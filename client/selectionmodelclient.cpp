@@ -33,61 +33,69 @@
 
 using namespace GammaRay;
 
-SelectionModelClient::SelectionModelClient(const QString& objectName, QAbstractItemModel* model, QObject* parent) :
-  NetworkSelectionModel(objectName, model, parent), m_timer(new QTimer(this))
+SelectionModelClient::SelectionModelClient(const QString &objectName, QAbstractItemModel *model,
+                                           QObject *parent)
+    : NetworkSelectionModel(objectName, model, parent)
+    , m_timer(new QTimer(this))
 {
-  m_timer->setSingleShot(true);
-  m_timer->setInterval(125);
-  Q_ASSERT(model);
-  // We do use a timer to group requests to avoid network overhead
-  connect(model, SIGNAL(modelAboutToBeReset()), this, SLOT(clearPendingSelection()));
-  connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-  connect(model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(start()));
-  connect(model, SIGNAL(columnsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-  connect(model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(start()));
-  connect(model, SIGNAL(layoutChanged()), m_timer, SLOT(start()));
-  connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    m_timer->setSingleShot(true);
+    m_timer->setInterval(125);
+    Q_ASSERT(model);
+    // We do use a timer to group requests to avoid network overhead
+    connect(model, SIGNAL(modelAboutToBeReset()), this, SLOT(clearPendingSelection()));
+    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
+    connect(model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(
+                start()));
+    connect(model, SIGNAL(columnsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
+    connect(model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer,
+            SLOT(start()));
+    connect(model, SIGNAL(layoutChanged()), m_timer, SLOT(start()));
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
 
-  m_myAddress = Client::instance()->objectAddress(objectName);
-  connect(Client::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)), SLOT(serverRegistered(QString,Protocol::ObjectAddress)));
-  connect(Client::instance(), SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)),  SLOT(serverUnregistered(QString,Protocol::ObjectAddress)));
-  connectToServer();
+    m_myAddress = Client::instance()->objectAddress(objectName);
+    connect(Client::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)),
+            SLOT(serverRegistered(QString,Protocol::ObjectAddress)));
+    connect(Client::instance(), SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)),
+            SLOT(serverUnregistered(QString,Protocol::ObjectAddress)));
+    connectToServer();
 }
 
 SelectionModelClient::~SelectionModelClient()
 {
-  m_timer->stop();
+    m_timer->stop();
 }
 
 void SelectionModelClient::connectToServer()
 {
-  if (m_myAddress == Protocol::InvalidObjectAddress)
-    return;
-  Client::instance()->registerMessageHandler(m_myAddress, this, "newMessage");
-  // There can be some delay between the selection model is created and its connections went done in the UI part.
-  // So, let delay the request a bit, not perfect but can help.
-  // Probably a better way would be to consider some GammaRay::Message to be pendable and put them in a pool
-  // to be handled again later.
-  // connectionEstablished does not seems to help here (bader).
-  QTimer::singleShot(125, this, SLOT(requestSelection()));
+    if (m_myAddress == Protocol::InvalidObjectAddress)
+        return;
+    Client::instance()->registerMessageHandler(m_myAddress, this, "newMessage");
+    // There can be some delay between the selection model is created and its connections went done in the UI part.
+    // So, let delay the request a bit, not perfect but can help.
+    // Probably a better way would be to consider some GammaRay::Message to be pendable and put them in a pool
+    // to be handled again later.
+    // connectionEstablished does not seems to help here (bader).
+    QTimer::singleShot(125, this, SLOT(requestSelection()));
 }
 
 void SelectionModelClient::timeout()
 {
-  applyPendingSelection();
+    applyPendingSelection();
 }
 
-void SelectionModelClient::serverRegistered(const QString& objectName, Protocol::ObjectAddress objectAddress)
+void SelectionModelClient::serverRegistered(const QString &objectName,
+                                            Protocol::ObjectAddress objectAddress)
 {
-  if (objectName == m_objectName) {
-    m_myAddress = objectAddress;
-    connectToServer();
-  }
+    if (objectName == m_objectName) {
+        m_myAddress = objectAddress;
+        connectToServer();
+    }
 }
 
-void SelectionModelClient::serverUnregistered(const QString& objectName, Protocol::ObjectAddress objectAddress)
+void SelectionModelClient::serverUnregistered(const QString &objectName,
+                                              Protocol::ObjectAddress objectAddress)
 {
-  Q_UNUSED(objectAddress);
-  if (objectName == m_objectName)
-    m_myAddress = Protocol::InvalidObjectAddress;
+    Q_UNUSED(objectAddress);
+    if (objectName == m_objectName)
+        m_myAddress = Protocol::InvalidObjectAddress;
 }

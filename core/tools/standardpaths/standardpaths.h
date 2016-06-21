@@ -32,27 +32,26 @@
 #include "core/toolfactory.h"
 
 namespace GammaRay {
-
 class StandardPaths : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit StandardPaths(ProbeInterface *probe, QObject *parent = 0);
     ~StandardPaths();
 };
 
 class StandardPathsFactory : public QObject, public StandardToolFactory<QObject, StandardPaths>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit StandardPathsFactory(QObject *parent) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+public:
+    explicit StandardPathsFactory(QObject *parent)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_STANDARDPATHS_H

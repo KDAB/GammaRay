@@ -38,8 +38,8 @@
 
 using namespace GammaRay;
 
-QmlContextPropertyAdaptor::QmlContextPropertyAdaptor(QObject *parent) :
-    PropertyAdaptor(parent)
+QmlContextPropertyAdaptor::QmlContextPropertyAdaptor(QObject *parent)
+    : PropertyAdaptor(parent)
 {
 }
 
@@ -61,7 +61,7 @@ PropertyData QmlContextPropertyAdaptor::propertyData(int index) const
     Q_ASSERT(index >= 0);
     Q_ASSERT(index < m_contextPropertyNames.size());
 
-    auto context = qobject_cast<QQmlContext*>(object().qtObject());
+    auto context = qobject_cast<QQmlContext *>(object().qtObject());
     if (!context)
         return pd;
 
@@ -72,13 +72,13 @@ PropertyData QmlContextPropertyAdaptor::propertyData(int index) const
     return pd;
 }
 
-void QmlContextPropertyAdaptor::writeProperty(int index, const QVariant  &value)
+void QmlContextPropertyAdaptor::writeProperty(int index, const QVariant &value)
 {
     Q_ASSERT(index >= 0);
     Q_ASSERT(index < m_contextPropertyNames.size());
 
     const auto name = m_contextPropertyNames.at(index);
-    auto context = qobject_cast<QQmlContext*>(object().qtObject());
+    auto context = qobject_cast<QQmlContext *>(object().qtObject());
     if (name.isEmpty() || !context)
         return;
     context->setContextProperty(name, value);
@@ -87,7 +87,7 @@ void QmlContextPropertyAdaptor::writeProperty(int index, const QVariant  &value)
 void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    auto context = qobject_cast<QQmlContext*>(oi.qtObject());
+    auto context = qobject_cast<QQmlContext *>(oi.qtObject());
     Q_ASSERT(context);
 
     auto contextData = QQmlContextData::get(context);
@@ -109,16 +109,16 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 #endif
 }
 
+QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::s_instance = Q_NULLPTR;
 
-QmlContextPropertyAdaptorFactory* QmlContextPropertyAdaptorFactory::s_instance = Q_NULLPTR;
-
-PropertyAdaptor* QmlContextPropertyAdaptorFactory::create(const ObjectInstance& oi, QObject* parent) const
+PropertyAdaptor *QmlContextPropertyAdaptorFactory::create(const ObjectInstance &oi,
+                                                          QObject *parent) const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     if (oi.type() != ObjectInstance::QtObject || !oi.qtObject())
         return Q_NULLPTR;
 
-    if (qobject_cast<QQmlContext*>(oi.qtObject()))
+    if (qobject_cast<QQmlContext *>(oi.qtObject()))
         return new QmlContextPropertyAdaptor(parent);
 #else
     Q_UNUSED(oi);
@@ -128,7 +128,7 @@ PropertyAdaptor* QmlContextPropertyAdaptorFactory::create(const ObjectInstance& 
     return Q_NULLPTR;
 }
 
-QmlContextPropertyAdaptorFactory* QmlContextPropertyAdaptorFactory::instance()
+QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::instance()
 {
     if (!s_instance)
         s_instance = new QmlContextPropertyAdaptorFactory;

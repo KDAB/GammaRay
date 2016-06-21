@@ -33,15 +33,15 @@
 using namespace GammaRay;
 
 PropertyMatrixEditor::PropertyMatrixEditor(QWidget *parent)
-  : PropertyExtendedEditor(parent)
+    : PropertyExtendedEditor(parent)
 {
 }
 
 void PropertyMatrixEditor::edit()
 {
-  PropertyMatrixDialog dlg;
-  dlg.setMatrix(value());
+    PropertyMatrixDialog dlg;
+    dlg.setMatrix(value());
 
-  if (dlg.exec())
-    save(dlg.matrix());
+    if (dlg.exec())
+        save(dlg.matrix());
 }

@@ -32,18 +32,16 @@
 #include <QObject>
 
 namespace GammaRay {
-
 class ModelInspectorInterface : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ModelInspectorInterface(QObject *parent = 0);
     virtual ~ModelInspectorInterface();
 
-  signals:
+signals:
     void cellSelected(int row, int col, const QString &internalId, const QString &internalPtr);
 };
-
 }
 
 QT_BEGIN_NAMESPACE

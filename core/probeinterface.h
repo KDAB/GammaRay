@@ -47,7 +47,6 @@ class QString;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 struct SignalSpyCallbackSet;
 
 /**
@@ -58,7 +57,7 @@ struct SignalSpyCallbackSet;
  */
 class ProbeInterface
 {
-  public:
+public:
     ProbeInterface() {}
     virtual inline ~ProbeInterface()
     {
@@ -98,7 +97,7 @@ class ProbeInterface
      * Register a model for remote usage.
      * @param objectName unique identifier for the model, typically in reverse domain notation.
      */
-    virtual void registerModel(const QString &objectName, QAbstractItemModel* model) = 0;
+    virtual void registerModel(const QString &objectName, QAbstractItemModel *model) = 0;
 
     /**
      * Install a global event filter.
@@ -140,14 +139,15 @@ class ProbeInterface
      */
     virtual void selectObject(QObject *object, const QPoint &pos = QPoint()) = 0;
 
-    virtual void selectObject(QObject* object, const QString &toolId, const QPoint &pos = QPoint()) = 0;
+    virtual void selectObject(QObject *object, const QString &toolId,
+                              const QPoint &pos = QPoint()) = 0;
 
     /**
      * Notify the probe about the user selecting one of "your" objects.
      *
      * @since 2.1
      */
-    virtual void selectObject(void* object, const QString& typeName) = 0;
+    virtual void selectObject(void *object, const QString &typeName) = 0;
 
     /**
      * Register a signal spy callback set.
@@ -161,7 +161,6 @@ class ProbeInterface
 private:
     Q_DISABLE_COPY(ProbeInterface)
 };
-
 }
 
 #endif

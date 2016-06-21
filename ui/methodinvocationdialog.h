@@ -38,24 +38,24 @@ class QAbstractItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
-namespace Ui { class MethodInvocationDialog; }
+namespace Ui {
+class MethodInvocationDialog;
+}
 
 class MethodInvocationDialog : public QDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MethodInvocationDialog(QWidget *parent = 0);
     ~MethodInvocationDialog();
 
     Qt::ConnectionType connectionType() const;
     void setArgumentModel(QAbstractItemModel *model);
 
-  private:
+private:
     QScopedPointer<Ui::MethodInvocationDialog> ui;
     UIStateManager m_stateManager;
 };
-
 }
 
 #endif // GAMMARAY_METHODINVOCATIONDIALOG_H

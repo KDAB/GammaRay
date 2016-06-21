@@ -32,17 +32,17 @@
 #include "injector/debuggerinjector.h"
 
 namespace GammaRay {
-
 class GdbInjector : public DebuggerInjector
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit GdbInjector(const QString &executableOverride = QString());
     QString name() const Q_DECL_OVERRIDE;
-    bool launch(const QStringList &programAndArgs, const QString &probeDll, const QString &probeFunc, const QProcessEnvironment &env) Q_DECL_OVERRIDE;
+    bool launch(const QStringList &programAndArgs, const QString &probeDll,
+                const QString &probeFunc, const QProcessEnvironment &env) Q_DECL_OVERRIDE;
     bool attach(int pid, const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     void disableConfirmations() Q_DECL_OVERRIDE;
     void addFunctionBreakpoint(const QByteArray &function) Q_DECL_OVERRIDE;
     void addMethodBreakpoint(const QByteArray &method) Q_DECL_OVERRIDE;
@@ -50,11 +50,10 @@ class GdbInjector : public DebuggerInjector
     void printBacktrace() Q_DECL_OVERRIDE;
     void loadSymbols(const QByteArray &library) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void readyReadStandardError() Q_DECL_OVERRIDE;
     void readyReadStandardOutput() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_GDBINJECTOR_H

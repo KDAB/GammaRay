@@ -32,7 +32,7 @@
 
 using namespace GammaRay;
 
-PaintAnalyzerClient::PaintAnalyzerClient(const QString& name, QObject* parent):
-    PaintAnalyzerInterface(name, parent)
+PaintAnalyzerClient::PaintAnalyzerClient(const QString &name, QObject *parent)
+    : PaintAnalyzerInterface(name, parent)
 {
 }

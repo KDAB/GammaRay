@@ -33,36 +33,35 @@
 #include <QVariant>
 
 namespace GammaRay {
-
 /** Transport wrapper for variants that shall not be unpacked by GammaRay::MethodArgument. */
 class VariantWrapper
 {
 public:
-  inline VariantWrapper() {}
-  explicit inline VariantWrapper(const QVariant &variant) : m_variant(variant) {}
+    inline VariantWrapper() {}
+    explicit inline VariantWrapper(const QVariant &variant)
+        : m_variant(variant) {}
 
-  inline QVariant variant() const { return m_variant; }
-  inline void setVariant(const QVariant &v) { m_variant = v; }
-  inline operator QVariant() const { return QVariant::fromValue(*this); }
+    inline QVariant variant() const { return m_variant; }
+    inline void setVariant(const QVariant &v) { m_variant = v; }
+    inline operator QVariant() const { return QVariant::fromValue(*this); }
 
 private:
-  QVariant m_variant;
+    QVariant m_variant;
 };
 
-inline QDataStream &operator<<(QDataStream &out, const VariantWrapper& wrapper)
+inline QDataStream &operator<<(QDataStream &out, const VariantWrapper &wrapper)
 {
-  out << wrapper.variant();
-  return out;
+    out << wrapper.variant();
+    return out;
 }
 
 inline QDataStream &operator>>(QDataStream &in, VariantWrapper &value)
 {
-  QVariant v;
-  in >> v;
-  value.setVariant(v);
-  return in;
+    QVariant v;
+    in >> v;
+    value.setVariant(v);
+    return in;
 }
-
 }
 
 Q_DECLARE_METATYPE(GammaRay::VariantWrapper)

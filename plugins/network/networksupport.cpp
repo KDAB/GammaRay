@@ -77,14 +77,15 @@ Q_DECLARE_METATYPE(QSslSocket::PeerVerifyMode)
 Q_DECLARE_METATYPE(QSslSocket::SslMode)
 #endif // QT_NO_SSL
 
-
-NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent) :
-    QObject(parent)
+NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent)
+    : QObject(parent)
 {
     registerMetaTypes();
     registerVariantHandler();
 
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkInterfaceModel"), new NetworkInterfaceModel(this));
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.NetworkInterfaceModel"),
+                         new NetworkInterfaceModel(this));
 
     PropertyController::registerExtension<CookieExtension>();
 }
@@ -103,8 +104,8 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, peerPort);
     MO_ADD_PROPERTY_RO(QAbstractSocket, QHostAddress, peerAddress);
     MO_ADD_PROPERTY_RO(QAbstractSocket, QString, peerName);
-    MO_ADD_PROPERTY   (QAbstractSocket, qint64, readBufferSize, setReadBufferSize);
-    MO_ADD_PROPERTY   (QAbstractSocket, QAbstractSocket::PauseModes, pauseMode, setPauseMode);
+    MO_ADD_PROPERTY(QAbstractSocket, qint64, readBufferSize, setReadBufferSize);
+    MO_ADD_PROPERTY(QAbstractSocket, QAbstractSocket::PauseModes, pauseMode, setPauseMode);
     MO_ADD_PROPERTY_RO(QAbstractSocket, qintptr, socketDescriptor);
     MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketType, socketType);
     MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketState, state);
@@ -131,8 +132,8 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QLocalSocket, QLocalSocket::LocalSocketState, state);
 
     MO_ADD_METAOBJECT1(QNetworkAccessManager, QObject);
-    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QAbstractNetworkCache*, cache);
-    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QNetworkCookieJar*, cookieJar);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QAbstractNetworkCache *, cache);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QNetworkCookieJar *, cookieJar);
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, QStringList, supportedSchemes);
 
     // FIXME: QAbstractSocket::setSocketOption() would be nice to have
@@ -140,7 +141,7 @@ void NetworkSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT1(QTcpServer, QObject);
     MO_ADD_PROPERTY_RO(QTcpServer, bool, isListening);
-    MO_ADD_PROPERTY   (QTcpServer, int, maxPendingConnections, setMaxPendingConnections);
+    MO_ADD_PROPERTY(QTcpServer, int, maxPendingConnections, setMaxPendingConnections);
     MO_ADD_PROPERTY_RO(QTcpServer, quint16, serverPort);
     MO_ADD_PROPERTY_RO(QTcpServer, QHostAddress, serverAddress);
     MO_ADD_PROPERTY_RO(QTcpServer, qintptr, socketDescriptor);
@@ -188,9 +189,11 @@ void NetworkSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT0(QSslConfiguration);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-    MO_ADD_PROPERTY   (QSslConfiguration, QList<QByteArray>, allowedNextProtocols, setAllowedNextProtocols);
+    MO_ADD_PROPERTY(QSslConfiguration, QList<QByteArray>, allowedNextProtocols,
+                    setAllowedNextProtocols);
 #endif
-    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, caCertificates, setCaCertificates);
+    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, caCertificates,
+                       setCaCertificates);
     MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCipher>, ciphers, setCiphers);
     // TODO 5.5 ellipticCurves
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
@@ -198,17 +201,20 @@ void NetworkSupport::registerMetaTypes()
 #endif
     MO_ADD_PROPERTY_RO(QSslConfiguration, bool, isNull);
     MO_ADD_PROPERTY_CR(QSslConfiguration, QSslCertificate, localCertificate, setLocalCertificate);
-    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, localCertificateChain, setLocalCertificateChain);
+    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, localCertificateChain,
+                       setLocalCertificateChain);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     MO_ADD_PROPERTY_RO(QSslConfiguration, QByteArray, nextNegotiatedProtocol);
-    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslConfiguration::NextProtocolNegotiationStatus, nextProtocolNegotiationStatus); // TODO enum lookup table
+    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslConfiguration::NextProtocolNegotiationStatus,
+                       nextProtocolNegotiationStatus);                                                                      // TODO enum lookup table
 #endif
     MO_ADD_PROPERTY_RO(QSslConfiguration, QSslCertificate, peerCertificate);
     MO_ADD_PROPERTY_RO(QSslConfiguration, QList<QSslCertificate>, peerCertificateChain);
-    MO_ADD_PROPERTY   (QSslConfiguration, int, peerVerifyDepth, setPeerVerifyDepth);
-    MO_ADD_PROPERTY   (QSslConfiguration, QSslSocket::PeerVerifyMode, peerVerifyMode, setPeerVerifyMode);
+    MO_ADD_PROPERTY(QSslConfiguration, int, peerVerifyDepth, setPeerVerifyDepth);
+    MO_ADD_PROPERTY(QSslConfiguration, QSslSocket::PeerVerifyMode, peerVerifyMode,
+                    setPeerVerifyMode);
     MO_ADD_PROPERTY_CR(QSslConfiguration, QSslKey, privateKey, setPrivateKey);
-    MO_ADD_PROPERTY   (QSslConfiguration, QSsl::SslProtocol, protocol, setProtocol);
+    MO_ADD_PROPERTY(QSslConfiguration, QSsl::SslProtocol, protocol, setProtocol);
     MO_ADD_PROPERTY_RO(QSslConfiguration, QSslCipher, sessionCipher);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QSslConfiguration, QSsl::SslProtocol, sessionProtocol);
@@ -234,8 +240,8 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslSocket, QSslSocket::SslMode, mode);
     MO_ADD_PROPERTY_RO(QSslSocket, QSslCertificate, peerCertificate);
     MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslCertificate>, peerCertificateChain);
-    MO_ADD_PROPERTY   (QSslSocket, int, peerVerifyDepth, setPeerVerifyDepth);
-    MO_ADD_PROPERTY   (QSslSocket, QSslSocket::PeerVerifyMode, peerVerifyMode, setPeerVerifyMode);
+    MO_ADD_PROPERTY(QSslSocket, int, peerVerifyDepth, setPeerVerifyDepth);
+    MO_ADD_PROPERTY(QSslSocket, QSslSocket::PeerVerifyMode, peerVerifyMode, setPeerVerifyMode);
     MO_ADD_PROPERTY_CR(QSslSocket, QString, peerVerifyName, setPeerVerifyName);
     MO_ADD_PROPERTY_CR(QSslSocket, QSslKey, privateKey, setPrivateKey);
     MO_ADD_PROPERTY_RO(QSslSocket, QSsl::SslProtocol, protocol);
@@ -250,7 +256,7 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
     MO_ADD_PROPERTY_RO(QSocketNotifier, qintptr, socket);
     MO_ADD_PROPERTY_RO(QSocketNotifier, QSocketNotifier::Type, type);
-    MO_ADD_PROPERTY   (QSocketNotifier, bool, isEnabled, setEnabled);
+    MO_ADD_PROPERTY(QSocketNotifier, bool, isEnabled, setEnabled);
 }
 
 #define E(x) { QAbstractSocket:: x, #x }
@@ -266,7 +272,8 @@ static QString socketPauseModeToString(QAbstractSocket::PauseModes flags)
 }
 
 #define E(x) { QNetworkAccessManager:: x, #x }
-static const MetaEnum::Value<QNetworkAccessManager::NetworkAccessibility> network_accessibility_table[] = {
+static const MetaEnum::Value<QNetworkAccessManager::NetworkAccessibility>
+network_accessibility_table[] = {
     E(UnknownAccessibility),
     E(NotAccessible),
     E(Accessible)
@@ -379,13 +386,17 @@ static QString sslErrorToString(const QSslError &error)
 {
     return error.errorString();
 }
+
 #endif // QT_NO_SSL
 
 void NetworkSupport::registerVariantHandler()
 {
     VariantHandler::registerStringConverter<QAbstractSocket::PauseModes>(socketPauseModeToString);
-    VariantHandler::registerStringConverter<QHostAddress>([](const QHostAddress &addr) { return addr.toString(); });
-    VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(networkAccessibilityToString);
+    VariantHandler::registerStringConverter<QHostAddress>([](const QHostAddress &addr) {
+        return addr.toString();
+    });
+    VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(
+        networkAccessibilityToString);
 #ifndef QT_NO_SSL
     VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(sslPeerVerifyModeToString);
     VariantHandler::registerStringConverter<QSslSocket::SslMode>(sslModeToString);
@@ -393,15 +404,15 @@ void NetworkSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSsl::KeyType>(sslKeyTypeToString);
     VariantHandler::registerStringConverter<QSsl::SslProtocol>(sslProtocolToString);
     VariantHandler::registerStringConverter<QSslCertificate>(sslCertificateToString);
-    VariantHandler::registerStringConverter<QSslCertificateExtension>(sslCertificateExtensionToString);
+    VariantHandler::registerStringConverter<QSslCertificateExtension>(
+        sslCertificateExtensionToString);
     VariantHandler::registerStringConverter<QSslCipher>(sslCipherToString);
     VariantHandler::registerStringConverter<QSslError>(sslErrorToString);
 #endif
 }
 
-
-NetworkSupportFactory::NetworkSupportFactory(QObject *parent) :
-    QObject(parent)
+NetworkSupportFactory::NetworkSupportFactory(QObject *parent)
+    : QObject(parent)
 {
 }
 

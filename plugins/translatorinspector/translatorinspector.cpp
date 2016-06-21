@@ -42,107 +42,107 @@
 
 using namespace GammaRay;
 
-TranslatorInspector::TranslatorInspector(ProbeInterface *probe,
-                                       QObject *parent)
+TranslatorInspector::TranslatorInspector(ProbeInterface *probe, QObject *parent)
     : TranslatorInspectorInterface(QStringLiteral("com.kdab.GammaRay.TranslatorInspector"),
-                                  parent),
-      m_probe(probe)
+                                   parent)
+    , m_probe(probe)
 {
-  m_translatorsModel = new TranslatorsModel(this);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"),
-                       m_translatorsModel);
+    m_translatorsModel = new TranslatorsModel(this);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"),
+                         m_translatorsModel);
 
-  m_translationsModel = new ServerProxyModel<QSortFilterProxyModel>(this);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.TranslationsModel"),
-                       m_translationsModel);
+    m_translationsModel = new ServerProxyModel<QSortFilterProxyModel>(this);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.TranslationsModel"),
+                         m_translationsModel);
 
-  m_selectionModel = ObjectBroker::selectionModel(m_translatorsModel);
-  connect(m_selectionModel,
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(selectionChanged(QItemSelection)));
+    m_selectionModel = ObjectBroker::selectionModel(m_translatorsModel);
+    connect(m_selectionModel,
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(selectionChanged(QItemSelection)));
 
-  m_translationsSelectionModel =
-      ObjectBroker::selectionModel(m_translationsModel);
+    m_translationsSelectionModel
+        = ObjectBroker::selectionModel(m_translationsModel);
 
-  m_fallbackWrapper = new TranslatorWrapper(new FallbackTranslator(this), this);
-  m_translatorsModel->registerTranslator(m_fallbackWrapper);
-  QCoreApplicationPrivate *obj = static_cast<QCoreApplicationPrivate *>(
-      QCoreApplicationPrivate::get(qApp));
-  obj->translators.append(m_fallbackWrapper);
+    m_fallbackWrapper = new TranslatorWrapper(new FallbackTranslator(this), this);
+    m_translatorsModel->registerTranslator(m_fallbackWrapper);
+    QCoreApplicationPrivate *obj = static_cast<QCoreApplicationPrivate *>(
+        QCoreApplicationPrivate::get(qApp));
+    obj->translators.append(m_fallbackWrapper);
 
-  qApp->installEventFilter(this);
-  sendLanguageChangeEvent();
+    qApp->installEventFilter(this);
+    sendLanguageChangeEvent();
 }
 
 void TranslatorInspector::sendLanguageChangeEvent()
 {
-  QEvent event(QEvent::LanguageChange);
-  qApp->sendEvent(qApp, &event);
+    QEvent event(QEvent::LanguageChange);
+    qApp->sendEvent(qApp, &event);
 }
+
 void TranslatorInspector::resetTranslations()
 {
-  const QItemSelection translatorsSelection = m_selectionModel->selection();
-  if (translatorsSelection.isEmpty()) {
-    return;
-  }
-  TranslatorWrapper *translator =
-      m_translatorsModel->translator(translatorsSelection.first().topLeft());
-  Q_ASSERT(translator);
-  const QItemSelection translationsSelection =
-      m_translationsSelectionModel->selection();
-  if (translationsSelection.isEmpty()) {
-    return;
-  }
-  translator->model()->resetTranslations(
-      translationsSelection.first().topLeft(),
-      translationsSelection.last().bottomRight());
+    const QItemSelection translatorsSelection = m_selectionModel->selection();
+    if (translatorsSelection.isEmpty())
+        return;
+    TranslatorWrapper *translator
+        = m_translatorsModel->translator(translatorsSelection.first().topLeft());
+    Q_ASSERT(translator);
+    const QItemSelection translationsSelection
+        = m_translationsSelectionModel->selection();
+    if (translationsSelection.isEmpty())
+        return;
+    translator->model()->resetTranslations(
+        translationsSelection.first().topLeft(),
+        translationsSelection.last().bottomRight());
 }
+
 bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
 {
-  if (event->type() == QEvent::LanguageChange) {
-    QCoreApplicationPrivate *obj = static_cast<QCoreApplicationPrivate *>(
-        QCoreApplicationPrivate::get(qApp));
-    for (int i = 0; i < obj->translators.size(); ++i) {
-      if (obj->translators.at(i)->metaObject() == &TranslatorWrapper::staticMetaObject) {
-        continue; // it's already setup correctly
-      } else {
-        /* wrap the translator set with installTranslator in a TranslatorWrapper
-         * and make sure we use the TranslatorWrapper instead of the original
-         * translator
-         */
-        auto wrapper = new TranslatorWrapper(obj->translators.at(i), this);
-        obj->translators[i] = wrapper;
-        m_translatorsModel->registerTranslator(wrapper);
-        connect(wrapper,
-                &TranslatorWrapper::destroyed,
+    if (event->type() == QEvent::LanguageChange) {
+        QCoreApplicationPrivate *obj = static_cast<QCoreApplicationPrivate *>(
+            QCoreApplicationPrivate::get(qApp));
+        for (int i = 0; i < obj->translators.size(); ++i) {
+            if (obj->translators.at(i)->metaObject() == &TranslatorWrapper::staticMetaObject) {
+                continue; // it's already setup correctly
+            } else {
+                /* wrap the translator set with installTranslator in a TranslatorWrapper
+                 * and make sure we use the TranslatorWrapper instead of the original
+                 * translator
+                 */
+                auto wrapper = new TranslatorWrapper(obj->translators.at(i), this);
+                obj->translators[i] = wrapper;
+                m_translatorsModel->registerTranslator(wrapper);
+                connect(wrapper,
+                        &TranslatorWrapper::destroyed,
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-                m_translationsModel,
+                        m_translationsModel,
 #endif
-                [wrapper, this](QObject *) { m_translatorsModel->unregisterTranslator(wrapper); });
-      }
+                        [wrapper, this](QObject *) {
+                    m_translatorsModel->unregisterTranslator(wrapper);
+                });
+            }
+        }
+        for (auto it = obj->translators.constBegin(); it != obj->translators.constEnd(); ++it) {
+            TranslatorWrapper *wrapper = qobject_cast<TranslatorWrapper *>(*it);
+            Q_ASSERT(wrapper);
+            wrapper->model()->resetAllUnchanged();
+        }
     }
-    for (auto it = obj->translators.constBegin(); it != obj->translators.constEnd(); ++it)
-    {
-      TranslatorWrapper *wrapper = qobject_cast<TranslatorWrapper *>(*it);
-      Q_ASSERT(wrapper);
-      wrapper->model()->resetAllUnchanged();
-    }
-  }
-  return QObject::eventFilter(object, event);
+    return QObject::eventFilter(object, event);
 }
+
 void TranslatorInspector::selectionChanged(const QItemSelection &selection)
 {
-  m_translationsModel->setSourceModel(0);
-  if (!selection.isEmpty()) {
-    TranslatorWrapper *translator =
-        m_translatorsModel->translator(selection.first().topLeft());
-    if (translator) {
-      m_translationsModel->setSourceModel(translator->model());
+    m_translationsModel->setSourceModel(0);
+    if (!selection.isEmpty()) {
+        TranslatorWrapper *translator
+            = m_translatorsModel->translator(selection.first().topLeft());
+        if (translator)
+            m_translationsModel->setSourceModel(translator->model());
     }
-  }
 }
 
 QString TranslatorInspectorFactory::name() const
 {
-  return tr("Translators");
+    return tr("Translators");
 }

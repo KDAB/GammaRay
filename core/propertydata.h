@@ -36,7 +36,6 @@
 #include <QVariant>
 
 namespace GammaRay {
-
 /** Represents a single property value. */
 class GAMMARAY_CORE_EXPORT PropertyData
 {
@@ -72,12 +71,11 @@ private:
     QString m_details;
     Flags m_flags;
 };
-
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::PropertyData::Flags)
 QT_BEGIN_NAMESPACE
-Q_DECLARE_TYPEINFO(GammaRay::PropertyData, Q_MOVABLE_TYPE);
+    Q_DECLARE_TYPEINFO(GammaRay::PropertyData, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
 #endif // GAMMARAY_PROPERTYDATA_H

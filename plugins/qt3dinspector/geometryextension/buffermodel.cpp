@@ -33,10 +33,10 @@
 
 using namespace GammaRay;
 
-BufferModel::BufferModel(QObject* parent) :
-    QAbstractTableModel(parent),
-    m_bufferIndex(-1),
-    m_rowSize(0)
+BufferModel::BufferModel(QObject *parent)
+    : QAbstractTableModel(parent)
+    , m_bufferIndex(-1)
+    , m_rowSize(0)
 {
 }
 
@@ -44,7 +44,7 @@ BufferModel::~BufferModel()
 {
 }
 
-void BufferModel::setGeometryData(const GammaRay::Qt3DGeometryData& data)
+void BufferModel::setGeometryData(const GammaRay::Qt3DGeometryData &data)
 {
     beginResetModel();
     m_data = data;
@@ -81,7 +81,7 @@ void BufferModel::updateAttributes()
     });
 }
 
-void BufferModel::updateAttribute(const GammaRay::Qt3DGeometryAttributeData& attrData)
+void BufferModel::updateAttribute(const GammaRay::Qt3DGeometryAttributeData &attrData)
 {
     m_rowSize = m_buffer.size() / attrData.count;
     for (uint i = 0; i < std::max(attrData.vertexSize, 1u); ++i) {
@@ -96,20 +96,20 @@ void BufferModel::updateAttribute(const GammaRay::Qt3DGeometryAttributeData& att
     }
 }
 
-int BufferModel::columnCount(const QModelIndex& parent) const
+int BufferModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_attrs.size();
 }
 
-int BufferModel::rowCount(const QModelIndex& parent) const
+int BufferModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid() || m_attrs.isEmpty())
         return 0;
     return m_buffer.size() / m_rowSize;
 }
 
-QVariant BufferModel::data(const QModelIndex& index, int role) const
+QVariant BufferModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || m_attrs.isEmpty())
         return QVariant();
@@ -125,10 +125,9 @@ QVariant BufferModel::data(const QModelIndex& index, int role) const
 
 QVariant BufferModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return m_attrs.at(section).name;
-    } else if (orientation == Qt::Vertical && role == Qt::DisplayRole) {
+    else if (orientation == Qt::Vertical && role == Qt::DisplayRole)
         return QString::number(section); // 0-based rather than 1-based
-    }
     return QAbstractTableModel::headerData(section, orientation, role);
 }

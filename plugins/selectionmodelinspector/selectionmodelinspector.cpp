@@ -49,33 +49,33 @@ Q_EXPORT_PLUGIN(SelectionModelInspectorFactory)
 #endif
 
 SelectionModelInspector::SelectionModelInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
-  , m_current(new QIdentityProxyModel(this))
+    : QObject(parent)
+    , m_current(new QIdentityProxyModel(this))
 {
-  ObjectTypeFilterProxyModel<QItemSelectionModel> *selectionModelProxy =
-    new ObjectTypeFilterProxyModel<QItemSelectionModel>(this);
-  selectionModelProxy->setSourceModel(probe->objectListModel());
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.SelectionModelsModel"), selectionModelProxy);
+    ObjectTypeFilterProxyModel<QItemSelectionModel> *selectionModelProxy
+        = new ObjectTypeFilterProxyModel<QItemSelectionModel>(this);
+    selectionModelProxy->setSourceModel(probe->objectListModel());
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.SelectionModelsModel"), selectionModelProxy);
 
-  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(selectionModelProxy);
-  connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          SLOT(currentChanged(QModelIndex)));
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(selectionModelProxy);
+    connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            SLOT(currentChanged(QModelIndex)));
 
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.CurrentSelectionModel"), m_current);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.CurrentSelectionModel"), m_current);
 }
 
 void SelectionModelInspector::currentChanged(const QModelIndex &current)
 {
-  QObject *selectionModelObject = current.data(ObjectModel::ObjectRole).value<QObject*>();
-  QItemSelectionModel *selectionModel = qobject_cast<QItemSelectionModel*>(selectionModelObject);
-  if (selectionModel && selectionModel->model()) {
-    m_current->setSourceModel(const_cast<QAbstractItemModel*>(selectionModel->model()));
-  } else {
-    m_current->setSourceModel(0);
-  }
+    QObject *selectionModelObject = current.data(ObjectModel::ObjectRole).value<QObject *>();
+    QItemSelectionModel *selectionModel = qobject_cast<QItemSelectionModel *>(selectionModelObject);
+    if (selectionModel && selectionModel->model())
+        m_current->setSourceModel(const_cast<QAbstractItemModel *>(selectionModel->model()));
+    else
+        m_current->setSourceModel(0);
 }
 
 QString SelectionModelInspectorFactory::name() const
 {
-  return tr("Selection Models");
+    return tr("Selection Models");
 }

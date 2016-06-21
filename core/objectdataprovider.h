@@ -39,7 +39,6 @@ class QString;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SourceLocation;
 
 /** @brief Base class for custom object data providers.
@@ -57,25 +56,23 @@ public:
 };
 
 /** @brief Retrieve basic information about QObject instances. */
-namespace ObjectDataProvider
-{
-    GAMMARAY_CORE_EXPORT void registerProvider(AbstractObjectDataProvider* provider);
+namespace ObjectDataProvider {
+GAMMARAY_CORE_EXPORT void registerProvider(AbstractObjectDataProvider *provider);
 
-    /** Returns the object name, considering possibly available information from
-     * dynamic language runtimes, such as QML ids.
-     */
-    GAMMARAY_CORE_EXPORT QString name(const QObject *obj);
+/** Returns the object name, considering possibly available information from
+ * dynamic language runtimes, such as QML ids.
+ */
+GAMMARAY_CORE_EXPORT QString name(const QObject *obj);
 
-    /** Returns the type name of @p obj. */
-    GAMMARAY_CORE_EXPORT QString typeName(QObject *obj);
+/** Returns the type name of @p obj. */
+GAMMARAY_CORE_EXPORT QString typeName(QObject *obj);
 
-    /** Returns the source location where this object was created, if known. */
-    GAMMARAY_CORE_EXPORT SourceLocation creationLocation(QObject *obj);
+/** Returns the source location where this object was created, if known. */
+GAMMARAY_CORE_EXPORT SourceLocation creationLocation(QObject *obj);
 
-    /** Returns the source location where the type of this object was declared, if known. */
-    GAMMARAY_CORE_EXPORT SourceLocation declarationLocation(QObject *obj);
+/** Returns the source location where the type of this object was declared, if known. */
+GAMMARAY_CORE_EXPORT SourceLocation declarationLocation(QObject *obj);
 }
-
 }
 
 #endif // GAMMARAY_OBJECTDATAPROVIDER_H

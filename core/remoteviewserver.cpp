@@ -41,27 +41,28 @@
 
 using namespace GammaRay;
 
-RemoteViewServer::RemoteViewServer(const QString& name, QObject* parent):
-    RemoteViewInterface(name, parent),
-    m_eventReceiver(Q_NULLPTR),
-    m_updateTimer(new QTimer(this)),
-    m_clientActive(false),
-    m_sourceChanged(false),
-    m_clientReady(true)
+RemoteViewServer::RemoteViewServer(const QString &name, QObject *parent)
+    : RemoteViewInterface(name, parent)
+    , m_eventReceiver(Q_NULLPTR)
+    , m_updateTimer(new QTimer(this))
+    , m_clientActive(false)
+    , m_sourceChanged(false)
+    , m_clientReady(true)
 {
-    Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(name), this, "clientConnectedChanged");
+    Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(
+                                                    name), this, "clientConnectedChanged");
 
     m_updateTimer->setSingleShot(true);
     m_updateTimer->setInterval(100);
     connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(requestUpdateTimeout()));
 }
 
-void RemoteViewServer::setEventReceiver(EventReceiver* receiver)
+void RemoteViewServer::setEventReceiver(EventReceiver *receiver)
 {
     m_eventReceiver = receiver;
 }
 
-void RemoteViewServer::pickElementAt(const QPoint& pos)
+void RemoteViewServer::pickElementAt(const QPoint &pos)
 {
     emit doPickElement(pos);
 }
@@ -77,7 +78,7 @@ bool RemoteViewServer::isActive() const
     return m_clientActive;
 }
 
-void RemoteViewServer::sendFrame(const RemoteViewFrame& frame)
+void RemoteViewServer::sendFrame(const RemoteViewFrame &frame)
 {
     m_clientReady = false;
     emit frameUpdated(frame);
@@ -101,36 +102,46 @@ void RemoteViewServer::checkRequestUpdate()
         m_updateTimer->start();
 }
 
-void RemoteViewServer::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
+void RemoteViewServer::sendKeyEvent(int type, int key, int modifiers, const QString &text,
+                                    bool autorep, ushort count)
 {
     if (!m_eventReceiver)
         return;
 
-    auto event = new QKeyEvent((QEvent::Type)type, key, (Qt::KeyboardModifiers)modifiers, text, autorep, count);
+    auto event = new QKeyEvent((QEvent::Type)type, key, (Qt::KeyboardModifiers)modifiers, text,
+                               autorep, count);
     QCoreApplication::postEvent(m_eventReceiver, event);
 }
 
-void RemoteViewServer::sendMouseEvent(int type, const QPoint& localPos, int button, int buttons, int modifiers)
+void RemoteViewServer::sendMouseEvent(int type, const QPoint &localPos, int button, int buttons,
+                                      int modifiers)
 {
     if (!m_eventReceiver)
         return;
 
-    auto event = new QMouseEvent((QEvent::Type)type, localPos, (Qt::MouseButton)button, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers);
+    auto event
+        = new QMouseEvent((QEvent::Type)type, localPos, (Qt::MouseButton)button,
+                          (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers);
     QCoreApplication::postEvent(m_eventReceiver, event);
 }
 
-void RemoteViewServer::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers)
+void RemoteViewServer::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta,
+                                      int buttons, int modifiers)
 {
     if (!m_eventReceiver)
         return;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(localPos), pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical, /*not used*/ (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers);
+    auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(
+                                     localPos), pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical,
+                                 /*not used*/ (Qt::MouseButtons)buttons,
+                                 (Qt::KeyboardModifiers)modifiers);
 #else
     Q_UNUSED(pixelDelta);
     auto orientation = angleDelta.x() == 0 ? Qt::Vertical : Qt::Horizontal;
-    auto delta = orientation == Qt::Horizontal ? angleDelta.x() :angleDelta.y();
-    auto event = new QWheelEvent(localPos, delta, (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers, orientation);
+    auto delta = orientation == Qt::Horizontal ? angleDelta.x() : angleDelta.y();
+    auto event = new QWheelEvent(localPos, delta, (Qt::MouseButtons)buttons,
+                                 (Qt::KeyboardModifiers)modifiers, orientation);
 #endif
     QCoreApplication::sendEvent(m_eventReceiver, event);
 }

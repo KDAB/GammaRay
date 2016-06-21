@@ -29,42 +29,38 @@
 #include "protocol.h"
 
 namespace GammaRay {
-
 namespace Protocol {
-
-Protocol::ModelIndex fromQModelIndex(const QModelIndex& index)
+Protocol::ModelIndex fromQModelIndex(const QModelIndex &index)
 {
-  if (!index.isValid())
-    return ModelIndex();
-  ModelIndex result = fromQModelIndex(index.parent());
-  result.push_back(qMakePair(index.row(), index.column()));
-  return result;
+    if (!index.isValid())
+        return ModelIndex();
+    ModelIndex result = fromQModelIndex(index.parent());
+    result.push_back(qMakePair(index.row(), index.column()));
+    return result;
 }
 
-QModelIndex toQModelIndex(const QAbstractItemModel* model, const Protocol::ModelIndex& index)
+QModelIndex toQModelIndex(const QAbstractItemModel *model, const Protocol::ModelIndex &index)
 {
-  QModelIndex qmi;
+    QModelIndex qmi;
 
-  for (Protocol::ModelIndex::ConstIterator it = index.constBegin(), end = index.constEnd(); it != end; ++it) {
-    qmi = model->index(it->first, it->second, qmi);
-    if (!qmi.isValid()) {
-      return QModelIndex(); // model isn't loaded to the full depth, so don't restart from the top
+    for (Protocol::ModelIndex::ConstIterator it = index.constBegin(), end = index.constEnd();
+         it != end; ++it) {
+        qmi = model->index(it->first, it->second, qmi);
+        if (!qmi.isValid())
+            return QModelIndex(); // model isn't loaded to the full depth, so don't restart from the top
     }
-  }
 
-  return qmi;
+    return qmi;
 }
 
 qint32 version()
 {
-  return 26;
+    return 26;
 }
 
 qint32 broadcastFormatVersion()
 {
-  return 2;
+    return 2;
 }
-
 }
-
 }

@@ -33,7 +33,6 @@
 #include "toolfactory.h"
 
 namespace GammaRay {
-
 /**
  * A wrapper around a plugin ToolFactory that only loads the actual plugin
  * once initialized.
@@ -43,8 +42,8 @@ namespace GammaRay {
  */
 class ProxyToolFactory : public ProxyFactory<ToolFactory>
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * @param path Path to the plugin spec file
      */
@@ -59,7 +58,6 @@ class ProxyToolFactory : public ProxyFactory<ToolFactory>
 
     void init(ProbeInterface *probe) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_PROXYTOOLFACTORY_H

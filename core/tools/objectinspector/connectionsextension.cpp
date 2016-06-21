@@ -39,47 +39,48 @@
 
 using namespace GammaRay;
 
-ConnectionsExtension::ConnectionsExtension(PropertyController* controller):
-  ConnectionsExtensionInterface(controller->objectBaseName() + ".connectionsExtension", controller),
-  PropertyControllerExtension(controller->objectBaseName() + ".connections")
+ConnectionsExtension::ConnectionsExtension(PropertyController *controller)
+    : ConnectionsExtensionInterface(
+        controller->objectBaseName() + ".connectionsExtension", controller)
+    , PropertyControllerExtension(controller->objectBaseName() + ".connections")
 {
-  m_inboundModel = new InboundConnectionsModel(controller);
-  m_outboundModel = new OutboundConnectionsModel(controller);
+    m_inboundModel = new InboundConnectionsModel(controller);
+    m_outboundModel = new OutboundConnectionsModel(controller);
 
-  controller->registerModel(m_inboundModel, QStringLiteral("inboundConnections"));
-  controller->registerModel(m_outboundModel, QStringLiteral("outboundConnections"));
+    controller->registerModel(m_inboundModel, QStringLiteral("inboundConnections"));
+    controller->registerModel(m_outboundModel, QStringLiteral("outboundConnections"));
 }
 
 ConnectionsExtension::~ConnectionsExtension()
 {
 }
 
-bool ConnectionsExtension::setQObject(QObject* object)
+bool ConnectionsExtension::setQObject(QObject *object)
 {
-  m_inboundModel->setObject(object);
-  m_outboundModel->setObject(object);
+    m_inboundModel->setObject(object);
+    m_outboundModel->setObject(object);
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
-  return true;
+    return true;
 #else
-  return false; // the above models wont have any content
+    return false; // the above models wont have any content
 #endif
 }
 
 void ConnectionsExtension::navigateToSender(int modelRow)
 {
-  const QModelIndex index = m_inboundModel->index(modelRow, 0);
-  QObject* sender = index.data(ConnectionsModelRoles::EndpointRole).value<QObject*>();
-  if (!sender)
-    return;
-  Probe::instance()->selectObject(sender);
+    const QModelIndex index = m_inboundModel->index(modelRow, 0);
+    QObject *sender = index.data(ConnectionsModelRoles::EndpointRole).value<QObject *>();
+    if (!sender)
+        return;
+    Probe::instance()->selectObject(sender);
 }
 
 void ConnectionsExtension::navigateToReceiver(int modelRow)
 {
-  const QModelIndex index = m_outboundModel->index(modelRow, 0);
-  QObject* receiver = index.data(ConnectionsModelRoles::EndpointRole).value<QObject*>();
-  if (!receiver)
-    return;
-  Probe::instance()->selectObject(receiver);
+    const QModelIndex index = m_outboundModel->index(modelRow, 0);
+    QObject *receiver = index.data(ConnectionsModelRoles::EndpointRole).value<QObject *>();
+    if (!receiver)
+        return;
+    Probe::instance()->selectObject(receiver);
 }

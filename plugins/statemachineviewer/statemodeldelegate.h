@@ -32,7 +32,6 @@
 #include <QStyledItemDelegate>
 
 namespace GammaRay {
-
 class StateModelDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -40,9 +39,9 @@ public:
     explicit StateModelDelegate(QObject *parent = Q_NULLPTR);
 
 protected:
-    void initStyleOption(QStyleOptionViewItem* option, const QModelIndex& index) const Q_DECL_OVERRIDE;
+    void initStyleOption(QStyleOptionViewItem *option,
+                         const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_STATEMODELDELEGATE_H

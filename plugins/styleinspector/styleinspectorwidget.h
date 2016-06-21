@@ -33,32 +33,30 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class StyleInspectorWidget;
+class StyleInspectorWidget;
 }
 
 class StyleInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit StyleInspectorWidget(QWidget *parent = 0);
     virtual ~StyleInspectorWidget();
 
-  private slots:
+private slots:
     void styleSelected(int index);
 
-  private:
+private:
     Ui::StyleInspectorWidget *ui;
 };
 
 class StyleInspectorUiFactory : public QObject, public StandardToolUiFactory<StyleInspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_styleinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_styleinspector.json")
 };
-
 }
 
 #endif // GAMMARAY_STYLEINSPECTORWIDGET_H

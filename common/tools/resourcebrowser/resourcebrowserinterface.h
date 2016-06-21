@@ -32,29 +32,28 @@
 #include <QObject>
 
 namespace GammaRay {
-
 class ResourceBrowserInterface : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ResourceBrowserInterface(QObject *parent = 0);
     virtual ~ResourceBrowserInterface();
 
-  public slots:
+public slots:
     virtual void downloadResource(const QString &sourceFilePath, const QString &targetFilePath) = 0;
     virtual void selectResource(const QString &sourceFilePath, int line = -1, int column = -1) = 0;
 
-  signals:
+signals:
     void resourceDeselected();
     void resourceSelected(const QByteArray &contents, int line, int column);
 
     void resourceDownloaded(const QString &targetFilePath, const QByteArray &contents);
 };
-
 }
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(GammaRay::ResourceBrowserInterface, "com.kdab.GammaRay.ResourceBrowserInterface")
+Q_DECLARE_INTERFACE(GammaRay::ResourceBrowserInterface,
+                    "com.kdab.GammaRay.ResourceBrowserInterface")
 QT_END_NAMESPACE
 
 #endif // GAMMARAY_RESOURCEBROWSERINTERFACE_H

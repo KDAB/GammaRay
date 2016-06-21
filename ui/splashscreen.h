@@ -32,10 +32,8 @@
 #include "gammaray_ui_export.h"
 
 namespace GammaRay {
-
 GAMMARAY_UI_EXPORT void showSplashScreen();
 GAMMARAY_UI_EXPORT void hideSplashScreen();
-
 }
 
 #endif // SPLASHSCREEN_H

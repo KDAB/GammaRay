@@ -40,84 +40,80 @@ using namespace GammaRay;
 using namespace std;
 
 ObjectListModel::ObjectListModel(Probe *probe)
-  : ObjectModelBase< QAbstractTableModel >(probe)
+    : ObjectModelBase< QAbstractTableModel >(probe)
 {
-  connect(probe, SIGNAL(objectCreated(QObject*)),
-          this, SLOT(objectAdded(QObject*)));
-  connect(probe, SIGNAL(objectDestroyed(QObject*)),
-          this, SLOT(objectRemoved(QObject*)));
+    connect(probe, SIGNAL(objectCreated(QObject*)),
+            this, SLOT(objectAdded(QObject*)));
+    connect(probe, SIGNAL(objectDestroyed(QObject*)),
+            this, SLOT(objectRemoved(QObject*)));
 }
 
 QPair<int, QVariant> ObjectListModel::defaultSelectedItem() const
 {
-  // select the qApp object (if any) in the object model
-  return QPair<int, QVariant>(ObjectModel::ObjectRole, QVariant::fromValue<QObject*>(qApp));
+    // select the qApp object (if any) in the object model
+    return QPair<int, QVariant>(ObjectModel::ObjectRole, QVariant::fromValue<QObject *>(qApp));
 }
 
 QVariant ObjectListModel::data(const QModelIndex &index, int role) const
 {
-  QMutexLocker lock(Probe::objectLock());
-  if (index.row() >= 0 && index.row() < m_objects.size()) {
-    QObject *obj = m_objects.at(index.row());
-    if (Probe::instance()->isValidObject(obj)) {
-      return dataForObject(obj, index, role);
+    QMutexLocker lock(Probe::objectLock());
+    if (index.row() >= 0 && index.row() < m_objects.size()) {
+        QObject *obj = m_objects.at(index.row());
+        if (Probe::instance()->isValidObject(obj))
+            return dataForObject(obj, index, role);
     }
-  }
-  return QVariant();
+    return QVariant();
 }
 
 int ObjectListModel::columnCount(const QModelIndex &parent) const
 {
-  if (parent.isValid()) {
-    return 0;
-  }
-  return ObjectModelBase<QAbstractTableModel>::columnCount(parent);
+    if (parent.isValid())
+        return 0;
+    return ObjectModelBase<QAbstractTableModel>::columnCount(parent);
 }
 
 int ObjectListModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid()) {
-    return 0;
-  }
+    if (parent.isValid())
+        return 0;
 
-  return m_objects.size();
+    return m_objects.size();
 }
 
 void ObjectListModel::objectAdded(QObject *obj)
 {
-  // see Probe::objectCreated, that promises a valid object in the main thread
-  Q_ASSERT(QThread::currentThread() == thread());
-  Q_ASSERT(obj);
-  Q_ASSERT(Probe::instance()->isValidObject(obj));
+    // see Probe::objectCreated, that promises a valid object in the main thread
+    Q_ASSERT(QThread::currentThread() == thread());
+    Q_ASSERT(obj);
+    Q_ASSERT(Probe::instance()->isValidObject(obj));
 
-  QVector<QObject*>::iterator it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
-  Q_ASSERT(it == m_objects.end() || *it != obj);
+    QVector<QObject *>::iterator it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
+    Q_ASSERT(it == m_objects.end() || *it != obj);
 
-  const int row = std::distance(m_objects.begin(), it);
-  Q_ASSERT(row >= 0 && row <= m_objects.size());
+    const int row = std::distance(m_objects.begin(), it);
+    Q_ASSERT(row >= 0 && row <= m_objects.size());
 
-  beginInsertRows(QModelIndex(), row, row);
-  m_objects.insert(it, obj);
-  Q_ASSERT(m_objects.at(row) == obj);
-  endInsertRows();
+    beginInsertRows(QModelIndex(), row, row);
+    m_objects.insert(it, obj);
+    Q_ASSERT(m_objects.at(row) == obj);
+    endInsertRows();
 }
 
 void ObjectListModel::objectRemoved(QObject *obj)
 {
-  Q_ASSERT(thread() == QThread::currentThread());
+    Q_ASSERT(thread() == QThread::currentThread());
 
-  QVector<QObject*>::iterator it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
-  if (it == m_objects.end() || *it != obj) {
-    // not found
-    return;
-  }
+    QVector<QObject *>::iterator it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
+    if (it == m_objects.end() || *it != obj) {
+        // not found
+        return;
+    }
 
-  const int row = std::distance(m_objects.begin(), it);
-  Q_ASSERT(row >= 0 && row < m_objects.size());
-  Q_ASSERT(m_objects.at(row) == obj);
+    const int row = std::distance(m_objects.begin(), it);
+    Q_ASSERT(row >= 0 && row < m_objects.size());
+    Q_ASSERT(m_objects.at(row) == obj);
 
-  beginRemoveRows(QModelIndex(), row, row);
-  m_objects.erase(it);
-  endRemoveRows();
+    beginRemoveRows(QModelIndex(), row, row);
+    m_objects.erase(it);
+    endRemoveRows();
 }
-

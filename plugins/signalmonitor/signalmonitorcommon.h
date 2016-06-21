@@ -42,13 +42,9 @@ Q_DECLARE_METATYPE(IntByteArrayHash)
 #endif
 
 namespace GammaRay {
-
 namespace StreamOperators {
-
 void registerSignalMonitorStreamOperators();
-
 }
-
 }
 
 #endif // GAMMARAY_SIGNALMONITORCOMMON_H

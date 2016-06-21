@@ -42,37 +42,35 @@ class QTextDocument;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class TextDocumentModel : public QStandardItemModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit TextDocumentModel(QObject *parent = 0);
 
     enum Roles {
-      FormatRole = UserRole,
-      BoundingBoxRole
+        FormatRole = UserRole,
+        BoundingBoxRole
     };
 
     void setDocument(QTextDocument *doc);
 
-  private:
+private:
     void fillModel();
     void fillFrame(QTextFrame *frame, QStandardItem *parent);
     void fillFrameIterator(const QTextFrame::iterator &it, QStandardItem *parent);
     void fillTable(QTextTable *table, QStandardItem *parent);
     void fillBlock(const QTextBlock &block, QStandardItem *parent);
     QStandardItem *formatItem(const QTextFormat &format);
-    void appendRow(QStandardItem *parent, QStandardItem *item,
-                   const QTextFormat &format, const QRectF &boundingBox = QRectF());
+    void appendRow(QStandardItem *parent, QStandardItem *item, const QTextFormat &format,
+                   const QRectF &boundingBox = QRectF());
 
-  private slots:
+private slots:
     void documentChanged();
 
-  private:
+private:
     QTextDocument *m_document;
 };
-
 }
 
 #endif

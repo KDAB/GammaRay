@@ -47,55 +47,53 @@ using namespace GammaRay;
 
 QStyle *InjectorStylePlugin::create(const QString &)
 {
-  inject();
+    inject();
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-  static QGuiPlatformPlugin defaultGuiPlatform;
-  return QStyleFactory::create(defaultGuiPlatform.styleName());
+    static QGuiPlatformPlugin defaultGuiPlatform;
+    return QStyleFactory::create(defaultGuiPlatform.styleName());
 #else
-  const QStringList styleNameList =
-    QGuiApplicationPrivate::platform_theme->themeHint(
-      QPlatformTheme::StyleNames).toStringList();
-  foreach (const QString &styleName, styleNameList) {
-    if (QStyle *style = QStyleFactory::create(styleName)) {
-      return style;
+    const QStringList styleNameList
+        = QGuiApplicationPrivate::platform_theme->themeHint(
+        QPlatformTheme::StyleNames).toStringList();
+    foreach (const QString &styleName, styleNameList) {
+        if (QStyle *style = QStyleFactory::create(styleName))
+            return style;
     }
-  }
-  return 0;
+    return 0;
 #endif
 }
 
 QStringList InjectorStylePlugin::keys() const
 {
-  return QStringList() << QStringLiteral("gammaray-injector");
+    return QStringList() << QStringLiteral("gammaray-injector");
 }
 
 void InjectorStylePlugin::inject()
 {
-  const QByteArray probeDllPath = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEDLL");
-  if (probeDllPath.isEmpty()) {
-    qWarning("No probe DLL specified.");
-    return;
-  }
+    const QByteArray probeDllPath = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEDLL");
+    if (probeDllPath.isEmpty()) {
+        qWarning("No probe DLL specified.");
+        return;
+    }
 
-  QLibrary probeDll(QString::fromLocal8Bit(probeDllPath));
-  probeDll.setLoadHints(QLibrary::ResolveAllSymbolsHint);
-  if (!probeDll.load()) {
-    qWarning() << "Loading probe DLL failed:" << probeDll.errorString();
-    return;
-  }
+    QLibrary probeDll(QString::fromLocal8Bit(probeDllPath));
+    probeDll.setLoadHints(QLibrary::ResolveAllSymbolsHint);
+    if (!probeDll.load()) {
+        qWarning() << "Loading probe DLL failed:" << probeDll.errorString();
+        return;
+    }
 
-  const QByteArray probeFunc = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEFUNC");
-  if (probeFunc.isEmpty()) {
-    qWarning("No probe function specified.");
-    return;
-  }
+    const QByteArray probeFunc = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEFUNC");
+    if (probeFunc.isEmpty()) {
+        qWarning("No probe function specified.");
+        return;
+    }
 
-  QFunctionPointer probeFuncHandle = probeDll.resolve(probeFunc);
-  if (probeFuncHandle) {
-    reinterpret_cast<void(*)()>(probeFuncHandle)();
-  } else {
-    qWarning() << "Resolving probe function failed:" << probeDll.errorString();
-  }
+    QFunctionPointer probeFuncHandle = probeDll.resolve(probeFunc);
+    if (probeFuncHandle)
+        reinterpret_cast<void (*)()>(probeFuncHandle)();
+    else
+        qWarning() << "Resolving probe function failed:" << probeDll.errorString();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

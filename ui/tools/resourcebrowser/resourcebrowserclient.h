@@ -33,19 +33,19 @@
 #include <common/tools/resourcebrowser/resourcebrowserinterface.h>
 
 namespace GammaRay {
-
 class ResourceBrowserClient : public ResourceBrowserInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ResourceBrowserInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ResourceBrowserInterface)
+public:
     explicit ResourceBrowserClient(QObject *parent);
     virtual ~ResourceBrowserClient();
 
-    void downloadResource(const QString &sourceFilePath, const QString &targetFilePath) Q_DECL_OVERRIDE;
-    void selectResource(const QString &sourceFilePath, int line = -1, int column = -1) Q_DECL_OVERRIDE;
+    void downloadResource(const QString &sourceFilePath,
+                          const QString &targetFilePath) Q_DECL_OVERRIDE;
+    void selectResource(const QString &sourceFilePath, int line = -1,
+                        int column = -1) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // RESOURCEBROWSERCLIENT_H

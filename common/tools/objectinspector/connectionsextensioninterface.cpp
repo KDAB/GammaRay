@@ -32,11 +32,11 @@
 
 using namespace GammaRay;
 
-ConnectionsExtensionInterface::ConnectionsExtensionInterface(const QString& name, QObject* parent):
-  QObject(parent),
-  m_name(name)
+ConnectionsExtensionInterface::ConnectionsExtensionInterface(const QString &name, QObject *parent)
+    : QObject(parent)
+    , m_name(name)
 {
-  ObjectBroker::registerObject(name, this);
+    ObjectBroker::registerObject(name, this);
 }
 
 ConnectionsExtensionInterface::~ConnectionsExtensionInterface()
@@ -45,5 +45,5 @@ ConnectionsExtensionInterface::~ConnectionsExtensionInterface()
 
 QString ConnectionsExtensionInterface::name() const
 {
-  return m_name;
+    return m_name;
 }

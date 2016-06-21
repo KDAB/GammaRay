@@ -33,13 +33,13 @@
 #include <QStringList>
 
 namespace GammaRay {
-
 /** @brief Client/Server interface of the property editor. */
 class PropertyControllerInterface : public QObject
 {
-  Q_OBJECT
-  Q_PROPERTY(QStringList availableExtensions READ availableExtensions WRITE setAvailableExtensions NOTIFY availableExtensionsChanged)
-  public:
+    Q_OBJECT
+    Q_PROPERTY(
+        QStringList availableExtensions READ availableExtensions WRITE setAvailableExtensions NOTIFY availableExtensionsChanged)
+public:
     explicit PropertyControllerInterface(const QString &name, QObject *parent = 0);
     virtual ~PropertyControllerInterface();
 
@@ -48,18 +48,18 @@ class PropertyControllerInterface : public QObject
     QStringList availableExtensions() const;
     void setAvailableExtensions(const QStringList &availableExtensions);
 
-  signals:
+signals:
     void availableExtensionsChanged();
 
-  private:
+private:
     QString m_name;
     QStringList m_availableExtensions;
 };
-
 }
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(GammaRay::PropertyControllerInterface, "com.kdab.GammaRay.PropertyControllerInterface")
+Q_DECLARE_INTERFACE(GammaRay::PropertyControllerInterface,
+                    "com.kdab.GammaRay.PropertyControllerInterface")
 QT_END_NAMESPACE
 
 #endif // GAMMARAY_PROPERTYCONTROLLERINTERFACE_H

@@ -33,9 +33,7 @@
 #include <QWidget>
 
 namespace GammaRay {
-
-namespace Ui
-{
+namespace Ui {
 class NetworkInterfaceWidget;
 }
 

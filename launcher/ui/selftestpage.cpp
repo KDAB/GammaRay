@@ -39,42 +39,43 @@
 using namespace GammaRay;
 
 SelfTestPage::SelfTestPage(QWidget *parent)
-  : QWidget(parent), ui(new Ui::SelfTestPage), m_resultModel(new QStandardItemModel(this))
+    : QWidget(parent)
+    , ui(new Ui::SelfTestPage)
+    , m_resultModel(new QStandardItemModel(this))
 {
-  ui->setupUi(this);
-  ui->resultView->setModel(m_resultModel);
-  run();
+    ui->setupUi(this);
+    ui->resultView->setModel(m_resultModel);
+    run();
 }
 
 SelfTestPage::~SelfTestPage()
 {
-  delete ui;
+    delete ui;
 }
 
 void SelfTestPage::run()
 {
-  m_resultModel->clear();
-  SelfTest selfTest;
-  connect(&selfTest, SIGNAL(information(QString)), this, SLOT(information(QString)));
-  connect(&selfTest, SIGNAL(error(QString)), this, SLOT(error(QString)));
-  selfTest.checkEverything();
+    m_resultModel->clear();
+    SelfTest selfTest;
+    connect(&selfTest, SIGNAL(information(QString)), this, SLOT(information(QString)));
+    connect(&selfTest, SIGNAL(error(QString)), this, SLOT(error(QString)));
+    selfTest.checkEverything();
 }
 
 void SelfTestPage::error(const QString &msg)
 {
-  QStandardItem *item = new QStandardItem;
-  item->setEditable(false);
-  item->setText(msg);
-  item->setIcon(style()->standardIcon(QStyle::SP_MessageBoxCritical));
-  m_resultModel->appendRow(item);
+    QStandardItem *item = new QStandardItem;
+    item->setEditable(false);
+    item->setText(msg);
+    item->setIcon(style()->standardIcon(QStyle::SP_MessageBoxCritical));
+    m_resultModel->appendRow(item);
 }
 
 void SelfTestPage::information(const QString &msg)
 {
-  QStandardItem *item = new QStandardItem;
-  item->setEditable(false);
-  item->setText(msg);
-  item->setIcon(style()->standardIcon(QStyle::SP_MessageBoxInformation));
-  m_resultModel->appendRow(item);
+    QStandardItem *item = new QStandardItem;
+    item->setEditable(false);
+    item->setText(msg);
+    item->setIcon(style()->standardIcon(QStyle::SP_MessageBoxInformation));
+    m_resultModel->appendRow(item);
 }
-

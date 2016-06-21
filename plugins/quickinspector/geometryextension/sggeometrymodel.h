@@ -38,54 +38,57 @@ class QSGGeometry;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SGGeometryModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 
     enum Role {
-      IsCoordinateRole = 257,
-      RenderRole = 258
+        IsCoordinateRole = 257,
+        RenderRole = 258
     };
 
     explicit SGGeometryModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     void setNode(QSGGeometryNode *node);
 
-    template <typename T>
-    static QStringList toStringList(void *data, int size) {
-      QStringList list;
-      T* typedData = static_cast<T*>(data);
-      for (int i = 0; i < size; i++) {
-        list << QString::number(*typedData);
-        ++typedData;
-      }
-      return list;
-    }
-    template <typename T>
-    static QVariantList toVariantList(void *data, int size) {
-      QVariantList list;
-      T* typedData = static_cast<T*>(data);
-      for (int i = 0; i < size; i++) {
-        list << QVariant::fromValue<T>(*typedData);
-        ++typedData;
-      }
-      return list;
+    template<typename T>
+    static QStringList toStringList(void *data, int size)
+    {
+        QStringList list;
+        T *typedData = static_cast<T *>(data);
+        for (int i = 0; i < size; i++) {
+            list << QString::number(*typedData);
+            ++typedData;
+        }
+        return list;
     }
 
-  private:
+    template<typename T>
+    static QVariantList toVariantList(void *data, int size)
+    {
+        QVariantList list;
+        T *typedData = static_cast<T *>(data);
+        for (int i = 0; i < size; i++) {
+            list << QVariant::fromValue<T>(*typedData);
+            ++typedData;
+        }
+        return list;
+    }
+
+private:
     QSGGeometry *m_geometry;
     QSGGeometryNode *m_node;
 };
-
 }
 
 #endif // GAMMARAY_SGGEOMETRYMODEL_H

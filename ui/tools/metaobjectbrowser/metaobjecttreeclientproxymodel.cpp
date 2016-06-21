@@ -35,8 +35,8 @@
 
 using namespace GammaRay;
 
-MetaObjectTreeClientProxyModel::MetaObjectTreeClientProxyModel(QObject* parent) :
-    QIdentityProxyModel(parent)
+MetaObjectTreeClientProxyModel::MetaObjectTreeClientProxyModel(QObject *parent)
+    : QIdentityProxyModel(parent)
 {
 }
 
@@ -44,7 +44,7 @@ MetaObjectTreeClientProxyModel::~MetaObjectTreeClientProxyModel()
 {
 }
 
-void MetaObjectTreeClientProxyModel::setSourceModel(QAbstractItemModel* source)
+void MetaObjectTreeClientProxyModel::setSourceModel(QAbstractItemModel *source)
 {
     QIdentityProxyModel::setSourceModel(source);
 
@@ -65,15 +65,18 @@ static QColor colorForRatio(double ratio)
     return color;
 }
 
-QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex& index, int role) const
+QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex &index, int role) const
 {
     if (!sourceModel())
         return QVariant();
 
-    if ((role != Qt::BackgroundRole && role != Qt::ToolTipRole) || index.column() == 0 || !m_qobjIndex.isValid())
+    if ((role != Qt::BackgroundRole && role != Qt::ToolTipRole) || index.column() == 0
+        || !m_qobjIndex.isValid())
         return QIdentityProxyModel::data(index, role);
 
-    if (!index.parent().isValid() && (index.row() != m_qobjIndex.row() || (index.row() == m_qobjIndex.row() && index.column() == 2)))
+    if (!index.parent().isValid()
+        && (index.row() != m_qobjIndex.row()
+            || (index.row() == m_qobjIndex.row() && index.column() == 2)))
         return QIdentityProxyModel::data(index, role); // top-level but not QObject, or QObject incl count
 
     const auto count = index.data(Qt::DisplayRole).toInt();
@@ -85,9 +88,8 @@ QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex& index, int role
 
     // at this point, role can only be background or tooltip
 
-    if (role == Qt::BackgroundRole) {
+    if (role == Qt::BackgroundRole)
         return colorForRatio(ratio);
-    }
 
     Q_ASSERT(role == Qt::ToolTipRole);
     return tr("%1%").arg(ratio * 100.0, 0, 'f', 2);
@@ -95,11 +97,14 @@ QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex& index, int role
 
 void MetaObjectTreeClientProxyModel::findQObjectIndex()
 {
-    auto idxList = match(index(0, 0), Qt::DisplayRole, QStringLiteral("QObject"), 1, Qt::MatchFixedString | Qt::MatchCaseSensitive);
+    auto idxList = match(index(0, 0), Qt::DisplayRole, QStringLiteral(
+                             "QObject"), 1, Qt::MatchFixedString | Qt::MatchCaseSensitive);
     if (idxList.isEmpty())
         return;
 
     m_qobjIndex = idxList.first();
-    disconnect(sourceModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(findQObjectIndex()));
-    disconnect(sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(findQObjectIndex()));
+    disconnect(sourceModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), this,
+               SLOT(findQObjectIndex()));
+    disconnect(sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
+               SLOT(findQObjectIndex()));
 }

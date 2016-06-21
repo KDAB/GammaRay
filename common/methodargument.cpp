@@ -36,21 +36,25 @@ using namespace GammaRay;
 
 class GammaRay::MethodArgumentPrivate : public QSharedData
 {
-  public:
-    MethodArgumentPrivate() : QSharedData(), data(0), unwrapVariant(true) {}
+public:
+    MethodArgumentPrivate()
+        : QSharedData()
+        , data(0)
+        , unwrapVariant(true) {}
 
-    MethodArgumentPrivate(const MethodArgumentPrivate &other) : QSharedData(other)
+    MethodArgumentPrivate(const MethodArgumentPrivate &other)
+        : QSharedData(other)
     {
-      value = other.value;
-      name = other.name;
-      data = 0;
-      unwrapVariant = other.unwrapVariant;
+        value = other.value;
+        name = other.name;
+        data = 0;
+        unwrapVariant = other.unwrapVariant;
     }
 
     ~MethodArgumentPrivate()
     {
-      if (data)
-        QMetaType::destroy(value.userType(), data);
+        if (data)
+            QMetaType::destroy(value.userType(), data);
     }
 
     QVariant value;
@@ -59,24 +63,27 @@ class GammaRay::MethodArgumentPrivate : public QSharedData
     bool unwrapVariant;
 };
 
-MethodArgument::MethodArgument() : d(new MethodArgumentPrivate)
+MethodArgument::MethodArgument()
+    : d(new MethodArgumentPrivate)
 {
 }
 
-MethodArgument::MethodArgument(const QVariant& v) : d(new MethodArgumentPrivate)
+MethodArgument::MethodArgument(const QVariant &v)
+    : d(new MethodArgumentPrivate)
 {
-  if (v.userType() == qMetaTypeId<VariantWrapper>()) {
-    d->value = v.value<VariantWrapper>().variant();
-    d->unwrapVariant = false;
-    d->name = "QVariant";
-  } else {
-    d->value = v;
-    d->unwrapVariant = true;
-    d->name = v.typeName();
-  }
+    if (v.userType() == qMetaTypeId<VariantWrapper>()) {
+        d->value = v.value<VariantWrapper>().variant();
+        d->unwrapVariant = false;
+        d->name = "QVariant";
+    } else {
+        d->value = v;
+        d->unwrapVariant = true;
+        d->name = v.typeName();
+    }
 }
 
-MethodArgument::MethodArgument(const MethodArgument& other) : d(other.d)
+MethodArgument::MethodArgument(const MethodArgument &other)
+    : d(other.d)
 {
 }
 
@@ -84,23 +91,22 @@ MethodArgument::~MethodArgument()
 {
 }
 
-MethodArgument& MethodArgument::operator=(const MethodArgument& other)
+MethodArgument &MethodArgument::operator=(const MethodArgument &other)
 {
-  d = other.d;
-  return *this;
+    d = other.d;
+    return *this;
 }
 
 MethodArgument::operator QGenericArgument() const
 {
-  if (!d->unwrapVariant) {
-    return QGenericArgument(d->name.constData(), &d->value);
-  }
+    if (!d->unwrapVariant)
+        return QGenericArgument(d->name.constData(), &d->value);
 
-  if (d->value.isValid()) {
-    d->data = QMetaType::construct(d->value.userType(), d->value.constData());
-    Q_ASSERT(d->data);
-    return QGenericArgument(d->name.constData(), d->data);
-  }
+    if (d->value.isValid()) {
+        d->data = QMetaType::construct(d->value.userType(), d->value.constData());
+        Q_ASSERT(d->data);
+        return QGenericArgument(d->name.constData(), d->data);
+    }
 
-  return QGenericArgument();
+    return QGenericArgument();
 }

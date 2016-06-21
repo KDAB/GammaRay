@@ -41,21 +41,20 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SceneInspectorInterface;
 
 namespace Ui {
-  class SceneInspectorWidget;
+class SceneInspectorWidget;
 }
 
 class SceneInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit SceneInspectorWidget(QWidget *parent = 0);
     ~SceneInspectorWidget();
 
-  private slots:
+private slots:
     void sceneSelected(int index);
     void sceneItemSelected(const QItemSelection &selection);
     void sceneRectChanged(const QRectF &rect);
@@ -66,7 +65,7 @@ class SceneInspectorWidget : public QWidget
     void itemSelected(const QRectF &boundingRect);
     void sceneContextMenu(QPoint pos);
 
-  private:
+private:
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
     QScopedPointer<Ui::SceneInspectorWidget> ui;
@@ -79,13 +78,12 @@ class SceneInspectorWidget : public QWidget
 
 class SceneInspectorUiFactory : public QObject, public StandardToolUiFactory<SceneInspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_sceneinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_sceneinspector.json")
 public:
     void initUi() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_SCENEINSPECTOR_H

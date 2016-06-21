@@ -33,8 +33,8 @@
 
 using namespace GammaRay;
 
-PaintAnalyzerTab::PaintAnalyzerTab(PropertyWidget* parent)
-  : PaintAnalyzerWidget(parent)
+PaintAnalyzerTab::PaintAnalyzerTab(PropertyWidget *parent)
+    : PaintAnalyzerWidget(parent)
 {
     setBaseName(parent->objectBaseName() + ".painting.analyzer");
 }

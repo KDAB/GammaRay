@@ -40,79 +40,88 @@
 #include <QVector>
 
 namespace GammaRay {
-
 class Message;
 
 /** @internal Exported for unit test use only. */
 class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
 {
-  Q_OBJECT
-  Q_PROPERTY(bool dynamicSortFilter READ proxyDynamicSortFilter WRITE setProxyDynamicSortFilter NOTIFY proxyDynamicSortFilterChanged)
-  Q_PROPERTY(Qt::CaseSensitivity filterCaseSensitivity READ proxyFilterCaseSensitivity WRITE setProxyFilterCaseSensitivity NOTIFY proxyFilterCaseSensitivityChanged)
-  Q_PROPERTY(int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn NOTIFY proxyFilterKeyColumnChanged)
-  Q_PROPERTY(QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp NOTIFY proxyFilterRegExpChanged)
+    Q_OBJECT
+    Q_PROPERTY(
+        bool dynamicSortFilter READ proxyDynamicSortFilter WRITE setProxyDynamicSortFilter NOTIFY proxyDynamicSortFilterChanged)
+    Q_PROPERTY(
+        Qt::CaseSensitivity filterCaseSensitivity READ proxyFilterCaseSensitivity WRITE setProxyFilterCaseSensitivity NOTIFY proxyFilterCaseSensitivityChanged)
+    Q_PROPERTY(
+        int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn NOTIFY proxyFilterKeyColumnChanged)
+    Q_PROPERTY(
+        QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp NOTIFY proxyFilterRegExpChanged)
 
-  public:
+public:
     explicit RemoteModel(const QString &serverObject, QObject *parent = 0);
     ~RemoteModel();
 
     bool isConnected() const;
 
-    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QModelIndex parent(const QModelIndex& child) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value,
+                 int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     void newMessage(const GammaRay::Message &msg);
     void serverRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
-    void serverUnregistered(const QString& objectName, Protocol::ObjectAddress objectAddress);
+    void serverUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
-  public:
+public:
     enum Roles {
-      LoadingState = ObjectModel::UserRole + 128 // TODO: Tidy up roles in general (and give loading state a proper id)
+        LoadingState = ObjectModel::UserRole + 128 // TODO: Tidy up roles in general (and give loading state a proper id)
     };
     enum NodeState {
-      NoState = 0,
-      Empty = 1,
-      Loading = 2,
-      Outdated = 4
+        NoState = 0,
+        Empty = 1,
+        Loading = 2,
+        Outdated = 4
     };
     Q_DECLARE_FLAGS(NodeStates, NodeState)
 
-  signals:
+signals:
     void proxyDynamicSortFilterChanged();
     void proxyFilterCaseSensitivityChanged();
     void proxyFilterKeyColumnChanged();
     void proxyFilterRegExpChanged();
 
-  private:
+private:
     struct Node { // represents one row
-      Node() : parent(0), rowCount(-1), columnCount(-1) {}
-      ~Node();
-      Q_DISABLE_COPY(Node)
-      // delete all cached children data, but assume row/column count on this level is still accurate
-      void clearChildrenData();
-      // forget everything we know about our children, including row/column counts
-      void clearChildrenStructure();
+        Node()
+            : parent(0)
+            , rowCount(-1)
+            , columnCount(-1) {}
+        ~Node();
+        Q_DISABLE_COPY(Node)
+        // delete all cached children data, but assume row/column count on this level is still accurate
+        void clearChildrenData();
+        // forget everything we know about our children, including row/column counts
+        void clearChildrenStructure();
 
-      // resize the initialize the column vectors
-      void allocateColumns();
-      // returns whether columns are allocated
-      bool hasColumnData() const;
+        // resize the initialize the column vectors
+        void allocateColumns();
+        // returns whether columns are allocated
+        bool hasColumnData() const;
 
-      Node* parent;
-      QVector<Node*> children;
-      qint32 rowCount;
-      qint32 columnCount;
-      QVector<QHash<int, QVariant> > data; // column -> role -> data
-      QVector<Qt::ItemFlags> flags;        // column -> flags
-      QVector<NodeStates> state;           // column -> state (cache outdated, waiting for data, etc)
+        Node *parent;
+        QVector<Node *> children;
+        qint32 rowCount;
+        qint32 columnCount;
+        QVector<QHash<int, QVariant> > data; // column -> role -> data
+        QVector<Qt::ItemFlags> flags;      // column -> flags
+        QVector<NodeStates> state;         // column -> state (cache outdated, waiting for data, etc)
     };
 
     void clear();
@@ -120,14 +129,14 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
 
     bool checkSyncBarrier(const Message &msg);
 
-    Node* nodeForIndex(const QModelIndex &index) const;
-    Node* nodeForIndex(const Protocol::ModelIndex &index) const;
-    QModelIndex modelIndexForNode(GammaRay::RemoteModel::Node* node, int column) const;
+    Node *nodeForIndex(const QModelIndex &index) const;
+    Node *nodeForIndex(const Protocol::ModelIndex &index) const;
+    QModelIndex modelIndexForNode(GammaRay::RemoteModel::Node *node, int column) const;
 
     /** Checks if @p ancestor is a (grand)parent of @p child. */
     bool isAncestor(Node *ancestor, Node *child) const;
 
-    NodeStates stateForColumn(Node* node, int columnIndex) const;
+    NodeStates stateForColumn(Node *node, int columnIndex) const;
 
     void requestRowColumnCount(const QModelIndex &index) const;
     void requestDataAndFlags(const QModelIndex &index) const;
@@ -142,7 +151,8 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
     /// execute a removeRows() operation
     void doRemoveRows(Node *parentNode, int first, int last);
     /// execute a rowsMoved() operation
-    void doMoveRows(Node *sourceParentNode, int sourceStart, int sourceEnd, Node* destParentNode, int destStart);
+    void doMoveRows(Node *sourceParentNode, int sourceStart, int sourceEnd, Node *destParentNode,
+                    int destStart);
 
     /// execute a insertColumns() operation
     void doInsertColumns(Node *parentNode, int first, int last);
@@ -163,13 +173,13 @@ private slots:
     void doRequestDataAndFlags() const;
 
 private:
-    Node* m_root;
+    Node *m_root;
 
     mutable QVector<QHash<int, QVariant> > m_horizontalHeaders; // section -> role -> data
     mutable QVector<QHash<int, QVariant> > m_verticalHeaders; // section -> role -> data
 
     mutable QVector<Protocol::ModelIndex> m_pendingDataRequests;
-    QTimer* m_pendingDataRequestsTimer;
+    QTimer *m_pendingDataRequestsTimer;
 
     QString m_serverObject;
     Protocol::ObjectAddress m_myAddress;
@@ -192,7 +202,6 @@ private:
     virtual void sendMessage(const Message &msg) const;
     friend class FakeRemoteModel;
 };
-
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::RemoteModel::NodeStates)

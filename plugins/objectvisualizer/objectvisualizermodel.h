@@ -33,7 +33,6 @@
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
 namespace GammaRay {
-
 /** Augment the regular object tree by some information needed for the visualization
  * on the client side.
  */
@@ -42,17 +41,16 @@ class ObjectVisualizerModel : public KRecursiveFilterProxyModel
     Q_OBJECT
 public:
     enum Role {
-      ObjectId = ObjectModel::UserRole,
-      ObjectDisplayName,
-      ClassName
+        ObjectId = ObjectModel::UserRole,
+        ObjectDisplayName,
+        ClassName
     };
 
     explicit ObjectVisualizerModel(QObject *parent);
     ~ObjectVisualizerModel();
 
-    QVariant data(const QModelIndex& proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_OBJECTVISUALIZERMODEL_H

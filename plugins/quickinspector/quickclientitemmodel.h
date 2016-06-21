@@ -32,18 +32,16 @@
 #include <QIdentityProxyModel>
 
 namespace GammaRay {
-
 /** UI-dependent (and thus client-side) bits of the item tree model. */
 class QuickClientItemModel : public QIdentityProxyModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit QuickClientItemModel(QObject *parent = 0);
     ~QuickClientItemModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_QUICKCLIENTITEMMODEL_H

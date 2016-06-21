@@ -30,12 +30,12 @@
 
 using namespace GammaRay;
 
-PEFile::PEFile(const QString& filePath) :
-    m_file(filePath),
-    m_begin(Q_NULLPTR),
-    m_end(Q_NULLPTR),
-    m_fileHeader(Q_NULLPTR),
-    m_importDesc(Q_NULLPTR)
+PEFile::PEFile(const QString &filePath)
+    : m_file(filePath)
+    , m_begin(Q_NULLPTR)
+    , m_end(Q_NULLPTR)
+    , m_fileHeader(Q_NULLPTR)
+    , m_importDesc(Q_NULLPTR)
 {
     if (!m_file.open(QFile::ReadOnly))
         return;
@@ -69,14 +69,14 @@ bool PEFile::parse()
         return false;
 
     // check signatures
-    const IMAGE_DOS_HEADER *dosHdr = reinterpret_cast<const IMAGE_DOS_HEADER*>(data);
+    const IMAGE_DOS_HEADER *dosHdr = reinterpret_cast<const IMAGE_DOS_HEADER *>(data);
     if (dosHdr->e_magic != IMAGE_DOS_SIGNATURE)
         return false;
     data += dosHdr->e_lfanew;
     if (data + sizeof(quint32) >= m_end)
         return false;
 
-    const quint32 *peHdr = reinterpret_cast<const quint32*>(data);
+    const quint32 *peHdr = reinterpret_cast<const quint32 *>(data);
     if (*peHdr != IMAGE_NT_SIGNATURE)
         return false;
     data += sizeof(quint32);
@@ -84,24 +84,28 @@ bool PEFile::parse()
         return false;
 
     // file header (for architecture)
-    m_fileHeader = reinterpret_cast<const IMAGE_FILE_HEADER*>(data);
+    m_fileHeader = reinterpret_cast<const IMAGE_FILE_HEADER *>(data);
     data += sizeof(IMAGE_FILE_HEADER);
     if (data + sizeof(IMAGE_OPTIONAL_HEADER64) >= m_end)
         return false;
 
     // optional headers (for import descriptor)
-    const IMAGE_OPTIONAL_HEADER32 *optHdr32 = reinterpret_cast<const IMAGE_OPTIONAL_HEADER32*>(data);
+    const IMAGE_OPTIONAL_HEADER32 *optHdr32
+        = reinterpret_cast<const IMAGE_OPTIONAL_HEADER32 *>(data);
     if (optHdr32->Magic == IMAGE_NT_OPTIONAL_HDR32_MAGIC) {
-        data = rvaToFile(m_fileHeader, optHdr32->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
+        data = rvaToFile(m_fileHeader,
+                         optHdr32->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
     } else {
-        const IMAGE_OPTIONAL_HEADER64 *optHdr64 = reinterpret_cast<const IMAGE_OPTIONAL_HEADER64*>(data);
+        const IMAGE_OPTIONAL_HEADER64 *optHdr64
+            = reinterpret_cast<const IMAGE_OPTIONAL_HEADER64 *>(data);
         if (optHdr64->Magic != IMAGE_NT_OPTIONAL_HDR64_MAGIC)
             return false;
-        data = rvaToFile(m_fileHeader, optHdr64->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
+        data = rvaToFile(m_fileHeader,
+                         optHdr64->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
     }
     if (data + sizeof(IMAGE_IMPORT_DESCRIPTOR) >= m_end)
         return false;
-    m_importDesc = reinterpret_cast<const IMAGE_IMPORT_DESCRIPTOR*>(data);
+    m_importDesc = reinterpret_cast<const IMAGE_IMPORT_DESCRIPTOR *>(data);
 
     return true;
 }
@@ -116,9 +120,11 @@ QString PEFile::architecture() const
     if (!m_fileHeader)
         return QString();
 
-    switch(m_fileHeader->Machine) {
-        case IMAGE_FILE_MACHINE_I386: return QStringLiteral("i686");
-        case IMAGE_FILE_MACHINE_AMD64: return QStringLiteral("x86_64");
+    switch (m_fileHeader->Machine) {
+    case IMAGE_FILE_MACHINE_I386:
+        return QStringLiteral("i686");
+    case IMAGE_FILE_MACHINE_AMD64:
+        return QStringLiteral("x86_64");
     }
 
     return QString();
@@ -132,40 +138,44 @@ QStringList PEFile::imports() const
 
     auto importDesc = m_importDesc;
     while (importDesc->Name) {
-        const char* libraryName = reinterpret_cast<const char*>(rvaToFile(m_fileHeader, importDesc->Name));
+        const char *libraryName
+            = reinterpret_cast<const char *>(rvaToFile(m_fileHeader, importDesc->Name));
         if (libraryName)
             libs.push_back(QString::fromAscii(libraryName));
         importDesc++;
-        if (reinterpret_cast<const uchar*>(importDesc) + sizeof(IMAGE_IMPORT_DESCRIPTOR) >= m_end)
+        if (reinterpret_cast<const uchar *>(importDesc) + sizeof(IMAGE_IMPORT_DESCRIPTOR) >= m_end)
             return QStringList();
     }
 
     return libs;
 }
 
-const uchar* PEFile::rvaToFile(const IMAGE_FILE_HEADER* hdr, DWORD rva) const
+const uchar *PEFile::rvaToFile(const IMAGE_FILE_HEADER *hdr, DWORD rva) const
 {
     Q_ASSERT(m_begin);
     Q_ASSERT(m_end);
     Q_ASSERT(hdr);
 
-    const IMAGE_SECTION_HEADER* sectionHdr = sectionForRVA(hdr, rva);
+    const IMAGE_SECTION_HEADER *sectionHdr = sectionForRVA(hdr, rva);
     if (!sectionHdr)
         return Q_NULLPTR;
     return m_begin + rva - sectionHdr->VirtualAddress + sectionHdr->PointerToRawData;
 }
 
-const IMAGE_SECTION_HEADER* PEFile::sectionForRVA(const IMAGE_FILE_HEADER* hdr, DWORD rva) const
+const IMAGE_SECTION_HEADER *PEFile::sectionForRVA(const IMAGE_FILE_HEADER *hdr, DWORD rva) const
 {
     Q_ASSERT(hdr);
     Q_ASSERT(m_end);
 
-    const uchar *data = reinterpret_cast<const uchar*>(hdr);
-    auto sectionHdr = reinterpret_cast<const IMAGE_SECTION_HEADER*>(data + sizeof(IMAGE_FILE_HEADER) + hdr->SizeOfOptionalHeader);
+    const uchar *data = reinterpret_cast<const uchar *>(hdr);
+    auto sectionHdr
+        = reinterpret_cast<const IMAGE_SECTION_HEADER *>(data + sizeof(IMAGE_FILE_HEADER)
+                                                         + hdr->SizeOfOptionalHeader);
     for (int i = 0; i < hdr->NumberOfSections; ++i, ++sectionHdr) {
-        if (reinterpret_cast<const uchar*>(sectionHdr +1) >= m_end)
+        if (reinterpret_cast<const uchar *>(sectionHdr +1) >= m_end)
             return Q_NULLPTR;
-        if (rva >= sectionHdr->VirtualAddress && rva < sectionHdr->VirtualAddress + sectionHdr->Misc.VirtualSize)
+        if (rva >= sectionHdr->VirtualAddress
+            && rva < sectionHdr->VirtualAddress + sectionHdr->Misc.VirtualSize)
             return sectionHdr;
     }
     return Q_NULLPTR;

@@ -49,33 +49,32 @@ class vtkGraphLayoutView;
 class vtkMutableDirectedGraph;
 
 namespace GammaRay {
-
 class VtkWidget : public QVTKWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit VtkWidget(QWidget *parent = 0);
     virtual ~VtkWidget();
 
     vtkGraphLayoutView *layoutView() const
     {
-      return m_view;
+        return m_view;
     }
 
-    void setModel(QAbstractItemModel* model);
-    void setSelectionModel(QItemSelectionModel* selectionModel);
+    void setModel(QAbstractItemModel *model);
+    void setSelectionModel(QItemSelectionModel *selectionModel);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void resetCamera();
 
-    qulonglong addObject(const QModelIndex& index);
+    qulonglong addObject(const QModelIndex &index);
     bool removeObject(const QModelIndex &index);
 
     void clear();
     void repopulate();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     bool removeObjectInternal(qulonglong objectId);
     void doRepopulate();
     void selectionChanged();
@@ -87,20 +86,20 @@ class VtkWidget : public QVTKWidget
     void objectRowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
     void objectDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
-  protected:
+protected:
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);
 
     bool filterAcceptsObject(const QModelIndex &index) const;
 
-  private:
+private:
     void setupGraph();
     void setupRenderer();
 
     bool m_mousePressed;
     QTimer *m_updateTimer;
-    QAbstractItemModel* m_model;
-    QItemSelectionModel* m_selectionModel;
+    QAbstractItemModel *m_model;
+    QItemSelectionModel *m_selectionModel;
     QTimer *m_repopulateTimer;
 
     // TODO: Instead of tracking all available objects, make Probe::m_validObjects public?
@@ -113,7 +112,6 @@ class VtkWidget : public QVTKWidget
     vtkGraphLayoutView *m_view;
     vtkSmartPointer<vtkMutableDirectedGraph> m_graph;
 };
-
 }
 
 #endif // GAMMARAY_VTKWIDGET_H

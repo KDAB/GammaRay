@@ -48,23 +48,24 @@ namespace GammaRay {
 class QuickScenePreviewWidget;
 
 namespace Ui {
-  class QuickInspectorWidget;
+class QuickInspectorWidget;
 }
 
 class QuickInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit QuickInspectorWidget(QWidget *parent = 0);
     ~QuickInspectorWidget();
 
-  private slots:
+private slots:
     void itemSelectionChanged(const QItemSelection &selection);
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
-    void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
+    void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                              const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);
 
-  private:
+private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
     UIStateManager m_stateManager;
     QuickScenePreviewWidget *m_previewWidget;
@@ -73,13 +74,12 @@ class QuickInspectorWidget : public QWidget
 
 class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<QuickInspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_quickinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_quickinspector.json")
 
-  void initUi() Q_DECL_OVERRIDE;
+    void initUi() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif

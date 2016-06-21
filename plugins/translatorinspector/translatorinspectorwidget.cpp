@@ -38,59 +38,69 @@
 using namespace GammaRay;
 
 TranslatorInspectorClient::TranslatorInspectorClient(const QString &name, QObject *parent)
-  : TranslatorInspectorInterface(name, parent)
+    : TranslatorInspectorInterface(name, parent)
 {
 }
+
 void TranslatorInspectorClient::sendLanguageChangeEvent()
 {
-  Endpoint::instance()->invokeObject(name(), "sendLanguageChangeEvent");
+    Endpoint::instance()->invokeObject(name(), "sendLanguageChangeEvent");
 }
+
 void TranslatorInspectorClient::resetTranslations()
 {
-  Endpoint::instance()->invokeObject(name(), "resetTranslations");
+    Endpoint::instance()->invokeObject(name(), "resetTranslations");
 }
 
 TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::TranslatorInspectorWidget)
-  , m_stateManager(this)
+    : QWidget(parent)
+    , ui(new Ui::TranslatorInspectorWidget)
+    , m_stateManager(this)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  m_inspector = ObjectBroker::object<TranslatorInspectorInterface *>(QStringLiteral("com.kdab.GammaRay.TranslatorInspector"));
+    m_inspector
+        = ObjectBroker::object<TranslatorInspectorInterface *>(QStringLiteral(
+                                                                   "com.kdab.GammaRay.TranslatorInspector"));
 
-  ui->translatorList->header()->setObjectName("translatorListHeader");
-  ui->translatorList->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-  ui->translatorList->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  ui->translatorList->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
-  ui->translatorList->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslatorsModel")));
-  ui->translatorList->setSelectionModel(ObjectBroker::selectionModel(ui->translatorList->model()));
+    ui->translatorList->header()->setObjectName("translatorListHeader");
+    ui->translatorList->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->translatorList->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->translatorList->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    ui->translatorList->setModel(ObjectBroker::model(QStringLiteral(
+                                                         "com.kdab.GammaRay.TranslatorsModel")));
+    ui->translatorList->setSelectionModel(ObjectBroker::selectionModel(ui->translatorList->model()));
 
-  connect(ui->languageChangeButton, SIGNAL(clicked()), m_inspector, SLOT(sendLanguageChangeEvent()));
-  connect(ui->resetTranslationsButton, SIGNAL(clicked()), m_inspector, SLOT(resetTranslations()));
+    connect(ui->languageChangeButton, SIGNAL(clicked()), m_inspector, SLOT(
+                sendLanguageChangeEvent()));
+    connect(ui->resetTranslationsButton, SIGNAL(clicked()), m_inspector, SLOT(resetTranslations()));
 
-  // searching for translations
-  {
-    ui->translationsView->header()->setObjectName("translationsViewHeader");
-    ui->translationsView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-    ui->translationsView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel")));
-    ui->translationsView->setSelectionModel(ObjectBroker::selectionModel(ui->translationsView->model()));
+    // searching for translations
+    {
+        ui->translationsView->header()->setObjectName("translationsViewHeader");
+        ui->translationsView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+        ui->translationsView->setModel(ObjectBroker::model(QStringLiteral(
+                                                               "com.kdab.GammaRay.TranslationsModel")));
+        ui->translationsView->setSelectionModel(ObjectBroker::selectionModel(ui->translationsView->
+                                                                             model()));
 
-    new SearchLineController(ui->translationsSearchLine, ui->translationsView->model());
-  }
+        new SearchLineController(ui->translationsSearchLine, ui->translationsView->model());
+    }
 
-  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
 }
+
 TranslatorInspectorWidget::~TranslatorInspectorWidget()
 {
 }
 
-static QObject* translatorInspectorClientFactory(const QString &name, QObject *parent)
+static QObject *translatorInspectorClientFactory(const QString &name, QObject *parent)
 {
-  return new TranslatorInspectorClient(name, parent);
+    return new TranslatorInspectorClient(name, parent);
 }
 
 void TranslatorInspectorWidgetFactory::initUi()
 {
-  ObjectBroker::registerClientObjectFactoryCallback<TranslatorInspectorInterface *>(translatorInspectorClientFactory);
+    ObjectBroker::registerClientObjectFactoryCallback<TranslatorInspectorInterface *>(
+        translatorInspectorClientFactory);
 }

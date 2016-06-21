@@ -30,30 +30,29 @@
 #include <core/toolfactory.h>
 
 namespace GammaRay {
-
 class GraphViewer : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit GraphViewer(ProbeInterface *probe, QObject *parent = 0);
     ~GraphViewer();
 };
 
 class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, GraphViewer>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_objectvisualizer.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_objectvisualizer.json")
 
-  public:
-    explicit GraphViewerFactory(QObject *parent = 0) : QObject(parent)
+public:
+    explicit GraphViewerFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_GRAPHVIEWER_H

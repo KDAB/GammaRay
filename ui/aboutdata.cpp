@@ -37,7 +37,8 @@
 using namespace GammaRay;
 
 namespace GammaRay {
-class AboutDataContext {
+class AboutDataContext
+{
     Q_DECLARE_TR_FUNCTIONS(GammaRay::AboutDataContext)
 };
 }
@@ -46,11 +47,11 @@ QStringList AboutData::authors()
 {
     QFile f(QStringLiteral(":/gammaray/authors"));
     if (f.open(QFile::ReadOnly)) {
-      return QString::fromUtf8(f.readAll()).split('\n', QString::SkipEmptyParts);
+        return QString::fromUtf8(f.readAll()).split('\n', QString::SkipEmptyParts);
     } else {
-      Q_ASSERT_X(0, "AboutData::authors()", "cannot open the authors resource file");
-      qWarning() << "Failed to open the authors resource file";
-      return QStringList(AboutDataContext::tr("Unable to read the Authors list"));
+        Q_ASSERT_X(0, "AboutData::authors()", "cannot open the authors resource file");
+        qWarning() << "Failed to open the authors resource file";
+        return QStringList(AboutDataContext::tr("Unable to read the Authors list"));
     }
 }
 

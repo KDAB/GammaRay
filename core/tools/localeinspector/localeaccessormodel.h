@@ -33,17 +33,16 @@
 #include <QVector>
 
 namespace GammaRay {
-
 class LocaleDataAccessorRegistry;
 struct LocaleDataAccessor;
 
 class LocaleAccessorModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  Q_ENUMS(CustomRoles)
-  public:
+    Q_OBJECT
+    Q_ENUMS(CustomRoles)
+public:
     enum CustomRoles {
-      AccessorRole = UserRole + 1
+        AccessorRole = UserRole + 1
     };
 
     explicit LocaleAccessorModel(LocaleDataAccessorRegistry *registry, QObject *parent = 0);
@@ -52,13 +51,13 @@ class LocaleAccessorModel : public QAbstractTableModel
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value,
+                 int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
-  private:
-    QVector<LocaleDataAccessor*> enabledAccessors;
+private:
+    QVector<LocaleDataAccessor *> enabledAccessors;
     LocaleDataAccessorRegistry *m_registry;
 };
-
 }
 
 #endif

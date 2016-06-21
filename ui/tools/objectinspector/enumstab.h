@@ -32,24 +32,22 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 class Ui_EnumsTab;
 class PropertyWidget;
 
 class EnumsTab : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit EnumsTab(PropertyWidget *parent);
-  virtual ~EnumsTab();
+    explicit EnumsTab(PropertyWidget *parent);
+    virtual ~EnumsTab();
 
 private:
-  void setObjectBaseName(const QString &baseName);
+    void setObjectBaseName(const QString &baseName);
 
 private:
-  Ui_EnumsTab *m_ui;
+    Ui_EnumsTab *m_ui;
 };
-
 }
 
 #endif // ENUMSTAB_H

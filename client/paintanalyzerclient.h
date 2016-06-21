@@ -32,15 +32,13 @@
 #include <common/paintanalyzerinterface.h>
 
 namespace GammaRay {
-
 class PaintAnalyzerClient : public PaintAnalyzerInterface
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::PaintAnalyzerInterface)
 public:
-    explicit PaintAnalyzerClient(const QString& name, QObject* parent = Q_NULLPTR);
+    explicit PaintAnalyzerClient(const QString &name, QObject *parent = Q_NULLPTR);
 };
-
 }
 
 #endif // GAMMARAY_PAINTANALYZERCLIENT_H

@@ -39,12 +39,11 @@ class QStringList;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class AbstractInjector : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     typedef QSharedPointer<AbstractInjector> Ptr;
     virtual ~AbstractInjector();
 
@@ -60,9 +59,8 @@ class AbstractInjector : public QObject
      *
      * @return True if the launch succeeded, false otherwise.
      */
-    virtual bool launch(const QStringList &programAndArgs,
-                        const QString &probeDll, const QString &probeFunc,
-                        const QProcessEnvironment &env);
+    virtual bool launch(const QStringList &programAndArgs, const QString &probeDll,
+                        const QString &probeFunc, const QProcessEnvironment &env);
 
     /**
      * Attach to the running application with process id @p pid
@@ -118,7 +116,6 @@ signals:
 private:
     QString m_workingDir;
 };
-
 }
 
 #endif // ABSTRACTINJECTOR_H

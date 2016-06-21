@@ -32,7 +32,6 @@
 #include "qt3dgeometryextensioninterface.h"
 
 namespace GammaRay {
-
 class Qt3DGeometryExtensionClient : public Qt3DGeometryExtensionInterface
 {
     Q_OBJECT

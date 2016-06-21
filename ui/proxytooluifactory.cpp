@@ -31,36 +31,36 @@
 using namespace GammaRay;
 
 ProxyToolUiFactory::ProxyToolUiFactory(const PluginInfo &pluginInfo, QObject *parent)
-  : ProxyFactory<ToolUiFactory>(pluginInfo, parent)
+    : ProxyFactory<ToolUiFactory>(pluginInfo, parent)
 {
 }
 
 bool ProxyToolUiFactory::isValid() const
 {
-  return pluginInfo().isValid();
+    return pluginInfo().isValid();
 }
 
 bool ProxyToolUiFactory::remotingSupported() const
 {
-  return pluginInfo().remoteSupport();
+    return pluginInfo().remoteSupport();
 }
 
 QWidget *ProxyToolUiFactory::createWidget(QWidget *parentWidget)
 {
-  loadPlugin();
-  ToolUiFactory *fac = factory();
-  if (!fac) {
-    return new QLabel(tr("Plugin '%1' could not be loaded.").arg(pluginInfo().path()), parentWidget);
-  }
-  Q_ASSERT(fac);
-  return fac->createWidget(parentWidget);
+    loadPlugin();
+    ToolUiFactory *fac = factory();
+    if (!fac)
+        return new QLabel(tr("Plugin '%1' could not be loaded.").arg(
+                              pluginInfo().path()), parentWidget);
+    Q_ASSERT(fac);
+    return fac->createWidget(parentWidget);
 }
 
 void ProxyToolUiFactory::initUi()
 {
-  loadPlugin();
-  ToolUiFactory *fac = factory();
-  if (!fac)
-    return;
-  return fac->initUi();
+    loadPlugin();
+    ToolUiFactory *fac = factory();
+    if (!fac)
+        return;
+    return fac->initUi();
 }

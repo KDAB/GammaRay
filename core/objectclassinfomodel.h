@@ -33,20 +33,19 @@
 #include <QMetaClassInfo>
 
 namespace GammaRay {
-
 class ObjectClassInfoModel : public MetaObjectModel<QMetaClassInfo,
                                                     &QMetaObject::classInfo,
                                                     &QMetaObject::classInfoCount,
                                                     &QMetaObject::classInfoOffset>
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ObjectClassInfoModel(QObject *parent = 0);
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant metaData(const QModelIndex &index, const QMetaClassInfo &classInfo, int role) const Q_DECL_OVERRIDE;
+    QVariant metaData(const QModelIndex &index, const QMetaClassInfo &classInfo,
+                      int role) const Q_DECL_OVERRIDE;
     QString columnHeader(int index) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_OBJECTCLASSINFOMODEL_H

@@ -42,85 +42,85 @@
 #include <QString>
 
 namespace GammaRay {
-
 namespace InjectorFactory {
-
 AbstractInjector::Ptr createInjector(const QString &name, const QString &executableOverride)
 {
 #ifndef Q_OS_WIN
-  if (name == QLatin1String("gdb")) {
-    return AbstractInjector::Ptr(new GdbInjector(executableOverride));
-  }
-  if (name == QLatin1String("lldb")) {
-    return AbstractInjector::Ptr(new LldbInjector(executableOverride));
-  }
+    if (name == QLatin1String("gdb"))
+        return AbstractInjector::Ptr(new GdbInjector(executableOverride));
+    if (name == QLatin1String("lldb"))
+        return AbstractInjector::Ptr(new LldbInjector(executableOverride));
+
 #else
-  Q_UNUSED(executableOverride);
+    Q_UNUSED(executableOverride);
 #endif
-  if (name == QLatin1String("style")) {
-    return AbstractInjector::Ptr(new StyleInjector);
-  }
+    if (name == QLatin1String("style"))
+        return AbstractInjector::Ptr(new StyleInjector);
+
 #ifndef Q_OS_WIN
-  if (name == QLatin1String("preload")) {
-    return AbstractInjector::Ptr(new PreloadInjector);
-  }
+    if (name == QLatin1String("preload"))
+        return AbstractInjector::Ptr(new PreloadInjector);
+
 #else
-  if (name == QLatin1String("windll")) {
-    return AbstractInjector::Ptr(new WinDllInjector);
-  }
+    if (name == QLatin1String("windll"))
+        return AbstractInjector::Ptr(new WinDllInjector);
+
 #endif
-  return AbstractInjector::Ptr(0);
+    return AbstractInjector::Ptr(0);
 }
 
 #if !defined(Q_OS_WIN)
 static AbstractInjector::Ptr findFirstWorkingInjector(const QStringList &types)
 {
-  foreach (const QString &type, types) {
-    AbstractInjector::Ptr injector = createInjector(type);
-    if (injector->selfTest())
-      return injector;
-  }
-  return AbstractInjector::Ptr(0);
+    foreach (const QString &type, types) {
+        AbstractInjector::Ptr injector = createInjector(type);
+        if (injector->selfTest())
+            return injector;
+    }
+    return AbstractInjector::Ptr(0);
 }
+
 #endif
 
 AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi)
 {
 #if defined(Q_OS_MAC)
-  if (abi.majorQtVersion() >= 5 && abi.minorQtVersion() >= 4)
-    return createInjector(QStringLiteral("preload"));
-  return findFirstWorkingInjector(QStringList() << QStringLiteral("lldb") << QStringLiteral("gdb"));
+    if (abi.majorQtVersion() >= 5 && abi.minorQtVersion() >= 4)
+        return createInjector(QStringLiteral("preload"));
+    return findFirstWorkingInjector(QStringList() << QStringLiteral("lldb")
+                                                  << QStringLiteral("gdb"));
 #elif defined(Q_OS_UNIX)
-  Q_UNUSED(abi);
-  return createInjector(QStringLiteral("preload"));
+    Q_UNUSED(abi);
+    return createInjector(QStringLiteral("preload"));
 #else
-  Q_UNUSED(abi);
-  return createInjector(QStringLiteral("windll"));
+    Q_UNUSED(abi);
+    return createInjector(QStringLiteral("windll"));
 #endif
 }
 
 AbstractInjector::Ptr defaultInjectorForAttach()
 {
 #if defined(Q_OS_MAC)
-  return findFirstWorkingInjector(QStringList() << QStringLiteral("lldb") << QStringLiteral("gdb"));
+    return findFirstWorkingInjector(QStringList() << QStringLiteral("lldb")
+                                                  << QStringLiteral("gdb"));
 #elif !defined(Q_OS_WIN)
-  return findFirstWorkingInjector(QStringList() << QStringLiteral("gdb") << QStringLiteral("lldb"));
+    return findFirstWorkingInjector(QStringList() << QStringLiteral("gdb")
+                                                  << QStringLiteral("lldb"));
 #else
-  return createInjector(QStringLiteral("windll"));
+    return createInjector(QStringLiteral("windll"));
 #endif
 }
 
 QStringList availableInjectors()
 {
-  QStringList types;
+    QStringList types;
 #ifndef Q_OS_WIN
-  types << QStringLiteral("preload") << QStringLiteral("gdb") << QStringLiteral("lldb");
+    types << QStringLiteral("preload") << QStringLiteral("gdb") << QStringLiteral("lldb");
 #else
-  types << QStringLiteral("windll");
+    types << QStringLiteral("windll");
 #endif
-  types << QStringLiteral("style");
-  return types;
+    types << QStringLiteral("style");
+    return types;
 }
-
 }
 }

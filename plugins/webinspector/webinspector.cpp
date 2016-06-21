@@ -47,72 +47,72 @@
 using namespace GammaRay;
 
 WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  WebViewModel *webViewModel = new WebViewModel(this);
-  webViewModel->setSourceModel(probe->objectListModel());
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.WebPages"), webViewModel);
+    WebViewModel *webViewModel = new WebViewModel(this);
+    webViewModel->setSourceModel(probe->objectListModel());
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.WebPages"), webViewModel);
 
-  connect(probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectAdded(QObject*)));
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectAdded(QObject*)));
 
-  const QUrl serverUrl = Endpoint::instance()->serverAddress();
-  QString serverAddress(GAMMARAY_DEFAULT_ANY_ADDRESS);
-  if (serverUrl.scheme() == QLatin1String("tcp"))
-    serverAddress = serverUrl.host();
-  qputenv("QTWEBKIT_INSPECTOR_SERVER", serverAddress.toLocal8Bit() + ':' + QByteArray::number(Endpoint::defaultPort() + 1));
+    const QUrl serverUrl = Endpoint::instance()->serverAddress();
+    QString serverAddress(GAMMARAY_DEFAULT_ANY_ADDRESS);
+    if (serverUrl.scheme() == QLatin1String("tcp"))
+        serverAddress = serverUrl.host();
+    qputenv("QTWEBKIT_INSPECTOR_SERVER",
+            serverAddress.toLocal8Bit() + ':' + QByteArray::number(Endpoint::defaultPort() + 1));
 }
 
-void WebInspector::objectAdded(QObject* obj)
+void WebInspector::objectAdded(QObject *obj)
 {
-  // both of the following cases seem to be needed, the web view object changes depending on
-  // you have "import QtWebKit.experimental 1.0" or not...
-  QObject *experimental = 0;
-  if (obj->inherits("QQuickWebView")) {
-    experimental = obj->property("experimental").value<QObject*>();
-  }
-  if (obj->inherits("QQuickWebViewExperimental"))
-    experimental = obj;
+    // both of the following cases seem to be needed, the web view object changes depending on
+    // you have "import QtWebKit.experimental 1.0" or not...
+    QObject *experimental = 0;
+    if (obj->inherits("QQuickWebView"))
+        experimental = obj->property("experimental").value<QObject *>();
+    if (obj->inherits("QQuickWebViewExperimental"))
+        experimental = obj;
 
-  if (!experimental)
-    return;
+    if (!experimental)
+        return;
 
-  // FIXME: this conversion fails with "QMetaProperty::read: Unable to handle unregistered datatype 'QWebPreferences*' for property 'QQuickWebViewExperimental::preferences'"
-  // if we don't have "import QtWebKit.experimental 1.0"
-  QObject *prefs = experimental->property("preferences").value<QObject*>();
-  if (!prefs)
-    return;
-  prefs->setProperty("developerExtrasEnabled", true);
+    // FIXME: this conversion fails with "QMetaProperty::read: Unable to handle unregistered datatype 'QWebPreferences*' for property 'QQuickWebViewExperimental::preferences'"
+    // if we don't have "import QtWebKit.experimental 1.0"
+    QObject *prefs = experimental->property("preferences").value<QObject *>();
+    if (!prefs)
+        return;
+    prefs->setProperty("developerExtrasEnabled", true);
 }
 
-
-WebInspectorFactory::WebInspectorFactory(QObject* parent): QObject(parent)
+WebInspectorFactory::WebInspectorFactory(QObject *parent)
+    : QObject(parent)
 {
-  QVector<QByteArray> types;
+    QVector<QByteArray> types;
 #ifdef HAVE_QT_WEBKIT1
-  types << QWebPage::staticMetaObject.className();
+    types << QWebPage::staticMetaObject.className();
 #endif
-  types << QByteArrayLiteral("QQuickWebView");
-  setSupportedTypes(types);
+    types << QByteArrayLiteral("QQuickWebView");
+    setSupportedTypes(types);
 }
 
 QString WebInspectorFactory::id() const
 {
-  return WebInspector::staticMetaObject.className();
+    return WebInspector::staticMetaObject.className();
 }
 
-void WebInspectorFactory::init(ProbeInterface* probe)
+void WebInspectorFactory::init(ProbeInterface *probe)
 {
-  new WebInspector(probe, probe->probe());
+    new WebInspector(probe, probe->probe());
 }
 
 QString WebInspectorFactory::name() const
 {
-  return tr("Web Pages");
+    return tr("Web Pages");
 }
 
 bool WebInspectorFactory::isHidden() const
 {
-  return false;
+    return false;
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

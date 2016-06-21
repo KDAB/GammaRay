@@ -38,58 +38,60 @@ using namespace GammaRay;
 
 class Emitter : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 signals:
-  void signal1(int);
-  void signal2(const QString &);
+    void signal1(int);
+    void signal2(const QString &);
 
-  friend class MultiSignalMapperTest;
+    friend class MultiSignalMapperTest;
 };
 
 Q_DECLARE_METATYPE(QVector<QVariant>)
 
 class MultiSignalMapperTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit MultiSignalMapperTest(QObject* parent = 0) : QObject(parent)
-  {
-    qRegisterMetaType<QVector<QVariant> >();
-  }
+    explicit MultiSignalMapperTest(QObject *parent = 0)
+        : QObject(parent)
+    {
+        qRegisterMetaType<QVector<QVariant> >();
+    }
+
 private:
-  QMetaMethod method(QObject* obj, const char* name)
-  {
-    return obj->metaObject()->method(obj->metaObject()->indexOfSignal(name));
-  }
+    QMetaMethod method(QObject *obj, const char *name)
+    {
+        return obj->metaObject()->method(obj->metaObject()->indexOfSignal(name));
+    }
 
 private slots:
-  void testMapper()
-  {
-    Emitter emitter1, emitter2;
+    void testMapper()
+    {
+        Emitter emitter1, emitter2;
 
-    MultiSignalMapper mapper;
-    mapper.connectToSignal(&emitter1, method(&emitter1, "signal1(int)"));
-    mapper.connectToSignal(&emitter2, method(&emitter1, "signal1(int)"));
-    mapper.connectToSignal(&emitter1, method(&emitter1, "signal2(QString)"));
-    mapper.connectToSignal(&emitter2, method(&emitter1, "signal2(QString)"));
+        MultiSignalMapper mapper;
+        mapper.connectToSignal(&emitter1, method(&emitter1, "signal1(int)"));
+        mapper.connectToSignal(&emitter2, method(&emitter1, "signal1(int)"));
+        mapper.connectToSignal(&emitter1, method(&emitter1, "signal2(QString)"));
+        mapper.connectToSignal(&emitter2, method(&emitter1, "signal2(QString)"));
 
-    QSignalSpy spy(&mapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)));
-    QVERIFY(spy.isValid());
-    QVERIFY(spy.isEmpty());
+        QSignalSpy spy(&mapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)));
+        QVERIFY(spy.isValid());
+        QVERIFY(spy.isEmpty());
 
-    emitter1.signal1(42);
-    QCOMPARE(spy.size(), 1);
-    QCOMPARE(spy.at(0).at(0).value<QObject*>(), &emitter1);
-    QCOMPARE(spy.at(0).at(1).toInt(), emitter1.metaObject()->indexOfSignal("signal1(int)"));
-    QCOMPARE(spy.at(0).at(2).value<QVector<QVariant> >().first().toInt(), 42);
+        emitter1.signal1(42);
+        QCOMPARE(spy.size(), 1);
+        QCOMPARE(spy.at(0).at(0).value<QObject *>(), &emitter1);
+        QCOMPARE(spy.at(0).at(1).toInt(), emitter1.metaObject()->indexOfSignal("signal1(int)"));
+        QCOMPARE(spy.at(0).at(2).value<QVector<QVariant> >().first().toInt(), 42);
 
-    emitter2.signal2(QStringLiteral("hello"));
-    QCOMPARE(spy.size(), 2);
-    QCOMPARE(spy.at(1).at(0).value<QObject*>(), &emitter2);
-    QCOMPARE(spy.at(1).at(1).toInt(), emitter1.metaObject()->indexOfSignal("signal2(QString)"));
-    QCOMPARE(spy.at(1).at(2).value<QVector<QVariant> >().first().toString(), QStringLiteral("hello"));
-  }
-
+        emitter2.signal2(QStringLiteral("hello"));
+        QCOMPARE(spy.size(), 2);
+        QCOMPARE(spy.at(1).at(0).value<QObject *>(), &emitter2);
+        QCOMPARE(spy.at(1).at(1).toInt(), emitter1.metaObject()->indexOfSignal("signal2(QString)"));
+        QCOMPARE(spy.at(1).at(2).value<QVector<QVariant> >().first().toString(),
+                 QStringLiteral("hello"));
+    }
 };
 
 QTEST_MAIN(MultiSignalMapperTest)

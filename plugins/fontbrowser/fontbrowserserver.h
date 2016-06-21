@@ -37,18 +37,17 @@ class QItemSelectionModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ProbeInterface;
 class FontModel;
 
 class FontBrowserServer : public FontBrowserInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::FontBrowserInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::FontBrowserInterface)
+public:
     explicit FontBrowserServer(ProbeInterface *probe, QObject *parent = 0);
 
-  private slots:
+private slots:
     void updateFonts();
 
     void setPointSize(int size) Q_DECL_OVERRIDE;
@@ -58,11 +57,10 @@ class FontBrowserServer : public FontBrowserInterface
     void updateText(const QString &text) Q_DECL_OVERRIDE;
     void setColors(const QColor &foreground, const QColor &background) Q_DECL_OVERRIDE;
 
-  private:
+private:
     FontModel *m_selectedFontModel;
     QItemSelectionModel *m_fontSelectionModel;
 };
-
 }
 
 #endif // FONTBROWSERSERVER_H

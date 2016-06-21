@@ -34,26 +34,25 @@
 #include <QMetaType>
 
 namespace GammaRay {
-
 QDataStream &operator<<(QDataStream &out, WidgetInspectorInterface::Features value)
 {
-  out << qint32(value);
-  return out;
+    out << qint32(value);
+    return out;
 }
 
 QDataStream &operator>>(QDataStream &in, WidgetInspectorInterface::Features &value)
 {
-  qint32 t;
-  in >> t;
-  value = static_cast<WidgetInspectorInterface::Features>(t);
-  return in;
+    qint32 t;
+    in >> t;
+    value = static_cast<WidgetInspectorInterface::Features>(t);
+    return in;
 }
 
 WidgetInspectorInterface::WidgetInspectorInterface(QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
     qRegisterMetaTypeStreamOperators<Features>();
-    ObjectBroker::registerObject<WidgetInspectorInterface*>(this);
+    ObjectBroker::registerObject<WidgetInspectorInterface *>(this);
 }
 
 WidgetInspectorInterface::~WidgetInspectorInterface()
@@ -72,5 +71,4 @@ void WidgetInspectorInterface::setFeatures(WidgetInspectorInterface::Features fe
     m_features = features;
     emit featuresChanged();
 }
-
 }

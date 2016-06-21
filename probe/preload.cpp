@@ -36,38 +36,38 @@ using namespace GammaRay;
 
 extern "C" Q_DECL_EXPORT void qt_startup_hook()
 {
-  gammaray_startup_hook();
+    gammaray_startup_hook();
 
 #if !defined Q_OS_MAC
-  if (!Hooks::hooksInstalled()) {
-    static void(*next_qt_startup_hook)() = (void (*)()) dlsym(RTLD_NEXT, "qt_startup_hook");
-    next_qt_startup_hook();
-  }
+    if (!Hooks::hooksInstalled()) {
+        static void (*next_qt_startup_hook)() = (void (*)())dlsym(RTLD_NEXT, "qt_startup_hook");
+        next_qt_startup_hook();
+    }
 #endif
 }
 
 extern "C" Q_DECL_EXPORT void qt_addObject(QObject *obj)
 {
-  gammaray_addObject(obj);
+    gammaray_addObject(obj);
 
 #if !defined Q_OS_MAC
-  if (!Hooks::hooksInstalled()) {
-    static void (*next_qt_addObject)(QObject *obj) =
-    (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_addObject");
-    next_qt_addObject(obj);
-  }
+    if (!Hooks::hooksInstalled()) {
+        static void (*next_qt_addObject)(QObject *obj)
+            = (void (*)(QObject *obj))dlsym(RTLD_NEXT, "qt_addObject");
+        next_qt_addObject(obj);
+    }
 #endif
 }
 
 extern "C" Q_DECL_EXPORT void qt_removeObject(QObject *obj)
 {
-  gammaray_removeObject(obj);
+    gammaray_removeObject(obj);
 
 #if !defined Q_OS_WIN && !defined Q_OS_MAC
-  if (!Hooks::hooksInstalled()) {
-    static void (*next_qt_removeObject)(QObject *obj) =
-    (void (*)(QObject *obj)) dlsym(RTLD_NEXT, "qt_removeObject");
-    next_qt_removeObject(obj);
-  }
+    if (!Hooks::hooksInstalled()) {
+        static void (*next_qt_removeObject)(QObject *obj)
+            = (void (*)(QObject *obj))dlsym(RTLD_NEXT, "qt_removeObject");
+        next_qt_removeObject(obj);
+    }
 #endif
 }

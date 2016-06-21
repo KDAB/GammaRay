@@ -26,15 +26,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "propertywidgettab.h"
 
 using namespace GammaRay;
 
-PropertyWidgetTabFactoryBase::PropertyWidgetTabFactoryBase(const QString& name, const QString& label, int priority) :
-    m_name(name),
-    m_label(label),
-    m_priority(priority)
+PropertyWidgetTabFactoryBase::PropertyWidgetTabFactoryBase(const QString &name,
+                                                           const QString &label, int priority)
+    : m_name(name)
+    , m_label(label)
+    , m_priority(priority)
 {
 }
 

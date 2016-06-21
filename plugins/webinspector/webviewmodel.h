@@ -32,7 +32,6 @@
 #include <core/objecttypefilterproxymodel.h>
 
 namespace GammaRay {
-
 class WebViewModel : public ObjectFilterProxyModelBase
 {
     Q_OBJECT
@@ -40,11 +39,10 @@ public:
     explicit WebViewModel(QObject *parent = 0);
     ~WebViewModel();
 
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QMap< int, QVariant > itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
-    bool filterAcceptsObject(QObject* object) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap< int, QVariant > itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_WEBVIEWMODEL_H

@@ -33,10 +33,11 @@
 
 using namespace GammaRay;
 
-SelectionModelServer::SelectionModelServer(const QString& objectName, QAbstractItemModel* model, QObject* parent):
-    NetworkSelectionModel(objectName, model, parent),
-    m_timer(new QTimer(this)),
-    m_monitored(false)
+SelectionModelServer::SelectionModelServer(const QString &objectName, QAbstractItemModel *model,
+                                           QObject *parent)
+    : NetworkSelectionModel(objectName, model, parent)
+    , m_timer(new QTimer(this))
+    , m_monitored(false)
 {
     // We do use a timer to group requests to avoid network overhead
     m_timer->setSingleShot(true);
@@ -57,7 +58,6 @@ bool SelectionModelServer::isConnected() const
 {
     return NetworkSelectionModel::isConnected() && m_monitored;
 }
-
 
 void SelectionModelServer::timeout()
 {
@@ -80,9 +80,11 @@ void SelectionModelServer::connectModel()
     Q_ASSERT(model());
     connect(model(), SIGNAL(modelReset()), m_timer, SLOT(start()));
     connect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    connect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(start()));
+    connect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer,
+            SLOT(start()));
     connect(model(), SIGNAL(columnsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    connect(model(), SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(start()));
+    connect(model(), SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer,
+            SLOT(start()));
     connect(model(), SIGNAL(layoutChanged()), m_timer, SLOT(start()));
 }
 
@@ -92,8 +94,10 @@ void SelectionModelServer::disconnectModel()
         return;
     disconnect(model(), SIGNAL(modelReset()), m_timer, SLOT(start()));
     disconnect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(start()));
+    disconnect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer,
+               SLOT(start()));
     disconnect(model(), SIGNAL(columnsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(start()));
+    disconnect(model(), SIGNAL(columnsMoved(QModelIndex, int, int, QModelIndex,
+                                            int)), m_timer, SLOT(start()));
     disconnect(model(), SIGNAL(layoutChanged()), m_timer, SLOT(start()));
 }

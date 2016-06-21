@@ -42,16 +42,15 @@ class QAbstractItemModel;
 class QItemSelection;
 class QItemSelectionModel;
 class QSGNode;
-//class QSGBasicGeometryNode;
-//class QSGGeometryNode;
-//class QSGClipNode;
-//class QSGTransformNode;
-//class QSGRootNode;
-//class QSGOpacityNode;
+// class QSGBasicGeometryNode;
+// class QSGGeometryNode;
+// class QSGClipNode;
+// class QSGTransformNode;
+// class QSGRootNode;
+// class QSGOpacityNode;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PropertyController;
 class QuickItemModel;
 class QuickSceneGraphModel;
@@ -59,23 +58,24 @@ class RemoteViewServer;
 
 class QuickInspector : public QuickInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::QuickInspectorInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::QuickInspectorInterface)
 
-  public:
+public:
     explicit QuickInspector(ProbeInterface *probe, QObject *parent = 0);
     ~QuickInspector();
 
-    typedef bool (*GrabWindowCallback)(QQuickWindow*);
+    typedef bool (*GrabWindowCallback)(QQuickWindow *);
 
-  public slots:
+public slots:
     void selectWindow(int index) Q_DECL_OVERRIDE;
 
-    void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode) Q_DECL_OVERRIDE;
+    void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
+    Q_DECL_OVERRIDE;
 
     void checkFeatures() Q_DECL_OVERRIDE;
 
-    void pickItemAt(const QPoint& pos);
+    void pickItemAt(const QPoint &pos);
 
     /** Allow other plugins to provide specific window grabbing callbacks.
      *  Needed for QQuickWidget.
@@ -84,10 +84,10 @@ class QuickInspector : public QuickInspectorInterface
 
     void sendRenderedScene(const QImage &currentFrame);
 
-  protected:
+protected:
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void slotSceneChanged();
     void slotGrabWindow();
     void itemSelectionChanged(const QItemSelection &selection);
@@ -96,7 +96,7 @@ class QuickInspector : public QuickInspectorInterface
     void objectSelected(QObject *object);
     void objectSelected(void *object, const QString &typeName);
 
-  private:
+private:
     void selectWindow(QQuickWindow *window);
     void selectItem(QQuickItem *item);
     void selectSGNode(QSGNode *node);
@@ -125,20 +125,20 @@ class QuickInspector : public QuickInspectorInterface
 };
 
 class QuickInspectorFactory : public QObject,
-                              public StandardToolFactory<QQuickWindow, QuickInspector>
+    public StandardToolFactory<QQuickWindow, QuickInspector>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_quickinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_quickinspector.json")
 
-  public:
-    explicit QuickInspectorFactory(QObject *parent = 0) : QObject(parent)
+public:
+    explicit QuickInspectorFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif

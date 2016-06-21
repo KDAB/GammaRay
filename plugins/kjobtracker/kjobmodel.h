@@ -35,11 +35,10 @@
 class KJob;
 
 namespace GammaRay {
-
 class KJobModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit KJobModel(QObject *parent = 0);
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
@@ -51,32 +50,31 @@ class KJobModel : public QAbstractTableModel
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
     void jobResult(KJob *job);
     void jobFinished(KJob *obj);
     void jobInfo(KJob *job, const QString &plainMessage);
 
-  private:
+private:
     int indexOfJob(QObject *obj) const;
 
     struct KJobInfo {
-      KJob *job;
-      QString name;
-      QString type;
-      QString statusText;
-      enum {
-        Running,
-        Finished,
-        Error,
-        Killed,
-        Deleted
-      } state;
+        KJob *job;
+        QString name;
+        QString type;
+        QString statusText;
+        enum {
+            Running,
+            Finished,
+            Error,
+            Killed,
+            Deleted
+        } state;
     };
     QVector<KJobInfo> m_data;
 };
-
 }
 
 #endif // GAMMARAY_KJOBMODEL_H

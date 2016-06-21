@@ -32,9 +32,9 @@
 
 using namespace GammaRay;
 
-PaintAnalyzerInterface::PaintAnalyzerInterface(const QString &name, QObject* parent):
-    QObject(parent),
-    m_name(name)
+PaintAnalyzerInterface::PaintAnalyzerInterface(const QString &name, QObject *parent)
+    : QObject(parent)
+    , m_name(name)
 {
     ObjectBroker::registerObject(name, this);
 }

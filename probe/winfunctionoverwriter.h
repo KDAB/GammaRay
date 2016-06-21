@@ -33,10 +33,9 @@
 #include <qt_windows.h>
 
 namespace GammaRay {
-
 class WinFunctionOverwriter : public AbstractFunctionOverwriter
 {
-  protected:
+protected:
     virtual bool unprotectMemory(void *mem, size_t size);
     virtual bool reprotectMemory(void *mem, size_t size);
 
@@ -49,13 +48,12 @@ class WinFunctionOverwriter : public AbstractFunctionOverwriter
     virtual void *qtCoreFunctionLookup(const QString &function);
     virtual long pagesize() const;
 
-  private:
+private:
     WinFunctionOverwriter();
     DWORD oldProtect;
 
     friend class FunctionOverwriterFactory;
 };
-
 }
 
 #endif // WINFUNCTIONOVERWRITER_H

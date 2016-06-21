@@ -41,28 +41,27 @@
 #endif
 
 namespace GammaRay {
-
 class FontBrowserFactory : public QObject
 #ifndef Q_MOC_RUN // Qt4 moc fails on the ifdef'ed multi-inheritance and generates invalid code
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-, public StandardToolFactory<QApplication, FontBrowserServer>
+    , public StandardToolFactory<QApplication, FontBrowserServer>
 #else
-, public StandardToolFactory<QGuiApplication, FontBrowserServer>
+    , public StandardToolFactory<QGuiApplication, FontBrowserServer>
 #endif
 #endif
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_fontbrowser.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_fontbrowser.json")
 
-  public:
-    explicit FontBrowserFactory(QObject *parent = 0) : QObject(parent)
+public:
+    explicit FontBrowserFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_FONTBROWSER_H

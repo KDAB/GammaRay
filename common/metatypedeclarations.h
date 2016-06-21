@@ -55,7 +55,7 @@
 
 Q_DECLARE_METATYPE(Qt::ConnectionType)
 Q_DECLARE_METATYPE(QMetaMethod::MethodType)
-Q_DECLARE_METATYPE(const QMetaObject*)
+Q_DECLARE_METATYPE(const QMetaObject *)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 #include <QTimeZone>
@@ -72,7 +72,7 @@ Q_DECLARE_METATYPE(QPolygonF)
 Q_DECLARE_METATYPE(QMargins)
 Q_DECLARE_METATYPE(Qt::WindowType)
 Q_DECLARE_METATYPE(Qt::WindowState)
-Q_DECLARE_METATYPE(const QMatrix4x4*)
+Q_DECLARE_METATYPE(const QMatrix4x4 *)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QOpenGLShader::ShaderType)

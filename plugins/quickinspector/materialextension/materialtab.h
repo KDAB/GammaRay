@@ -36,7 +36,6 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class MaterialExtensionInterface;
 
 class Ui_MaterialTab;
@@ -44,23 +43,22 @@ class PropertyWidget;
 
 class MaterialTab : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MaterialTab(PropertyWidget *parent);
     virtual ~MaterialTab();
 
-  private:
+private:
     void setObjectBaseName(const QString &baseName);
 
-  private slots:
+private slots:
     void shaderSelectionChanged(const QItemSelection &selection);
     void showShader(const QString &shaderSource);
 
-  private:
+private:
     QScopedPointer<Ui_MaterialTab> m_ui;
     MaterialExtensionInterface *m_interface;
 };
-
 }
 
 #endif // MATERIALTAB_H

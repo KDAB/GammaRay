@@ -36,12 +36,12 @@
 using namespace GammaRay;
 
 SGGeometryExtension::SGGeometryExtension(PropertyController *controller)
-  : SGGeometryExtensionInterface(controller->objectBaseName() + ".sgGeometry", controller),
-    PropertyControllerExtension(controller->objectBaseName() + ".sgGeometry"),
-    m_node(0),
-    m_model(new SGGeometryModel(this))
+    : SGGeometryExtensionInterface(controller->objectBaseName() + ".sgGeometry", controller)
+    , PropertyControllerExtension(controller->objectBaseName() + ".sgGeometry")
+    , m_node(0)
+    , m_model(new SGGeometryModel(this))
 {
-  controller->registerModel(m_model, QStringLiteral("sgGeometryModel"));
+    controller->registerModel(m_model, QStringLiteral("sgGeometryModel"));
 }
 
 SGGeometryExtension::~SGGeometryExtension()
@@ -50,17 +50,17 @@ SGGeometryExtension::~SGGeometryExtension()
 
 bool SGGeometryExtension::setObject(void *object, const QString &typeName)
 {
-  if (typeName == QStringLiteral("QSGGeometryNode")) {
-    m_node = static_cast<QSGGeometryNode*>(object);
-    m_model->setNode(m_node);
+    if (typeName == QStringLiteral("QSGGeometryNode")) {
+        m_node = static_cast<QSGGeometryNode *>(object);
+        m_model->setNode(m_node);
 
-    QSGGeometry *geometry = m_node->geometry();
-    emit geometryChanged(
-      geometry->drawingMode(),
-      QByteArray::fromRawData(reinterpret_cast<char*>(geometry->indexData()),
-                              geometry->indexCount() * geometry->sizeOfIndex()),
-      geometry->indexType());
-    return true;
-  }
-  return false;
+        QSGGeometry *geometry = m_node->geometry();
+        emit geometryChanged(
+            geometry->drawingMode(),
+            QByteArray::fromRawData(reinterpret_cast<char *>(geometry->indexData()),
+                                    geometry->indexCount() * geometry->sizeOfIndex()),
+            geometry->indexType());
+        return true;
+    }
+    return false;
 }

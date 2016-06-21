@@ -38,7 +38,6 @@ class QObject;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** @brief Callbacks for tracing signal emissions and slot invocation.
  *
  *  @since 2.3
@@ -56,7 +55,6 @@ struct GAMMARAY_CORE_EXPORT SignalSpyCallbackSet
     BeginCallback slotBeginCallback;
     EndCallback slotEndCallback;
 };
-
 }
 
 #endif

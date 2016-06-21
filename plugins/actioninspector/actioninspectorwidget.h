@@ -38,29 +38,27 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ActionInspectorWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit ActionInspectorWidget(QWidget *parent = 0);
     ~ActionInspectorWidget();
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void triggerAction(const QModelIndex &index);
 
-  private:
+private:
     UIStateManager m_stateManager;
 };
 
 class ActionInspectorUiFactory : public QObject, public StandardToolUiFactory<ActionInspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_actioninspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_actioninspector.json")
 };
-
 }
 
 #endif // GAMMARAY_ACTIONINSPECTORWIDGET_H

@@ -31,28 +31,28 @@
 
 using namespace GammaRay;
 
-AboutDialog::AboutDialog(QWidget* parent): QDialog(parent),
-  ui(new Ui::AboutDialog)
+AboutDialog::AboutDialog(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::AboutDialog)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 }
 
 AboutDialog::~AboutDialog()
 {
 }
 
-void AboutDialog::setTitle(const QString& title)
+void AboutDialog::setTitle(const QString &title)
 {
-  ui->titleLabel->setText(title);
+    ui->titleLabel->setText(title);
 }
 
-void AboutDialog::setText(const QString& text)
+void AboutDialog::setText(const QString &text)
 {
-  ui->textLabel->setText(text);
+    ui->textLabel->setText(text);
 }
 
-void AboutDialog::setLogo(const QString& iconFileName)
+void AboutDialog::setLogo(const QString &iconFileName)
 {
-  ui->logoLabel->setPixmap(iconFileName);
+    ui->logoLabel->setPixmap(iconFileName);
 }
-

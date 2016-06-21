@@ -35,13 +35,14 @@
 
 using namespace GammaRay;
 
-WidgetAttributeTab::WidgetAttributeTab(PropertyWidget* parent) :
-    QWidget(parent),
-    ui(new Ui::WidgetAttributeTab)
+WidgetAttributeTab::WidgetAttributeTab(PropertyWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::WidgetAttributeTab)
 {
     ui->setupUi(this);
 
-    ui->attributeView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".widgetAttributeModel")));
+    ui->attributeView->setModel(ObjectBroker::model(parent->objectBaseName()
+                                                    + QStringLiteral(".widgetAttributeModel")));
 }
 
 WidgetAttributeTab::~WidgetAttributeTab()

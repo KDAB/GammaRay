@@ -33,22 +33,21 @@
 #include "objectinstance.h"
 
 namespace GammaRay {
-
 /** Property adaptor for QMetaProperty/Object-based property access. */
 class QMetaPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit QMetaPropertyAdaptor(QObject* parent = 0);
+    explicit QMetaPropertyAdaptor(QObject *parent = 0);
     ~QMetaPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;
     PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
-    void writeProperty(int index, const QVariant& value) Q_DECL_OVERRIDE;
+    void writeProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
     void resetProperty(int index) Q_DECL_OVERRIDE;
 
 protected:
-    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
 
 private:
     QString detailString(const QMetaProperty &prop) const;
@@ -60,7 +59,6 @@ private:
     QHash<int, int> m_notifyToPropertyMap;
     mutable bool m_notifyGuard;
 };
-
 }
 
 #endif // GAMMARAY_QMETAPROPERTYADAPTOR_H

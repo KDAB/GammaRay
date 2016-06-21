@@ -32,26 +32,24 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class LocaleInspectorWidget;
+class LocaleInspectorWidget;
 }
 
 class LocaleInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit LocaleInspectorWidget(QWidget *parent = 0);
     ~LocaleInspectorWidget();
 
-  private slots:
+private slots:
     void initSplitterPosition();
 
-  private:
+private:
     QScopedPointer<Ui::LocaleInspectorWidget> ui;
     UIStateManager m_stateManager;
 };
-
 }
 
 #endif // GAMMARAY_LOCALEINSPECTORWIDGET_H

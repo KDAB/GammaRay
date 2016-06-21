@@ -57,18 +57,21 @@ static QString positioningMethodsToString(QGeoPositionInfoSource::PositioningMet
     if (methods & QGeoPositionInfoSource::NonSatellitePositioningMethods)
         l.push_back(QStringLiteral("NonSatellitePositioningMethods"));
 
-  return l.join(QLatin1Char('|'));
+    return l.join(QLatin1Char('|'));
 }
 
-Positioning::Positioning(ProbeInterface* probe, QObject* parent): QObject(parent)
+Positioning::Positioning(ProbeInterface *probe, QObject *parent)
+    : QObject(parent)
 {
     Q_UNUSED(probe);
 
     MetaObject *mo = 0;
     MO_ADD_METAOBJECT1(QGeoPositionInfoSource, QObject);
     MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::Error, error);
-    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::PositioningMethods, preferredPositioningMethods);
-    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::PositioningMethods, supportedPositioningMethods);
+    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::PositioningMethods,
+                       preferredPositioningMethods);
+    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::PositioningMethods,
+                       supportedPositioningMethods);
 
     MO_ADD_METAOBJECT1(QGeoSatelliteInfoSource, QObject);
     MO_ADD_PROPERTY_RO(QGeoSatelliteInfoSource, QGeoSatelliteInfoSource::Error, error);
@@ -77,9 +80,11 @@ Positioning::Positioning(ProbeInterface* probe, QObject* parent): QObject(parent
     MO_ADD_METAOBJECT1(QGeoAreaMonitorSource, QObject);
     MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QGeoAreaMonitorSource::Error, error);
     MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QString, sourceName);
-    MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QGeoAreaMonitorSource::AreaMonitorFeatures, supportedAreaMonitorFeatures);
+    MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QGeoAreaMonitorSource::AreaMonitorFeatures,
+                       supportedAreaMonitorFeatures);
 
-    VariantHandler::registerStringConverter<QGeoPositionInfoSource::PositioningMethods>(positioningMethodsToString);
+    VariantHandler::registerStringConverter<QGeoPositionInfoSource::PositioningMethods>(
+        positioningMethodsToString);
 }
 
 QString PositioningFactory::name() const

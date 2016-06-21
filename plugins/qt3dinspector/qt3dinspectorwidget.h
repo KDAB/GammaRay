@@ -37,11 +37,10 @@
 #include <memory>
 
 namespace GammaRay {
-
 class Qt3DInspectorInterface;
 
 namespace Ui {
-    class Qt3DInspectorWidget;
+class Qt3DInspectorWidget;
 }
 
 class Qt3DInspectorWidget : public QWidget
@@ -60,7 +59,7 @@ private:
     Qt3DInspectorInterface *m_interface;
 };
 
-class Qt3DInspectorUiFactory: public QObject, public StandardToolUiFactory<Qt3DInspectorWidget>
+class Qt3DInspectorUiFactory : public QObject, public StandardToolUiFactory<Qt3DInspectorWidget>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolUiFactory)
@@ -69,7 +68,6 @@ class Qt3DInspectorUiFactory: public QObject, public StandardToolUiFactory<Qt3DI
 public:
     void initUi() override;
 };
-
 }
 
 #endif

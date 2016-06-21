@@ -47,80 +47,88 @@ class StandardPathsProxy : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-  StandardPathsProxy(QObject *parent = 0)
-    : QIdentityProxyModel(parent) { }
+    StandardPathsProxy(QObject *parent = 0)
+        : QIdentityProxyModel(parent) { }
 
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
-  {
-    if (section == 2 && role == Qt::DisplayRole) {
-      return tr("Locations Standard / Writable");
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
+    {
+        if (section == 2 && role == Qt::DisplayRole)
+            return tr("Locations Standard / Writable");
+
+        return QIdentityProxyModel::headerData(section, orientation, role);
     }
-
-    return QIdentityProxyModel::headerData(section, orientation, role);
-  }
 };
 
 class StandardPathsDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-  StandardPathsDelegate(QObject *parent = 0)
-    : QStyledItemDelegate(parent) { }
+    StandardPathsDelegate(QObject *parent = 0)
+        : QStyledItemDelegate(parent) { }
 
-  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE
-  {
-    if (index.column() == 2) {
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const Q_DECL_OVERRIDE
+    {
+        if (index.column() == 2) {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
-      QStyleOptionViewItem opt = option;
+            QStyleOptionViewItem opt = option;
 #else
-      QStyleOptionViewItemV4 opt = *qstyleoption_cast<const QStyleOptionViewItemV4*>(&option);
+            QStyleOptionViewItemV4 opt
+                = *qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option);
 #endif
-      initStyleOption(&opt, index);
+            initStyleOption(&opt, index);
 
-      const QWidget *widget = opt.widget;
-      QStyle *style = widget ? widget->style() : QApplication::style();
-      style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
+            const QWidget *widget = opt.widget;
+            QStyle *style = widget ? widget->style() : QApplication::style();
+            style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
 
-      const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget) + 1;
-      const QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &opt, widget)
-          .adjusted(textMargin, 1, -textMargin, -1);
-      painter->setPen(((opt.state & QStyle::State_Selected) ? opt.palette.highlightedText() : opt.palette.text()).color());
-      painter->drawText(textRect, Qt::AlignBottom | Qt::AlignLeft, index.sibling(index.row(), 3).data().toString());
-    } else {
-      QStyledItemDelegate::paint(painter, option, index);
+            const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget) + 1;
+            const QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &opt, widget)
+                                   .adjusted(textMargin, 1, -textMargin, -1);
+            painter->setPen(((opt.state
+                              & QStyle::State_Selected) ? opt.palette.highlightedText() : opt.
+                             palette.text()).color());
+            painter->drawText(textRect, Qt::AlignBottom | Qt::AlignLeft,
+                              index.sibling(index.row(), 3).data().toString());
+        } else {
+            QStyledItemDelegate::paint(painter, option, index);
+        }
     }
-  }
 
-  QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE
-  {
-    if (index.column() == 2) {
-      QSize s1 = QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 2));
-      QSize s2 = QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 3));
-      return QSize(qMax(s1.width(), s2.width()), s1.height() + s2.height() + option.fontMetrics.height());
-    } else {
-      return QStyledItemDelegate::sizeHint(option, index);
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const Q_DECL_OVERRIDE
+    {
+        if (index.column() == 2) {
+            QSize s1 = QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 2));
+            QSize s2 = QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 3));
+            return QSize(qMax(s1.width(), s2.width()),
+                         s1.height() + s2.height() + option.fontMetrics.height());
+        } else {
+            return QStyledItemDelegate::sizeHint(option, index);
+        }
     }
-  }
 };
 }
 
 StandardPathsWidget::StandardPathsWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::StandardPathsWidget)
-  , m_stateManager(this)
+    : QWidget(parent)
+    , ui(new Ui::StandardPathsWidget)
+    , m_stateManager(this)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  StandardPathsProxy *proxy = new StandardPathsProxy(this);
-  proxy->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StandardPathsModel")));
+    StandardPathsProxy *proxy = new StandardPathsProxy(this);
+    proxy->setSourceModel(ObjectBroker::model(QStringLiteral(
+                                                  "com.kdab.GammaRay.StandardPathsModel")));
 
-  ui->pathView->header()->setObjectName("pathViewHeader");
-  ui->pathView->setUniformRowHeights(false);
-  ui->pathView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-  ui->pathView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  ui->pathView->setDeferredHidden(3, true);
-  ui->pathView->setItemDelegateForColumn(2, new StandardPathsDelegate(this));
-  ui->pathView->setModel(proxy);
+    ui->pathView->header()->setObjectName("pathViewHeader");
+    ui->pathView->setUniformRowHeights(false);
+    ui->pathView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->pathView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->pathView->setDeferredHidden(3, true);
+    ui->pathView->setItemDelegateForColumn(2, new StandardPathsDelegate(this));
+    ui->pathView->setModel(proxy);
 }
 
 StandardPathsWidget::~StandardPathsWidget()

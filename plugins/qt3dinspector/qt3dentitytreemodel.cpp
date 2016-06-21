@@ -35,9 +35,9 @@
 
 using namespace GammaRay;
 
-Qt3DEntityTreeModel::Qt3DEntityTreeModel(QObject* parent):
-    ObjectModelBase<QAbstractItemModel>(parent),
-    m_engine(nullptr)
+Qt3DEntityTreeModel::Qt3DEntityTreeModel(QObject *parent)
+    : ObjectModelBase<QAbstractItemModel>(parent)
+    , m_engine(nullptr)
 {
 }
 
@@ -45,7 +45,7 @@ Qt3DEntityTreeModel::~Qt3DEntityTreeModel()
 {
 }
 
-void Qt3DEntityTreeModel::setEngine(Qt3DCore::QAspectEngine* engine)
+void Qt3DEntityTreeModel::setEngine(Qt3DCore::QAspectEngine *engine)
 {
     beginResetModel();
     clear();
@@ -60,7 +60,7 @@ void Qt3DEntityTreeModel::clear()
     m_parentChildMap.clear();
 }
 
-void Qt3DEntityTreeModel::populateFromEntity(Qt3DCore::QEntity* entity)
+void Qt3DEntityTreeModel::populateFromEntity(Qt3DCore::QEntity *entity)
 {
     if (!entity)
         return;
@@ -68,52 +68,52 @@ void Qt3DEntityTreeModel::populateFromEntity(Qt3DCore::QEntity* entity)
     m_childParentMap[entity] = entity->parentEntity();
     m_parentChildMap[entity->parentEntity()].push_back(entity);
 
-    foreach (auto child,  entity->childNodes()) {
-        if (auto childEntity = qobject_cast<Qt3DCore::QEntity*>(child))
+    foreach (auto child, entity->childNodes()) {
+        if (auto childEntity = qobject_cast<Qt3DCore::QEntity *>(child))
             populateFromEntity(childEntity);
     }
 
-    auto &children  = m_parentChildMap[entity->parentEntity()];
+    auto &children = m_parentChildMap[entity->parentEntity()];
     std::sort(children.begin(), children.end());
 }
 
-QVariant Qt3DEntityTreeModel::data(const QModelIndex& index, int role) const
+QVariant Qt3DEntityTreeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || !m_engine)
         return QVariant();
 
-    auto entity = reinterpret_cast<Qt3DCore::QEntity*>(index.internalPointer());
+    auto entity = reinterpret_cast<Qt3DCore::QEntity *>(index.internalPointer());
     if (role == ObjectModel::ObjectIdRole)
         return QVariant::fromValue(ObjectId(entity));
 
     return dataForObject(entity, index, role);
 }
 
-int Qt3DEntityTreeModel::rowCount(const QModelIndex& parent) const
+int Qt3DEntityTreeModel::rowCount(const QModelIndex &parent) const
 {
     if (!m_engine || !m_engine->rootEntity())
         return 0;
 
-    auto parentEntity = reinterpret_cast<Qt3DCore::QEntity*>(parent.internalPointer());
+    auto parentEntity = reinterpret_cast<Qt3DCore::QEntity *>(parent.internalPointer());
     return m_parentChildMap.value(parentEntity).size();
 }
 
-QModelIndex Qt3DEntityTreeModel::parent(const QModelIndex& child) const
+QModelIndex Qt3DEntityTreeModel::parent(const QModelIndex &child) const
 {
-    auto childEntity = reinterpret_cast<Qt3DCore::QEntity*>(child.internalPointer());
+    auto childEntity = reinterpret_cast<Qt3DCore::QEntity *>(child.internalPointer());
     return indexForEntity(m_childParentMap.value(childEntity));
 }
 
-QModelIndex Qt3DEntityTreeModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex Qt3DEntityTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-    auto parentEntity = reinterpret_cast<Qt3DCore::QEntity*>(parent.internalPointer());
+    auto parentEntity = reinterpret_cast<Qt3DCore::QEntity *>(parent.internalPointer());
     const auto children = m_parentChildMap.value(parentEntity);
-    if (row < 0 || column < 0 || row >= children.size()  || column >= columnCount())
+    if (row < 0 || column < 0 || row >= children.size() || column >= columnCount())
         return QModelIndex();
     return createIndex(row, column, children.at(row));
 }
 
-QModelIndex Qt3DEntityTreeModel::indexForEntity(Qt3DCore::QEntity* entity) const
+QModelIndex Qt3DEntityTreeModel::indexForEntity(Qt3DCore::QEntity *entity) const
 {
     if (!entity)
         return QModelIndex();
@@ -132,7 +132,7 @@ QModelIndex Qt3DEntityTreeModel::indexForEntity(Qt3DCore::QEntity* entity) const
     return index(row, 0, parentIndex);
 }
 
-static bool isEngineForEntity(Qt3DCore::QAspectEngine* engine, Qt3DCore::QEntity *entity)
+static bool isEngineForEntity(Qt3DCore::QAspectEngine *engine, Qt3DCore::QEntity *entity)
 {
     Q_ASSERT(engine);
     Q_ASSERT(entity);
@@ -143,12 +143,12 @@ static bool isEngineForEntity(Qt3DCore::QAspectEngine* engine, Qt3DCore::QEntity
     return isEngineForEntity(engine, entity->parentEntity());
 }
 
-void Qt3DEntityTreeModel::objectCreated(QObject* obj)
+void Qt3DEntityTreeModel::objectCreated(QObject *obj)
 {
     if (!m_engine)
         return;
 
-    auto entity = qobject_cast<Qt3DCore::QEntity*>(obj);
+    auto entity = qobject_cast<Qt3DCore::QEntity *>(obj);
     if (!entity)
         return;
 
@@ -170,29 +170,29 @@ void Qt3DEntityTreeModel::objectCreated(QObject* obj)
     const auto index = indexForEntity(parentEntity);
     Q_ASSERT(index.isValid() || !parentEntity);
 
-    QVector<Qt3DCore::QEntity*> &children = m_parentChildMap[parentEntity];
-    QVector<Qt3DCore::QEntity*>::iterator it = std::lower_bound(children.begin(), children.end(), entity);
+    QVector<Qt3DCore::QEntity *> &children = m_parentChildMap[parentEntity];
+    QVector<Qt3DCore::QEntity *>::iterator it = std::lower_bound(children.begin(),
+                                                                 children.end(), entity);
     const int row = std::distance(children.begin(), it);
 
     beginInsertRows(index, row, row);
     children.insert(it, entity);
     m_childParentMap.insert(entity, parentEntity);
-    foreach (auto child,  entity->childNodes()) {
-        if (auto childEntity = qobject_cast<Qt3DCore::QEntity*>(child))
+    foreach (auto child, entity->childNodes()) {
+        if (auto childEntity = qobject_cast<Qt3DCore::QEntity *>(child))
             populateFromEntity(childEntity);
     }
     endInsertRows();
-
 }
 
-void Qt3DEntityTreeModel::objectDestroyed(QObject* obj)
+void Qt3DEntityTreeModel::objectDestroyed(QObject *obj)
 {
     // TODO
 }
 
-void Qt3DEntityTreeModel::objectReparented(QObject* obj)
+void Qt3DEntityTreeModel::objectReparented(QObject *obj)
 {
-    auto entity = qobject_cast<Qt3DCore::QEntity*>(obj);
+    auto entity = qobject_cast<Qt3DCore::QEntity *>(obj);
     if (!entity)
         return;
 
@@ -202,5 +202,4 @@ void Qt3DEntityTreeModel::objectReparented(QObject* obj)
         // possibly reparented into our tree
         objectCreated(obj);
     }
-
 }

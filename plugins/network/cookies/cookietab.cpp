@@ -35,13 +35,14 @@
 
 using namespace GammaRay;
 
-CookieTab::CookieTab(GammaRay::PropertyWidget* parent) :
-    QWidget(parent),
-    ui(new Ui::CookieTab)
+CookieTab::CookieTab(GammaRay::PropertyWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::CookieTab)
 {
     ui->setupUi(this);
 
-    ui->cookieJarView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".cookieJarModel")));
+    ui->cookieJarView->setModel(ObjectBroker::model(parent->objectBaseName()
+                                                    + QStringLiteral(".cookieJarModel")));
 }
 
 CookieTab::~CookieTab()

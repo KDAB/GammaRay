@@ -44,10 +44,10 @@
 using namespace GammaRay;
 
 namespace GammaRay {
-
 struct HelpControllerPrivate
 {
-    HelpControllerPrivate() : proc(Q_NULLPTR) {}
+    HelpControllerPrivate()
+        : proc(Q_NULLPTR) {}
 
     void startProcess();
     void sendCommand(const QByteArray &cmd);
@@ -56,7 +56,6 @@ struct HelpControllerPrivate
     QString qhcPath;
     QProcess *proc;
 };
-
 }
 
 void HelpControllerPrivate::startProcess()
@@ -66,16 +65,19 @@ void HelpControllerPrivate::startProcess()
         return;
 
     proc = new QProcess(QCoreApplication::instance());
-    QObject::connect(proc, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), [this](){
+    QObject::connect(proc,
+                     static_cast<void (QProcess::*)(int,
+                                                    QProcess::ExitStatus)>(&QProcess::finished),
+                     [this](){
         proc->deleteLater();
         proc = Q_NULLPTR;
     });
     proc->setProgram(assistantPath);
-    proc->setArguments(QStringList() <<
-        QLatin1String("-collectionFile") <<
-        qhcPath <<
-        QLatin1String("-enableRemoteControl")
-    );
+    proc->setArguments(QStringList()
+                       <<QLatin1String("-collectionFile")
+                       <<qhcPath
+                       <<QLatin1String("-enableRemoteControl")
+                       );
     proc->start();
     proc->waitForStarted();
     sendCommand("expandToc 2;");
@@ -109,7 +111,8 @@ bool HelpController::isAvailable()
         d->qhcPath = qhcPath;
         return true;
     } else {
-        qDebug() << "gammaray.qhc not found in" << Paths::documentationPath() << " - help not available";
+        qDebug() << "gammaray.qhc not found in" << Paths::documentationPath()
+                 << " - help not available";
     }
 #endif
     return false;
@@ -120,7 +123,8 @@ void HelpController::openContents()
     Q_ASSERT(isAvailable());
     auto d = s_helpController();
     d->startProcess();
-    d->sendCommand("setSource qthelp://com.kdab.GammaRay." GAMMARAY_PLUGIN_VERSION "/doc/index.html;syncContents\n");
+    d->sendCommand(
+        "setSource qthelp://com.kdab.GammaRay." GAMMARAY_PLUGIN_VERSION "/doc/index.html;syncContents\n");
 }
 
 void HelpController::openPage(const QString &page)
@@ -128,5 +132,7 @@ void HelpController::openPage(const QString &page)
     Q_ASSERT(isAvailable());
     auto d = s_helpController();
     d->startProcess();
-    d->sendCommand(QByteArray("setSource qthelp://com.kdab.GammaRay." GAMMARAY_PLUGIN_VERSION "/") + page.toUtf8() + ";syncContents\n");
+    d->sendCommand(QByteArray(
+                       "setSource qthelp://com.kdab.GammaRay." GAMMARAY_PLUGIN_VERSION "/") + page.toUtf8()
+                   + ";syncContents\n");
 }

@@ -33,30 +33,28 @@
 #include "core/propertycontrollerextension.h"
 
 namespace GammaRay {
-
 class InboundConnectionsModel;
 class OutboundConnectionsModel;
 
 class ConnectionsExtension : public ConnectionsExtensionInterface,
-                             public PropertyControllerExtension
+    public PropertyControllerExtension
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)
+public:
     explicit ConnectionsExtension(PropertyController *controller);
     ~ConnectionsExtension();
 
     bool setQObject(QObject *object) Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     void navigateToReceiver(int modelRow) Q_DECL_OVERRIDE;
     void navigateToSender(int modelRow) Q_DECL_OVERRIDE;
 
-  private:
+private:
     InboundConnectionsModel *m_inboundModel;
     OutboundConnectionsModel *m_outboundModel;
 };
-
 }
 
 #endif // GAMMARAY_CONNECTIONSEXTENSION_H

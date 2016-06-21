@@ -45,35 +45,34 @@
 using namespace GammaRay;
 
 namespace {
-QAbstractItemView *headerView(QHeaderView *header) {
+QAbstractItemView *headerView(QHeaderView *header)
+{
     QWidget *view = header->parentWidget();
 
-    while (!view->inherits("QAbstractItemView")) {
+    while (!view->inherits("QAbstractItemView"))
         view = view->parentWidget();
-    }
 
     return qobject_cast<QAbstractItemView *>(view);
 }
 
-void distributeSpace(QList<int> &sizes, int size, int handleSize) {
-  QList<QList<int>::Iterator> its;
-  int usedSpace = 0;
+void distributeSpace(QList<int> &sizes, int size, int handleSize)
+{
+    QList<QList<int>::Iterator> its;
+    int usedSpace = 0;
 
-  for (auto it = sizes.begin(), end = sizes.end(); it != end; ++it) {
-    if ((*it) == -1) {
-      its << it;
-    } else {
-      usedSpace += (*it);
+    for (auto it = sizes.begin(), end = sizes.end(); it != end; ++it) {
+        if ((*it) == -1)
+            its << it;
+        else
+            usedSpace += (*it);
     }
-  }
 
-  if (!its.isEmpty()) {
-    const int freeSpace = size - usedSpace - (sizes.count() * handleSize) - handleSize;
-    const int space = freeSpace / its.count();
-    for (auto it = its.begin(), end = its.end(); it != end; ++it) {
-      (*(*it)) = space;
+    if (!its.isEmpty()) {
+        const int freeSpace = size - usedSpace - (sizes.count() * handleSize) - handleSize;
+        const int space = freeSpace / its.count();
+        for (auto it = its.begin(), end = its.end(); it != end; ++it)
+            (*(*it)) = space;
     }
-  }
 }
 
 typedef QList<QSplitter *> QSplitterList;
@@ -81,14 +80,14 @@ typedef QList<QHeaderView *> QHeaderViewList;
 }
 
 UIStateManager::UIStateManager(QWidget *widget)
-  : QObject(widget)
-  , m_widget(widget)
-  , m_stateSettings(new QSettings("KDAB", "GammaRay", this))
-  , m_initialized(false)
-  , m_resizing(false)
+    : QObject(widget)
+    , m_widget(widget)
+    , m_stateSettings(new QSettings("KDAB", "GammaRay", this))
+    , m_initialized(false)
+    , m_resizing(false)
 {
-  Q_ASSERT(m_widget);
-  m_widget->installEventFilter(this);
+    Q_ASSERT(m_widget);
+    m_widget->installEventFilter(this);
 }
 
 UIStateManager::~UIStateManager()
@@ -97,113 +96,110 @@ UIStateManager::~UIStateManager()
 
 QList<QSplitter *> UIStateManager::splitters() const
 {
-  return m_widget->findChildren<QSplitter *>();
+    return m_widget->findChildren<QSplitter *>();
 }
 
 QList<QHeaderView *> UIStateManager::headers() const
 {
-  return m_widget->findChildren<QHeaderView *>();
+    return m_widget->findChildren<QHeaderView *>();
 }
 
 void UIStateManager::setup()
 {
-  if (!checkWidget(m_widget)) {
-    return;
-  }
+    if (!checkWidget(m_widget))
+        return;
 
-  m_initialized = true;
-  m_stateSettings->beginGroup(QString::fromLatin1("UiState/%1").arg(widgetName(m_widget)));
+    m_initialized = true;
+    m_stateSettings->beginGroup(QString::fromLatin1("UiState/%1").arg(widgetName(m_widget)));
 
-  // Make sure objects names are unique.
-  // Also make the comparison lower case as some QSettings implementations
-  // are case sensitive.
-  QSet<QString> knownNames;
+    // Make sure objects names are unique.
+    // Also make the comparison lower case as some QSettings implementations
+    // are case sensitive.
+    QSet<QString> knownNames;
 
-  knownNames << widgetPath(m_widget);
+    knownNames << widgetPath(m_widget);
 
-  foreach (QSplitter *splitter, splitters()) {
-    if (!checkWidget(splitter)) {
-      continue;
+    foreach (QSplitter *splitter, splitters()) {
+        if (!checkWidget(splitter))
+            continue;
+
+        const QString name = widgetPath(splitter);
+
+        if (knownNames.contains(name)) {
+            qWarning() << Q_FUNC_INFO << "Duplicate widget name" << name << "in widget" << m_widget;
+            continue;
+        }
+
+        knownNames << name;
+
+        connect(splitter, SIGNAL(splitterMoved(int,int)), this, SLOT(
+                    widgetCustomized()), Qt::UniqueConnection);
     }
 
-    const QString name = widgetPath(splitter);
+    foreach (QHeaderView *header, headers()) {
+        if (!checkWidget(header))
+            continue;
 
-    if (knownNames.contains(name)) {
-      qWarning() << Q_FUNC_INFO << "Duplicate widget name" << name << "in widget" << m_widget;
-      continue;
+        const QString name = widgetPath(header);
+
+        if (knownNames.contains(name)) {
+            qWarning() << Q_FUNC_INFO << "Duplicate widget name" << name << "in widget" << m_widget;
+            continue;
+        }
+
+        knownNames << name;
+
+        connect(header, SIGNAL(sectionResized(int,int,int)), this, SLOT(
+                    widgetCustomized()), Qt::UniqueConnection);
+        connect(header, SIGNAL(sectionCountChanged(int,int)), this,
+                SLOT(headerSectionCountChanged()), Qt::UniqueConnection);
+
+        QAbstractItemView *view = headerView(header);
+        view->removeEventFilter(this);
+        view->installEventFilter(this);
     }
 
-    knownNames << name;
-
-    connect(splitter, SIGNAL(splitterMoved(int,int)), this, SLOT(widgetCustomized()), Qt::UniqueConnection);
-  }
-
-  foreach (QHeaderView *header, headers()) {
-    if (!checkWidget(header)) {
-      continue;
-    }
-
-    const QString name = widgetPath(header);
-
-    if (knownNames.contains(name)) {
-      qWarning() << Q_FUNC_INFO << "Duplicate widget name" << name << "in widget" << m_widget;
-      continue;
-    }
-
-    knownNames << name;
-
-    connect(header, SIGNAL(sectionResized(int,int,int)), this, SLOT(widgetCustomized()), Qt::UniqueConnection);
-    connect(header, SIGNAL(sectionCountChanged(int,int)), this, SLOT(headerSectionCountChanged()), Qt::UniqueConnection);
-
-    QAbstractItemView *view = headerView(header);
-    view->removeEventFilter(this);
-    view->installEventFilter(this);
-  }
-
-  restoreState();
+    restoreState();
 }
 
 void UIStateManager::restoreState()
 {
-  restoreWindowState();
-  restoreSplitterState();
-  restoreHeaderState();
+    restoreWindowState();
+    restoreSplitterState();
+    restoreHeaderState();
 }
 
 void UIStateManager::saveState()
 {
-  saveWindowState();
-  saveSplitterState();
-  saveHeaderState();
+    saveWindowState();
+    saveSplitterState();
+    saveHeaderState();
 }
 
 bool UIStateManager::eventFilter(QObject *object, QEvent *event)
 {
-  if (object == m_widget) {
-    if (event->type() == QEvent::Hide) {
-      if (m_initialized) {
-        saveState();
-      }
+    if (object == m_widget) {
+        if (event->type() == QEvent::Hide) {
+            if (m_initialized)
+                saveState();
+        }
     }
-  }
 
-  const bool result = QObject::eventFilter(object, event);
+    const bool result = QObject::eventFilter(object, event);
 
-  if (object == m_widget) {
-    if (event->type() == QEvent::Show) {
-      if (!m_initialized) {
-        setup();
-      }
+    if (object == m_widget) {
+        if (event->type() == QEvent::Show) {
+            if (!m_initialized)
+                setup();
+        }
     }
-  }
 
-  if (event->type() == QEvent::Resize) {
-    if (m_initialized && !m_resizing) {
-      widgetResized(qobject_cast<QWidget *>(object));
+    if (event->type() == QEvent::Resize) {
+        if (m_initialized && !m_resizing)
+            widgetResized(qobject_cast<QWidget *>(object));
     }
-  }
 
-  return result;
+    return result;
 }
 
 QString UIStateManager::widgetName(QWidget *widget) const
@@ -228,291 +224,286 @@ QString UIStateManager::widgetPath(QWidget *widget) const
 
 UISizeVector UIStateManager::defaultSizes(QSplitter *splitter) const
 {
-  return checkWidget(splitter) ? m_defaultSplitterSizes.value(widgetPath(splitter)) : UISizeVector();
+    return checkWidget(splitter) ? m_defaultSplitterSizes.value(widgetPath(splitter)) : UISizeVector();
 }
 
 void UIStateManager::setDefaultSizes(QSplitter *splitter, const UISizeVector &defaultSizes)
 {
-  if (checkWidget(splitter)) {
-    m_defaultSplitterSizes[widgetPath(splitter)] = defaultSizes;
-  }
+    if (checkWidget(splitter))
+        m_defaultSplitterSizes[widgetPath(splitter)] = defaultSizes;
 }
 
 UISizeVector UIStateManager::defaultSizes(QHeaderView *header) const
 {
-  return checkWidget(header) ? m_defaultHeaderSizes.value(widgetPath(header)) : UISizeVector();
+    return checkWidget(header) ? m_defaultHeaderSizes.value(widgetPath(header)) : UISizeVector();
 }
 
 void UIStateManager::setDefaultSizes(QHeaderView *header, const UISizeVector &defaultSizes)
 {
-  if (checkWidget(header)) {
-    m_defaultHeaderSizes[widgetPath(header)] = defaultSizes;
-  }
+    if (checkWidget(header))
+        m_defaultHeaderSizes[widgetPath(header)] = defaultSizes;
 }
 
 void UIStateManager::reset()
 {
-  m_initialized = false;
-  m_stateSettings->endGroup();
-  setup();
+    m_initialized = false;
+    m_stateSettings->endGroup();
+    setup();
 }
 
 QString UIStateManager::widgetGeometryKey(QWidget *widget) const
 {
-  return QString::fromLatin1("%1Geometry").arg(widgetPath(widget));
+    return QString::fromLatin1("%1Geometry").arg(widgetPath(widget));
 }
 
 QString UIStateManager::widgetStateKey(QWidget *widget) const
 {
-  return QString::fromLatin1("%1State").arg(widgetPath(widget));
+    return QString::fromLatin1("%1State").arg(widgetPath(widget));
 }
 
 QString UIStateManager::widgetStateSectionsKey(QWidget *widget) const
 {
-  return QString::fromLatin1("%1StateSections").arg(widgetPath(widget));
+    return QString::fromLatin1("%1StateSections").arg(widgetPath(widget));
 }
 
 bool UIStateManager::checkWidget(QWidget *widget) const
 {
-  if (widget->objectName().isEmpty()) {
-    qWarning() << Q_FUNC_INFO << "Widget with no name" << widget << widgetPath(widget) << "in widget" << m_widget;
-    return false;
-  }
+    if (widget->objectName().isEmpty()) {
+        qWarning() << Q_FUNC_INFO << "Widget with no name" << widget << widgetPath(widget)
+                   << "in widget" << m_widget;
+        return false;
+    }
 
-  return true;
+    return true;
 }
 
 int UIStateManager::percentToInt(const QString &size) const
 {
-  return size.left(size.length() -1).toInt(); //clazy:exclude=qstring-ref due to Qt4 support
+    return size.left(size.length() -1).toInt(); // clazy:exclude=qstring-ref due to Qt4 support
 }
 
 void UIStateManager::restoreWindowState()
 {
-  QMainWindow *window = qobject_cast<QMainWindow *>(m_widget);
+    QMainWindow *window = qobject_cast<QMainWindow *>(m_widget);
 
-  if (window) {
-    const QByteArray geometry = m_stateSettings->value(widgetGeometryKey(m_widget)).toByteArray();
-    const QByteArray state = m_stateSettings->value(widgetStateKey(m_widget)).toByteArray();
+    if (window) {
+        const QByteArray geometry
+            = m_stateSettings->value(widgetGeometryKey(m_widget)).toByteArray();
+        const QByteArray state = m_stateSettings->value(widgetStateKey(m_widget)).toByteArray();
 
-    if (geometry.isEmpty()) {
-      const QRect area = qApp->desktop()->availableGeometry(QCursor::pos());
-      QRect rect(QPoint(), QSize(1024, 768));
-      rect.moveCenter(area.center());
-      m_widget->setGeometry(rect);
-    } else {
-      if (!m_resizing) {
-        window->restoreGeometry(geometry);
-        window->restoreState(state);
-      }
+        if (geometry.isEmpty()) {
+            const QRect area = qApp->desktop()->availableGeometry(QCursor::pos());
+            QRect rect(QPoint(), QSize(1024, 768));
+            rect.moveCenter(area.center());
+            m_widget->setGeometry(rect);
+        } else {
+            if (!m_resizing) {
+                window->restoreGeometry(geometry);
+                window->restoreState(state);
+            }
+        }
     }
-  }
 }
 
 void UIStateManager::saveWindowState()
 {
-  QMainWindow *window = qobject_cast<QMainWindow *>(m_widget);
+    QMainWindow *window = qobject_cast<QMainWindow *>(m_widget);
 
-  if (window) {
-    m_stateSettings->setValue(widgetGeometryKey(m_widget), window->saveGeometry());
-    m_stateSettings->setValue(widgetStateKey(m_widget), window->saveState());
-  }
+    if (window) {
+        m_stateSettings->setValue(widgetGeometryKey(m_widget), window->saveGeometry());
+        m_stateSettings->setValue(widgetStateKey(m_widget), window->saveState());
+    }
 }
 
 void UIStateManager::restoreSplitterState(QSplitter *splitter)
 {
-  const QSplitterList splitters = splitter ? (QSplitterList() << splitter) : this->splitters();
-  foreach (QSplitter *splitter, splitters) {
-    if (!checkWidget(splitter)) {
-      continue;
-    }
+    const QSplitterList splitters = splitter ? (QSplitterList() << splitter) : this->splitters();
+    foreach (QSplitter *splitter, splitters) {
+        if (!checkWidget(splitter))
+            continue;
 
-    const QByteArray state = m_stateSettings->value(widgetStateKey(splitter)).toByteArray();
+        const QByteArray state = m_stateSettings->value(widgetStateKey(splitter)).toByteArray();
 
-    if (state.isEmpty()) {
-      const UISizeVector defaultSizes = this->defaultSizes(splitter);
+        if (state.isEmpty()) {
+            const UISizeVector defaultSizes = this->defaultSizes(splitter);
 
-      if (!defaultSizes.isEmpty()) {
-        Q_ASSERT(defaultSizes.count() == splitter->count());
+            if (!defaultSizes.isEmpty()) {
+                Q_ASSERT(defaultSizes.count() == splitter->count());
 
-        QList<int> sizes;
-        sizes.reserve(defaultSizes.count());
+                QList<int> sizes;
+                sizes.reserve(defaultSizes.count());
 
-        foreach (const QVariant &size, defaultSizes) {
-          switch (size.type()) {
-          case QVariant::Int: { // Pixels
-            sizes << size.toInt();
-            break;
-          }
+                foreach (const QVariant &size, defaultSizes) {
+                    switch (size.type()) {
+                    case QVariant::Int: // Pixels
+                        sizes << size.toInt();
+                        break;
 
-          case QVariant::String: { // Percent
-            int value = percentToInt(size.toString());
-            if (value == -1) {
-              sizes << value;
-            } else if (splitter->orientation() == Qt::Horizontal) {
-              sizes << splitter->width() * value / 100;
-            } else {
-              sizes << splitter->height() * value / 100;
+                    case QVariant::String:
+                    {              // Percent
+                        int value = percentToInt(size.toString());
+                        if (value == -1)
+                            sizes << value;
+                        else if (splitter->orientation() == Qt::Horizontal)
+                            sizes << splitter->width() * value / 100;
+                        else
+                            sizes << splitter->height() * value / 100;
+                        break;
+                    }
+
+                    default:
+                        Q_ASSERT(false);
+                    }
+                }
+
+                distributeSpace(sizes,
+                                splitter->orientation() == Qt::Horizontal ? splitter->width() : splitter->height(),
+                                splitter->handleWidth());
+                splitter->setSizes(sizes);
             }
-            break;
-          }
-
-          default:
-            Q_ASSERT(false);
-          }
+        } else {
+            if (!m_resizing) {
+                splitter->restoreState(state);
+                splitter->setProperty(WIDGET_CUSTOMIZED, true);
+            }
         }
-
-        distributeSpace(sizes, splitter->orientation() == Qt::Horizontal ? splitter->width() : splitter->height(),
-                        splitter->handleWidth());
-        splitter->setSizes(sizes);
-      }
-    } else {
-      if (!m_resizing) {
-        splitter->restoreState(state);
-        splitter->setProperty(WIDGET_CUSTOMIZED, true);
-      }
     }
-  }
 }
 
 void UIStateManager::saveSplitterState(QSplitter *splitter)
 {
-  const QSplitterList splitters = splitter ? (QSplitterList() << splitter) : this->splitters();
-  foreach (QSplitter *splitter, splitters) {
-    if (!checkWidget(splitter) || !splitter->property(WIDGET_CUSTOMIZED).toBool()) {
-      continue;
-    }
+    const QSplitterList splitters = splitter ? (QSplitterList() << splitter) : this->splitters();
+    foreach (QSplitter *splitter, splitters) {
+        if (!checkWidget(splitter) || !splitter->property(WIDGET_CUSTOMIZED).toBool())
+            continue;
 
-    m_stateSettings->setValue(widgetStateKey(splitter), splitter->saveState());
-  }
+        m_stateSettings->setValue(widgetStateKey(splitter), splitter->saveState());
+    }
 }
 
 void UIStateManager::restoreHeaderState(QHeaderView *header)
 {
-  const QHeaderViewList headers = header ? (QHeaderViewList() << header) : this->headers();
-  foreach (QHeaderView *header, headers) {
-    if (!checkWidget(header) || header->count() == 0) {
-      continue;
-    }
+    const QHeaderViewList headers = header ? (QHeaderViewList() << header) : this->headers();
+    foreach (QHeaderView *header, headers) {
+        if (!checkWidget(header) || header->count() == 0)
+            continue;
 
-    const QByteArray state = m_stateSettings->value(widgetStateKey(header)).toByteArray();
+        const QByteArray state = m_stateSettings->value(widgetStateKey(header)).toByteArray();
 
-    if (state.isEmpty()) {
-      const UISizeVector defaultSizes = this->defaultSizes(header);
-      QAbstractItemView *view = headerView(header);
+        if (state.isEmpty()) {
+            const UISizeVector defaultSizes = this->defaultSizes(header);
+            QAbstractItemView *view = headerView(header);
 
-      if (!defaultSizes.isEmpty()) {
-        Q_ASSERT(defaultSizes.count() == header->count());
+            if (!defaultSizes.isEmpty()) {
+                Q_ASSERT(defaultSizes.count() == header->count());
 
-        QList<int> sizes;
-        sizes.reserve(defaultSizes.count());
+                QList<int> sizes;
+                sizes.reserve(defaultSizes.count());
 
-        int i = 0;
-        for (auto it = defaultSizes.constBegin(), end = defaultSizes.constEnd(); it != end; ++it) {
-          int size = 0;
+                int i = 0;
+                for (auto it = defaultSizes.constBegin(), end = defaultSizes.constEnd(); it != end;
+                     ++it) {
+                    int size = 0;
 
-          switch ((*it).type()) {
-          case QVariant::Int: { // Pixels
-            size = (*it).toInt();
-            break;
-          }
+                    switch ((*it).type()) {
+                    case QVariant::Int: // Pixels
+                        size = (*it).toInt();
+                        break;
 
-          case QVariant::String: { // Percent
-            size = percentToInt((*it).toString());
-            if (size == -1) {
-            } else if (header->orientation() == Qt::Horizontal) {
-              size = view->width() * size / 100;
-            } else {
-              size = view->height() * size / 100;
-            }
-            break;
-          }
+                    case QVariant::String: // Percent
+                        size = percentToInt((*it).toString());
+                        if (size == -1) {
+                        } else if (header->orientation() == Qt::Horizontal) {
+                            size = view->width() * size / 100;
+                        } else {
+                            size = view->height() * size / 100;
+                        }
+                        break;
 
-          default:
-            Q_ASSERT(false);
-          }
+                    default:
+                        Q_ASSERT(false);
+                    }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-          switch (header->sectionResizeMode(i)) {
+                    switch (header->sectionResizeMode(i)) {
 #else
-          switch (header->resizeMode(i)) {
+                    switch (header->resizeMode(i)) {
 #endif
-          case QHeaderView::Interactive:
-          case QHeaderView::Fixed:
-            header->resizeSection(i, size == -1 ? header->sectionSizeHint(i) : size);
-            break;
+                    case QHeaderView::Interactive:
+                    case QHeaderView::Fixed:
+                        header->resizeSection(i, size == -1 ? header->sectionSizeHint(i) : size);
+                        break;
 
-          default:
-            break;
-          }
+                    default:
+                        break;
+                    }
 
-          i++;
+                    i++;
+                }
+            }
+        } else {
+            if (!m_resizing) {
+                const int count
+                    = m_stateSettings->value(widgetStateSectionsKey(header), -1).toInt();
+                if (count == header->count()) {
+                    header->restoreState(state);
+                    header->setProperty(WIDGET_CUSTOMIZED, true);
+                } else {
+                    // QHeaderView is not able to restore state correctly when the column count changed
+                    // and lead to crash... let clear the settings.
+                    m_stateSettings->remove(widgetStateSectionsKey(header));
+                    m_stateSettings->remove(widgetStateKey(header));
+                }
+            }
         }
-      }
-    } else {
-      if (!m_resizing) {
-        const int count = m_stateSettings->value(widgetStateSectionsKey(header), -1).toInt();
-        if (count == header->count()) {
-          header->restoreState(state);
-          header->setProperty(WIDGET_CUSTOMIZED, true);
-        }
-        else {
-          // QHeaderView is not able to restore state correctly when the column count changed
-          // and lead to crash... let clear the settings.
-          m_stateSettings->remove(widgetStateSectionsKey(header));
-          m_stateSettings->remove(widgetStateKey(header));
-        }
-      }
     }
-  }
 }
 
 void UIStateManager::saveHeaderState(QHeaderView *header)
 {
-  const QHeaderViewList headers = header ? (QHeaderViewList() << header) : this->headers();
-  foreach (QHeaderView *header, headers) {
-    if (!checkWidget(header) || header->count() == 0 || !header->property(WIDGET_CUSTOMIZED).toBool()) {
-      continue;
-    }
+    const QHeaderViewList headers = header ? (QHeaderViewList() << header) : this->headers();
+    foreach (QHeaderView *header, headers) {
+        if (!checkWidget(header) || header->count() == 0
+            || !header->property(WIDGET_CUSTOMIZED).toBool())
+            continue;
 
-    m_stateSettings->setValue(widgetStateSectionsKey(header), header->count());
-    m_stateSettings->setValue(widgetStateKey(header), header->saveState());
-  }
+        m_stateSettings->setValue(widgetStateSectionsKey(header), header->count());
+        m_stateSettings->setValue(widgetStateKey(header), header->saveState());
+    }
 }
 
 void UIStateManager::headerSectionCountChanged()
 {
-  restoreHeaderState(qobject_cast<QHeaderView *>(sender()));
+    restoreHeaderState(qobject_cast<QHeaderView *>(sender()));
 }
 
 void UIStateManager::widgetResized(QWidget *widget)
 {
-  Util::SetTempValue<bool> guard(m_resizing, true);
+    Util::SetTempValue<bool> guard(m_resizing, true);
 
-  if (widget == m_widget) {
-    restoreSplitterState();
-    restoreHeaderState();
-  } else {
-    foreach (QHeaderView *header, widget->findChildren<QHeaderView *>()) {
-      restoreHeaderState(header);
+    if (widget == m_widget) {
+        restoreSplitterState();
+        restoreHeaderState();
+    } else {
+        foreach (QHeaderView *header, widget->findChildren<QHeaderView *>())
+            restoreHeaderState(header);
     }
-  }
 }
 
 void UIStateManager::widgetCustomized()
 {
-  QSplitter *splitter = qobject_cast<QSplitter *>(sender());
-  HeaderView *header = qobject_cast<HeaderView *>(sender());
+    QSplitter *splitter = qobject_cast<QSplitter *>(sender());
+    HeaderView *header = qobject_cast<HeaderView *>(sender());
 
-  if (splitter) {
-    splitter->setProperty(WIDGET_CUSTOMIZED, true);
-    saveSplitterState(splitter);
-  } else if (header) {
-    // There is no way to know if a resize is manual or programamtically...
-    // So only cast against our HeaderView which has a isState() member.
-    if (header->isState(HeaderView::ResizeSection)) {
-      header->setProperty(WIDGET_CUSTOMIZED, true);
-      saveHeaderState(header);
+    if (splitter) {
+        splitter->setProperty(WIDGET_CUSTOMIZED, true);
+        saveSplitterState(splitter);
+    } else if (header) {
+        // There is no way to know if a resize is manual or programamtically...
+        // So only cast against our HeaderView which has a isState() member.
+        if (header->isState(HeaderView::ResizeSection)) {
+            header->setProperty(WIDGET_CUSTOMIZED, true);
+            saveHeaderState(header);
+        }
     }
-  }
 }

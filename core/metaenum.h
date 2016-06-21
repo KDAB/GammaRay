@@ -32,18 +32,16 @@
 #include <QStringList>
 
 namespace GammaRay {
-
 /** Enum/flag stringification utilities. */
 namespace MetaEnum {
-
-template <typename T>
+template<typename T>
 struct Value {
     T value;
-    const char* const name;
+    const char * const name;
 };
 
-template <typename T, std::size_t N>
-QString enumToString(T value, const Value<T> (&lookupTable)[N])
+template<typename T, std::size_t N>
+QString enumToString(T value, const Value<T>(&lookupTable)[N])
 {
     for (std::size_t i = 0; i < N; ++i) {
         if (lookupTable[i].value == value)
@@ -52,8 +50,8 @@ QString enumToString(T value, const Value<T> (&lookupTable)[N])
     return QStringLiteral("unknown (") + QString::number(value) + ')';
 }
 
-template <typename T, typename F, std::size_t N>
-QString flagsToString(T flags, const Value<F> (&lookupTable)[N])
+template<typename T, typename F, std::size_t N>
+QString flagsToString(T flags, const Value<F>(&lookupTable)[N])
 {
     QStringList l;
     T handledFlags = 0;
@@ -65,7 +63,8 @@ QString flagsToString(T flags, const Value<F> (&lookupTable)[N])
     }
 
     if (flags & ~handledFlags)
-        l.push_back(QStringLiteral("flag 0x") + QString::number(qulonglong(flags & ~handledFlags), 16));
+        l.push_back(QStringLiteral("flag 0x")
+                    + QString::number(qulonglong(flags & ~handledFlags), 16));
 
     if (l.isEmpty()) {
         // check if we have a special 0-value
@@ -77,9 +76,7 @@ QString flagsToString(T flags, const Value<F> (&lookupTable)[N])
     }
     return l.join(QStringLiteral("|"));
 }
-
 }
-
 }
 
 #endif

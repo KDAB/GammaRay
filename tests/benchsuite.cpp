@@ -41,39 +41,39 @@ using namespace GammaRay;
 
 void BenchSuite::iconForObject()
 {
-  QWidget widget;
-  QLabel label;
-  QTreeView treeView;
-  QBENCHMARK {
-    Util::iconForObject(this);
-    Util::iconForObject(&widget);
-    Util::iconForObject(&label);
-    Util::iconForObject(&treeView);
-  }
+    QWidget widget;
+    QLabel label;
+    QTreeView treeView;
+    QBENCHMARK {
+        Util::iconForObject(this);
+        Util::iconForObject(&widget);
+        Util::iconForObject(&label);
+        Util::iconForObject(&treeView);
+    }
 }
 
 void BenchSuite::probe_objectAdded()
 {
-  Probe::createProbe(false);
+    Probe::createProbe(false);
 
-  static const int NUM_OBJECTS = 10000;
-  QVector<QObject*> objects;
-  objects.reserve(NUM_OBJECTS + 1);
-  // fill it
-  for (int i = 0; i < NUM_OBJECTS; ++i) {
-    QObject *obj = new QObject;
-    objects << obj;
-  }
-
-  QVector<QObject*>::const_iterator it = objects.constBegin();
-  QVector<QObject*>::const_iterator end = objects.constEnd();
-  QBENCHMARK_ONCE {
-    while (it != end) {
-      Probe::objectAdded(*it);
-      ++it;
+    static const int NUM_OBJECTS = 10000;
+    QVector<QObject *> objects;
+    objects.reserve(NUM_OBJECTS + 1);
+    // fill it
+    for (int i = 0; i < NUM_OBJECTS; ++i) {
+        QObject *obj = new QObject;
+        objects << obj;
     }
-  }
 
-  qDeleteAll(objects);
-  delete Probe::instance();
+    QVector<QObject *>::const_iterator it = objects.constBegin();
+    QVector<QObject *>::const_iterator end = objects.constEnd();
+    QBENCHMARK_ONCE {
+        while (it != end) {
+            Probe::objectAdded(*it);
+            ++it;
+        }
+    }
+
+    qDeleteAll(objects);
+    delete Probe::instance();
 }

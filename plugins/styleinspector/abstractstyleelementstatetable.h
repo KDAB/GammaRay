@@ -39,7 +39,6 @@ class QPainter;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class StyleInspectorInterface;
 
 /**
@@ -48,27 +47,26 @@ class StyleInspectorInterface;
  */
 class AbstractStyleElementStateTable : public GammaRay::AbstractStyleElementModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit AbstractStyleElementStateTable(QObject *parent = 0);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     int doColumnCount() const Q_DECL_OVERRIDE;
     QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
 
     /// standard setup for the style option used in a cell in column @p column
     void fillStyleOption(QStyleOption *option, int column) const;
 
-  protected:
+protected:
     StyleInspectorInterface *m_interface;
 
-  private slots:
+private slots:
     void cellSizeChanged();
 };
-
 }
 
 #endif // GAMMARAY_ABSTRACTSTYLEELEMENTSTATETABLE_H

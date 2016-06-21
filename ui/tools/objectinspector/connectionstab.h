@@ -32,7 +32,6 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 class ConnectionsExtensionInterface;
 class PropertyWidget;
 namespace Ui {
@@ -41,16 +40,16 @@ class ConnectionsTab;
 
 class ConnectionsTab : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ConnectionsTab(PropertyWidget *parent = 0);
     ~ConnectionsTab();
 
-  private slots:
+private slots:
     void inboundContextMenu(const QPoint &pos);
     void outboundContextMenu(const QPoint &pos);
 
-  private:
+private:
     QScopedPointer<Ui::ConnectionsTab> ui;
     ConnectionsExtensionInterface *m_interface;
 };

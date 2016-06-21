@@ -36,11 +36,10 @@ class QAbstractItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class StyleInspectorInterface;
 
 namespace Ui {
-  class StyleElementStateTablePage;
+class StyleElementStateTablePage;
 }
 
 /**
@@ -48,23 +47,22 @@ namespace Ui {
  */
 class StyleElementStateTablePage : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit StyleElementStateTablePage(QWidget *parent = 0);
     ~StyleElementStateTablePage();
     void setModel(QAbstractItemModel *model);
 
-  protected:
+protected:
     void showEvent(QShowEvent *show) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void updateCellSize();
 
-  private:
+private:
     Ui::StyleElementStateTablePage *ui;
     StyleInspectorInterface *m_interface;
 };
-
 }
 
 #endif // GAMMARAY_STYLEELEMENTSTATETABLEPAGE_H

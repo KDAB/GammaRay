@@ -34,19 +34,17 @@
 #include <QTcpSocket>
 
 namespace GammaRay {
-
 class TcpClientDevice : public ClientDeviceImpl<QTcpSocket>
 {
     Q_OBJECT
 public:
-    explicit TcpClientDevice(QObject* parent = 0);
+    explicit TcpClientDevice(QObject *parent = 0);
     void connectToHost() Q_DECL_OVERRIDE;
     void disconnectFromHost() Q_DECL_OVERRIDE;
 
 private slots:
     void socketError();
 };
-
 }
 
 #endif // GAMMARAY_TCPCLIENTDEVICE_H

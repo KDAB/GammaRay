@@ -38,21 +38,25 @@
 
 using namespace GammaRay;
 
-ConnectPage::ConnectPage(QWidget* parent): QWidget(parent), ui(new Ui::ConnectPage)
+ConnectPage::ConnectPage(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::ConnectPage)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  connect(ui->host, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
-  connect(ui->port, SIGNAL(valueChanged(int)), SIGNAL(updateButtonState()));
+    connect(ui->host, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
+    connect(ui->port, SIGNAL(valueChanged(int)), SIGNAL(updateButtonState()));
 
-  NetworkDiscoveryModel* model = new NetworkDiscoveryModel(this);
-  ui->instanceView->setModel(model);
-  connect(ui->instanceView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(instanceSelected()));
-  connect(ui->instanceView, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
+    NetworkDiscoveryModel *model = new NetworkDiscoveryModel(this);
+    ui->instanceView->setModel(model);
+    connect(ui->instanceView->selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(instanceSelected()));
+    connect(ui->instanceView, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
 
-  QSettings settings;
-  ui->host->setText(settings.value(QStringLiteral("Connect/Host"), QString()).toString());
-  ui->port->setValue(settings.value(QStringLiteral("Connect/Port"), Endpoint::defaultPort()).toInt());
+    QSettings settings;
+    ui->host->setText(settings.value(QStringLiteral("Connect/Host"), QString()).toString());
+    ui->port->setValue(settings.value(QStringLiteral("Connect/Port"),
+                                      Endpoint::defaultPort()).toInt());
 }
 
 ConnectPage::~ConnectPage()
@@ -61,32 +65,31 @@ ConnectPage::~ConnectPage()
 
 bool ConnectPage::isValid() const
 {
-  return !ui->host->text().isEmpty();
+    return !ui->host->text().isEmpty();
 }
 
 void ConnectPage::launchClient()
 {
-  QUrl url;
-  url.setScheme(QStringLiteral("tcp"));
-  url.setHost(ui->host->text());
-  url.setPort(ui->port->value());
-  ClientLauncher::launchDetached(url);
+    QUrl url;
+    url.setScheme(QStringLiteral("tcp"));
+    url.setHost(ui->host->text());
+    url.setPort(ui->port->value());
+    ClientLauncher::launchDetached(url);
 }
 
 void ConnectPage::writeSettings()
 {
-  QSettings settings;
-  settings.setValue(QStringLiteral("Connect/Host"), ui->host->text());
-  settings.setValue(QStringLiteral("Connect/Port"), ui->port->value());
+    QSettings settings;
+    settings.setValue(QStringLiteral("Connect/Host"), ui->host->text());
+    settings.setValue(QStringLiteral("Connect/Port"), ui->port->value());
 }
 
 void ConnectPage::instanceSelected()
 {
-  const QModelIndexList rows = ui->instanceView->selectionModel()->selectedRows();
-  if (rows.size() != 1)
-    return;
+    const QModelIndexList rows = ui->instanceView->selectionModel()->selectedRows();
+    if (rows.size() != 1)
+        return;
 
-  ui->host->setText(rows.first().data(NetworkDiscoveryModel::HostNameRole).toString());
-  ui->port->setValue(rows.first().data(NetworkDiscoveryModel::PortRole).toInt());
+    ui->host->setText(rows.first().data(NetworkDiscoveryModel::HostNameRole).toString());
+    ui->port->setValue(rows.first().data(NetworkDiscoveryModel::PortRole).toInt());
 }
-

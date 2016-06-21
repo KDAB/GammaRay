@@ -30,7 +30,7 @@
 
 using namespace GammaRay;
 
-Qt3DGeometryExtensionClient::Qt3DGeometryExtensionClient(const QString& name, QObject* parent) :
-    Qt3DGeometryExtensionInterface(name, parent)
+Qt3DGeometryExtensionClient::Qt3DGeometryExtensionClient(const QString &name, QObject *parent)
+    : Qt3DGeometryExtensionInterface(name, parent)
 {
 }

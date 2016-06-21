@@ -35,13 +35,11 @@
 #include <QFormBuilder>
 
 namespace GammaRay {
-
 class UiExtractor : public QFormBuilder
 {
-  protected:
+protected:
     bool checkProperty(QObject *obj, const QString &prop) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif

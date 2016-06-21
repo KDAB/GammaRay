@@ -38,34 +38,34 @@ class QAbstractProxyModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SelectionModelInspector : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit SelectionModelInspector(ProbeInterface *probe, QObject *parent = 0);
 
-  private slots:
+private slots:
     void currentChanged(const QModelIndex &current);
 
-  private:
+private:
     QAbstractProxyModel *m_current;
 };
 
-class SelectionModelInspectorFactory :
-    public QObject, public StandardToolFactory<QItemSelectionModel, SelectionModelInspector>
+class SelectionModelInspectorFactory : public QObject,
+    public StandardToolFactory<QItemSelectionModel, SelectionModelInspector>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_selectionmodelinspector.json")
-  public:
-    explicit SelectionModelInspectorFactory(QObject *parent = 0) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(
+        IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_selectionmodelinspector.json")
+public:
+    explicit SelectionModelInspectorFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_SELECTIONMODELINSPECTOR_H

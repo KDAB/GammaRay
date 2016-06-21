@@ -34,7 +34,6 @@
 #include <QVector>
 
 namespace GammaRay {
-
 /** Meta-data about a specific plugin.
  *  This abstracts Qt5-style embedded JSON data and Qt4-style desktop files.
  */

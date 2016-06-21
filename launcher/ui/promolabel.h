@@ -32,24 +32,22 @@
 #include <QLabel>
 
 namespace GammaRay {
-
 class PromoLabel : public QLabel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit PromoLabel(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
     static QImage tintedImage(const QString &image, const QColor &color);
 
-  protected:
+protected:
     bool event(QEvent *e) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
 
-  private:
+private:
     void updatePixmap();
 };
-
 }
 
 #endif // PROMOLABEL_H

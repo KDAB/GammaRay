@@ -30,19 +30,17 @@
 #include "statemachineviewerinterface.h"
 
 namespace GammaRay {
-
 class StateMachineViewerClient : public StateMachineViewerInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::StateMachineViewerInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::StateMachineViewerInterface)
+public:
     explicit StateMachineViewerClient(QObject *parent = 0);
 
     void selectStateMachine(int index) Q_DECL_OVERRIDE;
     void toggleRunning() Q_DECL_OVERRIDE;
     void repopulateGraph() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_STATEMACHINEVIEWERCLIENT_H

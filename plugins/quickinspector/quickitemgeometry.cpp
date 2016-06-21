@@ -29,71 +29,69 @@
 #include "quickitemgeometry.h"
 
 namespace GammaRay {
-
-QDataStream& operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry)
+QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry)
 {
-  stream << geometry.itemRect
-         << geometry.boundingRect
-         << geometry.childrenRect
+    stream << geometry.itemRect
+           << geometry.boundingRect
+           << geometry.childrenRect
 
-         << geometry.transformOriginPoint
-         << geometry.transform
-         << geometry.parentTransform
+           << geometry.transformOriginPoint
+           << geometry.transform
+           << geometry.parentTransform
 
-         << geometry.x
-         << geometry.y
+           << geometry.x
+           << geometry.y
 
-         << geometry.left
-         << geometry.right
-         << geometry.top
-         << geometry.bottom
-         << geometry.horizontalCenter
-         << geometry.verticalCenter
-         << geometry.baseline
+           << geometry.left
+           << geometry.right
+           << geometry.top
+           << geometry.bottom
+           << geometry.horizontalCenter
+           << geometry.verticalCenter
+           << geometry.baseline
 
-         << geometry.margins
-         << geometry.leftMargin
-         << geometry.horizontalCenterOffset
-         << geometry.rightMargin
-         << geometry.topMargin
-         << geometry.verticalCenterOffset
-         << geometry.bottomMargin
-         << geometry.baselineOffset;
+           << geometry.margins
+           << geometry.leftMargin
+           << geometry.horizontalCenterOffset
+           << geometry.rightMargin
+           << geometry.topMargin
+           << geometry.verticalCenterOffset
+           << geometry.bottomMargin
+           << geometry.baselineOffset;
 
-  return stream;
+    return stream;
 }
 
-QDataStream& operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry)
+QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry)
 {
-  stream >> geometry.itemRect
-         >> geometry.boundingRect
-         >> geometry.childrenRect
+    stream >> geometry.itemRect
+    >> geometry.boundingRect
+    >> geometry.childrenRect
 
-         >> geometry.transformOriginPoint
-         >> geometry.transform
-         >> geometry.parentTransform
+    >> geometry.transformOriginPoint
+    >> geometry.transform
+    >> geometry.parentTransform
 
-         >> geometry.x
-         >> geometry.y
+    >> geometry.x
+    >> geometry.y
 
-         >> geometry.left
-         >> geometry.right
-         >> geometry.top
-         >> geometry.bottom
-         >> geometry.horizontalCenter
-         >> geometry.verticalCenter
-         >> geometry.baseline
+    >> geometry.left
+    >> geometry.right
+    >> geometry.top
+    >> geometry.bottom
+    >> geometry.horizontalCenter
+    >> geometry.verticalCenter
+    >> geometry.baseline
 
-         >> geometry.margins
-         >> geometry.leftMargin
-         >> geometry.horizontalCenterOffset
-         >> geometry.rightMargin
-         >> geometry.topMargin
-         >> geometry.verticalCenterOffset
-         >> geometry.bottomMargin
-         >> geometry.baselineOffset;
+    >> geometry.margins
+    >> geometry.leftMargin
+    >> geometry.horizontalCenterOffset
+    >> geometry.rightMargin
+    >> geometry.topMargin
+    >> geometry.verticalCenterOffset
+    >> geometry.bottomMargin
+    >> geometry.baselineOffset;
 
-  return stream;
+    return stream;
 }
-
 }

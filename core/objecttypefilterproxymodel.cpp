@@ -30,23 +30,22 @@
 
 using namespace GammaRay;
 
-ObjectFilterProxyModelBase::ObjectFilterProxyModelBase(QObject *parent) :
-    QSortFilterProxyModel(parent)
+ObjectFilterProxyModelBase::ObjectFilterProxyModelBase(QObject *parent)
+    : QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
 }
 
-bool ObjectFilterProxyModelBase::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+bool ObjectFilterProxyModelBase::filterAcceptsRow(int source_row,
+                                                  const QModelIndex &source_parent) const
 {
     const QModelIndex source_index = sourceModel()->index(source_row, 0, source_parent);
-    if (!source_index.isValid()) {
+    if (!source_index.isValid())
         return false;
-    }
 
-    QObject *obj = source_index.data(ObjectModel::ObjectRole).value<QObject*>();
-    if (!obj || !filterAcceptsObject(obj)) {
+    QObject *obj = source_index.data(ObjectModel::ObjectRole).value<QObject *>();
+    if (!obj || !filterAcceptsObject(obj))
         return false;
-    }
 
     return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }

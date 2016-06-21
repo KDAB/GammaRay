@@ -26,7 +26,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "variantpropertyobject.h"
 
 #include <QHash>
@@ -37,9 +36,9 @@ typedef QHash<QString, int> StringIntHash;
 Q_DECLARE_METATYPE(StringIntHash)
 #endif
 
-VariantPropertyObject::VariantPropertyObject(QObject *parent):
-    QObject(parent),
-    m_object(new QObject)
+VariantPropertyObject::VariantPropertyObject(QObject *parent)
+    : QObject(parent)
+    , m_object(new QObject)
 {
     QHash<QString, int> mapping;
     mapping.insert(QStringLiteral("One"), 1);
@@ -54,20 +53,20 @@ VariantPropertyObject::~VariantPropertyObject()
 
 QSharedPointer<QObject> VariantPropertyObject::sharedObject() const
 {
-  return m_object;
+    return m_object;
 }
 
 QPointer<QObject> VariantPropertyObject::trackingObject() const
 {
-  return m_object.data();
+    return m_object.data();
 }
 
 QVector<int> VariantPropertyObject::widgetVector() const
 {
-  QVector<int> vec;
-  vec << 5;
-  vec << 6;
-  vec << 7;
-  vec << 8;
-  return vec;
+    QVector<int> vec;
+    vec << 5;
+    vec << 6;
+    vec << 7;
+    vec << 8;
+    return vec;
 }

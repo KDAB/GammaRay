@@ -51,29 +51,28 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 namespace Ui {
-  class ObjectInspectorWidget;
+class ObjectInspectorWidget;
 }
 
-template <typename T>
-static QObject* createExtension(const QString &name, QObject *parent)
+template<typename T>
+static QObject *createExtension(const QString &name, QObject *parent)
 {
-  return new T(name, parent);
+    return new T(name, parent);
 }
 
 class ObjectInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ObjectInspectorWidget(QWidget *parent = 0);
     ~ObjectInspectorWidget();
 
-  private slots:
+private slots:
     void objectSelectionChanged(const QItemSelection &selection);
     void objectContextMenuRequested(const QPoint &pos);
 
-  private:
+private:
     QScopedPointer<Ui::ObjectInspectorWidget> ui;
     UIStateManager m_stateManager;
 };
@@ -82,22 +81,41 @@ class ObjectInspectorFactory : public QObject, public ToolUiFactory
 {
     Q_OBJECT
 public:
-  QString id() const Q_DECL_OVERRIDE { return QStringLiteral("GammaRay::ObjectInspector"); }
-  QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE { return new ObjectInspectorWidget(parentWidget); }
-  void initUi() Q_DECL_OVERRIDE
-  {
-    PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), tr("Properties"), PropertyWidgetTabPriority::First);
-    ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface*>(createExtension<PropertiesExtensionClient>);
-    PropertyWidget::registerTab<MethodsTab>(QStringLiteral("methods"), tr("Methods"), PropertyWidgetTabPriority::Basic - 1);
-    ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface*>(createExtension<MethodsExtensionClient>);
-    PropertyWidget::registerTab<ConnectionsTab>(QStringLiteral("connections"), tr("Connections"), PropertyWidgetTabPriority::Basic - 1);
-    ObjectBroker::registerClientObjectFactoryCallback<ConnectionsExtensionInterface*>(createExtension<ConnectionsExtensionClient>);
-    PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), tr("Enums"), PropertyWidgetTabPriority::Exotic - 1);
-    PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), tr("Class Info"), PropertyWidgetTabPriority::Exotic - 1);
-    PropertyWidget::registerTab<ApplicationAttributeTab>(QStringLiteral("applicationAttributes"), tr("Attributes"), PropertyWidgetTabPriority::Advanced);
-  }
+    QString id() const Q_DECL_OVERRIDE { return QStringLiteral("GammaRay::ObjectInspector"); }
+    QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE
+    {
+        return new ObjectInspectorWidget(
+            parentWidget);
+    }
+    void initUi() Q_DECL_OVERRIDE
+    {
+        PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), tr(
+                                                       "Properties"),
+                                                   PropertyWidgetTabPriority::First);
+        ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface *>(
+            createExtension<PropertiesExtensionClient>);
+        PropertyWidget::registerTab<MethodsTab>(QStringLiteral("methods"), tr(
+                                                    "Methods"),
+                                                PropertyWidgetTabPriority::Basic - 1);
+        ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface *>(
+            createExtension<MethodsExtensionClient>);
+        PropertyWidget::registerTab<ConnectionsTab>(QStringLiteral("connections"), tr(
+                                                        "Connections"),
+                                                    PropertyWidgetTabPriority::Basic - 1);
+        ObjectBroker::registerClientObjectFactoryCallback<ConnectionsExtensionInterface *>(
+            createExtension<ConnectionsExtensionClient>);
+        PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), tr(
+                                                  "Enums"), PropertyWidgetTabPriority::Exotic - 1);
+        PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), tr(
+                                                      "Class Info"),
+                                                  PropertyWidgetTabPriority::Exotic - 1);
+        PropertyWidget::registerTab<ApplicationAttributeTab>(QStringLiteral(
+                                                                 "applicationAttributes"),
+                                                             tr(
+                                                                 "Attributes"),
+            PropertyWidgetTabPriority::Advanced);
+    }
 };
-
 }
 
 #endif // GAMMARAY_OBJECTINSPECTOR_H

@@ -37,7 +37,6 @@
 #include <QVector>
 
 namespace GammaRay {
-
 /** Helper class to bind two properties together, similar to QML. */
 class GAMMARAY_UI_EXPORT PropertyBinder : public QObject
 {
@@ -54,7 +53,8 @@ public:
      *  This is a convenience overload for syncing a single property pair, initial synchronization
      *  from source to destination happens automatically.
      */
-    explicit PropertyBinder(QObject *source, const char *sourceProp, QObject *destination, const char *destProp);
+    explicit PropertyBinder(QObject *source, const char *sourceProp, QObject *destination,
+                            const char *destProp);
 
     ~PropertyBinder();
 
@@ -72,11 +72,11 @@ private slots:
     void syncDestinationToSource();
 
 private:
-    QObject* m_source;
+    QObject *m_source;
     QPointer<QObject> m_destination;
     struct Binding {
-      QMetaProperty sourceProperty;
-      QMetaProperty destinationProperty;
+        QMetaProperty sourceProperty;
+        QMetaProperty destinationProperty;
     };
     QVector<Binding> m_properties;
     bool m_lock;

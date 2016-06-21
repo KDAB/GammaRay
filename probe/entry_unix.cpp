@@ -35,11 +35,10 @@ using namespace GammaRay;
 class HitMeBabyOneMoreTime
 {
 public:
-  HitMeBabyOneMoreTime()
-  {
-    Hooks::installHooks();
-  }
-
+    HitMeBabyOneMoreTime()
+    {
+        Hooks::installHooks();
+    }
 };
 
 static HitMeBabyOneMoreTime britney;

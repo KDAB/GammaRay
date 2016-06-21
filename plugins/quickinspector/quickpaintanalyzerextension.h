@@ -32,7 +32,6 @@
 #include <core/propertycontrollerextension.h>
 
 namespace GammaRay {
-
 class PaintAnalyzer;
 class PropertyController;
 

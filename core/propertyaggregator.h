@@ -36,26 +36,25 @@
 #include <QVector>
 
 namespace GammaRay {
-
 /** Aggregates the results of a bunch of PropertyAdaptor instances. */
 class GAMMARAY_CORE_EXPORT PropertyAggregator : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit PropertyAggregator(QObject* parent = 0);
+    explicit PropertyAggregator(QObject *parent = 0);
     ~PropertyAggregator();
 
     int count() const Q_DECL_OVERRIDE;
     PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
-    void writeProperty(int index, const QVariant& value) Q_DECL_OVERRIDE;
+    void writeProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
     bool canAddProperty() const Q_DECL_OVERRIDE;
-    void addProperty(const PropertyData& data) Q_DECL_OVERRIDE;
+    void addProperty(const PropertyData &data) Q_DECL_OVERRIDE;
     void resetProperty(int index) Q_DECL_OVERRIDE;
 
     void addPropertyAdaptor(PropertyAdaptor *adaptor);
 
 protected:
-    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
 
 private slots:
     void slotPropertyChanged(int first, int last);
@@ -63,9 +62,8 @@ private slots:
     void slotPropertyRemoved(int first, int last);
 
 private:
-    QVector<PropertyAdaptor*> m_propertyAdaptors;
+    QVector<PropertyAdaptor *> m_propertyAdaptors;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYAGGREGATOR_H

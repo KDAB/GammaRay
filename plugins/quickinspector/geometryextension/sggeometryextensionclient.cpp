@@ -35,9 +35,8 @@
 using namespace GammaRay;
 
 SGGeometryExtensionClient::SGGeometryExtensionClient(const QString &name, QObject *parent)
-  : SGGeometryExtensionInterface(name, parent)
+    : SGGeometryExtensionInterface(name, parent)
 {
-
 }
 
 SGGeometryExtensionClient::~SGGeometryExtensionClient()

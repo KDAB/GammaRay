@@ -34,59 +34,56 @@
 
 #include <iostream>
 
-namespace GammaRay
-{
-
+namespace GammaRay {
 /** Base class for wrappers for potentially not yet loaded plugins. */
 class ProxyFactoryBase : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ProxyFactoryBase(const PluginInfo &pluginInfo, QObject *parent = 0);
-  ~ProxyFactoryBase();
+    explicit ProxyFactoryBase(const PluginInfo &pluginInfo, QObject *parent = 0);
+    ~ProxyFactoryBase();
 
-  PluginInfo pluginInfo() const;
-  QString errorString() const;
+    PluginInfo pluginInfo() const;
+    QString errorString() const;
 
 protected:
-  void loadPlugin();
+    void loadPlugin();
 
-  QObject *m_factory;
-  QString m_errorString;
+    QObject *m_factory;
+    QString m_errorString;
 
 private:
-  PluginInfo m_pluginInfo;
+    PluginInfo m_pluginInfo;
 };
 
-template <typename IFace>
+template<typename IFace>
 class ProxyFactory : public ProxyFactoryBase, public IFace
 {
 public:
-  explicit inline ProxyFactory(const PluginInfo &pluginInfo, QObject *parent = 0)
-    : ProxyFactoryBase(pluginInfo, parent) {}
-  inline ~ProxyFactory() {}
+    explicit inline ProxyFactory(const PluginInfo &pluginInfo, QObject *parent = 0)
+        : ProxyFactoryBase(pluginInfo, parent) {}
+    inline ~ProxyFactory() {}
 
-  QString id() const Q_DECL_OVERRIDE
-  {
-    return pluginInfo().id();
-  }
+    QString id() const Q_DECL_OVERRIDE
+    {
+        return pluginInfo().id();
+    }
 
 protected:
-  IFace *factory()
-  {
-    loadPlugin();
-    IFace *iface = qobject_cast<IFace*>(m_factory);
-    if (!iface) {
-      m_errorString =
-        QObject::tr("Plugin does not provide an instance of %1.").
-        arg(qobject_interface_iid<IFace*>());
-      std::cerr << "Failed to cast object from " << qPrintable(pluginInfo().path())
-                << " to " << qobject_interface_iid<IFace*>() << std::endl;
+    IFace *factory()
+    {
+        loadPlugin();
+        IFace *iface = qobject_cast<IFace *>(m_factory);
+        if (!iface) {
+            m_errorString
+                = QObject::tr("Plugin does not provide an instance of %1.").
+                  arg(qobject_interface_iid<IFace *>());
+            std::cerr << "Failed to cast object from " << qPrintable(pluginInfo().path())
+                      << " to " << qobject_interface_iid<IFace *>() << std::endl;
+        }
+        return iface;
     }
-    return iface;
-  }
 };
-
 }
 
 #endif // GAMMARAY_PROXYFACTORYBASE_H

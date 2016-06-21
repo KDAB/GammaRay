@@ -39,12 +39,11 @@ class QUdpSocket;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class TcpServerDevice : public ServerDeviceImpl<QTcpServer>
 {
     Q_OBJECT
 public:
-    explicit TcpServerDevice(QObject* parent = 0);
+    explicit TcpServerDevice(QObject *parent = 0);
     ~TcpServerDevice();
 
     bool listen() Q_DECL_OVERRIDE;
@@ -52,9 +51,8 @@ public:
     void broadcast(const QByteArray &data) Q_DECL_OVERRIDE;
 
 private:
-    QUdpSocket* m_broadcastSocket;
+    QUdpSocket *m_broadcastSocket;
 };
-
 }
 
 #endif // GAMMARAY_TCPSERVERDEVICE_H

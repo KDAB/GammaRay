@@ -32,5 +32,5 @@
 
 void Gadget::someMethod()
 {
-  qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
 }

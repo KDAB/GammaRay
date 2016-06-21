@@ -34,23 +34,21 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class StandardPathsWidget;
+class StandardPathsWidget;
 }
 
 class StandardPathsWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit StandardPathsWidget(QWidget *parent = 0);
     ~StandardPathsWidget();
 
-  private:
+private:
     QScopedPointer<Ui::StandardPathsWidget> ui;
     UIStateManager m_stateManager;
 };
-
 }
 
 #endif // GAMMARAY_STANDARDPATHSWIDGET_H

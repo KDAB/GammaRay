@@ -51,16 +51,15 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class StateModel;
 class StateMachineWatcher;
 class TransitionModel;
 
 class StateMachineViewerServer : public StateMachineViewerInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::StateMachineViewerInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::StateMachineViewerInterface)
+public:
     explicit StateMachineViewerServer(ProbeInterface *probe, QObject *parent = 0);
 
     void addState(QAbstractState *state);
@@ -69,7 +68,7 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     QStateMachine *selectedStateMachine() const;
 
     using StateMachineViewerInterface::stateConfigurationChanged;
-  private slots:
+private slots:
     void stateEntered(QAbstractState *state);
     void stateExited(QAbstractState *state);
     void stateConfigurationChanged();
@@ -77,16 +76,16 @@ class StateMachineViewerServer : public StateMachineViewerInterface
 
     void stateSelectionChanged();
 
-    void setFilteredStates(const QVector<QAbstractState*> &states);
+    void setFilteredStates(const QVector<QAbstractState *> &states);
     void selectStateMachine(int row) Q_DECL_OVERRIDE;
-    void setSelectedStateMachine(QStateMachine* machine);
+    void setSelectedStateMachine(QStateMachine *machine);
 
     void updateStartStop();
     void toggleRunning() Q_DECL_OVERRIDE;
 
     void repopulateGraph() Q_DECL_OVERRIDE;
 
-  private:
+private:
     void registerTypes();
     void updateStateItems();
 
@@ -98,28 +97,28 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     TransitionModel *m_transitionModel;
 
     // filters
-    QVector<QAbstractState*> m_filteredStates;
+    QVector<QAbstractState *> m_filteredStates;
 
     StateMachineWatcher *m_stateMachineWatcher;
-    QSet<QAbstractState*> m_recursionGuard;
-    QSet<QAbstractState*> m_lastStateConfig;
+    QSet<QAbstractState *> m_recursionGuard;
+    QSet<QAbstractState *> m_lastStateConfig;
 };
 
-class StateMachineViewerFactory :
-public QObject, public StandardToolFactory<QStateMachine, StateMachineViewerServer>
+class StateMachineViewerFactory : public QObject,
+    public StandardToolFactory<QStateMachine, StateMachineViewerServer>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_statemachineviewer.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_statemachineviewer.json")
 
-  public:
-    explicit StateMachineViewerFactory(QObject *parent = 0) : QObject(parent)
+public:
+    explicit StateMachineViewerFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_STATEMACHINEVIEWERSERVER_H

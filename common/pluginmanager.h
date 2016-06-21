@@ -39,32 +39,32 @@
 #include <iostream>
 
 namespace GammaRay {
-
 class PluginLoadError;
 
 typedef QList<PluginLoadError> PluginLoadErrors;
 
 class PluginLoadError
 {
-  public:
+public:
     PluginLoadError(const QString &_pluginFile, const QString &_errorString)
-      : pluginFile(_pluginFile), errorString(_errorString)
+        : pluginFile(_pluginFile)
+        , errorString(_errorString)
     {
     }
 
     QString pluginName() const
     {
-      return QFileInfo(pluginFile).baseName();
+        return QFileInfo(pluginFile).baseName();
     }
 
-  public:
+public:
     QString pluginFile;
     QString errorString;
 };
 
 class PluginManagerBase
 {
-  public:
+public:
     /**
      * @param parent This is the parent object for all objects created by the plugins
      */
@@ -73,60 +73,61 @@ class PluginManagerBase
 
     QList<PluginLoadError> errors() const
     {
-      return m_errors;
+        return m_errors;
     }
 
-  protected:
-    virtual bool createProxyFactory(const PluginInfo& pluginInfo, QObject* parent) = 0;
+protected:
+    virtual bool createProxyFactory(const PluginInfo &pluginInfo, QObject *parent) = 0;
 
-    void scan(const QString& serviceType);
+    void scan(const QString &serviceType);
     QStringList pluginPaths() const;
     QStringList pluginFilter() const;
 
     QList<PluginLoadError> m_errors;
     QObject *m_parent;
-  private:
+private:
     Q_DISABLE_COPY(PluginManagerBase)
 };
 
-template <typename IFace, typename Proxy>
+template<typename IFace, typename Proxy>
 class PluginManager : public PluginManagerBase
 {
 public:
-    explicit inline PluginManager(QObject *parent = 0) : PluginManagerBase(parent)
+    explicit inline PluginManager(QObject *parent = 0)
+        : PluginManagerBase(parent)
     {
-      const QString iid = QString::fromLatin1(qobject_interface_iid<IFace*>());
-      Q_ASSERT(!iid.isEmpty());
-      const QString serviceType = iid.split(QLatin1Char('/')).first();
-      scan(serviceType);
+        const QString iid = QString::fromLatin1(qobject_interface_iid<IFace *>());
+        Q_ASSERT(!iid.isEmpty());
+        const QString serviceType = iid.split(QLatin1Char('/')).first();
+        scan(serviceType);
     }
 
     inline ~PluginManager() {}
 
-    inline QVector<IFace*> plugins()
+    inline QVector<IFace *> plugins()
     {
-      return m_plugins;
+        return m_plugins;
     }
 
 protected:
-    bool createProxyFactory(const PluginInfo& pluginInfo, QObject* parent) Q_DECL_OVERRIDE
+    bool createProxyFactory(const PluginInfo &pluginInfo, QObject *parent) Q_DECL_OVERRIDE
     {
-      Proxy *proxy = new Proxy(pluginInfo, parent);
-      if (!proxy->isValid()) {
-        m_errors << PluginLoadError(pluginInfo.path(), QObject::tr("Failed to load plugin: %1").arg(proxy->errorString()));
-        std::cerr << "invalid plugin " << qPrintable(pluginInfo.path()) << std::endl;
-        delete proxy;
-      } else {
-        m_plugins.push_back(proxy);
-        return true;
-      }
-      return false;
+        Proxy *proxy = new Proxy(pluginInfo, parent);
+        if (!proxy->isValid()) {
+            m_errors << PluginLoadError(pluginInfo.path(), QObject::tr(
+                                            "Failed to load plugin: %1").arg(proxy->errorString()));
+            std::cerr << "invalid plugin " << qPrintable(pluginInfo.path()) << std::endl;
+            delete proxy;
+        } else {
+            m_plugins.push_back(proxy);
+            return true;
+        }
+        return false;
     }
 
 private:
-    QVector<IFace*> m_plugins;
+    QVector<IFace *> m_plugins;
 };
-
 }
 
 #endif // GAMMARAY_PLUGINMANAGER_H

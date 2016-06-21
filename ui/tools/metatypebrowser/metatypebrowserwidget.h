@@ -34,23 +34,21 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class MetaTypeBrowserWidget;
+class MetaTypeBrowserWidget;
 }
 
 class MetaTypeBrowserWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MetaTypeBrowserWidget(QWidget *parent = 0);
     ~MetaTypeBrowserWidget();
 
-  private:
+private:
     QScopedPointer<Ui::MetaTypeBrowserWidget> ui;
     UIStateManager m_stateManager;
 };
-
 }
 
 #endif // GAMMARAY_METATYPEBROWSERWIDGET_H

@@ -30,18 +30,16 @@
 #include "abstractfunctionoverwriter.h"
 
 namespace GammaRay {
-
 class FunctionOverwriterFactory
 {
-  public:
+public:
     static AbstractFunctionOverwriter *createFunctionOverwriter();
 
-  private:
+private:
     FunctionOverwriterFactory()
     {
     }
 };
-
 }
 
 #endif // FUNCTIONOVERWRITERFACTORY_H

@@ -67,10 +67,12 @@ void ItemDelegateInterface::setPlaceholderColumns(const QSet<int> &placeholderCo
 QString ItemDelegateInterface::defaultDisplayText(const QModelIndex &index) const
 {
     QString display = index.data().toString();
-    if (display.isEmpty() && (m_placeholderColumns.isEmpty() || m_placeholderColumns.contains(index.column())))
+    if (display.isEmpty()
+        && (m_placeholderColumns.isEmpty() || m_placeholderColumns.contains(index.column()))) {
         display = QString(m_placeholderText)
-                .replace(QStringLiteral("%r"), QString::number(index.row()))
-                .replace(QStringLiteral("%c"), QString::number(index.column()));
+                  .replace(QStringLiteral("%r"), QString::number(index.row()))
+                  .replace(QStringLiteral("%c"), QString::number(index.column()));
+    }
     return display;
 }
 
@@ -79,28 +81,30 @@ const QWidget *ItemDelegateInterface::widget(const QStyleOptionViewItem &option)
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     const QStyleOptionViewItem &opt(option);
 #else
-    const QStyleOptionViewItemV4 &opt(*qstyleoption_cast<const QStyleOptionViewItemV4*>(&option));
+    const QStyleOptionViewItemV4 &opt(*qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option));
 #endif
     return opt.widget;
 }
 
 QStyle *ItemDelegateInterface::style(const QStyleOptionViewItem &option) const
 {
-    const QWidget *widget = this->widget(option);;
+    const QWidget *widget = this->widget(option);
     return widget ? widget->style() : QApplication::style();
 }
 
 ItemDelegate::ItemDelegate(QObject *parent)
-  : QStyledItemDelegate(parent), ItemDelegateInterface()
+    : QStyledItemDelegate(parent)
+    , ItemDelegateInterface()
 {
 }
 
-void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+                         const QModelIndex &index) const
 {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     QStyleOptionViewItem opt = option;
 #else
-    QStyleOptionViewItemV4 opt = *qstyleoption_cast<const QStyleOptionViewItemV4*>(&option);
+    QStyleOptionViewItemV4 opt = *qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option);
 #endif
     opt.text = defaultDisplayText(index);
     initStyleOption(&opt, index);

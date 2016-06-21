@@ -37,7 +37,7 @@
 using namespace GammaRay;
 
 QuickClientItemModel::QuickClientItemModel(QObject *parent)
-  : QIdentityProxyModel(parent)
+    : QIdentityProxyModel(parent)
 {
 }
 
@@ -47,71 +47,65 @@ QuickClientItemModel::~QuickClientItemModel()
 
 QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid()) {
-    return QVariant();
-  }
+    if (!index.isValid())
+        return QVariant();
 
-  if (role == Qt::ForegroundRole || role == Qt::ToolTipRole) {
-    int flags = QIdentityProxyModel::data(index, QuickItemModelRole::ItemFlags).value<int>();
+    if (role == Qt::ForegroundRole || role == Qt::ToolTipRole) {
+        int flags = QIdentityProxyModel::data(index, QuickItemModelRole::ItemFlags).value<int>();
 
-    // Grey out invisible items
-    if (role == Qt::ForegroundRole &&
-        (flags & (QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize))) {
-      return qApp->palette().color(QPalette::Disabled, QPalette::Text);
-    }
-    // Adjust tooltip to show information about items
-    if (role == Qt::ToolTipRole && flags) {
-      QString tooltip = QIdentityProxyModel::data(index, role).toString();
-      tooltip.append("<p style='white-space:pre'>");
-      if ((flags & QuickItemModelRole::OutOfView) &&
-          (~flags & QuickItemModelRole::Invisible)) {
-        QByteArray byteArray;
-        QBuffer buffer(&byteArray);
-        QIcon::fromTheme(QStringLiteral("dialog-warning")).pixmap(16, 16).save(&buffer, "PNG");
-        tooltip.append("<img src=\"data:image/png;base64,").
+        // Grey out invisible items
+        if (role == Qt::ForegroundRole
+            && (flags & (QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize)))
+            return qApp->palette().color(QPalette::Disabled, QPalette::Text);
+        // Adjust tooltip to show information about items
+        if (role == Qt::ToolTipRole && flags) {
+            QString tooltip = QIdentityProxyModel::data(index, role).toString();
+            tooltip.append("<p style='white-space:pre'>");
+            if ((flags &QuickItemModelRole::OutOfView)
+                && (~flags & QuickItemModelRole::Invisible)) {
+                QByteArray byteArray;
+                QBuffer buffer(&byteArray);
+                QIcon::fromTheme(QStringLiteral("dialog-warning")).pixmap(16, 16).save(&buffer,
+                                                                                       "PNG");
+                tooltip.append("<img src=\"data:image/png;base64,").
                 append(byteArray.toBase64()).
                 append("\"> Item is visible, but out of view.");
-        flags &= ~QuickItemModelRole::OutOfView;
-        if (flags) {
-          tooltip.append("\n");
-        }
-      }
-      if (flags) {
-        QStringList flagStrings;
-        if (flags & QuickItemModelRole::Invisible) {
-          flagStrings << tr("is invisible");
-        }
+                flags &= ~QuickItemModelRole::OutOfView;
+                if (flags)
+                    tooltip.append("\n");
+            }
+            if (flags) {
+                QStringList flagStrings;
+                if (flags & QuickItemModelRole::Invisible)
+                    flagStrings << tr("is invisible");
 
-        if (flags & QuickItemModelRole::ZeroSize) {
-          flagStrings << tr("has a size of zero");
-        }
+                if (flags & QuickItemModelRole::ZeroSize)
+                    flagStrings << tr("has a size of zero");
 
-        if (flags & QuickItemModelRole::OutOfView) {
-          flagStrings << tr("is out of view");
-        }
+                if (flags & QuickItemModelRole::OutOfView)
+                    flagStrings << tr("is out of view");
 
-        if (flags & QuickItemModelRole::HasFocus && ~flags & QuickItemModelRole::HasActiveFocus) {
-          flagStrings << tr("has inactive focus");
-        }
+                if (flags & QuickItemModelRole::HasFocus
+                    && ~flags & QuickItemModelRole::HasActiveFocus)
+                    flagStrings << tr("has inactive focus");
 
-        if (flags & QuickItemModelRole::HasActiveFocus) {
-          flagStrings << tr("has active focus");
-        }
+                if (flags & QuickItemModelRole::HasActiveFocus)
+                    flagStrings << tr("has active focus");
 
-        if (flags & QuickItemModelRole::JustRecievedEvent) {
-          flagStrings << tr("just received an event");
-        }
+                if (flags & QuickItemModelRole::JustRecievedEvent)
+                    flagStrings << tr("just received an event");
 
-        QByteArray byteArray;
-        QBuffer buffer(&byteArray);
-        QIcon::fromTheme(QStringLiteral("dialog-information")).pixmap(16, 16).save(&buffer, "PNG");
-        tooltip.append(QStringLiteral("<img src=\"data:image/png;base64,").
-                append(byteArray.toBase64()).
-                append("\"> Item %1.").arg(flagStrings.join(QStringLiteral(", "))));
-      }
-      tooltip.append("</p>");
-      return tooltip;
+                QByteArray byteArray;
+                QBuffer buffer(&byteArray);
+                QIcon::fromTheme(QStringLiteral("dialog-information")).pixmap(16, 16).save(&buffer,
+                                                                                           "PNG");
+                tooltip.append(QStringLiteral("<img src=\"data:image/png;base64,").
+                               append(byteArray.toBase64()).
+                               append("\"> Item %1.").arg(flagStrings.join(QStringLiteral(", "))));
+            }
+            tooltip.append("</p>");
+            return tooltip;
+        }
     }
-  }
-  return QIdentityProxyModel::data(index, role);
+    return QIdentityProxyModel::data(index, role);
 }

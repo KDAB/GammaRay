@@ -32,17 +32,15 @@
 #include "sggeometryextensioninterface.h"
 
 namespace GammaRay {
-
 class SGGeometryExtensionClient : public SGGeometryExtensionInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::SGGeometryExtensionInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::SGGeometryExtensionInterface)
 
-  public:
+public:
     explicit SGGeometryExtensionClient(const QString &name, QObject *parent = 0);
     virtual ~SGGeometryExtensionClient();
 };
-
 }
 
 #endif // GAMMARAY_SGGEOMETRYEXTENSIONCLIENT_H

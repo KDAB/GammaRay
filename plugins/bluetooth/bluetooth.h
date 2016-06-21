@@ -30,28 +30,27 @@
 #include <core/toolfactory.h>
 
 namespace GammaRay {
-
 class Bluetooth : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit Bluetooth(ProbeInterface *probe, QObject *parent = 0);
+    explicit Bluetooth(ProbeInterface *probe, QObject *parent = 0);
 };
 
 class BluetoothFactory : public QObject, public StandardToolFactory<QObject, Bluetooth>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_bluetooth.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_bluetooth.json")
 
 public:
-  explicit BluetoothFactory(QObject *parent = 0) : QObject(parent)
-  {
-  }
+    explicit BluetoothFactory(QObject *parent = 0)
+        : QObject(parent)
+    {
+    }
 
-  QString name() const Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif

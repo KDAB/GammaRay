@@ -32,23 +32,22 @@
 #include <QSortFilterProxyModel>
 
 namespace GammaRay {
-
 // A filterable and sortable process model
 class ProcessFilterModel : public QSortFilterProxyModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ProcessFilterModel(QObject *parent);
 
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
-    bool filterAcceptsColumn(int source_column, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    bool filterAcceptsColumn(int source_column,
+                             const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
     QString m_currentProcId;
     QString m_currentUser;
 };
-
 }
 
 #endif // GAMMARAY_PROCESSFILTERMODEL_H

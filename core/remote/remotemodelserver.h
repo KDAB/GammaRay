@@ -41,7 +41,6 @@ class QAbstractItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class Message;
 
 /** Provides the server-side interface for a QAbstractItemModel to be used from a separate process.
@@ -50,36 +49,42 @@ class Message;
  */
 class RemoteModelServer : public QObject
 {
-  Q_OBJECT
-  Q_PROPERTY(bool dynamicSortFilter READ proxyDynamicSortFilter WRITE setProxyDynamicSortFilter)
-  Q_PROPERTY(Qt::CaseSensitivity filterCaseSensitivity READ proxyFilterCaseSensitivity WRITE setProxyFilterCaseSensitivity)
-  Q_PROPERTY(int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn)
-  Q_PROPERTY(QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp)
+    Q_OBJECT
+    Q_PROPERTY(bool dynamicSortFilter READ proxyDynamicSortFilter WRITE setProxyDynamicSortFilter)
+    Q_PROPERTY(
+        Qt::CaseSensitivity filterCaseSensitivity READ proxyFilterCaseSensitivity WRITE setProxyFilterCaseSensitivity)
+    Q_PROPERTY(int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn)
+    Q_PROPERTY(QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp)
 
-  public:
+public:
     /** Registers a new model server object with name @p objectName (must be unique). */
     explicit RemoteModelServer(const QString &objectName, QObject *parent = 0);
     ~RemoteModelServer();
 
     /** Returns the source model. */
-    QAbstractItemModel* model() const;
+    QAbstractItemModel *model() const;
     /** Set the source model for this model server instance. */
     void setModel(QAbstractItemModel *model);
 
-  public slots:
+public slots:
     void newRequest(const GammaRay::Message &msg);
     /** Notifications about an object on the client side (un)monitoring this object.
      *  If no one is watching, we don't send out any change notification to reduce network traffice.
      */
     void modelMonitored(bool monitored = false);
 
-  private:
+private:
     void connectModel();
     void disconnectModel();
-    void sendAddRemoveMessage(Protocol::MessageType type, const QModelIndex &parent, int start, int end);
-    void sendMoveMessage(Protocol::MessageType type, const Protocol::ModelIndex &sourceParent, int sourceStart, int sourceEnd, const Protocol::ModelIndex &destinationParent, int destinationIndex);
-    QMap< int, QVariant > filterItemData(const QMap< int, QVariant >& data) const;
-    void sendLayoutChanged(const QVector<Protocol::ModelIndex> &parents = QVector<Protocol::ModelIndex>(), quint32 hint = 0);
+    void sendAddRemoveMessage(Protocol::MessageType type, const QModelIndex &parent, int start,
+                              int end);
+    void sendMoveMessage(Protocol::MessageType type, const Protocol::ModelIndex &sourceParent,
+                         int sourceStart, int sourceEnd,
+                         const Protocol::ModelIndex &destinationParent, int destinationIndex);
+    QMap< int, QVariant > filterItemData(const QMap< int, QVariant > &data) const;
+    void sendLayoutChanged(
+        const QVector<Protocol::ModelIndex> &parents = QVector<Protocol::ModelIndex>(),
+        quint32 hint = 0);
     bool canSerialize(const QVariant &value) const;
 
     // proxy model settings
@@ -99,27 +104,32 @@ class RemoteModelServer : public QObject
     virtual void sendMessage(const Message &msg) const;
     friend class FakeRemoteModelServer;
 
-  private slots:
-    void dataChanged(const QModelIndex &begin, const QModelIndex &end, const QVector<int> &roles = QVector<int>());
+private slots:
+    void dataChanged(const QModelIndex &begin, const QModelIndex &end,
+                     const QVector<int> &roles = QVector<int>());
     void headerDataChanged(Qt::Orientation orientation, int first, int last);
     void rowsInserted(const QModelIndex &parent, int start, int end);
-    void rowsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow);
-    void rowsMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow);
+    void rowsAboutToBeMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                            const QModelIndex &destinationParent, int destinationRow);
+    void rowsMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                   const QModelIndex &destinationParent, int destinationRow);
     void rowsRemoved(const QModelIndex &parent, int start, int end);
     void columnsInserted(const QModelIndex &parent, int start, int end);
-    void columnsMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationColumn);
+    void columnsMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                      const QModelIndex &destinationParent, int destinationColumn);
     void columnsRemoved(const QModelIndex &parent, int start, int end);
 #ifdef QT4_MOC_WORKAROUND // Qt4 moc doesn't understand QT_VERSION preprocessor conditionals
     void layoutChanged();
 #else
-    void layoutChanged(const QList<QPersistentModelIndex> &parents, QAbstractItemModel::LayoutChangeHint hint);
+    void layoutChanged(const QList<QPersistentModelIndex> &parents,
+                       QAbstractItemModel::LayoutChangeHint hint);
 #endif
 
     void modelReset();
 
     void modelDeleted();
 
-  private:
+private:
     QPointer<QAbstractItemModel> m_model;
     // those two are used for canSerialize, since recreating the QBuffer is somewhat expensive,
     // especially since being a QObject triggers all kind of GammaRay internals
@@ -132,7 +142,6 @@ class RemoteModelServer : public QObject
     Protocol::ObjectAddress m_myAddress;
     bool m_monitored;
 };
-
 }
 
 #endif

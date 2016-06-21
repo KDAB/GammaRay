@@ -36,7 +36,6 @@
 #include <QSet>
 
 namespace GammaRay {
-
 class Probe;
 
 /**
@@ -52,27 +51,26 @@ class Probe;
  */
 class ObjectListModel : public ObjectModelBase<QAbstractTableModel>
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ObjectListModel(Probe *probe);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     QPair<int, QVariant> defaultSelectedItem() const;
 
-  private slots:
+private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
 
-  private:
+private:
     void removeObject(QObject *obj);
 
     // sorted vector for stable iterators/indexes, esp. for the model methods
-    QVector<QObject*> m_objects;
+    QVector<QObject *> m_objects;
 };
-
 }
 
 #endif // GAMMARAY_OBJECTLISTMODEL_H

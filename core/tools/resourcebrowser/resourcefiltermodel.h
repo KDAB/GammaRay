@@ -32,15 +32,13 @@
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
 namespace GammaRay {
-
 class ResourceFilterModel : public KRecursiveFilterProxyModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ResourceFilterModel(QObject *parent = 0);
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // RESOURCEFILTERMODEL_H

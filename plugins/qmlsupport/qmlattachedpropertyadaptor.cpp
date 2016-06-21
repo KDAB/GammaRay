@@ -36,7 +36,8 @@
 
 using namespace GammaRay;
 
-QmlAttachedPropertyAdaptor::QmlAttachedPropertyAdaptor(QObject* parent): PropertyAdaptor(parent)
+QmlAttachedPropertyAdaptor::QmlAttachedPropertyAdaptor(QObject *parent)
+    : PropertyAdaptor(parent)
 {
 }
 
@@ -44,7 +45,7 @@ QmlAttachedPropertyAdaptor::~QmlAttachedPropertyAdaptor()
 {
 }
 
-void QmlAttachedPropertyAdaptor::doSetObject(const ObjectInstance& oi)
+void QmlAttachedPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
     auto data = QQmlData::get(oi.qtObject());
     Q_ASSERT(data);
@@ -52,7 +53,8 @@ void QmlAttachedPropertyAdaptor::doSetObject(const ObjectInstance& oi)
     Q_ASSERT(data->attachedProperties());
 
     m_attachedTypes.reserve(data->attachedProperties()->size());
-    for (auto it = data->attachedProperties()->constBegin(); it != data->attachedProperties()->constEnd(); ++it)
+    for (auto it = data->attachedProperties()->constBegin();
+         it != data->attachedProperties()->constEnd(); ++it)
         m_attachedTypes.push_back(it.key());
 }
 
@@ -90,22 +92,23 @@ PropertyData QmlAttachedPropertyAdaptor::propertyData(int index) const
     return pd;
 }
 
+QmlAttachedPropertyAdaptorFactory *QmlAttachedPropertyAdaptorFactory::s_instance = 0;
 
-QmlAttachedPropertyAdaptorFactory* QmlAttachedPropertyAdaptorFactory::s_instance = 0;
-
-PropertyAdaptor* QmlAttachedPropertyAdaptorFactory::create(const ObjectInstance& oi, QObject* parent) const
+PropertyAdaptor *QmlAttachedPropertyAdaptorFactory::create(const ObjectInstance &oi,
+                                                           QObject *parent) const
 {
     if (oi.type() != ObjectInstance::QtObject || !oi.qtObject())
         return Q_NULLPTR;
 
     auto data = QQmlData::get(oi.qtObject());
-    if (!data || !data->hasExtendedData() || !data->attachedProperties() || data->attachedProperties()->isEmpty())
+    if (!data || !data->hasExtendedData() || !data->attachedProperties()
+        || data->attachedProperties()->isEmpty())
         return Q_NULLPTR;
 
     return new QmlAttachedPropertyAdaptor(parent);
 }
 
-QmlAttachedPropertyAdaptorFactory* QmlAttachedPropertyAdaptorFactory::instance()
+QmlAttachedPropertyAdaptorFactory *QmlAttachedPropertyAdaptorFactory::instance()
 {
     if (!s_instance)
         s_instance = new QmlAttachedPropertyAdaptorFactory;

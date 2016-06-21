@@ -32,29 +32,27 @@
 #include "propertyadaptor.h"
 
 namespace GammaRay {
-
 /** Access to dynamic QObject properties. */
 class DynamicPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit DynamicPropertyAdaptor(QObject* parent = 0);
+    explicit DynamicPropertyAdaptor(QObject *parent = 0);
     ~DynamicPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;
     PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
-    void writeProperty(int index, const QVariant& value) Q_DECL_OVERRIDE;
+    void writeProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
     bool canAddProperty() const Q_DECL_OVERRIDE;
-    void addProperty(const PropertyData& data) Q_DECL_OVERRIDE;
+    void addProperty(const PropertyData &data) Q_DECL_OVERRIDE;
 
 protected:
-    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
     QList<QByteArray> m_propNames;
 };
-
 }
 
 #endif // GAMMARAY_DYNAMICPROPERTYADAPTOR_H

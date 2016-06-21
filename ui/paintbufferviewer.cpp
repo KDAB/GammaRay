@@ -41,15 +41,15 @@
 using namespace GammaRay;
 
 PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
-  : QDialog(parent)
-  , ui(new Ui::PaintBufferViewer)
+    : QDialog(parent)
+    , ui(new Ui::PaintBufferViewer)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  setAttribute(Qt::WA_DeleteOnClose);
-  setModal(true);
+    setAttribute(Qt::WA_DeleteOnClose);
+    setModal(true);
 
-  ui->paintAnalyzerWidget->setBaseName(name);
+    ui->paintAnalyzerWidget->setBaseName(name);
 }
 
 PaintBufferViewer::~PaintBufferViewer()

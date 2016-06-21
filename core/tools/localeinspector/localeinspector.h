@@ -30,26 +30,25 @@
 #include "toolfactory.h"
 
 namespace GammaRay {
-
 class LocaleInspector : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit LocaleInspector(ProbeInterface *probe, QObject *parent = 0);
 };
 
 class LocaleInspectorFactory : public QObject, public StandardToolFactory<QObject, LocaleInspector>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit LocaleInspectorFactory(QObject *parent) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+public:
+    explicit LocaleInspectorFactory(QObject *parent)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_LOCALEINSPECTOR_H

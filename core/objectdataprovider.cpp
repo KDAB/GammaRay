@@ -34,20 +34,19 @@
 #include <QVector>
 
 namespace GammaRay {
-
 AbstractObjectDataProvider::~AbstractObjectDataProvider()
 {
 }
 
-Q_GLOBAL_STATIC(QVector<AbstractObjectDataProvider*>, s_providers)
+Q_GLOBAL_STATIC(QVector<AbstractObjectDataProvider *>, s_providers)
 
-void ObjectDataProvider::registerProvider(AbstractObjectDataProvider* provider)
+void ObjectDataProvider::registerProvider(AbstractObjectDataProvider *provider)
 {
     if (!s_providers()->contains(provider))
         s_providers()->push_back(provider);
 }
 
-QString ObjectDataProvider::name(const QObject* obj)
+QString ObjectDataProvider::name(const QObject *obj)
 {
     if (!obj)
         return QStringLiteral("0x0");
@@ -75,7 +74,7 @@ QString ObjectDataProvider::typeName(QObject *obj)
     return obj->metaObject()->className();
 }
 
-SourceLocation ObjectDataProvider::creationLocation(QObject* obj)
+SourceLocation ObjectDataProvider::creationLocation(QObject *obj)
 {
     SourceLocation loc;
     if (!obj)
@@ -90,7 +89,7 @@ SourceLocation ObjectDataProvider::creationLocation(QObject* obj)
     return loc;
 }
 
-SourceLocation ObjectDataProvider::declarationLocation(QObject* obj)
+SourceLocation ObjectDataProvider::declarationLocation(QObject *obj)
 {
     SourceLocation loc;
     if (!obj)
@@ -104,5 +103,4 @@ SourceLocation ObjectDataProvider::declarationLocation(QObject* obj)
 
     return loc;
 }
-
 }

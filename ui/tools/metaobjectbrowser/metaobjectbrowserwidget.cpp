@@ -43,47 +43,50 @@
 using namespace GammaRay;
 
 MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
-  : QWidget(parent)
-  , m_stateManager(this)
+    : QWidget(parent)
+    , m_stateManager(this)
 {
-  setObjectName("MetaObjectBrowserWidget");
+    setObjectName("MetaObjectBrowserWidget");
 
-  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"));
-  auto proxy = new MetaObjectTreeClientProxyModel(this);
-  proxy->setSourceModel(model);
+    auto model
+        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"));
+    auto proxy = new MetaObjectTreeClientProxyModel(this);
+    proxy->setSourceModel(model);
 
-  m_treeView = new DeferredTreeView(this);
-  m_treeView->header()->setObjectName("metaObjectViewHeader");
-  m_treeView->setStretchLastSection(false);
-  m_treeView->setExpandNewContent(true);
-  m_treeView->setDeferredResizeMode(0, QHeaderView::Stretch);
-  m_treeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  m_treeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
-  m_treeView->setUniformRowHeights(true);
-  m_treeView->setModel(proxy);
-  m_treeView->setSelectionModel(ObjectBroker::selectionModel(proxy));
-  m_treeView->sortByColumn(0, Qt::AscendingOrder);
-  connect(m_treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
+    m_treeView = new DeferredTreeView(this);
+    m_treeView->header()->setObjectName("metaObjectViewHeader");
+    m_treeView->setStretchLastSection(false);
+    m_treeView->setExpandNewContent(true);
+    m_treeView->setDeferredResizeMode(0, QHeaderView::Stretch);
+    m_treeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    m_treeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    m_treeView->setUniformRowHeights(true);
+    m_treeView->setModel(proxy);
+    m_treeView->setSelectionModel(ObjectBroker::selectionModel(proxy));
+    m_treeView->sortByColumn(0, Qt::AscendingOrder);
+    connect(m_treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,
+                                                                  QItemSelection)), this,
+            SLOT(selectionChanged(QItemSelection)));
 
-  auto objectSearchLine = new QLineEdit(this);
-  new SearchLineController(objectSearchLine, model);
+    auto objectSearchLine = new QLineEdit(this);
+    new SearchLineController(objectSearchLine, model);
 
-  PropertyWidget *propertyWidget = new PropertyWidget(this);
-  m_propertyWidget = propertyWidget;
-  m_propertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"));
+    PropertyWidget *propertyWidget = new PropertyWidget(this);
+    m_propertyWidget = propertyWidget;
+    m_propertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"));
 
-  QVBoxLayout *vbox = new QVBoxLayout;
-  vbox->addWidget(objectSearchLine);
-  vbox->addWidget(m_treeView);
+    QVBoxLayout *vbox = new QVBoxLayout;
+    vbox->addWidget(objectSearchLine);
+    vbox->addWidget(m_treeView);
 
-  QHBoxLayout *hbox = new QHBoxLayout(this);
-  hbox->addLayout(vbox);
-  hbox->addWidget(propertyWidget);
+    QHBoxLayout *hbox = new QHBoxLayout(this);
+    hbox->addLayout(vbox);
+    hbox->addWidget(propertyWidget);
 
-  connect(m_propertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+    connect(m_propertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
 }
 
-void MetaObjectBrowserWidget::selectionChanged(const QItemSelection& selection)
+void MetaObjectBrowserWidget::selectionChanged(const QItemSelection &selection)
 {
     if (selection.isEmpty())
         return;

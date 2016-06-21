@@ -35,12 +35,10 @@
 using namespace GammaRay;
 
 PropertyControllerClient::PropertyControllerClient(const QString &name, QObject *parent)
-  : PropertyControllerInterface(name, parent)
+    : PropertyControllerInterface(name, parent)
 {
-
 }
 
 PropertyControllerClient::~PropertyControllerClient()
 {
-
 }

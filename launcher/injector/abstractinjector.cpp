@@ -39,26 +39,24 @@ AbstractInjector::~AbstractInjector()
     stop();
 }
 
-bool AbstractInjector::launch(const QStringList &programAndArgs,
-                              const QString &probeDll,
-                              const QString &probeFunc,
-                              const QProcessEnvironment& env)
+bool AbstractInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
+                              const QString &probeFunc, const QProcessEnvironment &env)
 {
-  Q_UNUSED(programAndArgs);
-  Q_UNUSED(probeDll);
-  Q_UNUSED(probeFunc);
-  Q_UNUSED(env);
-  qWarning() << "Injection on launch not supported by this injector.";
-  return false;
+    Q_UNUSED(programAndArgs);
+    Q_UNUSED(probeDll);
+    Q_UNUSED(probeFunc);
+    Q_UNUSED(env);
+    qWarning() << "Injection on launch not supported by this injector.";
+    return false;
 }
 
 bool AbstractInjector::attach(int pid, const QString &probeDll, const QString &probeFunc)
 {
-  Q_UNUSED(pid);
-  Q_UNUSED(probeDll);
-  Q_UNUSED(probeFunc);
-  qWarning() << "Attaching to a running process is not supported by this injector.";
-  return false;
+    Q_UNUSED(pid);
+    Q_UNUSED(probeDll);
+    Q_UNUSED(probeFunc);
+    qWarning() << "Attaching to a running process is not supported by this injector.";
+    return false;
 }
 
 bool AbstractInjector::selfTest()
@@ -77,7 +75,7 @@ QString AbstractInjector::workingDirectory() const
     return m_workingDir;
 }
 
-void AbstractInjector::setWorkingDirectory(const QString& path)
+void AbstractInjector::setWorkingDirectory(const QString &path)
 {
     m_workingDir = path;
 }

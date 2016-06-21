@@ -52,7 +52,7 @@ class QmlSupportTest : public QObject
 {
     Q_OBJECT
 private:
-    int indexOfProperty(PropertyAdaptor *adaptor, const char* name)
+    int indexOfProperty(PropertyAdaptor *adaptor, const char *name)
     {
         for (int i = 0; i < adaptor->count(); ++i) {
             auto prop = adaptor->propertyData(i);
@@ -75,7 +75,8 @@ private slots:
     {
         QQmlEngine engine;
         QQmlComponent component(&engine);
-        component.setData("import QtQuick 2.0\nRectangle { Text { text: \"Hello world!\" } }", QUrl());
+        component.setData("import QtQuick 2.0\nRectangle { Text { text: \"Hello world!\" } }",
+                          QUrl());
         auto obj = component.create();
         QVERIFY(obj);
 
@@ -94,7 +95,7 @@ private slots:
 
         auto data = listAdaptor->propertyData(0);
         QVERIFY(!data.name().isEmpty());
-        QVERIFY(data.value().canConvert<QObject*>());
+        QVERIFY(data.value().canConvert<QObject *>());
         QVERIFY(!data.typeName().isEmpty());
         QVERIFY(!data.className().isEmpty());
     }
@@ -118,7 +119,7 @@ private slots:
         QCOMPARE(data.name(), QStringLiteral("Keys"));
         QVERIFY(!data.typeName().isEmpty());
         QVERIFY(data.value().isValid());
-        QVERIFY(data.value().canConvert<QObject*>());
+        QVERIFY(data.value().canConvert<QObject *>());
         QVERIFY(!data.className().isEmpty());
     }
 
@@ -126,7 +127,9 @@ private slots:
     {
         QQmlEngine engine;
         QQmlComponent component(&engine);
-        component.setData("import QtQuick 2.0\nRectangle { property var a1: []; property var a2: [\"hello\", \"world\"] }", QUrl());
+        component.setData(
+            "import QtQuick 2.0\nRectangle { property var a1: []; property var a2: [\"hello\", \"world\"] }",
+            QUrl());
         auto obj = component.create();
         QVERIFY(obj);
 

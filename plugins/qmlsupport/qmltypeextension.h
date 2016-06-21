@@ -32,7 +32,6 @@
 #include <core/propertycontrollerextension.h>
 
 namespace GammaRay {
-
 class AggregatedPropertyModel;
 
 class QmlTypeExtension : public PropertyControllerExtension
@@ -47,7 +46,6 @@ public:
 private:
     AggregatedPropertyModel *m_typePropertyModel;
 };
-
 }
 
 #endif // GAMMARAY_QMLTYPEEXTENSION_H

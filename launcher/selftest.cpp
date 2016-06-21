@@ -35,7 +35,8 @@
 
 using namespace GammaRay;
 
-SelfTest::SelfTest(QObject *parent) : QObject(parent)
+SelfTest::SelfTest(QObject *parent)
+    : QObject(parent)
 {
 }
 
@@ -94,7 +95,7 @@ bool SelfTest::checkInjectors()
     return true;
 }
 
-bool SelfTest::checkInjector(const QString& injectorType)
+bool SelfTest::checkInjector(const QString &injectorType)
 {
     AbstractInjector::Ptr injector = InjectorFactory::createInjector(injectorType);
     if (!injector) {
@@ -102,10 +103,11 @@ bool SelfTest::checkInjector(const QString& injectorType)
         return false;
     }
     if (!injector->selfTest()) {
-        emit error(tr("Injector %1 failed to pass its self-test: %2."). arg(injectorType, injector->errorString()));
+        emit error(tr("Injector %1 failed to pass its self-test: %2.").arg(injectorType,
+                                                                           injector->errorString()));
         return false;
     }
 
-    emit information(tr("Injector %1 successfully passed its self-test."). arg(injectorType));
+    emit information(tr("Injector %1 successfully passed its self-test.").arg(injectorType));
     return true;
 }

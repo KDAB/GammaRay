@@ -39,38 +39,38 @@ class QString;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ProbeABI;
 
 /** @brief Functions to locate a suitable probe. */
 namespace ProbeFinder {
+/**
+ * Attempts to find the full path of the probe DLL.
+ *
+ * @deprecated Use the findProbe() overload below.
+ */
+GAMMARAY_LAUNCHER_DEPRECATED_EXPORT QString findProbe(const QString &baseName,
+                                                      const ProbeABI &probeAbi);
 
-  /**
-   * Attempts to find the full path of the probe DLL.
-   *
-   * @deprecated Use the findProbe() overload below.
-   */
-  GAMMARAY_LAUNCHER_DEPRECATED_EXPORT QString findProbe(const QString& baseName, const ProbeABI& probeAbi);
+/**
+ * Attempts to find the full path of the probe DLL with ABI @p probeAbi, considering
+ * the additional search paths @p searchRoots.
+ */
+GAMMARAY_LAUNCHER_EXPORT QString findProbe(const ProbeABI &probeAbi,
+                                           const QStringList &searchRoots = QStringList());
 
-  /**
-   * Attempts to find the full path of the probe DLL with ABI @p probeAbi, considering
-   * the additional search paths @p searchRoots.
-   */
-  GAMMARAY_LAUNCHER_EXPORT QString findProbe(const ProbeABI &probeAbi, const QStringList &searchRoots = QStringList());
+/**
+ * Find the best matching probe for the given @p targetABI.
+ * An invalid ProbeABI instance is returned if there is no compatible probe installed.
+ */
+GAMMARAY_LAUNCHER_EXPORT ProbeABI findBestMatchingABI(const ProbeABI &targetABI);
+GAMMARAY_LAUNCHER_EXPORT ProbeABI findBestMatchingABI(const ProbeABI &targetABI,
+                                                      const QVector<ProbeABI> &availableABIs);
 
-  /**
-   * Find the best matching probe for the given @p targetABI.
-   * An invalid ProbeABI instance is returned if there is no compatible probe installed.
-   */
-  GAMMARAY_LAUNCHER_EXPORT ProbeABI findBestMatchingABI(const ProbeABI &targetABI);
-  GAMMARAY_LAUNCHER_EXPORT ProbeABI findBestMatchingABI(const ProbeABI &targetABI, const QVector<ProbeABI> &availableABIs);
-
-  /**
-   * List all available probe ABIs.
-   */
-  GAMMARAY_LAUNCHER_EXPORT QVector<ProbeABI> listProbeABIs();
+/**
+ * List all available probe ABIs.
+ */
+GAMMARAY_LAUNCHER_EXPORT QVector<ProbeABI> listProbeABIs();
 }
-
 }
 
 #endif // GAMMARAY_PROBEFINDER_H

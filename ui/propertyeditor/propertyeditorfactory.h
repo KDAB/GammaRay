@@ -35,11 +35,10 @@
 #include <QVector>
 
 namespace GammaRay {
-
 /** Item editor factory with support for extra types while keeping support for the built-in ones. */
 class GAMMARAY_UI_EXPORT PropertyEditorFactory : public QItemEditorFactory
 {
-  public:
+public:
     static PropertyEditorFactory *instance();
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
@@ -52,17 +51,16 @@ class GAMMARAY_UI_EXPORT PropertyEditorFactory : public QItemEditorFactory
 
     static QVector<int> supportedTypes();
 
-  protected:
+protected:
     PropertyEditorFactory();
 
-  private:
+private:
     Q_DISABLE_COPY(PropertyEditorFactory)
     void initBuiltInTypes();
     void addEditor(TypeId type, QItemEditorCreatorBase *creator);
 
     QVector<int> m_supportedTypes;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYEDITORFACTORY_H

@@ -32,9 +32,10 @@
 using namespace GammaRay;
 
 MaterialExtensionInterface::MaterialExtensionInterface(const QString &name, QObject *parent)
-  : QObject(parent), m_name(name)
+    : QObject(parent)
+    , m_name(name)
 {
-  ObjectBroker::registerObject(name, this);
+    ObjectBroker::registerObject(name, this);
 }
 
 MaterialExtensionInterface::~MaterialExtensionInterface()
@@ -43,5 +44,5 @@ MaterialExtensionInterface::~MaterialExtensionInterface()
 
 const QString &MaterialExtensionInterface::name() const
 {
-  return m_name;
+    return m_name;
 }

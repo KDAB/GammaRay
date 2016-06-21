@@ -30,16 +30,16 @@
 
 using namespace GammaRay;
 
-SourceLocation::SourceLocation() :
-    m_line(-1),
-    m_column(-1)
+SourceLocation::SourceLocation()
+    : m_line(-1)
+    , m_column(-1)
 {
 }
 
-SourceLocation::SourceLocation(const QUrl &url, int line, int column) :
-    m_url(url),
-    m_line(line),
-    m_column(column)
+SourceLocation::SourceLocation(const QUrl &url, int line, int column)
+    : m_url(url)
+    , m_line(line)
+    , m_column(column)
 {
 }
 
@@ -105,7 +105,7 @@ QString SourceLocation::displayString() const
     return result;
 }
 
-QDataStream& GammaRay::operator<<(QDataStream& out, const SourceLocation& location)
+QDataStream &GammaRay::operator<<(QDataStream &out, const SourceLocation &location)
 {
     out << location.m_url;
     out << location.m_line;
@@ -113,7 +113,7 @@ QDataStream& GammaRay::operator<<(QDataStream& out, const SourceLocation& locati
     return out;
 }
 
-QDataStream& GammaRay::operator>>(QDataStream& in, SourceLocation& location)
+QDataStream &GammaRay::operator>>(QDataStream &in, SourceLocation &location)
 {
     in >> location.m_url;
     in >> location.m_line;

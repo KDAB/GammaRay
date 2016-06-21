@@ -40,59 +40,57 @@ class QUrl;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class LaunchOptions;
 struct LauncherPrivate;
 
 /** @brief Manages launching a target process, injecting the probe and if needed also starting the client application. */
 class GAMMARAY_LAUNCHER_EXPORT Launcher : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit Launcher(const LaunchOptions &options, QObject *parent = 0);
-  ~Launcher();
+    explicit Launcher(const LaunchOptions &options, QObject *parent = 0);
+    ~Launcher();
 
-  /** This is used to identify the communication channels used by the launcher and the target process. */
-  qint64 instanceIdentifier() const;
-  bool start();
-  void stop();
+    /** This is used to identify the communication channels used by the launcher and the target process. */
+    qint64 instanceIdentifier() const;
+    bool start();
+    void stop();
 
-  /** Target exit code, in case we launched it. */
-  int exitCode() const;
-  /** Error message from attaching/launching the target, if any. */
-  QString errorMessage() const;
+    /** Target exit code, in case we launched it. */
+    int exitCode() const;
+    /** Error message from attaching/launching the target, if any. */
+    QString errorMessage() const;
 
-  /** Address for the client to connect to, valid once received from the target. */
-  QUrl serverAddress() const;
+    /** Address for the client to connect to, valid once received from the target. */
+    QUrl serverAddress() const;
 signals:
-  void started();
-  void finished();
-  void attached();
+    void started();
+    void finished();
+    void attached();
 
-  void stdoutMessage(const QString &message);
-  void stderrMessage(const QString &message);
+    void stdoutMessage(const QString &message);
+    void stderrMessage(const QString &message);
 
 protected:
-  virtual void startClient(const QUrl &serverAddress);
+    virtual void startClient(const QUrl &serverAddress);
 
 private slots:
-  void injectorError(int exitCode, const QString &errorMessage);
-  void injectorFinished();
-  void timeout();
-  void restartTimer();
+    void injectorError(int exitCode, const QString &errorMessage);
+    void injectorFinished();
+    void timeout();
+    void restartTimer();
 
-  void newConnection();
-  void readyRead();
-
-private:
-  void sendLauncherId();
-  void setupProbeSettingsServer();
-  void checkDone();
+    void newConnection();
+    void readyRead();
 
 private:
-  LauncherPrivate* const d;
+    void sendLauncherId();
+    void setupProbeSettingsServer();
+    void checkDone();
+
+private:
+    LauncherPrivate * const d;
 };
-
 }
 
 #endif // GAMMARAY_LAUNCHER_H

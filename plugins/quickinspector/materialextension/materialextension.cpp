@@ -50,22 +50,22 @@ using namespace GammaRay;
 
 class SGMaterialShaderThief : public QSGMaterialShader
 {
-  public:
+public:
     QHash<QOpenGLShader::ShaderType, QStringList> getShaderSources()
     {
-      return d_func()->m_sourceFiles;
+        return d_func()->m_sourceFiles;
     }
 };
 
 MaterialExtension::MaterialExtension(PropertyController *controller)
-  : MaterialExtensionInterface(controller->objectBaseName() + ".material", controller),
-    PropertyControllerExtension(controller->objectBaseName() + ".material"),
-    m_node(0),
-    m_materialPropertyModel(new AggregatedPropertyModel(this)),
-    m_shaderModel(new QStandardItemModel(this))
+    : MaterialExtensionInterface(controller->objectBaseName() + ".material", controller)
+    , PropertyControllerExtension(controller->objectBaseName() + ".material")
+    , m_node(0)
+    , m_materialPropertyModel(new AggregatedPropertyModel(this))
+    , m_shaderModel(new QStandardItemModel(this))
 {
-  controller->registerModel(m_materialPropertyModel, QStringLiteral("materialPropertyModel"));
-  controller->registerModel(m_shaderModel, QStringLiteral("shaderModel"));
+    controller->registerModel(m_materialPropertyModel, QStringLiteral("materialPropertyModel"));
+    controller->registerModel(m_shaderModel, QStringLiteral("shaderModel"));
 }
 
 MaterialExtension::~MaterialExtension()
@@ -74,56 +74,56 @@ MaterialExtension::~MaterialExtension()
 
 #include <iostream>
 
-static const char* typeForMaterial(QSGMaterial *material)
+static const char *typeForMaterial(QSGMaterial *material)
 {
-#define MT(type) if (dynamic_cast<type*>(material)) return #type;
-  MT(QSGFlatColorMaterial)
-  MT(QSGTextureMaterial)
-  MT(QSGOpaqueTextureMaterial)
-  MT(QSGVertexColorMaterial)
+#define MT(type) if (dynamic_cast<type *>(material)) return #type;
+    MT(QSGFlatColorMaterial)
+    MT(QSGTextureMaterial)
+    MT(QSGOpaqueTextureMaterial)
+    MT(QSGVertexColorMaterial)
 #undef MT
-  return "QSGMaterial";
+    return "QSGMaterial";
 }
 
 bool MaterialExtension::setObject(void *object, const QString &typeName)
 {
-  if (typeName == QStringLiteral("QSGGeometryNode")) {
-    m_node = static_cast<QSGGeometryNode*>(object);
+    if (typeName == QStringLiteral("QSGGeometryNode")) {
+        m_node = static_cast<QSGGeometryNode *>(object);
 
-    m_materialPropertyModel->setObject(ObjectInstance(m_node->material(), typeForMaterial(m_node->material())));
+        m_materialPropertyModel->setObject(ObjectInstance(m_node->material(),
+                                                          typeForMaterial(m_node->material())));
 
-    QSGMaterialShader *materialShader = m_node->material()->createShader();
-    SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief*>(materialShader);
-    const QHash<QOpenGLShader::ShaderType, QStringList> shaderSources = thief->getShaderSources();
+        QSGMaterialShader *materialShader = m_node->material()->createShader();
+        SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief *>(materialShader);
+        const QHash<QOpenGLShader::ShaderType,
+                    QStringList> shaderSources = thief->getShaderSources();
 
-    m_shaderModel->clear();
-    m_shaderModel->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Shader"));
-    for (auto it = shaderSources.constBegin(); it != shaderSources.constEnd(); ++it) {
-      foreach (const QString &source, it.value()) {
-        auto *item = new QStandardItem(source);
-        item->setEditable(false);
-        item->setToolTip(tr("Shader type: %1").arg(VariantHandler::displayString(it.key())));
-        m_shaderModel->appendRow(item);
-      }
+        m_shaderModel->clear();
+        m_shaderModel->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Shader"));
+        for (auto it = shaderSources.constBegin(); it != shaderSources.constEnd(); ++it) {
+            foreach (const QString &source, it.value()) {
+                auto *item = new QStandardItem(source);
+                item->setEditable(false);
+                item->setToolTip(tr("Shader type: %1").arg(VariantHandler::displayString(it.key())));
+                m_shaderModel->appendRow(item);
+            }
+        }
+
+        return true;
     }
 
-    return true;
-  }
-
-  m_materialPropertyModel->setObject(0);
-  return false;
+    m_materialPropertyModel->setObject(0);
+    return false;
 }
 
 void MaterialExtension::getShader(const QString &fileName)
 {
-  QFile shaderFile(fileName);
-  if (!shaderFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    return;
-  }
+    QFile shaderFile(fileName);
+    if (!shaderFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
 
-  QString source(shaderFile.readAll());
+    QString source(shaderFile.readAll());
 
-  if (!source.isEmpty()) {
-    emit gotShader(source);
-  }
+    if (!source.isEmpty())
+        emit gotShader(source);
 }

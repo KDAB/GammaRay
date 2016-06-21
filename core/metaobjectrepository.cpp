@@ -51,119 +51,118 @@
 using namespace GammaRay;
 
 namespace GammaRay {
-
 class StaticMetaObjectRepository : public MetaObjectRepository
 {
-  public:
-    StaticMetaObjectRepository() : MetaObjectRepository()
+public:
+    StaticMetaObjectRepository()
+        : MetaObjectRepository()
     {
     }
 };
-
 }
 
 Q_GLOBAL_STATIC(StaticMetaObjectRepository, s_instance)
 
-MetaObjectRepository::MetaObjectRepository() : m_initialized(false)
+MetaObjectRepository::MetaObjectRepository()
+    : m_initialized(false)
 {
 }
 
 MetaObjectRepository::~MetaObjectRepository()
 {
-  qDeleteAll(m_metaObjects);
+    qDeleteAll(m_metaObjects);
 }
 
 void MetaObjectRepository::initBuiltInTypes()
 {
-  m_initialized = true;
-  initQObjectTypes();
-  initIOTypes();
+    m_initialized = true;
+    initQObjectTypes();
+    initIOTypes();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_DECLARE_METATYPE(QThread*)
+Q_DECLARE_METATYPE(QThread *)
 #endif
 Q_DECLARE_METATYPE(QThread::Priority)
 
 void MetaObjectRepository::initQObjectTypes()
 {
-  MetaObject *mo = 0;
-  MO_ADD_METAOBJECT0(QMetaObject);
-  MO_ADD_PROPERTY_RO(QMetaObject, int, classInfoCount);
-  MO_ADD_PROPERTY_RO(QMetaObject, int, classInfoOffset);
-//   MO_ADD_PROPERTY_RO(QMetaObject, const char*, className);
-  MO_ADD_PROPERTY_RO(QMetaObject, int, constructorCount);
-  MO_ADD_PROPERTY_RO(QMetaObject, int, enumeratorCount);
-  MO_ADD_PROPERTY_RO(QMetaObject, int, enumeratorOffset);
-  MO_ADD_PROPERTY_RO(QMetaObject, int, methodCount);
-  MO_ADD_PROPERTY_RO(QMetaObject, int, methodOffset);
-  MO_ADD_PROPERTY_RO(QMetaObject, int, propertyCount);
-  MO_ADD_PROPERTY_RO(QMetaObject, int, propertyOffset);
-  MO_ADD_PROPERTY_RO(QMetaObject, const QMetaObject*, superClass);
+    MetaObject *mo = 0;
+    MO_ADD_METAOBJECT0(QMetaObject);
+    MO_ADD_PROPERTY_RO(QMetaObject, int, classInfoCount);
+    MO_ADD_PROPERTY_RO(QMetaObject, int, classInfoOffset);
+// MO_ADD_PROPERTY_RO(QMetaObject, const char*, className);
+    MO_ADD_PROPERTY_RO(QMetaObject, int, constructorCount);
+    MO_ADD_PROPERTY_RO(QMetaObject, int, enumeratorCount);
+    MO_ADD_PROPERTY_RO(QMetaObject, int, enumeratorOffset);
+    MO_ADD_PROPERTY_RO(QMetaObject, int, methodCount);
+    MO_ADD_PROPERTY_RO(QMetaObject, int, methodOffset);
+    MO_ADD_PROPERTY_RO(QMetaObject, int, propertyCount);
+    MO_ADD_PROPERTY_RO(QMetaObject, int, propertyOffset);
+    MO_ADD_PROPERTY_RO(QMetaObject, const QMetaObject *, superClass);
 
-  MO_ADD_METAOBJECT0(QObject);
-  MO_ADD_PROPERTY_RO(QObject, const QMetaObject*, metaObject);
-  MO_ADD_PROPERTY_RO(QObject, QObject*, parent);
-  MO_ADD_PROPERTY_RO(QObject, bool, signalsBlocked); // TODO setter has non-void return type
-  MO_ADD_PROPERTY_RO(QObject, QThread*, thread);
+    MO_ADD_METAOBJECT0(QObject);
+    MO_ADD_PROPERTY_RO(QObject, const QMetaObject *, metaObject);
+    MO_ADD_PROPERTY_RO(QObject, QObject *, parent);
+    MO_ADD_PROPERTY_RO(QObject, bool, signalsBlocked); // TODO setter has non-void return type
+    MO_ADD_PROPERTY_RO(QObject, QThread *, thread);
 
-  MO_ADD_METAOBJECT1(QThread, QObject)
-  MO_ADD_PROPERTY_RO(QThread, bool, isFinished);
+    MO_ADD_METAOBJECT1(QThread, QObject)
+    MO_ADD_PROPERTY_RO(QThread, bool, isFinished);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-  MO_ADD_PROPERTY_RO(QThread, bool, isInterruptionRequested);
+    MO_ADD_PROPERTY_RO(QThread, bool, isInterruptionRequested);
 #endif
-  MO_ADD_PROPERTY_RO(QThread, bool, isRunning);
-  MO_ADD_PROPERTY   (QThread, QThread::Priority, priority, setPriority);
-  MO_ADD_PROPERTY   (QThread, uint, stackSize, setStackSize);
+    MO_ADD_PROPERTY_RO(QThread, bool, isRunning);
+    MO_ADD_PROPERTY(QThread, QThread::Priority, priority, setPriority);
+    MO_ADD_PROPERTY(QThread, uint, stackSize, setStackSize);
 
-  MO_ADD_METAOBJECT1(QCoreApplication, QObject);
-  MO_ADD_PROPERTY_ST(QCoreApplication, QString, applicationDirPath);
-  MO_ADD_PROPERTY_ST(QCoreApplication, QString, applicationFilePath);
-  MO_ADD_PROPERTY_ST(QCoreApplication, qint64, applicationPid);
-  MO_ADD_PROPERTY_ST(QCoreApplication, QStringList, arguments);
-  MO_ADD_PROPERTY_ST(QCoreApplication, bool, closingDown);
-  MO_ADD_PROPERTY_ST(QCoreApplication, bool, hasPendingEvents);
+    MO_ADD_METAOBJECT1(QCoreApplication, QObject);
+    MO_ADD_PROPERTY_ST(QCoreApplication, QString, applicationDirPath);
+    MO_ADD_PROPERTY_ST(QCoreApplication, QString, applicationFilePath);
+    MO_ADD_PROPERTY_ST(QCoreApplication, qint64, applicationPid);
+    MO_ADD_PROPERTY_ST(QCoreApplication, QStringList, arguments);
+    MO_ADD_PROPERTY_ST(QCoreApplication, bool, closingDown);
+    MO_ADD_PROPERTY_ST(QCoreApplication, bool, hasPendingEvents);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  MO_ADD_PROPERTY_ST(QCoreApplication, bool, isQuitLockEnabled);
+    MO_ADD_PROPERTY_ST(QCoreApplication, bool, isQuitLockEnabled);
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-  MO_ADD_PROPERTY_ST(QCoreApplication, bool, isSetuidAllowed);
+    MO_ADD_PROPERTY_ST(QCoreApplication, bool, isSetuidAllowed);
 #endif
-  MO_ADD_PROPERTY_ST(QCoreApplication, QStringList, libraryPaths);
-  MO_ADD_PROPERTY_ST(QCoreApplication, bool, startingUp);
+    MO_ADD_PROPERTY_ST(QCoreApplication, QStringList, libraryPaths);
+    MO_ADD_PROPERTY_ST(QCoreApplication, bool, startingUp);
 
-  MO_ADD_METAOBJECT1(QAbstractItemModel, QObject);
-  MO_ADD_PROPERTY_RO(QAbstractItemModel, QStringList, mimeTypes);
+    MO_ADD_METAOBJECT1(QAbstractItemModel, QObject);
+    MO_ADD_PROPERTY_RO(QAbstractItemModel, QStringList, mimeTypes);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-  MO_ADD_PROPERTY_RO(QAbstractItemModel, Qt::DropActions, supportedDragActions);
-  MO_ADD_PROPERTY_RO(QAbstractItemModel, Qt::DropActions, supportedDropActions);
+    MO_ADD_PROPERTY_RO(QAbstractItemModel, Qt::DropActions, supportedDragActions);
+    MO_ADD_PROPERTY_RO(QAbstractItemModel, Qt::DropActions, supportedDropActions);
 #endif
-  MO_ADD_METAOBJECT1(QAbstractProxyModel, QAbstractItemModel);
-  MO_ADD_METAOBJECT1(QSortFilterProxyModel, QAbstractProxyModel);
-  MO_ADD_PROPERTY_RO(QSortFilterProxyModel, Qt::SortOrder, sortOrder);
+    MO_ADD_METAOBJECT1(QAbstractProxyModel, QAbstractItemModel);
+    MO_ADD_METAOBJECT1(QSortFilterProxyModel, QAbstractProxyModel);
+    MO_ADD_PROPERTY_RO(QSortFilterProxyModel, Qt::SortOrder, sortOrder);
 
-  MO_ADD_METAOBJECT0(QDateTime);
+    MO_ADD_METAOBJECT0(QDateTime);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-  MO_ADD_PROPERTY_RO(QDateTime, bool, isDaylightTime);
+    MO_ADD_PROPERTY_RO(QDateTime, bool, isDaylightTime);
 #endif
-  MO_ADD_PROPERTY_RO(QDateTime, bool, isNull);
-  MO_ADD_PROPERTY_RO(QDateTime, bool, isValid);
+    MO_ADD_PROPERTY_RO(QDateTime, bool, isNull);
+    MO_ADD_PROPERTY_RO(QDateTime, bool, isValid);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-  MO_ADD_PROPERTY_RO(QDateTime, int, offsetFromUtc);
-  MO_ADD_PROPERTY_CR(QDateTime, QTimeZone, timeZone, setTimeZone);
+    MO_ADD_PROPERTY_RO(QDateTime, int, offsetFromUtc);
+    MO_ADD_PROPERTY_CR(QDateTime, QTimeZone, timeZone, setTimeZone);
 
-  MO_ADD_METAOBJECT0(QTimeZone);
-  MO_ADD_PROPERTY_RO(QTimeZone, QString, comment);
+    MO_ADD_METAOBJECT0(QTimeZone);
+    MO_ADD_PROPERTY_RO(QTimeZone, QString, comment);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-  MO_ADD_PROPERTY_RO(QTimeZone, QLocale::Country, country);
+    MO_ADD_PROPERTY_RO(QTimeZone, QLocale::Country, country);
 #endif
-  MO_ADD_PROPERTY_RO(QTimeZone, bool, hasDaylightTime);
-  MO_ADD_PROPERTY_RO(QTimeZone, bool, hasTransitions);
-  MO_ADD_PROPERTY_RO(QTimeZone, QByteArray, id);
-  MO_ADD_PROPERTY_RO(QTimeZone, bool, isValid);
+    MO_ADD_PROPERTY_RO(QTimeZone, bool, hasDaylightTime);
+    MO_ADD_PROPERTY_RO(QTimeZone, bool, hasTransitions);
+    MO_ADD_PROPERTY_RO(QTimeZone, QByteArray, id);
+    MO_ADD_PROPERTY_RO(QTimeZone, bool, isValid);
 #endif
 }
-
 
 Q_DECLARE_METATYPE(QIODevice::OpenMode)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -176,66 +175,66 @@ Q_DECLARE_METATYPE(Qt::SortOrder)
 
 void MetaObjectRepository::initIOTypes()
 {
-  MetaObject *mo = 0;
-  MO_ADD_METAOBJECT1(QIODevice, QObject);
-  MO_ADD_PROPERTY_RO(QIODevice, QIODevice::OpenMode, openMode);
-  MO_ADD_PROPERTY   (QIODevice, bool, isTextModeEnabled, setTextModeEnabled);
-  MO_ADD_PROPERTY_RO(QIODevice, bool, isOpen);
-  MO_ADD_PROPERTY_RO(QIODevice, bool, isReadable);
-  MO_ADD_PROPERTY_RO(QIODevice, bool, isWritable);
-  MO_ADD_PROPERTY_RO(QIODevice, bool, isSequential);
-  MO_ADD_PROPERTY_RO(QIODevice, qint64, pos);
-  MO_ADD_PROPERTY_RO(QIODevice, qint64, size);
-  MO_ADD_PROPERTY_RO(QIODevice, bool, atEnd);
-  MO_ADD_PROPERTY_RO(QIODevice, qint64, bytesAvailable);
-  MO_ADD_PROPERTY_RO(QIODevice, qint64, bytesToWrite);
-  MO_ADD_PROPERTY_RO(QIODevice, bool, canReadLine);
-  MO_ADD_PROPERTY_RO(QIODevice, QString, errorString);
+    MetaObject *mo = 0;
+    MO_ADD_METAOBJECT1(QIODevice, QObject);
+    MO_ADD_PROPERTY_RO(QIODevice, QIODevice::OpenMode, openMode);
+    MO_ADD_PROPERTY(QIODevice, bool, isTextModeEnabled, setTextModeEnabled);
+    MO_ADD_PROPERTY_RO(QIODevice, bool, isOpen);
+    MO_ADD_PROPERTY_RO(QIODevice, bool, isReadable);
+    MO_ADD_PROPERTY_RO(QIODevice, bool, isWritable);
+    MO_ADD_PROPERTY_RO(QIODevice, bool, isSequential);
+    MO_ADD_PROPERTY_RO(QIODevice, qint64, pos);
+    MO_ADD_PROPERTY_RO(QIODevice, qint64, size);
+    MO_ADD_PROPERTY_RO(QIODevice, bool, atEnd);
+    MO_ADD_PROPERTY_RO(QIODevice, qint64, bytesAvailable);
+    MO_ADD_PROPERTY_RO(QIODevice, qint64, bytesToWrite);
+    MO_ADD_PROPERTY_RO(QIODevice, bool, canReadLine);
+    MO_ADD_PROPERTY_RO(QIODevice, QString, errorString);
 
-  // FIXME: QIODevice::readAll() would be nice to have
+    // FIXME: QIODevice::readAll() would be nice to have
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  MO_ADD_METAOBJECT1(QFileDevice, QIODevice);
-  MO_ADD_PROPERTY_RO(QFileDevice, QFileDevice::FileError, error);
-  MO_ADD_PROPERTY_RO(QFileDevice, QString, fileName);
-  MO_ADD_PROPERTY_RO(QFileDevice, int, handle);
-  MO_ADD_PROPERTY_RO(QFileDevice, QFileDevice::Permissions, permissions);
+    MO_ADD_METAOBJECT1(QFileDevice, QIODevice);
+    MO_ADD_PROPERTY_RO(QFileDevice, QFileDevice::FileError, error);
+    MO_ADD_PROPERTY_RO(QFileDevice, QString, fileName);
+    MO_ADD_PROPERTY_RO(QFileDevice, int, handle);
+    MO_ADD_PROPERTY_RO(QFileDevice, QFileDevice::Permissions, permissions);
 
-  MO_ADD_METAOBJECT1(QFile, QFileDevice);
-  MO_ADD_PROPERTY_RO(QFile, bool, exists);
-  MO_ADD_PROPERTY_RO(QFile, QString, symLinkTarget);
+    MO_ADD_METAOBJECT1(QFile, QFileDevice);
+    MO_ADD_PROPERTY_RO(QFile, bool, exists);
+    MO_ADD_PROPERTY_RO(QFile, QString, symLinkTarget);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
-  MO_ADD_METAOBJECT1(QSaveFile, QFileDevice);
+    MO_ADD_METAOBJECT1(QSaveFile, QFileDevice);
 #endif
 #endif
 }
 
 MetaObjectRepository *MetaObjectRepository::instance()
 {
-  if (!s_instance()->m_initialized)
-    s_instance()->initBuiltInTypes();
-  return s_instance();
+    if (!s_instance()->m_initialized)
+        s_instance()->initBuiltInTypes();
+    return s_instance();
 }
 
 void MetaObjectRepository::addMetaObject(MetaObject *mo)
 {
-  Q_ASSERT(!mo->className().isEmpty());
-  m_metaObjects.insert(mo->className(), mo);
+    Q_ASSERT(!mo->className().isEmpty());
+    m_metaObjects.insert(mo->className(), mo);
 }
 
 MetaObject *MetaObjectRepository::metaObject(const QString &typeName) const
 {
-  QString typeName_ = typeName;
-  typeName_.remove('*');
-  typeName_.remove('&');
-  typeName_.remove(QStringLiteral("const "));
-  typeName_.remove(QStringLiteral(" const"));
-  typeName_.remove(' ');
-  return m_metaObjects.value(typeName_);
+    QString typeName_ = typeName;
+    typeName_.remove('*');
+    typeName_.remove('&');
+    typeName_.remove(QStringLiteral("const "));
+    typeName_.remove(QStringLiteral(" const"));
+    typeName_.remove(' ');
+    return m_metaObjects.value(typeName_);
 }
 
 bool MetaObjectRepository::hasMetaObject(const QString &typeName) const
 {
-  return m_metaObjects.contains(typeName);
+    return m_metaObjects.contains(typeName);
 }

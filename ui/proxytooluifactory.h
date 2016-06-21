@@ -31,15 +31,14 @@
 #include <ui/tooluifactory.h>
 
 namespace GammaRay {
-
 /**
  * A wrapper around a plugin ToolUiFactory that only loads the actual plugin once really needed.
  * Until then, meta-data is provided based on a plugin spec file.
  */
 class ProxyToolUiFactory : public ProxyFactory<ToolUiFactory>
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * @param path Path to the plugin spec file
      */
@@ -52,7 +51,6 @@ class ProxyToolUiFactory : public ProxyFactory<ToolUiFactory>
     QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE;
     void initUi() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_PROXYTOOLUIFACTORY_H

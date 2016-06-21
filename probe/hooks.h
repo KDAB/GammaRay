@@ -44,10 +44,9 @@ QT_END_NAMESPACE
 #endif
 
 extern "C" {
-
 extern Q_DECL_EXPORT void gammaray_startup_hook();
-extern Q_DECL_EXPORT void gammaray_addObject(QObject* obj);
-extern Q_DECL_EXPORT void gammaray_removeObject(QObject* obj);
+extern Q_DECL_EXPORT void gammaray_addObject(QObject *obj);
+extern Q_DECL_EXPORT void gammaray_removeObject(QObject *obj);
 
 /** Entry point for startup injection. */
 extern Q_DECL_EXPORT void gammaray_probe_inject();
@@ -62,18 +61,15 @@ extern Q_DECL_EXPORT void gammaray_probe_attach();
 }
 
 namespace GammaRay {
-
 namespace Hooks {
+/** Returns @c true if we have installed the hooks.
+ *  This is useful to avoid loops from preloaded hooks for example.
+ */
+bool hooksInstalled();
 
-  /** Returns @c true if we have installed the hooks.
-   *  This is useful to avoid loops from preloaded hooks for example.
-   */
-  bool hooksInstalled();
-
-  /** Install hooks, either by function overwriting or using qhooks. */
-  void installHooks();
+/** Install hooks, either by function overwriting or using qhooks. */
+void installHooks();
 }
-
 }
 
 #endif

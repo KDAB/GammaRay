@@ -71,172 +71,181 @@
 
 using namespace GammaRay;
 struct IdeSettings {
-    const char* const app;
-    const char* const args;
-    const char* const name;
-    const char* const icon;
+    const char * const app;
+    const char * const args;
+    const char * const name;
+    const char * const icon;
 };
 
 static const IdeSettings ideSettings[] = {
 #if defined(Q_OS_WIN) || defined(Q_OS_OSX)
-    {"",            "",                         "",                       ""          } // Dummy content, because we can't have empty arrays.
+    {"", "", "", ""          }                                                          // Dummy content, because we can't have empty arrays.
 #else
-    { "kdevelop",   "%f:%l:%c",                 QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KDevelop"),   "kdevelop"  },
-    { "kate",       "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Kate"),       "kate"      },
-    { "kwrite",     "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KWrite"),     nullptr     },
-    { "qtcreator",  "%f",                       QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr     }
+    { "kdevelop", "%f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KDevelop"), "kdevelop"  },
+    { "kate", "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Kate"),
+      "kate"      },
+    { "kwrite", "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KWrite"),
+      nullptr     },
+    { "qtcreator", "%f", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr     }
 #endif
 };
 #if defined(Q_OS_WIN) || defined(Q_OS_OSX) // Remove this #if branch when adding real data to ideSettings for Windows/OSX.
-    static const int ideSettingsSize = 0;
+static const int ideSettingsSize = 0;
 #else
-    static const int ideSettingsSize = sizeof(ideSettings) / sizeof(IdeSettings);
+static const int ideSettingsSize = sizeof(ideSettings) / sizeof(IdeSettings);
 #endif
 
 MainWindowUIStateManager::MainWindowUIStateManager(QWidget *widget)
-  : UIStateManager(widget)
+    : UIStateManager(widget)
 {
 }
 
 QList<QSplitter *> MainWindowUIStateManager::splitters() const
 {
-  return QList<QSplitter *>();
+    return QList<QSplitter *>();
 }
 
 QList<QHeaderView *> MainWindowUIStateManager::headers() const
 {
-  return QList<QHeaderView *>();
+    return QList<QHeaderView *>();
 }
 
 MainWindow::MainWindow(QWidget *parent)
-  : QMainWindow(parent)
-  , ui(new Ui::MainWindow)
-  , m_stateManager(this)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+    , m_stateManager(this)
 {
-  if (!Endpoint::instance()->isRemoteClient()) {
-    // we don't want application styles to propagate to the GammaRay window,
-    // so set the platform default one.
-    // unfortunately, that's not recursive by default, unless we have a style sheet set
-    setStyleSheet(QStringLiteral("I_DONT_EXIST {}"));
+    if (!Endpoint::instance()->isRemoteClient()) {
+        // we don't want application styles to propagate to the GammaRay window,
+        // so set the platform default one.
+        // unfortunately, that's not recursive by default, unless we have a style sheet set
+        setStyleSheet(QStringLiteral("I_DONT_EXIST {}"));
 
-    QStyle *defaultStyle = 0;
+        QStyle *defaultStyle = 0;
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    QGuiPlatformPlugin defaultGuiPlatform;
-    defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName());
+        QGuiPlatformPlugin defaultGuiPlatform;
+        defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName());
 #else
-    foreach (const QString &styleName, QGuiApplicationPrivate::platform_theme->themeHint(QPlatformTheme::StyleNames).toStringList()) {
-      if ((defaultStyle = QStyleFactory::create(styleName))) {
-        break;
-      }
-    }
+        foreach (const QString &styleName,
+                 QGuiApplicationPrivate::platform_theme->themeHint(QPlatformTheme::StyleNames).
+                 toStringList()) {
+            if ((defaultStyle = QStyleFactory::create(styleName)))
+                break;
+        }
 #endif
-    if (defaultStyle) {
-      // do not set parent of default style
-      // this will cause the style being deleted too early through ~QObject()
-      // other objects (e.g. the script engine debugger) still might have a
-      // reference on the style during destruction
-      setStyle(defaultStyle);
+        if (defaultStyle) {
+            // do not set parent of default style
+            // this will cause the style being deleted too early through ~QObject()
+            // other objects (e.g. the script engine debugger) still might have a
+            // reference on the style during destruction
+            setStyle(defaultStyle);
+        }
     }
-  }
 
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  connect(ui->actionRetractProbe, SIGNAL(triggered(bool)), SLOT(detachProbe()));
+    connect(ui->actionRetractProbe, SIGNAL(triggered(bool)), SLOT(detachProbe()));
 
-  connect(QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()));
-  connect(ui->actionQuit, SIGNAL(triggered(bool)), this, SLOT(quitHost()));
-  ui->actionQuit->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
+    connect(QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()));
+    connect(ui->actionQuit, SIGNAL(triggered(bool)), this, SLOT(quitHost()));
+    ui->actionQuit->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
 
-  ui->actionHelp->setShortcut(QKeySequence::HelpContents);
-  ui->actionHelp->setEnabled(HelpController::isAvailable());
+    ui->actionHelp->setShortcut(QKeySequence::HelpContents);
+    ui->actionHelp->setEnabled(HelpController::isAvailable());
 
-  connect(ui->actionHelp, SIGNAL(triggered(bool)), this, SLOT(help()));
-  connect(ui->actionPlugins, SIGNAL(triggered(bool)),
-          this, SLOT(aboutPlugins()));
-  connect(ui->actionMessageStatistics, SIGNAL(triggered(bool)), this, SLOT(showMessageStatistics()));
-  connect(ui->actionAboutQt, SIGNAL(triggered(bool)),
-          QApplication::instance(), SLOT(aboutQt()));
-  connect(ui->actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));
-  connect(ui->actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
+    connect(ui->actionHelp, SIGNAL(triggered(bool)), this, SLOT(help()));
+    connect(ui->actionPlugins, SIGNAL(triggered(bool)),
+            this, SLOT(aboutPlugins()));
+    connect(ui->actionMessageStatistics, SIGNAL(triggered(bool)), this, SLOT(
+                showMessageStatistics()));
+    connect(ui->actionAboutQt, SIGNAL(triggered(bool)),
+            QApplication::instance(), SLOT(aboutQt()));
+    connect(ui->actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));
+    connect(ui->actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
 
-  setWindowIcon(QIcon(QStringLiteral(":gammaray/GammaRay-128x128.png")));
+    setWindowIcon(QIcon(QStringLiteral(":gammaray/GammaRay-128x128.png")));
 
-  QAbstractItemModel *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
-  ClientToolModel *toolModel = new ClientToolModel(this);
-  toolModel->setData(QModelIndex(), QVariant::fromValue<QWidget*>(this), ToolModelRole::ToolWidgetParent);
-  toolModel->setSourceModel(model);
-  ui->toolSelector->setModel(toolModel);
-  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(toolModel);
-  ui->toolSelector->setSelectionModel(selectionModel);
-  ui->toolSelector->resize(ui->toolSelector->minimumSize());
-  connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(toolSelected()));
+    QAbstractItemModel *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
+    ClientToolModel *toolModel = new ClientToolModel(this);
+    toolModel->setData(QModelIndex(), QVariant::fromValue<QWidget *>(
+                           this), ToolModelRole::ToolWidgetParent);
+    toolModel->setSourceModel(model);
+    ui->toolSelector->setModel(toolModel);
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(toolModel);
+    ui->toolSelector->setSelectionModel(selectionModel);
+    ui->toolSelector->resize(ui->toolSelector->minimumSize());
+    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(toolSelected()));
 
-  // hide unused tool bar for now
-  ui->mainToolBar->setHidden(true);
+    // hide unused tool bar for now
+    ui->mainToolBar->setHidden(true);
 
-  setWindowTitle(tr("GammaRay (%1)").arg(Endpoint::instance()->label()));
+    setWindowTitle(tr("GammaRay (%1)").arg(Endpoint::instance()->label()));
 
 #ifdef Q_OS_MAC
-  ui->groupBox->setFlat(true);
-  ui->horizontalLayout->setContentsMargins(0, 0, 0, 0);
+    ui->groupBox->setFlat(true);
+    ui->horizontalLayout->setContentsMargins(0, 0, 0, 0);
 #endif
 
-  // Code Navigation
-  QAction *configAction = new QAction(QIcon::fromTheme(QStringLiteral("applications-development")), tr("Code Navigation"), this);
-  auto menu = new QMenu(this);
-  auto group = new QActionGroup(this);
-  group->setExclusive(true);
+    // Code Navigation
+    QAction *configAction = new QAction(QIcon::fromTheme(QStringLiteral(
+                                                             "applications-development")),
+                                        tr("Code Navigation"), this);
+    auto menu = new QMenu(this);
+    auto group = new QActionGroup(this);
+    group->setExclusive(true);
 
-  QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
-  settings.beginGroup(QStringLiteral("CodeNavigation"));
-  const auto currentIdx = settings.value(QStringLiteral("IDE"), -1).toInt();
+    QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
+    settings.beginGroup(QStringLiteral("CodeNavigation"));
+    const auto currentIdx = settings.value(QStringLiteral("IDE"), -1).toInt();
 
-  for (int i = 0; i < ideSettingsSize; ++i) {
-      auto action = new QAction(menu);
-      action->setText(QObject::tr(ideSettings[i].name));
-      if (ideSettings[i].icon)
-          action->setIcon(QIcon::fromTheme(ideSettings[i].icon));
-      action->setCheckable(true);
-      action->setChecked(currentIdx == i);
-      action->setData(i);
+    for (int i = 0; i < ideSettingsSize; ++i) {
+        auto action = new QAction(menu);
+        action->setText(QObject::tr(ideSettings[i].name));
+        if (ideSettings[i].icon)
+            action->setIcon(QIcon::fromTheme(ideSettings[i].icon));
+        action->setCheckable(true);
+        action->setChecked(currentIdx == i);
+        action->setData(i);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0) // It's not worth it to reimplement missing findExecutable for Qt4.
-      action->setEnabled(!QStandardPaths::findExecutable(ideSettings[i].app).isEmpty());
+        action->setEnabled(!QStandardPaths::findExecutable(ideSettings[i].app).isEmpty());
 #endif
-      group->addAction(action);
-      menu->addAction(action);
-  }
-  menu->addSeparator();
+        group->addAction(action);
+        menu->addAction(action);
+    }
+    menu->addSeparator();
 
-  QAction *action = new QAction(menu);
-  action->setText(tr("Custom..."));
-  action->setCheckable(true);
-  action->setChecked(currentIdx == -1);
-  action->setData(-1);
-  group->addAction(action);
-  menu->addAction(action);
+    QAction *action = new QAction(menu);
+    action->setText(tr("Custom..."));
+    action->setCheckable(true);
+    action->setChecked(currentIdx == -1);
+    action->setData(-1);
+    group->addAction(action);
+    menu->addAction(action);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_OSX)
-  // This is a workaround for the cases, where we can't safely do assumptions
-  // about the install location of the IDE
-  action = new QAction(menu);
-  action->setText(tr("Automatic (No Line numbers)"));
-  action->setCheckable(true);
-  action->setChecked(currentIdx == -2);
-  action->setData(-2);
-  group->addAction(action);
-  menu->addAction(action);
+    // This is a workaround for the cases, where we can't safely do assumptions
+    // about the install location of the IDE
+    action = new QAction(menu);
+    action->setText(tr("Automatic (No Line numbers)"));
+    action->setCheckable(true);
+    action->setChecked(currentIdx == -2);
+    action->setData(-2);
+    group->addAction(action);
+    menu->addAction(action);
 #endif
 
-  QObject::connect(group, SIGNAL(triggered(QAction*)), this, SLOT(setCodeNavigationIDE(QAction*)));
+    QObject::connect(group, SIGNAL(triggered(QAction*)), this, SLOT(setCodeNavigationIDE(
+                                                                         QAction *)));
 
-  configAction->setMenu(menu);
-  ui->menuSettings->addMenu(menu);
+    configAction->setMenu(menu);
+    ui->menuSettings->addMenu(menu);
 
-  // Initialize UiIntegration singleton
-  new UiIntegration(this);
+    // Initialize UiIntegration singleton
+    new UiIntegration(this);
 
-  connect(UiIntegration::instance(), SIGNAL(navigateToCode(QUrl,int,int)), this, SLOT(navigateToCode(QUrl,int,int)));
+    connect(UiIntegration::instance(), SIGNAL(navigateToCode(QUrl,int,int)), this,
+            SLOT(navigateToCode(QUrl,int,int)));
 }
 
 MainWindow::~MainWindow()
@@ -250,40 +259,40 @@ void MainWindow::help()
 
 void MainWindow::about()
 {
-  AboutDialog dialog(this);
-  dialog.setWindowTitle(tr("About GammaRay"));
-  dialog.setTitle(AboutData::aboutTitle());
-  dialog.setText(AboutData::aboutBody());
-  dialog.setLogo(QStringLiteral(":gammaray/GammaRay-128x128.png"));
-  dialog.setWindowIcon(QPixmap(QStringLiteral(":gammaray/GammaRay-128x128.png")));
-  dialog.exec();
+    AboutDialog dialog(this);
+    dialog.setWindowTitle(tr("About GammaRay"));
+    dialog.setTitle(AboutData::aboutTitle());
+    dialog.setText(AboutData::aboutBody());
+    dialog.setLogo(QStringLiteral(":gammaray/GammaRay-128x128.png"));
+    dialog.setWindowIcon(QPixmap(QStringLiteral(":gammaray/GammaRay-128x128.png")));
+    dialog.exec();
 }
 
 void MainWindow::aboutPlugins()
 {
-  AboutPluginsDialog dlg(this);
-  dlg.setFixedSize(800, 600);
-  dlg.exec();
+    AboutPluginsDialog dlg(this);
+    dlg.setFixedSize(800, 600);
+    dlg.exec();
 }
 
 void MainWindow::aboutKDAB()
 {
-  AboutDialog dialog(this);
-  dialog.setWindowTitle(tr("About KDAB"));
-  dialog.setTitle(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
-  dialog.setText(
-    tr("<qt><p>GammaRay is supported and maintained by KDAB</p>"
-       "KDAB, the Qt experts, provide consulting and mentoring for developing "
-       "Qt applications from scratch and in porting from all popular and legacy "
-       "frameworks to Qt. We continue to help develop parts of Qt and are one "
-       "of the major contributors to the Qt Project. We can give advanced or "
-       "standard trainings anywhere around the globe.</p>"
-       "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
-       "to meet the people who write code like this."
-       "</p></qt>"));
-  dialog.setLogo(QStringLiteral(":gammaray/kdablogo160.png"));
-  dialog.setWindowIcon(QPixmap(QStringLiteral(":gammaray/kdablogo160.png")));
-  dialog.exec();
+    AboutDialog dialog(this);
+    dialog.setWindowTitle(tr("About KDAB"));
+    dialog.setTitle(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
+    dialog.setText(
+        tr("<qt><p>GammaRay is supported and maintained by KDAB</p>"
+           "KDAB, the Qt experts, provide consulting and mentoring for developing "
+           "Qt applications from scratch and in porting from all popular and legacy "
+           "frameworks to Qt. We continue to help develop parts of Qt and are one "
+           "of the major contributors to the Qt Project. We can give advanced or "
+           "standard trainings anywhere around the globe.</p>"
+           "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
+           "to meet the people who write code like this."
+           "</p></qt>"));
+    dialog.setLogo(QStringLiteral(":gammaray/kdablogo160.png"));
+    dialog.setWindowIcon(QPixmap(QStringLiteral(":gammaray/kdablogo160.png")));
+    dialog.exec();
 }
 
 void MainWindow::showMessageStatistics()
@@ -298,108 +307,111 @@ void MainWindow::showMessageStatistics()
 
 bool MainWindow::selectTool(const QString &id)
 {
-  const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect |
-      QItemSelectionModel::Rows | QItemSelectionModel::Current;
-  const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
-  const QAbstractItemModel *model = ui->toolSelector->model();
-  const QModelIndex toolIndex = model->match(model->index(0, 0), ToolModelRole::ToolId, id, 1, matchFlags).value(0);
-  if (!toolIndex.isValid()) {
-    return false;
-  }
+    const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect
+                                                               |QItemSelectionModel::Rows
+                                                               | QItemSelectionModel::Current;
+    const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
+    const QAbstractItemModel *model = ui->toolSelector->model();
+    const QModelIndex toolIndex = model->match(model->index(0,
+                                                            0), ToolModelRole::ToolId, id, 1,
+                                               matchFlags).value(0);
+    if (!toolIndex.isValid())
+        return false;
 
-  QItemSelectionModel *selectionModel = ui->toolSelector->selectionModel();
-  selectionModel->setCurrentIndex(toolIndex, selectionFlags);
-  return true;
+    QItemSelectionModel *selectionModel = ui->toolSelector->selectionModel();
+    selectionModel->setCurrentIndex(toolIndex, selectionFlags);
+    return true;
 }
 
 void MainWindow::toolSelected()
 {
-  ui->actionsMenu->clear();
-  QModelIndexList list = ui->toolSelector->selectionModel()->selectedRows();
-  int row = -1;
-  if (!list.isEmpty()) {
-    row = list[0].row();
-  }
-  if (row == -1) {
-    return;
-  }
+    ui->actionsMenu->clear();
+    QModelIndexList list = ui->toolSelector->selectionModel()->selectedRows();
+    int row = -1;
+    if (!list.isEmpty())
+        row = list[0].row();
+    if (row == -1)
+        return;
 
-  const QModelIndex mi = ui->toolSelector->model()->index(row, 0);
-  QWidget *toolWidget = mi.data(ToolModelRole::ToolWidget).value<QWidget*>();
-  if (!toolWidget) {
-    toolWidget = createErrorPage(mi);
-    ui->toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget), ToolModelRole::ToolWidget);
-  }
+    const QModelIndex mi = ui->toolSelector->model()->index(row, 0);
+    QWidget *toolWidget = mi.data(ToolModelRole::ToolWidget).value<QWidget *>();
+    if (!toolWidget) {
+        toolWidget = createErrorPage(mi);
+        ui->toolSelector->model()->setData(mi, QVariant::fromValue(
+                                               toolWidget), ToolModelRole::ToolWidget);
+    }
 
-  Q_ASSERT(toolWidget);
-  if (ui->toolStack->indexOf(toolWidget) < 0) { // newly created
-    if (toolWidget->layout()) {
+    Q_ASSERT(toolWidget);
+    if (ui->toolStack->indexOf(toolWidget) < 0) { // newly created
+        if (toolWidget->layout()) {
 #ifndef Q_OS_MAC
-      toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
+            toolWidget->layout()->setContentsMargins(11, 0, 0, 0);
 #else
-      QMargins margins = toolWidget->layout()->contentsMargins();
-      margins.setLeft(0);
-      toolWidget->layout()->setContentsMargins(margins);
+            QMargins margins = toolWidget->layout()->contentsMargins();
+            margins.setLeft(0);
+            toolWidget->layout()->setContentsMargins(margins);
 #endif
-    }
-    ui->toolStack->addWidget(toolWidget);
-  }
-
-  ui->toolStack->setCurrentIndex(ui->toolStack->indexOf(toolWidget));
-
-  foreach (QAction *action, toolWidget->actions()) {
-    if (auto widgetAction = qobject_cast<QWidgetAction*>(action)) {
-      if (auto toolButton = qobject_cast<QToolButton*>(widgetAction->defaultWidget())) {
-        auto subMenu = ui->actionsMenu->addMenu(toolButton->text());
-        if (auto defaultAction = toolButton->defaultAction()) {
-          subMenu->addAction(defaultAction);
-          subMenu->addSeparator();
         }
-        subMenu->addActions(toolButton->menu()->actions());
-      }
-    } else {
-      ui->actionsMenu->addAction(action);
+        ui->toolStack->addWidget(toolWidget);
     }
-  }
-  ui->actionsMenu->setEnabled(!ui->actionsMenu->isEmpty());
-  ui->actionsMenu->setTitle(mi.data().toString());
+
+    ui->toolStack->setCurrentIndex(ui->toolStack->indexOf(toolWidget));
+
+    foreach (QAction *action, toolWidget->actions()) {
+        if (auto widgetAction = qobject_cast<QWidgetAction *>(action)) {
+            if (auto toolButton = qobject_cast<QToolButton *>(widgetAction->defaultWidget())) {
+                auto subMenu = ui->actionsMenu->addMenu(toolButton->text());
+                if (auto defaultAction = toolButton->defaultAction()) {
+                    subMenu->addAction(defaultAction);
+                    subMenu->addSeparator();
+                }
+                subMenu->addActions(toolButton->menu()->actions());
+            }
+        } else {
+            ui->actionsMenu->addAction(action);
+        }
+    }
+    ui->actionsMenu->setEnabled(!ui->actionsMenu->isEmpty());
+    ui->actionsMenu->setTitle(mi.data().toString());
 }
 
 void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumber)
 {
-  // Show Qt resources in our qrc browser
-  if (url.scheme() == "qrc") {
-    if (selectTool(QStringLiteral("GammaRay::ResourceBrowser"))) {
-      QMetaObject::invokeMethod(ui->toolStack->currentWidget(), "selectResource", Q_ARG(QString, url.toString()),
-                              Q_ARG(int, lineNumber), Q_ARG(int, columnNumber));
-    }
-  } else {
-    QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
-    settings.beginGroup(QStringLiteral("CodeNavigation"));
-    const auto ideIdx = settings.value(QStringLiteral("IDE"), -1).toInt();
-
-    QString command;
-    if (ideIdx >= 0 && ideIdx < ideSettingsSize) {
-        command += ideSettings[ideIdx].app;
-        command += ' ';
-        command += ideSettings[ideIdx].args;
-    } else if (ideIdx == -1) {
-        command = settings.value(QStringLiteral("CustomCommand")).toString();
+    // Show Qt resources in our qrc browser
+    if (url.scheme() == "qrc") {
+        if (selectTool(QStringLiteral("GammaRay::ResourceBrowser"))) {
+            QMetaObject::invokeMethod(ui->toolStack->currentWidget(), "selectResource",
+                                      Q_ARG(QString, url.toString()),
+                                      Q_ARG(int, lineNumber), Q_ARG(int, columnNumber));
+        }
     } else {
-        QDesktopServices::openUrl(QUrl(url));
+        QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
+        settings.beginGroup(QStringLiteral("CodeNavigation"));
+        const auto ideIdx = settings.value(QStringLiteral("IDE"), -1).toInt();
+
+        QString command;
+        if (ideIdx >= 0 && ideIdx < ideSettingsSize) {
+            command += ideSettings[ideIdx].app;
+            command += ' ';
+            command += ideSettings[ideIdx].args;
+        } else if (ideIdx == -1) {
+            command = settings.value(QStringLiteral("CustomCommand")).toString();
+        } else {
+            QDesktopServices::openUrl(QUrl(url));
+        }
+
+        const QString filePath = url.isLocalFile()
+                                 || url.isRelative() ? url.toLocalFile() : url.toString();
+        command.replace(QStringLiteral("%f"), filePath);
+        command.replace(QStringLiteral("%l"), QString::number(std::max(0, lineNumber)));
+        command.replace(QStringLiteral("%c"), QString::number(std::max(0, columnNumber)));
+
+        if (!command.isEmpty())
+            QProcess::startDetached(command);
     }
-
-    const QString filePath = url.isLocalFile() || url.isRelative() ? url.toLocalFile() : url.toString();
-    command.replace(QStringLiteral("%f"), filePath);
-    command.replace(QStringLiteral("%l"), QString::number(std::max(0, lineNumber)));
-    command.replace(QStringLiteral("%c"), QString::number(std::max(0, columnNumber)));
-
-    if (!command.isEmpty())
-        QProcess::startDetached(command);
-  }
 }
 
-void GammaRay::MainWindow::setCodeNavigationIDE(QAction* action)
+void GammaRay::MainWindow::setCodeNavigationIDE(QAction *action)
 {
     QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
     settings.beginGroup(QStringLiteral("CodeNavigation"));
@@ -407,9 +419,10 @@ void GammaRay::MainWindow::setCodeNavigationIDE(QAction* action)
     if (action->data() == -1) {
         const auto customCmd = QInputDialog::getText(
             this, tr("Custom Code Navigation"),
-            tr("Specify command to use for code navigation, '%f' will be replaced by the file name, '%l' by the line number and '%c' by the column number."),
+            tr(
+                "Specify command to use for code navigation, '%f' will be replaced by the file name, '%l' by the line number and '%c' by the column number."),
             QLineEdit::Normal, settings.value(QStringLiteral("CustomCommand")).toString()
-        );
+            );
         if (!customCmd.isEmpty()) {
             settings.setValue(QStringLiteral("CustomCommand"), customCmd);
             settings.setValue(QStringLiteral("IDE"), -1);
@@ -421,24 +434,23 @@ void GammaRay::MainWindow::setCodeNavigationIDE(QAction* action)
     settings.setValue(QStringLiteral("IDE"), defaultIde);
 }
 
-
 QWidget *MainWindow::createErrorPage(const QModelIndex &index)
 {
-  QLabel *page = new QLabel(this);
-  page->setAlignment(Qt::AlignCenter);
-  // TODO show the actual plugin error message as well as any other useful information (eg. file name) we have, once the tool model has those
-  page->setText(tr("Tool %1 failed to load.").arg(index.data(ToolModelRole::ToolId).toString()));
-  return page;
+    QLabel *page = new QLabel(this);
+    page->setAlignment(Qt::AlignCenter);
+    // TODO show the actual plugin error message as well as any other useful information (eg. file name) we have, once the tool model has those
+    page->setText(tr("Tool %1 failed to load.").arg(index.data(ToolModelRole::ToolId).toString()));
+    return page;
 }
 
 void MainWindow::quitHost()
 {
-  emit targetQuitRequested();
-  ObjectBroker::object<ProbeControllerInterface*>()->quitHost();
+    emit targetQuitRequested();
+    ObjectBroker::object<ProbeControllerInterface *>()->quitHost();
 }
 
 void MainWindow::detachProbe()
 {
-  emit targetQuitRequested();
-  ObjectBroker::object<ProbeControllerInterface*>()->detachProbe();
+    emit targetQuitRequested();
+    ObjectBroker::object<ProbeControllerInterface *>()->detachProbe();
 }

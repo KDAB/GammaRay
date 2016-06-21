@@ -32,16 +32,14 @@
 #include <common/modelinspectorinterface.h>
 
 namespace GammaRay {
-
 class ModelInspectorClient : public ModelInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ModelInspectorInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ModelInspectorInterface)
+public:
     explicit ModelInspectorClient(QObject *parent = 0);
     virtual ~ModelInspectorClient();
 };
-
 }
 
 #endif // GAMMARAY_MODELINSPECTORCLIENT_H

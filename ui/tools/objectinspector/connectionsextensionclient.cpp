@@ -33,8 +33,8 @@
 
 using namespace GammaRay;
 
-ConnectionsExtensionClient::ConnectionsExtensionClient(const QString& name, QObject* parent):
-  ConnectionsExtensionInterface(name, parent)
+ConnectionsExtensionClient::ConnectionsExtensionClient(const QString &name, QObject *parent)
+    : ConnectionsExtensionInterface(name, parent)
 {
 }
 
@@ -44,10 +44,12 @@ ConnectionsExtensionClient::~ConnectionsExtensionClient()
 
 void ConnectionsExtensionClient::navigateToSender(int modelRow)
 {
-  Endpoint::instance()->invokeObject(name(), "navigateToSender", QVariantList() << QVariant::fromValue(modelRow));
+    Endpoint::instance()->invokeObject(name(), "navigateToSender",
+                                       QVariantList() << QVariant::fromValue(modelRow));
 }
 
 void ConnectionsExtensionClient::navigateToReceiver(int modelRow)
 {
-  Endpoint::instance()->invokeObject(name(), "navigateToReceiver", QVariantList() << QVariant::fromValue(modelRow));
+    Endpoint::instance()->invokeObject(name(), "navigateToReceiver",
+                                       QVariantList() << QVariant::fromValue(modelRow));
 }

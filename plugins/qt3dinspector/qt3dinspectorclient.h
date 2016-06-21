@@ -32,7 +32,6 @@
 #include "qt3dinspectorinterface.h"
 
 namespace GammaRay {
-
 class Qt3DInspectorClient : public Qt3DInspectorInterface
 {
     Q_OBJECT

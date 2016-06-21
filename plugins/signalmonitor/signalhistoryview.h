@@ -32,16 +32,16 @@
 #include "ui/deferredtreeview.h"
 
 namespace GammaRay {
-
 class SignalHistoryDelegate;
 
 class SignalHistoryView : public DeferredTreeView
 {
-  Q_OBJECT
-    Q_PROPERTY(QScrollBar *eventScrollBar READ eventScrollBar WRITE setEventScrollBar NOTIFY eventScrollBarChanged)
+    Q_OBJECT
+    Q_PROPERTY(
+        QScrollBar *eventScrollBar READ eventScrollBar WRITE setEventScrollBar NOTIFY eventScrollBarChanged)
     Q_PROPERTY(SignalHistoryDelegate *eventDelegate READ eventDelegate FINAL CONSTANT)
 
-  public:
+public:
     explicit SignalHistoryView(QWidget *parent = 0);
 
     void setEventScrollBar(QScrollBar *scrollBar);
@@ -51,21 +51,20 @@ class SignalHistoryView : public DeferredTreeView
     int eventColumnPosition() const;
     int eventColumnWidth() const;
 
-  signals:
+signals:
     void eventScrollBarChanged(QScrollBar *scrollBar);
 
-  protected:
+protected:
     bool viewportEvent(QEvent *event) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void eventDelegateChanged();
     void eventScrollBarSliderMoved(int value);
 
-  private:
-    SignalHistoryDelegate *const m_eventDelegate;
+private:
+    SignalHistoryDelegate * const m_eventDelegate;
     QScrollBar *m_eventScrollBar;
 };
-
 } // namespace GammaRay
 
 #endif // GAMMARAY_SIGNALHISTORYVIEW_H

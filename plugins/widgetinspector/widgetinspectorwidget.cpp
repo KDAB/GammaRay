@@ -51,79 +51,81 @@
 
 using namespace GammaRay;
 
-static QObject* createWidgetInspectorClient(const QString &/*name*/, QObject *parent)
+static QObject *createWidgetInspectorClient(const QString & /*name*/, QObject *parent)
 {
-  return new WidgetInspectorClient(parent);
+    return new WidgetInspectorClient(parent);
 }
 
 WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::WidgetInspectorWidget)
-  , m_stateManager(this)
-  , m_inspector(0)
-  , m_remoteView(new RemoteViewWidget(this))
+    : QWidget(parent)
+    , ui(new Ui::WidgetInspectorWidget)
+    , m_stateManager(this)
+    , m_inspector(0)
+    , m_remoteView(new RemoteViewWidget(this))
 {
-  ObjectBroker::registerClientObjectFactoryCallback<WidgetInspectorInterface*>(createWidgetInspectorClient);
-  m_inspector = ObjectBroker::object<WidgetInspectorInterface*>();
+    ObjectBroker::registerClientObjectFactoryCallback<WidgetInspectorInterface *>(
+        createWidgetInspectorClient);
+    m_inspector = ObjectBroker::object<WidgetInspectorInterface *>();
 
-  ui->setupUi(this);
-  ui->widgetPropertyWidget->setObjectBaseName(m_inspector->objectName());
+    ui->setupUi(this);
+    ui->widgetPropertyWidget->setObjectBaseName(m_inspector->objectName());
 
-  auto widgetModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WidgetTree"));
-  ui->widgetTreeView->header()->setObjectName("widgetTreeViewHeader");
-  ui->widgetTreeView->setDeferredResizeMode(0, QHeaderView::Stretch);
-  ui->widgetTreeView->setDeferredResizeMode(1, QHeaderView::Interactive);
-  ui->widgetTreeView->setModel(widgetModel);
-  ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetModel));
-  new SearchLineController(ui->widgetSearchLine, widgetModel);
-  connect(ui->widgetTreeView->selectionModel(),
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(widgetSelected(QItemSelection)));
-  connect(ui->widgetTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(widgetTreeContextMenu(QPoint)));
+    auto widgetModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WidgetTree"));
+    ui->widgetTreeView->header()->setObjectName("widgetTreeViewHeader");
+    ui->widgetTreeView->setDeferredResizeMode(0, QHeaderView::Stretch);
+    ui->widgetTreeView->setDeferredResizeMode(1, QHeaderView::Interactive);
+    ui->widgetTreeView->setModel(widgetModel);
+    ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetModel));
+    new SearchLineController(ui->widgetSearchLine, widgetModel);
+    connect(ui->widgetTreeView->selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(widgetSelected(QItemSelection)));
+    connect(ui->widgetTreeView, SIGNAL(customContextMenuRequested(QPoint)), this,
+            SLOT(widgetTreeContextMenu(QPoint)));
 
-  m_remoteView->setName(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"));
+    m_remoteView->setName(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"));
 
-  auto layout = new QVBoxLayout;
-  layout->setMargin(0);
-  auto toolbar = new QToolBar(this);
-  toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-  layout->addWidget(toolbar);
-  ui->widgetPreviewContainer->setLayout(layout);
-  layout->addWidget(m_remoteView);
+    auto layout = new QVBoxLayout;
+    layout->setMargin(0);
+    auto toolbar = new QToolBar(this);
+    toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    layout->addWidget(toolbar);
+    ui->widgetPreviewContainer->setLayout(layout);
+    layout->addWidget(m_remoteView);
 
-  foreach (auto action, m_remoteView->interactionModeActions()->actions())
-    toolbar->addAction(action);
-  toolbar->addSeparator();
+    foreach (auto action, m_remoteView->interactionModeActions()->actions())
+        toolbar->addAction(action);
+    toolbar->addSeparator();
 
-  toolbar->addAction(m_remoteView->zoomOutAction());
-  auto zoom = new QComboBox;
-  zoom->setModel(m_remoteView->zoomLevelModel());
-  toolbar->addWidget(zoom);
-  connect(zoom, SIGNAL(currentIndexChanged(int)), m_remoteView, SLOT(setZoomLevel(int)));
-  connect(m_remoteView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
-  zoom->setCurrentIndex(m_remoteView->zoomLevelIndex());
-  toolbar->addAction(m_remoteView->zoomInAction());
+    toolbar->addAction(m_remoteView->zoomOutAction());
+    auto zoom = new QComboBox;
+    zoom->setModel(m_remoteView->zoomLevelModel());
+    toolbar->addWidget(zoom);
+    connect(zoom, SIGNAL(currentIndexChanged(int)), m_remoteView, SLOT(setZoomLevel(int)));
+    connect(m_remoteView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
+    zoom->setCurrentIndex(m_remoteView->zoomLevelIndex());
+    toolbar->addAction(m_remoteView->zoomInAction());
 
-  connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
-  connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
-  connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
-  connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
-  connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
+    connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
+    connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
+    connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
+    connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
+    connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
 
-  connect(m_inspector, SIGNAL(featuresChanged()), this, SLOT(updateActions()));
+    connect(m_inspector, SIGNAL(featuresChanged()), this, SLOT(updateActions()));
 
-  addAction(ui->actionSaveAsImage);
-  addAction(ui->actionSaveAsSvg);
-  addAction(ui->actionSaveAsPdf);
-  addAction(ui->actionSaveAsUiFile);
-  addAction(ui->actionAnalyzePainting);
+    addAction(ui->actionSaveAsImage);
+    addAction(ui->actionSaveAsSvg);
+    addAction(ui->actionSaveAsPdf);
+    addAction(ui->actionSaveAsUiFile);
+    addAction(ui->actionAnalyzePainting);
 
-  updateActions();
+    updateActions();
 
-  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
-  m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
-  connect(ui->widgetPropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+    connect(ui->widgetPropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
 }
 
 WidgetInspectorWidget::~WidgetInspectorWidget()
@@ -135,29 +137,33 @@ void WidgetInspectorWidget::updateActions()
     const auto model = ui->widgetTreeView->selectionModel()->selectedRows();
     const auto selection = !model.isEmpty() && model.first().isValid();
 
-    ui->actionSaveAsSvg->setEnabled(selection && m_inspector->features() & WidgetInspectorInterface::SvgExport);
-    ui->actionSaveAsPdf->setEnabled(selection && m_inspector->features() & WidgetInspectorInterface::PdfExport);
-    ui->actionSaveAsUiFile->setEnabled(selection && m_inspector->features() & WidgetInspectorInterface::UiExport);
-    ui->actionAnalyzePainting->setEnabled(selection && m_inspector->features() & WidgetInspectorInterface::AnalyzePainting);
+    ui->actionSaveAsSvg->setEnabled(
+        selection && m_inspector->features() & WidgetInspectorInterface::SvgExport);
+    ui->actionSaveAsPdf->setEnabled(
+        selection && m_inspector->features() & WidgetInspectorInterface::PdfExport);
+    ui->actionSaveAsUiFile->setEnabled(
+        selection && m_inspector->features() & WidgetInspectorInterface::UiExport);
+    ui->actionAnalyzePainting->setEnabled(
+        selection && m_inspector->features() & WidgetInspectorInterface::AnalyzePainting);
 
-    auto f = m_remoteView->supportedInteractionModes() & ~ RemoteViewWidget::InputRedirection;
+    auto f = m_remoteView->supportedInteractionModes() & ~RemoteViewWidget::InputRedirection;
     if (m_inspector->features() & WidgetInspectorInterface::InputRedirection)
         f |= RemoteViewWidget::InputRedirection;
     m_remoteView->setSupportedInteractionModes(f);
 }
 
-void WidgetInspectorWidget::widgetSelected(const QItemSelection& selection)
+void WidgetInspectorWidget::widgetSelected(const QItemSelection &selection)
 {
-  QModelIndex index;
-  if (selection.size() > 0)
-    index = selection.first().topLeft();
+    QModelIndex index;
+    if (selection.size() > 0)
+        index = selection.first().topLeft();
 
-  if (index.isValid()) {
-    // in case selection was triggered remotely
-    ui->widgetTreeView->scrollTo(index);
-  }
+    if (index.isValid()) {
+        // in case selection was triggered remotely
+        ui->widgetTreeView->scrollTo(index);
+    }
 
-  updateActions();
+    updateActions();
 }
 
 void WidgetInspectorWidget::widgetTreeContextMenu(QPoint pos)
@@ -176,75 +182,79 @@ void WidgetInspectorWidget::widgetTreeContextMenu(QPoint pos)
 
 void WidgetInspectorWidget::saveAsImage()
 {
-  const QString fileName =
-    QFileDialog::getSaveFileName(
-      this,
-      tr("Save As Image"),
-      QString(),
-      tr("Image Files (*.png *.jpg)"));
+    const QString fileName
+        = QFileDialog::getSaveFileName(
+        this,
+        tr("Save As Image"),
+        QString(),
+        tr("Image Files (*.png *.jpg)"));
 
-  if (fileName.isEmpty())
-    return;
+    if (fileName.isEmpty())
+        return;
 
-  m_inspector->saveAsImage(fileName);
+    m_inspector->saveAsImage(fileName);
 }
 
 void WidgetInspectorWidget::saveAsSvg()
 {
-  const QString fileName =
-    QFileDialog::getSaveFileName(
-      this,
-      tr("Save As SVG"),
-      QString(),
-      tr("Scalable Vector Graphics (*.svg)"));
+    const QString fileName
+        = QFileDialog::getSaveFileName(
+        this,
+        tr("Save As SVG"),
+        QString(),
+        tr("Scalable Vector Graphics (*.svg)"));
 
-  if (fileName.isEmpty())
-    return;
+    if (fileName.isEmpty())
+        return;
 
-  m_inspector->saveAsSvg(fileName);
+    m_inspector->saveAsSvg(fileName);
 }
 
 void WidgetInspectorWidget::saveAsPdf()
 {
-  const QString fileName =
-    QFileDialog::getSaveFileName(
-      this,
-      tr("Save As PDF"),
-      QString(),
-      tr("PDF (*.pdf)"));
+    const QString fileName
+        = QFileDialog::getSaveFileName(
+        this,
+        tr("Save As PDF"),
+        QString(),
+        tr("PDF (*.pdf)"));
 
-  if (fileName.isEmpty())
-    return;
+    if (fileName.isEmpty())
+        return;
 
-  m_inspector->saveAsPdf(fileName);
+    m_inspector->saveAsPdf(fileName);
 }
 
 void WidgetInspectorWidget::saveAsUiFile()
 {
-  const QString fileName =
-    QFileDialog::getSaveFileName(
-      this,
-      tr("Save As Qt Designer UI File"),
-      QString(),
-      tr("Qt Designer UI File (*.ui)"));
+    const QString fileName
+        = QFileDialog::getSaveFileName(
+        this,
+        tr("Save As Qt Designer UI File"),
+        QString(),
+        tr("Qt Designer UI File (*.ui)"));
 
-  if (fileName.isEmpty())
-    return;
+    if (fileName.isEmpty())
+        return;
 
-  m_inspector->saveAsUiFile(fileName);
+    m_inspector->saveAsUiFile(fileName);
 }
 
 void WidgetInspectorWidget::analyzePainting()
 {
-  m_inspector->analyzePainting();
+    m_inspector->analyzePainting();
 
-  PaintBufferViewer *viewer = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this);
-  viewer->show();
+    PaintBufferViewer *viewer
+        = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this);
+    viewer->show();
 }
 
 void WidgetInspectorUiFactory::initUi()
 {
-    PropertyWidget::registerTab<WidgetAttributeTab>(QStringLiteral("widgetAttributes"), tr("Attributes"), PropertyWidgetTabPriority::Advanced);
+    PropertyWidget::registerTab<WidgetAttributeTab>(QStringLiteral("widgetAttributes"),
+                                                    tr(
+                                                        "Attributes"),
+                                                    PropertyWidgetTabPriority::Advanced);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

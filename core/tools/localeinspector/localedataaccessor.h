@@ -34,96 +34,96 @@
 #include <QVector>
 
 namespace GammaRay {
-
 struct LocaleDataAccessor;
 
 class LocaleDataAccessorRegistry : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit LocaleDataAccessorRegistry(QObject *parent = 0);
     ~LocaleDataAccessorRegistry();
 
     void registerAccessor(LocaleDataAccessor *accessor);
     void setAccessorEnabled(LocaleDataAccessor *accessor, bool enabled);
-    QVector<LocaleDataAccessor*> accessors();
-    QVector<LocaleDataAccessor*> enabledAccessors();
+    QVector<LocaleDataAccessor *> accessors();
+    QVector<LocaleDataAccessor *> enabledAccessors();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void accessorAdded();
     void accessorRemoved(int idx);
 
-  private:
+private:
     void init();
 
-  private:
-    QVector<LocaleDataAccessor*> m_accessors;
-    QVector<LocaleDataAccessor*> m_enabledAccessors;
+private:
+    QVector<LocaleDataAccessor *> m_accessors;
+    QVector<LocaleDataAccessor *> m_enabledAccessors;
 };
 
 struct LocaleDataAccessor
 {
-  LocaleDataAccessor(LocaleDataAccessorRegistry *registry, bool defaultAccessor = false)
-  {
-    registry->registerAccessor(this);
-    if (defaultAccessor) {
-      registry->setAccessorEnabled(this, true);
+    LocaleDataAccessor(LocaleDataAccessorRegistry *registry, bool defaultAccessor = false)
+    {
+        registry->registerAccessor(this);
+        if (defaultAccessor)
+            registry->setAccessorEnabled(this, true);
     }
-  }
-  virtual ~LocaleDataAccessor() {}
 
-  virtual QString accessorName() = 0;
+    virtual ~LocaleDataAccessor() {}
 
-  QVariant data(const QLocale &locale, int role)
-  {
-    if (role == Qt::DisplayRole) {
-      return display(locale);
+    virtual QString accessorName() = 0;
+
+    QVariant data(const QLocale &locale, int role)
+    {
+        if (role == Qt::DisplayRole)
+            return display(locale);
+        return QVariant();
     }
-    return QVariant();
-  }
-  virtual QString display(const QLocale &)
-  {
-    return QString();
-  }
 
-  Q_DISABLE_COPY(LocaleDataAccessor)
+    virtual QString display(const QLocale &)
+    {
+        return QString();
+    }
+
+    Q_DISABLE_COPY(LocaleDataAccessor)
 };
 
 #define LOCALE_DISPLAY_ACCESSOR(NAME) \
-struct Locale##NAME##Accessor : LocaleDataAccessor \
-{ \
-  Locale##NAME##Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor(registry) {} \
-  QString accessorName() { return QStringLiteral(#NAME); } \
-  QString display(const QLocale &locale) \
-  { \
+    struct Locale ## NAME ## Accessor : LocaleDataAccessor \
+    { \
+        Locale ## NAME ## Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor( \
+                registry) {} \
+        QString accessorName() { return QStringLiteral(#NAME); } \
+        QString display(const QLocale &locale) \
+        { \
 
 #define LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME) \
-struct Locale##NAME##Accessor : LocaleDataAccessor \
-{ \
-  Locale##NAME##Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor(registry, true) {} \
+    struct Locale ## NAME ## Accessor : LocaleDataAccessor \
+    { \
+        Locale ## NAME ## Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor( \
+                registry, true) {} \
   \
-  QString accessorName()                 \
-  {                                      \
-    return QStringLiteral(#NAME);        \
-  }                                      \
-  QString display(const QLocale &locale) \
-  { \
+        QString accessorName()                 \
+        {                                      \
+            return QStringLiteral(#NAME);        \
+        }                                      \
+        QString display(const QLocale &locale) \
+        { \
 
 #define LOCALE_DISPLAY_ACCESSOR_END(NAME) \
     return QString(); \
-  } \
-}; new Locale##NAME##Accessor(this);
+    } \
+    }; new Locale ## NAME ## Accessor(this);
 
 #define LOCALE_SIMPLE_ACCESSOR(NAME, IMPLEMENTATION) \
-  LOCALE_DISPLAY_ACCESSOR(NAME) \
-  IMPLEMENTATION \
-  LOCALE_DISPLAY_ACCESSOR_END(NAME)
+    LOCALE_DISPLAY_ACCESSOR(NAME) \
+    IMPLEMENTATION \
+    LOCALE_DISPLAY_ACCESSOR_END(NAME)
 
 #define LOCALE_SIMPLE_DEFAULT_ACCESSOR(NAME, IMPLEMENTATION) \
-  LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME) \
-  IMPLEMENTATION \
-  LOCALE_DISPLAY_ACCESSOR_END(NAME)
-
+    LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME) \
+    IMPLEMENTATION \
+    LOCALE_DISPLAY_ACCESSOR_END(NAME)
 }
 
 Q_DECLARE_METATYPE(GammaRay::LocaleDataAccessor *)

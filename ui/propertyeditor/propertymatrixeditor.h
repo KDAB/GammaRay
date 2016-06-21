@@ -32,17 +32,15 @@
 #include "propertyextendededitor.h"
 
 namespace GammaRay {
-
 class PropertyMatrixEditor : public PropertyExtendedEditor
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PropertyMatrixEditor(QWidget *parent = Q_NULLPTR);
 
-  protected:
+protected:
     void edit() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYMATRIXEDITOR_H

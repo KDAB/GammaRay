@@ -37,14 +37,13 @@ class QStyle;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /**
  * Base class for all models showing style elements.
  */
 class AbstractStyleElementModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit AbstractStyleElementModel(QObject *parent = 0);
 
     void setStyle(QStyle *style);
@@ -55,7 +54,7 @@ class AbstractStyleElementModel : public QAbstractTableModel
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     virtual QVariant doData(int row, int column, int role) const = 0;
     virtual int doColumnCount() const = 0;
     virtual int doRowCount() const = 0;
@@ -65,10 +64,9 @@ class AbstractStyleElementModel : public QAbstractTableModel
      */
     bool isMainStyle() const;
 
-  protected:
+protected:
     QPointer<QStyle> m_style;
 };
-
 }
 
 #endif // GAMMARAY_ABSTRACTSTYLEELEMENTMODEL_H

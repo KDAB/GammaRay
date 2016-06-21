@@ -26,7 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//krazy:excludeall=typedefs since we need int8_t and friends in here
+// krazy:excludeall=typedefs since we need int8_t and friends in here
 
 #include "attribute.h"
 
@@ -52,24 +52,33 @@ int Attribute::size(Qt3DRender::QAttribute::VertexBaseType type)
     return size_table[type];
 }
 
-template <typename T> static QVariant toVariant(const char *data)
+template<typename T> static QVariant toVariant(const char *data)
 {
-    //cppcheck-suppress invalidPointerCast
-    return QVariant::fromValue<T>(*reinterpret_cast<const T*>(data));
+    // cppcheck-suppress invalidPointerCast
+    return QVariant::fromValue<T>(*reinterpret_cast<const T *>(data));
 }
 
-QVariant Attribute::variant(Qt3DRender::QAttribute::VertexBaseType type, const char* data)
+QVariant Attribute::variant(Qt3DRender::QAttribute::VertexBaseType type, const char *data)
 {
     switch (type) {
-        case Qt3DRender::QAttribute::Byte: return toVariant<int8_t>(data);
-        case Qt3DRender::QAttribute::UnsignedByte: return toVariant<uint8_t>(data);
-        case Qt3DRender::QAttribute::Short: return toVariant<int16_t>(data);
-        case Qt3DRender::QAttribute::UnsignedShort: return toVariant<uint16_t>(data);
-        case Qt3DRender::QAttribute::Int: return toVariant<int32_t>(data);
-        case Qt3DRender::QAttribute::UnsignedInt: return toVariant<uint32_t>(data);
-        case Qt3DRender::QAttribute::HalfFloat: return QVariant("TODO");
-        case Qt3DRender::QAttribute::Float: return toVariant<float>(data);
-        case Qt3DRender::QAttribute::Double: return toVariant<double>(data);
+    case Qt3DRender::QAttribute::Byte:
+        return toVariant<int8_t>(data);
+    case Qt3DRender::QAttribute::UnsignedByte:
+        return toVariant<uint8_t>(data);
+    case Qt3DRender::QAttribute::Short:
+        return toVariant<int16_t>(data);
+    case Qt3DRender::QAttribute::UnsignedShort:
+        return toVariant<uint16_t>(data);
+    case Qt3DRender::QAttribute::Int:
+        return toVariant<int32_t>(data);
+    case Qt3DRender::QAttribute::UnsignedInt:
+        return toVariant<uint32_t>(data);
+    case Qt3DRender::QAttribute::HalfFloat:
+        return QVariant("TODO");
+    case Qt3DRender::QAttribute::Float:
+        return toVariant<float>(data);
+    case Qt3DRender::QAttribute::Double:
+        return toVariant<double>(data);
     }
     return QVariant();
 }

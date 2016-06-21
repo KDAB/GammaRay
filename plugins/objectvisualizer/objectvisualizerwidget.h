@@ -38,31 +38,29 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class DeferredTreeView;
 class GraphWidget;
 
 class GraphViewerWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit GraphViewerWidget(QWidget *parent = 0);
     virtual ~GraphViewerWidget();
 
-  private:
+private:
     UIStateManager m_stateManager;
-    QAbstractItemModel* mModel;
+    QAbstractItemModel *mModel;
     DeferredTreeView *mObjectTreeView;
     GraphWidget *mWidget;
 };
 
 class ObjectVisualizerUiFactory : public QObject, public StandardToolUiFactory<GraphViewerWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_objectvisualizer.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_objectvisualizer.json")
 };
-
 }
 
 #endif // GAMMARAY_GRAPHVIEWER_H

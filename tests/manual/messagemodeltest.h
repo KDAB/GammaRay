@@ -36,21 +36,19 @@
 #endif
 
 namespace GammaRay {
-
 class MessageGenerator : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     MessageGenerator();
 
-  private slots:
+private slots:
     void generateDebug();
     void generateWarning();
     void generateCritical();
     Q_NORETURN void generateFatal();
 };
-
 }
 
 #endif // GAMMARAY_MESSAGEMODELTEST_H

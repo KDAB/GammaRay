@@ -41,15 +41,15 @@
 using namespace GammaRay;
 
 ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QObject *parent)
-  : ResourceBrowserInterface(parent)
+    : ResourceBrowserInterface(parent)
 {
-  ResourceModel *resourceModel = new ResourceModel(this);
-  auto proxy = new ServerProxyModel<ResourceFilterModel>(this);
-  proxy->setSourceModel(resourceModel);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ResourceModel"), proxy);
-  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
-  connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-          this, SLOT(currentChanged(QModelIndex)));
+    ResourceModel *resourceModel = new ResourceModel(this);
+    auto proxy = new ServerProxyModel<ResourceFilterModel>(this);
+    proxy->setSourceModel(resourceModel);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.ResourceModel"), proxy);
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
+    connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(currentChanged(QModelIndex)));
 }
 
 void ResourceBrowser::downloadResource(const QString &sourceFilePath, const QString &targetFilePath)
@@ -58,28 +58,29 @@ void ResourceBrowser::downloadResource(const QString &sourceFilePath, const QStr
 
     if (fi.isFile()) {
         QFile f(fi.absoluteFilePath());
-        if (f.open(QFile::ReadOnly)) {
+        if (f.open(QFile::ReadOnly))
             emit resourceDownloaded(targetFilePath, f.readAll());
-        } else {
+        else
             qWarning() << "Failed to open" << fi.absoluteFilePath();
-        }
     }
 }
 
 void ResourceBrowser::selectResource(const QString &sourceFilePath, int line, int column)
 {
-  const bool locked = blockSignals(true);
-  const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect |
-      QItemSelectionModel::Rows | QItemSelectionModel::Current;
-  const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
-  auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ResourceModel"));
-  auto selectionModel = ObjectBroker::selectionModel(model);
-  const QString filePath = QLatin1Char(':') + QUrl(sourceFilePath).path();
-  const QModelIndex index = model->match(model->index(0,0), ResourceModel::FilePathRole, filePath, 1,
-                                         matchFlags).value(0);
-  selectionModel->setCurrentIndex(index, selectionFlags);
-  blockSignals(locked);
-  currentChanged(index, line, column);
+    const bool locked = blockSignals(true);
+    const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect
+                                                               |QItemSelectionModel::Rows
+                                                               | QItemSelectionModel::Current;
+    const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
+    auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ResourceModel"));
+    auto selectionModel = ObjectBroker::selectionModel(model);
+    const QString filePath = QLatin1Char(':') + QUrl(sourceFilePath).path();
+    const QModelIndex index = model->match(model->index(0,
+                                                        0), ResourceModel::FilePathRole, filePath, 1,
+                                           matchFlags).value(0);
+    selectionModel->setCurrentIndex(index, selectionFlags);
+    blockSignals(locked);
+    currentChanged(index, line, column);
 }
 
 void ResourceBrowser::currentChanged(const QModelIndex &current, int line, int column)
@@ -101,5 +102,5 @@ void ResourceBrowser::currentChanged(const QModelIndex &current, int line, int c
 
 QString ResourceBrowserFactory::name() const
 {
-  return tr("Resources");
+    return tr("Resources");
 }

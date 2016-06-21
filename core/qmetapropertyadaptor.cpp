@@ -37,9 +37,9 @@
 
 using namespace GammaRay;
 
-QMetaPropertyAdaptor::QMetaPropertyAdaptor(QObject* parent):
-    PropertyAdaptor(parent),
-    m_notifyGuard(false)
+QMetaPropertyAdaptor::QMetaPropertyAdaptor(QObject *parent)
+    : PropertyAdaptor(parent)
+    , m_notifyGuard(false)
 {
 }
 
@@ -47,7 +47,7 @@ QMetaPropertyAdaptor::~QMetaPropertyAdaptor()
 {
 }
 
-void QMetaPropertyAdaptor::doSetObject(const ObjectInstance& oi)
+void QMetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
     auto mo = oi.metaObject();
     if (!mo || oi.type() != ObjectInstance::QtObject || !oi.qtObject())
@@ -60,11 +60,11 @@ void QMetaPropertyAdaptor::doSetObject(const ObjectInstance& oi)
         if (prop.hasNotifySignal()) {
             connect(oi.qtObject(), QByteArray("2") +
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-                prop.notifySignal().signature()
+                    prop.notifySignal().signature()
 #else
-                prop.notifySignal().methodSignature()
+                    prop.notifySignal().methodSignature()
 #endif
-                , this, SLOT(propertyUpdated()));
+                    , this, SLOT(propertyUpdated()));
             m_notifyToPropertyMap.insert(prop.notifySignalIndex(), i);
         }
     }
@@ -88,18 +88,17 @@ static QString translateBool(bool value)
     return value ? yesStr : noStr;
 }
 
-QString QMetaPropertyAdaptor::detailString(const QMetaProperty& prop) const
+QString QMetaPropertyAdaptor::detailString(const QMetaProperty &prop) const
 {
     QObject *obj = object().qtObject();
     QStringList s;
     s << tr("Constant: %1").arg(translateBool(prop.isConstant()));
     s << tr("Designable: %1").arg(translateBool(prop.isDesignable(obj)));
     s << tr("Final: %1").arg(translateBool(prop.isFinal()));
-    if (prop.hasNotifySignal()) {
+    if (prop.hasNotifySignal())
         s << tr("Notification: %1").arg(Util::prettyMethodSignature(prop.notifySignal()));
-    } else {
+    else
         s << tr("Notification: no");
-    }
     s << tr("Resetable: %1").arg(translateBool(prop.isResettable()));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
     s << tr("Revision: %1").arg(prop.revision());
@@ -135,18 +134,18 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
     {
         ProbeGuardSuspender g;
         switch (object().type()) {
-            case ObjectInstance::QtObject:
-                if (object().qtObject())
-                    data.setValue(prop.read(object().qtObject()));
-                break;
+        case ObjectInstance::QtObject:
+            if (object().qtObject())
+                data.setValue(prop.read(object().qtObject()));
+            break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-            case ObjectInstance::QtGadget:
-                if (object().object())
-                    data.setValue(prop.readOnGadget(object().object()));
-                break;
+        case ObjectInstance::QtGadget:
+            if (object().object())
+                data.setValue(prop.readOnGadget(object().object()));
+            break;
 #endif
-            default:
-                break;
+        default:
+            break;
         }
     }
 
@@ -163,30 +162,30 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
     return data;
 }
 
-void QMetaPropertyAdaptor::writeProperty(int index, const QVariant& value)
+void QMetaPropertyAdaptor::writeProperty(int index, const QVariant &value)
 {
     const auto mo = object().metaObject();
     Q_ASSERT(mo);
 
     const auto prop = mo->property(index);
     switch (object().type()) {
-        case ObjectInstance::QtObject:
-            if (object().qtObject()) {
-                prop.write(object().qtObject(), value);
-                if (!prop.hasNotifySignal())
-                    emit propertyChanged(index, index);
-            }
-            break;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-        case ObjectInstance::QtGadget:
-            if (object().object()) {
-                prop.writeOnGadget(object().object(), value);
+    case ObjectInstance::QtObject:
+        if (object().qtObject()) {
+            prop.write(object().qtObject(), value);
+            if (!prop.hasNotifySignal())
                 emit propertyChanged(index, index);
-            }
-            break;
+        }
+        break;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    case ObjectInstance::QtGadget:
+        if (object().object()) {
+            prop.writeOnGadget(object().object(), value);
+            emit propertyChanged(index, index);
+        }
+        break;
 #endif
-        default:
-            break;
+    default:
+        break;
     }
 }
 
@@ -197,23 +196,23 @@ void QMetaPropertyAdaptor::resetProperty(int index)
 
     const auto prop = mo->property(index);
     switch (object().type()) {
-        case ObjectInstance::QtObject:
-            if (object().qtObject()) {
-                prop.reset(object().qtObject());
-                if (!prop.hasNotifySignal())
-                    emit propertyChanged(index, index);
-            }
-            break;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-        case ObjectInstance::QtGadget:
-            if (object().object()) {
-                prop.resetOnGadget(object().object());
+    case ObjectInstance::QtObject:
+        if (object().qtObject()) {
+            prop.reset(object().qtObject());
+            if (!prop.hasNotifySignal())
                 emit propertyChanged(index, index);
-            }
-            break;
+        }
+        break;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    case ObjectInstance::QtGadget:
+        if (object().object()) {
+            prop.resetOnGadget(object().object());
+            emit propertyChanged(index, index);
+        }
+        break;
 #endif
-        default:
-            break;
+    default:
+        break;
     }
 }
 

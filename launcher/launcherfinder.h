@@ -34,19 +34,16 @@
 #include <QString>
 
 namespace GammaRay {
-
 /** Utility function to find the various executables related to the launcher. */
-namespace LauncherFinder
-{
-  enum Type {
+namespace LauncherFinder {
+enum Type {
     Injector,
     LauncherUI,
     Client
-  };
+};
 
-  GAMMARAY_LAUNCHER_EXPORT QString findLauncher(Type type);
+GAMMARAY_LAUNCHER_EXPORT QString findLauncher(Type type);
 }
-
 }
 
 #endif // GAMMARAY_LAUNCHERFINDER_H

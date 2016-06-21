@@ -41,46 +41,43 @@ class QUdpSocket;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** \brief Lists all active server instances found via network autodiscovery. */
 class GAMMARAY_LAUNCHER_EXPORT NetworkDiscoveryModel : public QAbstractTableModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  enum Role {
-    HostNameRole = Qt::UserRole + 1,
-    PortRole,
-    CompatibleRole,
-    UrlStringRole
-  };
+    enum Role {
+        HostNameRole = Qt::UserRole + 1,
+        PortRole,
+        CompatibleRole,
+        UrlStringRole
+    };
 
-  explicit NetworkDiscoveryModel(QObject* parent);
-  ~NetworkDiscoveryModel();
+    explicit NetworkDiscoveryModel(QObject *parent);
+    ~NetworkDiscoveryModel();
 
-  QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
-  int columnCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
-  int rowCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
-  QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
-  Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private slots:
-  void processPendingDatagrams();
-  void expireEntries();
+    void processPendingDatagrams();
+    void expireEntries();
 
 private:
-  QUdpSocket *m_socket;
+    QUdpSocket *m_socket;
 
-  struct ServerInfo {
-    bool operator==(const ServerInfo &other);
-    qint32 version;
-    QUrl url;
-    QString label;
-    QDateTime lastSeen;
-  };
-  QVector<ServerInfo> m_data;
-
+    struct ServerInfo {
+        bool operator==(const ServerInfo &other);
+        qint32 version;
+        QUrl url;
+        QString label;
+        QDateTime lastSeen;
+    };
+    QVector<ServerInfo> m_data;
 };
-
 }
 
 #endif // GAMMARAY_NETWORKDISCOVERYMODEL_H

@@ -34,15 +34,15 @@
 using namespace GammaRay;
 
 GraphWidget::GraphWidget(QWidget *parent)
-  : QWidget(parent)
+    : QWidget(parent)
 {
-  QVBoxLayout *vbox = new QVBoxLayout(this);
+    QVBoxLayout *vbox = new QVBoxLayout(this);
 
-  m_vtkWidget = new VtkWidget(this);
+    m_vtkWidget = new VtkWidget(this);
 
-  m_vtkPanel = new VtkPanel(m_vtkWidget, this);
-  vbox->addWidget(m_vtkPanel);
-  vbox->addWidget(m_vtkWidget);
+    m_vtkPanel = new VtkPanel(m_vtkWidget, this);
+    vbox->addWidget(m_vtkPanel);
+    vbox->addWidget(m_vtkWidget);
 }
 
 GraphWidget::~GraphWidget()

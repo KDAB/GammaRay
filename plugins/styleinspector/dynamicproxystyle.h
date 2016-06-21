@@ -34,14 +34,13 @@
 #include <QPointer>
 
 namespace GammaRay {
-
 /**
  * A proxy style that allows runtime-editing of various parameters.
  */
 class DynamicProxyStyle : public QProxyStyle
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit DynamicProxyStyle(QStyle *baseStyle);
 
     static DynamicProxyStyle *instance();
@@ -53,11 +52,10 @@ class DynamicProxyStyle : public QProxyStyle
     int pixelMetric(PixelMetric metric, const QStyleOption *option = 0,
                     const QWidget *widget = 0) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     QHash<QStyle::PixelMetric, int> m_pixelMetrics;
     static QPointer<DynamicProxyStyle> s_instance;
 };
-
 }
 
 #endif // GAMMARAY_DYNAMICPROXYSTYLE_H

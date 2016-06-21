@@ -35,9 +35,10 @@
 
 using namespace GammaRay;
 
-ApplicationAttributeExtension::ApplicationAttributeExtension(GammaRay::PropertyController* controller) :
-    PropertyControllerExtension(controller->objectBaseName() + ".applicationAttributes"),
-    m_attributeModel(new AttributeModel<QCoreApplication, Qt::ApplicationAttribute>(controller))
+ApplicationAttributeExtension::ApplicationAttributeExtension(
+    GammaRay::PropertyController *controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".applicationAttributes")
+    , m_attributeModel(new AttributeModel<QCoreApplication, Qt::ApplicationAttribute>(controller))
 {
     m_attributeModel->setAttributeType("ApplicationAttribute");
     controller->registerModel(m_attributeModel, QStringLiteral("applicationAttributeModel"));
@@ -47,9 +48,9 @@ ApplicationAttributeExtension::~ApplicationAttributeExtension()
 {
 }
 
-bool ApplicationAttributeExtension::setQObject(QObject* object)
+bool ApplicationAttributeExtension::setQObject(QObject *object)
 {
-    if (auto app = qobject_cast<QCoreApplication*>(object)) {
+    if (auto app = qobject_cast<QCoreApplication *>(object)) {
         m_attributeModel->setObject(app);
         return true;
     }

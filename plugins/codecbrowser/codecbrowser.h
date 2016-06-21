@@ -37,43 +37,42 @@ class QItemSelectionModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SelectedCodecsModel;
 
 namespace Ui {
-  class CodecBrowser;
+class CodecBrowser;
 }
 
 class CodecBrowser : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit CodecBrowser(ProbeInterface *probe, QObject *parent = 0);
 
-  public slots:
+public slots:
     void textChanged(const QString &text);
 
-  private slots:
+private slots:
     void updateCodecs(const QItemSelection &selected, const QItemSelection &deselected);
 
-  private:
+private:
     SelectedCodecsModel *m_selectedCodecsModel;
     QItemSelectionModel *m_codecSelectionModel;
 };
 
 class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, CodecBrowser>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_codecbrowser.json")
-  public:
-    explicit CodecBrowserFactory(QObject *parent = 0) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_codecbrowser.json")
+public:
+    explicit CodecBrowserFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_CODECBROWSER_H

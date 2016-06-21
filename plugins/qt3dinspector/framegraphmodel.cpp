@@ -34,8 +34,8 @@
 
 using namespace GammaRay;
 
-FrameGraphModel::FrameGraphModel(QObject* parent):
-    ObjectModelBase<QAbstractItemModel>(parent)
+FrameGraphModel::FrameGraphModel(QObject *parent)
+    : ObjectModelBase<QAbstractItemModel>(parent)
 {
 }
 
@@ -43,7 +43,7 @@ FrameGraphModel::~FrameGraphModel()
 {
 }
 
-void FrameGraphModel::setFrameGraph(Qt3DRender::QFrameGraphNode* frameGraph)
+void FrameGraphModel::setFrameGraph(Qt3DRender::QFrameGraphNode *frameGraph)
 {
     beginResetModel();
     clear();
@@ -57,7 +57,7 @@ void FrameGraphModel::clear()
     m_parentChildMap.clear();
 }
 
-void FrameGraphModel::populateFromNode(Qt3DRender::QFrameGraphNode* node)
+void FrameGraphModel::populateFromNode(Qt3DRender::QFrameGraphNode *node)
 {
     if (!node)
         return;
@@ -65,49 +65,49 @@ void FrameGraphModel::populateFromNode(Qt3DRender::QFrameGraphNode* node)
     m_childParentMap[node] = node->parentFrameGraphNode();
     m_parentChildMap[node->parentFrameGraphNode()].push_back(node);
 
-    foreach (auto child,  node->childNodes()) {
-        if (auto childNode = qobject_cast<Qt3DRender::QFrameGraphNode*>(child))
+    foreach (auto child, node->childNodes()) {
+        if (auto childNode = qobject_cast<Qt3DRender::QFrameGraphNode *>(child))
             populateFromNode(childNode);
     }
 
-    auto &children  = m_parentChildMap[node->parentFrameGraphNode()];
+    auto &children = m_parentChildMap[node->parentFrameGraphNode()];
     std::sort(children.begin(), children.end());
 }
 
-int FrameGraphModel::rowCount(const QModelIndex& parent) const
+int FrameGraphModel::rowCount(const QModelIndex &parent) const
 {
-    auto parentNode = reinterpret_cast<Qt3DRender::QFrameGraphNode*>(parent.internalPointer());
+    auto parentNode = reinterpret_cast<Qt3DRender::QFrameGraphNode *>(parent.internalPointer());
     return m_parentChildMap.value(parentNode).size();
 }
 
-QVariant FrameGraphModel::data(const QModelIndex& index, int role) const
+QVariant FrameGraphModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
 
-    auto node = reinterpret_cast<Qt3DRender::QFrameGraphNode*>(index.internalPointer());
+    auto node = reinterpret_cast<Qt3DRender::QFrameGraphNode *>(index.internalPointer());
     if (role == ObjectModel::ObjectIdRole)
         return QVariant::fromValue(ObjectId(node));
 
     return dataForObject(node, index, role);
 }
 
-QModelIndex FrameGraphModel::parent(const QModelIndex& child) const
+QModelIndex FrameGraphModel::parent(const QModelIndex &child) const
 {
-    auto childNode = reinterpret_cast<Qt3DRender::QFrameGraphNode*>(child.internalPointer());
+    auto childNode = reinterpret_cast<Qt3DRender::QFrameGraphNode *>(child.internalPointer());
     return indexForNode(m_childParentMap.value(childNode));
 }
 
-QModelIndex FrameGraphModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex FrameGraphModel::index(int row, int column, const QModelIndex &parent) const
 {
-    auto parentNode = reinterpret_cast<Qt3DRender::QFrameGraphNode*>(parent.internalPointer());
+    auto parentNode = reinterpret_cast<Qt3DRender::QFrameGraphNode *>(parent.internalPointer());
     const auto children = m_parentChildMap.value(parentNode);
-    if (row < 0 || column < 0 || row >= children.size()  || column >= columnCount())
+    if (row < 0 || column < 0 || row >= children.size() || column >= columnCount())
         return QModelIndex();
     return createIndex(row, column, children.at(row));
 }
 
-QModelIndex FrameGraphModel::indexForNode(Qt3DRender::QFrameGraphNode* node) const
+QModelIndex FrameGraphModel::indexForNode(Qt3DRender::QFrameGraphNode *node) const
 {
     if (!node)
         return QModelIndex();

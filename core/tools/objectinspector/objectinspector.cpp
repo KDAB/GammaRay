@@ -48,78 +48,79 @@
 using namespace GammaRay;
 
 ObjectInspector::ObjectInspector(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  registerPCExtensions();
+    registerPCExtensions();
 
-  m_propertyController = new PropertyController(QStringLiteral("com.kdab.GammaRay.ObjectInspector"), this);
+    m_propertyController = new PropertyController(QStringLiteral(
+                                                      "com.kdab.GammaRay.ObjectInspector"), this);
 
-  auto proxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
-  proxy->setSourceModel(probe->objectTreeModel());
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"), proxy);
+    auto proxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    proxy->setSourceModel(probe->objectTreeModel());
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"), proxy);
 
-  m_selectionModel = ObjectBroker::selectionModel(proxy);
+    m_selectionModel = ObjectBroker::selectionModel(proxy);
 
-  connect(m_selectionModel,
-          SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(objectSelectionChanged(QItemSelection)));
+    connect(m_selectionModel,
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(objectSelectionChanged(QItemSelection)));
 
-  connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
+            SLOT(objectSelected(QObject*)));
 }
 
-void ObjectInspector::objectSelectionChanged(const QItemSelection& selection)
+void ObjectInspector::objectSelectionChanged(const QItemSelection &selection)
 {
-  if (selection.isEmpty())
-    objectSelected(QModelIndex());
-  else
-    objectSelected(selection.first().topLeft());
+    if (selection.isEmpty())
+        objectSelected(QModelIndex());
+    else
+        objectSelected(selection.first().topLeft());
 }
 
 void ObjectInspector::objectSelected(const QModelIndex &index)
 {
-  if (index.isValid()) {
-    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject*>();
-    m_propertyController->setObject(obj);
-  } else {
-    m_propertyController->setObject(0);
-  }
+    if (index.isValid()) {
+        QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
+        m_propertyController->setObject(obj);
+    } else {
+        m_propertyController->setObject(0);
+    }
 }
 
 void ObjectInspector::objectSelected(QObject *object)
 {
-  const QAbstractItemModel *model = m_selectionModel->model();
-  const QModelIndexList indexList =
-  model->match(model->index(0, 0),
-               ObjectModel::ObjectRole,
-               QVariant::fromValue<QObject*>(object), 1,
-               Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
-  if (indexList.isEmpty()) {
-    return;
-  }
+    const QAbstractItemModel *model = m_selectionModel->model();
+    const QModelIndexList indexList
+        = model->match(model->index(0, 0),
+                       ObjectModel::ObjectRole,
+                       QVariant::fromValue<QObject *>(object), 1,
+                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+    if (indexList.isEmpty())
+        return;
 
-  const QModelIndex index = indexList.first();
-  m_selectionModel->select(
-    index,
-    QItemSelectionModel::Select | QItemSelectionModel::Clear |
-    QItemSelectionModel::Rows | QItemSelectionModel::Current);
-  // TODO: move this to the client side!
-  //ui->objectTreeView->scrollTo(index);
-  objectSelected(index);
+    const QModelIndex index = indexList.first();
+    m_selectionModel->select(
+        index,
+        QItemSelectionModel::Select | QItemSelectionModel::Clear
+        |QItemSelectionModel::Rows | QItemSelectionModel::Current);
+    // TODO: move this to the client side!
+    // ui->objectTreeView->scrollTo(index);
+    objectSelected(index);
 }
 
 void ObjectInspector::registerPCExtensions()
 {
-  PropertyController::registerExtension<ClassInfoExtension>();
-  PropertyController::registerExtension<MethodsExtension>();
-  PropertyController::registerExtension<EnumsExtension>();
-  PropertyController::registerExtension<PropertiesExtension>();
-  PropertyController::registerExtension<ConnectionsExtension>();
-  PropertyController::registerExtension<ApplicationAttributeExtension>();
+    PropertyController::registerExtension<ClassInfoExtension>();
+    PropertyController::registerExtension<MethodsExtension>();
+    PropertyController::registerExtension<EnumsExtension>();
+    PropertyController::registerExtension<PropertiesExtension>();
+    PropertyController::registerExtension<ConnectionsExtension>();
+    PropertyController::registerExtension<ApplicationAttributeExtension>();
 }
 
 QString ObjectInspectorFactory::name() const
 {
-  return tr("Objects");
+    return tr("Objects");
 }
 
 QVector<QByteArray> GammaRay::ObjectInspectorFactory::selectableTypes() const

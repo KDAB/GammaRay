@@ -38,148 +38,155 @@ using namespace GammaRay;
 
 static QString formatTypeToString(int type)
 {
-  switch (type) {
-    case QTextFormat::InvalidFormat: return QStringLiteral("Invalid");
-    case QTextFormat::BlockFormat: return QStringLiteral("Block");
-    case QTextFormat::CharFormat: return QStringLiteral("Char");
-    case QTextFormat::ListFormat: return QStringLiteral("List");
-    case QTextFormat::FrameFormat: return QStringLiteral("Frame");
-    case QTextFormat::UserFormat: return QStringLiteral("User");
-  }
-  return QStringLiteral("Unknown format: %1").arg(type);
+    switch (type) {
+    case QTextFormat::InvalidFormat:
+        return QStringLiteral("Invalid");
+    case QTextFormat::BlockFormat:
+        return QStringLiteral("Block");
+    case QTextFormat::CharFormat:
+        return QStringLiteral("Char");
+    case QTextFormat::ListFormat:
+        return QStringLiteral("List");
+    case QTextFormat::FrameFormat:
+        return QStringLiteral("Frame");
+    case QTextFormat::UserFormat:
+        return QStringLiteral("User");
+    }
+    return QStringLiteral("Unknown format: %1").arg(type);
 }
 
 TextDocumentModel::TextDocumentModel(QObject *parent)
-  : QStandardItemModel(parent), m_document(0)
+    : QStandardItemModel(parent)
+    , m_document(0)
 {
 }
 
 void TextDocumentModel::setDocument(QTextDocument *doc)
 {
-  if (m_document) {
-    disconnect(m_document, SIGNAL(contentsChanged()), this, SLOT(documentChanged()));
-  }
+    if (m_document)
+        disconnect(m_document, SIGNAL(contentsChanged()), this, SLOT(documentChanged()));
 
-  m_document = doc;
-  fillModel();
+    m_document = doc;
+    fillModel();
 
-  if (m_document)
-    connect(m_document, SIGNAL(contentsChanged()), SLOT(documentChanged()));
+    if (m_document)
+        connect(m_document, SIGNAL(contentsChanged()), SLOT(documentChanged()));
 }
 
 void TextDocumentModel::documentChanged()
 {
-  // TODO
-  fillModel();
+    // TODO
+    fillModel();
 }
 
 void TextDocumentModel::fillModel()
 {
-  clear();
-  if (!m_document) {
-    return;
-  }
+    clear();
+    if (!m_document)
+        return;
 
-  QStandardItem *item = new QStandardItem(tr("Root Frame"));
-  const QTextFormat f = m_document->rootFrame()->frameFormat();
-  item->setData(QVariant::fromValue(f), FormatRole);
-  item->setEditable(false);
-  QStandardItemModel::appendRow(QList<QStandardItem*>()
-                                << item
-                                << formatItem(m_document->rootFrame()->frameFormat()));
-  fillFrame(m_document->rootFrame(), item);
-  setHorizontalHeaderLabels(QStringList() << tr("Element") << tr("Format"));
+    QStandardItem *item = new QStandardItem(tr("Root Frame"));
+    const QTextFormat f = m_document->rootFrame()->frameFormat();
+    item->setData(QVariant::fromValue(f), FormatRole);
+    item->setEditable(false);
+    QStandardItemModel::appendRow(QList<QStandardItem *>()
+                                  << item
+                                  << formatItem(m_document->rootFrame()->frameFormat()));
+    fillFrame(m_document->rootFrame(), item);
+    setHorizontalHeaderLabels(QStringList() << tr("Element") << tr("Format"));
 }
 
 void TextDocumentModel::fillFrame(QTextFrame *frame, QStandardItem *parent)
 {
-  for (QTextFrame::iterator it = frame->begin(); it != frame->end(); ++it) {
-    fillFrameIterator(it, parent);
-  }
+    for (QTextFrame::iterator it = frame->begin(); it != frame->end(); ++it)
+        fillFrameIterator(it, parent);
 }
 
 void TextDocumentModel::fillFrameIterator(const QTextFrame::iterator &it, QStandardItem *parent)
 {
-  QStandardItem *item = new QStandardItem;
-  if (QTextFrame *frame = it.currentFrame()) {
-    const QRectF b = m_document->documentLayout()->frameBoundingRect(frame);
-    QTextTable *table = qobject_cast<QTextTable*>(frame);
-    if (table) {
-      item->setText(tr("Table"));
-      appendRow(parent, item, table->format(), b);
-      fillTable(table, item);
-    } else {
-      item->setText(tr("Frame"));
-      appendRow(parent, item, frame->frameFormat(), b);
-      fillFrame(frame, item);
+    QStandardItem *item = new QStandardItem;
+    if (QTextFrame *frame = it.currentFrame()) {
+        const QRectF b = m_document->documentLayout()->frameBoundingRect(frame);
+        QTextTable *table = qobject_cast<QTextTable *>(frame);
+        if (table) {
+            item->setText(tr("Table"));
+            appendRow(parent, item, table->format(), b);
+            fillTable(table, item);
+        } else {
+            item->setText(tr("Frame"));
+            appendRow(parent, item, frame->frameFormat(), b);
+            fillFrame(frame, item);
+        }
     }
-  }
-  const QTextBlock block = it.currentBlock();
-  if (block.isValid()) {
-    item->setText(tr("Block: %1").arg(block.text()));
-    const QRectF b = m_document->documentLayout()->blockBoundingRect(block);
-    appendRow(parent, item, block.blockFormat(), b);
-    fillBlock(block, item);
-  }
+    const QTextBlock block = it.currentBlock();
+    if (block.isValid()) {
+        item->setText(tr("Block: %1").arg(block.text()));
+        const QRectF b = m_document->documentLayout()->blockBoundingRect(block);
+        appendRow(parent, item, block.blockFormat(), b);
+        fillBlock(block, item);
+    }
 }
 
 void TextDocumentModel::fillTable(QTextTable *table, QStandardItem *parent)
 {
-  for (int row = 0; row < table->rows(); ++row) {
-    for (int col = 0; col < table->columns(); ++col) {
-      QTextTableCell cell = table->cellAt(row, col);
-      QStandardItem *item = new QStandardItem;
-      item->setText(tr("Cell %1x%2").arg(row).arg(col));
-      appendRow(parent, item, cell.format());
-      for (QTextFrame::iterator it = cell.begin(); it != cell.end(); ++it) {
-        fillFrameIterator(it, item);
-      }
+    for (int row = 0; row < table->rows(); ++row) {
+        for (int col = 0; col < table->columns(); ++col) {
+            QTextTableCell cell = table->cellAt(row, col);
+            QStandardItem *item = new QStandardItem;
+            item->setText(tr("Cell %1x%2").arg(row).arg(col));
+            appendRow(parent, item, cell.format());
+            for (QTextFrame::iterator it = cell.begin(); it != cell.end(); ++it)
+                fillFrameIterator(it, item);
+        }
     }
-  }
 }
 
 void TextDocumentModel::fillBlock(const QTextBlock &block, QStandardItem *parent)
 {
-  for (QTextBlock::iterator it = block.begin(); it != block.end(); ++it) {
-    QStandardItem *item = new QStandardItem(tr("Fragment: %1").arg(it.fragment().text()));
-    const QRectF b = m_document->documentLayout()->blockBoundingRect(block);
-    appendRow(parent, item, it.fragment().charFormat(), b);
-    if (!block.layout())
-      continue;
+    for (QTextBlock::iterator it = block.begin(); it != block.end(); ++it) {
+        QStandardItem *item = new QStandardItem(tr("Fragment: %1").arg(it.fragment().text()));
+        const QRectF b = m_document->documentLayout()->blockBoundingRect(block);
+        appendRow(parent, item, it.fragment().charFormat(), b);
+        if (!block.layout())
+            continue;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    foreach (const auto &range, block.layout()->formats()) {
-      const auto start = std::max(range.start, it.fragment().position() - block.position());
-      const auto end = std::min(range.start + range.length, it.fragment().position() + it.fragment().length() - block.position());
-      if (start >= end)
-        continue;
-      auto child = new QStandardItem(tr("Layout Range: %1").arg(it.fragment().text().mid(start, end-start)));
-      appendRow(item, child, range.format, QRectF());
-    }
+        foreach (const auto &range, block.layout()->formats()) {
+            const auto start = std::max(range.start, it.fragment().position() - block.position());
+            const auto end = std::min(range.start + range.length,
+                                      it.fragment().position() + it.fragment().length()
+                                      - block.position());
+            if (start >= end)
+                continue;
+            auto child
+                = new QStandardItem(tr("Layout Range: %1").arg(it.fragment().text().mid(start,
+                                                                                        end
+                                                                                        -start)));
+            appendRow(item, child, range.format, QRectF());
+        }
 #endif
-  }
+    }
 }
 
 QStandardItem *TextDocumentModel::formatItem(const QTextFormat &format)
 {
-  QStandardItem *item = new QStandardItem;
-  if (!format.isValid()) {
-    item->setText(tr("no format"));
-  } else if (format.isImageFormat()) {
-    const QTextImageFormat imgformat = format.toImageFormat();
-    item->setText(tr("Image: %1").arg(imgformat.name()));
-  } else {
-    item->setText(formatTypeToString(format.type()));
-  }
-  item->setEditable(false);
-  return item;
+    QStandardItem *item = new QStandardItem;
+    if (!format.isValid()) {
+        item->setText(tr("no format"));
+    } else if (format.isImageFormat()) {
+        const QTextImageFormat imgformat = format.toImageFormat();
+        item->setText(tr("Image: %1").arg(imgformat.name()));
+    } else {
+        item->setText(formatTypeToString(format.type()));
+    }
+    item->setEditable(false);
+    return item;
 }
 
 void TextDocumentModel::appendRow(QStandardItem *parent, QStandardItem *item,
                                   const QTextFormat &format, const QRectF &boundingBox)
 {
-  item->setData(QVariant::fromValue(format), FormatRole);
-  item->setData(boundingBox, BoundingBoxRole);
-  item->setEditable(false);
-  parent->appendRow(QList<QStandardItem*>() << item << formatItem(format));
+    item->setData(QVariant::fromValue(format), FormatRole);
+    item->setData(boundingBox, BoundingBoxRole);
+    item->setEditable(false);
+    parent->appendRow(QList<QStandardItem *>() << item << formatItem(format));
 }
-

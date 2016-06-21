@@ -61,15 +61,19 @@
 
 using namespace GammaRay;
 
-Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
-    Qt3DInspectorInterface(parent),
-    m_engine(nullptr),
-    m_entityModel(new Qt3DEntityTreeModel(this)),
-    m_currentEntity(nullptr),
-    m_entitryPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"), this)),
-    m_frameGraphModel(new FrameGraphModel(this)),
-    m_currentFrameGraphNode(nullptr),
-    m_frameGraphPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"), this))
+Qt3DInspector::Qt3DInspector(ProbeInterface *probe, QObject *parent)
+    : Qt3DInspectorInterface(parent)
+    , m_engine(nullptr)
+    , m_entityModel(new Qt3DEntityTreeModel(this))
+    , m_currentEntity(nullptr)
+    , m_entitryPropertyController(new PropertyController(QStringLiteral(
+                                                             "com.kdab.GammaRay.Qt3DInspector.entityPropertyController"),
+                                                         this))
+    , m_frameGraphModel(new FrameGraphModel(this))
+    , m_currentFrameGraphNode(nullptr)
+    , m_frameGraphPropertyController(new PropertyController(QStringLiteral(
+                                                                "com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"),
+                                                            this))
 {
     registerCoreMetaTypes();
     registerRenderMetaTypes();
@@ -80,24 +84,32 @@ Qt3DInspector::Qt3DInspector(ProbeInterface* probe, QObject* parent) :
     auto proxy = new SingleColumnObjectProxyModel(this);
     proxy->setSourceModel(engineFilterModel);
     m_engineModel = proxy;
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.engineModel"), m_engineModel);
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.Qt3DInspector.engineModel"), m_engineModel);
 
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_entityModel, SLOT(objectCreated(QObject*)));
-    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_entityModel, SLOT(objectDestroyed(QObject*)));
-    connect(probe->probe(), SIGNAL(objectReparented(QObject*)), m_entityModel, SLOT(objectReparented(QObject*)));
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_entityModel,
+            SLOT(objectCreated(QObject*)));
+    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_entityModel,
+            SLOT(objectDestroyed(QObject*)));
+    connect(probe->probe(), SIGNAL(objectReparented(QObject*)), m_entityModel,
+            SLOT(objectReparented(QObject*)));
     auto entityProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     entityProxy->setSourceModel(m_entityModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), entityProxy);
     m_entitySelectionModel = ObjectBroker::selectionModel(entityProxy);
-    connect(m_entitySelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspector::entitySelectionChanged);
+    connect(m_entitySelectionModel, &QItemSelectionModel::selectionChanged, this,
+            &Qt3DInspector::entitySelectionChanged);
 
     auto frameGraphProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     frameGraphProxy->setSourceModel(m_frameGraphModel);
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"), frameGraphProxy);
+    probe->registerModel(QStringLiteral(
+                             "com.kdab.GammaRay.Qt3DInspector.frameGraphModel"), frameGraphProxy);
     m_frameGraphSelectionModel = ObjectBroker::selectionModel(frameGraphProxy);
-    connect(m_frameGraphSelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspector::frameGraphSelectionChanged);
+    connect(m_frameGraphSelectionModel, &QItemSelectionModel::selectionChanged, this,
+            &Qt3DInspector::frameGraphSelectionChanged);
 
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this,
+            SLOT(objectSelected(QObject*)));
 }
 
 Qt3DInspector::~Qt3DInspector()
@@ -106,14 +118,17 @@ Qt3DInspector::~Qt3DInspector()
 
 void Qt3DInspector::selectEngine(int row)
 {
-    Qt3DCore::QAspectEngine* engine = nullptr;
+    Qt3DCore::QAspectEngine *engine = nullptr;
     const auto idx = m_engineModel->index(row, 0);
     if (idx.isValid())
-        engine = qobject_cast<Qt3DCore::QAspectEngine*>(idx.data(ObjectModel::ObjectRole).value<QObject*>());
+        engine
+            = qobject_cast<Qt3DCore::QAspectEngine *>(idx.data(
+                                                          ObjectModel::ObjectRole).value<QObject *>());
+
     selectEngine(engine);
 }
 
-void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine* engine)
+void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine *engine)
 {
     if (m_engine == engine)
         return;
@@ -127,24 +142,24 @@ void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine* engine)
     if (!rootEntity)
         return;
     foreach (auto component, rootEntity->components()) {
-        if (auto renderSettings = qobject_cast<Qt3DRender::QRenderSettings*>(component)) {
+        if (auto renderSettings = qobject_cast<Qt3DRender::QRenderSettings *>(component)) {
             m_frameGraphModel->setFrameGraph(renderSettings->activeFrameGraph());
             break;
         }
     }
 }
 
-void Qt3DInspector::entitySelectionChanged(const QItemSelection& selection)
+void Qt3DInspector::entitySelectionChanged(const QItemSelection &selection)
 {
     if (selection.isEmpty())
         return;
 
     const auto index = selection.first().topLeft();
-    auto entity = index.data(ObjectModel::ObjectRole).value<Qt3DCore::QEntity*>();
+    auto entity = index.data(ObjectModel::ObjectRole).value<Qt3DCore::QEntity *>();
     selectEntity(entity);
 }
 
-void Qt3DInspector::selectEntity(Qt3DCore::QEntity* entity)
+void Qt3DInspector::selectEntity(Qt3DCore::QEntity *entity)
 {
     if (m_currentEntity == entity)
         return;
@@ -155,24 +170,30 @@ void Qt3DInspector::selectEntity(Qt3DCore::QEntity* entity)
     const auto model = m_entitySelectionModel->model();
     Model::used(model);
 
-    const auto indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue<Qt3DCore::QEntity*>(entity), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+    const auto indexList = model->match(model->index(0,
+                                                     0), ObjectModel::ObjectRole,
+                                        QVariant::fromValue<Qt3DCore::QEntity *>(
+                                            entity), 1,
+                                        Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
     const auto index = indexList.first();
-    m_entitySelectionModel->select(index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
+    m_entitySelectionModel->select(index,
+                                   QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows
+                                   | QItemSelectionModel::Current);
 }
 
-void Qt3DInspector::frameGraphSelectionChanged(const QItemSelection& selection)
+void Qt3DInspector::frameGraphSelectionChanged(const QItemSelection &selection)
 {
     if (selection.isEmpty())
         return;
 
     const auto index = selection.first().topLeft();
-    auto node = index.data(ObjectModel::ObjectRole).value<Qt3DRender::QFrameGraphNode*>();
+    auto node = index.data(ObjectModel::ObjectRole).value<Qt3DRender::QFrameGraphNode *>();
     selectFrameGraphNode(node);
 }
 
-void Qt3DInspector::selectFrameGraphNode(Qt3DRender::QFrameGraphNode* node)
+void Qt3DInspector::selectFrameGraphNode(Qt3DRender::QFrameGraphNode *node)
 {
     if (m_currentFrameGraphNode == node)
         return;
@@ -183,21 +204,27 @@ void Qt3DInspector::selectFrameGraphNode(Qt3DRender::QFrameGraphNode* node)
     const auto model = m_frameGraphSelectionModel->model();
     Model::used(model);
 
-    const auto indexList = model->match(model->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue<Qt3DRender::QFrameGraphNode*>(node), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+    const auto indexList = model->match(model->index(0,
+                                                     0), ObjectModel::ObjectRole,
+                                        QVariant::fromValue<Qt3DRender::QFrameGraphNode *>(
+                                            node), 1,
+                                        Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
     const auto index = indexList.first();
-    m_frameGraphSelectionModel->select(index, QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
+    m_frameGraphSelectionModel->select(index,
+                                       QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows
+                                       | QItemSelectionModel::Current);
 }
 
-void Qt3DInspector::objectSelected(QObject* obj)
+void Qt3DInspector::objectSelected(QObject *obj)
 {
-    if (auto engine = qobject_cast<Qt3DCore::QAspectEngine*>(obj))
+    if (auto engine = qobject_cast<Qt3DCore::QAspectEngine *>(obj))
         selectEngine(engine);
     // TODO check if the engine matches, otherwise switch that too
-    else if (auto entity = qobject_cast<Qt3DCore::QEntity*>(obj))
+    else if (auto entity = qobject_cast<Qt3DCore::QEntity *>(obj))
         selectEntity(entity);
-    else if (auto node = qobject_cast<Qt3DRender::QFrameGraphNode*>(obj))
+    else if (auto node = qobject_cast<Qt3DRender::QFrameGraphNode *>(obj))
         selectFrameGraphNode(node);
 }
 
@@ -213,25 +240,25 @@ void Qt3DInspector::registerCoreMetaTypes()
 #endif
 
     MO_ADD_METAOBJECT1(Qt3DCore::QComponent, Qt3DCore::QNode);
-    MO_ADD_PROPERTY_RO(Qt3DCore::QComponent, QVector<Qt3DCore::QEntity*>, entities);
+    MO_ADD_PROPERTY_RO(Qt3DCore::QComponent, QVector<Qt3DCore::QEntity *>, entities);
 
     MO_ADD_METAOBJECT1(Qt3DCore::QEntity, Qt3DCore::QNode);
-#if QT_VERSION < QT_VERSION_CHECK(5, 7 , 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
     MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QComponentList, components);
 #else
     MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QComponentVector, components);
 #endif
-    MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QEntity*, parentEntity);
+    MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QEntity *, parentEntity);
 }
 
 void Qt3DInspector::registerRenderMetaTypes()
 {
-    qRegisterMetaType<Qt3DRender::QAttribute*>();
-    qRegisterMetaType<Qt3DRender::QBuffer*>();
-    qRegisterMetaType<Qt3DRender::QCamera*>();
-    qRegisterMetaType<Qt3DRender::QEffect*>();
-    qRegisterMetaType<Qt3DRender::QFrameGraphNode*>();
-    qRegisterMetaType<Qt3DRender::QGraphicsApiFilter*>();
+    qRegisterMetaType<Qt3DRender::QAttribute *>();
+    qRegisterMetaType<Qt3DRender::QBuffer *>();
+    qRegisterMetaType<Qt3DRender::QCamera *>();
+    qRegisterMetaType<Qt3DRender::QEffect *>();
+    qRegisterMetaType<Qt3DRender::QFrameGraphNode *>();
+    qRegisterMetaType<Qt3DRender::QGraphicsApiFilter *>();
 }
 
 void Qt3DInspector::registerExtensions()
@@ -241,5 +268,5 @@ void Qt3DInspector::registerExtensions()
 
 QString Qt3DInspectorFactory::name() const
 {
-  return tr("Qt3D Inspector");
+    return tr("Qt3D Inspector");
 }

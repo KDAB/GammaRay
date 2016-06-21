@@ -42,13 +42,12 @@ class QQuickWindow;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** QQ2 item tree model. */
 class QuickItemModel : public ObjectModelBase<QAbstractItemModel>
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit QuickItemModel(QObject *parent = 0);
     ~QuickItemModel();
 
@@ -60,16 +59,16 @@ class QuickItemModel : public ObjectModelBase<QAbstractItemModel>
     QModelIndex index(int row, int column, const QModelIndex &parent) const Q_DECL_OVERRIDE;
     QMap< int, QVariant > itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
 
-  private slots:
+private slots:
     void itemReparented();
     void itemWindowChanged();
     void itemUpdated();
 
-  private:
+private:
     friend class QuickEventMonitor;
     void updateItem(QQuickItem *item, int role);
     void recursivelyUpdateItem(QQuickItem *item);
@@ -100,24 +99,23 @@ class QuickItemModel : public ObjectModelBase<QAbstractItemModel>
 
     QPointer<QQuickWindow> m_window;
 
-    QHash<QQuickItem*, QQuickItem*> m_childParentMap;
-    QHash<QQuickItem*, QVector<QQuickItem*> > m_parentChildMap;
-    QHash<QQuickItem*, int> m_itemFlags;
+    QHash<QQuickItem *, QQuickItem *> m_childParentMap;
+    QHash<QQuickItem *, QVector<QQuickItem *> > m_parentChildMap;
+    QHash<QQuickItem *, int> m_itemFlags;
 };
 
 class QuickEventMonitor : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit QuickEventMonitor(QuickItemModel *parent);
 
-  protected:
+protected:
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
 
-  private:
+private:
     QuickItemModel *m_model;
 };
-
 }
 
 #endif // GAMMARAY_QUICKITEMMODEL_H

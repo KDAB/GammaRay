@@ -33,16 +33,15 @@
 #include <ctime>
 
 namespace GammaRay {
-
 class FunctionCallTimer
 {
-  public:
+public:
     FunctionCallTimer();
     bool start();
     bool active() const;
     int stop();
 
-  private:
+private:
 #ifndef Q_OS_WIN
     timespec m_startTime;
 #else
@@ -50,6 +49,5 @@ class FunctionCallTimer
 #endif
     bool m_active;
 };
-
 }
 #endif // GAMMARAY_FUNCTIONCALLTIMER_H

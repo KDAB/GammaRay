@@ -34,7 +34,7 @@
 
 using namespace GammaRay;
 
-ClientDevice::ClientDevice(QObject* parent)
+ClientDevice::ClientDevice(QObject *parent)
     : QObject(parent)
     , m_tries(0)
 {
@@ -44,9 +44,9 @@ ClientDevice::~ClientDevice()
 {
 }
 
-ClientDevice* ClientDevice::create(const QUrl& url, QObject *parent)
+ClientDevice *ClientDevice::create(const QUrl &url, QObject *parent)
 {
-    ClientDevice* device = 0;
+    ClientDevice *device = 0;
     if (url.scheme() == QLatin1String("tcp"))
         device = new TcpClientDevice(parent);
     else if (url.scheme() == QLatin1String("local"))

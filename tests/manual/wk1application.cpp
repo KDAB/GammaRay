@@ -27,12 +27,12 @@
 #include <QApplication>
 #include <QWebView>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
     QWebView view;
-    view.setUrl(QUrl("http://www.kdab.com/gammaray")); 
+    view.setUrl(QUrl("http://www.kdab.com/gammaray"));
     view.show();
 
     return app.exec();

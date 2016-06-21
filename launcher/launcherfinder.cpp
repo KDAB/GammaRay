@@ -38,39 +38,37 @@
 using namespace GammaRay;
 
 const char *executableNames[] = {
-  "gammaray",          // the Injector
-  "gammaray-launcher", // the LauncherUI
-  "gammaray-client"    // the Client
+    "gammaray",        // the Injector
+    "gammaray-launcher", // the LauncherUI
+    "gammaray-client"  // the Client
 };
 
 QString LauncherFinder::findLauncher(LauncherFinder::Type type)
 {
-  QString fileName = executableNames[type];
+    QString fileName = executableNames[type];
 #ifdef Q_OS_WIN
-  fileName += ".exe";
+    fileName += ".exe";
 #endif
 
-  QStringList appPaths; //a list of all the paths we have searched
+    QStringList appPaths; // a list of all the paths we have searched
 
-  QString appPath = Paths::binPath() + QDir::separator() + fileName;
-  QFileInfo fi(appPath);
-  if (fi.isExecutable()) {
-    return fi.absoluteFilePath();
-  }
-  appPaths.append(appPath);
-
-  appPath = Paths::libexecPath() + QDir::separator() + fileName;
-  if(!appPaths.contains(appPath)) {
-    fi.setFile(appPath);
-    if (fi.isExecutable()) {
-      return fi.absoluteFilePath();
-    }
+    QString appPath = Paths::binPath() + QDir::separator() + fileName;
+    QFileInfo fi(appPath);
+    if (fi.isExecutable())
+        return fi.absoluteFilePath();
     appPaths.append(appPath);
-  }
 
-  qWarning() << fileName << "not found in the expected location(s):";
-  qWarning() << appPaths.join(QStringLiteral(", ")) << endl
-             << "continuing anyway, hoping for it to be in PATH.";
-  qWarning() << "This is likely a setup problem." << endl;
-  return fileName;
+    appPath = Paths::libexecPath() + QDir::separator() + fileName;
+    if (!appPaths.contains(appPath)) {
+        fi.setFile(appPath);
+        if (fi.isExecutable())
+            return fi.absoluteFilePath();
+        appPaths.append(appPath);
+    }
+
+    qWarning() << fileName << "not found in the expected location(s):";
+    qWarning() << appPaths.join(QStringLiteral(", ")) << endl
+               << "continuing anyway, hoping for it to be in PATH.";
+    qWarning() << "This is likely a setup problem." << endl;
+    return fileName;
 }

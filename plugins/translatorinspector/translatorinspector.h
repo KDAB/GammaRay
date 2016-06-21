@@ -49,24 +49,23 @@ class FallbackTranslator;
 
 class TranslatorInspector : public TranslatorInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::TranslatorInspectorInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::TranslatorInspectorInterface)
 
-  public:
-    explicit TranslatorInspector(GammaRay::ProbeInterface *probe,
-                                QObject *parent = 0);
+public:
+    explicit TranslatorInspector(GammaRay::ProbeInterface *probe, QObject *parent = 0);
 
-  public slots:
+public slots:
     void sendLanguageChangeEvent() Q_DECL_OVERRIDE;
     void resetTranslations() Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void selectionChanged(const QItemSelection &selection);
 
-  protected:
+protected:
     bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
-  private:
+private:
     QItemSelectionModel *m_selectionModel;
     QItemSelectionModel *m_translationsSelectionModel;
     TranslatorsModel *m_translatorsModel;
@@ -75,16 +74,16 @@ class TranslatorInspector : public TranslatorInspectorInterface
     TranslatorWrapper *m_fallbackWrapper;
 };
 
-class TranslatorInspectorFactory
-    : public QObject,
-      public StandardToolFactory<QTranslator, TranslatorInspector>
+class TranslatorInspectorFactory : public QObject,
+    public StandardToolFactory<QTranslator, TranslatorInspector>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_translatorinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_translatorinspector.json")
 
-  public:
-    explicit TranslatorInspectorFactory(QObject *parent = 0) : QObject(parent) {}
+public:
+    explicit TranslatorInspectorFactory(QObject *parent = 0)
+        : QObject(parent) {}
 
     QString name() const Q_DECL_OVERRIDE;
 };

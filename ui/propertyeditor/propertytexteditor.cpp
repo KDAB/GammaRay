@@ -85,7 +85,6 @@ void PropertyTextEditor::save(const QString &text)
 void PropertyTextEditor::edit()
 {
     PropertyTextEditorDialog dlg(text(), this);
-    if (dlg.exec() == QDialog::Accepted) {
-      save(dlg.text());
-    }
+    if (dlg.exec() == QDialog::Accepted)
+        save(dlg.text());
 }

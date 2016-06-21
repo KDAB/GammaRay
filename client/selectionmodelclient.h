@@ -36,26 +36,24 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Client side of the network transparent QItemSelectionModel. */
 class SelectionModelClient : public NetworkSelectionModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  SelectionModelClient(const QString& objectName, QAbstractItemModel* model, QObject* parent);
-  ~SelectionModelClient();
+    SelectionModelClient(const QString &objectName, QAbstractItemModel *model, QObject *parent);
+    ~SelectionModelClient();
 
 private slots:
-  void timeout();
-  void serverRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
-  void serverUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
+    void timeout();
+    void serverRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
+    void serverUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
 private:
-  void connectToServer();
+    void connectToServer();
 
-  QTimer *m_timer;
+    QTimer *m_timer;
 };
-
 }
 
 #endif // GAMMARAY_SELECTIONMODELCLIENT_H

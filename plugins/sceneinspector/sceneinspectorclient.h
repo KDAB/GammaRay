@@ -32,12 +32,11 @@
 #include "sceneinspectorinterface.h"
 
 namespace GammaRay {
-
 class SceneInspectorClient : public SceneInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::SceneInspectorInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::SceneInspectorInterface)
+public:
     explicit SceneInspectorClient(QObject *parent = 0);
     ~SceneInspectorClient();
 
@@ -45,7 +44,6 @@ class SceneInspectorClient : public SceneInspectorInterface
     void renderScene(const QTransform &transform, const QSize &size) Q_DECL_OVERRIDE;
     void sceneClicked(const QPointF &pos) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_SCENEINSPECTORCLIENT_H

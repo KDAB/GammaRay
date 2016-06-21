@@ -32,24 +32,22 @@
 #include <QListView>
 
 namespace GammaRay {
-
 class SidePane : public QListView
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit SidePane(QWidget *parent = 0);
     ~SidePane();
 
     QSize sizeHint() const Q_DECL_OVERRIDE;
-    void setModel(QAbstractItemModel* model) Q_DECL_OVERRIDE;
+    void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void updateSizeHint();
 };
-
 }
 
 #endif // GAMMARAY_SIDEPANE_H

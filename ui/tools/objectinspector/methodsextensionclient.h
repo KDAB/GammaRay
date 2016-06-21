@@ -32,21 +32,19 @@
 #include <common/tools/objectinspector/methodsextensioninterface.h>
 
 namespace GammaRay {
-
 class MethodsExtensionClient : public MethodsExtensionInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::MethodsExtensionInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::MethodsExtensionInterface)
+public:
     explicit MethodsExtensionClient(const QString &name, QObject *parent = 0);
     ~MethodsExtensionClient();
 
-  public slots:
+public slots:
     void activateMethod() Q_DECL_OVERRIDE;
     void invokeMethod(Qt::ConnectionType type) Q_DECL_OVERRIDE;
     void connectToSignal() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_METHODSEXTENSIONCLIENT_H

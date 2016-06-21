@@ -38,29 +38,28 @@
 using namespace GammaRay;
 
 TimerTopWidget::TimerTopWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::TimerTopWidget)
-  , m_stateManager(this)
-  , m_updateTimer(new QTimer(this))
+    : QWidget(parent)
+    , ui(new Ui::TimerTopWidget)
+    , m_stateManager(this)
+    , m_updateTimer(new QTimer(this))
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  ui->timerView->header()->setObjectName("timerViewHeader");
-  ui->timerView->setDeferredResizeMode(0, QHeaderView::Stretch);
-  ui->timerView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  ui->timerView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
-  ui->timerView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
-  ui->timerView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
-  ui->timerView->setDeferredResizeMode(5, QHeaderView::ResizeToContents);
+    ui->timerView->header()->setObjectName("timerViewHeader");
+    ui->timerView->setDeferredResizeMode(0, QHeaderView::Stretch);
+    ui->timerView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->timerView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    ui->timerView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+    ui->timerView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
+    ui->timerView->setDeferredResizeMode(5, QHeaderView::ResizeToContents);
 
-  QSortFilterProxyModel * const sortModel = new QSortFilterProxyModel(this);
-  sortModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel")));
-  sortModel->setDynamicSortFilter(true);
-  ui->timerView->setModel(sortModel);
+    QSortFilterProxyModel * const sortModel = new QSortFilterProxyModel(this);
+    sortModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel")));
+    sortModel->setDynamicSortFilter(true);
+    ui->timerView->setModel(sortModel);
 
-  ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1,
-                              Qt::DescendingOrder);
-
+    ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1,
+                                Qt::DescendingOrder);
 }
 
 TimerTopWidget::~TimerTopWidget()

@@ -36,8 +36,7 @@ class QCoreApplication;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
-template <typename, typename> class AttributeModel;
+template<typename, typename> class AttributeModel;
 
 class ApplicationAttributeExtension : public PropertyControllerExtension
 {
@@ -45,7 +44,7 @@ public:
     explicit ApplicationAttributeExtension(PropertyController *controller);
     ~ApplicationAttributeExtension();
 
-    bool setQObject(QObject * object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
 
 private:
     AttributeModel<QCoreApplication, Qt::ApplicationAttribute> *m_attributeModel;

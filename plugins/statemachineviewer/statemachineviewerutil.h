@@ -32,50 +32,50 @@
 template<class T>
 class RingBuffer
 {
-  public:
-    RingBuffer() : m_size(5)
+public:
+    RingBuffer()
+        : m_size(5)
     {
     }
 
     void resize(int size)
     {
-      Q_ASSERT(size > 0);
-      m_size = size;
-      cleanup();
+        Q_ASSERT(size > 0);
+        m_size = size;
+        cleanup();
     }
 
     void enqueue(T t)
     {
-      m_entries.enqueue(t);
-      cleanup();
+        m_entries.enqueue(t);
+        cleanup();
     }
 
     void clear()
     {
-      m_entries.clear();
+        m_entries.clear();
     }
 
     int size() const
     {
-      return m_entries.size();
+        return m_entries.size();
     }
 
     T tail() const
     {
-      return m_entries.last();
+        return m_entries.last();
     }
 
     QList<T> entries() const
     {
-      return m_entries;
+        return m_entries;
     }
 
-  private:
+private:
     void cleanup()
     {
-      while (m_entries.size() > m_size) {
-        m_entries.dequeue();
-      }
+        while (m_entries.size() > m_size)
+            m_entries.dequeue();
     }
 
     QQueue<T> m_entries;

@@ -32,7 +32,6 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
 class ConnectPage;
 }
@@ -40,27 +39,26 @@ class ConnectPage;
 /** UI for connecting to a running GammaRay instance. */
 class ConnectPage : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ConnectPage(QWidget* parent = 0);
-  ~ConnectPage();
+    explicit ConnectPage(QWidget *parent = 0);
+    ~ConnectPage();
 
-  bool isValid() const;
-  void writeSettings();
+    bool isValid() const;
+    void writeSettings();
 
 public slots:
-  void launchClient();
+    void launchClient();
 
 signals:
-  void updateButtonState();
-  void activate();
+    void updateButtonState();
+    void activate();
 
 private slots:
-  void instanceSelected();
+    void instanceSelected();
 
 private:
-  QScopedPointer<Ui::ConnectPage> ui;
-
+    QScopedPointer<Ui::ConnectPage> ui;
 };
 }
 

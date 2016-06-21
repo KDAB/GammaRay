@@ -32,20 +32,18 @@
 #include "materialextensioninterface.h"
 
 namespace GammaRay {
-
 class MaterialExtensionClient : public MaterialExtensionInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::MaterialExtensionInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::MaterialExtensionInterface)
 
-  public:
+public:
     explicit MaterialExtensionClient(const QString &name, QObject *parent = 0);
     virtual ~MaterialExtensionClient();
 
-  public slots:
+public slots:
     void getShader(const QString &fileName) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_MATERIALEXTENSIONCLIENT_H

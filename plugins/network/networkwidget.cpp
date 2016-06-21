@@ -34,9 +34,9 @@
 
 using namespace GammaRay;
 
-NetworkWidget::NetworkWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::NetworkWidget)
+NetworkWidget::NetworkWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::NetworkWidget)
 {
     ui->setupUi(this);
 }
@@ -45,8 +45,8 @@ NetworkWidget::~NetworkWidget()
 {
 }
 
-
 void NetworkWidgetFactory::initUi()
 {
-    PropertyWidget::registerTab<CookieTab>(QStringLiteral("cookieJar"), tr("Cookies"), PropertyWidgetTabPriority::Basic);
+    PropertyWidget::registerTab<CookieTab>(QStringLiteral("cookieJar"), tr(
+                                               "Cookies"), PropertyWidgetTabPriority::Basic);
 }

@@ -32,7 +32,6 @@
 #include <QAbstractTableModel>
 
 namespace GammaRay {
-
 /** List of plugin loading errors on the target. */
 class ToolPluginErrorModel : public QAbstractTableModel
 {
@@ -41,10 +40,11 @@ public:
     explicit ToolPluginErrorModel(const PluginLoadErrors &errors, QObject *parent = 0);
     ~ToolPluginErrorModel();
 
-    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 private:
     PluginLoadErrors m_errors;

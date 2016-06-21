@@ -43,19 +43,23 @@
 using namespace GammaRay;
 
 QmlContextTab::QmlContextTab(PropertyWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::QmlContextTab)
+    : QWidget(parent)
+    , ui(new Ui::QmlContextTab)
 {
     ui->setupUi(this);
 
-    auto contextModel = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextModel"));
+    auto contextModel
+        = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextModel"));
     ui->contextView->header()->setObjectName("contextViewHeader");
     ui->contextView->setModel(contextModel);
     ui->contextView->setSelectionModel(ObjectBroker::selectionModel(contextModel));
     ui->contextView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-    connect(ui->contextView, &QWidget::customContextMenuRequested, this, &QmlContextTab::contextContextMenu);
+    connect(ui->contextView, &QWidget::customContextMenuRequested, this,
+            &QmlContextTab::contextContextMenu);
 
-    auto propertyModel = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextPropertyModel"));
+    auto propertyModel
+        = ObjectBroker::model(parent->objectBaseName()
+                              + QStringLiteral(".qmlContextPropertyModel"));
     auto propertyProxy = new QSortFilterProxyModel(this);
     propertyProxy->setSourceModel(propertyModel);
     propertyProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
@@ -64,7 +68,8 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent)
     ui->contextPropertyView->sortByColumn(0, Qt::AscendingOrder);
     ui->contextPropertyView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->contextPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
-    connect(ui->contextPropertyView, &QWidget::customContextMenuRequested, this, &QmlContextTab::propertiesContextMenu);
+    connect(ui->contextPropertyView, &QWidget::customContextMenuRequested, this,
+            &QmlContextTab::propertiesContextMenu);
 }
 
 QmlContextTab::~QmlContextTab()
@@ -76,7 +81,8 @@ void QmlContextTab::contextContextMenu(QPoint pos)
     auto idx = ui->contextView->indexAt(pos);
     ContextMenuExtension cme;
 
-    if (!cme.discoverSourceLocation(ContextMenuExtension::GoTo, idx.sibling(idx.row(), 1).data().toUrl()))
+    if (!cme.discoverSourceLocation(ContextMenuExtension::GoTo,
+                                    idx.sibling(idx.row(), 1).data().toUrl()))
         return;
 
     QMenu contextMenu;
@@ -93,8 +99,8 @@ void QmlContextTab::propertiesContextMenu(QPoint pos)
     const auto actions = idx.data(PropertyModel::ActionRole).toInt();
     const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
     ContextMenuExtension ext(objectId);
-    const bool canShow = (actions == PropertyModel::NavigateTo && !objectId.isNull()) ||
-        ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+    const bool canShow = (actions == PropertyModel::NavigateTo && !objectId.isNull())
+                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
 
     if (!canShow)
         return;

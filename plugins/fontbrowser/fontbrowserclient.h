@@ -32,15 +32,14 @@
 #include "fontbrowserinterface.h"
 
 namespace GammaRay {
-
 class FontBrowserClient : public FontBrowserInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::FontBrowserInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::FontBrowserInterface)
+public:
     explicit FontBrowserClient(QObject *parent = 0);
 
-  public slots:
+public slots:
     void setPointSize(int size) Q_DECL_OVERRIDE;
     void toggleBoldFont(bool bold) Q_DECL_OVERRIDE;
     void toggleItalicFont(bool italic) Q_DECL_OVERRIDE;
@@ -48,7 +47,6 @@ class FontBrowserClient : public FontBrowserInterface
     void updateText(const QString &text) Q_DECL_OVERRIDE;
     void setColors(const QColor &foreground, const QColor &background) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_FONTBROWSERCLIENT_H

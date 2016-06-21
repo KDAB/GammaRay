@@ -35,17 +35,17 @@
 using namespace GammaRay;
 
 PropertiesExtensionClient::PropertiesExtensionClient(const QString &name, QObject *parent)
-  : PropertiesExtensionInterface(name, parent)
+    : PropertiesExtensionInterface(name, parent)
 {
-
 }
 
 PropertiesExtensionClient::~PropertiesExtensionClient()
 {
-
 }
 
-void PropertiesExtensionClient::setProperty(const QString& propertyName, const QVariant& value)
+void PropertiesExtensionClient::setProperty(const QString &propertyName, const QVariant &value)
 {
-  Endpoint::instance()->invokeObject(name(), "setProperty", QVariantList() << QVariant::fromValue(propertyName) << VariantWrapper(value));
+    Endpoint::instance()->invokeObject(name(), "setProperty",
+                                       QVariantList() << QVariant::fromValue(
+                                           propertyName) << VariantWrapper(value));
 }

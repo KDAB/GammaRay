@@ -34,7 +34,6 @@
 #include <QtPlugin>
 
 namespace GammaRay {
-
 /**
  * @brief An abstract interface for creating the UI parts of probe tools.
  *
@@ -44,7 +43,7 @@ namespace GammaRay {
  */
 class GAMMARAY_UI_EXPORT ToolUiFactory
 {
-  public:
+public:
     ToolUiFactory();
     virtual ~ToolUiFactory();
 
@@ -74,28 +73,27 @@ class GAMMARAY_UI_EXPORT ToolUiFactory
      */
     virtual void initUi();
 
-  private:
+private:
     Q_DISABLE_COPY(ToolUiFactory)
 };
 
 /**
  * @brief A templated convenience ToolUiFactory applicable for most use-cases.
  */
-template <typename ToolUi>
+template<typename ToolUi>
 class StandardToolUiFactory : public ToolUiFactory
 {
 public:
-  QString id() const Q_DECL_OVERRIDE
-  {
-    return QString(); // TODO is this a problem??
-  }
+    QString id() const Q_DECL_OVERRIDE
+    {
+        return QString(); // TODO is this a problem??
+    }
 
-  QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE
-  {
-    return new ToolUi(parentWidget);
-  }
+    QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE
+    {
+        return new ToolUi(parentWidget);
+    }
 };
-
 }
 
 QT_BEGIN_NAMESPACE

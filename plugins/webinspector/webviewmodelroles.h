@@ -32,13 +32,11 @@
 #include <common/objectmodel.h>
 
 namespace GammaRay {
-
 namespace WebViewModelRoles {
-    enum Role {
-        WebKitVersionRole = ObjectModel::UserRole
-    };
+enum Role {
+    WebKitVersionRole = ObjectModel::UserRole
+};
 }
-
 }
 
 #endif

@@ -39,22 +39,21 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class RemoteViewWidget;
 class WidgetInspectorInterface;
 
 namespace Ui {
-  class WidgetInspectorWidget;
+class WidgetInspectorWidget;
 }
 
 class WidgetInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit WidgetInspectorWidget(QWidget *parent = 0);
     ~WidgetInspectorWidget();
 
-  private slots:
+private slots:
     void widgetSelected(const QItemSelection &selection);
     void widgetTreeContextMenu(QPoint pos);
 
@@ -65,7 +64,7 @@ class WidgetInspectorWidget : public QWidget
     void analyzePainting();
     void updateActions();
 
-  private:
+private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;
     UIStateManager m_stateManager;
     WidgetInspectorInterface *m_inspector;
@@ -74,13 +73,12 @@ class WidgetInspectorWidget : public QWidget
 
 class WidgetInspectorUiFactory : public QObject, public StandardToolUiFactory<WidgetInspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_widgetinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_widgetinspector.json")
 public:
     void initUi() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_WIDGETINSPECTOR_H

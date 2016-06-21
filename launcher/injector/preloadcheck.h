@@ -33,7 +33,6 @@
 #include <QString>
 
 namespace GammaRay {
-
 /**
  * This class checks if it's possible to overwrite symbols
  * by setting the LD_PRELOAD environment variable
@@ -41,7 +40,7 @@ namespace GammaRay {
 class PreloadCheck
 {
     Q_DECLARE_TR_FUNCTIONS(GammaRay::PreloadCheck)
-  public:
+public:
     PreloadCheck();
 
     /**
@@ -58,10 +57,10 @@ class PreloadCheck
 
     QString errorString() const;
 
-  protected:
+protected:
     void setErrorString(const QString &err);
 
-  private:
+private:
     /**
      * Additional method for testing whether the call to the function will go
      * through .got and lazy binding stub (MIPS specific)
@@ -72,7 +71,6 @@ class PreloadCheck
 
     QString m_errorString;
 };
-
 }
 
 #endif

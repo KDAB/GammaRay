@@ -33,7 +33,6 @@
 #include <QVariant>
 
 namespace GammaRay {
-
 class MultiSignalMapperPrivate;
 
 /**
@@ -41,21 +40,20 @@ class MultiSignalMapperPrivate;
  */
 class MultiSignalMapper : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MultiSignalMapper(QObject *parent = 0);
     ~MultiSignalMapper();
 
     void connectToSignal(QObject *sender, const QMetaMethod &signal);
 
-  signals:
+signals:
     void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &arguments);
 
-  private:
+private:
     friend class MultiSignalMapperPrivate;
-    MultiSignalMapperPrivate* const d;
+    MultiSignalMapperPrivate * const d;
 };
-
 }
 
 #endif // GAMMARAY_MULTISIGNALMAPPER_H
