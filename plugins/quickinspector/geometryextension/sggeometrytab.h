@@ -37,7 +37,6 @@ class QAbstractItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SGGeometryExtensionInterface;
 
 class Ui_SGGeometryTab;
@@ -45,21 +44,20 @@ class PropertyWidget;
 
 class SGGeometryTab : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit SGGeometryTab(PropertyWidget *parent);
     virtual ~SGGeometryTab();
 
-  private:
+private:
     void setObjectBaseName(const QString &baseName);
 
-  private:
+private:
     Ui_SGGeometryTab *m_ui;
     SGGeometryExtensionInterface *m_interface;
     QAbstractItemModel *m_model;
 };
-
 }
 
 #endif // SGGEOMETRYTAB_H

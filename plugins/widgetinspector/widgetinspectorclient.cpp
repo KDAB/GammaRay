@@ -33,7 +33,7 @@
 using namespace GammaRay;
 
 WidgetInspectorClient::WidgetInspectorClient(QObject *parent)
-  : WidgetInspectorInterface(parent)
+    : WidgetInspectorInterface(parent)
 {
 }
 
@@ -42,10 +42,10 @@ WidgetInspectorClient::~WidgetInspectorClient()
 }
 
 #define WRAP_REMOTE(func, type) \
-void WidgetInspectorClient::func(type arg) \
-{ \
-  Endpoint::instance()->invokeObject(objectName(), #func, QVariantList() << arg); \
-}
+    void WidgetInspectorClient::func(type arg) \
+    { \
+        Endpoint::instance()->invokeObject(objectName(), #func, QVariantList() << arg); \
+    }
 
 WRAP_REMOTE(saveAsImage, const QString &)
 WRAP_REMOTE(saveAsPdf, const QString &)
@@ -54,5 +54,5 @@ WRAP_REMOTE(saveAsUiFile, const QString &)
 
 void WidgetInspectorClient::analyzePainting()
 {
-  Endpoint::instance()->invokeObject(objectName(), "analyzePainting");
+    Endpoint::instance()->invokeObject(objectName(), "analyzePainting");
 }

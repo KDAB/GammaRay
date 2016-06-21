@@ -38,27 +38,24 @@ class QUrl;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** General purpose settings of the probe provided by the launcher. */
-namespace ProbeSettings
-{
-  GAMMARAY_CORE_EXPORT QVariant value(const QString &key, const QVariant &defaultValue = QString());
+namespace ProbeSettings {
+GAMMARAY_CORE_EXPORT QVariant value(const QString &key, const QVariant &defaultValue = QString());
 
-  /** Call if using runtime attaching to obtain settings provided via shared memory.
-   *  This method blocks until communication with the launcher is complete.
-   */
-  void receiveSettings();
+/** Call if using runtime attaching to obtain settings provided via shared memory.
+ *  This method blocks until communication with the launcher is complete.
+ */
+void receiveSettings();
 
-  /** Identifier used for finding the communication channels to the launcher. */
-  qint64 launcherIdentifier();
+/** Identifier used for finding the communication channels to the launcher. */
+qint64 launcherIdentifier();
 
-  /** Reset the launcher Identifier. Call this when detaching the probe. */
-  void resetLauncherIdentifier();
+/** Reset the launcher Identifier. Call this when detaching the probe. */
+void resetLauncherIdentifier();
 
-  /** Sends the server address used for communication with the client back to the launcher. */
-  void sendServerAddress(const QUrl &addr);
+/** Sends the server address used for communication with the client back to the launcher. */
+void sendServerAddress(const QUrl &addr);
 }
-
 }
 
 #endif // GAMMARAY_PROBESETTINGS_H

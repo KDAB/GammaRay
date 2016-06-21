@@ -37,10 +37,9 @@
 #include <QMetaType>
 
 namespace GammaRay {
-
 class TimerInfo
 {
-  public:
+public:
     enum Type {
         QTimerType,
         QObjectType,
@@ -49,8 +48,8 @@ class TimerInfo
 
     struct TimeoutEvent
     {
-      QTime timeStamp;
-      int executionTime;
+        QTime timeStamp;
+        int executionTime;
     };
 
     explicit TimerInfo(QObject *timer);
@@ -70,7 +69,7 @@ class TimerInfo
     QString state() const;
     QString displayName() const;
 
-  private:
+private:
     Type m_type;
     int m_totalWakeups;
 
@@ -88,7 +87,6 @@ class TimerInfo
 };
 
 typedef QSharedPointer<TimerInfo> TimerInfoPtr;
-
 }
 
 Q_DECLARE_METATYPE(GammaRay::TimerInfoPtr)

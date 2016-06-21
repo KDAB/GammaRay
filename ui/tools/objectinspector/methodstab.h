@@ -36,7 +36,6 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class MethodsExtensionInterface;
 
 class Ui_MethodsTab;
@@ -44,25 +43,24 @@ class PropertyWidget;
 
 class MethodsTab : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MethodsTab(PropertyWidget *parent);
     virtual ~MethodsTab();
 
-  private:
+private:
     void setObjectBaseName(const QString &baseName);
 
-  private slots:
+private slots:
     void methodActivated(const QModelIndex &index);
     void methodContextMenu(const QPoint &pos);
 
-  private:
+private:
     Ui_MethodsTab *m_ui;
     MethodsExtensionInterface *m_interface;
 
     QString m_objectBaseName;
 };
-
 }
 
 #endif // METHODSTAB_H

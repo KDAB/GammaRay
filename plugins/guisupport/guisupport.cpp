@@ -57,8 +57,8 @@ Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
 #endif
 
-GuiSupport::GuiSupport(GammaRay::ProbeInterface* probe, QObject* parent) :
-    QObject(parent)
+GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
+    : QObject(parent)
 {
     Q_UNUSED(probe);
 
@@ -75,13 +75,13 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_ST(QGuiApplication, Qt::ApplicationState, applicationState);
     MO_ADD_PROPERTY_ST(QGuiApplication, bool, desktopSettingsAware);
     MO_ADD_PROPERTY_RO(QGuiApplication, qreal, devicePixelRatio);
-    MO_ADD_PROPERTY_ST(QGuiApplication, QObject*, focusObject);
-    MO_ADD_PROPERTY_ST(QGuiApplication, QWindow*, focusWindow);
+    MO_ADD_PROPERTY_ST(QGuiApplication, QObject *, focusObject);
+    MO_ADD_PROPERTY_ST(QGuiApplication, QWindow *, focusWindow);
     MO_ADD_PROPERTY_ST(QGuiApplication, QFont, font);
     MO_ADD_PROPERTY_ST(QGuiApplication, bool, isLeftToRight);
     MO_ADD_PROPERTY_ST(QGuiApplication, bool, isRightToLeft);
     MO_ADD_PROPERTY_ST(QGuiApplication, QPalette, palette);
-    MO_ADD_PROPERTY_ST(QGuiApplication, QScreen*, primaryScreen);
+    MO_ADD_PROPERTY_ST(QGuiApplication, QScreen *, primaryScreen);
 #ifndef QT_NO_SESSIONMANAGER
     MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSavingSession);
     MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSessionRestored);
@@ -111,7 +111,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QPaintDevice, int, widthMM);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    qRegisterMetaType<QScreen*>();
+    qRegisterMetaType<QScreen *>();
 
     MO_ADD_METAOBJECT0(QSurface);
     MO_ADD_PROPERTY_RO(QSurface, QSurfaceFormat, format);
@@ -126,7 +126,7 @@ void GuiSupport::registerMetaTypes()
 #endif
     MO_ADD_PROPERTY_RO(QWindow, qreal, devicePixelRatio);
     MO_ADD_PROPERTY_CR(QWindow, QString, filePath, setFilePath);
-    MO_ADD_PROPERTY_RO(QWindow, QObject*, focusObject);
+    MO_ADD_PROPERTY_RO(QWindow, QObject *, focusObject);
     MO_ADD_PROPERTY_RO(QWindow, QRect, frameGeometry);
     MO_ADD_PROPERTY_RO(QWindow, QMargins, frameMargins);
     MO_ADD_PROPERTY_CR(QWindow, QPoint, framePosition, setFramePosition);
@@ -139,10 +139,10 @@ void GuiSupport::registerMetaTypes()
 #endif
     MO_ADD_PROPERTY_CR(QWindow, QPoint, position, setPosition);
     MO_ADD_PROPERTY_RO(QWindow, QSurfaceFormat, requestedFormat);
-    MO_ADD_PROPERTY_RO(QWindow, QScreen*, screen);
+    MO_ADD_PROPERTY_RO(QWindow, QScreen *, screen);
     MO_ADD_PROPERTY_CR(QWindow, QSize, sizeIncrement, setSizeIncrement);
-    MO_ADD_PROPERTY   (QWindow, Qt::WindowState, windowState, setWindowState);
-    MO_ADD_PROPERTY_RO(QWindow, QWindow*, transientParent);
+    MO_ADD_PROPERTY(QWindow, Qt::WindowState, windowState, setWindowState);
+    MO_ADD_PROPERTY_RO(QWindow, QWindow *, transientParent);
     MO_ADD_PROPERTY_RO(QWindow, Qt::WindowType, type);
 
     MO_ADD_METAOBJECT1(QOpenGLShader, QObject);
@@ -157,45 +157,45 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, QString, log);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 // FIXME calling this asserts in debug builds of some newer Qt versions
-//   MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, int, maxGeometryOutputVertices);
-    MO_ADD_PROPERTY   (QOpenGLShaderProgram, int, patchVertexCount, setPatchVertexCount);
+// MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, int, maxGeometryOutputVertices);
+    MO_ADD_PROPERTY(QOpenGLShaderProgram, int, patchVertexCount, setPatchVertexCount);
 #endif
     MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, uint, programId);
 
     MO_ADD_METAOBJECT1(QOpenGLContext, QObject);
     MO_ADD_PROPERTY_RO(QOpenGLContext, uint, defaultFramebufferObject);
     // crashes if context isn't current
-//     MO_ADD_PROPERTY_RO(QOpenGLContext, QSet<QByteArray>, extensions);
+// MO_ADD_PROPERTY_RO(QOpenGLContext, QSet<QByteArray>, extensions);
     MO_ADD_PROPERTY_RO(QOpenGLContext, QSurfaceFormat, format);
     MO_ADD_PROPERTY_RO(QOpenGLContext, bool, isValid);
-    MO_ADD_PROPERTY_RO(QOpenGLContext, QScreen*, screen);
-    MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContext*, shareContext);
-    MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContextGroup*, shareGroup);
-//     MO_ADD_PROPERTY_RO(QOpenGLContext, QSurface*, surface);
+    MO_ADD_PROPERTY_RO(QOpenGLContext, QScreen *, screen);
+    MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContext *, shareContext);
+    MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContextGroup *, shareGroup);
+// MO_ADD_PROPERTY_RO(QOpenGLContext, QSurface*, surface);
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_METAOBJECT0(QBrush);
-    MO_ADD_PROPERTY   (QBrush, const QColor&, color, setColor);
+    MO_ADD_PROPERTY(QBrush, const QColor &, color, setColor);
     MO_ADD_PROPERTY_RO(QBrush, bool, isOpaque);
-    MO_ADD_PROPERTY   (QBrush, const QMatrix&, matrix, setMatrix);
-    MO_ADD_PROPERTY   (QBrush, Qt::BrushStyle, style, setStyle);
+    MO_ADD_PROPERTY(QBrush, const QMatrix &, matrix, setMatrix);
+    MO_ADD_PROPERTY(QBrush, Qt::BrushStyle, style, setStyle);
     MO_ADD_PROPERTY_CR(QBrush, QPixmap, texture, setTexture);
     MO_ADD_PROPERTY_CR(QBrush, QTransform, transform, setTransform);
 
     MO_ADD_METAOBJECT0(QPen);
     MO_ADD_PROPERTY_CR(QPen, QBrush, brush, setBrush);
-    MO_ADD_PROPERTY   (QPen, Qt::PenCapStyle, capStyle, setCapStyle);
+    MO_ADD_PROPERTY(QPen, Qt::PenCapStyle, capStyle, setCapStyle);
     MO_ADD_PROPERTY_CR(QPen, QColor, color, setColor);
-    MO_ADD_PROPERTY   (QPen, qreal, dashOffset, setDashOffset);
+    MO_ADD_PROPERTY(QPen, qreal, dashOffset, setDashOffset);
     MO_ADD_PROPERTY_CR(QPen, QVector<qreal>, dashPattern, setDashPattern);
-    MO_ADD_PROPERTY   (QPen, bool, isCosmetic, setCosmetic);
+    MO_ADD_PROPERTY(QPen, bool, isCosmetic, setCosmetic);
     MO_ADD_PROPERTY_RO(QPen, bool, isSolid);
-    MO_ADD_PROPERTY   (QPen, Qt::PenJoinStyle, joinStyle, setJoinStyle);
-    MO_ADD_PROPERTY   (QPen, qreal, miterLimit, setMiterLimit);
-    MO_ADD_PROPERTY   (QPen, Qt::PenStyle, style, setStyle);
-    MO_ADD_PROPERTY   (QPen, int, width, setWidth);
-    MO_ADD_PROPERTY   (QPen, qreal, widthF, setWidthF);
+    MO_ADD_PROPERTY(QPen, Qt::PenJoinStyle, joinStyle, setJoinStyle);
+    MO_ADD_PROPERTY(QPen, qreal, miterLimit, setMiterLimit);
+    MO_ADD_PROPERTY(QPen, Qt::PenStyle, style, setStyle);
+    MO_ADD_PROPERTY(QPen, int, width, setWidth);
+    MO_ADD_PROPERTY(QPen, qreal, widthF, setWidthF);
 #endif
 }
 
@@ -204,58 +204,58 @@ static QString surfaceFormatToString(const QSurfaceFormat &format)
 {
     QString s;
     switch (format.renderableType()) {
-        case QSurfaceFormat::DefaultRenderableType:
-            s += QStringLiteral("Default");
-            break;
-        case QSurfaceFormat::OpenGL:
-            s += QStringLiteral("OpenGL");
-            break;
-        case QSurfaceFormat::OpenGLES:
-            s += QStringLiteral("OpenGL ES");
-            break;
-        case QSurfaceFormat::OpenVG:
-            s += QStringLiteral("OpenVG");
-            break;
+    case QSurfaceFormat::DefaultRenderableType:
+        s += QStringLiteral("Default");
+        break;
+    case QSurfaceFormat::OpenGL:
+        s += QStringLiteral("OpenGL");
+        break;
+    case QSurfaceFormat::OpenGLES:
+        s += QStringLiteral("OpenGL ES");
+        break;
+    case QSurfaceFormat::OpenVG:
+        s += QStringLiteral("OpenVG");
+        break;
     }
 
-    s += " (" + QString::number(format.majorVersion()) +
-         '.' + QString::number(format.minorVersion());
+    s += " (" + QString::number(format.majorVersion())
+         +'.' + QString::number(format.minorVersion());
     switch (format.profile()) {
-        case QSurfaceFormat::CoreProfile:
-            s += QStringLiteral(" core");
-            break;
-        case QSurfaceFormat::CompatibilityProfile:
-            s += QStringLiteral(" compat");
-            break;
-        case QSurfaceFormat::NoProfile:
-            break;
+    case QSurfaceFormat::CoreProfile:
+        s += QStringLiteral(" core");
+        break;
+    case QSurfaceFormat::CompatibilityProfile:
+        s += QStringLiteral(" compat");
+        break;
+    case QSurfaceFormat::NoProfile:
+        break;
     }
     s += ')';
 
-    s += " RGBA: " + QString::number(format.redBufferSize()) +
-         '/' + QString::number(format.greenBufferSize()) +
-         '/' + QString::number(format.blueBufferSize()) +
-         '/' + QString::number(format.alphaBufferSize());
+    s += " RGBA: " + QString::number(format.redBufferSize())
+         +'/' + QString::number(format.greenBufferSize())
+         +'/' + QString::number(format.blueBufferSize())
+         +'/' + QString::number(format.alphaBufferSize());
 
     s += " Depth: " + QString::number(format.depthBufferSize());
     s += " Stencil: " + QString::number(format.stencilBufferSize());
 
     s += QStringLiteral(" Buffer: ");
     switch (format.swapBehavior()) {
-        case QSurfaceFormat::DefaultSwapBehavior:
-            s += QStringLiteral("default");
-            break;
-        case QSurfaceFormat::SingleBuffer:
-            s += QStringLiteral("single");
-            break;
-        case QSurfaceFormat::DoubleBuffer:
-            s += QStringLiteral("double");
-            break;
-        case QSurfaceFormat::TripleBuffer:
-            s += QStringLiteral("triple");
-            break;
-        default:
-            s += QStringLiteral("unknown");
+    case QSurfaceFormat::DefaultSwapBehavior:
+        s += QStringLiteral("default");
+        break;
+    case QSurfaceFormat::SingleBuffer:
+        s += QStringLiteral("single");
+        break;
+    case QSurfaceFormat::DoubleBuffer:
+        s += QStringLiteral("double");
+        break;
+    case QSurfaceFormat::TripleBuffer:
+        s += QStringLiteral("triple");
+        break;
+    default:
+        s += QStringLiteral("unknown");
     }
 
     return s;
@@ -264,9 +264,11 @@ static QString surfaceFormatToString(const QSurfaceFormat &format)
 static QString surfaceClassToString(QSurface::SurfaceClass sc)
 {
     switch (sc) {
-        case QSurface::Window: return QStringLiteral("Window");
+    case QSurface::Window:
+        return QStringLiteral("Window");
 #if QT_VERSION > QT_VERSION_CHECK(5, 1, 0)
-        case QSurface::Offscreen: return QStringLiteral("Offscreen");
+    case QSurface::Offscreen:
+        return QStringLiteral("Offscreen");
 #endif
     }
     return QStringLiteral("Unknown Surface Class");
@@ -275,10 +277,13 @@ static QString surfaceClassToString(QSurface::SurfaceClass sc)
 static QString surfaceTypeToString(QSurface::SurfaceType type)
 {
     switch (type) {
-        case QSurface::RasterSurface: return QStringLiteral("Raster");
-        case QSurface::OpenGLSurface: return QStringLiteral("OpenGL");
+    case QSurface::RasterSurface:
+        return QStringLiteral("Raster");
+    case QSurface::OpenGLSurface:
+        return QStringLiteral("OpenGL");
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-        case QSurface::RasterGLSurface: return QStringLiteral("RasterGLSurface");
+    case QSurface::RasterGLSurface:
+        return QStringLiteral("RasterGLSurface");
 #endif
     }
     return QStringLiteral("Unknown Surface Type");
@@ -302,6 +307,7 @@ static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
         return QStringLiteral("<none>");
     return types.join(QStringLiteral(" | "));
 }
+
 #endif
 
 static QString textLengthToString(const QTextLength &l)
@@ -341,8 +347,8 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
 }
 
-GuiSupportFactory::GuiSupportFactory(QObject* parent) :
-    QObject(parent)
+GuiSupportFactory::GuiSupportFactory(QObject *parent)
+    : QObject(parent)
 {
 }
 

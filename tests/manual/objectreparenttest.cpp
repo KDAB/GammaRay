@@ -32,11 +32,11 @@ class MyObject : public QObject
 {
     Q_OBJECT
 public:
-    explicit MyObject(QObject *parent = 0) :
-        QObject(parent),
-        c(new QObject(this)),
-        p1(new QObject(this)),
-        p2(new QObject(this))
+    explicit MyObject(QObject *parent = 0)
+        : QObject(parent)
+        , c(new QObject(this))
+        , p1(new QObject(this))
+        , p2(new QObject(this))
     {
         c->setObjectName(QStringLiteral("MovingSubtree"));
 
@@ -48,23 +48,23 @@ public:
         new QObject(gc);
         c->setParent(p1);
     }
+
 public slots:
     void reparent()
     {
         if (c->parent() == p1)
-          c->setParent(p2);
+            c->setParent(p2);
         else if (c->parent() == p2)
-          c->setParent(0);
+            c->setParent(0);
         else
-          c->setParent(p1);
+            c->setParent(p1);
     }
 
 private:
     QObject *c, *p1, *p2;
 };
 
-
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
 

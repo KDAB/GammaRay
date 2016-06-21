@@ -38,14 +38,15 @@
 
 using namespace GammaRay;
 
-QVector<PropertyWidgetTabFactoryBase*> PropertyWidget::s_tabFactories = QVector<PropertyWidgetTabFactoryBase*>();
-QVector<PropertyWidget*> PropertyWidget::s_propertyWidgets;
+QVector<PropertyWidgetTabFactoryBase *> PropertyWidget::s_tabFactories
+    = QVector<PropertyWidgetTabFactoryBase *>();
+QVector<PropertyWidget *> PropertyWidget::s_propertyWidgets;
 
-PropertyWidget::PropertyWidget(QWidget *parent) :
-    QTabWidget(parent),
-    m_tabsUpdatedTimer(new QTimer(this)),
-    m_lastManuallySelectedWidget(Q_NULLPTR),
-    m_controller(0)
+PropertyWidget::PropertyWidget(QWidget *parent)
+    : QTabWidget(parent)
+    , m_tabsUpdatedTimer(new QTimer(this))
+    , m_lastManuallySelectedWidget(Q_NULLPTR)
+    , m_controller(0)
 {
     m_tabsUpdatedTimer->setInterval(100);
     m_tabsUpdatedTimer->setSingleShot(true);
@@ -56,35 +57,37 @@ PropertyWidget::PropertyWidget(QWidget *parent) :
 
 PropertyWidget::~PropertyWidget()
 {
-  const int index = s_propertyWidgets.indexOf(this);
-  if (index >= 0)
-    s_propertyWidgets.remove(index);
+    const int index = s_propertyWidgets.indexOf(this);
+    if (index >= 0)
+        s_propertyWidgets.remove(index);
 }
 
 QString PropertyWidget::objectBaseName() const
 {
-  Q_ASSERT(!m_objectBaseName.isEmpty());
-  return m_objectBaseName;
+    Q_ASSERT(!m_objectBaseName.isEmpty());
+    return m_objectBaseName;
 }
 
 void PropertyWidget::setObjectBaseName(const QString &baseName)
 {
-  Q_ASSERT(m_objectBaseName.isEmpty()); // ideally the object base name would be a ctor argument, but then this doesn't work in Designer anymore
-  m_objectBaseName = baseName;
+    Q_ASSERT(m_objectBaseName.isEmpty()); // ideally the object base name would be a ctor argument, but then this doesn't work in Designer anymore
+    m_objectBaseName = baseName;
 
-  if (Endpoint::instance()->objectAddress(baseName + ".controller") == Protocol::InvalidObjectAddress)
-    return; // unknown property controller, likely disabled/not supported on the server
+    if (Endpoint::instance()->objectAddress(baseName + ".controller")
+        == Protocol::InvalidObjectAddress)
+        return; // unknown property controller, likely disabled/not supported on the server
 
-  if (m_controller) {
-    disconnect(m_controller, SIGNAL(availableExtensionsChanged()), this, SLOT(updateShownTabs()));
-  }
-  m_controller = ObjectBroker::object<PropertyControllerInterface*>(m_objectBaseName + ".controller");
-  connect(m_controller, SIGNAL(availableExtensionsChanged()), this, SLOT(updateShownTabs()));
+    if (m_controller)
+        disconnect(m_controller, SIGNAL(availableExtensionsChanged()), this,
+                   SLOT(updateShownTabs()));
+    m_controller = ObjectBroker::object<PropertyControllerInterface *>(
+        m_objectBaseName + ".controller");
+    connect(m_controller, SIGNAL(availableExtensionsChanged()), this, SLOT(updateShownTabs()));
 
-  updateShownTabs();
+    updateShownTabs();
 }
 
-void PropertyWidget::registerTab(PropertyWidgetTabFactoryBase* factory)
+void PropertyWidget::registerTab(PropertyWidgetTabFactoryBase *factory)
 {
     s_tabFactories.push_back(factory);
     foreach (PropertyWidget *widget, s_propertyWidgets)
@@ -93,44 +96,44 @@ void PropertyWidget::registerTab(PropertyWidgetTabFactoryBase* factory)
 
 void PropertyWidget::createWidgets()
 {
-  if (m_objectBaseName.isEmpty())
-    return;
-  foreach (PropertyWidgetTabFactoryBase *factory, s_tabFactories) {
-    if (!factoryInUse(factory) && extensionAvailable(factory)) {
-      const PageInfo pi = { factory, factory->createWidget(this) };
-      m_pages.push_back(pi);
+    if (m_objectBaseName.isEmpty())
+        return;
+    foreach (PropertyWidgetTabFactoryBase *factory, s_tabFactories) {
+        if (!factoryInUse(factory) && extensionAvailable(factory)) {
+            const PageInfo pi = { factory, factory->createWidget(this) };
+            m_pages.push_back(pi);
+        }
     }
-  }
 
-  std::sort(m_pages.begin(), m_pages.end(), [](const PageInfo &lhs, const PageInfo &rhs) -> bool {
-      if (lhs.factory->priority() == rhs.factory->priority())
-          return s_tabFactories.indexOf(lhs.factory) < s_tabFactories.indexOf(rhs.factory);
-      return lhs.factory->priority() < rhs.factory->priority();
-  });
+    std::sort(m_pages.begin(), m_pages.end(), [](const PageInfo &lhs, const PageInfo &rhs) -> bool {
+        if (lhs.factory->priority() == rhs.factory->priority())
+            return s_tabFactories.indexOf(lhs.factory) < s_tabFactories.indexOf(rhs.factory);
+        return lhs.factory->priority() < rhs.factory->priority();
+    });
 }
 
 void PropertyWidget::updateShownTabs()
 {
-  setUpdatesEnabled(false);
-  createWidgets();
+    setUpdatesEnabled(false);
+    createWidgets();
 
-  // we distinguish between the last selected tab, and the last one that
-  // was explicitly selected. The latter might be temporarily hidden, but
-  // we will try to restore it when it becomes available again.
-  auto prevManuallySelected = m_lastManuallySelectedWidget;
-  auto prevSelectedWidget = currentWidget();
+    // we distinguish between the last selected tab, and the last one that
+    // was explicitly selected. The latter might be temporarily hidden, but
+    // we will try to restore it when it becomes available again.
+    auto prevManuallySelected = m_lastManuallySelectedWidget;
+    auto prevSelectedWidget = currentWidget();
 
-  int tabIt = 0;
-  foreach (const auto &page, m_pages) {
-      const int index = indexOf(page.widget);
-      if (extensionAvailable(page.factory)) {
-          if (index != tabIt)
-              removeTab(index);
-          insertTab(tabIt, page.widget, page.factory->label());
-          ++tabIt;
-      } else if (index != -1) {
-          removeTab(index);
-      }
+    int tabIt = 0;
+    foreach (const auto &page, m_pages) {
+        const int index = indexOf(page.widget);
+        if (extensionAvailable(page.factory)) {
+            if (index != tabIt)
+                removeTab(index);
+            insertTab(tabIt, page.widget, page.factory->label());
+            ++tabIt;
+        } else if (index != -1) {
+            removeTab(index);
+        }
     }
 
     // try to restore selection
@@ -148,12 +151,12 @@ void PropertyWidget::updateShownTabs()
     m_tabsUpdatedTimer->start(); // use a timer to group chained registrations.
 }
 
-bool PropertyWidget::extensionAvailable(PropertyWidgetTabFactoryBase* factory) const
+bool PropertyWidget::extensionAvailable(PropertyWidgetTabFactoryBase *factory) const
 {
-  return m_controller->availableExtensions().contains(m_objectBaseName + '.' + factory->name());
+    return m_controller->availableExtensions().contains(m_objectBaseName + '.' + factory->name());
 }
 
-bool PropertyWidget::factoryInUse(PropertyWidgetTabFactoryBase* factory) const
+bool PropertyWidget::factoryInUse(PropertyWidgetTabFactoryBase *factory) const
 {
     return std::find_if(m_pages.begin(), m_pages.end(), [factory](const PageInfo &pi) {
         return pi.factory == factory;

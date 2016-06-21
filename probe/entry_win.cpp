@@ -34,18 +34,15 @@
 
 using namespace GammaRay;
 
-extern "C" BOOL WINAPI DllMain(HINSTANCE/*hInstance*/, DWORD dwReason, LPVOID/*lpvReserved*/)
+extern "C" BOOL WINAPI DllMain(HINSTANCE /*hInstance*/, DWORD dwReason, LPVOID /*lpvReserved*/)
 {
-  switch(dwReason) {
+    switch (dwReason) {
     case DLL_PROCESS_ATTACH:
     case DLL_THREAD_ATTACH:
-    {
-      Hooks::installHooks();
-      if (!Probe::isInitialized()) {
-        gammaray_probe_inject();
-      }
-      break;
+        Hooks::installHooks();
+        if (!Probe::isInitialized())
+            gammaray_probe_inject();
+        break;
     }
-  };
-  return TRUE; //krazy:exclude=captruefalse
+    return TRUE; // krazy:exclude=captruefalse
 }

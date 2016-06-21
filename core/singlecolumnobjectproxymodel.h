@@ -43,21 +43,20 @@
 #include <QIdentityProxyModel>
 
 namespace GammaRay {
-
 /**
  * @brief A QIdentityProxyModel for generic Objects.
  */
 class GAMMARAY_CORE_EXPORT SingleColumnObjectProxyModel : public QIdentityProxyModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     /**
      * Constructor.
      * @param parent is the parent object for this instance.
      */
     explicit SingleColumnObjectProxyModel(QObject *parent = Q_NULLPTR);
 
-    int columnCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     /**
      * Returns the data for the specified model.
@@ -69,7 +68,6 @@ class GAMMARAY_CORE_EXPORT SingleColumnObjectProxyModel : public QIdentityProxyM
      */
     QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_SINGLECOLUMNOBJECTPROXYMODEL_H

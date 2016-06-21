@@ -35,27 +35,26 @@
 using namespace GammaRay;
 
 SceneInspectorClient::SceneInspectorClient(QObject *parent)
-  : SceneInspectorInterface(parent)
+    : SceneInspectorInterface(parent)
 {
-
 }
 
 SceneInspectorClient::~SceneInspectorClient()
 {
-
 }
 
 void SceneInspectorClient::initializeGui()
 {
-  Endpoint::instance()->invokeObject(objectName(), "initializeGui");
+    Endpoint::instance()->invokeObject(objectName(), "initializeGui");
 }
 
 void SceneInspectorClient::renderScene(const QTransform &transform, const QSize &size)
 {
-  Endpoint::instance()->invokeObject(objectName(), "renderScene", QVariantList() << transform << size);
+    Endpoint::instance()->invokeObject(objectName(), "renderScene",
+                                       QVariantList() << transform << size);
 }
 
 void SceneInspectorClient::sceneClicked(const QPointF &pos)
 {
-  Endpoint::instance()->invokeObject(objectName(), "sceneClicked", QVariantList() << pos);
+    Endpoint::instance()->invokeObject(objectName(), "sceneClicked", QVariantList() << pos);
 }

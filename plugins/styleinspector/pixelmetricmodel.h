@@ -32,14 +32,13 @@
 #include "abstractstyleelementmodel.h"
 
 namespace GammaRay {
-
 /**
  * Lists all pixel metric values of a given QStyle.
  */
 class PixelMetricModel : public AbstractStyleElementModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PixelMetricModel(QObject *parent = 0);
 
     QVariant headerData(int section, Qt::Orientation orientation,
@@ -47,14 +46,14 @@ class PixelMetricModel : public AbstractStyleElementModel
 
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value,
+                 int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
     int doColumnCount() const Q_DECL_OVERRIDE;
     int doRowCount() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_PIXELMETRICMODEL_H

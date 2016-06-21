@@ -40,32 +40,34 @@
 using namespace GammaRay;
 
 ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
-  : QWidget(parent)
-  , m_stateManager(this)
+    : QWidget(parent)
+    , m_stateManager(this)
 {
-  setObjectName("ActionInspectorWidget");
-  QAbstractItemModel *actionModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
+    setObjectName("ActionInspectorWidget");
+    QAbstractItemModel *actionModel
+        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
 
-  QVBoxLayout *vbox = new QVBoxLayout(this);
-  auto actionSearchLine = new QLineEdit(this);
-  new SearchLineController(actionSearchLine, actionModel);
-  vbox->addWidget(actionSearchLine);
+    QVBoxLayout *vbox = new QVBoxLayout(this);
+    auto actionSearchLine = new QLineEdit(this);
+    new SearchLineController(actionSearchLine, actionModel);
+    vbox->addWidget(actionSearchLine);
 
-  DeferredTreeView *objectTreeView = new DeferredTreeView(this);
-  objectTreeView->header()->setObjectName("objectTreeViewHeader");
-  objectTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-  objectTreeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
-  objectTreeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
-  objectTreeView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
-  objectTreeView->setModel(actionModel);
-  objectTreeView->sortByColumn(ActionModel::ShortcutsPropColumn);
-  vbox->addWidget(objectTreeView);
+    DeferredTreeView *objectTreeView = new DeferredTreeView(this);
+    objectTreeView->header()->setObjectName("objectTreeViewHeader");
+    objectTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    objectTreeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    objectTreeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+    objectTreeView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
+    objectTreeView->setModel(actionModel);
+    objectTreeView->sortByColumn(ActionModel::ShortcutsPropColumn);
+    vbox->addWidget(objectTreeView);
 
-  QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(actionModel);
-  objectTreeView->setSelectionModel(selectionModel);
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(actionModel);
+    objectTreeView->setSelectionModel(selectionModel);
 
-  m_stateManager.setDefaultSizes(objectTreeView->header(), UISizeVector() << -1 << 200 << -1 << -1 << -1 << 200);
-  connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
+    m_stateManager.setDefaultSizes(objectTreeView->header(),
+                                   UISizeVector() << -1 << 200 << -1 << -1 << -1 << 200);
+    connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
 }
 
 ActionInspectorWidget::~ActionInspectorWidget()
@@ -74,12 +76,12 @@ ActionInspectorWidget::~ActionInspectorWidget()
 
 void ActionInspectorWidget::triggerAction(const QModelIndex &index)
 {
-  if (!index.isValid()) {
-    return;
-  }
+    if (!index.isValid())
+        return;
 
-  Endpoint::instance()->invokeObject(QStringLiteral("com.kdab.GammaRay.ActionInspector"), "triggerAction",
-                                     QVariantList() << index.row());
+    Endpoint::instance()->invokeObject(QStringLiteral(
+                                           "com.kdab.GammaRay.ActionInspector"), "triggerAction",
+                                       QVariantList() << index.row());
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

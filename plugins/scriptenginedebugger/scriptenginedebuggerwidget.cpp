@@ -46,37 +46,37 @@ using namespace GammaRay;
 ///      was triggered and we close the mainwindow.
 
 ScriptEngineDebuggerWidget::ScriptEngineDebuggerWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::ScriptEngineDebuggerWidget)
-  , m_stateManager(this)
-  , debugger(new QScriptEngineDebugger(this))
+    : QWidget(parent)
+    , ui(new Ui::ScriptEngineDebuggerWidget)
+    , m_stateManager(this)
+    , debugger(new QScriptEngineDebugger(this))
 {
-  ui->setupUi(this);
-  ui->scriptEngineComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ScriptEngines")));
-  connect(ui->scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)));
+    ui->setupUi(this);
+    ui->scriptEngineComboBox->setModel(ObjectBroker::model(QStringLiteral(
+                                                               "com.kdab.GammaRay.ScriptEngines")));
+    connect(ui->scriptEngineComboBox, SIGNAL(activated(int)), SLOT(scriptEngineSelected(int)));
 
-  ui->verticalLayout_10->addWidget(debugger->standardWindow());
+    ui->verticalLayout_10->addWidget(debugger->standardWindow());
 
-  if (ui->scriptEngineComboBox->count()) {
-    scriptEngineSelected(0);
-  }
+    if (ui->scriptEngineComboBox->count())
+        scriptEngineSelected(0);
 }
 
 ScriptEngineDebuggerWidget::~ScriptEngineDebuggerWidget()
 {
-  debugger->detach();
+    debugger->detach();
 }
 
 void ScriptEngineDebuggerWidget::scriptEngineSelected(int index)
 {
-  QObject *obj =
-    ui->scriptEngineComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
-  QScriptEngine *engine = qobject_cast<QScriptEngine*>(obj);
-  if (engine) {
-    debugger->attachTo(engine);
+    QObject *obj
+        = ui->scriptEngineComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject *>();
+    QScriptEngine *engine = qobject_cast<QScriptEngine *>(obj);
+    if (engine) {
+        debugger->attachTo(engine);
 // FIXME: if we'd do that, we'd get crashes on shutdown.
-//     debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
-  }
+// debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
+    }
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

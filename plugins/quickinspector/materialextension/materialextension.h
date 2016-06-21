@@ -38,31 +38,29 @@ class QStandardItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class AggregatedPropertyModel;
 class PropertyController;
 class ObjectEnumModel;
 
 class MaterialExtension : public MaterialExtensionInterface, public PropertyControllerExtension
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::MaterialExtensionInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::MaterialExtensionInterface)
 
-  public:
+public:
     explicit MaterialExtension(PropertyController *controller);
     ~MaterialExtension();
 
     bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     void getShader(const QString &fileName) Q_DECL_OVERRIDE;
 
-  private:
+private:
     QSGGeometryNode *m_node;
     AggregatedPropertyModel *m_materialPropertyModel;
     QStandardItemModel *m_shaderModel;
 };
-
 }
 
 #endif // MATERIALEXTENSION_H

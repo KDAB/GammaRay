@@ -37,7 +37,8 @@
 
 using namespace GammaRay;
 
-AssociativePropertyAdaptor::AssociativePropertyAdaptor(QObject* parent): PropertyAdaptor(parent)
+AssociativePropertyAdaptor::AssociativePropertyAdaptor(QObject *parent)
+    : PropertyAdaptor(parent)
 {
 }
 
@@ -45,7 +46,7 @@ AssociativePropertyAdaptor::~AssociativePropertyAdaptor()
 {
 }
 
-void AssociativePropertyAdaptor::doSetObject(const ObjectInstance& oi)
+void AssociativePropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
     if (oi.type() == ObjectInstance::QtVariant)
         m_value = oi.variant();
@@ -75,5 +76,5 @@ PropertyData AssociativePropertyAdaptor::propertyData(int index) const
 
     return data;
 }
-#endif
 
+#endif

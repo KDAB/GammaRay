@@ -37,44 +37,43 @@ class QAction;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ActionValidator;
 
 class ActionModel : public QAbstractTableModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Column {
-      AddressColumn,
-      NameColumn,
-      CheckablePropColumn,
-      CheckedPropColumn,
-      PriorityPropColumn,
-      ShortcutsPropColumn,
-      /** Mark column count */
-      ColumnCount
+        AddressColumn,
+        NameColumn,
+        CheckablePropColumn,
+        CheckedPropColumn,
+        PriorityPropColumn,
+        ShortcutsPropColumn,
+        /** Mark column count */
+        ColumnCount
     };
 
     explicit ActionModel(QObject *parent = 0);
     ~ActionModel();
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     void objectAdded(QObject *object);
     void objectRemoved(QObject *object);
 
-  private:
+private:
     // sorted vector of QActions
-    QVector<QAction*> m_actions;
+    QVector<QAction *> m_actions;
 
     ActionValidator *m_duplicateFinder;
 };
-
 }
 
 #endif // GAMMARAY_ACTIONMODEL_H

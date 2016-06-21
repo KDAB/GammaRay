@@ -38,26 +38,24 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PropertyWidget;
 class DeferredTreeView;
 
 class MetaObjectBrowserWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit MetaObjectBrowserWidget(QWidget *parent = 0);
 
-  private slots:
+private slots:
     void selectionChanged(const QItemSelection &selection);
 
-  private:
+private:
     UIStateManager m_stateManager;
     PropertyWidget *m_propertyWidget;
     DeferredTreeView *m_treeView;
 };
-
 }
 
 #endif // GAMMARAY_METAOBJECTBROWSERWIDGET_H

@@ -33,11 +33,10 @@
 #include <QVector>
 
 namespace GammaRay {
-
 class MetaTypesModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MetaTypesModel(QObject *parent = 0);
 
     QVariant headerData(int section, Qt::Orientation orientation,
@@ -48,12 +47,11 @@ class MetaTypesModel : public QAbstractTableModel
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     void scanMetaTypes();
 
     QVector<int> m_metaTypes;
 };
-
 }
 
 #endif

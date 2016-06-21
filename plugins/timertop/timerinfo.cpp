@@ -38,172 +38,166 @@ using namespace GammaRay;
 static const int maxTimeoutEvents = 1000;
 static const int maxTimeSpan = 10000;
 
-TimerInfo::TimerInfo(QObject* timer) :
-    m_type(QQmlTimerType),
-    m_totalWakeups(0),
-    m_timer(timer),
-    m_timerId(-1),
-    m_lastReceiver(0)
+TimerInfo::TimerInfo(QObject *timer)
+    : m_type(QQmlTimerType)
+    , m_totalWakeups(0)
+    , m_timer(timer)
+    , m_timerId(-1)
+    , m_lastReceiver(0)
 {
-  if (QTimer *t = qobject_cast<QTimer*>(timer)) {
-    m_type = QTimerType;
-    m_timerId = t->timerId();
-  }
+    if (QTimer *t = qobject_cast<QTimer *>(timer)) {
+        m_type = QTimerType;
+        m_timerId = t->timerId();
+    }
 }
 
 TimerInfo::TimerInfo(int timerId)
-  : m_type(QObjectType),
-    m_totalWakeups(0),
-    m_timerId(timerId)
+    : m_type(QObjectType)
+    , m_totalWakeups(0)
+    , m_timerId(timerId)
 {
 }
 
 TimerInfo::Type TimerInfo::type() const
 {
-  return m_type;
+    return m_type;
 }
 
 void TimerInfo::addEvent(const TimeoutEvent &timeoutEvent)
 {
-  m_timeoutEvents.append(timeoutEvent);
-  removeOldEvents();
-  m_totalWakeups++;
+    m_timeoutEvents.append(timeoutEvent);
+    removeOldEvents();
+    m_totalWakeups++;
 }
 
 int TimerInfo::numEvents() const
 {
-  return m_timeoutEvents.size();
+    return m_timeoutEvents.size();
 }
 
-QObject* TimerInfo::timerObject() const
+QObject *TimerInfo::timerObject() const
 {
-  return m_timer;
+    return m_timer;
 }
 
 QTimer *TimerInfo::timer() const
 {
-  if (m_type != QTimerType)
-    return 0;
-  return qobject_cast<QTimer*>(m_timer);
+    if (m_type != QTimerType)
+        return 0;
+    return qobject_cast<QTimer *>(m_timer);
 }
 
 int TimerInfo::timerId() const
 {
-  return m_timerId;
+    return m_timerId;
 }
 
 FunctionCallTimer *TimerInfo::functionCallTimer()
 {
-  return &m_functionCallTimer;
+    return &m_functionCallTimer;
 }
 
 QString TimerInfo::wakeupsPerSec() const
 {
-  int totalWakeups = 0;
-  int start = 0;
-  int end = m_timeoutEvents.size() - 1;
-  for (int i = end; i >= 0; i--) {
-    const TimeoutEvent &event = m_timeoutEvents.at(i);
-    if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan) {
-      start = i;
-      break;
+    int totalWakeups = 0;
+    int start = 0;
+    int end = m_timeoutEvents.size() - 1;
+    for (int i = end; i >= 0; i--) {
+        const TimeoutEvent &event = m_timeoutEvents.at(i);
+        if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan) {
+            start = i;
+            break;
+        }
+        totalWakeups++;
     }
-    totalWakeups++;
-  }
 
-  if (totalWakeups > 0 && end > start) {
-    const QTime startTime = m_timeoutEvents[start].timeStamp;
-    const QTime endTime = m_timeoutEvents[end].timeStamp;
-    const int timeSpan = startTime.msecsTo(endTime);
-    const float wakeupsPerSec = totalWakeups / (float)timeSpan * 1000.0f;
-    return QString::number(wakeupsPerSec, 'f', 1);
-  }
-  return QStringLiteral("0");
+    if (totalWakeups > 0 && end > start) {
+        const QTime startTime = m_timeoutEvents[start].timeStamp;
+        const QTime endTime = m_timeoutEvents[end].timeStamp;
+        const int timeSpan = startTime.msecsTo(endTime);
+        const float wakeupsPerSec = totalWakeups / (float)timeSpan * 1000.0f;
+        return QString::number(wakeupsPerSec, 'f', 1);
+    }
+    return QStringLiteral("0");
 }
 
 QString TimerInfo::timePerWakeup() const
 {
-  if (m_type == QObjectType) {
-    return QStringLiteral("N/A");
-  }
+    if (m_type == QObjectType)
+        return QStringLiteral("N/A");
 
-  int totalWakeups = 0;
-  int totalTime = 0;
-  for (int i = m_timeoutEvents.size() - 1; i >= 0; i--) {
-    const TimeoutEvent &event = m_timeoutEvents.at(i);
-    if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan) {
-      break;
+    int totalWakeups = 0;
+    int totalTime = 0;
+    for (int i = m_timeoutEvents.size() - 1; i >= 0; i--) {
+        const TimeoutEvent &event = m_timeoutEvents.at(i);
+        if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan)
+            break;
+        totalWakeups++;
+        totalTime += event.executionTime;
     }
-    totalWakeups++;
-    totalTime += event.executionTime;
-  }
 
-  if (totalWakeups > 0) {
-    return QString::number(totalTime / (float)totalWakeups, 'f', 1);
-  }
-  return QStringLiteral("N/A");
+    if (totalWakeups > 0)
+        return QString::number(totalTime / (float)totalWakeups, 'f', 1);
+    return QStringLiteral("N/A");
 }
 
 QString TimerInfo::maxWakeupTime() const
 {
-  if (m_type == QObjectType) {
-    return QStringLiteral("N/A");
-  }
+    if (m_type == QObjectType)
+        return QStringLiteral("N/A");
 
-  int max = 0;
-  for (int i = 0; i < m_timeoutEvents.size(); i++) {
-    const TimeoutEvent &event = m_timeoutEvents.at(i);
-    if (event.executionTime > max) {
-      max = event.executionTime;
+    int max = 0;
+    for (int i = 0; i < m_timeoutEvents.size(); i++) {
+        const TimeoutEvent &event = m_timeoutEvents.at(i);
+        if (event.executionTime > max)
+            max = event.executionTime;
     }
-  }
-  return QString::number(max);
+    return QString::number(max);
 }
 
 int TimerInfo::totalWakeups() const
 {
-  return m_totalWakeups;
+    return m_totalWakeups;
 }
 
 QString TimerInfo::state() const
 {
-  switch (type()) {
+    switch (type()) {
     case QTimerType:
     {
-      const QTimer *t = timer();
-      if (!t)
-        return TimerModel::tr("None");
-      if (!t->isActive())
-        return TimerModel::tr("Inactive");
-      if (t->isSingleShot())
-        return TimerModel::tr("Singleshot (%1 ms)").arg(t->interval());
-      return TimerModel::tr("Repeating (%1 ms)").arg(t->interval());
+        const QTimer *t = timer();
+        if (!t)
+            return TimerModel::tr("None");
+        if (!t->isActive())
+            return TimerModel::tr("Inactive");
+        if (t->isSingleShot())
+            return TimerModel::tr("Singleshot (%1 ms)").arg(t->interval());
+        return TimerModel::tr("Repeating (%1 ms)").arg(t->interval());
     }
     case QQmlTimerType:
     {
-      const QObject *obj = timerObject();
-      if (!obj)
-        return TimerModel::tr("None");
-      const int interval = obj->property("interval").toInt();
-      if (!obj->property("running").toBool())
-        return TimerModel::tr("Inactive (%1 ms)").arg(interval);
-      if (obj->property("repeat").toBool())
-        return TimerModel::tr("Repeating (%1 ms)").arg(interval);
-      return TimerModel::tr("Singleshot (%1 ms)").arg(interval);
+        const QObject *obj = timerObject();
+        if (!obj)
+            return TimerModel::tr("None");
+        const int interval = obj->property("interval").toInt();
+        if (!obj->property("running").toBool())
+            return TimerModel::tr("Inactive (%1 ms)").arg(interval);
+        if (obj->property("repeat").toBool())
+            return TimerModel::tr("Repeating (%1 ms)").arg(interval);
+        return TimerModel::tr("Singleshot (%1 ms)").arg(interval);
     }
     case QObjectType:
-      return QStringLiteral("N/A");
-  }
+        return QStringLiteral("N/A");
+    }
 
-  Q_ASSERT(false);
-  return QString();
+    Q_ASSERT(false);
+    return QString();
 }
 
 void TimerInfo::removeOldEvents()
 {
-  if (m_timeoutEvents.size() > maxTimeoutEvents) {
-    m_timeoutEvents.removeFirst();
-  }
+    if (m_timeoutEvents.size() > maxTimeoutEvents)
+        m_timeoutEvents.removeFirst();
 }
 
 void TimerInfo::setLastReceiver(QObject *receiver)
@@ -213,18 +207,17 @@ void TimerInfo::setLastReceiver(QObject *receiver)
 
 QString TimerInfo::displayName() const
 {
-  switch (m_type) {
+    switch (m_type) {
     case QTimerType:
     case QQmlTimerType:
-      return Util::displayString(timerObject());
+        return Util::displayString(timerObject());
     case QObjectType:
-      if (m_lastReceiver) {
-        return Util::displayString(m_lastReceiver);
-      } else {
-        return TimerModel::tr("Unknown QObject");
-      }
-  }
+        if (m_lastReceiver)
+            return Util::displayString(m_lastReceiver);
+        else
+            return TimerModel::tr("Unknown QObject");
+    }
 
-  Q_ASSERT(false);
-  return QString();
+    Q_ASSERT(false);
+    return QString();
 }

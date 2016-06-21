@@ -36,36 +36,34 @@ class TranslatorWrapper;
 
 class TranslatorsModel : public QAbstractTableModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit TranslatorsModel(QObject *parent = 0);
 
     enum ExtraRoles
     {
-      TranslatorRole = Qt::UserRole
+        TranslatorRole = Qt::UserRole
     };
 
     int columnCount(
-            const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+        const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &proxyIndex, int role) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation,
-                        int role) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
     TranslatorWrapper *translator(const QModelIndex &index) const;
 
-  public slots:
+public slots:
     void registerTranslator(TranslatorWrapper *translator);
     void unregisterTranslator(TranslatorWrapper *translator);
 
-  private slots:
+private slots:
     void sourceDataChanged();
 
-  private:
+private:
     QList<TranslatorWrapper *> m_translators;
 };
-
 }
 
 #endif

@@ -40,21 +40,20 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PropertyController;
 
 class ObjectInspector : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ObjectInspector(ProbeInterface *probe, QObject *parent = 0);
 
-  private slots:
+private slots:
     void objectSelected(const QModelIndex &index);
     void objectSelectionChanged(const QItemSelection &selection);
     void objectSelected(QObject *object);
 
-  private:
+private:
     void registerPCExtensions();
 
     PropertyController *m_propertyController;
@@ -63,17 +62,17 @@ class ObjectInspector : public QObject
 
 class ObjectInspectorFactory : public QObject, public StandardToolFactory<QObject, ObjectInspector>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit ObjectInspectorFactory(QObject *parent) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+public:
+    explicit ObjectInspectorFactory(QObject *parent)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
     QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_OBJECTINSPECTOR_H

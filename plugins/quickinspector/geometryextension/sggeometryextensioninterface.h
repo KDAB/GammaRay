@@ -32,24 +32,22 @@
 #include <QObject>
 
 namespace GammaRay {
-
 /** @brief Client/Server interface of the sggeometry viewer. */
 class SGGeometryExtensionInterface : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit SGGeometryExtensionInterface(const QString &name, QObject *parent = 0);
     virtual ~SGGeometryExtensionInterface();
 
     const QString &name() const;
 
-  signals:
+signals:
     void geometryChanged(uint drawingMode, const QByteArray &indices, int indexType);
 
-  private:
+private:
     QString m_name;
 };
-
 }
 
 QT_BEGIN_NAMESPACE

@@ -32,7 +32,6 @@
 #include <core/toolfactory.h>
 
 namespace GammaRay {
-
 class GuiSupport : public QObject
 {
     Q_OBJECT
@@ -53,7 +52,6 @@ public:
     explicit GuiSupportFactory(QObject *parent = Q_NULLPTR);
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_GUISUPPORT_H

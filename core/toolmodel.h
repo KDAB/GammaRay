@@ -38,7 +38,6 @@
 #include <QPointer>
 
 namespace GammaRay {
-
 class ToolFactory;
 class ProxyToolFactory;
 
@@ -49,17 +48,17 @@ typedef PluginManager<ToolFactory, ProxyToolFactory> ToolPluginManager;
  */
 class ToolModel : public QAbstractListModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ToolModel(QObject *parent = 0);
     ~ToolModel();
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     /** returns all tools provided by plugins for the ToolPluginModel. */
-    QVector<ToolFactory*> plugins() const;
+    QVector<ToolFactory *> plugins() const;
     /** returns all plugin load errors. */
     PluginLoadErrors pluginErrors() const;
     /** returns the tools that are best suited to show information about \p object. */
@@ -67,12 +66,12 @@ class ToolModel : public QAbstractListModel
     /** returns the tools that are best suited to show information about \p object. */
     QModelIndexList toolsForObject(const void *object, const QString &typeName) const;
 
-  public slots:
+public slots:
     QPair<int, QVariant> defaultSelectedItem() const;
     /** Check if we have to activate tools for this type */
     void objectAdded(QObject *obj);
 
-  private:
+private:
     /**
      * Check if we have to activate tools for this type
      *
@@ -80,16 +79,15 @@ class ToolModel : public QAbstractListModel
      */
     void objectAdded(const QMetaObject *mo);
 
-    void addToolFactory(ToolFactory* tool);
+    void addToolFactory(ToolFactory *tool);
 
-  private:
-    QVector<ToolFactory*> m_tools;
-    QSet<ToolFactory*> m_inactiveTools;
-    QSet<const QMetaObject*> m_knownMetaObjects;
+private:
+    QVector<ToolFactory *> m_tools;
+    QSet<ToolFactory *> m_inactiveTools;
+    QSet<const QMetaObject *> m_knownMetaObjects;
     QPointer<QWidget> m_parentWidget;
     QScopedPointer<ToolPluginManager> m_pluginManager;
 };
-
 }
 
 #endif // GAMMARAY_TOOLMODEL_H

@@ -32,17 +32,15 @@
 #include <ui/paintanalyzerwidget.h>
 
 namespace GammaRay {
-
 class PropertyWidget;
 
 class PaintAnalyzerTab : public PaintAnalyzerWidget
 {
     Q_OBJECT
 public:
-  explicit PaintAnalyzerTab(PropertyWidget *parent);
-  ~PaintAnalyzerTab();
+    explicit PaintAnalyzerTab(PropertyWidget *parent);
+    ~PaintAnalyzerTab();
 };
-
 }
 
 #endif // GAMMARAY_PAINTANALYZERTAB_H

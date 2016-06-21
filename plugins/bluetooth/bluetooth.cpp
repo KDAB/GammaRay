@@ -60,23 +60,25 @@ static QString bluetoothAddressToString(const QBluetoothAddress &addr)
 static QString bluetoothInquiryTypeToString(QBluetoothDeviceDiscoveryAgent::InquiryType type)
 {
     switch (type) {
-        case QBluetoothDeviceDiscoveryAgent::GeneralUnlimitedInquiry: return QStringLiteral("Unlimited");
-        case QBluetoothDeviceDiscoveryAgent::LimitedInquiry: return QStringLiteral("Limited");
+    case QBluetoothDeviceDiscoveryAgent::GeneralUnlimitedInquiry:
+        return QStringLiteral("Unlimited");
+    case QBluetoothDeviceDiscoveryAgent::LimitedInquiry:
+        return QStringLiteral("Limited");
     }
     Q_UNREACHABLE();
     return QString();
 }
 
-
-Bluetooth::Bluetooth(ProbeInterface* probe, QObject* parent) :
-    QObject(parent)
+Bluetooth::Bluetooth(ProbeInterface *probe, QObject *parent)
+    : QObject(parent)
 {
     Q_UNUSED(probe);
     qRegisterMetaType<QBluetoothDeviceDiscoveryAgent::InquiryType>();
 
     MetaObject *mo = 0;
     MO_ADD_METAOBJECT1(QBluetoothDeviceDiscoveryAgent, QObject);
-    MO_ADD_PROPERTY_RO(QBluetoothDeviceDiscoveryAgent, QBluetoothDeviceDiscoveryAgent::Error, error);
+    MO_ADD_PROPERTY_RO(QBluetoothDeviceDiscoveryAgent, QBluetoothDeviceDiscoveryAgent::Error,
+                       error);
     MO_ADD_PROPERTY_RO(QBluetoothDeviceDiscoveryAgent, QString, errorString);
     MO_ADD_PROPERTY_RO(QBluetoothDeviceDiscoveryAgent, bool, isActive);
 
@@ -85,7 +87,7 @@ Bluetooth::Bluetooth(ProbeInterface* probe, QObject* parent) :
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     MO_ADD_PROPERTY_RO(QBluetoothLocalDevice, QList<QBluetoothAddress>, connectedDevices);
 #endif
-    MO_ADD_PROPERTY   (QBluetoothLocalDevice, QBluetoothLocalDevice::HostMode, hostMode, setHostMode);
+    MO_ADD_PROPERTY(QBluetoothLocalDevice, QBluetoothLocalDevice::HostMode, hostMode, setHostMode);
     MO_ADD_PROPERTY_RO(QBluetoothLocalDevice, bool, isValid);
     MO_ADD_PROPERTY_RO(QBluetoothLocalDevice, QString, name);
 
@@ -93,17 +95,19 @@ Bluetooth::Bluetooth(ProbeInterface* probe, QObject* parent) :
     MO_ADD_PROPERTY_RO(QBluetoothServer, QBluetoothServer::Error, error);
     MO_ADD_PROPERTY_RO(QBluetoothServer, bool, hasPendingConnections);
     MO_ADD_PROPERTY_RO(QBluetoothServer, bool, isListening);
-    MO_ADD_PROPERTY   (QBluetoothServer, int, maxPendingConnections, setMaxPendingConnections);
-    MO_ADD_PROPERTY   (QBluetoothServer, QBluetooth::SecurityFlags, securityFlags, setSecurityFlags);
+    MO_ADD_PROPERTY(QBluetoothServer, int, maxPendingConnections, setMaxPendingConnections);
+    MO_ADD_PROPERTY(QBluetoothServer, QBluetooth::SecurityFlags, securityFlags, setSecurityFlags);
     MO_ADD_PROPERTY_RO(QBluetoothServer, quint16, serverPort);
     MO_ADD_PROPERTY_RO(QBluetoothServer, QBluetoothServiceInfo::Protocol, serverType);
 
     MO_ADD_METAOBJECT1(QBluetoothServiceDiscoveryAgent, QObject);
-    MO_ADD_PROPERTY_RO(QBluetoothServiceDiscoveryAgent, QBluetoothServiceDiscoveryAgent::Error, error);
+    MO_ADD_PROPERTY_RO(QBluetoothServiceDiscoveryAgent, QBluetoothServiceDiscoveryAgent::Error,
+                       error);
     MO_ADD_PROPERTY_RO(QBluetoothServiceDiscoveryAgent, QString, errorString);
     MO_ADD_PROPERTY_RO(QBluetoothServiceDiscoveryAgent, bool, isActive);
     MO_ADD_PROPERTY_RO(QBluetoothServiceDiscoveryAgent, QBluetoothAddress, remoteAddress);
-    MO_ADD_PROPERTY_CR(QBluetoothServiceDiscoveryAgent, QList<QBluetoothUuid>, uuidFilter, setUuidFilter);
+    MO_ADD_PROPERTY_CR(QBluetoothServiceDiscoveryAgent, QList<QBluetoothUuid>, uuidFilter,
+                       setUuidFilter);
 
     MO_ADD_METAOBJECT1(QBluetoothSocket, QIODevice);
     MO_ADD_PROPERTY_RO(QBluetoothSocket, QBluetoothSocket::SocketError, error);
@@ -119,7 +123,8 @@ Bluetooth::Bluetooth(ProbeInterface* probe, QObject* parent) :
     MO_ADD_PROPERTY_RO(QBluetoothSocket, QBluetoothSocket::SocketState, state);
 
     VariantHandler::registerStringConverter<QBluetoothAddress>(bluetoothAddressToString);
-    VariantHandler::registerStringConverter<QBluetoothDeviceDiscoveryAgent::InquiryType>(bluetoothInquiryTypeToString);
+    VariantHandler::registerStringConverter<QBluetoothDeviceDiscoveryAgent::InquiryType>(
+        bluetoothInquiryTypeToString);
 }
 
 QString BluetoothFactory::name() const

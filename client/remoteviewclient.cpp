@@ -32,17 +32,18 @@
 
 using namespace GammaRay;
 
-RemoteViewClient::RemoteViewClient(const QString& name, QObject* parent):
-    RemoteViewInterface(name, parent)
+RemoteViewClient::RemoteViewClient(const QString &name, QObject *parent)
+    : RemoteViewInterface(name, parent)
 {
 }
 
-void RemoteViewClient::pickElementAt(const QPoint& pos)
+void RemoteViewClient::pickElementAt(const QPoint &pos)
 {
     Endpoint::instance()->invokeObject(name(), "pickElementAt", QVariantList() << pos);
 }
 
-void RemoteViewClient::sendKeyEvent(int type, int key, int modifiers, const QString& text, bool autorep, ushort count)
+void RemoteViewClient::sendKeyEvent(int type, int key, int modifiers, const QString &text,
+                                    bool autorep, ushort count)
 {
     Endpoint::instance()->invokeObject(name(), "sendKeyEvent", QVariantList()
                                        << QVariant::fromValue(type)
@@ -53,17 +54,19 @@ void RemoteViewClient::sendKeyEvent(int type, int key, int modifiers, const QStr
                                        << QVariant::fromValue(count));
 }
 
-void RemoteViewClient::sendMouseEvent(int type, const QPoint& localPos, int button, int buttons, int modifiers)
+void RemoteViewClient::sendMouseEvent(int type, const QPoint &localPos, int button, int buttons,
+                                      int modifiers)
 {
     Endpoint::instance()->invokeObject(name(), "sendMouseEvent", QVariantList()
-                                      << QVariant::fromValue(type)
-                                      << QVariant::fromValue(localPos)
-                                      << QVariant::fromValue(button)
-                                      << QVariant::fromValue(buttons)
-                                      << QVariant::fromValue(modifiers));
+                                       << QVariant::fromValue(type)
+                                       << QVariant::fromValue(localPos)
+                                       << QVariant::fromValue(button)
+                                       << QVariant::fromValue(buttons)
+                                       << QVariant::fromValue(modifiers));
 }
 
-void RemoteViewClient::sendWheelEvent(const QPoint& localPos, QPoint pixelDelta, QPoint angleDelta, int buttons, int modifiers)
+void RemoteViewClient::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta,
+                                      int buttons, int modifiers)
 {
     Endpoint::instance()->invokeObject(name(), "sendWheelEvent", QVariantList()
                                        << QVariant::fromValue(localPos)

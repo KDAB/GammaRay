@@ -32,13 +32,11 @@
 using namespace GammaRay;
 
 ResourceBrowserInterface::ResourceBrowserInterface(QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  ObjectBroker::registerObject<ResourceBrowserInterface*>(this);
+    ObjectBroker::registerObject<ResourceBrowserInterface *>(this);
 }
 
 ResourceBrowserInterface::~ResourceBrowserInterface()
 {
-
 }
-

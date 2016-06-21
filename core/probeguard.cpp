@@ -34,14 +34,14 @@ static QThreadStorage<bool> s_probeGuards;
 
 using namespace GammaRay;
 
-ProbeGuard::ProbeGuard() :
-    m_previousState(insideProbe())
+ProbeGuard::ProbeGuard()
+    : m_previousState(insideProbe())
 {
     setInsideProbe(true);
 }
 
-ProbeGuard::ProbeGuard(bool newState) :
-    m_previousState(insideProbe())
+ProbeGuard::ProbeGuard(bool newState)
+    : m_previousState(insideProbe())
 {
     setInsideProbe(newState);
 }
@@ -63,5 +63,6 @@ void ProbeGuard::setInsideProbe(bool inside)
     s_probeGuards.localData() = inside;
 }
 
-ProbeGuardSuspender::ProbeGuardSuspender() : ProbeGuard(false) {}
+ProbeGuardSuspender::ProbeGuardSuspender()
+    : ProbeGuard(false) {}
 ProbeGuardSuspender::~ProbeGuardSuspender() {}

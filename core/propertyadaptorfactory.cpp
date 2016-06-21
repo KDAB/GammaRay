@@ -42,7 +42,7 @@
 
 using namespace GammaRay;
 
-Q_GLOBAL_STATIC(QVector<AbstractPropertyAdaptorFactory*>, s_propertyAdaptorFactories)
+Q_GLOBAL_STATIC(QVector<AbstractPropertyAdaptorFactory *>, s_propertyAdaptorFactories)
 
 AbstractPropertyAdaptorFactory::AbstractPropertyAdaptorFactory()
 {
@@ -52,15 +52,16 @@ AbstractPropertyAdaptorFactory::~AbstractPropertyAdaptorFactory()
 {
 }
 
-PropertyAdaptor* PropertyAdaptorFactory::create(const ObjectInstance& oi, QObject *parent)
+PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObject *parent)
 {
-    QVector<PropertyAdaptor*> adaptors;
+    QVector<PropertyAdaptor *> adaptors;
 
     if (oi.metaObject())
         adaptors.push_back(new QMetaPropertyAdaptor(parent));
     if (oi.type() == ObjectInstance::QtObject)
         adaptors.push_back(new DynamicPropertyAdaptor(parent));
-    if (oi.type() == ObjectInstance::QtObject || oi.type() == ObjectInstance::Object || oi.type() == ObjectInstance::Value || oi.type() == ObjectInstance::QtGadget)
+    if (oi.type() == ObjectInstance::QtObject || oi.type() == ObjectInstance::Object
+        || oi.type() == ObjectInstance::Value || oi.type() == ObjectInstance::QtGadget)
         adaptors.push_back(new MetaPropertyAdaptor(parent));
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
@@ -95,7 +96,7 @@ PropertyAdaptor* PropertyAdaptorFactory::create(const ObjectInstance& oi, QObjec
     return aggregator;
 }
 
-void PropertyAdaptorFactory::registerFactory(AbstractPropertyAdaptorFactory* factory)
+void PropertyAdaptorFactory::registerFactory(AbstractPropertyAdaptorFactory *factory)
 {
     s_propertyAdaptorFactories()->push_back(factory);
 }

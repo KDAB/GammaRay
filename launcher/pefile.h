@@ -35,7 +35,6 @@
 #include <qt_windows.h>
 
 namespace GammaRay {
-
 /** Convenience API to deal with extracting information from PE files. */
 class PEFile
 {
@@ -52,16 +51,15 @@ private:
     void close();
     bool parse();
 
-    const uchar* rvaToFile(const IMAGE_FILE_HEADER *hdr, DWORD rva) const;
-    const IMAGE_SECTION_HEADER* sectionForRVA(const IMAGE_FILE_HEADER *hdr, DWORD rva) const;
+    const uchar *rvaToFile(const IMAGE_FILE_HEADER *hdr, DWORD rva) const;
+    const IMAGE_SECTION_HEADER *sectionForRVA(const IMAGE_FILE_HEADER *hdr, DWORD rva) const;
 
     QFile m_file;
     const uchar *m_begin;
     const uchar *m_end;
-    const IMAGE_FILE_HEADER* m_fileHeader;
-    const IMAGE_IMPORT_DESCRIPTOR* m_importDesc;
+    const IMAGE_FILE_HEADER *m_fileHeader;
+    const IMAGE_IMPORT_DESCRIPTOR *m_importDesc;
 };
-
 }
 
 #endif // GAMMARAY_PEFILE_H

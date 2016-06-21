@@ -37,7 +37,8 @@
 
 using namespace GammaRay;
 
-AbstractConnectionsModel::AbstractConnectionsModel(QObject *parent): QAbstractTableModel(parent)
+AbstractConnectionsModel::AbstractConnectionsModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
 }
 
@@ -47,145 +48,152 @@ AbstractConnectionsModel::~AbstractConnectionsModel()
 
 int AbstractConnectionsModel::columnCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent);
-  return 4;
+    Q_UNUSED(parent);
+    return 4;
 }
 
 int AbstractConnectionsModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid()) {
-    return 0;
-  }
-  return m_connections.size();
+    if (parent.isValid())
+        return 0;
+    return m_connections.size();
 }
 
-QVariant AbstractConnectionsModel::data(const QModelIndex& index, int role) const
+QVariant AbstractConnectionsModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid())
-    return QVariant();
+    if (!index.isValid())
+        return QVariant();
 
-  const Connection &conn = m_connections.at(index.row());
-  if (role == Qt::DisplayRole && index.column() == 3) {
-    switch (conn.type) { // see qobject_p.h
-      case 0:
-        if (!conn.endpoint || !m_object)
-          return tr("Auto");
-        return tr("Auto (%1)").arg(conn.endpoint->thread() == m_object->thread() ? tr("Direct") : tr("Queued"));
-      case 1: return tr("Direct");
-      case 2: return tr("Queued");
-      case 3: // Qt5
-      case 4: // Qt4
-          return tr("Blocking");
-      default: return tr("Unknown: %1").arg(conn.type);
+    const Connection &conn = m_connections.at(index.row());
+    if (role == Qt::DisplayRole && index.column() == 3) {
+        switch (conn.type) { // see qobject_p.h
+        case 0:
+            if (!conn.endpoint || !m_object)
+                return tr("Auto");
+            return tr("Auto (%1)").arg(conn.endpoint->thread() == m_object->thread() ? tr(
+                                           "Direct") : tr("Queued"));
+        case 1:
+            return tr("Direct");
+        case 2:
+            return tr("Queued");
+        case 3: // Qt5
+        case 4: // Qt4
+            return tr("Blocking");
+        default:
+            return tr("Unknown: %1").arg(conn.type);
+        }
     }
-  }
 
-  if (role == ConnectionsModelRoles::WarningFlagRole && index.column() == 0) {
-    return isDuplicate(conn) || isDirectCrossThreadConnection(conn);
-  }
+    if (role == ConnectionsModelRoles::WarningFlagRole && index.column() == 0)
+        return isDuplicate(conn) || isDirectCrossThreadConnection(conn);
 
-  if (role == Qt::ToolTipRole) {
-    QStringList tips;
-    if (isDuplicate(conn))
-      tips << tr("Connections exists multiple times.\nThe connected slot is called multiple times when the signal is emitted.");
-    if (isDirectCrossThreadConnection(conn))
-      tips << tr("Direct cross-thread connection.\nThe connected slot is called in the context of the emitting thread.");
-    if (!tips.isEmpty())
-      return tips.join(QStringLiteral("\n\n"));
-  }
+    if (role == Qt::ToolTipRole) {
+        QStringList tips;
+        if (isDuplicate(conn))
+            tips << tr(
+                "Connections exists multiple times.\nThe connected slot is called multiple times when the signal is emitted.");
 
-  if (role == ConnectionsModelRoles::EndpointRole) {
-    return QVariant::fromValue(conn.endpoint.data());
-  }
+        if (isDirectCrossThreadConnection(conn))
+            tips << tr(
+                "Direct cross-thread connection.\nThe connected slot is called in the context of the emitting thread.");
 
-  if (role == ConnectionsModelRoles::ActionRole) {
-    if (conn.endpoint && conn.endpoint != m_object)
-      return ConnectionsModelActions::NavigateToEndpoint;
-    return ConnectionsModelActions::NoAction;
-  }
+        if (!tips.isEmpty())
+            return tips.join(QStringLiteral("\n\n"));
+    }
 
-  return QVariant();
+    if (role == ConnectionsModelRoles::EndpointRole)
+        return QVariant::fromValue(conn.endpoint.data());
+
+    if (role == ConnectionsModelRoles::ActionRole) {
+        if (conn.endpoint && conn.endpoint != m_object)
+            return ConnectionsModelActions::NavigateToEndpoint;
+        return ConnectionsModelActions::NoAction;
+    }
+
+    return QVariant();
 }
 
-QVariant AbstractConnectionsModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant AbstractConnectionsModel::headerData(int section, Qt::Orientation orientation,
+                                              int role) const
 {
-  if (section == 3 && orientation == Qt::Horizontal && role == Qt::DisplayRole)
-    return tr("Type");
-  return QAbstractItemModel::headerData(section, orientation, role);
+    if (section == 3 && orientation == Qt::Horizontal && role == Qt::DisplayRole)
+        return tr("Type");
+    return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 QString AbstractConnectionsModel::displayString(QObject *object, int methodIndex)
 {
-  if (!object)
-    return tr("<destroyed>");
-  if (methodIndex < 0)
-    return tr("<unknown>");
+    if (!object)
+        return tr("<destroyed>");
+    if (methodIndex < 0)
+        return tr("<unknown>");
 
-  const QMetaMethod method = object->metaObject()->method(methodIndex);
-  return Util::prettyMethodSignature(method);
+    const QMetaMethod method = object->metaObject()->method(methodIndex);
+    return Util::prettyMethodSignature(method);
 }
 
-QString AbstractConnectionsModel::displayString(QObject* object)
+QString AbstractConnectionsModel::displayString(QObject *object)
 {
-  if (!object)
-    return tr("<destroyed>");
-  return Util::displayString(object);
+    if (!object)
+        return tr("<destroyed>");
+    return Util::displayString(object);
 }
 
-int AbstractConnectionsModel::signalIndexToMethodIndex(QObject* object, int signalIndex)
+int AbstractConnectionsModel::signalIndexToMethodIndex(QObject *object, int signalIndex)
 {
-  if (signalIndex < 0)
-    return signalIndex;
-  Q_ASSERT(object);
+    if (signalIndex < 0)
+        return signalIndex;
+    Q_ASSERT(object);
 
-  return Util::signalIndexToMethodIndex(object->metaObject(), signalIndex);
+    return Util::signalIndexToMethodIndex(object->metaObject(), signalIndex);
 }
 
-QMap< int, QVariant > AbstractConnectionsModel::itemData(const QModelIndex& index) const
+QMap< int, QVariant > AbstractConnectionsModel::itemData(const QModelIndex &index) const
 {
-  QMap<int, QVariant> d = QAbstractTableModel::itemData(index);
-  d.insert(ConnectionsModelRoles::WarningFlagRole, data(index, ConnectionsModelRoles::WarningFlagRole));
-  d.insert(ConnectionsModelRoles::ActionRole, data(index, ConnectionsModelRoles::ActionRole));
-  return d;
+    QMap<int, QVariant> d = QAbstractTableModel::itemData(index);
+    d.insert(ConnectionsModelRoles::WarningFlagRole,
+             data(index, ConnectionsModelRoles::WarningFlagRole));
+    d.insert(ConnectionsModelRoles::ActionRole, data(index, ConnectionsModelRoles::ActionRole));
+    return d;
 }
 
-bool AbstractConnectionsModel::isDuplicate(const Connection& conn) const
+bool AbstractConnectionsModel::isDuplicate(const Connection &conn) const
 {
-  foreach (const Connection &c, m_connections) {
-    if (&c == &conn)
-      continue;
-    if (c.endpoint == conn.endpoint &&
-        c.slotIndex >= 0 && c.slotIndex == conn.slotIndex &&
-        c.signalIndex >= 0 && c.signalIndex == conn.signalIndex)
-      return true;
-  }
-  return false;
-}
-
-bool AbstractConnectionsModel::isDirectCrossThreadConnection(const Connection& conn) const
-{
-  if (!conn.endpoint || !m_object || conn.endpoint->thread() == m_object->thread())
+    foreach (const Connection &c, m_connections) {
+        if (&c == &conn)
+            continue;
+        if (c.endpoint == conn.endpoint
+            && c.slotIndex >= 0 && c.slotIndex == conn.slotIndex
+            && c.signalIndex >= 0 && c.signalIndex == conn.signalIndex)
+            return true;
+    }
     return false;
-  return conn.type == 1; // direct
+}
+
+bool AbstractConnectionsModel::isDirectCrossThreadConnection(const Connection &conn) const
+{
+    if (!conn.endpoint || !m_object || conn.endpoint->thread() == m_object->thread())
+        return false;
+    return conn.type == 1; // direct
 }
 
 void AbstractConnectionsModel::clear()
 {
-  if (m_connections.isEmpty())
-    return;
+    if (m_connections.isEmpty())
+        return;
 
-  beginRemoveRows(QModelIndex(), 0, m_connections.size() - 1);
-  m_connections.clear();
-  endRemoveRows();
+    beginRemoveRows(QModelIndex(), 0, m_connections.size() - 1);
+    m_connections.clear();
+    endRemoveRows();
 }
 
-void AbstractConnectionsModel::setConnections(const QVector<Connection>& connections)
+void AbstractConnectionsModel::setConnections(const QVector<Connection> &connections)
 {
-  Q_ASSERT(m_connections.isEmpty());
-  if (connections.isEmpty())
-    return;
+    Q_ASSERT(m_connections.isEmpty());
+    if (connections.isEmpty())
+        return;
 
-  beginInsertRows(QModelIndex(), 0, connections.size() - 1);
-  m_connections = connections;
-  endInsertRows();
+    beginInsertRows(QModelIndex(), 0, connections.size() - 1);
+    m_connections = connections;
+    endInsertRows();
 }

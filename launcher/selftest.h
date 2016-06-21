@@ -34,7 +34,6 @@
 #include <QObject>
 
 namespace GammaRay {
-
 /** @brief Self-test functions for probes and injectors. */
 class GAMMARAY_LAUNCHER_EXPORT SelfTest : public QObject
 {

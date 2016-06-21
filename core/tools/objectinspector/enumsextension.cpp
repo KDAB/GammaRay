@@ -34,25 +34,25 @@
 
 using namespace GammaRay;
 
-EnumsExtension::EnumsExtension(PropertyController* controller) :
-  PropertyControllerExtension(controller->objectBaseName() + ".enums"),
-  m_model(new ObjectEnumModel(controller))
+EnumsExtension::EnumsExtension(PropertyController *controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".enums")
+    , m_model(new ObjectEnumModel(controller))
 {
-  controller->registerModel(m_model, QStringLiteral("enums"));
+    controller->registerModel(m_model, QStringLiteral("enums"));
 }
 
 EnumsExtension::~EnumsExtension()
 {
 }
 
-bool EnumsExtension::setQObject(QObject* object)
+bool EnumsExtension::setQObject(QObject *object)
 {
-  m_model->setMetaObject(object ? object->metaObject() : 0);
-  return m_model->rowCount() > 0;
+    m_model->setMetaObject(object ? object->metaObject() : 0);
+    return m_model->rowCount() > 0;
 }
 
-bool EnumsExtension::setMetaObject(const QMetaObject* metaObject)
+bool EnumsExtension::setMetaObject(const QMetaObject *metaObject)
 {
-  m_model->setMetaObject(metaObject);
-  return m_model->rowCount() > 0;
+    m_model->setMetaObject(metaObject);
+    return m_model->rowCount() > 0;
 }

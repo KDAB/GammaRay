@@ -32,7 +32,6 @@
 #include <QDialog>
 
 namespace GammaRay {
-
 namespace Ui {
 class PropertyMatrixDialog;
 }
@@ -41,20 +40,19 @@ class PropertyMatrixModel;
 
 class PropertyMatrixDialog : public QDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PropertyMatrixDialog(QWidget *parent = Q_NULLPTR);
     ~PropertyMatrixDialog();
 
     void setMatrix(const QVariant &matrix);
     QVariant matrix() const;
 
-  private:
+private:
     Ui::PropertyMatrixDialog *ui;
 
     PropertyMatrixModel *m_model;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYMATRIXDIALOG_H

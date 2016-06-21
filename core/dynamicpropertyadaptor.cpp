@@ -35,8 +35,8 @@
 
 using namespace GammaRay;
 
-DynamicPropertyAdaptor::DynamicPropertyAdaptor(QObject* parent):
-    PropertyAdaptor(parent)
+DynamicPropertyAdaptor::DynamicPropertyAdaptor(QObject *parent)
+    : PropertyAdaptor(parent)
 {
 }
 
@@ -44,7 +44,7 @@ DynamicPropertyAdaptor::~DynamicPropertyAdaptor()
 {
 }
 
-void DynamicPropertyAdaptor::doSetObject(const ObjectInstance& oi)
+void DynamicPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
     auto obj = oi.qtObject();
     if (obj) {
@@ -77,7 +77,7 @@ PropertyData DynamicPropertyAdaptor::propertyData(int index) const
     return data;
 }
 
-void DynamicPropertyAdaptor::writeProperty(int index, const QVariant& value)
+void DynamicPropertyAdaptor::writeProperty(int index, const QVariant &value)
 {
     if (!object().isValid())
         return;
@@ -92,7 +92,7 @@ bool DynamicPropertyAdaptor::canAddProperty() const
     return object().qtObject();
 }
 
-void DynamicPropertyAdaptor::addProperty(const PropertyData& data)
+void DynamicPropertyAdaptor::addProperty(const PropertyData &data)
 {
     if (!object().isValid())
         return;
@@ -101,11 +101,11 @@ void DynamicPropertyAdaptor::addProperty(const PropertyData& data)
     object().qtObject()->setProperty(data.name().toUtf8(), data.value());
 }
 
-bool DynamicPropertyAdaptor::eventFilter(QObject* receiver, QEvent* event)
+bool DynamicPropertyAdaptor::eventFilter(QObject *receiver, QEvent *event)
 {
     auto obj = object().qtObject();
     if (receiver == obj && event->type() == QEvent::DynamicPropertyChange) {
-        const auto changeEvent = static_cast<QDynamicPropertyChangeEvent*>(event);
+        const auto changeEvent = static_cast<QDynamicPropertyChangeEvent *>(event);
         const auto oldIdx = m_propNames.indexOf(changeEvent->propertyName());
         const auto newIdx = obj->dynamicPropertyNames().indexOf(changeEvent->propertyName());
         if (oldIdx >= 0 && newIdx >= 0) {

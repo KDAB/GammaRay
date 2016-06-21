@@ -35,23 +35,24 @@
 using namespace GammaRay;
 
 MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::MetaTypeBrowserWidget)
-  , m_stateManager(this)
+    : QWidget(parent)
+    , ui(new Ui::MetaTypeBrowserWidget)
+    , m_stateManager(this)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  QAbstractItemModel *mtm = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaTypeModel"));
-  Q_ASSERT(mtm);
+    QAbstractItemModel *mtm
+        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaTypeModel"));
+    Q_ASSERT(mtm);
 
-  ui->metaTypeView->header()->setObjectName("metaTypeViewHeader");
-  ui->metaTypeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-  ui->metaTypeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  ui->metaTypeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
-  ui->metaTypeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
-  ui->metaTypeView->setModel(mtm);
-  ui->metaTypeView->sortByColumn(1, Qt::AscendingOrder); // sort by type id
-  new SearchLineController(ui->metaTypeSearchLine, mtm);
+    ui->metaTypeView->header()->setObjectName("metaTypeViewHeader");
+    ui->metaTypeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->metaTypeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->metaTypeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    ui->metaTypeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+    ui->metaTypeView->setModel(mtm);
+    ui->metaTypeView->sortByColumn(1, Qt::AscendingOrder); // sort by type id
+    new SearchLineController(ui->metaTypeSearchLine, mtm);
 }
 
 MetaTypeBrowserWidget::~MetaTypeBrowserWidget()

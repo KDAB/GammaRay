@@ -37,7 +37,6 @@
 #include <QString>
 
 namespace GammaRay {
-
 /** @brief Detect the probe ABI required for a given target.
  *  A target can be specified as either a process id or a path to an executable to be launched.
  */
@@ -81,7 +80,6 @@ private:
 
     mutable QHash<QString, ProbeABI> m_abiForQtCoreCache;
 };
-
 }
 
 #endif // GAMMARAY_PROBEABIDETECTOR_H

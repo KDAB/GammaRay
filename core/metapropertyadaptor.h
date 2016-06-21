@@ -32,7 +32,6 @@
 #include "propertyadaptor.h"
 
 namespace GammaRay {
-
 class MetaObject;
 
 /** Property access for GammaRay meta-type based property-access. */
@@ -40,21 +39,20 @@ class MetaPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit MetaPropertyAdaptor(QObject* parent = 0);
+    explicit MetaPropertyAdaptor(QObject *parent = 0);
     ~MetaPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;
     PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
-    void writeProperty(int index, const QVariant& value) Q_DECL_OVERRIDE;
+    void writeProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
 
 protected:
-    void doSetObject(const ObjectInstance& oi) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
 
 private:
     MetaObject *m_metaObj;
     void *m_obj;
 };
-
 }
 
 #endif // GAMMARAY_METAPROPERTYADAPTOR_H

@@ -37,12 +37,12 @@ class QImage;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class WidgetInspectorInterface : public QObject
 {
-  Q_OBJECT
-  Q_PROPERTY(GammaRay::WidgetInspectorInterface::Features features READ features WRITE setFeatures NOTIFY featuresChanged)
-  public:
+    Q_OBJECT
+    Q_PROPERTY(
+        GammaRay::WidgetInspectorInterface::Features features READ features WRITE setFeatures NOTIFY featuresChanged)
+public:
     enum Feature {
         NoFeature = 0,
         InputRedirection = 1,
@@ -59,7 +59,7 @@ class WidgetInspectorInterface : public QObject
     Features features() const;
     void setFeatures(Features features);
 
-  public slots:
+public slots:
     virtual void saveAsImage(const QString &fileName) = 0;
     virtual void saveAsSvg(const QString &fileName) = 0;
     virtual void saveAsPdf(const QString &fileName) = 0;
@@ -67,13 +67,12 @@ class WidgetInspectorInterface : public QObject
 
     virtual void analyzePainting() = 0;
 
-  signals:
+signals:
     void featuresChanged();
 
-  private:
+private:
     Features m_features;
 };
-
 }
 
 Q_DECLARE_METATYPE(GammaRay::WidgetInspectorInterface::Features)

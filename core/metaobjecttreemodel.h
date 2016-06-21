@@ -40,24 +40,23 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class Probe;
 class MetaObjectInfoTracker;
 
 class MetaObjectTreeModel : public QAbstractItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Role {
-      MetaObjectRole = UserRole + 1
+        MetaObjectRole = UserRole + 1
     };
 
     enum Column {
-      ObjectColumn,
-      ObjectSelfCountColumn,
-      ObjectInclusiveCountColumn,
-      _Last
+        ObjectColumn,
+        ObjectSelfCountColumn,
+        ObjectInclusiveCountColumn,
+        _Last
     };
 
     explicit MetaObjectTreeModel(Probe *probe);
@@ -71,14 +70,16 @@ class MetaObjectTreeModel : public QAbstractItemModel
 
     QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     QVariant headerData(int section, Qt::Orientation orientation,
-                                int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    QModelIndexList match(const QModelIndex & start, int role, const QVariant & value, int hits, Qt::MatchFlags flags) const Q_DECL_OVERRIDE;
+    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits,
+                          Qt::MatchFlags flags) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     void scanMetaTypes();
     void addMetaObject(const QMetaObject *metaObject);
     void removeMetaObject(const QMetaObject *metaObject);
@@ -87,36 +88,37 @@ class MetaObjectTreeModel : public QAbstractItemModel
     QModelIndex indexForMetaObject(const QMetaObject *metaObject) const;
     const QMetaObject *metaObjectForIndex(const QModelIndex &index) const;
 
-    void scheduleDataChange(const QMetaObject* mo);
+    void scheduleDataChange(const QMetaObject *mo);
 
-  private slots:
+private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
 
     void emitPendingDataChanged();
 
-  private:
-    QHash<const QMetaObject*, const QMetaObject*> m_childParentMap;
-    QHash<const QMetaObject*, QVector<const QMetaObject*> > m_parentChildMap;
+private:
+    QHash<const QMetaObject *, const QMetaObject *> m_childParentMap;
+    QHash<const QMetaObject *, QVector<const QMetaObject *> > m_parentChildMap;
 
     struct MetaObjectInfo
     {
-      MetaObjectInfo() : selfCount(0), inclusiveCount(0) {}
+        MetaObjectInfo()
+            : selfCount(0)
+            , inclusiveCount(0) {}
 
-      /// Number of objects of a particular meta object type
-      int selfCount;
-      /**
-       * Number of objects of the exact meta object type
-       * + number of objects of type that inherit from this meta type
-       */
-      int inclusiveCount;
+        /// Number of objects of a particular meta object type
+        int selfCount;
+        /**
+         * Number of objects of the exact meta object type
+         * + number of objects of type that inherit from this meta type
+         */
+        int inclusiveCount;
     };
-    QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
+    QHash<const QMetaObject *, MetaObjectInfo> m_metaObjectInfoMap;
 
-    QSet<const QMetaObject*> m_pendingDataChanged;
+    QSet<const QMetaObject *> m_pendingDataChanged;
     QTimer *m_pendingDataChangedTimer;
 };
-
 }
 
 #endif // GAMMARAY_METAOBJECTTREEMODEL_H

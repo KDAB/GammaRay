@@ -32,14 +32,15 @@
 #include <QObject>
 
 namespace GammaRay {
-
 /** @brief Client/Server interface of the property editor. */
 class PropertiesExtensionInterface : public QObject
 {
-  Q_OBJECT
-  Q_PROPERTY(bool canAddProperty READ canAddProperty WRITE setCanAddProperty NOTIFY canAddPropertyChanged)
-  Q_PROPERTY(bool hasPropertyValues READ hasPropertyValues WRITE setHasPropertyValues NOTIFY hasPropertyValuesChanged)
-  public:
+    Q_OBJECT
+    Q_PROPERTY(
+        bool canAddProperty READ canAddProperty WRITE setCanAddProperty NOTIFY canAddPropertyChanged)
+    Q_PROPERTY(
+        bool hasPropertyValues READ hasPropertyValues WRITE setHasPropertyValues NOTIFY hasPropertyValuesChanged)
+public:
     explicit PropertiesExtensionInterface(const QString &name, QObject *parent = 0);
     virtual ~PropertiesExtensionInterface();
 
@@ -51,23 +52,23 @@ class PropertiesExtensionInterface : public QObject
     bool hasPropertyValues() const;
     void setHasPropertyValues(bool hasValues);
 
-  public slots:
+public slots:
     virtual void setProperty(const QString &name, const QVariant &value) = 0;
 
-  signals:
+signals:
     void canAddPropertyChanged();
     void hasPropertyValuesChanged();
 
-  private:
+private:
     QString m_name;
     bool m_canAddProperty;
     bool m_hasPropertyValues;
 };
-
 }
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(GammaRay::PropertiesExtensionInterface, "com.kdab.GammaRay.PropertiesExtensionInterface")
+Q_DECLARE_INTERFACE(GammaRay::PropertiesExtensionInterface,
+                    "com.kdab.GammaRay.PropertiesExtensionInterface")
 QT_END_NAMESPACE
 
 #endif // GAMMARAY_PROPERTIESEXTENSIONINTERFACE_H

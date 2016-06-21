@@ -37,33 +37,31 @@ class QGraphicsItem;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class GraphicsView;
 
 namespace Ui {
-  class GraphicsSceneView;
+class GraphicsSceneView;
 }
 
 class GraphicsSceneView : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit GraphicsSceneView(QWidget *parent = 0);
     ~GraphicsSceneView();
 
-    GraphicsView* view() const;
+    GraphicsView *view() const;
 
     void showGraphicsItem(QGraphicsItem *item);
     void setGraphicsScene(QGraphicsScene *scene);
 
-  private slots:
+private slots:
     void sceneCoordinatesChanged(const QPointF &coord);
     void itemCoordinatesChanged(const QPointF &coord);
 
-  private:
+private:
     Ui::GraphicsSceneView *ui;
 };
-
 }
 
 #endif // GAMMARAY_GRAPHICSSCENEVIEW_H

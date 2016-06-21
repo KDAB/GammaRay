@@ -30,17 +30,17 @@
 using namespace GammaRay;
 
 StateMachineViewerInterface::StateMachineViewerInterface(QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  qRegisterMetaType<StateId>();
-  qRegisterMetaTypeStreamOperators<StateId>();
-  qRegisterMetaType<TransitionId>();
-  qRegisterMetaTypeStreamOperators<TransitionId>();
-  qRegisterMetaType<StateMachineConfiguration>();
-  qRegisterMetaTypeStreamOperators<StateMachineConfiguration>();
-  qRegisterMetaType<StateType>();
-  qRegisterMetaTypeStreamOperators<StateType>();
-  ObjectBroker::registerObject<StateMachineViewerInterface*>(this);
+    qRegisterMetaType<StateId>();
+    qRegisterMetaTypeStreamOperators<StateId>();
+    qRegisterMetaType<TransitionId>();
+    qRegisterMetaTypeStreamOperators<TransitionId>();
+    qRegisterMetaType<StateMachineConfiguration>();
+    qRegisterMetaTypeStreamOperators<StateMachineConfiguration>();
+    qRegisterMetaType<StateType>();
+    qRegisterMetaTypeStreamOperators<StateType>();
+    ObjectBroker::registerObject<StateMachineViewerInterface *>(this);
 }
 
 StateMachineViewerInterface::~StateMachineViewerInterface()

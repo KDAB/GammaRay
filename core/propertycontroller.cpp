@@ -34,90 +34,90 @@
 
 using namespace GammaRay;
 
-QVector<PropertyControllerExtensionFactoryBase*> PropertyController::s_extensionFactories = QVector<PropertyControllerExtensionFactoryBase*>();
-QVector<PropertyController*> PropertyController::s_instances = QVector<PropertyController*>();
+QVector<PropertyControllerExtensionFactoryBase *> PropertyController::s_extensionFactories
+    = QVector<PropertyControllerExtensionFactoryBase *>();
+QVector<PropertyController *> PropertyController::s_instances = QVector<PropertyController *>();
 
-PropertyController::PropertyController(const QString &baseName, QObject *parent) :
-  PropertyControllerInterface(baseName + ".controller", parent),
-  m_objectBaseName(baseName)
+PropertyController::PropertyController(const QString &baseName, QObject *parent)
+    : PropertyControllerInterface(baseName + ".controller", parent)
+    , m_objectBaseName(baseName)
 {
-  s_instances << this;
-  m_extensions.reserve(s_extensionFactories.size());
-  foreach (PropertyControllerExtensionFactoryBase *factory, s_extensionFactories) {
-    m_extensions << factory->create(this);
-  }
+    s_instances << this;
+    m_extensions.reserve(s_extensionFactories.size());
+    foreach (PropertyControllerExtensionFactoryBase *factory, s_extensionFactories)
+        m_extensions << factory->create(this);
 }
 
 PropertyController::~PropertyController()
 {
-  const auto i = s_instances.indexOf(this);
-  if (i >= 0)
-    s_instances.remove(i);
+    const auto i = s_instances.indexOf(this);
+    if (i >= 0)
+        s_instances.remove(i);
 }
 
-void PropertyController::loadExtension(PropertyControllerExtensionFactoryBase* factory)
+void PropertyController::loadExtension(PropertyControllerExtensionFactoryBase *factory)
 {
-  m_extensions << factory->create(this);
+    m_extensions << factory->create(this);
 }
 
 const QString &PropertyController::objectBaseName()
 {
-  return m_objectBaseName;
+    return m_objectBaseName;
 }
 
 void PropertyController::registerModel(QAbstractItemModel *model, const QString &nameSuffix)
 {
-  Probe::instance()->registerModel(m_objectBaseName + '.' + nameSuffix, model);
+    Probe::instance()->registerModel(m_objectBaseName + '.' + nameSuffix, model);
 }
 
 void PropertyController::setObject(QObject *object)
 {
-  if (m_object)
-    disconnect(m_object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
-  if (object)
-    connect(object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
+    if (m_object)
+        disconnect(m_object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
+    if (object)
+        connect(object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
 
-  m_object = object;
+    m_object = object;
 
-  QStringList availableExtensions;
+    QStringList availableExtensions;
 
-  foreach (PropertyControllerExtension *extension, m_extensions) {
-    if (extension->setQObject(object))
-      availableExtensions << extension->name();
-  }
+    foreach (PropertyControllerExtension *extension, m_extensions) {
+        if (extension->setQObject(object))
+            availableExtensions << extension->name();
+    }
 
-  setAvailableExtensions(availableExtensions);
+    setAvailableExtensions(availableExtensions);
 }
 
 void PropertyController::setObject(void *object, const QString &className)
 {
-  setObject(0);
+    setObject(0);
 
-  QStringList availableExtensions;
+    QStringList availableExtensions;
 
-  foreach (PropertyControllerExtension *extension, m_extensions) {
-    if (extension->setObject(object, className))
-      availableExtensions << extension->name();
-  }
+    foreach (PropertyControllerExtension *extension, m_extensions) {
+        if (extension->setObject(object, className))
+            availableExtensions << extension->name();
+    }
 
-  setAvailableExtensions(availableExtensions);
+    setAvailableExtensions(availableExtensions);
 }
 
 void PropertyController::setMetaObject(const QMetaObject *metaObject)
 {
-  setObject(0);
+    setObject(0);
 
-  QStringList availableExtensions;
+    QStringList availableExtensions;
 
-  foreach (PropertyControllerExtension *extension, m_extensions) {
-    if (extension->setMetaObject(metaObject))
-      availableExtensions << extension->name();
-  }
+    foreach (PropertyControllerExtension *extension, m_extensions) {
+        if (extension->setMetaObject(metaObject))
+            availableExtensions << extension->name();
+    }
 
-  setAvailableExtensions(availableExtensions);
+    setAvailableExtensions(availableExtensions);
 }
 
 void PropertyController::objectDestroyed()
 {
-  setObject(0);
+    setObject(0);
 }

@@ -36,9 +36,9 @@
 
 using namespace GammaRay;
 
-CookieExtension::CookieExtension(PropertyController* controller) :
-    PropertyControllerExtension(controller->objectBaseName() + ".cookieJar"),
-    m_cookieJarModel(new CookieJarModel(controller))
+CookieExtension::CookieExtension(PropertyController *controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".cookieJar")
+    , m_cookieJarModel(new CookieJarModel(controller))
 {
     controller->registerModel(m_cookieJarModel, QStringLiteral("cookieJarModel"));
 }
@@ -47,12 +47,12 @@ CookieExtension::~CookieExtension()
 {
 }
 
-bool CookieExtension::setQObject(QObject* object)
+bool CookieExtension::setQObject(QObject *object)
 {
-    if (auto cookieJar = qobject_cast<QNetworkCookieJar*>(object)) {
+    if (auto cookieJar = qobject_cast<QNetworkCookieJar *>(object)) {
         m_cookieJarModel->setCookieJar(cookieJar);
         return true;
-    } else if (auto nam = qobject_cast<QNetworkAccessManager*>(object)) {
+    } else if (auto nam = qobject_cast<QNetworkAccessManager *>(object)) {
         return setQObject(nam->cookieJar());
     }
 

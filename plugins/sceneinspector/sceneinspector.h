@@ -42,18 +42,17 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PropertyController;
 class SceneModel;
 
 class SceneInspector : public SceneInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::SceneInspectorInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::SceneInspectorInterface)
+public:
     explicit SceneInspector(ProbeInterface *probe, QObject *parent = 0);
 
-  private slots:
+private slots:
     void initializeGui() Q_DECL_OVERRIDE;
     void renderScene(const QTransform &transform, const QSize &size) Q_DECL_OVERRIDE;
 
@@ -66,33 +65,33 @@ class SceneInspector : public SceneInspectorInterface
 
     void clientConnectedChanged(bool clientConnected);
 
-  private:
+private:
     QString findBestType(QGraphicsItem *item);
     void registerGraphicsViewMetaTypes();
     void registerVariantHandlers();
     void connectToScene();
 
-  private:
+private:
     SceneModel *m_sceneModel;
-    QItemSelectionModel* m_itemSelectionModel;
+    QItemSelectionModel *m_itemSelectionModel;
     PropertyController *m_propertyController;
     bool m_clientConnected;
 };
 
 class SceneInspectorFactory : public QObject,
-                              public StandardToolFactory<QGraphicsScene, SceneInspector>
+    public StandardToolFactory<QGraphicsScene, SceneInspector>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_sceneinspector.json")
-  public:
-    explicit SceneInspectorFactory(QObject *parent = 0) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_sceneinspector.json")
+public:
+    explicit SceneInspectorFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_SCENEINSPECTOR_H

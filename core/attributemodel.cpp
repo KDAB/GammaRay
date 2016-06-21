@@ -30,8 +30,8 @@
 
 using namespace GammaRay;
 
-AbstractAttributeModel::AbstractAttributeModel(QObject* parent) :
-    QAbstractTableModel(parent)
+AbstractAttributeModel::AbstractAttributeModel(QObject *parent)
+    : QAbstractTableModel(parent)
 {
 }
 
@@ -39,7 +39,7 @@ AbstractAttributeModel::~AbstractAttributeModel()
 {
 }
 
-void AbstractAttributeModel::setAttributeType(const char* name)
+void AbstractAttributeModel::setAttributeType(const char *name)
 {
     beginResetModel();
     const auto idx = staticQtMetaObject.indexOfEnumerator(name);
@@ -48,42 +48,43 @@ void AbstractAttributeModel::setAttributeType(const char* name)
     endResetModel();
 }
 
-int AbstractAttributeModel::columnCount(const QModelIndex& parent) const
+int AbstractAttributeModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 1;
 }
 
-int AbstractAttributeModel::rowCount(const QModelIndex& parent) const
+int AbstractAttributeModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() || !m_attrs.isValid() )
+    if (parent.isValid() || !m_attrs.isValid())
         return 0;
     return m_attrs.keyCount() - 1; // skip AttributeCount
 }
 
-QVariant AbstractAttributeModel::data(const QModelIndex& index, int role) const
+QVariant AbstractAttributeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || !m_attrs.isValid())
         return QVariant();
 
     switch (role) {
-        case Qt::DisplayRole:
-            return QString::fromLatin1(m_attrs.valueToKey(m_attrs.value(index.row()))).mid(3);
-        case Qt::CheckStateRole:
-            return testAttribute(m_attrs.value(index.row())) ? Qt::Checked : Qt::Unchecked;
+    case Qt::DisplayRole:
+        return QString::fromLatin1(m_attrs.valueToKey(m_attrs.value(index.row()))).mid(3);
+    case Qt::CheckStateRole:
+        return testAttribute(m_attrs.value(index.row())) ? Qt::Checked : Qt::Unchecked;
     }
 
     return QVariant();
 }
 
-QVariant AbstractAttributeModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant AbstractAttributeModel::headerData(int section, Qt::Orientation orientation,
+                                            int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
         return tr("Attribute");
     return QAbstractTableModel::headerData(section, orientation, role);
 }
 
-Qt::ItemFlags AbstractAttributeModel::flags(const QModelIndex& index) const
+Qt::ItemFlags AbstractAttributeModel::flags(const QModelIndex &index) const
 {
     const auto baseFlags = QAbstractTableModel::flags(index);
     if (!index.isValid())
@@ -91,7 +92,7 @@ Qt::ItemFlags AbstractAttributeModel::flags(const QModelIndex& index) const
     return baseFlags | Qt::ItemIsUserCheckable;
 }
 
-bool AbstractAttributeModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool AbstractAttributeModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (!index.isValid() || !m_attrs.isValid() || role != Qt::CheckStateRole)
         return false;
@@ -100,4 +101,3 @@ bool AbstractAttributeModel::setData(const QModelIndex& index, const QVariant& v
     emit dataChanged(index, index);
     return false;
 }
-

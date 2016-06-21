@@ -44,218 +44,219 @@ using namespace GammaRay;
 /// Tries to reuse an already existing instances of \param str by checking
 /// a global string pool. If no instance of \param str is interned yet the
 /// string will be added to the pool.
-template <typename T>
+template<typename T>
 static T internString(const T &str)
 {
-  static QSet<T> pool;
+    static QSet<T> pool;
 
-  // Check if the pool already contains the string...
-  const typename QSet<T>::const_iterator it = pool.find(str);
+    // Check if the pool already contains the string...
+    const typename QSet<T>::const_iterator it = pool.find(str);
 
-  //  ...and return it if possible.
-  if (it != pool.end())
-    return *it;
+    // ...and return it if possible.
+    if (it != pool.end())
+        return *it;
 
-  // Otherwise add the string to the pool.
-  pool.insert(str);
-  return str;
+    // Otherwise add the string to the pool.
+    pool.insert(str);
+    return str;
 }
 
 static SignalHistoryModel *s_historyModel = 0;
 
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
-  Q_UNUSED(argv);
-  if (s_historyModel) {
-    const int signalIndex = method_index + 1; // offset 1, so unknown signals end up at 0
-    static const QMetaMethod m = s_historyModel->metaObject()->method(s_historyModel->metaObject()->indexOfMethod("onSignalEmitted(QObject*,int)"));
+    Q_UNUSED(argv);
+    if (s_historyModel) {
+        const int signalIndex = method_index + 1; // offset 1, so unknown signals end up at 0
+        static const QMetaMethod m = s_historyModel->metaObject()->method(
+            s_historyModel->metaObject()->indexOfMethod("onSignalEmitted(QObject*,int)"));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    Q_ASSERT(m.isValid());
+        Q_ASSERT(m.isValid());
 #endif
-    m.invoke(s_historyModel, Qt::AutoConnection, Q_ARG(QObject*, caller), Q_ARG(int, signalIndex));
-  }
+        m.invoke(s_historyModel, Qt::AutoConnection, Q_ARG(QObject *, caller),
+                 Q_ARG(int, signalIndex));
+    }
 }
 
-
 SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
-  : QAbstractTableModel(parent)
+    : QAbstractTableModel(parent)
 {
-  connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));
-  connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), this, SLOT(onObjectRemoved(QObject*)));
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));
+    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), this,
+            SLOT(onObjectRemoved(QObject*)));
 
-  SignalSpyCallbackSet spy;
-  spy.signalBeginCallback = signal_begin_callback;
-  probe->registerSignalSpyCallbackSet(spy);
+    SignalSpyCallbackSet spy;
+    spy.signalBeginCallback = signal_begin_callback;
+    probe->registerSignalSpyCallbackSet(spy);
 
-  s_historyModel = this;
+    s_historyModel = this;
 }
 
 SignalHistoryModel::~SignalHistoryModel()
 {
-  s_historyModel = 0;
+    s_historyModel = 0;
 }
 
 int SignalHistoryModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid())
-    return 0;
-  return m_tracedObjects.size();
+    if (parent.isValid())
+        return 0;
+    return m_tracedObjects.size();
 }
 
 int SignalHistoryModel::columnCount(const QModelIndex &) const
 {
-  return 3;
+    return 3;
 }
 
-SignalHistoryModel::Item* SignalHistoryModel::item(const QModelIndex& index) const
+SignalHistoryModel::Item *SignalHistoryModel::item(const QModelIndex &index) const
 {
-  if (!index.isValid())
-    return 0;
-  return m_tracedObjects.at(index.row());
+    if (!index.isValid())
+        return 0;
+    return m_tracedObjects.at(index.row());
 }
 
 QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
 {
-  switch (static_cast<ColumnId>(index.column())) {
+    switch (static_cast<ColumnId>(index.column())) {
     case ObjectColumn:
         if (role == Qt::DisplayRole)
-          return item(index)->objectName;
+            return item(index)->objectName;
         if (role == Qt::ToolTipRole)
-          return tr("Address: %1").arg(Util::addressToString(item(index)->object));
+            return tr("Address: %1").arg(Util::addressToString(item(index)->object));
         if (role == Qt::DecorationRole)
-          return item(index)->decoration;
+            return item(index)->decoration;
 
         break;
 
     case TypeColumn:
         if (role == Qt::DisplayRole)
-          return item(index)->objectType;
+            return item(index)->objectType;
         break;
 
     case EventColumn:
         if (role == EventsRole)
-          return QVariant::fromValue(item(index)->events);
+            return QVariant::fromValue(item(index)->events);
         if (role == StartTimeRole)
-          return item(index)->startTime;
+            return item(index)->startTime;
         if (role == EndTimeRole)
-          return item(index)->endTime();
+            return item(index)->endTime();
         if (role == SignalMapRole)
-          return QVariant::fromValue(item(index)->signalNames);
+            return QVariant::fromValue(item(index)->signalNames);
 
         break;
-  }
+    }
 
-  return QVariant();
+    return QVariant();
 }
 
 QVariant SignalHistoryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-    switch (section) {
-      case ObjectColumn:
-        return tr("Object");
-      case TypeColumn:
-        return tr("Type");
-      case EventColumn:
-        return tr("Events");
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+        switch (section) {
+        case ObjectColumn:
+            return tr("Object");
+        case TypeColumn:
+            return tr("Type");
+        case EventColumn:
+            return tr("Events");
+        }
     }
-  }
 
-  return QVariant();
+    return QVariant();
 }
 
-QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex& index) const
+QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex &index) const
 {
-  QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
-  d.insert(EventsRole, data(index, EventsRole));
-  d.insert(StartTimeRole, data(index, StartTimeRole));
-  d.insert(EndTimeRole, data(index, EndTimeRole));
-  d.insert(SignalMapRole, data(index, SignalMapRole));
-  return d;
+    QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
+    d.insert(EventsRole, data(index, EventsRole));
+    d.insert(StartTimeRole, data(index, StartTimeRole));
+    d.insert(EndTimeRole, data(index, EndTimeRole));
+    d.insert(SignalMapRole, data(index, SignalMapRole));
+    return d;
 }
 
-void SignalHistoryModel::onObjectAdded(QObject* object)
+void SignalHistoryModel::onObjectAdded(QObject *object)
 {
-  Q_ASSERT(thread() == QThread::currentThread());
+    Q_ASSERT(thread() == QThread::currentThread());
 
-  // blacklist event dispatchers
-  if (qstrncmp(object->metaObject()->className(), "QPAEventDispatcher", 18) == 0
-    || qstrncmp(object->metaObject()->className(), "QGuiEventDispatcher", 19) == 0
-    || qstrncmp(object->metaObject()->className(), "QEventDispatcher", 16) == 0)
-    return;
+    // blacklist event dispatchers
+    if (qstrncmp(object->metaObject()->className(), "QPAEventDispatcher", 18) == 0
+        || qstrncmp(object->metaObject()->className(), "QGuiEventDispatcher", 19) == 0
+        || qstrncmp(object->metaObject()->className(), "QEventDispatcher", 16) == 0)
+        return;
 
-  beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size());
+    beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size());
 
-  Item *const data = new Item(object);
-  m_itemIndex.insert(object, m_tracedObjects.size());
-  m_tracedObjects.push_back(data);
+    Item * const data = new Item(object);
+    m_itemIndex.insert(object, m_tracedObjects.size());
+    m_tracedObjects.push_back(data);
 
-  endInsertRows();
+    endInsertRows();
 }
 
-void SignalHistoryModel::onObjectRemoved(QObject* object)
+void SignalHistoryModel::onObjectRemoved(QObject *object)
 {
-  Q_ASSERT(thread() == QThread::currentThread());
+    Q_ASSERT(thread() == QThread::currentThread());
 
-  const auto it = m_itemIndex.find(object);
-  if (it == m_itemIndex.end())
-    return;
-  const int itemIndex = *it;
-  m_itemIndex.erase(it);
+    const auto it = m_itemIndex.find(object);
+    if (it == m_itemIndex.end())
+        return;
+    const int itemIndex = *it;
+    m_itemIndex.erase(it);
 
-  Item *data = m_tracedObjects.at(itemIndex);
-  Q_ASSERT(data->object == object);
-  data->object = 0;
-  emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
+    Item *data = m_tracedObjects.at(itemIndex);
+    Q_ASSERT(data->object == object);
+    data->object = 0;
+    emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
 }
 
 void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
 {
-  Q_ASSERT(thread() == QThread::currentThread());
-  const qint64 timestamp = RelativeClock::sinceAppStart()->mSecs();
+    Q_ASSERT(thread() == QThread::currentThread());
+    const qint64 timestamp = RelativeClock::sinceAppStart()->mSecs();
 
-  const auto it = m_itemIndex.constFind(sender);
-  if (it == m_itemIndex.constEnd())
-    return;
-  const int itemIndex = *it;
+    const auto it = m_itemIndex.constFind(sender);
+    if (it == m_itemIndex.constEnd())
+        return;
+    const int itemIndex = *it;
 
-  Item *data = m_tracedObjects.at(itemIndex);
-  Q_ASSERT(data->object == sender);
-  // ensure the item is known
-  if (signalIndex > 0 && !data->signalNames.contains(signalIndex)) {
-    // protect dereferencing of sender here
-    QMutexLocker lock(Probe::objectLock());
-    if (!Probe::instance()->isValidObject(sender))
-      return;
-    const QByteArray signalName = sender->metaObject()->method(signalIndex - 1)
+    Item *data = m_tracedObjects.at(itemIndex);
+    Q_ASSERT(data->object == sender);
+    // ensure the item is known
+    if (signalIndex > 0 && !data->signalNames.contains(signalIndex)) {
+        // protect dereferencing of sender here
+        QMutexLocker lock(Probe::objectLock());
+        if (!Probe::instance()->isValidObject(sender))
+            return;
+        const QByteArray signalName = sender->metaObject()->method(signalIndex - 1)
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-      .signature();
+                                      .signature();
 #else
-      .methodSignature();
+                                      .methodSignature();
 #endif
-    data->signalNames.insert(signalIndex, internString(signalName));
-  }
+        data->signalNames.insert(signalIndex, internString(signalName));
+    }
 
-  data->events.push_back((timestamp << 16) | signalIndex);
-  emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
+    data->events.push_back((timestamp << 16) | signalIndex);
+    emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
 }
 
-
 SignalHistoryModel::Item::Item(QObject *obj)
-  : object(obj)
-  , startTime(RelativeClock::sinceAppStart()->mSecs())
+    : object(obj)
+    , startTime(RelativeClock::sinceAppStart()->mSecs())
 {
-  objectName = Util::shortDisplayString(object);
-  objectType = internString(QByteArray(obj->metaObject()->className()));
-  decoration = Util::iconForObject(object).value<QIcon>();
+    objectName = Util::shortDisplayString(object);
+    objectType = internString(QByteArray(obj->metaObject()->className()));
+    decoration = Util::iconForObject(object).value<QIcon>();
 }
 
 qint64 SignalHistoryModel::Item::endTime() const
 {
-  if (object)
-    return -1; // still alive
-  if (!events.isEmpty())
-    return timestamp(events.size() - 1);
+    if (object)
+        return -1; // still alive
+    if (!events.isEmpty())
+        return timestamp(events.size() - 1);
 
-  return startTime;
+    return startTime;
 }

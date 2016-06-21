@@ -41,56 +41,55 @@
 
 using namespace GammaRay;
 
-PreloadInjector::PreloadInjector() : ProcessInjector()
+PreloadInjector::PreloadInjector()
+    : ProcessInjector()
 {
 }
 
 QString PreloadInjector::name() const
 {
-  return QStringLiteral("preload");
+    return QStringLiteral("preload");
 }
 
-bool PreloadInjector::launch(const QStringList &programAndArgs,
-                            const QString &probeDll,
-                            const QString &probeFunc,
-                            const QProcessEnvironment &e)
+bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
+                             const QString &probeFunc, const QProcessEnvironment &e)
 {
-  Q_UNUSED(probeFunc);
+    Q_UNUSED(probeFunc);
 
-  QProcessEnvironment env(e);
+    QProcessEnvironment env(e);
 #ifdef Q_OS_MAC
-  env.insert(QStringLiteral("DYLD_FORCE_FLAT_NAMESPACE"), QStringLiteral("1"));
-  env.insert(QStringLiteral("DYLD_INSERT_LIBRARIES"), probeDll);
-  env.insert(QStringLiteral("GAMMARAY_UNSET_DYLD"), QStringLiteral("1"));
+    env.insert(QStringLiteral("DYLD_FORCE_FLAT_NAMESPACE"), QStringLiteral("1"));
+    env.insert(QStringLiteral("DYLD_INSERT_LIBRARIES"), probeDll);
+    env.insert(QStringLiteral("GAMMARAY_UNSET_DYLD"), QStringLiteral("1"));
 
-  // Make sure Qt do load it's correct libs/plugins.
-  if (probeDll.contains(QStringLiteral("_debug"), Qt::CaseInsensitive)) {
-    env.insert(QStringLiteral("DYLD_IMAGE_SUFFIX"), QStringLiteral("_debug"));
-  }
+    // Make sure Qt do load it's correct libs/plugins.
+    if (probeDll.contains(QStringLiteral("_debug"), Qt::CaseInsensitive))
+        env.insert(QStringLiteral("DYLD_IMAGE_SUFFIX"), QStringLiteral("_debug"));
+
 #else
-  env.insert(QStringLiteral("LD_PRELOAD"), probeDll);
-  env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));
+    env.insert(QStringLiteral("LD_PRELOAD"), probeDll);
+    env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));
 
-  auto exePath = programAndArgs.first();
+    auto exePath = programAndArgs.first();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  exePath = QStandardPaths::findExecutable(exePath);
+    exePath = QStandardPaths::findExecutable(exePath);
 #endif
 
-  ProbeABIDetector abiDetector;
-  const auto qtCorePath = abiDetector.qtCoreForExecutable(exePath);
-  PreloadCheck check;
-  const bool success = check.test(qtCorePath, QStringLiteral("qt_startup_hook"));
+    ProbeABIDetector abiDetector;
+    const auto qtCorePath = abiDetector.qtCoreForExecutable(exePath);
+    PreloadCheck check;
+    const bool success = check.test(qtCorePath, QStringLiteral("qt_startup_hook"));
 #if QT_VERSION < QT_VERSION_CHECK(5, 4, 0) // before 5.4 this is fatal, after that we have the built-in hooks and DLL initialization as an even better way
-  if (!success  && !qtCorePath.isEmpty()) {
-    mExitCode = 1;
-    mErrorString = check.errorString();
-    return false;
-  }
+    if (!success && !qtCorePath.isEmpty()) {
+        mExitCode = 1;
+        mErrorString = check.errorString();
+        return false;
+    }
 #else
-  Q_UNUSED(success);
+    Q_UNUSED(success);
 #endif
 
 #endif
 
-  return launchProcess(programAndArgs, env);
+    return launchProcess(programAndArgs, env);
 }

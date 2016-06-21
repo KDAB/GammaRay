@@ -35,30 +35,28 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class KJobTrackerWidget;
+class KJobTrackerWidget;
 }
 
 class KJobTrackerWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit KJobTrackerWidget(QWidget *parent = 0);
     ~KJobTrackerWidget();
 
-  private:
+private:
     QScopedPointer<Ui::KJobTrackerWidget> ui;
     UIStateManager m_stateManager;
 };
 
 class KJobTrackerUiFactory : public QObject, public StandardToolUiFactory<KJobTrackerWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_kjobtracker.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_kjobtracker.json")
 };
-
 }
 
 #endif // GAMMARAY_KJOBTRACKERWIDGET_H

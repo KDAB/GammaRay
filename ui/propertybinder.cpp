@@ -33,21 +33,22 @@
 
 using namespace GammaRay;
 
-PropertyBinder::PropertyBinder(QObject* source, QObject* destination):
-    QObject(source),
-    m_source(source),
-    m_destination(destination),
-    m_lock(false)
+PropertyBinder::PropertyBinder(QObject *source, QObject *destination)
+    : QObject(source)
+    , m_source(source)
+    , m_destination(destination)
+    , m_lock(false)
 {
     Q_ASSERT(source);
     Q_ASSERT(destination);
 }
 
-PropertyBinder::PropertyBinder(QObject* source, const char* sourceProp, QObject* destination, const char* destProp):
-    QObject(source),
-    m_source(source),
-    m_destination(destination),
-    m_lock(false)
+PropertyBinder::PropertyBinder(QObject *source, const char *sourceProp, QObject *destination,
+                               const char *destProp)
+    : QObject(source)
+    , m_source(source)
+    , m_destination(destination)
+    , m_lock(false)
 {
     Q_ASSERT(source);
     Q_ASSERT(destination);
@@ -60,7 +61,7 @@ PropertyBinder::~PropertyBinder()
 {
 }
 
-void PropertyBinder::add(const char* sourceProp, const char* destProp)
+void PropertyBinder::add(const char *sourceProp, const char *destProp)
 {
     Q_ASSERT(sourceProp);
     Q_ASSERT(destProp);
@@ -72,11 +73,11 @@ void PropertyBinder::add(const char* sourceProp, const char* destProp)
     Q_ASSERT(b.sourceProperty.hasNotifySignal());
     connect(m_source, QByteArray("2") +
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        b.sourceProperty.notifySignal().signature()
+            b.sourceProperty.notifySignal().signature()
 #else
-        b.sourceProperty.notifySignal().methodSignature()
+            b.sourceProperty.notifySignal().methodSignature()
 #endif
-        , this, SLOT(syncSourceToDestination()));
+            , this, SLOT(syncSourceToDestination()));
 
     const auto destIndex = m_destination->metaObject()->indexOfProperty(destProp);
     b.destinationProperty = m_destination->metaObject()->property(destIndex);
@@ -91,11 +92,11 @@ void PropertyBinder::add(const char* sourceProp, const char* destProp)
 
     connect(m_destination, QByteArray("2") +
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        b.destinationProperty.notifySignal().signature()
+            b.destinationProperty.notifySignal().signature()
 #else
-        b.destinationProperty.notifySignal().methodSignature()
+            b.destinationProperty.notifySignal().methodSignature()
 #endif
-        , this, SLOT(syncDestinationToSource()));
+            , this, SLOT(syncDestinationToSource()));
 }
 
 void PropertyBinder::syncSourceToDestination()
@@ -104,16 +105,15 @@ void PropertyBinder::syncSourceToDestination()
         return;
 
     m_lock = true;
-    foreach (const auto &b, m_properties) {
+    foreach (const auto &b, m_properties)
         b.destinationProperty.write(m_destination, b.sourceProperty.read(m_source));
-    }
     m_lock = false;
 }
 
 void PropertyBinder::syncDestinationToSource()
 {
     if (m_lock)
-      return;
+        return;
 
     m_lock = true;
     foreach (const auto &b, m_properties) {

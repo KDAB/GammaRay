@@ -36,30 +36,29 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Server-side of the network transparent QItemSelection model. */
 class SelectionModelServer : public NetworkSelectionModel
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit SelectionModelServer(const QString& objectName, QAbstractItemModel* model, QObject* parent);
-  ~SelectionModelServer();
+    explicit SelectionModelServer(const QString &objectName, QAbstractItemModel *model,
+                                  QObject *parent);
+    ~SelectionModelServer();
 
 protected:
-  bool isConnected() const Q_DECL_OVERRIDE;
+    bool isConnected() const Q_DECL_OVERRIDE;
 
 private slots:
-  void timeout();
-  void modelMonitored(bool monitored = false);
+    void timeout();
+    void modelMonitored(bool monitored = false);
 
 private:
-  void connectModel();
-  void disconnectModel();
+    void connectModel();
+    void disconnectModel();
 
-  QTimer *m_timer;
-  bool m_monitored;
+    QTimer *m_timer;
+    bool m_monitored;
 };
-
 }
 
 #endif // GAMMARAY_SELECTIONMODELSERVER_H

@@ -40,26 +40,27 @@
 
 using namespace GammaRay;
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-  QApplication app(argc, argv);
-  Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
-  Translator::load();
-  ClientConnectionManager::init();
+    QApplication app(argc, argv);
+    Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
+    Translator::load();
+    ClientConnectionManager::init();
 
-  QUrl serverUrl;
-  if (app.arguments().size() == 2) {
-    serverUrl = QUrl::fromUserInput(app.arguments().at(1));
-  } else {
-    serverUrl.setScheme(QStringLiteral("tcp"));
-    serverUrl.setHost(QStringLiteral(GAMMARAY_DEFAULT_LOCAL_ADDRESS));
-    serverUrl.setPort(Client::defaultPort());
-  }
+    QUrl serverUrl;
+    if (app.arguments().size() == 2) {
+        serverUrl = QUrl::fromUserInput(app.arguments().at(1));
+    } else {
+        serverUrl.setScheme(QStringLiteral("tcp"));
+        serverUrl.setHost(QStringLiteral(GAMMARAY_DEFAULT_LOCAL_ADDRESS));
+        serverUrl.setPort(Client::defaultPort());
+    }
 
-  ClientConnectionManager conMan;
-  QObject::connect(&conMan, SIGNAL(ready()), &conMan, SLOT(createMainWindow()));
-  QObject::connect(&conMan, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
-  QObject::connect(&conMan, SIGNAL(persistentConnectionError(QString)), &conMan, SLOT(handlePersistentConnectionError(QString)));
-  conMan.connectToHost(serverUrl);
-  return app.exec();
+    ClientConnectionManager conMan;
+    QObject::connect(&conMan, SIGNAL(ready()), &conMan, SLOT(createMainWindow()));
+    QObject::connect(&conMan, SIGNAL(disconnected()), QApplication::instance(), SLOT(quit()));
+    QObject::connect(&conMan, SIGNAL(persistentConnectionError(QString)), &conMan,
+                     SLOT(handlePersistentConnectionError(QString)));
+    conMan.connectToHost(serverUrl);
+    return app.exec();
 }

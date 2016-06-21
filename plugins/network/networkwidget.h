@@ -35,9 +35,7 @@
 #include <QWidget>
 
 namespace GammaRay {
-
-namespace Ui
-{
+namespace Ui {
 class NetworkWidget;
 }
 
@@ -60,7 +58,6 @@ class NetworkWidgetFactory : public QObject, public StandardToolUiFactory<Networ
 public:
     void initUi() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_NETWORKWIDGET_H

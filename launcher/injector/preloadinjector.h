@@ -33,18 +33,15 @@
 #include <qglobal.h>
 
 namespace GammaRay {
-
 class PreloadInjector : public ProcessInjector
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     PreloadInjector();
     QString name() const Q_DECL_OVERRIDE;
-    bool launch(const QStringList &programAndArgs,
-                const QString &probeDll, const QString &probeFunc,
-                const QProcessEnvironment &env) Q_DECL_OVERRIDE;
+    bool launch(const QStringList &programAndArgs, const QString &probeDll,
+                const QString &probeFunc, const QProcessEnvironment &env) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_PRELOADINJECTOR_H

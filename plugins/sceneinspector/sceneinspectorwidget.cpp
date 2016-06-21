@@ -54,84 +54,84 @@
 using namespace GammaRay;
 using namespace std;
 
-static QObject* createClientSceneInspector(const QString &/*name*/, QObject *parent)
+static QObject *createClientSceneInspector(const QString & /*name*/, QObject *parent)
 {
-  return new SceneInspectorClient(parent);
+    return new SceneInspectorClient(parent);
 }
 
 SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::SceneInspectorWidget)
-  , m_stateManager(this)
-  , m_interface(0)
-  , m_scene(new QGraphicsScene(this))
-  , m_pixmap(new QGraphicsPixmapItem)
-  , m_updateTimer(new QTimer(this))
+    : QWidget(parent)
+    , ui(new Ui::SceneInspectorWidget)
+    , m_stateManager(this)
+    , m_interface(0)
+    , m_scene(new QGraphicsScene(this))
+    , m_pixmap(new QGraphicsPixmapItem)
+    , m_updateTimer(new QTimer(this))
 {
-  ObjectBroker::registerClientObjectFactoryCallback<SceneInspectorInterface*>(createClientSceneInspector);
-  m_interface = ObjectBroker::object<SceneInspectorInterface*>();
+    ObjectBroker::registerClientObjectFactoryCallback<SceneInspectorInterface *>(
+        createClientSceneInspector);
+    m_interface = ObjectBroker::object<SceneInspectorInterface *>();
 
-  ui->setupUi(this);
-  ui->sceneTreeView->header()->setObjectName("sceneTreeViewHeader");
-  ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.SceneInspector"));
+    ui->setupUi(this);
+    ui->sceneTreeView->header()->setObjectName("sceneTreeViewHeader");
+    ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.SceneInspector"));
 
-  ui->sceneComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneList")));
-  connect(ui->sceneComboBox, SIGNAL(currentIndexChanged(int)), SLOT(sceneSelected(int)));
+    ui->sceneComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneList")));
+    connect(ui->sceneComboBox, SIGNAL(currentIndexChanged(int)), SLOT(sceneSelected(int)));
 
-  auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"));
-  ui->sceneTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-  ui->sceneTreeView->setModel(sceneModel);
-  new SearchLineController(ui->sceneTreeSearchLine, sceneModel);
+    auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"));
+    ui->sceneTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->sceneTreeView->setModel(sceneModel);
+    new SearchLineController(ui->sceneTreeSearchLine, sceneModel);
 
-  QItemSelectionModel *itemSelection = ObjectBroker::selectionModel(sceneModel);
-  ui->sceneTreeView->setSelectionModel(itemSelection);
-  connect(itemSelection, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          this, SLOT(sceneItemSelected(QItemSelection)));
+    QItemSelectionModel *itemSelection = ObjectBroker::selectionModel(sceneModel);
+    ui->sceneTreeView->setSelectionModel(itemSelection);
+    connect(itemSelection, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(sceneItemSelected(QItemSelection)));
 
-  connect(ui->sceneTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(sceneContextMenu(QPoint)));
+    connect(ui->sceneTreeView, SIGNAL(customContextMenuRequested(QPoint)), this,
+            SLOT(sceneContextMenu(QPoint)));
 
-  ui->graphicsSceneView->setGraphicsScene(m_scene);
-  connect(m_interface, SIGNAL(sceneRectChanged(QRectF)),
-          this, SLOT(sceneRectChanged(QRectF)));
-  connect(m_interface, SIGNAL(sceneChanged()),
-          this, SLOT(sceneChanged()));
-  connect(m_interface, SIGNAL(sceneRendered(QPixmap)),
-          this, SLOT(sceneRendered(QPixmap)));
-  connect(m_interface, SIGNAL(itemSelected(QRectF)),
-          this, SLOT(itemSelected(QRectF)));
+    ui->graphicsSceneView->setGraphicsScene(m_scene);
+    connect(m_interface, SIGNAL(sceneRectChanged(QRectF)),
+            this, SLOT(sceneRectChanged(QRectF)));
+    connect(m_interface, SIGNAL(sceneChanged()),
+            this, SLOT(sceneChanged()));
+    connect(m_interface, SIGNAL(sceneRendered(QPixmap)),
+            this, SLOT(sceneRendered(QPixmap)));
+    connect(m_interface, SIGNAL(itemSelected(QRectF)),
+            this, SLOT(itemSelected(QRectF)));
 
-  m_interface->initializeGui();
+    m_interface->initializeGui();
 
-  m_pixmap->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-  m_scene->addItem(m_pixmap);
-  connect(ui->graphicsSceneView->view(), SIGNAL(transformChanged()),
-          this, SLOT(visibleSceneRectChanged()));
-  connect(ui->graphicsSceneView->view()->horizontalScrollBar(), SIGNAL(valueChanged(int)),
-          this, SLOT(visibleSceneRectChanged()));
-  connect(ui->graphicsSceneView->view()->verticalScrollBar(), SIGNAL(valueChanged(int)),
-          this, SLOT(visibleSceneRectChanged()));
+    m_pixmap->setFlag(QGraphicsItem::ItemIgnoresTransformations);
+    m_scene->addItem(m_pixmap);
+    connect(ui->graphicsSceneView->view(), SIGNAL(transformChanged()),
+            this, SLOT(visibleSceneRectChanged()));
+    connect(ui->graphicsSceneView->view()->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(visibleSceneRectChanged()));
+    connect(ui->graphicsSceneView->view()->verticalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(visibleSceneRectChanged()));
 
-  if (Endpoint::instance()->isRemoteClient()) {
-    ui->graphicsSceneView->view()->viewport()->installEventFilter(this);
-  }
+    if (Endpoint::instance()->isRemoteClient())
+        ui->graphicsSceneView->view()->viewport()->installEventFilter(this);
 
-  QItemSelectionModel *selection = ObjectBroker::selectionModel(ui->sceneComboBox->model());
-  if (selection->currentIndex().isValid()) {
-    sceneSelected(selection->currentIndex().row());
-  } else if (ui->sceneComboBox->currentIndex() >= 0) { // no server-side selection yet, but there's data available
-    sceneSelected(ui->sceneComboBox->currentIndex());
-  }
+    QItemSelectionModel *selection = ObjectBroker::selectionModel(ui->sceneComboBox->model());
+    if (selection->currentIndex().isValid())
+        sceneSelected(selection->currentIndex().row());
+    else if (ui->sceneComboBox->currentIndex() >= 0)   // no server-side selection yet, but there's data available
+        sceneSelected(ui->sceneComboBox->currentIndex());
 
-  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
-  m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
-  connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+    connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
 
-  // limit fps to prevent bad performance, and to group update requests which is esp. required
-  // for scrolling and similar high-frequency update requests
-  m_updateTimer->setSingleShot(true);
-  m_updateTimer->setInterval(100);
-  connect(m_updateTimer, SIGNAL(timeout()), SLOT(requestSceneUpdate()));
+    // limit fps to prevent bad performance, and to group update requests which is esp. required
+    // for scrolling and similar high-frequency update requests
+    m_updateTimer->setSingleShot(true);
+    m_updateTimer->setInterval(100);
+    connect(m_updateTimer, SIGNAL(timeout()), SLOT(requestSceneUpdate()));
 }
 
 SceneInspectorWidget::~SceneInspectorWidget()
@@ -140,82 +140,79 @@ SceneInspectorWidget::~SceneInspectorWidget()
 
 bool SceneInspectorWidget::eventFilter(QObject *obj, QEvent *event)
 {
-  Q_ASSERT(obj == ui->graphicsSceneView->view()->viewport());
-  if (event->type() == QEvent::Resize) {
-    QMetaObject::invokeMethod(this, "visibleSceneRectChanged", Qt::QueuedConnection);
-  } else if (event->type() == QEvent::MouseButtonRelease) {
-    QMouseEvent *e = static_cast<QMouseEvent*>(event);
-    if (e->button() == Qt::LeftButton &&
-        e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-    {
-      m_interface->sceneClicked(ui->graphicsSceneView->view()->mapToScene(e->pos()));
+    Q_ASSERT(obj == ui->graphicsSceneView->view()->viewport());
+    if (event->type() == QEvent::Resize) {
+        QMetaObject::invokeMethod(this, "visibleSceneRectChanged", Qt::QueuedConnection);
+    } else if (event->type() == QEvent::MouseButtonRelease) {
+        QMouseEvent *e = static_cast<QMouseEvent *>(event);
+        if (e->button() == Qt::LeftButton
+            && e->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
+            m_interface->sceneClicked(ui->graphicsSceneView->view()->mapToScene(e->pos()));
     }
-  }
-  return QObject::eventFilter(obj, event);
+    return QObject::eventFilter(obj, event);
 }
 
 void SceneInspectorWidget::itemSelected(const QRectF &boundingRect)
 {
-  ui->graphicsSceneView->view()->fitInView(boundingRect, Qt::KeepAspectRatio);
-  ui->graphicsSceneView->view()->scale(0.8, 0.8);
-  visibleSceneRectChanged();
+    ui->graphicsSceneView->view()->fitInView(boundingRect, Qt::KeepAspectRatio);
+    ui->graphicsSceneView->view()->scale(0.8, 0.8);
+    visibleSceneRectChanged();
 }
 
 void SceneInspectorWidget::sceneRectChanged(const QRectF &rect)
 {
-  m_scene->setSceneRect(rect);
-  visibleSceneRectChanged();
+    m_scene->setSceneRect(rect);
+    visibleSceneRectChanged();
 }
 
 void SceneInspectorWidget::sceneChanged()
 {
-  if (!m_updateTimer->isActive()) {
-    m_updateTimer->start();
-  }
+    if (!m_updateTimer->isActive())
+        m_updateTimer->start();
 }
 
 void SceneInspectorWidget::requestSceneUpdate()
 {
-  if (!Endpoint::instance()->isRemoteClient()) {
-    return;
-  }
+    if (!Endpoint::instance()->isRemoteClient())
+        return;
 
-  if (ui->graphicsSceneView->view()->rect().isEmpty()) {
-    // when the splitter is moved to hide the view, don't request updates
-    return;
-  }
+    if (ui->graphicsSceneView->view()->rect().isEmpty()) {
+        // when the splitter is moved to hide the view, don't request updates
+        return;
+    }
 
-  m_interface->renderScene(ui->graphicsSceneView->view()->viewportTransform(),
-                           ui->graphicsSceneView->view()->viewport()->rect().size());
+    m_interface->renderScene(ui->graphicsSceneView->view()->viewportTransform(),
+                             ui->graphicsSceneView->view()->viewport()->rect().size());
 }
 
 void SceneInspectorWidget::sceneRendered(const QPixmap &view)
 {
-  m_pixmap->setPixmap(view);
+    m_pixmap->setPixmap(view);
 }
 
 void SceneInspectorWidget::visibleSceneRectChanged()
 {
-  m_pixmap->setPos(ui->graphicsSceneView->view()->mapToScene(0, 0));
-  sceneChanged();
+    m_pixmap->setPos(ui->graphicsSceneView->view()->mapToScene(0, 0));
+    sceneChanged();
 }
 
 void SceneInspectorWidget::sceneSelected(int index)
 {
-  const QModelIndex mi = ui->sceneComboBox->model()->index(index, 0);
-  ObjectBroker::selectionModel(ui->sceneComboBox->model())->select(mi, QItemSelectionModel::ClearAndSelect);
+    const QModelIndex mi = ui->sceneComboBox->model()->index(index, 0);
+    ObjectBroker::selectionModel(ui->sceneComboBox->model())->select(mi,
+                                                                     QItemSelectionModel::ClearAndSelect);
 
-  if (!Endpoint::instance()->isRemoteClient()) {
-    // for in-process mode, use the user scene directly. This is much more performant and we can
-    // skip the pixmap conversions and fps limitations thereof.
-    QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject*>();
-    QGraphicsScene *scene = qobject_cast<QGraphicsScene*>(obj);
-    cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
+    if (!Endpoint::instance()->isRemoteClient()) {
+        // for in-process mode, use the user scene directly. This is much more performant and we can
+        // skip the pixmap conversions and fps limitations thereof.
+        QObject *obj
+            = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject *>();
+        QGraphicsScene *scene = qobject_cast<QGraphicsScene *>(obj);
+        cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
-    if (scene) {
-      ui->graphicsSceneView->setGraphicsScene(scene);
+        if (scene)
+            ui->graphicsSceneView->setGraphicsScene(scene);
     }
-  }
 }
 
 void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
@@ -229,7 +226,7 @@ void SceneInspectorWidget::sceneItemSelected(const QItemSelection &selection)
     ui->sceneTreeView->scrollTo(index); // in case selection does not come from us
 
     if (!Endpoint::instance()->isRemoteClient()) {
-        QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem*>();
+        QGraphicsItem *item = index.data(SceneModel::SceneItemRole).value<QGraphicsItem *>();
         ui->graphicsSceneView->showGraphicsItem(item);
     }
 }
@@ -241,7 +238,8 @@ void SceneInspectorWidget::sceneContextMenu(QPoint pos)
         return;
 
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
-    QMenu menu(tr("QGraphicsItem @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+    QMenu menu(tr("QGraphicsItem @ %1").arg(QLatin1String("0x") + QString::number(
+                                                objectId.id(), 16)));
     ContextMenuExtension ext(objectId);
     ext.populateMenu(&menu);
 

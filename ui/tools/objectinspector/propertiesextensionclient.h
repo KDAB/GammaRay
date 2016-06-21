@@ -32,19 +32,17 @@
 #include <common/tools/objectinspector/propertiesextensioninterface.h>
 
 namespace GammaRay {
-
 class PropertiesExtensionClient : public PropertiesExtensionInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::PropertiesExtensionInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::PropertiesExtensionInterface)
+public:
     explicit PropertiesExtensionClient(const QString &name, QObject *parent = 0);
     ~PropertiesExtensionClient();
 
-  public slots:
-    void setProperty(const QString& name, const QVariant& value) Q_DECL_OVERRIDE;
+public slots:
+    void setProperty(const QString &name, const QVariant &value) Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTIESEXTENSIONCLIENT_H

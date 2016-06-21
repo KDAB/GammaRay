@@ -49,22 +49,21 @@
 #include <QObject>
 
 namespace GammaRay {
-
 /**
  * @brief A container for a generic Object Model derived from some Base.
  */
 template<typename Base>
 class ObjectModelBase : public Base
 {
-  public:
+public:
     /**
      * Constructor.
      * @param parent is the parent object for this instance.
      */
     explicit ObjectModelBase<Base>(QObject *parent) : Base(parent)
     {
-      qRegisterMetaType<ObjectId>();
-      qRegisterMetaTypeStreamOperators<ObjectId>();
+        qRegisterMetaType<ObjectId>();
+        qRegisterMetaTypeStreamOperators<ObjectId>();
     }
 
     /**
@@ -75,8 +74,8 @@ class ObjectModelBase : public Base
      */
     int columnCount(const QModelIndex &parent = QModelIndex()) const
     {
-      Q_UNUSED(parent);
-      return 2;
+        Q_UNUSED(parent);
+        return 2;
     }
 
     /**
@@ -90,44 +89,43 @@ class ObjectModelBase : public Base
      */
     QVariant dataForObject(QObject *object, const QModelIndex &index, int role) const
     {
-      if (role == Qt::DisplayRole) {
-        if (index.column() == 0) {
-          return Util::shortDisplayString(object);
-        } else if (index.column() == 1) {
-          return ObjectDataProvider::typeName(object);
+        if (role == Qt::DisplayRole) {
+            if (index.column() == 0)
+                return Util::shortDisplayString(object);
+            else if (index.column() == 1)
+                return ObjectDataProvider::typeName(object);
+        } else if (role == ObjectModel::ObjectRole) {
+            return QVariant::fromValue(object);
+        } else if (role == ObjectModel::ObjectIdRole) {
+            return QVariant::fromValue(ObjectId(object));
+        } else if (role == Qt::ToolTipRole) {
+            return Util::tooltipForObject(object);
+        } else if (role == Qt::DecorationRole && index.column() == 0) {
+            return Util::iconForObject(object);
+        } else if (role == ObjectModel::CreationLocationRole) {
+            const auto loc = ObjectDataProvider::creationLocation(object);
+            if (loc.isValid())
+                return QVariant::fromValue(loc);
+        } else if (role == ObjectModel::DeclarationLocationRole) {
+            const auto loc = ObjectDataProvider::declarationLocation(object);
+            if (loc.isValid())
+                return QVariant::fromValue(loc);
         }
-      } else if (role == ObjectModel::ObjectRole) {
-        return QVariant::fromValue(object);
-      } else if (role == ObjectModel::ObjectIdRole) {
-        return QVariant::fromValue(ObjectId(object));
-      } else if (role == Qt::ToolTipRole) {
-          return Util::tooltipForObject(object);
-      } else if (role == Qt::DecorationRole && index.column() == 0) {
-        return Util::iconForObject(object);
-      } else if (role == ObjectModel::CreationLocationRole) {
-          const auto loc = ObjectDataProvider::creationLocation(object);
-          if (loc.isValid())
-              return QVariant::fromValue(loc);
-      } else if (role == ObjectModel::DeclarationLocationRole) {
-          const auto loc = ObjectDataProvider::declarationLocation(object);
-          if (loc.isValid())
-              return QVariant::fromValue(loc);
-      }
 
-      return QVariant();
+        return QVariant();
     }
 
-    QMap<int, QVariant> itemData(const QModelIndex& index) const
+    QMap<int, QVariant> itemData(const QModelIndex &index) const
     {
-      QMap<int, QVariant> map = Base::itemData(index);
-      map.insert(ObjectModel::ObjectIdRole, this->data(index, ObjectModel::ObjectIdRole));
-      auto loc = this->data(index, ObjectModel::CreationLocationRole);
-      if (loc.isValid())
-          map.insert(ObjectModel::CreationLocationRole, loc);
-      loc = this->data(index, ObjectModel::DeclarationLocationRole);
-      if (loc.isValid())
-          map.insert(ObjectModel::DeclarationLocationRole, loc);
-      return map;
+        QMap<int, QVariant> map = Base::itemData(index);
+        map.insert(ObjectModel::ObjectIdRole, this->data(index, ObjectModel::ObjectIdRole));
+        auto loc = this->data(index, ObjectModel::CreationLocationRole);
+        if (loc.isValid())
+            map.insert(ObjectModel::CreationLocationRole, loc);
+        loc = this->data(index, ObjectModel::DeclarationLocationRole);
+        if (loc.isValid())
+            map.insert(ObjectModel::DeclarationLocationRole, loc);
+        return map;
     }
 
     /**
@@ -143,18 +141,17 @@ class ObjectModelBase : public Base
      */
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
     {
-      if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-        switch (section) {
-        case 0:
-          return QObject::tr("Object");
-        case 1:
-          return QObject::tr("Type");
+        if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+            switch (section) {
+            case 0:
+                return QObject::tr("Object");
+            case 1:
+                return QObject::tr("Type");
+            }
         }
-      }
-      return Base::headerData(section, orientation, role);
+        return Base::headerData(section, orientation, role);
     }
 };
-
 }
 
 #endif

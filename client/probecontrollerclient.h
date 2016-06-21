@@ -32,21 +32,19 @@
 #include <common/probecontrollerinterface.h>
 
 namespace GammaRay {
-
 class ProbeControllerClient : public ProbeControllerInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ProbeControllerInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ProbeControllerInterface)
 public:
-  explicit ProbeControllerClient(QObject *parent = 0);
+    explicit ProbeControllerClient(QObject *parent = 0);
 
-  void selectObject(ObjectId id, const QString &toolId) Q_DECL_OVERRIDE;
-  void requestSupportedTools(ObjectId id) Q_DECL_OVERRIDE;
+    void selectObject(ObjectId id, const QString &toolId) Q_DECL_OVERRIDE;
+    void requestSupportedTools(ObjectId id) Q_DECL_OVERRIDE;
 
-  void detachProbe() Q_DECL_OVERRIDE;
-  void quitHost() Q_DECL_OVERRIDE;
+    void detachProbe() Q_DECL_OVERRIDE;
+    void quitHost() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_PROBECONTROLLERCLIENT_H

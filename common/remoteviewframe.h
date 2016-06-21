@@ -38,11 +38,10 @@
 #include <QVariant>
 
 namespace GammaRay {
-
 class RemoteViewFrame;
 
-QDataStream& operator<<(QDataStream &stream, const GammaRay::RemoteViewFrame &frame);
-QDataStream& operator>>(QDataStream &stream, GammaRay::RemoteViewFrame &frame);
+QDataStream &operator<<(QDataStream &stream, const GammaRay::RemoteViewFrame &frame);
+QDataStream &operator>>(QDataStream &stream, GammaRay::RemoteViewFrame &frame);
 
 /** Data of a single frame displayed in the RemoteViewWidget. */
 class GAMMARAY_COMMON_EXPORT RemoteViewFrame
@@ -68,14 +67,13 @@ public:
     void setData(const QVariant &data);
 
 private:
-    friend QDataStream& operator<<(QDataStream &stream, const RemoteViewFrame &frame);
-    friend QDataStream& operator>>(QDataStream &stream, RemoteViewFrame &frame);
+    friend QDataStream &operator<<(QDataStream &stream, const RemoteViewFrame &frame);
+    friend QDataStream &operator>>(QDataStream &stream, RemoteViewFrame &frame);
     TransferImage m_image;
     QVariant m_data;
     QRectF m_viewRect;
     QRectF m_sceneRect;
 };
-
 }
 
 Q_DECLARE_METATYPE(GammaRay::RemoteViewFrame)

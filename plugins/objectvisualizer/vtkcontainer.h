@@ -30,33 +30,31 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 class VtkPanel;
 class VtkWidget;
 
 class GraphWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit GraphWidget(QWidget *parent = 0);
     virtual ~GraphWidget();
 
     VtkWidget *vtkWidget() const
     {
-      return m_vtkWidget;
+        return m_vtkWidget;
     }
 
     VtkPanel *vtkPanel() const
     {
-      return m_vtkPanel;
+        return m_vtkPanel;
     }
 
-  private:
+private:
     VtkWidget *m_vtkWidget;
     VtkPanel *m_vtkPanel;
 };
-
 }
 
 #endif // GAMMARAY_GRAPHWIDGET_H

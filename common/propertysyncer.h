@@ -37,7 +37,6 @@
 #include <QVector>
 
 namespace GammaRay {
-
 class Message;
 
 /** Infrastructure for syncing property values between a local and a remote object. */
@@ -76,7 +75,7 @@ signals:
 
 private slots:
     void propertyChanged();
-    void objectDestroyed(QObject* obj);
+    void objectDestroyed(QObject *obj);
 
 private:
     struct ObjectInfo {
@@ -89,7 +88,6 @@ private:
     Protocol::ObjectAddress m_address;
     bool m_initialSync;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYSYNCER_H

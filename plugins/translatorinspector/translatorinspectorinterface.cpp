@@ -32,10 +32,11 @@
 
 using namespace GammaRay;
 
-TranslatorInspectorInterface::TranslatorInspectorInterface(const QString &name,
-                                                         QObject *parent)
-    : QObject(parent), m_name(name)
+TranslatorInspectorInterface::TranslatorInspectorInterface(const QString &name, QObject *parent)
+    : QObject(parent)
+    , m_name(name)
 {
-  ObjectBroker::registerObject(name, this);
+    ObjectBroker::registerObject(name, this);
 }
+
 TranslatorInspectorInterface::~TranslatorInspectorInterface() {}

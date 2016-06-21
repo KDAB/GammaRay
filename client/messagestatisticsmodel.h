@@ -36,7 +36,6 @@
 #include <QVector>
 
 namespace GammaRay {
-
 /** Diagnostics for GammaRay-internal communication. */
 class MessageStatisticsModel : public QAbstractTableModel
 {
@@ -49,9 +48,9 @@ public:
     void addObject(Protocol::ObjectAddress addr, const QString &name);
     void addMessage(Protocol::ObjectAddress addr, Protocol::MessageType msgType, int size);
 
-    int columnCount(const QModelIndex & parent) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex & parent) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex & index, int role) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
 private:

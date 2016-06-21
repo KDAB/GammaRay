@@ -38,85 +38,77 @@ typedef MetaObjectModel<QMetaEnum,
                         &QMetaObject::enumeratorCount,
                         &QMetaObject::enumeratorOffset> SuperClass;
 
-GammaRay::ObjectEnumModel::ObjectEnumModel(QObject *parent) : SuperClass(parent)
+GammaRay::ObjectEnumModel::ObjectEnumModel(QObject *parent)
+    : SuperClass(parent)
 {
 }
 
 int ObjectEnumModel::rowCount(const QModelIndex &parent) const
 {
-  if (!parent.isValid()) {
-    return SuperClass::rowCount(parent);
-  }
-  if (parent.parent().isValid()) {
-    return 0;
-  }
-  const QMetaEnum e = m_metaObject->enumerator(parent.row());
-  return e.keyCount();
+    if (!parent.isValid())
+        return SuperClass::rowCount(parent);
+    if (parent.parent().isValid())
+        return 0;
+    const QMetaEnum e = m_metaObject->enumerator(parent.row());
+    return e.keyCount();
 }
 
 int GammaRay::ObjectEnumModel::columnCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent);
-  return 3;
+    Q_UNUSED(parent);
+    return 3;
 }
 
 QVariant ObjectEnumModel::data(const QModelIndex &index, int role) const
 {
-  if (!index.parent().isValid()) {
-    return SuperClass::data(index, role);
-  }
+    if (!index.parent().isValid())
+        return SuperClass::data(index, role);
 
-  if (role == Qt::DisplayRole) {
-    const QMetaEnum e = m_metaObject->enumerator(index.parent().row());
-    if (index.column() == 0) {
-      return e.key(index.row());
+    if (role == Qt::DisplayRole) {
+        const QMetaEnum e = m_metaObject->enumerator(index.parent().row());
+        if (index.column() == 0)
+            return e.key(index.row());
+        if (index.column() == 1)
+            return e.value(index.row());
     }
-    if (index.column() == 1) {
-      return e.value(index.row());
-    }
-  }
 
-  return QVariant();
+    return QVariant();
 }
 
-QVariant ObjectEnumModel::metaData(const QModelIndex &index,
-                               const QMetaEnum &enumerator, int role) const
+QVariant ObjectEnumModel::metaData(const QModelIndex &index, const QMetaEnum &enumerator,
+                                   int role) const
 {
-  if (role == Qt::DisplayRole) {
-    if (index.column() == 0) {
-      return QString::fromLatin1(enumerator.name());
+    if (role == Qt::DisplayRole) {
+        if (index.column() == 0)
+            return QString::fromLatin1(enumerator.name());
+        if (index.column() == 1)
+            return tr("%n element(s)", "", enumerator.keyCount());
     }
-    if (index.column() == 1) {
-      return tr("%n element(s)", "", enumerator.keyCount());
-    }
-  }
-  return QVariant();
+    return QVariant();
 }
 
 QString ObjectEnumModel::columnHeader(int index) const
 {
-  switch (index) {
-  case 0:
-    return tr("Name");
-  case 1:
-    return tr("Value");
-  }
-  return QString();
+    switch (index) {
+    case 0:
+        return tr("Name");
+    case 1:
+        return tr("Value");
+    }
+    return QString();
 }
 
 QModelIndex GammaRay::ObjectEnumModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if (!parent.isValid()) {
-    return SuperClass::index(row, column, parent);
-  }
-  return createIndex(row, column, parent.row());
+    if (!parent.isValid())
+        return SuperClass::index(row, column, parent);
+    return createIndex(row, column, parent.row());
 }
 
 QModelIndex GammaRay::ObjectEnumModel::parent(const QModelIndex &child) const
 {
-  // note: Qt4 doesn't have qintptr
-  if (static_cast<qptrdiff>(child.internalId()) == -1) {
-    return SuperClass::parent(child);
-  }
-  return SuperClass::index(child.internalId(), 0, QModelIndex());
+    // note: Qt4 doesn't have qintptr
+    if (static_cast<qptrdiff>(child.internalId()) == -1)
+        return SuperClass::parent(child);
+    return SuperClass::index(child.internalId(), 0, QModelIndex());
 }

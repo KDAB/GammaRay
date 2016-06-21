@@ -38,10 +38,8 @@
 #include <limits>
 
 namespace GammaRay {
-
 /** @brief Helper functions and constants defining the communication protocol between client and server. */
 namespace Protocol {
-
 typedef qint32 PayloadSize;
 typedef quint16 ObjectAddress;
 typedef quint8 MessageType;
@@ -51,58 +49,58 @@ static const ObjectAddress LauncherAddress = std::numeric_limits<ObjectAddress>:
 static const MessageType InvalidMessageType = 0;
 
 enum BuildInMessageType {
-  // object management
-  // client -> server
-  ObjectMonitored = InvalidMessageType + 1,
-  ObjectUnmonitored,
+    // object management
+    // client -> server
+    ObjectMonitored = InvalidMessageType + 1,
+    ObjectUnmonitored,
 
-  // server -> client
-  ServerVersion,
+    // server -> client
+    ServerVersion,
 
-  ObjectMapReply,
-  ObjectAdded,
-  ObjectRemoved,
+    ObjectMapReply,
+    ObjectAdded,
+    ObjectRemoved,
 
-  // remote model messages
-  // client -> server
-  ModelRowColumnCountRequest,
-  ModelContentRequest,
-  ModelHeaderRequest,
-  ModelSetDataRequest,
-  ModelSortRequest,
-  ModelSyncBarrier,
-  SelectionModelStateRequest,
+    // remote model messages
+    // client -> server
+    ModelRowColumnCountRequest,
+    ModelContentRequest,
+    ModelHeaderRequest,
+    ModelSetDataRequest,
+    ModelSortRequest,
+    ModelSyncBarrier,
+    SelectionModelStateRequest,
 
-  // server -> client
-  ModelRowColumnCountReply,
-  ModelContentReply,
-  ModelContentChanged,
-  ModelHeaderReply,
-  ModelHeaderChanged,
-  ModelRowsAdded,
-  ModelRowsMoved,
-  ModelRowsRemoved,
-  ModelColumnsAdded,
-  ModelColumnsMoved,
-  ModelColumnsRemoved,
-  ModelReset,
-  ModelLayoutChanged,
+    // server -> client
+    ModelRowColumnCountReply,
+    ModelContentReply,
+    ModelContentChanged,
+    ModelHeaderReply,
+    ModelHeaderChanged,
+    ModelRowsAdded,
+    ModelRowsMoved,
+    ModelRowsRemoved,
+    ModelColumnsAdded,
+    ModelColumnsMoved,
+    ModelColumnsRemoved,
+    ModelReset,
+    ModelLayoutChanged,
 
-  // server <-> client
-  SelectionModelSelect,
-  SelectionModelCurrent,
+    // server <-> client
+    SelectionModelSelect,
+    SelectionModelCurrent,
 
-  MethodCall,
-  PropertySyncRequest,
-  PropertyValuesChanged,
+    MethodCall,
+    PropertySyncRequest,
+    PropertyValuesChanged,
 
-  ServerInfo,
+    ServerInfo,
 
-  // probe settings provided by the launcher
-  ProbeSettings,
-  ServerAddress,
+    // probe settings provided by the launcher
+    ProbeSettings,
+    ServerAddress,
 
-  MESSAGE_TYPE_COUNT // NOTE when changing this enum, also update MessageStatisticsModel!
+    MESSAGE_TYPE_COUNT // NOTE when changing this enum, also update MessageStatisticsModel!
 };
 
 typedef QVector<QPair<qint32, qint32> > ModelIndex;
@@ -118,20 +116,19 @@ typedef QVector<ItemSelectionRange> ItemSelection;
 GAMMARAY_COMMON_EXPORT ModelIndex fromQModelIndex(const QModelIndex &index);
 
 /** Deserializes a QModelIndex. */
-GAMMARAY_COMMON_EXPORT QModelIndex toQModelIndex(const QAbstractItemModel *model, const ModelIndex &index);
+GAMMARAY_COMMON_EXPORT QModelIndex toQModelIndex(const QAbstractItemModel *model,
+                                                 const ModelIndex &index);
 
 /** Protocol version, must match exactly between client and server. */
 GAMMARAY_COMMON_EXPORT qint32 version();
 
 /** Broadcast format version. */
 GAMMARAY_COMMON_EXPORT qint32 broadcastFormatVersion();
-
 }
-
 }
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_TYPEINFO(GammaRay::Protocol::ItemSelectionRange, Q_MOVABLE_TYPE);
+    Q_DECLARE_TYPEINFO(GammaRay::Protocol::ItemSelectionRange, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
 #endif

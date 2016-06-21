@@ -38,92 +38,101 @@ using namespace GammaRay;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 namespace {
-QString sourceLocationLabel(ContextMenuExtension::Location location, const SourceLocation &sourceLocation) {
-  switch (location) {
-  case ContextMenuExtension::GoTo:
-    return ContextMenuExtension::tr("Go to: %1").arg(sourceLocation.displayString());
-  case ContextMenuExtension::ShowSource:
-    return ContextMenuExtension::tr("Show source: %1").arg(sourceLocation.displayString());
-  case ContextMenuExtension::Creation:
-    return ContextMenuExtension::tr("Go to creation: %1").arg(sourceLocation.displayString());
-  case ContextMenuExtension::Declaration:
-    return ContextMenuExtension::tr("Go to declaration: %1").arg(sourceLocation.displayString());
-  }
-  Q_ASSERT(false);
-  return QString();
+QString sourceLocationLabel(ContextMenuExtension::Location location,
+                            const SourceLocation &sourceLocation)
+{
+    switch (location) {
+    case ContextMenuExtension::GoTo:
+        return ContextMenuExtension::tr("Go to: %1").arg(sourceLocation.displayString());
+    case ContextMenuExtension::ShowSource:
+        return ContextMenuExtension::tr("Show source: %1").arg(sourceLocation.displayString());
+    case ContextMenuExtension::Creation:
+        return ContextMenuExtension::tr("Go to creation: %1").arg(sourceLocation.displayString());
+    case ContextMenuExtension::Declaration:
+        return ContextMenuExtension::tr("Go to declaration: %1").arg(sourceLocation.displayString());
+    }
+    Q_ASSERT(false);
+    return QString();
 }
 }
 #endif
 
 ContextMenuExtension::ContextMenuExtension(ObjectId id)
-  : m_id(id)
+    : m_id(id)
 {
 }
 
-void ContextMenuExtension::setLocation(ContextMenuExtension::Location location, const SourceLocation &sourceLocation)
+void ContextMenuExtension::setLocation(ContextMenuExtension::Location location,
+                                       const SourceLocation &sourceLocation)
 {
-  m_locations[location] = sourceLocation;
+    m_locations[location] = sourceLocation;
 }
 
-bool ContextMenuExtension::discoverSourceLocation(ContextMenuExtension::Location location, const QUrl &url)
+bool ContextMenuExtension::discoverSourceLocation(ContextMenuExtension::Location location,
+                                                  const QUrl &url)
 {
-  if (!UiIntegration::instance())
-    return false;
+    if (!UiIntegration::instance())
+        return false;
 
-  if (url.isEmpty())
-    return false;
+    if (url.isEmpty())
+        return false;
 
-  setLocation(location, SourceLocation(url, 0));
-  return true;
+    setLocation(location, SourceLocation(url, 0));
+    return true;
 }
 
-bool ContextMenuExtension::discoverPropertySourceLocation(ContextMenuExtension::Location location, const QModelIndex &index)
+bool ContextMenuExtension::discoverPropertySourceLocation(ContextMenuExtension::Location location,
+                                                          const QModelIndex &index)
 {
-  if (!UiIntegration::instance())
-    return false;
+    if (!UiIntegration::instance())
+        return false;
 
-  if (!index.isValid())
-    return false;
+    if (!index.isValid())
+        return false;
 
-  const bool isUrl = index.sibling(index.row(), PropertyModel::TypeColumn).data().toString() == QStringLiteral("QUrl");
-  if (!isUrl)
-    return false;
+    const bool isUrl
+        = index.sibling(index.row(), PropertyModel::TypeColumn).data().toString() == QStringLiteral(
+        "QUrl");
+    if (!isUrl)
+        return false;
 
-  return discoverSourceLocation(location, index.sibling(index.row(), PropertyModel::ValueColumn).data().toUrl());
+    return discoverSourceLocation(location, index.sibling(
+                                      index.row(), PropertyModel::ValueColumn).data().toUrl());
 }
 
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-  if (UiIntegration::instance()) {
-    for (auto it = m_locations.constBegin(), end = m_locations.constEnd(); it != end; ++it) {
-      if (it.value().isValid()) {
-        auto action = menu->addAction(sourceLocationLabel(it.key(), it.value()));
-        connect(action, &QAction::triggered, this, [it]() {
-          UiIntegration::requestNavigateToCode(it.value().url(), it.value().line(), it.value().column());
-        });
-      }
+    if (UiIntegration::instance()) {
+        for (auto it = m_locations.constBegin(), end = m_locations.constEnd(); it != end; ++it) {
+            if (it.value().isValid()) {
+                auto action = menu->addAction(sourceLocationLabel(it.key(), it.value()));
+                connect(action, &QAction::triggered, this, [it]() {
+                    UiIntegration::requestNavigateToCode(it.value().url(), it.value().line(),
+                                                         it.value().column());
+                });
+            }
+        }
     }
-  }
 
-  if (m_id.isNull())
-    return;
+    if (m_id.isNull())
+        return;
 
-  auto probeController = ObjectBroker::object<ProbeControllerInterface*>();
-  probeController->requestSupportedTools(m_id);
+    auto probeController = ObjectBroker::object<ProbeControllerInterface *>();
+    probeController->requestSupportedTools(m_id);
 
-  // delay adding actions until we know the supported tools
-  connect(probeController, &ProbeControllerInterface::supportedToolsResponse,
-          menu, [menu](ObjectId id, const ToolInfos &toolInfos) {
-    foreach (const auto &toolInfo, toolInfos) {
-      auto action = menu->addAction(tr("Show in \"%1\" tool").arg(toolInfo.name));
-      QObject::connect(action, &QAction::triggered, [id, toolInfo]() {
-        auto probeController = ObjectBroker::object<ProbeControllerInterface*>();
-        probeController->selectObject(id, toolInfo.id);
-      });
-    }
-  });
+    // delay adding actions until we know the supported tools
+    connect(probeController, &ProbeControllerInterface::supportedToolsResponse,
+            menu, [menu](ObjectId id, const ToolInfos &toolInfos) {
+        foreach (const auto &toolInfo, toolInfos) {
+            auto action = menu->addAction(tr("Show in \"%1\" tool").arg(toolInfo.name));
+            QObject::connect(action, &QAction::triggered, [id, toolInfo]() {
+                auto probeController = ObjectBroker::object<ProbeControllerInterface *>();
+                probeController->selectObject(id, toolInfo.id);
+            });
+        }
+    });
 #else
-  Q_UNUSED(menu);
+    Q_UNUSED(menu);
 #endif
 }

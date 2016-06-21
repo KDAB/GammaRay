@@ -33,40 +33,38 @@
 #include <common/tools/messagehandler/messagehandlerinterface.h>
 
 namespace GammaRay {
-
 struct DebugMessage;
 class MessageModel;
 
 namespace Ui {
-  class MessageHandler;
+class MessageHandler;
 }
 
 class MessageHandler : public MessageHandlerInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::MessageHandlerInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::MessageHandlerInterface)
+public:
     explicit MessageHandler(ProbeInterface *probe, QObject *parent = 0);
     ~MessageHandler();
 
-  private slots:
+private slots:
     void ensureHandlerInstalled();
     void handleFatalMessage(const GammaRay::DebugMessage &message);
 
-  private:
+private:
     MessageModel *m_messageModel;
 };
 
 class MessageHandlerFactory : public QObject, public StandardToolFactory<QObject, MessageHandler>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+public:
     explicit MessageHandlerFactory(QObject *parent);
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // MESSAGEHANDLER_H

@@ -35,14 +35,13 @@
 #include <QStandardItemModel>
 
 namespace GammaRay {
-
 class MimeTypesModel : public QStandardItemModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum Roles {
-      IconNameRole = UserRole + 1,
-      GenericIconNameRole
+        IconNameRole = UserRole + 1,
+        GenericIconNameRole
     };
 
     explicit MimeTypesModel(QObject *parent = 0);
@@ -50,20 +49,19 @@ class MimeTypesModel : public QStandardItemModel
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     void fillModel();
-    QVector<QStandardItem*> itemsForType(const QString &mimeTypeName);
+    QVector<QStandardItem *> itemsForType(const QString &mimeTypeName);
     void makeItemsForType(const QString &mimeTypeName);
-    static QList<QStandardItem*> makeRowForType(const QMimeType &mt);
+    static QList<QStandardItem *> makeRowForType(const QMimeType &mt);
     QSet<QString> normalizedMimeTypeNames(const QStringList &typeNames) const;
 
-    QHash<QString, QVector<QStandardItem*> > m_mimeTypeNodes;
+    QHash<QString, QVector<QStandardItem *> > m_mimeTypeNodes;
     QMimeDatabase m_db;
     bool m_modelFilled;
 };
-
 }
 
 #endif // GAMMARAY_MIMETYPESMODEL_H

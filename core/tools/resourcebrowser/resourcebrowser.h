@@ -37,34 +37,35 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ResourceBrowser : public ResourceBrowserInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ResourceBrowserInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ResourceBrowserInterface)
+public:
     explicit ResourceBrowser(ProbeInterface *probe, QObject *parent = 0);
 
-  public slots:
-    void downloadResource(const QString &sourceFilePath, const QString &targetFilePath) Q_DECL_OVERRIDE;
-    void selectResource(const QString &sourceFilePath, int line = -1, int column = -1) Q_DECL_OVERRIDE;
+public slots:
+    void downloadResource(const QString &sourceFilePath,
+                          const QString &targetFilePath) Q_DECL_OVERRIDE;
+    void selectResource(const QString &sourceFilePath, int line = -1,
+                        int column = -1) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void currentChanged(const QModelIndex &current, int line = -1, int column = -1);
 };
 
 class ResourceBrowserFactory : public QObject, public StandardToolFactory<QObject, ResourceBrowser>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit ResourceBrowserFactory(QObject *parent) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+public:
+    explicit ResourceBrowserFactory(QObject *parent)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_RESOURCEBROWSER_H

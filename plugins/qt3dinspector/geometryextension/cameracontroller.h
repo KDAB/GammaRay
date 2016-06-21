@@ -43,7 +43,6 @@ class QKeyboardDevice;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class CameraController : public Qt3DCore::QEntity
 {
     Q_OBJECT
@@ -65,7 +64,7 @@ private:
 
     Qt3DInput::QAction *m_leftMouseButtonAction;
 
-    Qt3DInput::QAxis* m_axis[AXISCOUNT];
+    Qt3DInput::QAxis *m_axis[AXISCOUNT];
 
     Qt3DInput::QKeyboardDevice *m_keyboardDevice;
 

@@ -32,7 +32,6 @@
 #include <QObject>
 
 namespace GammaRay {
-
 class SignalMonitorInterface : public QObject
 {
     Q_OBJECT
@@ -46,11 +45,11 @@ public slots:
 signals:
     void clock(qlonglong msecs);
 };
-
 }
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(GammaRay::SignalMonitorInterface, "com.kdab.GammaRay.SignalMonitorInterface/1.0")
+Q_DECLARE_INTERFACE(GammaRay::SignalMonitorInterface,
+                    "com.kdab.GammaRay.SignalMonitorInterface/1.0")
 QT_END_NAMESPACE
 
 #endif // GAMMARAY_SIGNALMONITORINTERFACE_H

@@ -40,8 +40,8 @@ class QGeometryRenderer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
-class Qt3DGeometryExtension : public Qt3DGeometryExtensionInterface, public PropertyControllerExtension
+class Qt3DGeometryExtension : public Qt3DGeometryExtensionInterface,
+    public PropertyControllerExtension
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::Qt3DGeometryExtensionInterface)

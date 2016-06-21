@@ -32,31 +32,30 @@
 using namespace GammaRay;
 
 PropertyControllerInterface::PropertyControllerInterface(const QString &name, QObject *parent)
-  : QObject(parent)
-  , m_name(name)
+    : QObject(parent)
+    , m_name(name)
 {
-  ObjectBroker::registerObject(name, this);
+    ObjectBroker::registerObject(name, this);
 }
 
 PropertyControllerInterface::~PropertyControllerInterface()
 {
-
 }
 
 QString PropertyControllerInterface::name() const
 {
-  return m_name;
+    return m_name;
 }
 
 QStringList PropertyControllerInterface::availableExtensions() const
 {
-  return m_availableExtensions;
+    return m_availableExtensions;
 }
 
-void PropertyControllerInterface::setAvailableExtensions(const QStringList& availableExtensions)
+void PropertyControllerInterface::setAvailableExtensions(const QStringList &availableExtensions)
 {
-  if (m_availableExtensions == availableExtensions)
-    return;
-  m_availableExtensions = availableExtensions;
-  emit availableExtensionsChanged();
+    if (m_availableExtensions == availableExtensions)
+        return;
+    m_availableExtensions = availableExtensions;
+    emit availableExtensionsChanged();
 }

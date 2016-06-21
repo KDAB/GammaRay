@@ -33,38 +33,36 @@
 #include <QLineEdit>
 
 namespace GammaRay {
-
 namespace Ui {
-  class PropertyTextEditorDialog;
+class PropertyTextEditorDialog;
 }
 
 /** Property editor dialog for texts. */
 class PropertyTextEditorDialog : public QDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PropertyTextEditorDialog(const QString &text, QWidget *parent = 0);
     ~PropertyTextEditorDialog();
 
     QString text() const;
 
-  protected:
+protected:
     QScopedPointer<Ui::PropertyTextEditorDialog> ui;
 };
 
 /** Property editor for texts. */
 class PropertyTextEditor : public QLineEdit
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PropertyTextEditor(QWidget *parent = 0);
 
     void save(const QString &text);
 
-  protected slots:
+protected slots:
     void edit();
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYTEXTEDITOR_H

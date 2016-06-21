@@ -41,24 +41,23 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class MultiSignalMapper;
 class ServerDevice;
 
 /** Server side connection endpoint. */
 class GAMMARAY_CORE_EXPORT Server : public Endpoint
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit Server(QObject *parent = 0);
     ~Server();
 
     /** Indicates which parts of a QObject should be exported to the client. */
     enum ObjectExportOption {
-      ExportNothing = 0x0,
-      ExportSignals = 0x1,
-      ExportProperties = 0x2,
-      ExportEverything = ExportProperties | ExportSignals
+        ExportNothing = 0x0,
+        ExportSignals = 0x1,
+        ExportProperties = 0x2,
+        ExportEverything = ExportProperties | ExportSignals
     };
     Q_DECLARE_FLAGS(ObjectExportOptions, ObjectExportOption)
 
@@ -71,7 +70,8 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
     /**
      * Register a server-side QObject for exporting to the client.
      */
-    Protocol::ObjectAddress registerObject(const QString &name, QObject *object, ObjectExportOptions exportOptions);
+    Protocol::ObjectAddress registerObject(const QString &name, QObject *object,
+                                           ObjectExportOptions exportOptions);
 
     /**
      * Register a callback slot @p monitorNotifier on object @p receiver that is called if the usage
@@ -80,15 +80,17 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
      * This is useful for example to disable expensive operations like sending large amounts of
      * data if nobody is interested anyway.
      */
-    void registerMonitorNotifier(Protocol::ObjectAddress address, QObject *receiver, const char* monitorNotifier);
+    void registerMonitorNotifier(Protocol::ObjectAddress address, QObject *receiver,
+                                 const char *monitorNotifier);
 
     /** Singleton accessor. */
-    static Server* instance();
+    static Server *instance();
 
     /**
      * Call @p method on the remote client and also directly on the local object identified by @p objectName.
      */
-    void invokeObject(const QString &objectName, const char *method, const QVariantList &args = QVariantList()) const Q_DECL_OVERRIDE;
+    void invokeObject(const QString &objectName, const char *method,
+                      const QVariantList &args = QVariantList()) const Q_DECL_OVERRIDE;
 
     bool isRemoteClient() const Q_DECL_OVERRIDE;
     QUrl serverAddress() const Q_DECL_OVERRIDE;
@@ -98,34 +100,35 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
      * be identical for all protocols (such as TCP).
      */
     QUrl externalAddress() const;
-  protected:
-    void messageReceived(const Message& msg) Q_DECL_OVERRIDE;
-    void handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString& objectName) Q_DECL_OVERRIDE;
-    void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName, QObject *object) Q_DECL_OVERRIDE;
+protected:
+    void messageReceived(const Message &msg) Q_DECL_OVERRIDE;
+    void handlerDestroyed(Protocol::ObjectAddress objectAddress,
+                          const QString &objectName) Q_DECL_OVERRIDE;
+    void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName,
+                         QObject *object) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void newConnection();
     void broadcast();
 
     /**
      * Forward the signal that triggered the call to this slot to the remote client if connected.
      */
-    void forwardSignal(QObject* sender, int signalIndex, const QVector<QVariant> &args);
+    void forwardSignal(QObject *sender, int signalIndex, const QVector<QVariant> &args);
 
-  private:
+private:
     void sendServerGreeting();
 
-  private:
+private:
     ServerDevice *m_serverDevice;
-    QHash<Protocol::ObjectAddress, QPair<QObject*, QByteArray> > m_monitorNotifiers;
+    QHash<Protocol::ObjectAddress, QPair<QObject *, QByteArray> > m_monitorNotifiers;
     Protocol::ObjectAddress m_nextAddress;
 
     QString m_label;
-    QTimer* m_broadcastTimer;
+    QTimer *m_broadcastTimer;
 
-    MultiSignalMapper* m_signalMapper;
+    MultiSignalMapper *m_signalMapper;
 };
-
 }
 
 #endif

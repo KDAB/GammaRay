@@ -36,49 +36,47 @@
 using namespace GammaRay;
 
 PromoLabel::PromoLabel(QWidget *parent, Qt::WindowFlags f)
-: QLabel(parent, f)
+    : QLabel(parent, f)
 {
-  updatePixmap();
+    updatePixmap();
 
-  setCursor(QCursor(Qt::PointingHandCursor));
-  setToolTip(tr("Visit KDAB Website"));
+    setCursor(QCursor(Qt::PointingHandCursor));
+    setToolTip(tr("Visit KDAB Website"));
 }
 
 bool PromoLabel::event(QEvent *e)
 {
-  if (e->type() == QEvent::PaletteChange) {
-    updatePixmap();
-  }
-  return QLabel::event(e);
+    if (e->type() == QEvent::PaletteChange)
+        updatePixmap();
+    return QLabel::event(e);
 }
 
 void PromoLabel::mouseReleaseEvent(QMouseEvent *ev)
 {
-  if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
-    QDesktopServices::openUrl(QUrl(QStringLiteral("http://www.kdab.com")));
-    ev->accept();
-    return;
-  }
+    if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
+        QDesktopServices::openUrl(QUrl(QStringLiteral("http://www.kdab.com")));
+        ev->accept();
+        return;
+    }
 
-  QLabel::mouseReleaseEvent(ev);
+    QLabel::mouseReleaseEvent(ev);
 }
 
 QImage PromoLabel::tintedImage(const QString &image, const QColor &color)
 {
-  QImage img(image);
-  img = img.alphaChannel();
-  QColor newColor = color;
-  for (int i = 0; i < img.colorCount(); ++i) {
-    newColor.setAlpha(qGray(img.color(i)));
-    img.setColor(i, newColor.rgba());
-  }
-  return img;
+    QImage img(image);
+    img = img.alphaChannel();
+    QColor newColor = color;
+    for (int i = 0; i < img.colorCount(); ++i) {
+        newColor.setAlpha(qGray(img.color(i)));
+        img.setColor(i, newColor.rgba());
+    }
+    return img;
 }
 
 void PromoLabel::updatePixmap()
 {
-  // load image and adapt it to user's foreground color
-  setPixmap(QPixmap::fromImage(tintedImage(QStringLiteral(":gammaray/kdabproducts.png"),
-                                           palette().foreground().color())));
+    // load image and adapt it to user's foreground color
+    setPixmap(QPixmap::fromImage(tintedImage(QStringLiteral(":gammaray/kdabproducts.png"),
+                                             palette().foreground().color())));
 }
-

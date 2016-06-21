@@ -43,7 +43,8 @@
 using namespace GammaRay;
 using namespace std;
 
-PluginManagerBase::PluginManagerBase(QObject *parent) : m_parent(parent)
+PluginManagerBase::PluginManagerBase(QObject *parent)
+    : m_parent(parent)
 {
 }
 
@@ -53,55 +54,58 @@ PluginManagerBase::~PluginManagerBase()
 
 QStringList PluginManagerBase::pluginPaths() const
 {
-  QStringList pluginPaths;
-  pluginPaths.push_back(Paths::currentPluginsPath());
-  return pluginPaths;
+    QStringList pluginPaths;
+    pluginPaths.push_back(Paths::currentPluginsPath());
+    return pluginPaths;
 }
 
 QStringList PluginManagerBase::pluginFilter() const
 {
-  QStringList filter;
+    QStringList filter;
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-  filter.push_back(QStringLiteral("*") + QStringLiteral(GAMMARAY_PROBE_ABI) + QStringLiteral(".desktop"));
+    filter.push_back(QStringLiteral("*") + QStringLiteral(GAMMARAY_PROBE_ABI)
+                     + QStringLiteral(".desktop"));
 #else
-  filter.push_back(QStringLiteral("*.desktop"));
+    filter.push_back(QStringLiteral("*.desktop"));
 #endif
 #elif defined(Q_OS_ANDROID)
-  filter.push_back(QStringLiteral("libplugins_gammaray_gammaray_*") + Paths::pluginExtension());
+    filter.push_back(QStringLiteral("libplugins_gammaray_gammaray_*") + Paths::pluginExtension());
 #else
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-  filter.push_back(QStringLiteral("*") + QStringLiteral(GAMMARAY_PROBE_ABI) + Paths::pluginExtension());
+    filter.push_back(QStringLiteral("*") + QStringLiteral(
+                         GAMMARAY_PROBE_ABI) + Paths::pluginExtension());
 #else
-  filter.push_back(QStringLiteral("*") + Paths::pluginExtension());
+    filter.push_back(QStringLiteral("*") + Paths::pluginExtension());
 #endif
 #endif
-  return filter;
+    return filter;
 }
 
 void PluginManagerBase::scan(const QString &serviceType)
 {
-  m_errors.clear();
-  QStringList loadedPluginNames;
+    m_errors.clear();
+    QStringList loadedPluginNames;
 
-  foreach (const QString &pluginPath, pluginPaths()) {
-    const QDir dir(pluginPath);
-    IF_DEBUG(cout << "checking plugin path: " << qPrintable(dir.absolutePath()) << endl);
-    foreach (const QString &plugin, dir.entryList(pluginFilter(), QDir::Files)) {
-      const QString pluginFile = dir.absoluteFilePath(plugin);
-      const PluginInfo pluginInfo(pluginFile);
+    foreach (const QString &pluginPath, pluginPaths()) {
+        const QDir dir(pluginPath);
+        IF_DEBUG(cout << "checking plugin path: " << qPrintable(dir.absolutePath()) << endl);
+        foreach (const QString &plugin, dir.entryList(pluginFilter(), QDir::Files)) {
+            const QString pluginFile = dir.absoluteFilePath(plugin);
+            const PluginInfo pluginInfo(pluginFile);
 
-      if (!pluginInfo.isValid() || loadedPluginNames.contains(pluginInfo.id())) {
-        continue;
-      }
+            if (!pluginInfo.isValid() || loadedPluginNames.contains(pluginInfo.id()))
+                continue;
 
-      if (pluginInfo.interfaceId() != serviceType) {
-        IF_DEBUG(qDebug() << Q_FUNC_INFO << "skipping" << pluginFile << "not supporting service type" << serviceType << "service types are: " << pluginInfo.interfaceId();)
-        continue;
-      }
+            if (pluginInfo.interfaceId() != serviceType) {
+                IF_DEBUG(
+                    qDebug() << Q_FUNC_INFO << "skipping" << pluginFile << "not supporting service type" << serviceType << "service types are: " << pluginInfo.interfaceId();
+                    )
+                continue;
+            }
 
-      if (createProxyFactory(pluginInfo, m_parent))
-        loadedPluginNames.push_back(pluginInfo.id());
+            if (createProxyFactory(pluginInfo, m_parent))
+                loadedPluginNames.push_back(pluginInfo.id());
+        }
     }
-  }
 }

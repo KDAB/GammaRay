@@ -31,13 +31,10 @@
 using namespace GammaRay;
 
 ModelInspectorClient::ModelInspectorClient(QObject *parent)
-: ModelInspectorInterface(parent)
+    : ModelInspectorInterface(parent)
 {
-
 }
 
 ModelInspectorClient::~ModelInspectorClient()
 {
-
 }
-

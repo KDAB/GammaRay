@@ -30,8 +30,8 @@
 
 using namespace GammaRay;
 
-PropertyControllerExtension::PropertyControllerExtension(const QString& name)
-  : m_name(name)
+PropertyControllerExtension::PropertyControllerExtension(const QString &name)
+    : m_name(name)
 {
 }
 
@@ -41,24 +41,24 @@ PropertyControllerExtension::~PropertyControllerExtension()
 
 QString PropertyControllerExtension::name() const
 {
-  return m_name;
+    return m_name;
 }
 
-bool PropertyControllerExtension::setObject(void* object, const QString& typeName)
+bool PropertyControllerExtension::setObject(void *object, const QString &typeName)
 {
-  Q_UNUSED(object);
-  Q_UNUSED(typeName);
-  return false;
+    Q_UNUSED(object);
+    Q_UNUSED(typeName);
+    return false;
 }
 
-bool PropertyControllerExtension::setQObject(QObject* object)
+bool PropertyControllerExtension::setQObject(QObject *object)
 {
-  Q_UNUSED(object);
-  return false;
+    Q_UNUSED(object);
+    return false;
 }
 
-bool PropertyControllerExtension::setMetaObject(const QMetaObject* metaObject)
+bool PropertyControllerExtension::setMetaObject(const QMetaObject *metaObject)
 {
-  Q_UNUSED(metaObject);
-  return false;
+    Q_UNUSED(metaObject);
+    return false;
 }

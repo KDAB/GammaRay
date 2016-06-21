@@ -35,7 +35,6 @@
 #include <QMetaEnum>
 
 namespace GammaRay {
-
 class GAMMARAY_CORE_EXPORT AbstractAttributeModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -43,14 +42,14 @@ public:
     explicit AbstractAttributeModel(QObject *parent = Q_NULLPTR);
     ~AbstractAttributeModel();
 
-    void setAttributeType(const char* name);
+    void setAttributeType(const char *name);
 
-    int columnCount(const QModelIndex & parent) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex & parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex & index, int role) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex & index) const Q_DECL_OVERRIDE;
-    bool setData(const QModelIndex & index, const QVariant & value, int role) Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
 
 protected:
     virtual bool testAttribute(int attr) const = 0;
@@ -60,26 +59,25 @@ private:
     QMetaEnum m_attrs;
 };
 
-
-template <typename Class, typename Enum>
+template<typename Class, typename Enum>
 class AttributeModel : public AbstractAttributeModel
 {
 public:
-    explicit AttributeModel(QObject *parent = Q_NULLPTR) :
-        AbstractAttributeModel(parent),
-        m_obj(Q_NULLPTR)
+    explicit AttributeModel(QObject *parent = Q_NULLPTR)
+        : AbstractAttributeModel(parent)
+        , m_obj(Q_NULLPTR)
     {
     }
 
     ~AttributeModel() {}
 
-    void setObject(Class* obj)
+    void setObject(Class *obj)
     {
         if (m_obj == obj)
             return;
 
         m_obj = obj;
-        emit dataChanged(index(0,0), index(rowCount() - 1, 0));
+        emit dataChanged(index(0, 0), index(rowCount() - 1, 0));
     }
 
 protected:
@@ -98,9 +96,8 @@ protected:
     }
 
 private:
-    Class* m_obj;
+    Class *m_obj;
 };
-
 }
 
 #endif // GAMMARAY_ATTRIBUTEMODEL_H

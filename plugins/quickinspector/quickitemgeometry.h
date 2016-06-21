@@ -35,7 +35,6 @@
 #include <QTransform>
 
 namespace GammaRay {
-
 struct QuickItemGeometry {
     // basic geometry
     QRectF itemRect;
@@ -46,7 +45,6 @@ struct QuickItemGeometry {
     QPointF transformOriginPoint;
     QTransform transform;
     QTransform parentTransform;
-
 
     // simple position
     qreal x;
@@ -72,12 +70,10 @@ struct QuickItemGeometry {
     qreal baselineOffset;
 };
 
-QDataStream& operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry);
-QDataStream& operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry);
-
+QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry);
+QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry);
 }
 
 Q_DECLARE_METATYPE(GammaRay::QuickItemGeometry)
 
 #endif
-

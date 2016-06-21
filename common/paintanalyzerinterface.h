@@ -38,7 +38,6 @@ class QImage;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Communication interface for GammaRay::PaintAnalyzer. */
 class GAMMARAY_COMMON_EXPORT PaintAnalyzerInterface : public QObject
 {
@@ -50,7 +49,6 @@ public:
 private:
     QString m_name;
 };
-
 }
 
 QT_BEGIN_NAMESPACE

@@ -37,28 +37,27 @@ class QAbstractItemView;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class QuickItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit QuickItemDelegate(QAbstractItemView *view);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void setTextColor(const QVariant &textColor, const QPersistentModelIndex &index);
 
-  protected:
+protected:
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
                const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-  private:
+private:
     QHash<QModelIndex, QColor> m_colors;
     QAbstractItemView *m_view;
 };
-
 }
 
 Q_DECLARE_METATYPE(QPersistentModelIndex)

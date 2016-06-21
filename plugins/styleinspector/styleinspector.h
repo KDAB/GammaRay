@@ -40,7 +40,6 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ComplexControlModel;
 class ControlModel;
 class PaletteModel;
@@ -50,16 +49,16 @@ class StandardIconModel;
 
 class StyleInspector : public StyleInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::StyleInspectorInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::StyleInspectorInterface)
+public:
     explicit StyleInspector(ProbeInterface *probe, QObject *parent = 0);
     virtual ~StyleInspector();
 
-  private slots:
+private slots:
     void styleSelected(const QItemSelection &selection);
 
-  private:
+private:
     PrimitiveModel *m_primitiveModel;
     ControlModel *m_controlModel;
     ComplexControlModel *m_complexControlModel;
@@ -70,18 +69,18 @@ class StyleInspector : public StyleInspectorInterface
 
 class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle, StyleInspector>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_styleinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_styleinspector.json")
 
-  public:
-    explicit StyleInspectorFactory(QObject *parent = 0) : QObject(parent)
+public:
+    explicit StyleInspectorFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_STYLEINSPECTOR_H

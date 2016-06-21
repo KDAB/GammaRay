@@ -30,8 +30,8 @@
 
 using namespace GammaRay;
 
-PropertyData::PropertyData() :
-    m_flags(PropertyData::Readable)
+PropertyData::PropertyData()
+    : m_flags(PropertyData::Readable)
 {
 }
 
@@ -40,7 +40,7 @@ QString PropertyData::name() const
     return m_name;
 }
 
-void PropertyData::setName(const QString& name)
+void PropertyData::setName(const QString &name)
 {
     m_name = name;
 }
@@ -50,7 +50,7 @@ QVariant PropertyData::value() const
     return m_value;
 }
 
-void PropertyData::setValue(const QVariant& value)
+void PropertyData::setValue(const QVariant &value)
 {
     m_value = value;
 }
@@ -62,7 +62,7 @@ QString PropertyData::typeName() const
     return m_typeName;
 }
 
-void PropertyData::setTypeName(const QString& typeName)
+void PropertyData::setTypeName(const QString &typeName)
 {
     m_typeName = typeName;
 }
@@ -72,7 +72,7 @@ QString PropertyData::className() const
     return m_className;
 }
 
-void PropertyData::setClassName(const QString& className)
+void PropertyData::setClassName(const QString &className)
 {
     m_className = className;
 }
@@ -82,7 +82,7 @@ QString PropertyData::details() const
     return m_details;
 }
 
-void PropertyData::setDetails(const QString& details)
+void PropertyData::setDetails(const QString &details)
 {
     m_details = details;
 }

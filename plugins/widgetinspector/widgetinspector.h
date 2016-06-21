@@ -36,21 +36,20 @@
 #include <QWidget>
 
 namespace GammaRay {
-
-class WidgetInspectorFactory
-  : public QObject, public StandardToolFactory<QWidget, WidgetInspectorServer>
+class WidgetInspectorFactory : public QObject,
+    public StandardToolFactory<QWidget, WidgetInspectorServer>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_widgetinspector.json")
-  public:
-    explicit WidgetInspectorFactory(QObject *parent = 0) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_widgetinspector.json")
+public:
+    explicit WidgetInspectorFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_WIDGETINSPECTOR_H

@@ -34,16 +34,17 @@
 using namespace GammaRay;
 
 PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
-  : QWidget(parent), ui(new Ui::PropertyExtendedEditor)
+    : QWidget(parent)
+    , ui(new Ui::PropertyExtendedEditor)
 {
-  ui->setupUi(this);
-  // TODO: make button content smaller by using a tiny icon
-  connect(ui->editButton, SIGNAL(clicked()),SLOT(edit()));
+    ui->setupUi(this);
+    // TODO: make button content smaller by using a tiny icon
+    connect(ui->editButton, SIGNAL(clicked()), SLOT(edit()));
 }
 
 PropertyExtendedEditor::~PropertyExtendedEditor()
 {
-  delete ui;
+    delete ui;
 }
 
 Qt::Alignment PropertyExtendedEditor::alignment() const
@@ -58,22 +59,21 @@ void PropertyExtendedEditor::setAlignment(const Qt::Alignment &alignment)
 
 QVariant PropertyExtendedEditor::value() const
 {
-  return m_value;
+    return m_value;
 }
 
 void PropertyExtendedEditor::setValue(const QVariant &value)
 {
-  m_value = value;
-  const QString displayValue = property("displayString").toString();
-  ui->valueLabel->setText(displayValue.isEmpty() ? value.toString() : displayValue);
+    m_value = value;
+    const QString displayValue = property("displayString").toString();
+    ui->valueLabel->setText(displayValue.isEmpty() ? value.toString() : displayValue);
 }
 
 void PropertyExtendedEditor::save(const QVariant &value)
 {
-  setValue(value);
+    setValue(value);
 
-  // The user already pressed Apply, don't force her/him to do again
-  QKeyEvent event(QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier);
-  QApplication::sendEvent(this, &event);
+    // The user already pressed Apply, don't force her/him to do again
+    QKeyEvent event(QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier);
+    QApplication::sendEvent(this, &event);
 }
-

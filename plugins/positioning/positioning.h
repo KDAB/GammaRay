@@ -35,7 +35,6 @@
 #include <QObject>
 
 namespace GammaRay {
-
 class Positioning : public QObject
 {
     Q_OBJECT
@@ -43,19 +42,20 @@ public:
     explicit Positioning(ProbeInterface *probe, QObject *parent = Q_NULLPTR);
 };
 
-class PositioningFactory :  public QObject, public StandardToolFactory<QGeoPositionInfoSource, Positioning>
+class PositioningFactory : public QObject,
+    public StandardToolFactory<QGeoPositionInfoSource, Positioning>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_positioning.json")
 public:
-    explicit PositioningFactory(QObject *parent = Q_NULLPTR) : QObject(parent)
+    explicit PositioningFactory(QObject *parent = Q_NULLPTR)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_POSITIONING_H

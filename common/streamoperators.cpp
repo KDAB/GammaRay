@@ -42,9 +42,9 @@ QT_END_NAMESPACE
 
 void StreamOperators::registerOperators()
 {
-  qRegisterMetaTypeStreamOperators<QMetaMethod::MethodType>();
-  qRegisterMetaTypeStreamOperators<Qt::ConnectionType>();
+    qRegisterMetaTypeStreamOperators<QMetaMethod::MethodType>();
+    qRegisterMetaTypeStreamOperators<Qt::ConnectionType>();
 
-  qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
-  qRegisterMetaTypeStreamOperators<GammaRay::SourceLocation>();
+    qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
+    qRegisterMetaTypeStreamOperators<GammaRay::SourceLocation>();
 }

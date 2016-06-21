@@ -46,14 +46,14 @@
 using namespace GammaRay;
 
 MethodsTab::MethodsTab(PropertyWidget *parent)
-  : QWidget(parent)
-  , m_ui(new Ui_MethodsTab)
-  , m_interface(0)
+    : QWidget(parent)
+    , m_ui(new Ui_MethodsTab)
+    , m_interface(0)
 {
-  m_ui->setupUi(this);
-  m_ui->methodView->header()->setObjectName("methodViewHeader");
-  m_ui->methodLog->header()->setObjectName("methodLogHeader");
-  setObjectBaseName(parent->objectBaseName());
+    m_ui->setupUi(this);
+    m_ui->methodView->header()->setObjectName("methodViewHeader");
+    m_ui->methodLog->header()->setObjectName("methodLogHeader");
+    setObjectBaseName(parent->objectBaseName());
 }
 
 MethodsTab::~MethodsTab()
@@ -62,66 +62,62 @@ MethodsTab::~MethodsTab()
 
 void MethodsTab::setObjectBaseName(const QString &baseName)
 {
-  m_objectBaseName = baseName;
+    m_objectBaseName = baseName;
 
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "methods"));
-  proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-  proxy->setSortRole(ObjectMethodModelRole::MethodSignature);
-  m_ui->methodView->setModel(proxy);
-  m_ui->methodView->sortByColumn(0, Qt::AscendingOrder);
-  m_ui->methodView->setSelectionModel(ObjectBroker::selectionModel(proxy));
-  m_ui->methodView->header()->setResizeMode(QHeaderView::ResizeToContents);
-  new SearchLineController(m_ui->methodSearchLine, proxy);
-  connect(m_ui->methodView, SIGNAL(doubleClicked(QModelIndex)),
-          SLOT(methodActivated(QModelIndex)));
-  connect(m_ui->methodView, SIGNAL(customContextMenuRequested(QPoint)),
-          SLOT(methodContextMenu(QPoint)));
-  m_ui->methodLog->setModel(ObjectBroker::model(baseName + '.' + "methodLog"));
+    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    proxy->setDynamicSortFilter(true);
+    proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "methods"));
+    proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+    proxy->setSortRole(ObjectMethodModelRole::MethodSignature);
+    m_ui->methodView->setModel(proxy);
+    m_ui->methodView->sortByColumn(0, Qt::AscendingOrder);
+    m_ui->methodView->setSelectionModel(ObjectBroker::selectionModel(proxy));
+    m_ui->methodView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    new SearchLineController(m_ui->methodSearchLine, proxy);
+    connect(m_ui->methodView, SIGNAL(doubleClicked(QModelIndex)),
+            SLOT(methodActivated(QModelIndex)));
+    connect(m_ui->methodView, SIGNAL(customContextMenuRequested(QPoint)),
+            SLOT(methodContextMenu(QPoint)));
+    m_ui->methodLog->setModel(ObjectBroker::model(baseName + '.' + "methodLog"));
 
-  m_interface = ObjectBroker::object<MethodsExtensionInterface*>(baseName + ".methodsExtension");
-  new PropertyBinder(m_interface, "hasObject", m_ui->methodLog, "visible");
+    m_interface = ObjectBroker::object<MethodsExtensionInterface *>(baseName + ".methodsExtension");
+    new PropertyBinder(m_interface, "hasObject", m_ui->methodLog, "visible");
 }
 
 void MethodsTab::methodActivated(const QModelIndex &index)
 {
-  if (!index.isValid() || !m_interface->hasObject()) {
-    return;
-  }
-  m_interface->activateMethod();
+    if (!index.isValid() || !m_interface->hasObject())
+        return;
+    m_interface->activateMethod();
 
-  MethodInvocationDialog dlg(this);
-  dlg.setArgumentModel(ObjectBroker::model(m_objectBaseName + '.' + "methodArguments"));
-  if (dlg.exec()) {
-    m_interface->invokeMethod(dlg.connectionType());
-  }
+    MethodInvocationDialog dlg(this);
+    dlg.setArgumentModel(ObjectBroker::model(m_objectBaseName + '.' + "methodArguments"));
+    if (dlg.exec())
+        m_interface->invokeMethod(dlg.connectionType());
 }
 
 void MethodsTab::methodContextMenu(const QPoint &pos)
 {
-  const QModelIndex index = m_ui->methodView->indexAt(pos);
-  if (!index.isValid() || !m_interface->hasObject()) {
-    return;
-  }
+    const QModelIndex index = m_ui->methodView->indexAt(pos);
+    if (!index.isValid() || !m_interface->hasObject())
+        return;
 
-  const QMetaMethod::MethodType methodType =
-    index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
-  QMenu contextMenu;
-  QAction *invokeAction = 0, *connectToAction = 0;
-  if (methodType == QMetaMethod::Slot || methodType == QMetaMethod::Method) {
-    invokeAction = contextMenu.addAction(tr("Invoke"));
-  } else if (methodType == QMetaMethod::Signal) {
-    connectToAction = contextMenu.addAction(tr("Connect to"));
-    invokeAction = contextMenu.addAction(tr("Emit"));
-  } else {
-    return; // Can't do any action, so don't try to show an empty context menu.
-  }
+    const QMetaMethod::MethodType methodType
+        = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
+    QMenu contextMenu;
+    QAction *invokeAction = 0, *connectToAction = 0;
+    if (methodType == QMetaMethod::Slot || methodType == QMetaMethod::Method) {
+        invokeAction = contextMenu.addAction(tr("Invoke"));
+    } else if (methodType == QMetaMethod::Signal) {
+        connectToAction = contextMenu.addAction(tr("Connect to"));
+        invokeAction = contextMenu.addAction(tr("Emit"));
+    } else {
+        return; // Can't do any action, so don't try to show an empty context menu.
+    }
 
-  QAction *action = contextMenu.exec(m_ui->methodView->viewport()->mapToGlobal(pos));
-  if (action == invokeAction) {
-    methodActivated(index);
-  } else if (action == connectToAction) {
-    m_interface->connectToSignal();
-  }
+    QAction *action = contextMenu.exec(m_ui->methodView->viewport()->mapToGlobal(pos));
+    if (action == invokeAction)
+        methodActivated(index);
+    else if (action == connectToAction)
+        m_interface->connectToSignal();
 }

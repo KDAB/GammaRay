@@ -32,10 +32,10 @@
 
 using namespace GammaRay;
 
-Qt3DInspectorInterface::Qt3DInspectorInterface(QObject* parent):
-    QObject(parent)
+Qt3DInspectorInterface::Qt3DInspectorInterface(QObject *parent)
+    : QObject(parent)
 {
-    ObjectBroker::registerObject<Qt3DInspectorInterface*>(this);
+    ObjectBroker::registerObject<Qt3DInspectorInterface *>(this);
 }
 
 Qt3DInspectorInterface::~Qt3DInspectorInterface()

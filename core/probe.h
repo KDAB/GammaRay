@@ -48,7 +48,6 @@ class QMutex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ProbeCreator;
 class MetaObjectTreeModel;
 class ObjectListModel;
@@ -60,8 +59,8 @@ class Server;
 
 class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     ~Probe();
 
     /**
@@ -81,14 +80,15 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     QAbstractItemModel *objectTreeModel() const Q_DECL_OVERRIDE;
     QAbstractItemModel *metaObjectModel() const;
     ToolModel *toolModel() const;
-    void registerModel(const QString& objectName, QAbstractItemModel* model) Q_DECL_OVERRIDE;
-    void installGlobalEventFilter(QObject* filter) Q_DECL_OVERRIDE;
+    void registerModel(const QString &objectName, QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    void installGlobalEventFilter(QObject *filter) Q_DECL_OVERRIDE;
     bool needsObjectDiscovery() const Q_DECL_OVERRIDE;
-    void discoverObject(QObject* object) Q_DECL_OVERRIDE;
-    void selectObject(QObject* object, const QPoint& pos = QPoint()) Q_DECL_OVERRIDE;
-    void selectObject(QObject* object, const QString &toolId, const QPoint& pos = QPoint()) Q_DECL_OVERRIDE;
-    void selectObject(void* object, const QString& typeName) Q_DECL_OVERRIDE;
-    void registerSignalSpyCallbackSet(const SignalSpyCallbackSet& callbacks) Q_DECL_OVERRIDE;
+    void discoverObject(QObject *object) Q_DECL_OVERRIDE;
+    void selectObject(QObject *object, const QPoint &pos = QPoint()) Q_DECL_OVERRIDE;
+    void selectObject(QObject *object, const QString &toolId,
+                      const QPoint &pos = QPoint()) Q_DECL_OVERRIDE;
+    void selectObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
+    void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) Q_DECL_OVERRIDE;
 
     QObject *window() const;
     void setWindow(QObject *window);
@@ -112,9 +112,9 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 
     /// internal
     static void startupHookReceived();
-    template <typename Func>  static void executeSignalCallback(const Func &func);
+    template<typename Func> static void executeSignalCallback(const Func &func);
 
-  signals:
+signals:
     /**
      * Emitted when the user selected @p object at position @p pos in the probed application.
      */
@@ -155,16 +155,16 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     void objectDestroyed(QObject *obj);
     void objectReparented(QObject *obj);
 
-  protected:
+protected:
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void delayedInit();
     void processQueuedObjectChanges();
     void handleObjectDestroyed(QObject *obj);
     void objectParentChanged();
 
-  private:
+private:
     friend class ProbeCreator;
     friend class BenchSuite;
 
@@ -205,26 +205,25 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
     ToolModel *m_toolModel;
     QItemSelectionModel *m_toolSelectionModel;
     QObject *m_window;
-    QSet<QObject*> m_validObjects;
+    QSet<QObject *> m_validObjects;
 
     // all delayed object changes need to go through a single queue, as the order is crucial
     struct ObjectChange {
-      QObject *obj;
-      enum Type {
-        Create,
-        Destroy
-      } type;
+        QObject *obj;
+        enum Type {
+            Create,
+            Destroy
+        } type;
     };
     QVector<ObjectChange> m_queuedObjectChanges;
 
-    QList<QObject*> m_pendingReparents;
+    QList<QObject *> m_pendingReparents;
     QTimer *m_queueTimer;
-    QVector<QObject*> m_globalEventFilters;
+    QVector<QObject *> m_globalEventFilters;
     QVector<SignalSpyCallbackSet> m_signalSpyCallbacks;
     SignalSpyCallbackSet m_previousSignalSpyCallbackSet;
     Server *m_server;
 };
-
 }
 
 #endif // GAMMARAY_PROBE_H

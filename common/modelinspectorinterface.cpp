@@ -32,13 +32,11 @@
 using namespace GammaRay;
 
 ModelInspectorInterface::ModelInspectorInterface(QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  ObjectBroker::registerObject<ModelInspectorInterface*>(this);
+    ObjectBroker::registerObject<ModelInspectorInterface *>(this);
 }
 
 ModelInspectorInterface::~ModelInspectorInterface()
 {
-
 }
-

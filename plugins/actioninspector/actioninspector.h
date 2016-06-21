@@ -36,40 +36,39 @@ class QItemSelectionModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ActionInspector : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit ActionInspector(ProbeInterface *probe, QObject *parent = 0);
     virtual ~ActionInspector();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void triggerAction(int row);
 
 private Q_SLOTS:
     void objectSelected(QObject *obj);
 
-  private:
+private:
     void registerMetaTypes();
     QItemSelectionModel *m_selectionModel;
 };
 
 class ActionInspectorFactory : public QObject, public StandardToolFactory<QAction, ActionInspector>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_actioninspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_actioninspector.json")
 
-  public:
-    explicit ActionInspectorFactory(QObject *parent = 0) : QObject(parent)
+public:
+    explicit ActionInspectorFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_ACTIONINSPECTOR_H

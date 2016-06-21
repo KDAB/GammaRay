@@ -42,51 +42,50 @@ class QAbstractItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** @brief Non-UI part of the property widget. */
 class GAMMARAY_CORE_EXPORT PropertyController : public PropertyControllerInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::PropertyControllerInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::PropertyControllerInterface)
 public:
-  explicit PropertyController(const QString &baseName, QObject *parent);
-  ~PropertyController();
+    explicit PropertyController(const QString &baseName, QObject *parent);
+    ~PropertyController();
 
-  const QString &objectBaseName();
+    const QString &objectBaseName();
 
-  void setObject(QObject *object);
-  void setObject(void *object, const QString &className);
-  void setMetaObject(const QMetaObject *metaObject);
+    void setObject(QObject *object);
+    void setObject(void *object, const QString &className);
+    void setMetaObject(const QMetaObject *metaObject);
 
-  void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
+    void registerModel(QAbstractItemModel *model, const QString &nameSuffix);
 
-  template<typename T>
-  static void registerExtension()
-  {
-    PropertyControllerExtensionFactoryBase *factory = PropertyControllerExtensionFactory<T>::instance();
-    if (s_extensionFactories.indexOf(factory) >= 0)
-      return;
-    s_extensionFactories << factory;
-    foreach (PropertyController *instance, s_instances)
-      instance->loadExtension(factory);
-  }
+    template<typename T>
+    static void registerExtension()
+    {
+        PropertyControllerExtensionFactoryBase *factory
+            = PropertyControllerExtensionFactory<T>::instance();
+        if (s_extensionFactories.indexOf(factory) >= 0)
+            return;
+        s_extensionFactories << factory;
+        foreach (PropertyController *instance, s_instances)
+            instance->loadExtension(factory);
+    }
 
 private slots:
-  void objectDestroyed();
+    void objectDestroyed();
 
 private:
-  void loadExtension(PropertyControllerExtensionFactoryBase *factory);
+    void loadExtension(PropertyControllerExtensionFactoryBase *factory);
 
 private:
-  QString m_objectBaseName;
+    QString m_objectBaseName;
 
-  QPointer<QObject> m_object;
-  QVector<PropertyControllerExtension*> m_extensions;
+    QPointer<QObject> m_object;
+    QVector<PropertyControllerExtension *> m_extensions;
 
-  static QVector<PropertyControllerExtensionFactoryBase*> s_extensionFactories;
-  static QVector<PropertyController*> s_instances;
+    static QVector<PropertyControllerExtensionFactoryBase *> s_extensionFactories;
+    static QVector<PropertyController *> s_instances;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYCONTROLLER_H

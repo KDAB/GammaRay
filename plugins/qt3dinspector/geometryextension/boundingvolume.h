@@ -32,7 +32,6 @@
 #include <QVector3D>
 
 namespace GammaRay {
-
 class BoundingVolume
 {
 public:
@@ -47,7 +46,6 @@ private:
     QVector3D m_p2;
     bool m_null;
 };
-
 }
 
 #endif // GAMMARAY_BOUNDINGVOLUME_H

@@ -39,31 +39,29 @@ class QTime;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 namespace Ui {
-  class MessageHandlerWidget;
+class MessageHandlerWidget;
 }
 
 class MessageHandlerWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MessageHandlerWidget(QWidget *parent = 0);
     ~MessageHandlerWidget();
 
-  private slots:
-    void fatalMessageReceived(const QString &app, const QString &message,
-                              const QTime &time, const QStringList &backtrace);
+private slots:
+    void fatalMessageReceived(const QString &app, const QString &message, const QTime &time,
+                              const QStringList &backtrace);
     void copyToClipboard(const QString &message);
     void messageContextMenu(const QPoint &pos);
     void messageSelected(const QItemSelection &selection);
 
-  private:
+private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
     UIStateManager m_stateManager;
     QStringListModel *m_backtraceModel;
 };
-
 }
 
 #endif // MESSAGEHANDLERWIDGET_H

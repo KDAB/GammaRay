@@ -42,7 +42,6 @@ class QEntity;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 /** Model for the entity tree of an QAspectEngine. */
 class Qt3DEntityTreeModel : public ObjectModelBase<QAbstractItemModel>
 {
@@ -53,10 +52,10 @@ public:
 
     void setEngine(Qt3DCore::QAspectEngine *engine);
 
-    QVariant data(const QModelIndex& index, int role) const override;
-    int rowCount(const QModelIndex& parent) const override;
-    QModelIndex parent(const QModelIndex& child) const override;
-    QModelIndex index(int row, int column, const QModelIndex& parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
 
 public slots:
     void objectCreated(QObject *obj);
@@ -65,14 +64,14 @@ public slots:
 
 private:
     void clear();
-    void populateFromEntity(Qt3DCore::QEntity* entity);
-    QModelIndex indexForEntity(Qt3DCore::QEntity* entity) const;
+    void populateFromEntity(Qt3DCore::QEntity *entity);
+    QModelIndex indexForEntity(Qt3DCore::QEntity *entity) const;
 
 private:
     Qt3DCore::QAspectEngine *m_engine;
 
-    QHash<Qt3DCore::QEntity*, Qt3DCore::QEntity*> m_childParentMap;
-    QHash<Qt3DCore::QEntity*, QVector<Qt3DCore::QEntity*> > m_parentChildMap;
+    QHash<Qt3DCore::QEntity *, Qt3DCore::QEntity *> m_childParentMap;
+    QHash<Qt3DCore::QEntity *, QVector<Qt3DCore::QEntity *> > m_parentChildMap;
 };
 }
 

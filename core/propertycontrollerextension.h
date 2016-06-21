@@ -39,7 +39,6 @@ struct QMetaObject;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class PropertyController;
 
 /**
@@ -55,72 +54,72 @@ class PropertyController;
 class GAMMARAY_CORE_EXPORT PropertyControllerExtension
 {
 public:
-  /** @brief Create a new property extension.
-   *  @param name The extension identifier used for client/server communication.
-   */
-  explicit PropertyControllerExtension(const QString &name);
-  virtual ~PropertyControllerExtension();
+    /** @brief Create a new property extension.
+     *  @param name The extension identifier used for client/server communication.
+     */
+    explicit PropertyControllerExtension(const QString &name);
+    virtual ~PropertyControllerExtension();
 
-  /** @brief Sets the object that should be represented by this extension.
-   *  This variant is used for non-QObject types using Gammaray::MetaObjectRepository.
-   *  @return @c true if the extension can handle @p object, @c false otherwise.
-   */
-  virtual bool setObject(void *object, const QString &typeName);
+    /** @brief Sets the object that should be represented by this extension.
+     *  This variant is used for non-QObject types using Gammaray::MetaObjectRepository.
+     *  @return @c true if the extension can handle @p object, @c false otherwise.
+     */
+    virtual bool setObject(void *object, const QString &typeName);
 
-  /** @brief Sets the QObject that should be represented by this extension.
-   *  This variant is used for QObject-derived types.
-   *  @return @c true if the extension can handle @p object, @c false otherwise.
-   */
-  virtual bool setQObject(QObject *object);
+    /** @brief Sets the QObject that should be represented by this extension.
+     *  This variant is used for QObject-derived types.
+     *  @return @c true if the extension can handle @p object, @c false otherwise.
+     */
+    virtual bool setQObject(QObject *object);
 
-  /** @brief Sets the meta object that should be represented by this extension.
-   *  This variant is used for QMetaObjects without a specific object instance.
-   *  @return @c true if the extension can handle @p object, @c false otherwise.
-   */
-  virtual bool setMetaObject(const QMetaObject *metaObject);
+    /** @brief Sets the meta object that should be represented by this extension.
+     *  This variant is used for QMetaObjects without a specific object instance.
+     *  @return @c true if the extension can handle @p object, @c false otherwise.
+     */
+    virtual bool setMetaObject(const QMetaObject *metaObject);
 
-  /** @brief Returns the identifier of this extension, used for client/server communication. */
-  QString name() const;
+    /** @brief Returns the identifier of this extension, used for client/server communication. */
+    QString name() const;
 
 private:
-  Q_DISABLE_COPY(PropertyControllerExtension)
-  QString m_name;
+    Q_DISABLE_COPY(PropertyControllerExtension)
+    QString m_name;
 };
 
 ///@cond internal
-class PropertyControllerExtensionFactoryBase {
-  public:
+class PropertyControllerExtensionFactoryBase
+{
+public:
     explicit PropertyControllerExtensionFactoryBase() {}
     virtual PropertyControllerExtension *create(PropertyController *controller) = 0;
-  private:
+private:
     Q_DISABLE_COPY(PropertyControllerExtensionFactoryBase)
 };
 
-template <typename T>
+template<typename T>
 class PropertyControllerExtensionFactory : public PropertyControllerExtensionFactoryBase
 {
-  public:
-    static PropertyControllerExtensionFactoryBase* instance()
+public:
+    static PropertyControllerExtensionFactoryBase *instance()
     {
-      if (!s_instance)
-        s_instance = new PropertyControllerExtensionFactory<T>();
-      return s_instance;
+        if (!s_instance)
+            s_instance = new PropertyControllerExtensionFactory<T>();
+        return s_instance;
     }
 
     PropertyControllerExtension *create(PropertyController *controller) Q_DECL_OVERRIDE
     {
-      return new T(controller);
+        return new T(controller);
     }
 
-  private:
+private:
     explicit PropertyControllerExtensionFactory() {}
-    static PropertyControllerExtensionFactory<T>* s_instance;
+    static PropertyControllerExtensionFactory<T> *s_instance;
 };
 
-template <typename T>
-PropertyControllerExtensionFactory<T>* PropertyControllerExtensionFactory<T>::s_instance = 0;
+template<typename T>
+PropertyControllerExtensionFactory<T> *PropertyControllerExtensionFactory<T>::s_instance = 0;
 ///@endcond
-
 }
 
 #endif // PROPERTYCONTROLLEREXTENSION_H

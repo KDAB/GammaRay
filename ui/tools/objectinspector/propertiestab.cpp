@@ -48,17 +48,17 @@
 using namespace GammaRay;
 
 PropertiesTab::PropertiesTab(PropertyWidget *parent)
- : QWidget(parent)
- , m_ui(new Ui_PropertiesTab)
- , m_interface(0)
- , m_newPropertyValue(0)
+    : QWidget(parent)
+    , m_ui(new Ui_PropertiesTab)
+    , m_interface(0)
+    , m_newPropertyValue(0)
 {
-  m_ui->setupUi(this);
-  m_ui->propertyView->header()->setObjectName("propertyViewHeader");
+    m_ui->setupUi(this);
+    m_ui->propertyView->header()->setObjectName("propertyViewHeader");
 
-  m_ui->newPropertyButton->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
+    m_ui->newPropertyButton->setIcon(QIcon::fromTheme(QStringLiteral("list-add")));
 
-  setObjectBaseName(parent->objectBaseName());
+    setObjectBaseName(parent->objectBaseName());
 }
 
 PropertiesTab::~PropertiesTab()
@@ -67,121 +67,121 @@ PropertiesTab::~PropertiesTab()
 
 void PropertiesTab::setObjectBaseName(const QString &baseName)
 {
-  QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
-  proxy->setDynamicSortFilter(true);
-  proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-  QAbstractItemModel *model = ObjectBroker::model(baseName + '.' + "properties");
-  proxy->setSourceModel(model);
-  m_ui->propertyView->setModel(proxy);
-  m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
-  m_ui->propertyView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-  new SearchLineController(m_ui->propertySearchLine, proxy);
-  m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
-  connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
-          this, SLOT(propertyContextMenu(QPoint)));
+    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    proxy->setDynamicSortFilter(true);
+    proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+    QAbstractItemModel *model = ObjectBroker::model(baseName + '.' + "properties");
+    proxy->setSourceModel(model);
+    m_ui->propertyView->setModel(proxy);
+    m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
+    m_ui->propertyView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    new SearchLineController(m_ui->propertySearchLine, proxy);
+    m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
+    connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(propertyContextMenu(QPoint)));
 
-  EditableTypesModel *typesModel = new EditableTypesModel(this);
-  proxy = new QSortFilterProxyModel(this);
-  proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-  proxy->setSourceModel(typesModel);
-  proxy->sort(0);
-  m_ui->newPropertyType->setModel(proxy);
-  connect(m_ui->newPropertyType, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(updateNewPropertyValueEditor()));
-  updateNewPropertyValueEditor();
-  connect(m_ui->newPropertyName, SIGNAL(textChanged(QString)),
-          this, SLOT(validateNewProperty()));
-  validateNewProperty();
-  connect(m_ui->newPropertyButton, SIGNAL(clicked()),
-          this, SLOT(addNewProperty()));
+    EditableTypesModel *typesModel = new EditableTypesModel(this);
+    proxy = new QSortFilterProxyModel(this);
+    proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
+    proxy->setSourceModel(typesModel);
+    proxy->sort(0);
+    m_ui->newPropertyType->setModel(proxy);
+    connect(m_ui->newPropertyType, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(updateNewPropertyValueEditor()));
+    updateNewPropertyValueEditor();
+    connect(m_ui->newPropertyName, SIGNAL(textChanged(QString)),
+            this, SLOT(validateNewProperty()));
+    validateNewProperty();
+    connect(m_ui->newPropertyButton, SIGNAL(clicked()),
+            this, SLOT(addNewProperty()));
 
-  m_interface = ObjectBroker::object<PropertiesExtensionInterface*>(baseName + ".propertiesExtension");
-  new PropertyBinder(m_interface, "canAddProperty", m_ui->newPropertyBar, "visible");
-  m_ui->propertyView->setDeferredHidden(1, !m_interface->hasPropertyValues());
-  m_ui->propertyView->setRootIsDecorated(m_interface->hasPropertyValues());
-  connect(m_interface, SIGNAL(hasPropertyValuesChanged()), this, SLOT(hasValuesChanged()));
+    m_interface = ObjectBroker::object<PropertiesExtensionInterface *>(
+        baseName + ".propertiesExtension");
+    new PropertyBinder(m_interface, "canAddProperty", m_ui->newPropertyBar, "visible");
+    m_ui->propertyView->setDeferredHidden(1, !m_interface->hasPropertyValues());
+    m_ui->propertyView->setRootIsDecorated(m_interface->hasPropertyValues());
+    connect(m_interface, SIGNAL(hasPropertyValuesChanged()), this, SLOT(hasValuesChanged()));
 }
 
 static PropertyEditorFactory::TypeId selectedTypeId(QComboBox *box)
 {
-  return static_cast<PropertyEditorFactory::TypeId>(
-    box->itemData(box->currentIndex(), Qt::UserRole).toInt());
+    return static_cast<PropertyEditorFactory::TypeId>(
+        box->itemData(box->currentIndex(), Qt::UserRole).toInt());
 }
 
 void PropertiesTab::updateNewPropertyValueEditor()
 {
- delete m_newPropertyValue;
+    delete m_newPropertyValue;
 
- const PropertyEditorFactory::TypeId type = selectedTypeId(m_ui->newPropertyType);
+    const PropertyEditorFactory::TypeId type = selectedTypeId(m_ui->newPropertyType);
 
- m_newPropertyValue = PropertyEditorFactory::instance()->createEditor(type, this);
- static_cast<QHBoxLayout*>(m_ui->newPropertyBar->layout())->insertWidget(5, m_newPropertyValue);
- m_ui->newPropertyValueLabel->setBuddy(m_newPropertyValue);
+    m_newPropertyValue = PropertyEditorFactory::instance()->createEditor(type, this);
+    static_cast<QHBoxLayout *>(m_ui->newPropertyBar->layout())->insertWidget(5, m_newPropertyValue);
+    m_ui->newPropertyValueLabel->setBuddy(m_newPropertyValue);
 }
 
 void PropertiesTab::validateNewProperty()
 {
- Q_ASSERT(m_newPropertyValue);
- m_ui->newPropertyButton->setEnabled(!m_ui->newPropertyName->text().isEmpty());
+    Q_ASSERT(m_newPropertyValue);
+    m_ui->newPropertyButton->setEnabled(!m_ui->newPropertyName->text().isEmpty());
 }
 
 void PropertiesTab::propertyContextMenu(const QPoint &pos)
 {
-  const QModelIndex index = m_ui->propertyView->indexAt(pos);
-  if (!index.isValid()) {
-    return;
-  }
+    const QModelIndex index = m_ui->propertyView->indexAt(pos);
+    if (!index.isValid())
+        return;
 
-  const int actions = index.data(PropertyModel::ActionRole).toInt();
-  const auto objectId = index.data(PropertyModel::ObjectIdRole).value<ObjectId>();
-  ContextMenuExtension ext(objectId);
-  const bool canShow = actions != PropertyModel::NoAction ||
-      ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, index);
+    const int actions = index.data(PropertyModel::ActionRole).toInt();
+    const auto objectId = index.data(PropertyModel::ObjectIdRole).value<ObjectId>();
+    ContextMenuExtension ext(objectId);
+    const bool canShow = actions != PropertyModel::NoAction
+                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, index);
 
-  if (!canShow) {
-    return;
-  }
+    if (!canShow)
+        return;
 
-  QMenu contextMenu;
+    QMenu contextMenu;
 
-  if (actions & PropertyModel::Delete) {
-    QAction *action = contextMenu.addAction(tr("Remove"));
-    action->setData(PropertyModel::Delete);
-  }
-  if (actions & PropertyModel::Reset) {
-    QAction *action = contextMenu.addAction(tr("Reset"));
-    action->setData(PropertyModel::Reset);
-  }
-
-  ext.populateMenu(&contextMenu);
-
-  if (QAction *action = contextMenu.exec(m_ui->propertyView->viewport()->mapToGlobal(pos))) {
-    switch (action->data().toInt()) {
-      case PropertyModel::Delete:
-        m_ui->propertyView->model()->setData(index, QVariant(), Qt::EditRole);
-        break;
-      case PropertyModel::Reset:
-        m_ui->propertyView->model()->setData(index, QVariant(), PropertyModel::ResetActionRole);
-        break;
+    if (actions & PropertyModel::Delete) {
+        QAction *action = contextMenu.addAction(tr("Remove"));
+        action->setData(PropertyModel::Delete);
     }
-  }
+    if (actions & PropertyModel::Reset) {
+        QAction *action = contextMenu.addAction(tr("Reset"));
+        action->setData(PropertyModel::Reset);
+    }
+
+    ext.populateMenu(&contextMenu);
+
+    if (QAction *action = contextMenu.exec(m_ui->propertyView->viewport()->mapToGlobal(pos))) {
+        switch (action->data().toInt()) {
+        case PropertyModel::Delete:
+            m_ui->propertyView->model()->setData(index, QVariant(), Qt::EditRole);
+            break;
+        case PropertyModel::Reset:
+            m_ui->propertyView->model()->setData(index, QVariant(), PropertyModel::ResetActionRole);
+            break;
+        }
+    }
 }
 
 void PropertiesTab::addNewProperty()
 {
-  Q_ASSERT(m_interface->canAddProperty());
-  const PropertyEditorFactory::TypeId type = selectedTypeId(m_ui->newPropertyType);
+    Q_ASSERT(m_interface->canAddProperty());
+    const PropertyEditorFactory::TypeId type = selectedTypeId(m_ui->newPropertyType);
 
-  const QByteArray editorPropertyName = PropertyEditorFactory::instance()->valuePropertyName(type);
-  const QVariant value = m_newPropertyValue->property(editorPropertyName);
-  m_interface->setProperty(m_ui->newPropertyName->text(), value);
+    const QByteArray editorPropertyName
+        = PropertyEditorFactory::instance()->valuePropertyName(type);
+    const QVariant value = m_newPropertyValue->property(editorPropertyName);
+    m_interface->setProperty(m_ui->newPropertyName->text(), value);
 
-  m_ui->newPropertyName->clear();
-  updateNewPropertyValueEditor();
+    m_ui->newPropertyName->clear();
+    updateNewPropertyValueEditor();
 }
 
 void PropertiesTab::hasValuesChanged()
 {
-  m_ui->propertyView->setDeferredHidden(1, !m_interface->hasPropertyValues());
-  m_ui->propertyView->setRootIsDecorated(m_interface->hasPropertyValues());
+    m_ui->propertyView->setDeferredHidden(1, !m_interface->hasPropertyValues());
+    m_ui->propertyView->setRootIsDecorated(m_interface->hasPropertyValues());
 }

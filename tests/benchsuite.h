@@ -32,16 +32,14 @@
 #include <QObject>
 
 namespace GammaRay {
-
 class BenchSuite : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  private slots:
+private slots:
     void iconForObject();
     void probe_objectAdded();
 };
-
 }
 
 #endif // GAMMARAY_BENCHSUITE_H

@@ -32,17 +32,15 @@
 #include "propertyextendededitor.h"
 
 namespace GammaRay {
-
 class PropertyPaletteEditor : public PropertyExtendedEditor
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PropertyPaletteEditor(QWidget *parent = 0);
 
-  protected:
+protected:
     void edit() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYPALETTEEDITOR_H

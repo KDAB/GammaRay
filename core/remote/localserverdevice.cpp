@@ -33,8 +33,8 @@
 
 using namespace GammaRay;
 
-LocalServerDevice::LocalServerDevice(QObject* parent):
-    ServerDeviceImpl<QLocalServer>(parent)
+LocalServerDevice::LocalServerDevice(QObject *parent)
+    : ServerDeviceImpl<QLocalServer>(parent)
 {
     m_server = new QLocalServer(this);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)

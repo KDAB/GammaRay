@@ -34,25 +34,25 @@
 
 using namespace GammaRay;
 
-ClassInfoExtension::ClassInfoExtension(PropertyController* controller) :
-  PropertyControllerExtension(controller->objectBaseName() + ".classInfo"),
-  m_model(new ObjectClassInfoModel(controller))
+ClassInfoExtension::ClassInfoExtension(PropertyController *controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".classInfo")
+    , m_model(new ObjectClassInfoModel(controller))
 {
-  controller->registerModel(m_model, QStringLiteral("classInfo"));
+    controller->registerModel(m_model, QStringLiteral("classInfo"));
 }
 
 ClassInfoExtension::~ClassInfoExtension()
 {
 }
 
-bool ClassInfoExtension::setQObject(QObject* object)
+bool ClassInfoExtension::setQObject(QObject *object)
 {
-  m_model->setMetaObject(object ? object->metaObject() : 0);
-  return m_model->rowCount() > 0;
+    m_model->setMetaObject(object ? object->metaObject() : 0);
+    return m_model->rowCount() > 0;
 }
 
-bool ClassInfoExtension::setMetaObject(const QMetaObject* metaObject)
+bool ClassInfoExtension::setMetaObject(const QMetaObject *metaObject)
 {
-  m_model->setMetaObject(metaObject);
-  return m_model->rowCount() > 0;
+    m_model->setMetaObject(metaObject);
+    return m_model->rowCount() > 0;
 }

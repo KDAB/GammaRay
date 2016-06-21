@@ -41,37 +41,35 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class GAMMARAY_UI_EXPORT ContextMenuExtension : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  // UI presentation depend the order of this enum
-  enum Location {
-    GoTo,
-    ShowSource,
-    Creation,
-    Declaration
-  };
+    // UI presentation depend the order of this enum
+    enum Location {
+        GoTo,
+        ShowSource,
+        Creation,
+        Declaration
+    };
 
-  explicit ContextMenuExtension(ObjectId id = ObjectId());
+    explicit ContextMenuExtension(ObjectId id = ObjectId());
 
-  void setLocation(Location location, const SourceLocation &sourceLocation);
+    void setLocation(Location location, const SourceLocation &sourceLocation);
 
-  bool discoverSourceLocation(Location location, const QUrl &url);
-  // Given a model index from a PropertyModel, try to found a valid url and call
-  // setLocation() with the given location.
-  bool discoverPropertySourceLocation(Location location, const QModelIndex &index);
+    bool discoverSourceLocation(Location location, const QUrl &url);
+    // Given a model index from a PropertyModel, try to found a valid url and call
+    // setLocation() with the given location.
+    bool discoverPropertySourceLocation(Location location, const QModelIndex &index);
 
-  /// Populate @p menu with entries related to the captured object id. Only supported on Qt5
-  void populateMenu(QMenu *menu);
+    /// Populate @p menu with entries related to the captured object id. Only supported on Qt5
+    void populateMenu(QMenu *menu);
 
 private:
-  ObjectId m_id;
-  QMap<Location, SourceLocation> m_locations;
+    ObjectId m_id;
+    QMap<Location, SourceLocation> m_locations;
 };
-
 }
 
 #endif // GAMMARAY_CONTEXTMENUEXTENSION_H

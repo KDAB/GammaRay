@@ -44,15 +44,14 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class Ui_PropertyWidget;
 class PropertyControllerInterface;
 
 /** @brief Client-side counter-part GammaRay::PropertyController. */
 class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PropertyWidget(QWidget *parent = 0);
     virtual ~PropertyWidget();
 
@@ -66,25 +65,26 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
      * @param priority This is used to keep tabs in a stable order, tabs are ordered
      *   left to right with increasing priority.
      */
-    template<typename T> static void registerTab(const QString &name, const QString &label, int priority = 1000)
+    template<typename T> static void registerTab(const QString &name, const QString &label,
+                                                 int priority = 1000)
     {
         registerTab(new PropertyWidgetTabFactory<T>(name, label, priority));
     }
 
-  signals:
+signals:
     void tabsUpdated();
 
-  private:
+private:
     static void registerTab(PropertyWidgetTabFactoryBase *factory);
     void createWidgets();
     bool extensionAvailable(PropertyWidgetTabFactoryBase *factory) const;
     bool factoryInUse(PropertyWidgetTabFactoryBase *factory) const;
 
-  private slots:
+private slots:
     void updateShownTabs();
     void slotCurrentTabChanged();
 
-  private:
+private:
     QString m_objectBaseName;
 
     QTimer *m_tabsUpdatedTimer;
@@ -98,10 +98,9 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
 
     PropertyControllerInterface *m_controller;
 
-    static QVector<PropertyWidgetTabFactoryBase*> s_tabFactories;
-    static QVector<PropertyWidget*> s_propertyWidgets;
+    static QVector<PropertyWidgetTabFactoryBase *> s_tabFactories;
+    static QVector<PropertyWidget *> s_propertyWidgets;
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYWIDGET_H

@@ -32,23 +32,21 @@
 #include "propertycontrollerextension.h"
 
 namespace GammaRay {
-
 class PropertyController;
 class ObjectClassInfoModel;
 
 class ClassInfoExtension : public PropertyControllerExtension
 {
-  public:
+public:
     explicit ClassInfoExtension(PropertyController *controller);
     ~ClassInfoExtension();
 
     bool setQObject(QObject *object) Q_DECL_OVERRIDE;
     bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
 
-  private:
+private:
     ObjectClassInfoModel *m_model;
 };
-
 }
 
 #endif // CLASSINFOEXTENSION_H

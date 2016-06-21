@@ -34,30 +34,27 @@
 #include <QStyle>
 
 namespace GammaRay {
-
 /**
  * Lists all standard icons of a style.
  */
 class StandardIconModel : public AbstractStyleElementModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit StandardIconModel(QObject *parent = 0);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
     int doColumnCount() const Q_DECL_OVERRIDE;
     int doRowCount() const Q_DECL_OVERRIDE;
 
-  private:
-    QVariant dataForStandardIcon(QStyle::StandardPixmap stdPix,
-                                 const QString &name,
-                                 int column, int role) const;
+private:
+    QVariant dataForStandardIcon(QStyle::StandardPixmap stdPix, const QString &name, int column,
+                                 int role) const;
 };
-
 }
 
 #endif // GAMMARAY_STANDARDICONMODEL_H

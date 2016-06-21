@@ -30,22 +30,21 @@
 using namespace GammaRay;
 
 StateMachineViewerClient::StateMachineViewerClient(QObject *parent)
-  : StateMachineViewerInterface(parent)
+    : StateMachineViewerInterface(parent)
 {
-
 }
 
 void StateMachineViewerClient::selectStateMachine(int index)
 {
-  Endpoint::instance()->invokeObject(objectName(), "selectStateMachine", QVariantList() << index);
+    Endpoint::instance()->invokeObject(objectName(), "selectStateMachine", QVariantList() << index);
 }
 
 void StateMachineViewerClient::toggleRunning()
 {
-  Endpoint::instance()->invokeObject(objectName(), "toggleRunning");
+    Endpoint::instance()->invokeObject(objectName(), "toggleRunning");
 }
 
 void StateMachineViewerClient::repopulateGraph()
 {
-  Endpoint::instance()->invokeObject(objectName(), "repopulateGraph");
+    Endpoint::instance()->invokeObject(objectName(), "repopulateGraph");
 }

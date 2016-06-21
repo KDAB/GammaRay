@@ -36,7 +36,8 @@
 
 using namespace GammaRay;
 
-ServerDevice::ServerDevice(QObject* parent): QObject(parent)
+ServerDevice::ServerDevice(QObject *parent)
+    : QObject(parent)
 {
 }
 
@@ -44,17 +45,17 @@ ServerDevice::~ServerDevice()
 {
 }
 
-void ServerDevice::setServerAddress(const QUrl& serverAddress)
+void ServerDevice::setServerAddress(const QUrl &serverAddress)
 {
     m_address = serverAddress;
 }
 
-void ServerDevice::broadcast(const QByteArray& data)
+void ServerDevice::broadcast(const QByteArray &data)
 {
     Q_UNUSED(data);
 }
 
-ServerDevice* ServerDevice::create(const QUrl& serverAddress, QObject* parent)
+ServerDevice *ServerDevice::create(const QUrl &serverAddress, QObject *parent)
 {
     ServerDevice *device = 0;
     if (serverAddress.scheme() == QLatin1String("tcp"))

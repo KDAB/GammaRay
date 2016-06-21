@@ -31,7 +31,6 @@
 #include <QVector>
 
 namespace GammaRay {
-
 class ToolFactory;
 
 /** Information about loaded plugins, for display in the about dialog. */
@@ -39,16 +38,17 @@ class ToolPluginModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit ToolPluginModel(const QVector<ToolFactory*> &plugins, QObject *parent = 0);
+    explicit ToolPluginModel(const QVector<ToolFactory *> &plugins, QObject *parent = 0);
     ~ToolPluginModel();
 
-    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex& parent) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 private:
-    QVector<ToolFactory*> m_tools;
+    QVector<ToolFactory *> m_tools;
 };
 }
 

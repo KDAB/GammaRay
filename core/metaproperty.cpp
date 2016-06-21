@@ -33,7 +33,9 @@
 
 using namespace GammaRay;
 
-MetaProperty::MetaProperty(const char *name) : m_class(0), m_name(name)
+MetaProperty::MetaProperty(const char *name)
+    : m_class(0)
+    , m_name(name)
 {
 }
 
@@ -41,25 +43,25 @@ MetaProperty::~MetaProperty()
 {
 }
 
-const char* MetaProperty::name() const
+const char *MetaProperty::name() const
 {
-  return m_name;
+    return m_name;
 }
 
-void MetaProperty::setValue(void* object, const QVariant& value)
+void MetaProperty::setValue(void *object, const QVariant &value)
 {
-  Q_UNUSED(object);
-  Q_UNUSED(value);
-  Q_ASSERT(isReadOnly()); // otherwise sub-class should have implement this...
+    Q_UNUSED(object);
+    Q_UNUSED(value);
+    Q_ASSERT(isReadOnly()); // otherwise sub-class should have implement this...
 }
 
 MetaObject *MetaProperty::metaObject() const
 {
-  Q_ASSERT(m_class);
-  return m_class;
+    Q_ASSERT(m_class);
+    return m_class;
 }
 
 void MetaProperty::setMetaObject(MetaObject *om)
 {
-  m_class = om;
+    m_class = om;
 }

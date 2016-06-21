@@ -76,7 +76,7 @@ private:
     bool waitForSignal(QSignalSpy *spy, bool keepResult = false)
     {
         if (spy->isEmpty())
-          spy->wait(1000);
+            spy->wait(1000);
         bool result = !spy->isEmpty();
         if (!keepResult)
             spy->clear();
@@ -92,7 +92,10 @@ private:
         view->show();
         exposed = QTest::qWaitForWindowExposed(view);
         if (!exposed)
-            qWarning() << "Unable to expose window, probably running tests on a headless system - ignoring all following render failures.";
+            qWarning()
+                <<
+            "Unable to expose window, probably running tests on a headless system - ignoring all following render failures.";
+
 
         // wait at least two frames so we have the final window size with all render loop/driver combinations...
         QTest::qWait(20);
@@ -106,6 +109,7 @@ private slots:
     {
         qRegisterMetaType<QItemSelection>();
     }
+
     void init()
     {
         createProbe();
@@ -123,11 +127,12 @@ private slots:
         QVERIFY(sgModel);
         ModelTest sgModelTest(sgModel);
 
-        inspector = ObjectBroker::object<QuickInspectorInterface*>();
+        inspector = ObjectBroker::object<QuickInspectorInterface *>();
         QVERIFY(inspector);
         inspector->selectWindow(0);
         QTest::qWait(1);
     }
+
     void cleanup()
     {
         delete view;
@@ -166,9 +171,11 @@ private slots:
         QVERIFY(sgModel->rowCount() > 0);
 
         itemModel->setProperty("filterKeyColumn", -1);
-        itemModel->setProperty("filterRegExp", QRegExp("Rect", Qt::CaseInsensitive, QRegExp::FixedString));
+        itemModel->setProperty("filterRegExp",
+                               QRegExp("Rect", Qt::CaseInsensitive, QRegExp::FixedString));
         sgModel->setProperty("filterKeyColumn", -1);
-        sgModel->setProperty("filterRegExp", QRegExp("Transform", Qt::CaseInsensitive, QRegExp::FixedString));
+        sgModel->setProperty("filterRegExp",
+                             QRegExp("Transform", Qt::CaseInsensitive, QRegExp::FixedString));
         QVERIFY(itemModel->rowCount() > 0);
         QVERIFY(sgModel->rowCount() > 0);
 
@@ -191,21 +198,25 @@ private slots:
 
         auto toolSelectionModel = ObjectBroker::selectionModel(toolModel);
         QVERIFY(toolSelectionModel);
-        QSignalSpy toolSpy(toolSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QSignalSpy toolSpy(toolSelectionModel, SIGNAL(selectionChanged(QItemSelection,
+                                                                       QItemSelection)));
         QVERIFY(toolSpy.isValid());
 
         auto itemSelectionModel = ObjectBroker::selectionModel(itemModel);
         QVERIFY(itemSelectionModel);
-        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,
+                                                                       QItemSelection)));
         QVERIFY(itemSpy.isValid());
 
         auto sgSelectionModel = ObjectBroker::selectionModel(sgModel);
         QVERIFY(sgModel);
-        QSignalSpy sgSpy(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QSignalSpy sgSpy(sgSelectionModel,
+                         SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
         QVERIFY(sgSpy.isValid());
 
         // auto center-click is broken before https://codereview.qt-project.org/141085/
-        QTest::mouseClick(view, Qt::LeftButton, Qt::ShiftModifier | Qt::ControlModifier, QPoint(view->width()/2, view->height()/2));
+        QTest::mouseClick(view, Qt::LeftButton, Qt::ShiftModifier | Qt::ControlModifier,
+                          QPoint(view->width()/2, view->height()/2));
         QTest::qWait(20);
 
         QCOMPARE(toolSpy.size(), 1);
@@ -217,7 +228,9 @@ private slots:
 
     void testFetchingPreview()
     {
-        auto remoteView = ObjectBroker::object<RemoteViewInterface*>(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"));
+        auto remoteView
+            = ObjectBroker::object<RemoteViewInterface *>(QStringLiteral(
+                                                              "com.kdab.GammaRay.QuickRemoteView"));
         QVERIFY(remoteView);
         remoteView->setViewActive(true);
 
@@ -243,7 +256,7 @@ private slots:
         QCOMPARE(img.width(), 320);
         QCOMPARE(img.height(), 160);
 #ifndef Q_OS_WIN // this is too unstable on the CI, rendered results seem to differ in color!?
-        QCOMPARE(img.pixel(1,1), QColor(QStringLiteral("lightsteelblue")).rgb());
+        QCOMPARE(img.pixel(1, 1), QColor(QStringLiteral("lightsteelblue")).rgb());
 #endif
 
         remoteView->setViewActive(false);
@@ -251,7 +264,8 @@ private slots:
 
     void testCustomRenderModes()
     {
-        QSignalSpy featureSpy(inspector, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)));
+        QSignalSpy featureSpy(inspector, SIGNAL(features(
+                                                    GammaRay::QuickInspectorInterface::Features)));
         QVERIFY(featureSpy.isValid());
         inspector->checkFeatures();
         QCOMPARE(featureSpy.size(), 1);
@@ -265,44 +279,39 @@ private slots:
         if (features & QuickInspectorInterface::CustomRenderModeClipping) {
             // We can't do more than making sure, it doesn't crash. Let's wait some frames
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++)
                 triggerSceneChange();
-            }
             if (exposed)
                 QVERIFY(waitForSignal(&renderSpy));
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeOverdraw) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeOverdraw);
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++)
                 triggerSceneChange();
-            }
             if (exposed)
                 QVERIFY(waitForSignal(&renderSpy));
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeBatches) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++)
                 triggerSceneChange();
-            }
             if (exposed)
                 QVERIFY(waitForSignal(&renderSpy));
         }
 
         if (features & QuickInspectorInterface::CustomRenderModeChanges) {
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++)
                 triggerSceneChange();
-            }
             if (exposed)
                 QVERIFY(waitForSignal(&renderSpy));
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++)
             triggerSceneChange();
-        }
         if (exposed)
             QVERIFY(waitForSignal(&renderSpy));
     }

@@ -32,23 +32,21 @@
 #include "propertycontrollerextension.h"
 
 namespace GammaRay {
-
 class PropertyController;
 class ObjectEnumModel;
 
 class EnumsExtension : public PropertyControllerExtension
 {
-  public:
+public:
     explicit EnumsExtension(PropertyController *controller);
     ~EnumsExtension();
 
     bool setQObject(QObject *object) Q_DECL_OVERRIDE;
     bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
 
-  private:
+private:
     ObjectEnumModel *m_model;
 };
-
 }
 
 #endif // ENUMSEXTENSION_H

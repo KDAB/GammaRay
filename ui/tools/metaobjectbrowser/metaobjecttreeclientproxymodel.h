@@ -33,7 +33,6 @@
 #include <QPersistentModelIndex>
 
 namespace GammaRay {
-
 /** Colors the usage counts based on the global ratio. */
 class MetaObjectTreeClientProxyModel : public QIdentityProxyModel
 {
@@ -43,7 +42,7 @@ public:
     ~MetaObjectTreeClientProxyModel();
 
     void setSourceModel(QAbstractItemModel *source) Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex & index, int role) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
 private slots:
     void findQObjectIndex();
@@ -51,7 +50,6 @@ private slots:
 private:
     QPersistentModelIndex m_qobjIndex;
 };
-
 }
 
 #endif // GAMMARAY_METAOBJECTTREECLIENTPROXYMODEL_H

@@ -40,7 +40,9 @@ class MyObject : public QObject
     Q_PROPERTY(int intProp READ intProp WRITE setIntProp NOTIFY intPropChanged)
     Q_OBJECT
 public:
-    explicit MyObject(QObject *parent = 0) : QObject(parent), p1(0) {}
+    explicit MyObject(QObject *parent = 0)
+        : QObject(parent)
+        , p1(0) {}
     int intProp() { return p1; }
     void setIntProp(int i)
     {
@@ -61,11 +63,12 @@ class PropertySyncerTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit PropertySyncerTest(QObject *parent = 0) : QObject(parent),
-        m_server2ClientCount(0),
-        m_client2ServerCount(0),
-        m_client(0),
-        m_server(0)
+    explicit PropertySyncerTest(QObject *parent = 0)
+        : QObject(parent)
+        , m_server2ClientCount(0)
+        , m_client2ServerCount(0)
+        , m_client(0)
+        , m_server(0)
     {
     }
 
@@ -104,7 +107,8 @@ private slots:
         MyObject serverObj;
         serverObj.setIntProp(14);
         m_server = new PropertySyncer(this);
-        connect(m_server, SIGNAL(message(GammaRay::Message)), this, SLOT(server2client(GammaRay::Message)));
+        connect(m_server, SIGNAL(message(GammaRay::Message)), this,
+                SLOT(server2client(GammaRay::Message)));
         m_server->setAddress(1);
         m_server->addObject(42, &serverObj);
 
@@ -112,7 +116,8 @@ private slots:
         MyObject *clientObj = new MyObject(this);
         m_client = new PropertySyncer(this);
         m_client->setRequestInitialSync(true);
-        connect(m_client, SIGNAL(message(GammaRay::Message)), this, SLOT(client2server(GammaRay::Message)));
+        connect(m_client, SIGNAL(message(GammaRay::Message)), this,
+                SLOT(client2server(GammaRay::Message)));
         m_client->setAddress(1);
         m_client->addObject(42, clientObj);
         m_server->setObjectEnabled(42, true);

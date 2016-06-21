@@ -34,28 +34,27 @@
 #include <QQmlEngine>
 
 namespace GammaRay {
-
 class QmlSupport : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit QmlSupport(ProbeInterface *probe, QObject *parent = 0);
+    explicit QmlSupport(ProbeInterface *probe, QObject *parent = 0);
 };
 
 class QmlSupportFactory : public QObject, public StandardToolFactory<QQmlEngine, QmlSupport>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_qmlsupport.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_qmlsupport.json")
 
 public:
-  explicit QmlSupportFactory(QObject *parent = 0) : QObject(parent)
-  {
-  }
+    explicit QmlSupportFactory(QObject *parent = 0)
+        : QObject(parent)
+    {
+    }
 
-  QString name() const Q_DECL_OVERRIDE;
+    QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif

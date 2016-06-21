@@ -39,39 +39,44 @@
 using namespace GammaRay;
 
 TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent)
-  : QWidget(parent)
-  , ui(new Ui::TextDocumentInspectorWidget)
-  , m_stateManager(this)
+    : QWidget(parent)
+    , ui(new Ui::TextDocumentInspectorWidget)
+    , m_stateManager(this)
 {
-  ui->setupUi(this);
+    ui->setupUi(this);
 
-  ui->documentList->header()->setObjectName("documentListHeader");
-  ui->documentList->setDeferredResizeMode(0, QHeaderView::Stretch);
-  ui->documentList->setDeferredResizeMode(1, QHeaderView::Stretch);
-  ui->documentList->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TextDocumentsModel")));
-  ui->documentList->setSelectionModel(ObjectBroker::selectionModel(ui->documentList->model()));
-  connect(ui->documentList->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(documentSelected(QItemSelection,QItemSelection)));
+    ui->documentList->header()->setObjectName("documentListHeader");
+    ui->documentList->setDeferredResizeMode(0, QHeaderView::Stretch);
+    ui->documentList->setDeferredResizeMode(1, QHeaderView::Stretch);
+    ui->documentList->setModel(ObjectBroker::model(QStringLiteral(
+                                                       "com.kdab.GammaRay.TextDocumentsModel")));
+    ui->documentList->setSelectionModel(ObjectBroker::selectionModel(ui->documentList->model()));
+    connect(ui->documentList->selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(documentSelected(QItemSelection,QItemSelection)));
 
-  ui->documentTree->header()->setObjectName("documentTreeHeader");
-  ui->documentTree->setDeferredResizeMode(0, QHeaderView::Stretch);
-  ui->documentTree->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-  ui->documentTree->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TextDocumentModel")));
-  ui->documentTree->setSelectionModel(ObjectBroker::selectionModel(ui->documentTree->model()));
-  connect(ui->documentTree->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-          SLOT(documentElementSelected(QItemSelection,QItemSelection)));
+    ui->documentTree->header()->setObjectName("documentTreeHeader");
+    ui->documentTree->setDeferredResizeMode(0, QHeaderView::Stretch);
+    ui->documentTree->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->documentTree->setModel(ObjectBroker::model(QStringLiteral(
+                                                       "com.kdab.GammaRay.TextDocumentModel")));
+    ui->documentTree->setSelectionModel(ObjectBroker::selectionModel(ui->documentTree->model()));
+    connect(ui->documentTree->selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(documentElementSelected(QItemSelection,QItemSelection)));
 
-  ui->documentFormatView->header()->setObjectName("documentFormatViewHeader");
-  ui->documentFormatView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-  ui->documentFormatView->setDeferredResizeMode(1, QHeaderView::Stretch);
-  ui->documentFormatView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
-  ui->documentFormatView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TextDocumentFormatModel")));
+    ui->documentFormatView->header()->setObjectName("documentFormatViewHeader");
+    ui->documentFormatView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->documentFormatView->setDeferredResizeMode(1, QHeaderView::Stretch);
+    ui->documentFormatView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    ui->documentFormatView->setModel(ObjectBroker::model(QStringLiteral(
+                                                             "com.kdab.GammaRay.TextDocumentFormatModel")));
 
-  if (Endpoint::instance()->isRemoteClient()) // FIXME: content preview doesn't work remotely yet
-    ui->tabWidget->hide();
+    if (Endpoint::instance()->isRemoteClient()) // FIXME: content preview doesn't work remotely yet
+        ui->tabWidget->hide();
 
-  m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << 280 << -1 << -1);
-  m_stateManager.setDefaultSizes(ui->structureSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << 280 << -1 << -1);
+    m_stateManager.setDefaultSizes(ui->structureSplitter, UISizeVector() << "50%" << "50%");
 }
 
 TextDocumentInspectorWidget::~TextDocumentInspectorWidget()
@@ -79,39 +84,39 @@ TextDocumentInspectorWidget::~TextDocumentInspectorWidget()
 }
 
 void TextDocumentInspectorWidget::documentSelected(const QItemSelection &selected,
-                                             const QItemSelection &deselected)
+                                                   const QItemSelection &deselected)
 {
-  Q_UNUSED(deselected);
-  const QModelIndex selectedRow = selected.first().topLeft();
-  QObject *selectedObj = selectedRow.data(ObjectModel::ObjectRole).value<QObject*>();
-  QTextDocument *doc = qobject_cast<QTextDocument*>(selectedObj);
+    Q_UNUSED(deselected);
+    const QModelIndex selectedRow = selected.first().topLeft();
+    QObject *selectedObj = selectedRow.data(ObjectModel::ObjectRole).value<QObject *>();
+    QTextDocument *doc = qobject_cast<QTextDocument *>(selectedObj);
 
-  if (m_currentDocument) {
-    disconnect(m_currentDocument, SIGNAL(contentsChanged()),
-               this, SLOT(documentContentChanged()));
-  }
-  m_currentDocument = QPointer<QTextDocument>(doc);
+    if (m_currentDocument) {
+        disconnect(m_currentDocument, SIGNAL(contentsChanged()),
+                   this, SLOT(documentContentChanged()));
+    }
+    m_currentDocument = QPointer<QTextDocument>(doc);
 
-  if (doc) {
-    ui->documentView->setDocument(doc);
-    connect(doc, SIGNAL(contentsChanged()), SLOT(documentContentChanged()));
-    documentContentChanged();
-  }
+    if (doc) {
+        ui->documentView->setDocument(doc);
+        connect(doc, SIGNAL(contentsChanged()), SLOT(documentContentChanged()));
+        documentContentChanged();
+    }
 }
 
 void TextDocumentInspectorWidget::documentElementSelected(const QItemSelection &selected,
-                                                    const QItemSelection &deselected)
+                                                          const QItemSelection &deselected)
 {
-  Q_UNUSED(deselected);
-  const QModelIndex selectedRow = selected.first().topLeft();
+    Q_UNUSED(deselected);
+    const QModelIndex selectedRow = selected.first().topLeft();
 
-  const QRectF boundingBox = selectedRow.data(TextDocumentModel::BoundingBoxRole).toRectF();
-  ui->documentView->setShowBoundingBox(boundingBox);
+    const QRectF boundingBox = selectedRow.data(TextDocumentModel::BoundingBoxRole).toRectF();
+    ui->documentView->setShowBoundingBox(boundingBox);
 }
 
 void TextDocumentInspectorWidget::documentContentChanged()
 {
-  ui->htmlView->setPlainText(m_currentDocument->toHtml());
+    ui->htmlView->setPlainText(m_currentDocument->toHtml());
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

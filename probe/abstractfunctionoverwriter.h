@@ -44,10 +44,9 @@
 #endif
 
 namespace GammaRay {
-
 class AbstractFunctionOverwriter
 {
-  public:
+public:
     AbstractFunctionOverwriter();
     virtual ~AbstractFunctionOverwriter();
 
@@ -56,10 +55,9 @@ class AbstractFunctionOverwriter
      * @param orignalFunc original Qt Core 4 function
      * @param replacementFunc replacement function
      */
-    bool overwriteFunction(const QString &orignalFunc,
-                           void * const replacementFunc);
+    bool overwriteFunction(const QString &orignalFunc, void * const replacementFunc);
 
-  protected:
+protected:
     /**
      * Unprotects a memory region so that the memory can get written
      * @param mem start address of the memory that should be unprotected
@@ -145,20 +143,19 @@ class AbstractFunctionOverwriter
 
     virtual size_t blocksize();
 
-  private:
+private:
     Q_DISABLE_COPY(AbstractFunctionOverwriter)
     void *page_align(void *addr) const;
     size_t roundToNextPage(size_t addr) const;
 
     struct MemorySegment {
-      void *mem;
-      size_t size;
-      size_t free;
+        void *mem;
+        size_t size;
+        size_t free;
     };
 
     QList<MemorySegment> memoryPool;
 };
-
 }
 
 #endif // ABSTRACTFUNCTIONOVERWRITER_H

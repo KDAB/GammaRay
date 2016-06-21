@@ -31,27 +31,24 @@
 
 #include <QObject>
 
-namespace GammaRay
-{
-
+namespace GammaRay {
 class TranslatorInspectorInterface : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit TranslatorInspectorInterface(const QString &name, QObject *parent);
     virtual ~TranslatorInspectorInterface();
 
     const QString &name() const { return m_name; }
 
-  public slots:
+public slots:
     virtual void sendLanguageChangeEvent() = 0;
     virtual void resetTranslations() = 0;
 
-  private:
+private:
     QString m_name;
 };
-
 }
 
 QT_BEGIN_NAMESPACE

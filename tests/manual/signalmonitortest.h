@@ -33,18 +33,18 @@
 
 class SignalMonitorTest : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     SignalMonitorTest(QObject *parent = 0);
 
-  private:
+private:
     QString nextTimerName();
 
-  private slots:
+private slots:
     void onTimeout();
 
-  private:
+private:
     int m_timerCount;
 };
 

@@ -35,109 +35,110 @@
 using namespace GammaRay;
 
 GdbInjector::GdbInjector(const QString &executableOverride)
-  : DebuggerInjector()
+    : DebuggerInjector()
 {
-  setFilePath(executableOverride.isEmpty() ? QStringLiteral("gdb") : executableOverride);
+    setFilePath(executableOverride.isEmpty() ? QStringLiteral("gdb") : executableOverride);
 }
 
 QString GdbInjector::name() const
 {
-  return QStringLiteral("gdb");
+    return QStringLiteral("gdb");
 }
 
-bool GdbInjector::launch(const QStringList &programAndArgs, const QString &probeDll, const QString &probeFunc, const QProcessEnvironment &env)
+bool GdbInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
+                         const QString &probeFunc, const QProcessEnvironment &env)
 {
-  QStringList gdbArgs;
-  gdbArgs.push_back(QStringLiteral("--args"));
-  gdbArgs.append(programAndArgs);
+    QStringList gdbArgs;
+    gdbArgs.push_back(QStringLiteral("--args"));
+    gdbArgs.append(programAndArgs);
 
-  if (!startDebugger(gdbArgs, env)) {
-    return -1;
-  }
+    if (!startDebugger(gdbArgs, env))
+        return -1;
 
-  disableConfirmations();
-  waitForMain();
-  return injectAndDetach(probeDll, probeFunc);
+    disableConfirmations();
+    waitForMain();
+    return injectAndDetach(probeDll, probeFunc);
 }
 
 bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeFunc)
 {
-  Q_ASSERT(pid > 0);
-  if (!startDebugger(QStringList() << QStringLiteral("-pid") << QString::number(pid))) {
-    return false;
-  }
-  disableConfirmations();
-  return injectAndDetach(probeDll, probeFunc);
+    Q_ASSERT(pid > 0);
+    if (!startDebugger(QStringList() << QStringLiteral("-pid") << QString::number(pid)))
+        return false;
+    disableConfirmations();
+    return injectAndDetach(probeDll, probeFunc);
 }
 
 void GdbInjector::disableConfirmations()
 {
-  execCmd("set confirm off");
+    execCmd("set confirm off");
 }
 
 void GdbInjector::readyReadStandardError()
 {
-  const QString error = QString::fromLocal8Bit(m_process->readAllStandardError());
-  processLog(DebuggerInjector::In, true, error);
-  emit stderrMessage(error);
+    const QString error = QString::fromLocal8Bit(m_process->readAllStandardError());
+    processLog(DebuggerInjector::In, true, error);
+    emit stderrMessage(error);
 
-  if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
-    mManualError = true;
-    mErrorString = tr("The debuggee application is missing debug symbols which are required\n"
-                      "for GammaRay's GDB injector. Please recompile the debuggee.\n\n"
-                      "GDB error was: %1").arg(error);
-  } else if (error.startsWith(QLatin1String("Can't find member of namespace, class, struct, or union named \"QCoreApplication::exec\""))) {
-    mManualError = true;
-    mErrorString = tr("Your QtCore library is missing debug symbols which are required\n"
-                      "for GammaRay's GDB injector. Please install the required debug symbols.\n\n"
-                      "GDB error was: %1").arg(error);
-  }
+    if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
+        mManualError = true;
+        mErrorString = tr("The debuggee application is missing debug symbols which are required\n"
+                          "for GammaRay's GDB injector. Please recompile the debuggee.\n\n"
+                          "GDB error was: %1").arg(error);
+    } else if (error.startsWith(QLatin1String(
+                                    "Can't find member of namespace, class, struct, or union named \"QCoreApplication::exec\"")))
+    {
+        mManualError = true;
+        mErrorString = tr("Your QtCore library is missing debug symbols which are required\n"
+                          "for GammaRay's GDB injector. Please install the required debug symbols.\n\n"
+                          "GDB error was: %1").arg(error);
+    }
 
-  if (mManualError) {
-    m_process->kill();
-    disconnect(m_process.data(), SIGNAL(readyReadStandardError()), this, 0);
-    disconnect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, 0);
-    mProcessError = QProcess::FailedToStart;
-    return;
-  }
+    if (mManualError) {
+        m_process->kill();
+        disconnect(m_process.data(), SIGNAL(readyReadStandardError()), this, 0);
+        disconnect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, 0);
+        mProcessError = QProcess::FailedToStart;
+        return;
+    }
 }
 
 void GdbInjector::readyReadStandardOutput()
 {
-  QString message = QString::fromLocal8Bit(m_process->readAllStandardOutput());
-  processLog(DebuggerInjector::In, false, message);
-  emit stderrMessage(message); // Is this signal emit correct ?? stderr vs stdout
+    QString message = QString::fromLocal8Bit(m_process->readAllStandardOutput());
+    processLog(DebuggerInjector::In, false, message);
+    emit stderrMessage(message); // Is this signal emit correct ?? stderr vs stdout
 }
 
 void GdbInjector::addFunctionBreakpoint(const QByteArray &function)
 {
-  execCmd("break " + function);
+    execCmd("break " + function);
 }
 
 void GdbInjector::addMethodBreakpoint(const QByteArray &method)
 {
 #ifdef Q_OS_MAC
-  execCmd("break " + method + "()");
+    execCmd("break " + method + "()");
 #else
-  execCmd("break " + method);
+    execCmd("break " + method);
 #endif
 }
 
 void GdbInjector::clearBreakpoints()
 {
-  execCmd("delete");
+    execCmd("delete");
 }
 
 void GdbInjector::printBacktrace()
 {
-  execCmd("backtrace", false);
+    execCmd("backtrace", false);
 }
 
 void GdbInjector::loadSymbols(const QByteArray &library)
 {
 #ifndef Q_OS_MAC
-  execCmd("sha " + library);
+    execCmd("sha " + library);
 #else
-  Q_UNUSED(library);
+    Q_UNUSED(library);
 #endif
 }

@@ -34,10 +34,9 @@
 #include "abstractfunctionoverwriter.h"
 
 namespace GammaRay {
-
 class UnixFunctionOverwriter : public AbstractFunctionOverwriter
 {
-  protected:
+protected:
     virtual bool unprotectMemory(void *mem, size_t size);
     virtual bool reprotectMemory(void *mem, size_t size);
 
@@ -50,14 +49,13 @@ class UnixFunctionOverwriter : public AbstractFunctionOverwriter
     virtual void *qtCoreFunctionLookup(const QString &function);
     virtual long pagesize() const;
 
-  private:
+private:
     UnixFunctionOverwriter();
 
     long m_pagesize;
 
     friend class FunctionOverwriterFactory;
 };
-
 }
 
 #endif // !Q_OS_WIN

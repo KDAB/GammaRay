@@ -37,12 +37,13 @@
 
 using namespace GammaRay;
 
-PropertiesExtension::PropertiesExtension(PropertyController *controller) :
-  PropertiesExtensionInterface(controller->objectBaseName() + ".propertiesExtension", controller),
-  PropertyControllerExtension(controller->objectBaseName() + ".properties"),
-  m_aggregatedPropertyModel(new AggregatedPropertyModel(this))
+PropertiesExtension::PropertiesExtension(PropertyController *controller)
+    : PropertiesExtensionInterface(controller->objectBaseName() + ".propertiesExtension",
+                                   controller)
+    , PropertyControllerExtension(controller->objectBaseName() + ".properties")
+    , m_aggregatedPropertyModel(new AggregatedPropertyModel(this))
 {
-  controller->registerModel(m_aggregatedPropertyModel, QStringLiteral("properties"));
+    controller->registerModel(m_aggregatedPropertyModel, QStringLiteral("properties"));
 }
 
 PropertiesExtension::~PropertiesExtension()
@@ -51,37 +52,36 @@ PropertiesExtension::~PropertiesExtension()
 
 bool PropertiesExtension::setQObject(QObject *object)
 {
-  if (m_object == object)
+    if (m_object == object)
+        return true;
+    m_object = object;
+    m_aggregatedPropertyModel->setObject(object);
+    setCanAddProperty(true);
+    setHasPropertyValues(true);
     return true;
-  m_object = object;
-  m_aggregatedPropertyModel->setObject(object);
-  setCanAddProperty(true);
-  setHasPropertyValues(true);
-  return true;
 }
 
 bool PropertiesExtension::setObject(void *object, const QString &typeName)
 {
-  m_object = 0;
-  m_aggregatedPropertyModel->setObject(ObjectInstance(object, typeName.toUtf8()));
-  setCanAddProperty(false);
-  setHasPropertyValues(true);
-  return true;
+    m_object = 0;
+    m_aggregatedPropertyModel->setObject(ObjectInstance(object, typeName.toUtf8()));
+    setCanAddProperty(false);
+    setHasPropertyValues(true);
+    return true;
 }
 
-bool PropertiesExtension::setMetaObject(const QMetaObject* metaObject)
+bool PropertiesExtension::setMetaObject(const QMetaObject *metaObject)
 {
-  m_object = 0;
-  m_aggregatedPropertyModel->setObject(ObjectInstance(0, metaObject));
-  setCanAddProperty(false);
-  setHasPropertyValues(false);
-  return true;
+    m_object = 0;
+    m_aggregatedPropertyModel->setObject(ObjectInstance(0, metaObject));
+    setCanAddProperty(false);
+    setHasPropertyValues(false);
+    return true;
 }
 
 void PropertiesExtension::setProperty(const QString &name, const QVariant &value)
 {
-  if (!m_object) {
-    return;
-  }
-  m_object->setProperty(name.toUtf8(), value);
+    if (!m_object)
+        return;
+    m_object->setProperty(name.toUtf8(), value);
 }

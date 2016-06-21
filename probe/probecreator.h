@@ -31,31 +31,28 @@
 
 #include <QObject>
 
-namespace GammaRay
-{
-
+namespace GammaRay {
 /**
  * Creates Probe instance in main thread and deletes self afterwards.
  */
 class ProbeCreator : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     enum CreateFlag {
-      Create = 0,
-      FindExistingObjects = 1,
-      ResendServerAddress = 2
+        Create = 0,
+        FindExistingObjects = 1,
+        ResendServerAddress = 2
     };
     Q_DECLARE_FLAGS(CreateFlags, CreateFlag)
     explicit ProbeCreator(CreateFlags flags);
 
-  private slots:
+private slots:
     void createProbe();
 
-  private:
+private:
     CreateFlags m_flags;
 };
-
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::ProbeCreator::CreateFlags)

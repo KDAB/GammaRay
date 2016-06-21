@@ -32,24 +32,24 @@
 #include "metaobjectmodel.h"
 
 namespace GammaRay {
-
 class ObjectEnumModel : public MetaObjectModel<QMetaEnum, &QMetaObject::enumerator,
                                                &QMetaObject::enumeratorCount,
                                                &QMetaObject::enumeratorOffset>
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ObjectEnumModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QString columnHeader(int index) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QVariant metaData(const QModelIndex &index, const QMetaEnum &enumerator, int role) const Q_DECL_OVERRIDE;
+    QVariant metaData(const QModelIndex &index, const QMetaEnum &enumerator,
+                      int role) const Q_DECL_OVERRIDE;
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_OBJECTENUMMODEL_H

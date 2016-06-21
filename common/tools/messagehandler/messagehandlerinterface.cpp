@@ -32,13 +32,11 @@
 using namespace GammaRay;
 
 MessageHandlerInterface::MessageHandlerInterface(QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  ObjectBroker::registerObject<MessageHandlerInterface*>(this);
+    ObjectBroker::registerObject<MessageHandlerInterface *>(this);
 }
 
 MessageHandlerInterface::~MessageHandlerInterface()
 {
-
 }
-

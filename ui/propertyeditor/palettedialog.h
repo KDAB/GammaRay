@@ -34,30 +34,28 @@
 #include <ui/uistatemanager.h>
 
 namespace GammaRay {
-
 class PropertyEditorFactory;
 
 class PaletteModel;
 
 namespace Ui {
-  class PaletteDialog;
+class PaletteDialog;
 }
 
 class PaletteDialog : public QDialog
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PaletteDialog(const QPalette &palette, QWidget *parent = 0);
     virtual ~PaletteDialog();
 
     QPalette editedPalette() const;
 
-  private:
+private:
     Ui::PaletteDialog *ui;
     UIStateManager m_stateManager;
     PaletteModel *m_model;
 };
-
 }
 
 #endif // GAMMARAY_PALETTEDIALOG_H

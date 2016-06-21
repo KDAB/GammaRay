@@ -42,19 +42,19 @@
 
 using namespace GammaRay;
 
-static QuickWidgetSupport* s_quickWidgetSupportInstance = Q_NULLPTR;
+static QuickWidgetSupport *s_quickWidgetSupportInstance = Q_NULLPTR;
 
-static bool quickWidgetGrabWindowCallback(QQuickWindow* window)
+static bool quickWidgetGrabWindowCallback(QQuickWindow *window)
 {
     if (!s_quickWidgetSupportInstance)
         return false;
     return s_quickWidgetSupportInstance->grabWindow(window);
 }
 
-QuickWidgetSupport::QuickWidgetSupport(ProbeInterface* probe, QObject* parent) :
-    QObject(parent),
-    m_quickInspector(Q_NULLPTR),
-    m_probe(probe)
+QuickWidgetSupport::QuickWidgetSupport(ProbeInterface *probe, QObject *parent)
+    : QObject(parent)
+    , m_quickInspector(Q_NULLPTR)
+    , m_probe(probe)
 {
     Q_ASSERT(s_quickWidgetSupportInstance == Q_NULLPTR);
     s_quickWidgetSupportInstance = this;
@@ -63,14 +63,14 @@ QuickWidgetSupport::QuickWidgetSupport(ProbeInterface* probe, QObject* parent) :
 
     MetaObject *mo = 0;
     MO_ADD_METAOBJECT1(QQuickWidget, QWidget);
-    MO_ADD_PROPERTY_RO(QQuickWidget, QQmlEngine*, engine);
+    MO_ADD_PROPERTY_RO(QQuickWidget, QQmlEngine *, engine);
     MO_ADD_PROPERTY_RO(QQuickWidget, QSurfaceFormat, format);
     MO_ADD_PROPERTY_RO(QQuickWidget, QSize, initialSize);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    MO_ADD_PROPERTY_RO(QQuickWidget, QQuickWindow*, quickWindow);
+    MO_ADD_PROPERTY_RO(QQuickWidget, QQuickWindow *, quickWindow);
 #endif
-    MO_ADD_PROPERTY_RO(QQuickWidget, QQmlContext*, rootContext);
-    MO_ADD_PROPERTY_RO(QQuickWidget, QQuickItem*, rootObject);
+    MO_ADD_PROPERTY_RO(QQuickWidget, QQmlContext *, rootContext);
+    MO_ADD_PROPERTY_RO(QQuickWidget, QQuickItem *, rootObject);
 }
 
 GammaRay::QuickWidgetSupport::~QuickWidgetSupport()
@@ -78,9 +78,9 @@ GammaRay::QuickWidgetSupport::~QuickWidgetSupport()
     s_quickWidgetSupportInstance = Q_NULLPTR;
 }
 
-void GammaRay::QuickWidgetSupport::objectAdded(QObject* obj)
+void GammaRay::QuickWidgetSupport::objectAdded(QObject *obj)
 {
-    auto qqw = qobject_cast<QQuickWidget*>(obj);
+    auto qqw = qobject_cast<QQuickWidget *>(obj);
     if (!qqw)
         return;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
@@ -102,12 +102,15 @@ void GammaRay::QuickWidgetSupport::registerWindowGrabber()
         return;
     }
 
-    m_quickInspector = ObjectBroker::objectInternal(QStringLiteral("com.kdab.GammaRay.QuickInspectorInterface/1.0"));
+    m_quickInspector
+        = ObjectBroker::objectInternal(QStringLiteral(
+                                           "com.kdab.GammaRay.QuickInspectorInterface/1.0"));
     Q_ASSERT(m_quickInspector);
-    QMetaObject::invokeMethod(m_quickInspector, "registerGrabWindowCallback", Q_ARG(GrabWindowCallback, quickWidgetGrabWindowCallback));
+    QMetaObject::invokeMethod(m_quickInspector, "registerGrabWindowCallback",
+                              Q_ARG(GrabWindowCallback, quickWidgetGrabWindowCallback));
 }
 
-bool GammaRay::QuickWidgetSupport::grabWindow(QQuickWindow* window) const
+bool GammaRay::QuickWidgetSupport::grabWindow(QQuickWindow *window) const
 {
     const auto it = m_windowMap.constFind(window);
     if (it == m_windowMap.constEnd())
@@ -122,8 +125,7 @@ bool GammaRay::QuickWidgetSupport::grabWindow(QQuickWindow* window) const
 #endif
 }
 
-
 QString QuickWidgetSupportFactory::name() const
 {
-  return tr("Quick Widget Support");
+    return tr("Quick Widget Support");
 }

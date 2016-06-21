@@ -34,16 +34,13 @@
 #include <QStringList>
 
 namespace GammaRay {
-
-namespace AboutData
-{
-    QStringList authors();
-    QStringList authorsAsHtml();
-    GAMMARAY_UI_EXPORT QString aboutTitle();
-    GAMMARAY_UI_EXPORT QString aboutBody();
-    GAMMARAY_UI_EXPORT QString aboutText();
+namespace AboutData {
+QStringList authors();
+QStringList authorsAsHtml();
+GAMMARAY_UI_EXPORT QString aboutTitle();
+GAMMARAY_UI_EXPORT QString aboutBody();
+GAMMARAY_UI_EXPORT QString aboutText();
 }
-
 }
 
 #endif // GAMMARAY_ABOUTDATA_H

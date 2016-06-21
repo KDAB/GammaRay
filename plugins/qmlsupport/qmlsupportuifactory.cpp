@@ -41,11 +41,14 @@ QString QmlSupportUiFactory::id() const
 
 void QmlSupportUiFactory::initUi()
 {
-    PropertyWidget::registerTab<QmlContextTab>(QStringLiteral("qmlContext"), tr("QML Context"), PropertyWidgetTabPriority::Advanced);
-    PropertyWidget::registerTab<QmlTypeTab>(QStringLiteral("qmlType"), tr("QML Type"), PropertyWidgetTabPriority::Exotic);
+    PropertyWidget::registerTab<QmlContextTab>(QStringLiteral("qmlContext"), tr(
+                                                   "QML Context"),
+                                               PropertyWidgetTabPriority::Advanced);
+    PropertyWidget::registerTab<QmlTypeTab>(QStringLiteral("qmlType"), tr(
+                                                "QML Type"), PropertyWidgetTabPriority::Exotic);
 }
 
-QWidget* GammaRay::QmlSupportUiFactory::createWidget(QWidget*)
+QWidget *GammaRay::QmlSupportUiFactory::createWidget(QWidget *)
 {
     return Q_NULLPTR;
 }

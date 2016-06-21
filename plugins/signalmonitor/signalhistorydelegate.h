@@ -32,19 +32,22 @@
 #include <QStyledItemDelegate>
 
 namespace GammaRay {
-
 class SignalHistoryDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
-  Q_PROPERTY(qint64 visibleInterval READ visibleInterval WRITE setVisibleInterval NOTIFY visibleIntervalChanged)
-  Q_PROPERTY(qint64 visibleOffset READ visibleOffset NOTIFY setVisibleOffset NOTIFY visibleOffsetChanged)
-  Q_PROPERTY(bool isActive READ isActive WRITE setActive NOTIFY isActiveChanged)
+    Q_OBJECT
+    Q_PROPERTY(
+        qint64 visibleInterval READ visibleInterval WRITE setVisibleInterval NOTIFY visibleIntervalChanged)
+    Q_PROPERTY(
+        qint64 visibleOffset READ visibleOffset NOTIFY setVisibleOffset NOTIFY visibleOffsetChanged)
+    Q_PROPERTY(bool isActive READ isActive WRITE setActive NOTIFY isActiveChanged)
 
-  public:
+public:
     explicit SignalHistoryDelegate(QObject *parent = 0);
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const Q_DECL_OVERRIDE;
 
     void setVisibleInterval(qint64 interval);
     qint64 visibleInterval() const { return m_visibleInterval; }
@@ -59,23 +62,22 @@ class SignalHistoryDelegate : public QStyledItemDelegate
 
     QString toolTipAt(const QModelIndex &index, int position, int width);
 
-  signals:
+signals:
     void visibleIntervalChanged(qint64 value);
     void visibleOffsetChanged(qint64 value);
     void isActiveChanged(bool value);
     void totalIntervalChanged();
 
-  private slots:
+private slots:
     void onUpdateTimeout();
     void onServerClockChanged(qlonglong msecs);
 
-  private:
-    QTimer *const m_updateTimer;
+private:
+    QTimer * const m_updateTimer;
     qint64 m_visibleOffset;
     qint64 m_visibleInterval;
     qint64 m_totalInterval;
 };
-
 } // namespace GammaRay
 
 #endif // GAMMARAY_SIGNALHISTORYDELEGATE_H

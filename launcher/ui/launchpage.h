@@ -38,18 +38,17 @@ class QStringListModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ProbeABIModel;
 
 class LaunchOptions;
 namespace Ui {
-  class LaunchPage;
+class LaunchPage;
 }
 
 class LaunchPage : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit LaunchPage(QWidget *parent = 0);
     ~LaunchPage();
 
@@ -59,17 +58,17 @@ class LaunchPage : public QWidget
 
     void writeSettings();
 
-  signals:
+signals:
     void updateButtonState();
 
-  private slots:
+private slots:
     void showFileDialog();
     void addArgument();
     void removeArgument();
     void updateArgumentButtons();
     void detectABI(const QString &path);
 
-  private:
+private:
     QStringList notEmptyString(const QStringList &list) const;
     Ui::LaunchPage *ui;
     QStringListModel *m_argsModel;
@@ -77,7 +76,6 @@ class LaunchPage : public QWidget
     ProbeABIDetector m_abiDetector;
     bool m_abiIsValid;
 };
-
 }
 
 #endif // GAMMARAY_LAUNCHPAGE_H

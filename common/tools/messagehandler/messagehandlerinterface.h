@@ -36,19 +36,17 @@ class QTime;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class MessageHandlerInterface : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MessageHandlerInterface(QObject *parent = 0);
     virtual ~MessageHandlerInterface();
 
-  signals:
-    void fatalMessageReceived(const QString &app, const QString &message,
-                              const QTime &time, const QStringList &backtrace);
+signals:
+    void fatalMessageReceived(const QString &app, const QString &message, const QTime &time,
+                              const QStringList &backtrace);
 };
-
 }
 
 QT_BEGIN_NAMESPACE

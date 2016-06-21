@@ -34,12 +34,12 @@
 using namespace GammaRay;
 
 MimeTypes::MimeTypes(ProbeInterface *probe, QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  auto model = new MimeTypesModel(this);
-  auto proxy = new KRecursiveFilterProxyModel(this);
-  proxy->setSourceModel(model);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"), proxy);
+    auto model = new MimeTypesModel(this);
+    auto proxy = new KRecursiveFilterProxyModel(this);
+    proxy->setSourceModel(model);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"), proxy);
 }
 
 MimeTypes::~MimeTypes()
@@ -48,5 +48,5 @@ MimeTypes::~MimeTypes()
 
 QString MimeTypesFactory::name() const
 {
-  return tr("Mime Types");
+    return tr("Mime Types");
 }

@@ -44,78 +44,77 @@ PreloadCheck::PreloadCheck()
 
 bool PreloadCheck::test(const QString &fileName, const QString &symbol)
 {
-  if (fileName.isEmpty()) {
-    setErrorString(tr("Cannot find file containing symbol: %1").arg(symbol));
-    return false;
-  }
-
-  if (!QFile(fileName).exists()) {
-    setErrorString(tr("Invalid shared object: %1").arg(fileName));
-    return false;
-  }
-
-  QStringList args;
-  args << QStringLiteral("--relocs") << QStringLiteral("--wide") << fileName;
-  QProcess proc;
-  proc.setProcessChannelMode(QProcess::MergedChannels);
-  proc.start(QStringLiteral("readelf"), args, QIODevice::ReadOnly);
-  if (!proc.waitForFinished()) {
-    // TODO: Find out if we want to error out if 'readelf' is missing
-    // The question is: Do all (major) distributions ship binutils by default?
-    // Major distros do, but not custom embedded ones...
-    setErrorString(tr("Failed to run 'readelf' (binutils) binary: %1").
-                   arg(QString(proc.errorString())));
-    return true;
-  }
-
-  if (proc.exitCode() != 0) {
-    setErrorString(tr("Cannot read shared object: %1").arg(QString(proc.readAll())));
-    return false;
-  }
-
-  // Example line on x86_64:
-  //   00000049f3d8  054300000007 R_X86_64_JUMP_SLO 000000000016c930 qt_startup_hook + 0
-  // Example line on i386:
-  //   002e02f0  00034407 R_386_JUMP_SLOT        00181490   qt_startup_hook
-  QRegExp rx("^(?:[^ ]+\\s+){4}([^ ]+)(?:.*)$");
-  while (proc.canReadLine()) {
-    const QString line = proc.readLine().trimmed();
-    if (!rx.exactMatch(line)) {
-      continue;
+    if (fileName.isEmpty()) {
+        setErrorString(tr("Cannot find file containing symbol: %1").arg(symbol));
+        return false;
     }
 
-    const QString currentSymbol = rx.cap(1);
-    if (currentSymbol == symbol) {
-      qDebug() << "Found relocatable symbol in" << fileName << ":" << symbol;
-      setErrorString(QString());
-      return true;
+    if (!QFile(fileName).exists()) {
+        setErrorString(tr("Invalid shared object: %1").arg(fileName));
+        return false;
     }
-  }
+
+    QStringList args;
+    args << QStringLiteral("--relocs") << QStringLiteral("--wide") << fileName;
+    QProcess proc;
+    proc.setProcessChannelMode(QProcess::MergedChannels);
+    proc.start(QStringLiteral("readelf"), args, QIODevice::ReadOnly);
+    if (!proc.waitForFinished()) {
+        // TODO: Find out if we want to error out if 'readelf' is missing
+        // The question is: Do all (major) distributions ship binutils by default?
+        // Major distros do, but not custom embedded ones...
+        setErrorString(tr("Failed to run 'readelf' (binutils) binary: %1").
+                       arg(QString(proc.errorString())));
+        return true;
+    }
+
+    if (proc.exitCode() != 0) {
+        setErrorString(tr("Cannot read shared object: %1").arg(QString(proc.readAll())));
+        return false;
+    }
+
+    // Example line on x86_64:
+    // 00000049f3d8  054300000007 R_X86_64_JUMP_SLO 000000000016c930 qt_startup_hook + 0
+    // Example line on i386:
+    // 002e02f0  00034407 R_386_JUMP_SLOT        00181490   qt_startup_hook
+    QRegExp rx("^(?:[^ ]+\\s+){4}([^ ]+)(?:.*)$");
+    while (proc.canReadLine()) {
+        const QString line = proc.readLine().trimmed();
+        if (!rx.exactMatch(line))
+            continue;
+
+        const QString currentSymbol = rx.cap(1);
+        if (currentSymbol == symbol) {
+            qDebug() << "Found relocatable symbol in" << fileName << ":" << symbol;
+            setErrorString(QString());
+            return true;
+        }
+    }
 
 #if defined(__mips__) && defined(GAMMARAY_ENABLE_GPL_ONLY_FEATURES)
-  // Mips, besides the plt, has another method of
-  // calling functions from .so files, and this method doesn't need JUMP_SLOT
-  // relocations (in fact, it doesn't need any relocations). This method uses .got
-  // entries and lazy binding stubs.
-  if (testMips(symbol, fileName)) {
-    qDebug() << "Call of function " << symbol << " will go through lazy binding stub";
-    setErrorString(QString());
-    return true;
-  }
+    // Mips, besides the plt, has another method of
+    // calling functions from .so files, and this method doesn't need JUMP_SLOT
+    // relocations (in fact, it doesn't need any relocations). This method uses .got
+    // entries and lazy binding stubs.
+    if (testMips(symbol, fileName)) {
+        qDebug() << "Call of function " << symbol << " will go through lazy binding stub";
+        setErrorString(QString());
+        return true;
+    }
 #endif
 
-  setErrorString(tr("Symbol is not marked as relocatable: %1").arg(symbol));
-  return false;
+    setErrorString(tr("Symbol is not marked as relocatable: %1").arg(symbol));
+    return false;
 }
 
 QString PreloadCheck::errorString() const
 {
-  return m_errorString;
+    return m_errorString;
 }
 
 void PreloadCheck::setErrorString(const QString &err)
 {
-  m_errorString = err;
+    m_errorString = err;
 }
 
 #ifdef GAMMARAY_ENABLE_GPL_ONLY_FEATURES

@@ -36,27 +36,26 @@ class QStandardItemModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class MimeTypes : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MimeTypes(ProbeInterface *probe, QObject *parent = 0);
     ~MimeTypes();
 };
 
 class MimeTypesFactory : public QObject, public StandardToolFactory<QObject, MimeTypes>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit MimeTypesFactory(QObject *parent) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+public:
+    explicit MimeTypesFactory(QObject *parent)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_MIMETYPES_H

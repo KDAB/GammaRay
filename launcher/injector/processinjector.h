@@ -33,15 +33,14 @@
 #include <QProcess>
 
 namespace GammaRay {
-
 /** Convenience base class for injectors using QProcess
  *  to launch the target process.
  *  Provides support for using gdb or valgrind for debugging the target.
  */
 class ProcessInjector : public AbstractInjector
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     ProcessInjector();
     ~ProcessInjector();
 
@@ -51,18 +50,18 @@ class ProcessInjector : public AbstractInjector
     QProcess::ProcessError processError() Q_DECL_OVERRIDE;
     QString errorString() Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     bool launchProcess(const QStringList &programAndArgs, const QProcessEnvironment &env);
     int mExitCode;
     QString mErrorString;
 
-  private slots:
+private slots:
     void processFailed();
     void processFinished();
     void readStdOut();
     void readStdErr();
 
-  private:
+private:
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
     QProcess m_proc;

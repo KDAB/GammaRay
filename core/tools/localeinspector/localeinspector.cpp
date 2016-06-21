@@ -37,21 +37,20 @@
 using namespace GammaRay;
 
 LocaleInspector::LocaleInspector(ProbeInterface *probe, QObject *parent)
-: QObject(parent)
+    : QObject(parent)
 {
-  LocaleDataAccessorRegistry *registry = new LocaleDataAccessorRegistry(this);
+    LocaleDataAccessorRegistry *registry = new LocaleDataAccessorRegistry(this);
 
-  LocaleModel *model = new LocaleModel(registry, this);
-  auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-  proxy->setSourceModel(model);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.LocaleModel"), proxy);
+    LocaleModel *model = new LocaleModel(registry, this);
+    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+    proxy->setSourceModel(model);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.LocaleModel"), proxy);
 
-
-  LocaleAccessorModel *accessorModel = new LocaleAccessorModel(registry, this);
-  probe->registerModel(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"), accessorModel);
+    LocaleAccessorModel *accessorModel = new LocaleAccessorModel(registry, this);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"), accessorModel);
 }
 
 QString LocaleInspectorFactory::name() const
 {
-  return tr("Locales");
+    return tr("Locales");
 }

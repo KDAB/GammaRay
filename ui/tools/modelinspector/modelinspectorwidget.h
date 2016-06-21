@@ -39,32 +39,30 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ModelInspectorInterface;
 
 namespace Ui {
-  class ModelInspectorWidget;
+class ModelInspectorWidget;
 }
 
 class ModelInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ModelInspectorWidget(QWidget *parent = 0);
     ~ModelInspectorWidget();
 
-  private slots:
+private slots:
     void cellSelected(int row, int column, const QString &internalId, const QString &internalPtr);
     void objectRegistered(const QString &objectName);
-    void modelSelected(const QItemSelection& selected);
+    void modelSelected(const QItemSelection &selected);
     void setupModelContentSelectionModel();
 
-  private:
+private:
     QScopedPointer<Ui::ModelInspectorWidget> ui;
     UIStateManager m_stateManager;
     ModelInspectorInterface *m_interface;
 };
-
 }
 
 #endif // GAMMARAY_MODELINSPECTORWIDGET_H

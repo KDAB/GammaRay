@@ -39,26 +39,25 @@ class QStateMachine;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class StateMachineWatcher : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit StateMachineWatcher(QObject *parent = 0);
     virtual ~StateMachineWatcher();
 
     void setWatchedStateMachine(QStateMachine *machine);
     QStateMachine *watchedStateMachine() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void stateEntered(QAbstractState *state);
     void stateExited(QAbstractState *state);
 
-    void transitionTriggered(QAbstractTransition*);
+    void transitionTriggered(QAbstractTransition *);
 
     void watchedStateMachineChanged(QStateMachine *);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void watchState(QAbstractState *state);
     void clearWatchedStates();
 
@@ -67,14 +66,13 @@ class StateMachineWatcher : public QObject
     void handleStateDestroyed();
     void handleTransitionTriggered();
 
-  private:
+private:
     QStateMachine *m_watchedStateMachine;
     QVector<QAbstractState *> m_watchedStates;
 
     QAbstractState *m_lastEnteredState;
     QAbstractState *m_lastExitedState;
 };
-
 }
 
 #endif // GAMMARAY_STATEMACHINEWATCHER_H

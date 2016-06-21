@@ -35,7 +35,6 @@
 #include "ui_attachdialog.h"
 
 namespace GammaRay {
-
 class LaunchOptions;
 class ProcessModel;
 class ProcessFilterModel;
@@ -43,9 +42,9 @@ class ProbeABIModel;
 
 class AttachDialog : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     explicit AttachDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
 
     LaunchOptions launchOptions() const;
@@ -55,22 +54,21 @@ class AttachDialog : public QWidget
     bool isValid() const;
     void writeSettings();
 
-  signals:
+signals:
     void updateButtonState();
     void activate();
 
-  private slots:
+private slots:
     void updateProcesses();
     void updateProcessesFinished();
     void selectABI(const QModelIndex &processIndex);
 
-  private:
+private:
     Ui::AttachDialog ui;
     ProcessModel *m_model;
     ProcessFilterModel *m_proxyModel;
     ProbeABIModel *m_abiModel;
 };
-
 } // namespace GammaRay
 
 #endif // ATTACHDIALOG_H

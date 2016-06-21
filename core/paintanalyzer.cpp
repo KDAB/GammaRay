@@ -41,19 +41,21 @@
 
 using namespace GammaRay;
 
-PaintAnalyzer::PaintAnalyzer(const QString& name, QObject* parent):
-    PaintAnalyzerInterface(name, parent),
-    m_paintBufferModel(Q_NULLPTR),
-    m_selectionModel(Q_NULLPTR),
-    m_paintBuffer(Q_NULLPTR),
-    m_remoteView(new RemoteViewServer(name + QStringLiteral(".remoteView"), this))
+PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
+    : PaintAnalyzerInterface(name, parent)
+    , m_paintBufferModel(Q_NULLPTR)
+    , m_selectionModel(Q_NULLPTR)
+    , m_paintBuffer(Q_NULLPTR)
+    , m_remoteView(new RemoteViewServer(name + QStringLiteral(".remoteView"), this))
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBufferModel = new PaintBufferModel(this);
-    Probe::instance()->registerModel(name + QStringLiteral(".paintBufferModel"), m_paintBufferModel);
+    Probe::instance()->registerModel(name + QStringLiteral(".paintBufferModel"),
+                                     m_paintBufferModel);
 
     m_selectionModel = ObjectBroker::selectionModel(m_paintBufferModel);
-    connect(m_selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)), m_remoteView, SLOT(sourceChanged()));
+    connect(m_selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)), m_remoteView,
+            SLOT(sourceChanged()));
 #endif
 
     connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(repaint()));
@@ -107,7 +109,7 @@ void PaintAnalyzer::beginAnalyzePainting()
 #endif
 }
 
-void PaintAnalyzer::setBoundingRect(const QRectF& boundingBox)
+void PaintAnalyzer::setBoundingRect(const QRectF &boundingBox)
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     Q_ASSERT(m_paintBuffer);
@@ -117,7 +119,7 @@ void PaintAnalyzer::setBoundingRect(const QRectF& boundingBox)
 #endif
 }
 
-QPaintDevice* PaintAnalyzer::paintDevice() const
+QPaintDevice *PaintAnalyzer::paintDevice() const
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     Q_ASSERT(m_paintBuffer);
@@ -140,7 +142,9 @@ void PaintAnalyzer::endAnalyzePainting()
 
     if (auto rowCount = m_paintBufferModel->rowCount()) {
         const auto idx = m_paintBufferModel->index(rowCount - 1, 0);
-        m_selectionModel->select(idx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
+        m_selectionModel->select(idx,
+                                 QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows
+                                 | QItemSelectionModel::Current);
     }
 #endif
 }

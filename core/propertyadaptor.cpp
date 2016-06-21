@@ -31,7 +31,8 @@
 
 using namespace GammaRay;
 
-PropertyAdaptor::PropertyAdaptor(QObject* parent): QObject(parent)
+PropertyAdaptor::PropertyAdaptor(QObject *parent)
+    : QObject(parent)
 {
 }
 
@@ -39,18 +40,18 @@ PropertyAdaptor::~PropertyAdaptor()
 {
 }
 
-const ObjectInstance& PropertyAdaptor::object() const
+const ObjectInstance &PropertyAdaptor::object() const
 {
     return m_oi;
 }
 
-void PropertyAdaptor::setObject(const ObjectInstance& oi)
+void PropertyAdaptor::setObject(const ObjectInstance &oi)
 {
     m_oi = oi;
     doSetObject(m_oi);
 }
 
-void PropertyAdaptor::writeProperty(int index, const QVariant& value)
+void PropertyAdaptor::writeProperty(int index, const QVariant &value)
 {
     Q_UNUSED(index);
     Q_UNUSED(value);
@@ -61,7 +62,7 @@ bool PropertyAdaptor::canAddProperty() const
     return false;
 }
 
-void PropertyAdaptor::addProperty(const PropertyData& data)
+void PropertyAdaptor::addProperty(const PropertyData &data)
 {
     Q_UNUSED(data);
     Q_ASSERT(false);
@@ -73,12 +74,12 @@ void PropertyAdaptor::resetProperty(int index)
     Q_ASSERT(false);
 }
 
-void PropertyAdaptor::doSetObject(const ObjectInstance& oi)
+void PropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
     Q_UNUSED(oi);
 }
 
-PropertyAdaptor* GammaRay::PropertyAdaptor::parentAdaptor() const
+PropertyAdaptor *GammaRay::PropertyAdaptor::parentAdaptor() const
 {
-    return qobject_cast<PropertyAdaptor*>(parent());
+    return qobject_cast<PropertyAdaptor *>(parent());
 }

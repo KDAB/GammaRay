@@ -32,15 +32,13 @@
 #include <common/tools/messagehandler/messagehandlerinterface.h>
 
 namespace GammaRay {
-
 class MessageHandlerClient : public MessageHandlerInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::MessageHandlerInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::MessageHandlerInterface)
+public:
     explicit MessageHandlerClient(QObject *parent = 0);
 };
-
 }
 
 #endif // GAMMARAY_MESSAGEHANDLERCLIENT_H

@@ -36,16 +36,16 @@ using namespace GammaRay;
 
 AbstractFunctionOverwriter *FunctionOverwriterFactory::createFunctionOverwriter()
 {
-  static AbstractFunctionOverwriter *overwriter = 0;
+    static AbstractFunctionOverwriter *overwriter = 0;
 
 #ifdef Q_OS_WIN
-  if (!overwriter) {
-    overwriter = new WinFunctionOverwriter();
-  }
+    if (!overwriter)
+        overwriter = new WinFunctionOverwriter();
+
 #else
-  if (!overwriter) {
-    overwriter = new UnixFunctionOverwriter();
-  }
+    if (!overwriter)
+        overwriter = new UnixFunctionOverwriter();
+
 #endif
-  return overwriter;
+    return overwriter;
 }

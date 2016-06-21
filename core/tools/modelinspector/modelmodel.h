@@ -37,30 +37,29 @@
 #include <QVector>
 
 namespace GammaRay {
-
 class ModelModel : public ObjectModelBase<QAbstractItemModel>
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit ModelModel(QObject *parent);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
 
-  private:
+private:
     QModelIndex indexForModel(QAbstractItemModel *model) const;
-    QVector<QAbstractProxyModel*> proxiesForModel(QAbstractItemModel *model) const;
+    QVector<QAbstractProxyModel *> proxiesForModel(QAbstractItemModel *model) const;
 
-  private:
-    QVector<QAbstractItemModel*> m_models;
-    QVector<QAbstractProxyModel*> m_proxies;
+private:
+    QVector<QAbstractItemModel *> m_models;
+    QVector<QAbstractProxyModel *> m_proxies;
 };
-
 }
 
 #endif // MODELMODEL_H

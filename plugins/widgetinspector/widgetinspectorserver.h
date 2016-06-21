@@ -43,7 +43,6 @@ class QPoint;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class ProbeInterface;
 class PropertyController;
 class OverlayWidget;
@@ -52,16 +51,16 @@ class RemoteViewServer;
 
 class WidgetInspectorServer : public WidgetInspectorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::WidgetInspectorInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::WidgetInspectorInterface)
+public:
     explicit WidgetInspectorServer(ProbeInterface *probe, QObject *parent = 0);
     ~WidgetInspectorServer();
 
-  protected:
+protected:
     bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
-  private:
+private:
     void callExternalExportAction(const char *name, QWidget *widget, const QString &fileName);
     QImage imageForWidget(QWidget *widget);
     void registerWidgetMetaTypes();
@@ -69,7 +68,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     void discoverObjects();
     void checkFeatures();
 
-  private slots:
+private slots:
     void widgetSelected(const QItemSelection &selection);
     void widgetSelected(QWidget *widget);
     void objectSelected(QObject *obj);
@@ -87,7 +86,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     void updateWidgetPreview();
     void pickElement(const QPoint &pos);
 
-  private:
+private:
     QPointer<OverlayWidget> m_overlayWidget;
     QLibrary *m_externalExportActions;
     PropertyController *m_propertyController;
@@ -97,7 +96,6 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     RemoteViewServer *m_remoteView;
     ProbeInterface *m_probe;
 };
-
 }
 
 #endif // GAMMARAY_WIDGETINSPECTORSERVER_H

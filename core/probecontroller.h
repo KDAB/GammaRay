@@ -32,14 +32,13 @@
 #include <common/probecontrollerinterface.h>
 
 namespace GammaRay {
-
 /** @brief Server-side part for the object property inspector.
  *  Use this to integrate a property inspector like in the QObject view into your tool.
  */
 class ProbeController : public ProbeControllerInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ProbeControllerInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ProbeControllerInterface)
 public:
     explicit ProbeController(QObject *parent = 0);
 
@@ -50,7 +49,6 @@ public slots:
     void detachProbe() Q_DECL_OVERRIDE;
     void quitHost() Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_PROBECONTROLLER_H

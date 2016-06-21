@@ -36,7 +36,6 @@
 #include <QDataStream>
 
 namespace GammaRay {
-
 /**
  * Single message send between client and server.
  * Binary format:
@@ -47,13 +46,13 @@ namespace GammaRay {
  */
 class GAMMARAY_COMMON_EXPORT Message
 {
-  public:
+public:
     /**
      * Construct a new message to/from @p address and message type @p type.
      */
     explicit Message(Protocol::ObjectAddress address, Protocol::MessageType type);
 #ifdef Q_COMPILER_RVALUE_REFS
-    Message(Message &&other); //krazy:exclude=explicit
+    Message(Message &&other); // krazy:exclude=explicit
 #else
     // this is only needed to make readMessage compile (due to RVO there is no actual copy though)
     // semantically we don't want to support copying, due to the datastream state
@@ -67,7 +66,7 @@ class GAMMARAY_COMMON_EXPORT Message
     /** Access to the message payload. This is read-only for received messages
      *  and write-only for messages to be sent.
      */
-    QDataStream& payload() const;
+    QDataStream &payload() const;
 
     /** Checks if there is a full message waiting in @p device. */
     static bool canReadMessage(QIODevice *device);
@@ -80,7 +79,7 @@ class GAMMARAY_COMMON_EXPORT Message
     /** Size of the uncompressed message payload. */
     int size() const;
 
-  private:
+private:
     Message();
 
     mutable QByteArray m_buffer;
@@ -89,7 +88,6 @@ class GAMMARAY_COMMON_EXPORT Message
     Protocol::ObjectAddress m_objectAddress;
     Protocol::MessageType m_messageType;
 };
-
 }
 
 #endif

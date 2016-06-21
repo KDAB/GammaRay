@@ -35,12 +35,11 @@
 #include <QProcess>
 
 namespace GammaRay {
-
 /** Base class for debugger-based injectors. */
 class DebuggerInjector : public AbstractInjector
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     DebuggerInjector();
     ~DebuggerInjector();
 
@@ -56,7 +55,7 @@ class DebuggerInjector : public AbstractInjector
     QString errorString() Q_DECL_OVERRIDE;
     bool selfTest() Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     /** Execute a raw command on the debugger. */
     virtual void execCmd(const QByteArray &cmd, bool waitForWritten = true);
     /** Turn off confirmations */
@@ -73,20 +72,21 @@ class DebuggerInjector : public AbstractInjector
     virtual void loadSymbols(const QByteArray &library);
 
     /** Start the debugger with the given command line arguments. */
-    bool startDebugger(const QStringList &args, const QProcessEnvironment &env = QProcessEnvironment());
+    bool startDebugger(const QStringList &args,
+                       const QProcessEnvironment &env = QProcessEnvironment());
     /** Add a breakpoint in common entry points and wait until they are hit. */
     void waitForMain();
     /** Given an interrupted process, this injects the probe and continues the process. */
     bool injectAndDetach(const QString &probeDll, const QString &probeFunc);
 
-  protected slots:
+protected slots:
     virtual void readyReadStandardError();
     virtual void readyReadStandardOutput();
 
-  private slots:
+private slots:
     void processFinished();
 
-  protected:
+protected:
     QScopedPointer<QProcess> m_process;
     int mExitCode;
     QProcess::ProcessError mProcessError;
@@ -95,15 +95,14 @@ class DebuggerInjector : public AbstractInjector
     QString mErrorString;
     bool mManualError;
 
-  protected:
+protected:
     enum Orientation {
-      In,
-      Out
+        In,
+        Out
     };
 
     void processLog(DebuggerInjector::Orientation orientation, bool isError, const QString &text);
 };
-
 }
 
 #endif // GAMMARAY_DEBUGGERINJECTOR_H

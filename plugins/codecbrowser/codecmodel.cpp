@@ -33,164 +33,151 @@
 using namespace GammaRay;
 
 AllCodecsModel::AllCodecsModel(QObject *parent)
-  : QAbstractItemModel(parent)
+    : QAbstractItemModel(parent)
 {
 }
 
 int AllCodecsModel::columnCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent);
-  return 2;
+    Q_UNUSED(parent);
+    return 2;
 }
 
 QVariant AllCodecsModel::data(const QModelIndex &index, int role) const
 {
-  if (role == Qt::DisplayRole) {
-    if (index.column() == 0) {
-      return QTextCodec::availableCodecs().at(index.row());
-    }
-    if (index.column() == 1) {
-      QList<QByteArray> aliases =
-        QTextCodec::codecForName(QTextCodec::availableCodecs().at(index.row()))->aliases();
+    if (role == Qt::DisplayRole) {
+        if (index.column() == 0)
+            return QTextCodec::availableCodecs().at(index.row());
+        if (index.column() == 1) {
+            QList<QByteArray> aliases
+                = QTextCodec::codecForName(QTextCodec::availableCodecs().at(index.row()))->aliases();
 
-      QString result;
-      int size = aliases.size();
-      int i = 0;
-      foreach (const QByteArray &ba, aliases) {
-        result.append(ba);
+            QString result;
+            int size = aliases.size();
+            int i = 0;
+            foreach (const QByteArray &ba, aliases) {
+                result.append(ba);
 
-        ++i;
-        if (i != size) {
-          result.append(", ");
+                ++i;
+                if (i != size)
+                    result.append(", ");
+            }
+            return result;
         }
-      }
-      return result;
     }
-  }
-  return QVariant();
+    return QVariant();
 }
 
 QVariant AllCodecsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    if (section == 0) {
-      return "Codec";
-    } else if (section == 1) {
-      return "Aliases";
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        if (section == 0)
+            return "Codec";
+        else if (section == 1)
+            return "Aliases";
     }
-  }
-  return QVariant();
+    return QVariant();
 }
 
 QModelIndex AllCodecsModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if (parent.isValid()) {
-    return QModelIndex();
-  }
-  if (!hasIndex(row, column, parent)) {
-    return QModelIndex();
-  }
-  return createIndex(row, column);
+    if (parent.isValid())
+        return QModelIndex();
+    if (!hasIndex(row, column, parent))
+        return QModelIndex();
+    return createIndex(row, column);
 }
 
 QModelIndex AllCodecsModel::parent(const QModelIndex &child) const
 {
-  Q_UNUSED(child);
-  return QModelIndex();
+    Q_UNUSED(child);
+    return QModelIndex();
 }
 
 int AllCodecsModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid()) {
-    return 0;
-  }
-  return QTextCodec::availableCodecs().size();
+    if (parent.isValid())
+        return 0;
+    return QTextCodec::availableCodecs().size();
 }
 
 SelectedCodecsModel::SelectedCodecsModel(QObject *parent)
-  : QAbstractItemModel(parent)
+    : QAbstractItemModel(parent)
 {
 }
 
 void SelectedCodecsModel::setCodecs(const QStringList &codecs)
 {
-  beginResetModel();
-  m_codecs = codecs;
-  endResetModel();
+    beginResetModel();
+    m_codecs = codecs;
+    endResetModel();
 }
 
 QStringList SelectedCodecsModel::currentCodecs() const
 {
-  return m_codecs;
+    return m_codecs;
 }
 
 void SelectedCodecsModel::updateText(const QString &text)
 {
-  m_text = text;
-  if (!m_codecs.isEmpty()) {
-    emit dataChanged(index(0, 1), index(m_codecs.size() - 1, 1));
-  }
+    m_text = text;
+    if (!m_codecs.isEmpty())
+        emit dataChanged(index(0, 1), index(m_codecs.size() - 1, 1));
 }
 
 QVariant SelectedCodecsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-    if (section == 0) {
-      return "Codec";
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        if (section == 0)
+            return "Codec";
+        if (section == 1)
+            return "Data";
     }
-    if (section == 1) {
-      return "Data";
-    }
-  }
-  return QAbstractItemModel::headerData(section, orientation, role);
+    return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 int SelectedCodecsModel::rowCount(const QModelIndex &parent) const
 {
-  if (parent.isValid()) {
-    return 0;
-  }
-  return m_codecs.size();
+    if (parent.isValid())
+        return 0;
+    return m_codecs.size();
 }
 
 QModelIndex SelectedCodecsModel::index(int row, int column, const QModelIndex &parent) const
 {
-  if (parent.isValid()) {
-    return QModelIndex();
-  }
-  if (!hasIndex(row, column, parent)) {
-    return QModelIndex();
-  }
-  return createIndex(row, column);
+    if (parent.isValid())
+        return QModelIndex();
+    if (!hasIndex(row, column, parent))
+        return QModelIndex();
+    return createIndex(row, column);
 }
 
 QModelIndex SelectedCodecsModel::parent(const QModelIndex &child) const
 {
-  Q_UNUSED(child);
-  return QModelIndex();
+    Q_UNUSED(child);
+    return QModelIndex();
 }
 
 int SelectedCodecsModel::columnCount(const QModelIndex &parent) const
 {
-  Q_UNUSED(parent);
-  return 2;
+    Q_UNUSED(parent);
+    return 2;
 }
 
 QVariant SelectedCodecsModel::data(const QModelIndex &index, int role) const
 {
-  if (index.column() == 0) {
-    if (role == Qt::DisplayRole) {
-      return m_codecs.at(index.row());
+    if (index.column() == 0) {
+        if (role == Qt::DisplayRole)
+            return m_codecs.at(index.row());
+    } else if (index.column() == 1) {
+        if (role == Qt::DisplayRole) {
+            const QByteArray ba
+                = QTextCodec::codecForName(m_codecs.at(index.row()).toLatin1())->fromUnicode(m_text);
+// QString result;
+// foreach ()
+            return ba.toHex();
+        }
     }
-  } else if (index.column() == 1) {
-    if (role == Qt::DisplayRole) {
-      const QByteArray ba =
-        QTextCodec::codecForName(m_codecs.at(index.row()).toLatin1())->fromUnicode(m_text);
-//       QString result;
-//       foreach ()
-      return ba.toHex();
-    }
-  }
 
-  return QVariant();
+    return QVariant();
 }

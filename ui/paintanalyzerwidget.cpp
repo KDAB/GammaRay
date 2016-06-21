@@ -38,7 +38,7 @@
 
 using namespace GammaRay;
 
-PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget* parent)
+PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::PaintAnalyzerWidget)
 {
@@ -59,7 +59,8 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget* parent)
     toolbar->addWidget(zoom);
     toolbar->addAction(ui->replayWidget->zoomInAction());
 
-    ui->replayWidget->setSupportedInteractionModes(RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring);
+    ui->replayWidget->setSupportedInteractionModes(
+        RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring);
 
     ui->paintAnalyzerSplitter->setStretchFactor(0, 0);
     ui->paintAnalyzerSplitter->setStretchFactor(1, 1);
@@ -73,7 +74,7 @@ PaintAnalyzerWidget::~PaintAnalyzerWidget()
 {
 }
 
-void PaintAnalyzerWidget::setBaseName(const QString& name)
+void PaintAnalyzerWidget::setBaseName(const QString &name)
 {
     auto model = ObjectBroker::model(name + QStringLiteral(".paintBufferModel"));
     ui->commandView->setModel(model);

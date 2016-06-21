@@ -42,7 +42,6 @@ class QFrameGraphNode;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class FrameGraphModel : public ObjectModelBase<QAbstractItemModel>
 {
     Q_OBJECT
@@ -50,22 +49,21 @@ public:
     explicit FrameGraphModel(QObject *parent = nullptr);
     ~FrameGraphModel();
 
-    void setFrameGraph(Qt3DRender::QFrameGraphNode* frameGraph);
+    void setFrameGraph(Qt3DRender::QFrameGraphNode *frameGraph);
 
-    QVariant data(const QModelIndex& index, int role) const override;
-    int rowCount(const QModelIndex& parent) const override;
-    QModelIndex parent(const QModelIndex& child) const override;
-    QModelIndex index(int row, int column, const QModelIndex& parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
 
 private:
     void clear();
-    void populateFromNode(Qt3DRender::QFrameGraphNode* node);
-    QModelIndex indexForNode(Qt3DRender::QFrameGraphNode* node) const;
+    void populateFromNode(Qt3DRender::QFrameGraphNode *node);
+    QModelIndex indexForNode(Qt3DRender::QFrameGraphNode *node) const;
 
 private:
-    QHash<Qt3DRender::QFrameGraphNode*, Qt3DRender::QFrameGraphNode*> m_childParentMap;
-    QHash<Qt3DRender::QFrameGraphNode*, QVector<Qt3DRender::QFrameGraphNode*> > m_parentChildMap;
-
+    QHash<Qt3DRender::QFrameGraphNode *, Qt3DRender::QFrameGraphNode *> m_childParentMap;
+    QHash<Qt3DRender::QFrameGraphNode *, QVector<Qt3DRender::QFrameGraphNode *> > m_parentChildMap;
 };
 }
 

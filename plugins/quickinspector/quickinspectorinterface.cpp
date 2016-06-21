@@ -34,45 +34,44 @@
 #include <QDataStream>
 
 namespace GammaRay {
-
 QDataStream &operator<<(QDataStream &out, QuickInspectorInterface::Features value)
 {
-  out << qint32(value);
-  return out;
+    out << qint32(value);
+    return out;
 }
 
 QDataStream &operator>>(QDataStream &in, QuickInspectorInterface::Features &value)
 {
-  qint32 t;
-  in >> t;
-  value = static_cast<QuickInspectorInterface::Features>(t);
-  return in;
+    qint32 t;
+    in >> t;
+    value = static_cast<QuickInspectorInterface::Features>(t);
+    return in;
 }
 
 QDataStream &operator<<(QDataStream &out, QuickInspectorInterface::RenderMode value)
 {
-  out << qint32(value);
-  return out;
+    out << qint32(value);
+    return out;
 }
 
 QDataStream &operator>>(QDataStream &in, QuickInspectorInterface::RenderMode &value)
 {
-  qint32 t;
-  in >> t;
-  value = static_cast<QuickInspectorInterface::RenderMode>(t);
-  return in;
+    qint32 t;
+    in >> t;
+    value = static_cast<QuickInspectorInterface::RenderMode>(t);
+    return in;
 }
 
-QuickInspectorInterface::QuickInspectorInterface(QObject * parent) : QObject(parent)
+QuickInspectorInterface::QuickInspectorInterface(QObject *parent)
+    : QObject(parent)
 {
-  ObjectBroker::registerObject<QuickInspectorInterface*>(this);
-  qRegisterMetaTypeStreamOperators<Features>();
-  qRegisterMetaTypeStreamOperators<RenderMode>();
-  qRegisterMetaTypeStreamOperators<QuickItemGeometry>();
+    ObjectBroker::registerObject<QuickInspectorInterface *>(this);
+    qRegisterMetaTypeStreamOperators<Features>();
+    qRegisterMetaTypeStreamOperators<RenderMode>();
+    qRegisterMetaTypeStreamOperators<QuickItemGeometry>();
 }
 
 QuickInspectorInterface::~QuickInspectorInterface()
 {
 }
-
 }

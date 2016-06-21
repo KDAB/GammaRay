@@ -36,20 +36,19 @@ class QPoint;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 namespace Ui {
-  class PropertyIntPairEditor;
+class PropertyIntPairEditor;
 }
 
 /** Property editor for QPoint, QSize and anything else consisting of two integer values. */
 class PropertyIntPairEditor : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PropertyIntPairEditor(QWidget *parent = 0);
     ~PropertyIntPairEditor();
 
-  protected:
+protected:
     QScopedPointer<Ui::PropertyIntPairEditor> ui;
 };
 
@@ -58,9 +57,9 @@ class PropertyIntPairEditor : public QWidget
  */
 class PropertyPointEditor : public PropertyIntPairEditor
 {
-  Q_OBJECT
-  Q_PROPERTY(QPoint point READ point WRITE setPoint USER true)
-  public:
+    Q_OBJECT
+    Q_PROPERTY(QPoint point READ point WRITE setPoint USER true)
+public:
     explicit PropertyPointEditor(QWidget *parent = 0);
 
     QPoint point() const;
@@ -70,15 +69,14 @@ class PropertyPointEditor : public PropertyIntPairEditor
 /** Same again for size. */
 class PropertySizeEditor : public PropertyIntPairEditor
 {
-  Q_OBJECT
-  Q_PROPERTY(QSize sizeValue READ sizeValue WRITE setSizeValue USER true)
-  public:
+    Q_OBJECT
+    Q_PROPERTY(QSize sizeValue READ sizeValue WRITE setSizeValue USER true)
+public:
     explicit PropertySizeEditor(QWidget *parent = 0);
 
     QSize sizeValue() const;
     void setSizeValue(const QSize &size);
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYINTPAIREDITOR_H

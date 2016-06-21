@@ -32,9 +32,8 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class PaintAnalyzerWidget;
+class PaintAnalyzerWidget;
 }
 
 /**
@@ -42,17 +41,16 @@ namespace Ui {
  */
 class GAMMARAY_UI_EXPORT PaintAnalyzerWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit PaintAnalyzerWidget(QWidget *parent = Q_NULLPTR);
     ~PaintAnalyzerWidget();
 
     void setBaseName(const QString &name);
 
-  private:
+private:
     QScopedPointer<Ui::PaintAnalyzerWidget> ui;
 };
-
 }
 
 #endif

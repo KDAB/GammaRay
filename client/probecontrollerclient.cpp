@@ -32,30 +32,29 @@
 
 using namespace GammaRay;
 
-ProbeControllerClient::ProbeControllerClient(QObject* parent)
-  : ProbeControllerInterface(parent)
+ProbeControllerClient::ProbeControllerClient(QObject *parent)
+    : ProbeControllerInterface(parent)
 {
 }
 
 void ProbeControllerClient::selectObject(ObjectId id, const QString &toolId)
 {
-  Endpoint::instance()->invokeObject(objectName(), "selectObject",
-                                     QVariantList() << QVariant::fromValue(id) << toolId);
+    Endpoint::instance()->invokeObject(objectName(), "selectObject",
+                                       QVariantList() << QVariant::fromValue(id) << toolId);
 }
 
 void ProbeControllerClient::requestSupportedTools(ObjectId id)
 {
-  Endpoint::instance()->invokeObject(objectName(), "requestSupportedTools",
-                                     QVariantList() << QVariant::fromValue(id));
+    Endpoint::instance()->invokeObject(objectName(), "requestSupportedTools",
+                                       QVariantList() << QVariant::fromValue(id));
 }
 
 void ProbeControllerClient::detachProbe()
 {
-  Endpoint::instance()->invokeObject(objectName(), "detachProbe");
+    Endpoint::instance()->invokeObject(objectName(), "detachProbe");
 }
 
 void ProbeControllerClient::quitHost()
 {
-  Endpoint::instance()->invokeObject(objectName(), "quitHost");
+    Endpoint::instance()->invokeObject(objectName(), "quitHost");
 }
-

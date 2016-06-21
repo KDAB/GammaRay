@@ -32,13 +32,10 @@
 #include "gammaray_common_export.h"
 
 namespace GammaRay {
-
-namespace Translator
-{
-    /** Load translation catalogs for current locale. */
-    void GAMMARAY_COMMON_EXPORT load();
+namespace Translator {
+/** Load translation catalogs for current locale. */
+void GAMMARAY_COMMON_EXPORT load();
 }
-
 }
 
 #endif // GAMMARAY_TRANSLATOR_H

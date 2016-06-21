@@ -41,40 +41,39 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class TextDocumentModel;
 class TextDocumentFormatModel;
 
 namespace Ui {
-  class TextDocumentInspectorWidget;
+class TextDocumentInspectorWidget;
 }
 
 class TextDocumentInspectorWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit TextDocumentInspectorWidget(QWidget *parent = 0);
     ~TextDocumentInspectorWidget();
 
-  private slots:
+private slots:
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentContentChanged();
 
-  private:
+private:
     QScopedPointer<Ui::TextDocumentInspectorWidget> ui;
     UIStateManager m_stateManager;
     QPointer<QTextDocument> m_currentDocument;
 };
 
-class TextDocumentInspectorWidgetFactory: public QObject, public StandardToolUiFactory<TextDocumentInspectorWidget>
+class TextDocumentInspectorWidgetFactory : public QObject,
+    public StandardToolUiFactory<TextDocumentInspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_textdocumentinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(
+        IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_textdocumentinspector.json")
 };
-
-
 }
 
 #endif // GAMMARAY_TEXTDOCUMENTINSPECTOR_H

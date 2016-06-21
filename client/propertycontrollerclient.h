@@ -32,16 +32,14 @@
 #include <common/propertycontrollerinterface.h>
 
 namespace GammaRay {
-
 class PropertyControllerClient : public PropertyControllerInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::PropertyControllerInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::PropertyControllerInterface)
+public:
     explicit PropertyControllerClient(const QString &name, QObject *parent = 0);
     virtual ~PropertyControllerClient();
 };
-
 }
 
 #endif // GAMMARAY_PROPERTYCONTROLLERCLIENT_H

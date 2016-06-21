@@ -43,44 +43,55 @@
 
 using namespace GammaRay;
 
-static QObject *create3DInsepctorClient(const QString &/*name*/, QObject *parent)
+static QObject *create3DInsepctorClient(const QString & /*name*/, QObject *parent)
 {
     return new Qt3DInspectorClient(parent);
 }
 
-Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget* parent)
+Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Qt3DInspectorWidget)
     , m_stateManager(this)
 {
-    ObjectBroker::registerClientObjectFactoryCallback<Qt3DInspectorInterface*>(create3DInsepctorClient);
-    m_interface = ObjectBroker::object<Qt3DInspectorInterface*>();
+    ObjectBroker::registerClientObjectFactoryCallback<Qt3DInspectorInterface *>(
+        create3DInsepctorClient);
+    m_interface = ObjectBroker::object<Qt3DInspectorInterface *>();
 
     ui->setupUi(this);
-    ui->engineComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.engineModel")));
-    connect(ui->engineComboBox, SIGNAL(currentIndexChanged(int)), m_interface, SLOT(selectEngine(int)));
+    ui->engineComboBox->setModel(ObjectBroker::model(QStringLiteral(
+                                                         "com.kdab.GammaRay.Qt3DInspector.engineModel")));
+    connect(ui->engineComboBox, SIGNAL(currentIndexChanged(int)), m_interface,
+            SLOT(selectEngine(int)));
 
-    auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"));
+    auto sceneModel
+        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"));
     ui->sceneTreeView->header()->setObjectName("sceneTreeViewHeader");
     ui->sceneTreeView->setModel(sceneModel);
     ui->sceneTreeView->setSelectionModel(ObjectBroker::selectionModel(sceneModel));
     new SearchLineController(ui->sceneSearchLine, sceneModel);
-    connect(ui->sceneTreeView, &QWidget::customContextMenuRequested, this, &Qt3DInspectorWidget::entityContextMenu);
+    connect(ui->sceneTreeView, &QWidget::customContextMenuRequested, this,
+            &Qt3DInspectorWidget::entityContextMenu);
 
-    ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
+    ui->scenePropertyWidget->setObjectBaseName(QStringLiteral(
+                                                   "com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
 
-    auto frameGraphModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
+    auto frameGraphModel
+        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
     ui->frameGraphView->header()->setObjectName("frameGraphViewHeader");
     ui->frameGraphView->setModel(frameGraphModel);
     ui->frameGraphView->setSelectionModel(ObjectBroker::selectionModel(frameGraphModel));
     new SearchLineController(ui->frameGraphSearchLine, frameGraphModel);
-    connect(ui->frameGraphView, &QWidget::customContextMenuRequested, this, &Qt3DInspectorWidget::frameGraphContextMenu);
+    connect(ui->frameGraphView, &QWidget::customContextMenuRequested, this,
+            &Qt3DInspectorWidget::frameGraphContextMenu);
 
-    ui->frameGraphNodePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"));
+    ui->frameGraphNodePropertyWidget->setObjectBaseName(QStringLiteral(
+                                                            "com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"));
 
-    connect(ui->tabWidget, &QTabWidget::currentChanged, ui->stack, &QStackedWidget::setCurrentIndex);
+    connect(ui->tabWidget, &QTabWidget::currentChanged, ui->stack,
+            &QStackedWidget::setCurrentIndex);
     connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
-    connect(ui->frameGraphNodePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+    connect(ui->frameGraphNodePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager,
+            SLOT(reset()));
 }
 
 Qt3DInspectorWidget::~Qt3DInspectorWidget()
@@ -96,8 +107,10 @@ void Qt3DInspectorWidget::entityContextMenu(QPoint pos)
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     QMenu menu(tr("Entity @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
     ContextMenuExtension ext(objectId);
-    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
-    ext.setLocation(ContextMenuExtension::Declaration, index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Creation, index.data(
+                        ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Declaration,
+                    index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.populateMenu(&menu);
 
     menu.exec(ui->sceneTreeView->viewport()->mapToGlobal(pos));
@@ -110,23 +123,26 @@ void Qt3DInspectorWidget::frameGraphContextMenu(QPoint pos)
         return;
 
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
-    QMenu menu(tr("Frame Graph Node @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+    QMenu menu(tr("Frame Graph Node @ %1").arg(QLatin1String("0x") + QString::number(
+                                                   objectId.id(), 16)));
     ContextMenuExtension ext(objectId);
-    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
-    ext.setLocation(ContextMenuExtension::Declaration, index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Creation, index.data(
+                        ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Declaration,
+                    index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.populateMenu(&menu);
 
     menu.exec(ui->frameGraphView->viewport()->mapToGlobal(pos));
 }
 
-
 static QObject *createGeometryExtension(const QString &name, QObject *parent)
 {
-  return new Qt3DGeometryExtensionClient(name, parent);
+    return new Qt3DGeometryExtensionClient(name, parent);
 }
 
 void Qt3DInspectorUiFactory::initUi()
 {
-    ObjectBroker::registerClientObjectFactoryCallback<Qt3DGeometryExtensionInterface*>(createGeometryExtension);
-//     PropertyWidget::registerTab<Qt3DGeometryTab>(QStringLiteral("qt3dGeometry"), tr("Geometry"), PropertyWidgetTabPriority::Advanced);
+    ObjectBroker::registerClientObjectFactoryCallback<Qt3DGeometryExtensionInterface *>(
+        createGeometryExtension);
+// PropertyWidget::registerTab<Qt3DGeometryTab>(QStringLiteral("qt3dGeometry"), tr("Geometry"), PropertyWidgetTabPriority::Advanced);
 }

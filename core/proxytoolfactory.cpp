@@ -32,44 +32,42 @@ using namespace GammaRay;
 using namespace std;
 
 ProxyToolFactory::ProxyToolFactory(const PluginInfo &pluginInfo, QObject *parent)
-  : ProxyFactory<ToolFactory>(pluginInfo, parent)
+    : ProxyFactory<ToolFactory>(pluginInfo, parent)
 {
-  const QStringList typesList = pluginInfo.supportedTypes();
-  QVector<QByteArray> typesVector;
-  typesVector.reserve(typesList.count());
-  for (auto it = typesList.constBegin(), end = typesList.constEnd(); it != end; ++it) {
-    typesVector << (*it).toLatin1();
-  }
-  setSupportedTypes(typesVector);
+    const QStringList typesList = pluginInfo.supportedTypes();
+    QVector<QByteArray> typesVector;
+    typesVector.reserve(typesList.count());
+    for (auto it = typesList.constBegin(), end = typesList.constEnd(); it != end; ++it)
+        typesVector << (*it).toLatin1();
+    setSupportedTypes(typesVector);
 }
 
 bool ProxyToolFactory::isValid() const
 {
-  return
-    pluginInfo().isValid() &&
-    !name().isEmpty() &&
-    !supportedTypes().isEmpty();
+    return
+        pluginInfo().isValid()
+        && !name().isEmpty()
+        && !supportedTypes().isEmpty();
 }
 
 QString ProxyToolFactory::name() const
 {
-  return pluginInfo().name();
+    return pluginInfo().name();
 }
 
 void ProxyToolFactory::init(ProbeInterface *probe)
 {
-  loadPlugin();
-  ToolFactory *fac = factory();
-  if (!fac) {
-    return;
-  }
-  Q_ASSERT(fac);
-  fac->init(probe);
+    loadPlugin();
+    ToolFactory *fac = factory();
+    if (!fac)
+        return;
+    Q_ASSERT(fac);
+    fac->init(probe);
 }
 
 bool ProxyToolFactory::isHidden() const
 {
-  return pluginInfo().isHidden();
+    return pluginInfo().isHidden();
 }
 
 QVector<QByteArray> ProxyToolFactory::selectableTypes() const

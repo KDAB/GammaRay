@@ -32,32 +32,31 @@
 using namespace GammaRay;
 
 MethodsExtensionInterface::MethodsExtensionInterface(const QString &name, QObject *parent)
-  : QObject(parent)
-  , m_name(name)
-  , m_hasObject(false)
+    : QObject(parent)
+    , m_name(name)
+    , m_hasObject(false)
 {
-  ObjectBroker::registerObject(name, this);
+    ObjectBroker::registerObject(name, this);
 }
 
 MethodsExtensionInterface::~MethodsExtensionInterface()
 {
-
 }
 
 const QString &MethodsExtensionInterface::name() const
 {
-  return m_name;
+    return m_name;
 }
 
 bool MethodsExtensionInterface::hasObject() const
 {
-  return m_hasObject;
+    return m_hasObject;
 }
 
 void MethodsExtensionInterface::setHasObject(bool hasObject)
 {
-  if (m_hasObject == hasObject)
-    return;
-  m_hasObject = hasObject;
-  emit hasObjectChanged();
+    if (m_hasObject == hasObject)
+        return;
+    m_hasObject = hasObject;
+    emit hasObjectChanged();
 }

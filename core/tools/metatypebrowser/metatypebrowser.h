@@ -32,26 +32,25 @@
 #include "toolfactory.h"
 
 namespace GammaRay {
-
 class MetaTypeBrowser : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit MetaTypeBrowser(ProbeInterface *probe, QObject *parent = 0);
 };
 
 class MetaTypeBrowserFactory : public QObject, public StandardToolFactory<QObject, MetaTypeBrowser>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  public:
-    explicit MetaTypeBrowserFactory(QObject *parent) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+public:
+    explicit MetaTypeBrowserFactory(QObject *parent)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 }
 
 #endif // GAMMARAY_METATYPEBROWSER_H

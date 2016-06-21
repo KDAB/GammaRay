@@ -31,7 +31,7 @@
 
 using namespace GammaRay;
 
-UiIntegration* UiIntegration::s_uiIntegrationInstance = 0;
+UiIntegration *UiIntegration::s_uiIntegrationInstance = 0;
 
 UiIntegration::UiIntegration(QObject *parent)
     : QObject(parent)
@@ -45,12 +45,12 @@ UiIntegration::~UiIntegration()
     s_uiIntegrationInstance = 0;
 }
 
-UiIntegration * UiIntegration::instance()
+UiIntegration *UiIntegration::instance()
 {
     return s_uiIntegrationInstance;
 }
 
-void UiIntegration::requestNavigateToCode(const QUrl& url, int lineNumber, int columnNumber)
+void UiIntegration::requestNavigateToCode(const QUrl &url, int lineNumber, int columnNumber)
 {
     if (UiIntegration::instance())
         emit UiIntegration::instance()->navigateToCode(url, lineNumber, columnNumber);

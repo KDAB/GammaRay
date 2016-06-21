@@ -32,22 +32,20 @@
 #include <QTextEdit>
 
 namespace GammaRay {
-
 class TextDocumentContentView : public QTextEdit
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit TextDocumentContentView(QWidget *parent = 0);
 
     void setShowBoundingBox(const QRectF &boundingBox);
 
-  protected:
+protected:
     void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
 
-  private:
+private:
     QRectF m_boundingBox;
 };
-
 }
 
 #endif // GAMMARAY_TEXTDOCUMENTCONTENTVIEW_H

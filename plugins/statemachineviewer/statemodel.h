@@ -36,18 +36,17 @@ class QStateMachine;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class StateModelPrivate;
 
 class StateModel : public ObjectModelBase<QAbstractItemModel>
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     enum Roles {
-      TransitionsRole = ObjectModel::UserRole + 1,
-      IsInitialStateRole,
-      StateObjectRole = ObjectModel::UserRole + 11
+        TransitionsRole = ObjectModel::UserRole + 1,
+        IsInitialStateRole,
+        StateObjectRole = ObjectModel::UserRole + 11
     };
     explicit StateModel(QObject *parent = 0);
     ~StateModel();
@@ -57,19 +56,20 @@ class StateModel : public ObjectModelBase<QAbstractItemModel>
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  protected:
+protected:
     Q_DECLARE_PRIVATE(StateModel)
     StateModelPrivate * const d_ptr;
 
-  private:
+private:
     Q_PRIVATE_SLOT(d_func(), void stateConfigurationChanged())
     Q_PRIVATE_SLOT(d_func(), void handleMachineDestroyed(QObject*))
 };
-
 }
 
 #endif

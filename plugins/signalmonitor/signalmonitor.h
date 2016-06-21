@@ -38,39 +38,37 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class SignalMonitor : public SignalMonitorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::SignalMonitorInterface)
-  public:
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::SignalMonitorInterface)
+public:
     explicit SignalMonitor(ProbeInterface *probe, QObject *parent = 0);
     ~SignalMonitor();
 
-  public slots:
+public slots:
     void sendClockUpdates(bool enabled) Q_DECL_OVERRIDE;
 
-  private slots:
+private slots:
     void timeout();
 
-  private:
+private:
     QTimer *m_clock;
-
 };
 
 class SignalMonitorFactory : public QObject, public StandardToolFactory<QObject, SignalMonitor>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_signalmonitor.json")
-  public:
-    explicit SignalMonitorFactory(QObject *parent = 0) : QObject(parent)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_signalmonitor.json")
+public:
+    explicit SignalMonitorFactory(QObject *parent = 0)
+        : QObject(parent)
     {
     }
 
     QString name() const Q_DECL_OVERRIDE;
 };
-
 } // namespace GammaRay
 
 #endif // GAMMARAY_SIGNALMONITOR_H

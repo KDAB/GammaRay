@@ -31,13 +31,14 @@
 
 #include "../shared/propertytestobject.h"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-  QCoreApplication app(argc, argv);
-  PropertyTestObject obj;
-  QTimer timer;
-  QObject::connect(&timer, SIGNAL(timeout()), obj.changingPropertyObject(), SLOT(changeProperties()));
-  timer.start(5000);
+    QCoreApplication app(argc, argv);
+    PropertyTestObject obj;
+    QTimer timer;
+    QObject::connect(&timer, SIGNAL(timeout()), obj.changingPropertyObject(),
+                     SLOT(changeProperties()));
+    timer.start(5000);
 
-  return app.exec();
+    return app.exec();
 }

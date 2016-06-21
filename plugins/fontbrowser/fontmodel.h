@@ -35,11 +35,10 @@
 #include <QVector>
 
 namespace GammaRay {
-
 class FontModel : public QAbstractTableModel
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit FontModel(QObject *parent);
 
     void updateFonts(const QVector<QFont> &fonts);
@@ -48,13 +47,12 @@ class FontModel : public QAbstractTableModel
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    QVariant data(const QModelIndex &index,
-                  int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-  public slots:
+public slots:
     void updateText(const QString &text);
     void toggleBoldFont(bool bold);
     void toggleItalicFont(bool italic);
@@ -62,7 +60,7 @@ class FontModel : public QAbstractTableModel
     void setPointSize(int size);
     void setColors(const QColor &foreground, const QColor &background);
 
-  private:
+private:
     void fontDataChanged();
 
     QVector<QFont> m_fonts;
@@ -74,7 +72,6 @@ class FontModel : public QAbstractTableModel
     QColor m_foreground;
     QColor m_background;
 };
-
 }
 
 #endif

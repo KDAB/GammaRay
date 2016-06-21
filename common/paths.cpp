@@ -35,85 +35,84 @@
 
 namespace GammaRay {
 namespace Paths {
-
 static QString s_rootPath;
 
 QString rootPath()
 {
-  Q_ASSERT(!s_rootPath.isEmpty());
-  return s_rootPath;
+    Q_ASSERT(!s_rootPath.isEmpty());
+    return s_rootPath;
 }
 
-void setRootPath(const QString& rootPath)
+void setRootPath(const QString &rootPath)
 {
-  Q_ASSERT(!rootPath.isEmpty());
-  Q_ASSERT(QDir(rootPath).exists());
-  Q_ASSERT(QDir(rootPath).isAbsolute());
+    Q_ASSERT(!rootPath.isEmpty());
+    Q_ASSERT(QDir(rootPath).exists());
+    Q_ASSERT(QDir(rootPath).isAbsolute());
 
-  s_rootPath = rootPath;
+    s_rootPath = rootPath;
 }
 
-void setRelativeRootPath(const char* relativeRootPath)
+void setRelativeRootPath(const char *relativeRootPath)
 {
-  Q_ASSERT(relativeRootPath);
-  setRootPath(QCoreApplication::applicationDirPath() + QDir::separator() + QLatin1String(relativeRootPath));
+    Q_ASSERT(relativeRootPath);
+    setRootPath(QCoreApplication::applicationDirPath() + QDir::separator()
+                + QLatin1String(relativeRootPath));
 }
 
-QString probePath(const QString& probeABI, const QString &rootPath)
+QString probePath(const QString &probeABI, const QString &rootPath)
 {
 #ifndef GAMMARAY_INSTALL_QT_LAYOUT
-  return rootPath + QDir::separator()
-    + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR) + QDir::separator()
-    + QLatin1String(GAMMARAY_PLUGIN_VERSION) + QDir::separator()
-    + probeABI;
+    return rootPath + QDir::separator()
+           + QLatin1String(GAMMARAY_PLUGIN_INSTALL_DIR) + QDir::separator()
+           + QLatin1String(GAMMARAY_PLUGIN_VERSION) + QDir::separator()
+           + probeABI;
 #else
-  Q_UNUSED(probeABI);
-  return rootPath + QDir::separator() + QLatin1String(GAMMARAY_PROBE_INSTALL_DIR);
+    Q_UNUSED(probeABI);
+    return rootPath + QDir::separator() + QLatin1String(GAMMARAY_PROBE_INSTALL_DIR);
 #endif
 }
 
 QString binPath()
 {
-  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_BIN_INSTALL_DIR);
+    return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_BIN_INSTALL_DIR);
 }
 
 QString libexecPath()
 {
-  return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_LIBEXEC_INSTALL_DIR);
+    return rootPath() + QDir::separator() + QLatin1String(GAMMARAY_LIBEXEC_INSTALL_DIR);
 }
 
 QString currentProbePath()
 {
-  return probePath(QStringLiteral(GAMMARAY_PROBE_ABI));
+    return probePath(QStringLiteral(GAMMARAY_PROBE_ABI));
 }
 
 QString currentPluginsPath()
 {
 #ifndef GAMMARAY_INSTALL_QT_LAYOUT
-  return currentProbePath();
+    return currentProbePath();
 #else
-  return rootPath() + QDir::separator() + QStringLiteral(GAMMARAY_PLUGIN_INSTALL_DIR);
+    return rootPath() + QDir::separator() + QStringLiteral(GAMMARAY_PLUGIN_INSTALL_DIR);
 #endif
-
 }
 
 QString libraryExtension()
 {
 #ifdef Q_OS_WIN
-  return QStringLiteral(".dll");
+    return QStringLiteral(".dll");
 #elif defined(Q_OS_MAC)
-  return QStringLiteral(".dylib");
+    return QStringLiteral(".dylib");
 #else
-  return QStringLiteral(".so");
+    return QStringLiteral(".so");
 #endif
 }
 
 QString pluginExtension()
 {
 #ifdef Q_OS_MAC
-  return QStringLiteral(".so");
+    return QStringLiteral(".so");
 #else
-  return libraryExtension();
+    return libraryExtension();
 #endif
 }
 
@@ -121,7 +120,5 @@ QString documentationPath()
 {
     return rootPath() + QLatin1Char('/') + QLatin1String(GAMMARAY_QCH_INSTALL_DIR);
 }
-
 }
-
 }

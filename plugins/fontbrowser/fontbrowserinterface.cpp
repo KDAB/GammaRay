@@ -33,12 +33,11 @@
 using namespace GammaRay;
 
 FontBrowserInterface::FontBrowserInterface(QObject *parent)
-  : QObject(parent)
+    : QObject(parent)
 {
-  ObjectBroker::registerObject<FontBrowserInterface*>(this);
+    ObjectBroker::registerObject<FontBrowserInterface *>(this);
 }
 
 FontBrowserInterface::~FontBrowserInterface()
 {
-
 }

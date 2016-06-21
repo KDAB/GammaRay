@@ -35,33 +35,31 @@
 #include <QWidget>
 
 namespace GammaRay {
-
 namespace Ui {
-  class CodecBrowserWidget;
+class CodecBrowserWidget;
 }
 
 class CodecBrowserWidget : public QWidget
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
     explicit CodecBrowserWidget(QWidget *parent = 0);
     ~CodecBrowserWidget();
 
-  private slots:
+private slots:
     void textChanged(const QString &text);
 
-  private:
+private:
     QScopedPointer<Ui::CodecBrowserWidget> ui;
     UIStateManager m_stateManager;
 };
 
 class CodecBrowserUiFactory : public QObject, public StandardToolUiFactory<CodecBrowserWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_codecbrowser.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_codecbrowser.json")
 };
-
 }
 
 #endif // GAMMARAY_CODECBROWSERWIDGET_H
