@@ -49,7 +49,7 @@ QAbstractItemView *headerView(QHeaderView *header)
 {
     QWidget *view = header->parentWidget();
 
-    while (!view->inherits("QAbstractItemView"))
+    while (!qobject_cast<QAbstractItemView*>(view))
         view = view->parentWidget();
 
     return qobject_cast<QAbstractItemView *>(view);
