@@ -188,6 +188,7 @@ void Qt3DEntityTreeModel::objectCreated(QObject *obj)
 void Qt3DEntityTreeModel::objectDestroyed(QObject *obj)
 {
     // TODO
+    Q_UNUSED(obj);
 }
 
 void Qt3DEntityTreeModel::objectReparented(QObject *obj)
