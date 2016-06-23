@@ -78,26 +78,34 @@ void SelectionModelServer::modelMonitored(bool monitored)
 void SelectionModelServer::connectModel()
 {
     Q_ASSERT(model());
-    connect(model(), SIGNAL(modelReset()), m_timer, SLOT(start()));
-    connect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    connect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer,
-            SLOT(start()));
-    connect(model(), SIGNAL(columnsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    connect(model(), SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer,
-            SLOT(start()));
-    connect(model(), SIGNAL(layoutChanged()), m_timer, SLOT(start()));
+    connect(model(), SIGNAL(modelReset()),
+            m_timer, SLOT(start()));
+    connect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+            m_timer, SLOT(start()));
+    connect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+            m_timer, SLOT(start()));
+    connect(model(), SIGNAL(columnsInserted(QModelIndex,int,int)),
+            m_timer, SLOT(start()));
+    connect(model(), SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)),
+            m_timer, SLOT(start()));
+    connect(model(), SIGNAL(layoutChanged()),
+            m_timer, SLOT(start()));
 }
 
 void SelectionModelServer::disconnectModel()
 {
     if (!model())
         return;
-    disconnect(model(), SIGNAL(modelReset()), m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer,
-               SLOT(start()));
-    disconnect(model(), SIGNAL(columnsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(columnsMoved(QModelIndex, int, int, QModelIndex,
-                                            int)), m_timer, SLOT(start()));
+
+    disconnect(model(), SIGNAL(modelReset()),
+               m_timer, SLOT(start()));
+    disconnect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+               m_timer, SLOT(start()));
+    disconnect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+               m_timer, SLOT(start()));
+    disconnect(model(), SIGNAL(columnsInserted(QModelIndex,int,int)),
+               m_timer, SLOT(start()));
+    disconnect(model(), SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)),
+               m_timer, SLOT(start()));
     disconnect(model(), SIGNAL(layoutChanged()), m_timer, SLOT(start()));
 }

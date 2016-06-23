@@ -127,30 +127,30 @@ void RemoteModelServer::disconnectModel()
     Q_ASSERT(m_model);
     Model::unused(m_model);
 
-    disconnect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), this,
-               SLOT(headerDataChanged(Qt::Orientation,int,int)));
-    disconnect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this,
-               SLOT(rowsInserted(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex, int, int, QModelIndex,
-                                                  int)), this,
-               SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
-    disconnect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this,
-               SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
-    disconnect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)), this,
-               SLOT(rowsRemoved(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(columnsInserted(QModelIndex,int,int)), this,
-               SLOT(columnsInserted(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), this,
-               SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
-    disconnect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)), this,
-               SLOT(columnsRemoved(QModelIndex,int,int)));
+    disconnect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)),
+               this, SLOT(headerDataChanged(Qt::Orientation,int,int)));
+    disconnect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
+               this, SLOT(rowsInserted(QModelIndex,int,int)));
+    disconnect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)),
+               this, SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
+    disconnect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+               this, SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
+    disconnect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+               this, SLOT(rowsRemoved(QModelIndex,int,int)));
+    disconnect(m_model, SIGNAL(columnsInserted(QModelIndex,int,int)),
+               this, SLOT(columnsInserted(QModelIndex,int,int)));
+    disconnect(m_model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)),
+               this, SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
+    disconnect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)),
+               this, SLOT(columnsRemoved(QModelIndex,int,int)));
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
-               SLOT(dataChanged(QModelIndex,QModelIndex)));
-    disconnect(m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()));
+    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+               this, SLOT(dataChanged(QModelIndex,QModelIndex)));
+    disconnect(m_model, SIGNAL(layoutChanged()),
+               this, SLOT(layoutChanged()));
 #else
-    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), this,
-               SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+               this, SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     disconnect(m_model,
                SIGNAL(layoutChanged(QList<QPersistentModelIndex>,
                                     QAbstractItemModel::LayoutChangeHint)),

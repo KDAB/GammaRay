@@ -208,19 +208,13 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
     connect(m_interface, SIGNAL(stateConfigurationChanged(GammaRay::StateMachineConfiguration)),
             this, SLOT(stateConfigurationChanged(GammaRay::StateMachineConfiguration)));
     connect(m_interface,
-            SIGNAL(stateAdded(GammaRay::StateId, GammaRay::StateId, bool, QString,
-                              GammaRay::StateType,
-                              bool)),
+            SIGNAL(stateAdded(GammaRay::StateId,GammaRay::StateId,bool,QString,GammaRay::StateType,bool)),
             this,
-            SLOT(stateAdded(GammaRay::StateId, GammaRay::StateId, bool, QString,
-                            GammaRay::StateType,
-                            bool)));
+            SLOT(stateAdded(GammaRay::StateId,GammaRay::StateId,bool,QString,GammaRay::StateType,bool)));
     connect(m_interface,
-            SIGNAL(transitionAdded(GammaRay::TransitionId, GammaRay::StateId, GammaRay::StateId,
-                                   QString)),
+            SIGNAL(transitionAdded(GammaRay::TransitionId,GammaRay::StateId,GammaRay::StateId,QString)),
             this,
-            SLOT(transitionAdded(GammaRay::TransitionId, GammaRay::StateId, GammaRay::StateId,
-                                 QString)));
+            SLOT(transitionAdded(GammaRay::TransitionId,GammaRay::StateId,GammaRay::StateId,QString)));
     connect(m_interface, SIGNAL(statusChanged(bool,bool)), this, SLOT(statusChanged(bool,bool)));
     connect(m_interface, SIGNAL(transitionTriggered(GammaRay::TransitionId,QString)),
             this, SLOT(transitionTriggered(GammaRay::TransitionId,QString)));
