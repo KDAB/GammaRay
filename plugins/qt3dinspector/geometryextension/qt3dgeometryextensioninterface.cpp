@@ -39,7 +39,6 @@ QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QAttribute::AttributeType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QAttribute::VertexBaseType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QBuffer::BufferType)
-QT_END_NAMESPACE
 
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
 {
@@ -54,6 +53,7 @@ static QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
        >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
     return in;
 }
+QT_END_NAMESPACE
 
 Qt3DGeometryAttributeData::Qt3DGeometryAttributeData()
     : attributeType(Qt3DRender::QAttribute::VertexAttribute)
@@ -81,6 +81,7 @@ bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData &rhs)
         && bufferIndex == rhs.bufferIndex;
 }
 
+QT_BEGIN_NAMESPACE
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryBufferData &data)
 {
     out << data.name << data.data << data.type;
@@ -92,6 +93,7 @@ static QDataStream &operator>>(QDataStream &in, Qt3DGeometryBufferData &data)
     in >> data.name >> data.data >> data.type;
     return in;
 }
+QT_END_NAMESPACE
 
 Qt3DGeometryBufferData::Qt3DGeometryBufferData()
     : type(Qt3DRender::QBuffer::VertexBuffer)
@@ -103,6 +105,7 @@ bool Qt3DGeometryBufferData::operator==(const Qt3DGeometryBufferData &rhs) const
     return name == rhs.name && data == rhs.data;
 }
 
+QT_BEGIN_NAMESPACE
 static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryData &data)
 {
     out << data.attributes << data.buffers;
@@ -114,6 +117,7 @@ static QDataStream &operator>>(QDataStream &in, Qt3DGeometryData &data)
     in >> data.attributes >> data.buffers;
     return in;
 }
+QT_END_NAMESPACE
 
 bool Qt3DGeometryData::operator==(const Qt3DGeometryData &rhs) const
 {
