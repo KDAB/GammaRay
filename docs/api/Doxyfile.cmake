@@ -25,7 +25,7 @@ FULL_PATH_NAMES        = NO
 STRIP_FROM_PATH        =
 STRIP_FROM_INC_PATH    =
 SHORT_NAMES            = NO
-JAVADOC_AUTOBRIEF      = NO
+QT_AUTOBRIEF           = YES
 MULTILINE_CPP_IS_BRIEF = NO
 INHERIT_DOCS           = YES
 SEPARATE_MEMBER_PAGES  = NO
@@ -41,12 +41,12 @@ SUBGROUPING            = YES
 EXTRACT_ALL            = NO
 EXTRACT_PRIVATE        = NO
 EXTRACT_STATIC         = YES
-EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_LOCAL_CLASSES  = NO
 EXTRACT_LOCAL_METHODS  = NO
 HIDE_UNDOC_MEMBERS     = NO
 HIDE_UNDOC_CLASSES     = NO
 HIDE_FRIEND_COMPOUNDS  = YES
-HIDE_IN_BODY_DOCS      = NO
+HIDE_IN_BODY_DOCS      = YES
 INTERNAL_DOCS          = YES
 CASE_SENSE_NAMES       = YES
 HIDE_SCOPE_NAMES       = NO
@@ -57,13 +57,14 @@ SORT_MEMBERS_CTORS_1ST = YES
 SORT_BRIEF_DOCS        = YES
 SORT_BY_SCOPE_NAME     = NO
 GENERATE_TODOLIST      = NO
-GENERATE_TESTLIST      = YES
-GENERATE_BUGLIST       = YES
+GENERATE_TESTLIST      = NO
+GENERATE_BUGLIST       = NO
 GENERATE_DEPRECATEDLIST = YES
 ENABLED_SECTIONS       =
 MAX_INITIALIZER_LINES  = 30
-SHOW_USED_FILES        = YES
+SHOW_USED_FILES        = NO
 FILE_VERSION_FILTER    =
+SHOW_FILES             = NO
 #---------------------------------------------------------------------------
 # configuration options related to warning and progress messages
 #---------------------------------------------------------------------------
@@ -72,7 +73,7 @@ WARNINGS               = YES
 WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = YES
-WARN_FORMAT            = "\$file:\$line: \$text"
+WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           = doxygen.log
 #---------------------------------------------------------------------------
 # configuration options related to the input files
@@ -120,12 +121,12 @@ IGNORE_PREFIX          =
 #---------------------------------------------------------------------------
 SOURCE_BROWSER         = NO
 GENERATE_HTML          = YES
+GENERATE_HTMLHELP      = NO
 GENERATE_LATEX         = NO
 GENERATE_RTF           = NO
 GENERATE_XML           = NO
 GENERATE_AUTOGEN_DEF   = NO
 GENERATE_PERLMOD       = NO
-DISABLE_INDEX          = YES
 #---------------------------------------------------------------------------
 # configuration options related to the HTML output
 #---------------------------------------------------------------------------
@@ -135,17 +136,10 @@ HTML_FILE_EXTENSION    = .html
 HTML_HEADER            =
 HTML_FOOTER            = @CMAKE_CURRENT_SOURCE_DIR@/footer.html
 HTML_EXTRA_FILES       = @CMAKE_CURRENT_SOURCE_DIR@/kdab-logo-16x16.png @CMAKE_CURRENT_SOURCE_DIR@/kdab-gammaray-logo-16x16.png
-HTML_STYLESHEET        =
-GENERATE_HTMLHELP      = NO
-CHM_FILE               =
-HHC_LOCATION           =
-GENERATE_CHI           = NO
-BINARY_TOC             = NO
-TOC_EXPAND             = NO
 DISABLE_INDEX          = NO
 ENUM_VALUES_PER_LINE   = 4
 GENERATE_TREEVIEW      = NO
-TREEVIEW_WIDTH         = 250
+VERBATIM_HEADERS       = NO
 #---------------------------------------------------------------------------
 # Configuration options related to the preprocessor
 #---------------------------------------------------------------------------
@@ -183,7 +177,7 @@ INCLUDED_BY_GRAPH      = NO
 CALL_GRAPH             = NO
 CALLER_GRAPH           = NO
 GRAPHICAL_HIERARCHY    = YES
-DIRECTORY_GRAPH        = YES
+DIRECTORY_GRAPH        = NO
 DOT_IMAGE_FORMAT       = png
 DOT_PATH               =
 DOTFILE_DIRS           =
