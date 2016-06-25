@@ -182,6 +182,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowTitle(tr("GammaRay (%1)").arg(Endpoint::instance()->label()));
 
+    selectInitialTool();
+
 #ifdef Q_OS_MAC
     ui->groupBox->setFlat(true);
     ui->horizontalLayout->setContentsMargins(0, 0, 0, 0);
@@ -321,6 +323,15 @@ bool MainWindow::selectTool(const QString &id)
     QItemSelectionModel *selectionModel = ui->toolSelector->selectionModel();
     selectionModel->setCurrentIndex(toolIndex, selectionFlags);
     return true;
+}
+
+void MainWindow::selectInitialTool()
+{
+    auto model = ui->toolSelector->model();
+    QModelIndexList matches = model->match(model->index(0, 0), ToolModelRole::ToolId, QStringLiteral("GammaRay::ObjectInspector"));
+    if (matches.isEmpty())
+        return;
+    ui->toolSelector->setCurrentIndex(matches.first());
 }
 
 void MainWindow::toolSelected()

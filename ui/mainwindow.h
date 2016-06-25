@@ -83,6 +83,7 @@ private slots:
     void setCodeNavigationIDE(QAction *action);
 
 private:
+    void selectInitialTool();
     QWidget *createErrorPage(const QModelIndex &index);
 
     QScopedPointer<Ui::MainWindow> ui;
