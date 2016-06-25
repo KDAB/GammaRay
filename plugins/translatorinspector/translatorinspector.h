@@ -84,8 +84,6 @@ class TranslatorInspectorFactory : public QObject,
 public:
     explicit TranslatorInspectorFactory(QObject *parent = 0)
         : QObject(parent) {}
-
-    QString name() const Q_DECL_OVERRIDE;
 };
 }
 

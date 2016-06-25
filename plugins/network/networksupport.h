@@ -52,7 +52,6 @@ class NetworkSupportFactory : public QObject, public StandardToolFactory<QObject
 
 public:
     explicit NetworkSupportFactory(QObject *parent = Q_NULLPTR);
-    QString name() const Q_DECL_OVERRIDE;
 };
 }
 

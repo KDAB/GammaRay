@@ -75,11 +75,6 @@ void CodecBrowser::updateCodecs(const QItemSelection &selected, const QItemSelec
     m_selectedCodecsModel->setCodecs(currentCodecNames);
 }
 
-QString CodecBrowserFactory::name() const
-{
-    return tr("Text Codecs");
-}
-
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(CodecBrowserFactory)
 #endif

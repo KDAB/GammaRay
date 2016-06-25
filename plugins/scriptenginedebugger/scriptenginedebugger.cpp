@@ -60,11 +60,6 @@ ScriptEngineDebugger::~ScriptEngineDebugger()
 {
 }
 
-QString ScriptEngineDebuggerFactory::name() const
-{
-    return tr("Script Engines");
-}
-
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(ScriptEngineDebuggerFactory)
 #endif

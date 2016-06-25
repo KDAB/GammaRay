@@ -415,8 +415,3 @@ NetworkSupportFactory::NetworkSupportFactory(QObject *parent)
     : QObject(parent)
 {
 }
-
-QString NetworkSupportFactory::name() const
-{
-    return tr("Network");
-}

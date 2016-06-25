@@ -105,16 +105,6 @@ void WebInspectorFactory::init(ProbeInterface *probe)
     new WebInspector(probe, probe->probe());
 }
 
-QString WebInspectorFactory::name() const
-{
-    return tr("Web Pages");
-}
-
-bool WebInspectorFactory::isHidden() const
-{
-    return false;
-}
-
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(WebInspectorFactory)
 #endif

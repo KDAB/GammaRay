@@ -322,8 +322,3 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     static auto dataProvider = new QmlObjectDataProvider;
     ObjectDataProvider::registerProvider(dataProvider);
 }
-
-QString QmlSupportFactory::name() const
-{
-    return tr("QML Support");
-}

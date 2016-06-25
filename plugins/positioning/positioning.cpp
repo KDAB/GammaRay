@@ -86,8 +86,3 @@ Positioning::Positioning(ProbeInterface *probe, QObject *parent)
     VariantHandler::registerStringConverter<QGeoPositionInfoSource::PositioningMethods>(
         positioningMethodsToString);
 }
-
-QString PositioningFactory::name() const
-{
-    return tr("Positioning");
-}

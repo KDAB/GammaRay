@@ -67,8 +67,6 @@ public:
         : QObject(parent)
     {
     }
-
-    QString name() const Q_DECL_OVERRIDE;
 };
 }
 

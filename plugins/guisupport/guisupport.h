@@ -50,7 +50,6 @@ class GuiSupportFactory : public QObject, public StandardToolFactory<QObject, Gu
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_guisupport.json")
 public:
     explicit GuiSupportFactory(QObject *parent = Q_NULLPTR);
-    QString name() const Q_DECL_OVERRIDE;
 };
 }
 

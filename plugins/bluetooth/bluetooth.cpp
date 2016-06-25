@@ -126,8 +126,3 @@ Bluetooth::Bluetooth(ProbeInterface *probe, QObject *parent)
     VariantHandler::registerStringConverter<QBluetoothDeviceDiscoveryAgent::InquiryType>(
         bluetoothInquiryTypeToString);
 }
-
-QString BluetoothFactory::name() const
-{
-    return tr("Bluetooth");
-}

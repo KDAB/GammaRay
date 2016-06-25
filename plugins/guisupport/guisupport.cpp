@@ -352,11 +352,6 @@ GuiSupportFactory::GuiSupportFactory(QObject *parent)
 {
 }
 
-QString GuiSupportFactory::name() const
-{
-    return QString();
-}
-
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(GuiSupportFactory)
 #endif

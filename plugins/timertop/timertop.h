@@ -55,8 +55,6 @@ class TimerTopFactory : public QObject, public StandardToolFactory<QTimer, Timer
 
 public:
     explicit TimerTopFactory(QObject *parent = 0);
-
-    QString name() const Q_DECL_OVERRIDE;
 };
 }
 

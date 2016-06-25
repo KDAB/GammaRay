@@ -124,8 +124,3 @@ bool GammaRay::QuickWidgetSupport::grabWindow(QQuickWindow *window) const
     return false;
 #endif
 }
-
-QString QuickWidgetSupportFactory::name() const
-{
-    return tr("Quick Widget Support");
-}

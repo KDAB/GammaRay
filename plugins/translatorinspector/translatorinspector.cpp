@@ -141,8 +141,3 @@ void TranslatorInspector::selectionChanged(const QItemSelection &selection)
             m_translationsModel->setSourceModel(translator->model());
     }
 }
-
-QString TranslatorInspectorFactory::name() const
-{
-    return tr("Translators");
-}

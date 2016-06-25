@@ -94,11 +94,6 @@ void TextDocumentInspector::documentElementSelected(const QItemSelection &select
     m_textDocumentFormatModel->setFormat(f);
 }
 
-QString TextDocumentInspectorFactory::name() const
-{
-    return tr("Text Documents");
-}
-
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(TextDocumentInspectorFactory)
 #endif

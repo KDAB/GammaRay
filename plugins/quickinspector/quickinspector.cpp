@@ -770,8 +770,3 @@ QString QuickInspector::findSGNodeType(QSGNode *node) const
 
     return QStringLiteral("QSGNode");
 }
-
-QString QuickInspectorFactory::name() const
-{
-    return tr("Quick Scenes");
-}

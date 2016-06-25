@@ -265,8 +265,3 @@ void Qt3DInspector::registerExtensions()
 {
     PropertyController::registerExtension<Qt3DGeometryExtension>();
 }
-
-QString Qt3DInspectorFactory::name() const
-{
-    return tr("Qt3D Inspector");
-}
