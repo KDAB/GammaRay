@@ -20,7 +20,11 @@ logic to extract the relevant information from the target application, and one f
 the client containing the graphical user interface.
 
 GammaRay ships with a large set of plugins for various Qt frameworks that
-can serve as examples for all the features described below.
+can serve as examples for all the features described below. Additional external
+plugins can be found here:
+
+- GammaRay plugin examples: http://github.com/KDAB/GammaRay-plugin-examples
+- GammaRay QtIvi support plugin: http://codereview.qt-project.org/gitweb?p=qt-apps/gammaray-plugin-qtivi.git
 
 @subsection plugins-entry Entry Points
 
