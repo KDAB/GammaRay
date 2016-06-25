@@ -1,0 +1,84 @@
+/*!
+\page gammaray-plugin-design-guide Plugin Design Guide
+
+This page lists a number of best practises for GammaRay plugins.
+
+\tableofcontents
+
+\section gammaray-plugin-infrastructure Common Infrastructure
+
+\subsection gammaray-plugin-infrastructure-remote Remote Support
+
+While historically possible, plugins should not rely on the in-process mode, or offer some features only in
+in-process mode, but fully work out-of-process and thus also with remote devices.
+
+\subsection gammaray-plugin-infrastructure-features Features
+
+There is a number of shared features worth considering:
+
+- If the plugin represents a user-interface framework, offer a remote view of the output using GammaRay::RemoteViewServer and GammaRay::RemoteViewWidget.
+- If the plugin deals with something using a QPainter, offer paint analyzer support via GammaRay::PaintAnalyzer.
+
+\section gammaray-plugin-probe Probe Plugin
+
+\subsection gammaray-plugin-probe-performance Performance
+
+There are a number of performance hot paths that affect the entire target application, the plugin should
+do minimal work on these. Particular care also has to be taken for multi-threading support there.
+
+- GammaRay::Probe::objectCreated() and GammaRay::Probe::objectDestroyed().
+- Avoid holding GammaRay::Probe::objectLock().
+- GammaRay::SignalSpyCallbackSet.
+- GammaRay::Probe::installGlobalEventFilter().
+
+\subsection gammaray-plugin-probe-gui GUI Dependency
+
+The probe plugin should not supply user interface assets (icons, colors, etc). System icons might not be available
+on the target (embedded) system, and color/palette settings might be incompatible with that of the client system.
+Instead, send semantically information to the client, and resolve user interface assets on the client side.
+
+If the probe plugin does not have to link against Qt5::Gui anyway, consider avoiding linking against it to avoid
+this problem in the first place.
+
+\section gammaray-plugin-ui User Interface
+
+For the user-interface, consider the following:
+- provide sensible auto-expansion of object trees.
+- perform as-you-type search on the probe side, by exporting a QSortFilterProxyModel instance rather than the
+  source model directly.
+- save and restore UI state (see GammaRay::UIStateManager).
+- initialize the user interface in a sensible way (see GammaRay::UIStateManager)
+- if your plugin represents visual elements, provide picking support, either in the target application or in a remote view
+  (see GammaRay::Probe::selectObject()).
+
+All translation need to happen on the client side, QObject::tr() calls should be avoided in the probe plugin,
+as loading translation catalogs in the probe would interfere with the target application.
+
+\section gammaray-plugin-navigation Navigation
+
+\subsection gammaray-plugin-navigation-object Object Navigation
+
+If your plugin shows a selectable set of objects, offer object navigation:
+
+- inbound, ie. from other tools to your plugin, by handling GammaRay::Probe::objectSelected().
+- outbound, ie. from your plugin to other tools, by using GammaRay::ContextMenuExtension.
+
+\subsection gammaray-plugin-navigation-source Source Navigation
+
+Support source code navigation:
+
+- for existing objects, by using GammaRay::ContextMenuExtension.
+- for objects of your plugin, by providing source code locations via GammaRay::ObjectDataProvider or GammaRay::SourceLocation.
+
+\section gammaray-plugin-doc Documentation
+
+If the plugin provides a user interface, make sure it's covered in the user manual.
+
+\section gammaray-plugin-qa Quality Assurance
+
+Each plugin should provide manual and automatic tests.
+
+- Automatic tests should cover object tracking and model code in particular.
+- Manual tests should enable all features in the plugin.
+
+*/

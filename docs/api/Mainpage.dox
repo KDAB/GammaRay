@@ -26,6 +26,8 @@ plugins can be found here:
 - GammaRay plugin examples: http://github.com/KDAB/GammaRay-plugin-examples
 - GammaRay QtIvi support plugin: http://codereview.qt-project.org/gitweb?p=qt-apps/gammaray-plugin-qtivi.git
 
+For best practices on plugin development, also see the \ref gammaray-plugin-design-guide "Plugin Design Guide".
+
 @subsection plugins-entry Entry Points
 
 Probe plugins inherit GammaRay::ToolFactory, client plugins inherit GammaRay::ToolUiFactory.
