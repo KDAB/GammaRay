@@ -12,8 +12,8 @@
             <text language="de">Über Gammaray...</text>
         </aboutMenuText>
         <aboutDialog>
-            <!-- TODO proper about text, also filled from .ts files -->
-            <file>@CMAKE_SOURCE_DIR@/resources/authors</file>
+            <!-- TODO fill from .ts files -->
+            <file>@CMAKE_CURRENT_SOURCE_DIR@/about.txt</file>
             <icon>@CMAKE_SOURCE_DIR@/resources/GammaRay-128x128.png</icon>
         </aboutDialog>
         <enableDocumentationManager>false</enableDocumentationManager>

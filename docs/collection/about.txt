@@ -1,0 +1,10 @@
+<b>GammaRay</b>
+
+<p>The Qt application inspection and manipulation tool.
+Learn more at <a href=\"http://www.kdab.com/gammaray\">http://www.kdab.com/gammaray/</a>.</p>
+<p>Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB,
+a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>
+
+<p>GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB
+in the European Union, the United States and/or other countries.  Other product and
+company names and logos may be trademarks or registered trademarks of their respective companies.</p>
