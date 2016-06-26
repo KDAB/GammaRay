@@ -57,6 +57,8 @@ public:
     int rowCount(const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent) const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
 public slots:
     void objectCreated(QObject *obj);
@@ -67,8 +69,13 @@ private:
     void clear();
     void populateFromNode(Qt3DCore::QNode *node);
     void populateFromEntity(Qt3DCore::QEntity *entity);
-    void removeSubtree(Qt3DCore::QEntity *entity);
+    void removeEntity(Qt3DCore::QEntity *entity, bool danglingPointer);
+    void removeSubtree(Qt3DCore::QEntity *entity, bool danglingPointer);
     QModelIndex indexForEntity(Qt3DCore::QEntity *entity) const;
+
+    void connectEntity(Qt3DCore::QEntity *entity);
+    void disconnectEntity(Qt3DCore::QEntity *entity);
+    void entityEnabledChanged();
 
 private:
     Qt3DCore::QAspectEngine *m_engine;

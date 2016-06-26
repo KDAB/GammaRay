@@ -80,6 +80,7 @@ void Qt3DEntityTreeModel::populateFromEntity(Qt3DCore::QEntity *entity)
 
     m_childParentMap[entity] = entity->parentEntity();
     m_parentChildMap[entity->parentEntity()].push_back(entity);
+    connectEntity(entity);
 
     foreach (auto child, entity->childNodes()) {
         populateFromNode(child);
@@ -97,6 +98,8 @@ QVariant Qt3DEntityTreeModel::data(const QModelIndex &index, int role) const
     auto entity = reinterpret_cast<Qt3DCore::QEntity *>(index.internalPointer());
     if (role == ObjectModel::ObjectIdRole)
         return QVariant::fromValue(ObjectId(entity));
+    else if (role == Qt::CheckStateRole && index.column() == 0)
+        return entity->isEnabled() ? Qt::Checked : Qt::Unchecked;
 
     return dataForObject(entity, index, role);
 }
@@ -123,6 +126,25 @@ QModelIndex Qt3DEntityTreeModel::index(int row, int column, const QModelIndex &p
     if (row < 0 || column < 0 || row >= children.size() || column >= columnCount())
         return QModelIndex();
     return createIndex(row, column, children.at(row));
+}
+
+Qt::ItemFlags Qt3DEntityTreeModel::flags(const QModelIndex &index) const
+{
+    auto baseFlags = QAbstractItemModel::flags(index);
+    if (index.isValid() && index.column() == 0)
+        return baseFlags | Qt::ItemIsUserCheckable;
+    return baseFlags;
+}
+
+bool Qt3DEntityTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!m_engine || !index.isValid() || role != Qt::CheckStateRole || index.column() != 0)
+        return false;
+
+    auto entity = reinterpret_cast<Qt3DCore::QEntity*>(index.internalPointer());
+    entity->setEnabled(value.toInt() == Qt::Checked);
+    emit dataChanged(index, index);
+    return true;
 }
 
 QModelIndex Qt3DEntityTreeModel::indexForEntity(Qt3DCore::QEntity *entity) const
@@ -190,6 +212,7 @@ void Qt3DEntityTreeModel::objectCreated(QObject *obj)
     beginInsertRows(index, row, row);
     children.insert(it, entity);
     m_childParentMap.insert(entity, parentEntity);
+    connectEntity(entity);
     foreach (auto child, entity->childNodes()) {
         populateFromNode(child);
     }
@@ -204,6 +227,11 @@ void Qt3DEntityTreeModel::objectDestroyed(QObject *obj)
         return;
     }
 
+    removeEntity(entity, true);
+}
+
+void Qt3DEntityTreeModel::removeEntity(Qt3DCore::QEntity *entity, bool danglingPointer)
+{
     auto parentEntity = m_childParentMap.value(entity);
     const QModelIndex parentIndex = indexForEntity(parentEntity);
     if (parentEntity && !parentIndex.isValid())
@@ -217,16 +245,17 @@ void Qt3DEntityTreeModel::objectDestroyed(QObject *obj)
 
     beginRemoveRows(parentIndex, row, row);
     siblings.erase(it);
-    removeSubtree(entity);
+    removeSubtree(entity, danglingPointer);
     endRemoveRows();
-
 }
 
-void Qt3DEntityTreeModel::removeSubtree(Qt3DCore::QEntity *entity)
+void Qt3DEntityTreeModel::removeSubtree(Qt3DCore::QEntity *entity, bool danglingPointer)
 {
+    if (!danglingPointer)
+        disconnectEntity(entity);
     const auto children = m_parentChildMap.value(entity);
     for (auto child : children)
-        removeSubtree(child);
+        removeSubtree(child, danglingPointer);
     m_childParentMap.remove(entity);
     m_parentChildMap.remove(entity);
 }
@@ -240,7 +269,7 @@ void Qt3DEntityTreeModel::objectReparented(QObject *obj)
     if (m_childParentMap.contains(entity)) {
         // moved out of our tree
         if (!isEngineForEntity(m_engine, entity)) {
-            objectDestroyed(entity);
+            removeEntity(entity, false);
         } else {
             // TODO reparented within our tree
         }
@@ -248,4 +277,25 @@ void Qt3DEntityTreeModel::objectReparented(QObject *obj)
         // possibly reparented into our tree
         objectCreated(obj);
     }
+}
+
+void Qt3DEntityTreeModel::connectEntity(Qt3DCore::QEntity *entity)
+{
+    connect(entity, &Qt3DCore::QEntity::enabledChanged, this, &Qt3DEntityTreeModel::entityEnabledChanged);
+}
+
+void Qt3DEntityTreeModel::disconnectEntity(Qt3DCore::QEntity *entity)
+{
+    disconnect(entity, &Qt3DCore::QEntity::enabledChanged, this, &Qt3DEntityTreeModel::entityEnabledChanged);
+}
+
+void Qt3DEntityTreeModel::entityEnabledChanged()
+{
+    auto entity = qobject_cast<Qt3DCore::QEntity*>(sender());
+    if (!entity)
+        return;
+    const auto idx = indexForEntity(entity);
+    if (!idx.isValid())
+        return;
+    emit dataChanged(idx, idx);
 }
