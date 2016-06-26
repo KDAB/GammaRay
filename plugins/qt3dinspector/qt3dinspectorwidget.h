@@ -58,8 +58,8 @@ private:
     void entityContextMenu(QPoint pos);
     void frameGraphContextMenu(QPoint pos);
 
-    void entitySelectionChanged(const QItemSelection &selection);
-    void frameGraphSelectionChanged(const QItemSelection &selection);
+    void entitySelectionChanged(const QItemSelection &selection, const QItemSelection &deselected);
+    void frameGraphSelectionChanged(const QItemSelection &selection, const QItemSelection &deselected);
 
     std::unique_ptr<Ui::Qt3DInspectorWidget> ui;
     UIStateManager m_stateManager;

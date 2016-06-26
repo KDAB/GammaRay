@@ -138,22 +138,24 @@ void Qt3DInspectorWidget::frameGraphContextMenu(QPoint pos)
     menu.exec(ui->frameGraphView->viewport()->mapToGlobal(pos));
 }
 
-void Qt3DInspectorWidget::entitySelectionChanged(const QItemSelection &selection)
+void Qt3DInspectorWidget::entitySelectionChanged(const QItemSelection &selection, const QItemSelection &deselected)
 {
     if (selection.isEmpty())
         return;
     const auto index = selection.first().topLeft();
     ui->sceneTreeView->scrollTo(index);
-    ui->tabWidget->setCurrentWidget(ui->sceneTab);
+    if (!deselected.isEmpty()) // external change, not initial selection
+        ui->tabWidget->setCurrentWidget(ui->sceneTab);
 }
 
-void Qt3DInspectorWidget::frameGraphSelectionChanged(const QItemSelection &selection)
+void Qt3DInspectorWidget::frameGraphSelectionChanged(const QItemSelection &selection, const QItemSelection &deselected)
 {
     if (selection.isEmpty())
         return;
     const auto index = selection.first().topLeft();
     ui->frameGraphView->scrollTo(index);
-    ui->tabWidget->setCurrentWidget(ui->renderSettingsTab);
+    if (!deselected.isEmpty()) // external change, not initial selection
+        ui->tabWidget->setCurrentWidget(ui->renderSettingsTab);
 }
 
 static QObject *createGeometryExtension(const QString &name, QObject *parent)
