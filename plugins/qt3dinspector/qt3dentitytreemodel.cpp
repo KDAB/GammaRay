@@ -148,10 +148,10 @@ static bool isEngineForEntity(Qt3DCore::QAspectEngine *engine, Qt3DCore::QEntity
 {
     Q_ASSERT(engine);
     Q_ASSERT(entity);
-    if (!entity->parentEntity())
-        return false;
     if (entity == engine->rootEntity())
         return true;
+    if (!entity->parentEntity())
+        return false;
     return isEngineForEntity(engine, entity->parentEntity());
 }
 
@@ -198,8 +198,37 @@ void Qt3DEntityTreeModel::objectCreated(QObject *obj)
 
 void Qt3DEntityTreeModel::objectDestroyed(QObject *obj)
 {
-    // TODO
-    Q_UNUSED(obj);
+    auto entity = static_cast<Qt3DCore::QEntity*>(obj); // never dereference this!
+    if (!m_childParentMap.contains(entity)) {
+        Q_ASSERT(!m_parentChildMap.contains(entity));
+        return;
+    }
+
+    auto parentEntity = m_childParentMap.value(entity);
+    const QModelIndex parentIndex = indexForEntity(parentEntity);
+    if (parentEntity && !parentIndex.isValid())
+        return;
+
+    auto &siblings = m_parentChildMap[parentEntity];
+    auto it = std::lower_bound(siblings.begin(), siblings.end(), entity);
+    if (it == siblings.end() || *it != entity)
+        return;
+    const int row = std::distance(siblings.begin(), it);
+
+    beginRemoveRows(parentIndex, row, row);
+    siblings.erase(it);
+    removeSubtree(entity);
+    endRemoveRows();
+
+}
+
+void Qt3DEntityTreeModel::removeSubtree(Qt3DCore::QEntity *entity)
+{
+    const auto children = m_parentChildMap.value(entity);
+    for (auto child : children)
+        removeSubtree(child);
+    m_childParentMap.remove(entity);
+    m_parentChildMap.remove(entity);
 }
 
 void Qt3DEntityTreeModel::objectReparented(QObject *obj)
@@ -209,7 +238,12 @@ void Qt3DEntityTreeModel::objectReparented(QObject *obj)
         return;
 
     if (m_childParentMap.contains(entity)) {
-        // TODO reparented within our tree, or out of it
+        // moved out of our tree
+        if (!isEngineForEntity(m_engine, entity)) {
+            objectDestroyed(entity);
+        } else {
+            // TODO reparented within our tree
+        }
     } else {
         // possibly reparented into our tree
         objectCreated(obj);

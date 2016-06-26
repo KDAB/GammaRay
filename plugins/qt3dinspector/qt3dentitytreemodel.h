@@ -67,6 +67,7 @@ private:
     void clear();
     void populateFromNode(Qt3DCore::QNode *node);
     void populateFromEntity(Qt3DCore::QEntity *entity);
+    void removeSubtree(Qt3DCore::QEntity *entity);
     QModelIndex indexForEntity(Qt3DCore::QEntity *entity) const;
 
 private:
