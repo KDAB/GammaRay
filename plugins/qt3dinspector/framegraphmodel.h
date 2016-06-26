@@ -56,6 +56,8 @@ public:
     int rowCount(const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent) const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
 public slots:
     void objectCreated(QObject *obj);
@@ -68,6 +70,10 @@ private:
     void removeNode(Qt3DRender::QFrameGraphNode *node, bool danglingPointer);
     void removeSubtree(Qt3DRender::QFrameGraphNode *node, bool danglingPointer);
     QModelIndex indexForNode(Qt3DRender::QFrameGraphNode *node) const;
+
+    void connectNode(Qt3DRender::QFrameGraphNode *node);
+    void disconnectNode(Qt3DRender::QFrameGraphNode *node);
+    void nodeEnabledChanged();
 
 private:
     Qt3DRender::QRenderSettings *m_settings;

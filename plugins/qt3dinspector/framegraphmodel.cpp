@@ -58,6 +58,8 @@ void FrameGraphModel::setRenderSettings(Qt3DRender::QRenderSettings *settings)
 
 void FrameGraphModel::clear()
 {
+    for (auto it = m_childParentMap.constBegin(); it != m_childParentMap.constEnd(); ++it)
+        disconnectNode(it.key());
     m_childParentMap.clear();
     m_parentChildMap.clear();
 }
@@ -69,6 +71,7 @@ void FrameGraphModel::populateFromNode(Qt3DRender::QFrameGraphNode *node)
 
     m_childParentMap[node] = node->parentFrameGraphNode();
     m_parentChildMap[node->parentFrameGraphNode()].push_back(node);
+    connectNode(node);
 
     foreach (auto child, node->childNodes()) {
         if (auto childNode = qobject_cast<Qt3DRender::QFrameGraphNode *>(child))
@@ -93,6 +96,8 @@ QVariant FrameGraphModel::data(const QModelIndex &index, int role) const
     auto node = reinterpret_cast<Qt3DRender::QFrameGraphNode *>(index.internalPointer());
     if (role == ObjectModel::ObjectIdRole)
         return QVariant::fromValue(ObjectId(node));
+    else if (role == Qt::CheckStateRole && index.column() == 0)
+        return node->isEnabled() ? Qt::Checked : Qt::Unchecked;
 
     return dataForObject(node, index, role);
 }
@@ -110,6 +115,25 @@ QModelIndex FrameGraphModel::index(int row, int column, const QModelIndex &paren
     if (row < 0 || column < 0 || row >= children.size() || column >= columnCount())
         return QModelIndex();
     return createIndex(row, column, children.at(row));
+}
+
+Qt::ItemFlags FrameGraphModel::flags(const QModelIndex &index) const
+{
+    auto baseFlags = QAbstractItemModel::flags(index);
+    if (index.isValid() && index.column() == 0)
+        return baseFlags | Qt::ItemIsUserCheckable;
+    return baseFlags;
+}
+
+bool FrameGraphModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!m_settings || !index.isValid() || role != Qt::CheckStateRole || index.column() != 0)
+        return false;
+
+    auto node = reinterpret_cast<Qt3DRender::QFrameGraphNode*>(index.internalPointer());
+    node->setEnabled(value.toInt() == Qt::Checked);
+    emit dataChanged(index, index);
+    return true;
 }
 
 QModelIndex FrameGraphModel::indexForNode(Qt3DRender::QFrameGraphNode *node) const
@@ -173,6 +197,7 @@ void FrameGraphModel::objectCreated(QObject *obj)
     beginInsertRows(index, row, row);
     children.insert(it, node);
     m_childParentMap.insert(node, parentNode);
+    connectNode(node);
     foreach (auto child, node->childNodes()) {
         if (auto childNode = qobject_cast<Qt3DRender::QFrameGraphNode *>(child))
             populateFromNode(childNode);
@@ -193,6 +218,9 @@ void FrameGraphModel::objectDestroyed(QObject *obj)
 
 void FrameGraphModel::removeNode(Qt3DRender::QFrameGraphNode *node, bool danglingPointer)
 {
+    if (!danglingPointer)
+        disconnectNode(node);
+
     auto parentNode = m_childParentMap.value(node);
     const QModelIndex parentIndex = indexForNode(parentNode);
     if (parentNode && !parentIndex.isValid())
@@ -236,4 +264,25 @@ void FrameGraphModel::objectReparented(QObject *obj)
         // possibly reparented into our tree
         objectCreated(obj);
     }
+}
+
+void FrameGraphModel::connectNode(Qt3DRender::QFrameGraphNode *node)
+{
+    connect(node, &Qt3DRender::QFrameGraphNode::enabledChanged, this, &FrameGraphModel::nodeEnabledChanged);
+}
+
+void FrameGraphModel::disconnectNode(Qt3DRender::QFrameGraphNode *node)
+{
+    disconnect(node, &Qt3DRender::QFrameGraphNode::enabledChanged, this, &FrameGraphModel::nodeEnabledChanged);
+}
+
+void FrameGraphModel::nodeEnabledChanged()
+{
+    auto node = qobject_cast<Qt3DRender::QFrameGraphNode*>(sender());
+    if (!node)
+        return;
+    const auto idx = indexForNode(node);
+    if (!idx.isValid())
+        return;
+    emit dataChanged(idx, idx);
 }
