@@ -56,6 +56,8 @@ void Qt3DEntityTreeModel::setEngine(Qt3DCore::QAspectEngine *engine)
 
 void Qt3DEntityTreeModel::clear()
 {
+    for (auto it = m_childParentMap.constBegin(); it != m_childParentMap.constEnd(); ++it)
+        disconnectEntity(it.key());
     m_childParentMap.clear();
     m_parentChildMap.clear();
 }
