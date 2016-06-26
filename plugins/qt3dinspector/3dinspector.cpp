@@ -149,7 +149,7 @@ void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine *engine)
         return;
     foreach (auto component, rootEntity->components()) {
         if (auto renderSettings = qobject_cast<Qt3DRender::QRenderSettings *>(component)) {
-            m_frameGraphModel->setFrameGraph(renderSettings->activeFrameGraph());
+            m_frameGraphModel->setRenderSettings(renderSettings);
             break;
         }
     }

@@ -38,6 +38,7 @@
 QT_BEGIN_NAMESPACE
 namespace Qt3DRender {
 class QFrameGraphNode;
+class QRenderSettings;
 }
 QT_END_NAMESPACE
 
@@ -49,7 +50,7 @@ public:
     explicit FrameGraphModel(QObject *parent = nullptr);
     ~FrameGraphModel();
 
-    void setFrameGraph(Qt3DRender::QFrameGraphNode *frameGraph);
+    void setRenderSettings(Qt3DRender::QRenderSettings *settings);
 
     QVariant data(const QModelIndex &index, int role) const override;
     int rowCount(const QModelIndex &parent) const override;
@@ -69,6 +70,7 @@ private:
     QModelIndex indexForNode(Qt3DRender::QFrameGraphNode *node) const;
 
 private:
+    Qt3DRender::QRenderSettings *m_settings;
     QHash<Qt3DRender::QFrameGraphNode *, Qt3DRender::QFrameGraphNode *> m_childParentMap;
     QHash<Qt3DRender::QFrameGraphNode *, QVector<Qt3DRender::QFrameGraphNode *> > m_parentChildMap;
 };

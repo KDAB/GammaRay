@@ -29,6 +29,7 @@
 #include "framegraphmodel.h"
 
 #include <Qt3DRender/QFrameGraphNode>
+#include <Qt3DRender/QRenderSettings>
 
 #include <algorithm>
 
@@ -36,6 +37,7 @@ using namespace GammaRay;
 
 FrameGraphModel::FrameGraphModel(QObject *parent)
     : ObjectModelBase<QAbstractItemModel>(parent)
+    , m_settings(nullptr)
 {
 }
 
@@ -43,11 +45,14 @@ FrameGraphModel::~FrameGraphModel()
 {
 }
 
-void FrameGraphModel::setFrameGraph(Qt3DRender::QFrameGraphNode *frameGraph)
+void FrameGraphModel::setRenderSettings(Qt3DRender::QRenderSettings *settings)
 {
     beginResetModel();
     clear();
-    populateFromNode(frameGraph);
+    m_settings = settings;
+    // TODO monitor m_settings->activeFrameGraph changed
+    if (m_settings)
+        populateFromNode(m_settings->activeFrameGraph());
     endResetModel();
 }
 
@@ -126,13 +131,25 @@ QModelIndex FrameGraphModel::indexForNode(Qt3DRender::QFrameGraphNode *node) con
     return index(row, 0, parentIndex);
 }
 
+static bool isRenderSettingsForNode(Qt3DRender::QRenderSettings *settings, Qt3DRender::QFrameGraphNode *node)
+{
+    Q_ASSERT(settings);
+    Q_ASSERT(node);
+    if (node == settings->activeFrameGraph())
+        return true;
+    if (!node->parentFrameGraphNode())
+        return false;
+    return isRenderSettingsForNode(settings, node->parentFrameGraphNode());
+}
+
 void FrameGraphModel::objectCreated(QObject *obj)
 {
     auto node = qobject_cast<Qt3DRender::QFrameGraphNode*>(obj);
-    if (!node)
+    if (!node || !m_settings)
         return;
 
-    // TODO is this for our render settings node?
+    if (!isRenderSettingsForNode(m_settings, node))
+        return;
 
     if (m_childParentMap.contains(node))
         return;
@@ -209,7 +226,12 @@ void FrameGraphModel::objectReparented(QObject *obj)
         return;
 
     if (m_childParentMap.contains(node)) {
-        // TODO moved inside our tree, or moved out of it
+        if (isRenderSettingsForNode(m_settings, node)) {
+            // TODO reparented inside our tree
+        } else {
+            // moved to outside of our tree
+            removeNode(node, false);
+        }
     } else {
         // possibly reparented into our tree
         objectCreated(obj);
