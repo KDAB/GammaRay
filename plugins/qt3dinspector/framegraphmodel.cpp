@@ -125,3 +125,93 @@ QModelIndex FrameGraphModel::indexForNode(Qt3DRender::QFrameGraphNode *node) con
     const int row = std::distance(siblings.constBegin(), it);
     return index(row, 0, parentIndex);
 }
+
+void FrameGraphModel::objectCreated(QObject *obj)
+{
+    auto node = qobject_cast<Qt3DRender::QFrameGraphNode*>(obj);
+    if (!node)
+        return;
+
+    // TODO is this for our render settings node?
+
+    if (m_childParentMap.contains(node))
+        return;
+
+    auto parentNode = node->parentFrameGraphNode();
+    if (parentNode) {
+        // add parent first, if we don't know that yet
+        if (!m_childParentMap.contains(parentNode)) {
+            objectCreated(parentNode);
+            return;
+        }
+    }
+
+    const auto index = indexForNode(parentNode);
+    Q_ASSERT(index.isValid() || !parentNode);
+
+    auto &children = m_parentChildMap[parentNode];
+    auto it = std::lower_bound(children.begin(), children.end(), node);
+    const int row = std::distance(children.begin(), it);
+
+    beginInsertRows(index, row, row);
+    children.insert(it, node);
+    m_childParentMap.insert(node, parentNode);
+    foreach (auto child, node->childNodes()) {
+        if (auto childNode = qobject_cast<Qt3DRender::QFrameGraphNode *>(child))
+            populateFromNode(childNode);
+    }
+    endInsertRows();
+}
+
+void FrameGraphModel::objectDestroyed(QObject *obj)
+{
+    auto node = static_cast<Qt3DRender::QFrameGraphNode*>(obj); // never dereference this!
+    if (!m_childParentMap.contains(node)) {
+        Q_ASSERT(!m_parentChildMap.contains(node));
+        return;
+    }
+
+    removeNode(node, true);
+}
+
+void FrameGraphModel::removeNode(Qt3DRender::QFrameGraphNode *node, bool danglingPointer)
+{
+    auto parentNode = m_childParentMap.value(node);
+    const QModelIndex parentIndex = indexForNode(parentNode);
+    if (parentNode && !parentIndex.isValid())
+        return;
+
+    auto &siblings = m_parentChildMap[parentNode];
+    auto it = std::lower_bound(siblings.begin(), siblings.end(), node);
+    if (it == siblings.end() || *it != node)
+        return;
+    const int row = std::distance(siblings.begin(), it);
+
+    beginRemoveRows(parentIndex, row, row);
+    siblings.erase(it);
+    removeSubtree(node, danglingPointer);
+    endRemoveRows();
+}
+
+void FrameGraphModel::removeSubtree(Qt3DRender::QFrameGraphNode *node, bool danglingPointer)
+{
+    const auto children = m_parentChildMap.value(node);
+    for (auto child : children)
+        removeSubtree(child, danglingPointer);
+    m_childParentMap.remove(node);
+    m_parentChildMap.remove(node);
+}
+
+void FrameGraphModel::objectReparented(QObject *obj)
+{
+    auto node = qobject_cast<Qt3DRender::QFrameGraphNode*>(obj);
+    if (!node)
+        return;
+
+    if (m_childParentMap.contains(node)) {
+        // TODO moved inside our tree, or moved out of it
+    } else {
+        // possibly reparented into our tree
+        objectCreated(obj);
+    }
+}

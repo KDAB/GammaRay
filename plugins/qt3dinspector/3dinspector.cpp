@@ -103,6 +103,9 @@ Qt3DInspector::Qt3DInspector(ProbeInterface *probe, QObject *parent)
     connect(m_entitySelectionModel, &QItemSelectionModel::selectionChanged, this,
             &Qt3DInspector::entitySelectionChanged);
 
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_frameGraphModel, SLOT(objectCreated(QObject*)));
+    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_frameGraphModel, SLOT(objectDestroyed(QObject*)));
+    connect(probe->probe(), SIGNAL(objectReparented(QObject*)), m_frameGraphModel, SLOT(objectReparented(QObject*)));
     auto frameGraphProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     frameGraphProxy->setSourceModel(m_frameGraphModel);
     probe->registerModel(QStringLiteral(
