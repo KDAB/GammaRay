@@ -74,6 +74,7 @@ private:
     void selectFrameGraphNode(Qt3DRender::QFrameGraphNode *node);
 
     void registerCoreMetaTypes();
+    void registerInputMetaTypes();
     void registerRenderMetaTypes();
     void registerExtensions();
 

@@ -51,6 +51,8 @@
 #include <Qt3DRender/QGraphicsApiFilter>
 #include <Qt3DRender/QRenderSettings>
 
+#include <Qt3DInput/QAbstractPhysicalDevice>
+
 #include <Qt3DCore/QAspectEngine>
 #include <Qt3DCore/QComponent>
 #include <Qt3DCore/QEntity>
@@ -76,6 +78,7 @@ Qt3DInspector::Qt3DInspector(ProbeInterface *probe, QObject *parent)
                                                             this))
 {
     registerCoreMetaTypes();
+    registerInputMetaTypes();
     registerRenderMetaTypes();
     registerExtensions();
 
@@ -249,6 +252,11 @@ void Qt3DInspector::registerCoreMetaTypes()
     MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QComponentVector, components);
 #endif
     MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QEntity *, parentEntity);
+}
+
+void Qt3DInspector::registerInputMetaTypes()
+{
+    qRegisterMetaType<Qt3DInput::QAbstractPhysicalDevice*>();
 }
 
 void Qt3DInspector::registerRenderMetaTypes()

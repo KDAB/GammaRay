@@ -16,7 +16,7 @@ set(gammaray_3dinspector_srcs
   geometryextension/qt3dgeometryextension.cpp
 )
 gammaray_add_plugin(gammaray_3dinspector JSON gammaray_3dinspector.json SOURCES ${gammaray_3dinspector_srcs})
-target_link_libraries(gammaray_3dinspector gammaray_core gammaray_kitemmodels Qt5::3DRender)
+target_link_libraries(gammaray_3dinspector gammaray_core gammaray_kitemmodels Qt5::3DInput Qt5::3DRender)
 
 # ui plugin
 if(GAMMARAY_BUILD_UI)
