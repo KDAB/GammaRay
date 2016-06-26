@@ -25,6 +25,7 @@ if(GAMMARAY_BUILD_UI)
     ${gammaray_3dinspector_shared_srcs}
     qt3dinspectorwidget.cpp
     qt3dinspectorclient.cpp
+    treeexpander.cpp
 
     geometryextension/qt3dgeometryextensionclient.cpp
     geometryextension/qt3dgeometrytab.cpp

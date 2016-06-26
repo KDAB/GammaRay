@@ -29,6 +29,7 @@
 #include "qt3dinspectorwidget.h"
 #include "ui_qt3dinspectorwidget.h"
 #include "qt3dinspectorclient.h"
+#include "treeexpander.h"
 #include "geometryextension/qt3dgeometrytab.h"
 #include "geometryextension/qt3dgeometryextensionclient.h"
 
@@ -73,6 +74,7 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
     new SearchLineController(ui->sceneSearchLine, sceneModel);
     connect(ui->sceneTreeView, &QWidget::customContextMenuRequested, this,
             &Qt3DInspectorWidget::entityContextMenu);
+    new TreeExpander(ui->sceneTreeView);
 
     ui->scenePropertyWidget->setObjectBaseName(QStringLiteral(
                                                    "com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
@@ -86,6 +88,7 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
     new SearchLineController(ui->frameGraphSearchLine, frameGraphModel);
     connect(ui->frameGraphView, &QWidget::customContextMenuRequested, this,
             &Qt3DInspectorWidget::frameGraphContextMenu);
+    new TreeExpander(ui->frameGraphView);
 
     ui->frameGraphNodePropertyWidget->setObjectBaseName(QStringLiteral(
                                                             "com.kdab.GammaRay.Qt3DInspector.frameGraphPropertyController"));

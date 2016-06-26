@@ -1,0 +1,64 @@
+/*
+  treeexpander.cpp
+
+  This file is part of GammaRay, the Qt application inspection and
+  manipulation tool.
+
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
+
+  Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+  accordance with GammaRay Commercial License Agreement provided with the Software.
+
+  Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "treeexpander.h"
+
+#include <QScrollBar>
+#include <QTreeView>
+
+using namespace GammaRay;
+
+TreeExpander::TreeExpander(QTreeView* view) :
+    QObject(view),
+    m_view(view)
+{
+    Q_ASSERT(m_view);
+    Q_ASSERT(m_view->model());
+
+    connect(m_view->model(), &QAbstractItemModel::rowsInserted, this, &TreeExpander::rowsInserted);
+}
+
+TreeExpander::~TreeExpander()
+{
+}
+
+void TreeExpander::rowsInserted(const QModelIndex &parent, int start, int end)
+{
+    if (m_view->horizontalScrollBar()->isVisible()) {
+        deleteLater();
+        return;
+    }
+
+    if (parent.isValid() && !m_view->isExpanded(parent))
+        return;
+
+    for (auto row = start; row <= end; ++row) {
+        const auto idx = m_view->model()->index(row, 0, parent);
+        m_view->setExpanded(idx, true);
+    }
+}
