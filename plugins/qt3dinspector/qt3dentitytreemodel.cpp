@@ -60,6 +60,19 @@ void Qt3DEntityTreeModel::clear()
     m_parentChildMap.clear();
 }
 
+void Qt3DEntityTreeModel::populateFromNode(Qt3DCore::QNode *node)
+{
+    // the entity tree can have intermediate nodes, so we need to do this
+    // recursively without a depth limit
+    auto entity = qobject_cast<Qt3DCore::QEntity*>(node);
+    if (entity) {
+        populateFromEntity(entity);
+    } else {
+        foreach (auto child, node->childNodes())
+            populateFromNode(child);
+    }
+}
+
 void Qt3DEntityTreeModel::populateFromEntity(Qt3DCore::QEntity *entity)
 {
     if (!entity)
@@ -69,8 +82,7 @@ void Qt3DEntityTreeModel::populateFromEntity(Qt3DCore::QEntity *entity)
     m_parentChildMap[entity->parentEntity()].push_back(entity);
 
     foreach (auto child, entity->childNodes()) {
-        if (auto childEntity = qobject_cast<Qt3DCore::QEntity *>(child))
-            populateFromEntity(childEntity);
+        populateFromNode(child);
     }
 
     auto &children = m_parentChildMap[entity->parentEntity()];
@@ -179,8 +191,7 @@ void Qt3DEntityTreeModel::objectCreated(QObject *obj)
     children.insert(it, entity);
     m_childParentMap.insert(entity, parentEntity);
     foreach (auto child, entity->childNodes()) {
-        if (auto childEntity = qobject_cast<Qt3DCore::QEntity *>(child))
-            populateFromEntity(childEntity);
+        populateFromNode(child);
     }
     endInsertRows();
 }

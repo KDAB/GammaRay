@@ -38,6 +38,7 @@ QT_BEGIN_NAMESPACE
 namespace Qt3DCore {
 class QAspectEngine;
 class QEntity;
+class QNode;
 }
 QT_END_NAMESPACE
 
@@ -64,6 +65,7 @@ public slots:
 
 private:
     void clear();
+    void populateFromNode(Qt3DCore::QNode *node);
     void populateFromEntity(Qt3DCore::QEntity *entity);
     QModelIndex indexForEntity(Qt3DCore::QEntity *entity) const;
 
