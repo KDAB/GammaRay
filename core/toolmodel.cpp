@@ -179,9 +179,9 @@ QModelIndexList ToolModel::toolsForObject(QObject *object) const
     while (metaObject) {
         for (int i = 0; i < m_tools.size(); i++) {
             const ToolFactory *factory = m_tools.at(i);
-            if (factory && !factory->isHidden()
-                && factory->selectableTypes().contains(metaObject->className()))
-                ret += index(i, 0);
+            const auto idx = index(i, 0);
+            if (factory && !factory->isHidden() && factory->selectableTypes().contains(metaObject->className()) && !ret.contains(idx))
+                ret += idx;
         }
         metaObject = metaObject->superClass();
     }
