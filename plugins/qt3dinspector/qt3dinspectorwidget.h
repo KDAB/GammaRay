@@ -36,6 +36,10 @@
 
 #include <memory>
 
+QT_BEGIN_NAMESPACE
+class QItemSelection;
+QT_END_NAMESPACE
+
 namespace GammaRay {
 class Qt3DInspectorInterface;
 
@@ -53,6 +57,9 @@ public:
 private:
     void entityContextMenu(QPoint pos);
     void frameGraphContextMenu(QPoint pos);
+
+    void entitySelectionChanged(const QItemSelection &selection);
+    void frameGraphSelectionChanged(const QItemSelection &selection);
 
     std::unique_ptr<Ui::Qt3DInspectorWidget> ui;
     UIStateManager m_stateManager;

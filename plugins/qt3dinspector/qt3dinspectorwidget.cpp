@@ -39,6 +39,7 @@
 #include <common/objectmodel.h>
 #include <common/sourcelocation.h>
 
+#include <QItemSelection>
 #include <QMenu>
 
 using namespace GammaRay;
@@ -63,11 +64,12 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
     connect(ui->engineComboBox, SIGNAL(currentIndexChanged(int)), m_interface,
             SLOT(selectEngine(int)));
 
-    auto sceneModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"));
+    auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"));
     ui->sceneTreeView->header()->setObjectName("sceneTreeViewHeader");
     ui->sceneTreeView->setModel(sceneModel);
-    ui->sceneTreeView->setSelectionModel(ObjectBroker::selectionModel(sceneModel));
+    auto sceneSelectionModel = ObjectBroker::selectionModel(sceneModel);
+    ui->sceneTreeView->setSelectionModel(sceneSelectionModel);
+    connect(sceneSelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspectorWidget::entitySelectionChanged);
     new SearchLineController(ui->sceneSearchLine, sceneModel);
     connect(ui->sceneTreeView, &QWidget::customContextMenuRequested, this,
             &Qt3DInspectorWidget::entityContextMenu);
@@ -75,11 +77,12 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
     ui->scenePropertyWidget->setObjectBaseName(QStringLiteral(
                                                    "com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
 
-    auto frameGraphModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
+    auto frameGraphModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
     ui->frameGraphView->header()->setObjectName("frameGraphViewHeader");
     ui->frameGraphView->setModel(frameGraphModel);
-    ui->frameGraphView->setSelectionModel(ObjectBroker::selectionModel(frameGraphModel));
+    auto frameGraphSelectionModel = ObjectBroker::selectionModel(frameGraphModel);
+    ui->frameGraphView->setSelectionModel(frameGraphSelectionModel);
+    connect(frameGraphSelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspectorWidget::frameGraphSelectionChanged);
     new SearchLineController(ui->frameGraphSearchLine, frameGraphModel);
     connect(ui->frameGraphView, &QWidget::customContextMenuRequested, this,
             &Qt3DInspectorWidget::frameGraphContextMenu);
@@ -133,6 +136,24 @@ void Qt3DInspectorWidget::frameGraphContextMenu(QPoint pos)
     ext.populateMenu(&menu);
 
     menu.exec(ui->frameGraphView->viewport()->mapToGlobal(pos));
+}
+
+void Qt3DInspectorWidget::entitySelectionChanged(const QItemSelection &selection)
+{
+    if (selection.isEmpty())
+        return;
+    const auto index = selection.first().topLeft();
+    ui->sceneTreeView->scrollTo(index);
+    ui->tabWidget->setCurrentWidget(ui->sceneTab);
+}
+
+void Qt3DInspectorWidget::frameGraphSelectionChanged(const QItemSelection &selection)
+{
+    if (selection.isEmpty())
+        return;
+    const auto index = selection.first().topLeft();
+    ui->frameGraphView->scrollTo(index);
+    ui->tabWidget->setCurrentWidget(ui->renderSettingsTab);
 }
 
 static QObject *createGeometryExtension(const QString &name, QObject *parent)
