@@ -10,5 +10,5 @@
     "types": [
         "Qt3DCore::QNode"
     ],
-    "hidden": true
+    "hidden": false
 }
