@@ -113,6 +113,8 @@ bool PluginInfo::isValid() const
 static QString readLocalized(const QJsonObject &obj, const QString &baseKey)
 {
     foreach (const auto &lang, QLocale().uiLanguages()) {
+        if (lang == QLatin1String("en"))
+            return obj.value(baseKey).toString();
         const QString key = baseKey + '[' + lang + ']';
         const auto it = obj.find(key);
         if (it != obj.end())
