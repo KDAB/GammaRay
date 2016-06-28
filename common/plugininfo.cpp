@@ -132,9 +132,9 @@ static QString readLocalized(const QLocale &locale, const QJsonObject &obj, cons
 
         // Check against language
         if (it == obj.end()) {
+            name.replace('-', '_');
             name = name.section(QLatin1Char('_'), 0, -2);
             if (!name.isEmpty()) {
-                name.replace('-', '_');
                 key = baseKey + '[' + name + ']';
                 it = obj.find(key);
             }
