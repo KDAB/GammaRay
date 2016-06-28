@@ -1,4 +1,4 @@
-set(LANGUAGES de)
+set(LANGUAGES en de)
 
 # translation tools
 add_executable(ljsonupdate ljsonupdate.cpp)
