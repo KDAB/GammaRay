@@ -1443,9 +1443,9 @@ Message Size: %6 of %7 (%8%)</source>
     <message numerus="yes">
         <location filename="../core/objectenummodel.cpp" line="+85"/>
         <source>%n element(s)</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>One element</numerusform>
+            <numerusform>%n elements</numerusform>
         </translation>
     </message>
     <message>
