@@ -35,6 +35,7 @@
 #include <QLibrary>
 #include <QLocale>
 #include <QSettings>
+#include <QCoreApplication>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QJsonArray>
@@ -110,27 +111,38 @@ bool PluginInfo::isValid() const
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-static QString readLocalized(const QJsonObject &obj, const QString &baseKey)
+static QString readLocalized(const QLocale &locale, const QJsonObject &obj, const QString &baseKey)
 {
-    foreach (const auto &lang, QLocale().uiLanguages()) {
-        if (lang == QLatin1String("en"))
-            return obj.value(baseKey).toString();
-        const QString key = baseKey + '[' + lang + ']';
-        const auto it = obj.find(key);
-        if (it != obj.end())
-            return it.value().toString();
-    }
+    const QString qtcLanguage = qApp->property("qtc_locale").toString();
+    QStringList names = locale.uiLanguages();
+    if (!qtcLanguage.isEmpty())
+        names.prepend(qtcLanguage);
 
-    foreach (auto lang, QLocale().uiLanguages()) {
-        lang.replace('-', '_');
-        const auto idx = lang.lastIndexOf('_');
-        if (idx <= 0)
-            continue;
-        lang.truncate(idx);
-        const QString key = baseKey + '[' + lang + ']';
-        const auto it = obj.find(key);
+    foreach (auto name, names) {
+        const QLocale uiLocale(name);
+
+        // We are natively English, skip...
+        if (uiLocale.language() == QLocale::English || uiLocale.name() == QLatin1String("C")) {
+            return obj.value(baseKey).toString();
+        }
+
+        // Check against name
+        QString key = baseKey + '[' + name + ']';
+        auto it = obj.find(key);
+
+        // Check against language
+        if (it == obj.end()) {
+            name = name.section(QLatin1Char('_'), 0, -2);
+            if (!name.isEmpty()) {
+                name.replace('-', '_');
+                key = baseKey + '[' + name + ']';
+                it = obj.find(key);
+            }
+        }
+
         if (it != obj.end())
             return it.value().toString();
+
     }
 
     return obj.value(baseKey).toString();
@@ -148,7 +160,7 @@ void PluginInfo::initFromJSON(const QString &path)
     const QJsonObject customData = metaData.value(QStringLiteral("MetaData")).toObject();
 
     m_id = customData.value(QStringLiteral("id")).toString();
-    m_name = readLocalized(customData, QStringLiteral("name"));
+    m_name = readLocalized(QLocale(), customData, QStringLiteral("name"));
     m_remoteSupport = customData.value(QStringLiteral("remoteSupport")).toBool(true);
     m_hidden = customData.value(QStringLiteral("hidden")).toBool(false);
 

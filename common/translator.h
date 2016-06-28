@@ -31,10 +31,12 @@
 
 #include "gammaray_common_export.h"
 
+#include <QLocale>
+
 namespace GammaRay {
 namespace Translator {
 /** Load translation catalogs for current locale. */
-void GAMMARAY_COMMON_EXPORT load();
+void GAMMARAY_COMMON_EXPORT load(const QLocale &locale = QLocale());
 }
 }
 

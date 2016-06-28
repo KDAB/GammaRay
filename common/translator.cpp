@@ -35,27 +35,46 @@
 #include <QDebug>
 #include <QLibraryInfo>
 #include <QLocale>
+#include <QDir>
 #include <QTranslator>
 
 using namespace GammaRay;
 
-static void loadCatalog(const QString &catalog, const QString &path)
+static void loadCatalog(const QLocale &locale, const QString &catalog, const QString &path)
 {
-    auto translator = new QTranslator(QCoreApplication::instance());
-    if (translator->load(QLocale(), catalog, QStringLiteral("_"), path)) {
-        QCoreApplication::instance()->installTranslator(translator);
-    } else {
-        if (QLocale().name() != QLatin1String("C")
-            && !QLocale().name().startsWith(QLatin1String("en")))
-            qDebug() << "did not find a translation for" << catalog << "in" << path
-                     << "for language" << QLocale().name();
-        delete translator;
+    const QDir dir(path);
+    const QString qtcLanguage = qApp->property("qtc_locale").toString();
+    QStringList names = locale.uiLanguages();
+    if (!qtcLanguage.isEmpty())
+        names.prepend(qtcLanguage);
+
+    foreach (const QString &name, names) {
+        const QLocale uiLocale(name);
+        auto translator = new QTranslator(QCoreApplication::instance());
+        if (translator->load(uiLocale, catalog, QStringLiteral("_"), path)) {
+            QCoreApplication::instance()->installTranslator(translator);
+            return;
+        } else {
+            delete translator;
+
+            foreach (const QString &name, uiLocale.uiLanguages()) {
+                const QString fileName = QString("%1_%2.qm").arg(catalog, name);
+                const QString filePath = dir.filePath(fileName);
+                if (QFile::exists(filePath)) {
+                    return;
+                }
+            }
+        }
     }
+
+    if (locale.language() != QLocale::C && locale.language() != QLocale::English)
+        qDebug() << "did not find a translation for" << catalog << "in" << path
+                 << "for language" << locale.name();
 }
 
-void Translator::load()
+void Translator::load(const QLocale &locale)
 {
-    loadCatalog(QStringLiteral("gammaray"), Paths::rootPath() + QLatin1Char(
+    loadCatalog(locale, QStringLiteral("gammaray"), Paths::rootPath() + QLatin1Char(
                     '/') + GAMMARAY_TRANSLATION_INSTALL_DIR);
-    loadCatalog(QStringLiteral("qt"), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    loadCatalog(locale, QStringLiteral("qt"), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 }
