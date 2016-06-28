@@ -122,7 +122,7 @@ static QString readLocalized(const QLocale &locale, const QJsonObject &obj, cons
         const QLocale uiLocale(name);
 
         // We are natively English, skip...
-        if (uiLocale.language() == QLocale::English || uiLocale.name() == QLatin1String("C")) {
+        if (uiLocale.language() == QLocale::English || uiLocale.language() == QLocale::C) {
             return obj.value(baseKey).toString();
         }
 

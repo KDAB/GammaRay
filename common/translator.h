@@ -36,7 +36,10 @@
 namespace GammaRay {
 namespace Translator {
 /** Load translation catalogs for current locale. */
-void GAMMARAY_COMMON_EXPORT load(const QLocale &locale = QLocale());
+void GAMMARAY_COMMON_EXPORT loadTranslator(const QString &catalog, const QString &path,
+                                           const QLocale &locale = QLocale(), const QString &overrideLanguage = QString());
+void GAMMARAY_COMMON_EXPORT loadGammaRayTranslations(const QLocale &locale = QLocale(), const QString &overrideLanguage = QString());
+void GAMMARAY_COMMON_EXPORT loadStandAloneTranslations(const QLocale &locale = QLocale(), const QString &overrideLanguage = QString());
 }
 }
 

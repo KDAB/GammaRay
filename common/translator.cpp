@@ -40,13 +40,21 @@
 
 using namespace GammaRay;
 
-static void loadCatalog(const QLocale &locale, const QString &catalog, const QString &path)
+static QString rootTranslationsPath() {
+    return Paths::rootPath() + QLatin1Char('/') + GAMMARAY_TRANSLATION_INSTALL_DIR;
+}
+
+static QString qtTranslationsPath() {
+    return QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+}
+
+void Translator::loadTranslator(const QString &catalog, const QString &path, const QLocale &locale,
+                                const QString &overrideLanguage)
 {
     const QDir dir(path);
-    const QString qtcLanguage = qApp->property("qtc_locale").toString();
     QStringList names = locale.uiLanguages();
-    if (!qtcLanguage.isEmpty())
-        names.prepend(qtcLanguage);
+    if (!overrideLanguage.isEmpty())
+        names.prepend(overrideLanguage);
 
     foreach (const QString &name, names) {
         const QLocale uiLocale(name);
@@ -72,9 +80,15 @@ static void loadCatalog(const QLocale &locale, const QString &catalog, const QSt
                  << "for language" << locale.name();
 }
 
-void Translator::load(const QLocale &locale)
+void Translator::loadGammaRayTranslations(const QLocale &locale, const QString &overrideLanguage)
 {
-    loadCatalog(locale, QStringLiteral("gammaray"), Paths::rootPath() + QLatin1Char(
-                    '/') + GAMMARAY_TRANSLATION_INSTALL_DIR);
-    loadCatalog(locale, QStringLiteral("qt"), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    loadTranslator(QStringLiteral("gammaray"), rootTranslationsPath(), locale, overrideLanguage);
 }
+
+void Translator::loadStandAloneTranslations(const QLocale &locale, const QString &overrideLanguage)
+{
+    loadGammaRayTranslations(locale, overrideLanguage);
+    loadTranslator(QStringLiteral("qt"), qtTranslationsPath(), locale, overrideLanguage);
+}
+
+

@@ -90,6 +90,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     propertycontrollerinterface.h
     protocol.h
     sourcelocation.h
+    translator.h
   )
 
   ecm_generate_pri_file(BASE_NAME GammaRayCommon

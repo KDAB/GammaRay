@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 
     QApplication app(argc, argv);
     Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
-    Translator::load();
+    Translator::loadStandAloneTranslations();
 
     LauncherWindow launcher;
     launcher.show();
