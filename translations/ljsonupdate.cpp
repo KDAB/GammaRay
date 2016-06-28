@@ -67,8 +67,13 @@ static int mergeMessages(const QStringList &jsons, const QString &qmFile, const 
 {
     QTranslator t;
     if (!t.load(qmFile)) {
-        qWarning() << "Can't open translation catalog" << qmFile;
-        return 1;
+        if (QFile::exists(qmFile)) {
+            qDebug() << "Translation catalog empty, skipping.";
+            return 0;
+        } else {
+            qWarning() << "Can't open translation catalog" << qmFile;
+            return 1;
+        }
     }
 
     foreach (const auto &jsonFile, jsons) {
