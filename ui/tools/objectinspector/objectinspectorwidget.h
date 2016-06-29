@@ -82,6 +82,7 @@ class ObjectInspectorFactory : public QObject, public ToolUiFactory
     Q_OBJECT
 public:
     QString id() const Q_DECL_OVERRIDE { return QStringLiteral("GammaRay::ObjectInspector"); }
+    QString name() const Q_DECL_OVERRIDE { return tr("Objects"); }
     QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE
     {
         return new ObjectInspectorWidget(

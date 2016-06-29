@@ -46,13 +46,8 @@ bool ProxyToolFactory::isValid() const
 {
     return
         pluginInfo().isValid()
-        && !name().isEmpty()
+        && !id().isEmpty()
         && !supportedTypes().isEmpty();
-}
-
-QString ProxyToolFactory::name() const
-{
-    return pluginInfo().name();
 }
 
 void ProxyToolFactory::init(ProbeInterface *probe)

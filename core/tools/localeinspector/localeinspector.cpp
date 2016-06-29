@@ -49,8 +49,3 @@ LocaleInspector::LocaleInspector(ProbeInterface *probe, QObject *parent)
     LocaleAccessorModel *accessorModel = new LocaleAccessorModel(registry, this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"), accessorModel);
 }
-
-QString LocaleInspectorFactory::name() const
-{
-    return tr("Locales");
-}

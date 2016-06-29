@@ -49,23 +49,24 @@
 
 using namespace GammaRay;
 
-#define MAKE_FACTORY(type, remote) \
+#define MAKE_FACTORY(label, type, remote) \
     class type ## Factory : public ToolUiFactory { \
     public: \
         virtual inline QString id() const { return "GammaRay::" #type; } \
+        virtual inline QString name() const { return label; } \
         virtual inline QWidget *createWidget(QWidget *parentWidget) { return new type ## Widget( \
                                                                           parentWidget); } \
         virtual inline bool remotingSupported() const { return remote; } \
     }
 
-MAKE_FACTORY(LocaleInspector, true);
-MAKE_FACTORY(MessageHandler, true);
-MAKE_FACTORY(MetaObjectBrowser, true);
-MAKE_FACTORY(MetaTypeBrowser, true);
-MAKE_FACTORY(MimeTypes, true);
-MAKE_FACTORY(ModelInspector, true);
-MAKE_FACTORY(ResourceBrowser, true);
-MAKE_FACTORY(StandardPaths, true);
+MAKE_FACTORY(qApp->translate("LocaleInspectorFactory", "Locales"), LocaleInspector, true);
+MAKE_FACTORY(qApp->translate("MessageHandlerFactory", "Messages"), MessageHandler, true);
+MAKE_FACTORY(qApp->translate("MetaObjectBrowserFactory", "Meta Objects"), MetaObjectBrowser, true);
+MAKE_FACTORY(qApp->translate("MetaTypeBrowserFactory", "Meta Types"), MetaTypeBrowser, true);
+MAKE_FACTORY(qApp->translate("MimeTypesFactory", "Mime Types"), MimeTypes, true);
+MAKE_FACTORY(qApp->translate("ModelInspectorFactory", "Models"), ModelInspector, true);
+MAKE_FACTORY(qApp->translate("ResourceBrowserFactory", "Resources"), ResourceBrowser, true);
+MAKE_FACTORY(qApp->translate("StandardPathsFactory", "Standard Paths"), StandardPaths, true);
 
 struct PluginRepository {
     PluginRepository() {}
@@ -124,12 +125,16 @@ ClientToolModel::~ClientToolModel()
 
 QVariant ClientToolModel::data(const QModelIndex &index, int role) const
 {
-    if (role == ToolModelRole::ToolFactory || role == ToolModelRole::ToolWidget
+    if (role == Qt::DisplayRole || role == ToolModelRole::ToolFactory || role == ToolModelRole::ToolWidget
         || role == Qt::ToolTipRole) {
         const QString toolId = QSortFilterProxyModel::data(index, ToolModelRole::ToolId).toString();
         if (toolId.isEmpty())
             return QVariant();
 
+        if (role == Qt::DisplayRole) {
+            ToolUiFactory *factory = s_pluginRepository()->factories.value(toolId);
+            return factory ? factory->name() : toolId;
+        }
         if (role == ToolModelRole::ToolFactory)
             return QVariant::fromValue(s_pluginRepository()->factories.value(toolId));
         if (role == ToolModelRole::ToolWidget) {

@@ -52,7 +52,6 @@ public:
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
 
-    QString name() const Q_DECL_OVERRIDE;
     bool isHidden() const Q_DECL_OVERRIDE;
     QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
 

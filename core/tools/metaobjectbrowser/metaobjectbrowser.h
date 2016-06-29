@@ -70,7 +70,6 @@ public:
     {
     }
 
-    QString name() const Q_DECL_OVERRIDE;
     QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
 };
 }

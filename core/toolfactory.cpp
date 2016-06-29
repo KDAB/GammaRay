@@ -38,11 +38,6 @@ ToolFactory::~ToolFactory()
 {
 }
 
-QString ToolFactory::name() const
-{
-    return QString(); // in the common case this is provided via ProxyToolFactory
-}
-
 const QVector<QByteArray> &ToolFactory::supportedTypes() const
 {
     return m_types;
