@@ -68,13 +68,6 @@ public:
     virtual QString id() const = 0;
 
     /*!
-     * Human readable name of this tool.
-     * You do not need to override this usually, the plugin loader will fill this in.
-     * @return a QString containing the tool name.
-     */
-    virtual QString name() const;
-
-    /*!
      * Class names of types this tool can handle.
      * The tool will only be activated if an object of one of these types
      * is seen in the probed application.

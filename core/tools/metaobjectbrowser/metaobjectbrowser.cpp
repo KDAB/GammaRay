@@ -110,11 +110,6 @@ void MetaObjectBrowser::metaObjectSelected(const QMetaObject *mo)
         indexes.first(), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
 }
 
-QString MetaObjectBrowserFactory::name() const
-{
-    return tr("Meta Objects");
-}
-
 QVector<QByteArray> MetaObjectBrowserFactory::selectableTypes() const
 {
     return QVector<QByteArray>() << QObject::staticMetaObject.className() << "QMetaObject";

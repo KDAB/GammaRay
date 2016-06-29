@@ -161,11 +161,6 @@ void ModelInspector::objectCreated(QObject *object)
         m_probe->discoverObject(proxy->sourceModel());
 }
 
-QString ModelInspectorFactory::name() const
-{
-    return tr("Models");
-}
-
 QVector<QByteArray> ModelInspectorFactory::selectableTypes() const
 {
     return QVector<QByteArray>() << QAbstractItemModel::staticMetaObject.className();

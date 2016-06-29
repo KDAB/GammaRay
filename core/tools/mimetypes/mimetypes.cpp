@@ -45,8 +45,3 @@ MimeTypes::MimeTypes(ProbeInterface *probe, QObject *parent)
 MimeTypes::~MimeTypes()
 {
 }
-
-QString MimeTypesFactory::name() const
-{
-    return tr("Mime Types");
-}

@@ -35,6 +35,11 @@ ProxyToolUiFactory::ProxyToolUiFactory(const PluginInfo &pluginInfo, QObject *pa
 {
 }
 
+QString ProxyToolUiFactory::name() const
+{
+    return pluginInfo().name();
+}
+
 bool ProxyToolUiFactory::isValid() const
 {
     return pluginInfo().isValid();

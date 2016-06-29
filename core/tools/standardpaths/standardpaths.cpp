@@ -41,8 +41,3 @@ StandardPaths::StandardPaths(ProbeInterface *probe, QObject *parent)
 StandardPaths::~StandardPaths()
 {
 }
-
-QString StandardPathsFactory::name() const
-{
-    return tr("Standard Paths");
-}
