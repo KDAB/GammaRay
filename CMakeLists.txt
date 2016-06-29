@@ -243,6 +243,7 @@ if(Qt5Core_FOUND)
     Script
     ScriptTools
     Test
+    WebKit
     WebKitWidgets
     Widgets
   )
@@ -283,6 +284,7 @@ if(Qt5Core_FOUND)
   set(HAVE_QT_SVG ${Qt5Svg_FOUND})
   set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
   set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
+  set(HAVE_QT_WEBKIT ${Qt5WebKit_FOUND})
   set(HAVE_QT_WEBKIT1 ${Qt5WebKitWidgets_FOUND})
 
   if(Qt5_POSITION_INDEPENDENT_CODE AND NOT WIN32)
@@ -332,6 +334,7 @@ else()
     set(HAVE_QT_DESIGNER true)
   endif()
   set(HAVE_QT_PRINTSUPPORT true)
+  set(HAVE_QT_WEBKIT ${QT_QTWEBKIT_FOUND})
   set(HAVE_QT_WEBKIT1 ${QT_QTWEBKIT_FOUND})
 
   find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_INCLUDES})
