@@ -63,6 +63,7 @@ public:
 
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const Q_DECL_OVERRIDE;
 
 private slots:
     void updateToolInitialization(const QModelIndex &topLeft, const QModelIndex &bottomRight);
@@ -71,6 +72,8 @@ private:
     typedef QHash<QString, QPointer<QWidget> > WidgetsHash;
     mutable WidgetsHash m_widgets; // ToolId -> Widget
     QPointer<QWidget> m_parentWidget;
+
+    QString toolLabel(const QString &toolId) const;
 };
 }
 

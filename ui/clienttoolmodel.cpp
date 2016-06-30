@@ -131,10 +131,8 @@ QVariant ClientToolModel::data(const QModelIndex &index, int role) const
         if (toolId.isEmpty())
             return QVariant();
 
-        if (role == Qt::DisplayRole) {
-            ToolUiFactory *factory = s_pluginRepository()->factories.value(toolId);
-            return factory ? factory->name() : toolId;
-        }
+        if (role == Qt::DisplayRole)
+            return toolLabel(toolId);
         if (role == ToolModelRole::ToolFactory)
             return QVariant::fromValue(s_pluginRepository()->factories.value(toolId));
         if (role == ToolModelRole::ToolWidget) {
@@ -192,6 +190,7 @@ Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
 void ClientToolModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
     QSortFilterProxyModel::setSourceModel(sourceModel);
+    sort(0, Qt::AscendingOrder);
     connect(sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
             SLOT(updateToolInitialization(QModelIndex,QModelIndex)));
 }
@@ -203,6 +202,13 @@ bool ClientToolModel::filterAcceptsRow(int source_row, const QModelIndex &source
 
     const auto srcIdx = sourceModel()->index(source_row, 0);
     return srcIdx.data(ToolModelRole::ToolHasUi).toBool();
+}
+
+bool ClientToolModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
+{
+    const QString lhToolId = source_left.data(ToolModelRole::ToolId).toString();
+    const QString rhToolId = source_right.data(ToolModelRole::ToolId).toString();
+    return toolLabel(lhToolId).localeAwareCompare(toolLabel(rhToolId)) < 0;
 }
 
 void ClientToolModel::updateToolInitialization(const QModelIndex &topLeft,
@@ -223,4 +229,10 @@ void ClientToolModel::updateToolInitialization(const QModelIndex &topLeft,
             }
         }
     }
+}
+
+QString ClientToolModel::toolLabel(const QString &toolId) const
+{
+    ToolUiFactory *factory = s_pluginRepository()->factories.value(toolId);
+    return factory ? factory->name() : toolId;
 }
