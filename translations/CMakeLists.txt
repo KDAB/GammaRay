@@ -33,7 +33,7 @@ foreach(LANG ${LANGUAGES})
             -qm ${CMAKE_CURRENT_BINARY_DIR}/gammaray_${LANG}.qm
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gammaray_${LANG}.ts
     )
-    add_custom_target(gammaray_${LANG}.qm ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gammaray_${LANG}.qm)
+    add_custom_target(gammaray_${LANG}_qm ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gammaray_${LANG}.qm)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gammaray_${LANG}.qm DESTINATION ${TRANSLATION_INSTALL_DIR})
 endforeach()
 
