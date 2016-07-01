@@ -391,6 +391,12 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
+if(HAVE_QT_WIDGETS)
+  option(GAMMARAY_CORE_ONLY_LAUNCHER "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatiblity)" FALSE)
+else()
+  set(GAMMARAY_CORE_ONLYL_LAUNCHER TRUE)
+endif()
+
 add_feature_info("QtScript debugger" QT_QTSCRIPTTOOLS_FOUND "Requires QtScript and QtScriptTools.")
 add_feature_info("Web inspector" HAVE_QT_WEBKIT1 "Requires QtWebKit.")
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")

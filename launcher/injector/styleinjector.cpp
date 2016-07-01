@@ -76,7 +76,7 @@ bool StyleInjector::launch(const QStringList &programAndArgs, const QString &pro
 
 bool StyleInjector::selfTest()
 {
-#ifdef HAVE_QT_WIDGETS
+#ifndef GAMMARAY_CORE_ONLY_LAUNCHER
     QCoreApplication::addLibraryPath(Paths::currentPluginsPath());
     if (!QStyleFactory::keys().contains(QStringLiteral("gammaray-injector"))) {
         mErrorString = tr("Injector style plugin is not found in the Qt style "

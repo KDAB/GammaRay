@@ -185,7 +185,7 @@ int main(int argc, char **argv)
     for (int i = 1; i < argc; ++i)
         args.push_back(QString::fromLocal8Bit(argv[i]));
 
-#ifdef HAVE_QT_WIDGETS
+#ifndef GAMMARAY_CORE_ONLY_LAUNCHER
     QApplication app(argc, argv); // for style inspector
 #else
     QCoreApplication app(argc, argv);

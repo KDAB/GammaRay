@@ -55,5 +55,6 @@
 #cmakedefine HAVE_ELF
 
 #cmakedefine GAMMARAY_ENABLE_GPL_ONLY_FEATURES
+#cmakedefine GAMMARAY_CORE_ONLY_LAUNCHER
 
 #endif // CONFIG_GAMMARAY_H
