@@ -42,7 +42,7 @@ ToolPluginModel::~ToolPluginModel()
 int ToolPluginModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 3;
+    return 2;
 }
 
 int ToolPluginModel::rowCount(const QModelIndex &parent) const
@@ -64,8 +64,6 @@ QVariant ToolPluginModel::data(const QModelIndex &index, int role) const
         case 0:
             return factory->id();
         case 1:
-            return factory->name();
-        case 2:
             return factory->supportedTypesString();
         }
     }
@@ -79,8 +77,6 @@ QVariant ToolPluginModel::headerData(int section, Qt::Orientation orientation, i
         case 0:
             return tr("Id");
         case 1:
-            return tr("Name");
-        case 2:
             return tr("Supported types");
         }
     }

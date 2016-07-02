@@ -44,6 +44,8 @@ public:
      */
     explicit ProxyToolUiFactory(const PluginInfo &pluginInfo, QObject *parent = 0);
 
+    QString name() const Q_DECL_OVERRIDE;
+
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
 

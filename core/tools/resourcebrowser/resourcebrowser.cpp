@@ -99,8 +99,3 @@ void ResourceBrowser::currentChanged(const QModelIndex &current, int line, int c
         emit resourceDeselected();
     }
 }
-
-QString ResourceBrowserFactory::name() const
-{
-    return tr("Resources");
-}

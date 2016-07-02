@@ -91,7 +91,7 @@ QVariant ToolModel::data(const QModelIndex &index, int role) const
 
     ToolFactory *toolIface = m_tools.at(index.row());
     if (role == Qt::DisplayRole)
-        return toolIface->name();
+        return toolIface->id();
     else if (role == ToolModelRole::ToolFactory)
         return QVariant::fromValue(toolIface);
     else if (role == ToolModelRole::ToolId)

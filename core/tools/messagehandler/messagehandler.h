@@ -62,8 +62,6 @@ class MessageHandlerFactory : public QObject, public StandardToolFactory<QObject
     Q_INTERFACES(GammaRay::ToolFactory)
 public:
     explicit MessageHandlerFactory(QObject *parent);
-
-    QString name() const Q_DECL_OVERRIDE;
 };
 }
 

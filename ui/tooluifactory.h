@@ -53,6 +53,13 @@ public:
      */
     virtual QString id() const = 0;
 
+    /*!
+     * Human readable name of this tool.
+     * You do not need to override this usually, the plugin loader will fill this in.
+     * @return a QString containing the tool name.
+     */
+    virtual QString name() const;
+
     /**
      * Return @c true if this tool supports remoting, @c false otherwise.
      * The default implementation returns @c true.

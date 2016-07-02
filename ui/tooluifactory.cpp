@@ -38,6 +38,11 @@ ToolUiFactory::~ToolUiFactory()
 {
 }
 
+QString ToolUiFactory::name() const
+{
+    return QString(); // in the common case this is provided via ProxyToolUIFactory
+}
+
 bool ToolUiFactory::remotingSupported() const
 {
     return true;
