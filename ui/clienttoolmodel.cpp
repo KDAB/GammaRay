@@ -59,14 +59,14 @@ using namespace GammaRay;
         virtual inline bool remotingSupported() const { return remote; } \
     }
 
-MAKE_FACTORY(qApp->translate("LocaleInspectorFactory", "Locales"), LocaleInspector, true);
-MAKE_FACTORY(qApp->translate("MessageHandlerFactory", "Messages"), MessageHandler, true);
-MAKE_FACTORY(qApp->translate("MetaObjectBrowserFactory", "Meta Objects"), MetaObjectBrowser, true);
-MAKE_FACTORY(qApp->translate("MetaTypeBrowserFactory", "Meta Types"), MetaTypeBrowser, true);
-MAKE_FACTORY(qApp->translate("MimeTypesFactory", "Mime Types"), MimeTypes, true);
-MAKE_FACTORY(qApp->translate("ModelInspectorFactory", "Models"), ModelInspector, true);
-MAKE_FACTORY(qApp->translate("ResourceBrowserFactory", "Resources"), ResourceBrowser, true);
-MAKE_FACTORY(qApp->translate("StandardPathsFactory", "Standard Paths"), StandardPaths, true);
+MAKE_FACTORY(qApp->translate("GammaRay::LocaleInspectorFactory", "Locales"), LocaleInspector, true);
+MAKE_FACTORY(qApp->translate("GammaRay::MessageHandlerFactory", "Messages"), MessageHandler, true);
+MAKE_FACTORY(qApp->translate("GammaRay::MetaObjectBrowserFactory", "Meta Objects"), MetaObjectBrowser, true);
+MAKE_FACTORY(qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"), MetaTypeBrowser, true);
+MAKE_FACTORY(qApp->translate("GammaRay::MimeTypesFactory", "Mime Types"), MimeTypes, true);
+MAKE_FACTORY(qApp->translate("GammaRay::ModelInspectorFactory", "Models"), ModelInspector, true);
+MAKE_FACTORY(qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"), ResourceBrowser, true);
+MAKE_FACTORY(qApp->translate("GammaRay::StandardPathsFactory", "Standard Paths"), StandardPaths, true);
 
 struct PluginRepository {
     PluginRepository() {}
