@@ -49,24 +49,24 @@
 
 using namespace GammaRay;
 
-#define MAKE_FACTORY(label, type, remote) \
-    class type ## Factory : public ToolUiFactory { \
-    public: \
-        virtual inline QString id() const { return "GammaRay::" #type; } \
-        virtual inline QString name() const { return label; } \
-        virtual inline QWidget *createWidget(QWidget *parentWidget) { return new type ## Widget( \
-                                                                          parentWidget); } \
-        virtual inline bool remotingSupported() const { return remote; } \
-    }
+#define MAKE_FACTORY(label, type) \
+class type ## Factory : public ToolUiFactory { \
+public: \
+    QString id() const Q_DECL_OVERRIDE { return "GammaRay::" #type; } \
+    QString name() const Q_DECL_OVERRIDE { return label; } \
+    QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE { \
+        return new type ## Widget(parentWidget); \
+    } \
+}
 
-MAKE_FACTORY(qApp->translate("GammaRay::LocaleInspectorFactory", "Locales"), LocaleInspector, true);
-MAKE_FACTORY(qApp->translate("GammaRay::MessageHandlerFactory", "Messages"), MessageHandler, true);
-MAKE_FACTORY(qApp->translate("GammaRay::MetaObjectBrowserFactory", "Meta Objects"), MetaObjectBrowser, true);
-MAKE_FACTORY(qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"), MetaTypeBrowser, true);
-MAKE_FACTORY(qApp->translate("GammaRay::MimeTypesFactory", "Mime Types"), MimeTypes, true);
-MAKE_FACTORY(qApp->translate("GammaRay::ModelInspectorFactory", "Models"), ModelInspector, true);
-MAKE_FACTORY(qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"), ResourceBrowser, true);
-MAKE_FACTORY(qApp->translate("GammaRay::StandardPathsFactory", "Standard Paths"), StandardPaths, true);
+MAKE_FACTORY(qApp->translate("GammaRay::LocaleInspectorFactory", "Locales"), LocaleInspector);
+MAKE_FACTORY(qApp->translate("GammaRay::MessageHandlerFactory", "Messages"), MessageHandler);
+MAKE_FACTORY(qApp->translate("GammaRay::MetaObjectBrowserFactory", "Meta Objects"), MetaObjectBrowser);
+MAKE_FACTORY(qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"), MetaTypeBrowser);
+MAKE_FACTORY(qApp->translate("GammaRay::MimeTypesFactory", "Mime Types"), MimeTypes);
+MAKE_FACTORY(qApp->translate("GammaRay::ModelInspectorFactory", "Models"), ModelInspector);
+MAKE_FACTORY(qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"), ResourceBrowser);
+MAKE_FACTORY(qApp->translate("GammaRay::StandardPathsFactory", "Standard Paths"), StandardPaths);
 
 struct PluginRepository {
     PluginRepository() {}
