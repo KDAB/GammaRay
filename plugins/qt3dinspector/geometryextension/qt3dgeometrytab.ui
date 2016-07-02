@@ -82,31 +82,6 @@
     <string>Reset camera.</string>
    </property>
   </action>
-  <action name="actionFirstPersonCam">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>First Person</string>
-   </property>
-   <property name="toolTip">
-    <string>First person camera control.</string>
-   </property>
-  </action>
-  <action name="actionOrbitCam">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Orbit</string>
-   </property>
-   <property name="toolTip">
-    <string>Orbit camera control.</string>
-   </property>
-  </action>
   <action name="actionShowNormals">
    <property name="checkable">
     <bool>true</bool>

@@ -63,6 +63,7 @@ private:
     Qt3DRender::QCamera *m_camera;
 
     Qt3DInput::QAction *m_leftMouseButtonAction;
+    Qt3DInput::QAction *m_midMouseButtonAction;
 
     Qt3DInput::QAxis *m_axis[AXISCOUNT];
 

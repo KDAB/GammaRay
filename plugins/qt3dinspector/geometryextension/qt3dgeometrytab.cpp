@@ -90,18 +90,12 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     toolbar->addAction(ui->actionViewBuffers);
     toolbar->addSeparator();
     toolbar->addAction(ui->actionResetCam);
-    toolbar->addAction(ui->actionFirstPersonCam);
-    toolbar->addAction(ui->actionOrbitCam);
     toolbar->addSeparator();
     toolbar->addAction(ui->actionShowNormals);
     toolbar->addAction(ui->actionShowTangents);
     toolbar->addAction(ui->actionCullBack);
 
     connect(ui->actionResetCam, &QAction::triggered, this, &Qt3DGeometryTab::resetCamera);
-    auto camGroup = new QActionGroup(this);
-    camGroup->setExclusive(true);
-    camGroup->addAction(ui->actionFirstPersonCam);
-    camGroup->addAction(ui->actionOrbitCam);
 
     connect(ui->actionShowNormals, &QAction::toggled, this, [this]() {
         if (m_normalsRenderPass)
@@ -117,11 +111,10 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     viewGroup->setExclusive(true);
     viewGroup->addAction(ui->actionViewGeometry);
     viewGroup->addAction(ui->actionViewBuffers);
-    connect(viewGroup, &QActionGroup::triggered, this, [this, camGroup]() {
+    connect(viewGroup, &QActionGroup::triggered, this, [this]() {
         const auto geoView = ui->actionViewGeometry->isChecked();
         ui->stackedWidget->setCurrentWidget(geoView ? ui->geometryPage : ui->bufferPage);
         ui->actionResetCam->setVisible(geoView);
-        camGroup->setVisible(geoView);
         ui->actionShowNormals->setVisible(geoView);
         ui->actionShowTangents->setVisible(geoView);
         ui->actionCullBack->setVisible(geoView);

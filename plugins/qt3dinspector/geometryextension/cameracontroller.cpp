@@ -48,33 +48,38 @@ using namespace GammaRay;
 CameraController::CameraController(Qt3DCore::QNode *parent)
     : Qt3DCore::QEntity(parent)
     , m_camera(nullptr)
-    , m_leftMouseButtonAction(new Qt3DInput::QAction)
+    , m_leftMouseButtonAction(new Qt3DInput::QAction(this))
+    , m_midMouseButtonAction(new Qt3DInput::QAction(this))
     , m_keyboardDevice(new Qt3DInput::QKeyboardDevice)
 {
     for (int i = 0; i < AXISCOUNT; ++i)
         m_axis[i] = new Qt3DInput::QAxis(this);
 
-    // LMB
-    auto m_mouseDevice = new Qt3DInput::QMouseDevice;
-    auto m_leftMouseButtonInput = new Qt3DInput::QActionInput;
-    m_leftMouseButtonInput->setButtons({Qt3DInput::QMouseEvent::LeftButton});
-    m_leftMouseButtonInput->setSourceDevice(m_mouseDevice);
-    m_leftMouseButtonAction->addInput(m_leftMouseButtonInput);
+    // LMB for first person control
+    auto mouseDevice = new Qt3DInput::QMouseDevice(this);
+    auto leftMouseButtonInput = new Qt3DInput::QActionInput(this);
+    leftMouseButtonInput->setButtons({Qt3DInput::QMouseEvent::LeftButton});
+    leftMouseButtonInput->setSourceDevice(mouseDevice);
+    m_leftMouseButtonAction->addInput(leftMouseButtonInput);
 
-    // TODO: MMB pan
+    // MMB for orbit control
+    auto midMouseButtonInput = new Qt3DInput::QActionInput(this);
+    midMouseButtonInput->setButtons({Qt3DInput::QMouseEvent::MiddleButton});
+    midMouseButtonInput->setSourceDevice(mouseDevice);
+    m_midMouseButtonAction->addInput(midMouseButtonInput);
     // TODO: wheel zoom
     // TODO: shift for slow motion, ctrl for fast motion
 
     // X rotation
     auto mouseRxInput = new Qt3DInput::QAnalogAxisInput;
     mouseRxInput->setAxis(Qt3DInput::QMouseDevice::X);
-    mouseRxInput->setSourceDevice(m_mouseDevice);
+    mouseRxInput->setSourceDevice(mouseDevice);
     m_axis[RX]->addInput(mouseRxInput);
 
     // Y rotation
     auto mouseRyInput = new Qt3DInput::QAnalogAxisInput;
     mouseRyInput->setAxis(Qt3DInput::QMouseDevice::Y);
-    mouseRyInput->setSourceDevice(m_mouseDevice);
+    mouseRyInput->setSourceDevice(mouseDevice);
     m_axis[RY]->addInput(mouseRyInput);
 
     // X translation
@@ -98,6 +103,7 @@ CameraController::CameraController(Qt3DCore::QNode *parent)
     // logical device
     auto m_logicalDevice = new Qt3DInput::QLogicalDevice;
     m_logicalDevice->addAction(m_leftMouseButtonAction);
+    m_logicalDevice->addAction(m_midMouseButtonAction);
     for (int i = 0; i < AXISCOUNT; ++i)
         m_logicalDevice->addAxis(m_axis[i]);
     addComponent(m_logicalDevice);
@@ -127,6 +133,9 @@ void CameraController::frameActionTriggered(float dt)
     if (m_leftMouseButtonAction->isActive()) {
         m_camera->pan(m_axis[RX]->value() * m_lookSpeed * dt, QVector3D(0.0f, 1.0f, 0.0f));
         m_camera->tilt(m_axis[RY]->value() * m_lookSpeed * dt);
+    } else if (m_midMouseButtonAction->isActive()) {
+        m_camera->panAboutViewCenter(m_axis[RX]->value() * m_lookSpeed * dt, QVector3D(0.0f, 1.0f, 0.0f));
+        m_camera->tiltAboutViewCenter(m_axis[RY]->value() * m_lookSpeed * dt);
     }
 }
 
