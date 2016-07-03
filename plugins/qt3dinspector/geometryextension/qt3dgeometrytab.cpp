@@ -48,6 +48,7 @@
 #include <Qt3DRender/QGeometryRenderer>
 #include <Qt3DRender/QGraphicsApiFilter>
 #include <Qt3DRender/QMaterial>
+#include <Qt3DRender/QParameter>
 #include <Qt3DRender/QRenderAspect>
 #include <Qt3DRender/QRenderPass>
 #include <Qt3DRender/QRenderSettings>
@@ -211,6 +212,7 @@ Qt3DCore::QComponent *Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
 {
     auto material = new Qt3DRender::QMaterial(parent);
 
+    // wireframe render pass
     auto wireframeShader = new Qt3DRender::QShaderProgram;
     wireframeShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
                                                                                          "qrc:/gammaray/qt3dinspector/geometryextension/passthrough.vert"))));
@@ -227,6 +229,10 @@ Qt3DCore::QComponent *Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
     m_cullMode->setMode(
         ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back : Qt3DRender::QCullFace::NoCulling);
     wireframeRenderPass->addRenderState(m_cullMode);
+
+    // normal render pass
+    m_normalLength = new Qt3DRender::QParameter(QStringLiteral("normalLength"), 0.1, material);
+    material->addParameter(m_normalLength);
 
     auto normalsShader = new Qt3DRender::QShaderProgram;
     normalsShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
@@ -341,6 +347,7 @@ void Qt3DGeometryTab::updateGeometry()
             geometry->addAttribute(posAttr);
             computeBoundingVolume(attrData, posAttr->buffer()->data());
             m_geometryTransform->setTranslation(-m_boundingVolume.center());
+            m_normalLength->setValue(0.025 * m_boundingVolume.radius());
         } else if (attrData.name == Qt3DRender::QAttribute::defaultNormalAttributeName()) {
             auto normalAttr = new Qt3DRender::QAttribute();
             normalAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);

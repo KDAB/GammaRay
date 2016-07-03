@@ -62,6 +62,8 @@ QVector3D BoundingVolume::center() const
 
 float BoundingVolume::radius() const
 {
-    return std::max((m_p1.x() - m_p2.x()) * 0.5f,
-                    std::max((m_p1.y() - m_p2.y()) * 0.5f, (m_p1.z() - m_p2.z()) * 0.5f));
+    const auto dx = m_p1.x() - m_p2.x();
+    const auto dy = m_p1.y() - m_p2.y();
+    const auto dz = m_p1.z() - m_p2.z();
+    return std::sqrt(dx*dx + dy*dy + dz*dz) * 0.5;
 }
