@@ -37,6 +37,7 @@
 #include "selftest.h"
 
 #include <common/paths.h>
+#include <common/protocol.h>
 #include <launcher/probeabi.h>
 #include <launcher/probeabidetector.h>
 
@@ -220,6 +221,8 @@ int main(int argc, char **argv)
             out << "GammaRay version " << GAMMARAY_VERSION_STRING << endl;
             out << "Copyright (C) 2010-2016 Klaralvdalens Datakonsult AB, "
                 << "a KDAB Group company, info@kdab.com" << endl;
+            out << "Protocol version " << Protocol::version() << endl;
+            out << "Broadcast version " << Protocol::broadcastFormatVersion() << endl;
             return 0;
         }
         if (arg == QLatin1String("--inprocess"))
