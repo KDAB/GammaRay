@@ -28,6 +28,8 @@
 
 #include "boundingvolume.h"
 
+#include <cmath>
+
 using namespace GammaRay;
 
 BoundingVolume::BoundingVolume()
