@@ -40,6 +40,7 @@ WidgetAttributeTab::WidgetAttributeTab(PropertyWidget *parent)
     , ui(new Ui::WidgetAttributeTab)
 {
     ui->setupUi(this);
+    ui->attributeView->header()->setObjectName("attributeViewHeader");
 
     ui->attributeView->setModel(ObjectBroker::model(parent->objectBaseName()
                                                     + QStringLiteral(".widgetAttributeModel")));

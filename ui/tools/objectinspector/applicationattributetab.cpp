@@ -40,6 +40,7 @@ ApplicationAttributeTab::ApplicationAttributeTab(PropertyWidget *parent)
     , ui(new Ui::ApplicationAttributeTab)
 {
     ui->setupUi(this);
+    ui->attributeView->header()->setObjectName("attributeViewHeader");
 
     ui->attributeView->setModel(ObjectBroker::model(parent->objectBaseName()
                                                     + QStringLiteral(".applicationAttributeModel")));
