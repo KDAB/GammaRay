@@ -53,10 +53,16 @@ public:
     explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent = 0);
     ~QuickScenePreviewWidget();
 
+    void restoreState(const QByteArray &state) Q_DECL_OVERRIDE;
+    QByteArray saveState() const Q_DECL_OVERRIDE;
+
     void setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes);
 
+    QuickInspectorInterface::RenderMode customRenderMode() const;
+    void setCustomRenderMode(QuickInspectorInterface::RenderMode customRenderMode);
+
 private Q_SLOTS:
-    void visualizeActionTriggered(bool checked);
+    void visualizeActionTriggered(QAction* current);
     void updateEffectiveGeometry();
 
 private:

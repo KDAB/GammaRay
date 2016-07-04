@@ -29,6 +29,8 @@
 #include "quickscenepreviewwidget.h"
 #include "quickinspectorinterface.h"
 
+#include <common/streamoperators.h>
+
 #include <QDebug>
 #include <QMouseEvent>
 #include <QPainter>
@@ -40,6 +42,11 @@
 #include <cmath>
 
 using namespace GammaRay;
+static qint32 QuickScenePreviewWidgetStateVersion = 1;
+
+QT_BEGIN_NAMESPACE
+GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QuickInspectorInterface::RenderMode)
+QT_END_NAMESPACE
 
 QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspector,
                                                  QWidget *parent)
@@ -54,6 +61,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
     m_toolBar.visualizeGroup = new QActionGroup(this);
     m_toolBar.visualizeGroup->setExclusive(false); // we need 0 or 1 selected, not exactly 1
+
     m_toolBar.visualizeClipping
         = new QAction(QIcon(QStringLiteral(
                                 ":/gammaray/plugins/quickinspector/visualize-clipping.png")),
@@ -67,9 +75,6 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                                                "comes with quite some cost, like disabling some performance optimizations.<br/>"
                                                "With this tool enabled the QtQuick renderer highlights items, that have clipping "
                                                "enabled, so you can check for items, that have clipping enabled unnecessarily. "));
-    m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeClipping);
-    connect(m_toolBar.visualizeClipping, SIGNAL(triggered(bool)), this,
-            SLOT(visualizeActionTriggered(bool)));
 
     m_toolBar.visualizeOverdraw
         = new QAction(QIcon(QStringLiteral(
@@ -85,9 +90,6 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                                                "<i>visible: false</i> for hidden items, yourself.<br/>"
                                                "With this tool enabled the QtQuick renderer draws a 3D-Box visualizing the "
                                                "layers of items that are drawn."));
-    m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeOverdraw);
-    connect(m_toolBar.visualizeOverdraw, SIGNAL(triggered(bool)), this,
-            SLOT(visualizeActionTriggered(bool)));
 
     m_toolBar.visualizeBatches
         = new QAction(QIcon(QStringLiteral(
@@ -105,9 +107,6 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                                               "causing items to be rendered separately. With this tool enabled the QtQuick "
                                               "renderer visualizes those batches, by drawing all items that are batched using "
                                               "the same color. The fewer colors you see in this mode the better."));
-    m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeBatches);
-    connect(m_toolBar.visualizeBatches, SIGNAL(triggered(bool)), this,
-            SLOT(visualizeActionTriggered(bool)));
 
     m_toolBar.visualizeChanges
         = new QAction(QIcon(QStringLiteral(
@@ -120,9 +119,10 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                                               "Unnecessary repaints can have a bad impact on the performance. With this tool "
                                               "enabled, the QtQuick renderer will thus on each repaint highlight the item(s), "
                                               "that caused the repaint."));
-    m_toolBar.toolbarWidget->addAction(m_toolBar.visualizeChanges);
-    connect(m_toolBar.visualizeChanges, SIGNAL(triggered(bool)), this,
-            SLOT(visualizeActionTriggered(bool)));
+
+    m_toolBar.toolbarWidget->addActions(m_toolBar.visualizeGroup->actions());
+    connect(m_toolBar.visualizeGroup, SIGNAL(triggered(QAction*)), this,
+            SLOT(visualizeActionTriggered(QAction*)));
 
     m_toolBar.toolbarWidget->addSeparator();
 
@@ -150,6 +150,49 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
 QuickScenePreviewWidget::~QuickScenePreviewWidget()
 {
+}
+
+void QuickScenePreviewWidget::restoreState(const QByteArray &state)
+{
+    if (state.isEmpty())
+        return;
+
+    QDataStream stream(state);
+    qint32 version;
+    QuickInspectorInterface::RenderMode mode = customRenderMode();
+    RemoteViewWidget::restoreState(stream);
+
+    stream >> version;
+
+    switch (version) {
+    case 1: {
+        stream >> mode;
+        break;
+    }
+    }
+
+    setCustomRenderMode(mode);
+}
+
+QByteArray QuickScenePreviewWidget::saveState() const
+{
+    QByteArray data;
+
+    {
+        QDataStream stream(&data, QIODevice::WriteOnly);
+        RemoteViewWidget::saveState(stream);
+
+        stream << QuickScenePreviewWidgetStateVersion;
+
+        switch (QuickScenePreviewWidgetStateVersion) {
+        case 1: {
+            stream << customRenderMode();
+            break;
+        }
+        }
+    }
+
+    return data;
 }
 
 void QuickScenePreviewWidget::resizeEvent(QResizeEvent *e)
@@ -380,23 +423,16 @@ void QuickScenePreviewWidget::updateEffectiveGeometry()
     m_effectiveGeometry.y = itemGeometry.y * zoom();
 }
 
-void QuickScenePreviewWidget::visualizeActionTriggered(bool checked)
+void QuickScenePreviewWidget::visualizeActionTriggered(QAction *current)
 {
-    static bool recursionGuard = false;
-    if (recursionGuard)
-        return;
-
-    if (!checked) {
+    if (!current->isChecked()) {
         m_inspectorInterface->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
     } else {
         // QActionGroup requires exactly one selected, but we need 0 or 1 selected
-        const auto current = sender();
-        recursionGuard = true;
         foreach (auto action, m_toolBar.visualizeGroup->actions()) {
             if (action != current)
                 action->setChecked(false);
         }
-        recursionGuard = false;
         m_inspectorInterface->setCustomRenderMode(current == m_toolBar.visualizeClipping ? QuickInspectorInterface::VisualizeClipping
                                                   : current == m_toolBar.visualizeBatches ? QuickInspectorInterface::VisualizeBatches
                                                   : current == m_toolBar.visualizeOverdraw ? QuickInspectorInterface::VisualizeOverdraw
@@ -417,4 +453,52 @@ void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(
         supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeOverdraw);
     m_toolBar.visualizeChanges->setEnabled(
         supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeChanges);
+}
+
+QuickInspectorInterface::RenderMode QuickScenePreviewWidget::customRenderMode() const
+{
+    if (m_toolBar.visualizeClipping->isChecked()) {
+        return QuickInspectorInterface::VisualizeClipping;
+    }
+    else if (m_toolBar.visualizeBatches->isChecked()) {
+        return QuickInspectorInterface::VisualizeBatches;
+    }
+    else if (m_toolBar.visualizeOverdraw->isChecked()) {
+        return QuickInspectorInterface::VisualizeOverdraw;
+    }
+    else if (m_toolBar.visualizeChanges->isChecked()) {
+        return QuickInspectorInterface::VisualizeChanges;
+    }
+
+    return QuickInspectorInterface::NormalRendering;
+}
+
+void QuickScenePreviewWidget::setCustomRenderMode(QuickInspectorInterface::RenderMode customRenderMode)
+{
+    if (this->customRenderMode() == customRenderMode)
+        return;
+
+    QAction *currentAction = Q_NULLPTR;
+    switch (customRenderMode) {
+    case QuickInspectorInterface::NormalRendering:
+        break;
+    case QuickInspectorInterface::VisualizeClipping:
+        currentAction = m_toolBar.visualizeClipping;
+        break;
+    case QuickInspectorInterface::VisualizeOverdraw:
+        currentAction = m_toolBar.visualizeOverdraw;
+        break;
+    case QuickInspectorInterface::VisualizeBatches:
+        currentAction = m_toolBar.visualizeBatches;
+        break;
+    case QuickInspectorInterface::VisualizeChanges:
+        currentAction = m_toolBar.visualizeChanges;
+        break;
+    }
+
+    foreach (auto action, m_toolBar.visualizeGroup->actions()) {
+        action->setChecked(currentAction == action);
+    }
+
+    visualizeActionTriggered(currentAction ? currentAction : m_toolBar.visualizeBatches);
 }

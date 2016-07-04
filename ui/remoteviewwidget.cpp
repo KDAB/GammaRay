@@ -29,11 +29,12 @@
 #include "remoteviewwidget.h"
 #include "modelpickerdialog.h"
 
-#include <common/remoteviewinterface.h>
-#include <common/objectbroker.h>
 #include <common/endpoint.h>
+#include <common/objectbroker.h>
 #include <common/objectidfilterproxymodel.h>
 #include <common/objectmodel.h>
+#include <common/remoteviewinterface.h>
+#include <common/streamoperators.h>
 
 #include <QAction>
 #include <QActionGroup>
@@ -47,6 +48,11 @@
 #include <cstdlib>
 
 using namespace GammaRay;
+static qint32 RemoteViewWidgetStateVersion = 1;
+
+QT_BEGIN_NAMESPACE
+GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::RemoteViewWidget::InteractionMode)
+QT_END_NAMESPACE
 
 RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     : QWidget(parent)
@@ -60,6 +66,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     , m_supportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection)
     , m_hasMeasurement(false)
     , m_pickProxyModel(new ObjectIdsFilterProxyModel(this))
+    , m_initialZoomDone(false)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setMouseTracking(true);
@@ -211,7 +218,10 @@ void RemoteViewWidget::frameUpdated(const RemoteViewFrame &frame)
 {
     if (!m_frame.isValid()) {
         m_frame = frame;
-        fitToView();
+        if (m_initialZoomDone)
+            centerView();
+        else
+            fitToView();
     } else {
         m_frame = frame;
         update();
@@ -262,6 +272,27 @@ QAction *RemoteViewWidget::zoomInAction() const
     return m_zoomInAction;
 }
 
+void RemoteViewWidget::restoreState(const QByteArray &state)
+{
+    if (state.isEmpty())
+        return;
+
+    QDataStream stream(state);
+    restoreState(stream);
+}
+
+QByteArray RemoteViewWidget::saveState() const
+{
+    QByteArray data;
+
+    {
+        QDataStream stream(&data, QIODevice::WriteOnly);
+        saveState(stream);
+    }
+
+    return data;
+}
+
 double RemoteViewWidget::zoom() const
 {
     return m_zoom;
@@ -294,6 +325,7 @@ void RemoteViewWidget::setZoom(double zoom)
     if (m_zoomLevels.at(index) == oldZoom)
         return;
     m_zoom = m_zoomLevels.at(index);
+    m_initialZoomDone = true;
     emit zoomChanged();
     emit zoomLevelChanged(index);
 
@@ -340,6 +372,11 @@ void RemoteViewWidget::fitToView()
                                     (double)contentHeight()
                                     / (double)m_frame.sceneRect().height()));
     setZoom(scale);
+    centerView();
+}
+
+void RemoteViewWidget::centerView()
+{
     m_x = 0.5 * (contentWidth() - m_frame.sceneRect().width() * m_zoom);
     m_y = 0.5 * (contentHeight() - m_frame.sceneRect().height() * m_zoom);
     update();
@@ -642,6 +679,43 @@ QPoint RemoteViewWidget::mapToSource(QPoint pos) const
 QPoint RemoteViewWidget::mapFromSource(QPoint pos) const
 {
     return pos * m_zoom + QPoint(m_x, m_y);
+}
+
+void RemoteViewWidget::restoreState(QDataStream &stream)
+{
+    stream.setVersion(QDataStream::Qt_4_8);
+
+    qint32 version;
+    InteractionMode interactionMode = m_interactionMode;
+    double zoom = m_zoom;
+
+    stream >> version;
+
+    switch (version) {
+    case 1: {
+        stream >> interactionMode;
+        stream >> zoom;
+        break;
+    }
+    }
+
+    setInteractionMode(interactionMode);
+    setZoom(zoom);
+}
+
+void RemoteViewWidget::saveState(QDataStream &stream) const
+{
+    stream.setVersion(QDataStream::Qt_4_8);
+
+    stream << RemoteViewWidgetStateVersion;
+
+    switch (RemoteViewWidgetStateVersion) {
+    case 1: {
+        stream << m_interactionMode;
+        stream << m_zoom;
+        break;
+    }
+    }
 }
 
 void RemoteViewWidget::clampPanPosition()
