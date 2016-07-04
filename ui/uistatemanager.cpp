@@ -28,6 +28,7 @@
 #include "uistatemanager.h"
 #include "deferredtreeview.h"
 #include "deferredtreeview_p.h"
+#include "common/endpoint.h"
 #include "common/settempvalue.h"
 
 #include <QApplication>
@@ -87,11 +88,22 @@ UIStateManager::UIStateManager(QWidget *widget)
     , m_resizing(false)
 {
     Q_ASSERT(m_widget);
+
     m_widget->installEventFilter(this);
 }
 
 UIStateManager::~UIStateManager()
 {
+}
+
+QWidget *UIStateManager::widget() const
+{
+    return m_widget;
+}
+
+bool UIStateManager::initialized() const
+{
+    return m_initialized;
 }
 
 QList<QSplitter *> UIStateManager::splitters() const
@@ -106,6 +118,8 @@ QList<QHeaderView *> UIStateManager::headers() const
 
 void UIStateManager::setup()
 {
+    Q_ASSERT(Endpoint::instance()->isConnected());
+    Q_ASSERT(!m_initialized);
     if (!checkWidget(m_widget))
         return;
 
@@ -159,18 +173,60 @@ void UIStateManager::setup()
         view->installEventFilter(this);
     }
 
+    // Try to find methods on widget
+    m_targetStateSource = m_widget->metaObject();
+    m_targetRestoreMethodId = m_targetStateSource->indexOfMethod("restoreTargetState(QSettings*)");
+    m_targetSaveMethodId = m_targetStateSource->indexOfMethod("saveTargetState(QSettings*)");
+
+    // Here for inherited UIStateManager where widget is not modifiable (ie: QtC)
+    if (m_targetRestoreMethodId == -1 || m_targetSaveMethodId == -1) {
+        m_targetStateSource = metaObject();
+        m_targetRestoreMethodId = m_targetStateSource->indexOfMethod("restoreTargetState(QSettings*)");
+        m_targetSaveMethodId = m_targetStateSource->indexOfMethod("saveTargetState(QSettings*)");
+    }
+
+    if (m_targetRestoreMethodId == -1 || m_targetSaveMethodId == -1) {
+        m_targetStateSource = Q_NULLPTR;
+        m_targetRestoreMethodId = -1;
+        m_targetSaveMethodId = -1;
+    }
+
     restoreState();
 }
 
 void UIStateManager::restoreState()
 {
+    Q_ASSERT(Endpoint::instance()->isConnected());
+
     restoreWindowState();
     restoreSplitterState();
     restoreHeaderState();
+
+    // Allow restore state per end point
+    if (m_targetStateSource) {
+        Q_ASSERT(!Endpoint::instance()->key().isEmpty());
+        m_stateSettings->beginGroup(Endpoint::instance()->key());
+        QMetaMethod method = m_targetStateSource->method(m_targetRestoreMethodId);
+        QObject *target = m_targetStateSource == m_widget->metaObject() ? qobject_cast<QObject *>(m_widget) : this;
+        method.invoke(target, Q_ARG(QSettings *, m_stateSettings));
+        m_stateSettings->endGroup();
+    }
 }
 
 void UIStateManager::saveState()
 {
+    Q_ASSERT(Endpoint::instance()->isConnected());
+
+    // Allow save state per end point
+    if (m_targetStateSource) {
+        Q_ASSERT(!Endpoint::instance()->key().isEmpty());
+        m_stateSettings->beginGroup(Endpoint::instance()->key());
+        QMetaMethod method = m_targetStateSource->method(m_targetSaveMethodId);
+        QObject *target = m_targetStateSource == m_widget->metaObject() ? qobject_cast<QObject *>(m_widget) : this;
+        method.invoke(target, Q_ARG(QSettings *, m_stateSettings));
+        m_stateSettings->endGroup();
+    }
+
     saveWindowState();
     saveSplitterState();
     saveHeaderState();
@@ -178,7 +234,9 @@ void UIStateManager::saveState()
 
 bool UIStateManager::eventFilter(QObject *object, QEvent *event)
 {
-    if (object == m_widget) {
+    const bool connected = Endpoint::instance()->isConnected();
+
+    if (connected && object == m_widget) {
         if (event->type() == QEvent::Hide) {
             if (m_initialized)
                 saveState();
@@ -187,14 +245,14 @@ bool UIStateManager::eventFilter(QObject *object, QEvent *event)
 
     const bool result = QObject::eventFilter(object, event);
 
-    if (object == m_widget) {
+    if (connected && object == m_widget) {
         if (event->type() == QEvent::Show) {
             if (!m_initialized)
                 setup();
         }
     }
 
-    if (event->type() == QEvent::Resize) {
+    if (connected && event->type() == QEvent::Resize) {
         if (m_initialized && !m_resizing)
             widgetResized(qobject_cast<QWidget *>(object));
     }
@@ -246,8 +304,10 @@ void UIStateManager::setDefaultSizes(QHeaderView *header, const UISizeVector &de
 
 void UIStateManager::reset()
 {
-    m_initialized = false;
-    m_stateSettings->endGroup();
+    if (m_initialized) {
+        m_initialized = false;
+        m_stateSettings->endGroup();
+    }
     setup();
 }
 
