@@ -31,6 +31,7 @@
 
 #include <QWidget>
 #include <qopengl.h>
+#include <QSet>
 
 QT_BEGIN_NAMESPACE
 class QItemSelection;
@@ -50,33 +51,38 @@ public:
     ~SGWireframeWidget();
 
     QAbstractItemModel *model() const;
-    void setModel(QAbstractItemModel *m_model);
+    void setModel(QAbstractItemModel *vertexModel, QAbstractItemModel *adjacencyModel);
     void setHighlightModel(QItemSelectionModel *selectionModel);
-
-public slots:
-    void onGeometryChanged(uint drawingMode, const QByteArray &indexData, int indexType);
 
 protected:
     void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 
 private slots:
-    void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onVertexModelReset();
+    void onAdjacencyModelReset();
+    void onVertexModelRowsInserted(const QModelIndex &parent, int first, int last);
+    void onAdjacencyModelRowsInserted(const QModelIndex &parent, int first, int last);
+    void onVertexModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onAdjacencyModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void onHighlightDataChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
     void drawWire(QPainter *painter, int vertexIndex1, int vertexIndex2);
     void drawHighlightedFace(QPainter *painter, const QVector<int> &vertexIndices);
+    void fetchVertices();
+    void fetchAdjacencyList();
 
 private:
-    QAbstractItemModel *m_model;
+    QAbstractItemModel *m_vertexModel;
+    QAbstractItemModel *m_adjacencyModel;
+    QItemSelectionModel *m_highlightModel;
     int m_positionColumn;
     GLenum m_drawingMode;
-    QByteArray m_indexData;
-    int m_indexType;
-    QItemSelectionModel *m_highlightModel;
     QVector<QPointF> m_vertices;
-    QVector<int> m_highlightedVertices;
+    QSet<int> m_highlightedVertices;
+    QVector<int> m_adjacencyList;
+
     qreal m_geometryWidth;
     qreal m_geometryHeight;
     qreal m_zoom;

@@ -30,23 +30,18 @@
 #define GAMMARAY_QUICKINSPECTOR_SGGEOMETRYEXTENSION_H
 
 #include <core/propertycontrollerextension.h>
-#include "sggeometryextensioninterface.h"
 
 QT_BEGIN_NAMESPACE
 class QSGGeometryNode;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class SGGeometryModel;
-
 class PropertyController;
-class SGGeometryModel;
+class SGVertexModel;
+class SGAdjacencyModel;
 
-class SGGeometryExtension : public SGGeometryExtensionInterface, public PropertyControllerExtension
+class SGGeometryExtension : public PropertyControllerExtension
 {
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::SGGeometryExtensionInterface)
-
 public:
     explicit SGGeometryExtension(PropertyController *controller);
     ~SGGeometryExtension();
@@ -55,7 +50,8 @@ public:
 
 private:
     QSGGeometryNode *m_node;
-    SGGeometryModel *m_model;
+    SGVertexModel *m_vertexModel;
+    SGAdjacencyModel *m_adjacencyModel;
 };
 }
 

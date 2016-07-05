@@ -10,7 +10,6 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
         quickinspectorinterface.cpp
         quickitemgeometry.cpp
         materialextension/materialextensioninterface.cpp
-        geometryextension/sggeometryextensioninterface.cpp
       )
 
   add_library(gammaray_quickinspector_shared STATIC ${gammaray_quickinspector_shared_srcs})
@@ -53,7 +52,6 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
 
       materialextension/materialextensionclient.cpp
       materialextension/materialtab.cpp
-      geometryextension/sggeometryextensionclient.cpp
       geometryextension/sggeometrytab.cpp
       geometryextension/sgwireframewidget.cpp
     )
