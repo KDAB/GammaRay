@@ -44,14 +44,38 @@ Q_DECLARE_METATYPE(QVector<uint>)
 Q_DECLARE_METATYPE(QVector<float>)
 Q_DECLARE_METATYPE(QVector<double>)
 
-GammaRay::SGGeometryModel::SGGeometryModel(QObject *parent)
+template<typename T>
+static QStringList toStringList(void *data, int size)
+{
+    QStringList list;
+    T *typedData = static_cast<T *>(data);
+    for (int i = 0; i < size; i++) {
+        list << QString::number(*typedData);
+        ++typedData;
+    }
+    return list;
+}
+
+template<typename T>
+static QVariantList toVariantList(void *data, int size)
+{
+    QVariantList list;
+    T *typedData = static_cast<T *>(data);
+    for (int i = 0; i < size; i++) {
+        list << QVariant::fromValue<T>(*typedData);
+        ++typedData;
+    }
+    return list;
+}
+
+GammaRay::SGVertexModel::SGVertexModel(QObject *parent)
     : QAbstractTableModel(parent)
     , m_geometry(0)
     , m_node(0)
 {
 }
 
-int SGGeometryModel::rowCount(const QModelIndex &parent) const
+int SGVertexModel::rowCount(const QModelIndex &parent) const
 {
     if (!m_geometry || parent.isValid())
         return 0;
@@ -59,7 +83,7 @@ int SGGeometryModel::rowCount(const QModelIndex &parent) const
     return m_geometry->vertexCount();
 }
 
-int GammaRay::SGGeometryModel::columnCount(const QModelIndex &parent) const
+int GammaRay::SGVertexModel::columnCount(const QModelIndex &parent) const
 {
     if (!m_geometry || parent.isValid())
         return 0;
@@ -67,7 +91,7 @@ int GammaRay::SGGeometryModel::columnCount(const QModelIndex &parent) const
     return m_geometry->attributeCount();
 }
 
-QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
+QVariant SGVertexModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()
         || !m_geometry
@@ -154,7 +178,7 @@ QVariant SGGeometryModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QMap< int, QVariant > SGGeometryModel::itemData(const QModelIndex &index) const
+QMap< int, QVariant > SGVertexModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> map = QAbstractItemModel::itemData(index);
     map.insert(IsCoordinateRole, data(index, IsCoordinateRole));
@@ -162,7 +186,7 @@ QMap< int, QVariant > SGGeometryModel::itemData(const QModelIndex &index) const
     return map;
 }
 
-QVariant SGGeometryModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant SGVertexModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal && m_geometry) {
         char const * const *attributeNames = m_node->material()->createShader()->attributeNames();
@@ -177,7 +201,7 @@ QVariant SGGeometryModel::headerData(int section, Qt::Orientation orientation, i
     return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-void SGGeometryModel::setNode(QSGGeometryNode *node)
+void SGVertexModel::setNode(QSGGeometryNode *node)
 {
     beginResetModel();
     m_node = node;
@@ -185,7 +209,7 @@ void SGGeometryModel::setNode(QSGGeometryNode *node)
     endResetModel();
 }
 
-QModelIndex GammaRay::SGGeometryModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex GammaRay::SGVertexModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!m_geometry
         || row >= m_geometry->vertexCount()
@@ -235,4 +259,64 @@ QModelIndex GammaRay::SGGeometryModel::index(int row, int column, const QModelIn
     }
 
     return createIndex(row, column, attr);
+}
+
+
+GammaRay::SGAdjacencyModel::SGAdjacencyModel(QObject *parent)
+    : QAbstractListModel(parent)
+    , m_geometry(0)
+    , m_node(0)
+{
+}
+
+int SGAdjacencyModel::rowCount(const QModelIndex &parent) const
+{
+    if (!m_geometry || parent.isValid())
+        return 0;
+
+    return m_geometry->indexCount();
+}
+
+QVariant SGAdjacencyModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid()
+        || !m_geometry
+        || index.row() >= m_geometry->indexCount()
+        || index.column() != 0)
+        return QVariant();
+
+    if (role == DrawingModeRole) {
+        return m_geometry->drawingMode();
+    }
+    if (role == RenderRole) {
+        int indexType = m_geometry->indexType();
+        quint32 i;
+
+        if (indexType == GL_UNSIGNED_INT)
+            i = *(static_cast<const quint32 *>(m_geometry->indexData()) + index.row());
+        else if (indexType == GL_UNSIGNED_SHORT)
+            i = *(static_cast<const quint16 *>(m_geometry->indexData()) + index.row());
+        else if (indexType == GL_UNSIGNED_BYTE)
+            i = *(static_cast<const quint8 *>(m_geometry->indexData()) + index.row());
+
+        return i;
+    }
+
+    return QVariant();
+}
+
+void SGAdjacencyModel::setNode(QSGGeometryNode *node)
+{
+    beginResetModel();
+    m_node = node;
+    m_geometry = node->geometry();
+    endResetModel();
+}
+
+QMap< int, QVariant > SGAdjacencyModel::itemData(const QModelIndex &index) const
+{
+    QMap<int, QVariant> map = QAbstractItemModel::itemData(index);
+    map.insert(DrawingModeRole, data(index, DrawingModeRole));
+    map.insert(RenderRole, data(index, RenderRole));
+    return map;
 }

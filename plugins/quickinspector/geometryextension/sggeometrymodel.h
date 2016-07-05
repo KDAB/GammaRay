@@ -38,7 +38,7 @@ class QSGGeometry;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class SGGeometryModel : public QAbstractTableModel
+class SGVertexModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
@@ -48,7 +48,7 @@ public:
         RenderRole = 258
     };
 
-    explicit SGGeometryModel(QObject *parent = 0);
+    explicit SGVertexModel (QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
@@ -61,29 +61,25 @@ public:
 
     void setNode(QSGGeometryNode *node);
 
-    template<typename T>
-    static QStringList toStringList(void *data, int size)
-    {
-        QStringList list;
-        T *typedData = static_cast<T *>(data);
-        for (int i = 0; i < size; i++) {
-            list << QString::number(*typedData);
-            ++typedData;
-        }
-        return list;
-    }
+private:
+    QSGGeometry *m_geometry;
+    QSGGeometryNode *m_node;
+};
 
-    template<typename T>
-    static QVariantList toVariantList(void *data, int size)
-    {
-        QVariantList list;
-        T *typedData = static_cast<T *>(data);
-        for (int i = 0; i < size; i++) {
-            list << QVariant::fromValue<T>(*typedData);
-            ++typedData;
-        }
-        return list;
-    }
+class SGAdjacencyModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    enum Role {
+        DrawingModeRole = 257,
+        RenderRole = 258
+    };
+    explicit SGAdjacencyModel (QObject *parent = 0);
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+    void setNode(QSGGeometryNode *node);
 
 private:
     QSGGeometry *m_geometry;

@@ -32,7 +32,6 @@
 #include "quickitemtreewatcher.h"
 #include "quickitemmodelroles.h"
 #include "quickscenepreviewwidget.h"
-#include "geometryextension/sggeometryextensionclient.h"
 #include "geometryextension/sggeometrytab.h"
 #include "materialextension/materialextensionclient.h"
 #include "materialextension/materialtab.h"
@@ -69,11 +68,6 @@ static QObject *createQuickInspectorClient(const QString & /*name*/, QObject *pa
 static QObject *createMaterialExtension(const QString &name, QObject *parent)
 {
     return new MaterialExtensionClient(name, parent);
-}
-
-static QObject *createSGGeometryExtension(const QString &name, QObject *parent)
-{
-    return new SGGeometryExtensionClient(name, parent);
 }
 
 QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
@@ -209,9 +203,6 @@ void QuickInspectorUiFactory::initUi()
         createMaterialExtension);
 
     PropertyWidget::registerTab<MaterialTab>(QStringLiteral("material"), tr("Material"));
-
-    ObjectBroker::registerClientObjectFactoryCallback<SGGeometryExtensionInterface *>(
-        createSGGeometryExtension);
 
     PropertyWidget::registerTab<SGGeometryTab>(QStringLiteral("sgGeometry"), tr("Geometry"));
 }
