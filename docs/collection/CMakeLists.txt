@@ -28,5 +28,5 @@ add_custom_command(
         ${apidocs_qch_target}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
-add_custom_target(gammaray.qhc ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhc)
+add_custom_target(gammaray_qhc ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhc DESTINATION ${QCH_INSTALL_DIR})
