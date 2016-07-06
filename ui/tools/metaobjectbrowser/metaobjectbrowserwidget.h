@@ -50,6 +50,7 @@ public:
 
 private slots:
     void selectionChanged(const QItemSelection &selection);
+    void propertyWidgetTabsChanged();
 
 private:
     UIStateManager m_stateManager;

@@ -125,7 +125,7 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
-    connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+    connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
 
     // limit fps to prevent bad performance, and to group update requests which is esp. required
     // for scrolling and similar high-frequency update requests
@@ -244,6 +244,12 @@ void SceneInspectorWidget::sceneContextMenu(QPoint pos)
     ext.populateMenu(&menu);
 
     menu.exec(ui->sceneTreeView->viewport()->mapToGlobal(pos));
+}
+
+void SceneInspectorWidget::propertyWidgetTabsChanged()
+{
+    m_stateManager.saveState();
+    m_stateManager.reset();
 }
 
 void SceneInspectorUiFactory::initUi()

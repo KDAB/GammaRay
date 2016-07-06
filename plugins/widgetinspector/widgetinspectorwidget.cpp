@@ -49,6 +49,7 @@
 #include <QMenu>
 #include <QtPlugin>
 #include <QToolBar>
+#include <QSettings>
 
 using namespace GammaRay;
 
@@ -129,11 +130,21 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
-    connect(ui->widgetPropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+    connect(ui->widgetPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
 }
 
 WidgetInspectorWidget::~WidgetInspectorWidget()
 {
+}
+
+void WidgetInspectorWidget::saveTargetState(QSettings *settings) const
+{
+    settings->setValue("remoteViewState", m_remoteView->saveState());
+}
+
+void WidgetInspectorWidget::restoreTargetState(QSettings *settings)
+{
+    m_remoteView->restoreState(settings->value("remoteViewState").toByteArray());
 }
 
 void WidgetInspectorWidget::updateActions()
@@ -154,6 +165,12 @@ void WidgetInspectorWidget::updateActions()
     if (m_inspector->features() & WidgetInspectorInterface::InputRedirection)
         f |= RemoteViewWidget::InputRedirection;
     m_remoteView->setSupportedInteractionModes(f);
+}
+
+void WidgetInspectorWidget::propertyWidgetTabsChanged()
+{
+    m_stateManager.saveState();
+    m_stateManager.reset();
 }
 
 void WidgetInspectorWidget::widgetSelected(const QItemSelection &selection)

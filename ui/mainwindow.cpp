@@ -227,8 +227,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowTitle(tr("GammaRay (%1)").arg(Endpoint::instance()->label()));
 
-    selectInitialTool();
-
     // Code Navigation
     QAction *configAction = new QAction(QIcon::fromTheme(QStringLiteral(
                                                              "applications-development")),
@@ -287,6 +285,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(UiIntegration::instance(), SIGNAL(navigateToCode(QUrl,int,int)), this,
             SLOT(navigateToCode(QUrl,int,int)));
+
+    connect(this, SIGNAL(targetQuitRequested()), &m_stateManager, SLOT(saveState()));
 }
 
 MainWindow::~MainWindow()
@@ -295,6 +295,23 @@ MainWindow::~MainWindow()
     settings.beginGroup("Sidebar");
     settings.setValue(QLatin1String("FilterInactive"), m_toolFilterModel->filterInactiveTools());
     settings.endGroup();
+}
+
+void MainWindow::saveTargetState(QSettings *settings) const
+{
+    // When closing/quitting the client main window, this is triggered but the connection is already closed
+    if (Endpoint::instance()->isConnected()) {
+        const QModelIndex toolIndex = ui->toolSelector->selectionModel()->selectedRows().value(0);
+        const QString toolId = toolIndex.data(ToolModelRole::ToolId).toString();
+        settings->setValue("selectedToolId", toolId);
+    }
+}
+
+void MainWindow::restoreTargetState(QSettings *settings)
+{
+    Q_ASSERT(ClientToolManager::instance()->isToolListLoaded());
+    const QString toolId = settings->value("selectedToolId", QStringLiteral("GammaRay::ObjectInspector")).toString();
+    selectTool(toolId);
 }
 
 void MainWindow::help()
@@ -353,13 +370,15 @@ void MainWindow::showMessageStatistics()
 
 bool MainWindow::selectTool(const QString &id)
 {
+    if (id.isEmpty())
+        return false;
+
     const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect
-                                                               |QItemSelectionModel::Rows
+                                                               | QItemSelectionModel::Rows
                                                                | QItemSelectionModel::Current;
     const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
     const QAbstractItemModel *model = ui->toolSelector->model();
-    const QModelIndex toolIndex = model->match(model->index(0,
-                                                            0), ToolModelRole::ToolId, id, 1,
+    const QModelIndex toolIndex = model->match(model->index(0,0), ToolModelRole::ToolId, id, 1,
                                                matchFlags).value(0);
     if (!toolIndex.isValid())
         return false;
@@ -367,15 +386,6 @@ bool MainWindow::selectTool(const QString &id)
     QItemSelectionModel *selectionModel = ui->toolSelector->selectionModel();
     selectionModel->setCurrentIndex(toolIndex, selectionFlags);
     return true;
-}
-
-void MainWindow::selectInitialTool()
-{
-    auto model = ui->toolSelector->model();
-    QModelIndexList matches = model->match(model->index(0, 0), ToolModelRole::ToolId, QStringLiteral("GammaRay::ObjectInspector"));
-    if (matches.isEmpty())
-        return;
-    ui->toolSelector->setCurrentIndex(matches.first());
 }
 
 void MainWindow::toolSelected()

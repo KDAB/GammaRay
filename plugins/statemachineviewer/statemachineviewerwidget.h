@@ -55,6 +55,9 @@ public:
     explicit StateMachineViewerWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
     virtual ~StateMachineViewerWidget();
 
+    Q_INVOKABLE void saveTargetState(QSettings *settings) const;
+    Q_INVOKABLE void restoreTargetState(QSettings *settings);
+
     KDSME::StateMachineView *stateMachineView() const;
     DeferredTreeView *objectInspector() const;
 
@@ -97,6 +100,7 @@ private:
     QHash<StateId, KDSME::State *> m_idToStateMap;
     QHash<TransitionId, KDSME::Transition *> m_idToTransitionMap;
     KDSME::StateMachine *m_machine;
+    bool m_showLog;
 };
 
 class StateMachineViewerUiFactory : public QObject,

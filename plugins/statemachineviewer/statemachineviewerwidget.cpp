@@ -140,6 +140,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
     , m_ui(new Ui::StateMachineViewerWidget)
     , m_stateManager(this)
     , m_machine(0)
+    , m_showLog(false)
 {
     ObjectBroker::registerClientObjectFactoryCallback<StateMachineViewerInterface *>(
         createStateMachineViewerClient);
@@ -239,6 +240,20 @@ StateMachineViewerWidget::~StateMachineViewerWidget()
     saveSettings();
 }
 
+void StateMachineViewerWidget::saveTargetState(QSettings *settings) const
+{
+    settings->setValue("ShowLog", m_showLog);
+    // TODO: settings->setValue("ShowTransitionsLabel", m_stateMachineView->scene()->isTransitionsLabelVisible());
+    settings->setValue("MaximumDepth", m_stateMachineView->scene()->maximumDepth());
+}
+
+void StateMachineViewerWidget::restoreTargetState(QSettings *settings)
+{
+    setShowLog(settings->value("ShowLog", m_showLog).toBool());
+    // TODO: m_stateMachineView->scene()->setTransitionsLabelVisible(settings->value("ShowTransitionsLabel", true).toBool());
+    m_stateMachineView->scene()->setMaximumDepth(settings->value("MaximumDepth", 3).toInt());
+}
+
 void StateMachineViewerWidget::showContextMenuForObject(const QModelIndex &index,
                                                         const QPoint &globalPos)
 {
@@ -275,10 +290,6 @@ void StateMachineViewerWidget::loadSettings()
     QSettings settings;
     settings.beginGroup("Plugin_StateMachineViewer");
     m_stateMachineView->setThemeName(settings.value("ThemeName", "SystemTheme").toString());
-
-    // session-specific settings, we should probably save them on a per-target basis
-    m_stateMachineView->scene()->setMaximumDepth(settings.value("MaximumDepth", 3).toInt());
-
     settings.endGroup();
     settings.sync();
 }
@@ -288,9 +299,6 @@ void StateMachineViewerWidget::saveSettings()
     QSettings settings;
     settings.beginGroup("Plugin_StateMachineViewer");
     settings.setValue("ThemeName", m_stateMachineView->themeName());
-
-    settings.setValue("MaximumDepth", m_stateMachineView->scene()->maximumDepth());
-
     settings.endGroup();
     settings.sync();
 }
@@ -416,8 +424,7 @@ void StateMachineViewerWidget::repopulateView()
         return;
     m_stateMachineView->scene()->layout();
 
-    IF_DEBUG(m_machine->dumpObjectTree();
-             )
+    IF_DEBUG(m_machine->dumpObjectTree();)
 
     m_stateMachineView->fitInView();
 }
@@ -441,6 +448,7 @@ void StateMachineViewerWidget::objectInspectorContextMenu(QPoint pos)
 
 void StateMachineViewerWidget::setShowLog(bool show)
 {
+    m_showLog = show;
     m_ui->logExpandingWidget->setVisible(show);
     m_ui->showLogPushButton->setVisible(!show);
     m_ui->verticalSplitter->handle(0)->setEnabled(show);

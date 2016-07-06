@@ -53,6 +53,9 @@ public:
     explicit WidgetInspectorWidget(QWidget *parent = 0);
     ~WidgetInspectorWidget();
 
+    Q_INVOKABLE void saveTargetState(QSettings *settings) const;
+    Q_INVOKABLE void restoreTargetState(QSettings *settings);
+
 private slots:
     void widgetSelected(const QItemSelection &selection);
     void widgetTreeContextMenu(QPoint pos);
@@ -63,6 +66,7 @@ private slots:
     void saveAsUiFile();
     void analyzePainting();
     void updateActions();
+    void propertyWidgetTabsChanged();
 
 private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;

@@ -64,6 +64,9 @@ private:
     std::unique_ptr<Ui::Qt3DInspectorWidget> ui;
     UIStateManager m_stateManager;
     Qt3DInspectorInterface *m_interface;
+
+private slots:
+    void propertyWidgetTabsChanged();
 };
 
 class Qt3DInspectorUiFactory : public QObject, public StandardToolUiFactory<Qt3DInspectorWidget>

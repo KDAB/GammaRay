@@ -58,12 +58,16 @@ public:
     explicit QuickInspectorWidget(QWidget *parent = 0);
     ~QuickInspectorWidget();
 
+    Q_INVOKABLE void saveTargetState(QSettings *settings) const;
+    Q_INVOKABLE void restoreTargetState(QSettings *settings);
+
 private slots:
     void itemSelectionChanged(const QItemSelection &selection);
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                               const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);
+    void propertyWidgetTabsChanged();
 
 private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;

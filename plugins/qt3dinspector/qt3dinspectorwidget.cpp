@@ -95,9 +95,8 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
 
     connect(ui->tabWidget, &QTabWidget::currentChanged, ui->stack,
             &QStackedWidget::setCurrentIndex);
-    connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
-    connect(ui->frameGraphNodePropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager,
-            SLOT(reset()));
+    connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
+    connect(ui->frameGraphNodePropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
 }
 
 Qt3DInspectorWidget::~Qt3DInspectorWidget()
@@ -159,6 +158,12 @@ void Qt3DInspectorWidget::frameGraphSelectionChanged(const QItemSelection &selec
     ui->frameGraphView->scrollTo(index);
     if (!deselected.isEmpty()) // external change, not initial selection
         ui->tabWidget->setCurrentWidget(ui->renderSettingsTab);
+}
+
+void Qt3DInspectorWidget::propertyWidgetTabsChanged()
+{
+    m_stateManager.saveState();
+    m_stateManager.reset();
 }
 
 static QObject *createGeometryExtension(const QString &name, QObject *parent)

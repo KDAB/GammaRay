@@ -64,6 +64,7 @@ private slots:
     void visibleSceneRectChanged();
     void itemSelected(const QRectF &boundingRect);
     void sceneContextMenu(QPoint pos);
+    void propertyWidgetTabsChanged();
 
 private:
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;

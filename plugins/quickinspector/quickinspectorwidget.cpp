@@ -57,6 +57,7 @@
 #include <QRectF>
 #include <QtCore/qglobal.h>
 #include <QPropertyAnimation>
+#include <QSettings>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -141,12 +142,24 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
 
-    connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
-    connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+    connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
+    connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()
 {
+}
+
+void QuickInspectorWidget::saveTargetState(QSettings *settings) const
+{
+    settings->setValue("tabIndex", ui->tabWidget->currentIndex());
+    settings->setValue("remoteViewState", m_previewWidget->saveState());
+}
+
+void QuickInspectorWidget::restoreTargetState(QSettings *settings)
+{
+    ui->tabWidget->setCurrentIndex(settings->value("tabIndex", 0).toInt());
+    m_previewWidget->restoreState(settings->value("remoteViewState").toByteArray());
 }
 
 void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features features)
@@ -219,4 +232,10 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint &pos)
                     index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.populateMenu(&contextMenu);
     contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos));
+}
+
+void QuickInspectorWidget::propertyWidgetTabsChanged()
+{
+    m_stateManager.saveState();
+    m_stateManager.reset();
 }
