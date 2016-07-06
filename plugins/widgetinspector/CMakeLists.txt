@@ -55,9 +55,9 @@ install(TARGETS gammaray_widget_export_actions DESTINATION ${PROBE_PLUGIN_INSTAL
 # UI plugin
 if(GAMMARAY_BUILD_UI)
   set(gammaray_widgetinspector_ui_plugin_srcs
+    widgetinspectorwidget.cpp
     widgetinspectorinterface.cpp
     widgetinspectorclient.cpp
-    widgetinspectorwidget.cpp
 
     waextension/widgetattributetab.cpp
   )

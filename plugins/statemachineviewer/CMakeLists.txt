@@ -15,7 +15,7 @@ set(gammaray_statemachineviewer_plugin_srcs
 gammaray_add_plugin(gammaray_statemachineviewer_plugin
   DESKTOP gammaray_statemachineviewer.desktop.in
   JSON gammaray_statemachineviewer.json
-  SOURCES ${gammaray_statemachineviewer_shared_srcs} ${gammaray_statemachineviewer_plugin_srcs}
+  SOURCES ${gammaray_statemachineviewer_plugin_srcs} ${gammaray_statemachineviewer_shared_srcs}
 )
 
 target_link_libraries(gammaray_statemachineviewer_plugin
@@ -35,8 +35,8 @@ endif()
 if(GAMMARAY_BUILD_UI AND KDSME_FOUND)
 
 set(gammaray_statemachineviewer_ui_plugin_srcs
-  statemachineviewerclient.cpp
   statemachineviewerwidget.cpp
+  statemachineviewerclient.cpp
   statemodeldelegate.cpp
 )
 
@@ -44,7 +44,7 @@ qt4_wrap_ui(gammaray_statemachineviewer_ui_plugin_srcs statemachineviewerwidget.
 
 gammaray_add_plugin(gammaray_statemachineviewer_ui_plugin
   JSON gammaray_statemachineviewer.json
-  SOURCES ${gammaray_statemachineviewer_shared_srcs} ${gammaray_statemachineviewer_ui_plugin_srcs}
+  SOURCES ${gammaray_statemachineviewer_ui_plugin_srcs} ${gammaray_statemachineviewer_shared_srcs}
 )
 
 target_link_libraries(gammaray_statemachineviewer_ui_plugin

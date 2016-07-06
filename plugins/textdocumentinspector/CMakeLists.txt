@@ -1,7 +1,7 @@
 # probe plugin
 set(gammaray_textdocumentinspector_srcs
-    textdocumentformatmodel.cpp
     textdocumentinspector.cpp
+    textdocumentformatmodel.cpp
     textdocumentmodel.cpp
 )
 gammaray_add_plugin(gammaray_textdocumentinspector
@@ -19,8 +19,8 @@ endif()
 # ui plugin
 if(GAMMARAY_BUILD_UI)
     set(gammaray_textdocumentinspector_ui_srcs
-        textdocumentcontentview.cpp
         textdocumentinspectorwidget.cpp
+        textdocumentcontentview.cpp
     )
 
     qt4_wrap_ui(gammaray_textdocumentinspector_ui_srcs

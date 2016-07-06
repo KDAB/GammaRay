@@ -44,8 +44,8 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
   if(GAMMARAY_BUILD_UI)
     # ui plugin
     set(gammaray_quickinspector_ui_srcs
-      quickinspectorclient.cpp
       quickinspectorwidget.cpp
+      quickinspectorclient.cpp
       quickclientitemmodel.cpp
       quickitemdelegate.cpp
       quickitemtreewatcher.cpp

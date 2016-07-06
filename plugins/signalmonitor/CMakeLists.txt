@@ -31,9 +31,9 @@ endif ()
 if(GAMMARAY_BUILD_UI)
   # ui plugin
   set(gammaray_signalmonitor_ui_srcs
+    signalmonitorwidget.cpp
     signalhistorydelegate.cpp
     signalhistoryview.cpp
-    signalmonitorwidget.cpp
     signalmonitorclient.cpp
   )
 

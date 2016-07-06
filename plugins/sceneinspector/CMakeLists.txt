@@ -1,8 +1,9 @@
+
 # probe part
 set(gammaray_sceneinspector_plugin_srcs
+  sceneinspector.cpp
   scenemodel.cpp
   sceneinspectorinterface.cpp
-  sceneinspector.cpp
   paintanalyzerextension.cpp
 )
 
@@ -21,11 +22,11 @@ target_link_libraries(gammaray_sceneinspector_plugin
 # ui part
 if(GAMMARAY_BUILD_UI)
   set(gammaray_sceneinspector_ui_plugin_srcs
+    sceneinspectorwidget.cpp
     graphicsview.cpp
     graphicssceneview.cpp
     sceneinspectorinterface.cpp
     sceneinspectorclient.cpp
-    sceneinspectorwidget.cpp
   )
 
   qt4_wrap_ui(gammaray_sceneinspector_ui_plugin_srcs
