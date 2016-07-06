@@ -1,7 +1,7 @@
 # probe part
 set(gammaray_actioninspector_plugin_srcs
-  actionvalidator.cpp
   actioninspector.cpp
+  actionvalidator.cpp
   actionmodel.cpp
 )
 

@@ -1,7 +1,7 @@
 # probe part
 set(gammaray_fontbrowser_plugin_srcs
-  fontbrowserinterface.cpp
   fontbrowser.cpp
+  fontbrowserinterface.cpp
   fontmodel.cpp
   fontdatabasemodel.cpp
   fontbrowserserver.cpp
@@ -24,8 +24,8 @@ endif()
 if(GAMMARAY_BUILD_UI)
 
   set(gammaray_fontbrowser_plugin_ui_srcs
-    fontbrowserinterface.cpp
     fontbrowserwidget.cpp
+    fontbrowserinterface.cpp
     fontbrowserclient.cpp
   )
 

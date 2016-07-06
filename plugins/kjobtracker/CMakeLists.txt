@@ -26,8 +26,8 @@ if(KDE4_FOUND OR KF5CoreAddons_FOUND)
   add_definitions(${KDE4_DEFINITIONS})
 
   set(gammaray_kjob_plugin_srcs
-    kjobmodel.cpp
     kjobtracker.cpp
+    kjobmodel.cpp
   )
 
   gammaray_add_plugin(gammaray_kjobtracker_plugin

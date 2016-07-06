@@ -45,6 +45,24 @@ macro(gammaray_add_plugin _target_name)
   endif()
   set(_build_target_dir "${PROJECT_BINARY_DIR}/${PROBE_PLUGIN_INSTALL_DIR}")
 
+  # Work-around for KDEND-44 (also see https://cmake.org/Bug/bug_relationship_graph.php?bug_id=15419)
+  # Re-generates moc file in case the JSON file changes
+  if (Qt5Core_FOUND AND NOT Qt5Core_VERSION VERSION_LESS 5.6.0) # DEPENDS argument for qt5_wrap_cpp was added in 5.6.0
+      list(GET _gammaray_add_plugin_SOURCES 0 mainSourceFile)
+      string(REPLACE ".cpp" ".h" mainHeaderFile ${mainSourceFile})
+
+      # sanity check
+      file(READ ${mainHeaderFile} mainHeaderFileContents)
+      string(FIND "${mainHeaderFileContents}" "Q_PLUGIN_METADATA" hasPluginMetadataMacroMatchRes)
+      if (hasPluginMetadataMacroMatchRes EQUAL -1)
+          message(FATAL_ERROR "First file passed to SOURCES must be the .cpp file which includes the header using the Q_PLUGIN_METADATA macro")
+      endif()
+
+      qt5_wrap_cpp(_gammaray_add_plugin_SOURCES ${mainHeaderFile} DEPENDS ${_gammaray_add_plugin_JSON})
+      set_source_files_properties("${mainHeaderFile}" PROPERTIES SKIP_AUTOMOC TRUE)
+      set_source_files_properties("${mainSourceFile}" PROPERTIES SKIP_AUTOMOC TRUE)
+  endif()
+
   add_library(${_target_name} MODULE ${_gammaray_add_plugin_SOURCES})
   set_target_properties(${_target_name} PROPERTIES
     PREFIX ""
@@ -53,12 +71,6 @@ macro(gammaray_add_plugin _target_name)
 
   if(GAMMARAY_INSTALL_QT_LAYOUT)
     set_target_properties(${_target_name} PROPERTIES OUTPUT_NAME ${_target_name}-${GAMMARAY_PROBE_ABI})
-  endif()
-
-  # as of CMake 3.3 plugin JSON files are not automatically added as dependency
-  if(${Qt5Core_FOUND} AND _gammaray_add_plugin_JSON)
-    get_filename_component(_json "${_gammaray_add_plugin_JSON}" REALPATH)
-    set_property(TARGET ${_target_name} APPEND PROPERTY AUTOGEN_TARGET_DEPENDS ${_json})
   endif()
 
   if(APPLE)
