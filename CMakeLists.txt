@@ -392,7 +392,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
 endif()
 
 if(HAVE_QT_WIDGETS)
-  option(GAMMARAY_CORE_ONLY_LAUNCHER "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatiblity)" FALSE)
+  option(GAMMARAY_CORE_ONLY_LAUNCHER "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatibility)" FALSE)
 else()
   set(GAMMARAY_CORE_ONLYL_LAUNCHER TRUE)
 endif()
