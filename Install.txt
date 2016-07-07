@@ -70,7 +70,7 @@ to remove all forwards
 You'll find more information on this in the wiki:
 https://github.com/KDAB/GammaRay/wiki/Cross-compiling-GammaRay
 
-== Building with Private Qt Headers ==
+== Building with Private Qt Headers (Qt4 only) ==
 To build against private Qt headers (necessary for painter debugging/profiling)
 you must have a developer build version of Qt available (i.e. Qt must be
 configured using the -developer-build option).
@@ -100,7 +100,7 @@ For instance:
   % cmake -DCMAKE_DISABLE_FIND_PACKAGE_VTK=True
 
 
-== Warning! ==
+== Warning! (Qt <= 5.4 only) ==
 If your Qt is linked with the "-Bsymbolic-function" option preloading will be
 broken.  When this is enabled, references to global functions will be bound to
 the shared object internally; therefore, the definition of the function will be
