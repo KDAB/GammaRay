@@ -1,6 +1,50 @@
 Release Highlights
 ==================
 
+Version 2.5.0:
+--------------
+ * Added paint analyzer for QQuickPaintedItems.
+ * Added element picking in QtQuick and widget remote view.
+ * Added input redirection to the widget remote view.
+ * Improved measuring tool in QtQuick remote view, and added measuring support to widget and paint analyzer views.
+ * Added zoom support to the widget remote view.
+ * Widget remote view now always shows the selected window, not only the selected widget.
+ * Fix widget remote view overloading slow targets.
+ * Added support for QQuickWidget.
+ * Added instance counts to meta object browser.
+ * Improved object navigation allowing to select which tool to go to if multiple apply.
+ * Support for object navigation in more plug-ins.
+ * Added edit support for QMatrix4x4, QVector[2,3,4]D, QQaternion and QTransform in the property editor.
+ * Added basic type support for Qt3D.
+ * Added Qt3D scene graph and frame graph inspector (Qt >= 5.7).
+ * Fix SHM resource leaks on UNIX-like systems when target crashes on startup.
+ * Removed non-KDSME fallback QSM visualizer.
+ * Fix QNX 6.6 build.
+ * Fix LLDB injector on OSX.
+ * Added IPv6 support for client/probe communication.
+ * Fixed depth-limiting in the state machine debugger.
+ * Support non-QObject objects as composite types in the property editor.
+ * Added QPainter analyzer for individual QGraphicsItems.
+ * Added source navigation to declaration location for QML items.
+ * Added the ability to browser and configure logging categories.
+ * Added support for browsing QML context properties.
+ * Fix crash on nested QVariant/QJSValue structures.
+ * Improved injector self-tests to detect the Yama security extension blocking injection.
+ * Added source navigation to QRC data.
+ * Support more image formats in the resource browser.
+ * Save and restore window and tool layouts.
+ * Improved display in the model inspector for empty data.
+ * Support block layout elements in the text document inspector (Qt >= 5.5).
+ * Support inspection of QQmlScriptString properties and callable QJSValues.
+ * Fix MSVC2015 runtime detection.
+ * Fix various runtime attaching issues.
+ * Fix display of multi-line string values in the property editor.
+ * Initial support for namespaced Qt.
+ * Add network interface browser.
+ * Add cookie jar browser.
+ * Add recursive access to nested value type properties (read-only).
+ * Add access to SSL cipher and certificate information for QSslSocket.
+
 Version 2.4.1:
 --------------
  * Fix exponential resource leak in recursive property editor.
