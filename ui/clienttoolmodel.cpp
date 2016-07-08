@@ -200,8 +200,14 @@ bool ClientToolModel::filterAcceptsRow(int source_row, const QModelIndex &source
     if (!sourceModel() || source_parent.isValid())
         return false;
 
+    // hide tools that have no UI
     const auto srcIdx = sourceModel()->index(source_row, 0);
-    return srcIdx.data(ToolModelRole::ToolHasUi).toBool();
+    if (!srcIdx.data(ToolModelRole::ToolHasUi).toBool())
+        return false;
+
+    // hide tools we have no UI plugin for
+    const auto toolId = srcIdx.data(ToolModelRole::ToolId).toString();
+    return s_pluginRepository()->factories.contains(toolId);
 }
 
 bool ClientToolModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
