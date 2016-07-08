@@ -138,7 +138,7 @@ void Client::messageReceived(const Message &msg)
             disconnectFromHost();
         }
         qint32 serverVersion;
-        msg.payload() >> serverVersion;
+        msg >> serverVersion;
         if (serverVersion != Protocol::version()) {
             emit persisitentConnectionError(tr("Server version is %1, was expecting %2.").arg(
                                                 serverVersion).arg(Protocol::version()));
@@ -154,7 +154,7 @@ void Client::messageReceived(const Message &msg)
         {
             QString name;
             Protocol::ObjectAddress addr;
-            msg.payload() >> name >> addr;
+            msg >> name >> addr;
             addObjectNameAddressMapping(name, addr);
             m_statModel->addObject(addr, name);
             break;
@@ -162,14 +162,14 @@ void Client::messageReceived(const Message &msg)
         case Protocol::ObjectRemoved:
         {
             QString name;
-            msg.payload() >> name;
+            msg >> name;
             removeObjectNameAddressMapping(name);
             break;
         }
         case Protocol::ObjectMapReply:
         {
             QVector<QPair<Protocol::ObjectAddress, QString> > objects;
-            msg.payload() >> objects;
+            msg >> objects;
             for (QVector<QPair<Protocol::ObjectAddress, QString> >::const_iterator it =
                      objects.constBegin();
                  it != objects.constEnd(); ++it) {
@@ -190,7 +190,7 @@ void Client::messageReceived(const Message &msg)
         case Protocol::ServerInfo:
         {
             QString label;
-            msg.payload() >> label;
+            msg >> label;
             setLabel(label);
             m_initState |= ServerInfoReceived;
             break;
@@ -249,7 +249,7 @@ void Client::monitorObject(Protocol::ObjectAddress objectAddress)
     if (!isConnected())
         return;
     Message msg(endpointAddress(), Protocol::ObjectMonitored);
-    msg.payload() << objectAddress;
+    msg << objectAddress;
     send(msg);
 }
 
@@ -258,7 +258,7 @@ void Client::unmonitorObject(Protocol::ObjectAddress objectAddress)
     if (!isConnected())
         return;
     Message msg(endpointAddress(), Protocol::ObjectUnmonitored);
-    msg.payload() << objectAddress;
+    msg << objectAddress;
     send(msg);
 }
 

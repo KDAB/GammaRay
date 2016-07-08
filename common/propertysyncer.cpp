@@ -99,7 +99,7 @@ void PropertySyncer::setObjectEnabled(Protocol::ObjectAddress addr, bool enabled
     (*it).enabled = enabled;
     if (enabled && m_initialSync) {
         Message msg(m_address, Protocol::PropertySyncRequest);
-        msg.payload() << addr;
+        msg << addr;
         emit message(msg);
     }
 }
@@ -121,7 +121,7 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
     case Protocol::PropertySyncRequest:
     {
         Protocol::ObjectAddress addr;
-        msg.payload() >> addr;
+        msg >> addr;
         Q_ASSERT(addr != Protocol::InvalidObjectAddress);
 
         const auto it
@@ -142,9 +142,9 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
         Q_ASSERT(!values.isEmpty());
 
         Message msg(m_address, Protocol::PropertyValuesChanged);
-        msg.payload() << addr << (quint32)values.size();
+        msg << addr << (quint32)values.size();
         foreach (const auto &value, values)
-            msg.payload() << value.first << value.second;
+            msg << value.first << value.second;
         emit message(msg);
         break;
     }
@@ -152,7 +152,7 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
     {
         Protocol::ObjectAddress addr;
         quint32 changeSize;
-        msg.payload() >> addr >> changeSize;
+        msg >> addr >> changeSize;
         Q_ASSERT(addr != Protocol::InvalidObjectAddress);
         Q_ASSERT(changeSize > 0);
 
@@ -165,7 +165,7 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
         for (quint32 i = 0; i < changeSize; ++i) {
             QByteArray propName;
             QVariant propValue;
-            msg.payload() >> propName >> propValue;
+            msg >> propName >> propValue;
             (*it).recursionLock = true;
             (*it).obj->setProperty(propName, propValue);
 
@@ -207,9 +207,9 @@ void PropertySyncer::propertyChanged()
     Q_ASSERT(!changes.isEmpty());
 
     Message msg(m_address, Protocol::PropertyValuesChanged);
-    msg.payload() << (*it).addr << (quint32)changes.size();
+    msg << (*it).addr << (quint32)changes.size();
     foreach (const auto &change, changes)
-        msg.payload() << change.first << change.second;
+        msg << change.first << change.second;
     emit message(msg);
 }
 

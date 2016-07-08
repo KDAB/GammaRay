@@ -141,19 +141,19 @@ void Server::sendServerGreeting()
     // send greeting message for protocol version check
     {
         Message msg(endpointAddress(), Protocol::ServerVersion);
-        msg.payload() << Protocol::version();
+        msg << Protocol::version();
         send(msg);
     }
 
     {
         Message msg(endpointAddress(), Protocol::ServerInfo);
-        msg.payload() << label(); // TODO: expand with anything else needed here: Qt/GammaRay version, hostname, that kind of stuff
+        msg << label(); // TODO: expand with anything else needed here: Qt/GammaRay version, hostname, that kind of stuff
         send(msg);
     }
 
     {
         Message msg(endpointAddress(), Protocol::ObjectMapReply);
-        msg.payload() << objectAddresses();
+        msg << objectAddresses();
         send(msg);
     }
 }
@@ -166,7 +166,7 @@ void Server::messageReceived(const Message &msg)
         case Protocol::ObjectUnmonitored:
         {
             Protocol::ObjectAddress addr;
-            msg.payload() >> addr;
+            msg >> addr;
             Q_ASSERT(addr > Protocol::InvalidObjectAddress);
             m_propertySyncer->setObjectEnabled(addr, msg.type() == Protocol::ObjectMonitored);
             const QHash<Protocol::ObjectAddress,
@@ -224,7 +224,7 @@ Protocol::ObjectAddress Server::registerObject(const QString &name, QObject *obj
 
     if (isConnected()) {
         Message msg(endpointAddress(), Protocol::ObjectAdded);
-        msg.payload() <<  name << m_nextAddress;
+        msg <<  name << m_nextAddress;
         send(msg);
     }
 
@@ -288,7 +288,7 @@ void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QStri
 
     if (isConnected()) {
         Message msg(endpointAddress(), Protocol::ObjectRemoved);
-        msg.payload() << objectName;
+        msg << objectName;
         send(msg);
     }
 }
@@ -301,7 +301,7 @@ void Server::objectDestroyed(Protocol::ObjectAddress /*objectAddress*/, const QS
 
     if (isConnected()) {
         Message msg(endpointAddress(), Protocol::ObjectRemoved);
-        msg.payload() << objectName;
+        msg << objectName;
         send(msg);
     }
 }

@@ -191,7 +191,7 @@ void Endpoint::invokeObject(const QString &objectName, const char *method,
     Message msg(obj->address, Protocol::MethodCall);
     const QByteArray name(method);
     Q_ASSERT(!name.isEmpty());
-    msg.payload() << name << args;
+    msg << name << args;
     send(msg);
 }
 
@@ -305,11 +305,11 @@ void Endpoint::dispatchMessage(const Message &msg)
     ObjectInfo *obj = it.value();
     if (msg.type() == Protocol::MethodCall) {
         QByteArray method;
-        msg.payload() >> method;
+        msg >> method;
         if (obj->object) {
             Q_ASSERT(!method.isEmpty());
             QVariantList args;
-            msg.payload() >> args;
+            msg >> args;
 
             invokeObjectLocal(obj->object, method.constData(), args);
         } else {

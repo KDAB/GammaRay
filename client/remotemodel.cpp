@@ -230,7 +230,7 @@ bool RemoteModel::setData(const QModelIndex &index, const QVariant &value, int r
         return false;
 
     Message msg(m_myAddress, Protocol::ModelSetDataRequest);
-    msg.payload() << Protocol::fromQModelIndex(index) << role << value;
+    msg << Protocol::fromQModelIndex(index) << role << value;
     sendMessage(msg);
     return false;
 }
@@ -272,7 +272,7 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
 void RemoteModel::sort(int column, Qt::SortOrder order)
 {
     Message msg(m_myAddress, Protocol::ModelSortRequest);
-    msg.payload() << (quint32)column << (quint32)order;
+    msg << (quint32)column << (quint32)order;
     sendMessage(msg);
 }
 
@@ -285,7 +285,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     case Protocol::ModelRowColumnCountReply:
     {
         Protocol::ModelIndex index;
-        msg.payload() >> index;
+        msg >> index;
         Node *node = nodeForIndex(index);
         if (!node) {
             // This can happen e.g. when we called a blocking operation from the remote client
@@ -297,7 +297,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             break;
         }
         qint32 rowCount, columnCount;
-        msg.payload() >> rowCount >> columnCount;
+        msg >> rowCount >> columnCount;
         // we get -1/-1 if we requested for an invalid index, e.g. due to not having processed
         // all structure changes yet. This will automatically trigger a retry.
         Q_ASSERT((rowCount >= 0 && columnCount >= 0) || (rowCount == -1 && columnCount == -1));
@@ -343,20 +343,20 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     case Protocol::ModelContentReply:
     {
         quint32 size;
-        msg.payload() >> size;
+        msg >> size;
         Q_ASSERT(size > 0);
 
         QHash<QModelIndex, QVector<QModelIndex> > dataChangedIndexes;
         for (quint32 i = 0; i < size; ++i) {
             Protocol::ModelIndex index;
-            msg.payload() >> index;
+            msg >> index;
             Node *node = nodeForIndex(index);
             const auto column = index.last().second;
             const NodeStates state = node ? stateForColumn(node, column) : NoState;
             typedef QHash<int, QVariant> ItemData;
             ItemData itemData;
             qint32 flags;
-            msg.payload() >> itemData >> flags;
+            msg >> itemData >> flags;
             if ((state & Loading) == 0)
                 continue; // we didn't ask for this, probably outdated response for a moved cell
 
@@ -403,7 +403,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         qint8 orientation;
         qint32 section;
         QHash<qint32, QVariant> data;
-        msg.payload() >> orientation >> section >> data;
+        msg >> orientation >> section >> data;
         Q_ASSERT(orientation == Qt::Horizontal || orientation == Qt::Vertical);
         Q_ASSERT(section >= 0);
         auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
@@ -421,7 +421,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     {
         Protocol::ModelIndex beginIndex, endIndex;
         QVector<int> roles;
-        msg.payload() >> beginIndex >> endIndex >> roles;
+        msg >> beginIndex >> endIndex >> roles;
         Node *node = nodeForIndex(beginIndex);
         if (!node || node == m_root)
             break;
@@ -458,7 +458,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     {
         qint8 ori;
         int first, last;
-        msg.payload() >> ori >> first >> last;
+        msg >> ori >> first >> last;
         const Qt::Orientation orientation = static_cast<Qt::Orientation>(ori);
         auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
 
@@ -473,7 +473,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     {
         Protocol::ModelIndex parentIndex;
         int first, last;
-        msg.payload() >> parentIndex >> first >> last;
+        msg >> parentIndex >> first >> last;
         Q_ASSERT(last >= first);
 
         Node *parentNode = nodeForIndex(parentIndex);
@@ -487,7 +487,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     {
         Protocol::ModelIndex parentIndex;
         int first, last;
-        msg.payload() >> parentIndex >> first >> last;
+        msg >> parentIndex >> first >> last;
         Q_ASSERT(last >= first);
 
         Node *parentNode = nodeForIndex(parentIndex);
@@ -501,7 +501,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     {
         Protocol::ModelIndex sourceParentIndex, destParentIndex;
         int sourceFirst, sourceLast, destChild;
-        msg.payload() >> sourceParentIndex >> sourceFirst >> sourceLast >> destParentIndex
+        msg >> sourceParentIndex >> sourceFirst >> sourceLast >> destParentIndex
         >> destChild;
         Q_ASSERT(sourceLast >= sourceFirst);
 
@@ -538,7 +538,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     {
         Protocol::ModelIndex parentIndex;
         int first, last;
-        msg.payload() >> parentIndex >> first >> last;
+        msg >> parentIndex >> first >> last;
         Q_ASSERT(last >= first);
 
         Node *parentNode = nodeForIndex(parentIndex);
@@ -553,7 +553,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     {
         Protocol::ModelIndex parentIndex;
         int first, last;
-        msg.payload() >> parentIndex >> first >> last;
+        msg >> parentIndex >> first >> last;
         Q_ASSERT(last >= first);
 
         Node *parentNode = nodeForIndex(parentIndex);
@@ -574,7 +574,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     {
         QVector<Protocol::ModelIndex> parents;
         quint32 hint;
-        msg.payload() >> parents >> hint;
+        msg >> parents >> hint;
 
         if (parents.isEmpty()) { // everything changed (or Qt4)
             emit layoutAboutToBeChanged();
@@ -704,7 +704,7 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
     node->rowCount = -2;
 
     Message msg(m_myAddress, Protocol::ModelRowColumnCountRequest);
-    msg.payload() << Protocol::fromQModelIndex(index);
+    msg << Protocol::fromQModelIndex(index);
     sendMessage(msg);
 }
 
@@ -733,9 +733,9 @@ void RemoteModel::doRequestDataAndFlags() const
 {
     Q_ASSERT(!m_pendingDataRequests.isEmpty());
     Message msg(m_myAddress, Protocol::ModelContentRequest);
-    msg.payload() << quint32(m_pendingDataRequests.size());
+    msg << quint32(m_pendingDataRequests.size());
     foreach (const auto &index, m_pendingDataRequests)
-        msg.payload() << index;
+        msg << index;
     m_pendingDataRequests.clear();
     sendMessage(msg);
 }
@@ -749,7 +749,7 @@ void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) co
     headers[section][Qt::DisplayRole] = s_emptyDisplayValue;
 
     Message msg(m_myAddress, Protocol::ModelHeaderRequest);
-    msg.payload() << qint8(orientation) << qint32(section);
+    msg << qint8(orientation) << qint32(section);
     sendMessage(msg);
 }
 
@@ -759,7 +759,7 @@ void RemoteModel::clear()
 
     if (isConnected()) {
         Message msg(m_myAddress, Protocol::ModelSyncBarrier);
-        msg.payload() << ++m_targetSyncBarrier;
+        msg << ++m_targetSyncBarrier;
         sendMessage(msg);
     }
 
@@ -784,7 +784,7 @@ void RemoteModel::connectToServer()
 bool RemoteModel::checkSyncBarrier(const Message &msg)
 {
     if (msg.type() == Protocol::ModelSyncBarrier)
-        msg.payload() >> m_currentSyncBarrier;
+        msg >> m_currentSyncBarrier;
 
     return m_currentSyncBarrier == m_targetSyncBarrier;
 }

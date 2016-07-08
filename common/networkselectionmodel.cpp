@@ -53,9 +53,9 @@ QDataStream &operator>>(QDataStream &in, QItemSelectionModel::SelectionFlags &co
 
 static void writeSelection(Message *msg, const QItemSelection &selection)
 {
-    msg->payload() << qint32(selection.size());
+    *msg << qint32(selection.size());
     foreach (const QItemSelectionRange &range, selection)
-        msg->payload() << Protocol::fromQModelIndex(range.topLeft()) << Protocol::fromQModelIndex(
+        *msg << Protocol::fromQModelIndex(range.topLeft()) << Protocol::fromQModelIndex(
             range.bottomRight());
 }
 
@@ -150,7 +150,7 @@ void NetworkSelectionModel::sendSelection()
     } else {
         Message msg(m_myAddress, Protocol::SelectionModelSelect);
         writeSelection(&msg, selection());
-        msg.payload() << ClearAndSelect;
+        msg << ClearAndSelect;
         Endpoint::send(msg);
     }
 }
@@ -159,12 +159,12 @@ Protocol::ItemSelection GammaRay::NetworkSelectionModel::readSelection(const Gam
 {
     Protocol::ItemSelection selection;
     qint32 size = 0;
-    msg.payload() >> size;
+    msg >> size;
     selection.reserve(size);
 
     for (int i = 0; i < size; ++i) {
         Protocol::ItemSelectionRange range;
-        msg.payload() >> range.topLeft >> range.bottomRight;
+        msg >> range.topLeft >> range.bottomRight;
         selection.push_back(range);
     }
 
@@ -193,7 +193,7 @@ void NetworkSelectionModel::newMessage(const Message &msg)
     {
         Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
         m_pendingSelection = readSelection(msg);
-        msg.payload() >> m_pendingCommand;
+        msg >> m_pendingCommand;
         applyPendingSelection();
         break;
     }
@@ -201,7 +201,7 @@ void NetworkSelectionModel::newMessage(const Message &msg)
     {
         SelectionFlags flags;
         Protocol::ModelIndex index;
-        msg.payload() >> flags >> index;
+        msg >> flags >> index;
         const QModelIndex qmi = Protocol::toQModelIndex(model(), index);
         if (!qmi.isValid())
             break;
@@ -226,7 +226,7 @@ void NetworkSelectionModel::slotCurrentChanged(const QModelIndex &current,
     clearPendingSelection();
 
     Message msg(m_myAddress, Protocol::SelectionModelCurrent);
-    msg.payload() << QItemSelectionModel::Current << Protocol::fromQModelIndex(current);
+    msg << QItemSelectionModel::Current << Protocol::fromQModelIndex(current);
     Endpoint::send(msg);
 }
 
@@ -241,7 +241,7 @@ void NetworkSelectionModel::select(const QItemSelection &selection,
 
     Message msg(m_myAddress, Protocol::SelectionModelSelect);
     writeSelection(&msg, selection);
-    msg.payload() << command;
+    msg << command;
     Endpoint::send(msg);
 }
 

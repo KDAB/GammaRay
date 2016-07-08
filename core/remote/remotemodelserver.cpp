@@ -172,7 +172,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
     case Protocol::ModelRowColumnCountRequest:
     {
         Protocol::ModelIndex index;
-        msg.payload() >> index;
+        msg >> index;
         const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
 
         qint32 rowCount = -1, columnCount = -1;
@@ -182,7 +182,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         }
 
         Message msg(m_myAddress, Protocol::ModelRowColumnCountReply);
-        msg.payload() << index << rowCount << columnCount;
+        msg << index << rowCount << columnCount;
         sendMessage(msg);
         break;
     }
@@ -190,14 +190,14 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
     case Protocol::ModelContentRequest:
     {
         quint32 size;
-        msg.payload() >> size;
+        msg >> size;
         Q_ASSERT(size > 0);
 
         QVector<QModelIndex> indexes;
         indexes.reserve(size);
         for (quint32 i = 0; i < size; ++i) {
             Protocol::ModelIndex index;
-            msg.payload() >> index;
+            msg >> index;
             const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
             if (!qmIndex.isValid())
                 continue;
@@ -207,9 +207,9 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
             break;
 
         Message msg(m_myAddress, Protocol::ModelContentReply);
-        msg.payload() << quint32(indexes.size());
+        msg << quint32(indexes.size());
         foreach (const auto &qmIndex, indexes)
-            msg.payload() << Protocol::fromQModelIndex(qmIndex)
+            msg << Protocol::fromQModelIndex(qmIndex)
                           << filterItemData(m_model->itemData(qmIndex))
                           << qint32(m_model->flags(qmIndex));
 
@@ -221,7 +221,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
     {
         qint8 orientation;
         qint32 section;
-        msg.payload() >> orientation >> section;
+        msg >> orientation >> section;
         Q_ASSERT(orientation == Qt::Horizontal || orientation == Qt::Vertical);
         Q_ASSERT(section >= 0);
 
@@ -235,7 +235,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
                                         Qt::ToolTipRole));
 
         Message msg(m_myAddress, Protocol::ModelHeaderReply);
-        msg.payload() << orientation << section << data;
+        msg << orientation << section << data;
         sendMessage(msg);
         break;
     }
@@ -245,7 +245,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         Protocol::ModelIndex index;
         int role;
         QVariant value;
-        msg.payload() >> index >> role >> value;
+        msg >> index >> role >> value;
 
         m_model->setData(Protocol::toQModelIndex(m_model, index), value, role);
         break;
@@ -254,7 +254,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
     case Protocol::ModelSortRequest:
     {
         quint32 column, order;
-        msg.payload() >> column >> order;
+        msg >> column >> order;
         m_model->sort(column, (Qt::SortOrder)order);
         break;
     }
@@ -262,9 +262,9 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
     case Protocol::ModelSyncBarrier:
     {
         qint32 barrierId;
-        msg.payload() >> barrierId;
+        msg >> barrierId;
         Message reply(m_myAddress, Protocol::ModelSyncBarrier);
-        reply.payload() << barrierId;
+        reply << barrierId;
         sendMessage(reply);
         break;
     }
@@ -344,7 +344,7 @@ void RemoteModelServer::dataChanged(const QModelIndex &begin, const QModelIndex 
     if (!isConnected())
         return;
     Message msg(m_myAddress, Protocol::ModelContentChanged);
-    msg.payload() << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end) << roles;
+    msg << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end) << roles;
     sendMessage(msg);
 }
 
@@ -353,7 +353,7 @@ void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first
     if (!isConnected())
         return;
     Message msg(m_myAddress, Protocol::ModelHeaderChanged);
-    msg.payload() <<  qint8(orientation) << first << last;
+    msg <<  qint8(orientation) << first << last;
     sendMessage(msg);
 }
 
@@ -435,7 +435,7 @@ void RemoteModelServer::sendLayoutChanged(const QVector< Protocol::ModelIndex > 
     if (!isConnected())
         return;
     Message msg(m_myAddress, Protocol::ModelLayoutChanged);
-    msg.payload() << parents << hint;
+    msg << parents << hint;
     sendMessage(msg);
 }
 
@@ -452,7 +452,7 @@ void RemoteModelServer::sendAddRemoveMessage(Protocol::MessageType type, const Q
     if (!isConnected())
         return;
     Message msg(m_myAddress, type);
-    msg.payload() << Protocol::fromQModelIndex(parent) << start << end;
+    msg << Protocol::fromQModelIndex(parent) << start << end;
     sendMessage(msg);
 }
 
@@ -465,7 +465,7 @@ void RemoteModelServer::sendMoveMessage(Protocol::MessageType type,
     if (!isConnected())
         return;
     Message msg(m_myAddress, type);
-    msg.payload() << sourceParent << qint32(sourceStart) << qint32(sourceEnd)
+    msg << sourceParent << qint32(sourceStart) << qint32(sourceEnd)
                   << destinationParent << qint32(destinationIndex);
     sendMessage(msg);
 }

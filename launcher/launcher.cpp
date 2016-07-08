@@ -298,13 +298,13 @@ void Launcher::newConnection()
 
     {
         Message msg(Protocol::LauncherAddress, Protocol::ServerVersion);
-        msg.payload() << Protocol::version();
+        msg << Protocol::version();
         msg.write(d->socket);
     }
 
     {
         Message msg(Protocol::LauncherAddress, Protocol::ProbeSettings);
-        msg.payload() << d->options.probeSettings();
+        msg << d->options.probeSettings();
         msg.write(d->socket);
     }
 }
@@ -316,7 +316,7 @@ void Launcher::readyRead()
         switch (msg.type()) {
         case Protocol::ServerAddress:
         {
-            msg.payload() >> d->serverAddress;
+            msg >> d->serverAddress;
             break;
         }
         default:
