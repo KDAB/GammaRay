@@ -101,6 +101,9 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_prefix}/share/appdata/GammaRay.appdata.xml
 %{_prefix}/share/icons/hicolor
 %{_prefix}/share/doc/gammaray
+%dir %{_prefix}/share/gammaray/
+%dir %{_prefix}/share/gammaray/translations/
+%{_prefix}/share/gammaray/translations/gammaray_*.qm
 %{_mandir}/man1/gammaray.1.gz
 %{_bindir}/gammaray
 %{_libdir}/gammaray/libexec/gammaray-client
@@ -121,6 +124,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_bluetooth.so
 %{_libdir}/gammaray/*/*/gammaray_codecbrowser*
 %{_libdir}/gammaray/*/*/gammaray_fontbrowser*
+%{_libdir}/gammaray/*/*/gammaray_guisupport*
+%{_libdir}/gammaray/*/*/gammaray_network*
 %{_libdir}/gammaray/*/*/gammaray_selectionmodelinspector*
 %{_libdir}/gammaray/*/*/gammaray_signalmonitor*
 %{_libdir}/gammaray/*/*/gammaray_statemachineviewer*
@@ -132,6 +137,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_webinspector*
 %{_libdir}/gammaray/*/*/gammaray_qmlsupport*
 %{_libdir}/gammaray/*/*/gammaray_quickinspector*
+%{_libdir}/gammaray/*/*/gammaray_quickwidgetsupport*
+%{_libdir}/gammaray/*/*/gammaray_textdocumentinspector*
 %{_libdir}/gammaray/*/*/gammaray_translatorinspector*
 %{_libdir}/gammaray/*/*/styles/
 
