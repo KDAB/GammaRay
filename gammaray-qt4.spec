@@ -1,5 +1,5 @@
 Name:           gammaray-qt4
-Version:        2.4.1
+Version:        2.5.0
 Release:        1
 Summary:        An introspection tool for Qt applications
 Source:         gammaray-%{version}.tar.gz
@@ -112,6 +112,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/gammaray/*/*/gammaray_kjobtracker_ui.desktop
 
 %changelog
+* Fri Jul 08 2016 Allen Winter <allen.winter@kdab.com> 2.5.0
+  2.5.0 final
 * Fri Mar 11 2016 Allen Winter <allen.winter@kdab.com> 2.4.1
   2.4.1 final
 * Tue Dec 22 2015 Allen Winter <allen.winter@kdab.com> 2.4.0
