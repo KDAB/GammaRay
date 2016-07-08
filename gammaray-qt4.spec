@@ -107,9 +107,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %files kde4-plugins
 %defattr(-,root,root)
 %{_libdir}/gammaray/*/*/gammaray_kjobtracker_plugin.so
-%{_libdir}/gammaray/*/*/gammaray_kjobtracker.desktop
 %{_libdir}/gammaray/*/*/gammaray_kjobtracker_ui_plugin.so
-%{_libdir}/gammaray/*/*/gammaray_kjobtracker_ui.desktop
 
 %changelog
 * Fri Jul 08 2016 Allen Winter <allen.winter@kdab.com> 2.5.0
