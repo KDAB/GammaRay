@@ -58,7 +58,7 @@ macro(gammaray_add_plugin _target_name)
           message(FATAL_ERROR "First file passed to SOURCES must be the .cpp file which includes the header using the Q_PLUGIN_METADATA macro")
       endif()
 
-      qt5_wrap_cpp(_gammaray_add_plugin_SOURCES ${mainHeaderFile} DEPENDS ${_gammaray_add_plugin_JSON})
+      qt5_wrap_cpp(_gammaray_add_plugin_SOURCES ${mainHeaderFile} DEPENDS ${_gammaray_add_plugin_JSON} TARGET ${_target_name})
       set_source_files_properties("${mainHeaderFile}" PROPERTIES SKIP_AUTOMOC TRUE)
       set_source_files_properties("${mainSourceFile}" PROPERTIES SKIP_AUTOMOC TRUE)
   endif()
