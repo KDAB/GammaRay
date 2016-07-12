@@ -1,4 +1,5 @@
 [Desktop Entry]
+Name=Script Engines
 X-GammaRay-Id=gammaray_scriptenginedebugger
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
 Exec=${plugin_exec}

@@ -1,4 +1,5 @@
 [Desktop Entry]
+Name=Font Browser
 X-GammaRay-Id=gammaray_fontbrowser
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
 Exec=${plugin_exec}
