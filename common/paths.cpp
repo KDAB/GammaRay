@@ -32,15 +32,25 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
+#include <QMutex>
 
 namespace GammaRay {
+
+struct PathData
+{
+    QString rootPath;
+    QMutex mutex; // rootPath is set from the probe setting receiver thread
+};
+
+Q_GLOBAL_STATIC(PathData, s_pathData)
+
 namespace Paths {
-static QString s_rootPath;
 
 QString rootPath()
 {
-    Q_ASSERT(!s_rootPath.isEmpty());
-    return s_rootPath;
+    QMutexLocker locker(&s_pathData()->mutex);
+    Q_ASSERT(!s_pathData()->rootPath.isEmpty());
+    return s_pathData()->rootPath;
 }
 
 void setRootPath(const QString &rootPath)
@@ -49,7 +59,8 @@ void setRootPath(const QString &rootPath)
     Q_ASSERT(QDir(rootPath).exists());
     Q_ASSERT(QDir(rootPath).isAbsolute());
 
-    s_rootPath = rootPath;
+    QMutexLocker locker(&s_pathData()->mutex);
+    s_pathData()->rootPath = rootPath;
 }
 
 void setRelativeRootPath(const char *relativeRootPath)
