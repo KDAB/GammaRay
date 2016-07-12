@@ -115,9 +115,11 @@ target_link_libraries(probeabidetectortest gammaray_launcher ${QT_QTTEST_LIBRARI
 add_test(probeabidetectortest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/probeabidetectortest)
 
 ### self test test
+if (NOT OSX_ASAN_WORKAROUND)
 add_executable(selftesttest selftesttest.cpp)
 target_link_libraries(selftesttest gammaray_launcher gammaray_common ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
 add_test(NAME selftesttest COMMAND selftesttest)
+endif()
 
 ### probe settings test
 add_executable(probesettingsclient probesettingsclient.cpp ${CMAKE_SOURCE_DIR}/core/probesettings.cpp)
