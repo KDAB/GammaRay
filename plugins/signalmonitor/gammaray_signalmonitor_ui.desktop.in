@@ -1,4 +1,5 @@
 [Desktop Entry]
+Name=Signals
 X-GammaRay-Id=gammaray_signalmonitor
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
 Exec=${plugin_exec}

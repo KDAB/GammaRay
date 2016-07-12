@@ -1,4 +1,4 @@
-Desktop Entry]
+[Desktop Entry]
 X-GammaRay-Id=gammaray_guisupport
 X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
 Exec=${plugin_exec}
