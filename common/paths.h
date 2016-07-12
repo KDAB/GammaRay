@@ -65,8 +65,11 @@ GAMMARAY_COMMON_EXPORT QString binPath();
 /** Returns the path containing helper executables. */
 GAMMARAY_COMMON_EXPORT QString libexecPath();
 
-/** Returns the path to the current probe location, probePath(GAMMARAY_PROBE_ABI). */
-GAMMARAY_COMMON_EXPORT QString currentProbePath();
+/** Returns the path to the current probe location, probePath(GAMMARAY_PROBE_ABI).
+ *  @note Must not be used outside of probe code!
+ *  @deprecated Use Paths::probePath instead.
+ */
+GAMMARAY_COMMON_DEPRECATED_EXPORT QString currentProbePath();
 
 /** Returns the path to the current plugins location.
  *  This is the same as currentProbePath() when using the GammaRay installation layout,

@@ -101,7 +101,7 @@ QString currentProbePath()
 QString currentPluginsPath()
 {
 #ifndef GAMMARAY_INSTALL_QT_LAYOUT
-    return currentProbePath();
+    return probePath(QStringLiteral(GAMMARAY_PROBE_ABI));
 #else
     return rootPath() + QDir::separator() + QStringLiteral(GAMMARAY_PLUGIN_INSTALL_DIR);
 #endif
