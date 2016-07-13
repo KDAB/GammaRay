@@ -93,6 +93,11 @@ void OverlayWidget::placeOn(QWidget *widget)
 
 bool OverlayWidget::eventFilter(QObject *receiver, QEvent *event)
 {
+    if (m_currentWidget && m_currentToplevelWidget != m_currentWidget->window()) { // detect (un)docking
+        placeOn(m_currentWidget);
+        return false;
+    }
+
     if (receiver == m_currentWidget) {
         if (event->type() == QEvent::Resize || event->type() == QEvent::Move || event->type() == QEvent::Show || event->type() == QEvent::Hide) {
             resizeOverlay();
