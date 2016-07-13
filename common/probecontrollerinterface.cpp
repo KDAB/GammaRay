@@ -33,12 +33,6 @@ using namespace GammaRay;
 ProbeControllerInterface::ProbeControllerInterface(QObject *parent)
     : QObject(parent)
 {
-    qRegisterMetaType<ObjectId>();
-    qRegisterMetaTypeStreamOperators<ObjectId>();
-    qRegisterMetaType<ToolInfo>();
-    qRegisterMetaTypeStreamOperators<ToolInfo>();
-    qRegisterMetaType<ToolInfos>();
-    qRegisterMetaTypeStreamOperators<ToolInfos>();
 }
 
 ProbeControllerInterface::~ProbeControllerInterface()

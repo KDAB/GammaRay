@@ -29,8 +29,6 @@
 #ifndef GAMMARAY_PROBECONTROLLERINTERFACE_H
 #define GAMMARAY_PROBECONTROLLERINTERFACE_H
 
-#include "objectid.h"
-
 #include <QObject>
 #include <QDataStream>
 #include <QDebug>
@@ -38,14 +36,6 @@
 #include <QVector>
 
 namespace GammaRay {
-/** @brief GammaRay tool identifier. */
-struct ToolInfo
-{
-    QString id;
-    QString name;
-};
-typedef QVector<ToolInfo> ToolInfos;
-
 /** @brief Probe and host process remote control functions. */
 class ProbeControllerInterface : public QObject
 {
@@ -55,43 +45,20 @@ public:
     explicit ProbeControllerInterface(QObject *parent = nullptr);
     virtual ~ProbeControllerInterface();
 
-    virtual void selectObject(ObjectId id, const QString &toolId) = 0;
-
-    virtual void requestSupportedTools(ObjectId id) = 0;
-
     /** Terminate host application. */
     virtual void quitHost() = 0;
 
     /** Detach GammaRay but keep host application running. */
     virtual void detachProbe() = 0;
 
-Q_SIGNALS:
-    void supportedToolsResponse(GammaRay::ObjectId id, const GammaRay::ToolInfos &toolInfos);
-
 private:
     Q_DISABLE_COPY(ProbeControllerInterface)
 };
-
-inline QDataStream &operator<<(QDataStream &out, const ToolInfo &toolInfo)
-{
-    out << toolInfo.id;
-    out << toolInfo.name;
-    return out;
-}
-
-inline QDataStream &operator>>(QDataStream &in, ToolInfo &toolInfo)
-{
-    in >> toolInfo.id;
-    in >> toolInfo.name;
-    return in;
-}
 }
 
 QT_BEGIN_NAMESPACE
-    Q_DECLARE_INTERFACE(GammaRay::ProbeControllerInterface,
-                        "com.kdab.GammaRay.ProbeControllerInterface")
+Q_DECLARE_INTERFACE(GammaRay::ProbeControllerInterface,
+                    "com.kdab.GammaRay.ProbeControllerInterface")
 QT_END_NAMESPACE
-Q_DECLARE_METATYPE(GammaRay::ToolInfo)
-Q_DECLARE_METATYPE(GammaRay::ToolInfos)
 
 #endif // GAMMARAY_PROBECONTROLLERINTERFACE_H

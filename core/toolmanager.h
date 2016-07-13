@@ -1,11 +1,11 @@
 /*
-  toolmodel.h
+  toolmanager.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2013-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,16 +26,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_TOOLMODEL_H
-#define GAMMARAY_TOOLMODEL_H
+#ifndef GAMMARAY_TOOLMANAGER_H
+#define GAMMARAY_TOOLMANAGER_H
 
+#include "proxytoolfactory.h"
+
+#include <common/toolmanagerinterface.h>
 #include <common/pluginmanager.h>
-#include <common/modelroles.h>
-
-#include <QAbstractListModel>
-#include <QSet>
-#include <QVector>
-#include <QPointer>
 
 namespace GammaRay {
 class ToolFactory;
@@ -43,33 +40,30 @@ class ProxyToolFactory;
 
 typedef PluginManager<ToolFactory, ProxyToolFactory> ToolPluginManager;
 
-/**
- * Manages the list of available probing tools.
+/** @brief Server-sided tool manager. Provides information to the client
+ *  about which tools exists and especially which tools to enable. Also
+ *  calls the ToolPluginManager to load tool plugins.
  */
-class ToolModel : public QAbstractListModel
+class ToolManager : public ToolManagerInterface
 {
     Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolManagerInterface)
 public:
-    explicit ToolModel(QObject *parent = 0);
-    ~ToolModel();
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    explicit ToolManager(QObject *parent = 0);
 
-    /** returns all tools provided by plugins for the ToolPluginModel. */
-    QVector<ToolFactory *> plugins() const;
-    /** returns all plugin load errors. */
-    PluginLoadErrors pluginErrors() const;
     /** returns the tools that are best suited to show information about \p object. */
-    QModelIndexList toolsForObject(QObject *object) const;
+    const ToolInfos toolsForObject(QObject *object) const;
     /** returns the tools that are best suited to show information about \p object. */
-    QModelIndexList toolsForObject(const void *object, const QString &typeName) const;
+    const ToolInfos toolsForObject(const void *object, const QString &typeName) const;
 
-public slots:
-    QPair<int, QVariant> defaultSelectedItem() const;
+    bool hasTool(const QString &id) const;
+
+    ToolPluginManager *toolPluginManager() const;
+
     /** Check if we have to activate tools for this type */
     void objectAdded(QObject *obj);
+
+    void selectTool(const QString &toolId);
 
 private:
     /**
@@ -79,15 +73,20 @@ private:
      */
     void objectAdded(const QMetaObject *mo);
 
-    void addToolFactory(ToolFactory *tool);
+public slots:
+    void selectObject(GammaRay::ObjectId id, const QString &toolId) Q_DECL_OVERRIDE;
+    void requestToolsForObject(GammaRay::ObjectId id) Q_DECL_OVERRIDE;
+    void requestAvailableTools() Q_DECL_OVERRIDE;
 
 private:
+    void addToolFactory(ToolFactory *tool);
+    ToolInfo toolInfoForFactory(ToolFactory *factory) const;
+
     QVector<ToolFactory *> m_tools;
-    QSet<ToolFactory *> m_inactiveTools;
+    QSet<ToolFactory *> m_disabledTools;
     QSet<const QMetaObject *> m_knownMetaObjects;
-    QPointer<QWidget> m_parentWidget;
-    QScopedPointer<ToolPluginManager> m_pluginManager;
+    QScopedPointer<ToolPluginManager> m_toolPluginManager;
 };
 }
 
-#endif // GAMMARAY_TOOLMODEL_H
+#endif // GAMMARAY_TOOLMANAGER_H

@@ -1,11 +1,11 @@
 /*
-  probecontroller.h
+  toolmanagerclient.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2013-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,26 +26,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PROBECONTROLLER_H
-#define GAMMARAY_PROBECONTROLLER_H
+#include "toolmanagerclient.h"
 
-#include <common/probecontrollerinterface.h>
+#include <common/endpoint.h>
 
-namespace GammaRay {
-/** @brief Server-side part for the object property inspector.
- *  Use this to integrate a property inspector like in the QObject view into your tool.
- */
-class ProbeController : public ProbeControllerInterface
+using namespace GammaRay;
+
+ToolManagerClient::ToolManagerClient(QObject *parent)
+    : ToolManagerInterface(parent)
 {
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ProbeControllerInterface)
-public:
-    explicit ProbeController(QObject *parent = 0);
-
-public slots:
-    void detachProbe() Q_DECL_OVERRIDE;
-    void quitHost() Q_DECL_OVERRIDE;
-};
 }
 
-#endif // GAMMARAY_PROBECONTROLLER_H
+void ToolManagerClient::selectObject(ObjectId id, const QString &toolId)
+{
+    Endpoint::instance()->invokeObject(objectName(), "selectObject",
+                                       QVariantList() << QVariant::fromValue(id) << toolId);
+}
+
+void ToolManagerClient::requestToolsForObject(ObjectId id)
+{
+    Endpoint::instance()->invokeObject(objectName(), "requestToolsForObject",
+                                       QVariantList() << QVariant::fromValue(id));
+}
+
+void ToolManagerClient::requestAvailableTools()
+{
+    Endpoint::instance()->invokeObject(objectName(), "requestAvailableTools");
+}

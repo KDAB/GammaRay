@@ -103,7 +103,6 @@ private slots:
     void connectionEstablished();
     void transientConnectionError();
 
-    void toolModelPopulated();
     void delayedHideSplashScreen();
     void targetQuitRequested();
 
@@ -111,7 +110,6 @@ private:
     QUrl m_serverUrl;
     Client *m_client;
     QPointer<MainWindow> m_mainWindow;
-    QAbstractItemModel *m_toolModel;
     QTime m_connectionTimeout;
     bool m_ignorePersistentError;
     int m_tries;

@@ -3,7 +3,7 @@
 #
 set(gammaray_ui_srcs
   aboutdata.cpp
-  clienttoolmodel.cpp
+  clienttoolmanager.cpp
   contextmenuextension.cpp
   deferredtreeview.cpp
   editabletypesmodel.cpp
@@ -153,7 +153,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
 
   gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_ui_export.h
-    clienttoolmodel.h
+    clienttoolmanager.h
     propertywidget.h
     propertywidgettab.h
     tooluifactory.h

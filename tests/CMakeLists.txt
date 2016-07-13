@@ -343,4 +343,19 @@ target_link_libraries(quickinspectortest gammaray_core Qt5::Test Qt5::Quick)
 add_test(NAME quickinspectortest COMMAND quickinspectortest)
 endif()
 
+### ToolManager test
+
+if(GAMMARAY_BUILD_UI AND Qt5Widgets_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+add_executable(toolmanagertest
+  toolmanagertest.cpp
+  ../probe/probecreator.cpp
+  ../probe/hooks.cpp
+  ../common/toolmanagerinterface.cpp
+    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+)
+target_link_libraries(toolmanagertest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTWIDGETS_LIBRARIES})
+target_link_libraries(toolmanagertest gammaray_ui)
+add_test(NAME toolmanagertest COMMAND toolmanagertest)
+endif()
+
 add_subdirectory(manual)

@@ -1,11 +1,11 @@
 /*
-  probecontroller.h
+  toolmanagerclient.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2013-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,26 +26,25 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PROBECONTROLLER_H
-#define GAMMARAY_PROBECONTROLLER_H
+#ifndef GAMMARAY_TOOLMANAGERCLIENT_H
+#define GAMMARAY_TOOLMANAGERCLIENT_H
 
-#include <common/probecontrollerinterface.h>
+#include "gammaray_ui_export.h"
+
+#include <common/toolmanagerinterface.h>
 
 namespace GammaRay {
-/** @brief Server-side part for the object property inspector.
- *  Use this to integrate a property inspector like in the QObject view into your tool.
- */
-class ProbeController : public ProbeControllerInterface
+class ToolManagerClient : public ToolManagerInterface
 {
     Q_OBJECT
-    Q_INTERFACES(GammaRay::ProbeControllerInterface)
+    Q_INTERFACES(GammaRay::ToolManagerInterface)
 public:
-    explicit ProbeController(QObject *parent = 0);
+    explicit ToolManagerClient(QObject *parent = 0);
 
-public slots:
-    void detachProbe() Q_DECL_OVERRIDE;
-    void quitHost() Q_DECL_OVERRIDE;
+    void selectObject(ObjectId id, const QString &toolId) Q_DECL_OVERRIDE;
+    void requestToolsForObject(ObjectId id) Q_DECL_OVERRIDE;
+    void requestAvailableTools() Q_DECL_OVERRIDE;
 };
 }
 
-#endif // GAMMARAY_PROBECONTROLLER_H
+#endif // GAMMARAY_TOOLMANAGERCLIENT_H

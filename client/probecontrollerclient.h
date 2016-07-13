@@ -39,9 +39,6 @@ class ProbeControllerClient : public ProbeControllerInterface
 public:
     explicit ProbeControllerClient(QObject *parent = 0);
 
-    void selectObject(ObjectId id, const QString &toolId) Q_DECL_OVERRIDE;
-    void requestSupportedTools(ObjectId id) Q_DECL_OVERRIDE;
-
     void detachProbe() Q_DECL_OVERRIDE;
     void quitHost() Q_DECL_OVERRIDE;
 };

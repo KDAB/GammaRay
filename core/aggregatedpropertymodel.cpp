@@ -34,11 +34,10 @@
 #include "propertydata.h"
 #include "propertyadaptorfactory.h"
 #include "toolfactory.h"
-#include "toolmodel.h"
 #include "varianthandler.h"
 #include "util.h"
 
-#include <common/probecontrollerinterface.h>
+#include <common/objectid.h>
 #include <common/propertymodel.h>
 
 #include <QDebug>

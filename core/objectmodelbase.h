@@ -41,7 +41,7 @@
 #include "util.h"
 #include "objectdataprovider.h"
 
-#include <common/probecontrollerinterface.h>
+#include <common/objectid.h>
 #include <common/objectmodel.h>
 #include <common/sourcelocation.h>
 
