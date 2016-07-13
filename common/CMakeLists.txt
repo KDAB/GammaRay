@@ -51,6 +51,7 @@ set(gammaray_common_internal_srcs
   proxyfactorybase.cpp
   propertycontrollerinterface.cpp
   probecontrollerinterface.cpp
+  toolmanagerinterface.cpp
   modelinspectorinterface.cpp
   networkselectionmodel.cpp
   streamoperators.cpp
@@ -89,6 +90,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     metatypedeclarations.h
     modelroles.h
     objectbroker.h
+    objectid.h
     objectmodel.h
     paths.h
     probecontrollerinterface.h
@@ -96,6 +98,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     protocol.h
     sourcelocation.h
     translator.h
+    toolmanagerinterface.h
   )
 
   ecm_generate_pri_file(BASE_NAME GammaRayCommon

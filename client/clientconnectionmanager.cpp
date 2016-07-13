@@ -35,6 +35,7 @@
 #include "probecontrollerclient.h"
 #include "paintanalyzerclient.h"
 #include "remoteviewclient.h"
+#include <toolmanagerclient.h>
 
 #include <common/objectbroker.h>
 #include <common/streamoperators.h>
@@ -70,6 +71,13 @@ static QObject *createProbeController(const QString &name, QObject *parent)
     return o;
 }
 
+static QObject *createToolManager(const QString &name, QObject *parent)
+{
+    QObject *o = new ToolManagerClient(parent);
+    ObjectBroker::registerObject(name, o);
+    return o;
+}
+
 static QObject *createPaintAnalyzerClient(const QString &name, QObject *parent)
 {
     return new PaintAnalyzerClient(name, parent);
@@ -88,6 +96,7 @@ void ClientConnectionManager::init()
         createPropertyController);
     ObjectBroker::registerClientObjectFactoryCallback<ProbeControllerInterface *>(
         createProbeController);
+    ObjectBroker::registerClientObjectFactoryCallback<ToolManagerInterface *>(createToolManager);
     ObjectBroker::registerClientObjectFactoryCallback<PaintAnalyzerInterface *>(
         createPaintAnalyzerClient);
     ObjectBroker::registerClientObjectFactoryCallback<RemoteViewInterface *>(createRemoteViewClient);
@@ -100,7 +109,6 @@ ClientConnectionManager::ClientConnectionManager(QObject *parent, bool showSplas
     : QObject(parent)
     , m_client(new Client(this))
     , m_mainWindow(0)
-    , m_toolModel(0)
     , m_ignorePersistentError(false)
     , m_tries(0)
 {
@@ -144,24 +152,6 @@ void ClientConnectionManager::connectToHost()
 
 void ClientConnectionManager::connectionEstablished()
 {
-    m_toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
-
-    if (m_toolModel->rowCount() <= 0) {
-        connect(m_toolModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-                SLOT(toolModelPopulated()));
-        connect(m_toolModel, SIGNAL(layoutChanged()), SLOT(toolModelPopulated()));
-        connect(m_toolModel, SIGNAL(modelReset()), SLOT(toolModelPopulated()));
-    } else {
-        toolModelPopulated();
-    }
-}
-
-void ClientConnectionManager::toolModelPopulated()
-{
-    if (m_toolModel->rowCount() <= 0)
-        return;
-
-    disconnect(m_toolModel, 0, this, 0);
     QTimer::singleShot(0, this, SLOT(delayedHideSplashScreen()));
     emit ready();
 }

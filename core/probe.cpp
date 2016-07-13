@@ -34,9 +34,9 @@
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "metaobjecttreemodel.h"
-#include "toolmodel.h"
 #include "probesettings.h"
 #include "probecontroller.h"
+#include "toolmanager.h"
 #include "toolpluginmodel.h"
 #include "util.h"
 
@@ -47,7 +47,6 @@
 #include "remote/serverproxymodel.h"
 #include "remote/selectionmodelserver.h"
 #include "toolpluginerrormodel.h"
-#include "toolfactory.h"
 #include "probeguard.h"
 
 #include <common/objectbroker.h>
@@ -208,7 +207,6 @@ Probe::Probe(QObject *parent)
     , m_objectListModel(new ObjectListModel(this))
     , m_objectTreeModel(new ObjectTreeModel(this))
     , m_metaObjectTreeModel(new MetaObjectTreeModel(this))
-    , m_toolModel(0)
     , m_window(0)
     , m_queueTimer(new QTimer(this))
     , m_server(Q_NULLPTR)
@@ -218,11 +216,6 @@ Probe::Probe(QObject *parent)
              )
 
     ProbeSettings::receiveSettings();
-    m_toolModel = new ToolModel(this);
-    auto sortedToolModel = new ServerProxyModel<QSortFilterProxyModel>(this);
-    sortedToolModel->setSourceModel(m_toolModel);
-    sortedToolModel->setDynamicSortFilter(true);
-    sortedToolModel->sort(0);
 
     m_server = new Server(this);
     ProbeSettings::sendServerAddress(m_server->externalAddress());
@@ -230,24 +223,23 @@ Probe::Probe(QObject *parent)
     StreamOperators::registerOperators();
     ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
     ObjectBroker::registerObject<ProbeControllerInterface *>(new ProbeController(this));
+    m_toolManager = new ToolManager(this);
+    ObjectBroker::registerObject<ToolManagerInterface *>(m_toolManager);
 
     registerModel(QStringLiteral("com.kdab.GammaRay.ObjectTree"), m_objectTreeModel);
     registerModel(QStringLiteral("com.kdab.GammaRay.ObjectList"), m_objectListModel);
     registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);
-    registerModel(QStringLiteral("com.kdab.GammaRay.ToolModel"), sortedToolModel);
 
-    m_toolSelectionModel = ObjectBroker::selectionModel(sortedToolModel);
-
-    ToolPluginModel *toolPluginModel = new ToolPluginModel(m_toolModel->plugins(), this);
+    ToolPluginModel *toolPluginModel = new ToolPluginModel(
+        m_toolManager->toolPluginManager()->plugins(), this);
     registerModel(QStringLiteral("com.kdab.GammaRay.ToolPluginModel"), toolPluginModel);
     ToolPluginErrorModel *toolPluginErrorModel
-        = new ToolPluginErrorModel(m_toolModel->pluginErrors(), this);
+        = new ToolPluginErrorModel(m_toolManager->toolPluginManager()->errors(), this);
     registerModel(QStringLiteral("com.kdab.GammaRay.ToolPluginErrorModel"), toolPluginErrorModel);
 
     if (qgetenv("GAMMARAY_MODELTEST") == "1") {
         new ModelTest(m_objectListModel, m_objectListModel);
         new ModelTest(m_objectTreeModel, m_objectTreeModel);
-        new ModelTest(m_toolModel, m_toolModel);
     }
 
     m_queueTimer->setSingleShot(true);
@@ -503,11 +495,6 @@ QAbstractItemModel *Probe::metaObjectModel() const
     return m_metaObjectTreeModel;
 }
 
-ToolModel *Probe::toolModel() const
-{
-    return m_toolModel;
-}
-
 QObject *Probe::probe() const
 {
     return const_cast<GammaRay::Probe *>(this);
@@ -699,7 +686,7 @@ void Probe::objectFullyConstructed(QObject *obj)
     if (obj->inherits("QQuickItem"))
         connect(obj, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(objectParentChanged()));
 
-    m_toolModel->objectAdded(obj);
+    m_toolManager->objectAdded(obj);
 
     emit objectCreated(obj);
 }
@@ -955,43 +942,27 @@ bool Probe::hasReliableObjectTracking() const
 
 void Probe::selectObject(QObject *object, const QPoint &pos)
 {
-    const auto srcIdxs = m_toolModel->toolsForObject(object);
-    selectTool(srcIdxs.value(0));
+    const auto tools = m_toolManager->toolsForObject(object);
+    m_toolManager->selectTool(tools.value(0).id);
     emit objectSelected(object, pos);
 }
 
 void Probe::selectObject(QObject *object, const QString &toolId, const QPoint &pos)
 {
-    const auto matches = m_toolModel->match(m_toolModel->index(0,
-                                                               0), ToolModelRole::ToolId, toolId, 1,
-                                            Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
-    if (matches.isEmpty()) {
+    if (!m_toolManager->hasTool(toolId)) {
         std::cerr << "Invalid tool id: " << qPrintable(toolId) << std::endl;
         return;
     }
 
-    selectTool(matches.first());
+    m_toolManager->selectTool(toolId);
     emit objectSelected(object, pos);
 }
 
 void Probe::selectObject(void *object, const QString &typeName)
 {
-    const auto srcIdxs = m_toolModel->toolsForObject(object, typeName);
-    selectTool(srcIdxs.value(0));
+    const auto tools = m_toolManager->toolsForObject(object, typeName);
+    m_toolManager->selectTool(tools.value(0).id);
     emit nonQObjectSelected(object, typeName);
-}
-
-void Probe::selectTool(const QModelIndex &toolModelSourceIndex)
-{
-    const auto proxy = qobject_cast<const QAbstractProxyModel *>(m_toolSelectionModel->model());
-    if (!proxy->sourceModel()) // still detached, ie. no client connected
-        return;
-
-    const auto idx = proxy->mapFromSource(toolModelSourceIndex);
-    m_toolSelectionModel->select(idx, QItemSelectionModel::Select
-                                 |QItemSelectionModel::Clear
-                                 |QItemSelectionModel::Rows
-                                 |QItemSelectionModel::Current);
 }
 
 void Probe::registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks)

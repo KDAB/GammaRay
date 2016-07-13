@@ -30,6 +30,7 @@
 #define GAMMARAY_MODELINSPECTOR_MODELINSPECTOR_H
 
 #include "toolfactory.h"
+#include <QAbstractItemModel>
 
 #include "common/modelinspectorinterface.h"
 

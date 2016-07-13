@@ -29,7 +29,7 @@
 
 #include "gammaray_ui_export.h"
 
-#include <common/probecontrollerinterface.h>
+#include <common/toolmanagerinterface.h>
 #include <common/sourcelocation.h>
 
 #include <QObject>

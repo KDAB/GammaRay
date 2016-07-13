@@ -31,7 +31,7 @@
 #include "ui_mainwindow.h"
 #include "aboutpluginsdialog.h"
 #include "aboutdialog.h"
-#include "clienttoolmodel.h"
+#include "clienttoolmanager.h"
 #include "aboutdata.h"
 #include "uiintegration.h"
 #include "helpcontroller.h"
@@ -192,20 +192,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowIcon(QIcon(QStringLiteral(":gammaray/GammaRay-128x128.png")));
 
-    QAbstractItemModel *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
-    ClientToolModel *toolModel = new ClientToolModel(this);
-    toolModel->setData(QModelIndex(), QVariant::fromValue<QWidget *>(
-                           this), ToolModelRole::ToolWidgetParent);
-    toolModel->setSourceModel(model);
-    ui->toolSelector->setModel(toolModel);
-    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(toolModel);
-    ui->toolSelector->setSelectionModel(selectionModel);
+    ClientToolManager *toolManager = new ClientToolManager(this);
+    toolManager->setToolParentWidget(this);
+    ui->toolSelector->setModel(toolManager->model());
+    ui->toolSelector->setSelectionModel(toolManager->selectionModel());
     ui->toolSelector->resize(ui->toolSelector->minimumSize());
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+    connect(toolManager->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(toolSelected()));
     // ### see ContextMenuExtension, workaround for tool name lookup regression in 2.5
     // remove ones we have the model-free tool handling changes merged
-    ObjectBroker::registerModelInternal(QStringLiteral("com.kdab.GammaRay.ClientToolModel"), toolModel);
+    ObjectBroker::registerModelInternal(QStringLiteral("com.kdab.GammaRay.ClientToolModel"), toolManager->model());
 
     // hide unused tool bar for now
     ui->mainToolBar->setHidden(true);

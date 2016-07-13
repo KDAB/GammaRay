@@ -29,7 +29,7 @@
 #include "scenemodel.h"
 
 #include <common/objectmodel.h>
-#include <common/probecontrollerinterface.h> // for ObjectId
+#include <common/objectid.h>
 
 #include <QApplication>
 #include <QGraphicsItem>

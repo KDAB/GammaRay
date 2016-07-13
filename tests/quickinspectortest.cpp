@@ -30,6 +30,7 @@
 #include <probe/hooks.h>
 #include <probe/probecreator.h>
 #include <core/probe.h>
+#include <core/toolmanager.h>
 #include <common/paths.h>
 #include <common/objectbroker.h>
 #include <common/remoteviewinterface.h>
@@ -191,15 +192,10 @@ private slots:
 
     void testItemPicking()
     {
-        auto toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolModel"));
-        QVERIFY(toolModel);
-
         QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
 
-        auto toolSelectionModel = ObjectBroker::selectionModel(toolModel);
-        QVERIFY(toolSelectionModel);
-        QSignalSpy toolSpy(toolSelectionModel, SIGNAL(selectionChanged(QItemSelection,
-                                                                       QItemSelection)));
+        ToolManagerInterface *toolManager = ObjectBroker::object<ToolManagerInterface *>();
+        QSignalSpy toolSpy(toolManager, SIGNAL(toolSelected(QString)));
         QVERIFY(toolSpy.isValid());
 
         auto itemSelectionModel = ObjectBroker::selectionModel(itemModel);
@@ -210,8 +206,7 @@ private slots:
 
         auto sgSelectionModel = ObjectBroker::selectionModel(sgModel);
         QVERIFY(sgModel);
-        QSignalSpy sgSpy(sgSelectionModel,
-                         SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QSignalSpy sgSpy(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
         QVERIFY(sgSpy.isValid());
 
         // auto center-click is broken before https://codereview.qt-project.org/141085/

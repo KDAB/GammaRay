@@ -5,6 +5,7 @@ set(gammaray_clientlib_srcs
   clientconnectionmanager.cpp
   propertycontrollerclient.cpp
   probecontrollerclient.cpp
+  toolmanagerclient.cpp
   clientdevice.cpp
   tcpclientdevice.cpp
   localclientdevice.cpp

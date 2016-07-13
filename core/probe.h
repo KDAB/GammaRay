@@ -52,10 +52,10 @@ class ProbeCreator;
 class MetaObjectTreeModel;
 class ObjectListModel;
 class ObjectTreeModel;
-class ToolModel;
 class MainWindow;
 class BenchSuite;
 class Server;
+class ToolManager;
 
 class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 {
@@ -79,7 +79,6 @@ public:
     QAbstractItemModel *objectListModel() const Q_DECL_OVERRIDE;
     QAbstractItemModel *objectTreeModel() const Q_DECL_OVERRIDE;
     QAbstractItemModel *metaObjectModel() const;
-    ToolModel *toolModel() const;
     void registerModel(const QString &objectName, QAbstractItemModel *model) Q_DECL_OVERRIDE;
     void installGlobalEventFilter(QObject *filter) Q_DECL_OVERRIDE;
     bool needsObjectDiscovery() const Q_DECL_OVERRIDE;
@@ -168,8 +167,6 @@ private:
     friend class ProbeCreator;
     friend class BenchSuite;
 
-    void selectTool(const QModelIndex &toolModelSourceIndex);
-
     /* Returns @c true if we have working hooks in QtCore, that is we are notified reliably
      * about every QObject creation/destruction.
      * @since 2.0
@@ -202,8 +199,7 @@ private:
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;
     MetaObjectTreeModel *m_metaObjectTreeModel;
-    ToolModel *m_toolModel;
-    QItemSelectionModel *m_toolSelectionModel;
+    ToolManager *m_toolManager;
     QObject *m_window;
     QSet<QObject *> m_validObjects;
 

@@ -21,7 +21,7 @@ set(gammaray_srcs
   signalspycallbackset.cpp
   singlecolumnobjectproxymodel.cpp
   toolfactory.cpp
-  toolmodel.cpp
+  toolmanager.cpp
   toolpluginmodel.cpp
   toolpluginerrormodel.cpp
   propertycontroller.cpp

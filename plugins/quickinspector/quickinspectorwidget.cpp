@@ -42,7 +42,7 @@
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
-#include <common/probecontrollerinterface.h> // for ObjectId
+#include <common/objectid.h>
 #include <common/sourcelocation.h>
 
 #include <ui/contextmenuextension.h>
