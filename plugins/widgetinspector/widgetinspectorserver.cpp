@@ -338,14 +338,15 @@ void WidgetInspectorServer::callExternalExportAction(const char *name, QWidget *
                                                      const QString &fileName)
 {
     if (!m_externalExportActions->isLoaded()) {
-        m_externalExportActions->setFileName(
-            Paths::currentPluginsPath() + QLatin1String("/libgammaray_widget_export_actions")
+        foreach (const auto &path, Paths::pluginPaths(GAMMARAY_PROBE_ABI)) {
+            m_externalExportActions->setFileName(path + QLatin1String("/libgammaray_widget_export_actions")
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-            + QStringLiteral("-") + QStringLiteral(GAMMARAY_PROBE_ABI)
+                + QStringLiteral("-") + QStringLiteral(GAMMARAY_PROBE_ABI)
 #endif
             );
-
-        m_externalExportActions->load();
+            if (m_externalExportActions->load())
+                break;
+        }
     }
 
     void (*function)(QWidget *, const QString &)
