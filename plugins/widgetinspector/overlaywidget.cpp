@@ -36,17 +36,6 @@
 
 using namespace GammaRay;
 
-static QWidget *toplevelWidget(QWidget *widget)
-{
-    QWidget *parent = widget;
-    while (parent->parentWidget()
-           && (qobject_cast<QDialog *>(parent->parentWidget()) == 0)
-           && (qobject_cast<QDialog *>(parent) == 0))
-        parent = parent->parentWidget();
-
-    return parent;
-}
-
 OverlayWidget::OverlayWidget()
     : m_currentToplevelWidget(0)
     , m_currentWidget(0)
@@ -74,7 +63,7 @@ void OverlayWidget::placeOn(QWidget *widget)
         return;
     }
 
-    QWidget *toplevel = toplevelWidget(widget);
+    QWidget *toplevel = widget->window();
     Q_ASSERT(toplevel);
 
     if (m_currentWidget)
