@@ -20,6 +20,9 @@ set_target_properties(gammaray_kitemmodels PROPERTIES
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   install(TARGETS gammaray_kitemmodels EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+  if(MSVC)
+    install(FILES "${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray_kitemmodels-${GAMMARAY_PROBE_ABI}.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
+  endif()
 
   ecm_generate_pri_file(BASE_NAME GammaRayKItemModels
                         LIB_NAME gammaray_kitemmodels-${GAMMARAY_PROBE_ABI}

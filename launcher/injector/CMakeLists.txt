@@ -21,4 +21,7 @@ if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
     TARGETS gammaray_injector_style
     DESTINATION ${PROBE_PLUGIN_INSTALL_DIR}/styles
   )
+  if(MSVC)
+    install(FILES "${PROJECT_BINARY_DIR}/${PROBE_PLUGIN_INSTALL_DIR}/styles/gammaray_injector_style.pdb" DESTINATION "${PROBE_PLUGIN_INSTALL_DIR}/styles" CONFIGURATIONS Debug RelWithDebInfo)
+  endif()
 endif()

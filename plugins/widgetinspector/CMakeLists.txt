@@ -51,6 +51,9 @@ target_link_libraries(gammaray_widget_export_actions
 )
 
 install(TARGETS gammaray_widget_export_actions DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
+if(MSVC)
+  install(FILES "${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray_widget_export_actions.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
+endif()
 
 # UI plugin
 if(GAMMARAY_BUILD_UI)

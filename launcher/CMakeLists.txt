@@ -91,6 +91,9 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
 else()
   install(TARGETS gammaray_launcher ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
+if(MSVC)
+  install(FILES "${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray_launcher.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
+endif()
 
 
 # command line launcher
@@ -108,6 +111,9 @@ endif()
 gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
 
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
+if(MSVC)
+  install(FILES "${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
+endif()
 
 # UI launcher
 if(HAVE_QT_CONCURRENT AND GAMMARAY_BUILD_UI)

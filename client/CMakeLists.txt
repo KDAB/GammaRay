@@ -69,5 +69,8 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
 else()
   install(TARGETS gammaray_client ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
+if(MSVC)
+  install(FILES "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}/gammaray_client.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
+endif()
 
 install(TARGETS gammaray-client DESTINATION ${LIBEXEC_INSTALL_DIR})
