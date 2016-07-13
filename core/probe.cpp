@@ -412,27 +412,28 @@ void Probe::showInProcessUi()
         return;
     }
 
-    IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;
-             )
+    IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
     ProbeGuard guard;
 
-    QString path = Paths::currentPluginsPath();
-    if (!path.isEmpty())
-        path += QDir::separator();
-    path += QStringLiteral("gammaray_inprocessui");
+    QLibrary lib;
+    foreach (auto path, Paths::pluginPaths(GAMMARAY_PROBE_ABI)) {
+        path += QStringLiteral("/gammaray_inprocessui");
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-    path += '-';
-    path += GAMMARAY_PROBE_ABI;
+        path += '-';
+        path += GAMMARAY_PROBE_ABI;
 #else
 #if !defined(Q_OS_MAC)
 #if defined(QT_DEBUG)
-    path += QStringLiteral(GAMMARAY_DEBUG_POSTFIX);
+        path += QStringLiteral(GAMMARAY_DEBUG_POSTFIX);
 #endif
 #endif
 #endif
-    QLibrary lib;
-    lib.setFileName(path);
-    if (!lib.load()) {
+        lib.setFileName(path);
+        if (lib.load())
+            break;
+    }
+
+    if (!lib.isLoaded()) {
         std::cerr << "Failed to load in-process UI module: "
                   << qPrintable(lib.errorString())
                   << std::endl;
