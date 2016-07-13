@@ -72,6 +72,9 @@
 #include <QMouseEvent>
 #include <QEvent>
 #include <QStyle>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QWindow>
+#endif
 
 #include <iostream>
 
@@ -431,9 +434,14 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_RO(QGridLayout, int, rowCount);
 
     MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
-    MO_ADD_PROPERTY_RO(QWidget, QWidget *, focusProxy);
+    MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy);
+    MO_ADD_PROPERTY_RO(QWidget, bool, isWindow);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QWidget, QLayout *, layout);
+    MO_ADD_PROPERTY_RO(QWidget, QLayout*, layout);
+#endif
+    MO_ADD_PROPERTY_RO(QWidget, QWidget*, window);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    MO_ADD_PROPERTY_RO(QWidget, QWindow*, windowHandle);
 #endif
 
     MO_ADD_METAOBJECT1(QStyle, QObject);

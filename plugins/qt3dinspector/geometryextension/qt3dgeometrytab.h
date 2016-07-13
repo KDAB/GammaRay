@@ -55,7 +55,7 @@ namespace GammaRay {
 class BufferModel;
 class PropertyWidget;
 class Qt3DGeometryExtensionInterface;
-class Qt3DGeometryAttributeData;
+struct Qt3DGeometryAttributeData;
 
 namespace Ui {
 class Qt3DGeometryTab;

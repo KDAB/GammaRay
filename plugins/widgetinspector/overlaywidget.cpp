@@ -36,17 +36,6 @@
 
 using namespace GammaRay;
 
-static QWidget *toplevelWidget(QWidget *widget)
-{
-    QWidget *parent = widget;
-    while (parent->parentWidget()
-           && (qobject_cast<QDialog *>(parent->parentWidget()) == 0)
-           && (qobject_cast<QDialog *>(parent) == 0))
-        parent = parent->parentWidget();
-
-    return parent;
-}
-
 OverlayWidget::OverlayWidget()
     : m_currentToplevelWidget(0)
     , m_currentWidget(0)
@@ -74,7 +63,7 @@ void OverlayWidget::placeOn(QWidget *widget)
         return;
     }
 
-    QWidget *toplevel = toplevelWidget(widget);
+    QWidget *toplevel = widget->window();
     Q_ASSERT(toplevel);
 
     if (m_currentWidget)
@@ -104,13 +93,18 @@ void OverlayWidget::placeOn(QWidget *widget)
 
 bool OverlayWidget::eventFilter(QObject *receiver, QEvent *event)
 {
-    if (receiver == m_currentToplevelWidget) {
-        if (event->type() == QEvent::Resize) {
+    if (m_currentWidget && m_currentToplevelWidget != m_currentWidget->window()) { // detect (un)docking
+        placeOn(m_currentWidget);
+        return false;
+    }
+
+    if (receiver == m_currentWidget) {
+        if (event->type() == QEvent::Resize || event->type() == QEvent::Move || event->type() == QEvent::Show || event->type() == QEvent::Hide) {
             resizeOverlay();
             updatePositions();
         }
-    } else if (receiver == m_currentWidget) {
-        if (event->type() == QEvent::Resize || event->type() == QEvent::Move) {
+    } else if (receiver == m_currentToplevelWidget) {
+        if (event->type() == QEvent::Resize) {
             resizeOverlay();
             updatePositions();
         }
