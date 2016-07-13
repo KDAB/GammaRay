@@ -55,6 +55,17 @@ QString StyleInjector::name() const
     return QStringLiteral("style");
 }
 
+static QChar listSeparator()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+    return QDir::listSeparator();
+#elif defined(Q_OS_WIN)
+    return ';';
+#else
+    return ':';
+#endif
+}
+
 bool StyleInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
                            const QString &probeFunc, const QProcessEnvironment &e)
 {
@@ -64,7 +75,7 @@ bool StyleInjector::launch(const QStringList &programAndArgs, const QString &pro
 
     QString qtPluginPath = env.value(QStringLiteral("QT_PLUGIN_PATH"));
     if (!qtPluginPath.isEmpty())
-        qtPluginPath.append(":");
+        qtPluginPath.append(listSeparator());
     qtPluginPath.append(Paths::currentPluginsPath());
     env.insert(QStringLiteral("QT_PLUGIN_PATH"), qtPluginPath);
 
