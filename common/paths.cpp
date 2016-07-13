@@ -32,6 +32,8 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
+#include <QFileInfo>
+#include <QLibraryInfo>
 #include <QMutex>
 
 namespace GammaRay {
@@ -96,6 +98,37 @@ QString libexecPath()
 QString currentProbePath()
 {
     return probePath(QStringLiteral(GAMMARAY_PROBE_ABI));
+}
+
+static void addPluginPath(QStringList &list, const QString &path)
+{
+    QFileInfo fi(path);
+    if (!fi.isDir())
+        return;
+    list.push_back(fi.canonicalFilePath());
+}
+
+QStringList pluginPaths(const QString &probeABI)
+{
+    QStringList l;
+    // TODO based on environment variable for custom plugins
+
+    // based on rootPath()
+    addPluginPath(l, rootPath() + QLatin1String("/" GAMMARAY_PLUGIN_INSTALL_DIR "/" GAMMARAY_PLUGIN_VERSION "/") + probeABI);
+    addPluginPath(l, rootPath() + QLatin1String("/" GAMMARAY_PLUGIN_INSTALL_DIR));
+
+    // based on Qt plugin search paths
+    foreach (const auto &path, QCoreApplication::libraryPaths()) {
+        addPluginPath(l, path + QLatin1String("/gammaray/" GAMMARAY_PLUGIN_VERSION "/") + probeABI);
+        addPluginPath(l, path + QLatin1String("/gammaray"));
+    }
+
+    // based on Qt's own install layout and/or qt.conf
+    const auto path = QLibraryInfo::location(QLibraryInfo::PluginsPath);
+    addPluginPath(l, path + QLatin1String("/gammaray/" GAMMARAY_PLUGIN_VERSION "/") + probeABI);
+    addPluginPath(l, path + QLatin1String("/gammaray"));
+
+    return l;
 }
 
 QString currentPluginsPath()

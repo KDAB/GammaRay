@@ -54,9 +54,7 @@ PluginManagerBase::~PluginManagerBase()
 
 QStringList PluginManagerBase::pluginPaths() const
 {
-    QStringList pluginPaths;
-    pluginPaths.push_back(Paths::currentPluginsPath());
-    return pluginPaths;
+    return Paths::pluginPaths(GAMMARAY_PROBE_ABI);
 }
 
 QStringList PluginManagerBase::pluginFilter() const
