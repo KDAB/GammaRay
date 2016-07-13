@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_ABSTRACTINJECTOR_H
 #define GAMMARAY_ABSTRACTINJECTOR_H
 
+#include <launcher/probeabi.h>
+
 #include <QProcess>
 #include <QSharedPointer>
 
@@ -105,6 +107,11 @@ public:
     /** Set working directory for launching. */
     void setWorkingDirectory(const QString &path);
 
+    /*! Returns the ABI of the target. */
+    ProbeABI targetAbi() const;
+    /*! Sets the ABI of the target. */
+    void setTargetAbi(const ProbeABI &abi);
+
 signals:
     void started();
     void finished();
@@ -115,6 +122,7 @@ signals:
 
 private:
     QString m_workingDir;
+    ProbeABI m_targetAbi;
 };
 }
 

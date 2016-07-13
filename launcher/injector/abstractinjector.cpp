@@ -79,3 +79,13 @@ void AbstractInjector::setWorkingDirectory(const QString &path)
 {
     m_workingDir = path;
 }
+
+ProbeABI AbstractInjector::targetAbi() const
+{
+    return m_targetAbi;
+}
+
+void AbstractInjector::setTargetAbi(const ProbeABI& abi)
+{
+    m_targetAbi = abi;
+}

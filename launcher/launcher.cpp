@@ -151,6 +151,7 @@ bool Launcher::start()
         }
         return false;
     }
+    d->injector->setTargetAbi(d->options.probeABI());
 
     connect(d->injector.data(), SIGNAL(started()), this, SLOT(restartTimer()));
     connect(d->injector.data(), SIGNAL(finished()), this, SLOT(
