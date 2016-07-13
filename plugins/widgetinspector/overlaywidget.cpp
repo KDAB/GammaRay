@@ -93,13 +93,13 @@ void OverlayWidget::placeOn(QWidget *widget)
 
 bool OverlayWidget::eventFilter(QObject *receiver, QEvent *event)
 {
-    if (receiver == m_currentToplevelWidget) {
-        if (event->type() == QEvent::Resize) {
+    if (receiver == m_currentWidget) {
+        if (event->type() == QEvent::Resize || event->type() == QEvent::Move || event->type() == QEvent::Show || event->type() == QEvent::Hide) {
             resizeOverlay();
             updatePositions();
         }
-    } else if (receiver == m_currentWidget) {
-        if (event->type() == QEvent::Resize || event->type() == QEvent::Move) {
+    } else if (receiver == m_currentToplevelWidget) {
+        if (event->type() == QEvent::Resize) {
             resizeOverlay();
             updatePositions();
         }
