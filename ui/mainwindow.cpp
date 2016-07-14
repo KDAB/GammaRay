@@ -184,11 +184,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     selectInitialTool();
 
-#ifdef Q_OS_MAC
-    ui->groupBox->setFlat(true);
-    ui->horizontalLayout->setContentsMargins(0, 0, 0, 0);
-#endif
-
     // Code Navigation
     QAction *configAction = new QAction(QIcon::fromTheme(QStringLiteral(
                                                              "applications-development")),
