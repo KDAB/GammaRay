@@ -59,10 +59,10 @@ bool Qt3DGeometryExtension::setQObject(QObject *object)
     Qt3DRender::QGeometryRenderer *geometry = nullptr;
 
     // try to find a half-way related QGeometryRenderer instance
-    if (geometry = qobject_cast<Qt3DRender::QGeometryRenderer *>(object)) {
+    if ((geometry = qobject_cast<Qt3DRender::QGeometryRenderer *>(object))) {
     } else if (auto entity = qobject_cast<Qt3DCore::QEntity *>(object)) {
         foreach (auto component, entity->components()) {
-            if (geometry = qobject_cast<Qt3DRender::QGeometryRenderer *>(component))
+            if ((geometry = qobject_cast<Qt3DRender::QGeometryRenderer *>(component)))
                 break;
         }
     } else if (auto geo = qobject_cast<Qt3DRender::QGeometry *>(object)) {
