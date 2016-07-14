@@ -70,6 +70,9 @@
 #endif
 
 using namespace GammaRay;
+
+namespace {
+
 struct IdeSettings {
     const char * const app;
     const char * const args;
@@ -95,6 +98,39 @@ static const int ideSettingsSize = 0;
 static const int ideSettingsSize = sizeof(ideSettings) / sizeof(IdeSettings);
 #endif
 
+QStyle *gammarayStyleOverride()
+{
+    const auto styleNameOverride = QString::fromLocal8Bit(qgetenv("GAMMARAY_STYLE"));
+    if (styleNameOverride.isEmpty()) {
+        return nullptr;
+    }
+
+    if (!QStyleFactory::keys().contains(styleNameOverride)) {
+        qWarning() << "Style" << styleNameOverride << "does not exit (enabled by GAMMARAY_STYLE environment variable)";
+        qWarning() << "Existing styles: " << QStyleFactory::keys();
+    }
+
+    return QStyleFactory::create(styleNameOverride);
+}
+
+QStyle *gammarayDefaultStyle()
+{
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    QGuiPlatformPlugin defaultGuiPlatform;
+    return QStyleFactory::create(defaultGuiPlatform.styleName());
+#else
+    foreach (const QString &styleName,
+             QGuiApplicationPrivate::platform_theme->themeHint(QPlatformTheme::StyleNames).
+             toStringList()) {
+        if (auto style = QStyleFactory::create(styleName)) {
+            return style;
+        }
+    }
+#endif
+    return nullptr;
+}
+}
+
 MainWindowUIStateManager::MainWindowUIStateManager(QWidget *widget)
     : UIStateManager(widget)
 {
@@ -115,31 +151,23 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , m_stateManager(this)
 {
+
+    const auto styleOverride = gammarayStyleOverride();
+    if (styleOverride) {
+        applyStyle(styleOverride);
+    }
+
     if (!Endpoint::instance()->isRemoteClient()) {
         // we don't want application styles to propagate to the GammaRay window,
-        // so set the platform default one.
-        // unfortunately, that's not recursive by default, unless we have a style sheet set
-        setStyleSheet(QStringLiteral("I_DONT_EXIST {}"));
+        // so set the platform default one if needed
 
-        QStyle *defaultStyle = 0;
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        QGuiPlatformPlugin defaultGuiPlatform;
-        defaultStyle = QStyleFactory::create(defaultGuiPlatform.styleName());
-#else
-        foreach (const QString &styleName,
-                 QGuiApplicationPrivate::platform_theme->themeHint(QPlatformTheme::StyleNames).
-                 toStringList()) {
-            if ((defaultStyle = QStyleFactory::create(styleName)))
-                break;
+        // check if the style is not already overwritten
+        if (!styleOverride) {
+            if (auto defaultStyle= gammarayDefaultStyle()) {
+                applyStyle(defaultStyle);
+            }
         }
-#endif
-        if (defaultStyle) {
-            // do not set parent of default style
-            // this will cause the style being deleted too early through ~QObject()
-            // other objects (e.g. the script engine debugger) still might have a
-            // reference on the style during destruction
-            setStyle(defaultStyle);
-        }
+
     }
 
     ui->setupUi(this);
@@ -183,11 +211,6 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle(tr("GammaRay (%1)").arg(Endpoint::instance()->label()));
 
     selectInitialTool();
-
-#ifdef Q_OS_MAC
-    ui->groupBox->setFlat(true);
-    ui->horizontalLayout->setContentsMargins(0, 0, 0, 0);
-#endif
 
     // Code Navigation
     QAction *configAction = new QAction(QIcon::fromTheme(QStringLiteral(
@@ -443,6 +466,20 @@ void GammaRay::MainWindow::setCodeNavigationIDE(QAction *action)
 
     const auto defaultIde = action->data().toInt();
     settings.setValue(QStringLiteral("IDE"), defaultIde);
+}
+
+void MainWindow::applyStyle(QStyle* style)
+{
+    qDebug() << "Using" << style << "style";
+
+    // note: do not set parent of style
+    // this will cause the style being deleted too early through ~QObject()
+    // other objects (e.g. the script engine debugger) still might have a
+    // reference on the style during destruction
+
+    // unfortunately, setting the style is not recursive by default, unless we have a style sheet set
+    setStyleSheet(QStringLiteral("I_DONT_EXIST {}"));
+    setStyle(style);
 }
 
 QWidget *MainWindow::createErrorPage(const QModelIndex &index)

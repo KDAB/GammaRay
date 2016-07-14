@@ -82,7 +82,9 @@ void SidePane::setModel(QAbstractItemModel *model)
 {
     if (model) {
         connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateSizeHint()));
+        connect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(updateSizeHint()));
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(updateSizeHint()));
+        connect(model, SIGNAL(modelReset()), SLOT(updateSizeHint()));
     }
     QAbstractItemView::setModel(model);
 }
