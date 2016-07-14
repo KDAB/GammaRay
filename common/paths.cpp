@@ -28,6 +28,7 @@
 
 #include <config-gammaray.h>
 #include "paths.h"
+#include "selflocator.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -51,6 +52,12 @@ namespace Paths {
 QString rootPath()
 {
     QMutexLocker locker(&s_pathData()->mutex);
+    if (s_pathData()->rootPath.isEmpty()) {
+        QFileInfo fi(SelfLocator::findMe());
+        fi.setFile(fi.absolutePath() + QLatin1String("/" GAMMARAY_INVERSE_LIB_DIR));
+        if (fi.isDir())
+            s_pathData()->rootPath = fi.absoluteFilePath();
+    }
     Q_ASSERT(!s_pathData()->rootPath.isEmpty());
     return s_pathData()->rootPath;
 }

@@ -14,6 +14,7 @@ set(gammaray_common_srcs
   modelevent.cpp
   modelutils.cpp
   paintanalyzerinterface.cpp
+  selflocator.cpp
   sourcelocation.cpp
   translator.cpp
 
@@ -39,6 +40,10 @@ else()
     LINK_PRIVATE ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} gammaray_kitemmodels
   )
 endif()
+if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
+  target_link_libraries(gammaray_common LINK_PRIVATE dl)
+endif()
+
 
 set(gammaray_common_internal_srcs
   plugininfo.cpp
