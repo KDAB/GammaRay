@@ -41,7 +41,7 @@
 #include "common/endpoint.h"
 #include "common/probecontrollerinterface.h"
 
-#include "kde/krecursivefilterproxymodel.h"
+#include "kde/klinkitemselectionmodel.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <private/qguiplatformplugin_p.h>
@@ -59,6 +59,7 @@
 #include <QMenu>
 #include <QProcess>
 #include <QSettings>
+#include <QSortFilterProxyModel>
 #include <QStyleFactory>
 #include <QTableView>
 #include <QToolButton>
@@ -194,8 +195,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     ClientToolManager *toolManager = new ClientToolManager(this);
     toolManager->setToolParentWidget(this);
-    ui->toolSelector->setModel(toolManager->model());
-    ui->toolSelector->setSelectionModel(toolManager->selectionModel());
+
+    auto sourceModel = toolManager->model();
+    auto sourceSelectionModel = toolManager->selectionModel();
+    auto proxyModel = new QSortFilterProxyModel(this);
+    proxyModel->setSourceModel(sourceModel);
+    proxyModel->setDynamicSortFilter(true);
+    proxyModel->sort(0);
+    ui->toolSelector->setModel(proxyModel);
+    ui->toolSelector->setSelectionModel(new KLinkItemSelectionModel(proxyModel, sourceSelectionModel, sourceModel));
     ui->toolSelector->resize(ui->toolSelector->minimumSize());
     connect(toolManager->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(toolSelected()));
