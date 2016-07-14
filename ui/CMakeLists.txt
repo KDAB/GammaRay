@@ -140,12 +140,12 @@ qt4_wrap_ui(gammaray_ui_internal_srcs
 
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})
 set_target_properties(gammaray_ui_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
 target_link_libraries(gammaray_ui_internal
   ${QT_QTCORE_LIBRARIES}
   ${QT_QTGUI_LIBRARIES}
   gammaray_common_internal
   gammaray_ui
+  gammaray_kitemmodels
 )
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
