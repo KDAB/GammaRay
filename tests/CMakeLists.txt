@@ -267,6 +267,16 @@ add_executable(propertymodeltest
 target_link_libraries(propertymodeltest gammaray_core ${QT_QTTEST_LIBRARIES} gammaray_shared_test_data)
 add_test(NAME propertymodeltest COMMAND propertymodeltest)
 
+### Method model test
+
+add_executable(methodmodeltest
+  methodmodeltest.cpp
+  ${CMAKE_SOURCE_DIR}/core/objectmethodmodel.cpp
+  ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+)
+target_link_libraries(methodmodeltest gammaray_core ${QT_QTTEST_LIBRARIES} gammaray_shared_test_data)
+add_test(NAME methodmodeltest COMMAND methodmodeltest)
+
 ### Font plugin
 
 add_executable(fontdatabasemodeltest
