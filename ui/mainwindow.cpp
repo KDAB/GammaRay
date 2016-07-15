@@ -176,6 +176,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->toolSelector->resize(ui->toolSelector->minimumSize());
     connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(toolSelected()));
+    // ### see ContextMenuExtension, workaround for tool name lookup regression in 2.5
+    // remove ones we have the model-free tool handling changes merged
+    ObjectBroker::registerModelInternal(QStringLiteral("com.kdab.GammaRay.ClientToolModel"), toolModel);
 
     // hide unused tool bar for now
     ui->mainToolBar->setHidden(true);
