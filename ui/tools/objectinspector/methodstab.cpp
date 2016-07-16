@@ -28,10 +28,11 @@
 
 #include "methodstab.h"
 #include "ui_methodstab.h"
-#include "propertywidget.h"
+#include "clientmethodmodel.h"
 
 #include <ui/methodinvocationdialog.h>
 #include <ui/propertybinder.h>
+#include <ui/propertywidget.h>
 #include <ui/searchlinecontroller.h>
 
 #include "common/objectbroker.h"
@@ -64,9 +65,12 @@ void MethodsTab::setObjectBaseName(const QString &baseName)
 {
     m_objectBaseName = baseName;
 
+    auto clientModel = new ClientMethodModel(this);
+    clientModel->setSourceModel(ObjectBroker::model(baseName + '.' + "methods"));
+
     QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
-    proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "methods"));
+    proxy->setSourceModel(clientModel);
     proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxy->setSortRole(ObjectMethodModelRole::MethodSignature);
     m_ui->methodView->setModel(proxy);

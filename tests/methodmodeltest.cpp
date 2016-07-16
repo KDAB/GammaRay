@@ -27,6 +27,7 @@
 */
 
 #include <core/objectmethodmodel.h>
+#include <ui/tools/objectinspector/clientmethodmodel.h>
 
 #include <3rdparty/qt/modeltest.h>
 
@@ -65,18 +66,24 @@ private:
 private slots:
     void modelTest()
     {
-        ObjectMethodModel model;
+        ObjectMethodModel srcModel;
+        ClientMethodModel model;
+        model.setSourceModel(&srcModel);
+
         ModelTest modelTest(&model);
 
-        model.setMetaObject(&QObject::staticMetaObject);
-        model.setMetaObject(&staticMetaObject);
-        model.setMetaObject(Q_NULLPTR);
+        srcModel.setMetaObject(&QObject::staticMetaObject);
+        srcModel.setMetaObject(&staticMetaObject);
+        srcModel.setMetaObject(Q_NULLPTR);
     }
 
     void testModel()
     {
-        ObjectMethodModel model;
-        model.setMetaObject(&staticMetaObject);
+        ObjectMethodModel srcModel;
+        ClientMethodModel model;
+        model.setSourceModel(&srcModel);
+
+        srcModel.setMetaObject(&staticMetaObject);
 
         QVERIFY(model.rowCount() > 0);
 
@@ -88,7 +95,7 @@ private slots:
         QCOMPARE(idx.sibling(idx.row(), 2).data().toString(), QLatin1String("Public"));
         QCOMPARE(idx.sibling(idx.row(), 3).data().toString(), QLatin1String("QObject"));
 
-        model.setMetaObject(Q_NULLPTR);
+        srcModel.setMetaObject(Q_NULLPTR);
         QCOMPARE(model.rowCount(), 0);
     }
 
@@ -108,8 +115,10 @@ private slots:
         QFETCH(QString, name);
         QFETCH(QString, toolTip);
 
-        ObjectMethodModel model;
-        model.setMetaObject(&staticMetaObject);
+        ObjectMethodModel srcModel;
+        ClientMethodModel model;
+        model.setSourceModel(&srcModel);
+        srcModel.setMetaObject(&staticMetaObject);
 
         auto idx = indexForSignature(name, &model);
         QVERIFY(idx.isValid());

@@ -52,6 +52,7 @@ set(gammaray_ui_srcs
   tools/objectinspector/objectinspectorwidget.cpp
   tools/objectinspector/propertiestab.cpp
   tools/objectinspector/propertiesextensionclient.cpp
+  tools/objectinspector/clientmethodmodel.cpp
   tools/objectinspector/methodsextensionclient.cpp
   tools/objectinspector/methodstab.cpp
   tools/objectinspector/connectionstab.cpp
