@@ -61,13 +61,6 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
                 return tr("Unknown");
             }
         }
-    } else if (role == Qt::ToolTipRole) {
-        QString tt = Util::prettyMethodSignature(method);
-        tt += tr("\nTag: %1\n").arg(qstrlen(method.tag()) > 0 ? method.tag() : tr("<none>"));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
-        tt += tr("Revision: %1").arg(method.revision());
-#endif
-        return tt;
     } else if (role == ObjectMethodModelRole::MetaMethod) {
         return QVariant::fromValue(method);
     } else if (role == ObjectMethodModelRole::MetaMethodType && index.column() == 1) {
@@ -78,6 +71,12 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
 #else
         return method.methodSignature();
 #endif
+    } else if (role == ObjectMethodModelRole::MethodTag && index.column() == 0 && qstrlen(method.tag())) {
+        return method.tag();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+    } else if (role == ObjectMethodModelRole::MethodRevision && index.column() == 0) {
+        return method.revision();
+#endif
     }
     return QVariant();
 }
@@ -85,9 +84,9 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
 QMap< int, QVariant > ObjectMethodModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> m = super::itemData(index);
-    m.insert(ObjectMethodModelRole::MetaMethodType,
-             data(index, ObjectMethodModelRole::MetaMethodType));
-    m.insert(ObjectMethodModelRole::MethodSignature,
-             data(index, ObjectMethodModelRole::MethodSignature));
+    m.insert(ObjectMethodModelRole::MetaMethodType, data(index, ObjectMethodModelRole::MetaMethodType));
+    m.insert(ObjectMethodModelRole::MethodSignature, data(index, ObjectMethodModelRole::MethodSignature));
+    m.insert(ObjectMethodModelRole::MethodTag, data(index, ObjectMethodModelRole::MethodTag));
+    m.insert(ObjectMethodModelRole::MethodRevision, data(index, ObjectMethodModelRole::MethodRevision));
     return m;
 }

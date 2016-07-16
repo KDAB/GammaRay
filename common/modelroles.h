@@ -60,7 +60,9 @@ namespace ObjectMethodModelRole {
 enum Role {
     MetaMethod = UserRole + 1,
     MetaMethodType,
-    MethodSignature
+    MethodSignature,
+    MethodTag,
+    MethodRevision
 };
 }
 }

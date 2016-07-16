@@ -66,6 +66,16 @@ QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
     }
     if (index.column() != 1 && role == ObjectMethodModelRole::MetaMethodType)
         return index.sibling(index.row(), 1).data(ObjectMethodModelRole::MetaMethodType);
+    if (role == Qt::ToolTipRole) {
+        const auto idx = index.sibling(index.row(), 0);
+        auto tt = idx.data(Qt::DisplayRole).toString();
+        const auto tag = idx.data(ObjectMethodModelRole::MethodTag).toString();
+        tt += tr("\nTag: %1\n").arg(tag.isEmpty() ?tr("<none>") : tag);
+        const auto rev = idx.data(ObjectMethodModelRole::MethodRevision);
+        if (!rev.isNull())
+            tt += tr("Revision: %1").arg(rev.toInt());
+        return tt;
+    }
 
     return QIdentityProxyModel::data(index, role);
 }
