@@ -96,19 +96,6 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
     return QVariant();
 }
 
-QString GammaRay::ObjectMethodModel::columnHeader(int index) const
-{
-    switch (index) {
-    case 0:
-        return tr("Signature");
-    case 1:
-        return tr("Type");
-    case 2:
-        return tr("Access");
-    }
-    return QString();
-}
-
 QMap< int, QVariant > ObjectMethodModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> m = super::itemData(index);

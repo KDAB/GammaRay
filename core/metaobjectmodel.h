@@ -123,7 +123,11 @@ protected:
     virtual QVariant metaData(const QModelIndex &index, const MetaThing &metaThing,
                               int role) const = 0;
 
-    virtual QString columnHeader(int index) const = 0;
+    virtual QString columnHeader(int index) const
+    {
+        Q_UNUSED(index);
+        return QString();
+    };
 
     typedef MetaObjectModel<MetaThing, MetaAccessor, MetaCount, MetaOffset> super;
 

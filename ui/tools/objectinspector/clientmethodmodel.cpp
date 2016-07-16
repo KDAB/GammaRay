@@ -35,7 +35,25 @@ ClientMethodModel::ClientMethodModel(QObject *parent)
 {
 }
 
-
 ClientMethodModel::~ClientMethodModel()
 {
+}
+
+QVariant ClientMethodModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal) {
+        if (role != Qt::DisplayRole)
+            return QVariant();
+        switch (section) {
+            case 0:
+                return tr("Signature");
+            case 1:
+                return tr("Type");
+            case 2:
+                return tr("Access");
+            case 3:
+                return tr("Class");
+        }
+    }
+    return QIdentityProxyModel::headerData(section, orientation, role);
 }

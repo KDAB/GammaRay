@@ -50,7 +50,6 @@ public:
 protected:
     QVariant metaData(const QModelIndex &index, const QMetaMethod &method,
                       int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QString columnHeader(int index) const Q_DECL_OVERRIDE;
 };
 }
 

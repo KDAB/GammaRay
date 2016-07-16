@@ -41,6 +41,7 @@ public:
     explicit ClientMethodModel(QObject *parent = Q_NULLPTR);
     ~ClientMethodModel();
 
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
 
 }
