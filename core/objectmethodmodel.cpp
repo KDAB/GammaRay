@@ -49,20 +49,6 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
     if (role == Qt::DisplayRole) {
         if (index.column() == 0)
             return Util::prettyMethodSignature(method);
-        if (index.column() == 1) {
-            switch (method.methodType()) {
-            case QMetaMethod::Method:
-                return tr("Method");
-            case QMetaMethod::Constructor:
-                return tr("Constructor");
-            case QMetaMethod::Slot:
-                return tr("Slot");
-            case QMetaMethod::Signal:
-                return tr("Signal");
-            default:
-                return tr("Unknown");
-            }
-        }
         if (index.column() == 2) {
             switch (method.access()) {
             case QMetaMethod::Public:
@@ -84,7 +70,7 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
         return tt;
     } else if (role == ObjectMethodModelRole::MetaMethod) {
         return QVariant::fromValue(method);
-    } else if (role == ObjectMethodModelRole::MetaMethodType) {
+    } else if (role == ObjectMethodModelRole::MetaMethodType && index.column() == 1) {
         return QVariant::fromValue(method.methodType());
     } else if (role == ObjectMethodModelRole::MethodSignature && index.column() == 0) {
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

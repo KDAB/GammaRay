@@ -28,6 +28,11 @@
 
 #include "clientmethodmodel.h"
 
+#include <common/modelroles.h>
+#include <common/metatypedeclarations.h>
+
+#include <QMetaMethod>
+
 using namespace GammaRay;
 
 ClientMethodModel::ClientMethodModel(QObject *parent)
@@ -37,6 +42,32 @@ ClientMethodModel::ClientMethodModel(QObject *parent)
 
 ClientMethodModel::~ClientMethodModel()
 {
+}
+
+QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (index.column() == 1 && role == Qt::DisplayRole) {
+        const auto methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
+        switch (methodType) {
+            case QMetaMethod::Method:
+                return tr("Method");
+            case QMetaMethod::Constructor:
+                return tr("Constructor");
+            case QMetaMethod::Slot:
+                return tr("Slot");
+            case QMetaMethod::Signal:
+                return tr("Signal");
+            default:
+                return tr("Unknown");
+        }
+    }
+    if (index.column() != 1 && role == ObjectMethodModelRole::MetaMethodType)
+        return index.sibling(index.row(), 1).data(ObjectMethodModelRole::MetaMethodType);
+
+    return QIdentityProxyModel::data(index, role);
 }
 
 QVariant ClientMethodModel::headerData(int section, Qt::Orientation orientation, int role) const
