@@ -86,7 +86,7 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
         return QVariant::fromValue(method);
     } else if (role == ObjectMethodModelRole::MetaMethodType) {
         return QVariant::fromValue(method.methodType());
-    } else if (role == ObjectMethodModelRole::MethodSignature) {
+    } else if (role == ObjectMethodModelRole::MethodSignature && index.column() == 0) {
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         return method.signature();
 #else

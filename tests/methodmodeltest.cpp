@@ -82,7 +82,9 @@ private slots:
 
         auto idx = indexForSignature("deleteLater()", &model);
         QVERIFY(idx.isValid());
+        QVERIFY(idx.data(ObjectMethodModelRole::MethodSignature).toString().startsWith(QLatin1String("deleteLater")));
         QCOMPARE(idx.sibling(idx.row(), 1).data().toString(), QLatin1String("Slot"));
+        QVERIFY(idx.sibling(idx.row(), 1).data(ObjectMethodModelRole::MethodSignature).isNull());
         QCOMPARE(idx.sibling(idx.row(), 2).data().toString(), QLatin1String("Public"));
         QCOMPARE(idx.sibling(idx.row(), 3).data().toString(), QLatin1String("QObject"));
 
