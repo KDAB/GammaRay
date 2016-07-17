@@ -41,7 +41,6 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class Probe;
-class MetaObjectInfoTracker;
 
 class MetaObjectTreeModel : public QAbstractItemModel
 {

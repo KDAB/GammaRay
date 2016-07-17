@@ -176,6 +176,8 @@ int MetaObjectTreeModel::columnCount(const QModelIndex &parent) const
 
 int MetaObjectTreeModel::rowCount(const QModelIndex &parent) const
 {
+    if (parent.column() > 0)
+        return 0;
     const QMetaObject *metaObject = metaObjectForIndex(parent);
     return m_parentChildMap.value(metaObject).size();
 }

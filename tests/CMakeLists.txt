@@ -287,6 +287,20 @@ add_executable(qmetaobjectvalidatortest
 target_link_libraries(qmetaobjectvalidatortest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 add_test(NAME qmetavobjectvalidatortest COMMAND qmetaobjectvalidatortest)
 
+### Meta object tree model test
+
+if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+  add_executable(metaobjecttreemodeltest
+    metaobjecttreemodeltest.cpp
+    ${CMAKE_SOURCE_DIR}/ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
+    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
+    ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
+  )
+  target_link_libraries(metaobjecttreemodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+  add_test(NAME metaobjecttreemodeltest COMMAND metaobjecttreemodeltest)
+endif()
+
 ### Font plugin
 
 add_executable(fontdatabasemodeltest
