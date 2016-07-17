@@ -272,11 +272,20 @@ add_test(NAME propertymodeltest COMMAND propertymodeltest)
 add_executable(methodmodeltest
   methodmodeltest.cpp
   ${CMAKE_SOURCE_DIR}/core/objectmethodmodel.cpp
+  ${CMAKE_SOURCE_DIR}/core/qmetaobjectvalidator.cpp
   ${CMAKE_SOURCE_DIR}/ui/tools/objectinspector/clientmethodmodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
 )
-target_link_libraries(methodmodeltest gammaray_core ${QT_QTTEST_LIBRARIES} gammaray_shared_test_data)
+target_link_libraries(methodmodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 add_test(NAME methodmodeltest COMMAND methodmodeltest)
+
+### QMetaObject validator test
+
+add_executable(qmetaobjectvalidatortest
+  qmetaobjectvalidatortest.cpp
+)
+target_link_libraries(qmetaobjectvalidatortest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+add_test(NAME qmetavobjectvalidatortest COMMAND qmetaobjectvalidatortest)
 
 ### Font plugin
 

@@ -29,9 +29,12 @@
 #include "clientmethodmodel.h"
 
 #include <common/metatypedeclarations.h>
+#include <common/qmetaobjectvalidatorresult.h>
 #include <common/tools/objectinspector/methodmodel.h>
 
+#include <QApplication>
 #include <QMetaMethod>
+#include <QStyle>
 
 using namespace GammaRay;
 
@@ -87,12 +90,27 @@ QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
         const auto rev = idx.data(ObjectMethodModelRole::MethodRevision);
         if (!rev.isNull())
             tt += tr("\nRevision: %1").arg(rev.toInt());
+
+        const auto r = index.data(ObjectMethodModelRole::MethodIssues).value<QMetaObjectValidatorResult::Results>();
+        if (r != QMetaObjectValidatorResult::NoIssue) {
+            QStringList l;
+            if (r & QMetaObjectValidatorResult::SignalOverride)
+                l.push_back(tr("overrides base class signal"));
+            if (r & QMetaObjectValidatorResult::UnknownMethodParameterType)
+                l.push_back(tr("uses parameter type not registerd with the meta type system"));
+            tt += tr("\nIssues: %1").arg(l.join(", "));
+        }
         return tt;
     }
     if (role == ObjectMethodModelRole::MethodSortRole) {
         if (index.column() == 0)
             return index.data(ObjectMethodModelRole::MethodSignature);
         return index.data(Qt::DisplayRole);
+    }
+    if (role == Qt::DecorationRole && index.column() == 0) {
+        const auto r = index.data(ObjectMethodModelRole::MethodIssues).value<QMetaObjectValidatorResult::Results>();
+        if (r != QMetaObjectValidatorResult::NoIssue)
+            return qApp->style()->standardIcon(QStyle::SP_MessageBoxWarning);
     }
 
     return QIdentityProxyModel::data(index, role);

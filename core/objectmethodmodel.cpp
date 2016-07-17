@@ -29,6 +29,7 @@
 #include "objectmethodmodel.h"
 #include "util.h"
 
+#include <core/qmetaobjectvalidator.h>
 #include <common/tools/objectinspector/methodmodel.h>
 
 using namespace GammaRay;
@@ -68,6 +69,12 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
     } else if (role == ObjectMethodModelRole::MethodRevision && index.column() == 0) {
         return method.revision();
 #endif
+    } else if (role == ObjectMethodModelRole::MethodIssues && index.column() == 0) {
+        const QMetaObject *mo = m_metaObject;
+        while (mo->methodOffset() > index.row())
+            mo = mo->superClass();
+        const auto r = QMetaObjectValidator::checkMethod(mo, method);
+        return r == QMetaObjectValidatorResult::NoIssue ? QVariant() : QVariant::fromValue(r);
     }
     return QVariant();
 }
@@ -80,5 +87,6 @@ QMap< int, QVariant > ObjectMethodModel::itemData(const QModelIndex &index) cons
     m.insert(ObjectMethodModelRole::MethodSignature, data(index, ObjectMethodModelRole::MethodSignature));
     m.insert(ObjectMethodModelRole::MethodTag, data(index, ObjectMethodModelRole::MethodTag));
     m.insert(ObjectMethodModelRole::MethodRevision, data(index, ObjectMethodModelRole::MethodRevision));
+    m.insert(ObjectMethodModelRole::MethodIssues, data(index, ObjectMethodModelRole::MethodIssues));
     return m;
 }

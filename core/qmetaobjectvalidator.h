@@ -1,5 +1,5 @@
 /*
-  methodmodel.h
+  qmetaobjectvalidator.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,27 +26,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_METHODMODEL_H
-#define GAMMARAY_METHODMODEL_H
+#ifndef GAMMARAY_QMETAOBJECTVALIDATOR_H
+#define GAMMARAY_QMETAOBJECTVALIDATOR_H
 
-#include <common/modelroles.h>
+#include <common/qmetaobjectvalidatorresult.h>
+
+QT_BEGIN_NAMESPACE
+class QMetaMethod;
+class QMetaObject;
+class QMetaProperty;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
-/*! Custom roles for GammaRay::ObjectMethodModel. */
-namespace ObjectMethodModelRole {
-enum Role {
-    MetaMethod = UserRole + 1,
-    MetaMethodType,
-    MethodSignature,
-    MethodTag,
-    MethodRevision,
-    MethodAccess,
-    MethodSortRole,
-    MethodIssues
-};
+/*! Checks QMetaObject instances for common problems. */
+namespace QMetaObjectValidator
+{
+
+QMetaObjectValidatorResult::Results checkProperty(const QMetaObject *mo, const QMetaProperty &property);
+QMetaObjectValidatorResult::Results checkMethod(const QMetaObject *mo, const QMetaMethod &method);
+
+QMetaObjectValidatorResult::Results check(const QMetaObject *mo);
+
 }
 
 }
 
-#endif
+#endif // GAMMARAY_QMETAOBJECTVALIDATOR_H

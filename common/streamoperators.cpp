@@ -30,6 +30,7 @@
 #include "metatypedeclarations.h"
 #include "variantwrapper.h"
 #include "sourcelocation.h"
+#include "qmetaobjectvalidatorresult.h"
 
 #include <QMetaMethod>
 
@@ -41,6 +42,8 @@ GAMMARAY_ENUM_STREAM_OPERATORS(QMetaMethod::MethodType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt::ConnectionType)
 QT_END_NAMESPACE
 
+GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QMetaObjectValidatorResult::Results)
+
 void StreamOperators::registerOperators()
 {
     qRegisterMetaTypeStreamOperators<QMetaMethod::Access>();
@@ -49,4 +52,5 @@ void StreamOperators::registerOperators()
 
     qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
     qRegisterMetaTypeStreamOperators<GammaRay::SourceLocation>();
+    qRegisterMetaTypeStreamOperators<GammaRay::QMetaObjectValidatorResult::Results>();
 }
