@@ -40,9 +40,8 @@ QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(QMetaMethod::Access)
 GAMMARAY_ENUM_STREAM_OPERATORS(QMetaMethod::MethodType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt::ConnectionType)
-QT_END_NAMESPACE
-
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QMetaObjectValidatorResult::Results)
+QT_END_NAMESPACE
 
 void StreamOperators::registerOperators()
 {
