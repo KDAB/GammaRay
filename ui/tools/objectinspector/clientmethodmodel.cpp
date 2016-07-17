@@ -83,10 +83,10 @@ QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
         const auto idx = index.sibling(index.row(), 0);
         auto tt = idx.data(Qt::DisplayRole).toString();
         const auto tag = idx.data(ObjectMethodModelRole::MethodTag).toString();
-        tt += tr("\nTag: %1\n").arg(tag.isEmpty() ?tr("<none>") : tag);
+        tt += tr("\nTag: %1").arg(tag.isEmpty() ?tr("<none>") : tag);
         const auto rev = idx.data(ObjectMethodModelRole::MethodRevision);
         if (!rev.isNull())
-            tt += tr("Revision: %1").arg(rev.toInt());
+            tt += tr("\nRevision: %1").arg(rev.toInt());
         return tt;
     }
     if (role == ObjectMethodModelRole::MethodSortRole) {
