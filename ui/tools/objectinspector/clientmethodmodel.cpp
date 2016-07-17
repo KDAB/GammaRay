@@ -28,8 +28,8 @@
 
 #include "clientmethodmodel.h"
 
-#include <common/modelroles.h>
 #include <common/metatypedeclarations.h>
+#include <common/tools/objectinspector/methodmodel.h>
 
 #include <QMetaMethod>
 

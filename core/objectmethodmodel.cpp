@@ -29,6 +29,8 @@
 #include "objectmethodmodel.h"
 #include "util.h"
 
+#include <common/tools/objectinspector/methodmodel.h>
+
 using namespace GammaRay;
 
 ObjectMethodModel::ObjectMethodModel(QObject *parent)

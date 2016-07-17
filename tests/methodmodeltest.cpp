@@ -28,6 +28,7 @@
 
 #include <core/objectmethodmodel.h>
 #include <ui/tools/objectinspector/clientmethodmodel.h>
+#include <common/tools/objectinspector/methodmodel.h>
 
 #include <3rdparty/qt/modeltest.h>
 

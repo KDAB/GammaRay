@@ -37,8 +37,8 @@
 
 #include "common/objectbroker.h"
 #include "common/metatypedeclarations.h"
-#include "common/modelroles.h"
 #include "common/tools/objectinspector/methodsextensioninterface.h"
+#include <common/tools/objectinspector/methodmodel.h>
 
 #include <QSortFilterProxyModel>
 #include <QMetaMethod>

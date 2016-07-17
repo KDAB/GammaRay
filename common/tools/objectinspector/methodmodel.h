@@ -1,10 +1,10 @@
 /*
-  objectmethodmodel.h
+  methodmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,32 +26,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_OBJECTMETHODMODEL_H
-#define GAMMARAY_OBJECTMETHODMODEL_H
+#ifndef GAMMARAY_METHODMODEL_H
+#define GAMMARAY_METHODMODEL_H
 
-#include "metaobjectmodel.h"
-
-#include <common/metatypedeclarations.h>
-
-#include <QMetaMethod>
+#include <common/modelroles.h>
 
 namespace GammaRay {
-class ObjectMethodModel : public MetaObjectModel<QMetaMethod, &QMetaObject::method,
-                                                 &QMetaObject::methodCount,
-                                                 &QMetaObject::methodOffset>
-{
-    Q_OBJECT
-public:
-    explicit ObjectMethodModel(QObject *parent = 0);
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QMap< int, QVariant > itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-protected:
-    QVariant metaData(const QModelIndex &index, const QMetaMethod &method,
-                      int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+/*! Custom roles for GammaRay::ObjectMethodModel. */
+namespace ObjectMethodModelRole {
+enum Role {
+    MetaMethod = UserRole + 1,
+    MetaMethodType,
+    MethodSignature,
+    MethodTag,
+    MethodRevision,
+    MethodAccess,
+    MethodSortRole
 };
 }
 
-Q_DECLARE_METATYPE(QMetaMethod)
+}
 
-#endif // GAMMARAY_OBJECTMETHODMODEL_H
+#endif

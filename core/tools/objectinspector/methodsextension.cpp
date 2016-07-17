@@ -34,6 +34,7 @@
 #include "multisignalmapper.h"
 
 #include "common/objectbroker.h"
+#include <common/tools/objectinspector/methodmodel.h>
 
 #include <QMetaMethod>
 #include <QStandardItemModel>

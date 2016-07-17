@@ -54,17 +54,6 @@ enum Role {
     ToolHasUi
 };
 }
-
-/** @brief Custom roles for GammaRay::ObjectMethodModel. */
-namespace ObjectMethodModelRole {
-enum Role {
-    MetaMethod = UserRole + 1,
-    MetaMethodType,
-    MethodSignature,
-    MethodTag,
-    MethodRevision
-};
-}
 }
 
 #endif
