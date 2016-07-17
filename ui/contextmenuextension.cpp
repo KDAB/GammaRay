@@ -31,6 +31,7 @@
 #include <common/objectbroker.h>
 #include <common/probecontrollerinterface.h>
 #include <common/propertymodel.h>
+#include <common/modelroles.h>
 
 #include <QMenu>
 
@@ -100,6 +101,19 @@ bool ContextMenuExtension::discoverPropertySourceLocation(ContextMenuExtension::
                                       index.row(), PropertyModel::ValueColumn).data().toUrl());
 }
 
+static QString toolName(const QString &id)
+{
+    auto toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ClientToolModel"));
+    if (!toolModel)
+        return id;
+    const auto idxList = toolModel->match(toolModel->index(0, 0), ToolModelRole::ToolId, id, 1, Qt::MatchExactly);
+    if (idxList.isEmpty())
+        return id;
+    const auto idx = idxList.at(0);
+    const auto name = idx.data(Qt::DisplayRole).toString();
+    return name.isEmpty() ? id : name;
+}
+
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -125,7 +139,7 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
     connect(probeController, &ProbeControllerInterface::supportedToolsResponse,
             menu, [menu](ObjectId id, const ToolInfos &toolInfos) {
         foreach (const auto &toolInfo, toolInfos) {
-            auto action = menu->addAction(tr("Show in \"%1\" tool").arg(toolInfo.name));
+            auto action = menu->addAction(tr("Show in \"%1\" tool").arg(toolName(toolInfo.id)));
             QObject::connect(action, &QAction::triggered, [id, toolInfo]() {
                 auto probeController = ObjectBroker::object<ProbeControllerInterface *>();
                 probeController->selectObject(id, toolInfo.id);
