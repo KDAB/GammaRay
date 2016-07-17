@@ -76,6 +76,11 @@ QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
             tt += tr("Revision: %1").arg(rev.toInt());
         return tt;
     }
+    if (role == ObjectMethodModelRole::MethodSortRole) {
+        if (index.column() == 0)
+            return index.data(ObjectMethodModelRole::MethodSignature);
+        return index.data(Qt::DisplayRole);
+    }
 
     return QIdentityProxyModel::data(index, role);
 }

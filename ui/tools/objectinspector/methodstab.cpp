@@ -72,7 +72,7 @@ void MethodsTab::setObjectBaseName(const QString &baseName)
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(clientModel);
     proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-    proxy->setSortRole(ObjectMethodModelRole::MethodSignature);
+    proxy->setSortRole(ObjectMethodModelRole::MethodSortRole);
     m_ui->methodView->setModel(proxy);
     m_ui->methodView->sortByColumn(0, Qt::AscendingOrder);
     m_ui->methodView->setSelectionModel(ObjectBroker::selectionModel(proxy));
