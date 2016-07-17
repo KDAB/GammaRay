@@ -48,25 +48,14 @@ int GammaRay::ObjectMethodModel::columnCount(const QModelIndex &parent) const
 QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod &method,
                                      int role) const
 {
-    if (role == Qt::DisplayRole) {
-        if (index.column() == 0)
-            return Util::prettyMethodSignature(method);
-        if (index.column() == 2) {
-            switch (method.access()) {
-            case QMetaMethod::Public:
-                return tr("Public");
-            case QMetaMethod::Protected:
-                return tr("Protected");
-            case QMetaMethod::Private:
-                return tr("Private");
-            default:
-                return tr("Unknown");
-            }
-        }
+    if (role == Qt::DisplayRole && index.column() == 0) {
+        return Util::prettyMethodSignature(method);
     } else if (role == ObjectMethodModelRole::MetaMethod) {
         return QVariant::fromValue(method);
     } else if (role == ObjectMethodModelRole::MetaMethodType && index.column() == 1) {
         return QVariant::fromValue(method.methodType());
+    } else if (role == ObjectMethodModelRole::MethodAccess && index.column() == 2) {
+        return QVariant::fromValue(method.access());
     } else if (role == ObjectMethodModelRole::MethodSignature && index.column() == 0) {
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         return method.signature();
@@ -87,6 +76,7 @@ QMap< int, QVariant > ObjectMethodModel::itemData(const QModelIndex &index) cons
 {
     QMap<int, QVariant> m = super::itemData(index);
     m.insert(ObjectMethodModelRole::MetaMethodType, data(index, ObjectMethodModelRole::MetaMethodType));
+    m.insert(ObjectMethodModelRole::MethodAccess, data(index, ObjectMethodModelRole::MethodAccess));
     m.insert(ObjectMethodModelRole::MethodSignature, data(index, ObjectMethodModelRole::MethodSignature));
     m.insert(ObjectMethodModelRole::MethodTag, data(index, ObjectMethodModelRole::MethodTag));
     m.insert(ObjectMethodModelRole::MethodRevision, data(index, ObjectMethodModelRole::MethodRevision));

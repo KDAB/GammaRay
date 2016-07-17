@@ -54,6 +54,7 @@
 #endif
 
 Q_DECLARE_METATYPE(Qt::ConnectionType)
+Q_DECLARE_METATYPE(QMetaMethod::Access)
 Q_DECLARE_METATYPE(QMetaMethod::MethodType)
 Q_DECLARE_METATYPE(const QMetaObject *)
 

@@ -64,6 +64,19 @@ QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
                 return tr("Unknown");
         }
     }
+    if (index.column() == 2 && role == Qt::DisplayRole) {
+        const auto methodAccess = index.data(ObjectMethodModelRole::MethodAccess).value<QMetaMethod::Access>();
+        switch (methodAccess) {
+            case QMetaMethod::Public:
+                return tr("Public");
+            case QMetaMethod::Protected:
+                return tr("Protected");
+            case QMetaMethod::Private:
+                return tr("Private");
+            default:
+                return tr("Unknown");
+        }
+    }
     if (index.column() != 1 && role == ObjectMethodModelRole::MetaMethodType)
         return index.sibling(index.row(), 1).data(ObjectMethodModelRole::MetaMethodType);
     if (role == Qt::ToolTipRole) {
