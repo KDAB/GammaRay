@@ -33,7 +33,7 @@
 
 QT_BEGIN_NAMESPACE
 class QMetaMethod;
-class QMetaObject;
+struct QMetaObject;
 class QMetaProperty;
 QT_END_NAMESPACE
 
