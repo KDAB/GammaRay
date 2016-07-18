@@ -26,13 +26,17 @@ Building on Unix with gcc or clang:
 % make install
 
 Building on Windows with Microsoft Visual Studio:
+From a command prompt for the version of MSVC you want to use
 % mkdir build
 % cd build
 % cmake -G "NMake Makefiles" ..
 % nmake
 % nmake install
 
-Building on Windows with mingw:
+Building on Windows with MinGW:
+Make sure you have the path to the MinGW programs in %PATH% first, for example:
+% set "PATH=c:\MinGW\mingw64\bin;%PATH%"
+Now build:
 % mkdir build
 % cd build
 % cmake -G "MinGW Makefiles" ..
