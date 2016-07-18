@@ -1,0 +1,20 @@
+include(@CMAKE_CURRENT_BUILD_DIR@/gammaray-manual.qdocconf)
+include(@QDOC_TEMPLATE_DIR@/qt-html-templates-offline.qdocconf)
+
+# adapted from qtbase template
+# TODO: add logo like in the doxygen case?
+HTML.footer = \
+    "        </div>\n" \
+    "       </div>\n" \
+    "   </div>\n" \
+    "   </div>\n" \
+    "</div>\n" \
+    "<div class=\"footer\">\n" \
+    "   <p>\n" \
+    "   <acronym title=\"Copyright\">&copy;</acronym> 2016 Klar&auml;lvdalens Datakonsult AB (KDAB).\n" \
+    "   Documentation contributions included herein are the copyrights of\n" \
+    "   their respective owners.<br/>" \
+    "   This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>." \
+    "</p>" \
+    "</div>\n" \
+

@@ -1,0 +1,2 @@
+include(@CMAKE_CURRENT_BUILD_DIR@/gammaray-manual.qdocconf)
+include(@QDOC_TEMPLATE_DIR@/qt-html-templates-online.qdocconf)
