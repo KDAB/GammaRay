@@ -89,6 +89,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     metatypedeclarations.h
     modelroles.h
     objectbroker.h
+    objectid.h
     objectmodel.h
     paths.h
     probecontrollerinterface.h
