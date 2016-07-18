@@ -70,7 +70,7 @@ else()
   install(TARGETS gammaray_client ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
 if(MSVC)
-  install(FILES "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}/gammaray_client.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
+  install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_client>/$<TARGET_PDB_FILE_NAME:gammaray_client>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
 endif()
 
 install(TARGETS gammaray-client DESTINATION ${LIBEXEC_INSTALL_DIR})

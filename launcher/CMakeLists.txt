@@ -92,7 +92,7 @@ else()
   install(TARGETS gammaray_launcher ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
 if(MSVC)
-  install(FILES "${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray_launcher.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
+  install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_launcher>/$<TARGET_PDB_FILE_NAME:gammaray_launcher>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
 endif()
 
 
@@ -112,7 +112,7 @@ gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
 
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
 if(MSVC)
-  install(FILES "${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray.pdb" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
+  install(FILES "$<TARGET_PDB_FILE_DIR:gammaray>/$<TARGET_PDB_FILE_NAME:gammaray>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
 endif()
 
 # UI launcher
