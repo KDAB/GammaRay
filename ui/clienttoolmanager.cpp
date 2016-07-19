@@ -328,7 +328,7 @@ void ClientToolManager::Model::toolEnabled(int toolIndex)
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     emit dataChanged(i, i);
 #else
-    emit dataChanged(i, i, {ToolModelRole::ToolEnabled});
+    emit dataChanged(i, i, QVector<int>() << ToolModelRole::ToolEnabled);
 #endif
 }
 
