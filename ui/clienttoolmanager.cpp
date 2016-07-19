@@ -274,7 +274,7 @@ void ClientToolManager::toolGotSelected(const QString &toolId)
 int ClientToolManager::toolIndexForToolId(const QString &toolId) const
 {
     int i = 0;
-    for (auto it = m_tools.constBegin(); it != m_tools.constEnd(); i++, it++) {
+    for (auto it = m_tools.constBegin(); it != m_tools.constEnd(); ++i, ++it) {
         if (it->id == toolId)
             return i;
     }

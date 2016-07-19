@@ -117,7 +117,7 @@ private slots:
         toolEnabledSpy.wait(1000);
         QVERIFY(!toolEnabledSpy.isEmpty());
         QStringList enabledTools;
-        for (auto i = toolEnabledSpy.constBegin(); i != toolEnabledSpy.constEnd(); i++)
+        for (auto i = toolEnabledSpy.constBegin(); i != toolEnabledSpy.constEnd(); ++i)
             enabledTools << i->first().toString();
         QVERIFY(enabledTools.contains("gammaray_actioninspector"));
 
@@ -179,7 +179,7 @@ private slots:
         toolEnabledSpy.wait(50);
         QVERIFY(toolEnabledSpy.size() >= 1);
         QStringList enabledTools;
-        for (auto i = toolEnabledSpy.constBegin(); i != toolEnabledSpy.constEnd(); i++)
+        for (auto i = toolEnabledSpy.constBegin(); i != toolEnabledSpy.constEnd(); ++i)
             enabledTools << i->first().toString();
         QVERIFY(enabledTools.contains("gammaray_actioninspector"));
 
