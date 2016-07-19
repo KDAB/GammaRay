@@ -101,6 +101,7 @@ bool ContextMenuExtension::discoverPropertySourceLocation(ContextMenuExtension::
                                       index.row(), PropertyModel::ValueColumn).data().toUrl());
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 static QString toolName(const QString &id)
 {
     auto toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ClientToolModel"));
@@ -113,6 +114,7 @@ static QString toolName(const QString &id)
     const auto name = idx.data(Qt::DisplayRole).toString();
     return name.isEmpty() ? id : name;
 }
+#endif
 
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
