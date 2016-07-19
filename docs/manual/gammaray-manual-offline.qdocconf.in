@@ -1,4 +1,4 @@
-include(@CMAKE_CURRENT_BUILD_DIR@/gammaray-manual.qdocconf)
+include(@CMAKE_CURRENT_BINARY_DIR@/gammaray-manual.qdocconf)
 include(@QDOC_TEMPLATE_DIR@/qt-html-templates-offline.qdocconf)
 
 # adapted from qtbase template
