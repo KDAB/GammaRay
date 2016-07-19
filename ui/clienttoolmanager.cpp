@@ -52,9 +52,9 @@ using namespace GammaRay;
 #define MAKE_FACTORY(type, label) \
     class type##Factory : public ToolUiFactory { \
     public: \
-        virtual inline QString id() const Q_DECL_OVERRIDE { return "GammaRay::" #type; } \
-        virtual inline QString name() const Q_DECL_OVERRIDE { return label; } \
-        virtual inline QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE  { \
+        virtual QString id() const Q_DECL_OVERRIDE { return "GammaRay::" #type; } \
+        virtual QString name() const Q_DECL_OVERRIDE { return label; } \
+        virtual QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE  { \
             return new type##Widget(parentWidget); \
         } \
     }
