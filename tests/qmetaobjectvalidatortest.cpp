@@ -71,7 +71,7 @@ private slots:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         for (int i = staticMetaObject.methodOffset(); i < staticMetaObject.methodCount(); ++i) {
             const auto method = staticMetaObject.method(i);
-            if (method.name().startsWith("unknown"))
+            if (method.name().startsWith("unknown")) //krazy:exclude=strings
                 QVERIFY(QMetaObjectValidator::checkMethod(&staticMetaObject, method) & QMetaObjectValidatorResult::UnknownMethodParameterType);
             else
                 QVERIFY((QMetaObjectValidator::checkMethod(&staticMetaObject, method) & QMetaObjectValidatorResult::UnknownMethodParameterType) == 0);
