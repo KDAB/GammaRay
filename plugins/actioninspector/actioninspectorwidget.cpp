@@ -53,6 +53,8 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
     vbox->addWidget(actionSearchLine);
 
     DeferredTreeView *objectTreeView = new DeferredTreeView(this);
+    objectTreeView->setRootIsDecorated(false);
+    objectTreeView->setUniformRowHeights(true);
     objectTreeView->header()->setObjectName("objectTreeViewHeader");
     objectTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     objectTreeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
