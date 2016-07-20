@@ -370,7 +370,7 @@ QVariant ResourceModel::data(const QModelIndex &index, int role) const
     }
 
     if (index.column() == 1 && Qt::TextAlignmentRole == role) {
-        return Qt::AlignRight;
+        return QVariant::fromValue<int>(Qt::AlignRight | Qt::AlignVCenter);
     }
     return QVariant();
 }

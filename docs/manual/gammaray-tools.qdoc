@@ -35,6 +35,7 @@
         \li \l{Qt Quick 2 Inspector}
         \li \l{Widget Inspector}
         \li \l{Graphics Scene Inspector}
+        \li Qt3D Inspector
         \li \l{Styles}
         \li Web Inspector
     \endlist
@@ -46,7 +47,6 @@
     \list
         \li \l{State Machine Debugger}
         \li \l{Messages}
-        \li Resources
         \li \l{Signal Plotter}
         \li Timers
         \li Wayland Compositors
@@ -63,6 +63,7 @@
         \li Models
         \li Selection Models
         \li Text Documents
+        \li \l{Resources}
         \li Translations
         \li \l{Meta Object Browser}
         \li Meta Type Browser
