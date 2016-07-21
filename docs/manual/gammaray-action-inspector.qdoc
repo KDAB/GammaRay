@@ -1,0 +1,37 @@
+/*
+    gammaray-action-inspector.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Actions}
+    \nextpage {Resources}
+    \previouspage {Object Inspector}
+    \page gammaray-action-inspector.html
+
+    \title Actions
+
+    \section1 Overview
+
+    The action inspector shows all QAction instances that exist in the target application. Information about
+    the display name, checkable states and shortcuts and shortcut priorities are displayed.
+
+    \image gammaray-action-inspector.png
+
+    The action inspector will warn about shortcut conflicts (that is, two QAction instances using the same
+    shortcut sequence and thus making it ambiguous) with a warning icon in its shortcut column.
+
+    Actions can also be activated remotely via GammaRay, by double-clicking the corresponding entry.
+*/
