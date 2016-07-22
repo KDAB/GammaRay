@@ -122,7 +122,9 @@ void Server::newConnection()
 {
     if (isConnected()) {
         cerr << Q_FUNC_INFO << " connected already, refusing incoming connection." << endl;
-        m_serverDevice->nextPendingConnection()->close();
+        auto con = m_serverDevice->nextPendingConnection();
+        con->close();
+        con->deleteLater();
         return;
     }
 
