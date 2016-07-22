@@ -129,7 +129,9 @@ void Server::newConnection()
     }
 
     m_broadcastTimer->stop();
-    setDevice(m_serverDevice->nextPendingConnection());
+    auto con = m_serverDevice->nextPendingConnection();
+    connect(con, SIGNAL(disconnected()), con, SLOT(deleteLater()));
+    setDevice(con);
 
     sendServerGreeting();
 }

@@ -138,7 +138,6 @@ void Endpoint::readyRead()
 
 void Endpoint::connectionClosed()
 {
-    m_socket->deleteLater();
     m_socket = 0;
     emit disconnected();
 }
