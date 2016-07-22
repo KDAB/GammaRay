@@ -91,8 +91,8 @@ void Client::connectToHost(const QUrl &url, int tryAgain)
     connect(m_clientDevice, SIGNAL(transientError()), this, SIGNAL(transientConnectionError()));
     connect(m_clientDevice, SIGNAL(persistentError(QString)), this,
             SIGNAL(persisitentConnectionError(QString)));
-    connect(m_clientDevice, SIGNAL(transientError()), this, SLOT(socketError()));
-    connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SLOT(socketError()));
+    connect(m_clientDevice, SIGNAL(transientError()), this, SLOT(resetClientDevice()));
+    connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SLOT(resetClientDevice()));
     m_clientDevice->setTryAgain(tryAgain);
     m_clientDevice->connectToHost();
 }
@@ -101,10 +101,7 @@ void Client::disconnectFromHost()
 {
     if (m_clientDevice) {
         m_clientDevice->disconnectFromHost();
-        if (m_clientDevice) {
-            m_clientDevice->deleteLater();
-            m_clientDevice = 0;
-        }
+        resetClientDevice();
     }
 }
 
@@ -114,7 +111,7 @@ void Client::socketConnected()
     setDevice(m_clientDevice->device());
 }
 
-void Client::socketError()
+void Client::resetClientDevice()
 {
     if (m_clientDevice) {
         m_clientDevice->deleteLater();
@@ -127,6 +124,7 @@ void Client::socketDisconnected()
     foreach (const auto &objInfo, objectAddresses())
         removeObjectNameAddressMapping(objInfo.second);
     ObjectBroker::clear();
+    resetClientDevice();
 }
 
 void Client::messageReceived(const Message &msg)

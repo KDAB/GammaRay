@@ -91,7 +91,7 @@ private:
 
 private slots:
     void socketConnected();
-    void socketError();
+    void resetClientDevice();
     void socketDisconnected();
 
 private:
