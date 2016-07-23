@@ -29,8 +29,6 @@
 #ifndef GAMMARAY_METAOBJECTTREEMODEL_H
 #define GAMMARAY_METAOBJECTTREEMODEL_H
 
-#include <common/modelroles.h>
-
 #include <QModelIndex>
 #include <QSet>
 #include <QVector>
@@ -47,17 +45,6 @@ class MetaObjectTreeModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    enum Role {
-        MetaObjectRole = UserRole + 1
-    };
-
-    enum Column {
-        ObjectColumn,
-        ObjectSelfCountColumn,
-        ObjectInclusiveCountColumn,
-        _Last
-    };
-
     explicit MetaObjectTreeModel(Probe *probe);
     ~MetaObjectTreeModel();
 

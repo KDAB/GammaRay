@@ -33,6 +33,7 @@
 
 #include <common/objectbroker.h>
 #include <common/metatypedeclarations.h>
+#include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
 #include <core/remote/serverproxymodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
@@ -72,7 +73,7 @@ void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
 
     if (index.isValid()) {
         const QMetaObject *metaObject
-            = index.data(MetaObjectTreeModel::MetaObjectRole).value<const QMetaObject *>();
+            = index.data(QMetaObjectModel::MetaObjectRole).value<const QMetaObject*>();
         m_propertyController->setMetaObject(metaObject);
     } else {
         m_propertyController->setMetaObject(0);
@@ -97,10 +98,8 @@ void MetaObjectBrowser::metaObjectSelected(const QMetaObject *mo)
 {
     if (!mo)
         return;
-    const auto indexes = m_model->match(m_model->index(0,
-                                                       0), MetaObjectTreeModel::MetaObjectRole,
-                                        QVariant::fromValue(
-                                            mo),
+    const auto indexes = m_model->match(m_model->index(0, 0), QMetaObjectModel::MetaObjectRole,
+                                        QVariant::fromValue(mo),
                                         Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexes.isEmpty()) {
         metaObjectSelected(mo->superClass());

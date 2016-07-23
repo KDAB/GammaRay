@@ -31,6 +31,7 @@
 #include "probe.h"
 
 #include <common/metatypedeclarations.h>
+#include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
 
 #include <QDebug>
 #include <QThread>
@@ -103,22 +104,22 @@ QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientatio
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
-        case ObjectColumn:
+        case QMetaObjectModel::ObjectColumn:
             return tr("Meta Object Class");
-        case ObjectSelfCountColumn:
+        case QMetaObjectModel::ObjectSelfCountColumn:
             return tr("Self");
-        case ObjectInclusiveCountColumn:
+        case QMetaObjectModel::ObjectInclusiveCountColumn:
             return tr("Incl.");
         default:
             return QVariant();
         }
     } else if (role == Qt::ToolTipRole) {
         switch (section) {
-        case ObjectColumn:
+        case QMetaObjectModel::ObjectColumn:
             return tr("This column shows the QMetaObject class hierarchy.");
-        case ObjectSelfCountColumn:
+        case QMetaObjectModel::ObjectSelfCountColumn:
             return tr("This column shows the number of objects created of a particular type.");
-        case ObjectInclusiveCountColumn:
+        case QMetaObjectModel::ObjectInclusiveCountColumn:
             return tr(
                 "This column shows the number of objects created that inherit from a particular type.");
         default:
@@ -149,20 +150,20 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
     const QMetaObject *object = metaObjectForIndex(index);
     if (role == Qt::DisplayRole) {
         switch (column) {
-        case ObjectColumn:
+        case QMetaObjectModel::ObjectColumn:
             return object->className();
-        case ObjectSelfCountColumn:
+        case QMetaObjectModel::ObjectSelfCountColumn:
             if (inheritsQObject(object))
                 return m_metaObjectInfoMap.value(object).selfCount;
             return QStringLiteral("-");
-        case ObjectInclusiveCountColumn:
+        case QMetaObjectModel::ObjectInclusiveCountColumn:
             if (inheritsQObject(object))
                 return m_metaObjectInfoMap.value(object).inclusiveCount;
             return QStringLiteral("-");
         default:
             break;
         }
-    } else if (role == MetaObjectRole) {
+    } else if (role == QMetaObjectModel::MetaObjectRole) {
         return QVariant::fromValue<const QMetaObject *>(object);
     }
     return QVariant();
@@ -171,7 +172,7 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
 int MetaObjectTreeModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return _Last;
+    return QMetaObjectModel::_Last;
 }
 
 int MetaObjectTreeModel::rowCount(const QModelIndex &parent) const
@@ -208,7 +209,7 @@ QModelIndexList MetaObjectTreeModel::match(const QModelIndex &start, int role,
                                            const QVariant &value, int hits,
                                            Qt::MatchFlags flags) const
 {
-    if (role == MetaObjectRole) {
+    if (role == QMetaObjectModel::MetaObjectRole) {
         const auto mo = value.value<const QMetaObject *>();
         return QModelIndexList() << indexForMetaObject(mo);
     }
@@ -384,8 +385,8 @@ void GammaRay::MetaObjectTreeModel::emitPendingDataChanged()
         auto index = indexForMetaObject(mo);
         if (!index.isValid())
             continue;
-        emit dataChanged(index.sibling(index.row(), ObjectSelfCountColumn), index.sibling(
-                             index.row(), ObjectInclusiveCountColumn));
+        emit dataChanged(index.sibling(index.row(), QMetaObjectModel::ObjectSelfCountColumn),
+                         index.sibling(index.row(), QMetaObjectModel::ObjectInclusiveCountColumn));
     }
     m_pendingDataChanged.clear();
 }
