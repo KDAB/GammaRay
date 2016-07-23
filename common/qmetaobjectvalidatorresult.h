@@ -40,7 +40,9 @@ namespace QMetaObjectValidatorResult {
 enum Result {
     NoIssue = 0,
     SignalOverride = 1,
-    UnknownMethodParameterType = 2
+    UnknownMethodParameterType = 2,
+    PropertyOverride = 4,
+    UnknownPropertyType = 8
 };
 
 Q_DECLARE_FLAGS(Results, Result)

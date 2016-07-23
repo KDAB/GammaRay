@@ -39,17 +39,17 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkProperty(const QM
 {
     QMetaObjectValidatorResult::Results r = QMetaObjectValidatorResult::NoIssue;
 
-    // TODO
+    // check if property overrides base-class declaration
     if (mo->superClass()) {
         const auto baseIdx = mo->superClass()->indexOfProperty(property.name());
         if (baseIdx >= 0)
-            qDebug() << mo->className() << property.name() << "property override";
+            r |= QMetaObjectValidatorResult::PropertyOverride;
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    // TODO
+    // check if property uses a known type
     if (property.userType() == QMetaType::UnknownType)
-       qDebug() << "Unknown property type:" << property.typeName() << "of property" << mo->className() << "::" << property.name();
+        r |= QMetaObjectValidatorResult::UnknownPropertyType;
 #endif
 
     return r;

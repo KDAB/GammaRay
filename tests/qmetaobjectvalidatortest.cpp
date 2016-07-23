@@ -41,6 +41,12 @@ Q_DECLARE_METATYPE(KnownCustomType)
 class QMetaObjectValidatorTest : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(UnknownCustomType failUnknownType READ failUnknownType)
+    Q_PROPERTY(KnownCustomType knownType READ knownType)
+public:
+    UnknownCustomType failUnknownType() const { return UnknownCustomType(); }
+    KnownCustomType knownType() const { return KnownCustomType(); }
+
 signals:
     void destroyed();
 
@@ -79,10 +85,26 @@ private slots:
 #endif
     }
 
+    void testPropertyType()
+    {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        for (int i = staticMetaObject.propertyOffset(); i < staticMetaObject.propertyCount(); ++i) {
+            const auto property = staticMetaObject.property(i);
+            if (strstr(property.name(), "fail") == property.name())
+                QVERIFY(QMetaObjectValidator::checkProperty(&staticMetaObject, property) & QMetaObjectValidatorResult::UnknownPropertyType);
+            else
+                QVERIFY((QMetaObjectValidator::checkProperty(&staticMetaObject, property) & QMetaObjectValidatorResult::UnknownPropertyType) == 0);
+        }
+#endif
+    }
+
     void testObject()
     {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        QCOMPARE(QMetaObjectValidator::check(&staticMetaObject), QMetaObjectValidatorResult::SignalOverride | QMetaObjectValidatorResult::UnknownMethodParameterType);
+        QCOMPARE(QMetaObjectValidator::check(&staticMetaObject),
+                 QMetaObjectValidatorResult::SignalOverride |
+                 QMetaObjectValidatorResult::UnknownMethodParameterType |
+                 QMetaObjectValidatorResult::UnknownPropertyType);
 #endif
         QCOMPARE(QMetaObjectValidator::check(&QObject::staticMetaObject), QMetaObjectValidatorResult::NoIssue);
     }
