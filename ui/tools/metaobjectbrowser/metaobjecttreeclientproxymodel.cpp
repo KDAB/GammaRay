@@ -28,12 +28,14 @@
 
 #include "metaobjecttreeclientproxymodel.h"
 
+#include <common/qmetaobjectvalidatorresult.h>
 #include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
 
 #include <QApplication>
 #include <QColor>
 #include <QDebug>
 #include <QPalette>
+#include <QStyle>
 
 using namespace GammaRay;
 
@@ -52,6 +54,7 @@ void MetaObjectTreeClientProxyModel::setSourceModel(QAbstractItemModel *source)
 
     connect(source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(findQObjectIndex()));
     connect(source, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(findQObjectIndex()));
+    findQObjectIndex();
 }
 
 // 1 / GRADIENT_SCALE_FACTOR is yellow, 2 / GRADIENT_SCALE_FACTOR and beyond is red
@@ -67,13 +70,37 @@ static QColor colorForRatio(double ratio)
     return color;
 }
 
+static QString issuesToString(QMetaObjectValidatorResult::Results r)
+{
+    QStringList l;
+    if (r & QMetaObjectValidatorResult::SignalOverride)
+        l.push_back(MetaObjectTreeClientProxyModel::tr("overrides base class signal"));
+    if (r & QMetaObjectValidatorResult::UnknownMethodParameterType)
+        l.push_back(MetaObjectTreeClientProxyModel::tr("method uses parameter type not registerd with the meta type system"));
+    return MetaObjectTreeClientProxyModel::tr("Issues:<ul><li>%1</li></ul>").arg(l.join("</li><li>"));
+}
+
 QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex &index, int role) const
 {
-    if (!sourceModel())
+    if (!sourceModel() || !index.isValid())
         return QVariant();
 
-    if ((role != Qt::BackgroundRole && role != Qt::ToolTipRole) || index.column() == 0
-        || !m_qobjIndex.isValid())
+    if (index.column() == QMetaObjectModel::ObjectColumn) {
+        const auto issues = QIdentityProxyModel::data(index, QMetaObjectModel::MetaObjectIssues).value<QMetaObjectValidatorResult::Results>();
+        switch (role) {
+            case Qt::DecorationRole:
+                if (issues != QMetaObjectValidatorResult::NoIssue)
+                    return qApp->style()->standardIcon(QStyle::SP_MessageBoxWarning);
+                break;
+            case Qt::ToolTipRole:
+                if (issues != QMetaObjectValidatorResult::NoIssue)
+                    return issuesToString(issues);
+                break;
+        }
+        return QIdentityProxyModel::data(index, role);
+    }
+
+    if ((role != Qt::BackgroundRole && role != Qt::ToolTipRole) || !m_qobjIndex.isValid())
         return QIdentityProxyModel::data(index, role);
 
     if (!index.parent().isValid()

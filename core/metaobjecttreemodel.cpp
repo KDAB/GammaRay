@@ -28,7 +28,8 @@
 
 #include "metaobjecttreemodel.h"
 
-#include "probe.h"
+#include <core/probe.h>
+#include <core/qmetaobjectvalidator.h>
 
 #include <common/metatypedeclarations.h>
 #include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
@@ -135,6 +136,9 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
         }
     } else if (role == QMetaObjectModel::MetaObjectRole) {
         return QVariant::fromValue<const QMetaObject *>(object);
+    } else if (role == QMetaObjectModel::MetaObjectIssues && index.column() == QMetaObjectModel::ObjectColumn) {
+        const auto r = QMetaObjectValidator::check(object);
+        return r == QMetaObjectValidatorResult::NoIssue ? QVariant() : QVariant::fromValue(r);
     }
     return QVariant();
 }

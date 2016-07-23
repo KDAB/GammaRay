@@ -37,7 +37,8 @@ namespace GammaRay {
 namespace QMetaObjectModel
 {
     enum Role {
-        MetaObjectRole = UserRole + 1
+        MetaObjectRole = UserRole + 1,
+        MetaObjectIssues
     };
 
     enum Column {

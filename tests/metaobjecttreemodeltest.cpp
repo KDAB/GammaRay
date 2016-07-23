@@ -45,6 +45,8 @@ using namespace GammaRay;
 class MetaObjectTreeModelTest : public QObject
 {
     Q_OBJECT
+signals:
+    void destroyed(); // to trigger the QMO validator
 private:
     void createProbe()
     {
@@ -85,14 +87,32 @@ private slots:
         QVERIFY(idx.isValid());
 
         QCOMPARE(idx.data(Qt::DisplayRole).toString(), QLatin1String("MetaObjectTreeModelTest"));
-        QCOMPARE(idx.sibling(idx.row(), 1).data().toInt(), 1);
-        QCOMPARE(idx.sibling(idx.row(), 2).data().toInt(), 1);
+        QVERIFY(!idx.data(Qt::DecorationRole).isNull());
+        QVERIFY(!idx.data(Qt::ToolTipRole).toString().isEmpty());
+
+        idx = idx.sibling(idx.row(), 1);
+        QCOMPARE(idx.data().toInt(), 1);
+        QVERIFY(!idx.data(Qt::BackgroundRole).isNull());
+        QVERIFY(!idx.data(Qt::ToolTipRole).toString().isEmpty());
+
+        idx = idx.sibling(idx.row(), 2);
+        QCOMPARE(idx.data().toInt(), 1);
+        QVERIFY(!idx.data(Qt::BackgroundRole).isNull());
+        QVERIFY(!idx.data(Qt::ToolTipRole).toString().isEmpty());
 
         idx = idx.parent();
         QVERIFY(idx.isValid());
         QCOMPARE(idx.data(Qt::DisplayRole).toString(), QLatin1String("QObject"));
-        QVERIFY(idx.sibling(idx.row(), 1).data().toInt() >= 0);
-        QVERIFY(idx.sibling(idx.row(), 2).data().toInt() > 1);
+        QVERIFY(idx.data(Qt::DecorationRole).isNull());
+        QVERIFY(idx.data(Qt::ToolTipRole).toString().isEmpty());
+
+        idx = idx.sibling(idx.row(), 1);
+        QVERIFY(idx.data().toInt() >= 0);
+
+        idx = idx.sibling(idx.row(), 2);
+        QVERIFY(idx.data().toInt() > 1);
+        QVERIFY(idx.data(Qt::BackgroundRole).isNull());
+        QVERIFY(idx.data(Qt::ToolTipRole).toString().isEmpty());
 
         QVERIFY(!idx.parent().isValid());
     }
