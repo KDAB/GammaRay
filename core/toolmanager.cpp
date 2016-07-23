@@ -43,7 +43,6 @@
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include "tools/standardpaths/standardpaths.h"
-#include "tools/mimetypes/mimetypes.h"
 #endif
 
 #include <QDebug>
@@ -67,7 +66,6 @@ ToolManager::ToolManager(QObject *parent)
     addToolFactory(new LocaleInspectorFactory(this));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     addToolFactory(new StandardPathsFactory(this));
-    addToolFactory(new MimeTypesFactory(this));
 #endif
 
     Q_FOREACH (ToolFactory *factory, m_toolPluginManager->plugins())

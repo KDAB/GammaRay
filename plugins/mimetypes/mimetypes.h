@@ -1,5 +1,5 @@
 /*
-  mimetypeswidget.h
+  mimetypes.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,29 +26,35 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MIMETYPESWIDGET_H
-#define GAMMARAY_MIMETYPESWIDGET_H
+#ifndef GAMMARAY_MIMETYPES_MIMETYPES_H
+#define GAMMARAY_MIMETYPES_MIMETYPES_H
 
-#include <ui/uistatemanager.h>
+#include "core/toolfactory.h"
 
-#include <QWidget>
+QT_BEGIN_NAMESPACE
+class QStandardItemModel;
+QT_END_NAMESPACE
 
 namespace GammaRay {
-namespace Ui {
-class MimeTypesWidget;
-}
-
-class MimeTypesWidget : public QWidget
+class MimeTypes : public QObject
 {
     Q_OBJECT
 public:
-    explicit MimeTypesWidget(QWidget *parent = 0);
-    ~MimeTypesWidget();
+    explicit MimeTypes(ProbeInterface *probe, QObject *parent = 0);
+    ~MimeTypes();
+};
 
-private:
-    QScopedPointer<Ui::MimeTypesWidget> ui;
-    UIStateManager m_stateManager;
+class MimeTypesFactory : public QObject, public StandardToolFactory<QObject, MimeTypes>
+{
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_mimetypes.json")
+public:
+    explicit MimeTypesFactory(QObject *parent = Q_NULLPTR)
+        : QObject(parent)
+    {
+    }
 };
 }
 
-#endif // GAMMARAY_MIMETYPESWIDGET_H
+#endif // GAMMARAY_MIMETYPES_H

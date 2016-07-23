@@ -1,0 +1,8 @@
+{
+    "hidden": false,
+    "id": "gammaray_mimetypes",
+    "name": "Mime Types",
+    "types": [
+        "QObject"
+    ]
+}

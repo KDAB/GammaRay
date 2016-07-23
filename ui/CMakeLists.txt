@@ -46,7 +46,6 @@ set(gammaray_ui_srcs
   tools/metaobjectbrowser/metaobjectbrowserwidget.cpp
   tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
   tools/metatypebrowser/metatypebrowserwidget.cpp
-  tools/mimetypes/mimetypeswidget.cpp
   tools/modelinspector/modelinspectorwidget.cpp
   tools/modelinspector/modelinspectorclient.cpp
   tools/objectinspector/objectinspectorwidget.cpp
@@ -84,7 +83,6 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/localeinspector/localeinspectorwidget.ui
   tools/messagehandler/messagehandlerwidget.ui
   tools/metatypebrowser/metatypebrowserwidget.ui
-  tools/mimetypes/mimetypeswidget.ui
   tools/modelinspector/modelinspectorwidget.ui
   tools/objectinspector/objectinspectorwidget.ui
   tools/objectinspector/propertiestab.ui

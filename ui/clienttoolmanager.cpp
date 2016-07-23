@@ -32,7 +32,6 @@
 #include <ui/tools/messagehandler/messagehandlerwidget.h>
 #include <ui/tools/metaobjectbrowser/metaobjectbrowserwidget.h>
 #include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
-#include <ui/tools/mimetypes/mimetypeswidget.h>
 #include <ui/tools/modelinspector/modelinspectorwidget.h>
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
 #include <ui/tools/resourcebrowser/resourcebrowserwidget.h>
@@ -63,7 +62,6 @@ MAKE_FACTORY(LocaleInspector,   qApp->translate("LocaleInspectorFactory", "Local
 MAKE_FACTORY(MessageHandler,    qApp->translate("MessageHandlerFactory", "Messages"));
 MAKE_FACTORY(MetaObjectBrowser, qApp->translate("MetaObjectBrowserFactory", "Meta Objects"));
 MAKE_FACTORY(MetaTypeBrowser,   qApp->translate("MetaTypeBrowserFactory", "Meta Types"));
-MAKE_FACTORY(MimeTypes,         qApp->translate("MimeTypesFactory", "Mime Types"));
 MAKE_FACTORY(ModelInspector,    qApp->translate("ModelInspectorFactory", "Models"));
 MAKE_FACTORY(ResourceBrowser,   qApp->translate("ResourceBrowserFactory", "Resources"));
 MAKE_FACTORY(StandardPaths,     qApp->translate("StandardPathsFactory", "Standard Paths"));
@@ -99,7 +97,6 @@ static void initPluginRepository()
     insertFactory(new MessageHandlerFactory);
     insertFactory(new MetaObjectBrowserFactory);
     insertFactory(new MetaTypeBrowserFactory);
-    insertFactory(new MimeTypesFactory);
     insertFactory(new ModelInspectorFactory);
     insertFactory(new ObjectInspectorFactory);
     insertFactory(new ResourceBrowserFactory);
