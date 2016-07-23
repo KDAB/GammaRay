@@ -28,6 +28,8 @@
 
 #include "metaobjecttreeclientproxymodel.h"
 
+#include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
+
 #include <QApplication>
 #include <QColor>
 #include <QDebug>
@@ -93,6 +95,36 @@ QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex &index, int role
 
     Q_ASSERT(role == Qt::ToolTipRole);
     return tr("%1%").arg(ratio * 100.0, 0, 'f', 2);
+}
+
+QVariant MetaObjectTreeClientProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+        switch (section) {
+            case QMetaObjectModel::ObjectColumn:
+                return tr("Meta Object Class");
+            case QMetaObjectModel::ObjectSelfCountColumn:
+                return tr("Self");
+            case QMetaObjectModel::ObjectInclusiveCountColumn:
+                return tr("Incl.");
+            default:
+                return QVariant();
+        }
+    } else if (role == Qt::ToolTipRole) {
+        switch (section) {
+            case QMetaObjectModel::ObjectColumn:
+                return tr("This column shows the QMetaObject class hierarchy.");
+            case QMetaObjectModel::ObjectSelfCountColumn:
+                return tr("This column shows the number of objects created of a particular type.");
+            case QMetaObjectModel::ObjectInclusiveCountColumn:
+                return tr(
+                    "This column shows the number of objects created that inherit from a particular type.");
+            default:
+                return QVariant();
+        }
+    }
+
+    return QIdentityProxyModel::headerData(section, orientation, role);
 }
 
 void MetaObjectTreeClientProxyModel::findQObjectIndex()

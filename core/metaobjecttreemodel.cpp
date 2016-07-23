@@ -100,36 +100,6 @@ MetaObjectTreeModel::~MetaObjectTreeModel()
 {
 }
 
-QVariant MetaObjectTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-        switch (section) {
-        case QMetaObjectModel::ObjectColumn:
-            return tr("Meta Object Class");
-        case QMetaObjectModel::ObjectSelfCountColumn:
-            return tr("Self");
-        case QMetaObjectModel::ObjectInclusiveCountColumn:
-            return tr("Incl.");
-        default:
-            return QVariant();
-        }
-    } else if (role == Qt::ToolTipRole) {
-        switch (section) {
-        case QMetaObjectModel::ObjectColumn:
-            return tr("This column shows the QMetaObject class hierarchy.");
-        case QMetaObjectModel::ObjectSelfCountColumn:
-            return tr("This column shows the number of objects created of a particular type.");
-        case QMetaObjectModel::ObjectInclusiveCountColumn:
-            return tr(
-                "This column shows the number of objects created that inherit from a particular type.");
-        default:
-            return QVariant();
-        }
-    }
-
-    return QAbstractItemModel::headerData(section, orientation, role);
-}
-
 static bool inheritsQObject(const QMetaObject *mo)
 {
     while (mo) {
