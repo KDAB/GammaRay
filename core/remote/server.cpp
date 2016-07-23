@@ -122,12 +122,16 @@ void Server::newConnection()
 {
     if (isConnected()) {
         cerr << Q_FUNC_INFO << " connected already, refusing incoming connection." << endl;
-        m_serverDevice->nextPendingConnection()->close();
+        auto con = m_serverDevice->nextPendingConnection();
+        con->close();
+        con->deleteLater();
         return;
     }
 
     m_broadcastTimer->stop();
-    setDevice(m_serverDevice->nextPendingConnection());
+    auto con = m_serverDevice->nextPendingConnection();
+    connect(con, SIGNAL(disconnected()), con, SLOT(deleteLater()));
+    setDevice(con);
 
     sendServerGreeting();
 }

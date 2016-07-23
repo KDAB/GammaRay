@@ -70,8 +70,10 @@
             \li \l{Styles}
             \li \l{Messages}
             \li \l{Signal Plotter}
+            \li \l{Actions}
             \li \l{Resources}
             \li \l{Meta Object Browser}
+            \li \l{Font Browser}
             \li \l{Locales}
             \li \l{Mime Types}
         \endlist

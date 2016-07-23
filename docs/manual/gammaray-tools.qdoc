@@ -59,7 +59,7 @@
 
     \list
         \li \l{Object Inspector}
-        \li Actions
+        \li \l{Actions}
         \li Models
         \li Selection Models
         \li Text Documents
@@ -74,7 +74,7 @@
     The following tools allow you to inspect information of the Qt installation and the system it's deplyoed on.
 
     \list
-        \li Fonts
+        \li \l{Font Browser}
         \li \l{Locales}
         \li \l{Mime Types}
         \li Network
