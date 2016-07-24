@@ -213,7 +213,7 @@ bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
             if (widget) {
                 // also select the corresponding model if a view was selected
                 if (QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(object))
-                    m_probe->selectObject(view->model());
+                    m_probe->selectObject(view->selectionModel());
                 else if (QComboBox *box = Util::findParentOfType<QComboBox>(object))
                     m_probe->selectObject(box->model());
 
