@@ -120,6 +120,8 @@ QVariant ModelCellModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
             return value;
+    } else if (role == Qt::DecorationRole && index.column() == 1) {
+        return VariantHandler::decoration(value);
     }
 
     return QVariant();
