@@ -46,6 +46,8 @@ public:
     /*! show only selection models for @p model */
     void setModel(QAbstractItemModel *model);
 
+    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+
 protected:
     bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE;
 

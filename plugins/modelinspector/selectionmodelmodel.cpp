@@ -58,3 +58,9 @@ bool SelectionModelModel::filterAcceptsObject(QObject* object) const
     Q_ASSERT(selectionModel);
     return selectionModel->model() == m_model;
 }
+
+QMap<int, QVariant> SelectionModelModel::itemData(const QModelIndex& index) const
+{
+    const auto sourceIndex = mapToSource(index);
+    return sourceModel()->itemData(sourceIndex);
+}

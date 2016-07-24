@@ -66,6 +66,8 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
     ui->selectionModelsView->header()->setObjectName("selectionModelsViewHeader");
     ui->selectionModelsView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->selectionModelsView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    connect(ui->selectionModelsView, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(selectionModelContextMenu(QPoint)));
 
     ui->modelContentView->header()->setObjectName("modelContentViewHeader");
     ui->modelContentView->setItemDelegate(new PropertyEditorDelegate(GammaRay::ItemDelegate::tr(
@@ -176,6 +178,22 @@ void ModelInspectorWidget::modelContextMenu(QPoint pos)
     ext.populateMenu(&menu);
 
     menu.exec(ui->modelView->viewport()->mapToGlobal(pos));
+}
+
+void ModelInspectorWidget::selectionModelContextMenu(QPoint pos)
+{
+    const auto index = ui->selectionModelsView->indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Declaration, index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.populateMenu(&menu);
+
+    menu.exec(ui->selectionModelsView->viewport()->mapToGlobal(pos));
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
