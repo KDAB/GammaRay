@@ -1,6 +1,7 @@
 add_subdirectory(codecbrowser)
 add_subdirectory(fontbrowser)
 add_subdirectory(kjobtracker)
+add_subdirectory(modelinspector)
 add_subdirectory(quickinspector)
 add_subdirectory(selectionmodelinspector)
 add_subdirectory(signalmonitor)

@@ -29,7 +29,7 @@
 #include "modeltester.h"
 #include <3rdparty/qt/modeltest.h>
 
-#include "util.h"
+#include <core/util.h>
 
 #include <QAbstractListModel>
 #include <QDebug>

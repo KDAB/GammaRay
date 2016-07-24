@@ -28,7 +28,7 @@
 
 #include "modelcellmodel.h"
 
-#include "core/varianthandler.h"
+#include <core/varianthandler.h>
 
 #include <QAbstractProxyModel>
 

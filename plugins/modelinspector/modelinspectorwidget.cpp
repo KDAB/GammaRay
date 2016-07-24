@@ -150,3 +150,7 @@ void ModelInspectorWidget::setupModelContentSelectionModel()
     ui->modelContentView->setSelectionModel(ObjectBroker::selectionModel(
                                                 ui->modelContentView->model()));
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(ModelInspectorUiFactory)
+#endif

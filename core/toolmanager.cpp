@@ -36,7 +36,6 @@
 
 #include "tools/localeinspector/localeinspector.h"
 #include "tools/metatypebrowser/metatypebrowser.h"
-#include "tools/modelinspector/modelinspector.h"
 #include "tools/objectinspector/objectinspector.h"
 #include "tools/resourcebrowser/resourcebrowser.h"
 #include "tools/messagehandler/messagehandler.h"
@@ -58,7 +57,6 @@ ToolManager::ToolManager(QObject *parent)
 {
     // built-in tools
     addToolFactory(new ObjectInspectorFactory(this));
-    addToolFactory(new ModelInspectorFactory(this));
     addToolFactory(new ResourceBrowserFactory(this));
     addToolFactory(new MetaObjectBrowserFactory(this));
     addToolFactory(new MetaTypeBrowserFactory(this));

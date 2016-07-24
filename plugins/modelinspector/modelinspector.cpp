@@ -140,7 +140,6 @@ void ModelInspector::objectCreated(QObject *object)
         m_probe->discoverObject(proxy->sourceModel());
 }
 
-QVector<QByteArray> ModelInspectorFactory::selectableTypes() const
-{
-    return QVector<QByteArray>() << QAbstractItemModel::staticMetaObject.className();
-}
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(ModelInspectorFactory)
+#endif

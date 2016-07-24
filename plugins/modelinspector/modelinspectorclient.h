@@ -1,5 +1,5 @@
 /*
-  modelinspectorinterface.cpp
+  modelinspectorclient.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -8,7 +8,7 @@
   Author: Milian Wolff <milian.wolff@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
-  acuordance with GammaRay Commercial License Agreement provided with the Software.
+  accordance with GammaRay Commercial License Agreement provided with the Software.
 
   Contact info@kdab.com if any conditions of this licensing are not clear to you.
 
@@ -26,17 +26,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef GAMMARAY_MODELINSPECTORCLIENT_H
+#define GAMMARAY_MODELINSPECTORCLIENT_H
+
 #include "modelinspectorinterface.h"
-#include "objectbroker.h"
 
-using namespace GammaRay;
-
-ModelInspectorInterface::ModelInspectorInterface(QObject *parent)
-    : QObject(parent)
+namespace GammaRay {
+class ModelInspectorClient : public ModelInspectorInterface
 {
-    ObjectBroker::registerObject<ModelInspectorInterface *>(this);
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ModelInspectorInterface)
+public:
+    explicit ModelInspectorClient(QObject *parent = 0);
+    virtual ~ModelInspectorClient();
+};
 }
 
-ModelInspectorInterface::~ModelInspectorInterface()
-{
-}
+#endif // GAMMARAY_MODELINSPECTORCLIENT_H

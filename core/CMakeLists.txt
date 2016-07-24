@@ -49,9 +49,6 @@ set(gammaray_srcs
 
   remoteviewserver.cpp
 
-  tools/modelinspector/modeltester.cpp
-  tools/modelinspector/modelmodel.cpp
-  tools/modelinspector/modelcellmodel.cpp
   tools/metatypebrowser/metatypesmodel.cpp
   tools/localeinspector/localemodel.cpp
   tools/localeinspector/localedataaccessor.cpp
@@ -61,8 +58,6 @@ set(gammaray_srcs
   tools/localeinspector/localeinspector.cpp
   tools/metaobjectbrowser/metaobjectbrowser.cpp
   tools/metatypebrowser/metatypebrowser.cpp
-  tools/modelinspector/modelinspector.cpp
-  tools/modelinspector/modelcontentproxymodel.cpp
   tools/objectinspector/objectinspector.cpp
   tools/objectinspector/propertiesextension.cpp
   tools/objectinspector/methodsextension.cpp
@@ -109,7 +104,6 @@ else()
     ${CMAKE_SOURCE_DIR}/3rdparty/StackWalker/StackWalker.cpp)
 endif()
 
-qt4_wrap_cpp(gammaray_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.h)
 qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 # core lib

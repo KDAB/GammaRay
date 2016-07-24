@@ -1,5 +1,5 @@
 /*
-  modelinspectorwidget.h
+  modelmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,43 +26,39 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MODELINSPECTOR_MODELINSPECTORWIDGET_H
-#define GAMMARAY_MODELINSPECTOR_MODELINSPECTORWIDGET_H
+#ifndef GAMMARAY_MODELINSPECTOR_MODELMODEL_H
+#define GAMMARAY_MODELINSPECTOR_MODELMODEL_H
 
-#include <ui/uistatemanager.h>
+#include <core/objectmodelbase.h>
 
-#include <QWidget>
-
-QT_BEGIN_NAMESPACE
-class QItemSelection;
-class QModelIndex;
-QT_END_NAMESPACE
+#include <QAbstractItemModel>
+#include <QAbstractProxyModel>
+#include <QVector>
 
 namespace GammaRay {
-class ModelInspectorInterface;
-
-namespace Ui {
-class ModelInspectorWidget;
-}
-
-class ModelInspectorWidget : public QWidget
+class ModelModel : public ObjectModelBase<QAbstractItemModel>
 {
     Q_OBJECT
 public:
-    explicit ModelInspectorWidget(QWidget *parent = 0);
-    ~ModelInspectorWidget();
+    explicit ModelModel(QObject *parent);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-private slots:
-    void cellSelected(int row, int column, const QString &internalId, const QString &internalPtr);
-    void objectRegistered(const QString &objectName);
-    void modelSelected(const QItemSelection &selected);
-    void setupModelContentSelectionModel();
+public slots:
+    void objectAdded(QObject *obj);
+    void objectRemoved(QObject *obj);
 
 private:
-    QScopedPointer<Ui::ModelInspectorWidget> ui;
-    UIStateManager m_stateManager;
-    ModelInspectorInterface *m_interface;
+    QModelIndex indexForModel(QAbstractItemModel *model) const;
+    QVector<QAbstractProxyModel *> proxiesForModel(QAbstractItemModel *model) const;
+
+private:
+    QVector<QAbstractItemModel *> m_models;
+    QVector<QAbstractProxyModel *> m_proxies;
 };
 }
 
-#endif // GAMMARAY_MODELINSPECTORWIDGET_H
+#endif // MODELMODEL_H

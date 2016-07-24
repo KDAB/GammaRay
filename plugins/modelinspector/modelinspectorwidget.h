@@ -1,5 +1,5 @@
 /*
-  modelinspector.h
+  modelinspectorwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,66 +26,51 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MODELINSPECTOR_MODELINSPECTOR_H
-#define GAMMARAY_MODELINSPECTOR_MODELINSPECTOR_H
+#ifndef GAMMARAY_MODELINSPECTOR_MODELINSPECTORWIDGET_H
+#define GAMMARAY_MODELINSPECTOR_MODELINSPECTORWIDGET_H
 
-#include "toolfactory.h"
-#include <QAbstractItemModel>
+#include <ui/tooluifactory.h>
+#include <ui/uistatemanager.h>
 
-#include "common/modelinspectorinterface.h"
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
-class QAbstractItemModel;
 class QItemSelection;
-class QItemSelectionModel;
 class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class ModelCellModel;
-class ModelTester;
-class ModelContentProxyModel;
+class ModelInspectorInterface;
 
-class ModelInspector : public ModelInspectorInterface
+namespace Ui {
+class ModelInspectorWidget;
+}
+
+class ModelInspectorWidget : public QWidget
 {
     Q_OBJECT
-    Q_INTERFACES(GammaRay::ModelInspectorInterface)
 public:
-    explicit ModelInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit ModelInspectorWidget(QWidget *parent = 0);
+    ~ModelInspectorWidget();
 
 private slots:
+    void cellSelected(int row, int column, const QString &internalId, const QString &internalPtr);
+    void objectRegistered(const QString &objectName);
     void modelSelected(const QItemSelection &selected);
-    void selectionChanged(const QModelIndex &selected);
-
-    void objectSelected(QObject *object);
-    void objectCreated(QObject *object);
+    void setupModelContentSelectionModel();
 
 private:
-    ProbeInterface *m_probe;
-    QAbstractItemModel *m_modelModel;
-    QItemSelectionModel *m_modelSelectionModel;
-
-    QItemSelectionModel *m_modelContentSelectionModel;
-    ModelContentProxyModel *m_modelContentProxyModel;
-
-    ModelCellModel *m_cellModel;
-
-    ModelTester *m_modelTester;
+    QScopedPointer<Ui::ModelInspectorWidget> ui;
+    UIStateManager m_stateManager;
+    ModelInspectorInterface *m_interface;
 };
 
-class ModelInspectorFactory : public QObject,
-    public StandardToolFactory<QAbstractItemModel, ModelInspector>
+class ModelInspectorUiFactory : public QObject, public StandardToolUiFactory<ModelInspectorWidget>
 {
     Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-public:
-    explicit ModelInspectorFactory(QObject *parent)
-        : QObject(parent)
-    {
-    }
-
-    QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_modelinspector.json")
 };
 }
 
-#endif // GAMMARAY_MODELINSPECTOR_H
+#endif // GAMMARAY_MODELINSPECTORWIDGET_H
