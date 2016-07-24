@@ -6,7 +6,8 @@
         "QItemSelectionModel"
     ],
     "selectableTypes": [
-        "QAbstractItemModel"
+        "QAbstractItemModel",
+        "QItemSelectionModel"
     ]
 }
 

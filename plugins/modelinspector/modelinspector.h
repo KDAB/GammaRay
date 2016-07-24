@@ -69,6 +69,7 @@ private:
     QItemSelectionModel *m_modelSelectionModel;
 
     SelectionModelModel *m_selectionModelsModel;
+    QItemSelectionModel *m_selectionModelsSelectionModel;
 
     QItemSelectionModel *m_modelContentSelectionModel;
     ModelContentProxyModel *m_modelContentProxyModel;

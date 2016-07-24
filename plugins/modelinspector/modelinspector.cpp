@@ -50,6 +50,7 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
     , m_probe(probe)
     , m_modelModel(0)
     , m_selectionModelsModel(new SelectionModelModel(this))
+    , m_selectionModelsSelectionModel(Q_NULLPTR)
     , m_modelContentSelectionModel(0)
     , m_modelContentProxyModel(new ModelContentProxyModel(this))
     , m_modelTester(0)
@@ -73,6 +74,7 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
 
     m_selectionModelsModel->setSourceModel(probe->objectListModel());
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SelectionModels"), m_selectionModelsModel);
+    m_selectionModelsSelectionModel = ObjectBroker::selectionModel(m_selectionModelsModel);
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelContent"), m_modelContentProxyModel);
     m_modelContentSelectionModel = ObjectBroker::selectionModel(m_modelContentProxyModel);
@@ -114,20 +116,34 @@ void ModelInspector::modelSelected(const QItemSelection &selected)
 
 void ModelInspector::objectSelected(QObject *object)
 {
-    QAbstractItemModel *selectedModel = qobject_cast<QAbstractItemModel *>(object);
-    if (selectedModel) {
-        const QModelIndexList indexList
-            = m_modelModel->match(m_modelModel->index(0, 0),
+    if (auto model = qobject_cast<QAbstractItemModel*>(object)) {
+        if (model == m_modelContentProxyModel->sourceModel())
+            return;
+
+        const auto indexList = m_modelModel->match(m_modelModel->index(0, 0),
                                   ObjectModel::ObjectRole,
-                                  QVariant::fromValue<QObject *>(selectedModel), 1,
+                                  QVariant::fromValue<QObject*>(model), 1,
                                   Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
         if (indexList.isEmpty())
             return;
 
-        const QModelIndex index = indexList.first();
-        m_modelSelectionModel->select(index,
-                                      QItemSelectionModel::ClearAndSelect
-                                      | QItemSelectionModel::Rows);
+        const auto index = indexList.first();
+        m_modelSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    }
+    if (auto selModel = qobject_cast<QItemSelectionModel*>(object)) {
+        if (!selModel->model())
+            return;
+        objectSelected(const_cast<QAbstractItemModel*>(selModel->model()));
+
+        const auto indexList = m_selectionModelsModel->match(m_selectionModelsModel->index(0, 0),
+                                  ObjectModel::ObjectRole,
+                                  QVariant::fromValue<QObject*>(selModel), 1,
+                                  Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+        if (indexList.isEmpty())
+            return;
+
+        const auto index = indexList.first();
+        m_selectionModelsSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     }
 }
 
