@@ -33,6 +33,9 @@
        </item>
        <item>
         <widget class="GammaRay::DeferredTreeView" name="modelView">
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
          <property name="uniformRowHeights">
           <bool>true</bool>
          </property>

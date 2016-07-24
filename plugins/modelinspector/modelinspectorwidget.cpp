@@ -30,6 +30,7 @@
 #include "ui_modelinspectorwidget.h"
 #include "modelinspectorclient.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/itemdelegate.h>
 #include <ui/searchlinecontroller.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
@@ -39,6 +40,7 @@
 #include <common/objectmodel.h>
 
 #include <QDebug>
+#include <QMenu>
 
 using namespace GammaRay;
 
@@ -57,6 +59,8 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
 
     ui->modelView->header()->setObjectName("modelViewHeader");
     ui->modelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    connect(ui->modelView, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(modelContextMenu(QPoint)));
 
     ui->modelContentView->header()->setObjectName("modelContentViewHeader");
     ui->modelContentView->setItemDelegate(new PropertyEditorDelegate(GammaRay::ItemDelegate::tr(
@@ -149,6 +153,24 @@ void ModelInspectorWidget::setupModelContentSelectionModel()
 
     ui->modelContentView->setSelectionModel(ObjectBroker::selectionModel(
                                                 ui->modelContentView->model()));
+}
+
+void ModelInspectorWidget::modelContextMenu(QPoint pos)
+{
+    const auto index = ui->modelView->indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.setLocation(ContextMenuExtension::Creation, index.data(
+                        ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Declaration,
+                    index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.populateMenu(&menu);
+
+    menu.exec(ui->modelView->viewport()->mapToGlobal(pos));
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

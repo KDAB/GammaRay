@@ -58,6 +58,7 @@ private slots:
     void objectRegistered(const QString &objectName);
     void modelSelected(const QItemSelection &selected);
     void setupModelContentSelectionModel();
+    void modelContextMenu(QPoint pos);
 
 private:
     QScopedPointer<Ui::ModelInspectorWidget> ui;
