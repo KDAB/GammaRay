@@ -62,6 +62,11 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
     connect(ui->modelView, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(modelContextMenu(QPoint)));
 
+    ui->selectionModelsView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectionModels")));
+    ui->selectionModelsView->header()->setObjectName("selectionModelsViewHeader");
+    ui->selectionModelsView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->selectionModelsView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+
     ui->modelContentView->header()->setObjectName("modelContentViewHeader");
     ui->modelContentView->setItemDelegate(new PropertyEditorDelegate(GammaRay::ItemDelegate::tr(
                                                                          "(Item %r)"), this));

@@ -32,6 +32,7 @@
 #include "modelcellmodel.h"
 #include "modeltester.h"
 #include "modelcontentproxymodel.h"
+#include "selectionmodelmodel.h"
 
 #include <core/probeinterface.h>
 #include <core/remote/serverproxymodel.h>
@@ -48,6 +49,7 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
     : ModelInspectorInterface(parent)
     , m_probe(probe)
     , m_modelModel(0)
+    , m_selectionModelsModel(new SelectionModelModel(this))
     , m_modelContentSelectionModel(0)
     , m_modelContentProxyModel(new ModelContentProxyModel(this))
     , m_modelTester(0)
@@ -68,6 +70,9 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
             SLOT(modelSelected(QItemSelection)));
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
             SLOT(objectSelected(QObject*)));
+
+    m_selectionModelsModel->setSourceModel(probe->objectListModel());
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.SelectionModels"), m_selectionModelsModel);
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelContent"), m_modelContentProxyModel);
     m_modelContentSelectionModel = ObjectBroker::selectionModel(m_modelContentProxyModel);
@@ -96,8 +101,10 @@ void ModelInspector::modelSelected(const QItemSelection &selected)
         QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
         QAbstractItemModel *model = qobject_cast<QAbstractItemModel *>(obj);
         Q_ASSERT(model);
+        m_selectionModelsModel->setModel(model);
         m_modelContentProxyModel->setSourceModel(model);
     } else {
+        m_selectionModelsModel->setModel(Q_NULLPTR);
         m_modelContentProxyModel->setSourceModel(Q_NULLPTR);
     }
 

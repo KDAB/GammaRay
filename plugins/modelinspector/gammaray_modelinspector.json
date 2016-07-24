@@ -2,7 +2,8 @@
     "id": "gammaray_modelinspector",
     "name": "Models",
     "types": [
-        "QAbstractItemModel"
+        "QAbstractItemModel",
+        "QItemSelectionModel"
     ],
     "selectableTypes": [
         "QAbstractItemModel"

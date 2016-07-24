@@ -47,6 +47,7 @@ namespace GammaRay {
 class ModelCellModel;
 class ModelTester;
 class ModelContentProxyModel;
+class SelectionModelModel;
 
 class ModelInspector : public ModelInspectorInterface
 {
@@ -66,6 +67,8 @@ private:
     ProbeInterface *m_probe;
     QAbstractItemModel *m_modelModel;
     QItemSelectionModel *m_modelSelectionModel;
+
+    SelectionModelModel *m_selectionModelsModel;
 
     QItemSelectionModel *m_modelContentSelectionModel;
     ModelContentProxyModel *m_modelContentProxyModel;

@@ -6,6 +6,7 @@ set(gammaray_models_srcs
   modelmodel.cpp
   modelcellmodel.cpp
   modelcontentproxymodel.cpp
+  selectionmodelmodel.cpp
 )
 qt4_wrap_cpp(gammaray_models_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.h)
 
