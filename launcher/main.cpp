@@ -281,8 +281,6 @@ int main(int argc, char **argv)
             qputenv("GAMMARAY_TEST_FILTER", "1");
         if (arg == QLatin1String("-unittest"))
             qputenv("GAMMARAY_UNITTEST", "1");
-        if (arg == QLatin1String("-modeltest"))
-            qputenv("GAMMARAY_MODELTEST", "1");
         // built-in arguments of QApp, could be meant for us if we are showing the launcher window
         foreach (const QString &builtInArg, builtInArgs) {
             if (arg == builtInArg && !args.isEmpty())

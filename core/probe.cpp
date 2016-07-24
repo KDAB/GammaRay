@@ -40,8 +40,6 @@
 #include "toolpluginmodel.h"
 #include "util.h"
 
-#include <3rdparty/qt/modeltest.h>
-
 #include "remote/server.h"
 #include "remote/remotemodelserver.h"
 #include "remote/serverproxymodel.h"
@@ -236,11 +234,6 @@ Probe::Probe(QObject *parent)
     ToolPluginErrorModel *toolPluginErrorModel
         = new ToolPluginErrorModel(m_toolManager->toolPluginManager()->errors(), this);
     registerModel(QStringLiteral("com.kdab.GammaRay.ToolPluginErrorModel"), toolPluginErrorModel);
-
-    if (qgetenv("GAMMARAY_MODELTEST") == "1") {
-        new ModelTest(m_objectListModel, m_objectListModel);
-        new ModelTest(m_objectTreeModel, m_objectTreeModel);
-    }
 
     m_queueTimer->setSingleShot(true);
     m_queueTimer->setInterval(0);
