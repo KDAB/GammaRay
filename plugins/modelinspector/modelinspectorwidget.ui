@@ -10,14 +10,24 @@
     <height>479</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <item>
     <widget class="QSplitter" name="mainSplitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QWidget" name="layoutWidget_3">
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Models</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLineEdit" name="modelSearchLine"/>
        </item>
@@ -30,12 +40,19 @@
        </item>
       </layout>
      </widget>
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="title">
-       <string>Model Content</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
+     <widget class="QWidget" name="">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Model Content</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="GammaRay::DeferredTreeView" name="modelContentView">
          <property name="uniformRowHeights">
           <bool>true</bool>
@@ -44,11 +61,18 @@
        </item>
       </layout>
      </widget>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="title">
-       <string>Cell Info</string>
-      </property>
+     <widget class="QWidget" name="">
       <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Cell Content</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
        <item>
         <layout class="QFormLayout" name="formLayout_2">
          <item row="0" column="0">
