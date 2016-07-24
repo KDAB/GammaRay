@@ -31,16 +31,15 @@
 #include "modelmodel.h"
 #include "modelcellmodel.h"
 #include "modeltester.h"
-#include "safetyfilterproxymodel.h"
+#include "modelcontentproxymodel.h"
 
-#include "probeinterface.h"
-
-#include "common/objectbroker.h"
-#include "remote/remotemodelserver.h"
-#include "remote/selectionmodelserver.h"
+#include <core/probeinterface.h>
+#include <common/objectbroker.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
+
 #include <QDebug>
+#include <QItemSelectionModel>
 
 using namespace GammaRay;
 
@@ -48,9 +47,8 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
     : ModelInspectorInterface(parent)
     , m_probe(probe)
     , m_modelModel(0)
-    , m_modelContentServer(0)
     , m_modelContentSelectionModel(0)
-    , m_safetyFilterProxyModel(0)
+    , m_modelContentProxyModel(new ModelContentProxyModel(this))
     , m_modelTester(0)
 {
     auto modelModelSource = new ModelModel(this);
@@ -70,8 +68,10 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
             SLOT(objectSelected(QObject*)));
 
-    m_modelContentServer = new RemoteModelServer(QStringLiteral(
-                                                     "com.kdab.GammaRay.ModelContent"), this);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelContent"), m_modelContentProxyModel);
+    m_modelContentSelectionModel = ObjectBroker::selectionModel(m_modelContentProxyModel);
+    connect(m_modelContentSelectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            this, SLOT(selectionChanged(QModelIndex)));
 
     m_cellModel = new ModelCellModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelCellModel"), m_cellModel);
@@ -87,11 +87,6 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
 
 void ModelInspector::modelSelected(const QItemSelection &selected)
 {
-    if (m_modelContentSelectionModel && m_modelContentSelectionModel->model())
-        ObjectBroker::unregisterSelectionModel(m_modelContentSelectionModel);
-    delete m_modelContentSelectionModel;
-    m_modelContentSelectionModel = 0;
-
     QModelIndex index;
     if (selected.size() >= 1)
         index = selected.first().topLeft();
@@ -99,26 +94,10 @@ void ModelInspector::modelSelected(const QItemSelection &selected)
     if (index.isValid()) {
         QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
         QAbstractItemModel *model = qobject_cast<QAbstractItemModel *>(obj);
-
-        if (model->inherits("QQmlListModel")) {
-            if (!m_safetyFilterProxyModel)
-                m_safetyFilterProxyModel = new SafetyFilterProxyModel(this);
-            m_safetyFilterProxyModel->setSourceModel(model);
-            m_modelContentServer->setModel(m_safetyFilterProxyModel);
-        } else {
-            m_modelContentServer->setModel(model);
-        }
-
-        m_modelContentSelectionModel
-            = new SelectionModelServer(QStringLiteral(
-                                           "com.kdab.GammaRay.ModelContent.selection"),
-                                       m_modelContentServer->model(), this);
-        ObjectBroker::registerSelectionModel(m_modelContentSelectionModel);
-        connect(m_modelContentSelectionModel,
-                SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-                SLOT(selectionChanged(QModelIndex)));
+        Q_ASSERT(model);
+        m_modelContentProxyModel->setSourceModel(model);
     } else {
-        m_modelContentServer->setModel(0);
+        m_modelContentProxyModel->setSourceModel(Q_NULLPTR);
     }
 
     // clear the cell info box

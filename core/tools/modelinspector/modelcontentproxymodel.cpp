@@ -26,26 +26,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "safetyfilterproxymodel.h"
+#include "modelcontentproxymodel.h"
 
 using namespace GammaRay;
 
-SafetyFilterProxyModel::SafetyFilterProxyModel(QObject *parent)
+ModelContentProxyModel::ModelContentProxyModel(QObject *parent)
     : QIdentityProxyModel(parent)
 {
 }
 
-SafetyFilterProxyModel::~SafetyFilterProxyModel()
+ModelContentProxyModel::~ModelContentProxyModel()
 {
 }
 
-QVariant SafetyFilterProxyModel::data(const QModelIndex &proxyIndex, int role) const
+QVariant ModelContentProxyModel::data(const QModelIndex &proxyIndex, int role) const
 {
+    // Work around crash in QQmlListModel for unknown roles
+#if QT_VERSION < QT_VERSION_CHECK(5, 6, 1)
     if (sourceModel() && sourceModel()->inherits("QQmlListModel")) {
         // data on anything not in roleNames() crashes
         if (!sourceModel()->roleNames().contains(role))
             return QVariant();
     }
+#endif
 
-    return QAbstractProxyModel::data(proxyIndex, role);
+    return QIdentityProxyModel::data(proxyIndex, role);
 }

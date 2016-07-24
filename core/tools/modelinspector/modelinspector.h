@@ -44,8 +44,7 @@ QT_END_NAMESPACE
 namespace GammaRay {
 class ModelCellModel;
 class ModelTester;
-class RemoteModelServer;
-class SafetyFilterProxyModel;
+class ModelContentProxyModel;
 
 class ModelInspector : public ModelInspectorInterface
 {
@@ -66,9 +65,8 @@ private:
     QAbstractItemModel *m_modelModel;
     QItemSelectionModel *m_modelSelectionModel;
 
-    RemoteModelServer *m_modelContentServer;
     QItemSelectionModel *m_modelContentSelectionModel;
-    SafetyFilterProxyModel *m_safetyFilterProxyModel;
+    ModelContentProxyModel *m_modelContentProxyModel;
 
     ModelCellModel *m_cellModel;
 
