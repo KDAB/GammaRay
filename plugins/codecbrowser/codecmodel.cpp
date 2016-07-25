@@ -33,7 +33,7 @@
 using namespace GammaRay;
 
 AllCodecsModel::AllCodecsModel(QObject *parent)
-    : QAbstractItemModel(parent)
+    : QAbstractTableModel(parent)
 {
 }
 
@@ -79,21 +79,6 @@ QVariant AllCodecsModel::headerData(int section, Qt::Orientation orientation, in
     return QVariant();
 }
 
-QModelIndex AllCodecsModel::index(int row, int column, const QModelIndex &parent) const
-{
-    if (parent.isValid())
-        return QModelIndex();
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-    return createIndex(row, column);
-}
-
-QModelIndex AllCodecsModel::parent(const QModelIndex &child) const
-{
-    Q_UNUSED(child);
-    return QModelIndex();
-}
-
 int AllCodecsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
@@ -102,7 +87,7 @@ int AllCodecsModel::rowCount(const QModelIndex &parent) const
 }
 
 SelectedCodecsModel::SelectedCodecsModel(QObject *parent)
-    : QAbstractItemModel(parent)
+    : QAbstractTableModel(parent)
 {
 }
 
@@ -133,7 +118,7 @@ QVariant SelectedCodecsModel::headerData(int section, Qt::Orientation orientatio
         if (section == 1)
             return "Data";
     }
-    return QAbstractItemModel::headerData(section, orientation, role);
+    return QAbstractTableModel::headerData(section, orientation, role);
 }
 
 int SelectedCodecsModel::rowCount(const QModelIndex &parent) const
@@ -141,21 +126,6 @@ int SelectedCodecsModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
     return m_codecs.size();
-}
-
-QModelIndex SelectedCodecsModel::index(int row, int column, const QModelIndex &parent) const
-{
-    if (parent.isValid())
-        return QModelIndex();
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-    return createIndex(row, column);
-}
-
-QModelIndex SelectedCodecsModel::parent(const QModelIndex &child) const
-{
-    Q_UNUSED(child);
-    return QModelIndex();
 }
 
 int SelectedCodecsModel::columnCount(const QModelIndex &parent) const
