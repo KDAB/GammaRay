@@ -35,6 +35,7 @@ using namespace GammaRay;
 AllCodecsModel::AllCodecsModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
+    m_codecs = QTextCodec::availableCodecs();
 }
 
 int AllCodecsModel::columnCount(const QModelIndex &parent) const
@@ -47,10 +48,10 @@ QVariant AllCodecsModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole) {
         if (index.column() == 0)
-            return QTextCodec::availableCodecs().at(index.row());
+            return m_codecs.at(index.row());
         if (index.column() == 1) {
             QList<QByteArray> aliases
-                = QTextCodec::codecForName(QTextCodec::availableCodecs().at(index.row()))->aliases();
+                = QTextCodec::codecForName(m_codecs.at(index.row()))->aliases();
 
             QString result;
             int size = aliases.size();
@@ -83,7 +84,7 @@ int AllCodecsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return QTextCodec::availableCodecs().size();
+    return m_codecs.size();
 }
 
 SelectedCodecsModel::SelectedCodecsModel(QObject *parent)

@@ -47,6 +47,8 @@ public:
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+private:
+    QList<QByteArray> m_codecs;
 };
 
 class SelectedCodecsModel : public QAbstractTableModel
