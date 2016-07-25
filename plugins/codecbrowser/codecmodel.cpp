@@ -73,9 +73,9 @@ QVariant AllCodecsModel::headerData(int section, Qt::Orientation orientation, in
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (section == 0)
-            return "Codec";
+            return tr("Codec");
         else if (section == 1)
-            return "Aliases";
+            return tr("Aliases");
     }
     return QVariant();
 }
@@ -115,9 +115,9 @@ QVariant SelectedCodecsModel::headerData(int section, Qt::Orientation orientatio
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (section == 0)
-            return "Codec";
+            return tr("Codec");
         if (section == 1)
-            return "Data";
+            return tr("Encoded Data");
     }
     return QAbstractTableModel::headerData(section, orientation, role);
 }
