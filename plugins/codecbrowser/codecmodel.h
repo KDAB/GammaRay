@@ -34,31 +34,28 @@
 #include <QTextCodec>
 
 namespace GammaRay {
-class AllCodecsModel : public QAbstractItemModel
+class AllCodecsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit AllCodecsModel(QObject *parent);
+    explicit AllCodecsModel(QObject *parent = Q_NULLPTR);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-
-    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
-
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+private:
+    QList<QByteArray> m_codecs;
 };
 
-class SelectedCodecsModel : public QAbstractItemModel
+class SelectedCodecsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit SelectedCodecsModel(QObject *parent);
+    explicit SelectedCodecsModel(QObject *parent = Q_NULLPTR);
 
     void setCodecs(const QStringList &codecs);
     QStringList currentCodecs() const;
@@ -67,11 +64,6 @@ public:
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-
-    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

@@ -37,7 +37,7 @@
         \li \l{Graphics Scene Inspector}
         \li Qt3D Inspector
         \li \l{Styles}
-        \li Web Inspector
+        \li \l{Web Inspector}
     \endlist
 
     \section2 Application Behavior Inspection

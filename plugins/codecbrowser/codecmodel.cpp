@@ -33,8 +33,9 @@
 using namespace GammaRay;
 
 AllCodecsModel::AllCodecsModel(QObject *parent)
-    : QAbstractItemModel(parent)
+    : QAbstractTableModel(parent)
 {
+    m_codecs = QTextCodec::availableCodecs();
 }
 
 int AllCodecsModel::columnCount(const QModelIndex &parent) const
@@ -47,10 +48,10 @@ QVariant AllCodecsModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole) {
         if (index.column() == 0)
-            return QTextCodec::availableCodecs().at(index.row());
+            return m_codecs.at(index.row());
         if (index.column() == 1) {
             QList<QByteArray> aliases
-                = QTextCodec::codecForName(QTextCodec::availableCodecs().at(index.row()))->aliases();
+                = QTextCodec::codecForName(m_codecs.at(index.row()))->aliases();
 
             QString result;
             int size = aliases.size();
@@ -72,37 +73,22 @@ QVariant AllCodecsModel::headerData(int section, Qt::Orientation orientation, in
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (section == 0)
-            return "Codec";
+            return tr("Codec");
         else if (section == 1)
-            return "Aliases";
+            return tr("Aliases");
     }
     return QVariant();
-}
-
-QModelIndex AllCodecsModel::index(int row, int column, const QModelIndex &parent) const
-{
-    if (parent.isValid())
-        return QModelIndex();
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-    return createIndex(row, column);
-}
-
-QModelIndex AllCodecsModel::parent(const QModelIndex &child) const
-{
-    Q_UNUSED(child);
-    return QModelIndex();
 }
 
 int AllCodecsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return QTextCodec::availableCodecs().size();
+    return m_codecs.size();
 }
 
 SelectedCodecsModel::SelectedCodecsModel(QObject *parent)
-    : QAbstractItemModel(parent)
+    : QAbstractTableModel(parent)
 {
 }
 
@@ -129,11 +115,11 @@ QVariant SelectedCodecsModel::headerData(int section, Qt::Orientation orientatio
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (section == 0)
-            return "Codec";
+            return tr("Codec");
         if (section == 1)
-            return "Data";
+            return tr("Encoded Data");
     }
-    return QAbstractItemModel::headerData(section, orientation, role);
+    return QAbstractTableModel::headerData(section, orientation, role);
 }
 
 int SelectedCodecsModel::rowCount(const QModelIndex &parent) const
@@ -141,21 +127,6 @@ int SelectedCodecsModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
     return m_codecs.size();
-}
-
-QModelIndex SelectedCodecsModel::index(int row, int column, const QModelIndex &parent) const
-{
-    if (parent.isValid())
-        return QModelIndex();
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-    return createIndex(row, column);
-}
-
-QModelIndex SelectedCodecsModel::parent(const QModelIndex &child) const
-{
-    Q_UNUSED(child);
-    return QModelIndex();
 }
 
 int SelectedCodecsModel::columnCount(const QModelIndex &parent) const

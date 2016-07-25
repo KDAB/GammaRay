@@ -311,6 +311,18 @@ add_executable(fontdatabasemodeltest
 target_link_libraries(fontdatabasemodeltest ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
 add_test(NAME fontdatabasemodeltest COMMAND fontdatabasemodeltest)
 
+### Codec plugins
+
+if(NOT OSX_ASAN_WORKAROUND)
+add_executable(codecmodeltest
+  codecmodeltest.cpp
+  ${CMAKE_SOURCE_DIR}/plugins/codecbrowser/codecmodel.cpp
+  ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+)
+target_link_libraries(codecmodeltest ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
+add_test(NAME codecmodeltest COMMAND codecmodeltest)
+endif()
+
 ### QML support
 
 if(Qt5Quick_FOUND)
