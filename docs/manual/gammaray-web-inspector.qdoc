@@ -1,5 +1,5 @@
 /*
-    gammaray-styles.qdoc
+    gammaray-web-inspector.qdoc
 
     This file is part of the GammaRay documentation.
 
@@ -16,27 +16,25 @@
 */
 
 /*!
-    \contentspage {Styles}
-    \nextpage {Web Inspector}
-    \previouspage {Graphics Scene Inspector}
-    \page gammaray-styles.html
+    \contentspage {Web Inspector}
+    \nextpage {State Machine Debugger}
+    \previouspage {Styles}
+    \page gammaray-web-Inspector.html
 
-    \title Styles
+    \title Web Inspector
 
     \section1 Overview
 
-    The Styles tool is used for working on and debugging custom QStyle sub-classes.
+    The GammaRay web inspector tool allows you to inspect HTML5 content inside a QWebEngine.
 
-    \image gammaray-style-controls.png
+    \image gammaray-web-inspector.png
 
-    This tool allows you to:
+    The web inspector enables access to the built-in diagnostics tool of WebKit, which allows you to:
 
     \list
-        \li Look at all style primitives in all states.
-        \li Look at all controls in all states.
-        \li Look at all complex controls and their sub-element areas.
-        \li Look at built-in standard pixmaps.
-        \li View and edit style pixel metrics.
-        \li Look at the style-defined QPalette.
+        \li inspect and manipulate the DOM tree
+        \li debug JavaScript
+        \li observe network operations
+        \li profile the web content for performance issues
     \endlist
 */
