@@ -104,7 +104,6 @@ DeferredTreeView::DeferredTreeView(QWidget *parent)
     header()->setSortIndicatorShown(true);
 
     setIndentation(10);
-    setAllColumnsShowFocus(true);
     setSortingEnabled(true);
 
     connect(header(), SIGNAL(sectionCountChanged(int,int)), SLOT(sectionCountChanged()));
