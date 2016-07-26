@@ -40,6 +40,7 @@
 #include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QStringListModel>
 #include <QObject>
 
 using namespace GammaRay;
@@ -163,6 +164,41 @@ private slots:
         targetModelIdx = indexForName(modelModel, QLatin1String("targetModel"));
         QVERIFY(!targetModelIdx.isValid());
         QCOMPARE(modelModel->rowCount(), topRowCount - 1);
+    }
+
+    void testSelectionModels()
+    {
+        createProbe();
+
+        auto targetModel = new QStringListModel;
+        targetModel->setObjectName("targetModel");
+        targetModel->setStringList(QStringList() << "item1" << "item2" << "item3");
+        QTest::qWait(1); // trigger model inspector plugin loading
+
+        auto modelModel = ObjectBroker::model("com.kdab.GammaRay.ModelModel");
+        QVERIFY(modelModel);
+
+        auto selectionModels = ObjectBroker::model("com.kdab.GammaRay.SelectionModels");
+        QVERIFY(selectionModels);
+        ModelTest selModelTester(selectionModels);
+        QCOMPARE(selectionModels->rowCount(), 0);
+
+        auto targetSelModel = new QItemSelectionModel;
+        targetSelModel->setObjectName("targetSelModel");
+        targetSelModel->setModel(targetModel);
+        QTest::qWait(1);
+        QCOMPARE(selectionModels->rowCount(), 0);
+
+        auto modelSelModel = ObjectBroker::selectionModel(modelModel);
+        QVERIFY(modelSelModel);
+        auto idx = indexForName(modelModel, "targetModel");
+        QVERIFY(idx.isValid());
+        modelSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
+        QCOMPARE(selectionModels->rowCount(), 1);
+
+        delete targetSelModel;
+        QTest::qWait(1);
+        QCOMPARE(selectionModels->rowCount(), 0);
     }
 };
 
