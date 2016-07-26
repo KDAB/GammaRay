@@ -29,6 +29,7 @@
 #include "modelinspectorwidget.h"
 #include "ui_modelinspectorwidget.h"
 #include "modelinspectorclient.h"
+#include "modelcontentdelegate.h"
 
 #include <ui/contextmenuextension.h>
 #include <ui/itemdelegate.h>
@@ -74,8 +75,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
     ui->selectionModelsView->setSelectionModel(ObjectBroker::selectionModel(selectionModels));
 
     ui->modelContentView->header()->setObjectName("modelContentViewHeader");
-    ui->modelContentView->setItemDelegate(new PropertyEditorDelegate(GammaRay::ItemDelegate::tr(
-                                                                         "(Item %r)"), this));
+    ui->modelContentView->setItemDelegate(new ModelContentDelegate(this));
 
     ui->modelCellView->header()->setObjectName("modelCellViewHeader");
     ui->modelCellView->setItemDelegate(new PropertyEditorDelegate(this));

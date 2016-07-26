@@ -50,6 +50,14 @@ QVariant ModelContentProxyModel::data(const QModelIndex &proxyIndex, int role) c
     }
 #endif
 
+    // we override this below, so convey enabled state via a custom role
+    // since disabled is less common then enabled, only transfer disabled states
+    if (role == DisabledRole) {
+        if (QIdentityProxyModel::flags(proxyIndex) & Qt::ItemIsEnabled)
+            return QVariant();
+        return true;
+    }
+
     return QIdentityProxyModel::data(proxyIndex, role);
 }
 
@@ -59,4 +67,13 @@ Qt::ItemFlags ModelContentProxyModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return f;
     return f | Qt::ItemIsEnabled | Qt::ItemIsSelectable; // always enable items for inspection
+}
+
+QMap<int, QVariant> ModelContentProxyModel::itemData(const QModelIndex &index) const
+{
+    auto d = QIdentityProxyModel::itemData(index);
+    const auto v = data(index, DisabledRole);
+    if (!v.isNull())
+        d.insert(DisabledRole, v);
+    return d;
 }

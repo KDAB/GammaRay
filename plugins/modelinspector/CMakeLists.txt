@@ -29,6 +29,7 @@ if(GAMMARAY_BUILD_UI)
     modelinspectorwidget.cpp
     modelinspectorinterface.cpp
     modelinspectorclient.cpp
+    modelcontentdelegate.cpp
   )
 
   qt4_wrap_ui(gammaray_models_ui_srcs

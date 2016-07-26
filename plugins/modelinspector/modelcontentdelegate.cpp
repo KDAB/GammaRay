@@ -1,10 +1,10 @@
 /*
-  safetyfilterproxymodel.h
+  modelcontentdelegate.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,34 +26,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MODELINSPECTOR_MODELCONTENTPROXYMODEL_H
-#define GAMMARAY_MODELINSPECTOR_MODELCONTENTPROXYMODEL_H
+#include "modelcontentdelegate.h"
+#include "modelcontentproxymodel.h"
 
-#include <common/modelroles.h>
+#include <QApplication>
+#include <QStyle>
 
-#include <QIdentityProxyModel>
+using namespace GammaRay;
 
-namespace GammaRay {
-
-/*! Proxies source model content to the client.
- *  This does some safety checks for known broken sources.
- */
-class ModelContentProxyModel : public QIdentityProxyModel
+ModelContentDelegate::ModelContentDelegate(QObject* parent) :
+    QStyledItemDelegate(parent)
 {
-    Q_OBJECT
-public:
-    enum Roles {
-        DisabledRole = GammaRay::UserRole + 1
-    };
-
-    explicit ModelContentProxyModel(QObject *parent = 0);
-    ~ModelContentProxyModel();
-
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
-};
-
 }
 
-#endif // SAFETYFILTERPROXYMODEL_H
+ModelContentDelegate::~ModelContentDelegate()
+{
+}
+
+void ModelContentDelegate::paint(QPainter *painter, const QStyleOptionViewItem &origOption, const QModelIndex &index) const
+{
+    Q_ASSERT(index.isValid());
+    auto option = origOption;
+    initStyleOption(&option, index);
+    if (index.data(ModelContentProxyModel::DisabledRole).toBool())
+        option.state = option.state & ~QStyle::State_Enabled;
+
+    QStyle *style = QApplication::style();
+    style->drawControl(QStyle::CE_ItemViewItem, &option, painter, Q_NULLPTR);
+}

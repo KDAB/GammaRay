@@ -27,6 +27,7 @@
 */
 
 #include <plugins/modelinspector/modelinspectorinterface.h>
+#include <plugins/modelinspector/modelcontentproxymodel.h>
 
 #include <probe/hooks.h>
 #include <probe/probecreator.h>
@@ -244,6 +245,7 @@ private slots:
         QCOMPARE(idx.data().toString(), QLatin1String("item0,0"));
         QVERIFY(idx.flags() & Qt::ItemIsEnabled);
         QVERIFY(idx.flags() & Qt::ItemIsSelectable);
+        QCOMPARE(idx.data(ModelContentProxyModel::DisabledRole).toBool(), true);
 
         auto cellSelModel = ObjectBroker::selectionModel(contentModel);
         QVERIFY(cellSelModel);

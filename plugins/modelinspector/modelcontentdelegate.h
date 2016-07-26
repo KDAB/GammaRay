@@ -1,10 +1,10 @@
 /*
-  safetyfilterproxymodel.h
+  modelcontentdelegate.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,34 +26,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_MODELINSPECTOR_MODELCONTENTPROXYMODEL_H
-#define GAMMARAY_MODELINSPECTOR_MODELCONTENTPROXYMODEL_H
+#ifndef GAMMARAY_MODELCONTENTDELEGATE_H
+#define GAMMARAY_MODELCONTENTDELEGATE_H
 
-#include <common/modelroles.h>
-
-#include <QIdentityProxyModel>
+#include <QStyledItemDelegate>
 
 namespace GammaRay {
 
-/*! Proxies source model content to the client.
- *  This does some safety checks for known broken sources.
- */
-class ModelContentProxyModel : public QIdentityProxyModel
+class ModelContentDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    enum Roles {
-        DisabledRole = GammaRay::UserRole + 1
-    };
+    explicit ModelContentDelegate(QObject *parent = Q_NULLPTR);
+    ~ModelContentDelegate();
 
-    explicit ModelContentProxyModel(QObject *parent = 0);
-    ~ModelContentProxyModel();
-
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 
 }
 
-#endif // SAFETYFILTERPROXYMODEL_H
+#endif // GAMMARAY_MODELCONTENTDELEGATE_H
