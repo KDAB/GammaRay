@@ -98,10 +98,14 @@ void ModelModel::objectAdded(QObject *obj)
         connect(proxy, &QAbstractProxyModel::sourceModelChanged, this, [this, proxy]() {
             beginResetModel(); // FIXME
             if (proxy->sourceModel()) {
-                m_models.removeAll(proxy);
+                const auto i = m_models.indexOf(proxy);
+                if (i >= 0)
+                    m_models.remove(i);
                 m_proxies.push_back(proxy);
             } else {
-                m_proxies.removeAll(proxy);
+                const auto i = m_proxies.indexOf(proxy);
+                if (i >= 0)
+                    m_proxies.remove(i);
                 m_models.push_back(proxy);
             }
             endResetModel();
