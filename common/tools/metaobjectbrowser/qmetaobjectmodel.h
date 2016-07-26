@@ -26,8 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_METAOBJECT_MODEL_H
-#define GAMMARAY_METAOBJECT_MODEL_H
+#ifndef GAMMARAY_METAOBJECTBROWSER_QMETAOBJECTMODEL_H
+#define GAMMARAY_METAOBJECTBROWSER_QMETAOBJECTMODEL_H
 
 #include <common/modelroles.h>
 

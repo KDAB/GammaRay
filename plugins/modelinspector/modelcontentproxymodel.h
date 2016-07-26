@@ -26,8 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SAFETYFILTERPROXYMODEL_H
-#define SAFETYFILTERPROXYMODEL_H
+#ifndef GAMMARAY_MODELINSPECTOR_MODELCONTENTPROXYMODEL_H
+#define GAMMARAY_MODELINSPECTOR_MODELCONTENTPROXYMODEL_H
 
 #include <QIdentityProxyModel>
 
