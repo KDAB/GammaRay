@@ -30,21 +30,44 @@
 #define GAMMARAY_MODELINSPECTORINTERFACE_H
 
 #include <QObject>
+#include <QMetaType>
 
 namespace GammaRay {
+
+struct ModelCellData
+{
+    ModelCellData();
+    bool operator==(const ModelCellData &other) const;
+
+    int row;
+    int column;
+    QString internalId;
+    QString internalPtr;
+    Qt::ItemFlags flags;
+};
+
 class ModelInspectorInterface : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(GammaRay::ModelCellData cellData READ currentCellData WRITE setCurrentCellData NOTIFY currentCellDataChanged)
 public:
     explicit ModelInspectorInterface(QObject *parent = 0);
     virtual ~ModelInspectorInterface();
 
+    ModelCellData currentCellData() const;
+    void setCurrentCellData(const ModelCellData &cellData);
+
 signals:
-    void cellSelected(int row, int col, const QString &internalId, const QString &internalPtr);
+    void currentCellDataChanged();
+
+private:
+    ModelCellData m_currentCellData;
 };
 }
 
+Q_DECLARE_METATYPE(GammaRay::ModelCellData)
 QT_BEGIN_NAMESPACE
+Q_DECLARE_TYPEINFO(GammaRay::ModelCellData, Q_MOVABLE_TYPE);
 Q_DECLARE_INTERFACE(GammaRay::ModelInspectorInterface, "com.kdab.GammaRay.ModelInspectorInterface")
 QT_END_NAMESPACE
 

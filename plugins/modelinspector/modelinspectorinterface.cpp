@@ -29,15 +29,64 @@
 #include "modelinspectorinterface.h"
 
 #include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
 using namespace GammaRay;
+
+QT_BEGIN_NAMESPACE
+GAMMARAY_ENUM_STREAM_OPERATORS(Qt::ItemFlags)
+
+static QDataStream &operator<<(QDataStream &out, const ModelCellData &data)
+{
+    out << data.row << data.column << data.internalId << data.internalPtr << data.flags;
+    return out;
+}
+
+static QDataStream &operator>>(QDataStream &in, ModelCellData &data)
+{
+    in >> data.row >> data.column >> data.internalId >> data.internalPtr >> data.flags;
+    return in;
+}
+QT_END_NAMESPACE
+
+ModelCellData::ModelCellData() :
+    row(-1),
+    column(-1),
+    flags(Qt::NoItemFlags)
+{
+}
+
+bool ModelCellData::operator==(const ModelCellData& other) const
+{
+    return row == other.row &&
+           column == other.column &&
+           internalId == other.internalId &&
+           internalPtr == other.internalPtr &&
+           flags == other.flags;
+}
+
 
 ModelInspectorInterface::ModelInspectorInterface(QObject *parent)
     : QObject(parent)
 {
+    qRegisterMetaType<ModelCellData>();
+    qRegisterMetaTypeStreamOperators<ModelCellData>();
     ObjectBroker::registerObject<ModelInspectorInterface *>(this);
 }
 
 ModelInspectorInterface::~ModelInspectorInterface()
 {
+}
+
+ModelCellData ModelInspectorInterface::currentCellData() const
+{
+    return m_currentCellData;
+}
+
+void ModelInspectorInterface::setCurrentCellData(const ModelCellData& cellData)
+{
+    if (m_currentCellData == cellData)
+        return;
+    m_currentCellData = cellData;
+    emit currentCellDataChanged();
 }

@@ -151,8 +151,17 @@ void ModelInspector::selectionChanged(const QModelIndex &index)
 {
     m_cellModel->setModelIndex(index);
 
-    emit cellSelected(index.row(), index.column(), QString::number(
-                          index.internalId()), Util::addressToString(index.internalPointer()));
+    if (!index.isValid()) {
+        setCurrentCellData(ModelCellData());
+        return;
+    }
+    ModelCellData cellData;
+    cellData.row = index.row();
+    cellData.column = index.column();
+    cellData.internalId = QString::number(index.internalId());
+    cellData.internalPtr = Util::addressToString(index.internalPointer());
+    cellData.flags = index.flags();
+    setCurrentCellData(cellData);
 }
 
 void ModelInspector::objectCreated(QObject *object)

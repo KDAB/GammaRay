@@ -54,7 +54,7 @@ public:
     ~ModelInspectorWidget();
 
 private slots:
-    void cellSelected(int row, int column, const QString &internalId, const QString &internalPtr);
+    void cellDataChanged();
     void objectRegistered(const QString &objectName);
     void modelSelected(const QItemSelection &selected);
     void setupModelContentSelectionModel();

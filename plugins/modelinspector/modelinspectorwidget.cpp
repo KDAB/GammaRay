@@ -35,6 +35,8 @@
 #include <ui/searchlinecontroller.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 
+#include <core/metaenum.h>
+
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
@@ -81,8 +83,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
     ObjectBroker::registerClientObjectFactoryCallback<ModelInspectorInterface *>(
         createModelInspectorClient);
     m_interface = ObjectBroker::object<ModelInspectorInterface *>();
-    connect(m_interface, SIGNAL(cellSelected(int,int,QString,QString)),
-            SLOT(cellSelected(int,int,QString,QString)));
+    connect(m_interface, SIGNAL(currentCellDataChanged()), this, SLOT(cellDataChanged()));
 
     auto modelModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelModel"));
     ui->modelView->setModel(modelModel);
@@ -97,7 +98,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "33%" << "33%" << "33%");
 
-    cellSelected(-1, -1, QString(), QString());
+    cellDataChanged();
 }
 
 ModelInspectorWidget::~ModelInspectorWidget()
@@ -133,19 +134,39 @@ void ModelInspectorWidget::modelSelected(const QItemSelection &selected)
     } else {
         ui->modelContentView->setModel(0);
     }
-
-    // clear the cell info box
-    cellSelected(-1, -1, QString(), QString());
 }
 
-void ModelInspectorWidget::cellSelected(int row, int column, const QString &internalId,
-                                        const QString &internalPtr)
+#define F(x) { Qt:: x, #x }
+static const MetaEnum::Value<Qt::ItemFlag> item_flag_table[] = {
+    { Qt::ItemIsSelectable,     "Selectable" },
+    { Qt::ItemIsEditable,       "Editable" },
+    { Qt::ItemIsDragEnabled,    "DragEnabled" },
+    { Qt::ItemIsDropEnabled,    "DropEnableD" },
+    { Qt::ItemIsUserCheckable,  "UserCheckable" },
+    { Qt::ItemIsEnabled,        "Enabled" },
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+    { Qt::ItemIsAutoTristate,   "AutoTristate" },
+#else
+    { Qt::ItemIsTristate,       "AutoTristate" },
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    { Qt::ItemNeverHasChildren, "ItemNeverHasChildren" },
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    { Qt::ItemIsUserTristate,   "UserTristate" }
+#endif
+};
+#undef F
+
+void ModelInspectorWidget::cellDataChanged()
 {
-    ui->indexLabel->setText(row != -1
-                            ? tr("Row: %1 Column: %2").arg(row).arg(column)
+    const auto cellData = m_interface->currentCellData();
+    ui->indexLabel->setText(cellData.row != -1
+                            ? tr("Row: %1 Column: %2").arg(cellData.row).arg(cellData.column)
                             : tr("Invalid"));
-    ui->internalIdLabel->setText(internalId);
-    ui->internalPtrLabel->setText(internalPtr);
+    ui->internalIdLabel->setText(cellData.internalId);
+    ui->internalPtrLabel->setText(cellData.internalPtr);
+    ui->flagsLabel->setText(MetaEnum::flagsToString(cellData.flags, item_flag_table));
 }
 
 void ModelInspectorWidget::objectRegistered(const QString &objectName)
