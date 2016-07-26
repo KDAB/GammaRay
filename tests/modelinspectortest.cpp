@@ -199,6 +199,62 @@ private slots:
         delete targetSelModel;
         QTest::qWait(1);
         QCOMPARE(selectionModels->rowCount(), 0);
+
+        delete targetModel;
+        QTest::qWait(1);
+    }
+
+    void testModelContent()
+    {
+        createProbe();
+
+        auto targetModel = new QStandardItemModel;
+        targetModel->setObjectName("targetModel");
+        QTest::qWait(1); // trigger model inspector plugin loading
+
+        auto modelModel = ObjectBroker::model("com.kdab.GammaRay.ModelModel");
+        QVERIFY(modelModel);
+
+        auto contentModel = ObjectBroker::model("com.kdab.GammaRay.ModelContent");
+        QVERIFY(contentModel);
+        ModelTest contentModelTester(contentModel);
+        QCOMPARE(contentModel->rowCount(), 0);
+
+        auto cellModel = ObjectBroker::model("com.kdab.GammaRay.ModelCellModel");
+        QVERIFY(cellModel);
+        ModelTest cellModelTester(cellModel);
+        QCOMPARE(cellModel->rowCount(), 0);
+
+        auto targetModelIdx = indexForName(modelModel, QLatin1String("targetModel"));
+        QVERIFY(targetModelIdx.isValid());
+        auto modelSelModel = ObjectBroker::selectionModel(modelModel);
+        QVERIFY(modelSelModel);
+        modelSelModel->select(targetModelIdx, QItemSelectionModel::ClearAndSelect);
+        QCOMPARE(contentModel->rowCount(), 0);
+
+        auto item = new QStandardItem("item0,0");
+        targetModel->appendRow(item);
+        QCOMPARE(contentModel->rowCount(), 1);
+        QCOMPARE(contentModel->columnCount(), 1);
+        auto idx = contentModel->index(0, 0);
+        QVERIFY(idx.isValid());
+        QCOMPARE(idx.data().toString(), QLatin1String("item0,0"));
+
+        auto cellSelModel = ObjectBroker::selectionModel(contentModel);
+        QVERIFY(cellSelModel);
+        qDebug() << "selecting" << cellSelModel->model();
+        cellSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
+        QVERIFY(cellModel->rowCount() > 0);
+
+        idx = indexForName(cellModel, QLatin1String("Qt::DisplayRole"));
+        QVERIFY(idx.isValid());
+        QCOMPARE(idx.sibling(idx.row(), 1).data().toString(), QLatin1String("item0,0"));
+
+        cellSelModel->clear();
+        QCOMPARE(cellModel->rowCount(), 0);
+
+        delete targetModel;
+        QTest::qWait(1);
     }
 };
 

@@ -58,7 +58,7 @@ public:
 
 private slots:
     void modelSelected(const QItemSelection &selected);
-    void selectionChanged(const QModelIndex &selected);
+    void cellSelectionChanged(const QItemSelection &selected);
 
     void objectSelected(QObject *object);
     void objectCreated(QObject *object);
