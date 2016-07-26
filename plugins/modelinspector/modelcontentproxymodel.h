@@ -44,6 +44,7 @@ public:
     ~ModelContentProxyModel();
 
     QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 };
 }
 

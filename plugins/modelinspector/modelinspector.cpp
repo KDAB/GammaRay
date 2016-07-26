@@ -159,6 +159,8 @@ void ModelInspector::cellSelectionChanged(const QItemSelection &selection)
         setCurrentCellData(ModelCellData());
         return;
     }
+
+    index = m_modelContentProxyModel->mapToSource(index);
     ModelCellData cellData;
     cellData.row = index.row();
     cellData.column = index.column();

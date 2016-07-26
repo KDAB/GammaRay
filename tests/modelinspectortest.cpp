@@ -26,6 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <plugins/modelinspector/modelinspectorinterface.h>
+
 #include <probe/hooks.h>
 #include <probe/probecreator.h>
 #include <core/probe.h>
@@ -233,12 +235,15 @@ private slots:
         QCOMPARE(contentModel->rowCount(), 0);
 
         auto item = new QStandardItem("item0,0");
+        item->setFlags(Qt::NoItemFlags); // should nevertheless be selectable for inspection
         targetModel->appendRow(item);
         QCOMPARE(contentModel->rowCount(), 1);
         QCOMPARE(contentModel->columnCount(), 1);
         auto idx = contentModel->index(0, 0);
         QVERIFY(idx.isValid());
         QCOMPARE(idx.data().toString(), QLatin1String("item0,0"));
+        QVERIFY(idx.flags() & Qt::ItemIsEnabled);
+        QVERIFY(idx.flags() & Qt::ItemIsSelectable);
 
         auto cellSelModel = ObjectBroker::selectionModel(contentModel);
         QVERIFY(cellSelModel);
@@ -249,6 +254,13 @@ private slots:
         idx = indexForName(cellModel, QLatin1String("Qt::DisplayRole"));
         QVERIFY(idx.isValid());
         QCOMPARE(idx.sibling(idx.row(), 1).data().toString(), QLatin1String("item0,0"));
+
+        auto iface = ObjectBroker::object<ModelInspectorInterface*>();
+        QVERIFY(iface);
+        auto cellData = iface->currentCellData();
+        QCOMPARE(cellData.row, 0);
+        QCOMPARE(cellData.column, 0);
+        QCOMPARE(cellData.flags, Qt::NoItemFlags);
 
         cellSelModel->clear();
         QCOMPARE(cellModel->rowCount(), 0);

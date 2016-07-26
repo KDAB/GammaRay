@@ -204,6 +204,7 @@ endif()
 if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
   add_executable(modelinspectortest
     modelinspectortest.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/modelinspector/modelinspectorinterface.cpp
     ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
     ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp

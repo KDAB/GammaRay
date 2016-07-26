@@ -52,3 +52,11 @@ QVariant ModelContentProxyModel::data(const QModelIndex &proxyIndex, int role) c
 
     return QIdentityProxyModel::data(proxyIndex, role);
 }
+
+Qt::ItemFlags ModelContentProxyModel::flags(const QModelIndex &index) const
+{
+    const auto f = QIdentityProxyModel::flags(index);
+    if (!index.isValid())
+        return f;
+    return f | Qt::ItemIsEnabled | Qt::ItemIsSelectable; // always enable items for inspection
+}
