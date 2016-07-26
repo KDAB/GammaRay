@@ -199,6 +199,19 @@ endif()
 
 endif()
 
+### Model inspector test
+
+if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+  add_executable(modelinspectortest
+    modelinspectortest.cpp
+    ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
+    ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
+    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+)
+target_link_libraries(modelinspectortest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+add_test(NAME modelinspectortest COMMAND modelinspectortest)
+endif()
+
 ### QWidget test
 
 if(Qt5Widgets_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks

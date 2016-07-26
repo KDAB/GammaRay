@@ -49,10 +49,11 @@ QVariant ModelModel::data(const QModelIndex &index, int role) const
 int ModelModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
-        QAbstractItemModel *sourceModel
-            = static_cast<QAbstractItemModel *>(parent.internalPointer());
+        if (parent.column() > 0)
+            return 0;
+        QAbstractItemModel *sourceModel = static_cast<QAbstractItemModel*>(parent.internalPointer());
         Q_ASSERT(sourceModel);
-        const QVector<QAbstractProxyModel *> proxies = proxiesForModel(sourceModel);
+        const QVector<QAbstractProxyModel*> proxies = proxiesForModel(sourceModel);
         return proxies.size();
     }
 
@@ -88,7 +89,24 @@ void ModelModel::objectAdded(QObject *obj)
     QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>(obj);
     if (proxy) {
         beginResetModel(); // FIXME
-        m_proxies.push_back(proxy);
+        if (proxy->sourceModel())
+            m_proxies.push_back(proxy);
+        else
+            m_models.push_back(proxy);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        connect(proxy, &QAbstractProxyModel::sourceModelChanged, this, [this, proxy]() {
+            beginResetModel(); // FIXME
+            if (proxy->sourceModel()) {
+                m_models.removeAll(proxy);
+                m_proxies.push_back(proxy);
+            } else {
+                m_proxies.removeAll(proxy);
+                m_models.push_back(proxy);
+            }
+            endResetModel();
+        });
+#endif
         endResetModel();
         return;
     }
