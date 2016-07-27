@@ -1,6 +1,17 @@
 Release Highlights
 ==================
 
+Version 2.5.1:
+--------------
+ * Fix build of external plugins when using a non-standard GammaRay install prefix.
+ * Fix race when receiving probe settings.
+ * Fix tool selector showing empty entries with Qt4.
+ * Fix widget layout overlay been shown incorrectly on floating dock widgets.
+ * Fix tool navigation context menu showing internal ids rather than tool names.
+ * Fix crash when target closes the connection first.
+ * Extended user manual content.
+ * Fix codec browser showing random values when changing selection.
+
 Version 2.5.0:
 --------------
  * Added paint analyzer for QQuickPaintedItems.
