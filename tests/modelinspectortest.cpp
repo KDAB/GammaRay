@@ -186,9 +186,8 @@ private slots:
         ModelTest selModelTester(selectionModels);
         QCOMPARE(selectionModels->rowCount(), 0);
 
-        auto targetSelModel = new QItemSelectionModel;
+        auto targetSelModel = new QItemSelectionModel(targetModel);
         targetSelModel->setObjectName("targetSelModel");
-        targetSelModel->setModel(targetModel);
         QTest::qWait(1);
         QCOMPARE(selectionModels->rowCount(), 0);
 
