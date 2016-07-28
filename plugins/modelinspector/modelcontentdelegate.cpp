@@ -30,6 +30,7 @@
 #include "modelcontentproxymodel.h"
 
 #include <QApplication>
+#include <QBrush>
 #include <QStyle>
 
 using namespace GammaRay;
@@ -46,10 +47,22 @@ ModelContentDelegate::~ModelContentDelegate()
 void ModelContentDelegate::paint(QPainter *painter, const QStyleOptionViewItem &origOption, const QModelIndex &index) const
 {
     Q_ASSERT(index.isValid());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     auto option = origOption;
+#else
+    QStyleOptionViewItemV4 option = origOption;
+#endif
     initStyleOption(&option, index);
     if (index.data(ModelContentProxyModel::DisabledRole).toBool())
         option.state = option.state & ~QStyle::State_Enabled;
+
+    if (index.data(ModelContentProxyModel::SelectedRole).toBool()) {
+        // for non-selected cells
+        option.backgroundBrush = option.palette.highlight();
+        option.backgroundBrush.setStyle(Qt::BDiagPattern);
+
+        // TODO also render selection for currently selected cells
+    }
 
     QStyle *style = QApplication::style();
     style->drawControl(QStyle::CE_ItemViewItem, &option, painter, Q_NULLPTR);
