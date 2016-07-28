@@ -283,9 +283,8 @@ private slots:
         auto modelModel = ObjectBroker::model("com.kdab.GammaRay.ModelModel");
         QVERIFY(modelModel);
 
-        auto targetSelModel = new QItemSelectionModel;
+        auto targetSelModel = new QItemSelectionModel(targetModel);
         targetSelModel->setObjectName("targetSelModel");
-        targetSelModel->setModel(targetModel);
         QTest::qWait(1);
 
         auto selectionModels = ObjectBroker::model("com.kdab.GammaRay.SelectionModels");
