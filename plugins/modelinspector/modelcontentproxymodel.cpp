@@ -28,15 +28,44 @@
 
 #include "modelcontentproxymodel.h"
 
+#include <QDebug>
+#include <QItemSelectionModel>
+
 using namespace GammaRay;
 
 ModelContentProxyModel::ModelContentProxyModel(QObject *parent)
     : QIdentityProxyModel(parent)
+    , m_selectionModel(Q_NULLPTR)
 {
 }
 
 ModelContentProxyModel::~ModelContentProxyModel()
 {
+}
+
+void ModelContentProxyModel::setSourceModel(QAbstractItemModel *model)
+{
+    setSelectionModel(Q_NULLPTR);
+    QIdentityProxyModel::setSourceModel(model);
+}
+
+void ModelContentProxyModel::setSelectionModel(QItemSelectionModel *selectionModel)
+{
+    Q_ASSERT(!selectionModel || selectionModel->model() == sourceModel());
+    if (m_selectionModel == selectionModel)
+        return;
+
+    if (m_selectionModel) {
+        disconnect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
+        emitDataChangedForSelection(m_selectionModel->selection());
+    }
+
+    m_selectionModel = selectionModel;
+
+    if (m_selectionModel) {
+        connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
+        emitDataChangedForSelection(m_selectionModel->selection());
+    }
 }
 
 QVariant ModelContentProxyModel::data(const QModelIndex &proxyIndex, int role) const
@@ -58,6 +87,10 @@ QVariant ModelContentProxyModel::data(const QModelIndex &proxyIndex, int role) c
         return true;
     }
 
+    if (role == SelectedRole && m_selectionModel && m_selectionModel->isSelected(mapToSource(proxyIndex))) {
+        return true;
+    }
+
     return QIdentityProxyModel::data(proxyIndex, role);
 }
 
@@ -72,8 +105,26 @@ Qt::ItemFlags ModelContentProxyModel::flags(const QModelIndex &index) const
 QMap<int, QVariant> ModelContentProxyModel::itemData(const QModelIndex &index) const
 {
     auto d = QIdentityProxyModel::itemData(index);
-    const auto v = data(index, DisabledRole);
+    auto v = data(index, DisabledRole);
     if (!v.isNull())
         d.insert(DisabledRole, v);
+    v = data(index, SelectedRole);
+    if (!v.isNull())
+        d.insert(SelectedRole, v);
     return d;
+}
+
+void ModelContentProxyModel::emitDataChangedForSelection(const QItemSelection &selection)
+{
+    foreach (const auto &range, selection) {
+        if (!range.isValid())
+            continue;
+        emit dataChanged(range.topLeft(), range.bottomRight());
+    }
+}
+
+void ModelContentProxyModel::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+{
+    emitDataChangedForSelection(deselected);
+    emitDataChangedForSelection(selected);
 }

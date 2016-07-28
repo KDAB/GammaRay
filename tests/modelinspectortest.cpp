@@ -41,6 +41,7 @@
 #include <QtTest/qtest.h>
 
 #include <QItemSelectionModel>
+#include <QSignalSpy>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QStringListModel>
@@ -268,6 +269,58 @@ private slots:
 
         delete targetModel;
         QTest::qWait(1);
+    }
+
+    void testSelectionModelSelection()
+    {
+        createProbe();
+
+        auto targetModel = new QStringListModel;
+        targetModel->setObjectName("targetModel");
+        targetModel->setStringList(QStringList() << "item1" << "item2" << "item3");
+        QTest::qWait(1); // trigger model inspector plugin loading
+
+        auto modelModel = ObjectBroker::model("com.kdab.GammaRay.ModelModel");
+        QVERIFY(modelModel);
+
+        auto targetSelModel = new QItemSelectionModel;
+        targetSelModel->setObjectName("targetSelModel");
+        targetSelModel->setModel(targetModel);
+        QTest::qWait(1);
+
+        auto selectionModels = ObjectBroker::model("com.kdab.GammaRay.SelectionModels");
+        QVERIFY(selectionModels);
+
+        auto modelSelModel = ObjectBroker::selectionModel(modelModel);
+        QVERIFY(modelSelModel);
+        auto idx = indexForName(modelModel, "targetModel");
+        QVERIFY(idx.isValid());
+        modelSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
+
+        auto selSelModel = ObjectBroker::selectionModel(selectionModels);
+        QVERIFY(selSelModel);
+        idx = indexForName(selectionModels, "targetSelModel");
+        QVERIFY(idx.isValid());
+        selSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
+
+        auto contentModel = ObjectBroker::model("com.kdab.GammaRay.ModelContent");
+        QVERIFY(contentModel);
+        QCOMPARE(contentModel->rowCount(), targetModel->rowCount());
+        for (int i = 0; i < targetModel->rowCount(); ++i)
+            QVERIFY(contentModel->index(i, 0).data(ModelContentProxyModel::SelectedRole).isNull());
+
+        QSignalSpy contentSpy(contentModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QVERIFY(contentSpy.isValid());
+
+        targetSelModel->select(contentModel->index(1, 0), QItemSelectionModel::ClearAndSelect);
+        QVERIFY(contentModel->index(0, 0).data(ModelContentProxyModel::SelectedRole).isNull());
+        QVERIFY(contentModel->index(1, 0).data(ModelContentProxyModel::SelectedRole).toBool());
+        QVERIFY(contentModel->index(2, 0).data(ModelContentProxyModel::SelectedRole).isNull());
+
+        QVERIFY(contentSpy.size() > 0);
+
+        delete targetSelModel;
+        delete targetModel;
     }
 };
 

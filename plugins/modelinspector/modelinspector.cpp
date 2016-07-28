@@ -75,6 +75,8 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
     m_selectionModelsModel->setSourceModel(probe->objectListModel());
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SelectionModels"), m_selectionModelsModel);
     m_selectionModelsSelectionModel = ObjectBroker::selectionModel(m_selectionModelsModel);
+    connect(m_selectionModelsSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this, SLOT(selectionModelSelected(QItemSelection)));
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelContent"), m_modelContentProxyModel);
     m_modelContentSelectionModel = ObjectBroker::selectionModel(m_modelContentProxyModel);
@@ -177,6 +179,18 @@ void ModelInspector::objectCreated(QObject *object)
 
     if (auto proxy = qobject_cast<QAbstractProxyModel *>(object))
         m_probe->discoverObject(proxy->sourceModel());
+}
+
+void ModelInspector::selectionModelSelected(const QItemSelection& selected)
+{
+    QModelIndex idx;
+    if (selected.size() > 0)
+        idx = selected.at(0).topLeft();
+    if (!idx.isValid()) {
+        m_modelContentProxyModel->setSelectionModel(Q_NULLPTR);
+        return;
+    }
+    m_modelContentProxyModel->setSelectionModel(qobject_cast<QItemSelectionModel*>(idx.data(ObjectModel::ObjectRole).value<QObject*>()));
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

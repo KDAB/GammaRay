@@ -32,6 +32,12 @@
 #include <common/modelroles.h>
 
 #include <QIdentityProxyModel>
+#include <QPointer>
+
+QT_BEGIN_NAMESPACE
+class QItemSelection;
+class QItemSelectionModel;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -43,15 +49,28 @@ class ModelContentProxyModel : public QIdentityProxyModel
     Q_OBJECT
 public:
     enum Roles {
-        DisabledRole = GammaRay::UserRole + 1
+        DisabledRole = GammaRay::UserRole + 1,
+        SelectedRole
     };
 
     explicit ModelContentProxyModel(QObject *parent = 0);
     ~ModelContentProxyModel();
 
+    /*! Will provide the selection via a custom role for rendering in ModelContentDelegate. */
+    void setSelectionModel(QItemSelectionModel *selectionModel);
+
+    void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+
+private slots:
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+
+private:
+    void emitDataChangedForSelection(const QItemSelection &selection);
+
+    QPointer<QItemSelectionModel> m_selectionModel;
 };
 
 }
