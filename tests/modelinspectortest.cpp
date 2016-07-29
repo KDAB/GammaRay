@@ -186,6 +186,8 @@ private slots:
         QVERIFY(selectionModels);
         ModelTest selModelTester(selectionModels);
         QCOMPARE(selectionModels->rowCount(), 0);
+        QSignalSpy resetSpy(selectionModels, SIGNAL(modelReset()));
+        QVERIFY(resetSpy.isValid());
 
         auto targetSelModel = new QItemSelectionModel(targetModel);
         targetSelModel->setObjectName("targetSelModel");
@@ -205,6 +207,7 @@ private slots:
 
         delete targetModel;
         QTest::qWait(1);
+        QVERIFY(resetSpy.isEmpty());
     }
 
     void testModelContent()

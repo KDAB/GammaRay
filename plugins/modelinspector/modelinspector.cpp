@@ -72,7 +72,8 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
             SLOT(objectSelected(QObject*)));
 
-    m_selectionModelsModel->setSourceModel(probe->objectListModel());
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_selectionModelsModel, SLOT(objectCreated(QObject*)));
+    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_selectionModelsModel, SLOT(objectDestroyed(QObject*)));
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SelectionModels"), m_selectionModelsModel);
     m_selectionModelsSelectionModel = ObjectBroker::selectionModel(m_selectionModelsModel);
     connect(m_selectionModelsSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),

@@ -28,10 +28,14 @@
 
 #include "selectionmodelmodel.h"
 
+#include <QItemSelectionModel>
+
+#include <algorithm>
+
 using namespace GammaRay;
 
 SelectionModelModel::SelectionModelModel(QObject *parent) :
-    ObjectTypeFilterProxyModel<QItemSelectionModel>(parent),
+    ObjectModelBase<QAbstractTableModel>(parent),
     m_model(Q_NULLPTR)
 {
 }
@@ -40,27 +44,111 @@ SelectionModelModel::~SelectionModelModel()
 {
 }
 
+void SelectionModelModel::objectCreated(QObject* obj)
+{
+    Q_ASSERT(obj);
+    auto model = qobject_cast<QItemSelectionModel*>(obj);
+    if (!model)
+        return;
+
+    auto it = std::lower_bound(m_selectionModels.begin(), m_selectionModels.end(), model);
+    if (it != m_selectionModels.end() && *it == model)
+        return;
+    m_selectionModels.insert(it, model);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    connect(model, &QItemSelectionModel::modelChanged, this, &SelectionModelModel::sourceModelChanged);
+#endif
+
+    if (!m_model || model->model() != m_model)
+        return;
+
+    it = std::lower_bound(m_currentSelectionModels.begin(), m_currentSelectionModels.end(), model);
+   const  auto row = std::distance(m_currentSelectionModels.begin(), it);
+    beginInsertRows(QModelIndex(), row, row);
+    m_currentSelectionModels.insert(it, model);
+    endInsertRows();
+}
+
+void SelectionModelModel::objectDestroyed(QObject* obj)
+{
+    Q_ASSERT(obj);
+    auto model = static_cast<QItemSelectionModel*>(obj); // do not dereference!
+
+    auto it = std::lower_bound(m_selectionModels.begin(), m_selectionModels.end(), model);
+    if (it == m_selectionModels.end() || *it != model)
+        return;
+    m_selectionModels.erase(it);
+
+    it = std::lower_bound(m_currentSelectionModels.begin(), m_currentSelectionModels.end(), model);
+    if (it == m_currentSelectionModels.end() || *it != model)
+        return;
+    const auto row = std::distance(m_currentSelectionModels.begin(), it);
+    beginRemoveRows(QModelIndex(), row, row);
+    m_currentSelectionModels.erase(it);
+    endRemoveRows();
+}
+
+void SelectionModelModel::sourceModelChanged()
+{
+    auto model = qobject_cast<QItemSelectionModel*>(sender());
+    Q_ASSERT(model);
+
+    auto it = std::lower_bound(m_currentSelectionModels.begin(), m_currentSelectionModels.end(), model);
+    if (it != m_currentSelectionModels.end() && *it == model && model->model() != m_model && m_model) {
+        const auto row = std::distance(m_currentSelectionModels.begin(), it);
+        beginRemoveRows(QModelIndex(), row, row);
+        m_currentSelectionModels.erase(it);
+        endRemoveRows();
+    }
+
+    if (model->model() == m_model && m_model) {
+        auto it = std::lower_bound(m_currentSelectionModels.begin(), m_currentSelectionModels.end(), model);
+        if (it != m_currentSelectionModels.end() && *it == model)
+            return;
+        const auto row = std::distance(m_currentSelectionModels.begin(), it);
+        beginInsertRows(QModelIndex(), row, row);
+        m_currentSelectionModels.insert(it, model);
+        endInsertRows();
+    }
+}
+
 void SelectionModelModel::setModel(QAbstractItemModel* model)
 {
-    beginResetModel();
+    if (model == m_model)
+        return;
+
+    if (!m_currentSelectionModels.isEmpty()) {
+        beginRemoveRows(QModelIndex(), 0, m_currentSelectionModels.size() - 1);
+        m_currentSelectionModels.clear();
+        endRemoveRows();
+    }
+
     m_model = model;
-    endResetModel();
+    QVector<QItemSelectionModel*> models;
+    std::copy_if(m_selectionModels.constBegin(), m_selectionModels.constEnd(), std::back_inserter(models), [this](QItemSelectionModel* model) {
+        return model->model() == m_model;
+    });
+
+    if (models.isEmpty())
+        return;
+
+    beginInsertRows(QModelIndex(), 0, models.size() - 1);
+    m_currentSelectionModels = models;
+    endInsertRows();
 }
 
-bool SelectionModelModel::filterAcceptsObject(QObject* object) const
+int SelectionModelModel::rowCount(const QModelIndex &parent) const
 {
-    if (!m_model)
-        return false;
-    if (!ObjectTypeFilterProxyModel<QItemSelectionModel>::filterAcceptsObject(object))
-        return false;
-
-    auto selectionModel = qobject_cast<QItemSelectionModel*>(object);
-    Q_ASSERT(selectionModel);
-    return selectionModel->model() == m_model;
+    if (parent.isValid())
+        return 0;
+    return m_currentSelectionModels.size();
 }
 
-QMap<int, QVariant> SelectionModelModel::itemData(const QModelIndex& index) const
+QVariant SelectionModelModel::data(const QModelIndex &index, int role) const
 {
-    const auto sourceIndex = mapToSource(index);
-    return sourceModel()->itemData(sourceIndex);
+    if (!index.isValid())
+        return QVariant();
+
+    auto model = m_currentSelectionModels.at(index.row());
+    return dataForObject(model, index, role);
 }

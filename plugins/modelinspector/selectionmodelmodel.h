@@ -29,14 +29,18 @@
 #ifndef GAMMARAY_SELECTIONMODELMODEL_H
 #define GAMMARAY_SELECTIONMODELMODEL_H
 
-#include <core/objecttypefilterproxymodel.h>
+#include <core/objectmodelbase.h>
 
-#include <QItemSelectionModel>
+#include <QVector>
+
+QT_BEGIN_NAMESPACE
+class QItemSelectionModel;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
 /*! Selection models for a specific model. */
-class SelectionModelModel : public ObjectTypeFilterProxyModel<QItemSelectionModel>
+class SelectionModelModel : public ObjectModelBase<QAbstractTableModel>
 {
     Q_OBJECT
 public:
@@ -46,12 +50,19 @@ public:
     /*! show only selection models for @p model */
     void setModel(QAbstractItemModel *model);
 
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-protected:
-    bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE;
+public slots:
+    void objectCreated(QObject *obj);
+    void objectDestroyed(QObject *obj);
+
+private slots:
+    void sourceModelChanged();
 
 private:
+    QVector<QItemSelectionModel*> m_selectionModels;
+    QVector<QItemSelectionModel*> m_currentSelectionModels;
     QAbstractItemModel *m_model;
 };
 }
