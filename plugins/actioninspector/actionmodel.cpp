@@ -127,7 +127,7 @@ QVariant ActionModel::headerData(int section, Qt::Orientation orientation, int r
     if (role == Qt::DisplayRole) {
         switch (section) {
         case AddressColumn:
-            return tr("Address");
+            return tr("Object");
         case NameColumn:
             return tr("Name");
         case CheckablePropColumn:
@@ -160,7 +160,7 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         switch (column) {
         case AddressColumn:
-            return Util::addressToString(action);
+            return Util::shortDisplayString(action);
         case NameColumn:
             return action->text();
         case CheckablePropColumn:
