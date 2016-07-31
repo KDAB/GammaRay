@@ -28,6 +28,8 @@
 
 #include "selectionmodelmodel.h"
 
+#include <core/objectdataprovider.h>
+
 #include <QItemSelectionModel>
 
 #include <algorithm>
@@ -55,6 +57,7 @@ void SelectionModelModel::objectCreated(QObject* obj)
     if (it != m_selectionModels.end() && *it == model)
         return;
     m_selectionModels.insert(it, model);
+    connect(model, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged()));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     connect(model, &QItemSelectionModel::modelChanged, this, &SelectionModelModel::sourceModelChanged);
 #endif
@@ -112,6 +115,20 @@ void SelectionModelModel::sourceModelChanged()
     }
 }
 
+void SelectionModelModel::selectionChanged()
+{
+    auto model = qobject_cast<QItemSelectionModel*>(sender());
+    Q_ASSERT(model);
+
+    if (model->model() != m_model)
+        return;
+
+    const auto it = std::lower_bound(m_currentSelectionModels.constBegin(), m_currentSelectionModels.constEnd(), model);
+    Q_ASSERT(it != m_currentSelectionModels.constEnd() && *it == model);
+    const auto row = std::distance(m_currentSelectionModels.constBegin(), it);
+    emit dataChanged(index(row, 1), index(row, 3));
+}
+
 void SelectionModelModel::setModel(QAbstractItemModel* model)
 {
     if (model == m_model)
@@ -137,6 +154,12 @@ void SelectionModelModel::setModel(QAbstractItemModel* model)
     endInsertRows();
 }
 
+int SelectionModelModel::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return 5;
+}
+
 int SelectionModelModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
@@ -148,7 +171,30 @@ QVariant SelectionModelModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-
     auto model = m_currentSelectionModels.at(index.row());
+
+    if (role == Qt::DisplayRole) {
+        switch (index.column()) {
+            case 1: return model->selectedIndexes().size();
+            case 2: return model->selectedRows().size();
+            case 3: return model->selectedColumns().size();
+            case 4: return ObjectDataProvider::typeName(model);
+        }
+    }
+
     return dataForObject(model, index, role);
+}
+
+QVariant SelectionModelModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch (section) {
+            case 0: return tr("Object");
+            case 1: return tr("#Items");
+            case 2: return tr("#Rows");
+            case 3: return tr("#Columns");
+            case 4: return tr("Type");
+        }
+    }
+    return QAbstractTableModel::headerData(section, orientation, role);
 }

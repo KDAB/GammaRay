@@ -201,6 +201,21 @@ private slots:
         modelSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
         QCOMPARE(selectionModels->rowCount(), 1);
 
+        QSignalSpy dataChangeSpy(selectionModels, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QVERIFY(dataChangeSpy.isValid());
+        QCOMPARE(selectionModels->index(0, 1).data().toInt(), 0);
+        QCOMPARE(selectionModels->index(0, 2).data().toInt(), 0);
+        QCOMPARE(selectionModels->index(0, 3).data().toInt(), 0);
+
+        targetSelModel->select(targetModel->index(1, 0), QItemSelectionModel::ClearAndSelect);
+        QCOMPARE(dataChangeSpy.size(), 1);
+        QCOMPARE(selectionModels->index(0, 1).data().toInt(), 1);
+        QCOMPARE(selectionModels->index(0, 2).data().toInt(), 1); // rows
+        QCOMPARE(selectionModels->index(0, 3).data().toInt(), 0); // cols
+
+        targetSelModel->clear();
+        QCOMPARE(dataChangeSpy.size(), 2);
+
         delete targetSelModel;
         QTest::qWait(1);
         QCOMPARE(selectionModels->rowCount(), 0);
