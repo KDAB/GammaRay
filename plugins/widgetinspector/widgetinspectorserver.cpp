@@ -58,20 +58,24 @@
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
+#include <QAction>
 #include <QAbstractItemView>
 #include <QApplication>
+#include <QButtonGroup>
 #include <QComboBox>
 #include <QDesktopWidget>
 #include <QDialog>
+#include <QItemSelectionModel>
 #include <QLayout>
 #include <QLibrary>
-#include <QItemSelectionModel>
+#include <QMenu>
 #include <QPainter>
 #include <QPixmap>
 #include <QMainWindow>
 #include <QMouseEvent>
 #include <QEvent>
 #include <QStyle>
+#include <QToolButton>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QWindow>
 #endif
@@ -468,6 +472,13 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
 
     MO_ADD_METAOBJECT1(QComboBox, QWidget);
     MO_ADD_PROPERTY_RO(QComboBox, QAbstractItemModel *, model);
+
+    MO_ADD_METAOBJECT1(QAbstractButton, QWidget);
+    MO_ADD_PROPERTY_RO(QAbstractButton, QButtonGroup*, group);
+
+    MO_ADD_METAOBJECT1(QToolButton, QAbstractButton);
+    MO_ADD_PROPERTY_RO(QToolButton, QAction*, defaultAction);
+    MO_ADD_PROPERTY_RO(QToolButton, QMenu*, menu);
 #endif
 }
 
