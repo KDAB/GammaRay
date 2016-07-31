@@ -59,6 +59,7 @@ private slots:
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentContentChanged();
+    void documentContextMenu(QPoint pos);
 
 private:
     QScopedPointer<Ui::TextDocumentInspectorWidget> ui;

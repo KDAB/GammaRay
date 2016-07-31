@@ -32,8 +32,12 @@
 
 #include <common/objectmodel.h>
 #include <common/objectbroker.h>
+#include <common/objectid.h>
 #include <common/endpoint.h>
 
+#include <ui/contextmenuextension.h>
+
+#include <QMenu>
 #include <QTextDocument>
 
 using namespace GammaRay;
@@ -48,12 +52,12 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent)
     ui->documentList->header()->setObjectName("documentListHeader");
     ui->documentList->setDeferredResizeMode(0, QHeaderView::Stretch);
     ui->documentList->setDeferredResizeMode(1, QHeaderView::Stretch);
-    ui->documentList->setModel(ObjectBroker::model(QStringLiteral(
-                                                       "com.kdab.GammaRay.TextDocumentsModel")));
+    ui->documentList->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TextDocumentsModel")));
     ui->documentList->setSelectionModel(ObjectBroker::selectionModel(ui->documentList->model()));
     connect(ui->documentList->selectionModel(),
             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(documentSelected(QItemSelection,QItemSelection)));
+    connect(ui->documentList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(documentContextMenu(QPoint)));
 
     ui->documentTree->header()->setObjectName("documentTreeHeader");
     ui->documentTree->setDeferredResizeMode(0, QHeaderView::Stretch);
@@ -117,6 +121,22 @@ void TextDocumentInspectorWidget::documentElementSelected(const QItemSelection &
 void TextDocumentInspectorWidget::documentContentChanged()
 {
     ui->htmlView->setPlainText(m_currentDocument->toHtml());
+}
+
+void TextDocumentInspectorWidget::documentContextMenu(QPoint pos)
+{
+    const auto index = ui->documentList->indexAt(pos);
+    if (!index.isValid())
+        return;
+
+    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Declaration, index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.populateMenu(&menu);
+
+    menu.exec(ui->documentList->viewport()->mapToGlobal(pos));
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

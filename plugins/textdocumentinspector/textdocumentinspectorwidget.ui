@@ -27,6 +27,9 @@
        </item>
        <item>
         <widget class="GammaRay::DeferredTreeView" name="documentList">
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
          <property name="rootIsDecorated">
           <bool>false</bool>
          </property>

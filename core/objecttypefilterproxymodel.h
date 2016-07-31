@@ -58,6 +58,8 @@ public:
      */
     explicit ObjectFilterProxyModelBase(QObject *parent = Q_NULLPTR);
 
+    QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
+
 protected:
     /**
      * Determines if the item in the specified row can be included in the model.
