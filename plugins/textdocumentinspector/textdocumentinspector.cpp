@@ -44,27 +44,42 @@ using namespace GammaRay;
 TextDocumentInspector::TextDocumentInspector(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
 {
-    ObjectTypeFilterProxyModel<QTextDocument> *documentFilter
-        = new ObjectTypeFilterProxyModel<QTextDocument>(this);
+    auto documentFilter = new ObjectTypeFilterProxyModel<QTextDocument>(this);
     documentFilter->setSourceModel(probe->objectListModel());
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentsModel"), documentFilter);
+    m_documentsModel = documentFilter;
 
-    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(documentFilter);
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+    m_documentSelectionModel = ObjectBroker::selectionModel(documentFilter);
+    connect(m_documentSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(documentSelected(QItemSelection,QItemSelection)));
 
     m_textDocumentModel = new TextDocumentModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentModel"),
                          m_textDocumentModel);
 
-    selectionModel = ObjectBroker::selectionModel(m_textDocumentModel);
+    auto selectionModel = ObjectBroker::selectionModel(m_textDocumentModel);
     connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(documentElementSelected(QItemSelection,QItemSelection)));
 
     m_textDocumentFormatModel = new TextDocumentFormatModel(this);
-    probe->registerModel(QStringLiteral(
-                             "com.kdab.GammaRay.TextDocumentFormatModel"),
-                         m_textDocumentFormatModel);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentFormatModel"), m_textDocumentFormatModel);
+
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+}
+
+void TextDocumentInspector::objectSelected(QObject* obj)
+{
+    if (auto doc = qobject_cast<QTextDocument*>(obj)) {
+        const auto indexList = m_documentsModel->match(m_documentsModel->index(0, 0),
+                                  ObjectModel::ObjectRole,
+                                  QVariant::fromValue<QObject*>(doc), 1,
+                                  Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+        if (indexList.isEmpty())
+            return;
+
+        const auto index = indexList.first();
+        m_documentSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    }
 }
 
 void TextDocumentInspector::documentSelected(const QItemSelection &selected,

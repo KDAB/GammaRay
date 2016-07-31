@@ -1,5 +1,6 @@
 {
     "id": "gammaray_textdocumentinspector",
     "name": "Text Documents",
+    "selectableTypes": [ "QTextDocument" ],
     "types": [ "QTextDocument" ]
 }

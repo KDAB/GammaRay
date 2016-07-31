@@ -35,7 +35,9 @@
 #include <QTextDocument>
 
 QT_BEGIN_NAMESPACE
+class QAbstractItemModel;
 class QItemSelection;
+class QItemSelectionModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -51,8 +53,11 @@ public:
 private slots:
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);
     void documentElementSelected(const QItemSelection &selected, const QItemSelection &deselected);
+    void objectSelected(QObject *obj);
 
 private:
+    QAbstractItemModel *m_documentsModel;
+    QItemSelectionModel *m_documentSelectionModel;
     TextDocumentModel *m_textDocumentModel;
     TextDocumentFormatModel *m_textDocumentFormatModel;
 };
