@@ -1,6 +1,10 @@
 {
     "id": "gammaray_textdocumentinspector",
     "name": "Text Documents",
-    "selectableTypes": [ "QTextDocument" ],
+    "selectableTypes": [
+        "QTextDocument",
+        "QTextObject",
+        "QAbstractTextDocumentLayout"
+    ],
     "types": [ "QTextDocument" ]
 }
