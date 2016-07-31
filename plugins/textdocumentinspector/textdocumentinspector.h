@@ -56,6 +56,8 @@ private slots:
     void objectSelected(QObject *obj);
 
 private:
+    void registerMetaTypes();
+
     QAbstractItemModel *m_documentsModel;
     QItemSelectionModel *m_documentSelectionModel;
     TextDocumentModel *m_textDocumentModel;

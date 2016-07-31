@@ -31,19 +31,26 @@
 #include "textdocumentformatmodel.h"
 #include "textdocumentmodel.h"
 
+#include <core/metaobject.h>
+#include <core/metaobjectrepository.h>
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
 
 #include <common/objectbroker.h>
 
+#include <QAbstractTextDocumentLayout>
 #include <QItemSelection>
 #include <QTextDocument>
+#include <QTextList>
+#include <QTextTable>
 
 using namespace GammaRay;
 
 TextDocumentInspector::TextDocumentInspector(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
 {
+    registerMetaTypes();
+
     auto documentFilter = new ObjectTypeFilterProxyModel<QTextDocument>(this);
     documentFilter->setSourceModel(probe->objectListModel());
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentsModel"), documentFilter);
@@ -107,6 +114,35 @@ void TextDocumentInspector::documentElementSelected(const QItemSelection &select
     const QModelIndex selectedRow = selected.first().topLeft();
     const QTextFormat f = selectedRow.data(TextDocumentModel::FormatRole).value<QTextFormat>();
     m_textDocumentFormatModel->setFormat(f);
+}
+
+void TextDocumentInspector::registerMetaTypes()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    MetaObject *mo = Q_NULLPTR;
+    MO_ADD_METAOBJECT1(QTextObject, QObject);
+    MO_ADD_PROPERTY_RO(QTextObject, QTextDocument*, document);
+    MO_ADD_PROPERTY_RO(QTextObject, int, formatIndex);
+    MO_ADD_PROPERTY_RO(QTextObject, int, objectIndex);
+
+    MO_ADD_METAOBJECT1(QTextFrame, QTextObject);
+    MO_ADD_PROPERTY_RO(QTextFrame, int, firstPosition);
+    MO_ADD_PROPERTY_RO(QTextFrame, int, lastPosition);
+    MO_ADD_PROPERTY_RO(QTextFrame, QTextFrame*, parentFrame);
+
+    MO_ADD_METAOBJECT1(QTextTable, QTextFrame);
+    MO_ADD_PROPERTY_RO(QTextTable, int, columns);
+    MO_ADD_PROPERTY_RO(QTextTable, int, rows);
+
+    MO_ADD_METAOBJECT1(QTextBlockGroup, QTextObject);
+    MO_ADD_METAOBJECT1(QTextList, QTextBlockGroup);
+    MO_ADD_PROPERTY_RO(QTextList, int, count);
+
+    MO_ADD_METAOBJECT1(QAbstractTextDocumentLayout, QObject);
+    MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, QTextDocument*, document);
+    MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, QSizeF, documentSize);
+    MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, int, pageCount);
+#endif
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
