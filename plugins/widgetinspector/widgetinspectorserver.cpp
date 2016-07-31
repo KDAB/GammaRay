@@ -220,6 +220,10 @@ bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
                     m_probe->selectObject(view->selectionModel());
                 else if (QComboBox *box = Util::findParentOfType<QComboBox>(object))
                     m_probe->selectObject(box->model());
+                else if (auto toolButton = qobject_cast<QToolButton*>(object)) {
+                    if (toolButton->defaultAction())
+                        m_probe->selectObject(toolButton->defaultAction());
+                }
 
                 m_probe->selectObject(widget, widget->mapFromGlobal(mouseEv->globalPos()));
                 widgetSelected(widget);
