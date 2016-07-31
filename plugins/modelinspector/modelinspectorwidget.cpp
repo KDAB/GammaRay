@@ -73,6 +73,9 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
             this, SLOT(selectionModelContextMenu(QPoint)));
     ui->selectionModelsView->setSelectionModel(ObjectBroker::selectionModel(selectionModels));
 
+    auto contentModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelContent"));
+    ui->modelContentView->setModel(contentModel);
+    ui->modelContentView->setSelectionModel(ObjectBroker::selectionModel(contentModel));
     ui->modelContentView->header()->setObjectName("modelContentViewHeader");
     ui->modelContentView->setItemDelegate(new ModelContentDelegate(this));
 
@@ -110,29 +113,9 @@ void ModelInspectorWidget::modelSelected(const QItemSelection &selected)
     if (selected.size() >= 1)
         index = selected.first().topLeft();
 
-    if (index.isValid()) {
-        QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
-        QAbstractItemModel *model = qobject_cast<QAbstractItemModel *>(obj);
-        if (model) {
-            // we are on the server side
-            ui->modelContentView->setModel(model);
-            if (ObjectBroker::hasSelectionModel(ui->modelContentView->model()))
-                setupModelContentSelectionModel();
-            connect(Endpoint::instance(), SIGNAL(objectRegistered(QString,
-                                                                  Protocol::ObjectAddress)),
-                    this, SLOT(objectRegistered(QString)), Qt::UniqueConnection);
-        } else {
-            // we are on the client side
-            model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelContent"));
-            ui->modelContentView->setModel(model);
-            setupModelContentSelectionModel();
-        }
-
+    if (index.isValid())
         // in case selection is not directly triggered by the user
         ui->modelView->scrollTo(index, QAbstractItemView::EnsureVisible);
-    } else {
-        ui->modelContentView->setModel(0);
-    }
 }
 
 #define F(x) { Qt:: x, #x }
@@ -173,15 +156,6 @@ void ModelInspectorWidget::objectRegistered(const QString &objectName)
     if (objectName == QLatin1String("com.kdab.GammaRay.ModelContent.selection"))
         // delay, since it's not registered yet when the signal is emitted
         QMetaObject::invokeMethod(this, "setupModelContentSelectionModel", Qt::QueuedConnection);
-}
-
-void ModelInspectorWidget::setupModelContentSelectionModel()
-{
-    if (!ui->modelContentView->model())
-        return;
-
-    ui->modelContentView->setSelectionModel(ObjectBroker::selectionModel(
-                                                ui->modelContentView->model()));
 }
 
 void ModelInspectorWidget::modelContextMenu(QPoint pos)

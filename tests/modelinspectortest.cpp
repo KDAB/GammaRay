@@ -32,6 +32,7 @@
 #include <probe/hooks.h>
 #include <probe/probecreator.h>
 #include <core/probe.h>
+#include <ui/clienttoolmanager.h>
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <common/objectid.h>
@@ -40,6 +41,7 @@
 
 #include <QtTest/qtest.h>
 
+#include <QAbstractItemView>
 #include <QItemSelectionModel>
 #include <QSignalSpy>
 #include <QSortFilterProxyModel>
@@ -338,6 +340,26 @@ private slots:
 
         delete targetSelModel;
         delete targetModel;
+    }
+
+    void testWidget()
+    {
+        createProbe();
+
+        auto targetModel = new QStringListModel;
+        targetModel->setObjectName("targetModel");
+        targetModel->setStringList(QStringList() << "item1" << "item2" << "item3");
+        QTest::qWait(1); // trigger model inspector plugin loading
+
+        ClientToolManager mgr;
+        auto widget = mgr.widgetForId("gammaray_modelinspector");
+        QVERIFY(widget);
+        widget->show();
+
+        auto views = widget->findChildren<QAbstractItemView*>();
+        foreach (auto view, views) {
+            QVERIFY(view->model());
+        }
     }
 };
 
