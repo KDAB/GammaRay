@@ -450,6 +450,7 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_RO(QWidget, QWidget*, window);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_PROPERTY_RO(QWidget, QWindow*, windowHandle);
+    MO_ADD_PROPERTY   (QWidget, Qt::WindowFlags, windowFlags, setWindowFlags);
 #endif
 
     MO_ADD_METAOBJECT1(QStyle, QObject);
