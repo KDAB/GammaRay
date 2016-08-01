@@ -32,6 +32,8 @@
 #include <QMetaType>
 #include <QStringList>
 
+#include <string.h>
+
 using namespace GammaRay;
 
 MetaTypesModel::MetaTypesModel(QObject *parent)
@@ -137,7 +139,10 @@ void MetaTypesModel::scanMetaTypes()
 
 #else
     for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
-        if (QMetaType::isRegistered(mtId))
+        if (!QMetaType::isRegistered(mtId))
+            continue;
+        const auto name = QMetaType::typeName(mtId);
+        if (strstr(name, "GammaRay::") != name)
             m_metaTypes.push_back(mtId);
     }
 #endif
