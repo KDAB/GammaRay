@@ -56,7 +56,9 @@
 #include <private/qjsvalue_p.h>
 #include <private/qqmlmetatype_p.h>
 #include <private/qqmldata_p.h>
+#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
 #include <private/qqmlcompiler_p.h>
+#endif
 #include <private/qqmlcontext_p.h>
 #include <private/qqmlscriptstring_p.h>
 #include <private/qv8engine_p.h>
@@ -191,10 +193,17 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
     // QML defined type
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     auto data = QQmlData::get(obj);
+#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
     if (!data || !data->compiledData)
         return QString();
 
     qmlType = QQmlMetaType::qmlType(data->compiledData->url());
+#else
+    if (!data || !data->compilationUnit)
+        return QString();
+
+    qmlType = QQmlMetaType::qmlType(data->compilationUnit->url());
+#endif
     if (qmlType) {
         // we get the same type for top-level types and inline types, with no known way to tell those apart...
         if (QString::fromLatin1(obj->metaObject()->className()).startsWith(qmlType->qmlTypeName()
@@ -244,10 +253,17 @@ SourceLocation QmlObjectDataProvider::declarationLocation(QObject *obj) const
     // QML-defined type
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     auto data = QQmlData::get(obj);
+#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
     if (!data || !data->compiledData)
         return SourceLocation();
 
     qmlType = QQmlMetaType::qmlType(data->compiledData->url());
+#else
+    if (!data || !data->compilationUnit)
+        return SourceLocation();
+
+    qmlType = QQmlMetaType::qmlType(data->compilationUnit->url());
+#endif
     if (qmlType)
         return SourceLocation(qmlType->sourceUrl());
 #endif
