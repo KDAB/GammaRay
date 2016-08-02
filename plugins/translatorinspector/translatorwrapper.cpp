@@ -209,16 +209,14 @@ bool TranslatorWrapper::isEmpty() const
 QString TranslatorWrapper::translate(const char *context, const char *sourceText,
                                      const char *disambiguation, int n) const
 {
-    const QString translation
-        = translateInternal(context, sourceText, disambiguation, n);
+    const QString translation = translateInternal(context, sourceText, disambiguation, n);
 
-    if (strncmp(context, "GammaRay::", 10) == 0)
+    if (context && strncmp(context, "GammaRay::", 10) == 0)
         return translation;
     // it's not for this translator
     if (translation.isNull())
         return translation;
-    return m_model->translation(context, sourceText, disambiguation, n,
-                                translation);
+    return m_model->translation(context, sourceText, disambiguation, n, translation);
 }
 
 QString TranslatorWrapper::translateInternal(const char *context, const char *sourceText,

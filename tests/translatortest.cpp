@@ -35,6 +35,7 @@
 #include <3rdparty/qt/modeltest.h>
 
 #include <QtTest/qtest.h>
+#include <QItemSelectionModel>
 #include <QObject>
 #include <QLibraryInfo>
 #include <QTranslator>
@@ -92,6 +93,39 @@ private slots:
 
         QCoreApplication::removeTranslator(t2);
         delete t2;
+        QTest::qWait(1);
+    }
+
+    void testTranslate()
+    {
+        createProbe();
+
+        auto t1 = new QTranslator;
+        t1->setObjectName(QStringLiteral("t1"));
+        t1->load(QLibraryInfo::location(QLibraryInfo::TranslationsPath) + QStringLiteral( "/qt_sv.qm"));
+        QVERIFY(!t1->isEmpty());
+        QCoreApplication::installTranslator(t1);
+        QTest::qWait(1);
+
+        auto *translatorModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"));
+        QVERIFY(translatorModel);
+        ModelTest TranslationsModelTest(translatorModel);
+        QCOMPARE(translatorModel->rowCount(), 2);
+
+        auto translatorSelection = ObjectBroker::selectionModel(translatorModel);
+        QVERIFY(translatorSelection);
+        translatorSelection->select(translatorModel->index(0, 0), QItemSelectionModel::ClearAndSelect);
+
+        auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel"));
+        QVERIFY(model);
+        ModelTest modelTest(model);
+
+        QCoreApplication::translate("context", "key", Q_NULLPTR);
+        QCoreApplication::translate(Q_NULLPTR, "key", Q_NULLPTR);
+        QCoreApplication::translate(Q_NULLPTR, "key", "disambiguation");
+        QCoreApplication::translate("context", "key", "disambiguation");
+
+        delete t1;
         QTest::qWait(1);
     }
 };
