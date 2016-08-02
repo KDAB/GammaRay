@@ -33,7 +33,7 @@
 using namespace GammaRay;
 
 TranslationsModel::TranslationsModel(TranslatorWrapper *translator)
-    : QAbstractListModel(translator)
+    : QAbstractTableModel(translator)
     , m_translator(translator)
 {
     connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
@@ -56,7 +56,7 @@ int TranslationsModel::columnCount(const QModelIndex &) const
 
 QVariant TranslationsModel::data(const QModelIndex &index, int role) const
 {
-    if (index.parent().isValid())
+    if (!index.isValid())
         return QVariant();
     Row node = m_nodes.at(index.row());
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
@@ -113,10 +113,10 @@ QVariant TranslationsModel::headerData(int section, Qt::Orientation orientation,
 
 Qt::ItemFlags TranslationsModel::flags(const QModelIndex &index) const
 {
+    const auto f = QAbstractTableModel::flags(index);
     if (index.column() == 3)
-        return Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemIsSelectable;
-    else
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+        return f | Qt::ItemIsEditable;
+    return f;
 }
 
 void TranslationsModel::resetTranslations(const QModelIndex &first, const QModelIndex &last)
@@ -147,7 +147,7 @@ void TranslationsModel::resetAllUnchanged()
 {
     for (int i = 0; i < m_nodes.size(); ++i) {
         if (!m_nodes[i].isOverriden)
-            resetTranslations(index(i), index(i));
+            resetTranslations(index(i, 0), index(i, 0));
     }
 }
 

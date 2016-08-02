@@ -35,7 +35,7 @@
 namespace GammaRay {
 class TranslatorWrapper;
 
-class TranslationsModel : public QAbstractListModel
+class TranslationsModel : public QAbstractTableModel
 {
     Q_OBJECT
 
