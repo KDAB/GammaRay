@@ -50,8 +50,11 @@ public:
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
 private:
+    typedef QPair<int, QString> RoleInfo;
+    static QVector<RoleInfo> rolesForModel(const QAbstractItemModel *model);
+
     QPersistentModelIndex m_index;
-    QVector<QPair<int, QString> > m_roles;
+    QVector<RoleInfo> m_roles;
 };
 }
 

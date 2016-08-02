@@ -247,6 +247,8 @@ private slots:
         QVERIFY(cellModel);
         ModelTest cellModelTester(cellModel);
         QCOMPARE(cellModel->rowCount(), 0);
+        QSignalSpy cellContentResetSpy(cellModel, SIGNAL(modelReset()));
+        QVERIFY(cellContentResetSpy.isValid());
 
         auto targetModelIdx = indexForName(modelModel, QLatin1String("targetModel"));
         QVERIFY(targetModelIdx.isValid());
@@ -286,6 +288,7 @@ private slots:
 
         cellSelModel->clear();
         QCOMPARE(cellModel->rowCount(), 0);
+        QVERIFY(cellContentResetSpy.isEmpty());
 
         delete targetModel;
         QTest::qWait(1);

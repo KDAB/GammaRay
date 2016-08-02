@@ -47,58 +47,74 @@ static bool sourceIsQQmlListModel(const QAbstractItemModel *model)
     return model->inherits("QQmlListModel");
 }
 
-void ModelCellModel::setModelIndex(const QModelIndex &index)
+void ModelCellModel::setModelIndex(const QModelIndex &idx)
 {
-    beginResetModel();
-    m_index = index;
-
-    m_roles.clear();
-
-    if (index.isValid()) {
-        // add built-in roles
-        const auto hasDefaultRoles = !sourceIsQQmlListModel(index.model());
-        if (hasDefaultRoles) {
-      #define R(x) qMakePair<int, QString>(x, QStringLiteral(#x))
-            m_roles << R(Qt::DisplayRole)
-                    << R(Qt::DecorationRole)
-                    << R(Qt::EditRole)
-                    << R(Qt::ToolTipRole)
-                    << R(Qt::StatusTipRole)
-                    << R(Qt::WhatsThisRole)
-                    << R(Qt::FontRole)
-                    << R(Qt::TextAlignmentRole)
-                    << R(Qt::BackgroundRole)
-                    << R(Qt::ForegroundRole)
-                    << R(Qt::CheckStateRole)
-                    << R(Qt::AccessibleTextRole)
-                    << R(Qt::AccessibleDescriptionRole)
-                    << R(Qt::SizeHintRole)
-                    << R(Qt::InitialSortOrderRole)
-            ;
-      #undef R
+    const auto newRoles = rolesForModel(idx.model());
+    if (newRoles != m_roles) {
+        if (!m_roles.isEmpty()) {
+            beginRemoveRows(QModelIndex(), 0, m_roles.size() - 1);
+            m_roles.clear();
+            endRemoveRows();
         }
+        m_index = idx;
+        if (!newRoles.isEmpty()) {
+            beginInsertRows(QModelIndex(), 0, newRoles.size() - 1);
+            m_roles = newRoles;
+            endInsertRows();
+        }
+    } else {
+        m_index = idx;
+        if (!m_roles.isEmpty())
+            emit dataChanged(index(0, 1), index(rowCount() - 1, 1));
+    }
+}
 
-        // add custom roles
-        QHash<int, QByteArray> roleNames = index.model()->roleNames();
-        for (QHash<int, QByteArray>::const_iterator it = roleNames.constBegin();
-             it != roleNames.constEnd(); ++it) {
-            bool roleFound = false;
-            for (int i = 0; i < m_roles.size(); ++i) {
-                if (m_roles.at(i).first == it.key()) {
-                    roleFound = true;
-                    break;
-                }
+QVector<ModelCellModel::RoleInfo> ModelCellModel::rolesForModel(const QAbstractItemModel *model)
+{
+    QVector<RoleInfo> roles;
+    if (!model)
+        return roles;
+
+    // add built-in roles
+    const auto hasDefaultRoles = !sourceIsQQmlListModel(model);
+    if (hasDefaultRoles) {
+#define R(x) qMakePair<int, QString>(x, QStringLiteral(#x))
+        roles << R(Qt::DisplayRole)
+              << R(Qt::DecorationRole)
+              << R(Qt::EditRole)
+              << R(Qt::ToolTipRole)
+              << R(Qt::StatusTipRole)
+              << R(Qt::WhatsThisRole)
+              << R(Qt::FontRole)
+              << R(Qt::TextAlignmentRole)
+              << R(Qt::BackgroundRole)
+              << R(Qt::ForegroundRole)
+              << R(Qt::CheckStateRole)
+              << R(Qt::AccessibleTextRole)
+              << R(Qt::AccessibleDescriptionRole)
+              << R(Qt::SizeHintRole)
+              << R(Qt::InitialSortOrderRole)
+          ;
+#undef R
+    }
+
+    // add custom roles
+    const auto roleNames = model->roleNames();
+    for (auto it = roleNames.constBegin(); it != roleNames.constEnd(); ++it) {
+        bool roleFound = false;
+        for (int i = 0; i < roles.size(); ++i) {
+            if (roles.at(i).first == it.key()) {
+                roleFound = true;
+                break;
             }
-            if (!roleFound) {
-                const QString name
-                    = it.value().isEmpty() ? tr("Role #%1").arg(it.key()) : QString::fromLatin1(
-                    it.value());
-                m_roles.push_back(qMakePair(it.key(), name));
-            }
+        }
+        if (!roleFound) {
+            const auto name = it.value().isEmpty() ? tr("Role #%1").arg(it.key()) : QString::fromLatin1(it.value());
+            roles.push_back(qMakePair(it.key(), name));
         }
     }
 
-    endResetModel();
+    return roles;
 }
 
 QVariant ModelCellModel::data(const QModelIndex &index, int role) const
