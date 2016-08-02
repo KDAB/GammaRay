@@ -607,6 +607,7 @@ if(Qt5LinguistTools_FOUND)
   add_subdirectory(translations)
 endif()
 if(GAMMARAY_BUILD_DOCS)
+  add_subdirectory(examples)
   add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
 endif()
 endif()

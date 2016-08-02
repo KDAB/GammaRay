@@ -15,7 +15,7 @@ macro(qt5_build_doc _qdocconf_name)
   # run qdoc to get qhp file
   set(_qdoc_output_dir ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name})
   # FIXME: this should rather be taken from the qdocconf file?
-  file(GLOB _qdoc_srcs ${CMAKE_CURRENT_SOURCE_DIR} "*.qdoc")
+  file(GLOB_RECURSE _qdoc_srcs ${CMAKE_CURRENT_SOURCE_DIR} "*.qdoc")
   file(GLOB _qdoc_imgs ${CMAKE_CURRENT_SOURCE_DIR}/images "*.png")
   add_custom_command(
     OUTPUT ${_qdoc_output_dir}/${_qdocconf_name}.qhp
