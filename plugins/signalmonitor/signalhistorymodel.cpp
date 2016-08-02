@@ -34,6 +34,8 @@
 #include <core/util.h>
 #include <core/probe.h>
 
+#include <common/objectid.h>
+
 #include <QLocale>
 #include <QMutex>
 #include <QSet>
@@ -126,6 +128,8 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
             return tr("Address: %1").arg(Util::addressToString(item(index)->object));
         if (role == Qt::DecorationRole)
             return item(index)->decoration;
+        if (role == ObjectIdRole && item(index)->object)
+            return QVariant::fromValue(ObjectId(item(index)->object));
 
         break;
 
@@ -173,6 +177,7 @@ QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex &index) con
     d.insert(StartTimeRole, data(index, StartTimeRole));
     d.insert(EndTimeRole, data(index, EndTimeRole));
     d.insert(SignalMapRole, data(index, SignalMapRole));
+    d.insert(ObjectIdRole, data(index, ObjectIdRole));
     return d;
 }
 
@@ -208,6 +213,7 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
     Item *data = m_tracedObjects.at(itemIndex);
     Q_ASSERT(data->object == object);
     data->object = 0;
+    emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn)); // for ObjectIdRole
     emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
 }
 

@@ -73,7 +73,8 @@ public:
         EventsRole = ObjectModel::UserRole + 1,
         StartTimeRole,
         EndTimeRole,
-        SignalMapRole
+        SignalMapRole,
+        ObjectIdRole
     };
 
     explicit SignalHistoryModel(ProbeInterface *probe, QObject *parent = 0);

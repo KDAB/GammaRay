@@ -33,9 +33,12 @@
 #include "signalmonitorclient.h"
 #include "signalmonitorcommon.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
 
 #include <common/objectbroker.h>
+
+#include <QMenu>
 
 #include <cmath>
 
@@ -66,6 +69,7 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     ui->objectTreeView->header()->setObjectName("objectTreeViewHeader");
     ui->objectTreeView->setModel(signalHistory);
     ui->objectTreeView->setEventScrollBar(ui->eventScrollBar);
+    connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
 
     connect(ui->pauseButton, SIGNAL(toggled(bool)), this, SLOT(pauseAndResume(bool)));
     connect(ui->intervalScale, SIGNAL(valueChanged(int)), this,
@@ -118,6 +122,23 @@ void SignalMonitorWidget::pauseAndResume(bool pause)
 void SignalMonitorWidget::eventDelegateIsActiveChanged(bool active)
 {
     ui->pauseButton->setChecked(!active);
+}
+
+void SignalMonitorWidget::contextMenu(QPoint pos)
+{
+    auto index = ui->objectTreeView->indexAt(pos);
+    if (!index.isValid())
+        return;
+    index = index.sibling(index.row(), 0);
+
+    const auto objectId = index.data(SignalHistoryModel::ObjectIdRole).value<ObjectId>();
+    if (objectId.isNull())
+        return;
+
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+    menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

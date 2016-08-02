@@ -72,6 +72,9 @@
    </item>
    <item>
     <widget class="GammaRay::SignalHistoryView" name="objectTreeView">
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>

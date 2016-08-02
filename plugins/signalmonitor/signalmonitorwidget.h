@@ -51,6 +51,7 @@ private slots:
     void adjustEventScrollBarSize();
     void pauseAndResume(bool pause);
     void eventDelegateIsActiveChanged(bool active);
+    void contextMenu(QPoint pos);
 
 private:
     static const QString ITEM_TYPE_NAME_OBJECT;
