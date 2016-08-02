@@ -34,6 +34,7 @@
 #include <core/toolfactory.h>
 
 QT_BEGIN_NAMESPACE
+class QItemSelectionModel;
 class QTimer;
 QT_END_NAMESPACE
 
@@ -51,9 +52,12 @@ public slots:
 
 private slots:
     void timeout();
+    void objectSelected(QObject *obj);
 
 private:
     QTimer *m_clock;
+    QAbstractItemModel *m_objModel;
+    QItemSelectionModel *m_objSelectionModel;
 };
 
 class SignalMonitorFactory : public QObject, public StandardToolFactory<QObject, SignalMonitor>

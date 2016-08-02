@@ -70,6 +70,9 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     ui->objectTreeView->setModel(signalHistory);
     ui->objectTreeView->setEventScrollBar(ui->eventScrollBar);
     connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
+    auto selectionModel = ObjectBroker::selectionModel(signalHistory);
+    ui->objectTreeView->setSelectionModel(selectionModel);
+    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
 
     connect(ui->pauseButton, SIGNAL(toggled(bool)), this, SLOT(pauseAndResume(bool)));
     connect(ui->intervalScale, SIGNAL(valueChanged(int)), this,
@@ -139,6 +142,14 @@ void SignalMonitorWidget::contextMenu(QPoint pos)
     ContextMenuExtension ext(objectId);
     ext.populateMenu(&menu);
     menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));
+}
+
+void SignalMonitorWidget::selectionChanged(const QItemSelection& selection)
+{
+    if (selection.isEmpty())
+        return;
+    const auto idx = selection.at(0).topLeft();
+    ui->objectTreeView->scrollTo(idx);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

@@ -4,5 +4,8 @@
     "name[de]": "Signale",
     "types": [
         "QObject"
+    ],
+    "selectableTypes": [
+        "QObject"
     ]
 }

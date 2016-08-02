@@ -34,6 +34,10 @@
 
 #include <QWidget>
 
+QT_BEGIN_NAMESPACE
+class QItemSelection;
+QT_END_NAMESPACE
+
 namespace GammaRay {
 namespace Ui {
 class SignalMonitorWidget;
@@ -52,6 +56,7 @@ private slots:
     void pauseAndResume(bool pause);
     void eventDelegateIsActiveChanged(bool active);
     void contextMenu(QPoint pos);
+    void selectionChanged(const QItemSelection &selection);
 
 private:
     static const QString ITEM_TYPE_NAME_OBJECT;
