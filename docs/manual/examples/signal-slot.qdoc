@@ -32,6 +32,8 @@
     Clicking the reconnect button multiple times however breaks things, so that clicking the emit button
     will result in more than on increment of the LCD widget.
 
+    \snippet signal-slot/signal-slot.cpp Widget setup
+
     \section1 Investigation
 
     There are several aspects of this problem that can be analyzed with GammaRay.

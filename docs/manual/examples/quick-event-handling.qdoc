@@ -1,0 +1,60 @@
+/*
+    quick-event-handling.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \example quick-event-handling
+    \title Qt Quick Event Handling
+    \brief Investiagte issues regarding Qt Quick input events.
+    \ingroup examples-gammaray
+
+    This examples shows GammaRay's capabilities for analyzing \l{Qt Quick} event handling issues.
+
+    \section1 Problem
+
+    The example application shows a simple Qt Quick button. Clicking the button is supposed to
+    emit a debug message acknowledging the click.
+
+    \snippet quick-event-handling/quick-event-handling.qml Button setup
+
+    However, you can observe that this only works on the left side of the button, on the right side
+    clicks have no effect.
+
+    \section1 Investigation
+
+    There are several aspects of this problem that can be analyzed with GammaRay.
+
+    \section2 Qt Quick element picking
+
+    Open the \l{Qt Quick 2 Inspector} and select the element picking tool above the scene view on the lower left.
+    Clicking on to the view will select the element at that location. You can notice that picking on the left
+    side of the button will select the button as expected (or one of its internal elements), but picking on
+    the right side selects a second, invisible button.
+
+    \snippet quick-event-handling/quick-event-handling.qml Hidden button
+
+    This hidden button consumes the events and thus breaks our example.
+
+    \section2 Live property editing
+
+    Selecting the hidden button in the \l{Qt Quick 2 Inspector} or \l{Object Inspector} tools will show the property
+    view on the right. In there we can investigate why the hidden button consumes events, and test our theory by
+    changing properties in the running application.
+
+    In our case we will notice that the button is not actually hidden (the visible property is still true), it is
+    merely set to be fully transparent (the opacity property is 0). If we change its visible property to false, our
+    example works as expected, that is clicks on the right half of the button work as well.
+*/

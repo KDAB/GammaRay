@@ -39,6 +39,7 @@ public:
     explicit Widget(QWidget *parent = Q_NULLPTR) :
         QWidget(parent)
     {
+        //! [Widget setup]
         auto layout = new QVBoxLayout(this);
         m_emitButton = new QPushButton("Emit Signal", this);
         layout->addWidget(m_emitButton);
@@ -50,6 +51,7 @@ public:
 
         m_counter = new QLCDNumber(this);
         layout->addWidget(m_counter);
+        //! [Widget setup]
     }
 
 public slots:

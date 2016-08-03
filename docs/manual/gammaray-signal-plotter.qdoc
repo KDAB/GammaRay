@@ -31,4 +31,11 @@
     \image gammaray-signal-plotter.png
 
     Tooltips on each signal emission show information about the emission, including the signal name and the time of the emission.
+
+    \section1 Examples
+
+    The following examples make use of the signal plotter:
+    \list
+        \li \l{signal-slot}
+    \endlist
 */

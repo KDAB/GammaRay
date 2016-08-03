@@ -50,4 +50,11 @@
 
     If you have already selected an object and want to navigate to related objects, say look at a model of a selected view, you
     can use the object navigation in the context menu by right-clicking on the corresponding element in the property view.
+
+    \section1 Examples
+
+    The following examples make use of the QObject inspector:
+    \list
+        \li \l{signal-slot}
+    \endlist
 */

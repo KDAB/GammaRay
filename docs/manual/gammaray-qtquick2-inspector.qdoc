@@ -85,4 +85,10 @@
         \li Geometry and other per-vertex data, when looking at a geometry node.
     \endlist
 
+    \section1 Examples
+
+    The following examples make use of the Qt Quick inspector:
+    \list
+        \li \l{quick-event-handling}
+    \endlist
 */
