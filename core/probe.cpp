@@ -40,6 +40,7 @@
 #include "probecontroller.h"
 #include "toolpluginmodel.h"
 #include "util.h"
+#include "varianthandler.h"
 
 #include <3rdparty/qt/modeltest.h>
 
@@ -282,6 +283,7 @@ Probe::~Probe()
     ObjectBroker::clear();
     ProbeSettings::resetLauncherIdentifier();
     MetaObjectRepository::instance()->clear();
+    VariantHandler::clear();
 
     s_instance = QAtomicPointer<Probe>(0);
 }

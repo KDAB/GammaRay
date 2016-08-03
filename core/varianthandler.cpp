@@ -60,6 +60,7 @@ namespace GammaRay {
 struct VariantHandlerRepository
 {
     ~VariantHandlerRepository();
+    void clear();
 
     QHash<int, VariantHandler::Converter<QString> *> stringConverters;
     QVector<VariantHandler::GenericStringConverter> genericStringConverters;
@@ -68,6 +69,13 @@ struct VariantHandlerRepository
 VariantHandlerRepository::~VariantHandlerRepository()
 {
     qDeleteAll(stringConverters);
+}
+
+void VariantHandlerRepository::clear()
+{
+    qDeleteAll(stringConverters);
+    stringConverters.clear();
+    genericStringConverters.clear();
 }
 
 static QString displayMatrix4x4(const QMatrix4x4 &matrix)
@@ -413,6 +421,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
 
 void VariantHandler::registerStringConverter(int type, Converter<QString> *converter)
 {
+    Q_ASSERT(!s_variantHandlerRepository()->stringConverters.contains(type));
     s_variantHandlerRepository()->stringConverters.insert(type, converter);
 }
 
@@ -432,4 +441,9 @@ QVariant VariantHandler::serializableVariant(const QVariant &value)
     }
 
     return value;
+}
+
+void VariantHandler::clear()
+{
+    s_variantHandlerRepository()->clear();
 }

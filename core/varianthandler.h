@@ -120,6 +120,10 @@ GAMMARAY_CORE_EXPORT void registerGenericStringConverter(GenericStringConverter 
  * primarily for the fancy display delegate on the client side.
  */
 GAMMARAY_CORE_EXPORT QVariant serializableVariant(const QVariant &value);
+
+///@cond internal
+void clear();
+///@endcond
 }
 }
 
