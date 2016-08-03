@@ -32,6 +32,7 @@
 #include "common/objectbroker.h"
 #include "common/propertycontrollerinterface.h"
 
+#include <QCoreApplication>
 #include <QTimer>
 
 #include <algorithm>
@@ -87,11 +88,23 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
     updateShownTabs();
 }
 
+static void propertyWidgetCleanup()
+{
+    PropertyWidget::cleanupTabs();
+}
+
 void PropertyWidget::registerTab(PropertyWidgetTabFactoryBase *factory)
 {
+    if (s_tabFactories.isEmpty())
+        qAddPostRoutine(propertyWidgetCleanup);
     s_tabFactories.push_back(factory);
     foreach (PropertyWidget *widget, s_propertyWidgets)
         widget->updateShownTabs();
+}
+
+void PropertyWidget::cleanupTabs()
+{
+    qDeleteAll(s_tabFactories);
 }
 
 void PropertyWidget::createWidgets()
