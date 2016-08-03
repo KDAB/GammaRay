@@ -95,6 +95,7 @@ SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
 SignalHistoryModel::~SignalHistoryModel()
 {
     s_historyModel = 0;
+    qDeleteAll(m_tracedObjects);
 }
 
 int SignalHistoryModel::rowCount(const QModelIndex &parent) const
