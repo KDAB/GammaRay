@@ -98,6 +98,8 @@ private slots:
         QVERIFY(data.value().canConvert<QObject *>());
         QVERIFY(!data.typeName().isEmpty());
         QVERIFY(!data.className().isEmpty());
+
+        delete obj;
     }
 
     void testAttachedProperty()
@@ -121,6 +123,8 @@ private slots:
         QVERIFY(data.value().isValid());
         QVERIFY(data.value().canConvert<QObject *>());
         QVERIFY(!data.className().isEmpty());
+
+        delete obj;
     }
 
     void testJSValue()
@@ -157,6 +161,8 @@ private slots:
         QCOMPARE(data.name(), QStringLiteral("1"));
         QCOMPARE(data.value(), QVariant("world"));
 #endif
+
+        delete obj;
     }
 
     void testContextProperty()
