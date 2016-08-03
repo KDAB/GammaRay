@@ -737,7 +737,6 @@ void QuickInspector::registerVariantHandlers()
     VariantHandler::registerStringConverter<QSGOpacityNode *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGNode::Flags>(qSGNodeFlagsToString);
     VariantHandler::registerStringConverter<QSGNode::DirtyState>(qSGNodeDirtyStateToString);
-    VariantHandler::registerStringConverter<const QSGClipNode *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGGeometry *>(Util::addressToString);
     VariantHandler::registerStringConverter<const QSGGeometry *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGMaterial *>(Util::addressToString);

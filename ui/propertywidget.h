@@ -71,6 +71,8 @@ public:
         registerTab(new PropertyWidgetTabFactory<T>(name, label, priority));
     }
 
+    //! \internal
+    static void cleanupTabs();
 signals:
     void tabsUpdated();
 

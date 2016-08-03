@@ -53,6 +53,7 @@ PropertyController::~PropertyController()
     const auto i = s_instances.indexOf(this);
     if (i >= 0)
         s_instances.remove(i);
+    qDeleteAll(m_extensions);
 }
 
 void PropertyController::loadExtension(PropertyControllerExtensionFactoryBase *factory)

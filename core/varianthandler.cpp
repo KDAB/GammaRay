@@ -59,9 +59,16 @@ using namespace GammaRay;
 namespace GammaRay {
 struct VariantHandlerRepository
 {
+    ~VariantHandlerRepository();
+
     QHash<int, VariantHandler::Converter<QString> *> stringConverters;
     QVector<VariantHandler::GenericStringConverter> genericStringConverters;
 };
+
+VariantHandlerRepository::~VariantHandlerRepository()
+{
+    qDeleteAll(stringConverters);
+}
 
 static QString displayMatrix4x4(const QMatrix4x4 &matrix)
 {
