@@ -173,8 +173,11 @@ private slots:
         QTest::qWait(1);
         QCOMPARE(index.data().toString(), QStringLiteral("entry1"));
 
-        listModel->takeRow(3);
+        const auto deleteMe = listModel->takeRow(3);
+        qDeleteAll(deleteMe);
         QCOMPARE(client.rowCount(), 4);
+
+        delete listModel;
     }
 
     void testTreeRemoteModel()
@@ -225,10 +228,13 @@ private slots:
         QCOMPARE(i11.data().toString(), QStringLiteral("entry11"));
         QCOMPARE(client.rowCount(i11), 0);
 
-        e1->takeRow(0);
+        const auto deleteMe = e1->takeRow(0);
+        qDeleteAll(deleteMe);
         QCOMPARE(client.rowCount(i1), 2);
         i11 = client.index(0, 0, i1);
         QCOMPARE(i11.data().toString(), QStringLiteral("entry11"));
+
+        delete treeModel;
     }
 
     // this should not make a difference if the above works, however it broke massively with Qt 5.4...
@@ -283,6 +289,8 @@ private slots:
         // this fails with data() call batching sizes close to 1
 // QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
         QCOMPARE(proxy.rowCount(pi1), 2);
+
+        delete treeModel;
     }
 };
 
