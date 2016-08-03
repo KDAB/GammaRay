@@ -250,7 +250,7 @@ ResourceModel::ResourceModel(QObject *parent)
 
 ResourceModel::~ResourceModel()
 {
-
+    delete d_ptr;
 }
 
 /*!
