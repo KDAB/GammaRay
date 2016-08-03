@@ -72,6 +72,13 @@ public:
      */
     bool hasMetaObject(const QString &typeName) const;
 
+    /*!
+     * Clears the content of the meta object repository.
+     * Call this when removing the probe from a target.
+     * \internal
+     */
+    void clear();
+
 protected:
     MetaObjectRepository();
 

@@ -31,6 +31,7 @@
 #include <config-gammaray.h>
 
 #include "probe.h"
+#include "metaobjectrepository.h"
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
 #include "metaobjecttreemodel.h"
@@ -280,6 +281,7 @@ Probe::~Probe()
 
     ObjectBroker::clear();
     ProbeSettings::resetLauncherIdentifier();
+    MetaObjectRepository::instance()->clear();
 
     s_instance = QAtomicPointer<Probe>(0);
 }

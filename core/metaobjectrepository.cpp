@@ -220,6 +220,7 @@ MetaObjectRepository *MetaObjectRepository::instance()
 void MetaObjectRepository::addMetaObject(MetaObject *mo)
 {
     Q_ASSERT(!mo->className().isEmpty());
+    Q_ASSERT(!m_metaObjects.contains(mo->className()));
     m_metaObjects.insert(mo->className(), mo);
 }
 
@@ -237,4 +238,11 @@ MetaObject *MetaObjectRepository::metaObject(const QString &typeName) const
 bool MetaObjectRepository::hasMetaObject(const QString &typeName) const
 {
     return m_metaObjects.contains(typeName);
+}
+
+void MetaObjectRepository::clear()
+{
+    qDeleteAll(m_metaObjects);
+    m_metaObjects.clear();
+    m_initialized = false;
 }
