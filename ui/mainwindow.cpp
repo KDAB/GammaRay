@@ -134,10 +134,11 @@ MainWindow::MainWindow(QWidget *parent)
         }
 #endif
         if (defaultStyle) {
-            // do not set parent of default style
+            // do not set this as parent of default style
             // this will cause the style being deleted too early through ~QObject()
             // other objects (e.g. the script engine debugger) still might have a
             // reference on the style during destruction
+            defaultStyle->setParent(QCoreApplication::instance());
             setStyle(defaultStyle);
         }
     }
