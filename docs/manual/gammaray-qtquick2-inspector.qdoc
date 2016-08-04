@@ -90,5 +90,6 @@
     The following examples make use of the Qt Quick inspector:
     \list
         \li \l{quick-event-handling}
+        \li \l{quick-batching}
     \endlist
 */

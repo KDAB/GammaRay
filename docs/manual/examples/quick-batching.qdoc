@@ -1,0 +1,100 @@
+/*
+    quick-batching.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \example quick-batching
+    \title Qt Quick Batching
+    \brief Investiagte render performance issues due to unmerged render batches.
+    \ingroup examples-gammaray
+
+    This examples shows GammaRay's capabilities for analyzing \l{Qt Quick} batch rendering issues.
+
+    \section1 Problem
+
+    The example application shows two custom Qt Quick sliders consisting of flat colored rectangles.
+
+    \snippet quick-batching/quick-batching.qml Slider setup
+
+    Observed in a OpenGL tracing tool or profiler, it can be seen however that the two sliders take
+    several hundred OpenGL calls to be rendered. Closer investigation shows that each rectangle results
+    in a separate OpenGL draw call.
+
+    \section1 Investigation
+
+    There are several aspects of this problem that can be analyzed with GammaRay.
+
+    \section2 Scene graph render diagnostic messages
+
+    The \l{Qt Quick} renderer has some built-in diagnostic messages that can sometimes be helpful in
+    such a scenario. Turning them on unconditionally can be inconvenient though, as they are usually
+    triggered by frame. It is therefore useful to only enable them for a short amount of time while
+    triggering the relevant operation in the target application.
+
+    This can be done using the GammaRay \l{Messages} tool. Open the Logging tab, find debug categories
+    you are interested in (qt.scenegraph.* or qt.quick.* for example), and enable the checkbox in the
+    Debug column.
+
+    \section2 Scene graph render visualziation
+
+    The \l{Qt Quick} renderer also has a number of built-in diagnostic visualizations. Those can
+    be usually only enabled at application startup. This is inconvenient however if you first need
+    to navigate to the relevant part of your application to investigate a specific issue.
+
+    The GammaRay \l{Qt Quick 2 Inspector} allows to enable these diagnostic render modes at runtime
+    too (only available in some Qt versions). The toolbar above the scene view in the lower left part
+    of the Qt Quick inspector view has toggle actions for them.
+
+    In our example, the batch rendering visualization is particularly interesting. Areas of the same
+    color indicate batches of elements that are rendered in a single draw call. This is the optimal scenario
+    we are trying to achieve. Areas with diagonal lines represent sets of items that have some Common
+    state but are rendered by individual draw calls. The scene graph renderer calls this case "unmerged
+    batch", this is what we are hitting in our example for the elements in the sliders.
+
+    \section2 Scene graph inspection
+
+    After having established that our problem comes from unmerged batched in the scene graph renderer we
+    need to investigate what prevents merging in our case. Batches can't be merged when non-opaque items
+    overlap, or when they have a non-trivial transformation matrix. As our code does neither overlap nor
+    use transparency we can look at the transformation matrices.
+
+    For this we use the scene graph view of the \l{Qt Quick 2 Inspector} view in GammaRay. This shows the
+    internal scene graph items, which is what the renderer uses as input for the batching.
+
+    Looking at the combinedMatrix property of any node belonging to a slider we notice that at least one
+    value of the diagonal is negative, indicating a rotation. This is preventing the batch merging. In
+    order to identify the culprit, we can move up the hierarchy to the first node introducing this
+    transformation.
+
+    In order to match this to the actual code causing the problem, switch back to the item tree view,
+    and use the context menu action "Go to declaration", which will open a code editor around the
+    following piece of code:
+
+    \snippet quick-batching/Slider.qml Slider transformation
+
+    In order to verify that this is our problem you don't need to restart the application, you can also
+    use the property editor in the item tree view to adjust the rotation live. After doing this we see
+    that the left slider is no having a trivial diagonal in its combined transformation matrix, and thus
+    is rendered with a single OpenGL draw call. For the right slider we have to repeat this procedure to
+    identify a second transformation:
+
+    \snippet quick-batching/Slider.qml Slider mirroring
+
+    Just removing the transformations is of course not a proper fix (as it changes the visual appearance
+    of the application), it merely verifies that it's these rotations causing our performance problem.
+    You would now need to refactor the code in a way that it achieves the same behavior and visual
+    appearance without the use of rotational transformations.
+*/

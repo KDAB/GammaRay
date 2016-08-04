@@ -17,6 +17,7 @@
 
 /*!
     \group examples-gammaray
+    \target Examples
     \title Examples
 
     The following examples demonstrate typical problems that can be found in Qt applications

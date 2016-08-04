@@ -45,4 +45,11 @@
 
     Here you can enable or disable individual logging categories at runtime, which takes immediate effect.
     This is particularly useful to only enable output of high-volume diagnostics for a short period of time.
+
+    \section1 Examples
+
+    The following examples make use of the debug message browser:
+    \list
+        \li \l{quick-batching}
+    \endlist
 */
