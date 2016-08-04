@@ -62,13 +62,7 @@ public:
     template<typename T>
     static void registerExtension()
     {
-        PropertyControllerExtensionFactoryBase *factory
-            = PropertyControllerExtensionFactory<T>::instance();
-        if (s_extensionFactories.indexOf(factory) >= 0)
-            return;
-        s_extensionFactories << factory;
-        foreach (PropertyController *instance, s_instances)
-            instance->loadExtension(factory);
+        registerExtension(PropertyControllerExtensionFactory<T>::instance());
     }
 
 private slots:
@@ -76,6 +70,7 @@ private slots:
 
 private:
     void loadExtension(PropertyControllerExtensionFactoryBase *factory);
+    static void registerExtension(PropertyControllerExtensionFactoryBase *factory);
 
 private:
     QString m_objectBaseName;

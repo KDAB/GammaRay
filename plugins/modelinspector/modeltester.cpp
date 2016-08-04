@@ -60,6 +60,11 @@ ModelTester::ModelTester(QObject *parent)
 {
 }
 
+ModelTester::~ModelTester()
+{
+    qDeleteAll(m_modelTestMap);
+}
+
 void ModelTester::objectAdded(QObject *obj)
 {
     QAbstractItemModel *model = qobject_cast<QAbstractItemModel *>(obj);

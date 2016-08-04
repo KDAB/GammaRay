@@ -478,10 +478,11 @@ void MainWindow::applyStyle(QStyle* style)
 {
     qDebug() << "Using" << style << "style";
 
-    // note: do not set parent of style
+    // note: do not set this as parent of default style
     // this will cause the style being deleted too early through ~QObject()
     // other objects (e.g. the script engine debugger) still might have a
     // reference on the style during destruction
+    style->setParent(QCoreApplication::instance());
 
     // unfortunately, setting the style is not recursive by default, unless we have a style sheet set
     setStyleSheet(QStringLiteral("I_DONT_EXIST {}"));

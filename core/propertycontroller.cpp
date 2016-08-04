@@ -61,6 +61,15 @@ void PropertyController::loadExtension(PropertyControllerExtensionFactoryBase *f
     m_extensions << factory->create(this);
 }
 
+void PropertyController::registerExtension(PropertyControllerExtensionFactoryBase* factory)
+{
+    if (s_extensionFactories.indexOf(factory) >= 0)
+        return;
+    s_extensionFactories << factory;
+    foreach (PropertyController *instance, s_instances)
+        instance->loadExtension(factory);
+}
+
 const QString &PropertyController::objectBaseName()
 {
     return m_objectBaseName;
