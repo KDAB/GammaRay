@@ -109,26 +109,6 @@ int MetaTypesModel::columnCount(const QModelIndex &parent) const
 #endif
 }
 
-QVariant MetaTypesModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (role != Qt::DisplayRole || orientation != Qt::Horizontal)
-        return QVariant();
-
-    switch (section) {
-    case 0:
-        return tr("Type Name");
-    case 1:
-        return tr("Meta Type Id");
-    case 2:
-        return tr("Size");
-    case 3:
-        return tr("Meta Object");
-    case 4:
-        return tr("Type Flags");
-    }
-    return QVariant();
-}
-
 void MetaTypesModel::scanMetaTypes()
 {
     beginResetModel();

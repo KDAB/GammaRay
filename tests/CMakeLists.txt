@@ -320,6 +320,7 @@ endif()
 add_executable(metatypemodeltest
   metatypemodeltest.cpp
   ${CMAKE_SOURCE_DIR}/core/tools/metatypebrowser/metatypesmodel.cpp
+  ${CMAKE_SOURCE_DIR}/ui/tools/metatypebrowser/metatypesclientmodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
 )
 target_link_libraries(metatypemodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})

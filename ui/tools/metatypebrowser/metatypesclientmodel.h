@@ -1,11 +1,11 @@
 /*
-  metatypesmodel.h
+  metatypesclientmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Stephen Kelly <stephen.kelly@kdab.com>
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,29 +26,24 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_METATYPEBROWSER_METATYPESMODEL_H
-#define GAMMARAY_METATYPEBROWSER_METATYPESMODEL_H
+#ifndef GAMMARAY_METATYPESCLIENTMODEL_H
+#define GAMMARAY_METATYPESCLIENTMODEL_H
 
-#include <QAbstractTableModel>
-#include <QVector>
+#include <QIdentityProxyModel>
 
 namespace GammaRay {
-class MetaTypesModel : public QAbstractTableModel
+
+/*! Client-side part of the meta types model. */
+class MetaTypesClientModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit MetaTypesModel(QObject *parent = 0);
+    explicit MetaTypesClientModel(QObject *parent = Q_NULLPTR);
+    ~MetaTypesClientModel();
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-
-private:
-    void scanMetaTypes();
-
-    QVector<int> m_metaTypes;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
+
 }
 
-#endif
+#endif // GAMMARAY_METATYPESCLIENTMODEL_H

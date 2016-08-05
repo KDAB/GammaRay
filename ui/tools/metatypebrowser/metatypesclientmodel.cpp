@@ -1,5 +1,5 @@
 /*
-  metatypemodeltest.cpp
+  metatypesclientmodel.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,46 +26,37 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <core/tools/metatypebrowser/metatypesmodel.h>
-#include <ui/tools/metatypebrowser/metatypesclientmodel.h>
-
-#include <3rdparty/qt/modeltest.h>
-
-#include <QDebug>
-#include <QtTest/qtest.h>
-#include <QObject>
+#include "metatypesclientmodel.h"
 
 using namespace GammaRay;
 
-class MetaTypeModelTest : public QObject
+MetaTypesClientModel::MetaTypesClientModel(QObject* parent)
+    : QIdentityProxyModel(parent)
 {
-    Q_OBJECT
-private:
-    QModelIndex indexForName(const QString &name, QAbstractItemModel *model)
-    {
-        for (int i = 0; i < model->rowCount(); ++i) {
-            const auto idx = model->index(i, 0);
-            if (idx.data().toString() == name)
-                return idx;
+}
+
+MetaTypesClientModel::~MetaTypesClientModel()
+{
+}
+
+QVariant MetaTypesClientModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal) {
+        if (role != Qt::DisplayRole)
+            return QVariant();
+        switch (section) {
+            case 0:
+                return tr("Type Name");
+            case 1:
+                return tr("Meta Type Id");
+            case 2:
+                return tr("Size");
+            case 3:
+                return tr("Meta Object");
+            case 4:
+                return tr("Type Flags");
         }
-        return QModelIndex();
+        return QVariant();
     }
-
-private slots:
-    void testModel()
-    {
-        MetaTypesModel srcModel;
-        MetaTypesClientModel model;
-        model.setSourceModel(&srcModel);
-        ModelTest modelTest(&model);
-        QVERIFY(model.rowCount() > 0);
-
-        auto idx = indexForName("QObject*", &model);
-        QVERIFY(idx.isValid());
-    }
-
-};
-
-QTEST_MAIN(MetaTypeModelTest)
-
-#include "metatypemodeltest.moc"
+    return QIdentityProxyModel::headerData(section, orientation, role);
+}

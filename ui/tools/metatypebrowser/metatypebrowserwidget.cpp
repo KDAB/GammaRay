@@ -28,6 +28,7 @@
 
 #include "metatypebrowserwidget.h"
 #include "ui_metatypebrowserwidget.h"
+#include "metatypesclientmodel.h"
 
 #include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
@@ -41,9 +42,8 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QAbstractItemModel *mtm
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaTypeModel"));
-    Q_ASSERT(mtm);
+    auto mtm = new MetaTypesClientModel(this);
+    mtm->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaTypeModel")));
 
     ui->metaTypeView->header()->setObjectName("metaTypeViewHeader");
     ui->metaTypeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);

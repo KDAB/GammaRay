@@ -46,6 +46,7 @@ set(gammaray_ui_srcs
   tools/metaobjectbrowser/metaobjectbrowserwidget.cpp
   tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
   tools/metatypebrowser/metatypebrowserwidget.cpp
+  tools/metatypebrowser/metatypesclientmodel.cpp
   tools/objectinspector/objectinspectorwidget.cpp
   tools/objectinspector/propertiestab.cpp
   tools/objectinspector/propertiesextensionclient.cpp
