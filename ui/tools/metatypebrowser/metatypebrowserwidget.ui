@@ -31,6 +31,17 @@
     </widget>
    </item>
   </layout>
+  <action name="actionRescanTypes">
+   <property name="icon">
+    <iconset theme="view-refresh"/>
+   </property>
+   <property name="text">
+    <string>&amp;Rescan Meta Types</string>
+   </property>
+   <property name="toolTip">
+    <string>Check for changes to the meta type database.</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>

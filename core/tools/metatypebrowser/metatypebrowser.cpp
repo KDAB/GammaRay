@@ -39,11 +39,16 @@
 using namespace GammaRay;
 
 MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
-    : QObject(parent)
+    : MetaTypeBrowserInterface(parent)
+    , m_mtm(new MetaTypesModel(this))
 {
-    MetaTypesModel *mtm = new MetaTypesModel(this);
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-    proxy->setSourceModel(mtm);
+    proxy->setSourceModel(m_mtm);
     proxy->addRole(MetaTypeRoles::MetaObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaTypeModel"), proxy);
+}
+
+void MetaTypeBrowser::rescanTypes()
+{
+    m_mtm->scanMetaTypes();
 }

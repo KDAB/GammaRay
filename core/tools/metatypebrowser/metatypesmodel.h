@@ -44,9 +44,9 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-private:
     void scanMetaTypes();
 
+private:
     QVector<int> m_metaTypes;
 };
 }

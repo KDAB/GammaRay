@@ -29,6 +29,7 @@
 #include "metatypebrowserwidget.h"
 #include "ui_metatypebrowserwidget.h"
 #include "metatypesclientmodel.h"
+#include "metatypebrowserclient.h"
 
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
@@ -41,11 +42,18 @@
 
 using namespace GammaRay;
 
+static QObject *createMetaTypeBrowserClient(const QString & /*name*/, QObject *parent)
+{
+    return new MetaTypeBrowserClient(parent);
+}
+
 MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MetaTypeBrowserWidget)
     , m_stateManager(this)
 {
+    ObjectBroker::registerClientObjectFactoryCallback<MetaTypeBrowserInterface*>(createMetaTypeBrowserClient);
+
     ui->setupUi(this);
 
     auto mtm = new MetaTypesClientModel(this);
@@ -61,6 +69,11 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
     connect(ui->metaTypeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
 
     new SearchLineController(ui->metaTypeSearchLine, mtm);
+
+    auto iface = ObjectBroker::object<MetaTypeBrowserInterface*>();
+    connect(ui->actionRescanTypes, SIGNAL(triggered()), iface, SLOT(rescanTypes()));
+
+    addAction(ui->actionRescanTypes);
 }
 
 MetaTypeBrowserWidget::~MetaTypeBrowserWidget()

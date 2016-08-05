@@ -37,6 +37,8 @@
 #include <QDebug>
 #include <QtTest/qtest.h>
 #include <QObject>
+#include <QSignalSpy>
+#include <QThread>
 
 using namespace GammaRay;
 
@@ -62,6 +64,8 @@ private slots:
         model.setSourceModel(&srcModel);
         ModelTest modelTest(&model);
         QVERIFY(model.rowCount() > 0);
+        QSignalSpy resetSpy(&model, SIGNAL(modelReset()));
+        QVERIFY(resetSpy.isValid());
 
         auto idx = indexForName("QObject*", &model);
         QVERIFY(idx.isValid());
@@ -72,6 +76,20 @@ private slots:
         idx = indexForName("int", &model);
         QVERIFY(idx.isValid());
         QVERIFY(idx.data(MetaTypeRoles::MetaObjectIdRole).isNull());
+
+        idx = indexForName("QThread*", &model);
+        QVERIFY(!idx.isValid());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        qRegisterMetaType<QThread*>();
+        srcModel.scanMetaTypes();
+        idx = indexForName("QThread*", &model);
+        QVERIFY(idx.isValid());
+#else
+        srcModel.scanMetaTypes();
+#endif
+
+        QEXPECT_FAIL("", "not yet implemented", Continue);
+        QCOMPARE(resetSpy.size(), 0);
     }
 
 };

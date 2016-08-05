@@ -1,10 +1,10 @@
 /*
-  metatypebrowser.h
+  metatypebrowserclient.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,41 +26,22 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_METATYPEBROWSER_METATYPEBROWSER_H
-#define GAMMARAY_METATYPEBROWSER_METATYPEBROWSER_H
+#include "metatypebrowserclient.h"
 
-#include <core/toolfactory.h>
+#include <common/endpoint.h>
 
-#include <common/tools/metatypebrowser/metatypebrowserinterface.h>
+using namespace GammaRay;
 
-namespace GammaRay {
-
-class MetaTypesModel;
-
-class MetaTypeBrowser : public MetaTypeBrowserInterface
+MetaTypeBrowserClient::MetaTypeBrowserClient(QObject* parent)
+    : MetaTypeBrowserInterface(parent)
 {
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::MetaTypeBrowserInterface)
-public:
-    explicit MetaTypeBrowser(ProbeInterface *probe, QObject *parent = 0);
-
-public slots:
-    void rescanTypes() Q_DECL_OVERRIDE;
-
-private:
-    MetaTypesModel *m_mtm;
-};
-
-class MetaTypeBrowserFactory : public QObject, public StandardToolFactory<QObject, MetaTypeBrowser>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-public:
-    explicit MetaTypeBrowserFactory(QObject *parent)
-        : QObject(parent)
-    {
-    }
-};
 }
 
-#endif // GAMMARAY_METATYPEBROWSER_H
+MetaTypeBrowserClient::~MetaTypeBrowserClient()
+{
+}
+
+void MetaTypeBrowserClient::rescanTypes()
+{
+    Endpoint::instance()->invokeObject(objectName(), "rescanTypes");
+}
