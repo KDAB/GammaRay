@@ -315,6 +315,16 @@ if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
   add_test(NAME metaobjecttreemodeltest COMMAND metaobjecttreemodeltest)
 endif()
 
+### Meta type browser
+
+add_executable(metatypemodeltest
+  metatypemodeltest.cpp
+  ${CMAKE_SOURCE_DIR}/core/tools/metatypebrowser/metatypesmodel.cpp
+  ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+)
+target_link_libraries(metatypemodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+add_test(NAME metatypemodeltest COMMAND metatypemodeltest)
+
 ### Font plugin
 
 add_executable(fontdatabasemodeltest
