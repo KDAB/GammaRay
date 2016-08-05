@@ -45,6 +45,9 @@ public:
     explicit MetaTypeBrowserWidget(QWidget *parent = 0);
     ~MetaTypeBrowserWidget();
 
+private slots:
+    void contextMenu(QPoint pos);
+
 private:
     QScopedPointer<Ui::MetaTypeBrowserWidget> ui;
     UIStateManager m_stateManager;

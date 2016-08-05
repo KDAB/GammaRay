@@ -28,6 +28,11 @@
 
 #include "metatypesmodel.h"
 
+#include <core/util.h>
+
+#include <common/objectid.h>
+#include <common/tools/metatypebrowser/metatyperoles.h>
+
 #include <QDebug>
 #include <QMetaType>
 #include <QStringList>
@@ -44,48 +49,56 @@ MetaTypesModel::MetaTypesModel(QObject *parent)
 
 QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
 {
-    if (role != Qt::DisplayRole || !index.isValid())
+    if (!index.isValid())
         return QVariant();
 
-    int metaTypeId = m_metaTypes.at(index.row());
-    switch (index.column()) {
-    case 0:
-    {
-        QString name(QMetaType::typeName(metaTypeId));
-        if (name.isEmpty())
-            return tr("N/A");
-        return name;
-    }
-    case 1:
-        return metaTypeId;
+    const auto metaTypeId = m_metaTypes.at(index.row());
+    if (role == Qt::DisplayRole) {
+        switch (index.column()) {
+        case 0:
+        {
+            QString name(QMetaType::typeName(metaTypeId));
+            if (name.isEmpty())
+                return tr("N/A");
+            return name;
+        }
+        case 1:
+            return metaTypeId;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    case 2:
-        return QMetaType::sizeOf(metaTypeId);
-    case 3:
-        return QMetaType::metaObjectForType(metaTypeId) != 0;
-    case 4:
-    {
-        const QMetaType::TypeFlags flags = QMetaType::typeFlags(metaTypeId);
-        QStringList l;
-    #define F(x) if (flags & QMetaType:: x) l.push_back(QStringLiteral(#x))
-        F(NeedsConstruction);
-        F(NeedsDestruction);
-        F(MovableType);
-        F(PointerToQObject);
-        F(IsEnumeration);
-        F(SharedPointerToQObject);
-        F(WeakPointerToQObject);
-        F(TrackingPointerToQObject);
-        F(WasDeclaredAsMetaType);
+        case 2:
+            return QMetaType::sizeOf(metaTypeId);
+        case 3:
+            return Util::addressToString(QMetaType::metaObjectForType(metaTypeId));
+        case 4:
+        {
+            const QMetaType::TypeFlags flags = QMetaType::typeFlags(metaTypeId);
+            QStringList l;
+        #define F(x) if (flags & QMetaType:: x) l.push_back(QStringLiteral(#x))
+            F(NeedsConstruction);
+            F(NeedsDestruction);
+            F(MovableType);
+            F(PointerToQObject);
+            F(IsEnumeration);
+            F(SharedPointerToQObject);
+            F(WeakPointerToQObject);
+            F(TrackingPointerToQObject);
+            F(WasDeclaredAsMetaType);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-        F(IsGadget);
+            F(IsGadget);
 #endif
-    #undef F
+        #undef F
 
-        return l.join(QStringLiteral(", "));
-    }
+            return l.join(QStringLiteral(", "));
+        }
+#endif
+        }
+    } else if (role == MetaTypeRoles::MetaObjectIdRole && index.column() == 0) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        if (auto mo = QMetaType::metaObjectForType(metaTypeId))
+            return QVariant::fromValue(ObjectId(const_cast<QMetaObject*>(mo), "const QMetaObject*"));
 #endif
     }
+
     return QVariant();
 }
 

@@ -28,6 +28,9 @@
 
 #include <core/tools/metatypebrowser/metatypesmodel.h>
 #include <ui/tools/metatypebrowser/metatypesclientmodel.h>
+#include <common/tools/metatypebrowser/metatyperoles.h>
+
+#include <common/objectid.h>
 
 #include <3rdparty/qt/modeltest.h>
 
@@ -62,6 +65,13 @@ private slots:
 
         auto idx = indexForName("QObject*", &model);
         QVERIFY(idx.isValid());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        QVERIFY(!idx.data(MetaTypeRoles::MetaObjectIdRole).value<ObjectId>().isNull());
+#endif
+
+        idx = indexForName("int", &model);
+        QVERIFY(idx.isValid());
+        QVERIFY(idx.data(MetaTypeRoles::MetaObjectIdRole).isNull());
     }
 
 };

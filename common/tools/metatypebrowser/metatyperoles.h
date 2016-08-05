@@ -1,10 +1,10 @@
 /*
-  metatypebrowser.cpp
+  metatyperoles.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,24 +26,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "metatypebrowser.h"
-#include "metatypesmodel.h"
+#ifndef GAMMARAY_METATYPEROLES_H
+#define GAMMARAY_METATYPEROLES_H
 
-#include <core/remote/serverproxymodel.h>
+#include <common/modelroles.h>
 
-#include <common/objectbroker.h>
-#include <common/tools/metatypebrowser/metatyperoles.h>
+namespace GammaRay {
+namespace MetaTypeRoles {
 
-#include <QSortFilterProxyModel>
+enum Roles {
+    MetaObjectIdRole = UserRole + 1
+};
 
-using namespace GammaRay;
-
-MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
-    : QObject(parent)
-{
-    MetaTypesModel *mtm = new MetaTypesModel(this);
-    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-    proxy->setSourceModel(mtm);
-    proxy->addRole(MetaTypeRoles::MetaObjectIdRole);
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaTypeModel"), proxy);
 }
+}
+
+#endif

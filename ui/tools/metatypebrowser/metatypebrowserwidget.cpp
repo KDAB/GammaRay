@@ -30,8 +30,14 @@
 #include "ui_metatypebrowserwidget.h"
 #include "metatypesclientmodel.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
+
 #include <common/objectbroker.h>
+#include <common/objectid.h>
+#include <common/tools/metatypebrowser/metatyperoles.h>
+
+#include <QMenu>
 
 using namespace GammaRay;
 
@@ -52,9 +58,28 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
     ui->metaTypeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
     ui->metaTypeView->setModel(mtm);
     ui->metaTypeView->sortByColumn(1, Qt::AscendingOrder); // sort by type id
+    connect(ui->metaTypeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
+
     new SearchLineController(ui->metaTypeSearchLine, mtm);
 }
 
 MetaTypeBrowserWidget::~MetaTypeBrowserWidget()
 {
+}
+
+void MetaTypeBrowserWidget::contextMenu(QPoint pos)
+{
+    auto index = ui->metaTypeView->indexAt(pos);
+    if (!index.isValid())
+        return;
+    index = index.sibling(index.row(), 0);
+
+    const auto objectId = index.data(MetaTypeRoles::MetaObjectIdRole).value<ObjectId>();
+    if (objectId.isNull())
+        return;
+
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+    menu.exec(ui->metaTypeView->viewport()->mapToGlobal(pos));
 }
