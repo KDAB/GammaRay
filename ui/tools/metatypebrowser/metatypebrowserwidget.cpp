@@ -64,6 +64,7 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
     ui->metaTypeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
     ui->metaTypeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
     ui->metaTypeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+    ui->metaTypeView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
     ui->metaTypeView->setModel(mtm);
     ui->metaTypeView->sortByColumn(1, Qt::AscendingOrder); // sort by type id
     connect(ui->metaTypeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));

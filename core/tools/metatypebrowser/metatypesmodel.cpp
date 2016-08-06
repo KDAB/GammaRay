@@ -91,6 +91,12 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
             return l.join(QStringLiteral(", "));
         }
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+        case 5:
+            return QMetaType::hasRegisteredComparators(metaTypeId);
+        case 6:
+            return QMetaType::hasRegisteredDebugStreamOperator(metaTypeId);
+#endif
         }
     } else if (role == MetaTypeRoles::MetaObjectIdRole && index.column() == 0) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -117,8 +123,10 @@ int MetaTypesModel::columnCount(const QModelIndex &parent) const
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     return 2;
-#else
+#elif QT_VERSION < QT_VERSION_CHECK(5, 2, 0)
     return 5;
+#else
+    return 7;
 #endif
 }
 

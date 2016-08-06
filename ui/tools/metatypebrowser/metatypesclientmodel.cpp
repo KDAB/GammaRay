@@ -42,19 +42,30 @@ MetaTypesClientModel::~MetaTypesClientModel()
 QVariant MetaTypesClientModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal) {
-        if (role != Qt::DisplayRole)
-            return QVariant();
-        switch (section) {
-            case 0:
-                return tr("Type Name");
-            case 1:
-                return tr("Meta Type Id");
-            case 2:
-                return tr("Size");
-            case 3:
-                return tr("Meta Object");
-            case 4:
-                return tr("Type Flags");
+        if (role == Qt::DisplayRole) {
+            switch (section) {
+                case 0:
+                    return tr("Type Name");
+                case 1:
+                    return tr("Meta Type Id");
+                case 2:
+                    return tr("Size");
+                case 3:
+                    return tr("Meta Object");
+                case 4:
+                    return tr("Type Flags");
+                case 5:
+                    return tr("Compare");
+                case 6:
+                    return tr("Debug");
+            }
+        } else if (role == Qt::ToolTipRole) {
+            switch (section) {
+                case 5:
+                    return tr("Has equality comparison operators registered.");
+                case 6:
+                    return tr("Has debug stream operators registered.");
+            }
         }
         return QVariant();
     }
