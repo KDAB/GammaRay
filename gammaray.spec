@@ -10,7 +10,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
-BuildRequires: cmake kdstatemachineeditor-devel graphviz-devel
+BuildRequires: cmake kdstatemachineeditor-devel
 %if %{defined suse_version}
 BuildRequires: libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel
 %if 0%{?suse_version} > 1320
@@ -24,6 +24,9 @@ BuildRequires: kcoreaddons-devel
 BuildRequires: qt5-qtdeclarative-devel qt5-qtconnectivity-devel qt5-qttools-devel qt5-qtsvg-devel qt5-qtscript-devel qt5-qtwebkit-devel
 %if 0%{?fedora} >= 21
 BuildRequires:  kf5-kcoreaddons-devel
+%endif
+%if 0%{?fedora} > 23
+BuildRequires:  ghostscript-core
 %endif
 %endif
 
