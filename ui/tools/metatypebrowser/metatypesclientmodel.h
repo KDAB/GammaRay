@@ -41,6 +41,7 @@ public:
     explicit MetaTypesClientModel(QObject *parent = Q_NULLPTR);
     ~MetaTypesClientModel();
 
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 };
 

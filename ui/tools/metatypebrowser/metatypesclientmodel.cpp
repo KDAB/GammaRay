@@ -28,6 +28,9 @@
 
 #include "metatypesclientmodel.h"
 
+#include <QApplication>
+#include <QStyle>
+
 using namespace GammaRay;
 
 MetaTypesClientModel::MetaTypesClientModel(QObject* parent)
@@ -37,6 +40,22 @@ MetaTypesClientModel::MetaTypesClientModel(QObject* parent)
 
 MetaTypesClientModel::~MetaTypesClientModel()
 {
+}
+
+QVariant MetaTypesClientModel::data(const QModelIndex& index, int role) const
+{
+    if (role == Qt::DisplayRole && (index.column() == 5 || index.column() == 6)) {
+        const auto v = QIdentityProxyModel::data(index, Qt::DisplayRole);
+        const auto b = v.type() == QVariant::Bool && v.toBool();
+        if (b && qApp->style()->standardIcon(QStyle::SP_DialogYesButton).isNull())
+            return tr("yes");
+        return QVariant();
+    } else if (role == Qt::DecorationRole && (index.column() == 5 || index.column() == 6)) {
+        const auto v = QIdentityProxyModel::data(index, Qt::DisplayRole);
+        const auto b = v.type() == QVariant::Bool && v.toBool();
+        return b ? qApp->style()->standardIcon(QStyle::SP_DialogYesButton) : QVariant();
+    }
+    return QIdentityProxyModel::data(index, role);
 }
 
 QVariant MetaTypesClientModel::headerData(int section, Qt::Orientation orientation, int role) const
