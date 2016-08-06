@@ -132,11 +132,10 @@ int MetaTypesModel::columnCount(const QModelIndex &parent) const
 
 void MetaTypesModel::scanMetaTypes()
 {
-    beginResetModel();
-    m_metaTypes.clear();
+    QVector<int> metaTypes;
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     for (int mtId = 0; QMetaType::isRegistered(mtId); ++mtId)
-        m_metaTypes.push_back(mtId);
+        metaTypes.push_back(mtId);
 
 #else
     for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
@@ -144,8 +143,29 @@ void MetaTypesModel::scanMetaTypes()
             continue;
         const auto name = QMetaType::typeName(mtId);
         if (strstr(name, "GammaRay::") != name)
-            m_metaTypes.push_back(mtId);
+            metaTypes.push_back(mtId);
     }
 #endif
-    endResetModel();
+
+    auto itOld = m_metaTypes.constBegin();
+    auto itNew = metaTypes.constBegin();
+
+    for (; itOld != m_metaTypes.constEnd() && itNew != metaTypes.constEnd(); ++itOld, ++itNew) {
+        if (*itOld != *itNew)
+            break;
+    }
+
+    if (itOld != m_metaTypes.constEnd()) {
+        const auto row = std::distance(m_metaTypes.constBegin(), itOld);
+        beginRemoveRows(QModelIndex(), row, m_metaTypes.size() - 1);
+        m_metaTypes.remove(row, m_metaTypes.size() - row);
+        endRemoveRows();
+    }
+
+    if (itNew != metaTypes.constEnd()) {
+        const auto count = std::distance(itNew, metaTypes.constEnd());
+        beginInsertRows(QModelIndex(), m_metaTypes.size(), m_metaTypes.size() + count - 1);
+        std::copy(itNew, metaTypes.constEnd(), std::back_inserter(m_metaTypes));
+        endInsertRows();
+    }
 }

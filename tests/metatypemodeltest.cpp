@@ -88,7 +88,6 @@ private slots:
         srcModel.scanMetaTypes();
 #endif
 
-        QEXPECT_FAIL("", "not yet implemented", Continue);
         QCOMPARE(resetSpy.size(), 0);
     }
 
