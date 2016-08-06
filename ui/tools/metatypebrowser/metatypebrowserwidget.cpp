@@ -73,6 +73,7 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
 
     auto iface = ObjectBroker::object<MetaTypeBrowserInterface*>();
     connect(ui->actionRescanTypes, SIGNAL(triggered()), iface, SLOT(rescanTypes()));
+    iface->rescanTypes();
 
     addAction(ui->actionRescanTypes);
 }
