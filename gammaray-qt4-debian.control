@@ -5,7 +5,7 @@ Maintainer: Allen Winter <allen.winter@kdab.com>
 
 Package: gammaray-qt4
 Architecture: any
-Depends: ${shlibs:Depends}, graphviz
+Depends: ${shlibs:Depends}
 Description: A tool to poke around in a Qt-application
  GammaRay is a tool for examining the internals of a Qt application
  and to some extent also manipulate it. GammaRay uses injection
