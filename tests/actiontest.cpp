@@ -39,6 +39,7 @@
 #include <QAbstractItemModel>
 #include <QAction>
 #include <QObject>
+#include <QSignalSpy>
 
 using namespace GammaRay;
 
@@ -119,7 +120,37 @@ private slots:
         QCOMPARE(index.data(Qt::DisplayRole).toString(), QKeySequence(QStringLiteral("Ctrl+K")).toString( QKeySequence::PortableText));
         QVERIFY(!index.data(Qt::DecorationRole).isNull());
         QVERIFY(!index.data(Qt::ToolTipRole).toString().isEmpty());
+
+        delete a1;
+        delete a2;
+        QTest::qWait(1);
     }
+
+    void testActionChanges()
+    {
+        createProbe();
+
+        QAction *a1 = new QAction(QStringLiteral("Action 1"), this);
+        QTest::qWait(1); // event loop re-entry
+
+        auto sourceModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
+        auto model = new ClientActionModel(this);
+        model->setSourceModel(sourceModel);
+        QVERIFY(model);
+        QCOMPARE(model->rowCount(), 1);
+
+        QSignalSpy changeSpy(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QVERIFY(changeSpy.isValid());
+
+        a1->setCheckable(true);
+        QCOMPARE(changeSpy.size(), 1);
+        a1->setText("Renamed Action");
+        QCOMPARE(changeSpy.size(), 2);
+
+        a1->setChecked(true);
+        QCOMPARE(changeSpy.size(), 3);
+    }
+
 };
 
 QTEST_MAIN(ActionTest)

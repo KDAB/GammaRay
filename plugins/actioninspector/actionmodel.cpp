@@ -84,6 +84,7 @@ void ActionModel::objectAdded(QObject *object)
     m_actions.insert(it, action);
     Q_ASSERT(m_actions.at(row) == action);
     m_duplicateFinder->insert(action);
+    connect(action, SIGNAL(changed()), this, SLOT(actionChanged()));
     endInsertRows();
 }
 
@@ -159,4 +160,14 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
+}
+
+void ActionModel::actionChanged()
+{
+    auto action = qobject_cast<QAction*>(sender());
+    if (!action)
+        return;
+
+    auto row = m_actions.indexOf(action);
+    emit dataChanged(index(row, 0), index(row, ActionModel::ShortcutsPropColumn));
 }

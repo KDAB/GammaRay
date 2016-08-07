@@ -73,6 +73,9 @@ public slots:
     void objectAdded(QObject *object);
     void objectRemoved(QObject *object);
 
+private slots:
+    void actionChanged();
+
 private:
     // sorted vector of QActions
     QVector<QAction *> m_actions;
