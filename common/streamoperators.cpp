@@ -31,6 +31,7 @@
 #include "variantwrapper.h"
 #include "sourcelocation.h"
 #include "qmetaobjectvalidatorresult.h"
+#include "objectid.h"
 
 #include <QMetaMethod>
 
@@ -48,6 +49,9 @@ void StreamOperators::registerOperators()
     qRegisterMetaTypeStreamOperators<QMetaMethod::Access>();
     qRegisterMetaTypeStreamOperators<QMetaMethod::MethodType>();
     qRegisterMetaTypeStreamOperators<Qt::ConnectionType>();
+
+    qRegisterMetaType<ObjectId>();
+    qRegisterMetaTypeStreamOperators<ObjectId>();
 
     qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
     qRegisterMetaTypeStreamOperators<GammaRay::SourceLocation>();

@@ -62,8 +62,6 @@ public:
      */
     explicit ObjectModelBase<Base>(QObject *parent) : Base(parent)
     {
-        qRegisterMetaType<ObjectId>();
-        qRegisterMetaTypeStreamOperators<ObjectId>();
     }
 
     /**
