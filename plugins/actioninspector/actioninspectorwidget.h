@@ -38,6 +38,11 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+
+namespace Ui {
+class ActionInspectorWidget;
+}
+
 class ActionInspectorWidget : public QWidget
 {
     Q_OBJECT
@@ -48,8 +53,10 @@ public:
 
 private Q_SLOTS:
     void triggerAction(const QModelIndex &index);
+    void contextMenu(QPoint pos);
 
 private:
+    QScopedPointer<Ui::ActionInspectorWidget> ui;
     UIStateManager m_stateManager;
 };
 

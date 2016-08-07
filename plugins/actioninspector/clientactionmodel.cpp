@@ -40,6 +40,13 @@ ClientActionModel::~ClientActionModel()
 {
 }
 
+QVariant ClientActionModel::data(const QModelIndex& index, int role) const
+{
+    if (role == ActionModel::ObjectIdRole && index.column() != ActionModel::AddressColumn)
+        return index.sibling(index.row(), ActionModel::AddressColumn).data(ActionModel::ObjectIdRole);
+    return QIdentityProxyModel::data(index, role);
+}
+
 QVariant ClientActionModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal) {

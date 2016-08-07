@@ -27,12 +27,14 @@
 #include "actioninspector.h"
 #include "actionmodel.h"
 
-#include <common/objectmodel.h>
-#include <common/objectbroker.h>
 #include <core/probeinterface.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/remote/serverproxymodel.h>
+
+#include <common/objectmodel.h>
+#include <common/objectbroker.h>
+#include <common/objectid.h>
 
 #include <QtPlugin>
 #include <QGraphicsWidget>
@@ -66,6 +68,7 @@ ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
 
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     proxy->setSourceModel(actionModel);
+    proxy->addRole(ActionModel::ObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ActionModel"), proxy);
 
     m_selectionModel = ObjectBroker::selectionModel(proxy);
@@ -98,10 +101,9 @@ void GammaRay::ActionInspector::objectSelected(QObject *obj)
 
     const QAbstractItemModel *model = m_selectionModel->model();
 
-    const QModelIndexList indexList
-        = model->match(model->index(0, 0),
-                       ObjectModel::ObjectRole,
-                       QVariant::fromValue<QAction *>(action), 1,
+    const auto indexList = model->match(model->index(0, 0),
+                       ActionModel::ObjectIdRole,
+                       QVariant::fromValue(ObjectId(action)), 1,
                        Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;

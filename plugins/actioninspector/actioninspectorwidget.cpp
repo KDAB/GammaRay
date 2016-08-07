@@ -25,52 +25,50 @@
 */
 
 #include "actioninspectorwidget.h"
+#include "ui_actioninspectorwidget.h"
 #include "actionmodel.h" // for column enum only
 #include "clientactionmodel.h"
 
-#include <ui/deferredtreeview.h>
+#include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
+
 #include <common/objectbroker.h>
+#include <common/objectid.h>
 #include <common/endpoint.h>
 
 #include <QDebug>
-#include <QHBoxLayout>
-#include <QHeaderView>
-#include <QLineEdit>
+#include <QMenu>
 
 using namespace GammaRay;
 
 ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
     : QWidget(parent)
+    , ui(new Ui::ActionInspectorWidget)
     , m_stateManager(this)
 {
     setObjectName("ActionInspectorWidget");
+    ui->setupUi(this);
+
+    auto sourceModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
     auto actionModel = new ClientActionModel(this);
-    actionModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel")));
+    actionModel->setSourceModel(sourceModel);
 
-    QVBoxLayout *vbox = new QVBoxLayout(this);
-    auto actionSearchLine = new QLineEdit(this);
-    new SearchLineController(actionSearchLine, actionModel);
-    vbox->addWidget(actionSearchLine);
+    new SearchLineController(ui->actionSearchLine, sourceModel);
 
-    DeferredTreeView *objectTreeView = new DeferredTreeView(this);
-    objectTreeView->setRootIsDecorated(false);
-    objectTreeView->setUniformRowHeights(true);
-    objectTreeView->header()->setObjectName("objectTreeViewHeader");
-    objectTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-    objectTreeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
-    objectTreeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
-    objectTreeView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
-    objectTreeView->setModel(actionModel);
-    objectTreeView->sortByColumn(ActionModel::ShortcutsPropColumn);
-    vbox->addWidget(objectTreeView);
+    ui->actionView->header()->setObjectName("objectTreeViewHeader");
+    ui->actionView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->actionView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    ui->actionView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+    ui->actionView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
+    ui->actionView->setModel(actionModel);
+    ui->actionView->sortByColumn(ActionModel::ShortcutsPropColumn);
+    connect(ui->actionView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
 
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(actionModel);
-    objectTreeView->setSelectionModel(selectionModel);
+    ui->actionView->setSelectionModel(selectionModel);
 
-    m_stateManager.setDefaultSizes(objectTreeView->header(),
-                                   UISizeVector() << -1 << 200 << -1 << -1 << -1 << 200);
-    connect(objectTreeView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
+    m_stateManager.setDefaultSizes(ui->actionView->header(), UISizeVector() << -1 << 200 << -1 << -1 << -1 << 200);
+    connect(ui->actionView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
 }
 
 ActionInspectorWidget::~ActionInspectorWidget()
@@ -86,6 +84,24 @@ void ActionInspectorWidget::triggerAction(const QModelIndex &index)
                                            "com.kdab.GammaRay.ActionInspector"), "triggerAction",
                                        QVariantList() << index.row());
 }
+
+void ActionInspectorWidget::contextMenu(QPoint pos)
+{
+    auto index = ui->actionView->indexAt(pos);
+    if (!index.isValid())
+        return;
+    index = index.sibling(index.row(), 0);
+
+    const auto objectId = index.data(ActionModel::ObjectIdRole).value<ObjectId>();
+    if (objectId.isNull())
+        return;
+
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+    menu.exec(ui->actionView->viewport()->mapToGlobal(pos));
+}
+
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(ActionInspectorUiFactory)

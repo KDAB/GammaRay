@@ -32,6 +32,8 @@
 #include <QAbstractTableModel>
 #include <QVector>
 
+#include <common/modelroles.h>
+
 QT_BEGIN_NAMESPACE
 class QAction;
 QT_END_NAMESPACE
@@ -53,6 +55,11 @@ public:
         ShortcutsPropColumn,
         /** Mark column count */
         ColumnCount
+    };
+
+    enum Role {
+        ObjectIdRole = UserRole + 1,
+        ShortcutConflictRole
     };
 
     explicit ActionModel(QObject *parent = 0);

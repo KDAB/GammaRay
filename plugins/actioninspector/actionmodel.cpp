@@ -32,7 +32,8 @@
 #include <core/probe.h>
 #include <core/util.h>
 #include <core/varianthandler.h>
-#include <common/objectmodel.h>
+
+#include <common/objectid.h>
 
 #include <QAction>
 #include <QDebug>
@@ -162,8 +163,8 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::ToolTipRole) {
         if (column == ShortcutsPropColumn && m_duplicateFinder->hasAmbiguousShortcut(action))
             return tr("Warning: Ambiguous shortcut detected.");
-    } else if (role == ObjectModel::ObjectRole) {
-        return QVariant::fromValue<QObject *>(action);
+    } else if (role == ActionModel::ObjectIdRole && index.column() == 0) {
+        return QVariant::fromValue(ObjectId(action));
     }
 
     return QVariant();
