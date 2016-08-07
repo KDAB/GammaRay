@@ -120,32 +120,6 @@ int ActionModel::rowCount(const QModelIndex &parent) const
     return m_actions.size();
 }
 
-QVariant ActionModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    Q_ASSERT(section >= 0);
-
-    if (role == Qt::DisplayRole) {
-        switch (section) {
-        case AddressColumn:
-            return tr("Object");
-        case NameColumn:
-            return tr("Name");
-        case CheckablePropColumn:
-            return tr("Checkable");
-        case CheckedPropColumn:
-            return tr("Checked");
-        case PriorityPropColumn:
-            return tr("Priority");
-        case ShortcutsPropColumn:
-            return tr("Shortcut(s)");
-        default:
-            return QVariant();
-        }
-    }
-
-    return QAbstractTableModel::headerData(section, orientation, role);
-}
-
 QVariant ActionModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())

@@ -232,6 +232,7 @@ endif()
 if(Qt5Widgets_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 add_executable(actiontest
   actiontest.cpp
+  ${CMAKE_SOURCE_DIR}/plugins/actioninspector/clientactionmodel.cpp
   ../probe/probecreator.cpp
   ../probe/hooks.cpp
 )

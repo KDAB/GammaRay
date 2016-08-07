@@ -26,6 +26,8 @@
 
 #include <config-gammaray.h>
 
+#include <plugins/actioninspector/clientactionmodel.h>
+
 #include <probe/hooks.h>
 #include <probe/probecreator.h>
 #include <core/probe.h>
@@ -63,8 +65,10 @@ private slots:
         QAction *a2 = new QAction(QStringLiteral("Action 2"), this);
         QTest::qWait(1); // event loop re-entry
 
-        auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
-        QVERIFY(model);
+        auto sourceModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
+        QVERIFY(sourceModel);
+        auto model = new ClientActionModel(this);
+        model->setSourceModel(sourceModel);
         QCOMPARE(model->rowCount(), 2);
 
         delete a1;
@@ -84,7 +88,10 @@ private slots:
         a2->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));
         QTest::qWait(1); // event loop re-entry
 
-        auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
+        auto sourceModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
+        QVERIFY(sourceModel);
+        auto model = new ClientActionModel(this);
+        model->setSourceModel(sourceModel);
         QVERIFY(model);
         QCOMPARE(model->rowCount(), 2);
 

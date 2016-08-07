@@ -21,6 +21,7 @@ target_link_libraries(gammaray_actioninspector_plugin
 if(GAMMARAY_BUILD_UI)
   set(gammaray_actioninspector_ui_plugin_srcs
     actioninspectorwidget.cpp
+    clientactionmodel.cpp
   )
 
   gammaray_add_plugin(gammaray_actioninspector_ui_plugin

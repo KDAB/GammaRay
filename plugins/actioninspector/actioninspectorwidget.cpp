@@ -26,6 +26,7 @@
 
 #include "actioninspectorwidget.h"
 #include "actionmodel.h" // for column enum only
+#include "clientactionmodel.h"
 
 #include <ui/deferredtreeview.h>
 #include <ui/searchlinecontroller.h>
@@ -44,8 +45,8 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
     , m_stateManager(this)
 {
     setObjectName("ActionInspectorWidget");
-    QAbstractItemModel *actionModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
+    auto actionModel = new ClientActionModel(this);
+    actionModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel")));
 
     QVBoxLayout *vbox = new QVBoxLayout(this);
     auto actionSearchLine = new QLineEdit(this);
