@@ -34,6 +34,7 @@
 #include <ui/tooluifactory.h>
 
 QT_BEGIN_NAMESPACE
+class QItemSelection;
 class QModelIndex;
 QT_END_NAMESPACE
 
@@ -54,6 +55,7 @@ public:
 private Q_SLOTS:
     void triggerAction(const QModelIndex &index);
     void contextMenu(QPoint pos);
+    void selectionChanged(const QItemSelection &selection);
 
 private:
     QScopedPointer<Ui::ActionInspectorWidget> ui;

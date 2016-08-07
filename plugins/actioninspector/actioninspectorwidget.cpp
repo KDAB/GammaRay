@@ -64,8 +64,9 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
     ui->actionView->sortByColumn(ActionModel::ShortcutsPropColumn);
     connect(ui->actionView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
 
-    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(actionModel);
+    auto selectionModel = ObjectBroker::selectionModel(actionModel);
     ui->actionView->setSelectionModel(selectionModel);
+    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
 
     m_stateManager.setDefaultSizes(ui->actionView->header(), UISizeVector() << -1 << 200 << -1 << -1 << -1 << 200);
     connect(ui->actionView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
@@ -102,6 +103,13 @@ void ActionInspectorWidget::contextMenu(QPoint pos)
     menu.exec(ui->actionView->viewport()->mapToGlobal(pos));
 }
 
+void ActionInspectorWidget::selectionChanged(const QItemSelection& selection)
+{
+    if (selection.isEmpty())
+        return;
+    const auto idx = selection.at(0).topLeft();
+    ui->actionView->scrollTo(idx);
+}
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(ActionInspectorUiFactory)
