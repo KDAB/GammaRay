@@ -367,6 +367,13 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                 node->flags[column] = static_cast<Qt::ItemFlags>(flags);
                 node->state[column] = state & ~(Loading | Empty | Outdated);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                if ((flags & Qt::ItemNeverHasChildren) && column == 0) {
+                    node->rowCount = 0;
+                    node->columnCount = node->data.size();
+                }
+#endif
+
                 // group by parent, and emit dataChange for the bounding rect per hierarchy level
                 // as an approximiation of perfect range batching
                 const QModelIndex qmi = modelIndexForNode(node, column);
