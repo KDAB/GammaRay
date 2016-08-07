@@ -56,12 +56,23 @@ private:
         QTest::qWait(1); // event loop re-entry
     }
 
+    QModelIndex indexForName(const QString &name, QAbstractItemModel *model)
+    {
+        for (int i = 0; i < model->rowCount(); ++i) {
+            const auto idx = model->index(i, 0);
+            if (idx.data().toString() == name)
+                return idx;
+        }
+        return QModelIndex();
+    }
+
 private slots:
     void testActionCreationDeletion()
     {
         createProbe();
 
         QAction *a1 = new QAction(QStringLiteral("Action 1"), this);
+        a1->setObjectName("action1");
         QAction *a2 = new QAction(QStringLiteral("Action 2"), this);
         QTest::qWait(1); // event loop re-entry
 
@@ -71,11 +82,20 @@ private slots:
         model->setSourceModel(sourceModel);
         QCOMPARE(model->rowCount(), 2);
 
+        auto idx = indexForName("action1", model);
+        QVERIFY(idx.isValid());
+        idx = idx.sibling(idx.row(), 5);
+        QVERIFY(idx.data().toString().isEmpty());
+        QVERIFY(idx.data(Qt::ToolTipRole).isNull());
+        QVERIFY(idx.data(Qt::DecorationRole).isNull());
+
         delete a1;
         QTest::qWait(1); // event loop re-entry
+        QCOMPARE(model->rowCount(), 1);
 
         delete a2;
         QTest::qWait(1); // event loop re-entry
+        QCOMPARE(model->rowCount(), 0);
     }
 
     void testConflictDetection()
@@ -96,9 +116,9 @@ private slots:
         QCOMPARE(model->rowCount(), 2);
 
         const auto index = model->index(0, 5);
-        QCOMPARE(index.data(Qt::DisplayRole).toString(), QKeySequence(QStringLiteral(
-                                                                          "Ctrl+K")).toString(
-                     QKeySequence::PortableText));
+        QCOMPARE(index.data(Qt::DisplayRole).toString(), QKeySequence(QStringLiteral("Ctrl+K")).toString( QKeySequence::PortableText));
+        QVERIFY(!index.data(Qt::DecorationRole).isNull());
+        QVERIFY(!index.data(Qt::ToolTipRole).toString().isEmpty());
     }
 };
 

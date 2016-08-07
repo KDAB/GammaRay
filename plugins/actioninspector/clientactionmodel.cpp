@@ -29,6 +29,9 @@
 #include "clientactionmodel.h"
 #include "actionmodel.h" // for column/role enums
 
+#include <QApplication>
+#include <QStyle>
+
 using namespace GammaRay;
 
 ClientActionModel::ClientActionModel(QObject* parent)
@@ -42,8 +45,17 @@ ClientActionModel::~ClientActionModel()
 
 QVariant ClientActionModel::data(const QModelIndex& index, int role) const
 {
-    if (role == ActionModel::ObjectIdRole && index.column() != ActionModel::AddressColumn)
+    if (role == ActionModel::ObjectIdRole && index.column() != ActionModel::AddressColumn) {
         return index.sibling(index.row(), ActionModel::AddressColumn).data(ActionModel::ObjectIdRole);
+    } else if (role == Qt::DecorationRole && index.column() == ActionModel::ShortcutsPropColumn) {
+        const auto v = index.data(ActionModel::ShortcutConflictRole);
+        const auto b = v.type() == QVariant::Bool ? v.toBool() : false;
+        return b ? qApp->style()->standardIcon(QStyle::SP_MessageBoxWarning) : QVariant();
+    } else if (role == Qt::ToolTipRole && index.column() == ActionModel::ShortcutsPropColumn) {
+        const auto v = index.data(ActionModel::ShortcutConflictRole);
+        const auto b = v.type() == QVariant::Bool ? v.toBool() : false;
+        return b ? tr("Warning: Ambiguous shortcut detected.") : QVariant();
+    }
     return QIdentityProxyModel::data(index, role);
 }
 

@@ -150,19 +150,10 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
             return QVariant();
         }
     } else if (role == Qt::DecorationRole) {
-        if (column == NameColumn) {
+        if (column == NameColumn)
             return action->icon();
-        } else if (column == ShortcutsPropColumn
-                   && m_duplicateFinder->hasAmbiguousShortcut(action)) {
-            QIcon icon = QIcon::fromTheme(QStringLiteral("dialog-warning"));
-            if (!icon.isNull())
-                return icon;
-            else
-                return QColor(Qt::red);
-        }
-    } else if (role == Qt::ToolTipRole) {
-        if (column == ShortcutsPropColumn && m_duplicateFinder->hasAmbiguousShortcut(action))
-            return tr("Warning: Ambiguous shortcut detected.");
+    } else if (role == ShortcutConflictRole && column == ShortcutsPropColumn) {
+        return m_duplicateFinder->hasAmbiguousShortcut(action);
     } else if (role == ActionModel::ObjectIdRole && index.column() == 0) {
         return QVariant::fromValue(ObjectId(action));
     }
