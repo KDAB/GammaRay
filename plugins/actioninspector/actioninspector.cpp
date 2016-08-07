@@ -80,14 +80,13 @@ ActionInspector::~ActionInspector()
 
 void ActionInspector::triggerAction(int row)
 {
-    QAbstractItemModel *model
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
+    auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
     const QModelIndex index = model->index(row, 0);
     if (!index.isValid())
         return;
 
-    QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
-    QAction *action = qobject_cast<QAction *>(obj);
+    QObject *obj = index.data(ActionModel::ObjectRole).value<QObject*>();
+    QAction *action = qobject_cast<QAction*>(obj);
 
     if (action)
         action->trigger();

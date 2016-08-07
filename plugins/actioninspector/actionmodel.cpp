@@ -160,6 +160,8 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
         }
     } else if (role == ShortcutConflictRole && column == ShortcutsPropColumn) {
         return m_duplicateFinder->hasAmbiguousShortcut(action);
+    } else if (role == ActionModel::ObjectRole) {
+        return QVariant::fromValue<QObject*>(action);
     } else if (role == ActionModel::ObjectIdRole && index.column() == 0) {
         return QVariant::fromValue(ObjectId(action));
     }

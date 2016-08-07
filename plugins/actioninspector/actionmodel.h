@@ -59,6 +59,7 @@ public:
 
     enum Role {
         ObjectIdRole = UserRole + 1,
+        ObjectRole,
         ShortcutConflictRole
     };
 
