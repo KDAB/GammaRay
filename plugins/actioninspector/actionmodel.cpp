@@ -141,8 +141,6 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
             return action->text();
         case CheckablePropColumn:
             return action->isCheckable();
-        case CheckedPropColumn:
-            return VariantHandler::displayString(action->isChecked());
         case PriorityPropColumn:
             return Util::enumToString(action->priority(), 0, action);
         case ShortcutsPropColumn:
@@ -157,6 +155,10 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
         switch (column) {
             case AddressColumn:
                 return action->isEnabled() ? Qt::Checked : Qt::Unchecked;
+            case CheckedPropColumn:
+                if (action->isCheckable())
+                    return action->isChecked() ? Qt::Checked : Qt::Unchecked;
+                return QVariant();
         }
     } else if (role == ShortcutConflictRole && column == ShortcutsPropColumn) {
         return m_duplicateFinder->hasAmbiguousShortcut(action);
@@ -176,6 +178,8 @@ Qt::ItemFlags ActionModel::flags(const QModelIndex& index) const
         return f;
     if (index.column() == AddressColumn)
         return f | Qt::ItemIsUserCheckable;
+    if (index.column() == CheckedPropColumn && m_actions.at(index.row())->isCheckable())
+        return f | Qt::ItemIsUserCheckable;
     return f;
 }
 
@@ -186,6 +190,9 @@ bool ActionModel::setData(const QModelIndex& index, const QVariant& value, int r
         switch (index.column()) {
             case AddressColumn:
                 action->setEnabled(value.toInt() == Qt::Checked);
+                return true;
+            case CheckedPropColumn:
+                action->setChecked(value.toInt() == Qt::Checked);
                 return true;
         }
     }

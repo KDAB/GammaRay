@@ -160,6 +160,13 @@ private slots:
         QVERIFY(model->setData(model->index(0, 0), Qt::Unchecked, Qt::CheckStateRole));
         QCOMPARE(a1->isEnabled(), false);
         QCOMPARE(changeSpy.size(), 1);
+
+        a1->setChecked(true);
+        QCOMPARE(changeSpy.size(), 1);
+        QCOMPARE(model->index(0, 3).data(Qt::CheckStateRole).toInt(), (int)Qt::Checked);
+        QVERIFY(model->setData(model->index(0, 3), Qt::Unchecked, Qt::CheckStateRole));
+        QCOMPARE(a1->isChecked(), false);
+        QCOMPARE(changeSpy.size(), 2);
     }
 
 };
