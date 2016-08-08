@@ -1,0 +1,45 @@
+/*
+    state-machine.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \example state-machine
+    \title State Machines
+    \brief Debug state machine runtime behavior
+    \ingroup examples-gammaray
+
+    This examples shows GammaRay's capabilities in analyzing state machine behavior at runtime.
+
+    \section1 Problem
+
+    The example application shows a simple traffic light with an on/off switch that is driven
+    by a declarative StateMachine.
+
+    We can observe that during its normal cycle it transitions from green directly to red, rather
+    than going via yellow as one would expect.
+
+    \section1 Investigation
+
+    While the target application is running, open the \l{State Machine Debugger} view in GammaRay
+    to observe the state machine layout, active configuration and configuration changes. It is
+    easily visible that the green state is not transitioning to the greenToRed state as it is
+    supposed to, but the red state directly.
+
+    In order to fix this, right click on the green state, and select "Go to creation", which
+    will open your code editor at the right spot in the corresponding source file.
+
+    \snippet state-machine/state-machine.qml Wrong transition
+*/

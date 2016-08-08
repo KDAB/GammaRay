@@ -39,4 +39,11 @@
 
     If your target contains multiple state machine instances, the currently displayed one can be selected in the
     combo box on the top left.
+
+    \section1 Examples
+
+    The following examples make use of the state machine debugger:
+    \list
+        \li \l{state-machine}
+    \endlist
 */

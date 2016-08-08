@@ -1,6 +1,7 @@
 if(Qt5Core_FOUND)
   add_subdirectory(quick-batching)
   add_subdirectory(quick-event-handling)
+  add_subdirectory(state-machine)
 endif()
 
 if(Qt5Widgets_FOUND)
