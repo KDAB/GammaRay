@@ -439,7 +439,7 @@ add_feature_info("ELF ABI detection" HAVE_ELF "Automatic probe ABI detection on 
 find_package(Glslang)
 set_package_properties(Glslang PROPERTIES URL "https://github.com/KhronosGroup/glslang" PURPOSE "Validate GL shader code.")
 
-if(Qt5Core_FOUND)
+if(NOT Qt5Core_VERSION VERSION_LESS 5.4)
   find_package(QmlLint)
   set_package_properties(QmlLint PROPERTIES URL "http://qt.io" PURPOSE "Validate QML code.")
 endif()
