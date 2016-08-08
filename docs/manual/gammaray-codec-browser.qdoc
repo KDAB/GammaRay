@@ -1,0 +1,37 @@
+/*
+    gammaray-codec-browser.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Text Codecs}
+    \previouspage {Network}
+    \page gammaray-codec-browser.html
+
+    \title Text Codecs
+
+    \section1 Overview
+
+    The text codec browser allows you to inspect QTextCodec instances available on the target system, and to see
+    how a specific code converts a given QString.
+
+    These information are usually independent of the target application, but rather depend on the system.
+
+    \image gammaray-codec-browser.png
+
+    The list on the left side contains all codecs known by QTextCodec, as well as their aliases. You can select
+    one or more of these codecs for looking at their encoding results of the test string given on the upper
+    right side. Encoding results are shown for all selected codecs on the right side.
+*/
