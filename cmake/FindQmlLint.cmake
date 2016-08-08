@@ -33,7 +33,7 @@ endif()
 
 # validate a list of qml files
 function(qml_lint)
-  if (NOT QMLLINT_EXECUTABLE)
+  if (NOT QMLLINT_EXECUTABLE OR NOT QmlLint_FOUND)
     return()
   endif()
 
