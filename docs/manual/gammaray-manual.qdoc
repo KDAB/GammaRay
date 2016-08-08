@@ -79,6 +79,7 @@
             \li \l{Locales}
             \li \l{Mime Types}
             \li \l{Network}
+            \li \l{Text Codecs}
         \endlist
         \li \l{Examples}
     \endlist
