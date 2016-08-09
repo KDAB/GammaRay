@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ContactForm</class>
+ <widget class="QWidget" name="ContactForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1052</width>
+    <height>524</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" rowspan="2">
+    <widget class="QGroupBox" name="detailsGroup">
+     <property name="title">
+      <string>Details</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Sa&amp;lutation:</string>
+        </property>
+        <property name="buddy">
+         <cstring>salutation</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="salutation"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>First Na&amp;me:</string>
+        </property>
+        <property name="buddy">
+         <cstring>first_name</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="first_name"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Last Name:</string>
+        </property>
+        <property name="buddy">
+         <cstring>last_name</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="last_name"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>&amp;Title:</string>
+        </property>
+        <property name="buddy">
+         <cstring>title</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="title"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>&amp;Department:</string>
+        </property>
+        <property name="buddy">
+         <cstring>department</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="department"/>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>&amp;Account Name:</string>
+        </property>
+        <property name="buddy">
+         <cstring>account_id</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <layout class="QHBoxLayout" name="accountLayout">
+        <item>
+         <widget class="QComboBox" name="account_id"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonSelectAccount">
+          <property name="text">
+           <string>Select Account...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="buttonOpenAccount">
+          <property name="icon">
+           <iconset theme="document-open">
+            <normaloff>.</normaloff>.</iconset>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Lead Source:</string>
+        </property>
+        <property name="buddy">
+         <cstring>lead_source</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QComboBox" name="lead_source"/>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Reports to:</string>
+        </property>
+        <property name="buddy">
+         <cstring>reports_to_id</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QComboBox" name="reports_to_id"/>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Primary Email:</string>
+        </property>
+        <property name="buddy">
+         <cstring>email1</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLineEdit" name="email1"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonMailToPrimary">
+          <property name="text">
+           <string>Send Email</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="label_31">
+        <property name="text">
+         <string>Other Email:</string>
+        </property>
+        <property name="buddy">
+         <cstring>email2</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QLineEdit" name="email2"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonMailToOther">
+          <property name="text">
+           <string>Send Email</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Assi&amp;gned to:</string>
+        </property>
+        <property name="buddy">
+         <cstring>assigned_user_id</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QComboBox" name="assigned_user_id"/>
+      </item>
+      <item row="11" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QPushButton" name="viewNotesButton">
+          <property name="text">
+           <string>View Notes</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item row="12" column="1">
+       <widget class="QLabel" name="urllabel">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>-</string>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="1" rowspan="2">
+    <widget class="QGroupBox" name="otherDetailsBox">
+     <property name="title">
+      <string>Other Details</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Office Phone:</string>
+        </property>
+        <property name="buddy">
+         <cstring>phone_work</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="phone_work"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>Mobile:</string>
+        </property>
+        <property name="buddy">
+         <cstring>phone_mobile</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="phone_mobile"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_14">
+        <property name="text">
+         <string>Home:</string>
+        </property>
+        <property name="buddy">
+         <cstring>phone_home</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="phone_home"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_15">
+        <property name="text">
+         <string>Fa&amp;x:</string>
+        </property>
+        <property name="buddy">
+         <cstring>phone_fax</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="phone_fax"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>Other Phone:</string>
+        </property>
+        <property name="buddy">
+         <cstring>phone_other</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="phone_other"/>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_30">
+        <property name="text">
+         <string>Do &amp;Not Call:</string>
+        </property>
+        <property name="buddy">
+         <cstring>do_not_call</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="do_not_call">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_17">
+        <property name="text">
+         <string>B&amp;irthdate:</string>
+        </property>
+        <property name="buddy">
+         <cstring>birthdate</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="birthdate"/>
+        </item>
+        <item>
+         <widget class="QToolButton" name="clearDateButton">
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="calendarButton">
+          <property name="text">
+           <string>&amp;Edit</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label_28">
+        <property name="text">
+         <string>Assistant:</string>
+        </property>
+        <property name="buddy">
+         <cstring>assistant</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLineEdit" name="assistant"/>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_29">
+        <property name="text">
+         <string>Assistant Phone:</string>
+        </property>
+        <property name="buddy">
+         <cstring>phoneAssistant</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QLineEdit" name="phoneAssistant"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QGroupBox" name="primaryAddressBox">
+     <property name="title">
+      <string>Primary Address</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_18">
+        <property name="text">
+         <string>Street:</string>
+        </property>
+        <property name="buddy">
+         <cstring>primaryAddressStreet</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPlainTextEdit" name="primaryAddressStreet"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_19">
+        <property name="text">
+         <string>&amp;City:</string>
+        </property>
+        <property name="buddy">
+         <cstring>primaryAddressCity</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="primaryAddressCity"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_20">
+        <property name="text">
+         <string>State:</string>
+        </property>
+        <property name="buddy">
+         <cstring>primaryAddressState</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="primaryAddressState"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_21">
+        <property name="text">
+         <string>Postal Code:</string>
+        </property>
+        <property name="buddy">
+         <cstring>primaryAddressPostalcode</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="primaryAddressPostalcode"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_22">
+        <property name="text">
+         <string>Co&amp;untry:</string>
+        </property>
+        <property name="buddy">
+         <cstring>primaryAddressCountry</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="primaryAddressCountry"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QGroupBox" name="otherAddressBox">
+     <property name="title">
+      <string>Other Address</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_4">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_23">
+        <property name="text">
+         <string>Street:</string>
+        </property>
+        <property name="buddy">
+         <cstring>altAddressStreet</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPlainTextEdit" name="altAddressStreet"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_24">
+        <property name="text">
+         <string>Cit&amp;y:</string>
+        </property>
+        <property name="buddy">
+         <cstring>altAddressCity</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="altAddressCity"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_25">
+        <property name="text">
+         <string>State:</string>
+        </property>
+        <property name="buddy">
+         <cstring>altAddressState</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="altAddressState"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_26">
+        <property name="text">
+         <string>Postal Code:</string>
+        </property>
+        <property name="buddy">
+         <cstring>altAddressPostalcode</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="altAddressPostalcode"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_27">
+        <property name="text">
+         <string>Country:</string>
+        </property>
+        <property name="buddy">
+         <cstring>altAddressCountry</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="altAddressCountry"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>salutation</tabstop>
+  <tabstop>first_name</tabstop>
+  <tabstop>last_name</tabstop>
+  <tabstop>title</tabstop>
+  <tabstop>department</tabstop>
+  <tabstop>account_id</tabstop>
+  <tabstop>buttonOpenAccount</tabstop>
+  <tabstop>lead_source</tabstop>
+  <tabstop>reports_to_id</tabstop>
+  <tabstop>email1</tabstop>
+  <tabstop>email2</tabstop>
+  <tabstop>assigned_user_id</tabstop>
+  <tabstop>phone_work</tabstop>
+  <tabstop>phone_mobile</tabstop>
+  <tabstop>phone_home</tabstop>
+  <tabstop>phone_fax</tabstop>
+  <tabstop>phone_other</tabstop>
+  <tabstop>do_not_call</tabstop>
+  <tabstop>birthdate</tabstop>
+  <tabstop>clearDateButton</tabstop>
+  <tabstop>calendarButton</tabstop>
+  <tabstop>assistant</tabstop>
+  <tabstop>phoneAssistant</tabstop>
+  <tabstop>primaryAddressStreet</tabstop>
+  <tabstop>primaryAddressCity</tabstop>
+  <tabstop>primaryAddressState</tabstop>
+  <tabstop>primaryAddressPostalcode</tabstop>
+  <tabstop>primaryAddressCountry</tabstop>
+  <tabstop>altAddressStreet</tabstop>
+  <tabstop>altAddressCity</tabstop>
+  <tabstop>altAddressState</tabstop>
+  <tabstop>altAddressPostalcode</tabstop>
+  <tabstop>altAddressCountry</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

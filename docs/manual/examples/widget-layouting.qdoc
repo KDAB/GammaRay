@@ -1,0 +1,65 @@
+/*
+    widget-layouting.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+// TODO: expand this example to also include size policy issues, but for that we need to
+// first be able to actually edit the size policies...
+
+/*!
+    \example widget-layouting
+    \title Widget Layouting
+    \brief Analyze widget layouting behavior.
+    \ingroup examples-gammaray
+
+    This examples shows GammaRay's capabilities in analyzing widget layouting issues.
+
+    \section1 Problem
+
+    The widget layouting example application shows a complex dialog window that cannot be
+    resized as small as one would expect.
+
+    \section1 Investigation
+
+    GammaRay supports several approaches of analyzing widget layouting issues. All of them revolve around the \l{Widget Inspector}.
+
+    \section2 In-app widget picking
+
+    You can select the widget occupying a specific screen pixel by clicking on the area you are interested in the
+    target applicationi while holding Ctrl+Shift. This will select the top-most QWidget occupying this space.
+
+    This is particularly useful for identifying the "owner" of seemingly empty space. In our example this can
+    be used to identify the QLabel on the lower left that has an unnecessarily high minimum size set.
+
+    \section2 Property inspection
+
+    For the selected QWidget or QLayout instance you can look at and edit many layouting-relevant properties in the
+    property view on the right. Tweaking these values at runtime avoids lengthy recompile and restart cycles just
+    to verify a specific change.
+
+    In our example, we can change the minimum size of the offending QLabel in the lower left to something
+    more reasonable and immediately verify that the window resizing has improved.
+
+    \section2 Bisection layouting problems
+
+    A useful approach for identifying more complicated layouting issues is bisecting them, that is, take our parts
+    of the UI and verify if the problem persists. You can do this at runtime with GammaRay too, without needing
+    to recompile or restart the target application, by setting the relevant QWidget sub-tree to invisible in the
+    property view.
+
+    In our example, we can use this to exclude the QGroupBox instances at the right side as a possible source
+    for the window resizing issue. Hiding one of them makes it a lot more apparent that the actual source of the
+    problem is the QLabel on the lower left.
+*/

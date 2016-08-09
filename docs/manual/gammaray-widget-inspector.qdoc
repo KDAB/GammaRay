@@ -52,5 +52,6 @@
     The following examples make use of the widget inspector:
     \list
         \li \l{signal-slot}
+        \li \l{widget-layouting}
     \endlist
 */

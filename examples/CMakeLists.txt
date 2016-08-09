@@ -6,4 +6,5 @@ endif()
 
 if(Qt5Widgets_FOUND)
   add_subdirectory(signal-slot)
+  add_subdirectory(widget-layouting)
 endif()
