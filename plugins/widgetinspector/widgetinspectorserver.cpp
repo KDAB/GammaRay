@@ -83,10 +83,12 @@
 #include <iostream>
 
 Q_DECLARE_METATYPE(const QStyle *)
+Q_DECLARE_METATYPE(QSizePolicy::ControlType)
 Q_DECLARE_METATYPE(QSizePolicy::ControlTypes)
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Qt::Orientations)
 Q_DECLARE_METATYPE(Qt::Alignment)
+Q_DECLARE_METATYPE(QSizePolicy::Policy)
 #endif
 
 using namespace GammaRay;
@@ -486,6 +488,27 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_METAOBJECT1(QToolButton, QAbstractButton);
     MO_ADD_PROPERTY_RO(QToolButton, QAction*, defaultAction);
     MO_ADD_PROPERTY_RO(QToolButton, QMenu*, menu);
+#endif
+
+    MO_ADD_METAOBJECT0(QSizePolicy);
+    MO_ADD_PROPERTY   (QSizePolicy, QSizePolicy::ControlType, controlType, setControlType);
+    MO_ADD_PROPERTY_RO(QSizePolicy, Qt::Orientations, expandingDirections);
+    MO_ADD_PROPERTY   (QSizePolicy, bool, hasHeightForWidth, setHeightForWidth);
+    MO_ADD_PROPERTY   (QSizePolicy, bool, hasWidthForHeight, setWidthForHeight);
+    MO_ADD_PROPERTY   (QSizePolicy, QSizePolicy::Policy, horizontalPolicy, setHorizontalPolicy);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    MO_ADD_PROPERTY_RO(QSizePolicy, int, horizontalStretch);
+#else
+    MO_ADD_PROPERTY   (QSizePolicy, int, horizontalStretch, setHorizontalStretch);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    MO_ADD_PROPERTY   (QSizePolicy, bool, retainSizeWhenHidden, setRetainSizeWhenHidden);
+#endif
+    MO_ADD_PROPERTY   (QSizePolicy, QSizePolicy::Policy, verticalPolicy, setVerticalPolicy);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    MO_ADD_PROPERTY_RO(QSizePolicy, int, verticalStretch);
+#else
+    MO_ADD_PROPERTY   (QSizePolicy, int, verticalStretch, setVerticalStretch);
 #endif
 }
 
