@@ -56,16 +56,15 @@ public:
     void preSignalActivate(QObject *caller, int methodIndex);
     void postSignalActivate(QObject *caller, int methodIndex);
 
-    enum Roles {
-        FirstRole = UserRole + 1,
-        ObjectNameRole,
-        StateRole,
-        TotalWakeupsRole,
-        WakeupsPerSecRole,
-        TimePerWakeupRole,
-        MaxTimePerWakeupRole,
-        TimerIdRole,
-        LastRole
+    enum Columns {
+        ObjectNameColumn,
+        StateColumn,
+        TotalWakeupsColumn,
+        WakeupsPerSecColumn,
+        TimePerWakeupColumn,
+        MaxTimePerWakeupColumn,
+        TimerIdColumn,
+        ColumnCount
     };
 
     void setSourceModel(QAbstractItemModel *sourceModel);

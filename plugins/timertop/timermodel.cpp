@@ -240,7 +240,7 @@ void TimerModel::setSourceModel(QAbstractItemModel *sourceModel)
 int TimerModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return LastRole - FirstRole - 1;
+    return ColumnCount;
 }
 
 int TimerModel::rowCount(const QModelIndex &parent) const
@@ -259,23 +259,22 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole && index.isValid()
         && index.column() >= 0 && index.column() < columnCount()) {
         const TimerInfoPtr timerInfo = const_cast<TimerModel *>(this)->findOrCreateTimerInfo(index);
-        switch ((Roles)(index.column() + FirstRole + 1)) {
-        case ObjectNameRole:
+        switch (index.column()) {
+        case ObjectNameColumn:
             return timerInfo->displayName();
-        case StateRole:
+        case StateColumn:
             return timerInfo->state();
-        case TotalWakeupsRole:
+        case TotalWakeupsColumn:
             return timerInfo->totalWakeups();
-        case WakeupsPerSecRole:
+        case WakeupsPerSecColumn:
             return timerInfo->wakeupsPerSec();
-        case TimePerWakeupRole:
+        case TimePerWakeupColumn:
             return timerInfo->timePerWakeup();
-        case MaxTimePerWakeupRole:
+        case MaxTimePerWakeupColumn:
             return timerInfo->maxWakeupTime();
-        case TimerIdRole:
+        case TimerIdColumn:
             return timerInfo->timerId();
-        case FirstRole:
-        case LastRole:
+        case ColumnCount:
             break;
         }
     }
@@ -285,23 +284,22 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
 QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch ((Roles)(section + FirstRole + 1)) {
-        case ObjectNameRole:
+        switch (section) {
+        case ObjectNameColumn:
             return tr("Object Name");
-        case StateRole:
+        case StateColumn:
             return tr("State");
-        case TotalWakeupsRole:
+        case TotalWakeupsColumn:
             return tr("Total Wakeups");
-        case WakeupsPerSecRole:
+        case WakeupsPerSecColumn:
             return tr("Wakeups/Sec");
-        case TimePerWakeupRole:
+        case TimePerWakeupColumn:
             return tr("Time/Wakeup [uSecs]");
-        case MaxTimePerWakeupRole:
+        case MaxTimePerWakeupColumn:
             return tr("Max Wakeup Time [uSecs]");
-        case TimerIdRole:
+        case TimerIdColumn:
             return tr("Timer ID");
-        case FirstRole:
-        case LastRole:
+        case ColumnCount:
             break;
         }
     }
@@ -389,11 +387,10 @@ void TimerModel::emitFreeTimerChanged(int row)
 void TimerModel::flushEmitPendingChangedRows()
 {
     foreach (int row, m_pendingChangedTimerObjects)
-        emit dataChanged(index(row, 0), index(row, LastRole - FirstRole - 2));
+        emit dataChanged(index(row, 0), index(row, columnCount() - 1));
     m_pendingChangedTimerObjects.clear();
 
     foreach (int row, m_pendingChangedFreeTimers)
-        emit dataChanged(index(m_sourceModel->rowCount() + row, 0), index(
-                             m_sourceModel->rowCount() + row, LastRole - FirstRole - 2));
+        emit dataChanged(index(m_sourceModel->rowCount() + row, 0), index(m_sourceModel->rowCount() + row, columnCount() - 1));
     m_pendingChangedFreeTimers.clear();
 }

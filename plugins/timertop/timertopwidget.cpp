@@ -58,8 +58,7 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
     sortModel->setDynamicSortFilter(true);
     ui->timerView->setModel(sortModel);
 
-    ui->timerView->sortByColumn(TimerModel::WakeupsPerSecRole - TimerModel::FirstRole - 1,
-                                Qt::DescendingOrder);
+    ui->timerView->sortByColumn(TimerModel::WakeupsPerSecColumn, Qt::DescendingOrder);
 }
 
 TimerTopWidget::~TimerTopWidget()
