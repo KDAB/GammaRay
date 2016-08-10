@@ -40,7 +40,6 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class ProbeInterface;
 
 class TimerModel : public QAbstractTableModel
 {
@@ -68,9 +67,6 @@ public:
         TimerIdRole,
         LastRole
     };
-
-    /// if set, filters out object owned by the probe
-    void setProbe(ProbeInterface *probe);
 
     void setSourceModel(QAbstractItemModel *sourceModel);
 
@@ -115,7 +111,6 @@ private:
 
     QAbstractItemModel *m_sourceModel;
     QList<TimerInfoPtr> m_freeTimers;
-    ProbeInterface *m_probe;
     // current timer signals that are being processed
     QHash<QObject *, TimerInfoPtr> m_currentSignals;
     // pending dataChanged() signals

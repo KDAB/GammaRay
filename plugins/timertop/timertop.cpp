@@ -120,13 +120,14 @@ TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
     filterModel->setDynamicSortFilter(true);
     filterModel->setSourceModel(probe->objectListModel());
     TimerModel::instance()->setParent(this); // otherwise it's not filtered out
-    TimerModel::instance()->setProbe(probe);
     TimerModel::instance()->setSourceModel(filterModel);
 
     SignalSpyCallbackSet callbacks;
     callbacks.signalBeginCallback = signal_begin_callback;
     callbacks.signalEndCallback = signal_end_callback;
     probe->registerSignalSpyCallbackSet(callbacks);
+
+    probe->installGlobalEventFilter(TimerModel::instance());
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimerModel"), TimerModel::instance());
 }

@@ -27,11 +27,9 @@
 */
 #include "timermodel.h"
 
-#include <core/probeinterface.h>
 #include <common/objectmodel.h>
 
 #include <QMetaMethod>
-#include <QCoreApplication>
 #include <QTimerEvent>
 #include <QThread>
 
@@ -47,7 +45,6 @@ static TimerModel *s_timerModel = 0;
 TimerModel::TimerModel(QObject *parent)
     : QAbstractTableModel(parent)
     , m_sourceModel(0)
-    , m_probe(0)
     , m_pendingChanedRowsTimer(new QTimer(this))
     , m_timeoutIndex(QTimer::staticMetaObject.indexOfSignal("timeout()"))
     , m_qmlTimerTriggeredIndex(-1)
@@ -214,17 +211,11 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
     emitTimerObjectChanged(row);
 }
 
-void TimerModel::setProbe(ProbeInterface *probe)
-{
-    m_probe = probe;
-}
-
 void TimerModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
     Q_ASSERT(!m_sourceModel);
     beginResetModel();
     m_sourceModel = sourceModel;
-    qApp->installEventFilter(this);
 
     connect(m_sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
             this, SLOT(slotBeginInsertRows(QModelIndex,int,int)));
@@ -325,10 +316,6 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
         // If there is a QTimer associated with this timer ID, don't handle it here, it will be handled
         // by the signal hooks for QTimer::timeout()
         if (findOrCreateQTimerTimerInfo(timerEvent->timerId()))
-            return false;
-
-        // check if object is owned by GammaRay itself
-        if (m_probe && m_probe->filterObject(watched))
             return false;
 
         const TimerInfoPtr timerInfo = findOrCreateFreeTimerInfo(timerEvent->timerId());
