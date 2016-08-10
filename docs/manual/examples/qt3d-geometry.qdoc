@@ -1,0 +1,71 @@
+/*
+    qt3d-geometry.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \example qt3d-geometry
+    \title Qt3D Geometry
+    \brief Geometry data inspection
+    \ingroup examples-gammaray
+
+    This examples shows GammaRay's capabilities for inspecting \l{Qt 3D} vertex and index attribute
+    data.
+
+    \section1 Problem
+
+    The example shows a three dimensional cylinder using \l{Qt 3D}. It's implemented as a custom
+    Qt3DRender::QGeometry sub-class and computes the cylinder geometry, surface normals and
+    vertex indexes.
+
+    Looking at the rendered result we notice that one side of the cylinder is not rendered
+    correctly, and on closer look we also see that the phong shading doesn't match the
+    expected light reflections on a cylinder
+
+    \section1 Investigation
+
+    GammaRay provides several features supporting the analysis of issues regarding
+    vertex data provided via Qt3DRender::QAttribute and Qt3DRender::QBuffer. They are all
+    available by opening the Qt3D inspector view, selecting a geometry entity in the entity
+    tree view on the left side and then opening the Geometry tab on the right side.
+
+    \section2 Backface culling
+
+    A common problem for seemingly "missing" parts of the geometry is a wrong vertex order.
+    The geometry inspector in GammaRay allows you to disable the normally active backface
+    culling to easily spot such cases. You find the action for that in the toolbar above
+    the geometry view.
+
+    Back faces of triangles are rendered in red with culling disabled. Rotating the cylinder
+    in our example using the middle mouse button so you can see the bottom disc will show
+    that the triangles are indeed the wrong way around, and thus aren't rendred.
+
+    \snippet qt3d-geometry/mycylinder.cpp Wrong bottom disc indexes
+
+    \section2 Normal vector visualization
+
+    With the geometry fixed, we can look into the shading issues. Light reflection in the
+    phong model largely depends on surface normal vectors, which are also provided via
+    a Qt3DRender::QAttribute in our example. Normals can be visualized with the geometry
+    inspector by chosing the corresponding action in the toolbar above the geometry view.
+    The resulting blue lines show the vertex normals, the yellow lines the corresponding
+    face normals.
+
+    In our case we can easily see that the normals for the side faces are bent towards the
+    center line of the cylinder, that is their y value isn't 0 for all vertices as it is
+    supposed to be.
+
+    \snippet qt3d-geometry/mycylinder.cpp Wrong side normals
+*/
