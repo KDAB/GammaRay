@@ -28,7 +28,6 @@
 #include "timermodel.h"
 
 #include <core/probeinterface.h>
-#include <core/signalspycallbackset.h>
 #include <common/objectmodel.h>
 
 #include <QMetaMethod>
@@ -44,36 +43,6 @@ using namespace GammaRay;
 using namespace std;
 
 static TimerModel *s_timerModel = 0;
-
-static bool processCallback()
-{
-    ///TODO: multi-threading support
-    if (!TimerModel::isInitialized() || QThread::currentThread() != qApp->thread())
-        return false;
-    return true;
-}
-
-static void signal_begin_callback(QObject *caller, int method_index, void **argv)
-{
-    Q_UNUSED(argv);
-    if (!processCallback())
-        return;
-
-    ///TODO: support threads living in other threads
-    if (caller->thread() != qApp->thread())
-        return;
-
-    TimerModel::instance()->preSignalActivate(caller, method_index);
-}
-
-static void signal_end_callback(QObject *caller, int method_index)
-{
-    // NOTE: here and below the caller may be invalid, e.g. if it was deleted from a slot
-    if (!processCallback())
-        return;
-
-    TimerModel::instance()->postSignalActivate(caller, method_index);
-}
 
 TimerModel::TimerModel(QObject *parent)
     : QAbstractTableModel(parent)
@@ -248,12 +217,6 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
 void TimerModel::setProbe(ProbeInterface *probe)
 {
     m_probe = probe;
-
-    SignalSpyCallbackSet callbacks;
-    callbacks.signalBeginCallback = signal_begin_callback;
-    callbacks.signalEndCallback = signal_end_callback;
-
-    probe->registerSignalSpyCallbackSet(callbacks);
 }
 
 void TimerModel::setSourceModel(QAbstractItemModel *sourceModel)

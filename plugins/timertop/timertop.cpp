@@ -31,8 +31,11 @@
 
 #include <core/probeinterface.h>
 #include <core/objecttypefilterproxymodel.h>
+#include <core/signalspycallbackset.h>
 
+#include <QCoreApplication>
 #include <QtPlugin>
+#include <QThread>
 
 using namespace GammaRay;
 
@@ -77,6 +80,36 @@ public:
     }
 };
 
+static bool processCallback()
+{
+    ///TODO: multi-threading support
+    if (!TimerModel::isInitialized() || QThread::currentThread() != QCoreApplication::instance()->thread())
+        return false;
+    return true;
+}
+
+static void signal_begin_callback(QObject *caller, int method_index, void **argv)
+{
+    Q_UNUSED(argv);
+    if (!processCallback())
+        return;
+
+    ///TODO: support threads living in other threads
+    if (caller->thread() != qApp->thread())
+        return;
+
+    TimerModel::instance()->preSignalActivate(caller, method_index);
+}
+
+static void signal_end_callback(QObject *caller, int method_index)
+{
+    // NOTE: here and below the caller may be invalid, e.g. if it was deleted from a slot
+    if (!processCallback())
+        return;
+
+    TimerModel::instance()->postSignalActivate(caller, method_index);
+}
+
 TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
     , m_updateTimer(new QTimer(this))
@@ -89,6 +122,11 @@ TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
     TimerModel::instance()->setParent(this); // otherwise it's not filtered out
     TimerModel::instance()->setProbe(probe);
     TimerModel::instance()->setSourceModel(filterModel);
+
+    SignalSpyCallbackSet callbacks;
+    callbacks.signalBeginCallback = signal_begin_callback;
+    callbacks.signalEndCallback = signal_end_callback;
+    probe->registerSignalSpyCallbackSet(callbacks);
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimerModel"), TimerModel::instance());
 }
