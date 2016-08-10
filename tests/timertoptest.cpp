@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <plugins/timertop/timermodel.h>
 
 #include <probe/hooks.h>
 #include <probe/probecreator.h>
@@ -86,7 +87,9 @@ private slots:
         QTest::qWait(1);
 
         QCOMPARE(model->rowCount(), baseRowCount + 1);
-        QVERIFY(indexForName(model, "timer1").isValid());
+        auto idx = indexForName(model, "timer1");
+        QVERIFY(idx.isValid());
+        QCOMPARE(idx.data(TimerModel::ObjectIdRole).value<ObjectId>(), ObjectId(t1));
 
         delete t1;
         QTest::qWait(1);
@@ -139,6 +142,8 @@ private slots:
 
         idx = indexForName(model, "testObject");
         QVERIFY(idx.isValid());
+        QEXPECT_FAIL("", "still needs to be investigated", Continue);
+        QCOMPARE(idx.data(TimerModel::ObjectIdRole).value<ObjectId>(), ObjectId(this));
         idx = idx.sibling(idx.row(), 6);
         QVERIFY(idx.isValid());
         QCOMPARE(idx.data().toInt(), timerId);

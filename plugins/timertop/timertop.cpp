@@ -33,7 +33,11 @@
 #include <core/objecttypefilterproxymodel.h>
 #include <core/signalspycallbackset.h>
 
+#include <common/objectbroker.h>
+#include <common/objectid.h>
+
 #include <QCoreApplication>
+#include <QItemSelectionModel>
 #include <QtPlugin>
 #include <QThread>
 
@@ -130,6 +134,26 @@ TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
     probe->installGlobalEventFilter(TimerModel::instance());
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimerModel"), TimerModel::instance());
+    m_selectionModel = ObjectBroker::selectionModel(TimerModel::instance());
+
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+}
+
+void TimerTop::objectSelected(QObject* obj)
+{
+    auto timer = qobject_cast<QTimer*>(obj);
+    if (!timer)
+        return;
+
+    const auto model = m_selectionModel->model();
+    const auto indexList = model->match(model->index(0, 0), TimerModel::ObjectIdRole,
+                       QVariant::fromValue(ObjectId(timer)), 1,
+                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+    if (indexList.isEmpty())
+        return;
+
+    const auto index = indexList.first();
+    m_selectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
 TimerTopFactory::TimerTopFactory(QObject *parent)

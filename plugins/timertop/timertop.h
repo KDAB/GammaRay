@@ -32,6 +32,10 @@
 
 #include <QTimer>
 
+QT_BEGIN_NAMESPACE
+class QItemSelectionModel;
+QT_END_NAMESPACE
+
 namespace GammaRay {
 namespace Ui {
 class TimerTop;
@@ -43,8 +47,12 @@ class TimerTop : public QObject
 public:
     explicit TimerTop(ProbeInterface *probe, QObject *parent = 0);
 
+private slots:
+    void objectSelected(QObject *obj);
+
 private:
     QTimer *m_updateTimer;
+    QItemSelectionModel *m_selectionModel;
 };
 
 class TimerTopFactory : public QObject, public StandardToolFactory<QTimer, TimerTop>

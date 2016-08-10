@@ -67,6 +67,10 @@ public:
         ColumnCount
     };
 
+    enum Roles {
+        ObjectIdRole = UserRole + 1
+    };
+
     void setSourceModel(QAbstractItemModel *sourceModel);
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

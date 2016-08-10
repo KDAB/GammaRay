@@ -28,6 +28,7 @@
 #include "timermodel.h"
 
 #include <common/objectmodel.h>
+#include <common/objectid.h>
 
 #include <QMetaMethod>
 #include <QTimerEvent>
@@ -253,11 +254,10 @@ int TimerModel::rowCount(const QModelIndex &parent) const
 
 QVariant TimerModel::data(const QModelIndex &index, int role) const
 {
-    if (!m_sourceModel)
+    if (!m_sourceModel || !index.isValid())
         return QVariant();
 
-    if (role == Qt::DisplayRole && index.isValid()
-        && index.column() >= 0 && index.column() < columnCount()) {
+    if (role == Qt::DisplayRole) {
         const TimerInfoPtr timerInfo = const_cast<TimerModel *>(this)->findOrCreateTimerInfo(index);
         switch (index.column()) {
         case ObjectNameColumn:
@@ -278,6 +278,12 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
             break;
         }
     }
+
+    if (role == ObjectIdRole && index.column() == 0) {
+        const TimerInfoPtr timerInfo = const_cast<TimerModel*>(this)->findOrCreateTimerInfo(index);
+        return QVariant::fromValue(ObjectId(timerInfo->timerObject()));
+    }
+
     return QVariant();
 }
 

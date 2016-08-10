@@ -57,6 +57,7 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
     sortModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel")));
     sortModel->setDynamicSortFilter(true);
     ui->timerView->setModel(sortModel);
+    ui->timerView->setSelectionModel(ObjectBroker::selectionModel(sortModel));
 
     ui->timerView->sortByColumn(TimerModel::WakeupsPerSecColumn, Qt::DescendingOrder);
 }

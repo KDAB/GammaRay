@@ -6,5 +6,8 @@
         "QTimer",
         "QQmlTimer",
         "QUnifiedTimer"
+    ],
+    "selectableTypes": [
+        "QTimer"
     ]
 }
