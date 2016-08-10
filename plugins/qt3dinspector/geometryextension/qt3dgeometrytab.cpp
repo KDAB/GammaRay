@@ -30,6 +30,7 @@
 #include "ui_qt3dgeometrytab.h"
 #include "qt3dgeometryextensioninterface.h"
 #include "cameracontroller.h"
+#include "attribute.h"
 #include "buffermodel.h"
 
 #include <ui/propertywidget.h>
@@ -399,8 +400,10 @@ void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData &ver
 {
     m_boundingVolume = BoundingVolume();
     QVector3D v;
+    const auto vertexSize = std::max(vertexAttr.vertexSize, 1u);
+    const auto stride = std::max(vertexAttr.byteStride, (uint)Attribute::size(vertexAttr.vertexBaseType) * vertexSize);
     for (unsigned int i = 0; i < vertexAttr.count; ++i) {
-        const char *c = bufferData.constData() + vertexAttr.byteOffset + i * vertexAttr.byteStride;
+        const char *c = bufferData.constData() + vertexAttr.byteOffset + i * stride;
         switch (vertexAttr.vertexBaseType) {
         case Qt3DRender::QAttribute::Float:
         {
