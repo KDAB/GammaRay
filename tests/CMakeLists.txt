@@ -349,6 +349,19 @@ target_link_libraries(codecmodeltest ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES
 add_test(NAME codecmodeltest COMMAND codecmodeltest)
 endif()
 
+### Timertop plugin
+
+if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+  add_executable(timertoptest
+    timertoptest.cpp
+    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
+    ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
+  )
+  target_link_libraries(timertoptest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+  add_test(NAME timertoptest COMMAND timertoptest)
+endif()
+
 ### QML support
 
 if(Qt5Quick_FOUND)
