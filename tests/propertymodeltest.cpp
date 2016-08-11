@@ -130,6 +130,53 @@ private slots:
         QCOMPARE(addSpy.size(), 1);
         QCOMPARE(removeSpy.size(), 1);
     }
+
+    void testGadgetRO()
+    {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        PropertyTestObject obj;
+        AggregatedPropertyModel model;
+        model.setObject(ObjectInstance(&obj));
+
+        auto idx = findRowByName(&model, "gadgetReadOnly");
+        QVERIFY(idx.isValid());
+        QCOMPARE(model.rowCount(idx), 1);
+        idx = idx.child(0, 1);
+        QVERIFY((idx.flags() & Qt::ItemIsEditable) == 0);
+#endif
+    }
+
+    void testGadgetRW()
+    {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        PropertyTestObject obj;
+        AggregatedPropertyModel model;
+        model.setObject(ObjectInstance(&obj));
+        ModelTest modelTest(&model);
+
+        auto idx = findRowByName(&model, "gadget");
+        QVERIFY(idx.isValid());
+        QCOMPARE(model.rowCount(idx), 1);
+        idx = idx.child(0, 1);
+        QEXPECT_FAIL("", "value type write propagation not implemented yet", Continue);
+        QVERIFY(idx.flags() & Qt::ItemIsEditable);
+        QVERIFY(model.setData(idx, 1554));
+        QEXPECT_FAIL("", "value type write propagation not implemented yet", Continue);
+        QCOMPARE(obj.gadgetPointer()->prop1(), 1554);
+
+        idx = findRowByName(&model, "gadgetPointer");
+        QVERIFY(idx.isValid());
+        QEXPECT_FAIL("", "gadget pointers not implemented yet", Continue);
+        QCOMPARE(model.rowCount(idx), 1);
+        idx = idx.child(0, 1);
+        QEXPECT_FAIL("", "gadget pointers not implemented yet", Continue);
+        QVERIFY(idx.flags() & Qt::ItemIsEditable);
+        QEXPECT_FAIL("", "gadget pointers not implemented yet", Continue);
+        QVERIFY(model.setData(idx, 1559));
+        QEXPECT_FAIL("", "gadget pointers not implemented yet", Continue);
+        QCOMPARE(obj.gadgetPointer()->prop1(), 1559);
+#endif
+    }
 };
 
 QTEST_MAIN(PropertyModelTest)

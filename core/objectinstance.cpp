@@ -51,7 +51,7 @@ ObjectInstance::ObjectInstance(void *obj, const QMetaObject *metaObj)
     : m_obj(obj)
     , m_metaObj(metaObj)
 {
-    m_type = obj ? QtGadget : QtMetaObject;
+    m_type = obj ? QtGadgetPointer : QtMetaObject;
 }
 
 ObjectInstance::ObjectInstance(void *obj, const char *typeName)
@@ -79,7 +79,7 @@ ObjectInstance::ObjectInstance(const QVariant &value)
         if (QMetaType::typeFlags(value.userType()) & QMetaType::IsGadget) {
             m_metaObj = QMetaType::metaObjectForType(value.userType());
             if (m_metaObj)
-                m_type = QtGadget;
+                m_type = QtGadgetValue;
         } else {
             unpackVariant();
         }
@@ -106,13 +106,14 @@ bool ObjectInstance::operator==(const ObjectInstance &rhs) const
     case Invalid:
         return false;
     case QtObject:
-    case QtGadget:
+    case QtGadgetPointer:
     case Object:
         return object() == rhs.object();
     case QtMetaObject:
         return metaObject() == rhs.metaObject();
     case Value:
     case QtVariant:
+    case QtGadgetValue:
         return variant() == rhs.variant();
     }
 
@@ -125,6 +126,11 @@ ObjectInstance::Type ObjectInstance::type() const
     return m_type;
 }
 
+bool ObjectInstance::isValueType() const
+{
+    return m_type == Value || m_type == QtGadgetValue; // ### || m_type == QtVariant; ??
+}
+
 QObject *ObjectInstance::qtObject() const
 {
     return m_qtObj;
@@ -132,11 +138,12 @@ QObject *ObjectInstance::qtObject() const
 
 void *ObjectInstance::object() const
 {
-    Q_ASSERT(m_type == QtObject || m_type == QtGadget || m_type == Object || m_type == Value);
+    Q_ASSERT(m_type == QtObject || m_type == QtGadgetPointer || m_type == QtGadgetValue || m_type == Object || m_type == Value);
     switch (m_type) {
     case QtObject:
         return m_qtObj;
-    case QtGadget:
+    case QtGadgetPointer:
+    case QtGadgetValue:
         return m_obj ? m_obj : const_cast<void *>(m_variant.constData());
     default:
         return m_obj;

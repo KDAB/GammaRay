@@ -49,10 +49,11 @@ public:
         Invalid,
         QtObject,
         QtMetaObject,
-        QtGadget,
+        QtGadgetPointer, ///< a pointer to a gadget
         QtVariant,
         Object,
-        Value
+        Value,
+        QtGadgetValue ///< a gadget value type stored in the QVariant
     };
     ObjectInstance();
     ObjectInstance(QObject *obj); // krazy:exclude=explicit
@@ -67,6 +68,12 @@ public:
     bool operator==(const ObjectInstance &rhs) const;
 
     Type type() const;
+    /**!
+     * Returns @c true if this instance holds a value type.
+     * This is important to treat differently when writing to it, as this will be a copy
+     * of the value you want to change.
+     */
+    bool isValueType() const;
 
     /// only valid for QtObject
     QObject *qtObject() const;

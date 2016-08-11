@@ -139,7 +139,8 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
                 data.setValue(prop.read(object().qtObject()));
             break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-        case ObjectInstance::QtGadget:
+        case ObjectInstance::QtGadgetPointer:
+        case ObjectInstance::QtGadgetValue:
             if (object().object())
                 data.setValue(prop.readOnGadget(object().object()));
             break;
@@ -177,7 +178,8 @@ void QMetaPropertyAdaptor::writeProperty(int index, const QVariant &value)
         }
         break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    case ObjectInstance::QtGadget:
+    case ObjectInstance::QtGadgetPointer:
+    case ObjectInstance::QtGadgetValue:
         if (object().object()) {
             prop.writeOnGadget(object().object(), value);
             emit propertyChanged(index, index);
@@ -204,7 +206,8 @@ void QMetaPropertyAdaptor::resetProperty(int index)
         }
         break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    case ObjectInstance::QtGadget:
+    case ObjectInstance::QtGadgetValue:
+    case ObjectInstance::QtGadgetPointer:
         if (object().object()) {
             prop.resetOnGadget(object().object());
             emit propertyChanged(index, index);

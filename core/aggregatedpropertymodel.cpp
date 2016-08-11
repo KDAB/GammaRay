@@ -258,9 +258,7 @@ Qt::ItemFlags AggregatedPropertyModel::flags(const QModelIndex &index) const
     auto adaptor = adaptorForIndex(index);
     auto data = adaptor->propertyData(index.row());
     // we can't edit value types (yet)
-    const auto editable = (data.flags() & PropertyData::Writable)
-                          && adaptor->object().type() != ObjectInstance::Value && isParentEditable(
-        adaptor);
+    const auto editable = (data.flags() & PropertyData::Writable) && !adaptor->object().isValueType() && isParentEditable(adaptor);
     return editable ? (baseFlags | Qt::ItemIsEditable) : baseFlags;
 }
 
@@ -465,7 +463,7 @@ bool AggregatedPropertyModel::isParentEditable(PropertyAdaptor *adaptor) const
     if (!parentAdaptor)
         return true;
 
-    if (parentAdaptor->object().type() == ObjectInstance::Value)
+    if (parentAdaptor->object().isValueType())
         return false; // we can't edit value types (yet)
 
     return isParentEditable(parentAdaptor);

@@ -53,6 +53,7 @@ private slots:
         QCOMPARE(oi.object(), &obj);
         QCOMPARE(oi.qtObject(), &obj);
         QCOMPARE(oi.metaObject(), &QObject::staticMetaObject);
+        QVERIFY(!oi.isValueType());
 
         auto oi2 = oi;
         QCOMPARE(oi2.type(), ObjectInstance::QtObject);
@@ -68,6 +69,7 @@ private slots:
         QCOMPARE(oi.type(), ObjectInstance::Object);
         QCOMPARE(oi.typeName(), QByteArray("QDateTime*"));
         QVERIFY(oi.object());
+        QVERIFY(!oi.isValueType());
 
         auto oi2 = oi;
         QCOMPARE(oi2.type(), ObjectInstance::Object);
@@ -88,6 +90,7 @@ private slots:
         QCOMPARE(oi.type(), ObjectInstance::Value);
         QCOMPARE(oi.typeName(), QByteArray("QDateTime"));
         QVERIFY(oi.object());
+        QVERIFY(oi.isValueType());
 
         auto oi2 = oi;
         QCOMPARE(oi2.type(), ObjectInstance::Value);

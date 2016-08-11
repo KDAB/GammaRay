@@ -52,13 +52,16 @@ private:
 };
 
 Q_DECLARE_METATYPE(Gadget)
+Q_DECLARE_METATYPE(Gadget*)
 
 class PropertyTestObject : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int intProp READ intProp WRITE setIntProp NOTIFY intPropChanged)
     Q_PROPERTY(int readOnlyProp READ intProp RESET resetIntProp)
-    Q_PROPERTY(Gadget gadget READ gadget)
+    Q_PROPERTY(Gadget gadget READ gadget WRITE setGadget)
+    Q_PROPERTY(Gadget gadgetReadOnly READ gadget)
+    Q_PROPERTY(Gadget* gadgetPointer READ gadgetPointer)
     Q_PROPERTY(VariantPropertyObject* variantPropertyObject READ variantPropertyObject)
     Q_PROPERTY(ChangingPropertyObject* changingPropertyObject READ changingPropertyObject)
 public:
@@ -80,6 +83,8 @@ public:
     }
 
     Gadget gadget() const { return g; }
+    void setGadget(Gadget _g) { g = _g; }
+    Gadget* gadgetPointer() const { return const_cast<Gadget*>(&g); }
     VariantPropertyObject *variantPropertyObject() { return &vpo; }
     ChangingPropertyObject *changingPropertyObject() { return &cpo; }
 
