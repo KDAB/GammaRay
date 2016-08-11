@@ -81,6 +81,8 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+
 
     bool eventFilter(QObject *watched, QEvent *event) Q_DECL_OVERRIDE;
 

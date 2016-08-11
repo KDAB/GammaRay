@@ -30,8 +30,11 @@
 #include "ui_timertopwidget.h"
 #include "timermodel.h"
 
+#include <ui/contextmenuextension.h>
+
 #include <common/objectbroker.h>
 
+#include <QMenu>
 #include <QSortFilterProxyModel>
 #include <QTimer>
 
@@ -52,6 +55,7 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
     ui->timerView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
     ui->timerView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
     ui->timerView->setDeferredResizeMode(5, QHeaderView::ResizeToContents);
+    connect(ui->timerView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
 
     QSortFilterProxyModel * const sortModel = new QSortFilterProxyModel(this);
     sortModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel")));
@@ -65,6 +69,24 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
 TimerTopWidget::~TimerTopWidget()
 {
 }
+
+void TimerTopWidget::contextMenu(QPoint pos)
+{
+    auto index = ui->timerView->indexAt(pos);
+    if (!index.isValid())
+        return;
+    index = index.sibling(index.row(), 0);
+
+    const auto objectId = index.data(TimerModel::ObjectIdRole).value<ObjectId>();
+    if (objectId.isNull())
+        return;
+
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+    menu.exec(ui->timerView->viewport()->mapToGlobal(pos));
+}
+
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 Q_EXPORT_PLUGIN(TimerTopUiFactory)

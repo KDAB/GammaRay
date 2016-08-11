@@ -49,6 +49,9 @@ public:
     explicit TimerTopWidget(QWidget *parent = 0);
     ~TimerTopWidget();
 
+private slots:
+    void contextMenu(QPoint pos);
+
 private:
     QScopedPointer<Ui::TimerTopWidget> ui;
     UIStateManager m_stateManager;

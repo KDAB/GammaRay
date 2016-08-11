@@ -312,6 +312,14 @@ QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int ro
     return QAbstractTableModel::headerData(section, orientation, role);
 }
 
+QMap<int, QVariant> TimerModel::itemData(const QModelIndex &index) const
+{
+    auto d = QAbstractTableModel::itemData(index);
+    if (index.column() == 0)
+        d.insert(ObjectIdRole, data(index, ObjectIdRole));
+    return d;
+}
+
 bool TimerModel::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::Timer) {
