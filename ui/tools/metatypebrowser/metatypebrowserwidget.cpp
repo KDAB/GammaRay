@@ -69,7 +69,7 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
     ui->metaTypeView->sortByColumn(1, Qt::AscendingOrder); // sort by type id
     connect(ui->metaTypeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
 
-    new SearchLineController(ui->metaTypeSearchLine, mtm);
+    new SearchLineController(ui->metaTypeSearchLine, mtm->sourceModel());
 
     auto iface = ObjectBroker::object<MetaTypeBrowserInterface*>();
     connect(ui->actionRescanTypes, SIGNAL(triggered()), iface, SLOT(rescanTypes()));
