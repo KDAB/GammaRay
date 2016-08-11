@@ -116,7 +116,6 @@ static void signal_end_callback(QObject *caller, int method_index)
 
 TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
-    , m_updateTimer(new QTimer(this))
 {
     Q_ASSERT(probe);
 

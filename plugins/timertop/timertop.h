@@ -51,7 +51,6 @@ private slots:
     void objectSelected(QObject *obj);
 
 private:
-    QTimer *m_updateTimer;
     QItemSelectionModel *m_selectionModel;
 };
 
