@@ -273,6 +273,12 @@ add_executable(propertyadaptortest propertyadaptortest.cpp)
 target_link_libraries(propertyadaptortest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_shared_test_data)
 add_test(NAME propertyadaptortest COMMAND propertyadaptortest)
 
+### Enum property test
+
+add_executable(enumpropertytest enumpropertytest.cpp)
+target_link_libraries(enumpropertytest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+add_test(NAME enumpropertytest COMMAND enumpropertytest)
+
 ### Property model test
 
 add_executable(propertymodeltest
