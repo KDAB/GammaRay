@@ -99,7 +99,7 @@ static const QMetaObject* metaObjectForClass(const QByteArray &name)
 }
 #endif
 
-QString Util::enumToString(const QVariant &value, const char *typeName, const QObject *object)
+QString Util::enumToString(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
 {
     QByteArray enumTypeName(typeName);
     if (enumTypeName.isEmpty())
@@ -115,8 +115,8 @@ QString Util::enumToString(const QVariant &value, const char *typeName, const QO
 
     const QMetaObject *mo = &ProtectedExposer::staticQtMetaObject;
     int enumIndex = mo->indexOfEnumerator(enumTypeName);
-    if (enumIndex < 0 && object) {
-        mo = object->metaObject();
+    if (enumIndex < 0 && metaObject) {
+        mo = metaObject;
         enumIndex = mo->indexOfEnumerator(enumTypeName);
     }
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -134,6 +134,11 @@ QString Util::enumToString(const QVariant &value, const char *typeName, const QO
     if (!me.isValid())
         return QString();
     return me.valueToKeys(value.toInt());
+}
+
+QString Util::enumToString(const QVariant& value, const char* typeName, const QObject* object)
+{
+    return enumToString(value, typeName, object ? object->metaObject() : Q_NULLPTR);
 }
 
 QString Util::prettyMethodSignature(const QMetaMethod &method)
@@ -158,6 +163,7 @@ QString Util::prettyMethodSignature(const QMetaMethod &method)
 #endif
 }
 
+
 bool Util::descendantOf(const QObject *ascendant, const QObject *obj)
 {
     QObject *parent = obj->parent();
@@ -176,7 +182,7 @@ static QString stringifyProperty(const QObject *obj, const QString &propName)
         = obj->metaObject()->property(
         obj->metaObject()->indexOfProperty(propName.toLatin1()));
     if (mp.isValid()) {
-        const QString enumStr = Util::enumToString(value, mp.typeName(), obj);
+        const QString enumStr = Util::enumToString(value, mp.typeName(), obj->metaObject());
         if (!enumStr.isEmpty())
             return enumStr;
     }

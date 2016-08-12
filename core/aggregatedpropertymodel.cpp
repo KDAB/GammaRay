@@ -151,9 +151,7 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
         {
             // QMetaProperty::read sets QVariant::typeName to int for enums,
             // so we need to handle that separately here
-            const QString enumStr = Util::enumToString(d.value(),
-                                                       d.typeName().toLatin1(),
-                                                       adaptor->object().qtObject());
+            const QString enumStr = Util::enumToString(d.value(), d.typeName().toLatin1(), adaptor->object().metaObject());
             if (!enumStr.isEmpty())
                 return enumStr;
             return VariantHandler::displayString(d.value());

@@ -142,7 +142,7 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
         case CheckablePropColumn:
             return action->isCheckable();
         case PriorityPropColumn:
-            return Util::enumToString(action->priority(), 0, action);
+            return Util::enumToString(action->priority(), 0, action->metaObject());
         case ShortcutsPropColumn:
             return toString(action->shortcuts());
         default:

@@ -32,6 +32,8 @@
 #include <QFrame>
 #include <QObject>
 
+Q_DECLARE_METATYPE(const QMetaObject*)
+
 using namespace GammaRay;
 
 class EnumPropertyTest : public QObject
@@ -39,34 +41,31 @@ class EnumPropertyTest : public QObject
     Q_OBJECT
 public:
     EnumPropertyTest(QObject *parent = Q_NULLPTR) :
-        QObject(parent),
-        m_widget(new QFrame)
+        QObject(parent)
     {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         qRegisterMetaType<QFrame*>();
         qRegisterMetaType<QFrame::Shadow>();
 #endif
     }
-private:
-    QScopedPointer<QWidget> m_widget;
 
 private slots:
     void testEnumToString_data()
     {
         QTest::addColumn<QVariant>("variant");
         QTest::addColumn<QByteArray>("name");
-        QTest::addColumn<QObject*>("obj");
+        QTest::addColumn<const QMetaObject*>("mo");
         QTest::addColumn<QString>("result");
 
-        QObject *nullObj = Q_NULLPTR;
+        const QMetaObject *nullObj = Q_NULLPTR;
         QTest::newRow("null") << QVariant() << QByteArray() << nullObj << QString();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         // global enum
-        QTest::newRow("global enum as int, QMO/name") << QVariant::fromValue<int>(Qt::LeftToRight) << QByteArray("Qt::LayoutDirection") << (QObject*)m_widget.data() << QStringLiteral("LeftToRight");
+        QTest::newRow("global enum as int, QMO/name") << QVariant::fromValue<int>(Qt::LeftToRight) << QByteArray("Qt::LayoutDirection") << &QFrame::staticMetaObject << QStringLiteral("LeftToRight");
         QTest::newRow("global enum as int, name") << QVariant::fromValue<int>(Qt::LeftToRight) << QByteArray("Qt::LayoutDirection") << nullObj << QStringLiteral("LeftToRight");
-        QTest::newRow("global enum, QMO/name") << QVariant::fromValue<Qt::LayoutDirection>(Qt::LeftToRight) << QByteArray("Qt::LayoutDirection") << (QObject*)m_widget.data() << QStringLiteral("LeftToRight");
-        QTest::newRow("global enum, QMO") << QVariant::fromValue<Qt::LayoutDirection>(Qt::LeftToRight) << QByteArray() << (QObject*)m_widget.data() << QStringLiteral("LeftToRight");
+        QTest::newRow("global enum, QMO/name") << QVariant::fromValue<Qt::LayoutDirection>(Qt::LeftToRight) << QByteArray("Qt::LayoutDirection") << &QFrame::staticMetaObject << QStringLiteral("LeftToRight");
+        QTest::newRow("global enum, QMO") << QVariant::fromValue<Qt::LayoutDirection>(Qt::LeftToRight) << QByteArray() << &QFrame::staticMetaObject << QStringLiteral("LeftToRight");
         QTest::newRow("global enum, name") << QVariant::fromValue<Qt::LayoutDirection>(Qt::LeftToRight) << QByteArray("Qt::LayoutDirection") << nullObj << QStringLiteral("LeftToRight");
         QTest::newRow("global enum") << QVariant::fromValue<Qt::LayoutDirection>(Qt::LeftToRight) << QByteArray() << nullObj << QStringLiteral("LeftToRight");
 
@@ -74,11 +73,11 @@ private slots:
         // TODO
 
         // object-local enum
-        QTest::newRow("local enum as int, QMO/name") << QVariant::fromValue<int>(QFrame::Sunken) << QByteArray("QFrame::Shadow") << (QObject*)m_widget.data() << QStringLiteral("Sunken");
+        QTest::newRow("local enum as int, QMO/name") << QVariant::fromValue<int>(QFrame::Sunken) << QByteArray("QFrame::Shadow") << &QFrame::staticMetaObject << QStringLiteral("Sunken");
         QTest::newRow("local enum as int, name, registered") << QVariant::fromValue<int>(QFrame::Sunken) << QByteArray("QFrame::Shadow") << nullObj << QStringLiteral("Sunken");
         QTest::newRow("local enum as int, name, parent registered") << QVariant::fromValue<int>(QFrame::Box) << QByteArray("QFrame::Shape") << nullObj << QStringLiteral("Box");
-        QTest::newRow("local enum, QMO/name") << QVariant::fromValue<QFrame::Shadow>(QFrame::Sunken) << QByteArray("QFrame::Shadow") << (QObject*)m_widget.data() << QStringLiteral("Sunken");
-        QTest::newRow("local enum, QMO") << QVariant::fromValue<QFrame::Shadow>(QFrame::Sunken) << QByteArray() << (QObject*)m_widget.data() << QStringLiteral("Sunken");
+        QTest::newRow("local enum, QMO/name") << QVariant::fromValue<QFrame::Shadow>(QFrame::Sunken) << QByteArray("QFrame::Shadow") << &QFrame::staticMetaObject << QStringLiteral("Sunken");
+        QTest::newRow("local enum, QMO") << QVariant::fromValue<QFrame::Shadow>(QFrame::Sunken) << QByteArray() << &QFrame::staticMetaObject << QStringLiteral("Sunken");
         QTest::newRow("local enum, name") << QVariant::fromValue<QFrame::Shadow>(QFrame::Sunken) << QByteArray("QFrame::Shadow") << nullObj << QStringLiteral("Sunken");
         QTest::newRow("local enum") << QVariant::fromValue<QFrame::Shadow>(QFrame::Sunken) << QByteArray() << nullObj << QStringLiteral("Sunken");
 
@@ -86,7 +85,12 @@ private slots:
         // TODO
 
         // gadget-local enum
-        // TODO
+        QTest::newRow("gadget enum as int, QMO/name") << QVariant::fromValue<int>(QSizePolicy::Maximum) << QByteArray("QSizePolicy::Policy") << &QSizePolicy::staticMetaObject << QStringLiteral("Maximum");
+        QTest::newRow("gadget enum as int, name") << QVariant::fromValue<int>(QSizePolicy::Maximum) << QByteArray("QSizePolicy::Policy") << nullObj << QStringLiteral("Maximum");
+        QTest::newRow("gadget enum, QMO/name") << QVariant::fromValue<QSizePolicy::Policy>(QSizePolicy::Maximum) << QByteArray("QSizePolicy::Policy") << &QSizePolicy::staticMetaObject << QStringLiteral("Maximum");
+        QTest::newRow("gadget enum, QMO") << QVariant::fromValue<QSizePolicy::Policy>(QSizePolicy::Maximum) << QByteArray() << &QSizePolicy::staticMetaObject << QStringLiteral("Maximum");
+        QTest::newRow("gadget enum, name") << QVariant::fromValue<QSizePolicy::Policy>(QSizePolicy::Maximum) << QByteArray("QSizePolicy::Policy") << nullObj << QStringLiteral("Maximum");
+        QTest::newRow("gadget enum") << QVariant::fromValue<QSizePolicy::Policy>(QSizePolicy::Maximum) << QByteArray() << nullObj << QStringLiteral("Maximum");
 
         // gadget-local flag
         // TODO
@@ -97,10 +101,10 @@ private slots:
     {
         QFETCH(QVariant, variant);
         QFETCH(QByteArray, name);
-        QFETCH(QObject*, obj);
+        QFETCH(const QMetaObject*, mo);
         QFETCH(QString, result);
 
-        auto str = Util::enumToString(variant, name, obj);
+        auto str = Util::enumToString(variant, name, mo);
         if (str.isEmpty())
             str = variant.toString(); // normally this would be VariantHandler::displayString, but that might interfere too much for testing
         QCOMPARE(str, result);
