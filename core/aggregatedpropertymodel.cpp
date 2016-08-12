@@ -210,6 +210,7 @@ bool AggregatedPropertyModel::setData(const QModelIndex &index, const QVariant &
     switch (role) {
     case Qt::EditRole:
         adaptor->writeProperty(index.row(), value);
+        propagateWrite(adaptor);
         return true;
     case PropertyModel::ResetActionRole:
         adaptor->resetProperty(index.row());
@@ -258,7 +259,7 @@ Qt::ItemFlags AggregatedPropertyModel::flags(const QModelIndex &index) const
     auto adaptor = adaptorForIndex(index);
     auto data = adaptor->propertyData(index.row());
     // we can't edit value types (yet)
-    const auto editable = (data.flags() & PropertyData::Writable) && !adaptor->object().isValueType() && isParentEditable(adaptor);
+    const auto editable = (data.flags() & PropertyData::Writable) && isParentEditable(adaptor);
     return editable ? (baseFlags | Qt::ItemIsEditable) : baseFlags;
 }
 
@@ -459,12 +460,35 @@ void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor *parentAdaptor, int 
 
 bool AggregatedPropertyModel::isParentEditable(PropertyAdaptor *adaptor) const
 {
-    auto parentAdaptor = adaptor->parentAdaptor();
+    const auto parentAdaptor = adaptor->parentAdaptor();
     if (!parentAdaptor)
         return true;
 
-    if (parentAdaptor->object().isValueType())
-        return false; // we can't edit value types (yet)
+    // we need all value types along the way to be writable
+    if (adaptor->object().isValueType()) {
+        const auto row = m_parentChildrenMap.value(parentAdaptor).indexOf(adaptor);
+        Q_ASSERT(row >= 0);
+
+        const auto pd = parentAdaptor->propertyData(row);
+        if ((pd.flags() & PropertyData::Writable) == 0)
+            return false;
+    }
 
     return isParentEditable(parentAdaptor);
+}
+
+void AggregatedPropertyModel::propagateWrite(GammaRay::PropertyAdaptor* adaptor)
+{
+    const auto parentAdaptor = adaptor->parentAdaptor();
+    if (!parentAdaptor)
+        return;
+
+    if (adaptor->object().isValueType()) {
+        const auto row = m_parentChildrenMap.value(parentAdaptor).indexOf(adaptor);
+        Q_ASSERT(row >= 0);
+
+        parentAdaptor->writeProperty(row, adaptor->object().variant());
+    }
+
+    propagateWrite(parentAdaptor);
 }

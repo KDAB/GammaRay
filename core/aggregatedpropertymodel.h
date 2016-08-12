@@ -71,6 +71,7 @@ private:
     bool hasLoop(PropertyAdaptor *adaptor, const QVariant &v) const;
     void reloadSubTree(PropertyAdaptor *parentAdaptor, int index);
     bool isParentEditable(PropertyAdaptor *adaptor) const;
+    void propagateWrite(PropertyAdaptor *adaptor);
 
 private slots:
     void propertyChanged(int first, int last);

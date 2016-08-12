@@ -154,7 +154,7 @@ void *ObjectInstance::object() const
 
 const QVariant &ObjectInstance::variant() const
 {
-    Q_ASSERT(m_type == QtVariant || m_type == Value);
+    Q_ASSERT(m_type == QtVariant || isValueType());
     return m_variant;
 }
 

@@ -158,10 +158,8 @@ private slots:
         QVERIFY(idx.isValid());
         QCOMPARE(model.rowCount(idx), 1);
         idx = idx.child(0, 1);
-        QEXPECT_FAIL("", "value type write propagation not implemented yet", Continue);
         QVERIFY(idx.flags() & Qt::ItemIsEditable);
         QVERIFY(model.setData(idx, 1554));
-        QEXPECT_FAIL("", "value type write propagation not implemented yet", Continue);
         QCOMPARE(obj.gadgetPointer()->prop1(), 1554);
 
         idx = findRowByName(&model, "gadgetPointer");
