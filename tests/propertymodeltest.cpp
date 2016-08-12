@@ -164,14 +164,10 @@ private slots:
 
         idx = findRowByName(&model, "gadgetPointer");
         QVERIFY(idx.isValid());
-        QEXPECT_FAIL("", "gadget pointers not implemented yet", Continue);
         QCOMPARE(model.rowCount(idx), 1);
         idx = idx.child(0, 1);
-        QEXPECT_FAIL("", "gadget pointers not implemented yet", Continue);
         QVERIFY(idx.flags() & Qt::ItemIsEditable);
-        QEXPECT_FAIL("", "gadget pointers not implemented yet", Continue);
         QVERIFY(model.setData(idx, 1559));
-        QEXPECT_FAIL("", "gadget pointers not implemented yet", Continue);
         QCOMPARE(obj.gadgetPointer()->prop1(), 1559);
 #endif
     }

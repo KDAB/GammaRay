@@ -196,7 +196,7 @@ void ObjectInstance::copy(const ObjectInstance &other)
     m_typeName = other.m_typeName;
     m_type = other.m_type;
 
-    if (m_type == Value)
+    if (m_type == Value || m_type == QtGadgetPointer)
         unpackVariant(); // pointer changes when copying the variant
 }
 
@@ -214,6 +214,25 @@ void ObjectInstance::unpackVariant()
         m_obj = const_cast<void *>(m_variant.constData());
         m_type = Value;
         m_typeName = m_variant.typeName();
+    }
+
+    if (!m_variant.isNull() && strstr(m_variant.typeName(), "*") != Q_NULLPTR) { // pointer to gadget
+        QByteArray normalizedTypeName = m_variant.typeName();
+        normalizedTypeName.replace('*', "");
+        normalizedTypeName.replace('&', "");
+        normalizedTypeName.replace("const ", "");
+        normalizedTypeName.replace(" const", "");
+        normalizedTypeName.replace(' ', "");
+
+        const auto typeId = QMetaType::type(normalizedTypeName);
+        if (typeId != QMetaType::UnknownType && (QMetaType::typeFlags(typeId) & QMetaType::IsGadget)) {
+            QMetaType::construct(m_variant.userType(), &m_obj, m_variant.constData());
+            m_metaObj = QMetaType::metaObjectForType(typeId);
+            if (m_obj && m_metaObj) {
+                m_type = QtGadgetPointer;
+                m_typeName = m_variant.typeName();
+            }
+        }
     }
 #endif
 }
