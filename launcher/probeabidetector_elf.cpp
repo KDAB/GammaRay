@@ -69,7 +69,7 @@ static QString qtCoreFromLdd(const QString &path, bool fallback = false)
     }
     proc.waitForFinished();
 
-    forever {
+    while (proc.canReadLine()) {
         const QByteArray line = proc.readLine();
         if (line.isEmpty())
             break;
