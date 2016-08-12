@@ -162,6 +162,10 @@ static QString archFromELFHeader(const uchar *data, quint64 size)
 #endif
     case EM_ARM:
         return QStringLiteral("arm");
+#ifdef EM_AARCH64
+    case EM_AARCH64:
+        return QStringLiteral("aarch64");
+#endif
     }
 
     qWarning() << "Unsupported ELF machine type:" << hdr->e_machine;
