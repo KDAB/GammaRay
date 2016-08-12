@@ -33,6 +33,7 @@
 #include <QObject>
 
 Q_DECLARE_METATYPE(const QMetaObject*)
+Q_DECLARE_METATYPE(QSizePolicy::ControlTypes)
 
 using namespace GammaRay;
 
@@ -70,7 +71,9 @@ private slots:
         QTest::newRow("global enum") << QVariant::fromValue<Qt::LayoutDirection>(Qt::LeftToRight) << QByteArray() << nullObj << QStringLiteral("LeftToRight");
 
         // global flag
-        // TODO
+        QTest::newRow("global flag as int, name") << QVariant::fromValue<int>(Qt::AlignHCenter|Qt::AlignTop) << QByteArray("Qt::Alignment") << nullObj << QStringLiteral("AlignHCenter|AlignTop");
+        QTest::newRow("global flag, name") << QVariant::fromValue<Qt::Alignment>(Qt::AlignHCenter|Qt::AlignTop) << QByteArray("Qt::Alignment") << nullObj << QStringLiteral("AlignHCenter|AlignTop");
+        QTest::newRow("global flag") << QVariant::fromValue<Qt::Alignment>(Qt::AlignHCenter|Qt::AlignTop) << QByteArray() << nullObj << QStringLiteral("AlignHCenter|AlignTop");
 
         // object-local enum
         QTest::newRow("local enum as int, QMO/name") << QVariant::fromValue<int>(QFrame::Sunken) << QByteArray("QFrame::Shadow") << &QFrame::staticMetaObject << QStringLiteral("Sunken");
@@ -81,9 +84,6 @@ private slots:
         QTest::newRow("local enum, name") << QVariant::fromValue<QFrame::Shadow>(QFrame::Sunken) << QByteArray("QFrame::Shadow") << nullObj << QStringLiteral("Sunken");
         QTest::newRow("local enum") << QVariant::fromValue<QFrame::Shadow>(QFrame::Sunken) << QByteArray() << nullObj << QStringLiteral("Sunken");
 
-        // object-local flag
-        // TODO
-
         // gadget-local enum
         QTest::newRow("gadget enum as int, QMO/name") << QVariant::fromValue<int>(QSizePolicy::Maximum) << QByteArray("QSizePolicy::Policy") << &QSizePolicy::staticMetaObject << QStringLiteral("Maximum");
         QTest::newRow("gadget enum as int, name") << QVariant::fromValue<int>(QSizePolicy::Maximum) << QByteArray("QSizePolicy::Policy") << nullObj << QStringLiteral("Maximum");
@@ -93,7 +93,12 @@ private slots:
         QTest::newRow("gadget enum") << QVariant::fromValue<QSizePolicy::Policy>(QSizePolicy::Maximum) << QByteArray() << nullObj << QStringLiteral("Maximum");
 
         // gadget-local flag
-        // TODO
+        QTest::newRow("gadget flag as int, QMO/name") << QVariant::fromValue<int>(QSizePolicy::Frame|QSizePolicy::Label) << QByteArray("QSizePolicy::ControlTypes") << &QSizePolicy::staticMetaObject << QStringLiteral("Frame|Label");
+        QTest::newRow("gadget flag as int, name") << QVariant::fromValue<int>(QSizePolicy::Frame|QSizePolicy::Label) << QByteArray("QSizePolicy::ControlTypes") << nullObj << QStringLiteral("Frame|Label");
+        QTest::newRow("gadget flag, QMO/name") << QVariant::fromValue<QSizePolicy::ControlTypes>(QSizePolicy::Frame|QSizePolicy::Label) << QByteArray("QSizePolicy::ControlTypes") << &QSizePolicy::staticMetaObject << QStringLiteral("Frame|Label");
+        QTest::newRow("gadget flag, QMO") << QVariant::fromValue<QSizePolicy::ControlTypes>(QSizePolicy::Frame|QSizePolicy::Label) << QByteArray() << &QSizePolicy::staticMetaObject << QStringLiteral("Frame|Label");
+        QTest::newRow("gadget flag, name") << QVariant::fromValue<QSizePolicy::ControlTypes>(QSizePolicy::Frame|QSizePolicy::Label) << QByteArray("QSizePolicy::ControlTypes") << nullObj << QStringLiteral("Frame|Label");
+        QTest::newRow("gadget flag") << QVariant::fromValue<QSizePolicy::ControlTypes>(QSizePolicy::Frame|QSizePolicy::Label) << QByteArray() << nullObj << QStringLiteral("Frame|Label");
 #endif
     }
 

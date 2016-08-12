@@ -133,6 +133,11 @@ QString Util::enumToString(const QVariant &value, const char *typeName, const QM
     const QMetaEnum me = mo->enumerator(enumIndex);
     if (!me.isValid())
         return QString();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    // QVariant has no implicit QFlag to int conversion as of Qt 5.7
+    if (me.isFlag() && QMetaType::sizeOf(value.userType()) == sizeof(int)) // int should be enough, QFlag has that hardcoded
+        return me.valueToKeys(value.constData() ? *static_cast<const int*>(value.constData()) : 0);
+#endif
     return me.valueToKeys(value.toInt());
 }
 
