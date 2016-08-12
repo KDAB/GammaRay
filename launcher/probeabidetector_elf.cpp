@@ -34,6 +34,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QProcess>
+#include <QProcessEnvironment>
 #include <QString>
 #include <QStringList>
 
@@ -47,12 +48,25 @@
 
 using namespace GammaRay;
 
-static QString qtCoreFromLdd(const QString &path)
+static QString qtCoreFromLdd(const QString &path, bool fallback = false)
 {
     QProcess proc;
     proc.setProcessChannelMode(QProcess::SeparateChannels);
     proc.setReadChannel(QProcess::StandardOutput);
-    proc.start(QStringLiteral("ldd"), QStringList() << path);
+    if (!fallback) {
+        // first try to use ldd
+        proc.start(QStringLiteral("ldd"), QStringList() << path);
+        if (!proc.waitForStarted()) // if that is not available, run the fallback
+            return qtCoreFromLdd(path, true);
+    } else {
+        // see http://man7.org/linux/man-pages/man8/ld.so.8.html
+        // by setting LD_TRACE_LOADED_OBJECTS=1 we make ld.so behave like ldd
+        // this works even on embedded systems where ldd is not available
+        QProcessEnvironment env = proc.processEnvironment();
+        env.insert(QStringLiteral("LD_TRACE_LOADED_OBJECTS"), QStringLiteral("1"));
+        proc.setProcessEnvironment(env);
+        proc.start(path);
+    }
     proc.waitForFinished();
 
     forever {
