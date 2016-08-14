@@ -32,6 +32,7 @@ set(gammaray_srcs
   objectdataprovider.cpp
   attributemodel.cpp
   qmetaobjectvalidator.cpp
+  enumrepositoryserver.cpp
 
   propertyadaptor.cpp
   propertyaggregator.cpp

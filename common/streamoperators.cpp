@@ -32,6 +32,8 @@
 #include "sourcelocation.h"
 #include "qmetaobjectvalidatorresult.h"
 #include "objectid.h"
+#include "enumdefinition.h"
+#include "enumvalue.h"
 
 #include <QMetaMethod>
 
@@ -67,4 +69,7 @@ void StreamOperators::registerOperators()
     qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
     qRegisterMetaTypeStreamOperators<GammaRay::SourceLocation>();
     qRegisterMetaTypeStreamOperators<GammaRay::QMetaObjectValidatorResult::Results>();
+
+    qRegisterMetaTypeStreamOperators<EnumDefinition>();
+    qRegisterMetaTypeStreamOperators<EnumValue>();
 }

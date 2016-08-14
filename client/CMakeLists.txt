@@ -12,6 +12,7 @@ set(gammaray_clientlib_srcs
   messagestatisticsmodel.cpp
   paintanalyzerclient.cpp
   remoteviewclient.cpp
+  enumrepositoryclient.cpp
 )
 
 qt4_add_resources(gammaray_clientlib_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)

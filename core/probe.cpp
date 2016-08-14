@@ -31,6 +31,7 @@
 #include <config-gammaray.h>
 
 #include "probe.h"
+#include "enumrepositoryserver.h"
 #include "metaobjectrepository.h"
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
@@ -226,6 +227,7 @@ Probe::Probe(QObject *parent)
     m_toolManager = new ToolManager(this);
     ObjectBroker::registerObject<ToolManagerInterface *>(m_toolManager);
 
+    EnumRepositoryServer::create(this);
     registerModel(QStringLiteral("com.kdab.GammaRay.ObjectTree"), m_objectTreeModel);
     registerModel(QStringLiteral("com.kdab.GammaRay.ObjectList"), m_objectListModel);
     registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);

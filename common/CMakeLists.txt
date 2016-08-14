@@ -19,6 +19,10 @@ set(gammaray_common_srcs
   sourcelocation.cpp
   translator.cpp
 
+  enumdefinition.cpp
+  enumrepository.cpp
+  enumvalue.cpp
+
   remoteviewinterface.cpp
   remoteviewframe.cpp
   transferimage.cpp
