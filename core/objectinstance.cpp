@@ -218,11 +218,13 @@ void ObjectInstance::unpackVariant()
 
     if (!m_variant.isNull() && strstr(m_variant.typeName(), "*") != Q_NULLPTR) { // pointer to gadget
         QByteArray normalizedTypeName = m_variant.typeName();
+        //krazy:cond=doublequote_chars
         normalizedTypeName.replace('*', "");
         normalizedTypeName.replace('&', "");
         normalizedTypeName.replace("const ", "");
         normalizedTypeName.replace(" const", "");
         normalizedTypeName.replace(' ', "");
+        //krazy:endcond=doublequote_chars
 
         const auto typeId = QMetaType::type(normalizedTypeName);
         if (typeId != QMetaType::UnknownType && (QMetaType::typeFlags(typeId) & QMetaType::IsGadget)) {
