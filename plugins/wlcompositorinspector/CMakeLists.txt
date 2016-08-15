@@ -1,8 +1,8 @@
 # probe plugin
-if(Qt5WaylandCompositor_FOUND)
-  find_package(Wayland COMPONENTS Server)
-  set_package_properties(Wayland PROPERTIES PURPOSE "Needed for the QtWayland compositor inspector plug-in." TYPE OPTIONAL)
+find_package(Wayland 1.12 COMPONENTS Server)
+set_package_properties(Wayland PROPERTIES PURPOSE "Needed for the QtWayland compositor inspector plug-in." TYPE OPTIONAL)
 
+if(Qt5WaylandCompositor_FOUND AND Wayland_FOUND)
   set(gammaray_wlcompositorinspector_srcs
     wlcompositorinspector.cpp
     wlcompositorinterface.cpp
