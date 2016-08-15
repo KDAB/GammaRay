@@ -246,6 +246,7 @@ if(Qt5Core_FOUND)
     WebKit
     WebKitWidgets
     Widgets
+    WaylandCompositor
   )
   # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
   if(NOT CMAKE_CROSSCOMPILING)
