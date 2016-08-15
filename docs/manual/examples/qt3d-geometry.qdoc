@@ -59,7 +59,7 @@
     With the geometry fixed, we can look into the shading issues. Light reflection in the
     phong model largely depends on surface normal vectors, which are also provided via
     a Qt3DRender::QAttribute in our example. Normals can be visualized with the geometry
-    inspector by chosing the corresponding action in the toolbar above the geometry view.
+    inspector by choosing the corresponding action in the toolbar above the geometry view.
     The resulting blue lines show the vertex normals, the yellow lines the corresponding
     face normals.
 
