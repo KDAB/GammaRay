@@ -60,6 +60,8 @@ signals:
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::WlCompositorInterface, "com.kdab.GammaRay.WlCompositor")
+QT_END_NAMESPACE
 
 #endif

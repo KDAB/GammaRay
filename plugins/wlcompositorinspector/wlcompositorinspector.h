@@ -36,7 +36,9 @@
 
 #include "wlcompositorinterface.h"
 
+QT_BEGIN_NAMESPACE
 class QStringListModel;
+QT_END_NAMESPACE
 
 struct wl_client;
 
