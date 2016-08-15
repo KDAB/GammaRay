@@ -36,11 +36,11 @@
 class QAbstractItemModel;
 class QItemSelection;
 
-namespace Ui {
-  class Widget;
-}
-
 namespace GammaRay {
+
+namespace Ui {
+  class InspectorWidget;
+}
 
 class WlCompositorInterface;
 class LogView;
@@ -63,7 +63,7 @@ private:
     void resourceActivated(const QModelIndex &index);
     void logMessage(const QByteArray &msg);
 
-    Ui::Widget *m_ui;
+    QScopedPointer<Ui::InspectorWidget> m_ui;
     QAbstractItemModel *m_model;
     WlCompositorInterface *m_client;
     LogView *m_logView;

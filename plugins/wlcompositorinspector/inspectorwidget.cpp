@@ -63,7 +63,7 @@ static QObject *wlCompositorClientFactory(const QString &/*name*/, QObject *pare
 
 InspectorWidget::InspectorWidget(QWidget *parent)
                : QWidget(parent)
-               , m_ui(new Ui::Widget)
+               , m_ui(new Ui::InspectorWidget)
 {
     ObjectBroker::registerClientObjectFactoryCallback<WlCompositorInterface *>(wlCompositorClientFactory);
     m_client = ObjectBroker::object<WlCompositorInterface *>();
