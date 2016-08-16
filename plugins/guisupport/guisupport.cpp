@@ -59,11 +59,14 @@ Q_DECLARE_METATYPE(QSurface::SurfaceType)
 
 GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     : QObject(parent)
+    , m_probe(probe)
 {
-    Q_UNUSED(probe);
-
     registerMetaTypes();
     registerVariantHandler();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
+#endif
 }
 
 void GuiSupport::registerMetaTypes()
@@ -346,6 +349,20 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
 }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+void GuiSupport::discoverObjects()
+{
+    foreach (QWindow *window, qApp->topLevelWindows())
+        m_probe->discoverObject(window);
+}
+
+void GuiSupport::objectCreated(QObject *object)
+{
+    if (qobject_cast<QGuiApplication *>(object))
+        discoverObjects();
+}
+#endif
 
 GuiSupportFactory::GuiSupportFactory(QObject *parent)
     : QObject(parent)
