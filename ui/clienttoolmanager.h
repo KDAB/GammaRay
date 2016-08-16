@@ -33,11 +33,11 @@
 
 #include <QHash>
 #include <QPointer>
-#include <QAbstractListModel>
-#include <QItemSelectionModel>
-#include <QSet>
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
+class QAbstractItemModel;
+class QItemSelectionModel;
 class QWidget;
 QT_END_NAMESPACE
 
@@ -84,9 +84,6 @@ private:
 class GAMMARAY_UI_EXPORT ClientToolManager : public QObject
 {
     Q_OBJECT
-    class Model;
-    class SelectionModel;
-
 public:
     explicit ClientToolManager(QObject *parent = 0);
     ~ClientToolManager();
@@ -132,8 +129,8 @@ private:
     QVector<ToolInfo> m_tools;
     ToolManagerInterface *m_remote;
     QWidget *m_parentWidget;
-    Model *m_model;
-    SelectionModel *m_selectionModel;
+    QAbstractItemModel *m_model;
+    QItemSelectionModel *m_selectionModel;
 
     static ClientToolManager *s_instance;
 };

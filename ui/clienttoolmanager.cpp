@@ -27,6 +27,7 @@
 */
 
 #include "clienttoolmanager.h"
+#include "clienttoolmodel.h"
 
 #include <ui/tools/localeinspector/localeinspectorwidget.h>
 #include <ui/tools/messagehandler/messagehandlerwidget.h>
@@ -156,41 +157,6 @@ bool ToolInfo::remotingSupported() const
     return m_factory && m_factory->remotingSupported();
 }
 
-class ClientToolManager::Model : public QAbstractListModel
-{
-    Q_OBJECT
-public:
-    explicit Model(ClientToolManager *manager);
-    ~Model();
-
-    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-
-private slots:
-    void startReset();
-    void finishReset();
-    void toolEnabled(int toolIndex);
-
-private:
-    ClientToolManager *m_toolManager;
-};
-
-class ClientToolManager::SelectionModel : public QItemSelectionModel
-{
-    Q_OBJECT
-public:
-    explicit SelectionModel(ClientToolManager *manager);
-    ~SelectionModel();
-
-private slots:
-    void selectTool(int index);
-    void selectDefaultTool();
-
-private:
-    ClientToolManager *m_toolManager;
-};
-
 
 ClientToolManager* ClientToolManager::s_instance = Q_NULLPTR;
 
@@ -288,14 +254,14 @@ bool ClientToolManager::isToolListLoaded() const
 QAbstractItemModel *ClientToolManager::model()
 {
     if (!m_model)
-        m_model = new Model(this);
+        m_model = new ClientToolModel(this);
     return m_model;
 }
 
 QItemSelectionModel *ClientToolManager::selectionModel()
 {
     if (!m_selectionModel)
-        m_selectionModel = new SelectionModel(this);
+        m_selectionModel = new ClientToolSelectionModel(this);
     return m_selectionModel;
 }
 
@@ -362,106 +328,3 @@ int ClientToolManager::toolIndexForToolId(const QString &toolId) const
     }
     return -1;
 }
-
-ClientToolManager::Model::Model(ClientToolManager *manager)
-    : QAbstractListModel(manager)
-    , m_toolManager(manager)
-{
-    connect(m_toolManager, SIGNAL(aboutToReceiveData()), this, SLOT(startReset()));
-    connect(m_toolManager, SIGNAL(toolListAvailable()), this, SLOT(finishReset()));
-    connect(m_toolManager, SIGNAL(toolEnabledByIndex(int)), this, SLOT(toolEnabled(int)));
-}
-
-ClientToolManager::Model::~Model()
-{
-}
-
-QVariant ClientToolManager::Model::data(const QModelIndex &index, int role) const
-{
-    if (!index.isValid())
-        return QVariant();
-
-    const ToolInfo &tool = m_toolManager->tools().at(index.row());
-    if (role == Qt::DisplayRole) {
-        return tool.name();
-    }
-    if (role == ToolModelRole::ToolId)
-        return tool.id();
-    if (role == ToolModelRole::ToolWidget)
-        return QVariant::fromValue(m_toolManager->widgetForIndex(index.row()));
-    if (role == Qt::ToolTipRole) {
-        if (!tool.remotingSupported() && Endpoint::instance()->isRemoteClient())
-            return tr("This tool does not work in out-of-process mode.");
-    }
-    if (role == ToolModelRole::ToolEnabled)
-        return tool.isEnabled();
-    if (role == ToolModelRole::ToolHasUi)
-        return tool.hasUi();
-    return QVariant();
-}
-
-void ClientToolManager::Model::toolEnabled(int toolIndex)
-{
-    QModelIndex i = index(toolIndex, 0);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    emit dataChanged(i, i);
-#else
-    emit dataChanged(i, i, QVector<int>() << ToolModelRole::ToolEnabled);
-#endif
-}
-
-void ClientToolManager::Model::startReset()
-{
-    beginResetModel();
-}
-
-void ClientToolManager::Model::finishReset()
-{
-    endResetModel();
-}
-
-Qt::ItemFlags ClientToolManager::Model::flags(const QModelIndex &index) const
-{
-    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-    if (!index.isValid())
-        return flags;
-
-    const auto &tool = m_toolManager->tools().at(index.row());
-    if (!tool.isEnabled() || (!tool.remotingSupported() && Endpoint::instance()->isRemoteClient()))
-        flags &= ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-    return flags;
-}
-
-int ClientToolManager::Model::rowCount(const QModelIndex &parent) const
-{
-    if (parent.isValid())
-        return 0;
-    return m_toolManager->tools().count();
-}
-
-ClientToolManager::SelectionModel::SelectionModel(ClientToolManager *manager)
-    : QItemSelectionModel(manager->model())
-    , m_toolManager(manager)
-{
-    connect(manager, SIGNAL(toolSelectedByIndex(int)), this, SLOT(selectTool(int)));
-    connect(manager, SIGNAL(toolListAvailable()), this, SLOT(selectDefaultTool()));
-}
-
-ClientToolManager::SelectionModel::~SelectionModel()
-{
-}
-
-void ClientToolManager::SelectionModel::selectTool(int index)
-{
-    select(model()->index(index, 0), QItemSelectionModel::Select
-           | QItemSelectionModel::Clear
-           | QItemSelectionModel::Rows
-           | QItemSelectionModel::Current);
-}
-
-void ClientToolManager::SelectionModel::selectDefaultTool()
-{
-    selectTool(m_toolManager->toolIndexForToolId(QStringLiteral("GammaRay::ObjectInspector")));
-}
-
-#include "clienttoolmanager.moc"
