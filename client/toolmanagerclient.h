@@ -41,8 +41,8 @@ class ToolManagerClient : public ToolManagerInterface
 public:
     explicit ToolManagerClient(QObject *parent = 0);
 
-    void selectObject(ObjectId id, const QString &toolId) Q_DECL_OVERRIDE;
-    void requestToolsForObject(ObjectId id) Q_DECL_OVERRIDE;
+    void selectObject(const ObjectId &id, const QString &toolId) Q_DECL_OVERRIDE;
+    void requestToolsForObject(const ObjectId &id) Q_DECL_OVERRIDE;
     void requestAvailableTools() Q_DECL_OVERRIDE;
 };
 }

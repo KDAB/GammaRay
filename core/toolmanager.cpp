@@ -70,7 +70,7 @@ ToolManager::ToolManager(QObject *parent)
         addToolFactory(factory);
 }
 
-void ToolManager::selectObject(ObjectId id, const QString &toolId)
+void ToolManager::selectObject(const ObjectId &id, const QString &toolId)
 {
     switch (id.type()) {
     case ObjectId::Invalid:
@@ -95,7 +95,7 @@ void ToolManager::selectTool(const QString &toolId)
     emit toolSelected(toolId);
 }
 
-void ToolManager::requestToolsForObject(ObjectId id)
+void ToolManager::requestToolsForObject(const ObjectId &id)
 {
     QVector<QString> toolInfos;
     switch (id.type()) {

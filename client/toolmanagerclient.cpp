@@ -37,13 +37,13 @@ ToolManagerClient::ToolManagerClient(QObject *parent)
 {
 }
 
-void ToolManagerClient::selectObject(ObjectId id, const QString &toolId)
+void ToolManagerClient::selectObject(const ObjectId &id, const QString &toolId)
 {
     Endpoint::instance()->invokeObject(objectName(), "selectObject",
                                        QVariantList() << QVariant::fromValue(id) << toolId);
 }
 
-void ToolManagerClient::requestToolsForObject(ObjectId id)
+void ToolManagerClient::requestToolsForObject(const ObjectId &id)
 {
     Endpoint::instance()->invokeObject(objectName(), "requestToolsForObject",
                                        QVariantList() << QVariant::fromValue(id));

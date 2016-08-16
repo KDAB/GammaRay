@@ -74,8 +74,8 @@ private:
     void objectAdded(const QMetaObject *mo);
 
 public slots:
-    void selectObject(GammaRay::ObjectId id, const QString &toolId) Q_DECL_OVERRIDE;
-    void requestToolsForObject(GammaRay::ObjectId id) Q_DECL_OVERRIDE;
+    void selectObject(const GammaRay::ObjectId &id, const QString &toolId) Q_DECL_OVERRIDE;
+    void requestToolsForObject(const GammaRay::ObjectId &id) Q_DECL_OVERRIDE;
     void requestAvailableTools() Q_DECL_OVERRIDE;
 
 private:

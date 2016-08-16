@@ -55,12 +55,12 @@ public:
     explicit ToolManagerInterface(QObject *parent = nullptr);
     virtual ~ToolManagerInterface();
 
-    virtual void selectObject(ObjectId id, const QString &toolId) = 0;
-    virtual void requestToolsForObject(ObjectId id) = 0;
+    virtual void selectObject(const ObjectId &id, const QString &toolId) = 0;
+    virtual void requestToolsForObject(const ObjectId &id) = 0;
     virtual void requestAvailableTools() = 0;
 
 Q_SIGNALS:
-    void toolsForObjectResponse(GammaRay::ObjectId id, const QVector<QString> &toolInfos);
+    void toolsForObjectResponse(const GammaRay::ObjectId &id, const QVector<QString> &toolInfos);
     void availableToolsResponse(const QVector<GammaRay::ToolData> &toolInfos);
     void toolEnabled(const QString &toolId);
     void toolSelected(const QString &toolId);
