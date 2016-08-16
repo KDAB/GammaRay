@@ -41,6 +41,18 @@ public:
 private:
     void registerMetaTypes();
     void registerVariantHandler();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    void discoverObjects();
+#endif
+
+private:
+    ProbeInterface *m_probe;
+
+private slots:
+#ifdef QT4_MOC_WORKAROUND
+#else
+    void objectCreated(QObject *object);
+#endif
 };
 
 class GuiSupportFactory : public QObject, public StandardToolFactory<QObject, GuiSupport>
