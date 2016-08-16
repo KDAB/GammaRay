@@ -151,6 +151,11 @@ QString ToolInfo::name() const
     return m_factory->name();
 }
 
+bool ToolInfo::remotingSupported() const
+{
+    return m_factory && m_factory->remotingSupported();
+}
+
 class ClientToolManager::Model : public QAbstractListModel
 {
     Q_OBJECT
@@ -382,13 +387,10 @@ QVariant ClientToolManager::Model::data(const QModelIndex &index, int role) cons
     }
     if (role == ToolModelRole::ToolId)
         return tool.id();
-    if (role == ToolModelRole::ToolFactory)
-        return QVariant::fromValue(s_pluginRepository()->factories.value(tool.id()));
     if (role == ToolModelRole::ToolWidget)
         return QVariant::fromValue(m_toolManager->widgetForIndex(index.row()));
     if (role == Qt::ToolTipRole) {
-        ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id());
-        if (factory && (!factory->remotingSupported() && Endpoint::instance()->isRemoteClient()))
+        if (!tool.remotingSupported() && Endpoint::instance()->isRemoteClient())
             return tr("This tool does not work in out-of-process mode.");
     }
     if (role == ToolModelRole::ToolEnabled)
@@ -424,10 +426,8 @@ Qt::ItemFlags ClientToolManager::Model::flags(const QModelIndex &index) const
     if (!index.isValid())
         return flags;
 
-    ToolInfo tool = m_toolManager->tools().at(index.row());
-    ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id());
-    if (!tool.isEnabled() || !factory
-        || (!factory->remotingSupported() && Endpoint::instance()->isRemoteClient()))
+    const auto &tool = m_toolManager->tools().at(index.row());
+    if (!tool.isEnabled() || (!tool.remotingSupported() && Endpoint::instance()->isRemoteClient()))
         flags &= ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     return flags;
 }

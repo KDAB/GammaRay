@@ -63,6 +63,7 @@ public:
     void setEnabled(bool enabled);
     bool hasUi() const;
     QString name() const;
+    bool remotingSupported() const;
 
 private:
     QString m_toolId;
