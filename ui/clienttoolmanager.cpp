@@ -39,6 +39,7 @@
 #include <common/modelroles.h>
 #include <common/pluginmanager.h>
 #include <common/endpoint.h>
+#include <common/toolmanagerinterface.h>
 #include <ui/proxytooluifactory.h>
 
 #include <QCoreApplication>
@@ -104,6 +105,52 @@ static void initPluginRepository()
         insertFactory(factory);
 }
 
+ToolInfo::ToolInfo() :
+    m_isEnabled(false),
+    m_hasUi(false),
+    m_factory(Q_NULLPTR)
+{
+}
+
+ToolInfo::ToolInfo(const ToolData &toolData, ToolUiFactory *factory) :
+    m_toolId(toolData.id),
+    m_isEnabled(toolData.enabled),
+    m_hasUi(toolData.hasUi),
+    m_factory(factory)
+{
+}
+
+ToolInfo::~ToolInfo()
+{
+}
+
+QString ToolInfo::id() const
+{
+    return m_toolId;
+}
+
+bool ToolInfo::isEnabled() const
+{
+    return m_isEnabled;
+}
+
+void ToolInfo::setEnabled(bool enabled)
+{
+    m_isEnabled = enabled;
+}
+
+bool ToolInfo::hasUi() const
+{
+    return m_hasUi;
+}
+
+QString ToolInfo::name() const
+{
+    if (!m_factory)
+        return m_toolId;
+    return m_factory->name();
+}
+
 class ClientToolManager::Model : public QAbstractListModel
 {
     Q_OBJECT
@@ -139,22 +186,30 @@ private:
     ClientToolManager *m_toolManager;
 };
 
+
+ClientToolManager* ClientToolManager::s_instance = Q_NULLPTR;
+
 ClientToolManager::ClientToolManager(QObject *parent)
     : QObject(parent)
     , m_parentWidget(0)
     , m_model(0)
     , m_selectionModel(0)
 {
+    Q_ASSERT(!s_instance);
+    s_instance = this;
+
     initPluginRepository();
 
     m_remote = ObjectBroker::object<ToolManagerInterface *>();
 
-    connect(m_remote, SIGNAL(availableToolsResponse(GammaRay::ToolInfos)),
-            this, SLOT(gotTools(GammaRay::ToolInfos)));
+    connect(m_remote, SIGNAL(availableToolsResponse(QVector<GammaRay::ToolData>)),
+            this, SLOT(gotTools(QVector<GammaRay::ToolData>)));
     connect(m_remote, SIGNAL(toolEnabled(QString)),
             this, SLOT(toolGotEnabled(QString)));
     connect(m_remote, SIGNAL(toolSelected(QString)),
             this, SLOT(toolGotSelected(QString)));
+    connect(m_remote, SIGNAL(toolsForObjectResponse(GammaRay::ObjectId,QVector<QString>)),
+            this, SLOT(toolsForObjectReceived(GammaRay::ObjectId,QVector<QString>)));
     m_remote->requestAvailableTools();
 }
 
@@ -162,6 +217,7 @@ ClientToolManager::~ClientToolManager()
 {
     for (auto it = m_widgets.constBegin(); it != m_widgets.constEnd(); ++it)
         delete it.value().data();
+    s_instance = Q_NULLPTR;
 }
 
 void ClientToolManager::setToolParentWidget(QWidget *parent)
@@ -179,12 +235,12 @@ QWidget *ClientToolManager::widgetForIndex(int index) const
     if (index < 0 || index >= m_tools.size())
         return 0;
     const ToolInfo &tool = m_tools.at(index);
-    if (!tool.enabled)
+    if (!tool.isEnabled())
         return 0;
-    const WidgetsHash::const_iterator it = m_widgets.constFind(tool.id);
+    const WidgetsHash::const_iterator it = m_widgets.constFind(tool.id());
     if (it != m_widgets.constEnd() && it.value())
         return it.value();
-    ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id);
+    ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id());
     if (!factory)
         return 0;
     if (s_pluginRepository()->uninitializedTools.contains(factory)) {
@@ -192,18 +248,18 @@ QWidget *ClientToolManager::widgetForIndex(int index) const
         s_pluginRepository()->uninitializedTools.remove(factory);
     }
     QWidget *widget = factory->createWidget(m_parentWidget);
-    m_widgets.insert(tool.id, widget);
+    m_widgets.insert(tool.id(), widget);
     return widget;
 }
 
-void ClientToolManager::gotTools(const ToolInfos &tools)
+void ClientToolManager::gotTools(const QVector<GammaRay::ToolData> &tools)
 {
     emit aboutToReceiveData();
-    foreach (ToolInfo tool, tools) {
+    foreach (const auto &tool, tools) {
         ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id);
         // hide tools we have no UI plugin for
-        if (tool.hasUi && s_pluginRepository()->factories.contains(tool.id)) {
-            m_tools.append(tool);
+        if (tool.hasUi && factory) {
+            m_tools.append(ToolInfo(tool, factory));
         }
         if (tool.enabled) {
             if (factory && (factory->remotingSupported() || !Endpoint::instance()->isRemoteClient())
@@ -215,8 +271,8 @@ void ClientToolManager::gotTools(const ToolInfos &tools)
     }
     emit toolListAvailable();
 
-    disconnect(m_remote, SIGNAL(availableToolsResponse(GammaRay::ToolInfos)),
-               this, SLOT(gotTools(GammaRay::ToolInfos)));
+    disconnect(m_remote, SIGNAL(availableToolsResponse(QVector<GammaRay::ToolData>)),
+               this, SLOT(gotTools(QVector<GammaRay::ToolData>)));
 }
 
 bool ClientToolManager::isToolListLoaded() const
@@ -238,15 +294,42 @@ QItemSelectionModel *ClientToolManager::selectionModel()
     return m_selectionModel;
 }
 
+void ClientToolManager::requestToolsForObject(const ObjectId &id)
+{
+    m_remote->requestToolsForObject(id);
+}
+
+void ClientToolManager::selectObject(const ObjectId &id, const ToolInfo &toolInfo)
+{
+    m_remote->selectObject(id, toolInfo.id());
+}
+
+void ClientToolManager::toolsForObjectReceived(const ObjectId &id, const QVector<QString> &toolIds)
+{
+    QVector<ToolInfo> t;
+    t.reserve(toolIds.size());
+    foreach (const auto &toolId, toolIds) {
+        const auto i = toolIndexForToolId(toolId);
+        if (i >= 0)
+            t.push_back(m_tools.at(i));
+    }
+    emit toolsForObjectResponse(id, t);
+}
+
+ClientToolManager *ClientToolManager::instance()
+{
+    return s_instance;
+}
+
 void ClientToolManager::toolGotEnabled(const QString &toolId)
 {
     int i = 0;
     auto it = m_tools.begin();
     for (; it != m_tools.end(); i++, it++) {
-        if (it->id == toolId) {
-            it->enabled = true;
+        if (it->id() == toolId) {
+            it->setEnabled(true);
 
-            ToolUiFactory *factory = s_pluginRepository()->factories.value(it->id);
+            ToolUiFactory *factory = s_pluginRepository()->factories.value(it->id());
             if (factory && (factory->remotingSupported() || !Endpoint::instance()->isRemoteClient())
                 && s_pluginRepository()->uninitializedTools.contains(factory)) {
                 factory->initUi();
@@ -269,7 +352,7 @@ int ClientToolManager::toolIndexForToolId(const QString &toolId) const
 {
     int i = 0;
     for (auto it = m_tools.constBegin(); it != m_tools.constEnd(); ++i, ++it) {
-        if (it->id == toolId)
+        if (it->id() == toolId)
             return i;
     }
     return -1;
@@ -295,24 +378,23 @@ QVariant ClientToolManager::Model::data(const QModelIndex &index, int role) cons
 
     const ToolInfo &tool = m_toolManager->tools().at(index.row());
     if (role == Qt::DisplayRole) {
-        ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id);
-        return factory ? factory->name() : tool.id;
+        return tool.name();
     }
     if (role == ToolModelRole::ToolId)
-        return tool.id;
+        return tool.id();
     if (role == ToolModelRole::ToolFactory)
-        return QVariant::fromValue(s_pluginRepository()->factories.value(tool.id));
+        return QVariant::fromValue(s_pluginRepository()->factories.value(tool.id()));
     if (role == ToolModelRole::ToolWidget)
         return QVariant::fromValue(m_toolManager->widgetForIndex(index.row()));
     if (role == Qt::ToolTipRole) {
-        ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id);
+        ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id());
         if (factory && (!factory->remotingSupported() && Endpoint::instance()->isRemoteClient()))
             return tr("This tool does not work in out-of-process mode.");
     }
     if (role == ToolModelRole::ToolEnabled)
-        return tool.enabled;
+        return tool.isEnabled();
     if (role == ToolModelRole::ToolHasUi)
-        return tool.hasUi;
+        return tool.hasUi();
     return QVariant();
 }
 
@@ -343,8 +425,8 @@ Qt::ItemFlags ClientToolManager::Model::flags(const QModelIndex &index) const
         return flags;
 
     ToolInfo tool = m_toolManager->tools().at(index.row());
-    ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id);
-    if (!tool.enabled || !factory
+    ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id());
+    if (!tool.isEnabled() || !factory
         || (!factory->remotingSupported() && Endpoint::instance()->isRemoteClient()))
         flags &= ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     return flags;

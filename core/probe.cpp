@@ -940,7 +940,7 @@ bool Probe::hasReliableObjectTracking() const
 void Probe::selectObject(QObject *object, const QPoint &pos)
 {
     const auto tools = m_toolManager->toolsForObject(object);
-    m_toolManager->selectTool(tools.value(0).id);
+    m_toolManager->selectTool(tools.value(0));
     emit objectSelected(object, pos);
 }
 
@@ -958,7 +958,7 @@ void Probe::selectObject(QObject *object, const QString &toolId, const QPoint &p
 void Probe::selectObject(void *object, const QString &typeName)
 {
     const auto tools = m_toolManager->toolsForObject(object, typeName);
-    m_toolManager->selectTool(tools.value(0).id);
+    m_toolManager->selectTool(tools.value(0));
     emit nonQObjectSelected(object, typeName);
 }
 

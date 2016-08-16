@@ -97,7 +97,7 @@ void ToolManager::selectTool(const QString &toolId)
 
 void ToolManager::requestToolsForObject(ObjectId id)
 {
-    ToolInfos toolInfos;
+    QVector<QString> toolInfos;
     switch (id.type()) {
     case ObjectId::Invalid:
         return;
@@ -120,16 +120,16 @@ void ToolManager::requestToolsForObject(ObjectId id)
 
 void ToolManager::requestAvailableTools()
 {
-    ToolInfos toolInfos;
+    QVector<ToolData> toolInfos;
     toolInfos.reserve(m_tools.size());
     foreach (ToolFactory *factory, m_tools)
         toolInfos.push_back(toolInfoForFactory(factory));
     emit availableToolsResponse(toolInfos);
 }
 
-ToolInfo ToolManager::toolInfoForFactory(ToolFactory *factory) const
+ToolData ToolManager::toolInfoForFactory(ToolFactory *factory) const
 {
-    ToolInfo info;
+    ToolData info;
     info.id = factory->id();
     info.hasUi = !factory->isHidden();
     info.enabled = !m_disabledTools.contains(factory);
@@ -145,12 +145,12 @@ bool ToolManager::hasTool(const QString &id) const
     return false;
 }
 
-const ToolInfos ToolManager::toolsForObject(QObject *object) const
+QVector<QString> ToolManager::toolsForObject(QObject *object) const
 {
     if (!object)
-        return ToolInfos();
+        return QVector<QString>();
 
-    ToolInfos ret;
+    QVector<QString> ret;
     QSet<ToolFactory *> knownTools;
     const QMetaObject *metaObject = object->metaObject();
     while (metaObject) {
@@ -158,7 +158,7 @@ const ToolInfos ToolManager::toolsForObject(QObject *object) const
             ToolFactory *factory = m_tools.at(i);
             if (factory && !factory->isHidden() && factory->selectableTypes().contains(metaObject->className()) && !knownTools.contains(factory)) {
                 knownTools << factory;
-                ret.append(toolInfoForFactory(factory));
+                ret.append(factory->id());
             }
         }
         metaObject = metaObject->superClass();
@@ -166,19 +166,19 @@ const ToolInfos ToolManager::toolsForObject(QObject *object) const
     return ret;
 }
 
-const ToolInfos ToolManager::toolsForObject(const void *object, const QString &typeName) const
+QVector<QString> ToolManager::toolsForObject(const void *object, const QString &typeName) const
 {
     if (!object)
-        return ToolInfos();
+        return QVector<QString>();
 
-    ToolInfos ret;
+    QVector<QString> ret;
     const MetaObject *metaObject = MetaObjectRepository::instance()->metaObject(typeName);
     while (metaObject) {
         for (int i = 0; i < m_tools.size(); i++) {
             ToolFactory *factory = m_tools.at(i);
             if (factory && !factory->isHidden()
                 && factory->selectableTypes().contains(metaObject->className().toUtf8()))
-                ret.append(toolInfoForFactory(factory));
+                ret.append(factory->id());
         }
         metaObject = metaObject->superClass();
     }

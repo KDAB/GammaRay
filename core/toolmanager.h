@@ -52,9 +52,9 @@ public:
     explicit ToolManager(QObject *parent = 0);
 
     /** returns the tools that are best suited to show information about \p object. */
-    const ToolInfos toolsForObject(QObject *object) const;
+    QVector<QString> toolsForObject(QObject *object) const;
     /** returns the tools that are best suited to show information about \p object. */
-    const ToolInfos toolsForObject(const void *object, const QString &typeName) const;
+    QVector<QString> toolsForObject(const void *object, const QString &typeName) const;
 
     bool hasTool(const QString &id) const;
 
@@ -80,7 +80,7 @@ public slots:
 
 private:
     void addToolFactory(ToolFactory *tool);
-    ToolInfo toolInfoForFactory(ToolFactory *factory) const;
+    ToolData toolInfoForFactory(ToolFactory *factory) const;
 
     QVector<ToolFactory *> m_tools;
     QSet<ToolFactory *> m_disabledTools;

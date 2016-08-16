@@ -46,6 +46,8 @@
 
 using namespace GammaRay;
 
+Q_DECLARE_METATYPE(QVector<GammaRay::ToolInfo>)
+
 class ToolManagerTest : public QObject
 {
     Q_OBJECT
@@ -72,6 +74,11 @@ private:
     }
 
 private slots:
+    void initTestCase()
+    {
+        qRegisterMetaType<QVector<ToolInfo> >();
+    }
+
     void init()
     {
         delete Probe::instance();
@@ -91,13 +98,13 @@ private slots:
         toolManager->requestAvailableTools();
         availableToolsSpy.wait(500);
         QCOMPARE(availableToolsSpy.size(), 1);
-        const ToolInfos &list = availableToolsSpy[0][0].value<ToolInfos>();
+        const auto &list = availableToolsSpy[0][0].value<QVector<ToolData> >();
         QVERIFY(list.size() > 0);
 
         bool hasBasicTools = false;
-        const ToolInfo *actionInspector = 0;
-        const ToolInfo *guiSupport = 0;
-        foreach (const ToolInfo &tool, list) {
+        const ToolData *actionInspector = 0;
+        const ToolData *guiSupport = 0;
+        foreach (const auto &tool, list) {
             if (tool.id == "GammaRay::ObjectInspector")
                 hasBasicTools = true;
             else if (tool.id == "gammaray_actioninspector")
@@ -132,10 +139,10 @@ private slots:
         QCOMPARE(toolsForObjectSpy.size(), 1);
         const ObjectId &actionId = toolsForObjectSpy.first().first().value<ObjectId>();
         QCOMPARE(actionId.asQObject(), &action);
-        const ToolInfos &actionTools = toolsForObjectSpy.first().last().value<ToolInfos>();
+        const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<QString> >();
         QStringList supportedToolIds;
-        foreach (const ToolInfo &tool, actionTools)
-            supportedToolIds << tool.id;
+        foreach (const auto &tool, actionTools)
+            supportedToolIds << tool;
         QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::ObjectInspector")));
         QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::MetaObjectBrowser")));
         QVERIFY(supportedToolIds.contains(QStringLiteral("gammaray_actioninspector")));
@@ -144,12 +151,14 @@ private slots:
     void testClientSide()
     {
         ClientToolManager manager;
+        ModelTest modelTest(manager.model());
 
         auto *toolManager = ObjectBroker::object<ToolManagerInterface *>();
         QVERIFY(toolManager);
 
         QSignalSpy toolEnabledSpy(&manager, &ClientToolManager::toolEnabled);
         QSignalSpy toolSelectedSpy(&manager, &ClientToolManager::toolSelected);
+        QSignalSpy toolsForObjectSpy(&manager, &ClientToolManager::toolsForObjectResponse);
 
         // we're testing inprocess, thus tool list should be available instantly.
         QVERIFY(manager.isToolListLoaded());
@@ -158,17 +167,17 @@ private slots:
         const ToolInfo *actionInspector = 0;
         const ToolInfo *guiSupport = 0;
         foreach (const ToolInfo &tool, manager.tools()) {
-            if (tool.id == "GammaRay::ObjectInspector")
+            if (tool.id() == "GammaRay::ObjectInspector")
                 hasBasicTools = true;
-            else if (tool.id == "gammaray_actioninspector")
+            else if (tool.id() == "gammaray_actioninspector")
                 actionInspector = &tool;
-            else if (tool.id == "gammaray_guisupport")
+            else if (tool.id() == "gammaray_guisupport")
                 guiSupport = &tool;
         }
         QVERIFY(hasBasicTools);
         QVERIFY(actionInspector);
-        QCOMPARE(actionInspector->enabled, false);
-        QCOMPARE(actionInspector->hasUi, true);
+        QCOMPARE(actionInspector->isEnabled(), false);
+        QCOMPARE(actionInspector->hasUi(), true);
         QVERIFY(!guiSupport); // tools without ui are supposed to be filtered out
 
         QVERIFY(!manager.widgetForId("inexistantTool"));
@@ -191,7 +200,21 @@ private slots:
         QString selectedTool = toolSelectedSpy.first().first().toString();
         QCOMPARE(selectedTool, QStringLiteral("gammaray_actioninspector"));
 
-        ModelTest modelTest(manager.model());
+        manager.requestToolsForObject(ObjectId(&action));
+        toolsForObjectSpy.wait(50);
+        QCOMPARE(toolsForObjectSpy.size(), 1);
+        const ObjectId &actionId = toolsForObjectSpy.first().first().value<ObjectId>();
+        QCOMPARE(actionId.asQObject(), &action);
+        const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<ToolInfo> >();
+        QStringList supportedToolIds;
+        foreach (const auto &tool, actionTools) {
+            QVERIFY(!tool.name().isEmpty());
+            QVERIFY(tool.name() != tool.id());
+            supportedToolIds << tool.id();
+        }
+        QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::ObjectInspector")));
+        QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::MetaObjectBrowser")));
+        QVERIFY(supportedToolIds.contains(QStringLiteral("gammaray_actioninspector")));
     }
 };
 

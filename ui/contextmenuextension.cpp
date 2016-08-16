@@ -101,21 +101,6 @@ bool ContextMenuExtension::discoverPropertySourceLocation(ContextMenuExtension::
                                       index.row(), PropertyModel::ValueColumn).data().toUrl());
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-static QString toolName(const QString &id)
-{
-    auto toolModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ClientToolModel"));
-    if (!toolModel)
-        return id;
-    const auto idxList = toolModel->match(toolModel->index(0, 0), ToolModelRole::ToolId, id, 1, Qt::MatchExactly);
-    if (idxList.isEmpty())
-        return id;
-    const auto idx = idxList.at(0);
-    const auto name = idx.data(Qt::DisplayRole).toString();
-    return name.isEmpty() ? id : name;
-}
-#endif
-
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -134,17 +119,16 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
     if (m_id.isNull())
         return;
 
-    auto toolManager = ObjectBroker::object<ToolManagerInterface *>();
-    toolManager->requestToolsForObject(m_id);
+    Q_ASSERT(ClientToolManager::instance());
+    ClientToolManager::instance()->requestToolsForObject(m_id);
 
     // delay adding actions until we know the supported tools
-    connect(toolManager, &ToolManagerInterface::toolsForObjectResponse,
-            menu, [menu](ObjectId id, const ToolInfos &toolInfos) {
+    connect(ClientToolManager::instance(), &ClientToolManager::toolsForObjectResponse,
+            menu, [menu](const ObjectId &id, const QVector<ToolInfo> &toolInfos) {
         foreach (const auto &toolInfo, toolInfos) {
-            auto action = menu->addAction(tr("Show in \"%1\" tool").arg(toolName(toolInfo.id)));
+            auto action = menu->addAction(tr("Show in \"%1\" tool").arg(toolInfo.name()));
             QObject::connect(action, &QAction::triggered, [id, toolInfo]() {
-                auto toolManager = ObjectBroker::object<ToolManagerInterface *>();
-                toolManager->selectObject(id, toolInfo.id);
+                ClientToolManager::instance()->selectObject(id, toolInfo);
             });
         }
     });

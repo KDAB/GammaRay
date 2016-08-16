@@ -31,8 +31,6 @@
 
 #include "gammaray_ui_export.h"
 
-#include <common/toolmanagerinterface.h>
-
 #include <QHash>
 #include <QPointer>
 #include <QAbstractListModel>
@@ -44,8 +42,34 @@ class QWidget;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+
+class ObjectId;
 class ProbeControllerInterface;
+class ToolData;
+class ToolManagerInterface;
 class ToolUiFactory;
+
+/*! Data structure describing a single GammaRay tool. */
+class GAMMARAY_UI_EXPORT ToolInfo
+{
+public:
+    ToolInfo();
+    /** @internal */
+    explicit ToolInfo(const ToolData &toolData, ToolUiFactory *factory);
+    ~ToolInfo();
+
+    QString id() const;
+    bool isEnabled() const;
+    void setEnabled(bool enabled);
+    bool hasUi() const;
+    QString name() const;
+
+private:
+    QString m_toolId;
+    bool m_isEnabled;
+    bool m_hasUi;
+    ToolUiFactory *m_factory;
+};
 
 /** @brief Tool Management API for the client to find out, which tools exist,
  *  get the tool's widgets, etc.
@@ -73,13 +97,18 @@ public:
     QWidget *widgetForIndex(int index) const;
     int toolIndexForToolId(const QString &toolId) const;
 
-    inline ToolInfos tools() const
+    inline QVector<ToolInfo> tools() const
     {
         return m_tools;
     }
 
     QAbstractItemModel *model();
     QItemSelectionModel *selectionModel();
+
+    void requestToolsForObject(const ObjectId &id);
+    void selectObject(const ObjectId &id, const ToolInfo &toolInfo);
+
+    static ClientToolManager* instance();
 
 signals:
     void toolEnabled(const QString &toolId);
@@ -88,20 +117,24 @@ signals:
     void toolListAvailable();
     void toolSelected(const QString &toolId);
     void toolSelectedByIndex(int index);
+    void toolsForObjectResponse(const GammaRay::ObjectId &id, const QVector<GammaRay::ToolInfo> &toolInfos);
 
 private slots:
-    void gotTools(const GammaRay::ToolInfos &tools);
+    void gotTools(const QVector<GammaRay::ToolData> &tools);
     void toolGotEnabled(const QString &toolId);
     void toolGotSelected(const QString &toolId);
+    void toolsForObjectReceived(const GammaRay::ObjectId &id, const QVector<QString> &toolIds);
 
 private:
     typedef QHash<QString, QPointer<QWidget> > WidgetsHash;
     mutable WidgetsHash m_widgets; // ToolId -> Widget
-    ToolInfos m_tools;
+    QVector<ToolInfo> m_tools;
     ToolManagerInterface *m_remote;
     QWidget *m_parentWidget;
     Model *m_model;
     SelectionModel *m_selectionModel;
+
+    static ClientToolManager *s_instance;
 };
 }
 

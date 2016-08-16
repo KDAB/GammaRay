@@ -35,10 +35,12 @@ ToolManagerInterface::ToolManagerInterface(QObject *parent)
 {
     qRegisterMetaType<ObjectId>();
     qRegisterMetaTypeStreamOperators<ObjectId>();
-    qRegisterMetaType<ToolInfo>();
-    qRegisterMetaTypeStreamOperators<ToolInfo>();
-    qRegisterMetaType<ToolInfos>();
-    qRegisterMetaTypeStreamOperators<ToolInfos>();
+    qRegisterMetaType<ToolData>();
+    qRegisterMetaTypeStreamOperators<ToolData>();
+    qRegisterMetaType<QVector<ToolData> >();
+    qRegisterMetaTypeStreamOperators<QVector<ToolData> >();
+    qRegisterMetaType<QVector<QString> >();
+    qRegisterMetaTypeStreamOperators<QVector<QString> >();
 }
 
 ToolManagerInterface::~ToolManagerInterface()

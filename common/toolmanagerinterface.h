@@ -39,13 +39,12 @@
 
 namespace GammaRay {
 /** @brief GammaRay tool identifier. */
-struct ToolInfo
+struct ToolData
 {
     QString id;
     bool hasUi;
     bool enabled;
 };
-typedef QVector<ToolInfo> ToolInfos;
 
 /** @brief Probe and host process remote control functions. */
 class ToolManagerInterface : public QObject
@@ -61,8 +60,8 @@ public:
     virtual void requestAvailableTools() = 0;
 
 Q_SIGNALS:
-    void toolsForObjectResponse(GammaRay::ObjectId id, const GammaRay::ToolInfos &toolInfos);
-    void availableToolsResponse(const GammaRay::ToolInfos &toolInfos);
+    void toolsForObjectResponse(GammaRay::ObjectId id, const QVector<QString> &toolInfos);
+    void availableToolsResponse(const QVector<GammaRay::ToolData> &toolInfos);
     void toolEnabled(const QString &toolId);
     void toolSelected(const QString &toolId);
 
@@ -70,7 +69,7 @@ private:
     Q_DISABLE_COPY(ToolManagerInterface)
 };
 
-inline QDataStream &operator<<(QDataStream &out, const ToolInfo &toolInfo)
+inline QDataStream &operator<<(QDataStream &out, const ToolData &toolInfo)
 {
     out << toolInfo.id;
     out << toolInfo.hasUi;
@@ -78,7 +77,7 @@ inline QDataStream &operator<<(QDataStream &out, const ToolInfo &toolInfo)
     return out;
 }
 
-inline QDataStream &operator>>(QDataStream &in, ToolInfo &toolInfo)
+inline QDataStream &operator>>(QDataStream &in, ToolData &toolInfo)
 {
     in >> toolInfo.id;
     in >> toolInfo.hasUi;
@@ -90,7 +89,10 @@ inline QDataStream &operator>>(QDataStream &in, ToolInfo &toolInfo)
 QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::ToolManagerInterface, "com.kdab.GammaRay.ToolManagerInterface")
 QT_END_NAMESPACE
-Q_DECLARE_METATYPE(GammaRay::ToolInfo)
-Q_DECLARE_METATYPE(GammaRay::ToolInfos)
+Q_DECLARE_METATYPE(GammaRay::ToolData)
+Q_DECLARE_METATYPE(QVector<GammaRay::ToolData>)
+#if QT_VERSION <= QT_VERSION_CHECK(5, 2, 0)
+Q_DECLARE_METATYPE(QVector<QString>)
+#endif
 
 #endif // GAMMARAY_TOOLMANAGERINTERFACE_H
