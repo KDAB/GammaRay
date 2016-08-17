@@ -704,7 +704,7 @@ void WlCompositorInspector::setSelectedClient(int index)
     }
 }
 
-void WlCompositorInspector::setSelectedResource(uint32_t id)
+void WlCompositorInspector::setSelectedResource(uint id)
 {
     wl_resource *res = m_resourcesModel->resource(id);
     QWaylandSurface *surface = nullptr;
