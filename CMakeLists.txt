@@ -395,7 +395,7 @@ endif()
 if(HAVE_QT_WIDGETS)
   option(GAMMARAY_CORE_ONLY_LAUNCHER "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatibility)" FALSE)
 else()
-  set(GAMMARAY_CORE_ONLYL_LAUNCHER TRUE)
+  set(GAMMARAY_CORE_ONLY_LAUNCHER TRUE)
 endif()
 
 add_feature_info("QtScript debugger" QT_QTSCRIPTTOOLS_FOUND "Requires QtScript and QtScriptTools.")
