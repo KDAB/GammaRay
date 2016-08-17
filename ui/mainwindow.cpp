@@ -193,7 +193,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowIcon(QIcon(QStringLiteral(":gammaray/GammaRay-128x128.png")));
 
-    ClientToolManager *toolManager = new ClientToolManager(this);
+    // ClientConnectionManager take care of creating and requesting server tools
+    // but in-process ui need to do it itself.
+    ClientToolManager *toolManager = ClientToolManager::instance();
+    if (!toolManager) {
+        toolManager = new ClientToolManager(this);
+        toolManager->requestAvailableTools();
+    }
+
     toolManager->setToolParentWidget(this);
 
     auto sourceModel = toolManager->model();

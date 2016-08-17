@@ -212,15 +212,13 @@ Probe::Probe(QObject *parent)
     , m_server(Q_NULLPTR)
 {
     Q_ASSERT(thread() == qApp->thread());
-    IF_DEBUG(cout << "attaching GammaRay probe" << endl;
-             )
+    IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
 
+    StreamOperators::registerOperators();
     ProbeSettings::receiveSettings();
 
     m_server = new Server(this);
-    ProbeSettings::sendServerAddress(m_server->externalAddress());
 
-    StreamOperators::registerOperators();
     ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
     ObjectBroker::registerObject<ProbeControllerInterface *>(new ProbeController(this));
     m_toolManager = new ToolManager(this);
@@ -360,6 +358,7 @@ void Probe::resendServerAddress()
 {
     Q_ASSERT(isInitialized());
     Q_ASSERT(m_server);
+    Q_ASSERT(m_server->isListening());
     ProbeSettings::receiveSettings();
     ProbeSettings::sendServerAddress(m_server->externalAddress());
 }
@@ -388,7 +387,9 @@ void Probe::delayedInit()
     }
     if (appName.isEmpty())
         appName = tr("PID %1").arg(qApp->applicationPid());
-    Server::instance()->setLabel(appName);
+    m_server->setLabel(appName);
+    m_server->listen();
+    ProbeSettings::sendServerAddress(m_server->externalAddress());
 
     if (ProbeSettings::value(QStringLiteral("InProcessUi"), false).toBool())
         showInProcessUi();

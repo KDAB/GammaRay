@@ -29,6 +29,7 @@
 #include "clienttoolmanager.h"
 #include "clienttoolmodel.h"
 
+#include <ui/proxytooluifactory.h>
 #include <ui/tools/localeinspector/localeinspectorwidget.h>
 #include <ui/tools/messagehandler/messagehandlerwidget.h>
 #include <ui/tools/metaobjectbrowser/metaobjectbrowserwidget.h>
@@ -37,11 +38,11 @@
 #include <ui/tools/resourcebrowser/resourcebrowserwidget.h>
 #include <ui/tools/standardpaths/standardpathswidget.h>
 
-#include <common/modelroles.h>
-#include <common/pluginmanager.h>
 #include <common/endpoint.h>
+#include <common/modelroles.h>
+#include <common/objectbroker.h>
+#include <common/pluginmanager.h>
 #include <common/toolmanagerinterface.h>
-#include <ui/proxytooluifactory.h>
 
 #include <QCoreApplication>
 #include <QDir>
@@ -181,7 +182,6 @@ ClientToolManager::ClientToolManager(QObject *parent)
             this, SLOT(toolGotSelected(QString)));
     connect(m_remote, SIGNAL(toolsForObjectResponse(GammaRay::ObjectId,QVector<QString>)),
             this, SLOT(toolsForObjectReceived(GammaRay::ObjectId,QVector<QString>)));
-    m_remote->requestAvailableTools();
 }
 
 ClientToolManager::~ClientToolManager()
@@ -189,6 +189,11 @@ ClientToolManager::~ClientToolManager()
     for (auto it = m_widgets.constBegin(); it != m_widgets.constEnd(); ++it)
         delete it.value().data();
     s_instance = Q_NULLPTR;
+}
+
+void ClientToolManager::requestAvailableTools()
+{
+    m_remote->requestAvailableTools();
 }
 
 void ClientToolManager::setToolParentWidget(QWidget *parent)

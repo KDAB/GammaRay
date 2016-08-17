@@ -42,6 +42,7 @@
 
 #include <ui/mainwindow.h>
 #include <ui/splashscreen.h>
+#include <ui/clienttoolmanager.h>
 
 #include <QApplication>
 #include <QMessageBox>
@@ -120,6 +121,7 @@ ClientConnectionManager::ClientConnectionManager(QObject *parent, bool showSplas
     connect(m_client, SIGNAL(persisitentConnectionError(QString)),
             SIGNAL(persistentConnectionError(QString)));
     connect(this, SIGNAL(persistentConnectionError(QString)), SLOT(delayedHideSplashScreen()));
+    connect(this, SIGNAL(ready()), this, SLOT(delayedHideSplashScreen()));
 }
 
 ClientConnectionManager::~ClientConnectionManager()
@@ -152,8 +154,15 @@ void ClientConnectionManager::connectToHost()
 
 void ClientConnectionManager::connectionEstablished()
 {
-    QTimer::singleShot(0, this, SLOT(delayedHideSplashScreen()));
-    emit ready();
+    auto toolManager = ClientToolManager::instance();
+    if (!toolManager) {
+        toolManager = new ClientToolManager(this);
+    }
+
+    // We cannot instanciate the tool manager in the ctor as it's too early (not yet connected) and will
+    // cause object registering issues, so make sure we connect only once.
+    connect(toolManager, SIGNAL(toolListAvailable()), this, SIGNAL(ready()), Qt::UniqueConnection);
+    toolManager->requestAvailableTools();
 }
 
 QMainWindow *ClientConnectionManager::createMainWindow()
@@ -193,7 +202,12 @@ void ClientConnectionManager::handlePersistentConnectionError(const QString &msg
 
 void ClientConnectionManager::delayedHideSplashScreen()
 {
-    hideSplashScreen();
+    QTimer::singleShot(0, this, SLOT(hideSplashScreen()));
+}
+
+void ClientConnectionManager::hideSplashScreen()
+{
+    ::hideSplashScreen();
 }
 
 void ClientConnectionManager::targetQuitRequested()

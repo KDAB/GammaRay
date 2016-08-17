@@ -88,6 +88,7 @@ public:
     explicit ClientToolManager(QObject *parent = 0);
     ~ClientToolManager();
 
+    void requestAvailableTools();
     void setToolParentWidget(QWidget *parent);
 
     bool isToolListLoaded() const;

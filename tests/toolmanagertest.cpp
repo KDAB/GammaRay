@@ -151,6 +151,7 @@ private slots:
     void testClientSide()
     {
         ClientToolManager manager;
+        manager.requestAvailableTools();
         ModelTest modelTest(manager.model());
 
         auto *toolManager = ObjectBroker::object<ToolManagerInterface *>();

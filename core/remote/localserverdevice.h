@@ -42,6 +42,7 @@ public:
     explicit LocalServerDevice(QObject *parent = 0);
 
     bool listen() Q_DECL_OVERRIDE;
+    bool isListening() const Q_DECL_OVERRIDE;
     QUrl externalAddress() const Q_DECL_OVERRIDE;
 };
 }
