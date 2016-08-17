@@ -61,6 +61,9 @@ public:
     };
     Q_DECLARE_FLAGS(ObjectExportOptions, ObjectExportOption)
 
+    bool listen();
+    bool isListening() const;
+
     /**
      * Register a server-side QObject to send/receive messages to/from the client side.
      * This is equivalent to registerObject(name, object, ExportEverything);

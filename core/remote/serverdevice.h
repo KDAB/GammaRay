@@ -48,6 +48,7 @@ public:
     void setServerAddress(const QUrl &serverAddress);
 
     virtual bool listen() = 0;
+    virtual bool isListening() const = 0;
     virtual QString errorString() const = 0;
     virtual QIODevice *nextPendingConnection() = 0;
 

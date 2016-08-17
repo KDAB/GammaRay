@@ -65,10 +65,6 @@ Server::Server(QObject *parent)
         return;
 
     connect(m_serverDevice, SIGNAL(newConnection()), this, SLOT(newConnection()));
-    if (!m_serverDevice->listen()) {
-        qWarning() << "Failed to start server:" << m_serverDevice->errorString();
-        return;
-    }
 
     m_broadcastTimer->setInterval(5 * 1000);
     m_broadcastTimer->setSingleShot(false);
@@ -90,6 +86,22 @@ Server::Server(QObject *parent)
 
 Server::~Server()
 {
+}
+
+bool Server::listen()
+{
+    Q_ASSERT(!m_serverDevice->isListening());
+    if (!m_serverDevice->listen()) {
+        qWarning() << "Failed to start server:" << m_serverDevice->errorString();
+        return false;
+    }
+
+    return true;
+}
+
+bool Server::isListening() const
+{
+    return m_serverDevice->isListening();
 }
 
 Server *Server::instance()
@@ -308,6 +320,9 @@ void Server::objectDestroyed(Protocol::ObjectAddress /*objectAddress*/, const QS
 
 void Server::broadcast()
 {
+    if (!Server::instance()->isListening())
+        return;
+
     QByteArray datagram;
     QDataStream stream(&datagram, QIODevice::WriteOnly);
     stream << Protocol::broadcastFormatVersion();

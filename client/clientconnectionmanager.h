@@ -104,6 +104,7 @@ private slots:
     void transientConnectionError();
 
     void delayedHideSplashScreen();
+    void hideSplashScreen();
     void targetQuitRequested();
 
 private:

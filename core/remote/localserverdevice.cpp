@@ -49,6 +49,11 @@ bool LocalServerDevice::listen()
     return m_server->listen(m_address.path());
 }
 
+bool LocalServerDevice::isListening() const
+{
+    return m_server->isListening();
+}
+
 QUrl LocalServerDevice::externalAddress() const
 {
     return m_address;

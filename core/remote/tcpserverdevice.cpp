@@ -56,6 +56,11 @@ bool TcpServerDevice::listen()
     return m_server->listen(address, 0);
 }
 
+bool TcpServerDevice::isListening() const
+{
+    return m_server->isListening();
+}
+
 QUrl TcpServerDevice::externalAddress() const
 {
     const QHostAddress address(m_server->serverAddress());

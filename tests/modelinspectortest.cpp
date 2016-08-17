@@ -355,6 +355,7 @@ private slots:
         QTest::qWait(1); // trigger model inspector plugin loading
 
         ClientToolManager mgr;
+        mgr.requestAvailableTools();
         auto widget = mgr.widgetForId("gammaray_modelinspector");
         QVERIFY(widget);
         widget->show();
