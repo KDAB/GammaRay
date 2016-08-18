@@ -48,9 +48,6 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     , ui(new Ui::ObjectInspectorWidget)
     , m_stateManager(this)
 {
-    qRegisterMetaType<ObjectId>();
-    qRegisterMetaTypeStreamOperators<ObjectId>();
-
     ui->setupUi(this);
     ui->objectPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.ObjectInspector"));
 

@@ -73,10 +73,6 @@ SelectionModelSyncer::SelectionModelSyncer(StateMachineViewerWidget *widget)
     , m_widget(widget)
     , m_updatesEnabled(true)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-    QMetaType::registerComparators<ObjectId>(); // for proper QAIM::match support for ObjectId
-#endif
-
     connect(widget->objectInspector()->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &SelectionModelSyncer::handle_objectInspector_currentChanged);
     connect(
