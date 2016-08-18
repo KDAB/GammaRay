@@ -18,7 +18,7 @@ if(Qt5WaylandCompositor_FOUND AND Wayland_FOUND)
 endif()
 
 # ui part
-if(GAMMARAY_BUILD_UI)
+if(GAMMARAY_BUILD_UI AND (NOT MSVC OR NOT MSVC_VERSION LESS 1800)) # at least MSVC 2013
 
   set(gammaray_wlcompositorinspector_ui_srcs
     inspectorwidget.cpp
