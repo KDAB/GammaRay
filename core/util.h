@@ -80,19 +80,6 @@ GAMMARAY_CORE_EXPORT QString shortDisplayString(const QObject *object);
  */
 GAMMARAY_CORE_EXPORT QString addressToString(const void *p);
 
-/**!
- * Translates an enum or flag value into a human readable text.
- * @param value The numerical value. Type information from the QVariant
- *              are used to find the corresponding QMetaEnum.
- * @param typeName Use this if the @p value has type int
- *                 (e.g. the case for QMetaProperty::read).
- * @param mo QMetaObject possibly containing the definition of the enum.
- *
- * @return a QString containing the string version of the specified @p value.
- */
-GAMMARAY_CORE_EXPORT QString enumToString(const QVariant &value, const char *typeName = Q_NULLPTR,
-                                          const QMetaObject *metaObject = Q_NULLPTR);
-
 /**
  * Translates an enum or flag value into a human readable text.
  * @param value The numerical value. Type information from the QVariant
@@ -102,7 +89,7 @@ GAMMARAY_CORE_EXPORT QString enumToString(const QVariant &value, const char *typ
  * @param object Additional QObject to search for QMetaEnums.
  *
  * @return a QString containing the string version of the specified @p value.
- * @deprecated Use the above enumToString overload.
+ * @deprecated Use EnumUtils::enumToString.
  */
 GAMMARAY_CORE_DEPRECATED_EXPORT QString enumToString(const QVariant &value, const char *typeName, const QObject *object);
 

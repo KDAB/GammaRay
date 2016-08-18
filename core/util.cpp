@@ -32,12 +32,12 @@
 #include "common/metatypedeclarations.h"
 #include "varianthandler.h"
 #include "objectdataprovider.h"
+#include "enumutil.h"
 
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 #include <QIcon>
-#include <QMetaEnum>
 #include <QMetaObject>
 #include <QObject>
 #include <QPainter>
@@ -51,14 +51,6 @@
 
 using namespace GammaRay;
 using namespace std;
-
-namespace GammaRay {
-class ProtectedExposer : public QObject
-{
-public:
-    using QObject::staticQtMetaObject;
-};
-}
 
 QString Util::displayString(const QObject *object)
 {
@@ -86,64 +78,9 @@ QString Util::addressToString(const void *p)
     return QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16);
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-static const QMetaObject* metaObjectForClass(const QByteArray &name)
-{
-    if (name.isEmpty())
-        return Q_NULLPTR;
-    auto mo = QMetaType::metaObjectForType(QMetaType::type(name));
-    if (mo)
-        return mo;
-    mo = QMetaType::metaObjectForType(QMetaType::type(name + '*')); // try pointer version, more likely for QObjects
-    return mo;
-}
-#endif
-
-QString Util::enumToString(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
-{
-    QByteArray enumTypeName(typeName);
-    if (enumTypeName.isEmpty())
-        enumTypeName = value.typeName();
-
-    // split class name and enum name
-    QByteArray className;
-    const int pos = enumTypeName.lastIndexOf("::");
-    if (pos >= 0) {
-        className = enumTypeName.left(pos);
-        enumTypeName = enumTypeName.mid(pos + 2);
-    }
-
-    const QMetaObject *mo = &ProtectedExposer::staticQtMetaObject;
-    int enumIndex = mo->indexOfEnumerator(enumTypeName);
-    if (enumIndex < 0 && metaObject) {
-        mo = metaObject;
-        enumIndex = mo->indexOfEnumerator(enumTypeName);
-    }
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    if (enumIndex < 0 && (mo = QMetaType::metaObjectForType(QMetaType::type(typeName)))) {
-        enumIndex = mo->indexOfEnumerator(enumTypeName);
-    }
-    if (enumIndex < 0 && (mo = metaObjectForClass(className))) {
-        enumIndex = mo->indexOfEnumerator(enumTypeName);
-    }
-#endif
-    if (enumIndex < 0)
-        return QString();
-
-    const QMetaEnum me = mo->enumerator(enumIndex);
-    if (!me.isValid())
-        return QString();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    // QVariant has no implicit QFlag to int conversion as of Qt 5.7
-    if (me.isFlag() && QMetaType::sizeOf(value.userType()) == sizeof(int)) // int should be enough, QFlag has that hardcoded
-        return me.valueToKeys(value.constData() ? *static_cast<const int*>(value.constData()) : 0);
-#endif
-    return me.valueToKeys(value.toInt());
-}
-
 QString Util::enumToString(const QVariant& value, const char* typeName, const QObject* object)
 {
-    return enumToString(value, typeName, object ? object->metaObject() : Q_NULLPTR);
+    return EnumUtil::enumToString(value, typeName, object ? object->metaObject() : Q_NULLPTR);
 }
 
 QString Util::prettyMethodSignature(const QMetaMethod &method)
@@ -187,7 +124,7 @@ static QString stringifyProperty(const QObject *obj, const QString &propName)
         = obj->metaObject()->property(
         obj->metaObject()->indexOfProperty(propName.toLatin1()));
     if (mp.isValid()) {
-        const QString enumStr = Util::enumToString(value, mp.typeName(), obj->metaObject());
+        const QString enumStr = EnumUtil::enumToString(value, mp.typeName(), obj->metaObject());
         if (!enumStr.isEmpty())
             return enumStr;
     }

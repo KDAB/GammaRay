@@ -28,7 +28,9 @@
 
 #include "varianthandler.h"
 #include "util.h"
-#include "common/metatypedeclarations.h"
+#include "enumutil.h"
+
+#include <common/metatypedeclarations.h>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QApplication>
@@ -118,7 +120,7 @@ QString VariantHandler::displayString(const QVariant &value)
     case QVariant::Cursor:
     {
         const QCursor cursor = value.value<QCursor>();
-        return Util::enumToString(QVariant::fromValue<int>(cursor.shape()), "Qt::CursorShape");
+        return EnumUtil::enumToString(QVariant::fromValue<int>(cursor.shape()), "Qt::CursorShape");
     }
 #endif
     case QVariant::Icon:
@@ -307,7 +309,7 @@ QString VariantHandler::displayString(const QVariant &value)
 #endif // Qt5
 
     // enums
-    const QString enumStr = Util::enumToString(value);
+    const QString enumStr = EnumUtil::enumToString(value);
     if (!enumStr.isEmpty())
         return enumStr;
 

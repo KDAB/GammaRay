@@ -29,6 +29,7 @@
 #include "actionmodel.h"
 #include "actionvalidator.h"
 
+#include <core/enumutil.h>
 #include <core/probe.h>
 #include <core/util.h>
 #include <core/varianthandler.h>
@@ -142,7 +143,7 @@ QVariant ActionModel::data(const QModelIndex &index, int role) const
         case CheckablePropColumn:
             return action->isCheckable();
         case PriorityPropColumn:
-            return Util::enumToString(action->priority(), 0, action->metaObject());
+            return EnumUtil::enumToString(action->priority(), 0, action->metaObject());
         case ShortcutsPropColumn:
             return toString(action->shortcuts());
         default:

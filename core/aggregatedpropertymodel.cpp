@@ -35,7 +35,7 @@
 #include "propertyadaptorfactory.h"
 #include "toolfactory.h"
 #include "varianthandler.h"
-#include "util.h"
+#include "enumutil.h"
 
 #include <common/objectid.h>
 #include <common/propertymodel.h>
@@ -151,7 +151,7 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
         {
             // QMetaProperty::read sets QVariant::typeName to int for enums,
             // so we need to handle that separately here
-            const QString enumStr = Util::enumToString(d.value(), d.typeName().toLatin1(), adaptor->object().metaObject());
+            const QString enumStr = EnumUtil::enumToString(d.value(), d.typeName().toLatin1(), adaptor->object().metaObject());
             if (!enumStr.isEmpty())
                 return enumStr;
             return VariantHandler::displayString(d.value());

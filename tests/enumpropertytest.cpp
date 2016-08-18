@@ -26,7 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <core/util.h>
+#include <core/enumutil.h>
 
 #include <QtTest/qtest.h>
 #include <QFrame>
@@ -109,7 +109,7 @@ private slots:
         QFETCH(const QMetaObject*, mo);
         QFETCH(QString, result);
 
-        auto str = Util::enumToString(variant, name, mo);
+        auto str = EnumUtil::enumToString(variant, name, mo);
         if (str.isEmpty())
             str = variant.toString(); // normally this would be VariantHandler::displayString, but that might interfere too much for testing
         QCOMPARE(str, result);
