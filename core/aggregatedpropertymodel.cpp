@@ -35,12 +35,14 @@
 #include "propertyadaptorfactory.h"
 #include "toolfactory.h"
 #include "varianthandler.h"
+#include "enumrepositoryserver.h"
 #include "enumutil.h"
 
 #include <common/objectid.h>
 #include <common/propertymodel.h>
 
 #include <QDebug>
+#include <QMetaEnum>
 
 using namespace GammaRay;
 
@@ -163,8 +165,14 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
         }
         break;
     case Qt::EditRole:
-        if (column == 1)
+        if (column == 1) {
+            const auto me = EnumUtil::metaEnum(d.value(), d.typeName().toLatin1(), adaptor->object().metaObject());
+            if (me.isValid()) {
+                const auto num = EnumUtil::enumToInt(d.value(), me);
+                return QVariant::fromValue(EnumRepositoryServer::valueFromMetaEnum(num, me));
+            }
             return VariantHandler::serializableVariant(d.value());
+        }
         break;
     case Qt::ToolTipRole:
         return d.details();
