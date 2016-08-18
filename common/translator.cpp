@@ -48,10 +48,10 @@ static QString qtTranslationsPath() {
     return QLibraryInfo::location(QLibraryInfo::TranslationsPath);
 }
 
-void Translator::loadTranslator(const QString &catalog, const QString &path, const QLocale &locale,
-                                const QString &overrideLanguage)
+void Translator::loadTranslations(const QString &catalog, const QString &path, const QString &overrideLanguage)
 {
     const QDir dir(path);
+    const QLocale locale;
     QStringList names = locale.uiLanguages();
     if (!overrideLanguage.isEmpty())
         names.prepend(overrideLanguage);
@@ -80,15 +80,15 @@ void Translator::loadTranslator(const QString &catalog, const QString &path, con
                  << "for language" << locale.name();
 }
 
-void Translator::loadGammaRayTranslations(const QLocale &locale, const QString &overrideLanguage)
+void Translator::loadGammaRayTranslations(const QString &overrideLanguage)
 {
-    loadTranslator(QStringLiteral("gammaray"), rootTranslationsPath(), locale, overrideLanguage);
+    loadTranslations(QStringLiteral("gammaray"), rootTranslationsPath(), overrideLanguage);
 }
 
-void Translator::loadStandAloneTranslations(const QLocale &locale, const QString &overrideLanguage)
+void Translator::loadStandAloneTranslations(const QString &overrideLanguage)
 {
-    loadGammaRayTranslations(locale, overrideLanguage);
-    loadTranslator(QStringLiteral("qt"), qtTranslationsPath(), locale, overrideLanguage);
+    loadGammaRayTranslations(overrideLanguage);
+    loadTranslations(QStringLiteral("qt"), qtTranslationsPath(), overrideLanguage);
 }
 
 
