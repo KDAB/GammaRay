@@ -60,6 +60,7 @@ private slots:
 
         const QMetaObject *nullObj = Q_NULLPTR;
         QTest::newRow("null") << QVariant() << QByteArray() << nullObj << QString();
+        QTest::newRow("int") << QVariant(42) << QByteArray() << &staticMetaObject << QString();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         // global enum
@@ -109,9 +110,7 @@ private slots:
         QFETCH(const QMetaObject*, mo);
         QFETCH(QString, result);
 
-        auto str = EnumUtil::enumToString(variant, name, mo);
-        if (str.isEmpty())
-            str = variant.toString(); // normally this would be VariantHandler::displayString, but that might interfere too much for testing
+        const auto str = EnumUtil::enumToString(variant, name, mo);
         QCOMPARE(str, result);
     }
 

@@ -34,7 +34,8 @@
 #include <qglobal.h>
 
 QT_BEGIN_NAMESPACE
-class QMetaObject;
+class QMetaEnum;
+struct QMetaObject;
 class QString;
 class QVariant;
 QT_END_NAMESPACE
@@ -45,6 +46,25 @@ namespace GammaRay {
 namespace EnumUtil
 {
 /*!
+ * Determine the QMetaEnum for a given enum/flag value.
+ * @param value A QVariant holding the enum/flag value, numerical or
+ * as actual enum/flag.
+ * @param typeName A type name hint, in case @p value holds a numeric value.
+ * @param metaObject A meta object hint holding the enum definition.
+ * @since 2.6
+ */
+QMetaEnum metaEnum(const QVariant &value, const char *typeName = Q_NULLPTR, const QMetaObject *metaObject = Q_NULLPTR);
+
+/*!
+ * Converts the given enum or flag value into its numerical representation.
+ * @param value A QVariant holding the enum/flag value, numerical or
+ * as actual enum/flag.
+ * @param me The QMetaEnum defining the enum/flag.
+ * @since 2.6
+ */
+int enumToInt(const QVariant &value, const QMetaEnum &me);
+
+/*!
  * Translates an enum or flag value into a human readable text.
  * @param value The numerical value. Type information from the QVariant
  *              are used to find the corresponding QMetaEnum.
@@ -53,6 +73,7 @@ namespace EnumUtil
  * @param mo QMetaObject possibly containing the definition of the enum.
  *
  * @return a QString containing the string version of the specified @p value.
+ * @since 2.6
  */
 GAMMARAY_CORE_EXPORT QString enumToString(const QVariant &value, const char *typeName = Q_NULLPTR,
                                           const QMetaObject *metaObject = Q_NULLPTR);

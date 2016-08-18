@@ -53,7 +53,7 @@ static const QMetaObject* metaObjectForClass(const QByteArray &name)
 }
 #endif
 
-QString EnumUtil::enumToString(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
+QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
 {
     QByteArray enumTypeName(typeName);
     if (enumTypeName.isEmpty())
@@ -82,15 +82,26 @@ QString EnumUtil::enumToString(const QVariant &value, const char *typeName, cons
     }
 #endif
     if (enumIndex < 0)
-        return QString();
+        return QMetaEnum();
+    return mo->enumerator(enumIndex);
+}
 
-    const QMetaEnum me = mo->enumerator(enumIndex);
-    if (!me.isValid())
-        return QString();
+int EnumUtil::enumToInt(const QVariant &value, const QMetaEnum &me)
+{
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     // QVariant has no implicit QFlag to int conversion as of Qt 5.7
     if (me.isFlag() && QMetaType::sizeOf(value.userType()) == sizeof(int)) // int should be enough, QFlag has that hardcoded
-        return me.valueToKeys(value.constData() ? *static_cast<const int*>(value.constData()) : 0);
+        return value.constData() ? *static_cast<const int*>(value.constData()) : 0;
+#else
+    Q_UNUSED(me);
 #endif
-    return me.valueToKeys(value.toInt());
+    return value.toInt();
+}
+
+QString EnumUtil::enumToString(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
+{
+    const auto me = metaEnum(value, typeName, metaObject);
+    if (!me.isValid())
+        return QString();
+    return me.valueToKeys(enumToInt(value, me));
 }
