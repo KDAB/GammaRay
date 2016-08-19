@@ -109,47 +109,9 @@ The connected slot is called in the context of the emitting thread.</source>
     </message>
 </context>
 <context>
-    <name>GammaRay::ActionModel</name>
-    <message>
-        <location filename="../plugins/actioninspector/actionmodel.cpp" line="+130"/>
-        <source>Address</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Checkable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Checked</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Priority</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Shortcut(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+50"/>
-        <source>Warning: Ambiguous shortcut detected.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>GammaRay::AggregatedPropertyModel</name>
     <message>
-        <location filename="../core/aggregatedpropertymodel.cpp" line="+274"/>
+        <location filename="../core/aggregatedpropertymodel.cpp" line="+270"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
@@ -166,6 +128,19 @@ The connected slot is called in the context of the emitting thread.</source>
     <message>
         <location line="+2"/>
         <source>Class</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GammaRay::AllCodecsModel</name>
+    <message>
+        <location filename="../plugins/codecbrowser/codecmodel.cpp" line="+76"/>
+        <source>Codec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Aliases</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -215,7 +190,7 @@ The connected slot is called in the context of the emitting thread.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+50"/>
         <source>Protocol violation, first message is not the server version.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -226,9 +201,47 @@ The connected slot is called in the context of the emitting thread.</source>
     </message>
 </context>
 <context>
+    <name>GammaRay::ClientActionModel</name>
+    <message>
+        <location filename="../plugins/actioninspector/clientactionmodel.cpp" line="+57"/>
+        <source>Warning: Ambiguous shortcut detected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Checkable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Checked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Priority</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Shortcut(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GammaRay::ClientConnectionManager</name>
     <message>
-        <location filename="../client/clientconnectionmanager.cpp" line="+185"/>
+        <location filename="../client/clientconnectionmanager.cpp" line="+175"/>
         <source>Connection refused.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -249,9 +262,106 @@ The connected slot is called in the context of the emitting thread.</source>
     </message>
 </context>
 <context>
+    <name>GammaRay::ClientMethodModel</name>
+    <message>
+        <location filename="../ui/tools/objectinspector/clientmethodmodel.cpp" line="+59"/>
+        <source>Method</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Constructor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Slot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Signal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <location line="+13"/>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-6"/>
+        <source>Public</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Protected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Private</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>
+Tag: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>&lt;none&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>
+Revision: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>overrides base class signal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>uses parameter type not registerd with the meta type system</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>
+Issues: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+25"/>
+        <source>Signature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Access</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Class</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GammaRay::ClientToolModel</name>
     <message>
-        <location filename="../ui/clienttoolmodel.cpp" line="+154"/>
+        <location filename="../ui/clienttoolmodel.cpp" line="+67"/>
         <source>This tool does not work in out-of-process mode.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -308,7 +418,7 @@ The connected slot is called in the context of the emitting thread.</source>
 <context>
     <name>GammaRay::ContextMenuExtension</name>
     <message>
-        <location filename="../ui/contextmenuextension.cpp" line="+46"/>
+        <location filename="../ui/contextmenuextension.cpp" line="+47"/>
         <source>Go to: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -491,7 +601,7 @@ GDB error was: %1</source>
 <context>
     <name>GammaRay::GuiSupport</name>
     <message>
-        <location filename="../plugins/guisupport/guisupport.cpp" line="+318"/>
+        <location filename="../plugins/guisupport/guisupport.cpp" line="+321"/>
         <source>variable</source>
         <translation type="unfinished"></translation>
     </message>
@@ -551,7 +661,6 @@ GDB error was: %1</source>
     <name>GammaRay::ItemDelegate</name>
     <message>
         <location filename="../ui/itemdelegate.cpp" line="+38"/>
-        <location filename="../ui/tools/modelinspector/modelinspectorwidget.cpp" line="+62"/>
         <source>(Item %r)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -665,7 +774,7 @@ GDB error was: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+31"/>
+        <location line="+32"/>
         <source>Failed to launch target &apos;%1&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -733,8 +842,21 @@ Error: %1</source>
 <context>
     <name>GammaRay::LocaleInspectorFactory</name>
     <message>
-        <location filename="../core/tools/localeinspector/localeinspector.cpp" line="+55"/>
+        <location filename="../ui/clienttoolmanager.cpp" line="+62"/>
         <source>Locales</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GammaRay::LogView</name>
+    <message>
+        <location filename="../plugins/wlcompositorinspector/logview.cpp" line="+459"/>
+        <source>Messages</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Timeline</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -859,7 +981,7 @@ Error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/mainwindow.cpp" line="+84"/>
+        <location filename="../ui/mainwindow.cpp" line="+88"/>
         <source>KDevelop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -879,12 +1001,12 @@ Error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+94"/>
+        <location line="+121"/>
         <source>GammaRay (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+7"/>
         <source>Code Navigation</source>
         <translation type="unfinished"></translation>
     </message>
@@ -934,7 +1056,7 @@ Error: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+35"/>
         <source>Tool %1 failed to load.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -993,7 +1115,7 @@ Error: %1</source>
 <context>
     <name>GammaRay::MessageHandlerFactory</name>
     <message>
-        <location filename="../core/tools/messagehandler/messagehandler.cpp" line="+231"/>
+        <location filename="../ui/clienttoolmanager.cpp" line="+1"/>
         <source>Messages</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1075,7 +1197,7 @@ Message Size: %6 of %7 (%8%)</source>
 <context>
     <name>GammaRay::MetaObjectBrowserFactory</name>
     <message>
-        <location filename="../core/tools/metaobjectbrowser/metaobjectbrowser.cpp" line="+115"/>
+        <location filename="../ui/clienttoolmanager.cpp" line="+1"/>
         <source>Meta Objects</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1091,15 +1213,37 @@ Message Size: %6 of %7 (%8%)</source>
 <context>
     <name>GammaRay::MetaObjectTreeClientProxyModel</name>
     <message>
-        <location filename="../ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp" line="+95"/>
+        <location filename="../ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp" line="+77"/>
+        <source>overrides base class signal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>method uses parameter type not registerd with the meta type system</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>overrides base class property</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>property with type not registered with the meta type system</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Issues:&lt;ul&gt;&lt;li&gt;%1&lt;/li&gt;&lt;/ul&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+44"/>
         <source>%1%</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>GammaRay::MetaObjectTreeModel</name>
     <message>
-        <location filename="../core/metaobjecttreemodel.cpp" line="+107"/>
+        <location line="+8"/>
         <source>Meta Object Class</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1132,20 +1276,33 @@ Message Size: %6 of %7 (%8%)</source>
 <context>
     <name>GammaRay::MetaTypeBrowserFactory</name>
     <message>
-        <location filename="../core/tools/metatypebrowser/metatypebrowser.cpp" line="+50"/>
+        <location filename="../ui/clienttoolmanager.cpp" line="+1"/>
         <source>Meta Types</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>GammaRay::MetaTypesModel</name>
+    <name>GammaRay::MetaTypeBrowserWidget</name>
     <message>
-        <location filename="../core/tools/metatypebrowser/metatypesmodel.cpp" line="+54"/>
-        <source>N/A</source>
+        <location filename="../ui/tools/metatypebrowser/metatypebrowserwidget.ui"/>
+        <source>&amp;Rescan Meta Types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+63"/>
+        <location/>
+        <source>Check for changes to the meta type database.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GammaRay::MetaTypesClientModel</name>
+    <message>
+        <location filename="../ui/tools/metatypebrowser/metatypesclientmodel.cpp" line="+51"/>
+        <source>yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+16"/>
         <source>Type Name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1167,6 +1324,34 @@ Message Size: %6 of %7 (%8%)</source>
     <message>
         <location line="+2"/>
         <source>Type Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Compare</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Has equality comparison operators registered.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Has debug stream operators registered.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GammaRay::MetaTypesModel</name>
+    <message>
+        <location filename="../core/tools/metatypebrowser/metatypesmodel.cpp" line="+62"/>
+        <source>N/A</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1224,7 +1409,7 @@ Message Size: %6 of %7 (%8%)</source>
 <context>
     <name>GammaRay::MethodsExtension</name>
     <message>
-        <location filename="../core/tools/objectinspector/methodsextension.cpp" line="+103"/>
+        <location filename="../core/tools/objectinspector/methodsextension.cpp" line="+104"/>
         <source>%1: Signal %2 emitted, arguments: %3</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1247,7 +1432,7 @@ Message Size: %6 of %7 (%8%)</source>
 <context>
     <name>GammaRay::MethodsTab</name>
     <message>
-        <location filename="../ui/tools/objectinspector/methodstab.cpp" line="+110"/>
+        <location filename="../ui/tools/objectinspector/methodstab.cpp" line="+114"/>
         <source>Invoke</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1263,17 +1448,9 @@ Message Size: %6 of %7 (%8%)</source>
     </message>
 </context>
 <context>
-    <name>GammaRay::MimeTypesFactory</name>
-    <message>
-        <location filename="../core/tools/mimetypes/mimetypes.cpp" line="+51"/>
-        <source>Mime Types</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>GammaRay::MimeTypesModel</name>
     <message>
-        <location filename="../core/tools/mimetypes/mimetypesmodel.cpp" line="+171"/>
+        <location filename="../plugins/mimetypes/mimetypesmodel.cpp" line="+171"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1306,7 +1483,7 @@ Message Size: %6 of %7 (%8%)</source>
 <context>
     <name>GammaRay::ModelCellModel</name>
     <message>
-        <location filename="../core/tools/modelinspector/modelcellmodel.cpp" line="+94"/>
+        <location filename="../plugins/modelinspector/modelcellmodel.cpp" line="+112"/>
         <source>Role #%1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1327,23 +1504,10 @@ Message Size: %6 of %7 (%8%)</source>
     </message>
 </context>
 <context>
-    <name>GammaRay::ModelInspectorFactory</name>
-    <message>
-        <location filename="../core/tools/modelinspector/modelinspector.cpp" line="+166"/>
-        <source>Models</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>GammaRay::ModelInspectorWidget</name>
     <message>
-        <location filename="../ui/tools/modelinspector/modelinspectorwidget.ui"/>
+        <location filename="../plugins/modelinspector/modelinspectorwidget.ui"/>
         <source>Model Content</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
-        <source>Cell Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1353,7 +1517,7 @@ Message Size: %6 of %7 (%8%)</source>
     </message>
     <message>
         <location/>
-        <location filename="../ui/tools/modelinspector/modelinspectorwidget.cpp" line="+71"/>
+        <location filename="../plugins/modelinspector/modelinspectorwidget.cpp" line="+148"/>
         <source>Invalid</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1368,8 +1532,28 @@ Message Size: %6 of %7 (%8%)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/tools/modelinspector/modelinspectorwidget.cpp" line="-1"/>
+        <location filename="../plugins/modelinspector/modelinspectorwidget.cpp" line="-1"/>
         <source>Row: %1 Column: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../plugins/modelinspector/modelinspectorwidget.ui"/>
+        <source>Models</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Selection Models</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Cell Content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Flags:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1462,12 +1646,12 @@ Message Size: %6 of %7 (%8%)</source>
 <context>
     <name>GammaRay::ObjectInspectorFactory</name>
     <message>
-        <location filename="../core/tools/objectinspector/objectinspector.cpp" line="+123"/>
+        <location filename="../ui/tools/objectinspector/objectinspectorwidget.h" line="+85"/>
         <source>Objects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/tools/objectinspector/objectinspectorwidget.h" line="+92"/>
+        <location line="+8"/>
         <source>Properties</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1500,84 +1684,8 @@ Message Size: %6 of %7 (%8%)</source>
 <context>
     <name>GammaRay::ObjectInspectorWidget</name>
     <message>
-        <location filename="../ui/tools/objectinspector/objectinspectorwidget.cpp" line="+103"/>
+        <location filename="../ui/tools/objectinspector/objectinspectorwidget.cpp" line="+100"/>
         <source>Object @ %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>GammaRay::ObjectMethodModel</name>
-    <message>
-        <location filename="../core/objectmethodmodel.cpp" line="+55"/>
-        <source>Method</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Constructor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Slot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Signal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <location line="+12"/>
-        <source>Unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="-6"/>
-        <source>Public</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Protected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Private</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>
-Tag: %1
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>&lt;none&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Revision: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+21"/>
-        <source>Signature</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Access</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1688,6 +1796,16 @@ Tag: %1
     </message>
     <message>
         <location line="+1"/>
+        <source>Mime Types</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Models</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Network</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1732,12 +1850,12 @@ Tag: %1
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>Selection Models</source>
+        <location line="+9"/>
+        <source>Wayland Compositor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-8"/>
         <source>Signals</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1810,7 +1928,7 @@ Tag: %1
 <context>
     <name>GammaRay::Probe</name>
     <message>
-        <location filename="../core/probe.cpp" line="+401"/>
+        <location filename="../core/probe.cpp" line="+390"/>
         <source>PID %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2090,7 +2208,7 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::ProxyToolUiFactory</name>
     <message>
-        <location filename="../ui/proxytooluifactory.cpp" line="+53"/>
+        <location filename="../ui/proxytooluifactory.cpp" line="+58"/>
         <source>Plugin &apos;%1&apos; could not be loaded.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2187,7 +2305,7 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::QmlSupport</name>
     <message>
-        <location filename="../plugins/qmlsupport/qmlsupport.cpp" line="+120"/>
+        <location filename="../plugins/qmlsupport/qmlsupport.cpp" line="+122"/>
         <source>&lt;empty&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2225,26 +2343,6 @@ Probe available: %5</source>
     <message>
         <location/>
         <source>Reset camera.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
-        <source>First Person</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
-        <source>First person camera control.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
-        <source>Orbit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
-        <source>Orbit camera control.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2299,14 +2397,6 @@ Probe available: %5</source>
     </message>
 </context>
 <context>
-    <name>GammaRay::Qt3DInspectorUiFactory</name>
-    <message>
-        <location filename="../plugins/qt3dinspector/qt3dinspectorwidget.cpp" line="+173"/>
-        <source>Geometry</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>GammaRay::Qt3DInspectorWidget</name>
     <message>
         <location filename="../plugins/qt3dinspector/qt3dinspectorwidget.ui"/>
@@ -2329,7 +2419,7 @@ Probe available: %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../plugins/qt3dinspector/qt3dinspectorwidget.cpp" line="-59"/>
+        <location filename="../plugins/qt3dinspector/qt3dinspectorwidget.cpp" line="+114"/>
         <source>Entity @ %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2375,7 +2465,7 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::QuickInspectorUiFactory</name>
     <message>
-        <location filename="../plugins/quickinspector/quickinspectorwidget.cpp" line="+197"/>
+        <location filename="../plugins/quickinspector/quickinspectorwidget.cpp" line="+198"/>
         <source>Material</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2458,12 +2548,12 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::RemoteViewWidget</name>
     <message>
-        <location filename="../ui/remoteviewwidget.cpp" line="+51"/>
+        <location filename="../ui/remoteviewwidget.cpp" line="+54"/>
         <source>No remote view available.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+58"/>
+        <location line="+60"/>
         <source>Pan View</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2521,7 +2611,7 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::ResourceBrowserFactory</name>
     <message>
-        <location filename="../core/tools/resourcebrowser/resourcebrowser.cpp" line="+105"/>
+        <location filename="../ui/clienttoolmanager.cpp" line="+1"/>
         <source>Resources</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2543,6 +2633,87 @@ Probe available: %5</source>
         <location line="+6"/>
         <location line="+19"/>
         <source>Save As</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GammaRay::ResourceInfo</name>
+    <message>
+        <location filename="../plugins/wlcompositorinspector/resourceinfo.cpp" line="+145"/>
+        <source>Version: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GammaRay::ResourceInfoExtractors</name>
+    <message>
+        <location line="-81"/>
+        <source>Role: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Buffer size: (%1x%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Is mapped: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Title: &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Class name: &quot;%1&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Surface: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Manufacturer: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Model: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Physical size: (%1x%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Position: (%1x%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Current mode: %1x%2@%3Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Scale factor: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Transform: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Subpixel: %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2598,6 +2769,47 @@ Probe available: %5</source>
     <message>
         <location filename="../ui/searchlinecontroller.cpp" line="+53"/>
         <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GammaRay::SelectedCodecsModel</name>
+    <message>
+        <location filename="../plugins/codecbrowser/codecmodel.cpp" line="+40"/>
+        <source>Codec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Encoded Data</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GammaRay::SelectionModelModel</name>
+    <message>
+        <location filename="../plugins/modelinspector/selectionmodelmodel.cpp" line="+192"/>
+        <source>Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>#Items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>#Rows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>#Columns</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2660,12 +2872,12 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::SignalHistoryModel</name>
     <message>
-        <location filename="../plugins/signalmonitor/signalhistorymodel.cpp" line="+126"/>
+        <location filename="../plugins/signalmonitor/signalhistorymodel.cpp" line="+129"/>
         <source>Address: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+34"/>
         <source>Object</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2709,7 +2921,7 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::StandardPathsFactory</name>
     <message>
-        <location filename="../core/tools/standardpaths/standardpaths.cpp" line="+47"/>
+        <location filename="../ui/clienttoolmanager.cpp" line="+1"/>
         <source>Standard Paths</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2791,7 +3003,7 @@ Probe available: %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../plugins/statemachineviewer/statemachineviewerwidget.cpp" line="+256"/>
+        <location filename="../plugins/statemachineviewer/statemachineviewerwidget.cpp" line="+252"/>
         <source>Entity @ %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2845,7 +3057,7 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::StyleInjector</name>
     <message>
-        <location filename="../launcher/injector/styleinjector.cpp" line="+82"/>
+        <location filename="../launcher/injector/styleinjector.cpp" line="+94"/>
         <source>Injector style plugin is not found in the Qt style plug-in search path or cannot be loaded</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3033,7 +3245,7 @@ Probe available: %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../plugins/timertop/timermodel.cpp" line="+336"/>
+        <location filename="../plugins/timertop/timermodel.cpp" line="+295"/>
         <source>Object Name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3089,13 +3301,8 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::ToolPluginModel</name>
     <message>
-        <location filename="../core/toolpluginmodel.cpp" line="+80"/>
+        <location filename="../core/toolpluginmodel.cpp" line="+78"/>
         <source>Id</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3257,7 +3464,7 @@ Probe available: %5</source>
 <context>
     <name>GammaRay::WidgetInspectorUiFactory</name>
     <message>
-        <location filename="../plugins/widgetinspector/widgetinspectorwidget.cpp" line="+255"/>
+        <location filename="../plugins/widgetinspector/widgetinspectorwidget.cpp" line="+256"/>
         <source>Attributes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3376,7 +3583,7 @@ Probe available: %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/objectmodelbase.h" line="+147"/>
+        <location filename="../core/objectmodelbase.h" line="+145"/>
         <source>Object</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3386,7 +3593,7 @@ Probe available: %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/util.cpp" line="+264"/>
+        <location filename="../core/util.cpp" line="+299"/>
         <source>&lt;p style=&apos;white-space:pre&apos;&gt;Object name: %1
 Type: %2
 Parent: %3 (Address: %4)
@@ -3394,7 +3601,7 @@ Number of children: %5&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/varianthandler.cpp" line="+113"/>
+        <location filename="../core/varianthandler.cpp" line="+128"/>
         <source>&lt;no icon&gt;</source>
         <translation type="unfinished"></translation>
     </message>
