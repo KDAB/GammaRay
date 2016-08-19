@@ -107,6 +107,16 @@ public:
     void setLabel(const QString &label);
 
     /**
+     * Returns a fixed string uniquely describing the host program.
+     */
+    QString key() const;
+
+    /**
+     * Sets the fixed key of this instance used e.g. when saving settings.
+     */
+    void setKey(const QString &key);
+
+    /**
      * Returns true for remote clients and false for the in-probe server endpoint.
      */
     virtual bool isRemoteClient() const = 0;
@@ -226,6 +236,7 @@ private:
     Protocol::ObjectAddress m_myAddress;
 
     QString m_label;
+    QString m_key;
 };
 }
 

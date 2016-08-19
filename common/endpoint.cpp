@@ -385,3 +385,13 @@ void Endpoint::setLabel(const QString &label)
 {
     m_label = label;
 }
+
+QString Endpoint::key() const
+{
+    return m_key;
+}
+
+void Endpoint::setKey(const QString &key)
+{
+    m_key = key;
+}

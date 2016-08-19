@@ -190,8 +190,10 @@ void Client::messageReceived(const Message &msg)
         case Protocol::ServerInfo:
         {
             QString label;
-            msg >> label;
+            QString key;
+            msg >> label >> key;
             setLabel(label);
+            setKey(key);
             m_initState |= ServerInfoReceived;
             break;
         }

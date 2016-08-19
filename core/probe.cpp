@@ -387,6 +387,8 @@ void Probe::delayedInit()
     if (appName.isEmpty())
         appName = tr("PID %1").arg(qApp->applicationPid());
     m_server->setLabel(appName);
+    // The applicationName might be translated, so let's go with the application file base name
+    m_server->setKey(QFileInfo(qApp->applicationFilePath()).completeBaseName());
     m_server->listen();
     ProbeSettings::sendServerAddress(m_server->externalAddress());
 
