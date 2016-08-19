@@ -1,13 +1,13 @@
 {
     "id": "gammaray_modelinspector",
     "name": "Models",
-    "types": [
+    "name[de]": "Modelle",
+    "selectableTypes": [
         "QAbstractItemModel",
         "QItemSelectionModel"
     ],
-    "selectableTypes": [
+    "types": [
         "QAbstractItemModel",
         "QItemSelectionModel"
     ]
 }
-
