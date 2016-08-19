@@ -1,6 +1,35 @@
 Release Highlights
 ==================
 
+Version 2.6.0
+-------------
+ * Reworked tool view handling, enabling deeper IDE integration of individual tools.
+ * Merged model and selection model inspector.
+ * Fixed crash when quickly changing selection in model inspector.
+ * Add QMetaObject validation, identifying common problems with signal/slot declarations.
+ * Support object navigation to and from the model and text document inspectors as well as the signal plotter.
+ * Visualize model selections.
+ * Allow to inspect model content also for disabled cells.
+ * Show model cell flags in model inspector.
+ * Fix sorting in object method view.
+ * Fix handling of source model changes for proxy and selection models.
+ * Add in-app picking for selection models and actions.
+ * Extended the user manual with example problems diagnosed with GammaRay.
+ * Allow to rescan the meta type database.
+ * Add object navigation from the meta type view to the meta object browser.
+ * Show registered comparison and stream operators in the meta type browser.
+ * Add object navigation support to the action and timer inspectors.
+ * Visualize enabled state in the action inspector too.
+ * Support editing of nested properties of value types.
+ * Fix various enum/flag display issues in the property view.
+ * Fix AArch64 detection on ELF platforms.
+ * Support ABI detection on systems without ldd.
+ * Add Wayland compositor inspector.
+ * Add advanced element picking mode for widget and Qt Quick inspectors.
+ * Fix crash when encountering an empty translation context.
+ * Fix a number of memory leaks.
+ * Fix crash when selecting a dangling top-level layout in the widget inspector.
+
 Version 2.5.1:
 --------------
  * Fix build of external plugins when using a non-standard GammaRay install prefix.
