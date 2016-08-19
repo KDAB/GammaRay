@@ -42,6 +42,7 @@ namespace GammaRay
 
 class ResourceInfoExtractors
 {
+    Q_DECLARE_TR_FUNCTIONS(GammaRay::ResourceInfoExtractors)
 public:
   typedef std::function<void (wl_resource *, QStringList &)> Function;
 
@@ -60,9 +61,9 @@ public:
   static void wlsurfaceInfo(wl_resource *res, QStringList &lines)
   {
     QWaylandSurface *surface = QWaylandSurface::fromResource(res);
-    lines << QObject::tr("Role: %1").arg(surface->role() ? QString(surface->role()->name()) : QStringLiteral("none"));
-    lines << QObject::tr("Buffer size: (%1x%2)").arg(QString::number(surface->size().width()), QString::number(surface->size().height()));
-    lines << QObject::tr("Is mapped: %1").arg(surface->isMapped() ? QStringLiteral("true") : QStringLiteral("false"));
+    lines << tr("Role: %1").arg(surface->role() ? QString(surface->role()->name()) : QStringLiteral("none"));
+    lines << tr("Buffer size: (%1x%2)").arg(QString::number(surface->size().width()), QString::number(surface->size().height()));
+    lines << tr("Is mapped: %1").arg(surface->isMapped() ? QStringLiteral("true") : QStringLiteral("false"));
   }
   static void wlshellsurfaceInfo(wl_resource *res, QStringList &lines)
   {
@@ -71,11 +72,11 @@ public:
       return;
     }
 
-    lines << QObject::tr("Title: \"%1\"").arg(ss->title());
-    lines << QObject::tr("Class name: \"%1\"").arg(ss->className());
+    lines << tr("Title: \"%1\"").arg(ss->title());
+    lines << tr("Class name: \"%1\"").arg(ss->className());
 
     ResourceInfo resinfo(ss->surface()->resource());
-    lines << QObject::tr("Surface: %1").arg(resinfo.name());
+    lines << tr("Surface: %1").arg(resinfo.name());
     foreach (const QString &line, resinfo.infoLines()) {
       lines << QStringLiteral("   ") + line;
     }
@@ -84,15 +85,15 @@ public:
   {
     QWaylandOutput *output = QWaylandOutput::fromResource(res);
 
-    lines << QObject::tr("Manufacturer: %1").arg(output->manufacturer());
-    lines << QObject::tr("Model: %1").arg(output->model());
-    lines << QObject::tr("Physical size: (%1x%2)").arg(QString::number(output->physicalSize().width()), QString::number(output->physicalSize().height()));
-    lines << QObject::tr("Position: (%1x%2)").arg(QString::number(output->position().x()), QString::number(output->position().y()));
+    lines << tr("Manufacturer: %1").arg(output->manufacturer());
+    lines << tr("Model: %1").arg(output->model());
+    lines << tr("Physical size: (%1x%2)").arg(QString::number(output->physicalSize().width()), QString::number(output->physicalSize().height()));
+    lines << tr("Position: (%1x%2)").arg(QString::number(output->position().x()), QString::number(output->position().y()));
     const QWaylandOutput::Mode &mode = output->mode();
-    lines << QObject::tr("Current mode: %1x%2@%3Hz").arg(QString::number(mode.size.width()), QString::number(mode.size.height()), QString::number(mode.refreshRate));
-    lines << QObject::tr("Scale factor: %1").arg(QString::number(output->scaleFactor()));
-    lines << QObject::tr("Transform: %1").arg(QMetaEnum::fromType<QWaylandOutput::Transform>().valueToKey(output->transform()));
-    lines << QObject::tr("Subpixel: %1").arg(QMetaEnum::fromType<QWaylandOutput::Subpixel>().valueToKey(output->subpixel()));
+    lines << tr("Current mode: %1x%2@%3Hz").arg(QString::number(mode.size.width()), QString::number(mode.size.height()), QString::number(mode.refreshRate));
+    lines << tr("Scale factor: %1").arg(QString::number(output->scaleFactor()));
+    lines << tr("Transform: %1").arg(QMetaEnum::fromType<QWaylandOutput::Transform>().valueToKey(output->transform()));
+    lines << tr("Subpixel: %1").arg(QMetaEnum::fromType<QWaylandOutput::Subpixel>().valueToKey(output->subpixel()));
   }
 
   QHash<QByteArray, Function> m_infoExtractors;
@@ -141,7 +142,7 @@ QString ResourceInfo::info() const
 QStringList ResourceInfo::infoLines() const
 {
   QStringList lines;
-  lines << QObject::tr("Version: %1").arg(QString::number(wl_resource_get_version(m_resource)));
+  lines << tr("Version: %1").arg(QString::number(wl_resource_get_version(m_resource)));
 
   if (const auto &func = s_infoExtractors->extractor(m_resource)) {
     func(m_resource, lines);

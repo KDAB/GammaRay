@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_RESOURCEINFO_H
 #define GAMMARAY_RESOURCEINFO_H
 
+#include <QCoreApplication>
 #include <QStringList>
 
 struct wl_resource;
@@ -39,6 +40,7 @@ namespace GammaRay
 
 class ResourceInfo
 {
+    Q_DECLARE_TR_FUNCTIONS(GammaRay::ResourceInfo)
 public:
   ResourceInfo(wl_resource *resource);
 
