@@ -59,12 +59,12 @@ using namespace GammaRay;
         } \
     }
 
-MAKE_FACTORY(LocaleInspector,   qApp->translate("LocaleInspectorFactory", "Locales"));
-MAKE_FACTORY(MessageHandler,    qApp->translate("MessageHandlerFactory", "Messages"));
-MAKE_FACTORY(MetaObjectBrowser, qApp->translate("MetaObjectBrowserFactory", "Meta Objects"));
-MAKE_FACTORY(MetaTypeBrowser,   qApp->translate("MetaTypeBrowserFactory", "Meta Types"));
-MAKE_FACTORY(ResourceBrowser,   qApp->translate("ResourceBrowserFactory", "Resources"));
-MAKE_FACTORY(StandardPaths,     qApp->translate("StandardPathsFactory", "Standard Paths"));
+MAKE_FACTORY(LocaleInspector,   qApp->translate("GammaRay::LocaleInspectorFactory", "Locales"));
+MAKE_FACTORY(MessageHandler,    qApp->translate("GammaRay::MessageHandlerFactory", "Messages"));
+MAKE_FACTORY(MetaObjectBrowser, qApp->translate("GammaRay::MetaObjectBrowserFactory", "Meta Objects"));
+MAKE_FACTORY(MetaTypeBrowser,   qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"));
+MAKE_FACTORY(ResourceBrowser,   qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"));
+MAKE_FACTORY(StandardPaths,     qApp->translate("GammaRay::StandardPathsFactory", "Standard Paths"));
 
 struct PluginRepository {
     PluginRepository() {}
