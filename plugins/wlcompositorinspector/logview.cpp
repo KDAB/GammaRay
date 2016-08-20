@@ -348,7 +348,7 @@ public:
       //draw the text after having drawn all the lines, so we're sure they don't go over it
       s = startLine;
       painter.setPen(palette.color(QPalette::Highlight));
-      for (qreal i = startLine * linesSpacing; i < drawRect.right(); i += step / substeps, s++) {
+      for (qreal i = startLine * linesSpacing; i < drawRect.right(); i += step / substeps, s++) { //krazy:exclude=postfixop
         bool isStep = s % substeps == 0;
         if (isStep) {
           painter.drawText(i-100, 0, 200, 200, Qt::AlignHCenter, QString("%1ms").arg(QString::number(qreal(i * m_zoom) / 1e6, 'g', 4)));
@@ -362,7 +362,7 @@ public:
         const auto &point = m_data.at(i);
         qreal offset = point.time - m_start;
         qreal x = offset / m_zoom;
-        qreal y = qMax(20., drawRect.y());
+        qreal y = qMax(qreal(20.), drawRect.y());
         if (!drawRect.contains(QPoint(x, y))) {
           if (hasDrawn)
             break;
