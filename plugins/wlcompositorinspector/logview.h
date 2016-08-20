@@ -41,7 +41,7 @@ class LogView : public QTabWidget
 {
   Q_OBJECT
 public:
-  LogView(QWidget *p);
+  explicit LogView(QWidget *p);
 
   QSize sizeHint() const override;
   void logMessage(qint64 time, const QByteArray &msg);

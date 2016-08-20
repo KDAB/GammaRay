@@ -29,7 +29,7 @@
 #ifndef WLCOMPOSITORINTERFACE_H
 #define WLCOMPOSITORINTERFACE_H
 
-#include "config-gammaray.h"
+#include <config-gammaray.h>
 
 #include <QObject>
 
@@ -43,7 +43,7 @@ class WlCompositorInterface : public QObject
 {
   Q_OBJECT
 public:
-  WlCompositorInterface(QObject *parent);
+  explicit WlCompositorInterface(QObject *parent);
   ~WlCompositorInterface();
 
 public slots:

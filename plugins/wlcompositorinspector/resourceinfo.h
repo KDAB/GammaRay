@@ -42,7 +42,7 @@ class ResourceInfo
 {
     Q_DECLARE_TR_FUNCTIONS(GammaRay::ResourceInfo)
 public:
-  ResourceInfo(wl_resource *resource);
+  explicit ResourceInfo(wl_resource *resource);
 
   uint32_t id() const;
   const char *interfaceName() const;
