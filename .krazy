@@ -31,4 +31,4 @@ SKIP /build-
 SKIP Doxyfile.cmake
 
 #skip the borrowed code in the cmake subdir
-SKIP /cmake/Toolchain-QNX65.cmake|/cmake/Toolchain-QNX66.cmake|/cmake/ECMQt4To5Porting.cmake|/cmake/ECMEnableSanitizers.cmake|/cmake/ECMGeneratePriFile.cmake|/cmake/ECMQueryQmake.cmake|/cmake/Toolchain-android.cmake
+SKIP /cmake/Toolchain-QNX65.cmake|/cmake/Toolchain-QNX66.cmake|/cmake/ECMQt4To5Porting.cmake|/cmake/ECMEnableSanitizers.cmake|/cmake/ECMGeneratePriFile.cmake|/cmake/ECMQueryQmake.cmake|/cmake/Toolchain-android.cmake|/cmake/FindWayland.cmake|/cmake/ECMFindModuleHelpers.cmake
