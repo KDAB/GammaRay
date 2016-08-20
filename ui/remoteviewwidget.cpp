@@ -101,7 +101,7 @@ void RemoteViewWidget::setName(const QString &name)
 {
     m_interface = ObjectBroker::object<RemoteViewInterface *>(name);
     connect(m_interface, SIGNAL(reset()), this, SLOT(reset()));
-    connect(m_interface, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)), this, SLOT(elementsAtReceived(GammaRay::ObjectIds, int)));
+    connect(m_interface, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)), this, SLOT(elementsAtReceived(GammaRay::ObjectIds,int)));
     connect(m_interface, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)), this,
             SLOT(frameUpdated(GammaRay::RemoteViewFrame)));
     m_interface->clientViewUpdated();
