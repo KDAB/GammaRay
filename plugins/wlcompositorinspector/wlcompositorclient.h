@@ -38,7 +38,7 @@ class WlCompositorClient : public WlCompositorInterface
   Q_OBJECT
   Q_INTERFACES(GammaRay::WlCompositorInterface)
 public:
-  WlCompositorClient(QObject *p);
+  explicit WlCompositorClient(QObject *p);
 
 public slots:
   void connected() override;
