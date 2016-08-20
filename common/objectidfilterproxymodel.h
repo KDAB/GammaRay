@@ -26,8 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_OBJECIDFILTERPROXYMODEL_H
-#define GAMMARAY_OBJECIDFILTERPROXYMODEL_H
+#ifndef GAMMARAY_OBJECTIDFILTERPROXYMODEL_H
+#define GAMMARAY_OBJECTIDFILTERPROXYMODEL_H
 
 #include "gammaray_common_export.h"
 #include "3rdparty/kde/krecursivefilterproxymodel.h"
