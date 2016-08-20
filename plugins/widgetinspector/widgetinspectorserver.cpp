@@ -147,7 +147,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
             SLOT(objectSelected(QObject*)));
 
     connect(m_remoteView, SIGNAL(elementsAtRequested(QPoint,GammaRay::RemoteViewInterface::RequestMode)), this, SLOT(requestElementsAt(QPoint,GammaRay::RemoteViewInterface::RequestMode)));
-    connect(this, SIGNAL(elementsAtReceived(const GammaRay::ObjectIds,int)), m_remoteView, SIGNAL(elementsAtReceived(const GammaRay::ObjectIds,int)));
+    connect(this, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)), m_remoteView, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)));
     connect(m_remoteView, SIGNAL(doPickElementId(GammaRay::ObjectId)), this, SLOT(pickElementId(GammaRay::ObjectId)));
 
     checkFeatures();
