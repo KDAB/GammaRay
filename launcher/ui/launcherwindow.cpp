@@ -55,6 +55,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
     connect(ui->buttonBox, SIGNAL(helpRequested()), this, SLOT(help()));
 
     setWindowTitle(tr("GammaRay Launcher"));
+    ui->buttonBox->button(QDialogButtonBox::Help)->setEnabled(HelpController::isAvailable());
 
     QSettings settings;
     ui->tabWidget->setCurrentIndex(settings.value(QStringLiteral("Launcher/TabIndex")).toInt());
