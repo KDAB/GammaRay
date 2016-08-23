@@ -59,7 +59,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="../resources/gammaray.qrc">:/gammaray/GammaRay-128x128.png</pixmap>
+            <pixmap resource="../resources/gammaray.qrc">:/gammaray/GammaRay-Trademark-medium.png</pixmap>
            </property>
           </widget>
          </item>

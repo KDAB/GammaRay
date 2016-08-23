@@ -11,6 +11,7 @@
     <file>kdablogo160.png</file>
     <file>splashscreen.png</file>
     <file>kdab-gammaray-logo.png</file>
+    <file>GammaRay-Trademark-medium.png</file>
 
     <!-- class icons -->
     <file alias="classes/QDateTimeEdit/default.png">classes/datetimeedit.png</file>
