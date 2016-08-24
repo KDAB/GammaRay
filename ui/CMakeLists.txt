@@ -36,6 +36,7 @@ set(gammaray_ui_srcs
   propertyeditor/propertypaletteeditor.cpp
   propertyeditor/palettedialog.cpp
   propertyeditor/propertyeditordelegate.cpp
+  propertyeditor/propertyenumeditor.cpp
   propertyeditor/propertymatrixdialog.cpp
   propertyeditor/propertymatrixeditor.cpp
   propertyeditor/propertymatrixmodel.cpp

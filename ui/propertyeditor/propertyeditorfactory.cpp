@@ -28,6 +28,7 @@
 
 #include "propertyeditorfactory.h"
 #include "propertycoloreditor.h"
+#include "propertyenumeditor.h"
 #include "propertyfonteditor.h"
 #include "propertyintpaireditor.h"
 #include "propertydoublepaireditor.h"
@@ -59,6 +60,10 @@ PropertyEditorFactory::PropertyEditorFactory()
     addEditor(QVariant::Vector4D, new QStandardItemEditorCreator<PropertyMatrixEditor>());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     addEditor(QVariant::Quaternion, new QStandardItemEditorCreator<PropertyMatrixEditor>());
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    registerEditor(qMetaTypeId<EnumValue>(), new QStandardItemEditorCreator<PropertyEnumEditor>());
 #endif
 }
 
