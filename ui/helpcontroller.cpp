@@ -34,10 +34,12 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #include <QFileInfo>
 #include <QProcess>
 #include <QString>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+#include <QLibraryInfo>
 #include <QStandardPaths>
 #endif
 
@@ -100,10 +102,15 @@ bool HelpController::isAvailable()
     if (!d->assistantPath.isEmpty() && !d->qhcPath.isEmpty())
         return true;
 
-    d->assistantPath = QStandardPaths::findExecutable(QStringLiteral("assistant"));
-    if (d->assistantPath.isEmpty()) {
-        qDebug() << "Qt Assistant not found, help not available.";
-        return false;
+    d->assistantPath = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator() + QStringLiteral("assistant");
+    QFileInfo assistFile(d->assistantPath);
+    if (!assistFile.isExecutable()) {
+        qDebug() << "Qt Assistant not found in QT_INSTALL_BINS. Looking in standard Path next.";
+        d->assistantPath = QStandardPaths::findExecutable(QStringLiteral("assistant"));
+        if (d->assistantPath.isEmpty()) {
+            qDebug() << "Qt Assistant not found, help not available.";
+            return false;
+        }
     }
 
     const QString qhcPath = Paths::documentationPath() + QLatin1String("/gammaray.qhc");
