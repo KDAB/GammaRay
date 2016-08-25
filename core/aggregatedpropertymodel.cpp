@@ -215,9 +215,22 @@ bool AggregatedPropertyModel::setData(const QModelIndex &index, const QVariant &
     const auto adaptor = adaptorForIndex(index);
     switch (role) {
     case Qt::EditRole:
-        adaptor->writeProperty(index.row(), value);
+    {
+        if (value.userType() == qMetaTypeId<EnumValue>()) {
+            const auto d = adaptor->propertyData(index.row());
+            if (d.value().type() == QVariant::Int) {
+                adaptor->writeProperty(index.row(), value.value<EnumValue>().value());
+            } else {
+                auto v = d.value();
+                *(static_cast<int*>(v.data())) = value.value<EnumValue>().value();
+                adaptor->writeProperty(index.row(), v);
+            }
+        } else {
+            adaptor->writeProperty(index.row(), value);
+        }
         propagateWrite(adaptor);
         return true;
+    }
     case PropertyModel::ResetActionRole:
         adaptor->resetProperty(index.row());
         return true;
