@@ -62,9 +62,7 @@ PropertyEditorFactory::PropertyEditorFactory()
     addEditor(QVariant::Quaternion, new QStandardItemEditorCreator<PropertyMatrixEditor>());
 #endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    registerEditor(qMetaTypeId<EnumValue>(), new QStandardItemEditorCreator<PropertyEnumEditor>());
-#endif
+    registerEditor(static_cast<TypeId>(qMetaTypeId<EnumValue>()), new QStandardItemEditorCreator<PropertyEnumEditor>());
 }
 
 PropertyEditorFactory *PropertyEditorFactory::instance()
