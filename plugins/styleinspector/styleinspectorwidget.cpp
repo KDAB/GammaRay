@@ -69,6 +69,11 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
     ui->standardPaletteView->setModel(ObjectBroker::model(QStringLiteral(
                                                               "com.kdab.GammaRay.StyleInspector.PaletteModel")));
 
+    ui->styleHintView->header()->setObjectName("styleHintViewHeader");
+    ui->styleHintView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->styleHintView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->styleHintView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.StyleHintModel")));
+
     // TODO this will fail due to lazy model population
     if (ui->styleSelector->count())
         styleSelected(0);

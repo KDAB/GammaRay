@@ -32,6 +32,7 @@
 #include "pixelmetricmodel.h"
 #include "primitivemodel.h"
 #include "standardiconmodel.h"
+#include "stylehintmodel.h"
 
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeinterface.h>
@@ -53,6 +54,7 @@ StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
     , m_pixelMetricModel(new PixelMetricModel(this))
     , m_standardIconModel(new StandardIconModel(this))
     , m_standardPaletteModel(new PaletteModel(this))
+    , m_styleHintModel(new StyleHintModel(this))
 {
     ObjectTypeFilterProxyModel<QStyle> *styleFilter = new ObjectTypeFilterProxyModel<QStyle>(this);
     styleFilter->setSourceModel(probe->objectListModel());
@@ -80,6 +82,7 @@ StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
     probe->registerModel(QStringLiteral(
                              "com.kdab.GammaRay.StyleInspector.PaletteModel"),
                          m_standardPaletteModel);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.StyleHintModel"), m_styleHintModel);
 }
 
 StyleInspector::~StyleInspector()
@@ -99,6 +102,7 @@ void StyleInspector::styleSelected(const QItemSelection &selection)
     m_pixelMetricModel->setStyle(style);
     m_standardIconModel->setStyle(style);
     m_standardPaletteModel->setPalette(style ? style->standardPalette() : qApp->palette());
+    m_styleHintModel->setStyle(style);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

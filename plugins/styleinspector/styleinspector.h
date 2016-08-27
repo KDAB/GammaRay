@@ -46,6 +46,7 @@ class PaletteModel;
 class PixelMetricModel;
 class PrimitiveModel;
 class StandardIconModel;
+class StyleHintModel;
 
 class StyleInspector : public StyleInspectorInterface
 {
@@ -65,6 +66,7 @@ private:
     PixelMetricModel *m_pixelMetricModel;
     StandardIconModel *m_standardIconModel;
     PaletteModel *m_standardPaletteModel;
+    StyleHintModel *m_styleHintModel;
 };
 
 class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle, StyleInspector>

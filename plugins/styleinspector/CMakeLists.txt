@@ -11,6 +11,7 @@ set(gammaray_styleinspector_plugin_srcs
   complexcontrolmodel.cpp
   dynamicproxystyle.cpp
   styleinspectorinterface.cpp
+  stylehintmodel.cpp
 
   ${CMAKE_SOURCE_DIR}/ui/palettemodel.cpp
 )
