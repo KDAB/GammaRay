@@ -113,6 +113,21 @@ void EnumDefinition::setElements(const QVector<EnumDefinitionElement>& elements)
     m_elements = elements;
 }
 
+QByteArray EnumDefinition::valueToString(const EnumValue& value) const
+{
+    Q_ASSERT(value.id() == id());
+    QByteArray r;
+    foreach (const auto &elem, m_elements) {
+        if (elem.value() == 0 && value.value() == 0)
+            return elem.name();
+        if ((elem.value() & value.value()) == elem.value() && elem.value() != 0)
+            r += elem.name() + '|';
+    }
+    if (!r.isEmpty())
+        r.chop(1);
+    return r;
+}
+
 namespace GammaRay {
 QDataStream& operator<<(QDataStream &out, const EnumDefinition &def)
 {

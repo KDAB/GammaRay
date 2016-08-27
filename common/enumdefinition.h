@@ -72,6 +72,8 @@ public:
     QVector<EnumDefinitionElement> elements() const;
     void setElements(const QVector<EnumDefinitionElement> &elements);
 
+    QByteArray valueToString(const EnumValue &value) const;
+
 private:
     friend GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out, const EnumDefinition &def);
     friend GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, EnumDefinition &def);
