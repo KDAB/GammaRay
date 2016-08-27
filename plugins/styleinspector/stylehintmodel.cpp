@@ -183,6 +183,8 @@ QVariant StyleHintModel::doData(int row, int column, int role) const
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
             MAKE_SH(SH_Widget_Animate)
             MAKE_SH(SH_Splitter_OpaqueResize)
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
             MAKE_SH(SH_ComboBox_UseNativePopup)
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
@@ -228,6 +230,8 @@ int StyleHintModel::doRowCount() const
     return QStyle::SH_RequestSoftwareInputPanel + 1;
 #elif QT_VERSION < QT_VERSION_CHECK(5, 2, 0)
     return QStyle::SH_ToolTip_FallAsleepDelay + 1;
+#elif QT_VERSION < QT_VERSION_CHECK(5, 3, 0)
+    return QStyle::SH_Splitter_OpaqueResize + 1;
 #elif QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
     return QStyle::SH_ComboBox_UseNativePopup + 1;
 #elif QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
@@ -311,6 +315,8 @@ QVariant StyleHintModel::styleHintToVariant(QStyle::StyleHint hint, int value) c
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
         case QStyle::SH_Widget_Animate:
         case QStyle::SH_Splitter_OpaqueResize:
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
         case QStyle::SH_ComboBox_UseNativePopup:
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
