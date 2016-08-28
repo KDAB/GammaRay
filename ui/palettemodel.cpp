@@ -103,14 +103,12 @@ QVariant PaletteModel::data(const QModelIndex &index, int role) const
         if (index.column() == 0)
             return paletteRoles[index.row()].name;
 
-        return
-            m_palette.color(paletteGroups[index.column()-1].group,
-                            paletteRoles[index.row()].role).name();
-    } else if (role == Qt::EditRole) {
+        return m_palette.color(paletteGroups[index.column()-1].group,
+                               paletteRoles[index.row()].role).name();
+    } else if (role == Qt::EditRole && index.column() > 0) {
         // TODO return QBrush once we have an editor for that
-        return
-            m_palette.color(paletteGroups[index.column()-1].group,
-                            paletteRoles[index.row()].role);
+        return m_palette.color(paletteGroups[index.column()-1].group,
+                               paletteRoles[index.row()].role);
     } else if (role == Qt::DecorationRole && index.column() != 0) {
         const QBrush brush = m_palette.brush(paletteGroups[index.column()-1].group,
                                              paletteRoles[index.row()].role);
