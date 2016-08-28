@@ -45,7 +45,7 @@ namespace GammaRay {
 
 class ObjectId;
 class ProbeControllerInterface;
-class ToolData;
+struct ToolData;
 class ToolManagerInterface;
 class ToolUiFactory;
 
