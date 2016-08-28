@@ -237,7 +237,7 @@ int StyleHintModel::doRowCount() const
 #elif QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
     return QStyle::SH_TabBar_ChangeCurrentDelay + 1;
 #elif QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    return QStyle::SH_MenuDontStartSloppyOnLeave + 1;
+    return QStyle::SH_Menu_SubMenuDontStartSloppyOnLeave + 1;
 #else
     return QStyle::SH_ItemView_ScrollMode + 1;
 #endif
