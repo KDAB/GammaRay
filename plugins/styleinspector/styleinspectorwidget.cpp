@@ -50,19 +50,19 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
                                                              "com.kdab.GammaRay.StyleInspector.ComplexControlModel")));
 
     ui->pixelMetricView->header()->setObjectName("pixelMetricViewHeader");
-    ui->pixelMetricView->setDeferredResizeMode(0, QHeaderView::Stretch);
-    ui->pixelMetricView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->pixelMetricView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->pixelMetricView->setDeferredResizeMode(1, QHeaderView::Stretch);
     ui->pixelMetricView->setModel(ObjectBroker::model(QStringLiteral(
                                                           "com.kdab.GammaRay.StyleInspector.PixelMetricModel")));
 
     ui->standardIconView->header()->setObjectName("standardIconViewHeader");
-    ui->standardIconView->setDeferredResizeMode(0, QHeaderView::Stretch);
-    ui->standardIconView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
+    ui->standardIconView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->standardIconView->setDeferredResizeMode(1, QHeaderView::Stretch);
     ui->standardIconView->setModel(ObjectBroker::model(QStringLiteral(
                                                            "com.kdab.GammaRay.StyleInspector.StandardIconModel")));
 
     ui->standardPaletteView->header()->setObjectName("standardPaletteViewHeader");
-    ui->standardPaletteView->setDeferredResizeMode(0, QHeaderView::Stretch);
+    ui->standardPaletteView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->standardPaletteView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
     ui->standardPaletteView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
     ui->standardPaletteView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
