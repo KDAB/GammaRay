@@ -64,6 +64,11 @@ protected:
      */
     bool isMainStyle() const;
 
+    /*! Returns the style of which we display the values, ie. the one set via
+     *  setStyle, or if present its wrapping DynamicProxyStyle.
+     */
+    QStyle* effectiveStyle() const;
+
 protected:
     QPointer<QStyle> m_style;
 };

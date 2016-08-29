@@ -149,10 +149,7 @@ QVariant PixelMetricModel::doData(int row, int column, int role) const
         case 0:
             return pixelMetrics[row].name;
         case 1:
-            return
-                (isMainStyle() && DynamicProxyStyle::exists())
-                ? DynamicProxyStyle::instance()->pixelMetric(pixelMetrics[row].pixelMetric)
-                : m_style->pixelMetric(pixelMetrics[row].pixelMetric);
+            return effectiveStyle()->pixelMetric(pixelMetrics[row].pixelMetric);
         }
     }
 

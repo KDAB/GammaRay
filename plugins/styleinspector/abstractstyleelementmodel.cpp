@@ -27,6 +27,7 @@
 */
 
 #include "abstractstyleelementmodel.h"
+#include "dynamicproxystyle.h"
 
 #include <QApplication>
 #include <QProxyStyle>
@@ -77,4 +78,9 @@ bool AbstractStyleElementModel::isMainStyle() const
             return false;
         style = proxy->baseStyle();
     }
+}
+
+QStyle* AbstractStyleElementModel::effectiveStyle() const
+{
+    return (isMainStyle() && DynamicProxyStyle::exists()) ? DynamicProxyStyle::instance() : m_style;
 }
