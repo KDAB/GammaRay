@@ -43,6 +43,186 @@
 
 using namespace GammaRay;
 
+namespace StyleHintType {
+enum Type {
+    Bool,
+    Int,
+    Alignment,
+    Color,
+    EventType,
+    Char,
+    FocusPolicy,
+    ColorRole,
+    ElideMode,
+    MouseButtons,
+    LayoutDirection,
+    FrameStyle,
+    TextInteractionFlags,
+    WizardStyle,
+    TabPosition,
+    FormWrapPolicy,
+    FormGrowthPolicy,
+    ToolButtonStyle,
+    RequestInputPanel,
+    ScrollMode
+};
+}
+
+namespace StyleHintExtraType {
+enum Type {
+    None,
+    Region,
+    Variant
+};
+}
+
+struct StyleHintInfo {
+    QStyle::StyleHint hint;
+    const char *name;
+    StyleHintType::Type type;
+    StyleHintExtraType::Type extraType;
+};
+
+#define SH(h, t, x) { QStyle::h, #h, StyleHintType::t, StyleHintExtraType::x },
+static const StyleHintInfo style_hint_table[] = {
+    SH(SH_EtchDisabledText,                               Bool,                 None   )
+    SH(SH_DitherDisabledText,                             Bool,                 None   )
+    SH(SH_ScrollBar_MiddleClickAbsolutePosition,          Bool,                 None   )
+    SH(SH_ScrollBar_ScrollWhenPointerLeavesControl,       Bool,                 None   )
+    SH(SH_TabBar_SelectMouseType,                         EventType,            None   )
+    SH(SH_TabBar_Alignment,                               Alignment,            None   )
+    SH(SH_Header_ArrowAlignment,                          Alignment,            None   )
+    SH(SH_Slider_SnapToValue,                             Bool,                 None   )
+    SH(SH_Slider_SloppyKeyEvents,                         Bool,                 None   )
+    SH(SH_ProgressDialog_CenterCancelButton,              Bool,                 None   )
+    SH(SH_ProgressDialog_TextLabelAlignment,              Alignment,            None   )
+    SH(SH_PrintDialog_RightAlignButtons,                  Bool,                 None   )
+    SH(SH_MainWindow_SpaceBelowMenuBar,                   Int,                  None   )
+    SH(SH_FontDialog_SelectAssociatedText,                Bool,                 None   )
+    SH(SH_Menu_AllowActiveAndDisabled,                    Bool,                 None   )
+    SH(SH_Menu_SpaceActivatesItem,                        Bool,                 None   )
+    SH(SH_Menu_SubMenuPopupDelay,                         Int,                  None   )
+    SH(SH_ScrollView_FrameOnlyAroundContents,             Bool,                 None   )
+    SH(SH_MenuBar_AltKeyNavigation,                       Bool,                 None   )
+    SH(SH_ComboBox_ListMouseTracking,                     Bool,                 None   )
+    SH(SH_Menu_MouseTracking,                             Bool,                 None   )
+    SH(SH_MenuBar_MouseTracking,                          Bool,                 None   )
+    SH(SH_ItemView_ChangeHighlightOnFocus,                Bool,                 None   )
+    SH(SH_Widget_ShareActivation,                         Bool,                 None   )
+    SH(SH_Workspace_FillSpaceOnMaximize,                  Bool,                 None   )
+    SH(SH_ComboBox_Popup,                                 Bool,                 None   )
+    SH(SH_TitleBar_NoBorder,                              Bool,                 None   )
+    SH(SH_Slider_StopMouseOverSlider,                     Bool,                 None   )
+    SH(SH_BlinkCursorWhenTextSelected,                    Bool,                 None   )
+    SH(SH_RichText_FullWidthSelection,                    Bool,                 None   )
+    SH(SH_Menu_Scrollable,                                Bool,                 None   )
+    SH(SH_GroupBox_TextLabelVerticalAlignment,            Alignment,            None   )
+    SH(SH_GroupBox_TextLabelColor,                        Color,                None   )
+    SH(SH_Menu_SloppySubMenus,                            Bool,                 None   )
+    SH(SH_Table_GridLineColor,                            Color,                None   )
+    SH(SH_LineEdit_PasswordCharacter,                     Char,                 None   )
+    SH(SH_DialogButtons_DefaultButton,                    Int,                  None   ) // TODO QDialogButtonBox::ButtonRole
+    SH(SH_ToolBox_SelectedPageTitleBold,                  Bool,                 None   )
+    SH(SH_TabBar_PreferNoArrows,                          Bool,                 None   )
+    SH(SH_ScrollBar_LeftClickAbsolutePosition,            Bool,                 None   )
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    SH(SH_ListViewExpand_SelectMouseType,                 EventType,            None   )
+#else
+    SH(SH_Q3ListViewExpand_SelectMouseType,               EventType,            None   )
+#endif
+    SH(SH_UnderlineShortcut,                              Bool,                 None   )
+    SH(SH_SpinBox_AnimateButton,                          Bool,                 None   )
+    SH(SH_SpinBox_KeyPressAutoRepeatRate,                 Int,                  None   )
+    SH(SH_SpinBox_ClickAutoRepeatRate,                    Int,                  None   )
+    SH(SH_Menu_FillScreenWithScroll,                      Bool,                 None   )
+    SH(SH_ToolTipLabel_Opacity,                           Int,                  None   )
+    SH(SH_DrawMenuBarSeparator,                           Bool,                 None   )
+    SH(SH_TitleBar_ModifyNotification,                    Bool,                 None   )
+    SH(SH_Button_FocusPolicy,                             FocusPolicy,          None   )
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    SH(SH_MenuBar_DismissOnSecondClick,                   Bool,                 None   )
+#endif
+    SH(SH_MessageBox_UseBorderForButtonSpacing,           Bool,                 None   )
+    SH(SH_TitleBar_AutoRaise,                             Bool,                 None   )
+    SH(SH_ToolButton_PopupDelay,                          Int,                  None   )
+    SH(SH_FocusFrame_Mask,                                Bool,                 Region )
+    SH(SH_RubberBand_Mask,                                Bool,                 Region )
+    SH(SH_WindowFrame_Mask,                               Bool,                 Region )
+    SH(SH_SpinControls_DisableOnBounds,                   Bool,                 None   )
+    SH(SH_Dial_BackgroundRole,                            ColorRole,            None   )
+    SH(SH_ComboBox_LayoutDirection,                       LayoutDirection,      None   )
+    SH(SH_ItemView_EllipsisLocation,                      Alignment,            None   )
+    SH(SH_ItemView_ShowDecorationSelected,                Bool,                 None   )
+    SH(SH_ItemView_ActivateItemOnSingleClick,             Bool,                 None   )
+    SH(SH_ScrollBar_ContextMenu,                          Bool,                 None   )
+    SH(SH_ScrollBar_RollBetweenButtons,                   Bool,                 None   )
+    SH(SH_Slider_AbsoluteSetButtons,                      MouseButtons,         None   )
+    SH(SH_Slider_PageSetButtons,                          MouseButtons,         None   )
+    SH(SH_Menu_KeyboardSearch,                            Bool,                 None   )
+    SH(SH_TabBar_ElideMode,                               ElideMode,            None   )
+    SH(SH_DialogButtonLayout,                             Int,                  None   ) // TODO QDialogButtonBox::ButtonLayout
+    SH(SH_ComboBox_PopupFrameStyle,                       FrameStyle,           None   )
+    SH(SH_MessageBox_TextInteractionFlags,                TextInteractionFlags, None   )
+    SH(SH_DialogButtonBox_ButtonsHaveIcons,               Bool,                 None   )
+    SH(SH_SpellCheckUnderlineStyle,                       Int,                  None   ) // TODO QTextCharFormat::UnderlineStyle
+    SH(SH_MessageBox_CenterButtons,                       Bool,                 None   )
+    SH(SH_Menu_SelectionWrap,                             Bool,                 None   )
+    SH(SH_ItemView_MovementWithoutUpdatingSelection,      Bool,                 None   )
+    SH(SH_ToolTip_Mask,                                   Bool,                 Region )
+    SH(SH_FocusFrame_AboveWidget,                         Bool,                 None   )
+    SH(SH_TextControl_FocusIndicatorTextCharFormat,       Int,                  Variant)
+    SH(SH_WizardStyle,                                    WizardStyle,          None   )
+    SH(SH_ItemView_ArrowKeysNavigateIntoChildren,         Bool,                 None   )
+    SH(SH_Menu_Mask ,                                     Bool,                 Region )
+    SH(SH_Menu_FlashTriggeredItem,                        Bool,                 None   )
+    SH(SH_Menu_FadeOutOnHide,                             Bool,                 None   )
+    SH(SH_SpinBox_ClickAutoRepeatThreshold,               Int,                  None   )
+    SH(SH_ItemView_PaintAlternatingRowColorsForEmptyArea, Bool,                 None   )
+    SH(SH_FormLayoutWrapPolicy,                           FormWrapPolicy,       None   )
+    SH(SH_TabWidget_DefaultTabPosition,                   TabPosition,          None   )
+    SH(SH_ToolBar_Movable,                                Bool,                 None   )
+    SH(SH_FormLayoutFieldGrowthPolicy,                    FormGrowthPolicy,     None   )
+    SH(SH_FormLayoutFormAlignment,                        Alignment,            None   )
+    SH(SH_FormLayoutLabelAlignment,                       Alignment,            None   )
+    SH(SH_ItemView_DrawDelegateFrame,                     Bool,                 None   )
+    SH(SH_TabBar_CloseButtonPosition,                     Int,                  None   ) // TODO QTabBar::ButtonPosition
+    SH(SH_DockWidget_ButtonsHaveFrame,                    Bool,                 None   )
+    SH(SH_ToolButtonStyle,                                ToolButtonStyle,      None   )
+    SH(SH_RequestSoftwareInputPanel,                      RequestInputPanel,    None   )
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    SH(SH_ScrollBar_Transient,                            Bool,                 None   )
+    SH(SH_Menu_SupportsSections,                          Bool,                 None   )
+    SH(SH_ToolTip_WakeUpDelay,                            Int,                  None   )
+    SH(SH_ToolTip_FallAsleepDelay,                        Int,                  None   )
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    SH(SH_Widget_Animate,                                 Bool,                 None   )
+    SH(SH_Splitter_OpaqueResize,                          Bool,                 None   )
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+    SH(SH_ComboBox_UseNativePopup,                        Bool,                 None   )
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    SH(SH_LineEdit_PasswordMaskDelay,                     Int,                  None   )
+    SH(SH_TabBar_ChangeCurrentDelay,                      Int,                  None   )
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    SH(SH_Menu_SubMenuUniDirection,                       Bool,                 None   )
+    SH(SH_Menu_SubMenuUniDirectionFailCount,              Int,                  None   )
+    SH(SH_Menu_SubMenuSloppySelectOtherActions,           Bool,                 None   )
+    SH(SH_Menu_SubMenuSloppyCloseTimeout,                 Int,                  None   )
+    SH(SH_Menu_SubMenuResetWhenReenteringParent,          Bool,                 None   )
+    SH(SH_Menu_SubMenuDontStartSloppyOnLeave,             Bool,                 None   )
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    SH(SH_ItemView_ScrollMode,                            ScrollMode,           None   )
+#endif
+};
+#undef SH
+
+static const int style_hint_count = sizeof(style_hint_table) / sizeof(StyleHintInfo);
+
+
 StyleHintModel::StyleHintModel(QObject *parent) :
     AbstractStyleElementModel(parent)
 {
@@ -68,141 +248,9 @@ QVariant StyleHintModel::headerData(int section, Qt::Orientation orientation, in
 
 QVariant StyleHintModel::doData(int row, int column, int role) const
 {
+    Q_ASSERT(row >= 0 && row < style_hint_count);
     if (role == Qt::DisplayRole && column == 0) {
-        switch (row) {
-            MAKE_SH(SH_EtchDisabledText)
-            MAKE_SH(SH_DitherDisabledText)
-            MAKE_SH(SH_ScrollBar_MiddleClickAbsolutePosition)
-            MAKE_SH(SH_ScrollBar_ScrollWhenPointerLeavesControl)
-            MAKE_SH(SH_TabBar_SelectMouseType)
-            MAKE_SH(SH_TabBar_Alignment)
-            MAKE_SH(SH_Header_ArrowAlignment)
-            MAKE_SH(SH_Slider_SnapToValue)
-            MAKE_SH(SH_Slider_SloppyKeyEvents)
-            MAKE_SH(SH_ProgressDialog_CenterCancelButton)
-            MAKE_SH(SH_ProgressDialog_TextLabelAlignment)
-            MAKE_SH(SH_PrintDialog_RightAlignButtons)
-            MAKE_SH(SH_MainWindow_SpaceBelowMenuBar)
-            MAKE_SH(SH_FontDialog_SelectAssociatedText)
-            MAKE_SH(SH_Menu_AllowActiveAndDisabled)
-            MAKE_SH(SH_Menu_SpaceActivatesItem)
-            MAKE_SH(SH_Menu_SubMenuPopupDelay)
-            MAKE_SH(SH_ScrollView_FrameOnlyAroundContents)
-            MAKE_SH(SH_MenuBar_AltKeyNavigation)
-            MAKE_SH(SH_ComboBox_ListMouseTracking)
-            MAKE_SH(SH_Menu_MouseTracking)
-            MAKE_SH(SH_MenuBar_MouseTracking)
-            MAKE_SH(SH_ItemView_ChangeHighlightOnFocus)
-            MAKE_SH(SH_Widget_ShareActivation)
-            MAKE_SH(SH_Workspace_FillSpaceOnMaximize)
-            MAKE_SH(SH_ComboBox_Popup)
-            MAKE_SH(SH_TitleBar_NoBorder)
-            MAKE_SH(SH_Slider_StopMouseOverSlider)
-            MAKE_SH(SH_BlinkCursorWhenTextSelected)
-            MAKE_SH(SH_RichText_FullWidthSelection)
-            MAKE_SH(SH_Menu_Scrollable)
-            MAKE_SH(SH_GroupBox_TextLabelVerticalAlignment)
-            MAKE_SH(SH_GroupBox_TextLabelColor)
-            MAKE_SH(SH_Menu_SloppySubMenus)
-            MAKE_SH(SH_Table_GridLineColor)
-            MAKE_SH(SH_LineEdit_PasswordCharacter)
-            MAKE_SH(SH_DialogButtons_DefaultButton)
-            MAKE_SH(SH_ToolBox_SelectedPageTitleBold)
-            MAKE_SH(SH_TabBar_PreferNoArrows)
-            MAKE_SH(SH_ScrollBar_LeftClickAbsolutePosition)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-            MAKE_SH(SH_ListViewExpand_SelectMouseType)
-#else
-            MAKE_SH(SH_Q3ListViewExpand_SelectMouseType)
-#endif
-            MAKE_SH(SH_UnderlineShortcut)
-            MAKE_SH(SH_SpinBox_AnimateButton)
-            MAKE_SH(SH_SpinBox_KeyPressAutoRepeatRate)
-            MAKE_SH(SH_SpinBox_ClickAutoRepeatRate)
-            MAKE_SH(SH_Menu_FillScreenWithScroll)
-            MAKE_SH(SH_ToolTipLabel_Opacity)
-            MAKE_SH(SH_DrawMenuBarSeparator)
-            MAKE_SH(SH_TitleBar_ModifyNotification)
-            MAKE_SH(SH_Button_FocusPolicy)
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-            MAKE_SH(SH_MenuBar_DismissOnSecondClick)
-#endif
-            MAKE_SH(SH_MessageBox_UseBorderForButtonSpacing)
-            MAKE_SH(SH_TitleBar_AutoRaise)
-            MAKE_SH(SH_ToolButton_PopupDelay)
-            MAKE_SH(SH_FocusFrame_Mask)
-            MAKE_SH(SH_RubberBand_Mask)
-            MAKE_SH(SH_WindowFrame_Mask)
-            MAKE_SH(SH_SpinControls_DisableOnBounds)
-            MAKE_SH(SH_Dial_BackgroundRole)
-            MAKE_SH(SH_ComboBox_LayoutDirection)
-            MAKE_SH(SH_ItemView_EllipsisLocation)
-            MAKE_SH(SH_ItemView_ShowDecorationSelected)
-            MAKE_SH(SH_ItemView_ActivateItemOnSingleClick)
-            MAKE_SH(SH_ScrollBar_ContextMenu)
-            MAKE_SH(SH_ScrollBar_RollBetweenButtons)
-            MAKE_SH(SH_Slider_AbsoluteSetButtons)
-            MAKE_SH(SH_Slider_PageSetButtons)
-            MAKE_SH(SH_Menu_KeyboardSearch)
-            MAKE_SH(SH_TabBar_ElideMode)
-            MAKE_SH(SH_DialogButtonLayout)
-            MAKE_SH(SH_ComboBox_PopupFrameStyle)
-            MAKE_SH(SH_MessageBox_TextInteractionFlags)
-            MAKE_SH(SH_DialogButtonBox_ButtonsHaveIcons)
-            MAKE_SH(SH_SpellCheckUnderlineStyle)
-            MAKE_SH(SH_MessageBox_CenterButtons)
-            MAKE_SH(SH_Menu_SelectionWrap)
-            MAKE_SH(SH_ItemView_MovementWithoutUpdatingSelection)
-            MAKE_SH(SH_ToolTip_Mask)
-            MAKE_SH(SH_FocusFrame_AboveWidget)
-            MAKE_SH(SH_TextControl_FocusIndicatorTextCharFormat)
-            MAKE_SH(SH_WizardStyle)
-            MAKE_SH(SH_ItemView_ArrowKeysNavigateIntoChildren)
-            MAKE_SH(SH_Menu_Mask)
-            MAKE_SH(SH_Menu_FlashTriggeredItem)
-            MAKE_SH(SH_Menu_FadeOutOnHide)
-            MAKE_SH(SH_SpinBox_ClickAutoRepeatThreshold)
-            MAKE_SH(SH_ItemView_PaintAlternatingRowColorsForEmptyArea)
-            MAKE_SH(SH_FormLayoutWrapPolicy)
-            MAKE_SH(SH_TabWidget_DefaultTabPosition)
-            MAKE_SH(SH_ToolBar_Movable)
-            MAKE_SH(SH_FormLayoutFieldGrowthPolicy)
-            MAKE_SH(SH_FormLayoutFormAlignment)
-            MAKE_SH(SH_FormLayoutLabelAlignment)
-            MAKE_SH(SH_ItemView_DrawDelegateFrame)
-            MAKE_SH(SH_TabBar_CloseButtonPosition)
-            MAKE_SH(SH_DockWidget_ButtonsHaveFrame)
-            MAKE_SH(SH_ToolButtonStyle)
-            MAKE_SH(SH_RequestSoftwareInputPanel)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-            MAKE_SH(SH_ScrollBar_Transient)
-            MAKE_SH(SH_Menu_SupportsSections)
-            MAKE_SH(SH_ToolTip_WakeUpDelay)
-            MAKE_SH(SH_ToolTip_FallAsleepDelay)
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-            MAKE_SH(SH_Widget_Animate)
-            MAKE_SH(SH_Splitter_OpaqueResize)
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-            MAKE_SH(SH_ComboBox_UseNativePopup)
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-            MAKE_SH(SH_LineEdit_PasswordMaskDelay)
-            MAKE_SH(SH_TabBar_ChangeCurrentDelay)
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-            MAKE_SH(SH_Menu_SubMenuUniDirection)
-            MAKE_SH(SH_Menu_SubMenuUniDirectionFailCount)
-            MAKE_SH(SH_Menu_SubMenuSloppySelectOtherActions)
-            MAKE_SH(SH_Menu_SubMenuSloppyCloseTimeout)
-            MAKE_SH(SH_Menu_SubMenuResetWhenReenteringParent)
-            MAKE_SH(SH_Menu_SubMenuDontStartSloppyOnLeave)
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-            MAKE_SH(SH_ItemView_ScrollMode)
-#endif
-        }
+        return style_hint_table[row].name;
     }
     if (role == Qt::DisplayRole && column == 1) {
         const auto h = m_style->styleHint(static_cast<QStyle::StyleHint>(row), Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
@@ -226,180 +274,67 @@ int StyleHintModel::doColumnCount() const
 
 int StyleHintModel::doRowCount() const
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    return QStyle::SH_RequestSoftwareInputPanel + 1;
-#elif QT_VERSION < QT_VERSION_CHECK(5, 2, 0)
-    return QStyle::SH_ToolTip_FallAsleepDelay + 1;
-#elif QT_VERSION < QT_VERSION_CHECK(5, 3, 0)
-    return QStyle::SH_Splitter_OpaqueResize + 1;
-#elif QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
-    return QStyle::SH_ComboBox_UseNativePopup + 1;
-#elif QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-    return QStyle::SH_TabBar_ChangeCurrentDelay + 1;
-#elif QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    return QStyle::SH_Menu_SubMenuDontStartSloppyOnLeave + 1;
-#else
-    return QStyle::SH_ItemView_ScrollMode + 1;
-#endif
+    return style_hint_count;
 }
 
 QVariant StyleHintModel::styleHintToVariant(QStyle::StyleHint hint, int value) const
 {
-    switch (hint) {
-        case QStyle::SH_EtchDisabledText:
-        case QStyle::SH_DitherDisabledText:
-        case QStyle::SH_Slider_SnapToValue:
-        case QStyle::SH_Slider_SloppyKeyEvents:
-        case QStyle::SH_ProgressDialog_CenterCancelButton:
-        case QStyle::SH_PrintDialog_RightAlignButtons:
-        case QStyle::SH_ScrollBar_MiddleClickAbsolutePosition:
-        case QStyle::SH_ScrollBar_ScrollWhenPointerLeavesControl:
-        case QStyle::SH_Menu_SloppySubMenus:
-        case QStyle::SH_TitleBar_AutoRaise:
-        case QStyle::SH_FontDialog_SelectAssociatedText:
-        case QStyle::SH_Menu_AllowActiveAndDisabled:
-        case QStyle::SH_Menu_SpaceActivatesItem:
-        case QStyle::SH_ScrollView_FrameOnlyAroundContents:
-        case QStyle::SH_MenuBar_AltKeyNavigation:
-        case QStyle::SH_ComboBox_ListMouseTracking:
-        case QStyle::SH_Menu_MouseTracking:
-        case QStyle::SH_MenuBar_MouseTracking:
-        case QStyle::SH_ItemView_ChangeHighlightOnFocus:
-        case QStyle::SH_Widget_ShareActivation:
-        case QStyle::SH_Workspace_FillSpaceOnMaximize:
-        case QStyle::SH_ComboBox_Popup:
-        case QStyle::SH_TitleBar_NoBorder:
-        case QStyle::SH_Slider_StopMouseOverSlider:
-        case QStyle::SH_BlinkCursorWhenTextSelected:
-        case QStyle::SH_RichText_FullWidthSelection:
-        case QStyle::SH_Menu_Scrollable:
-        case QStyle::SH_ToolBox_SelectedPageTitleBold:
-        case QStyle::SH_TabBar_PreferNoArrows:
-        case QStyle::SH_ScrollBar_LeftClickAbsolutePosition:
-        case QStyle::SH_UnderlineShortcut:
-        case QStyle::SH_SpinBox_AnimateButton:
-        case QStyle::SH_DrawMenuBarSeparator:
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        case QStyle::SH_MenuBar_DismissOnSecondClick:
-#endif
-        case QStyle::SH_MessageBox_UseBorderForButtonSpacing:
-        case QStyle::SH_ScrollBar_ContextMenu:
-        case QStyle::SH_SpinControls_DisableOnBounds:
-        case QStyle::SH_Menu_KeyboardSearch:
-        case QStyle::SH_Menu_SelectionWrap:
-        case QStyle::SH_Menu_FillScreenWithScroll:
-        case QStyle::SH_Menu_FlashTriggeredItem:
-        case QStyle::SH_Menu_FadeOutOnHide:
-        case QStyle::SH_TitleBar_ModifyNotification:
-        case QStyle::SH_ItemView_ShowDecorationSelected:
-        case QStyle::SH_ItemView_ActivateItemOnSingleClick:
-        case QStyle::SH_ScrollBar_RollBetweenButtons:
-        case QStyle::SH_DialogButtonBox_ButtonsHaveIcons:
-        case QStyle::SH_MessageBox_CenterButtons:
-        case QStyle::SH_ItemView_MovementWithoutUpdatingSelection:
-        case QStyle::SH_FocusFrame_AboveWidget:
-        case QStyle::SH_FocusFrame_Mask:
-        case QStyle::SH_RubberBand_Mask:
-        case QStyle::SH_WindowFrame_Mask:
-        case QStyle::SH_ToolTip_Mask:
-        case QStyle::SH_Menu_Mask:
-        case QStyle::SH_ItemView_ArrowKeysNavigateIntoChildren:
-        case QStyle::SH_ItemView_PaintAlternatingRowColorsForEmptyArea:
-        case QStyle::SH_ToolBar_Movable:
-        case QStyle::SH_ItemView_DrawDelegateFrame:
-        case QStyle::SH_DockWidget_ButtonsHaveFrame:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        case QStyle::SH_ScrollBar_Transient:
-        case QStyle::SH_Menu_SupportsSections:
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-        case QStyle::SH_Widget_Animate:
-        case QStyle::SH_Splitter_OpaqueResize:
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-        case QStyle::SH_ComboBox_UseNativePopup:
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-        case QStyle::SH_Menu_SubMenuUniDirection:
-        case QStyle::SH_Menu_SubMenuSloppySelectOtherActions:
-        case QStyle::SH_Menu_SubMenuResetWhenReenteringParent:
-        case QStyle::SH_Menu_SubMenuDontStartSloppyOnLeave:
-#endif
+    switch (style_hint_table[hint].type) {
+        case StyleHintType::Bool:
             return QVariant::fromValue<bool>(value);
-        case QStyle::SH_TabBar_Alignment:
-        case QStyle::SH_Header_ArrowAlignment:
-        case QStyle::SH_ProgressDialog_TextLabelAlignment:
-        case QStyle::SH_GroupBox_TextLabelVerticalAlignment:
-        case QStyle::SH_FormLayoutFormAlignment:
-        case QStyle::SH_FormLayoutLabelAlignment:
-        case QStyle::SH_ItemView_EllipsisLocation:
+        case StyleHintType::Int:
+            return value;
+        case StyleHintType::Alignment:
             return EnumUtil::enumToString(value, "Qt::Alignment");
-        case QStyle::SH_TabBar_SelectMouseType:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        case QStyle::SH_ListViewExpand_SelectMouseType:
-#else
-        case QStyle::SH_Q3ListViewExpand_SelectMouseType:
-#endif
+        case StyleHintType::EventType:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
             return EnumUtil::enumToString(value, "QEvent::Type", &QEvent::staticMetaObject);
 #else
             return value;
 #endif
-        case QStyle::SH_GroupBox_TextLabelColor:
-        case QStyle::SH_Table_GridLineColor:
+        case StyleHintType::Color:
             return QColor(value);
-        case QStyle::SH_LineEdit_PasswordCharacter:
+        case StyleHintType::Char:
             return QChar(value);
-        case QStyle::SH_Button_FocusPolicy:
+        case StyleHintType::FocusPolicy:
             return EnumUtil::enumToString(value, "Qt::FocusPolicy");
-        case QStyle::SH_Dial_BackgroundRole:
+        case StyleHintType::ColorRole:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
             return EnumUtil::enumToString(value, "QPalette::ColorRole", &QPalette::staticMetaObject);
 #else
             return value;
 #endif
-        case QStyle::SH_TabBar_ElideMode:
+        case StyleHintType::ElideMode:
             return EnumUtil::enumToString(value, "Qt::TextElideMode");
-        case QStyle::SH_Slider_AbsoluteSetButtons:
-        case QStyle::SH_Slider_PageSetButtons:
+        case StyleHintType::MouseButtons:
             return EnumUtil::enumToString(value, "Qt::MouseButtons");
-        case QStyle::SH_DialogButtons_DefaultButton:
-            return value; // EnumUtil::enumToString(value, "QDialogButtonBox::ButtonRole", &QDialogButtonBox::staticMetaObject);
-        case QStyle::SH_DialogButtonLayout:
-            return value; // TODO meta enum for QDialogButtonBox::ButtonLayout
-        case QStyle::SH_ComboBox_LayoutDirection:
+        case StyleHintType::LayoutDirection:
             return EnumUtil::enumToString(value, "Qt::LayoutDirection");
-        case QStyle::SH_ComboBox_PopupFrameStyle:
+        case StyleHintType::FrameStyle:
             return QString(EnumUtil::enumToString(value & QFrame::Shadow_Mask, "QFrame::Shadow", &QFrame::staticMetaObject)
                  + " / " + EnumUtil::enumToString(value & QFrame::Shape_Mask, "QFrame::Shape", &QFrame::staticMetaObject));
-        case QStyle::SH_MessageBox_TextInteractionFlags:
+        case StyleHintType::TextInteractionFlags:
             return EnumUtil::enumToString(value, "Qt::TextInteractionFlags");
-        case QStyle::SH_SpellCheckUnderlineStyle:
-            return value; // TODO QTextCharFormat::UnderlineStyle
-        case QStyle::SH_TabWidget_DefaultTabPosition:
-            return EnumUtil::enumToString(value, "QTabWidget::TabPosition", &QTabWidget::staticMetaObject);
-        case QStyle::SH_WizardStyle:
+        case StyleHintType::WizardStyle:
             return EnumUtil::enumToString(value, "QWizard::WizardStyle", &QWizard::staticMetaObject);
-        case QStyle::SH_FormLayoutWrapPolicy:
+        case StyleHintType::TabPosition:
+            return EnumUtil::enumToString(value, "QTabWidget::TabPosition", &QTabWidget::staticMetaObject);
+        case StyleHintType::FormWrapPolicy:
             return EnumUtil::enumToString(value, "QFormLayout::RowWrapPolicy", &QFormLayout::staticMetaObject);
-        case QStyle::SH_FormLayoutFieldGrowthPolicy:
+        case StyleHintType::FormGrowthPolicy:
             return EnumUtil::enumToString(value, "QFormLayout::FieldGrowthPolicy", &QFormLayout::staticMetaObject);
-        case QStyle::SH_ToolButtonStyle:
+        case StyleHintType::ToolButtonStyle:
             return EnumUtil::enumToString(value, "Qt::ToolButtonStyle");
-        case QStyle::SH_TabBar_CloseButtonPosition:
-            return value; // EnumUtil::enumToString(value, "QTabBar::ButtonPosition", &QTabBar::staticMetaObject);
-        case QStyle::SH_RequestSoftwareInputPanel:
+        case StyleHintType::RequestInputPanel:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
             return EnumUtil::enumToString(value, "QStyle::RequestSoftwareInputPanel", &QStyle::staticMetaObject);
 #else
             return value;
 #endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-        case QStyle::SH_ItemView_ScrollMode:
+        case StyleHintType::ScrollMode:
             return EnumUtil::enumToString(value, "QAbstractItemView::ScrollMode", &QAbstractItemView::staticMetaObject);
-#endif
-        default: break;
     }
+
     return value;
 }
 
