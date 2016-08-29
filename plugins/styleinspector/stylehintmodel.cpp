@@ -28,6 +28,7 @@
 
 #include "stylehintmodel.h"
 #include "styleoption.h"
+#include "dynamicproxystyle.h"
 
 #include <core/enumutil.h>
 #include <core/varianthandler.h>
@@ -47,10 +48,10 @@ namespace StyleHintType {
 enum Type {
     Bool,
     Int,
-    Alignment,
     Color,
-    EventType,
     Char,
+    Alignment,
+    EventType,
     FocusPolicy,
     ColorRole,
     ElideMode,
@@ -64,7 +65,9 @@ enum Type {
     FormGrowthPolicy,
     ToolButtonStyle,
     RequestInputPanel,
-    ScrollMode
+    ScrollMode,
+
+    FirstEnumType = Alignment
 };
 }
 
@@ -253,11 +256,16 @@ QVariant StyleHintModel::doData(int row, int column, int role) const
         return style_hint_table[row].name;
     }
     if (role == Qt::DisplayRole && column == 1) {
-        const auto h = m_style->styleHint(static_cast<QStyle::StyleHint>(row), Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
+        const auto h = effectiveStyle()->styleHint(static_cast<QStyle::StyleHint>(row), Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
         return VariantHandler::displayString(styleHintToVariant(static_cast<QStyle::StyleHint>(row), h));
     }
+    if (role == Qt::EditRole && column == 1) {
+        const auto h = effectiveStyle()->styleHint(static_cast<QStyle::StyleHint>(row), Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
+        if (style_hint_table[row].type < StyleHintType::FirstEnumType)
+            return styleHintToVariant(static_cast<QStyle::StyleHint>(row), h);
+    }
     if (role == Qt::DecorationRole && column == 1) {
-        const auto h = m_style->styleHint(static_cast<QStyle::StyleHint>(row), Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
+        const auto h = effectiveStyle()->styleHint(static_cast<QStyle::StyleHint>(row), Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
         return VariantHandler::decoration(styleHintToVariant(static_cast<QStyle::StyleHint>(row), h));
 
     }
@@ -293,7 +301,7 @@ QVariant StyleHintModel::styleHintToVariant(QStyle::StyleHint hint, int value) c
             return value;
 #endif
         case StyleHintType::Color:
-            return QColor(value);
+            return QVariant::fromValue(QColor(value));
         case StyleHintType::Char:
             return QChar(value);
         case StyleHintType::FocusPolicy:
@@ -345,7 +353,7 @@ QVariant StyleHintModel::styleHintData(QStyle::StyleHint hint) const
         {
             const auto opt = StyleOption::makeFrameStyleOption();
             QStyleHintReturnVariant data;
-            m_style->styleHint(hint, opt, Q_NULLPTR, &data);
+            effectiveStyle()->styleHint(hint, opt, Q_NULLPTR, &data);
             delete opt;
             return data.variant;
         }
@@ -355,7 +363,7 @@ QVariant StyleHintModel::styleHintData(QStyle::StyleHint hint) const
             opt.shape = QRubberBand::Rectangle;
             opt.rect = QRect(0, 0, 100, 100);
             QStyleHintReturnMask data;
-            m_style->styleHint(hint, &opt, Q_NULLPTR, &data);
+            effectiveStyle()->styleHint(hint, &opt, Q_NULLPTR, &data);
             return data.region;
         }
         case QStyle::SH_FocusFrame_Mask:
@@ -366,10 +374,34 @@ QVariant StyleHintModel::styleHintData(QStyle::StyleHint hint) const
             QStyleOption opt;
             opt.rect = QRect(0, 0, 100, 100);
             QStyleHintReturnMask data;
-            m_style->styleHint(hint, &opt, Q_NULLPTR, &data);
+            effectiveStyle()->styleHint(hint, &opt, Q_NULLPTR, &data);
             return data.region;
         }
         default: break;
     }
     return QVariant();
+}
+
+Qt::ItemFlags StyleHintModel::flags(const QModelIndex &index) const
+{
+    const auto baseFlags = QAbstractItemModel::flags(index);
+    if (index.isValid() && index.column() == 1 && isMainStyle()
+        && style_hint_table[index.row()].extraType == StyleHintExtraType::None
+        && style_hint_table[index.row()].type < StyleHintType::FirstEnumType) {
+        return baseFlags | Qt::ItemIsEditable;
+    }
+    return baseFlags;
+}
+
+bool StyleHintModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid() || index.column() != 1 || role != Qt::EditRole)
+        return false;
+
+    int i = value.toInt();
+    if (value.type() == QVariant::Color)
+        i = value.value<QColor>().rgba();
+    DynamicProxyStyle::instance()->setStyleHint(static_cast<QStyle::StyleHint>(index.row()), i);
+    emit dataChanged(index, index);
+    return true;
 }

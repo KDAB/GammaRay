@@ -29,6 +29,8 @@
 #include "styleinspectorwidget.h"
 #include "ui_styleinspectorwidget.h"
 
+#include <ui/propertyeditor/propertyeditordelegate.h>
+
 #include <common/objectbroker.h>
 
 using namespace GammaRay;
@@ -73,6 +75,7 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
     ui->styleHintView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->styleHintView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
     ui->styleHintView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleInspector.StyleHintModel")));
+    ui->styleHintView->setItemDelegate(new PropertyEditorDelegate(this));
 
     // TODO this will fail due to lazy model population
     if (ui->styleSelector->count())
