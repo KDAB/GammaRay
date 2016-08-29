@@ -64,6 +64,11 @@ void DynamicProxyStyle::setPixelMetric(QStyle::PixelMetric metric, int value)
     m_pixelMetrics.insert(metric, value);
 }
 
+void DynamicProxyStyle::setStyleHint(QStyle::StyleHint hint, int value)
+{
+    m_styleHints.insert(hint, value);
+}
+
 int DynamicProxyStyle::pixelMetric(QStyle::PixelMetric metric, const QStyleOption *option,
                                    const QWidget *widget) const
 {
@@ -71,4 +76,12 @@ int DynamicProxyStyle::pixelMetric(QStyle::PixelMetric metric, const QStyleOptio
     if (it != m_pixelMetrics.end())
         return it.value();
     return QProxyStyle::pixelMetric(metric, option, widget);
+}
+
+int DynamicProxyStyle::styleHint(QStyle::StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const
+{
+    const auto it = m_styleHints.find(hint);
+    if (it != m_styleHints.end())
+        return it.value();
+    return QProxyStyle::styleHint(hint, option, widget, returnData);
 }

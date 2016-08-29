@@ -48,12 +48,15 @@ public:
     static void insertProxyStyle();
 
     void setPixelMetric(PixelMetric metric, int value);
+    void setStyleHint(StyleHint hint, int value);
 
     int pixelMetric(PixelMetric metric, const QStyleOption *option = 0,
                     const QWidget *widget = 0) const Q_DECL_OVERRIDE;
+    int styleHint(QStyle::StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const Q_DECL_OVERRIDE;
 
 private:
     QHash<QStyle::PixelMetric, int> m_pixelMetrics;
+    QHash<QStyle::StyleHint, int> m_styleHints;
     static QPointer<DynamicProxyStyle> s_instance;
 };
 }
