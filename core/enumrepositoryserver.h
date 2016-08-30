@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_ENUMREPOSITORYSERVER_H
 #define GAMMARAY_ENUMREPOSITORYSERVER_H
 
+#include "gammaray_core_export.h"
+
 #include <common/enumrepository.h>
 
 #include <QHash>
@@ -49,7 +51,7 @@ public:
     //! @internal
     static void create(QObject *parent);
 
-    static EnumValue valueFromMetaEnum(int value, const QMetaEnum &me);
+    static GAMMARAY_CORE_EXPORT EnumValue valueFromMetaEnum(int value, const QMetaEnum &me);
 
 private:
     EnumRepositoryServer(QObject *parent = Q_NULLPTR);

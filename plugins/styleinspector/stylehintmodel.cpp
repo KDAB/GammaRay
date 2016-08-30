@@ -30,6 +30,7 @@
 #include "styleoption.h"
 #include "dynamicproxystyle.h"
 
+#include <core/enumrepositoryserver.h>
 #include <core/enumutil.h>
 #include <core/varianthandler.h>
 
@@ -37,6 +38,7 @@
 #include <QDebug>
 #include <QEvent>
 #include <QFormLayout>
+#include <QMetaEnum>
 #include <QStyleHintReturnMask>
 #include <QStyleHintReturnVariant>
 #include <QTabBar>
@@ -301,9 +303,18 @@ QVariant StyleHintModel::doData(int row, int column, int role) const
                     return QVariant();
                 return VariantHandler::displayString(styleHintToVariant(hint, value));
             case Qt::EditRole:
-                if (style_hint_table[row].type < StyleHintType::LastBasicType)
+            {
+                const auto type = style_hint_table[row].type;
+                if (type <= StyleHintType::LastBasicType)
                     return styleHintToVariant(hint, value);
+                const auto enumType = type - StyleHintType::FirstEnumType;
+                if (type >= StyleHintType::FirstEnumType && style_hint_type_table[enumType].name) {
+                    const auto me = EnumUtil::metaEnum(value, style_hint_type_table[enumType].name,
+                                                              style_hint_type_table[enumType].metaObject);
+                    return QVariant::fromValue(EnumRepositoryServer::valueFromMetaEnum(value, me));
+                }
                 return QVariant();
+            }
             case Qt::DecorationRole:
                 return VariantHandler::decoration(styleHintToVariant(hint, value));
             case Qt::CheckStateRole:
@@ -398,7 +409,7 @@ Qt::ItemFlags StyleHintModel::flags(const QModelIndex &index) const
         return baseFlags;
     }
 
-    if (style_hint_table[index.row()].type < StyleHintType::LastBasicType &&
+    if (style_hint_table[index.row()].type != StyleHintType::FrameStyle &&
         style_hint_table[index.row()].type != StyleHintType::Bool) {
         return baseFlags | Qt::ItemIsEditable;
     }
@@ -421,7 +432,9 @@ bool StyleHintModel::setData(const QModelIndex &index, const QVariant &value, in
     int i = value.toInt();
     if (value.type() == QVariant::Color)
         i = value.value<QColor>().rgba();
-    if (role == Qt::CheckStateRole)
+    else if (value.userType() == qMetaTypeId<EnumValue>())
+        i = value.value<EnumValue>().value();
+    else if (role == Qt::CheckStateRole)
         i = (i == Qt::Checked) ? 1 : 0;
     DynamicProxyStyle::instance()->setStyleHint(static_cast<QStyle::StyleHint>(index.row()), i);
     emit dataChanged(index, index);

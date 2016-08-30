@@ -53,7 +53,7 @@ namespace EnumUtil
  * @param metaObject A meta object hint holding the enum definition.
  * @since 2.6
  */
-QMetaEnum metaEnum(const QVariant &value, const char *typeName = Q_NULLPTR, const QMetaObject *metaObject = Q_NULLPTR);
+GAMMARAY_CORE_EXPORT QMetaEnum metaEnum(const QVariant &value, const char *typeName = Q_NULLPTR, const QMetaObject *metaObject = Q_NULLPTR);
 
 /*!
  * Converts the given enum or flag value into its numerical representation.
