@@ -255,19 +255,25 @@ QVariant StyleHintModel::doData(int row, int column, int role) const
     if (role == Qt::DisplayRole && column == 0) {
         return style_hint_table[row].name;
     }
-    if (role == Qt::DisplayRole && column == 1) {
-        const auto h = effectiveStyle()->styleHint(static_cast<QStyle::StyleHint>(row), Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
-        return VariantHandler::displayString(styleHintToVariant(static_cast<QStyle::StyleHint>(row), h));
-    }
-    if (role == Qt::EditRole && column == 1) {
-        const auto h = effectiveStyle()->styleHint(static_cast<QStyle::StyleHint>(row), Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
-        if (style_hint_table[row].type < StyleHintType::FirstEnumType)
-            return styleHintToVariant(static_cast<QStyle::StyleHint>(row), h);
-    }
-    if (role == Qt::DecorationRole && column == 1) {
-        const auto h = effectiveStyle()->styleHint(static_cast<QStyle::StyleHint>(row), Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
-        return VariantHandler::decoration(styleHintToVariant(static_cast<QStyle::StyleHint>(row), h));
-
+    if (column == 1) {
+        const auto hint = static_cast<QStyle::StyleHint>(row);
+        const auto value = effectiveStyle()->styleHint(hint, Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
+        switch (role) {
+            case Qt::DisplayRole:
+                if (style_hint_table[row].type == StyleHintType::Bool)
+                    return QVariant();
+                return VariantHandler::displayString(styleHintToVariant(hint, value));
+            case Qt::EditRole:
+                if (style_hint_table[row].type < StyleHintType::FirstEnumType)
+                    return styleHintToVariant(hint, value);
+                return QVariant();
+            case Qt::DecorationRole:
+                return VariantHandler::decoration(styleHintToVariant(hint, value));
+            case Qt::CheckStateRole:
+                if (style_hint_table[row].type == StyleHintType::Bool)
+                    return value ? Qt::Checked : Qt::Unchecked;
+                return QVariant();
+        }
     }
     if (role == Qt::DisplayRole && column == 2) {
         return VariantHandler::displayString(styleHintData(static_cast<QStyle::StyleHint>(row)));
@@ -385,22 +391,36 @@ QVariant StyleHintModel::styleHintData(QStyle::StyleHint hint) const
 Qt::ItemFlags StyleHintModel::flags(const QModelIndex &index) const
 {
     const auto baseFlags = QAbstractItemModel::flags(index);
-    if (index.isValid() && index.column() == 1 && isMainStyle()
-        && style_hint_table[index.row()].extraType == StyleHintExtraType::None
-        && style_hint_table[index.row()].type < StyleHintType::FirstEnumType) {
+    if (!index.isValid() || index.column() != 1 || !isMainStyle() ||
+        style_hint_table[index.row()].extraType != StyleHintExtraType::None) {
+        return baseFlags;
+    }
+
+    if (style_hint_table[index.row()].type < StyleHintType::FirstEnumType &&
+        style_hint_table[index.row()].type != StyleHintType::Bool) {
         return baseFlags | Qt::ItemIsEditable;
     }
+
+    if (style_hint_table[index.row()].type == StyleHintType::Bool) {
+        return baseFlags | Qt::ItemIsUserCheckable;
+    }
+
     return baseFlags;
 }
 
 bool StyleHintModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (!index.isValid() || index.column() != 1 || role != Qt::EditRole)
+    if (!index.isValid() || index.column() != 1)
+        return false;
+
+    if (role != Qt::EditRole && role != Qt::CheckStateRole)
         return false;
 
     int i = value.toInt();
     if (value.type() == QVariant::Color)
         i = value.value<QColor>().rgba();
+    if (role == Qt::CheckStateRole)
+        i = (i == Qt::Checked) ? 1 : 0;
     DynamicProxyStyle::instance()->setStyleHint(static_cast<QStyle::StyleHint>(index.row()), i);
     emit dataChanged(index, index);
     return true;
