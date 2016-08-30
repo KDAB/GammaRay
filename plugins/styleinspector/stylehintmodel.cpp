@@ -50,6 +50,7 @@ enum Type {
     Int,
     Color,
     Char,
+    FrameStyle, // this one is merged from two enums, thus not working out of the box with our enum editor
     Alignment,
     EventType,
     FocusPolicy,
@@ -57,7 +58,6 @@ enum Type {
     ElideMode,
     MouseButtons,
     LayoutDirection,
-    FrameStyle,
     TextInteractionFlags,
     WizardStyle,
     TabPosition,
@@ -67,9 +67,46 @@ enum Type {
     RequestInputPanel,
     ScrollMode,
 
+    LastBasicType = Char,
     FirstEnumType = Alignment
 };
 }
+
+struct StyleHintTypeInfo {
+    const char *name;
+    const QMetaObject *metaObject;
+};
+
+// ### must be the same order as the above enum
+static const StyleHintTypeInfo style_hint_type_table[] {
+    { "Qt::Alignment", Q_NULLPTR },
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    { "QEvent::Type", &QEvent::staticMetaObject },
+#else
+    { Q_NULLPTR, Q_NULLPTR },
+#endif
+    { "Qt::FocusPolicy", Q_NULLPTR },
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    { "QPalette::ColorRole", &QPalette::staticMetaObject },
+#else
+    { Q_NULLPTR, Q_NULLPTR },
+#endif
+    { "Qt::TextElideMode", Q_NULLPTR },
+    { "Qt::MouseButtons", Q_NULLPTR },
+    { "Qt::LayoutDirection", Q_NULLPTR },
+    { "Qt::TextInteractionFlags", Q_NULLPTR },
+    { "QWizard::WizardStyle", &QWizard::staticMetaObject },
+    { "QTabWidget::TabPosition", &QTabWidget::staticMetaObject },
+    { "QFormLayout::RowWrapPolicy", &QFormLayout::staticMetaObject },
+    { "QFormLayout::FieldGrowthPolicy", &QFormLayout::staticMetaObject },
+    { "Qt::ToolButtonStyle", Q_NULLPTR },
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    { "QStyle::RequestSoftwareInputPanel", &QStyle::staticMetaObject },
+#else
+    { Q_NULLPTR, Q_NULLPTR },
+#endif
+    { "QAbstractItemView::ScrollMode", &QAbstractItemView::staticMetaObject }
+};
 
 namespace StyleHintExtraType {
 enum Type {
@@ -264,7 +301,7 @@ QVariant StyleHintModel::doData(int row, int column, int role) const
                     return QVariant();
                 return VariantHandler::displayString(styleHintToVariant(hint, value));
             case Qt::EditRole:
-                if (style_hint_table[row].type < StyleHintType::FirstEnumType)
+                if (style_hint_table[row].type < StyleHintType::LastBasicType)
                     return styleHintToVariant(hint, value);
                 return QVariant();
             case Qt::DecorationRole:
@@ -293,60 +330,25 @@ int StyleHintModel::doRowCount() const
 
 QVariant StyleHintModel::styleHintToVariant(QStyle::StyleHint hint, int value) const
 {
-    switch (style_hint_table[hint].type) {
+    const auto type = style_hint_table[hint].type;
+    switch (type) {
         case StyleHintType::Bool:
             return QVariant::fromValue<bool>(value);
         case StyleHintType::Int:
             return value;
-        case StyleHintType::Alignment:
-            return EnumUtil::enumToString(value, "Qt::Alignment");
-        case StyleHintType::EventType:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-            return EnumUtil::enumToString(value, "QEvent::Type", &QEvent::staticMetaObject);
-#else
-            return value;
-#endif
         case StyleHintType::Color:
             return QVariant::fromValue(QColor(value));
         case StyleHintType::Char:
             return QChar(value);
-        case StyleHintType::FocusPolicy:
-            return EnumUtil::enumToString(value, "Qt::FocusPolicy");
-        case StyleHintType::ColorRole:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-            return EnumUtil::enumToString(value, "QPalette::ColorRole", &QPalette::staticMetaObject);
-#else
-            return value;
-#endif
-        case StyleHintType::ElideMode:
-            return EnumUtil::enumToString(value, "Qt::TextElideMode");
-        case StyleHintType::MouseButtons:
-            return EnumUtil::enumToString(value, "Qt::MouseButtons");
-        case StyleHintType::LayoutDirection:
-            return EnumUtil::enumToString(value, "Qt::LayoutDirection");
         case StyleHintType::FrameStyle:
             return QString(EnumUtil::enumToString(value & QFrame::Shadow_Mask, "QFrame::Shadow", &QFrame::staticMetaObject)
                  + " / " + EnumUtil::enumToString(value & QFrame::Shape_Mask, "QFrame::Shape", &QFrame::staticMetaObject));
-        case StyleHintType::TextInteractionFlags:
-            return EnumUtil::enumToString(value, "Qt::TextInteractionFlags");
-        case StyleHintType::WizardStyle:
-            return EnumUtil::enumToString(value, "QWizard::WizardStyle", &QWizard::staticMetaObject);
-        case StyleHintType::TabPosition:
-            return EnumUtil::enumToString(value, "QTabWidget::TabPosition", &QTabWidget::staticMetaObject);
-        case StyleHintType::FormWrapPolicy:
-            return EnumUtil::enumToString(value, "QFormLayout::RowWrapPolicy", &QFormLayout::staticMetaObject);
-        case StyleHintType::FormGrowthPolicy:
-            return EnumUtil::enumToString(value, "QFormLayout::FieldGrowthPolicy", &QFormLayout::staticMetaObject);
-        case StyleHintType::ToolButtonStyle:
-            return EnumUtil::enumToString(value, "Qt::ToolButtonStyle");
-        case StyleHintType::RequestInputPanel:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-            return EnumUtil::enumToString(value, "QStyle::RequestSoftwareInputPanel", &QStyle::staticMetaObject);
-#else
-            return value;
-#endif
-        case StyleHintType::ScrollMode:
-            return EnumUtil::enumToString(value, "QAbstractItemView::ScrollMode", &QAbstractItemView::staticMetaObject);
+        default: break;
+    }
+    const auto enumType = type - StyleHintType::FirstEnumType;
+    if (type >= StyleHintType::FirstEnumType && style_hint_type_table[enumType].name) {
+        return EnumUtil::enumToString(value, style_hint_type_table[enumType].name,
+                                             style_hint_type_table[enumType].metaObject);
     }
 
     return value;
@@ -396,7 +398,7 @@ Qt::ItemFlags StyleHintModel::flags(const QModelIndex &index) const
         return baseFlags;
     }
 
-    if (style_hint_table[index.row()].type < StyleHintType::FirstEnumType &&
+    if (style_hint_table[index.row()].type < StyleHintType::LastBasicType &&
         style_hint_table[index.row()].type != StyleHintType::Bool) {
         return baseFlags | Qt::ItemIsEditable;
     }
