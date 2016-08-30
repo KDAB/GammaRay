@@ -308,7 +308,9 @@ QVariant StyleHintModel::doData(int row, int column, int role) const
                 if (type <= StyleHintType::LastBasicType)
                     return styleHintToVariant(hint, value);
                 const auto enumType = type - StyleHintType::FirstEnumType;
-                if (type >= StyleHintType::FirstEnumType && style_hint_type_table[enumType].name) {
+                if (type >= StyleHintType::FirstEnumType ) {
+                    if (!style_hint_type_table[enumType].name)
+                        return value; // fallback to int for older Qt without meta enums for these types
                     const auto me = EnumUtil::metaEnum(value, style_hint_type_table[enumType].name,
                                                               style_hint_type_table[enumType].metaObject);
                     return QVariant::fromValue(EnumRepositoryServer::valueFromMetaEnum(value, me));
