@@ -38,7 +38,7 @@ class EnumRepositoryClient : public GammaRay::EnumRepository
     Q_OBJECT
     Q_INTERFACES(GammaRay::EnumRepository)
 public:
-    EnumRepositoryClient(QObject *parent = Q_NULLPTR);
+    explicit EnumRepositoryClient(QObject *parent = Q_NULLPTR);
     ~EnumRepositoryClient();
 
     EnumDefinition definition(EnumId id) const Q_DECL_OVERRIDE;

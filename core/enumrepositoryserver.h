@@ -54,7 +54,7 @@ public:
     static GAMMARAY_CORE_EXPORT EnumValue valueFromMetaEnum(int value, const QMetaEnum &me);
 
 private:
-    EnumRepositoryServer(QObject *parent = Q_NULLPTR);
+    explicit EnumRepositoryServer(QObject *parent = Q_NULLPTR);
     void requestDefinition(EnumId id) Q_DECL_OVERRIDE;
 
     EnumId m_nextId;
