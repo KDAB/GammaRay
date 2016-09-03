@@ -1,7 +1,7 @@
 #version 330 core
 
 /*
-  widget.vert
+  widget.frag
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -28,25 +28,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
-in vec2 vertexTexCoord;
+out vec4 fragColor;
 
-out VertexData {
-    vec3 position;
-    vec3 normal;
-    vec2 texCoord;
-} vs_out;
+in FragmentData {
+    vec4 color;
+} fs_in;
 
-uniform mat4 modelView;
-uniform mat3 modelViewNormal;
-uniform mat4 mvp;
 
 void main(void)
 {
-    vs_out.position = vertexPosition;
-    vs_out.normal = normalize(vertexNormal);
-    vs_out.texCoord = vertexTexCoord;
-
-    gl_Position = mvp * vec4(vertexPosition, 1.0);
+    fragColor = vec4(fs_in.color.xyz, 1.0);
 }
+

@@ -1,7 +1,7 @@
 #version 330 core
 
 /*
-  widget.vert
+  horizontal.vert
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -29,24 +29,15 @@
 */
 
 in vec3 vertexPosition;
-in vec3 vertexNormal;
-in vec2 vertexTexCoord;
 
 out VertexData {
-    vec3 position;
-    vec3 normal;
-    vec2 texCoord;
+  vec4 vertexPosition;
 } vs_out;
 
-uniform mat4 modelView;
-uniform mat3 modelViewNormal;
 uniform mat4 mvp;
 
 void main(void)
 {
-    vs_out.position = vertexPosition;
-    vs_out.normal = normalize(vertexNormal);
-    vs_out.texCoord = vertexTexCoord;
-
-    gl_Position = mvp * vec4(vertexPosition, 1.0);
+    vs_out.vertexPosition = mvp * vec4(vertexPosition, 1.0);
+    gl_Position = vs_out.vertexPosition;
 }

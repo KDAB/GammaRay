@@ -38,6 +38,7 @@ Material {
 
     property real explosionFactor: 0
     property real highlightFactor: 0
+    property int level: 0
 
     property var frontTextureImage
     property var backTextureImage
@@ -97,6 +98,14 @@ Material {
                     Parameter {
                         name: "highlightFactor"
                         value: root.highlightFactor
+                    },
+                    Parameter {
+                        name: "widget.explosionFactor"
+                        value: root.explosionFactor
+                    },
+                    Parameter {
+                        name: "widget.level"
+                        value: root.level
                     }
                 ]
 
@@ -104,7 +113,7 @@ Material {
                     RenderPass {
                         shaderProgram: ShaderProgram {
                             vertexShaderCode: loadSource("qrc:/assets/shaders/widget.vert")
-                            //geometryShaderCode: loadSource("qrc:/shaders/widget.geom")
+                            //geometryShaderCode: loadSource("qrc:/assets/shaders/widget.geom")
                             fragmentShaderCode: loadSource("qrc:/assets/shaders/widget.frag")
                         }
                     }

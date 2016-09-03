@@ -1,7 +1,7 @@
 #version 330 core
 
 /*
-  widget.vert
+  horizontal.geom
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -28,25 +28,36 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-in vec3 vertexPosition;
-in vec3 vertexNormal;
-in vec2 vertexTexCoord;
+layout(triangles) in;
+layout(line_strip, max_vertices = 2) out;
 
-out VertexData {
-    vec3 position;
-    vec3 normal;
-    vec2 texCoord;
-} vs_out;
+in VertexData {
+    vec4 vertexPosition;
+} gs_in[];
 
-uniform mat4 modelView;
-uniform mat3 modelViewNormal;
+out FragmentData {
+    vec4 color;
+} gs_out;
+
+uniform mat4 viewportMatrix;
 uniform mat4 mvp;
 
-void main(void)
-{
-    vs_out.position = vertexPosition;
-    vs_out.normal = normalize(vertexNormal);
-    vs_out.texCoord = vertexTexCoord;
+struct Widget {
+  float explosionFactor;
+  int level;
+};
+uniform Widget widget;
 
-    gl_Position = mvp * vec4(vertexPosition, 1.0);
+void main()
+{
+    gs_out.color = gs_in[0].vertexPosition;
+    gl_Position = gs_in[0].vertexPosition;
+    EmitVertex();
+
+    gs_out.color = gs_in[1].vertexPosition;
+    gl_Position = gs_in[1].vertexPosition;
+    EmitVertex();
+
+    EndPrimitive();
 }
+

@@ -37,24 +37,44 @@ in VertexData {
     vec2 texCoord;
 } gs_in[];
 
-out VertexData {
+out FragmentData {
     vec3 position;
     vec3 normal;
     vec2 texCoord;
+    vec3 altitude;
 } gs_out;
 
 uniform mat4 viewportMatrix;
 uniform mat4 mvp;
 
+uniform float explosionFactor;
+uniform int level;
 
 void main()
 {
-    for (int i = 0; i < gl_in.length(); i++) {
-        vec4 pos = vec4(gs_in[i].position, 1);
-        gl_Position = mvp * pos;
-        gs_out.position = gs_in[i].position;
-        gs_out.normal = gs_in[i].normal;
-        gs_out.texCoord = gs_in[i].texCoord;
+    vec2 vpos[3];
+    vpos[0] = vec2(viewportMatrix * (gs_in[0].gl_Position / gs_in[0].gl_Position.w));
+    vpos[1] = vec2(viewportMatrix * (gs_in[1].gl_Position / gs_in[1].gl_Position.w));
+    vpos[2] = vec2(viewportMatrix * (gs_in[2].gl_Position / gs_in[2].gl_Position.w));
+
+    float lenA = length(vpos[1] - vpos[0]);
+    float lenB = length(vpos[2] - vpos[0]);
+    float lenC = length(vpos[2] - vpos[1]);
+
+    float s = (lenA + lenB + lenC) / 2;
+    float hSqrt = sqrt(s * (s - lenA) * (s - lenB) * (s - lenC));
+    float hA = hSqrt / lenA;
+    float hB = hSqrt / lenB;
+    float hC = hSqrt / lenC;
+
+
+    vec4 pos = vec4(gs_in[i].position, 1.0);
+    gl_Position = mvp * pos;
+    gs_out.position = gs_in[i].position;
+    gs_out.normal = gs_in[i].normal;
+    gs_out.texCoord = gs_in[i].texCoord;
+    gs_out.edgeA =
+
 
         EmitVertex();
     }

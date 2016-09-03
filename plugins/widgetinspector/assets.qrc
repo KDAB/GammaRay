@@ -7,5 +7,8 @@
         <file>assets/shaders/widget.vert</file>
         <file>assets/shaders/widget.frag</file>
         <file>assets/shaders/widget.geom</file>
+        <file>assets/shaders/horizontal.vert</file>
+        <file>assets/shaders/horizontal.geom</file>
+        <file>assets/shaders/horizontal.frag</file>
     </qresource>
 </RCC>
