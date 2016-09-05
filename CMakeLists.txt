@@ -310,7 +310,7 @@ if(Qt5Core_FOUND)
     set(HAVE_PRIVATE_Qt5Quick_HEADERS true)
   endif()
 
-  set_package_properties(Qt5 PROPERTIES URL "http://qt-project.org/")
+  set_package_properties(Qt5 PROPERTIES URL "https://qt.io/")
   set_package_properties(Qt5Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
   set_package_properties(Qt5Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
   set_package_properties(Qt5Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
@@ -354,7 +354,7 @@ else()
     include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt/4.8)
   endif()
 
-  set_package_properties(Qt4 PROPERTIES URL "http://qt-project.org/")
+  set_package_properties(Qt4 PROPERTIES URL "https://qt.io/")
   add_feature_info("QPainter analyzer" HAVE_PRIVATE_QT_HEADERS
     "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
   )
@@ -441,7 +441,7 @@ find_package(Glslang)
 set_package_properties(Glslang PROPERTIES URL "https://github.com/KhronosGroup/glslang" PURPOSE "Validate GL shader code.")
 
 find_package(QmlLint)
-set_package_properties(QmlLint PROPERTIES URL "http://qt.io" PURPOSE "Validate QML code.")
+set_package_properties(QmlLint PROPERTIES URL "https://qt.io" PURPOSE "Validate QML code.")
 
 #
 # Determine probe ABI
@@ -714,7 +714,7 @@ if(WIN32)
   set(CPACK_NSIS_EXECUTABLES_DIRECTORY "${BIN_INSTALL_DIR}")
   set(CPACK_NSIS_MUI_ICON "${ICONS_DIR}/Charm.ico")
   set(CPACK_PACKAGE_ICON "${ICONS_DIR}\\\\CharmNSISHeader.bmp")
-  set(CPACK_NSIS_URL_INFO_ABOUT "http://www.kdab.com/")
+  set(CPACK_NSIS_URL_INFO_ABOUT "https://www.kdab.com/")
   set(CPACK_NSIS_INSTALLED_ICON_NAME "GammaRay${CMAKE_EXECUTABLE_SUFFIX}")
   set(CPACK_NSIS_MENU_LINKS
     "${LICENSE_FILE}" "License"

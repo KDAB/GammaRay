@@ -1,4 +1,4 @@
-# <a name="title"></a> [![Logo](https://github.com/KDAB/GammaRay/blob/master/resources/gammaray-trademark-medium.png)](http://www.kdab.com/gammaray)
+# <a name="title"></a> [![Logo](https://github.com/KDAB/GammaRay/blob/master/resources/gammaray-trademark-medium.png)](https://www.kdab.com/gammaray)
 Introduction
 ============
 GammaRay is a software introspection tool for Qt applications developed by KDAB.
@@ -75,7 +75,7 @@ standard trainings anywhere around the globe.
 
 If you would like to have a custom plugin for GammaRay to visualize, profile
 or debug your own specific components or applications, get in touch with us
-via http://www.kdab.com/contact. KDAB engineers have a lot of experience
+via https://www.kdab.com/contact. KDAB engineers have a lot of experience
 writing GammaRay plugins and can be contracted to help you get yours working
 and improve your development efficiency.
 

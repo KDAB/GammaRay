@@ -316,7 +316,7 @@ void MainWindow::aboutKDAB()
            "frameworks to Qt. We continue to help develop parts of Qt and are one "
            "of the major contributors to the Qt Project. We can give advanced or "
            "standard trainings anywhere around the globe.</p>"
-           "<p>Please visit <a href='http://www.kdab.com'>http://www.kdab.com</a> "
+           "<p>Please visit <a href='https://www.kdab.com'>https://www.kdab.com</a> "
            "to meet the people who write code like this."
            "</p></qt>"));
     dialog.setLogo(QStringLiteral(":gammaray/kdablogo160.png"));

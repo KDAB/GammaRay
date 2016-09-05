@@ -54,7 +54,7 @@ bool PromoLabel::event(QEvent *e)
 void PromoLabel::mouseReleaseEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::LeftButton && ev->modifiers() == Qt::NoModifier) {
-        QDesktopServices::openUrl(QUrl(QStringLiteral("http://www.kdab.com")));
+        QDesktopServices::openUrl(QUrl(QStringLiteral("https://www.kdab.com")));
         ev->accept();
         return;
     }
