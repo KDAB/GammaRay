@@ -1,4 +1,4 @@
-# <a name="title"></a> [![Logo](https://github.com/KDAB/GammaRay/blob/master/resources/gammaray-trademark-medium.png)](https://www.kdab.com/gammaray)
+# <a name="title"></a> [![Logo](https://github.com/KDAB/GammaRay/blob/master/resources/GammaRay-Trademark-medium.png)](http://www.kdab.com/gammaray)
 Introduction
 ============
 GammaRay is a software introspection tool for Qt applications developed by KDAB.
