@@ -80,7 +80,7 @@ struct StyleHintTypeInfo {
 };
 
 // ### must be the same order as the above enum
-static const StyleHintTypeInfo style_hint_type_table[] {
+static const struct StyleHintTypeInfo style_hint_type_table[] = {
     { "Qt::Alignment", Q_NULLPTR },
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     { "QEvent::Type", &QEvent::staticMetaObject },
