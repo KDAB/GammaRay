@@ -220,7 +220,7 @@ void MyCylinderGeometry::createSidesIndices(quint16 *&indicesPtr)
 void MyCylinderGeometry::createDiscIndices(quint16 *&indicesPtr, int discCenterIndex, float yPosition)
 {
     //! [Wrong bottom disc indexes]
-    const auto yNormal = (yPosition < 0.0f) ? -1.0f : 1.0f;
+    //const auto yNormal = (yPosition < 0.0f) ? -1.0f : 1.0f;
     for (auto slice = 0; slice < m_slices; ++slice) {
         const auto nextSlice = slice + 1;
         *indicesPtr++ = discCenterIndex;
