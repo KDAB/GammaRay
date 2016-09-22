@@ -151,7 +151,7 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 static QString compilerFromLibraries(const QStringList &libraries)
 {
     foreach (const QString &lib, libraries) {
-        if (lib.toLower().startsWith(QLatin1String("libgcc")))
+        if (lib.startsWith(QLatin1String("libgcc"), Qt::CaseInsensitive))
             return "GNU";
     }
 
@@ -161,9 +161,9 @@ static QString compilerFromLibraries(const QStringList &libraries)
 static bool isDebugRuntime(const QStringList &libraries)
 {
     foreach (const QString &lib, libraries) {
-        if (lib.toLower().startsWith(QLatin1String("msvcr"))
-            || lib.toLower().startsWith(QLatin1String("vcruntime")))
-            return lib.toLower().endsWith(QLatin1String("d.dll"));
+        if (lib.startsWith(QLatin1String("msvcr"), Qt::CaseInsensitive)
+            || lib.startsWith(QLatin1String("vcruntime"), Qt::CaseInsensitive))
+            return lib.endsWith(QLatin1String("d.dll"), Qt::CaseInsensitive);
     }
     return false;
 }
