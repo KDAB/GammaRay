@@ -3,7 +3,7 @@ Version:        2.5.1
 Release:        1
 Summary:        An introspection tool for Qt applications
 Source:         gammaray-%{version}.tar.gz
-Url:            http://github.com/KDAB/GammaRay
+Url:            https://github.com/KDAB/GammaRay
 Group:          Development/Tools
 License:        GPL-2.0+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build

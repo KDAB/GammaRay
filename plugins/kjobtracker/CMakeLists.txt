@@ -3,7 +3,7 @@ if(Qt5Core_FOUND)
   set_package_properties(KF5CoreAddons PROPERTIES
     TYPE OPTIONAL
     DESCRIPTION "KDE KCoreAddons Framework"
-    URL "http://www.kde.org/"
+    URL "https://www.kde.org/"
     PURPOSE "Required for the KJob tracker plug-in."
   )
 else()
@@ -15,7 +15,7 @@ else()
   set_package_properties(KDE4 PROPERTIES
     TYPE OPTIONAL
     DESCRIPTION "KDE libraries"
-    URL "http://www.kde.org/"
+    URL "https://www.kde.org/"
     PURPOSE "Required for the KJob tracker plug-in."
   )
 endif()

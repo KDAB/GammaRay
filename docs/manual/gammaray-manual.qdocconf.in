@@ -1,6 +1,6 @@
 project = "GammaRay"
 description = "GammaRay User Manual"
-url = http://www.kdab.com/gammaray
+url = https://www.kdab.com/gammaray
 
 sourcedirs = @CMAKE_CURRENT_SOURCE_DIR@
 sources.fileextensions = "*.qdoc"

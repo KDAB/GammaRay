@@ -67,6 +67,7 @@ void HelpControllerPrivate::startProcess()
         return;
 
     proc = new QProcess(QCoreApplication::instance());
+    proc->setProcessChannelMode(QProcess::ForwardedChannels);
     QObject::connect(proc,
                      static_cast<void (QProcess::*)(int,
                                                     QProcess::ExitStatus)>(&QProcess::finished),

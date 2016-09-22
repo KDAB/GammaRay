@@ -23,8 +23,8 @@ GammaRay ships with a large set of plugins for various Qt frameworks that
 can serve as examples for all the features described below. Additional external
 plugins can be found here:
 
-- GammaRay plugin examples: http://github.com/KDAB/GammaRay-plugin-examples
-- GammaRay QtIvi support plugin: http://codereview.qt-project.org/gitweb?p=qt-apps/gammaray-plugin-qtivi.git
+- GammaRay plugin examples: https://github.com/KDAB/GammaRay-plugin-examples
+- GammaRay QtIvi support plugin: https://codereview.qt-project.org/gitweb?p=qt-apps/gammaray-plugin-qtivi.git
 
 For best practices on plugin development, also see the \ref gammaray-plugin-design-guide "Plugin Design Guide".
 
@@ -104,7 +104,7 @@ frameworks to Qt. We continue to help develop parts of Qt and are one
 of the major contributors to the Qt Project. We can give advanced or
 standard trainings anywhere around the globe.
 
-Please visit http://www.kdab.com to meet the people who write code like this.
+Please visit https://www.kdab.com to meet the people who write code like this.
 
 @namespace GammaRay \brief All GammaRay classes.
 

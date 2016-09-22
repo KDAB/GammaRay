@@ -27,23 +27,23 @@
   </description>
   <screenshots>
     <screenshot type="default" width="500" height="273">
-      <image>http://www.kdab.com/wp-content/uploads/stories/software/gammaray2.png</image>
+      <image>https://www.kdab.com/wp-content/uploads/stories/software/gammaray2.png</image>
       <caption/>
     </screenshot>
     <screenshot width="500" height="281">
-      <image>http://www.kdab.com/wp-content/uploads/stories/software/gammaray1.png</image>
+      <image>https://www.kdab.com/wp-content/uploads/stories/software/gammaray1.png</image>
       <caption/>
     </screenshot>
     <screenshot width="500" height="281">
-      <image>http://www.kdab.com/wp-content/uploads/stories/software/gammaray4_text.png</image>
+      <image>https://www.kdab.com/wp-content/uploads/stories/software/gammaray4_text.png</image>
       <caption/>
     </screenshot>
     <screenshot width="500" height="273">
-      <image>http://www.kdab.com/wp-content/uploads/stories/software/gammaray-traffic-light.png</image>
+      <image>https://www.kdab.com/wp-content/uploads/stories/software/gammaray-traffic-light.png</image>
       <caption/>
     </screenshot>
   </screenshots>
-  <url type="homepage">http://www.kdab.com/gammaray/</url>
+  <url type="homepage">https://www.kdab.com/gammaray/</url>
   <url type="bugtracker">https://github.com/KDAB/GammaRay/issues</url>
   <url type="help">https://github.com/KDAB/GammaRay/wiki</url>
   <update_contact>allen.winter@kdab.com</update_contact>
