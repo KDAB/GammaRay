@@ -147,6 +147,13 @@ void ResourceBrowserWidget::resourceSelected(const QByteArray &contents, int lin
         return;
     }
 
+    // get the file name for syntax highlighting
+    QString fileName;
+    const auto selection = ui->treeView->selectionModel()->selectedRows();
+    if (!selection.isEmpty())
+        fileName = selection.at(0).data().toString();
+    ui->textBrowser->setFileName(fileName);
+
     // TODO: make encoding configurable
     ui->textBrowser->setPlainText(contents);
 

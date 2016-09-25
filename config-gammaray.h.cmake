@@ -50,6 +50,7 @@
 #cmakedefine HAVE_QT_WEBKIT1
 
 #cmakedefine HAVE_VTK
+#cmakedefine HAVE_SYNTAX_HIGHLIGHTING
 
 #cmakedefine HAVE_ELF_H
 #cmakedefine HAVE_SYS_ELF_H

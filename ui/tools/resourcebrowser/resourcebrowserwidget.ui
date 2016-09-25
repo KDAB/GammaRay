@@ -57,7 +57,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPlainTextEdit" name="textBrowser">
+         <widget class="GammaRay::CodeEditor" name="textBrowser">
           <property name="tabChangesFocus">
            <bool>true</bool>
           </property>
@@ -129,6 +129,11 @@
    <class>GammaRay::DeferredTreeView</class>
    <extends>QTreeView</extends>
    <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::CodeEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header location="global">ui/codeeditor/codeeditor.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
