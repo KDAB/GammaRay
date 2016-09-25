@@ -80,6 +80,15 @@ void CodeEditor::setFileName(const QString& fileName)
 #endif
 }
 
+void CodeEditor::setSyntaxDefinition(const QString& syntaxName)
+{
+#ifdef HAVE_SYNTAX_HIGHLIGHTING
+    ensureHighlighterExists();
+    const auto def = s_repository->definitionForName(syntaxName);
+    m_highlighter->setDefinition(def);
+#endif
+}
+
 int CodeEditor::sidebarWidth() const
 {
     int digits = 1;

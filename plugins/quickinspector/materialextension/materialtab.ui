@@ -43,7 +43,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTextEdit" name="shaderEdit">
+        <widget class="GammaRay::CodeEditor" name="shaderEdit">
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -60,6 +60,11 @@
    <class>GammaRay::DeferredTreeView</class>
    <extends>QTreeView</extends>
    <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::CodeEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header location="global">ui/codeeditor/codeeditor.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

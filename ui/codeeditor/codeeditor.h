@@ -29,8 +29,9 @@
 #ifndef GAMMARAY_CODEEDITOR_H
 #define GAMMARAY_CODEEDITOR_H
 
-#include <config-gammaray.h>
+#include "gammaray_ui_export.h"
 
+#include <config-gammaray.h>
 
 #include <QPlainTextEdit>
 
@@ -43,7 +44,7 @@ namespace GammaRay {
 
 class CodeEditorSidebar;
 
-class CodeEditor : public QPlainTextEdit
+class GAMMARAY_UI_EXPORT CodeEditor : public QPlainTextEdit
 {
     Q_OBJECT
 public:
@@ -51,6 +52,7 @@ public:
     ~CodeEditor();
 
     void setFileName(const QString &fileName);
+    void setSyntaxDefinition(const QString &syntaxName);
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;

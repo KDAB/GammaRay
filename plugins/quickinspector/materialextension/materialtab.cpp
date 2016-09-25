@@ -48,6 +48,8 @@ MaterialTab::MaterialTab(PropertyWidget *parent)
             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(shaderSelectionChanged(QItemSelection)));
 
+    m_ui->shaderEdit->setSyntaxDefinition(QLatin1String("GLSL"));
+
     m_ui->splitter->setStretchFactor(0, 1);
     m_ui->splitter->setStretchFactor(1, 3);
 }
@@ -82,5 +84,5 @@ void MaterialTab::shaderSelectionChanged(const QItemSelection &selection)
 
 void MaterialTab::showShader(const QString &shaderSource)
 {
-    m_ui->shaderEdit->setText(shaderSource);
+    m_ui->shaderEdit->setPlainText(shaderSource);
 }
