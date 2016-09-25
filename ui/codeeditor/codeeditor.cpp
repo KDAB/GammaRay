@@ -35,7 +35,10 @@
 #include <SyntaxHighlighting/Theme>
 #endif
 
+#include <QAction>
+#include <QActionGroup>
 #include <QDebug>
+#include <QMenu>
 #include <QPainter>
 #include <QTextBlock>
 
@@ -86,6 +89,43 @@ int CodeEditor::sidebarWidth() const
     }
     return 4 + fontMetrics().width(QLatin1Char('9')) * digits;
 }
+
+void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    auto menu = createStandardContextMenu(event->pos());
+#else
+    auto menu = createStandardContextMenu();
+#endif
+
+#ifdef HAVE_SYNTAX_HIGHLIGHTING
+    menu->addSeparator();
+    auto hlActionGroup = new QActionGroup(menu);
+    hlActionGroup->setExclusive(true);
+    auto hlGroupMenu = menu->addMenu(tr("Syntax Highlighting"));
+    QMenu *hlSubMenu = Q_NULLPTR;
+    QString currentGroup;
+    foreach (const auto &def, m_repository.definitions()) {
+        if (currentGroup != def.section()) {
+            currentGroup = def.section();
+            hlSubMenu = hlGroupMenu->addMenu(def.translatedSection());
+        }
+
+        Q_ASSERT(hlSubMenu);
+        auto action = hlSubMenu->addAction(def.translatedName());
+        action->setCheckable(true);
+        action->setData(def.name());
+        hlActionGroup->addAction(action);
+        if (def.name() == m_highlighter->definition().name())
+            action->setChecked(true);
+    }
+    connect(hlActionGroup, SIGNAL(triggered(QAction*)), this, SLOT(syntaxSelected(QAction*)));
+#endif
+
+    menu->exec(event->globalPos());
+    delete menu;
+}
+
 
 void CodeEditor::resizeEvent(QResizeEvent *event)
 {
@@ -146,4 +186,14 @@ void CodeEditor::highlightCurrentLine()
     QList<QTextEdit::ExtraSelection> extraSelections;
     extraSelections.append(selection);
     setExtraSelections(extraSelections);
+}
+
+void CodeEditor::syntaxSelected(QAction* action)
+{
+    Q_ASSERT(action);
+#ifdef HAVE_SYNTAX_HIGHLIGHTING
+    const auto defName = action->data().toString();
+    const auto def = m_repository.definitionForName(defName);
+    m_highlighter->setDefinition(def);
+#endif
 }

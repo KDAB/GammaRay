@@ -55,12 +55,14 @@ public:
     void setFileName(const QString &fileName);
 
 protected:
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
     void updateSidebarGeometry();
     void updateSidebarArea(const QRect &rect, int dy);
     void highlightCurrentLine();
+    void syntaxSelected(QAction *action);
 
 private:
     friend class CodeEditorSidebar;
