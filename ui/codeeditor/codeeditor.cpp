@@ -27,6 +27,7 @@
 */
 
 #include "codeeditor.h"
+#include "codeeditorsidebar.h"
 
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
 #include <SyntaxHighlighting/Definition>
@@ -34,18 +35,25 @@
 #include <SyntaxHighlighting/Theme>
 #endif
 
-#include <QApplication>
 #include <QDebug>
+#include <QPainter>
+#include <QTextBlock>
 
 using namespace GammaRay;
 
 CodeEditor::CodeEditor(QWidget* parent) :
     QPlainTextEdit(parent),
+    m_sideBar(new CodeEditorSidebar(this)),
     m_highlighter(Q_NULLPTR)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 #endif
+
+    connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSidebarGeometry()));
+    connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateSidebarArea(QRect,int)));
+
+    updateSidebarGeometry();
 }
 
 CodeEditor::~CodeEditor()
@@ -58,10 +66,66 @@ void CodeEditor::setFileName(const QString& fileName)
     const auto def = m_repository.definitionForFileName(fileName);
     if (!m_highlighter) {
         m_highlighter = new SyntaxHighlighting::SyntaxHighlighter(document());
-        m_highlighter->setTheme((qApp->palette().color(QPalette::Base).lightness() < 128)
+        m_highlighter->setTheme((palette().color(QPalette::Base).lightness() < 128)
             ? m_repository.defaultTheme(SyntaxHighlighting::Repository::DarkTheme)
             : m_repository.defaultTheme(SyntaxHighlighting::Repository::LightTheme));
     }
     m_highlighter->setDefinition(def);
 #endif
+}
+
+int CodeEditor::sidebarWidth() const
+{
+    int digits = 1;
+    auto count = blockCount();
+    while (count >= 10) {
+        ++digits;
+        count /= 10;
+    }
+    return 4 + fontMetrics().width(QLatin1Char('9')) * digits;
+}
+
+void CodeEditor::resizeEvent(QResizeEvent *event)
+{
+    QPlainTextEdit::resizeEvent(event);
+    updateSidebarGeometry();
+}
+
+void CodeEditor::updateSidebarGeometry()
+{
+    setViewportMargins(sidebarWidth(), 0, 0, 0);
+    const auto r = contentsRect();
+    m_sideBar->setGeometry(QRect(r.left(), r.top(), sidebarWidth(), r.height()));
+}
+
+void CodeEditor::updateSidebarArea(const QRect& rect, int dy)
+{
+    if (dy)
+        m_sideBar->scroll(0, dy);
+    else
+        m_sideBar->update(0, rect.y(), m_sideBar->width(), rect.height());
+}
+
+void CodeEditor::sidebarPaintEvent(QPaintEvent* event)
+{
+    QPainter painter(m_sideBar);
+    painter.fillRect(event->rect(), palette().color(QPalette::Window));
+
+    auto block = firstVisibleBlock();
+    auto blockNumber = block.blockNumber();
+    int top = blockBoundingGeometry(block).translated(contentOffset()).top();
+    int bottom = top + blockBoundingRect(block).height();
+
+    while (block.isValid() && top <= event->rect().bottom()) {
+        if (block.isVisible() && bottom >= event->rect().top()) {
+            const auto number = QString::number(blockNumber + 1);
+            painter.setPen(palette().color(QPalette::Text));
+            painter.drawText(0, top, m_sideBar->width() - 2, fontMetrics().height(), Qt::AlignRight, number);
+        }
+
+        block = block.next();
+        top = bottom;
+        bottom = top + blockBoundingRect(block).height();
+        ++blockNumber;
+    }
 }

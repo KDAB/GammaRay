@@ -1,5 +1,5 @@
 /*
-  codeeditor.h
+  codeeditorsidebar.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,52 +26,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CODEEDITOR_H
-#define GAMMARAY_CODEEDITOR_H
+#ifndef GAMMARAY_CODEEDITORSIDEBAR_H
+#define GAMMARAY_CODEEDITORSIDEBAR_H
 
-#include <config-gammaray.h>
-
-#ifdef HAVE_SYNTAX_HIGHLIGHTING
-#include <SyntaxHighlighting/Repository>
-#endif
-
-#include <QPlainTextEdit>
-
-namespace SyntaxHighlighting {
-class SyntaxHighlighter;
-}
+#include <QWidget>
 
 namespace GammaRay {
 
-class CodeEditorSidebar;
+class CodeEditor;
 
-class CodeEditor : public QPlainTextEdit
+class CodeEditorSidebar : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CodeEditor(QWidget *parent = Q_NULLPTR);
-    ~CodeEditor();
+    explicit CodeEditorSidebar(CodeEditor *editor);
+    ~CodeEditorSidebar();
 
-    void setFileName(const QString &fileName);
+    QSize sizeHint() const Q_DECL_OVERRIDE;
 
 protected:
-    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-
-private slots:
-    void updateSidebarGeometry();
-    void updateSidebarArea(const QRect &rect, int dy);
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
 private:
-    friend class CodeEditorSidebar;
-    int sidebarWidth() const;
-    void sidebarPaintEvent(QPaintEvent *event);
-
-    CodeEditorSidebar *m_sideBar;
-#ifdef HAVE_SYNTAX_HIGHLIGHTING
-    SyntaxHighlighting::Repository m_repository;
-#endif
-    SyntaxHighlighting::SyntaxHighlighter *m_highlighter;
+    CodeEditor *m_codeEditor;
 };
 }
 
-#endif // GAMMARAY_CODEEDITOR_H
+#endif // GAMMARAY_CODEEDITORSIDEBAR_H
