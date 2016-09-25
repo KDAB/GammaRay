@@ -52,8 +52,10 @@ CodeEditor::CodeEditor(QWidget* parent) :
 
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSidebarGeometry()));
     connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateSidebarArea(QRect,int)));
+    connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
     updateSidebarGeometry();
+    highlightCurrentLine();
 }
 
 CodeEditor::~CodeEditor()
@@ -128,4 +130,20 @@ void CodeEditor::sidebarPaintEvent(QPaintEvent* event)
         bottom = top + blockBoundingRect(block).height();
         ++blockNumber;
     }
+}
+
+void CodeEditor::highlightCurrentLine()
+{
+    auto lineColor = palette().color(QPalette::Highlight);
+    lineColor.setAlpha(32);
+
+    QTextEdit::ExtraSelection selection;
+    selection.format.setBackground(lineColor);
+    selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+    selection.cursor = textCursor();
+    selection.cursor.clearSelection();
+
+    QList<QTextEdit::ExtraSelection> extraSelections;
+    extraSelections.append(selection);
+    setExtraSelections(extraSelections);
 }

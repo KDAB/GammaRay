@@ -60,6 +60,7 @@ protected:
 private slots:
     void updateSidebarGeometry();
     void updateSidebarArea(const QRect &rect, int dy);
+    void highlightCurrentLine();
 
 private:
     friend class CodeEditorSidebar;
