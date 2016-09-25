@@ -85,7 +85,10 @@ void ResourceBrowser::selectResource(const QString &sourceFilePath, int line, in
 
 void ResourceBrowser::currentChanged(const QModelIndex &current, int line, int column)
 {
-    const QFileInfo fi(current.data(ResourceModel::FilePathRole).toString());
+    if (!current.isValid())
+        return;
+    const auto idx = current.sibling(current.row(), 0);
+    const QFileInfo fi(idx.data(ResourceModel::FilePathRole).toString());
     if (!fi.isFile()) {
         emit resourceDeselected();
         return;
