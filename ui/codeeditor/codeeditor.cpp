@@ -31,18 +31,24 @@
 
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
 #include <SyntaxHighlighting/Definition>
+#include <SyntaxHighlighting/Repository>
 #include <SyntaxHighlighting/SyntaxHighlighter>
 #include <SyntaxHighlighting/Theme>
 #endif
 
 #include <QAction>
 #include <QActionGroup>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QMenu>
 #include <QPainter>
 #include <QTextBlock>
 
 using namespace GammaRay;
+
+#ifdef HAVE_SYNTAX_HIGHLIGHTING
+SyntaxHighlighting::Repository* CodeEditor::s_repository = Q_NULLPTR;
+#endif
 
 CodeEditor::CodeEditor(QWidget* parent) :
     QPlainTextEdit(parent),
@@ -68,13 +74,8 @@ CodeEditor::~CodeEditor()
 void CodeEditor::setFileName(const QString& fileName)
 {
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
-    const auto def = m_repository.definitionForFileName(fileName);
-    if (!m_highlighter) {
-        m_highlighter = new SyntaxHighlighting::SyntaxHighlighter(document());
-        m_highlighter->setTheme((palette().color(QPalette::Base).lightness() < 128)
-            ? m_repository.defaultTheme(SyntaxHighlighting::Repository::DarkTheme)
-            : m_repository.defaultTheme(SyntaxHighlighting::Repository::LightTheme));
-    }
+    ensureHighlighterExists();
+    const auto def = s_repository->definitionForFileName(fileName);
     m_highlighter->setDefinition(def);
 #endif
 }
@@ -99,13 +100,14 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
 #endif
 
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
+    ensureHighlighterExists();
     menu->addSeparator();
     auto hlActionGroup = new QActionGroup(menu);
     hlActionGroup->setExclusive(true);
     auto hlGroupMenu = menu->addMenu(tr("Syntax Highlighting"));
     QMenu *hlSubMenu = Q_NULLPTR;
     QString currentGroup;
-    foreach (const auto &def, m_repository.definitions()) {
+    foreach (const auto &def, s_repository->definitions()) {
         if (currentGroup != def.section()) {
             currentGroup = def.section();
             hlSubMenu = hlGroupMenu->addMenu(def.translatedSection());
@@ -191,9 +193,28 @@ void CodeEditor::highlightCurrentLine()
 void CodeEditor::syntaxSelected(QAction* action)
 {
     Q_ASSERT(action);
+    Q_ASSERT(s_repository);
+
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
     const auto defName = action->data().toString();
-    const auto def = m_repository.definitionForName(defName);
+    const auto def = s_repository->definitionForName(defName);
     m_highlighter->setDefinition(def);
+#endif
+}
+
+void CodeEditor::ensureHighlighterExists()
+{
+#ifdef HAVE_SYNTAX_HIGHLIGHTING
+    if (!s_repository) {
+        s_repository = new SyntaxHighlighting::Repository;
+        qAddPostRoutine([](){ delete s_repository; });
+    }
+
+    if (!m_highlighter) {
+        m_highlighter = new SyntaxHighlighting::SyntaxHighlighter(document());
+        m_highlighter->setTheme((palette().color(QPalette::Base).lightness() < 128)
+            ? s_repository->defaultTheme(SyntaxHighlighting::Repository::DarkTheme)
+            : s_repository->defaultTheme(SyntaxHighlighting::Repository::LightTheme));
+    }
 #endif
 }

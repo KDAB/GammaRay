@@ -31,13 +31,11 @@
 
 #include <config-gammaray.h>
 
-#ifdef HAVE_SYNTAX_HIGHLIGHTING
-#include <SyntaxHighlighting/Repository>
-#endif
 
 #include <QPlainTextEdit>
 
 namespace SyntaxHighlighting {
+class Repository;
 class SyntaxHighlighter;
 }
 
@@ -68,11 +66,11 @@ private:
     friend class CodeEditorSidebar;
     int sidebarWidth() const;
     void sidebarPaintEvent(QPaintEvent *event);
+    void ensureHighlighterExists();
+
+    static SyntaxHighlighting::Repository *s_repository;
 
     CodeEditorSidebar *m_sideBar;
-#ifdef HAVE_SYNTAX_HIGHLIGHTING
-    SyntaxHighlighting::Repository m_repository;
-#endif
     SyntaxHighlighting::SyntaxHighlighter *m_highlighter;
 };
 }
