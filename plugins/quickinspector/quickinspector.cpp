@@ -519,7 +519,7 @@ void QuickInspector::setCustomRenderMode(
     RecreateState state;
     state.winPriv = winPriv;
     state.node = rootNode;
-    state.conn = connect(m_window, &QQuickWindow::beforeSynchronizing, state);
+    state.conn = connect(m_window.data(), &QQuickWindow::beforeSynchronizing, state);
 #endif
     m_window->update();
 
