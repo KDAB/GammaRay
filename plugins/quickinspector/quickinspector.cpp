@@ -491,7 +491,7 @@ void QuickInspector::setCustomRenderMode(
                                 : customRenderMode == VisualizeBatches ? "batches"
                                 : customRenderMode == VisualizeChanges ? "changes"
                                 : "";
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0) && 0 // FIXME this crashes on scene updates with Qt >= 5.5.1 and the multithreaded renderer
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     // Qt does some performance optimizations that break custom render modes.
     // Thus the optimizations are only applied if there is no custom render mode set.
     // So we need to make the scenegraph recheck whether a custom render mode is set.
@@ -503,8 +503,23 @@ void QuickInspector::setCustomRenderMode(
         rootNode = rootNode->parent();
 
     delete winPriv->renderer;
-    winPriv->renderer = winPriv->context->createRenderer();
-    winPriv->renderer->setRootNode(static_cast<QSGRootNode *>(rootNode));
+    winPriv->renderer = nullptr;
+
+    // we need to recreate the renderer in the render thread
+    struct RecreateState {
+        QQuickWindowPrivate *winPriv;
+        QSGNode *node;
+        QMetaObject::Connection conn;
+        void operator()() {
+            winPriv->renderer = winPriv->context->createRenderer();
+            winPriv->renderer->setRootNode(static_cast<QSGRootNode *>(node));
+            QObject::disconnect(conn);
+        }
+    };
+    RecreateState state;
+    state.winPriv = winPriv;
+    state.node = rootNode;
+    state.conn = connect(m_window, &QQuickWindow::beforeSynchronizing, state);
 #endif
     m_window->update();
 
@@ -517,11 +532,7 @@ void QuickInspector::checkFeatures()
 {
     emit features(
         Features(
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0) // FIXME any render mode crashes on first scene change
-            NoFeatures
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 5, 0) // batching crashes when enabled at runtime >= 5.5.0
-            CustomRenderModeChanges | CustomRenderModeClipping | CustomRenderModeOverdraw
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
             AllCustomRenderModes
 #endif
             )
