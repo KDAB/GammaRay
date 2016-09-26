@@ -36,6 +36,7 @@
 
 #include <QQuickWindow>
 #include <QImage>
+#include <QMutex>
 
 QT_BEGIN_NAMESPACE
 class QQuickShaderEffectSource;
@@ -111,6 +112,7 @@ private:
     void registerVariantHandlers();
     void registerPCExtensions();
     QString findSGNodeType(QSGNode *node) const;
+    void applyRenderMode();
 
     GammaRay::ObjectIds recursiveItemsAt(QQuickItem *parent, const QPointF &pos,
                                          GammaRay::RemoteViewInterface::RequestMode mode, int& bestCandidate) const;
@@ -130,6 +132,12 @@ private:
     QImage m_currentFrame;
     QVector<GrabWindowCallback> m_grabWindowCallbacks;
     bool m_isGrabbingWindow;
+    struct {
+        RenderMode mode;
+        QMetaObject::Connection connection;
+        QQuickWindow *window;
+        QMutex mutex;
+    } m_pendingRenderMode;
 };
 
 class QuickInspectorFactory : public QObject,

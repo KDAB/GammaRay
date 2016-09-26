@@ -481,51 +481,72 @@ void QuickInspector::slotGrabWindow()
     QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::QueuedConnection, Q_ARG(QImage, img));
 }
 
+static QByteArray renderModeToString(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
+{
+    switch (customRenderMode) {
+        case QuickInspectorInterface::VisualizeClipping:
+            return "clip";
+        case QuickInspectorInterface::VisualizeOverdraw:
+            return "overdraw";
+        case QuickInspectorInterface::VisualizeBatches:
+            return "batches";
+        case QuickInspectorInterface::VisualizeChanges:
+            return "changes";
+        case QuickInspectorInterface::NormalRendering:
+            break;
+    }
+    return "";
+}
+
 void QuickInspector::setCustomRenderMode(
     GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-    QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
-    winPriv->customRenderMode = customRenderMode == VisualizeClipping ? "clip"
-                                : customRenderMode == VisualizeOverdraw ? "overdraw"
-                                : customRenderMode == VisualizeBatches ? "batches"
-                                : customRenderMode == VisualizeChanges ? "changes"
-                                : "";
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     // Qt does some performance optimizations that break custom render modes.
     // Thus the optimizations are only applied if there is no custom render mode set.
     // So we need to make the scenegraph recheck whether a custom render mode is set.
     // We do this by simply recreating the renderer.
+    // We need however to recreate the renderer in the render thread.
+    QMutexLocker lock(&m_pendingRenderMode.mutex);
+    m_pendingRenderMode.mode = customRenderMode;
+    m_pendingRenderMode.window = m_window;
+    if (!m_pendingRenderMode.connection) {
+        m_pendingRenderMode.connection = connect(m_window, &QQuickWindow::beforeSynchronizing, this, &QuickInspector::applyRenderMode, Qt::DirectConnection);
+    }
 
-    QQuickItemPrivate *contentPriv = QQuickItemPrivate::get(m_window->contentItem());
-    QSGNode *rootNode = contentPriv->itemNode();
-    while (rootNode->parent())
-        rootNode = rootNode->parent();
-
-    delete winPriv->renderer;
-    winPriv->renderer = nullptr;
-
-    // we need to recreate the renderer in the render thread
-    struct RecreateState {
-        QQuickWindowPrivate *winPriv;
-        QSGNode *node;
-        QMetaObject::Connection conn;
-        void operator()() {
-            winPriv->renderer = winPriv->context->createRenderer();
-            winPriv->renderer->setRootNode(static_cast<QSGRootNode *>(node));
-            QObject::disconnect(conn);
-        }
-    };
-    RecreateState state;
-    state.winPriv = winPriv;
-    state.node = rootNode;
-    state.conn = connect(m_window.data(), &QQuickWindow::beforeSynchronizing, state);
+#else
+    QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
+    winPriv->customRenderMode = renderModeToString(customRenderMode);
 #endif
     m_window->update();
 
 #else
     Q_UNUSED(customRenderMode);
 #endif
+}
+
+void QuickInspector::applyRenderMode()
+{
+    QMutexLocker lock(&m_pendingRenderMode.mutex);
+    disconnect(m_pendingRenderMode.connection);
+
+    if (m_pendingRenderMode.window != m_window) { //we selected another window in the meanwhile, abort
+        return;
+    }
+
+    QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
+
+    QQuickItemPrivate *contentPriv = QQuickItemPrivate::get(m_window->contentItem());
+    QSGNode *rootNode = contentPriv->itemNode();
+    while (rootNode->parent())
+        rootNode = rootNode->parent();
+
+    winPriv->customRenderMode = renderModeToString(m_pendingRenderMode.mode);
+    delete winPriv->renderer;
+    winPriv->renderer = winPriv->context->createRenderer();
+    winPriv->renderer->setRootNode(static_cast<QSGRootNode *>(rootNode));
 }
 
 void QuickInspector::checkFeatures()
