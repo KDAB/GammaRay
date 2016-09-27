@@ -536,6 +536,7 @@ void QuickInspector::applyRenderMode()
         return;
     }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
 
     QQuickItemPrivate *contentPriv = QQuickItemPrivate::get(m_window->contentItem());
@@ -547,6 +548,7 @@ void QuickInspector::applyRenderMode()
     delete winPriv->renderer;
     winPriv->renderer = winPriv->context->createRenderer();
     winPriv->renderer->setRootNode(static_cast<QSGRootNode *>(rootNode));
+#endif
 }
 
 void QuickInspector::checkFeatures()
