@@ -182,7 +182,6 @@ public:
       QByteArray line;
     };
     RingBuffer<Message> m_lines;
-    int m_timerId;
     wl_client *m_currentClient;
     bool m_connected;
     WlCompositorInspector *m_inspector;
