@@ -50,8 +50,8 @@ ObjectInstance::ObjectInstance(QObject *obj)
 ObjectInstance::ObjectInstance(void *obj, const QMetaObject *metaObj)
     : m_obj(obj)
     , m_metaObj(metaObj)
+    , m_type(obj ? QtGadgetPointer : QtMetaObject)
 {
-    m_type = obj ? QtGadgetPointer : QtMetaObject;
 }
 
 ObjectInstance::ObjectInstance(void *obj, const char *typeName)
