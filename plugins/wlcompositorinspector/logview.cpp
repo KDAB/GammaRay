@@ -302,6 +302,8 @@ public:
     View()
       : m_data(500)
       , m_zoom(100000)
+      , m_start(0)
+      , m_timespan(0)
     {
       resize(100, 100);
       setAttribute(Qt::WA_OpaquePaintEvent);
