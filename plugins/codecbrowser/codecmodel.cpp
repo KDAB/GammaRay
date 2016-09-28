@@ -107,8 +107,10 @@ QStringList SelectedCodecsModel::currentCodecs() const
 void SelectedCodecsModel::updateText(const QString &text)
 {
     m_text = text;
-    if (!m_codecs.isEmpty())
+    if (!m_codecs.isEmpty()) {
+        // cppcheck-suppress nullPointer
         emit dataChanged(index(0, 1), index(m_codecs.size() - 1, 1));
+    }
 }
 
 QVariant SelectedCodecsModel::headerData(int section, Qt::Orientation orientation, int role) const

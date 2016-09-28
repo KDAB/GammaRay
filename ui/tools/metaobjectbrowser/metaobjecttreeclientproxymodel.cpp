@@ -160,8 +160,10 @@ QVariant MetaObjectTreeClientProxyModel::headerData(int section, Qt::Orientation
 
 void MetaObjectTreeClientProxyModel::findQObjectIndex()
 {
-    auto idxList = match(index(0, 0), Qt::DisplayRole, QStringLiteral(
-                             "QObject"), 1, Qt::MatchFixedString | Qt::MatchCaseSensitive);
+    // cppcheck-suppress nullPointer
+    auto idxList = match(index(0, 0), Qt::DisplayRole,
+                         QStringLiteral("QObject"), 1,
+                         Qt::MatchFixedString | Qt::MatchCaseSensitive);
     if (idxList.isEmpty())
         return;
 

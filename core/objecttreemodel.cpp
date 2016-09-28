@@ -134,7 +134,6 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
 
     QObject *parentObj = m_childParentMap[ obj ];
     const QModelIndex parentIndex = indexForObject(parentObj);
-    // cppcheck-suppress nullPointerRedundantCheck
     if (parentObj && !parentIndex.isValid())
         return;
 
@@ -176,7 +175,6 @@ void ObjectTreeModel::objectReparented(QObject *obj)
 
     QObject *oldParent = m_childParentMap.value(obj);
     const auto sourceParent = indexForObject(oldParent);
-    // cppcheck-suppress nullPointerRedundantCheck
     if ((oldParent && !sourceParent.isValid()) || (oldParent == parentObject(obj)))
         return;
 
