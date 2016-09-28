@@ -51,4 +51,37 @@ macro(qt5_build_doc _qdocconf_name)
 
 endmacro()
 
+find_file(QTQUICK_INDEX qtquick/qtquick.index
+  HINTS ${QT_INSTALL_DOCS}
+  HINTS ${QT_INSTALL_DATA}
+  HINTS ${QT_INSTALL_DATA}/doc
+)
+if(QTQUICK_INDEX)
+  set(HAVE_QTQUICK_DOCS "qtquick")
+else()
+  message(STATUS "qdoc qtquick.index not found: User Manual will be missing links to QtQuick API references")
+endif()
+
+find_file(QTQML_INDEX qtqml/qtqml.index
+  HINTS ${QT_INSTALL_DOCS}
+  HINTS ${QT_INSTALL_DATA}
+  HINTS ${QT_INSTALL_DATA}/doc
+)
+if(QTQML_INDEX)
+  set(HAVE_QTQML_DOCS "qtqml")
+else()
+  message(STATUS "qdoc qml.index not found: User Manual will be missing links to QML API references")
+endif()
+
+find_file(QT3D_INDEX qt3d/qt3d.index
+  HINTS ${QT_INSTALL_DOCS}
+  HINTS ${QT_INSTALL_DATA}
+  HINTS ${QT_INSTALL_DATA}/doc
+)
+if(QT3D_INDEX)
+  set(HAVE_QT3D_DOCS "qt3d")
+else()
+  message(STATUS "qdoc qt3d.index not found: User Manual will be missing links to Qt3D API references")
+endif()
+
 qt5_build_doc(gammaray-manual)
