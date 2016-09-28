@@ -428,11 +428,14 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
         const auto ideIdx = settings.value(QStringLiteral("IDE"), -1).toInt();
 
         QString command;
+#if !defined(Q_OS_WIN) && !defined(Q_OS_OSX) // Remove this #if branch when adding real data to ideSettings for Windows/OSX.
         if (ideIdx >= 0 && ideIdx < ideSettingsSize) {
             command += ideSettings[ideIdx].app;
             command += ' ';
             command += ideSettings[ideIdx].args;
-        } else if (ideIdx == -1) {
+        } else
+#endif
+        if (ideIdx == -1) {
             command = settings.value(QStringLiteral("CustomCommand")).toString();
         } else {
             QDesktopServices::openUrl(QUrl(url));
