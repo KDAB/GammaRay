@@ -48,7 +48,7 @@
         \li \l{State Machine Debugger}
         \li \l{Messages}
         \li \l{Signal Plotter}
-        \li Timers
+        \li \l{Timers}
         \li Wayland Compositors
         \li Script Enginge Debugger
     \endlist
