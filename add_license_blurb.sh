@@ -4,7 +4,7 @@ authorName=`git config user.name`
 authorEmail=`git config user.email`
 thisYear=`date +%Y`
 
-find "$@" -name '*.h' -o -name '*.cpp' -o -name '*.qml' | grep -v /3rdparty/ | grep -v /qmldebugcontrol/ | grep -v /StackWalker | grep -v /modeltest | grep -v /processlist | grep -v /interactiveprocess | grep -v /build | while read FILE; do
+find "$@" -name '*.h' -o -name '*.cpp' -o -name '*.qml' | grep -v /3rdparty/ | grep -v /qmldebugcontrol/ | grep -v /StackWalker | grep -v /modeltest | grep -v /processlist | grep -v /interactiveprocess | grep -v /preloadcheck_mips | grep -v /build | while read FILE; do
     if grep -qiE "Copyright \(C\) [0-9, -]{4,} Klar.*lvdalens Datakonsult AB" "$FILE" ; then continue; fi
     thisfile=`basename $FILE`
     cat <<EOF > "$FILE".tmp
