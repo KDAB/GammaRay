@@ -217,7 +217,7 @@ void MyCylinderGeometry::createSidesIndices(quint16 *&indicesPtr)
     }
 }
 
-void MyCylinderGeometry::createDiscIndices(quint16 *&indicesPtr, int discCenterIndex, float yPosition)
+void MyCylinderGeometry::createDiscIndices(quint16 *&indicesPtr, int discCenterIndex, float /*yPosition*/)
 {
     //! [Wrong bottom disc indexes]
     //const auto yNormal = (yPosition < 0.0f) ? -1.0f : 1.0f;
