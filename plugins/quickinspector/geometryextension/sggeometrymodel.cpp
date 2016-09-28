@@ -165,9 +165,6 @@ QMap< int, QVariant > SGGeometryModel::itemData(const QModelIndex &index) const
 QVariant SGGeometryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal && m_geometry) {
-        const QSGGeometry::Attribute *attrInfo = m_geometry->attributes();
-        attrInfo += section;
-
         char const * const *attributeNames = m_node->material()->createShader()->attributeNames();
 
         for (int i = 0; i <= section; i++) {
