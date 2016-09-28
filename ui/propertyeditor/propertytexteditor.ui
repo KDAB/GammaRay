@@ -12,7 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QPlainTextEdit" name="plainTextEdit">
+    <widget class="GammaRay::CodeEditor" name="plainTextEdit">
      <property name="lineWrapMode">
       <enum>QPlainTextEdit::NoWrap</enum>
      </property>
@@ -30,6 +30,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::CodeEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header location="global">ui/codeeditor/codeeditor.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
