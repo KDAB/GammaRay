@@ -117,6 +117,8 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
     QMenu *hlSubMenu = Q_NULLPTR;
     QString currentGroup;
     foreach (const auto &def, s_repository->definitions()) {
+        if (def.isHidden())
+            continue;
         if (currentGroup != def.section()) {
             currentGroup = def.section();
             hlSubMenu = hlGroupMenu->addMenu(def.translatedSection());
