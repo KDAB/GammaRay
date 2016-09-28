@@ -77,6 +77,7 @@ public:
             return;
 
         m_obj = obj;
+        // cppcheck-suppress nullPointer
         emit dataChanged(index(0, 0), index(rowCount() - 1, 0));
     }
 

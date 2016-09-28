@@ -204,5 +204,6 @@ void FontModel::fontDataChanged()
     if (m_fonts.isEmpty())
         return;
 
+    // cppcheck-suppress nullPointer
     emit dataChanged(index(0, 2), index(rowCount() - 1, 2));
 }

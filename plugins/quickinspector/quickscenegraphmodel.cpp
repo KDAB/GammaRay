@@ -341,7 +341,6 @@ QSGNode *QuickSceneGraphModel::sgNodeForItem(QQuickItem *item) const
 
 QQuickItem *QuickSceneGraphModel::itemForSgNode(QSGNode *node) const
 {
-    // cppcheck-suppress nullPointerRedundantCheck
     while (node && !m_itemNodeItemMap.contains(node)) {
         // If there's no entry for node, take its parent
         node = m_childParentMap[node];
