@@ -82,7 +82,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
         indexSize = sizeof(quint32);
     else if (m_indexType == GL_UNSIGNED_SHORT)
         indexSize = sizeof(quint16);
-    else if (m_indexType == GL_UNSIGNED_BYTE)
+    else /* must be GL_UNSIGNED_BYTE */
         indexSize = sizeof(quint8);
 
     const int count = m_indexData.isEmpty() ? m_vertices.count() : m_indexData.size() / indexSize;
