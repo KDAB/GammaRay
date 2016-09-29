@@ -85,21 +85,21 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/gammaray/*/*/libgammaray_widget_export_actions.so
 %{_libdir}/gammaray/*/*/gammaray_probe.so
 %{_libdir}/gammaray/*/*/gammaray_inprocessui.so
+%{_libdir}/gammaray/*/*/gammaray_actioninspector*
 %{_libdir}/gammaray/*/*/gammaray_codecbrowser*
 %{_libdir}/gammaray/*/*/gammaray_fontbrowser*
-%{_libdir}/gammaray/*/*/gammaray_selectionmodelinspector*
 %{_libdir}/gammaray/*/*/gammaray_guisupport*
+%{_libdir}/gammaray/*/*/gammaray_modelinspector*
+%{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
+%{_libdir}/gammaray/*/*/gammaray_sceneinspector*
+%{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
 %{_libdir}/gammaray/*/*/gammaray_signalmonitor*
 %{_libdir}/gammaray/*/*/gammaray_statemachineviewer*
-%{_libdir}/gammaray/*/*/gammaray_timertop*
-%{_libdir}/gammaray/*/*/gammaray_actioninspector*
-%{_libdir}/gammaray/*/*/gammaray_widgetinspector*
-%{_libdir}/gammaray/*/*/gammaray_sceneinspector*
 %{_libdir}/gammaray/*/*/gammaray_styleinspector*
-%{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
-%{_libdir}/gammaray/*/*/gammaray_webinspector*
 %{_libdir}/gammaray/*/*/gammaray_textdocumentinspector*
-%{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
+%{_libdir}/gammaray/*/*/gammaray_timertop*
+%{_libdir}/gammaray/*/*/gammaray_webinspector*
+%{_libdir}/gammaray/*/*/gammaray_widgetinspector*
 %{_libdir}/gammaray/*/*/styles/
 %exclude %{_libdir}/*.so
 %exclude %{_prefix}/share/icons/hicolor/*

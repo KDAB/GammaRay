@@ -124,25 +124,27 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_probe.so
 %{_libdir}/gammaray/*/*/gammaray_inprocessui.so
 %{_libdir}/gammaray/*/*/gammaray_actioninspector*
-%{_libdir}/gammaray/*/*/gammaray_bluetooth.so
+%{_libdir}/gammaray/*/*/gammaray_bluetooth*
 %{_libdir}/gammaray/*/*/gammaray_codecbrowser*
 %{_libdir}/gammaray/*/*/gammaray_fontbrowser*
 %{_libdir}/gammaray/*/*/gammaray_guisupport*
+%{_libdir}/gammaray/*/*/gammaray_mimetypes*
+%{_libdir}/gammaray/*/*/gammaray_modelinspector*
 %{_libdir}/gammaray/*/*/gammaray_network*
-%{_libdir}/gammaray/*/*/gammaray_selectionmodelinspector*
-%{_libdir}/gammaray/*/*/gammaray_signalmonitor*
-%{_libdir}/gammaray/*/*/gammaray_statemachineviewer*
-%{_libdir}/gammaray/*/*/gammaray_timertop*
-%{_libdir}/gammaray/*/*/gammaray_widgetinspector*
-%{_libdir}/gammaray/*/*/gammaray_sceneinspector*
-%{_libdir}/gammaray/*/*/gammaray_styleinspector*
-%{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
-%{_libdir}/gammaray/*/*/gammaray_webinspector*
 %{_libdir}/gammaray/*/*/gammaray_qmlsupport*
 %{_libdir}/gammaray/*/*/gammaray_quickinspector*
 %{_libdir}/gammaray/*/*/gammaray_quickwidgetsupport*
+%{_libdir}/gammaray/*/*/gammaray_sceneinspector*
+%{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
+%{_libdir}/gammaray/*/*/gammaray_signalmonitor*
+%{_libdir}/gammaray/*/*/gammaray_statemachineviewer*
+%{_libdir}/gammaray/*/*/gammaray_styleinspector*
 %{_libdir}/gammaray/*/*/gammaray_textdocumentinspector*
+%{_libdir}/gammaray/*/*/gammaray_timertop*
 %{_libdir}/gammaray/*/*/gammaray_translatorinspector*
+%{_libdir}/gammaray/*/*/gammaray_webinspector*
+%{_libdir}/gammaray/*/*/gammaray_widgetinspector*
+%{_libdir}/gammaray/*/*/gammaray_wlcompositorinspector*
 %{_libdir}/gammaray/*/*/styles/
 
 %files kf5-plugins

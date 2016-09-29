@@ -2,7 +2,7 @@ Source: gammaray
 Section: Miscellaneous
 Priority: optional
 Maintainer: Allen Winter <allen.winter@kdab.com>
-Build-Depends: debhelper (>= 4.1.16), cdbs, cmake, qt5-default, qtbase5-private-dev, qtdeclarative5-dev, qtdeclarative5-private-dev, qtscript5-dev, qttools5-dev, libqt5svg5-dev, libqt5webkit5-dev, kdstatemachineeditor
+Build-Depends: debhelper (>= 4.1.16), cdbs, cmake, qt5-default, qtbase5-private-dev, qtdeclarative5-dev, qtdeclarative5-private-dev, qtdeclarative5-dev-tools, qtscript5-dev, qttools5-dev, libqt5svg5-dev, libqt5webkit5-dev, kdstatemachineeditor
 
 Package: gammaray
 Architecture: any
