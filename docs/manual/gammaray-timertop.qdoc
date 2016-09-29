@@ -35,12 +35,12 @@
     The list view shows the following information:
 
     \list
-        \l The time object name/address.
-        \l Whether or not a timer is active, and if so, if it is supposed to fire in single shot mode or continuously, and in which interval.
-        \l The amount of wakeups triggered by a timer, that is how often it has fired so far.
-        \l The average time it took to process a timer's timeout signal.
-        \l The maximum time it took to process a timer's timeout signal.
-        \l The timer id, which is mainly relelvant for raw timer events rather than QTimer instances.
+        \li The time object name/address.
+        \li Whether or not a timer is active, and if so, if it is supposed to fire in single shot mode or continuously, and in which interval.
+        \li The amount of wakeups triggered by a timer, that is how often it has fired so far.
+        \li The average time it took to process a timer's timeout signal.
+        \li The maximum time it took to process a timer's timeout signal.
+        \li The timer id, which is mainly relelvant for raw timer events rather than QTimer instances.
     \endlist
 
     The context menu allows to navigate to different views for the timer objects.
