@@ -87,8 +87,10 @@ QVariant ModelContentProxyModel::data(const QModelIndex &proxyIndex, int role) c
         return true;
     }
 
-    if (role == SelectedRole && m_selectionModel && m_selectionModel->isSelected(mapToSource(proxyIndex))) {
-        return true;
+    if (role == SelectedRole) {
+        if (m_selectionModel && m_selectionModel->isSelected(mapToSource(proxyIndex)))
+            return true;
+        return QVariant();
     }
 
     return QIdentityProxyModel::data(proxyIndex, role);

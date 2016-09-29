@@ -104,10 +104,10 @@ void TextDocumentModel::fillFrame(QTextFrame *frame, QStandardItem *parent)
 
 void TextDocumentModel::fillFrameIterator(const QTextFrame::iterator &it, QStandardItem *parent)
 {
-    QStandardItem *item = new QStandardItem;
     if (QTextFrame *frame = it.currentFrame()) {
         const QRectF b = m_document->documentLayout()->frameBoundingRect(frame);
         QTextTable *table = qobject_cast<QTextTable *>(frame);
+        auto item = new QStandardItem;
         if (table) {
             item->setText(tr("Table"));
             appendRow(parent, item, table->format(), b);
@@ -120,6 +120,7 @@ void TextDocumentModel::fillFrameIterator(const QTextFrame::iterator &it, QStand
     }
     const QTextBlock block = it.currentBlock();
     if (block.isValid()) {
+        auto item = new QStandardItem;
         item->setText(tr("Block: %1").arg(block.text()));
         const QRectF b = m_document->documentLayout()->blockBoundingRect(block);
         appendRow(parent, item, block.blockFormat(), b);
