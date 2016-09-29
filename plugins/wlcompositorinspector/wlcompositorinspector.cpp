@@ -631,7 +631,7 @@ void WlCompositorInspector::init(QWaylandCompositor *compositor)
                   break;
               case 'o': {
                   wl_resource *r = (wl_resource *)arg.o;
-                  line += ResourceInfo(r).name();
+                  line += r ? ResourceInfo(r).name() : QLatin1String("(nil)");
                   break;
               }
               case 'n': {
