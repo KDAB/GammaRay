@@ -46,9 +46,10 @@ class View : public QWidget
 public:
   View(QWidget *p)
     : QWidget(p)
-    , m_lines(500)
+    , m_lines(5000)
     , m_metrics(QFont())
     , m_lineHeight(m_metrics.height())
+    , m_client(0)
   {
     resize(0, 0);
     setFocusPolicy(Qt::ClickFocus);
@@ -120,12 +121,12 @@ public:
     selectionBoundaries(start, end);
 
     if (start.y() < line && line < end.y()) {
-      return { 0, m_lines.at(line).text().count() };
+      return { 0, m_lines.at(line).text.text().count() };
     }
 
     if (start.y() == line || end.y() == line) {
       int startChar = 0;
-      int endChar = m_lines.at(line).text().count();
+      int endChar = m_lines.at(line).text.text().count();
       if (start.y() == line)
         startChar = start.x();
       if (end.y() == line)
@@ -146,10 +147,13 @@ public:
 
     QRectF drawRect = event->rect();
     int startingLine = lineAt(drawRect.y());
-    int y = m_lineHeight * startingLine;
+    int y = linePosAt(drawRect.y());
 
     for (int i = startingLine; i < m_lines.count(); ++i) {
-      const QStaticText &text = m_lines.at(i);
+      if (m_client && m_lines.at(i).pid != m_client) {
+        continue;
+      }
+      const QStaticText &text = m_lines.at(i).text;
 
       QRect lineRect(QRect(0, y, text.size().width(), m_lineHeight));
       painter.fillRect(QRectF(0, y, drawRect.width(), m_lineHeight), i % 2 ? palette().base() : palette().alternateBase());
@@ -169,13 +173,37 @@ public:
     }
   }
 
-  inline int lineAt(int y) const { return qMin(y / m_lineHeight, m_lines.count() - 1); }
+  inline int linesCount() const
+  {
+    return m_client ? m_linesCount.value(m_client) : m_lines.count();
+  }
+
+  inline int linePosAt(int y) const {
+    int line = qMin(y / m_lineHeight, m_lines.count() - 1);
+    return line * m_lineHeight;
+  }
+
+  inline int lineAt(int y) const {
+    int line = qMin(y / m_lineHeight, m_lines.count() - 1);
+    if (!m_client) {
+      return line;
+    }
+
+    for (int i = 0, l = 0; i < m_lines.count(); ++i) {
+      if (m_lines.at(i).pid == m_client) {
+        if (l++ == line) {
+          return i;
+        }
+      }
+    }
+    return line;
+  }
   inline QPoint charPosAt(const QPointF &p) const
   {
     int line = lineAt(p.y());
     int lineX = 0;
 
-    const QString &text = m_lines.at(line).text();
+    const QString &text = m_lines.at(line).text.text();
     for (int x = 0, i = 0; i < text.count(); ++i) {
       const QChar &c = text.at(i);
       if (p.x() >= x) {
@@ -213,7 +241,10 @@ public:
     selectionBoundaries(start, end);
     QString string;
     for (int i = start.y(); i <= end.y(); ++i) {
-      const QStaticText &line = m_lines.at(i);
+      if (m_client && m_lines.at(i).pid != m_client) {
+        continue;
+      }
+      const QStaticText &line = m_lines.at(i).text;
       LineSelection selection = lineSelection(i);
       string += line.text().mid(selection.start, selection.end - selection.start);
       string += QLatin1Char('\n');
@@ -228,11 +259,49 @@ public:
     }
   }
 
-  RingBuffer<QStaticText> m_lines;
+  void resetSelection()
+  {
+      m_selectionStart = m_selectionEnd = QPoint();
+      update();
+  }
+
+  struct Line {
+      quint64 pid;
+      QStaticText text;
+      int *counter;
+
+      Line() {}
+      Line(quint64 p, const QStaticText &t, int *cnt)
+        : pid(p), text(t), counter(cnt)
+      {
+        (*counter)++;
+      }
+      Line(const Line &l)
+        : pid(l.pid), text(l.text), counter(l.counter)
+      {
+        (*counter)++;
+      }
+      ~Line() { (*counter)--; }
+
+      Line &operator=(const Line &l) {
+          (*counter)--;
+
+          pid = l.pid;
+          text = l.text;
+          counter = l.counter;
+
+          (*counter)++;
+          return *this;
+      }
+
+  };
+  RingBuffer<Line> m_lines;
+  QHash<quint64, int> m_linesCount;
   QFontMetricsF m_metrics;
   int m_lineHeight;
   QPoint m_selectionStart;
   QPoint m_selectionEnd;
+  quint64 m_client;
 };
 
 
@@ -248,12 +317,12 @@ public:
     setWidgetResizable(true);
   }
 
-  void logMessage(qint64 time, const QByteArray &msg)
+  void logMessage(quint64 pid, qint64 time, const QByteArray &msg)
   {
     auto scrollbar = verticalScrollBar();
     bool scroll = scrollbar->value() >= scrollbar->maximum();
 
-    add(time, msg);
+    add(pid, time, msg);
 
     if (scroll)
       scrollbar->setValue(scrollbar->maximum());
@@ -265,23 +334,43 @@ public:
     m_view->resize(0, 0);
   }
 
-  void add(qint64 time, const QByteArray &m)
+  void updateSize()
   {
-    int count = m_view->m_lines.count();
-    m_view->m_lines.append(QStaticText(QString("[%1ms] %2").arg(QString::number(time / 1e6), QString(m))));
-
-    QSizeF lineSize = m_view->m_lines.last().size();
+    QSizeF lineSize = m_view->m_lines.last().text.size();
 
     int w = m_view->width();
-    int h = m_view->height();
-    if (m_view->m_lines.count() > count) {
-      h += m_view->m_lineHeight;
-    }
+    int h = m_view->linesCount() * m_view->m_lineHeight;
+
     if (lineSize.width() > w) {
       w = lineSize.width();
     }
     m_view->resize(w, h);
     m_view->update();
+  }
+
+  void add(quint64 pid, qint64 time, const QByteArray &m)
+  {
+    m_view->m_lines.append(View::Line(pid, QStaticText(QString("[%1ms] %2").arg(QString::number(time / 1e6), QString(m))), &m_view->m_linesCount[pid]));
+
+    if (m_view->m_client && pid != m_view->m_client) {
+      return;
+    }
+
+    updateSize();
+  }
+
+  void setLoggingClient(quint64 pid)
+  {
+    m_view->m_client = pid;
+
+    auto scrollbar = verticalScrollBar();
+    qreal v = (qreal)scrollbar->value() / (qreal)scrollbar->maximum();
+
+    m_view->resetSelection();
+    updateSize();
+
+    // keep the scrollbar at he same percentage
+    scrollbar->setValue(v * (qreal)scrollbar->maximum());
   }
 
   View *m_view;
@@ -467,10 +556,15 @@ QSize LogView::sizeHint() const
   return QSize(200, 200);
 }
 
-void LogView::logMessage(qint64 time, const QByteArray &msg)
+void LogView::logMessage(quint64 pid, qint64 time, const QByteArray &msg)
 {
-  m_messages->logMessage(time, msg);
+  m_messages->logMessage(pid, time, msg);
   m_timeline->logMessage(time, msg);
+}
+
+void LogView::setLoggingClient(quint64 pid)
+{
+  m_messages->setLoggingClient(pid);
 }
 
 void LogView::reset()

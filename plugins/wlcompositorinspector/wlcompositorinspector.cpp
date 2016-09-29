@@ -130,8 +130,7 @@ public:
 
     Logger(WlCompositorInspector *inspector, QObject *parent)
         : QObject(parent)
-        , m_lines(500)
-        , m_currentClient(0)
+        , m_lines(5000)
         , m_connected(false)
         , m_inspector(inspector)
     {
@@ -140,9 +139,6 @@ public:
 
     void add(wl_resource *res, MessageType dir, const QString &line)
     {
-        if (m_currentClient && m_currentClient != wl_resource_get_client(res))
-          return;
-
         pid_t pid;
         wl_client_get_credentials(wl_resource_get_client(res), &pid, 0, 0);
         QString l = QStringLiteral("%1 %2 %3").arg(QString::number(pid),
@@ -152,20 +148,15 @@ public:
         // so we save some space using utf8 rather than the utf16 QString uses
         QByteArray utf8 = l.toUtf8();
         qint64 time = m_timer.nsecsElapsed();
-        m_lines.append({ time, utf8 });
+        m_lines.append({ time, pid, utf8 });
         if (m_connected) {
-            emit m_inspector->logMessage(time, utf8);
+            emit m_inspector->logMessage(pid, time, utf8);
         }
     }
 
     void setCurrentClient(QWaylandClient *client)
     {
-        m_currentClient = client ? client->client() : nullptr;
-
-        m_lines.clear();
-        if (m_connected) {
-            emit m_inspector->resetLog();
-        }
+        emit m_inspector->setLoggingClient(client ? client->processId() : 0);
     }
 
     void setConnected(bool c)
@@ -173,16 +164,16 @@ public:
         m_connected = c;
         for (int i = 0; i < m_lines.count(); ++i) {
             const Message &m = m_lines.at(i);
-            emit m_inspector->logMessage(m.time, m.line);
+            emit m_inspector->logMessage(m.pid, m.time, m.line);
         }
     }
 
     struct Message {
       qint64 time;
+      pid_t pid;
       QByteArray line;
     };
     RingBuffer<Message> m_lines;
-    wl_client *m_currentClient;
     bool m_connected;
     WlCompositorInspector *m_inspector;
     QElapsedTimer m_timer;
