@@ -82,6 +82,7 @@ InspectorWidget::InspectorWidget(QWidget *parent)
     m_ui->gridLayout->addWidget(m_logView, 2, 0, 1, 2);
     connect(m_client, &WlCompositorInterface::logMessage, m_logView, &LogView::logMessage);
     connect(m_client, &WlCompositorInterface::resetLog, m_logView, &LogView::reset);
+    connect(m_client, &WlCompositorInterface::setLoggingClient, m_logView, &LogView::setLoggingClient);
 
     m_ui->clientsView->setModel(m_model);
     m_ui->clientsView->viewport()->installEventFilter(this);

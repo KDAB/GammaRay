@@ -44,7 +44,8 @@ public:
   explicit LogView(QWidget *p);
 
   QSize sizeHint() const override;
-  void logMessage(qint64 time, const QByteArray &msg);
+  void logMessage(quint64 pid, qint64 time, const QByteArray &msg);
+  void setLoggingClient(quint64 pid);
   void reset();
 
 private:
