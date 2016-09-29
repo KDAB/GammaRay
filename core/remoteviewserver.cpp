@@ -148,7 +148,7 @@ void RemoteViewServer::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
     auto event = new QWheelEvent(localPos, delta, (Qt::MouseButtons)buttons,
                                  (Qt::KeyboardModifiers)modifiers, orientation);
 #endif
-    QCoreApplication::sendEvent(m_eventReceiver, event);
+    QCoreApplication::postEvent(m_eventReceiver, event);
 }
 
 void RemoteViewServer::setViewActive(bool active)
