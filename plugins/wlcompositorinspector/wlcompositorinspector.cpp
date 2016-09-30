@@ -668,8 +668,8 @@ void WlCompositorInspector::addClient(wl_client *c)
     connect(client, &QObject::destroyed, [this, pid, client](QObject *) {
         if (m_resourcesModel->client() == client) {
           m_resourcesModel->setClient(nullptr);
-          m_clientsModel->removeClient(client);
         }
+        m_clientsModel->removeClient(client);
     });
 
     m_clientsModel->addClient(client);
