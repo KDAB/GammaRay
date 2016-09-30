@@ -1,0 +1,37 @@
+/*
+    gammaray-text-documents.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Text Documents}
+    \nextpage {Resources}
+    \previouspage {Models}
+    \page gammaray-text-documents.html
+
+    \title Text Documents
+
+    \section1 Overview
+
+    The text document inspector allows to introspect the document object tree of QTextDocument instances found in the target application.
+
+    \image gammaray-text-documents.png
+
+    The document list on the left side shows all QTextDocument instances, selecting one shows the document object tree in the right top view.
+    Navigation to other views is available via the context menu.
+
+    The document object tree on the upper right shows the tree of elements composing the text document. This includes blocks (see QTextBlock), fragments
+    (QTextFragment), tables (QTextTable), etc. Selecting an element will show the corresponding formats in the format view at the lower right.
+*/
