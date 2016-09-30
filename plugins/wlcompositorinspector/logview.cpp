@@ -385,14 +385,16 @@ public:
   public:
     struct DataPoint {
       qint64 time;
+      quint64 pid;
       QByteArray msg;
     };
 
     View()
-      : m_data(500)
+      : m_data(5000)
       , m_zoom(100000)
       , m_start(0)
       , m_timespan(0)
+      , m_client(0)
     {
       resize(100, 100);
       setAttribute(Qt::WA_OpaquePaintEvent);
@@ -451,6 +453,12 @@ public:
       bool hasDrawn = false;
       for (int i = 0; i < m_data.count(); ++i) {
         const auto &point = m_data.at(i);
+        if (m_client && point.pid != m_client) {
+            painter.setPen(palette.color(QPalette::Dark));
+        } else {
+            painter.setPen(palette.color(QPalette::Text));
+        }
+
         qreal offset = point.time - m_start;
         qreal x = offset / m_zoom;
         qreal y = qMax(qreal(20.), drawRect.y());
@@ -498,6 +506,7 @@ public:
     qreal m_zoom;
     qint64 m_start;
     qint64 m_timespan;
+    quint64 m_client;
   };
 
   Timeline(QWidget *parent)
@@ -509,10 +518,16 @@ public:
     m_view.installEventFilter(this);
   }
 
-  void logMessage(qint64 time, const QByteArray &msg)
+  void logMessage(quint64 pid, qint64 time, const QByteArray &msg)
   {
-    m_view.m_data.append({ time, msg });
+    m_view.m_data.append({ time, pid, msg });
     m_view.updateSize();
+  }
+
+  void setLoggingClient(quint64 pid)
+  {
+    m_view.m_client = pid;
+    m_view.update();
   }
 
   bool eventFilter(QObject *o, QEvent *e) override
@@ -559,12 +574,13 @@ QSize LogView::sizeHint() const
 void LogView::logMessage(quint64 pid, qint64 time, const QByteArray &msg)
 {
   m_messages->logMessage(pid, time, msg);
-  m_timeline->logMessage(time, msg);
+  m_timeline->logMessage(pid, time, msg);
 }
 
 void LogView::setLoggingClient(quint64 pid)
 {
   m_messages->setLoggingClient(pid);
+  m_timeline->setLoggingClient(pid);
 }
 
 void LogView::reset()
