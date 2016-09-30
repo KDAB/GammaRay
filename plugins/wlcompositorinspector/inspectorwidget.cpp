@@ -106,6 +106,9 @@ void InspectorWidget::delayedInit()
 void InspectorWidget::clientActivated(const QModelIndex &index)
 {
     m_client->setSelectedClient(index.row());
+    if (!index.isValid()) {
+        m_ui->clientsView->selectionModel()->clear();
+    }
 }
 
 void InspectorWidget::resourceActivated(const QModelIndex &index)
