@@ -45,11 +45,6 @@ if(WIN32)
 endif()
 
 # processor architecture
-# this is a bit messy since CMAKE_SYSTEM_PROCESSOR seems to contain the host CPU rather than the target architecture sometimes
-# and is empty on cross-builds by default
-if(NOT CMAKE_SYSTEM_PROCESSOR)
-  message(FATAL_ERROR "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
-endif()
 
 # on Windows our best bet is CMAKE_SIZEOF_VOID_P and assuming a x86 host==target build
 if(WIN32)
@@ -61,6 +56,9 @@ if(WIN32)
 
 # on Mac we apparently always get i386 on x86
 elseif(APPLE)
+  if(NOT CMAKE_SYSTEM_PROCESSOR)
+    message(FATAL_ERROR "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
+  endif()
   if(CMAKE_SYSTEM_PROCESSOR MATCHES "i386" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-x86_64")
   elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
@@ -69,7 +67,27 @@ elseif(APPLE)
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
   endif()
 
+# on Android we derive this from ANDROID_ABI
+elseif(ANDROID)
+  if(NOT ANDROID_ABI)
+    message(FATAL_ERROR "Unknown target ABI. Make sure ANDROID_ABI is set!")
+  endif()
+  if(ANDROID_ABI MATCHES "arm64")
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-aarch64")
+  elseif(ANDROID_ABI MATCHES "arm" )
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-arm")
+  elseif(ANDROID_ABI STREQUAL "x86_64" )
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-x86_64")
+  elseif(ANDROID_ABI STREQUAL "x86" )
+    set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-i686")
+  else()
+    message(FATAL_ERROR "Unsupported Android ABI ${ANDROID_ABI}.")
+  endif()
+
 else()
+  if(NOT CMAKE_SYSTEM_PROCESSOR)
+    message(FATAL_ERROR "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
+  endif()
   # uname reports different ARM versions, unlike ELF, so map all this to "arm"
   if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-arm")
