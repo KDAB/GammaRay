@@ -27,8 +27,13 @@ Version 2.6.0
  * Add Wayland compositor inspector.
  * Add advanced element picking mode for widget and Qt Quick inspectors.
  * Fix crash when encountering an empty translation context.
+ * Extend user manual content.
  * Fix a number of memory leaks.
  * Fix crash when selecting a dangling top-level layout in the widget inspector.
+ * Fix missing standard icon types in style inspector for some Qt versions.
+ * Fix table layout in style inspector.
+ * Fix invalid memory access in palette model.
+ * Fix selecting entries in the resource browser.
 
 Version 2.5.1:
 --------------

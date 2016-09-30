@@ -1,5 +1,5 @@
 Name:           gammaray-qt4
-Version:        2.5.1
+Version:        2.6.0
 Release:        1
 Summary:        An introspection tool for Qt applications
 Source:         gammaray-%{version}.tar.gz
@@ -50,7 +50,7 @@ Plug-ins for the GammaRay introspection tool to debug KDE4 applications,
 such as a KJob tracker.
 
 %prep
-%setup -n gammaray-%{version}
+%setup -q -n gammaray-%{version}
 
 %build
 %if %{defined fedora}
@@ -85,21 +85,21 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/gammaray/*/*/libgammaray_widget_export_actions.so
 %{_libdir}/gammaray/*/*/gammaray_probe.so
 %{_libdir}/gammaray/*/*/gammaray_inprocessui.so
+%{_libdir}/gammaray/*/*/gammaray_actioninspector*
 %{_libdir}/gammaray/*/*/gammaray_codecbrowser*
 %{_libdir}/gammaray/*/*/gammaray_fontbrowser*
-%{_libdir}/gammaray/*/*/gammaray_selectionmodelinspector*
 %{_libdir}/gammaray/*/*/gammaray_guisupport*
+%{_libdir}/gammaray/*/*/gammaray_modelinspector*
+%{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
+%{_libdir}/gammaray/*/*/gammaray_sceneinspector*
+%{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
 %{_libdir}/gammaray/*/*/gammaray_signalmonitor*
 %{_libdir}/gammaray/*/*/gammaray_statemachineviewer*
-%{_libdir}/gammaray/*/*/gammaray_timertop*
-%{_libdir}/gammaray/*/*/gammaray_actioninspector*
-%{_libdir}/gammaray/*/*/gammaray_widgetinspector*
-%{_libdir}/gammaray/*/*/gammaray_sceneinspector*
 %{_libdir}/gammaray/*/*/gammaray_styleinspector*
-%{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
-%{_libdir}/gammaray/*/*/gammaray_webinspector*
 %{_libdir}/gammaray/*/*/gammaray_textdocumentinspector*
-%{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
+%{_libdir}/gammaray/*/*/gammaray_timertop*
+%{_libdir}/gammaray/*/*/gammaray_webinspector*
+%{_libdir}/gammaray/*/*/gammaray_widgetinspector*
 %{_libdir}/gammaray/*/*/styles/
 %exclude %{_libdir}/*.so
 %exclude %{_prefix}/share/icons/hicolor/*
@@ -109,6 +109,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/gammaray/*/*/gammaray_kjobtracker*
 
 %changelog
+* Thu Sep 29 2016 Allen Winter <allen.winter@kdab.com> 2.6.0
+  2.6.0 final
 * Wed Jul 27 2016 Allen Winter <allen.winter@kdab.com> 2.5.1
   2.5.1 bugfix release
 * Fri Jul 08 2016 Allen Winter <allen.winter@kdab.com> 2.5.0
