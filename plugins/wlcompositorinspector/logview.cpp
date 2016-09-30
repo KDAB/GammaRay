@@ -441,7 +441,14 @@ public:
       for (qreal i = startLine * linesSpacing; i < drawRect.right(); i += linesSpacing, s++) {
         bool isStep = s % substeps == 0;
         painter.setPen(isStep ? palette.color(QPalette::Highlight) : palette.color(QPalette::Midlight));
-        painter.drawLine(i, isStep * 15, i, drawRect.bottom());
+
+        int y = 0;
+        if (isStep) {
+          int stepN = s / substeps;
+          y = 15 * (stepN % 2 + 1);
+        }
+
+        painter.drawLine(i, y, i, drawRect.bottom());
       }
 
       //draw the text after having drawn all the lines, so we're sure they don't go over it
@@ -467,7 +474,7 @@ public:
 
         qreal offset = point.time - m_start;
         qreal x = offset / m_zoom;
-        qreal y = qMax(qreal(20.), drawRect.y());
+        qreal y = qMax(qreal(40.), drawRect.y());
         if (!drawRect.contains(QPoint(x, y))) {
           if (hasDrawn)
             break;
