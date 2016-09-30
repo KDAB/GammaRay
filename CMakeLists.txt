@@ -97,8 +97,8 @@ set(GAMMARAY_SOVERSION "2.7.0")
 set(GAMMARAY_PLUGIN_VERSION "2.7")
 set(PROJECT_VERSION_STRING "${GAMMARAY_VERSION_STRING}")
 if(ANDROID)
-  # non-rooted Android doesn't like .so versions...
-  set(GAMMARAY_DEFAULT_LIBRARY_PROPERTIES "")
+  # non-rooted Android doesn't like .so versions and requires the lib prefix
+  set(GAMMARAY_DEFAULT_LIBRARY_PROPERTIES PREFIX "lib")
 else()
   set(GAMMARAY_DEFAULT_LIBRARY_PROPERTIES SOVERSION ${GAMMARAY_SOVERSION} VERSION ${GAMMARAY_SOVERSION})
 endif()
