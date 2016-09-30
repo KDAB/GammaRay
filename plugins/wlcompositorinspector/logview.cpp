@@ -406,6 +406,8 @@ public:
       return size();
     }
 
+    inline qint64 initialTime() const { return m_data.isEmpty() ? 0 : m_data.at(0).time; }
+
     void paintEvent(QPaintEvent *event) override
     {
       QPainter painter(this);
@@ -428,9 +430,13 @@ public:
         mul = mul == 2 ? 5 : 2;
       }
 
+      int it = initialTime();
+      int rit = round(it, -1);
+
       //draw the grid lines
       qreal linesSpacing = step / substeps;
-      int startLine = drawRect.left() / linesSpacing;
+      int startLine = drawRect.left() / linesSpacing - (rit - it) / m_zoom; //round the starting position so that we have nice numbers'
+
       int s = startLine;
       for (qreal i = startLine * linesSpacing; i < drawRect.right(); i += linesSpacing, s++) {
         bool isStep = s % substeps == 0;
@@ -444,7 +450,7 @@ public:
       for (qreal i = startLine * linesSpacing; i < drawRect.right(); i += step / substeps, s++) { //krazy:exclude=postfixop
         bool isStep = s % substeps == 0;
         if (isStep) {
-          painter.drawText(i-100, 0, 200, 200, Qt::AlignHCenter, QString("%1ms").arg(QString::number(qreal(i * m_zoom) / 1e6, 'g', 4)));
+          painter.drawText(i-100, ((s / substeps) % 2) * 15, 200, 200, Qt::AlignHCenter, QString("%1ms").arg(QString::number(qreal(it + i * m_zoom) / 1e6, 'g', 6)));
         }
       }
 

@@ -45,6 +45,7 @@ struct RingBuffer
 
   int count() const { return qMin(m_capacity, m_vector.count()); }
   int capacity() const { return m_capacity; }
+  bool isEmpty() const { return count() == 0; }
 
   const T &last() const { return at(count() - 1); }
 
