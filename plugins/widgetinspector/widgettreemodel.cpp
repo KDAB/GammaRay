@@ -28,10 +28,9 @@
 
 #include "widgettreemodel.h"
 #include "common/modelutils.h"
+#include "widgetmodelroles.h"
 
-#include <QApplication>
 #include <QLayout>
-#include <QPalette>
 #include <QWidget>
 
 using namespace GammaRay;
@@ -56,7 +55,7 @@ QPair<int, QVariant> WidgetTreeModel::defaultSelectedItem() const
 
 QVariant WidgetTreeModel::data(const QModelIndex &index, int role) const
 {
-    if (index.isValid() && role == Qt::ForegroundRole) {
+    if (index.isValid() && role == WidgetModelRoles::VisibleRole) {
         QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
         QWidget *widget = qobject_cast<QWidget *>(obj);
         if (!widget) {
@@ -64,10 +63,16 @@ QVariant WidgetTreeModel::data(const QModelIndex &index, int role) const
             if (layout)
                 widget = layout->parentWidget();
         }
-        if (widget && !widget->isVisible())
-            return qApp->palette().color(QPalette::Disabled, QPalette::Text);
+        return !widget || widget->isVisible();
     }
     return QSortFilterProxyModel::data(index, role);
+}
+
+QMap<int, QVariant> WidgetTreeModel::itemData(const QModelIndex &index) const
+{
+    auto d = ObjectFilterProxyModelBase::itemData(index);
+    d.insert(WidgetModelRoles::VisibleRole, data(index, WidgetModelRoles::VisibleRole));
+    return d;
 }
 
 bool WidgetTreeModel::filterAcceptsObject(QObject *object) const
