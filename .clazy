@@ -1,0 +1,5 @@
+#do not report clazy results for these subdirs
+SKIP /3rdparty/
+
+#clazy checks specification
+CHECKS level2,no-qenums,no-qgetenv
