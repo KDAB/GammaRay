@@ -110,6 +110,7 @@ if(GAMMARAY_BUILD_UI)
     target_link_libraries(gammaray_widgetinspector_ui_plugin
         gammaray_client
         Qt5::Qml
+        Qt5::Quick
         Qt5::3DRender
         Qt5::3DLogic
         Qt5::3DInput
