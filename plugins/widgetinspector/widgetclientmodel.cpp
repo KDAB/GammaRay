@@ -1,11 +1,11 @@
 /*
-  widget-layouting.cpp
+  widgetclientmodel.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Milian Wolff <milian.wolff@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,33 +26,27 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ui_contactform.h"
+#include "widgetclientmodel.h"
+#include "widgetmodelroles.h"
 
 #include <QApplication>
+#include <QPalette>
 
-class ContactForm : public QWidget
+using namespace GammaRay;
+
+WidgetClientModel::WidgetClientModel(QObject *parent)
+    : QIdentityProxyModel(parent)
 {
-    Q_OBJECT
-public:
-    ContactForm(QWidget *parent = Q_NULLPTR) :
-        QWidget(parent),
-        ui(new Ui::ContactForm)
-    {
-        ui->setupUi(this);
-    }
-
-private:
-    QScopedPointer<Ui::ContactForm> ui;
-};
-
-int main(int argc, char** argv)
-{
-    QApplication app(argc, argv);
-    QWidget w1;
-    QWidget w2;
-    ContactForm form;
-    form.show();
-    return app.exec();
 }
 
-#include "widget-layouting.moc"
+WidgetClientModel::~WidgetClientModel() = default;
+
+QVariant WidgetClientModel::data(const QModelIndex &index, int role) const
+{
+    if (index.isValid() && role == Qt::ForegroundRole) {
+        bool isVisible = index.data(WidgetModelRoles::VisibleRole).toBool();
+        if (!isVisible)
+            return qApp->palette().color(QPalette::Disabled, QPalette::Text);
+    }
+    return QIdentityProxyModel::data(index, role);
+}

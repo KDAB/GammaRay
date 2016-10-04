@@ -30,6 +30,7 @@
 #include "widgetinspectorwidget.h"
 #include "widgetinspectorinterface.h"
 #include "widgetinspectorclient.h"
+#include "widgetclientmodel.h"
 #include "ui_widgetinspectorwidget.h"
 #include "waextension/widgetattributetab.h"
 
@@ -70,7 +71,9 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     ui->setupUi(this);
     ui->widgetPropertyWidget->setObjectBaseName(m_inspector->objectName());
 
-    auto widgetModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WidgetTree"));
+    auto widgetTree = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WidgetTree"));
+    auto widgetModel = new WidgetClientModel(this);
+    widgetModel->setSourceModel(widgetTree);
     ui->widgetTreeView->header()->setObjectName("widgetTreeViewHeader");
     ui->widgetTreeView->setDeferredResizeMode(0, QHeaderView::Stretch);
     ui->widgetTreeView->setDeferredResizeMode(1, QHeaderView::Interactive);
