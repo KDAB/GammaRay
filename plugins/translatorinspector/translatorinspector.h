@@ -67,6 +67,8 @@ protected:
     bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
 
 private:
+    void registerMetaTypes();
+
     QItemSelectionModel *m_selectionModel;
     QItemSelectionModel *m_translationsSelectionModel;
     TranslatorsModel *m_translatorsModel;

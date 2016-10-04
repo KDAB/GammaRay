@@ -30,6 +30,8 @@
 #include "translatorwrapper.h"
 #include "translatorsmodel.h"
 
+#include <core/metaobject.h>
+#include <core/metaobjectrepository.h>
 #include <core/probeinterface.h>
 #include <core/objecttypefilterproxymodel.h>
 #include <core/remote/serverproxymodel.h>
@@ -48,6 +50,8 @@ TranslatorInspector::TranslatorInspector(ProbeInterface *probe, QObject *parent)
     : TranslatorInspectorInterface(QStringLiteral("com.kdab.GammaRay.TranslatorInspector"), parent)
     , m_probe(probe)
 {
+    registerMetaTypes();
+
     m_translatorsModel = new TranslatorsModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"),
                          m_translatorsModel);
@@ -160,4 +164,11 @@ void TranslatorInspector::objectSelected(QObject* obj)
 
     const auto index = indexList.first();
     m_selectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
+}
+
+void TranslatorInspector::registerMetaTypes()
+{
+    MetaObject *mo = 0;
+    MO_ADD_METAOBJECT1(QTranslator, QObject);
+    MO_ADD_PROPERTY_RO(QTranslator, bool, isEmpty);
 }
