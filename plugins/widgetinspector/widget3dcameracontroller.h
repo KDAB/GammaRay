@@ -33,6 +33,8 @@
 #include <Qt3DRender/QCamera>
 #include <QVector3D>
 
+QT_BEGIN_NAMESPACE
+
 namespace Qt3DInput
 {
 class QKeyboardDevice;
@@ -45,6 +47,8 @@ namespace Qt3DLogic
 {
 class QFrameAction;
 }
+
+QT_END_NAMESPACE
 
 class Widget3DCameraController : public Qt3DCore::QEntity
 {
