@@ -43,7 +43,7 @@ public:
 
     enum ExtraRoles
     {
-        TranslatorRole = Qt::UserRole
+        ObjectIdRole = Qt::UserRole + 1
     };
 
     int columnCount(

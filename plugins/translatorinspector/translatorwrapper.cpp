@@ -226,7 +226,7 @@ const
     return translator()->translate(context, sourceText, disambiguation, n);
 }
 
-const QTranslator *TranslatorWrapper::translator() const
+QTranslator *TranslatorWrapper::translator() const
 {
     Q_ASSERT(m_wrapped);
     return m_wrapped;

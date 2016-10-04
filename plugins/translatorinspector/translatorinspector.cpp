@@ -33,7 +33,9 @@
 #include <core/probeinterface.h>
 #include <core/objecttypefilterproxymodel.h>
 #include <core/remote/serverproxymodel.h>
+
 #include <common/objectbroker.h>
+#include <common/objectid.h>
 #include <common/objectmodel.h>
 
 #include <QCoreApplication>
@@ -43,8 +45,7 @@
 using namespace GammaRay;
 
 TranslatorInspector::TranslatorInspector(ProbeInterface *probe, QObject *parent)
-    : TranslatorInspectorInterface(QStringLiteral("com.kdab.GammaRay.TranslatorInspector"),
-                                   parent)
+    : TranslatorInspectorInterface(QStringLiteral("com.kdab.GammaRay.TranslatorInspector"), parent)
     , m_probe(probe)
 {
     m_translatorsModel = new TranslatorsModel(this);
@@ -71,6 +72,8 @@ TranslatorInspector::TranslatorInspector(ProbeInterface *probe, QObject *parent)
 
     qApp->installEventFilter(this);
     sendLanguageChangeEvent();
+
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
 }
 
 void TranslatorInspector::sendLanguageChangeEvent()
@@ -140,4 +143,21 @@ void TranslatorInspector::selectionChanged(const QItemSelection &selection)
         if (translator)
             m_translationsModel->setSourceModel(translator->model());
     }
+}
+
+void TranslatorInspector::objectSelected(QObject* obj)
+{
+    auto t = qobject_cast<QTranslator*>(obj);
+    if (!t)
+        return;
+
+    const auto indexList = m_translatorsModel->match(m_translationsModel->index(0, 0),
+                       TranslatorsModel::ObjectIdRole,
+                       QVariant::fromValue(ObjectId(t)), 1,
+                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+    if (indexList.isEmpty())
+        return;
+
+    const auto index = indexList.first();
+    m_selectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }

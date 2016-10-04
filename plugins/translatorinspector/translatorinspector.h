@@ -61,6 +61,7 @@ public slots:
 
 private slots:
     void selectionChanged(const QItemSelection &selection);
+    void objectSelected(QObject *obj);
 
 protected:
     bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;

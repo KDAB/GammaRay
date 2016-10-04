@@ -96,7 +96,7 @@ public:
     bool isEmpty() const Q_DECL_OVERRIDE;
     QString translate(const char *context, const char *sourceText, const char *disambiguation,
                       int n) const Q_DECL_OVERRIDE;
-    const QTranslator *translator() const;
+    QTranslator *translator() const;
 
 private:
     QTranslator *m_wrapped;

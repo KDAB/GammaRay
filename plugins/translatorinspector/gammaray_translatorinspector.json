@@ -4,5 +4,8 @@
     "name[de]": "Übersetzungen",
     "types": [
         "QTranslator"
+    ],
+    "selectableTypes": [
+        "QTranslator"
     ]
 }

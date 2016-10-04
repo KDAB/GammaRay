@@ -30,6 +30,8 @@
 
 #include <core/util.h>
 
+#include <common/objectid.h>
+
 #include "translatorwrapper.h"
 
 using namespace GammaRay;
@@ -56,8 +58,8 @@ QVariant TranslatorsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role == TranslatorRole)
-        return QVariant::fromValue(m_translators.at(index.row()));
+    if (role == ObjectIdRole)
+        return QVariant::fromValue(ObjectId(m_translators.at(index.row())->translator()));
     TranslatorWrapper *trans = m_translators.at(index.row());
     Q_ASSERT(trans);
     if (role == Qt::DisplayRole) {
