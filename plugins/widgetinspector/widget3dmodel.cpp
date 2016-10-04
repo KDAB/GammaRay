@@ -69,6 +69,17 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, int level, Widget3DWidget *pare
     updateTimeout();
 
     mQWidget->installEventFilter(this);
+
+    mMetaData = { { QStringLiteral("className"), QString::fromUtf8(mQWidget->metaObject()->className()) },
+                  { QStringLiteral("objectName"), mQWidget->objectName() },
+                  { QStringLiteral("address"), quintptr(mQWidget.data()) },
+                  { QStringLiteral("geometry"), mQWidget->geometry() },
+                  { QStringLiteral("parent"), mQWidget->parent() ?
+                        QVariantMap{ { QStringLiteral("className"), mQWidget->parent()->metaObject()->className() },
+                                     { QStringLiteral("objectName"), mQWidget->parent()->objectName() },
+                                     { QStringLiteral("address"), quintptr(mQWidget->parent()) } } :
+                        QVariant() }
+                };
 }
 
 Widget3DWidget::~Widget3DWidget()
@@ -82,6 +93,7 @@ bool Widget3DWidget::eventFilter(QObject *obj, QEvent *ev)
         case QEvent::Resize: {
             QResizeEvent *re = static_cast<QResizeEvent*>(ev);
             if (re->oldSize() != re->size()) {
+                mMetaData[QStringLiteral("geometry")] = mQWidget->geometry();
                 mGeomDirty = true;
                 startUpdateTimer();
             }
@@ -221,6 +233,10 @@ QVariant Widget3DModel::data(const QModelIndex &index, int role) const
         auto w = widgetForIndex(index);
         return w ? w->level() : -1;
     }
+    case MetaDataRole: {
+        auto w = widgetForIndex(index);
+        return w ? w->metaData() : QVariant();
+    }
     default:
         return QSortFilterProxyModel::data(index, role);
     }
@@ -238,6 +254,7 @@ QMap<int, QVariant> Widget3DModel::itemData(const QModelIndex &index) const
     data[BackTextureRole] = w->backTexture();
     data[GeometryRole] = w->geometry();
     data[LevelRole] = w->level();
+    data[MetaDataRole] = w->metaData();
     return data;
 }
 

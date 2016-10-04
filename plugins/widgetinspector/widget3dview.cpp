@@ -37,11 +37,12 @@
 #include <client/remotemodel.h>
 
 #include <QWindow>
-#include <QQuickWindow>
+#include <QQuickView>
 #include <QVBoxLayout>
 #include <QVariant>
 #include <QUrl>
 #include <QWheelEvent>
+#include <QFontMetrics>
 
 #include <Qt3DQuick/QQmlAspectEngine>
 #include <Qt3DCore/QAspectEngine>
@@ -56,23 +57,15 @@
 namespace GammaRay
 {
 
-class Widget3DWindow : public QQuickWindow
+class Widget3DWindow : public QQuickView
 {
    Q_OBJECT
 public:
     explicit Widget3DWindow(QWindow *parent = Q_NULLPTR)
-        : QQuickWindow(parent)
+        : QQuickView(parent)
     {
-        setSurfaceType(QSurface::OpenGLSurface);
         resize(800, 600);
-        QSurfaceFormat format;
-        format.setVersion(3, 3);
-        format.setProfile(QSurfaceFormat::CoreProfile);
-        format.setDepthBufferSize(24);
-        format.setSamples(4);
-        format.setStencilBufferSize(8);
-        setFormat(format);
-        create();
+        setResizeMode(QQuickView::SizeRootObjectToView);
     }
 
     ~Widget3DWindow()
@@ -119,10 +112,68 @@ public:
         roles[Widget3DModel::TextureRole] = "frontTexture";
         roles[Widget3DModel::BackTextureRole] = "backTexture";
         roles[Widget3DModel::LevelRole] = "level";
+        roles[Widget3DModel::MetaDataRole] = "metaData";
         return roles;
     }
 };
 
+// Unlike QtQuick's FontMetrics this one uses the the right overload of
+// QFontMetrics::boundingRect() that works properly with multi-line text,
+// which is exactly what we need in WidgetInfo
+class UsableFontMetrics : public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QString text MEMBER mText WRITE setText NOTIFY textChanged)
+    Q_PROPERTY(QFont font MEMBER mFont WRITE setFont NOTIFY fontChanged)
+    Q_PROPERTY(QRect boundingRect READ boundingRect NOTIFY boundingRectChanged)
+public:
+    explicit UsableFontMetrics(QObject *parent = Q_NULLPTR)
+        : QObject(parent)
+    {}
+    ~UsableFontMetrics() = default;
+
+    void setFont(const QFont &font)
+    {
+        if (mFont == font) {
+            return;
+        }
+        mFont = font;
+        Q_EMIT fontChanged();
+        updateBoundingRect();
+    }
+
+    void setText(const QString &text)
+    {
+        if (mText == text) {
+            return;
+        }
+        mText = text;
+        Q_EMIT textChanged();
+        updateBoundingRect();
+    }
+
+    QRect boundingRect() const
+    {
+        return mBoundingRect;
+    }
+
+Q_SIGNALS:
+    void textChanged();
+    void fontChanged();
+    void boundingRectChanged();
+private:
+    void updateBoundingRect()
+    {
+        mBoundingRect = QFontMetrics(mFont).boundingRect(QRect(), Qt::TextDontClip,
+                                                         mText, 0, Q_NULLPTR);
+        Q_EMIT boundingRectChanged();
+    }
+
+    QString mText;
+    QFont mFont;
+    QRect mBoundingRect;
+};
 
 }
 
@@ -142,17 +193,21 @@ Widget3DView::Widget3DView(QWidget* parent)
 
     qmlRegisterType<Widget3DCameraController>("com.kdab.GammaRay", 1, 0, "Widget3DCameraController");
     qmlRegisterType<Widget3DImageTextureImage>("com.kdab.GammaRay", 1, 0, "Widget3DImageTextureImage");
+    qmlRegisterType<UsableFontMetrics>("com.kdab.GammaRay", 1, 0, "UsableFontMetrics");
 
+    /*
     auto engine = new Qt3DCore::Quick::QQmlAspectEngine(this);
     engine->aspectEngine()->registerAspect(new Qt3DRender::QRenderAspect);
     engine->aspectEngine()->registerAspect(new Qt3DInput::QInputAspect);
     engine->aspectEngine()->registerAspect(new Qt3DLogic::QLogicAspect);
+    */
 
-    engine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_surface"), mWindow);
-    engine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_eventSource"), mWindow);
-    engine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_window"), mWindow);
-    engine->qmlEngine()->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), model);
-    engine->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
+    auto engine = mWindow->engine();
+    engine->rootContext()->setContextProperty(QStringLiteral("_surface"), mWindow);
+    engine->rootContext()->setContextProperty(QStringLiteral("_eventSource"), mWindow);
+    engine->rootContext()->setContextProperty(QStringLiteral("_window"), mWindow);
+    engine->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), model);
+    mWindow->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
 }
 
 Widget3DView::~Widget3DView()

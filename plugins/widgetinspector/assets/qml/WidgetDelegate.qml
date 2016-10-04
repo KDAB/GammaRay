@@ -43,6 +43,7 @@ Entity {
     property var frontTextureImage
     property var backTextureImage
     property rect geometry
+    property bool selected : objectPicker.containsMouse
 
     readonly property real _scaleFactor : 10.0
     readonly property real _geomWidth: root.geometry.width / _scaleFactor

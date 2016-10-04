@@ -28,81 +28,105 @@
 
 
 import QtQuick 2.5 as QQ2
+import QtQuick.Scene3D 2.0
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
 import Qt3D.Input 2.0
 import Qt3D.Extras 2.0
 import com.kdab.GammaRay 1.0
 
-Entity {
-    id: root
+QQ2.Item {
 
-    property real explosionFactor: 0
+    Scene3D {
+        id: scene3d
+        anchors.fill: parent
+        focus: true
+        aspects: [ "input", "logic", "render" ]
+        cameraAspectRatioMode: Scene3D.AutomaticAspectRatio
 
-    // Render from the mainCamera
-    components: [
-        RenderSettings {
-            activeFrameGraph: ForwardRenderer {
-                id: renderer
-                camera: mainCamera
-                clearColor: "black"
-                window: _surface
+
+        Entity {
+            id: root
+
+            property real explosionFactor: 0
+
+
+            Camera {
+                id: mainCamera
+                projectionType: CameraLens.PerspectiveProjection
+                fieldOfView: 45
+                nearPlane: 0.1
+                farPlane: 1000.0
+                viewCenter: Qt.vector3d(0.0, 0.0, 0.0)
+                upVector: Qt.vector3d(0.0, 1.0, 0.0)
+                position: Qt.vector3d(0.0, 0.0, 80.0)
             }
 
-            pickingSettings.pickMethod: PickingSettings.TrianglePicking
-            renderPolicy: RenderSettings.OnDemand
-        },
+            // Render from the mainCamera
+            components: [
+                RenderSettings {
+                    activeFrameGraph: ForwardRenderer {
+                        camera: mainCamera
+                        clearColor: "transparent"
+                    }
 
-        InputSettings {
-            eventSource: _eventSource
+                    pickingSettings.pickMethod: PickingSettings.TrianglePicking
+                    // TODO: Does not work with Scene3D
+                    //renderPolicy: RenderSettings.OnDemand
+                    renderPolicy: RenderSettings.Always
+                },
+
+                InputSettings {
+                    eventSource: _eventSource
+                }
+            ]
+
+            Widget3DCameraController {
+                id: cameraController
+                camera: mainCamera
+            }
+            //CameraController {
+            //    id: cameraController
+            //    camera: mainCamera
+            //}
+
+            QQ2.Connections {
+                target: _window
+                onWheel: {
+                    var newFactor = root.explosionFactor + delta / 80.0;
+                    root.explosionFactor = newFactor < 0 ? 0 : newFactor;
+                }
+            }
+
+            NodeInstantiator {
+                id: instantiator;
+                model: _widgetModel
+                asynchronous: false
+                delegate: WidgetDelegate {
+                    id: widgetDelegate
+                    // HACK: get top-level window geometry so we can transform children center accordingly
+                    topLevelGeometry: instantiator.objectAt(0) ? instantiator.objectAt(0).geometry : model.geometry
+                    geometry: model.geometry
+                    level: model.level
+                    frontTextureImage: model.frontTexture
+                    backTextureImage: model.backTexture
+                    explosionFactor: root.explosionFactor;
+
+                    onSelectedChanged: if (selected) widgetInfo.metaData = model.metaData;
+                }
+            }
         }
-    ]
-
-
-    Camera {
-        id: mainCamera
-        projectionType: CameraLens.PerspectiveProjection
-        fieldOfView: 45
-        aspectRatio: _window.width / _window.height
-        nearPlane: 0.1
-        farPlane: 1000.0
-        viewCenter: Qt.vector3d(0.0, 0.0, 0.0)
-        upVector: Qt.vector3d(0.0, 1.0, 0.0)
-        position: Qt.vector3d(0.0, 0.0, 80.0)
     }
 
-    Widget3DCameraController {
-        id: cameraController
-        camera: mainCamera
-    }
-    /*
-    CameraController {
-        id: cameraController
-        camera: mainCamera
-    }
-    */
+    WidgetInfo {
+        id: widgetInfo;
 
-    QQ2.Connections {
-        target: _window
-        onWheel: {
-            var newFactor = root.explosionFactor + delta / 80.0;
-            root.explosionFactor = newFactor < 0 ? 0 : newFactor;
+        anchors {
+            top: parent.top
+            right: parent.right
+            margins: 20
         }
     }
 
-    NodeInstantiator {
-        id: instantiator;
-        model: _widgetModel
-        asynchronous: true
-        delegate: WidgetDelegate {
-            id: widgetDelegate
-            // HACK: get top-level window geometry so we can transform children center accordingly
-            topLevelGeometry: instantiator.objectAt(0) ? instantiator.objectAt(0).geometry : model.geometry
-            geometry: model.geometry
-            level: model.level
-            frontTextureImage: model.frontTexture
-            backTextureImage: model.backTexture
-            explosionFactor: root.explosionFactor;
-        }
-    }
+
 }

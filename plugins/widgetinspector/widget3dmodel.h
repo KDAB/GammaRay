@@ -56,6 +56,7 @@ public:
     inline QWidget *qWidget() const { return mQWidget; }
     inline Widget3DWidget *parentWidget() const { return static_cast<Widget3DWidget*>(parent()); }
     inline bool isVisible() const { return mQWidget->isVisible(); }
+    inline QVariantMap metaData() const { return mMetaData; }
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) Q_DECL_OVERRIDE;
@@ -79,6 +80,7 @@ private:
     QImage mBackTextureImage;
     QRect mTextureGeometry;
     QRect mGeometry;
+    QVariantMap mMetaData;
     int mLevel;
     bool mIsPainting;
 
@@ -95,7 +97,8 @@ public:
         TextureRole = Qt::UserRole + 1,
         BackTextureRole,
         GeometryRole,
-        LevelRole
+        LevelRole,
+        MetaDataRole
     };
 
     explicit Widget3DModel(QObject *parent = Q_NULLPTR);
