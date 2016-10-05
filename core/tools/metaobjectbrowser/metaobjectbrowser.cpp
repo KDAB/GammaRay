@@ -45,8 +45,7 @@ using namespace GammaRay;
 
 MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
-    , m_propertyController(new PropertyController(QStringLiteral(
-                                                      "com.kdab.GammaRay.MetaObjectBrowser"), this))
+    , m_propertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this))
 {
     auto model = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     model->addRole(QMetaObjectModel::MetaObjectIssues);
@@ -65,6 +64,13 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
             SLOT(objectSelected(QObject*)));
     connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)), this,
             SLOT(objectSelected(void*,QString)));
+
+    ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this);
+}
+
+void MetaObjectBrowser::rescanMetaTypes()
+{
+    qobject_cast<MetaObjectTreeModel*>(Probe::instance()->metaObjectModel())->scanMetaTypes();
 }
 
 void MetaObjectBrowser::objectSelected(const QItemSelection &selection)

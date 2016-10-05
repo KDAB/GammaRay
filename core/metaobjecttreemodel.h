@@ -62,8 +62,8 @@ public:
     QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits,
                           Qt::MatchFlags flags) const Q_DECL_OVERRIDE;
 
-private:
     void scanMetaTypes();
+private:
     void addMetaObject(const QMetaObject *metaObject);
     void removeMetaObject(const QMetaObject *metaObject);
 

@@ -46,6 +46,9 @@ class MetaObjectBrowser : public QObject
 public:
     explicit MetaObjectBrowser(ProbeInterface *probe, QObject *parent = 0);
 
+public Q_SLOTS:
+    void rescanMetaTypes();
+
 private Q_SLOTS:
     void objectSelected(const QItemSelection &selection);
     void objectSelected(QObject *obj);

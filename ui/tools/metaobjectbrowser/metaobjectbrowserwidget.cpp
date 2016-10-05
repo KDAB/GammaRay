@@ -33,6 +33,7 @@
 #include <ui/deferredtreeview.h>
 #include <ui/searchlinecontroller.h>
 
+#include <common/endpoint.h>
 #include <common/objectbroker.h>
 
 #include <QDebug>
@@ -84,6 +85,8 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
     hbox->addWidget(propertyWidget);
 
     connect(m_propertyWidget, SIGNAL(tabsUpdated()), &m_stateManager, SLOT(reset()));
+
+    Endpoint::instance()->invokeObject(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), "rescanMetaTypes");
 }
 
 void MetaObjectBrowserWidget::selectionChanged(const QItemSelection &selection)
