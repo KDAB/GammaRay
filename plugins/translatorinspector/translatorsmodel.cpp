@@ -88,6 +88,13 @@ QVariant TranslatorsModel::headerData(int section, Qt::Orientation orientation, 
     return QVariant();
 }
 
+QMap<int, QVariant> TranslatorsModel::itemData(const QModelIndex &index) const
+{
+    auto d = QAbstractTableModel::itemData(index);
+    d.insert(ObjectIdRole, data(index, ObjectIdRole));
+    return d;
+}
+
 TranslatorWrapper *TranslatorsModel::translator(const QModelIndex &index)
 const
 {

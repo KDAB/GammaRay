@@ -17,6 +17,9 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="GammaRay::DeferredTreeView" name="translatorList">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
       <property name="rootIsDecorated">
        <bool>false</bool>
       </property>

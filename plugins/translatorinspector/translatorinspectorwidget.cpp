@@ -28,12 +28,17 @@
 
 #include "translatorinspectorwidget.h"
 #include "ui_translatorinspectorwidget.h"
+#include "translatorsmodel.h" // use only for its role enums
 
-#include <QSortFilterProxyModel>
-
+#include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
+
 #include <common/objectbroker.h>
+#include <common/objectid.h>
 #include <common/endpoint.h>
+
+#include <QMenu>
+#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
 
@@ -67,9 +72,9 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
     ui->translatorList->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->translatorList->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
     ui->translatorList->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
-    ui->translatorList->setModel(ObjectBroker::model(QStringLiteral(
-                                                         "com.kdab.GammaRay.TranslatorsModel")));
+    ui->translatorList->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslatorsModel")));
     ui->translatorList->setSelectionModel(ObjectBroker::selectionModel(ui->translatorList->model()));
+    connect(ui->translatorList, &QTreeView::customContextMenuRequested, this, &TranslatorInspectorWidget::translatorContextMenu);
 
     connect(ui->languageChangeButton, SIGNAL(clicked()), m_inspector, SLOT(
                 sendLanguageChangeEvent()));
@@ -93,6 +98,24 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
 TranslatorInspectorWidget::~TranslatorInspectorWidget()
 {
 }
+
+void TranslatorInspectorWidget::translatorContextMenu(QPoint pos)
+{
+    auto index = ui->translatorList->indexAt(pos);
+    if (!index.isValid())
+        return;
+    index = index.sibling(index.row(), 0);
+
+    const auto objectId = index.data(TranslatorsModel::ObjectIdRole).value<ObjectId>();
+    if (objectId.isNull())
+        return;
+
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+    menu.exec(ui->translatorList->viewport()->mapToGlobal(pos));
+}
+
 
 static QObject *translatorInspectorClientFactory(const QString &name, QObject *parent)
 {

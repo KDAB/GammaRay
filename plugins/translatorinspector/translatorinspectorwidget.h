@@ -62,6 +62,8 @@ public:
     ~TranslatorInspectorWidget();
 
 private:
+    void translatorContextMenu(QPoint pos);
+
     QScopedPointer<Ui::TranslatorInspectorWidget> ui;
     UIStateManager m_stateManager;
     TranslatorInspectorInterface *m_inspector;
