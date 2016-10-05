@@ -32,107 +32,80 @@ TAGLINKS =
 # to http://doxygen.org/manual/config.html for detailed explanation of the
 # options. To request support for more options, contact support@codedocs.xyz.
 #
-ABBREVIATE_BRIEF       = "The \$name class" \
-                         "The \$name widget" \
-                         "The \$name file" \
-                         is \
-                         provides \
-                         specifies \
-                         contains \
-                         represents \
-                         a \
-                         an \
-                         the
+# ABBREVIATE_BRIEF =
 # ALIASES =
-ALLEXTERNALS = NO
+# ALLEXTERNALS =
 # ALLOW_UNICODE_NAMES =
-ALPHABETICAL_INDEX = NO
+# ALPHABETICAL_INDEX =
 # ALWAYS_DETAILED_SEC =
 # AUTOLINK_SUPPORT =
-BRIEF_MEMBER_DESC = YES
+# BRIEF_MEMBER_DESC =
 # BUILTIN_STL_SUPPORT =
-CALLER_GRAPH = NO
+# CALLER_GRAPH =
 # CALL_GRAPH =
-CASE_SENSE_NAMES = YES
+# CASE_SENSE_NAMES =
 # CITE_BIB_FILES =
-CLASS_DIAGRAMS = YES
-CLASS_GRAPH = YES
-COLLABORATION_GRAPH = NO
-COLS_IN_ALPHA_INDEX = 5
+# CLASS_DIAGRAMS =
+# CLASS_GRAPH =
+# COLLABORATION_GRAPH =
+# COLS_IN_ALPHA_INDEX =
 # CPP_CLI_SUPPORT =
 # DIAFILE_DIRS =
-DIRECTORY_GRAPH = NO
+# DIRECTORY_GRAPH =
 # DISABLE_INDEX =
 # DISTRIBUTE_GROUP_DOC =
 # DOTFILE_DIRS =
 # DOT_FONTNAME =
 # DOT_FONTSIZE =
 # DOT_GRAPH_MAX_NODES =
-DOT_IMAGE_FORMAT = png
-DOT_TRANSPARENT = NO
+# DOT_IMAGE_FORMAT =
+# DOT_TRANSPARENT =
 # DOXYFILE_ENCODING =
 # ENABLED_SECTIONS =
-ENABLE_PREPROCESSING = YES
+# ENABLE_PREPROCESSING =
 # ENUM_VALUES_PER_LINE =
 # EXAMPLE_PATH =
 # EXAMPLE_PATTERNS =
-EXAMPLE_RECURSIVE = NO
+# EXAMPLE_RECURSIVE =
 EXCLUDE = common/gammaray_common_export.h \
           core/gammaray_core_export.h \
           ui/gammaray_ui_export.h
-EXCLUDE_PATTERNS       = */.svn/* \
-                         */.git/* \
-                         */cmake/* \
-                         *.moc.* \
-                         moc* \
-                         *.all_cpp.* \
-                         *unload.* \
-                         */test/* \
-                         */tests/* \
-                         *_p.cpp \
-                         *_export.h
+# EXCLUDE_PATTERNS =
 # EXCLUDE_SYMBOLS =
 # EXPAND_AS_DEFINED =
-EXPAND_ONLY_PREDEF = NO
+# EXPAND_ONLY_PREDEF =
 # EXTENSION_MAPPING =
-EXTERNAL_GROUPS = YES
+# EXTERNAL_GROUPS =
 # EXTERNAL_PAGES =
-EXTRACT_ALL = NO
+# EXTRACT_ALL =
 # EXTRACT_ANON_NSPACES =
-EXTRACT_LOCAL_CLASSES = NO
-EXTRACT_LOCAL_METHODS = NO
+# EXTRACT_LOCAL_CLASSES =
+# EXTRACT_LOCAL_METHODS =
 # EXTRACT_PACKAGE =
-EXTRACT_PRIVATE = NO
-EXTRACT_STATIC = YES
+# EXTRACT_PRIVATE =
+# EXTRACT_STATIC =
 # EXT_LINKS_IN_WINDOW =
-FILE_PATTERNS          = *.cpp \
-                         *.cc \
-                         *.cxx \
-                         *.h \
-                         *.hh \
-                         *.hxx \
-                         *.hpp \
-                         *.dox
+# FILE_PATTERNS =
 # FORCE_LOCAL_INCLUDES =
 # FORMULA_FONTSIZE =
 # FORMULA_TRANSPARENT =
 # FULL_PATH_NAMES =
-GENERATE_BUGLIST = NO
-GENERATE_DEPRECATEDLIST = YES
-GENERATE_LEGEND = YES
-GENERATE_TESTLIST = NO
-GENERATE_TODOLIST = NO
+# GENERATE_BUGLIST =
+# GENERATE_DEPRECATEDLIST =
+# GENERATE_LEGEND =
+# GENERATE_TESTLIST =
+# GENERATE_TODOLIST =
 # GENERATE_TREEVIEW =
-GRAPHICAL_HIERARCHY = YES
-GROUP_GRAPHS = NO
+# GRAPHICAL_HIERARCHY =
+# GROUP_GRAPHS =
 # GROUP_NESTED_COMPOUNDS =
 # HIDE_COMPOUND_REFERENCE= =
-HIDE_FRIEND_COMPOUNDS = YES
-HIDE_IN_BODY_DOCS = YES
-HIDE_SCOPE_NAMES = NO
-HIDE_UNDOC_CLASSES = NO
-HIDE_UNDOC_MEMBERS = NO
-HIDE_UNDOC_RELATIONS = YES
+# HIDE_FRIEND_COMPOUNDS =
+# HIDE_IN_BODY_DOCS =
+# HIDE_SCOPE_NAMES =
+# HIDE_UNDOC_CLASSES =
+# HIDE_UNDOC_MEMBERS =
+# HIDE_UNDOC_RELATIONS =
 # HTML_COLORSTYLE_GAMMA =
 # HTML_COLORSTYLE_HUE =
 # HTML_COLORSTYLE_SAT =
@@ -150,68 +123,23 @@ HTML_FOOTER = docs/api/footer.html
 IMAGE_PATH = docs/api
 # INCLUDED_BY_GRAPH =
 # INCLUDE_FILE_PATTERNS =
-INCLUDE_GRAPH = NO
+# INCLUDE_GRAPH =
 # INCLUDE_PATH =
 # INHERIT_DOCS =
 # INLINE_GROUPED_CLASSES =
-INLINE_INFO = YES
+# INLINE_INFO =
 # INLINE_INHERITED_MEMB =
 # INLINE_SIMPLE_STRUCTS =
 # INLINE_SOURCES =
-INPUT = \
-client/clientconnectionmanager.h \
-common/endpoint.h \
-common/metatypedeclarations.h \
-common/modelroles.h \
-common/objectbroker.h \
-common/objectidfilterproxymodel.h \
-common/objectid.h \
-common/objectmodel.h \
-common/paths.h \
-common/probecontrollerinterface.h \
-common/propertycontrollerinterface.h \
-common/protocol.h \
-common/sourcelocation.h \
-common/translator.h \
-core/metaobject.h \
-core/metaobjectrepository.h \
-core/metaproperty.h \
-core/objectdataprovider.h \
-core/objectmodelbase.h \
-core/objecttypefilterproxymodel.h \
-core/probecontroller.h \
-core/probe.h \
-core/probeinterface.h \
-core/propertycontrollerextension.h \
-core/propertycontroller.h \
-core/signalspycallbackset.h \
-core/singlecolumnobjectproxymodel.h \
-core/toolfactory.h \
-core/util.h \
-core/varianthandler.h \
-docs/api/footer.html \
-docs/api/Mainpage.dox \
-docs/api/PluginDesignGuide.dox \
-launcher/launcher.h \
-launcher/launchoptions.h \
-launcher/networkdiscoverymodel.h \
-launcher/probeabidetector.h \
-launcher/probeabi.h \
-launcher/probefinder.h \
-ui/clienttoolmanager.h \
-ui/propertywidget.h \
-ui/propertywidgettab.h \
-ui/tooluifactory.h \
-ui/uiintegration.h \
-ui/uistatemanager.h
+# INPUT =
 # INPUT_ENCODING =
 # INTERACTIVE_SVG =
-INTERNAL_DOCS = YES
+# INTERNAL_DOCS =
 # JAVADOC_AUTOBRIEF =
 # LAYOUT_FILE =
-MACRO_EXPANSION = YES
+# MACRO_EXPANSION =
 # MARKDOWN_SUPPORT =
-MAX_DOT_GRAPH_DEPTH = 1000
+# MAX_DOT_GRAPH_DEPTH =
 # MSCFILE_DIRS =
 # MULTILINE_CPP_IS_BRIEF =
 # OPTIMIZE_FOR_FORTRAN =
@@ -220,36 +148,33 @@ MAX_DOT_GRAPH_DEPTH = 1000
 # OPTIMIZE_OUTPUT_VHDL =
 # OUTPUT_LANGUAGE =
 # PLANTUML_JAR_PATH =
-PREDEFINED             = Q_DECL_IMPORT="" GAMMARAY_COMMON_EXPORT="" GAMMARAY_CORE_EXPORT="" \
-                         GAMMARAY_UI_EXPORT="" GAMMARAY_LAUNCHER_EXPORT="" \
-                         GAMMARAY_LAUNCHER_DEPRECATED_EXPORT="" \
-                         Q_DECL_OVERRIDE="override"
+# PREDEFINED =
 # PROJECT_BRIEF =
 # PROJECT_LOGO =
 PROJECT_NAME = "GammaRay API Documentation"
 PROJECT_NUMBER = "2.7.0 pre"
-QT_AUTOBRIEF = YES
-RECURSIVE = YES
+# QT_AUTOBRIEF =
+# RECURSIVE =
 # REFERENCED_BY_RELATION =
 # REFERENCES_LINK_SOURCE =
 # REFERENCES_RELATION =
-REPEAT_BRIEF = YES
+# REPEAT_BRIEF =
 # SEARCHENGINE =
-SEARCH_INCLUDES = YES
+# SEARCH_INCLUDES =
 # SEPARATE_MEMBER_PAGES =
 # SHORT_NAMES =
 SHOW_FILES = NO
 # SHOW_GROUPED_MEMB_INC =
-SHOW_INCLUDE_FILES = YES
+# SHOW_INCLUDE_FILES =
 # SHOW_NAMESPACES =
-SHOW_USED_FILES = NO
+# SHOW_USED_FILES =
 # SIP_SUPPORT =
-SKIP_FUNCTION_MACROS = YES
-SORT_BRIEF_DOCS = YES
-SORT_BY_SCOPE_NAME = NO
+# SKIP_FUNCTION_MACROS =
+# SORT_BRIEF_DOCS =
+# SORT_BY_SCOPE_NAME =
 # SORT_GROUP_NAMES =
-SORT_MEMBERS_CTORS_1ST = YES
-SORT_MEMBER_DOCS = YES
+# SORT_MEMBERS_CTORS_1ST =
+# SORT_MEMBER_DOCS =
 # SOURCE_BROWSER =
 # SOURCE_TOOLTIPS =
 # STRICT_PROTO_MATCHING =
@@ -258,11 +183,11 @@ SORT_MEMBER_DOCS = YES
 # STRIP_FROM_PATH =
 # SUBGROUPING =
 # TAB_SIZE =
-TEMPLATE_RELATIONS = NO
+# TEMPLATE_RELATIONS =
 # TREEVIEW_WIDTH =
 # TYPEDEF_HIDES_STRUCT =
 # UML_LIMIT_NUM_FIELDS =
-UML_LOOK = NO
+# UML_LOOK =
 # USE_MDFILE_AS_MAINPAGE =
 # VERBATIM_HEADERS =
 #
