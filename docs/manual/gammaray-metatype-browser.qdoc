@@ -1,0 +1,50 @@
+/*
+    gammaray-metatype-browser.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Meta Type Browser}
+    \nextpage{Font Browser}
+    \previouspage {Meta Object Browser}
+    \page gammaray-metatype-browser.html
+
+    \title Meta Type Browser
+
+    \section1 Overview
+
+    The meta type browser shows all types registered with QMetaType, and the information registered for them.
+
+    \image gammaray-metatype-browser.png
+
+    The meta type view can show the following information, some columns might only be available in newer
+    Qt versions though.
+
+    \list
+        \li The type name.
+        \li The type id.
+        \li The storage size needed for an instance of the type.
+        \li Address of the associated QMetaObject, if present.
+        \li Flags of the type (see QMetaType::TypeFlag), possible values depend on the Qt version used by the target.
+        \li Indication whether custom comparison or debug output functions have been registered for the type.
+    \endlist
+
+    On types with an associated QMetaObject, the context menu allows navigation to the corresponding entry
+    int the \l{Meta Object Browser}.
+
+    If the target registers types later during application runtime, it might become necessary to manually trigger
+    a scan for new meta types, the Meta Type menu contains a corresponding action for doing this.
+*/
+
