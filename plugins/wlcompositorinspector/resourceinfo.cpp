@@ -63,7 +63,11 @@ public:
     QWaylandSurface *surface = QWaylandSurface::fromResource(res);
     lines << tr("Role: %1").arg(surface->role() ? QString(surface->role()->name()) : QStringLiteral("none"));
     lines << tr("Buffer size: (%1x%2)").arg(QString::number(surface->size().width()), QString::number(surface->size().height()));
+#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
     lines << tr("Is mapped: %1").arg(surface->isMapped() ? QStringLiteral("true") : QStringLiteral("false"));
+#else
+    lines << tr("Has content: %1").arg(surface->hasContent() ? QStringLiteral("true") : QStringLiteral("false"));
+#endif
   }
   static void wlshellsurfaceInfo(wl_resource *res, QStringList &lines)
   {
