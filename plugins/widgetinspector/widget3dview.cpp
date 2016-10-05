@@ -117,64 +117,6 @@ public:
     }
 };
 
-// Unlike QtQuick's FontMetrics this one uses the the right overload of
-// QFontMetrics::boundingRect() that works properly with multi-line text,
-// which is exactly what we need in WidgetInfo
-class UsableFontMetrics : public QObject
-{
-    Q_OBJECT
-
-    Q_PROPERTY(QString text MEMBER mText WRITE setText NOTIFY textChanged)
-    Q_PROPERTY(QFont font MEMBER mFont WRITE setFont NOTIFY fontChanged)
-    Q_PROPERTY(QRect boundingRect READ boundingRect NOTIFY boundingRectChanged)
-public:
-    explicit UsableFontMetrics(QObject *parent = Q_NULLPTR)
-        : QObject(parent)
-    {}
-    ~UsableFontMetrics() = default;
-
-    void setFont(const QFont &font)
-    {
-        if (mFont == font) {
-            return;
-        }
-        mFont = font;
-        Q_EMIT fontChanged();
-        updateBoundingRect();
-    }
-
-    void setText(const QString &text)
-    {
-        if (mText == text) {
-            return;
-        }
-        mText = text;
-        Q_EMIT textChanged();
-        updateBoundingRect();
-    }
-
-    QRect boundingRect() const
-    {
-        return mBoundingRect;
-    }
-
-Q_SIGNALS:
-    void textChanged();
-    void fontChanged();
-    void boundingRectChanged();
-private:
-    void updateBoundingRect()
-    {
-        mBoundingRect = QFontMetrics(mFont).boundingRect(QRect(), Qt::TextDontClip,
-                                                         mText, 0, Q_NULLPTR);
-        Q_EMIT boundingRectChanged();
-    }
-
-    QString mText;
-    QFont mFont;
-    QRect mBoundingRect;
-};
-
 }
 
 Q_DECLARE_METATYPE(GammaRay::Widget3DWindow*)
@@ -193,17 +135,8 @@ Widget3DView::Widget3DView(QWidget* parent)
 
     qmlRegisterType<Widget3DCameraController>("com.kdab.GammaRay", 1, 0, "Widget3DCameraController");
     qmlRegisterType<Widget3DImageTextureImage>("com.kdab.GammaRay", 1, 0, "Widget3DImageTextureImage");
-    qmlRegisterType<UsableFontMetrics>("com.kdab.GammaRay", 1, 0, "UsableFontMetrics");
-
-    /*
-    auto engine = new Qt3DCore::Quick::QQmlAspectEngine(this);
-    engine->aspectEngine()->registerAspect(new Qt3DRender::QRenderAspect);
-    engine->aspectEngine()->registerAspect(new Qt3DInput::QInputAspect);
-    engine->aspectEngine()->registerAspect(new Qt3DLogic::QLogicAspect);
-    */
 
     auto engine = mWindow->engine();
-    engine->rootContext()->setContextProperty(QStringLiteral("_surface"), mWindow);
     engine->rootContext()->setContextProperty(QStringLiteral("_eventSource"), mWindow);
     engine->rootContext()->setContextProperty(QStringLiteral("_window"), mWindow);
     engine->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), model);
