@@ -203,8 +203,7 @@ ui/propertywidget.h \
 ui/propertywidgettab.h \
 ui/tooluifactory.h \
 ui/uiintegration.h \
-ui/uistatemanager.h \
-"
+ui/uistatemanager.h
 # INPUT_ENCODING =
 # INTERACTIVE_SVG =
 INTERNAL_DOCS = YES
