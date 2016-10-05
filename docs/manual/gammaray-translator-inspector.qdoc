@@ -1,0 +1,53 @@
+/*
+    gammaray-qresource-browser.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Translations}
+    \nextpage {Meta Object Browser}
+    \previouspage {Resources}
+    \page gammaray-translator-inspector.html
+
+    \title Translations
+
+    \section1 Overview
+
+    The translation inspector allows you to observe and override translation lookups on active QTranslator instances at runtime.
+    This is useful for debugging translation issues as it also shows context and disambiguation information, as well as for
+    verifying UI layouting as the length or format of translated strings change.
+
+    \image gammaray-translations.png
+
+    The translation inspector lists all active QTranslator instance on the left hand side. These are not necessarily all QTranslator
+    instances that exist in the target application, but those registered with QCoreApplication::installTranslator, as only those
+    are considered for translation lookup.
+
+    Selecting a translator on in the left view shows the corresponding translations that have been looked up and found in
+    its catalog in the translations view on the right. This view contains the following information:
+
+    \list
+        \li The message source text.
+        \li The context (typically the class in which the message is used, unless manually specified).
+        \li A disambiguation message, if present.
+        \li The translated message. This is editable inline.
+    \endlist
+
+    Translated messages can be edited in the translations view. To revert changes made there, use the "Reset Selected Translations"
+    action found in the translations menu or the context menu on the translations view. For changes to take effect, it's often
+    needed to notify the target application via a QEvent::LanguageChange event, this can be triggered via a corresponding action
+    in the translations menu.
+*/
+
