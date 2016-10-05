@@ -76,23 +76,29 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
     ui->translatorList->setSelectionModel(ObjectBroker::selectionModel(ui->translatorList->model()));
     connect(ui->translatorList, &QTreeView::customContextMenuRequested, this, &TranslatorInspectorWidget::translatorContextMenu);
 
-    connect(ui->languageChangeButton, SIGNAL(clicked()), m_inspector, SLOT(
-                sendLanguageChangeEvent()));
-    connect(ui->resetTranslationsButton, SIGNAL(clicked()), m_inspector, SLOT(resetTranslations()));
-
     // searching for translations
     {
         ui->translationsView->header()->setObjectName("translationsViewHeader");
         ui->translationsView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-        ui->translationsView->setModel(ObjectBroker::model(QStringLiteral(
-                                                               "com.kdab.GammaRay.TranslationsModel")));
-        ui->translationsView->setSelectionModel(ObjectBroker::selectionModel(ui->translationsView->
-                                                                             model()));
+        ui->translationsView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel")));
+        connect(ui->translationsView, &QTreeView::customContextMenuRequested, this, &TranslatorInspectorWidget::translationsContextMenu);
+
+        const auto selectionModel = ObjectBroker::selectionModel(ui->translationsView->model());
+        ui->translationsView->setSelectionModel(selectionModel);
+        connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &TranslatorInspectorWidget::updateActions);
 
         new SearchLineController(ui->translationsSearchLine, ui->translationsView->model());
     }
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+
+    connect(ui->actionSendLanguageChange, &QAction::triggered, m_inspector, &TranslatorInspectorInterface::sendLanguageChangeEvent);
+    connect(ui->actionReset, &QAction::triggered, m_inspector, &TranslatorInspectorInterface::resetTranslations);
+
+    addAction(ui->actionReset);
+    addAction(ui->actionSendLanguageChange);
+
+    updateActions();
 }
 
 TranslatorInspectorWidget::~TranslatorInspectorWidget()
@@ -114,6 +120,18 @@ void TranslatorInspectorWidget::translatorContextMenu(QPoint pos)
     ContextMenuExtension ext(objectId);
     ext.populateMenu(&menu);
     menu.exec(ui->translatorList->viewport()->mapToGlobal(pos));
+}
+
+void TranslatorInspectorWidget::translationsContextMenu(QPoint pos)
+{
+    QMenu menu;
+    menu.addAction(ui->actionReset);
+    menu.exec(ui->translationsView->viewport()->mapToGlobal(pos));
+}
+
+void TranslatorInspectorWidget::updateActions()
+{
+    ui->actionReset->setEnabled(!ui->translationsView->selectionModel()->selectedRows().isEmpty());
 }
 
 
