@@ -30,6 +30,7 @@
 
 #include "probeabidetector.h"
 #include "probeabi.h"
+#include "libraryutil.h"
 
 #include <QDebug>
 #include <QFile>
@@ -48,39 +49,11 @@
 
 using namespace GammaRay;
 
-static QString qtCoreFromLdd(const QString &path, bool fallback = false)
+static QString qtCoreFromLdd(const QString &path)
 {
-    QProcess proc;
-    proc.setProcessChannelMode(QProcess::SeparateChannels);
-    proc.setReadChannel(QProcess::StandardOutput);
-    if (!fallback) {
-        // first try to use ldd
-        proc.start(QStringLiteral("ldd"), QStringList() << path);
-        if (!proc.waitForStarted()) // if that is not available, run the fallback
-            return qtCoreFromLdd(path, true);
-    } else {
-        // see http://man7.org/linux/man-pages/man8/ld.so.8.html
-        // by setting LD_TRACE_LOADED_OBJECTS=1 we make ld.so behave like ldd
-        // this works even on embedded systems where ldd is not available
-        QProcessEnvironment env = proc.processEnvironment();
-        env.insert(QStringLiteral("LD_TRACE_LOADED_OBJECTS"), QStringLiteral("1"));
-        proc.setProcessEnvironment(env);
-        proc.start(path);
-    }
-    proc.waitForFinished();
-
-    while (proc.canReadLine()) {
-        const QByteArray line = proc.readLine();
-        if (line.isEmpty())
-            break;
-
-        if (ProbeABIDetector::containsQtCore(line)) {
-            const int begin = line.indexOf("=> ");
-            const int end = line.lastIndexOf(" (");
-            if (begin <= 0 || end <= 0 || end <= begin)
-                continue;
-            return QString::fromLocal8Bit(line.mid(begin + 3, end - begin - 3).trimmed());
-        }
+    foreach (const auto &lib, LibraryUtil::dependencies(path)) {
+        if (ProbeABIDetector::containsQtCore(lib))
+            return QString::fromLocal8Bit(lib);
     }
 
     return QString();
