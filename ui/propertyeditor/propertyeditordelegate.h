@@ -30,7 +30,6 @@
 #define GAMMARAY_PROPERTYEDITORDELEGATE_H
 
 #include "gammaray_ui_export.h"
-#include "ui/itemdelegate.h"
 #include <QStyledItemDelegate>
 
 QT_BEGIN_NAMESPACE
@@ -38,13 +37,11 @@ class QMatrix4x4;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class GAMMARAY_UI_EXPORT PropertyEditorDelegate : public QStyledItemDelegate,
-    public ItemDelegateInterface
+class GAMMARAY_UI_EXPORT PropertyEditorDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
     explicit PropertyEditorDelegate(QObject *parent);
-    explicit PropertyEditorDelegate(const QString &placeholderText, QObject *parent);
     ~PropertyEditorDelegate();
 
     void setEditorData(QWidget *editor, const QModelIndex &index) const Q_DECL_OVERRIDE;
