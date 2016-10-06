@@ -29,6 +29,7 @@
 #include "preloadinjector.h"
 #include "preloadcheck.h"
 
+#include <libraryutil.h>
 #include <probeabidetector.h>
 
 #include <QProcess>
@@ -67,13 +68,24 @@ bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &p
         env.insert(QStringLiteral("DYLD_IMAGE_SUFFIX"), QStringLiteral("_debug"));
 
 #else
-    env.insert(QStringLiteral("LD_PRELOAD"), probeDll);
-    env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));
 
     auto exePath = programAndArgs.first();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     exePath = QStandardPaths::findExecutable(exePath);
 #endif
+
+    // ASAN requires to be loaded first, so check if the target uses that
+    // and if so inject it before GammaRay
+    QStringList ldPreload;
+    foreach (const auto &lib, LibraryUtil::dependencies(exePath)) {
+        if (lib.contains("libasan.so") || lib.contains("libclang_rt.asan")) {
+            ldPreload.push_back(QString::fromLocal8Bit(lib));
+            break;
+        }
+    }
+    ldPreload.push_back(probeDll);
+    env.insert(QStringLiteral("LD_PRELOAD"), ldPreload.join(QLatin1Char(':')));
+    env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));
 
     ProbeABIDetector abiDetector;
     const auto qtCorePath = abiDetector.qtCoreForExecutable(exePath);
