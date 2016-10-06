@@ -12,6 +12,7 @@ set(gammaray_launcher_shared_srcs
   injector/injectorfactory.cpp
   injector/styleinjector.cpp
 
+  libraryutil.cpp
   probeabi.cpp
   probeabidetector.cpp
   probefinder.cpp
