@@ -84,7 +84,7 @@ bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &p
         }
     }
     ldPreload.push_back(probeDll);
-    env.insert(QStringLiteral("LD_PRELOAD"), ldPreload.join(QLatin1Char(':')));
+    env.insert(QStringLiteral("LD_PRELOAD"), ldPreload.join(QLatin1String(":")));
     env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));
 
     ProbeABIDetector abiDetector;
