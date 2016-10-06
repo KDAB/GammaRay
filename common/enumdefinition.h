@@ -44,7 +44,9 @@ public:
     EnumDefinitionElement();
     EnumDefinitionElement(int value, const char *name);
 
+    /*! The numeric value represented of this enum definition element. */
     int value() const;
+    /*! The name of this enum definition element. */
     QByteArray name() const;
 
 private:
@@ -62,16 +64,32 @@ public:
     EnumDefinition();
     explicit EnumDefinition(EnumId id, const QByteArray &name);
 
+    /*! Returns whether this is a valid enum definition.
+     * This means it's a enum definition registered with the EnumRepository
+     * and there is at least one enum definition element present.
+     */
     bool isValid() const;
 
+    /*! A unique identifer for this enum definition.
+     * This is used to identify enums between the GammaRay client and server.
+     */
     EnumId id() const;
+    /*! The name of the enum. */
     QByteArray name() const;
+    /*! Returns @c true if this enum is used as a flag. */
     bool isFlag() const;
-    void setIsFlag(bool isFlag);
 
+    /*! Returns the individual elements of this enum.
+     *  That is, the key/value pairs of its definition.
+     */
     QVector<EnumDefinitionElement> elements() const;
-    void setElements(const QVector<EnumDefinitionElement> &elements);
 
+    //! @cond internal
+    void setElements(const QVector<EnumDefinitionElement> &elements);
+    void setIsFlag(bool isFlag);
+    //! @endcond
+
+    /*! Converts the given enum value into a string representation. */
     QByteArray valueToString(const EnumValue &value) const;
 
 private:

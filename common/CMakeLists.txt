@@ -92,6 +92,9 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_common_export.h
     endpoint.h
+    enumdefinition.h
+    enumrepository.h
+    enumvalue.h
     metatypedeclarations.h
     modelroles.h
     objectbroker.h

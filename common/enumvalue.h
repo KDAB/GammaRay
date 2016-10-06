@@ -36,6 +36,7 @@
 
 namespace GammaRay {
 
+/*! Unique identifier for EnumDefinition instances. */
 typedef int EnumId;
 enum EnumIds {
     InvalidEnumId = -1,
@@ -49,10 +50,17 @@ public:
     EnumValue();
     explicit EnumValue(EnumId id, int value);
 
+    /*! The unique identifier of the definition of this enum.
+     *  @see EnumDefinition
+     */
     EnumId id() const;
+
+    /*! Returns the numeric value of this enum value. */
     int value() const;
+    /*! Sets the numeric value of this enum value. */
     void setValue(int value);
 
+    /*! Returns @c true if this instance refers to a valid EnumDefinition. */
     bool isValid() const;
 
 private:

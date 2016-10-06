@@ -41,18 +41,25 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 
-/*! Probe-side enum definition management. */
+/*! Probe-side enum definition management.
+ * Use this to obtain enum value representations that can be safely transferred to the client.
+ */
 class EnumRepositoryServer : public EnumRepository
 {
     Q_OBJECT
 public:
     ~EnumRepositoryServer();
 
-    //! @internal
-    static void create(QObject *parent);
-
+    /*! Creates an EnumValue instance for the given numeric value and QMetaEnum.
+     *  If not yet present, the enum definition with be registered
+     *  with the EnumRepositoryServer, so that the client has access
+     *  to the key/value mappings of the enum if needed.
+     */
     static GAMMARAY_CORE_EXPORT EnumValue valueFromMetaEnum(int value, const QMetaEnum &me);
 
+    //! @cond internal
+    static void create(QObject *parent);
+    //! @endcond
 private:
     explicit EnumRepositoryServer(QObject *parent = Q_NULLPTR);
     void requestDefinition(EnumId id) Q_DECL_OVERRIDE;

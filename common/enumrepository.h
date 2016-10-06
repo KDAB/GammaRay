@@ -44,12 +44,21 @@ class GAMMARAY_COMMON_EXPORT EnumRepository : public QObject
 public:
     ~EnumRepository();
 
+    /*! Request the enum definition for the given enum id.
+     *  On the client side the response can be invalid on first request,
+     *  as transfer from the server is asynchronous. Listen to the
+     *  definitionChanged() signal to be notified for its availability
+     *  in that case.
+     */
     virtual EnumDefinition definition(EnumId id) const;
 
 signals:
+    /*! Notification of EnumDefinition availability.
+     *  @see definition()
+     */
     void definitionChanged(int id);
 
-    //! @internal
+    //! @cond internal
     void definitionResponse(const GammaRay::EnumDefinition &def);
 
 protected:
@@ -57,6 +66,7 @@ protected:
     void addDefinition(const EnumDefinition &def);
 
     Q_INVOKABLE virtual void requestDefinition(int id) = 0;
+    //! @endcond
 
 private:
     QVector<EnumDefinition> m_definitions;
