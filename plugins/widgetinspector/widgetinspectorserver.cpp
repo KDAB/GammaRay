@@ -138,7 +138,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     auto widget3dmodel = new Widget3DModel(this);
-    widget3dmodel->setSourceModel(m_probe->objectListModel());
+    widget3dmodel->setSourceModel(m_probe->objectTreeModel());
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Widget3DModel"), widget3dmodel);
 #endif
 

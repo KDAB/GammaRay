@@ -38,8 +38,10 @@ Entity {
 
     property rect topLevelGeometry
     property real explosionFactor: 0
+    property string objectId
+    property var metaData
 
-    property int level
+    property int depth
     property var frontTextureImage
     property var backTextureImage
     property rect geometry
@@ -50,7 +52,7 @@ Entity {
     readonly property real _geomHeight: root.geometry.height / _scaleFactor
     readonly property real _geomX: root.geometry.x / _scaleFactor
     readonly property real _geomY: root.geometry.y / _scaleFactor
-    property real _geomZ: root.level / (_scaleFactor * 2.0) + root.level * root.explosionFactor
+    property real _geomZ: root.depth / (_scaleFactor * 2.0) + root.depth * root.explosionFactor
 
     QQ2.Behavior on _geomZ {
         QQ2.NumberAnimation {
@@ -69,37 +71,37 @@ Entity {
     Entity {
         id: widgetCube
 
-        components: [
-            CuboidMesh {
-                xExtent: root._geomWidth
-                yExtent: root._geomHeight
-                zExtent: 1
-            },
+        CuboidMesh {
+            id: cubeMesh
+            xExtent: root._geomWidth
+            yExtent: root._geomHeight
+            zExtent: 1
+        }
 
-            WidgetMaterial {
-                id: material
-                frontTextureImage: root.frontTextureImage
-                backTextureImage: root.backTextureImage
-                explosionFactor: root.explosionFactor
-                highlightFactor: root._highlightFactor
-                level: root.level
-            },
+        WidgetMaterial {
+            id: material
+            frontTextureImage: root.frontTextureImage
+            backTextureImage: root.backTextureImage
+            explosionFactor: root.explosionFactor
+            highlightFactor: root._highlightFactor
+            level: root.depth
+        }
 
-            Transform {
-                id: transform
-                translation: Qt.vector3d(
-                                _geomWidth / 2.0 + _geomX - topLevelGeometry.width / 2.0 / _scaleFactor,
-                                -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
-                                _geomZ
-                            )
-            },
+        Transform {
+            id: transform
+            translation: Qt.vector3d(
+                            _geomWidth / 2.0 + _geomX - topLevelGeometry.width / 2.0 / _scaleFactor,
+                            -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
+                            _geomZ
+                        )
+        }
 
-            ObjectPicker {
-                id: objectPicker
-                hoverEnabled: true
-                onClicked: console.log("Click!")
-            }
-        ]
+        ObjectPicker {
+            id: objectPicker
+            hoverEnabled: true
+        }
+
+        components: [ cubeMesh, material, transform, objectPicker ]
     }
 
     Entity {
@@ -169,7 +171,7 @@ Entity {
                                 },
                                 Parameter {
                                     name: "widget.level"
-                                    value: root.level
+                                    value: root.depth
                                 }
                             ]
 

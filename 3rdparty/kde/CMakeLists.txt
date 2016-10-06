@@ -2,6 +2,7 @@ set(gammaray_kitemmodels_srcs
   klinkitemselectionmodel.cpp
   kmodelindexproxymapper.cpp
   krecursivefilterproxymodel.cpp
+  kdescendantsproxymodel.cpp
 )
 
 add_library(gammaray_kitemmodels SHARED ${gammaray_kitemmodels_srcs})

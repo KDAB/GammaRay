@@ -81,6 +81,8 @@ if(GAMMARAY_BUILD_UI)
     set(gammaray_widgetinspector_ui_plugin_srcs
       ${gammaray_widgetinspector_ui_plugin_srcs}
       widget3dview.cpp
+      widget3dwindowmodel.cpp
+      widget3dsubtreemodel.cpp
       widget3dimagetextureimage.cpp
       widget3dcameracontroller.cpp
     )
@@ -109,6 +111,7 @@ if(GAMMARAY_BUILD_UI)
   if (Qt53DCore_FOUND AND NOT Qt53DCore_VERSION VERSION_LESS 5.7)
     target_link_libraries(gammaray_widgetinspector_ui_plugin
         gammaray_client
+        gammaray_kitemmodels
         Qt5::Qml
         Qt5::Quick
         Qt5::3DRender

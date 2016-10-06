@@ -33,7 +33,7 @@
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
-             <widget class="QWidget" name="">
+             <widget class="QWidget" name="layoutWidget">
               <layout class="QVBoxLayout" name="verticalLayout_2">
                <item>
                 <widget class="QLineEdit" name="widgetSearchLine"/>

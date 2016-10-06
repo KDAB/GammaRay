@@ -41,9 +41,9 @@ QQ2.Item {
         id: scene3d
         anchors.fill: parent
         focus: true
+        hoverEnabled: true
         aspects: [ "input", "logic", "render" ]
         cameraAspectRatioMode: Scene3D.AutomaticAspectRatio
-
 
         Entity {
             id: root
@@ -67,7 +67,7 @@ QQ2.Item {
                 RenderSettings {
                     activeFrameGraph: ForwardRenderer {
                         camera: mainCamera
-                        clearColor: "transparent"
+                        clearColor: "black"
                     }
 
                     pickingSettings.pickMethod: PickingSettings.TrianglePicking
@@ -77,7 +77,7 @@ QQ2.Item {
                 },
 
                 InputSettings {
-                    eventSource: _eventSource
+                    eventSource: _renderWindow
                 }
             ]
 
@@ -91,7 +91,7 @@ QQ2.Item {
             //}
 
             QQ2.Connections {
-                target: _window
+                target: _renderWindow
                 onWheel: {
                     var newFactor = root.explosionFactor + delta / 80.0;
                     root.explosionFactor = newFactor < 0 ? 0 : newFactor;
@@ -99,20 +99,25 @@ QQ2.Item {
             }
 
             NodeInstantiator {
-                id: instantiator;
+                id: instantiator
                 model: _widgetModel
                 asynchronous: false
+
+                property var selectedWidget;
+
                 delegate: WidgetDelegate {
-                    id: widgetDelegate
-                    // HACK: get top-level window geometry so we can transform children center accordingly
+                    id: windowDelegate
+
                     topLevelGeometry: instantiator.objectAt(0) ? instantiator.objectAt(0).geometry : model.geometry
+                    objectId: model.objectId
                     geometry: model.geometry
-                    level: model.level
                     frontTextureImage: model.frontTexture
                     backTextureImage: model.backTexture
                     explosionFactor: root.explosionFactor;
+                    depth: model.depth
+                    metaData: model.metaData
 
-                    onSelectedChanged: if (selected) widgetInfo.metaData = model.metaData;
+                    onSelectedChanged: if (selected) instantiator.selectedWidget = this
                 }
             }
         }
@@ -121,12 +126,14 @@ QQ2.Item {
     WidgetInfo {
         id: widgetInfo;
 
+        metaData: instantiator.selectedWidget && instantiator.selectedWidget.selected ?
+                        instantiator.selectedWidget.metaData :
+                        null
+
         anchors {
             top: parent.top
             right: parent.right
             margins: 20
         }
     }
-
-
 }

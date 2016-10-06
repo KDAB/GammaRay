@@ -33,40 +33,56 @@
 #include <QEvent>
 #include <QTimer>
 #include <QResizeEvent>
+#include <QMenu>
+#include <QMetaObject>
 
 #include <common/objectmodel.h>
-#include <core/objectlistmodel.h>
+#include <core/objecttreemodel.h>
+
+#include <iostream>
 
 using namespace GammaRay;
 
 Widget3DWidget::Widget3DWidget(QObject *parent)
     : QObject(parent)
     , mQWidget(Q_NULLPTR)
-    , mLevel(0)
-    , mIsPainting(false)
     , mUpdateTimer(Q_NULLPTR)
+    , mDepth(0)
+    , mIsPainting(false)
     , mGeomDirty(false)
     , mTextureDirty(false)
 {
 }
 
-Widget3DWidget::Widget3DWidget(QWidget *qWidget, int level, Widget3DWidget *parent)
+Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &idx,
+                               Widget3DWidget *parent)
     : QObject(parent)
+    , mModelIndex(idx)
     , mQWidget(qWidget)
-    , mLevel(level)
-    , mIsPainting(false)
     , mUpdateTimer(Q_NULLPTR)
+    , mDepth(0)
+    , mIsPainting(false)
     , mGeomDirty(true)
     , mTextureDirty(true)
 {
+    connect(qWidget, SIGNAL(destroyed(QObject*)),
+            this, SLOT(deleteLater()));
+
     mUpdateTimer = new QTimer(this);
     mUpdateTimer->setSingleShot(true);
     mUpdateTimer->setInterval(200);
     connect(mUpdateTimer, &QTimer::timeout,
             this, &Widget3DWidget::updateTimeout);
 
-    //mUpdateTimer->start();
-    updateTimeout();
+    if (qWidget->isVisible()) {
+        updateTimeout();
+    }
+
+    Widget3DWidget *w = this;
+    while (w && !w->isWindow()) {
+        ++mDepth;
+        w = qobject_cast<Widget3DWidget*>(w->parent());
+    }
 
     mQWidget->installEventFilter(this);
 
@@ -86,6 +102,23 @@ Widget3DWidget::~Widget3DWidget()
 {
 }
 
+bool Widget3DWidget::isWindow() const
+{
+    if (!mQWidget->isWindow()) {
+        return false;
+    }
+
+    // Those are technically windows, but we don't want them listed in the window
+    // list
+    // TODO: any more exceptions?
+    if (qobject_cast<QMenu*>(mQWidget)
+        || qstrcmp(mQWidget->metaObject()->className(), "QTipLabel") == 0) {
+        return false;
+    }
+
+    return true;
+}
+
 bool Widget3DWidget::eventFilter(QObject *obj, QEvent *ev)
 {
     if (obj == mQWidget) {
@@ -99,16 +132,30 @@ bool Widget3DWidget::eventFilter(QObject *obj, QEvent *ev)
             }
             return false;
         }
-        case QEvent::Paint:
+        case QEvent::Paint: {
             if (!mIsPainting) {
                 mTextureDirty = true;
                 startUpdateTimer();
             }
             return false;
-        case QEvent::Show:
-        case QEvent::Hide:
-            Q_EMIT visibleChanged();
+        }
+        case QEvent::Show: {
+            mGeomDirty = true;
+            mTextureDirty = true;
+            updateTimeout();
             return false;
+        }
+        case QEvent::Hide: {
+            mTextureImage = QImage();
+            mBackTextureImage = QImage();
+            mUpdateTimer->stop();
+            Q_EMIT changed(QVector<int>() << Widget3DModel::TextureRole
+                                          << Widget3DModel::BackTextureRole);
+            return false;
+        }
+        case QEvent::ParentChange: {
+            // TODO: Handle ParentChange!
+        }
         default:
             return false;
         }
@@ -119,29 +166,41 @@ bool Widget3DWidget::eventFilter(QObject *obj, QEvent *ev)
 
 void Widget3DWidget::startUpdateTimer()
 {
-    if (!mUpdateTimer->isActive()) {
+    if (mQWidget->isVisible() && !mUpdateTimer->isActive()) {
         mUpdateTimer->start();
     }
 }
 
 void GammaRay::Widget3DWidget::updateTimeout()
 {
-    if (mGeomDirty) {
-        updateGeometry();
+    QVector<int> changedRoles;
+    if (mGeomDirty && updateGeometry()) {
+        changedRoles << Widget3DModel::GeometryRole;
     }
-    if (mTextureDirty) {
-        updateTexture();
+    if (mTextureDirty && updateTexture()) {
+        changedRoles << Widget3DModel::TextureRole
+                     << Widget3DModel::BackTextureRole;
+    }
+
+    if (!changedRoles.isEmpty()) {
+        Q_EMIT changed(changedRoles);
     }
 }
 
 
-void Widget3DWidget::updateGeometry()
+bool Widget3DWidget::updateGeometry()
 {
     if (!mGeomDirty || !mQWidget) {
-        return;
+        return false;
     }
 
     QWidget *w = mQWidget;
+    if (!w->isVisible()) {
+        mGeomDirty = false;
+        mTextureDirty = false;
+        return false;
+    }
+
     QPoint mappedPos(0, 0);
     // TODO: Use mapTo(), but it behaved somewhat weird...
     while (w->parentWidget()) {
@@ -149,8 +208,8 @@ void Widget3DWidget::updateGeometry()
         w = w->parentWidget();
     }
 
-    mTextureGeometry = QRect(0, 0, mQWidget->width(), mQWidget->height());
-    mGeometry = QRect(mappedPos, QSize(mQWidget->width(), mQWidget->height()));
+    QRect textureGeometry(0, 0, mQWidget->width(), mQWidget->height());
+    QRect geometry(mappedPos, QSize(mQWidget->width(), mQWidget->height()));
     QRect parentGeom;
     if (parent()) {
         // Artificial clipping - don't shrink texture coordinates
@@ -173,15 +232,30 @@ void Widget3DWidget::updateGeometry()
         }
     }
 
-    mTextureDirty = true;
+    bool changed = false;
+    if (textureGeometry != mTextureGeometry) {
+        mTextureGeometry = textureGeometry;
+        mTextureDirty = true;
+        changed = true;
+    }
+    if (geometry != mGeometry) {
+        mGeometry = geometry;
+        changed = true;
+    }
     mGeomDirty = false;
-    Q_EMIT geometryChanged();
+
+    return changed;
 }
 
-void Widget3DWidget::updateTexture()
+bool Widget3DWidget::updateTexture()
 {
     if (!mTextureDirty || !mQWidget) {
-        return;
+        return false;
+    }
+
+    if (!mQWidget->isVisible()) {
+        mTextureDirty = false;
+        return false;
     }
 
     mIsPainting = true;
@@ -190,7 +264,7 @@ void Widget3DWidget::updateTexture()
     mTextureImage.fill(mQWidget->palette().button().color());
     mQWidget->render(&mTextureImage, QPoint(0, 0), QRegion(mTextureGeometry), QWidget::DrawWindowBackground);
 
-    if (!parent()) { // tlw
+    if (isWindow()) {
         mBackTextureImage = QImage(mTextureGeometry.size(), QImage::Format_RGBA8888);
         mQWidget->render(&mBackTextureImage, QPoint(0, 0), QRegion(mTextureGeometry));
     } else {
@@ -200,7 +274,7 @@ void Widget3DWidget::updateTexture()
     mIsPainting = false;
 
     mTextureDirty = false;
-    Q_EMIT textureChanged();
+    return true;
 }
 
 
@@ -214,78 +288,94 @@ Widget3DModel::~Widget3DModel()
 {
 }
 
+QHash<int, QByteArray> Widget3DModel::roleNames() const
+{
+    auto roles = QSortFilterProxyModel::roleNames();
+    roles[IdRole] = "objectId";
+    roles[TextureRole] = "frontTexture";
+    roles[BackTextureRole] = "backTexture";
+    roles[IsWindowRole] = "isWindow";
+    roles[GeometryRole] = "geometry";
+    roles[MetaDataRole] = "metaData";
+    roles[DepthRole] = "depth";
+    return roles;
+}
+
 QVariant Widget3DModel::data(const QModelIndex &index, int role) const
 {
-    switch (role) {
-    case TextureRole: {
-        auto w = widgetForIndex(index);
-        return w ? w->texture() : QImage();
+    if (index.column() == 0) {
+        switch (role) {
+        case IdRole: {
+            auto w = widgetForIndex(index);
+            return w ? w->id() : QString();
+        }
+        case TextureRole: {
+            auto w = widgetForIndex(index);
+            return w ? w->texture() : QImage();
+        }
+        case BackTextureRole: {
+            auto w = widgetForIndex(index);
+            return w ? w->backTexture() : QImage();
+        }
+        case IsWindowRole: {
+            auto w = widgetForIndex(index);
+            return w ? w->isWindow() : false;
+        }
+        case GeometryRole: {
+            auto w = widgetForIndex(index);
+            return w ? w->geometry() : QRect();
+        }
+        case MetaDataRole: {
+            auto w = widgetForIndex(index);
+            return w ? w->metaData() : QVariant();
+        }
+        case DepthRole: {
+            auto w = widgetForIndex(index);
+            return w ? w->depth() : 0;
+        }
+        }
     }
-    case BackTextureRole: {
-        auto w = widgetForIndex(index);
-        return w ? w->backTexture() : QImage();
-    }
-    case GeometryRole: {
-        auto w = widgetForIndex(index);
-        return w ? w->geometry() : QRect();
-    }
-    case LevelRole: {
-        auto w = widgetForIndex(index);
-        return w ? w->level() : -1;
-    }
-    case MetaDataRole: {
-        auto w = widgetForIndex(index);
-        return w ? w->metaData() : QVariant();
-    }
-    default:
-        return QSortFilterProxyModel::data(index, role);
-    }
+
+    return QSortFilterProxyModel::data(index, role);
 }
 
 QMap<int, QVariant> Widget3DModel::itemData(const QModelIndex &index) const
 {
-    QMap<int, QVariant> data;
-    auto w = widgetForIndex(index);
-    if (!w) {
-        return data;
-    }
+    QMap<int, QVariant> data = QSortFilterProxyModel::itemData(index);
+    if (index.column() == 0) {
+        auto w = widgetForIndex(index);
+        Q_ASSERT(w);
 
-    data[TextureRole] = w->texture();
-    data[BackTextureRole] = w->backTexture();
-    data[GeometryRole] = w->geometry();
-    data[LevelRole] = w->level();
-    data[MetaDataRole] = w->metaData();
+        // see comment in data()
+        data[IdRole] = w->id();
+        data[TextureRole] = w->texture();
+        data[BackTextureRole] = w->backTexture();
+        data[IsWindowRole] = w->isWindow();
+        data[GeometryRole] = w->geometry();
+        data[MetaDataRole] = w->metaData();
+        data[DepthRole] = w->depth();
+    }
     return data;
 }
 
-namespace {
-    inline int parentDepth(QObject *obj) {
-        QObject *p = obj;
-        int depth = 0;
-        while (p->parent()) {
-            ++depth;
-            p = p->parent();
-        }
-        return depth;
-    }
-}
-
-Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, bool createWhenMissing) const
+Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, const QModelIndex &idx,
+                                               bool createWhenMissing) const
 {
     Widget3DWidget *widget = mDataCache.value(obj, Q_NULLPTR);
     if (!widget && createWhenMissing) {
         Widget3DWidget *parent = Q_NULLPTR;
         if (obj->parent()) {
-             parent = widgetForObject(obj->parent(), createWhenMissing);
-             Q_ASSERT(parent);
+            Q_ASSERT(idx.parent().isValid());
+            parent = widgetForObject(obj->parent(), idx.parent(), createWhenMissing);
+            Q_ASSERT(parent);
         }
-        widget = new Widget3DWidget(qobject_cast<QWidget*>(obj), parentDepth(obj), parent);
-        connect(widget, &Widget3DWidget::geometryChanged,
-                this, &Widget3DModel::onWidgetGeometryChanged);
-        connect(widget, &Widget3DWidget::textureChanged,
-                this, &Widget3DModel::onWidgetTextureChanged);
-        connect(widget, &Widget3DWidget::visibleChanged,
-                this, &Widget3DModel::invalidate);
+        widget = new Widget3DWidget(qobject_cast<QWidget*>(obj), idx, parent);
+        connect(widget, &Widget3DWidget::changed,
+                this, &Widget3DModel::onWidgetChanged);
+        connect(obj, &QObject::destroyed,
+                this, [=](QObject *obj) {
+                    mDataCache.remove(obj);
+                });
         mDataCache.insert(obj, widget);
     }
     return widget;
@@ -297,65 +387,26 @@ Widget3DWidget *Widget3DModel::widgetForIndex(const QModelIndex &idx, bool creat
    Q_ASSERT(obj); // bug in model?
    Q_ASSERT(obj->isWidgetType()); // this should be already filtered out by filterAcceptsRow()
 
-   return widgetForObject(obj, createWhenMissing);
+   return widgetForObject(obj, idx, createWhenMissing);
 }
 
 bool Widget3DModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     const QModelIndex sourceIdx = sourceModel()->index(source_row, 0, source_parent);
     QObject *sourceObj = sourceModel()->data(sourceIdx, ObjectModel::ObjectRole).value<QObject*>();
-    QWidget *w = qobject_cast<QWidget *>(sourceObj);
-    return w && w->isVisible();
+    return qobject_cast<QWidget *>(sourceObj);
 }
 
-bool Widget3DModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
+void Widget3DModel::onWidgetChanged(const QVector<int> &roles)
 {
-    QObject *objLeft = sourceModel()->data(source_left, ObjectModel::ObjectRole).value<QObject*>();
-    Q_ASSERT(objLeft);
-    QObject *objRight = sourceModel()->data(source_right, ObjectModel::ObjectRole).value<QObject*>();
-    Q_ASSERT(objRight);
-
-    return parentDepth(objLeft) < parentDepth(objRight);
-}
-
-void Widget3DModel::onWidgetGeometryChanged()
-{
-    Widget3DWidget *widget = qobject_cast<Widget3DWidget*>(sender());
+    const auto widget = qobject_cast<Widget3DWidget*>(sender());
     Q_ASSERT(widget);
 
-    // TODO: Use a reverse-lookup map?
-    for (int i = 0; i < rowCount(); ++i) {
-        const QModelIndex idx = index(i, 0, QModelIndex());
-        if (widgetForIndex(idx, false) == widget) {
-            Q_EMIT dataChanged(idx, idx, { GeometryRole });
-            break;
-        }
+    const QModelIndex idx = widget->modelIndex();
+    if (!idx.isValid()) {
+        // ????
+        return;
     }
-}
 
-void Widget3DModel::onWidgetTextureChanged()
-{
-    Widget3DWidget *widget = qobject_cast<Widget3DWidget*>(sender());
-    Q_ASSERT(widget);
-
-    // TODO: Use a reverse-lookup map?
-    for (int i = 0; i < rowCount(); ++i) {
-        const QModelIndex idx = index(i, 0, QModelIndex());
-        if (widgetForIndex(idx, false) == widget) {
-            Q_EMIT dataChanged(idx, idx, { TextureRole, BackTextureRole });
-            break;
-        }
-    }
-}
-
-void Widget3DModel::onRowsRemoved(const QModelIndex &parent, int first, int last)
-{
-    for (int i = last; i >= first; --i) {
-        const QModelIndex idx = index(i, 0, parent);
-        Widget3DWidget *widget = widgetForIndex(idx, false);
-        if (widget) {
-            mDataCache.remove(widget->qWidget());
-            widget->deleteLater();
-        }
-    }
+    Q_EMIT dataChanged(idx, idx, roles);
 }

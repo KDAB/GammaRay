@@ -26,26 +26,27 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef WIDGET3DVIEW_H
-#define WIDGET3DVIEW_H
+#ifndef WIDGET3DWINDOWMODEL_H
+#define WIDGET3DWINDOWMODEL_H
 
-#include <QWidget>
+#include <QAbstractItemModel>
+#include <QPersistentModelIndex>
 
-namespace GammaRay
-{
-class Widget3DWindow;
+#include "widget3dmodel.h"
 
-class Widget3DView : public QWidget
+namespace GammaRay {
+
+class Widget3DWindowModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-public:
-    explicit Widget3DView(QWidget *parent = Q_NULLPTR);
-    ~Widget3DView();
 
-private:
-    Widget3DWindow *mRenderWindow;
+public:
+    explicit Widget3DWindowModel(QObject *parent = Q_NULLPTR);
+    ~Widget3DWindowModel();
+
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 };
 
 }
 
-#endif // WIDGET3DVIEW_H
+#endif

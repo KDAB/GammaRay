@@ -35,6 +35,9 @@
 #include <QWidget>
 #include <QMap>
 #include <QPointer>
+#include <QString>
+
+#include <common/objectmodel.h>
 
 namespace GammaRay {
 
@@ -46,45 +49,53 @@ class Widget3DWidget : public QObject
 
 public:
     Widget3DWidget(QObject *parent = Q_NULLPTR); // don't use
-    Widget3DWidget(QWidget *qWidget, int level, Widget3DWidget *parent);
+    Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &modelIndex, Widget3DWidget *parent);
     ~Widget3DWidget();
 
     inline QImage texture() const { return mTextureImage; }
     inline QImage backTexture() const { return mBackTextureImage; }
-    inline int level() const { return mLevel; }
     inline QRect geometry() const { return mGeometry; }
     inline QWidget *qWidget() const { return mQWidget; }
     inline Widget3DWidget *parentWidget() const { return static_cast<Widget3DWidget*>(parent()); }
     inline bool isVisible() const { return mQWidget->isVisible(); }
     inline QVariantMap metaData() const { return mMetaData; }
+    inline bool isWindow() const;
+    inline int depth() const { return mDepth; }
+    inline QPersistentModelIndex modelIndex() const { return mModelIndex; }
+    // QML does not handle 64bit integers, so use string instead, we only need
+    // the value for comparision, we can convert back to quintptr in C++
+    inline QString id() const {
+        QString str(8, QLatin1Char('0'));
+        const quint64 ptr = reinterpret_cast<quint64>(mQWidget.data());
+        qMemCopy(str.data(), &ptr, 8);
+        return str;
+    };
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
-    void textureChanged();
-    void geometryChanged();
-    void visibleChanged();
+    void changed(const QVector<int> &roles);
 
 private Q_SLOTS:
     void updateTimeout();
-    void updateTexture();
-    void updateGeometry();
+    bool updateTexture();
+    bool updateGeometry();
 
 private:
     void startUpdateTimer();
 
 private:
+    QPersistentModelIndex mModelIndex;
     QPointer<QWidget> mQWidget;
     QImage mTextureImage;
     QImage mBackTextureImage;
     QRect mTextureGeometry;
     QRect mGeometry;
     QVariantMap mMetaData;
-    int mLevel;
-    bool mIsPainting;
-
     QTimer *mUpdateTimer;
+    int mDepth;
+    bool mIsPainting;
     bool mGeomDirty;
     bool mTextureDirty;
 };
@@ -94,30 +105,34 @@ class Widget3DModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     enum Roles {
-        TextureRole = Qt::UserRole + 1,
+        IdRole = ObjectModel::UserRole + 1,
+        TextureRole,
         BackTextureRole,
+        IsWindowRole,
         GeometryRole,
-        LevelRole,
-        MetaDataRole
+        MetaDataRole,
+        DepthRole,
+
+        UserRole
     };
 
     explicit Widget3DModel(QObject *parent = Q_NULLPTR);
     ~Widget3DModel();
 
+    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
     QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
-    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
-    void onWidgetGeometryChanged();
-    void onWidgetTextureChanged();
-    void onRowsRemoved(const QModelIndex &parent, int first, int last);
+    void onWidgetChanged(const QVector<int> &roles);
 
 private:
-    Widget3DWidget *widgetForObject(QObject *object, bool createWhenMissing = true) const;
+    Widget3DWidget *widgetForObject(QObject *object, const QModelIndex &index, bool createWhenMissing = true) const;
     Widget3DWidget *widgetForIndex(const QModelIndex &idx, bool createWhenMissing = true) const;
 
     // mutable becasue we populate it lazily from data() const
