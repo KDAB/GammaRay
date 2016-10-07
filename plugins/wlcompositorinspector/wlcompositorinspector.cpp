@@ -53,6 +53,7 @@
 
 #include <wayland-server.h>
 
+#include "clientsmodel.h"
 #include "ringbuffer.h"
 #include "resourceinfo.h"
 
@@ -418,124 +419,6 @@ public:
     QWaylandClient *m_client;
 };
 
-class ClientsModel : public QAbstractTableModel
-{
-public:
-    enum Columns {
-        PidColumn,
-        CommandColumn,
-        EndColumn
-    };
-
-    enum Roles {
-        ObjectIdRole = UserRole + 1
-    };
-
-    explicit ClientsModel(ProbeInterface *probe, QObject *parent)
-        : QAbstractTableModel(parent)
-        , m_probe(probe)
-    {
-    }
-
-    QWaylandClient *client(int index) const
-    {
-        return m_clients.at(index);
-    }
-
-    void addClient(QWaylandClient *client)
-    {
-        beginInsertRows(QModelIndex(), m_clients.count(), m_clients.count());
-        m_clients.append(client);
-        endInsertRows();
-    }
-
-    void removeClient(QWaylandClient *client)
-    {
-        int index = -1;
-        for (int i = 0; i < m_clients.count(); ++i) {
-            if (m_clients.at(i) == client) {
-                index = i;
-                break;
-            }
-        }
-
-        if (index == -1) {
-            return;
-        }
-
-        beginRemoveRows(QModelIndex(), index, index);
-        m_clients.removeAt(index);
-        endRemoveRows();
-    }
-
-    int rowCount(const QModelIndex &parent) const override
-    {
-        if (parent.isValid())
-            return 0;
-        return m_clients.count();
-    }
-
-    int columnCount(const QModelIndex &) const override
-    {
-        return EndColumn;
-    }
-
-    QVariant data(const QModelIndex &index, int role) const override
-    {
-        auto client = m_clients.at(index.row());
-
-        switch (index.column()) {
-            case PidColumn:
-                if (role == Qt::DisplayRole)
-                    return client->processId();
-                if (role == ObjectIdRole)
-                    return QVariant::fromValue(ObjectId(client));
-            case CommandColumn: {
-                if (role != Qt::DisplayRole)
-                    return QVariant();
-                auto pid = client->processId();
-                QByteArray path;
-                QTextStream(&path) << "/proc/" << pid << "/cmdline";
-                QFile file(path);
-                if (!file.open(QIODevice::ReadOnly)) {
-                    return QStringLiteral("Not available :/");
-                }
-
-                QByteArray data = file.readAll();
-                data.replace('\0', ' ');
-                return data;
-            }
-        }
-        return QVariant();
-    }
-
-    QMap<int, QVariant> itemData(const QModelIndex &index) const override
-    {
-        QMap<int, QVariant> map;
-        auto insertRole = [&](int role) {
-            map[role] = data(index, role);
-        };
-        insertRole(Qt::DisplayRole);
-        return map;
-    }
-
-    QVariant headerData(int section, Qt::Orientation orientation, int) const override
-    {
-        if (orientation == Qt::Horizontal) {
-            switch (section) {
-                case PidColumn:
-                    return QStringLiteral("pid");
-                case CommandColumn:
-                    return QStringLiteral("command");
-            }
-        }
-        return QString::number(section + 1);
-    }
-
-    QVector<QWaylandClient *> m_clients;
-    ProbeInterface *m_probe;
-};
-
 WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* parent)
                      : WlCompositorInterface(parent)
                      , m_surfaceView(new SurfaceView(this))
@@ -546,7 +429,7 @@ WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* par
     MO_ADD_METAOBJECT1(QWaylandObject, QObject);
     MO_ADD_METAOBJECT1(QWaylandCompositor, QWaylandObject);
 
-    m_clientsModel = new ClientsModel(probe, this);
+    m_clientsModel = new ClientsModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.WaylandCompositorClientsModel"), m_clientsModel);
     m_clientSelectionModel = ObjectBroker::selectionModel(m_clientsModel);
 

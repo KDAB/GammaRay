@@ -6,6 +6,7 @@ if(Qt5WaylandCompositor_FOUND AND Wayland_FOUND)
   set(gammaray_wlcompositorinspector_srcs
     wlcompositorinspector.cpp
     wlcompositorinterface.cpp
+    clientsmodel.cpp
     resourceinfo.cpp
   )
   gammaray_add_plugin(gammaray_wlcompositorinspector
