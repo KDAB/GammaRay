@@ -473,13 +473,15 @@ public:
 
     QVariant data(const QModelIndex &index, int role) const override
     {
-        Q_UNUSED(role)
         auto client = m_clients.at(index.row());
 
         switch (index.column()) {
             case PidColumn:
-                return client->processId();
+                if (role == Qt::DisplayRole)
+                    return client->processId();
             case CommandColumn: {
+                if (role != Qt::DisplayRole)
+                    return QVariant();
                 auto pid = client->processId();
                 QByteArray path;
                 QTextStream(&path) << "/proc/" << pid << "/cmdline";
