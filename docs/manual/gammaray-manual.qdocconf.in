@@ -10,7 +10,7 @@ imagedirs = @CMAKE_CURRENT_SOURCE_DIR@/images
 exampledirs = @CMAKE_SOURCE_DIR@/examples
 examples.fileextensions = "*.h" "*.cpp" "*.qml"
 
-depends += qtcore qtgui qtwidgets @HAVE_QTQUICK_DOCS@ @HAVE_QTQML_DOCS@ @HAVE_QT3D_DOCS@
+depends += qtcore qtgui qtwidgets @HAVE_QTQUICK_DOCS@ @HAVE_QTQML_DOCS@ @HAVE_QT3D_DOCS@ qtwaylandcompositor
 
 qhp.projects = GammaRay
 qhp.GammaRay.file = gammaray-manual.qhp

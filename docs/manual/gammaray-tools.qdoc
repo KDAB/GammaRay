@@ -49,7 +49,7 @@
         \li \l{Messages}
         \li \l{Signal Plotter}
         \li \l{Timers}
-        \li Wayland Compositors
+        \li \l{Wayland Compositors}
         \li Script Enginge Debugger
     \endlist
 
