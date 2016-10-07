@@ -29,13 +29,15 @@
 #include "wlcompositorinspector.h"
 
 #include <QAbstractTableModel>
+#include <QElapsedTimer>
 #include <QFile>
+#include <QItemSelectionModel>
 #include <QWaylandClient>
 #include <QWaylandSurface>
 #include <QWaylandView>
 #include <QWaylandSurfaceGrabber>
-#include <QElapsedTimer>
 
+#include <common/objectbroker.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <common/objectmodel.h>
@@ -537,6 +539,7 @@ WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* par
 
     m_clientsModel = new ClientsModel(probe, this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.WaylandCompositorClientsModel"), m_clientsModel);
+    m_clientSelectionModel = ObjectBroker::selectionModel(m_clientsModel);
 
     m_resourcesModel = new ResourcesModel;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.WaylandCompositorResourcesModel"), m_resourcesModel);

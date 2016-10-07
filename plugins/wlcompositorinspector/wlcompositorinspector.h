@@ -37,7 +37,7 @@
 #include "wlcompositorinterface.h"
 
 QT_BEGIN_NAMESPACE
-class QStringListModel;
+class QItemSelectionModel;
 QT_END_NAMESPACE
 
 struct wl_client;
@@ -72,6 +72,7 @@ private:
 
     QWaylandCompositor *m_compositor;
     ClientsModel *m_clientsModel;
+    QItemSelectionModel *m_clientSelectionModel;
     Logger *m_logger;
     ResourcesModel *m_resourcesModel;
     SurfaceView *m_surfaceView;

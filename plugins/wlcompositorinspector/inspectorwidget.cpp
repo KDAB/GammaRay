@@ -69,9 +69,7 @@ InspectorWidget::InspectorWidget(QWidget *parent)
     m_client = ObjectBroker::object<WlCompositorInterface *>();
     m_client->connected();
 
-    m_model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorClientsModel"));
     m_ui->setupUi(this);
-
     m_ui->resourceInfo->setVisible(false);
 
     auto resourcesModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorResourcesModel"));
@@ -84,7 +82,10 @@ InspectorWidget::InspectorWidget(QWidget *parent)
     connect(m_client, &WlCompositorInterface::resetLog, m_logView, &LogView::reset);
     connect(m_client, &WlCompositorInterface::setLoggingClient, m_logView, &LogView::setLoggingClient);
 
+    m_model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorClientsModel"));
+    auto clientSelectionModel = ObjectBroker::selectionModel(m_model);
     m_ui->clientsView->setModel(m_model);
+    m_ui->clientsView->setSelectionModel(clientSelectionModel);
     m_ui->clientsView->viewport()->installEventFilter(this);
     connect(m_ui->resourcesView->selectionModel(), &QItemSelectionModel::currentChanged, this, &InspectorWidget::resourceActivated);
     m_ui->resourcesView->viewport()->installEventFilter(this);
