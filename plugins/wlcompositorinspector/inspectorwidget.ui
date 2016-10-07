@@ -27,6 +27,9 @@
    </item>
    <item row="0" column="0">
     <widget class="QTreeView" name="clientsView">
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>

@@ -124,6 +124,7 @@ QMap<int, QVariant> ClientsModel::itemData(const QModelIndex &index) const
         map[role] = data(index, role);
     };
     insertRole(Qt::DisplayRole);
+    insertRole(ObjectIdRole);
     return map;
 }
 

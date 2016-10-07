@@ -28,11 +28,15 @@
 
 #include "inspectorwidget.h"
 
-#include <common/objectbroker.h>
+#include <ui/contextmenuextension.h>
 #include <ui/remoteviewwidget.h>
+
+#include <common/objectbroker.h>
+#include <common/objectid.h>
 
 #include <QAbstractItemModel>
 #include <QDebug>
+#include <QMenu>
 #include <QMouseEvent>
 #include <QScrollBar>
 #include <QStaticText>
@@ -43,6 +47,7 @@
 #include "ui_inspectorwidget.h"
 #include "wlcompositorclient.h"
 #include "logview.h"
+#include "clientsmodel.h" // only for extra roles
 
 using namespace GammaRay;
 
@@ -88,6 +93,7 @@ InspectorWidget::InspectorWidget(QWidget *parent)
     m_ui->clientsView->setModel(m_model);
     m_ui->clientsView->setSelectionModel(clientSelectionModel);
     m_ui->clientsView->viewport()->installEventFilter(this);
+    connect(m_ui->clientsView, &QTreeView::customContextMenuRequested, this, &InspectorWidget::clientContextMenu);
 
     connect(m_ui->resourcesView->selectionModel(), &QItemSelectionModel::currentChanged, this, &InspectorWidget::resourceActivated);
     m_ui->resourcesView->viewport()->installEventFilter(this);
@@ -115,6 +121,23 @@ void InspectorWidget::clientSelected(const QItemSelection& selection)
 
     const auto index = selection.at(0).topLeft();
     m_client->setSelectedClient(index.row());
+}
+
+void InspectorWidget::clientContextMenu(QPoint pos)
+{
+    auto index = m_ui->clientsView->indexAt(pos);
+    if (!index.isValid())
+        return;
+    index = index.sibling(index.row(), 0);
+
+    const auto objectId = index.data(ClientsModel::ObjectIdRole).value<ObjectId>();
+    if (objectId.isNull())
+        return;
+
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+    menu.exec(m_ui->clientsView->viewport()->mapToGlobal(pos));
 }
 
 void InspectorWidget::resourceActivated(const QModelIndex &index)

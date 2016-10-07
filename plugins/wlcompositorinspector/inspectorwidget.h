@@ -62,6 +62,7 @@ private slots:
 
 private:
     void clientSelected(const QItemSelection &selection);
+    void clientContextMenu(QPoint pos);
     void resourceActivated(const QModelIndex &index);
     void logMessage(const QByteArray &msg);
 
