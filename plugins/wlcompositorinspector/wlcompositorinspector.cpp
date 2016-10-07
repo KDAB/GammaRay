@@ -580,7 +580,7 @@ void WlCompositorInspector::addClient(wl_client *c)
 
     QString pid = QString::number(client->processId());
     qWarning()<<"client"<<client<<pid;
-    connect(client, &QObject::destroyed, [this, pid, client](QObject *) {
+    connect(client, &QObject::destroyed, this, [this, pid, client](QObject *) {
         if (m_resourcesModel->client() == client) {
           m_resourcesModel->setClient(nullptr);
         }
