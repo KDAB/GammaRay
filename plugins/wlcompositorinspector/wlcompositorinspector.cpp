@@ -459,8 +459,10 @@ public:
         endRemoveRows();
     }
 
-    int rowCount(const QModelIndex &) const override
+    int rowCount(const QModelIndex &parent) const override
     {
+        if (parent.isValid())
+            return 0;
         return m_clients.count();
     }
 
