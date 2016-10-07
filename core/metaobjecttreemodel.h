@@ -45,7 +45,7 @@ class MetaObjectTreeModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    explicit MetaObjectTreeModel(Probe *probe);
+    explicit MetaObjectTreeModel(QObject *parent = Q_NULLPTR);
     ~MetaObjectTreeModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
@@ -63,6 +63,11 @@ public:
                           Qt::MatchFlags flags) const Q_DECL_OVERRIDE;
 
     void scanMetaTypes();
+
+public slots:
+    void objectAdded(QObject *obj);
+    void objectRemoved(QObject *obj);
+
 private:
     void addMetaObject(const QMetaObject *metaObject);
     void removeMetaObject(const QMetaObject *metaObject);
@@ -74,9 +79,6 @@ private:
     void scheduleDataChange(const QMetaObject *mo);
 
 private slots:
-    void objectAdded(QObject *obj);
-    void objectRemoved(QObject *obj);
-
     void emitPendingDataChanged();
 
 private:

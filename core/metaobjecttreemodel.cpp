@@ -80,16 +80,11 @@ static inline bool hasDynamicMetaObject(const QObject *object)
     return reinterpret_cast<const UnprotectedQObject *>(object)->data()->metaObject != 0;
 }
 
-MetaObjectTreeModel::MetaObjectTreeModel(Probe *probe)
-    : QAbstractItemModel(probe)
+MetaObjectTreeModel::MetaObjectTreeModel(QObject *parent)
+    : QAbstractItemModel(parent)
     , m_pendingDataChangedTimer(new QTimer(this))
 {
     qRegisterMetaType<const QMetaObject *>();
-
-    connect(probe, SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
-    // TODO see below
-    // connect(probe, SIGNAL(objectDestroyed(QObject*)), this, SLOT(objectRemoved(QObject*)));
-
     scanMetaTypes();
 
     m_pendingDataChangedTimer->setInterval(100);
@@ -282,6 +277,7 @@ void MetaObjectTreeModel::objectRemoved(QObject *obj)
 {
     Q_ASSERT(thread() == QThread::currentThread());
     Q_UNUSED(obj);
+    return;
     // TODO
 
     // decrease counter

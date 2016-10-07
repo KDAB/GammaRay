@@ -49,7 +49,6 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class ProbeCreator;
-class MetaObjectTreeModel;
 class ObjectListModel;
 class ObjectTreeModel;
 class MainWindow;
@@ -78,7 +77,6 @@ public:
 
     QAbstractItemModel *objectListModel() const Q_DECL_OVERRIDE;
     QAbstractItemModel *objectTreeModel() const Q_DECL_OVERRIDE;
-    QAbstractItemModel *metaObjectModel() const;
     void registerModel(const QString &objectName, QAbstractItemModel *model) Q_DECL_OVERRIDE;
     void installGlobalEventFilter(QObject *filter) Q_DECL_OVERRIDE;
     bool needsObjectDiscovery() const Q_DECL_OVERRIDE;
@@ -198,7 +196,6 @@ private:
 
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;
-    MetaObjectTreeModel *m_metaObjectTreeModel;
     ToolManager *m_toolManager;
     QObject *m_window;
     QSet<QObject *> m_validObjects;

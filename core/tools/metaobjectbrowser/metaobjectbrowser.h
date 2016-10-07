@@ -37,6 +37,7 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+class MetaObjectTreeModel;
 class PropertyController;
 
 class MetaObjectBrowser : public QObject
@@ -58,6 +59,7 @@ private:
     void metaObjectSelected(const QMetaObject *mo);
 
     PropertyController *m_propertyController;
+    MetaObjectTreeModel *m_motm;
     QAbstractProxyModel *m_model;
 };
 

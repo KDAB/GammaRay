@@ -61,7 +61,7 @@ private slots:
     {
         createProbe();
 
-        auto srcModel = ObjectBroker::model("com.kdab.GammaRay.MetaObjectModel");
+        auto srcModel = ObjectBroker::model("com.kdab.GammaRay.MetaObjectBrowserTreeModel");
         QVERIFY(srcModel);
         MetaObjectTreeClientProxyModel model;
         model.setSourceModel(srcModel);
@@ -75,7 +75,7 @@ private slots:
     {
         createProbe();
 
-        auto srcModel = ObjectBroker::model("com.kdab.GammaRay.MetaObjectModel");
+        auto srcModel = ObjectBroker::model("com.kdab.GammaRay.MetaObjectBrowserTreeModel");
         QVERIFY(srcModel);
         MetaObjectTreeClientProxyModel model;
         model.setSourceModel(srcModel);

@@ -35,7 +35,6 @@
 #include "metaobjectrepository.h"
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
-#include "metaobjecttreemodel.h"
 #include "probesettings.h"
 #include "probecontroller.h"
 #include "toolmanager.h"
@@ -207,7 +206,6 @@ Probe::Probe(QObject *parent)
     : QObject(parent)
     , m_objectListModel(new ObjectListModel(this))
     , m_objectTreeModel(new ObjectTreeModel(this))
-    , m_metaObjectTreeModel(new MetaObjectTreeModel(this))
     , m_window(0)
     , m_queueTimer(new QTimer(this))
     , m_server(Q_NULLPTR)
@@ -230,7 +228,6 @@ Probe::Probe(QObject *parent)
     EnumRepositoryServer::create(this);
     registerModel(QStringLiteral("com.kdab.GammaRay.ObjectTree"), m_objectTreeModel);
     registerModel(QStringLiteral("com.kdab.GammaRay.ObjectList"), m_objectListModel);
-    registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectModel"), m_metaObjectTreeModel);
 
     ToolPluginModel *toolPluginModel = new ToolPluginModel(
         m_toolManager->toolPluginManager()->plugins(), this);
@@ -489,11 +486,6 @@ QAbstractItemModel *Probe::objectTreeModel() const
     return m_objectTreeModel;
 }
 
-QAbstractItemModel *Probe::metaObjectModel() const
-{
-    return m_metaObjectTreeModel;
-}
-
 QObject *Probe::probe() const
 {
     return const_cast<GammaRay::Probe *>(this);
@@ -521,7 +513,6 @@ QMutex *Probe::objectLock()
  * (3) other thread, from ctor:
  * - wait until next event-loop re-entry in other thread (FIXME: we do not currently do this!!)
  * - post information to our thread
- * - emit objectCreated right away if object still valid
  * (4) other thread, after ctor:
  * - post information to our thread
  * - emit objectCreated there right away if object still valid
