@@ -49,6 +49,8 @@ private slots:
     void findQObjectIndex();
 
 private:
+    bool needsBackground(const QModelIndex &index) const;
+
     QPersistentModelIndex m_qobjIndex;
 };
 }

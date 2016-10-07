@@ -126,6 +126,14 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
             if (inheritsQObject(object))
                 return m_metaObjectInfoMap.value(object).inclusiveCount;
             return QStringLiteral("-");
+        case QMetaObjectModel::ObjectSelfAliveCountColumn:
+            if (inheritsQObject(object))
+                return m_metaObjectInfoMap.value(object).selfAliveCount;
+            return QStringLiteral("-");
+        case QMetaObjectModel::ObjectInclusiveAliveCountColumn:
+            if (inheritsQObject(object))
+                return m_metaObjectInfoMap.value(object).inclusiveAliveCount;
+            return QStringLiteral("-");
         default:
             break;
         }
@@ -218,12 +226,17 @@ void MetaObjectTreeModel::objectAdded(QObject *obj)
      * If this yields some performance issues, we might need to remove the inclusive
      * costs calculation altogether (a calculate-on-request pattern should be even slower)
      */
-    ++m_metaObjectInfoMap[metaObject].selfCount;
+    m_metaObjectMap.insert(obj, metaObject);
+    auto &info = m_metaObjectInfoMap[metaObject];
+    ++info.selfCount;
+    ++info.selfAliveCount;
 
     // increase inclusive counts
     const QMetaObject *current = metaObject;
     while (current) {
-        ++m_metaObjectInfoMap[current].inclusiveCount;
+        auto &info = m_metaObjectInfoMap[current];
+        ++info.inclusiveCount;
+        ++info.inclusiveAliveCount;
         scheduleDataChange(current);
         current = current->superClass();
     }
@@ -276,12 +289,12 @@ void MetaObjectTreeModel::removeMetaObject(const QMetaObject *metaObject)
 void MetaObjectTreeModel::objectRemoved(QObject *obj)
 {
     Q_ASSERT(thread() == QThread::currentThread());
-    Q_UNUSED(obj);
-    return;
-    // TODO
 
     // decrease counter
-    const QMetaObject *metaObject = obj->metaObject();
+    const QMetaObject *metaObject = m_metaObjectMap.take(obj);
+    if (!metaObject)
+        return;
+
     const QModelIndex metaModelIndex = indexForMetaObject(metaObject);
     if (!metaModelIndex.isValid()) {
         // something went wrong, ignore
@@ -289,24 +302,24 @@ void MetaObjectTreeModel::objectRemoved(QObject *obj)
     }
 
     assert(m_metaObjectInfoMap.contains(metaObject));
-    if (m_metaObjectInfoMap[metaObject].selfCount == 0) {
+    if (m_metaObjectInfoMap[metaObject].selfAliveCount == 0) {
         // something went wrong, but let's just ignore this event in case of assert
         return;
     }
 
-    --m_metaObjectInfoMap[metaObject].selfCount;
-    assert(m_metaObjectInfoMap[metaObject].selfCount >= 0);
+    --m_metaObjectInfoMap[metaObject].selfAliveCount;
+    assert(m_metaObjectInfoMap[metaObject].selfAliveCount >= 0);
 
     // decrease inclusive counts
     const QMetaObject *current = metaObject;
     while (current) {
-        --m_metaObjectInfoMap[current].inclusiveCount;
-        assert(m_metaObjectInfoMap[current].inclusiveCount >= 0);
+        --m_metaObjectInfoMap[current].inclusiveAliveCount;
+        assert(m_metaObjectInfoMap[current].inclusiveAliveCount >= 0);
         scheduleDataChange(current);
         current = current->superClass();
     }
 
-    emit dataChanged(metaModelIndex, metaModelIndex);
+    scheduleDataChange(metaObject);
 }
 
 bool MetaObjectTreeModel::isKnownMetaObject(const QMetaObject *metaObject) const

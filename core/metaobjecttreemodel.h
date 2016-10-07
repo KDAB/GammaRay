@@ -89,17 +89,26 @@ private:
     {
         MetaObjectInfo()
             : selfCount(0)
-            , inclusiveCount(0) {}
+            , selfAliveCount(0)
+            , inclusiveCount(0)
+            , inclusiveAliveCount(0) {}
 
-        /// Number of objects of a particular meta object type
+        /// Number of objects of a particular meta object type ever created
         int selfCount;
+        /// Number of instances of a meta object currently alive
+        int selfAliveCount;
         /**
          * Number of objects of the exact meta object type
          * + number of objects of type that inherit from this meta type
          */
         int inclusiveCount;
+        /// Inclusive instance count currently alive
+        int inclusiveAliveCount;
     };
-    QHash<const QMetaObject *, MetaObjectInfo> m_metaObjectInfoMap;
+    QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
+    /// meta objects at creation time, so we can correctly decrement instance counts
+    /// after destruction
+    QHash<QObject*, const QMetaObject*> m_metaObjectMap;
 
     QSet<const QMetaObject *> m_pendingDataChanged;
     QTimer *m_pendingDataChangedTimer;

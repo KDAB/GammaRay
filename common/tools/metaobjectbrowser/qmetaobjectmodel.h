@@ -45,6 +45,8 @@ namespace QMetaObjectModel
         ObjectColumn,
         ObjectSelfCountColumn,
         ObjectInclusiveCountColumn,
+        ObjectSelfAliveCountColumn,
+        ObjectInclusiveAliveCountColumn,
         _Last
     };
 }

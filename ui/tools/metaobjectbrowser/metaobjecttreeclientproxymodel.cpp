@@ -107,16 +107,16 @@ QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex &index, int role
     if ((role != Qt::BackgroundRole && role != Qt::ToolTipRole) || !m_qobjIndex.isValid())
         return QIdentityProxyModel::data(index, role);
 
-    if (!index.parent().isValid()
-        && (index.row() != m_qobjIndex.row()
-            || (index.row() == m_qobjIndex.row() && index.column() == 2)))
+    if (!needsBackground(index))
         return QIdentityProxyModel::data(index, role); // top-level but not QObject, or QObject incl count
 
     const auto count = index.data(Qt::DisplayRole).toInt();
     if (count <= 0)
         return QIdentityProxyModel::data(index, role);
 
-    const auto totalCount = m_qobjIndex.sibling(m_qobjIndex.row(), 2).data().toInt();
+    const auto totalColumn = (index.column() == QMetaObjectModel::ObjectSelfCountColumn || index.column() == QMetaObjectModel::ObjectInclusiveCountColumn)?
+        QMetaObjectModel::ObjectInclusiveCountColumn : QMetaObjectModel::ObjectInclusiveAliveCountColumn;
+    const auto totalCount = m_qobjIndex.sibling(m_qobjIndex.row(), totalColumn).data().toInt();
     const auto ratio = (double)count / (double)totalCount;
 
     // at this point, role can only be background or tooltip
@@ -135,9 +135,13 @@ QVariant MetaObjectTreeClientProxyModel::headerData(int section, Qt::Orientation
             case QMetaObjectModel::ObjectColumn:
                 return tr("Meta Object Class");
             case QMetaObjectModel::ObjectSelfCountColumn:
-                return tr("Self");
+                return tr("Self Total");
             case QMetaObjectModel::ObjectInclusiveCountColumn:
-                return tr("Incl.");
+                return tr("Incl. Total");
+            case QMetaObjectModel::ObjectSelfAliveCountColumn:
+                return tr("Self Alive");
+            case QMetaObjectModel::ObjectInclusiveAliveCountColumn:
+                return tr("Incl. Alive");
             default:
                 return QVariant();
         }
@@ -148,8 +152,11 @@ QVariant MetaObjectTreeClientProxyModel::headerData(int section, Qt::Orientation
             case QMetaObjectModel::ObjectSelfCountColumn:
                 return tr("This column shows the number of objects created of a particular type.");
             case QMetaObjectModel::ObjectInclusiveCountColumn:
-                return tr(
-                    "This column shows the number of objects created that inherit from a particular type.");
+                return tr("This column shows the number of objects created that inherit from a particular type.");
+            case QMetaObjectModel::ObjectSelfAliveCountColumn:
+                return tr("This column shows the number of objects created and not yet destroyed of a particular type.");
+            case QMetaObjectModel::ObjectInclusiveAliveCountColumn:
+                return tr("This column shows the number of objects created and not yet destroyed that inherit from a particular type.");
             default:
                 return QVariant();
         }
@@ -172,4 +179,15 @@ void MetaObjectTreeClientProxyModel::findQObjectIndex()
                SLOT(findQObjectIndex()));
     disconnect(sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
                SLOT(findQObjectIndex()));
+}
+
+bool MetaObjectTreeClientProxyModel::needsBackground(const QModelIndex &index) const
+{
+    if (index.parent().isValid())
+        return true;
+    if (index.row() != m_qobjIndex.row())
+        return true;
+    if (index.column() == QMetaObjectModel::ObjectInclusiveCountColumn || index.column() == QMetaObjectModel::ObjectInclusiveAliveCountColumn)
+        return false;
+    return true;
 }

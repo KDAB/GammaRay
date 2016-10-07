@@ -61,6 +61,8 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
     m_treeView->setDeferredResizeMode(0, QHeaderView::Stretch);
     m_treeView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
     m_treeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    m_treeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+    m_treeView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
     m_treeView->setUniformRowHeights(true);
     m_treeView->setModel(proxy);
     m_treeView->setSelectionModel(ObjectBroker::selectionModel(proxy));
