@@ -1,7 +1,7 @@
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
-PROJECT_NAME           = "GammaRay API Documentaion"
+PROJECT_NAME           = "GammaRay API Documentation"
 PROJECT_NUMBER         = @GAMMARAY_VERSION@
 OUTPUT_DIRECTORY       = @DOXYGEN_OUTPUT_DIR@
 CREATE_SUBDIRS         = NO
