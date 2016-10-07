@@ -37,16 +37,19 @@
 #include <QWaylandView>
 #include <QWaylandSurfaceGrabber>
 
+#include <common/modelroles.h>
 #include <common/objectbroker.h>
+#include <common/objectid.h>
+#include <common/objectmodel.h>
+#include <common/remoteviewframe.h>
+
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
-#include <common/objectmodel.h>
 #include <core/objecttypefilterproxymodel.h>
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/serverproxymodel.h>
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 #include <core/remoteviewserver.h>
-#include <common/remoteviewframe.h>
 
 #include <wayland-server.h>
 
@@ -424,6 +427,10 @@ public:
         EndColumn
     };
 
+    enum Roles {
+        ObjectIdRole = UserRole + 1
+    };
+
     explicit ClientsModel(ProbeInterface *probe, QObject *parent)
         : QAbstractTableModel(parent)
         , m_probe(probe)
@@ -481,6 +488,8 @@ public:
             case PidColumn:
                 if (role == Qt::DisplayRole)
                     return client->processId();
+                if (role == ObjectIdRole)
+                    return QVariant::fromValue(ObjectId(client));
             case CommandColumn: {
                 if (role != Qt::DisplayRole)
                     return QVariant();
@@ -547,6 +556,7 @@ WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* par
     m_logger = new Logger(this, this);
 
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
 }
 
 WlCompositorInspector::~WlCompositorInspector()
@@ -562,6 +572,21 @@ void WlCompositorInspector::objectAdded(QObject *obj)
 {
     if (auto *compositor = qobject_cast<QWaylandCompositor *>(obj)) {
         init(compositor);
+    }
+}
+
+void WlCompositorInspector::objectSelected(QObject *obj)
+{
+    if (auto client = qobject_cast<QWaylandClient*>(obj)) {
+        const auto indexList = m_clientsModel->match(m_clientsModel->index(0, 0),
+                    ClientsModel::ObjectIdRole,
+                    QVariant::fromValue(ObjectId(client)), 1,
+                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+
+        if (indexList.isEmpty())
+            return;
+        const auto index = indexList.first();
+        m_clientSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
     }
 }
 

@@ -61,7 +61,7 @@ private slots:
     void delayedInit();
 
 private:
-    void clientActivated(const QModelIndex &index);
+    void clientSelected(const QItemSelection &selection);
     void resourceActivated(const QModelIndex &index);
     void logMessage(const QByteArray &msg);
 

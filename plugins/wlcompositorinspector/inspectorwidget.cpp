@@ -84,9 +84,11 @@ InspectorWidget::InspectorWidget(QWidget *parent)
 
     m_model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WaylandCompositorClientsModel"));
     auto clientSelectionModel = ObjectBroker::selectionModel(m_model);
+    connect(clientSelectionModel, &QItemSelectionModel::selectionChanged, this, &InspectorWidget::clientSelected);
     m_ui->clientsView->setModel(m_model);
     m_ui->clientsView->setSelectionModel(clientSelectionModel);
     m_ui->clientsView->viewport()->installEventFilter(this);
+
     connect(m_ui->resourcesView->selectionModel(), &QItemSelectionModel::currentChanged, this, &InspectorWidget::resourceActivated);
     m_ui->resourcesView->viewport()->installEventFilter(this);
 
@@ -104,12 +106,15 @@ void InspectorWidget::delayedInit()
 {
 }
 
-void InspectorWidget::clientActivated(const QModelIndex &index)
+void InspectorWidget::clientSelected(const QItemSelection& selection)
 {
-    m_client->setSelectedClient(index.row());
-    if (!index.isValid()) {
-        m_ui->clientsView->selectionModel()->clear();
+    if (selection.isEmpty()) {
+        m_client->setSelectedClient(-1);
+        return;
     }
+
+    const auto index = selection.at(0).topLeft();
+    m_client->setSelectedClient(index.row());
 }
 
 void InspectorWidget::resourceActivated(const QModelIndex &index)
@@ -126,7 +131,9 @@ bool InspectorWidget::eventFilter(QObject *o, QEvent *e)
         case QEvent::MouseButtonRelease: {
             auto *me = static_cast<QMouseEvent *>(e);
             if (o == m_ui->clientsView->viewport()) {
-                clientActivated(m_ui->clientsView->indexAt(me->pos()));
+                const auto idx = m_ui->clientsView->indexAt(me->pos());
+                if (!idx.isValid())
+                    m_ui->clientsView->selectionModel()->clear();
             } else {
                 QModelIndex index = m_ui->resourcesView->indexAt(me->pos());
                 if (!index.isValid()) {

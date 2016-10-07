@@ -65,6 +65,7 @@ public slots:
 
 private slots:
     void objectAdded(QObject *obj);
+    void objectSelected(QObject *obj);
 
 private:
     void init(QWaylandCompositor *compositor);
