@@ -18,7 +18,7 @@
 /*!
     \example quick-event-handling
     \title Qt Quick Event Handling
-    \brief Investiagte issues regarding Qt Quick input events.
+    \brief Investigate issues regarding Qt Quick input events.
     \ingroup examples-gammaray
 
     This examples shows GammaRay's capabilities for analyzing \l{Qt Quick} event handling issues.
