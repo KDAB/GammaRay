@@ -170,5 +170,6 @@ void Qt3DInspectorUiFactory::initUi()
 {
     ObjectBroker::registerClientObjectFactoryCallback<Qt3DGeometryExtensionInterface *>(
         createGeometryExtension);
-// PropertyWidget::registerTab<Qt3DGeometryTab>(QStringLiteral("qt3dGeometry"), tr("Geometry"), PropertyWidgetTabPriority::Advanced);
+    PropertyWidget::registerTab<Qt3DGeometryTab>(QStringLiteral("qt3dGeometry"),
+        tr("Geometry"), PropertyWidgetTabPriority::Advanced);
 }
