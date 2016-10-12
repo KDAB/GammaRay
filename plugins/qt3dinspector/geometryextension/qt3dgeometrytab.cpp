@@ -49,6 +49,7 @@
 #include <Qt3DRender/QGeometryRenderer>
 #include <Qt3DRender/QGraphicsApiFilter>
 #include <Qt3DRender/QMaterial>
+#include <Qt3DRender/QPointLight>
 #include <Qt3DRender/QParameter>
 #include <Qt3DRender/QRenderAspect>
 #include <Qt3DRender/QRenderPass>
@@ -181,6 +182,14 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     m_geometryTransform = new Qt3DCore::QTransform;
     geometryEntity->addComponent(m_geometryTransform);
     updateGeometry();
+
+    auto lightEntity = new Qt3DCore::QEntity(rootEntity);
+    auto light = new Qt3DRender::QPointLight(lightEntity);
+    lightEntity->addComponent(light);
+    auto lightTransform = new Qt3DCore::QTransform(lightEntity);
+    lightTransform->setTranslation(m_camera->position());
+    connect(m_camera, &Qt3DRender::QCamera::positionChanged, lightTransform, &Qt3DCore::QTransform::setTranslation);
+    lightEntity->addComponent(lightTransform);
 
     auto skyboxEntity = new Qt3DCore::QEntity(rootEntity);
     auto skyBoxGeometry = new Qt3DExtras::QCuboidMesh;

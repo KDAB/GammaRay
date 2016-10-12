@@ -8,11 +8,23 @@ in VertexFormat {
 
 out vec4 fragColor;
 
-uniform vec4 lightPosition = vec4(4.0, 4.0, 4.0, 1.0);
-uniform vec3 lightIntensity = vec3(1.0, 1.0, 1.0);
-uniform float lightAc = 1.0; // Constant attenuation
-uniform float lightAl = 0.01; // Linear attenuation
-uniform float lightAq = 0.005; // Quadratic attenuation
+const int MAX_LIGHTS = 8;
+const int TYPE_POINT = 0;
+const int TYPE_DIRECTIONAL = 1;
+const int TYPE_SPOT = 2;
+struct Light {
+    int type;
+    vec3 position;
+    vec3 color;
+    float intensity;
+    vec3 direction;
+    float constantAttenuation;
+    float linearAttenuation;
+    float quadraticAttenuation;
+    float cutOffAngle;
+};
+uniform Light lights[MAX_LIGHTS];
+uniform int lightCount;
 
 uniform vec3 Ka = vec3(0.1, 0.1, 0.1); // Ambient reflectivity
 uniform vec3 Kd = vec3(0.9, 0.5, 0.3); // Diffuse reflectivity
@@ -25,7 +37,7 @@ uniform vec4 lineColor = vec4(0.4, 1.0, 0.8, 1.0);
 vec3 adsModel( const in vec3 pos, const in vec3 normal )
 {
     // Calculate the vector from the fragment to the light
-    vec3 s = normalize( vec3( lightPosition ) - pos );
+    vec3 s = normalize( vec3( lights[0].position ) - pos );
 
     // Calculate the vector from the fragment to the eye position (the
     // origin since this is in "eye" or "camera" space
@@ -41,10 +53,10 @@ vec3 adsModel( const in vec3 pos, const in vec3 normal )
     vec3 specular = vec3( pow( max( dot( r, v ), 0.0 ), shininess ) ) * ( shininess + 2.0 ) / 2.0;
 
     // Calculate distance from the fragment to the light
-    float dist = distance( vec3( lightPosition ), pos );
+    float dist = distance( vec3( lights[0].position ), pos );
 
     // Calculate light intensity when attenuation is applied
-    vec3 intensity = lightIntensity / ( lightAq * pow( dist, 2.0 ) + lightAl * dist + lightAc );
+    float intensity = lights[0].intensity / ( lights[0].quadraticAttenuation * pow( dist, 2.0 ) + lights[0].linearAttenuation * dist + lights[0].constantAttenuation);
 
     // Combine the ambient, diffuse and specular contributions
     return intensity * ( Ka + Kd * diffuse + Ks * specular );
