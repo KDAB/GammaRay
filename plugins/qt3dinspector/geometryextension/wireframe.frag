@@ -26,10 +26,10 @@ struct Light {
 uniform Light lights[MAX_LIGHTS];
 uniform int lightCount;
 
-uniform vec3 Ka = vec3(0.1, 0.1, 0.1); // Ambient reflectivity
+uniform vec3 Ka = vec3(0.45, 0.25, 0.15); // Ambient reflectivity
 uniform vec3 Kd = vec3(0.9, 0.5, 0.3); // Diffuse reflectivity
-uniform vec3 Ks = vec3(0.1, 0.1, 0.1); // Specular reflectivity
-uniform float shininess = 100; // Specular shininess factor
+uniform vec3 Ks = vec3(0.09, 0.05, 0.03); // Specular reflectivity
+uniform float shininess = 25; // Specular shininess factor
 
 uniform float lineWidth = 0.4;
 uniform vec4 lineColor = vec4(0.4, 1.0, 0.8, 1.0);
