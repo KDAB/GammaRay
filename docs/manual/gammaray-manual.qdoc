@@ -67,6 +67,7 @@
             \li \l{State Machine Debugger}
             \li \l{Widget Inspector}
             \li \l{Graphics Scene Inspector}
+            \li \l{Qt3D Inspector}
             \li \l{Styles}
             \li \l{Web Inspector}
             \li \l{Messages}

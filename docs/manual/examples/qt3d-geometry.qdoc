@@ -38,7 +38,7 @@
 
     GammaRay provides several features supporting the analysis of issues regarding
     vertex data provided via Qt3DRender::QAttribute and Qt3DRender::QBuffer. They are all
-    available by opening the Qt3D inspector view, selecting a geometry entity in the entity
+    available by opening the \l{Qt3D Inspector} view, selecting a geometry entity in the entity
     tree view on the left side and then opening the Geometry tab on the right side.
 
     \section2 Backface culling

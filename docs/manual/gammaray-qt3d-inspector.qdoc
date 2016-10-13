@@ -1,0 +1,88 @@
+/*
+    gammaray-qt3d-inspector.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Qt3D Inspector}
+    \nextpage {Styles}
+    \previouspage {Graphics Scene Inspector}
+    \page gammaray-qt3d-inspector.html
+
+    \title Qt3D Inspector
+
+    \section1 Overview
+
+    The \l{Qt 3D} inspector allows you to browse the entity tree and the frame graph of a \l{Qt 3D} scene. If the target application contains
+    multiple \l{Qt 3D} engine, you can select the desired Qt3DCore::QAspectEngine in the combo box at the top.
+
+    On the left side you can switch between two views with the tabs at the bottom:
+    \list
+        \li The entity tree of the scene.
+        \li The frame graph composing the render settings of the scene.
+    \endlist
+
+    \section2 Entity Tree
+
+    The entity tree shows the hierarchy of the Qt3DCore::QEntity instances of the scenes. The checkbox next to each entity shows
+    the state of the entity enabled state (see Qt3DCore::QEntity::enabled), which can also be changed this way. The context menu
+    on the entity tree allows navigation to other views of the entity object.
+
+    \section2 Render Settings
+
+    The frame graph tree shows the hierarchy of the Qt3DRender::QFrameGraphNode instances composing the Qt3DRender::QRenderSettings
+    of a scene. The checkbox next to each node shows the state of the frame graph node enabled state (see Qt3DRender::QFrameGraphNode::enabled),
+    which can also be changed this way. The context menu on the entity tree allows navigation to other views of the node object.
+
+    \section1 Geometry Inspection
+
+    When selecting an entity with a geometry component attached, or a geometry component directly in a different view, the geometry
+    inspector tab is shown on the right hand side.
+
+    The geometry inspection tab has to views:
+    \list
+        \li A graphical wireframe view of the geometry.
+        \li A raw data view on its associated Qt3DRender::QBuffer instances.
+    \endlist
+
+    \section2 Wireframe View
+
+    The wireframe view renders the selected geometry separately, so it can be inspected for defects easily. Common issues involve:
+    \list
+        \li Wrong triangle ordering. Toggle backface culling in the toolbar above the wireframe view to get culled back faces
+        highlighted.
+        \li Wrong normal vectors. Toggle the normal vector visualization to get vertex and face normals displayed.
+    \endlist
+
+    \image gammaray-qt3d-geometry.png
+
+    You can move the camera in the wireframe view using mouse (left and middle mouse buttons) or keyboard (arrow keys, page up/page down, W/A/S/D).
+
+    \section2 Buffer view
+
+    You can switch to the raw buffer view in the toolbar of the geometry tab, and select the Qt3DRender::QBuffer instance to inspect
+    in the combo box at the top right.
+
+    \image gammaray-qt3d-buffers.png
+
+    The buffer view then shows the buffer data decoded based on its associated Qt3DRender::QAttribute instances.
+
+    \section1 Examples
+
+    The following examples make use of the Qt3D inspector:
+    \list
+        \li \l{qt3d-geometry}
+    \endlist
+*/

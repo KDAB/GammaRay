@@ -35,7 +35,7 @@
         \li \l{Qt Quick 2 Inspector}
         \li \l{Widget Inspector}
         \li \l{Graphics Scene Inspector}
-        \li Qt3D Inspector
+        \li \l{Qt3D Inspector}
         \li \l{Styles}
         \li \l{Web Inspector}
     \endlist
