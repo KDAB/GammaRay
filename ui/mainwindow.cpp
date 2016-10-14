@@ -209,6 +209,12 @@ MainWindow::MainWindow(QWidget *parent)
             SLOT(toolSelected()));
     connect(ui->toolSelector, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(toolContextMenu(QPoint)));
 
+    QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
+    settings.beginGroup("Sidebar");
+    m_toolFilterModel->setFilterInactiveTools(settings.value(QLatin1String("FilterInactive"), false).toBool());
+    settings.endGroup();
+
+
     // hide unused tool bar for now
     ui->mainToolBar->setHidden(true);
 
@@ -224,7 +230,6 @@ MainWindow::MainWindow(QWidget *parent)
     auto group = new QActionGroup(this);
     group->setExclusive(true);
 
-    QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
     settings.beginGroup(QStringLiteral("CodeNavigation"));
     const auto currentIdx = settings.value(QStringLiteral("IDE"), -1).toInt();
 
@@ -279,6 +284,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
+    settings.beginGroup("Sidebar");
+    settings.setValue(QLatin1String("FilterInactive"), m_toolFilterModel->filterInactiveTools());
+    settings.endGroup();
 }
 
 void MainWindow::help()
