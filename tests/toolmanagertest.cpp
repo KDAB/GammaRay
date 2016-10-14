@@ -77,6 +77,7 @@ private slots:
     void initTestCase()
     {
         qRegisterMetaType<QVector<ToolInfo> >();
+        new ClientToolManager;
     }
 
     void init()
@@ -150,24 +151,32 @@ private slots:
 
     void testClientSide()
     {
-        ClientToolManager manager;
-        manager.requestAvailableTools();
-        ModelTest modelTest(manager.model());
-
-        auto *toolManager = ObjectBroker::object<ToolManagerInterface *>();
-        QVERIFY(toolManager);
-
-        QSignalSpy toolEnabledSpy(&manager, &ClientToolManager::toolEnabled);
-        QSignalSpy toolSelectedSpy(&manager, &ClientToolManager::toolSelected);
-        QSignalSpy toolsForObjectSpy(&manager, &ClientToolManager::toolsForObjectResponse);
+        ClientToolManager::instance()->requestAvailableTools();
+        ModelTest modelTest(ClientToolManager::instance()->model());
 
         // we're testing inprocess, thus tool list should be available instantly.
-        QVERIFY(manager.isToolListLoaded());
+        QVERIFY(ClientToolManager::instance()->isToolListLoaded());
 
+        testHasBasicTools(false);
+        testToolEnabled();
+        testToolSelected();
+        testRequestToolsForObject();
+
+        testClearance();
+
+        ClientToolManager::instance()->requestAvailableTools(); // "reconnect"
+        testHasBasicTools(true);
+        testToolSelected();
+        testRequestToolsForObject();
+    }
+
+private:
+    void testHasBasicTools(bool actionInspectorEnabled)
+    {
         bool hasBasicTools = false;
         const ToolInfo *actionInspector = 0;
         const ToolInfo *guiSupport = 0;
-        foreach (const ToolInfo &tool, manager.tools()) {
+        foreach (const ToolInfo &tool, ClientToolManager::instance()->tools()) {
             if (tool.id() == "GammaRay::ObjectInspector")
                 hasBasicTools = true;
             else if (tool.id() == "gammaray_actioninspector")
@@ -177,13 +186,16 @@ private slots:
         }
         QVERIFY(hasBasicTools);
         QVERIFY(actionInspector);
-        QCOMPARE(actionInspector->isEnabled(), false);
+        QCOMPARE(actionInspector->isEnabled(), actionInspectorEnabled);
         QCOMPARE(actionInspector->hasUi(), true);
         QVERIFY(!guiSupport); // tools without ui are supposed to be filtered out
+        QVERIFY(!ClientToolManager::instance()->widgetForId("inexistantTool"));
+        QVERIFY(actionInspectorEnabled == (bool)ClientToolManager::instance()->widgetForId("gammaray_actioninspector")); // if tool is disabled we explicitly want widgetForId to be null.
+    }
 
-        QVERIFY(!manager.widgetForId("inexistantTool"));
-        QVERIFY(!manager.widgetForId("gammaray_actioninspector")); // tool is disabled
-
+    void testToolEnabled()
+    {
+        QSignalSpy toolEnabledSpy(ClientToolManager::instance(), &ClientToolManager::toolEnabled);
         // Create QAction to enable action inspector
         QAction action("Test Action", this);
         toolEnabledSpy.wait(50);
@@ -193,15 +205,30 @@ private slots:
             enabledTools << i->first().toString();
         QVERIFY(enabledTools.contains("gammaray_actioninspector"));
 
-        QVERIFY(manager.widgetForId("gammaray_actioninspector"));
+        QVERIFY(ClientToolManager::instance()->widgetForId("gammaray_actioninspector"));
+    }
+
+    void testToolSelected()
+    {
+        auto *toolManager = ObjectBroker::object<ToolManagerInterface *>();
+        QVERIFY(toolManager);
+
+        QSignalSpy toolSelectedSpy(ClientToolManager::instance(), &ClientToolManager::toolSelected);
+        QAction action("Test Action", this);
 
         toolManager->selectObject(ObjectId(&action), QStringLiteral("gammaray_actioninspector"));
         toolSelectedSpy.wait(50);
         QCOMPARE(toolSelectedSpy.size(), 1);
         QString selectedTool = toolSelectedSpy.first().first().toString();
         QCOMPARE(selectedTool, QStringLiteral("gammaray_actioninspector"));
+    }
 
-        manager.requestToolsForObject(ObjectId(&action));
+    void testRequestToolsForObject()
+    {
+        QSignalSpy toolsForObjectSpy(ClientToolManager::instance(), &ClientToolManager::toolsForObjectResponse);
+        QAction action("Test Action", this);
+
+        ClientToolManager::instance()->requestToolsForObject(ObjectId(&action));
         toolsForObjectSpy.wait(50);
         QCOMPARE(toolsForObjectSpy.size(), 1);
         const ObjectId &actionId = toolsForObjectSpy.first().first().value<ObjectId>();
@@ -216,6 +243,16 @@ private slots:
         QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::ObjectInspector")));
         QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::MetaObjectBrowser")));
         QVERIFY(supportedToolIds.contains(QStringLiteral("gammaray_actioninspector")));
+    }
+
+    void testClearance()
+    {
+        QSignalSpy resetSpy(ClientToolManager::instance()->model(), &QAbstractItemModel::modelReset);
+        ClientToolManager::instance()->clear();
+        QVERIFY(ClientToolManager::instance());
+        QCOMPARE(ClientToolManager::instance()->tools().size(), 0);
+        resetSpy.wait(50);
+        QCOMPARE(resetSpy.size(), 1);
     }
 };
 

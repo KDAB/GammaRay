@@ -66,8 +66,6 @@ public:
     void unregisterMessageHandler(Protocol::ObjectAddress objectAddress) Q_DECL_OVERRIDE;
 
 signals:
-    /** Emitted when we successfully established a connection and passed the protocol version handshake step. */
-    void connectionEstablished();
     /** Emitted on transient connection errors.
      *  That is, on errors it's worth re-trying, e.g. because the target wasn't up yet.
      */

@@ -88,7 +88,6 @@ public:
     explicit ClientToolManager(QObject *parent = 0);
     ~ClientToolManager();
 
-    void requestAvailableTools();
     void setToolParentWidget(QWidget *parent);
 
     bool isToolListLoaded() const;
@@ -109,6 +108,10 @@ public:
 
     static ClientToolManager* instance();
 
+public slots:
+    void requestAvailableTools();
+    void clear();
+
 signals:
     void toolEnabled(const QString &toolId);
     void toolEnabledByIndex(int toolIndex);
@@ -117,6 +120,8 @@ signals:
     void toolSelected(const QString &toolId);
     void toolSelectedByIndex(int index);
     void toolsForObjectResponse(const GammaRay::ObjectId &id, const QVector<GammaRay::ToolInfo> &toolInfos);
+    void aboutToReset();
+    void reset();
 
 private slots:
     void gotTools(const QVector<GammaRay::ToolData> &tools);

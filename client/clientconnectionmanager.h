@@ -100,7 +100,6 @@ public slots:
 
 private slots:
     void connectToHost();
-    void connectionEstablished();
     void transientConnectionError();
 
     void delayedHideSplashScreen();
