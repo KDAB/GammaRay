@@ -45,6 +45,8 @@ namespace Ui {
 class MainWindow;
 }
 
+class ClientToolFilterProxyModel;
+
 class MainWindowUIStateManager : public UIStateManager
 {
     Q_OBJECT
@@ -76,6 +78,7 @@ private slots:
 
     void toolSelected();
     bool selectTool(const QString &id);
+    void toolContextMenu(QPoint pos);
 
     void quitHost();
     void detachProbe();
@@ -91,6 +94,7 @@ private:
 
     QScopedPointer<Ui::MainWindow> ui;
     MainWindowUIStateManager m_stateManager;
+    ClientToolFilterProxyModel *m_toolFilterModel;
 };
 }
 

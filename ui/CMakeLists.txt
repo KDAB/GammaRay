@@ -130,6 +130,7 @@ set(gammaray_ui_internal_srcs
   sidepane.cpp
   aboutpluginsdialog.cpp
   mainwindow.cpp
+  clienttoolfilterproxymodel.cpp
   aboutdialog.cpp
 )
 

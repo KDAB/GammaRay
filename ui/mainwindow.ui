@@ -29,6 +29,9 @@
         <height>0</height>
        </size>
       </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-image: url(:/gammaray/kdab-gammaray-logo.png);
 background-repeat: no-repeat;

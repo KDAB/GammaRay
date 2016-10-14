@@ -32,6 +32,7 @@
 #include "aboutpluginsdialog.h"
 #include "aboutdialog.h"
 #include "clienttoolmanager.h"
+#include "clienttoolfilterproxymodel.h"
 #include "aboutdata.h"
 #include "uiintegration.h"
 #include "helpcontroller.h"
@@ -59,7 +60,6 @@
 #include <QMenu>
 #include <QProcess>
 #include <QSettings>
-#include <QSortFilterProxyModel>
 #include <QStyleFactory>
 #include <QTableView>
 #include <QToolButton>
@@ -198,15 +198,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto sourceModel = toolManager->model();
     auto sourceSelectionModel = toolManager->selectionModel();
-    auto proxyModel = new QSortFilterProxyModel(this);
-    proxyModel->setSourceModel(sourceModel);
-    proxyModel->setDynamicSortFilter(true);
-    proxyModel->sort(0);
-    ui->toolSelector->setModel(proxyModel);
-    ui->toolSelector->setSelectionModel(new KLinkItemSelectionModel(proxyModel, sourceSelectionModel, sourceModel));
+    m_toolFilterModel = new ClientToolFilterProxyModel(this);
+    m_toolFilterModel->setSourceModel(sourceModel);
+    m_toolFilterModel->setDynamicSortFilter(true);
+    m_toolFilterModel->sort(0);
+    ui->toolSelector->setModel(m_toolFilterModel);
+    ui->toolSelector->setSelectionModel(new KLinkItemSelectionModel(m_toolFilterModel, sourceSelectionModel, sourceModel));
     ui->toolSelector->resize(ui->toolSelector->minimumSize());
     connect(toolManager->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(toolSelected()));
+    connect(ui->toolSelector, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(toolContextMenu(QPoint)));
 
     // hide unused tool bar for now
     ui->mainToolBar->setHidden(true);
@@ -411,6 +412,16 @@ void MainWindow::toolSelected()
     }
     ui->actionsMenu->setEnabled(!ui->actionsMenu->isEmpty());
     ui->actionsMenu->setTitle(mi.data().toString());
+}
+
+void MainWindow::toolContextMenu(QPoint pos)
+{
+    QMenu menu;
+    auto action = menu.addAction(tr("Hide inactive tools"));
+    action->setCheckable(true);
+    action->setChecked(m_toolFilterModel->filterInactiveTools());
+    connect(action, SIGNAL(toggled(bool)), m_toolFilterModel, SLOT(setFilterInactiveTools(bool)));
+    menu.exec(ui->toolSelector->viewport()->mapToGlobal(pos));
 }
 
 void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumber)
