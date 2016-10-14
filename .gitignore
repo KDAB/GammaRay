@@ -6,6 +6,7 @@
 *.out
 .*
 CMakeLists.txt.user
+*.qmlc
 
 # from kdiff3
 *.BACKUP.*
