@@ -441,8 +441,7 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
             QDesktopServices::openUrl(QUrl(url));
         }
 
-        const QString filePath = url.isLocalFile()
-                                 || url.isRelative() ? url.toLocalFile() : url.toString();
+        const QString filePath = url.isLocalFile() ? url.toLocalFile() : url.toString();
         command.replace(QStringLiteral("%f"), filePath);
         command.replace(QStringLiteral("%l"), QString::number(std::max(1, lineNumber)));
         command.replace(QStringLiteral("%c"), QString::number(std::max(1, columnNumber)));
