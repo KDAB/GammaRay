@@ -444,8 +444,8 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
         const QString filePath = url.isLocalFile()
                                  || url.isRelative() ? url.toLocalFile() : url.toString();
         command.replace(QStringLiteral("%f"), filePath);
-        command.replace(QStringLiteral("%l"), QString::number(std::max(0, lineNumber)));
-        command.replace(QStringLiteral("%c"), QString::number(std::max(0, columnNumber)));
+        command.replace(QStringLiteral("%l"), QString::number(std::max(1, lineNumber)));
+        command.replace(QStringLiteral("%c"), QString::number(std::max(1, columnNumber)));
 
         if (!command.isEmpty())
             QProcess::startDetached(command);
