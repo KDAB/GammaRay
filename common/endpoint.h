@@ -131,6 +131,8 @@ public slots:
     void sendMessage(const GammaRay::Message &msg);
 
 signals:
+    /** Emitted when a connection to another endpoint was successfully established and passed the protocol version handshake step. */
+    void connectionEstablished();
     /** Emitted when we lost the connection to the other endpoint. */
     void disconnected();
 
