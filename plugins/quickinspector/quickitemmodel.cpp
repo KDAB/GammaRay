@@ -353,21 +353,30 @@ void QuickItemModel::updateItemFlags(QQuickItem *item)
 {
     QQuickItem *ancestor = item->parentItem();
     bool outOfView = false;
+    bool partiallyOutOfView = false;
+
+    auto rect = item->mapRectToScene(QRectF(0, 0, item->width(), item->height()));
+
     while (ancestor && ancestor != m_window->contentItem()) {
-        QPointF pos = ancestor->mapFromItem(item, QPointF(0, 0));
-        if ((ancestor->parentItem() == m_window->contentItem()
-             || ancestor->clip())
-            && (-pos.x() > item->width() || -pos.y() > item->height()
-                || pos.x() > ancestor->width() || pos.y() > ancestor->height())) {
-            outOfView = true;
-            break;
+        if (ancestor->parentItem() == m_window->contentItem() || ancestor->clip()) {
+            auto ancestorRect = ancestor->mapRectToScene(QRectF(0, 0, ancestor->width(), ancestor->height()));
+
+            partiallyOutOfView |= !ancestorRect.contains(rect);
+            outOfView = partiallyOutOfView && !rect.intersects(ancestorRect);
+
+            if (outOfView) {
+                break;
+            }
         }
         ancestor = ancestor->parentItem();
     }
+
     m_itemFlags[item] = (!item->isVisible() || item->opacity() == 0
                          ? QuickItemModelRole::Invisible : QuickItemModelRole::None)
                         |(item->width() == 0 || item->height() == 0
                           ? QuickItemModelRole::ZeroSize : QuickItemModelRole::None)
+                        |(partiallyOutOfView
+                          ? QuickItemModelRole::PartiallyOutOfView : QuickItemModelRole::None)
                         |(outOfView
                           ? QuickItemModelRole::OutOfView : QuickItemModelRole::None)
                         |(item->hasFocus()
