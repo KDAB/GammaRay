@@ -34,7 +34,12 @@
 
 project(GammaRay CXX C)
 
-cmake_minimum_required(VERSION 2.8.12) # b/c of ECMGeneratePriFile.cmake
+if (MSVC)
+  cmake_minimum_required(VERSION 3.1.0) # b/c of TARGET_PDB_FILE_DIR generator expression
+else()
+  cmake_minimum_required(VERSION 2.8.12) # b/c of ECMGeneratePriFile.cmake
+endif()
+
 cmake_policy(SET CMP0020 NEW)
 if(POLICY CMP0043)
   cmake_policy(SET CMP0043 NEW)
