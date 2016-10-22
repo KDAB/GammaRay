@@ -61,16 +61,22 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
         if (role == Qt::ToolTipRole && flags) {
             QString tooltip = QIdentityProxyModel::data(index, role).toString();
             tooltip.append("<p style='white-space:pre'>");
-            if ((flags &QuickItemModelRole::OutOfView)
+            //if flags has OutOfView it has also PartiallyOutOfView, no need to test both
+            if ((flags &QuickItemModelRole::PartiallyOutOfView)
                 && (~flags & QuickItemModelRole::Invisible)) {
                 QByteArray byteArray;
                 QBuffer buffer(&byteArray);
                 QIcon::fromTheme(QStringLiteral("dialog-warning")).pixmap(16, 16).save(&buffer,
                                                                                        "PNG");
                 tooltip.append("<img src=\"data:image/png;base64,").
-                append(byteArray.toBase64()).
-                append("\"> Item is visible, but out of view.");
+                append(byteArray.toBase64());
+                if (flags & QuickItemModelRole::OutOfView)
+                    tooltip.append("\"> Item is visible, but out of view.");
+                else
+                    tooltip.append("\"> Item is visible, but partially out of view.");
+
                 flags &= ~QuickItemModelRole::OutOfView;
+                flags &= ~QuickItemModelRole::PartiallyOutOfView;
                 if (flags)
                     tooltip.append("\n");
             }
@@ -84,6 +90,8 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
 
                 if (flags & QuickItemModelRole::OutOfView)
                     flagStrings << tr("is out of view");
+                else if (flags & QuickItemModelRole::PartiallyOutOfView)
+                    flagStrings << tr("is partially out of view");
 
                 if (flags & QuickItemModelRole::HasFocus
                     && ~flags & QuickItemModelRole::HasActiveFocus)

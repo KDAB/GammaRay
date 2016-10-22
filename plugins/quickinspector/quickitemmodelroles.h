@@ -44,10 +44,11 @@ enum ItemFlag {
     None = 0,
     Invisible = 1,
     ZeroSize = 2,
-    OutOfView = 4,
-    HasFocus = 8,
-    HasActiveFocus = 16,
-    JustRecievedEvent = 32
+    PartiallyOutOfView = 4,
+    OutOfView = 8,
+    HasFocus = 16,
+    HasActiveFocus = 32,
+    JustRecievedEvent = 64
 };
 }
 }

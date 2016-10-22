@@ -90,7 +90,7 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         else if (deco.canConvert<QIcon>())
             icons.push_back(deco.value<QIcon>().pixmap(16, 16));
 
-        if ((flags &QuickItemModelRole::OutOfView) && (~flags & QuickItemModelRole::Invisible))
+        if ((flags &QuickItemModelRole::PartiallyOutOfView) && (~flags & QuickItemModelRole::Invisible))
             icons << QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/warning.png")).pixmap(
                 16, 16);
 
