@@ -72,11 +72,22 @@ to remove all forwards
 
 Building Gammaray probe for IOS (OSX "El Capitan" / Qt 5.7 / Xcode 8 / iphone SDK 10.0):
 Make sure you have gdb and qmake in your path
-% export QT_DIR=<QT HOME>
+% export QT_DIR=<QT HOME> <--- set to QT's home
 % mkdir build
 % cd build
 % cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-IOS.cmake -DCMAKE_PREFIX_PATH=${QT_DIR}/5.7/ios -DGAMMARAY_STATIC_PROBE=TRUE -DCMAKE_INSTALL_PREFIX=$SYSROOT/usr/ -DGAMMARAY_BUILD_UI=OFF -G Xcode ..
 % /usr/bin/xcodebuild -project GammaRay.xcodeproj build -target gammaray_probe -configuration Release
+
+Using Gammaray on IOS:
+-modify your main.cpp and include the following call from probe/hooks.h
+  GammaRay::Hooks::installHooks();
+- link your QT IOS app with the following libraries:
+  libgammaray_kitemmodels-qt5_7-arm.a
+  libgammaray_core-qt5_7-arm.a
+  libgammaray_common-qt5_7-arm.a
+  libgammaray_common_internal.a
+  gammaray_probe.a
+- deploy and run your app
 
 == Cross-compiling GammaRay ==
 You'll find more information on this in the wiki:
