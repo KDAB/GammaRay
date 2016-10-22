@@ -4,7 +4,7 @@ set(gammaray_kitemmodels_srcs
   krecursivefilterproxymodel.cpp
 )
 
-add_library(gammaray_kitemmodels SHARED ${gammaray_kitemmodels_srcs})
+add_library(gammaray_kitemmodels ${GAMMARAY_LIBRARY_TYPE} ${gammaray_kitemmodels_srcs})
 
 if(Qt5Core_FOUND)
   target_link_libraries(gammaray_kitemmodels LINK_PUBLIC Qt5::Core)
