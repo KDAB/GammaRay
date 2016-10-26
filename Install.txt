@@ -75,7 +75,7 @@ Make sure you have gdb and qmake in your path
 % export QT_DIR=<QT HOME> <--- set to QT's home
 % mkdir build
 % cd build
-% cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-IOS.cmake -DCMAKE_PREFIX_PATH=${QT_DIR}/5.7/ios -DGAMMARAY_STATIC_PROBE=TRUE -DCMAKE_INSTALL_PREFIX=$SYSROOT/usr/ -DGAMMARAY_BUILD_UI=OFF -G Xcode ..
+% cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-IOS.cmake -DCMAKE_PREFIX_PATH=${QT_DIR}/5.7/ios -DGAMMARAY_STATIC_PROBE=TRUE -DCMAKE_INSTALL_PREFIX=$SYSROOT/usr/ -G Xcode ..
 % /usr/bin/xcodebuild -project GammaRay.xcodeproj build -target gammaray_probe -configuration Release
 
 Using Gammaray on IOS:
