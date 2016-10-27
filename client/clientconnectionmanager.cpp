@@ -159,7 +159,7 @@ void ClientConnectionManager::connectionEstablished()
         toolManager = new ClientToolManager(this);
     }
 
-    // We cannot instanciate the tool manager in the ctor as it's too early (not yet connected) and will
+    // We cannot instantiate the tool manager in the ctor as it's too early (not yet connected) and will
     // cause object registering issues, so make sure we connect only once.
     connect(toolManager, SIGNAL(toolListAvailable()), this, SIGNAL(ready()), Qt::UniqueConnection);
     toolManager->requestAvailableTools();
