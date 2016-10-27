@@ -93,8 +93,10 @@ public:
     lines << tr("Model: %1").arg(output->model());
     lines << tr("Physical size: (%1x%2)").arg(QString::number(output->physicalSize().width()), QString::number(output->physicalSize().height()));
     lines << tr("Position: (%1x%2)").arg(QString::number(output->position().x()), QString::number(output->position().y()));
-    const QWaylandOutput::Mode &mode = output->mode();
-    lines << tr("Current mode: %1x%2@%3Hz").arg(QString::number(mode.size.width()), QString::number(mode.size.height()), QString::number(mode.refreshRate));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    const auto mode = output->currentMode();
+    lines << tr("Current mode: %1x%2@%3Hz").arg(QString::number(mode.size().width()), QString::number(mode.size().height()), QString::number(mode.refreshRate() / 1000.0f));
+#endif
     lines << tr("Scale factor: %1").arg(QString::number(output->scaleFactor()));
     lines << tr("Transform: %1").arg(QMetaEnum::fromType<QWaylandOutput::Transform>().valueToKey(output->transform()));
     lines << tr("Subpixel: %1").arg(QMetaEnum::fromType<QWaylandOutput::Subpixel>().valueToKey(output->subpixel()));
