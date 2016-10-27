@@ -86,6 +86,9 @@ UIStateManager::UIStateManager(QWidget *widget)
     , m_stateSettings(new QSettings("KDAB", "GammaRay", this))
     , m_initialized(false)
     , m_resizing(false)
+    , m_targetStateSource(Q_NULLPTR)
+    , m_targetRestoreMethodId(-1)
+    , m_targetSaveMethodId(-1)
 {
     Q_ASSERT(m_widget);
 
@@ -198,6 +201,11 @@ void UIStateManager::restoreState()
 {
     Q_ASSERT(Endpoint::instance()->isConnected());
 
+    if (!m_initialized) {
+        qWarning() << Q_FUNC_INFO << "Attempting to restoreState for a not yet initialized state manager.";
+        return;
+    }
+
     restoreWindowState();
     restoreSplitterState();
     restoreHeaderState();
@@ -216,6 +224,11 @@ void UIStateManager::restoreState()
 void UIStateManager::saveState()
 {
     Q_ASSERT(Endpoint::instance()->isConnected());
+
+    if (!m_initialized) {
+        qWarning() << Q_FUNC_INFO << "Attempting to saveState for a not yet initialized state manager.";
+        return;
+    }
 
     // Allow save state per end point
     if (m_targetStateSource) {
