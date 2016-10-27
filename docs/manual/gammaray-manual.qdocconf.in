@@ -1,6 +1,6 @@
 project = "GammaRay"
 description = "GammaRay User Manual"
-url = https://www.kdab.com/gammaray
+url = https://doc.qt.io/GammaRay
 
 sourcedirs = @CMAKE_CURRENT_SOURCE_DIR@
 sources.fileextensions = "*.qdoc"
@@ -8,15 +8,15 @@ sources.fileextensions = "*.qdoc"
 imagedirs = @CMAKE_CURRENT_SOURCE_DIR@/images
 
 exampledirs = @CMAKE_SOURCE_DIR@/examples
-examples.fileextensions = "*.h" "*.cpp" "*.qml"
+examples.fileextensions = "*.h *.cpp *.qml"
 
 depends += qtcore qtgui qtwidgets @HAVE_QTQUICK_DOCS@ @HAVE_QTQML_DOCS@ @HAVE_QT3D_DOCS@
 
 qhp.projects = GammaRay
 qhp.GammaRay.file = gammaray-manual.qhp
 qhp.GammaRay.namespace = com.kdab.GammaRay.@GAMMARAY_PLUGIN_VERSION@
-qhp.GammaRay.virtualFolder = doc
-qhp.GammaRay.indexTitle = GammaRay User Manual @GAMMARAY_VERSION@
+qhp.GammaRay.virtualFolder = gammaray
+qhp.GammaRay.indexTitle = GammaRay User Manual
 qhp.GammaRay.filterAttributes = gammaray @GAMMARAY_VERSION@
 qhp.GammaRay.customFilters.GammaRay.name = GammaRay @GAMMARAY_VERSION@
 qhp.GammaRay.customFilters.GammaRay.filterAttributes = gammaray @GAMMARAY_VERSION@
@@ -27,5 +27,6 @@ qhp.GammaRay.subprojects.manual.title = GammaRay User Manual
 qhp.GammaRay.subprojects.manual.indexTitle = GammaRay User Manual
 qhp.GammaRay.subprojects.manual.type = manual
 
-navigation.landingpage = "GammaRay"
+navigation.homepage    = "GammaRay User Manual"
+navigation.landingpage = "GammaRay User Manual"
 buildversion = "GammaRay User Manual @GAMMARAY_VERSION_STRING@"
