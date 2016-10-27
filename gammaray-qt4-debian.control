@@ -2,10 +2,12 @@ Source: gammaray
 Section: Miscellaneous
 Priority: optional
 Maintainer: Allen Winter <allen.winter@kdab.com>
+Standards-Version: 3.9.6
+Homepage: https://github.com/KDAB/GammaRay
 
 Package: gammaray-qt4
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: A tool to poke around in a Qt-application
  GammaRay is a tool for examining the internals of a Qt application
  and to some extent also manipulate it. GammaRay uses injection
