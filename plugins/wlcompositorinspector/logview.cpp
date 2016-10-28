@@ -430,8 +430,8 @@ public:
         mul = mul == 2 ? 5 : 2;
       }
 
-      int it = initialTime();
-      int rit = round(it, -1);
+      auto it = initialTime();
+      auto rit = round(it, -1);
 
       //draw the grid lines
       qreal linesSpacing = step / substeps;
