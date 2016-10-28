@@ -2,7 +2,8 @@
 find_package(Wayland 1.12 COMPONENTS Server)
 set_package_properties(Wayland PROPERTIES PURPOSE "Needed for the QtWayland compositor inspector plug-in." TYPE OPTIONAL)
 
-if(Qt5WaylandCompositor_FOUND AND Wayland_FOUND)
+# in GammaRay 2.6 we don't support the API-incompatible QtWayland 5.8 yet
+if(Qt5WaylandCompositor_FOUND AND Wayland_FOUND AND Qt5WaylandCompositor_VERSION VERSION_LESS 5.8)
   set(gammaray_wlcompositorinspector_srcs
     wlcompositorinspector.cpp
     wlcompositorinterface.cpp
