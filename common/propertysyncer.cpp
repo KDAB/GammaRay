@@ -179,7 +179,8 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
         break;
     }
     default:
-        Q_ASSERT(!"We should not get here!");
+        Q_ASSERT_X(false, "PropertySyncer::handleMessage",
+                   "Unexpected Gammaray::Message type encountered");
     }
 }
 

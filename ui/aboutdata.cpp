@@ -49,7 +49,7 @@ QStringList AboutData::authors()
     if (f.open(QFile::ReadOnly)) {
         return QString::fromUtf8(f.readAll()).split('\n', QString::SkipEmptyParts);
     } else {
-        Q_ASSERT_X(0, "AboutData::authors()", "cannot open the authors resource file");
+        Q_ASSERT_X(false, "AboutData::authors()", "cannot open the authors resource file");
         qWarning() << "Failed to open the authors resource file";
         return QStringList(AboutDataContext::tr("Unable to read the Authors list"));
     }

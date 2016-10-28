@@ -110,7 +110,8 @@ public:
         case 2:
             return static_cast<Base3 *>(static_cast<T *>(object));
         }
-        Q_ASSERT(!"WTF!?");
+        Q_ASSERT_X(false, "MetaObjectImpl::castToBaseClass",
+                   "Unexpected baseClassIndex encountered");
         return 0;
     }
 };

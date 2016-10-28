@@ -270,17 +270,22 @@ public:
       QStaticText text;
       int *counter;
 
-      Line() {}
+      Line() : counter(0)
+      {
+      }
+
       Line(quint64 p, const QStaticText &t, int *cnt)
         : pid(p), text(t), counter(cnt)
       {
         (*counter)++;
       }
+
       Line(const Line &l)
         : pid(l.pid), text(l.text), counter(l.counter)
       {
         (*counter)++;
       }
+
       ~Line() { (*counter)--; }
 
       Line &operator=(const Line &l) {
