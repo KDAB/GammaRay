@@ -262,6 +262,11 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     filterProxy->addRole(ObjectModel::ObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickItemModel"), filterProxy);
 
+    if (m_probe->needsObjectDiscovery()) {
+        connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)),
+                SLOT(objectCreated(QObject*)));
+    }
+
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
             m_itemModel, SLOT(objectAdded(QObject*)));
     connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
@@ -385,6 +390,25 @@ void QuickInspector::objectSelected(void *object, const QString &typeName)
     auto metaObject = MetaObjectRepository::instance()->metaObject(typeName);
     if (metaObject && metaObject->inherits(QStringLiteral("QSGNode")))
         selectSGNode(reinterpret_cast<QSGNode *>(object));
+}
+
+void QuickInspector::objectCreated(QObject *object)
+{
+    if (QQuickWindow *window = qobject_cast<QQuickWindow *>(object)) {
+        if (QQuickView *view = qobject_cast<QQuickView *>(object)) {
+            m_probe->discoverObject(view->engine());
+        }
+        else {
+            QQmlContext *context = QQmlEngine::contextForObject(window);
+            QQmlEngine *engine = context ? context->engine() : Q_NULLPTR;
+
+            if (!engine) {
+                engine = qmlEngine(window->contentItem()->childItems().value(0));
+            }
+
+            m_probe->discoverObject(engine);
+        }
+    }
 }
 
 void QuickInspector::sendRenderedScene(const QImage &currentFrame)

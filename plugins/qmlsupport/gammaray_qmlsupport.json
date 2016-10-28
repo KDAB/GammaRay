@@ -4,6 +4,6 @@
     "name": "QML Support",
     "name[de]": "QML Unterstützung",
     "types": [
-        "QQmlEngine"
+        "QJSEngine"
     ]
 }

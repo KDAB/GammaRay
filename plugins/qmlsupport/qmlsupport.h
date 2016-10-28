@@ -31,7 +31,7 @@
 
 #include <core/toolfactory.h>
 
-#include <QQmlEngine>
+#include <QJSEngine>
 
 namespace GammaRay {
 class QmlSupport : public QObject
@@ -41,7 +41,7 @@ public:
     explicit QmlSupport(ProbeInterface *probe, QObject *parent = 0);
 };
 
-class QmlSupportFactory : public QObject, public StandardToolFactory<QQmlEngine, QmlSupport>
+class QmlSupportFactory : public QObject, public StandardToolFactory<QJSEngine, QmlSupport>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

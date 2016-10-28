@@ -103,6 +103,7 @@ private slots:
     void sgNodeDeleted(QSGNode *node);
     void objectSelected(QObject *object);
     void objectSelected(void *object, const QString &typeName);
+    void objectCreated(QObject *object);
 
 private:
     void selectWindow(QQuickWindow *window);
