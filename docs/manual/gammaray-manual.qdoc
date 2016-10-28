@@ -24,7 +24,7 @@
 
     \section1 What is GammaRay?
 
-    GammaRay is an introspection tool for Qt applications developed by KDAB.
+    GammaRay is an introspection tool for Qt applications developed by \l{https://www.kdab.com/}{KDAB}.
     Leveraging the QObject introspection mechanism it allows you to observe and manipulate
     your application at runtime. This works both locally on your workstation and remotely
     on an embedded target.

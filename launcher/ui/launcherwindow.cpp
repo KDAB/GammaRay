@@ -109,5 +109,5 @@ void LauncherWindow::accept()
 
 void LauncherWindow::help()
 {
-    HelpController::openPage("doc/gammaray-launcher-gui.html");
+    HelpController::openPage("gammaray/gammaray-launcher-gui.html");
 }

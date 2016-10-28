@@ -132,7 +132,7 @@ void HelpController::openContents()
     auto d = s_helpController();
     d->startProcess();
     d->sendCommand(
-        "setSource qthelp://com.kdab.GammaRay." GAMMARAY_PLUGIN_VERSION "/doc/index.html;syncContents\n");
+        "setSource qthelp://com.kdab.GammaRay." GAMMARAY_PLUGIN_VERSION "/gammaray/index.html;syncContents\n");
 }
 
 void HelpController::openPage(const QString &page)
