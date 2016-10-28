@@ -62,6 +62,8 @@ public slots:
     void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings) override;
 
     void checkOverlaySettings() override;
+
+    void setGrabMode(GammaRay::QuickInspectorInterface::GrabMode mode) override;
 };
 }
 

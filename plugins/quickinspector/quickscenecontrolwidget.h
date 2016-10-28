@@ -71,6 +71,8 @@ public:
 
     QuickScenePreviewWidget *previewWidget();
 
+    QuickInspectorInterface::GrabMode grabMode() const { return m_grabMode; }
+
 signals:
     void stateChanged();
 
@@ -103,6 +105,7 @@ private:
     QuickOverlayLegend *m_legendTool;
 
     QuickInspectorInterface *m_inspectorInterface;
+    QuickInspectorInterface::GrabMode m_grabMode;
 };
 } // namespace GammaRay
 

@@ -88,3 +88,8 @@ void QuickInspectorClient::checkOverlaySettings()
 {
     Endpoint::instance()->invokeObject(objectName(), "checkOverlaySettings");
 }
+
+void QuickInspectorClient::setGrabMode(QuickInspectorInterface::GrabMode mode)
+{
+    Endpoint::instance()->invokeObject(objectName(), "setGrabMode", { QVariant::fromValue(mode) });
+}

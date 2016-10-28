@@ -118,6 +118,8 @@ public slots:
 
     void checkOverlaySettings() override;
 
+    void setGrabMode(GammaRay::QuickInspectorInterface::GrabMode mode) override;
+
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
     void pickElementId(const GammaRay::ObjectId& id);
 
@@ -165,6 +167,7 @@ private:
     RemoteViewServer *m_remoteView;
     RenderModeRequest *m_pendingRenderMode;
     QuickInspectorInterface::RenderMode m_renderMode;
+    GrabMode m_grabMode;
 };
 
 class QuickInspectorFactory : public QObject,

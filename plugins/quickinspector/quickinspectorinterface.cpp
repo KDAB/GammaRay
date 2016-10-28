@@ -63,6 +63,20 @@ QDataStream &operator>>(QDataStream &in, QuickInspectorInterface::RenderMode &va
     return in;
 }
 
+QDataStream &operator<<(QDataStream &out, QuickInspectorInterface::GrabMode value)
+{
+    out << qint32(value);
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in, QuickInspectorInterface::GrabMode &value)
+{
+    qint32 t;
+    in >> t;
+    value = static_cast<QuickInspectorInterface::GrabMode>(t);
+    return in;
+}
+
 QuickInspectorInterface::QuickInspectorInterface(QObject *parent)
     : QObject(parent)
 {
@@ -72,6 +86,7 @@ QuickInspectorInterface::QuickInspectorInterface(QObject *parent)
     qRegisterMetaTypeStreamOperators<QuickItemGeometry>();
     qRegisterMetaTypeStreamOperators<QVector<QuickItemGeometry>>();
     qRegisterMetaTypeStreamOperators<QuickDecorationsSettings>();
+    qRegisterMetaTypeStreamOperators<GrabMode>();
 }
 
 QuickInspectorInterface::~QuickInspectorInterface()
