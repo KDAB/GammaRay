@@ -9,7 +9,7 @@ HTML.footer = \
     "   This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>." \
     "   </p>\n"
 
-# Sidebar with quick links
-HTML.stylesheets += style/qt5-sidebar.html
-
 include(@QDOC_TEMPLATE_DIR@/qt-html-templates-online.qdocconf)
+
+# Sidebar with quick links
+HTML.stylesheets += @CMAKE_CURRENT_SOURCE_DIR@/style/qt5-sidebar.html
