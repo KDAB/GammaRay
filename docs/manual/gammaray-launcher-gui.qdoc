@@ -38,7 +38,7 @@
     \list
         \li On Windows, by starting gammaray.exe without arguments, or by selecting "GammaRay" in the start menu.
         \li On Mac OSX , by running the GammaRay app bundle.
-        \li On Linux, by running "gammaraY" without arguments on the command line, or by selecting "GammaRay" in the start menu.
+        \li On Linux, by running "gammaray" without arguments on the command line, or by selecting "GammaRay" in the start menu.
     \endlist
 
     \section1 Launching applications
