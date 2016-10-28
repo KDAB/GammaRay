@@ -48,6 +48,7 @@ QT_END_NAMESPACE
 namespace GammaRay {
 class RemoteViewInterface;
 class ObjectIdsFilterProxyModel;
+class VisibilityFilterProxyModel;
 
 /** Widget showing remote screen content and providing both visual inspection
  *  capabilities as well as input redirection.
@@ -198,6 +199,7 @@ private:
     QPoint m_measurementEndPosition; // in source coordinates
     bool m_hasMeasurement;
     ObjectIdsFilterProxyModel *m_pickProxyModel;
+    VisibilityFilterProxyModel *m_invisibleItemsProxyModel;
     bool m_initialZoomDone;
 };
 }
