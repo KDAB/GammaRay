@@ -16,7 +16,7 @@ macro(qt5_build_doc _qdocconf_name)
   set(_qdoc_output_dir ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name})
   # FIXME: this should rather be taken from the qdocconf file?
   file(GLOB_RECURSE _qdoc_srcs ${CMAKE_CURRENT_SOURCE_DIR} "*.qdoc")
-  file(GLOB _qdoc_imgs ${CMAKE_CURRENT_SOURCE_DIR}/images "*.png")
+  file(GLOB _qdoc_imgs ${CMAKE_CURRENT_SOURCE_DIR} "images/*.png")
   add_custom_command(
     OUTPUT ${_qdoc_output_dir}/${_qdocconf_name}.qhp
     COMMAND ${QDOC_EXECUTABLE}
@@ -39,13 +39,14 @@ macro(qt5_build_doc _qdocconf_name)
 
   # online docs
   set(_qdoc_output_dir ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online)
+  file(GLOB _qdoc_styles ${CMAKE_CURRENT_SOURCE_DIR} "style/*")
   add_custom_command(
     OUTPUT ${_qdoc_output_dir}/index.html
     COMMAND ${QDOC_EXECUTABLE}
       --indexdir ${QDOC_INDEX_DIR}
       --outputdir ${_qdoc_output_dir}
     ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online.qdocconf
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online.qdocconf ${_qdoc_srcs} ${_qdoc_imgs}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online.qdocconf ${_qdoc_srcs} ${_qdoc_imgs} ${_qdoc_styles}
   )
   add_custom_target(online-docs DEPENDS ${_qdoc_output_dir}/index.html)
 
