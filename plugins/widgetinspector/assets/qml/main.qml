@@ -28,6 +28,7 @@
 
 
 import QtQuick 2.5 as QQ2
+import QtQml 2.2 as Qml2
 import QtQuick.Scene3D 2.0
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
@@ -119,6 +120,12 @@ QQ2.Item {
 
                     onSelectedChanged: if (selected) instantiator.selectedWidget = this
                 }
+            }
+
+            Qml2.Binding {
+                target: _selectionHelper
+                property: "currentObject"
+                value: instantiator.selectedWidget ? instantiator.selectedWidget.objectId : ""
             }
         }
     }

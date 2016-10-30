@@ -34,6 +34,7 @@
 namespace GammaRay
 {
 class Widget3DWindow;
+class Widget3DSelectionHelper;
 
 class Widget3DView : public QWidget
 {
@@ -42,8 +43,17 @@ public:
     explicit Widget3DView(QWidget *parent = Q_NULLPTR);
     ~Widget3DView();
 
+protected:
+    bool eventFilter(QObject *o, QEvent *e) Q_DECL_OVERRIDE;
+
+
 private:
+    void showContextMenu(const QPoint &pos);
+
     Widget3DWindow *mRenderWindow;
+    Widget3DSelectionHelper *mSelectionHelper;
+
+    QPoint mLastRightClick;
 };
 
 }

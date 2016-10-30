@@ -38,6 +38,8 @@
 #include <common/objectmodel.h>
 #include <common/objectid.h>
 
+#include <ui/contextmenuextension.h>
+
 #include <3rdparty/kde/kdescendantsproxymodel.h>
 
 #include <QWindow>
@@ -50,6 +52,8 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QTreeView>
+#include <QMenu>
+#include <QApplication>
 
 #include <Qt3DQuick/QQmlAspectEngine>
 #include <Qt3DCore/QAspectEngine>
@@ -158,9 +162,55 @@ public:
     }
 };
 
+class Widget3DSelectionHelper : public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QString currentObject
+               READ currentObject
+               WRITE setCurrentObject
+               NOTIFY currentObjectChanged)
+public:
+    Widget3DSelectionHelper(Widget3DSubtreeModel *widgetModel, QObject *parent = Q_NULLPTR)
+        : QObject(parent)
+        , mModel(widgetModel)
+    {}
+
+    QString currentObject() const
+    {
+        return mCurrentObject;
+    }
+
+    void setCurrentObject(const QString &currentObject)
+    {
+        if (mCurrentObject != currentObject) {
+            mCurrentObject = currentObject;
+            mObjectId = ObjectId();
+            Q_EMIT currentObjectChanged();
+        }
+    }
+
+    ObjectId currentObjectId() const
+    {
+        if (mObjectId.isNull()) {
+            const_cast<Widget3DSelectionHelper*>(this)->mObjectId = mModel->realObjectId(mCurrentObject);
+        }
+        return mObjectId;
+    }
+
+Q_SIGNALS:
+    void currentObjectChanged();
+
+private:
+    QString mCurrentObject;
+    ObjectId mObjectId;
+    Widget3DSubtreeModel *mModel;
+};
+
 }
 
 Q_DECLARE_METATYPE(GammaRay::Widget3DWindow*)
+Q_DECLARE_METATYPE(GammaRay::Widget3DSelectionHelper*)
 
 using namespace GammaRay;
 
@@ -192,6 +242,8 @@ Widget3DView::Widget3DView(QWidget* parent)
     auto widgetModel = new Widget3DRoleModel(this);
     widgetModel->setSourceModel(flatSubtreeModel);
 
+    mSelectionHelper = new Widget3DSelectionHelper(subtreeModel, this);
+
     auto vbox = new QVBoxLayout(this);
 
     auto hbox = new QHBoxLayout();
@@ -207,15 +259,16 @@ Widget3DView::Widget3DView(QWidget* parent)
     vbox->addLayout(hbox);
 
     mRenderWindow = new Widget3DWindow();
+    mRenderWindow->installEventFilter(this);
     vbox->addWidget(QWidget::createWindowContainer(mRenderWindow, this), 1);
 
     qmlRegisterType<Widget3DCameraController>("com.kdab.GammaRay", 1, 0, "Widget3DCameraController");
     qmlRegisterType<Widget3DImageTextureImage>("com.kdab.GammaRay", 1, 0, "Widget3DImageTextureImage");
-    qmlRegisterType<Widget3DClientModel>("com.kdab.GammaRay", 1, 0, "Widget3DClientModel");
 
     auto engine = mRenderWindow->engine();
     engine->rootContext()->setContextProperty(QStringLiteral("_renderWindow"), mRenderWindow);
     engine->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), widgetModel);
+    engine->rootContext()->setContextProperty(QStringLiteral("_selectionHelper"), mSelectionHelper);
     mRenderWindow->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
 }
 
@@ -223,6 +276,51 @@ Widget3DView::~Widget3DView()
 {
     delete mRenderWindow;
 }
+
+bool Widget3DView::eventFilter(QObject *o, QEvent *e)
+{
+    if (o == mRenderWindow) {
+        if (e->type() == QEvent::MouseButtonPress) {
+            // Widget3DWindow is not a QWidget, so it does not handle closing
+            // popups when clicked
+            if (auto p = QApplication::activePopupWidget()) {
+                p->close();
+            }
+
+            const QMouseEvent *me = static_cast<QMouseEvent*>(e);
+            if (me->button() == Qt::RightButton) {
+                mLastRightClick = me->globalPos();
+            }
+        }
+        if (e->type() == QEvent::MouseButtonRelease) {
+            const QMouseEvent *me = static_cast<QMouseEvent*>(e);
+            if (me->button() == Qt::RightButton) {
+                if (me->globalPos() == mLastRightClick) {
+                    showContextMenu(me->globalPos());
+                }
+                mLastRightClick = QPoint();
+            }
+        }
+    }
+
+    return false;
+}
+
+
+void GammaRay::Widget3DView::showContextMenu(const QPoint &pos)
+{
+    const auto objectId = mSelectionHelper->currentObjectId();
+    if (objectId.isNull()) {
+        return;
+    }
+
+    QMenu menu(tr("Widget @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+
+    menu.exec(pos);
+}
+
 
 #include "widget3dview.moc"
 

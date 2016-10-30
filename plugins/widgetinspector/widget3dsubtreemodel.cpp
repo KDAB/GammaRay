@@ -30,17 +30,6 @@
 
 using namespace GammaRay;
 
-namespace {
-
-quint64 parseId(const QString &id)
-{
-    quint64 rv;
-    qMemCopy(&rv, id.constData(), 8);
-    return rv;
-}
-
-}
-
 class Widget3DSubtreeModel::Node
 {
 public:
@@ -340,4 +329,15 @@ QModelIndex Widget3DSubtreeModel::indexForNode(Node *node) const
     }
 
     return createIndex(node->parent->children.indexOf(node), 0, node->parent);
+}
+
+ObjectId Widget3DSubtreeModel::realObjectId(const QString &objectId) const
+{
+    Node *node = mNodeLookup[objectId];
+    if (!node) {
+        return ObjectId();
+    }
+
+    qDebug() << "LOOKUP" << node->sourceIdx.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+    return node->sourceIdx.data(ObjectModel::ObjectIdRole).value<ObjectId>();
 }

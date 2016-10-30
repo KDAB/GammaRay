@@ -64,6 +64,8 @@ public:
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
 
+    ObjectId realObjectId(const QString &objectId) const;
+
 Q_SIGNALS:
     void sourceModelChanged();
     void rootObjectIdChanged();

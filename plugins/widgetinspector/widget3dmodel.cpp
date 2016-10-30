@@ -347,6 +347,7 @@ QMap<int, QVariant> Widget3DModel::itemData(const QModelIndex &index) const
         Q_ASSERT(w);
 
         // see comment in data()
+        data[ObjectModel::ObjectIdRole] = this->data(index, ObjectModel::ObjectIdRole);
         data[IdRole] = w->id();
         data[TextureRole] = w->texture();
         data[BackTextureRole] = w->backTexture();
