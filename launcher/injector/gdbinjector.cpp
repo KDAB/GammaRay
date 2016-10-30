@@ -78,6 +78,7 @@ void GdbInjector::readyReadStandardError()
 {
     const QString error = QString::fromLocal8Bit(m_process->readAllStandardError());
     processLog(DebuggerInjector::In, true, error);
+    qDebug() << error;
     emit stderrMessage(error);
 
     if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
@@ -91,6 +92,12 @@ void GdbInjector::readyReadStandardError()
         mManualError = true;
         mErrorString = tr("Your QtCore library is missing debug symbols which are required\n"
                           "for GammaRay's GDB injector. Please install the required debug symbols.\n\n"
+                          "GDB error was: %1").arg(error);
+    } else if (error.startsWith(QLatin1String(
+                    "warning: Unable to restore previously selected frame"))) {
+        mManualError = true;
+        mErrorString = tr("The debuggee application seems to have an invalid stack trace\n"
+                          "This can be caused by the executable being updated on disk after launching it.\n\n"
                           "GDB error was: %1").arg(error);
     }
 
