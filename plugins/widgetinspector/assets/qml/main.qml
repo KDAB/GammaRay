@@ -82,14 +82,10 @@ QQ2.Item {
                 }
             ]
 
-            Widget3DCameraController {
-                id: cameraController
-                camera: mainCamera
+            CameraController {
+               id: cameraController
+               camera: mainCamera
             }
-            //CameraController {
-            //    id: cameraController
-            //    camera: mainCamera
-            //}
 
             QQ2.Connections {
                 target: _renderWindow

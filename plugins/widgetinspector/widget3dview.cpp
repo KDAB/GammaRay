@@ -30,7 +30,6 @@
 #include "widget3dview.h"
 #include "widget3dmodel.h"
 #include "widget3dimagetextureimage.h"
-#include "widget3dcameracontroller.h"
 #include "widget3dwindowmodel.h"
 #include "widget3dsubtreemodel.h"
 
@@ -262,7 +261,6 @@ Widget3DView::Widget3DView(QWidget* parent)
     mRenderWindow->installEventFilter(this);
     vbox->addWidget(QWidget::createWindowContainer(mRenderWindow, this), 1);
 
-    qmlRegisterType<Widget3DCameraController>("com.kdab.GammaRay", 1, 0, "Widget3DCameraController");
     qmlRegisterType<Widget3DImageTextureImage>("com.kdab.GammaRay", 1, 0, "Widget3DImageTextureImage");
 
     auto engine = mRenderWindow->engine();

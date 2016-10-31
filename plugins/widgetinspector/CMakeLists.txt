@@ -84,7 +84,6 @@ if(GAMMARAY_BUILD_UI)
       widget3dwindowmodel.cpp
       widget3dsubtreemodel.cpp
       widget3dimagetextureimage.cpp
-      widget3dcameracontroller.cpp
     )
   endif()
 
