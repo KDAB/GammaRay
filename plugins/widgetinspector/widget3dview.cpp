@@ -278,7 +278,9 @@ Widget3DView::~Widget3DView()
 bool Widget3DView::eventFilter(QObject *o, QEvent *e)
 {
     if (o == mRenderWindow) {
-        if (e->type() == QEvent::MouseButtonPress) {
+        if (e->type() == QEvent::MouseButtonDblClick) {
+            selectCurrentObject();
+        } else if (e->type() == QEvent::MouseButtonPress) {
             // Widget3DWindow is not a QWidget, so it does not handle closing
             // popups when clicked
             if (auto p = QApplication::activePopupWidget()) {
@@ -289,8 +291,7 @@ bool Widget3DView::eventFilter(QObject *o, QEvent *e)
             if (me->button() == Qt::RightButton) {
                 mLastRightClick = me->globalPos();
             }
-        }
-        if (e->type() == QEvent::MouseButtonRelease) {
+        } else if (e->type() == QEvent::MouseButtonRelease) {
             const QMouseEvent *me = static_cast<QMouseEvent*>(e);
             if (me->button() == Qt::RightButton) {
                 if (me->globalPos() == mLastRightClick) {
@@ -317,6 +318,16 @@ void GammaRay::Widget3DView::showContextMenu(const QPoint &pos)
     ext.populateMenu(&menu);
 
     menu.exec(pos);
+}
+
+void GammaRay::Widget3DView::selectCurrentObject()
+{
+    const auto objectId = mSelectionHelper->currentObjectId();
+    if (objectId.isNull()) {
+        return;
+    }
+
+    // TODO: How to select the ObjectId in the PropertyWidget?
 }
 
 

@@ -49,6 +49,7 @@ protected:
 
 private:
     void showContextMenu(const QPoint &pos);
+    void selectCurrentObject();
 
     Widget3DWindow *mRenderWindow;
     Widget3DSelectionHelper *mSelectionHelper;
