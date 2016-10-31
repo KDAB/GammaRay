@@ -100,21 +100,36 @@ QQ2.Item {
                 model: _widgetModel
                 asynchronous: false
 
-                property var selectedWidget;
+                property var selectedWidget
+
+                property var topLevelWindow : null
 
                 delegate: WidgetDelegate {
                     id: windowDelegate
 
-                    topLevelGeometry: instantiator.objectAt(0) ? instantiator.objectAt(0).geometry : model.geometry
+                    topLevelGeometry: instantiator.topLevelWindow ? instantiator.topLevelWindow.geometry : model.geometry
                     objectId: model.objectId
                     geometry: model.geometry
                     frontTextureImage: model.frontTexture
                     backTextureImage: model.backTexture
-                    explosionFactor: root.explosionFactor;
+                    explosionFactor: root.explosionFactor
                     depth: model.depth
                     metaData: model.metaData
+                    isWindow: model.isWindow
 
                     onSelectedChanged: if (selected) instantiator.selectedWidget = this
+                }
+
+                onObjectAdded: {
+                    if (object.isWindow) {
+                        topLevelWindow = object;
+                    }
+                }
+
+                onObjectRemoved: {
+                    if (topLevelWindow == object) {
+                        topLevelWindow = null;
+                    }
                 }
             }
 

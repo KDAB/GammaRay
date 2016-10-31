@@ -79,7 +79,7 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &id
     }
 
     Widget3DWidget *w = this;
-    while (w && !w->isWindow()) {
+    while (w && !isWindow()) {
         ++mDepth;
         w = qobject_cast<Widget3DWidget*>(w->parent());
     }

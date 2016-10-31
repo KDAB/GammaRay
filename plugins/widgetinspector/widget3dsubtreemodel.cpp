@@ -113,30 +113,34 @@ void Widget3DSubtreeModel::resetModel()
     mNodeLookup.clear();
     delete mRoot;
     mRoot = new Node;
-    mRoot->sourceIdx = m_rootIndex;
-    mNodeLookup[m_rootObject] = mRoot;
-    populate();
+    if (!m_rootObject.isEmpty()) {
+        populate();
+    }
     endResetModel();
 }
 
 void Widget3DSubtreeModel::populate()
 {
-    QList<QModelIndex> toVisit = { mRoot->sourceIdx };
+    QList<QModelIndex> toVisit = { m_rootIndex };
     while (!toVisit.isEmpty()) {
         const auto index = toVisit.takeFirst();
-        if (index != m_rootIndex) {
-            if (index.data(Widget3DModel::IsWindowRole).toBool()) {
-                m_foreignWindows.insert(index);
+        if (index.data(Widget3DModel::IsWindowRole).toBool()) {
+            m_foreignWindows.insert(index);
+            if (index != m_rootIndex) {
                 continue;
             }
-
-            Node *node = new Node;
-            node->sourceIdx = index;
-            node->parent = mNodeLookup.value(index.parent().data(Widget3DModel::IdRole).toString());
-            Q_ASSERT(node->parent);
-            node->parent->children.push_back(node);
-            mNodeLookup.insert(index.data(Widget3DModel::IdRole).toString(), node);
         }
+
+        Node *node = new Node;
+        node->sourceIdx = index;
+        if (index == m_rootIndex) {
+            node->parent = mRoot;
+        } else {
+            node->parent = mNodeLookup.value(index.parent().data(Widget3DModel::IdRole).toString());
+        }
+        Q_ASSERT(node->parent);
+        node->parent->children.push_back(node);
+        mNodeLookup.insert(index.data(Widget3DModel::IdRole).toString(), node);
 
         for (int i = 0, c = mSourceModel->rowCount(index); i < c; ++i) {
             toVisit.push_front(index.child(i, 0));
@@ -194,7 +198,12 @@ bool Widget3DSubtreeModel::belongsToModel(const QModelIndex &idx) const
 void Widget3DSubtreeModel::sourceRowsInserted(const QModelIndex &parent, int first, int last)
 {
     Q_ASSERT(!parent.isValid() || !parent.data(Widget3DModel::IdRole).toString().isEmpty());
-    Node *parentNode = parent.isValid() ? mNodeLookup.value(parent.data(Widget3DModel::IdRole).toString()) : mRoot;
+    Node *parentNode = Q_NULLPTR;
+    if (parent == m_rootIndex) {
+        parentNode = mRoot;
+    } else {
+        parentNode = mNodeLookup.value(parent.data(Widget3DModel::IdRole).toString());
+    }
     if (!parentNode) {
         return;
     }
@@ -295,6 +304,10 @@ QModelIndex Widget3DSubtreeModel::index(int row, int column, const QModelIndex &
     Node *parentNode = nodeForIndex(parent);
     Q_ASSERT(parentNode);
 
+    if (row >= parentNode->children.count()) {
+        return QModelIndex();
+    }
+
     return createIndex(row, column, parentNode);
 }
 
@@ -305,6 +318,7 @@ QModelIndex Widget3DSubtreeModel::parent(const QModelIndex &child) const
 
 QVariant Widget3DSubtreeModel::data(const QModelIndex &index, int role) const
 {
+    Q_ASSERT(index.isValid());
     Node *node = nodeForIndex(index);
     Q_ASSERT(node);
 
@@ -324,7 +338,7 @@ Widget3DSubtreeModel::Node *Widget3DSubtreeModel::nodeForIndex(const QModelIndex
 
 QModelIndex Widget3DSubtreeModel::indexForNode(Node *node) const
 {
-    if (!node->parent) {
+    if (node == mRoot) {
         return QModelIndex();
     }
 

@@ -40,6 +40,7 @@ Entity {
     property real explosionFactor: 0
     property string objectId
     property var metaData
+    property bool isWindow : false
 
     property int depth
     property var frontTextureImage
