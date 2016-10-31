@@ -27,11 +27,11 @@
 
     The text document inspector allows to introspect the document object tree of QTextDocument instances found in the target application.
 
-    \image gammaray-text-documents.png
+    \borderedimage gammaray-text-documents.png
 
-    The document list on the left side shows all QTextDocument instances, selecting one shows the document object tree in the right top view.
-    Navigation to other views is available via the context menu.
+    The document list on the left side shows all QTextDocument instances, selecting one of those shows the document object tree in the top-right view.
+    Navigation to other views is available using the context menu.
 
     The document object tree on the upper right shows the tree of elements composing the text document. This includes blocks (see QTextBlock), fragments
-    (QTextFragment), tables (QTextTable), etc. Selecting an element will show the corresponding formats in the format view at the lower right.
+    (QTextFragment), tables (QTextTable), and so on. Selecting an element shows the corresponding formats in the format view at the lower right.
 */

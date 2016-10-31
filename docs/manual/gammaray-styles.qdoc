@@ -27,16 +27,17 @@
 
     The Styles tool is used for working on and debugging custom QStyle sub-classes.
 
-    \image gammaray-style-controls.png
+    \borderedimage gammaray-style-controls.png
 
-    This tool allows you to:
+    This tool allows you to look at:
 
     \list
-        \li Look at all style primitives in all states.
-        \li Look at all controls in all states.
-        \li Look at all complex controls and their sub-element areas.
-        \li Look at built-in standard pixmaps.
-        \li View and edit style pixel metrics.
-        \li Look at the style-defined QPalette.
+        \li style primitives in all states,
+        \li controls in all states,
+        \li complex controls and their sub-element areas,
+        \li built-in standard pixmaps,
+        \li and the style-defined QPalette.
     \endlist
+    
+    It also lets you view and edit style pixel metrics.
 */

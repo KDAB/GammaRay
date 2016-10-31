@@ -25,30 +25,30 @@
 
     \section1 Overview
 
-    The object inspector gives you access to all QObject instances in a target. On the left side you have a tree view showing their parent/child relationship,
+    The object inspector provides access to all QObject instances in a target. On the left side you have a tree view showing their parent/child relationship,
     on the right side you have access to properties of the selected object.
 
-    \image gammaray-object-inspector.png
+    \borderedimage gammaray-object-inspector.png
 
     Depending on the type of the object, the property view provides additional tabs for accessing specific details of an object.
 
-    This includes:
+    The inspector provides the following information about the selected object:
 
     \list
-        \li Properties accessible via the Qt introspection system.
+        \li Properties that are accessible via the Qt introspection system.
         \li Qt signals, including the ability to monitor them for emission.
         \li Qt slots and Q_INVOKABLE methods, including the ability to invoke them.
         \li Inbound and outbound signal/slot connections.
-        \li Enums, flags and class information registered at Qt's meta object system.
+        \li Enums, flags, and class information registered at Qt's meta-object system.
         \li For objects created in a QML context, access to context properties and the current context chain is provided.
     \endlist
 
     \section1 Finding and Navigating Objects
 
-    Finding objects can be done via the search field on the top left side of the object inspector. Additionally, visual elements can be picked
-    in the target application using Ctrl+Shift+Left Click.
+    Finding objects can be done using the search field on the top-left side of the object inspector. Additionally, visual elements can be picked
+    in the target application by holding the Ctrl+Shift+Left keys.
 
-    If you have already selected an object and want to navigate to related objects, say look at a model of a selected view, you
+    If you have already selected an object and want to navigate to related objects, such as look at a model of a selected view, you
     can use the object navigation in the context menu by right-clicking on the corresponding element in the property view.
 
     \section1 Examples
