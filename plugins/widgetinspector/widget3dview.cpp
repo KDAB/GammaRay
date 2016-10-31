@@ -254,9 +254,18 @@ Widget3DView::Widget3DView(QWidget* parent)
     hbox->addWidget(combo, 1);
     vbox->addLayout(hbox);
 
+    hbox = new QHBoxLayout();
+    vbox->addLayout(hbox);
+
+#if 0 // widget model debugging
+    QTreeView *tv = new QTreeView;
+    tv->setModel(widgetModel);
+    hbox->addWidget(tv);
+#endif
+
     mRenderWindow = new Widget3DWindow();
     mRenderWindow->installEventFilter(this);
-    vbox->addWidget(QWidget::createWindowContainer(mRenderWindow, this), 1);
+    hbox->addWidget(QWidget::createWindowContainer(mRenderWindow, this), 1);
 
     qmlRegisterType<Widget3DImageTextureImage>("com.kdab.GammaRay", 1, 0, "Widget3DImageTextureImage");
 

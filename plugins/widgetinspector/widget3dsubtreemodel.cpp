@@ -107,7 +107,6 @@ QString Widget3DSubtreeModel::rootObjectId() const
 
 void Widget3DSubtreeModel::resetModel()
 {
-    qDebug() << "RESET!";
     beginResetModel();
     m_foreignWindows.clear();
     mNodeLookup.clear();
@@ -352,6 +351,5 @@ ObjectId Widget3DSubtreeModel::realObjectId(const QString &objectId) const
         return ObjectId();
     }
 
-    qDebug() << "LOOKUP" << node->sourceIdx.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     return node->sourceIdx.data(ObjectModel::ObjectIdRole).value<ObjectId>();
 }
