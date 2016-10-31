@@ -38,6 +38,12 @@ import com.kdab.GammaRay 1.0
 
 QQ2.Item {
 
+    function resetView()
+    {
+        mainCamera.resetView()
+        root.explosionFactor = 0
+    }
+
     Scene3D {
         id: scene3d
         anchors.fill: parent
@@ -61,6 +67,13 @@ QQ2.Item {
                 viewCenter: Qt.vector3d(0.0, 0.0, 0.0)
                 upVector: Qt.vector3d(0.0, 1.0, 0.0)
                 position: Qt.vector3d(0.0, 0.0, 80.0)
+
+                function resetView()
+                {
+                    viewCenter = Qt.vector3d(0.0, 0.0, 0.0);
+                    upVector = Qt.vector3d(0.0, 1.0, 0.0);
+                    position = Qt.vector3d(0.0, 0.0, 80.0);
+                }
             }
 
             // Render from the mainCamera

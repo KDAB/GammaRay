@@ -63,6 +63,7 @@
 #include <QtQml>
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlContext>
+#include <QtQuick/QQuickItem>
 
 namespace GammaRay
 {
@@ -250,10 +251,6 @@ Widget3DView::Widget3DView(QWidget* parent)
 
     QComboBox *combo = new QComboBox;
     combo->setModel(windowModel);
-    connect(combo, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this, [=]() {
-                subtreeModel->setRootObjectId(combo->currentData(Widget3DModel::IdRole).toString());
-            });
     hbox->addWidget(combo, 1);
     vbox->addLayout(hbox);
 
@@ -268,6 +265,12 @@ Widget3DView::Widget3DView(QWidget* parent)
     engine->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), widgetModel);
     engine->rootContext()->setContextProperty(QStringLiteral("_selectionHelper"), mSelectionHelper);
     mRenderWindow->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
+
+    connect(combo, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, [=]() {
+                subtreeModel->setRootObjectId(combo->currentData(Widget3DModel::IdRole).toString());
+                QMetaObject::invokeMethod(mRenderWindow->rootObject(), "resetView");
+            });
 }
 
 Widget3DView::~Widget3DView()
