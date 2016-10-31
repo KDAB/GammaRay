@@ -78,7 +78,6 @@ void GdbInjector::readyReadStandardError()
 {
     const QString error = QString::fromLocal8Bit(m_process->readAllStandardError());
     processLog(DebuggerInjector::In, true, error);
-    qDebug() << error;
     emit stderrMessage(error);
 
     if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
