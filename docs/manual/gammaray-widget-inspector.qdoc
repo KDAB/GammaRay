@@ -27,12 +27,12 @@
 
     The widget inspector allows you browse the QWidget and QLayout hierarchy of your target application.
 
-    \image gammaray-widget-inspector.png
+    \borderedimage gammaray-widget-inspector.png
 
     \section1 Remote View
 
-    Similar to the \l{Qt Quick 2 Inspector}, the widget inspector has a zoomable remote view of the selected window on the lower left.
-    This offers:
+    Similar to the \l{Qt Quick 2 Inspector}, the widget inspector has a zoomable remote view of the selected window to the lower left.
+    It offers:
 
     \list
         \li Widget picking.

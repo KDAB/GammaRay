@@ -36,55 +36,53 @@
     The graphical launcher can be started as follows:
 
     \list
-        \li On Windows, by starting gammaray.exe without arguments, or by selecting "GammaRay" in the start menu.
+        \li On Windows, by starting gammaray.exe without arguments, or by selecting "GammaRay" from the \uicontrol Start menu.
         \li On Mac OSX , by running the GammaRay app bundle.
-        \li On Linux, by running "gammaray" without arguments on the command line, or by selecting "GammaRay" in the start menu.
+        \li On Linux, by running "gammaray" without arguments on the command line, or by selecting "GammaRay" from the start menu.
     \endlist
 
-    \section1 Launching applications
+    \section1 Launching Applications
 
-    The "Launch" tab of the graphical launcher allows you to start new applications and inject GammaRay into them.
-    For this you can select the executable of the target at the top, and specify command line arguments in the field
+    The \uicontrol Launch tab of the graphical launcher allows you to start new applications and inject GammaRay into them.
+    You just have to select an applcation from the list at the top, and specify command line arguments in the field
     below.
 
-    \image gammaray-launcher-launch.png
+    \borderedimage gammaray-launcher-launch.png
 
-    GammaRay will automatically select the best matching probe for the target application. You can verify this in
-    the combo box at the bottom of the page. If GammaRay could not find a compatible probe, launching will not be
-    possible.
+    GammaRay automatically selects the best matching probe for the target application. You can verify this in
+    the combo box at the bottom of the page. If GammaRay could not find a compatible probe, launching fails.
 
-    \section1 Attaching to an application
+    \section1 Attaching to an Application
 
-    The "Attach" tab of the graphical launcher allows you to attach to an already running local target application and
+    The \uicontrol Attach tab of the graphical launcher allows you to attach to an application that is already running, and
     inject GammaRay into it.
 
-    The process list shows all local Qt-based processes, those are potential targets. For each of them GammaRay tries
-    to determine which exact Qt version they are using and whether a compatible probe is available. Those that have a
-    compatible probe available are enabled for attaching.
+    The process list shows all local Qt-based processes that are potential targets. For each of them, GammaRay tries
+    to determine the exact Qt version they are using and list only those that has a compatible probe available.
 
     A tooltip in the process list shows detailed information about the Qt version and used probe for each process.
 
-    \image gammaray-launcher-attach.png
+    \borderedimage gammaray-launcher-attach.png
 
-    \section1 Connecting to a remote target
+    \section1 Connecting to a Remote Target
 
-    The "Connect" tab of the graphical launcher allows you to connect to a target on a remote device that has already
+    The \uicontrol Connect tab of the graphical launcher allows you to connect to a target on a remote device that has already
     been injected with GammaRay. This is mainly useful when working with embedded devices.
 
     GammaRay tries to automatically discover viable targets on your local network, these are displayed in the list view
-    on the "Connect" page, and can be used by selecting the corresponding items. Discovered targets using an incompatible
+    on the \uicontrol Connect page, and can be used by selecting the corresponding items. Discovered targets using an incompatible
     GammaRay version will be shown but will be disabled for selection.
 
     Should GammaRay not be able to discover the desired target automatically, the network address of the target can also
     be specified manually in the entry field on the top. This might be necessary depending on your local network setup.
 
-    \image gammaray-launcher-connect.png
+    \borderedimage gammaray-launcher-connect.png
 
     \section1 Troubleshooting
 
-    Opening the "Self Test" page of the graphical launcher makes GammaRay verify its installation to identify a number of
-    common problems. The results are display on this page.
+    Opening the \uicontrol{Self Test} tab makes GammaRay verify its installation and identify problems (if any). The results are
+    displayed on this page.
 
-    \image gammaray-launcher-selftest.png
+    \borderedimage gammaray-launcher-selftest.png
 
 */

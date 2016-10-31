@@ -29,14 +29,14 @@
     The tree view on the left side shows the file and folder hierarchy, the content view on the right allows to inspect the file content
     if it is a supported text or image format.
 
-    \image gammaray-qrc-browser.png
+    \borderedimage gammaray-qrc-browser.png
 
     The context menu on the folder tree on the left side allows to save individual files or entire folders to disk. This also works for
     remote embedded targets.
 
     \section1 Source Code Navigation
 
-    When using compiled-in QML code via the QResource system, source code navigation from the \l{Qt Quick 2 Inspector} will automatically
-    select the QResource browser, navigate to the source file and open it at the corresponding line.
+    When using compiled-in QML code using the QResource system, source code navigation from the \l{Qt Quick 2 Inspector} automatically
+    selects the QResource browser, navigate to the source file, and open it at the corresponding line.
 
 */

@@ -21,26 +21,26 @@
     \previouspage {Resources}
     \page gammaray-metaobject-browser.html
 
-    \title Meta Object Browser
+    \title Meta-Object Browser
 
     \section1 Overview
 
-    The meta object browser shows the hierarchy of all QMetaObject instances found in the target in the tree view on the left side.
+    The meta-object browser shows the hierarchy of all QMetaObject instances found in the target in the tree view on the left side.
     The property view on the right side shows information known by the QMetaObject system, including data from:
 
     \list
-        \li QMetaProperty
-        \li QMetaMethod
-        \li QMetaEnum
-        \li QMetaClassInfo
+        \li QMetaProperty,
+        \li QMetaMethod,
+        \li QMetaEnum,
+        \li and QMetaClassInfo.
     \endlist
 
     \section1 Instance Statistics
 
-    The meta object tree view also contains columns with information about how many instances of a specific type have been created, including and excluding sub-classes.
+    The meta-object tree view also contains columns with information about how many instances of a specific type have been created, including and excluding sub-classes.
 
-    \image gammaray-metaobject-browser.png
+    \borderedimage gammaray-metaobject-browser.png
 
-    Tooltips on these columns as well as colorization show the ratio of this type on the overall amount of QObject instances. This is particularly useful for identifying
-    unnecessarily often created instances, as QObject construction is not exactly cheap.
+    Tooltips and colorization of these columns show the ratio of this type on the overall amount of QObject instances. This is particularly useful for identifying
+    unnecessarily created instances, as QObject construction is not exactly cheap.
 */

@@ -25,41 +25,41 @@
 
     \section1 Overview
 
-    The graphcis scene inspector allows you to inspect the structure of a QGraphicsScene and to view and edit the properties of the QGraphicsItem instances contained in it. It provides:
+    The graphcis scene inspector allows you to inspect the structure of a QGraphicsScene, and to view and edit the properties of the QGraphicsItem instances contained in it. It enables:
 
     \list
         \li Inspecting the graphics item hierarchy.
         \li Remote view of the rendered content with diagnostic overlays.
-        \li Inspecting individual QPainter commands per graphics item.
+        \li Inspecting individual QPainter commands for each graphics item.
     \endlist
 
     If your target has multiple QGraphicsScene instances, the combo box at the top can be used to switch between them.
 
     \section1 Item Tree
 
-    The item tree is shown on the top left, and contains the visual hierarchy of QGraphicsItem instances in the currently selected graphics scene.
-    The right side contains the same property view for the selected item.
+    The item tree is shown to the top left, and contains the visual hierarchy of QGraphicsItem instances in the currently selected graphics scene.
+    The right side contains the property view for the selected item.
 
-    \image gammaray-graphicsscene-inspector.png
+    \borderedimage gammaray-graphicsscene-inspector.png
 
-    You can navigate to the object inspector (and other applicable tools) using the context menu on the item tree. This feature is only available
-    for QGraphicsObject sub-classes though.
+    You can navigate to the object inspector (and other applicable tools) using the context menu on the item tree. This feature is available
+    for QGraphicsObject sub-classes only.
 
     \section1 Remote View
 
-    The remote view is shown on the left lower part of the graphics view inspector. Besides giving you a zoomable view of the rendered content,
+    The remote view is shown to the lower left of graphics view inspector. Besides giving you a zoomable view of the rendered content,
     it provides a number of additional features:
 
     \list
         \li Element picking.
-        \li Diagnostic overlays with bounding shape, bounding box and tranformation origin information.
+        \li Diagnostic overlays with bounding shape, bounding box, and tranformation origin information.
     \endlist
 
     \section1 Paint Analyzer
 
     When selecting a graphics item in the item tree, the paint analyzer tab is activated in the property view on the right.
 
-    \image gammaray-graphicsitem-paint-analyzer.png
+    \borderedimage gammaray-graphicsitem-paint-analyzer.png
 
     The paint analyzer allows you to inspect every single QPainter command that is executed, and look at the visual result after each step.
 
