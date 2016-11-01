@@ -186,7 +186,7 @@ void Widget3DWindowModel::populate()
         }
 
         for (int i = 0, cnt = sourceModel()->rowCount(idx); i < cnt; ++i) {
-            toVisit.push_back(sourceModel()->index(i, 0, idx));
+            toVisit.push_front(sourceModel()->index(i, 0, idx));
         }
     }
 }

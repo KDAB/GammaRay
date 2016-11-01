@@ -39,8 +39,6 @@
 
 #include <ui/contextmenuextension.h>
 
-#include <3rdparty/kde/kdescendantsproxymodel.h>
-
 #include <QWindow>
 #include <QQuickView>
 #include <QVBoxLayout>
