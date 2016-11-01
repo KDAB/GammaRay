@@ -28,6 +28,7 @@
 
 #include "remoteviewwidget.h"
 #include "modelpickerdialog.h"
+#include <visibilityfilterproxymodel.h>
 
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
@@ -66,6 +67,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     , m_supportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection)
     , m_hasMeasurement(false)
     , m_pickProxyModel(new ObjectIdsFilterProxyModel(this))
+    , m_invisibleItemsProxyModel (new VisibilityFilterProxyModel(this))
     , m_initialZoomDone(false)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -207,9 +209,11 @@ void RemoteViewWidget::elementsAtReceived(const GammaRay::ObjectIds &ids, int be
     else {
         const int candidate = bestCandidate == -1 ? 0 : bestCandidate;
         ModelPickerDialog *dlg = new ModelPickerDialog(window());
-        dlg->setModel(m_pickProxyModel);
+        m_invisibleItemsProxyModel->setSourceModel(m_pickProxyModel);
+        dlg->setModel(m_invisibleItemsProxyModel);
         dlg->setCurrentIndex(ObjectModel::ObjectIdRole, QVariant::fromValue(ids[candidate]));
         connect(dlg, SIGNAL(activated(QModelIndex)), this, SLOT(pickElementId(QModelIndex)));
+        connect(dlg, SIGNAL(checkBoxStateChanged(bool)), m_invisibleItemsProxyModel, SLOT(setHideQQuickItems(bool)));
         dlg->open();
     }
 }

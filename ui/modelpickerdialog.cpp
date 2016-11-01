@@ -28,11 +28,14 @@
 
 #include "modelpickerdialog.h"
 #include "deferredtreeview.h"
+#include "searchlinecontroller.h"
 
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QDebug>
+#include <QLineEdit>
+#include <QCheckBox>
 
 using namespace GammaRay;
 
@@ -45,14 +48,21 @@ ModelPickerDialog::ModelPickerDialog(QWidget *parent)
     : QDialog(parent)
     , m_view(new DeferredTreeView(this))
     , m_buttons(new QDialogButtonBox(this))
+    , m_searchBox (new QLineEdit(this))
+    , m_showInvisibleItems(new QCheckBox(tr("Hide invisible items"),this))
     , m_pendingSelection(qNullSelection())
 {
     setAttribute(Qt::WA_DeleteOnClose);
 
     m_view->setExpandNewContent(true);
     m_buttons->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    m_showInvisibleItems->setChecked(true);
 
     QVBoxLayout *vl = new QVBoxLayout(this);
+    QHBoxLayout *hl = new QHBoxLayout;
+    hl->addWidget(m_searchBox);
+    hl->addWidget(m_showInvisibleItems);
+    vl->addLayout(hl);
     vl->addWidget(m_view);
     vl->addWidget(m_buttons);
 
@@ -63,6 +73,7 @@ ModelPickerDialog::ModelPickerDialog(QWidget *parent)
     connect(m_view, SIGNAL(activated(QModelIndex)), this, SLOT(accept()));
     connect(m_buttons, SIGNAL(accepted()), this, SLOT(accept()));
     connect(m_buttons, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(m_showInvisibleItems, SIGNAL(toggled(bool)), this, SIGNAL(checkBoxStateChanged(bool)));
 }
 
 QAbstractItemModel *ModelPickerDialog::model() const
@@ -75,6 +86,7 @@ void ModelPickerDialog::setModel(QAbstractItemModel *model)
     m_view->setModel(model);
 
     connect(m_view->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged()));
+    new SearchLineController(m_searchBox, model);
 
     for (int i = 0; i < m_view->model()->columnCount(); ++i) {
         m_view->setDeferredResizeMode(i, QHeaderView::ResizeToContents);
@@ -126,3 +138,4 @@ void ModelPickerDialog::updatePendingSelection()
     if (m_pendingSelection != qNullSelection())
         setCurrentIndex(m_pendingSelection.first, m_pendingSelection.second);
 }
+

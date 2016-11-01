@@ -16,6 +16,7 @@ set(gammaray_ui_srcs
   propertywidget.cpp
   propertywidgettab.cpp
   proxytooluifactory.cpp
+  visibilityfilterproxymodel.cpp
   splashscreen.cpp
   searchlinecontroller.cpp
   tooluifactory.cpp

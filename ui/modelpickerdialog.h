@@ -38,6 +38,8 @@ QT_BEGIN_NAMESPACE
 class QModelIndex;
 class QAbstractItemModel;
 class QDialogButtonBox;
+class QLineEdit;
+class QCheckBox;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -64,10 +66,13 @@ public slots:
 
 signals:
     void activated(const QModelIndex &index);
+    void checkBoxStateChanged(const bool &checked);
 
 private:
     DeferredTreeView *m_view;
     QDialogButtonBox *m_buttons;
+    QLineEdit *m_searchBox;
+    QCheckBox *m_showInvisibleItems;
     QPair<int, QVariant> m_pendingSelection;
 
 private slots:
