@@ -29,14 +29,14 @@
 #ifndef WIDGET3DWINDOWMODEL_H
 #define WIDGET3DWINDOWMODEL_H
 
-#include <QAbstractItemModel>
+#include <QAbstractProxyModel>
 #include <QPersistentModelIndex>
 
 #include "widget3dmodel.h"
 
 namespace GammaRay {
 
-class Widget3DWindowModel : public QSortFilterProxyModel
+class Widget3DWindowModel : public QAbstractProxyModel
 {
     Q_OBJECT
 
@@ -44,7 +44,28 @@ public:
     explicit Widget3DWindowModel(QObject *parent = Q_NULLPTR);
     ~Widget3DWindowModel();
 
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
+
+    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex & parent) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
+    QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void sourceModelRowsInserted(const QModelIndex &parent, int first, int last);
+    void sourceModelRowsRemoved();
+    void sourceModelReset();
+
+private:
+    class WindowNode;
+
+    void populate();
+    QModelIndex indexForNode(WindowNode *node) const;
+
+    QVector<WindowNode*> mNodes;
 };
 
 }

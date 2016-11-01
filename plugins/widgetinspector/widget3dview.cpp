@@ -158,6 +158,8 @@ public:
             return false;
         }
 
+        // We accept this row, now force-populate its subtree
+        sourceModel()->index(0, 0, source_idx);
         return true;
     }
 };
@@ -223,12 +225,9 @@ Widget3DView::Widget3DView(QWidget* parent)
     clientModel->setSourceModel(remoteModel);
 
     // WINDOWS
-    // Flatten the tree
-    auto flatModel = new KDescendantsProxyModel(this);
-    flatModel->setSourceModel(clientModel);
     // Filter out everything except for window-type widgets
     auto windowModel = new Widget3DWindowModel(this);
-    windowModel->setSourceModel(flatModel);
+    windowModel->setSourceModel(clientModel);
 
     // WIDGETS
     // Filter out widget subtrees that don't belong to currently selected window
