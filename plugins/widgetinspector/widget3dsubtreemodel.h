@@ -39,19 +39,17 @@
 
 namespace GammaRay {
 
-class Widget3DSubtreeModel : public QAbstractItemModel
+class Widget3DSubtreeModel : public QAbstractProxyModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QAbstractItemModel *sourceModel READ sourceModel WRITE setSourceModel NOTIFY sourceModelChanged)
     Q_PROPERTY(QString rootObjectId READ rootObjectId WRITE setRootObjectId NOTIFY rootObjectIdChanged)
 
 public:
     explicit Widget3DSubtreeModel(QObject *parent = Q_NULLPTR);
     ~Widget3DSubtreeModel();
 
-    void setSourceModel(QAbstractItemModel *sourceModel);
-    QAbstractItemModel *sourceModel() const;
+    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
 
     void setRootObjectId(const QString &rootObject);
     QString rootObjectId() const;
@@ -61,17 +59,20 @@ public:
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const Q_DECL_OVERRIDE;
     QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    bool hasChildren(const QModelIndex &parent) const Q_DECL_OVERRIDE;
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
+    QModelIndex mapToSource(const QModelIndex &proxyIndex) const Q_DECL_OVERRIDE;
 
     ObjectId realObjectId(const QString &objectId) const;
 
 Q_SIGNALS:
-    void sourceModelChanged();
     void rootObjectIdChanged();
 
 private Q_SLOTS:
-    void sourceRowsInserted(const QModelIndex &parent, int first, int last);
+    int sourceRowsInserted(const QModelIndex &parent, int first, int last);
     void sourceRowsAboutToBeRemoved(const QModelIndex &parent, int first, int last);
     void sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void sourceModelReset();
@@ -79,7 +80,6 @@ private Q_SLOTS:
 
 private:
     class Node;
-    Node *nodeForIndex(const QModelIndex &index) const;
     QModelIndex indexForNode(Node *node) const;
 
     void populate();
@@ -88,12 +88,10 @@ private:
     bool isParentOf(const QModelIndex &parent, const QModelIndex &child) const;
     QModelIndex findIndexForObject(const QString &objectId) const;
 
-    QAbstractItemModel *mSourceModel;
     QString m_rootObject;
     QModelIndex m_rootIndex;
 
-
-    Node *mRoot;
+    QList<Node *> mNodeList;
     QHash<QString, Node*> mNodeLookup;
 
     mutable QSet<QPersistentModelIndex> m_foreignWindows;

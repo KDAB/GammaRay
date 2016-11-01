@@ -365,10 +365,8 @@ Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, const QModelIndex &
     Widget3DWidget *widget = mDataCache.value(obj, Q_NULLPTR);
     if (!widget && createWhenMissing) {
         Widget3DWidget *parent = Q_NULLPTR;
-        if (obj->parent()) {
-            Q_ASSERT(idx.parent().isValid());
+        if (obj->parent() && idx.parent().isValid()) {
             parent = widgetForObject(obj->parent(), idx.parent(), createWhenMissing);
-            Q_ASSERT(parent);
         }
         widget = new Widget3DWidget(qobject_cast<QWidget*>(obj), idx, parent);
         connect(widget, &Widget3DWidget::changed,

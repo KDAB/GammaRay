@@ -93,20 +93,19 @@ protected:
     }
 };
 
-class Widget3DRoleModel : public QIdentityProxyModel
+class Widget3DClientModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit Widget3DRoleModel(QObject *parent = Q_NULLPTR)
-        : QIdentityProxyModel(parent)
-    {}
-
-    ~Widget3DRoleModel() = default;
+    explicit Widget3DClientModel(QObject *parent = Q_NULLPTR)
+        : QSortFilterProxyModel(parent)
+    {
+    }
 
     // Map the server-side role names for easy use from QML
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE
     {
-        QHash<int, QByteArray> roles;
+        QHash<int, QByteArray> roles = QSortFilterProxyModel::roleNames();
         roles[Widget3DModel::IdRole] = "objectId";
         roles[Widget3DModel::GeometryRole] = "geometry";
         roles[Widget3DModel::TextureRole] = "frontTexture";
@@ -115,16 +114,6 @@ public:
         roles[Widget3DModel::MetaDataRole] = "metaData";
         roles[Widget3DModel::DepthRole] = "depth";
         return roles;
-    }
-};
-
-class Widget3DClientModel : public QSortFilterProxyModel
-{
-    Q_OBJECT
-public:
-    explicit Widget3DClientModel(QObject *parent = Q_NULLPTR)
-        : QSortFilterProxyModel(parent)
-    {
     }
 
     ~Widget3DClientModel() = default;
@@ -220,7 +209,8 @@ Widget3DView::Widget3DView(QWidget* parent)
     : QWidget(parent)
 {
     auto remoteModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Widget3DModel"));
-    // Filter out rows without data and invisible widgets
+    // Filter out rows without data and invisible widgets and expose C++ roles
+    // to QML.
     auto clientModel = new Widget3DClientModel(this);
     clientModel->setSourceModel(remoteModel);
 
@@ -231,17 +221,11 @@ Widget3DView::Widget3DView(QWidget* parent)
 
     // WIDGETS
     // Filter out widget subtrees that don't belong to currently selected window
-    auto subtreeModel = new Widget3DSubtreeModel(this);
-    subtreeModel->setSourceModel(clientModel);
-    // Flatten the filtered tree, the resulting list can be rendered by Qt3D
-    auto flatSubtreeModel = new KDescendantsProxyModel(this);
-    flatSubtreeModel->setSourceModel(subtreeModel);
-    // Finally add a proxy which will be exposed to QML and which contains
-    // C++ -> QML role mapping
-    auto widgetModel = new Widget3DRoleModel(this);
-    widgetModel->setSourceModel(flatSubtreeModel);
+    // and flatten the tree
+    auto widgetModel = new Widget3DSubtreeModel(this);
+    widgetModel->setSourceModel(clientModel);
 
-    mSelectionHelper = new Widget3DSelectionHelper(subtreeModel, this);
+    mSelectionHelper = new Widget3DSelectionHelper(widgetModel, this);
 
     auto vbox = new QVBoxLayout(this);
 
@@ -275,8 +259,8 @@ Widget3DView::Widget3DView(QWidget* parent)
     mRenderWindow->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
 
     connect(combo, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            this, [=]() {
-                subtreeModel->setRootObjectId(combo->currentData(Widget3DModel::IdRole).toString());
+            this, [widgetModel, combo, this]() {
+                widgetModel->setRootObjectId(combo->currentData(Widget3DModel::IdRole).toString());
                 QMetaObject::invokeMethod(mRenderWindow->rootObject(), "resetView");
             });
 }
