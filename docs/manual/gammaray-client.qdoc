@@ -1,0 +1,70 @@
+/*
+    gammaray-client.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay Client}
+    \nextpage {Tools}
+    \previouspage {Graphical Launcher}
+    \page gammaray-client.html
+
+    \title GammaRay Client
+
+    \section1 Overview
+
+    After launcher a target application with GammaRay, or attaching or connecting to a running one, you are presented with the GammaRay client.
+    This is the primary user interface for exploring what is going on inside the target application.
+
+    The GammaRay client is available in two forms:
+    \list
+        \li as a standalone application as depicted in the following screenshot
+        \li as \l{Qt Creator} plugin (for \l{Qt Automotive Suite} only)
+    \endlist
+
+    \image gammaray-object-inspector.png
+
+    \section2 Tools
+
+    GammaRay contains a number of different tools, each providing a different view on the activities and data of the target application.
+    A tool typically focuses on a specific Qt framework such at \l{Qt Quick} or state machines, or model/view.
+
+    Switching between tools is done via the tool list on the left side of the GammaRay client window. Only tools applicable to the current
+    target applications are active. Inactive tools can be hidden via the context menu.
+
+    An overview of all available tools can be found in the \l{Tools} section of this manual.
+
+    \section2 Object properties
+
+    Many tools in GammaRay deal with a set of objects of the target application, most commonly QObject sub-classes. To explore the properties of
+    a selected object, those tools typically show the object property inspector on the right hand side (as seen in the above screenshot).
+    The property inspector contains a number of different tabs, depending on the type of the object.
+
+    \section2 Object and code navigation
+
+    Different tools might show different aspects of the same object, so it's useful to be able to navigate to the current object in other tools.
+    This is offered in most places via the context menu.
+
+    Equally, it is useful to navigate to the code that declared or instaniated an object, this is offered also via the context menu (QML only currently).
+
+    \section2 Finding objects
+
+    Finding the right objects in the manu thousands existing in a target application typically can be challenging.
+    GammaRay supports this by the following means:
+    \list
+        \li Search fields for most object tree or list views, to quickly filter by type, object name or other displayed properties.
+        \li In-application object picking for visual elements, using Ctrl+Shift+left click on the target application.
+    \endlist
+*/
