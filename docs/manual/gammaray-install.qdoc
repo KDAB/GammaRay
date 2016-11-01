@@ -1,0 +1,163 @@
+/*
+    gammaray-install.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Installation}
+    \nextpage {Graphical Launcher}
+    \previouspage {Getting Started}
+    \page gammaray-install.html
+
+    \title Installation
+
+    \section1 Overview
+
+    GammaRay consists of two parts, the client and the probe. The client is the graphical user interface you
+    are going to interact with. The probe interacts very closely with the Qt application it analyzes, using
+    a number of internal APIs of Qt. This makes it necessary that the probe is built for exactly your Qt.
+
+    All of the following affect the compatibility of the GammaRay probe with the target application:
+    \list
+        \li Qt version
+        \li Qt configuration
+        \li system architecture (most prominently 32bit vs 64bit)
+        \li compiler vendor (particularly on Windows)
+        \li compiler settings (particularly debug or release mode, on Windows)
+    \endlist
+
+    This tight coupling to Qt makes it unfortunately somewhat difficult to provide pre-compiled binaries for
+    the GammaRay probe in all cases, the following instructions therefore also cover how to build GammaRay from
+    source code, should no pre-built probe be available for your configuration.
+
+    \section1 Local Development
+
+    \section2 Pre-built packages
+
+    Pre-built GammaRay packages are available for the following systems:
+    \list
+        \li \l{Qt Automotive Suite} contains everything needed as part of the standard SDK already.
+        \li For some Linux distributions \l{KDAB} provides packages via the Open Build Service \l{http://download.opensuse.org/repositories/isv:/KDAB/}{here}.
+    \endlist
+
+    \section2 Build recipes
+
+    Build recipes for the following source-based software distribution systems are available:
+    \list
+        \li \l{https://github.com/KDAB/homebrew-tap}{Homebrew} (macOS)
+        \li \l{https://quickgit.kde.org/?p=emerge.git&a=tree&f=portage%2Fqt-apps%2Fgammaray}{KDE emerge} (Windows)
+    \endlist
+
+    \section2 Building manually
+
+    You can obtain the source code of GammaRay on \l{https://github.com/KDAB/GammaRay}{Github}. To build it you need
+    the following requirements:
+    \list
+        \li Qt 4.8 or 5.2 or newer
+        \li CMake 2.8.12 or newer
+        \li a C++11 compatible compiler
+    \endlist
+
+    GammaRay is build using the normal CMake build process, you can find more information in the Install.txt file
+    in the GammaRay source tree.
+
+
+    \section1 Embedded Targets
+
+    The \l{Qt Automotive Suite} contains pre-built GammaRay probes are included in the device images.
+
+    For the following source-based embedded Linux distributions, there are example build recipes included
+    below. Note that these likely need to be adjusted for your specific setup.
+    \list
+        \li Yocto
+        \li Buildroot
+    \endlist
+
+    In all other cases, including non-Linux target systems, refer to the cross-compilation instructions below.
+
+    \section2 Yocto
+
+    Example gammaray_git.bb:
+
+    \quotefile yocto/gammaray_git.bb
+
+    The lines you probably want to adjust are:
+    \list
+        \li SRCREV: to use newer versions
+        \li DEPENDS: to select the Qt modules you are using, in order to enable all relevant GammaRay features
+    \endlist
+
+    \section2 Buildroot
+
+    Example Config.in:
+
+    \code
+        config BR2_PACKAGE_GAMMARAY
+                bool "gammaray"
+                depends on BR2_PACKAGE_QT5
+                help
+                GammaRay Qt introspection probe.
+    \endcode
+
+    Example gammaray.mk:
+
+    \code
+        GAMMARAY_VERSION = 1728dff87163c370fa6903a6d739d1a132b4c62f
+        GAMMARAY_SITE = git://github.com/KDAB/GammaRay.git
+        GAMMARAY_INSTALL_STAGING = NO
+        GAMMARAY_INSTALL_TARGET = YES
+        GAMMARAY_LICENSE = GPLv2
+        GAMMARAY_LICENSE_FILES = LICENSE
+        GAMMARAY_DEPENDENCIES = qt5base
+
+        GAMMARAY_CONF_OPTS += -DGAMMARAY_BUILD_UI=OFF
+
+        $(eval $(cmake-package))
+    \endcode
+
+    The lines you probably want to adjust are:
+    \list
+        \li GAMMARAY_VERSION: to use newer versions
+        \li GAMMARAY_DEPENDENCIES: to select the Qt modules you are using, in order to enable all relevant GammaRay features
+    \endlist
+
+    \section2 Manual cross-compilation
+
+    GammaRay can be cross-compiled using the normal cross-compilation mechanism of \l{CMake},
+    ie. passing CMake a toolchain file. The GammaRay source code contains a number of example
+    toolchain files for Linux (RPI, iMX6), QNX (6.5, 6.6) and Android you can use or adjust.
+
+    The toolchain file is passed to CMake using the -DCMAKE_TOOLCHAIN_FILE command line option.
+    Note that this only works on the very first CMake run, CMake doesn't like changing the toolchain
+    file on an existing build directory. In that case, make sure to wipe the entire build directory
+    first (just deleting CMakeCache.txt is not enough!).
+
+    Additionally you might need to pass one or more -DCMAKE_PREFIX_PATH=... command line options
+    to point CMake to the location your sysroot has Qt (or any other dependency) installed in,
+    just as during desktop builds.
+
+    A default build of GammaRay includes both the client and the probe, for cross-compiling you
+    normally only want the probe, which can be achieved by setting the CMake option GAMMARAY_BUILD_UI to off.
+
+    Here's an example CMake invocation for building for RaspberryPI:
+
+    \code
+        export SYSROOT=/where/your/rpi/sysroot/is/located
+        export PATH=<toolchain>:$PATH
+
+        cd <builddir>
+        cmake -DCMAKE_TOOLCHAIN_FILE=<srcdir>/cmake/Toolchain-RPI.cmake  -DCMAKE_PREFIX_PATH=$SYSROOT/usr/local/Qt-5.5.1 -DCMAKE_INSTALL_PREFIX=$SYSROOT/usr/ -DGAMMARAY_BUILD_UI=OFF
+    \endcode
+*/
