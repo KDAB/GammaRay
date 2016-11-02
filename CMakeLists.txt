@@ -318,10 +318,6 @@ if(Qt5Core_FOUND)
   set(HAVE_QT_WEBKIT ${Qt5WebKit_FOUND})
   set(HAVE_QT_WEBKIT1 ${Qt5WebKitWidgets_FOUND})
 
-  if(Qt5_POSITION_INDEPENDENT_CODE AND NOT WIN32)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-  endif()
-
   # TODO: Remove me once fixed in ECM module
   # more hacks: find qpa/... includes
   # also see https://codereview.qt-project.org/#change,30483
