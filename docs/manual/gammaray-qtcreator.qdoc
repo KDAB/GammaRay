@@ -1,0 +1,74 @@
+/*
+    gammaray-qtcreator.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Qt Creator Integration}
+    \nextpage {Tools}
+    \previouspage {GammaRay Client}
+    \page gammaray-qtcreator.html
+
+    \title Qt Creator Integration
+
+    \section1 Overview
+
+    The GammaRay \l{Qt Creator} integration plug-in allows you to interact with a target application
+    with GammaRay conveniently from within Qt Creator. The \l{GammaRay Client} is embedded inside Qt Creator
+    in this case, and you can directly launch, attach to or connect to target applications using the currently
+    active project configuration. Code navigation from GammaRay will directly open the corresponding source
+    file inside Qt Creator.
+
+    \image gammaray-qtcreator.png
+
+    The GammaRay Qt Creator integration plug-in is only available in the \l{Qt Automotive Suite}.
+
+    \section1 Launching Applications
+
+    Launching a target application with GammaRay from within \l{Qt Creator} is as easy as starting it in the debugger.
+    Just select \uicontrol Analyze > \uicontrol {Start with GammaRay}. Your target application will be started and the
+    GammaRay client appears inside Qt Creator. All necessary configuration for GammaRay is automatically determined
+    from the project settings in Qt Creator.
+
+    The following remote targets are supported:
+    \list
+        \li Generic Linux targets using SSH
+        \li QNX targets using SSH
+        \li Linux Boot2Qt targets
+    \endlist
+
+    \section1 Attaching to an Application
+
+    To attach to a locally running application select \uicontrol Analyze > \uicontrol {Attach GammaRay to a local running process}.
+    This will show you the standard process selection dialog of \l{Qt Creator}. Select the process you want to attach
+    to and press \uicontrol{Attach to Process}. After attaching the GammaRay client will be shown inside Qt Creator.
+
+    \image gammaray-qtcreator-attach.png
+
+    \section1 Connecting to a running target
+
+    It is also possible to connect to a target on a remote device that has already been injected with GammaRay.
+    This option is available under \uicontrol{Analyze} > \uicontrol{Connect GammaRay to a remote running process}.
+    Selecting this option will show the connection dialog depicted in the following screenshot.
+
+    \image gammaray-qtcreator-connect.png
+
+    GammaRay tries to automatically discover viable targets on your local network, these are displayed in the list view
+    in this dialog, and can be used by selecting the corresponding items. Discovered targets using an incompatible
+    GammaRay version will be shown but will be disabled for selection.
+
+    Should GammaRay not be able to discover the desired target automatically, the network address of the target can also
+    be specified manually in the entry field on the top. This might be necessary depending on your local network setup.
+*/
