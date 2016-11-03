@@ -21,19 +21,19 @@ gammaray_configure.commands = \
 
 gammaray_build.target = gammaray_build
 gammaray_build.depends += gammaray_configure
-gammaray_build.commands = $(MAKE) $(MAKEFLAGS) -C build
+gammaray_build.commands = $(MAKE) -C build
 
 gammaray_test.target = check
 gammaray_test.depends += gammaray_configure
-gammaray_test.commands = $(MAKE) $(MAKEFLAGS) -C build test
+gammaray_test.commands = $(MAKE) -C build test
 
 gammaray_online_docs.target = docs
 gammaray_online_docs.depends += gammaray_configure
-gammaray_online_docs.commands = $(MAKE) $(MAKEFLAGS) -C build online-docs
+gammaray_online_docs.commands = $(MAKE) -C build online-docs
 
 gammaray_install.target = install
 gammaray_install.depends += gammaray_configure
-gammaray_install.commands = $(MAKE) $(MAKEFLAGS) -C build install
+gammaray_install.commands = $(MAKE) DESTDIR=$(INSTALL_ROOT) -C build install
 
 QMAKE_EXTRA_TARGETS += \
     gammaray_configure \
