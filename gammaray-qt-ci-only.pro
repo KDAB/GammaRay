@@ -13,29 +13,34 @@ message("If you are seeing this and you are not the Qt CI, please refer to Insta
 
 TEMPLATE = aux
 
-gammaray_build.target = gammaray_build
-gammaray_build.commands = \
+gammaray_configure.target = gammaray_configure
+gammaray_configure.commands = \
     mkdir -p build; \
     cd build; \
-    cmake -DCMAKE_INSTALL_PREFIX=$$[QT_INSTALL_PREFIX] -DCMAKE_PREFIX_PATH=$$[QT_INSTALL_PREFIX] $$PWD; \
-    $(MAKE) $(MAKEFLAGS)
+    cmake -DCMAKE_INSTALL_PREFIX=$$[QT_INSTALL_PREFIX] -DCMAKE_PREFIX_PATH=$$[QT_INSTALL_PREFIX] $$PWD
+
+gammaray_build.target = gammaray_build
+gammaray_build.depends += gammaray_configure
+gammaray_build.commands = $(MAKE) $(MAKEFLAGS) -C build
+
+gammaray_test.target = check
+gammaray_test.depends += gammaray_configure
+gammaray_test.commands = $(MAKE) $(MAKEFLAGS) -C build test
 
 gammaray_online_docs.target = docs
-gammaray_online_docs.commands = \
-    mkdir -p build; \
-    cd build; \
-    cmake -DCMAKE_INSTALL_PREFIX=$$[QT_INSTALL_PREFIX] -DCMAKE_PREFIX_PATH=$$[QT_INSTALL_PREFIX] $$PWD; \
-    $(MAKE) online-docs
+gammaray_online_docs.depends += gammaray_configure
+gammaray_online_docs.commands = $(MAKE) $(MAKEFLAGS) -C build online-docs
 
 gammaray_install.target = install
-gammaray_install.commands = \
-    mkdir -p build; \
-    cd build; \
-    cmake -DCMAKE_INSTALL_PREFIX=$$[QT_INSTALL_PREFIX] -DCMAKE_PREFIX_PATH=$$[QT_INSTALL_PREFIX] $$PWD; \
-    $(MAKE) $(MAKEFLAGS); \
-    $(MAKE) install
+gammaray_install.depends += gammaray_configure
+gammaray_install.commands = $(MAKE) $(MAKEFLAGS) -C build install
 
-QMAKE_EXTRA_TARGETS += gammaray_build gammaray_online_docs gammaray_install
+QMAKE_EXTRA_TARGETS += \
+    gammaray_configure \
+    gammaray_build \
+    gammaray_test \
+    gammaray_online_docs \
+    gammaray_install
 
 TARGET = gammaray
 PRE_TARGETDEPS += gammaray_build
