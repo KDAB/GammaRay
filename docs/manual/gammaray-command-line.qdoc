@@ -1,0 +1,136 @@
+/*
+    gammaray-command-line.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Command Line Interface}
+    \nextpage {Tools}
+    \previouspage {Qt Creator Integration}
+    \page gammaray-command-line.html
+
+    \title Command Line Interface
+
+    \section1 Overview
+
+    All basic GammaRay operations such as launching a target application or attaching to a running one
+    are also available from the command line interface. This is particularly useful when working with
+    embedded devices. Additionally some specialized options to control GammaRay's injection behavior
+    are only available via the command line interface.
+
+    Launching a target application with GammaRay is done as follows:
+    \code
+    gammaray [gammaray args] <target application> [application args]
+    \endcode
+
+    When run without any arguments, \c gammaray will bring up the \l{Graphical Launcher}. Valid arguments
+    for the \c gammaray command are described in the next section.
+
+    \section1 Command Line Options
+
+    \table
+    \header
+        \li Option
+        \li Description
+    \row
+        \li \c --help
+        \li Print command line options.
+    \row
+        \li \c --version
+        \li Print the GammaRay version and the GammaRay protocol version.
+    \row
+        \li \c -p, \c --pid \c <pid>
+        \li Attach to a a running application with process id \c <pid>.
+    \row
+        \li \c -i, \c --injector \c <injector>
+        \li Specify injector type to use (see below).
+    \row
+        \li \c --inprocess
+        \li Use the Gammaray 1.x in-process UI. This is not necessary in most cases,
+        apart from using tools that do not work remotely.
+    \row
+        \li \c --inject-only
+        \li This will only inject the GammaRay probe into a process, but not start
+        the \l{GammaRay Client}. This is useful for example when doing remote debugging
+        on embedded devices.
+    \row
+        \li \c{--listen <address>}
+        \li Specify on which network address the GammaRay server should listen on.
+        This is useful when GammaRay is selecting the wrong network interface by default,
+        or for restricting remote access in untrusted networks.
+    \row
+        \li \c --no-listen
+        \li Disables the GammaRay server. This implies \c --inprocess as there is no
+        other way to connect to the GammaRay probe in this case.
+    \row
+        \li \c --list-probes
+        \li List all installed probes.
+    \row
+        \li \c{--probe <abi>}
+        \li Explicitly specify which probe to use. This should only be needed when the
+        automatic probe ABI detection fails, or on platforms that don't have probe ABI
+        detection implemented yet.
+    \row
+        \li \c{--connect tcp://<host>[:port]}
+        \li Connect to a target with an already injected GammaRay probe. Useful for
+        example for remote debugging.
+    \row
+        \li \c{--self-test [injector]}
+        \li Runs the GammaRay self-tests, if an injector is specified only that specific
+        one will be tested. The exit code is 0 on success, and 1 otherwise.
+    \endtable
+
+    \section2 Injector Types
+
+    GammaRay contains various methods of injecting itself into a target process. By default it picks the most suitable method
+    on its own, based on the current platform and properties of the target application. It can however be necessary to override
+    the default, in particular if other tools are used at the same time that already occupy specific ways, or if the target
+    application is incompatible with a specific injection method.
+
+    The following injection methods are supported:
+
+    \table
+    \header
+        \li Method
+        \li Launch
+        \li Attach
+        \li Supported Platforms
+    \row
+        \li preload
+        \li X
+        \li
+        \li Linux, macOS, QNX
+    \row
+        \li gdb
+        \li X
+        \li X
+        \li Linux, QNX
+    \row
+        \li lldb
+        \li X
+        \li X
+        \li Linux, macOS
+    \row
+        \li windll
+        \li X
+        \li X
+        \li Windows
+    \row
+        \li style
+        \li X
+        \li
+        \li all
+    \endtable
+*/

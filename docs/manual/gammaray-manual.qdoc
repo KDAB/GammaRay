@@ -61,6 +61,8 @@
             \li \l{Installation}
             \li \l{Graphical Launcher}
             \li \l{GammaRay Client}
+            \li \l{Qt Creator Integration}
+            \li \l{Command Line Interface}
         \endlist
         \li \l{Tools}
         \list
