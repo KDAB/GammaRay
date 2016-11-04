@@ -8,6 +8,9 @@
 # If you are building GammaRay yourself, please use CMake as
 # described in Install. txt
 
+requires(linux:!android|win32)
+requires(!cross_compile)
+
 message("QMake wrapper for the GammaRay build system is only supported for the Qt CI.")
 message("If you are seeing this and you are not the Qt CI, please refer to Install.txt!")
 
