@@ -20,7 +20,22 @@ gammaray_configure.target = gammaray_configure
 gammaray_configure.commands = \
     mkdir -p build; \
     cd build; \
-    cmake -DCMAKE_INSTALL_PREFIX=$$[QT_INSTALL_PREFIX] -DCMAKE_PREFIX_PATH=$$[QT_INSTALL_PREFIX] $$PWD
+    cmake \
+        -DCMAKE_INSTALL_PREFIX=$$[QT_INSTALL_PREFIX] \
+        -DCMAKE_PREFIX_PATH=$$[QT_INSTALL_PREFIX] \
+        -DGAMMARAY_PROBE_ONLY_BUILD=TRUE \
+        -DGAMMARAY_INSTALL_QT_LAYOUT=TRUE \
+        $$PWD
+
+gammaray_configure_docs.target = gammaray_configure_docs
+gammaray_configure_docs.commands = \
+    mkdir -p build; \
+    cd build; \
+    cmake \
+        -DCMAKE_INSTALL_PREFIX=$$[QT_INSTALL_PREFIX] \
+        -DCMAKE_PREFIX_PATH=$$[QT_INSTALL_PREFIX] \
+        -DGAMMARAY_PROBE_ONLY_BUILD=FALSE \
+        $$PWD
 
 gammaray_build.target = gammaray_build
 gammaray_build.depends += gammaray_configure
@@ -31,7 +46,7 @@ gammaray_test.depends += gammaray_configure
 gammaray_test.commands = $(MAKE) -C build test
 
 gammaray_online_docs.target = docs
-gammaray_online_docs.depends += gammaray_configure
+gammaray_online_docs.depends += gammaray_configure_docs
 gammaray_online_docs.commands = $(MAKE) -C build online-docs
 
 gammaray_install.target = install
@@ -40,6 +55,7 @@ gammaray_install.commands = $(MAKE) DESTDIR=$(INSTALL_ROOT) -C build install
 
 QMAKE_EXTRA_TARGETS += \
     gammaray_configure \
+    gammaray_configure_docs \
     gammaray_build \
     gammaray_test \
     gammaray_online_docs \
