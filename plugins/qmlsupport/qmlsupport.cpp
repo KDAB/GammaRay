@@ -52,6 +52,7 @@
 #include <QQmlContext>
 #include <QQmlError>
 #include <QQmlListProperty>
+#include <QQmlEngine>
 
 #include <private/qjsvalue_p.h>
 #include <private/qqmlmetatype_p.h>
