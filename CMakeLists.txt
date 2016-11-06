@@ -470,7 +470,7 @@ find_package(QmlLint)
 set_package_properties(QmlLint PROPERTIES URL "https://qt.io" PURPOSE "Validate QML code.")
 
 if(Qt5Core_FOUND)
-  find_package(KF5SyntaxHighlighting NO_MODULE QUIET)
+  find_package(KF5SyntaxHighlighting 5.28 NO_MODULE QUIET)
   set_package_properties(KF5SyntaxHighlighting PROPERTIES TYPE RECOMMENDED URL "https://www.kde.org/" PURPOSE "Syntax highlighting for code editor.")
   if(TARGET KF5::SyntaxHighlighting)
     set(HAVE_SYNTAX_HIGHLIGHTING TRUE)

@@ -30,10 +30,10 @@
 #include "codeeditorsidebar.h"
 
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
-#include <SyntaxHighlighting/Definition>
-#include <SyntaxHighlighting/Repository>
-#include <SyntaxHighlighting/SyntaxHighlighter>
-#include <SyntaxHighlighting/Theme>
+#include <KSyntaxHighlighting/Definition>
+#include <KSyntaxHighlighting/Repository>
+#include <KSyntaxHighlighting/SyntaxHighlighter>
+#include <KSyntaxHighlighting/Theme>
 #endif
 
 #include <QAction>
@@ -47,7 +47,7 @@
 using namespace GammaRay;
 
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
-SyntaxHighlighting::Repository* CodeEditor::s_repository = Q_NULLPTR;
+KSyntaxHighlighting::Repository* CodeEditor::s_repository = Q_NULLPTR;
 #endif
 
 CodeEditor::CodeEditor(QWidget* parent) :
@@ -217,15 +217,15 @@ void CodeEditor::ensureHighlighterExists()
 {
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
     if (!s_repository) {
-        s_repository = new SyntaxHighlighting::Repository;
+        s_repository = new KSyntaxHighlighting::Repository;
         qAddPostRoutine([](){ delete s_repository; });
     }
 
     if (!m_highlighter) {
-        m_highlighter = new SyntaxHighlighting::SyntaxHighlighter(document());
+        m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(document());
         m_highlighter->setTheme((palette().color(QPalette::Base).lightness() < 128)
-            ? s_repository->defaultTheme(SyntaxHighlighting::Repository::DarkTheme)
-            : s_repository->defaultTheme(SyntaxHighlighting::Repository::LightTheme));
+            ? s_repository->defaultTheme(KSyntaxHighlighting::Repository::DarkTheme)
+            : s_repository->defaultTheme(KSyntaxHighlighting::Repository::LightTheme));
     }
 #endif
 }

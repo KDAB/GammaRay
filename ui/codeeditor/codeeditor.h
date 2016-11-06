@@ -35,7 +35,7 @@
 
 #include <QPlainTextEdit>
 
-namespace SyntaxHighlighting {
+namespace KSyntaxHighlighting {
 class Repository;
 class SyntaxHighlighter;
 }
@@ -70,10 +70,10 @@ private:
     void sidebarPaintEvent(QPaintEvent *event);
     void ensureHighlighterExists();
 
-    static SyntaxHighlighting::Repository *s_repository;
+    static KSyntaxHighlighting::Repository *s_repository;
 
     CodeEditorSidebar *m_sideBar;
-    SyntaxHighlighting::SyntaxHighlighter *m_highlighter;
+    KSyntaxHighlighting::SyntaxHighlighter *m_highlighter;
 };
 }
 
