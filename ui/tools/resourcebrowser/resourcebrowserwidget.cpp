@@ -147,6 +147,9 @@ void ResourceBrowserWidget::resourceSelected(const QByteArray &contents, int lin
         return;
     }
 
+    // avoid re-highlighting the existing content when switching the syntax
+    ui->textBrowser->clear();
+
     // get the file name for syntax highlighting
     QString fileName;
     const auto selection = ui->treeView->selectionModel()->selectedRows();
