@@ -114,6 +114,10 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
     auto hlActionGroup = new QActionGroup(menu);
     hlActionGroup->setExclusive(true);
     auto hlGroupMenu = menu->addMenu(tr("Syntax Highlighting"));
+    auto noHlAction = hlGroupMenu->addAction(QStringLiteral("None"));
+    noHlAction->setCheckable(true);
+    hlActionGroup->addAction(noHlAction);
+    noHlAction->setChecked(!m_highlighter->definition().isValid());
     QMenu *hlSubMenu = Q_NULLPTR;
     QString currentGroup;
     foreach (const auto &def, s_repository->definitions()) {
