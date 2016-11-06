@@ -67,8 +67,14 @@ private slots:
 private:
     friend class CodeEditorSidebar;
     int sidebarWidth() const;
+    int foldingBarWidth() const;
     void sidebarPaintEvent(QPaintEvent *event);
     void ensureHighlighterExists();
+
+    QTextBlock blockAtPosition(int y) const;
+    bool isFoldable(const QTextBlock &block) const;
+    bool isFolded(const QTextBlock &block) const;
+    void toggleFold(const QTextBlock &block);
 
     static KSyntaxHighlighting::Repository *s_repository;
 

@@ -29,7 +29,9 @@
 #include "codeeditorsidebar.h"
 #include "codeeditor.h"
 
+#include <QMouseEvent>
 #include <QPaintEvent>
+#include <QTextBlock>
 
 using namespace GammaRay;
 
@@ -51,4 +53,15 @@ QSize CodeEditorSidebar::sizeHint() const
 void CodeEditorSidebar::paintEvent(QPaintEvent *event)
 {
     m_codeEditor->sidebarPaintEvent(event);
+}
+
+void CodeEditorSidebar::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (event->x() >= width() - m_codeEditor->foldingBarWidth()) {
+        auto block = m_codeEditor->blockAtPosition(event->y());
+        if (!block.isValid() || !m_codeEditor->isFoldable(block))
+            return;
+        m_codeEditor->toggleFold(block);
+    }
+    QWidget::mouseReleaseEvent(event);
 }
