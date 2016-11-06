@@ -38,8 +38,8 @@ class WidgetOrLayoutFacade
 {
 public:
     WidgetOrLayoutFacade() : m_object(nullptr) {}
-    WidgetOrLayoutFacade(QWidget *widget) : m_object(widget) {}
-    WidgetOrLayoutFacade(QLayout *layout) : m_object(layout) {}
+    WidgetOrLayoutFacade(QWidget *widget) : m_object(widget) {} //krazy:exclude=explicit
+    WidgetOrLayoutFacade(QLayout *layout) : m_object(layout) {} //krazy:exclude=explicit
 
     /// Get either the layout of the widget or the this-pointer
     inline QLayout *layout() const
