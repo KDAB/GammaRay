@@ -42,6 +42,8 @@ ClientToolModel::ClientToolModel(ClientToolManager *manager)
 {
     connect(m_toolManager, SIGNAL(aboutToReceiveData()), this, SLOT(startReset()));
     connect(m_toolManager, SIGNAL(toolListAvailable()), this, SLOT(finishReset()));
+    connect(m_toolManager, SIGNAL(aboutToReset()), this, SLOT(startReset()));
+    connect(m_toolManager, SIGNAL(reset()), this, SLOT(finishReset()));
     connect(m_toolManager, SIGNAL(toolEnabledByIndex(int)), this, SLOT(toolEnabled(int)));
 }
 
