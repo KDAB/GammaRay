@@ -43,12 +43,11 @@
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <common/objectid.h>
+#include <common/remotemodelroles.h>
 #include <common/sourcelocation.h>
 
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
-
-#include <client/remotemodel.h>
 
 #include <QEvent>
 #include <QLabel>
@@ -184,9 +183,8 @@ void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft,
 
     for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
         const QModelIndex index = ui->itemTreeView->model()->index(i, 0, topLeft.parent());
-        RemoteModel::NodeStates state
-            = index.data(RemoteModel::LoadingState).value<RemoteModel::NodeStates>();
-        if (state & RemoteModel::Empty || ~state & RemoteModel::Outdated)
+        const auto state = index.data(RemoteModelRole::LoadingState).value<RemoteModelNodeState::NodeStates>();
+        if (state & RemoteModelNodeState::Empty || ~state & RemoteModelNodeState::Outdated)
             continue;
 
         QVariantAnimation *colorAnimation = new QVariantAnimation(this);

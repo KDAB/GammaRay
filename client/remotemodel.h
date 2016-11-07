@@ -32,6 +32,7 @@
 #include "gammaray_client_export.h"
 #include <common/objectmodel.h>
 #include <common/protocol.h>
+#include <common/remotemodelroles.h>
 
 #include <QAbstractItemModel>
 #include <QRegExp>
@@ -79,18 +80,6 @@ public slots:
     void serverRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
     void serverUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
-public:
-    enum Roles {
-        LoadingState = ObjectModel::UserRole + 128 // TODO: Tidy up roles in general (and give loading state a proper id)
-    };
-    enum NodeState {
-        NoState = 0,
-        Empty = 1,
-        Loading = 2,
-        Outdated = 4
-    };
-    Q_DECLARE_FLAGS(NodeStates, NodeState)
-
 signals:
     void proxyDynamicSortFilterChanged();
     void proxyFilterCaseSensitivityChanged();
@@ -121,7 +110,7 @@ private:
         qint32 columnCount;
         QVector<QHash<int, QVariant> > data; // column -> role -> data
         QVector<Qt::ItemFlags> flags;      // column -> flags
-        QVector<NodeStates> state;         // column -> state (cache outdated, waiting for data, etc)
+        QVector<RemoteModelNodeState::NodeStates> state;         // column -> state (cache outdated, waiting for data, etc)
     };
 
     void clear();
@@ -136,7 +125,7 @@ private:
     /** Checks if @p ancestor is a (grand)parent of @p child. */
     bool isAncestor(Node *ancestor, Node *child) const;
 
-    NodeStates stateForColumn(Node *node, int columnIndex) const;
+    RemoteModelNodeState::NodeStates stateForColumn(Node *node, int columnIndex) const;
 
     void requestRowColumnCount(const QModelIndex &index) const;
     void requestDataAndFlags(const QModelIndex &index) const;
@@ -203,8 +192,5 @@ private:
     friend class FakeRemoteModel;
 };
 }
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::RemoteModel::NodeStates)
-Q_DECLARE_METATYPE(GammaRay::RemoteModel::NodeStates)
 
 #endif
