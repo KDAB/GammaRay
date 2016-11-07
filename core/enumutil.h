@@ -62,7 +62,7 @@ GAMMARAY_CORE_EXPORT QMetaEnum metaEnum(const QVariant &value, const char *typeN
  * @param me The QMetaEnum defining the enum/flag.
  * @since 2.6
  */
-int enumToInt(const QVariant &value, const QMetaEnum &me);
+GAMMARAY_CORE_EXPORT int enumToInt(const QVariant &value, const QMetaEnum &me);
 
 /*!
  * Translates an enum or flag value into a human readable text.
