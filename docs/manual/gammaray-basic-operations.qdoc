@@ -1,0 +1,110 @@
+/*!
+    \contentspage {Getting Started}
+    \nextpage {Graphical Launcher}
+    \previouspage {Installation}
+    \page gammaray-basic-operations.html
+
+    \title Basic Operations
+
+    \section1 Launching a New Application
+
+    \section2 On the command line
+
+    Launching an application with GammaRay on the command line is similar to tools like valgrind:
+    \code
+    gammaray <gammaray-args> <app> <app-args>
+    \endcode
+
+    This will launch the application with GammaRay attached to it right from the start. The GammaRay arguments allow you to select a different injection method.
+    While the default is suitable for most target applications, the simultaneous use of other tools using the same entry points as GammaRay might require using alternative
+    injection methods for example.
+
+    \l{Command Line Interface}{Read more...}
+
+    \section2 With a graphical user interface
+
+    Launching applications is also available in the graphical user interface. Launch GammaRay without command line arguments (or use the menu shortcut if you have one), select the \uicontrol Launch tab. There you can select the executable to launch as well as optional command line arguments to pass to it.
+
+    \l{Graphical Launcher}{Read more...}
+
+    \section2 With Qt Creator
+
+    You can launch both local and remote applications from within \l{Qt Creator} with GammaRay via
+    \uicontrol Analyze > \uicontrol {Start with GammaRay}. All environment and application settings
+    are taken from your regular run configuration in Qt Creator.
+
+    \l{Qt Creator Integration}{Read more...}
+
+    \l{Qt Creator} integration is only available in the \l{Qt Automotive Suite}.
+
+    \section2 On an embedded target
+
+    If you want to run the GammaRay UI on a different machine, which is commonly the case for embedded targets, you can proceed as described in the command line section above, with the extra \c --inject-only argument passed to GammaRay. Then follow the instructions below on how to connect to a already running instance.
+
+
+    \section1 Attaching to a Running Application
+
+    \section2 On the command line
+
+    Attaching to a running application on the command line is similar to gdb:
+    \code
+    gammaray <gammaray-args> --pid <pid>
+    \endcode
+
+    This will attach GammaRay to the application running with process id \c <pid>. Keep in mind that this process has to be a Qt application with matching build settings and Qt version for GammaRay to work.
+
+    \l{Command Line Interface}{Read more...}
+
+    \section2 With a graphical user interface
+
+    Launch GammaRay without command line arguments (or use the menu shortcut if you have one) to bring up the GammaRay UI. It will show you a list of processes GammaRay can attach to, that is, those with the same build settings and Qt version as your GammaRay instance. You'll find the process list on the \uicontrol Attach tab.
+
+    \l{Graphical Launcher}{Read more...}
+
+    \section2 With Qt Creator
+
+    You can attach GammaRay to already locally running applications from within \l{Qt Creator} using
+    \uicontrol Analyze > \uicontrol {Attach GammaRay to a local running process}. Just as when attaching
+    a regular debugger, Qt Creator will open a process selection dialog allowing you to pick which process
+    to attach to.
+
+    \l{Qt Creator Integration}{Read more...}
+
+    \l{Qt Creator} integration is only available in the \l{Qt Automotive Suite}.
+
+    \section2 On an embedded target
+
+    If you want to run the GammaRay UI on a different machine, which is commonly the case for embedded targets, you can proceed as described in the command line section above, with the extra \c --inject-only argument passed to GammaRay. Then follow the instructions below on how to connect to a already running instance.
+
+
+    \section1 Connecting to a Running Application
+
+    \section2 On the command line
+
+    Run the following command to connect to a running remote instance:
+    \code
+    gammaray --connect tcp://<host>:<port>
+    \endcode
+
+    Insert the IP address or host name of the target device, and if needed the port number accordingly. The port number can usually be omitted if there's only a single GammaRay instance active on the target. The port number to use is printed on the command line after injection as described above.
+
+    \l{Command Line Interface}{Read more...}
+
+    \section2 With a graphical user interface
+
+    Launch GammaRay without any command line arguments to get to the launcher UI. Select the \uicontrol Connect tab. Depending on your network setup active targets will be already listed here and can simply be selected from the list. Manual entry of host name or IP address, and if necessary the port number is also possible.
+
+    \l{Graphical Launcher}{Read more...}
+
+    \section2 With Qt Creator
+
+    You can connect to remotely running applications with GammaRay already injected from within \l{Qt Creator}
+    using \uicontrol Analyze > \uicontrol{Connect GammaRay to a remote running process}. Qt Creator will then
+    show all running instances discovered on the local network, as well as an option to manually specify a network
+    address to connect to.
+
+    \l{Qt Creator Integration}{Read more...}
+
+    \l{Qt Creator} integration is only available in the \l{Qt Automotive Suite}.
+*/
+
