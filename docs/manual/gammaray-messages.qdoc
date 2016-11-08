@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Messages}
+    \contentspage {Tools}
     \nextpage {Signal Plotter}
     \previouspage {State Machine Debugger}
     \page gammaray-messages.html
@@ -29,19 +29,19 @@
 
     \section1 Message Browser
 
-    The message browser shows you all diagnostic messages of the target of currently with a currently activated QLoggingCategory. Here you can:
+    The message browser shows you all diagnostic messages of the target using a QLoggingCategory that is active on the target. Here you can:
 
     \list
-        \li Search and filter messages.
-        \li Look at a backtrace of a selected critical or warning message.
-        \li Navigate to the code location of a diagnostic message (availability depends on build settings).
+        \li search and filter messages,
+        \li look at a backtrace of a selected critical or warning message,
+        \li and navigate to the code location of a diagnostic message (availability depends on build settings).
     \endlist
 
     \section1 Logging Categegory Configuration
 
-    The logging category Configuration shows all QLoggingCategory instances detected in the running target, as well as their current configuration.
+    The logging category configuration shows all QLoggingCategory instances detected on the running target, as well as their current configuration.
 
-    \image gammaray-logging-categories.png
+    \borderedimage gammaray-logging-categories.png
 
     Here you can enable or disable individual logging categories at runtime, which takes immediate effect.
     This is particularly useful to only enable output of high-volume diagnostics for a short period of time.

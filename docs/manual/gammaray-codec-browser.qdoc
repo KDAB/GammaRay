@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Text Codecs}
+    \contentspage {Tools}
     \previouspage {Network}
     \nextpage {Standard Paths}
     \page gammaray-codec-browser.html
@@ -28,11 +28,11 @@
     The text codec browser allows you to inspect QTextCodec instances available on the target system, and to see
     how a specific code converts a given QString.
 
-    These information are usually independent of the target application, but rather depend on the system.
+    This information is usually independent of the target application, but rather depend on the system.
 
-    \image gammaray-codec-browser.png
+    \borderedimage gammaray-codec-browser.png
 
     The list on the left side contains all codecs known by QTextCodec, as well as their aliases. You can select
-    one or more of these codecs for looking at their encoding results of the test string given on the upper
-    right side. Encoding results are shown for all selected codecs on the right side.
+    one or more of these codecs for looking at their encoding results on the test string at the upper-right side.
+    Encoding results are shown for all selected codecs on the right side.
 */

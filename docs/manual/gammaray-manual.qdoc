@@ -16,7 +16,6 @@
 */
 
 /*!
-    \contentspage{index.html}{GammaRay User Manual}
     \page index.html
     \nextpage gammaray-getting-started.html
 
@@ -31,7 +30,7 @@
 
     Augmenting your instruction-level debugger, GammaRay allows you to work on a much
     higher level, with the same concepts as the frameworks you use. This is especially
-    useful for the more complex Qt frameworks such as model/view, state machines or
+    useful for the more complex Qt frameworks such as model/view, state machines, or
     scene graphs.
 
     When trying to analyze bugs in your application, a instruction-level debugger is
@@ -41,17 +40,17 @@
     also handle Qt's own data types correctly. However, when dealing with complex
     frameworks this level of detail is often too low-level. Keeping an overview in a
     large scene graph or following the complex interactions between models and views
-    can quickly become a cumbersome task this way.
+    can quickly become a cumbersome task.
 
     GammaRay addresses this by providing domain-specific debugging aids on a much
     higher level. It provides easy ways of navigating through the complex internal
     structures you find in some Qt frameworks, such as the QtQuick scene graphs,
-    model/view, QTextDocument, state machines and more. Unlike the debugger,
+    model/view, QTextDocument, state machines, and more. Unlike the debugger,
     GammaRay understands those internal structures and can present them in a
     meaningful way.
 
     GammaRay is available for all major platforms and can inspect applications right
-    from the start or attach to an already running one at runtime. It also supports
+    from the start or attach to an already running one. It also supports
     remote debugging, which is especially valuable when working on embedded systems.
 
     \section1 Table Of Contents
@@ -59,6 +58,7 @@
         \li \l{Getting Started}
         \list
             \li \l{Installation}
+            \li \l{Basic Operations}
             \li \l{Graphical Launcher}
             \li \l{GammaRay Client}
             \li \l{Qt Creator Integration}

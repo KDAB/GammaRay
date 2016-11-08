@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Timers}
+    \contentspage {Tools}
     \nextpage {Wayland Compositors}
     \previouspage {Signal Plotter}
     \page gammaray-timertop.html
@@ -30,13 +30,13 @@
 
     This tool is particularly useful for finding timers that fire too often and thus cause unnecessary system wakeup on energy constrained devices.
 
-    \image gammaray-timertop.png
+    \borderedimage gammaray-timertop.png
 
     The list view shows the following information:
 
     \list
         \li The time object name/address.
-        \li Whether or not a timer is active, and if so, if it is supposed to fire in single shot mode or continuously, and in which interval.
+        \li Whether or not a timer is active, and if so, does it fire in single shot or continuous mode, and at what interval.
         \li The amount of wakeups triggered by a timer, that is how often it has fired so far.
         \li The average time it took to process a timer's timeout signal.
         \li The maximum time it took to process a timer's timeout signal.

@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Models}
+    \contentspage {Tools}
     \nextpage {Text Documents}
     \previouspage {Actions}
     \page gammaray-model-inspector.html
@@ -28,18 +28,18 @@
     The model inspector allows you to look at QAbstractItemModel instances, chains of QAbstractProxyModel instances
     built on top of these, as well as QItemSelectionModel instances associated with any of them.
 
-    \image gammaray-model-inspector.png
+    \borderedimage gammaray-model-inspector.png
 
-    \section2 Model inspection
+    \section2 Model Inspection
 
     The model view on the top left shows a list of all QAbstractItemModel instances in the target application. Selecting
-    a model with show its content in the model content view in the center. In the model content view you can select a
+    a model shows its content in the model content view at the center. In the model content view, you can select a
     single cell for inspecting its content in detail. The cell content view on the right will show you:
 
     \list
-        \li Information about the QModelIndex of that cell.
-        \li The cell flags (see Qt::ItemFlags).
-        \li The values for all default (see Qt::ItemDataRole) and custom roles.
+        \li information about the QModelIndex of that cell,
+        \li cell flags (see Qt::ItemFlags),
+        \li and values for all default (see Qt::ItemDataRole) and custom roles.
     \endlist
 
     If the source model allows changing values, you can edit the value column in the cell content view.
@@ -47,16 +47,16 @@
     The context menu on the model list allows navigation to and from the QObject insepctor for analyzing
     object properties.
 
-    \section2 Proxy model inspection
+    \section2 Proxy Model Inspection
 
     If the target application uses QAbstractProxyModel instances, those are shown in the tree view in the upper left,
     beneath there corresponding source model. This allows you to inspect intermediate results of proxy model chains.
 
-    \section2 Selection model inspection
+    \section2 Selection Model Inspection
 
     For each selected model, the selection model list on the lower left shows all QItemSelectionModel instances
-    for that model, as well as how many cells, rows and columns are currently selected. Selecting a selection model
-    will show its current selection in the model content view in the center.
+    for that model, as well as how many cells, rows, and columns are currently selected. Selecting a selection model
+    shows its current selection in the model content view at the center.
 
     The context menu on the selection model list allows navigation to and from the QObject inspector for analyzing
     object properties.

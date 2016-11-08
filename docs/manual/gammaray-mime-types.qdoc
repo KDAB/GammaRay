@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Mime Types}
+    \contentspage {Tools}
     \nextpage {Network}
     \previouspage {Locales}
     \page gammaray-mime-types.html
@@ -25,18 +25,18 @@
 
     \section1 Overview
 
-    The mime type browser is allowing you to inspect the details of every QMimeType instance available via QMimeDatabase on the target system. These information are usually independent of the
+    The mime type browser allows you to inspect the details of every QMimeType instance available via QMimeDatabase on the target system. This information is usually independent of the
     target application, but rather depend on the system.
 
-    \image gammaray-mime-types.png
+    \borderedimage gammaray-mime-types.png
 
-    The tree view shows the entire hierarchy of all known mime types. The hierarchy matches the specified inheritance of a mime type. In the subsequent columns
-    additional information for each mime type are shown, including:
+    The tree view shows the entire hierarchy of all known mime types. The hierarchy matches the specified inheritance of a mime type. In the subsequent columns,
+    additional information for each mime type is shown, including:
 
     \list
-        \li File extensions
-        \li Human readable description
-        \li Icons
-        \li Alias mime types
+        \li file extensions,
+        \li human readable description,
+        \li icons,
+        \li and alias mime types.
     \endlist
 */

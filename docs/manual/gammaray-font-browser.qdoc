@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Font Browser}
+    \contentspage {Tools}
     \nextpage {Locales}
     \previouspage {Meta Type Browser}
     \page gammaray-font-browser.html
@@ -27,12 +27,12 @@
 
     The font browser allows you to inspect the fonts accessible to QFontDatabase inside your target application.
 
-    \image gammaray-font-browser.png
+    \borderedimage gammaray-font-browser.png
 
     The tree view on the left side shows all font families and their corresponding styles found on the target system, or manually
     made available to QFontDatabase, as well as their supported sizes.
 
     The right side shows a preview of the fonts selected in the font tree, for the given sample text and font
-    properties. The preview is rendered on the target system, ie. you see the rendering result from an remote
-    embedded system here when using such a target.
+    properties. The preview is rendered on the target system, that is, you see the result from a remote
+    embedded system here if that is your target.
 */

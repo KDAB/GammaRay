@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Tools}
+    \contentspage {GammaRay User Manual}
     \nextpage {Qt Quick 2 Inspector}
     \previouspage {Command Line Interface}
     \page gammaray-tools.html
@@ -25,11 +25,11 @@
 
     \section1 Overview
 
-    GammaRay consists of a number of specialized tools for various aspects of Qt. Those can be selected via the tool selector on the very left of the GammaRay window.
+    GammaRay consists of a number of specialized tools to inspect various aspects of Qt. You can select these using the tool selector on the left of the GammaRay window.
 
     \section2 User Interface Inspection
 
-    The following tools can be used for insepcting graphical user interface issues, such as layouting, rendering or event handling.
+    The following tools can be used for insepecting graphical user interface issues, such as layouting, rendering, or event handling.
 
     \list
         \li \l{Qt Quick 2 Inspector}
@@ -42,7 +42,7 @@
 
     \section2 Application Behavior Inspection
 
-    The following tools can be used to obeserve application behavior live at runtime.
+    The following tools can be used to obeserve application behavior at runtime.
 
     \list
         \li \l{State Machine Debugger}
@@ -70,7 +70,7 @@
 
     \section2 System Information
 
-    The following tools allow you to inspect information of the Qt installation and the system it's deplyoed on.
+    The following tools allow you to inspect information of the Qt installation and the system it's deployed on.
 
     \list
         \li \l{Font Browser}

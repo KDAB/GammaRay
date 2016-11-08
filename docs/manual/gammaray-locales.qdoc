@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Locales}
+    \contentspage {Tools}
     \nextpage {Mime Types}
     \previouspage {Font Browser}
     \page gammaray-locales.html
@@ -25,12 +25,12 @@
 
     \section1 Overview
 
-    The locale browser is allowing you to inspect the details of every QLocale configuration present on the target system. These information are usually independent of the
+    The locale browser is allowing you to inspect the details of every QLocale configuration present on the target system. Thi information is usually independent of the
     target application, but rather depend on the system.
 
-    \image gammaray-locales.png
+    \borderedimage gammaray-locales.png
 
-    The upper area allows to select which aspects of the locales you are interested in (e.g. date/time settings, currency related information, number formatting rules, etc).
+    The upper area allows to select the aspects of the locales you are interested in (for example, date/time settings, currency-related information, number formatting rules, and so on).
     This translates to columns in the table below. Each row in the lower section of the locale browser corresponds with a QLocale configuration present on the target system
-    (ie. typically one per country/region). You can use the filter line on top to quickly find the country/region you are interested in.
+    (that is. typically one per country/region). You can use the filter on top to quickly find the country/region you are interested in.
 */

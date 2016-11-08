@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Actions}
+    \contentspage {Tools}
     \nextpage {Models}
     \previouspage {Object Inspector}
     \page gammaray-action-inspector.html
@@ -26,12 +26,12 @@
     \section1 Overview
 
     The action inspector shows all QAction instances that exist in the target application. Information about
-    the display name, checkable states and shortcuts and shortcut priorities are displayed.
+    the display name, checkable states, and shortcuts with their priorities are displayed.
 
-    \image gammaray-action-inspector.png
+    \borderedimage gammaray-action-inspector.png
 
-    The action inspector will warn about shortcut conflicts (that is, two QAction instances using the same
+    The action inspector warns about shortcut conflicts (that is, two QAction instances using the same
     shortcut sequence and thus making it ambiguous) with a warning icon in its shortcut column.
 
-    Actions can also be activated remotely via GammaRay, by double-clicking the corresponding entry.
+    Actions can also be activated remotely by double-clicking the corresponding entry.
 */

@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Qt Quick 2 Inspector}
+    \contentspage {Tools}
     \nextpage {Widget Inspector}
     \previouspage {Tools}
     \page gammaray-qtquick2-inspector.html
@@ -37,45 +37,45 @@
 
     \section1 Item Tree
 
-    The item tree is shown on the top left, and contains the visual hierarchy of QQuickItem instances in the currently selected Qt Quick scene.
+    The item tree is shown on the top left, and it contains the visual hierarchy of QQuickItem instances in the currently selected Qt Quick scene.
     This does not necessarily match the QObject parent/child hierarchy.
     The right side contains the same property view for the selected item you already know from the
     \l{Object Inspector}.
 
-    \image gammaray-qq2-inspector.png
+    \borderedimage gammaray-qq2-inspector.png
 
     You can navigate to the object inspector (and other applicable tools) using the context menu on the item tree. Similarly, you can
     navigate to the source code locations instantiating the current item, or the file declaring the type of the current item (if available).
 
     \section1 Remote View
 
-    The remote view is shown on the left lower part of the Qt Quick 2 inspector. Besides giving you a zoomable view of the rendered content,
+    The remote view is shown to the lower left in the Qt Quick 2 inspector. Besides giving you a zoomable view of the rendered content,
     it provides a number of additional features:
 
     \list
         \li Element picking.
-        \li Diagnostic overlays with layouting information.
+        \li Diagnostic overlays with layout information.
         \li Input event forwarding, for working with embedded targets.
         \li A measurement tool.
         \li Enabling of diagnostic render modes on target (availability depends on Qt version).
     \endlist
 
-    \image gammaray-qq2-qsg-visualize.png
+    \borderedimage gammaray-qq2-qsg-visualize.png
 
     \section1 Paint Analyzer
 
     When selecting a QQuickPaintedItem sub-class in the item tree, the paint analyzer tab is activated in the property view on the right.
 
-    \image gammaray-qqpainteditem-paint-analyzer.png
+    \borderedimage gammaray-qqpainteditem-paint-analyzer.png
 
     The paint analyzer allows you to inspect every single QPainter command that is executed, and look at the visual result after each step.
 
     \section1 Scene Graph
 
-    The scene graph view shows you the internal representation used by Qt Quick 2 to render the current Qt Quick scene. This is particularly
-    useful for debugging performance issues (e.g. related to batching) and rendering of custom QQuickItem sub-classes.
+    The scene graph view shows you the internal representation used by Qt Quick 2 to render the current scene. This is particularly
+    useful for debugging performance issues related to batching and rendering of custom QQuickItem sub-classes.
 
-    \image gammaray-qq2-geometry.png
+    \borderedimage gammaray-qq2-geometry.png
 
     For nodes in the scene graph you have access to:
 

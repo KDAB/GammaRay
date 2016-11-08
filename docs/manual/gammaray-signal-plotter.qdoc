@@ -16,7 +16,7 @@
 */
 
 /*!
-    \contentspage {Signal Plotter}
+    \contentspage {Tools}
     \nextpage {Timers}
     \previouspage {Messages}
     \page gammaray-signal-plotter.html
@@ -25,12 +25,12 @@
 
     \section1 Overview
 
-    The signal plotter visualizes the lifetime of all QObject instances in the target (gray horizontal bars), and shows the emission
-    of every signal in the target (vertical black bar on the emitting sender QObject).
+    The signal plotter visualizes the lifetime of all QObject instances on the target (gray horizontal bars), and shows the emission
+    of every signal on the target (vertical black bar on the emitting sender QObject).
 
-    \image gammaray-signal-plotter.png
+    \borderedimage gammaray-signal-plotter.png
 
-    Tooltips on each signal emission show information about the emission, including the signal name and the time of the emission.
+    Tooltips on each signal emission show information about the signal, including the signal name and the time of the emission.
 
     \section1 Examples
 
