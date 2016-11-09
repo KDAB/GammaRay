@@ -145,6 +145,9 @@ QDataStream &Message::payload() const
 
 bool Message::canReadMessage(QIODevice *device)
 {
+    if (!device)
+        return false;
+
     static const int minimumSize = sizeof(Protocol::PayloadSize) + sizeof(Protocol::ObjectAddress)
                                    + sizeof(Protocol::MessageType);
     if (device->bytesAvailable() < minimumSize)
