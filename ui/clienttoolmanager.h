@@ -133,7 +133,7 @@ private:
     typedef QHash<QString, QPointer<QWidget> > WidgetsHash;
     mutable WidgetsHash m_widgets; // ToolId -> Widget
     QVector<ToolInfo> m_tools;
-    ToolManagerInterface *m_remote;
+    QPointer<ToolManagerInterface> m_remote;
     QWidget *m_parentWidget;
     QAbstractItemModel *m_model;
     QItemSelectionModel *m_selectionModel;
