@@ -29,6 +29,7 @@
 
 import QtQuick 2.5 as QQ2
 import QtQml 2.2 as Qml2
+import QtQuick.Controls 1.2 as QQControls
 import QtQuick.Scene3D 2.0
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
@@ -129,6 +130,7 @@ QQ2.Item {
                     depth: model.depth
                     metaData: model.metaData
                     isWindow: model.isWindow
+                    wireframe: renderWireframe.checked
 
                     onSelectedChanged: if (selected) instantiator.selectedWidget = this
                 }
@@ -163,6 +165,16 @@ QQ2.Item {
 
         anchors {
             top: parent.top
+            right: parent.right
+            margins: 20
+        }
+    }
+
+    QQControls.CheckBox {
+        id: renderWireframe
+        text: "Wireframe"
+        anchors {
+            bottom: parent.bottom
             right: parent.right
             margins: 20
         }

@@ -39,6 +39,7 @@ Material {
     property real explosionFactor: 0
     property real highlightFactor: 0
     property int level: 0
+    property bool wireframe: false
 
     property var frontTextureImage
     property var backTextureImage
@@ -111,10 +112,20 @@ Material {
 
                 renderPasses: [
                     RenderPass {
+                        id: texturePass
                         shaderProgram: ShaderProgram {
                             vertexShaderCode: loadSource("qrc:/assets/shaders/widget.vert")
-                            //geometryShaderCode: loadSource("qrc:/assets/shaders/widget.geom")
                             fragmentShaderCode: loadSource("qrc:/assets/shaders/widget.frag")
+                        }
+                    },
+
+                    RenderPass {
+                        id: wireframePass
+                        enabled: wireframe
+                        shaderProgram: ShaderProgram {
+                            vertexShaderCode: loadSource("qrc:/assets/shaders/widget_wireframe.vert")
+                            geometryShaderCode: loadSource("qrc:/assets/shaders/widget_wireframe.geom")
+                            fragmentShaderCode: loadSource("qrc:/assets/shaders/widget_wireframe.frag")
                         }
                     }
                 ]

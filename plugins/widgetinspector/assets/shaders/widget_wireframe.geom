@@ -1,7 +1,7 @@
 #version 330 core
 
 /*
-  widget.geom
+  widget_pass2.geom
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -29,54 +29,40 @@
 */
 
 layout(triangles) in;
-layout(triangle_strip, max_vertices = 3) out;
+layout(line_strip, max_vertices = 4 /* 2 lines = 4 vertices */) out;
 
 in VertexData {
     vec3 position;
-    vec3 normal;
-    vec2 texCoord;
 } gs_in[];
 
-out FragmentData {
-    vec3 position;
-    vec3 normal;
-    vec2 texCoord;
-    vec3 altitude;
-} gs_out;
+void drawLine(vec4 a, vec4 b)
+{
+    gl_Position = a;
+    EmitVertex();
 
-uniform mat4 viewportMatrix;
-uniform mat4 mvp;
+    gl_Position = b;
+    EmitVertex();
 
-uniform float explosionFactor;
-uniform int level;
+    EndPrimitive();
+}
 
 void main()
 {
-    vec2 vpos[3];
-    vpos[0] = vec2(viewportMatrix * (gs_in[0].gl_Position / gs_in[0].gl_Position.w));
-    vpos[1] = vec2(viewportMatrix * (gs_in[1].gl_Position / gs_in[1].gl_Position.w));
-    vpos[2] = vec2(viewportMatrix * (gs_in[2].gl_Position / gs_in[2].gl_Position.w));
+    // This GS takes all three sides of a rectangle, but only emits vertices for
+    // its catheti, which gives us a nice wireframe.
 
-    float lenA = length(vpos[1] - vpos[0]);
-    float lenB = length(vpos[2] - vpos[0]);
-    float lenC = length(vpos[2] - vpos[1]);
+    vec3 aSide = (gs_in[0].position - gs_in[1].position);
+    vec3 bSide = (gs_in[0].position - gs_in[2].position);
+    vec3 cSide = (gs_in[1].position - gs_in[2].position);
 
-    float s = (lenA + lenB + lenC) / 2;
-    float hSqrt = sqrt(s * (s - lenA) * (s - lenB) * (s - lenC));
-    float hA = hSqrt / lenA;
-    float hB = hSqrt / lenB;
-    float hC = hSqrt / lenC;
-
-
-    vec4 pos = vec4(gs_in[i].position, 1.0);
-    gl_Position = mvp * pos;
-    gs_out.position = gs_in[i].position;
-    gs_out.normal = gs_in[i].normal;
-    gs_out.texCoord = gs_in[i].texCoord;
-    gs_out.edgeA =
-
-
-        EmitVertex();
+    if (dot(aSide, bSide) == 0) {
+        drawLine(gl_in[0].gl_Position, gl_in[1].gl_Position);
+        drawLine(gl_in[0].gl_Position, gl_in[2].gl_Position);
+    } else if (dot(aSide, cSide) == 0) {
+        drawLine(gl_in[0].gl_Position, gl_in[1].gl_Position);
+        drawLine(gl_in[1].gl_Position, gl_in[2].gl_Position);
+    } else if (dot(bSide, cSide) == 0) {
+        drawLine(gl_in[0].gl_Position, gl_in[2].gl_Position);
+        drawLine(gl_in[1].gl_Position, gl_in[2].gl_Position);
     }
-    EndPrimitive();
 }

@@ -41,6 +41,7 @@ Entity {
     property string objectId
     property var metaData
     property bool isWindow : false
+    property alias wireframe: material.wireframe
 
     property int depth
     property var frontTextureImage
