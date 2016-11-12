@@ -1,7 +1,7 @@
 #version 330 core
 
 /*
-  widget.frag
+  horizontal.frag
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -30,13 +30,9 @@
 
 out vec4 fragColor;
 
-in FragmentData {
-    vec4 color;
-} fs_in;
-
+uniform float highlightFactor;
 
 void main(void)
 {
-    fragColor = vec4(fs_in.color.xyz, 1.0);
+    fragColor = mix(vec4(1.0), vec4(1.0, 0.0, 0.0, 1.0), highlightFactor);
 }
-

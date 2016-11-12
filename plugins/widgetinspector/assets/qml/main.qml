@@ -131,6 +131,7 @@ QQ2.Item {
                     metaData: model.metaData
                     isWindow: model.isWindow
                     wireframe: renderWireframe.checked
+                    horizontals: renderHorizontals.checked
 
                     onSelectedChanged: if (selected) instantiator.selectedWidget = this
                 }
@@ -170,13 +171,21 @@ QQ2.Item {
         }
     }
 
-    QQControls.CheckBox {
-        id: renderWireframe
-        text: "Wireframe"
+    QQ2.Column {
         anchors {
             bottom: parent.bottom
             right: parent.right
             margins: 20
+        }
+
+        QQControls.CheckBox {
+            id: renderWireframe
+            text: "Wireframe"
+        }
+
+        QQControls.CheckBox {
+            id: renderHorizontals
+            text: "Horizontals"
         }
     }
 }

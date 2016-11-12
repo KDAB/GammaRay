@@ -31,13 +31,13 @@
 in vec3 vertexPosition;
 
 out VertexData {
-  vec4 vertexPosition;
+  vec3 vertexPosition;
 } vs_out;
 
 uniform mat4 mvp;
 
 void main(void)
 {
-    vs_out.vertexPosition = mvp * vec4(vertexPosition, 1.0);
-    gl_Position = vs_out.vertexPosition;
+    vs_out.vertexPosition = vertexPosition;
+    gl_Position = mvp * vec4(vertexPosition, 1.0);
 }

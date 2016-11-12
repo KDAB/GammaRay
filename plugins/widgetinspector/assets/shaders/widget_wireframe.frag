@@ -34,10 +34,5 @@ uniform float highlightFactor;
 
 void main(void)
 {
-    const vec4 white = vec4(1.0);
-    const vec4 red = vec4(1.0, 0.0, 0.0, 1.0);
-
-    fragColor = mix(white, red, highlightFactor);
+    fragColor = mix(vec4(1.0), vec4(1.0, 0.0, 0.0, 1.0), highlightFactor);
 }
-
-

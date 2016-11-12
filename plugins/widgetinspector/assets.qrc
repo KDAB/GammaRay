@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>assets/qml/main.qml</file>
+        <file>assets/qml/Horizontals.qml</file>
         <file>assets/qml/WidgetMaterial.qml</file>
         <file>assets/qml/WidgetDelegate.qml</file>
         <file>assets/qml/WidgetInfo.qml</file>

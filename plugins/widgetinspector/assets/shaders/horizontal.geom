@@ -28,34 +28,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-layout(triangles) in;
+
+layout(points) in;
 layout(line_strip, max_vertices = 2) out;
 
 in VertexData {
-    vec4 vertexPosition;
+    vec3 vertexPosition;
 } gs_in[];
 
-out FragmentData {
-    vec4 color;
-} gs_out;
-
-uniform mat4 viewportMatrix;
-uniform mat4 mvp;
 
 struct Widget {
   float explosionFactor;
-  int level;
 };
+
+uniform mat4 mvp;
 uniform Widget widget;
 
 void main()
 {
-    gs_out.color = gs_in[0].vertexPosition;
-    gl_Position = gs_in[0].vertexPosition;
+    vec4 pos = vec4(gs_in[0].vertexPosition, 1.0);
+
+    pos.z -= 0.5; // half thickness of the widget cuboid
+    gl_Position = mvp * pos;
     EmitVertex();
 
-    gs_out.color = gs_in[1].vertexPosition;
-    gl_Position = gs_in[1].vertexPosition;
+    pos.z -= widget.explosionFactor - 1.0;
+    gl_Position = mvp * pos;
     EmitVertex();
 
     EndPrimitive();

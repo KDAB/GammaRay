@@ -41,7 +41,9 @@ Entity {
     property string objectId
     property var metaData
     property bool isWindow : false
+
     property alias wireframe: material.wireframe
+    property bool horizontals: false
 
     property int depth
     property var frontTextureImage
@@ -56,7 +58,7 @@ Entity {
     readonly property real _geomY: root.geometry.y / _scaleFactor
     property real _geomZ: root.depth / (_scaleFactor * 2.0) + root.depth * root.explosionFactor
 
-    QQ2.Behavior on _geomZ {
+    QQ2.Behavior on explosionFactor {
         QQ2.NumberAnimation {
             duration: 200
             easing.type: Easing.OutQuart
@@ -106,98 +108,17 @@ Entity {
         components: [ cubeMesh, material, transform, objectPicker ]
     }
 
-    Entity {
+    Horizontals {
         id: horizontals
 
-        components: [
-            GeometryRenderer {
-                id: horizontalsMesh
-                instanceCount: 1
-                indexOffset: 0
-                firstInstance: 0
-                primitiveType: GeometryRenderer.Lines
+        enabled: !root.isWindow && root.horizontals
 
-                geometry: Geometry {
-                    attributes: [
-                        Attribute {
-                            attributeType: Attribute.VertexAttribute
-                            vertexBaseType: Attribute.Float
-                            count: 4
-                            vertexSize: 3
-                            byteOffset: 0
-                            byteStride: 3 * 4 // 3 vertices * sizeof(Float32)
-                            name: defaultPositionAttributeName()
-                            buffer: Buffer {
-                                function generateVertexBufferData() {
-                                    var v0 = Qt.vector2d(-_geomWidth / 2.0, _geomHeight / 2.0);
-                                    var v1 = Qt.vector2d(-_geomWidth / 2.0, _geomHeight / 2.0);
-                                    var v2 = Qt.vector2d(_geomWidth / 2.0, _geomHeight / 2.0);
-                                    var v3 = Qt.vector2d(_geomWidth / 2.0, _geomHeight / 2.0);
-
-                                    return new Float32Array([v0.x, v0.y, -0.5,
-                                                             v1.x, v1.y, -0.5,
-                                                             v2.x, v2.y, -0.5,
-                                                             v3.x, v3.y, -0.5]);
-                                }
-
-                                type: Buffer.VertexBuffer
-                                data: generateVertexBufferData()
-                            }
-                        }
-                    ]
-                }
-            },
-
-            Material {
-                effect: Effect {
-                    techniques: [
-                        Technique {
-                            graphicsApiFilter {
-                                api: GraphicsApiFilter.OpenGL
-                                profile: GraphicsApiFilter.CoreProfile
-                                majorVersion: 3
-                                minorVersion: 3
-                            }
-
-                            filterKeys: [
-                                FilterKey {
-                                      name: "renderingStyle"
-                                      value: "forward"
-                                }
-                            ]
-
-                            parameters: [
-                                Parameter {
-                                    name: "widget.explosionFactor"
-                                    value: root.explosionFactor
-                                },
-                                Parameter {
-                                    name: "widget.level"
-                                    value: root.depth
-                                }
-                            ]
-
-                            renderPasses: [
-                                RenderPass {
-                                    shaderProgram: ShaderProgram {
-                                        vertexShaderCode: loadSource("qrc:/assets/shaders/horizontal.vert")
-                                        geometryShaderCode: loadSource("qrc:/assets/shaders/horizontal.geom")
-                                        fragmentShaderCode: loadSource("qrc:/assets/shaders/horizontal.frag")
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-
-            Transform {
-                translation: Qt.vector3d(
-                                _geomWidth / 2.0 + _geomX - topLevelGeometry.width / 2.0 / _scaleFactor,
-                                -_geomHeight / 2.0 - _geomY + topLevelGeometry.height / 2.0 / _scaleFactor,
-                                _geomZ
-                            )
-            }
-        ]
+        geomWidth: _geomWidth
+        geomHeight: _geomHeight
+        geomX: _geomX
+        geomY: _geomY
+        geomZ: _geomZ
+        explosionFactor: root.explosionFactor
+        highlightFactor: root._highlightFactor
     }
 }
