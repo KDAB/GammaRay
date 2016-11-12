@@ -121,7 +121,7 @@ QQ2.Item {
                 delegate: WidgetDelegate {
                     id: windowDelegate
 
-                    topLevelGeometry: instantiator.topLevelWindow ? instantiator.topLevelWindow.geometry : model.geometry
+                    topLevelGeometry: instantiator.topLevelWindow !== null ? instantiator.topLevelWindow.geometry : model.geometry
                     objectId: model.objectId
                     geometry: model.geometry
                     frontTextureImage: model.frontTexture
