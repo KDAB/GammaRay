@@ -83,6 +83,9 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &id
         ++mDepth;
         w = qobject_cast<Widget3DWidget*>(w->parent());
     }
+    if (!isWindow()) {
+        --mDepth;
+    }
 
     mQWidget->installEventFilter(this);
 
