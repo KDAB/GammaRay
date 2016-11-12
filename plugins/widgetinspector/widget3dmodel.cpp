@@ -262,12 +262,13 @@ bool Widget3DWidget::updateTexture()
 
     mTextureImage = QImage(mTextureGeometry.size(), QImage::Format_RGBA8888);
     mTextureImage.fill(mQWidget->palette().button().color());
-    mQWidget->render(&mTextureImage, QPoint(0, 0), QRegion(mTextureGeometry), QWidget::DrawWindowBackground);
 
     if (isWindow()) {
+        mQWidget->render(&mTextureImage, QPoint(0, 0), QRegion(mTextureGeometry));
         mBackTextureImage = QImage(mTextureGeometry.size(), QImage::Format_RGBA8888);
         mQWidget->render(&mBackTextureImage, QPoint(0, 0), QRegion(mTextureGeometry));
     } else {
+        mQWidget->render(&mTextureImage, QPoint(0, 0), QRegion(mTextureGeometry), QWidget::DrawWindowBackground);
         mBackTextureImage = mTextureImage;
     }
 
