@@ -99,14 +99,6 @@ Material {
                     Parameter {
                         name: "highlightFactor"
                         value: root.highlightFactor
-                    },
-                    Parameter {
-                        name: "widget.explosionFactor"
-                        value: root.explosionFactor
-                    },
-                    Parameter {
-                        name: "widget.level"
-                        value: root.level
                     }
                 ]
 
