@@ -34,5 +34,5 @@ uniform float highlightFactor;
 
 void main(void)
 {
-    fragColor = mix(vec4(1.0), vec4(1.0, 0.0, 0.0, 1.0), highlightFactor);
+    fragColor = mix(vec4(0.0, 1.0, 0.0, 1.0), vec4(1.0, 0.0, 0.0, 1.0), highlightFactor);
 }
