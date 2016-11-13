@@ -30,11 +30,13 @@
 import QtQuick 2.5 as QQ2
 import QtQml 2.2 as Qml2
 import QtQuick.Controls 1.2 as QQControls
+
 import QtQuick.Scene3D 2.0
 import Qt3D.Core 2.0
 import Qt3D.Render 2.0
 import Qt3D.Input 2.0
 import Qt3D.Extras 2.0
+
 import com.kdab.GammaRay 1.0
 
 QQ2.Item {
@@ -178,12 +180,12 @@ QQ2.Item {
             margins: 20
         }
 
-        QQControls.CheckBox {
+        CheckBox {
             id: renderWireframe
             text: "Wireframe"
         }
 
-        QQControls.CheckBox {
+        CheckBox {
             id: renderHorizontals
             text: "Horizontals"
         }
