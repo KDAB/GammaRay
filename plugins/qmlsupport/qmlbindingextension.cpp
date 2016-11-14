@@ -1,10 +1,10 @@
 /*
-  qmlsupportuifactory.cpp
+  qmlbindingextension.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2016-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,31 +26,39 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qmlsupportuifactory.h"
-#include "qmlbindingtab.h"
-#include "qmlcontexttab.h"
-#include "qmltypetab.h"
+#include "qmlbindingextension.h"
+#include "qmlbindingmodel.h"
 
-#include <ui/propertywidget.h>
+#include <core/propertycontroller.h>
+
+#include <private/qqmldata_p.h>
 
 using namespace GammaRay;
 
-QString QmlSupportUiFactory::id() const
+QmlBindingExtension::QmlBindingExtension(PropertyController* controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".qmlBindings")
+    , m_bindingModel(new QmlBindingModel(controller))
 {
-    return QString();
+    controller->registerModel(m_bindingModel, QStringLiteral("qmlBindingModel"));
 }
 
-void QmlSupportUiFactory::initUi()
+QmlBindingExtension::~QmlBindingExtension()
 {
-    PropertyWidget::registerTab<QmlBindingTab>(QStringLiteral("qmlBindings"), tr("Bindings"),
-                                               PropertyWidgetTabPriority::Advanced);
-    PropertyWidget::registerTab<QmlContextTab>(QStringLiteral("qmlContext"), tr("QML Context"),
-                                               PropertyWidgetTabPriority::Advanced);
-    PropertyWidget::registerTab<QmlTypeTab>(QStringLiteral("qmlType"), tr("QML Type"),
-                                            PropertyWidgetTabPriority::Exotic);
 }
 
-QWidget *GammaRay::QmlSupportUiFactory::createWidget(QWidget *)
+bool QmlBindingExtension::setQObject(QObject* object)
 {
-    return nullptr;
+    if (!object)
+        return false;
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    auto data = QQmlData::get(object);
+    if (!data)
+        return false;
+
+    m_bindingModel->setObject(object);
+    return true;
+#else
+    return false;
+#endif
 }
