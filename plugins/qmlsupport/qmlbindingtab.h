@@ -1,10 +1,10 @@
 /*
-  qmlsupportuifactory.cpp
+  qmlbindingtab.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2016-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,31 +26,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qmlsupportuifactory.h"
-#include "qmlbindingtab.h"
-#include "qmlcontexttab.h"
-#include "qmltypetab.h"
+#ifndef GAMMARAY_QMLBINDINGTAB_H
+#define GAMMARAY_QMLBINDINGTAB_H
 
-#include <ui/propertywidget.h>
+#include <QScopedPointer>
+#include <QWidget>
 
-using namespace GammaRay;
+namespace GammaRay {
+class PropertyWidget;
 
-QString QmlSupportUiFactory::id() const
+namespace Ui
 {
-    return QString();
+class QmlBindingTab;
 }
 
-void QmlSupportUiFactory::initUi()
+class QmlBindingTab : public QWidget
 {
-    PropertyWidget::registerTab<QmlBindingTab>(QStringLiteral("qmlBindings"), tr("Bindings"),
-                                               PropertyWidgetTabPriority::Advanced);
-    PropertyWidget::registerTab<QmlContextTab>(QStringLiteral("qmlContext"), tr("QML Context"),
-                                               PropertyWidgetTabPriority::Advanced);
-    PropertyWidget::registerTab<QmlTypeTab>(QStringLiteral("qmlType"), tr("QML Type"),
-                                            PropertyWidgetTabPriority::Exotic);
+    Q_OBJECT
+public:
+    explicit QmlBindingTab(PropertyWidget *parent = Q_NULLPTR);
+    ~QmlBindingTab();
+
+private:
+    QScopedPointer<Ui::QmlBindingTab> ui;
+};
 }
 
-QWidget *GammaRay::QmlSupportUiFactory::createWidget(QWidget *)
-{
-    return nullptr;
-}
+#endif // GAMMARAY_QMLBINDINGTAB_H
