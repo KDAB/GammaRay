@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource prefix="/gammaray">
         <file>assets/qml/main.qml</file>
         <file>assets/qml/Horizontals.qml</file>
         <file>assets/qml/WidgetMaterial.qml</file>

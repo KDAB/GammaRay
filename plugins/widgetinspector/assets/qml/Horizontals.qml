@@ -97,9 +97,9 @@ Entity {
                     renderPasses: [
                         RenderPass {
                             shaderProgram: ShaderProgram {
-                                vertexShaderCode: loadSource("qrc:/assets/shaders/horizontal.vert")
-                                geometryShaderCode: loadSource("qrc:/assets/shaders/horizontal.geom")
-                                fragmentShaderCode: loadSource("qrc:/assets/shaders/horizontal.frag")
+                                vertexShaderCode: loadSource("qrc:/gammaray/assets/shaders/horizontal.vert")
+                                geometryShaderCode: loadSource("qrc:/gammaray/assets/shaders/horizontal.geom")
+                                fragmentShaderCode: loadSource("qrc:/gammaray/assets/shaders/horizontal.frag")
                             }
                         }
                     ]

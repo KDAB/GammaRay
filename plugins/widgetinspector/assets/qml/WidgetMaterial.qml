@@ -106,8 +106,8 @@ Material {
                     RenderPass {
                         id: texturePass
                         shaderProgram: ShaderProgram {
-                            vertexShaderCode: loadSource("qrc:/assets/shaders/widget.vert")
-                            fragmentShaderCode: loadSource("qrc:/assets/shaders/widget.frag")
+                            vertexShaderCode: loadSource("qrc:/gammaray/assets/shaders/widget.vert")
+                            fragmentShaderCode: loadSource("qrc:/gammaray/assets/shaders/widget.frag")
                         }
                     },
 
@@ -115,9 +115,9 @@ Material {
                         id: wireframePass
                         enabled: wireframe
                         shaderProgram: ShaderProgram {
-                            vertexShaderCode: loadSource("qrc:/assets/shaders/widget_wireframe.vert")
-                            geometryShaderCode: loadSource("qrc:/assets/shaders/widget_wireframe.geom")
-                            fragmentShaderCode: loadSource("qrc:/assets/shaders/widget_wireframe.frag")
+                            vertexShaderCode: loadSource("qrc:/gammaray/assets/shaders/widget_wireframe.vert")
+                            geometryShaderCode: loadSource("qrc:/gammaray/assets/shaders/widget_wireframe.geom")
+                            fragmentShaderCode: loadSource("qrc:/gammaray/assets/shaders/widget_wireframe.frag")
                         }
                     }
                 ]

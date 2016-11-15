@@ -254,7 +254,7 @@ Widget3DView::Widget3DView(QWidget* parent)
     engine->rootContext()->setContextProperty(QStringLiteral("_renderWindow"), mRenderWindow);
     engine->rootContext()->setContextProperty(QStringLiteral("_widgetModel"), widgetModel);
     engine->rootContext()->setContextProperty(QStringLiteral("_selectionHelper"), mSelectionHelper);
-    mRenderWindow->setSource(QUrl(QStringLiteral("qrc:/assets/qml/main.qml")));
+    mRenderWindow->setSource(QUrl(QStringLiteral("qrc:/gammaray/assets/qml/main.qml")));
 
     connect(combo, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, [widgetModel, combo, this]() {
