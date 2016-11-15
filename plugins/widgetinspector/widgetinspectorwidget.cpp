@@ -55,6 +55,7 @@
 #include <QToolBar>
 #include <QSettings>
 #include <QLayout>
+#include <QTabBar>
 
 using namespace GammaRay;
 
@@ -136,6 +137,14 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
+#ifdef WITH_WIDGET3D
+    QWidget *widget3d = new QWidget(this);
+    ui->tabWidget->addTab(widget3d, tr("3D View"));
+    widget3d->setLayout(new QHBoxLayout());
+#else
+    qFindChild<QTabBar *>(ui->tabWidget)->hide();
+#endif
+
     connect(ui->widgetPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
 }
@@ -159,7 +168,7 @@ void WidgetInspectorWidget::onTabChanged(int index)
 #ifdef WITH_WIDGET3D
     if (index == 1 && m_3dView == Q_NULLPTR) {
         m_3dView = new Widget3DView(this);
-        ui->widgetExplosionTab->layout()->addWidget(m_3dView);
+        ui->tabWidget->widget(1)->layout()->addWidget(m_3dView);
     }
 #else
     Q_UNUSED(index)

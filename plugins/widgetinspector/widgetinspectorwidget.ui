@@ -16,7 +16,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="mainLayoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QTabWidget" name="tabWidget">
@@ -54,12 +54,6 @@
             </widget>
            </item>
           </layout>
-         </widget>
-         <widget class="QWidget" name="widgetExplosionTab">
-          <attribute name="title">
-           <string>3D View</string>
-          </attribute>
-          <layout class="QHBoxLayout" name="horizontalLayout"/>
          </widget>
         </widget>
        </item>
