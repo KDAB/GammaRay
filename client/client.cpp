@@ -140,7 +140,8 @@ void Client::messageReceived(const Message &msg)
         qint32 serverVersion;
         msg >> serverVersion;
         if (serverVersion != Protocol::version()) {
-            emit persisitentConnectionError(tr("Server version is %1, was expecting %2.").arg(
+            emit persisitentConnectionError(tr("Gammaray Protocol Mismatch.\n" \
+                                               "Probe version is %1, was expecting %2.").arg(
                                                 serverVersion).arg(Protocol::version()));
             disconnectFromHost();
         }
