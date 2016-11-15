@@ -270,7 +270,6 @@ if(Qt5Core_FOUND)
     Qml
     Quick
     QuickWidgets
-    QuickControls
     Svg
     Script
     ScriptTools
@@ -286,17 +285,20 @@ if(Qt5Core_FOUND)
     find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
   endif()
 
-  # 3D Widget inspector requires Qt3D 5.7
-  if (Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
-    set(GAMMARAY_WITH_WIDGET3D TRUE)
-  endif()
-
   # starting with 5.6, the Designer module needs CMake 3.0 or higher
   if(Qt5Core_VERSION VERSION_LESS 5.6 OR NOT CMAKE_VERSION VERSION_LESS 3.0)
     find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Designer)
   endif()
   if(GAMMARAY_BUILD_UI) # widgets are required for the UI
     find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
+      # 3D Widget inspector requires Qt3D 5.7
+    if (Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
+      if (${Qt53DCore_FOUND})
+        set(GAMMARAY_WITH_WIDGET3D TRUE)
+      else()
+        message(STATUS "Not building GammaRay Widget 3D")
+      endif()
+    endif()
   endif()
 
   #HACK: CMake with broken Qt5Qml_PRIVATE_INCLUDE_DIRS, Qt5Quick_PRIVATE_INCLUDE_DIRS
@@ -435,6 +437,7 @@ endif()
 add_feature_info("QtScript debugger" QT_QTSCRIPTTOOLS_FOUND "Requires QtScript and QtScriptTools.")
 add_feature_info("Web inspector" HAVE_QT_WEBKIT1 "Requires QtWebKit.")
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
+add_feature_info("3D Widget Inspector" GAMMARAY_WITH_WIDGET3D "Requires Qt5 >= 5.7, Qt3D and QtQuick Controls")
 
 #
 # Additional dependencies
