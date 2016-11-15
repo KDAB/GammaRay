@@ -130,6 +130,7 @@ protected:
 
 private Q_SLOTS:
     void onWidgetChanged(const QVector<int> &roles);
+    void onWidgetDestroyed(QObject *obj);
 
 private:
     Widget3DWidget *widgetForObject(QObject *object, const QModelIndex &index, bool createWhenMissing = true) const;

@@ -71,8 +71,8 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &id
     mUpdateTimer = new QTimer(this);
     mUpdateTimer->setSingleShot(true);
     mUpdateTimer->setInterval(200);
-    connect(mUpdateTimer, &QTimer::timeout,
-            this, &Widget3DWidget::updateTimeout);
+    connect(mUpdateTimer, SIGNAL(timeout()),
+            this, SLOT(updateTimeout()));
 
     if (qWidget->isVisible()) {
         updateTimeout();
@@ -89,16 +89,19 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &id
 
     mQWidget->installEventFilter(this);
 
-    mMetaData = { { QStringLiteral("className"), QString::fromUtf8(mQWidget->metaObject()->className()) },
-                  { QStringLiteral("objectName"), mQWidget->objectName() },
-                  { QStringLiteral("address"), quintptr(mQWidget.data()) },
-                  { QStringLiteral("geometry"), mQWidget->geometry() },
-                  { QStringLiteral("parent"), mQWidget->parent() ?
-                        QVariantMap{ { QStringLiteral("className"), mQWidget->parent()->metaObject()->className() },
-                                     { QStringLiteral("objectName"), mQWidget->parent()->objectName() },
-                                     { QStringLiteral("address"), quintptr(mQWidget->parent()) } } :
-                        QVariant() }
-                };
+    mMetaData[QLatin1String("className")] = QString::fromUtf8(mQWidget->metaObject()->className());
+    mMetaData[QLatin1String("objectName")] = mQWidget->objectName();
+    mMetaData[QLatin1String("address")] = quintptr(mQWidget.data());
+    mMetaData[QLatin1String("geometry")] = mQWidget->geometry();
+    if (mQWidget->parent()) {
+        QVariantMap parentMap;
+        parentMap[QLatin1String("className")] = mQWidget->parent()->metaObject()->className();
+        parentMap[QLatin1String("objectName")] = mQWidget->parent()->objectName();
+        parentMap[QLatin1String("address")] = quintptr(mQWidget->parent());
+        mMetaData[QLatin1String("parent")] = parentMap;
+    } else {
+        mMetaData[QLatin1String("parent")] = QVariant();
+    }
 }
 
 Widget3DWidget::~Widget3DWidget()
@@ -263,12 +266,17 @@ bool Widget3DWidget::updateTexture()
 
     mIsPainting = true;
 
-    mTextureImage = QImage(mTextureGeometry.size(), QImage::Format_RGBA8888);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    const QImage::Format format = QImage::Format_RGBA8888;
+#else
+    const QImage::Format format = QImage::Format_ARGB32;
+#endif
+    mTextureImage = QImage(mTextureGeometry.size(), format);
     mTextureImage.fill(mQWidget->palette().button().color());
 
     if (isWindow()) {
         mQWidget->render(&mTextureImage, QPoint(0, 0), QRegion(mTextureGeometry));
-        mBackTextureImage = QImage(mTextureGeometry.size(), QImage::Format_RGBA8888);
+        mBackTextureImage = QImage(mTextureGeometry.size(), format);
         mQWidget->render(&mBackTextureImage, QPoint(0, 0), QRegion(mTextureGeometry));
     } else {
         mQWidget->render(&mTextureImage, QPoint(0, 0), QRegion(mTextureGeometry), QWidget::DrawWindowBackground);
@@ -373,12 +381,10 @@ Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, const QModelIndex &
             parent = widgetForObject(obj->parent(), idx.parent(), createWhenMissing);
         }
         widget = new Widget3DWidget(qobject_cast<QWidget*>(obj), idx, parent);
-        connect(widget, &Widget3DWidget::changed,
-                this, &Widget3DModel::onWidgetChanged);
-        connect(obj, &QObject::destroyed,
-                this, [=](QObject *obj) {
-                    mDataCache.remove(obj);
-                });
+        connect(widget, SIGNAL(changed(QVector<int>)),
+                this, SLOT(onWidgetChanged(QVector<int>)));
+        connect(obj, SIGNAL(destroyed(QObject*)),
+                this, SLOT(onWidgetDestroyed(QObject*)));
         mDataCache.insert(obj, widget);
     }
     return widget;
@@ -411,5 +417,15 @@ void Widget3DModel::onWidgetChanged(const QVector<int> &roles)
         return;
     }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     Q_EMIT dataChanged(idx, idx, roles);
+#else
+    Q_UNUSED(roles);
+    Q_EMIT dataChanged(idx, idx);
+#endif
+}
+
+void Widget3DModel::onWidgetDestroyed(QObject *obj)
+{
+    mDataCache.remove(obj);
 }

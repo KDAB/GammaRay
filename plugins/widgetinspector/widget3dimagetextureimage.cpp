@@ -87,7 +87,12 @@ QImage Widget3DImageTextureImage::image() const
 void Widget3DImageTextureImage::setImage(const QImage &image)
 {
     if (mImage != image) {
-        mImage = image;
+        if (image.format() == QImage::Format_RGBA8888) {
+            mImage = image;
+        } else {
+            // Qt4 does not have RGBA8888 so the probe sends us ARGB32
+            mImage = image.convertToFormat(QImage::Format_RGBA8888);
+        }
         Q_EMIT imageChanged();
         notifyDataGeneratorChanged();
     }
