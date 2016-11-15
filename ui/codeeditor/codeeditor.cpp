@@ -244,10 +244,10 @@ void CodeEditor::highlightCurrentLine()
 
 void CodeEditor::syntaxSelected(QAction* action)
 {
+#ifdef HAVE_SYNTAX_HIGHLIGHTING
     Q_ASSERT(action);
     Q_ASSERT(s_repository);
 
-#ifdef HAVE_SYNTAX_HIGHLIGHTING
     const auto defName = action->data().toString();
     const auto def = s_repository->definitionForName(defName);
     m_highlighter->setDefinition(def);
