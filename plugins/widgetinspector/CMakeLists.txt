@@ -71,6 +71,8 @@ if(GAMMARAY_BUILD_UI)
   )
 
   if (GAMMARAY_WITH_WIDGET3D)
+    add_subdirectory(assets)
+
     set(gammaray_widgetinspector_ui_plugin_srcs
       ${gammaray_widgetinspector_ui_plugin_srcs}
       widget3dview.cpp
