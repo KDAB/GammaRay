@@ -82,16 +82,16 @@ Item {
             text: "<b>" + (metaData ? parseObjectName(metaData) : "") + "</b>"
         }
         Text {
-            text: "<b>Class:</b> " + (metaData ? metaData.className : "")
+            text: "<b>" + qsTr("Class:") + "</b> " + (metaData ? metaData.className : "")
         }
         Text {
-            text: "<b>Parent:</b> " + (metaData ? parseObjectName(metaData.parent) : "")
+            text: "<b>" + qsTr("Parent:") + "</b> " + (metaData ? parseObjectName(metaData.parent) : "")
         }
         Text {
-            text: "<b>Position:</b> " + (metaData ? metaData.geometry.x + ", " + metaData.geometry.y : "")
+            text: "<b>" + qsTr("Position:") + "</b> " + (metaData ? metaData.geometry.x + ", " + metaData.geometry.y : "")
         }
         Text {
-            text: "<b>Size:</b> " + (metaData ? metaData.geometry.width + " x " + metaData.geometry.height : "")
+            text: "<b>" + qsTr("Size:") + "</b> " + (metaData ? metaData.geometry.width + " x " + metaData.geometry.height : "")
         }
     }
 }

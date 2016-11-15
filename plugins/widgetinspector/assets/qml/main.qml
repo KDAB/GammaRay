@@ -182,12 +182,12 @@ QQ2.Item {
 
         CheckBox {
             id: renderWireframe
-            text: "Wireframe"
+            text: qsTr("Wireframe")
         }
 
         CheckBox {
             id: renderHorizontals
-            text: "Horizontals"
+            text: qsTr("Horizontals")
         }
     }
 }
