@@ -262,6 +262,7 @@ if(Qt5Core_FOUND)
     3DInput
     3DLogic
     3DRender
+    3DQuick
     Bluetooth
     Concurrent
     Positioning
@@ -269,6 +270,7 @@ if(Qt5Core_FOUND)
     Qml
     Quick
     QuickWidgets
+    QuickControls
     Svg
     Script
     ScriptTools
@@ -286,13 +288,7 @@ if(Qt5Core_FOUND)
 
   # 3D Widget inspector requires Qt3D 5.7
   if (Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
-    find_package(Qt5 5.7 NO_MODULE QUIET OPTIONAL_COMPONENTS
-        3DCore
-        3DRender
-        3DInput
-        3DQuick
-        3DLogic
-    )
+    set(GAMMARAY_WITH_WIDGET3D TRUE)
   endif()
 
   # starting with 5.6, the Designer module needs CMake 3.0 or higher

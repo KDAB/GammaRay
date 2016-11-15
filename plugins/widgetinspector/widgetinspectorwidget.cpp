@@ -34,7 +34,7 @@
 #include "ui_widgetinspectorwidget.h"
 #include "waextension/widgetattributetab.h"
 
-#ifdef WITH_WIDGET3D
+#ifdef GAMMARAY_WITH_WIDGET3D
 #include "widget3dview.h"
 #endif
 
@@ -137,7 +137,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
-#ifdef WITH_WIDGET3D
+#ifdef GAMMARAY_WITH_WIDGET3D
     QWidget *widget3d = new QWidget(this);
     ui->tabWidget->addTab(widget3d, tr("3D View"));
     widget3d->setLayout(new QHBoxLayout());
@@ -165,7 +165,7 @@ void WidgetInspectorWidget::restoreTargetState(QSettings *settings)
 
 void WidgetInspectorWidget::onTabChanged(int index)
 {
-#ifdef WITH_WIDGET3D
+#ifdef GAMMARAY_WITH_WIDGET3D
     if (index == 1 && m_3dView == Q_NULLPTR) {
         m_3dView = new Widget3DView(this);
         ui->tabWidget->widget(1)->layout()->addWidget(m_3dView);

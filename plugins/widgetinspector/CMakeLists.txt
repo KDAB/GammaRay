@@ -6,16 +6,10 @@ set(gammaray_widgetinspector_plugin_srcs
   overlaywidget.cpp
   widgettreemodel.cpp
   widgetpaintanalyzerextension.cpp
+  widget3dmodel.cpp
 
   waextension/widgetattributeextension.cpp
 )
-
-if (Qt5Core_FOUND)
-  set(gammaray_widgetinspector_plugin_srcs
-      ${gammaray_widgetinspector_plugin_srcs}
-      widget3dmodel.cpp
-  )
-endif()
 
 gammaray_add_plugin(gammaray_widgetinspector_plugin
   DESKTOP gammaray_widgetinspector.desktop.in
@@ -76,8 +70,7 @@ if(GAMMARAY_BUILD_UI)
     widgetinspectorwidget.cpp
   )
 
-  if (Qt53DCore_FOUND AND NOT Qt53DCore_VERSION VERSION_LESS 5.7)
-    add_definitions(-DWITH_WIDGET3D)
+  if (GAMMARAY_WITH_WIDGET3D)
     set(gammaray_widgetinspector_ui_plugin_srcs
       ${gammaray_widgetinspector_ui_plugin_srcs}
       widget3dview.cpp
@@ -107,7 +100,7 @@ if(GAMMARAY_BUILD_UI)
     gammaray_ui
   )
 
-  if (Qt53DCore_FOUND AND NOT Qt53DCore_VERSION VERSION_LESS 5.7)
+  if (GAMMARAY_WITH_WIDGET3D)
     target_link_libraries(gammaray_widgetinspector_ui_plugin
         gammaray_client
         Qt5::Qml
