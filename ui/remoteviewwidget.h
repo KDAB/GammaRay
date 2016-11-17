@@ -100,6 +100,12 @@ public:
     virtual void restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
 
+    int flagRole() const;
+    void setFlagRole(int flagRole);
+
+    int invisibleMask() const;
+    void setInvisibleMask(int invisibleMask);
+
 public slots:
     /// Clears the current view content.
     void reset();
@@ -201,6 +207,8 @@ private:
     ObjectIdsFilterProxyModel *m_pickProxyModel;
     VisibilityFilterProxyModel *m_invisibleItemsProxyModel;
     bool m_initialZoomDone;
+    int m_flagRole;
+    int m_invisibleMask;
 };
 }
 

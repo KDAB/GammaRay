@@ -210,10 +210,13 @@ void RemoteViewWidget::elementsAtReceived(const GammaRay::ObjectIds &ids, int be
         const int candidate = bestCandidate == -1 ? 0 : bestCandidate;
         ModelPickerDialog *dlg = new ModelPickerDialog(window());
         m_invisibleItemsProxyModel->setSourceModel(m_pickProxyModel);
+        m_invisibleItemsProxyModel->setFlagRole(flagRole());
+        m_invisibleItemsProxyModel->setInvisibleMask(invisibleMask());
+
         dlg->setModel(m_invisibleItemsProxyModel);
         dlg->setCurrentIndex(ObjectModel::ObjectIdRole, QVariant::fromValue(ids[candidate]));
         connect(dlg, SIGNAL(activated(QModelIndex)), this, SLOT(pickElementId(QModelIndex)));
-        connect(dlg, SIGNAL(checkBoxStateChanged(bool)), m_invisibleItemsProxyModel, SLOT(setHideQQuickItems(bool)));
+        connect(dlg, SIGNAL(checkBoxStateChanged(bool)), m_invisibleItemsProxyModel, SLOT(setHideItems(bool)));
         dlg->open();
     }
 }
@@ -233,6 +236,26 @@ void RemoteViewWidget::frameUpdated(const RemoteViewFrame &frame)
 
     updateActions();
     QMetaObject::invokeMethod(m_interface, "clientViewUpdated", Qt::QueuedConnection);
+}
+
+int RemoteViewWidget::invisibleMask() const
+{
+    return m_invisibleMask;
+}
+
+void RemoteViewWidget::setInvisibleMask(int invisibleMask)
+{
+    m_invisibleMask = invisibleMask;
+}
+
+int RemoteViewWidget::flagRole() const
+{
+    return m_flagRole;
+}
+
+void RemoteViewWidget::setFlagRole(int flagRole)
+{
+    m_flagRole = flagRole;
 }
 
 QAbstractItemModel *RemoteViewWidget::pickSourceModel() const

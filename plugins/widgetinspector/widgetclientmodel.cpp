@@ -46,9 +46,12 @@ WidgetClientModel::~WidgetClientModel()
 QVariant WidgetClientModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid() && role == Qt::ForegroundRole) {
-        bool isVisible = index.data(WidgetModelRoles::VisibleRole).toBool();
-        if (!isVisible)
+
+        int flags = QIdentityProxyModel::data(index, WidgetModelRoles::WidgetFlags).value<int>();
+
+        if (flags & WidgetModelRoles::Invisible)
             return qApp->palette().color(QPalette::Disabled, QPalette::Text);
+
     }
     return QIdentityProxyModel::data(index, role);
 }

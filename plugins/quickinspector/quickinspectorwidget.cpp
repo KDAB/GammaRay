@@ -124,6 +124,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
     m_previewWidget = new QuickScenePreviewWidget(m_interface, this);
     m_previewWidget->setPickSourceModel(proxy);
+    m_previewWidget->setFlagRole(QuickItemModelRole::ItemFlags);
+    m_previewWidget->setInvisibleMask(QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
 
     ui->itemPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.QuickItem"));
     ui->sgPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"));

@@ -35,9 +35,16 @@ namespace GammaRay {
 /** Model roles shared between client and server. */
 namespace WidgetModelRoles {
 enum Roles {
-    VisibleRole = ObjectModel::UserRole,
+    WidgetFlags = ObjectModel::UserRole,
+};
+
+enum WidgetFlag {
+    None = 0,
+    Invisible = 1
 };
 }
 }
+
+Q_DECLARE_METATYPE(GammaRay::WidgetModelRoles::WidgetFlag)
 
 #endif // GAMMARAY_WIDGETINSPECTOR_WIDGETMODELROLES_H
