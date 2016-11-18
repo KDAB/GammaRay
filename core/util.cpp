@@ -234,9 +234,10 @@ QVariant Util::iconForObject(const QObject *obj)
 QString Util::tooltipForObject(const QObject *object)
 {
     return QObject::tr(
-        "<p style='white-space:pre'>Object name: %1\nType: %2\nParent: %3 (Address: %4)\nNumber of children: %5</p>")
+        "<p style='white-space:pre'>Object name: %1 (Address: %2)\nType: %3\nParent: %4 (Address: %5)\nNumber of children: %6</p>")
            .arg(
         object->objectName().isEmpty() ? QStringLiteral("&lt;Not set&gt;") : object->objectName(),
+        Util::addressToString(object),
         object->metaObject()->className(),
         object->parent() ? object->parent()->metaObject()->className() : QStringLiteral(
             "<No parent>"),
