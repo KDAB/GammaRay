@@ -53,8 +53,11 @@ ProcessInjector::~ProcessInjector()
 
 void ProcessInjector::stop()
 {
+    disconnect(&m_proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(processFailed()));
+    if (m_proc.state() != QProcess::Running)
+        return;
     m_proc.terminate();
-    if (!m_proc.waitForFinished(1000))
+    if (!m_proc.waitForFinished(1000)) // dont wait here.
         m_proc.kill(); // kill it softly
 }
 
