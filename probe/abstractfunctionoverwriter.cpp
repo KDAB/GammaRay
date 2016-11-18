@@ -55,8 +55,8 @@ bool AbstractFunctionOverwriter::writeShortJump(void *target, void * const func)
 
     *cur = 0xE9;
     cur++;
-    *reinterpret_cast<quint32 *>(cur) = reinterpret_cast<unsigned long>(func)
-                                        - reinterpret_cast<unsigned long>(cur + 4);
+    *reinterpret_cast<quint32 *>(cur) = reinterpret_cast<uintptr_t>(func)
+                                        - reinterpret_cast<uintptr_t>(cur + 4);
 
     ret = reprotectMemory(page_align(target), roundToNextPage(5));
 
