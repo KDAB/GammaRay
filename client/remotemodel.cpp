@@ -479,6 +479,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         Node *parentNode = nodeForIndex(parentIndex);
         if (!parentNode || parentNode->rowCount < 0)
             return; // we don't know the parent yet, so we don't care about changes to it either
+        Q_ASSERT(first <= parentNode->rowCount);
         doInsertRows(parentNode, first, last);
         break;
     }
@@ -493,6 +494,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         Node *parentNode = nodeForIndex(parentIndex);
         if (!parentNode || parentNode->rowCount < 0)
             return; // we don't know the parent yet, so we don't care about changes to it either
+        Q_ASSERT(first < parentNode->rowCount);
         doRemoveRows(parentNode, first, last);
         break;
     }
