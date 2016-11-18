@@ -189,7 +189,8 @@ void ClientToolManager::clear()
     for (auto it = m_widgets.constBegin(); it != m_widgets.constEnd(); ++it)
         delete it.value().data();
     m_tools.clear();
-    disconnect(m_remote, 0, this, 0);
+    if (m_remote)
+        disconnect(m_remote, 0, this, 0);
     m_remote = 0;
     emit reset();
 }
