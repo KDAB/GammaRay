@@ -1,0 +1,17 @@
+set(WIDGET3D_SHADERS_HORIZONTALS_PROGRAM
+    horizontal.frag
+    horizontal.geom
+    horizontal.vert
+)
+set(WIDGET3D_SHADERS_WIDGET_PROGRAM
+    widget.frag
+    widget.vert
+)
+set(WIDGET3D_SHADERS_WIDGET_WIREFRAME_PROGRAM
+    widget_wireframe.frag
+    widget_wireframe.geom
+    widget_wireframe.vert
+)
+glslang_validate_program(${WIDGET3D_SHADERS_HORIZONTALS_PROGRAM})
+glslang_validate_program(${WIDGET3D_SHADERS_WIDGET_PROGRAM})
+glslang_validate_program(${WIDGET3D_SHADERS_WIDGET_WIREFRAME_PROGRAM})

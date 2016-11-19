@@ -34,6 +34,12 @@
 #include "ui_widgetinspectorwidget.h"
 #include "waextension/widgetattributetab.h"
 
+#ifdef GAMMARAY_WITH_WIDGET3D
+#include "widget3dview.h"
+#include <QQmlEngine>
+#include <QQmlComponent>
+#endif
+
 #include "common/objectbroker.h"
 #include "common/objectmodel.h"
 
@@ -50,6 +56,8 @@
 #include <QtPlugin>
 #include <QToolBar>
 #include <QSettings>
+#include <QLayout>
+#include <QTabBar>
 
 using namespace GammaRay;
 
@@ -64,6 +72,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     , m_stateManager(this)
     , m_inspector(0)
     , m_remoteView(new RemoteViewWidget(this))
+    , m_3dView(Q_NULLPTR)
 {
     ObjectBroker::registerClientObjectFactoryCallback<WidgetInspectorInterface *>(
         createWidgetInspectorClient);
@@ -130,7 +139,25 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
+#ifdef GAMMARAY_WITH_WIDGET3D
+    // Check if QQC are available, there's no build-time check for this
+    QQmlEngine engine;
+    QQmlComponent comp(&engine);
+    comp.setData("import QtQuick.Controls 1.2; CheckBox {}", QUrl());
+    QScopedPointer<QObject> obj(comp.create());
+    if (!obj.isNull()) {
+        QWidget *widget3d = new QWidget(this);
+        ui->tabWidget->addTab(widget3d, tr("3D View"));
+        widget3d->setLayout(new QHBoxLayout());
+    } else {
+        qWarning() << "Disabling 3D Widget inspector: missing QtQuick Controls";
+    }
+#else
+    qFindChild<QTabBar *>(ui->tabWidget)->hide();
+#endif
+
     connect(ui->widgetPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
 }
 
 WidgetInspectorWidget::~WidgetInspectorWidget()
@@ -145,6 +172,18 @@ void WidgetInspectorWidget::saveTargetState(QSettings *settings) const
 void WidgetInspectorWidget::restoreTargetState(QSettings *settings)
 {
     m_remoteView->restoreState(settings->value("remoteViewState").toByteArray());
+}
+
+void WidgetInspectorWidget::onTabChanged(int index)
+{
+#ifdef GAMMARAY_WITH_WIDGET3D
+    if (index == 1 && m_3dView == Q_NULLPTR) {
+        m_3dView = new Widget3DView(this);
+        ui->tabWidget->widget(1)->layout()->addWidget(m_3dView);
+    }
+#else
+    Q_UNUSED(index)
+#endif
 }
 
 void WidgetInspectorWidget::updateActions()
@@ -175,6 +214,7 @@ void WidgetInspectorWidget::propertyWidgetTabsChanged()
 
 void WidgetInspectorWidget::widgetSelected(const QItemSelection &selection)
 {
+    ui->tabWidget->setCurrentIndex(0); // select the tree view tab
     QModelIndex index;
     if (selection.size() > 0)
         index = selection.first().topLeft();

@@ -262,6 +262,7 @@ if(Qt5Core_FOUND)
     3DInput
     3DLogic
     3DRender
+    3DQuick
     Bluetooth
     Concurrent
     Positioning
@@ -278,6 +279,7 @@ if(Qt5Core_FOUND)
     Widgets
     WaylandCompositor
   )
+
   # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
   if(NOT CMAKE_CROSSCOMPILING)
     find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
@@ -289,6 +291,14 @@ if(Qt5Core_FOUND)
   endif()
   if(GAMMARAY_BUILD_UI) # widgets are required for the UI
     find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
+      # 3D Widget inspector requires Qt3D 5.7
+    if (Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
+      if (${Qt53DCore_FOUND})
+        set(GAMMARAY_WITH_WIDGET3D TRUE)
+      else()
+        message(STATUS "Not building GammaRay Widget 3D")
+      endif()
+    endif()
   endif()
 
   #HACK: CMake with broken Qt5Qml_PRIVATE_INCLUDE_DIRS, Qt5Quick_PRIVATE_INCLUDE_DIRS
@@ -427,6 +437,7 @@ endif()
 add_feature_info("QtScript debugger" QT_QTSCRIPTTOOLS_FOUND "Requires QtScript and QtScriptTools.")
 add_feature_info("Web inspector" HAVE_QT_WEBKIT1 "Requires QtWebKit.")
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
+add_feature_info("3D Widget Inspector" GAMMARAY_WITH_WIDGET3D "Requires Qt5 >= 5.7, Qt3D and QtQuick Controls")
 
 #
 # Additional dependencies

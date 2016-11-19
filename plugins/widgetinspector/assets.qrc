@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/gammaray">
+        <file>assets/qml/main.qml</file>
+        <file>assets/qml/Horizontals.qml</file>
+        <file>assets/qml/WidgetMaterial.qml</file>
+        <file>assets/qml/WidgetDelegate.qml</file>
+        <file>assets/qml/WidgetInfo.qml</file>
+        <file>assets/qml/CameraController.qml</file>
+        <file>assets/qml/CheckBox.qml</file>
+        <file>assets/shaders/widget.vert</file>
+        <file>assets/shaders/widget.frag</file>
+        <file>assets/shaders/widget_wireframe.vert</file>
+        <file>assets/shaders/widget_wireframe.geom</file>
+        <file>assets/shaders/widget_wireframe.frag</file>
+        <file>assets/shaders/horizontal.vert</file>
+        <file>assets/shaders/horizontal.geom</file>
+        <file>assets/shaders/horizontal.frag</file>
+    </qresource>
+</RCC>

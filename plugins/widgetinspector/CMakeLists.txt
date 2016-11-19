@@ -6,6 +6,7 @@ set(gammaray_widgetinspector_plugin_srcs
   overlaywidget.cpp
   widgettreemodel.cpp
   widgetpaintanalyzerextension.cpp
+  widget3dmodel.cpp
 
   waextension/widgetattributeextension.cpp
 )
@@ -65,11 +66,29 @@ if(GAMMARAY_BUILD_UI)
     widgetclientmodel.cpp
 
     waextension/widgetattributetab.cpp
+
+    widgetinspectorwidget.cpp
   )
+
+  if (GAMMARAY_WITH_WIDGET3D)
+    add_subdirectory(assets)
+
+    set(gammaray_widgetinspector_ui_plugin_srcs
+      ${gammaray_widgetinspector_ui_plugin_srcs}
+      widget3dview.cpp
+      widget3dwindowmodel.cpp
+      widget3dsubtreemodel.cpp
+      widget3dimagetextureimage.cpp
+    )
+  endif()
 
   qt4_wrap_ui(gammaray_widgetinspector_ui_plugin_srcs
     widgetinspectorwidget.ui
     waextension/widgetattributetab.ui
+  )
+
+  qt4_add_resources(gammaray_widgetinspector_ui_plugin_srcs
+    assets.qrc
   )
 
   gammaray_add_plugin(gammaray_widgetinspector_ui_plugin
@@ -82,4 +101,16 @@ if(GAMMARAY_BUILD_UI)
     ${QT_QTGUI_LIBRARIES}
     gammaray_ui
   )
+
+  if (GAMMARAY_WITH_WIDGET3D)
+    target_link_libraries(gammaray_widgetinspector_ui_plugin
+        gammaray_client
+        Qt5::Qml
+        Qt5::Quick
+        Qt5::3DRender
+        Qt5::3DLogic
+        Qt5::3DInput
+        Qt5::3DQuick
+    )
+  endif()
 endif()
