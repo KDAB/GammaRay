@@ -124,7 +124,7 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
 
     // delay adding actions until we know the supported tools
     connect(ClientToolManager::instance(), &ClientToolManager::toolsForObjectResponse,
-            menu, [menu](const ObjectId &id, const QVector<ToolInfo> &toolInfos) {
+            menu, [this, menu](const ObjectId &id, const QVector<ToolInfo> &toolInfos) { // Capturing this due to a bug in GCC 4.6 and 4.7 regarding the tr()-call.
         foreach (const auto &toolInfo, toolInfos) {
             auto action = menu->addAction(tr("Show in \"%1\" tool").arg(toolInfo.name()));
             QObject::connect(action, &QAction::triggered, [id, toolInfo]() {
