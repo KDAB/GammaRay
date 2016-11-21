@@ -54,6 +54,7 @@ QQ2.Item {
         hoverEnabled: true
         aspects: [ "input", "logic", "render" ]
         cameraAspectRatioMode: Scene3D.AutomaticAspectRatio
+        multisample: true
 
         Entity {
             id: root
