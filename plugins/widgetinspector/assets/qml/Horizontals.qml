@@ -73,7 +73,7 @@ Entity {
                         api: GraphicsApiFilter.OpenGL
                         profile: GraphicsApiFilter.CoreProfile
                         majorVersion: 3
-                        minorVersion: 3
+                        minorVersion: 2
                     }
 
                     filterKeys: [

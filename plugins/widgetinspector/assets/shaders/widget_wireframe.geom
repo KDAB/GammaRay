@@ -1,7 +1,7 @@
-#version 330 core
+#version 150 core
 
 /*
-  widget_pass2.geom
+  widget_wireframe.geom
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
