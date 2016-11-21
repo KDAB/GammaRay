@@ -107,6 +107,11 @@ static void initPluginRepository()
         insertFactory(factory);
 }
 
+static bool toolLessThan(const ToolInfo &lhs, const ToolInfo &rhs)
+{
+    return lhs.name().localeAwareCompare(rhs.name()) < 0;
+}
+
 ToolInfo::ToolInfo() :
     m_isEnabled(false),
     m_hasUi(false),
@@ -260,6 +265,7 @@ void ClientToolManager::gotTools(const QVector<GammaRay::ToolData> &tools)
             }
         }
     }
+    qSort(m_tools.begin(), m_tools.end(), toolLessThan);
     emit toolListAvailable();
 
     if (m_remote) {
