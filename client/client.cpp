@@ -89,8 +89,7 @@ void Client::connectToHost(const QUrl &url, int tryAgain)
 
     connect(m_clientDevice, SIGNAL(connected()), this, SLOT(socketConnected()));
     connect(m_clientDevice, SIGNAL(transientError()), this, SIGNAL(transientConnectionError()));
-    connect(m_clientDevice, SIGNAL(persistentError(QString)), this,
-            SIGNAL(persisitentConnectionError(QString)));
+    connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SIGNAL(persisitentConnectionError(QString)));
     connect(m_clientDevice, SIGNAL(transientError()), this, SLOT(resetClientDevice()));
     connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SLOT(resetClientDevice()));
     m_clientDevice->setTryAgain(tryAgain);
@@ -101,7 +100,6 @@ void Client::disconnectFromHost()
 {
     if (m_clientDevice) {
         m_clientDevice->disconnectFromHost();
-        resetClientDevice();
     }
 }
 
