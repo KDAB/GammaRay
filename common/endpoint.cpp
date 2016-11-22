@@ -138,6 +138,8 @@ void Endpoint::readyRead()
 
 void Endpoint::connectionClosed()
 {
+    disconnect(m_socket.data(), SIGNAL(readyRead()), this, SLOT(readyRead()));
+    disconnect(m_socket.data(), SIGNAL(disconnected()), this, SLOT(connectionClosed()));
     m_socket = 0;
     emit disconnected();
 }
