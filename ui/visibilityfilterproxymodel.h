@@ -32,8 +32,6 @@
 #include "gammaray_common_export.h"
 #include "3rdparty/kde/krecursivefilterproxymodel.h"
 
-#include "plugins/quickinspector/quickitemmodelroles.h"
-
 namespace GammaRay {
 
 /**
@@ -54,8 +52,11 @@ public:
 
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
 
+    void setFlagRole(int flagRole);
+    void setInvisibleMask(int invisibleMask);
+
 public slots:
-    void setHideQQuickItems(bool hideQQuickItems);
+    void setHideItems(bool hideItems);
 
 protected:
     /**
@@ -67,16 +68,10 @@ protected:
      */
     bool acceptRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 
-    /**
-     * Determines if the specified QuickItem can be included in the model.
-     * @param itemFlag is a ref to the QuickItemModelRole.
-     * @return true if the QuickItem is not visible on or has a size of zero; false otherwise.
-     */
-
-    bool hideQQuickItems(const QuickItemModelRole::ItemFlag &itemFlag) const;
-
 private:
-    bool m_hideQQuickItems;
+    bool m_hideItems;
+    int m_flagRole;
+    int m_invisibleMask;
 };
 
 }

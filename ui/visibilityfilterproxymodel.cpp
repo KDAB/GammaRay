@@ -27,13 +27,17 @@
 */
 
 #include <visibilityfilterproxymodel.h>
-#include <plugins/quickinspector/quickitemmodelroles.h>
+#include "common/objectmodel.h"
+
+#include <QDebug>
 
 using namespace GammaRay;
 
 VisibilityFilterProxyModel::VisibilityFilterProxyModel(QObject *parent)
     : KRecursiveFilterProxyModel(parent)
-    , m_hideQQuickItems(true)
+    , m_hideItems(true)
+    , m_flagRole(0)
+    , m_invisibleMask(0)
 {
 }
 
@@ -50,24 +54,36 @@ bool VisibilityFilterProxyModel::acceptRow(int source_row, const QModelIndex &so
         return false;
     }
 
-    if (m_hideQQuickItems) {
-    QuickItemModelRole::ItemFlag flags = source_index.data(QuickItemModelRole::ItemFlags).value<QuickItemModelRole::ItemFlag>();
-    if (hideQQuickItems(flags))
-        return false;
+    if (m_hideItems) {
+        int flags = source_index.data(m_flagRole).toInt();
+        if (flags & m_invisibleMask)
+            return false;
     }
 
     return KRecursiveFilterProxyModel::acceptRow(source_row, source_parent);
 }
 
-bool VisibilityFilterProxyModel::hideQQuickItems(const GammaRay::QuickItemModelRole::ItemFlag &itemFlag) const
+void VisibilityFilterProxyModel::setHideItems(bool hideItems)
 {
-    if (itemFlag & (QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize))
-        return true;
-
-    return false;
+    if (m_hideItems != hideItems) {
+        m_hideItems = hideItems;
+        invalidateFilter();
+    }
 }
 
-void VisibilityFilterProxyModel::setHideQQuickItems(bool hideQQuickItems)
+void VisibilityFilterProxyModel::setFlagRole(int flagRole)
 {
-    m_hideQQuickItems = hideQQuickItems;
+    if (m_flagRole != flagRole) {
+        m_flagRole = flagRole;
+        invalidateFilter();
+    }
+}
+
+
+void VisibilityFilterProxyModel::setInvisibleMask(int invisibleMask)
+{
+    if (m_invisibleMask != invisibleMask) {
+        m_invisibleMask = invisibleMask;
+        invalidateFilter();
+    }
 }

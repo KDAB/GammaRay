@@ -55,7 +55,7 @@ QPair<int, QVariant> WidgetTreeModel::defaultSelectedItem() const
 
 QVariant WidgetTreeModel::data(const QModelIndex &index, int role) const
 {
-    if (index.isValid() && role == WidgetModelRoles::VisibleRole) {
+    if (index.isValid() && role == WidgetModelRoles::WidgetFlags) {
         QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
         QWidget *widget = qobject_cast<QWidget *>(obj);
         if (!widget) {
@@ -63,7 +63,11 @@ QVariant WidgetTreeModel::data(const QModelIndex &index, int role) const
             if (layout)
                 widget = layout->parentWidget();
         }
-        return !widget || widget->isVisible();
+
+        if (widget && !widget->isVisible())
+            return WidgetModelRoles::Invisible;
+
+        return WidgetModelRoles::None;
     }
     return QSortFilterProxyModel::data(index, role);
 }
@@ -71,7 +75,7 @@ QVariant WidgetTreeModel::data(const QModelIndex &index, int role) const
 QMap<int, QVariant> WidgetTreeModel::itemData(const QModelIndex &index) const
 {
     auto d = ObjectFilterProxyModelBase::itemData(index);
-    d.insert(WidgetModelRoles::VisibleRole, data(index, WidgetModelRoles::VisibleRole));
+    d.insert(WidgetModelRoles::WidgetFlags, data(index, WidgetModelRoles::WidgetFlags));
     return d;
 }
 

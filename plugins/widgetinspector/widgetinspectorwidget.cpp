@@ -33,6 +33,7 @@
 #include "widgetclientmodel.h"
 #include "ui_widgetinspectorwidget.h"
 #include "waextension/widgetattributetab.h"
+#include "widgetmodelroles.h"
 
 #ifdef GAMMARAY_WITH_WIDGET3D
 #include "widget3dview.h"
@@ -98,6 +99,8 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
 
     m_remoteView->setName(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"));
     m_remoteView->setPickSourceModel(widgetModel);
+    m_remoteView->setFlagRole(WidgetModelRoles::WidgetFlags);
+    m_remoteView->setInvisibleMask(WidgetModelRoles::Invisible);
 
     auto layout = new QVBoxLayout;
     layout->setMargin(0);
