@@ -151,6 +151,11 @@ void ClientConnectionManager::connectToHost(const QUrl &url, int tryAgain)
     connectToHost();
 }
 
+void ClientConnectionManager::showSplashScreen()
+{
+    ::showSplashScreen();
+}
+
 void ClientConnectionManager::disconnectFromHost()
 {
     m_client->disconnectFromHost();

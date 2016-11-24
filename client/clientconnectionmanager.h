@@ -63,6 +63,9 @@ public:
     /** Connect to a GammaRay probe at @p url. */
     void connectToHost(const QUrl &url, int tryAgain = 0);
 
+    /** Manually show the splash screen. */
+    void showSplashScreen();
+
     /** One-time initialization of stream operators and factory callbacks. */
     static void init();
 
