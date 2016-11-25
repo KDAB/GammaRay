@@ -1,0 +1,65 @@
+aside {
+    float: right;
+}
+aside ul {
+    list-style: none;
+}
+aside li:before {
+    content: "\2023";
+    /* color: #7F9CAD; TODO */
+    display: inline-block;
+    float: left;
+    margin-left: -1.3em;
+    width: 1.3em;
+}
+
+nav.breadcrumbHolder ul {
+    list-style: none;
+}
+nav.breadcrumbHolder li {
+    display:inline-block;
+    margin-right:5px;
+    position:relative;
+    padding-right:10px;
+/*   color:#585a5c TODO use from KDAB style */
+}
+nav.breadcrumbHolder li a {
+/*   color:#58585c  TODO use from KDAB style */
+}
+nav.breadcrumbHolder li:after {
+/*   color:#404244;  TODO */
+    content: "\2023";
+    display:inline-block;
+    font-size:1.5em;
+    line-height:1;
+    position:absolute;
+    right:-2px;
+    top:-4px
+}
+nav.breadcrumbHolder ul:last li a {
+/*   color:#80c342 TODO */
+}
+
+#buildversion {
+    font-style:italic;
+    font-size:small;
+    float:right
+}
+#buildversion:after {
+    content:none;
+}
+
+.toc,.sectionlist {
+    padding:35px;
+    background-color:#eee; /* TODO */
+    margin-bottom:2em
+}
+
+/* TODO restrict this only to qdoc content, classes with WP style */
+.border {
+    border: 0px;
+}
+.border img {
+   box-shadow:3px 3px 8px 3px rgba(200,200,200,0.5)
+}
+
