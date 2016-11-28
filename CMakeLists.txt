@@ -265,6 +265,7 @@ if(Qt5Core_FOUND)
     3DQuick
     Bluetooth
     Concurrent
+    IviCore
     Positioning
     PrintSupport
     Qml
