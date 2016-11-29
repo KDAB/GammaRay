@@ -73,6 +73,7 @@ public:
         IviProperty();
         QString name;
         QIviProperty *value;
+        bool notWritableInPractice;
         QtIviPropertyOverrider overrider;
     };
 
