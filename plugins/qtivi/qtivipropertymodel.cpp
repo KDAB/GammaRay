@@ -71,6 +71,7 @@ QtIviPropertyModel::QtIviPropertyModel(Probe *probe)
 QtIviPropertyModel::IviProperty::IviProperty(QIviProperty *_value, const QMetaProperty &metaProperty)
    : name(QString::fromUtf8(metaProperty.name())),
      value(_value),
+     notWritableInPractice(false),
      overrider(_value)
 {
 }
@@ -354,7 +355,8 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                 }
                 case WritableColumn:
                     if (role == Qt::CheckStateRole) {
-                        const bool writable = iviProperty.overrider.userWritable();
+                        const bool writable = iviProperty.overrider.userWritable() &&
+                                              !iviProperty.notWritableInPractice;
                         return writable ? Qt::Checked : Qt::Unchecked;
                     }
                     break;
@@ -393,7 +395,8 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
             if (index.column() == ValueColumn) {
                 if (role == Qt::DisplayRole || role == Qt::EditRole) {
                     const bool wasOverride = iviProperty->overrider.isOverride();
-                    bool isOverride = wasOverride || !iviProperty->overrider.userWritable();
+                    bool isOverride = wasOverride || !iviProperty->overrider.userWritable() ||
+                                      iviProperty->notWritableInPractice;
                     if (isOverride && !wasOverride) {
                         // Don't receive valueChanged signals we caused ourselves. We emit the
                         // dataChanged() signal manually instead, which has less potential for
@@ -416,6 +419,18 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
                     }
 
                     iviProperty->overrider.setValue(toSet);
+                    // Hack: some properties reject value changes with no general way to know that
+                    // up front, so check and compensate similarly to "proper" read-only properties.
+                    if (!isOverride && iviProperty->overrider.value() != toSet) {
+                        isOverride = true;
+                        disconnect(iviProperty->value, &QIviProperty::valueChanged,
+                                   this, &QtIviPropertyModel::propertyValueChanged);
+                        iviProperty->overrider.setOverride(isOverride);
+                        iviProperty->overrider.setValue(toSet);
+                        iviProperty->notWritableInPractice = true;
+                        emit dataChanged(index, index.sibling(index.row(), WritableColumn));
+                        emit dataChanged(index, index.sibling(index.row(), OverrideColumn));
+                    }
 
                     if (isOverride) {
                         // imitate the signals; if not overriding, the original setter has been called and
