@@ -41,16 +41,17 @@ namespace GammaRay {
  Read-write properties are effectively settings for lower layers from higher layers, with reading them
  back as a convenience function.
  Read-only properties are information about lower layers for higher layers.
- So the information flow is exactly opposite for the two kinds of properties. Thus, overriding should
- work as follows for them:
- - Read-write properties: Overriding allows the overrider to set the value, with the same effects as
-   setting the value from the UI. The regular setter will not  change the value anymore, but stash away
-   the value for later when override is disabled.
- - Readonly properties: Overriding allows the overrider to set the value, with the same effects as
-   setting the value from the backend.
-
- Unfortunately, QIviProperties cannot currently be explicitly readonly - they can only ignore
- setValue() calls...
+ We handle them as follows:
+ - Read-write properties:
+   - Non-override mode: set them like user input would
+   - Override mode: set them and make them return the set value, but don't pass it along to the
+     backend (e.g. when setting the target temperature of air conditioning, only the target
+     temperature as displayed would change, but the air in the car wouldn't be regulated warmer
+     or colder).
+ - Read-only properties:
+   - Non-override mode: does not change any value
+   - Override mode: As with read-write properties, only that the backend value couldn't
+     be changed anyway (e.g. outside temperature).
  */
 
 // Note: Those subclasses of QSlotObjectBase are not invoked through the ReadProperty / WriteProperty
@@ -66,13 +67,12 @@ class OverrideValueSetter : public QtPrivate::QSlotObjectBase
             delete static_cast<OverrideValueSetter*>(this_);
             break;
         case Call: {
-#if 0       // If we actually wanted to propagate writes coming from the real backend - which would
-            // undo the override... It seems better to ignore writes from the real backend.
-            QtIviPropertyOverrider *const overrider = static_cast<OverrideValueSetter*>(this_)->m_overrider;
-            const QMetaType::Type mt = static_cast<QMetaType::Type>(overrider->m_overrideValue.userType());
+            // store the value for later when we restore the original getters and setters - then we
+            // can also restore the last value received from the real backend.
+            OverrideValueSetter *const self = static_cast<OverrideValueSetter*>(this_);
+            const QMetaType::Type mt = static_cast<QMetaType::Type>(self->m_stashedValue.userType());
             void *const firstArgument = a[1];
-            overrider->m_overrideValue = QVariant(mt, firstArgument);
-#endif
+            self->m_stashedValue = QVariant(mt, firstArgument);
             break;
         }
         case Compare:
@@ -82,9 +82,9 @@ class OverrideValueSetter : public QtPrivate::QSlotObjectBase
         }
     }
 public:
-    QtIviPropertyOverrider *m_overrider;
-    explicit OverrideValueSetter(QtIviPropertyOverrider *overrider)
-        : QSlotObjectBase(&impl), m_overrider(overrider) {}
+    QVariant m_stashedValue;
+    explicit OverrideValueSetter(const QVariant &value)
+        : QSlotObjectBase(&impl), m_stashedValue(value) {}
 };
 
 class OverrideValueGetter : public QtPrivate::QSlotObjectBase
@@ -120,19 +120,12 @@ public:
 
 }
 
-QtIviPropertyOverrider::QtIviPropertyOverrider(QIviProperty *overriddenProperty, bool userWritable)
-   : m_prop(overriddenProperty),
-     m_overrideEnabled(false),
-     m_userWritable(userWritable)
+QtIviPropertyOverrider::QtIviPropertyOverrider(QIviProperty *overriddenProperty)
+   : m_prop(overriddenProperty)
 {
-    // access to m_overrideValue[G|S]etter is guarded by m_overrideEnabled so they don't need to be
-    // initialized
 }
 
 QtIviPropertyOverrider::QtIviPropertyOverrider()
-   : m_prop(nullptr),
-     m_overrideEnabled(false),
-     m_userWritable(false)
 {
 }
 
@@ -145,57 +138,72 @@ QtIviPropertyOverrider &QtIviPropertyOverrider::operator=(QtIviPropertyOverrider
 {
     m_prop = other.m_prop;
     m_overrideValue = other.m_overrideValue;
-    m_overrideEnabled = other.m_overrideEnabled;
-    m_originalValueSetter = other.m_originalValueSetter;
     m_originalValueGetter = other.m_originalValueGetter;
+    m_originalValueSetter = other.m_originalValueSetter;
 
-    if (m_overrideEnabled) {
-        // fix the backlinks
+    if (isOverride()) {
+        // fix up the backlink
         QIviPropertyPrivate *pPriv = QIviPropertyPrivate::get(m_prop);
-        static_cast<OverrideValueSetter *>(pPriv->m_valueSetter)->m_overrider = this;
         static_cast<OverrideValueGetter *>(pPriv->m_valueGetter)->m_overrider = this;
-
-        // this is enough to make destroying the other one harmless
-        other.m_overrideEnabled = false;
     }
     return *this;
 }
 
 QtIviPropertyOverrider::~QtIviPropertyOverrider()
 {
-    disableOverride();
+    setOverride(false);
 }
 
-void QtIviPropertyOverrider::setOverrideValue(const QVariant &value)
+void QtIviPropertyOverrider::setValue(const QVariant &value)
 {
-    if (!m_overrideEnabled) {
-        m_overrideEnabled = true;
-        QIviPropertyPrivate *pPriv = QIviPropertyPrivate::get(m_prop);
-        m_originalValueGetter = pPriv->m_valueGetter;
-        m_originalValueSetter = pPriv->m_valueSetter;
-
-        pPriv->m_valueGetter = new OverrideValueGetter(this);
-        pPriv->m_valueSetter = new OverrideValueSetter(this);
+    if (isOverride()) {
+        m_overrideValue = value;
+    } else {
+        if (!userWritable()) {
+            qWarning("QtIviPropertyOverrider::setValue(): cannot set value on "
+                     "non-writable non overridden property.");
+            return;
+        }
+        m_prop->setValue(value);
     }
-    m_overrideValue = value;
 }
 
-void QtIviPropertyOverrider::disableOverride()
+void QtIviPropertyOverrider::setOverride(bool doOverride)
 {
-    if (m_overrideEnabled) {
-        m_overrideEnabled = false;
-        QIviPropertyPrivate *pPriv = QIviPropertyPrivate::get(m_prop);
-        // ### should we really call destroyIfLastRef()?
+    QIviPropertyPrivate *const pPriv = QIviPropertyPrivate::get(m_prop);
+    const bool wasOverride = isOverride();
+    if (!doOverride && wasOverride) {
         pPriv->m_valueGetter->destroyIfLastRef();
-        pPriv->m_valueSetter->destroyIfLastRef();
         pPriv->m_valueGetter = m_originalValueGetter;
-        pPriv->m_valueSetter = m_originalValueSetter;
+        m_originalValueGetter = nullptr;
+        if (pPriv->m_valueSetter) { // if it was nullptr, we left it nullptr
+            // restore stashed value from the fake setter we injected
+            const QVariant value = static_cast<OverrideValueSetter *>(pPriv->m_valueSetter)->m_stashedValue;
+            pPriv->m_valueSetter->destroyIfLastRef();
+            pPriv->m_valueSetter = m_originalValueSetter;
+            m_originalValueSetter = nullptr;
+            m_prop->setValue(value);
+        }
+    } else if (doOverride && !wasOverride) {
+        const QVariant value = m_prop->value();
+        m_originalValueGetter = pPriv->m_valueGetter;
+        pPriv->m_valueGetter = new OverrideValueGetter(this);
+        if (pPriv->m_valueSetter) { // if it is nullptr (-> read-only property), leave it nullptr
+            m_originalValueSetter = pPriv->m_valueSetter;
+            pPriv->m_valueSetter = new OverrideValueSetter(value);
+        }
     }
+    Q_ASSERT(isOverride() == doOverride);
 }
 
-bool QtIviPropertyOverrider::overrideEnabled() const
+bool QtIviPropertyOverrider::isOverride() const
 {
-    return m_overrideEnabled;
+    return m_originalValueGetter;
+}
+
+bool QtIviPropertyOverrider::userWritable() const
+{
+    return QIviPropertyPrivate::get(m_prop)->m_valueSetter;
 }
 
 QVariant QtIviPropertyOverrider::value() const

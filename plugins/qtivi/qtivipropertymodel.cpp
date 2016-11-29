@@ -54,6 +54,7 @@ enum Columns
 {
     NameColumn = 0,
     ValueColumn,
+    WritableColumn,
     OverrideColumn,
     TypeColumn,
     ColumnCount
@@ -70,7 +71,7 @@ QtIviPropertyModel::QtIviPropertyModel(Probe *probe)
 QtIviPropertyModel::IviProperty::IviProperty(QIviProperty *_value, const QMetaProperty &metaProperty)
    : name(QString::fromUtf8(metaProperty.name())),
      value(_value),
-     overrider(_value, metaProperty.isWritable())
+     overrider(_value)
 {
 }
 
@@ -257,6 +258,8 @@ QVariant QtIviPropertyModel::headerData(int section, Qt::Orientation orientation
             return tr("Name");
         case ValueColumn:
             return tr("Value");
+        case WritableColumn:
+            return tr("Writable");
         case OverrideColumn:
             return tr("Override");
         case TypeColumn:
@@ -271,7 +274,6 @@ Qt::ItemFlags QtIviPropertyModel::flags(const QModelIndex &index) const
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
     if (index.isValid() && index.internalId() >= 0) {
         if (index.column() == ValueColumn) {
-            // TODO: check if the *data type* is editable? Maybe belongs more into the delegate...
             flags |= Qt::ItemIsEditable;
         } else if (index.column() == OverrideColumn) {
             flags |= Qt::ItemIsUserCheckable | Qt::ItemIsEditable;
@@ -350,9 +352,15 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                     }
                     break;
                 }
+                case WritableColumn:
+                    if (role == Qt::CheckStateRole) {
+                        const bool writable = iviProperty.overrider.userWritable();
+                        return writable ? Qt::Checked : Qt::Unchecked;
+                    }
+                    break;
                 case OverrideColumn:
                     if (role == Qt::CheckStateRole) {
-                        return iviProperty.overrider.overrideEnabled() ? Qt::Checked : Qt::Unchecked;
+                        return iviProperty.overrider.isOverride() ? Qt::Checked : Qt::Unchecked;
                     }
                     break;
                 case TypeColumn:
@@ -384,52 +392,57 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
             IviProperty *iviProperty = &propCarrier->iviProperties[index.row()];
             if (index.column() == ValueColumn) {
                 if (role == Qt::DisplayRole || role == Qt::EditRole) {
-                    const bool wasOverrideEnabled = iviProperty->overrider.overrideEnabled();
-                    if (!wasOverrideEnabled) {
+                    const bool wasOverride = iviProperty->overrider.isOverride();
+                    bool isOverride = wasOverride || !iviProperty->overrider.userWritable();
+                    if (isOverride && !wasOverride) {
                         // Don't receive valueChanged signals we caused ourselves. We emit the
                         // dataChanged() signal manually instead, which has less potential for
                         // "interesting" side effects.
                         disconnect(iviProperty->value, &QIviProperty::valueChanged,
                                    this, &QtIviPropertyModel::propertyValueChanged);
+                        iviProperty->overrider.setOverride(isOverride);
+                        emit dataChanged(index, index.sibling(index.row(), OverrideColumn));
                     }
 
+                    QVariant toSet = value;
                     if (value.userType() == qMetaTypeId<EnumValue>()) {
                         QVariant typeReference = iviProperty->value->value();
                         if (typeReference.type() == QVariant::Int) {
-                            iviProperty->overrider.setOverrideValue(value.value<EnumValue>().value());
+                            toSet = value.value<EnumValue>().value();
                         } else {
                             *(static_cast<int*>(typeReference.data())) = value.value<EnumValue>().value();
-                            iviProperty->overrider.setOverrideValue(typeReference);
+                            toSet = typeReference;
                         }
-                    } else {
-                        iviProperty->overrider.setOverrideValue(value);
                     }
 
-                    emit iviProperty->value->valueChanged(value);
-                    if (wasOverrideEnabled) {
+                    iviProperty->overrider.setValue(toSet);
+
+                    if (isOverride) {
+                        // imitate the signals; if not overriding, the original setter has been called and
+                        // emitted valueChanged(), which we received and re-emitted as dataChanged().
+                        emit iviProperty->value->valueChanged(value);
                         emit dataChanged(index, index);
-                    } else {
-                        emit dataChanged(index, index.sibling(index.row(), OverrideColumn));
                     }
                     return true;
                 }
             } else if (index.column() == OverrideColumn) {
                 if (role == Qt::CheckStateRole) {
-                    const bool wasOverrideEnabled = iviProperty->overrider.overrideEnabled();
-                    const bool overrideEnabled = value.toBool();
-                    if (overrideEnabled != wasOverrideEnabled) {
-                        if (overrideEnabled) {
+                    const bool wasOverride = iviProperty->overrider.isOverride();
+                    const bool isOverride = value.toBool();
+                    if (isOverride != wasOverride) {
+                        iviProperty->overrider.setOverride(isOverride);
+                        emit dataChanged(index.sibling(index.row(), OverrideColumn), index);
+                        if (isOverride) {
                             disconnect(iviProperty->value, &QIviProperty::valueChanged,
                                        this, &QtIviPropertyModel::propertyValueChanged);
-                            iviProperty->overrider.setOverrideValue(iviProperty->value->value());
-                            emit iviProperty->value->valueChanged(value);
+                            // for the initial override value, use the "real"value from original backend
+                            iviProperty->overrider.setValue(iviProperty->value->value());
                         } else {
-                            iviProperty->overrider.disableOverride();
+                            // revert to value from original backend
                             emit iviProperty->value->valueChanged(value);
                             connect(iviProperty->value, &QIviProperty::valueChanged,
                                     this, &QtIviPropertyModel::propertyValueChanged);
                         }
-                        emit dataChanged(index.sibling(index.row(), ValueColumn), index);
                         return true;
                     }
                 }
