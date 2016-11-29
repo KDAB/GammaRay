@@ -118,6 +118,8 @@ bool GammaRay::QuickWidgetSupport::grabWindow(QQuickWindow *window) const
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     auto image = it.value()->grabFramebuffer();
+    // See QTBUG-53795
+    image.setDevicePixelRatio(it.value()->quickWindow()->effectiveDevicePixelRatio());
     QMetaObject::invokeMethod(m_quickInspector, "sendRenderedScene", Q_ARG(QImage, image));
     return true;
 #else
