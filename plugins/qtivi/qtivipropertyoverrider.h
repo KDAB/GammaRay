@@ -40,8 +40,6 @@ class QtIviPropertyOverrider
 public:
     QtIviPropertyOverrider(QIviProperty *property, bool userWritable = false);
     QtIviPropertyOverrider();
-    QtIviPropertyOverrider(const QtIviPropertyOverrider &other) = delete;
-    QtIviPropertyOverrider &operator=(const QtIviPropertyOverrider &other) = delete;
     QtIviPropertyOverrider(QtIviPropertyOverrider &&other);
     QtIviPropertyOverrider &operator=(QtIviPropertyOverrider &&other);
     ~QtIviPropertyOverrider();
@@ -53,6 +51,7 @@ public:
     QVariant value() const;
 
 private:
+    Q_DISABLE_COPY(QtIviPropertyOverrider)
     friend class OverrideValueSetter;
     friend class OverrideValueGetter;
 
