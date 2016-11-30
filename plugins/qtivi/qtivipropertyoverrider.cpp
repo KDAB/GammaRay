@@ -28,6 +28,7 @@
 #include "qtivipropertyoverrider.h"
 
 #include <QObject>
+#include <QVarLengthArray>
 
 #include <QIviProperty>
 #include <private/qiviproperty_p.h>
@@ -207,5 +208,19 @@ bool QtIviPropertyOverrider::userWritable() const
 
 QVariant QtIviPropertyOverrider::value() const
 {
-    return m_prop->value();
+    // QIviProperty::value() unfortunately "sanitizes" the type to avoid confusing the QML engine with
+    // C++ types like enums and flags. We prefer the real types so we can show suitable display and
+    // editing delegates for them. So reimplement QIviProperty[Factory]::value() without the type munging.
+    QIviPropertyPrivate *const pPriv = QIviPropertyPrivate::get(m_prop);
+
+    // use quint64 to get a healthy alignment - hopefully it is enough!
+    QVarLengthArray<quint64, 2> storage;
+    const int typeSize = QMetaType::sizeOf(pPriv->m_type);
+    storage.resize((typeSize + sizeof(quint64) - 1) / sizeof(quint64));
+
+    void *const rawStorage = reinterpret_cast<void *>(storage.data());
+    void *args[] = { rawStorage, Q_NULLPTR };
+    pPriv->m_valueGetter->call(m_prop->parent(), args);
+
+    return QVariant(pPriv->m_type, rawStorage);
 }
