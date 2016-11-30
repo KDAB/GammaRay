@@ -45,6 +45,8 @@
 
 #include <iostream>
 
+static const quint64 PropertyCarrierIndex = ~quint64(0); // there is no QUINT64_MAX
+
 //#define IF_DEBUG(x) (x)
 #define IF_DEBUG(x)
 
@@ -273,7 +275,7 @@ QVariant QtIviPropertyModel::headerData(int section, Qt::Orientation orientation
 Qt::ItemFlags QtIviPropertyModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-    if (index.isValid() && index.internalId() >= 0) {
+    if (index.isValid() && index.internalId() != PropertyCarrierIndex) {
         if (index.column() == ValueColumn) {
             flags |= Qt::ItemIsEditable;
         } else if (index.column() == OverrideColumn) {
@@ -304,8 +306,8 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) {
         return QVariant();
     }
-    const int parentRow = static_cast<int>(index.internalId());
-    if (parentRow == -1 && role == Qt::DisplayRole) {
+    const quint64 parentRow = index.internalId();
+    if (parentRow == PropertyCarrierIndex && role == Qt::DisplayRole) {
         // property carrier
         if (index.row() >= 0 && uint(index.row()) < m_propertyCarriers.size()) {
             const IviPropertyCarrier &propCarrier = m_propertyCarriers.at(index.row());
@@ -322,7 +324,7 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
         }
     } else {
         // property
-        if (parentRow >= 0 && uint(parentRow) < m_propertyCarriers.size()) {
+        if (parentRow != PropertyCarrierIndex && parentRow < m_propertyCarriers.size()) {
             const IviPropertyCarrier &propCarrier = m_propertyCarriers.at(parentRow);
             if (index.row() >= 0 && uint(index.row()) < propCarrier.iviProperties.size()) {
                 const IviProperty &iviProperty = propCarrier.iviProperties.at(index.row());
@@ -385,7 +387,7 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
 {
     const int parentRow = static_cast<int>(index.internalId());
     if (!index.isValid() || (index.column() != ValueColumn && index.column() != OverrideColumn)
-        || index.internalId() < 0) {
+        || index.internalId() == PropertyCarrierIndex) {
         return false;
     }
     if (parentRow >= 0 && uint(parentRow) < m_propertyCarriers.size()) {
@@ -467,7 +469,7 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
     return false;
 }
 
-void QtIviPropertyModel::propertyValueChanged(const QVariant &value)
+void QtIviPropertyModel::propertyValueChanged(const QVariant &)
 {
     QIviProperty *property = qobject_cast<QIviProperty *>(sender());
     if (!property) {
@@ -493,8 +495,8 @@ int QtIviPropertyModel::rowCount(const QModelIndex &parent) const
     }
 
     if (parent.isValid()) {
-        const int grandparentRow = static_cast<int>(parent.internalId());
-        if (grandparentRow == -1 /* only property carriers have another level of children */) {
+        // only property carriers have another level of children
+        if (parent.internalId() == PropertyCarrierIndex) {
             const IviPropertyCarrier &propCarrier = m_propertyCarriers.at(parent.row());
             return propCarrier.iviProperties.size();
         }
@@ -512,9 +514,9 @@ int QtIviPropertyModel::columnCount(const QModelIndex &) const
 QModelIndex QtIviPropertyModel::parent(const QModelIndex &child) const
 {
     if (child.isValid()) {
-        const int parentRow = static_cast<int>(child.internalId());
-        if (parentRow != -1 /* -1 is already toplevel */) {
-            return createIndex(parentRow, 0, -1);
+        const  quint64 parentRow = child.internalId();
+        if (parentRow != PropertyCarrierIndex) {
+            return createIndex(parentRow, 0, PropertyCarrierIndex);
         }
     }
     return QModelIndex();
@@ -522,16 +524,17 @@ QModelIndex QtIviPropertyModel::parent(const QModelIndex &child) const
 
 /*
  Usage of QModelIndex::internalId() aka internalPointer():
- - toplevel (property carrier): (int) -1
- - second level (property): (int) index of property carrier (parent); >= 0
+ - toplevel (property carrier): PropertyCarrierIndex
+ - second level (property): index of property carrier (parent)
  */
 QModelIndex QtIviPropertyModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (column >= 0 && column < ColumnCount) {
         if (parent.isValid()) {
             // create an index to a property
-            const int grandparentRow = static_cast<int>(parent.internalId());
-            if (grandparentRow == -1 && /* only property carriers have another level of children */
+            const quint64 grandparentRow = parent.internalId();
+            // only property carriers have another level of children
+            if (grandparentRow == PropertyCarrierIndex &&
                 parent.row() >= 0 && uint(parent.row()) < m_propertyCarriers.size()) {
                 const IviPropertyCarrier &propCarrier = m_propertyCarriers.at(parent.row());
                 if (row >= 0 && uint(row) < propCarrier.iviProperties.size()) {
@@ -541,7 +544,7 @@ QModelIndex QtIviPropertyModel::index(int row, int column, const QModelIndex &pa
         } else {
             // create an index to a property carrier
             if (row >= 0 && uint(row) < m_propertyCarriers.size()) {
-                return createIndex(row, column, -1);
+                return createIndex(row, column, PropertyCarrierIndex);
             }
         }
     }
