@@ -60,7 +60,7 @@ namespace GammaRay {
 
 class OverrideValueSetter : public QtPrivate::QSlotObjectBase
 {
-    static void impl(int which, QSlotObjectBase *this_, QObject *r, void **a, bool *ret)
+    static void impl(int which, QSlotObjectBase *this_, QObject *, void **a, bool *ret)
     {
         switch (which) {
         case Destroy:
@@ -89,9 +89,8 @@ public:
 
 class OverrideValueGetter : public QtPrivate::QSlotObjectBase
 {
-    static void impl(int which, QSlotObjectBase *this_, QObject *r, void **a, bool *ret)
+    static void impl(int which, QSlotObjectBase *this_, QObject *, void **a, bool *ret)
     {
-        Q_UNUSED(r)
         switch (which) {
         case Destroy:
             delete static_cast<OverrideValueGetter*>(this_);
