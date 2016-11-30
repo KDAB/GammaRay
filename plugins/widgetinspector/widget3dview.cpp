@@ -58,7 +58,6 @@
 #include <Qt3DRender/QRenderAspect>
 #include <Qt3DLogic/QLogicAspect>
 
-#include <QtQml>
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlContext>
 #include <QtQuick/QQuickItem>
