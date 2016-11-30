@@ -32,8 +32,8 @@
 #include <QVariant>
 
 class QIviProperty;
-class OverrideValueGetter;
-class OverrideValueSetter;
+
+namespace GammaRay {
 
 class QtIviPropertyOverrider
 {
@@ -62,5 +62,7 @@ private:
     QtPrivate::QSlotObjectBase *m_originalValueSetter;
     QtPrivate::QSlotObjectBase *m_originalValueGetter;
 };
+
+}
 
 #endif // GAMMARAY_QTIVIPROPERTYOVERRIDER_H

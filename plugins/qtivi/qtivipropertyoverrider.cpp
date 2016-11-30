@@ -32,6 +32,10 @@
 #include <QIviProperty>
 #include <private/qiviproperty_p.h>
 
+using namespace GammaRay;
+
+namespace GammaRay {
+
 /*
  For the purpose of overriding, there is a big difference between read-only and read-write properties.
  Read-write properties are effectively settings for lower layers from higher layers, with reading them
@@ -113,6 +117,8 @@ public:
     explicit OverrideValueGetter(QtIviPropertyOverrider *overrider)
         : QSlotObjectBase(&impl), m_overrider(overrider) {}
 };
+
+}
 
 QtIviPropertyOverrider::QtIviPropertyOverrider(QIviProperty *overriddenProperty, bool userWritable)
    : m_prop(overriddenProperty),
