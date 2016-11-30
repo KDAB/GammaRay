@@ -48,7 +48,6 @@ class Widget3DWidget : public QObject
     Q_OBJECT
 
 public:
-    Widget3DWidget(QObject *parent = Q_NULLPTR); // don't use
     Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &modelIndex, Widget3DWidget *parent);
     ~Widget3DWidget();
 

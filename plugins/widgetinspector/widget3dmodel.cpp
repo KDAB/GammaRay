@@ -43,17 +43,6 @@
 
 using namespace GammaRay;
 
-Widget3DWidget::Widget3DWidget(QObject *parent)
-    : QObject(parent)
-    , mQWidget(Q_NULLPTR)
-    , mUpdateTimer(Q_NULLPTR)
-    , mDepth(0)
-    , mIsPainting(false)
-    , mGeomDirty(false)
-    , mTextureDirty(false)
-{
-}
-
 Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &idx,
                                Widget3DWidget *parent)
     : QObject(parent)
