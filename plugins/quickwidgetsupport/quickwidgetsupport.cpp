@@ -116,7 +116,7 @@ bool GammaRay::QuickWidgetSupport::grabWindow(QQuickWindow *window) const
     if (it == m_windowMap.constEnd())
         return false;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     auto image = it.value()->grabFramebuffer();
     // See QTBUG-53795
     image.setDevicePixelRatio(it.value()->quickWindow()->effectiveDevicePixelRatio());
