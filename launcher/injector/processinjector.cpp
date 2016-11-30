@@ -57,7 +57,7 @@ void ProcessInjector::stop()
     if (m_proc.state() != QProcess::Running)
         return;
     m_proc.terminate();
-    if (!m_proc.waitForFinished(1000)) // dont wait here.
+    if (!m_proc.waitForFinished(1000)) // don't wait here.
         m_proc.kill(); // kill it softly
 }
 

@@ -63,7 +63,7 @@ public:
     inline int depth() const { return mDepth; }
     inline QPersistentModelIndex modelIndex() const { return mModelIndex; }
     // QML does not handle 64bit integers, so use string instead, we only need
-    // the value for comparision, we can convert back to quintptr in C++
+    // the value for comparison, we can convert back to quintptr in C++
     inline QString id() const {
         QString str(8, QLatin1Char('0'));
         const quint64 ptr = reinterpret_cast<quint64>(mQWidget.data());
