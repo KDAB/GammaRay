@@ -56,9 +56,9 @@ private:
     friend class OverrideValueSetter;
     friend class OverrideValueGetter;
 
-    QIviProperty *m_prop = nullptr;
-    QtPrivate::QSlotObjectBase *m_originalValueGetter = nullptr;
-    QtPrivate::QSlotObjectBase *m_originalValueSetter = nullptr;
+    QIviProperty *m_prop;
+    QtPrivate::QSlotObjectBase *m_originalValueGetter;
+    QtPrivate::QSlotObjectBase *m_originalValueSetter;
     QVariant m_overrideValue;
 };
 
