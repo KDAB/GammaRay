@@ -30,6 +30,8 @@
 
 #include <QSplashScreen>
 #include <QBitmap>
+#include <QApplication>
+#include <QDesktopWidget>
 
 QSplashScreen *splash = 0;
 
@@ -40,6 +42,18 @@ void showSplashScreen()
         QPixmap pixmap(QStringLiteral(":gammaray/splashscreen.png"));
         splash = new QSplashScreen(pixmap);
         splash->setMask(pixmap.mask());
+    }
+
+    const QWidget *window = qApp->activeWindow();
+
+    if (window && window != splash) {
+        splash->ensurePolished();
+
+        const QRect windowRect = qApp->desktop()->availableGeometry(window);
+        QRect splashRect = QRect(QPoint(), splash->size());
+
+        splashRect.moveCenter(windowRect.center());
+        splash->move(splashRect.topLeft());
     }
 
     splash->show();
