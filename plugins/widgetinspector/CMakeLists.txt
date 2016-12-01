@@ -104,7 +104,6 @@ if(GAMMARAY_BUILD_UI)
 
   if (GAMMARAY_WITH_WIDGET3D)
     target_link_libraries(gammaray_widgetinspector_ui_plugin
-        gammaray_client
         Qt5::Qml
         Qt5::Quick
         Qt5::3DRender
