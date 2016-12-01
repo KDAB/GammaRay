@@ -190,6 +190,7 @@ void QtIviPropertyModel::objectAdded(QObject *obj)
         }
 
         connect(property, &QIviProperty::valueChanged, this, &QtIviPropertyModel::propertyValueChanged);
+        connect(property, &QIviProperty::availableChanged, this, &QtIviPropertyModel::availabilityChanged);
     }
 
     m_seenObjects.insert(obj, false);
@@ -276,6 +277,10 @@ Qt::ItemFlags QtIviPropertyModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
     if (index.isValid() && index.internalId() != PropertyCarrierIndex) {
+        const auto &carrier = m_propertyCarriers.at(index.parent().row());
+        const auto &prop = carrier.iviProperties.at(index.row());
+        if (!prop.value->isAvailable())
+            flags &= ~Qt::ItemIsEnabled;
         if (index.column() == ValueColumn) {
             flags |= Qt::ItemIsEditable;
         } else if (index.column() == OverrideColumn) {
@@ -507,6 +512,21 @@ void QtIviPropertyModel::propertyValueChanged(const QVariant &)
     }
     const QModelIndex index = createIndex(propertyIndex, ValueColumn, carrierIndex);
     emit dataChanged(index, index);
+}
+
+void QtIviPropertyModel::availabilityChanged()
+{
+    auto property = qobject_cast<QIviProperty *>(sender());
+    if (!property)
+        return;
+    const auto carrierIndex = indexOfPropertyCarrier(property->parent());
+    if (carrierIndex < 0)
+        return;
+    const auto &carrier = m_propertyCarriers.at(carrierIndex);
+    const auto propertyIndex = carrier.indexOfProperty(property);
+    if (propertyIndex < 0)
+        return;
+    emit dataChanged(createIndex(propertyIndex, NameColumn, carrierIndex), createIndex(propertyIndex, TypeColumn, carrierIndex));
 }
 
 int QtIviPropertyModel::rowCount(const QModelIndex &parent) const

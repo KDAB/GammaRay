@@ -65,6 +65,7 @@ private slots:
     void objectRemoved(QObject *obj);
     void objectReparented(QObject *obj);
     void propertyValueChanged(const QVariant &value);
+    void availabilityChanged();
 
 public:
     struct IviProperty // public so we can have a free function in the .cpp file dealing with it
