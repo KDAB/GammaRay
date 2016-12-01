@@ -158,6 +158,7 @@ void ClientConnectionManager::showSplashScreen()
 
 void ClientConnectionManager::disconnectFromHost()
 {
+    targetQuitRequested();
     m_client->disconnectFromHost();
 }
 
