@@ -1,0 +1,81 @@
+version: '{build}'
+install:
+- ps: |
+    $ErrorActionPreference="SilentlyContinue"
+    if (!(test-path -path $env:APPVEYOR_BUILD_FOLDER/work/craft)) {
+        [string[]]$config = @("--architecture", "$env:ARCHITECTURE", "--compiler", "$env:COMPILER", "--no-short-path",
+                                            "--set",
+                                            "QtSDK/Version=$env:QT_VER",
+                                            "QtSDK/Path=C:\Qt",
+                                            "QtSDK/Enabled=True",
+                                            "QtSDK/Compiler=$env:QTCOMPILER",
+                                            "QtSDK/PackageQtSDK=False",
+                                            "Packager/UseCache=True",
+                                            "Packager/RepositoryUrl=http://downloads.kdab.com/kde-emerge/",
+                                            "Compile/BuildType=Release",
+                                            "ContinuousIntegration/Enabled=True",
+                                            "CraftDebug/DumpSettings=True",
+                                            "PortageVersions/KF5=5.34.0",
+                                            "Portage/Ignores=dev-util/msys;dev-util/perl",# we use a cache so we don't need those
+                                            "PortageVersions/qt-apps/gammaray=master")
+        Start-FileDownload "https://raw.githubusercontent.com/KDE/craft/master/setup/install_craft.ps1"
+        ./install_craft.ps1 -root $env:APPVEYOR_BUILD_FOLDER\work -python "C:\python36\python.exe" -branch "master" -settings $config
+    }
+    function craft() {
+        #kdeenv.ps1 calls cls which won't work on appweyor so run things in a new powershell
+        powershell "$env:APPVEYOR_BUILD_FOLDER\work\craft\kdeenv.ps1" "craft" $args
+    }
+    $ErrorActionPreference="Stop"
+    craft craft
+    craft -p gammaray
+    craft nsis
+    craft --install-deps gammaray
+
+build_script:
+- ps: |
+    function craft() {
+        #kdeenv.ps1 calls cls which won't work on appweyor so run things in a new powershell
+        powershell "$env:APPVEYOR_BUILD_FOLDER\work\craft\kdeenv.ps1" "craft" $args
+    }
+    $ErrorActionPreference="Stop"
+    craft --no-cache --src-dir $env:APPVEYOR_BUILD_FOLDER gammaray
+
+test_script:
+- ps: |
+    function craft() {
+        #kdeenv.ps1 calls cls which won't work on appweyor so run things in a new powershell
+        powershell "$env:APPVEYOR_BUILD_FOLDER\work\craft\kdeenv.ps1" "craft" $args
+    }
+    craft --src-dir $env:APPVEYOR_BUILD_FOLDER --test gammaray
+
+
+on_success:
+- ps: |
+    function craft() {
+        #kdeenv.ps1 calls cls which won't work on appweyor so run things in a new powershell
+        powershell "$env:APPVEYOR_BUILD_FOLDER\work\craft\kdeenv.ps1" "craft" $args
+    }
+    craft --src-dir $env:APPVEYOR_BUILD_FOLDER --package gammaray
+    Get-ChildItem $env:APPVEYOR_BUILD_FOLDER\work\tmp\* | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
+on_finish:
+- ps: |
+    Get-ChildItem $env:USERPROFILE\.craft\* | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+    Push-AppveyorArtifact $env:APPVEYOR_BUILD_FOLDER\work\etc\kdesettings.ini.dump
+
+environment:
+    QT_VER: 5.9
+
+    matrix:
+    #msvc
+    - QTCOMPILER: msvc2015_64
+      ARCHITECTURE: x64
+      COMPILER: msvc2015
+    - QTCOMPILER: msvc2015
+      ARCHITECTURE: x86
+      COMPILER: msvc2015
+
+    #mingw
+    - QTCOMPILER: mingw53_32
+      ARCHITECTURE: x86
+      COMPILER: Mingw-w64
