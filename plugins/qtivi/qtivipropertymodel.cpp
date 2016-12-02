@@ -279,12 +279,23 @@ Qt::ItemFlags QtIviPropertyModel::flags(const QModelIndex &index) const
     if (index.isValid() && index.internalId() != PropertyCarrierIndex) {
         const auto &carrier = m_propertyCarriers.at(index.parent().row());
         const auto &prop = carrier.iviProperties.at(index.row());
+
         if (!prop.value->isAvailable())
             flags &= ~Qt::ItemIsEnabled;
-        if (index.column() == ValueColumn) {
+
+        switch (index.column()) {
+        case ValueColumn:
             flags |= Qt::ItemIsEditable;
-        } else if (index.column() == OverrideColumn) {
+            break;
+        case WritableColumn:
+            if (prop.overrider.userWritable() && prop.notWritableInPractice)
+                flags |= Qt::ItemIsUserCheckable | Qt::ItemIsEditable;
+            break;
+        case OverrideColumn:
             flags |= Qt::ItemIsUserCheckable | Qt::ItemIsEditable;
+            break;
+        default:
+            break;
         }
     }
     return flags;
@@ -366,9 +377,9 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                 }
                 case WritableColumn:
                     if (role == Qt::CheckStateRole) {
-                        const bool writable = iviProperty.overrider.userWritable() &&
-                                              !iviProperty.notWritableInPractice;
-                        return writable ? Qt::Checked : Qt::Unchecked;
+                        if (iviProperty.overrider.userWritable())
+                            return iviProperty.notWritableInPractice ? Qt::PartiallyChecked : Qt::Checked;
+                        return Qt::Unchecked;
                     }
                     break;
                 case OverrideColumn:
@@ -469,6 +480,16 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
             }
             break;
 
+        case WritableColumn:
+            if (role == Qt::CheckStateRole) {
+                // This should only ever be checkable because of a not-really-writable property.
+                // Reset the not really writable flag.
+                iviProperty->notWritableInPractice = false;
+                emit dataChanged(index, index);
+                return true;
+            }
+            break;
+
         case OverrideColumn:
             if (role == Qt::CheckStateRole) {
                 const bool wasOverride = iviProperty->overrider.isOverride();
@@ -488,6 +509,15 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
                         connect(iviProperty->value, &QIviProperty::valueChanged,
                                 this, &QtIviPropertyModel::propertyValueChanged);
                         emit iviProperty->value->valueChanged(iviProperty->value->value());
+
+                        if (iviProperty->notWritableInPractice) {
+                            // ### Override was probably enabled automatically because the property
+                            //     was not writable. Reset the not writable flag, too. Maybe only
+                            //     a particular value was bad so it could not be written.
+                            iviProperty->notWritableInPractice = false;
+                            const QModelIndex i = index.sibling(index.row(), WritableColumn);
+                            emit dataChanged(i, i);
+                        }
                     }
                     return true;
                 }
