@@ -84,12 +84,16 @@ static QStringList dllSearchPaths(const QString &exePath)
 }
 
 /** Resolves imports given a list of search paths. */
-static QString resolveImport(const QString &import, const QStringList &searchPaths)
+static QString resolveImport(const QString &import, const QStringList &searchPaths, const QString &arch)
 {
     foreach (const auto &path, searchPaths) {
         const QString absPath = path + '/' + import;
-        if (QFile::exists(absPath))
-            return absPath;
+        if (!QFile::exists(absPath))
+            continue;
+        PEFile f(absPath);
+        if (!f.isValid() || f.architecture() != arch)
+            continue;
+        return absPath;
     }
     qDebug() << "Could not resolve import" << import << "in" << searchPaths;
     return QString();
@@ -114,7 +118,7 @@ QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
                 continue;
 
             foreach (const auto &import, f.imports()) {
-                const auto absPath = resolveImport(import, searchPaths);
+                const auto absPath = resolveImport(import, searchPaths, f.architecture());
                 if (!absPath.isEmpty() && !checkedImports.contains(import))
                     resolvedSubImports.push_back(absPath);
                 checkedImports.insert(import);
