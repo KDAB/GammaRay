@@ -152,6 +152,7 @@ option(
 
 option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
 option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." OFF)
+option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
 
 set(GAMMARAY_BUILD_DOCS_DEFAULT ON)
 if(${GAMMARAY_PROBE_ONLY_BUILD})
@@ -660,7 +661,7 @@ add_subdirectory(resources)
 if(Qt5LinguistTools_FOUND)
   add_subdirectory(translations)
 endif()
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_MULTI_BUILD)
   add_subdirectory(multibuild)
 endif()
 if(GAMMARAY_BUILD_DOCS)
