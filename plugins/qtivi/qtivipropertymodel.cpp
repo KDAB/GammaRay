@@ -454,10 +454,12 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
                 // setter wasn't called or had no effect, so the signal will even always be
                 // emitted in cause-effect order. Not that it matters in most cases...
                 if (writableChanged) {
-                    emit dataChanged(index, index.sibling(index.row(), WritableColumn));
+                    const QModelIndex i = index.sibling(index.row(), WritableColumn);
+                    emit dataChanged(i, i);
                 }
                 if (overrideChanged) {
-                    emit dataChanged(index, index.sibling(index.row(), OverrideColumn));
+                    const QModelIndex i = index.sibling(index.row(), OverrideColumn);
+                    emit dataChanged(i, i);
                 }
                 if (isOverride) {
                     emit iviProperty->value->valueChanged(iviProperty->value->value());
@@ -472,7 +474,7 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
                 const bool wasOverride = iviProperty->overrider.isOverride();
                 const bool isOverride = value.toBool();
                 if (isOverride != wasOverride) {
-                    emit dataChanged(index.sibling(index.row(), OverrideColumn), index);
+                    emit dataChanged(index, index);
                     if (isOverride) {
                         disconnect(iviProperty->value, &QIviProperty::valueChanged,
                                     this, &QtIviPropertyModel::propertyValueChanged);
