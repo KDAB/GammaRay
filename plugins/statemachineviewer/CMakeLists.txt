@@ -10,6 +10,8 @@ set(gammaray_statemachineviewer_plugin_srcs
   transitionmodel.cpp
   statemodel.cpp
   statemachinewatcher.cpp
+  statemachinedebuginterface.cpp
+  qsmstatemachinedebuginterface.cpp
 )
 
 gammaray_add_plugin(gammaray_statemachineviewer_plugin

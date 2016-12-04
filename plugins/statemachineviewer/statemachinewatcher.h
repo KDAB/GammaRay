@@ -30,6 +30,8 @@
 #include <QObject>
 #include <QVector>
 
+#include "statemachinedebuginterface.h"
+
 QT_BEGIN_NAMESPACE
 class QAbstractState;
 class QAbstractState;
@@ -50,10 +52,10 @@ public:
     QStateMachine *watchedStateMachine() const;
 
 Q_SIGNALS:
-    void stateEntered(QAbstractState *state);
-    void stateExited(QAbstractState *state);
+    void stateEntered(State state);
+    void stateExited(State state);
 
-    void transitionTriggered(QAbstractTransition *);
+    void transitionTriggered(Transition transition);
 
     void watchedStateMachineChanged(QStateMachine *);
 

@@ -37,8 +37,9 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class StateModelPrivate;
+class StateMachineDebugInterface;
 
-class StateModel : public ObjectModelBase<QAbstractItemModel>
+class StateModel : public QAbstractItemModel
 {
     Q_OBJECT
 
@@ -46,14 +47,15 @@ public:
     enum Roles {
         TransitionsRole = ObjectModel::UserRole + 1,
         IsInitialStateRole,
-        StateObjectRole = ObjectModel::UserRole + 11
+        StateValueRole
     };
     explicit StateModel(QObject *parent = nullptr);
     ~StateModel();
 
-    void setStateMachine(QStateMachine *stateMachine);
-    QStateMachine *stateMachine() const;
+    void setStateMachine(StateMachineDebugInterface *stateMachine);
+    StateMachineDebugInterface *stateMachine() const;
 
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QModelIndex index(int row, int column,
@@ -61,6 +63,7 @@ public:
     QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 protected:
     Q_DECLARE_PRIVATE(StateModel)

@@ -32,19 +32,14 @@
 #include <QDataStream>
 #include <QVector>
 
-QT_BEGIN_NAMESPACE
-class QAbstractState;
-class QAbstractTransition;
-QT_END_NAMESPACE
-
 namespace GammaRay {
 // note: typedef bring major pain, on the client side i.e. it would always look for
 // signal/slots with the base type (or actually, the first type which was registered
 // to the meta type system)...
 struct TransitionId
 {
-    explicit TransitionId(QAbstractTransition *transition = nullptr)
-        : id(reinterpret_cast<quint64>(transition))
+    explicit TransitionId(quintptr transition = 0)
+        : id(static_cast<quint64>(transition))
     {}
     operator quint64() const
     {
@@ -67,8 +62,8 @@ inline QDataStream &operator>>(QDataStream &in, TransitionId &value)
 
 struct StateId
 {
-    explicit StateId(QAbstractState *state = nullptr)
-        : id(reinterpret_cast<quint64>(state))
+    explicit StateId(quintptr state = 0)
+        : id(static_cast<quint64>(state))
     {}
     operator quint64() const
     {

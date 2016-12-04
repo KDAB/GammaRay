@@ -35,6 +35,14 @@
 
 using namespace GammaRay;
 
+static State toState(QAbstractState *state = nullptr) {
+    return State(reinterpret_cast<quintptr>(state));
+}
+
+static Transition toTransition(QAbstractTransition *transition) {
+    return Transition(reinterpret_cast<quintptr>(transition));
+}
+
 StateMachineWatcher::StateMachineWatcher(QObject *parent)
     : QObject(parent)
     , m_watchedStateMachine(nullptr)
@@ -105,7 +113,7 @@ void StateMachineWatcher::handleTransitionTriggered()
     QAbstractTransition *transition = qobject_cast<QAbstractTransition *>(QObject::sender());
     Q_ASSERT(transition);
 
-    emit transitionTriggered(transition);
+    emit transitionTriggered(toTransition(transition));
 }
 
 void StateMachineWatcher::handleStateEntered()
@@ -120,7 +128,7 @@ void StateMachineWatcher::handleStateEntered()
         return;
 
     m_lastEnteredState = state;
-    emit stateEntered(state);
+    emit stateEntered(toState(state));
 }
 
 void StateMachineWatcher::handleStateExited()
@@ -135,7 +143,7 @@ void StateMachineWatcher::handleStateExited()
         return;
 
     m_lastExitedState = state;
-    emit stateExited(state);
+    emit stateExited(toState(state));
 }
 
 void StateMachineWatcher::handleStateDestroyed()
