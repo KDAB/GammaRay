@@ -81,7 +81,7 @@ protected:
 /**
  * @brief A templated generic ObjectFilterProxyModelBase for some data type.
  */
-template<typename T>
+template<typename T1, typename T2 = T1>
 class ObjectTypeFilterProxyModel : public ObjectFilterProxyModelBase
 {
 public:
@@ -97,9 +97,10 @@ public:
 protected:
     bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE
     {
-        return qobject_cast<T *>(object);
+        return qobject_cast<T1 *>(object) || qobject_cast<T2 *>(object);
     }
 };
+
 }
 
 #endif // GAMMARAY_OBJECTTYPEFILTERPROXYMODEL_H
