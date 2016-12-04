@@ -90,6 +90,10 @@ static const IdeSettings ideSettings[] = {
       "kate"      },
     { "kwrite", "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KWrite"),
       nullptr     },
+    { "gedit", "%f +%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "gedit"),
+      nullptr     },
+    { "gvim", "%f +%l", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "gvim"),
+      nullptr     },
     { "qtcreator", "%f", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr     }
 #endif
 };
