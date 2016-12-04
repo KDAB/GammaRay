@@ -284,6 +284,7 @@ if(Qt5Core_FOUND)
     Widgets
     WaylandCompositor
   )
+  find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
 
   if (Qt5Core_VERSION VERSION_GREATER 5.7)
     # Qt 5.8 is the first minor version to use nullptr more broadly
@@ -335,6 +336,7 @@ if(Qt5Core_FOUND)
   set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
   set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
   set(HAVE_QT_SVG ${Qt5Svg_FOUND})
+  set(HAVE_QT_SCXML ${Qt5Scxml_FOUND})
   set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
   set(HAVE_QT_PRINTSUPPORT ${Qt5PrintSupport_FOUND})
   set(HAVE_QT_WEBKIT ${Qt5WebKit_FOUND})

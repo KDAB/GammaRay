@@ -14,6 +14,11 @@ set(gammaray_statemachineviewer_plugin_srcs
   qsmstatemachinedebuginterface.cpp
 )
 
+if(Qt5Scxml_FOUND)
+  list(APPEND gammaray_statemachineviewer_plugin_srcs
+    qscxmlstatemachinedebuginterface.cpp)
+endif()
+
 gammaray_add_plugin(gammaray_statemachineviewer_plugin
   DESKTOP gammaray_statemachineviewer.desktop.in
   JSON gammaray_statemachineviewer.json
@@ -24,6 +29,11 @@ target_link_libraries(gammaray_statemachineviewer_plugin
   ${QT_QTCORE_LIBRARIES}
   gammaray_core
 )
+
+if(Qt5Scxml_FOUND)
+  target_link_libraries(gammaray_statemachineviewer_plugin Qt5::Scxml)
+  include_directories(SYSTEM ${Qt5Scxml_PRIVATE_INCLUDE_DIRS})
+endif()
 
 # UI part - dependencies
 set_package_properties(KDSME PROPERTIES URL "https://github.com/KDAB/KDStateMachineEditor" DESCRIPTION "KDAB State Machine Editor framework" TYPE RECOMMENDED PURPOSE "Graphical state machine debugging.")
