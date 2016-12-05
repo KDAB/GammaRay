@@ -32,7 +32,7 @@ class MyObject : public QObject
 {
     Q_OBJECT
 public:
-    explicit MyObject(QObject *parent = 0)
+    explicit MyObject(QObject *parent = nullptr)
         : QObject(parent)
         , c(new QObject(this))
         , p1(new QObject(this))
@@ -55,7 +55,7 @@ public slots:
         if (c->parent() == p1)
             c->setParent(p2);
         else if (c->parent() == p2)
-            c->setParent(0);
+            c->setParent(nullptr);
         else
             c->setParent(p1);
     }

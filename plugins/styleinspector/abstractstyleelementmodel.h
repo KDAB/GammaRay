@@ -44,7 +44,7 @@ class AbstractStyleElementModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit AbstractStyleElementModel(QObject *parent = 0);
+    explicit AbstractStyleElementModel(QObject *parent = nullptr);
 
     void setStyle(QStyle *style);
 

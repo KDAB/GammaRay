@@ -42,7 +42,7 @@ class ConnectionsTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConnectionsTab(PropertyWidget *parent = 0);
+    explicit ConnectionsTab(PropertyWidget *parent = nullptr);
     ~ConnectionsTab();
 
 private slots:

@@ -101,7 +101,7 @@ void PropertyController::setObject(QObject *object)
 
 void PropertyController::setObject(void *object, const QString &className)
 {
-    setObject(0);
+    setObject(nullptr);
 
     QStringList availableExtensions;
 
@@ -115,7 +115,7 @@ void PropertyController::setObject(void *object, const QString &className)
 
 void PropertyController::setMetaObject(const QMetaObject *metaObject)
 {
-    setObject(0);
+    setObject(nullptr);
 
     QStringList availableExtensions;
 
@@ -129,5 +129,5 @@ void PropertyController::setMetaObject(const QMetaObject *metaObject)
 
 void PropertyController::objectDestroyed()
 {
-    setObject(0);
+    setObject(nullptr);
 }

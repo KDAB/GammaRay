@@ -246,7 +246,7 @@ void PropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
 
     QRect textRect = QApplication::style()->subElementRect(QStyle::SE_ItemViewItemText, &opt,
                                                            opt.widget);
-    const int textHMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, 0,
+    const int textHMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr,
                                                                opt.widget) + 1;
     static const int textVMargin = 1;
     textRect = textRect.adjusted(textHMargin, textVMargin, -textHMargin, -textVMargin);
@@ -299,7 +299,7 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option, const
     initStyleOption(&opt, index);
 
     static const int parenthesisLineWidth = 1;
-    const int textHMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, 0,
+    const int textHMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr,
                                                                opt.widget) + 1;
     static const int textVMargin = 1;
 

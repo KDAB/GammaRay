@@ -37,9 +37,9 @@ using namespace GammaRay;
 
 StateMachineWatcher::StateMachineWatcher(QObject *parent)
     : QObject(parent)
-    , m_watchedStateMachine(0)
-    , m_lastEnteredState(0)
-    , m_lastExitedState(0)
+    , m_watchedStateMachine(nullptr)
+    , m_lastEnteredState(nullptr)
+    , m_lastExitedState(nullptr)
 {
 }
 

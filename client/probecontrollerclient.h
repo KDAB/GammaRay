@@ -37,7 +37,7 @@ class ProbeControllerClient : public ProbeControllerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::ProbeControllerInterface)
 public:
-    explicit ProbeControllerClient(QObject *parent = 0);
+    explicit ProbeControllerClient(QObject *parent = nullptr);
 
     void detachProbe() Q_DECL_OVERRIDE;
     void quitHost() Q_DECL_OVERRIDE;

@@ -43,7 +43,7 @@ class KJobTrackerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit KJobTrackerWidget(QWidget *parent = 0);
+    explicit KJobTrackerWidget(QWidget *parent = nullptr);
     ~KJobTrackerWidget();
 
 private:

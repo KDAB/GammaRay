@@ -61,7 +61,7 @@ QuickWidgetSupport::QuickWidgetSupport(ProbeInterface *probe, QObject *parent)
 
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
 
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQuickWidget, QWidget);
     MO_ADD_PROPERTY_RO(QQuickWidget, QQmlEngine *, engine);
     MO_ADD_PROPERTY_RO(QQuickWidget, QSurfaceFormat, format);

@@ -48,7 +48,7 @@ public:
         RenderRole = 258
     };
 
-    explicit SGVertexModel (QObject *parent = 0);
+    explicit SGVertexModel (QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
@@ -74,7 +74,7 @@ public:
         DrawingModeRole = 257,
         RenderRole = 258
     };
-    explicit SGAdjacencyModel (QObject *parent = 0);
+    explicit SGAdjacencyModel (QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;

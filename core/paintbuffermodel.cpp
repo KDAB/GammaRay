@@ -95,7 +95,7 @@ public:
 
 PaintBufferModel::PaintBufferModel(QObject *parent)
     : QAbstractTableModel(parent)
-    , m_privateBuffer(0)
+    , m_privateBuffer(nullptr)
 {
 }
 
@@ -104,7 +104,7 @@ void PaintBufferModel::setPaintBuffer(const QPaintBuffer &buffer)
     beginResetModel();
     m_buffer = buffer;
     PaintBufferPrivacyViolater p;
-    p.processCommands(buffer, 0, 0, -1); // end < begin -> no processing
+    p.processCommands(buffer, nullptr, 0, -1); // end < begin -> no processing
     m_privateBuffer = p.extract();
     endResetModel();
 }

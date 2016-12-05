@@ -40,7 +40,7 @@ class PaletteModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit PaletteModel(QObject *parent = 0);
+    explicit PaletteModel(QObject *parent = nullptr);
 
     QPalette palette() const;
     void setPalette(const QPalette &palette);

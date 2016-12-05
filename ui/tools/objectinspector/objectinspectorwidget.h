@@ -65,7 +65,7 @@ class ObjectInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ObjectInspectorWidget(QWidget *parent = 0);
+    explicit ObjectInspectorWidget(QWidget *parent = nullptr);
     ~ObjectInspectorWidget();
 
 private slots:

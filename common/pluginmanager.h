@@ -68,7 +68,7 @@ public:
     /**
      * @param parent This is the parent object for all objects created by the plugins
      */
-    explicit PluginManagerBase(QObject *parent = 0);
+    explicit PluginManagerBase(QObject *parent = nullptr);
     virtual ~PluginManagerBase();
 
     QList<PluginLoadError> errors() const
@@ -93,7 +93,7 @@ template<typename IFace, typename Proxy>
 class PluginManager : public PluginManagerBase
 {
 public:
-    explicit inline PluginManager(QObject *parent = 0)
+    explicit inline PluginManager(QObject *parent = nullptr)
         : PluginManagerBase(parent)
     {
         const QString iid = QString::fromLatin1(qobject_interface_iid<IFace *>());

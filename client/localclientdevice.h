@@ -38,7 +38,7 @@ class LocalClientDevice : public ClientDeviceImpl<QLocalSocket>
 {
     Q_OBJECT
 public:
-    explicit LocalClientDevice(QObject *parent = 0);
+    explicit LocalClientDevice(QObject *parent = nullptr);
     void connectToHost() Q_DECL_OVERRIDE;
     void disconnectFromHost() Q_DECL_OVERRIDE;
 

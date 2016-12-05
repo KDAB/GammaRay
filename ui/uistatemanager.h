@@ -104,10 +104,10 @@ protected:
 protected slots:
     void restoreWindowState();
     void saveWindowState();
-    void restoreSplitterState(QSplitter *splitter = 0);
-    void saveSplitterState(QSplitter *splitter = 0);
-    void restoreHeaderState(QHeaderView *header = 0);
-    void saveHeaderState(QHeaderView *header = 0);
+    void restoreSplitterState(QSplitter *splitter = nullptr);
+    void saveSplitterState(QSplitter *splitter = nullptr);
+    void restoreHeaderState(QHeaderView *header = nullptr);
+    void saveHeaderState(QHeaderView *header = nullptr);
 
 private:
     QPointer<QWidget> m_widget;

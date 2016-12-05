@@ -40,7 +40,7 @@ class ProbeController : public ProbeControllerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::ProbeControllerInterface)
 public:
-    explicit ProbeController(QObject *parent = 0);
+    explicit ProbeController(QObject *parent = nullptr);
 
 public slots:
     void detachProbe() Q_DECL_OVERRIDE;

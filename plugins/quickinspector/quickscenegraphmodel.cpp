@@ -43,7 +43,7 @@ using namespace GammaRay;
 
 QuickSceneGraphModel::QuickSceneGraphModel(QObject *parent)
     : ObjectModelBase<QAbstractItemModel>(parent)
-    , m_rootNode(0)
+    , m_rootNode(nullptr)
 {
 }
 
@@ -78,9 +78,9 @@ void QuickSceneGraphModel::updateSGTree(bool emitSignals)
             updateSGTree(false);
         endResetModel();
     } else {
-        m_childParentMap[m_rootNode] = 0;
-        m_parentChildMap[0].resize(1);
-        m_parentChildMap[0][0] = m_rootNode;
+        m_childParentMap[m_rootNode] = nullptr;
+        m_parentChildMap[nullptr].resize(1);
+        m_parentChildMap[nullptr][0] = m_rootNode;
 
         populateFromNode(m_rootNode, emitSignals);
         collectItemNodes(m_window->contentItem());

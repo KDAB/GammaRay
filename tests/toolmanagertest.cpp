@@ -103,8 +103,8 @@ private slots:
         QVERIFY(list.size() > 0);
 
         bool hasBasicTools = false;
-        const ToolData *actionInspector = 0;
-        const ToolData *guiSupport = 0;
+        const ToolData *actionInspector = nullptr;
+        const ToolData *guiSupport = nullptr;
         foreach (const auto &tool, list) {
             if (tool.id == "GammaRay::ObjectInspector")
                 hasBasicTools = true;
@@ -174,8 +174,8 @@ private:
     void testHasBasicTools(bool actionInspectorEnabled)
     {
         bool hasBasicTools = false;
-        const ToolInfo *actionInspector = 0;
-        const ToolInfo *guiSupport = 0;
+        const ToolInfo *actionInspector = nullptr;
+        const ToolInfo *guiSupport = nullptr;
         foreach (const ToolInfo &tool, ClientToolManager::instance()->tools()) {
             if (tool.id() == "GammaRay::ObjectInspector")
                 hasBasicTools = true;

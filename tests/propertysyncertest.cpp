@@ -40,7 +40,7 @@ class MyObject : public QObject
     Q_PROPERTY(int intProp READ intProp WRITE setIntProp NOTIFY intPropChanged)
     Q_OBJECT
 public:
-    explicit MyObject(QObject *parent = 0)
+    explicit MyObject(QObject *parent = nullptr)
         : QObject(parent)
         , p1(0) {}
     int intProp() { return p1; }
@@ -63,12 +63,12 @@ class PropertySyncerTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit PropertySyncerTest(QObject *parent = 0)
+    explicit PropertySyncerTest(QObject *parent = nullptr)
         : QObject(parent)
         , m_server2ClientCount(0)
         , m_client2ServerCount(0)
-        , m_client(0)
-        , m_server(0)
+        , m_client(nullptr)
+        , m_server(nullptr)
     {
     }
 

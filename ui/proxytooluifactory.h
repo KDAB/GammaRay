@@ -42,7 +42,7 @@ public:
     /**
      * @param path Path to the plugin spec file
      */
-    explicit ProxyToolUiFactory(const PluginInfo &pluginInfo, QObject *parent = 0);
+    explicit ProxyToolUiFactory(const PluginInfo &pluginInfo, QObject *parent = nullptr);
 
     QString name() const Q_DECL_OVERRIDE;
 

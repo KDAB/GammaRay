@@ -42,7 +42,7 @@ class QtIVIWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QtIVIWidget(QWidget *parent = 0);
+    explicit QtIVIWidget(QWidget *parent = nullptr);
 };
 
 class QtIVIUiFactory : public QObject, public StandardToolUiFactory<QtIVIWidget>

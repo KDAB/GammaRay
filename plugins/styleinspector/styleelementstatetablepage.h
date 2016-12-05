@@ -49,7 +49,7 @@ class StyleElementStateTablePage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StyleElementStateTablePage(QWidget *parent = 0);
+    explicit StyleElementStateTablePage(QWidget *parent = nullptr);
     ~StyleElementStateTablePage();
     void setModel(QAbstractItemModel *model);
 

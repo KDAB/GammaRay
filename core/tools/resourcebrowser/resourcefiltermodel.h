@@ -36,7 +36,7 @@ class ResourceFilterModel : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit ResourceFilterModel(QObject *parent = 0);
+    explicit ResourceFilterModel(QObject *parent = nullptr);
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
 };
 }

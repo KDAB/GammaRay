@@ -37,7 +37,7 @@ class FontBrowserClient : public FontBrowserInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::FontBrowserInterface)
 public:
-    explicit FontBrowserClient(QObject *parent = 0);
+    explicit FontBrowserClient(QObject *parent = nullptr);
 
 public slots:
     void setPointSize(int size) Q_DECL_OVERRIDE;

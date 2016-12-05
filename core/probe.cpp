@@ -97,7 +97,7 @@ extern QSignalSpyCallbackSet qt_signal_spy_callback_set;
 using namespace GammaRay;
 using namespace std;
 
-QAtomicPointer<Probe> Probe::s_instance = QAtomicPointer<Probe>(0);
+QAtomicPointer<Probe> Probe::s_instance = QAtomicPointer<Probe>(nullptr);
 
 namespace GammaRay {
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
@@ -206,7 +206,7 @@ Probe::Probe(QObject *parent)
     : QObject(parent)
     , m_objectListModel(new ObjectListModel(this))
     , m_objectTreeModel(new ObjectTreeModel(this))
-    , m_window(0)
+    , m_window(nullptr)
     , m_queueTimer(new QTimer(this))
     , m_server(Q_NULLPTR)
 {
@@ -267,7 +267,7 @@ Probe::~Probe()
     MetaObjectRepository::instance()->clear();
     VariantHandler::clear();
 
-    s_instance = QAtomicPointer<Probe>(0);
+    s_instance = QAtomicPointer<Probe>(nullptr);
 }
 
 void Probe::setWindow(QObject *window)
@@ -283,7 +283,7 @@ QObject *Probe::window() const
 Probe *GammaRay::Probe::instance()
 {
     if (!qApp)
-        return NULL;
+        return nullptr;
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
     return s_instance;
@@ -317,7 +317,7 @@ void Probe::createProbe(bool findExisting)
     // example are QAbstractSocketEngine.
     IF_DEBUG(cout << "setting up new probe instance" << endl;
              )
-    Probe *probe = 0;
+    Probe *probe = nullptr;
     {
         ProbeGuard guard;
         probe = new Probe;
@@ -975,7 +975,7 @@ void Probe::registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks)
 
 void Probe::setupSignalSpyCallbacks()
 {
-    QSignalSpyCallbackSet cbs = { 0, 0, 0, 0 };
+    QSignalSpyCallbackSet cbs = { nullptr, nullptr, nullptr, nullptr };
     foreach (const auto &it, m_signalSpyCallbacks) {
         if (it.signalBeginCallback) cbs.signal_begin_callback = signal_begin_callback;
         if (it.signalEndCallback) cbs.signal_end_callback = signal_end_callback;

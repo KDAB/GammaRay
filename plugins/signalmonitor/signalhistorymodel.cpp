@@ -63,7 +63,7 @@ static T internString(const T &str)
     return str;
 }
 
-static SignalHistoryModel *s_historyModel = 0;
+static SignalHistoryModel *s_historyModel = nullptr;
 
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
@@ -96,7 +96,7 @@ SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
 
 SignalHistoryModel::~SignalHistoryModel()
 {
-    s_historyModel = 0;
+    s_historyModel = nullptr;
     qDeleteAll(m_tracedObjects);
 }
 
@@ -115,7 +115,7 @@ int SignalHistoryModel::columnCount(const QModelIndex &) const
 SignalHistoryModel::Item *SignalHistoryModel::item(const QModelIndex &index) const
 {
     if (!index.isValid())
-        return 0;
+        return nullptr;
     return m_tracedObjects.at(index.row());
 }
 
@@ -213,7 +213,7 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
 
     Item *data = m_tracedObjects.at(itemIndex);
     Q_ASSERT(data->object == object);
-    data->object = 0;
+    data->object = nullptr;
     emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn)); // for ObjectIdRole
     emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
 }

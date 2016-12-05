@@ -48,7 +48,7 @@ public:
 
 protected:
     explicit NetworkSelectionModel(const QString &objectName, QAbstractItemModel *model,
-                                   QObject *parent = 0);
+                                   QObject *parent = nullptr);
     virtual bool isConnected() const;
 
     QString m_objectName;

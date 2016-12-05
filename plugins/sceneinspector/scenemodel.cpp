@@ -46,7 +46,7 @@ using namespace GammaRay;
 
 SceneModel::SceneModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , m_scene(0)
+    , m_scene(nullptr)
 {
     QGV_ITEMTYPE(QGraphicsLineItem)
     QGV_ITEMTYPE(QGraphicsPixmapItem)

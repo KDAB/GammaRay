@@ -35,7 +35,7 @@ class GraphViewer : public QObject
     Q_OBJECT
 
 public:
-    explicit GraphViewer(ProbeInterface *probe, QObject *parent = 0);
+    explicit GraphViewer(ProbeInterface *probe, QObject *parent = nullptr);
     ~GraphViewer();
 };
 
@@ -46,7 +46,7 @@ class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, G
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_objectvisualizer.json")
 
 public:
-    explicit GraphViewerFactory(QObject *parent = 0)
+    explicit GraphViewerFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

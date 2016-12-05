@@ -39,7 +39,7 @@ class QuickWidgetSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit QuickWidgetSupport(ProbeInterface *probe, QObject *parent = 0);
+    explicit QuickWidgetSupport(ProbeInterface *probe, QObject *parent = nullptr);
     ~QuickWidgetSupport();
 
     typedef bool (*GrabWindowCallback)(QQuickWindow *);
@@ -63,7 +63,7 @@ class QuickWidgetSupportFactory : public QObject,
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_quickwidgetsupport.json")
 
 public:
-    explicit QuickWidgetSupportFactory(QObject *parent = 0)
+    explicit QuickWidgetSupportFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

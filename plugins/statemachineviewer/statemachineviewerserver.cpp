@@ -224,7 +224,7 @@ void StateMachineViewerServer::selectStateMachine(int row)
     Q_ASSERT(m_stateMachinesModel);
     const auto index = m_stateMachinesModel->index(row, 0);
     if (!index.isValid()) {
-        setSelectedStateMachine(0);
+        setSelectedStateMachine(nullptr);
         return;
     }
 
@@ -354,7 +354,7 @@ void StateMachineViewerServer::addTransition(QAbstractTransition *transition)
 
 void StateMachineViewerServer::updateStartStop()
 {
-    emit statusChanged(selectedStateMachine() != 0,
+    emit statusChanged(selectedStateMachine() != nullptr,
                        selectedStateMachine() && selectedStateMachine()->isRunning());
 }
 

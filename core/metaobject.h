@@ -112,7 +112,7 @@ public:
         }
         Q_ASSERT_X(false, "MetaObjectImpl::castToBaseClass",
                    "Unexpected baseClassIndex encountered");
-        return 0;
+        return nullptr;
     }
 };
 }

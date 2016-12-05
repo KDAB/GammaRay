@@ -50,7 +50,7 @@ class ModelInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ModelInspectorWidget(QWidget *parent = 0);
+    explicit ModelInspectorWidget(QWidget *parent = nullptr);
     ~ModelInspectorWidget();
 
 private slots:

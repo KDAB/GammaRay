@@ -38,7 +38,7 @@ class QmlSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit QmlSupport(ProbeInterface *probe, QObject *parent = 0);
+    explicit QmlSupport(ProbeInterface *probe, QObject *parent = nullptr);
 };
 
 class QmlSupportFactory : public QObject, public StandardToolFactory<QJSEngine, QmlSupport>
@@ -48,7 +48,7 @@ class QmlSupportFactory : public QObject, public StandardToolFactory<QJSEngine, 
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_qmlsupport.json")
 
 public:
-    explicit QmlSupportFactory(QObject *parent = 0)
+    explicit QmlSupportFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

@@ -250,7 +250,7 @@ void SGWireframeWidget::setModel(QAbstractItemModel *vertexModel, QAbstractItemM
 void SGWireframeWidget::setHighlightModel(QItemSelectionModel *selectionModel)
 {
     if (m_highlightModel)
-        disconnect(m_highlightModel, 0, this, 0);
+        disconnect(m_highlightModel, nullptr, this, nullptr);
 
     m_highlightModel = selectionModel;
 

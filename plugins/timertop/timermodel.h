@@ -96,7 +96,7 @@ private slots:
     void flushEmitPendingChangedRows();
 
 private:
-    explicit TimerModel(QObject *parent = 0);
+    explicit TimerModel(QObject *parent = nullptr);
 
     // Finds only QTimers based on the timer ID, not free timers.
     TimerInfoPtr findOrCreateQTimerTimerInfo(int timerId);

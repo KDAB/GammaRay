@@ -41,7 +41,7 @@ class AttachHelper : public QObject
     Q_OBJECT
 public:
     explicit AttachHelper(const QString &gammaray, const QString &injector, const QString &debuggee,
-                          const QStringList &arguments, QObject *parent = 0);
+                          const QStringList &arguments, QObject *parent = nullptr);
 
 public slots:
     void attach();

@@ -55,7 +55,7 @@ class QuickInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QuickInspectorWidget(QWidget *parent = 0);
+    explicit QuickInspectorWidget(QWidget *parent = nullptr);
     ~QuickInspectorWidget();
 
     Q_INVOKABLE void saveTargetState(QSettings *settings) const;

@@ -39,7 +39,7 @@ class PrimitiveModel : public AbstractStyleElementStateTable
 {
     Q_OBJECT
 public:
-    explicit PrimitiveModel(QObject *parent = 0);
+    explicit PrimitiveModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

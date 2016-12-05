@@ -42,7 +42,7 @@ class MetaTypeBrowser : public MetaTypeBrowserInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::MetaTypeBrowserInterface)
 public:
-    explicit MetaTypeBrowser(ProbeInterface *probe, QObject *parent = 0);
+    explicit MetaTypeBrowser(ProbeInterface *probe, QObject *parent = nullptr);
 
 public slots:
     void rescanTypes() Q_DECL_OVERRIDE;

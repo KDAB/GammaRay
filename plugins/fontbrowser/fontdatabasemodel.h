@@ -39,7 +39,7 @@ class FontDatabaseModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit FontDatabaseModel(QObject *parent = 0);
+    explicit FontDatabaseModel(QObject *parent = nullptr);
     ~FontDatabaseModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

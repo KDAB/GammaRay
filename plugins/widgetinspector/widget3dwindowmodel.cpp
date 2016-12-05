@@ -59,7 +59,7 @@ Widget3DWindowModel::~Widget3DWindowModel()
 void Widget3DWindowModel::setSourceModel(QAbstractItemModel *sourceModel_)
 {
     if (sourceModel()) {
-        disconnect(sourceModel(), 0, this, 0);
+        disconnect(sourceModel(), nullptr, this, nullptr);
     }
 
     QAbstractProxyModel::setSourceModel(sourceModel_);

@@ -44,7 +44,7 @@ class SelfTestPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SelfTestPage(QWidget *parent = 0);
+    explicit SelfTestPage(QWidget *parent = nullptr);
     ~SelfTestPage();
 
 public slots:

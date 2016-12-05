@@ -48,7 +48,7 @@ class GAMMARAY_LAUNCHER_EXPORT Launcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit Launcher(const LaunchOptions &options, QObject *parent = 0);
+    explicit Launcher(const LaunchOptions &options, QObject *parent = nullptr);
     ~Launcher();
 
     /** This is used to identify the communication channels used by the launcher and the target process. */

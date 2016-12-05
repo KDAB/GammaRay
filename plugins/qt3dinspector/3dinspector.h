@@ -57,7 +57,7 @@ class Qt3DInspector : public Qt3DInspectorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::Qt3DInspectorInterface)
 public:
-    explicit Qt3DInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit Qt3DInspector(ProbeInterface *probe, QObject *parent = nullptr);
     ~Qt3DInspector();
 
 public slots:
@@ -101,7 +101,7 @@ class Qt3DInspectorFactory : public QObject,
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_3dinspector.json")
 
 public:
-    explicit Qt3DInspectorFactory(QObject *parent = 0)
+    explicit Qt3DInspectorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

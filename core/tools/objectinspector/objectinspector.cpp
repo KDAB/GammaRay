@@ -83,7 +83,7 @@ void ObjectInspector::objectSelected(const QModelIndex &index)
         QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
         m_propertyController->setObject(obj);
     } else {
-        m_propertyController->setObject(0);
+        m_propertyController->setObject(nullptr);
     }
 }
 

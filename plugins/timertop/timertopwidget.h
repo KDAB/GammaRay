@@ -46,7 +46,7 @@ class TimerTopWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TimerTopWidget(QWidget *parent = 0);
+    explicit TimerTopWidget(QWidget *parent = nullptr);
     ~TimerTopWidget();
 
 private slots:

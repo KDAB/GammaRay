@@ -65,7 +65,7 @@ bool WidgetPaintAnalyzerExtension::setQObject(QObject *object)
 
     m_paintAnalyzer->beginAnalyzePainting();
     m_paintAnalyzer->setBoundingRect(widget->rect());
-    widget->render(m_paintAnalyzer->paintDevice(), QPoint(), QRegion(), 0);
+    widget->render(m_paintAnalyzer->paintDevice(), QPoint(), QRegion(), nullptr);
     m_paintAnalyzer->endAnalyzePainting();
     return true;
 }

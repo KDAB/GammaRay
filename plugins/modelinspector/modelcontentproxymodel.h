@@ -53,7 +53,7 @@ public:
         SelectedRole
     };
 
-    explicit ModelContentProxyModel(QObject *parent = 0);
+    explicit ModelContentProxyModel(QObject *parent = nullptr);
     ~ModelContentProxyModel();
 
     /*! Will provide the selection via a custom role for rendering in ModelContentDelegate. */

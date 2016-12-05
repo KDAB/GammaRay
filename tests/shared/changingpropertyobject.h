@@ -39,7 +39,7 @@ class ChangingPropertyObject : public QObject
         int staticChangingProperty READ staticChangingProperty RESET staticChangingPropertyReset NOTIFY staticChangingPropertyChanged)
 
 public:
-    explicit ChangingPropertyObject(QObject *parent = 0)
+    explicit ChangingPropertyObject(QObject *parent = nullptr)
         : QObject(parent)
         , m_count(0)
     {

@@ -98,7 +98,7 @@ void TextDocumentInspector::documentSelected(const QItemSelection &selected,
 {
     Q_UNUSED(deselected);
     if (selected.isEmpty()) {
-        m_textDocumentModel->setDocument(0);
+        m_textDocumentModel->setDocument(nullptr);
         return;
     }
 

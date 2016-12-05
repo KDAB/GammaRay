@@ -49,7 +49,7 @@ class AbstractStyleElementStateTable : public GammaRay::AbstractStyleElementMode
 {
     Q_OBJECT
 public:
-    explicit AbstractStyleElementStateTable(QObject *parent = 0);
+    explicit AbstractStyleElementStateTable(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

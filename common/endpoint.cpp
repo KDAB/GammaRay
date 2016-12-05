@@ -36,12 +36,12 @@
 using namespace GammaRay;
 using namespace std;
 
-Endpoint *Endpoint::s_instance = 0;
+Endpoint *Endpoint::s_instance = nullptr;
 
 Endpoint::Endpoint(QObject *parent)
     : QObject(parent)
     , m_propertySyncer(new PropertySyncer(this))
-    , m_socket(0)
+    , m_socket(nullptr)
     , m_myAddress(Protocol::InvalidObjectAddress +1)
 {
     if (s_instance)
@@ -67,7 +67,7 @@ Endpoint::~Endpoint()
          it != m_addressMap.constEnd(); ++it)
         delete it.value();
 
-    s_instance = 0;
+    s_instance = nullptr;
 }
 
 Endpoint *Endpoint::instance()
@@ -140,7 +140,7 @@ void Endpoint::connectionClosed()
 {
     disconnect(m_socket.data(), SIGNAL(readyRead()), this, SLOT(readyRead()));
     disconnect(m_socket.data(), SIGNAL(disconnected()), this, SLOT(connectionClosed()));
-    m_socket = 0;
+    m_socket = nullptr;
     emit disconnected();
 }
 
@@ -154,7 +154,7 @@ Protocol::ObjectAddress Endpoint::objectAddress(const QString &objectName) const
 
 Protocol::ObjectAddress Endpoint::registerObject(const QString &name, QObject *object)
 {
-    ObjectInfo *obj = m_nameMap.value(name, 0);
+    ObjectInfo *obj = m_nameMap.value(name, nullptr);
     Q_ASSERT(obj);
 
     Q_ASSERT(!obj->object);
@@ -181,7 +181,7 @@ void Endpoint::invokeObject(const QString &objectName, const char *method,
     if (!isConnected())
         return;
 
-    ObjectInfo *obj = m_nameMap.value(objectName, 0);
+    ObjectInfo *obj = m_nameMap.value(objectName, nullptr);
     Q_ASSERT(obj);
 
     Q_ASSERT(obj->address != Protocol::InvalidObjectAddress);
@@ -264,13 +264,13 @@ void Endpoint::unregisterMessageHandler(Protocol::ObjectAddress objectAddress)
     disconnect(obj->receiver, SIGNAL(destroyed(QObject*)), this,
                SLOT(handlerDestroyed(QObject*)));
     m_handlerMap.remove(obj->receiver, obj);
-    obj->receiver = 0;
+    obj->receiver = nullptr;
     obj->messageHandler = QMetaMethod();
 }
 
 void Endpoint::objectDestroyed(QObject *obj)
 {
-    ObjectInfo *info = m_objectMap.value(obj, 0);
+    ObjectInfo *info = m_objectMap.value(obj, nullptr);
     Q_ASSERT(info);
 
     Q_ASSERT(info->object == obj);
@@ -279,7 +279,7 @@ void Endpoint::objectDestroyed(QObject *obj)
     if (!info || info->object != obj)
         return;
 
-    info->object = 0;
+    info->object = nullptr;
     m_objectMap.remove(obj);
     objectDestroyed(info->address, QString(info->name), obj); // copy the name, in case unregisterMessageHandlerInternal() is called inside
 }
@@ -289,7 +289,7 @@ void Endpoint::handlerDestroyed(QObject *obj)
     const QList<ObjectInfo *> objs = m_handlerMap.values(obj); // copy, the virtual method below likely changes the maps.
     m_handlerMap.remove(obj);
     foreach (ObjectInfo *obj, objs) {
-        obj->receiver = 0;
+        obj->receiver = nullptr;
         obj->messageHandler = QMetaMethod();
         handlerDestroyed(obj->address, QString(obj->name)); // copy the name, in case unregisterMessageHandlerInternal() is called inside
     }

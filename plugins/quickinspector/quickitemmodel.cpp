@@ -114,7 +114,7 @@ void QuickItemModel::clear()
 {
     for (QHash<QQuickItem *, QQuickItem *>::const_iterator it = m_childParentMap.constBegin();
          it != m_childParentMap.constEnd(); ++it)
-        disconnect(it.key(), 0, this, 0);
+        disconnect(it.key(), nullptr, this, nullptr);
     m_childParentMap.clear();
     m_parentChildMap.clear();
 }
@@ -156,7 +156,7 @@ void QuickItemModel::connectItem(QQuickItem *item)
 
 void QuickItemModel::disconnectItem(QQuickItem *item)
 {
-    disconnect(item, 0, this, 0);
+    disconnect(item, nullptr, this, nullptr);
 }
 
 QModelIndex QuickItemModel::indexForItem(QQuickItem *item) const

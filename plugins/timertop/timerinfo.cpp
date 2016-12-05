@@ -43,7 +43,7 @@ TimerInfo::TimerInfo(QObject *timer)
     , m_totalWakeups(0)
     , m_timer(timer)
     , m_timerId(-1)
-    , m_lastReceiver(0)
+    , m_lastReceiver(nullptr)
 {
     if (QTimer *t = qobject_cast<QTimer *>(timer)) {
         m_type = QTimerType;
@@ -83,7 +83,7 @@ QObject *TimerInfo::timerObject() const
 QTimer *TimerInfo::timer() const
 {
     if (m_type != QTimerType)
-        return 0;
+        return nullptr;
     return qobject_cast<QTimer *>(m_timer);
 }
 

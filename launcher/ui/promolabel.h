@@ -37,7 +37,7 @@ class PromoLabel : public QLabel
     Q_OBJECT
 
 public:
-    explicit PromoLabel(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit PromoLabel(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr);
 
     static QImage tintedImage(const QString &image, const QColor &color);
 

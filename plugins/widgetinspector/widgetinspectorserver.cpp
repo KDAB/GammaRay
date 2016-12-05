@@ -170,13 +170,13 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     ProbeGuard guard;
 
     if (selection.isEmpty()) {
-        m_propertyController->setObject(0);
+        m_propertyController->setObject(nullptr);
         return;
     }
     const QModelIndex index = selection.first().topLeft();
 
-    QLayout *layout = 0;
-    QWidget *widget = 0;
+    QLayout *layout = nullptr;
+    QWidget *widget = nullptr;
     if (index.isValid()) {
         QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
         m_propertyController->setObject(obj);
@@ -185,7 +185,7 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
         if (!widget && layout)
             widget = layout->parentWidget();
     } else {
-        m_propertyController->setObject(0);
+        m_propertyController->setObject(nullptr);
     }
 
     if (m_selectedWidget == widget && !layout)
@@ -292,7 +292,7 @@ void WidgetInspectorServer::pickElementId(const GammaRay::ObjectId &id)
 QImage WidgetInspectorServer::imageForWidget(QWidget *widget)
 {
     // prevent "recursion", i.e. infinite update loop, in our eventFilter
-    Util::SetTempValue<QPointer<QWidget> > guard(m_selectedWidget, 0);
+    Util::SetTempValue<QPointer<QWidget> > guard(m_selectedWidget, nullptr);
     // We should use hidpi rendering but it's buggy so let stay with
     // low dpi rendering. See QTBUG-53801
     const qreal ratio = 1; // widget->window()->devicePixelRatio();
@@ -507,7 +507,7 @@ void WidgetInspectorServer::checkFeatures()
 
 void WidgetInspectorServer::registerWidgetMetaTypes()
 {
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT0(QLayoutItem)
     MO_ADD_PROPERTY(QLayoutItem, Qt::Alignment, alignment, setAlignment);
     MO_ADD_PROPERTY_RO(QLayoutItem, QSizePolicy::ControlTypes, controlTypes);

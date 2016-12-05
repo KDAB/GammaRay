@@ -47,7 +47,7 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     : QTabWidget(parent)
     , m_tabsUpdatedTimer(new QTimer(this))
     , m_lastManuallySelectedWidget(Q_NULLPTR)
-    , m_controller(0)
+    , m_controller(nullptr)
 {
     m_tabsUpdatedTimer->setInterval(100);
     m_tabsUpdatedTimer->setSingleShot(true);

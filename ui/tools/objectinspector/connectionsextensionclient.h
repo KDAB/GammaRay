@@ -37,7 +37,7 @@ class ConnectionsExtensionClient : public ConnectionsExtensionInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)
 public:
-    explicit ConnectionsExtensionClient(const QString &name, QObject *parent = 0);
+    explicit ConnectionsExtensionClient(const QString &name, QObject *parent = nullptr);
     virtual ~ConnectionsExtensionClient();
 
 public slots:

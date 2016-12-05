@@ -52,7 +52,7 @@ class MultiSignalMapperTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit MultiSignalMapperTest(QObject *parent = 0)
+    explicit MultiSignalMapperTest(QObject *parent = nullptr)
         : QObject(parent)
     {
         qRegisterMetaType<QVector<QVariant> >();

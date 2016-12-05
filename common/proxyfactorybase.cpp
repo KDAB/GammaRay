@@ -34,7 +34,7 @@ using namespace GammaRay;
 
 ProxyFactoryBase::ProxyFactoryBase(const PluginInfo &pluginInfo, QObject *parent)
     : QObject(parent)
-    , m_factory(0)
+    , m_factory(nullptr)
     , m_pluginInfo(pluginInfo)
 {
 }

@@ -276,7 +276,7 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface *probe, QObject *parent)
 {
     Q_UNUSED(probe);
 
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQmlComponent, QObject);
     MO_ADD_PROPERTY_RO(QQmlComponent, QList<QQmlError>, errors);
     MO_ADD_PROPERTY_RO(QQmlComponent, bool, isError);

@@ -39,7 +39,7 @@ class ControlModel : public AbstractStyleElementStateTable
 {
     Q_OBJECT
 public:
-    explicit ControlModel(QObject *parent = 0);
+    explicit ControlModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

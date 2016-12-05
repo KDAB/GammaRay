@@ -43,7 +43,7 @@ class QuickItemTreeWatcher : public QObject
     Q_OBJECT
 
 public:
-    explicit QuickItemTreeWatcher(QTreeView *view, QTreeView *sgView, QObject *parent = 0);
+    explicit QuickItemTreeWatcher(QTreeView *view, QTreeView *sgView, QObject *parent = nullptr);
     ~QuickItemTreeWatcher();
 
 private slots:

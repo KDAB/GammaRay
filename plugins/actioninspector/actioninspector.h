@@ -41,7 +41,7 @@ class ActionInspector : public QObject
     Q_OBJECT
 
 public:
-    explicit ActionInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit ActionInspector(ProbeInterface *probe, QObject *parent = nullptr);
     virtual ~ActionInspector();
 
 public Q_SLOTS:
@@ -62,7 +62,7 @@ class ActionInspectorFactory : public QObject, public StandardToolFactory<QActio
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_actioninspector.json")
 
 public:
-    explicit ActionInspectorFactory(QObject *parent = 0)
+    explicit ActionInspectorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

@@ -40,7 +40,7 @@ class ProbeABIModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit ProbeABIModel(QObject *parent = 0);
+    explicit ProbeABIModel(QObject *parent = nullptr);
     ~ProbeABIModel();
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;

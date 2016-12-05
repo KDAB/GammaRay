@@ -46,7 +46,7 @@ class MetaObjectBrowserWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MetaObjectBrowserWidget(QWidget *parent = 0);
+    explicit MetaObjectBrowserWidget(QWidget *parent = nullptr);
 
 private slots:
     void selectionChanged(const QItemSelection &selection);

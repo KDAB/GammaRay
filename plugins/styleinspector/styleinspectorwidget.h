@@ -41,7 +41,7 @@ class StyleInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StyleInspectorWidget(QWidget *parent = 0);
+    explicit StyleInspectorWidget(QWidget *parent = nullptr);
     virtual ~StyleInspectorWidget();
 
 private slots:

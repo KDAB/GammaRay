@@ -37,7 +37,7 @@ class MyObject : public QObject
     Q_PROPERTY(int intProp2 READ intProp2 WRITE setIntProp2 NOTIFY intProp2Changed)
     Q_OBJECT
 public:
-    explicit MyObject(QObject *parent = 0)
+    explicit MyObject(QObject *parent = nullptr)
         : QObject(parent)
         , p1(0)
         , p2(23) {}

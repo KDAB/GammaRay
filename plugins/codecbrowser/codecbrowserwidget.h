@@ -43,7 +43,7 @@ class CodecBrowserWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CodecBrowserWidget(QWidget *parent = 0);
+    explicit CodecBrowserWidget(QWidget *parent = nullptr);
     ~CodecBrowserWidget();
 
 private slots:

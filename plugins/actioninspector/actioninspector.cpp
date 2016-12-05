@@ -117,7 +117,7 @@ void GammaRay::ActionInspector::objectSelected(QObject *obj)
 
 void ActionInspector::registerMetaTypes()
 {
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QAction, QObject);
     MO_ADD_PROPERTY_RO(QAction, QActionGroup *, actionGroup);
     MO_ADD_PROPERTY_CR(QAction, QVariant, data, setData);

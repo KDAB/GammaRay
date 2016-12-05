@@ -96,7 +96,7 @@ NetworkSupport::~NetworkSupport()
 
 void NetworkSupport::registerMetaTypes()
 {
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QAbstractSocket, QIODevice);
     MO_ADD_PROPERTY_RO(QAbstractSocket, bool, isValid);
     MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, localPort);

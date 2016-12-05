@@ -38,7 +38,7 @@ class ToolPluginModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit ToolPluginModel(const QVector<ToolFactory *> &plugins, QObject *parent = 0);
+    explicit ToolPluginModel(const QVector<ToolFactory *> &plugins, QObject *parent = nullptr);
     ~ToolPluginModel();
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;

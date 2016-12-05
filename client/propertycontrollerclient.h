@@ -37,7 +37,7 @@ class PropertyControllerClient : public PropertyControllerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::PropertyControllerInterface)
 public:
-    explicit PropertyControllerClient(const QString &name, QObject *parent = 0);
+    explicit PropertyControllerClient(const QString &name, QObject *parent = nullptr);
     virtual ~PropertyControllerClient();
 };
 }

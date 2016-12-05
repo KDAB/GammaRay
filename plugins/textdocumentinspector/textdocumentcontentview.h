@@ -36,7 +36,7 @@ class TextDocumentContentView : public QTextEdit
 {
     Q_OBJECT
 public:
-    explicit TextDocumentContentView(QWidget *parent = 0);
+    explicit TextDocumentContentView(QWidget *parent = nullptr);
 
     void setShowBoundingBox(const QRectF &boundingBox);
 

@@ -36,7 +36,7 @@ class SignalMonitorInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit SignalMonitorInterface(QObject *parent = 0);
+    explicit SignalMonitorInterface(QObject *parent = nullptr);
     ~SignalMonitorInterface();
 
 public slots:

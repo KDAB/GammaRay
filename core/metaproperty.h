@@ -94,7 +94,7 @@ private:
 public:
     inline MetaPropertyImpl(
         const char *name, GetterReturnType(Class::*getter)() const,
-        void(Class::*setter)(SetterArgType) = 0)
+        void(Class::*setter)(SetterArgType) = nullptr)
         : MetaProperty(name)
         , m_getter(getter)
         , m_setter(setter)
@@ -103,7 +103,7 @@ public:
 
     bool isReadOnly() const Q_DECL_OVERRIDE
     {
-        return m_setter == 0;
+        return m_setter == nullptr;
     }
 
     QVariant value(void *object) const Q_DECL_OVERRIDE

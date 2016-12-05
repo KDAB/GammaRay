@@ -36,7 +36,7 @@ class ResourceBrowserInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit ResourceBrowserInterface(QObject *parent = 0);
+    explicit ResourceBrowserInterface(QObject *parent = nullptr);
     virtual ~ResourceBrowserInterface();
 
 public slots:

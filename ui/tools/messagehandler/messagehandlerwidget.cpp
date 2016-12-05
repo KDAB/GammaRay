@@ -130,8 +130,8 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
     QGridLayout *layout = new QGridLayout;
 
     QLabel *iconLabel = new QLabel;
-    QIcon icon = dlg.style()->standardIcon(QStyle::SP_MessageBoxCritical, 0, &dlg);
-    int iconSize = dlg.style()->pixelMetric(QStyle::PM_MessageBoxIconSize, 0, &dlg);
+    QIcon icon = dlg.style()->standardIcon(QStyle::SP_MessageBoxCritical, nullptr, &dlg);
+    int iconSize = dlg.style()->pixelMetric(QStyle::PM_MessageBoxIconSize, nullptr, &dlg);
     iconLabel->setPixmap(icon.pixmap(iconSize, iconSize));
     iconLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     layout->addWidget(iconLabel, 0, 0);

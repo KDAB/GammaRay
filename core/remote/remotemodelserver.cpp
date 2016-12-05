@@ -45,11 +45,11 @@
 using namespace GammaRay;
 using namespace std;
 
-void(*RemoteModelServer::s_registerServerCallback)() = 0;
+void(*RemoteModelServer::s_registerServerCallback)() = nullptr;
 
 RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent)
     : QObject(parent)
-    , m_model(0)
+    , m_model(nullptr)
     , m_dummyBuffer(new QBuffer(&m_dummyData, this))
     , m_monitored(false)
 {
@@ -472,7 +472,7 @@ void RemoteModelServer::sendMoveMessage(Protocol::MessageType type,
 
 void RemoteModelServer::modelDeleted()
 {
-    m_model = 0;
+    m_model = nullptr;
     if (m_monitored)
         modelReset();
 }

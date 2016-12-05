@@ -42,7 +42,7 @@ class PropertyTextEditorDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit PropertyTextEditorDialog(const QString &text, QWidget *parent = 0);
+    explicit PropertyTextEditorDialog(const QString &text, QWidget *parent = nullptr);
     ~PropertyTextEditorDialog();
 
     QString text() const;
@@ -56,7 +56,7 @@ class PropertyTextEditor : public QLineEdit
 {
     Q_OBJECT
 public:
-    explicit PropertyTextEditor(QWidget *parent = 0);
+    explicit PropertyTextEditor(QWidget *parent = nullptr);
 
     void save(const QString &text);
 

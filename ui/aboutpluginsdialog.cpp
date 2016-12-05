@@ -41,7 +41,7 @@ using namespace GammaRay;
 AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f)
 {
-    QLayout *layout = 0;
+    QLayout *layout = nullptr;
     QVBoxLayout *vbox = new QVBoxLayout(this);
 
     {

@@ -39,7 +39,7 @@ class ToolManagerClient : public ToolManagerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolManagerInterface)
 public:
-    explicit ToolManagerClient(QObject *parent = 0);
+    explicit ToolManagerClient(QObject *parent = nullptr);
 
     void selectObject(const ObjectId &id, const QString &toolId) Q_DECL_OVERRIDE;
     void requestToolsForObject(const ObjectId &id) Q_DECL_OVERRIDE;

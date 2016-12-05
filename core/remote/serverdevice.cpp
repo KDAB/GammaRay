@@ -57,7 +57,7 @@ void ServerDevice::broadcast(const QByteArray &data)
 
 ServerDevice *ServerDevice::create(const QUrl &serverAddress, QObject *parent)
 {
-    ServerDevice *device = 0;
+    ServerDevice *device = nullptr;
     if (serverAddress.scheme() == QLatin1String("tcp"))
         device = new TcpServerDevice(parent);
     else if (serverAddress.scheme() == QLatin1String("local"))
@@ -65,7 +65,7 @@ ServerDevice *ServerDevice::create(const QUrl &serverAddress, QObject *parent)
 
     if (!device) {
         qWarning() << "Unsupported transport protocol:" << serverAddress.toString();
-        return 0;
+        return nullptr;
     }
     device->setServerAddress(serverAddress);
     return device;

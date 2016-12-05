@@ -42,7 +42,7 @@ class StandardPathsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit StandardPathsWidget(QWidget *parent = 0);
+    explicit StandardPathsWidget(QWidget *parent = nullptr);
     ~StandardPathsWidget();
 
 private:

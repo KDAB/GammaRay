@@ -38,7 +38,7 @@ class EditableTypesModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit EditableTypesModel(QObject *parent = 0);
+    explicit EditableTypesModel(QObject *parent = nullptr);
     ~EditableTypesModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

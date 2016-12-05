@@ -45,7 +45,7 @@ public:
     enum Role {
         SceneItemRole = UserRole + 1
     };
-    explicit SceneModel(QObject *parent = 0);
+    explicit SceneModel(QObject *parent = nullptr);
     void setScene(QGraphicsScene *scene);
     QGraphicsScene *scene() const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

@@ -40,7 +40,7 @@ class MessageHandlerInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit MessageHandlerInterface(QObject *parent = 0);
+    explicit MessageHandlerInterface(QObject *parent = nullptr);
     virtual ~MessageHandlerInterface();
 
 signals:

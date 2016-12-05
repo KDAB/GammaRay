@@ -38,7 +38,7 @@ class QMetaPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit QMetaPropertyAdaptor(QObject *parent = 0);
+    explicit QMetaPropertyAdaptor(QObject *parent = nullptr);
     ~QMetaPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;

@@ -54,7 +54,7 @@ class VtkWidget : public QVTKWidget
     Q_OBJECT
 
 public:
-    explicit VtkWidget(QWidget *parent = 0);
+    explicit VtkWidget(QWidget *parent = nullptr);
     virtual ~VtkWidget();
 
     vtkGraphLayoutView *layoutView() const

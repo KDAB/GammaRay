@@ -36,7 +36,7 @@ class SignalMonitorTest : public QObject
     Q_OBJECT
 
 public:
-    SignalMonitorTest(QObject *parent = 0);
+    SignalMonitorTest(QObject *parent = nullptr);
 
 private:
     QString nextTimerName();

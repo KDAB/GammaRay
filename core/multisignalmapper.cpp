@@ -101,5 +101,5 @@ void MultiSignalMapper::connectToSignal(QObject *sender, const QMetaMethod &sign
 {
     QMetaObject::connect(sender, signal.methodIndex(), d,
                          QObject::metaObject()->methodCount() + signal.methodIndex(), Qt::AutoConnection | Qt::UniqueConnection,
-                         0);
+                         nullptr);
 }

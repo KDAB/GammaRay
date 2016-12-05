@@ -42,7 +42,7 @@ class ClientDevice : public QObject
 {
     Q_OBJECT
 public:
-    explicit ClientDevice(QObject *parent = 0);
+    explicit ClientDevice(QObject *parent = nullptr);
     ~ClientDevice();
 
     static ClientDevice *create(const QUrl &url, QObject *parent);
@@ -68,9 +68,9 @@ template<typename ClientT>
 class ClientDeviceImpl : public ClientDevice
 {
 public:
-    explicit ClientDeviceImpl(QObject *parent = 0)
+    explicit ClientDeviceImpl(QObject *parent = nullptr)
         : ClientDevice(parent)
-        , m_socket(0)
+        , m_socket(nullptr)
     {
     }
 

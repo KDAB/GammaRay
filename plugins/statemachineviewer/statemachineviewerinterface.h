@@ -43,7 +43,7 @@ namespace GammaRay {
 // to the meta type system)...
 struct TransitionId
 {
-    explicit TransitionId(QAbstractTransition *transition = 0)
+    explicit TransitionId(QAbstractTransition *transition = nullptr)
         : id(reinterpret_cast<quint64>(transition))
     {}
     operator quint64() const
@@ -67,7 +67,7 @@ inline QDataStream &operator>>(QDataStream &in, TransitionId &value)
 
 struct StateId
 {
-    explicit StateId(QAbstractState *state = 0)
+    explicit StateId(QAbstractState *state = nullptr)
         : id(reinterpret_cast<quint64>(state))
     {}
     operator quint64() const
@@ -117,7 +117,7 @@ class StateMachineViewerInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit StateMachineViewerInterface(QObject *parent = 0);
+    explicit StateMachineViewerInterface(QObject *parent = nullptr);
     virtual ~StateMachineViewerInterface();
 
 public slots:

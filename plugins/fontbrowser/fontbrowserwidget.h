@@ -51,7 +51,7 @@ class FontBrowserWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FontBrowserWidget(QWidget *parent = 0);
+    explicit FontBrowserWidget(QWidget *parent = nullptr);
     ~FontBrowserWidget();
 
 private slots:

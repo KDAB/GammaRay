@@ -51,7 +51,7 @@ static QString maybeDemangleName(char *name)
         if (mangledNameEnd) {
             int status;
             *mangledNameEnd = 0;
-            auto demangled = abi::__cxa_demangle(mangledNameStart, 0, 0, &status);
+            auto demangled = abi::__cxa_demangle(mangledNameStart, nullptr, nullptr, &status);
             *mangledNameEnd = '+';
             if (status == 0 && demangled) {
                 QString ret = QString::fromLatin1(name, mangledNameStart - name)

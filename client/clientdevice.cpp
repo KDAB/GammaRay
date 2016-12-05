@@ -46,7 +46,7 @@ ClientDevice::~ClientDevice()
 
 ClientDevice *ClientDevice::create(const QUrl &url, QObject *parent)
 {
-    ClientDevice *device = 0;
+    ClientDevice *device = nullptr;
     if (url.scheme() == QLatin1String("tcp"))
         device = new TcpClientDevice(parent);
     else if (url.scheme() == QLatin1String("local"))
@@ -54,7 +54,7 @@ ClientDevice *ClientDevice::create(const QUrl &url, QObject *parent)
 
     if (!device) {
         qWarning() << "Unsupported transport protocol:" << url.toString();
-        return 0;
+        return nullptr;
     }
 
     device->m_serverAddress = url;

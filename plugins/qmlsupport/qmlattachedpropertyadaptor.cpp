@@ -92,7 +92,7 @@ PropertyData QmlAttachedPropertyAdaptor::propertyData(int index) const
     return pd;
 }
 
-QmlAttachedPropertyAdaptorFactory *QmlAttachedPropertyAdaptorFactory::s_instance = 0;
+QmlAttachedPropertyAdaptorFactory *QmlAttachedPropertyAdaptorFactory::s_instance = nullptr;
 
 PropertyAdaptor *QmlAttachedPropertyAdaptorFactory::create(const ObjectInstance &oi,
                                                            QObject *parent) const

@@ -126,7 +126,7 @@ void SceneInspector::sceneSelected(const QItemSelection &selection)
     QGraphicsScene *scene = qobject_cast<QGraphicsScene *>(obj);
 
     if (m_sceneModel->scene())
-        disconnect(m_sceneModel->scene(), 0, this, 0);
+        disconnect(m_sceneModel->scene(), nullptr, this, nullptr);
 
     m_sceneModel->setScene(scene);
     connectToScene();
@@ -217,7 +217,7 @@ void SceneInspector::sceneItemSelected(const QItemSelection &selection)
             m_propertyController->setObject(item, findBestType(item));
         emit itemSelected(item->mapRectToScene(item->boundingRect()));
     } else {
-        m_propertyController->setObject(0);
+        m_propertyController->setObject(nullptr);
         emit sceneChanged();
     }
 }
@@ -292,7 +292,7 @@ void SceneInspector::registerGraphicsViewMetaTypes()
     qRegisterMetaType<QGraphicsEffect *>();
     qRegisterMetaType<QGraphicsLayout *>();
 
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT0(QGraphicsItem);
     MO_ADD_PROPERTY(QGraphicsItem, bool, acceptDrops, setAcceptDrops);
     MO_ADD_PROPERTY(QGraphicsItem, bool, acceptHoverEvents, setAcceptHoverEvents);

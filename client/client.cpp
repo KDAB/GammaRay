@@ -43,7 +43,7 @@ using namespace GammaRay;
 
 Client::Client(QObject *parent)
     : Endpoint(parent)
-    , m_clientDevice(0)
+    , m_clientDevice(nullptr)
     , m_statModel(new MessageStatisticsModel)
     , m_initState(0)
 {
@@ -113,7 +113,7 @@ void Client::resetClientDevice()
 {
     if (m_clientDevice) {
         m_clientDevice->deleteLater();
-        m_clientDevice = 0;
+        m_clientDevice = nullptr;
     }
 }
 

@@ -45,7 +45,7 @@ class ClientResourceModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit ClientResourceModel(QObject *parent = 0);
+    explicit ClientResourceModel(QObject *parent = nullptr);
     ~ClientResourceModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

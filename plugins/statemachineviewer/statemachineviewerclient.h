@@ -35,7 +35,7 @@ class StateMachineViewerClient : public StateMachineViewerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::StateMachineViewerInterface)
 public:
-    explicit StateMachineViewerClient(QObject *parent = 0);
+    explicit StateMachineViewerClient(QObject *parent = nullptr);
 
     void selectStateMachine(int index) Q_DECL_OVERRIDE;
     void toggleRunning() Q_DECL_OVERRIDE;

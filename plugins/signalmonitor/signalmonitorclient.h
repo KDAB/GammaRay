@@ -37,7 +37,7 @@ class SignalMonitorClient : public SignalMonitorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::SignalMonitorInterface)
 public:
-    explicit SignalMonitorClient(QObject *parent = 0);
+    explicit SignalMonitorClient(QObject *parent = nullptr);
     ~SignalMonitorClient();
 
 public slots:

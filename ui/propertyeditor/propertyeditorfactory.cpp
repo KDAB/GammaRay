@@ -82,7 +82,7 @@ QWidget *PropertyEditorFactory::createEditor(TypeId type, QWidget *parent) const
 
     QWidget *w = QItemEditorFactory::createEditor(type, parent);
     if (!w)
-        return 0;
+        return nullptr;
 
     // the read-only view is still in the background usually, so transparency is not a good choice here
     w->setAutoFillBackground(true);

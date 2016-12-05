@@ -47,7 +47,7 @@ class SignalMonitorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SignalMonitorWidget(QWidget *parent = 0);
+    explicit SignalMonitorWidget(QWidget *parent = nullptr);
     ~SignalMonitorWidget();
 
 private slots:

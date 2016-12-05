@@ -57,7 +57,7 @@ static QString formatTypeToString(int type)
 
 TextDocumentModel::TextDocumentModel(QObject *parent)
     : QStandardItemModel(parent)
-    , m_document(0)
+    , m_document(nullptr)
 {
 }
 

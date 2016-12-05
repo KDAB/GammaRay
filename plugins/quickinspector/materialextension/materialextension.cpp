@@ -60,7 +60,7 @@ public:
 MaterialExtension::MaterialExtension(PropertyController *controller)
     : MaterialExtensionInterface(controller->objectBaseName() + ".material", controller)
     , PropertyControllerExtension(controller->objectBaseName() + ".material")
-    , m_node(0)
+    , m_node(nullptr)
     , m_materialPropertyModel(new AggregatedPropertyModel(this))
     , m_shaderModel(new QStandardItemModel(this))
 {
@@ -112,7 +112,7 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
         return true;
     }
 
-    m_materialPropertyModel->setObject(0);
+    m_materialPropertyModel->setObject(nullptr);
     return false;
 }
 

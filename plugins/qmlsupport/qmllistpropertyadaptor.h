@@ -37,7 +37,7 @@ class QmlListPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit QmlListPropertyAdaptor(QObject *parent = 0);
+    explicit QmlListPropertyAdaptor(QObject *parent = nullptr);
     ~QmlListPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;
@@ -47,7 +47,7 @@ public:
 class QmlListPropertyAdaptorFactory : public AbstractPropertyAdaptorFactory
 {
 public:
-    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = 0) const Q_DECL_OVERRIDE;
+    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = nullptr) const Q_DECL_OVERRIDE;
     static QmlListPropertyAdaptorFactory *instance();
 
 private:

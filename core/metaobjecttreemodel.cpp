@@ -77,7 +77,7 @@ public:
  */
 static inline bool hasDynamicMetaObject(const QObject *object)
 {
-    return reinterpret_cast<const UnprotectedQObject *>(object)->data()->metaObject != 0;
+    return reinterpret_cast<const UnprotectedQObject *>(object)->data()->metaObject != nullptr;
 }
 
 MetaObjectTreeModel::MetaObjectTreeModel(QObject *parent)
@@ -348,7 +348,7 @@ QModelIndex MetaObjectTreeModel::indexForMetaObject(const QMetaObject *metaObjec
 const QMetaObject *MetaObjectTreeModel::metaObjectForIndex(const QModelIndex &index) const
 {
     if (!index.isValid())
-        return 0;
+        return nullptr;
 
     void *internalPointer = index.internalPointer();
     const QMetaObject *metaObject = reinterpret_cast<QMetaObject *>(internalPointer);

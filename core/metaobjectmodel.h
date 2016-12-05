@@ -40,9 +40,9 @@ template<typename MetaThing,
 class MetaObjectModel : public QAbstractItemModel
 {
 public:
-    explicit MetaObjectModel(QObject *parent = 0)
+    explicit MetaObjectModel(QObject *parent = nullptr)
         : QAbstractItemModel(parent)
-        , m_metaObject(0)
+        , m_metaObject(nullptr)
     {
     }
 
@@ -51,10 +51,10 @@ public:
         const auto oldRowCount = rowCount();
         if (oldRowCount) {
             beginRemoveRows(QModelIndex(), 0, oldRowCount - 1);
-            m_metaObject = 0;
+            m_metaObject = nullptr;
             endRemoveRows();
         } else {
-            m_metaObject = 0;
+            m_metaObject = nullptr;
         }
 
         if (!metaObject)

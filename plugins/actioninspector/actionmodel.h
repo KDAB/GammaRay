@@ -63,7 +63,7 @@ public:
         ShortcutConflictRole
     };
 
-    explicit ActionModel(QObject *parent = 0);
+    explicit ActionModel(QObject *parent = nullptr);
     ~ActionModel();
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

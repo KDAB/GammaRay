@@ -58,7 +58,7 @@ class RemoteModelServer : public QObject
 
 public:
     /** Registers a new model server object with name @p objectName (must be unique). */
-    explicit RemoteModelServer(const QString &objectName, QObject *parent = 0);
+    explicit RemoteModelServer(const QString &objectName, QObject *parent = nullptr);
     ~RemoteModelServer();
 
     /** Returns the source model. */

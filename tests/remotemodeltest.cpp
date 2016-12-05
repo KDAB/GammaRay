@@ -46,7 +46,7 @@ class FakeRemoteModelServer : public RemoteModelServer
 {
     Q_OBJECT
 public:
-    explicit FakeRemoteModelServer(const QString &objectName, QObject *parent = 0)
+    explicit FakeRemoteModelServer(const QString &objectName, QObject *parent = nullptr)
         : RemoteModelServer(objectName, parent)
     {
         m_myAddress = 42;
@@ -77,7 +77,7 @@ class FakeRemoteModel : public RemoteModel
 {
     Q_OBJECT
 public:
-    explicit FakeRemoteModel(const QString &serverObject, QObject *parent = 0)
+    explicit FakeRemoteModel(const QString &serverObject, QObject *parent = nullptr)
         : RemoteModel(serverObject, parent)
     {
         m_myAddress = 42;

@@ -43,7 +43,7 @@ class WidgetInspectorFactory : public QObject,
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_widgetinspector.json")
 public:
-    explicit WidgetInspectorFactory(QObject *parent = 0)
+    explicit WidgetInspectorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

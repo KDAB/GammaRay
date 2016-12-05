@@ -41,7 +41,7 @@ class LauncherWindow : public QDialog
 {
     Q_OBJECT
 public:
-    explicit LauncherWindow(QWidget *parent = 0);
+    explicit LauncherWindow(QWidget *parent = nullptr);
     ~LauncherWindow();
 
     /// returns all information required to perform the launch/attach

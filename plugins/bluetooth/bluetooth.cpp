@@ -75,7 +75,7 @@ Bluetooth::Bluetooth(ProbeInterface *probe, QObject *parent)
     Q_UNUSED(probe);
     qRegisterMetaType<QBluetoothDeviceDiscoveryAgent::InquiryType>();
 
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QBluetoothDeviceDiscoveryAgent, QObject);
     MO_ADD_PROPERTY_RO(QBluetoothDeviceDiscoveryAgent, QBluetoothDeviceDiscoveryAgent::Error,
                        error);

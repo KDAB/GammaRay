@@ -52,7 +52,7 @@ class GAMMARAY_UI_EXPORT PropertyWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit PropertyWidget(QWidget *parent = 0);
+    explicit PropertyWidget(QWidget *parent = nullptr);
     virtual ~PropertyWidget();
 
     QString objectBaseName() const;

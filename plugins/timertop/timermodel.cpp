@@ -41,11 +41,11 @@ static const char timerInfoPropertyName[] = "GammaRay TimerInfo";
 using namespace GammaRay;
 using namespace std;
 
-static TimerModel *s_timerModel = 0;
+static TimerModel *s_timerModel = nullptr;
 
 TimerModel::TimerModel(QObject *parent)
     : QAbstractTableModel(parent)
-    , m_sourceModel(0)
+    , m_sourceModel(nullptr)
     , m_pendingChanedRowsTimer(new QTimer(this))
     , m_timeoutIndex(QTimer::staticMetaObject.indexOfSignal("timeout()"))
     , m_qmlTimerTriggeredIndex(-1)
@@ -57,12 +57,12 @@ TimerModel::TimerModel(QObject *parent)
 
 TimerModel::~TimerModel()
 {
-    s_timerModel = 0;
+    s_timerModel = nullptr;
 }
 
 bool TimerModel::isInitialized()
 {
-    return s_timerModel != 0;
+    return s_timerModel != nullptr;
 }
 
 TimerModel *TimerModel::instance()

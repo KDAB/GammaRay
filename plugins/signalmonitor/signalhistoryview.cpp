@@ -39,7 +39,7 @@ using namespace GammaRay;
 SignalHistoryView::SignalHistoryView(QWidget *parent)
     : DeferredTreeView(parent)
     , m_eventDelegate(new SignalHistoryDelegate(this))
-    , m_eventScrollBar(0)
+    , m_eventScrollBar(nullptr)
 {
     setDeferredResizeMode(0, QHeaderView::Interactive);
     setDeferredResizeMode(1, QHeaderView::Interactive);
@@ -80,7 +80,7 @@ void SignalHistoryView::setEventScrollBar(QScrollBar *scrollBar)
 {
     if (m_eventScrollBar != scrollBar) {
         if (m_eventScrollBar)
-            disconnect(m_eventScrollBar, 0, this, 0);
+            disconnect(m_eventScrollBar, nullptr, this, nullptr);
 
         m_eventScrollBar = scrollBar;
 

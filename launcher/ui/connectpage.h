@@ -41,7 +41,7 @@ class ConnectPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ConnectPage(QWidget *parent = 0);
+    explicit ConnectPage(QWidget *parent = nullptr);
     ~ConnectPage();
 
     bool isValid() const;

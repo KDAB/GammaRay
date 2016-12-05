@@ -55,7 +55,7 @@ class FontBrowserFactory : public QObject
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_fontbrowser.json")
 
 public:
-    explicit FontBrowserFactory(QObject *parent = 0)
+    explicit FontBrowserFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

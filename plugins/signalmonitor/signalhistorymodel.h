@@ -77,7 +77,7 @@ public:
         ObjectIdRole
     };
 
-    explicit SignalHistoryModel(ProbeInterface *probe, QObject *parent = 0);
+    explicit SignalHistoryModel(ProbeInterface *probe, QObject *parent = nullptr);
     ~SignalHistoryModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

@@ -59,7 +59,7 @@ QStyle *InjectorStylePlugin::create(const QString &)
         if (QStyle *style = QStyleFactory::create(styleName))
             return style;
     }
-    return 0;
+    return nullptr;
 #endif
 }
 

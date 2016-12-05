@@ -38,7 +38,7 @@ class GraphWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit GraphWidget(QWidget *parent = 0);
+    explicit GraphWidget(QWidget *parent = nullptr);
     virtual ~GraphWidget();
 
     VtkWidget *vtkWidget() const

@@ -37,7 +37,7 @@ class DynamicPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit DynamicPropertyAdaptor(QObject *parent = 0);
+    explicit DynamicPropertyAdaptor(QObject *parent = nullptr);
     ~DynamicPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;

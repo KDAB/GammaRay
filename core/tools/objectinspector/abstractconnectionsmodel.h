@@ -40,7 +40,7 @@ class AbstractConnectionsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit AbstractConnectionsModel(QObject *parent = 0);
+    explicit AbstractConnectionsModel(QObject *parent = nullptr);
     ~AbstractConnectionsModel();
 
     virtual void setObject(QObject *object) = 0;

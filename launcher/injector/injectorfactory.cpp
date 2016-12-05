@@ -66,7 +66,7 @@ AbstractInjector::Ptr createInjector(const QString &name, const QString &executa
         return AbstractInjector::Ptr(new WinDllInjector);
 
 #endif
-    return AbstractInjector::Ptr(0);
+    return AbstractInjector::Ptr(nullptr);
 }
 
 #if !defined(Q_OS_WIN)
@@ -77,7 +77,7 @@ static AbstractInjector::Ptr findFirstWorkingInjector(const QStringList &types)
         if (injector->selfTest())
             return injector;
     }
-    return AbstractInjector::Ptr(0);
+    return AbstractInjector::Ptr(nullptr);
 }
 
 #endif

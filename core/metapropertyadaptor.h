@@ -39,7 +39,7 @@ class MetaPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit MetaPropertyAdaptor(QObject *parent = 0);
+    explicit MetaPropertyAdaptor(QObject *parent = nullptr);
     ~MetaPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;

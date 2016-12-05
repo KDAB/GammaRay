@@ -57,7 +57,7 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
         QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp NOTIFY proxyFilterRegExpChanged)
 
 public:
-    explicit RemoteModel(const QString &serverObject, QObject *parent = 0);
+    explicit RemoteModel(const QString &serverObject, QObject *parent = nullptr);
     ~RemoteModel();
 
     bool isConnected() const;
@@ -89,7 +89,7 @@ signals:
 private:
     struct Node { // represents one row
         Node()
-            : parent(0)
+            : parent(nullptr)
             , rowCount(-1)
             , columnCount(-1) {}
         ~Node();

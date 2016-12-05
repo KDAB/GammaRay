@@ -37,7 +37,7 @@ class QuickClientItemModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit QuickClientItemModel(QObject *parent = 0);
+    explicit QuickClientItemModel(QObject *parent = nullptr);
     ~QuickClientItemModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

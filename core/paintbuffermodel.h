@@ -48,7 +48,7 @@ class PaintBufferModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit PaintBufferModel(QObject *parent = 0);
+    explicit PaintBufferModel(QObject *parent = nullptr);
 
     void setPaintBuffer(const QPaintBuffer &buffer);
     QPaintBuffer buffer() const;

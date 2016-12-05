@@ -66,7 +66,7 @@ void OverlayWidget::placeOn(WidgetOrLayoutFacade item)
         if (m_currentToplevelWidget)
             m_currentToplevelWidget->removeEventFilter(this);
 
-        m_currentToplevelWidget = 0;
+        m_currentToplevelWidget = nullptr;
         m_currentItem.clear();
         m_outerRect = QRect();
         m_layoutPath = QPainterPath();

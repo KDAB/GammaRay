@@ -37,7 +37,7 @@ class MetaTypesModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit MetaTypesModel(QObject *parent = 0);
+    explicit MetaTypesModel(QObject *parent = nullptr);
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 

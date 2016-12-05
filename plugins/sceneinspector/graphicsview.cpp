@@ -37,7 +37,7 @@ using namespace GammaRay;
 
 GraphicsView::GraphicsView(QWidget *parent)
     : QGraphicsView(parent)
-    , m_currentItem(0)
+    , m_currentItem(nullptr)
 {
     setMouseTracking(true);
 }

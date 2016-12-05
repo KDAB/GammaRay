@@ -43,7 +43,7 @@ class Client : public Endpoint
 {
     Q_OBJECT
 public:
-    explicit Client(QObject *parent = 0);
+    explicit Client(QObject *parent = nullptr);
     ~Client();
 
     /** Connect to a server reachable on @p url. */

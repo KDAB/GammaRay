@@ -60,7 +60,7 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::StateMachineViewerInterface)
 public:
-    explicit StateMachineViewerServer(ProbeInterface *probe, QObject *parent = 0);
+    explicit StateMachineViewerServer(ProbeInterface *probe, QObject *parent = nullptr);
 
     void addState(QAbstractState *state);
     void addTransition(QAbstractTransition *transition);
@@ -112,7 +112,7 @@ class StateMachineViewerFactory : public QObject,
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_statemachineviewer.json")
 
 public:
-    explicit StateMachineViewerFactory(QObject *parent = 0)
+    explicit StateMachineViewerFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

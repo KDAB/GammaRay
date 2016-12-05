@@ -151,7 +151,7 @@ signals:
     void objectUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
 protected:
-    Endpoint(QObject *parent = 0);
+    Endpoint(QObject *parent = nullptr);
     /** Call with the socket once you have established a connection to another endpoint, takes ownership of @p device. */
     void setDevice(QIODevice *device);
 
@@ -209,8 +209,8 @@ private:
     {
         ObjectInfo()
             : address(Protocol::InvalidObjectAddress)
-            , object(0)
-            , receiver(0)
+            , object(nullptr)
+            , receiver(nullptr)
         {
         }
 

@@ -298,7 +298,7 @@ struct QVectorPathCmd
         : vectorPath(d->floats.constData() + cmd.offset,
                      cmd.size,
                      cmd.offset2 & 0x80000000
-                     ? 0
+                     ? nullptr
                      : (const QPainterPath::ElementType *) (d->ints.constData() + cmd.offset2 + 1),
                      *(d->ints.constData() + (cmd.offset2 & 0x7fffffff))) {}
 
