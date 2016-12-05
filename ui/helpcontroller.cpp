@@ -49,7 +49,7 @@ namespace GammaRay {
 struct HelpControllerPrivate
 {
     HelpControllerPrivate()
-        : proc(Q_NULLPTR) {}
+        : proc(nullptr) {}
 
     void startProcess();
     void sendCommand(const QByteArray &cmd);
@@ -73,7 +73,7 @@ void HelpControllerPrivate::startProcess()
                                                     QProcess::ExitStatus)>(&QProcess::finished),
                      [this](){
         proc->deleteLater();
-        proc = Q_NULLPTR;
+        proc = nullptr;
     });
     proc->setProgram(assistantPath);
     proc->setArguments(QStringList()

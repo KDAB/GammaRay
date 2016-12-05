@@ -48,7 +48,7 @@ class GAMMARAY_UI_EXPORT CodeEditor : public QPlainTextEdit
 {
     Q_OBJECT
 public:
-    explicit CodeEditor(QWidget *parent = Q_NULLPTR);
+    explicit CodeEditor(QWidget *parent = nullptr);
     ~CodeEditor();
 
     void setFileName(const QString &fileName);

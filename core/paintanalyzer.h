@@ -50,7 +50,7 @@ class GAMMARAY_CORE_EXPORT PaintAnalyzer : public PaintAnalyzerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::PaintAnalyzerInterface)
 public:
-    explicit PaintAnalyzer(const QString &name, QObject *parent = Q_NULLPTR);
+    explicit PaintAnalyzer(const QString &name, QObject *parent = nullptr);
     ~PaintAnalyzer();
 
     // call the following 4 methods in this order to trigger a paint analysis

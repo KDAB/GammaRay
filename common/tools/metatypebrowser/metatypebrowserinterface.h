@@ -38,7 +38,7 @@ class MetaTypeBrowserInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit MetaTypeBrowserInterface(QObject *parent = Q_NULLPTR);
+    explicit MetaTypeBrowserInterface(QObject *parent = nullptr);
     ~MetaTypeBrowserInterface();
 
 public slots:

@@ -41,7 +41,7 @@ class NetworkInterfaceModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit NetworkInterfaceModel(QObject *parent = Q_NULLPTR);
+    explicit NetworkInterfaceModel(QObject *parent = nullptr);
     ~NetworkInterfaceModel();
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

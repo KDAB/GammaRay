@@ -98,12 +98,12 @@ PropertyAdaptor *QmlAttachedPropertyAdaptorFactory::create(const ObjectInstance 
                                                            QObject *parent) const
 {
     if (oi.type() != ObjectInstance::QtObject || !oi.qtObject())
-        return Q_NULLPTR;
+        return nullptr;
 
     auto data = QQmlData::get(oi.qtObject());
     if (!data || !data->hasExtendedData() || !data->attachedProperties()
         || data->attachedProperties()->isEmpty())
-        return Q_NULLPTR;
+        return nullptr;
 
     return new QmlAttachedPropertyAdaptor(parent);
 }

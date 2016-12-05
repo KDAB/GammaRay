@@ -69,16 +69,16 @@ PropertyData QJSValuePropertyAdaptor::propertyData(int index) const
     return pd;
 }
 
-QJSValuePropertyAdaptorFactory *QJSValuePropertyAdaptorFactory::s_instance = Q_NULLPTR;
+QJSValuePropertyAdaptorFactory *QJSValuePropertyAdaptorFactory::s_instance = nullptr;
 
 PropertyAdaptor *QJSValuePropertyAdaptorFactory::create(const ObjectInstance &oi,
                                                         QObject *parent) const
 {
     if (oi.type() != ObjectInstance::QtVariant)
-        return Q_NULLPTR;
+        return nullptr;
 
     if (!oi.variant().isValid() || !oi.variant().canConvert<QJSValue>())
-        return Q_NULLPTR;
+        return nullptr;
 
     return new QJSValuePropertyAdaptor(parent);
 }

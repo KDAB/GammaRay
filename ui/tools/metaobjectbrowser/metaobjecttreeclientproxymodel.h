@@ -38,7 +38,7 @@ class MetaObjectTreeClientProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit MetaObjectTreeClientProxyModel(QObject *parent = Q_NULLPTR);
+    explicit MetaObjectTreeClientProxyModel(QObject *parent = nullptr);
     ~MetaObjectTreeClientProxyModel();
 
     void setSourceModel(QAbstractItemModel *source) Q_DECL_OVERRIDE;

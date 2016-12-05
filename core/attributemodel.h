@@ -39,7 +39,7 @@ class GAMMARAY_CORE_EXPORT AbstractAttributeModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit AbstractAttributeModel(QObject *parent = Q_NULLPTR);
+    explicit AbstractAttributeModel(QObject *parent = nullptr);
     ~AbstractAttributeModel();
 
     void setAttributeType(const char *name);
@@ -63,9 +63,9 @@ template<typename Class, typename Enum>
 class AttributeModel : public AbstractAttributeModel
 {
 public:
-    explicit AttributeModel(QObject *parent = Q_NULLPTR)
+    explicit AttributeModel(QObject *parent = nullptr)
         : AbstractAttributeModel(parent)
-        , m_obj(Q_NULLPTR)
+        , m_obj(nullptr)
     {
     }
 

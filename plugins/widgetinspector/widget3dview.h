@@ -40,7 +40,7 @@ class Widget3DView : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Widget3DView(QWidget *parent = Q_NULLPTR);
+    explicit Widget3DView(QWidget *parent = nullptr);
     ~Widget3DView();
 
 protected:

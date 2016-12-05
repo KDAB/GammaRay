@@ -41,7 +41,7 @@ class MessageStatisticsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit MessageStatisticsModel(QObject *parent = Q_NULLPTR);
+    explicit MessageStatisticsModel(QObject *parent = nullptr);
     ~MessageStatisticsModel();
 
     void clear();

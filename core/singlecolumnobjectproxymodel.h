@@ -54,7 +54,7 @@ public:
      * Constructor.
      * @param parent is the parent object for this instance.
      */
-    explicit SingleColumnObjectProxyModel(QObject *parent = Q_NULLPTR);
+    explicit SingleColumnObjectProxyModel(QObject *parent = nullptr);
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 

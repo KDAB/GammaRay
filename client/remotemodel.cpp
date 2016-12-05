@@ -114,7 +114,7 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent)
 #endif
         opt.text = s_emptyDisplayValue.toString();
         s_emptySizeHintValue = QApplication::style()->sizeFromContents(QStyle::CT_ItemViewItem,
-                                                                       &opt, QSize(), Q_NULLPTR);
+                                                                       &opt, QSize(), nullptr);
     }
 
     m_root = new Node;

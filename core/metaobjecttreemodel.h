@@ -45,7 +45,7 @@ class MetaObjectTreeModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    explicit MetaObjectTreeModel(QObject *parent = Q_NULLPTR);
+    explicit MetaObjectTreeModel(QObject *parent = nullptr);
     ~MetaObjectTreeModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

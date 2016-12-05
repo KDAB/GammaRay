@@ -42,7 +42,7 @@ class QmlContextTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QmlContextTab(PropertyWidget *parent = Q_NULLPTR);
+    explicit QmlContextTab(PropertyWidget *parent = nullptr);
     ~QmlContextTab();
 
 private:

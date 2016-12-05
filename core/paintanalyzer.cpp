@@ -43,9 +43,9 @@ using namespace GammaRay;
 
 PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
     : PaintAnalyzerInterface(name, parent)
-    , m_paintBufferModel(Q_NULLPTR)
-    , m_selectionModel(Q_NULLPTR)
-    , m_paintBuffer(Q_NULLPTR)
+    , m_paintBufferModel(nullptr)
+    , m_selectionModel(nullptr)
+    , m_paintBuffer(nullptr)
     , m_remoteView(new RemoteViewServer(name + QStringLiteral(".remoteView"), this))
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
@@ -125,7 +125,7 @@ QPaintDevice *PaintAnalyzer::paintDevice() const
     Q_ASSERT(m_paintBuffer);
     return m_paintBuffer;
 #else
-    return Q_NULLPTR;
+    return nullptr;
 #endif
 }
 

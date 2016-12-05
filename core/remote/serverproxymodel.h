@@ -46,7 +46,7 @@ template<typename BaseProxy> class ServerProxyModel : public BaseProxy
 public:
     explicit ServerProxyModel(QObject *parent = nullptr)
         : BaseProxy(parent)
-        , m_sourceModel(Q_NULLPTR)
+        , m_sourceModel(nullptr)
         , m_active(false)
     {
     }

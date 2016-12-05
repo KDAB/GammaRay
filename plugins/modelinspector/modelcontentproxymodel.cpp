@@ -35,7 +35,7 @@ using namespace GammaRay;
 
 ModelContentProxyModel::ModelContentProxyModel(QObject *parent)
     : QIdentityProxyModel(parent)
-    , m_selectionModel(Q_NULLPTR)
+    , m_selectionModel(nullptr)
 {
 }
 
@@ -45,7 +45,7 @@ ModelContentProxyModel::~ModelContentProxyModel()
 
 void ModelContentProxyModel::setSourceModel(QAbstractItemModel *model)
 {
-    setSelectionModel(Q_NULLPTR);
+    setSelectionModel(nullptr);
     QIdentityProxyModel::setSourceModel(model);
 }
 

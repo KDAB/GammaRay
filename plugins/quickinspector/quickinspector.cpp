@@ -400,7 +400,7 @@ void QuickInspector::objectCreated(QObject *object)
         }
         else {
             QQmlContext *context = QQmlEngine::contextForObject(window);
-            QQmlEngine *engine = context ? context->engine() : Q_NULLPTR;
+            QQmlEngine *engine = context ? context->engine() : nullptr;
 
             if (!engine) {
                 engine = qmlEngine(window->contentItem()->childItems().value(0));

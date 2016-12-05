@@ -149,7 +149,7 @@ void *ObjectInstance::object() const
         return m_obj;
     }
     Q_ASSERT(false);
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 const QVariant &ObjectInstance::variant() const
@@ -204,7 +204,7 @@ void ObjectInstance::unpackVariant()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     const auto mo = MetaObjectRepository::instance()->metaObject(m_variant.typeName());
-    if (mo && strstr(m_variant.typeName(), "*") != Q_NULLPTR) { // pointer types
+    if (mo && strstr(m_variant.typeName(), "*") != nullptr) { // pointer types
         QMetaType::construct(m_variant.userType(), &m_obj, m_variant.constData());
         if (m_obj) {
             m_type = Object;
@@ -216,7 +216,7 @@ void ObjectInstance::unpackVariant()
         m_typeName = m_variant.typeName();
     }
 
-    if (!m_variant.isNull() && strstr(m_variant.typeName(), "*") != Q_NULLPTR) { // pointer to gadget
+    if (!m_variant.isNull() && strstr(m_variant.typeName(), "*") != nullptr) { // pointer to gadget
         QByteArray normalizedTypeName = m_variant.typeName();
         //krazy:cond=doublequote_chars
         normalizedTypeName.replace('*', "");

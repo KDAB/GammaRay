@@ -71,7 +71,7 @@ class TextDocumentInspectorFactory : public QObject,
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_textdocumentinspector.json")
 public:
-    explicit TextDocumentInspectorFactory(QObject *parent = Q_NULLPTR)
+    explicit TextDocumentInspectorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

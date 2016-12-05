@@ -45,7 +45,7 @@ class Widget3DImageTextureImage : public Qt3DRender::QAbstractTextureImage
 
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
 public:
-    explicit Widget3DImageTextureImage(Qt3DCore::QNode *parent = Q_NULLPTR);
+    explicit Widget3DImageTextureImage(Qt3DCore::QNode *parent = nullptr);
     ~Widget3DImageTextureImage();
 
     QImage image() const;

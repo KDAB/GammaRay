@@ -62,7 +62,7 @@ signals:
     void definitionResponse(const GammaRay::EnumDefinition &def);
 
 protected:
-    EnumRepository(QObject *parent = Q_NULLPTR);
+    EnumRepository(QObject *parent = nullptr);
     void addDefinition(const EnumDefinition &def);
 
     Q_INVOKABLE virtual void requestDefinition(int id) = 0;

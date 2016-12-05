@@ -47,7 +47,7 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
     , m_propertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this))
     , m_motm(new MetaObjectTreeModel(this))
-    , m_model(Q_NULLPTR)
+    , m_model(nullptr)
 {
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_motm, SLOT(objectAdded(QObject*)));
     connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_motm, SLOT(objectRemoved(QObject*)));

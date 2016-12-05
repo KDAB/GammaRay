@@ -115,7 +115,7 @@ public:
         UserRole
     };
 
-    explicit Widget3DModel(QObject *parent = Q_NULLPTR);
+    explicit Widget3DModel(QObject *parent = nullptr);
     ~Widget3DModel();
 
     QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;

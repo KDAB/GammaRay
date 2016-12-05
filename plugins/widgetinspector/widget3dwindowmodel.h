@@ -41,7 +41,7 @@ class Widget3DWindowModel : public QAbstractProxyModel
     Q_OBJECT
 
 public:
-    explicit Widget3DWindowModel(QObject *parent = Q_NULLPTR);
+    explicit Widget3DWindowModel(QObject *parent = nullptr);
     ~Widget3DWindowModel();
 
     void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;

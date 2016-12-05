@@ -44,7 +44,7 @@ class SelectionModelModel : public ObjectModelBase<QAbstractTableModel>
 {
     Q_OBJECT
 public:
-    explicit SelectionModelModel(QObject *parent = Q_NULLPTR);
+    explicit SelectionModelModel(QObject *parent = nullptr);
     ~SelectionModelModel();
 
     /*! show only selection models for @p model */

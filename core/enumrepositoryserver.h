@@ -61,7 +61,7 @@ public:
     static void create(QObject *parent);
     //! @endcond
 private:
-    explicit EnumRepositoryServer(QObject *parent = Q_NULLPTR);
+    explicit EnumRepositoryServer(QObject *parent = nullptr);
     void requestDefinition(EnumId id) Q_DECL_OVERRIDE;
 
     EnumId m_nextId;

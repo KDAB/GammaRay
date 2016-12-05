@@ -49,7 +49,7 @@ QList<QNetworkCookie> CookieMonster::pillageJar(QNetworkCookieJar *jar)
 
 CookieJarModel::CookieJarModel(QObject *parent)
     : QAbstractTableModel(parent)
-    , m_cookieJar(Q_NULLPTR)
+    , m_cookieJar(nullptr)
 {
 }
 

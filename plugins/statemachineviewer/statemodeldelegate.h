@@ -36,7 +36,7 @@ class StateModelDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    explicit StateModelDelegate(QObject *parent = Q_NULLPTR);
+    explicit StateModelDelegate(QObject *parent = nullptr);
 
 protected:
     void initStyleOption(QStyleOptionViewItem *option,

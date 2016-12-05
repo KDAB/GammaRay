@@ -43,7 +43,7 @@ class NetworkWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit NetworkWidget(QWidget *parent = Q_NULLPTR);
+    explicit NetworkWidget(QWidget *parent = nullptr);
     ~NetworkWidget();
 
 private:

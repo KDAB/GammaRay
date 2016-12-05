@@ -52,7 +52,7 @@ class GAMMARAY_UI_EXPORT ModelPickerDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ModelPickerDialog(QWidget *parent = Q_NULLPTR);
+    explicit ModelPickerDialog(QWidget *parent = nullptr);
 
     QAbstractItemModel *model() const;
     void setModel(QAbstractItemModel *model);

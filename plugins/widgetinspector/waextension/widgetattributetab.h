@@ -43,7 +43,7 @@ class WidgetAttributeTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WidgetAttributeTab(PropertyWidget *parent = Q_NULLPTR);
+    explicit WidgetAttributeTab(PropertyWidget *parent = nullptr);
     ~WidgetAttributeTab();
 
 private:

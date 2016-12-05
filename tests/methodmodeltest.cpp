@@ -75,7 +75,7 @@ private slots:
 
         srcModel.setMetaObject(&QObject::staticMetaObject);
         srcModel.setMetaObject(&staticMetaObject);
-        srcModel.setMetaObject(Q_NULLPTR);
+        srcModel.setMetaObject(nullptr);
     }
 
     void testModel()
@@ -96,7 +96,7 @@ private slots:
         QCOMPARE(idx.sibling(idx.row(), 2).data().toString(), QLatin1String("Public"));
         QCOMPARE(idx.sibling(idx.row(), 3).data().toString(), QLatin1String("QObject"));
 
-        srcModel.setMetaObject(Q_NULLPTR);
+        srcModel.setMetaObject(nullptr);
         QCOMPARE(model.rowCount(), 0);
     }
 

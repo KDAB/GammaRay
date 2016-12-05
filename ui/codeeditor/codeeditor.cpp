@@ -47,13 +47,13 @@
 using namespace GammaRay;
 
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
-KSyntaxHighlighting::Repository* CodeEditor::s_repository = Q_NULLPTR;
+KSyntaxHighlighting::Repository* CodeEditor::s_repository = nullptr;
 #endif
 
 CodeEditor::CodeEditor(QWidget* parent) :
     QPlainTextEdit(parent),
     m_sideBar(new CodeEditorSidebar(this)),
-    m_highlighter(Q_NULLPTR)
+    m_highlighter(nullptr)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
@@ -131,7 +131,7 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
     noHlAction->setCheckable(true);
     hlActionGroup->addAction(noHlAction);
     noHlAction->setChecked(!m_highlighter->definition().isValid());
-    QMenu *hlSubMenu = Q_NULLPTR;
+    QMenu *hlSubMenu = nullptr;
     QString currentGroup;
     foreach (const auto &def, s_repository->definitions()) {
         if (def.isHidden())

@@ -73,7 +73,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     , m_stateManager(this)
     , m_inspector(nullptr)
     , m_remoteView(new RemoteViewWidget(this))
-    , m_3dView(Q_NULLPTR)
+    , m_3dView(nullptr)
 {
     ObjectBroker::registerClientObjectFactoryCallback<WidgetInspectorInterface *>(
         createWidgetInspectorClient);
@@ -180,7 +180,7 @@ void WidgetInspectorWidget::restoreTargetState(QSettings *settings)
 void WidgetInspectorWidget::onTabChanged(int index)
 {
 #ifdef GAMMARAY_WITH_WIDGET3D
-    if (index == 1 && m_3dView == Q_NULLPTR) {
+    if (index == 1 && m_3dView == nullptr) {
         m_3dView = new Widget3DView(this);
         ui->tabWidget->widget(1)->layout()->addWidget(m_3dView);
     }

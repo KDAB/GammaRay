@@ -56,6 +56,6 @@ bool CookieExtension::setQObject(QObject *object)
         return setQObject(nam->cookieJar());
     }
 
-    m_cookieJarModel->setCookieJar(Q_NULLPTR);
+    m_cookieJarModel->setCookieJar(nullptr);
     return false;
 }

@@ -78,10 +78,10 @@ PropertyAdaptor *QmlListPropertyAdaptorFactory::create(const ObjectInstance &oi,
                                                        QObject *parent) const
 {
     if (oi.type() != ObjectInstance::QtVariant)
-        return Q_NULLPTR;
+        return nullptr;
 
     if (!oi.variant().isValid() || qstrncmp(oi.typeName(), "QQmlListProperty<", 17) != 0)
-        return Q_NULLPTR;
+        return nullptr;
 
     return new QmlListPropertyAdaptor(parent);
 }

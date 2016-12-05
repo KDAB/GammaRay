@@ -36,7 +36,7 @@ class GuiSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit GuiSupport(ProbeInterface *probe, QObject *parent = Q_NULLPTR);
+    explicit GuiSupport(ProbeInterface *probe, QObject *parent = nullptr);
 
 private:
     void registerMetaTypes();
@@ -61,7 +61,7 @@ class GuiSupportFactory : public QObject, public StandardToolFactory<QObject, Gu
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_guisupport.json")
 public:
-    explicit GuiSupportFactory(QObject *parent = Q_NULLPTR);
+    explicit GuiSupportFactory(QObject *parent = nullptr);
 };
 }
 

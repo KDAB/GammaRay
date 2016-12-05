@@ -40,7 +40,7 @@ class LoggingCategoryModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit LoggingCategoryModel(QObject *parent = Q_NULLPTR);
+    explicit LoggingCategoryModel(QObject *parent = nullptr);
     ~LoggingCategoryModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

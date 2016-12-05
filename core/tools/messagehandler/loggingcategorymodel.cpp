@@ -41,20 +41,20 @@ void categoryFilter(QLoggingCategory *category)
 }
 }
 
-LoggingCategoryModel *LoggingCategoryModel::m_instance = Q_NULLPTR;
+LoggingCategoryModel *LoggingCategoryModel::m_instance = nullptr;
 
 LoggingCategoryModel::LoggingCategoryModel(QObject *parent)
     : QAbstractTableModel(parent)
-    , m_previousFilter(Q_NULLPTR)
+    , m_previousFilter(nullptr)
 {
-    Q_ASSERT(m_instance == Q_NULLPTR);
+    Q_ASSERT(m_instance == nullptr);
     m_instance = this;
     m_previousFilter = QLoggingCategory::installFilter(categoryFilter);
 }
 
 LoggingCategoryModel::~LoggingCategoryModel()
 {
-    m_instance = Q_NULLPTR;
+    m_instance = nullptr;
     QLoggingCategory::installFilter(m_previousFilter);
 }
 

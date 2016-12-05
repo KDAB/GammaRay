@@ -120,9 +120,9 @@ private slots:
         QVERIFY(model);
         ModelTest modelTest(model);
 
-        QCoreApplication::translate("context", "key", Q_NULLPTR);
-        QCoreApplication::translate(Q_NULLPTR, "key", Q_NULLPTR);
-        QCoreApplication::translate(Q_NULLPTR, "key", "disambiguation");
+        QCoreApplication::translate("context", "key", nullptr);
+        QCoreApplication::translate(nullptr, "key", nullptr);
+        QCoreApplication::translate(nullptr, "key", "disambiguation");
         QCoreApplication::translate("context", "key", "disambiguation");
 
         delete t1;

@@ -37,7 +37,7 @@ class ClientToolFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit ClientToolFilterProxyModel(QObject *parent = Q_NULLPTR);
+    explicit ClientToolFilterProxyModel(QObject *parent = nullptr);
     ~ClientToolFilterProxyModel();
 
     bool filterInactiveTools() const;

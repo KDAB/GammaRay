@@ -37,7 +37,7 @@ class RemoteViewClient : public RemoteViewInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::RemoteViewInterface)
 public:
-    explicit RemoteViewClient(const QString &name, QObject *parent = Q_NULLPTR);
+    explicit RemoteViewClient(const QString &name, QObject *parent = nullptr);
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode) Q_DECL_OVERRIDE;
     void pickElementId(const GammaRay::ObjectId &id) Q_DECL_OVERRIDE;
     void sendKeyEvent(int type, int key, int modifiers,

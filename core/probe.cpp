@@ -208,7 +208,7 @@ Probe::Probe(QObject *parent)
     , m_objectTreeModel(new ObjectTreeModel(this))
     , m_window(nullptr)
     , m_queueTimer(new QTimer(this))
-    , m_server(Q_NULLPTR)
+    , m_server(nullptr)
 {
     Q_ASSERT(thread() == qApp->thread());
     IF_DEBUG(cout << "attaching GammaRay probe" << endl;)

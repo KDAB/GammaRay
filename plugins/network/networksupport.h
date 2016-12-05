@@ -36,7 +36,7 @@ class NetworkSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit NetworkSupport(ProbeInterface *probe, QObject *parent = Q_NULLPTR);
+    explicit NetworkSupport(ProbeInterface *probe, QObject *parent = nullptr);
     ~NetworkSupport();
 
 private:
@@ -51,7 +51,7 @@ class NetworkSupportFactory : public QObject, public StandardToolFactory<QObject
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_network.json")
 
 public:
-    explicit NetworkSupportFactory(QObject *parent = Q_NULLPTR);
+    explicit NetworkSupportFactory(QObject *parent = nullptr);
 };
 }
 

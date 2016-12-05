@@ -32,10 +32,10 @@ using namespace GammaRay;
 
 PEFile::PEFile(const QString &filePath)
     : m_file(filePath)
-    , m_begin(Q_NULLPTR)
-    , m_end(Q_NULLPTR)
-    , m_fileHeader(Q_NULLPTR)
-    , m_importDesc(Q_NULLPTR)
+    , m_begin(nullptr)
+    , m_end(nullptr)
+    , m_fileHeader(nullptr)
+    , m_importDesc(nullptr)
 {
     if (!m_file.open(QFile::ReadOnly))
         return;
@@ -56,10 +56,10 @@ void PEFile::close()
     if (!m_begin)
         return;
     m_file.close();
-    m_begin = Q_NULLPTR;
-    m_end = Q_NULLPTR;
-    m_fileHeader = Q_NULLPTR;
-    m_importDesc = Q_NULLPTR;
+    m_begin = nullptr;
+    m_end = nullptr;
+    m_fileHeader = nullptr;
+    m_importDesc = nullptr;
 }
 
 bool PEFile::parse()
@@ -112,7 +112,7 @@ bool PEFile::parse()
 
 bool PEFile::isValid() const
 {
-    return m_begin != Q_NULLPTR;
+    return m_begin != nullptr;
 }
 
 QString PEFile::architecture() const
@@ -158,7 +158,7 @@ const uchar *PEFile::rvaToFile(const IMAGE_FILE_HEADER *hdr, DWORD rva) const
 
     const IMAGE_SECTION_HEADER *sectionHdr = sectionForRVA(hdr, rva);
     if (!sectionHdr)
-        return Q_NULLPTR;
+        return nullptr;
     return m_begin + rva - sectionHdr->VirtualAddress + sectionHdr->PointerToRawData;
 }
 
@@ -173,10 +173,10 @@ const IMAGE_SECTION_HEADER *PEFile::sectionForRVA(const IMAGE_FILE_HEADER *hdr, 
                                                          + hdr->SizeOfOptionalHeader);
     for (int i = 0; i < hdr->NumberOfSections; ++i, ++sectionHdr) {
         if (reinterpret_cast<const uchar *>(sectionHdr +1) >= m_end)
-            return Q_NULLPTR;
+            return nullptr;
         if (rva >= sectionHdr->VirtualAddress
             && rva < sectionHdr->VirtualAddress + sectionHdr->Misc.VirtualSize)
             return sectionHdr;
     }
-    return Q_NULLPTR;
+    return nullptr;
 }

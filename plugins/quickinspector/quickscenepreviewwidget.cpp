@@ -478,7 +478,7 @@ void QuickScenePreviewWidget::setCustomRenderMode(QuickInspectorInterface::Rende
     if (this->customRenderMode() == customRenderMode)
         return;
 
-    QAction *currentAction = Q_NULLPTR;
+    QAction *currentAction = nullptr;
     switch (customRenderMode) {
     case QuickInspectorInterface::NormalRendering:
         break;

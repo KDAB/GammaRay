@@ -115,7 +115,7 @@ static bool toolLessThan(const ToolInfo &lhs, const ToolInfo &rhs)
 ToolInfo::ToolInfo() :
     m_isEnabled(false),
     m_hasUi(false),
-    m_factory(Q_NULLPTR)
+    m_factory(nullptr)
 {
 }
 
@@ -164,7 +164,7 @@ bool ToolInfo::remotingSupported() const
 }
 
 
-ClientToolManager* ClientToolManager::s_instance = Q_NULLPTR;
+ClientToolManager* ClientToolManager::s_instance = nullptr;
 
 ClientToolManager::ClientToolManager(QObject *parent)
     : QObject(parent)
@@ -185,7 +185,7 @@ ClientToolManager::~ClientToolManager()
 {
     for (auto it = m_widgets.constBegin(); it != m_widgets.constEnd(); ++it)
         delete it.value().data();
-    s_instance = Q_NULLPTR;
+    s_instance = nullptr;
 }
 
 void ClientToolManager::clear()

@@ -43,7 +43,7 @@ class QmlTypeTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QmlTypeTab(PropertyWidget *parent = Q_NULLPTR);
+    explicit QmlTypeTab(PropertyWidget *parent = nullptr);
     ~QmlTypeTab();
 
 private:

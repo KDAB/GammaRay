@@ -107,7 +107,7 @@ void *MetaObject::castTo(void *object, const QString &baseClass) const
             return result;
     }
 
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 MetaObject *MetaObject::superClass(int index) const

@@ -42,7 +42,7 @@ class QmlContextModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit QmlContextModel(QObject *parent = Q_NULLPTR);
+    explicit QmlContextModel(QObject *parent = nullptr);
     ~QmlContextModel();
 
     void clear();

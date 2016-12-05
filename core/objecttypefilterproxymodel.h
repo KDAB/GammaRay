@@ -56,7 +56,7 @@ public:
      * Constructor.
      * @param parent is the parent object for this instance.
      */
-    explicit ObjectFilterProxyModelBase(QObject *parent = Q_NULLPTR);
+    explicit ObjectFilterProxyModelBase(QObject *parent = nullptr);
 
     QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
 

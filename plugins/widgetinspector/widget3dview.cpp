@@ -69,7 +69,7 @@ class Widget3DWindow : public QQuickView
 {
    Q_OBJECT
 public:
-    explicit Widget3DWindow(QWindow *parent = Q_NULLPTR)
+    explicit Widget3DWindow(QWindow *parent = nullptr)
         : QQuickView(parent)
     {
         resize(800, 600);
@@ -94,7 +94,7 @@ class Widget3DClientModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit Widget3DClientModel(QObject *parent = Q_NULLPTR)
+    explicit Widget3DClientModel(QObject *parent = nullptr)
         : QSortFilterProxyModel(parent)
     {
     }
@@ -159,7 +159,7 @@ class Widget3DSelectionHelper : public QObject
                WRITE setCurrentObject
                NOTIFY currentObjectChanged)
 public:
-    Widget3DSelectionHelper(Widget3DSubtreeModel *widgetModel, QObject *parent = Q_NULLPTR)
+    Widget3DSelectionHelper(Widget3DSubtreeModel *widgetModel, QObject *parent = nullptr)
         : QObject(parent)
         , mModel(widgetModel)
     {}

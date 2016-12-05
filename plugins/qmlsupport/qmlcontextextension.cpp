@@ -84,7 +84,7 @@ bool QmlContextExtension::setQObject(QObject *object)
 void QmlContextExtension::contextSelected(const QItemSelection &selection)
 {
     if (selection.isEmpty()) {
-        m_propertyModel->setObject(Q_NULLPTR);
+        m_propertyModel->setObject(nullptr);
         return;
     }
 

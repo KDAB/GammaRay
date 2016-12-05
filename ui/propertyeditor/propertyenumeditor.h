@@ -42,7 +42,7 @@ class PropertyEnumEditor : public QComboBox
     Q_OBJECT
     Q_PROPERTY(GammaRay::EnumValue enumValue READ enumValue WRITE setEnumValue USER true)
 public:
-    explicit PropertyEnumEditor(QWidget *parent = Q_NULLPTR);
+    explicit PropertyEnumEditor(QWidget *parent = nullptr);
     ~PropertyEnumEditor();
 
     EnumValue enumValue() const;

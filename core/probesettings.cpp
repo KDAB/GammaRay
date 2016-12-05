@@ -58,7 +58,7 @@ class ProbeSettingsReceiver : public QObject
 {
     Q_OBJECT
 public:
-    explicit ProbeSettingsReceiver(QObject *parent = Q_NULLPTR);
+    explicit ProbeSettingsReceiver(QObject *parent = nullptr);
     ~ProbeSettingsReceiver();
     Q_INVOKABLE void sendServerAddress(const QUrl &address);
 
@@ -78,7 +78,7 @@ private:
 
 ProbeSettingsReceiver::ProbeSettingsReceiver(QObject *parent)
     : QObject(parent)
-    , m_socket(Q_NULLPTR)
+    , m_socket(nullptr)
 {
 }
 
@@ -163,7 +163,7 @@ void ProbeSettingsReceiver::sendServerAddress(const QUrl &address)
     m_socket->close();
 
     deleteLater();
-    s_probeSettings()->receiver = Q_NULLPTR;
+    s_probeSettings()->receiver = nullptr;
     thread()->quit();
 }
 

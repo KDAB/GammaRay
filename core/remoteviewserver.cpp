@@ -43,7 +43,7 @@ using namespace GammaRay;
 
 RemoteViewServer::RemoteViewServer(const QString &name, QObject *parent)
     : RemoteViewInterface(name, parent)
-    , m_eventReceiver(Q_NULLPTR)
+    , m_eventReceiver(nullptr)
     , m_updateTimer(new QTimer(this))
     , m_clientActive(false)
     , m_sourceChanged(false)

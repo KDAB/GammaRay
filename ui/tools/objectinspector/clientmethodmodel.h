@@ -38,7 +38,7 @@ class ClientMethodModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit ClientMethodModel(QObject *parent = Q_NULLPTR);
+    explicit ClientMethodModel(QObject *parent = nullptr);
     ~ClientMethodModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

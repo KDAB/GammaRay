@@ -43,7 +43,7 @@ class CookieTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CookieTab(PropertyWidget *parent = Q_NULLPTR);
+    explicit CookieTab(PropertyWidget *parent = nullptr);
     ~CookieTab();
 
 private:

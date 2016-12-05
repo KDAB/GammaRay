@@ -50,7 +50,7 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
     , m_probe(probe)
     , m_modelModel(nullptr)
     , m_selectionModelsModel(new SelectionModelModel(this))
-    , m_selectionModelsSelectionModel(Q_NULLPTR)
+    , m_selectionModelsSelectionModel(nullptr)
     , m_modelContentSelectionModel(nullptr)
     , m_modelContentProxyModel(new ModelContentProxyModel(this))
     , m_modelTester(nullptr)
@@ -108,8 +108,8 @@ void ModelInspector::modelSelected(const QItemSelection &selected)
         m_selectionModelsModel->setModel(model);
         m_modelContentProxyModel->setSourceModel(model);
     } else {
-        m_selectionModelsModel->setModel(Q_NULLPTR);
-        m_modelContentProxyModel->setSourceModel(Q_NULLPTR);
+        m_selectionModelsModel->setModel(nullptr);
+        m_modelContentProxyModel->setSourceModel(nullptr);
     }
 
     // clear the cell info box
@@ -188,7 +188,7 @@ void ModelInspector::selectionModelSelected(const QItemSelection& selected)
     if (selected.size() > 0)
         idx = selected.at(0).topLeft();
     if (!idx.isValid()) {
-        m_modelContentProxyModel->setSelectionModel(Q_NULLPTR);
+        m_modelContentProxyModel->setSelectionModel(nullptr);
         return;
     }
     m_modelContentProxyModel->setSelectionModel(qobject_cast<QItemSelectionModel*>(idx.data(ObjectModel::ObjectRole).value<QObject*>()));

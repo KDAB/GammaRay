@@ -49,7 +49,7 @@ public:
         RequestAll
     };
 
-    explicit RemoteViewInterface(const QString &name, QObject *parent = Q_NULLPTR);
+    explicit RemoteViewInterface(const QString &name, QObject *parent = nullptr);
 
     QString name() const;
 

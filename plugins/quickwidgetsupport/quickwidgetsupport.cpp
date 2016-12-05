@@ -42,7 +42,7 @@
 
 using namespace GammaRay;
 
-static QuickWidgetSupport *s_quickWidgetSupportInstance = Q_NULLPTR;
+static QuickWidgetSupport *s_quickWidgetSupportInstance = nullptr;
 
 static bool quickWidgetGrabWindowCallback(QQuickWindow *window)
 {
@@ -53,10 +53,10 @@ static bool quickWidgetGrabWindowCallback(QQuickWindow *window)
 
 QuickWidgetSupport::QuickWidgetSupport(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
-    , m_quickInspector(Q_NULLPTR)
+    , m_quickInspector(nullptr)
     , m_probe(probe)
 {
-    Q_ASSERT(s_quickWidgetSupportInstance == Q_NULLPTR);
+    Q_ASSERT(s_quickWidgetSupportInstance == nullptr);
     s_quickWidgetSupportInstance = this;
 
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
@@ -75,7 +75,7 @@ QuickWidgetSupport::QuickWidgetSupport(ProbeInterface *probe, QObject *parent)
 
 GammaRay::QuickWidgetSupport::~QuickWidgetSupport()
 {
-    s_quickWidgetSupportInstance = Q_NULLPTR;
+    s_quickWidgetSupportInstance = nullptr;
 }
 
 void GammaRay::QuickWidgetSupport::objectAdded(QObject *obj)
