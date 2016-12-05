@@ -34,7 +34,7 @@ class ContactForm : public QWidget
 {
     Q_OBJECT
 public:
-    ContactForm(QWidget *parent = Q_NULLPTR) :
+    ContactForm(QWidget *parent = nullptr) :
         QWidget(parent),
         ui(new Ui::ContactForm)
     {

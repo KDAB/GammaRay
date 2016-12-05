@@ -68,7 +68,7 @@ Widget3DSubtreeModel::~Widget3DSubtreeModel()
 void Widget3DSubtreeModel::setSourceModel(QAbstractItemModel *newSource)
 {
     if (sourceModel()) {
-        disconnect(sourceModel(), Q_NULLPTR, this, Q_NULLPTR);
+        disconnect(sourceModel(), nullptr, this, nullptr);
     }
 
     QAbstractProxyModel::setSourceModel(newSource);
@@ -125,7 +125,7 @@ void Widget3DSubtreeModel::populate()
     QList<QModelIndex> toVisit = { m_rootIndex };
     while (!toVisit.isEmpty()) {
         const auto index = toVisit.takeFirst();
-        Node *parent = Q_NULLPTR;
+        Node *parent = nullptr;
         if (index != m_rootIndex) {
             parent = mNodeLookup.value(index.parent().data(Widget3DModel::IdRole).toString());
         }
@@ -136,7 +136,7 @@ void Widget3DSubtreeModel::populate()
             m_foreignWindows.insert(index);
             if (index != m_rootIndex) {
                 if (parent) {
-                    parent->children.push_back(Q_NULLPTR);
+                    parent->children.push_back(nullptr);
                 }
                 continue;
             }
@@ -216,7 +216,7 @@ int Widget3DSubtreeModel::sourceRowsInserted(const QModelIndex &sourceParent, in
     Q_ASSERT(sourceModel());
 
     Q_ASSERT(!sourceParent.isValid() || !sourceParent.data(Widget3DModel::IdRole).toString().isEmpty());
-    Node *parentNode = sourceParent.isValid() ? mNodeLookup.value(sourceParent.data(Widget3DModel::IdRole).toString()) : Q_NULLPTR;
+    Node *parentNode = sourceParent.isValid() ? mNodeLookup.value(sourceParent.data(Widget3DModel::IdRole).toString()) : nullptr;
 
     // Not for our current window
     if (sourceParent.isValid() && !parentNode) {
@@ -246,7 +246,7 @@ int Widget3DSubtreeModel::sourceRowsInserted(const QModelIndex &sourceParent, in
         if (idx.data(Widget3DModel::IsWindowRole).toBool()) {
             m_foreignWindows.insert(idx);
             if (parentNode) {
-                parentNode->children.insert(i, Q_NULLPTR);
+                parentNode->children.insert(i, nullptr);
             }
             continue;
         }

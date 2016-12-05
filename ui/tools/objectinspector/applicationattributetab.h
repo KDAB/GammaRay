@@ -43,7 +43,7 @@ class ApplicationAttributeTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ApplicationAttributeTab(PropertyWidget *parent = Q_NULLPTR);
+    explicit ApplicationAttributeTab(PropertyWidget *parent = nullptr);
     ~ApplicationAttributeTab();
 
 private:

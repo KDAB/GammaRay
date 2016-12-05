@@ -59,7 +59,7 @@ class GAMMARAY_UI_EXPORT RemoteViewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit RemoteViewWidget(QWidget *parent = Q_NULLPTR);
+    explicit RemoteViewWidget(QWidget *parent = nullptr);
     ~RemoteViewWidget();
 
     /// Set the object name for connecting to the server.

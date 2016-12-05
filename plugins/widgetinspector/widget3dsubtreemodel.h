@@ -46,7 +46,7 @@ class Widget3DSubtreeModel : public QAbstractProxyModel
     Q_PROPERTY(QString rootObjectId READ rootObjectId WRITE setRootObjectId NOTIFY rootObjectIdChanged)
 
 public:
-    explicit Widget3DSubtreeModel(QObject *parent = Q_NULLPTR);
+    explicit Widget3DSubtreeModel(QObject *parent = nullptr);
     ~Widget3DSubtreeModel();
 
     void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;

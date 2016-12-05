@@ -38,7 +38,7 @@ class AllCodecsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit AllCodecsModel(QObject *parent = Q_NULLPTR);
+    explicit AllCodecsModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
@@ -55,7 +55,7 @@ class SelectedCodecsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit SelectedCodecsModel(QObject *parent = Q_NULLPTR);
+    explicit SelectedCodecsModel(QObject *parent = nullptr);
 
     void setCodecs(const QStringList &codecs);
     QStringList currentCodecs() const;

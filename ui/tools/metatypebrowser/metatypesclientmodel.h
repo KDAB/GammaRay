@@ -38,7 +38,7 @@ class MetaTypesClientModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit MetaTypesClientModel(QObject *parent = Q_NULLPTR);
+    explicit MetaTypesClientModel(QObject *parent = nullptr);
     ~MetaTypesClientModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

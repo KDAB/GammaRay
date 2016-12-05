@@ -80,7 +80,7 @@ QString Util::addressToString(const void *p)
 
 QString Util::enumToString(const QVariant& value, const char* typeName, const QObject* object)
 {
-    return EnumUtil::enumToString(value, typeName, object ? object->metaObject() : Q_NULLPTR);
+    return EnumUtil::enumToString(value, typeName, object ? object->metaObject() : nullptr);
 }
 
 QString Util::prettyMethodSignature(const QMetaMethod &method)

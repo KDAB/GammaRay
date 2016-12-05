@@ -37,7 +37,7 @@ class ClientActionModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit ClientActionModel(QObject *parent = Q_NULLPTR);
+    explicit ClientActionModel(QObject *parent = nullptr);
     ~ClientActionModel();
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

@@ -39,7 +39,7 @@ class GAMMARAY_LAUNCHER_EXPORT SelfTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit SelfTest(QObject *parent = Q_NULLPTR);
+    explicit SelfTest(QObject *parent = nullptr);
     ~SelfTest();
 
     /** Run all available tests. */

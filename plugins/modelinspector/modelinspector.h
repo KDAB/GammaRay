@@ -87,7 +87,7 @@ class ModelInspectorFactory : public QObject,
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_modelinspector.json")
 public:
-    explicit ModelInspectorFactory(QObject *parent = Q_NULLPTR)
+    explicit ModelInspectorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

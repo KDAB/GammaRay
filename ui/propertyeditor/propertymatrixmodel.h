@@ -36,7 +36,7 @@ class PropertyMatrixModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit PropertyMatrixModel(QObject *parent = Q_NULLPTR);
+    explicit PropertyMatrixModel(QObject *parent = nullptr);
 
     void setMatrix(const QVariant &matrix);
     QVariant matrix() const;

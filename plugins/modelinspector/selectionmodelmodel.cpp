@@ -38,7 +38,7 @@ using namespace GammaRay;
 
 SelectionModelModel::SelectionModelModel(QObject *parent) :
     ObjectModelBase<QAbstractTableModel>(parent),
-    m_model(Q_NULLPTR)
+    m_model(nullptr)
 {
 }
 

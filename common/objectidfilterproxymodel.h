@@ -50,7 +50,7 @@ public:
      * Constructor.
      * @param parent is the parent object for this instance.
      */
-    explicit ObjectIdsFilterProxyModel(QObject *parent = Q_NULLPTR);
+    explicit ObjectIdsFilterProxyModel(QObject *parent = nullptr);
 
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
 

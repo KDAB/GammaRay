@@ -86,7 +86,7 @@ UIStateManager::UIStateManager(QWidget *widget)
     , m_stateSettings(new QSettings("KDAB", "GammaRay", this))
     , m_initialized(false)
     , m_resizing(false)
-    , m_targetStateSource(Q_NULLPTR)
+    , m_targetStateSource(nullptr)
     , m_targetRestoreMethodId(-1)
     , m_targetSaveMethodId(-1)
 {
@@ -189,7 +189,7 @@ void UIStateManager::setup()
     }
 
     if (m_targetRestoreMethodId == -1 || m_targetSaveMethodId == -1) {
-        m_targetStateSource = Q_NULLPTR;
+        m_targetStateSource = nullptr;
         m_targetRestoreMethodId = -1;
         m_targetSaveMethodId = -1;
     }

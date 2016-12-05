@@ -43,7 +43,7 @@ class GAMMARAY_COMMON_EXPORT PaintAnalyzerInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit PaintAnalyzerInterface(const QString &name, QObject *parent = Q_NULLPTR);
+    explicit PaintAnalyzerInterface(const QString &name, QObject *parent = nullptr);
     QString name() const;
 
 private:

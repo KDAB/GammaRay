@@ -109,14 +109,14 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 #endif
 }
 
-QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::s_instance = Q_NULLPTR;
+QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::s_instance = nullptr;
 
 PropertyAdaptor *QmlContextPropertyAdaptorFactory::create(const ObjectInstance &oi,
                                                           QObject *parent) const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     if (oi.type() != ObjectInstance::QtObject || !oi.qtObject())
-        return Q_NULLPTR;
+        return nullptr;
 
     if (qobject_cast<QQmlContext *>(oi.qtObject()))
         return new QmlContextPropertyAdaptor(parent);
@@ -125,7 +125,7 @@ PropertyAdaptor *QmlContextPropertyAdaptorFactory::create(const ObjectInstance &
     Q_UNUSED(parent);
 #endif
 
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::instance()

@@ -42,7 +42,7 @@ class PropertyMatrixDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit PropertyMatrixDialog(QWidget *parent = Q_NULLPTR);
+    explicit PropertyMatrixDialog(QWidget *parent = nullptr);
     ~PropertyMatrixDialog();
 
     void setMatrix(const QVariant &matrix);

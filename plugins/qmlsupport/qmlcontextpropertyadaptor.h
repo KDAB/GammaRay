@@ -39,7 +39,7 @@ class QmlContextPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit QmlContextPropertyAdaptor(QObject *parent = Q_NULLPTR);
+    explicit QmlContextPropertyAdaptor(QObject *parent = nullptr);
     ~QmlContextPropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;

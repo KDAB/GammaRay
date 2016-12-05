@@ -60,8 +60,8 @@ struct LauncherPrivate
 {
     LauncherPrivate(const LaunchOptions &options)
         : options(options)
-        , server(Q_NULLPTR)
-        , socket(Q_NULLPTR)
+        , server(nullptr)
+        , socket(nullptr)
         , state(Initial)
         , exitCode(0)
     {}

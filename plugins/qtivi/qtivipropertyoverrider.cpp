@@ -224,7 +224,7 @@ QVariant QtIviPropertyOverrider::value() const
     storage.resize((typeSize + sizeof(quint64) - 1) / sizeof(quint64));
 
     void *const rawStorage = reinterpret_cast<void *>(storage.data());
-    void *args[] = { rawStorage, Q_NULLPTR };
+    void *args[] = { rawStorage, nullptr };
     pPriv->m_valueGetter->call(m_prop->parent(), args);
 
     return QVariant(pPriv->m_type, rawStorage);

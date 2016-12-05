@@ -41,7 +41,7 @@ class EnumPropertyTest : public QObject
 {
     Q_OBJECT
 public:
-    EnumPropertyTest(QObject *parent = Q_NULLPTR) :
+    EnumPropertyTest(QObject *parent = nullptr) :
         QObject(parent)
     {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
@@ -58,7 +58,7 @@ private slots:
         QTest::addColumn<const QMetaObject*>("mo");
         QTest::addColumn<QString>("result");
 
-        const QMetaObject *nullObj = Q_NULLPTR;
+        const QMetaObject *nullObj = nullptr;
         QTest::newRow("null") << QVariant() << QByteArray() << nullObj << QString();
         QTest::newRow("int") << QVariant(42) << QByteArray() << &staticMetaObject << QString();
 

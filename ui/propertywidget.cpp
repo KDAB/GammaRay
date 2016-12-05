@@ -46,7 +46,7 @@ QVector<PropertyWidget *> PropertyWidget::s_propertyWidgets;
 PropertyWidget::PropertyWidget(QWidget *parent)
     : QTabWidget(parent)
     , m_tabsUpdatedTimer(new QTimer(this))
-    , m_lastManuallySelectedWidget(Q_NULLPTR)
+    , m_lastManuallySelectedWidget(nullptr)
     , m_controller(nullptr)
 {
     m_tabsUpdatedTimer->setInterval(100);

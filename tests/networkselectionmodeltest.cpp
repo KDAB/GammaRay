@@ -64,7 +64,7 @@ class FakeEndpoint : public Endpoint
 {
     Q_OBJECT
 public:
-    explicit FakeEndpoint(QObject *parent = Q_NULLPTR)
+    explicit FakeEndpoint(QObject *parent = nullptr)
         : Endpoint(parent)
     {
         setDevice(new QBuffer(this));
@@ -102,7 +102,7 @@ class FakeNetworkSelectionModel : public NetworkSelectionModel
     Q_OBJECT
 public:
     explicit FakeNetworkSelectionModel(Protocol::ObjectAddress address, QAbstractItemModel *model,
-                                       QObject *parent = Q_NULLPTR)
+                                       QObject *parent = nullptr)
         : NetworkSelectionModel(QStringLiteral("com.kdab.GammaRay.UnitTest.Model"), model, parent)
     {
         m_myAddress = address;

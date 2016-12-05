@@ -48,7 +48,7 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &id
     : QObject(parent)
     , mModelIndex(idx)
     , mQWidget(qWidget)
-    , mUpdateTimer(Q_NULLPTR)
+    , mUpdateTimer(nullptr)
     , mDepth(0)
     , mIsPainting(false)
     , mGeomDirty(true)
@@ -363,9 +363,9 @@ QMap<int, QVariant> Widget3DModel::itemData(const QModelIndex &index) const
 Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, const QModelIndex &idx,
                                                bool createWhenMissing) const
 {
-    Widget3DWidget *widget = mDataCache.value(obj, Q_NULLPTR);
+    Widget3DWidget *widget = mDataCache.value(obj, nullptr);
     if (!widget && createWhenMissing) {
-        Widget3DWidget *parent = Q_NULLPTR;
+        Widget3DWidget *parent = nullptr;
         if (obj->parent() && idx.parent().isValid()) {
             parent = widgetForObject(obj->parent(), idx.parent(), createWhenMissing);
         }

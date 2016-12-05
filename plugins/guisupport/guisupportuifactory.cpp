@@ -47,7 +47,7 @@ void GuiSupportUiFactory::initUi()
 
 QWidget *GuiSupportUiFactory::createWidget(QWidget *)
 {
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

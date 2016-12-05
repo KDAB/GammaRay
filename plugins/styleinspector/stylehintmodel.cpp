@@ -81,31 +81,31 @@ struct StyleHintTypeInfo {
 
 // ### must be the same order as the above enum
 static const struct StyleHintTypeInfo style_hint_type_table[] = {
-    { "Qt::Alignment", Q_NULLPTR },
+    { "Qt::Alignment", nullptr },
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     { "QEvent::Type", &QEvent::staticMetaObject },
 #else
-    { Q_NULLPTR, Q_NULLPTR },
+    { nullptr, nullptr },
 #endif
-    { "Qt::FocusPolicy", Q_NULLPTR },
+    { "Qt::FocusPolicy", nullptr },
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     { "QPalette::ColorRole", &QPalette::staticMetaObject },
 #else
-    { Q_NULLPTR, Q_NULLPTR },
+    { nullptr, nullptr },
 #endif
-    { "Qt::TextElideMode", Q_NULLPTR },
-    { "Qt::MouseButtons", Q_NULLPTR },
-    { "Qt::LayoutDirection", Q_NULLPTR },
-    { "Qt::TextInteractionFlags", Q_NULLPTR },
+    { "Qt::TextElideMode", nullptr },
+    { "Qt::MouseButtons", nullptr },
+    { "Qt::LayoutDirection", nullptr },
+    { "Qt::TextInteractionFlags", nullptr },
     { "QWizard::WizardStyle", &QWizard::staticMetaObject },
     { "QTabWidget::TabPosition", &QTabWidget::staticMetaObject },
     { "QFormLayout::RowWrapPolicy", &QFormLayout::staticMetaObject },
     { "QFormLayout::FieldGrowthPolicy", &QFormLayout::staticMetaObject },
-    { "Qt::ToolButtonStyle", Q_NULLPTR },
+    { "Qt::ToolButtonStyle", nullptr },
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     { "QStyle::RequestSoftwareInputPanel", &QStyle::staticMetaObject },
 #else
-    { Q_NULLPTR, Q_NULLPTR },
+    { nullptr, nullptr },
 #endif
     { "QAbstractItemView::ScrollMode", &QAbstractItemView::staticMetaObject }
 };
@@ -296,7 +296,7 @@ QVariant StyleHintModel::doData(int row, int column, int role) const
     }
     if (column == 1) {
         const auto hint = static_cast<QStyle::StyleHint>(row);
-        const auto value = effectiveStyle()->styleHint(hint, Q_NULLPTR, Q_NULLPTR, Q_NULLPTR);
+        const auto value = effectiveStyle()->styleHint(hint, nullptr, nullptr, nullptr);
         switch (role) {
             case Qt::DisplayRole:
                 if (style_hint_table[row].type == StyleHintType::Bool)
@@ -374,7 +374,7 @@ QVariant StyleHintModel::styleHintData(QStyle::StyleHint hint) const
         {
             const auto opt = StyleOption::makeFrameStyleOption();
             QStyleHintReturnVariant data;
-            effectiveStyle()->styleHint(hint, opt, Q_NULLPTR, &data);
+            effectiveStyle()->styleHint(hint, opt, nullptr, &data);
             delete opt;
             return data.variant;
         }
@@ -384,7 +384,7 @@ QVariant StyleHintModel::styleHintData(QStyle::StyleHint hint) const
             opt.shape = QRubberBand::Rectangle;
             opt.rect = QRect(0, 0, 100, 100);
             QStyleHintReturnMask data;
-            effectiveStyle()->styleHint(hint, &opt, Q_NULLPTR, &data);
+            effectiveStyle()->styleHint(hint, &opt, nullptr, &data);
             return data.region;
         }
         case QStyle::SH_FocusFrame_Mask:
@@ -395,7 +395,7 @@ QVariant StyleHintModel::styleHintData(QStyle::StyleHint hint) const
             QStyleOption opt;
             opt.rect = QRect(0, 0, 100, 100);
             QStyleHintReturnMask data;
-            effectiveStyle()->styleHint(hint, &opt, Q_NULLPTR, &data);
+            effectiveStyle()->styleHint(hint, &opt, nullptr, &data);
             return data.region;
         }
         default: break;

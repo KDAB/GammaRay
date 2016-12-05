@@ -32,7 +32,7 @@
 
 using namespace GammaRay;
 
-EnumRepositoryServer* EnumRepositoryServer::s_instance = Q_NULLPTR;
+EnumRepositoryServer* EnumRepositoryServer::s_instance = nullptr;
 
 EnumRepositoryServer::EnumRepositoryServer(QObject *parent)
     : EnumRepository(parent)
@@ -42,7 +42,7 @@ EnumRepositoryServer::EnumRepositoryServer(QObject *parent)
 
 EnumRepositoryServer::~EnumRepositoryServer()
 {
-    s_instance = Q_NULLPTR;
+    s_instance = nullptr;
 }
 
 void EnumRepositoryServer::create(QObject *parent)

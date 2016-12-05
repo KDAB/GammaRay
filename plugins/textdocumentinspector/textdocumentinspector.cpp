@@ -123,7 +123,7 @@ void TextDocumentInspector::documentElementSelected(const QItemSelection &select
 void TextDocumentInspector::registerMetaTypes()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    MetaObject *mo = Q_NULLPTR;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QTextObject, QObject);
     MO_ADD_PROPERTY_RO(QTextObject, QTextDocument*, document);
     MO_ADD_PROPERTY_RO(QTextObject, int, formatIndex);

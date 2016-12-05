@@ -44,7 +44,7 @@ class PropertyEnumEditorModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit PropertyEnumEditorModel(QObject *parent = Q_NULLPTR);
+    explicit PropertyEnumEditorModel(QObject *parent = nullptr);
     ~PropertyEnumEditorModel();
 
     EnumValue value() const;

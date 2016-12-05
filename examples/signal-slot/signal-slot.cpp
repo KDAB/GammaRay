@@ -36,7 +36,7 @@ class Widget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Widget(QWidget *parent = Q_NULLPTR) :
+    explicit Widget(QWidget *parent = nullptr) :
         QWidget(parent)
     {
         //! [Widget setup]

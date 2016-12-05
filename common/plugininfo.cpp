@@ -77,8 +77,8 @@ void PluginInfo::init()
     m_remoteSupport = true;
     m_hidden = false;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-    m_staticPlugin.instance = Q_NULLPTR;
-    m_staticPlugin.rawMetaData = Q_NULLPTR;
+    m_staticPlugin.instance = nullptr;
+    m_staticPlugin.rawMetaData = nullptr;
 #endif
 }
 
@@ -181,7 +181,7 @@ QObject* PluginInfo::staticInstance() const
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     return m_staticPlugin.instance();
 #else
-    return Q_NULLPTR;
+    return nullptr;
 #endif
 }
 

@@ -54,6 +54,6 @@ bool WidgetAttributeExtension::setQObject(QObject *object)
         return true;
     }
 
-    m_attributeModel->setObject(Q_NULLPTR);
+    m_attributeModel->setObject(nullptr);
     return false;
 }

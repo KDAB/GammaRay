@@ -90,7 +90,7 @@ void QuickSceneGraphModel::updateSGTree(bool emitSignals)
 QSGNode *QuickSceneGraphModel::currentRootNode() const
 {
     if (!m_window)
-        return Q_NULLPTR;
+        return nullptr;
 
     QQuickItem *item = m_window->contentItem();
     QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);

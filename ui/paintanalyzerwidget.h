@@ -43,7 +43,7 @@ class GAMMARAY_UI_EXPORT PaintAnalyzerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PaintAnalyzerWidget(QWidget *parent = Q_NULLPTR);
+    explicit PaintAnalyzerWidget(QWidget *parent = nullptr);
     ~PaintAnalyzerWidget();
 
     void setBaseName(const QString &name);

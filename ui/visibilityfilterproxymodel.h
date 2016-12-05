@@ -48,7 +48,7 @@ public:
      * Constructor.
      * @param parent is the parent object for this instance.
      */
-    explicit VisibilityFilterProxyModel(QObject *parent = Q_NULLPTR);
+    explicit VisibilityFilterProxyModel(QObject *parent = nullptr);
 
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
 

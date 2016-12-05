@@ -39,7 +39,7 @@ class Positioning : public QObject
 {
     Q_OBJECT
 public:
-    explicit Positioning(ProbeInterface *probe, QObject *parent = Q_NULLPTR);
+    explicit Positioning(ProbeInterface *probe, QObject *parent = nullptr);
 };
 
 class PositioningFactory : public QObject,
@@ -49,7 +49,7 @@ class PositioningFactory : public QObject,
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_positioning.json")
 public:
-    explicit PositioningFactory(QObject *parent = Q_NULLPTR)
+    explicit PositioningFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

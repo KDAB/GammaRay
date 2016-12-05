@@ -65,5 +65,5 @@ void ModelContentDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     }
 
     QStyle *style = QApplication::style();
-    style->drawControl(QStyle::CE_ItemViewItem, &option, painter, Q_NULLPTR);
+    style->drawControl(QStyle::CE_ItemViewItem, &option, painter, nullptr);
 }

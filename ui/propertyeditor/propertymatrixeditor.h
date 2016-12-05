@@ -36,7 +36,7 @@ class PropertyMatrixEditor : public PropertyExtendedEditor
 {
     Q_OBJECT
 public:
-    explicit PropertyMatrixEditor(QWidget *parent = Q_NULLPTR);
+    explicit PropertyMatrixEditor(QWidget *parent = nullptr);
 
 protected:
     void edit() Q_DECL_OVERRIDE;

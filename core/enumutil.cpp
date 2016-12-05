@@ -44,7 +44,7 @@ public:
 static const QMetaObject* metaObjectForClass(const QByteArray &name)
 {
     if (name.isEmpty())
-        return Q_NULLPTR;
+        return nullptr;
     auto mo = QMetaType::metaObjectForType(QMetaType::type(name));
     if (mo)
         return mo;

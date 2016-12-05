@@ -127,7 +127,7 @@ private slots:
         QVERIFY(proxyIdx.isValid());
         QVERIFY(proxyIdx.parent().isValid());
 
-        targetProxy->setSourceModel(Q_NULLPTR);
+        targetProxy->setSourceModel(nullptr);
         QCOMPARE(modelModel->rowCount(), topRowCount + 1);
         proxyIdx = indexForName(modelModel, "targetProxy");
         QVERIFY(proxyIdx.isValid());

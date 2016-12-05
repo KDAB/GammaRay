@@ -40,7 +40,7 @@ using namespace GammaRay;
 
 QuickPaintAnalyzerExtension::QuickPaintAnalyzerExtension(PropertyController *controller)
     : PropertyControllerExtension(controller->objectBaseName() + ".painting")
-    , m_paintAnalyzer(Q_NULLPTR)
+    , m_paintAnalyzer(nullptr)
 {
     // check if the paint analyzer already exists before creating it, as we share the UI with other plugins
     const QString analyzerName = controller->objectBaseName()

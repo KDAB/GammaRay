@@ -50,7 +50,7 @@ class MimeTypesFactory : public QObject, public StandardToolFactory<QObject, Mim
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_mimetypes.json")
 public:
-    explicit MimeTypesFactory(QObject *parent = Q_NULLPTR)
+    explicit MimeTypesFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

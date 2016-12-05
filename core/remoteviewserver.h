@@ -45,7 +45,7 @@ class GAMMARAY_CORE_EXPORT RemoteViewServer : public RemoteViewInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::RemoteViewInterface)
 public:
-    explicit RemoteViewServer(const QString &name, QObject *parent = Q_NULLPTR);
+    explicit RemoteViewServer(const QString &name, QObject *parent = nullptr);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     typedef QWindow EventReceiver;

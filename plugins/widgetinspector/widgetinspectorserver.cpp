@@ -195,7 +195,7 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
         m_remoteView->resetView();
     m_selectedWidget = widget;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    m_remoteView->setEventReceiver(m_selectedWidget ? m_selectedWidget->window()->windowHandle() : Q_NULLPTR);
+    m_remoteView->setEventReceiver(m_selectedWidget ? m_selectedWidget->window()->windowHandle() : nullptr);
 #endif
 
     if (m_selectedWidget

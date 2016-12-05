@@ -50,5 +50,5 @@ void QmlSupportUiFactory::initUi()
 
 QWidget *GammaRay::QmlSupportUiFactory::createWidget(QWidget *)
 {
-    return Q_NULLPTR;
+    return nullptr;
 }
