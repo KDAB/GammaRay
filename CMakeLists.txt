@@ -285,6 +285,13 @@ if(Qt5Core_FOUND)
     WaylandCompositor
   )
 
+  if (Qt5Core_VERSION VERSION_GREATER 5.7)
+    # Qt 5.8 is the first minor version to use nullptr more broadly
+    # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
+    #   .../examples/widget-layouting/ui_contactform.h:606:85: warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
+    add_flag_if_supported(-Wzero-as-null-pointer-constant ZERO_AS_NULL_POINTER_CONSTANT)
+  endif()
+
   # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
   if(NOT CMAKE_CROSSCOMPILING)
     find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
