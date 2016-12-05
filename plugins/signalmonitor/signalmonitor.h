@@ -44,7 +44,7 @@ class SignalMonitor : public SignalMonitorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::SignalMonitorInterface)
 public:
-    explicit SignalMonitor(ProbeInterface *probe, QObject *parent = 0);
+    explicit SignalMonitor(ProbeInterface *probe, QObject *parent = nullptr);
     ~SignalMonitor();
 
 public slots:
@@ -66,7 +66,7 @@ class SignalMonitorFactory : public QObject, public StandardToolFactory<QObject,
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_signalmonitor.json")
 public:
-    explicit SignalMonitorFactory(QObject *parent = 0)
+    explicit SignalMonitorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

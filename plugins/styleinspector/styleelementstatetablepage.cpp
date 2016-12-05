@@ -43,7 +43,7 @@ using namespace GammaRay;
 StyleElementStateTablePage::StyleElementStateTablePage(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::StyleElementStateTablePage)
-    , m_interface(0)
+    , m_interface(nullptr)
 {
     ObjectBroker::registerClientObjectFactoryCallback<StyleInspectorInterface *>(
         createStyleInspectorClient);

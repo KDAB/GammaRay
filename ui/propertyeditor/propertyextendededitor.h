@@ -43,7 +43,7 @@ class PropertyExtendedEditor : public QWidget
     Q_OBJECT
     Q_PROPERTY(QVariant value READ value WRITE setValue USER true)
 public:
-    explicit PropertyExtendedEditor(QWidget *parent = 0);
+    explicit PropertyExtendedEditor(QWidget *parent = nullptr);
     virtual ~PropertyExtendedEditor();
 
     Qt::Alignment alignment() const;

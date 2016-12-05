@@ -42,7 +42,7 @@ class MultiSignalMapper : public QObject
 {
     Q_OBJECT
 public:
-    explicit MultiSignalMapper(QObject *parent = 0);
+    explicit MultiSignalMapper(QObject *parent = nullptr);
     ~MultiSignalMapper();
 
     void connectToSignal(QObject *sender, const QMetaMethod &signal);

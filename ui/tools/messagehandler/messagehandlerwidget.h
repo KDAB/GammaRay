@@ -47,7 +47,7 @@ class MessageHandlerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MessageHandlerWidget(QWidget *parent = 0);
+    explicit MessageHandlerWidget(QWidget *parent = nullptr);
     ~MessageHandlerWidget();
 
 private slots:

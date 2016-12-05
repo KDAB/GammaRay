@@ -41,7 +41,7 @@ class VtkPanel : public QToolBar
     Q_OBJECT
 
 public:
-    explicit VtkPanel(VtkWidget *vtkWidget, QWidget *parent = 0);
+    explicit VtkPanel(VtkWidget *vtkWidget, QWidget *parent = nullptr);
     virtual ~VtkPanel();
 
 public slots:

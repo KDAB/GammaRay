@@ -56,7 +56,7 @@ private:
 class QmlContextPropertyAdaptorFactory : public AbstractPropertyAdaptorFactory
 {
 public:
-    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = 0) const Q_DECL_OVERRIDE;
+    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = nullptr) const Q_DECL_OVERRIDE;
     static QmlContextPropertyAdaptorFactory *instance();
 private:
     static QmlContextPropertyAdaptorFactory *s_instance;

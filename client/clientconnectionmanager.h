@@ -55,7 +55,7 @@ class GAMMARAY_CLIENT_EXPORT ClientConnectionManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ClientConnectionManager(QObject *parent = 0, bool showSplashScreenOnStartUp = true);
+    explicit ClientConnectionManager(QObject *parent = nullptr, bool showSplashScreenOnStartUp = true);
     ~ClientConnectionManager();
 
     QMainWindow *mainWindow() const;

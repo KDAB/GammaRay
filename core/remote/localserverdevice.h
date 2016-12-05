@@ -39,7 +39,7 @@ class LocalServerDevice : public ServerDeviceImpl<QLocalServer>
 {
     Q_OBJECT
 public:
-    explicit LocalServerDevice(QObject *parent = 0);
+    explicit LocalServerDevice(QObject *parent = nullptr);
 
     bool listen() Q_DECL_OVERRIDE;
     bool isListening() const Q_DECL_OVERRIDE;

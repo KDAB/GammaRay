@@ -70,8 +70,8 @@ static QVariantList toVariantList(void *data, int size)
 
 GammaRay::SGVertexModel::SGVertexModel(QObject *parent)
     : QAbstractTableModel(parent)
-    , m_geometry(0)
-    , m_node(0)
+    , m_geometry(nullptr)
+    , m_node(nullptr)
 {
 }
 

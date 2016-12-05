@@ -49,7 +49,7 @@ class ActionInspectorWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit ActionInspectorWidget(QWidget *parent = 0);
+    explicit ActionInspectorWidget(QWidget *parent = nullptr);
     ~ActionInspectorWidget();
 
 private Q_SLOTS:

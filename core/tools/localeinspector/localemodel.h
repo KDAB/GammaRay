@@ -39,7 +39,7 @@ class LocaleModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit LocaleModel(LocaleDataAccessorRegistry *registry, QObject *parent = 0);
+    explicit LocaleModel(LocaleDataAccessorRegistry *registry, QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

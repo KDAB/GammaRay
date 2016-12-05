@@ -40,7 +40,7 @@ class LocaleInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit LocaleInspectorWidget(QWidget *parent = 0);
+    explicit LocaleInspectorWidget(QWidget *parent = nullptr);
     ~LocaleInspectorWidget();
 
 private slots:

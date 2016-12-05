@@ -50,7 +50,7 @@ class SceneInspector : public SceneInspectorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::SceneInspectorInterface)
 public:
-    explicit SceneInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit SceneInspector(ProbeInterface *probe, QObject *parent = nullptr);
 
 private slots:
     void initializeGui() Q_DECL_OVERRIDE;
@@ -85,7 +85,7 @@ class SceneInspectorFactory : public QObject,
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_sceneinspector.json")
 public:
-    explicit SceneInspectorFactory(QObject *parent = 0)
+    explicit SceneInspectorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

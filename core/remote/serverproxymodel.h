@@ -44,7 +44,7 @@ namespace GammaRay {
 template<typename BaseProxy> class ServerProxyModel : public BaseProxy
 {
 public:
-    explicit ServerProxyModel(QObject *parent = 0)
+    explicit ServerProxyModel(QObject *parent = nullptr)
         : BaseProxy(parent)
         , m_sourceModel(Q_NULLPTR)
         , m_active(false)
@@ -103,7 +103,7 @@ protected:
                 if (mev->used() && BaseProxy::sourceModel() != m_sourceModel)
                     BaseProxy::setSourceModel(m_sourceModel);
                 else if (!mev->used())
-                    BaseProxy::setSourceModel(0);
+                    BaseProxy::setSourceModel(nullptr);
             }
         }
         BaseProxy::customEvent(event);

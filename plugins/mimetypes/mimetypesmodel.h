@@ -44,7 +44,7 @@ public:
         GenericIconNameRole
     };
 
-    explicit MimeTypesModel(QObject *parent = 0);
+    explicit MimeTypesModel(QObject *parent = nullptr);
     ~MimeTypesModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

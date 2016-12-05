@@ -87,7 +87,7 @@ Q_DECLARE_METATYPE(QThread::Priority)
 
 void MetaObjectRepository::initQObjectTypes()
 {
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT0(QMetaObject);
     MO_ADD_PROPERTY_RO(QMetaObject, int, classInfoCount);
     MO_ADD_PROPERTY_RO(QMetaObject, int, classInfoOffset);
@@ -175,7 +175,7 @@ Q_DECLARE_METATYPE(Qt::SortOrder)
 
 void MetaObjectRepository::initIOTypes()
 {
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QIODevice, QObject);
     MO_ADD_PROPERTY_RO(QIODevice, QIODevice::OpenMode, openMode);
     MO_ADD_PROPERTY(QIODevice, bool, isTextModeEnabled, setTextModeEnabled);

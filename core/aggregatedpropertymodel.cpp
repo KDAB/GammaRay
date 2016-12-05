@@ -48,7 +48,7 @@ using namespace GammaRay;
 
 AggregatedPropertyModel::AggregatedPropertyModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , m_rootAdaptor(0)
+    , m_rootAdaptor(nullptr)
     , m_inhibitAdaptorCreation(false)
 {
     qRegisterMetaType<GammaRay::PropertyAdaptor *>();
@@ -90,7 +90,7 @@ void AggregatedPropertyModel::clear()
 
     m_parentChildrenMap.clear();
     delete m_rootAdaptor;
-    m_rootAdaptor = 0;
+    m_rootAdaptor = nullptr;
 
     if (count)
         endRemoveRows();
@@ -370,7 +370,7 @@ void AggregatedPropertyModel::propertyAdded(int first, int last)
     if (first >= children.size())
         children.resize(last + 1);
     else
-        children.insert(first, last - first + 1, 0);
+        children.insert(first, last - first + 1, nullptr);
     endInsertRows();
 }
 
@@ -447,7 +447,7 @@ void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor *parentAdaptor, int 
         auto oldRowCount = m_parentChildrenMap.value(oldAdaptor).size();
         if (oldRowCount > 0)
             beginRemoveRows(createIndex(index, 0, parentAdaptor), 0, oldRowCount - 1);
-        m_parentChildrenMap[parentAdaptor][index] = 0;
+        m_parentChildrenMap[parentAdaptor][index] = nullptr;
         m_parentChildrenMap.remove(oldAdaptor);
         delete oldAdaptor;
         if (oldRowCount)

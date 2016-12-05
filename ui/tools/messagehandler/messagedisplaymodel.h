@@ -37,7 +37,7 @@ class MessageDisplayModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit MessageDisplayModel(QObject *parent = 0);
+    explicit MessageDisplayModel(QObject *parent = nullptr);
     ~MessageDisplayModel();
 
     QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

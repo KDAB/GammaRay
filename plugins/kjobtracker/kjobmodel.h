@@ -39,7 +39,7 @@ class KJobModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit KJobModel(QObject *parent = 0);
+    explicit KJobModel(QObject *parent = nullptr);
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 

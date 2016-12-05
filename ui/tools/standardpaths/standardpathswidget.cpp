@@ -47,7 +47,7 @@ class StandardPathsProxy : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    StandardPathsProxy(QObject *parent = 0)
+    StandardPathsProxy(QObject *parent = nullptr)
         : QIdentityProxyModel(parent) { }
 
     QVariant headerData(int section, Qt::Orientation orientation,
@@ -64,7 +64,7 @@ class StandardPathsDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    StandardPathsDelegate(QObject *parent = 0)
+    StandardPathsDelegate(QObject *parent = nullptr)
         : QStyledItemDelegate(parent) { }
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
@@ -83,7 +83,7 @@ public:
             QStyle *style = widget ? widget->style() : QApplication::style();
             style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, widget);
 
-            const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, 0, widget) + 1;
+            const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, widget) + 1;
             const QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &opt, widget)
                                    .adjusted(textMargin, 1, -textMargin, -1);
             painter->setPen(((opt.state

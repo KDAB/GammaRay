@@ -49,7 +49,7 @@ class ToolManager : public ToolManagerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolManagerInterface)
 public:
-    explicit ToolManager(QObject *parent = 0);
+    explicit ToolManager(QObject *parent = nullptr);
 
     /** returns the tools that are best suited to show information about \p object. */
     QVector<QString> toolsForObject(QObject *object) const;

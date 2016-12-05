@@ -45,7 +45,7 @@ class InternalLauncher : public Launcher
 {
     Q_OBJECT
 public:
-    explicit InternalLauncher(const LaunchOptions &options, QObject *parent = 0)
+    explicit InternalLauncher(const LaunchOptions &options, QObject *parent = nullptr)
         : Launcher(options, parent) {}
 
 signals:
@@ -62,7 +62,7 @@ class Orchestrator : public QObject
 {
     Q_OBJECT
 public:
-    explicit Orchestrator(QObject *parent = 0)
+    explicit Orchestrator(QObject *parent = nullptr)
         : QObject(parent)
     {
         m_launcherWindow = new LauncherWindow;

@@ -43,7 +43,7 @@ class ModelTester : public QObject
 {
     Q_OBJECT
 public:
-    explicit ModelTester(QObject *parent = 0);
+    explicit ModelTester(QObject *parent = nullptr);
     ~ModelTester();
 
     void failure(QAbstractItemModel *model, const char *file, int line, const char *message);

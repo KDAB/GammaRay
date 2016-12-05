@@ -54,7 +54,7 @@ class ModelInspector : public ModelInspectorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::ModelInspectorInterface)
 public:
-    explicit ModelInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit ModelInspector(ProbeInterface *probe, QObject *parent = nullptr);
 
 private slots:
     void modelSelected(const QItemSelection &selected);

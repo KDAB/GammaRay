@@ -46,7 +46,7 @@ class PaletteDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit PaletteDialog(const QPalette &palette, QWidget *parent = 0);
+    explicit PaletteDialog(const QPalette &palette, QWidget *parent = nullptr);
     virtual ~PaletteDialog();
 
     QPalette editedPalette() const;

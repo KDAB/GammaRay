@@ -41,7 +41,7 @@ class KJobTracker : public QObject
 {
     Q_OBJECT
 public:
-    explicit KJobTracker(ProbeInterface *probe, QObject *parent = 0);
+    explicit KJobTracker(ProbeInterface *probe, QObject *parent = nullptr);
     virtual ~KJobTracker();
 
 private:
@@ -55,7 +55,7 @@ class KJobTrackerFactory : public QObject, public StandardToolFactory<KJob, KJob
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_kjobtracker.json")
 
 public:
-    explicit KJobTrackerFactory(QObject *parent = 0)
+    explicit KJobTrackerFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

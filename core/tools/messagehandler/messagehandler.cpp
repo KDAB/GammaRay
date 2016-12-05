@@ -60,8 +60,8 @@ static MessageHandlerCallback(*const installMessageHandler)(MessageHandlerCallba
     = qInstallMessageHandler;
 #endif
 
-static MessageModel *s_model = 0;
-static MessageHandlerCallback s_handler = 0;
+static MessageModel *s_model = nullptr;
+static MessageHandlerCallback s_handler = nullptr;
 static bool s_handlerDisabled = false;
 static QMutex s_mutex(QMutex::Recursive);
 
@@ -160,7 +160,7 @@ MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
     : MessageHandlerInterface(parent)
     , m_messageModel(new MessageModel(this))
 {
-    Q_ASSERT(s_model == 0);
+    Q_ASSERT(s_model == nullptr);
     s_model = m_messageModel;
 
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
@@ -189,13 +189,13 @@ MessageHandler::~MessageHandler()
 {
     QMutexLocker lock(&s_mutex);
 
-    s_model = 0;
+    s_model = nullptr;
     MessageHandlerCallback oldHandler = installMessageHandler(s_handler);
     if (oldHandler != handleMessage) {
         // ups, the app installed it's own handler after ours...
         installMessageHandler(oldHandler);
     }
-    s_handler = 0;
+    s_handler = nullptr;
 }
 
 void MessageHandler::ensureHandlerInstalled()

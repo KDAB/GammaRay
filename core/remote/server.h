@@ -49,7 +49,7 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
 {
     Q_OBJECT
 public:
-    explicit Server(QObject *parent = 0);
+    explicit Server(QObject *parent = nullptr);
     ~Server();
 
     /** Indicates which parts of a QObject should be exported to the client. */

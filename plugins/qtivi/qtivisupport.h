@@ -38,7 +38,7 @@ class QtIviSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit QtIviSupport(ProbeInterface *probe, QObject *parent = 0);
+    explicit QtIviSupport(ProbeInterface *probe, QObject *parent = nullptr);
 };
 
 class QtIviSupportFactory : public QObject, public StandardToolFactory<QIviProperty, QtIviSupport>
@@ -48,7 +48,7 @@ class QtIviSupportFactory : public QObject, public StandardToolFactory<QIviPrope
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_qtivi.json")
 
 public:
-    explicit QtIviSupportFactory(QObject *parent = 0) : QObject(parent)
+    explicit QtIviSupportFactory(QObject *parent = nullptr) : QObject(parent)
     {
     }
 };

@@ -43,7 +43,7 @@ class StyleElementProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit StyleModelProxy(QObject *parent = 0);
+    explicit StyleModelProxy(QObject *parent = nullptr);
 
     virtual QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const;
 

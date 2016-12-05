@@ -285,7 +285,7 @@ private slots:
     void testQtMetaObject()
     {
         auto adaptor
-            = PropertyAdaptorFactory::create(ObjectInstance(0,
+            = PropertyAdaptorFactory::create(ObjectInstance(nullptr,
                                                             &PropertyTestObject::staticMetaObject),
                                              this);
         QVERIFY(adaptor);

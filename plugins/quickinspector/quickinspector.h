@@ -66,7 +66,7 @@ class QuickInspector : public QuickInspectorInterface
     Q_INTERFACES(GammaRay::QuickInspectorInterface)
 
 public:
-    explicit QuickInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit QuickInspector(ProbeInterface *probe, QObject *parent = nullptr);
     ~QuickInspector();
 
     typedef bool (*GrabWindowCallback)(QQuickWindow *);
@@ -149,7 +149,7 @@ class QuickInspectorFactory : public QObject,
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_quickinspector.json")
 
 public:
-    explicit QuickInspectorFactory(QObject *parent = 0)
+    explicit QuickInspectorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

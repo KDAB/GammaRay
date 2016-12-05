@@ -140,7 +140,7 @@ bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
 
 void TranslatorInspector::selectionChanged(const QItemSelection &selection)
 {
-    m_translationsModel->setSourceModel(0);
+    m_translationsModel->setSourceModel(nullptr);
     if (!selection.isEmpty()) {
         TranslatorWrapper *translator
             = m_translatorsModel->translator(selection.first().topLeft());
@@ -168,7 +168,7 @@ void TranslatorInspector::objectSelected(QObject* obj)
 
 void TranslatorInspector::registerMetaTypes()
 {
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QTranslator, QObject);
     MO_ADD_PROPERTY_RO(QTranslator, bool, isEmpty);
 }

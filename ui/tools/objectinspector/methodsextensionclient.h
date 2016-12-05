@@ -37,7 +37,7 @@ class MethodsExtensionClient : public MethodsExtensionInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::MethodsExtensionInterface)
 public:
-    explicit MethodsExtensionClient(const QString &name, QObject *parent = 0);
+    explicit MethodsExtensionClient(const QString &name, QObject *parent = nullptr);
     ~MethodsExtensionClient();
 
 public slots:

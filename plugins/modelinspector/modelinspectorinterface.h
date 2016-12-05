@@ -51,7 +51,7 @@ class ModelInspectorInterface : public QObject
     Q_OBJECT
     Q_PROPERTY(GammaRay::ModelCellData cellData READ currentCellData WRITE setCurrentCellData NOTIFY currentCellDataChanged)
 public:
-    explicit ModelInspectorInterface(QObject *parent = 0);
+    explicit ModelInspectorInterface(QObject *parent = nullptr);
     virtual ~ModelInspectorInterface();
 
     ModelCellData currentCellData() const;

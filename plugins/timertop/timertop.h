@@ -45,7 +45,7 @@ class TimerTop : public QObject
 {
     Q_OBJECT
 public:
-    explicit TimerTop(ProbeInterface *probe, QObject *parent = 0);
+    explicit TimerTop(ProbeInterface *probe, QObject *parent = nullptr);
 
 private slots:
     void objectSelected(QObject *obj);
@@ -61,7 +61,7 @@ class TimerTopFactory : public QObject, public StandardToolFactory<QTimer, Timer
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_timertop.json")
 
 public:
-    explicit TimerTopFactory(QObject *parent = 0);
+    explicit TimerTopFactory(QObject *parent = nullptr);
 };
 }
 

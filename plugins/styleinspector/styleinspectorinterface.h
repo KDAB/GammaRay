@@ -40,7 +40,7 @@ class StyleInspectorInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit StyleInspectorInterface(QObject *parent = 0);
+    explicit StyleInspectorInterface(QObject *parent = nullptr);
     virtual ~StyleInspectorInterface();
 
     int cellHeight() const;

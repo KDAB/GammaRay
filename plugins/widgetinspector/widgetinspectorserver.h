@@ -57,7 +57,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::WidgetInspectorInterface)
 public:
-    explicit WidgetInspectorServer(ProbeInterface *probe, QObject *parent = 0);
+    explicit WidgetInspectorServer(ProbeInterface *probe, QObject *parent = nullptr);
     ~WidgetInspectorServer();
 
 signals:

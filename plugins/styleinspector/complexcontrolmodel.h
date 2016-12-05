@@ -36,7 +36,7 @@ class ComplexControlModel : public AbstractStyleElementStateTable
 {
     Q_OBJECT
 public:
-    explicit ComplexControlModel(QObject *parent = 0);
+    explicit ComplexControlModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

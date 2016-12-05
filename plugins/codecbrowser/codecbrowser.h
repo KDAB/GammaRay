@@ -47,7 +47,7 @@ class CodecBrowser : public QObject
 {
     Q_OBJECT
 public:
-    explicit CodecBrowser(ProbeInterface *probe, QObject *parent = 0);
+    explicit CodecBrowser(ProbeInterface *probe, QObject *parent = nullptr);
 
 public slots:
     void textChanged(const QString &text);
@@ -66,7 +66,7 @@ class CodecBrowserFactory : public QObject, public StandardToolFactory<QObject, 
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_codecbrowser.json")
 public:
-    explicit CodecBrowserFactory(QObject *parent = 0)
+    explicit CodecBrowserFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

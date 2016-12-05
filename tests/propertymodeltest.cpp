@@ -94,7 +94,7 @@ private slots:
     void testMetaObject()
     {
         AggregatedPropertyModel model;
-        model.setObject(ObjectInstance(0, &Gadget::staticMetaObject));
+        model.setObject(ObjectInstance(nullptr, &Gadget::staticMetaObject));
         ModelTest modelTest(&model);
 
         QCOMPARE(model.rowCount(), 1);

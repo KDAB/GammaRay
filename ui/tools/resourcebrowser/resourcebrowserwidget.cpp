@@ -58,7 +58,7 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ResourceBrowserWidget)
     , m_stateManager(this)
-    , m_interface(0)
+    , m_interface(nullptr)
 {
     ObjectBroker::registerClientObjectFactoryCallback<ResourceBrowserInterface *>(
         createResourceBrowserClient);

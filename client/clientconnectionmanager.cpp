@@ -116,7 +116,7 @@ void ClientConnectionManager::init()
 ClientConnectionManager::ClientConnectionManager(QObject *parent, bool showSplashScreenOnStartUp)
     : QObject(parent)
     , m_client(new Client(this))
-    , m_mainWindow(0)
+    , m_mainWindow(nullptr)
     , m_ignorePersistentError(false)
     , m_tries(0)
 {

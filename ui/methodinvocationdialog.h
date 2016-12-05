@@ -46,7 +46,7 @@ class MethodInvocationDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit MethodInvocationDialog(QWidget *parent = 0);
+    explicit MethodInvocationDialog(QWidget *parent = nullptr);
     ~MethodInvocationDialog();
 
     Qt::ConnectionType connectionType() const;

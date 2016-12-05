@@ -86,7 +86,7 @@ void TestConnections::timeout()
         m_objects.clear();
         emit done();
         delete m_timer;
-        m_timer = 0;
+        m_timer = nullptr;
         return;
     }
     m_numTimeout++;
@@ -103,7 +103,7 @@ void TestConnections::timeout()
     } else if (m_type == SetParent) {
         TestObject *obj = new TestObject;
         obj->setParent(this);
-        obj->child->setParent(0);
+        obj->child->setParent(nullptr);
         obj->child->setParent(obj);
         obj->deleteLater();
     } else {
@@ -209,7 +209,7 @@ void TestWaiter::startThreadsAndWaitForFinished()
     m_loop = new QEventLoop;
     m_loop->exec();
     delete m_loop;
-    m_loop = 0;
+    m_loop = nullptr;
 }
 
 // END TestWaiter

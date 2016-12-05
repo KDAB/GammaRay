@@ -39,7 +39,7 @@ public:
         NoState, ResizeSection, MoveSection, SelectSections, NoClear
     };                                                                           // Copied from QHVPrivate
 
-    explicit HeaderView(Qt::Orientation orientation, QWidget *parent = 0);
+    explicit HeaderView(Qt::Orientation orientation, QWidget *parent = nullptr);
 
     bool isState(State state) const;
 };

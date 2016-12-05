@@ -38,7 +38,7 @@ using namespace GammaRay;
 MaterialTab::MaterialTab(PropertyWidget *parent)
     : QWidget(parent)
     , m_ui(new Ui_MaterialTab)
-    , m_interface(0)
+    , m_interface(nullptr)
 {
     m_ui->setupUi(this);
     m_ui->materialPropertyView->header()->setObjectName("materialPropertyViewHeader");
@@ -61,7 +61,7 @@ MaterialTab::~MaterialTab()
 void MaterialTab::setObjectBaseName(const QString &baseName)
 {
     if (m_interface)
-        disconnect(m_interface, 0, this, 0);
+        disconnect(m_interface, nullptr, this, nullptr);
 
     m_interface
         = ObjectBroker::object<MaterialExtensionInterface *>(baseName + ".material");

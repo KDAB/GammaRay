@@ -38,7 +38,7 @@ class ScriptEngineDebugger : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScriptEngineDebugger(ProbeInterface *probe, QObject *parent = 0);
+    explicit ScriptEngineDebugger(ProbeInterface *probe, QObject *parent = nullptr);
     virtual ~ScriptEngineDebugger();
 };
 
@@ -50,7 +50,7 @@ class ScriptEngineDebuggerFactory : public QObject,
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_scriptenginedebugger.json")
 
 public:
-    explicit ScriptEngineDebuggerFactory(QObject *parent = 0)
+    explicit ScriptEngineDebuggerFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

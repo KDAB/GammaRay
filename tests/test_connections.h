@@ -41,7 +41,7 @@ class TestObject : public QObject
 {
     Q_OBJECT
 public:
-    explicit TestObject(QObject *parent = 0);
+    explicit TestObject(QObject *parent = nullptr);
     ~TestObject();
 
 private slots:
@@ -92,7 +92,7 @@ class TestThread : public QThread
     Q_OBJECT
 public:
     TestThread(TestConnections::Type type, int timeOuts, int timeoutInterval = -1,
-               QObject *parent = 0);
+               QObject *parent = nullptr);
     ~TestThread();
     void run() Q_DECL_OVERRIDE;
 

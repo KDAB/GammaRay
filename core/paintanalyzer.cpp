@@ -136,7 +136,7 @@ void PaintAnalyzer::endAnalyzePainting()
     Q_ASSERT(m_paintBufferModel);
     m_paintBufferModel->setPaintBuffer(*m_paintBuffer);
     delete m_paintBuffer;
-    m_paintBuffer = 0;
+    m_paintBuffer = nullptr;
     m_remoteView->resetView();
     m_remoteView->sourceChanged();
 

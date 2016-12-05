@@ -63,7 +63,7 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
     connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(objectSelected(QItemSelection)));
 
-    m_propertyController->setMetaObject(0); // init
+    m_propertyController->setMetaObject(nullptr); // init
 
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this,
             SLOT(objectSelected(QObject*)));
@@ -89,7 +89,7 @@ void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
             = index.data(QMetaObjectModel::MetaObjectRole).value<const QMetaObject*>();
         m_propertyController->setMetaObject(metaObject);
     } else {
-        m_propertyController->setMetaObject(0);
+        m_propertyController->setMetaObject(nullptr);
     }
 }
 

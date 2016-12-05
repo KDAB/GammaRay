@@ -45,7 +45,7 @@ class PropertyIntPairEditor : public QWidget
 {
     Q_OBJECT
 public:
-    explicit PropertyIntPairEditor(QWidget *parent = 0);
+    explicit PropertyIntPairEditor(QWidget *parent = nullptr);
     ~PropertyIntPairEditor();
 
 protected:
@@ -60,7 +60,7 @@ class PropertyPointEditor : public PropertyIntPairEditor
     Q_OBJECT
     Q_PROPERTY(QPoint point READ point WRITE setPoint USER true)
 public:
-    explicit PropertyPointEditor(QWidget *parent = 0);
+    explicit PropertyPointEditor(QWidget *parent = nullptr);
 
     QPoint point() const;
     void setPoint(const QPoint &point);
@@ -72,7 +72,7 @@ class PropertySizeEditor : public PropertyIntPairEditor
     Q_OBJECT
     Q_PROPERTY(QSize sizeValue READ sizeValue WRITE setSizeValue USER true)
 public:
-    explicit PropertySizeEditor(QWidget *parent = 0);
+    explicit PropertySizeEditor(QWidget *parent = nullptr);
 
     QSize sizeValue() const;
     void setSizeValue(const QSize &size);

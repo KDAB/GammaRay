@@ -33,7 +33,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 
-QSplashScreen *splash = 0;
+QSplashScreen *splash = nullptr;
 
 namespace GammaRay {
 void showSplashScreen()

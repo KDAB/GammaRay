@@ -44,7 +44,7 @@ class GAMMARAY_COMMON_EXPORT PropertySyncer : public QObject
 {
     Q_OBJECT
 public:
-    explicit PropertySyncer(QObject *parent = 0);
+    explicit PropertySyncer(QObject *parent = nullptr);
     ~PropertySyncer();
 
     /** Add an object that should be monitored for to be synced property changes. */

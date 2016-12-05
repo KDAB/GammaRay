@@ -119,7 +119,7 @@ template<typename T>
 T *findParentOfType(QObject *object)
 {
     if (!object)
-        return 0;
+        return nullptr;
     if (qobject_cast<T *>(object))
         return qobject_cast<T *>(object);
     return findParentOfType<T>(object->parent());

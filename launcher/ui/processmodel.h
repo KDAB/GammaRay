@@ -41,7 +41,7 @@ class ProcessModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit ProcessModel(QObject *parent = 0);
+    explicit ProcessModel(QObject *parent = nullptr);
     virtual ~ProcessModel();
 
     void setProcesses(const ProcDataList &processes);

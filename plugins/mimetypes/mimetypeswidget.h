@@ -43,7 +43,7 @@ class MimeTypesWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MimeTypesWidget(QWidget *parent = 0);
+    explicit MimeTypesWidget(QWidget *parent = nullptr);
     ~MimeTypesWidget();
 
 private:

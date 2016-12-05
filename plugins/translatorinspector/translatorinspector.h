@@ -53,7 +53,7 @@ class TranslatorInspector : public TranslatorInspectorInterface
     Q_INTERFACES(GammaRay::TranslatorInspectorInterface)
 
 public:
-    explicit TranslatorInspector(GammaRay::ProbeInterface *probe, QObject *parent = 0);
+    explicit TranslatorInspector(GammaRay::ProbeInterface *probe, QObject *parent = nullptr);
 
 public slots:
     void sendLanguageChangeEvent() Q_DECL_OVERRIDE;
@@ -85,7 +85,7 @@ class TranslatorInspectorFactory : public QObject,
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_translatorinspector.json")
 
 public:
-    explicit TranslatorInspectorFactory(QObject *parent = 0)
+    explicit TranslatorInspectorFactory(QObject *parent = nullptr)
         : QObject(parent) {}
 };
 }

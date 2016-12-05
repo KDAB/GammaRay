@@ -89,7 +89,7 @@ public:
      * Constructor.
      * @param parent is the parent object for this instance.
      */
-    explicit ObjectTypeFilterProxyModel(QObject *parent = 0)
+    explicit ObjectTypeFilterProxyModel(QObject *parent = nullptr)
         : ObjectFilterProxyModelBase(parent)
     {
     }

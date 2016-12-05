@@ -113,7 +113,7 @@ void *MetaObject::castTo(void *object, const QString &baseClass) const
 MetaObject *MetaObject::superClass(int index) const
 {
     if (m_baseClasses.size() <= index)
-        return 0;
+        return nullptr;
     return m_baseClasses[index];
 }
 

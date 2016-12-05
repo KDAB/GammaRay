@@ -53,7 +53,7 @@ class StyleInspector : public StyleInspectorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::StyleInspectorInterface)
 public:
-    explicit StyleInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit StyleInspector(ProbeInterface *probe, QObject *parent = nullptr);
     virtual ~StyleInspector();
 
 private slots:
@@ -76,7 +76,7 @@ class StyleInspectorFactory : public QObject, public StandardToolFactory<QStyle,
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_styleinspector.json")
 
 public:
-    explicit StyleInspectorFactory(QObject *parent = 0)
+    explicit StyleInspectorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

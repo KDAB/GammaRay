@@ -45,7 +45,7 @@ class FontBrowserServer : public FontBrowserInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::FontBrowserInterface)
 public:
-    explicit FontBrowserServer(ProbeInterface *probe, QObject *parent = 0);
+    explicit FontBrowserServer(ProbeInterface *probe, QObject *parent = nullptr);
 
 private slots:
     void updateFonts();

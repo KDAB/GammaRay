@@ -102,8 +102,8 @@ void GdbInjector::readyReadStandardError()
 
     if (mManualError) {
         m_process->kill();
-        disconnect(m_process.data(), SIGNAL(readyReadStandardError()), this, 0);
-        disconnect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, 0);
+        disconnect(m_process.data(), SIGNAL(readyReadStandardError()), this, nullptr);
+        disconnect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, nullptr);
         mProcessError = QProcess::FailedToStart;
         return;
     }

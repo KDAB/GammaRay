@@ -85,7 +85,7 @@ class GAMMARAY_UI_EXPORT ClientToolManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit ClientToolManager(QObject *parent = 0);
+    explicit ClientToolManager(QObject *parent = nullptr);
     ~ClientToolManager();
 
     void setToolParentWidget(QWidget *parent);

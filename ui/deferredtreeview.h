@@ -50,7 +50,7 @@ class GAMMARAY_UI_EXPORT DeferredTreeView : public QTreeView
     Q_OBJECT
 
 public:
-    explicit DeferredTreeView(QWidget *parent = 0);
+    explicit DeferredTreeView(QWidget *parent = nullptr);
 
     void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 

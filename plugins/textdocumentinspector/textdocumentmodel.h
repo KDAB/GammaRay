@@ -46,7 +46,7 @@ class TextDocumentModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    explicit TextDocumentModel(QObject *parent = 0);
+    explicit TextDocumentModel(QObject *parent = nullptr);
 
     enum Roles {
         FormatRole = UserRole,

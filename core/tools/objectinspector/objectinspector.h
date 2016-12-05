@@ -46,7 +46,7 @@ class ObjectInspector : public QObject
 {
     Q_OBJECT
 public:
-    explicit ObjectInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit ObjectInspector(ProbeInterface *probe, QObject *parent = nullptr);
 
 private slots:
     void objectSelected(const QModelIndex &index);

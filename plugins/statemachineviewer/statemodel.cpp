@@ -47,7 +47,7 @@ class StateModelPrivate
     StateModelPrivate(StateModel *qq)
         : q_ptr(qq)
         , m_stateMachineWatcher(new StateMachineWatcher(qq))
-        , m_stateMachine(0)
+        , m_stateMachine(nullptr)
     {
         qq->connect(m_stateMachineWatcher, SIGNAL(stateEntered(QAbstractState*)),
                     qq, SLOT(stateConfigurationChanged()));
@@ -84,7 +84,7 @@ class StateModelPrivate
 QList<QObject *> StateModelPrivate::children(QObject *parent) const
 {
     QList<QObject *> result;
-    if (parent == 0)
+    if (parent == nullptr)
         parent = m_stateMachine;
 
     // if the state machine is not yet set, return an empty list
@@ -141,7 +141,7 @@ void StateModelPrivate::handleMachineDestroyed(QObject *)
     Q_Q(StateModel);
 
     q->beginResetModel();
-    m_stateMachine = 0;
+    m_stateMachine = nullptr;
     q->endResetModel();
 }
 
@@ -251,7 +251,7 @@ QModelIndex StateModel::index(int row, int column, const QModelIndex &parent) co
     if (row < 0 || column < 0 || column > 1)
         return QModelIndex();
 
-    QObject *internalPointer = 0;
+    QObject *internalPointer = nullptr;
     if (!parent.isValid()) {
         internalPointer = d->m_stateMachine;
     } else {

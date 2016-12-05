@@ -45,7 +45,7 @@ class GraphViewerWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit GraphViewerWidget(QWidget *parent = 0);
+    explicit GraphViewerWidget(QWidget *parent = nullptr);
     virtual ~GraphViewerWidget();
 
 private:

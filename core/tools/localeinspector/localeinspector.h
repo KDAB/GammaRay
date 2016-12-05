@@ -34,7 +34,7 @@ class LocaleInspector : public QObject
 {
     Q_OBJECT
 public:
-    explicit LocaleInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit LocaleInspector(ProbeInterface *probe, QObject *parent = nullptr);
 };
 
 class LocaleInspectorFactory : public QObject, public StandardToolFactory<QObject, LocaleInspector>

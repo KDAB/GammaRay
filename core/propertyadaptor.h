@@ -43,7 +43,7 @@ class GAMMARAY_CORE_EXPORT PropertyAdaptor : public QObject
 {
     Q_OBJECT
 public:
-    explicit PropertyAdaptor(QObject *parent = 0);
+    explicit PropertyAdaptor(QObject *parent = nullptr);
     ~PropertyAdaptor();
 
     /** Returns the object instance who's properties this accesses. */

@@ -235,7 +235,7 @@ static bool isGoodCandidateItem(QQuickItem *item)
 QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     : QuickInspectorInterface(parent)
     , m_probe(probe)
-    , m_currentSgNode(0)
+    , m_currentSgNode(nullptr)
     , m_itemModel(new QuickItemModel(this))
     , m_sgModel(new QuickSceneGraphModel(this))
     , m_itemPropertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.QuickItem"),
@@ -313,7 +313,7 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     }
 
     if (m_window) {
-        disconnect(m_window, 0, this, 0);
+        disconnect(m_window, nullptr, this, nullptr);
     }
 
     m_window = window;
@@ -631,7 +631,7 @@ void QuickInspector::sgSelectionChanged(const QItemSelection &selection)
 void QuickInspector::sgNodeDeleted(QSGNode *node)
 {
     if (m_currentSgNode == node)
-        m_sgPropertyController->setObject(0);
+        m_sgPropertyController->setObject(nullptr);
 }
 
 void QuickInspector::requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode)
@@ -732,7 +732,7 @@ bool QuickInspector::eventFilter(QObject *receiver, QEvent *event)
 
 void QuickInspector::registerMetaTypes()
 {
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQuickWindow, QWindow);
     MO_ADD_PROPERTY(QQuickWindow, bool, clearBeforeRendering, setClearBeforeRendering);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)

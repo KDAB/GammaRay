@@ -36,7 +36,7 @@ class StandardPathsModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit StandardPathsModel(QObject *parent = 0);
+    explicit StandardPathsModel(QObject *parent = nullptr);
     ~StandardPathsModel();
 
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;

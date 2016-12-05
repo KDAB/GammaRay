@@ -36,7 +36,7 @@ class WebInspector : public QObject
 {
     Q_OBJECT
 public:
-    explicit WebInspector(GammaRay::ProbeInterface *probe, QObject *parent = 0);
+    explicit WebInspector(GammaRay::ProbeInterface *probe, QObject *parent = nullptr);
 
 private slots:
     void objectAdded(QObject *obj);
@@ -49,7 +49,7 @@ class WebInspectorFactory : public QObject, public ToolFactory
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_webinspector.json")
 
 public:
-    explicit WebInspectorFactory(QObject *parent = 0);
+    explicit WebInspectorFactory(QObject *parent = nullptr);
     QString id() const Q_DECL_OVERRIDE;
     void init(ProbeInterface *probe) Q_DECL_OVERRIDE;
 };

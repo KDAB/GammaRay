@@ -31,7 +31,7 @@
 
 using namespace GammaRay;
 
-UiIntegration *UiIntegration::s_uiIntegrationInstance = 0;
+UiIntegration *UiIntegration::s_uiIntegrationInstance = nullptr;
 
 UiIntegration::UiIntegration(QObject *parent)
     : QObject(parent)
@@ -42,7 +42,7 @@ UiIntegration::UiIntegration(QObject *parent)
 
 UiIntegration::~UiIntegration()
 {
-    s_uiIntegrationInstance = 0;
+    s_uiIntegrationInstance = nullptr;
 }
 
 UiIntegration *UiIntegration::instance()

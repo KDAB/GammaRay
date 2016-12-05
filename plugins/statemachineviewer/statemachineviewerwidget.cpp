@@ -139,7 +139,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
     : QWidget(parent, f)
     , m_ui(new Ui::StateMachineViewerWidget)
     , m_stateManager(this)
-    , m_machine(0)
+    , m_machine(nullptr)
     , m_showLog(false)
 {
     ObjectBroker::registerClientObjectFactoryCallback<StateMachineViewerInterface *>(
@@ -332,7 +332,7 @@ void StateMachineViewerWidget::stateAdded(const StateId stateId, const StateId p
         return;
 
     KDSME::State *parentState = m_idToStateMap.value(parentId);
-    KDSME::State *state = 0;
+    KDSME::State *state = nullptr;
     if (type == StateMachineState)
         state = m_machine = new KDSME::StateMachine;
     else if (type == GammaRay::FinalState)
@@ -409,7 +409,7 @@ void StateMachineViewerWidget::clearGraph()
 {
     IF_DEBUG(qDebug() << Q_FUNC_INFO);
 
-    m_stateMachineView->scene()->setRootState(0);
+    m_stateMachineView->scene()->setRootState(nullptr);
 
     m_idToStateMap.clear();
     m_idToTransitionMap.clear();

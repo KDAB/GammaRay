@@ -45,7 +45,7 @@ class MetaObjectBrowser : public QObject
     Q_OBJECT
 
 public:
-    explicit MetaObjectBrowser(ProbeInterface *probe, QObject *parent = 0);
+    explicit MetaObjectBrowser(ProbeInterface *probe, QObject *parent = nullptr);
 
 public Q_SLOTS:
     void rescanMetaTypes();

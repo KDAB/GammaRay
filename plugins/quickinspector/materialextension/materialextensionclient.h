@@ -38,7 +38,7 @@ class MaterialExtensionClient : public MaterialExtensionInterface
     Q_INTERFACES(GammaRay::MaterialExtensionInterface)
 
 public:
-    explicit MaterialExtensionClient(const QString &name, QObject *parent = 0);
+    explicit MaterialExtensionClient(const QString &name, QObject *parent = nullptr);
     virtual ~MaterialExtensionClient();
 
 public slots:

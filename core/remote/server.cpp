@@ -52,7 +52,7 @@ using namespace std;
 
 Server::Server(QObject *parent)
     : Endpoint(parent)
-    , m_serverDevice(0)
+    , m_serverDevice(nullptr)
     , m_nextAddress(endpointAddress())
     , m_broadcastTimer(new QTimer(this))
     , m_signalMapper(new MultiSignalMapper(this))

@@ -41,7 +41,7 @@ using namespace GammaRay;
 namespace GammaRay {
 struct ModelTester::ModelTestResult {
     ModelTestResult()
-        : modelTest(0)
+        : modelTest(nullptr)
     {
     }
 

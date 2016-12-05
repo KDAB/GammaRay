@@ -36,7 +36,7 @@ class WebViewModel : public ObjectFilterProxyModelBase
 {
     Q_OBJECT
 public:
-    explicit WebViewModel(QObject *parent = 0);
+    explicit WebViewModel(QObject *parent = nullptr);
     ~WebViewModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

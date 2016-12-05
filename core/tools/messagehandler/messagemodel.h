@@ -61,7 +61,7 @@ class MessageModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit MessageModel(QObject *parent = 0);
+    explicit MessageModel(QObject *parent = nullptr);
     ~MessageModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

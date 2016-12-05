@@ -56,7 +56,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ModelInspectorWidget)
     , m_stateManager(this)
-    , m_interface(0)
+    , m_interface(nullptr)
 {
     ui->setupUi(this);
 

@@ -168,9 +168,9 @@ ClientToolManager* ClientToolManager::s_instance = Q_NULLPTR;
 
 ClientToolManager::ClientToolManager(QObject *parent)
     : QObject(parent)
-    , m_parentWidget(0)
-    , m_model(0)
-    , m_selectionModel(0)
+    , m_parentWidget(nullptr)
+    , m_model(nullptr)
+    , m_selectionModel(nullptr)
 {
     Q_ASSERT(!s_instance);
     s_instance = this;
@@ -195,8 +195,8 @@ void ClientToolManager::clear()
         delete it.value().data();
     m_tools.clear();
     if (m_remote)
-        disconnect(m_remote, 0, this, 0);
-    m_remote = 0;
+        disconnect(m_remote, nullptr, this, nullptr);
+    m_remote = nullptr;
     emit reset();
 }
 
@@ -229,16 +229,16 @@ QWidget *ClientToolManager::widgetForId(const QString &toolId) const
 QWidget *ClientToolManager::widgetForIndex(int index) const
 {
     if (index < 0 || index >= m_tools.size())
-        return 0;
+        return nullptr;
     const ToolInfo &tool = m_tools.at(index);
     if (!tool.isEnabled())
-        return 0;
+        return nullptr;
     const WidgetsHash::const_iterator it = m_widgets.constFind(tool.id());
     if (it != m_widgets.constEnd() && it.value())
         return it.value();
     ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id());
     if (!factory)
-        return 0;
+        return nullptr;
     if (s_pluginRepository()->uninitializedTools.contains(factory)) {
         factory->initUi();
         s_pluginRepository()->uninitializedTools.remove(factory);

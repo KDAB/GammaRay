@@ -50,8 +50,8 @@ public:
     void setPixelMetric(PixelMetric metric, int value);
     void setStyleHint(StyleHint hint, int value);
 
-    int pixelMetric(PixelMetric metric, const QStyleOption *option = 0,
-                    const QWidget *widget = 0) const Q_DECL_OVERRIDE;
+    int pixelMetric(PixelMetric metric, const QStyleOption *option = nullptr,
+                    const QWidget *widget = nullptr) const Q_DECL_OVERRIDE;
     int styleHint(QStyle::StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const Q_DECL_OVERRIDE;
 
 private:

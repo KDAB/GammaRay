@@ -63,10 +63,10 @@ GAMMARAY_COMMON_EXPORT QObject *objectInternal(const QString &name,
  * Use this if multiple objects of the given type have been registered.
  * Otherwise the function below is simpler and more failsafe.
  *
- * NOTE: the "T = 0" is just to ensure a pointer type is given.
+ * NOTE: the "T = nullptr" is just to ensure a pointer type is given.
  */
 template<class T>
-T object(const QString &name, T = 0)
+T object(const QString &name, T = nullptr)
 {
     T ret = qobject_cast<T>(objectInternal(name, QByteArray(qobject_interface_iid<T>())));
     Q_ASSERT(ret);
@@ -81,10 +81,10 @@ T object(const QString &name, T = 0)
  *
  * In most cases this is the simplest way for tools to get an object.
  *
- * NOTE: the "T = 0" is just to ensure a pointer type is given.
+ * NOTE: the "T = nullptr" is just to ensure a pointer type is given.
  */
 template<class T>
-T object(T = 0)
+T object(T = nullptr)
 {
     const QByteArray interfaceName(qobject_interface_iid<T>());
     T ret = qobject_cast<T>(objectInternal(QString::fromUtf8(interfaceName), interfaceName));
@@ -101,10 +101,10 @@ GAMMARAY_COMMON_EXPORT void registerClientObjectFactoryCallbackInternal(const QB
 /**
  * Register a callback for a factory of a given interface to create remote object stubs for the given type.
  *
- * NOTE: the "T = 0" is just to ensure a pointer type is given.
+ * NOTE: the "T = nullptr" is just to ensure a pointer type is given.
  */
 template<class T>
-void registerClientObjectFactoryCallback(ClientObjectFactoryCallback callback, T = 0)
+void registerClientObjectFactoryCallback(ClientObjectFactoryCallback callback, T = nullptr)
 {
     registerClientObjectFactoryCallbackInternal(QByteArray(qobject_interface_iid<T>()), callback);
 }

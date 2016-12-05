@@ -49,7 +49,7 @@ class QuickSceneGraphModel : public ObjectModelBase<QAbstractItemModel>
 {
     Q_OBJECT
 public:
-    explicit QuickSceneGraphModel(QObject *parent = 0);
+    explicit QuickSceneGraphModel(QObject *parent = nullptr);
     ~QuickSceneGraphModel();
 
     void setWindow(QQuickWindow *window);

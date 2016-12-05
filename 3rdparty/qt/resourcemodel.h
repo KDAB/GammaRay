@@ -66,8 +66,8 @@ public:
     };
 
     ResourceModel(const QStringList &nameFilters, QDir::Filters filters,
-              QDir::SortFlags sort, QObject *parent = 0);
-    explicit ResourceModel(QObject *parent = 0);
+              QDir::SortFlags sort, QObject *parent = nullptr);
+    explicit ResourceModel(QObject *parent = nullptr);
     ~ResourceModel();
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
@@ -134,7 +134,7 @@ public Q_SLOTS:
     void refresh(const QModelIndex &parent = QModelIndex());
 
 protected:
-    ResourceModel(ResourceModelPrivate &, QObject *parent = 0);
+    ResourceModel(ResourceModelPrivate &, QObject *parent = nullptr);
     friend class QFileDialogPrivate;
 
 private:

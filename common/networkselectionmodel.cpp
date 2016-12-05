@@ -70,7 +70,7 @@ static QAbstractItemModel *findSourceModel(QAbstractItemModel *model)
             return findSourceModel(proxy->sourceModel());
     }
 
-    return 0;
+    return nullptr;
 }
 
 NetworkSelectionModel::NetworkSelectionModel(const QString &objectName, QAbstractItemModel *model,

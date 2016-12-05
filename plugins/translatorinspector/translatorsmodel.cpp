@@ -132,7 +132,7 @@ void TranslatorsModel::unregisterTranslator(TranslatorWrapper *translator)
                  qPrintable(Util::addressToString(translator)));
         return;
     }
-    disconnect(translator->model(), 0, this, 0);
+    disconnect(translator->model(), nullptr, this, nullptr);
     beginRemoveRows(QModelIndex(), index, index);
     m_translators.removeAt(index);
     endRemoveRows();

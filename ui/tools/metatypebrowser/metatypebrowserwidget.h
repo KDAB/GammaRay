@@ -42,7 +42,7 @@ class MetaTypeBrowserWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MetaTypeBrowserWidget(QWidget *parent = 0);
+    explicit MetaTypeBrowserWidget(QWidget *parent = nullptr);
     ~MetaTypeBrowserWidget();
 
 private slots:

@@ -37,7 +37,7 @@ class MessageHandlerClient : public MessageHandlerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::MessageHandlerInterface)
 public:
-    explicit MessageHandlerClient(QObject *parent = 0);
+    explicit MessageHandlerClient(QObject *parent = nullptr);
 };
 }
 

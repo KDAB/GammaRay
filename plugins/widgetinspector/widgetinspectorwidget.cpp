@@ -71,7 +71,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::WidgetInspectorWidget)
     , m_stateManager(this)
-    , m_inspector(0)
+    , m_inspector(nullptr)
     , m_remoteView(new RemoteViewWidget(this))
     , m_3dView(Q_NULLPTR)
 {

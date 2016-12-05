@@ -40,7 +40,7 @@ class ProxyFactoryBase : public QObject
 {
     Q_OBJECT
 public:
-    explicit ProxyFactoryBase(const PluginInfo &pluginInfo, QObject *parent = 0);
+    explicit ProxyFactoryBase(const PluginInfo &pluginInfo, QObject *parent = nullptr);
     ~ProxyFactoryBase();
 
     PluginInfo pluginInfo() const;
@@ -60,7 +60,7 @@ template<typename IFace>
 class ProxyFactory : public ProxyFactoryBase, public IFace
 {
 public:
-    explicit inline ProxyFactory(const PluginInfo &pluginInfo, QObject *parent = 0)
+    explicit inline ProxyFactory(const PluginInfo &pluginInfo, QObject *parent = nullptr)
         : ProxyFactoryBase(pluginInfo, parent) {}
     inline ~ProxyFactory() {}
 

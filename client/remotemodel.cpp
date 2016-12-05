@@ -42,7 +42,7 @@
 
 using namespace GammaRay;
 
-void(*RemoteModel::s_registerClientCallback)() = 0;
+void(*RemoteModel::s_registerClientCallback)() = nullptr;
 
 RemoteModel::Node::~Node()
 {
@@ -658,7 +658,7 @@ RemoteModel::Node *RemoteModel::nodeForIndex(const Protocol::ModelIndex &index) 
     Node *node = m_root;
     for (int i = 0; i < index.size(); ++i) {
         if (node->children.size() <= index[i].first)
-            return 0;
+            return nullptr;
         node = node->children.at(index[i].first);
     }
     return node;
@@ -821,7 +821,7 @@ void RemoteModel::doInsertRows(RemoteModel::Node *parentNode, int first, int las
         m_verticalHeaders.insert(first, last - first + 1, QHash<int, QVariant>());
 
     // allocate rows in the right spot
-    parentNode->children.insert(first, last - first + 1, 0);
+    parentNode->children.insert(first, last - first + 1, nullptr);
 
     // create nodes for the new rows
     for (int i = first; i <= last; ++i) {
@@ -878,7 +878,7 @@ void RemoteModel::doMoveRows(RemoteModel::Node *sourceParentNode, int sourceStar
     beginMoveRows(qmiSourceParent, sourceStart, sourceEnd, qmiDestParent, destStart);
 
     // make room in the destination
-    destParentNode->children.insert(destStart, amount, 0);
+    destParentNode->children.insert(destStart, amount, nullptr);
 
     // move nodes
     for (int i = 0; i < amount; ++i) {

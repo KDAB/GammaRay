@@ -48,12 +48,12 @@ using namespace GammaRay;
 ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
     : ModelInspectorInterface(parent)
     , m_probe(probe)
-    , m_modelModel(0)
+    , m_modelModel(nullptr)
     , m_selectionModelsModel(new SelectionModelModel(this))
     , m_selectionModelsSelectionModel(Q_NULLPTR)
-    , m_modelContentSelectionModel(0)
+    , m_modelContentSelectionModel(nullptr)
     , m_modelContentProxyModel(new ModelContentProxyModel(this))
-    , m_modelTester(0)
+    , m_modelTester(nullptr)
 {
     auto modelModelSource = new ModelModel(this);
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)),

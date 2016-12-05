@@ -51,7 +51,7 @@ class SceneInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SceneInspectorWidget(QWidget *parent = 0);
+    explicit SceneInspectorWidget(QWidget *parent = nullptr);
     ~SceneInspectorWidget();
 
 private slots:

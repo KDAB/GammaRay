@@ -65,7 +65,7 @@ class PropertyTestObject : public QObject
     Q_PROPERTY(VariantPropertyObject* variantPropertyObject READ variantPropertyObject)
     Q_PROPERTY(ChangingPropertyObject* changingPropertyObject READ changingPropertyObject)
 public:
-    explicit PropertyTestObject(QObject *parent = 0)
+    explicit PropertyTestObject(QObject *parent = nullptr)
         : QObject(parent)
         , p1(0) {}
     int intProp() { return p1; }

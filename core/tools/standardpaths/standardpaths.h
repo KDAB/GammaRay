@@ -36,7 +36,7 @@ class StandardPaths : public QObject
 {
     Q_OBJECT
 public:
-    explicit StandardPaths(ProbeInterface *probe, QObject *parent = 0);
+    explicit StandardPaths(ProbeInterface *probe, QObject *parent = nullptr);
     ~StandardPaths();
 };
 

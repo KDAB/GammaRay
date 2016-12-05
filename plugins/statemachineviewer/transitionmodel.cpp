@@ -47,7 +47,7 @@ class TransitionModelPrivate
 {
     TransitionModelPrivate(TransitionModel *qq)
         : q_ptr(qq)
-        , m_state(0)
+        , m_state(nullptr)
     {
     }
 
@@ -64,7 +64,7 @@ class TransitionModelPrivate
 QList<QObject *> TransitionModelPrivate::children(QObject *parent) const
 {
     QList<QObject *> result;
-    if (parent == 0)
+    if (parent == nullptr)
         parent = m_state;
 
     foreach (QObject *o, parent->children()) {
@@ -164,7 +164,7 @@ QModelIndex TransitionModel::index(int row, int column, const QModelIndex &paren
     if (row < 0 || column < 0 || column > 3)
         return QModelIndex();
 
-    QObject *internalPointer = 0;
+    QObject *internalPointer = nullptr;
     if (!parent.isValid()) {
         internalPointer = d->m_state;
     } else {

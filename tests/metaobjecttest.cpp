@@ -62,7 +62,7 @@ private slots:
         auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QThread"));
         QVERIFY(mo->propertyCount() >= 7); // depends on Qt version
 
-        MetaProperty *prop = 0;
+        MetaProperty *prop = nullptr;
         for (int i = 0; i < mo->propertyCount(); ++i) {
             prop = mo->propertyAt(i);
             QVERIFY(prop);
@@ -85,7 +85,7 @@ private slots:
         QVERIFY(mo);
         QVERIFY(mo->propertyCount() >= 8); // depends on Qt version
 
-        MetaProperty *prop = 0;
+        MetaProperty *prop = nullptr;
         for (int i = 0; i < mo->propertyCount(); ++i) {
             prop = mo->propertyAt(i);
             QVERIFY(prop);
@@ -97,7 +97,7 @@ private slots:
         QCOMPARE(prop->name(), "libraryPaths");
         QCOMPARE(prop->typeName(), "QStringList");
         QCOMPARE(prop->isReadOnly(), true);
-        QCOMPARE(prop->value(0).toStringList(), QCoreApplication::libraryPaths());
+        QCOMPARE(prop->value(nullptr).toStringList(), QCoreApplication::libraryPaths());
     }
 };
 

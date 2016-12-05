@@ -49,7 +49,7 @@ MethodsExtension::MethodsExtension(PropertyController *controller)
     , m_model(new ObjectMethodModel(controller))
     , m_methodLogModel(new QStandardItemModel(this))
     , m_methodArgumentModel(new MethodArgumentModel(this))
-    , m_signalMapper(0)
+    , m_signalMapper(nullptr)
 {
     controller->registerModel(m_model, QStringLiteral("methods"));
     controller->registerModel(m_methodLogModel, QStringLiteral("methodLog"));
@@ -68,7 +68,7 @@ bool MethodsExtension::setQObject(QObject *object)
         return true;
     m_object = object;
 
-    m_model->setMetaObject(object ? object->metaObject() : 0);
+    m_model->setMetaObject(object ? object->metaObject() : nullptr);
 
     delete m_signalMapper;
     m_signalMapper = new MultiSignalMapper(this);
@@ -84,7 +84,7 @@ bool MethodsExtension::setQObject(QObject *object)
 
 bool MethodsExtension::setMetaObject(const QMetaObject *metaObject)
 {
-    m_object = 0;
+    m_object = nullptr;
     m_model->setMetaObject(metaObject);
     setHasObject(false);
     return true;

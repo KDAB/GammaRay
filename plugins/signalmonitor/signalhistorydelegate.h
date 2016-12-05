@@ -42,7 +42,7 @@ class SignalHistoryDelegate : public QStyledItemDelegate
     Q_PROPERTY(bool isActive READ isActive WRITE setActive NOTIFY isActiveChanged)
 
 public:
-    explicit SignalHistoryDelegate(QObject *parent = 0);
+    explicit SignalHistoryDelegate(QObject *parent = nullptr);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
                const QModelIndex &index) const Q_DECL_OVERRIDE;

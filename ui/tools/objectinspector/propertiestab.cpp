@@ -50,8 +50,8 @@ using namespace GammaRay;
 PropertiesTab::PropertiesTab(PropertyWidget *parent)
     : QWidget(parent)
     , m_ui(new Ui_PropertiesTab)
-    , m_interface(0)
-    , m_newPropertyValue(0)
+    , m_interface(nullptr)
+    , m_newPropertyValue(nullptr)
 {
     m_ui->setupUi(this);
     m_ui->propertyView->header()->setObjectName("propertyViewHeader");

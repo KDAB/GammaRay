@@ -68,7 +68,7 @@ class GAMMARAY_UI_EXPORT ItemDelegate : public QStyledItemDelegate, public ItemD
     Q_OBJECT
 
 public:
-    explicit ItemDelegate(QObject *parent = 0);
+    explicit ItemDelegate(QObject *parent = nullptr);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
                const QModelIndex &index) const Q_DECL_OVERRIDE;

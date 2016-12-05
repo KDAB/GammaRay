@@ -54,7 +54,7 @@ class WlCompositorInspector: public WlCompositorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::WlCompositorInterface)
 public:
-    explicit WlCompositorInspector(ProbeInterface *probe, QObject *parent = 0);
+    explicit WlCompositorInspector(ProbeInterface *probe, QObject *parent = nullptr);
     ~WlCompositorInspector();
 
 public slots:
@@ -86,7 +86,7 @@ class WlCompositorInspectorFactory: public QObject, public StandardToolFactory<Q
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_wlcompositorinspector.json")
 
 public:
-    explicit WlCompositorInspectorFactory(QObject *parent = 0) : QObject(parent)
+    explicit WlCompositorInspectorFactory(QObject *parent = nullptr) : QObject(parent)
     {
     }
 };

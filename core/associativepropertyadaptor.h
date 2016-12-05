@@ -39,7 +39,7 @@ class AssociativePropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit AssociativePropertyAdaptor(QObject *parent = 0);
+    explicit AssociativePropertyAdaptor(QObject *parent = nullptr);
     ~AssociativePropertyAdaptor();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)

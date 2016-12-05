@@ -34,7 +34,7 @@
 using namespace GammaRay;
 
 MetaProperty::MetaProperty(const char *name)
-    : m_class(0)
+    : m_class(nullptr)
     , m_name(name)
 {
 }

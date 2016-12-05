@@ -42,7 +42,7 @@ class SignalHistoryView : public DeferredTreeView
     Q_PROPERTY(SignalHistoryDelegate *eventDelegate READ eventDelegate FINAL CONSTANT)
 
 public:
-    explicit SignalHistoryView(QWidget *parent = 0);
+    explicit SignalHistoryView(QWidget *parent = nullptr);
 
     void setEventScrollBar(QScrollBar *scrollBar);
     QScrollBar *eventScrollBar() const { return m_eventScrollBar; }

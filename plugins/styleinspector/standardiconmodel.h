@@ -41,7 +41,7 @@ class StandardIconModel : public AbstractStyleElementModel
 {
     Q_OBJECT
 public:
-    explicit StandardIconModel(QObject *parent = 0);
+    explicit StandardIconModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

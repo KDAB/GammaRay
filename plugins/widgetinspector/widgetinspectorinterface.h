@@ -53,7 +53,7 @@ public:
     };
     Q_DECLARE_FLAGS(Features, Feature)
 
-    explicit WidgetInspectorInterface(QObject *parent = 0);
+    explicit WidgetInspectorInterface(QObject *parent = nullptr);
     virtual ~WidgetInspectorInterface();
 
     Features features() const;

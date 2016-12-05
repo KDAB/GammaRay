@@ -39,7 +39,7 @@ class SequentialPropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit SequentialPropertyAdaptor(QObject *parent = 0);
+    explicit SequentialPropertyAdaptor(QObject *parent = nullptr);
     ~SequentialPropertyAdaptor();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)

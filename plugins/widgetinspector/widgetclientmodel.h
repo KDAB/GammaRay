@@ -37,7 +37,7 @@ class WidgetClientModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    explicit WidgetClientModel(QObject *parent = 0);
+    explicit WidgetClientModel(QObject *parent = nullptr);
     ~WidgetClientModel();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

@@ -40,7 +40,7 @@ class MethodArgumentModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit MethodArgumentModel(QObject *parent = 0);
+    explicit MethodArgumentModel(QObject *parent = nullptr);
     void setMethod(const QMetaMethod &method);
     QVector<MethodArgument> arguments() const;
 

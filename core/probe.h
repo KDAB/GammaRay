@@ -188,7 +188,7 @@ private:
     static void createProbe(bool findExisting);
     void resendServerAddress();
 
-    explicit Probe(QObject *parent = 0);
+    explicit Probe(QObject *parent = nullptr);
     static QAtomicPointer<Probe> s_instance;
 
     /** Set up all needed signal spy callbacks. */

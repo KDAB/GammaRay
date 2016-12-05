@@ -43,8 +43,8 @@
 namespace GammaRay {
 struct ObjectlBrokerData {
     ObjectlBrokerData()
-        : modelCallback(0)
-        , selectionCallback(0) {}
+        : modelCallback(nullptr)
+        , selectionCallback(nullptr) {}
     QHash<QString, QObject *> objects;
     QHash<QString, QAbstractItemModel *> models;
     QHash<QAbstractItemModel *, QItemSelectionModel *> selectionModels;
@@ -82,7 +82,7 @@ QObject *ObjectBroker::objectInternal(const QString &name, const QByteArray &typ
 
     // Below here only valid for clients!
     // Remote/probe side should have registered the object directly
-    QObject *obj = 0;
+    QObject *obj = nullptr;
 
     if (!type.isEmpty()) {
         Q_ASSERT(s_objectBroker()->clientObjectFactories.contains(type));
@@ -96,7 +96,7 @@ QObject *ObjectBroker::objectInternal(const QString &name, const QByteArray &typ
 
     Q_ASSERT(obj);
     // ensure it was registered
-    Q_ASSERT_X(s_objectBroker()->objects.value(name, 0) == obj, Q_FUNC_INFO,
+    Q_ASSERT_X(s_objectBroker()->objects.value(name, nullptr) == obj, Q_FUNC_INFO,
                qPrintable(QStringLiteral("Object %1 was not registered in the broker.").arg(name)));
 
     return obj;
@@ -136,7 +136,7 @@ QAbstractItemModel *ObjectBroker::model(const QString &name)
             return model;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 void ObjectBroker::setModelFactoryCallback(ObjectBroker::ModelFactoryCallback callback)
@@ -189,7 +189,7 @@ QItemSelectionModel *ObjectBroker::selectionModel(QAbstractItemModel *model)
     if (s_objectBroker()->selectionCallback) {
         QAbstractItemModel *sourceModel = sourceModelForProxy(model);
 
-        QItemSelectionModel *selectionModel = 0;
+        QItemSelectionModel *selectionModel = nullptr;
         if (sourceModel == model) {
             selectionModel = s_objectBroker()->selectionCallback(sourceModel);
             s_objectBroker()->ownedObjects.push_back(selectionModel);
@@ -203,7 +203,7 @@ QItemSelectionModel *ObjectBroker::selectionModel(QAbstractItemModel *model)
             return selectionModel;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 void ObjectBroker::setSelectionModelFactoryCallback(

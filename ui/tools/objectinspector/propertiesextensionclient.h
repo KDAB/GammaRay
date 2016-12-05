@@ -37,7 +37,7 @@ class PropertiesExtensionClient : public PropertiesExtensionInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::PropertiesExtensionInterface)
 public:
-    explicit PropertiesExtensionClient(const QString &name, QObject *parent = 0);
+    explicit PropertiesExtensionClient(const QString &name, QObject *parent = nullptr);
     ~PropertiesExtensionClient();
 
 public slots:

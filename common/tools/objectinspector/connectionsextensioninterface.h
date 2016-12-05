@@ -37,7 +37,7 @@ class ConnectionsExtensionInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit ConnectionsExtensionInterface(const QString &name, QObject *parent = 0);
+    explicit ConnectionsExtensionInterface(const QString &name, QObject *parent = nullptr);
     ~ConnectionsExtensionInterface();
 
     QString name() const;

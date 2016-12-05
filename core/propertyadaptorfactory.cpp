@@ -81,7 +81,7 @@ PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObjec
     }
 
     if (adaptors.isEmpty())
-        return 0;
+        return nullptr;
     if (adaptors.size() == 1) {
         adaptors.first()->setObject(oi);
         return adaptors.first();

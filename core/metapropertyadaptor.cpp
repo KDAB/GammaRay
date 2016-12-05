@@ -38,8 +38,8 @@ using namespace GammaRay;
 
 MetaPropertyAdaptor::MetaPropertyAdaptor(QObject *parent)
     : PropertyAdaptor(parent)
-    , m_metaObj(0)
-    , m_obj(0)
+    , m_metaObj(nullptr)
+    , m_obj(nullptr)
 {
 }
 
@@ -49,8 +49,8 @@ MetaPropertyAdaptor::~MetaPropertyAdaptor()
 
 void MetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
-    Q_ASSERT(m_metaObj == 0);
-    Q_ASSERT(m_obj == 0);
+    Q_ASSERT(m_metaObj == nullptr);
+    Q_ASSERT(m_obj == nullptr);
 
     switch (oi.type()) {
     case ObjectInstance::Object:

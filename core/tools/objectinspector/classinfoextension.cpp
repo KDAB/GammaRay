@@ -47,7 +47,7 @@ ClassInfoExtension::~ClassInfoExtension()
 
 bool ClassInfoExtension::setQObject(QObject *object)
 {
-    m_model->setMetaObject(object ? object->metaObject() : 0);
+    m_model->setMetaObject(object ? object->metaObject() : nullptr);
     return m_model->rowCount() > 0;
 }
 

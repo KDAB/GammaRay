@@ -50,7 +50,7 @@ class QuickScenePreviewWidget : public RemoteViewWidget
     Q_OBJECT
 
 public:
-    explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent = 0);
+    explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent = nullptr);
     ~QuickScenePreviewWidget();
 
     void restoreState(const QByteArray &state) Q_DECL_OVERRIDE;

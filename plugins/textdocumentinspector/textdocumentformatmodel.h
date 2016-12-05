@@ -37,7 +37,7 @@ class TextDocumentFormatModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit TextDocumentFormatModel(QObject *parent = 0);
+    explicit TextDocumentFormatModel(QObject *parent = nullptr);
 
     void setFormat(const QTextFormat &format);
 

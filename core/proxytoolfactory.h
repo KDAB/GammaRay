@@ -47,7 +47,7 @@ public:
     /**
      * @param path Path to the plugin spec file
      */
-    explicit ProxyToolFactory(const PluginInfo &pluginInfo, QObject *parent = 0);
+    explicit ProxyToolFactory(const PluginInfo &pluginInfo, QObject *parent = nullptr);
 
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;

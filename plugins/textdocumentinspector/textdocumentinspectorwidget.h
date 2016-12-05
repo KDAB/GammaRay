@@ -52,7 +52,7 @@ class TextDocumentInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TextDocumentInspectorWidget(QWidget *parent = 0);
+    explicit TextDocumentInspectorWidget(QWidget *parent = nullptr);
     ~TextDocumentInspectorWidget();
 
 private slots:

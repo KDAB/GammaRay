@@ -68,7 +68,7 @@ public:
     Q_ENUMS(RenderMode)
     Q_DECLARE_FLAGS(Features, Feature)
 
-    explicit QuickInspectorInterface(QObject *parent = 0);
+    explicit QuickInspectorInterface(QObject *parent = nullptr);
     ~QuickInspectorInterface();
 
 public slots:

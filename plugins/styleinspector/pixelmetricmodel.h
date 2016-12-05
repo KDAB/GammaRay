@@ -39,7 +39,7 @@ class PixelMetricModel : public AbstractStyleElementModel
 {
     Q_OBJECT
 public:
-    explicit PixelMetricModel(QObject *parent = 0);
+    explicit PixelMetricModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

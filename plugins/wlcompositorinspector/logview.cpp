@@ -270,7 +270,7 @@ public:
       QStaticText text;
       int *counter;
 
-      Line() : pid(0), counter(0)
+      Line() : pid(0), counter(nullptr)
       {
       }
 

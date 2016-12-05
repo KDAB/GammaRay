@@ -49,7 +49,7 @@ using namespace GammaRay;
 MethodsTab::MethodsTab(PropertyWidget *parent)
     : QWidget(parent)
     , m_ui(new Ui_MethodsTab)
-    , m_interface(0)
+    , m_interface(nullptr)
 {
     m_ui->setupUi(this);
     m_ui->methodView->header()->setObjectName("methodViewHeader");
@@ -109,7 +109,7 @@ void MethodsTab::methodContextMenu(const QPoint &pos)
     const QMetaMethod::MethodType methodType
         = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
     QMenu contextMenu;
-    QAction *invokeAction = 0, *connectToAction = 0;
+    QAction *invokeAction = nullptr, *connectToAction = nullptr;
     if (methodType == QMetaMethod::Slot || methodType == QMetaMethod::Method) {
         invokeAction = contextMenu.addAction(tr("Invoke"));
     } else if (methodType == QMetaMethod::Signal) {

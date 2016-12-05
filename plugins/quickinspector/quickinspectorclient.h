@@ -42,7 +42,7 @@ class QuickInspectorClient : public QuickInspectorInterface
     Q_INTERFACES(GammaRay::QuickInspectorInterface)
 
 public:
-    explicit QuickInspectorClient(QObject *parent = 0);
+    explicit QuickInspectorClient(QObject *parent = nullptr);
     ~QuickInspectorClient();
 
 public slots:

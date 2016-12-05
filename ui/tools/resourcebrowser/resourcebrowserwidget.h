@@ -48,7 +48,7 @@ class ResourceBrowserWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ResourceBrowserWidget(QWidget *parent = 0);
+    explicit ResourceBrowserWidget(QWidget *parent = nullptr);
     ~ResourceBrowserWidget();
 
 public slots:

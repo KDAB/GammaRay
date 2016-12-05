@@ -72,7 +72,7 @@ PropertyData QmlListPropertyAdaptor::propertyData(int index) const
     return pd;
 }
 
-QmlListPropertyAdaptorFactory *QmlListPropertyAdaptorFactory::s_instance = 0;
+QmlListPropertyAdaptorFactory *QmlListPropertyAdaptorFactory::s_instance = nullptr;
 
 PropertyAdaptor *QmlListPropertyAdaptorFactory::create(const ObjectInstance &oi,
                                                        QObject *parent) const

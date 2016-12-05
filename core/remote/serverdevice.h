@@ -42,7 +42,7 @@ class ServerDevice : public QObject
 {
     Q_OBJECT
 public:
-    explicit ServerDevice(QObject *parent = 0);
+    explicit ServerDevice(QObject *parent = nullptr);
     ~ServerDevice();
 
     void setServerAddress(const QUrl &serverAddress);
@@ -57,7 +57,7 @@ public:
      */
     virtual QUrl externalAddress() const = 0;
 
-    static ServerDevice *create(const QUrl &serverAddress, QObject *parent = 0);
+    static ServerDevice *create(const QUrl &serverAddress, QObject *parent = nullptr);
 
     /** Broadcast the given message on an appropriate channel, if backend supports broadcasting. */
     virtual void broadcast(const QByteArray &data);
@@ -73,9 +73,9 @@ template<typename ServerT>
 class ServerDeviceImpl : public ServerDevice
 {
 public:
-    explicit inline ServerDeviceImpl(QObject *parent = 0)
+    explicit inline ServerDeviceImpl(QObject *parent = nullptr)
         : ServerDevice(parent)
-        , m_server(0)
+        , m_server(nullptr)
     {
     }
 

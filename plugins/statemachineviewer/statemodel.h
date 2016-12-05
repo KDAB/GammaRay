@@ -48,7 +48,7 @@ public:
         IsInitialStateRole,
         StateObjectRole = ObjectModel::UserRole + 11
     };
-    explicit StateModel(QObject *parent = 0);
+    explicit StateModel(QObject *parent = nullptr);
     ~StateModel();
 
     void setStateMachine(QStateMachine *stateMachine);

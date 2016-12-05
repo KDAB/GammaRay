@@ -43,7 +43,7 @@ class WebInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WebInspectorWidget(QWidget *parent = 0);
+    explicit WebInspectorWidget(QWidget *parent = nullptr);
     ~WebInspectorWidget();
 
 private slots:

@@ -118,7 +118,7 @@ private:
 };
 
 template<typename T>
-PropertyControllerExtensionFactory<T> *PropertyControllerExtensionFactory<T>::s_instance = 0;
+PropertyControllerExtensionFactory<T> *PropertyControllerExtensionFactory<T>::s_instance = nullptr;
 ///@endcond
 }
 

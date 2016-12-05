@@ -49,7 +49,7 @@ class LaunchPage : public QWidget
 {
     Q_OBJECT
 public:
-    explicit LaunchPage(QWidget *parent = 0);
+    explicit LaunchPage(QWidget *parent = nullptr);
     ~LaunchPage();
 
     LaunchOptions launchOptions() const;

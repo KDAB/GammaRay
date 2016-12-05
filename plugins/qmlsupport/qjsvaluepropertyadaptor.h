@@ -37,7 +37,7 @@ class QJSValuePropertyAdaptor : public PropertyAdaptor
 {
     Q_OBJECT
 public:
-    explicit QJSValuePropertyAdaptor(QObject *parent = 0);
+    explicit QJSValuePropertyAdaptor(QObject *parent = nullptr);
     ~QJSValuePropertyAdaptor();
 
     int count() const Q_DECL_OVERRIDE;
@@ -47,7 +47,7 @@ public:
 class QJSValuePropertyAdaptorFactory : public AbstractPropertyAdaptorFactory
 {
 public:
-    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = 0) const Q_DECL_OVERRIDE;
+    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = nullptr) const Q_DECL_OVERRIDE;
     static QJSValuePropertyAdaptorFactory *instance();
 
 private:

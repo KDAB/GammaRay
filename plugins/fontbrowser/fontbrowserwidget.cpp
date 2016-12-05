@@ -48,8 +48,8 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::FontBrowserWidget)
     , m_stateManager(this)
-    , m_selectedFontModel(0)
-    , m_fontBrowser(0)
+    , m_selectedFontModel(nullptr)
+    , m_fontBrowser(nullptr)
 {
     ObjectBroker::registerClientObjectFactoryCallback<FontBrowserInterface *>(
         fontBrowserClientFactory);

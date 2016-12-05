@@ -34,7 +34,7 @@ class Bluetooth : public QObject
 {
     Q_OBJECT
 public:
-    explicit Bluetooth(ProbeInterface *probe, QObject *parent = 0);
+    explicit Bluetooth(ProbeInterface *probe, QObject *parent = nullptr);
 };
 
 class BluetoothFactory : public QObject, public StandardToolFactory<QObject, Bluetooth>
@@ -44,7 +44,7 @@ class BluetoothFactory : public QObject, public StandardToolFactory<QObject, Blu
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_bluetooth.json")
 
 public:
-    explicit BluetoothFactory(QObject *parent = 0)
+    explicit BluetoothFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }
