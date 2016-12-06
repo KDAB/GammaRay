@@ -32,6 +32,26 @@
 
 using namespace GammaRay;
 
+// The following commit in qtbase.git deprecated versioned style class in 5.7.0
+//   95a6dc1 - QStyleOption*V<N>: mark as Q_DECL_DEPRECATED
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+typedef QStyleOptionFrame QStyleOptionFrameCV;
+typedef QStyleOptionToolBox QStyleOptionToolBoxCV;
+typedef QStyleOptionTab QStyleOptionTabCV;
+typedef QStyleOptionTabBarBase QStyleOptionTabBarBaseCV;
+typedef QStyleOptionTabWidgetFrame QStyleOptionTabWidgetFrameCV;
+typedef QStyleOptionViewItem QStyleOptionViewItemCV;
+typedef QStyleOptionProgressBar QStyleOptionProgressBarCV;
+#else
+typedef QStyleOptionFrameV3 QStyleOptionFrameCV;
+typedef QStyleOptionToolBoxV2 QStyleOptionToolBoxCV;
+typedef QStyleOptionTabBarBaseV2 QStyleOptionTabBarBaseCV;
+typedef QStyleOptionTabV3 QStyleOptionTabCV;
+typedef QStyleOptionTabWidgetFrameV2 QStyleOptionTabWidgetFrameCV;
+typedef QStyleOptionViewItemV4 QStyleOptionViewItemCV;
+typedef QStyleOptionProgressBarV2 QStyleOptionProgressBarCV;
+#endif
+
 struct style_state_t {
     const char *name;
     QStyle::State state;
@@ -116,7 +136,7 @@ QStyleOption *StyleOption::makeComboBoxStyleOption()
 
 QStyleOption *StyleOption::makeFrameStyleOption()
 {
-    QStyleOptionFrameV3 *opt = new QStyleOptionFrameV3;
+    auto opt = new QStyleOptionFrameCV;
     opt->lineWidth = 1;
     opt->midLineWidth = 0;
     opt->frameShape = QFrame::StyledPanel;
@@ -142,9 +162,9 @@ QStyleOption *StyleOption::makeHeaderStyleOption()
 
 QStyleOption *StyleOption::makeItemViewStyleOption()
 {
-    QStyleOptionViewItemV4 *opt = new QStyleOptionViewItemV4;
+    auto opt = new QStyleOptionViewItemCV;
     opt->text = QStringLiteral("Text");
-    opt->features = QStyleOptionViewItemV2::HasDisplay;
+    opt->features = QStyleOptionViewItemCV::HasDisplay;
     return opt;
 }
 
@@ -157,7 +177,7 @@ QStyleOption *StyleOption::makeMenuStyleOption()
 
 QStyleOption *StyleOption::makeProgressBarStyleOption()
 {
-    QStyleOptionProgressBarV2 *opt = new QStyleOptionProgressBarV2;
+    auto opt = new QStyleOptionProgressBarCV;
     opt->minimum = 0;
     opt->maximum = 100;
     opt->progress = 42;
@@ -183,19 +203,19 @@ QStyleOption *StyleOption::makeSpinBoxStyleOption()
 
 QStyleOption *StyleOption::makeTabStyleOption()
 {
-    QStyleOptionTabV3 *opt = new QStyleOptionTabV3;
+    auto opt = new QStyleOptionTabCV;
     opt->text = QStringLiteral("Label");
     return opt;
 }
 
 QStyleOption *StyleOption::makeTabBarBaseStyleOption()
 {
-    return new QStyleOptionTabBarBaseV2;
+    return new QStyleOptionTabBarBaseCV;
 }
 
 QStyleOption *StyleOption::makeTabWidgetFrameStyleOption()
 {
-    QStyleOptionTabWidgetFrameV2 *opt = new QStyleOptionTabWidgetFrameV2;
+    auto opt = new QStyleOptionTabWidgetFrameCV;
     opt->lineWidth = 1;
     return opt;
 }
@@ -213,7 +233,7 @@ QStyleOption *StyleOption::makeTitleBarStyleOption()
 
 QStyleOption *StyleOption::makeToolBoxStyleOption()
 {
-    QStyleOptionToolBoxV2 *opt = new QStyleOptionToolBoxV2;
+    auto opt = new QStyleOptionToolBoxCV;
     opt->text = QStringLiteral("Label");
     return opt;
 }
