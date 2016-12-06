@@ -536,15 +536,19 @@ void QuickInspector::setCustomRenderMode(
     QMutexLocker lock(&m_pendingRenderMode.mutex);
     m_pendingRenderMode.mode = customRenderMode;
     m_pendingRenderMode.window = m_window;
-    if (!m_pendingRenderMode.connection) {
+    if (m_window && !m_pendingRenderMode.connection) {
         m_pendingRenderMode.connection = connect(m_window.data(), &QQuickWindow::beforeSynchronizing, this, &QuickInspector::applyRenderMode, Qt::DirectConnection);
     }
 
 #else
-    QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
-    winPriv->customRenderMode = renderModeToString(customRenderMode);
+    if (m_window) {
+        QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
+        winPriv->customRenderMode = renderModeToString(customRenderMode);
+    }
 #endif
-    m_window->update();
+    if (m_window) {
+        m_window->update();
+    }
 
 #else
     Q_UNUSED(customRenderMode);
