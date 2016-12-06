@@ -171,7 +171,9 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
     event->setWindow(m_eventReceiver);
 
 #else
-    auto event = new QTouchEvent(QEvent::Type(type), touchDeviceType, Qt::KeyboardModifiers(modifiers), touchPointStates, touchPoints);
+    Q_UNUSED(deviceCaps)
+    Q_UNUSED(touchDeviceMaxTouchPoints)
+    auto event = new QTouchEvent(QEvent::Type(type), QTouchEvent::DeviceType(touchDeviceType), Qt::KeyboardModifiers(modifiers), touchPointStates, touchPoints);
 #endif
     QCoreApplication::sendEvent(m_eventReceiver, event);
 }

@@ -731,7 +731,9 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
 {
     QTouchEvent::TouchPoint p;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     p.setFlags(point.flags());
+#endif
     p.setId(point.id());
     p.setPressure(point.pressure());
     p.setState(point.state());
@@ -1026,7 +1028,9 @@ bool RemoteViewWidget::event(QEvent *event)
     if (m_interactionMode == InputRedirection) {
         switch (event->type()) {
         case QEvent::TouchBegin:
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         case QEvent::TouchCancel:
+#endif
         case QEvent::TouchEnd:
         case QEvent::TouchUpdate:
             sendTouchEvent(static_cast<QTouchEvent *>(event));
@@ -1104,9 +1108,11 @@ void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)
         touchPoints << mapToSource(point);
     }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QTouchDevice::Capabilities caps = event->device()->capabilities();
     caps &= ~QTouchDevice::RawPositions; //we don't have a way to meaningfully map the raw positions to the source
     caps &= ~QTouchDevice::Velocity; //neither for velocity
+#endif
 
     m_interface->sendTouchEvent(event->type(),
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -1114,7 +1120,7 @@ void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)
                                 caps,
                                 event->device()->maximumTouchPoints(),
 #else
-                                event->deviceType(),
+                                event->deviceType(), 0, 0,
 #endif
                                 event->modifiers(), event->touchPointStates(), touchPoints);
 }

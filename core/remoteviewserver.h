@@ -104,7 +104,9 @@ private:
     bool m_clientActive;
     bool m_sourceChanged;
     bool m_clientReady;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     std::unique_ptr<QTouchDevice> m_touchDevice;
+#endif
 };
 }
 
