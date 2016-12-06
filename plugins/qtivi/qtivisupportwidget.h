@@ -25,8 +25,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QTIVI_QTIVIWIDGET_H
-#define GAMMARAY_QTIVI_QTIVIWIDGET_H
+#ifndef GAMMARAY_QTIVISUPPORTWIDGET_H
+#define GAMMARAY_QTIVISUPPORTWIDGET_H
 
 #include <QWidget>
 

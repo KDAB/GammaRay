@@ -25,8 +25,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QTIVI_QTIVI_H
-#define GAMMARAY_QTIVI_QTIVI_H
+#ifndef GAMMARAY_QTIVISUPPORT_H
+#define GAMMARAY_QTIVISUPPORT_H
 
 #include <core/toolfactory.h>
 

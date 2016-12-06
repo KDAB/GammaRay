@@ -27,8 +27,8 @@
 */
 
 
-#ifndef WIDGET3DTEXTURE_H
-#define WIDGET3DTEXTURE_H
+#ifndef GAMMARAY_WIDGET3DIMAGETEXTUREWIDGET_H
+#define GAMMARAY_WIDGET3DIMAGETEXTUREWIDGET_H
 
 #include <Qt3DRender/QAbstractTextureImage>
 #include <Qt3DRender/QTextureImageDataGenerator>
@@ -63,4 +63,4 @@ private:
 
 }
 
-#endif // WIDGET3DTEXTURE_H
+#endif // GAMMARAY_WIDGET3DIMAGETEXTUREWIDGET_H

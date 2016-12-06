@@ -38,9 +38,10 @@ namespace GammaRay {
 class QtIviPropertyOverrider
 {
 public:
-    QtIviPropertyOverrider(QIviProperty *property);
     QtIviPropertyOverrider();
-    QtIviPropertyOverrider(QtIviPropertyOverrider &&other);
+    explicit QtIviPropertyOverrider(QIviProperty *property);
+    explicit QtIviPropertyOverrider(QtIviPropertyOverrider &&other);
+
     QtIviPropertyOverrider &operator=(QtIviPropertyOverrider &&other);
     ~QtIviPropertyOverrider();
 

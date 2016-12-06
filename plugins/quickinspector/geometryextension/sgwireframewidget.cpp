@@ -230,8 +230,8 @@ void SGWireframeWidget::setModel(QAbstractItemModel *vertexModel, QAbstractItemM
             this, SLOT(onVertexModelReset()));
     connect(m_vertexModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             this, SLOT(onVertexModelDataChanged(QModelIndex,QModelIndex)));
-    connect(m_vertexModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-            this, SLOT(onVertexModelRowsInserted(QModelIndex, int, int)));
+    connect(m_vertexModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SLOT(onVertexModelRowsInserted(QModelIndex,int,int)));
 
 
     if (m_adjacencyModel) {
@@ -243,8 +243,8 @@ void SGWireframeWidget::setModel(QAbstractItemModel *vertexModel, QAbstractItemM
             this, SLOT(onAdjacencyModelReset()));
     connect(m_adjacencyModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             this, SLOT(onAdjacencyModelDataChanged(QModelIndex,QModelIndex)));
-    connect(m_adjacencyModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-            this, SLOT(onAdjacencyModelRowsInserted(QModelIndex, int, int)));
+    connect(m_adjacencyModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SLOT(onAdjacencyModelRowsInserted(QModelIndex,int,int)));
 }
 
 void SGWireframeWidget::setHighlightModel(QItemSelectionModel *selectionModel)
