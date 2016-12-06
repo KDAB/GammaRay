@@ -88,7 +88,6 @@ private:
 
 }
 
-QT_BEGIN_NAMESPACE
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
 Q_DECLARE_METATYPE(Qt::TouchPointStates)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -96,6 +95,7 @@ Q_DECLARE_METATYPE(QTouchEvent::TouchPoint::InfoFlags)
 #endif
 Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
 Q_DECLARE_METATYPE(GammaRay::RemoteViewInterface::RequestMode)
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::RemoteViewInterface, "com.kdab.GammaRay.RemoteViewInterface/1.0")
 QT_END_NAMESPACE
 

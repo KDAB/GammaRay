@@ -35,7 +35,6 @@
 using namespace GammaRay;
 QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(RemoteViewInterface::RequestMode)
-QT_END_NAMESPACE
 
 QDataStream &operator<<(QDataStream &s, Qt::TouchPointStates states)
 {
@@ -132,6 +131,8 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
     }
     return s;
 }
+
+QT_END_NAMESPACE
 
 
 RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
