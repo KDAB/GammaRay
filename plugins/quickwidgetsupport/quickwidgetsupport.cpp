@@ -32,10 +32,8 @@
 #include <core/metaobjectrepository.h>
 
 #include <common/metatypedeclarations.h>
-#include <common/objectbroker.h>
 
 #include <QDebug>
-#include <QMetaObject>
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickItem>
@@ -44,16 +42,8 @@ using namespace GammaRay;
 
 static QuickWidgetSupport *s_quickWidgetSupportInstance = nullptr;
 
-static bool quickWidgetGrabWindowCallback(QQuickWindow *window)
-{
-    if (!s_quickWidgetSupportInstance)
-        return false;
-    return s_quickWidgetSupportInstance->grabWindow(window);
-}
-
 QuickWidgetSupport::QuickWidgetSupport(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
-    , m_quickInspector(nullptr)
     , m_probe(probe)
 {
     Q_ASSERT(s_quickWidgetSupportInstance == nullptr);
@@ -84,45 +74,7 @@ void GammaRay::QuickWidgetSupport::objectAdded(QObject *obj)
     if (!qqw)
         return;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    m_windowMap.insert(qqw->quickWindow(), qqw);
     if (m_probe->needsObjectDiscovery())
         m_probe->discoverObject(qqw->quickWindow());
-#endif
-    registerWindowGrabber();
-}
-
-void GammaRay::QuickWidgetSupport::registerWindowGrabber()
-{
-    if (m_quickInspector)
-        return;
-
-    if (!ObjectBroker::hasObject(QStringLiteral("com.kdab.GammaRay.QuickInspectorInterface/1.0"))) {
-        // the QQ2 inspector can be activated after ourselves, so try again
-        QMetaObject::invokeMethod(this, "registerWindowGrabber", Qt::QueuedConnection);
-        return;
-    }
-
-    m_quickInspector
-        = ObjectBroker::objectInternal(QStringLiteral(
-                                           "com.kdab.GammaRay.QuickInspectorInterface/1.0"));
-    Q_ASSERT(m_quickInspector);
-    QMetaObject::invokeMethod(m_quickInspector, "registerGrabWindowCallback",
-                              Q_ARG(GrabWindowCallback, quickWidgetGrabWindowCallback));
-}
-
-bool GammaRay::QuickWidgetSupport::grabWindow(QQuickWindow *window) const
-{
-    const auto it = m_windowMap.constFind(window);
-    if (it == m_windowMap.constEnd())
-        return false;
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    auto image = it.value()->grabFramebuffer();
-    // See QTBUG-53795
-    image.setDevicePixelRatio(it.value()->quickWindow()->effectiveDevicePixelRatio());
-    QMetaObject::invokeMethod(m_quickInspector, "sendRenderedScene", Q_ARG(QImage, image));
-    return true;
-#else
-    return false;
 #endif
 }
