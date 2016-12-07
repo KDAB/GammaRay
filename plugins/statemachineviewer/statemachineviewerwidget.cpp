@@ -36,6 +36,7 @@
 #include <ui/contextmenuextension.h>
 
 #include <kdstatemachineeditor/core/elementmodel.h>
+#include <kdstatemachineeditor/core/layoutproperties.h>
 #include <kdstatemachineeditor/core/state.h>
 #include <kdstatemachineeditor/core/transition.h>
 #include <kdstatemachineeditor/core/runtimecontroller.h>
@@ -243,15 +244,19 @@ StateMachineViewerWidget::~StateMachineViewerWidget()
 void StateMachineViewerWidget::saveTargetState(QSettings *settings) const
 {
     settings->setValue("ShowLog", m_showLog);
-    // TODO: settings->setValue("ShowTransitionsLabel", m_stateMachineView->scene()->isTransitionsLabelVisible());
-    settings->setValue("MaximumDepth", m_stateMachineView->scene()->maximumDepth());
+
+    const auto scene = m_stateMachineView->scene();
+    settings->setValue("ShowTransitionsLabel", scene->layoutProperties()->showTransitionLabels());
+    settings->setValue("MaximumDepth", scene->maximumDepth());
 }
 
 void StateMachineViewerWidget::restoreTargetState(QSettings *settings)
 {
     setShowLog(settings->value("ShowLog", m_showLog).toBool());
-    // TODO: m_stateMachineView->scene()->setTransitionsLabelVisible(settings->value("ShowTransitionsLabel", true).toBool());
-    m_stateMachineView->scene()->setMaximumDepth(settings->value("MaximumDepth", 3).toInt());
+
+    auto scene = m_stateMachineView->scene();
+    scene->layoutProperties()->setShowTransitionLabels(settings->value("ShowTransitionsLabel", true).toBool());
+    scene->setMaximumDepth(settings->value("MaximumDepth", 3).toInt());
 }
 
 void StateMachineViewerWidget::showContextMenuForObject(const QModelIndex &index,
