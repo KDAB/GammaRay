@@ -63,12 +63,6 @@ public:
 
 private Q_SLOTS:
     void visualizeActionTriggered(QAction* current);
-    void updateEffectiveGeometry();
-
-private:
-    void drawArrow(QPainter *p, QPointF first, QPointF second);
-    void drawAnchor(QPainter *p, Qt::Orientation orientation, qreal ownAnchorLine, qreal offset,
-                    const QString &label);
 
 private:
     void drawDecoration(QPainter *p) Q_DECL_OVERRIDE;
@@ -85,7 +79,6 @@ private:
     } m_toolBar;
 
     QuickInspectorInterface *m_inspectorInterface;
-    QuickItemGeometry m_effectiveGeometry; // scaled and translated
 };
 } // namespace GammaRay
 

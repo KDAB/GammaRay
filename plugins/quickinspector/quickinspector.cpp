@@ -27,6 +27,7 @@
 */
 
 #include "quickinspector.h"
+#include "quickoverlay.h"
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
 #include "quickpaintanalyzerextension.h"
@@ -41,6 +42,7 @@
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/objecttypefilterproxymodel.h>
+#include <core/probeguard.h>
 #include <core/probeinterface.h>
 #include <core/propertycontroller.h>
 #include <core/remote/server.h>
@@ -243,12 +245,13 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     , m_sgPropertyController(new PropertyController(QStringLiteral(
                                                         "com.kdab.GammaRay.QuickSceneGraph"), this))
     , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this))
-    , m_isGrabbingWindow(false)
 {
     registerPCExtensions();
     registerMetaTypes();
     registerVariantHandlers();
     probe->installGlobalEventFilter(this);
+
+    recreateOverlay();
 
     QAbstractProxyModel *windowModel = new ObjectTypeFilterProxyModel<QQuickWindow>(this);
     windowModel->setSourceModel(probe->objectListModel());
@@ -297,6 +300,9 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
 
 QuickInspector::~QuickInspector()
 {
+    disconnect(m_overlay, SIGNAL(destroyed(QObject*)),
+               this, SLOT(recreateOverlay()));
+    delete m_overlay.data();
 }
 
 void QuickInspector::selectWindow(int index)
@@ -312,10 +318,6 @@ void QuickInspector::selectWindow(QQuickWindow *window)
         return;
     }
 
-    if (m_window) {
-        disconnect(m_window, nullptr, this, nullptr);
-    }
-
     m_window = window;
     m_itemModel->setWindow(window);
     m_sgModel->setWindow(window);
@@ -325,11 +327,6 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     if (m_window) {
         // make sure we have selected something for the property editor to not be entirely empty
         selectItem(m_window->contentItem());
-
-        // frame swapped isn't enough, we don't get that for FBO render targets such as in QQuickWidget
-        connect(window, &QQuickWindow::afterRendering, this, &QuickInspector::slotSceneChanged);
-        connect(window, &QQuickWindow::frameSwapped, this, &QuickInspector::slotSceneChanged);
-
         m_window->update();
     }
 }
@@ -411,50 +408,39 @@ void QuickInspector::objectCreated(QObject *object)
     }
 }
 
+void QuickInspector::recreateOverlay()
+{
+    ProbeGuard guard;
+    m_overlay = new QuickOverlay;
+
+    connect(m_overlay, &QuickOverlay::sceneChanged, m_remoteView, &RemoteViewServer::sourceChanged);
+    connect(m_overlay, &QuickOverlay::sceneGrabbed, this, &QuickInspector::sendRenderedScene);
+    // the target application might have destroyed the overlay widget
+    // (e.g. because the parent of the overlay got destroyed).
+    // just recreate a new one in this case
+    connect(m_overlay, SIGNAL(destroyed(QObject*)), this, SLOT(recreateOverlay()));
+}
+
 void QuickInspector::sendRenderedScene(const QImage &currentFrame)
 {
-    m_isGrabbingWindow = false;
-
     RemoteViewFrame frame;
     frame.setImage(currentFrame);
     QuickItemGeometry itemGeometry;
     if (m_currentItem)
         itemGeometry.initFrom(m_currentItem);
-    frame.setSceneRect(QRectF(
-                           currentFrame.rect()) | itemGeometry.itemRect | itemGeometry.childrenRect
-                       | itemGeometry.boundingRect);
+    frame.setSceneRect(QRectF(currentFrame.rect()) | itemGeometry.itemRect |
+                       itemGeometry.childrenRect | itemGeometry.boundingRect);
     frame.setData(QVariant::fromValue(itemGeometry));
     m_remoteView->sendFrame(frame);
 }
 
-void QuickInspector::slotSceneChanged()
-{
-    if (!m_isGrabbingWindow)
-        m_remoteView->sourceChanged();
-}
-
 void QuickInspector::slotGrabWindow()
 {
-    if (!m_remoteView->isActive() || !m_window || m_isGrabbingWindow)
+    if (!m_remoteView->isActive() || !m_window)
         return;
 
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
-    m_isGrabbingWindow = true;
-    foreach (const auto callback, m_grabWindowCallbacks) {
-        if (callback(m_window))
-            return;
-    }
-
-    // delay this so we can process the signals to slotSceneChanged first, while we are in the m_isGrabbingWindow state
-    // otherwise we end up with an infinite update loop even on static scenes
-    auto img = m_window->grabWindow();
-    // See QTBUG-53795
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    img.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    img.setDevicePixelRatio(m_window->devicePixelRatio());
-#endif
-    QMetaObject::invokeMethod(this, "sendRenderedScene", Qt::QueuedConnection, Q_ARG(QImage, img));
+    m_overlay->requestGrabWindow();
 }
 
 static QByteArray renderModeToString(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
@@ -544,8 +530,11 @@ void QuickInspector::checkFeatures()
 
 void QuickInspector::itemSelectionChanged(const QItemSelection &selection)
 {
-    if (selection.isEmpty())
+    if (selection.isEmpty()) {
+        m_overlay->placeOn(ItemOrLayoutFacade());
+        m_remoteView->clearFrameData();
         return;
+    }
 
     const QModelIndex index = selection.first().topLeft();
     m_currentItem = index.data(ObjectModel::ObjectRole).value<QQuickItem *>();
@@ -564,8 +553,7 @@ void QuickInspector::itemSelectionChanged(const QItemSelection &selection)
                                    |QItemSelectionModel::Current);
     }
 
-    if (m_window)
-        m_window->update();
+    m_overlay->placeOn(m_currentItem.data());
 }
 
 void QuickInspector::sgSelectionChanged(const QItemSelection &selection)
@@ -660,11 +648,6 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
     }
 
     return objects;
-}
-
-void GammaRay::QuickInspector::registerGrabWindowCallback(GrabWindowCallback callback)
-{
-    m_grabWindowCallbacks.push_back(callback);
 }
 
 bool QuickInspector::eventFilter(QObject *receiver, QEvent *event)

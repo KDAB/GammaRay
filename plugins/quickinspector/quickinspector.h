@@ -54,6 +54,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class PropertyController;
+class QuickOverlay;
 class QuickItemModel;
 class QuickSceneGraphModel;
 class RemoteViewServer;
@@ -69,8 +70,6 @@ public:
     explicit QuickInspector(ProbeInterface *probe, QObject *parent = nullptr);
     ~QuickInspector();
 
-    typedef bool (*GrabWindowCallback)(QQuickWindow *);
-
 signals:
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
 
@@ -85,18 +84,12 @@ public slots:
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
     void pickElementId(const GammaRay::ObjectId& id);
 
-    /** Allow other plugins to provide specific window grabbing callbacks.
-     *  Needed for QQuickWidget.
-     */
-    void registerGrabWindowCallback(GrabWindowCallback callback);
-
     void sendRenderedScene(const QImage &currentFrame);
 
 protected:
     bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
 
 private slots:
-    void slotSceneChanged();
     void slotGrabWindow();
     void itemSelectionChanged(const QItemSelection &selection);
     void sgSelectionChanged(const QItemSelection &selection);
@@ -104,6 +97,7 @@ private slots:
     void objectSelected(QObject *object);
     void objectSelected(void *object, const QString &typeName);
     void objectCreated(QObject *object);
+    void recreateOverlay();
 
 private:
     void selectWindow(QQuickWindow *window);
@@ -119,6 +113,7 @@ private:
                                          GammaRay::RemoteViewInterface::RequestMode mode, int& bestCandidate) const;
 
     ProbeInterface *m_probe;
+    QPointer<QuickOverlay> m_overlay;
     QPointer<QQuickWindow> m_window;
     QPointer<QQuickItem> m_currentItem;
     QSGNode *m_currentSgNode;
@@ -130,9 +125,6 @@ private:
     PropertyController *m_itemPropertyController;
     PropertyController *m_sgPropertyController;
     RemoteViewServer *m_remoteView;
-    QImage m_currentFrame;
-    QVector<GrabWindowCallback> m_grabWindowCallbacks;
-    bool m_isGrabbingWindow;
     struct {
         RenderMode mode;
         QMetaObject::Connection connection;

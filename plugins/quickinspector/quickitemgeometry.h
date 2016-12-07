@@ -34,7 +34,9 @@
 #include <QPointF>
 #include <QTransform>
 
+QT_BEGIN_NAMESPACE
 class QQuickItem;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 struct QuickItemGeometry {
