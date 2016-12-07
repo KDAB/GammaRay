@@ -286,8 +286,8 @@ void StateMachineViewerServer::addState(State state)
     }
 
     // add sub-states
-    Q_FOREACH(auto state, selectedStateMachine()->stateChildren(state)) {
-        addState(state);
+    Q_FOREACH(auto childState, selectedStateMachine()->stateChildren(state)) {
+        addState(childState);
     }
 }
 
