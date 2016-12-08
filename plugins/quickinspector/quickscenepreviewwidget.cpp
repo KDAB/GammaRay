@@ -402,25 +402,7 @@ void QuickScenePreviewWidget::updateEffectiveGeometry()
 {
     const auto itemGeometry = frame().data().value<QuickItemGeometry>();
     m_effectiveGeometry = itemGeometry;
-
-    m_effectiveGeometry.itemRect = QRectF(
-        itemGeometry.itemRect.topLeft() * zoom(), itemGeometry.itemRect.bottomRight() * zoom());
-    m_effectiveGeometry.boundingRect = QRectF(
-        itemGeometry.boundingRect.topLeft() * zoom(),
-        itemGeometry.boundingRect.bottomRight() * zoom());
-    m_effectiveGeometry.childrenRect = QRectF(
-        itemGeometry.childrenRect.topLeft() * zoom(),
-        itemGeometry.childrenRect.bottomRight() * zoom());
-    m_effectiveGeometry.transformOriginPoint = itemGeometry.transformOriginPoint * zoom();
-    m_effectiveGeometry.leftMargin = itemGeometry.leftMargin * zoom();
-    m_effectiveGeometry.horizontalCenterOffset = itemGeometry.horizontalCenterOffset * zoom();
-    m_effectiveGeometry.rightMargin = itemGeometry.rightMargin * zoom();
-    m_effectiveGeometry.topMargin = itemGeometry.topMargin * zoom();
-    m_effectiveGeometry.verticalCenterOffset = itemGeometry.verticalCenterOffset * zoom();
-    m_effectiveGeometry.bottomMargin = itemGeometry.bottomMargin * zoom();
-    m_effectiveGeometry.baselineOffset = itemGeometry.baselineOffset * zoom();
-    m_effectiveGeometry.x = itemGeometry.x * zoom();
-    m_effectiveGeometry.y = itemGeometry.y * zoom();
+    m_effectiveGeometry.scaleTo(zoom());
 }
 
 void QuickScenePreviewWidget::visualizeActionTriggered(QAction *current)

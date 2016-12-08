@@ -400,6 +400,7 @@ set(quickinspectortest_srcs
 )
 qt4_add_resources(quickinspectortest_srcs quickinspectortest.qrc)
 add_executable(quickinspectortest ${quickinspectortest_srcs})
+target_include_directories(quickinspectortest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
 target_link_libraries(quickinspectortest gammaray_core Qt5::Test Qt5::Quick)
 add_test(NAME quickinspectortest COMMAND quickinspectortest)
 endif()

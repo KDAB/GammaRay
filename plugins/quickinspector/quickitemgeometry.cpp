@@ -28,7 +28,87 @@
 
 #include "quickitemgeometry.h"
 
+#include <QQuickItem>
+
+#include <private/qquickanchors_p.h>
+#include <private/qquickitem_p.h>
+
 namespace GammaRay {
+void QuickItemGeometry::initFrom(QQuickItem *item)
+{
+    if (!item) {
+        Q_ASSERT(false);
+        return;
+    }
+
+    QQuickItem *parent = item->parentItem();
+
+    if (parent) {
+        itemRect = item->parentItem()->mapRectToScene(
+                    QRectF(item->x(), item->y(), item->width(), item->height()));
+    } else {
+        itemRect = QRectF(0, 0, item->width(), item->height());
+    }
+
+    boundingRect = item->mapRectToScene(item->boundingRect());
+    childrenRect = item->mapRectToScene(item->childrenRect());
+    transformOriginPoint = item->mapToScene(item->transformOriginPoint());
+
+    QQuickAnchors *anchors = item->property("anchors").value<QQuickAnchors *>();
+
+    if (anchors) {
+        QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
+        left = (bool)(usedAnchors &QQuickAnchors::LeftAnchor) || anchors->fill();
+        right = (bool)(usedAnchors &QQuickAnchors::RightAnchor) || anchors->fill();
+        top = (bool)(usedAnchors &QQuickAnchors::TopAnchor) || anchors->fill();
+        bottom = (bool)(usedAnchors &QQuickAnchors::BottomAnchor) || anchors->fill();
+        baseline = (bool)(usedAnchors & QQuickAnchors::BaselineAnchor);
+        horizontalCenter = (bool)(usedAnchors &QQuickAnchors::HCenterAnchor)
+                                        || anchors->centerIn();
+        verticalCenter = (bool)(usedAnchors &QQuickAnchors::VCenterAnchor)
+                                      || anchors->centerIn();
+        leftMargin = anchors->leftMargin();
+        rightMargin = anchors->rightMargin();
+        topMargin = anchors->topMargin();
+        bottomMargin = anchors->bottomMargin();
+        horizontalCenterOffset = anchors->horizontalCenterOffset();
+        verticalCenterOffset = anchors->verticalCenterOffset();
+        baselineOffset = anchors->baselineOffset();
+        margins = anchors->margins();
+    }
+    x = item->x();
+    y = item->y();
+    QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
+    transform = itemPriv->itemToWindowTransform();
+    if (parent) {
+        QQuickItemPrivate *parentPriv = QQuickItemPrivate::get(parent);
+        parentTransform = parentPriv->itemToWindowTransform();
+    }
+}
+
+void QuickItemGeometry::scaleTo(qreal factor)
+{
+    itemRect = QRectF(
+        itemRect.topLeft() * factor,
+        itemRect.bottomRight() * factor);
+    boundingRect = QRectF(
+        boundingRect.topLeft() * factor,
+        boundingRect.bottomRight() * factor);
+    childrenRect = QRectF(
+        childrenRect.topLeft() * factor,
+        childrenRect.bottomRight() * factor);
+    transformOriginPoint = transformOriginPoint * factor;
+    leftMargin = leftMargin * factor;
+    horizontalCenterOffset = horizontalCenterOffset * factor;
+    rightMargin = rightMargin * factor;
+    topMargin = topMargin * factor;
+    verticalCenterOffset = verticalCenterOffset * factor;
+    bottomMargin = bottomMargin * factor;
+    baselineOffset = baselineOffset * factor;
+    x = x * factor;
+    y = y * factor;
+}
+
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry)
 {
     stream << geometry.itemRect
@@ -65,32 +145,32 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &
 QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry)
 {
     stream >> geometry.itemRect
-    >> geometry.boundingRect
-    >> geometry.childrenRect
+           >> geometry.boundingRect
+           >> geometry.childrenRect
 
-    >> geometry.transformOriginPoint
-    >> geometry.transform
-    >> geometry.parentTransform
+           >> geometry.transformOriginPoint
+           >> geometry.transform
+           >> geometry.parentTransform
 
-    >> geometry.x
-    >> geometry.y
+           >> geometry.x
+           >> geometry.y
 
-    >> geometry.left
-    >> geometry.right
-    >> geometry.top
-    >> geometry.bottom
-    >> geometry.horizontalCenter
-    >> geometry.verticalCenter
-    >> geometry.baseline
+           >> geometry.left
+           >> geometry.right
+           >> geometry.top
+           >> geometry.bottom
+           >> geometry.horizontalCenter
+           >> geometry.verticalCenter
+           >> geometry.baseline
 
-    >> geometry.margins
-    >> geometry.leftMargin
-    >> geometry.horizontalCenterOffset
-    >> geometry.rightMargin
-    >> geometry.topMargin
-    >> geometry.verticalCenterOffset
-    >> geometry.bottomMargin
-    >> geometry.baselineOffset;
+           >> geometry.margins
+           >> geometry.leftMargin
+           >> geometry.horizontalCenterOffset
+           >> geometry.rightMargin
+           >> geometry.topMargin
+           >> geometry.verticalCenterOffset
+           >> geometry.bottomMargin
+           >> geometry.baselineOffset;
 
     return stream;
 }
