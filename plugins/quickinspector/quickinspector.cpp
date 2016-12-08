@@ -418,56 +418,8 @@ void QuickInspector::sendRenderedScene(const QImage &currentFrame)
     RemoteViewFrame frame;
     frame.setImage(currentFrame);
     QuickItemGeometry itemGeometry;
-    if (m_currentItem) {
-        QQuickItem *parent = m_currentItem->parentItem();
-
-        if (parent) {
-            itemGeometry.itemRect = m_currentItem->parentItem()->mapRectToScene(
-                QRectF(m_currentItem->x(), m_currentItem->y(),
-                       m_currentItem->width(), m_currentItem->height()));
-        } else {
-            itemGeometry.itemRect = QRectF(0, 0, m_currentItem->width(), m_currentItem->height());
-        }
-
-        itemGeometry.boundingRect
-            = m_currentItem->mapRectToScene(m_currentItem->boundingRect());
-        itemGeometry.childrenRect
-            = m_currentItem->mapRectToScene(m_currentItem->childrenRect());
-        itemGeometry.transformOriginPoint
-            = m_currentItem->mapToScene(m_currentItem->transformOriginPoint());
-
-        QQuickAnchors *anchors = m_currentItem->property("anchors").value<QQuickAnchors *>();
-
-        if (anchors) {
-            QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
-            itemGeometry.left = (bool)(usedAnchors &QQuickAnchors::LeftAnchor) || anchors->fill();
-            itemGeometry.right = (bool)(usedAnchors &QQuickAnchors::RightAnchor) || anchors->fill();
-            itemGeometry.top = (bool)(usedAnchors &QQuickAnchors::TopAnchor) || anchors->fill();
-            itemGeometry.bottom = (bool)(usedAnchors &QQuickAnchors::BottomAnchor)
-                                  || anchors->fill();
-            itemGeometry.baseline = (bool)(usedAnchors & QQuickAnchors::BaselineAnchor);
-            itemGeometry.horizontalCenter = (bool)(usedAnchors &QQuickAnchors::HCenterAnchor)
-                                            || anchors->centerIn();
-            itemGeometry.verticalCenter = (bool)(usedAnchors &QQuickAnchors::VCenterAnchor)
-                                          || anchors->centerIn();
-            itemGeometry.leftMargin = anchors->leftMargin();
-            itemGeometry.rightMargin = anchors->rightMargin();
-            itemGeometry.topMargin = anchors->topMargin();
-            itemGeometry.bottomMargin = anchors->bottomMargin();
-            itemGeometry.horizontalCenterOffset = anchors->horizontalCenterOffset();
-            itemGeometry.verticalCenterOffset = anchors->verticalCenterOffset();
-            itemGeometry.baselineOffset = anchors->baselineOffset();
-            itemGeometry.margins = anchors->margins();
-        }
-        itemGeometry.x = m_currentItem->x();
-        itemGeometry.y = m_currentItem->y();
-        QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(m_currentItem);
-        itemGeometry.transform = itemPriv->itemToWindowTransform();
-        if (parent) {
-            QQuickItemPrivate *parentPriv = QQuickItemPrivate::get(parent);
-            itemGeometry.parentTransform = parentPriv->itemToWindowTransform();
-        }
-    }
+    if (m_currentItem)
+        itemGeometry.initFrom(m_currentItem);
     frame.setSceneRect(QRectF(
                            currentFrame.rect()) | itemGeometry.itemRect | itemGeometry.childrenRect
                        | itemGeometry.boundingRect);

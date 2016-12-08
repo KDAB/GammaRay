@@ -34,6 +34,8 @@
 #include <QPointF>
 #include <QTransform>
 
+class QQuickItem;
+
 namespace GammaRay {
 struct QuickItemGeometry {
     // basic geometry
@@ -68,6 +70,9 @@ struct QuickItemGeometry {
     qreal verticalCenterOffset;
     qreal bottomMargin;
     qreal baselineOffset;
+
+    void initFrom(QQuickItem *item);
+    void scaleTo(qreal factor);
 };
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry);
