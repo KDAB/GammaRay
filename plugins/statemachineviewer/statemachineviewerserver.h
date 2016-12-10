@@ -83,6 +83,8 @@ private slots:
 
     void repopulateGraph() Q_DECL_OVERRIDE;
 
+    void handleLogMessage(const QString &label, const QString &message);
+
 private:
     bool mayAddState(State state);
 
