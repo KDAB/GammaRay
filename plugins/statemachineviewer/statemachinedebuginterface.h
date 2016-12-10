@@ -102,6 +102,8 @@ signals:
     void stateExited(State state);
 
     void transitionTriggered(Transition transition);
+
+    void logMessage(const QString &label, const QString &message);
 };
 }
 

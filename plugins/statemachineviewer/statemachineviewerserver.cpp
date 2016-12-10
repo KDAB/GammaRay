@@ -148,10 +148,7 @@ void StateMachineViewerServer::setSelectedStateMachine(StateMachineDebugInterfac
         return;
 
     if (oldMachine) {
-        disconnect(oldMachine, SIGNAL(runningChanged(bool)), this, SLOT(updateStartStop()));
-        disconnect(oldMachine, SIGNAL(stateEntered(State)), this, SLOT(stateEntered(State)));
-        disconnect(oldMachine, SIGNAL(stateExited(State)), this, SLOT(stateExited(State)));
-        disconnect(oldMachine, SIGNAL(transitionTriggered(Transition)), this, SLOT(handleTransitionTriggered(Transition)));
+        oldMachine->disconnect(this);
     }
 
     m_stateModel->setStateMachine(machine);
@@ -166,6 +163,7 @@ void StateMachineViewerServer::setSelectedStateMachine(StateMachineDebugInterfac
         connect(machine, SIGNAL(stateEntered(State)), this, SLOT(stateEntered(State)));
         connect(machine, SIGNAL(stateExited(State)), this, SLOT(stateExited(State)));
         connect(machine, SIGNAL(transitionTriggered(Transition)), this, SLOT(handleTransitionTriggered(Transition)));
+        connect(machine, SIGNAL(logMessage(QString, QString)), this, SLOT(handleLogMessage(QString, QString)));
     }
     updateStartStop();
 
@@ -320,6 +318,11 @@ void StateMachineViewerServer::toggleRunning()
         selectedStateMachine()->stop();
     else
         selectedStateMachine()->start();
+}
+
+void StateMachineViewerServer::handleLogMessage(const QString &label, const QString &msg)
+{
+    emit message(tr("Log [label=%1]: %2").arg(label, msg));
 }
 
 StateMachineViewerFactory::StateMachineViewerFactory(QObject *parent)
