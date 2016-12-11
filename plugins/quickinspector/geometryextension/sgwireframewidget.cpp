@@ -272,6 +272,8 @@ void SGWireframeWidget::onAdjacencyModelReset()
 
 void SGWireframeWidget::onVertexModelRowsInserted(const QModelIndex& parent, int first, int last)
 {
+    Q_UNUSED(first);
+    Q_UNUSED(last);
     if (!parent.isValid()) {
         fetchVertices();
         update();
@@ -280,6 +282,8 @@ void SGWireframeWidget::onVertexModelRowsInserted(const QModelIndex& parent, int
 
 void SGWireframeWidget::onAdjacencyModelRowsInserted(const QModelIndex& parent, int first, int last)
 {
+    Q_UNUSED(first);
+    Q_UNUSED(last);
     if (!parent.isValid()) {
         fetchAdjacencyList();
         update();
