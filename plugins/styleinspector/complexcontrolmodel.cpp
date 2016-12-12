@@ -97,8 +97,9 @@ QVariant ComplexControlModel::doData(int row, int column, int role) const
         m_style->drawComplexControl(complexControlElements[row].control, opt.data(), &painter);
 
         int colorIndex = 7;
-        for (int i = 0; i < 32; ++i) {
-            QStyle::SubControl sc = static_cast<QStyle::SubControl>(1 << i);
+        unsigned int nshifts = sizeof(unsigned int) * 8;
+        for (unsigned int i = 0; i < nshifts; ++i) {
+            QStyle::SubControl sc = static_cast<QStyle::SubControl>(1U << i);
             if (sc & complexControlElements[row].subControls) {
                 QRectF scRect
                     = m_style->subControlRect(complexControlElements[row].control, opt.data(), sc);
