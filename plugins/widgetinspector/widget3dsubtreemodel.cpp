@@ -34,7 +34,8 @@ class Widget3DSubtreeModel::Node
 {
 public:
     Node(const QModelIndex &idx)
-        : sourceIdx(idx)
+        : sourceIdx(idx),
+          parent(0)
     {}
 
     int realChildrenCount() const

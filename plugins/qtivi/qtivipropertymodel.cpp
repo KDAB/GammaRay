@@ -71,15 +71,16 @@ QtIviPropertyModel::QtIviPropertyModel(Probe *probe)
 }
 
 QtIviPropertyModel::IviProperty::IviProperty(QIviProperty *_value, const QMetaProperty &metaProperty)
-   : name(QString::fromUtf8(metaProperty.name())),
-     value(_value),
-     notWritableInPractice(false),
-     overrider(_value)
+    : name(QString::fromUtf8(metaProperty.name())),
+      value(_value),
+      notWritableInPractice(false),
+      overrider(_value)
 {
 }
 
 QtIviPropertyModel::IviProperty::IviProperty()
-   : value(nullptr)
+    : value(nullptr),
+      notWritableInPractice(false)
 {
 }
 
