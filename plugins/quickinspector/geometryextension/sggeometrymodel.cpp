@@ -290,16 +290,13 @@ QVariant SGAdjacencyModel::data(const QModelIndex &index, int role) const
     }
     if (role == RenderRole) {
         int indexType = m_geometry->indexType();
-        quint32 i;
 
         if (indexType == GL_UNSIGNED_INT)
-            i = *(static_cast<const quint32 *>(m_geometry->indexData()) + index.row());
+            return *(static_cast<const quint32 *>(m_geometry->indexData()) + index.row());
         else if (indexType == GL_UNSIGNED_SHORT)
-            i = *(static_cast<const quint16 *>(m_geometry->indexData()) + index.row());
+            return *(static_cast<const quint16 *>(m_geometry->indexData()) + index.row());
         else if (indexType == GL_UNSIGNED_BYTE)
-            i = *(static_cast<const quint8 *>(m_geometry->indexData()) + index.row());
-
-        return i;
+            return *(static_cast<const quint8 *>(m_geometry->indexData()) + index.row());
     }
 
     return QVariant();
