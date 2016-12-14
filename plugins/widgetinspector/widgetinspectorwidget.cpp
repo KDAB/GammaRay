@@ -138,6 +138,7 @@ void WidgetInspectorWidget::updateActions()
     const auto model = ui->widgetTreeView->selectionModel()->selectedRows();
     const auto selection = !model.isEmpty() && model.first().isValid();
 
+    ui->actionSaveAsImage->setEnabled(selection);
     ui->actionSaveAsSvg->setEnabled(
         selection && m_inspector->features() & WidgetInspectorInterface::SvgExport);
     ui->actionSaveAsPdf->setEnabled(
