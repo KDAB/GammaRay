@@ -37,7 +37,7 @@ class AboutPluginsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AboutPluginsDialog(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr);
+    explicit AboutPluginsDialog(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 };
 }
 

@@ -52,7 +52,7 @@ class StateMachineViewerWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit StateMachineViewerWidget(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr);
+    explicit StateMachineViewerWidget(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     virtual ~StateMachineViewerWidget();
 
     Q_INVOKABLE void saveTargetState(QSettings *settings) const;

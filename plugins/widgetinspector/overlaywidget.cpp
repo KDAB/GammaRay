@@ -41,8 +41,8 @@ static QWidget *toplevelWidget(QWidget *widget)
     Q_ASSERT(widget);
     QWidget *parent = widget;
     while (parent->parentWidget() &&
-            (qobject_cast<QDialog*>(parent->parentWidget()) == 0) &&
-            (qobject_cast<QDialog*>(parent) == 0)) {
+            !qobject_cast<QDialog*>(parent->parentWidget()) &&
+            !qobject_cast<QDialog*>(parent)) {
         parent = parent->parentWidget();
     }
 
@@ -50,7 +50,7 @@ static QWidget *toplevelWidget(QWidget *widget)
 }
 
 OverlayWidget::OverlayWidget()
-  : m_currentToplevelWidget(0),
+  : m_currentToplevelWidget(nullptr),
     m_drawLayoutOutlineOnly(true)
 {
     setAttribute(Qt::WA_TransparentForMouseEvents);

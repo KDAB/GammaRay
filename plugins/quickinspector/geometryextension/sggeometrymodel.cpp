@@ -264,8 +264,8 @@ QModelIndex GammaRay::SGVertexModel::index(int row, int column, const QModelInde
 
 GammaRay::SGAdjacencyModel::SGAdjacencyModel(QObject *parent)
     : QAbstractListModel(parent)
-    , m_geometry(0)
-    , m_node(0)
+    , m_geometry(nullptr)
+    , m_node(nullptr)
 {
 }
 

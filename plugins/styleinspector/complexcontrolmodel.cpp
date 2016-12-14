@@ -44,7 +44,7 @@ struct complex_control_element_t {
     QStyle::SubControls subControls;
 };
 
-#define MAKE_CC2(control, factory) { #control, QStyle:: control, &StyleOption:: factory, 0 }
+#define MAKE_CC2(control, factory) { #control, QStyle:: control, &StyleOption:: factory, QStyle::SubControls() }
 #define MAKE_CC3(control, factory, subControls) { #control, QStyle:: control, \
                                                   &StyleOption:: factory, subControls }
 

@@ -146,7 +146,7 @@ public:
     void add(wl_resource *res, MessageType dir, const QString &line)
     {
         pid_t pid;
-        wl_client_get_credentials(wl_resource_get_client(res), &pid, 0, 0);
+        wl_client_get_credentials(wl_resource_get_client(res), &pid, nullptr, nullptr);
         QString l = QStringLiteral("%1 %2 %3").arg(QString::number(pid),
                                                    dir == MessageType::Request ? QLatin1String("->") : QLatin1String("<-"),
                                                    line);
@@ -314,7 +314,7 @@ public:
 
     void addResource(wl_resource *res)
     {
-        wl_resource *parentResource = 0; // wl_resource_get_parent(res);
+        wl_resource *parentResource = nullptr; // wl_resource_get_parent(res);
         Resource *parent = parentResource ? Resource::fromWlResource(parentResource) : nullptr;
         int count = parent ? parent->children.count() : m_resources.count();
 
@@ -425,7 +425,7 @@ WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* par
 {
     qWarning()<<"init probe"<<probe->objectTreeModel()<<probe->probe();
 
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QWaylandObject, QObject);
     MO_ADD_METAOBJECT1(QWaylandCompositor, QWaylandObject);
 

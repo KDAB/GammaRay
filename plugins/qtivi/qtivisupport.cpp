@@ -46,7 +46,7 @@ static void registerMetaTypes()
 {
     qRegisterMetaType<QIviServiceObject*>();
 
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT0(QIviServiceInterface);
     MO_ADD_PROPERTY_RO(QIviServiceInterface, QStringList, interfaces);
 

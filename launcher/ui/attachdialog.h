@@ -45,7 +45,7 @@ class AttachDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit AttachDialog(QWidget *parent = nullptr, Qt::WindowFlags f = nullptr);
+    explicit AttachDialog(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 
     LaunchOptions launchOptions() const;
     int pid() const;

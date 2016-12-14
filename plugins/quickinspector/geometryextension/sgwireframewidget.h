@@ -47,7 +47,7 @@ class SGWireframeWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit SGWireframeWidget(QWidget *parent = nullptr, Qt::WindowFlags f = 0);
+    explicit SGWireframeWidget(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     ~SGWireframeWidget();
 
     QAbstractItemModel *model() const;

@@ -67,7 +67,7 @@ void WebInspector::objectAdded(QObject *obj)
 {
     // both of the following cases seem to be needed, the web view object changes depending on
     // you have "import QtWebKit.experimental 1.0" or not...
-    QObject *experimental = 0;
+    QObject *experimental = nullptr;
     if (obj->inherits("QQuickWebView"))
         experimental = obj->property("experimental").value<QObject *>();
     if (obj->inherits("QQuickWebViewExperimental"))

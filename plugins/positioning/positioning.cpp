@@ -65,7 +65,7 @@ Positioning::Positioning(ProbeInterface *probe, QObject *parent)
 {
     Q_UNUSED(probe);
 
-    MetaObject *mo = 0;
+    MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QGeoPositionInfoSource, QObject);
     MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::Error, error);
     MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::PositioningMethods,

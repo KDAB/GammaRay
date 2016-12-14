@@ -38,9 +38,9 @@ using namespace GammaRay;
 
 SGWireframeWidget::SGWireframeWidget(QWidget *parent, Qt::WindowFlags f)
     : QWidget(parent, f)
-    , m_vertexModel(0)
-    , m_adjacencyModel(0)
-    , m_highlightModel(0)
+    , m_vertexModel(nullptr)
+    , m_adjacencyModel(nullptr)
+    , m_highlightModel(nullptr)
     , m_positionColumn(-1)
     , m_drawingMode(0)
     , m_geometryWidth(0)
@@ -222,7 +222,7 @@ QAbstractItemModel *SGWireframeWidget::model() const
 void SGWireframeWidget::setModel(QAbstractItemModel *vertexModel, QAbstractItemModel *adjacencyModel)
 {
     if (m_vertexModel) {
-        disconnect(m_vertexModel, 0, this, 0);
+        disconnect(m_vertexModel, nullptr, this, nullptr);
     }
     m_vertexModel = vertexModel;
     m_vertexModel->rowCount();
@@ -235,7 +235,7 @@ void SGWireframeWidget::setModel(QAbstractItemModel *vertexModel, QAbstractItemM
 
 
     if (m_adjacencyModel) {
-        disconnect(m_adjacencyModel, 0, this, 0);
+        disconnect(m_adjacencyModel, nullptr, this, nullptr);
     }
     m_adjacencyModel = adjacencyModel;
     m_adjacencyModel->rowCount();
