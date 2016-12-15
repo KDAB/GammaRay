@@ -95,6 +95,8 @@ void Qt3DGeometryExtension::updateGeometryData()
     QHash<Qt3DRender::QBuffer *, uint> bufferMap;
     data.attributes.reserve(m_geometry->geometry()->attributes().size());
     foreach (auto attr, m_geometry->geometry()->attributes()) {
+        if (attr->count() == 0) // ignore empty/invalid attributes
+            continue;
         Qt3DGeometryAttributeData attrData;
         attrData.name = attr->name();
         attrData.attributeType = attr->attributeType();
