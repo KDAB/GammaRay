@@ -445,8 +445,7 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                     break;
                 case TypeColumn:
                     if (role == Qt::DisplayRole) {
-                        QVariant value = iviProperty.overrider.value();
-                        const int metatype = value.userType();
+                        const int metatype = iviProperty.overrider.value().userType();
                         return QString::fromLatin1(QMetaType::typeName(metatype));
                     }
                     break;
