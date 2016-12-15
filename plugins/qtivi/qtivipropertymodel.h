@@ -30,6 +30,8 @@
 
 #include "qtivipropertyoverrider.h"
 
+#include <common/objectmodel.h>
+
 #include <QAbstractItemModel>
 #include <QHash>
 #include <QString>
@@ -47,7 +49,7 @@ class QtIviPropertyModel : public QAbstractItemModel
     Q_OBJECT
 public:
     enum {
-        ValueConstraintsRole = UserRole + 1, // the role for transporting the following constraints types
+        ValueConstraintsRole = ObjectModel::UserRole + 1, // transmits the following constraints types
 
         RangeConstraints = 0, // min / max
         AvailableValuesConstraints // list of possible values
