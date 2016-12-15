@@ -597,7 +597,7 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
     return false;
 }
 
-void QtIviPropertyModel::propertyValueChanged(const QVariant &v)
+void QtIviPropertyModel::propertyValueChanged(const QVariant &)
 {
     QIviProperty *property = qobject_cast<QIviProperty *>(sender());
     if (!property) {
