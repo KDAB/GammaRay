@@ -67,14 +67,6 @@ QtIviSupport::QtIviSupport(ProbeInterface* probe, QObject* parent)
 
     auto propertyModel = new QtIviPropertyModel(Probe::instance());
 
-    connect(propertyModel, &QtIviPropertyModel::dataChanged,
-        [propertyModel](const QModelIndex& tl, const QModelIndex& br)
-        {
-            qDebug() << "data changed from top left:" << tl << "to bottom right:" << br
-                     << "with new data at top left" << propertyModel->data(tl);
-        }
-    );
-
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.PropertyModel"), propertyModel);
     //m_selectionModel = ObjectBroker::selectionModel(filterModel);
 }
