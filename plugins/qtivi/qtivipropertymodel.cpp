@@ -36,6 +36,7 @@
 
 #include <QIviAbstractZonedFeature>
 #include <QIviProperty>
+#include <private/qiviproperty_p.h>
 
 #include <QThread>
 #include <QMetaObject>
@@ -318,6 +319,58 @@ static QString buildCarrierObjectName(const QObject *carrier)
     return name;
 }
 
+static QVariant formatConstraints(QIviProperty *property)
+{
+    // value range?
+    const QVariant min = property->minimumValue();
+    const QVariant max = property->maximumValue();
+    if (min != max)
+        return QVariantList() << quint32(QtIviPropertyModel::RangeConstraints) << min << max;
+
+    // list of allowed values?
+    const QVariantList rawAvail = property->availableValues();
+    if (!rawAvail.isEmpty()) {
+        QVariantList avail;
+        avail << uint(QtIviPropertyModel::AvailableValuesConstraints);
+
+        foreach (QVariant v, rawAvail) {
+            // First, convert back to real type if it was sanitized for QML.
+            const int realTypeId = QIviPropertyPrivate::get(property)->m_type;
+            if (v.userType() != realTypeId) {
+                if (v.canConvert(realTypeId)) {
+                    v.convert(realTypeId);
+                } else {
+                    const QMetaEnum me = EnumUtil::metaEnum(QVariant(realTypeId, nullptr));
+                    if (me.isValid() && v.canConvert<int>()) {
+                        // An int is not "naturally" convertible to an enum or flags unless
+                        // a conversion is explicitly registered
+                        int rawValue = v.toInt();
+                        v = QVariant(realTypeId, &rawValue);
+                    }
+                }
+            }
+
+            // For convenience on the view side, send for each allowed value:
+            // 1. Display string to display to the user
+            // 2. "Raw" value for passing to setData() after editing
+            const QMetaEnum me = EnumUtil::metaEnum(v);
+            if (me.isValid()) {
+                const int num = EnumUtil::enumToInt(v, me);
+                if (me.isFlag())
+                    avail << QString::fromLatin1(me.valueToKeys(num));
+                else
+                    avail << QString::fromLatin1(me.valueToKey(num));
+                avail << QVariant::fromValue(EnumRepositoryServer::valueFromMetaEnum(num, me));
+            } else {
+                avail << VariantHandler::displayString(v);
+                avail << VariantHandler::serializableVariant(v);
+            }
+        }
+        return avail;
+    }
+    return QVariant();
+}
+
 QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -373,6 +426,8 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                             return QVariant::fromValue(EnumRepositoryServer::valueFromMetaEnum(num, me));
                         }
                         return VariantHandler::serializableVariant(value);
+                    } else if (role == ValueConstraintsRole) {
+                        return formatConstraints(iviProperty.value);
                     }
                     break;
                 }
@@ -402,6 +457,16 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
         }
     }
     return QVariant();
+}
+
+QMap<int, QVariant> QtIviPropertyModel::itemData(const QModelIndex &index) const
+{
+    QMap<int, QVariant> ret = QAbstractItemModel::itemData(index);
+    QVariant maybeConstraints = data(index, ValueConstraintsRole);
+    if (maybeConstraints.isValid()) {
+        ret.insert(ValueConstraintsRole, maybeConstraints);
+    }
+    return ret;
 }
 
 bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value, int role)

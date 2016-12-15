@@ -1,5 +1,5 @@
 /*
-  qtivisupportwidget.cpp
+  qtiviconstrainedvaluedelegate.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -25,35 +25,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qtivisupportwidget.h"
-#include "qtivipropertymodel.h"
-#include "qtiviconstrainedvaluedelegate.h"
+#include <ui/propertyeditor/propertyeditordelegate.h>
 
-#include <common/objectbroker.h>
-#include <common/endpoint.h>
+namespace GammaRay {
 
-#include <QTreeView>
-#include <QHBoxLayout>
-#include <QHeaderView>
-#include <QLineEdit>
-
-using namespace GammaRay;
-
-QtIVIWidget::QtIVIWidget(QWidget *parent)
-    : QWidget(parent)
+class QtIviConstrainedValueDelegate : public PropertyEditorDelegate
 {
-    setObjectName("QtIVIWidget");
-    QAbstractItemModel *propertyModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.PropertyModel"));
+    Q_OBJECT
+public:
+    explicit QtIviConstrainedValueDelegate(QObject *parent);
+    ~QtIviConstrainedValueDelegate();
 
-    QVBoxLayout *vbox = new QVBoxLayout(this);
+    // Override or modify the editor for certain cases:
+    // - Set limits in spinboxes for numeric ranges
+    // - Show a special combobox for properties which have a list of allowed values, e.g.
+    //   QFlags with only some allowed combinations, like AirflowDirections
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const Q_DECL_OVERRIDE;
+};
 
-    auto objectTreeView = new QTreeView(this);
-    objectTreeView->header()->setObjectName("objectTreeViewHeader");
-    vbox->addWidget(objectTreeView);
-
-    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(propertyModel);
-    Q_UNUSED(selectionModel); // it *is* used just by having a QAIM as parent
-    objectTreeView->setModel(propertyModel);
-    objectTreeView->setItemDelegateForColumn(1, new QtIviConstrainedValueDelegate(this));
 }
