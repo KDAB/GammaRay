@@ -8,6 +8,7 @@ endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)
-    gammaray_add_plugin(gammaray_qtivi_ui JSON gammaray_qtivi.json SOURCES qtivisupportwidget.cpp)
+    gammaray_add_plugin(gammaray_qtivi_ui JSON gammaray_qtivi.json SOURCES qtivisupportwidget.cpp
+                        qtiviconstrainedvaluedelegate.cpp)
     target_link_libraries(gammaray_qtivi_ui ${QT_QTGUI_LIBRARIES} gammaray_ui)
 endif()

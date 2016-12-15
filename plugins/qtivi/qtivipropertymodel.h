@@ -46,12 +46,20 @@ class QtIviPropertyModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
+    enum {
+        ValueConstraintsRole = UserRole + 1, // the role for transporting the following constraints types
+
+        RangeConstraints = 0, // min / max
+        AvailableValuesConstraints // list of possible values
+    };
+
     explicit QtIviPropertyModel(Probe *probe);
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
     bool setData(const QModelIndex &index, const QVariant &value,
                  int role = Qt::EditRole) Q_DECL_OVERRIDE;
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
