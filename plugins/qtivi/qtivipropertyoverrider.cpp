@@ -211,7 +211,7 @@ bool QtIviPropertyOverrider::userWritable() const
     return QIviPropertyPrivate::get(m_prop)->m_valueSetter;
 }
 
-QVariant QtIviPropertyOverrider::value() const
+QVariant QtIviPropertyOverrider::cppValue() const
 {
     // QIviProperty::value() unfortunately "sanitizes" the type to avoid confusing the QML engine with
     // C++ types like enums and flags. We prefer the real types so we can show suitable display and

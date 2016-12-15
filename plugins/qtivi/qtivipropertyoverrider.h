@@ -50,7 +50,7 @@ public:
     void setOverride(bool);
     bool isOverride() const;
 
-    QVariant value() const;
+    QVariant cppValue() const;
 
 private:
     Q_DISABLE_COPY(QtIviPropertyOverrider)

@@ -319,6 +319,33 @@ static QString buildCarrierObjectName(const QObject *carrier)
     return name;
 }
 
+// Note: convertToCppType() could be used instead of or to implement QtIviPropertyOverrider::cppValue() -
+// the latter just seems more direct and less likely to go wrong for now.
+
+// Convert back to C++ type if it was sanitized for QML - trying to imitate what
+// QIviProperty::setValue(const QVariant &value) does; note that the interesting
+// part of setValue() is the int * -> void * conversion for the args array.
+// The rest of setValue() checks to see if it is okay to do that :)
+static QVariant convertToCppType(QVariant qmlVar, int cppTypeId)
+{
+    if (qmlVar.userType() != cppTypeId) {
+        if (qmlVar.canConvert(cppTypeId)) {
+            qmlVar.convert(cppTypeId);
+        } else {
+            const QMetaEnum me = EnumUtil::metaEnum(QVariant(cppTypeId, nullptr));
+            if (me.isValid() && qmlVar.canConvert<int>()) {
+                const int rawValue = qmlVar.toInt();
+                // An int is not "naturally" convertible to an enum or flags unless
+                // a conversion is explicitly registered.
+                // ### If a Q_ENUM could inherit long long, this could be an uninitialized memory read.
+                // I think it can't be long long, due to QMetaEnum API being int-based.
+                return QVariant(cppTypeId, &rawValue);
+            }
+        }
+    }
+    return qmlVar;
+}
+
 static QVariant formatConstraints(QIviProperty *property)
 {
     // value range?
@@ -333,22 +360,8 @@ static QVariant formatConstraints(QIviProperty *property)
         QVariantList avail;
         avail << uint(QtIviPropertyModel::AvailableValuesConstraints);
 
-        foreach (QVariant v, rawAvail) {
-            // First, convert back to real type if it was sanitized for QML.
-            const int realTypeId = QIviPropertyPrivate::get(property)->m_type;
-            if (v.userType() != realTypeId) {
-                if (v.canConvert(realTypeId)) {
-                    v.convert(realTypeId);
-                } else {
-                    const QMetaEnum me = EnumUtil::metaEnum(QVariant(realTypeId, nullptr));
-                    if (me.isValid() && v.canConvert<int>()) {
-                        // An int is not "naturally" convertible to an enum or flags unless
-                        // a conversion is explicitly registered
-                        int rawValue = v.toInt();
-                        v = QVariant(realTypeId, &rawValue);
-                    }
-                }
-            }
+        foreach (const QVariant &qmlVar, rawAvail) {
+            const QVariant v = convertToCppType(qmlVar, QIviPropertyPrivate::get(property)->m_type);
 
             // For convenience on the view side, send for each allowed value:
             // 1. Display string to display to the user
@@ -379,6 +392,7 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
     const quint64 parentRow = index.internalId();
     if (parentRow == PropertyCarrierIndex && role == Qt::DisplayRole) {
         // property carrier
+
         if (index.row() >= 0 && uint(index.row()) < m_propertyCarriers.size()) {
             const IviPropertyCarrier &propCarrier = m_propertyCarriers.at(index.row());
             // The columns are a bit awkward here. They are assigned that way for compatibility
@@ -395,10 +409,6 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
     } else {
         // property
 
-        // Note about value access: QIviProperty sanitizes values for QML, it turns enums and flags
-        // into ints. This is not what we want here. Use QtIviPropertyOverrider to bypass the
-        // filtering.
-
         if (parentRow != PropertyCarrierIndex && parentRow < m_propertyCarriers.size()) {
             const IviPropertyCarrier &propCarrier = m_propertyCarriers.at(parentRow);
             if (index.row() >= 0 && uint(index.row()) < propCarrier.iviProperties.size()) {
@@ -411,14 +421,14 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                     break;
                 case ValueColumn: {
                     if (role == Qt::DisplayRole) {
-                        const QVariant value = iviProperty.overrider.value();
+                        const QVariant value = iviProperty.overrider.cppValue();
                         const QMetaObject *const mo = QMetaType::metaObjectForType(value.userType());
                         const QString enumStr = EnumUtil::enumToString(value, nullptr, mo);
                         if (!enumStr.isEmpty())
                             return enumStr;
                         return VariantHandler::displayString(value);
                     } else if (role == Qt::EditRole) {
-                        const QVariant value = iviProperty.overrider.value();
+                        const QVariant value = iviProperty.overrider.cppValue();
                         const QMetaObject *const mo = QMetaType::metaObjectForType(value.userType());
                         const QMetaEnum me = EnumUtil::metaEnum(value, nullptr, mo);
                         if (me.isValid()) {
@@ -445,7 +455,7 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                     break;
                 case TypeColumn:
                     if (role == Qt::DisplayRole) {
-                        const int metatype = iviProperty.overrider.value().userType();
+                        const int metatype = iviProperty.overrider.cppValue().userType();
                         return QString::fromLatin1(QMetaType::typeName(metatype));
                     }
                     break;
@@ -475,10 +485,6 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
         return false;
     }
 
-    // Note about value access: The comment from data() applies. However, when we imitate the
-    // valueChanged() signal, it is better to use the filtered value, so get it from
-    // QIviProperty::value() in that case.
-
     IviPropertyCarrier *propCarrier = &m_propertyCarriers[parentRow];
     if (index.row() >= 0 && uint(index.row()) < propCarrier->iviProperties.size()) {
         IviProperty *iviProperty = &propCarrier->iviProperties[index.row()];
@@ -503,7 +509,7 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
 
                 QVariant toSet = value;
                 if (value.userType() == qMetaTypeId<EnumValue>()) {
-                    QVariant typeReference = iviProperty->overrider.value();
+                    QVariant typeReference = iviProperty->overrider.cppValue();
                     if (typeReference.type() == QVariant::Int) {
                         toSet = value.value<EnumValue>().value();
                     } else {
@@ -515,7 +521,7 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
 
                 // Hack: some properties reject value changes with no general way to know that
                 // up front, so check and compensate similarly to "proper" read-only properties.
-                if (!isOverride && iviProperty->overrider.value() != toSet) {
+                if (!isOverride && iviProperty->overrider.cppValue() != toSet) {
                     disconnect(iviProperty->value, &QIviProperty::valueChanged,
                                 this, &QtIviPropertyModel::propertyValueChanged);
                     isOverride = true;
@@ -565,7 +571,7 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
                         disconnect(iviProperty->value, &QIviProperty::valueChanged,
                                     this, &QtIviPropertyModel::propertyValueChanged);
                         // for the initial override value, keep the "real" value from original backend
-                        const QVariant originalValue = iviProperty->overrider.value();
+                        const QVariant originalValue = iviProperty->overrider.cppValue();
                         iviProperty->overrider.setOverride(true);
                         iviProperty->overrider.setValue(originalValue);
                     } else {
