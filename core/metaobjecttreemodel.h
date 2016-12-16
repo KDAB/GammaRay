@@ -71,6 +71,7 @@ public slots:
 private:
     void addMetaObject(const QMetaObject *metaObject);
     void removeMetaObject(const QMetaObject *metaObject);
+    bool inheritsQObject(const QMetaObject *mo) const;
 
     bool isKnownMetaObject(const QMetaObject *metaObject) const;
     QModelIndex indexForMetaObject(const QMetaObject *metaObject) const;
@@ -88,11 +89,17 @@ private:
     struct MetaObjectInfo
     {
         MetaObjectInfo()
-            : selfCount(0)
+            : invalid(false)
+            , selfCount(0)
             , selfAliveCount(0)
             , inclusiveCount(0)
             , inclusiveAliveCount(0) {}
 
+        /**
+         * True if the meta object is suspected invalid. We can't know when one is destroyed,
+         * so we mark this as true when all of the objects with this type are destroyed.
+         */
+        bool invalid;
         /// Number of objects of a particular meta object type ever created
         int selfCount;
         /// Number of instances of a meta object currently alive
@@ -104,6 +111,8 @@ private:
         int inclusiveCount;
         /// Inclusive instance count currently alive
         int inclusiveAliveCount;
+        /// A copy of QMetaObject::className()
+        QByteArray className;
     };
     QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
     /// meta objects at creation time, so we can correctly decrement instance counts
