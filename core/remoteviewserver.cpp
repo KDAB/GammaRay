@@ -78,6 +78,13 @@ void RemoteViewServer::resetView()
         emit reset();
 }
 
+
+void RemoteViewServer::clearFrameData()
+{
+    if (isActive())
+        emit requestClearFrameData();
+}
+
 bool RemoteViewServer::isActive() const
 {
     return m_clientActive;

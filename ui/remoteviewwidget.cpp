@@ -117,6 +117,7 @@ void RemoteViewWidget::setName(const QString &name)
     connect(m_interface, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)), this, SLOT(elementsAtReceived(GammaRay::ObjectIds,int)));
     connect(m_interface, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)), this,
             SLOT(frameUpdated(GammaRay::RemoteViewFrame)));
+    connect(m_interface, SIGNAL(requestClearFrameData()), this, SLOT(clearFrameData()));
     m_interface->clientViewUpdated();
 }
 
@@ -240,6 +241,15 @@ void RemoteViewWidget::frameUpdated(const RemoteViewFrame &frame)
 
     updateActions();
     QMetaObject::invokeMethod(m_interface, "clientViewUpdated", Qt::QueuedConnection);
+}
+
+void RemoteViewWidget::clearFrameData()
+{
+    if (!m_frame.isValid())
+        return;
+    auto frame = m_frame;
+    frame.setData(QVariant());
+    frameUpdated(frame);
 }
 
 int RemoteViewWidget::invisibleMask() const
