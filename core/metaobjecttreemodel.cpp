@@ -96,12 +96,12 @@ MetaObjectTreeModel::~MetaObjectTreeModel()
 {
 }
 
-static bool inheritsQObject(const QMetaObject *mo)
+bool MetaObjectTreeModel::inheritsQObject(const QMetaObject *mo) const
 {
     while (mo) {
         if (mo == &QObject::staticMetaObject)
             return true;
-        mo = mo->superClass();
+        mo = m_childParentMap.value(mo);
     }
 
     return false;
@@ -117,7 +117,7 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         switch (column) {
         case QMetaObjectModel::ObjectColumn:
-            return object->className();
+            return m_metaObjectInfoMap.value(object).className;
         case QMetaObjectModel::ObjectSelfCountColumn:
             if (inheritsQObject(object))
                 return m_metaObjectInfoMap.value(object).selfCount;
@@ -138,8 +138,12 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
             break;
         }
     } else if (role == QMetaObjectModel::MetaObjectRole) {
+        if (m_metaObjectInfoMap.value(object).invalid)
+            return QVariant();
         return QVariant::fromValue<const QMetaObject *>(object);
     } else if (role == QMetaObjectModel::MetaObjectIssues && index.column() == QMetaObjectModel::ObjectColumn) {
+        if (m_metaObjectInfoMap.value(object).invalid)
+            return QVariant();
         const auto r = QMetaObjectValidator::check(object);
         return r == QMetaObjectValidatorResult::NoIssue ? QVariant() : QVariant::fromValue(r);
     }
@@ -167,7 +171,7 @@ QModelIndex MetaObjectTreeModel::parent(const QModelIndex &child) const
 
     const QMetaObject *object = metaObjectForIndex(child);
     Q_ASSERT(object);
-    const QMetaObject *parentObject = object->superClass();
+    const QMetaObject *parentObject = m_childParentMap.value(object);
     return indexForMetaObject(parentObject);
 }
 
@@ -267,6 +271,8 @@ void MetaObjectTreeModel::addMetaObject(const QMetaObject *metaObject)
         addMetaObject(metaObject->superClass());
     }
 
+    m_metaObjectInfoMap[metaObject].className = metaObject->className();
+
     const QModelIndex parentIndex = indexForMetaObject(parentMetaObject);
     // either we get a proper parent and hence valid index or there is no parent
     assert(parentIndex.isValid() || !parentMetaObject);
@@ -313,10 +319,17 @@ void MetaObjectTreeModel::objectRemoved(QObject *obj)
     // decrease inclusive counts
     const QMetaObject *current = metaObject;
     while (current) {
-        --m_metaObjectInfoMap[current].inclusiveAliveCount;
-        assert(m_metaObjectInfoMap[current].inclusiveAliveCount >= 0);
+        MetaObjectInfo &info = m_metaObjectInfoMap[current];
+        --info.inclusiveAliveCount;
+        assert(info.inclusiveAliveCount >= 0);
         scheduleDataChange(current);
-        current = current->superClass();
+        const QMetaObject *parent = m_childParentMap.value(current);
+        // there is no way to detect when a QMetaObject is getting actually destroyed,
+        // so mark them as invalid when there are no objects if that type alive anymore.
+        if (info.inclusiveAliveCount == 0) {
+            info.invalid = true;
+        }
+        current = parent;
     }
 
     scheduleDataChange(metaObject);
