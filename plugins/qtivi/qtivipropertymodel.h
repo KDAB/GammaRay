@@ -49,7 +49,8 @@ class QtIviPropertyModel : public QAbstractItemModel
     Q_OBJECT
 public:
     enum {
-        ValueConstraintsRole = ObjectModel::UserRole + 1, // transmits the following constraints types
+        ObjectIdRole = ObjectModel::UserRole + 1,
+        ValueConstraintsRole, // transmits the following constraints types
 
         RangeConstraints = 0, // min / max
         AvailableValuesConstraints // list of possible values
@@ -74,6 +75,7 @@ private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
     void objectReparented(QObject *obj);
+    void objectSelected(QObject *obj);
     void propertyValueChanged(const QVariant &value);
     void availabilityChanged();
 

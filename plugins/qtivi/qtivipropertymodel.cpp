@@ -32,6 +32,8 @@
 #include <core/probe.h>
 #include <core/util.h>
 #include <core/varianthandler.h>
+#include <common/objectbroker.h>
+#include <common/objectid.h>
 #include <common/objectmodel.h>
 
 #include <QIviAbstractZonedFeature>
@@ -39,6 +41,7 @@
 #include <private/qiviproperty_p.h>
 
 #include <QThread>
+#include <QItemSelectionModel>
 #include <QMetaObject>
 #include <QMetaProperty>
 #include <QMutexLocker>
@@ -69,6 +72,8 @@ QtIviPropertyModel::QtIviPropertyModel(Probe *probe)
     connect(probe, SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
     connect(probe, SIGNAL(objectDestroyed(QObject*)), this, SLOT(objectRemoved(QObject*)));
     connect(probe, SIGNAL(objectReparented(QObject*)), this, SLOT(objectReparented(QObject*)));
+    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+
 }
 
 QtIviPropertyModel::IviProperty::IviProperty(QIviProperty *_value, const QMetaProperty &metaProperty)
@@ -268,6 +273,21 @@ void QtIviPropertyModel::objectReparented(QObject *obj)
     }
 }
 
+void QtIviPropertyModel::objectSelected(QObject *obj)
+{
+    QIviProperty *prop = qobject_cast<QIviProperty *>(obj);
+    if (!prop)
+        return;
+    const QModelIndex index = indexOfProperty(prop);
+    if (!index.isValid())
+        return;
+
+    QItemSelectionModel *const selectionModel = ObjectBroker::selectionModel(this);
+    selectionModel->select(index,
+                           QItemSelectionModel::Select | QItemSelectionModel::Clear |
+                           QItemSelectionModel::Rows | QItemSelectionModel::Current);
+}
+
 QVariant QtIviPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
@@ -402,19 +422,33 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) {
         return QVariant();
     }
+
     const quint64 parentRow = index.internalId();
-    if (parentRow == PropertyCarrierIndex && role == Qt::DisplayRole) {
+    if (parentRow == PropertyCarrierIndex) {
         // property carrier
 
         if (index.row() >= 0 && uint(index.row()) < m_propertyCarriers.size()) {
             const IviPropertyCarrier &propCarrier = m_propertyCarriers.at(index.row());
-            // The columns are a bit awkward here. They are assigned that way for compatibility
-            // with the header data meant for the properties.
-            switch (index.column()) {
-            case NameColumn:
-                return buildCarrierObjectName(propCarrier.carrier);
-            case TypeColumn:
-                return QString::fromLatin1(propCarrier.carrier->metaObject()->className());
+            switch (role) {
+            case Qt::DisplayRole:
+                // The columns are a bit awkward here. They are assigned that way for compatibility
+                // with the header data meant for the properties.
+                switch (index.column()) {
+                case NameColumn:
+                    return buildCarrierObjectName(propCarrier.carrier);
+                case TypeColumn:
+                    return QString::fromLatin1(propCarrier.carrier->metaObject()->className());
+                default:
+                    break;
+                }
+                break;
+            break;
+
+            case ObjectIdRole:
+                if (index.column() == 0)
+                    return QVariant::fromValue(ObjectId(propCarrier.carrier));
+                break;
+
             default:
                 break;
             }
@@ -422,14 +456,16 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
     } else {
         // property
 
-        if (parentRow != PropertyCarrierIndex && parentRow < m_propertyCarriers.size()) {
+        if (parentRow < m_propertyCarriers.size()) {
             const IviPropertyCarrier &propCarrier = m_propertyCarriers.at(parentRow);
             if (index.row() >= 0 && uint(index.row()) < propCarrier.iviProperties.size()) {
                 const IviProperty &iviProperty = propCarrier.iviProperties.at(index.row());
                 switch (index.column()) {
-                case NameColumn:
+                case NameColumn: // aka column 0, for ObjectIdRole
                     if (role == Qt::DisplayRole) {
                         return iviProperty.name;
+                    } else if (role == ObjectIdRole) {
+                        return QVariant::fromValue(ObjectId(iviProperty.value));
                     }
                     break;
                 case ValueColumn: {
@@ -488,6 +524,7 @@ QMap<int, QVariant> QtIviPropertyModel::itemData(const QModelIndex &index) const
     if (maybeConstraints.isValid()) {
         ret.insert(ValueConstraintsRole, maybeConstraints);
     }
+    ret.insert(ObjectIdRole, data(index, ObjectIdRole));
     return ret;
 }
 

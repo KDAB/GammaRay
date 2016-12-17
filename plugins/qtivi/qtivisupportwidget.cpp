@@ -29,13 +29,15 @@
 #include "qtivipropertymodel.h"
 #include "qtiviconstrainedvaluedelegate.h"
 
-#include <common/objectbroker.h>
 #include <common/endpoint.h>
+#include <common/objectbroker.h>
+#include <ui/contextmenuextension.h>
 
-#include <QTreeView>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QHeaderView>
 #include <QLineEdit>
+#include <QMenu>
+#include <QTreeView>
 
 using namespace GammaRay;
 
@@ -48,12 +50,31 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
 
     QVBoxLayout *vbox = new QVBoxLayout(this);
 
-    auto objectTreeView = new QTreeView(this);
-    objectTreeView->header()->setObjectName("objectTreeViewHeader");
-    vbox->addWidget(objectTreeView);
+    m_objectTreeView = new QTreeView(this);
+    m_objectTreeView->header()->setObjectName("objectTreeViewHeader");
+    vbox->addWidget(m_objectTreeView);
 
-    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(propertyModel);
-    Q_UNUSED(selectionModel); // it *is* used just by having a QAIM as parent
-    objectTreeView->setModel(propertyModel);
-    objectTreeView->setItemDelegateForColumn(1, new QtIviConstrainedValueDelegate(this));
+    m_objectTreeView->setModel(propertyModel);
+    m_objectTreeView->setSelectionModel(ObjectBroker::selectionModel(propertyModel));
+    m_objectTreeView->setItemDelegateForColumn(1, new QtIviConstrainedValueDelegate(this));
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    m_objectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
+}
+
+void QtIVIWidget::contextMenu(QPoint pos)
+{
+    QModelIndex index = m_objectTreeView->indexAt(pos);
+    if (!index.isValid())
+        return;
+    index = index.sibling(index.row(), 0);
+    const ObjectId objectId = index.data(QtIviPropertyModel::ObjectIdRole).value<ObjectId>();
+    if (objectId.isNull())
+        return;
+
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+    menu.exec(m_objectTreeView->viewport()->mapToGlobal(pos));
 }
