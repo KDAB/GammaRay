@@ -34,6 +34,7 @@
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
+class QTreeView;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -43,6 +44,12 @@ class QtIVIWidget : public QWidget
     Q_OBJECT
 public:
     explicit QtIVIWidget(QWidget *parent = nullptr);
+
+private slots:
+    void contextMenu(QPoint pos);
+
+private:
+    QTreeView *m_objectTreeView;
 };
 
 class QtIVIUiFactory : public QObject, public StandardToolUiFactory<QtIVIWidget>
