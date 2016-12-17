@@ -90,6 +90,7 @@ public:
 
 private:
     int indexOfPropertyCarrier(const QObject *carrier) const;
+    QModelIndex indexOfProperty(const QIviProperty *property, int column = 0 /*NameColumn*/) const;
 
     struct IviPropertyCarrier
     {
