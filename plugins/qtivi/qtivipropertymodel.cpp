@@ -127,6 +127,18 @@ int QtIviPropertyModel::IviPropertyCarrier::indexOfProperty(const QIviProperty *
     return -1;
 }
 
+QModelIndex QtIviPropertyModel::indexOfProperty(const QIviProperty *property, int column) const
+{
+    const int carrierIndex = indexOfPropertyCarrier(property->parent());
+    if (carrierIndex < 0)
+        return QModelIndex();
+    const IviPropertyCarrier &carrier = m_propertyCarriers.at(carrierIndex);
+    const int propertyIndex = carrier.indexOfProperty(property);
+    if (propertyIndex < 0)
+        return QModelIndex();
+    return createIndex(propertyIndex, column, carrierIndex);
+}
+
 void QtIviPropertyModel::objectAdded(QObject *obj)
 {
     // We see a property carriers in a half-constructed state here, let's take QIviClimateControl as
@@ -610,32 +622,19 @@ void QtIviPropertyModel::propertyValueChanged(const QVariant &)
     if (!property) {
         return;
     }
-    const int carrierIndex = indexOfPropertyCarrier(property->parent());
-    if (carrierIndex < 0) {
+    const QModelIndex index = indexOfProperty(property, ValueColumn);
+    if (!index.isValid())
         return;
-    }
-    const IviPropertyCarrier &carrier = m_propertyCarriers.at(carrierIndex);
-    const int propertyIndex = carrier.indexOfProperty(property);
-    if (propertyIndex < 0) {
-        return;
-    }
-    const QModelIndex index = createIndex(propertyIndex, ValueColumn, carrierIndex);
     emit dataChanged(index, index);
 }
 
 void QtIviPropertyModel::availabilityChanged()
 {
     auto property = qobject_cast<QIviProperty *>(sender());
-    if (!property)
+    const QModelIndex index = indexOfProperty(property, NameColumn);
+    if (!index.isValid())
         return;
-    const auto carrierIndex = indexOfPropertyCarrier(property->parent());
-    if (carrierIndex < 0)
-        return;
-    const auto &carrier = m_propertyCarriers.at(carrierIndex);
-    const auto propertyIndex = carrier.indexOfProperty(property);
-    if (propertyIndex < 0)
-        return;
-    emit dataChanged(createIndex(propertyIndex, NameColumn, carrierIndex), createIndex(propertyIndex, TypeColumn, carrierIndex));
+    emit dataChanged(index, index.sibling(index.row(), TypeColumn));
 }
 
 int QtIviPropertyModel::rowCount(const QModelIndex &parent) const
