@@ -282,6 +282,7 @@ Qt::ItemFlags QtIviPropertyModel::flags(const QModelIndex &index) const
         const auto &carrier = m_propertyCarriers.at(index.parent().row());
         const auto &prop = carrier.iviProperties.at(index.row());
 
+        flags |= Qt::ItemNeverHasChildren; // We have two levels, this is the second
         if (!prop.value->isAvailable())
             flags &= ~Qt::ItemIsEnabled;
 
