@@ -33,10 +33,12 @@
        <enum>Qt::CustomContextMenu</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-image: url(:/gammaray/kdab-gammaray-logo.png);
+       <string notr="true">QWidget#toolSelector{
+background-image: url(:/gammaray/kdab-gammaray-logo.png);
 background-repeat: no-repeat;
 background-attachment:fixed;
 background-position:bottom right;
+}
 </string>
       </property>
       <property name="frameShape">
@@ -89,7 +91,7 @@ background-position:bottom right;
      <x>0</x>
      <y>0</y>
      <width>829</width>
-     <height>27</height>
+     <height>39</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_GammaRay">
