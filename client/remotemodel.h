@@ -95,9 +95,9 @@ private:
         ~Node();
         Q_DISABLE_COPY(Node)
         // delete all cached children data, but assume row/column count on this level is still accurate
-        void clearChildrenData();
+        void clearChildrenData(RemoteModel *model);
         // forget everything we know about our children, including row/column counts
-        void clearChildrenStructure();
+        void clearChildrenStructure(RemoteModel *model);
 
         // resize the initialize the column vectors
         void allocateColumns();
