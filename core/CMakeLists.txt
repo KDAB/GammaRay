@@ -3,6 +3,7 @@ set(gammaray_srcs
 
   aggregatedpropertymodel.cpp
   metaobject.cpp
+  metaobjectregistry.cpp
   metaobjecttreemodel.cpp
   metaobjectrepository.cpp
   metaproperty.cpp

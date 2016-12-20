@@ -55,6 +55,7 @@ class MainWindow;
 class BenchSuite;
 class Server;
 class ToolManager;
+class MetaObjectRegistry;
 
 class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 {
@@ -91,6 +92,8 @@ public:
     void setWindow(QObject *window);
 
     QObject *probe() const Q_DECL_OVERRIDE;
+
+    MetaObjectRegistry *metaObjectRegistry() const;
 
     /**
      * Lock this to check the validity of a QObject
@@ -199,6 +202,7 @@ private:
     ToolManager *m_toolManager;
     QObject *m_window;
     QSet<QObject *> m_validObjects;
+    MetaObjectRegistry *m_metaObjectRegistry;
 
     // all delayed object changes need to go through a single queue, as the order is crucial
     struct ObjectChange {

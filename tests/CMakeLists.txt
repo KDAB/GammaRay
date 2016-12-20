@@ -298,6 +298,9 @@ add_executable(methodmodeltest
   methodmodeltest.cpp
   ${CMAKE_SOURCE_DIR}/core/objectmethodmodel.cpp
   ${CMAKE_SOURCE_DIR}/core/qmetaobjectvalidator.cpp
+  ${CMAKE_SOURCE_DIR}/core/metaobjectregistry.cpp
+  ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
+  ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
   ${CMAKE_SOURCE_DIR}/ui/tools/objectinspector/clientmethodmodel.cpp
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
 )

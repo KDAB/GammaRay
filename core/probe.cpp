@@ -41,6 +41,7 @@
 #include "toolpluginmodel.h"
 #include "util.h"
 #include "varianthandler.h"
+#include "metaobjectregistry.h"
 
 #include "remote/server.h"
 #include "remote/remotemodelserver.h"
@@ -207,6 +208,7 @@ Probe::Probe(QObject *parent)
     , m_objectListModel(new ObjectListModel(this))
     , m_objectTreeModel(new ObjectTreeModel(this))
     , m_window(nullptr)
+    , m_metaObjectRegistry(new MetaObjectRegistry(this))
     , m_queueTimer(new QTimer(this))
     , m_server(nullptr)
 {
@@ -247,6 +249,9 @@ Probe::Probe(QObject *parent)
         = qt_signal_spy_callback_set.slot_begin_callback;
     m_previousSignalSpyCallbackSet.slotEndCallback = qt_signal_spy_callback_set.slot_end_callback;
     registerSignalSpyCallbackSet(m_previousSignalSpyCallbackSet); // daisy-chain existing callbacks
+
+    connect(this, &Probe::objectCreated, m_metaObjectRegistry, &MetaObjectRegistry::objectAdded);
+    connect(this, &Probe::objectDestroyed, m_metaObjectRegistry, &MetaObjectRegistry::objectRemoved);
 }
 
 Probe::~Probe()
@@ -278,6 +283,11 @@ void Probe::setWindow(QObject *window)
 QObject *Probe::window() const
 {
     return m_window;
+}
+
+MetaObjectRegistry *Probe::metaObjectRegistry() const
+{
+    return m_metaObjectRegistry;
 }
 
 Probe *GammaRay::Probe::instance()

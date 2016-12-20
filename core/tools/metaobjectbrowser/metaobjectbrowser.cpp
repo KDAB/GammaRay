@@ -30,6 +30,7 @@
 #include "metaobjecttreemodel.h"
 #include "probe.h"
 #include "propertycontroller.h"
+#include "metaobjectregistry.h"
 
 #include <common/objectbroker.h>
 #include <common/metatypedeclarations.h>
@@ -49,9 +50,6 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
     , m_motm(new MetaObjectTreeModel(this))
     , m_model(nullptr)
 {
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_motm, SLOT(objectAdded(QObject*)));
-    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_motm, SLOT(objectRemoved(QObject*)));
-
     auto model = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     model->addRole(QMetaObjectModel::MetaObjectIssues);
     model->setSourceModel(m_motm);
@@ -75,7 +73,7 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
 
 void MetaObjectBrowser::rescanMetaTypes()
 {
-    m_motm->scanMetaTypes();
+    Probe::instance()->metaObjectRegistry()->scanMetaTypes();
 }
 
 void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
