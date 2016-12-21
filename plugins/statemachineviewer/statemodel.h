@@ -71,6 +71,7 @@ protected:
 
 private:
     Q_PRIVATE_SLOT(d_func(), void stateConfigurationChanged())
+    Q_PRIVATE_SLOT(d_func(), void objectSelected(QObject*))
     Q_PRIVATE_SLOT(d_func(), void handleMachineDestroyed(QObject*))
 };
 }
