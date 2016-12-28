@@ -45,6 +45,7 @@
 #include <common/objectmodel.h>
 #include <common/sourcelocation.h>
 
+#include <QCoreApplication>
 #include <QModelIndex>
 #include <QObject>
 
@@ -142,9 +143,9 @@ public:
         if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
             switch (section) {
             case 0:
-                return QObject::tr("Object");
+                return qApp->translate("GammaRay::ObjectModelBase", "Object");
             case 1:
-                return QObject::tr("Type");
+                return qApp->translate("GammaRay::ObjectModelBase", "Type");
             }
         }
         return Base::headerData(section, orientation, role);

@@ -29,6 +29,7 @@
 
 #include "plugininfo.h"
 
+#include <QCoreApplication>
 #include <QObject>
 #include <QString>
 
@@ -75,9 +76,9 @@ protected:
         loadPlugin();
         IFace *iface = qobject_cast<IFace *>(m_factory);
         if (!iface) {
-            m_errorString
-                = QObject::tr("Plugin does not provide an instance of %1.").
-                  arg(qobject_interface_iid<IFace *>());
+            m_errorString = qApp->translate("GammaRay::ProxyFactory",
+                                            "Plugin does not provide an instance of %1.")
+                                                .arg(qobject_interface_iid<IFace *>());
             std::cerr << "Failed to cast object from " << qPrintable(pluginInfo().path())
                       << " to " << qobject_interface_iid<IFace *>() << std::endl;
         }

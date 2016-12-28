@@ -233,7 +233,7 @@ QVariant Util::iconForObject(const QObject *obj)
 
 QString Util::tooltipForObject(const QObject *object)
 {
-    return QObject::tr(
+    return qApp->translate("GammaRay::Util",
         "<p style='white-space:pre'>Object name: %1 (Address: %2)\nType: %3\nParent: %4 (Address: %5)\nNumber of children: %6</p>")
            .arg(
         object->objectName().isEmpty() ? QStringLiteral("&lt;Not set&gt;") : object->objectName(),

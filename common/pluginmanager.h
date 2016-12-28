@@ -31,6 +31,7 @@
 
 #include "plugininfo.h"
 
+#include <QCoreApplication>
 #include <QVector>
 #include <QList>
 #include <QFileInfo>
@@ -114,7 +115,7 @@ protected:
     {
         Proxy *proxy = new Proxy(pluginInfo, parent);
         if (!proxy->isValid()) {
-            m_errors << PluginLoadError(pluginInfo.path(), QObject::tr(
+            m_errors << PluginLoadError(pluginInfo.path(), qApp->translate("GammaRay::PluginManager",
                                             "Failed to load plugin: %1").arg(proxy->errorString()));
             std::cerr << "invalid plugin " << qPrintable(pluginInfo.path()) << std::endl;
             delete proxy;
