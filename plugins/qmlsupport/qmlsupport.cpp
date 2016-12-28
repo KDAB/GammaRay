@@ -291,7 +291,10 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     MO_ADD_PROPERTY_RO(QQmlContext, bool, isValid);
     MO_ADD_PROPERTY_RO(QQmlContext, QQmlContext *, parentContext);
 
-    MO_ADD_METAOBJECT1(QQmlEngine, QObject);
+    MO_ADD_METAOBJECT1(QJSEngine, QObject);
+    MO_ADD_PROPERTY_RO(QJSEngine, QJSValue, globalObject);
+
+    MO_ADD_METAOBJECT1(QQmlEngine, QJSEngine);
     MO_ADD_PROPERTY_CR(QQmlEngine, QUrl, baseUrl, setBaseUrl);
     MO_ADD_PROPERTY_CR(QQmlEngine, QStringList, importPathList, setImportPathList);
     MO_ADD_PROPERTY(QQmlEngine, bool, outputWarningsToStandardError,
