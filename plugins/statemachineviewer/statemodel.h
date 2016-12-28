@@ -28,7 +28,9 @@
 #ifndef GAMMARAY_STATEMACHINEVIEWER_STATEMODEL_H
 #define GAMMARAY_STATEMACHINEVIEWER_STATEMODEL_H
 
-#include <core/objectmodelbase.h>
+#include <common/objectmodel.h>
+
+#include <QAbstractItemModel>
 
 QT_BEGIN_NAMESPACE
 class QAbstractTransition;
