@@ -29,6 +29,7 @@
 #include "statemachinedebuginterface.h"
 #include "statemachinewatcher.h"
 
+#include <core/objectmodelbase.h>
 #include <core/util.h>
 
 #include <QAbstractTransition>
