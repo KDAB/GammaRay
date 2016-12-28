@@ -170,7 +170,6 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
     m_ui->singleStateMachineView->setExpandNewContent(true);
     m_ui->singleStateMachineView->setDeferredResizeMode(0, QHeaderView::Stretch);
     m_ui->singleStateMachineView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-    m_ui->singleStateMachineView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_ui->singleStateMachineView->setItemDelegate(new StateModelDelegate(this));
     m_ui->singleStateMachineView->setModel(stateModel);
     connect(m_ui->singleStateMachineView, &QWidget::customContextMenuRequested, this,
