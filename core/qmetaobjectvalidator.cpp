@@ -61,9 +61,12 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkMethod(const QMet
 
     // check for parameters with unknown type
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    for (int j = 0; j < method.parameterCount(); ++j) {
-        if (method.parameterType(j) == QMetaType::UnknownType)
-            r |= QMetaObjectValidatorResult::UnknownMethodParameterType;
+    // don't check internal methods such as _q_createJSWrapper() from QQuickItem
+    if (!method.name().startsWith("_q")) {
+        for (int j = 0; j < method.parameterCount(); ++j) {
+            if (method.parameterType(j) == QMetaType::UnknownType)
+                r |= QMetaObjectValidatorResult::UnknownMethodParameterType;
+        }
     }
 
     // check for signal overrides
