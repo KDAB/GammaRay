@@ -208,6 +208,8 @@ QVariant StateModel::data(const QModelIndex &index, int role) const
         return d->m_stateMachine->isInitialState(state);
     } else if (role == StateValueRole) {
         return QVariant::fromValue(state);
+    } else if (role == StateIdRole) {
+        return QVariant::fromValue(GammaRay::StateId(static_cast<quint64>(state.m_id)));
     } else if (role == Qt::CheckStateRole && index.column() == 0) {
         return d->m_stateMachine->configuration().contains(state) ? Qt::Checked : Qt::Unchecked;
     } else if (role == Qt::DisplayRole && index.column() == 0) {

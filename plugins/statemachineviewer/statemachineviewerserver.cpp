@@ -61,8 +61,11 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
     , m_stateModel(new StateModel(this))
     , m_transitionModel(new TransitionModel(this))
 {
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateModel"), m_stateModel);
-    QItemSelectionModel *stateSelectionModel = ObjectBroker::selectionModel(m_stateModel);
+    auto proxyModel = new ServerProxyModel<QIdentityProxyModel>(this);
+    proxyModel->setSourceModel(m_stateModel);
+    proxyModel->addRole(StateModel::StateIdRole);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateModel"), proxyModel);
+    QItemSelectionModel *stateSelectionModel = ObjectBroker::selectionModel(proxyModel);
     connect(stateSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(stateSelectionChanged()));
 
