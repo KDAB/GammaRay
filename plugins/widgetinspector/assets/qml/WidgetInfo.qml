@@ -82,16 +82,20 @@ Item {
             text: "<b>" + (metaData ? parseObjectName(metaData) : "") + "</b>"
         }
         Text {
-            text: "<b>" + qsTr("Class:") + "</b> " + (metaData ? metaData.className : "")
+            text: "<b>" + qsTranslate("GammaRay::WidgetInspector::QML", "Class:")
+                + "</b> " + (metaData ? metaData.className : "")
         }
         Text {
-            text: "<b>" + qsTr("Parent:") + "</b> " + (metaData ? parseObjectName(metaData.parent) : "")
+            text: "<b>" + qsTranslate("GammaRay::WidgetInspector::QML", "Parent:")
+                + "</b> " + (metaData ? parseObjectName(metaData.parent) : "")
         }
         Text {
-            text: "<b>" + qsTr("Position:") + "</b> " + (metaData ? metaData.geometry.x + ", " + metaData.geometry.y : "")
+            text: "<b>" + qsTranslate("GammaRay::WidgetInspector::QML", "Position:")
+                + "</b> " + (metaData ? metaData.geometry.x + ", " + metaData.geometry.y : "")
         }
         Text {
-            text: "<b>" + qsTr("Size:") + "</b> " + (metaData ? metaData.geometry.width + " x " + metaData.geometry.height : "")
+            text: "<b>" + qsTranslate("GammaRay::WidgetInspector::QML", "Size:")
+                + "</b> " + (metaData ? metaData.geometry.width + " x " + metaData.geometry.height : "")
         }
     }
 }

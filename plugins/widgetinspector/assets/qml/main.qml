@@ -183,12 +183,12 @@ QQ2.Item {
 
         CheckBox {
             id: renderWireframe
-            text: qsTr("Wireframe")
+            text: qsTranslate("GammaRay::WidgetInspector::QML", "Wireframe")
         }
 
         CheckBox {
             id: renderHorizontals
-            text: qsTr("Horizontals")
+            text: qsTranslate("GammaRay::WidgetInspector::QML", "Horizontals")
         }
     }
 }
