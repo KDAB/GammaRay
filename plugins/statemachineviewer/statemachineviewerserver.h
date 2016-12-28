@@ -76,6 +76,8 @@ private slots:
 
     void setFilteredStates(const QVector<State> &states);
     void selectStateMachine(int row) Q_DECL_OVERRIDE;
+
+    /// Takes ownership of @p machine
     void setSelectedStateMachine(StateMachineDebugInterface *machine);
 
     void updateStartStop();

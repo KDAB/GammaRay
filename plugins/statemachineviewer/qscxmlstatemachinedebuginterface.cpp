@@ -47,8 +47,8 @@ static Transition toTransition(QScxmlStateMachineInfo::TransitionId transition) 
     return Transition(static_cast<quintptr>(transition));
 }
 
-QScxmlStateMachineDebugInterface::QScxmlStateMachineDebugInterface(QScxmlStateMachine *stateMachine)
-    : StateMachineDebugInterface(stateMachine)
+QScxmlStateMachineDebugInterface::QScxmlStateMachineDebugInterface(QScxmlStateMachine *stateMachine, QObject *parent)
+    : StateMachineDebugInterface(parent)
     , m_stateMachine(stateMachine)
     , m_info(new QScxmlStateMachineInfo(stateMachine))
 {

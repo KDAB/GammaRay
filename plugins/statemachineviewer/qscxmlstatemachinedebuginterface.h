@@ -44,7 +44,7 @@ class QScxmlStateMachineDebugInterface: public StateMachineDebugInterface
 Q_OBJECT
 
 public:
-    explicit QScxmlStateMachineDebugInterface(QScxmlStateMachine *stateMachine);
+    explicit QScxmlStateMachineDebugInterface(QScxmlStateMachine *stateMachine, QObject *parent = nullptr);
     ~QScxmlStateMachineDebugInterface();
 
     bool isRunning() const override;

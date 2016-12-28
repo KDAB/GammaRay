@@ -159,6 +159,8 @@ void StateMachineViewerServer::setSelectedStateMachine(StateMachineDebugInterfac
     stateConfigurationChanged();
 
     if (machine) {
+        machine->setParent(this);
+
         connect(machine, SIGNAL(runningChanged(bool)), this, SLOT(updateStartStop()));
         connect(machine, SIGNAL(stateEntered(State)), this, SLOT(stateEntered(State)));
         connect(machine, SIGNAL(stateExited(State)), this, SLOT(stateExited(State)));
@@ -182,13 +184,13 @@ void StateMachineViewerServer::selectStateMachine(int row)
     QObject *stateMachineObject = index.data(ObjectModel::ObjectRole).value<QObject *>();
     QStateMachine *machine = qobject_cast<QStateMachine *>(stateMachineObject);
     if (machine) {
-        setSelectedStateMachine(new QSMStateMachineDebugInterface(machine));
+        setSelectedStateMachine(new QSMStateMachineDebugInterface(machine, this));
         return;
     }
 #ifdef HAVE_QT_SCXML
     QScxmlStateMachine *qscxmlMachine = qobject_cast<QScxmlStateMachine *>(stateMachineObject);
     if (qscxmlMachine) {
-        setSelectedStateMachine(new QScxmlStateMachineDebugInterface(qscxmlMachine));
+        setSelectedStateMachine(new QScxmlStateMachineDebugInterface(qscxmlMachine, this));
         return;
     }
 #endif

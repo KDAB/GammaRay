@@ -73,8 +73,8 @@ static QVector<T*> childrenOfType(QObject *parent) {
     return v;
 }
 
-QSMStateMachineDebugInterface::QSMStateMachineDebugInterface(QStateMachine *stateMachine)
-    : StateMachineDebugInterface(stateMachine)
+QSMStateMachineDebugInterface::QSMStateMachineDebugInterface(QStateMachine *stateMachine, QObject *parent)
+    : StateMachineDebugInterface(parent)
     , m_stateMachine(stateMachine)
     , m_stateMachineWatcher(new StateMachineWatcher(this))
 {
