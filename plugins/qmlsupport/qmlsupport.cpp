@@ -130,6 +130,13 @@ static QString qjsValueToString(const QJSValue &v)
         return QStringLiteral("<array>");
     else if (v.isBool())
         return v.toBool() ? QStringLiteral("true") : QStringLiteral("false");
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    // note: v.isQMetaObject() == true => v.isCallable() == true, because QV4::QMetaObjectWrapper inherits
+    // QV4::FunctionObject and isCallable just checks whether the object is a function object.
+    // thus the isQMetaObject check needs to come before the isCallable check
+    else if (v.isQMetaObject())
+        return QStringLiteral("QMetaObject[className=%1]").arg(v.toQMetaObject()->className());
+#endif
     else if (v.isCallable())
         return callableQjsValueToString(v);
     else if (v.isDate())
