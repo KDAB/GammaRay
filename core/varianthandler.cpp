@@ -127,7 +127,7 @@ QString VariantHandler::displayString(const QVariant &value)
     {
         const QIcon icon = value.value<QIcon>();
         if (icon.isNull())
-            return QObject::tr("<no icon>");
+            return qApp->translate("GammaRay::VariantHandler", "<no icon>");
         const auto sizes = icon.availableSizes();
         QStringList l;
         l.reserve(sizes.size());
@@ -264,7 +264,7 @@ QString VariantHandler::displayString(const QVariant &value)
     // types with dynamic type ids
     if (value.userType() == qMetaTypeId<QMargins>()) {
         const QMargins margins = value.value<QMargins>();
-        return QObject::tr("left: %1, top: %2, right: %3, bottom: %4")
+        return qApp->translate("GammaRay::VariantHandler", "left: %1, top: %2, right: %3, bottom: %4")
                .arg(margins.left()).arg(margins.top())
                .arg(margins.right()).arg(margins.bottom());
     }

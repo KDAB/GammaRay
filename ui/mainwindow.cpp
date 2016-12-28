@@ -244,7 +244,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     for (int i = 0; i < ideSettingsSize; ++i) {
         auto action = new QAction(menu);
-        action->setText(QObject::tr(ideSettings[i].name));
+        action->setText(tr(ideSettings[i].name));
         if (ideSettings[i].icon)
             action->setIcon(QIcon::fromTheme(ideSettings[i].icon));
         action->setCheckable(true);
