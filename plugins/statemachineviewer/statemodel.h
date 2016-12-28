@@ -47,10 +47,12 @@ class StateModel : public QAbstractItemModel
 
 public:
     enum Roles {
-        TransitionsRole = ObjectModel::UserRole + 1,
-        IsInitialStateRole,
-        StateValueRole
+        TransitionsRole = ObjectModel::UserRole + 1, ///< return bool, see StateMachineDebugInterface::transitions()
+        IsInitialStateRole, ///< return bool, see StateMachineDebugInterface::isInitialState()
+        StateValueRole,     ///< return GammaRay::State
+        StateIdRole         ///< return GammaRay::StateId
     };
+
     explicit StateModel(QObject *parent = nullptr);
     ~StateModel();
 

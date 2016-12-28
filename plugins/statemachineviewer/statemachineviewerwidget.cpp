@@ -29,6 +29,8 @@
 
 #include "statemachineviewerclient.h"
 #include "statemodeldelegate.h"
+#include "statemodel.h"
+#include "statemachinedebuginterface.h"
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
@@ -89,10 +91,11 @@ void SelectionModelSyncer::handle_objectInspector_currentChanged(const QModelInd
     QScopedValueRollback<bool> block(m_updatesEnabled);
     m_updatesEnabled = false;
 
-    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
+    const auto stateId = index.data(StateModel::StateIdRole).value<StateId>();
+
     const auto model = m_widget->stateMachineView()->scene()->model();
     const auto matches = model->match(model->index(0, 0), KDSME::StateModel::InternalIdRole,
-                                      static_cast<quintptr>(objectId.id()), 1,
+                                      static_cast<quintptr>(stateId), 1,
                                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     auto selectionModel = m_widget->stateMachineView()->scene()->selectionModel();
     selectionModel->setCurrentIndex(matches.value(0), QItemSelectionModel::SelectCurrent);
@@ -107,10 +110,9 @@ void SelectionModelSyncer::handle_stateMachineView_currentChanged(const QModelIn
     m_updatesEnabled = false;
 
     const auto internalId = index.data(KDSME::StateModel::InternalIdRole).value<quintptr>();
-    const auto objectId = ObjectId(reinterpret_cast<QObject *>(internalId));
     const auto model = m_widget->objectInspector()->model();
-    const auto matches = model->match(model->index(0, 0), ObjectModel::ObjectIdRole,
-                                      QVariant::fromValue(objectId), 1,
+    const auto matches = model->match(model->index(0, 0), StateModel::StateIdRole,
+                                      QVariant::fromValue(StateId(internalId)), 1,
                                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     auto selectionModel = m_widget->objectInspector()->selectionModel();
     selectionModel->setCurrentIndex(matches.value(
