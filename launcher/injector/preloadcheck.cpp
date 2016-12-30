@@ -32,7 +32,6 @@
 #include <QDebug>
 #include <QIODevice>
 #include <QFile>
-#include <QRegExp>
 #include <QString>
 #include <QProcess>
 
@@ -73,18 +72,40 @@ bool PreloadCheck::test(const QString &fileName, const QString &symbol)
         return false;
     }
 
+    const QByteArray symbolAsByteArray = symbol.toLocal8Bit();
+
     // Example line on x86_64:
     // 00000049f3d8  054300000007 R_X86_64_JUMP_SLO 000000000016c930 qt_startup_hook + 0
     // Example line on i386:
     // 002e02f0  00034407 R_386_JUMP_SLOT        00181490   qt_startup_hook
-    QRegExp rx("^(?:[^ ]+\\s+){4}([^ ]+)(?:.*)$");
+
+    // algorithm:
+    // - scan the readelf output line by line
+    // - for each line: jump to the 5th word & strncmp with the searched symbol
     while (proc.canReadLine()) {
-        const QString line = proc.readLine().trimmed();
-        if (!rx.exactMatch(line))
+        const QByteArray line = proc.readLine();
+        if (line.isEmpty())
             continue;
 
-        const QString currentSymbol = rx.cap(1);
-        if (currentSymbol == symbol) {
+        // first word must be a address (thus first char must be a hex char)
+        if (!(line[0] >= '0' && line[0] <= 'f'))
+            continue;
+
+        // skip 4 words
+        int pos = 1;
+        int count = line.size();
+        int wordCount = 1; // 1 because pos == 0 already contains the start of a word
+        for (; pos < count; ++pos) {
+            // transition from whitespace to non-whitespace char => we found a word
+            if (line[pos-1] == ' ' && line[pos] != ' ')
+                ++wordCount;
+
+            if (wordCount == 5)
+                break;
+        }
+
+        // we're at the 5th word
+        if (qstrncmp(line.constData() + pos, symbolAsByteArray.constData(), symbolAsByteArray.length()) == 0) {
             qDebug() << "Found relocatable symbol in" << fileName << ":" << symbol;
             setErrorString(QString());
             return true;
@@ -103,6 +124,7 @@ bool PreloadCheck::test(const QString &fileName, const QString &symbol)
     }
 #endif
 
+    qDebug() << "Did not find relocatable symbol in" << fileName << ":" << symbol;
     setErrorString(tr("Symbol is not marked as relocatable: %1").arg(symbol));
     return false;
 }
