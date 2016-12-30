@@ -438,9 +438,9 @@ add_definitions(
     -DQT_NO_URL_CAST_FROM_STRING
 )
 
-# disable QT_STRICT_ITERATORS on the Qt5+Windows combo
+# disable QT_STRICT_ITERATORS on the >=Qt5.0<=Qt5.2+Windows combo
 # see: https://bugreports.qt-project.org/browse/QTBUG-29608
-if(NOT (Qt5Core_FOUND AND WIN32))
+if(NOT (Qt5Core_FOUND AND Qt5Core_VERSION VERSION_LESS 5.3 AND WIN32))
   add_definitions(-DQT_STRICT_ITERATORS)
 endif()
 
