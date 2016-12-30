@@ -541,9 +541,14 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 
 #endif
 
-    if (fromCtor) {
-        s_listener()->constructionBacktracesForObjects[obj].load_here(32);
+    static const bool disableBacktraceLogging = qgetenv("GAMMARAY_DISABLE_BACKTRACE_LOGGING") == "1";
+
+    if (!disableBacktraceLogging) {
+        if (fromCtor) {
+            s_listener()->constructionBacktracesForObjects[obj].load_here(32);
+        }
     }
+
     if (!isInitialized()) {
         IF_DEBUG(cout
                  << "objectAdded Before: "
