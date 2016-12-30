@@ -29,10 +29,13 @@
 #include "statemachinedebuginterface.h"
 #include "statemachinewatcher.h"
 
+#include <common/objectbroker.h>
+#include <core/probe.h>
 #include <core/util.h>
 
 #include <QAbstractTransition>
 #include <QDebug>
+#include <QItemSelectionModel>
 #include <QStateMachine>
 #include <QStringList>
 
@@ -73,6 +76,7 @@ class StateModelPrivate
 // private slots:
     void stateConfigurationChanged();
     void handleMachineDestroyed(QObject *);
+    void objectSelected(QObject *obj);
 };
 }
 
@@ -141,6 +145,19 @@ void StateModelPrivate::handleMachineDestroyed(QObject *)
     q->endResetModel();
 }
 
+void StateModelPrivate::objectSelected(QObject *obj)
+{
+    const QModelIndex index = indexForState(State(quintptr(obj)));
+    if (!index.isValid())
+        return;
+
+    Q_Q(StateModel);
+    QItemSelectionModel *const selectionModel = ObjectBroker::selectionModel(q);
+    selectionModel->select(index,
+                           QItemSelectionModel::Select | QItemSelectionModel::Clear |
+                           QItemSelectionModel::Rows | QItemSelectionModel::Current);
+}
+
 StateModel::StateModel(QObject *parent)
     : QAbstractItemModel(parent)
     , d_ptr(new StateModelPrivate(this))
@@ -149,6 +166,8 @@ StateModel::StateModel(QObject *parent)
     _roleNames.insert(TransitionsRole, "transitions");
     _roleNames.insert(IsInitialStateRole, "isInitial");
     setRoleNames(_roleNames);
+    connect(Probe::instance(), SIGNAL(objectSelected(QObject*,QPoint)),
+            this, SLOT(objectSelected(QObject*)));
 }
 
 StateModel::~StateModel()
