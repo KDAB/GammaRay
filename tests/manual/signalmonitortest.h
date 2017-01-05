@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2013-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2013-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Mathias Hasselmann <mathias.hasselmann@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -36,7 +36,7 @@ class SignalMonitorTest : public QObject
     Q_OBJECT
 
 public:
-    SignalMonitorTest(QObject *parent = nullptr);
+    explicit SignalMonitorTest(QObject *parent = nullptr);
 
 private:
     QString nextTimerName();
