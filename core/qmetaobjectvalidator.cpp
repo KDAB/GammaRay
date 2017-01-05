@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -62,7 +62,7 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkMethod(const QMet
     // check for parameters with unknown type
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     // don't check internal methods such as _q_createJSWrapper() from QQuickItem
-    if (!method.name().startsWith("_q")) {
+    if (!method.name().startsWith("_q")) { //krazy:exclude=strings
         for (int j = 0; j < method.parameterCount(); ++j) {
             if (method.parameterType(j) == QMetaType::UnknownType)
                 r |= QMetaObjectValidatorResult::UnknownMethodParameterType;
