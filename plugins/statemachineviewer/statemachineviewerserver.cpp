@@ -2,7 +2,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2010-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Kevin Funk <kevin.funk@kdab.com>
   Author: Milian Wolff <milian.wolff@kdab.com>
 
@@ -168,7 +168,7 @@ void StateMachineViewerServer::setSelectedStateMachine(StateMachineDebugInterfac
         connect(machine, SIGNAL(stateEntered(State)), this, SLOT(stateEntered(State)));
         connect(machine, SIGNAL(stateExited(State)), this, SLOT(stateExited(State)));
         connect(machine, SIGNAL(transitionTriggered(Transition)), this, SLOT(handleTransitionTriggered(Transition)));
-        connect(machine, SIGNAL(logMessage(QString, QString)), this, SLOT(handleLogMessage(QString, QString)));
+        connect(machine, SIGNAL(logMessage(QString,QString)), this, SLOT(handleLogMessage(QString,QString)));
     }
     updateStartStop();
 

@@ -2,7 +2,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2010-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Jan Arne Petersen <jan.petersen@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -54,7 +54,7 @@ QScxmlStateMachineDebugInterface::QScxmlStateMachineDebugInterface(QScxmlStateMa
 {
     connect(stateMachine, SIGNAL(runningChanged(bool)), this, SIGNAL(runningChanged(bool)));
 
-    connect(stateMachine, SIGNAL(log(QString, QString)), this, SIGNAL(logMessage(QString, QString)));
+    connect(stateMachine, SIGNAL(log(QString,QString)), this, SIGNAL(logMessage(QString,QString)));
 
     connect(m_info.data(), SIGNAL(statesEntered(QVector<QScxmlStateMachineInfo::StateId>)), this, SLOT(statesEntered(QVector<QScxmlStateMachineInfo::StateId>)));
     connect(m_info.data(), SIGNAL(statesExited(QVector<QScxmlStateMachineInfo::StateId>)), this, SLOT(statesExited(QVector<QScxmlStateMachineInfo::StateId>)));
