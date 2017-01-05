@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# Copyright (C) 2016-2017 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # All rights reserved.
 #
 # Author: Allen Winter <allen.winter@kdab.com>

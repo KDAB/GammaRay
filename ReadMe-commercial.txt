@@ -15,7 +15,7 @@ Copyright Assignment Agreement.  Contact info@kdab.com for more information.
 
 Licensing
 =========
-Copyright (C) 2010-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, <info@kdab.com>
+Copyright (C) 2010-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, <info@kdab.com>
 
 Commercial licensing terms are available in the included file
         LICENSE.txt (for non-US customers)
