@@ -132,7 +132,8 @@ void QuickOverlay::placeOn(ItemOrLayoutFacade item)
         if (m_currentToplevelItem) {
             disconnectTopItemChanges(m_currentToplevelItem);
             // Ensure the overlay is cleared
-            m_currentToplevelItem->window()->update();
+            if (m_currentToplevelItem->window())
+                m_currentToplevelItem->window()->update();
         }
 
         m_currentToplevelItem = nullptr;
