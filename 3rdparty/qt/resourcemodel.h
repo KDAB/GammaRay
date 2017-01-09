@@ -45,8 +45,6 @@
 #include <QtCore/qabstractitemmodel.h>
 #include <QtCore/qdir.h>
 
-QT_BEGIN_NAMESPACE
-
 QT_MODULE(Gui)
 
 namespace GammaRay {
@@ -147,7 +145,5 @@ private:
 };
 
 }
-
-QT_END_NAMESPACE
 
 #endif // QDIRMODEL_H

@@ -61,8 +61,6 @@
 
 using namespace GammaRay;
 
-QT_BEGIN_NAMESPACE
-
 class GammaRay::ResourceModelPrivate
 {
     Q_DECLARE_PUBLIC(ResourceModel)
@@ -1361,7 +1359,5 @@ QFileInfo ResourceModelPrivate::resolvedInfo(QFileInfo info)
     return info;
 #endif
 }
-
-QT_END_NAMESPACE
 
 #include "moc_resourcemodel.cpp"
