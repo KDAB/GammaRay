@@ -29,7 +29,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Drop-in replacement for CMake's option()
-# This version takes care of add feature info to FeatureSummary for this option
+# This version takes care of adding feature info to FeatureSummary for this option
 #
 # Usage:
 #   gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
