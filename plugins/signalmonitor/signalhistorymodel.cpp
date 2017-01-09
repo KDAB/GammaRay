@@ -43,8 +43,8 @@
 
 using namespace GammaRay;
 
-/// Tries to reuse an already existing instances of \param str by checking
-/// a global string pool. If no instance of \param str is interned yet the
+/// Tries to reuse an already existing instances of @p str by checking
+/// a global string pool. If no instance of @p str is interned yet the
 /// string will be added to the pool.
 template<typename T>
 static T internString(const T &str)

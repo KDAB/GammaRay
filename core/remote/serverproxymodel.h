@@ -58,7 +58,7 @@ public:
     }
 
     /** Additional roles used from the proxy model itself for transfer to the client.
-     *  This is useful if @tparam BaseProxy overrides data().
+     *  This is useful if BaseProxy overrides data().
      */
     void addProxyRole(int role)
     {

@@ -40,7 +40,7 @@ class ProxyToolUiFactory : public ProxyFactory<ToolUiFactory>
     Q_OBJECT
 public:
     /**
-     * @param path Path to the plugin spec file
+     * @param pluginInfo Plugin spec file
      */
     explicit ProxyToolUiFactory(const PluginInfo &pluginInfo, QObject *parent = nullptr);
 

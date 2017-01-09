@@ -78,7 +78,7 @@ protected:
      * NOTE: A short jump takes 5 bytes, so make sure these 5 bytes
      * can be written.
      * @param target position where the jump should be written to
-     * @param size size of the memory region
+     * @param func function to jump to
      */
     virtual bool writeShortJump(void *target, void * const func);
 
@@ -87,7 +87,7 @@ protected:
      * NOTE: A short jump takes 10 bytes for x86 and 14 bytes for x64,
      * so make sure these 5 bytes can be written.
      * @param target position where the jump should be written to
-     * @param size size of the memory region
+     * @param func function to jump to
      */
     virtual bool writeLongJump(void *target, void * const func);
 

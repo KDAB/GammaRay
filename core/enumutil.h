@@ -59,10 +59,10 @@ GAMMARAY_CORE_EXPORT QMetaEnum metaEnum(const QVariant &value, const char *typeN
  * Converts the given enum or flag value into its numerical representation.
  * @param value A QVariant holding the enum/flag value, numerical or
  * as actual enum/flag.
- * @param me The QMetaEnum defining the enum/flag.
+ * @param metaEnum The QMetaEnum defining the enum/flag.
  * @since 2.6
  */
-GAMMARAY_CORE_EXPORT int enumToInt(const QVariant &value, const QMetaEnum &me);
+GAMMARAY_CORE_EXPORT int enumToInt(const QVariant &value, const QMetaEnum &metaEnum);
 
 /*!
  * Translates an enum or flag value into a human readable text.
@@ -70,7 +70,7 @@ GAMMARAY_CORE_EXPORT int enumToInt(const QVariant &value, const QMetaEnum &me);
  *              are used to find the corresponding QMetaEnum.
  * @param typeName Use this if the @p value has type int
  *                 (e.g. the case for QMetaProperty::read).
- * @param mo QMetaObject possibly containing the definition of the enum.
+ * @param metaObject QMetaObject possibly containing the definition of the enum.
  *
  * @return a QString containing the string version of the specified @p value.
  * @since 2.6
