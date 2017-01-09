@@ -28,11 +28,17 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-macro(gammaray_option option description default)
-    set(unparsed_arguments ${ARGN})
-    option(${option} "${description}" ${default} ${unparsed_arguments})
+# Drop-in replacement for CMake's option()
+# This version takes care of add feature info to FeatureSummary for this option
+#
+# Usage:
+#   gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
+#
+function(gammaray_option option description)
+    set(extra_option_arguments ${ARGN})
+    option(${option} "${description}" ${extra_option_arguments})
     add_feature_info("Option ${option}" ${option} "${description}")
-endmacro()
+endfunction()
 
 macro(gammaray_target_relocatable_interfaces _paths)
   # See https://cmake.org/cmake/help/v3.3/manual/cmake-packages.7.html#creating-relocatable-packages
