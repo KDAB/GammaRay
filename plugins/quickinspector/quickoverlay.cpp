@@ -37,7 +37,9 @@
 #include <QOpenGLFramebufferObject>
 #include <QOpenGLPaintDevice>
 
+QT_BEGIN_NAMESPACE
 extern Q_GUI_EXPORT QImage qt_gl_read_framebuffer(const QSize &size, bool alpha_format, bool include_alpha);
+QT_END_NAMESPACE
 
 using namespace GammaRay;
 
