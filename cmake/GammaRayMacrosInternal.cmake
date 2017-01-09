@@ -28,6 +28,12 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+macro(gammaray_option option description default)
+    set(unparsed_arguments ${ARGN})
+    option(${option} "${description}" ${default} ${unparsed_arguments})
+    add_feature_info("Option ${option}" ${option} "${description}")
+endmacro()
+
 macro(gammaray_target_relocatable_interfaces _paths)
   # See https://cmake.org/cmake/help/v3.3/manual/cmake-packages.7.html#creating-relocatable-packages
   get_filename_component(_dir ${CMAKE_CURRENT_SOURCE_DIR} NAME)

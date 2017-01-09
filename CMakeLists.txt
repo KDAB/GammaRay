@@ -133,9 +133,9 @@ message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TY
 #
 # Build options
 #
-option(
+gammaray_option(
   GAMMARAY_ENFORCE_QT4_BUILD
-  "Enable if you want to enforce a build with Qt4"
+  "Enforce a build with Qt4 (by default GammaRay looks out for Qt5 first)"
   OFF
 )
 
@@ -143,24 +143,24 @@ set(GAMMARAY_BUILD_UI_DEFAULT ON)
 if(QNXNTO OR ANDROID)
   set(GAMMARAY_BUILD_UI_DEFAULT OFF)
 endif()
-option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
+gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
 
-option(
+gammaray_option(
   GAMMARAY_PROBE_ONLY_BUILD
   "Build only an additional probe configuration for an already existing launcher."
   OFF
 )
 
-option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
-option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." OFF)
-option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
+gammaray_option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
+gammaray_option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." OFF)
+gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
 
 set(GAMMARAY_BUILD_DOCS_DEFAULT ON)
 if(${GAMMARAY_PROBE_ONLY_BUILD})
   set(GAMMARAY_BUILD_DOCS_DEFAULT OFF)
 endif()
-option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
-option(
+gammaray_option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
+gammaray_option(
   GAMMARAY_STATIC_PROBE
   "Build the probe as static library for compile-time injection (requires Qt 5.4 or newer)."
   OFF
@@ -449,7 +449,7 @@ if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
 endif()
 
 if(HAVE_QT_WIDGETS)
-  option(GAMMARAY_CORE_ONLY_LAUNCHER "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatibility)" FALSE)
+  gammaray_option(GAMMARAY_CORE_ONLY_LAUNCHER "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatibility)" FALSE)
 else()
   set(GAMMARAY_CORE_ONLY_LAUNCHER TRUE)
 endif()
