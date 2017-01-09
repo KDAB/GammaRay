@@ -49,6 +49,8 @@ QT_BEGIN_NAMESPACE
 
 QT_MODULE(Gui)
 
+namespace GammaRay {
+
 class ResourceModelPrivate;
 
 class ResourceModel : public QAbstractItemModel
@@ -143,6 +145,8 @@ private:
     Q_DISABLE_COPY(ResourceModel)
     Q_PRIVATE_SLOT(d_func(), void _q_refresh())
 };
+
+}
 
 QT_END_NAMESPACE
 

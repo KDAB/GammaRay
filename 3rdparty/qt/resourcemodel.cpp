@@ -61,7 +61,9 @@
 
 QT_BEGIN_NAMESPACE
 
-class ResourceModelPrivate
+using namespace GammaRay;
+
+class GammaRay::ResourceModelPrivate
 {
     Q_DECLARE_PUBLIC(ResourceModel)
     ResourceModel * const q_ptr;
