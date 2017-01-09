@@ -41,13 +41,13 @@ public:
     explicit EnumRepositoryClient(QObject *parent = nullptr);
     ~EnumRepositoryClient();
 
-    EnumDefinition definition(EnumId id) const Q_DECL_OVERRIDE;
+    EnumDefinition definition(EnumId id) const override;
 
 private slots:
     void definitionReceived(const GammaRay::EnumDefinition &def);
 
 private:
-    void requestDefinition(EnumId id) Q_DECL_OVERRIDE;
+    void requestDefinition(EnumId id) override;
 };
 }
 

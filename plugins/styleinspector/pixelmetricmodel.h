@@ -42,17 +42,17 @@ public:
     explicit PixelMetricModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+                        int role = Qt::DisplayRole) const override;
 
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     bool setData(const QModelIndex &index, const QVariant &value,
-                 int role = Qt::EditRole) Q_DECL_OVERRIDE;
+                 int role = Qt::EditRole) override;
 
 protected:
-    QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
-    int doColumnCount() const Q_DECL_OVERRIDE;
-    int doRowCount() const Q_DECL_OVERRIDE;
+    QVariant doData(int row, int column, int role) const override;
+    int doColumnCount() const override;
+    int doRowCount() const override;
 };
 }
 

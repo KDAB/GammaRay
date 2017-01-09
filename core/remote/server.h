@@ -68,7 +68,7 @@ public:
      * Register a server-side QObject to send/receive messages to/from the client side.
      * This is equivalent to registerObject(name, object, ExportEverything);
      */
-    Protocol::ObjectAddress registerObject(const QString &name, QObject *object) Q_DECL_OVERRIDE;
+    Protocol::ObjectAddress registerObject(const QString &name, QObject *object) override;
 
     /**
      * Register a server-side QObject for exporting to the client.
@@ -93,10 +93,10 @@ public:
      * Call @p method on the remote client and also directly on the local object identified by @p objectName.
      */
     void invokeObject(const QString &objectName, const char *method,
-                      const QVariantList &args = QVariantList()) const Q_DECL_OVERRIDE;
+                      const QVariantList &args = QVariantList()) const override;
 
-    bool isRemoteClient() const Q_DECL_OVERRIDE;
-    QUrl serverAddress() const Q_DECL_OVERRIDE;
+    bool isRemoteClient() const override;
+    QUrl serverAddress() const override;
     /**
      * Returns an address suitable to connect to this server.
      * In contrast to serverAddress(), which returns the listening address, which might not
@@ -104,11 +104,11 @@ public:
      */
     QUrl externalAddress() const;
 protected:
-    void messageReceived(const Message &msg) Q_DECL_OVERRIDE;
+    void messageReceived(const Message &msg) override;
     void handlerDestroyed(Protocol::ObjectAddress objectAddress,
-                          const QString &objectName) Q_DECL_OVERRIDE;
+                          const QString &objectName) override;
     void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName,
-                         QObject *object) Q_DECL_OVERRIDE;
+                         QObject *object) override;
 
 private slots:
     void newConnection();

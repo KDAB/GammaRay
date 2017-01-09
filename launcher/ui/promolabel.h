@@ -42,8 +42,8 @@ public:
     static QImage tintedImage(const QString &image, const QColor &color);
 
 protected:
-    bool event(QEvent *e) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
+    bool event(QEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *ev) override;
 
 private:
     void updatePixmap();

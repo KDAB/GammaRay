@@ -41,7 +41,7 @@ public:
     void setShowBoundingBox(const QRectF &boundingBox);
 
 protected:
-    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) override;
 
 private:
     QRectF m_boundingBox;

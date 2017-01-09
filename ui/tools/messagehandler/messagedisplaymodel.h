@@ -40,7 +40,7 @@ public:
     explicit MessageDisplayModel(QObject *parent = nullptr);
     ~MessageDisplayModel();
 
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const override;
 };
 }
 

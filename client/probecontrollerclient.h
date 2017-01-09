@@ -39,8 +39,8 @@ class ProbeControllerClient : public ProbeControllerInterface
 public:
     explicit ProbeControllerClient(QObject *parent = nullptr);
 
-    void detachProbe() Q_DECL_OVERRIDE;
-    void quitHost() Q_DECL_OVERRIDE;
+    void detachProbe() override;
+    void quitHost() override;
 };
 }
 

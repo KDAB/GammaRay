@@ -55,8 +55,8 @@ public:
     void setHighlightModel(QItemSelectionModel *selectionModel);
 
 protected:
-    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent *) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *) override;
+    void mouseReleaseEvent(QMouseEvent *) override;
 
 private slots:
     void onVertexModelReset();

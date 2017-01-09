@@ -95,10 +95,10 @@ public:
      */
     void placeOn(WidgetOrLayoutFacade item);
 
-    bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *receiver, QEvent *event) override;
 
 protected:
-    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *event) override;
 
 private:
     void resizeOverlay();

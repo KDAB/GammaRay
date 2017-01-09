@@ -59,10 +59,10 @@ public:
     /*! Will provide the selection via a custom role for rendering in ModelContentDelegate. */
     void setSelectionModel(QItemSelectionModel *selectionModel);
 
-    void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *model) override;
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
 private slots:
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);

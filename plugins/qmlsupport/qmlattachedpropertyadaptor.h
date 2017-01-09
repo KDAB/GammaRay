@@ -40,11 +40,11 @@ public:
     explicit QmlAttachedPropertyAdaptor(QObject *parent = nullptr);
     ~QmlAttachedPropertyAdaptor();
 
-    int count() const Q_DECL_OVERRIDE;
-    PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
+    int count() const override;
+    PropertyData propertyData(int index) const override;
 
 protected:
-    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) override;
 
 private:
     QVector<int> m_attachedTypes;
@@ -54,7 +54,7 @@ private:
 class QmlAttachedPropertyAdaptorFactory : public AbstractPropertyAdaptorFactory
 {
 public:
-    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = nullptr) const Q_DECL_OVERRIDE;
+    PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = nullptr) const override;
     static QmlAttachedPropertyAdaptorFactory *instance();
 private:
     static QmlAttachedPropertyAdaptorFactory *s_instance;

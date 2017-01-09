@@ -101,12 +101,12 @@ public:
     {
     }
 
-    bool isReadOnly() const Q_DECL_OVERRIDE
+    bool isReadOnly() const override
     {
         return m_setter == nullptr;
     }
 
-    QVariant value(void *object) const Q_DECL_OVERRIDE
+    QVariant value(void *object) const override
     {
         Q_ASSERT(object);
         Q_ASSERT(m_getter);
@@ -114,7 +114,7 @@ public:
         return QVariant::fromValue(v);
     }
 
-    void setValue(void *object, const QVariant &value) Q_DECL_OVERRIDE
+    void setValue(void *object, const QVariant &value) override
     {
         if (isReadOnly())
             return;
@@ -123,7 +123,7 @@ public:
         (static_cast<Class *>(object)->*(m_setter))(value.value<ValueType>());
     }
 
-    const char *typeName() const Q_DECL_OVERRIDE
+    const char *typeName() const override
     {
         return QMetaType::typeName(qMetaTypeId<ValueType>());
     }
@@ -147,12 +147,12 @@ public:
     {
     }
 
-    bool isReadOnly() const Q_DECL_OVERRIDE
+    bool isReadOnly() const override
     {
         return true;
     }
 
-    QVariant value(void *object) const Q_DECL_OVERRIDE
+    QVariant value(void *object) const override
     {
         Q_UNUSED(object);
         Q_ASSERT(m_getter);
@@ -160,7 +160,7 @@ public:
         return QVariant::fromValue(v);
     }
 
-    const char *typeName() const Q_DECL_OVERRIDE
+    const char *typeName() const override
     {
         return QMetaType::typeName(qMetaTypeId<ValueType>());
     }

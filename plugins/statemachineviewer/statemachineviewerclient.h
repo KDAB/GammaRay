@@ -37,9 +37,9 @@ class StateMachineViewerClient : public StateMachineViewerInterface
 public:
     explicit StateMachineViewerClient(QObject *parent = nullptr);
 
-    void selectStateMachine(int index) Q_DECL_OVERRIDE;
-    void toggleRunning() Q_DECL_OVERRIDE;
-    void repopulateGraph() Q_DECL_OVERRIDE;
+    void selectStateMachine(int index) override;
+    void toggleRunning() override;
+    void repopulateGraph() override;
 };
 }
 

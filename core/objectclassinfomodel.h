@@ -41,10 +41,10 @@ class ObjectClassInfoModel : public MetaObjectModel<QMetaClassInfo,
     Q_OBJECT
 public:
     explicit ObjectClassInfoModel(QObject *parent = nullptr);
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant metaData(const QModelIndex &index, const QMetaClassInfo &classInfo,
-                      int role) const Q_DECL_OVERRIDE;
-    QString columnHeader(int index) const Q_DECL_OVERRIDE;
+                      int role) const override;
+    QString columnHeader(int index) const override;
 };
 }
 

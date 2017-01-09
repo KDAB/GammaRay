@@ -49,7 +49,7 @@ public:
 
     QImage image() const;
 
-    Qt3DRender::QTextureImageDataGeneratorPtr dataGenerator() const Q_DECL_OVERRIDE;
+    Qt3DRender::QTextureImageDataGeneratorPtr dataGenerator() const override;
 public Q_SLOTS:
     void setImage(const QImage &image);
 

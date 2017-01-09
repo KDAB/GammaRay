@@ -94,7 +94,7 @@ public:
     TestThread(TestConnections::Type type, int timeOuts, int timeoutInterval = -1,
                QObject *parent = nullptr);
     ~TestThread();
-    void run() Q_DECL_OVERRIDE;
+    void run() override;
 
 private:
     TestConnections::Type m_type;

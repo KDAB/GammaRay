@@ -99,7 +99,7 @@ template<typename T, typename Base1 = void, typename Base2 = void, typename Base
 class MetaObjectImpl : public MetaObject
 {
 public:
-    void *castToBaseClass(void *object, int baseClassIndex) const Q_DECL_OVERRIDE
+    void *castToBaseClass(void *object, int baseClassIndex) const override
     {
         Q_ASSERT(baseClassIndex >= 0 && baseClassIndex < m_baseClasses.size());
         switch (baseClassIndex) {

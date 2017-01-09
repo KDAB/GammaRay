@@ -51,7 +51,7 @@ public:
         : QIdentityProxyModel(parent) { }
 
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
+                        int role = Qt::DisplayRole) const override
     {
         if (section == 2 && role == Qt::DisplayRole)
             return tr("Locations Standard / Writable");
@@ -68,7 +68,7 @@ public:
         : QStyledItemDelegate(parent) { }
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
-               const QModelIndex &index) const Q_DECL_OVERRIDE
+               const QModelIndex &index) const override
     {
         if (index.column() == 2) {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
@@ -97,7 +97,7 @@ public:
     }
 
     QSize sizeHint(const QStyleOptionViewItem &option,
-                   const QModelIndex &index) const Q_DECL_OVERRIDE
+                   const QModelIndex &index) const override
     {
         if (index.column() == 2) {
             QSize s1 = QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 2));

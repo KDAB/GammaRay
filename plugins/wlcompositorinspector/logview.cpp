@@ -215,7 +215,7 @@ public:
     return QPoint(lineX, line);
   }
 
-  void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE
+  void mousePressEvent(QMouseEvent *e) override
   {
     if (e->button() == Qt::LeftButton) {
       m_selectionStart = m_selectionEnd = charPosAt(e->pos());
@@ -224,7 +224,7 @@ public:
     }
   }
 
-  void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE
+  void mouseMoveEvent(QMouseEvent *e) override
   {
     m_selectionEnd = charPosAt(e->pos());
     e->accept();
@@ -252,7 +252,7 @@ public:
     return string;
   }
 
-  void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE
+  void keyPressEvent(QKeyEvent *e) override
   {
     if (e->key() == Qt::Key_C && e->modifiers() == Qt::ControlModifier) {
       QApplication::clipboard()->setText(selectedText());

@@ -47,7 +47,7 @@ public:
     /// returns all information required to perform the launch/attach
     LaunchOptions launchOptions() const;
 
-    void accept() Q_DECL_OVERRIDE;
+    void accept() override;
 
 private slots:
     void tabChanged();

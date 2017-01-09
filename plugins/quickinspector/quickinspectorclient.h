@@ -46,12 +46,12 @@ public:
     ~QuickInspectorClient();
 
 public slots:
-    void selectWindow(int index) Q_DECL_OVERRIDE;
+    void selectWindow(int index) override;
 
     void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
-    Q_DECL_OVERRIDE;
+    override;
 
-    void checkFeatures() Q_DECL_OVERRIDE;
+    void checkFeatures() override;
 };
 }
 

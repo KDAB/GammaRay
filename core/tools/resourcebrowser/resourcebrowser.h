@@ -46,9 +46,9 @@ public:
 
 public slots:
     void downloadResource(const QString &sourceFilePath,
-                          const QString &targetFilePath) Q_DECL_OVERRIDE;
+                          const QString &targetFilePath) override;
     void selectResource(const QString &sourceFilePath, int line = -1,
-                        int column = -1) Q_DECL_OVERRIDE;
+                        int column = -1) override;
 
 private slots:
     void currentChanged(const QModelIndex &current, int line = -1, int column = -1);

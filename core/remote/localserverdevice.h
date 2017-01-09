@@ -41,9 +41,9 @@ class LocalServerDevice : public ServerDeviceImpl<QLocalServer>
 public:
     explicit LocalServerDevice(QObject *parent = nullptr);
 
-    bool listen() Q_DECL_OVERRIDE;
-    bool isListening() const Q_DECL_OVERRIDE;
-    QUrl externalAddress() const Q_DECL_OVERRIDE;
+    bool listen() override;
+    bool isListening() const override;
+    QUrl externalAddress() const override;
 };
 }
 

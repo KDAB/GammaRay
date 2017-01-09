@@ -41,9 +41,9 @@ public:
     ~MethodsExtensionClient();
 
 public slots:
-    void activateMethod() Q_DECL_OVERRIDE;
-    void invokeMethod(Qt::ConnectionType type) Q_DECL_OVERRIDE;
-    void connectToSignal() Q_DECL_OVERRIDE;
+    void activateMethod() override;
+    void invokeMethod(Qt::ConnectionType type) override;
+    void connectToSignal() override;
 };
 }
 

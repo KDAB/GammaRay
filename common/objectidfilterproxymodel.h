@@ -52,7 +52,7 @@ public:
      */
     explicit ObjectIdsFilterProxyModel(QObject *parent = nullptr);
 
-    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) Q_DECL_OVERRIDE;
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 
     GammaRay::ObjectIds ids() const;
     void setIds(const GammaRay::ObjectIds &ids);
@@ -65,7 +65,7 @@ protected:
      * @return true if the item in the row can be included in the model;
      *         otherwise returns false.
      */
-    bool acceptRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    bool acceptRow(int source_row, const QModelIndex &source_parent) const override;
 
     /**
      * Determines if the specified ObjectID can be included in the model.

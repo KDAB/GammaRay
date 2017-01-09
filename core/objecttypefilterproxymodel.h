@@ -58,7 +58,7 @@ public:
      */
     explicit ObjectFilterProxyModelBase(QObject *parent = nullptr);
 
-    QMap<int, QVariant> itemData(const QModelIndex& index) const Q_DECL_OVERRIDE;
+    QMap<int, QVariant> itemData(const QModelIndex& index) const override;
 
 protected:
     /**
@@ -68,7 +68,7 @@ protected:
      * @return true if the item in the row can be included in the model;
      *         otherwise returns false.
      */
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
     /**
      * Determines if the specified QObject can be included in the model.
@@ -95,7 +95,7 @@ public:
     }
 
 protected:
-    bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE
+    bool filterAcceptsObject(QObject *object) const override
     {
         return qobject_cast<T1 *>(object) || qobject_cast<T2 *>(object);
     }

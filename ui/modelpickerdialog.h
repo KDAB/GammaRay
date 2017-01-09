@@ -62,7 +62,7 @@ public:
     void setCurrentIndex(int role, const QVariant &value);
 
 public slots:
-    void accept() Q_DECL_OVERRIDE;
+    void accept() override;
 
 signals:
     void activated(const QModelIndex &index);

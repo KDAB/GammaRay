@@ -39,11 +39,11 @@ public:
     explicit ComplexControlModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+                        int role = Qt::DisplayRole) const override;
 
 protected:
-    QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
-    int doRowCount() const Q_DECL_OVERRIDE;
+    QVariant doData(int row, int column, int role) const override;
+    int doRowCount() const override;
 };
 }
 

@@ -56,15 +56,15 @@ public:
     explicit TranslatorInspector(GammaRay::ProbeInterface *probe, QObject *parent = nullptr);
 
 public slots:
-    void sendLanguageChangeEvent() Q_DECL_OVERRIDE;
-    void resetTranslations() Q_DECL_OVERRIDE;
+    void sendLanguageChangeEvent() override;
+    void resetTranslations() override;
 
 private slots:
     void selectionChanged(const QItemSelection &selection);
     void objectSelected(QObject *obj);
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private:
     void registerMetaTypes();

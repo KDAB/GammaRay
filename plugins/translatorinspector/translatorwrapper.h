@@ -42,12 +42,12 @@ class TranslationsModel : public QAbstractTableModel
 public:
     explicit TranslationsModel(TranslatorWrapper *translator);
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex &) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
-    bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     void resetTranslations(const QModelIndex &first, const QModelIndex &last);
     QString translation(const char *context, const char *sourceText, const char *disambiguation,
@@ -93,9 +93,9 @@ public:
 
     TranslationsModel *model() const { return m_model; }
 
-    bool isEmpty() const Q_DECL_OVERRIDE;
+    bool isEmpty() const override;
     QString translate(const char *context, const char *sourceText, const char *disambiguation,
-                      int n) const Q_DECL_OVERRIDE;
+                      int n) const override;
     QTranslator *translator() const;
 
 private:
@@ -113,13 +113,13 @@ class FallbackTranslator : public QTranslator
 public:
     explicit FallbackTranslator(QObject *parent = nullptr);
 
-    bool isEmpty() const Q_DECL_OVERRIDE
+    bool isEmpty() const override
     {
         return false;
     }
 
     QString translate(const char *context, const char *sourceText, const char *disambiguation,
-                      int n) const Q_DECL_OVERRIDE;
+                      int n) const override;
 
 private:
 #ifndef Q_NO_USING_KEYWORD

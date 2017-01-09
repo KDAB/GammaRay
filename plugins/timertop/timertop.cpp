@@ -76,7 +76,7 @@ public:
     explicit TimerFilterModel(QObject *parent)
         : ObjectTypeFilterProxyModel<QTimer>(parent) {}
 
-    bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE
+    bool filterAcceptsObject(QObject *object) const override
     {
         if (object && object->inherits("QQmlTimer"))
             return true;

@@ -52,7 +52,7 @@ class GAMMARAY_UI_EXPORT DeferredTreeView : public QTreeView
 public:
     explicit DeferredTreeView(QWidget *parent = nullptr);
 
-    void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    void setModel(QAbstractItemModel *model) override;
 
     // TODO: Move sections members into HeaderView so it can be reused by QTableView.
     QHeaderView::ResizeMode deferredResizeMode(int logicalIndex) const;
@@ -74,7 +74,7 @@ protected:
     void resetDeferredInitialized();
 
 protected slots:
-    void rowsInserted(const QModelIndex &parent, int start, int end) Q_DECL_OVERRIDE;
+    void rowsInserted(const QModelIndex &parent, int start, int end) override;
 
 private:
     struct DeferredHeaderProperties

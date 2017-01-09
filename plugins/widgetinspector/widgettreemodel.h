@@ -40,14 +40,14 @@ class WidgetTreeModel : public ObjectFilterProxyModelBase
     Q_OBJECT
 public:
     explicit WidgetTreeModel(QObject *parent = nullptr);
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
 public slots:
     QPair<int, QVariant> defaultSelectedItem() const;
 
 protected:
-    bool filterAcceptsObject(QObject *object) const Q_DECL_OVERRIDE;
+    bool filterAcceptsObject(QObject *object) const override;
 };
 }
 

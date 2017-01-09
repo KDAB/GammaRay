@@ -44,11 +44,11 @@ public:
     ProcessInjector();
     ~ProcessInjector();
 
-    void stop() Q_DECL_OVERRIDE;
-    int exitCode() Q_DECL_OVERRIDE;
-    QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
-    QProcess::ProcessError processError() Q_DECL_OVERRIDE;
-    QString errorString() Q_DECL_OVERRIDE;
+    void stop() override;
+    int exitCode() override;
+    QProcess::ExitStatus exitStatus() override;
+    QProcess::ProcessError processError() override;
+    QString errorString() override;
 
 protected:
     bool launchProcess(const QStringList &programAndArgs, const QProcessEnvironment &env);

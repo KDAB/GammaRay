@@ -50,7 +50,7 @@ template<typename RetT, typename InputT,
     {
     }
 
-    RetT operator()(const QVariant &v) Q_DECL_OVERRIDE
+    RetT operator()(const QVariant &v) override
     {
         return f(v.value<InputT>());
     }

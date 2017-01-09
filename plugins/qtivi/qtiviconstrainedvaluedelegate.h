@@ -44,7 +44,7 @@ public:
     // - Show a special combobox for properties which have a list of allowed values, e.g.
     //   QFlags with only some allowed combinations, like AirflowDirections
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                          const QModelIndex &index) const Q_DECL_OVERRIDE;
+                          const QModelIndex &index) const override;
 };
 
 }

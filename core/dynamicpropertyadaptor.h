@@ -40,15 +40,15 @@ public:
     explicit DynamicPropertyAdaptor(QObject *parent = nullptr);
     ~DynamicPropertyAdaptor();
 
-    int count() const Q_DECL_OVERRIDE;
-    PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
-    void writeProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
-    bool canAddProperty() const Q_DECL_OVERRIDE;
-    void addProperty(const PropertyData &data) Q_DECL_OVERRIDE;
+    int count() const override;
+    PropertyData propertyData(int index) const override;
+    void writeProperty(int index, const QVariant &value) override;
+    bool canAddProperty() const override;
+    void addProperty(const PropertyData &data) override;
 
 protected:
-    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
-    bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) override;
+    bool eventFilter(QObject *receiver, QEvent *event) override;
 
 private:
     QList<QByteArray> m_propNames;

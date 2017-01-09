@@ -40,7 +40,7 @@ public:
     explicit CookieExtension(PropertyController *controller);
     ~CookieExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
 
 private:
     CookieJarModel *m_cookieJarModel;

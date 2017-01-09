@@ -44,12 +44,12 @@ public:
 
     void setAttributeType(const char *name);
 
-    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
 protected:
     virtual bool testAttribute(int attr) const = 0;
@@ -82,14 +82,14 @@ public:
     }
 
 protected:
-    bool testAttribute(int attr) const Q_DECL_OVERRIDE
+    bool testAttribute(int attr) const override
     {
         if (!m_obj)
             return false;
         return m_obj->testAttribute(static_cast<Enum>(attr));
     }
 
-    void setAttribute(int attr, bool on) Q_DECL_OVERRIDE
+    void setAttribute(int attr, bool on) override
     {
         if (!m_obj)
             return;

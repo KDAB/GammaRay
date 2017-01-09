@@ -41,7 +41,7 @@ public:
     explicit MetaTypeBrowserClient(QObject *parent);
     ~MetaTypeBrowserClient();
 
-    void rescanTypes() Q_DECL_OVERRIDE;
+    void rescanTypes() override;
 };
 }
 

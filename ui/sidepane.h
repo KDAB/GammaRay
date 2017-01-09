@@ -39,11 +39,11 @@ public:
     explicit SidePane(QWidget *parent = nullptr);
     ~SidePane();
 
-    QSize sizeHint() const Q_DECL_OVERRIDE;
-    void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    QSize sizeHint() const override;
+    void setModel(QAbstractItemModel *model) override;
 
 protected:
-    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *e) override;
 
 private slots:
     void updateSizeHint();

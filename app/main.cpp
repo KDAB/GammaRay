@@ -52,7 +52,7 @@ signals:
     void launchClient(const QUrl &serverAddress);
 
 protected:
-    void startClient(const QUrl &serverAddress) Q_DECL_OVERRIDE
+    void startClient(const QUrl &serverAddress) override
     {
         emit launchClient(serverAddress);
     }

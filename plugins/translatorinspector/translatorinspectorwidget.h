@@ -49,8 +49,8 @@ public:
     explicit TranslatorInspectorClient(const QString &name, QObject *parent = nullptr);
 
 public slots:
-    void sendLanguageChangeEvent() Q_DECL_OVERRIDE;
-    void resetTranslations() Q_DECL_OVERRIDE;
+    void sendLanguageChangeEvent() override;
+    void resetTranslations() override;
 };
 
 class TranslatorInspectorWidget : public QWidget
@@ -79,7 +79,7 @@ class TranslatorInspectorWidgetFactory : public QObject,
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_translatorinspector.json")
 
 public:
-    void initUi() Q_DECL_OVERRIDE;
+    void initUi() override;
 };
 }
 

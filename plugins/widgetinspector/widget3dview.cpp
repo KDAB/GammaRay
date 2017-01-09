@@ -100,7 +100,7 @@ public:
     }
 
     // Map the server-side role names for easy use from QML
-    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE
+    QHash<int, QByteArray> roleNames() const override
     {
         QHash<int, QByteArray> roles = QSortFilterProxyModel::roleNames();
         roles[Widget3DModel::IdRole] = "objectId";
@@ -115,7 +115,7 @@ public:
 
     ~Widget3DClientModel() = default;
 
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override
     {
         // Filter out rows that we don't have additional roles for yet (since data
         // are retrieved lazily by the RemoteModel). This greatly simplifies all

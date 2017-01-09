@@ -37,18 +37,18 @@ class LldbInjector : public DebuggerInjector
     Q_OBJECT
 public:
     explicit LldbInjector(const QString &executableOverride = QString());
-    bool selfTest() Q_DECL_OVERRIDE;
-    QString name() const Q_DECL_OVERRIDE;
+    bool selfTest() override;
+    QString name() const override;
     bool launch(const QStringList &programAndArgs, const QString &probeDll,
-                const QString &probeFunc, const QProcessEnvironment &env) Q_DECL_OVERRIDE;
-    bool attach(int pid, const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
+                const QString &probeFunc, const QProcessEnvironment &env) override;
+    bool attach(int pid, const QString &probeDll, const QString &probeFunc) override;
 
 protected:
-    void disableConfirmations() Q_DECL_OVERRIDE;
-    void addFunctionBreakpoint(const QByteArray &function) Q_DECL_OVERRIDE;
-    void addMethodBreakpoint(const QByteArray &method) Q_DECL_OVERRIDE;
-    void clearBreakpoints() Q_DECL_OVERRIDE;
-    void printBacktrace() Q_DECL_OVERRIDE;
+    void disableConfirmations() override;
+    void addFunctionBreakpoint(const QByteArray &function) override;
+    void addMethodBreakpoint(const QByteArray &method) override;
+    void clearBreakpoints() override;
+    void printBacktrace() override;
 };
 }
 

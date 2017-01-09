@@ -65,7 +65,7 @@ public:
         : ProxyFactoryBase(pluginInfo, parent) {}
     inline ~ProxyFactory() {}
 
-    QString id() const Q_DECL_OVERRIDE
+    QString id() const override
     {
         return pluginInfo().id();
     }

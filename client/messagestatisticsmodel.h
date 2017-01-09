@@ -48,10 +48,10 @@ public:
     void addObject(Protocol::ObjectAddress addr, const QString &name);
     void addMessage(Protocol::ObjectAddress addr, Protocol::MessageType msgType, int size);
 
-    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
     int countPerType(int msgType) const;

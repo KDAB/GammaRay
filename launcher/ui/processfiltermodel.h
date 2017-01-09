@@ -39,12 +39,12 @@ class ProcessFilterModel : public QSortFilterProxyModel
 public:
     explicit ProcessFilterModel(QObject *parent);
 
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
     bool filterAcceptsColumn(int source_column,
-                             const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+                             const QModelIndex &source_parent) const override;
 
 private:
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
     QString m_currentProcId;
     QString m_currentUser;
 };

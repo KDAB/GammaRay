@@ -41,11 +41,11 @@ public:
     explicit OutboundConnectionsModel(QObject *parent = nullptr);
     ~OutboundConnectionsModel();
 
-    void setObject(QObject *object) Q_DECL_OVERRIDE;
+    void setObject(QObject *object) override;
 
-    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+                        int role = Qt::DisplayRole) const override;
 };
 }
 

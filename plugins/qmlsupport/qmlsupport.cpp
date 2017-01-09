@@ -174,10 +174,10 @@ namespace GammaRay {
 class QmlObjectDataProvider : public AbstractObjectDataProvider
 {
 public:
-    QString name(const QObject *obj) const Q_DECL_OVERRIDE;
-    QString typeName(QObject *obj) const Q_DECL_OVERRIDE;
-    SourceLocation creationLocation(QObject *obj) const Q_DECL_OVERRIDE;
-    SourceLocation declarationLocation(QObject *obj) const Q_DECL_OVERRIDE;
+    QString name(const QObject *obj) const override;
+    QString typeName(QObject *obj) const override;
+    SourceLocation creationLocation(QObject *obj) const override;
+    SourceLocation declarationLocation(QObject *obj) const override;
 };
 }
 

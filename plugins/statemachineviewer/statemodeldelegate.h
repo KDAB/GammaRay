@@ -40,7 +40,7 @@ public:
 
 protected:
     void initStyleOption(QStyleOptionViewItem *option,
-                         const QModelIndex &index) const Q_DECL_OVERRIDE;
+                         const QModelIndex &index) const override;
 };
 }
 

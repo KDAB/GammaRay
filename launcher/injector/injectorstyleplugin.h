@@ -39,7 +39,7 @@ class InjectorStylePlugin : public QStylePlugin
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QStyleFactoryInterface" FILE "injectorstyle.json")
 #endif
 public:
-    QStyle *create(const QString &) Q_DECL_OVERRIDE;
+    QStyle *create(const QString &) override;
     QStringList keys() const;
 
 private:

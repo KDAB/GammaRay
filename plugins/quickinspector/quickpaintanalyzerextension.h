@@ -41,7 +41,7 @@ public:
     explicit QuickPaintAnalyzerExtension(PropertyController *controller);
     ~QuickPaintAnalyzerExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
 
 private:
     PaintAnalyzer *m_paintAnalyzer;

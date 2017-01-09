@@ -53,13 +53,13 @@ public:
     explicit MethodsExtension(PropertyController *controller);
     ~MethodsExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
-    bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
+    bool setMetaObject(const QMetaObject *metaObject) override;
 
 public slots:
-    void activateMethod() Q_DECL_OVERRIDE;
-    void invokeMethod(Qt::ConnectionType type) Q_DECL_OVERRIDE;
-    void connectToSignal() Q_DECL_OVERRIDE;
+    void activateMethod() override;
+    void invokeMethod(Qt::ConnectionType type) override;
+    void connectToSignal() override;
 
 private slots:
     void signalEmitted(QObject *sender, int signalIndex, const QVector<QVariant> &args);

@@ -91,12 +91,12 @@ template<typename ToolUi>
 class StandardToolUiFactory : public ToolUiFactory
 {
 public:
-    QString id() const Q_DECL_OVERRIDE
+    QString id() const override
     {
         return QString(); // TODO is this a problem??
     }
 
-    QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE
+    QWidget *createWidget(QWidget *parentWidget) override
     {
         return new ToolUi(parentWidget);
     }

@@ -43,11 +43,11 @@ public:
     ~WidgetInspectorClient();
 
 private:
-    void saveAsImage(const QString &fileName) Q_DECL_OVERRIDE;
-    void saveAsSvg(const QString &fileName) Q_DECL_OVERRIDE;
-    void saveAsPdf(const QString &fileName) Q_DECL_OVERRIDE;
-    void saveAsUiFile(const QString &fileName) Q_DECL_OVERRIDE;
-    void analyzePainting() Q_DECL_OVERRIDE;
+    void saveAsImage(const QString &fileName) override;
+    void saveAsSvg(const QString &fileName) override;
+    void saveAsPdf(const QString &fileName) override;
+    void saveAsUiFile(const QString &fileName) override;
+    void analyzePainting() override;
 };
 }
 

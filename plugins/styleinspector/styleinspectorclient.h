@@ -40,9 +40,9 @@ public:
     explicit StyleInspectorClient(QObject *parent = nullptr);
     ~StyleInspectorClient();
 
-    void setCellHeight(int height) Q_DECL_OVERRIDE;
-    void setCellWidth(int width) Q_DECL_OVERRIDE;
-    void setCellZoom(int zoom) Q_DECL_OVERRIDE;
+    void setCellHeight(int height) override;
+    void setCellWidth(int width) override;
+    void setCellZoom(int zoom) override;
 };
 }
 

@@ -45,11 +45,11 @@ public:
     explicit ConnectionsExtension(PropertyController *controller);
     ~ConnectionsExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
 
 public slots:
-    void navigateToReceiver(int modelRow) Q_DECL_OVERRIDE;
-    void navigateToSender(int modelRow) Q_DECL_OVERRIDE;
+    void navigateToReceiver(int modelRow) override;
+    void navigateToSender(int modelRow) override;
 
 private:
     InboundConnectionsModel *m_inboundModel;

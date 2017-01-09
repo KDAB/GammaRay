@@ -42,11 +42,11 @@ class ObjectTreeModel : public ObjectModelBase<QAbstractItemModel>
 public:
     explicit ObjectTreeModel(Probe *probe);
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
     QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+                      const QModelIndex &parent = QModelIndex()) const override;
 
 public slots:
     QPair<int, QVariant> defaultSelectedItem() const;

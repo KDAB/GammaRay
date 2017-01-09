@@ -75,22 +75,22 @@ public:
     static void objectAdded(QObject *obj, bool fromCtor = false);
     static void objectRemoved(QObject *obj);
 
-    QAbstractItemModel *objectListModel() const Q_DECL_OVERRIDE;
-    QAbstractItemModel *objectTreeModel() const Q_DECL_OVERRIDE;
-    void registerModel(const QString &objectName, QAbstractItemModel *model) Q_DECL_OVERRIDE;
-    void installGlobalEventFilter(QObject *filter) Q_DECL_OVERRIDE;
-    bool needsObjectDiscovery() const Q_DECL_OVERRIDE;
-    void discoverObject(QObject *object) Q_DECL_OVERRIDE;
-    void selectObject(QObject *object, const QPoint &pos = QPoint()) Q_DECL_OVERRIDE;
+    QAbstractItemModel *objectListModel() const override;
+    QAbstractItemModel *objectTreeModel() const override;
+    void registerModel(const QString &objectName, QAbstractItemModel *model) override;
+    void installGlobalEventFilter(QObject *filter) override;
+    bool needsObjectDiscovery() const override;
+    void discoverObject(QObject *object) override;
+    void selectObject(QObject *object, const QPoint &pos = QPoint()) override;
     void selectObject(QObject *object, const QString &toolId,
-                      const QPoint &pos = QPoint()) Q_DECL_OVERRIDE;
-    void selectObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
-    void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) Q_DECL_OVERRIDE;
+                      const QPoint &pos = QPoint()) override;
+    void selectObject(void *object, const QString &typeName) override;
+    void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) override;
 
     QObject *window() const;
     void setWindow(QObject *window);
 
-    QObject *probe() const Q_DECL_OVERRIDE;
+    QObject *probe() const override;
 
     /**
      * Lock this to check the validity of a QObject
@@ -105,7 +105,7 @@ public:
      */
     bool isValidObject(QObject *obj) const;
 
-    bool filterObject(QObject *obj) const Q_DECL_OVERRIDE;
+    bool filterObject(QObject *obj) const override;
 
     /// internal
     static void startupHookReceived();
@@ -153,7 +153,7 @@ signals:
     void objectReparented(QObject *obj);
 
 protected:
-    bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *receiver, QEvent *event) override;
 
 private slots:
     void delayedInit();

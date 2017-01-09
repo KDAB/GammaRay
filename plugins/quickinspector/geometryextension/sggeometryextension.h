@@ -46,7 +46,7 @@ public:
     explicit SGGeometryExtension(PropertyController *controller);
     ~SGGeometryExtension();
 
-    bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
+    bool setObject(void *object, const QString &typeName) override;
 
 private:
     QSGGeometryNode *m_node;

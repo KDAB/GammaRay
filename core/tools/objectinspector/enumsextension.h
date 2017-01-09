@@ -41,8 +41,8 @@ public:
     explicit EnumsExtension(PropertyController *controller);
     ~EnumsExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
-    bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
+    bool setMetaObject(const QMetaObject *metaObject) override;
 
 private:
     ObjectEnumModel *m_model;

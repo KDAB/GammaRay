@@ -41,7 +41,7 @@ public:
     ~PropertiesExtensionClient();
 
 public slots:
-    void setProperty(const QString &name, const QVariant &value) Q_DECL_OVERRIDE;
+    void setProperty(const QString &name, const QVariant &value) override;
 };
 }
 

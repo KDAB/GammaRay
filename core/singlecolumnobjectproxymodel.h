@@ -56,7 +56,7 @@ public:
      */
     explicit SingleColumnObjectProxyModel(QObject *parent = nullptr);
 
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     /**
      * Returns the data for the specified model.
@@ -66,7 +66,7 @@ public:
      * @return on success, a QVariant containing the data;
      *         QVariant() if some anamoly occurs.
      */
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const override;
 };
 }
 

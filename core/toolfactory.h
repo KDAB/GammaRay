@@ -130,12 +130,12 @@ public:
         setSupportedTypes(QVector<QByteArray>() << Type::staticMetaObject.className());
     }
 
-    QString id() const Q_DECL_OVERRIDE
+    QString id() const override
     {
         return Tool::staticMetaObject.className();
     }
 
-    void init(ProbeInterface *probe) Q_DECL_OVERRIDE
+    void init(ProbeInterface *probe) override
     {
         new Tool(probe, probe->probe());
     }

@@ -71,7 +71,7 @@ public:
     }
 
 protected:
-    void doSendMessage(const Message &msg) Q_DECL_OVERRIDE
+    void doSendMessage(const Message &msg) override
     {
         QByteArray ba;
         QBuffer buffer(&ba);
@@ -87,11 +87,11 @@ protected:
         emit message(Message::readMessage(&buffer));
     }
 
-    bool isRemoteClient() const Q_DECL_OVERRIDE { return true; }
-    void messageReceived(const GammaRay::Message &) Q_DECL_OVERRIDE {}
-    QUrl serverAddress() const Q_DECL_OVERRIDE { return QUrl(); }
-    void handlerDestroyed(Protocol::ObjectAddress, const QString &) Q_DECL_OVERRIDE {}
-    void objectDestroyed(Protocol::ObjectAddress, const QString &, QObject *) Q_DECL_OVERRIDE {}
+    bool isRemoteClient() const override { return true; }
+    void messageReceived(const GammaRay::Message &) override {}
+    QUrl serverAddress() const override { return QUrl(); }
+    void handlerDestroyed(Protocol::ObjectAddress, const QString &) override {}
+    void objectDestroyed(Protocol::ObjectAddress, const QString &, QObject *) override {}
 
 signals:
     void message(const GammaRay::Message &msg);

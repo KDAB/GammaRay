@@ -70,7 +70,7 @@ public:
         }
     }
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
     {
         if (!index.isValid() || !m_metaObject
             || index.row() < 0 || index.row() >= rowCount(index.parent()))
@@ -87,7 +87,7 @@ public:
     }
 
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE
+                        int role = Qt::DisplayRole) const override
     {
         if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
             if (section == columnCount() - 1)
@@ -97,7 +97,7 @@ public:
         return QAbstractItemModel::headerData(section, orientation, role);
     }
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override
     {
         if (!m_metaObject || parent.isValid())
             return 0;
@@ -105,7 +105,7 @@ public:
     }
 
     QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
+                      const QModelIndex &parent = QModelIndex()) const override
     {
         if (row >= 0 && row < rowCount(parent) && column >= 0
             && column < columnCount(parent) && !parent.isValid())
@@ -113,7 +113,7 @@ public:
         return QModelIndex();
     }
 
-    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE
+    QModelIndex parent(const QModelIndex &child) const override
     {
         Q_UNUSED(child);
         return QModelIndex();

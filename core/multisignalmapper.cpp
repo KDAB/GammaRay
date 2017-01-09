@@ -42,7 +42,7 @@ public:
         , q(parent) {}
     ~MultiSignalMapperPrivate() {}
 
-    int qt_metacall(QMetaObject::Call call, int methodId, void **args) Q_DECL_OVERRIDE
+    int qt_metacall(QMetaObject::Call call, int methodId, void **args) override
     {
         methodId = QObject::qt_metacall(call, methodId, args);
         if (methodId < 0)

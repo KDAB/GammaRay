@@ -75,15 +75,15 @@ private slots:
     void stateSelectionChanged();
 
     void setFilteredStates(const QVector<State> &states);
-    void selectStateMachine(int row) Q_DECL_OVERRIDE;
+    void selectStateMachine(int row) override;
 
     /// Takes ownership of @p machine
     void setSelectedStateMachine(StateMachineDebugInterface *machine);
 
     void updateStartStop();
-    void toggleRunning() Q_DECL_OVERRIDE;
+    void toggleRunning() override;
 
-    void repopulateGraph() Q_DECL_OVERRIDE;
+    void repopulateGraph() override;
 
     void handleLogMessage(const QString &label, const QString &message);
 

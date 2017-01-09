@@ -56,7 +56,7 @@ class NetworkWidgetFactory : public QObject, public StandardToolUiFactory<Networ
     Q_INTERFACES(GammaRay::ToolUiFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_network.json")
 public:
-    void initUi() Q_DECL_OVERRIDE;
+    void initUi() override;
 };
 }
 

@@ -38,9 +38,9 @@ class GuiSupportUiFactory : public QObject, public ToolUiFactory
     Q_INTERFACES(GammaRay::ToolUiFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_guisupport.json")
 public:
-    QString id() const Q_DECL_OVERRIDE;
-    void initUi() Q_DECL_OVERRIDE;
-    QWidget *createWidget(QWidget *) Q_DECL_OVERRIDE;
+    QString id() const override;
+    void initUi() override;
+    QWidget *createWidget(QWidget *) override;
 };
 }
 

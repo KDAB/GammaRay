@@ -53,8 +53,8 @@ public:
     explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent = nullptr);
     ~QuickScenePreviewWidget();
 
-    void restoreState(const QByteArray &state) Q_DECL_OVERRIDE;
-    QByteArray saveState() const Q_DECL_OVERRIDE;
+    void restoreState(const QByteArray &state) override;
+    QByteArray saveState() const override;
 
     void setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes);
 
@@ -65,8 +65,8 @@ private Q_SLOTS:
     void visualizeActionTriggered(QAction* current);
 
 private:
-    void drawDecoration(QPainter *p) Q_DECL_OVERRIDE;
-    void resizeEvent(QResizeEvent *e) Q_DECL_OVERRIDE;
+    void drawDecoration(QPainter *p) override;
+    void resizeEvent(QResizeEvent *e) override;
 
     struct {
         QToolBar *toolbarWidget;

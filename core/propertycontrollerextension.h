@@ -107,7 +107,7 @@ public:
         return s_instance;
     }
 
-    PropertyControllerExtension *create(PropertyController *controller) Q_DECL_OVERRIDE
+    PropertyControllerExtension *create(PropertyController *controller) override
     {
         return new T(controller);
     }

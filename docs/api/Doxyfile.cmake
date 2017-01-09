@@ -152,7 +152,7 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = Q_DECL_IMPORT="" GAMMARAY_COMMON_EXPORT="" GAMMARAY_CORE_EXPORT="" \
                          GAMMARAY_UI_EXPORT="" GAMMARAY_LAUNCHER_EXPORT="" \
                          GAMMARAY_LAUNCHER_DEPRECATED_EXPORT="" \
-                         Q_DECL_OVERRIDE="override"
+                         override="override"
 EXPAND_AS_DEFINED      =
 SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------

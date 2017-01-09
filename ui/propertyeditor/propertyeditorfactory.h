@@ -47,7 +47,7 @@ public:
     typedef int TypeId;
 #endif
 
-    QWidget *createEditor(TypeId type, QWidget *parent) const Q_DECL_OVERRIDE;
+    QWidget *createEditor(TypeId type, QWidget *parent) const override;
 
     static QVector<int> supportedTypes();
 

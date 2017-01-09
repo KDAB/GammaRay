@@ -79,7 +79,7 @@ public:
     explicit PropertyWidgetTabFactory(const QString &name, const QString &label, int priority)
         : GammaRay::PropertyWidgetTabFactoryBase(name, label, priority) {}
 
-    QWidget *createWidget(PropertyWidget *parent) Q_DECL_OVERRIDE
+    QWidget *createWidget(PropertyWidget *parent) override
     {
         return new T(parent);
     }

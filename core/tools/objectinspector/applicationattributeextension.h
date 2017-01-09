@@ -44,7 +44,7 @@ public:
     explicit ApplicationAttributeExtension(PropertyController *controller);
     ~ApplicationAttributeExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
 
 private:
     AttributeModel<QCoreApplication, Qt::ApplicationAttribute> *m_attributeModel;

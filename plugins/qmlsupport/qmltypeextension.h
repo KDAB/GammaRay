@@ -40,8 +40,8 @@ public:
     explicit QmlTypeExtension(PropertyController *controller);
     ~QmlTypeExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
-    bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
+    bool setMetaObject(const QMetaObject *metaObject) override;
 
 private:
     AggregatedPropertyModel *m_typePropertyModel;

@@ -38,11 +38,11 @@ class StyleInjector : public GammaRay::ProcessInjector
 public:
     StyleInjector();
 
-    QString name() const Q_DECL_OVERRIDE;
+    QString name() const override;
     bool launch(const QStringList &programAndArgs, const QString &probeDll,
-                const QString &probeFunc, const QProcessEnvironment &env) Q_DECL_OVERRIDE;
+                const QString &probeFunc, const QProcessEnvironment &env) override;
 
-    bool selfTest() Q_DECL_OVERRIDE;
+    bool selfTest() override;
 };
 }
 

@@ -74,7 +74,7 @@ public:
     {
     }
 
-    QIODevice *device() const Q_DECL_OVERRIDE
+    QIODevice *device() const override
     {
         return m_socket;
     }

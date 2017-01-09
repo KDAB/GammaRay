@@ -50,12 +50,12 @@ public:
 private slots:
     void updateFonts();
 
-    void setPointSize(int size) Q_DECL_OVERRIDE;
-    void toggleBoldFont(bool bold) Q_DECL_OVERRIDE;
-    void toggleItalicFont(bool italic) Q_DECL_OVERRIDE;
-    void toggleUnderlineFont(bool underline) Q_DECL_OVERRIDE;
-    void updateText(const QString &text) Q_DECL_OVERRIDE;
-    void setColors(const QColor &foreground, const QColor &background) Q_DECL_OVERRIDE;
+    void setPointSize(int size) override;
+    void toggleBoldFont(bool bold) override;
+    void toggleItalicFont(bool italic) override;
+    void toggleUnderlineFont(bool underline) override;
+    void updateText(const QString &text) override;
+    void setColors(const QColor &foreground, const QColor &background) override;
 
 private:
     FontModel *m_selectedFontModel;

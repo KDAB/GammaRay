@@ -41,11 +41,11 @@ public:
     explicit ToolPluginModel(const QVector<ToolFactory *> &plugins, QObject *parent = nullptr);
     ~ToolPluginModel();
 
-    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const override;
+    int columnCount(const QModelIndex &parent) const override;
+    int rowCount(const QModelIndex &parent) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+                        int role = Qt::DisplayRole) const override;
 
 private:
     QVector<ToolFactory *> m_tools;

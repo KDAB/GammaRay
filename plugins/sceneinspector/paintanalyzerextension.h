@@ -45,8 +45,8 @@ public:
     explicit PaintAnalyzerExtension(PropertyController *controller);
     ~PaintAnalyzerExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
-    bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
+    bool setObject(void *object, const QString &typeName) override;
 
 private:
     bool analyzePainting(QGraphicsItem *item);

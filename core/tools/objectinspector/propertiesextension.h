@@ -50,11 +50,11 @@ public:
     explicit PropertiesExtension(PropertyController *controller);
     ~PropertiesExtension();
 
-    void setProperty(const QString &name, const QVariant &value) Q_DECL_OVERRIDE;
+    void setProperty(const QString &name, const QVariant &value) override;
 
-    bool setObject(void *object, const QString &typeName) Q_DECL_OVERRIDE;
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
-    bool setMetaObject(const QMetaObject *metaObject) Q_DECL_OVERRIDE;
+    bool setObject(void *object, const QString &typeName) override;
+    bool setQObject(QObject *object) override;
+    bool setMetaObject(const QMetaObject *metaObject) override;
 
 private:
     AggregatedPropertyModel *m_aggregatedPropertyModel;

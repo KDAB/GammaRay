@@ -44,14 +44,14 @@ public:
      */
     explicit ProxyToolUiFactory(const PluginInfo &pluginInfo, QObject *parent = nullptr);
 
-    QString name() const Q_DECL_OVERRIDE;
+    QString name() const override;
 
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
 
-    bool remotingSupported() const Q_DECL_OVERRIDE;
-    QWidget *createWidget(QWidget *parentWidget) Q_DECL_OVERRIDE;
-    void initUi() Q_DECL_OVERRIDE;
+    bool remotingSupported() const override;
+    QWidget *createWidget(QWidget *parentWidget) override;
+    void initUi() override;
 };
 }
 

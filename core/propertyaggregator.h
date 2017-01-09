@@ -44,17 +44,17 @@ public:
     explicit PropertyAggregator(QObject *parent = nullptr);
     ~PropertyAggregator();
 
-    int count() const Q_DECL_OVERRIDE;
-    PropertyData propertyData(int index) const Q_DECL_OVERRIDE;
-    void writeProperty(int index, const QVariant &value) Q_DECL_OVERRIDE;
-    bool canAddProperty() const Q_DECL_OVERRIDE;
-    void addProperty(const PropertyData &data) Q_DECL_OVERRIDE;
-    void resetProperty(int index) Q_DECL_OVERRIDE;
+    int count() const override;
+    PropertyData propertyData(int index) const override;
+    void writeProperty(int index, const QVariant &value) override;
+    bool canAddProperty() const override;
+    void addProperty(const PropertyData &data) override;
+    void resetProperty(int index) override;
 
     void addPropertyAdaptor(PropertyAdaptor *adaptor);
 
 protected:
-    void doSetObject(const ObjectInstance &oi) Q_DECL_OVERRIDE;
+    void doSetObject(const ObjectInstance &oi) override;
 
 private slots:
     void slotPropertyChanged(int first, int last);

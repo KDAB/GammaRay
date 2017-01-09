@@ -38,9 +38,9 @@ class PreloadInjector : public ProcessInjector
     Q_OBJECT
 public:
     PreloadInjector();
-    QString name() const Q_DECL_OVERRIDE;
+    QString name() const override;
     bool launch(const QStringList &programAndArgs, const QString &probeDll,
-                const QString &probeFunc, const QProcessEnvironment &env) Q_DECL_OVERRIDE;
+                const QString &probeFunc, const QProcessEnvironment &env) override;
 };
 }
 

@@ -47,9 +47,9 @@ signals:
     void transformChanged();
 
 protected:
-    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-    void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void drawForeground(QPainter *painter, const QRectF &rect) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void drawForeground(QPainter *painter, const QRectF &rect) override;
 
 private:
     QGraphicsItem *m_currentItem;

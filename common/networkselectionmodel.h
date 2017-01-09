@@ -43,7 +43,7 @@ public:
     ~NetworkSelectionModel();
 
     void select(const QItemSelection &selection,
-                QItemSelectionModel::SelectionFlags command) Q_DECL_OVERRIDE;
+                QItemSelectionModel::SelectionFlags command) override;
     using QItemSelectionModel::select;
 
 protected:

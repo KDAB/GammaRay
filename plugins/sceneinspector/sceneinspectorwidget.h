@@ -67,7 +67,7 @@ private slots:
     void propertyWidgetTabsChanged();
 
 private:
-    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
     QScopedPointer<Ui::SceneInspectorWidget> ui;
     UIStateManager m_stateManager;
@@ -83,7 +83,7 @@ class SceneInspectorUiFactory : public QObject, public StandardToolUiFactory<Sce
     Q_INTERFACES(GammaRay::ToolUiFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_sceneinspector.json")
 public:
-    void initUi() Q_DECL_OVERRIDE;
+    void initUi() override;
 };
 }
 

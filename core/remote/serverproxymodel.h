@@ -65,7 +65,7 @@ public:
         m_extraProxyRoles.push_back(role);
     }
 
-    QMap<int, QVariant> itemData(const QModelIndex &index) const Q_DECL_OVERRIDE
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override
     {
         const QModelIndex sourceIndex = BaseProxy::mapToSource(index);
         auto d = BaseProxy::sourceModel()->itemData(sourceIndex);
@@ -76,7 +76,7 @@ public:
         return d;
     }
 
-    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE
+    void setSourceModel(QAbstractItemModel *sourceModel) override
     {
         m_sourceModel = sourceModel;
         if (m_active && sourceModel) {
@@ -86,14 +86,14 @@ public:
     }
 
     QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE
+                      const QModelIndex &parent = QModelIndex()) const override
     {
         Model::used(this);
         return BaseProxy::index(row, column, parent);
     }
 
 protected:
-    void customEvent(QEvent *event) Q_DECL_OVERRIDE
+    void customEvent(QEvent *event) override
     {
         if (event->type() == ModelEvent::eventType()) {
             auto mev = static_cast<ModelEvent *>(event);

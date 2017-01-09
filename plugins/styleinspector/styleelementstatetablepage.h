@@ -54,7 +54,7 @@ public:
     void setModel(QAbstractItemModel *model);
 
 protected:
-    void showEvent(QShowEvent *show) Q_DECL_OVERRIDE;
+    void showEvent(QShowEvent *show) override;
 
 private slots:
     void updateCellSize();

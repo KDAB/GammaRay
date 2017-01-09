@@ -45,7 +45,7 @@ public:
     explicit QmlContextExtension(PropertyController *controller);
     ~QmlContextExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
 
 private:
     void contextSelected(const QItemSelection &selection);

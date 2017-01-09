@@ -50,8 +50,8 @@ class WebInspectorFactory : public QObject, public ToolFactory
 
 public:
     explicit WebInspectorFactory(QObject *parent = nullptr);
-    QString id() const Q_DECL_OVERRIDE;
-    void init(ProbeInterface *probe) Q_DECL_OVERRIDE;
+    QString id() const override;
+    void init(ProbeInterface *probe) override;
 };
 }
 

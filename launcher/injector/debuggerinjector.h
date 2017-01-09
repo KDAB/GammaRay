@@ -47,13 +47,13 @@ public:
     QString filePath() const;
     void setFilePath(const QString &filePath);
 
-    void stop() Q_DECL_OVERRIDE;
+    void stop() override;
 
-    QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
-    QProcess::ProcessError processError() Q_DECL_OVERRIDE;
-    int exitCode() Q_DECL_OVERRIDE;
-    QString errorString() Q_DECL_OVERRIDE;
-    bool selfTest() Q_DECL_OVERRIDE;
+    QProcess::ExitStatus exitStatus() override;
+    QProcess::ProcessError processError() override;
+    int exitCode() override;
+    QString errorString() override;
+    bool selfTest() override;
 
 protected:
     /** Execute a raw command on the debugger. */

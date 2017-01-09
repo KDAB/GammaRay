@@ -39,7 +39,7 @@ public:
     explicit PropertyPaletteEditor(QWidget *parent = nullptr);
 
 protected:
-    void edit() Q_DECL_OVERRIDE;
+    void edit() override;
 };
 }
 

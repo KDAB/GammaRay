@@ -101,8 +101,8 @@ public:
     */
     KLinkItemSelectionModel(QAbstractItemModel *targetModel, QItemSelectionModel *linkedItemSelectionModel, QObject *parent = nullptr);
     ~KLinkItemSelectionModel();
-    void select(const QModelIndex &index, QItemSelectionModel::SelectionFlags command) Q_DECL_OVERRIDE;
-    void select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command) Q_DECL_OVERRIDE;
+    void select(const QModelIndex &index, QItemSelectionModel::SelectionFlags command) override;
+    void select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command) override;
 
 protected:
     KLinkItemSelectionModelPrivate *const d_ptr;

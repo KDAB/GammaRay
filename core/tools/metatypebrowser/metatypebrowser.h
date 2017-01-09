@@ -45,7 +45,7 @@ public:
     explicit MetaTypeBrowser(ProbeInterface *probe, QObject *parent = nullptr);
 
 public slots:
-    void rescanTypes() Q_DECL_OVERRIDE;
+    void rescanTypes() override;
 
 private:
     MetaTypesModel *m_mtm;

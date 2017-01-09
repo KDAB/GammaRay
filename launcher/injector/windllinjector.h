@@ -43,14 +43,14 @@ class WinDllInjector : public AbstractInjector
 public:
     WinDllInjector();
     ~WinDllInjector();
-    QString name() const Q_DECL_OVERRIDE;
+    QString name() const override;
     bool launch(const QStringList &programAndArgs, const QString &probeDll,
-                const QString &probeFunc, const QProcessEnvironment &env) Q_DECL_OVERRIDE;
-    bool attach(int pid, const QString &probeDll, const QString &probeFunc) Q_DECL_OVERRIDE;
-    int exitCode() Q_DECL_OVERRIDE;
-    QProcess::ExitStatus exitStatus() Q_DECL_OVERRIDE;
-    QProcess::ProcessError processError() Q_DECL_OVERRIDE;
-    QString errorString() Q_DECL_OVERRIDE;
+                const QString &probeFunc, const QProcessEnvironment &env) override;
+    bool attach(int pid, const QString &probeDll, const QString &probeFunc) override;
+    int exitCode() override;
+    QProcess::ExitStatus exitStatus() override;
+    QProcess::ProcessError processError() override;
+    QString errorString() override;
     void stop();
 private:
     int mExitCode;

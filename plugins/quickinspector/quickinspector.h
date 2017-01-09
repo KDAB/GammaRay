@@ -74,12 +74,12 @@ signals:
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
 
 public slots:
-    void selectWindow(int index) Q_DECL_OVERRIDE;
+    void selectWindow(int index) override;
 
     void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
-    Q_DECL_OVERRIDE;
+    override;
 
-    void checkFeatures() Q_DECL_OVERRIDE;
+    void checkFeatures() override;
 
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
     void pickElementId(const GammaRay::ObjectId& id);
@@ -87,7 +87,7 @@ public slots:
     void sendRenderedScene(const QImage &currentFrame);
 
 protected:
-    bool eventFilter(QObject *receiver, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *receiver, QEvent *event) override;
 
 private slots:
     void slotGrabWindow();

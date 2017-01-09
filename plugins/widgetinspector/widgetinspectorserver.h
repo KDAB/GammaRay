@@ -64,7 +64,7 @@ signals:
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private:
     GammaRay::ObjectIds recursiveWidgetsAt(QWidget *parent, const QPoint &pos,
@@ -84,12 +84,12 @@ private slots:
 
     void recreateOverlayWidget();
 
-    void saveAsImage(const QString &fileName) Q_DECL_OVERRIDE;
-    void saveAsSvg(const QString &fileName) Q_DECL_OVERRIDE;
-    void saveAsPdf(const QString &fileName) Q_DECL_OVERRIDE;
-    void saveAsUiFile(const QString &fileName) Q_DECL_OVERRIDE;
+    void saveAsImage(const QString &fileName) override;
+    void saveAsSvg(const QString &fileName) override;
+    void saveAsPdf(const QString &fileName) override;
+    void saveAsUiFile(const QString &fileName) override;
 
-    void analyzePainting() Q_DECL_OVERRIDE;
+    void analyzePainting() override;
 
     void updateWidgetPreview();
 

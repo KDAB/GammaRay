@@ -40,9 +40,9 @@ public:
     explicit SceneInspectorClient(QObject *parent = nullptr);
     ~SceneInspectorClient();
 
-    void initializeGui() Q_DECL_OVERRIDE;
-    void renderScene(const QTransform &transform, const QSize &size) Q_DECL_OVERRIDE;
-    void sceneClicked(const QPointF &pos) Q_DECL_OVERRIDE;
+    void initializeGui() override;
+    void renderScene(const QTransform &transform, const QSize &size) override;
+    void sceneClicked(const QPointF &pos) override;
 };
 }
 

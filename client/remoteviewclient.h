@@ -38,20 +38,20 @@ class RemoteViewClient : public RemoteViewInterface
     Q_INTERFACES(GammaRay::RemoteViewInterface)
 public:
     explicit RemoteViewClient(const QString &name, QObject *parent = nullptr);
-    void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode) Q_DECL_OVERRIDE;
-    void pickElementId(const GammaRay::ObjectId &id) Q_DECL_OVERRIDE;
+    void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode) override;
+    void pickElementId(const GammaRay::ObjectId &id) override;
     void sendKeyEvent(int type, int key, int modifiers,
                       const QString &text = QString(), bool autorep = false,
-                      ushort count = 1) Q_DECL_OVERRIDE;
+                      ushort count = 1) override;
     void sendMouseEvent(int type, const QPoint &localPos, int button, int buttons,
-                        int modifiers) Q_DECL_OVERRIDE;
+                        int modifiers) override;
     void sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta, int buttons,
-                        int modifiers) Q_DECL_OVERRIDE;
+                        int modifiers) override;
     void sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
                         Qt::TouchPointStates touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
-                        Q_DECL_OVERRIDE;
-    void setViewActive(bool active) Q_DECL_OVERRIDE;
-    void clientViewUpdated() Q_DECL_OVERRIDE;
+                        override;
+    void setViewActive(bool active) override;
+    void clientViewUpdated() override;
 };
 }
 

@@ -55,7 +55,7 @@ signals:
     void eventScrollBarChanged(QScrollBar *scrollBar);
 
 protected:
-    bool viewportEvent(QEvent *event) Q_DECL_OVERRIDE;
+    bool viewportEvent(QEvent *event) override;
 
 private slots:
     void eventDelegateChanged();

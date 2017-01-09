@@ -77,7 +77,7 @@ private slots:
     }
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event) Q_DECL_OVERRIDE
+    bool eventFilter(QObject *object, QEvent *event) override
     {
         if (event->type() == QEvent::LanguageChange)
             retranslate();

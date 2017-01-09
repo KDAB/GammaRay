@@ -46,10 +46,10 @@ public:
     explicit TcpServerDevice(QObject *parent = nullptr);
     ~TcpServerDevice();
 
-    bool listen() Q_DECL_OVERRIDE;
-    bool isListening() const Q_DECL_OVERRIDE;
-    QUrl externalAddress() const Q_DECL_OVERRIDE;
-    void broadcast(const QByteArray &data) Q_DECL_OVERRIDE;
+    bool listen() override;
+    bool isListening() const override;
+    QUrl externalAddress() const override;
+    void broadcast(const QByteArray &data) override;
 
 private:
     QUdpSocket *m_broadcastSocket;

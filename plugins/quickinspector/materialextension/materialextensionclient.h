@@ -42,7 +42,7 @@ public:
     virtual ~MaterialExtensionClient();
 
 public slots:
-    void getShader(const QString &fileName) Q_DECL_OVERRIDE;
+    void getShader(const QString &fileName) override;
 };
 }
 

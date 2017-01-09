@@ -46,7 +46,7 @@ public:
     ~SelectionModelServer();
 
 protected:
-    bool isConnected() const Q_DECL_OVERRIDE;
+    bool isConnected() const override;
 
 private slots:
     void timeout();

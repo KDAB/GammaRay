@@ -52,10 +52,10 @@ public:
     /** Returns @c true if the plugin seems valid from all the information we have so far. */
     bool isValid() const;
 
-    bool isHidden() const Q_DECL_OVERRIDE;
-    QVector<QByteArray> selectableTypes() const Q_DECL_OVERRIDE;
+    bool isHidden() const override;
+    QVector<QByteArray> selectableTypes() const override;
 
-    void init(ProbeInterface *probe) Q_DECL_OVERRIDE;
+    void init(ProbeInterface *probe) override;
 };
 }
 

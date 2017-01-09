@@ -44,7 +44,7 @@ public:
     explicit WidgetAttributeExtension(PropertyController *controller);
     ~WidgetAttributeExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
 
 private:
     AttributeModel<QWidget, Qt::WidgetAttribute> *m_attributeModel;

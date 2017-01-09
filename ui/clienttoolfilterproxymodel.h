@@ -46,7 +46,7 @@ public slots:
     void setFilterInactiveTools(bool enable);
 
 protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const Q_DECL_OVERRIDE;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
 private:
     bool m_filterInactiveTools;

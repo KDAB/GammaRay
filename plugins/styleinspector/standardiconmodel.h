@@ -44,12 +44,12 @@ public:
     explicit StandardIconModel(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+                        int role = Qt::DisplayRole) const override;
 
 protected:
-    QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
-    int doColumnCount() const Q_DECL_OVERRIDE;
-    int doRowCount() const Q_DECL_OVERRIDE;
+    QVariant doData(int row, int column, int role) const override;
+    int doColumnCount() const override;
+    int doRowCount() const override;
 
 private:
     QVariant dataForStandardIcon(QStyle::StandardPixmap stdPix, const QString &name, int column,

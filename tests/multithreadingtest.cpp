@@ -45,7 +45,7 @@ public:
         , delay(0)
         , iterations(100) {}
 
-    void run() Q_DECL_OVERRIDE
+    void run() override
     {
         objects.reserve(batchSize);
         for (int i = 0; i < iterations; ++i) {

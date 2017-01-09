@@ -52,11 +52,11 @@ public:
     explicit AbstractStyleElementStateTable(QObject *parent = nullptr);
 
     QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+                        int role = Qt::DisplayRole) const override;
 
 protected:
-    int doColumnCount() const Q_DECL_OVERRIDE;
-    QVariant doData(int row, int column, int role) const Q_DECL_OVERRIDE;
+    int doColumnCount() const override;
+    QVariant doData(int row, int column, int role) const override;
 
     /// standard setup for the style option used in a cell in column @p column
     void fillStyleOption(QStyleOption *option, int column) const;

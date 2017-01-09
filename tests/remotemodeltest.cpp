@@ -61,8 +61,8 @@ signals:
     void message(const GammaRay::Message &msg);
 
 private:
-    bool isConnected() const Q_DECL_OVERRIDE { return true; }
-    void sendMessage(const Message &msg) const Q_DECL_OVERRIDE
+    bool isConnected() const override { return true; }
+    void sendMessage(const Message &msg) const override
     {
         QByteArray ba;
         QBuffer buffer(&ba);
@@ -92,7 +92,7 @@ signals:
     void message(const GammaRay::Message &msg);
 
 private:
-    void sendMessage(const Message &msg) const Q_DECL_OVERRIDE
+    void sendMessage(const Message &msg) const override
     {
         QByteArray ba;
         QBuffer buffer(&ba);

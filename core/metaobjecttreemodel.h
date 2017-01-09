@@ -48,19 +48,19 @@ public:
     explicit MetaObjectTreeModel(QObject *parent = nullptr);
     ~MetaObjectTreeModel();
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &child) const override;
 
     QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+                      const QModelIndex &parent = QModelIndex()) const override;
 
     QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits,
-                          Qt::MatchFlags flags) const Q_DECL_OVERRIDE;
+                          Qt::MatchFlags flags) const override;
 
     void scanMetaTypes();
 

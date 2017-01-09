@@ -46,11 +46,11 @@ public:
         ObjectIdRole = Qt::UserRole + 1
     };
 
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &proxyIndex, int role) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
-    QMap<int, QVariant> itemData(const QModelIndex & index) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &proxyIndex, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+    QMap<int, QVariant> itemData(const QModelIndex & index) const override;
 
     TranslatorWrapper *translator(const QModelIndex &index) const;
 

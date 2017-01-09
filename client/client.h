@@ -53,17 +53,17 @@ public:
     /**
      * Register a client-side QObject to send/receive messages to/from the server side.
      */
-    Protocol::ObjectAddress registerObject(const QString &name, QObject *object) Q_DECL_OVERRIDE;
+    Protocol::ObjectAddress registerObject(const QString &name, QObject *object) override;
 
     /** Singleton accessor. */
     static Client *instance();
 
-    bool isRemoteClient() const Q_DECL_OVERRIDE;
-    QUrl serverAddress() const Q_DECL_OVERRIDE;
+    bool isRemoteClient() const override;
+    QUrl serverAddress() const override;
 
     void registerMessageHandler(Protocol::ObjectAddress objectAddress, QObject *receiver,
-                                const char *messageHandlerName) Q_DECL_OVERRIDE;
-    void unregisterMessageHandler(Protocol::ObjectAddress objectAddress) Q_DECL_OVERRIDE;
+                                const char *messageHandlerName) override;
+    void unregisterMessageHandler(Protocol::ObjectAddress objectAddress) override;
 
 signals:
     /** Emitted on transient connection errors.
@@ -76,12 +76,12 @@ signals:
     void persisitentConnectionError(const QString &msg);
 
 protected:
-    void messageReceived(const Message &msg) Q_DECL_OVERRIDE;
+    void messageReceived(const Message &msg) override;
     void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName,
-                         QObject *object) Q_DECL_OVERRIDE;
+                         QObject *object) override;
     void handlerDestroyed(Protocol::ObjectAddress objectAddress,
-                          const QString &objectName) Q_DECL_OVERRIDE;
-    void doSendMessage(const GammaRay::Message &msg) Q_DECL_OVERRIDE;
+                          const QString &objectName) override;
+    void doSendMessage(const GammaRay::Message &msg) override;
 
 private:
     void monitorObject(Protocol::ObjectAddress objectAddress);
