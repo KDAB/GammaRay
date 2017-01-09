@@ -59,9 +59,9 @@
     \value FileNameRole
 */
 
-QT_BEGIN_NAMESPACE
-
 using namespace GammaRay;
+
+QT_BEGIN_NAMESPACE
 
 class GammaRay::ResourceModelPrivate
 {
