@@ -156,20 +156,21 @@ void ModelInspector::cellSelectionChanged(const QItemSelection &selection)
     QModelIndex index;
     if (selection.size() >= 1)
         index = selection.at(0).topLeft();
-    m_cellModel->setModelIndex(index);
 
-    if (!index.isValid()) {
+    const QModelIndex sourceIndex = m_modelContentProxyModel->mapToSource(index);
+    m_cellModel->setModelIndex(sourceIndex);
+
+    if (!sourceIndex.isValid()) {
         setCurrentCellData(ModelCellData());
         return;
     }
 
-    index = m_modelContentProxyModel->mapToSource(index);
     ModelCellData cellData;
-    cellData.row = index.row();
-    cellData.column = index.column();
-    cellData.internalId = QString::number(index.internalId());
-    cellData.internalPtr = Util::addressToString(index.internalPointer());
-    cellData.flags = index.flags();
+    cellData.row = sourceIndex.row();
+    cellData.column = sourceIndex.column();
+    cellData.internalId = QString::number(sourceIndex.internalId());
+    cellData.internalPtr = Util::addressToString(sourceIndex.internalPointer());
+    cellData.flags = sourceIndex.flags();
     setCurrentCellData(cellData);
 }
 
