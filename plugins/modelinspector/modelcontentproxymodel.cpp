@@ -93,6 +93,11 @@ QVariant ModelContentProxyModel::data(const QModelIndex &proxyIndex, int role) c
         return QVariant();
     }
 
+    // we set the EmptyNameRole to signal this index is unnamed to the delegate
+    if (role == IsDisplayStringEmptyRole) {
+        return QIdentityProxyModel::data(proxyIndex, Qt::DisplayRole).toString().isNull();
+    }
+
     return QIdentityProxyModel::data(proxyIndex, role);
 }
 
@@ -113,6 +118,9 @@ QMap<int, QVariant> ModelContentProxyModel::itemData(const QModelIndex &index) c
     v = data(index, SelectedRole);
     if (!v.isNull())
         d.insert(SelectedRole, v);
+    v = data(index, IsDisplayStringEmptyRole);
+    if (!v.isNull())
+        d.insert(IsDisplayStringEmptyRole, v);
     return d;
 }
 

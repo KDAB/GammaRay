@@ -64,6 +64,11 @@ void ModelContentDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
         // TODO also render selection for currently selected cells
     }
 
+    if (index.data(ModelContentProxyModel::IsDisplayStringEmptyRole).toBool()) {
+        option.palette.setColor(QPalette::Text, option.palette.color(QPalette::Disabled, QPalette::Text));
+        option.text = tr("<unnamed: row %1, column %2>").arg(index.row()).arg(index.column());
+    }
+
     QStyle *style = QApplication::style();
     style->drawControl(QStyle::CE_ItemViewItem, &option, painter, nullptr);
 }
