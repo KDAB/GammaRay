@@ -71,7 +71,7 @@ public:
      * @param parent is the model QModelIndex.
      * @return the column count for specified model.
      */
-    int columnCount(const QModelIndex &parent = QModelIndex()) const
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override
     {
         Q_UNUSED(parent);
         return 2;
@@ -114,7 +114,7 @@ public:
         return QVariant();
     }
 
-    QMap<int, QVariant> itemData(const QModelIndex &index) const
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override
     {
         QMap<int, QVariant> map = Base::itemData(index);
         map.insert(ObjectModel::ObjectIdRole, this->data(index, ObjectModel::ObjectIdRole));
@@ -138,7 +138,7 @@ public:
      *         QVariant() if some anamoly occurs.
      *
      */
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override
     {
         if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
             switch (section) {

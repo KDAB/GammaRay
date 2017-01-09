@@ -91,7 +91,7 @@ public slots:
     virtual void saveState();
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
 
     QString widgetName(QWidget *widget) const;
     QString widgetPath(QWidget *widget) const;

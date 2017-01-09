@@ -84,7 +84,7 @@ Q_SIGNALS:
     void wheel(float delta);
 
 protected:
-    void wheelEvent(QWheelEvent *ev)
+    void wheelEvent(QWheelEvent *ev) override
     {
         Q_EMIT wheel(ev->delta());
     }
