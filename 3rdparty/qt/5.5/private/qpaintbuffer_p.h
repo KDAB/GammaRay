@@ -324,6 +324,9 @@ protected:
     QTransform m_world_matrix;
 
     QPainter *painter;
+
+private:
+    Q_DISABLE_COPY(QPainterReplayer)
 };
 
 class QPaintEngineExReplayer : public QPainterReplayer

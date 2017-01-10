@@ -34,6 +34,11 @@
 #include <QVector>
 
 namespace GammaRay {
+
+AbstractObjectDataProvider::AbstractObjectDataProvider()
+{
+}
+
 AbstractObjectDataProvider::~AbstractObjectDataProvider()
 {
 }

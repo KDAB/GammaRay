@@ -59,13 +59,18 @@
 using namespace GammaRay;
 
 namespace GammaRay {
-struct VariantHandlerRepository
+class VariantHandlerRepository
 {
+public:
+    VariantHandlerRepository() {};
     ~VariantHandlerRepository();
     void clear();
 
     QHash<int, VariantHandler::Converter<QString> *> stringConverters;
     QVector<VariantHandler::GenericStringConverter> genericStringConverters;
+
+private:
+    Q_DISABLE_COPY(VariantHandlerRepository)
 };
 
 VariantHandlerRepository::~VariantHandlerRepository()

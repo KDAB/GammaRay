@@ -48,11 +48,15 @@ class SourceLocation;
 class GAMMARAY_CORE_EXPORT AbstractObjectDataProvider
 {
 public:
+    AbstractObjectDataProvider();
     virtual ~AbstractObjectDataProvider();
     virtual QString name(const QObject *obj) const = 0;
     virtual QString typeName(QObject *obj) const = 0;
     virtual SourceLocation creationLocation(QObject *obj) const = 0;
     virtual SourceLocation declarationLocation(QObject *obj) const = 0;
+
+private:
+    Q_DISABLE_COPY(AbstractObjectDataProvider)
 };
 
 /** @brief Retrieve basic information about QObject instances. */
