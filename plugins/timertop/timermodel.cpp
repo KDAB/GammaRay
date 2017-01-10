@@ -1,3 +1,4 @@
+
 /*
   timermodel.cpp
 
@@ -328,7 +329,7 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
         // If there is a QTimer associated with this timer ID, don't handle it here, it will be handled
         // by the signal hooks for QTimer::timeout()
         if (findOrCreateQTimerTimerInfo(timerEvent->timerId()))
-            return false;
+            return QAbstractTableModel::eventFilter(watched, event);
 
         const TimerInfoPtr timerInfo = findOrCreateFreeTimerInfo(timerEvent->timerId());
         TimerInfo::TimeoutEvent timeoutEvent;
@@ -339,7 +340,7 @@ bool TimerModel::eventFilter(QObject *watched, QEvent *event)
         timerInfo->setLastReceiver(watched);
         emitFreeTimerChanged(m_freeTimers.indexOf(timerInfo));
     }
-    return false;
+    return QAbstractTableModel::eventFilter(watched, event);
 }
 
 void TimerModel::slotBeginRemoveRows(const QModelIndex &parent, int start, int end)
