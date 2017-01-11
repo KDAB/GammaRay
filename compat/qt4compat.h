@@ -34,7 +34,6 @@
  */
 
 #define override
-#define Q_NULLPTR 0
 
 #define QStringLiteral(str) QString::fromUtf8("" str "", sizeof(str) - 1)
 #define QByteArrayLiteral(str) QByteArray("" str "", sizeof(str) - 1)
