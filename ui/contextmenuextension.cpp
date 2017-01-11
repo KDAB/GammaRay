@@ -58,7 +58,7 @@ QString sourceLocationLabel(ContextMenuExtension::Location location,
 }
 #endif
 
-ContextMenuExtension::ContextMenuExtension(ObjectId id)
+ContextMenuExtension::ContextMenuExtension(const ObjectId &id)
     : m_id(id)
 {
 }

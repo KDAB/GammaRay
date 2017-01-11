@@ -54,7 +54,7 @@ public:
         Declaration
     };
 
-    explicit ContextMenuExtension(ObjectId id = ObjectId());
+    explicit ContextMenuExtension(const ObjectId &id = ObjectId());
 
     void setLocation(Location location, const SourceLocation &sourceLocation);
 
