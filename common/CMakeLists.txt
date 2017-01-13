@@ -29,6 +29,14 @@ set(gammaray_common_srcs
   transferimage.cpp
 )
 
+if (APPLE)
+    list(APPEND gammaray_common_srcs processtracker_macos.cpp)
+elseif(UNIX)
+    list(APPEND gammaray_common_srcs processtracker_linux.cpp)
+elseif(WIN32)
+    list(APPEND gammaray_common_srcs processtracker_windows.cpp)
+endif()
+
 add_library(gammaray_common ${GAMMARAY_LIBRARY_TYPE} ${gammaray_common_srcs})
 generate_export_header(gammaray_common)
 set_target_properties(gammaray_common PROPERTIES
