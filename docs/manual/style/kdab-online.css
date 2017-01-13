@@ -40,23 +40,31 @@ nav.breadcrumbHolder ul {
     list-style: none;
     padding-left: 0px;
     font-size: small;
+    font-weight: 400;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 0px;
 }
 nav.breadcrumbHolder li {
-    display:inline-block;
-    position:relative;
+    display: inline-block;
+    position: relative;
     padding-right: 0.25em;
-/*   color:#585a5c TODO use from KDAB style */
+    color: #7F9CAD;
 }
 nav.breadcrumbHolder li a {
-/*   color:#58585c  TODO use from KDAB style */
+    color: #7F9CAD;
+}
+nav.breadcrumbHolder li a:hover {
+    color: #4C758D;
 }
 nav.breadcrumbHolder li:after {
-/*   color:#404244;  TODO */
+    color: #7F9CAD;
     content: "\2023";
     padding-left: 0.5em;
 }
-nav.breadcrumbHolder ul:last li a {
-/*   color:#80c342 TODO */
+nav.breadcrumbHolder ul li:nth-last-child(2) {
+    color: #7F9CAD;
+    font-weight: 700;
 }
 
 #buildversion {
