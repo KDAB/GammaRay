@@ -19,7 +19,16 @@ HTML.headerscripts = \
     "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab16/js/bootstrap-3.3.6.min.js?ver=3.3.6\"></script>\n" \
     "  <script type=\"text/javascript\">\n" \
     "  \$(function(){\n" \
-    "     \$(\"#kdab-header\").load(\"style/kdab-header.html\");\n" \
+    "     \$(\"#kdab-header\").load(\"style/kdab-header.html\", function() {\n" \
+    "       \$('.navbar .dropdown > a').click(function () {\n" \
+    "         location.href = this.href;\n" \
+    "       });\n" \
+    "       \$('.navbar .dropdown').hover(function () {\n" \
+    "         \$(this).addClass(\"open\");\n" \
+    "       }, function () { \n" \
+    "         \$(this).removeClass(\"open\");\n" \
+      "     });\n" \
+    "     });\n" \
     "     \$(\"#kdab-footer\").load(\"style/kdab-footer.html\");\n" \
     "     \$(\"#sidebar-content\").load(\"style/qt5-sidebar.html\");\n" \
     "  });\n" \
