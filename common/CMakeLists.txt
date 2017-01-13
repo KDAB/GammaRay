@@ -15,6 +15,7 @@ set(gammaray_common_srcs
   modelutils.cpp
   objectidfilterproxymodel.cpp
   paintanalyzerinterface.cpp
+  processtracker.cpp
   selflocator.cpp
   sourcelocation.cpp
   translator.cpp
@@ -103,6 +104,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     objectidfilterproxymodel.h
     paths.h
     probecontrollerinterface.h
+    processtracker.h
     propertycontrollerinterface.h
     protocol.h
     sourcelocation.h

@@ -39,6 +39,7 @@
 #include <toolmanagerclient.h>
 
 #include <common/objectbroker.h>
+#include <common/processtracker.h>
 #include <common/streamoperators.h>
 
 #include <ui/mainwindow.h>
@@ -116,12 +117,19 @@ void ClientConnectionManager::init()
 ClientConnectionManager::ClientConnectionManager(QObject *parent, bool showSplashScreenOnStartUp)
     : QObject(parent)
     , m_client(new Client(this))
+    , m_processTracker(new GammaRay::ProcessTracker(this))
     , m_mainWindow(nullptr)
     , m_ignorePersistentError(false)
     , m_tries(0)
 {
     if (showSplashScreenOnStartUp)
         showSplashScreen();
+    connect(m_processTracker, SIGNAL(backendChanged(GammaRay::ProcessTrackerBackend*)), this,
+            SIGNAL(processTrackerBackendChanged(GammaRay::ProcessTrackerBackend*)));
+    connect(m_processTracker, SIGNAL(infoChanged(GammaRay::ProcessTrackerInfo)), this,
+            SIGNAL(processTrackerInfoChanged(GammaRay::ProcessTrackerInfo)));
+    connect(this, SIGNAL(ready()), this, SLOT(clientConnected()));
+    connect(this, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
     connect(m_client, SIGNAL(disconnected()), SIGNAL(disconnected()));
     connect(m_client, SIGNAL(transientConnectionError()), SLOT(transientConnectionError()));
     connect(m_client, SIGNAL(persisitentConnectionError(QString)),
@@ -154,6 +162,28 @@ void ClientConnectionManager::connectToHost(const QUrl &url, int tryAgain)
 void ClientConnectionManager::showSplashScreen()
 {
     ::showSplashScreen();
+}
+
+GammaRay::ProcessTrackerBackend *ClientConnectionManager::processTrackerBackend() const
+{
+    return m_processTracker->backend();
+}
+
+void ClientConnectionManager::setProcessTrackerBackend(GammaRay::ProcessTrackerBackend *backend)
+{
+    m_processTracker->setBackend(backend);
+    updateProcessTrackerState();
+}
+
+qint64 ClientConnectionManager::processTrackerPid() const
+{
+    return m_processTracker->pid();
+}
+
+void ClientConnectionManager::setProcessTrackerPid(qint64 pid)
+{
+    m_processTracker->setPid(pid);
+    updateProcessTrackerState();
 }
 
 QString ClientConnectionManager::endPointLabel() const
@@ -230,4 +260,32 @@ void ClientConnectionManager::hideSplashScreen()
 void ClientConnectionManager::targetQuitRequested()
 {
     m_ignorePersistentError = true;
+}
+
+void ClientConnectionManager::updateProcessTrackerState()
+{
+    if (!m_client->isConnected()) {
+        m_processTracker->stop();
+    }
+    else if (m_processTracker->isActive()) {
+        if (!m_processTracker->backend() || m_processTracker->pid() < 0) {
+            m_processTracker->stop();
+        }
+    }
+    else {
+        if (m_processTracker->backend() && m_processTracker->pid() >= 0) {
+            m_processTracker->start();
+        }
+    }
+}
+
+void ClientConnectionManager::clientConnected()
+{
+    setProcessTrackerPid(m_client->pid());
+}
+
+void ClientConnectionManager::clientDisconnected()
+{
+    setProcessTrackerPid(-1);
+    emit processTrackerInfoChanged({});
 }

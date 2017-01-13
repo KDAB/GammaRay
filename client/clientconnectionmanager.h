@@ -44,6 +44,9 @@ QT_END_NAMESPACE
 namespace GammaRay {
 class Client;
 class MainWindow;
+class ProcessTracker;
+class ProcessTrackerBackend;
+struct ProcessTrackerInfo;
 
 /** @brief Pre-MainWindow connection setup logic.
  *
@@ -65,6 +68,12 @@ public:
 
     /** Manually show the splash screen. */
     void showSplashScreen();
+
+    GammaRay::ProcessTrackerBackend *processTrackerBackend() const;
+    void setProcessTrackerBackend(GammaRay::ProcessTrackerBackend *backend);
+
+    qint64 processTrackerPid() const;
+    void setProcessTrackerPid(qint64 pid);
 
     QString endPointLabel() const;
     QString endPointKey() const;
@@ -91,6 +100,9 @@ signals:
      */
     void disconnected();
 
+    void processTrackerBackendChanged(GammaRay::ProcessTrackerBackend *backend);
+    void processTrackerInfoChanged(const GammaRay::ProcessTrackerInfo &info);
+
 public slots:
     /** Disconnect GammaRay. */
     void disconnectFromHost();
@@ -113,9 +125,14 @@ private slots:
     void hideSplashScreen();
     void targetQuitRequested();
 
+    void updateProcessTrackerState();
+    void clientConnected();
+    void clientDisconnected();
+
 private:
     QUrl m_serverUrl;
     Client *m_client;
+    GammaRay::ProcessTracker *m_processTracker;
     QPointer<MainWindow> m_mainWindow;
     QTime m_connectionTimeout;
     bool m_ignorePersistentError;
