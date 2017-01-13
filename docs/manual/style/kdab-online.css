@@ -1,10 +1,26 @@
-aside {
+/* main content area */
+div.content {
+    display: inline-block;
+    float: left;
+    width: 80%;
+    padding-right: 2em;
+    padding-top: 2em;
+}
+
+/* right sidebar */
+div.sidebar {
+    display: block;
     float: right;
+    width: 20%;
+    padding-top: 2em;
 }
-aside ul {
+
+div.sidebar ul {
     list-style: none;
+    padding-left: 1.3em;
 }
-aside li:before {
+
+div.sidebar li:before {
     content: "\2023";
     /* color: #7F9CAD; TODO */
     display: inline-block;
@@ -13,14 +29,22 @@ aside li:before {
     width: 1.3em;
 }
 
+.toc,.sectionlist {
+    padding: 1em;
+    background-color:#eee; /* TODO */
+    margin-bottom:2em
+}
+
+/* navigation breadcrumb at the top */
 nav.breadcrumbHolder ul {
     list-style: none;
+    padding-left: 0px;
+    font-size: small;
 }
 nav.breadcrumbHolder li {
     display:inline-block;
-    margin-right:5px;
     position:relative;
-    padding-right:10px;
+    padding-right: 0.25em;
 /*   color:#585a5c TODO use from KDAB style */
 }
 nav.breadcrumbHolder li a {
@@ -29,12 +53,7 @@ nav.breadcrumbHolder li a {
 nav.breadcrumbHolder li:after {
 /*   color:#404244;  TODO */
     content: "\2023";
-    display:inline-block;
-    font-size:1.5em;
-    line-height:1;
-    position:absolute;
-    right:-2px;
-    top:-4px
+    padding-left: 0.5em;
 }
 nav.breadcrumbHolder ul:last li a {
 /*   color:#80c342 TODO */
@@ -49,12 +68,28 @@ nav.breadcrumbHolder ul:last li a {
     content:none;
 }
 
-.toc,.sectionlist {
-    padding:35px;
-    background-color:#eee; /* TODO */
-    margin-bottom:2em
+/* forward/back links */
+.naviNextPrevious.headerNavi {
+    display: none;
 }
 
+.naviNextPrevious.footerNavi {
+    margin-top: 25px;
+    max-width: 100%;
+}
+
+.nextPage {
+    float: right;
+}
+/* TODO use KDAB-style triangles instead of <> */
+.prevPage::before {
+    content: "< ";
+}
+.nextPage::after {
+    content: " >";
+}
+
+/* content styling */
 /* TODO restrict this only to qdoc content, classes with WP style */
 .border {
     border: 0px;
