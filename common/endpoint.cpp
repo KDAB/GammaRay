@@ -43,6 +43,7 @@ Endpoint::Endpoint(QObject *parent)
     , m_propertySyncer(new PropertySyncer(this))
     , m_socket(nullptr)
     , m_myAddress(Protocol::InvalidObjectAddress +1)
+    , m_pid(-1)
 {
     if (s_instance) {
         qCritical(
@@ -404,4 +405,14 @@ QString Endpoint::key() const
 void Endpoint::setKey(const QString &key)
 {
     m_key = key;
+}
+
+qint64 Endpoint::pid() const
+{
+    return m_pid;
+}
+
+void Endpoint::setPid(qint64 pid)
+{
+    m_pid = pid;
 }
