@@ -156,6 +156,21 @@ void ClientConnectionManager::showSplashScreen()
     ::showSplashScreen();
 }
 
+QString ClientConnectionManager::endPointLabel() const
+{
+    return m_client->label();
+}
+
+QString ClientConnectionManager::endPointKey() const
+{
+    return m_client->key();
+}
+
+qint64 ClientConnectionManager::endPointPid() const
+{
+    return m_client->pid();
+}
+
 void ClientConnectionManager::disconnectFromHost()
 {
     targetQuitRequested();

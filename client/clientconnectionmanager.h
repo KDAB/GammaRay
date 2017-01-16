@@ -66,6 +66,10 @@ public:
     /** Manually show the splash screen. */
     void showSplashScreen();
 
+    QString endPointLabel() const;
+    QString endPointKey() const;
+    qint64 endPointPid() const;
+
     /** One-time initialization of stream operators and factory callbacks. */
     static void init();
 
