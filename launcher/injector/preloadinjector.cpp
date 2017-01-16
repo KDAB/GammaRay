@@ -59,7 +59,6 @@ bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &p
 
     QProcessEnvironment env(e);
 #ifdef Q_OS_MAC
-    env.insert(QStringLiteral("DYLD_FORCE_FLAT_NAMESPACE"), QStringLiteral("1"));
     env.insert(QStringLiteral("DYLD_INSERT_LIBRARIES"), probeDll);
     env.insert(QStringLiteral("GAMMARAY_UNSET_DYLD"), QStringLiteral("1"));
 
