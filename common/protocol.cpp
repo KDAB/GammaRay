@@ -55,7 +55,7 @@ QModelIndex toQModelIndex(const QAbstractItemModel *model, const Protocol::Model
 
 qint32 version()
 {
-    return 30;
+    return 31;
 }
 
 qint32 broadcastFormatVersion()

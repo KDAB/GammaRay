@@ -117,6 +117,16 @@ public:
     void setKey(const QString &key);
 
     /**
+     * Returns the process identifier (pid) of the host program.
+     */
+    qint64 pid() const;
+
+    /**
+     * Sets the process identifier of the host program of this instance used e.g. when querying system pid.
+     */
+    void setPid(qint64 pid);
+
+    /**
      * Returns true for remote clients and false for the in-probe server endpoint.
      */
     virtual bool isRemoteClient() const = 0;
@@ -239,6 +249,7 @@ private:
 
     QString m_label;
     QString m_key;
+    qint64 m_pid;
 };
 }
 

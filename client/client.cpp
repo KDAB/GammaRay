@@ -190,9 +190,11 @@ void Client::messageReceived(const Message &msg)
         {
             QString label;
             QString key;
-            msg >> label >> key;
+            qint64 pid;
+            msg >> label >> key >> pid;
             setLabel(label);
             setKey(key);
+            setPid(pid);
             m_initState |= ServerInfoReceived;
             break;
         }

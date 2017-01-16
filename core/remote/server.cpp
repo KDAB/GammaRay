@@ -161,7 +161,7 @@ void Server::sendServerGreeting()
 
     {
         Message msg(endpointAddress(), Protocol::ServerInfo);
-        msg << label() << key(); // TODO: expand with anything else needed here: Qt/GammaRay version, hostname, that kind of stuff
+        msg << label() << key() << pid(); // TODO: expand with anything else needed here: Qt/GammaRay version, hostname, that kind of stuff
         send(msg);
     }
 
