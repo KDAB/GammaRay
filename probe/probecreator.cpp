@@ -56,10 +56,8 @@ ProbeCreator::ProbeCreator(CreateFlags flags)
     // don't propagate the probe to child processes
     if (qgetenv("GAMMARAY_UNSET_PRELOAD") == "1")
         qputenv("LD_PRELOAD", "");
-    if (qgetenv("GAMMARAY_UNSET_DYLD") == "1") {
+    if (qgetenv("GAMMARAY_UNSET_DYLD") == "1")
         qputenv("DYLD_INSERT_LIBRARIES", "");
-        qputenv("DYLD_FORCE_FLAT_NAMESPACE", "");
-    }
 
     // HACK the webinspector plugin does this as well, but if the web view is created
     // too early the env var from there isn't going to reach the web process
