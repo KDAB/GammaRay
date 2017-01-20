@@ -31,8 +31,34 @@ div.sidebar li:before {
 
 .toc,.sectionlist {
     padding: 1em;
-    background-color:#eee; /* TODO */
-    margin-bottom:2em
+    background-color: #eee;
+    margin-bottom: 3em
+}
+.toc:after {
+    content: '';
+    position: relative;
+    border-style: solid;
+    border-width: 0 0 3em 3em;
+    border-color: transparent #eee;
+    display: block;
+    width: 0%;
+    bottom: -3em;
+    left: -1em;
+}
+
+.sectionlist:after {
+    content: '';
+    position: relative;
+    border-style: solid;
+    border-width: 0 3em 3em 0;
+    border-color: transparent #eee;
+    display: block;
+    width: 100%;
+    bottom: -3em;
+    left: 1em;
+}
+.sectionlist:last-child::after {
+    display: none;
 }
 
 /* navigation breadcrumb at the top */
