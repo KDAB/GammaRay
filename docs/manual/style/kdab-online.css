@@ -152,3 +152,7 @@ table td,table th {
   padding:5px 20px;
   line-height:1.3
 }
+
+h1 { /* prevent base style from upper-casing our titles */
+    text-transform: none;
+}
