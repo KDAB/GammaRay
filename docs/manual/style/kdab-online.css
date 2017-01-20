@@ -106,3 +106,23 @@ nav.breadcrumbHolder ul li:nth-last-child(2) {
    box-shadow:3px 3px 8px 3px rgba(200,200,200,0.5)
 }
 
+table {
+  border-collapse:collapse;
+  border-spacing:0;
+  margin-bottom:25px;
+  width:100%
+}
+table .odd {
+  background-color:#f9f9f9
+}
+table thead {
+  text-align:left;
+  padding-left:20px
+}
+table,table td,table th {
+  border:1px solid #eee
+}
+table td,table th {
+  padding:5px 20px;
+  line-height:1.3
+}
