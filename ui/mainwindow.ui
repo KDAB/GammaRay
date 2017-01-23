@@ -220,10 +220,6 @@ background-position:bottom right;
    </property>
   </action>
   <action name="actionHelp">
-   <property name="icon">
-    <iconset theme="help-contents">
-     <normaloff>.</normaloff>.</iconset>
-   </property>
    <property name="text">
     <string>&amp;Help...</string>
    </property>
