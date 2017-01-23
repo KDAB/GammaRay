@@ -135,7 +135,7 @@ LaunchOptions LaunchPage::launchOptions() const
 
 void LaunchPage::showFileDialog()
 {
-    const QString exeFilePath
+    QString exeFilePath
         = QFileDialog::getOpenFileName(
         this,
         tr("Executable to Launch"),
@@ -147,7 +147,18 @@ void LaunchPage::showFileDialog()
 
     if (exeFilePath.isEmpty())
         return;
-
+#if QT_VERSION >= QT_VERSION_CHECK(4, 3, 0)
+    {
+        const QFileInfo fileInfo(exeFilePath);
+        if (fileInfo.isBundle()) {
+            const QString bundleTarget = QString::fromLatin1("%1/Contents/MacOS/%2")
+                    .arg(exeFilePath, fileInfo.completeBaseName())
+                    .replace(QLatin1String("/"), QDir::separator());
+            if (QFile::exists(bundleTarget))
+                exeFilePath = bundleTarget;
+        }
+    }
+#endif
     ui->progEdit->setText(exeFilePath);
 }
 
