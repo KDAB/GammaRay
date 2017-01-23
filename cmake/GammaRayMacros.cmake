@@ -82,7 +82,7 @@ macro(gammaray_add_plugin _target_name)
 
   if(APPLE)
     if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
-      set_target_properties(${_target_name} PROPERTIES INSTALL_RPATH "@loader_path/../../../Frameworks")
+      set_target_properties(${_target_name} PROPERTIES INSTALL_RPATH "@loader_pathd/../../../../Frameworks")
     endif()
   endif()
 
