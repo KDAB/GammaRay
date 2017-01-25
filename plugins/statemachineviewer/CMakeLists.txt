@@ -38,7 +38,7 @@ endif()
 # UI part - dependencies
 set_package_properties(KDSME PROPERTIES URL "https://github.com/KDAB/KDStateMachineEditor" DESCRIPTION "KDAB State Machine Editor framework" TYPE RECOMMENDED PURPOSE "Graphical state machine debugging.")
 if (Qt5_FOUND)
-  find_package(KDSME 1.1 CONFIG QUIET)
+  find_package(KDSME 1.2 CONFIG QUIET)
 else()
   add_feature_info("State machine debugging" FALSE "Graphical state machine debugging is not available when building with Qt4.")
 endif()
