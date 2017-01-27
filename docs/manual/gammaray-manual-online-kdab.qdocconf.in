@@ -6,6 +6,7 @@ HTML.stylesheets += \
     @CMAKE_CURRENT_SOURCE_DIR@/style/kdab-footer.html \
     @CMAKE_CURRENT_SOURCE_DIR@/style/kdab-online.css \
     @CMAKE_CURRENT_SOURCE_DIR@/style/gammaray-manual-splash-screen.png \
+    @CMAKE_CURRENT_SOURCE_DIR@/style/gammaray-logo-256.png \
 
 HTML.headerstyles = \
     "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab16/css/bootstrap-3.3.6.min.css\" type=\"text/css\"/>\n" \
