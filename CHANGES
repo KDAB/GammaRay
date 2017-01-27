@@ -1,6 +1,37 @@
 Release Highlights
 ==================
 
+Version 2.7.0
+-------------
+ * Improved enum and flag editor in the property view.
+ * Add style hint view to style inspector.
+ * Fix runtime QSG visualization mode switching for newer Qt versions.
+ * Initial support for statically compiling GammaRay into a target.
+ * Support for QtWayland 5.8.
+ * Add object navigation for the translation inspector.
+ * Automatically re-scan meta types to captures types registered later.
+ * Improved Wayland log and timeline view.
+ * Add object navigation for Wayland clients.
+ * Show alive object statistics in the meta object browser.
+ * Add Qt3D geometry inspector (requires Qt >= 5.7 and Qt3D)
+ * Allow to hide inactive tools.
+ * Fix handling of partially out-of-view QQuickItems in the QQ2 inspector.
+ * Improve error handling in the GDB injector.
+ * Fix QML support not being activated when attaching to a QtQuick application at runtime.
+ * Fix widget layout overlay for nested QLayouts.
+ * Fix crash on client disconnect.
+ * Syntax highlighting and code folding for textual content (requires KF5::SyntaxHighlighting)
+ * Add 3D widget layout visualization.
+ * Allow to hide non-visible elements in the full-depth picking dialog.
+ * Add QtIvi inspection tool (requires Qt5IviCore)
+ * Fix QSG geometry inspector not showing geometry correctly on first selection.
+ * Build both release and debug probes by default when using MSVC.
+ * Add more editor defaults for code navigation on Linux.
+ * Add QtSCXML support to the state machine debugger (requires Qt >= 5.8).
+ * Show QtQuick overlays also in the target application.
+ * Avoid leaking GammaRay translated strings into the translation inspector.
+ * Fix launching targets on macOS >= 10.9.
+
 Version 2.6.0
 -------------
  * Reworked tool view handling, enabling deeper IDE integration of individual tools.
