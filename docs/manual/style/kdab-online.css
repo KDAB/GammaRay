@@ -156,3 +156,9 @@ table td,table th {
 h1 { /* prevent base style from upper-casing our titles */
     text-transform: none;
 }
+
+/* title page splash screen image */
+#splashscreen {
+    width: 100%;
+    padding-bottom: 2em;
+}

@@ -4,7 +4,8 @@ HTML.stylesheets += \
     @CMAKE_CURRENT_SOURCE_DIR@/style/qt5-sidebar.html \
     @CMAKE_CURRENT_SOURCE_DIR@/style/kdab-header.html \
     @CMAKE_CURRENT_SOURCE_DIR@/style/kdab-footer.html \
-    @CMAKE_CURRENT_SOURCE_DIR@/style/kdab-online.css
+    @CMAKE_CURRENT_SOURCE_DIR@/style/kdab-online.css \
+    @CMAKE_CURRENT_SOURCE_DIR@/style/gammaray-manual-splash-screen.png \
 
 HTML.headerstyles = \
     "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab16/css/bootstrap-3.3.6.min.css\" type=\"text/css\"/>\n" \
@@ -31,6 +32,7 @@ HTML.headerscripts = \
     "     });\n" \
     "     \$(\"#kdab-footer\").load(\"style/kdab-footer.html\");\n" \
     "     \$(\"#sidebar-content\").load(\"style/qt5-sidebar.html\");\n" \
+    "     if (\$(\"#sidebar-content\").length == 0) { \$(\"#content\").prepend(\"<img src='style/gammaray-manual-splash-screen.png' id='splashscreen'/>\"); }\n" \
     "  });\n" \
     "  </script>\n" \
 
@@ -55,7 +57,7 @@ HTML.postpostheader = \
 
 # this goes between sidebar and actual content
 HTML.prologue = \
-    " <div class=\"content\">\n" \
+    " <div class=\"content\" id=\"content\">\n" \
 
 HTML.footer += \
     "</div>\n" \
