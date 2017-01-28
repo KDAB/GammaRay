@@ -296,7 +296,8 @@ QVariant StyleHintModel::doData(int row, int column, int role) const
     }
     if (column == 1) {
         const auto hint = static_cast<QStyle::StyleHint>(row);
-        const auto value = effectiveStyle()->styleHint(hint, nullptr, nullptr, nullptr);
+        QStyleOption option;
+        const auto value = effectiveStyle()->styleHint(hint, &option, nullptr, nullptr);
         switch (role) {
             case Qt::DisplayRole:
                 if (style_hint_table[row].type == StyleHintType::Bool)
