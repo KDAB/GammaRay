@@ -68,7 +68,8 @@ private slots:
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                               const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);
-    void propertyWidgetTabsChanged();
+    void resetState();
+    void saveState();
 
 private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
