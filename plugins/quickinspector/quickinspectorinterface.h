@@ -79,8 +79,13 @@ public slots:
 
     virtual void checkFeatures() = 0;
 
+    virtual void setServerSideDecorationsEnabled(bool enabled) = 0;
+
+    virtual void checkServerSideDecorations() = 0;
+
 signals:
     void features(GammaRay::QuickInspectorInterface::Features features);
+    void serverSideDecorations(bool enabled);
 };
 }
 

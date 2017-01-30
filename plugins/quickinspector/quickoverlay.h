@@ -83,6 +83,9 @@ public:
      */
     void placeOn(ItemOrLayoutFacade item);
 
+    bool drawDecorations() const;
+    void setDrawDecorations(bool enabled);
+
     static void drawDecoration(QPainter *painter, const QuickItemGeometry &itemGeometry, const QRectF &viewRect,
                                qreal zoom);
 
@@ -112,6 +115,7 @@ private:
     ItemOrLayoutFacade m_currentItem;
     QuickItemGeometry m_effectiveGeometry;
     bool m_isGrabbingMode;
+    bool m_drawDecorations;
 };
 }
 

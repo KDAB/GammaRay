@@ -57,12 +57,17 @@ public:
     QByteArray saveState() const override;
 
     void setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes);
+    void setServerSideDecorationsState(bool enabled);
 
     QuickInspectorInterface::RenderMode customRenderMode() const;
     void setCustomRenderMode(QuickInspectorInterface::RenderMode customRenderMode);
 
+    bool serverSideDecorationsEnabled() const;
+    void setServerSideDecorationsEnabled(bool enabled);
+
 private Q_SLOTS:
     void visualizeActionTriggered(QAction* current);
+    void serverSideDecorationsTriggered(bool enabled);
 
 private:
     void drawDecoration(QPainter *p) override;
@@ -76,6 +81,7 @@ private:
         QAction *visualizeOverdraw;
         QAction *visualizeBatches;
         QAction *visualizeChanges;
+        QAction *serverSideDecorationsEnabled;
     } m_toolBar;
 
     QuickInspectorInterface *m_inspectorInterface;

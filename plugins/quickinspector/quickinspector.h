@@ -81,6 +81,10 @@ public slots:
 
     void checkFeatures() override;
 
+    void setServerSideDecorationsEnabled(bool enabled) override;
+
+    void checkServerSideDecorations() override;
+
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
     void pickElementId(const GammaRay::ObjectId& id);
 
