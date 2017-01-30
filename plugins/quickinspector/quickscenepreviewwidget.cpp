@@ -43,7 +43,7 @@
 #include <cmath>
 
 using namespace GammaRay;
-static qint32 QuickScenePreviewWidgetStateVersion = 1;
+static qint32 QuickScenePreviewWidgetStateVersion = 2;
 
 QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QuickInspectorInterface::RenderMode)
@@ -174,18 +174,29 @@ void QuickScenePreviewWidget::restoreState(const QByteArray &state)
     QDataStream stream(state);
     qint32 version;
     QuickInspectorInterface::RenderMode mode = customRenderMode();
+    bool drawDecorations = serverSideDecorationsEnabled();
     RemoteViewWidget::restoreState(stream);
 
     stream >> version;
 
     switch (version) {
     case 1: {
-        stream >> mode;
+        stream
+                >> mode
+        ;
+        break;
+    }
+    case 2: {
+        stream
+                >> mode
+                >> drawDecorations
+        ;
         break;
     }
     }
 
     setCustomRenderMode(mode);
+    setServerSideDecorationsEnabled(drawDecorations);
 }
 
 QByteArray QuickScenePreviewWidget::saveState() const
@@ -200,7 +211,16 @@ QByteArray QuickScenePreviewWidget::saveState() const
 
         switch (QuickScenePreviewWidgetStateVersion) {
         case 1: {
-            stream << customRenderMode();
+            stream
+                    << customRenderMode()
+            ;
+            break;
+        }
+        case 2: {
+            stream
+                    << customRenderMode()
+                    << serverSideDecorationsEnabled()
+            ;
             break;
         }
         }
@@ -241,12 +261,14 @@ void QuickScenePreviewWidget::visualizeActionTriggered(QAction *current)
                                                   : QuickInspectorInterface::NormalRendering
                                                   );
     }
+    emit stateChanged();
 }
 
 void QuickScenePreviewWidget::serverSideDecorationsTriggered(bool enabled)
 {
     m_toolBar.serverSideDecorationsEnabled->setChecked(enabled);
     m_inspectorInterface->setServerSideDecorationsEnabled(enabled);
+    emit stateChanged();
 }
 
 void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(
