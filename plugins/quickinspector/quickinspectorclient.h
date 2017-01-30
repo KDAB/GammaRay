@@ -52,6 +52,10 @@ public slots:
     override;
 
     void checkFeatures() override;
+
+    void setServerSideDecorationsEnabled(bool enabled) override;
+
+    void checkServerSideDecorations() override;
 };
 }
 

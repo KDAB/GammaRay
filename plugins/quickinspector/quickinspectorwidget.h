@@ -64,6 +64,7 @@ public:
 private slots:
     void itemSelectionChanged(const QItemSelection &selection);
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
+    void setServerSideDecorations(bool enabled);
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                               const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);

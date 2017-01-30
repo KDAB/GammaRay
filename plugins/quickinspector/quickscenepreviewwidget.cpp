@@ -121,6 +121,13 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                                               "enabled, the QtQuick renderer will thus on each repaint highlight the item(s), "
                                               "that caused the repaint."));
 
+    m_toolBar.serverSideDecorationsEnabled = new QAction(QIcon(QStringLiteral(
+                                                               ":/gammaray/plugins/quickinspector/active-focus.png")),
+                                                     tr("Target Decorations"), this);
+    m_toolBar.serverSideDecorationsEnabled->setCheckable(true);
+    m_toolBar.serverSideDecorationsEnabled->setToolTip(tr("<b>Target Decorations</b><br>"
+                                              "This enable or not the decorations on the target application."));
+
     m_toolBar.toolbarWidget->addActions(m_toolBar.visualizeGroup->actions());
     connect(m_toolBar.visualizeGroup, SIGNAL(triggered(QAction*)), this,
             SLOT(visualizeActionTriggered(QAction*)));
@@ -129,6 +136,11 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
     foreach (auto action, interactionModeActions()->actions())
         m_toolBar.toolbarWidget->addAction(action);
+    m_toolBar.toolbarWidget->addSeparator();
+
+    m_toolBar.toolbarWidget->addAction(m_toolBar.serverSideDecorationsEnabled);
+    connect(m_toolBar.serverSideDecorationsEnabled, SIGNAL(triggered(bool)), this,
+            SLOT(serverSideDecorationsTriggered(bool)));
     m_toolBar.toolbarWidget->addSeparator();
 
     m_toolBar.toolbarWidget->addAction(zoomOutAction());
@@ -230,6 +242,12 @@ void QuickScenePreviewWidget::visualizeActionTriggered(QAction *current)
     }
 }
 
+void QuickScenePreviewWidget::serverSideDecorationsTriggered(bool enabled)
+{
+    m_toolBar.serverSideDecorationsEnabled->setChecked(enabled);
+    m_inspectorInterface->setServerSideDecorationsEnabled(enabled);
+}
+
 void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(
     QuickInspectorInterface::Features supportedCustomRenderModes)
 {
@@ -241,6 +259,11 @@ void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(
         supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeOverdraw);
     m_toolBar.visualizeChanges->setEnabled(
         supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeChanges);
+}
+
+void QuickScenePreviewWidget::setServerSideDecorationsState(bool enabled)
+{
+    m_toolBar.serverSideDecorationsEnabled->setChecked(enabled);
 }
 
 QuickInspectorInterface::RenderMode QuickScenePreviewWidget::customRenderMode() const
@@ -289,4 +312,17 @@ void QuickScenePreviewWidget::setCustomRenderMode(QuickInspectorInterface::Rende
     }
 
     visualizeActionTriggered(currentAction ? currentAction : m_toolBar.visualizeBatches);
+}
+
+bool QuickScenePreviewWidget::serverSideDecorationsEnabled() const
+{
+    return m_toolBar.serverSideDecorationsEnabled->isChecked();
+}
+
+void QuickScenePreviewWidget::setServerSideDecorationsEnabled(bool enabled)
+{
+    if (m_toolBar.serverSideDecorationsEnabled->isChecked() == enabled)
+        return;
+    m_toolBar.serverSideDecorationsEnabled->setChecked(enabled);
+    serverSideDecorationsTriggered(enabled);
 }
