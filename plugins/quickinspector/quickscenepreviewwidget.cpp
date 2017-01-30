@@ -134,8 +134,9 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
     m_toolBar.toolbarWidget->addSeparator();
 
-    foreach (auto action, interactionModeActions()->actions())
+    foreach (auto action, interactionModeActions()->actions()) {
         m_toolBar.toolbarWidget->addAction(action);
+    }
     m_toolBar.toolbarWidget->addSeparator();
 
     m_toolBar.toolbarWidget->addAction(m_toolBar.serverSideDecorationsEnabled);
@@ -330,7 +331,8 @@ void QuickScenePreviewWidget::setCustomRenderMode(QuickInspectorInterface::Rende
     }
 
     foreach (auto action, m_toolBar.visualizeGroup->actions()) {
-        action->setChecked(currentAction == action);
+        if (action)
+            action->setChecked(currentAction == action);
     }
 
     visualizeActionTriggered(currentAction ? currentAction : m_toolBar.visualizeBatches);
