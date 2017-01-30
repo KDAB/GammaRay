@@ -32,7 +32,7 @@
 #include <QFrame>
 #include <QObject>
 
-Q_DECLARE_METATYPE(const QMetaObject*)
+Q_DECLARE_METATYPE(const QMetaObject *)
 Q_DECLARE_METATYPE(QSizePolicy::ControlTypes)
 
 using namespace GammaRay;
@@ -53,10 +53,10 @@ public:
 private slots:
     void testEnumToString_data()
     {
-        QTest::addColumn<QVariant>("variant");
-        QTest::addColumn<QByteArray>("name");
-        QTest::addColumn<const QMetaObject*>("mo");
-        QTest::addColumn<QString>("result");
+        QTest::addColumn<QVariant>("variant", nullptr);
+        QTest::addColumn<QByteArray>("name", nullptr);
+        QTest::addColumn<const QMetaObject*>("mo", nullptr);
+        QTest::addColumn<QString>("result", nullptr);
 
         const QMetaObject *nullObj = nullptr;
         QTest::newRow("null") << QVariant() << QByteArray() << nullObj << QString();
@@ -107,7 +107,7 @@ private slots:
     {
         QFETCH(QVariant, variant);
         QFETCH(QByteArray, name);
-        QFETCH(const QMetaObject*, mo);
+        QFETCH(const QMetaObject *, mo);
         QFETCH(QString, result);
 
         const auto str = EnumUtil::enumToString(variant, name, mo);
@@ -119,4 +119,3 @@ private slots:
 QTEST_MAIN(EnumPropertyTest)
 
 #include "enumpropertytest.moc"
-

@@ -58,12 +58,12 @@ private slots:
 
     void testToString_data()
     {
-        QTest::addColumn<QString>("id");
-        QTest::addColumn<int>("majorVersion");
-        QTest::addColumn<int>("minorVersion");
-        QTest::addColumn<bool>("isDebug");
-        QTest::addColumn<QString>("arch");
-        QTest::addColumn<QString>("compiler");
+        QTest::addColumn<QString>("id", nullptr);
+        QTest::addColumn<int>("majorVersion", nullptr);
+        QTest::addColumn<int>("minorVersion", nullptr);
+        QTest::addColumn<bool>("isDebug", nullptr);
+        QTest::addColumn<QString>("arch", nullptr);
+        QTest::addColumn<QString>("compiler", nullptr);
 
         QTest::newRow("invalid") << QString() << -1 << -1 << false << QString() << QString();
 #ifndef Q_OS_WIN
@@ -98,13 +98,13 @@ private slots:
 
     void testFromString_data()
     {
-        QTest::addColumn<QString>("id");
-        QTest::addColumn<bool>("valid");
-        QTest::addColumn<int>("majorVersion");
-        QTest::addColumn<int>("minorVersion");
-        QTest::addColumn<bool>("isDebug");
-        QTest::addColumn<QString>("arch");
-        QTest::addColumn<QString>("compiler");
+        QTest::addColumn<QString>("id", nullptr);
+        QTest::addColumn<bool>("valid", nullptr);
+        QTest::addColumn<int>("majorVersion", nullptr);
+        QTest::addColumn<int>("minorVersion", nullptr);
+        QTest::addColumn<bool>("isDebug", nullptr);
+        QTest::addColumn<QString>("arch", nullptr);
+        QTest::addColumn<QString>("compiler", nullptr);
 
         QTest::newRow("invalid") << QString() << false << -1 << -1 << false << QString()
                                  << QString();
@@ -148,8 +148,9 @@ private slots:
         QCOMPARE(abi.majorQtVersion(), majorVersion);
         QCOMPARE(abi.minorQtVersion(), minorVersion);
         QCOMPARE(abi.architecture(), arch);
-        if (abi.isDebugRelevant())
+        if (abi.isDebugRelevant()) {
             QCOMPARE(abi.isDebug(), isDebug);
+        }
 #ifdef Q_OS_WIN
         QCOMPARE(abi.compiler(), compiler);
 #else
@@ -159,8 +160,8 @@ private slots:
 
     void testDisplayString_data()
     {
-        QTest::addColumn<QString>("id");
-        QTest::addColumn<QString>("display");
+        QTest::addColumn<QString>("id", nullptr);
+        QTest::addColumn<QString>("display", nullptr);
 
         QTest::newRow("invalid") << QString() << QString();
 #ifndef Q_OS_WIN

@@ -39,11 +39,11 @@ class SourceLocationTest : public QObject
 private slots:
     void testDisplayString_data()
     {
-        QTest::addColumn<QUrl>("url");
-        QTest::addColumn<int>("line");
-        QTest::addColumn<int>("column");
-        QTest::addColumn<QString>("displayString");
-        QTest::addColumn<bool>("valid");
+        QTest::addColumn<QUrl>("url", nullptr);
+        QTest::addColumn<int>("line", nullptr);
+        QTest::addColumn<int>("column", nullptr);
+        QTest::addColumn<QString>("displayString", nullptr);
+        QTest::addColumn<bool>("valid", nullptr);
 
         QTest::newRow("invalid") << QUrl() << -1 << -1 << QString() << false;
         QTest::newRow("invalid 2") << QUrl() << 42 << 23 << QString() << false;

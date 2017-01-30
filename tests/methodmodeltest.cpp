@@ -102,8 +102,8 @@ private slots:
 
     void testToolTip_data()
     {
-        QTest::addColumn<QString>("name");
-        QTest::addColumn<QString>("toolTip");
+        QTest::addColumn<QString>("name", nullptr);
+        QTest::addColumn<QString>("toolTip", nullptr);
 
         QTest::newRow("tagged") << "taggedSlot" << "MY_TAG";
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
