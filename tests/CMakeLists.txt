@@ -423,7 +423,7 @@ endif()
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     add_executable(earlyexittest earlyexittest.cpp)
     target_include_directories(earlyexittest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
-    target_link_libraries(earlyexittest gammaray_launcher ${QT_QTTEST_LIBRARIES})
+    target_link_libraries(earlyexittest gammaray_core gammaray_launcher ${QT_QTTEST_LIBRARIES})
     add_test(NAME earlyexittest COMMAND earlyexittest)
 endif()
 
