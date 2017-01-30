@@ -278,7 +278,8 @@ void Launcher::restartTimer()
 
 void Launcher::checkDone()
 {
-    if (d->state == InjectorFinished) {
+    if (d->state == Complete
+        || (d->options.uiMode() == LaunchOptions::InProcessUi && d->state == InjectorFinished)) {
         emit finished();
     } else if ((d->state & InjectorFailed) != 0) {
         d->client.terminate();
