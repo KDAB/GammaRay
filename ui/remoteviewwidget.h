@@ -124,6 +124,7 @@ public slots:
 signals:
     void zoomChanged();
     void zoomLevelChanged(int zoomLevelIndex);
+    void stateChanged();
 
 protected:
     /** Current frame data. */

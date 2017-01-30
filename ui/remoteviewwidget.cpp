@@ -369,6 +369,7 @@ void RemoteViewWidget::setZoom(double zoom)
     m_initialZoomDone = true;
     emit zoomChanged();
     emit zoomLevelChanged(index);
+    emit stateChanged();
 
     m_x = contentWidth() / 2 - (contentWidth() / 2 - m_x) * m_zoom / oldZoom;
     m_y = contentHeight() / 2 - (contentHeight() / 2 - m_y) * m_zoom / oldZoom;
@@ -459,6 +460,7 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
     }
 
     update();
+    emit stateChanged();
 }
 
 RemoteViewWidget::InteractionModes RemoteViewWidget::supportedInteractionModes() const

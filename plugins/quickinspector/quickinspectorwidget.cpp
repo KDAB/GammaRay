@@ -140,8 +140,9 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
 
-    connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
-    connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
+    connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
+    connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
+    connect(m_previewWidget, SIGNAL(stateChanged()), this, SLOT(saveState()));
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()
@@ -233,8 +234,12 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint &pos)
     contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos));
 }
 
-void QuickInspectorWidget::propertyWidgetTabsChanged()
+void QuickInspectorWidget::resetState()
+{
+    m_stateManager.reset();
+}
+
+void QuickInspectorWidget::saveState()
 {
     m_stateManager.saveState();
-    m_stateManager.reset();
 }
