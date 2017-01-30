@@ -493,6 +493,11 @@ void QuickInspector::setCustomRenderMode(
 #endif
 }
 
+void QuickInspector::setServerSideDecorationsEnabled(bool enabled)
+{
+    m_overlay->setDrawDecorations(enabled);
+}
+
 void QuickInspector::applyRenderMode()
 {
     QMutexLocker lock(&m_pendingRenderMode.mutex);
@@ -526,6 +531,11 @@ void QuickInspector::checkFeatures()
 #endif
             )
         );
+}
+
+void QuickInspector::checkServerSideDecorations()
+{
+    emit serverSideDecorations(m_overlay->drawDecorations());
 }
 
 void QuickInspector::itemSelectionChanged(const QItemSelection &selection)

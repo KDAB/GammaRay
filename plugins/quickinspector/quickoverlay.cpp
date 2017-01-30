@@ -122,6 +122,7 @@ bool ItemOrLayoutFacade::isLayout() const
 QuickOverlay::QuickOverlay()
   : m_currentToplevelItem(nullptr)
   , m_isGrabbingMode(false)
+  , m_drawDecorations(true)
 {
 }
 
@@ -171,6 +172,19 @@ void QuickOverlay::placeOn(ItemOrLayoutFacade item)
     updateOverlay();
 }
 
+bool QuickOverlay::drawDecorations() const
+{
+    return m_drawDecorations;
+}
+
+void QuickOverlay::setDrawDecorations(bool enabled)
+{
+    if (m_drawDecorations == enabled)
+        return;
+    m_drawDecorations = enabled;
+    updateOverlay();
+}
+
 void QuickOverlay::setIsGrabbingMode(bool isGrabbingMode)
 {
     if (m_isGrabbingMode == isGrabbingMode)
@@ -217,6 +231,8 @@ void QuickOverlay::windowAfterRendering()
 
 void QuickOverlay::drawDecorations(const QSize &size, qreal dpr)
 {
+    if (!m_drawDecorations)
+        return;
     QOpenGLPaintDevice device(size * dpr);
     device.setDevicePixelRatio(dpr);
     QPainter painter(&device);
