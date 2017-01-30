@@ -58,8 +58,8 @@ private slots:
 
     void testContainsQtCore_data()
     {
-        QTest::addColumn<QString>("line");
-        QTest::addColumn<bool>("isQtCore");
+        QTest::addColumn<QString>("line", nullptr);
+        QTest::addColumn<bool>("isQtCore", nullptr);
 
         QTest::newRow("empty") << QString() << false;
         QTest::newRow("too short1") << "Qt" << false;

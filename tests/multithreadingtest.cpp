@@ -49,8 +49,9 @@ public:
     {
         objects.reserve(batchSize);
         for (int i = 0; i < iterations; ++i) {
-            for (int j = 0; j < batchSize; ++j)
+            for (int j = 0; j < batchSize; ++j) {
                 objects.push_back(new QObject);
+            }
             QTest::qWait(delay);
             qDeleteAll(objects);
             objects.clear();
@@ -79,9 +80,9 @@ private:
 private slots:
     void testCreateDestroy_data()
     {
-        QTest::addColumn<int>("batchSize");
-        QTest::addColumn<int>("delay");
-        QTest::addColumn<int>("iterations");
+        QTest::addColumn<int>("batchSize", nullptr);
+        QTest::addColumn<int>("delay", nullptr);
+        QTest::addColumn<int>("iterations", nullptr);
 
         QTest::newRow("10-0-1000") << 10 << 0 << 1000;
         QTest::newRow("100-1-100") << 100 << 1 << 100;

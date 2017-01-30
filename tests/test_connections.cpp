@@ -150,8 +150,8 @@ TestThread::~TestThread()
 
 void TestThread::run()
 {
-    TestConnections tester(m_type, m_timeOuts, m_timeoutInterval == -1
-                           ? TIMEOUTS : m_timeoutInterval);
+    TestConnections tester(m_type, m_timeOuts,
+                           m_timeoutInterval == -1 ? TIMEOUTS : m_timeoutInterval);
 
     QEventLoop *loop = new QEventLoop;
     connect(&tester, SIGNAL(done()), loop, SLOT(quit()));
@@ -194,6 +194,7 @@ void TestWaiter::checkFinished()
 {
     if (!m_loop)
         return;
+
     if (m_threads.isEmpty() && m_tester.isEmpty())
         m_loop->quit();
 }
@@ -203,8 +204,9 @@ void TestWaiter::startThreadsAndWaitForFinished()
     if (m_threads.isEmpty() && m_tester.isEmpty())
         return;
 
-    foreach (TestThread *thread, m_threads)
+    foreach (TestThread *thread, m_threads) {
         thread->start();
+    }
 
     m_loop = new QEventLoop;
     m_loop->exec();
@@ -230,7 +232,7 @@ void TestMain::startTests()
 
 void TestMain::run_data()
 {
-    QTest::addColumn<int>("type");
+    QTest::addColumn<int>("type", nullptr);
     QTest::newRow("delete") << static_cast<int>(TestConnections::Delete);
     QTest::newRow("deleteLater") << static_cast<int>(TestConnections::DeleteLater);
     QTest::newRow("noEventLoop") << static_cast<int>(TestConnections::NoEventLoop);
