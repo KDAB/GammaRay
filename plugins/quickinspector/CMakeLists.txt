@@ -72,7 +72,6 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
       SOURCES ${gammaray_quickinspector_ui_srcs}
     )
 
-    target_include_directories(gammaray_quickinspector_ui PRIVATE ${CMAKE_BINARY_DIR}/client) # for remotemodel.h
     target_link_libraries(gammaray_quickinspector_ui
       gammaray_quickinspector_shared
       gammaray_ui
