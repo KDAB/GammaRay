@@ -616,7 +616,11 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
 
     bestCandidate = -1;
 
-    const auto childItems = parent->childItems();
+    auto childItems = parent->childItems();
+    std::stable_sort(childItems.begin(), childItems.end(),
+                     [](QQuickItem *lhs, QQuickItem *rhs){return lhs->z() < rhs->z();}
+    );
+
     for (int i = childItems.size() - 1; i >= 0; --i) { // backwards to match z order
         auto c = childItems.at(i);
         const QPointF p = parent->mapToItem(c, pos);
