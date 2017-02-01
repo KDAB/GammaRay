@@ -44,6 +44,21 @@ QT_END_NAMESPACE
 
 using namespace GammaRay;
 
+const QColor QuickOverlay::BoundingRectColor(232, 87, 82, 170);
+const QBrush QuickOverlay::BoundingRectBrush(QColor(232, 87, 82, 95));
+
+const QColor QuickOverlay::GeometryRectColor(Qt::gray);
+const QBrush QuickOverlay::GeometryRectBrush(QColor(Qt::gray), Qt::BDiagPattern);
+
+const QColor QuickOverlay::ChildrenRectColor(0, 99, 193, 170);
+const QBrush QuickOverlay::ChildrenRectBrush(QColor(0, 99, 193, 95));
+
+const QColor QuickOverlay::TransformOriginColor(156, 15, 86, 170);
+
+const QColor QuickOverlay::CoordinatesColor(136, 136, 136);
+
+const QColor QuickOverlay::MarginsColor(139, 179, 0);
+
 static QQuickItem *toplevelItem(QQuickItem *item)
 {
     Q_ASSERT(item);
@@ -124,8 +139,8 @@ bool ItemOrLayoutFacade::isLayout() const
 QuickOverlay::QuickOverlay()
     : m_window(nullptr)
     , m_currentToplevelItem(nullptr)
-    , m_isGrabbingMode(false)
-    , m_drawDecorations(true)
+  , m_isGrabbingMode(false)
+  , m_drawDecorations(true)
 {
 }
 
@@ -280,7 +295,7 @@ void QuickOverlay::updateOverlay()
     if (m_window) {
         if (!m_currentItem.isNull()) {
             Q_ASSERT(m_currentItem.item()->window() == m_window);
-        }
+}
 
         m_window->update();
     }
@@ -296,11 +311,11 @@ void QuickOverlay::itemParentChanged(QQuickItem *parent)
 void QuickOverlay::itemWindowChanged(QQuickWindow *window)
 {
     if (m_window == window) {
-        if (!m_currentItem.isNull())
-            placeOn(m_currentItem);
+    if (!m_currentItem.isNull())
+        placeOn(m_currentItem);
     } else {
         placeOn(ItemOrLayoutFacade());
-    }
+}
 }
 
 void QuickOverlay::connectItemChanges(QQuickItem *item)
@@ -360,14 +375,14 @@ void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &it
     painter->save();
 
     // bounding box
-    painter->setPen(QColor(232, 87, 82, 170));
-    painter->setBrush(QBrush(QColor(232, 87, 82, 95)));
+    painter->setPen(BoundingRectColor);
+    painter->setBrush(BoundingRectBrush);
     painter->drawRect(itemGeometry.boundingRect);
 
     // original geometry
     if (itemGeometry.itemRect != itemGeometry.boundingRect) {
-        painter->setPen(Qt::gray);
-        painter->setBrush(QBrush(Qt::gray, Qt::BDiagPattern));
+        painter->setPen(GeometryRectColor);
+        painter->setBrush(GeometryRectBrush);
         painter->drawRect(itemGeometry.itemRect);
     }
 
@@ -376,35 +391,35 @@ void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &it
         itemGeometry.transform.isIdentity()) {
         // If this item is transformed the children rect will be painted wrongly,
         // so for now skip painting it.
-        painter->setPen(QColor(0, 99, 193, 170));
-        painter->setBrush(QBrush(QColor(0, 99, 193, 95)));
+        painter->setPen(ChildrenRectColor);
+        painter->setBrush(ChildrenRectBrush);
         painter->drawRect(itemGeometry.childrenRect);
     }
 
     // transform origin
     if (itemGeometry.itemRect != itemGeometry.boundingRect) {
-        painter->setPen(QColor(156, 15, 86, 170));
+        painter->setPen(TransformOriginColor);
         painter->drawEllipse(itemGeometry.transformOriginPoint, 2.5, 2.5);
         painter->drawLine(itemGeometry.transformOriginPoint - QPointF(0, 6),
-                          itemGeometry.transformOriginPoint + QPointF(0, 6));
+                    itemGeometry.transformOriginPoint + QPointF(0, 6));
         painter->drawLine(itemGeometry.transformOriginPoint - QPointF(6, 0),
-                          itemGeometry.transformOriginPoint + QPointF(6, 0));
+                    itemGeometry.transformOriginPoint + QPointF(6, 0));
     }
 
     // x and y values
-    painter->setPen(QColor(136, 136, 136));
+    painter->setPen(CoordinatesColor);
     if (!itemGeometry.left &&
         !itemGeometry.horizontalCenter &&
         !itemGeometry.right &&
         itemGeometry.x != 0) {
         QPointF parentEnd = (QPointF(itemGeometry.itemRect.x() - itemGeometry.x,
-                           itemGeometry.itemRect.y()));
+                       itemGeometry.itemRect.y()));
         QPointF itemEnd = itemGeometry.itemRect.topLeft();
         drawArrow(painter, parentEnd, itemEnd);
         painter->drawText(QRectF(parentEnd.x(), parentEnd.y() + 10,
                                  itemEnd.x() - parentEnd.x(), 50),
-                          Qt::AlignHCenter | Qt::TextDontClip,
-                          QStringLiteral("x: %1px").arg(itemGeometry.x / zoom));
+                    Qt::AlignHCenter | Qt::TextDontClip,
+                    QStringLiteral("x: %1px").arg(itemGeometry.x / zoom));
     }
     if (!itemGeometry.top &&
         !itemGeometry.verticalCenter &&
@@ -412,57 +427,59 @@ void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &it
         !itemGeometry.baseline &&
         itemGeometry.y != 0) {
         QPointF parentEnd = (QPointF(itemGeometry.itemRect.x(),
-                           itemGeometry.itemRect.y() - itemGeometry.y));
+                       itemGeometry.itemRect.y() - itemGeometry.y));
         QPointF itemEnd = itemGeometry.itemRect.topLeft();
         drawArrow(painter, parentEnd, itemEnd);
         painter->drawText(QRectF(parentEnd.x() + 10, parentEnd.y(),
                                  100, itemEnd.y() - parentEnd.y()),
-                          Qt::AlignVCenter | Qt::TextDontClip,
-                          QStringLiteral("y: %1px").arg(itemGeometry.y / zoom));
+                    Qt::AlignVCenter | Qt::TextDontClip,
+                    QStringLiteral("y: %1px").arg(itemGeometry.y / zoom));
     }
 
     // anchors
+    painter->setPen(MarginsColor);
+
     if (itemGeometry.left) {
-        drawAnchor(painter, itemGeometry, viewRect, zoom, Qt::Horizontal,
+        drawHorizontalAnchor(painter, itemGeometry, viewRect, zoom,
                    itemGeometry.itemRect.left(), itemGeometry.leftMargin,
                    QStringLiteral("margin: %1px").arg(itemGeometry.leftMargin / zoom));
     }
 
     if (itemGeometry.horizontalCenter) {
-        drawAnchor(painter, itemGeometry, viewRect, zoom, Qt::Horizontal,
-                             (itemGeometry.itemRect.left() + itemGeometry.itemRect.right()) / 2,
-                             itemGeometry.horizontalCenterOffset,
+        drawHorizontalAnchor(painter, itemGeometry, viewRect, zoom,
+                   (itemGeometry.itemRect.left() + itemGeometry.itemRect.right()) / 2,
+                   itemGeometry.horizontalCenterOffset,
                    QStringLiteral("offset: %1px").arg(itemGeometry.horizontalCenterOffset / zoom));
     }
 
     if (itemGeometry.right) {
-        drawAnchor(painter, itemGeometry, viewRect, zoom, Qt::Horizontal,
+        drawHorizontalAnchor(painter, itemGeometry, viewRect, zoom,
                    itemGeometry.itemRect.right(), -itemGeometry.rightMargin,
                    QStringLiteral("margin: %1px").arg(itemGeometry.rightMargin / zoom));
     }
 
     if (itemGeometry.top) {
-        drawAnchor(painter, itemGeometry, viewRect, zoom, Qt::Vertical,
+        drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
                    itemGeometry.itemRect.top(), itemGeometry.topMargin,
                    QStringLiteral("margin: %1px").arg(itemGeometry.topMargin / zoom));
     }
 
     if (itemGeometry.verticalCenter) {
-        drawAnchor(painter, itemGeometry, viewRect, zoom, Qt::Vertical,
-                           (itemGeometry.itemRect.top() + itemGeometry.itemRect.bottom()) / 2,
-                           itemGeometry.verticalCenterOffset,
+        drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
+                   (itemGeometry.itemRect.top() + itemGeometry.itemRect.bottom()) / 2,
+                   itemGeometry.verticalCenterOffset,
                    QStringLiteral("offset: %1px").arg(itemGeometry.verticalCenterOffset / zoom));
     }
 
     if (itemGeometry.bottom) {
-        drawAnchor(painter, itemGeometry, viewRect, zoom, Qt::Vertical,
+        drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
                    itemGeometry.itemRect.bottom(), -itemGeometry.bottomMargin,
                    QStringLiteral("margin: %1px").arg(itemGeometry.bottomMargin / zoom));
     }
 
     if (itemGeometry.baseline) {
-        drawAnchor(painter, itemGeometry, viewRect, zoom, Qt::Vertical,
-                                         itemGeometry.itemRect.top(), itemGeometry.baselineOffset,
+        drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
+                   itemGeometry.itemRect.top(), itemGeometry.baselineOffset,
                    QStringLiteral("offset: %1px").arg(itemGeometry.baselineOffset / zoom));
     }
 
@@ -496,8 +513,10 @@ void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry
                               const QRectF &viewRect, qreal zoom, Qt::Orientation orientation,
                               qreal ownAnchorLine, qreal offset, const QString &label)
 {
+    p->save();
+
     qreal foreignAnchorLine = ownAnchorLine - offset;
-    QPen pen(QColor(139, 179, 0));
+    QPen pen(p->pen());
 
     // Margin arrow
     if (offset) {
@@ -530,7 +549,7 @@ void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry
                        foreignAnchorLine, 100, offset),
                 Qt::AlignVCenter | Qt::TextDontClip,
                 label);
-    }
+        }
     }
 
     // Own Anchor line
@@ -542,7 +561,7 @@ void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry
                     itemGeometry.itemRect.bottom());
     } else {
         p->drawLine(itemGeometry.itemRect.left(), ownAnchorLine,
-                    itemGeometry.itemRect.right(), ownAnchorLine);
+            itemGeometry.itemRect.right(), ownAnchorLine);
     }
 
     // Foreign Anchor line
@@ -552,5 +571,16 @@ void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry
         p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, viewRect.height() * zoom);
     } else {
         p->drawLine(0, foreignAnchorLine, viewRect.width() * zoom, foreignAnchorLine);
+
+    p->restore();
 }
+
+void QuickOverlay::drawVerticalAnchor(QPainter *p, const QuickItemGeometry &itemGeometry, const QRectF &viewRect, qreal zoom, qreal ownAnchorLine, qreal offset, const QString &label)
+{
+    drawAnchor(p, itemGeometry, viewRect, zoom, Qt::Vertical, ownAnchorLine, offset, label);
+}
+
+void QuickOverlay::drawHorizontalAnchor(QPainter *p, const QuickItemGeometry &itemGeometry, const QRectF &viewRect, qreal zoom, qreal ownAnchorLine, qreal offset, const QString &label)
+{
+    drawAnchor(p, itemGeometry, viewRect, zoom, Qt::Horizontal, ownAnchorLine, offset, label);
 }

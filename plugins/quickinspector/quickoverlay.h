@@ -92,6 +92,21 @@ public:
     static void drawDecoration(QPainter *painter, const QuickItemGeometry &itemGeometry, const QRectF &viewRect,
                                qreal zoom);
 
+    static const QColor BoundingRectColor;
+    static const QBrush BoundingRectBrush;
+
+    static const QColor GeometryRectColor;
+    static const QBrush GeometryRectBrush;
+
+    static const QColor ChildrenRectColor;
+    static const QBrush ChildrenRectBrush;
+
+    static const QColor TransformOriginColor;
+
+    static const QColor CoordinatesColor;
+
+    static const QColor MarginsColor;
+
 public slots:
     void requestGrabWindow();
 
@@ -103,6 +118,10 @@ private:
     static void drawArrow(QPainter *p, QPointF first, QPointF second);
     static void drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry, const QRectF &viewRect, qreal zoom,
                            Qt::Orientation orientation, qreal ownAnchorLine, qreal offset, const QString &label);
+    static void drawVerticalAnchor(QPainter *p, const QuickItemGeometry &itemGeometry, const QRectF &viewRect, qreal zoom,
+                                   qreal ownAnchorLine, qreal offset, const QString &label);
+    static void drawHorizontalAnchor(QPainter *p, const QuickItemGeometry &itemGeometry, const QRectF &viewRect, qreal zoom,
+                                   qreal ownAnchorLine, qreal offset, const QString &label);
     void setIsGrabbingMode(bool isGrabbingMode);
     void windowAfterRendering();
     void drawDecorations(const QSize &size, qreal dpr);

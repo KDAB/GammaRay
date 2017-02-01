@@ -44,6 +44,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class QuickInspectorInterface;
+class QuickOverlayLegend;
 
 class QuickScenePreviewWidget : public RemoteViewWidget
 {
@@ -83,6 +84,8 @@ private:
         QAction *visualizeChanges;
         QAction *serverSideDecorationsEnabled;
     } m_toolBar;
+
+    QuickOverlayLegend *m_legendTool;
 
     QuickInspectorInterface *m_inspectorInterface;
 };

@@ -2,6 +2,7 @@
   <qresource prefix="gammaray/plugins/quickinspector">
     <file>focus.png</file>
     <file>warning.png</file>
+    <file>legend.png</file>
     <file>active-focus.png</file>
     <file>visualize-clipping.png</file>
     <file>visualize-overdraw.png</file>

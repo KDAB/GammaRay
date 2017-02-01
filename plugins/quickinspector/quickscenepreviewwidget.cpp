@@ -28,6 +28,7 @@
 
 #include "quickscenepreviewwidget.h"
 #include "quickinspectorinterface.h"
+#include "quickoverlaylegend.h"
 #include "quickoverlay.h"
 
 #include <common/streamoperators.h>
@@ -52,6 +53,7 @@ QT_END_NAMESPACE
 QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspector,
                                                  QWidget *parent)
     : RemoteViewWidget(parent)
+    , m_legendTool(new QuickOverlayLegend(this))
     , m_inspectorInterface(inspector)
 {
     setName(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"));
@@ -155,6 +157,9 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
     m_toolBar.toolbarWidget->addWidget(m_toolBar.zoomCombobox);
     m_toolBar.toolbarWidget->addAction(zoomInAction());
+
+    m_toolBar.toolbarWidget->addSeparator();
+    m_toolBar.toolbarWidget->addAction(m_legendTool->visibilityAction());
 
     setUnavailableText(tr(
                            "No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
