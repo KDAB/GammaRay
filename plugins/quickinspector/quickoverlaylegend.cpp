@@ -145,6 +145,12 @@ public:
                        QT_TR_NOOP("Margins")
                        );
 
+        m_items << Item(
+                       QBrush(),
+                       QuickOverlay::PaddingColor,
+                       QT_TR_NOOP("Padding")
+                       );
+
         for (int i = 0; i < m_items.count(); ++i) {
             Item::createPixmap(m_items[i]);
         }

@@ -54,6 +54,12 @@ void QuickItemGeometry::initFrom(QQuickItem *item)
 
     boundingRect = item->mapRectToScene(item->boundingRect());
     childrenRect = item->mapRectToScene(item->childrenRect());
+    QQuickItem *background = item->property("background").value<QQuickItem *>();
+    if (background)
+        backgroundRect = background->mapRectToScene(background->boundingRect());
+    QQuickItem *contentItem = item->property("contentItem").value<QQuickItem *>();
+    if (contentItem)
+        contentItemRect = contentItem->mapRectToScene(contentItem->boundingRect());
     transformOriginPoint = item->mapToScene(item->transformOriginPoint());
 
     QQuickAnchors *anchors = item->property("anchors").value<QQuickAnchors *>();
@@ -80,6 +86,22 @@ void QuickItemGeometry::initFrom(QQuickItem *item)
     }
     x = item->x();
     y = item->y();
+
+    const QMetaObject *mo = item->metaObject();
+    if (mo->property(mo->indexOfProperty("padding")).isValid()) {
+        padding = item->property("padding").toReal();
+        leftPadding = item->property("leftPadding").toReal();
+        rightPadding = item->property("rightPadding").toReal();
+        topPadding = item->property("topPadding").toReal();
+        bottomPadding = item->property("bottomPadding").toReal();
+    } else {
+        padding = qQNaN();
+        leftPadding = qQNaN();
+        rightPadding = qQNaN();
+        topPadding = qQNaN();
+        bottomPadding = qQNaN();
+    }
+
     QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
     transform = itemPriv->itemToWindowTransform();
     if (parent) {
@@ -102,6 +124,12 @@ void QuickItemGeometry::scaleTo(qreal factor)
     childrenRect = QRectF(
         childrenRect.topLeft() * factor,
         childrenRect.bottomRight() * factor);
+    backgroundRect = QRectF(
+                backgroundRect.topLeft() * factor,
+                backgroundRect.bottomRight() * factor);
+    contentItemRect = QRectF(
+                contentItemRect.topLeft() * factor,
+                contentItemRect.bottomRight() * factor);
     transformOriginPoint = transformOriginPoint * factor;
     leftMargin = leftMargin * factor;
     horizontalCenterOffset = horizontalCenterOffset * factor;
@@ -112,7 +140,14 @@ void QuickItemGeometry::scaleTo(qreal factor)
     baselineOffset = baselineOffset * factor;
     x = x * factor;
     y = y * factor;
+    if (padding != qQNaN()) {
+        padding = padding * factor;
+        leftPadding = leftPadding * factor;
+        rightPadding = rightPadding * factor;
+        topPadding = topPadding * factor;
+        bottomPadding = bottomPadding * factor;
     }
+}
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry)
 {
@@ -120,6 +155,8 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &
            << geometry.itemRect
            << geometry.boundingRect
            << geometry.childrenRect
+           << geometry.backgroundRect
+           << geometry.contentItemRect
 
            << geometry.transformOriginPoint
            << geometry.transform
@@ -143,7 +180,14 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &
            << geometry.topMargin
            << geometry.verticalCenterOffset
            << geometry.bottomMargin
-           << geometry.baselineOffset;
+           << geometry.baselineOffset
+
+           << geometry.padding
+           << geometry.leftPadding
+           << geometry.rightPadding
+           << geometry.topPadding
+           << geometry.bottomPadding
+    ;
 
     return stream;
 }
@@ -154,6 +198,8 @@ QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geomet
            >> geometry.itemRect
            >> geometry.boundingRect
            >> geometry.childrenRect
+           >> geometry.backgroundRect
+           >> geometry.contentItemRect
 
            >> geometry.transformOriginPoint
            >> geometry.transform
@@ -177,7 +223,14 @@ QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geomet
            >> geometry.topMargin
            >> geometry.verticalCenterOffset
            >> geometry.bottomMargin
-           >> geometry.baselineOffset;
+           >> geometry.baselineOffset
+
+           >> geometry.padding
+           >> geometry.leftPadding
+           >> geometry.rightPadding
+           >> geometry.topPadding
+           >> geometry.bottomPadding
+    ;
 
     return stream;
 }

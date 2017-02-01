@@ -59,6 +59,8 @@ const QColor QuickOverlay::CoordinatesColor(136, 136, 136);
 
 const QColor QuickOverlay::MarginsColor(139, 179, 0);
 
+const QColor QuickOverlay::PaddingColor(Qt::darkBlue);
+
 static QQuickItem *toplevelItem(QQuickItem *item)
 {
     Q_ASSERT(item);
@@ -442,45 +444,83 @@ void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &it
     if (itemGeometry.left) {
         drawHorizontalAnchor(painter, itemGeometry, viewRect, zoom,
                    itemGeometry.itemRect.left(), itemGeometry.leftMargin,
-                   QStringLiteral("margin: %1px").arg(itemGeometry.leftMargin / zoom));
+                   QStringLiteral("margin: %1px").arg(itemGeometry.leftMargin / zoom),
+                   Qt::AlignBottom | Qt::AlignRight);
     }
 
     if (itemGeometry.horizontalCenter) {
         drawHorizontalAnchor(painter, itemGeometry, viewRect, zoom,
                    (itemGeometry.itemRect.left() + itemGeometry.itemRect.right()) / 2,
                    itemGeometry.horizontalCenterOffset,
-                   QStringLiteral("offset: %1px").arg(itemGeometry.horizontalCenterOffset / zoom));
+                   QStringLiteral("offset: %1px").arg(itemGeometry.horizontalCenterOffset / zoom),
+                   Qt::AlignBottom | Qt::AlignHCenter);
     }
 
     if (itemGeometry.right) {
         drawHorizontalAnchor(painter, itemGeometry, viewRect, zoom,
                    itemGeometry.itemRect.right(), -itemGeometry.rightMargin,
-                   QStringLiteral("margin: %1px").arg(itemGeometry.rightMargin / zoom));
+                   QStringLiteral("margin: %1px").arg(itemGeometry.rightMargin / zoom),
+                   Qt::AlignTop | Qt::AlignLeft);
     }
 
     if (itemGeometry.top) {
         drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
                    itemGeometry.itemRect.top(), itemGeometry.topMargin,
-                   QStringLiteral("margin: %1px").arg(itemGeometry.topMargin / zoom));
+                   QStringLiteral("margin: %1px").arg(itemGeometry.topMargin / zoom),
+                   Qt::AlignVCenter | Qt::AlignRight);
     }
 
     if (itemGeometry.verticalCenter) {
         drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
                    (itemGeometry.itemRect.top() + itemGeometry.itemRect.bottom()) / 2,
                    itemGeometry.verticalCenterOffset,
-                   QStringLiteral("offset: %1px").arg(itemGeometry.verticalCenterOffset / zoom));
+                   QStringLiteral("offset: %1px").arg(itemGeometry.verticalCenterOffset / zoom),
+                   Qt::AlignVCenter | Qt::AlignRight);
     }
 
     if (itemGeometry.bottom) {
         drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
                    itemGeometry.itemRect.bottom(), -itemGeometry.bottomMargin,
-                   QStringLiteral("margin: %1px").arg(itemGeometry.bottomMargin / zoom));
+                   QStringLiteral("margin: %1px").arg(itemGeometry.bottomMargin / zoom),
+                   Qt::AlignVCenter | Qt::AlignLeft);
     }
 
     if (itemGeometry.baseline) {
         drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
                    itemGeometry.itemRect.top(), itemGeometry.baselineOffset,
-                   QStringLiteral("offset: %1px").arg(itemGeometry.baselineOffset / zoom));
+                   QStringLiteral("offset: %1px").arg(itemGeometry.baselineOffset / zoom),
+                   Qt::AlignVCenter | Qt::AlignLeft);
+    }
+
+    // padding
+    painter->setPen(PaddingColor);
+
+    if (!qIsNaN(itemGeometry.leftPadding)) {
+        drawHorizontalAnchor(painter, itemGeometry, viewRect, zoom,
+                   itemGeometry.itemRect.left(), -itemGeometry.leftPadding,
+                   QStringLiteral("padding: %1px").arg(itemGeometry.leftPadding / zoom),
+                   Qt::AlignTop | Qt::AlignRight);
+    }
+
+    if (!qIsNaN(itemGeometry.rightPadding)) {
+        drawHorizontalAnchor(painter, itemGeometry, viewRect, zoom,
+                   itemGeometry.itemRect.right(), itemGeometry.rightPadding,
+                   QStringLiteral("padding: %1px").arg(itemGeometry.rightPadding / zoom),
+                   Qt::AlignBottom | Qt::AlignLeft);
+    }
+
+    if (!qIsNaN(itemGeometry.topPadding)) {
+        drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
+                   itemGeometry.itemRect.top(), -itemGeometry.topPadding,
+                   QStringLiteral("padding: %1px").arg(itemGeometry.topPadding / zoom),
+                   Qt::AlignVCenter | Qt::AlignLeft);
+    }
+
+    if (!qIsNaN(itemGeometry.bottomPadding)) {
+        drawVerticalAnchor(painter, itemGeometry, viewRect, zoom,
+                   itemGeometry.itemRect.bottom(), itemGeometry.bottomPadding,
+                   QStringLiteral("padding: %1px").arg(itemGeometry.bottomPadding / zoom),
+                   Qt::AlignVCenter | Qt::AlignRight);
     }
 
     painter->restore();
@@ -511,14 +551,30 @@ void QuickOverlay::drawArrow(QPainter *p, QPointF first, QPointF second)
 
 void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry,
                               const QRectF &viewRect, qreal zoom, Qt::Orientation orientation,
-                              qreal ownAnchorLine, qreal offset, const QString &label)
+                              qreal ownAnchorLine, qreal offset, const QString &label,
+                              Qt::Alignment align)
 {
+    if (align.testFlag(Qt::AlignCenter)) {
+        qWarning("%s: You can not use Qt::AlignCenter!");
+        return;
+    }
+
+    if (align.testFlag(Qt::AlignJustify)) {
+        qWarning("%s: You can not use Qt::AlignJustify!");
+        return;
+    }
+
+    if (align.testFlag(Qt::AlignBaseline)) {
+        qWarning("%s: You can not use Qt::AlignBaseline!");
+        return;
+    }
+
     p->save();
 
     qreal foreignAnchorLine = ownAnchorLine - offset;
     QPen pen(p->pen());
 
-    // Margin arrow
+    // Arrow
     if (offset) {
         p->setPen(pen);
         if (orientation == Qt::Horizontal) {
@@ -535,20 +591,66 @@ void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry
                               ownAnchorLine));
         }
 
-        // Margin text
+        // Text
+        const int margin = 10;
+
         if (orientation == Qt::Horizontal) {
-            p->drawText(
-                QRectF(foreignAnchorLine,
-                       (itemGeometry.itemRect.top() + itemGeometry.itemRect.bottom()) / 2 + 10,
-                       offset, 50),
-                Qt::AlignHCenter | Qt::TextDontClip,
-                label);
+            QRectF rect(p->fontMetrics().boundingRect(label));
+
+            QPointF center(foreignAnchorLine + ((ownAnchorLine - foreignAnchorLine) / 2),
+                           itemGeometry.itemRect.center().y());
+
+            if (align.testFlag(Qt::AlignLeft)) {
+                rect.moveRight(center.x());
+
+                if (align.testFlag(Qt::AlignVCenter)) {
+                    rect.moveRight(foreignAnchorLine - margin);
+                }
+            } else if (align.testFlag(Qt::AlignRight)) {
+                rect.moveLeft(center.x());
+
+                if (align.testFlag(Qt::AlignVCenter)) {
+                    rect.moveLeft(foreignAnchorLine + offset + margin);
+                }
+            } else if (align.testFlag(Qt::AlignHCenter)) {
+                rect.moveCenter(QPointF(center.x(), rect.center().y()));
+            }
+
+            if (align.testFlag(Qt::AlignTop)) {
+                rect.moveBottom(center.y() - margin);
+            } else if (align.testFlag(Qt::AlignBottom)) {
+                rect.moveTop(center.y() + margin);
+            } else if (align.testFlag(Qt::AlignVCenter)) {
+                rect.moveCenter(QPointF(rect.center().x(), center.y()));
+            }
+
+            p->drawText(rect, Qt::AlignCenter | Qt::TextDontClip, label);
         } else {
-            p->drawText(
-                QRectF((itemGeometry.itemRect.left() + itemGeometry.itemRect.right()) / 2 + 10,
-                       foreignAnchorLine, 100, offset),
-                Qt::AlignVCenter | Qt::TextDontClip,
-                label);
+            QRectF rect(p->fontMetrics().boundingRect(label));
+
+            QPointF center(itemGeometry.itemRect.center().x(),
+                           foreignAnchorLine + ((ownAnchorLine - foreignAnchorLine) / 2));
+
+            if (align.testFlag(Qt::AlignLeft)) {
+                rect.moveRight(center.x() - margin);
+            } else if (align.testFlag(Qt::AlignRight)) {
+                rect.moveLeft(center.x() + margin);
+            } else if (align.testFlag(Qt::AlignHCenter)) {
+                rect.moveCenter(QPointF(center.x(), rect.center().y()));
+            } else if (align.testFlag(Qt::AlignJustify)) {
+                rect.moveCenter(QPointF(center.x(), rect.center().y()));
+            }
+
+            if (align.testFlag(Qt::AlignTop)) {
+                rect.moveBottom(center.y());
+            } else if (align.testFlag(Qt::AlignBottom)) {
+                rect.moveTop(center.y());
+            } else if (align.testFlag(Qt::AlignVCenter)) {
+                rect.moveCenter(QPointF(rect.center().x(), center.y()));
+            } else if (align.testFlag(Qt::AlignBaseline)) {
+            }
+
+            p->drawText(rect, Qt::AlignCenter | Qt::TextDontClip, label);
         }
     }
 
@@ -575,12 +677,16 @@ void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry
     p->restore();
 }
 
-void QuickOverlay::drawVerticalAnchor(QPainter *p, const QuickItemGeometry &itemGeometry, const QRectF &viewRect, qreal zoom, qreal ownAnchorLine, qreal offset, const QString &label)
+void QuickOverlay::drawVerticalAnchor(QPainter *p, const QuickItemGeometry &itemGeometry,
+                                      const QRectF &viewRect, qreal zoom, qreal ownAnchorLine,
+                                      qreal offset, const QString &label, Qt::Alignment align)
 {
-    drawAnchor(p, itemGeometry, viewRect, zoom, Qt::Vertical, ownAnchorLine, offset, label);
+    drawAnchor(p, itemGeometry, viewRect, zoom, Qt::Vertical, ownAnchorLine, offset, label, align);
 }
 
-void QuickOverlay::drawHorizontalAnchor(QPainter *p, const QuickItemGeometry &itemGeometry, const QRectF &viewRect, qreal zoom, qreal ownAnchorLine, qreal offset, const QString &label)
+void QuickOverlay::drawHorizontalAnchor(QPainter *p, const QuickItemGeometry &itemGeometry,
+                                        const QRectF &viewRect, qreal zoom, qreal ownAnchorLine,
+                                        qreal offset, const QString &label, Qt::Alignment align)
 {
-    drawAnchor(p, itemGeometry, viewRect, zoom, Qt::Horizontal, ownAnchorLine, offset, label);
+    drawAnchor(p, itemGeometry, viewRect, zoom, Qt::Horizontal, ownAnchorLine, offset, label, align);
 }
