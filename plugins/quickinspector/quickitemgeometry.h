@@ -46,6 +46,8 @@ struct QuickItemGeometry {
     QRectF itemRect;
     QRectF boundingRect;
     QRectF childrenRect;
+    QRectF backgroundRect;
+    QRectF contentItemRect;
 
     // transform
     QPointF transformOriginPoint;
@@ -74,6 +76,13 @@ struct QuickItemGeometry {
     qreal verticalCenterOffset;
     qreal bottomMargin;
     qreal baselineOffset;
+
+    // padding
+    qreal padding;
+    qreal leftPadding;
+    qreal rightPadding;
+    qreal topPadding;
+    qreal bottomPadding;
 
     void initFrom(QQuickItem *item);
     void scaleTo(qreal factor);
