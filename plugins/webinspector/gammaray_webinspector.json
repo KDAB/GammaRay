@@ -1,5 +1,9 @@
 {
     "id": "gammaray_webinspector",
     "name": "Web Inspector",
-    "types": [ "QWebPage", "QQuickWebView" ]
+    "name[de]": "Web Inspektor",
+    "types": [
+        "QWebPage",
+        "QQuickWebView"
+    ]
 }
