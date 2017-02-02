@@ -281,6 +281,9 @@ void QuickItemModel::itemReparented()
 
     QQuickItem *sourceParent = m_childParentMap.value(item);
     Q_ASSERT(sourceParent);
+    if (sourceParent == item->parentItem())
+        return;
+
     const QModelIndex sourceParentIndex = indexForItem(sourceParent);
 
     QVector<QQuickItem *> &sourceSiblings = m_parentChildMap[sourceParent];
