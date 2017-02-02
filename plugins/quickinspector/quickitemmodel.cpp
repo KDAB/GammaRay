@@ -219,7 +219,8 @@ void QuickItemModel::addItem(QQuickItem *item)
     connectItem(item);
 
     const QModelIndex index = indexForItem(parentItem);
-    Q_ASSERT(index.isValid() || !parentItem);
+    if (!index.isValid() && parentItem)
+        return;
 
     QVector<QQuickItem *> &children = m_parentChildMap[parentItem];
     QVector<QQuickItem *>::iterator it = std::lower_bound(children.begin(), children.end(), item);
