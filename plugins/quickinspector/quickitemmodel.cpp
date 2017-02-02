@@ -47,6 +47,7 @@ using namespace GammaRay;
 QuickItemModel::QuickItemModel(QObject *parent)
     : ObjectModelBase<QAbstractItemModel>(parent)
 {
+    m_clickEventFilter = new QuickEventMonitor(this);
 }
 
 QuickItemModel::~QuickItemModel()
@@ -150,7 +151,7 @@ void QuickItemModel::connectItem(QQuickItem *item)
     connect(item, SIGNAL(heightChanged()), this, SLOT(itemUpdated()));
     connect(item, SIGNAL(xChanged()), this, SLOT(itemUpdated()));
     connect(item, SIGNAL(yChanged()), this, SLOT(itemUpdated()));
-    item->installEventFilter(new QuickEventMonitor(this));
+    item->installEventFilter(m_clickEventFilter);
 }
 
 void QuickItemModel::disconnectItem(QQuickItem *item)
