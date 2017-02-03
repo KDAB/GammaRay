@@ -27,7 +27,7 @@ div.sidebar h2, div.sidebar h3 {
 
 div.sidebar li:before {
     content: "\2023";
-    /* color: #7F9CAD; TODO */
+    color: #7f9cad;
     display: inline-block;
     float: left;
     margin-left: -1.3em;
@@ -168,6 +168,17 @@ table td,table th {
 
 h1 { /* prevent base style from upper-casing our titles */
     text-transform: none;
+}
+
+.content ul {
+    list-style: none;
+}
+.content li:before {
+    content: "\2023";
+    color: #7f9cad;
+    margin-left: -1em;
+    display: inline-block;
+    width: 1em;
 }
 
 /* title page splash screen image */
