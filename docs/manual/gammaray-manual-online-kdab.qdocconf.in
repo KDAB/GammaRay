@@ -46,6 +46,11 @@ HTML.postheader = \
     " <div id=\"sb-site\" style=\"min-height: 1106px;\">\n" \
     "  <div data-spy=\"affix\" data-offset-top=\"1\" class=\"affixautowidth mainnav affix\" id=\"kdab-header\"></div>\n" \
     "  <div class=\"mainbgcol\">\n" \
+    "   <nav class=\"expertise\"><div class=\"container\"><div class=\"row\">\n" \
+    "    <div class=\"col-xs-4\"><a href=\"https://www.kdab.com/expertise/qt/\" class=\"expert-qt\">Qt / QML</a></div>\n" \
+    "    <div class=\"col-xs-4\"><a href=\"https://www.kdab.com/expertise/cpp/\" class=\"expert-c\">C++</a></div>\n" \
+    "    <div class=\"col-xs-4\"><a href=\"https://www.kdab.com/expertise/3dgraphicsandcompute/\" class=\"expert-opengl\">3D / OpenGL</a></div>\n" \
+    "   </div></div></nav>\n" \
     "   <nav class=\"breadcrumbHolder\">\n" \
     "    <div class=\"container\">\n" \
     "     <ul>\n" \
