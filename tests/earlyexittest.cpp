@@ -42,6 +42,16 @@ class EarlyExitTest : public QObject
 {
     Q_OBJECT
 private slots:
+    void testNonExistingTarget()
+    {
+        LaunchOptions options;
+        options.setUiMode(LaunchOptions::NoUi);
+        options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        options.setLaunchArguments(QStringList() << QStringLiteral("I_DONT_EXIST"));
+        Launcher launcher(options);
+        QVERIFY(!launcher.start());
+    }
+
     void test()
     {
         LaunchOptions options;
@@ -53,7 +63,7 @@ private slots:
 
         QSignalSpy spy(&launcher, SIGNAL(finished()));
 
-        Q_ASSERT(launcher.start());
+        QVERIFY(launcher.start());
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         spy.wait(10000);
