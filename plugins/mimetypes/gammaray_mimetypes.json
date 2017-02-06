@@ -2,6 +2,7 @@
     "hidden": false,
     "id": "gammaray_mimetypes",
     "name": "Mime Types",
+    "name[de]": "Mime Typen",
     "types": [
         "QObject"
     ]

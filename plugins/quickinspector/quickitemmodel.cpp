@@ -47,6 +47,7 @@ using namespace GammaRay;
 QuickItemModel::QuickItemModel(QObject *parent)
     : ObjectModelBase<QAbstractItemModel>(parent)
 {
+    m_clickEventFilter = new QuickEventMonitor(this);
 }
 
 QuickItemModel::~QuickItemModel()
@@ -143,7 +144,6 @@ void QuickItemModel::populateFromItem(QQuickItem *item)
 void QuickItemModel::connectItem(QQuickItem *item)
 {
     connect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()));
-    connect(item, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(itemWindowChanged()));
     connect(item, SIGNAL(visibleChanged()), this, SLOT(itemUpdated()));
     connect(item, SIGNAL(focusChanged(bool)), this, SLOT(itemUpdated()));
     connect(item, SIGNAL(activeFocusChanged(bool)), this, SLOT(itemUpdated()));
@@ -151,12 +151,19 @@ void QuickItemModel::connectItem(QQuickItem *item)
     connect(item, SIGNAL(heightChanged()), this, SLOT(itemUpdated()));
     connect(item, SIGNAL(xChanged()), this, SLOT(itemUpdated()));
     connect(item, SIGNAL(yChanged()), this, SLOT(itemUpdated()));
-    item->installEventFilter(new QuickEventMonitor(this));
+    item->installEventFilter(m_clickEventFilter);
 }
 
 void QuickItemModel::disconnectItem(QQuickItem *item)
 {
-    disconnect(item, nullptr, this, nullptr);
+    disconnect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()));
+    disconnect(item, SIGNAL(visibleChanged()), this, SLOT(itemUpdated()));
+    disconnect(item, SIGNAL(focusChanged(bool)), this, SLOT(itemUpdated()));
+    disconnect(item, SIGNAL(activeFocusChanged(bool)), this, SLOT(itemUpdated()));
+    disconnect(item, SIGNAL(widthChanged()), this, SLOT(itemUpdated()));
+    disconnect(item, SIGNAL(heightChanged()), this, SLOT(itemUpdated()));
+    disconnect(item, SIGNAL(xChanged()), this, SLOT(itemUpdated()));
+    disconnect(item, SIGNAL(yChanged()), this, SLOT(itemUpdated()));
 }
 
 QModelIndex QuickItemModel::indexForItem(QQuickItem *item) const
@@ -183,13 +190,16 @@ void QuickItemModel::objectAdded(QObject *obj)
 {
     Q_ASSERT(thread() == QThread::currentThread());
     QQuickItem *item = qobject_cast<QQuickItem *>(obj);
+    if (!item)
+        return;
+
+    connect(item, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(itemWindowChanged())); // detect if item is added to scene later
     addItem(item);
 }
 
 void QuickItemModel::addItem(QQuickItem *item)
 {
-    if (!item)
-        return;
+    Q_ASSERT(item);
 
     if (!item->window())
         return; // item not (yet) added to a scene
@@ -210,7 +220,8 @@ void QuickItemModel::addItem(QQuickItem *item)
     connectItem(item);
 
     const QModelIndex index = indexForItem(parentItem);
-    Q_ASSERT(index.isValid() || !parentItem);
+    if (!index.isValid() && parentItem)
+        return;
 
     QVector<QQuickItem *> &children = m_parentChildMap[parentItem];
     QVector<QQuickItem *>::iterator it = std::lower_bound(children.begin(), children.end(), item);
@@ -281,6 +292,9 @@ void QuickItemModel::itemReparented()
 
     QQuickItem *sourceParent = m_childParentMap.value(item);
     Q_ASSERT(sourceParent);
+    if (sourceParent == item->parentItem())
+        return;
+
     const QModelIndex sourceParentIndex = indexForItem(sourceParent);
 
     QVector<QQuickItem *> &sourceSiblings = m_parentChildMap[sourceParent];
@@ -308,8 +322,11 @@ void QuickItemModel::itemReparented()
 void QuickItemModel::itemWindowChanged()
 {
     QQuickItem *item = qobject_cast<QQuickItem *>(sender());
-    Q_ASSERT(item && (!item->window() || item->window() != m_window));
-    removeItem(item);
+    Q_ASSERT(item);
+    if (!item->window() || item->window() != m_window)
+        removeItem(item);
+    else if (m_window && item->window() == m_window)
+        addItem(item);
 }
 
 void QuickItemModel::itemUpdated()

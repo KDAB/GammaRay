@@ -1,0 +1,188 @@
+/* main content area */
+div.content {
+    display: inline-block;
+    float: left;
+    width: 80%;
+    padding-right: 2em;
+    padding-top: 2em;
+}
+
+/* right sidebar */
+div.sidebar {
+    display: block;
+    float: right;
+    width: 20%;
+    padding-top: 2em;
+}
+
+div.sidebar ul {
+    list-style: none;
+    padding-left: 1.3em;
+    margin-top: 0px; /** Site style has a way too big 50py here. */
+}
+
+div.sidebar h2, div.sidebar h3 {
+    margin-bottom: 0.5em;
+}
+
+div.sidebar li:before {
+    content: "\2023";
+    color: #7f9cad;
+    display: inline-block;
+    float: left;
+    margin-left: -1.3em;
+    width: 1.3em;
+}
+
+.toc,.sectionlist {
+    padding: 1em;
+    background-color: #eef2f4;
+    margin-bottom: 3em
+}
+.toc:after {
+    content: '';
+    position: relative;
+    border-style: solid;
+    border-width: 0 0 3em 3em;
+    border-color: transparent #eef2f4;
+    display: block;
+    width: 0%;
+    bottom: -3em;
+    left: -1em;
+}
+
+.sectionlist:after {
+    content: '';
+    position: relative;
+    border-style: solid;
+    border-width: 0 3em 3em 0;
+    border-color: transparent #eef2f4;
+    display: block;
+    width: 100%;
+    bottom: -3em;
+    left: 1em;
+}
+.sectionlist:last-child::after {
+    background-image: url("gammaray-logo-256.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    border-width: 0;
+    width: 100%;
+    height: 256px;
+    bottom: 1em;
+    left: 0;
+}
+
+/* navigation breadcrumb at the top */
+nav.breadcrumbHolder ul {
+    list-style: none;
+    padding-left: 0px;
+    font-size: small;
+    font-weight: 400;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 0px;
+}
+nav.breadcrumbHolder li {
+    display: inline-block;
+    position: relative;
+    padding-right: 0.25em;
+    color: #7F9CAD;
+}
+nav.breadcrumbHolder li a {
+    color: #7F9CAD;
+}
+nav.breadcrumbHolder li a:hover {
+    color: #4C758D;
+}
+nav.breadcrumbHolder li:after {
+    color: #7F9CAD;
+    content: "\2023";
+    padding-left: 0.5em;
+}
+nav.breadcrumbHolder ul li:nth-last-child(2) {
+    color: #7F9CAD;
+    font-weight: 700;
+}
+
+#buildversion {
+    font-style:italic;
+    font-size:small;
+    float:right
+}
+#buildversion:after {
+    content:none;
+}
+
+/* forward/back links */
+.naviNextPrevious.headerNavi {
+    display: none;
+}
+
+.naviNextPrevious.footerNavi {
+    margin-top: 25px;
+    max-width: 100%;
+}
+
+.nextPage {
+    float: right;
+}
+/* TODO use KDAB-style triangles instead of <> */
+.prevPage::before {
+    content: "< ";
+}
+.nextPage::after {
+    content: " >";
+}
+
+/* content styling */
+/* TODO restrict this only to qdoc content, classes with WP style */
+.border {
+    border: 0px;
+}
+.border img {
+   box-shadow:3px 3px 8px 3px rgba(200,200,200,0.5)
+}
+
+table {
+  border-collapse:collapse;
+  border-spacing:0;
+  margin-bottom:25px;
+  width:100%
+}
+table .odd {
+  background-color:#f9f9f9
+}
+table thead {
+  text-align:left;
+  padding-left:20px
+}
+table,table td,table th {
+  border:1px solid #eef2f4
+}
+table td,table th {
+  padding:5px 20px;
+  line-height:1.3
+}
+
+h1 { /* prevent base style from upper-casing our titles */
+    text-transform: none;
+}
+
+.content ul {
+    list-style: none;
+}
+.content li:before {
+    content: "\2023";
+    color: #7f9cad;
+    margin-left: -1em;
+    display: inline-block;
+    width: 1em;
+}
+
+/* title page splash screen image */
+#splashscreen {
+    width: 100%;
+    padding-bottom: 2em;
+}

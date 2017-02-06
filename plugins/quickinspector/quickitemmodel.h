@@ -42,6 +42,10 @@ class QQuickWindow;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+
+//forward
+class QuickEventMonitor;
+
 /** QQ2 item tree model. */
 class QuickItemModel : public ObjectModelBase<QAbstractItemModel>
 {
@@ -102,6 +106,7 @@ private:
     QHash<QQuickItem *, QQuickItem *> m_childParentMap;
     QHash<QQuickItem *, QVector<QQuickItem *> > m_parentChildMap;
     QHash<QQuickItem *, int> m_itemFlags;
+    QuickEventMonitor *m_clickEventFilter;
 };
 
 class QuickEventMonitor : public QObject

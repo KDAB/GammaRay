@@ -102,6 +102,7 @@ QVector<ModelCellModel::RoleInfo> ModelCellModel::rolesForModel(const QAbstractI
 
     // add custom roles
     const auto roleNames = model->roleNames();
+
     for (auto it = roleNames.constBegin(); it != roleNames.constEnd(); ++it) {
         bool roleFound = false;
         for (int i = 0; i < roles.size(); ++i) {
@@ -116,6 +117,7 @@ QVector<ModelCellModel::RoleInfo> ModelCellModel::rolesForModel(const QAbstractI
         }
     }
 
+    std::sort(roles.begin(), roles.end(), [] (const RoleInfo& lhs, const RoleInfo& rhs){return lhs.first < rhs.first;});
     return roles;
 }
 

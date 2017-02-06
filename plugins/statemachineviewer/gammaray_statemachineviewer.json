@@ -1,5 +1,9 @@
 {
     "id": "gammaray_statemachineviewer",
     "name": "State Machines",
-    "types": [ "QAbstractState", "QScxmlStateMachine" ]
+    "name[de]": "Zustandsautomaten",
+    "types": [
+        "QAbstractState",
+        "QScxmlStateMachine"
+    ]
 }

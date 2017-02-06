@@ -1,0 +1,77 @@
+include(@CMAKE_CURRENT_BINARY_DIR@/gammaray-manual.qdocconf)
+
+HTML.stylesheets += \
+    @CMAKE_CURRENT_SOURCE_DIR@/style/qt5-sidebar.html \
+    @CMAKE_CURRENT_SOURCE_DIR@/style/kdab-header.html \
+    @CMAKE_CURRENT_SOURCE_DIR@/style/kdab-footer.html \
+    @CMAKE_CURRENT_SOURCE_DIR@/style/kdab-online.css \
+    @CMAKE_CURRENT_SOURCE_DIR@/style/gammaray-manual-splash-screen.png \
+    @CMAKE_CURRENT_SOURCE_DIR@/style/gammaray-logo-256.png \
+
+HTML.headerstyles = \
+    "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab16/css/bootstrap-3.3.6.min.css\" type=\"text/css\"/>\n" \
+    "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab16/css/font-awesome-4.5.0.min.css\" type=\"text/css\"/>\n" \
+    "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab16/style.css\" type=\"text/css\"/>\n" \
+    "  <link rel=\"stylesheet\" href=\"style/kdab-online.css\" type=\"text/css\"/>\n" \
+    "  <link rel=\"icon\" href=\"https://www.kdab.com/wp-content/uploads/stories/cropped-Favicon-32x32.png\" sizes=\"32x32\"/>\n"
+
+HTML.headerscripts = \
+    "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab16/js/jquery-2.2.3.min.js?ver=2.2.3\"></script>\n" \
+    "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab16/js/modernizr.custom.js?ver=2.6.2\"></script>\n" \
+    "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab16/js/bootstrap-3.3.6.min.js?ver=3.3.6\"></script>\n" \
+    "  <script type=\"text/javascript\">\n" \
+    "  \$(function(){\n" \
+    "     \$(\"#kdab-header\").load(\"style/kdab-header.html\", function() {\n" \
+    "       \$('.navbar .dropdown > a').click(function () {\n" \
+    "         location.href = this.href;\n" \
+    "       });\n" \
+    "       \$('.navbar .dropdown').hover(function () {\n" \
+    "         \$(this).addClass(\"open\");\n" \
+    "       }, function () { \n" \
+    "         \$(this).removeClass(\"open\");\n" \
+      "     });\n" \
+    "     });\n" \
+    "     \$(\"#kdab-footer\").load(\"style/kdab-footer.html\");\n" \
+    "     \$(\"#sidebar-content\").load(\"style/qt5-sidebar.html\");\n" \
+    "     if (\$(\"#sidebar-content\").length == 0) { \$(\"#content\").prepend(\"<img src='style/gammaray-manual-splash-screen.png' id='splashscreen'/>\"); }\n" \
+    "  });\n" \
+    "  </script>\n" \
+
+HTML.endheader = \
+    "</head>\n"
+
+# this goes before the breadcrumb
+HTML.postheader = \
+    "<body>\n" \
+    " <div id=\"sb-site\" style=\"min-height: 1106px;\">\n" \
+    "  <div data-spy=\"affix\" data-offset-top=\"1\" class=\"affixautowidth mainnav affix\" id=\"kdab-header\"></div>\n" \
+    "  <div class=\"mainbgcol\">\n" \
+    "   <nav class=\"expertise\"><div class=\"container\"><div class=\"row\">\n" \
+    "    <div class=\"col-xs-4\"><a href=\"https://www.kdab.com/expertise/qt/\" class=\"expert-qt\">Qt / QML</a></div>\n" \
+    "    <div class=\"col-xs-4\"><a href=\"https://www.kdab.com/expertise/cpp/\" class=\"expert-c\">C++</a></div>\n" \
+    "    <div class=\"col-xs-4\"><a href=\"https://www.kdab.com/expertise/3dgraphicsandcompute/\" class=\"expert-opengl\">3D / OpenGL</a></div>\n" \
+    "   </div></div></nav>\n" \
+    "   <nav class=\"breadcrumbHolder\">\n" \
+    "    <div class=\"container\">\n" \
+    "     <ul>\n" \
+
+# this goes between breadcrumb and sidebar
+HTML.postpostheader = \
+    "</ul></div></nav>\n" \
+    "<div class=\"container\">\n" \
+    "<div class=\"row\">\n"
+
+# this goes between sidebar and actual content
+HTML.prologue = \
+    " <div class=\"content\" id=\"content\">\n" \
+
+HTML.footer += \
+    "</div>\n" \
+    "</div>\n" \
+    "</div>\n" \
+    "</div>\n" \
+    "</div>\n" \
+    "<div id=\"kdab-footer\">\n" \
+        "<footer id=\"#footer\">\n" \
+        "</footer>\n" \
+    "</div>\n"

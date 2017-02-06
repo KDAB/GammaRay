@@ -10,6 +10,7 @@ macro(qt5_build_doc _qdocconf_name)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}.qdocconf.in ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}.qdocconf)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-offline.qdocconf.in ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-offline.qdocconf)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-online.qdocconf.in ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online.qdocconf)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-online-kdab.qdocconf.in ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online-kdab.qdocconf)
 
   # offline docs
   # run qdoc to get qhp file
@@ -38,8 +39,9 @@ macro(qt5_build_doc _qdocconf_name)
   install(FILES ${_qdoc_output_dir}/${_qdocconf_name}.qch DESTINATION ${QCH_INSTALL_DIR})
 
   # online docs
-  set(_qdoc_output_dir ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online)
   file(GLOB _qdoc_styles ${CMAKE_CURRENT_SOURCE_DIR} "style/*")
+  # Qt style
+  set(_qdoc_output_dir ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online)
   add_custom_command(
     OUTPUT ${_qdoc_output_dir}/index.html
     COMMAND ${QDOC_EXECUTABLE}
@@ -49,6 +51,17 @@ macro(qt5_build_doc _qdocconf_name)
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online.qdocconf ${_qdoc_srcs} ${_qdoc_imgs} ${_qdoc_styles}
   )
   add_custom_target(online-docs DEPENDS ${_qdoc_output_dir}/index.html)
+  # KDAB style
+  set(_qdoc_output_dir ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online-kdab)
+  add_custom_command(
+    OUTPUT ${_qdoc_output_dir}/index.html
+    COMMAND ${QDOC_EXECUTABLE}
+      --indexdir ${QDOC_INDEX_DIR}
+      --outputdir ${_qdoc_output_dir}
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online-kdab.qdocconf
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name}-online-kdab.qdocconf ${_qdoc_srcs} ${_qdoc_imgs} ${_qdoc_styles}
+  )
+  add_custom_target(online-docs-kdab DEPENDS ${_qdoc_output_dir}/index.html)
 
 endmacro()
 
