@@ -41,7 +41,7 @@ class LauncherWindow : public QDialog
 {
     Q_OBJECT
 public:
-    explicit LauncherWindow(QWidget *parent = nullptr);
+    explicit LauncherWindow(bool launchClient = true, QWidget *parent = nullptr);
     ~LauncherWindow();
 
     /// returns all information required to perform the launch/attach
@@ -55,6 +55,9 @@ private slots:
 
 private:
     Ui::LauncherWindow *ui;
+    bool m_launchClient;
+
+    friend class LauncherDialog;
 };
 }
 
