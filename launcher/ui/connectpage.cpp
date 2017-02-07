@@ -68,13 +68,18 @@ bool ConnectPage::isValid() const
     return !ui->host->text().isEmpty();
 }
 
-void ConnectPage::launchClient()
+QUrl ConnectPage::url() const
 {
     QUrl url;
     url.setScheme(QStringLiteral("tcp"));
     url.setHost(ui->host->text());
     url.setPort(ui->port->value());
-    ClientLauncher::launchDetached(url);
+    return url;
+}
+
+void ConnectPage::launchClient()
+{
+    ClientLauncher::launchDetached(url());
 }
 
 void ConnectPage::writeSettings()

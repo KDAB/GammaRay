@@ -33,6 +33,7 @@
 
 #include <QHash>
 #include <QSharedDataPointer>
+#include <QUrl>
 
 QT_BEGIN_NAMESPACE
 class QStringList;
@@ -65,6 +66,8 @@ public:
     /** Returns @c true if we are supposed to attach rather than start a new process. */
     bool isAttach() const;
 
+    bool isConnect() const;
+
     /** Returns @c true if no valid launch arguments or process id are set. */
     bool isValid() const;
 
@@ -83,6 +86,9 @@ public:
     /** Process id for the process to attach to. */
     void setPid(int pid);
     int pid() const;
+
+    void setUrl(const QUrl &url);
+    QUrl url() const;
 
     /** UI mode. */
     UiMode uiMode() const;

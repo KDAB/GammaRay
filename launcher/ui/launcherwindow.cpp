@@ -38,9 +38,10 @@
 
 using namespace GammaRay;
 
-LauncherWindow::LauncherWindow(QWidget *parent)
+LauncherWindow::LauncherWindow(bool launchClient, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::LauncherWindow)
+    , m_launchClient(launchClient)
 {
     ui->setupUi(this);
     ui->aboutLabel->setText(AboutData::aboutText());
@@ -101,7 +102,7 @@ void LauncherWindow::accept()
     ui->attachPage->writeSettings();
     ui->connectPage->writeSettings();
 
-    if (ui->tabWidget->currentWidget() == ui->connectPage)
+    if (ui->tabWidget->currentWidget() == ui->connectPage && m_launchClient)
         ui->connectPage->launchClient();
 
     QDialog::accept();

@@ -49,6 +49,7 @@ public:
 
     LaunchOptions launchOptions() const;
     int pid() const;
+    QString name() const;
 
     /// Returns @c true if a valid process is selected.
     bool isValid() const;

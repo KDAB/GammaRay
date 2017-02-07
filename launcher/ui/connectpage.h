@@ -46,6 +46,7 @@ public:
 
     bool isValid() const;
     void writeSettings();
+    QUrl url() const;
 
 public slots:
     void launchClient();

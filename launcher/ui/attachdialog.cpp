@@ -141,6 +141,11 @@ int AttachDialog::pid() const
     return ui.view->currentIndex().data(ProcessModel::PIDRole).toInt();
 }
 
+QString AttachDialog::name() const
+{
+    return ui.view->currentIndex().data(ProcessModel::NameRole).toString();
+}
+
 void AttachDialog::updateProcesses()
 {
     QFutureWatcher<ProcDataList> *watcher = new QFutureWatcher<ProcDataList>(this);
