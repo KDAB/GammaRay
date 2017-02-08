@@ -60,16 +60,24 @@ public:
 signals:
     void message(const GammaRay::Message &msg);
 
+private slots:
+    void deliverMessage(const QByteArray &ba)
+    {
+        QBuffer buffer(const_cast<QByteArray*>(&ba));
+        buffer.open(QIODevice::ReadOnly);
+        emit message(Message::readMessage(&buffer));
+    }
+
 private:
     bool isConnected() const override { return true; }
     void sendMessage(const Message &msg) const override
     {
         QByteArray ba;
         QBuffer buffer(&ba);
-        buffer.open(QIODevice::ReadWrite);
+        buffer.open(QIODevice::WriteOnly);
         msg.write(&buffer);
-        buffer.seek(0);
-        emit const_cast<FakeRemoteModelServer *>(this)->message(Message::readMessage(&buffer));
+        buffer.close();
+        QMetaObject::invokeMethod(const_cast<FakeRemoteModelServer*>(this), "deliverMessage", Qt::QueuedConnection, Q_ARG(QByteArray, ba));
     }
 };
 
@@ -155,26 +163,28 @@ private slots:
                 SLOT(newRequest(GammaRay::Message)));
 
         ModelTest modelTest(&client);
-        QTest::qWait(10); // ModelTest is going to fetch stuff for us already
+        QTest::qWait(100); // ModelTest is going to fetch stuff for us already
 
         QCOMPARE(client.rowCount(), 4);
         QCOMPARE(client.hasChildren(), true);
 
         auto index = client.index(1, 0);
         index.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QTest::qWait(100);
         QCOMPARE(index.data().toString(), QStringLiteral("entry2"));
         QCOMPARE(client.rowCount(index), 0);
 
         listModel->insertRow(1, new QStandardItem(QStringLiteral("entry1")));
+        QTest::qWait(10);
         QCOMPARE(client.rowCount(), 5);
         index = client.index(1, 0);
         index.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QTest::qWait(10);
         QCOMPARE(index.data().toString(), QStringLiteral("entry1"));
 
         const auto deleteMe = listModel->takeRow(3);
         qDeleteAll(deleteMe);
+        QTest::qWait(10);
         QCOMPARE(client.rowCount(), 4);
 
         delete listModel;
@@ -210,26 +220,28 @@ private slots:
 
         auto i1 = client.index(1, 0);
         i1.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QTest::qWait(100);
         QCOMPARE(i1.data().toString(), QStringLiteral("entry1"));
         QCOMPARE(client.rowCount(i1), 2);
 
         auto i12 = client.index(1, 0, i1);
         i12.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QTest::qWait(10);
         QCOMPARE(i12.data().toString(), QStringLiteral("entry12"));
         QCOMPARE(client.rowCount(i12), 0);
 
         e1->insertRow(1, new QStandardItem(QStringLiteral("entry11")));
+        QTest::qWait(10);
         QCOMPARE(client.rowCount(i1), 3);
         auto i11 = client.index(1, 0, i1);
         i11.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QTest::qWait(10);
         QCOMPARE(i11.data().toString(), QStringLiteral("entry11"));
         QCOMPARE(client.rowCount(i11), 0);
 
         const auto deleteMe = e1->takeRow(0);
         qDeleteAll(deleteMe);
+        QTest::qWait(10);
         QCOMPARE(client.rowCount(i1), 2);
         i11 = client.index(0, 0, i1);
         QCOMPARE(i11.data().toString(), QStringLiteral("entry11"));
@@ -274,6 +286,8 @@ private slots:
         QCOMPARE(proxy.rowCount(), 2);
 
         auto pi0 = proxy.index(0, 0);
+        pi0.data();
+        QTest::qWait(100);
         QCOMPARE(pi0.data().toString(), QStringLiteral("entry0"));
         QCOMPARE(proxy.rowCount(pi0), 4);
 
