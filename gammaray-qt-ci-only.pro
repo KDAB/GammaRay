@@ -16,26 +16,30 @@ message("If you are seeing this and you are not the Qt CI, please refer to Insta
 
 TEMPLATE = aux
 
+# convert path separators to platform format
+SHELL_INSTALL_PREFIX = $$shell_path($$[QT_INSTALL_PREFIX])
+SHELL_PWD = $$shell_path($$PWD)
+
 gammaray_configure.target = gammaray_configure
 gammaray_configure.commands = \
     mkdir -p build; \
     cd build; \
     cmake \
-        -DCMAKE_INSTALL_PREFIX=$$[QT_INSTALL_PREFIX] \
-        -DCMAKE_PREFIX_PATH=$$[QT_INSTALL_PREFIX] \
+        -DCMAKE_INSTALL_PREFIX=$$SHELL_INSTALL_PREFIX \
+        -DCMAKE_PREFIX_PATH=$$SHELL_INSTALL_PREFIX \
         -DGAMMARAY_PROBE_ONLY_BUILD=TRUE \
         -DGAMMARAY_INSTALL_QT_LAYOUT=TRUE \
-        $$PWD
+        $$SHELL_PWD
 
 gammaray_configure_docs.target = gammaray_configure_docs
 gammaray_configure_docs.commands = \
     mkdir -p build; \
     cd build; \
     cmake \
-        -DCMAKE_INSTALL_PREFIX=$$[QT_INSTALL_PREFIX] \
-        -DCMAKE_PREFIX_PATH=$$[QT_INSTALL_PREFIX] \
+        -DCMAKE_INSTALL_PREFIX=$$SHELL_INSTALL_PREFIX \
+        -DCMAKE_PREFIX_PATH=$$SHELL_INSTALL_PREFIX \
         -DGAMMARAY_PROBE_ONLY_BUILD=FALSE \
-        $$PWD
+        $$SHELL_PWD
 
 gammaray_build.target = gammaray_build
 gammaray_build.depends += gammaray_configure
