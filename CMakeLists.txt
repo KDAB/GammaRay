@@ -9,10 +9,14 @@
 #
 # -DGAMMARAY_BUILD_UI=[true|false]
 #  Build the client and in-process UI.
-#  Default=true
+#  Default=true (except on QNX and Android)
 #
 # -DGAMMARAY_PROBE_ONLY_BUILD=[true|false]
 #  Build only an additional probe configuration for an already existing launcher.
+#  Default=false
+#
+# -DGAMMARAY_ENABLE_GPL_ONLY_FEATURES=[true|false]
+#  Enable features only available under GPL license.
 #  Default=false
 #
 # -DGAMMARAY_INSTALL_QT_LAYOUT=[true|false]
@@ -22,6 +26,14 @@
 #    - qmake mkspecs file
 #  Default=false
 #  Only use for Android or when you know what you are doing.
+#
+# -DGAMMARAY_MULTI_BUILD=[true|false]
+#  Build multiple applicable probe configurations.
+#  Default=true
+#
+# -DGAMMARAY_STATIC_PROBE=[true|false]
+#  Build the probe as static library for compile-time injection (requires Qt 5.4 or newer).
+#  Default=false
 #
 # -DGAMMARAY_BUILD_DOCS=[true|false]
 #  Build the API documentation and User Manual.
@@ -34,7 +46,7 @@
 
 project(GammaRay CXX C)
 
-if (MSVC)
+if(MSVC)
   cmake_minimum_required(VERSION 3.1.0) # b/c of TARGET_PDB_FILE_DIR generator expression
 else()
   cmake_minimum_required(VERSION 2.8.12) # b/c of ECMGeneratePriFile.cmake
@@ -185,10 +197,10 @@ endif()
 # Compiler & linker settings
 #
 function(append_if condition value)
-  if (${condition})
+  if(${condition})
     foreach(variable ${ARGN})
       set(${variable} "${${variable}} ${value}" PARENT_SCOPE)
-    endforeach(variable)
+    endforeach()
   endif()
 endfunction()
 
@@ -229,7 +241,7 @@ endif()
 
 # Do not treat the operator name keywords and, bitand, bitor, compl, not, or and xor as synonyms as keywords.
 # They're not supported under Visual Studio out of the box thus using them limits the portability of code
-if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER_ID STREQUAL "Clang" OR (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER_ID STREQUAL "Clang" OR (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-operator-names")
 endif()
 
@@ -292,12 +304,12 @@ if(Qt5Core_FOUND)
   )
   find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
 
-  if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND Qt5Core_VERSION VERSION_LESS 5.5)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND Qt5Core_VERSION VERSION_LESS 5.5)
     # disable warnings about inconsistent usage of 'override' specifier for Qt <5.5
     # only starting with 5.5 Qt started to use 'override' throughout the code base
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override")
   endif()
-  if (Qt5Core_VERSION VERSION_GREATER 5.7)
+  if(Qt5Core_VERSION VERSION_GREATER 5.7)
     # Qt 5.8 is the first minor version to use nullptr more broadly
     # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
     #   .../examples/widget-layouting/ui_contactform.h:606:85: warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
@@ -315,9 +327,9 @@ if(Qt5Core_FOUND)
   endif()
   if(GAMMARAY_BUILD_UI) # widgets are required for the UI
     find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
-      # 3D Widget inspector requires Qt3D 5.7
-    if (Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
-      if (${Qt53DCore_FOUND})
+    # 3D Widget inspector requires Qt3D 5.7
+    if(Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
+      if(${Qt53DCore_FOUND})
         set(GAMMARAY_WITH_WIDGET3D TRUE)
       else()
         message(STATUS "Not building GammaRay Widget 3D")
@@ -443,10 +455,10 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "^[Rr]el")
 endif()
 
 add_definitions(
-    -DQT_USE_FAST_CONCATENATION
-    -DQT_USE_FAST_OPERATOR_PLUS
-    -DQT_NO_CAST_TO_ASCII
-    -DQT_NO_URL_CAST_FROM_STRING
+  -DQT_USE_FAST_CONCATENATION
+  -DQT_USE_FAST_OPERATOR_PLUS
+  -DQT_NO_CAST_TO_ASCII
+  -DQT_NO_URL_CAST_FROM_STRING
 )
 
 # disable QT_STRICT_ITERATORS on the >=Qt5.0<=Qt5.2+Windows combo
