@@ -22,7 +22,7 @@ SHELL_PWD = $$shell_path($$PWD)
 
 gammaray_configure.target = gammaray_configure
 gammaray_configure.commands = \
-    mkdir -p build; \
+    $$sprintf($$QMAKE_MKDIR_CMD, "build"); \
     cd build; \
     cmake \
         -DCMAKE_INSTALL_PREFIX=$$SHELL_INSTALL_PREFIX \
@@ -33,7 +33,7 @@ gammaray_configure.commands = \
 
 gammaray_configure_docs.target = gammaray_configure_docs
 gammaray_configure_docs.commands = \
-    mkdir -p build; \
+    $$sprintf($$QMAKE_MKDIR_CMD, "build"); \
     cd build; \
     cmake \
         -DCMAKE_INSTALL_PREFIX=$$SHELL_INSTALL_PREFIX \
