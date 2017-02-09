@@ -44,7 +44,7 @@ using namespace GammaRay;
 Client::Client(QObject *parent)
     : Endpoint(parent)
     , m_clientDevice(nullptr)
-    , m_statModel(new MessageStatisticsModel)
+    , m_statModel(new MessageStatisticsModel(this))
     , m_initState(0)
 {
     connect(this, SIGNAL(disconnected()), SLOT(socketDisconnected()));
