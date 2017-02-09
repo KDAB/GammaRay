@@ -246,7 +246,7 @@ void QuickScenePreviewWidget::drawDecoration(QPainter *p)
     // scaled and translated
     auto itemGeometry = frame().data().value<QuickItemGeometry>();
     itemGeometry.scaleTo(zoom());
-    QuickOverlay::drawDecoration(p, itemGeometry, frame().viewRect(), zoom());
+    QuickOverlay::drawDecoration(p, QuickOverlay::RenderInfo(itemGeometry, frame().viewRect(), zoom()));
 }
 
 void QuickScenePreviewWidget::visualizeActionTriggered(QAction *current)
