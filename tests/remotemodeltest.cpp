@@ -34,6 +34,7 @@
 #include <QDebug>
 #include <QtTest/qtest.h>
 #include <QObject>
+#include <QSignalSpy>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 
@@ -60,16 +61,24 @@ public:
 signals:
     void message(const GammaRay::Message &msg);
 
+private slots:
+    void deliverMessage(const QByteArray &ba)
+    {
+        QBuffer buffer(const_cast<QByteArray*>(&ba));
+        buffer.open(QIODevice::ReadOnly);
+        emit message(Message::readMessage(&buffer));
+    }
+
 private:
     bool isConnected() const override { return true; }
     void sendMessage(const Message &msg) const override
     {
         QByteArray ba;
         QBuffer buffer(&ba);
-        buffer.open(QIODevice::ReadWrite);
+        buffer.open(QIODevice::WriteOnly);
         msg.write(&buffer);
-        buffer.seek(0);
-        emit const_cast<FakeRemoteModelServer *>(this)->message(Message::readMessage(&buffer));
+        buffer.close();
+        QMetaObject::invokeMethod(const_cast<FakeRemoteModelServer*>(this), "deliverMessage", Qt::QueuedConnection, Q_ARG(QByteArray, ba));
     }
 };
 
@@ -107,6 +116,32 @@ private:
 class RemoteModelTest : public QObject
 {
     Q_OBJECT
+private:
+    bool waitForData(const QModelIndex &idx)
+    {
+        if (idx.data(RemoteModelRole::LoadingState).value<RemoteModelNodeState::NodeStates>() == RemoteModelNodeState::NoState)
+            return true; // data already present
+
+        QSignalSpy spy(const_cast<QAbstractItemModel*>(idx.model()), SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        if (!spy.isValid())
+            return false;
+        idx.data(); // trigger the request
+        Q_ASSERT(spy.isEmpty());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        while (spy.wait()) {
+            for (auto it = spy.constBegin(); it != spy.constEnd(); ++it) {
+                if ((*it).contains(idx))
+                    return true;
+            }
+            spy.clear();
+        }
+        return false;
+#else
+        QTest::qWait(100);
+        return true;
+#endif
+    }
+
 private slots:
     void initTestCases()
     {
@@ -155,26 +190,26 @@ private slots:
                 SLOT(newRequest(GammaRay::Message)));
 
         ModelTest modelTest(&client);
-        QTest::qWait(10); // ModelTest is going to fetch stuff for us already
+        QTest::qWait(100); // ModelTest is going to fetch stuff for us already
 
         QCOMPARE(client.rowCount(), 4);
         QCOMPARE(client.hasChildren(), true);
 
         auto index = client.index(1, 0);
-        index.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QVERIFY(waitForData(index));
         QCOMPARE(index.data().toString(), QStringLiteral("entry2"));
         QCOMPARE(client.rowCount(index), 0);
 
         listModel->insertRow(1, new QStandardItem(QStringLiteral("entry1")));
+        QTest::qWait(10);
         QCOMPARE(client.rowCount(), 5);
         index = client.index(1, 0);
-        index.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QVERIFY(waitForData(index));
         QCOMPARE(index.data().toString(), QStringLiteral("entry1"));
 
         const auto deleteMe = listModel->takeRow(3);
         qDeleteAll(deleteMe);
+        QTest::qWait(10);
         QCOMPARE(client.rowCount(), 4);
 
         delete listModel;
@@ -209,29 +244,29 @@ private slots:
         QCOMPARE(client.hasChildren(), true);
 
         auto i1 = client.index(1, 0);
-        i1.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QVERIFY(waitForData(i1));
         QCOMPARE(i1.data().toString(), QStringLiteral("entry1"));
         QCOMPARE(client.rowCount(i1), 2);
 
         auto i12 = client.index(1, 0, i1);
-        i12.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QVERIFY(waitForData(i12));
         QCOMPARE(i12.data().toString(), QStringLiteral("entry12"));
         QCOMPARE(client.rowCount(i12), 0);
 
         e1->insertRow(1, new QStandardItem(QStringLiteral("entry11")));
+        QTest::qWait(10);
         QCOMPARE(client.rowCount(i1), 3);
         auto i11 = client.index(1, 0, i1);
-        i11.data(); // need an event loop entry for the data retrieval
-        QTest::qWait(1);
+        QVERIFY(waitForData(i11));
         QCOMPARE(i11.data().toString(), QStringLiteral("entry11"));
         QCOMPARE(client.rowCount(i11), 0);
 
         const auto deleteMe = e1->takeRow(0);
         qDeleteAll(deleteMe);
+        QTest::qWait(10);
         QCOMPARE(client.rowCount(i1), 2);
         i11 = client.index(0, 0, i1);
+        QVERIFY(waitForData(i11));
         QCOMPARE(i11.data().toString(), QStringLiteral("entry11"));
 
         delete treeModel;
@@ -274,17 +309,21 @@ private slots:
         QCOMPARE(proxy.rowCount(), 2);
 
         auto pi0 = proxy.index(0, 0);
+        QVERIFY(waitForData(pi0));
         QCOMPARE(pi0.data().toString(), QStringLiteral("entry0"));
         QCOMPARE(proxy.rowCount(pi0), 4);
 
         auto pi03 = proxy.index(3, 0, pi0);
+        QVERIFY(waitForData(pi03));
         QCOMPARE(pi03.data().toString(), QStringLiteral("entry03"));
 
         auto ci0 = client.index(0, 0);
+        QVERIFY(waitForData(ci0));
         QCOMPARE(ci0.data().toString(), QStringLiteral("entry1"));
         QCOMPARE(client.rowCount(ci0), 2);
 
         auto pi1 = proxy.index(1, 0);
+        QVERIFY(waitForData(pi1));
         QCOMPARE(pi1.data().toString(), QStringLiteral("entry1"));
         // this fails with data() call batching sizes close to 1
 // QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
