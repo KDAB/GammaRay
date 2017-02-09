@@ -30,6 +30,7 @@
 #define ENUMSTAB_H
 
 #include <QWidget>
+#include <memory>
 
 namespace GammaRay {
 class Ui_EnumsTab;
@@ -40,13 +41,13 @@ class EnumsTab : public QWidget
     Q_OBJECT
 public:
     explicit EnumsTab(PropertyWidget *parent);
-    virtual ~EnumsTab();
+    ~EnumsTab();
 
 private:
     void setObjectBaseName(const QString &baseName);
 
 private:
-    Ui_EnumsTab *m_ui;
+    std::unique_ptr<Ui_EnumsTab> m_ui;
 };
 }
 

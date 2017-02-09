@@ -30,6 +30,7 @@
 #define PROPERTIESTAB_H
 
 #include <QWidget>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -59,7 +60,7 @@ private slots:
     void hasValuesChanged();
 
 private:
-    Ui_PropertiesTab *m_ui;
+    std::unique_ptr<Ui_PropertiesTab> m_ui;
     PropertiesExtensionInterface *m_interface;
 
     QWidget *m_newPropertyValue;

@@ -31,6 +31,7 @@
 
 #include <QWidget>
 #include <QModelIndex>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
@@ -52,7 +53,7 @@ private:
     void setObjectBaseName(const QString &baseName);
 
 private:
-    Ui_SGGeometryTab *m_ui;
+    std::unique_ptr<Ui_SGGeometryTab> m_ui;
     QAbstractItemModel *m_vertexModel;
     QAbstractItemModel *m_adjacencyModel;
 };

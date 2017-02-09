@@ -30,6 +30,7 @@
 #define METHODSTAB_H
 
 #include <QWidget>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -56,7 +57,7 @@ private slots:
     void methodContextMenu(const QPoint &pos);
 
 private:
-    Ui_MethodsTab *m_ui;
+    std::unique_ptr<Ui_MethodsTab> m_ui;
     MethodsExtensionInterface *m_interface;
 
     QString m_objectBaseName;

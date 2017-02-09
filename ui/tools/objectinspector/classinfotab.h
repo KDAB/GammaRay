@@ -30,6 +30,7 @@
 #define CLASSINFOTAB_H
 
 #include <QWidget>
+#include <memory>
 
 namespace GammaRay {
 class Ui_ClassInfoTab;
@@ -46,7 +47,7 @@ private:
     void setObjectBaseName(const QString &baseName);
 
 private:
-    Ui_ClassInfoTab *m_ui;
+    std::unique_ptr<Ui_ClassInfoTab> m_ui;
 };
 }
 
