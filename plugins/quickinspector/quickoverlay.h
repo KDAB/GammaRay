@@ -30,6 +30,7 @@
 #define GAMMARAY_QUICKINSPECTOR_QUICKOVERLAY_H
 
 #include <QObject>
+#include <QPen>
 
 #include "quickitemgeometry.h"
 
@@ -130,13 +131,35 @@ signals:
     void sceneGrabbed(const QImage &image);
 
 private:
+    struct DrawTextInfo {
+        DrawTextInfo(const QPen &pen = {}, const QRectF &rect = {},
+                     const QString &label = {}, int align = Qt::AlignCenter | Qt::TextDontClip)
+            : pen(pen)
+            , rect(rect)
+            , label(label)
+            , align(align)
+        { }
+
+        QPen pen;
+        QRectF rect;
+        QString label;
+        int align = 0;
+    };
+
+    using DrawTextInfoList = QVector<DrawTextInfo>;
+
     static void drawArrow(QPainter *p, QPointF first, QPointF second);
     static void drawAnchor(QPainter *p, const RenderInfo &renderInfo, Qt::Orientation orientation,
+                           qreal ownAnchorLine, qreal offset);
+    static void drawVerticalAnchor(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine, qreal offset);
+    static void drawHorizontalAnchor(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine, qreal offset);
+    static DrawTextInfo drawAnchorLabel(QPainter *p, const RenderInfo &renderInfo, Qt::Orientation orientation,
                            qreal ownAnchorLine, qreal offset, const QString &label, Qt::Alignment align);
-    static void drawVerticalAnchor(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine,
-                                   qreal offset, const QString &label, Qt::Alignment align);
-    static void drawHorizontalAnchor(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine,
-                                     qreal offset, const QString &label, Qt::Alignment align);
+    static DrawTextInfo drawHorizontalAnchorLabel(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine,
+                                          qreal offset, const QString &label, Qt::Alignment align);
+    static DrawTextInfo drawVerticalAnchorLabel(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine,
+                                        qreal offset, const QString &label, Qt::Alignment align);
+
     void setIsGrabbingMode(bool isGrabbingMode);
     void windowAfterRendering();
     void drawDecorations(const QSize &size, qreal dpr);
