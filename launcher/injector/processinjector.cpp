@@ -49,6 +49,7 @@ ProcessInjector::ProcessInjector()
 
 ProcessInjector::~ProcessInjector()
 {
+    stop();
 }
 
 void ProcessInjector::stop()

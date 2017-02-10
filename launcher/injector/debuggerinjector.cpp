@@ -51,6 +51,7 @@ DebuggerInjector::DebuggerInjector()
 
 DebuggerInjector::~DebuggerInjector()
 {
+    stop();
 }
 
 QString DebuggerInjector::filePath() const

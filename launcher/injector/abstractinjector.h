@@ -100,7 +100,8 @@ public:
      */
     virtual bool selfTest();
 
-    virtual void stop();
+    /** Attempts to stop a running process. */
+    virtual void stop() = 0;
 
     /** Returns the working directory supposed to be used for launching. */
     QString workingDirectory() const;

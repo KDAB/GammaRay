@@ -80,6 +80,7 @@ WinDllInjector::WinDllInjector()
 
 WinDllInjector::~WinDllInjector()
 {
+    stop();
     delete m_injectThread;
 }
 
