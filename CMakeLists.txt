@@ -329,7 +329,7 @@ if(Qt5Core_FOUND)
     find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
     # 3D Widget inspector requires Qt3D 5.7
     if(Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
-      if(${Qt53DCore_FOUND})
+      if(${Qt53DRender_FOUND} AND ${Qt53DInput_FOUND} AND ${Qt53DLogic_FOUND} AND ${Qt53DQuick_FOUND})
         set(GAMMARAY_WITH_WIDGET3D TRUE)
       else()
         message(STATUS "Not building GammaRay Widget 3D")
