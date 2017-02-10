@@ -59,9 +59,7 @@ protected:
         WaitForSingleObject(m_injector->m_destProcess, INFINITE);
         DWORD exitCode;
         GetExitCodeProcess(m_injector->m_destProcess, &exitCode);
-
-        m_injector->mExitCode = exitCode;
-        emit m_injector->finished();
+        QMetaObject::invokeMethod(m_injector, "processExited", Qt::QueuedConnection, Q_ARG(int, exitCode));
     }
 
 private:
@@ -81,6 +79,7 @@ WinDllInjector::WinDllInjector()
 WinDllInjector::~WinDllInjector()
 {
     stop();
+    m_injectThread->wait(1000);
     delete m_injectThread;
 }
 
@@ -200,4 +199,11 @@ void WinDllInjector::stop()
     if (m_destProcess)
         TerminateProcess(m_destProcess, 0xff);
 }
+
+void WinDllInjector::processExited(int exitCode)
+{
+    mExitCode = exitCode;
+    emit finished();
+}
+
 }// namespace GammaRay
