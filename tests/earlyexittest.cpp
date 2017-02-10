@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <launcher/injector/injectorfactory.h>
 #include <launcher/launchoptions.h>
 #include <launcher/launcher.h>
 #include <launcher/probefinder.h>
@@ -36,11 +37,23 @@
 #include <QObject>
 #include <QSignalSpy>
 
+#include <memory>
+
 using namespace GammaRay;
 
 class EarlyExitTest : public QObject
 {
     Q_OBJECT
+private:
+    bool hasInjector(const char *type) const
+    {
+        auto injector = InjectorFactory::createInjector(type);
+        if (!injector)
+            return false;
+
+        return injector->selfTest();
+    }
+
 private slots:
     void testNonExistingTarget()
     {
@@ -80,13 +93,26 @@ private slots:
         QCOMPARE(spy.count(), 1);
     }
 
+    void testStop_data()
+    {
+        QTest::addColumn<QString>("injectorType");
+        QTest::newRow("default") << QString();
+        if (hasInjector("gdb"))
+            QTest::newRow("gdb") << QStringLiteral("gdb");
+        if (hasInjector("lldb"))
+            QTest::newRow("lldb") << QStringLiteral("lldb");
+    }
+
     void testStop()
     {
+        QFETCH(QString, injectorType);
+
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
         // setting the probe is not strictly needed but we silence a runtime warning this way
         options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
         options.setLaunchArguments(QStringList() << "sleep" << "1000");
+        options.setInjectorType(injectorType);
         Launcher launcher(options);
 
         QSignalSpy spy(&launcher, SIGNAL(finished()));

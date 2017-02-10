@@ -28,6 +28,7 @@
 
 #include "debuggerinjector.h"
 
+#include <QDebug>
 #include <QFile>
 #include <QProcess>
 #include <QTime>
@@ -67,11 +68,15 @@ void DebuggerInjector::setFilePath(const QString &debuggerFilePath)
 void DebuggerInjector::stop()
 {
     if (m_process) {
+        if (!mManualError) {
+            mManualError = true;
+            mErrorString = tr("Process stopped.");
+        }
         m_process->terminate();
         if (!m_process->waitForFinished(1000))
             m_process->kill(); // kill it softly
+        emit finished();
     }
-    emit finished();
 }
 
 QString DebuggerInjector::errorString()
@@ -120,7 +125,9 @@ void DebuggerInjector::processFinished()
         if (mProcessError != QProcess::UnknownError)
             mErrorString = m_process->errorString();
     }
-    emit attached();
+
+    if (!mManualError)
+        emit attached();
 }
 
 void DebuggerInjector::readyReadStandardError()
