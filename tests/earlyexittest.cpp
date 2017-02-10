@@ -79,6 +79,33 @@ private slots:
 
         QCOMPARE(spy.count(), 1);
     }
+
+    void testStop()
+    {
+        LaunchOptions options;
+        options.setUiMode(LaunchOptions::NoUi);
+        // setting the probe is not strictly needed but we silence a runtime warning this way
+        options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        options.setLaunchArguments(QStringList() << "sleep" << "1000");
+        Launcher launcher(options);
+
+        QSignalSpy spy(&launcher, SIGNAL(finished()));
+
+        QVERIFY(launcher.start());
+        launcher.stop();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        spy.wait(1000);
+#else
+        int loops = 0;
+        while (loops++ < 100) {
+            if (spy.count() == 1) {
+                break;
+            }
+            QTest::qWait(10);
+        }
+#endif
+        QCOMPARE(spy.count(), 1);
+    }
 };
 
 QTEST_MAIN(EarlyExitTest)
