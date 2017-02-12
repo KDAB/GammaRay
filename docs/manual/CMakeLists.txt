@@ -65,6 +65,7 @@ macro(qt5_build_doc _qdocconf_name)
 
 endmacro()
 
+#QtQuick
 find_file(QTQUICK_INDEX qtquick/qtquick.index
   HINTS ${QT_INSTALL_DOCS}
   HINTS ${QT_INSTALL_DATA}
@@ -76,6 +77,7 @@ else()
   message(STATUS "qdoc qtquick.index not found: User Manual will be missing links to QtQuick API references")
 endif()
 
+#QtQML
 find_file(QTQML_INDEX qtqml/qtqml.index
   HINTS ${QT_INSTALL_DOCS}
   HINTS ${QT_INSTALL_DATA}
@@ -87,6 +89,7 @@ else()
   message(STATUS "qdoc qml.index not found: User Manual will be missing links to QML API references")
 endif()
 
+#Qt3D
 find_file(QT3D_INDEX qt3d/qt3d.index
   HINTS ${QT_INSTALL_DOCS}
   HINTS ${QT_INSTALL_DATA}
@@ -96,6 +99,18 @@ if(QT3D_INDEX)
   set(HAVE_QT3D_DOCS "qt3d")
 else()
   message(STATUS "qdoc qt3d.index not found: User Manual will be missing links to Qt3D API references")
+endif()
+
+#QtWaylandCompositor
+find_file(QTWAYLANDCOMPOSITOR_INDEX qtwaylandcompositor/qtwaylandcompositor.index
+  HINTS ${QT_INSTALL_DOCS}
+  HINTS ${QT_INSTALL_DATA}
+  HINTS ${QT_INSTALL_DATA}/doc
+)
+if(QTWAYLANDCOMPOSITOR_INDEX)
+  set(HAVE_QTWAYLANDCOMPOSITOR_DOCS "qtwaylandcompositor")
+else()
+  message(STATUS "qdoc qtwaylandcompositor.index not found: User Manual will be missing links to QtWaylandCompositor API references")
 endif()
 
 qt5_build_doc(gammaray-manual)
