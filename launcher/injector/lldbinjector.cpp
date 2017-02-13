@@ -129,7 +129,7 @@ bool LldbInjector::launch(const QStringList &programAndArgs, const QString &prob
     args.append(programAndArgs);
 
     if (!startDebugger(args, env))
-        return -1;
+        return false;
 
     disableConfirmations();
     waitForMain();

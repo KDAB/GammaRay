@@ -64,7 +64,7 @@ private slots:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         QVERIFY(finishSpy.wait());
 #else
-        QTest::qWait(10000);
+        QTest::qWait(5000);
 #endif
         QCOMPARE(startSpy.size(), 1);
         QCOMPARE(finishSpy.size(), 1);
