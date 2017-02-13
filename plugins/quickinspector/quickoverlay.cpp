@@ -38,7 +38,8 @@
 #include <QOpenGLPaintDevice>
 
 QT_BEGIN_NAMESPACE
-extern Q_GUI_EXPORT QImage qt_gl_read_framebuffer(const QSize &size, bool alpha_format, bool include_alpha);
+extern Q_GUI_EXPORT QImage qt_gl_read_framebuffer(const QSize &size,
+                                                  bool alpha_format, bool include_alpha);
 QT_END_NAMESPACE
 
 using namespace GammaRay;
@@ -119,6 +120,7 @@ bool ItemOrLayoutFacade::isLayout() const
     return itemIsLayout(m_object);
 }
 
+// cppcheck-suppress uninitMemberVar
 QuickOverlay::QuickOverlay()
   : m_currentToplevelItem(nullptr)
   , m_isGrabbingMode(false)
@@ -181,6 +183,7 @@ void QuickOverlay::setDrawDecorations(bool enabled)
 {
     if (m_drawDecorations == enabled)
         return;
+
     m_drawDecorations = enabled;
     updateOverlay();
 }
@@ -189,6 +192,7 @@ void QuickOverlay::setIsGrabbingMode(bool isGrabbingMode)
 {
     if (m_isGrabbingMode == isGrabbingMode)
         return;
+
     m_isGrabbingMode = isGrabbingMode;
     if (m_isGrabbingMode)
         updateOverlay();
@@ -233,6 +237,7 @@ void QuickOverlay::drawDecorations(const QSize &size, qreal dpr)
 {
     if (!m_drawDecorations)
         return;
+
     QOpenGLPaintDevice device(size * dpr);
     device.setDevicePixelRatio(dpr);
     QPainter painter(&device);
@@ -295,7 +300,8 @@ void QuickOverlay::disconnectItemChanges(QQuickItem *item)
 void QuickOverlay::connectTopItemChanges(QQuickItem *item)
 {
     // Force DirectConnection else Auto lead to Queued which is not good.
-    connect(item->window(), &QQuickWindow::afterRendering, this, &QuickOverlay::windowAfterRendering, Qt::DirectConnection);
+    connect(item->window(), &QQuickWindow::afterRendering,
+            this, &QuickOverlay::windowAfterRendering, Qt::DirectConnection);
     connect(item, &QQuickItem::childrenRectChanged, this, &QuickOverlay::updateOverlay);
     connect(item, &QQuickItem::rotationChanged, this, &QuickOverlay::updateOverlay);
     connect(item, &QQuickItem::scaleChanged, this, &QuickOverlay::updateOverlay);
@@ -305,7 +311,8 @@ void QuickOverlay::connectTopItemChanges(QQuickItem *item)
 
 void QuickOverlay::disconnectTopItemChanges(QQuickItem *item)
 {
-    disconnect(item->window(), &QQuickWindow::afterRendering, this, &QuickOverlay::windowAfterRendering);
+    disconnect(item->window(), &QQuickWindow::afterRendering,
+               this, &QuickOverlay::windowAfterRendering);
     disconnect(item, &QQuickItem::childrenRectChanged, this, &QuickOverlay::updateOverlay);
     disconnect(item, &QQuickItem::rotationChanged, this, &QuickOverlay::updateOverlay);
     disconnect(item, &QQuickItem::scaleChanged, this, &QuickOverlay::updateOverlay);
@@ -313,8 +320,8 @@ void QuickOverlay::disconnectTopItemChanges(QQuickItem *item)
     disconnect(item, &QQuickItem::heightChanged, this, &QuickOverlay::updateOverlay);
 }
 
-void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &itemGeometry, const QRectF &viewRect,
-                                 qreal zoom)
+void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &itemGeometry,
+                                  const QRectF &viewRect, qreal zoom)
 {
     painter->save();
 
@@ -331,8 +338,8 @@ void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &it
     }
 
     // children rect
-    if (itemGeometry.itemRect != itemGeometry.boundingRect
-        && itemGeometry.transform.isIdentity()) {
+    if (itemGeometry.itemRect != itemGeometry.boundingRect &&
+        itemGeometry.transform.isIdentity()) {
         // If this item is transformed the children rect will be painted wrongly,
         // so for now skip painting it.
         painter->setPen(QColor(0, 99, 193, 170));
@@ -352,32 +359,32 @@ void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &it
 
     // x and y values
     painter->setPen(QColor(136, 136, 136));
-    if (!itemGeometry.left
-        && !itemGeometry.horizontalCenter
-        && !itemGeometry.right
-        && itemGeometry.x != 0) {
-        QPointF parentEnd
-            = (QPointF(itemGeometry.itemRect.x() - itemGeometry.x,
-                       itemGeometry.itemRect.y()));
+    if (!itemGeometry.left &&
+        !itemGeometry.horizontalCenter &&
+        !itemGeometry.right &&
+        itemGeometry.x != 0) {
+        QPointF parentEnd = (QPointF(itemGeometry.itemRect.x() - itemGeometry.x,
+                                     itemGeometry.itemRect.y()));
         QPointF itemEnd = itemGeometry.itemRect.topLeft();
         drawArrow(painter, parentEnd, itemEnd);
-        painter->drawText(QRectF(parentEnd.x(), parentEnd.y() + 10, itemEnd.x() - parentEnd.x(), 50),
-                    Qt::AlignHCenter | Qt::TextDontClip,
-                    QStringLiteral("x: %1px").arg(itemGeometry.x / zoom));
+        painter->drawText(QRectF(parentEnd.x(), parentEnd.y() + 10,
+                                 itemEnd.x() - parentEnd.x(), 50),
+                          Qt::AlignHCenter | Qt::TextDontClip,
+                          QStringLiteral("x: %1px").arg(itemGeometry.x / zoom));
     }
-    if (!itemGeometry.top
-        && !itemGeometry.verticalCenter
-        && !itemGeometry.bottom
-        && !itemGeometry.baseline
-        && itemGeometry.y != 0) {
-        QPointF parentEnd
-            = (QPointF(itemGeometry.itemRect.x(),
-                       itemGeometry.itemRect.y() - itemGeometry.y));
+    if (!itemGeometry.top &&
+        !itemGeometry.verticalCenter &&
+        !itemGeometry.bottom &&
+        !itemGeometry.baseline &&
+        itemGeometry.y != 0) {
+        QPointF parentEnd = (QPointF(itemGeometry.itemRect.x(),
+                                     itemGeometry.itemRect.y() - itemGeometry.y));
         QPointF itemEnd = itemGeometry.itemRect.topLeft();
         drawArrow(painter, parentEnd, itemEnd);
-        painter->drawText(QRectF(parentEnd.x() + 10, parentEnd.y(), 100, itemEnd.y() - parentEnd.y()),
-                    Qt::AlignVCenter | Qt::TextDontClip,
-                    QStringLiteral("y: %1px").arg(itemGeometry.y / zoom));
+        painter->drawText(QRectF(parentEnd.x() + 10, parentEnd.y(),
+                                 100, itemEnd.y() - parentEnd.y()),
+                          Qt::AlignVCenter | Qt::TextDontClip,
+                          QStringLiteral("y: %1px").arg(itemGeometry.y / zoom));
     }
 
     // anchors
@@ -389,7 +396,8 @@ void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &it
 
     if (itemGeometry.horizontalCenter) {
         drawAnchor(painter, itemGeometry, viewRect, zoom, Qt::Horizontal,
-                   (itemGeometry.itemRect.left() + itemGeometry.itemRect.right()) / 2, itemGeometry.horizontalCenterOffset,
+                   (itemGeometry.itemRect.left() + itemGeometry.itemRect.right()) / 2,
+                   itemGeometry.horizontalCenterOffset,
                    QStringLiteral("offset: %1px").arg(itemGeometry.horizontalCenterOffset / zoom));
     }
 
@@ -407,7 +415,8 @@ void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &it
 
     if (itemGeometry.verticalCenter) {
         drawAnchor(painter, itemGeometry, viewRect, zoom, Qt::Vertical,
-                   (itemGeometry.itemRect.top() + itemGeometry.itemRect.bottom()) / 2, itemGeometry.verticalCenterOffset,
+                   (itemGeometry.itemRect.top() + itemGeometry.itemRect.bottom()) / 2,
+                   itemGeometry.verticalCenterOffset,
                    QStringLiteral("offset: %1px").arg(itemGeometry.verticalCenterOffset / zoom));
     }
 
@@ -430,6 +439,7 @@ void QuickOverlay::requestGrabWindow()
 {
     if (m_isGrabbingMode)
         return;
+
     setIsGrabbingMode(true);
 }
 
@@ -448,8 +458,9 @@ void QuickOverlay::drawArrow(QPainter *p, QPointF first, QPointF second)
     p->drawLine(second, second - v2.toPointF());
 }
 
-void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry, const QRectF &viewRect, qreal zoom,
-                             Qt::Orientation orientation, qreal ownAnchorLine, qreal offset, const QString &label)
+void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry,
+                              const QRectF &viewRect, qreal zoom, Qt::Orientation orientation,
+                              qreal ownAnchorLine, qreal offset, const QString &label)
 {
     qreal foreignAnchorLine = ownAnchorLine - offset;
     QPen pen(QColor(139, 179, 0));
@@ -460,31 +471,28 @@ void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry
         if (orientation == Qt::Horizontal) {
             drawArrow(p,
                       QPointF(foreignAnchorLine,
-                              (itemGeometry.itemRect.top()
-                               + itemGeometry.itemRect.bottom()) / 2),
+                              (itemGeometry.itemRect.top() + itemGeometry.itemRect.bottom()) / 2),
                       QPointF(ownAnchorLine,
-                              (itemGeometry.itemRect.top()
-                               + itemGeometry.itemRect.bottom()) / 2));
+                              (itemGeometry.itemRect.top() + itemGeometry.itemRect.bottom()) / 2));
         } else {
             drawArrow(p,
-                      QPointF((itemGeometry.itemRect.left()
-                               + itemGeometry.itemRect.right()) / 2, foreignAnchorLine),
-                      QPointF((itemGeometry.itemRect.left()
-                               + itemGeometry.itemRect.right()) / 2, ownAnchorLine));
+                      QPointF((itemGeometry.itemRect.left() + itemGeometry.itemRect.right()) / 2,
+                              foreignAnchorLine),
+                      QPointF((itemGeometry.itemRect.left() + itemGeometry.itemRect.right()) / 2,
+                              ownAnchorLine));
         }
 
         // Margin text
         if (orientation == Qt::Horizontal) {
             p->drawText(
                 QRectF(foreignAnchorLine,
-                       (itemGeometry.itemRect.top()
-                        + itemGeometry.itemRect.bottom()) / 2 + 10, offset, 50),
+                       (itemGeometry.itemRect.top() + itemGeometry.itemRect.bottom()) / 2 + 10,
+                       offset, 50),
                 Qt::AlignHCenter | Qt::TextDontClip,
                 label);
         } else {
             p->drawText(
-                QRectF((itemGeometry.itemRect.left()
-                        + itemGeometry.itemRect.right()) / 2 + 10,
+                QRectF((itemGeometry.itemRect.left() + itemGeometry.itemRect.right()) / 2 + 10,
                        foreignAnchorLine, 100, offset),
                 Qt::AlignVCenter | Qt::TextDontClip,
                 label);
@@ -494,20 +502,21 @@ void QuickOverlay::drawAnchor(QPainter *p, const QuickItemGeometry &itemGeometry
     // Own Anchor line
     pen.setWidth(2);
     p->setPen(pen);
-    if (orientation == Qt::Horizontal)
+    if (orientation == Qt::Horizontal) {
         p->drawLine(ownAnchorLine,
                     itemGeometry.itemRect.top(), ownAnchorLine,
                     itemGeometry.itemRect.bottom());
-    else
-        p->drawLine(
-            itemGeometry.itemRect.left(), ownAnchorLine,
-            itemGeometry.itemRect.right(), ownAnchorLine);
+    } else {
+        p->drawLine(itemGeometry.itemRect.left(), ownAnchorLine,
+                    itemGeometry.itemRect.right(), ownAnchorLine);
+    }
 
     // Foreign Anchor line
     pen.setStyle(Qt::DotLine);
     p->setPen(pen);
-    if (orientation == Qt::Horizontal)
+    if (orientation == Qt::Horizontal) {
         p->drawLine(foreignAnchorLine, 0, foreignAnchorLine, viewRect.height() * zoom);
-    else
+    } else {
         p->drawLine(0, foreignAnchorLine, viewRect.width() * zoom, foreignAnchorLine);
+    }
 }
