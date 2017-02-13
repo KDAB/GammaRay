@@ -73,7 +73,7 @@ private slots:
         // setting the probe is not strictly needed but we silence a runtime warning this way
         options.setProbeABI(ProbeFinder::listProbeABIs().first());
         options.setWorkingDirectory(QCoreApplication::applicationDirPath());
-        options.setLaunchArguments(QStringList() << "sleep" << "1");
+        options.setLaunchArguments(QStringList() << QCoreApplication::applicationDirPath() + QStringLiteral("/sleep") << QStringLiteral("1"));
         Launcher launcher(options);
 
         QSignalSpy spy(&launcher, SIGNAL(finished()));
@@ -114,7 +114,7 @@ private slots:
         // setting the probe is not strictly needed but we silence a runtime warning this way
         options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
         options.setWorkingDirectory(QCoreApplication::applicationDirPath());
-        options.setLaunchArguments(QStringList() << "sleep" << "1000");
+        options.setLaunchArguments(QStringList() << QCoreApplication::applicationDirPath() + QStringLiteral("/sleep") << QStringLiteral("1000"));
         options.setInjectorType(injectorType);
         Launcher launcher(options);
 

@@ -420,6 +420,11 @@ target_link_libraries(toolmanagertest gammaray_ui)
 add_test(NAME toolmanagertest COMMAND toolmanagertest)
 endif()
 
+add_executable(sleep sleep.cpp)
+target_link_libraries(sleep
+  ${QT_QTCORE_LIBRARIES}
+)
+
 if(NOT GAMMARAY_PROBE_ONLY_BUILD AND NOT OSX_ASAN_WORKAROUND)
     add_executable(earlyexittest earlyexittest.cpp)
     target_include_directories(earlyexittest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
