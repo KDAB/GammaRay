@@ -60,6 +60,7 @@ private slots:
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
         options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        options.setWorkingDirectory(QCoreApplication::applicationDirPath());
         options.setLaunchArguments(QStringList() << QStringLiteral("I_DONT_EXIST"));
         Launcher launcher(options);
         QVERIFY(!launcher.start());
@@ -71,6 +72,7 @@ private slots:
         options.setUiMode(LaunchOptions::NoUi);
         // setting the probe is not strictly needed but we silence a runtime warning this way
         options.setProbeABI(ProbeFinder::listProbeABIs().first());
+        options.setWorkingDirectory(QCoreApplication::applicationDirPath());
         options.setLaunchArguments(QStringList() << "sleep" << "1");
         Launcher launcher(options);
 
@@ -111,6 +113,7 @@ private slots:
         options.setUiMode(LaunchOptions::NoUi);
         // setting the probe is not strictly needed but we silence a runtime warning this way
         options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        options.setWorkingDirectory(QCoreApplication::applicationDirPath());
         options.setLaunchArguments(QStringList() << "sleep" << "1000");
         options.setInjectorType(injectorType);
         Launcher launcher(options);
