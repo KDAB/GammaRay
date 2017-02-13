@@ -58,12 +58,59 @@ private slots:
     void testNonExistingTarget()
     {
         LaunchOptions options;
+#ifdef Q_OS_MAC
+        // older OSX versions fall back to lldb by default, which has no synchronous error reporting, see below test
+        options.setInjectorType("preload");
+#endif
         options.setUiMode(LaunchOptions::NoUi);
         options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
         options.setWorkingDirectory(QCoreApplication::applicationDirPath());
         options.setLaunchArguments(QStringList() << QStringLiteral("I_DONT_EXIST"));
         Launcher launcher(options);
         QVERIFY(!launcher.start());
+    }
+
+    void testNonExistingTargetDebugger_data()
+    {
+        QTest::addColumn<QString>("injectorType");
+        QTest::newRow("dummy") << QString(); // QTestlib fails when the test data is empty...
+        if (hasInjector("gdb"))
+            QTest::newRow("gdb") << QStringLiteral("gdb");
+        if (hasInjector("lldb"))
+            QTest::newRow("lldb") << QStringLiteral("lldb");
+    }
+
+    void testNonExistingTargetDebugger()
+    {
+        QFETCH(QString, injectorType);
+        if (injectorType.isEmpty())
+            return;
+
+        LaunchOptions options;
+        options.setUiMode(LaunchOptions::NoUi);
+        // setting the probe is not strictly needed but we silence a runtime warning this way
+        options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        options.setLaunchArguments(QStringList() << QStringLiteral("I_DONT_EXIST"));
+        options.setInjectorType(injectorType);
+        Launcher launcher(options);
+
+        QSignalSpy spy(&launcher, SIGNAL(finished()));
+        QVERIFY(launcher.start());
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        spy.wait(10000);
+#else
+        int loops = 0;
+        while (loops++ < 100) {
+            if (spy.count() == 1) {
+                break;
+            }
+            QTest::qWait(100);
+        }
+#endif
+        QCOMPARE(spy.count(), 1);
+        QEXPECT_FAIL("", "Debug injectors miss error detection for this case.", Continue);
+        QVERIFY(!launcher.errorMessage().isEmpty());
     }
 
     void test()
