@@ -44,9 +44,11 @@ Endpoint::Endpoint(QObject *parent)
     , m_socket(nullptr)
     , m_myAddress(Protocol::InvalidObjectAddress +1)
 {
-    if (s_instance)
+    if (s_instance) {
         qCritical(
             "Found existing GammaRay::Endpoint instance - trying to attach to a GammaRay client?");
+    }
+
     Q_ASSERT(!s_instance);
     s_instance = this;
 
@@ -62,10 +64,10 @@ Endpoint::Endpoint(QObject *parent)
 
 Endpoint::~Endpoint()
 {
-    for (QHash<Protocol::ObjectAddress, ObjectInfo *>::const_iterator it =
-             m_addressMap.constBegin();
-         it != m_addressMap.constEnd(); ++it)
+    for (QHash<Protocol::ObjectAddress, ObjectInfo *>::const_iterator it = m_addressMap.constBegin();
+         it != m_addressMap.constEnd(); ++it) {
         delete it.value();
+    }
 
     s_instance = nullptr;
 }
@@ -85,6 +87,7 @@ void Endpoint::sendMessage(const Message &msg)
 {
     if (!isConnected())
         return;
+
     doSendMessage(msg);
 }
 
@@ -147,23 +150,24 @@ void Endpoint::connectionClosed()
 Protocol::ObjectAddress Endpoint::objectAddress(const QString &objectName) const
 {
     const QHash<QString, ObjectInfo *>::const_iterator it = m_nameMap.constFind(objectName);
+
     if (it != m_nameMap.constEnd())
         return it.value()->address;
+
     return Protocol::InvalidObjectAddress;
 }
 
 Protocol::ObjectAddress Endpoint::registerObject(const QString &name, QObject *object)
 {
     ObjectInfo *obj = m_nameMap.value(name, nullptr);
+#if !defined(NDEBUG)
     Q_ASSERT(obj);
-
     Q_ASSERT(!obj->object);
-
     Q_ASSERT(obj->address != Protocol::InvalidObjectAddress);
-
-    // cppcheck-suppress nullPointerRedundantCheck
+#else
     if (!obj || obj->object || obj->address == Protocol::InvalidObjectAddress)
         return 0;
+#endif
 
     obj->object = object;
 
@@ -182,13 +186,13 @@ void Endpoint::invokeObject(const QString &objectName, const char *method,
         return;
 
     ObjectInfo *obj = m_nameMap.value(objectName, nullptr);
+#if !defined(NDEBUG)
     Q_ASSERT(obj);
-
     Q_ASSERT(obj->address != Protocol::InvalidObjectAddress);
-
-    // cppcheck-suppress nullPointerRedundantCheck
+#else
     if (!obj || obj->address == Protocol::InvalidObjectAddress)
         return;
+#endif
 
     Message msg(obj->address, Protocol::MethodCall);
     const QByteArray name(method);
@@ -202,8 +206,9 @@ void Endpoint::invokeObjectLocal(QObject *object, const char *method,
 {
     Q_ASSERT(args.size() <= 10);
     QVector<MethodArgument> a(10);
-    for (int i = 0; i < args.size(); ++i)
+    for (int i = 0; i < args.size(); ++i) {
         a[i] = MethodArgument(args.at(i));
+    }
 
     QMetaObject::invokeMethod(object, method, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8],
                               a[9]);
@@ -271,27 +276,30 @@ void Endpoint::unregisterMessageHandler(Protocol::ObjectAddress objectAddress)
 void Endpoint::objectDestroyed(QObject *obj)
 {
     ObjectInfo *info = m_objectMap.value(obj, nullptr);
+#if !defined(NDEBUG)
     Q_ASSERT(info);
-
     Q_ASSERT(info->object == obj);
-
-    // cppcheck-suppress nullPointerRedundantCheck
+#else
     if (!info || info->object != obj)
         return;
+#endif
 
     info->object = nullptr;
     m_objectMap.remove(obj);
-    objectDestroyed(info->address, QString(info->name), obj); // copy the name, in case unregisterMessageHandlerInternal() is called inside
+    // copy the name, in case unregisterMessageHandlerInternal() is called inside
+    objectDestroyed(info->address, QString(info->name), obj);
 }
 
 void Endpoint::handlerDestroyed(QObject *obj)
 {
-    const QList<ObjectInfo *> objs = m_handlerMap.values(obj); // copy, the virtual method below likely changes the maps.
+    // copy, the virtual method below likely changes the maps.
+    const QList<ObjectInfo *> objs = m_handlerMap.values(obj);
     m_handlerMap.remove(obj);
     foreach (ObjectInfo *obj, objs) {
         obj->receiver = nullptr;
         obj->messageHandler = QMetaMethod();
-        handlerDestroyed(obj->address, QString(obj->name)); // copy the name, in case unregisterMessageHandlerInternal() is called inside
+        // copy the name, in case unregisterMessageHandlerInternal() is called inside
+        handlerDestroyed(obj->address, QString(obj->name));
     }
 }
 
@@ -335,10 +343,10 @@ QVector< QPair< Protocol::ObjectAddress, QString > > Endpoint::objectAddresses()
 {
     QVector<QPair<Protocol::ObjectAddress, QString> > addrs;
     addrs.reserve(m_addressMap.size());
-    for (QHash<Protocol::ObjectAddress, ObjectInfo *>::const_iterator it =
-             m_addressMap.constBegin();
-         it != m_addressMap.constEnd(); ++it)
+    for (QHash<Protocol::ObjectAddress, ObjectInfo *>::const_iterator it = m_addressMap.constBegin();
+         it != m_addressMap.constEnd(); ++it) {
         addrs.push_back(qMakePair(it.key(), it.value()->name));
+    }
     return addrs;
 }
 
