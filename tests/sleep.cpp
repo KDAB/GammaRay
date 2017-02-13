@@ -28,6 +28,12 @@
 
 #include <QThread>
 
+class QThreadAccessViolator : public QThread
+{
+public:
+    using QThread::sleep; // protected in Qt4
+};
+
 int main(int argc, char *argv[])
 {
     if (argc <= 1) {
@@ -35,7 +41,7 @@ int main(int argc, char *argv[])
     }
 
     unsigned long secs = strtoul(argv[1], NULL, 0);
-    QThread::sleep(secs);
+    QThreadAccessViolator::sleep(secs);
 
     return 0;
 }
