@@ -4,6 +4,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR})
 
 add_subdirectory(shared)
 
+add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
+set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_definitions(modeltestobj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
+target_include_directories(modeltestobj PUBLIC ${QT_INCLUDES})
+
 ### BENCH SUITE
 
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
@@ -150,7 +155,7 @@ endif()
 if(GAMMARAY_BUILD_UI AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   add_executable(remotemodeltest
     remotemodeltest.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    $<TARGET_OBJECTS:modeltestobj>
     ../core/remote/remotemodelserver.cpp
   )
   target_link_libraries(remotemodeltest gammaray_core gammaray_client ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
@@ -193,7 +198,7 @@ if(EXISTS "${QT_INSTALL_TRANSLATIONS}/qtbase_de.qm")
     translatortest.cpp
     ../probe/probecreator.cpp
     ../probe/hooks.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    $<TARGET_OBJECTS:modeltestobj>
   )
   target_link_libraries(translatortest gammaray_core ${QT_QTTEST_LIBRARIES})
   add_test(NAME translatortest COMMAND translatortest)
@@ -211,7 +216,7 @@ if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4 AND GAMMARAY_BUILD_UI) # r
     ${CMAKE_SOURCE_DIR}/plugins/modelinspector/modelinspectorinterface.cpp
     ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
     ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(modelinspectortest gammaray_core gammaray_ui ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 add_test(NAME modelinspectortest COMMAND modelinspectortest)
@@ -224,7 +229,7 @@ add_executable(widgettest
   widgettest.cpp
   ../probe/probecreator.cpp
   ../probe/hooks.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(widgettest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTWIDGETS_LIBRARIES})
 
@@ -287,7 +292,7 @@ add_test(NAME enumpropertytest COMMAND enumpropertytest)
 
 add_executable(propertymodeltest
   propertymodeltest.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+  $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(propertymodeltest gammaray_core ${QT_QTTEST_LIBRARIES} gammaray_shared_test_data)
 add_test(NAME propertymodeltest COMMAND propertymodeltest)
@@ -299,7 +304,7 @@ add_executable(methodmodeltest
   ${CMAKE_SOURCE_DIR}/core/objectmethodmodel.cpp
   ${CMAKE_SOURCE_DIR}/core/qmetaobjectvalidator.cpp
   ${CMAKE_SOURCE_DIR}/ui/tools/objectinspector/clientmethodmodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+  $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(methodmodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 add_test(NAME methodmodeltest COMMAND methodmodeltest)
@@ -318,7 +323,7 @@ if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
   add_executable(metaobjecttreemodeltest
     metaobjecttreemodeltest.cpp
     ${CMAKE_SOURCE_DIR}/ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    $<TARGET_OBJECTS:modeltestobj>
     ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
     ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
   )
@@ -332,7 +337,7 @@ add_executable(metatypemodeltest
   metatypemodeltest.cpp
   ${CMAKE_SOURCE_DIR}/core/tools/metatypebrowser/metatypesmodel.cpp
   ${CMAKE_SOURCE_DIR}/ui/tools/metatypebrowser/metatypesclientmodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+  $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(metatypemodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 add_test(NAME metatypemodeltest COMMAND metatypemodeltest)
@@ -342,7 +347,7 @@ add_test(NAME metatypemodeltest COMMAND metatypemodeltest)
 add_executable(fontdatabasemodeltest
   fontdatabasemodeltest.cpp
   ${CMAKE_SOURCE_DIR}/plugins/fontbrowser/fontdatabasemodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+  $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(fontdatabasemodeltest ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
 add_test(NAME fontdatabasemodeltest COMMAND fontdatabasemodeltest)
@@ -353,7 +358,7 @@ if(NOT OSX_ASAN_WORKAROUND)
 add_executable(codecmodeltest
   codecmodeltest.cpp
   ${CMAKE_SOURCE_DIR}/plugins/codecbrowser/codecmodel.cpp
-  ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+  $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(codecmodeltest ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES})
 add_test(NAME codecmodeltest COMMAND codecmodeltest)
@@ -364,7 +369,7 @@ endif()
 if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
   add_executable(timertoptest
     timertoptest.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    $<TARGET_OBJECTS:modeltestobj>
     ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
     ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
   )
@@ -396,7 +401,7 @@ set(quickinspectortest_srcs
   ../probe/hooks.cpp
   ../plugins/quickinspector/quickinspectorinterface.cpp
   ../plugins/quickinspector/quickitemgeometry.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    $<TARGET_OBJECTS:modeltestobj>
 )
 qt4_add_resources(quickinspectortest_srcs quickinspectortest.qrc)
 add_executable(quickinspectortest ${quickinspectortest_srcs})
@@ -413,7 +418,7 @@ add_executable(toolmanagertest
   ../probe/probecreator.cpp
   ../probe/hooks.cpp
   ../common/toolmanagerinterface.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp
+    $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(toolmanagertest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTWIDGETS_LIBRARIES})
 target_link_libraries(toolmanagertest gammaray_ui)
