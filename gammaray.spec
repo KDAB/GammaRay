@@ -1,5 +1,5 @@
 Name:           gammaray
-Version:        2.6.0
+Version:        2.7.0
 Release:        1
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
@@ -163,6 +163,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/qt5/mkspecs/modules/*
 
 %changelog
+* Tue Feb 14 2017 Allen Winter <allen.winter@kdab.com> 2.7.0
+  2.7.0 final
 * Thu Sep 29 2016 Allen Winter <allen.winter@kdab.com> 2.6.0
   2.6.0 final
 * Wed Jul 27 2016 Allen Winter <allen.winter@kdab.com> 2.5.1
