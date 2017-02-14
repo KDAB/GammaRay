@@ -73,8 +73,6 @@ private:
 };
 
 struct QuickOverlaySettings {
-    QuickOverlaySettings() = default;
-
     bool operator==(const QuickOverlaySettings &other) const {
         return std::tie(boundingRectColor,
                         boundingRectBrush,
@@ -85,7 +83,10 @@ struct QuickOverlaySettings {
                         transformOriginColor,
                         coordinatesColor,
                         marginsColor,
-                        paddingColor) ==
+                        paddingColor,
+                        gridOffset,
+                        gridCellSize,
+                        gridColor) ==
                 std::tie(other.boundingRectColor,
                          other.boundingRectBrush,
                          other.geometryRectColor,
@@ -95,7 +96,10 @@ struct QuickOverlaySettings {
                          other.transformOriginColor,
                          other.coordinatesColor,
                          other.marginsColor,
-                         other.paddingColor);
+                         other.paddingColor,
+                         other.gridOffset,
+                         other.gridCellSize,
+                         other.gridColor);
     }
 
     bool operator!=(const QuickOverlaySettings &other) const {
@@ -112,6 +116,9 @@ struct QuickOverlaySettings {
     QColor coordinatesColor = QColor(136, 136, 136);
     QColor marginsColor = QColor(139, 179, 0);
     QColor paddingColor = QColor(Qt::darkBlue);
+    QPointF gridOffset = QPointF(0, 0);
+    QSizeF gridCellSize = QSizeF(0, 0);
+    QColor gridColor = QColor(Qt::red);
 };
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickOverlaySettings &settings);
@@ -195,6 +202,7 @@ private:
                                           qreal offset, const QString &label, Qt::Alignment align);
     static DrawTextInfo drawVerticalAnchorLabel(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine,
                                         qreal offset, const QString &label, Qt::Alignment align);
+    static void drawGrid(QPainter *p, const RenderInfo &renderInfo);
 
     void setIsGrabbingMode(bool isGrabbingMode);
     void windowAfterRendering();

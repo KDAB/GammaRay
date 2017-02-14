@@ -29,16 +29,20 @@
 #include "quickscenepreviewwidget.h"
 #include "quickinspectorinterface.h"
 #include "quickoverlaylegend.h"
+#include "gridsettingswidget.h"
 
 #include <common/streamoperators.h>
 
 #include <QDebug>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QWidgetAction>
 #include <QAction>
+#include <QMenu>
 #include <QComboBox>
 #include <QLabel>
 #include <QToolBar>
+#include <QToolButton>
 
 #include <cmath>
 
@@ -52,6 +56,7 @@ QT_END_NAMESPACE
 QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspector,
                                                  QWidget *parent)
     : RemoteViewWidget(parent)
+    , m_gridSettingsWidget(new GridSettingsWidget(this))
     , m_legendTool(new QuickOverlayLegend(this))
     , m_inspectorInterface(inspector)
 {
@@ -129,6 +134,17 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
     m_toolBar.serverSideDecorationsEnabled->setToolTip(tr("<b>Target Decorations</b><br>"
                                               "This enable or not the decorations on the target application."));
 
+    QWidgetAction *gridSettingsAction = new QWidgetAction(this);
+    gridSettingsAction->setDefaultWidget(m_gridSettingsWidget);
+
+    m_toolBar.gridSettings = new QMenu(tr("Grid Settings"), this);
+    m_toolBar.gridSettings->setIcon(QIcon(QStringLiteral(
+                                              ":/gammaray/plugins/quickinspector/active-focus.png")));
+    m_toolBar.gridSettings->setToolTip(tr("<b>Grid Settings</b><br>"
+                                              "This popup a small widget to configure the grid settings."));
+    m_toolBar.gridSettings->setToolTipsVisible(true);
+    m_toolBar.gridSettings->addAction(gridSettingsAction);
+
     m_toolBar.toolbarWidget->addActions(m_toolBar.visualizeGroup->actions());
     connect(m_toolBar.visualizeGroup, SIGNAL(triggered(QAction*)), this,
             SLOT(visualizeActionTriggered(QAction*)));
@@ -159,6 +175,13 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
     m_toolBar.toolbarWidget->addSeparator();
     m_toolBar.toolbarWidget->addAction(m_legendTool->visibilityAction());
+    m_toolBar.toolbarWidget->addAction(m_toolBar.gridSettings->menuAction());
+
+    QToolButton *b = qobject_cast<QToolButton *>(m_toolBar.toolbarWidget->widgetForAction(m_toolBar.gridSettings->menuAction()));
+    b->setPopupMode(QToolButton::InstantPopup);
+
+    connect(m_gridSettingsWidget, SIGNAL(offsetChanged(QPoint)), this, SLOT(gridOffsetChanged(QPoint)));
+    connect(m_gridSettingsWidget, SIGNAL(cellSizeChanged(QSize)), this, SLOT(gridCellSizeChanged(QSize)));
 
     setUnavailableText(tr(
                            "No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
@@ -275,6 +298,22 @@ void QuickScenePreviewWidget::serverSideDecorationsTriggered(bool enabled)
     emit stateChanged();
 }
 
+void QuickScenePreviewWidget::gridOffsetChanged(const QPoint &value)
+{
+    m_overlaySettings.gridOffset = value;
+    m_legendTool->setOverlaySettings(m_overlaySettings);
+    update();
+    setOverlaySettings(m_overlaySettings);
+}
+
+void QuickScenePreviewWidget::gridCellSizeChanged(const QSize &value)
+{
+    m_overlaySettings.gridCellSize = value;
+    m_legendTool->setOverlaySettings(m_overlaySettings);
+    update();
+    setOverlaySettings(m_overlaySettings);
+}
+
 void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(
     QuickInspectorInterface::Features supportedCustomRenderModes)
 {
@@ -296,6 +335,7 @@ void QuickScenePreviewWidget::setServerSideDecorationsState(bool enabled)
 void QuickScenePreviewWidget::setOverlaySettingsState(const QuickOverlaySettings &settings)
 {
     m_overlaySettings = settings;
+    m_gridSettingsWidget->setOverlaySettings(settings);
     m_legendTool->setOverlaySettings(settings);
 }
 

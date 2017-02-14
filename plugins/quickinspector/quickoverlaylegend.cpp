@@ -127,7 +127,7 @@ public:
             const Item &item(m_items[index.row()]);
 
             switch (role) {
-            // Return a pixmap so the view will draw it at the given size instead of the icon size
+            // Return a pixmap so the view will draw it at the given size instead of the view icon size
             case Qt::DecorationRole:
                 return item.pixmap;
             case Qt::ForegroundRole:
@@ -187,6 +187,12 @@ public:
                        QBrush(),
                        settings.paddingColor,
                        QT_TR_NOOP("Padding")
+                       );
+
+        m_items << Item(
+                       QBrush(),
+                       settings.gridColor,
+                       QT_TR_NOOP("Grid")
                        );
 
         for (int i = 0; i < m_items.count(); ++i) {
