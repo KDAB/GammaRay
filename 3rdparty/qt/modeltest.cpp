@@ -31,6 +31,11 @@
 #include <QtCore/QtCore>
 #include <QtTest/QtTest>
 
+// NOTE: Patch to make this file compilable with older Qt versions
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
+Q_DECLARE_METATYPE(Qt::Alignment)
+#endif
+
 /*!
     Connect to all of the models signals.  Whenever anything happens recheck everything.
 */
