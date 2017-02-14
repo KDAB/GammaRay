@@ -51,6 +51,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
       quickitemtreewatcher.cpp
       quickscenepreviewwidget.cpp
       quickoverlaylegend.cpp
+      gridsettingswidget.cpp
 
       materialextension/materialextensionclient.cpp
       materialextension/materialtab.cpp
@@ -64,6 +65,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
 
     qt4_wrap_ui(gammaray_quickinspector_ui_srcs
       quickinspectorwidget.ui
+      gridsettingswidget.ui
       materialextension/materialtab.ui
       geometryextension/sggeometrytab.ui
     )

@@ -366,6 +366,9 @@ void QuickOverlay::disconnectTopItemChanges(QQuickItem *item)
 
 void QuickOverlay::drawDecoration(QPainter *painter, const RenderInfo &renderInfo)
 {
+    // Draw the grid if needed
+    drawGrid(painter, renderInfo);
+
     if (!renderInfo.itemGeometry.valid)
         return;
 
@@ -753,6 +756,40 @@ QuickOverlay::DrawTextInfo QuickOverlay::drawVerticalAnchorLabel(QPainter *p, co
     return drawAnchorLabel(p, renderInfo, Qt::Vertical, ownAnchorLine, offset, label, align);
 }
 
+void QuickOverlay::drawGrid(QPainter *p, const QuickOverlay::RenderInfo &renderInfo)
+{
+    const QRectF &viewRect(renderInfo.viewRect);
+    const QPointF &gridOffset(renderInfo.settings.gridOffset);
+    const QSizeF &gridCellSize(renderInfo.settings.gridCellSize);
+
+    if (gridCellSize.isEmpty())
+        return;
+
+    p->save();
+    p->setPen(renderInfo.settings.gridColor);
+
+    QVector<QLineF> lines;
+    lines.reserve((viewRect.width() / gridCellSize.width()) +
+                  (viewRect.height() / gridCellSize.height()));
+
+    for (qreal x = viewRect.left() + gridOffset.x(); x < viewRect.right(); x += gridCellSize.width()) {
+        if (x < viewRect.left())
+            continue;
+        lines << QLineF(QPointF(x, viewRect.top()) * renderInfo.zoom,
+                        QPointF(x, viewRect.bottom()) * renderInfo.zoom);
+    }
+
+    for (qreal y = viewRect.top() + gridOffset.y(); y < viewRect.bottom(); y += gridCellSize.height()) {
+        if (y < viewRect.top())
+            continue;
+        lines << QLineF(QPointF(viewRect.left(), y) * renderInfo.zoom,
+                        QPointF(viewRect.right(), y) * renderInfo.zoom);
+    }
+
+    p->drawLines(lines);
+    p->restore();
+}
+
 QDataStream &GammaRay::operator<<(QDataStream &stream, const GammaRay::QuickOverlaySettings &settings)
 {
     stream
@@ -766,6 +803,9 @@ QDataStream &GammaRay::operator<<(QDataStream &stream, const GammaRay::QuickOver
             << settings.coordinatesColor
             << settings.marginsColor
             << settings.paddingColor
+            << settings.gridOffset
+            << settings.gridCellSize
+            << settings.gridColor
     ;
 
     return stream;
@@ -784,6 +824,9 @@ QDataStream &GammaRay::operator>>(QDataStream &stream, GammaRay::QuickOverlaySet
             >> settings.coordinatesColor
             >> settings.marginsColor
             >> settings.paddingColor
+            >> settings.gridOffset
+            >> settings.gridCellSize
+            >> settings.gridColor
     ;
 
     return stream;

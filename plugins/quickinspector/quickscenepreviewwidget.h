@@ -38,6 +38,7 @@
 QT_BEGIN_NAMESPACE
 class QAction;
 class QActionGroup;
+class QMenu;
 class QComboBox;
 class QLabel;
 class QToolBar;
@@ -45,6 +46,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class QuickInspectorInterface;
+class GridSettingsWidget;
 class QuickOverlayLegend;
 
 class QuickScenePreviewWidget : public RemoteViewWidget
@@ -74,6 +76,8 @@ public:
 private Q_SLOTS:
     void visualizeActionTriggered(QAction* current);
     void serverSideDecorationsTriggered(bool enabled);
+    void gridOffsetChanged(const QPoint &value);
+    void gridCellSizeChanged(const QSize &value);
 
 private:
     void drawDecoration(QPainter *p) override;
@@ -88,9 +92,11 @@ private:
         QAction *visualizeBatches;
         QAction *visualizeChanges;
         QAction *serverSideDecorationsEnabled;
+        QMenu *gridSettings;
     } m_toolBar;
 
     QuickOverlaySettings m_overlaySettings;
+    GridSettingsWidget *m_gridSettingsWidget;
     QuickOverlayLegend *m_legendTool;
 
     QuickInspectorInterface *m_inspectorInterface;
