@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    unsigned long secs = strtoul(argv[1], NULL, 0);
+    unsigned long secs = strtoul(argv[1], NULL, 0); //krazy:exclude=null using a STDC lib function
     QThreadAccessViolator::sleep(secs);
 
     return 0;
