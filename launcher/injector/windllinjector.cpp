@@ -29,6 +29,8 @@
 
 #include "windllinjector.h"
 
+#include <common/paths.h>
+
 #include <QDebug>
 #include <QThread>
 
@@ -89,8 +91,12 @@ QString WinDllInjector::name() const
 }
 
 bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
-                            const QString & /*probeFunc*/, const QProcessEnvironment &env)
+                            const QString & /*probeFunc*/, const QProcessEnvironment &_env)
 {
+    // add location of GammaRay DLLs to PATH, so the probe can find them
+    auto env = _env;
+    env.insert(QStringLiteral("PATH"), env.value(QStringLiteral("PATH")) + QLatin1Char(';') + Paths::binPath());
+
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682425%28v=vs.85%29.aspx
     QByteArray buffer;
     char null[2] = {0, 0};
