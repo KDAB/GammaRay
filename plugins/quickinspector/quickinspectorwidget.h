@@ -46,6 +46,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class QuickScenePreviewWidget;
+struct QuickOverlaySettings;
 
 namespace Ui {
 class QuickInspectorWidget;
@@ -65,6 +66,7 @@ private slots:
     void itemSelectionChanged(const QItemSelection &selection);
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
     void setServerSideDecorations(bool enabled);
+    void setOverlaySettings(const GammaRay::QuickOverlaySettings &settings);
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                               const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);

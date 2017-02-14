@@ -44,23 +44,6 @@ QT_END_NAMESPACE
 
 using namespace GammaRay;
 
-const QColor QuickOverlay::BoundingRectColor(232, 87, 82, 170);
-const QBrush QuickOverlay::BoundingRectBrush(QColor(232, 87, 82, 95));
-
-const QColor QuickOverlay::GeometryRectColor(Qt::gray);
-const QBrush QuickOverlay::GeometryRectBrush(QColor(Qt::gray), Qt::BDiagPattern);
-
-const QColor QuickOverlay::ChildrenRectColor(0, 99, 193, 170);
-const QBrush QuickOverlay::ChildrenRectBrush(QColor(0, 99, 193, 95));
-
-const QColor QuickOverlay::TransformOriginColor(156, 15, 86, 170);
-
-const QColor QuickOverlay::CoordinatesColor(136, 136, 136);
-
-const QColor QuickOverlay::MarginsColor(139, 179, 0);
-
-const QColor QuickOverlay::PaddingColor(Qt::darkBlue);
-
 static QQuickItem *toplevelItem(QQuickItem *item)
 {
     Q_ASSERT(item);
@@ -141,8 +124,8 @@ bool ItemOrLayoutFacade::isLayout() const
 QuickOverlay::QuickOverlay()
     : m_window(nullptr)
     , m_currentToplevelItem(nullptr)
-  , m_isGrabbingMode(false)
-  , m_drawDecorations(true)
+    , m_isGrabbingMode(false)
+    , m_drawDecorations(true)
 {
 }
 
@@ -169,6 +152,19 @@ void QuickOverlay::setWindow(QQuickWindow *window)
         connect(m_window, &QQuickWindow::afterRendering,
                 this, &QuickOverlay::windowAfterRendering, Qt::DirectConnection);
     }
+}
+
+QuickOverlaySettings QuickOverlay::settings() const
+{
+    return m_settings;
+}
+
+void QuickOverlay::setSettings(const QuickOverlaySettings &settings)
+{
+    if (m_settings == settings)
+        return;
+    m_settings = settings;
+    updateOverlay();
 }
 
 void QuickOverlay::placeOn(ItemOrLayoutFacade item)
@@ -284,7 +280,7 @@ void QuickOverlay::drawDecorations(const QSize &size, qreal dpr)
     QOpenGLPaintDevice device(size * dpr);
     device.setDevicePixelRatio(dpr);
     QPainter painter(&device);
-    drawDecoration(&painter, RenderInfo(m_effectiveGeometry, QRectF(QPointF(), size), 1.0));
+    drawDecoration(&painter, RenderInfo(m_settings, m_effectiveGeometry, QRectF(QPointF(), size), 1.0));
 }
 
 void QuickOverlay::updateOverlay()
@@ -380,14 +376,14 @@ void QuickOverlay::drawDecoration(QPainter *painter, const RenderInfo &renderInf
     painter->save();
 
     // bounding box
-    painter->setPen(BoundingRectColor);
-    painter->setBrush(BoundingRectBrush);
+    painter->setPen(renderInfo.settings.boundingRectColor);
+    painter->setBrush(renderInfo.settings.boundingRectBrush);
     painter->drawRect(itemGeometry.boundingRect);
 
     // original geometry
     if (itemGeometry.itemRect != itemGeometry.boundingRect) {
-        painter->setPen(GeometryRectColor);
-        painter->setBrush(GeometryRectBrush);
+        painter->setPen(renderInfo.settings.geometryRectColor);
+        painter->setBrush(renderInfo.settings.geometryRectBrush);
         painter->drawRect(itemGeometry.itemRect);
     }
 
@@ -396,37 +392,37 @@ void QuickOverlay::drawDecoration(QPainter *painter, const RenderInfo &renderInf
         itemGeometry.transform.isIdentity()) {
         // If this item is transformed the children rect will be painted wrongly,
         // so for now skip painting it.
-        painter->setPen(ChildrenRectColor);
-        painter->setBrush(ChildrenRectBrush);
+        painter->setPen(renderInfo.settings.childrenRectColor);
+        painter->setBrush(renderInfo.settings.childrenRectBrush);
         painter->drawRect(itemGeometry.childrenRect);
     }
 
     // transform origin
     if (itemGeometry.itemRect != itemGeometry.boundingRect) {
-        painter->setPen(TransformOriginColor);
+        painter->setPen(renderInfo.settings.transformOriginColor);
         painter->drawEllipse(itemGeometry.transformOriginPoint, 2.5, 2.5);
         painter->drawLine(itemGeometry.transformOriginPoint - QPointF(0, 6),
-                    itemGeometry.transformOriginPoint + QPointF(0, 6));
+                          itemGeometry.transformOriginPoint + QPointF(0, 6));
         painter->drawLine(itemGeometry.transformOriginPoint - QPointF(6, 0),
-                    itemGeometry.transformOriginPoint + QPointF(6, 0));
+                          itemGeometry.transformOriginPoint + QPointF(6, 0));
     }
 
     // x and y values
-    painter->setPen(CoordinatesColor);
+    painter->setPen(renderInfo.settings.coordinatesColor);
     if (!itemGeometry.left &&
         !itemGeometry.horizontalCenter &&
         !itemGeometry.right &&
         itemGeometry.x != 0) {
         QPointF parentEnd = (QPointF(itemGeometry.itemRect.x() - itemGeometry.x,
-                       itemGeometry.itemRect.y()));
+                           itemGeometry.itemRect.y()));
         QPointF itemEnd = itemGeometry.itemRect.topLeft();
         drawArrow(painter, parentEnd, itemEnd);
         texts << DrawTextInfo(
-                 painter->pen(),
-                 QRectF(parentEnd.x(), parentEnd.y() + 10, itemEnd.x() - parentEnd.x(), 50),
-                 QStringLiteral("x: %1px").arg(itemGeometry.x / zoom),
-                 Qt::AlignHCenter | Qt::TextDontClip
-        );
+                     painter->pen(),
+                     QRectF(parentEnd.x(), parentEnd.y() + 10, itemEnd.x() - parentEnd.x(), 50),
+                     QStringLiteral("x: %1px").arg(itemGeometry.x / zoom),
+                     Qt::AlignHCenter | Qt::TextDontClip
+                     );
     }
     if (!itemGeometry.top &&
         !itemGeometry.verticalCenter &&
@@ -434,19 +430,19 @@ void QuickOverlay::drawDecoration(QPainter *painter, const RenderInfo &renderInf
         !itemGeometry.baseline &&
         itemGeometry.y != 0) {
         QPointF parentEnd = (QPointF(itemGeometry.itemRect.x(),
-                       itemGeometry.itemRect.y() - itemGeometry.y));
+                           itemGeometry.itemRect.y() - itemGeometry.y));
         QPointF itemEnd = itemGeometry.itemRect.topLeft();
         drawArrow(painter, parentEnd, itemEnd);
         texts << DrawTextInfo(
-                 painter->pen(),
-                 QRectF(parentEnd.x() + 10, parentEnd.y(), 100, itemEnd.y() - parentEnd.y()),
-                 QStringLiteral("y: %1px").arg(itemGeometry.y / zoom),
-                 Qt::AlignVCenter | Qt::TextDontClip
-        );
+                     painter->pen(),
+                     QRectF(parentEnd.x() + 10, parentEnd.y(), 100, itemEnd.y() - parentEnd.y()),
+                     QStringLiteral("y: %1px").arg(itemGeometry.y / zoom),
+                     Qt::AlignVCenter | Qt::TextDontClip
+                     );
     }
 
     // anchors
-    painter->setPen(MarginsColor);
+    painter->setPen(renderInfo.settings.marginsColor);
 
     if (itemGeometry.left) {
         drawHorizontalAnchor(painter, renderInfo, itemGeometry.itemRect.left(),
@@ -510,13 +506,13 @@ void QuickOverlay::drawDecoration(QPainter *painter, const RenderInfo &renderInf
         drawVerticalAnchor(painter, renderInfo, itemGeometry.itemRect.top(),
                            itemGeometry.baselineOffset);
         texts << drawVerticalAnchorLabel(painter, renderInfo,
-                           itemGeometry.itemRect.top(), itemGeometry.baselineOffset,
+                                         itemGeometry.itemRect.top(), itemGeometry.baselineOffset,
                            QStringLiteral("offset: %1px").arg(itemGeometry.baselineOffset / zoom),
                            Qt::AlignVCenter | Qt::AlignLeft);
     }
 
     // padding
-    painter->setPen(PaddingColor);
+    painter->setPen(renderInfo.settings.paddingColor);
 
     if (!qIsNaN(itemGeometry.leftPadding)) {
         drawHorizontalAnchor(painter, renderInfo, itemGeometry.itemRect.left(),
@@ -627,8 +623,8 @@ void QuickOverlay::drawAnchor(QPainter *p, const RenderInfo &renderInfo,
                     itemGeometry.itemRect.bottom());
     else
         p->drawLine(
-            itemGeometry.itemRect.left(), ownAnchorLine,
-            itemGeometry.itemRect.right(), ownAnchorLine);
+                    itemGeometry.itemRect.left(), ownAnchorLine,
+                    itemGeometry.itemRect.right(), ownAnchorLine);
 
     // Foreign Anchor line
     pen.setStyle(Qt::DotLine);
@@ -709,8 +705,8 @@ QuickOverlay::DrawTextInfo QuickOverlay::drawAnchorLabel(QPainter *p, const Quic
 
             return {
                 p->pen(),
-                rect,
-                label
+                        rect,
+                        label
             };
         } else {
             QRectF rect(p->fontMetrics().boundingRect(label));
@@ -736,8 +732,8 @@ QuickOverlay::DrawTextInfo QuickOverlay::drawAnchorLabel(QPainter *p, const Quic
 
             return {
                 p->pen(),
-                rect,
-                label
+                        rect,
+                        label
             };
         }
     }
@@ -755,4 +751,40 @@ QuickOverlay::DrawTextInfo QuickOverlay::drawVerticalAnchorLabel(QPainter *p, co
                                             qreal ownAnchorLine, qreal offset, const QString &label, Qt::Alignment align)
 {
     return drawAnchorLabel(p, renderInfo, Qt::Vertical, ownAnchorLine, offset, label, align);
+}
+
+QDataStream &GammaRay::operator<<(QDataStream &stream, const GammaRay::QuickOverlaySettings &settings)
+{
+    stream
+            << settings.boundingRectColor
+            << settings.boundingRectBrush
+            << settings.geometryRectColor
+            << settings.geometryRectBrush
+            << settings.childrenRectColor
+            << settings.childrenRectBrush
+            << settings.transformOriginColor
+            << settings.coordinatesColor
+            << settings.marginsColor
+            << settings.paddingColor
+    ;
+
+    return stream;
+}
+
+QDataStream &GammaRay::operator>>(QDataStream &stream, GammaRay::QuickOverlaySettings &settings)
+{
+    stream
+            >> settings.boundingRectColor
+            >> settings.boundingRectBrush
+            >> settings.geometryRectColor
+            >> settings.geometryRectBrush
+            >> settings.childrenRectColor
+            >> settings.childrenRectBrush
+            >> settings.transformOriginColor
+            >> settings.coordinatesColor
+            >> settings.marginsColor
+            >> settings.paddingColor
+    ;
+
+    return stream;
 }

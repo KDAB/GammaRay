@@ -109,51 +109,6 @@ public:
     LegendModel(QObject *parent = nullptr)
         : QAbstractListModel(parent)
     {
-        m_items << Item(
-                       QuickOverlay::BoundingRectBrush,
-                       QuickOverlay::BoundingRectColor,
-                       QT_TR_NOOP("Bounding rect")
-                       );
-
-        m_items << Item(
-                       QuickOverlay::GeometryRectBrush,
-                       QuickOverlay::GeometryRectColor,
-                       QT_TR_NOOP("Geometry rect")
-                       );
-
-        m_items << Item(
-                       QuickOverlay::ChildrenRectBrush,
-                       QuickOverlay::ChildrenRectColor,
-                       QT_TR_NOOP("Children rect")
-                       );
-
-        m_items << Item(
-                       QBrush(),
-                       QuickOverlay::TransformOriginColor,
-                       QT_TR_NOOP("Transform origin")
-                       );
-
-        m_items << Item(
-                       QBrush(),
-                       QuickOverlay::CoordinatesColor,
-                       QT_TR_NOOP("Coordinates (x, y...)")
-                       );
-
-        m_items << Item(
-                       QBrush(),
-                       QuickOverlay::MarginsColor,
-                       QT_TR_NOOP("Margins")
-                       );
-
-        m_items << Item(
-                       QBrush(),
-                       QuickOverlay::PaddingColor,
-                       QT_TR_NOOP("Padding")
-                       );
-
-        for (int i = 0; i < m_items.count(); ++i) {
-            Item::createPixmap(m_items[i]);
-        }
     }
 
     Qt::ItemFlags flags(const QModelIndex &index) const override
@@ -187,20 +142,72 @@ public:
         return QVariant();
     }
 
+    void setSettings(const QuickOverlaySettings &settings)
+    {
+        beginResetModel();
+        m_items.clear();
+
+        m_items << Item(
+                       settings.boundingRectBrush,
+                       settings.boundingRectColor,
+                       QT_TR_NOOP("Bounding rect")
+                       );
+
+        m_items << Item(
+                       settings.geometryRectBrush,
+                       settings.geometryRectColor,
+                       QT_TR_NOOP("Geometry rect")
+                       );
+
+        m_items << Item(
+                       settings.childrenRectBrush,
+                       settings.childrenRectColor,
+                       QT_TR_NOOP("Children rect")
+                       );
+
+        m_items << Item(
+                       QBrush(),
+                       settings.transformOriginColor,
+                       QT_TR_NOOP("Transform origin")
+                       );
+
+        m_items << Item(
+                       QBrush(),
+                       settings.coordinatesColor,
+                       QT_TR_NOOP("Coordinates (x, y...)")
+                       );
+
+        m_items << Item(
+                       QBrush(),
+                       settings.marginsColor,
+                       QT_TR_NOOP("Margins")
+                       );
+
+        m_items << Item(
+                       QBrush(),
+                       settings.paddingColor,
+                       QT_TR_NOOP("Padding")
+                       );
+
+        for (int i = 0; i < m_items.count(); ++i) {
+            Item::createPixmap(m_items[i]);
+        }
+        endResetModel();
+    }
+
 private:
     QVector<Item> m_items;
 };
 
 QuickOverlayLegend::QuickOverlayLegend(QWidget *parent)
     : QWidget(parent, Qt::Tool)
+    , m_model(new LegendModel(this))
 {
     setWindowTitle(tr("Legend"));
 
-    LegendModel *model = new LegendModel(this);
-
     QListView *view = new QListView(this);
     view->setUniformItemSizes(true);
-    view->setModel(model);
+    view->setModel(m_model);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(view);
@@ -214,16 +221,21 @@ QuickOverlayLegend::QuickOverlayLegend(QWidget *parent)
     connect(m_visibilityAction, &QAction::triggered, this, [this](bool toggled) {
         setVisible(toggled);
     });
-
-    const int titleBarHeight = style()->pixelMetric(QStyle::PM_TitleBarHeight);
-    const QMargins margins(layout->contentsMargins());
-    const int viewHeight = model->index(0, 0).data(Qt::SizeHintRole).toSize().height() * model->rowCount();
-    resize(280, titleBarHeight + margins.top() + margins.bottom() + viewHeight);
 }
 
 QAction *QuickOverlayLegend::visibilityAction() const
 {
     return m_visibilityAction;
+}
+
+void QuickOverlayLegend::setOverlaySettings(const QuickOverlaySettings &settings)
+{
+    m_model->setSettings(settings);
+
+    const int titleBarHeight = style()->pixelMetric(QStyle::PM_TitleBarHeight);
+    const QMargins margins(layout()->contentsMargins());
+    const int viewHeight = m_model->index(0, 0).data(Qt::SizeHintRole).toSize().height() * m_model->rowCount();
+    resize(280, titleBarHeight + margins.top() + margins.bottom() + viewHeight);
 }
 
 void QuickOverlayLegend::showEvent(QShowEvent *event)

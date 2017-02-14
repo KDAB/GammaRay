@@ -130,12 +130,14 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
             this, SLOT(setFeatures(GammaRay::QuickInspectorInterface::Features)));
 
     connect(m_interface, SIGNAL(serverSideDecorations(bool)), this, SLOT(setServerSideDecorations(bool)));
+    connect(m_interface, SIGNAL(overlaySettings(GammaRay::QuickOverlaySettings)), this, SLOT(setOverlaySettings(GammaRay::QuickOverlaySettings)));
 
     connect(ui->itemTreeView, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(itemContextMenu(QPoint)));
 
     m_interface->checkFeatures();
     m_interface->checkServerSideDecorations();
+    m_interface->checkOverlaySettings();
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
@@ -169,6 +171,11 @@ void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features feature
 void QuickInspectorWidget::setServerSideDecorations(bool enabled)
 {
     m_previewWidget->setServerSideDecorationsState(enabled);
+}
+
+void QuickInspectorWidget::setOverlaySettings(const GammaRay::QuickOverlaySettings &settings)
+{
+    m_previewWidget->setOverlaySettingsState(settings);
 }
 
 void QuickInspectorWidget::itemSelectionChanged(const QItemSelection &selection)

@@ -28,6 +28,7 @@
 
 #include "quickinspectorinterface.h"
 #include "quickitemmodelroles.h"
+#include "quickoverlay.h"
 
 #include <common/objectbroker.h>
 
@@ -69,6 +70,7 @@ QuickInspectorInterface::QuickInspectorInterface(QObject *parent)
     qRegisterMetaTypeStreamOperators<Features>();
     qRegisterMetaTypeStreamOperators<RenderMode>();
     qRegisterMetaTypeStreamOperators<QuickItemGeometry>();
+    qRegisterMetaTypeStreamOperators<QuickOverlaySettings>();
 }
 
 QuickInspectorInterface::~QuickInspectorInterface()

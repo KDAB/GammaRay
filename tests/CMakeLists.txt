@@ -406,6 +406,7 @@ set(quickinspectortest_srcs
   ../probe/hooks.cpp
   ../plugins/quickinspector/quickinspectorinterface.cpp
   ../plugins/quickinspector/quickitemgeometry.cpp
+  ../plugins/quickinspector/quickoverlay.cpp
     $<TARGET_OBJECTS:modeltestobj>
 )
 qt4_add_resources(quickinspectortest_srcs quickinspectortest.qrc)
