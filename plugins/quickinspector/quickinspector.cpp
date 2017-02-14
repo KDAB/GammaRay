@@ -539,6 +539,16 @@ void QuickInspector::checkServerSideDecorations()
     emit serverSideDecorations(m_overlay->drawDecorations());
 }
 
+void QuickInspector::setOverlaySettings(const GammaRay::QuickOverlaySettings &settings)
+{
+    m_overlay->setSettings(settings);
+}
+
+void QuickInspector::checkOverlaySettings()
+{
+    emit overlaySettings(m_overlay->settings());
+}
+
 void QuickInspector::itemSelectionChanged(const QItemSelection &selection)
 {
     const QModelIndex index = selection.value(0).topLeft();

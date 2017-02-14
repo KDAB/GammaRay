@@ -29,7 +29,6 @@
 #include "quickscenepreviewwidget.h"
 #include "quickinspectorinterface.h"
 #include "quickoverlaylegend.h"
-#include "quickoverlay.h"
 
 #include <common/streamoperators.h>
 
@@ -246,7 +245,7 @@ void QuickScenePreviewWidget::drawDecoration(QPainter *p)
     // scaled and translated
     auto itemGeometry = frame().data().value<QuickItemGeometry>();
     itemGeometry.scaleTo(zoom());
-    QuickOverlay::drawDecoration(p, QuickOverlay::RenderInfo(itemGeometry, frame().viewRect(), zoom()));
+    QuickOverlay::drawDecoration(p, QuickOverlay::RenderInfo(m_overlaySettings, itemGeometry, frame().viewRect(), zoom()));
 }
 
 void QuickScenePreviewWidget::visualizeActionTriggered(QAction *current)
@@ -292,6 +291,12 @@ void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(
 void QuickScenePreviewWidget::setServerSideDecorationsState(bool enabled)
 {
     m_toolBar.serverSideDecorationsEnabled->setChecked(enabled);
+}
+
+void QuickScenePreviewWidget::setOverlaySettingsState(const QuickOverlaySettings &settings)
+{
+    m_overlaySettings = settings;
+    m_legendTool->setOverlaySettings(settings);
 }
 
 QuickInspectorInterface::RenderMode QuickScenePreviewWidget::customRenderMode() const
@@ -341,6 +346,17 @@ void QuickScenePreviewWidget::setCustomRenderMode(QuickInspectorInterface::Rende
     }
 
     visualizeActionTriggered(currentAction ? currentAction : m_toolBar.visualizeBatches);
+}
+
+QuickOverlaySettings QuickScenePreviewWidget::overlaySettings() const
+{
+    return m_overlaySettings;
+}
+
+void QuickScenePreviewWidget::setOverlaySettings(const QuickOverlaySettings &settings)
+{
+    m_inspectorInterface->setOverlaySettings(settings);
+    emit stateChanged();
 }
 
 bool QuickScenePreviewWidget::serverSideDecorationsEnabled() const

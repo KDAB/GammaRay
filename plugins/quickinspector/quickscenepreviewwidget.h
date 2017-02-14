@@ -31,6 +31,7 @@
 
 #include "quickitemgeometry.h"
 #include "quickinspectorinterface.h"
+#include "quickoverlay.h"
 
 #include <ui/remoteviewwidget.h>
 
@@ -59,9 +60,13 @@ public:
 
     void setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes);
     void setServerSideDecorationsState(bool enabled);
+    void setOverlaySettingsState(const QuickOverlaySettings &settings);
 
     QuickInspectorInterface::RenderMode customRenderMode() const;
     void setCustomRenderMode(QuickInspectorInterface::RenderMode customRenderMode);
+
+    QuickOverlaySettings overlaySettings() const;
+    void setOverlaySettings(const QuickOverlaySettings &settings);
 
     bool serverSideDecorationsEnabled() const;
     void setServerSideDecorationsEnabled(bool enabled);
@@ -85,6 +90,7 @@ private:
         QAction *serverSideDecorationsEnabled;
     } m_toolBar;
 
+    QuickOverlaySettings m_overlaySettings;
     QuickOverlayLegend *m_legendTool;
 
     QuickInspectorInterface *m_inspectorInterface;

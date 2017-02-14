@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_QUICKOVERLAY_H
 #define GAMMARAY_QUICKINSPECTOR_QUICKOVERLAY_H
 
+#include <tuple>
+
 #include <QObject>
 #include <QPen>
 
@@ -70,6 +72,51 @@ private:
     QQuickItem *m_object;
 };
 
+struct QuickOverlaySettings {
+    QuickOverlaySettings() = default;
+
+    bool operator==(const QuickOverlaySettings &other) const {
+        return std::tie(boundingRectColor,
+                        boundingRectBrush,
+                        geometryRectColor,
+                        geometryRectBrush,
+                        childrenRectColor,
+                        childrenRectBrush,
+                        transformOriginColor,
+                        coordinatesColor,
+                        marginsColor,
+                        paddingColor) ==
+                std::tie(other.boundingRectColor,
+                         other.boundingRectBrush,
+                         other.geometryRectColor,
+                         other.geometryRectBrush,
+                         other.childrenRectColor,
+                         other.childrenRectBrush,
+                         other.transformOriginColor,
+                         other.coordinatesColor,
+                         other.marginsColor,
+                         other.paddingColor);
+    }
+
+    bool operator!=(const QuickOverlaySettings &other) const {
+        return !operator==(other);
+    }
+
+    QColor boundingRectColor = QColor(232, 87, 82, 170);
+    QBrush boundingRectBrush = QBrush(QColor(232, 87, 82, 95));
+    QColor geometryRectColor = QColor(Qt::gray);
+    QBrush geometryRectBrush = QBrush(QColor(Qt::gray), Qt::BDiagPattern);
+    QColor childrenRectColor = QColor(0, 99, 193, 170);
+    QBrush childrenRectBrush = QBrush(QColor(0, 99, 193, 95));
+    QColor transformOriginColor = QColor(156, 15, 86, 170);
+    QColor coordinatesColor = QColor(136, 136, 136);
+    QColor marginsColor = QColor(139, 179, 0);
+    QColor paddingColor = QColor(Qt::darkBlue);
+};
+
+QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickOverlaySettings &settings);
+QDataStream &operator>>(QDataStream &stream, GammaRay::QuickOverlaySettings &settings);
+
 class QuickOverlay : public QObject
 {
     Q_OBJECT
@@ -78,14 +125,17 @@ public:
     QuickOverlay();
 
     struct RenderInfo {
-        RenderInfo(const QuickItemGeometry &itemGeometry = QuickItemGeometry(),
-                   const QRectF &viewRect = QRectF(),
+        RenderInfo(const QuickOverlaySettings &settings = {},
+                   const QuickItemGeometry &itemGeometry = {},
+                   const QRectF &viewRect = {},
                    qreal zoom = 1.0)
-            : itemGeometry(itemGeometry)
+            : settings(settings)
+            , itemGeometry(itemGeometry)
             , viewRect(viewRect)
             , zoom(zoom)
         { }
 
+        const QuickOverlaySettings settings;
         const QuickItemGeometry itemGeometry;
         const QRectF viewRect;
         const qreal zoom;
@@ -93,6 +143,9 @@ public:
 
     QQuickWindow *window() const;
     void setWindow(QQuickWindow *window);
+
+    QuickOverlaySettings settings() const;
+    void setSettings(const QuickOverlaySettings &settings);
 
     /**
      * Place the overlay on @p item
@@ -105,23 +158,6 @@ public:
     void setDrawDecorations(bool enabled);
 
     static void drawDecoration(QPainter *painter, const RenderInfo &renderInfo);
-
-    static const QColor BoundingRectColor;
-    static const QBrush BoundingRectBrush;
-
-    static const QColor GeometryRectColor;
-    static const QBrush GeometryRectBrush;
-
-    static const QColor ChildrenRectColor;
-    static const QBrush ChildrenRectBrush;
-
-    static const QColor TransformOriginColor;
-
-    static const QColor CoordinatesColor;
-
-    static const QColor MarginsColor;
-
-    static const QColor PaddingColor;
 
 public slots:
     void requestGrabWindow();
@@ -175,9 +211,12 @@ private:
     QQuickItem *m_currentToplevelItem;
     ItemOrLayoutFacade m_currentItem;
     QuickItemGeometry m_effectiveGeometry;
+    QuickOverlaySettings m_settings;
     bool m_isGrabbingMode;
     bool m_drawDecorations;
 };
 }
+
+Q_DECLARE_METATYPE(GammaRay::QuickOverlaySettings)
 
 #endif

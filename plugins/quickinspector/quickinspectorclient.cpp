@@ -27,6 +27,8 @@
 */
 
 #include "quickinspectorclient.h"
+#include "quickoverlay.h"
+
 #include <common/endpoint.h>
 
 #include <QEvent>
@@ -72,4 +74,17 @@ void GammaRay::QuickInspectorClient::setServerSideDecorationsEnabled(bool enable
 void QuickInspectorClient::checkServerSideDecorations()
 {
     Endpoint::instance()->invokeObject(objectName(), "checkServerSideDecorations");
+}
+
+void QuickInspectorClient::setOverlaySettings(const GammaRay::QuickOverlaySettings &settings)
+{
+    Endpoint::instance()->invokeObject(objectName(),
+                                       "setOverlaySettings",
+                                       QVariantList()
+                                       << QVariant::fromValue(settings));
+}
+
+void QuickInspectorClient::checkOverlaySettings()
+{
+    Endpoint::instance()->invokeObject(objectName(), "checkOverlaySettings");
 }

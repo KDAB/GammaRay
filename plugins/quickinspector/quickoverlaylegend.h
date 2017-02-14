@@ -36,18 +36,23 @@ class QAction;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+struct QuickOverlaySettings;
+class LegendModel;
 
 class QuickOverlayLegend : public QWidget
 {
     Q_OBJECT
 public:
     explicit QuickOverlayLegend(QWidget *parent = nullptr);
+
     QAction *visibilityAction() const;
+    void setOverlaySettings(const QuickOverlaySettings &settings);
 
     void showEvent(QShowEvent *event) override;
     void hideEvent(QHideEvent *event) override;
 
 private:
+    LegendModel *m_model;
     QAction *m_visibilityAction;
 };
 
