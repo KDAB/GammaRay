@@ -357,7 +357,8 @@ void Probe::resendServerAddress()
 {
     Q_ASSERT(isInitialized());
     Q_ASSERT(m_server);
-    Q_ASSERT(m_server->isListening());
+    if (!m_server->isListening()) // already connected
+        return;
     ProbeSettings::receiveSettings();
     ProbeSettings::sendServerAddress(m_server->externalAddress());
 }
