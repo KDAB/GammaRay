@@ -26,6 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
+
 #include <launcher/launcher.h>
 #include <launcher/launchoptions.h>
 #include <common/paths.h>
@@ -53,6 +55,7 @@ private slots:
         // this will effectively disable injection, so we will just launch the process
         options.setProbePath(QCoreApplication::applicationDirPath());
         options.setInjectorType(QStringLiteral("style"));
+        options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
 
         Launcher launcher(options);
         QSignalSpy startSpy(&launcher, SIGNAL(started()));

@@ -26,6 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
+
 #include <core/metaobjecttreemodel.h>
 #include <ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.h>
 
@@ -50,6 +52,7 @@ signals:
 private:
     void createProbe()
     {
+        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Hooks::installHooks();
         Probe::startupHookReceived();
         new ProbeCreator(ProbeCreator::Create);

@@ -75,12 +75,12 @@ endif()
 
 foreach(injectorType ${INJECTOR_TYPES})
   add_test(connectiontest-${injectorType}
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i ${injectorType}
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess --listen tcp://127.0.0.1 -unittest -i ${injectorType}
     ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
   )
   if(RUN_FILTER_TESTS)
     add_test(connectiontest-${injectorType}-filter
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i ${injectorType}
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest --listen tcp://127.0.0.1 -filtertest -i ${injectorType}
       ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
     )
   endif()

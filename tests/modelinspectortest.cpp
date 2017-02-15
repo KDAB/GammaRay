@@ -26,6 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
+
 #include <plugins/modelinspector/modelinspectorinterface.h>
 #include <plugins/modelinspector/modelcontentproxymodel.h>
 
@@ -57,6 +59,7 @@ class ModelInspectorTest : public QObject
 private:
     void createProbe()
     {
+        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Hooks::installHooks();
         Probe::startupHookReceived();
         new ProbeCreator(ProbeCreator::Create);

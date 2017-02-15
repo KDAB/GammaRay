@@ -91,6 +91,7 @@ private slots:
         options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
         options.setLaunchArguments(QStringList() << QLatin1String(TESTBIN_DIR "/minimalcoreapplication"));
         options.setInjectorType(injectorType);
+        options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
 
         QSignalSpy startSpy(&launcher, SIGNAL(started()));
@@ -117,6 +118,7 @@ private slots:
         options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
         options.setLaunchArguments(QStringList() << QLatin1String(TESTBIN_DIR "/minimalwidgetapplication"));
         options.setInjectorType(QStringLiteral("style"));
+        options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
 
         QSignalSpy startSpy(&launcher, SIGNAL(started()));
