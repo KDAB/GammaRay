@@ -56,6 +56,14 @@ class BenchSuite;
 class Server;
 class ToolManager;
 
+/**
+ * @brief Central entity of GammaRay: The probe is tracking the Qt application under test
+ *
+ * NOTE: The Probe lifetime is strongly coupled with the QCoreApplication lifetime, if there's
+ * no QCoreApplication instance, then there's no probe.
+ *
+ * To get a hold of the probe, call Probe::instance()
+ */
 class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 {
     Q_OBJECT
@@ -64,6 +72,8 @@ public:
 
     /**
      * NOTE: You must hold the object lock when operating on the instance!
+     *
+     * @sa objectLock()
      */
     static Probe *instance();
 
@@ -157,6 +167,8 @@ protected:
 
 private slots:
     void delayedInit();
+    void shutdown();
+
     void processQueuedObjectChanges();
     void handleObjectDestroyed(QObject *obj);
     void objectParentChanged();

@@ -208,6 +208,18 @@ endif()
 
 endif()
 
+### Integration test
+
+add_executable(integrationtest
+  integrationtest.cpp
+  ../probe/probecreator.cpp
+  ../probe/hooks.cpp
+    $<TARGET_OBJECTS:modeltestobj>
+)
+target_link_libraries(integrationtest gammaray_core ${QT_QTTEST_LIBRARIES})
+
+add_test(NAME integrationtest COMMAND integrationtest)
+
 ### Model inspector test
 
 if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4 AND GAMMARAY_BUILD_UI) # requires QHooks
