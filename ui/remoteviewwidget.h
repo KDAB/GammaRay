@@ -193,7 +193,6 @@ private slots:
     void pickElementId(const QModelIndex &index);
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
     void frameUpdated(const GammaRay::RemoteViewFrame &frame);
-    void clearFrameData();
 
 private:
     RemoteViewFrame m_frame;

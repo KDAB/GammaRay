@@ -541,13 +541,7 @@ void QuickInspector::checkServerSideDecorations()
 
 void QuickInspector::itemSelectionChanged(const QItemSelection &selection)
 {
-    if (selection.isEmpty()) {
-        m_overlay->placeOn(ItemOrLayoutFacade());
-        m_remoteView->clearFrameData();
-        return;
-    }
-
-    const QModelIndex index = selection.first().topLeft();
+    const QModelIndex index = selection.value(0).topLeft();
     m_currentItem = index.data(ObjectModel::ObjectRole).value<QQuickItem *>();
     m_itemPropertyController->setObject(m_currentItem);
 

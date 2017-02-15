@@ -61,9 +61,6 @@ public:
     /// resets the client view if the window selection changed
     void resetView();
 
-    /// clear the client current frame data
-    void clearFrameData();
-
     /// returns @c true if there is a client displaying our content
     bool isActive() const;
 

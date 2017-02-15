@@ -81,7 +81,6 @@ signals:
     void reset();
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
     void frameUpdated(const GammaRay::RemoteViewFrame &frame);
-    void requestClearFrameData();
 
 private:
     QString m_name;
