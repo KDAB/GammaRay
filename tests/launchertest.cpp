@@ -75,15 +75,22 @@ private slots:
     void testLauncher_data()
     {
         QTest::addColumn<QString>("injectorType");
+        QTest::newRow("dummy") << QString(); // workaround for QTestlib asserting on empty test data sets
+#if !defined(Q_OS_MAC) || QT_VERSION >= QT_VERSION_CHECK(5, 1, 0) // Requires at least Q_COREAPP_STARTUP_FUNCTION to work on macOS
         if (hasInjector("preload"))
             QTest::newRow("preload") << QStringLiteral("preload");
+#endif
+#if !defined(Q_OS_WIN) || QT_VERSION >= QT_VERSION_CHECK(5, 1, 0) // Requires at least Q_COREAPP_STARTUP_FUNCTION to work on Windows
         if (hasInjector("windll"))
             QTest::newRow("windll") << QStringLiteral("windll");
+#endif
     }
 
     void testLauncher()
     {
         QFETCH(QString, injectorType);
+        if (injectorType.isEmpty())
+            return;
 
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
