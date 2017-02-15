@@ -282,9 +282,6 @@ QObject *Probe::window() const
 
 Probe *GammaRay::Probe::instance()
 {
-    if (!qApp)
-        return nullptr;
-
 #if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
     return s_instance;
 #else
@@ -294,7 +291,7 @@ Probe *GammaRay::Probe::instance()
 
 bool Probe::isInitialized()
 {
-    return instance() && qApp;
+    return instance();
 }
 
 bool Probe::canShowWidgets()
@@ -309,6 +306,7 @@ bool Probe::canShowWidgets()
 
 void Probe::createProbe(bool findExisting)
 {
+    Q_ASSERT(qApp);
     Q_ASSERT(!isInitialized());
 
     // first create the probe and its children
@@ -325,7 +323,11 @@ void Probe::createProbe(bool findExisting)
     IF_DEBUG(cout << "done setting up new probe instance" << endl;
              )
 
-    connect(qApp, SIGNAL(aboutToQuit()), probe, SLOT(deleteLater()));
+    connect(qApp, SIGNAL(aboutToQuit()), probe, SLOT(shutdown()));
+
+    // Our safety net, if there's no call to QCoreApplication::exec() we'll never receive the aboutToQuit() signal
+    // Make sure we still cleanup safely after the application instance got destroyed
+    connect(qApp, SIGNAL(destroyed()), probe, SLOT(shutdown()));
 
     // now we can get the lock and add items which where added before this point in time
     {
@@ -395,6 +397,11 @@ void Probe::delayedInit()
 
     if (ProbeSettings::value(QStringLiteral("InProcessUi"), false).toBool())
         showInProcessUi();
+}
+
+void Probe::shutdown()
+{
+    delete this;
 }
 
 void Probe::showInProcessUi()
