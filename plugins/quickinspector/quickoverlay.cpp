@@ -122,10 +122,36 @@ bool ItemOrLayoutFacade::isLayout() const
 
 // cppcheck-suppress uninitMemberVar
 QuickOverlay::QuickOverlay()
-  : m_currentToplevelItem(nullptr)
-  , m_isGrabbingMode(false)
-  , m_drawDecorations(true)
+    : m_window(nullptr)
+    , m_currentToplevelItem(nullptr)
+    , m_isGrabbingMode(false)
+    , m_drawDecorations(true)
 {
+}
+
+QQuickWindow *QuickOverlay::window() const
+{
+    return m_window;
+}
+
+void QuickOverlay::setWindow(QQuickWindow *window)
+{
+    if (m_window == window)
+        return;
+
+    if (m_window) {
+        disconnect(m_window, &QQuickWindow::afterRendering,
+                   this, &QuickOverlay::windowAfterRendering);
+    }
+
+    placeOn(ItemOrLayoutFacade());
+    m_window = window;
+
+    if (m_window) {
+        // Force DirectConnection else Auto lead to Queued which is not good.
+        connect(m_window, &QQuickWindow::afterRendering,
+                this, &QuickOverlay::windowAfterRendering, Qt::DirectConnection);
+    }
 }
 
 void QuickOverlay::placeOn(ItemOrLayoutFacade item)
@@ -148,6 +174,8 @@ void QuickOverlay::placeOn(ItemOrLayoutFacade item)
         updateOverlay();
         return;
     }
+
+    Q_ASSERT(item.item()->window() == m_window);
 
     if (!m_currentItem.isNull())
         disconnectItemChanges(m_currentItem.data());
@@ -202,28 +230,26 @@ void QuickOverlay::windowAfterRendering()
 {
     // We are in the rendering thread at this point
     // And the gui thread is blocked
-    Q_ASSERT(!m_currentItem.isNull());
-    QQuickWindow *window = m_currentItem.data()->window();
-    Q_ASSERT(QOpenGLContext::currentContext() == window->openglContext());
+    Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
 
     qreal dpr = 1.0;
     // See QTBUG-53795
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    dpr = window->effectiveDevicePixelRatio();
+    dpr = m_window->effectiveDevicePixelRatio();
 #elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    dpr = window->devicePixelRatio();
+    dpr = m_window->devicePixelRatio();
 #endif
 
     if (m_isGrabbingMode) {
-        QImage image = qt_gl_read_framebuffer(window->size() * dpr, false, false);
+        QImage image = qt_gl_read_framebuffer(m_window->size() * dpr, false, false);
         image.setDevicePixelRatio(dpr);
         if (!image.isNull())
             QMetaObject::invokeMethod(this, "sceneGrabbed", Qt::QueuedConnection, Q_ARG(QImage, image));
     }
 
-    drawDecorations(window->size(), dpr);
+    drawDecorations(m_window->size(), dpr);
 
-    window->resetOpenGLState();
+    m_window->resetOpenGLState();
 
     if (m_isGrabbingMode) {
         setIsGrabbingMode(false);
@@ -246,11 +272,18 @@ void QuickOverlay::drawDecorations(const QSize &size, qreal dpr)
 
 void QuickOverlay::updateOverlay()
 {
-    if (m_currentItem.isNull() || !m_currentToplevelItem)
-        return;
+    if (!m_currentItem.isNull() && m_currentToplevelItem)
+        m_effectiveGeometry.initFrom(m_currentItem.data());
+    else
+        m_effectiveGeometry = QuickItemGeometry();
 
-    m_effectiveGeometry.initFrom(m_currentItem.data());
-    m_currentToplevelItem->window()->update();
+    if (m_window) {
+        if (!m_currentItem.isNull()) {
+            Q_ASSERT(m_currentItem.item()->window() == m_window);
+        }
+
+        m_window->update();
+    }
 }
 
 void QuickOverlay::itemParentChanged(QQuickItem *parent)
@@ -262,9 +295,12 @@ void QuickOverlay::itemParentChanged(QQuickItem *parent)
 
 void QuickOverlay::itemWindowChanged(QQuickWindow *window)
 {
-    Q_UNUSED(window);
-    if (!m_currentItem.isNull())
-        placeOn(m_currentItem);
+    if (m_window == window) {
+        if (!m_currentItem.isNull())
+            placeOn(m_currentItem);
+    } else {
+        placeOn(ItemOrLayoutFacade());
+    }
 }
 
 void QuickOverlay::connectItemChanges(QQuickItem *item)
@@ -299,9 +335,6 @@ void QuickOverlay::disconnectItemChanges(QQuickItem *item)
 
 void QuickOverlay::connectTopItemChanges(QQuickItem *item)
 {
-    // Force DirectConnection else Auto lead to Queued which is not good.
-    connect(item->window(), &QQuickWindow::afterRendering,
-            this, &QuickOverlay::windowAfterRendering, Qt::DirectConnection);
     connect(item, &QQuickItem::childrenRectChanged, this, &QuickOverlay::updateOverlay);
     connect(item, &QQuickItem::rotationChanged, this, &QuickOverlay::updateOverlay);
     connect(item, &QQuickItem::scaleChanged, this, &QuickOverlay::updateOverlay);
@@ -311,8 +344,6 @@ void QuickOverlay::connectTopItemChanges(QQuickItem *item)
 
 void QuickOverlay::disconnectTopItemChanges(QQuickItem *item)
 {
-    disconnect(item->window(), &QQuickWindow::afterRendering,
-               this, &QuickOverlay::windowAfterRendering);
     disconnect(item, &QQuickItem::childrenRectChanged, this, &QuickOverlay::updateOverlay);
     disconnect(item, &QQuickItem::rotationChanged, this, &QuickOverlay::updateOverlay);
     disconnect(item, &QQuickItem::scaleChanged, this, &QuickOverlay::updateOverlay);
@@ -323,6 +354,9 @@ void QuickOverlay::disconnectTopItemChanges(QQuickItem *item)
 void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &itemGeometry,
                                   const QRectF &viewRect, qreal zoom)
 {
+    if (!itemGeometry.valid)
+        return;
+
     painter->save();
 
     // bounding box

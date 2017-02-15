@@ -76,10 +76,13 @@ class QuickOverlay : public QObject
 public:
     QuickOverlay();
 
+    QQuickWindow *window() const;
+    void setWindow(QQuickWindow *window);
+
     /**
      * Place the overlay on @p item
      *
-     * @param item The overlay can be cover a widget or a layout
+     * @param item The overlay can be cover a widget or a layout of the current window
      */
     void placeOn(ItemOrLayoutFacade item);
 
@@ -111,6 +114,7 @@ private:
     void connectTopItemChanges(QQuickItem *item);
     void disconnectTopItemChanges(QQuickItem *item);
 
+    QQuickWindow *m_window;
     QQuickItem *m_currentToplevelItem;
     ItemOrLayoutFacade m_currentItem;
     QuickItemGeometry m_effectiveGeometry;
