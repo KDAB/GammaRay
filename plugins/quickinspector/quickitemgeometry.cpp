@@ -41,6 +41,8 @@ void QuickItemGeometry::initFrom(QQuickItem *item)
         return;
     }
 
+    valid = true;
+
     QQuickItem *parent = item->parentItem();
 
     if (parent) {
@@ -88,6 +90,9 @@ void QuickItemGeometry::initFrom(QQuickItem *item)
 
 void QuickItemGeometry::scaleTo(qreal factor)
 {
+    if (!valid)
+        return;
+
     itemRect = QRectF(
         itemRect.topLeft() * factor,
         itemRect.bottomRight() * factor);
@@ -107,11 +112,12 @@ void QuickItemGeometry::scaleTo(qreal factor)
     baselineOffset = baselineOffset * factor;
     x = x * factor;
     y = y * factor;
-}
+    }
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry)
 {
-    stream << geometry.itemRect
+    stream << geometry.valid
+           << geometry.itemRect
            << geometry.boundingRect
            << geometry.childrenRect
 
@@ -144,7 +150,8 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &
 
 QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry)
 {
-    stream >> geometry.itemRect
+    stream >> geometry.valid
+           >> geometry.itemRect
            >> geometry.boundingRect
            >> geometry.childrenRect
 
