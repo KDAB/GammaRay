@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
 #include "gammaray-test-config.h"
 
 #include <launcher/injector/injectorfactory.h>
@@ -78,9 +79,6 @@ private slots:
             QTest::newRow("preload") << QStringLiteral("preload");
         if (hasInjector("windll"))
             QTest::newRow("windll") << QStringLiteral("windll");
-        // TODO: this doesn't work on a QtCore only target, obviously!
-//         if (hasInjector("style"))
-//             QTest::newRow("style") << QStringLiteral("style");
     }
 
     void testLauncher()
@@ -109,6 +107,33 @@ private slots:
         waitForSpy(&finishSpy, 1000);
         QCOMPARE(finishSpy.count(), 1);
     }
+
+#ifdef HAVE_QT_WIDGETS
+    void testLauncherStyle()
+    {
+        LaunchOptions options;
+        options.setUiMode(LaunchOptions::NoUi);
+        // setting the probe is not strictly needed but we silence a runtime warning this way
+        options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        options.setLaunchArguments(QStringList() << QLatin1String(TESTBIN_DIR "/minimalwidgetapplication"));
+        options.setInjectorType(QStringLiteral("style"));
+        Launcher launcher(options);
+
+        QSignalSpy startSpy(&launcher, SIGNAL(started()));
+        QVERIFY(startSpy.isValid());
+        QSignalSpy finishSpy(&launcher, SIGNAL(finished()));
+        QVERIFY(finishSpy.isValid());
+
+        QVERIFY(launcher.start());
+        waitForSpy(&startSpy, 10000);
+        QCOMPARE(startSpy.count(), 1);
+        QCOMPARE(finishSpy.count(), 0);
+
+        launcher.stop();
+        waitForSpy(&finishSpy, 10000);
+        QCOMPARE(finishSpy.count(), 1);
+    }
+#endif
 };
 
 QTEST_MAIN(LauncherTest)
