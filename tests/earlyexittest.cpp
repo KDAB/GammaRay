@@ -26,6 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
+
 #include <launcher/injector/injectorfactory.h>
 #include <launcher/launchoptions.h>
 #include <launcher/launcher.h>
@@ -66,6 +68,7 @@ private slots:
         options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
         options.setWorkingDirectory(QCoreApplication::applicationDirPath());
         options.setLaunchArguments(QStringList() << QStringLiteral("I_DONT_EXIST"));
+        options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
         QVERIFY(!launcher.start());
     }
@@ -121,6 +124,7 @@ private slots:
         options.setProbeABI(ProbeFinder::listProbeABIs().first());
         options.setWorkingDirectory(QCoreApplication::applicationDirPath());
         options.setLaunchArguments(QStringList() << QCoreApplication::applicationDirPath() + QStringLiteral("/sleep") << QStringLiteral("1"));
+        options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
 
         QSignalSpy spy(&launcher, SIGNAL(finished()));
@@ -163,6 +167,7 @@ private slots:
         options.setWorkingDirectory(QCoreApplication::applicationDirPath());
         options.setLaunchArguments(QStringList() << QCoreApplication::applicationDirPath() + QStringLiteral("/sleep") << QStringLiteral("1000"));
         options.setInjectorType(injectorType);
+        options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
 
         QSignalSpy spy(&launcher, SIGNAL(finished()));
