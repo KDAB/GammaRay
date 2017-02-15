@@ -102,7 +102,11 @@ QAtomicPointer<Probe> Probe::s_instance = QAtomicPointer<Probe>(nullptr);
 namespace GammaRay {
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
-    if (method_index == 0 || Probe::instance()->filterObject(caller))
+    if (method_index == 0 || !Probe::instance())
+        return;
+
+    QMutexLocker locker(Probe::objectLock());
+    if (Probe::instance()->filterObject(caller))
         return;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -116,7 +120,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 
 static void signal_end_callback(QObject *caller, int method_index)
 {
-    if (method_index == 0)
+    if (method_index == 0 || !Probe::instance())
         return;
 
     QMutexLocker locker(Probe::objectLock());
@@ -134,7 +138,11 @@ static void signal_end_callback(QObject *caller, int method_index)
 
 static void slot_begin_callback(QObject *caller, int method_index, void **argv)
 {
-    if (method_index == 0 || Probe::instance()->filterObject(caller))
+    if (method_index == 0 || !Probe::instance())
+        return;
+
+    QMutexLocker locker(Probe::objectLock());
+    if (Probe::instance()->filterObject(caller))
         return;
 
     Probe::executeSignalCallback([=](const SignalSpyCallbackSet &callbacks) {
@@ -145,7 +153,7 @@ static void slot_begin_callback(QObject *caller, int method_index, void **argv)
 
 static void slot_end_callback(QObject *caller, int method_index)
 {
-    if (method_index == 0)
+    if (method_index == 0 || !Probe::instance())
         return;
 
     QMutexLocker locker(Probe::objectLock());
