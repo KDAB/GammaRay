@@ -95,6 +95,10 @@ add_test(NAME attachtest-lldb
   COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray lldb
   ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
 )
+add_test(NAME attachtest-windll
+  COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray windll
+  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+)
 endif()
 
 ### MultiSignalMapper test
