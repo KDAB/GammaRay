@@ -32,6 +32,7 @@
 #include <common/paths.h>
 
 #include <QDebug>
+#include <QDir>
 #include <QThread>
 
 #include <cstdlib>
@@ -75,7 +76,6 @@ WinDllInjector::WinDllInjector()
     , mProcessError(QProcess::UnknownError)
     , mExitStatus(QProcess::NormalExit)
     , m_destProcess(NULL)
-    , m_destThread(NULL)
     , m_injectThread(new FinishWaiter(this))
 {
 }
@@ -132,7 +132,6 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
         return false;
 
     m_destProcess = pid.hProcess;
-    m_destThread = pid.hThread;
     m_dllPath = probeDll;
     m_dllPath.replace('/', '\\');
     inject();
@@ -145,19 +144,19 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
 
 bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*probeFunc*/)
 {
-    m_dllPath = probeDll;
-    m_dllPath.replace('/', '\\');
+    m_dllPath = QDir::toNativeSeparators(probeDll);
 
     m_destProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
-
-    if (!m_destProcess)
+    if (!m_destProcess) {
+        qWarning() << "Failed to open process" << pid << "error code:" << GetLastError();
         return false;
+    }
 
+    addDllDirectory();
     inject();
-    m_injectThread->stop();
     emit started();
     m_destProcess = 0;
-    return m_injectThread->isRunning();
+    return true;
 }
 
 int WinDllInjector::exitCode()
@@ -177,21 +176,37 @@ QProcess::ExitStatus WinDllInjector::exitStatus()
 
 void WinDllInjector::inject()
 {
-    int strsize = (m_dllPath.size() * 2) + 2;
+    remoteKernel32Call("LoadLibraryW", m_dllPath);
+}
+
+void WinDllInjector::addDllDirectory()
+{
+    remoteKernel32Call("SetDllDirectoryW", QDir::toNativeSeparators(Paths::binPath()));
+}
+
+void WinDllInjector::remoteKernel32Call(const char *funcName, const QString &argument)
+{
+    // resolve function pointer
+    auto kernel32handle = GetModuleHandleW(L"Kernel32");
+    auto func = GetProcAddress(kernel32handle, funcName);
+    if (!func) {
+        qWarning() << "Unable to resolve" << funcName << "in kernel32.dll!";
+        return;
+    }
+
+    // write argument into target process memory
+    int strsize = (argument.size() * 2) + 2;
     void *mem = VirtualAllocEx(m_destProcess, NULL, strsize, MEM_COMMIT, PAGE_READWRITE);
-    WriteProcessMemory(m_destProcess, mem, (void *)m_dllPath.utf16(), strsize, NULL);
-    HMODULE kernel32handle = GetModuleHandleW(L"Kernel32");
-    FARPROC loadLib = GetProcAddress(kernel32handle, "LoadLibraryW");
-    m_destThread = CreateRemoteThread(m_destProcess, NULL, 0,
-                                      (LPTHREAD_START_ROUTINE)loadLib,
-                                      mem, 0, NULL);
+    WriteProcessMemory(m_destProcess, mem, (void*)argument.utf16(), strsize, NULL);
 
-    WaitForSingleObject(m_destThread, INFINITE);
-
+    // call function pointer in remote process
+    auto t = CreateRemoteThread(m_destProcess, NULL, 0, (LPTHREAD_START_ROUTINE)func, mem, 0, NULL);
+    WaitForSingleObject(t, INFINITE);
     DWORD result;
-    GetExitCodeThread(m_destThread, &result);
+    GetExitCodeThread(t, &result);
 
-    CloseHandle(m_destThread);
+    // cleanup
+    CloseHandle(t);
     VirtualFreeEx(m_destProcess, mem, strsize, MEM_RELEASE);
 }
 
