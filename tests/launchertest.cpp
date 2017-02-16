@@ -42,6 +42,10 @@
 
 #include <memory>
 
+#ifdef Q_OS_WIN32
+#include <qt_windows.h>
+#endif
+
 using namespace GammaRay;
 
 class LauncherTest : public QObject
@@ -143,6 +147,35 @@ private slots:
         QCOMPARE(finishSpy.count(), 1);
     }
 #endif
+
+    void testAttach()
+    {
+        QProcess target;
+        target.setProcessChannelMode(QProcess::ForwardedChannels);
+        target.start(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"));
+        QVERIFY(target.waitForStarted());
+
+        LaunchOptions options;
+        options.setUiMode(LaunchOptions::NoUi);
+        options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
+#ifdef Q_OS_WIN32
+         options.setPid(target.pid()->dwProcessId);
+#else
+        options.setPid(target.pid());
+#endif
+        Launcher launcher(options);
+
+        QSignalSpy spy(&launcher, SIGNAL(attached()));
+        QVERIFY(spy.isValid());
+        QVERIFY(launcher.start());
+
+        waitForSpy(&spy, 30000);
+        QCOMPARE(spy.count(), 1);
+
+        target.kill();
+        target.waitForFinished();
+    }
 };
 
 QTEST_MAIN(LauncherTest)
