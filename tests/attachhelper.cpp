@@ -88,6 +88,7 @@ void AttachHelper::attach()
     args << QStringLiteral("-p") << QString::number(m_proc->pid());
 #endif
     args << QStringLiteral("-nodialogs");
+    args << QStringLiteral("--listen") << QStringLiteral("tcp://127.0.0.1/");
     const int ret = gammaray.execute(m_gammaray, args);
     if (ret != 0) {
         m_proc->kill();

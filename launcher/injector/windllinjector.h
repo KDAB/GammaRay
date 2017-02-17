@@ -61,8 +61,9 @@ private:
     QString mErrorString;
 
     void inject();
+    void addDllDirectory();
+    void remoteKernel32Call(const char *funcName, const QString &argument);
     HANDLE m_destProcess;
-    HANDLE m_destThread;
     QString m_dllPath;
     FinishWaiter *m_injectThread;
     friend class FinishWaiter;

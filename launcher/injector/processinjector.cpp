@@ -28,6 +28,8 @@
 
 #include "processinjector.h"
 
+#include <common/paths.h>
+
 #include <QDebug>
 #include <iostream>
 
@@ -63,10 +65,15 @@ void ProcessInjector::stop()
 }
 
 bool ProcessInjector::launchProcess(const QStringList &programAndArgs,
-                                    const QProcessEnvironment &env)
+                                    const QProcessEnvironment &_env)
 {
-    m_proc.setWorkingDirectory(workingDirectory());
+    auto env = _env;
+#ifdef Q_OS_WIN
+    // add location of GammaRay DLLs to PATH, so the probe can find them
+    env.insert(QStringLiteral("PATH"), env.value(QStringLiteral("PATH")) + QLatin1Char(';') + Paths::binPath());
+#endif
     m_proc.setProcessEnvironment(env);
+    m_proc.setWorkingDirectory(workingDirectory());
 
     QStringList args = programAndArgs;
 

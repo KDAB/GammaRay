@@ -3,6 +3,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR})
 
 add_subdirectory(shared)
+configure_file(gammaray-test-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/gammaray-test-config.h)
 
 add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
 set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -74,12 +75,12 @@ endif()
 
 foreach(injectorType ${INJECTOR_TYPES})
   add_test(connectiontest-${injectorType}
-    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest -i ${injectorType}
+    ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess --listen tcp://127.0.0.1 -unittest -i ${injectorType}
     ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
   )
   if(RUN_FILTER_TESTS)
     add_test(connectiontest-${injectorType}-filter
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest -filtertest -i ${injectorType}
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest --listen tcp://127.0.0.1 -filtertest -i ${injectorType}
       ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
     )
   endif()
@@ -92,6 +93,10 @@ add_test(NAME attachtest-gdb
 )
 add_test(NAME attachtest-lldb
   COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray lldb
+  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+)
+add_test(NAME attachtest-windll
+  COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray windll
   ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
 )
 endif()
@@ -435,6 +440,12 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD AND NOT OSX_ASAN_WORKAROUND)
     target_include_directories(earlyexittest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
     target_link_libraries(earlyexittest gammaray_core gammaray_launcher ${QT_QTTEST_LIBRARIES})
     add_test(NAME earlyexittest COMMAND earlyexittest)
+ 
+    add_executable(launchertest launchertest.cpp)
+    target_include_directories(launchertest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
+    target_link_libraries(launchertest gammaray_core gammaray_launcher ${QT_QTTEST_LIBRARIES})
+    add_test(NAME launchertest COMMAND launchertest)
 endif()
 
 add_subdirectory(manual)
+add_subdirectory(targets)

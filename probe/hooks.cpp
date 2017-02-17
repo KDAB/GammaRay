@@ -55,6 +55,14 @@
 
 using namespace GammaRay;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+static void gammaray_pre_routine()
+{
+    new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects);
+}
+Q_COREAPP_STARTUP_FUNCTION(gammaray_pre_routine)
+#endif
+
 // previously installed Qt hooks, for daisy-chaining
 static void (*gammaray_next_startup_hook)() = nullptr;
 static void (*gammaray_next_addObject)(QObject *) = nullptr;

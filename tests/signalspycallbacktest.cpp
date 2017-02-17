@@ -24,6 +24,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
+
 #include <probe/probecreator.h>
 #include <core/probe.h>
 
@@ -57,6 +59,7 @@ private:
     void createProbe()
     {
         qputenv("GAMMARAY_ProbePath", QCoreApplication::applicationDirPath().toUtf8());
+        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         new ProbeCreator(ProbeCreator::Create);
         QTest::qWait(1); // event loop re-entry
     }
