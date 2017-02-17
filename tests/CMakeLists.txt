@@ -3,6 +3,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR})
 
 add_subdirectory(shared)
+configure_file(gammaray-test-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/gammaray-test-config.h)
 
 add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
 set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -425,4 +426,12 @@ target_link_libraries(toolmanagertest gammaray_ui)
 add_test(NAME toolmanagertest COMMAND toolmanagertest)
 endif()
 
+if(NOT GAMMARAY_PROBE_ONLY_BUILD AND NOT OSX_ASAN_WORKAROUND)
+    add_executable(launchertest launchertest.cpp)
+    target_include_directories(launchertest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
+    target_link_libraries(launchertest gammaray_core gammaray_launcher ${QT_QTTEST_LIBRARIES})
+    add_test(NAME launchertest COMMAND launchertest)
+endif()
+
 add_subdirectory(manual)
+add_subdirectory(targets)
