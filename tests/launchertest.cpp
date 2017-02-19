@@ -26,8 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config-gammaray.h"
-#include "gammaray-test-config.h"
+#include <config-gammaray.h>
+#include <gammaray-test-config.h>
 
 #include <launcher/injector/injectorfactory.h>
 #include <launcher/launchoptions.h>
