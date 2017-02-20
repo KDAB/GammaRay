@@ -13,12 +13,15 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTreeView" name="bindingView">
-     <property name="rootIsDecorated">
-      <bool>false</bool>
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
      </property>
      <property name="uniformRowHeights">
       <bool>true</bool>
      </property>
+     <attribute name="headerDefaultSectionSize">
+      <number>200</number>
+     </attribute>
     </widget>
    </item>
   </layout>

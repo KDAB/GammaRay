@@ -27,18 +27,23 @@
 */
 
 #include "qmlbindingmodel.h"
+#include "qmlbindingnode.h"
+#include <core/util.h>
 
+#define private public
+#define protected public
 #include <QDebug>
 
 #include <private/qqmlabstractbinding_p.h>
 #include <private/qqmlbinding_p.h>
 #include <private/qqmldata_p.h>
 #include <private/qqmlproperty_p.h>
+#include <common/objectmodel.h>
 
 using namespace GammaRay;
 
 QmlBindingModel::QmlBindingModel(QObject* parent)
-    : QAbstractTableModel(parent)
+    : QAbstractItemModel(parent)
     , m_obj(Q_NULLPTR)
 {
 }
@@ -58,9 +63,9 @@ void QmlBindingModel::setObject(QObject* obj)
     endResetModel();
 }
 
-QVector<QmlBindingModel::BindingInfo> QmlBindingModel::bindingsFromObject(QObject* obj)
+std::vector<QmlBindingNode *> QmlBindingModel::bindingsFromObject(QObject* obj)
 {
-    QVector<BindingInfo> bindings;
+    std::vector<QmlBindingNode *> bindings;
     if (!obj)
         return bindings;
 
@@ -69,50 +74,41 @@ QVector<QmlBindingModel::BindingInfo> QmlBindingModel::bindingsFromObject(QObjec
     if (!data)
         return bindings;
 
+//     for (int i = data->propertyCache->propertyOffset(); i < data->propertyCache->propertyCount(); ++i) {
+//         QQmlPropertyData *prop = data->propertyCache->property(i);
+//     }
+
     auto b = data->bindings;
     while (b) {
-
-        BindingInfo info;
-        QQmlPropertyData::decodeValueTypePropertyIndex(b->targetPropertyIndex(), &info.propertyIndex);
-
         if (auto qmlBinding = dynamic_cast<QQmlBinding*>(b)) {
-            info.sourceLocation = qmlBinding->expressionIdentifier();
+            QmlBindingNode *node;
 
-#if 0
-            auto context = QQmlEngine::contextForObject(obj);
-            // manually try to get the code, QQmlBinding::expression() only gives us
-            // literally "function() { [code] }"...
-            QQmlEnginePrivate *ep = QQmlEnginePrivate::get(data->context->engine);
-            QV4::Scope scope(ep->v4engine());
-            QV4::ScopedValue f(scope, qmlBinding->m_function.value());
-            QV4::Function *function = f->as<QV4::FunctionObject>()->function();
+            // Try to find out dependencies of this binding.
+            node = new QmlBindingNode(qmlBinding);
 
-//             info.expression = function->code(QQmlEnginePrivate::getV4Engine(context->engine()), function->codeData);
-            qDebug() << info.expression;
-            qDebug() << function->codeData;
-            qDebug() << function->codeData;
-#endif
+            qDebug() << *node;
+            bindings.push_back(node);
+        } else {
+            qDebug() << "Ohhh...";
         }
-        if (info.expression.isEmpty())
-            info.expression = b->expression();
-        bindings.push_back(info);
+//         if (node->expression().isEmpty())
+//             node->expression() = b->expression();
         b = b->nextBinding();
     }
 #endif
     return bindings;
 }
 
-
 int QmlBindingModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return 4;
+    return 5;
 }
 
 int QmlBindingModel::rowCount(const QModelIndex& parent) const
 {
     if (parent.isValid())
-        return 0;
+        return static_cast<QmlBindingNode *>(parent.internalPointer())->dependencies().size();
     return m_bindings.size();
 }
 
@@ -121,19 +117,34 @@ QVariant QmlBindingModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || !m_obj)
         return QVariant();
 
+    QmlBindingNode *binding = static_cast<QmlBindingNode*>(index.internalPointer());
+    if (!binding)
+        return QVariant();
+
     if (role == Qt::DisplayRole) {
-        const auto &b = m_bindings.at(index.row());
         switch (index.column()) {
-            case 0: {
-                const auto prop = m_obj->metaObject()->property(b.propertyIndex);
-                return prop.name();
+            case 0: return binding->property().name();
+            case 1: return binding->value();
+            case 2: return binding->expression();
+            case 3: return binding->sourceLocation().displayString();
+            case 4: {
+                int depth = binding->depth();
+                return depth == std::numeric_limits<uint>::max() ? QStringLiteral("∞") : QString::number(depth);
             }
-            case 1: return b.expression;
-            case 2: return b.sourceLocation;
         }
+    } else if (role == ObjectModel::DeclarationLocationRole) {
+        qDebug() << "###########Foo";
+        return QVariant::fromValue(binding->sourceLocation());
     }
 
     return QVariant();
+}
+
+QMap<int, QVariant> QmlBindingModel::itemData(const QModelIndex &index) const
+{
+    QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
+    d.insert(ObjectModel::DeclarationLocationRole, data(index, ObjectModel::DeclarationLocationRole));
+    return d;
 }
 
 QVariant QmlBindingModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -141,10 +152,47 @@ QVariant QmlBindingModel::headerData(int section, Qt::Orientation orientation, i
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
             case 0: return tr("Property");
-            case 1: return tr("Expression");
-            case 2: return tr("Source");
-            case 3: return tr("Class");
+            case 1: return tr("Value");
+            case 2: return tr("Expression");
+            case 3: return tr("Source");
+            case 4: return tr("Depth");
         }
     }
-    return QAbstractTableModel::headerData(section, orientation, role);
+    return QAbstractItemModel::headerData(section, orientation, role);
+}
+
+QModelIndex GammaRay::QmlBindingModel::index(int row, int column, const QModelIndex& parent) const
+{
+    if (!hasIndex(row, column, parent)) {
+        return QModelIndex();
+    }
+    QModelIndex index;
+    if (parent.isValid()) {
+        index = createIndex(row, column, static_cast<QmlBindingNode *>(parent.internalPointer())->dependencies()[row].get());
+    } else {
+        index = createIndex(row, column, m_bindings[row]);
+    }
+    return index;
+}
+
+QModelIndex GammaRay::QmlBindingModel::parent(const QModelIndex& child) const
+{
+    QmlBindingNode *parent = static_cast<QmlBindingNode *>(child.internalPointer())->parent();
+    if (!parent) {
+        return QModelIndex();
+    }
+    QmlBindingNode *grandparent = parent->parent();
+    if (!grandparent) {
+        for (int i = 0; i < m_bindings.size(); i++) {
+            if (parent == m_bindings[i]) {
+                return createIndex(i, child.column(), m_bindings[i]);
+            }
+        }
+    }
+    for (int i = 0; i < grandparent->dependencies().size(); i++) {
+        if (parent == grandparent->dependencies()[i].get()) {
+            return createIndex(i, child.column(), grandparent->dependencies()[i].get());
+        }
+    }
+    return QModelIndex();
 }

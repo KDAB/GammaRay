@@ -30,7 +30,10 @@
 #include "ui_qmlbindingtab.h"
 
 #include <ui/propertywidget.h>
+#include <ui/contextmenuextension.h>
 #include <common/objectbroker.h>
+#include <QMenu>
+#include <common/objectmodel.h>
 
 using namespace GammaRay;
 
@@ -40,8 +43,30 @@ QmlBindingTab::QmlBindingTab(PropertyWidget* parent)
 {
     ui->setupUi(this);
     ui->bindingView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlBindingModel")));
+    connect(ui->bindingView, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(bindingContextMenu(QPoint)));
 }
 
 QmlBindingTab::~QmlBindingTab()
 {
+}
+
+void GammaRay::QmlBindingTab::bindingContextMenu(QPoint pos)
+{
+    qDebug() << "######################Huibu!";
+    const auto index = ui->bindingView->indexAt(pos);
+    if (!index.isValid())
+        return;
+    qDebug() << "indexIsValid";
+
+    QMenu menu;
+    ContextMenuExtension ext;
+    ext.setLocation(ContextMenuExtension::ShowSource,
+                    index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.populateMenu(&menu);
+    qDebug() << index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>().displayString();
+
+    menu.addAction("Foo");
+
+    menu.exec(ui->bindingView->viewport()->mapToGlobal(pos));
 }

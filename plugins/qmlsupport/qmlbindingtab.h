@@ -47,6 +47,9 @@ public:
     explicit QmlBindingTab(PropertyWidget *parent = Q_NULLPTR);
     ~QmlBindingTab();
 
+private slots:
+    void bindingContextMenu(QPoint pos);
+
 private:
     QScopedPointer<Ui::QmlBindingTab> ui;
 };
