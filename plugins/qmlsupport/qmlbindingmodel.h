@@ -31,13 +31,20 @@
 
 #include <QAbstractTableModel>
 #include <QVector>
+#include <memory>
+#include <vector>
+
+class QQmlBinding;
 
 namespace GammaRay {
 
-class QmlBindingModel : public QAbstractTableModel
+class QmlBindingNode;
+
+class QmlBindingModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
+
     explicit QmlBindingModel(QObject *parent = Q_NULLPTR);
     ~QmlBindingModel();
 
@@ -47,19 +54,20 @@ public:
     int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex & parent) const override;
+    QModelIndex parent(const QModelIndex & child) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const;
 
 private:
-    struct BindingInfo {
-        QString expression;
-        QString sourceLocation;
-        int propertyIndex;
-    };
-    static QVector<BindingInfo> bindingsFromObject(QObject *obj);
+    std::vector<QmlBindingNode *> bindingsFromObject(QObject *obj);
 
     QObject *m_obj;
-    QVector<BindingInfo> m_bindings;
-
+    std::vector<QmlBindingNode *> m_bindings;
+    std::vector<std::unique_ptr<QmlBindingNode>> m_allNodes;
+    std::vector<QmlBindingNode *> m_currentInvestigationPath; // This stack is used to store temporary
+                                                           // information while investigating all bindings
 };
+
 }
 
 #endif // GAMMARAY_QMLBINDINGMODEL_H
