@@ -72,9 +72,9 @@ void QuickItemGeometry::initFrom(QQuickItem *item)
         bottom = (bool)(usedAnchors &QQuickAnchors::BottomAnchor) || anchors->fill();
         baseline = (bool)(usedAnchors & QQuickAnchors::BaselineAnchor);
         horizontalCenter = (bool)(usedAnchors &QQuickAnchors::HCenterAnchor)
-                                        || anchors->centerIn();
+                || anchors->centerIn();
         verticalCenter = (bool)(usedAnchors &QQuickAnchors::VCenterAnchor)
-                                      || anchors->centerIn();
+                || anchors->centerIn();
         leftMargin = anchors->leftMargin();
         rightMargin = anchors->rightMargin();
         topMargin = anchors->topMargin();
@@ -116,14 +116,14 @@ void QuickItemGeometry::scaleTo(qreal factor)
         return;
 
     itemRect = QRectF(
-        itemRect.topLeft() * factor,
-        itemRect.bottomRight() * factor);
+                itemRect.topLeft() * factor,
+                itemRect.bottomRight() * factor);
     boundingRect = QRectF(
-        boundingRect.topLeft() * factor,
-        boundingRect.bottomRight() * factor);
+                boundingRect.topLeft() * factor,
+                boundingRect.bottomRight() * factor);
     childrenRect = QRectF(
-        childrenRect.topLeft() * factor,
-        childrenRect.bottomRight() * factor);
+                childrenRect.topLeft() * factor,
+                childrenRect.bottomRight() * factor);
     backgroundRect = QRectF(
                 backgroundRect.topLeft() * factor,
                 backgroundRect.bottomRight() * factor);
