@@ -39,7 +39,15 @@
 #include <QList>
 #include <QSet>
 #include <QVector>
+
 #include <memory>
+
+#ifdef Q_OS_UNIX
+#define USE_BACKWARD_CPP 1
+#else
+// backward-cpp is not supported on anything else than Unix platforms, so just don't enable support here
+#define USE_BACKWARD_CPP 0
+#endif
 
 QT_BEGIN_NAMESPACE
 class QItemSelectionModel;
@@ -50,9 +58,11 @@ class QTimer;
 class QMutex;
 QT_END_NAMESPACE
 
+#if USE_BACKWARD_CPP
 namespace backward {
-    class TraceResolver;
+class TraceResolver;
 }
+#endif
 
 namespace GammaRay {
 class ProbeCreator;
@@ -225,7 +235,10 @@ private:
     QVector<SignalSpyCallbackSet> m_signalSpyCallbacks;
     SignalSpyCallbackSet m_previousSignalSpyCallbackSet;
     Server *m_server;
+
+#if USE_BACKWARD_CPP
     std::unique_ptr<backward::TraceResolver> m_traceResolver;
+#endif
 };
 }
 
