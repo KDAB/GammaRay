@@ -1057,12 +1057,13 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
             menu.addAction(m_toggleFPSAction);
         }
         menu.exec(event->globalPos());
+        break;
     }
     case NoInteraction:
     case InputRedirection:
+        QWidget::contextMenuEvent(event);
         break;
     }
-    QWidget::contextMenuEvent(event);
 }
 
 bool RemoteViewWidget::eventFilter(QObject *receiver, QEvent *event)
