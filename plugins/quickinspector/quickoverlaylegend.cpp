@@ -180,7 +180,7 @@ public:
         m_items << Item(
                        QBrush(),
                        settings.marginsColor,
-                       QT_TR_NOOP("Margins")
+                       QT_TR_NOOP("Margins/Anchors")
                        );
 
         m_items << Item(
@@ -222,7 +222,7 @@ QuickOverlayLegend::QuickOverlayLegend(QWidget *parent)
                                      tr("Legend Visibility"), this);
     m_visibilityAction->setCheckable(true);
     m_visibilityAction->setToolTip(tr("<b>Legend Visibility</b><br>"
-                                    "This toggle the visibility of the legend tool."));
+                                      "This toggle the visibility of the legend tool."));
 
     connect(m_visibilityAction, &QAction::triggered, this, [this](bool toggled) {
         setVisible(toggled);
