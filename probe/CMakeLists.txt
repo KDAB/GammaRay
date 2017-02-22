@@ -26,14 +26,24 @@ if(APPLE OR NOT Qt5Core_VERSION VERSION_LESS 5.4.0)
   list(APPEND gammaray_probe_srcs entry_unix.cpp)
 endif()
 
+# create intermediate gammaray_probe object files which unit tests can use
+add_library(gammaray_probe_obj OBJECT ${gammaray_probe_srcs})
+set_target_properties(gammaray_probe_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_definitions(gammaray_probe_obj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
+target_include_directories(gammaray_probe_obj PUBLIC
+    ${QT_INCLUDES}
+    $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
+)
+
 # probe lib
 if(APPLE) # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
-  add_library(gammaray_probe SHARED ${gammaray_probe_srcs})
+  add_library(gammaray_probe SHARED $<TARGET_OBJECTS:gammaray_probe_obj>)
   if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
     set_target_properties(gammaray_probe PROPERTIES INSTALL_RPATH "@loader_path/../../../../Frameworks")
   endif()
 else()
-  add_library(gammaray_probe ${GAMMARAY_PLUGIN_TYPE} ${gammaray_probe_srcs})
+  add_library(gammaray_probe ${GAMMARAY_PLUGIN_TYPE} $<TARGET_OBJECTS:gammaray_probe_obj>)
 endif()
 target_link_libraries(gammaray_probe
   gammaray_core

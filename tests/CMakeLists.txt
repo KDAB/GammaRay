@@ -217,11 +217,10 @@ endif()
 
 add_executable(integrationtest
   integrationtest.cpp
-  ../probe/probecreator.cpp
-  ../probe/hooks.cpp
+    $<TARGET_OBJECTS:gammaray_probe_obj>
     $<TARGET_OBJECTS:modeltestobj>
 )
-target_link_libraries(integrationtest gammaray_core ${QT_QTTEST_LIBRARIES})
+target_link_libraries(integrationtest $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> gammaray_core ${QT_QTTEST_LIBRARIES})
 
 add_test(NAME integrationtest COMMAND integrationtest)
 
@@ -231,8 +230,7 @@ if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4 AND GAMMARAY_BUILD_UI) # r
   add_executable(modelinspectortest
     modelinspectortest.cpp
     ${CMAKE_SOURCE_DIR}/plugins/modelinspector/modelinspectorinterface.cpp
-    ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
-    ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
+    $<TARGET_OBJECTS:gammaray_probe_obj>
     $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(modelinspectortest gammaray_core gammaray_ui ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
@@ -244,9 +242,8 @@ endif()
 if(Qt5Widgets_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 add_executable(widgettest
   widgettest.cpp
-  ../probe/probecreator.cpp
-  ../probe/hooks.cpp
-    $<TARGET_OBJECTS:modeltestobj>
+  $<TARGET_OBJECTS:gammaray_probe_obj>
+  $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(widgettest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTWIDGETS_LIBRARIES})
 
@@ -259,8 +256,7 @@ if(Qt5Widgets_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 add_executable(actiontest
   actiontest.cpp
   ${CMAKE_SOURCE_DIR}/plugins/actioninspector/clientactionmodel.cpp
-  ../probe/probecreator.cpp
-  ../probe/hooks.cpp
+  $<TARGET_OBJECTS:gammaray_probe_obj>
 )
 target_link_libraries(actiontest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTWIDGETS_LIBRARIES})
 
@@ -340,9 +336,8 @@ if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
   add_executable(metaobjecttreemodeltest
     metaobjecttreemodeltest.cpp
     ${CMAKE_SOURCE_DIR}/ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
+    $<TARGET_OBJECTS:gammaray_probe_obj>
     $<TARGET_OBJECTS:modeltestobj>
-    ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
-    ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
   )
   target_link_libraries(metaobjecttreemodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
   add_test(NAME metaobjecttreemodeltest COMMAND metaobjecttreemodeltest)
@@ -414,11 +409,10 @@ endif()
 if(Qt5Quick_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 set(quickinspectortest_srcs
   quickinspectortest.cpp
-  ../probe/probecreator.cpp
-  ../probe/hooks.cpp
   ../plugins/quickinspector/quickinspectorinterface.cpp
   ../plugins/quickinspector/quickitemgeometry.cpp
-    $<TARGET_OBJECTS:modeltestobj>
+  $<TARGET_OBJECTS:modeltestobj>
+  $<TARGET_OBJECTS:gammaray_probe_obj>
 )
 qt4_add_resources(quickinspectortest_srcs quickinspectortest.qrc)
 add_executable(quickinspectortest ${quickinspectortest_srcs})
@@ -432,10 +426,9 @@ endif()
 if(GAMMARAY_BUILD_UI AND Qt5Widgets_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 add_executable(toolmanagertest
   toolmanagertest.cpp
-  ../probe/probecreator.cpp
-  ../probe/hooks.cpp
   ../common/toolmanagerinterface.cpp
-    $<TARGET_OBJECTS:modeltestobj>
+  $<TARGET_OBJECTS:gammaray_probe_obj>
+  $<TARGET_OBJECTS:modeltestobj>
 )
 target_link_libraries(toolmanagertest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTWIDGETS_LIBRARIES})
 target_link_libraries(toolmanagertest gammaray_ui)
