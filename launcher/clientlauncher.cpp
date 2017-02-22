@@ -31,6 +31,8 @@
 
 #include <QUrl>
 
+#include <iostream>
+
 using namespace GammaRay;
 
 ClientLauncher::ClientLauncher()
@@ -62,7 +64,9 @@ bool ClientLauncher::launch(const QUrl &url)
 
 void ClientLauncher::launchDetached(const QUrl &url)
 {
-    QProcess::startDetached(clientPath(), makeArgs(url));
+    const auto args = makeArgs(url);
+    std::cout << "Detaching: " << qPrintable(clientPath()) << " " << qPrintable(args.join(" ")) << std::endl;
+    QProcess::startDetached(clientPath(), args);
 }
 
 void ClientLauncher::terminate()

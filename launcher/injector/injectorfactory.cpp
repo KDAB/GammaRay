@@ -70,42 +70,52 @@ AbstractInjector::Ptr createInjector(const QString &name, const QString &executa
 }
 
 #if !defined(Q_OS_WIN)
-static AbstractInjector::Ptr findFirstWorkingInjector(const QStringList &types)
+static AbstractInjector::Ptr findFirstWorkingInjector(const QStringList &types, QStringList *errorStrings)
 {
     foreach (const QString &type, types) {
         AbstractInjector::Ptr injector = createInjector(type);
-        if (injector->selfTest())
-            return injector;
+        if (injector) {
+            if (injector->selfTest()) {
+                return injector;
+            } else if (errorStrings) {
+                *errorStrings << QStringLiteral("%1: %2").arg(type, injector->errorString());
+            }
+        } else if (errorStrings) {
+            *errorStrings << QStringLiteral("No valid injector type: %1").arg(type);
+        }
     }
+
     return AbstractInjector::Ptr(nullptr);
 }
 
 #endif
 
-AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi)
+AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi, QStringList *errorStrings)
 {
 #if defined(Q_OS_MAC)
     if (abi.majorQtVersion() >= 5 && abi.minorQtVersion() >= 4)
         return createInjector(QStringLiteral("preload"));
     return findFirstWorkingInjector(QStringList() << QStringLiteral("lldb")
-                                                  << QStringLiteral("gdb"));
+                                                  << QStringLiteral("gdb"), errorStrings);
 #elif defined(Q_OS_UNIX)
     Q_UNUSED(abi);
+    Q_UNUSED(errorStrings);
     return createInjector(QStringLiteral("preload"));
 #else
     Q_UNUSED(abi);
+    Q_UNUSED(errorStrings);
     return createInjector(QStringLiteral("windll"));
 #endif
 }
 
-AbstractInjector::Ptr defaultInjectorForAttach()
+AbstractInjector::Ptr defaultInjectorForAttach(QStringList *errorStrings)
 {
 #if defined(Q_OS_MAC)
     return findFirstWorkingInjector(QStringList() << QStringLiteral("lldb")
-                                                  << QStringLiteral("gdb"));
+                                                  << QStringLiteral("gdb"), errorStrings);
 #elif !defined(Q_OS_WIN)
     return findFirstWorkingInjector(QStringList() << QStringLiteral("gdb")
-                                                  << QStringLiteral("lldb"));
+                                                  << QStringLiteral("lldb"), errorStrings);
 #else
     return createInjector(QStringLiteral("windll"));
 #endif

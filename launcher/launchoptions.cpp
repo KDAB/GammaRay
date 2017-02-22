@@ -36,6 +36,8 @@
 #include <QStandardPaths>
 #endif
 
+#include <iostream>
+
 namespace GammaRay {
 class LaunchOptionsPrivate : public QSharedData
 {
@@ -273,5 +275,8 @@ bool LaunchOptions::execute(const QString &launcherPath) const
     } else {
         args += launchArguments();
     }
+
+    std::cout << "Detaching: " << qPrintable(launcherPath) << " " << qPrintable(args.join(" ")) << std::endl;
+
     return QProcess::startDetached(launcherPath, args);
 }
