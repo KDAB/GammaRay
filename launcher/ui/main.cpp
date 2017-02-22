@@ -36,10 +36,14 @@
 
 #include <QApplication>
 
+#include <iostream>
+
 using namespace GammaRay;
 
 int main(int argc, char **argv)
 {
+    std::cout << "Startup: gammaray-launcher" << std::endl;
+
     QCoreApplication::setOrganizationName(QStringLiteral("KDAB"));
     QCoreApplication::setOrganizationDomain(QStringLiteral("kdab.com"));
     QCoreApplication::setApplicationName(QStringLiteral("GammaRay"));

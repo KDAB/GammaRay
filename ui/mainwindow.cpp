@@ -70,6 +70,8 @@
 #include <QStandardPaths>
 #endif
 
+#include <iostream>
+
 using namespace GammaRay;
 
 namespace {
@@ -487,8 +489,10 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
         command.replace(QStringLiteral("%l"), QString::number(std::max(1, lineNumber)));
         command.replace(QStringLiteral("%c"), QString::number(std::max(1, columnNumber)));
 
-        if (!command.isEmpty())
+        if (!command.isEmpty()) {
+            std::cout << "Detaching: " << qPrintable(command) << std::endl;
             QProcess::startDetached(command);
+        }
     }
 }
 
