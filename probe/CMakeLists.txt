@@ -28,7 +28,7 @@ endif()
 
 # probe lib
 if(APPLE) # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
-  add_library(gammaray_probe SHARED ${gammaray_probe_srcs})
+  add_library(gammaray_probe ${GAMMARAY_LIBRARY_TYPE} ${gammaray_probe_srcs})
   if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
     set_target_properties(gammaray_probe PROPERTIES INSTALL_RPATH "@loader_path/../../../../Frameworks")
   endif()
