@@ -66,13 +66,13 @@ struct LauncherPrivate
         , exitCode(0)
     {}
 
-    AbstractInjector::Ptr createInjector() const
+    AbstractInjector::Ptr createInjector(QStringList *errorStrings = nullptr) const
     {
         if (options.injectorType().isEmpty()) {
             if (options.isAttach())
-                return InjectorFactory::defaultInjectorForAttach();
+                return InjectorFactory::defaultInjectorForAttach(errorStrings);
             else
-                return InjectorFactory::defaultInjectorForLaunch(options.probeABI());
+                return InjectorFactory::defaultInjectorForLaunch(options.probeABI(), errorStrings);
         }
         return InjectorFactory::createInjector(
             options.injectorType(), options.injectorTypeExecutableOverride());
@@ -138,8 +138,17 @@ bool Launcher::start()
 
     if (d->options.uiMode() != LaunchOptions::InProcessUi)
         d->safetyTimer.start();
-    d->injector = d->createInjector();
+
+    QStringList errorStrings;
+    d->injector = d->createInjector(&errorStrings);
     if (!d->injector) {
+        Q_ASSERT(!errorStrings.isEmpty());
+        std::cerr << "Potential errors:" << std::endl;
+        for (const QString& errorString : errorStrings) {
+            std::cerr << "  Error: " << qPrintable(errorString) << std::endl;
+        }
+        std::cerr << std::endl;
+
         if (d->options.injectorType().isEmpty()) {
             if (d->options.isAttach())
                 injectorError(-1,
@@ -152,6 +161,7 @@ bool Launcher::start()
         }
         return false;
     }
+
     d->injector->setTargetAbi(d->options.probeABI());
 
     connect(d->injector.data(), SIGNAL(started()), this, SLOT(restartTimer()));

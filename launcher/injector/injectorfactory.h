@@ -41,9 +41,9 @@ GAMMARAY_LAUNCHER_EXPORT AbstractInjector::Ptr createInjector(const QString &nam
                                                               const QString &executableOverride
                                                                   = QString());
 
-AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi);
+AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi, QStringList *errorStrings = nullptr);
 
-AbstractInjector::Ptr defaultInjectorForAttach();
+AbstractInjector::Ptr defaultInjectorForAttach(QStringList *errorStrings = nullptr);
 
 /**
  * Returns the list of available injector types.
