@@ -121,7 +121,8 @@ qint64 Launcher::instanceIdentifier() const
 
 void Launcher::stop()
 {
-    d->injector->stop();
+    if (d->injector)
+        d->injector->stop();
 }
 
 bool Launcher::start()

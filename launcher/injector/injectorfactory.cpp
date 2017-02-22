@@ -74,7 +74,7 @@ static AbstractInjector::Ptr findFirstWorkingInjector(const QStringList &types)
 {
     foreach (const QString &type, types) {
         AbstractInjector::Ptr injector = createInjector(type);
-        if (injector->selfTest())
+        if (injector && injector->selfTest())
             return injector;
     }
     return AbstractInjector::Ptr(nullptr);
