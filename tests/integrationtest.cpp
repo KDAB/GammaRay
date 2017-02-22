@@ -40,8 +40,9 @@ using namespace GammaRay;
 
 namespace
 {
-    int argc = 0;
-    char* argv[] = {};
+    int argc = 1;
+    char argv0[] = "integrationtest";
+    char* argv[] = {argv0};
 }
 
 class IntegrationTest : public QObject
