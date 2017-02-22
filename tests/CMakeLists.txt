@@ -215,14 +215,15 @@ endif()
 
 ### Integration test
 
-add_executable(integrationtest
-  integrationtest.cpp
-    $<TARGET_OBJECTS:gammaray_probe_obj>
-    $<TARGET_OBJECTS:modeltestobj>
-)
-target_link_libraries(integrationtest $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> gammaray_core ${QT_QTTEST_LIBRARIES})
-
-add_test(NAME integrationtest COMMAND integrationtest)
+if(NOT OSX_ASAN_WORKAROUND)
+  add_executable(integrationtest
+    integrationtest.cpp
+      $<TARGET_OBJECTS:gammaray_probe_obj>
+      $<TARGET_OBJECTS:modeltestobj>
+  )
+  target_link_libraries(integrationtest $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> gammaray_core ${QT_QTTEST_LIBRARIES})
+  add_test(NAME integrationtest COMMAND integrationtest)
+endif()
 
 ### Model inspector test
 
