@@ -39,8 +39,9 @@ class QQuickItem;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-struct QuickItemGeometry {
-    bool valid = false;
+struct QuickItemGeometry
+{
+    bool valid;
 
     // basic geometry
     QRectF itemRect;

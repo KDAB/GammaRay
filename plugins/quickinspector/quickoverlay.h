@@ -72,7 +72,25 @@ private:
     QQuickItem *m_object;
 };
 
-struct QuickOverlaySettings {
+struct QuickOverlaySettings
+{
+    QuickOverlaySettings()
+        : boundingRectColor(QColor(232, 87, 82, 170))
+        , boundingRectBrush(QBrush(QColor(232, 87, 82, 95)))
+        , geometryRectColor(QColor(Qt::gray))
+        , geometryRectBrush(QBrush(QColor(Qt::gray), Qt::BDiagPattern))
+        , childrenRectColor(QColor(0, 99, 193, 170))
+        , childrenRectBrush(QBrush(QColor(0, 99, 193, 95)))
+        , transformOriginColor(QColor(156, 15, 86, 170))
+        , coordinatesColor(QColor(136, 136, 136))
+        , marginsColor(QColor(139, 179, 0))
+        , paddingColor(QColor(Qt::darkBlue))
+        , gridOffset(QPointF(0, 0))
+        , gridCellSize(QSizeF(0, 0))
+        , gridColor(QColor(Qt::red))
+    {
+    }
+
     bool operator==(const QuickOverlaySettings &other) const {
         return std::tie(boundingRectColor,
                         boundingRectBrush,
@@ -106,19 +124,19 @@ struct QuickOverlaySettings {
         return !operator==(other);
     }
 
-    QColor boundingRectColor = QColor(232, 87, 82, 170);
-    QBrush boundingRectBrush = QBrush(QColor(232, 87, 82, 95));
-    QColor geometryRectColor = QColor(Qt::gray);
-    QBrush geometryRectBrush = QBrush(QColor(Qt::gray), Qt::BDiagPattern);
-    QColor childrenRectColor = QColor(0, 99, 193, 170);
-    QBrush childrenRectBrush = QBrush(QColor(0, 99, 193, 95));
-    QColor transformOriginColor = QColor(156, 15, 86, 170);
-    QColor coordinatesColor = QColor(136, 136, 136);
-    QColor marginsColor = QColor(139, 179, 0);
-    QColor paddingColor = QColor(Qt::darkBlue);
-    QPointF gridOffset = QPointF(0, 0);
-    QSizeF gridCellSize = QSizeF(0, 0);
-    QColor gridColor = QColor(Qt::red);
+    QColor boundingRectColor;
+    QBrush boundingRectBrush;
+    QColor geometryRectColor;
+    QBrush geometryRectBrush;
+    QColor childrenRectColor;
+    QBrush childrenRectBrush;
+    QColor transformOriginColor;
+    QColor coordinatesColor;
+    QColor marginsColor;
+    QColor paddingColor;
+    QPointF gridOffset;
+    QSizeF gridCellSize;
+    QColor gridColor;
 };
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickOverlaySettings &settings);
@@ -186,7 +204,7 @@ private:
         QPen pen;
         QRectF rect;
         QString label;
-        int align = 0;
+        int align;
     };
 
     using DrawTextInfoList = QVector<DrawTextInfo>;
