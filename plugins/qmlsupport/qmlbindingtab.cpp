@@ -53,20 +53,15 @@ QmlBindingTab::~QmlBindingTab()
 
 void GammaRay::QmlBindingTab::bindingContextMenu(QPoint pos)
 {
-    qDebug() << "######################Huibu!";
     const auto index = ui->bindingView->indexAt(pos);
     if (!index.isValid())
         return;
-    qDebug() << "indexIsValid";
 
     QMenu menu;
     ContextMenuExtension ext;
     ext.setLocation(ContextMenuExtension::ShowSource,
                     index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.populateMenu(&menu);
-    qDebug() << index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>().displayString();
-
-    menu.addAction("Foo");
 
     menu.exec(ui->bindingView->viewport()->mapToGlobal(pos));
 }
