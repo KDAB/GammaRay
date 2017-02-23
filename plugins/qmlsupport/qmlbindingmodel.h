@@ -57,9 +57,14 @@ public:
     QModelIndex index(int row, int column, const QModelIndex & parent) const override;
     QModelIndex parent(const QModelIndex & child) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex & index) const override;
+
+public slots:
+    void propertyChanged();
 
 private:
     std::vector<QmlBindingNode *> bindingsFromObject(QObject *obj);
+    void invalidateDependencies(QmlBindingNode *node, const QModelIndex &nodeIndex);
 
     QObject *m_obj;
     std::vector<QmlBindingNode *> m_bindings;

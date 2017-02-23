@@ -48,6 +48,11 @@ public:
 
     QmlBindingNode *parent() const;
     QObject *object() const;
+
+    /**
+     * The qml id of the target object of this binding. No GammaRay objectId.
+     */
+    const QString &id() const;
     int propertyIndex() const;
     QMetaProperty property() const;
     QQmlBinding *binding() const;
@@ -60,6 +65,14 @@ public:
     const QVariant &value() const;
     uint depth() const;
 
+    /**
+     * Refreshes
+     * * the property value
+     * * the check for binding loops
+     * recursively, i.e. also for all its dependencies.
+     */
+    void refresh();
+
 private:
     static QQmlBinding *bindingForProperty(QObject *obj, int propertyIndex);
 
@@ -70,6 +83,7 @@ private:
 
     QmlBindingNode *m_parent;
     QObject *m_object;
+    QString m_id;
     int m_propertyIndex;
     QQmlBinding *m_binding = 0;
     QVariant m_value;

@@ -54,13 +54,45 @@ QmlBindingModel::~QmlBindingModel()
 
 void QmlBindingModel::setObject(QObject* obj)
 {
+    if (m_obj == obj)
+        return;
+
     const auto bindings = bindingsFromObject(obj);
 
     // TODO use removerows/insertrows instead of reset here
     beginResetModel();
+    disconnect(m_obj, 0, this, 0);
+
     m_obj = obj;
     m_bindings = bindings;
     endResetModel();
+}
+
+void GammaRay::QmlBindingModel::propertyChanged()
+{
+    Q_ASSERT(sender() == m_obj);
+
+    for (int i = 0; i < m_bindings.size(); i++) {
+        auto binding = m_bindings[i];
+        if (binding->property().notifySignalIndex() == senderSignalIndex()) {
+            binding->refresh();
+            QModelIndex modelIndex1 = index(i, 1, QModelIndex());
+            QModelIndex modelIndex5 = index(i, 5, QModelIndex());
+            emit dataChanged(modelIndex1, modelIndex1);
+            emit dataChanged(modelIndex5, modelIndex5);
+            invalidateDependencies(binding, modelIndex1);
+            return;
+        }
+    }
+}
+
+void GammaRay::QmlBindingModel::invalidateDependencies(GammaRay::QmlBindingNode* node, const QModelIndex &nodeIndex)
+{
+    emit dataChanged(index(0, 1, nodeIndex), index(node->dependencies().size() - 1, 1, nodeIndex));
+    emit dataChanged(index(0, 5, nodeIndex), index(node->dependencies().size() - 1, 5, nodeIndex));
+    for (int i = 0; i < node->dependencies().size(); i++) {
+        invalidateDependencies(node->dependencies()[i].get(), index(i, 1, nodeIndex));
+    }
 }
 
 std::vector<QmlBindingNode *> QmlBindingModel::bindingsFromObject(QObject* obj)
@@ -86,7 +118,8 @@ std::vector<QmlBindingNode *> QmlBindingModel::bindingsFromObject(QObject* obj)
             // Try to find out dependencies of this binding.
             node = new QmlBindingNode(qmlBinding);
 
-            qDebug() << *node;
+            QMetaObject::connect(obj, node->property().notifySignalIndex(), this, metaObject()->indexOfMethod("propertyChanged()"));
+
             bindings.push_back(node);
         } else {
             qDebug() << "Ohhh...";
@@ -123,7 +156,9 @@ QVariant QmlBindingModel::data(const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case 0: return binding->property().name();
+            case 0: {
+                return binding->id().isEmpty() ? binding->property().name() : QString(binding->id() + '.' + binding->property().name());
+            }
             case 1: return binding->value();
             case 2: return binding->expression();
             case 3: return binding->sourceLocation().displayString();
@@ -133,11 +168,20 @@ QVariant QmlBindingModel::data(const QModelIndex& index, int role) const
             }
         }
     } else if (role == ObjectModel::DeclarationLocationRole) {
-        qDebug() << "###########Foo";
         return QVariant::fromValue(binding->sourceLocation());
     }
 
     return QVariant();
+}
+
+Qt::ItemFlags QmlBindingModel::flags(const QModelIndex& index) const
+{
+    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    QmlBindingNode *binding = static_cast<QmlBindingNode*>(index.internalPointer());
+    if (binding && !binding->isActive()) {
+        flags &= ~Qt::ItemIsEnabled;
+    }
+    return flags;
 }
 
 QMap<int, QVariant> QmlBindingModel::itemData(const QModelIndex &index) const

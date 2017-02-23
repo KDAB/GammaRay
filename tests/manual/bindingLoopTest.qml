@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Controls 1.0
 
 Item {
     id: a
@@ -12,28 +13,37 @@ Item {
         y: 6
         width: x + contextPropertyFoo
         height: x < 10 ? width : y
+
+        Component.onCompleted: {
+            b.visible = Qt.binding(function(){ return x < 15; });
+        }
     }
 
     Item {
         id: c
+        property bool wantBindingLoop: false
         x: b.x
         y: height
         width: x + y
-        height: width
+        height: wantBindingLoop ? width : x
     }
 
-    MouseArea {
-        anchors.fill: parent
-
-        onClicked: {
-            print("Hallo");
-            if (mouse.modifiers & Qt.ControlModifier) {
-                print("y");
-                b.y++;
-            } else {
-                print("x");
-                b.x++;
-            }
+    Column {
+        anchors.centerIn: parent
+        Button {
+            text: "b.x++"
+            onClicked: b.x++;
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Button {
+            text: "b.y++"
+            onClicked: b.x++;
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Button {
+            text: "Toggle binding loop"
+            onClicked: c.wantBindingLoop = !c.wantBindingLoop;
+            anchors.horizontalCenter: parent.horizontalCenter
         }
     }
 }
