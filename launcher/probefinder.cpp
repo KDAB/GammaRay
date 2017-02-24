@@ -46,27 +46,50 @@
 
 namespace GammaRay {
 namespace ProbeFinder {
+
+static QString findProbeInternalNormalLayout(const ProbeABI &abi, const QString &rootPath)
+{
+#ifndef GAMMARAY_INSTALL_QT_LAYOUT
+    const QString path = rootPath + QLatin1String("/" GAMMARAY_PLUGIN_INSTALL_DIR "/" GAMMARAY_PLUGIN_VERSION "/") + abi.id();
+    const QString wildcard = QLatin1String(GAMMARAY_PROBE_BASENAME "*") + Paths::libraryExtension();
+    const auto fi = QDir(path).entryInfoList(QStringList(wildcard)).value(0);
+    if (fi.isFile() && fi.isReadable())
+        return fi.canonicalFilePath();
+#endif
+    return QString();
+}
+
+static QString findProbeInternalQtLayout(const ProbeABI &abi, const QString &rootPath)
+{
+#ifndef GAMMARAY_INSTALL_QT_LAYOUT
+#ifdef Q_OS_WIN
+    const QString path = rootPath + QLatin1String("/bin/" GAMMARAY_PROBE_BASENAME "-") + abi.id() + Paths::libraryExtension();
+#else
+    const QString path = rootPath + QLatin1String("/lib/libgammaray_probe-") + abi.id() + Paths::libraryExtension();
+#endif
+#else
+    const QString path = rootPath + QLatin1String("/" GAMMARAY_PROBE_INSTALL_DIR "/" GAMMARAY_PROBE_BASENAME "-") + abi.id() + Paths::libraryExtension();
+#endif
+
+    const auto fi = QFileInfo(path);
+    if (fi.isFile() && fi.isReadable())
+        return fi.canonicalFilePath();
+    return QString();
+}
+
 static QString findProbeInternal(const ProbeABI &probeAbi, const QString &rootPath)
 {
-    const QString probePath = Paths::probePath(probeAbi.id(), rootPath)
-                              %QDir::separator()
-                              %GAMMARAY_PROBE_BASENAME %
-#if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-                              QChar('-')
-                              %probeAbi.id() %
+#ifndef GAMMARAY_INSTALL_QT_LAYOUT
+    const auto probe = findProbeInternalNormalLayout(probeAbi, rootPath);
+    if (!probe.isEmpty())
+        return probe;
+    return findProbeInternalQtLayout(probeAbi, rootPath);
 #else
-                              QChar('*') %
+    const auto probe = findProbeInternalQtLayout(probeAbi, rootPath);
+    if (!probe.isEmpty())
+        return probe;
+    return findProbeInternalNormalLayout(probeAbi, rootPath);
 #endif
-                              Paths::libraryExtension();
-
-    const QFileInfo wildcarded(probePath);
-    const QFileInfo fi
-        = QDir(wildcarded.absolutePath()).entryInfoList(QStringList(wildcarded.fileName())).
-          value(0);
-    const QString canonicalPath = fi.canonicalFilePath();
-    if (!fi.isFile() || !fi.isReadable())
-        return QString();
-    return canonicalPath;
 }
 
 QString findProbe(const QString &baseName, const ProbeABI &probeAbi)
