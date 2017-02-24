@@ -144,7 +144,7 @@ bool Launcher::start()
     if (!d->injector) {
         Q_ASSERT(!errorStrings.isEmpty());
         std::cerr << "Potential errors:" << std::endl;
-        for (const QString& errorString : errorStrings) {
+        foreach (const QString& errorString, errorStrings) {
             std::cerr << "  Error: " << qPrintable(errorString) << std::endl;
         }
         std::cerr << std::endl;
