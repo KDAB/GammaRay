@@ -27,5 +27,6 @@ script:
   - chmod a+x linuxdeployqt*.AppImage
   - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
   - ./linuxdeployqt*.AppImage ./appdir/usr/bin/gammaray -bundle-non-qt-libs
+  # TODO: Fix rpaths in ./usr/lib/gammaray/
   - ./linuxdeployqt*.AppImage ./appdir/usr/bin/gammaray -appimage 
   - curl --upload-file ./GammaRay-*.AppImage https://transfer.sh/GammaRay-git$(git rev-parse --short HEAD)-x86_64.AppImage 
