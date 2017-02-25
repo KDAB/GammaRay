@@ -20,8 +20,8 @@ script:
   - sudo checkinstall --pkgname=app --pkgversion="1" --pkgrelease="1" --backup=no --fstrans=no --default --deldoc 
   - mkdir appdir ; cd appdir
   - dpkg -x ../app_1-1_amd64.deb . ; find .
-  - cp ./opt/qt58/share/icons/hicolor/128x128/apps/GammaRay.png .
   - cp ./usr/share/applications/gammaray.desktop .
+  - cp ./usr/share/icons/hicolor/256x256/apps/GammaRay.png .
   - cd .. 
   - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/3/linuxdeployqt-3-x86_64.AppImage" 
   - chmod a+x linuxdeployqt*.AppImage
