@@ -12,13 +12,15 @@ install:
     - source /opt/qt58/bin/qt58-env.sh
 
 script:
-  - qmake PREFIX=/usr
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
   - make -j4
   - sudo apt-get -y install checkinstall
   - sudo checkinstall --pkgname=app --pkgversion="1" --pkgrelease="1" --backup=no --fstrans=no --default --deldoc 
   - mkdir appdir ; cd appdir
   - dpkg -x ../app_1-1_amd64.deb . ; find .
-  - cp ./usr/share/icons/gammaray.png .
+  - cp ./opt/qt58/share/icons/hicolor/128x128/apps/GammaRay.png .
   - cp ./usr/share/applications/gammaray.desktop .
   - cd .. 
   - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/3/linuxdeployqt-3-x86_64.AppImage" 
