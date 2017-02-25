@@ -27,6 +27,12 @@ script:
   - chmod a+x linuxdeployqt*.AppImage
   - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
   - ./linuxdeployqt*.AppImage ./appdir/usr/bin/gammaray -bundle-non-qt-libs
-  # TODO: Fix rpaths in ./usr/lib/gammaray/
+  # Workaround for https://github.com/probonopd/linuxdeployqt/issues/83
+  - ./linuxdeployqt*.AppImage --appimage-extract
+  - ./squashfs-root/usr/bin/patchelf --set-rpath '$ORIGIN/../..' ./appdir/usr/lib/gammaray/libexec/gammaray-launcher
+  - ./squashfs-root/usr/bin/patchelf --set-rpath '$ORIGIN/../..' ./appdir/usr/lib/gammaray/libexec/gammaray-client
+  # Apparently the qt_prfxpath in libQt5Core.so
+  # is not relative to libQt5Core.so but to the binary that is being executed, is this clever?
+  - ( cd ./appdir/usr/lib/gammaray/ ;  ln -s ../../plugins/ . )
   - ./linuxdeployqt*.AppImage ./appdir/usr/bin/gammaray -appimage 
-  - curl --upload-file ./GammaRay-*.AppImage https://transfer.sh/GammaRay-git$(git rev-parse --short HEAD)-x86_64.AppImage 
+  - curl --upload-file ./GammaRay-*.AppImage https://transfer.sh/GammaRay-git.$(git rev-parse --short HEAD)-x86_64.AppImage 
