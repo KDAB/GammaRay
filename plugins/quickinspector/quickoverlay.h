@@ -32,12 +32,13 @@
 #include <tuple>
 
 #include <QObject>
+#include <QPointer>
+#include <QQuickItem>
 #include <QPen>
 
 #include "quickitemgeometry.h"
 
 QT_BEGIN_NAMESPACE
-class QQuickItem;
 class QQuickWindow;
 QT_END_NAMESPACE
 
@@ -69,7 +70,7 @@ private:
     inline QQuickItem *asLayout() const { return m_object; }
     inline QQuickItem *asItem() const { return m_object; }
 
-    QQuickItem *m_object;
+    QPointer<QQuickItem> m_object;
 };
 
 struct QuickOverlaySettings
@@ -233,8 +234,8 @@ private:
     void connectTopItemChanges(QQuickItem *item);
     void disconnectTopItemChanges(QQuickItem *item);
 
-    QQuickWindow *m_window;
-    QQuickItem *m_currentToplevelItem;
+    QPointer<QQuickWindow> m_window;
+    QPointer<QQuickItem> m_currentToplevelItem;
     ItemOrLayoutFacade m_currentItem;
     QuickItemGeometry m_effectiveGeometry;
     QuickOverlaySettings m_settings;
