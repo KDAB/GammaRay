@@ -704,11 +704,11 @@ QuickOverlay::DrawTextInfo QuickOverlay::drawAnchorLabel(QPainter *p, const Quic
                 rect.moveCenter(QPointF(rect.center().x(), center.y()));
             }
 
-            return {
-                p->pen(),
+            return QuickOverlay::DrawTextInfo(
+                        p->pen(),
                         rect,
                         label
-            };
+                        );
         } else {
             QRectF rect(p->fontMetrics().boundingRect(label));
 
@@ -731,11 +731,11 @@ QuickOverlay::DrawTextInfo QuickOverlay::drawAnchorLabel(QPainter *p, const Quic
                 rect.moveCenter(QPointF(rect.center().x(), center.y()));
             }
 
-            return {
-                p->pen(),
+            return QuickOverlay::DrawTextInfo(
+                        p->pen(),
                         rect,
                         label
-            };
+                        );
         }
     }
 
