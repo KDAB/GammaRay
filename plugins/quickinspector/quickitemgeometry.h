@@ -39,8 +39,30 @@ class QQuickItem;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-struct QuickItemGeometry {
-    bool valid = false;
+struct QuickItemGeometry
+{
+    QuickItemGeometry()
+        : valid(false)
+        , x(qQNaN())
+        , y(qQNaN())
+        , left(false)
+        , right(false)
+        , top(false)
+        , bottom(false)
+        , horizontalCenter(false)
+        , verticalCenter(false)
+        , baseline(false)
+        , margins(qQNaN())
+        , leftMargin(qQNaN())
+        , horizontalCenterOffset(qQNaN())
+        , rightMargin(qQNaN())
+        , topMargin(qQNaN())
+        , verticalCenterOffset(qQNaN())
+        , bottomMargin(qQNaN())
+        , baselineOffset(qQNaN())
+    { }
+
+    bool valid;
 
     // basic geometry
     QRectF itemRect;
