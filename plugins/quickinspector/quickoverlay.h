@@ -139,9 +139,9 @@ public:
     QuickOverlay();
 
     struct RenderInfo {
-        RenderInfo(const QuickOverlaySettings &settings = {},
-                   const QuickItemGeometry &itemGeometry = {},
-                   const QRectF &viewRect = {},
+        RenderInfo(const QuickOverlaySettings &settings = QuickOverlaySettings(),
+                   const QuickItemGeometry &itemGeometry = QuickItemGeometry(),
+                   const QRectF &viewRect = QRectF(),
                    qreal zoom = 1.0)
             : settings(settings)
             , itemGeometry(itemGeometry)
@@ -182,8 +182,8 @@ signals:
 
 private:
     struct DrawTextInfo {
-        DrawTextInfo(const QPen &pen = {}, const QRectF &rect = {},
-                     const QString &label = {}, int align = Qt::AlignCenter | Qt::TextDontClip)
+        DrawTextInfo(const QPen &pen = QPen(), const QRectF &rect = QRectF(),
+                     const QString &label = QString(), int align = Qt::AlignCenter | Qt::TextDontClip)
             : pen(pen)
             , rect(rect)
             , label(label)

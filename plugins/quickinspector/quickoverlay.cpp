@@ -657,17 +657,17 @@ QuickOverlay::DrawTextInfo QuickOverlay::drawAnchorLabel(QPainter *p, const Quic
 
     if (align.testFlag(Qt::AlignCenter)) {
         qWarning("%s: You can not use Qt::AlignCenter!", Q_FUNC_INFO);
-        return {};
+        return QuickOverlay::DrawTextInfo();
     }
 
     if (align.testFlag(Qt::AlignJustify)) {
         qWarning("%s: You can not use Qt::AlignJustify!", Q_FUNC_INFO);
-        return {};
+        return QuickOverlay::DrawTextInfo();
     }
 
     if (align.testFlag(Qt::AlignBaseline)) {
         qWarning("%s: You can not use Qt::AlignBaseline!", Q_FUNC_INFO);
-        return {};
+        return QuickOverlay::DrawTextInfo();
     }
 
     if (offset) {
@@ -739,7 +739,7 @@ QuickOverlay::DrawTextInfo QuickOverlay::drawAnchorLabel(QPainter *p, const Quic
         }
     }
 
-    return {};
+    return QuickOverlay::DrawTextInfo();
 }
 
 QuickOverlay::DrawTextInfo QuickOverlay::drawHorizontalAnchorLabel(QPainter *p, const QuickOverlay::RenderInfo &renderInfo,
