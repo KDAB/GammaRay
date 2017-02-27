@@ -35,6 +35,8 @@
 
 #include <common/remoteviewinterface.h>
 
+#include <QPointer>
+
 QT_BEGIN_NAMESPACE
 class QTimer;
 class QWindow;
@@ -99,7 +101,7 @@ private slots:
     void requestUpdateTimeout();
 
 private:
-    EventReceiver *m_eventReceiver;
+    QPointer<EventReceiver> m_eventReceiver;
     QTimer *m_updateTimer;
     bool m_clientActive;
     bool m_sourceChanged;

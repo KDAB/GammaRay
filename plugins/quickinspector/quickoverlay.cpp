@@ -31,7 +31,6 @@
 #include <QDebug>
 #include <QEvent>
 #include <QPainter>
-#include <QQuickItem>
 #include <QQuickWindow>
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
