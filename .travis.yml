@@ -16,7 +16,7 @@ script:
   - cd build
   - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
   - make -j4
-  - mkdir appdir ; sudo make DESTIDR=$(readlink -f appdir) install ; sudo chown -R $USER appdir ; find appdir/
+  - sudo make DESTDIR=appdir install ; sudo chown -R $USER appdir ; find appdir/
   - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" 
   - chmod a+x linuxdeployqt*.AppImage
   - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
