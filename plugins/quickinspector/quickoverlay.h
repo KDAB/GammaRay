@@ -196,7 +196,7 @@ private:
         int align;
     };
 
-    using DrawTextInfoList = QVector<DrawTextInfo>;
+    typedef QVector<DrawTextInfo> DrawTextInfoList;
 
     static void drawArrow(QPainter *p, QPointF first, QPointF second);
     static void drawAnchor(QPainter *p, const RenderInfo &renderInfo, Qt::Orientation orientation,
