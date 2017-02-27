@@ -55,6 +55,9 @@ static QString findProbeInternalNormalLayout(const ProbeABI &abi, const QString 
     const auto fi = QDir(path).entryInfoList(QStringList(wildcard)).value(0);
     if (fi.isFile() && fi.isReadable())
         return fi.canonicalFilePath();
+#else
+    Q_UNUSED(abi);
+    Q_UNUSED(rootPath);
 #endif
     return QString();
 }
