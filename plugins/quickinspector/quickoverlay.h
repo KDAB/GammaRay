@@ -93,32 +93,20 @@ struct QuickOverlaySettings
     }
 
     bool operator==(const QuickOverlaySettings &other) const {
-        return std::tie(boundingRectColor,
-                        boundingRectBrush,
-                        geometryRectColor,
-                        geometryRectBrush,
-                        childrenRectColor,
-                        childrenRectBrush,
-                        transformOriginColor,
-                        coordinatesColor,
-                        marginsColor,
-                        paddingColor,
-                        gridOffset,
-                        gridCellSize,
-                        gridColor) ==
-                std::tie(other.boundingRectColor,
-                         other.boundingRectBrush,
-                         other.geometryRectColor,
-                         other.geometryRectBrush,
-                         other.childrenRectColor,
-                         other.childrenRectBrush,
-                         other.transformOriginColor,
-                         other.coordinatesColor,
-                         other.marginsColor,
-                         other.paddingColor,
-                         other.gridOffset,
-                         other.gridCellSize,
-                         other.gridColor);
+        return boundingRectColor == other.boundingRectColor &&
+                boundingRectBrush == other.boundingRectBrush &&
+                geometryRectColor == other.geometryRectColor &&
+                geometryRectBrush == other.geometryRectBrush &&
+                childrenRectColor == other.childrenRectColor &&
+                childrenRectBrush == other.childrenRectBrush &&
+                transformOriginColor == other.transformOriginColor &&
+                coordinatesColor == other.coordinatesColor &&
+                marginsColor == other.marginsColor &&
+                paddingColor == other.paddingColor &&
+                gridOffset == other.gridOffset &&
+                gridCellSize == other.gridCellSize &&
+                gridColor == other.gridColor
+        ;
     }
 
     bool operator!=(const QuickOverlaySettings &other) const {
