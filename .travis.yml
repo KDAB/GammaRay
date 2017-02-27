@@ -16,10 +16,7 @@ script:
   - cd build
   - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
   - make -j4
-  - sudo apt-get -y install checkinstall
-  - sudo checkinstall --pkgname=app --pkgversion="1" --pkgrelease="1" --backup=no --fstrans=no --default --deldoc 
-  - mkdir appdir ; cd appdir
-  - dpkg -x ../app_1-1_amd64.deb . ; find .
+  - make INSTALL_ROOT=appdir install ; cd appdir ; find .
   - cp ./usr/share/applications/GammaRay.desktop .
   - cp ./usr/share/icons/hicolor/256x256/apps/GammaRay.png .
   - cd .. 
