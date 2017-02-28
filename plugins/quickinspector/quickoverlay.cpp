@@ -139,7 +139,7 @@ void QuickOverlay::setWindow(QQuickWindow *window)
         return;
 
     if (m_window) {
-        disconnect(m_window, &QQuickWindow::afterRendering,
+        disconnect(m_window.data(), &QQuickWindow::afterRendering,
                    this, &QuickOverlay::windowAfterRendering);
     }
 
@@ -148,7 +148,7 @@ void QuickOverlay::setWindow(QQuickWindow *window)
 
     if (m_window) {
         // Force DirectConnection else Auto lead to Queued which is not good.
-        connect(m_window, &QQuickWindow::afterRendering,
+        connect(m_window.data(), &QQuickWindow::afterRendering,
                 this, &QuickOverlay::windowAfterRendering, Qt::DirectConnection);
     }
 }
