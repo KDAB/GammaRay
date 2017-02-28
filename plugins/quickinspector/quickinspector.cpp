@@ -441,12 +441,11 @@ void QuickInspector::sendRenderedScene(const QImage &currentFrame, const QTransf
 {
     RemoteViewFrame frame;
     frame.setImage(currentFrame, transform);
-    QuickItemGeometry itemGeometry;
-    if (m_currentItem)
-        itemGeometry.initFrom(m_currentItem);
-    frame.setSceneRect(QRectF(currentFrame.rect()) | itemGeometry.itemRect |
-                       itemGeometry.childrenRect | itemGeometry.boundingRect);
-    frame.setData(QVariant::fromValue(itemGeometry));
+    frame.setSceneRect(m_overlay->itemsGeometryRect());
+    if (m_overlay->settings().componentsTraces)
+        frame.setData(QVariant::fromValue(m_overlay->itemsGeometry()));
+    else
+        frame.setData(QVariant::fromValue(m_overlay->itemsGeometry().first()));
     m_remoteView->sendFrame(frame);
 }
 
@@ -562,9 +561,10 @@ void QuickInspector::checkServerSideDecorations()
     emit serverSideDecorations(m_overlay->drawDecorations());
 }
 
-void QuickInspector::setOverlaySettings(const GammaRay::QuickOverlaySettings &settings)
+void QuickInspector::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)
 {
     m_overlay->setSettings(settings);
+    emit overlaySettings(m_overlay->settings());
 }
 
 void QuickInspector::checkOverlaySettings()

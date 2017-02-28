@@ -9,7 +9,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
   set(gammaray_quickinspector_shared_srcs
         quickinspectorinterface.cpp
         quickitemgeometry.cpp
-        quickoverlay.cpp
+        quickdecorationsdrawer.cpp
         materialextension/materialextensioninterface.cpp
       )
 
@@ -42,7 +42,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
     quickitemmodel.cpp
     quickscenegraphmodel.cpp
     quickpaintanalyzerextension.cpp
-
+    quickoverlay.cpp
     materialextension/materialextension.cpp
     geometryextension/sggeometryextension.cpp
     geometryextension/sggeometrymodel.cpp

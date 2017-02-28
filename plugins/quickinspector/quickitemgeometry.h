@@ -33,6 +33,7 @@
 #include <QRectF>
 #include <QPointF>
 #include <QTransform>
+#include <QColor>
 
 QT_BEGIN_NAMESPACE
 class QQuickItem;
@@ -108,9 +109,15 @@ struct QuickItemGeometry
     qreal topPadding;
     qreal bottomPadding;
 
+    QColor traceColor;
+    QString traceTypeName;
+    QString traceName;
+
     bool isValid() const;
-    void initFrom(QQuickItem *item);
     void scaleTo(qreal factor);
+
+    bool operator==(const QuickItemGeometry &other) const;
+    bool operator!=(const QuickItemGeometry &other) const;
 };
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry);
@@ -118,5 +125,6 @@ QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geomet
 }
 
 Q_DECLARE_METATYPE(GammaRay::QuickItemGeometry)
+Q_DECLARE_METATYPE(QVector<GammaRay::QuickItemGeometry>)
 
 #endif

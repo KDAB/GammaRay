@@ -36,7 +36,7 @@ namespace Ui { class GridSettingsWidget; }
 QT_END_NAMESPACE
 
 namespace GammaRay {
-struct QuickOverlaySettings;
+struct QuickDecorationsSettings;
 
 class GridSettingsWidget : public QFrame
 {
@@ -46,7 +46,7 @@ public:
     explicit GridSettingsWidget(QWidget *parent = nullptr);
     ~GridSettingsWidget();
 
-    void setOverlaySettings(const QuickOverlaySettings &settings);
+    void setOverlaySettings(const QuickDecorationsSettings &settings);
 
 signals:
     void offsetChanged(const QPoint &value);

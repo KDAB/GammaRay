@@ -74,7 +74,8 @@ public:
         ViewInteraction = 1, ///< panning, zooming, etc
         Measuring = 2,
         InputRedirection = 4,
-        ElementPicking = 8
+        ElementPicking = 8,
+        ComponentTraces = 16
     };
     InteractionMode interactionMode() const;
     void setInteractionMode(InteractionMode mode);
@@ -125,6 +126,7 @@ public slots:
 signals:
     void zoomChanged();
     void zoomLevelChanged(int zoomLevelIndex);
+    void interactionModeChanged();
     void stateChanged();
 
 protected:

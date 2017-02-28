@@ -36,7 +36,7 @@ class QEvent;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-struct QuickOverlaySettings;
+struct QuickDecorationsSettings;
 
 class QuickInspectorClient : public QuickInspectorInterface
 {
@@ -59,7 +59,7 @@ public slots:
 
     void checkServerSideDecorations() override;
 
-    void setOverlaySettings(const GammaRay::QuickOverlaySettings &settings) override;
+    void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings) override;
 
     void checkOverlaySettings() override;
 };
