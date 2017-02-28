@@ -43,7 +43,7 @@ class QImage;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-struct QuickOverlaySettings;
+struct QuickDecorationsSettings;
 
 class QuickInspectorInterface : public QObject
 {
@@ -85,14 +85,14 @@ public slots:
 
     virtual void checkServerSideDecorations() = 0;
 
-    virtual void setOverlaySettings(const GammaRay::QuickOverlaySettings &settings) = 0;
+    virtual void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings) = 0;
 
     virtual void checkOverlaySettings() = 0;
 
 signals:
     void features(GammaRay::QuickInspectorInterface::Features features);
     void serverSideDecorations(bool enabled);
-    void overlaySettings(const GammaRay::QuickOverlaySettings &settings);
+    void overlaySettings(const GammaRay::QuickDecorationsSettings &settings);
 };
 }
 

@@ -76,7 +76,7 @@ void QuickInspectorClient::checkServerSideDecorations()
     Endpoint::instance()->invokeObject(objectName(), "checkServerSideDecorations");
 }
 
-void QuickInspectorClient::setOverlaySettings(const GammaRay::QuickOverlaySettings &settings)
+void QuickInspectorClient::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)
 {
     Endpoint::instance()->invokeObject(objectName(),
                                        "setOverlaySettings",

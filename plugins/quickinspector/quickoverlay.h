@@ -29,14 +29,11 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_QUICKOVERLAY_H
 #define GAMMARAY_QUICKINSPECTOR_QUICKOVERLAY_H
 
-#include <tuple>
-
 #include <QObject>
 #include <QPointer>
 #include <QQuickItem>
-#include <QPen>
 
-#include "quickitemgeometry.h"
+#include "quickdecorationsdrawer.h"
 
 QT_BEGIN_NAMESPACE
 class QQuickWindow;
@@ -73,64 +70,6 @@ private:
     QPointer<QQuickItem> m_object;
 };
 
-struct QuickOverlaySettings
-{
-    QuickOverlaySettings()
-        : boundingRectColor(QColor(232, 87, 82, 170))
-        , boundingRectBrush(QBrush(QColor(232, 87, 82, 95)))
-        , geometryRectColor(QColor(Qt::gray))
-        , geometryRectBrush(QBrush(QColor(Qt::gray), Qt::BDiagPattern))
-        , childrenRectColor(QColor(0, 99, 193, 170))
-        , childrenRectBrush(QBrush(QColor(0, 99, 193, 95)))
-        , transformOriginColor(QColor(156, 15, 86, 170))
-        , coordinatesColor(QColor(136, 136, 136))
-        , marginsColor(QColor(139, 179, 0))
-        , paddingColor(QColor(Qt::darkBlue))
-        , gridOffset(QPointF(0, 0))
-        , gridCellSize(QSizeF(0, 0))
-        , gridColor(QColor(Qt::red))
-    {
-    }
-
-    bool operator==(const QuickOverlaySettings &other) const {
-        return boundingRectColor == other.boundingRectColor &&
-                boundingRectBrush == other.boundingRectBrush &&
-                geometryRectColor == other.geometryRectColor &&
-                geometryRectBrush == other.geometryRectBrush &&
-                childrenRectColor == other.childrenRectColor &&
-                childrenRectBrush == other.childrenRectBrush &&
-                transformOriginColor == other.transformOriginColor &&
-                coordinatesColor == other.coordinatesColor &&
-                marginsColor == other.marginsColor &&
-                paddingColor == other.paddingColor &&
-                gridOffset == other.gridOffset &&
-                gridCellSize == other.gridCellSize &&
-                gridColor == other.gridColor
-        ;
-    }
-
-    bool operator!=(const QuickOverlaySettings &other) const {
-        return !operator==(other);
-    }
-
-    QColor boundingRectColor;
-    QBrush boundingRectBrush;
-    QColor geometryRectColor;
-    QBrush geometryRectBrush;
-    QColor childrenRectColor;
-    QBrush childrenRectBrush;
-    QColor transformOriginColor;
-    QColor coordinatesColor;
-    QColor marginsColor;
-    QColor paddingColor;
-    QPointF gridOffset;
-    QSizeF gridCellSize;
-    QColor gridColor;
-};
-
-QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickOverlaySettings &settings);
-QDataStream &operator>>(QDataStream &stream, GammaRay::QuickOverlaySettings &settings);
-
 class QuickOverlay : public QObject
 {
     Q_OBJECT
@@ -138,28 +77,17 @@ class QuickOverlay : public QObject
 public:
     QuickOverlay();
 
-    struct RenderInfo {
-        RenderInfo(const QuickOverlaySettings &settings = QuickOverlaySettings(),
-                   const QuickItemGeometry &itemGeometry = QuickItemGeometry(),
-                   const QRectF &viewRect = QRectF(),
-                   qreal zoom = 1.0)
-            : settings(settings)
-            , itemGeometry(itemGeometry)
-            , viewRect(viewRect)
-            , zoom(zoom)
-        { }
-
-        const QuickOverlaySettings settings;
-        const QuickItemGeometry itemGeometry;
-        const QRectF viewRect;
-        const qreal zoom;
-    };
-
     QQuickWindow *window() const;
     void setWindow(QQuickWindow *window);
 
-    QuickOverlaySettings settings() const;
-    void setSettings(const QuickOverlaySettings &settings);
+    QuickDecorationsSettings settings() const;
+    void setSettings(const QuickDecorationsSettings &settings);
+
+    bool drawDecorations() const;
+    void setDrawDecorations(bool enabled);
+
+    QVector<QuickItemGeometry> itemsGeometry() const;
+    QRectF itemsGeometryRect() const;
 
     /**
      * Place the overlay on @p item
@@ -167,11 +95,6 @@ public:
      * @param item The overlay can be cover a widget or a layout of the current window
      */
     void placeOn(ItemOrLayoutFacade item);
-
-    bool drawDecorations() const;
-    void setDrawDecorations(bool enabled);
-
-    static void drawDecoration(QPainter *painter, const RenderInfo &renderInfo);
 
 public slots:
     void requestGrabWindow();
@@ -181,39 +104,10 @@ signals:
     void sceneGrabbed(const QImage &image, const QTransform transform);
 
 private:
-    struct DrawTextInfo {
-        DrawTextInfo(const QPen &pen = QPen(), const QRectF &rect = QRectF(),
-                     const QString &label = QString(), int align = Qt::AlignCenter | Qt::TextDontClip)
-            : pen(pen)
-            , rect(rect)
-            , label(label)
-            , align(align)
-        { }
-
-        QPen pen;
-        QRectF rect;
-        QString label;
-        int align;
-    };
-
-    typedef QVector<DrawTextInfo> DrawTextInfoList;
-
-    static void drawArrow(QPainter *p, QPointF first, QPointF second);
-    static void drawAnchor(QPainter *p, const RenderInfo &renderInfo, Qt::Orientation orientation,
-                           qreal ownAnchorLine, qreal offset);
-    static void drawVerticalAnchor(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine, qreal offset);
-    static void drawHorizontalAnchor(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine, qreal offset);
-    static DrawTextInfo drawAnchorLabel(QPainter *p, const RenderInfo &renderInfo, Qt::Orientation orientation,
-                           qreal ownAnchorLine, qreal offset, const QString &label, Qt::Alignment align);
-    static DrawTextInfo drawHorizontalAnchorLabel(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine,
-                                          qreal offset, const QString &label, Qt::Alignment align);
-    static DrawTextInfo drawVerticalAnchorLabel(QPainter *p, const RenderInfo &renderInfo, qreal ownAnchorLine,
-                                        qreal offset, const QString &label, Qt::Alignment align);
-    static void drawGrid(QPainter *p, const RenderInfo &renderInfo);
-
     void setIsGrabbingMode(bool isGrabbingMode);
     void windowAfterRendering();
     void drawDecorations(const QSize &size, qreal dpr);
+    void updateItemsGeometry();
     void updateOverlay();
     void itemParentChanged(QQuickItem *parent);
     void itemWindowChanged(QQuickWindow *window);
@@ -223,18 +117,18 @@ private:
     void disconnectTopItemChanges(QQuickItem *item);
     qreal getDpr();
     uint textureSize();
+    QuickItemGeometry initFromItem(QQuickItem *item) const;
 
     QPointer<QQuickWindow> m_window;
     QPointer<QQuickItem> m_currentToplevelItem;
     ItemOrLayoutFacade m_currentItem;
-    QuickItemGeometry m_effectiveGeometry;
-    QuickOverlaySettings m_settings;
+    QuickDecorationsSettings m_settings;
+    QVector<QuickItemGeometry> m_itemsGeometry;
+    QRectF m_itemsGeometryRect;
     bool m_isGrabbingMode;
     bool m_drawDecorations;
     QImage m_frame;
 };
 }
-
-Q_DECLARE_METATYPE(GammaRay::QuickOverlaySettings)
 
 #endif

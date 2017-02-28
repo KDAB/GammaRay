@@ -62,13 +62,13 @@ public:
 
     void setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes);
     void setServerSideDecorationsState(bool enabled);
-    void setOverlaySettingsState(const QuickOverlaySettings &settings);
+    void setOverlaySettingsState(const QuickDecorationsSettings &settings);
 
     QuickInspectorInterface::RenderMode customRenderMode() const;
     void setCustomRenderMode(QuickInspectorInterface::RenderMode customRenderMode);
 
-    QuickOverlaySettings overlaySettings() const;
-    void setOverlaySettings(const QuickOverlaySettings &settings);
+    QuickDecorationsSettings overlaySettings() const;
+    void setOverlaySettings(const QuickDecorationsSettings &settings);
 
     bool serverSideDecorationsEnabled() const;
     void setServerSideDecorationsEnabled(bool enabled);
@@ -78,6 +78,7 @@ private Q_SLOTS:
     void serverSideDecorationsTriggered(bool enabled);
     void gridOffsetChanged(const QPoint &value);
     void gridCellSizeChanged(const QSize &value);
+    void interactionChanged();
 
 private:
     void drawDecoration(QPainter *p) override;
@@ -95,7 +96,7 @@ private:
         QMenu *gridSettings;
     } m_toolBar;
 
-    QuickOverlaySettings m_overlaySettings;
+    QuickDecorationsSettings m_overlaySettings;
     GridSettingsWidget *m_gridSettingsWidget;
     QuickOverlayLegend *m_legendTool;
 

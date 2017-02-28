@@ -182,6 +182,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
     connect(m_gridSettingsWidget, SIGNAL(offsetChanged(QPoint)), this, SLOT(gridOffsetChanged(QPoint)));
     connect(m_gridSettingsWidget, SIGNAL(cellSizeChanged(QSize)), this, SLOT(gridCellSizeChanged(QSize)));
+    connect(this, SIGNAL(interactionModeChanged()), this, SLOT(interactionChanged()));
 
     setUnavailableText(tr(
                            "No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
@@ -265,10 +266,20 @@ void QuickScenePreviewWidget::resizeEvent(QResizeEvent *e)
 
 void QuickScenePreviewWidget::drawDecoration(QPainter *p)
 {
-    // scaled and translated
-    auto itemGeometry = frame().data().value<QuickItemGeometry>();
-    itemGeometry.scaleTo(zoom());
-    QuickOverlay::drawDecoration(p, QuickOverlay::RenderInfo(m_overlaySettings, itemGeometry, frame().viewRect(), zoom()));
+    if (frame().data().userType() == qMetaTypeId<QuickItemGeometry>()) {
+        // scaled and translated
+        auto itemGeometry = frame().data().value<QuickItemGeometry>();
+        itemGeometry.scaleTo(zoom());
+        const QuickDecorationsRenderInfo renderInfo(m_overlaySettings, itemGeometry, frame().viewRect(), zoom());
+        QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Decorations, *p, renderInfo);
+        drawer.drawDecorations();
+    } else if (frame().data().userType() == qMetaTypeId<QVector<QuickItemGeometry>>()) {
+        // Scaling and translations will be done on demand
+        const auto itemsGeometry = frame().data().value<QVector<QuickItemGeometry>>();
+        const QuickDecorationsTracesInfo tracesInfo(m_overlaySettings, itemsGeometry, frame().viewRect(), zoom());
+        QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Traces, *p, tracesInfo);
+        drawer.drawTraces();
+    }
 }
 
 void QuickScenePreviewWidget::visualizeActionTriggered(QAction *current)
@@ -314,6 +325,15 @@ void QuickScenePreviewWidget::gridCellSizeChanged(const QSize &value)
     setOverlaySettings(m_overlaySettings);
 }
 
+void QuickScenePreviewWidget::interactionChanged()
+{
+    const bool tracing = (interactionMode() == ComponentTraces);
+    if (m_overlaySettings.componentsTraces != tracing) {
+        m_overlaySettings.componentsTraces = tracing;
+        setOverlaySettings(m_overlaySettings);
+    }
+}
+
 void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(
     QuickInspectorInterface::Features supportedCustomRenderModes)
 {
@@ -332,7 +352,7 @@ void QuickScenePreviewWidget::setServerSideDecorationsState(bool enabled)
     m_toolBar.serverSideDecorationsEnabled->setChecked(enabled);
 }
 
-void QuickScenePreviewWidget::setOverlaySettingsState(const QuickOverlaySettings &settings)
+void QuickScenePreviewWidget::setOverlaySettingsState(const QuickDecorationsSettings &settings)
 {
     m_overlaySettings = settings;
     m_gridSettingsWidget->setOverlaySettings(settings);
@@ -388,12 +408,12 @@ void QuickScenePreviewWidget::setCustomRenderMode(QuickInspectorInterface::Rende
     visualizeActionTriggered(currentAction ? currentAction : m_toolBar.visualizeBatches);
 }
 
-QuickOverlaySettings QuickScenePreviewWidget::overlaySettings() const
+QuickDecorationsSettings QuickScenePreviewWidget::overlaySettings() const
 {
     return m_overlaySettings;
 }
 
-void QuickScenePreviewWidget::setOverlaySettings(const QuickOverlaySettings &settings)
+void QuickScenePreviewWidget::setOverlaySettings(const QuickDecorationsSettings &settings)
 {
     m_inspectorInterface->setOverlaySettings(settings);
     emit stateChanged();

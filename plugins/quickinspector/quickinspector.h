@@ -55,7 +55,7 @@ QT_END_NAMESPACE
 namespace GammaRay {
 class PropertyController;
 class QuickOverlay;
-struct QuickOverlaySettings;
+struct QuickDecorationsSettings;
 class QuickItemModel;
 class QuickSceneGraphModel;
 class RemoteViewServer;
@@ -86,7 +86,7 @@ public slots:
 
     void checkServerSideDecorations() override;
 
-    void setOverlaySettings(const GammaRay::QuickOverlaySettings &settings) override;
+    void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings) override;
 
     void checkOverlaySettings() override;
 

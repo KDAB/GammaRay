@@ -130,7 +130,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
             this, SLOT(setFeatures(GammaRay::QuickInspectorInterface::Features)));
 
     connect(m_interface, SIGNAL(serverSideDecorations(bool)), this, SLOT(setServerSideDecorations(bool)));
-    connect(m_interface, SIGNAL(overlaySettings(GammaRay::QuickOverlaySettings)), this, SLOT(setOverlaySettings(GammaRay::QuickOverlaySettings)));
+    connect(m_interface, SIGNAL(overlaySettings(GammaRay::QuickDecorationsSettings)), this, SLOT(setOverlaySettings(GammaRay::QuickDecorationsSettings)));
 
     connect(ui->itemTreeView, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(itemContextMenu(QPoint)));
@@ -173,7 +173,7 @@ void QuickInspectorWidget::setServerSideDecorations(bool enabled)
     m_previewWidget->setServerSideDecorationsState(enabled);
 }
 
-void QuickInspectorWidget::setOverlaySettings(const GammaRay::QuickOverlaySettings &settings)
+void QuickInspectorWidget::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)
 {
     m_previewWidget->setOverlaySettingsState(settings);
 }

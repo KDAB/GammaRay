@@ -49,7 +49,7 @@ GridSettingsWidget::~GridSettingsWidget()
     delete ui;
 }
 
-void GridSettingsWidget::setOverlaySettings(const QuickOverlaySettings &settings)
+void GridSettingsWidget::setOverlaySettings(const QuickDecorationsSettings &settings)
 {
     ui->sbXOffset->setValue(settings.gridOffset.x());
     ui->sbYOffset->setValue(settings.gridOffset.y());

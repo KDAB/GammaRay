@@ -142,7 +142,7 @@ public:
         return QVariant();
     }
 
-    void setSettings(const QuickOverlaySettings &settings)
+    void setSettings(const QuickDecorationsSettings &settings)
     {
         beginResetModel();
         m_items.clear();
@@ -234,7 +234,7 @@ QAction *QuickOverlayLegend::visibilityAction() const
     return m_visibilityAction;
 }
 
-void QuickOverlayLegend::setOverlaySettings(const QuickOverlaySettings &settings)
+void QuickOverlayLegend::setOverlaySettings(const QuickDecorationsSettings &settings)
 {
     m_model->setSettings(settings);
 

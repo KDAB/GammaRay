@@ -35,83 +35,10 @@
 #include <private/qquickitem_p.h>
 
 namespace GammaRay {
+
 bool GammaRay::QuickItemGeometry::isValid() const
 {
     return !qIsNaN(x) && !qIsNaN(y);
-}
-
-void QuickItemGeometry::initFrom(QQuickItem *item)
-{
-    if (!item) {
-        Q_ASSERT(false);
-        return;
-    }
-
-    QQuickItem *parent = item->parentItem();
-
-    if (parent) {
-        itemRect = item->parentItem()->mapRectToScene(
-                    QRectF(item->x(), item->y(), item->width(), item->height()));
-    } else {
-        itemRect = QRectF(0, 0, item->width(), item->height());
-    }
-
-    boundingRect = item->mapRectToScene(item->boundingRect());
-    childrenRect = item->mapRectToScene(item->childrenRect());
-    QQuickItem *background = item->property("background").value<QQuickItem *>();
-    if (background)
-        backgroundRect = background->mapRectToScene(background->boundingRect());
-    QQuickItem *contentItem = item->property("contentItem").value<QQuickItem *>();
-    if (contentItem)
-        contentItemRect = contentItem->mapRectToScene(contentItem->boundingRect());
-    transformOriginPoint = item->mapToScene(item->transformOriginPoint());
-
-    QQuickAnchors *anchors = item->property("anchors").value<QQuickAnchors *>();
-
-    if (anchors) {
-        QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
-        left = (bool)(usedAnchors &QQuickAnchors::LeftAnchor) || anchors->fill();
-        right = (bool)(usedAnchors &QQuickAnchors::RightAnchor) || anchors->fill();
-        top = (bool)(usedAnchors &QQuickAnchors::TopAnchor) || anchors->fill();
-        bottom = (bool)(usedAnchors &QQuickAnchors::BottomAnchor) || anchors->fill();
-        baseline = (bool)(usedAnchors & QQuickAnchors::BaselineAnchor);
-        horizontalCenter = (bool)(usedAnchors &QQuickAnchors::HCenterAnchor)
-                || anchors->centerIn();
-        verticalCenter = (bool)(usedAnchors &QQuickAnchors::VCenterAnchor)
-                || anchors->centerIn();
-        leftMargin = anchors->leftMargin();
-        rightMargin = anchors->rightMargin();
-        topMargin = anchors->topMargin();
-        bottomMargin = anchors->bottomMargin();
-        horizontalCenterOffset = anchors->horizontalCenterOffset();
-        verticalCenterOffset = anchors->verticalCenterOffset();
-        baselineOffset = anchors->baselineOffset();
-        margins = anchors->margins();
-    }
-    x = item->x();
-    y = item->y();
-
-    const QMetaObject *mo = item->metaObject();
-    if (mo->property(mo->indexOfProperty("padding")).isValid()) {
-        padding = item->property("padding").toReal();
-        leftPadding = item->property("leftPadding").toReal();
-        rightPadding = item->property("rightPadding").toReal();
-        topPadding = item->property("topPadding").toReal();
-        bottomPadding = item->property("bottomPadding").toReal();
-    } else {
-        padding = qQNaN();
-        leftPadding = qQNaN();
-        rightPadding = qQNaN();
-        topPadding = qQNaN();
-        bottomPadding = qQNaN();
-    }
-
-    QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
-    transform = itemPriv->itemToWindowTransform();
-    if (parent) {
-        QQuickItemPrivate *parentPriv = QQuickItemPrivate::get(parent);
-        parentTransform = parentPriv->itemToWindowTransform();
-    }
 }
 
 void QuickItemGeometry::scaleTo(qreal factor)
@@ -153,6 +80,50 @@ void QuickItemGeometry::scaleTo(qreal factor)
     }
 }
 
+bool QuickItemGeometry::operator==(const QuickItemGeometry &other) const
+{
+    return
+        itemRect == other.itemRect &&
+        boundingRect == other.boundingRect &&
+        childrenRect == other.childrenRect &&
+        backgroundRect == other.backgroundRect &&
+        contentItemRect == other.contentItemRect &&
+        transformOriginPoint == other.transformOriginPoint &&
+        transform == other.transform &&
+        parentTransform == other.parentTransform &&
+        x == other.x &&
+        y == other.y &&
+        left == other.left &&
+        right == other.right &&
+        top == other.top &&
+        bottom == other.bottom &&
+        horizontalCenter == other.horizontalCenter &&
+        verticalCenter == other.verticalCenter &&
+        baseline == other.baseline &&
+        margins == other.margins &&
+        leftMargin == other.leftMargin &&
+        horizontalCenterOffset == other.horizontalCenterOffset &&
+        rightMargin == other.rightMargin &&
+        topMargin == other.topMargin &&
+        verticalCenterOffset == other.verticalCenterOffset &&
+        bottomMargin == other.bottomMargin &&
+        baselineOffset == other.baselineOffset &&
+        padding == other.padding &&
+        leftPadding == other.leftPadding &&
+        rightPadding == other.rightPadding &&
+        topPadding == other.topPadding &&
+        bottomPadding == other.bottomPadding &&
+        traceColor == other.traceColor &&
+        traceTypeName == other.traceTypeName &&
+        traceName == other.traceName
+    ;
+}
+
+bool QuickItemGeometry::operator!=(const QuickItemGeometry &other) const
+{
+    return !operator==(other);
+}
+
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry)
 {
     stream << geometry.itemRect
@@ -190,6 +161,10 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &
            << geometry.rightPadding
            << geometry.topPadding
            << geometry.bottomPadding
+
+           << geometry.traceColor
+           << geometry.traceTypeName
+           << geometry.traceName
     ;
 
     return stream;
@@ -232,6 +207,10 @@ QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geomet
            >> geometry.rightPadding
            >> geometry.topPadding
            >> geometry.bottomPadding
+
+           >> geometry.traceColor
+           >> geometry.traceTypeName
+           >> geometry.traceName
     ;
 
     return stream;
