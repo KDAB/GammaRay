@@ -128,7 +128,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                                               "that caused the repaint."));
 
     m_toolBar.serverSideDecorationsEnabled = new QAction(QIcon(QStringLiteral(
-                                                               ":/gammaray/plugins/quickinspector/active-focus.png")),
+                                                               ":/gammaray/plugins/quickinspector/decorations.png")),
                                                      tr("Target Decorations"), this);
     m_toolBar.serverSideDecorationsEnabled->setCheckable(true);
     m_toolBar.serverSideDecorationsEnabled->setToolTip(tr("<b>Target Decorations</b><br>"
@@ -139,7 +139,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
     m_toolBar.gridSettings = new QMenu(tr("Grid Settings"), this);
     m_toolBar.gridSettings->setIcon(QIcon(QStringLiteral(
-                                              ":/gammaray/plugins/quickinspector/active-focus.png")));
+                                              ":/gammaray/plugins/quickinspector/grid-settings.png")));
     m_toolBar.gridSettings->setToolTip(tr("<b>Grid Settings</b><br>"
                                               "This popup a small widget to configure the grid settings."));
     m_toolBar.gridSettings->setToolTipsVisible(true);

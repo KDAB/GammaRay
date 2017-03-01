@@ -162,7 +162,7 @@ void RemoteViewWidget::setupActions()
     action->setData(InputRedirection);
     action->setActionGroup(m_interactionModeActions);
 
-    action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/component-traces.png")),
+    action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/traces.png")),
                          tr("Components Traces"), this);
     action->setCheckable(true);
     action->setToolTip(tr("<b>Components Traces</b><br>"
