@@ -42,8 +42,7 @@ namespace GammaRay {
 struct QuickItemGeometry
 {
     QuickItemGeometry()
-        : valid(false)
-        , x(qQNaN())
+        : x(qQNaN())
         , y(qQNaN())
         , left(false)
         , right(false)
@@ -61,8 +60,6 @@ struct QuickItemGeometry
         , bottomMargin(qQNaN())
         , baselineOffset(qQNaN())
     { }
-
-    bool valid;
 
     // basic geometry
     QRectF itemRect;
@@ -97,6 +94,7 @@ struct QuickItemGeometry
     qreal bottomMargin;
     qreal baselineOffset;
 
+    bool isValid() const;
     void initFrom(QQuickItem *item);
     void scaleTo(qreal factor);
 };

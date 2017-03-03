@@ -354,7 +354,7 @@ void QuickOverlay::disconnectTopItemChanges(QQuickItem *item)
 void QuickOverlay::drawDecoration(QPainter *painter, const QuickItemGeometry &itemGeometry,
                                   const QRectF &viewRect, qreal zoom)
 {
-    if (!itemGeometry.valid)
+    if (!itemGeometry.isValid())
         return;
 
     painter->save();

@@ -29,19 +29,23 @@
 #include "quickitemgeometry.h"
 
 #include <QQuickItem>
+#include <QtNumeric>
 
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
 
 namespace GammaRay {
+bool GammaRay::QuickItemGeometry::isValid() const
+{
+    return !qIsNaN(x) && !qIsNaN(y);
+}
+
 void QuickItemGeometry::initFrom(QQuickItem *item)
 {
     if (!item) {
         Q_ASSERT(false);
         return;
     }
-
-    valid = true;
 
     QQuickItem *parent = item->parentItem();
 
@@ -90,7 +94,7 @@ void QuickItemGeometry::initFrom(QQuickItem *item)
 
 void QuickItemGeometry::scaleTo(qreal factor)
 {
-    if (!valid)
+    if (!isValid())
         return;
 
     itemRect = QRectF(
@@ -116,8 +120,7 @@ void QuickItemGeometry::scaleTo(qreal factor)
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &geometry)
 {
-    stream << geometry.valid
-           << geometry.itemRect
+    stream << geometry.itemRect
            << geometry.boundingRect
            << geometry.childrenRect
 
@@ -150,8 +153,7 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &
 
 QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry)
 {
-    stream >> geometry.valid
-           >> geometry.itemRect
+    stream >> geometry.itemRect
            >> geometry.boundingRect
            >> geometry.childrenRect
 
