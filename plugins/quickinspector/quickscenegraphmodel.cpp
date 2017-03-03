@@ -305,7 +305,11 @@ void QuickSceneGraphModel::collectItemNodes(QQuickItem *item)
     if (!item)
         return;
 
-    QSGNode *itemNode = QQuickItemPrivate::get(item)->itemNode();
+    QQuickItemPrivate *priv = QQuickItemPrivate::get(item);
+    if (!priv->itemNodeInstance) // Explicitly avoid calling priv->itemNode() here, which would create a new node outside the scenegraph's behavior.
+        return;
+
+    QSGNode *itemNode = priv->itemNodeInstance;
     m_itemItemNodeMap[item] = itemNode;
     m_itemNodeItemMap[itemNode] = item;
 

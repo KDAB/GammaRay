@@ -367,7 +367,7 @@ void QuickOverlay::drawDecoration(QPainter *painter, const RenderInfo &renderInf
     // Draw the grid if needed
     drawGrid(painter, renderInfo);
 
-    if (!renderInfo.itemGeometry.valid)
+    if (!renderInfo.itemGeometry.isValid())
         return;
 
     const QuickItemGeometry &itemGeometry(renderInfo.itemGeometry);

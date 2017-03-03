@@ -67,10 +67,7 @@ if(UNIX)
     list(APPEND INJECTOR_TYPES lldb)
   endif()
 elseif(WIN32)
-  # MSVC+<Qt5.4: hooks and release builds don't work before 5.4
-  if(NOT (MSVC AND (NOT Qt5Core_FOUND OR Qt5Core_VERSION VERSION_LESS 5.4.0) AND CMAKE_BUILD_TYPE MATCHES "^[Rr]el"))
-    list(APPEND INJECTOR_TYPES windll style)
-  endif()
+  list(APPEND INJECTOR_TYPES windll style)
 endif()
 
 foreach(injectorType ${INJECTOR_TYPES})

@@ -52,6 +52,7 @@ class IntegrationTest : public QObject
 private:
     void initTestCase()
     {
+        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Hooks::installHooks();
         Probe::startupHookReceived();
     }

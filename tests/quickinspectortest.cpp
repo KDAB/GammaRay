@@ -123,11 +123,11 @@ private slots:
 
         itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
         QVERIFY(itemModel);
-        ModelTest itemModelTest(itemModel);
+        new ModelTest(itemModel, view);
 
         sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
         QVERIFY(sgModel);
-        ModelTest sgModelTest(sgModel);
+        new ModelTest(sgModel, view);
 
         inspector = ObjectBroker::object<QuickInspectorInterface *>();
         QVERIFY(inspector);
