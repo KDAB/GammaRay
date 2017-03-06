@@ -38,16 +38,18 @@ class ProcessTracker::D : public QObject
     Q_OBJECT
 
 public:
-    GammaRay::ProcessTracker *tracker = nullptr;
-    GammaRay::ProcessTrackerBackend *backend = nullptr;
-    QTimer *ticker = nullptr;
+    GammaRay::ProcessTracker *tracker;
+    GammaRay::ProcessTrackerBackend *backend;
+    QTimer *ticker;
     GammaRay::ProcessTrackerInfo previousInfo;
-    qint64 pid = -1;
+    qint64 pid;
 
     explicit D(GammaRay::ProcessTracker *tracker)
         : QObject(tracker)
         , tracker(tracker)
+        , backend(nullptr)
         , ticker(new QTimer(this))
+        , pid(-1)
     {
         ticker->setSingleShot(false);
 
@@ -133,19 +135,19 @@ bool ProcessTracker::isActive() const
 
 void ProcessTracker::setPid(qint64 pid)
 {
-    d->previousInfo = {};
+    d->previousInfo = ProcessTrackerInfo();
     d->pid = pid;
 }
 
 void ProcessTracker::start(int msecs)
 {
-    d->previousInfo = {};
+    d->previousInfo = ProcessTrackerInfo();
     d->ticker->start(msecs);
 }
 
 void ProcessTracker::stop()
 {
-    d->previousInfo = {};
+    d->previousInfo = ProcessTrackerInfo();
     d->ticker->stop();
 }
 

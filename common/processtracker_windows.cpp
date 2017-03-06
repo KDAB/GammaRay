@@ -64,8 +64,8 @@ using LocalHandlePtr = std::unique_ptr<LHANDLE, LocalHandleDeleter>;
 class LocalBuffer
 {
 private:
-    BYTE* m_data = nullptr;
-    DWORD m_size = 0;
+    BYTE* m_data;
+    DWORD m_size;
 
     void allocate(DWORD size) {
         m_data = (BYTE*)LocalAlloc(LMEM_FIXED, size);
@@ -83,7 +83,10 @@ private:
     }
 
 public:
-    LocalBuffer(DWORD size) {
+    LocalBuffer(DWORD size)
+        : m_data(nullptr)
+        , m_size(0)
+    {
         allocate(size);
     }
 
@@ -274,7 +277,7 @@ static QString toQString(const UNICODE_STRING &string) {
 
 // Resolve the dll only exported symbol
 // Though the api is available with recent Windows version, we prefer to dynamically resolve it
-using NtQuerySystemInformationFunc = NTSTATUS (
+typedef NTSTATUS(*NtQuerySystemInformationFunc)(
     SYSTEM_INFORMATION_CLASS SystemInformationClass,
     PVOID                    SystemInformation,
     ULONG                    SystemInformationLength,
@@ -419,8 +422,8 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
                 }
 
                 pinfo.state = suspended
-                        ? GammaRay::ProcessTracker::State::Suspended
-                        : GammaRay::ProcessTracker::State::Running;
+                        ? GammaRay::ProcessTracker::Suspended
+                        : GammaRay::ProcessTracker::Running;
             }
         }
     }

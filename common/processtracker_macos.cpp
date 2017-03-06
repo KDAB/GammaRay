@@ -72,11 +72,11 @@ void ProcessTrackerBackendMacOS::checkProcess(qint64 pid)
 
         switch (info.kp_proc.p_stat) {
             case SRUN:
-                pinfo.state = GammaRay::ProcessTracker::State::Running;
+                pinfo.state = GammaRay::ProcessTracker::Running;
                 break;
             case SSTOP:
             case SSLEEP:
-                pinfo.state = GammaRay::ProcessTracker::State::Suspended;
+                pinfo.state = GammaRay::ProcessTracker::Suspended;
                 break;
             default:
                 break;

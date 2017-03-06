@@ -44,7 +44,7 @@ class GAMMARAY_COMMON_EXPORT ProcessTracker : public QObject
     Q_OBJECT
 
 public:
-    enum class State {
+    enum State {
         Unknown = -1,
         Running,
         Suspended
@@ -75,7 +75,7 @@ private:
 
 struct GAMMARAY_COMMON_EXPORT ProcessTrackerInfo
 {
-    ProcessTrackerInfo(qint64 pid = -1, bool traced = false, GammaRay::ProcessTracker::State state = GammaRay::ProcessTracker::State::Unknown)
+    ProcessTrackerInfo(qint64 pid = -1, bool traced = false, GammaRay::ProcessTracker::State state = GammaRay::ProcessTracker::Unknown)
         : pid(pid)
         , traced(traced)
         , state(state)

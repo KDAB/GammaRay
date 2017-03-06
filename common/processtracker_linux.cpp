@@ -84,13 +84,13 @@ void ProcessTrackerBackendLinux::checkProcess(qint64 pid)
                 // status decoding as taken from fs/proc/array.c
                 switch (status) {
                     case 'T': {
-                        pinfo.state = GammaRay::ProcessTracker::State::Suspended;
+                        pinfo.state = GammaRay::ProcessTracker::Suspended;
                         break;
                     }
 
                     case 'S': // Sleeping
                     case 'R': {
-                        pinfo.state = GammaRay::ProcessTracker::State::Running;
+                        pinfo.state = GammaRay::ProcessTracker::Running;
                         break;
                     }
 
