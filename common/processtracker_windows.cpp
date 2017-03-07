@@ -67,6 +67,16 @@ private:
     BYTE* m_data;
     DWORD m_size;
 
+    LocalBuffer(const LocalBuffer &other)
+        : m_data(nullptr)
+        , m_size(0)
+    { Q_UNUSED(other); Q_ASSERT(false); }
+
+    LocalBuffer &operator=(const LocalBuffer &other)
+        : m_data(nullptr)
+        , m_size(0)
+    { Q_UNUSED(other); Q_ASSERT(false); }
+
     void allocate(DWORD size) {
         m_data = (BYTE*)LocalAlloc(LMEM_FIXED, size);
         if (m_data != nullptr) {
@@ -93,9 +103,6 @@ public:
     ~LocalBuffer() {
         free();
     }
-
-    LocalBuffer(const LocalBuffer &other) = delete;
-    LocalBuffer &operator=(const LocalBuffer &other) = delete;
 
     bool isValid() const {
         return m_data != nullptr;
