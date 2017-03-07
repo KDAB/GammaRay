@@ -73,9 +73,7 @@ private:
     { Q_UNUSED(other); Q_ASSERT(false); }
 
     LocalBuffer &operator=(const LocalBuffer &other)
-        : m_data(nullptr)
-        , m_size(0)
-    { Q_UNUSED(other); Q_ASSERT(false); }
+    { Q_UNUSED(other); Q_ASSERT(false); return *this; }
 
     void allocate(DWORD size) {
         m_data = (BYTE*)LocalAlloc(LMEM_FIXED, size);
