@@ -287,5 +287,5 @@ void ClientConnectionManager::clientConnected()
 void ClientConnectionManager::clientDisconnected()
 {
     setProcessTrackerPid(-1);
-    emit processTrackerInfoChanged({});
+    emit processTrackerInfoChanged(ProcessTrackerInfo());
 }
