@@ -57,9 +57,9 @@ struct LocalHandleDeleter
 };
 
 // Non pointer HANDLE helper
-using LHANDLE = std::remove_pointer<HANDLE>::type;
+typedef std::remove_pointer<HANDLE>::type LHANDLE;
 // HANDLE holder helper
-using LocalHandlePtr = std::unique_ptr<LHANDLE, LocalHandleDeleter>;
+typedef std::unique_ptr<LHANDLE, LocalHandleDeleter> LocalHandlePtr;
 
 class LocalBuffer
 {
@@ -284,7 +284,7 @@ typedef NTSTATUS(*NtQuerySystemInformationFunc)(
     PULONG                   ReturnLength
 );
 
-static NtQuerySystemInformationFunc *qt_NtQuerySystemInformation = (NtQuerySystemInformationFunc*)QLibrary::resolve("NtDll", "NtQuerySystemInformation");
+static NtQuerySystemInformationFunc qt_NtQuerySystemInformation = (NtQuerySystemInformationFunc)QLibrary::resolve("NtDll", "NtQuerySystemInformation");
 }
 
 using namespace GammaRay;

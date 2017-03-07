@@ -51,7 +51,7 @@ public:
     };
 
     explicit ProcessTracker(QObject *parent = nullptr);
-    ~ProcessTracker() override;
+    ~ProcessTracker();
 
     GammaRay::ProcessTrackerBackend *backend() const;
     void setBackend(GammaRay::ProcessTrackerBackend *backend);
