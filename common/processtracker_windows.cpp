@@ -408,7 +408,7 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
                 // Looks like when debugging a windows process that spawn lots of new threads
                 // All are suspended except the last one
                 bool suspended = true;
-                for (DWORD i = 0; i < process->NumberOfThreads; i++) {
+                for (DWORD i = 0; i < process->NumberOfThreads; ++i) {
                     SYSTEM_THREAD *thread = &(process->Threads[i]);
                     if (!thread) {
                         Q_ASSERT(false);
