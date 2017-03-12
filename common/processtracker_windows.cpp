@@ -64,16 +64,22 @@ typedef std::unique_ptr<LHANDLE, LocalHandleDeleter> LocalHandlePtr;
 class LocalBuffer
 {
 private:
-    BYTE* m_data;
+    BYTE *m_data;
     DWORD m_size;
 
     LocalBuffer(const LocalBuffer &other)
         : m_data(nullptr)
         , m_size(0)
-    { Q_UNUSED(other); Q_ASSERT(false); }
+    {
+        Q_UNUSED(other);
+        Q_ASSERT(false);
+    }
 
-    LocalBuffer &operator=(const LocalBuffer &other)
-    { Q_UNUSED(other); Q_ASSERT(false); return *this; }
+    LocalBuffer &operator=(const LocalBuffer &other) {
+        Q_UNUSED(other);
+        Q_ASSERT(false);
+        return *this;
+    }
 
     void allocate(DWORD size) {
         m_data = (BYTE*)LocalAlloc(LMEM_FIXED, size);
@@ -110,21 +116,21 @@ public:
         return m_size;
     }
 
-    BYTE* data() {
+    BYTE *data() {
         return m_data;
     }
 
     template <typename T>
-    T* data() {
+    T *data() {
         return reinterpret_cast<T *>(m_data);
     }
 
-    const BYTE* const data() const {
+    const BYTE *const data() const {
         return m_data;
     }
 
     template <typename T>
-    const T* const data() const {
+    const T *const data() const {
         return reinterpret_cast<const T * const>(m_data);
     }
 
@@ -307,9 +313,8 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
         BOOL traced = false;
         if (pid == QCoreApplication::applicationPid()) {
             traced = IsDebuggerPresent();
-        }
-        else {
-            LocalHandlePtr processHandle(OpenProcess(READ_CONTROL | PROCESS_QUERY_INFORMATION | PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid));
+        } else {
+            LocalHandlePtr processHandle(OpenProcess(READ_CONTROL | PROCESS_QUERY_INFORMATION | PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid)); //krazy:exclude=captruefalse
             if (!CheckRemoteDebuggerPresent(processHandle.get(), &traced)) {
                 qWarning("%s: Can not check remote debugger presence.");
             }
@@ -379,15 +384,14 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
 
         if (buffer.isValid()) {
             // Get the SYSTEM_PROCESS by its pid
-            SYSTEM_PROCESS* processes = buffer.data<SYSTEM_PROCESS>();
-            SYSTEM_PROCESS* process = nullptr;
+            SYSTEM_PROCESS *processes = buffer.data<SYSTEM_PROCESS>();
+            SYSTEM_PROCESS *process = nullptr;
             while (true) {
                 if ((uintptr_t)processes->UniqueProcessId == pid) {
                     //qWarning() << "Found process:" << pid << toQString(processes->ImageName);
                     process = processes;
                     break;
-                }
-                else {
+                } else {
                     //qWarning("No matching process: %lli", (uintptr_t)processes->UniqueProcessId);
                 }
 
@@ -396,7 +400,7 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
                     break;
                 }
 
-                processes = (SYSTEM_PROCESS*)((BYTE*)processes + processes->NextEntryOffset);
+                processes = (SYSTEM_PROCESS *)((BYTE *)processes + processes->NextEntryOffset);
             }
 
             if (process) {
@@ -405,12 +409,11 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
                 // All are suspended except the last one
                 bool suspended = true;
                 for (DWORD i = 0; i < process->NumberOfThreads; i++) {
-                    SYSTEM_THREAD* thread = &(process->Threads[i]);
+                    SYSTEM_THREAD *thread = &(process->Threads[i]);
                     if (!thread) {
                         Q_ASSERT(false);
                         continue;
                     }
-
 
                     const bool debuggingThread = process->NumberOfThreads > 1 && i == process->NumberOfThreads - 1;
                     if (debuggingThread) {
@@ -426,9 +429,8 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
                     }
                 }
 
-                pinfo.state = suspended
-                        ? GammaRay::ProcessTracker::Suspended
-                        : GammaRay::ProcessTracker::Running;
+                pinfo.state = suspended ?
+                    GammaRay::ProcessTracker::Suspended : GammaRay::ProcessTracker::Running;
             }
         }
     }
