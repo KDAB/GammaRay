@@ -142,8 +142,6 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
 
-    connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
-    connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(m_previewWidget, SIGNAL(stateChanged()), this, SLOT(saveState()));
 }
 
