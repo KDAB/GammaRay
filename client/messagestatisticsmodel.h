@@ -55,20 +55,20 @@ public:
 
 private:
     int countPerType(int msgType) const;
-    int sizePerType(int msgType) const;
+    quint64 sizePerType(int msgType) const;
 
     struct Info {
         Info();
         int totalCount() const;
-        int totalSize() const;
+        quint64 totalSize() const;
 
         QString name;
         QVector<int> messageCount;
-        QVector<int> messageSize;
+        QVector<quint64> messageSize;
     };
     QVector<Info> m_data;
     int m_totalCount;
-    int m_totalSize;
+    quint64 m_totalSize;
 };
 }
 
