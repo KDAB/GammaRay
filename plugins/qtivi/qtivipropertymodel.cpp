@@ -619,7 +619,7 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
         case OverrideColumn:
             if (role == Qt::CheckStateRole) {
                 const bool wasOverride = iviProperty->overrider.isOverride();
-                const bool isOverride = value.toBool();
+                const bool isOverride = value.value<Qt::CheckState>() > Qt::Unchecked;
                 if (isOverride != wasOverride) {
                     emit dataChanged(index, index);
                     if (isOverride) {
