@@ -52,6 +52,9 @@ public:
     bool isOverride() const;
 
     QVariant cppValue() const;
+    QVariant iviValue() const;
+
+    static QVariant iviValue(const QVariant &value, int userType);
 
 private:
     Q_DISABLE_COPY(QtIviPropertyOverrider)
