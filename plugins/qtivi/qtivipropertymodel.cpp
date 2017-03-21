@@ -543,6 +543,12 @@ bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value
     IviPropertyCarrier *propCarrier = &m_propertyCarriers[parentRow];
     if (index.row() >= 0 && uint(index.row()) < propCarrier->iviProperties.size()) {
         IviProperty *iviProperty = &propCarrier->iviProperties[index.row()];
+
+        // We do not want a not available property to be changed
+        if (!iviProperty->value->isAvailable()) {
+            return false;
+        }
+
         switch (index.column()) {
         case ValueColumn:
             if (role == Qt::DisplayRole || role == Qt::EditRole) {
