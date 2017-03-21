@@ -289,6 +289,7 @@ if(Qt5Core_FOUND)
     Bluetooth
     Concurrent
     IviCore
+    IviVehicleFunctions
     Positioning
     PrintSupport
     Qml

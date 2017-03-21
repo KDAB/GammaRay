@@ -451,5 +451,20 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD AND NOT OSX_ASAN_WORKAROUND)
     add_test(NAME launchertest COMMAND launchertest)
 endif()
 
+### Qt IVI property model test
+
+if(Qt5IviCore_FOUND AND Qt5IviVehicleFunctions_FOUND) # requires QHooks
+  add_executable(qtivipropertymodeltest
+    qtivipropertymodeltest.cpp
+    ../plugins/qtivi/qtivipropertyoverrider.cpp
+    ../plugins/qtivi/qtivipropertymodel.cpp
+    $<TARGET_OBJECTS:gammaray_probe_obj>
+    $<TARGET_OBJECTS:modeltestobj>
+  )
+  target_include_directories(qtivipropertymodeltest SYSTEM PRIVATE ${Qt5IviCore_PRIVATE_INCLUDE_DIRS})
+  target_link_libraries(qtivipropertymodeltest gammaray_core Qt5::Test Qt5::Gui Qt5::IviCore Qt5::IviVehicleFunctions)
+  add_test(NAME qtivipropertymodeltest COMMAND qtivipropertymodeltest)
+endif()
+
 add_subdirectory(manual)
 add_subdirectory(targets)
