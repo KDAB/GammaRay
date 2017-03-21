@@ -51,8 +51,7 @@ public:
     enum {
         ObjectIdRole = ObjectModel::UserRole + 1,
         ValueConstraintsRole, // transmits the following constraints types
-
-        RangeConstraints = 0, // min / max
+        RangeConstraints, // min / max
         AvailableValuesConstraints // list of possible values
     };
 
