@@ -156,7 +156,9 @@ QtIviPropertyOverrider &QtIviPropertyOverrider::operator=(QtIviPropertyOverrider
 
 QtIviPropertyOverrider::~QtIviPropertyOverrider()
 {
-    setOverride(false);
+    if (m_prop) {
+        setOverride(false);
+    }
 }
 
 void QtIviPropertyOverrider::setValue(const QVariant &value)
@@ -175,6 +177,7 @@ void QtIviPropertyOverrider::setValue(const QVariant &value)
 
 void QtIviPropertyOverrider::setOverride(bool doOverride)
 {
+    Q_ASSERT(m_prop);
     QIviPropertyPrivate *const pPriv = QIviPropertyPrivate::get(m_prop);
     const bool wasOverride = isOverride();
     if (!doOverride && wasOverride) {
