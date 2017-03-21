@@ -47,12 +47,24 @@ class Probe;
 class QtIviPropertyModel : public QAbstractItemModel
 {
     Q_OBJECT
+
 public:
-    enum {
+    enum Roles {
         ObjectIdRole = ObjectModel::UserRole + 1,
         ValueConstraintsRole, // transmits the following constraints types
         RangeConstraints, // min / max
-        AvailableValuesConstraints // list of possible values
+        AvailableValuesConstraints, // list of possible values
+        ZoneName, // the zoned feature name
+        NativeIviValue // The value as returned by QIviProperty::value()
+    };
+
+    enum Columns {
+        NameColumn = 0,
+        ValueColumn,
+        WritableColumn,
+        OverrideColumn,
+        TypeColumn,
+        ColumnCount
     };
 
     explicit QtIviPropertyModel(Probe *probe);

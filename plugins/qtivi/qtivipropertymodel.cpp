@@ -56,16 +56,6 @@ static const quint64 PropertyCarrierIndex = ~quint64(0); // there is no QUINT64_
 
 using namespace GammaRay;
 
-enum Columns
-{
-    NameColumn = 0,
-    ValueColumn,
-    WritableColumn,
-    OverrideColumn,
-    TypeColumn,
-    ColumnCount
-};
-
 QtIviPropertyModel::QtIviPropertyModel(Probe *probe)
     : QAbstractItemModel(probe)
 {
@@ -336,6 +326,13 @@ Qt::ItemFlags QtIviPropertyModel::flags(const QModelIndex &index) const
     return flags;
 }
 
+static QString zonedFeatureName(QObject *object)
+{
+    if (const QIviAbstractZonedFeature *zoned = qobject_cast<const QIviAbstractZonedFeature *>(object))
+        return zoned->zone();
+    return QString();
+}
+
 static QString buildCarrierObjectName(const QObject *carrier)
 {
     QString name = carrier->objectName();
@@ -449,6 +446,9 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                     return QVariant::fromValue(ObjectId(propCarrier.carrier));
                 break;
 
+            case ZoneName:
+                return zonedFeatureName(propCarrier.carrier);
+
             default:
                 break;
             }
@@ -460,6 +460,9 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
             const IviPropertyCarrier &propCarrier = m_propertyCarriers.at(parentRow);
             if (index.row() >= 0 && uint(index.row()) < propCarrier.iviProperties.size()) {
                 const IviProperty &iviProperty = propCarrier.iviProperties.at(index.row());
+                if (role == ZoneName) {
+                    return zonedFeatureName(propCarrier.carrier);
+                }
                 switch (index.column()) {
                 case NameColumn: // aka column 0, for ObjectIdRole
                     if (role == Qt::DisplayRole) {
@@ -485,6 +488,8 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                             return QVariant::fromValue(EnumRepositoryServer::valueFromMetaEnum(num, me));
                         }
                         return VariantHandler::serializableVariant(value);
+                    } else if (role == NativeIviValue) {
+                        return iviProperty.overrider.iviValue();
                     } else if (role == ValueConstraintsRole) {
                         return formatConstraints(iviProperty.value);
                     }
