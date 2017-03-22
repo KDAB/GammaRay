@@ -41,7 +41,11 @@
 #include <QDebug>
 #include <QtTest/qtest.h>
 #include <QObject>
+#include <QIviServiceObject>
 #include <QIviClimateControl>
+#if defined(QT_IVIMEDIA_LIB)
+#include <QIviAmFmTuner>
+#endif
 
 //#define ENABLE_LOG
 
@@ -63,7 +67,12 @@ class QtIviPropertyModelTest : public QObject
 {
     Q_OBJECT
     QIviClimateControl *m_climate;
+#if defined(QT_IVIMEDIA_LIB)
+    QIviAmFmTuner *m_amfm;
+#endif
     QAbstractItemModel *m_model;
+
+    typedef QSharedPointer<QtIviPropertyModel::IviCarrierProperty> IviCarrierProperty;
 
 public:
     explicit QtIviPropertyModelTest(QObject *parent = nullptr)
@@ -77,9 +86,16 @@ private:
     {
         m_climate = new QIviClimateControl(QString(), this);
         QVERIFY(m_climate);
-        m_climate->setDiscoveryMode(QIviAbstractZonedFeature::LoadOnlyProductionBackends);
-        QVERIFY(m_climate->startAutoDiscovery() == QIviAbstractFeature::ProductionBackendLoaded);
+        m_climate->setDiscoveryMode(QIviAbstractZonedFeature::LoadOnlySimulationBackends);
+        QVERIFY(m_climate->startAutoDiscovery() == QIviAbstractFeature::SimulationBackendLoaded);
         QVERIFY(m_climate->isValid());
+#if defined(QT_IVIMEDIA_LIB)
+        m_amfm = new QIviAmFmTuner(this);
+        QVERIFY(m_amfm);
+        m_amfm->setDiscoveryMode(QIviAbstractZonedFeature::LoadOnlySimulationBackends);
+        QVERIFY(m_amfm->startAutoDiscovery() == QIviAbstractFeature::SimulationBackendLoaded);
+        QVERIFY(m_amfm->isValid());
+#endif
     }
 
     void createProbe()
@@ -91,26 +107,17 @@ private:
         QTest::qWait(1); // event loop re-entry
     }
 
-    template <typename T>
-    QVariant iviValue(const T &value) const
+    QModelIndex carrierIndex(QObject *carrier, int column) const
     {
-        return std::is_same<typename std::decay<T>::type, QVariant>::value
-                ? QtIviPropertyOverrider::iviValue(value, value.userType())
-                : QtIviPropertyOverrider::iviValue(QVariant::fromValue(value), qMetaTypeId<T>())
-        ;
-    }
-
-    QModelIndex zonedFeatureIndex(const QString &zone, int column) const
-    {
-        const auto index(m_model->match(m_model->index(0, 0), QtIviPropertyModel::ZoneName,
-                                        zone, 1,
+        const auto index(m_model->match(m_model->index(0, 0), QtIviPropertyModel::ObjectIdRole,
+                                        QVariant::fromValue(ObjectId(carrier)), 1,
                                         Qt::MatchFlags(Qt::MatchExactly | Qt::MatchWrap)).value(0));
         return index.sibling(index.row(), column);
     }
 
-    QModelIndex zonedFeaturePropertyIndex(const QString &zone, const QString &property, int column) const
+    QModelIndex carrierPropertyIndex(QObject *carrier, const QString &property, int column) const
     {
-        const QModelIndex parent(zonedFeatureIndex(zone, 0));
+        const QModelIndex parent(carrierIndex(carrier, 0));
         const auto index(parent.isValid()
                          ? m_model->match(m_model->index(0, 0, parent), Qt::DisplayRole, property, 1,
                                           Qt::MatchFlags(Qt::MatchExactly | Qt::MatchWrap)).value(0)
@@ -118,24 +125,18 @@ private:
         return index.sibling(index.row(), column);
     }
 
-    QVariant zonedFeaturePropertyData(const QString &zone, const QString &property, int column, int role) const
+    QVariant carrierPropertyData(QObject *carrier, const QString &property, int column, int role) const
     {
-        return zonedFeaturePropertyIndex(zone, property, column).data(role);
+        return carrierPropertyIndex(carrier, property, column).data(role);
     }
 
-    QVariant zonedFeaturePropertyIviData(const QString &zone, const QString &property) const
+    QVariant carrierPropertyValue(QObject *carrier, const QString &property) const
     {
-        return zonedFeaturePropertyIndex(zone, property, QtIviPropertyModel::ValueColumn)
-                .data(QtIviPropertyModel::NativeIviValue);
+        return carrierPropertyData(carrier, property, QtIviPropertyModel::ValueColumn,
+                                   QtIviPropertyModel::RawValue);
     }
 
-    template <typename T>
-    T zonedFeaturePropertyData(const QString &zone, const QString &property, int column, int role) const
-    {
-        return zonedFeaturePropertyIndex(zone, property, column).data(role).value<T>();
-    }
-
-    QModelIndex zonedFeaturePropertyIndex(QIviProperty *property, int column) const
+    QModelIndex carrierPropertyIndex(QIviProperty *property, int column) const
     {
         const auto index(m_model->match(m_model->index(0, 0), QtIviPropertyModel::ObjectIdRole,
                                         QVariant::fromValue(ObjectId(property)), 1,
@@ -144,76 +145,99 @@ private:
         return index.sibling(index.row(), column);
     }
 
-    QVariant zonedFeaturePropertyData(QIviProperty *property, int column, int role) const
+    QVariant carrierPropertyData(QIviProperty *property, int column, int role) const
     {
-        return zonedFeaturePropertyIndex(property, column).data(role);
+        return carrierPropertyIndex(property, column).data(role);
     }
 
-    QVariant zonedFeaturePropertyIviData(QIviProperty *property) const
+    QVariant carrierPropertyValue(QIviProperty *property) const
     {
-        return zonedFeaturePropertyIndex(property, QtIviPropertyModel::ValueColumn)
-                .data(QtIviPropertyModel::NativeIviValue);
+        return carrierPropertyData(property, QtIviPropertyModel::ValueColumn,
+                                   QtIviPropertyModel::RawValue);
     }
 
-    template <typename T>
-    T zonedFeaturePropertyData(QIviProperty *property, int column, int role) const
-    {
-        return zonedFeaturePropertyIndex(property, column).data(role).value<T>();
+    IviCarrierProperty iviCarrierProperty(QObject *carrier, const QString &property) const {
+        if (!carrier)
+            return IviCarrierProperty::create();
+
+        const QMetaObject *mo(carrier->metaObject());
+        const int index(mo->indexOfProperty(qPrintable(property)));
+
+        if (index == -1)
+            return IviCarrierProperty::create();
+
+        const QMetaProperty metaProperty(mo->property(index));
+
+        if (metaProperty.userType() == qMetaTypeId<QIviProperty *>()) {
+            return IviCarrierProperty::create(metaProperty.read(carrier).value<QIviProperty *>(), metaProperty);
+        }
+
+        return IviCarrierProperty::create(metaProperty);
     }
 
-    // Check zoned feature properties vs model properties
-    bool testZonedFeature(const QIviAbstractZonedFeature *const zonedFeature) const
+    // Check ivi object properties vs model properties
+    bool testIviObject(QObject *iviObject) const
     {
 #if defined(ENABLE_LOG)
-        qWarning("Testing zone: %s/%s", zonedFeature->metaObject()->className(),
-                 zonedFeature->zone().toLocal8Bit().constData());
+        qWarning() << "Testing ivi object: " << iviObject;
 #endif
-        QVERIFY_RETURN_FALSE(zonedFeature);
+        QVERIFY_RETURN_FALSE(iviObject);
 
-        QVector<QString> zonedFeaturePropertyNames;
-        QMap<QString, QIviProperty *> zonedFeatureProperties;
-        const QMetaObject *mo(zonedFeature->metaObject());
+        QVector<QString> iviPropertyNames;
+        QMap<QString, QVariant> iviProperties;
+        const QMetaObject *iviMo(iviObject->metaObject());
+        int propertyOffset = -1;
 
-        for (int i = 0; i < mo->propertyCount(); ++i) {
-            const QMetaProperty property(mo->property(i));
+        if (qobject_cast<QIviServiceObject *>(iviObject))
+            propertyOffset = QIviServiceObject::staticMetaObject.propertyOffset();
+        else if (qobject_cast<QIviAbstractFeature *>(iviObject))
+            propertyOffset = QIviAbstractFeature::staticMetaObject.propertyOffset();
+
+        QVERIFY_RETURN_FALSE(propertyOffset != -1);
+
+        for (int i = propertyOffset; i < iviMo->propertyCount(); ++i) {
+            const QMetaProperty property(iviMo->property(i));
+
+            iviPropertyNames << QLatin1String(property.name());
+            QVERIFY_RETURN_FALSE(!iviPropertyNames.last().isEmpty());
 
             if (property.userType() == qMetaTypeId<QIviProperty *>()) {
-                zonedFeaturePropertyNames << QLatin1String(property.name());
-                QVERIFY_RETURN_FALSE(!zonedFeaturePropertyNames.last().isEmpty());
-                zonedFeatureProperties[zonedFeaturePropertyNames.last()] =
-                        property.read(zonedFeature).value<QIviProperty *>();
-                QVERIFY_RETURN_FALSE(zonedFeatureProperties[zonedFeaturePropertyNames.last()]);
+                QIviProperty *ivi = property.read(iviObject).value<QIviProperty *>();
+                QVERIFY_RETURN_FALSE(ivi);
+                iviProperties[iviPropertyNames.last()] = ivi->value();
+            } else {
+                iviProperties[iviPropertyNames.last()] = property.read(iviObject);
             }
         }
 
-        qStableSort(zonedFeaturePropertyNames);
-        QVERIFY_RETURN_FALSE(!zonedFeaturePropertyNames.isEmpty());
-        QVERIFY_RETURN_FALSE(!zonedFeatureProperties.isEmpty());
+        qStableSort(iviPropertyNames);
+        QVERIFY_RETURN_FALSE(!iviPropertyNames.isEmpty());
+        QVERIFY_RETURN_FALSE(!iviProperties.isEmpty());
 
-        const QModelIndex zonedFeatureIndex(this->zonedFeatureIndex(zonedFeature->zone(), 0));
-        const int zonedFeaturePropertyCount(m_model->rowCount(zonedFeatureIndex));
-        QVERIFY_RETURN_FALSE(zonedFeatureIndex.isValid());
-        QCOMPARE_RETURN_FALSE(zonedFeatureProperties.count(), zonedFeaturePropertyCount);
+        const QModelIndex carrierIndex(this->carrierIndex(iviObject, 0));
+        const int carrierPropertyCount(m_model->rowCount(carrierIndex));
+        QVERIFY_RETURN_FALSE(carrierIndex.isValid());
+        QCOMPARE_RETURN_FALSE(iviProperties.count(), carrierPropertyCount);
 
-        QVector<QString> zonedFeatureModelPropertyNames;
+        QVector<QString> carrierModelPropertyNames;
 
-        for (int i = 0; i < zonedFeaturePropertyCount; ++i) {
-            const QModelIndex nameIndex(m_model->index(i, QtIviPropertyModel::NameColumn, zonedFeatureIndex));
-            zonedFeatureModelPropertyNames << nameIndex.data(Qt::DisplayRole).toString();
-            QVERIFY_RETURN_FALSE(!zonedFeatureModelPropertyNames.last().isEmpty());
-            QCOMPARE_RETURN_FALSE(zonedFeatureProperties[zonedFeatureModelPropertyNames.last()]->value(),
-                    nameIndex.sibling(i, QtIviPropertyModel::ValueColumn).data(QtIviPropertyModel::NativeIviValue));
-            QCOMPARE_RETURN_FALSE(zonedFeatureProperties[zonedFeatureModelPropertyNames.last()]->isAvailable(),
-                    nameIndex.flags().testFlag(Qt::ItemIsEnabled));
+        for (int i = 0; i < carrierPropertyCount; ++i) {
+            const QModelIndex nameIndex(m_model->index(i, QtIviPropertyModel::NameColumn, carrierIndex));
+            carrierModelPropertyNames << nameIndex.data(Qt::DisplayRole).toString();
+            QVERIFY_RETURN_FALSE(!carrierModelPropertyNames.last().isEmpty());
+            QCOMPARE_RETURN_FALSE(iviProperties[carrierModelPropertyNames.last()],
+                    carrierPropertyValue(iviObject, carrierModelPropertyNames.last()));
         }
 
-        qStableSort(zonedFeatureModelPropertyNames);
-        QCOMPARE_RETURN_FALSE(zonedFeatureModelPropertyNames.count(), zonedFeaturePropertyNames.count());
-        QVERIFY_RETURN_FALSE(zonedFeatureModelPropertyNames == zonedFeaturePropertyNames);
+        qStableSort(carrierModelPropertyNames);
+        QCOMPARE_RETURN_FALSE(carrierModelPropertyNames.count(), iviPropertyNames.count());
+        QVERIFY_RETURN_FALSE(carrierModelPropertyNames == iviPropertyNames);
 
-        foreach (const QIviAbstractZonedFeature *subZone, zonedFeature->zones()) {
-            if (!testZonedFeature(subZone)) {
-                return false;
+        if (QIviAbstractZonedFeature *zonedFeature = qobject_cast<QIviAbstractZonedFeature *>(iviObject)) {
+            foreach (QIviAbstractZonedFeature *subZone, zonedFeature->zones()) {
+                if (!testIviObject(subZone)) {
+                    return false;
+                }
             }
         }
 
@@ -232,12 +256,13 @@ private slots:
     void testModelContent()
     {
         QVERIFY(new ModelTest(m_model, this));
-        QVERIFY(testZonedFeature(m_climate));
+        QVERIFY(testIviObject(m_climate));
+        QVERIFY(testIviObject(m_amfm));
     }
 
     void testModelContentChanges_data()
     {
-        QTest::addColumn<QString>("zone");
+        QTest::addColumn<QObject *>("carrier");
         QTest::addColumn<QString>("property");
         QTest::addColumn<bool>("override");
         QTest::addColumn<QVariant>("value");
@@ -247,8 +272,8 @@ private slots:
         // Invalid value mean nothing to set
         // Invalid expect mean use value
 
-        QTest::newRow("default-climateMode")
-                << QString()
+        QTest::newRow("climate-default-climateMode")
+                << (QObject *)m_climate
                 << "climateMode"
                 << true
                 << QVariant()
@@ -256,8 +281,8 @@ private slots:
                 << false
         ;
 
-        QTest::newRow("climateMode-Off")
-                << QString()
+        QTest::newRow("climate-climateMode-Off")
+                << (QObject *)m_climate
                 << "climateMode"
                 << false
                 << QVariant::fromValue(QIviClimateControl::ClimateOff)
@@ -265,8 +290,8 @@ private slots:
                 << false
         ;
 
-        QTest::newRow("airflowDirections-Floor")
-                << QString()
+        QTest::newRow("climate-airflowDirections-Floor")
+                << (QObject *)m_climate
                 << "airflowDirections"
                 << false
                 << QVariant::fromValue(QIviClimateControl::AirflowDirections(QIviClimateControl::Floor))
@@ -274,17 +299,18 @@ private slots:
                 << false
         ;
 
-        QTest::newRow("airflowDirections-Floor|Dashboard")
-                << QString()
+        QTest::newRow("climate-airflowDirections-Floor|Dashboard")
+                << (QObject *)m_climate
                 << "airflowDirections"
                 << false
-                << QVariant::fromValue(QIviClimateControl::AirflowDirections(QIviClimateControl::Floor | QIviClimateControl::Dashboard))
+                << QVariant::fromValue(QIviClimateControl::AirflowDirections(QIviClimateControl::Floor |
+                                                                             QIviClimateControl::Dashboard))
                 << QVariant()
                 << false
         ;
 
-        QTest::newRow("FrontLeft-targetTemperature-25")
-                << "FrontLeft"
+        QTest::newRow("climate-FrontLeft-targetTemperature-25")
+                << (QObject *)m_climate->zoneAt("FrontLeft")
                 << "targetTemperature"
                 << false
                 << QVariant(25)
@@ -292,8 +318,8 @@ private slots:
                 << false
         ;
 
-        QTest::newRow("FrontRight-seatHeater-8")
-                << "FrontRight"
+        QTest::newRow("climate-FrontRight-seatHeater-8")
+                << (QObject *)m_climate->zoneAt("FrontRight")
                 << "seatHeater"
                 << false
                 << QVariant(8)
@@ -302,7 +328,7 @@ private slots:
         ;
 
         QTest::newRow("unknown-property")
-                << ""
+                << (QObject *)nullptr
                 << "hey"
                 << false
                 << QVariant(42)
@@ -310,8 +336,8 @@ private slots:
                 << true
         ;
 
-        QTest::newRow("unknown-property-override")
-                << "FrontLeft"
+        QTest::newRow("climate-unknown-property-override")
+                << (QObject *)m_climate->zoneAt("FrontLeft")
                 << "hey"
                 << true
                 << QVariant(42)
@@ -319,69 +345,123 @@ private slots:
                 << true
         ;
 
-        QTest::newRow("FrontLeft-heater-true(readonly)")
-                << "FrontLeft"
+        QTest::newRow("climate-FrontLeft-heater-true(readonly)")
+                << (QObject *)m_climate->zoneAt("FrontLeft")
                 << "heater"
                 << false
                 << QVariant(true)
                 << QVariant(false)
                 << false
         ;
+
+#if defined(QT_IVIMEDIA_LIB)
+        QTest::newRow("amfm-default-discoveryMode")
+                << (QObject *)m_amfm
+                << "discoveryMode"
+                << false
+                << QVariant()
+                << QVariant::fromValue(QIviAbstractFeature::LoadOnlySimulationBackends)
+                << false
+        ;
+
+        QTest::newRow("amfm-discoveryMode-AutoDiscovery")
+                << (QObject *)m_amfm
+                << "discoveryMode"
+                << false
+                << QVariant::fromValue(QIviAbstractFeature::AutoDiscovery)
+                << QVariant()
+                << false
+        ;
+
+        QTest::newRow("amfm-band-AMBand")
+                << (QObject *)m_amfm
+                << "band"
+                << false
+                << QVariant::fromValue(QIviAmFmTuner::AMBand)
+                << QVariant()
+                << false
+        ;
+
+        QTest::newRow("amfm-unknown-property-override")
+                << (QObject *)m_amfm
+                << "hey"
+                << true
+                << QVariant(42)
+                << QVariant()
+                << true
+        ;
+
+        QTest::newRow("amfm-scanRunning-true(readonly)")
+                << (QObject *)m_amfm
+                << "scanRunning"
+                << false
+                << QVariant(true)
+                << QVariant(false)
+                << false
+        ;
+#endif
     }
 
     void testModelContentChanges()
     {
-        QFETCH(QString, zone);
+        QFETCH(QObject *, carrier);
         QFETCH(QString, property);
         QFETCH(bool, override);
         QFETCH(QVariant, value);
         QFETCH(QVariant, expect);
         QFETCH(bool, invalidProperty);
         const QVariant expectValue(expect.isValid() ? expect : value);
-        const QVariant expectIviValue(this->iviValue(expectValue));
-        const QVariant iviValue(this->iviValue(value));
+        const IviCarrierProperty iviProperty(iviCarrierProperty(carrier, property));
 
-        QIviProperty *iviProperty((zone.isEmpty() ? m_climate : m_climate->zoneAt(zone))
-                                  ->property(qPrintable(property)).value<QIviProperty *>());
         if (invalidProperty) {
             QEXPECT_FAIL("", "Expected not found property", Continue);
         }
-        QVERIFY(iviProperty);
+        QVERIFY(iviProperty->isValid());
 
-        const QModelIndex valueIndex(zonedFeaturePropertyIndex(zone, property, QtIviPropertyModel::ValueColumn));
-        QCOMPARE(valueIndex, zonedFeaturePropertyIndex(iviProperty, valueIndex.column()));
+        const QModelIndex valueIndex(carrierPropertyIndex(carrier, property, QtIviPropertyModel::ValueColumn));
+        if (iviProperty->m_iviProperty) {
+            QCOMPARE(valueIndex, carrierPropertyIndex(iviProperty->m_iviProperty, valueIndex.column()));
+        }
+        QCOMPARE(valueIndex.isValid(), iviProperty->isValid());
+        QCOMPARE(!invalidProperty, iviProperty->isValid());
+
 
 #if defined(ENABLE_LOG)
         qWarning("Original value: %s", invalidProperty ? "" : qPrintable(iviProperty->value().toString()));
 #endif
-        const QVariant originalValue = invalidProperty ? QVariant() : iviProperty->value();
+        const QVariant originalValue = iviProperty->cppValue(carrier);
         const QModelIndex overrideIndex(valueIndex.sibling(valueIndex.row(), QtIviPropertyModel::OverrideColumn));
 
 #if defined(ENABLE_LOG)
         qWarning("Setting override: %i", (int)override);
 #endif
-        const bool needOverride((overrideIndex.data(Qt::CheckStateRole).value<Qt::CheckState>() == Qt::Checked) != override);
-        QCOMPARE(overrideIndex.isValid(), !invalidProperty);
-        QCOMPARE(m_model->setData(overrideIndex, override ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole),
-                 (invalidProperty || !iviProperty->isAvailable() ? false : needOverride));
+        const bool willOverride(iviProperty->isAvailable() && iviProperty->isOverridable() &&
+                                (overrideIndex.data(Qt::CheckStateRole).value<Qt::CheckState>() == Qt::Checked) != override);
+        QCOMPARE(m_model->setData(overrideIndex, override ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole), willOverride);
         QCOMPARE((overrideIndex.data(Qt::CheckStateRole).value<Qt::CheckState>() == Qt::Checked),
-                 (invalidProperty || !iviProperty->isAvailable() ? false : override));
+                 (!iviProperty->isAvailable() ? false : override));
 
         if (value.isValid()) {
 #if defined(ENABLE_LOG)
             qWarning("Setting value: %s", qPrintable(value.toString()));
 #endif
-            const bool needValueUpdate(invalidProperty || !iviProperty->isAvailable() ? false : valueIndex.data(QtIviPropertyModel::NativeIviValue) != iviValue);
-            QCOMPARE(m_model->setData(valueIndex, iviValue, Qt::EditRole), needValueUpdate);
+            const bool willWrite(iviProperty->isAvailable() && iviProperty->isWritable() &&
+                                 valueIndex.data(QtIviPropertyModel::RawValue) != value);
+            QCOMPARE(m_model->setData(valueIndex, value, Qt::EditRole), willWrite);
+            if (willWrite) {
+                QCOMPARE(valueIndex.data(QtIviPropertyModel::RawValue), value);
+            }
         }
 
-        if (!invalidProperty) {
-            QCOMPARE(iviProperty->value(), iviProperty->isAvailable() && !override ? expectIviValue : originalValue);
+        if (iviProperty->isValid()) {
+            QCOMPARE(iviProperty->cppValue(carrier), iviProperty->isAvailable() && !override ? expectValue : originalValue);
         }
-        QCOMPARE(invalidProperty ? false : iviProperty->isAvailable(),
+        QCOMPARE(iviProperty->isAvailable(),
                 valueIndex.flags().testFlag(Qt::ItemIsEnabled));
-        QCOMPARE(valueIndex.data(QtIviPropertyModel::NativeIviValue),
-                 invalidProperty ? QVariant() : expectIviValue);
+        QCOMPARE(iviProperty->isAvailable() && iviProperty->isWritable(),
+                 valueIndex.flags().testFlag(Qt::ItemIsEditable));
+        QCOMPARE(valueIndex.data(QtIviPropertyModel::RawValue),
+                 invalidProperty ? QVariant() : expectValue);
     }
 };
 

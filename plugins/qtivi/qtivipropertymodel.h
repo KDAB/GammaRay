@@ -33,20 +33,26 @@
 #include <common/objectmodel.h>
 
 #include <QAbstractItemModel>
-#include <QHash>
-#include <QString>
+#include <QSet>
+#include <QMetaProperty>
 
 #include <vector>
 
 class QIviProperty;
+class QtIviPropertyModelTest;
 
 namespace GammaRay {
 
 class Probe;
+class ObjectId;
 
+// The QtIviPropertyModel is a model that expose QIviServiceObject and
+// QIviAbstractFeature objects with any if their properties being plain
+// Qt properties or QIviProperty.
 class QtIviPropertyModel : public QAbstractItemModel
 {
     Q_OBJECT
+    friend class ::QtIviPropertyModelTest;
 
 public:
     enum Roles {
@@ -54,12 +60,11 @@ public:
         ValueConstraintsRole, // transmits the following constraints types
         RangeConstraints, // min / max
         AvailableValuesConstraints, // list of possible values
-        ZoneName, // the zoned feature name
-        NativeIviValue // The value as returned by QIviProperty::value()
+        RawValue // the raw variant value without any transformation
     };
 
     enum Columns {
-        NameColumn = 0,
+        NameColumn = 0, // The carrier label or property name
         ValueColumn,
         WritableColumn,
         OverrideColumn,
@@ -87,38 +92,82 @@ private slots:
     void objectRemoved(QObject *obj);
     void objectReparented(QObject *obj);
     void objectSelected(QObject *obj);
-    void propertyValueChanged(const QVariant &value);
-    void availabilityChanged();
-
-public:
-    struct IviProperty // public so we can have a free function in the .cpp file dealing with it
-    {
-        explicit IviProperty(QIviProperty *value, const QMetaProperty &metaProperty);
-        IviProperty();
-        QString name;
-        QIviProperty *value;
-        bool notWritableInPractice;
-        QtIviPropertyOverrider overrider;
-    };
+    void objectPropertySelected(QObject *obj, const QByteArray &property);
+    void propertyChanged();
 
 private:
-    int indexOfPropertyCarrier(const QObject *carrier) const;
+    void emitRowDataChanged(const QModelIndex &index);
+    int rowOfCarrier(const QObject *carrier) const;
+    QModelIndex indexOfCarrier(const QObject *carrier, int column = 0 /*NameColumn*/) const;
     QModelIndex indexOfProperty(const QIviProperty *property, int column = 0 /*NameColumn*/) const;
+    QModelIndex indexOfProperty(const QObject *carrier, const QByteArray &property, int column = 0 /*NameColumn*/) const;
 
-    struct IviPropertyCarrier
+    class IviCarrierProperty
     {
-        QObject *carrier;
-        std::vector<IviProperty> iviProperties;
-        int indexOfProperty(const QIviProperty *property) const;
+        friend class ::QtIviPropertyModelTest;
+
+    public:
+        IviCarrierProperty();
+        IviCarrierProperty(IviCarrierProperty &&other);
+        explicit IviCarrierProperty(QIviProperty *iviProperty, const QMetaProperty &metaProperty);
+        explicit IviCarrierProperty(const QMetaProperty &metaProperty);
+
+        bool isValid() const;
+        bool isAvailable() const;
+        bool hasNotifySignal() const;
+        bool isWritable() const;
+        bool isOverridable() const;
+        bool isOverrided() const;
+        QString name() const;
+        QString typeName() const;
+        ObjectId objectId() const;
+        QString displayText(const QObject *carrier) const;
+        QVariant editValue(const QObject *carrier) const;
+        QVariant cppValue(const QObject *carrier) const;
+        QVariant iviConstraints() const;
+
+        void setOverrided(bool override);
+        bool setValue(const QVariant &editValue, QObject *carrier);
+
+        IviCarrierProperty &operator=(IviCarrierProperty &&other);
+        bool operator==(const QIviProperty *property) const;
+        bool operator==(const QByteArray &property) const;
+
+    private:
+        QMetaProperty m_metaProperty;
+        QIviProperty *m_iviProperty;
+        QtIviPropertyOverrider m_iviOverrider;
     };
 
-    /// property tree model
-    // "property carriers" are objects that have QIviProperty (static Qt meta) properties
+    class IviCarrier
+    {
+        friend class QtIviPropertyModel;
 
-    std::vector<IviPropertyCarrier> m_propertyCarriers;
-    // m_seenObjects is not strictly needed currently but it helps debugging and will become more useful
-    // when some of the current simplifying assumptions about object relationships must be discarded.
-    QHash<QObject *, bool> m_seenObjects; // bool meaning: whether it has properties of type QtIVIProperty *
+    public:
+        IviCarrier();
+        explicit IviCarrier(QObject *carrier);
+
+        QString label() const;
+        QString typeName() const;
+        ObjectId objectId() const;
+
+        int propertyCount() const;
+        void pushProperty(IviCarrierProperty &&property);
+        const IviCarrierProperty &propertyAt(int index) const;
+        IviCarrierProperty &propertyAt(int index);
+
+        int indexOfProperty(const QIviProperty *property) const;
+        int indexOfProperty(const QByteArray &property) const;
+
+        bool operator==(const QObject *carrier) const;
+
+    private:
+        QObject *m_carrier;
+        std::vector<IviCarrierProperty> m_properties;
+    };
+
+    std::vector<IviCarrier> m_carriers;
+    QSet<QObject *> m_seenCarriers;
 };
 
 }

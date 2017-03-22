@@ -464,6 +464,9 @@ if(Qt5IviCore_FOUND AND Qt5IviVehicleFunctions_FOUND) # requires QHooks
   target_include_directories(qtivipropertymodeltest SYSTEM PRIVATE ${Qt5IviCore_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(qtivipropertymodeltest gammaray_core Qt5::Test Qt5::Gui Qt5::IviCore Qt5::IviVehicleFunctions)
   add_test(NAME qtivipropertymodeltest COMMAND qtivipropertymodeltest)
+  if(Qt5IviMedia_FOUND)
+      target_link_libraries(qtivipropertymodeltest Qt5::IviMedia)
+  endif()
 endif()
 
 add_subdirectory(manual)
