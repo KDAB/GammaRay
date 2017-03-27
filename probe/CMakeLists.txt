@@ -37,13 +37,11 @@ target_include_directories(gammaray_probe_obj PUBLIC
 )
 
 # probe lib
-if(APPLE) # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
-  add_library(gammaray_probe SHARED $<TARGET_OBJECTS:gammaray_probe_obj>)
-  if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
+# DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
+# Windows also needs SHARED rather than MODULE here, to end up in bin/
+add_library(gammaray_probe ${GAMMARAY_LIBRARY_TYPE} $<TARGET_OBJECTS:gammaray_probe_obj>)
+if(APPLE AND NOT GAMMARAY_INSTALL_QT_LAYOUT)
     set_target_properties(gammaray_probe PROPERTIES INSTALL_RPATH "@loader_path/../../../../Frameworks")
-  endif()
-else()
-  add_library(gammaray_probe ${GAMMARAY_PLUGIN_TYPE} $<TARGET_OBJECTS:gammaray_probe_obj>)
 endif()
 target_link_libraries(gammaray_probe
   gammaray_core
@@ -55,6 +53,7 @@ endif()
 
 set_target_properties(gammaray_probe PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_INSTALL_DIR}"
+  RUNTIME_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_INSTALL_DIR}"
 )
 
 if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
