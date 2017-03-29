@@ -77,9 +77,20 @@ QImage RemoteViewFrame::image() const
     return m_image.image();
 }
 
+QTransform RemoteViewFrame::transform() const
+{
+    return m_image.transform();
+}
+
 void RemoteViewFrame::setImage(const QImage &image)
 {
     m_image.setImage(image);
+}
+
+void RemoteViewFrame::setImage(const QImage &image, const QTransform transform)
+{
+    m_image.setImage(image);
+    m_image.setTransform(transform);
 }
 
 QVariant RemoteViewFrame::data() const

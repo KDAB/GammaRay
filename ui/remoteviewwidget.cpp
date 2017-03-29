@@ -484,7 +484,12 @@ void RemoteViewWidget::paintEvent(QPaintEvent *event)
                         // but need to be able to see single pixels when zoomed in.
         p.setRenderHint(QPainter::SmoothPixmapTransform);
     }
+
+    p.save();
+    p.setTransform(m_frame.transform(), true);
     p.drawImage(QRect(QPoint(0, 0), m_frame.viewRect().size().toSize() * m_zoom), m_frame.image());
+    p.restore();
+
     drawDecoration(&p);
     p.restore();
 

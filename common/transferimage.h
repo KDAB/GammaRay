@@ -44,6 +44,9 @@ public:
     const QImage &image() const;
     void setImage(const QImage &image);
 
+    QTransform transform() const;
+    void setTransform(const QTransform &transform);
+
     enum Format {
         QImageFormat,
         RawFormat
@@ -51,6 +54,7 @@ public:
 
 private:
     QImage m_image;
+    QTransform m_transform;
 };
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::TransferImage &image);

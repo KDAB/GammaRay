@@ -93,7 +93,7 @@ public slots:
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
     void pickElementId(const GammaRay::ObjectId& id);
 
-    void sendRenderedScene(const QImage &currentFrame);
+    void sendRenderedScene(const QImage &currentFrame, const QTransform flipped);
 
 protected:
     bool eventFilter(QObject *receiver, QEvent *event) override;

@@ -178,7 +178,7 @@ public slots:
 
 signals:
     void sceneChanged();
-    void sceneGrabbed(const QImage &image);
+    void sceneGrabbed(const QImage &image, const QTransform transform);
 
 private:
     struct DrawTextInfo {
@@ -221,6 +221,8 @@ private:
     void disconnectItemChanges(QQuickItem *item);
     void connectTopItemChanges(QQuickItem *item);
     void disconnectTopItemChanges(QQuickItem *item);
+    qreal getDpr();
+    uint textureSize();
 
     QPointer<QQuickWindow> m_window;
     QPointer<QQuickItem> m_currentToplevelItem;
@@ -229,6 +231,7 @@ private:
     QuickOverlaySettings m_settings;
     bool m_isGrabbingMode;
     bool m_drawDecorations;
+    QImage m_frame;
 };
 }
 
