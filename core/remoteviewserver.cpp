@@ -53,7 +53,7 @@ RemoteViewServer::RemoteViewServer(const QString &name, QObject *parent)
                                                     name), this, "clientConnectedChanged");
 
     m_updateTimer->setSingleShot(true);
-    m_updateTimer->setInterval(100);
+    m_updateTimer->setInterval(10);
     connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(requestUpdateTimeout()));
 }
 
