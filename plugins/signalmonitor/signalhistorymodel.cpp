@@ -75,7 +75,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         Q_ASSERT(m.isValid());
 #endif
-        m.invoke(s_historyModel, Qt::AutoConnection, Q_ARG(QObject *, caller),
+        m.invoke(s_historyModel, Qt::AutoConnection, Q_ARG(QObject*, caller),
                  Q_ARG(int, signalIndex));
     }
 }

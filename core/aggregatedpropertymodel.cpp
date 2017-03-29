@@ -105,7 +105,7 @@ QVariant AggregatedPropertyModel::data(const QModelIndex &index, int role) const
     if (!adaptor->object().isValid()) {
         QMetaObject::invokeMethod(const_cast<AggregatedPropertyModel *>(this), "objectInvalidated",
                                   Qt::QueuedConnection,
-                                  Q_ARG(GammaRay::PropertyAdaptor *, adaptor));
+                                  Q_ARG(GammaRay::PropertyAdaptor*, adaptor));
         return QVariant();
     }
 
@@ -123,7 +123,7 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex &index) 
     if (!adaptor->object().isValid()) {
         QMetaObject::invokeMethod(const_cast<AggregatedPropertyModel *>(this), "objectInvalidated",
                                   Qt::QueuedConnection,
-                                  Q_ARG(GammaRay::PropertyAdaptor *, adaptor));
+                                  Q_ARG(GammaRay::PropertyAdaptor*, adaptor));
         return res;
     }
     const auto d = adaptor->propertyData(index.row());
