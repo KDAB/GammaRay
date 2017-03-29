@@ -37,6 +37,7 @@ TransferImage::TransferImage()
 
 TransferImage::TransferImage(const QImage &image)
     : m_image(image)
+    , m_transform()
 {
 }
 
@@ -48,6 +49,16 @@ const QImage &TransferImage::image() const
 void TransferImage::setImage(const QImage &image)
 {
     m_image = image;
+}
+
+QTransform TransferImage::transform() const
+{
+    return m_transform;
+}
+
+void TransferImage::setTransform(const QTransform &transform)
+{
+    m_transform = transform;
 }
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::TransferImage &image)
@@ -66,9 +77,8 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::TransferImage &imag
 #else
         stream << 1.0;
 #endif
-        stream << (quint32)img.format() << (quint32)img.width() << (quint32)img.height();
-        for (int i = 0; i < img.height(); ++i)
-            stream.device()->write((const char *)img.scanLine(i), img.bytesPerLine());
+        stream << (quint32)img.format() << (quint32)img.width() << (quint32)img.height() << image.transform();
+        stream.device()->write((const char*)img.constBits(), img.byteCount());
         break;
     }
 
@@ -93,7 +103,8 @@ QDataStream &operator>>(QDataStream &stream, TransferImage &image)
     {
         double r;
         quint32 f, w, h;
-        stream >> r >> f >> w >> h;
+        QTransform transform;
+        stream >> r >> f >> w >> h >> transform;
         QImage img(w, h, static_cast<QImage::Format>(f));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         img.setDevicePixelRatio(r);
@@ -102,7 +113,9 @@ QDataStream &operator>>(QDataStream &stream, TransferImage &image)
             const QByteArray buffer = stream.device()->read(img.bytesPerLine());
             memcpy(img.scanLine(i), buffer.constData(), img.bytesPerLine());
         }
+
         image.setImage(img);
+        image.setTransform(transform);
         break;
     }
     }

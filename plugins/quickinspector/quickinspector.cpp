@@ -435,10 +435,10 @@ void QuickInspector::recreateOverlay()
     connect(m_overlay.data(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
 }
 
-void QuickInspector::sendRenderedScene(const QImage &currentFrame)
+void QuickInspector::sendRenderedScene(const QImage &currentFrame, const QTransform transform)
 {
     RemoteViewFrame frame;
-    frame.setImage(currentFrame);
+    frame.setImage(currentFrame, transform);
     QuickItemGeometry itemGeometry;
     if (m_currentItem)
         itemGeometry.initFrom(m_currentItem);
