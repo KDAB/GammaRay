@@ -35,9 +35,10 @@
 #include <common/objectid.h>
 #include <common/remoteviewframe.h>
 
-#include <QWidget>
-#include <QTouchEvent>
+#include <QElapsedTimer>
 #include <QPointer>
+#include <QTouchEvent>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
@@ -168,6 +169,7 @@ private:
     void updateActions();
 
     void drawRuler(QPainter *p);
+    void drawFPS(QPainter *p);
     int sourceTickLabelDistance(int viewDistance);
     int viewTickLabelDistance() const;
     void drawMeasureOverlay(QPainter *p);
@@ -188,11 +190,14 @@ private:
     int horizontalRulerHeight() const;
     int verticalRulerWidth() const;
 
+
+
 private slots:
     void interactionActionTriggered(QAction *action);
     void pickElementId(const QModelIndex &index);
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
     void frameUpdated(const GammaRay::RemoteViewFrame &frame);
+    void enableFPS(const bool showFPS);
 
 private:
     RemoteViewFrame m_frame;
@@ -204,6 +209,7 @@ private:
     QActionGroup *m_interactionModeActions;
     QAction *m_zoomInAction;
     QAction *m_zoomOutAction;
+    QAction *m_toggleFPSAction;
     QPointer<RemoteViewInterface> m_interface;
     double m_zoom;
     int m_x; // view translation before zoom
@@ -220,6 +226,9 @@ private:
     bool m_initialZoomDone;
     int m_flagRole;
     int m_invisibleMask;
+    QElapsedTimer m_fpsTimer;
+    bool m_showFps;
+    qreal m_fps;
 };
 }
 

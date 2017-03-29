@@ -69,6 +69,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     , m_pickProxyModel(new ObjectIdsFilterProxyModel(this))
     , m_invisibleItemsProxyModel (new VisibilityFilterProxyModel(this))
     , m_initialZoomDone(false)
+    , m_showFps(false)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setMouseTracking(true);
@@ -176,6 +177,13 @@ void RemoteViewWidget::setupActions()
     connect(m_zoomInAction, SIGNAL(triggered(bool)), this, SLOT(zoomIn()));
     addAction(m_zoomInAction);
 
+    m_toggleFPSAction = new QAction(tr("Display FPS"), this);
+    m_toggleFPSAction->setCheckable(true);
+    m_toggleFPSAction->setToolTip("<b>Display FPS</b><br>"
+                                  "Shows rate of received frames from debuggee.");
+    connect(m_toggleFPSAction, SIGNAL(toggled(bool)), this, SLOT(enableFPS(bool)));
+    addAction(m_toggleFPSAction);
+
     updateActions();
 }
 
@@ -188,6 +196,11 @@ void RemoteViewWidget::updateActions()
     const auto zoomLevel = zoomLevelIndex();
     m_zoomOutAction->setEnabled(zoomLevel != 0);
     m_zoomInAction->setEnabled(zoomLevel != m_zoomLevels.size() - 1);
+}
+
+void RemoteViewWidget::enableFPS(const bool showFPS)
+{
+    m_showFps = showFPS;
 }
 
 const RemoteViewFrame &RemoteViewWidget::frame() const
@@ -236,6 +249,8 @@ void RemoteViewWidget::frameUpdated(const RemoteViewFrame &frame)
     } else {
         m_frame = frame;
         update();
+        m_fps = 1000.0 / m_fpsTimer.elapsed();
+        m_fpsTimer.restart();
     }
 
     updateActions();
@@ -494,6 +509,8 @@ void RemoteViewWidget::paintEvent(QPaintEvent *event)
     p.restore();
 
     drawRuler(&p);
+    if (m_showFps)
+        drawFPS(&p);
 
     if (m_interactionMode == Measuring && m_hasMeasurement)
         drawMeasureOverlay(&p);
@@ -595,6 +612,32 @@ void RemoteViewWidget::drawRuler(QPainter *p)
                                                                               .y()),
                 Qt::AlignHCenter | Qt::AlignVCenter
                 );
+    p->restore();
+}
+
+void RemoteViewWidget::drawFPS(QPainter *p)
+{
+    p->save();
+
+    const int hRulerHeight = horizontalRulerHeight();
+    const int vRulerWidth = verticalRulerWidth();
+    QFontMetrics metrics(p->font());
+    const int barWidth = 20;
+
+    QString fps = QString::number(m_fps, 'g', 3) + " fps";
+    const QRect textrect(width()  - vRulerWidth  - metrics.width(fps) - 5,
+                         height() - hRulerHeight - metrics.height()   - 5,
+                         metrics.width(fps) + 2,
+                         metrics.height()   + 2);
+    p->drawText(textrect , Qt::AlignRight , fps);
+
+    p->setBrush(QBrush(QColor(51, 51, 51, 170)));
+    p->setPen(Qt::NoPen);
+    p->drawRect(QRect(width() - vRulerWidth - barWidth - 5,
+                      height() - hRulerHeight - metrics.height() - 5,
+                      barWidth,
+                      -10.0 * m_fps));
+
     p->restore();
 }
 
@@ -1007,6 +1050,11 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
         menu.addSeparator();
         menu.addAction(m_zoomOutAction);
         menu.addAction(m_zoomInAction);
+        if (((event->modifiers() & Qt::ShiftModifier) && (event->modifiers() & Qt::ControlModifier)) || m_showFps)
+        {
+            menu.addSeparator();
+            menu.addAction(m_toggleFPSAction);
+        }
         menu.exec(event->globalPos());
     }
     case NoInteraction:
