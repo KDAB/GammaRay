@@ -35,6 +35,14 @@
 #include <QMetaMethod>
 #include <QObject>
 #include <QPointer>
+#include <QTimer>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+#include <QLoggingCategory>
+Q_DECLARE_LOGGING_CATEGORY(networkstatistics)
+#else
+#include <QDebug>
+#endif
 
 QT_BEGIN_NAMESPACE
 class QIODevice;
@@ -210,6 +218,7 @@ protected:
 
 private slots:
     void readyRead();
+    void logTransmissionRate();
     void connectionClosed();
     void handlerDestroyed(QObject *obj);
     void objectDestroyed(QObject *obj);
@@ -246,6 +255,8 @@ private:
 
     QPointer<QIODevice> m_socket;
     Protocol::ObjectAddress m_myAddress;
+    int m_bytesTransferred;
+    QTimer *m_bandwidthMeasurementTimer;
 
     QString m_label;
     QString m_key;
