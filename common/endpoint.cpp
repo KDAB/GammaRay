@@ -33,6 +33,14 @@
 
 #include <iostream>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+#include <QLoggingCategory>
+//we use qCWarning, which we turn off by default, but which is not compiled out in releasebuilds
+Q_LOGGING_CATEGORY(networkstatistics, "gammaray.network.statistics", QtMsgType::QtCriticalMsg)
+#else
+const QLatin1String networkstatistics("gammaray.network.statistics");
+#endif
+
 using namespace GammaRay;
 using namespace std;
 
@@ -43,6 +51,7 @@ Endpoint::Endpoint(QObject *parent)
     , m_propertySyncer(new PropertySyncer(this))
     , m_socket(nullptr)
     , m_myAddress(Protocol::InvalidObjectAddress +1)
+    , m_bytesTransferred(0)
     , m_pid(-1)
 {
     if (s_instance) {
@@ -58,6 +67,10 @@ Endpoint::Endpoint(QObject *parent)
     endpointObj->name = QStringLiteral("com.kdab.GammaRay.Server");
     // TODO: we could set this as message handler here and use the same dispatch mechanism
     insertObjectInfo(endpointObj);
+
+    m_bandwidthMeasurementTimer = new QTimer(this);
+    connect(m_bandwidthMeasurementTimer, SIGNAL(timeout()), this, SLOT(logTransmissionRate()));
+    m_bandwidthMeasurementTimer->start(1000);
 
     connect(m_propertySyncer, SIGNAL(message(GammaRay::Message)), this,
             SLOT(sendMessage(GammaRay::Message)));
@@ -96,6 +109,7 @@ void Endpoint::doSendMessage(const GammaRay::Message &msg)
 {
     Q_ASSERT(msg.address() != Protocol::InvalidObjectAddress);
     msg.write(m_socket);
+    m_bytesTransferred += msg.size();
 }
 
 void Endpoint::waitForMessagesWritten()
@@ -116,6 +130,17 @@ quint16 Endpoint::defaultPort()
 quint16 Endpoint::broadcastPort()
 {
     return 13325;
+}
+
+void Endpoint::logTransmissionRate()
+{
+    if(m_bytesTransferred != 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+        qCWarning(networkstatistics) << "TX: \t" << (m_bytesTransferred * 8 / 1024.0 / 1024.0) << "Mbps";
+#else
+        qDebug() << networkstatistics << "TX: \t" << (m_bytesTransferred * 8 / 1024.0 / 1024.0) << "Mbps";
+#endif
+    m_bytesTransferred = 0;
 }
 
 void Endpoint::setDevice(QIODevice *device)
