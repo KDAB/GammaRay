@@ -62,9 +62,7 @@ inline QByteArray uncompress(const QByteArray &src)
 }
 
 static const QDataStream::Version StreamVersion = QDataStream::Qt_4_7;
-#ifdef ENABLE_MESSAGE_COMPRESSSION
 static const int minimumUncompressedSize = 32;
-#endif
 
 #if QT_VERSION < 0x040800
 // This template-specialization is missing in qendian.h, required for qFromBigEndian
@@ -193,36 +191,31 @@ void Message::write(QIODevice *device) const
 {
     Q_ASSERT(m_objectAddress != Protocol::InvalidObjectAddress);
     Q_ASSERT(m_messageType != Protocol::InvalidMessageType);
+    static const bool compressionEnabled = qgetenv("GAMMARAY_DISABLE_LZ4") != "1";
     const int buffSize = m_buffer.size();
-#ifdef ENABLE_MESSAGE_COMPRESSSION
     QByteArray buff;
-    if (buffSize > minimumUncompressedSize)
+    if (buffSize > minimumUncompressedSize && compressionEnabled)
         buff = compress(m_buffer);
 
     if (buff.size() && buff.size() < buffSize)
         writeNumber<Protocol::PayloadSize>(device, -buff.size()); // send compressed Buffer
     else
-#endif
-    writeNumber<Protocol::PayloadSize>(device, buffSize);   // send uncompressed Buffer
+        writeNumber<Protocol::PayloadSize>(device, buffSize);   // send uncompressed Buffer
 
     writeNumber(device, m_objectAddress);
     writeNumber(device, m_messageType);
 
-#ifdef ENABLE_MESSAGE_COMPRESSSION
     if (buffSize) {
         if (buff.size() && buff.size() < buffSize) {
             const int s = device->write(buff);
             Q_ASSERT(s == buff.size());
             Q_UNUSED(s);
         } else {
-#endif
-    const int s = device->write(m_buffer);
-    Q_ASSERT(s == m_buffer.size());
-    Q_UNUSED(s);
-#ifdef ENABLE_MESSAGE_COMPRESSSION
-}
-}
-#endif
+            const int s = device->write(m_buffer);
+            Q_ASSERT(s == m_buffer.size());
+            Q_UNUSED(s);
+        }
+    }
 }
 
 int Message::size() const

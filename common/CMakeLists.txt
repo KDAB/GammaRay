@@ -91,10 +91,6 @@ else()
   )
 endif()
 
-if (ANDROID)
-    add_definitions(-DENABLE_MESSAGE_COMPRESSSION)
-endif()
-
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   install(TARGETS gammaray_common EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
