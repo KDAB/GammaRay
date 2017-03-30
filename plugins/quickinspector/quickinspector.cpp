@@ -39,6 +39,7 @@
 #include <common/probecontrollerinterface.h>
 #include <common/remoteviewframe.h>
 
+#include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/objecttypefilterproxymodel.h>
@@ -75,6 +76,10 @@
 #include <QMatrix4x4>
 #include <QCoreApplication>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#include <QSGRendererInterface>
+#endif
+
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
 #include <private/qsgbatchrenderer_p.h>
@@ -104,6 +109,14 @@ Q_DECLARE_METATYPE(QSGTexture::Filtering)
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+Q_DECLARE_METATYPE(QSGRendererInterface*)
+Q_DECLARE_METATYPE(QSGRendererInterface::GraphicsApi)
+Q_DECLARE_METATYPE(QSGRendererInterface::ShaderCompilationTypes)
+Q_DECLARE_METATYPE(QSGRendererInterface::ShaderSourceTypes)
+Q_DECLARE_METATYPE(QSGRendererInterface::ShaderType)
+#endif
+
 using namespace GammaRay;
 
 static QString qQuickItemFlagsToString(QQuickItem::Flags flags)
@@ -701,6 +714,15 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QQuickWindow, QQuickItem *, mouseGrabberItem);
     MO_ADD_PROPERTY_RO(QQuickWindow, QOpenGLContext *, openglContext);
     MO_ADD_PROPERTY_RO(QQuickWindow, uint, renderTargetId);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    MO_ADD_PROPERTY_RO(QQuickWindow, QSGRendererInterface*, rendererInterface);
+
+    MO_ADD_METAOBJECT0(QSGRendererInterface);
+    MO_ADD_PROPERTY_RO(QSGRendererInterface, QSGRendererInterface::GraphicsApi, graphicsApi);
+    MO_ADD_PROPERTY_RO(QSGRendererInterface, QSGRendererInterface::ShaderCompilationTypes, shaderCompilationType);
+    MO_ADD_PROPERTY_RO(QSGRendererInterface, QSGRendererInterface::ShaderSourceTypes, shaderSourceType);
+    MO_ADD_PROPERTY_RO(QSGRendererInterface, QSGRendererInterface::ShaderType, shaderType);
+#endif
 
     MO_ADD_METAOBJECT1(QQuickView, QQuickWindow);
     MO_ADD_PROPERTY_RO(QQuickView, QQmlEngine *, engine);
@@ -797,6 +819,35 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_METAOBJECT1(QSGVertexColorMaterial, QSGMaterial);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#define E(x) { QSGRendererInterface:: x, #x }
+static const MetaEnum::Value<QSGRendererInterface::GraphicsApi> qsg_graphics_api_table[] = {
+    E(Unknown),
+    E(Software),
+    E(OpenGL),
+    E(Direct3D12),
+    E(OpenVG)
+};
+
+static const MetaEnum::Value<QSGRendererInterface::ShaderCompilationType> qsg_shader_compilation_type_table[] = {
+    E(RuntimeCompilation),
+    E(OfflineCompilation)
+};
+
+static const MetaEnum::Value<QSGRendererInterface::ShaderSourceType> qsg_shader_source_type_table[] = {
+    E(ShaderSourceString),
+    E(ShaderSourceFile),
+    E(ShaderByteCode)
+};
+
+static const MetaEnum::Value<QSGRendererInterface::ShaderType> qsg_shader_type_table[] = {
+    E(UnknownShadingLanguage),
+    E(GLSL),
+    E(HLSL)
+};
+#undef E
+#endif
+
 void QuickInspector::registerVariantHandlers()
 {
     VariantHandler::registerStringConverter<QQuickItem::Flags>(qQuickItemFlagsToString);
@@ -818,6 +869,21 @@ void QuickInspector::registerVariantHandlers()
     VariantHandler::registerStringConverter<QSGMaterial::Flags>(qsgMaterialFlagsToString);
     VariantHandler::registerStringConverter<QSGTexture::Filtering>(qsgTextureFilteringToString);
     VariantHandler::registerStringConverter<QSGTexture::WrapMode>(qsgTextureWrapModeToString);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    VariantHandler::registerStringConverter<QSGRendererInterface*>(Util::addressToString);
+    VariantHandler::registerStringConverter<QSGRendererInterface::GraphicsApi>([](QSGRendererInterface::GraphicsApi api) {
+        return MetaEnum::enumToString(api, qsg_graphics_api_table);
+    });
+    VariantHandler::registerStringConverter<QSGRendererInterface::ShaderCompilationTypes>([](QSGRendererInterface::ShaderCompilationTypes t) {
+        return MetaEnum::flagsToString(t, qsg_shader_compilation_type_table);
+    });
+    VariantHandler::registerStringConverter<QSGRendererInterface::ShaderSourceTypes>([](QSGRendererInterface::ShaderSourceTypes t) {
+        return MetaEnum::flagsToString(t, qsg_shader_source_type_table);
+    });
+    VariantHandler::registerStringConverter<QSGRendererInterface::ShaderType>([](QSGRendererInterface::ShaderType t) {
+        return MetaEnum::enumToString(t, qsg_shader_type_table);
+    });
+#endif
 }
 
 void QuickInspector::registerPCExtensions()
