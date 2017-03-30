@@ -826,7 +826,9 @@ static const MetaEnum::Value<QSGRendererInterface::GraphicsApi> qsg_graphics_api
     E(Software),
     E(OpenGL),
     E(Direct3D12),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     E(OpenVG)
+#endif
 };
 
 static const MetaEnum::Value<QSGRendererInterface::ShaderCompilationType> qsg_shader_compilation_type_table[] = {
