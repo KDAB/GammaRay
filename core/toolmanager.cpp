@@ -49,6 +49,8 @@
 #include <QMutexLocker>
 #include <QThread>
 
+#include <algorithm>
+
 using namespace GammaRay;
 
 ToolManager::ToolManager(QObject *parent)
@@ -187,6 +189,8 @@ QVector<QString> ToolManager::toolsForObject(const void *object, const QString &
 
 void ToolManager::objectAdded(QObject *obj)
 {
+    // note: hot path, don't do expensive operations here
+
     Q_ASSERT(QThread::currentThread() == thread());
     Q_ASSERT(Probe::instance()->isValidObject(obj));
 
@@ -199,12 +203,17 @@ void ToolManager::objectAdded(QObject *obj)
 
 void ToolManager::objectAdded(const QMetaObject *mo)
 {
+    // note: hot path, don't do expensive operations here
+
     Q_ASSERT(thread() == QThread::currentThread());
     // as plugins can depend on each other, start from the base classes
     if (mo->superClass())
         objectAdded(mo->superClass());
+
     foreach (ToolFactory *factory, m_disabledTools) {
-        if (factory->supportedTypes().contains(mo->className())) {
+        const auto begin = factory->supportedTypes().constBegin();
+        const auto end = factory->supportedTypes().constEnd();
+        if (std::find(begin, end, mo->className()) != end) {
             m_disabledTools.remove(factory);
             factory->init(Probe::instance());
             emit toolEnabled(factory->id());
