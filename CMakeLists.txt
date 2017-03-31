@@ -287,7 +287,6 @@ if(Qt5Core_FOUND)
     3DQuick
     Bluetooth
     Concurrent
-    IviCore
     Positioning
     PrintSupport
     Qml
@@ -302,6 +301,9 @@ if(Qt5Core_FOUND)
     Widgets
     WaylandCompositor
   )
+  # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
+  # so we can retrieve those packages even when installed into a different prefix
+  find_package(Qt5IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
   find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND Qt5Core_VERSION VERSION_LESS 5.5)
