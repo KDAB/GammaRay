@@ -64,13 +64,13 @@ QQmlBinding *QmlBindingNode::bindingForProperty(QObject *obj, int propertyIndex)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     auto data = QQmlData::get(obj);
     if (!data)
-        return 0;
+        return Q_NULLPTR;
 
     auto b = data->bindings;
     while (b) {
         auto binding = dynamic_cast<QQmlBinding*>(b);
         if (!binding)
-            return 0;
+            return Q_NULLPTR;
         int index;
 #if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
         QQmlPropertyData::decodeValueTypePropertyIndex(b->targetPropertyIndex(), &index);
@@ -84,7 +84,7 @@ QQmlBinding *QmlBindingNode::bindingForProperty(QObject *obj, int propertyIndex)
         b = b->nextBinding();
     }
 #endif
-    return 0;
+    return Q_NULLPTR;
 }
 
 QmlBindingNode::QmlBindingNode(QObject* object, int propertyIndex, QmlBindingNode *parent)
@@ -101,7 +101,7 @@ QmlBindingNode::QmlBindingNode(QObject* object, int propertyIndex, QmlBindingNod
     } else {
         fetchPropertyCode();
     }
-    m_value = object->metaObject()->property(propertyIndex).read(object);
+    refreshValue();
 }
 
 
@@ -117,8 +117,8 @@ QmlBindingNode::QmlBindingNode(QQmlBinding* binding, QmlBindingNode *parent)
 #else
     m_propertyIndex = m_binding->targetPropertyIndex().coreIndex();
 #endif
-    m_value = m_object->metaObject()->property(m_propertyIndex).read(m_object);
 
+    refreshValue();
     fetchBindingCode();
     checkForLoops();
     findDependencies();
@@ -149,7 +149,7 @@ void GammaRay::QmlBindingNode::fetchBindingCode()
     }
 
     codeFile.waitForReadyRead(1000);
-    for (int i = 1; i < function->compiledFunction->location.line; i++)
+    for (uint i = 1; i < function->compiledFunction->location.line; i++)
         codeFile.readLine();
     if (!codeFile.canReadLine()) {
         qDebug() << "File ends before line" << function->compiledFunction->location.line;
@@ -190,29 +190,26 @@ void GammaRay::QmlBindingNode::findDependencies()
 
     // Static dependencies
     const QV4::CompiledData::Function *compiledData = function->compiledFunction;
-    qDebug() << "Binding:" << function->compilationUnit->data->sourceFileIndex; //->stringAt(compiledData->codeOffset);
     const auto idObjectDependencyTable = compiledData->qmlIdObjectDependencyTable();
     const auto contextPropertiesDependencyTable = compiledData->qmlContextPropertiesDependencyTable();
     const auto scopePropertiesDependencyTable = compiledData->qmlScopePropertiesDependencyTable();
-    for (int i = 0; i < compiledData->nDependingIdObjects; ++i) {
+    for (quint32 i = 0; i < compiledData->nDependingIdObjects; ++i) {
         auto idObjectIndex = *(idObjectDependencyTable + i);
     }
-    for (int i = 0; i < compiledData->nDependingContextProperties; ++i) {
+    for (quint32 i = 0; i < compiledData->nDependingContextProperties; ++i) {
         auto propertyIndex = *(contextPropertiesDependencyTable + 2*i);
         auto notifyIndex = *(contextPropertiesDependencyTable + 2*i + 1);
         m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(context->contextObject(), propertyIndex, this)));
-        qDebug() << "contextPropertyDependency found:" << propertyIndex << notifyIndex << context->contextObject()->metaObject()->property(propertyIndex).name();
     }
-    for (int i = 0; i < compiledData->nDependingScopeProperties; ++i) {
+    for (quint32 i = 0; i < compiledData->nDependingScopeProperties; ++i) {
         auto propertyIndex = *(scopePropertiesDependencyTable + 2*i);
         auto notifyIndex = *(scopePropertiesDependencyTable + 2*i + 1);
         auto dependencyNode = new QmlBindingNode(m_object, propertyIndex, this);
         m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(dependencyNode));
-        qDebug() << "scopePropertyDependency found:" << propertyIndex << notifyIndex << m_object->metaObject()->property(propertyIndex).name();
 
 //         // Find out, if this dependency is actually active
 //         dependencyNode->m_isActive = false;
-//         auto guards = m_binding->activeGuards;
+//         auto guards = m_binding->permanentGuards;
 //         QQmlJavaScriptExpressionGuard *guard = guards.first();
 //         while (guard) {
 //             if (guard->senderAsObject() == m_object && guard->signalIndex() == notifyIndex) {
@@ -247,20 +244,36 @@ void GammaRay::QmlBindingNode::findDependencies()
         }
         guard = guards.next(guard);
     }
+
+    std::sort(m_dependencies.begin(), m_dependencies.end(), [](std::unique_ptr<QmlBindingNode> &a, std::unique_ptr<QmlBindingNode> &b) {
+        return *a < *b;
+    });
 }
 
-void GammaRay::QmlBindingNode::refresh()
+bool QmlBindingNode::operator<(const QmlBindingNode& other) const
 {
-    m_value = m_object->metaObject()->property(m_propertyIndex).read(m_object);
-    checkForLoops();
+    if (m_object == other.m_object) {
+        return m_propertyIndex < other.m_propertyIndex;
+    }
+    return m_object < other.m_object;
+}
 
-    for (const auto &dependency : m_dependencies)
-        dependency->refresh();
+bool QmlBindingNode::operator>(const QmlBindingNode& other) const
+{
+    if (m_object == other.m_object) {
+        return m_propertyIndex > other.m_propertyIndex;
+    }
+    return m_object > other.m_object;
 }
 
 GammaRay::QmlBindingNode * GammaRay::QmlBindingNode::parent() const
 {
     return m_parent;
+}
+
+void GammaRay::QmlBindingNode::setParent(GammaRay::QmlBindingNode* parent)
+{
+    m_parent = parent;
 }
 
 const QString &QmlBindingNode::expression() const
@@ -308,9 +321,14 @@ QMetaProperty GammaRay::QmlBindingNode::property() const
     return m_object->metaObject()->property(m_propertyIndex);
 }
 
-const QVariant & GammaRay::QmlBindingNode::value() const
+const QVariant &QmlBindingNode::value() const
 {
     return m_value;
+}
+
+void QmlBindingNode::refreshValue()
+{
+    m_value = m_object->metaObject()->property(m_propertyIndex).read(m_object);
 }
 
 const SourceLocation &QmlBindingNode::sourceLocation() const
@@ -323,9 +341,14 @@ const std::vector<std::unique_ptr<QmlBindingNode>> &QmlBindingNode::dependencies
     return m_dependencies;
 }
 
+std::vector<std::unique_ptr<QmlBindingNode>> &QmlBindingNode::dependencies()
+{
+    return m_dependencies;
+}
+
 uint GammaRay::QmlBindingNode::depth() const
 {
-    int depth = 0;
+    uint depth = 0;
     if (m_isBindingLoop) {
         return std::numeric_limits<uint>::max(); // to be considered as infinity.
     }
@@ -333,7 +356,7 @@ uint GammaRay::QmlBindingNode::depth() const
         if (!dependency->isActive())
             continue;
         uint depDepth = dependency->depth();
-        if (depDepth == std::numeric_limits<int>::max()) {
+        if (depDepth == std::numeric_limits<uint>::max()) {
             depth = depDepth;
             break;
         } else if (depDepth + 1 > depth) {

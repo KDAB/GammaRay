@@ -56,19 +56,19 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
     QModelIndex index(int row, int column, const QModelIndex & parent) const override;
     QModelIndex parent(const QModelIndex & child) const override;
-    QMap<int, QVariant> itemData(const QModelIndex &index) const;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
 
 public slots:
     void propertyChanged();
 
 private:
-    std::vector<QmlBindingNode *> bindingsFromObject(QObject *obj);
-    void invalidateDependencies(QmlBindingNode *node, const QModelIndex &nodeIndex);
+    std::vector<std::unique_ptr<QmlBindingNode>> bindingsFromObject(QObject *obj);
+    void refresh(QmlBindingNode *oldBindingNode, QmlBindingNode *newBindingNode,
+                 const QModelIndex &index, bool emitSignals);
 
     QObject *m_obj;
-    std::vector<QmlBindingNode *> m_bindings;
-    std::vector<std::unique_ptr<QmlBindingNode>> m_allNodes;
+    std::vector<std::unique_ptr<QmlBindingNode>> m_bindings;
     std::vector<QmlBindingNode *> m_currentInvestigationPath; // This stack is used to store temporary
                                                            // information while investigating all bindings
 };
