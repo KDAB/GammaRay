@@ -279,7 +279,7 @@ void QuickOverlay::windowAfterRendering()
         glFuncs->glReadPixels(0, 0, realWindowWidth, realWindowHeight, GL_BGRA, GL_UNSIGNED_BYTE, m_frame.bits());
         //flip
         transform.scale(1.0, -1.0);
-        transform.translate(0.0, -realWindowHeight/2.0);
+        transform.translate(0.0, -realWindowHeight);
 #else
         m_frame = qt_gl_read_framebuffer(m_window->size() * getDpr(), false, m_window->openglContext());
 #endif
