@@ -305,6 +305,10 @@ void QuickOverlay::drawDecorations(const QSize &size, qreal dpr)
     if (!m_drawDecorations)
         return;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    if (m_window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
+        return; // TODO
+#endif
     QOpenGLPaintDevice device(size * dpr);
     device.setDevicePixelRatio(dpr);
     QPainter painter(&device);

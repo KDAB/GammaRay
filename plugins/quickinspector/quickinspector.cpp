@@ -454,6 +454,12 @@ void QuickInspector::slotGrabWindow()
         return;
 
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    if (m_window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL) {
+        sendRenderedScene(m_window->grabWindow(), QTransform());
+        return;
+    }
+#endif
     m_overlay->requestGrabWindow();
 }
 
