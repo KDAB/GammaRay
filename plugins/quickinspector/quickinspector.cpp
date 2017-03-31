@@ -343,6 +343,8 @@ void QuickInspector::selectWindow(QQuickWindow *window)
         selectItem(m_window->contentItem());
         m_window->update();
     }
+
+    checkFeatures();
 }
 
 void QuickInspector::selectItem(QQuickItem *item)
@@ -544,13 +546,15 @@ void QuickInspector::applyRenderMode()
 
 void QuickInspector::checkFeatures()
 {
-    emit features(
-        Features(
+    Features f;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-            AllCustomRenderModes
+    if (m_window
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+        && m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL
 #endif
-            )
-        );
+    ) f = AllCustomRenderModes;
+#endif
+    emit features(f);
 }
 
 void QuickInspector::checkServerSideDecorations()
