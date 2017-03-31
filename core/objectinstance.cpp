@@ -29,6 +29,7 @@
 #include "objectinstance.h"
 #include "metaobjectrepository.h"
 #include "metaobject.h"
+#include "util.h"
 
 using namespace GammaRay;
 
@@ -206,7 +207,7 @@ void ObjectInstance::unpackVariant()
     const auto mo = MetaObjectRepository::instance()->metaObject(m_variant.typeName());
     if (mo && strstr(m_variant.typeName(), "*") != nullptr) { // pointer types
         QMetaType::construct(m_variant.userType(), &m_obj, m_variant.constData());
-        if (quintptr(m_obj) >= 0x4) { // QSG sw renderer uses near-null values...
+        if (!Util::isNullish(m_obj)) {
             m_type = Object;
             m_typeName = m_variant.typeName();
         }

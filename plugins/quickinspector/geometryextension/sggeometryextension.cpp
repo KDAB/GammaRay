@@ -30,6 +30,7 @@
 #include "sggeometrymodel.h"
 #include <core/propertycontroller.h>
 #include <core/probe.h>
+#include <core/util.h>
 #include <QMetaProperty>
 #include <QSGNode>
 
@@ -55,7 +56,7 @@ bool SGGeometryExtension::setObject(void *object, const QString &typeName)
         m_node = static_cast<QSGGeometryNode *>(object);
         auto geometry = m_node->geometry();
         // the QSG software renderer puts 0x1 into geometry, so consider that as no geometry too
-        if (quintptr(geometry) < 0x4)
+        if (Util::isNullish(geometry))
             return false;
 
         m_vertexModel->setNode(m_node);

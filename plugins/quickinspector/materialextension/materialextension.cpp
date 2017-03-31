@@ -34,6 +34,7 @@
 #include <core/objectinstance.h>
 #include <core/propertycontroller.h>
 #include <core/varianthandler.h>
+#include <core/util.h>
 #include <common/metatypedeclarations.h>
 
 #include <QFile>
@@ -96,7 +97,7 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
     }
 
     // the QSG software renderer puts 0x1 into material, so consider that as no material too
-    if (quintptr(material) < 0x4) {
+    if (Util::isNullish(material)) {
         m_materialPropertyModel->setObject(nullptr);
         return false;
     }

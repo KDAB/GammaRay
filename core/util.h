@@ -160,6 +160,23 @@ GAMMARAY_CORE_EXPORT void drawTransparencyPattern(QPainter *painter, const QRect
  * @since 2.2
  */
 GAMMARAY_CORE_EXPORT int signalIndexToMethodIndex(const QMetaObject *metaObject, int signalIndex);
+
+/**
+ * Checks if the given pointer should be considered a nullptr.
+ * One would assume this to be trivial, but there are some interesting hacks
+ * in for example the QSG software renderer that use near-null values to not
+ * trigger normal nullptr checkes but are still effectively null as far as we
+ * are concerned (as in: we will crash for sure when dereferencing them).
+ */
+inline bool isNullish(void *ptr)
+{
+#if QT_POINTER_SIZE == 4
+    return quintptr(ptr) < 0x4;
+#else
+    return quintptr(ptr) < 0x8;
+#endif
+}
+
 }
 }
 
