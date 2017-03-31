@@ -53,6 +53,11 @@ bool SGGeometryExtension::setObject(void *object, const QString &typeName)
 {
     if (typeName == QStringLiteral("QSGGeometryNode")) {
         m_node = static_cast<QSGGeometryNode *>(object);
+        auto geometry = m_node->geometry();
+        // the QSG software renderer puts 0x1 into geometry, so consider that as no geometry too
+        if (quintptr(geometry) < 0x4)
+            return false;
+
         m_vertexModel->setNode(m_node);
         m_adjacencyModel->setNode(m_node);
         return true;

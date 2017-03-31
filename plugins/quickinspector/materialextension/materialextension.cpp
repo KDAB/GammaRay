@@ -87,33 +87,38 @@ static const char *typeForMaterial(QSGMaterial *material)
 
 bool MaterialExtension::setObject(void *object, const QString &typeName)
 {
+    QSGMaterial *material = nullptr;
+
     if (typeName == QStringLiteral("QSGGeometryNode")) {
         m_node = static_cast<QSGGeometryNode *>(object);
 
-        m_materialPropertyModel->setObject(ObjectInstance(m_node->material(),
-                                                          typeForMaterial(m_node->material())));
-
-        QSGMaterialShader *materialShader = m_node->material()->createShader();
-        SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief *>(materialShader);
-        const QHash<QOpenGLShader::ShaderType,
-                    QStringList> shaderSources = thief->getShaderSources();
-
-        m_shaderModel->clear();
-        m_shaderModel->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Shader"));
-        for (auto it = shaderSources.constBegin(); it != shaderSources.constEnd(); ++it) {
-            foreach (const QString &source, it.value()) {
-                auto *item = new QStandardItem(source);
-                item->setEditable(false);
-                item->setToolTip(tr("Shader type: %1").arg(VariantHandler::displayString(it.key())));
-                m_shaderModel->appendRow(item);
-            }
-        }
-
-        return true;
+        material = m_node->material();
     }
 
-    m_materialPropertyModel->setObject(nullptr);
-    return false;
+    // the QSG software renderer puts 0x1 into material, so consider that as no material too
+    if (quintptr(material) < 0x4) {
+        m_materialPropertyModel->setObject(nullptr);
+        return false;
+    }
+
+    m_materialPropertyModel->setObject(ObjectInstance(material, typeForMaterial(material)));
+
+    QSGMaterialShader *materialShader = material->createShader();
+    SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief *>(materialShader);
+    const QHash<QOpenGLShader::ShaderType, QStringList> shaderSources = thief->getShaderSources();
+
+    m_shaderModel->clear();
+    m_shaderModel->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Shader"));
+    for (auto it = shaderSources.constBegin(); it != shaderSources.constEnd(); ++it) {
+        foreach (const QString &source, it.value()) {
+            auto *item = new QStandardItem(source);
+            item->setEditable(false);
+            item->setToolTip(tr("Shader type: %1").arg(VariantHandler::displayString(it.key())));
+            m_shaderModel->appendRow(item);
+        }
+    }
+
+    return true;
 }
 
 void MaterialExtension::getShader(const QString &fileName)
