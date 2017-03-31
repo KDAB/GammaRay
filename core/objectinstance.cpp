@@ -206,7 +206,7 @@ void ObjectInstance::unpackVariant()
     const auto mo = MetaObjectRepository::instance()->metaObject(m_variant.typeName());
     if (mo && strstr(m_variant.typeName(), "*") != nullptr) { // pointer types
         QMetaType::construct(m_variant.userType(), &m_obj, m_variant.constData());
-        if (m_obj) {
+        if (quintptr(m_obj) >= 0x4) { // QSG sw renderer uses near-null values...
             m_type = Object;
             m_typeName = m_variant.typeName();
         }
