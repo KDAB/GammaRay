@@ -43,10 +43,11 @@ namespace GammaRay {
 class QmlBindingNode {
 public:
 
-    QmlBindingNode(QQmlBinding *binding, QmlBindingNode *parent = 0);
-    QmlBindingNode(QObject *object, int propertyIndex, QmlBindingNode *parent = 0);
+    QmlBindingNode(QQmlBinding *binding, QmlBindingNode *parent = Q_NULLPTR);
+    QmlBindingNode(QObject *object, int propertyIndex, QmlBindingNode *parent = Q_NULLPTR);
 
     QmlBindingNode *parent() const;
+    void setParent(QmlBindingNode *parent);
     QObject *object() const;
 
     /**
@@ -61,17 +62,15 @@ public:
     bool isBindingLoop() const;
     const QString &expression() const;
     const SourceLocation &sourceLocation() const;
+    std::vector<std::unique_ptr<QmlBindingNode>> &dependencies();
     const std::vector<std::unique_ptr<QmlBindingNode>> &dependencies() const;
     const QVariant &value() const;
     uint depth() const;
 
-    /**
-     * Refreshes
-     * * the property value
-     * * the check for binding loops
-     * recursively, i.e. also for all its dependencies.
-     */
-    void refresh();
+    void refreshValue();
+
+    bool operator<(const QmlBindingNode &other) const;
+    bool operator>(const QmlBindingNode &other) const;
 
 private:
     static QQmlBinding *bindingForProperty(QObject *obj, int propertyIndex);
@@ -85,7 +84,7 @@ private:
     QObject *m_object;
     QString m_id;
     int m_propertyIndex;
-    QQmlBinding *m_binding = 0;
+    QQmlBinding *m_binding = Q_NULLPTR;
     QVariant m_value;
     bool m_isActive = true;
     bool m_isBindingLoop = false;

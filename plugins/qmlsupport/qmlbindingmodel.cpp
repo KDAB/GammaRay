@@ -57,14 +57,14 @@ void QmlBindingModel::setObject(QObject* obj)
     if (m_obj == obj)
         return;
 
-    const auto bindings = bindingsFromObject(obj);
+    auto bindings = bindingsFromObject(obj);
 
     // TODO use removerows/insertrows instead of reset here
     beginResetModel();
-    disconnect(m_obj, 0, this, 0);
+    disconnect(m_obj, Q_NULLPTR, this, Q_NULLPTR);
 
     m_obj = obj;
-    m_bindings = bindings;
+    m_bindings = std::move(bindings);
     endResetModel();
 }
 
@@ -72,32 +72,84 @@ void GammaRay::QmlBindingModel::propertyChanged()
 {
     Q_ASSERT(sender() == m_obj);
 
-    for (int i = 0; i < m_bindings.size(); i++) {
-        auto binding = m_bindings[i];
+    for (size_t i = 0; i < m_bindings.size(); ++i) {
+        auto binding = m_bindings[i].get();
         if (binding->property().notifySignalIndex() == senderSignalIndex()) {
-            binding->refresh();
-            QModelIndex modelIndex1 = index(i, 1, QModelIndex());
-            QModelIndex modelIndex5 = index(i, 5, QModelIndex());
-            emit dataChanged(modelIndex1, modelIndex1);
-            emit dataChanged(modelIndex5, modelIndex5);
-            invalidateDependencies(binding, modelIndex1);
+            auto newBindingNode = new QmlBindingNode(binding->binding());
+            refresh(binding, newBindingNode, createIndex(i, 0, binding), true);
             return;
         }
     }
 }
 
-void GammaRay::QmlBindingModel::invalidateDependencies(GammaRay::QmlBindingNode* node, const QModelIndex &nodeIndex)
+void QmlBindingModel::refresh(QmlBindingNode *oldBindingNode, QmlBindingNode *newBindingNode,
+                 const QModelIndex &index, bool emitSignals)
 {
-    emit dataChanged(index(0, 1, nodeIndex), index(node->dependencies().size() - 1, 1, nodeIndex));
-    emit dataChanged(index(0, 5, nodeIndex), index(node->dependencies().size() - 1, 5, nodeIndex));
-    for (int i = 0; i < node->dependencies().size(); i++) {
-        invalidateDependencies(node->dependencies()[i].get(), index(i, 1, nodeIndex));
+    if (oldBindingNode->value() != newBindingNode->value()) {
+        oldBindingNode->refreshValue();
+        emit dataChanged(createIndex(index.row(), 1, oldBindingNode), createIndex(index.row(), 1, oldBindingNode));
+    }
+    if (oldBindingNode->depth() != newBindingNode->depth()) {
+        emit dataChanged(createIndex(index.row(), 4, oldBindingNode), createIndex(index.row(), 4, oldBindingNode));
+    }
+
+    // Refresh dependencies
+    auto &oldDependencies = oldBindingNode->dependencies();
+    oldDependencies.reserve(newBindingNode->dependencies().size());
+    auto i = oldDependencies.begin();
+    auto j = newBindingNode->dependencies().begin();
+
+    while (i != oldDependencies.end() && j != newBindingNode->dependencies().end()) {
+        const auto idx = std::distance(oldDependencies.begin(), i);
+        if (**i < **j) { // handle deleted node
+            if (emitSignals)
+                beginRemoveRows(index, idx, idx);
+            i = oldDependencies.erase(i);
+            if (emitSignals)
+                endRemoveRows();
+        } else if (**i > **j) { // handle added node
+            if (emitSignals)
+                beginInsertRows(index, idx, idx);
+            i = oldDependencies.insert(i, std::move(*j));
+            if (emitSignals)
+                endInsertRows();
+            ++i;
+            ++j;
+        } else { // already known node, no change
+            refresh(i->get(), j->get(), createIndex(idx, 1, i->get()), emitSignals);
+            ++i;
+            ++j;
+        }
+    }
+    if (i == oldDependencies.end() && j != newBindingNode->dependencies().end()) {
+        // Add remaining new items to list and inform the client
+        const auto idx = std::distance(oldDependencies.begin(), i);
+        const auto count = std::distance(j, newBindingNode->dependencies().end());
+
+        if (emitSignals)
+            beginInsertRows(index, idx, idx + count - 1);
+        while (j != newBindingNode->dependencies().end()) {
+            (*j)->setParent(static_cast<QmlBindingNode *>(index.internalPointer()));
+            oldDependencies.push_back(std::move(*j));
+            ++j;
+        }
+        if (emitSignals)
+            endInsertRows();
+    } else if (i != oldDependencies.end()) { // Inform the client about the removed rows
+        const auto idx = std::distance(oldDependencies.begin(), i);
+        const auto count = std::distance(i, oldDependencies.end());
+
+        if (emitSignals)
+            beginRemoveRows(index, idx, idx + count - 1);
+        i = oldDependencies.erase(i, oldDependencies.end());
+        if (emitSignals)
+            endRemoveRows();
     }
 }
 
-std::vector<QmlBindingNode *> QmlBindingModel::bindingsFromObject(QObject* obj)
+std::vector<std::unique_ptr<QmlBindingNode>> QmlBindingModel::bindingsFromObject(QObject* obj)
 {
-    std::vector<QmlBindingNode *> bindings;
+    std::vector<std::unique_ptr<QmlBindingNode>> bindings;
     if (!obj)
         return bindings;
 
@@ -106,26 +158,18 @@ std::vector<QmlBindingNode *> QmlBindingModel::bindingsFromObject(QObject* obj)
     if (!data)
         return bindings;
 
-//     for (int i = data->propertyCache->propertyOffset(); i < data->propertyCache->propertyCount(); ++i) {
-//         QQmlPropertyData *prop = data->propertyCache->property(i);
-//     }
-
     auto b = data->bindings;
     while (b) {
         if (auto qmlBinding = dynamic_cast<QQmlBinding*>(b)) {
             QmlBindingNode *node;
 
-            // Try to find out dependencies of this binding.
             node = new QmlBindingNode(qmlBinding);
+            QMetaObject::connect(obj, node->property().notifySignalIndex(), this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);
 
-            QMetaObject::connect(obj, node->property().notifySignalIndex(), this, metaObject()->indexOfMethod("propertyChanged()"));
-
-            bindings.push_back(node);
+            bindings.push_back(std::unique_ptr<QmlBindingNode>(node));
         } else {
             qDebug() << "Ohhh...";
         }
-//         if (node->expression().isEmpty())
-//             node->expression() = b->expression();
         b = b->nextBinding();
     }
 #endif
@@ -163,7 +207,7 @@ QVariant QmlBindingModel::data(const QModelIndex& index, int role) const
             case 2: return binding->expression();
             case 3: return binding->sourceLocation().displayString();
             case 4: {
-                int depth = binding->depth();
+                uint depth = binding->depth();
                 return depth == std::numeric_limits<uint>::max() ? QStringLiteral("∞") : QString::number(depth);
             }
         }
@@ -214,7 +258,7 @@ QModelIndex GammaRay::QmlBindingModel::index(int row, int column, const QModelIn
     if (parent.isValid()) {
         index = createIndex(row, column, static_cast<QmlBindingNode *>(parent.internalPointer())->dependencies()[row].get());
     } else {
-        index = createIndex(row, column, m_bindings[row]);
+        index = createIndex(row, column, m_bindings[row].get());
     }
     return index;
 }
@@ -227,13 +271,13 @@ QModelIndex GammaRay::QmlBindingModel::parent(const QModelIndex& child) const
     }
     QmlBindingNode *grandparent = parent->parent();
     if (!grandparent) {
-        for (int i = 0; i < m_bindings.size(); i++) {
-            if (parent == m_bindings[i]) {
-                return createIndex(i, child.column(), m_bindings[i]);
+        for (size_t i = 0; i < m_bindings.size(); i++) {
+            if (parent == m_bindings[i].get()) {
+                return createIndex(i, child.column(), m_bindings[i].get());
             }
         }
     }
-    for (int i = 0; i < grandparent->dependencies().size(); i++) {
+    for (size_t i = 0; i < grandparent->dependencies().size(); i++) {
         if (parent == grandparent->dependencies()[i].get()) {
             return createIndex(i, child.column(), grandparent->dependencies()[i].get());
         }
