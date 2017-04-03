@@ -226,8 +226,6 @@ void QuickOverlay::setWindow(QQuickWindow *window)
     placeOn(ItemOrLayoutFacade());
     m_window = window;
 
-    m_frame = QImage(m_window->size() * getDpr(), QImage::Format_ARGB32_Premultiplied);
-
     if (m_window) {
         // Force DirectConnection else Auto lead to Queued which is not good.
         connect(m_window.data(), &QQuickWindow::afterRendering,
@@ -329,24 +327,6 @@ void QuickOverlay::setIsGrabbingMode(bool isGrabbingMode)
         updateOverlay();
 }
 
-inline qreal QuickOverlay::getDpr()
-{
-    qreal dpr = 1.0;
-    // See QTBUG-53795
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    dpr = m_window->effectiveDevicePixelRatio();
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    dpr = m_window->devicePixelRatio();
-#endif
-    return dpr;
-}
-
-inline uint QuickOverlay::textureSize()
-{
-    const qreal dpr = getDpr();
-    return static_cast<uint>(m_window->width() * dpr) * static_cast<uint>(m_window->height() * dpr) * 4;
-}
-
 QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
 {
     QuickItemGeometry itemGeometry;
@@ -432,15 +412,22 @@ QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
 void QuickOverlay::windowAfterRendering()
 {
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
-    const int realWindowWidth = static_cast<int>(m_window->width() * getDpr());
-    const int realWindowHeight = static_cast<int>(m_window->height() * getDpr());
+    qreal dpr = 1.0;
+    // See QTBUG-53795
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    dpr = m_window->effectiveDevicePixelRatio();
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    dpr = m_window->devicePixelRatio();
+#endif
+    const int realWindowWidth = static_cast<int>(m_window->width() * dpr);
+    const int realWindowHeight = static_cast<int>(m_window->height() * dpr);
 
     updateItemsGeometry();
 
     if (m_isGrabbingMode) {
 
         if ((m_frame.width() != realWindowWidth) || (m_frame.height() != realWindowHeight))
-            m_frame = QImage(m_window->size() * getDpr(), QImage::Format_ARGB32_Premultiplied);
+            m_frame = QImage(m_window->size() * dpr, QImage::Format_ARGB32_Premultiplied);
 
         QTransform transform = QTransform();
 #ifdef ENABLE_GL_READPIXELS
@@ -448,16 +435,17 @@ void QuickOverlay::windowAfterRendering()
         glFuncs->glReadPixels(0, 0, realWindowWidth, realWindowHeight, GL_BGRA, GL_UNSIGNED_BYTE, m_frame.bits());
         //flip
         transform.scale(1.0, -1.0);
-        transform.translate(0.0, -realWindowHeight);
+        transform.translate(0.0, -m_window->height());
 #else
-        m_frame = qt_gl_read_framebuffer(m_window->size() * getDpr(), false, m_window->openglContext());
+        m_frame = qt_gl_read_framebuffer(m_window->size() * dpr, false, m_window->openglContext());
 #endif
+        m_frame.setDevicePixelRatio(dpr);
 
         if (!m_frame.isNull())
             QMetaObject::invokeMethod(this, "sceneGrabbed", Qt::QueuedConnection, Q_ARG(QImage, m_frame), Q_ARG(QTransform, transform));
     }
 
-    drawDecorations(m_window->size(), getDpr());
+    drawDecorations(m_window->size(), dpr);
 
     m_window->resetOpenGLState();
 
@@ -550,7 +538,6 @@ void QuickOverlay::itemWindowChanged(QQuickWindow *window)
             placeOn(m_currentItem);
     } else {
         placeOn(ItemOrLayoutFacade());
-        m_frame = QImage(m_window->size() * getDpr(), QImage::Format_ARGB32_Premultiplied);
     }
 }
 

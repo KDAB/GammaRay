@@ -457,7 +457,16 @@ void QuickInspector::slotGrabWindow()
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     if (m_window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL) {
-        sendRenderedScene(m_window->grabWindow(), QTransform());
+        qreal dpr = 1.0;
+        // See QTBUG-53795
+    #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+        dpr = m_window->effectiveDevicePixelRatio();
+    #elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        dpr = m_window->devicePixelRatio();
+    #endif
+        QImage image = m_window->grabWindow();
+        image.setDevicePixelRatio(dpr);
+        sendRenderedScene(image, QTransform());
         return;
     }
 #endif

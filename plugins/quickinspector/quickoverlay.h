@@ -115,8 +115,6 @@ private:
     void disconnectItemChanges(QQuickItem *item);
     void connectTopItemChanges(QQuickItem *item);
     void disconnectTopItemChanges(QQuickItem *item);
-    qreal getDpr();
-    uint textureSize();
     QuickItemGeometry initFromItem(QQuickItem *item) const;
 
     QPointer<QQuickWindow> m_window;
