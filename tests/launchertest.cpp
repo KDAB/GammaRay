@@ -99,9 +99,13 @@ private slots:
 
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
+        QString exePath = QLatin1String(TESTBIN_DIR "/minimalcoreapplication");
+#ifdef Q_OS_WIN
+        exePath += QLatin1String(".exe");
+#endif
         ProbeABIDetector detector;
-        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"))));
-        options.setLaunchArguments(QStringList() << QLatin1String(TESTBIN_DIR "/minimalcoreapplication"));
+        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(exePath)));
+        options.setLaunchArguments(QStringList() << exePath);
         options.setInjectorType(injectorType);
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
@@ -126,9 +130,13 @@ private slots:
     {
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
+        QString exePath = QLatin1String(TESTBIN_DIR "/minimalwidgetapplication");
+#ifdef Q_OS_WIN
+        exePath += QLatin1String(".exe");
+#endif
         ProbeABIDetector detector;
-        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(QLatin1String(TESTBIN_DIR "/minimalwidgetapplication"))));
-        options.setLaunchArguments(QStringList() << QLatin1String(TESTBIN_DIR "/minimalwidgetapplication"));
+        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(exePath)));
+        options.setLaunchArguments(QStringList() << exePath);
         options.setInjectorType(QStringLiteral("style"));
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
@@ -158,14 +166,15 @@ private slots:
 
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
-        ProbeABIDetector detector;
-        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"))));
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
          options.setPid(target.pid()->dwProcessId);
 #else
         options.setPid(target.pid());
 #endif
+        QTest::qWait(1000); // give the target some time to actually load the QtCore DLL, otherwise ABI detection fails
+        ProbeABIDetector detector;
+        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForProcess(options.pid())));
         Launcher launcher(options);
 
         QSignalSpy spy(&launcher, SIGNAL(attached()));
