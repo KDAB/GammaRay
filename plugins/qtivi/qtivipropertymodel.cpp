@@ -103,7 +103,6 @@ QtIviPropertyModel::QtIviPropertyModel(Probe *probe)
     connect(probe, SIGNAL(objectDestroyed(QObject*)), this, SLOT(objectRemoved(QObject*)));
     connect(probe, SIGNAL(objectReparented(QObject*)), this, SLOT(objectReparented(QObject*)));
     connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
-    connect(probe, SIGNAL(objectPropertySelected(QObject*,QByteArray)), this, SLOT(objectPropertySelected(QObject*,QByteArray)));
 }
 
 QtIviPropertyModel::IviCarrierProperty::IviCarrierProperty()
@@ -554,18 +553,6 @@ void QtIviPropertyModel::objectSelected(QObject *obj)
     if (!prop)
         return;
     const QModelIndex index = indexOfProperty(prop);
-    if (!index.isValid())
-        return;
-
-    QItemSelectionModel *const selectionModel = ObjectBroker::selectionModel(this);
-    selectionModel->select(index,
-                           QItemSelectionModel::Select | QItemSelectionModel::Clear |
-                           QItemSelectionModel::Rows | QItemSelectionModel::Current);
-}
-
-void QtIviPropertyModel::objectPropertySelected(QObject *obj, const QByteArray &property)
-{
-    const QModelIndex index = indexOfProperty(obj, property);
     if (!index.isValid())
         return;
 

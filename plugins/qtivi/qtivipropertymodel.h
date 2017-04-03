@@ -92,7 +92,6 @@ private slots:
     void objectRemoved(QObject *obj);
     void objectReparented(QObject *obj);
     void objectSelected(QObject *obj);
-    void objectPropertySelected(QObject *obj, const QByteArray &property);
     void propertyChanged();
 
 private:
