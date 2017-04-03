@@ -34,6 +34,7 @@
 #include <launcher/launcher.h>
 #include <launcher/probefinder.h>
 #include <launcher/probeabi.h>
+#include <launcher/probeabidetector.h>
 
 #include <QDebug>
 #include <QtTest/qtest.h>
@@ -98,8 +99,8 @@ private slots:
 
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
-        // setting the probe is not strictly needed but we silence a runtime warning this way
-        options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        ProbeABIDetector detector;
+        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"))));
         options.setLaunchArguments(QStringList() << QLatin1String(TESTBIN_DIR "/minimalcoreapplication"));
         options.setInjectorType(injectorType);
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
@@ -125,8 +126,8 @@ private slots:
     {
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
-        // setting the probe is not strictly needed but we silence a runtime warning this way
-        options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        ProbeABIDetector detector;
+        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(QLatin1String(TESTBIN_DIR "/minimalwidgetapplication"))));
         options.setLaunchArguments(QStringList() << QLatin1String(TESTBIN_DIR "/minimalwidgetapplication"));
         options.setInjectorType(QStringLiteral("style"));
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
@@ -157,7 +158,8 @@ private slots:
 
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
-        options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
+        ProbeABIDetector detector;
+        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"))));
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
 #ifdef Q_OS_WIN32
          options.setPid(target.pid()->dwProcessId);
