@@ -62,17 +62,10 @@ public:
     QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits,
                           Qt::MatchFlags flags) const override;
 
-    void scanMetaTypes();
-
-public slots:
-    void objectAdded(QObject *obj);
-    void objectRemoved(QObject *obj);
-
 private:
     void addMetaObject(const QMetaObject *metaObject);
-    void removeMetaObject(const QMetaObject *metaObject);
+    void endAddMetaObject(const QMetaObject *metaObject);
 
-    bool isKnownMetaObject(const QMetaObject *metaObject) const;
     QModelIndex indexForMetaObject(const QMetaObject *metaObject) const;
     const QMetaObject *metaObjectForIndex(const QModelIndex &index) const;
 
@@ -82,34 +75,6 @@ private slots:
     void emitPendingDataChanged();
 
 private:
-    QHash<const QMetaObject *, const QMetaObject *> m_childParentMap;
-    QHash<const QMetaObject *, QVector<const QMetaObject *> > m_parentChildMap;
-
-    struct MetaObjectInfo
-    {
-        MetaObjectInfo()
-            : selfCount(0)
-            , selfAliveCount(0)
-            , inclusiveCount(0)
-            , inclusiveAliveCount(0) {}
-
-        /// Number of objects of a particular meta object type ever created
-        int selfCount;
-        /// Number of instances of a meta object currently alive
-        int selfAliveCount;
-        /**
-         * Number of objects of the exact meta object type
-         * + number of objects of type that inherit from this meta type
-         */
-        int inclusiveCount;
-        /// Inclusive instance count currently alive
-        int inclusiveAliveCount;
-    };
-    QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
-    /// meta objects at creation time, so we can correctly decrement instance counts
-    /// after destruction
-    QHash<QObject*, const QMetaObject*> m_metaObjectMap;
-
     QSet<const QMetaObject *> m_pendingDataChanged;
     QTimer *m_pendingDataChangedTimer;
 };

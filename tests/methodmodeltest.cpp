@@ -29,6 +29,8 @@
 #include <core/objectmethodmodel.h>
 #include <ui/tools/objectinspector/clientmethodmodel.h>
 #include <common/tools/objectinspector/methodmodel.h>
+#include <probe/hooks.h>
+#include <probe/probecreator.h>
 
 #include <3rdparty/qt/modeltest.h>
 
@@ -64,9 +66,19 @@ private:
         return QModelIndex();
     }
 
+    void createProbe()
+    {
+        Hooks::installHooks();
+        Probe::startupHookReceived();
+        new ProbeCreator(ProbeCreator::Create);
+        QTest::qWait(1); // event loop re-entry
+    }
+
 private slots:
     void modelTest()
     {
+        createProbe();
+
         ObjectMethodModel srcModel;
         ClientMethodModel model;
         model.setSourceModel(&srcModel);

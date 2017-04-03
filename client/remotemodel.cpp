@@ -49,22 +49,24 @@ RemoteModel::Node::~Node()
     qDeleteAll(children);
 }
 
-void RemoteModel::Node::clearChildrenData()
+void RemoteModel::Node::clearChildrenData(RemoteModel *model)
 {
     foreach (auto child, children) {
-        child->clearChildrenStructure();
+        child->clearChildrenStructure(model);
         child->data.clear();
         child->flags.clear();
         child->state.clear();
     }
 }
 
-void RemoteModel::Node::clearChildrenStructure()
+void RemoteModel::Node::clearChildrenStructure(RemoteModel *model)
 {
+    model->beginRemoveRows(model->modelIndexForNode(this, 0), 0, children.count() - 1);
     qDeleteAll(children);
     children.clear();
     rowCount = -1;
     columnCount = -1;
+    model->endRemoveRows();
 }
 
 void RemoteModel::Node::allocateColumns()
@@ -583,9 +585,9 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             foreach (const auto &persistentIndex, persistentIndexList())
                 changePersistentIndex(persistentIndex, QModelIndex());
             if (hint == 0)
-                m_root->clearChildrenStructure();
+                m_root->clearChildrenStructure(this);
             else
-                m_root->clearChildrenData();
+                m_root->clearChildrenData(this);
             emit layoutChanged();
             break;
         }
@@ -614,9 +616,9 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         }
         foreach (auto node, parentNodes) {
             if (hint == 0)
-                node->clearChildrenStructure();
+                node->clearChildrenStructure(this);
             else
-                node->clearChildrenData();
+                node->clearChildrenData(this);
         }
         emit layoutChanged(); // TODO Qt5 support with exact sub-trees
         break;
