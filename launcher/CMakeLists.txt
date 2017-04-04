@@ -96,28 +96,10 @@ if(MSVC)
   install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_launcher>/$<TARGET_PDB_FILE_NAME:gammaray_launcher>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
 endif()
 
-
-# command line launcher
-set(gammaray_runner_srcs
-  main.cpp
-)
-
-add_executable(gammaray ${gammaray_runner_srcs})
-
-target_link_libraries(gammaray gammaray_launcher gammaray_common)
-if(HAVE_QT_WIDGETS)
-  target_link_libraries(gammaray ${QT_QTGUI_LIBRARIES})
-endif()
-
-gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
-
-install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
-if(MSVC)
-  install(FILES "$<TARGET_PDB_FILE_DIR:gammaray>/$<TARGET_PDB_FILE_NAME:gammaray>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
-endif()
-
+add_subdirectory(cli)
 # UI launcher
 if(HAVE_QT_CONCURRENT AND GAMMARAY_BUILD_UI)
   add_subdirectory(ui)
+  add_subdirectory(app)
 endif()
 endif()
