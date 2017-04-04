@@ -43,14 +43,14 @@ public:
     explicit MetaObjectModel(QObject *parent = nullptr)
         : QAbstractItemModel(parent)
         , m_metaObject(nullptr)
+        , m_rowCount(0)
     {
     }
 
     virtual void setMetaObject(const QMetaObject *metaObject)
     {
-        const auto oldRowCount = rowCount();
-        if (oldRowCount) {
-            beginRemoveRows(QModelIndex(), 0, oldRowCount - 1);
+        if (m_rowCount) {
+            beginRemoveRows(QModelIndex(), 0, m_rowCount - 1);
             m_metaObject = nullptr;
             endRemoveRows();
         } else {
@@ -60,9 +60,9 @@ public:
         if (!metaObject)
             return;
 
-        const auto newRowCount = (metaObject->*MetaCount)();
-        if (newRowCount) {
-            beginInsertRows(QModelIndex(), 0, newRowCount - 1);
+        m_rowCount = (metaObject->*MetaCount)();
+        if (m_rowCount) {
+            beginInsertRows(QModelIndex(), 0, m_rowCount - 1);
             m_metaObject = metaObject;
             endInsertRows();
         } else {
@@ -101,7 +101,7 @@ public:
     {
         if (!m_metaObject || parent.isValid())
             return 0;
-        return (m_metaObject->*MetaCount)();
+        return m_rowCount;
     }
 
     QModelIndex index(int row, int column,
@@ -133,7 +133,12 @@ protected:
 
 protected:
     // let's assume that meta objects never get destroyed
+    // very funny, never heard of QML? ;)
     const QMetaObject *m_metaObject;
+
+    // cached row count, so we don't need to dereference a potentially stale m_metaObject
+    // in setMetaObject again, as that might have been destroyed meanwhile
+    int m_rowCount;
 };
 }
 
