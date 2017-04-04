@@ -543,7 +543,7 @@ void QtIviPropertyModel::objectReparented(QObject *obj)
         IF_DEBUG(std::cout << "QtIviPropertyModel::objectReparented() " << obj << std::endl);
         // We don't need reparenting:
         // * Plain Qt properties can't move
-        // * QIviProperty's are stucked with they parent
+        // * QIviProperty's are stuck with their parent
     }
 }
 
