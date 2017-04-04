@@ -444,8 +444,8 @@ void QuickInspector::sendRenderedScene(const QImage &currentFrame, const QTransf
     frame.setSceneRect(m_overlay->itemsGeometryRect());
     if (m_overlay->settings().componentsTraces)
         frame.setData(QVariant::fromValue(m_overlay->itemsGeometry()));
-    else
-        frame.setData(QVariant::fromValue(m_overlay->itemsGeometry().first()));
+    else if (!m_overlay->itemsGeometry().isEmpty())
+        frame.setData(QVariant::fromValue(m_overlay->itemsGeometry().at(0)));
     m_remoteView->sendFrame(frame);
 }
 
