@@ -62,30 +62,27 @@ if(UNIX AND NOT APPLE AND NOT QNXNTO)
   target_link_libraries(gammaray_launcher LINK_PRIVATE dl) # for preload check
 endif()
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
-  install(TARGETS gammaray_launcher EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS gammaray_launcher EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-  gammaray_install_headers(DESTINATION launcher
-      ${CMAKE_CURRENT_BINARY_DIR}/gammaray_launcher_export.h
-      launcher.h
-      launchoptions.h
-      probeabi.h
-      probeabidetector.h
-      probefinder.h
-      networkdiscoverymodel.h
-  )
+gammaray_install_headers(DESTINATION launcher
+    ${CMAKE_CURRENT_BINARY_DIR}/gammaray_launcher_export.h
+    launcher.h
+    launchoptions.h
+    probeabi.h
+    probeabidetector.h
+    probefinder.h
+    networkdiscoverymodel.h
+)
 
-  ecm_generate_pri_file(BASE_NAME GammaRayLauncher
-                        LIB_NAME gammaray_launcher
-                        DEPS "core gui GammaRayCommon"
-                        FILENAME_VAR PRI_FILENAME
-                        INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
-  )
+ecm_generate_pri_file(BASE_NAME GammaRayLauncher
+                      LIB_NAME gammaray_launcher
+                      DEPS "core gui GammaRayCommon"
+                      FILENAME_VAR PRI_FILENAME
+                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
+)
 
-  install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
-else()
-  install(TARGETS gammaray_launcher ${INSTALL_TARGETS_DEFAULT_ARGS})
-endif()
+install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
 if(MSVC)
   install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_launcher>/$<TARGET_PDB_FILE_NAME:gammaray_launcher>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
 endif()
