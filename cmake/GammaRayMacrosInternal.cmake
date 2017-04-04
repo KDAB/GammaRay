@@ -55,7 +55,7 @@ macro(gammaray_target_relocatable_interfaces _paths)
 endmacro()
 
 function(gammaray_install_headers)
-  get_filename_component(_dir ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+  file(RELATIVE_PATH _dir ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
   cmake_parse_arguments(HEADER_INSTALL "" "DESTINATION" "" ${ARGN})
   if(NOT HEADER_INSTALL_DESTINATION)
     set(HEADER_INSTALL_DESTINATION ${_dir})
