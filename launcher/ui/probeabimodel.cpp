@@ -28,7 +28,7 @@
 
 #include "probeabimodel.h"
 
-#include <probefinder.h>
+#include <launcher/core/probefinder.h>
 
 using namespace GammaRay;
 

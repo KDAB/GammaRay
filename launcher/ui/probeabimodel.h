@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_PROBEABIMODEL_H
 #define GAMMARAY_PROBEABIMODEL_H
 
-#include <launcher/probeabi.h>
+#include <launcher/core/probeabi.h>
 
 #include <QAbstractListModel>
 #include <QVector>

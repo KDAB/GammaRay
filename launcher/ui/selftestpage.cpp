@@ -29,10 +29,10 @@
 #include <config-gammaray.h>
 
 #include "selftestpage.h"
-#include "probefinder.h"
 #include "ui_selftestpage.h"
 
-#include <launcher/selftest.h>
+#include <launcher/core/probefinder.h>
+#include <launcher/core/selftest.h>
 
 #include <QStandardItemModel>
 

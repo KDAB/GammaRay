@@ -29,7 +29,7 @@
 #include "processmodel.h"
 #include "probeabimodel.h"
 
-#include <probefinder.h>
+#include <launcher/core/probefinder.h>
 
 #include <QDebug>
 

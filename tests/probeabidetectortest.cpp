@@ -28,8 +28,8 @@
 
 #include <config-gammaray.h>
 
-#include <launcher/probeabi.h>
-#include <launcher/probeabidetector.h>
+#include <launcher/core/probeabi.h>
+#include <launcher/core/probeabidetector.h>
 
 #include <QtTest/qtest.h>
 #include <QObject>

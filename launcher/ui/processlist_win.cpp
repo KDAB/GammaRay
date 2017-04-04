@@ -32,7 +32,7 @@
 
 #include "processlist.h"
 
-#include <launcher/probeabidetector.h>
+#include <launcher/core/probeabidetector.h>
 
 #include <QLibrary>
 

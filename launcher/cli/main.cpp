@@ -28,18 +28,19 @@
 
 #include <config-gammaray.h>
 #include "config-gammaray-version.h"
-#include "injector/injectorfactory.h"
-#include "clientlauncher.h"
-#include "launchoptions.h"
-#include "launcherfinder.h"
-#include "launcher.h"
-#include "probefinder.h"
-#include "selftest.h"
+
+#include <launcher/core/injector/injectorfactory.h>
+#include <launcher/core/clientlauncher.h>
+#include <launcher/core/launchoptions.h>
+#include <launcher/core/launcherfinder.h>
+#include <launcher/core/launcher.h>
+#include <launcher/core/probeabi.h>
+#include <launcher/core/probeabidetector.h>
+#include <launcher/core/probefinder.h>
+#include <launcher/core/selftest.h>
 
 #include <common/paths.h>
 #include <common/protocol.h>
-#include <launcher/probeabi.h>
-#include <launcher/probeabidetector.h>
 
 #ifdef HAVE_QT_WIDGETS
 #include <QApplication>

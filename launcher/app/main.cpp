@@ -27,9 +27,10 @@
 */
 
 #include <config-gammaray.h>
-#include "launcherwindow.h"
-#include "launchoptions.h"
-#include "launcherfinder.h"
+
+#include <launcher/ui/launcherwindow.h>
+#include <launcher/core/launchoptions.h>
+#include <launcher/core/launcherfinder.h>
 
 #include <common/paths.h>
 #include <common/translator.h>

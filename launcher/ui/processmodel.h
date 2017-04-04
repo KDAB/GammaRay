@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_PROCESSMODEL_H
 #define GAMMARAY_PROCESSMODEL_H
 
-#include <launcher/probeabi.h>
+#include <launcher/core/probeabi.h>
 
 #include <QAbstractTableModel>
 #include <QVector>

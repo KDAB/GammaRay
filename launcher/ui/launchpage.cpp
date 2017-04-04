@@ -29,9 +29,10 @@
 #include <config-gammaray.h>
 #include "launchpage.h"
 #include "ui_launchpage.h"
-#include "launchoptions.h"
-#include "probefinder.h"
 #include "probeabimodel.h"
+
+#include <launcher/core/launchoptions.h>
+#include <launcher/core/probefinder.h>
 
 #include <QCompleter>
 #include <QFileDialog>

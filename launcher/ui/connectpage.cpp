@@ -28,8 +28,9 @@
 
 #include "connectpage.h"
 #include "ui_connectpage.h"
-#include "networkdiscoverymodel.h"
-#include "clientlauncher.h"
+
+#include <launcher/core/networkdiscoverymodel.h>
+#include <launcher/core/clientlauncher.h>
 
 #include <common/endpoint.h>
 

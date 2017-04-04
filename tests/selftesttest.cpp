@@ -26,7 +26,7 @@
 
 #include <config-gammaray.h>
 
-#include <launcher/selftest.h>
+#include <launcher/core/selftest.h>
 #include <common/paths.h>
 
 #include <QObject>

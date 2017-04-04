@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_ABSTRACTINJECTOR_H
 #define GAMMARAY_ABSTRACTINJECTOR_H
 
-#include <launcher/probeabi.h>
+#include <launcher/core/probeabi.h>
 
 #include <QProcess>
 #include <QSharedPointer>

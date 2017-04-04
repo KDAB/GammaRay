@@ -30,8 +30,8 @@
 
 #include <common/paths.h>
 
-#include <launcher/launcher.h>
-#include <launcher/launchoptions.h>
+#include <launcher/core/launcher.h>
+#include <launcher/core/launchoptions.h>
 #include <launcher/ui/launcherwindow.h>
 
 #include <client/clientconnectionmanager.h>

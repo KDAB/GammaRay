@@ -28,7 +28,8 @@
 
 #include "launcherwindow.h"
 #include "ui_launcherwindow.h"
-#include "launchoptions.h"
+
+#include <launcher/core/launchoptions.h>
 
 #include <ui/aboutdata.h>
 #include <ui/helpcontroller.h>

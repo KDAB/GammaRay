@@ -28,11 +28,11 @@
 
 #include <config-gammaray.h>
 #include "attachdialog.h"
-
-#include "launchoptions.h"
 #include "processfiltermodel.h"
 #include "processmodel.h"
 #include "probeabimodel.h"
+
+#include <launcher/core/launchoptions.h>
 
 #include <ui/searchlinecontroller.h>
 

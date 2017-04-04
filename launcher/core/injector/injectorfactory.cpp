@@ -37,7 +37,7 @@
 #include "preloadinjector.h"
 #endif
 
-#include <launcher/probeabi.h>
+#include <launcher/core/probeabi.h>
 
 #include <QString>
 

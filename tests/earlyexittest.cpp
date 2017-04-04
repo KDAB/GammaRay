@@ -28,11 +28,11 @@
 
 #include <config-gammaray.h>
 
-#include <launcher/injector/injectorfactory.h>
-#include <launcher/launchoptions.h>
-#include <launcher/launcher.h>
-#include <launcher/probefinder.h>
-#include <launcher/probeabi.h>
+#include <launcher/core/injector/injectorfactory.h>
+#include <launcher/core/launchoptions.h>
+#include <launcher/core/launcher.h>
+#include <launcher/core/probefinder.h>
+#include <launcher/core/probeabi.h>
 
 #include <QDebug>
 #include <QtTest/qtest.h>
