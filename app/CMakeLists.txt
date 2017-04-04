@@ -14,7 +14,7 @@ if(APPLE)
       ${QT_QTGUI_LIBRARIES}
       gammaray_common
       gammaray_launcher
-      gammaray_launcher_ui_internal
+      gammaray_launcher_ui
       gammaray_client
     )
 

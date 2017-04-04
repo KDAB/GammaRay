@@ -7,7 +7,7 @@ add_executable(gammaray-launcher WIN32 ${gammaray_launcher_ui_srcs})
 target_link_libraries(gammaray-launcher
   ${QT_QTGUI_LIBRARIES}
   gammaray_common
-  gammaray_launcher_ui_internal
+  gammaray_launcher_ui
 )
 
 gammaray_embed_info_plist(gammaray-launcher ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)

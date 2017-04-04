@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_LAUNCHERWINDOW_H
 #define GAMMARAY_LAUNCHERWINDOW_H
 
+#include "gammaray_launcher_ui_export.h"
+
 #include <QDialog>
 
 namespace GammaRay {
@@ -37,7 +39,7 @@ namespace Ui {
 class LauncherWindow;
 }
 
-class LauncherWindow : public QDialog
+class GAMMARAY_LAUNCHER_UI_EXPORT LauncherWindow : public QDialog
 {
     Q_OBJECT
 public:
