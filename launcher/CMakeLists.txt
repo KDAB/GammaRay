@@ -119,5 +119,6 @@ endif()
 # UI launcher
 if(HAVE_QT_CONCURRENT AND GAMMARAY_BUILD_UI)
   add_subdirectory(ui)
+  gammaray_install_headers(${CMAKE_CURRENT_BINARY_DIR}/ui/gammaray_launcher_dialog_export.h ui/launcherdialog.h)
 endif()
 endif()
