@@ -101,7 +101,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     connect(m_interactionModeActions, SIGNAL(triggered(QAction*)), this,
             SLOT(interactionActionTriggered(QAction*)));
 
-    setSupportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection | ComponentTraces);
+    setSupportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection);
     setInteractionMode(ViewInteraction);
 
     window()->installEventFilter(this);
@@ -160,15 +160,6 @@ void RemoteViewWidget::setupActions()
                           "In this mode all mouse input is redirected directly to the original application,"
                           "so you can control the application directly from within GammaRay."));
     action->setData(InputRedirection);
-    action->setActionGroup(m_interactionModeActions);
-
-    action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/traces.png")),
-                         tr("Components Traces"), this);
-    action->setCheckable(true);
-    action->setToolTip(tr("<b>Components Traces</b><br>"
-                          "When this mode is enabled overlay rects will cover any QQ2 components."
-                          "Overlay include random border and foreground colors as well as item id string."));
-    action->setData(ComponentTraces);
     action->setActionGroup(m_interactionModeActions);
 
     m_zoomOutAction = new QAction(QIcon(QStringLiteral(":/gammaray/ui/zoom-out.png")), tr(
@@ -462,7 +453,6 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
         break;
     case NoInteraction:
     case InputRedirection:
-    case ComponentTraces:
         setCursor(QCursor());
         break;
     }
@@ -886,7 +876,6 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
 
     switch (m_interactionMode) {
     case NoInteraction:
-    case ComponentTraces:
         break;
     case ViewInteraction:
         m_mouseDownPosition = event->pos() - QPoint(m_x, m_y);
@@ -933,7 +922,6 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent *event)
 
     switch (m_interactionMode) {
     case NoInteraction:
-    case ComponentTraces:
     case ElementPicking:
         break;
     case ViewInteraction:
@@ -957,7 +945,6 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
 
     switch (m_interactionMode) {
     case NoInteraction:
-    case ComponentTraces:
     case ElementPicking:
         break;
     case ViewInteraction:
@@ -983,7 +970,6 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
 {
     switch (m_interactionMode) {
     case NoInteraction:
-    case ComponentTraces:
         break;
     case ViewInteraction:
     case ElementPicking:
@@ -1014,7 +1000,6 @@ void RemoteViewWidget::keyPressEvent(QKeyEvent *event)
 {
     switch (m_interactionMode) {
     case NoInteraction:
-    case ComponentTraces:
     case ViewInteraction:
     case ElementPicking:
     case Measuring:
@@ -1060,7 +1045,6 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
     case ViewInteraction:
     case ElementPicking:
     case Measuring:
-    case ComponentTraces:
     {
         QMenu menu;
         menu.addActions(m_interactionModeActions->actions());

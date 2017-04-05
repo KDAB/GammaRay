@@ -74,8 +74,7 @@ public:
         ViewInteraction = 1, ///< panning, zooming, etc
         Measuring = 2,
         InputRedirection = 4,
-        ElementPicking = 8,
-        ComponentTraces = 16
+        ElementPicking = 8
     };
     InteractionMode interactionMode() const;
     void setInteractionMode(InteractionMode mode);

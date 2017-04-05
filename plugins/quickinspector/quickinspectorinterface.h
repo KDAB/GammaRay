@@ -55,8 +55,10 @@ public:
         CustomRenderModeOverdraw = 2,
         CustomRenderModeBatches = 4,
         CustomRenderModeChanges = 8,
+        CustomRenderModeTraces = 16,
         AllCustomRenderModes = CustomRenderModeClipping | CustomRenderModeOverdraw
                                | CustomRenderModeBatches | CustomRenderModeChanges
+                               | CustomRenderModeTraces
     };
 
     enum RenderMode {
@@ -64,7 +66,8 @@ public:
         VisualizeClipping,
         VisualizeOverdraw,
         VisualizeBatches,
-        VisualizeChanges
+        VisualizeChanges,
+        VisualizeTraces,
     };
 
     Q_ENUMS(RenderMode)

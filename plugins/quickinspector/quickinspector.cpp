@@ -485,6 +485,7 @@ static QByteArray renderModeToString(GammaRay::QuickInspectorInterface::RenderMo
             return "batches";
         case QuickInspectorInterface::VisualizeChanges:
             return "changes";
+        case QuickInspectorInterface::VisualizeTraces:
         case QuickInspectorInterface::NormalRendering:
             break;
     }
@@ -522,6 +523,13 @@ void QuickInspector::setCustomRenderMode(
 #else
     Q_UNUSED(customRenderMode);
 #endif
+
+    const bool tracing = customRenderMode == QuickInspectorInterface::VisualizeTraces;
+    if (m_overlay->settings().componentsTraces != tracing) {
+        auto settings = m_overlay->settings();
+        settings.componentsTraces = tracing;
+        setOverlaySettings(settings);
+    }
 }
 
 void QuickInspector::setServerSideDecorationsEnabled(bool enabled)
