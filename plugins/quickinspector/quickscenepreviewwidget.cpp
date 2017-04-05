@@ -75,6 +75,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                       tr("Visualize Clipping"),
                       this);
     m_toolBar.visualizeClipping->setActionGroup(m_toolBar.visualizeGroup);
+    m_toolBar.visualizeClipping->setData(QuickInspectorInterface::VisualizeClipping);
     m_toolBar.visualizeClipping->setCheckable(true);
     m_toolBar.visualizeClipping->setToolTip(tr("<b>Visualize Clipping</b><br/>"
                                                "Items with the property <i>clip</i> set to true, will cut off their and their "
@@ -89,6 +90,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                       tr("Visualize Overdraw"),
                       this);
     m_toolBar.visualizeOverdraw->setActionGroup(m_toolBar.visualizeGroup);
+    m_toolBar.visualizeOverdraw->setData(QuickInspectorInterface::VisualizeOverdraw);
     m_toolBar.visualizeOverdraw->setCheckable(true);
     m_toolBar.visualizeOverdraw->setToolTip(tr("<b>Visualize Overdraw</b><br/>"
                                                "The QtQuick renderer doesn't detect if an item is obscured by another "
@@ -103,6 +105,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                                 ":/gammaray/plugins/quickinspector/visualize-batches.png")),
                       tr("Visualize Batches"), this);
     m_toolBar.visualizeBatches->setActionGroup(m_toolBar.visualizeGroup);
+    m_toolBar.visualizeBatches->setData(QuickInspectorInterface::VisualizeBatches);
     m_toolBar.visualizeBatches->setCheckable(true);
     m_toolBar.visualizeBatches->setToolTip(tr("<b>Visualize Batches</b><br/>"
                                               "Where a traditional 2D API, such as QPainter, Cairo or Context2D, is written to "
@@ -120,6 +123,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                                 ":/gammaray/plugins/quickinspector/visualize-changes.png")),
                       tr("Visualize Changes"), this);
     m_toolBar.visualizeChanges->setActionGroup(m_toolBar.visualizeGroup);
+    m_toolBar.visualizeChanges->setData(QuickInspectorInterface::VisualizeChanges);
     m_toolBar.visualizeChanges->setCheckable(true);
     m_toolBar.visualizeChanges->setToolTip(tr("<b>Visualize Changes</b><br>"
                                               "The QtQuick scene is only repainted, if some item changes in a visual manner. "
@@ -284,7 +288,7 @@ void QuickScenePreviewWidget::drawDecoration(QPainter *p)
 
 void QuickScenePreviewWidget::visualizeActionTriggered(QAction *current)
 {
-    if (!current->isChecked()) {
+    if (!current || !current->isChecked()) {
         m_inspectorInterface->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
     } else {
         // QActionGroup requires exactly one selected, but we need 0 or 1 selected
@@ -292,12 +296,8 @@ void QuickScenePreviewWidget::visualizeActionTriggered(QAction *current)
             if (action != current)
                 action->setChecked(false);
         }
-        m_inspectorInterface->setCustomRenderMode(current == m_toolBar.visualizeClipping ? QuickInspectorInterface::VisualizeClipping
-                                                  : current == m_toolBar.visualizeBatches ? QuickInspectorInterface::VisualizeBatches
-                                                  : current == m_toolBar.visualizeOverdraw ? QuickInspectorInterface::VisualizeOverdraw
-                                                  : current == m_toolBar.visualizeChanges ? QuickInspectorInterface::VisualizeChanges
-                                                  : QuickInspectorInterface::NormalRendering
-                                                  );
+
+        m_inspectorInterface->setCustomRenderMode(static_cast<QuickInspectorInterface::RenderMode>(current->data().toInt()));
     }
     emit stateChanged();
 }
@@ -361,17 +361,10 @@ void QuickScenePreviewWidget::setOverlaySettingsState(const QuickDecorationsSett
 
 QuickInspectorInterface::RenderMode QuickScenePreviewWidget::customRenderMode() const
 {
-    if (m_toolBar.visualizeClipping->isChecked()) {
-        return QuickInspectorInterface::VisualizeClipping;
-    }
-    else if (m_toolBar.visualizeBatches->isChecked()) {
-        return QuickInspectorInterface::VisualizeBatches;
-    }
-    else if (m_toolBar.visualizeOverdraw->isChecked()) {
-        return QuickInspectorInterface::VisualizeOverdraw;
-    }
-    else if (m_toolBar.visualizeChanges->isChecked()) {
-        return QuickInspectorInterface::VisualizeChanges;
+    const QAction *checkedAction = m_toolBar.visualizeGroup->checkedAction();
+
+    if (checkedAction) {
+        return static_cast<QuickInspectorInterface::RenderMode>(checkedAction->data().toInt());
     }
 
     return QuickInspectorInterface::NormalRendering;
@@ -382,30 +375,12 @@ void QuickScenePreviewWidget::setCustomRenderMode(QuickInspectorInterface::Rende
     if (this->customRenderMode() == customRenderMode)
         return;
 
-    QAction *currentAction = nullptr;
-    switch (customRenderMode) {
-    case QuickInspectorInterface::NormalRendering:
-        break;
-    case QuickInspectorInterface::VisualizeClipping:
-        currentAction = m_toolBar.visualizeClipping;
-        break;
-    case QuickInspectorInterface::VisualizeOverdraw:
-        currentAction = m_toolBar.visualizeOverdraw;
-        break;
-    case QuickInspectorInterface::VisualizeBatches:
-        currentAction = m_toolBar.visualizeBatches;
-        break;
-    case QuickInspectorInterface::VisualizeChanges:
-        currentAction = m_toolBar.visualizeChanges;
-        break;
-    }
-
     foreach (auto action, m_toolBar.visualizeGroup->actions()) {
         if (action)
-            action->setChecked(currentAction == action);
+            action->setChecked(static_cast<QuickInspectorInterface::RenderMode>(action->data().toInt()) == customRenderMode);
     }
 
-    visualizeActionTriggered(currentAction ? currentAction : m_toolBar.visualizeBatches);
+    visualizeActionTriggered(m_toolBar.visualizeGroup->checkedAction());
 }
 
 QuickDecorationsSettings QuickScenePreviewWidget::overlaySettings() const
