@@ -70,6 +70,13 @@ private:
     QPointer<QQuickItem> m_object;
 };
 
+struct GrabedFrame {
+    QImage image;
+    QTransform transform;
+    QRectF itemsGeometryRect;
+    QVector<QuickItemGeometry> itemsGeometry;
+};
+
 class QuickOverlay : public QObject
 {
     Q_OBJECT
@@ -83,30 +90,28 @@ public:
     QuickDecorationsSettings settings() const;
     void setSettings(const QuickDecorationsSettings &settings);
 
-    bool drawDecorations() const;
-    void setDrawDecorations(bool enabled);
-
-    QVector<QuickItemGeometry> itemsGeometry() const;
-    QRectF itemsGeometryRect() const;
+    bool decorationsEnabled() const;
+    void setDecorationsEnabled(bool enabled);
 
     /**
      * Place the overlay on @p item
      *
      * @param item The overlay can be cover a widget or a layout of the current window
      */
-    void placeOn(ItemOrLayoutFacade item);
+    void placeOn(const ItemOrLayoutFacade &item);
 
 public slots:
     void requestGrabWindow();
 
 signals:
     void sceneChanged();
-    void sceneGrabbed(const QImage &image, const QTransform transform);
+    void sceneGrabbed(const GammaRay::GrabedFrame &frame);
 
 private:
-    void setIsGrabbingMode(bool isGrabbingMode);
+    void windowAfterSynchronizing();
     void windowAfterRendering();
-    void drawDecorations(const QSize &size, qreal dpr);
+    void gatherRenderInfo();
+    void drawDecorations();
     void updateOverlay();
     void itemParentChanged(QQuickItem *parent);
     void itemWindowChanged(QQuickWindow *window);
@@ -120,15 +125,33 @@ private:
     QPointer<QQuickItem> m_currentToplevelItem;
     ItemOrLayoutFacade m_currentItem;
     QuickDecorationsSettings m_settings;
-    QVector<QuickItemGeometry> m_itemsGeometry;
-    QRectF m_itemsGeometryRect;
     bool m_isGrabbingMode;
-    bool m_drawDecorations;
-    QImage m_frame;
+    bool m_decorationsEnabled;
+    GrabedFrame m_grabedFrame;
+    struct RenderInfo {
+        // Keep in sync with QSGRendererInterface::GraphicsApi
+        enum GraphicsApi {
+            Unknown,
+            Software,
+            OpenGL,
+            Direct3D12
+        };
+
+        RenderInfo()
+            : dpr(qQNaN())
+            , graphicsApi(Unknown)
+        { }
+
+        qreal dpr;
+        QSize windowSize;
+        GraphicsApi graphicsApi;
+    } m_renderInfo;
 
 private slots:
-    void updateItemsGeometry();
+    void setIsGrabbingMode(bool isGrabbingMode);
 };
 }
+
+Q_DECLARE_METATYPE(GammaRay::GrabedFrame)
 
 #endif

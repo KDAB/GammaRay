@@ -94,6 +94,7 @@ static bool quickItemZGreaterThan(QQuickItem *lhs, QQuickItem *rhs)
 static QVector<QQuickItem *> findItemByClassName(const char *className, QQuickItem *parent,
                                                  std::function<void(QQuickItem *)> walker)
 {
+    Q_ASSERT(parent);
     QVector<QQuickItem *> items;
 
     if (!parent->window()) {
@@ -208,8 +209,9 @@ QuickOverlay::QuickOverlay()
     : m_window(nullptr)
     , m_currentToplevelItem(nullptr)
     , m_isGrabbingMode(false)
-    , m_drawDecorations(true)
+    , m_decorationsEnabled(true)
 {
+    qRegisterMetaType<GrabedFrame>();
 }
 
 QQuickWindow *QuickOverlay::window() const
@@ -223,6 +225,8 @@ void QuickOverlay::setWindow(QQuickWindow *window)
         return;
 
     if (m_window) {
+        disconnect(m_window.data(), &QQuickWindow::afterSynchronizing,
+                   this, &QuickOverlay::windowAfterSynchronizing);
         disconnect(m_window.data(), &QQuickWindow::afterRendering,
                    this, &QuickOverlay::windowAfterRendering);
     }
@@ -232,6 +236,8 @@ void QuickOverlay::setWindow(QQuickWindow *window)
 
     if (m_window) {
         // Force DirectConnection else Auto lead to Queued which is not good.
+        connect(m_window.data(), &QQuickWindow::afterSynchronizing,
+                   this, &QuickOverlay::windowAfterSynchronizing, Qt::DirectConnection);
         connect(m_window.data(), &QQuickWindow::afterRendering,
                 this, &QuickOverlay::windowAfterRendering, Qt::DirectConnection);
     }
@@ -250,31 +256,21 @@ void QuickOverlay::setSettings(const QuickDecorationsSettings &settings)
     updateOverlay();
 }
 
-bool QuickOverlay::drawDecorations() const
+bool QuickOverlay::decorationsEnabled() const
 {
-    return m_drawDecorations;
+    return m_decorationsEnabled;
 }
 
-void QuickOverlay::setDrawDecorations(bool enabled)
+void QuickOverlay::setDecorationsEnabled(bool enabled)
 {
-    if (m_drawDecorations == enabled)
+    if (m_decorationsEnabled == enabled)
         return;
 
-    m_drawDecorations = enabled;
+    m_decorationsEnabled = enabled;
     updateOverlay();
 }
 
-QVector<QuickItemGeometry> QuickOverlay::itemsGeometry() const
-{
-    return m_itemsGeometry;
-}
-
-QRectF QuickOverlay::itemsGeometryRect() const
-{
-    return m_itemsGeometryRect;
-}
-
-void QuickOverlay::placeOn(ItemOrLayoutFacade item)
+void QuickOverlay::placeOn(const ItemOrLayoutFacade &item)
 {
     if (item.isNull()) {
         if (!m_currentItem.isNull())
@@ -413,110 +409,122 @@ QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
     return itemGeometry;
 }
 
+void QuickOverlay::windowAfterSynchronizing()
+{
+    // We are in the rendering thread at this point
+    // And the gui thread is locked
+    gatherRenderInfo();
+}
+
 void QuickOverlay::windowAfterRendering()
 {
     // We are in the rendering thread at this point
-    // And the gui thread is blocked
+    // And the gui thread is NOT locked
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
-    qreal dpr = 1.0;
-    // See QTBUG-53795
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    dpr = m_window->effectiveDevicePixelRatio();
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    dpr = m_window->devicePixelRatio();
-#endif
-    const int realWindowWidth = static_cast<int>(m_window->width() * dpr);
-    const int realWindowHeight = static_cast<int>(m_window->height() * dpr);
-
-    QMetaObject::invokeMethod(this, "updateItemsGeometry", Qt::QueuedConnection);
 
     if (m_isGrabbingMode) {
+        if (m_grabedFrame.image.size() != m_renderInfo.windowSize * m_renderInfo.dpr)
+            m_grabedFrame.image = QImage(m_renderInfo.windowSize * m_renderInfo.dpr, QImage::Format_ARGB32_Premultiplied);
 
-        if ((m_frame.width() != realWindowWidth) || (m_frame.height() != realWindowHeight))
-            m_frame = QImage(m_window->size() * dpr, QImage::Format_ARGB32_Premultiplied);
-
-        QTransform transform = QTransform();
+        m_grabedFrame.transform.reset();
 #ifdef ENABLE_GL_READPIXELS
         QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
-        glFuncs->glReadPixels(0, 0, realWindowWidth, realWindowHeight, GL_BGRA, GL_UNSIGNED_BYTE, m_frame.bits());
-        //flip
-        transform.scale(1.0, -1.0);
-        transform.translate(0.0, -m_window->height());
+        glFuncs->glReadPixels(0, 0, m_renderInfo.windowSize.width() * m_renderInfo.dpr, m_renderInfo.windowSize.height() * m_renderInfo.dpr, GL_BGRA, GL_UNSIGNED_BYTE, m_grabedFrame.image.bits());
+        // Mirror flip
+        m_grabedFrame.transform.scale(1.0, -1.0);
+        m_grabedFrame.transform.translate(0.0, -m_renderInfo.windowSize.height());
 #else
-        m_frame = qt_gl_read_framebuffer(m_window->size() * dpr, false, m_window->openglContext());
+        m_grabedFrame.image = qt_gl_read_framebuffer(m_renderInfo.windowSize * m_renderInfo.dpr, false, QOpenGLContext::currentContext());
 #endif
-        m_frame.setDevicePixelRatio(dpr);
+        m_grabedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
-        if (!m_frame.isNull())
-            QMetaObject::invokeMethod(this, "sceneGrabbed", Qt::QueuedConnection, Q_ARG(QImage, m_frame), Q_ARG(QTransform, transform));
+        if (!m_grabedFrame.image.isNull()) {
+            QMetaObject::invokeMethod(this, "sceneGrabbed", Qt::QueuedConnection, Q_ARG(GammaRay::GrabedFrame, m_grabedFrame));
+        }
     }
 
-    drawDecorations(m_window->size(), dpr);
+    drawDecorations();
 
     m_window->resetOpenGLState();
 
     if (m_isGrabbingMode) {
-        setIsGrabbingMode(false);
-        return;
-    }
-
-    QMetaObject::invokeMethod(this, "sceneChanged", Qt::QueuedConnection);
-}
-
-void QuickOverlay::drawDecorations(const QSize &size, qreal dpr)
-{
-    if (!m_drawDecorations)
-        return;
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    if (m_window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
-        return; // TODO
-#endif
-    QOpenGLPaintDevice device(size * dpr);
-    device.setDevicePixelRatio(dpr);
-    QPainter painter(&device);
-    if (m_settings.componentsTraces) {
-        const QuickDecorationsTracesInfo tracesInfo(m_settings,
-                                                    m_itemsGeometry,
-                                                    QRectF(QPointF(), size),
-                                                    1.0);
-        QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Traces, painter, tracesInfo);
-        drawer.drawTraces();
+        QMetaObject::invokeMethod(this, "setIsGrabbingMode", Qt::QueuedConnection, Q_ARG(bool, false));
     } else {
-        const QuickDecorationsRenderInfo renderInfo(m_settings,
-                                                    m_itemsGeometry.value(0),
-                                                    QRectF(QPointF(), size),
-                                                    1.0);
-        QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Decorations, painter, renderInfo);
-        drawer.drawDecorations();
+        QMetaObject::invokeMethod(this, "sceneChanged", Qt::QueuedConnection);
     }
 }
 
-void QuickOverlay::updateItemsGeometry()
+void QuickOverlay::gatherRenderInfo()
 {
-    m_itemsGeometry.clear();
-    m_itemsGeometryRect = QRectF();
+    // We are in the rendering thread at this point
+    // And the gui thread is locked
+    m_renderInfo.dpr = 1.0;
+    // See QTBUG-53795
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    m_renderInfo.dpr = m_window->effectiveDevicePixelRatio();
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    m_renderInfo.dpr = m_window->devicePixelRatio();
+#endif
+    m_renderInfo.windowSize = m_window->size();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    m_renderInfo.graphicsApi = static_cast<RenderInfo::GraphicsApi>(m_window->rendererInterface()->graphicsApi());
+#else
+    m_renderInfo.graphicsApi = RenderInfo::OpenGL;
+#endif
+
+    m_grabedFrame.itemsGeometry.clear();
+    m_grabedFrame.itemsGeometryRect = QRectF();
 
     if (m_window) {
-        m_itemsGeometryRect = QRect(QPoint(), m_window->size());
+        m_grabedFrame.itemsGeometryRect = QRect(QPoint(), m_renderInfo.windowSize);
 
         if (m_settings.componentsTraces) {
             findItemByClassName("QQuickControl",
                                 m_window->contentItem(),
                                 [this](QQuickItem *item) {
                 QuickItemGeometry itemGeometry = initFromItem(item);
-                m_itemsGeometry << itemGeometry;
-                m_itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
+                m_grabedFrame.itemsGeometry << itemGeometry;
+                m_grabedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
                         itemGeometry.boundingRect;
             });
         } else {
             QuickItemGeometry itemGeometry;
             if (!m_currentItem.isNull())
                 itemGeometry = initFromItem(m_currentItem.data());
-            m_itemsGeometry << itemGeometry;
-            m_itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
+            m_grabedFrame.itemsGeometry << itemGeometry;
+            m_grabedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
                     itemGeometry.boundingRect;
         }
+    }
+}
+
+void QuickOverlay::drawDecorations()
+{
+    // We are in the rendering thread at this point
+    // And the gui thread is NOT locked
+    if (!m_decorationsEnabled)
+        return;
+
+    if (m_renderInfo.graphicsApi != RenderInfo::OpenGL)
+        return; // TODO
+
+    QOpenGLPaintDevice device(m_renderInfo.windowSize * m_renderInfo.dpr);
+    device.setDevicePixelRatio(m_renderInfo.dpr);
+    QPainter painter(&device);
+    if (m_settings.componentsTraces) {
+        const QuickDecorationsTracesInfo tracesInfo(m_settings,
+                                                    m_grabedFrame.itemsGeometry,
+                                                    QRectF(QPointF(), m_renderInfo.windowSize),
+                                                    m_renderInfo.dpr);
+        QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Traces, painter, tracesInfo);
+        drawer.drawTraces();
+    } else {
+        const QuickDecorationsRenderInfo renderInfo(m_settings,
+                                                    m_grabedFrame.itemsGeometry.value(0),
+                                                    QRectF(QPointF(), m_renderInfo.windowSize),
+                                                    m_renderInfo.dpr);
+        QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Decorations, painter, renderInfo);
+        drawer.drawDecorations();
     }
 }
 
