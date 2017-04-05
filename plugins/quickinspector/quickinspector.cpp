@@ -437,15 +437,15 @@ void QuickInspector::recreateOverlay()
     connect(m_overlay.data(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
 }
 
-void QuickInspector::sendRenderedScene(const QImage &currentFrame, const QTransform transform)
+void QuickInspector::sendRenderedScene(const GammaRay::GrabedFrame &grabedFrame)
 {
     RemoteViewFrame frame;
-    frame.setImage(currentFrame, transform);
-    frame.setSceneRect(m_overlay->itemsGeometryRect());
+    frame.setImage(grabedFrame.image, grabedFrame.transform);
+    frame.setSceneRect(grabedFrame.itemsGeometryRect);
     if (m_overlay->settings().componentsTraces)
-        frame.setData(QVariant::fromValue(m_overlay->itemsGeometry()));
-    else if (!m_overlay->itemsGeometry().isEmpty())
-        frame.setData(QVariant::fromValue(m_overlay->itemsGeometry().at(0)));
+        frame.setData(QVariant::fromValue(grabedFrame.itemsGeometry));
+    else if (!grabedFrame.itemsGeometry.isEmpty())
+        frame.setData(QVariant::fromValue(grabedFrame.itemsGeometry.at(0)));
     m_remoteView->sendFrame(frame);
 }
 
@@ -464,9 +464,10 @@ void QuickInspector::slotGrabWindow()
     #elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         dpr = m_window->devicePixelRatio();
     #endif
-        QImage image = m_window->grabWindow();
-        image.setDevicePixelRatio(dpr);
-        sendRenderedScene(image, QTransform());
+        GrabedFrame grabedFrame;
+        grabedFrame.image = m_window->grabWindow();
+        grabedFrame.image.setDevicePixelRatio(dpr);
+        sendRenderedScene(grabedFrame);
         return;
     }
 #endif
@@ -525,7 +526,7 @@ void QuickInspector::setCustomRenderMode(
 
 void QuickInspector::setServerSideDecorationsEnabled(bool enabled)
 {
-    m_overlay->setDrawDecorations(enabled);
+    m_overlay->setDecorationsEnabled(enabled);
 }
 
 void QuickInspector::applyRenderMode()
@@ -567,7 +568,7 @@ void QuickInspector::checkFeatures()
 
 void QuickInspector::checkServerSideDecorations()
 {
-    emit serverSideDecorations(m_overlay->drawDecorations());
+    emit serverSideDecorations(m_overlay->decorationsEnabled());
 }
 
 void QuickInspector::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)
