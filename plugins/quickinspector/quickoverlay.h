@@ -107,7 +107,6 @@ private:
     void setIsGrabbingMode(bool isGrabbingMode);
     void windowAfterRendering();
     void drawDecorations(const QSize &size, qreal dpr);
-    void updateItemsGeometry();
     void updateOverlay();
     void itemParentChanged(QQuickItem *parent);
     void itemWindowChanged(QQuickWindow *window);
@@ -126,6 +125,9 @@ private:
     bool m_isGrabbingMode;
     bool m_drawDecorations;
     QImage m_frame;
+
+private slots:
+    void updateItemsGeometry();
 };
 }
 

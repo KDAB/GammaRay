@@ -96,6 +96,10 @@ static QVector<QQuickItem *> findItemByClassName(const char *className, QQuickIt
 {
     QVector<QQuickItem *> items;
 
+    if (!parent->window()) {
+        return items;
+    }
+
     if (parent != parent->window()->contentItem() && parent->inherits(className)) {
         items << parent;
         walker(parent);
@@ -411,6 +415,8 @@ QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
 
 void QuickOverlay::windowAfterRendering()
 {
+    // We are in the rendering thread at this point
+    // And the gui thread is blocked
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
     qreal dpr = 1.0;
     // See QTBUG-53795
@@ -422,7 +428,7 @@ void QuickOverlay::windowAfterRendering()
     const int realWindowWidth = static_cast<int>(m_window->width() * dpr);
     const int realWindowHeight = static_cast<int>(m_window->height() * dpr);
 
-    updateItemsGeometry();
+    QMetaObject::invokeMethod(this, "updateItemsGeometry", Qt::QueuedConnection);
 
     if (m_isGrabbingMode) {
 
