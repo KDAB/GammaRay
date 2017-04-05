@@ -484,7 +484,7 @@ void QuickOverlay::drawDecorations(const QSize &size, qreal dpr)
         drawer.drawTraces();
     } else {
         const QuickDecorationsRenderInfo renderInfo(m_settings,
-                                                    m_itemsGeometry.first(),
+                                                    m_itemsGeometry.value(0),
                                                     QRectF(QPointF(), size),
                                                     1.0);
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Decorations, painter, renderInfo);
