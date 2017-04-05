@@ -52,6 +52,7 @@ public:
         if (m_rowCount) {
             beginRemoveRows(QModelIndex(), 0, m_rowCount - 1);
             m_metaObject = nullptr;
+            m_rowCount = 0;
             endRemoveRows();
         } else {
             m_metaObject = nullptr;
@@ -60,10 +61,11 @@ public:
         if (!metaObject)
             return;
 
-        m_rowCount = (metaObject->*MetaCount)();
-        if (m_rowCount) {
-            beginInsertRows(QModelIndex(), 0, m_rowCount - 1);
+        auto newRowCount = (metaObject->*MetaCount)();
+        if (newRowCount) {
+            beginInsertRows(QModelIndex(), 0, newRowCount - 1);
             m_metaObject = metaObject;
+            m_rowCount = newRowCount;
             endInsertRows();
         } else {
             m_metaObject = metaObject;
