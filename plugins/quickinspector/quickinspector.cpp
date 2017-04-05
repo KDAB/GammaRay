@@ -512,8 +512,10 @@ void QuickInspector::setCustomRenderMode(
 
 #else
     if (m_window) {
+        const QByteArray mode = renderModeToString(customRenderMode);
         QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
-        winPriv->customRenderMode = renderModeToString(customRenderMode);
+        if (winPriv->customRenderMode != mode)
+            winPriv->customRenderMode = mode;
     }
 #endif
     if (m_window) {
@@ -547,7 +549,10 @@ void QuickInspector::applyRenderMode()
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    const QByteArray mode = renderModeToString(m_pendingRenderMode.mode);
     QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
+    if (winPriv->customRenderMode == mode)
+        return;
 
     QQuickItemPrivate *contentPriv = QQuickItemPrivate::get(m_window->contentItem());
     QSGNode *rootNode = contentPriv->itemNode();
