@@ -131,6 +131,19 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
                                               "enabled, the QtQuick renderer will thus on each repaint highlight the item(s), "
                                               "that caused the repaint."));
 
+
+    m_toolBar.visualizeTraces
+        = new QAction(QIcon(QStringLiteral(
+                                ":/gammaray/plugins/quickinspector/visualize-traces.png")),
+                      tr("Visualize Traces"), this);
+    m_toolBar.visualizeTraces->setActionGroup(m_toolBar.visualizeGroup);
+    m_toolBar.visualizeTraces->setData(QuickInspectorInterface::VisualizeTraces);
+    m_toolBar.visualizeTraces->setCheckable(true);
+    m_toolBar.visualizeTraces->setToolTip(tr("<b>Visualize Traces</b><br>"
+                                             "The QtQuick scene is rendered normaly, in addition overlay rects will "
+                                             "cover any QQ2 components. Overlay include random border and foreground "
+                                             "colors as well as item id string."));
+
     m_toolBar.serverSideDecorationsEnabled = new QAction(QIcon(QStringLiteral(
                                                                ":/gammaray/plugins/quickinspector/decorations.png")),
                                                      tr("Target Decorations"), this);
@@ -186,7 +199,6 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
 
     connect(m_gridSettingsWidget, SIGNAL(offsetChanged(QPoint)), this, SLOT(gridOffsetChanged(QPoint)));
     connect(m_gridSettingsWidget, SIGNAL(cellSizeChanged(QSize)), this, SLOT(gridCellSizeChanged(QSize)));
-    connect(this, SIGNAL(interactionModeChanged()), this, SLOT(interactionChanged()));
 
     setUnavailableText(tr(
                            "No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
@@ -325,15 +337,6 @@ void QuickScenePreviewWidget::gridCellSizeChanged(const QSize &value)
     setOverlaySettings(m_overlaySettings);
 }
 
-void QuickScenePreviewWidget::interactionChanged()
-{
-    const bool tracing = (interactionMode() == ComponentTraces);
-    if (m_overlaySettings.componentsTraces != tracing) {
-        m_overlaySettings.componentsTraces = tracing;
-        setOverlaySettings(m_overlaySettings);
-    }
-}
-
 void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(
     QuickInspectorInterface::Features supportedCustomRenderModes)
 {
@@ -345,6 +348,8 @@ void GammaRay::QuickScenePreviewWidget::setSupportsCustomRenderModes(
         supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeOverdraw);
     m_toolBar.visualizeChanges->setEnabled(
         supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeChanges);
+    m_toolBar.visualizeTraces->setEnabled(
+        supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeTraces);
 }
 
 void QuickScenePreviewWidget::setServerSideDecorationsState(bool enabled)

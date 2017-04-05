@@ -78,7 +78,6 @@ private Q_SLOTS:
     void serverSideDecorationsTriggered(bool enabled);
     void gridOffsetChanged(const QPoint &value);
     void gridCellSizeChanged(const QSize &value);
-    void interactionChanged();
 
 private:
     void drawDecoration(QPainter *p) override;
@@ -92,6 +91,7 @@ private:
         QAction *visualizeOverdraw;
         QAction *visualizeBatches;
         QAction *visualizeChanges;
+        QAction *visualizeTraces;
         QAction *serverSideDecorationsEnabled;
         QMenu *gridSettings;
     } m_toolBar;

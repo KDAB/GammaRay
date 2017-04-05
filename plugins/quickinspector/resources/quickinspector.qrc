@@ -10,5 +10,6 @@
     <file>visualize-overdraw.png</file>
     <file>visualize-batches.png</file>
     <file>visualize-changes.png</file>
+    <file>visualize-traces.png</file>
   </qresource>
 </RCC>

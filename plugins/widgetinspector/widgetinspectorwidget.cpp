@@ -205,8 +205,7 @@ void WidgetInspectorWidget::updateActions()
         selection && m_inspector->features() & WidgetInspectorInterface::AnalyzePainting);
 
     auto f = m_remoteView->supportedInteractionModes() &
-            ~RemoteViewWidget::InputRedirection &
-            ~RemoteViewWidget::ComponentTraces;
+            ~RemoteViewWidget::InputRedirection;
     if (m_inspector->features() & WidgetInspectorInterface::InputRedirection)
         f |= RemoteViewWidget::InputRedirection;
     m_remoteView->setSupportedInteractionModes(f);
