@@ -287,7 +287,6 @@ void QuickDecorationsDrawer::drawTraces()
         // bounding class box
         m_painter->setPen(QColor(60, 60, 60, 70));
         m_painter->setBrush(m_painter->pen().color());
-        m_painter->setFont(QFont(m_painter->font().family(), 11));
 
         const int margin = m_painter->fontMetrics().width(QLatin1Char('X')) / 2;
         const QRectF classRect = itemGeometry.boundingRect
@@ -312,7 +311,6 @@ void QuickDecorationsDrawer::drawTraces()
         m_painter->drawPoints(points);
 
         // name label
-        m_painter->setFont(QFont(m_painter->font().family(), 13));
         m_painter->setPen(QColor(250, 250, 250, 120));
         m_painter->drawText(itemGeometry.boundingRect.adjusted(margin, margin, -margin, -margin),
                           Qt::AlignVCenter | Qt::AlignLeft | Qt::TextDontClip,
