@@ -197,7 +197,9 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
 
     // C++ QML type
     auto qmlType = QQmlMetaType::qmlType(obj->metaObject());
-    if (qmlType)
+    // QQC2 has some weird types with only the namespace (that is, ending in '/')
+    // we get better results below, so ignore this case here
+    if (qmlType && !qmlType->qmlTypeName().endsWith(QLatin1Char('/')))
         return qmlType->qmlTypeName();
 
     // QML defined type
