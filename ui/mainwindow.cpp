@@ -222,7 +222,7 @@ MainWindow::MainWindow(QWidget *parent)
             SLOT(toolSelected()));
     connect(ui->toolSelector, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(toolContextMenu(QPoint)));
 
-    QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
+    QSettings settings;
     settings.beginGroup("Sidebar");
     m_toolFilterModel->setFilterInactiveTools(settings.value(QLatin1String("FilterInactive"), false).toBool());
     settings.endGroup();
@@ -297,7 +297,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
+    QSettings settings;
     settings.beginGroup("Sidebar");
     settings.setValue(QLatin1String("FilterInactive"), m_toolFilterModel->filterInactiveTools());
     settings.endGroup();
@@ -466,7 +466,7 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
                                       Q_ARG(int, lineNumber), Q_ARG(int, columnNumber));
         }
     } else {
-        QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
+        QSettings settings;
         settings.beginGroup(QStringLiteral("CodeNavigation"));
         const auto ideIdx = settings.value(QStringLiteral("IDE"), -1).toInt();
 
@@ -498,7 +498,7 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
 
 void GammaRay::MainWindow::setCodeNavigationIDE(QAction *action)
 {
-    QSettings settings(QStringLiteral("KDAB"), QStringLiteral("GammaRay"));
+    QSettings settings;
     settings.beginGroup(QStringLiteral("CodeNavigation"));
 
     if (action->data() == -1) {

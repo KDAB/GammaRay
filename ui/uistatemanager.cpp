@@ -83,7 +83,7 @@ typedef QList<QHeaderView *> QHeaderViewList;
 UIStateManager::UIStateManager(QWidget *widget)
     : QObject(widget)
     , m_widget(widget)
-    , m_stateSettings(new QSettings("KDAB", "GammaRay", this))
+    , m_stateSettings(new QSettings(this))
     , m_initialized(false)
     , m_resizing(false)
     , m_targetStateSource(nullptr)
