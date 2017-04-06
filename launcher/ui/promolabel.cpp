@@ -77,6 +77,6 @@ QImage PromoLabel::tintedImage(const QString &image, const QColor &color)
 void PromoLabel::updatePixmap()
 {
     // load image and adapt it to user's foreground color
-    setPixmap(QPixmap::fromImage(tintedImage(QStringLiteral(":gammaray/kdabproducts.png"),
+    setPixmap(QPixmap::fromImage(tintedImage(QStringLiteral(":/gammaray/kdabproducts.png"),
                                              palette().foreground().color())));
 }

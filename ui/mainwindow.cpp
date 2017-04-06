@@ -197,7 +197,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));
     connect(ui->actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
 
-    setWindowIcon(QIcon(QStringLiteral(":gammaray/GammaRay-128x128.png")));
+    setWindowIcon(QIcon(QStringLiteral(":/gammaray/GammaRay-128x128.png")));
 
     // ClientConnectionManager take care of creating and requesting server tools
     // but in-process ui need to do it itself.
@@ -331,8 +331,8 @@ void MainWindow::about()
     dialog.setWindowTitle(tr("About GammaRay"));
     dialog.setTitle(AboutData::aboutTitle());
     dialog.setText(AboutData::aboutBody());
-    dialog.setLogo(QStringLiteral(":gammaray/GammaRay-Trademark-medium.png"));
-    dialog.setWindowIcon(QPixmap(QStringLiteral(":gammaray/GammaRay-128x128.png")));
+    dialog.setLogo(QStringLiteral(":/gammaray/GammaRay-Trademark-medium.png"));
+    dialog.setWindowIcon(QPixmap(QStringLiteral(":/gammaray/GammaRay-128x128.png")));
     dialog.adjustSize();
     dialog.exec();
 }
@@ -359,8 +359,8 @@ void MainWindow::aboutKDAB()
            "<p>Please visit <a href='https://www.kdab.com'>https://www.kdab.com</a> "
            "to meet the people who write code like this."
            "</p></qt>"));
-    dialog.setLogo(QStringLiteral(":gammaray/kdablogo160.png"));
-    dialog.setWindowIcon(QPixmap(QStringLiteral(":gammaray/kdablogo160.png")));
+    dialog.setLogo(QStringLiteral(":/gammaray/kdablogo160.png"));
+    dialog.setWindowIcon(QPixmap(QStringLiteral(":/gammaray/kdablogo160.png")));
     dialog.exec();
 }
 

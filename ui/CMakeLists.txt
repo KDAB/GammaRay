@@ -22,6 +22,7 @@ set(gammaray_ui_srcs
   tooluifactory.cpp
   uiintegration.cpp
   uistatemanager.cpp
+  uiresources.cpp
   remoteviewwidget.cpp
   helpcontroller.cpp
 
@@ -166,6 +167,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     tooluifactory.h
     uiintegration.h
     uistatemanager.h
+    uiresources.h
   )
 
   ecm_generate_pri_file(BASE_NAME GammaRayUi
@@ -182,3 +184,4 @@ endif()
 if(MSVC)
   install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_ui>/$<TARGET_PDB_FILE_NAME:gammaray_ui>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
 endif()
+add_subdirectory(resources)

@@ -92,7 +92,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
                                                       "Launcher/AttachAccessMode")).toInt());
 
     setWindowTitle(tr("GammaRay - Attach to Process"));
-    setWindowIcon(QIcon(QStringLiteral(":gammaray/GammaRay-128x128.png")));
+    setWindowIcon(QIcon(QStringLiteral(":/gammaray/GammaRay-128x128.png")));
 
     ui.stackedWidget->setCurrentWidget(ui.loadingLabel);
     emit updateButtonState();

@@ -39,7 +39,7 @@ namespace GammaRay {
 void showSplashScreen()
 {
     if (!splash) {
-        QPixmap pixmap(QStringLiteral(":gammaray/splashscreen.png"));
+        QPixmap pixmap(QStringLiteral(":/gammaray/splashscreen.png"));
         splash = new QSplashScreen(pixmap);
         splash->setMask(pixmap.mask());
     }

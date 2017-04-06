@@ -29,6 +29,8 @@
 #include "quickoverlaylegend.h"
 #include "quickoverlay.h"
 
+#include <ui/uiresources.h>
+
 #include <QAction>
 #include <QVBoxLayout>
 #include <QListView>
@@ -218,7 +220,7 @@ QuickOverlayLegend::QuickOverlayLegend(QWidget *parent)
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(view);
 
-    m_visibilityAction = new QAction(QIcon(":/gammaray/plugins/quickinspector/legend.png"),
+    m_visibilityAction = new QAction(UIResources::themedIcon(QLatin1String("legend.png")),
                                      tr("Legend Visibility"), this);
     m_visibilityAction->setCheckable(true);
     m_visibilityAction->setToolTip(tr("<b>Legend Visibility</b><br>"

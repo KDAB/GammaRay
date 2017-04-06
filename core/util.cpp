@@ -154,7 +154,9 @@ static IconDatabase readIconData()
     if (!qApp->inherits("QGuiApplication") && !qApp->inherits("QApplication"))
         return data;
 
-    const QString basePath = QStringLiteral(":/gammaray/classes/");
+    // This is core lib, UI resources are part of the GammaRay UI library
+    // Though classes resources are part of the GammaRay Common library
+    const QString basePath = QLatin1String(":/gammaray/icons/ui/classes");
     QDir dir(basePath);
 
     const QStringList filterList = QStringList() << QStringLiteral("*.png");

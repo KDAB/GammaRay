@@ -32,6 +32,7 @@
 
 #include "probe.h"
 #include "enumrepositoryserver.h"
+#include "classesiconsrepositoryserver.h"
 #include "metaobjectrepository.h"
 #include "objectlistmodel.h"
 #include "objecttreemodel.h"
@@ -237,6 +238,7 @@ Probe::Probe(QObject *parent)
     ObjectBroker::registerObject<ToolManagerInterface *>(m_toolManager);
 
     EnumRepositoryServer::create(this);
+    ClassesIconsRepositoryServer::create(this);
     registerModel(QStringLiteral("com.kdab.GammaRay.ObjectTree"), m_objectTreeModel);
     registerModel(QStringLiteral("com.kdab.GammaRay.ObjectList"), m_objectListModel);
 

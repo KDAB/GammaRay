@@ -1,3 +1,24 @@
+# classes icons tool
+add_executable(classesiconsextractor classesiconsextractor.cpp)
+if(Qt5Core_FOUND)
+  target_link_libraries(classesiconsextractor LINK_PUBLIC Qt5::Core Qt5::Xml)
+else()
+  target_link_libraries(classesiconsextractor LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTXML_LIBRARIES})
+endif()
+
+add_custom_command(
+    OUTPUT
+        ${CMAKE_CURRENT_BINARY_DIR}/classesiconsindex_data.cpp
+    COMMAND
+        classesiconsextractor
+            -qrc ${CMAKE_CURRENT_SOURCE_DIR}/../ui/resources/ui.qrc
+            -out ${CMAKE_CURRENT_BINARY_DIR}/classesiconsindex_data.cpp
+    DEPENDS
+        ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsextractor.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../ui/resources/ui.qrc
+)
+add_custom_target(classesiconsindex_data DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/classesiconsindex_data.cpp)
+
 #
 # Shared non-UI code between probe and client
 #
@@ -23,6 +44,7 @@ set(gammaray_common_srcs
   enumdefinition.cpp
   enumrepository.cpp
   enumvalue.cpp
+  classesiconsrepository.cpp
 
   remoteviewinterface.cpp
   remoteviewframe.cpp
@@ -43,6 +65,7 @@ set_target_properties(gammaray_common PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   OUTPUT_NAME gammaray_common-${GAMMARAY_PROBE_ABI}
 )
+add_dependencies(gammaray_common classesiconsindex_data)
 
 gammaray_target_relocatable_interfaces(gammaray_common_ipaths)
 target_include_directories(gammaray_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_common_ipaths}>)
@@ -98,6 +121,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     enumdefinition.h
     enumrepository.h
     enumvalue.h
+    classesiconsrepository.h
     metatypedeclarations.h
     modelroles.h
     objectbroker.h

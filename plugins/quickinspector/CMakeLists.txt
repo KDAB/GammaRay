@@ -83,10 +83,6 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
       geometryextension/sgwireframewidget.cpp
     )
 
-    qt4_add_resources(gammaray_quickinspector_ui_srcs
-      resources/quickinspector.qrc
-    )
-
     qt4_wrap_ui(gammaray_quickinspector_ui_srcs
       quickinspectorwidget.ui
       gridsettingswidget.ui

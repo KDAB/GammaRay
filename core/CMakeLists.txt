@@ -35,6 +35,7 @@ set(gammaray_srcs
   enumrepositoryserver.cpp
   enumutil.cpp
   execution.cpp
+  classesiconsrepositoryserver.cpp
 
   propertyadaptor.cpp
   propertyaggregator.cpp
@@ -141,6 +142,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_core_export.h
     enumrepositoryserver.h
     enumutil.h
+    classesiconsrepositoryserver.h
     metaobject.h
     metaobjectrepository.h
     metaproperty.h

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowIcon">
-   <iconset resource="../resources/gammaray.qrc">
+   <iconset resource="../../ui/resources/ui.qrc">
     <normaloff>:/gammaray/GammaRay-128x128.png</normaloff>:/gammaray/GammaRay-128x128.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -98,7 +98,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../resources/gammaray.qrc"/>
+  <include location="../../ui/resources/ui.qrc"/>
  </resources>
  <connections/>
 </ui>

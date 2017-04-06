@@ -37,6 +37,8 @@
 #include <common/remoteviewinterface.h>
 #include <common/streamoperators.h>
 
+#include <ui/uiresources.h>
+
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
@@ -126,7 +128,7 @@ void RemoteViewWidget::setupActions()
 {
     m_interactionModeActions->setExclusive(true);
 
-    auto action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/move-preview.png")), tr(
+    auto action = new QAction(UIResources::themedIcon(QLatin1String("move-preview.png")), tr(
                                   "Pan View"), this);
     action->setCheckable(true);
     action->setToolTip(tr("<b>Pan view</b><br>"
@@ -134,7 +136,7 @@ void RemoteViewWidget::setupActions()
     action->setData(ViewInteraction);
     action->setActionGroup(m_interactionModeActions);
 
-    action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/measure-pixels.png")),
+    action = new QAction(UIResources::themedIcon(QLatin1String("measure-pixels.png")),
                          tr("Measure Pixel Sizes"), this);
     action->setCheckable(true);
     action->setToolTip(tr("<b>Measure pixel-sizes</b><br>"
@@ -146,14 +148,14 @@ void RemoteViewWidget::setupActions()
 
     action = new QAction(tr("Pick Element"), this);
     action->setIconText(tr("Pick"));
-    action->setIcon(QIcon(QStringLiteral(":/gammaray/ui/pick-element.png")));
+    action->setIcon(UIResources::themedIcon(QLatin1String("pick-element.png")));
     action->setCheckable(true);
     action->setToolTip(tr("<b>Pick Element</b><br>"
                           "Select an element for inspection by clicking on it."));
     action->setData(ElementPicking);
     action->setActionGroup(m_interactionModeActions);
 
-    action = new QAction(QIcon(QStringLiteral(":/gammaray/ui/redirect-input.png")),
+    action = new QAction(UIResources::themedIcon(QLatin1String("redirect-input.png")),
                          tr("Redirect Input"), this);
     action->setCheckable(true);
     action->setToolTip(tr("<b>Redirect Input</b><br>"
@@ -162,14 +164,14 @@ void RemoteViewWidget::setupActions()
     action->setData(InputRedirection);
     action->setActionGroup(m_interactionModeActions);
 
-    m_zoomOutAction = new QAction(QIcon(QStringLiteral(":/gammaray/ui/zoom-out.png")), tr(
+    m_zoomOutAction = new QAction(UIResources::themedIcon(QLatin1String("zoom-out.png")), tr(
                                       "Zoom Out"), this);
     m_zoomOutAction->setShortcutContext(Qt::WidgetShortcut);
     m_zoomOutAction->setShortcuts(QKeySequence::ZoomOut);
     connect(m_zoomOutAction, SIGNAL(triggered(bool)), this, SLOT(zoomOut()));
     addAction(m_zoomOutAction); // needed to make the WidgetShortcut context work
 
-    m_zoomInAction = new QAction(QIcon(QStringLiteral(":/gammaray/ui/zoom-in.png")), tr(
+    m_zoomInAction = new QAction(UIResources::themedIcon(QLatin1String("zoom-in.png")), tr(
                                      "Zoom In"), this);
     m_zoomInAction->setShortcutContext(Qt::WidgetShortcut);
     m_zoomInAction->setShortcuts(QKeySequence::ZoomIn);

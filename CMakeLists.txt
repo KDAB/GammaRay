@@ -287,7 +287,7 @@ endif()
 
 if(Qt5Core_FOUND)
   set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
-  find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
+  find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network Xml)
   find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     3DExtras
     3DInput
@@ -409,7 +409,7 @@ else()
   set_package_properties(Qt4 PROPERTIES TYPE OPTIONAL)
   if(Qt4_FOUND)
     # minimum set
-    find_package(Qt4 4.8.0 REQUIRED QtCore QtGui QtNetwork)
+    find_package(Qt4 4.8.0 REQUIRED QtCore QtGui QtNetwork QtXml)
   endif()
   find_package(Qt4 4.8.0 QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
 
@@ -714,7 +714,6 @@ if((Qt5Test_FOUND OR QT_QTTEST_FOUND) AND NOT CMAKE_CROSSCOMPILING)
   add_subdirectory(tests)
 endif()
 add_subdirectory(plugins)
-add_subdirectory(resources)
 if(Qt5LinguistTools_FOUND)
   add_subdirectory(translations)
 endif()

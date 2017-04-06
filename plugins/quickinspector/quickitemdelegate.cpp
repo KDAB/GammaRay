@@ -29,6 +29,8 @@
 #include "quickitemdelegate.h"
 #include "quickitemmodelroles.h"
 
+#include <ui/uiresources.h>
+
 #include <QPainter>
 #include <QIcon>
 #include <QVariant>
@@ -91,18 +93,13 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
             icons.push_back(deco.value<QIcon>().pixmap(16, 16));
 
         if ((flags &QuickItemModelRole::PartiallyOutOfView) && (~flags & QuickItemModelRole::Invisible))
-            icons << QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/warning.png")).pixmap(
-                16, 16);
+            icons << UIResources::themedIcon(QStringLiteral("warning.png")).pixmap(16, 16);
 
         if (flags & QuickItemModelRole::HasActiveFocus)
-            icons
-                << QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/active-focus.png")).
-            pixmap(
-                16, 16);
+            icons << UIResources::themedIcon(QStringLiteral("active-focus.png")).pixmap(16, 16);
 
         if (flags & QuickItemModelRole::HasFocus && ~flags & QuickItemModelRole::HasActiveFocus)
-            icons << QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/focus.png")).pixmap(16,
-                                                                                                 16);
+            icons << UIResources::themedIcon(QStringLiteral("focus.png")).pixmap(16, 16);
 
         for (int i = 0; i < icons.size() && drawRect.left() < opt.rect.right(); i++) {
             painter->drawPixmap(drawRect.topLeft(), icons.at(i));
