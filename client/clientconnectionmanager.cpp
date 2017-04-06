@@ -30,6 +30,7 @@
 
 #include "client.h"
 #include "enumrepositoryclient.h"
+#include "classesiconsrepositoryclient.h"
 #include "remotemodel.h"
 #include "selectionmodelclient.h"
 #include "propertycontrollerclient.h"
@@ -96,6 +97,11 @@ static QObject *createEnumRepositoryClient(const QString &, QObject *parent)
     return new EnumRepositoryClient(parent);
 }
 
+static QObject *createClassesIconsRepositoryClient(const QString &, QObject *parent)
+{
+    return new ClassesIconsRepositoryClient(parent);
+}
+
 void ClientConnectionManager::init()
 {
     StreamOperators::registerOperators();
@@ -109,6 +115,7 @@ void ClientConnectionManager::init()
         createPaintAnalyzerClient);
     ObjectBroker::registerClientObjectFactoryCallback<RemoteViewInterface *>(createRemoteViewClient);
     ObjectBroker::registerClientObjectFactoryCallback<EnumRepository*>(createEnumRepositoryClient);
+    ObjectBroker::registerClientObjectFactoryCallback<ClassesIconsRepository*>(createClassesIconsRepositoryClient);
 
     ObjectBroker::setModelFactoryCallback(modelFactory);
     ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);

@@ -32,6 +32,8 @@
 #include "quickscenepreviewwidget.h"
 #include "gridsettingswidget.h"
 
+#include <ui/uiresources.h>
+
 #include <QAction>
 #include <QComboBox>
 #include <QLabel>
@@ -56,11 +58,14 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     m_toolBar = new QToolBar(this);
     m_toolBar->setAutoFillBackground(true);
+    // Our icons are 16x16 and support hidpi, so let force iconSize on every styles
+    m_toolBar->setIconSize(QSize(16, 16));
+    m_toolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
     m_visualizeGroup = new QActionGroup(this);
     m_visualizeGroup->setExclusive(false); // we need 0 or 1 selected, not exactly 1
 
-    m_visualizeClipping = new QAction(QIcon(QStringLiteral(":/gammaray/plugins/quickinspector/visualize-clipping.png")),
+    m_visualizeClipping = new QAction(UIResources::themedIcon(QLatin1String("visualize-clipping.png")),
                                       tr("Visualize Clipping"),
                                       this);
     m_visualizeClipping->setActionGroup(m_visualizeGroup);
@@ -74,8 +79,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
                                        "enabled, so you can check for items, that have clipping enabled unnecessarily. "));
 
     m_visualizeOverdraw
-            = new QAction(QIcon(QStringLiteral(
-                                    ":/gammaray/plugins/quickinspector/visualize-overdraw.png")),
+            = new QAction(UIResources::themedIcon(QLatin1String("visualize-overdraw.png")),
                           tr("Visualize Overdraw"),
                           this);
     m_visualizeOverdraw->setActionGroup(m_visualizeGroup);
@@ -89,8 +93,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
                                        "With this tool enabled the QtQuick renderer draws a 3D-Box visualizing the "
                                        "layers of items that are drawn."));
 
-    m_visualizeBatches = new QAction(QIcon(QStringLiteral(
-                                               ":/gammaray/plugins/quickinspector/visualize-batches.png")),
+    m_visualizeBatches = new QAction(UIResources::themedIcon(QLatin1String("visualize-batches.png")),
                                      tr("Visualize Batches"), this);
     m_visualizeBatches->setActionGroup(m_visualizeGroup);
     m_visualizeBatches->setData(QuickInspectorInterface::VisualizeBatches);
@@ -106,8 +109,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
                                       "renderer visualizes those batches, by drawing all items that are batched using "
                                       "the same color. The fewer colors you see in this mode the better."));
 
-    m_visualizeChanges = new QAction(QIcon(QStringLiteral(
-                                               ":/gammaray/plugins/quickinspector/visualize-changes.png")),
+    m_visualizeChanges = new QAction(UIResources::themedIcon(QLatin1String("visualize-changes.png")),
                                      tr("Visualize Changes"), this);
     m_visualizeChanges->setActionGroup(m_visualizeGroup);
     m_visualizeChanges->setData(QuickInspectorInterface::VisualizeChanges);
@@ -119,8 +121,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
                                       "that caused the repaint."));
 
     m_visualizeTraces
-            = new QAction(QIcon(QStringLiteral(
-                                    ":/gammaray/plugins/quickinspector/visualize-traces.png")),
+            = new QAction(UIResources::themedIcon(QLatin1String("visualize-traces.png")),
                           tr("Visualize Traces"), this);
     m_visualizeTraces->setActionGroup(m_visualizeGroup);
     m_visualizeTraces->setData(QuickInspectorInterface::VisualizeTraces);
@@ -130,8 +131,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
                                      "cover any QQ2 components. Overlay include random border and foreground "
                                      "colors as well as item id string."));
 
-    m_serverSideDecorationsEnabled = new QAction(QIcon(QStringLiteral(
-                                                           ":/gammaray/plugins/quickinspector/decorations.png")),
+    m_serverSideDecorationsEnabled = new QAction(UIResources::themedIcon(QLatin1String("server-decorations.png")),
                                                  tr("Target Decorations"), this);
     m_serverSideDecorationsEnabled->setCheckable(true);
     m_serverSideDecorationsEnabled->setToolTip(tr("<b>Target Decorations</b><br>"
@@ -141,8 +141,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     gridSettingsAction->setDefaultWidget(m_gridSettingsWidget);
 
     m_gridSettings = new QMenu(tr("Grid Settings"), this);
-    m_gridSettings->setIcon(QIcon(QStringLiteral(
-                                      ":/gammaray/plugins/quickinspector/grid-settings.png")));
+    m_gridSettings->setIcon(UIResources::themedIcon(QLatin1String("grid-settings.png")));
     m_gridSettings->setToolTip(tr("<b>Grid Settings</b><br>"
                                   "This popup a small widget to configure the grid settings."));
     m_gridSettings->setToolTipsVisible(true);
@@ -167,6 +166,8 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_toolBar->addAction(m_previewWidget->zoomOutAction());
     m_zoomCombobox = new QComboBox(this);
     m_zoomCombobox->setModel(m_previewWidget->zoomLevelModel());
+    // macOS and some platforms expect to use *small* controls in such small toolbar
+    m_zoomCombobox->setAttribute(Qt::WA_MacSmallSize);
     connect(m_zoomCombobox, SIGNAL(currentIndexChanged(int)), m_previewWidget,
             SLOT(setZoomLevel(int)));
     connect(m_previewWidget, &RemoteViewWidget::zoomLevelChanged, m_zoomCombobox,
