@@ -70,7 +70,8 @@ private:
     QPointer<QQuickItem> m_object;
 };
 
-struct GrabedFrame {
+class GrabedFrame {
+public:
     QImage image;
     QTransform transform;
     QRectF itemsGeometryRect;
