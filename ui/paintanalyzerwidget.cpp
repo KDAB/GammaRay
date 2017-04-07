@@ -46,8 +46,10 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     ui->commandView->header()->setObjectName("commandViewHeader");
 
     auto toolbar = new QToolBar;
+    // Our icons are 16x16 and support hidpi, so let force iconSize on every styles
+    toolbar->setIconSize(QSize(16, 16));
     toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    ui->replayContainer->insertWidget(0, toolbar);
+    ui->replayContainer->setMenuBar(toolbar);
 
     foreach (auto action, ui->replayWidget->interactionModeActions()->actions())
         toolbar->addAction(action);
