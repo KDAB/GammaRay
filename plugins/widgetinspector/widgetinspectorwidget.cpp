@@ -105,8 +105,10 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     auto layout = new QVBoxLayout;
     layout->setMargin(0);
     auto toolbar = new QToolBar(this);
+    // Our icons are 16x16 and support hidpi, so let force iconSize on every styles
+    toolbar->setIconSize(QSize(16, 16));
     toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    layout->addWidget(toolbar);
+    layout->setMenuBar(toolbar);
     ui->widgetPreviewContainer->setLayout(layout);
     layout->addWidget(m_remoteView);
 
@@ -116,6 +118,8 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
 
     toolbar->addAction(m_remoteView->zoomOutAction());
     auto zoom = new QComboBox;
+    // macOS and some platforms expect to use *small* controls in such small toolbar
+    zoom->setAttribute(Qt::WA_MacSmallSize);
     zoom->setModel(m_remoteView->zoomLevelModel());
     toolbar->addWidget(zoom);
     connect(zoom, SIGNAL(currentIndexChanged(int)), m_remoteView, SLOT(setZoomLevel(int)));
