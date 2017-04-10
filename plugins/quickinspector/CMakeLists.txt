@@ -73,6 +73,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
       quickitemdelegate.cpp
       quickitemtreewatcher.cpp
       quickscenepreviewwidget.cpp
+      quickscenecontrolwidget.cpp
       quickoverlaylegend.cpp
       gridsettingswidget.cpp
 

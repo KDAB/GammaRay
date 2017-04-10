@@ -32,75 +32,36 @@
 #include "quickitemgeometry.h"
 #include "quickinspectorinterface.h"
 #include "quickoverlay.h"
+#include "quickscenecontrolwidget.h"
 
 #include <ui/remoteviewwidget.h>
 
-QT_BEGIN_NAMESPACE
-class QAction;
-class QActionGroup;
-class QMenu;
-class QComboBox;
-class QLabel;
-class QToolBar;
-QT_END_NAMESPACE
-
 namespace GammaRay {
 class QuickInspectorInterface;
-class GridSettingsWidget;
-class QuickOverlayLegend;
 
 class QuickScenePreviewWidget : public RemoteViewWidget
 {
     Q_OBJECT
 
+    friend class QuickSceneControlWidget;
+
 public:
-    explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QWidget *parent = nullptr);
+    explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QuickSceneControlWidget *control, QWidget *parent = nullptr);
     ~QuickScenePreviewWidget();
 
     void restoreState(const QByteArray &state) override;
     QByteArray saveState() const override;
 
-    void setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes);
-    void setServerSideDecorationsState(bool enabled);
-    void setOverlaySettingsState(const QuickDecorationsSettings &settings);
-
-    QuickInspectorInterface::RenderMode customRenderMode() const;
-    void setCustomRenderMode(QuickInspectorInterface::RenderMode customRenderMode);
-
     QuickDecorationsSettings overlaySettings() const;
-    void setOverlaySettings(const QuickDecorationsSettings &settings);
-
-    bool serverSideDecorationsEnabled() const;
-    void setServerSideDecorationsEnabled(bool enabled);
-
-private Q_SLOTS:
-    void visualizeActionTriggered(QAction* current);
-    void serverSideDecorationsTriggered(bool enabled);
-    void gridOffsetChanged(const QPoint &value);
-    void gridCellSizeChanged(const QSize &value);
 
 private:
     void drawDecoration(QPainter *p) override;
     void resizeEvent(QResizeEvent *e) override;
 
-    struct {
-        QToolBar *toolbarWidget;
-        QComboBox *zoomCombobox;
-        QActionGroup *visualizeGroup;
-        QAction *visualizeClipping;
-        QAction *visualizeOverdraw;
-        QAction *visualizeBatches;
-        QAction *visualizeChanges;
-        QAction *visualizeTraces;
-        QAction *serverSideDecorationsEnabled;
-        QMenu *gridSettings;
-    } m_toolBar;
+    QuickInspectorInterface *m_inspectorInterface;
+    QuickSceneControlWidget *m_control;
 
     QuickDecorationsSettings m_overlaySettings;
-    GridSettingsWidget *m_gridSettingsWidget;
-    QuickOverlayLegend *m_legendTool;
-
-    QuickInspectorInterface *m_inspectorInterface;
 };
 } // namespace GammaRay
 

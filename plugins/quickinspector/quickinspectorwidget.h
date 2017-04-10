@@ -45,7 +45,7 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class QuickScenePreviewWidget;
+class QuickSceneControlWidget;
 struct QuickDecorationsSettings;
 
 namespace Ui {
@@ -76,7 +76,7 @@ private slots:
 private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
     UIStateManager m_stateManager;
-    QuickScenePreviewWidget *m_previewWidget;
+    QuickSceneControlWidget *m_scenePreviewWidget;
     QuickInspectorInterface *m_interface;
 };
 
