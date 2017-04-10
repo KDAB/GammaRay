@@ -116,15 +116,15 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
     new QuickItemTreeWatcher(ui->itemTreeView, ui->sgTreeView, this);
 
-    m_previewWidget = new QuickScenePreviewWidget(m_interface, this);
-    m_previewWidget->setPickSourceModel(proxy);
-    m_previewWidget->setFlagRole(QuickItemModelRole::ItemFlags);
-    m_previewWidget->setInvisibleMask(QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
+    m_scenePreviewWidget = new QuickSceneControlWidget(m_interface, this);
+    m_scenePreviewWidget->previewWidget()->setPickSourceModel(proxy);
+    m_scenePreviewWidget->previewWidget()->setFlagRole(QuickItemModelRole::ItemFlags);
+    m_scenePreviewWidget->previewWidget()->setInvisibleMask(QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
 
     ui->itemPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.QuickItem"));
     ui->sgPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.QuickSceneGraph"));
 
-    ui->previewTreeSplitter->addWidget(m_previewWidget);
+    ui->previewTreeSplitter->addWidget(m_scenePreviewWidget);
 
     connect(m_interface, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)),
             this, SLOT(setFeatures(GammaRay::QuickInspectorInterface::Features)));
@@ -144,7 +144,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
     connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
-    connect(m_previewWidget, SIGNAL(stateChanged()), this, SLOT(saveState()));
+    connect(m_scenePreviewWidget, SIGNAL(stateChanged()), this, SLOT(saveState()));
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()
@@ -154,28 +154,28 @@ QuickInspectorWidget::~QuickInspectorWidget()
 void QuickInspectorWidget::saveTargetState(QSettings *settings) const
 {
     settings->setValue("tabIndex", ui->tabWidget->currentIndex());
-    settings->setValue("remoteViewState", m_previewWidget->saveState());
+    settings->setValue("remoteViewState", m_scenePreviewWidget->previewWidget()->saveState());
 }
 
 void QuickInspectorWidget::restoreTargetState(QSettings *settings)
 {
     ui->tabWidget->setCurrentIndex(settings->value("tabIndex", 0).toInt());
-    m_previewWidget->restoreState(settings->value("remoteViewState").toByteArray());
+    m_scenePreviewWidget->previewWidget()->restoreState(settings->value("remoteViewState").toByteArray());
 }
 
 void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features features)
 {
-    m_previewWidget->setSupportsCustomRenderModes(features);
+    m_scenePreviewWidget->setSupportsCustomRenderModes(features);
 }
 
 void QuickInspectorWidget::setServerSideDecorations(bool enabled)
 {
-    m_previewWidget->setServerSideDecorationsState(enabled);
+    m_scenePreviewWidget->setServerSideDecorationsState(enabled);
 }
 
 void QuickInspectorWidget::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)
 {
-    m_previewWidget->setOverlaySettingsState(settings);
+    m_scenePreviewWidget->setOverlaySettingsState(settings);
 }
 
 void QuickInspectorWidget::itemSelectionChanged(const QItemSelection &selection)
