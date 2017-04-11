@@ -18,10 +18,14 @@ target_link_libraries(gammaray_localeinspector_plugin gammaray_core)
 if(GAMMARAY_BUILD_UI)
     set(gammaray_localeinspector_plugin_ui_srcs
         localeinspectorwidget.cpp
+        localetab.cpp
+        timezonetab.cpp
     )
 
     qt4_wrap_ui(gammaray_localeinspector_plugin_ui_srcs
         localeinspectorwidget.ui
+        localetab.ui
+        timezonetab.ui
     )
 
     gammaray_add_plugin(gammaray_localeinspector_ui_plugin

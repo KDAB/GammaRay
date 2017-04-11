@@ -1,11 +1,9 @@
 /*
-  localeinspectorwidget.cpp
-
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2011-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Stephen Kelly <stephen.kelly@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,27 +24,37 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "localeinspectorwidget.h"
-#include "ui_localeinspectorwidget.h"
+#ifndef GAMMARAY_LOCALETAB_H
+#define GAMMARAY_LOCALETAB_H
 
-#include <common/objectbroker.h>
+#include <ui/uistatemanager.h>
 
-using namespace GammaRay;
+#include <QWidget>
 
-LocaleInspectorWidget::LocaleInspectorWidget(QWidget *parent)
-    : QWidget(parent)
-    , ui(new Ui::LocaleInspectorWidget)
+#include <memory>
+
+namespace GammaRay {
+
+namespace Ui
 {
-    ui->setupUi(this);
-
-    ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->timezoneTab),
-        ObjectBroker::hasObject(QLatin1String("com.kdab.GammaRay.TimezoneModel")));
+class LocaleTab;
 }
 
-LocaleInspectorWidget::~LocaleInspectorWidget()
+class LocaleTab : public QWidget
 {
+    Q_OBJECT
+public:
+    explicit LocaleTab(QWidget *parent = nullptr);
+    ~LocaleTab();
+
+private slots:
+    void initSplitterPosition();
+
+private:
+    std::unique_ptr<Ui::LocaleTab> ui;
+    UIStateManager m_stateManager;
+};
+
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(LocaleInspectorUiFactory)
-#endif
+#endif // GAMMARAY_LOCALETAB_H

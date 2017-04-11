@@ -1,5 +1,5 @@
 /*
-  localeinspectorwidget.cpp
+  timezonetab.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,27 +26,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "localeinspectorwidget.h"
-#include "ui_localeinspectorwidget.h"
+#ifndef GAMMARAY_TIMEZONETAB_H
+#define GAMMARAY_TIMEZONETAB_H
 
-#include <common/objectbroker.h>
+#include <QWidget>
 
-using namespace GammaRay;
+#include <memory>
 
-LocaleInspectorWidget::LocaleInspectorWidget(QWidget *parent)
-    : QWidget(parent)
-    , ui(new Ui::LocaleInspectorWidget)
+namespace GammaRay {
+
+namespace Ui
 {
-    ui->setupUi(this);
-
-    ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->timezoneTab),
-        ObjectBroker::hasObject(QLatin1String("com.kdab.GammaRay.TimezoneModel")));
+class TimezoneTab;
 }
 
-LocaleInspectorWidget::~LocaleInspectorWidget()
+class TimezoneTab : public QWidget
 {
+    Q_OBJECT
+public:
+    explicit TimezoneTab(QWidget *parent = nullptr);
+    ~TimezoneTab();
+
+private:
+    std::unique_ptr<Ui::TimezoneTab> ui;
+};
+
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(LocaleInspectorUiFactory)
-#endif
+#endif // GAMMARAY_TIMEZONETAB_H

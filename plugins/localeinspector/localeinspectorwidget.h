@@ -1,9 +1,11 @@
 /*
+  localeinspectorwidget.h
+
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2011-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Stephen Kelly <stephen.kelly@kdab.com>
+  Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -28,9 +30,10 @@
 #define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTORWIDGET_H
 
 #include <ui/tooluifactory.h>
-#include <ui/uistatemanager.h>
 
 #include <QWidget>
+
+#include <memory>
 
 namespace GammaRay {
 namespace Ui {
@@ -44,12 +47,8 @@ public:
     explicit LocaleInspectorWidget(QWidget *parent = nullptr);
     ~LocaleInspectorWidget();
 
-private slots:
-    void initSplitterPosition();
-
 private:
-    QScopedPointer<Ui::LocaleInspectorWidget> ui;
-    UIStateManager m_stateManager;
+    std::unique_ptr<Ui::LocaleInspectorWidget> ui;
 };
 
 class LocaleInspectorUiFactory : public QObject, public StandardToolUiFactory<LocaleInspectorWidget>
