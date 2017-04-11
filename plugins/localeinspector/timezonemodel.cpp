@@ -27,6 +27,7 @@
 */
 
 #include "timezonemodel.h"
+#include "timezonemodelroles.h"
 
 #include <QLocale>
 #include <QTimeZone>
@@ -45,7 +46,7 @@ TimezoneModel::~TimezoneModel()
 int TimezoneModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return 5;
+    return TimezoneModelColumns::COUNT;
 }
 
 int TimezoneModel::rowCount(const QModelIndex& parent) const
@@ -65,20 +66,24 @@ QVariant TimezoneModel::data(const QModelIndex& index, int role) const
     if (role == Qt::DisplayRole) {
         const QTimeZone tz(m_ids.at(index.row()));
         switch (index.column()) {
-            case 0:
+            case TimezoneModelColumns::IanaIdColumn:
                 return tz.id();
-            case 1:
+            case TimezoneModelColumns::CountryColumn:
                 return QLocale::countryToString(tz.country());
-            case 2:
+            case TimezoneModelColumns::StandardDisplayNameColumn:
                 return tz.displayName(QTimeZone::StandardTime);
-            case 3:
+            case TimezoneModelColumns::DSTColumn:
                 return tz.hasDaylightTime();
-            case 4:
+            case TimezoneModelColumns::WindowsIdColumn:
                 return QTimeZone::ianaIdToWindowsId(tz.id());
         }
     } else if (role == Qt::ToolTipRole && index.column() == 0) {
         const QTimeZone tz(m_ids.at(index.row()));
         return tz.comment();
+    } else if (role == TimezoneModelRoles::LocalZoneRole && index.column() == 0) {
+        if (m_ids.at(index.row()) == QTimeZone::systemTimeZoneId())
+            return true;
+        return QVariant();
     }
 
     return QVariant();

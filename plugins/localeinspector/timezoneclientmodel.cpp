@@ -27,8 +27,10 @@
 */
 
 #include "timezoneclientmodel.h"
+#include "timezonemodelroles.h"
 
 #include <QApplication>
+#include <QFont>
 #include <QStyle>
 
 using namespace GammaRay;
@@ -46,16 +48,24 @@ QVariant TimezoneClientModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::ToolTipRole && index.column() > 0) {
         return QIdentityProxyModel::data(index.sibling(index.row(), 0), role);
-    } else if (role == Qt::DisplayRole && index.column() == 3) {
+    } else if (role == Qt::DisplayRole && index.column() == TimezoneModelColumns::DSTColumn) {
         const auto v = QIdentityProxyModel::data(index, Qt::DisplayRole);
         const auto b = v.type() == QVariant::Bool && v.toBool();
         if (b && qApp->style()->standardIcon(QStyle::SP_DialogYesButton).isNull())
             return tr("yes");
         return QVariant();
-    } else if (role == Qt::DecorationRole && index.column() == 3) {
+    } else if (role == Qt::DecorationRole && index.column() == TimezoneModelColumns::DSTColumn) {
         const auto v = QIdentityProxyModel::data(index, Qt::DisplayRole);
         const auto b = v.type() == QVariant::Bool && v.toBool();
         return b ? qApp->style()->standardIcon(QStyle::SP_DialogYesButton) : QVariant();
+    } else if (role == Qt::FontRole) {
+        const auto v = QIdentityProxyModel::data(index.sibling(index.row(), 0), TimezoneModelRoles::LocalZoneRole);
+        const auto b = v.type() == QVariant::Bool && v.toBool();
+        if (b) {
+            QFont f;
+            f.setBold(true);
+            return f;
+        }
     }
 
     return QIdentityProxyModel::data(index, role);
@@ -65,15 +75,15 @@ QVariant TimezoneClientModel::headerData(int section, Qt::Orientation orientatio
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case 0:
+            case TimezoneModelColumns::IanaIdColumn:
                 return tr("IANA Id");
-            case 1:
+            case TimezoneModelColumns::CountryColumn:
                 return tr("Country");
-            case 2:
+            case TimezoneModelColumns::StandardDisplayNameColumn:
                 return tr("Standard Display Name");
-            case 3:
+            case TimezoneModelColumns::DSTColumn:
                 return tr("DST");
-            case 4:
+            case TimezoneModelColumns::WindowsIdColumn:
                 return tr("Windows Id");
         }
     }

@@ -31,6 +31,7 @@
 #include "localedataaccessor.h"
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 #include "timezonemodel.h"
+#include "timezonemodelroles.h"
 #endif
 
 #include <core/remote/serverproxymodel.h>
@@ -56,6 +57,7 @@ LocaleInspector::LocaleInspector(ProbeInterface *probe, QObject *parent)
     auto tzModel = new TimezoneModel(this);
     proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     proxy->setSourceModel(tzModel);
+    proxy->addRole(TimezoneModelRoles::LocalZoneRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimezoneModel"), proxy);
 #endif
 }
