@@ -2,7 +2,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2011-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2010-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Stephen Kelly <stephen.kelly@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -24,32 +24,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTORWIDGET_H
-#define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTORWIDGET_H
+#include "localeinspector.h"
 
-#include <ui/uistatemanager.h>
+#include "localemodel.h"
+#include "localeaccessormodel.h"
+#include "localedataaccessor.h"
 
-#include <QWidget>
+#include <core/remote/serverproxymodel.h>
 
-namespace GammaRay {
-namespace Ui {
-class LocaleInspectorWidget;
-}
+#include <QSortFilterProxyModel>
 
-class LocaleInspectorWidget : public QWidget
+using namespace GammaRay;
+
+LocaleInspector::LocaleInspector(ProbeInterface *probe, QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit LocaleInspectorWidget(QWidget *parent = nullptr);
-    ~LocaleInspectorWidget();
+    LocaleDataAccessorRegistry *registry = new LocaleDataAccessorRegistry(this);
 
-private slots:
-    void initSplitterPosition();
+    LocaleModel *model = new LocaleModel(registry, this);
+    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+    proxy->setSourceModel(model);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.LocaleModel"), proxy);
 
-private:
-    QScopedPointer<Ui::LocaleInspectorWidget> ui;
-    UIStateManager m_stateManager;
-};
+    LocaleAccessorModel *accessorModel = new LocaleAccessorModel(registry, this);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"), accessorModel);
 }
 
-#endif // GAMMARAY_LOCALEINSPECTORWIDGET_H
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(LocaleInspectorFactory)
+#endif

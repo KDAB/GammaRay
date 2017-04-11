@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Locales
+X-GammaRay-Id=gammaray_localeinspector
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
+Exec=${plugin_exec}
+

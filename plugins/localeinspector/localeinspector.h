@@ -27,7 +27,7 @@
 #ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
 #define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
 
-#include "toolfactory.h"
+#include <core/toolfactory.h>
 
 namespace GammaRay {
 class LocaleInspector : public QObject
@@ -41,8 +41,9 @@ class LocaleInspectorFactory : public QObject, public StandardToolFactory<QObjec
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_localeinspector.json")
 public:
-    explicit LocaleInspectorFactory(QObject *parent)
+    explicit LocaleInspectorFactory(QObject *parent = nullptr)
         : QObject(parent)
     {
     }

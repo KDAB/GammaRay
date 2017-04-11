@@ -1,0 +1,7 @@
+{
+    "id": "gammaray_localeinspector",
+    "name": "Locales",
+    "types": [
+        "QObject"
+    ]
+}

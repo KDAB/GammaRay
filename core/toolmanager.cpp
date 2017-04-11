@@ -34,7 +34,6 @@
 #include "proxytoolfactory.h"
 #include "toolfactory.h"
 
-#include "tools/localeinspector/localeinspector.h"
 #include "tools/metatypebrowser/metatypebrowser.h"
 #include "tools/objectinspector/objectinspector.h"
 #include "tools/resourcebrowser/resourcebrowser.h"
@@ -63,7 +62,6 @@ ToolManager::ToolManager(QObject *parent)
     addToolFactory(new MetaObjectBrowserFactory(this));
     addToolFactory(new MetaTypeBrowserFactory(this));
     addToolFactory(new MessageHandlerFactory(this));
-    addToolFactory(new LocaleInspectorFactory(this));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     addToolFactory(new StandardPathsFactory(this));
 #endif

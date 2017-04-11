@@ -30,7 +30,6 @@
 #include "clienttoolmodel.h"
 
 #include <ui/proxytooluifactory.h>
-#include <ui/tools/localeinspector/localeinspectorwidget.h>
 #include <ui/tools/messagehandler/messagehandlerwidget.h>
 #include <ui/tools/metaobjectbrowser/metaobjectbrowserwidget.h>
 #include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
@@ -60,7 +59,6 @@ using namespace GammaRay;
         } \
     }
 
-MAKE_FACTORY(LocaleInspector,   qApp->translate("GammaRay::LocaleInspectorFactory", "Locales"));
 MAKE_FACTORY(MessageHandler,    qApp->translate("GammaRay::MessageHandlerFactory", "Messages"));
 MAKE_FACTORY(MetaObjectBrowser, qApp->translate("GammaRay::MetaObjectBrowserFactory", "Meta Objects"));
 MAKE_FACTORY(MetaTypeBrowser,   qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"));
@@ -94,7 +92,6 @@ static void initPluginRepository()
     if (!s_pluginRepository()->factories.isEmpty())
         return;
 
-    insertFactory(new LocaleInspectorFactory);
     insertFactory(new MessageHandlerFactory);
     insertFactory(new MetaObjectBrowserFactory);
     insertFactory(new MetaTypeBrowserFactory);

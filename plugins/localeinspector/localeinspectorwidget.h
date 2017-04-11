@@ -2,7 +2,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2011-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Stephen Kelly <stephen.kelly@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -24,28 +24,41 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "localeinspector.h"
+#ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTORWIDGET_H
+#define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTORWIDGET_H
 
-#include "localemodel.h"
-#include "localeaccessormodel.h"
-#include "localedataaccessor.h"
+#include <ui/tooluifactory.h>
+#include <ui/uistatemanager.h>
 
-#include <core/remote/serverproxymodel.h>
+#include <QWidget>
 
-#include <QSortFilterProxyModel>
-
-using namespace GammaRay;
-
-LocaleInspector::LocaleInspector(ProbeInterface *probe, QObject *parent)
-    : QObject(parent)
-{
-    LocaleDataAccessorRegistry *registry = new LocaleDataAccessorRegistry(this);
-
-    LocaleModel *model = new LocaleModel(registry, this);
-    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-    proxy->setSourceModel(model);
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.LocaleModel"), proxy);
-
-    LocaleAccessorModel *accessorModel = new LocaleAccessorModel(registry, this);
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"), accessorModel);
+namespace GammaRay {
+namespace Ui {
+class LocaleInspectorWidget;
 }
+
+class LocaleInspectorWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit LocaleInspectorWidget(QWidget *parent = nullptr);
+    ~LocaleInspectorWidget();
+
+private slots:
+    void initSplitterPosition();
+
+private:
+    QScopedPointer<Ui::LocaleInspectorWidget> ui;
+    UIStateManager m_stateManager;
+};
+
+class LocaleInspectorUiFactory : public QObject, public StandardToolUiFactory<LocaleInspectorWidget>
+{
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_localeinspector.json")
+};
+
+}
+
+#endif // GAMMARAY_LOCALEINSPECTORWIDGET_H

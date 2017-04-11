@@ -46,7 +46,6 @@ set(gammaray_ui_srcs
   codeeditor/codeeditor.cpp
   codeeditor/codeeditorsidebar.cpp
 
-  tools/localeinspector/localeinspectorwidget.cpp
   tools/messagehandler/messagedisplaymodel.cpp
   tools/messagehandler/messagehandlerwidget.cpp
   tools/messagehandler/messagehandlerclient.cpp
@@ -87,7 +86,6 @@ qt4_wrap_ui(gammaray_ui_srcs
   propertyeditor/propertytexteditor.ui
   propertyeditor/palettedialog.ui
 
-  tools/localeinspector/localeinspectorwidget.ui
   tools/messagehandler/messagehandlerwidget.ui
   tools/metatypebrowser/metatypebrowserwidget.ui
   tools/objectinspector/objectinspectorwidget.ui

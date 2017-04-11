@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Locales
+X-GammaRay-Id=gammaray_localeinspector
+X-GammaRay-Types="QObject"
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
+Exec=${plugin_exec}

@@ -76,3 +76,7 @@ void LocaleInspectorWidget::initSplitterPosition()
                                    UISizeVector() << accessorHeight << height() - accessorHeight);
     m_stateManager.restoreState();
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+Q_EXPORT_PLUGIN(LocaleInspectorUiFactory)
+#endif
