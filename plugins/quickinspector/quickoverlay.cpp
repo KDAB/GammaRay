@@ -482,6 +482,8 @@ void QuickOverlay::gatherRenderInfo()
             findItemByClassName("QQuickControl",
                                 m_window->contentItem(),
                                 [this](QQuickItem *item) {
+                if (!item->isVisible())
+                    return;
                 QuickItemGeometry itemGeometry = initFromItem(item);
                 m_grabedFrame.itemsGeometry << itemGeometry;
                 m_grabedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
