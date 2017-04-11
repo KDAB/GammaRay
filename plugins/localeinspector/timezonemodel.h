@@ -1,5 +1,5 @@
 /*
-  localeinspectorwidget.cpp
+  timezonemodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,27 +26,30 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "localeinspectorwidget.h"
-#include "ui_localeinspectorwidget.h"
+#ifndef GAMMARAY_TIMEZONEMODEL_H
+#define GAMMARAY_TIMEZONEMODEL_H
 
-#include <common/endpoint.h>
+#include <QAbstractTableModel>
+#include <QByteArray>
+#include <QList>
 
-using namespace GammaRay;
+namespace GammaRay {
 
-LocaleInspectorWidget::LocaleInspectorWidget(QWidget *parent)
-    : QWidget(parent)
-    , ui(new Ui::LocaleInspectorWidget)
+class TimezoneModel : public QAbstractTableModel
 {
-    ui->setupUi(this);
+    Q_OBJECT
+public:
+    explicit TimezoneModel(QObject *parent = nullptr);
+    ~TimezoneModel();
 
-    ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->timezoneTab),
-        Endpoint::instance()->objectAddress(QLatin1String("com.kdab.GammaRay.TimezoneModel")) != Protocol::InvalidObjectAddress);
+    int columnCount(const QModelIndex & parent) const override;
+    int rowCount(const QModelIndex & parent) const override;
+    QVariant data(const QModelIndex & index, int role) const override;
+
+private:
+    mutable QList<QByteArray> m_ids;
+};
+
 }
 
-LocaleInspectorWidget::~LocaleInspectorWidget()
-{
-}
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(LocaleInspectorUiFactory)
-#endif
+#endif // GAMMARAY_TIMEZONEMODEL_H

@@ -15,7 +15,14 @@
     <widget class="QLineEdit" name="tzSearchLine"/>
    </item>
    <item>
-    <widget class="QTreeView" name="tzView"/>
+    <widget class="QTreeView" name="tzView">
+     <property name="rootIsDecorated">
+      <bool>false</bool>
+     </property>
+     <property name="uniformRowHeights">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

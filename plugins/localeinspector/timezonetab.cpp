@@ -28,6 +28,12 @@
 
 #include "timezonetab.h"
 #include "ui_timezonetab.h"
+#include "timezoneclientmodel.h"
+
+#include <ui/searchlinecontroller.h>
+
+#include <common/endpoint.h>
+#include <common/objectbroker.h>
 
 using namespace GammaRay;
 
@@ -36,10 +42,17 @@ TimezoneTab::TimezoneTab(QWidget *parent)
     , ui(new Ui::TimezoneTab)
 {
     ui->setupUi(this);
-}
 
+    if (Endpoint::instance()->objectAddress(QLatin1String("com.kdab.GammaRay.TimezoneModel")) == Protocol::InvalidObjectAddress)
+        return;
+
+    auto tzModel = ObjectBroker::model(QLatin1String("com.kdab.GammaRay.TimezoneModel"));
+    auto tzProxy = new TimezoneClientModel(this);
+    tzProxy->setSourceModel(tzModel);
+    ui->tzView->setModel(tzProxy);
+    new SearchLineController(ui->tzSearchLine, tzModel);
+}
 
 TimezoneTab::~TimezoneTab()
 {
 }
-
