@@ -243,6 +243,8 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint &pos)
 
 void QuickInspectorWidget::resetState()
 {
+    disconnect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
+    disconnect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     m_stateManager.reset();
 }
 
