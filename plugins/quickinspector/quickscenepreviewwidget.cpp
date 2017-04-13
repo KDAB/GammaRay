@@ -146,6 +146,3 @@ QuickDecorationsSettings QuickScenePreviewWidget::overlaySettings() const
 {
     return m_overlaySettings;
 }
-
-
-

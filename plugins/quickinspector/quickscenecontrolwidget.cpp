@@ -188,7 +188,6 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     setMinimumWidth(std::max(minimumWidth(), m_toolBar->sizeHint().width()));
 
-
     m_layout->addWidget(m_toolBar);
     m_layout->addWidget(m_previewWidget);
 }
@@ -214,7 +213,6 @@ void QuickSceneControlWidget::visualizeActionTriggered(QAction *current)
     }
     emit m_previewWidget->stateChanged();
 }
-
 
 void QuickSceneControlWidget::serverSideDecorationsTriggered(bool enabled)
 {

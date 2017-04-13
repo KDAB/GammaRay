@@ -34,7 +34,6 @@
 #include "quickinspectorinterface.h"
 #include "quickoverlay.h"
 
-
 QT_BEGIN_NAMESPACE
 class QAction;
 class QActionGroup;
@@ -50,7 +49,6 @@ class QuickInspectorInterface;
 class GridSettingsWidget;
 class QuickScenePreviewWidget;
 class QuickOverlayLegend;
-
 
 class QuickSceneControlWidget : public QWidget
 {
@@ -73,7 +71,6 @@ public:
 
     QuickScenePreviewWidget *previewWidget();
 
-
 signals:
 
 private Q_SLOTS:
@@ -83,7 +80,6 @@ private Q_SLOTS:
     void gridCellSizeChanged(const QSize &value);
 
 private:
-
     void resizeEvent(QResizeEvent *e) override;
 
     QVBoxLayout *m_layout;
@@ -105,7 +101,6 @@ private:
     QuickOverlayLegend *m_legendTool;
 
     QuickInspectorInterface *m_inspectorInterface;
-
 };
 } // namespace GammaRay
 
