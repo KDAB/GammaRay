@@ -49,8 +49,8 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     , m_legendTool(new QuickOverlayLegend(this))
     , m_inspectorInterface(inspector)
 {
-    m_layout = new QVBoxLayout();
-    setLayout(m_layout);
+    m_layout = new QVBoxLayout(this);
+    m_layout->setContentsMargins(QMargins());
 
     m_previewWidget = new QuickScenePreviewWidget(m_inspectorInterface, this, this);
 
@@ -188,7 +188,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     setMinimumWidth(std::max(minimumWidth(), m_toolBar->sizeHint().width()));
 
-    m_layout->addWidget(m_toolBar);
+    m_layout->setMenuBar(m_toolBar);
     m_layout->addWidget(m_previewWidget);
 
     connect(m_previewWidget, SIGNAL(stateChanged()), this, SIGNAL(stateChanged()));
