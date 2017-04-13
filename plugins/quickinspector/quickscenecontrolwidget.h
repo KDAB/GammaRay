@@ -72,6 +72,7 @@ public:
     QuickScenePreviewWidget *previewWidget();
 
 signals:
+    void stateChanged();
 
 private Q_SLOTS:
     void visualizeActionTriggered(QAction* current);

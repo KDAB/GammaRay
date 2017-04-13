@@ -190,6 +190,8 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     m_layout->addWidget(m_toolBar);
     m_layout->addWidget(m_previewWidget);
+
+    connect(m_previewWidget, SIGNAL(stateChanged()), this, SIGNAL(stateChanged()));
 }
 
 void QuickSceneControlWidget::resizeEvent(QResizeEvent *e)
