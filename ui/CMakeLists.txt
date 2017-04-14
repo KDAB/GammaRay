@@ -3,6 +3,7 @@
 #
 set(gammaray_ui_srcs
   aboutdata.cpp
+  clientdecorationidentityproxymodel.cpp
   clienttoolmanager.cpp
   clienttoolmodel.cpp
   contextmenuextension.cpp
@@ -160,6 +161,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
 
   gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_ui_export.h
+    clientdecorationidentityproxymodel.h
     clienttoolmanager.h
     propertyeditor/propertyeditordelegate.h
     propertywidget.h

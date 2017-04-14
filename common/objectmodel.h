@@ -54,7 +54,8 @@ enum Role {
     ObjectRole = 256 + 1,   /**< the Object role */
     ObjectIdRole,           /**< return ObjectId object */
     CreationLocationRole,   /**< source location where this object was created, if known. */
-    DeclarationLocationRole,   /**< source location where the type for this object has been declared, if known. */
+    DeclarationLocationRole,/**< source location where the type for this object has been declared, if known. */
+    DecorationIdRole,       /**< the classes icon id to display as Qt::DecorationRole. */
     UserRole                /**< the UserRole, as defined by Qt */
 };
 }
