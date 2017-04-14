@@ -29,11 +29,11 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETCLIENTMODEL_H
 #define GAMMARAY_WIDGETINSPECTOR_WIDGETCLIENTMODEL_H
 
-#include <QIdentityProxyModel>
+#include <ui/clientdecorationidentityproxymodel.h>
 
 namespace GammaRay {
 /** UI-dependent (and thus client-side) bits of the widget tree model. */
-class WidgetClientModel : public QIdentityProxyModel
+class WidgetClientModel : public ClientDecorationIdentityProxyModel
 {
     Q_OBJECT
 public:

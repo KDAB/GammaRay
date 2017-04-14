@@ -45,6 +45,7 @@
 #include <common/remotemodelroles.h>
 #include <common/sourcelocation.h>
 
+#include <ui/clientdecorationidentityproxymodel.h>
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
 
@@ -105,11 +106,13 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
             this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex,QVector<int>)));
 
     model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
+    ClientDecorationIdentityProxyModel *clientSceneGraphModel = new ClientDecorationIdentityProxyModel(this);
+    clientSceneGraphModel->setSourceModel(model);
     ui->sgTreeView->header()->setObjectName("sceneGraphTreeViewHeader");
     ui->sgTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-    ui->sgTreeView->setModel(model);
-    new SearchLineController(ui->sgTreeSearchLine, model);
-    QItemSelectionModel *sgSelectionModel = ObjectBroker::selectionModel(model);
+    ui->sgTreeView->setModel(clientSceneGraphModel);
+    new SearchLineController(ui->sgTreeSearchLine, clientSceneGraphModel);
+    QItemSelectionModel *sgSelectionModel = ObjectBroker::selectionModel(clientSceneGraphModel);
     ui->sgTreeView->setSelectionModel(sgSelectionModel);
     connect(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             this, SLOT(itemSelectionChanged(QItemSelection)));

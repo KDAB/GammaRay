@@ -33,6 +33,7 @@
 #include "geometryextension/qt3dgeometrytab.h"
 #include "geometryextension/qt3dgeometryextensionclient.h"
 
+#include <ui/clientdecorationidentityproxymodel.h>
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
 
@@ -66,12 +67,14 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
             SLOT(selectEngine(int)));
 
     auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"));
+    ClientDecorationIdentityProxyModel *clientSceneModel = new ClientDecorationIdentityProxyModel(this);
+    clientSceneModel->setSourceModel(sceneModel);
     ui->sceneTreeView->header()->setObjectName("sceneTreeViewHeader");
-    ui->sceneTreeView->setModel(sceneModel);
-    auto sceneSelectionModel = ObjectBroker::selectionModel(sceneModel);
+    ui->sceneTreeView->setModel(clientSceneModel);
+    auto sceneSelectionModel = ObjectBroker::selectionModel(clientSceneModel);
     ui->sceneTreeView->setSelectionModel(sceneSelectionModel);
     connect(sceneSelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspectorWidget::entitySelectionChanged);
-    new SearchLineController(ui->sceneSearchLine, sceneModel);
+    new SearchLineController(ui->sceneSearchLine, clientSceneModel);
     connect(ui->sceneTreeView, &QWidget::customContextMenuRequested, this,
             &Qt3DInspectorWidget::entityContextMenu);
     new TreeExpander(ui->sceneTreeView);
@@ -80,12 +83,14 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
                                                    "com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
 
     auto frameGraphModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
+    ClientDecorationIdentityProxyModel *clientFrameGraphModel = new ClientDecorationIdentityProxyModel(this);
+    clientFrameGraphModel->setSourceModel(frameGraphModel);
     ui->frameGraphView->header()->setObjectName("frameGraphViewHeader");
-    ui->frameGraphView->setModel(frameGraphModel);
-    auto frameGraphSelectionModel = ObjectBroker::selectionModel(frameGraphModel);
+    ui->frameGraphView->setModel(clientFrameGraphModel);
+    auto frameGraphSelectionModel = ObjectBroker::selectionModel(clientFrameGraphModel);
     ui->frameGraphView->setSelectionModel(frameGraphSelectionModel);
     connect(frameGraphSelectionModel, &QItemSelectionModel::selectionChanged, this, &Qt3DInspectorWidget::frameGraphSelectionChanged);
-    new SearchLineController(ui->frameGraphSearchLine, frameGraphModel);
+    new SearchLineController(ui->frameGraphSearchLine, clientFrameGraphModel);
     connect(ui->frameGraphView, &QWidget::customContextMenuRequested, this,
             &Qt3DInspectorWidget::frameGraphContextMenu);
     new TreeExpander(ui->frameGraphView);

@@ -33,6 +33,7 @@
 #include <common/objectmodel.h>
 #include <common/sourcelocation.h>
 
+#include <ui/clientdecorationidentityproxymodel.h>
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
 
@@ -52,12 +53,14 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     ui->objectPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.ObjectInspector"));
 
     auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"));
+    ClientDecorationIdentityProxyModel *clientModel = new ClientDecorationIdentityProxyModel(this);
+    clientModel->setSourceModel(model);
     ui->objectTreeView->header()->setObjectName("objectTreeViewHeader");
-    ui->objectTreeView->setModel(model);
+    ui->objectTreeView->setModel(clientModel);
     ui->objectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->objectTreeView->setDeferredResizeMode(0, QHeaderView::Stretch);
     ui->objectTreeView->setDeferredResizeMode(1, QHeaderView::Interactive);
-    new SearchLineController(ui->objectSearchLine, model);
+    new SearchLineController(ui->objectSearchLine, clientModel);
 
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(ui->objectTreeView->model());
     ui->objectTreeView->setSelectionModel(selectionModel);
