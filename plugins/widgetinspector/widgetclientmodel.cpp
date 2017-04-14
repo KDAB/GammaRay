@@ -35,7 +35,7 @@
 using namespace GammaRay;
 
 WidgetClientModel::WidgetClientModel(QObject *parent)
-    : QIdentityProxyModel(parent)
+    : ClientDecorationIdentityProxyModel(parent)
 {
 }
 
@@ -47,11 +47,11 @@ QVariant WidgetClientModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid() && role == Qt::ForegroundRole) {
 
-        int flags = QIdentityProxyModel::data(index, WidgetModelRoles::WidgetFlags).value<int>();
+        int flags = ClientDecorationIdentityProxyModel::data(index, WidgetModelRoles::WidgetFlags).value<int>();
 
         if (flags & WidgetModelRoles::Invisible)
             return qApp->palette().color(QPalette::Disabled, QPalette::Text);
 
     }
-    return QIdentityProxyModel::data(index, role);
+    return ClientDecorationIdentityProxyModel::data(index, role);
 }

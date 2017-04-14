@@ -29,11 +29,11 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_QUICKCLIENTITEMMODEL_H
 #define GAMMARAY_QUICKINSPECTOR_QUICKCLIENTITEMMODEL_H
 
-#include <QIdentityProxyModel>
+#include <ui/clientdecorationidentityproxymodel.h>
 
 namespace GammaRay {
 /** UI-dependent (and thus client-side) bits of the item tree model. */
-class QuickClientItemModel : public QIdentityProxyModel
+class QuickClientItemModel : public ClientDecorationIdentityProxyModel
 {
     Q_OBJECT
 public:

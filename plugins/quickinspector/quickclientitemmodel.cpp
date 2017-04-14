@@ -37,7 +37,7 @@
 using namespace GammaRay;
 
 QuickClientItemModel::QuickClientItemModel(QObject *parent)
-    : QIdentityProxyModel(parent)
+    : ClientDecorationIdentityProxyModel(parent)
 {
 }
 
@@ -51,7 +51,7 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (role == Qt::ForegroundRole || role == Qt::ToolTipRole) {
-        int flags = QIdentityProxyModel::data(index, QuickItemModelRole::ItemFlags).value<int>();
+        int flags = ClientDecorationIdentityProxyModel::data(index, QuickItemModelRole::ItemFlags).value<int>();
 
         // Grey out invisible items
         if (role == Qt::ForegroundRole
@@ -59,7 +59,7 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
             return qApp->palette().color(QPalette::Disabled, QPalette::Text);
         // Adjust tooltip to show information about items
         if (role == Qt::ToolTipRole && flags) {
-            QString tooltip = QIdentityProxyModel::data(index, role).toString();
+            QString tooltip = ClientDecorationIdentityProxyModel::data(index, role).toString();
             tooltip.append("<p style='white-space:pre'>");
             //if flags has OutOfView it has also PartiallyOutOfView, no need to test both
             if ((flags &QuickItemModelRole::PartiallyOutOfView)
@@ -115,5 +115,5 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
             return tooltip;
         }
     }
-    return QIdentityProxyModel::data(index, role);
+    return ClientDecorationIdentityProxyModel::data(index, role);
 }
