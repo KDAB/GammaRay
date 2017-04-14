@@ -45,10 +45,10 @@ void BenchSuite::iconForObject()
     QLabel label;
     QTreeView treeView;
     QBENCHMARK {
-        Util::iconForObject(this);
-        Util::iconForObject(&widget);
-        Util::iconForObject(&label);
-        Util::iconForObject(&treeView);
+        Util::iconIdForObject(this);
+        Util::iconIdForObject(&widget);
+        Util::iconIdForObject(&label);
+        Util::iconIdForObject(&treeView);
     }
 }
 

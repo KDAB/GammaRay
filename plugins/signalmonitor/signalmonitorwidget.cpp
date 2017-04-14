@@ -33,6 +33,7 @@
 #include "signalmonitorclient.h"
 #include "signalmonitorcommon.h"
 
+#include <ui/clientdecorationidentityproxymodel.h>
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
 
@@ -64,13 +65,15 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
 
     QAbstractItemModel * const signalHistory
         = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"));
-    new SearchLineController(ui->objectSearchLine, signalHistory);
+    ClientDecorationIdentityProxyModel *signalHistoryProxyModel = new ClientDecorationIdentityProxyModel(this);
+    signalHistoryProxyModel->setSourceModel(signalHistory);
+    new SearchLineController(ui->objectSearchLine, signalHistoryProxyModel);
 
     ui->objectTreeView->header()->setObjectName("objectTreeViewHeader");
-    ui->objectTreeView->setModel(signalHistory);
+    ui->objectTreeView->setModel(signalHistoryProxyModel);
     ui->objectTreeView->setEventScrollBar(ui->eventScrollBar);
     connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
-    auto selectionModel = ObjectBroker::selectionModel(signalHistory);
+    auto selectionModel = ObjectBroker::selectionModel(signalHistoryProxyModel);
     ui->objectTreeView->setSelectionModel(selectionModel);
     connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
 
@@ -134,7 +137,7 @@ void SignalMonitorWidget::contextMenu(QPoint pos)
         return;
     index = index.sibling(index.row(), 0);
 
-    const auto objectId = index.data(SignalHistoryModel::ObjectIdRole).value<ObjectId>();
+    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     if (objectId.isNull())
         return;
 

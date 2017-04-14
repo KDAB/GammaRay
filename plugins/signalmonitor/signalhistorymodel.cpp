@@ -127,9 +127,9 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
             return item(index)->objectName;
         if (role == Qt::ToolTipRole)
             return tr("Address: %1").arg(Util::addressToString(item(index)->object));
-        if (role == Qt::DecorationRole)
-            return item(index)->decoration;
-        if (role == ObjectIdRole && item(index)->object)
+        if (role == ObjectModel::DecorationIdRole)
+            return item(index)->decorationId;
+        if (role == ObjectModel::ObjectIdRole && item(index)->object)
             return QVariant::fromValue(ObjectId(item(index)->object));
 
         break;
@@ -178,7 +178,8 @@ QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex &index) con
     d.insert(StartTimeRole, data(index, StartTimeRole));
     d.insert(EndTimeRole, data(index, EndTimeRole));
     d.insert(SignalMapRole, data(index, SignalMapRole));
-    d.insert(ObjectIdRole, data(index, ObjectIdRole));
+    d.insert(ObjectModel::ObjectIdRole, data(index, ObjectModel::ObjectIdRole));
+    d.insert(ObjectModel::DecorationIdRole, data(index, ObjectModel::DecorationIdRole));
     return d;
 }
 
@@ -255,7 +256,7 @@ SignalHistoryModel::Item::Item(QObject *obj)
 {
     objectName = Util::shortDisplayString(object);
     objectType = internString(QByteArray(obj->metaObject()->className()));
-    decoration = Util::iconForObject(object).value<QIcon>();
+    decorationId = Util::iconIdForObject(object);
 }
 
 qint64 SignalHistoryModel::Item::endTime() const

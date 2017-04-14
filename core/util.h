@@ -126,14 +126,14 @@ T *findParentOfType(QObject *object)
 }
 
 /**
- * Returns an icon for the given object. In normal operation a QIcon is
- * returned containing the icon most closely associated with the data type
+ * Returns a class icon id for the given object. In normal operation a positive integer
+ * is returned containing the icon most closely associated with the data type
  * pointed to by @p object
  * @param object is a pointer to a QObject.
  *
- * @return on failure QVariant() is returned; else a QIcon
+ * @return on failure -1 is returned; else a positive integer.
  */
-GAMMARAY_CORE_EXPORT QVariant iconForObject(const QObject *object);
+GAMMARAY_CORE_EXPORT int iconIdForObject(const QObject *object);
 
 /**
  * Returns a suitable rich text tooltip string for @p object.

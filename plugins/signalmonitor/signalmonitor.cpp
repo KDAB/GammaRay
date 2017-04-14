@@ -81,7 +81,7 @@ void SignalMonitor::sendClockUpdates(bool enabled)
 
 void SignalMonitor::objectSelected(QObject* obj)
 {
-    const auto indexList = m_objModel->match(m_objModel->index(0, 0), SignalHistoryModel::ObjectIdRole,
+    const auto indexList = m_objModel->match(m_objModel->index(0, 0), ObjectModel::ObjectIdRole,
         QVariant::fromValue<ObjectId>(ObjectId(obj)), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;

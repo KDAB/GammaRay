@@ -29,7 +29,9 @@
 #include <config-gammaray.h>
 
 #include "util.h"
+#include "common/classesiconsrepository.h"
 #include "common/metatypedeclarations.h"
+#include "common/objectbroker.h"
 #include "varianthandler.h"
 #include "objectdataprovider.h"
 #include "enumutil.h"
@@ -133,14 +135,18 @@ static QString stringifyProperty(const QObject *obj, const QString &propName)
 
 struct IconCacheEntry
 {
-    QVariant defaultIcon;
+    IconCacheEntry()
+        : defaultIcon(-1)
+    { }
+
+    int defaultIcon;
 
     // pair of property name and expected string value
     typedef QPair<QString, QString> PropertyPair;
     // a list of property pairs
     typedef QVector<PropertyPair> PropertyMap;
     // pair of icon and property map, for which this icon is valid
-    typedef QPair<QVariant, PropertyMap> PropertyIcon;
+    typedef QPair<int, PropertyMap> PropertyIcon;
     typedef QVector<PropertyIcon> PropertyIcons;
     PropertyIcons propertyIcons;
 };
@@ -149,34 +155,21 @@ typedef QHash<QByteArray, IconCacheEntry> IconDatabase;
 
 static IconDatabase readIconData()
 {
+    auto classesIconsRepository = ObjectBroker::object<ClassesIconsRepository *>();
     IconDatabase data;
-    // we can't load icons due to their QPixmap dependency in a QCoreApplication
-    if (!qApp->inherits("QGuiApplication") && !qApp->inherits("QApplication"))
-        return data;
+    int id = 0;
 
-    // This is core lib, UI resources are part of the GammaRay UI library
-    // Though classes resources are part of the GammaRay Common library
-    const QString basePath = QLatin1String(":/gammaray/icons/ui/classes");
-    QDir dir(basePath);
+    for (auto it = classesIconsRepository->constBegin(), end = classesIconsRepository->constEnd();
+         it != end; ++id, ++it) {
+        const QFileInfo fileInfo((*it));
+        const QDir dir(fileInfo.path());
+        const QString className = dir.dirName();
+        const QString iconName = fileInfo.fileName();
+        IconCacheEntry &perClassData = data[className.toLatin1()];
 
-    const QStringList filterList = QStringList() << QStringLiteral("*.png");
-
-    foreach (const QFileInfo &classEntry, dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot)) {
-        IconCacheEntry perClassData;
-        dir.cd(classEntry.fileName());
-        const QStringList classIcons = dir.entryList(filterList, QDir::Files);
-        dir.cdUp();
-        if (classIcons.isEmpty()) {
-            cerr << "invalid class icon resource file: "
-                 << qPrintable(classEntry.absoluteFilePath()) << endl;
-            continue;
-        }
-        foreach (const QString &iconName, classIcons) {
-            const QIcon icon(classEntry.absoluteFilePath() + '/' + iconName);
-            if (iconName == QLatin1String("default.png")) {
-                perClassData.defaultIcon = icon;
-                continue;
-            }
+        if (iconName == QLatin1String("default.png")) {
+            perClassData.defaultIcon = id;
+        } else {
             // special property-specific icons with file name format prop1=val;prop2=val.png
             QString propString(iconName);
             propString.chop(4);
@@ -189,14 +182,14 @@ static IconDatabase readIconData()
                 propertyMap << qMakePair(keyValue.at(0), keyValue.at(1));
             }
             Q_ASSERT(!propertyMap.isEmpty());
-            perClassData.propertyIcons << qMakePair(QVariant::fromValue(icon), propertyMap);
+            perClassData.propertyIcons << qMakePair(id, propertyMap);
         }
-        data[classEntry.fileName().toLatin1()] = perClassData;
     }
+
     return data;
 }
 
-static QVariant iconForObject(const QMetaObject *mo, const QObject *obj)
+static int iconIdForObject(const QMetaObject *mo, const QObject *obj)
 {
     static const IconDatabase iconDataBase = readIconData();
     // stupid Qt convention to use int for sizes... the static cast shuts down warnings about conversion from size_t to int.
@@ -220,17 +213,17 @@ static QVariant iconForObject(const QMetaObject *mo, const QObject *obj)
     }
 
     if (mo->superClass())
-        return iconForObject(mo->superClass(), obj);
+        return iconIdForObject(mo->superClass(), obj);
 
-    return QVariant();
+    return -1;
 }
 }
 
-QVariant Util::iconForObject(const QObject *obj)
+int Util::iconIdForObject(const QObject *obj)
 {
     if (obj)
-        return GammaRay::iconForObject(obj->metaObject(), obj);
-    return QVariant();
+        return GammaRay::iconIdForObject(obj->metaObject(), obj);
+    return -1;
 }
 
 QString Util::tooltipForObject(const QObject *object)

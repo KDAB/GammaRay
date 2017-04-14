@@ -53,7 +53,7 @@ private:
         QHash<int, QByteArray> signalNames;
         QString objectName;
         QByteArray objectType;
-        QIcon decoration;
+        int decorationId;
         QVector<qint64> events;
         const qint64 startTime; // FIXME: make them all methods
         qint64 endTime() const;
@@ -73,8 +73,7 @@ public:
         EventsRole = ObjectModel::UserRole + 1,
         StartTimeRole,
         EndTimeRole,
-        SignalMapRole,
-        ObjectIdRole
+        SignalMapRole
     };
 
     explicit SignalHistoryModel(ProbeInterface *probe, QObject *parent = nullptr);
