@@ -99,8 +99,9 @@ public:
             return QVariant::fromValue(ObjectId(object));
         } else if (role == Qt::ToolTipRole) {
             return Util::tooltipForObject(object);
-        } else if (role == Qt::DecorationRole && index.column() == 0) {
-            return Util::iconForObject(object);
+        } else if (role == ObjectModel::DecorationIdRole && index.column() == 0) {
+            const int id = Util::iconIdForObject(object);
+            return id >= 0 ? QVariant(id) : QVariant();
         } else if (role == ObjectModel::CreationLocationRole) {
             const auto loc = ObjectDataProvider::creationLocation(object);
             if (loc.isValid())
@@ -118,6 +119,7 @@ public:
     {
         QMap<int, QVariant> map = Base::itemData(index);
         map.insert(ObjectModel::ObjectIdRole, this->data(index, ObjectModel::ObjectIdRole));
+        map.insert(ObjectModel::DecorationIdRole, this->data(index, ObjectModel::DecorationIdRole));
         auto loc = this->data(index, ObjectModel::CreationLocationRole);
         if (loc.isValid())
             map.insert(ObjectModel::CreationLocationRole, loc);

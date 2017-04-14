@@ -36,6 +36,7 @@
 #include <common/objectmodel.h>
 #include <common/probecontrollerinterface.h>
 #include <ui/contextmenuextension.h>
+#include <ui/clientdecorationidentityproxymodel.h>
 
 #include <kdstatemachineeditor/core/elementmodel.h>
 #include <kdstatemachineeditor/core/layoutproperties.h>
@@ -168,15 +169,17 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
 
     QAbstractItemModel *stateModel
         = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateModel"));
-    connect(stateModel, SIGNAL(modelReset()), this, SLOT(stateModelReset()));
+    ClientDecorationIdentityProxyModel *stateProxyModel = new ClientDecorationIdentityProxyModel(this);
+    stateProxyModel->setSourceModel(stateModel);
+    connect(stateProxyModel, SIGNAL(modelReset()), this, SLOT(stateModelReset()));
 
     m_ui->singleStateMachineView->header()->setObjectName("singleStateMachineViewHeader");
     m_ui->singleStateMachineView->setExpandNewContent(true);
     m_ui->singleStateMachineView->setDeferredResizeMode(0, QHeaderView::Stretch);
     m_ui->singleStateMachineView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
     m_ui->singleStateMachineView->setItemDelegate(new StateModelDelegate(this));
-    m_ui->singleStateMachineView->setModel(stateModel);
-    m_ui->singleStateMachineView->setSelectionModel(ObjectBroker::selectionModel(stateModel));
+    m_ui->singleStateMachineView->setModel(stateProxyModel);
+    m_ui->singleStateMachineView->setSelectionModel(ObjectBroker::selectionModel(stateProxyModel));
     connect(m_ui->singleStateMachineView, &QWidget::customContextMenuRequested, this,
             &StateMachineViewerWidget::objectInspectorContextMenu);
 
