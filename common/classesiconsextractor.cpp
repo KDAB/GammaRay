@@ -99,6 +99,9 @@ static int generateOutput(const QFileInfo &qrc, const QFileInfo &out) {
     QTextStream outStream(&outFile);
     outStream.setCodec("UTF-8");
 
+    outStream << QLatin1String("// This is machine generated code, DO NOT EDIT.") << QLatin1Char('\n');
+    outStream << QLatin1String("// This generated file is versionned only to easier crossbuilding to others architectures.") << QLatin1Char('\n');
+    outStream << QLatin1String("// See classesiconsextractor.cpp to change this code.") << QLatin1Char('\n');
     outStream << QLatin1String("namespace GammaRay {") << QLatin1Char('\n');
     outStream << QLatin1String("namespace ClassesIconsIndex {") << QLatin1Char('\n');
     outStream << QLatin1String("static QHash<int, QString> s_numberToKey;") << QLatin1Char('\n');
