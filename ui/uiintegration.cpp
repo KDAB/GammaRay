@@ -26,8 +26,11 @@
  */
 
 #include "uiintegration.h"
+#include "utils.h"
 
 #include <QUrl>
+#include <QApplication>
+#include <QPalette>
 
 using namespace GammaRay;
 
@@ -54,4 +57,9 @@ void UiIntegration::requestNavigateToCode(const QUrl &url, int lineNumber, int c
 {
     if (UiIntegration::instance())
         emit UiIntegration::instance()->navigateToCode(url, lineNumber, columnNumber);
+}
+
+bool UiIntegration::hasDarkUI()
+{
+    return Utils::isDarkColor(QApplication::palette().color(QPalette::Base));
 }

@@ -29,6 +29,8 @@
 #include "codeeditor.h"
 #include "codeeditorsidebar.h"
 
+#include <ui/utils.h>
+
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
 #include <KSyntaxHighlighting/Definition>
 #include <KSyntaxHighlighting/Repository>
@@ -266,7 +268,7 @@ void CodeEditor::ensureHighlighterExists()
 
     if (!m_highlighter) {
         m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(document());
-        m_highlighter->setTheme((palette().color(QPalette::Base).lightness() < 128)
+        m_highlighter->setTheme(Utils::isDarkColor(palette().color(QPalette::Base))
             ? s_repository->defaultTheme(KSyntaxHighlighting::Repository::DarkTheme)
             : s_repository->defaultTheme(KSyntaxHighlighting::Repository::LightTheme));
     }

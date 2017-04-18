@@ -337,14 +337,14 @@ add_test(NAME qmetavobjectvalidatortest COMMAND qmetaobjectvalidatortest)
 
 ### Meta object tree model test
 
-if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4 AND GAMMARAY_BUILD_UI) # requires QHooks
   add_executable(metaobjecttreemodeltest
     metaobjecttreemodeltest.cpp
     ${CMAKE_SOURCE_DIR}/ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
     $<TARGET_OBJECTS:gammaray_probe_obj>
     $<TARGET_OBJECTS:modeltestobj>
   )
-  target_link_libraries(metaobjecttreemodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+  target_link_libraries(metaobjecttreemodeltest gammaray_core gammaray_ui ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
   add_test(NAME metaobjecttreemodeltest COMMAND metaobjecttreemodeltest)
 endif()
 
