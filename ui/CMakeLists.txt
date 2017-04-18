@@ -26,6 +26,7 @@ set(gammaray_ui_srcs
   uiresources.cpp
   remoteviewwidget.cpp
   helpcontroller.cpp
+  utils.cpp
 
   paintanalyzerwidget.cpp
   paintbufferviewer.cpp
@@ -170,6 +171,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     uiintegration.h
     uistatemanager.h
     uiresources.h
+    utils.h
   )
 
   ecm_generate_pri_file(BASE_NAME GammaRayUi

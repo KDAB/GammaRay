@@ -57,6 +57,8 @@ public:
      */
     static void requestNavigateToCode(const QUrl &url, int lineNumber, int columnNumber = 0);
 
+    static bool hasDarkUI();
+
 Q_SIGNALS:
     void navigateToCode(const QUrl &url, int lineNumber, int columnNumber);
 

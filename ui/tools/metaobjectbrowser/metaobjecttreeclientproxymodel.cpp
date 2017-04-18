@@ -28,13 +28,14 @@
 
 #include "metaobjecttreeclientproxymodel.h"
 
+#include <ui/uiintegration.h>
+
 #include <common/qmetaobjectvalidatorresult.h>
 #include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
 
 #include <QApplication>
 #include <QColor>
 #include <QDebug>
-#include <QPalette>
 #include <QStyle>
 
 using namespace GammaRay;
@@ -65,7 +66,7 @@ static QColor colorForRatio(double ratio)
     const auto red = qBound<qreal>(0.0, ratio * GRADIENT_SCALE_FACTOR, 0.5);
     const auto green = qBound<qreal>(0.0, 1 - ratio * GRADIENT_SCALE_FACTOR, 0.5);
     auto color = QColor(255 * red, 255 * green, 0);
-    if (QApplication::palette().color(QPalette::Base).lightness() > 128)
+    if (!UiIntegration::hasDarkUI())
         return color.lighter(300);
     return color;
 }

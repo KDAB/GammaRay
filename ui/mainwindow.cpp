@@ -36,6 +36,7 @@
 #include "aboutdata.h"
 #include "uiintegration.h"
 #include "helpcontroller.h"
+#include "uiresources.h"
 
 #include "common/objectbroker.h"
 #include "common/modelroles.h"
@@ -173,8 +174,11 @@ MainWindow::MainWindow(QWidget *parent)
                 applyStyle(defaultStyle);
             }
         }
-
     }
+
+    UIResources::setIconTheme(UiIntegration::hasDarkUI()
+                              ? UIResources::Light
+                              : UIResources::Dark);
 
     ui->setupUi(this);
 
