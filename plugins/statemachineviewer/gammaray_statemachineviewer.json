@@ -5,5 +5,6 @@
     "types": [
         "QAbstractState",
         "QScxmlStateMachine"
-    ]
+    ],
+    "selectableTypes": [ "QAbstractState" ]
 }

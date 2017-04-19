@@ -65,9 +65,10 @@ StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObjec
     proxyModel->setSourceModel(m_stateModel);
     proxyModel->addRole(StateModel::StateIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateModel"), proxyModel);
-    QItemSelectionModel *stateSelectionModel = ObjectBroker::selectionModel(proxyModel);
-    connect(stateSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+    m_stateSelectionModel = ObjectBroker::selectionModel(proxyModel);
+    connect(m_stateSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(stateSelectionChanged()));
+    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
 
 #ifdef HAVE_QT_SCXML
     auto stateMachineFilter = new ObjectTypeFilterProxyModel<QStateMachine, QScxmlStateMachine>(this);
@@ -202,7 +203,8 @@ void StateMachineViewerServer::selectStateMachine(int row)
 
 void StateMachineViewerServer::stateSelectionChanged()
 {
-    const QModelIndexList &selection = ObjectBroker::selectionModel(m_stateModel)->selectedRows();
+    const QModelIndexList &selection = m_stateSelectionModel->selectedRows();
+    qDebug() << selection;
     QVector<State> filter;
     filter.reserve(selection.size());
     foreach (const QModelIndex &index, selection) {
@@ -328,6 +330,21 @@ void StateMachineViewerServer::toggleRunning()
 void StateMachineViewerServer::handleLogMessage(const QString &label, const QString &msg)
 {
     emit message(tr("Log [label=%1]: %2").arg(label, msg));
+}
+
+void StateMachineViewerServer::objectSelected(QObject *obj)
+{
+    if (auto state = qobject_cast<QAbstractState*>(obj)) {
+        auto model = m_stateSelectionModel->model();
+        const auto idxs = model->match(model->index(0, 0), StateModel::StateValueRole,
+                                       QVariant::fromValue(GammaRay::State(quintptr(state))), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+        qDebug() << idxs;
+        if (idxs.isEmpty())
+            return;
+        const auto idx = idxs.first();
+        m_stateSelectionModel->select(idx, QItemSelectionModel::ClearAndSelect |
+            QItemSelectionModel::Rows | QItemSelectionModel::Current);
+    }
 }
 
 StateMachineViewerFactory::StateMachineViewerFactory(QObject *parent)

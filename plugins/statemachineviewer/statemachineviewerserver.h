@@ -45,6 +45,7 @@
 QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
 class QAbstractProxyModel;
+class QItemSelectionModel;
 class QModelIndex;
 QT_END_NAMESPACE
 
@@ -87,11 +88,14 @@ private slots:
 
     void handleLogMessage(const QString &label, const QString &message);
 
+    void objectSelected(QObject *obj);
+
 private:
     bool mayAddState(State state);
 
     QAbstractProxyModel *m_stateMachinesModel;
     StateModel *m_stateModel;
+    QItemSelectionModel *m_stateSelectionModel;
     TransitionModel *m_transitionModel;
 
     // filters

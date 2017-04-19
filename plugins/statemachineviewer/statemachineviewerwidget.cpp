@@ -176,6 +176,7 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
     m_ui->singleStateMachineView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
     m_ui->singleStateMachineView->setItemDelegate(new StateModelDelegate(this));
     m_ui->singleStateMachineView->setModel(stateModel);
+    m_ui->singleStateMachineView->setSelectionModel(ObjectBroker::selectionModel(stateModel));
     connect(m_ui->singleStateMachineView, &QWidget::customContextMenuRequested, this,
             &StateMachineViewerWidget::objectInspectorContextMenu);
 
