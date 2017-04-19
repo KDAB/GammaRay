@@ -92,7 +92,7 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
     auto messageModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MessageModel"));
     auto displayModel = new MessageDisplayModel(this);
     displayModel->setSourceModel(messageModel);
-    new SearchLineController(ui->messageSearchLine, messageModel);
+    new SearchLineController(ui->messageSearchLine, displayModel);
     ui->messageView->setModel(displayModel);
     connect(ui->messageView, SIGNAL(customContextMenuRequested(QPoint)), this,
             SLOT(messageContextMenu(QPoint)));

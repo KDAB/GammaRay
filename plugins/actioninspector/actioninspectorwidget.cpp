@@ -53,7 +53,7 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
     auto actionModel = new ClientActionModel(this);
     actionModel->setSourceModel(sourceModel);
 
-    new SearchLineController(ui->actionSearchLine, sourceModel);
+    new SearchLineController(ui->actionSearchLine, actionModel);
 
     ui->actionView->header()->setObjectName("objectTreeViewHeader");
     ui->actionView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
