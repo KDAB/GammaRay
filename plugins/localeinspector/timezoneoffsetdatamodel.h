@@ -1,9 +1,11 @@
 /*
+  timezoneoffsetdatamodel.h
+
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2011-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Stephen Kelly <stephen.kelly@kdab.com>
+  Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -24,42 +26,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
-#define GAMMARAY_LOCALEINSPECTOR_LOCALEINSPECTOR_H
+#ifndef GAMMARAY_TIMEZONEOFFSETDATAMODEL_H
+#define GAMMARAY_TIMEZONEOFFSETDATAMODEL_H
 
-#include <core/toolfactory.h>
-
-QT_BEGIN_NAMESPACE
-class QItemSelection;
-QT_END_NAMESPACE
+#include <QAbstractItemModel>
+#include <QTimeZone>
 
 namespace GammaRay {
 
-class TimezoneOffsetDataModel;
-
-class LocaleInspector : public QObject
+class TimezoneOffsetDataModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit LocaleInspector(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit TimezoneOffsetDataModel(QObject *parent = nullptr);
+    ~TimezoneOffsetDataModel();
+
+    void setTimezone(const QTimeZone &tz);
+
+    int columnCount(const QModelIndex & parent) const override;
+    int rowCount(const QModelIndex & parent) const override;
+    QVariant data(const QModelIndex & index, int role) const override;
 
 private:
-    void timezoneSelected(const QItemSelection &selection);
-
-    TimezoneOffsetDataModel *m_offsetModel;
+    QVector<QTimeZone::OffsetData> m_offsets;
 };
 
-class LocaleInspectorFactory : public QObject, public StandardToolFactory<QObject, LocaleInspector>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_localeinspector.json")
-public:
-    explicit LocaleInspectorFactory(QObject *parent = nullptr)
-        : QObject(parent)
-    {
-    }
-};
 }
 
-#endif // GAMMARAY_LOCALEINSPECTOR_H
+#endif // GAMMARAY_TIMEZONEOFFSETDATAMODEL_H

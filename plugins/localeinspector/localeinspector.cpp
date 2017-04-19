@@ -32,10 +32,14 @@
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 #include "timezonemodel.h"
 #include "timezonemodelroles.h"
+#include "timezoneoffsetdatamodel.h"
 #endif
 
 #include <core/remote/serverproxymodel.h>
+#include <common/objectbroker.h>
 
+#include <QDebug>
+#include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
 
 using namespace GammaRay;
@@ -59,6 +63,25 @@ LocaleInspector::LocaleInspector(ProbeInterface *probe, QObject *parent)
     proxy->setSourceModel(tzModel);
     proxy->addRole(TimezoneModelRoles::LocalZoneRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimezoneModel"), proxy);
+
+    auto tzSelModel = ObjectBroker::selectionModel(proxy);
+    connect(tzSelModel, &QItemSelectionModel::selectionChanged, this, &LocaleInspector::timezoneSelected);
+
+    m_offsetModel = new TimezoneOffsetDataModel(this);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimezoneOffsetDataModel"), m_offsetModel);
+#endif
+}
+
+void LocaleInspector::timezoneSelected(const QItemSelection& selection)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    if (selection.isEmpty())
+        return;
+    auto idx = selection.first().topLeft();
+    idx = idx.sibling(idx.row(), 0);
+    m_offsetModel->setTimezone(QTimeZone(idx.data().toString().toUtf8()));
+#else
+    Q_UNUSED(selection);
 #endif
 }
 

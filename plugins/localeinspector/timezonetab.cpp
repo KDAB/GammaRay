@@ -29,6 +29,7 @@
 #include "timezonetab.h"
 #include "ui_timezonetab.h"
 #include "timezoneclientmodel.h"
+#include "timezoneoffsetdataclientmodel.h"
 
 #include <ui/searchlinecontroller.h>
 
@@ -51,6 +52,15 @@ TimezoneTab::TimezoneTab(QWidget *parent)
     tzProxy->setSourceModel(tzModel);
     ui->tzView->setModel(tzProxy);
     new SearchLineController(ui->tzSearchLine, tzModel);
+
+    auto selModel = ObjectBroker::selectionModel(tzProxy);
+    ui->tzView->setSelectionModel(selModel);
+
+    auto offsetModel = ObjectBroker::model(QLatin1String("com.kdab.GammaRay.TimezoneOffsetDataModel"));
+    auto offsetProxy = new TimezoneOffsetDataClientModel(this);
+    offsetProxy->setSourceModel(offsetModel);
+    ui->offsetView->setModel(offsetProxy);
+    ui->offsetView->header()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
 TimezoneTab::~TimezoneTab()
