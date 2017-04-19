@@ -81,7 +81,7 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
     ui->treeView->setDeferredHidden(3, true);
     ui->treeView->setModel(model);
     ui->treeView->setSelectionModel(ObjectBroker::selectionModel(ui->treeView->model()));
-    new SearchLineController(ui->searchLine, resModel);
+    new SearchLineController(ui->searchLine, model);
 
     connect(ui->treeView, SIGNAL(newContentExpanded()), SLOT(setupLayout()));
 

@@ -96,7 +96,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     ui->itemTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->itemTreeView->setModel(proxy);
     ui->itemTreeView->setItemDelegate(new QuickItemDelegate(ui->itemTreeView));
-    new SearchLineController(ui->itemTreeSearchLine, model);
+    new SearchLineController(ui->itemTreeSearchLine, proxy);
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
     ui->itemTreeView->setSelectionModel(selectionModel);
     connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),

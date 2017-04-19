@@ -72,7 +72,7 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
             SLOT(selectionChanged(QItemSelection)));
 
     auto objectSearchLine = new QLineEdit(this);
-    new SearchLineController(objectSearchLine, model);
+    new SearchLineController(objectSearchLine, proxy);
 
     PropertyWidget *propertyWidget = new PropertyWidget(this);
     m_propertyWidget = propertyWidget;
