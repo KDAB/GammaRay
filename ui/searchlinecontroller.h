@@ -40,7 +40,12 @@ class QLineEdit;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-/** Couples a line edit to a QSortFilterProxyModel for as-you-type filtering. */
+/** Couples a line edit to a QSortFilterProxyModel api-like model for as-you-type filtering.
+ * The model don't really need to be a QSortFilterProxyModel, it can be a plain QAbstractItemModel
+ * implementing QSFPM like properties (ie, filterKeyColumn, filterCaseSensitivity etc...).
+ * If the given proxy is not a QSFPM api-like model, a check is performed recursively in all
+ * sourceModel until a compatible QSFPM api-like one is found.
+*/
 class GAMMARAY_UI_EXPORT SearchLineController : public QObject
 {
     Q_OBJECT
@@ -54,7 +59,7 @@ private slots:
 
 private:
     QLineEdit *m_lineEdit;
-    QPointer<QAbstractItemModel> m_model;
+    QPointer<QAbstractItemModel> m_filterModel;
 };
 }
 

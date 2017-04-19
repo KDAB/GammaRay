@@ -31,19 +31,43 @@
 #include <QLineEdit>
 #include <QRegExp>
 #include <QTimer>
+#include <QAbstractProxyModel>
 
 using namespace GammaRay;
+
+namespace {
+static QAbstractItemModel *findEffectiveFilterModel(QAbstractItemModel *model) {
+    Q_ASSERT(model);
+
+    if (model->metaObject()->indexOfProperty("filterKeyColumn") != -1) {
+        return model;
+    }
+
+    QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>(model);
+
+    if (proxy) {
+        return findEffectiveFilterModel(proxy->sourceModel());
+    }
+
+    return nullptr;
+}
+}
 
 SearchLineController::SearchLineController(QLineEdit *lineEdit, QAbstractItemModel *proxyModel)
     : QObject(lineEdit)
     , m_lineEdit(lineEdit)
-    , m_model(proxyModel)
+    , m_filterModel(findEffectiveFilterModel(proxyModel))
 {
     Q_ASSERT(lineEdit);
-    Q_ASSERT(proxyModel);
+    Q_ASSERT(m_filterModel);
 
-    m_model->setProperty("filterKeyColumn", -1);
-    m_model->setProperty("filterCaseSensitivity", Qt::CaseInsensitive);
+    if (!m_filterModel) {
+        QMetaObject::invokeMethod(this, "deleteLater", Qt::QueuedConnection);
+        return;
+    }
+
+    m_filterModel->setProperty("filterKeyColumn", -1);
+    m_filterModel->setProperty("filterCaseSensitivity", Qt::CaseInsensitive);
     activateSearch();
 
 #if QT_VERSION >= 0x050200
@@ -65,11 +89,8 @@ SearchLineController::~SearchLineController()
 
 void SearchLineController::activateSearch()
 {
-    if (!m_model) {
-        deleteLater();
-        return;
+    if (m_filterModel) {
+        m_filterModel->setProperty("filterRegExp",
+                                   QRegExp(m_lineEdit->text(), Qt::CaseInsensitive, QRegExp::FixedString));
     }
-
-    m_model->setProperty("filterRegExp",
-                         QRegExp(m_lineEdit->text(), Qt::CaseInsensitive, QRegExp::FixedString));
 }
