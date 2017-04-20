@@ -28,7 +28,7 @@
 
 #include <config-gammaray.h>
 
-#include <core/metaobjecttreemodel.h>
+#include <core/tools/metaobjectbrowser/metaobjecttreemodel.h>
 #include <ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.h>
 
 #include <probe/hooks.h>

@@ -28,14 +28,15 @@
 
 #include "metaobjectbrowser.h"
 #include "metaobjecttreemodel.h"
-#include "probe.h"
-#include "propertycontroller.h"
-#include "metaobjectregistry.h"
+
+#include <core/metaobjectregistry.h>
+#include <core/probe.h>
+#include <core/propertycontroller.h>
+#include <core/remote/serverproxymodel.h>
 
 #include <common/objectbroker.h>
 #include <common/metatypedeclarations.h>
 #include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
-#include <core/remote/serverproxymodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 

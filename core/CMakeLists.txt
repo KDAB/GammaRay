@@ -4,7 +4,6 @@ set(gammaray_srcs
   aggregatedpropertymodel.cpp
   metaobject.cpp
   metaobjectregistry.cpp
-  metaobjecttreemodel.cpp
   metaobjectrepository.cpp
   metaproperty.cpp
   probe.cpp
@@ -60,6 +59,7 @@ set(gammaray_srcs
   tools/messagehandler/messagemodel.cpp
   tools/localeinspector/localeinspector.cpp
   tools/metaobjectbrowser/metaobjectbrowser.cpp
+  tools/metaobjectbrowser/metaobjecttreemodel.cpp
   tools/metatypebrowser/metatypebrowser.cpp
   tools/objectinspector/objectinspector.cpp
   tools/objectinspector/propertiesextension.cpp
