@@ -188,6 +188,7 @@ void MetaObjectRegistry::objectAdded(QObject *obj)
         auto &info = m_metaObjectInfoMap[current];
         ++info.inclusiveCount;
         ++info.inclusiveAliveCount;
+        info.invalid = false;
         emit dataChanged(current);
         current = current->superClass();
     }
