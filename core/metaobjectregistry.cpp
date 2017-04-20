@@ -254,6 +254,7 @@ void MetaObjectRegistry::objectRemoved(QObject *obj)
         MetaObjectInfo &info = m_metaObjectInfoMap[current];
         --info.inclusiveAliveCount;
         assert(info.inclusiveAliveCount >= 0);
+        emit dataChanged(current);
         const QMetaObject *parent = m_childParentMap.value(current);
         // there is no way to detect when a QMetaObject is getting actually destroyed,
         // so mark them as invalid when there are no objects if that type alive anymore.

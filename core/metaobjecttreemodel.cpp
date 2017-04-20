@@ -209,7 +209,7 @@ void GammaRay::MetaObjectTreeModel::emitPendingDataChanged()
         if (!index.isValid())
             continue;
         emit dataChanged(index.sibling(index.row(), QMetaObjectModel::ObjectSelfCountColumn),
-                         index.sibling(index.row(), QMetaObjectModel::ObjectInclusiveCountColumn));
+                         index.sibling(index.row(), QMetaObjectModel::ObjectInclusiveAliveCountColumn));
     }
     m_pendingDataChanged.clear();
 }
