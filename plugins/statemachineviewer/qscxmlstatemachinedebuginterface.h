@@ -30,6 +30,7 @@
 #include "statemachinedebuginterface.h"
 
 #include <private/qscxmlstatemachineinfo_p.h>
+#include <QPointer>
 
 QT_BEGIN_NAMESPACE
 class QScxmlStateMachine;
@@ -75,7 +76,7 @@ private slots:
 
 private:
     QScxmlStateMachine *m_stateMachine;
-    QScopedPointer<QScxmlStateMachineInfo> m_info;
+    QPointer<QScxmlStateMachineInfo> m_info;
 };
 }
 

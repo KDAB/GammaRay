@@ -63,6 +63,7 @@ QScxmlStateMachineDebugInterface::QScxmlStateMachineDebugInterface(QScxmlStateMa
 
 QScxmlStateMachineDebugInterface::~QScxmlStateMachineDebugInterface()
 {
+    delete m_info;
 }
 
 bool QScxmlStateMachineDebugInterface::isRunning() const
