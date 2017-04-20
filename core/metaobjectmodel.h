@@ -32,6 +32,9 @@
 #include <QAbstractItemModel>
 #include <QMetaObject>
 
+#include "metaobjectregistry.h"
+#include "probe.h"
+
 namespace GammaRay {
 template<typename MetaThing,
          MetaThing(QMetaObject::*MetaAccessor)(int)const,
@@ -60,8 +63,10 @@ public:
 
         if (!metaObject)
             return;
+        if (!Probe::instance()->metaObjectRegistry()->isValid(metaObject))
+            return;
 
-        auto newRowCount = (metaObject->*MetaCount)();
+        const auto newRowCount = (metaObject->*MetaCount)();
         if (newRowCount) {
             beginInsertRows(QModelIndex(), 0, newRowCount - 1);
             m_metaObject = metaObject;
@@ -76,6 +81,8 @@ public:
     {
         if (!index.isValid() || !m_metaObject
             || index.row() < 0 || index.row() >= rowCount(index.parent()))
+            return QVariant();
+        if (!Probe::instance()->metaObjectRegistry()->isValid(m_metaObject))
             return QVariant();
 
         const MetaThing metaThing = (m_metaObject->*MetaAccessor)(index.row());
