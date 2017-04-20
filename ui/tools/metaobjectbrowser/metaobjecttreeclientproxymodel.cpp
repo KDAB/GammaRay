@@ -97,9 +97,14 @@ QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex &index, int role
                     return qApp->style()->standardIcon(QStyle::SP_MessageBoxWarning);
                 break;
             case Qt::ToolTipRole:
+            {
                 if (issues != QMetaObjectValidatorResult::NoIssue)
                     return issuesToString(issues);
+                const auto invalid = index.sibling(index.row(), QMetaObjectModel::ObjectInclusiveAliveCountColumn).data(QMetaObjectModel::MetaObjectInvalid).toBool();
+                if (invalid)
+                    return tr("This meta object might have been deleted.");
                 break;
+            }
         }
         return QIdentityProxyModel::data(index, role);
     }
@@ -163,6 +168,18 @@ QVariant MetaObjectTreeClientProxyModel::headerData(int section, Qt::Orientation
     }
 
     return QIdentityProxyModel::headerData(section, orientation, role);
+}
+
+Qt::ItemFlags MetaObjectTreeClientProxyModel::flags(const QModelIndex& index) const
+{
+    auto f = QIdentityProxyModel::flags(index);
+    if (index.isValid()) {
+        const auto idx = index.sibling(index.row(), QMetaObjectModel::ObjectInclusiveAliveCountColumn);
+        const auto invalid = idx.data(QMetaObjectModel::MetaObjectInvalid).toBool();
+        if (invalid)
+            f &= ~Qt::ItemIsEnabled;
+    }
+    return f;
 }
 
 void MetaObjectTreeClientProxyModel::findQObjectIndex()

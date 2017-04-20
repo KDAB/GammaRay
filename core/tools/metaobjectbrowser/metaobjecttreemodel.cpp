@@ -97,6 +97,10 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
             return QVariant();
         const auto r = QMetaObjectValidator::check(object);
         return r == QMetaObjectValidatorResult::NoIssue ? QVariant() : QVariant::fromValue(r);
+    } else if (role == QMetaObjectModel::MetaObjectInvalid && index.column() == QMetaObjectModel::ObjectInclusiveAliveCountColumn) {
+        if (!registry()->isValid(object))
+            return true;
+        return QVariant();
     }
     return QVariant();
 }

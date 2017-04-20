@@ -38,7 +38,8 @@ namespace QMetaObjectModel
 {
     enum Role {
         MetaObjectRole = UserRole + 1,
-        MetaObjectIssues
+        MetaObjectIssues,
+        MetaObjectInvalid
     };
 
     enum Column {

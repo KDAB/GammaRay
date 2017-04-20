@@ -53,6 +53,7 @@ MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
 {
     auto model = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     model->addRole(QMetaObjectModel::MetaObjectIssues);
+    model->addRole(QMetaObjectModel::MetaObjectInvalid);
     model->setSourceModel(m_motm);
     m_model = model;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"), m_model);
