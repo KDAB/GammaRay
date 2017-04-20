@@ -310,18 +310,19 @@ add_test(NAME propertymodeltest COMMAND propertymodeltest)
 
 ### Method model test
 
-add_executable(methodmodeltest
-  methodmodeltest.cpp
-  ${CMAKE_SOURCE_DIR}/core/objectmethodmodel.cpp
-  ${CMAKE_SOURCE_DIR}/core/qmetaobjectvalidator.cpp
-  ${CMAKE_SOURCE_DIR}/core/metaobjectregistry.cpp
-  ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
-  ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
-  ${CMAKE_SOURCE_DIR}/ui/tools/objectinspector/clientmethodmodel.cpp
-  $<TARGET_OBJECTS:modeltestobj>
-)
-target_link_libraries(methodmodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
-add_test(NAME methodmodeltest COMMAND methodmodeltest)
+if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+  add_executable(methodmodeltest
+    methodmodeltest.cpp
+    ${CMAKE_SOURCE_DIR}/core/objectmethodmodel.cpp
+    ${CMAKE_SOURCE_DIR}/core/qmetaobjectvalidator.cpp
+    ${CMAKE_SOURCE_DIR}/core/metaobjectregistry.cpp
+    ${CMAKE_SOURCE_DIR}/ui/tools/objectinspector/clientmethodmodel.cpp
+    $<TARGET_OBJECTS:gammaray_probe_obj>
+    $<TARGET_OBJECTS:modeltestobj>
+  )
+  target_link_libraries(methodmodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+  add_test(NAME methodmodeltest COMMAND methodmodeltest)
+endif()
 
 ### QMetaObject validator test
 
