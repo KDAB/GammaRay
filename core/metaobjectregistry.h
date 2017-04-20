@@ -71,7 +71,6 @@ signals:
 
 private:
     void addMetaObject(const QMetaObject *metaObject);
-    void removeMetaObject(const QMetaObject *metaObject);
     bool inheritsQObject(const QMetaObject *mo) const;
 
     bool isKnownMetaObject(const QMetaObject *metaObject) const;

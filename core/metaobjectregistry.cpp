@@ -230,12 +230,6 @@ void MetaObjectRegistry::addMetaObject(const QMetaObject *metaObject)
     emit afterMetaObjectAdded(metaObject);
 }
 
-void MetaObjectRegistry::removeMetaObject(const QMetaObject *metaObject)
-{
-    Q_UNUSED(metaObject);
-    // TODO: Meta objects may be deleted, find a way to detect this
-}
-
 void MetaObjectRegistry::objectRemoved(QObject *obj)
 {
     Q_ASSERT(thread() == QThread::currentThread());
