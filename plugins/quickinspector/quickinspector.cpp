@@ -300,9 +300,10 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
 
 QuickInspector::~QuickInspector()
 {
-    disconnect(m_overlay, SIGNAL(destroyed(QObject*)),
-               this, SLOT(recreateOverlay()));
-    delete m_overlay.data();
+    if (m_overlay) {
+        disconnect(m_overlay.data(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
+        delete m_overlay.data();
+    }
 }
 
 void QuickInspector::selectWindow(int index)
