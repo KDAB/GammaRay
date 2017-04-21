@@ -176,13 +176,6 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_toolBar->addWidget(m_zoomCombobox);
     m_toolBar->addAction(m_previewWidget->zoomInAction());
 
-    m_toolBar->addSeparator();
-    m_toolBar->addAction(m_legendTool->visibilityAction());
-    m_toolBar->addAction(m_gridSettings->menuAction());
-
-    QToolButton *b = qobject_cast<QToolButton *>(m_toolBar->widgetForAction(m_gridSettings->menuAction()));
-    b->setPopupMode(QToolButton::InstantPopup);
-
     connect(m_gridSettingsWidget, SIGNAL(offsetChanged(QPoint)), this, SLOT(gridOffsetChanged(QPoint)));
     connect(m_gridSettingsWidget, SIGNAL(cellSizeChanged(QSize)), this, SLOT(gridCellSizeChanged(QSize)));
 
@@ -192,6 +185,14 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_layout->addWidget(m_previewWidget);
 
     connect(m_previewWidget, SIGNAL(stateChanged()), this, SIGNAL(stateChanged()));
+
+    QAction *menuSeparator = new QAction(this);
+    menuSeparator->setSeparator(true);
+
+    addActions(m_toolBar->actions()
+               << menuSeparator
+               << m_legendTool->visibilityAction()
+               << m_gridSettings->menuAction());
 }
 
 void QuickSceneControlWidget::resizeEvent(QResizeEvent *e)

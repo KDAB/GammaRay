@@ -139,6 +139,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     m_interface->checkServerSideDecorations();
     m_interface->checkOverlaySettings();
 
+    addActions(m_scenePreviewWidget->actions());
+
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
 
