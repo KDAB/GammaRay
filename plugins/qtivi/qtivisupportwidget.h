@@ -35,6 +35,7 @@
 QT_BEGIN_NAMESPACE
 class QModelIndex;
 class QTreeView;
+class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -46,6 +47,7 @@ public:
     explicit QtIVIWidget(QWidget *parent = nullptr);
 
 private slots:
+    void objectSelected(const QItemSelection &selection);
     void contextMenu(QPoint pos);
 
 private:

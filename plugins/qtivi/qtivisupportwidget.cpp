@@ -47,6 +47,7 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
     setObjectName("QtIVIWidget");
     QAbstractItemModel *propertyModel
         = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.PropertyModel"));
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(propertyModel);
 
     QVBoxLayout *vbox = new QVBoxLayout(this);
 
@@ -55,12 +56,26 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
     vbox->addWidget(m_objectTreeView);
 
     m_objectTreeView->setModel(propertyModel);
-    m_objectTreeView->setSelectionModel(ObjectBroker::selectionModel(propertyModel));
     m_objectTreeView->setItemDelegateForColumn(1, new QtIviConstrainedValueDelegate(this));
+    m_objectTreeView->setSelectionModel(selectionModel);
+    connect(selectionModel,
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(objectSelected(QItemSelection)));
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     m_objectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
+}
+
+void QtIVIWidget::objectSelected(const QItemSelection &selection)
+{
+    QModelIndex index;
+    if (!selection.isEmpty())
+        index = selection.first().topLeft();
+
+    if (index.isValid()) {
+        m_objectTreeView->scrollTo(index);
+    }
 }
 
 void QtIVIWidget::contextMenu(QPoint pos)
