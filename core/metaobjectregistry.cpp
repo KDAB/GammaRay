@@ -39,6 +39,7 @@
 #include <QThread>
 #include <QTimer>
 
+#include <algorithm>
 #include <assert.h>
 
 using namespace GammaRay;
@@ -121,7 +122,10 @@ QVariant MetaObjectRegistry::data(const QMetaObject *object, MetaObjectData type
 
 bool MetaObjectRegistry::isValid(const QMetaObject *mo) const
 {
-    return !m_metaObjectInfoMap[mo].invalid;
+    const auto it = m_metaObjectInfoMap.constFind(mo);
+    if (it == m_metaObjectInfoMap.constEnd())
+        return false;
+    return !(*it).invalid;
 }
 
 const QMetaObject *MetaObjectRegistry::parentOf(const QMetaObject *mo) const
@@ -154,17 +158,7 @@ void MetaObjectRegistry::objectAdded(QObject *obj)
     Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(obj->parent()));
 
     const QMetaObject *metaObject = obj->metaObject();
-
-    if (hasDynamicMetaObject(obj)) {
-        // ideally we would clone the meta object here
-        // for now we just move up to the first known static parent meta object, and work with that
-        while (metaObject && !isKnownMetaObject(metaObject))
-            metaObject = metaObject->superClass();
-        if (!metaObject) // the QML engines actually manages to hit this case, with QObject-ified gadgets...
-            return;
-    }
-
-    addMetaObject(metaObject);
+    metaObject = addMetaObject(metaObject, hasDynamicMetaObject(obj));
 
     /*
      * This will increase these values:
@@ -182,6 +176,8 @@ void MetaObjectRegistry::objectAdded(QObject *obj)
     auto &info = m_metaObjectInfoMap[metaObject];
     ++info.selfCount;
     ++info.selfAliveCount;
+    if (info.isDynamic)
+        addAliveInstance(obj, metaObject);
 
     // increase inclusive counts
     const QMetaObject *current = metaObject;
@@ -191,7 +187,7 @@ void MetaObjectRegistry::objectAdded(QObject *obj)
         ++info.inclusiveAliveCount;
         info.invalid = false;
         emit dataChanged(current);
-        current = current->superClass();
+        current = parentOf(current);
     }
 }
 
@@ -209,20 +205,30 @@ void MetaObjectRegistry::scanMetaTypes()
     addMetaObject(&staticQtMetaObject);
 }
 
-void MetaObjectRegistry::addMetaObject(const QMetaObject *metaObject)
+const QMetaObject* MetaObjectRegistry::addMetaObject(const QMetaObject *metaObject, bool mergeDynamic)
 {
     if (isKnownMetaObject(metaObject))
-        return;
+        return metaObject;
 
     const QMetaObject *parentMetaObject = metaObject->superClass();
     if (parentMetaObject && !isKnownMetaObject(parentMetaObject)) {
         // add parent first
-        addMetaObject(metaObject->superClass());
+        parentMetaObject = addMetaObject(metaObject->superClass(), mergeDynamic);
+    }
+
+    const auto isStatic = Execution::isReadOnlyData(metaObject);
+    if (!isStatic && mergeDynamic) {
+        const QByteArray name(metaObject->className());
+        const auto it = m_metaObjectNameMap.constFind(name);
+        if (it != m_metaObjectNameMap.constEnd())
+            return *it; // ### we could do some sanity checking here if the QMO content is really identical, in case they just happen to have the same name
+        m_metaObjectNameMap.insert(name, metaObject);
     }
 
     auto &info = m_metaObjectInfoMap[metaObject];
     info.className = metaObject->className();
-    info.isStatic = Execution::isReadOnlyData(metaObject);
+    info.isStatic = isStatic;
+    info.isDynamic = !isStatic && mergeDynamic;
     // make the parent immediately retrieveable, so that slots connected to
     // beforeMetaObjectAdded() can use parentOf().
     m_childParentMap.insert(metaObject, parentMetaObject);
@@ -232,6 +238,7 @@ void MetaObjectRegistry::addMetaObject(const QMetaObject *metaObject)
     emit beforeMetaObjectAdded(metaObject);
     children.push_back(metaObject);
     emit afterMetaObjectAdded(metaObject);
+    return metaObject;
 }
 
 void MetaObjectRegistry::objectRemoved(QObject *obj)
@@ -251,6 +258,8 @@ void MetaObjectRegistry::objectRemoved(QObject *obj)
 
     --m_metaObjectInfoMap[metaObject].selfAliveCount;
     assert(m_metaObjectInfoMap[metaObject].selfAliveCount >= 0);
+    if (m_metaObjectInfoMap[metaObject].isDynamic)
+        removeAliveInstance(obj, metaObject);
 
     // decrease inclusive counts
     const QMetaObject *current = metaObject;
@@ -272,4 +281,32 @@ void MetaObjectRegistry::objectRemoved(QObject *obj)
 bool MetaObjectRegistry::isKnownMetaObject(const QMetaObject *metaObject) const
 {
     return m_childParentMap.contains(metaObject);
+}
+
+const QMetaObject* MetaObjectRegistry::aliveInstance(const QMetaObject* mo) const
+{
+    const auto it = m_aliveInstances.find(mo);
+    if (it == m_aliveInstances.end())
+        return mo; // static QMO
+    if (it.value().isEmpty())
+        return nullptr;
+    return it.value().at(0);
+}
+
+void MetaObjectRegistry::addAliveInstance(QObject *obj, const QMetaObject* canonicalMO)
+{
+    auto aliveMO = obj->metaObject();
+    m_dynamicMetaObjectMap.insert(obj, aliveMO);
+    auto &alivePool = m_aliveInstances[canonicalMO];
+    auto it = std::lower_bound(alivePool.begin(), alivePool.end(), aliveMO);
+    alivePool.insert(it, aliveMO);
+}
+
+void MetaObjectRegistry::removeAliveInstance(QObject *obj, const QMetaObject* canonicalMO)
+{
+    auto aliveMO = m_dynamicMetaObjectMap.take(obj);
+    auto &alivePool = m_aliveInstances[canonicalMO];
+    auto it = std::lower_bound(alivePool.begin(), alivePool.end(), aliveMO);
+    if (it != alivePool.end() && *it == aliveMO)
+        alivePool.erase(it);
 }

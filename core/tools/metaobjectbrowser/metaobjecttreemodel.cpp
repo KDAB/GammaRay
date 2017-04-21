@@ -91,11 +91,11 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
     } else if (role == QMetaObjectModel::MetaObjectRole) {
         if (!registry()->isValid(object))
             return QVariant();
-        return QVariant::fromValue<const QMetaObject *>(object);
+        return QVariant::fromValue<const QMetaObject *>(registry()->aliveInstance(object));
     } else if (role == QMetaObjectModel::MetaObjectIssues && index.column() == QMetaObjectModel::ObjectColumn) {
         if (!registry()->isValid(object))
             return QVariant();
-        const auto r = QMetaObjectValidator::check(object);
+        const auto r = QMetaObjectValidator::check(registry()->aliveInstance(object));
         return r == QMetaObjectValidatorResult::NoIssue ? QVariant() : QVariant::fromValue(r);
     } else if (role == QMetaObjectModel::MetaObjectInvalid && index.column() == QMetaObjectModel::ObjectInclusiveAliveCountColumn) {
         if (!registry()->isValid(object))

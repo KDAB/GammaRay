@@ -56,6 +56,7 @@ public:
 
     QVariant data(const QMetaObject *metaObject, MetaObjectData type) const;
     bool isValid(const QMetaObject *metaObject) const;
+    const QMetaObject* aliveInstance(const QMetaObject *mo) const;
 
     const QMetaObject *parentOf(const QMetaObject *metaObject) const;
     QVector<const QMetaObject *> childrenOf(const QMetaObject *metaObject) const;
@@ -70,10 +71,12 @@ signals:
     void dataChanged(const QMetaObject *metaObject);
 
 private:
-    void addMetaObject(const QMetaObject *metaObject);
+    const QMetaObject* addMetaObject(const QMetaObject *metaObject, bool mergeDynamic = false);
     bool inheritsQObject(const QMetaObject *mo) const;
 
     bool isKnownMetaObject(const QMetaObject *metaObject) const;
+    void addAliveInstance(QObject *obj, const QMetaObject *canonicalMO);
+    void removeAliveInstance(QObject *obj, const QMetaObject *canonicalMO);
 
 private:
     QHash<const QMetaObject *, const QMetaObject *> m_childParentMap;
@@ -83,6 +86,7 @@ private:
     {
         MetaObjectInfo()
             : isStatic(false)
+            , isDynamic(false)
             , invalid(false)
             , selfCount(0)
             , selfAliveCount(0)
@@ -91,6 +95,8 @@ private:
 
         /// @c true if this is a static meta object that can only become invalid by DLL unloading.
         bool isStatic;
+        /// @c true if this is a merged dynamic meta object, as e.g. in use by QML
+        bool isDynamic;
         /**
          * True if the meta object is suspected invalid. We can't know when one is destroyed,
          * so we mark this as true when all of the objects with this type are destroyed.
@@ -111,9 +117,17 @@ private:
         QByteArray className;
     };
     QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
-    /// meta objects at creation time, so we can correctly decrement instance counts
+    /// canonical meta objects at creation time, so we can correctly decrement instance counts
     /// after destruction
     QHash<QObject*, const QMetaObject*> m_metaObjectMap;
+    /// name to canonical QMO map, for merging dynamic meta objects as produced by QML
+    QHash<QByteArray, const QMetaObject*> m_metaObjectNameMap;
+
+    /// alive instances for canonical dynamic meta objects
+    QHash<const QMetaObject*, QVector<const QMetaObject*> > m_aliveInstances;
+    /// mapping from QObject* to its owned QMetaObject (for dynamic ones only)
+    /// this is needed to clean up m_aliveInstances on deletion
+    QHash<QObject*, const QMetaObject*> m_dynamicMetaObjectMap;
 };
 }
 
