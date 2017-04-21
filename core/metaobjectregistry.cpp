@@ -250,15 +250,16 @@ void MetaObjectRegistry::objectRemoved(QObject *obj)
     if (!metaObject)
         return;
 
-    assert(m_metaObjectInfoMap.contains(metaObject));
-    if (m_metaObjectInfoMap[metaObject].selfAliveCount == 0) {
+    auto &info = m_metaObjectInfoMap[metaObject];
+    assert(!info.className.isEmpty()); // ie. we found the entry
+    if (info.selfAliveCount == 0) {
         // something went wrong, but let's just ignore this event in case of assert
         return;
     }
 
-    --m_metaObjectInfoMap[metaObject].selfAliveCount;
-    assert(m_metaObjectInfoMap[metaObject].selfAliveCount >= 0);
-    if (m_metaObjectInfoMap[metaObject].isDynamic)
+    --info.selfAliveCount;
+    assert(info.selfAliveCount >= 0);
+    if (info.isDynamic)
         removeAliveInstance(obj, metaObject);
 
     // decrease inclusive counts
