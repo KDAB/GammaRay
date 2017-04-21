@@ -56,8 +56,7 @@ class QtIviPropertyModel : public QAbstractItemModel
 
 public:
     enum Roles {
-        ObjectIdRole = ObjectModel::UserRole + 1,
-        ValueConstraintsRole, // transmits the following constraints types
+        ValueConstraintsRole = ObjectModel::UserRole + 1, // transmits the following constraints types
         RangeConstraints, // min / max
         AvailableValuesConstraints, // list of possible values
         RawValue // the raw variant value without any transformation

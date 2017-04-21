@@ -549,16 +549,15 @@ void QtIviPropertyModel::objectReparented(QObject *obj)
 
 void QtIviPropertyModel::objectSelected(QObject *obj)
 {
-    QIviProperty *prop = qobject_cast<QIviProperty *>(obj);
-    if (!prop)
+    const ObjectId id(obj);
+    const QModelIndex index = match(this->index(0, 0), ObjectModel::ObjectIdRole, QVariant::fromValue(id), 1,
+                                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap).value(0);
+    if (!index.isValid()) {
         return;
-    const QModelIndex index = indexOfProperty(prop);
-    if (!index.isValid())
-        return;
+    }
 
     QItemSelectionModel *const selectionModel = ObjectBroker::selectionModel(this);
-    selectionModel->select(index,
-                           QItemSelectionModel::Select | QItemSelectionModel::Clear |
+    selectionModel->select(index, QItemSelectionModel::ClearAndSelect |
                            QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
@@ -658,7 +657,7 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                 break;
             }
 
-            case ObjectIdRole:
+            case ObjectModel::ObjectIdRole:
                 return QVariant::fromValue(carrier.objectId());
 
             default:
@@ -732,7 +731,7 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                     break;
                 }
 
-                case ObjectIdRole:
+                case ObjectModel::ObjectIdRole:
                     return QVariant::fromValue(property.objectId());
 
                 case RawValue:
@@ -752,7 +751,7 @@ QMap<int, QVariant> QtIviPropertyModel::itemData(const QModelIndex &index) const
     if (maybeConstraints.isValid()) {
         ret.insert(ValueConstraintsRole, maybeConstraints);
     }
-    ret.insert(ObjectIdRole, data(index, ObjectIdRole));
+    ret.insert(ObjectModel::ObjectIdRole, data(index, ObjectModel::ObjectIdRole));
     return ret;
 }
 

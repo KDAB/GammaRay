@@ -69,7 +69,7 @@ void QtIVIWidget::contextMenu(QPoint pos)
     if (!index.isValid())
         return;
     index = index.sibling(index.row(), 0);
-    const ObjectId objectId = index.data(QtIviPropertyModel::ObjectIdRole).value<ObjectId>();
+    const ObjectId objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     if (objectId.isNull())
         return;
 

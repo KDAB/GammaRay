@@ -109,7 +109,7 @@ private:
 
     QModelIndex carrierIndex(QObject *carrier, int column) const
     {
-        const auto index(m_model->match(m_model->index(0, 0), QtIviPropertyModel::ObjectIdRole,
+        const auto index(m_model->match(m_model->index(0, 0), ObjectModel::ObjectIdRole,
                                         QVariant::fromValue(ObjectId(carrier)), 1,
                                         Qt::MatchFlags(Qt::MatchExactly | Qt::MatchWrap)).value(0));
         return index.sibling(index.row(), column);
@@ -138,7 +138,7 @@ private:
 
     QModelIndex carrierPropertyIndex(QIviProperty *property, int column) const
     {
-        const auto index(m_model->match(m_model->index(0, 0), QtIviPropertyModel::ObjectIdRole,
+        const auto index(m_model->match(m_model->index(0, 0), ObjectModel::ObjectIdRole,
                                         QVariant::fromValue(ObjectId(property)), 1,
                                         Qt::MatchFlags(Qt::MatchExactly | Qt::MatchWrap | Qt::MatchRecursive))
                          .value(0));
