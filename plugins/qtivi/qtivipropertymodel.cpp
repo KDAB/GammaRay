@@ -50,8 +50,6 @@
 #include <QMetaProperty>
 #include <QMutexLocker>
 #include <QSignalMapper>
-#include <QGuiApplication>
-#include <QFont>
 
 #include <iostream>
 
@@ -713,11 +711,8 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                     break;
                 }
 
-                // QIviProperty's appears in italic to distinguish from plain qt properties
-                case Qt::FontRole: {
-                    QFont font(QGuiApplication::font());
-                    font.setItalic(property.isOverridable());
-                    return QVariant::fromValue(font);
+                case IsIviProperty: {
+                    return property.isOverridable();
                 }
 
                 case ValueConstraintsRole: {
@@ -751,6 +746,7 @@ QMap<int, QVariant> QtIviPropertyModel::itemData(const QModelIndex &index) const
     if (maybeConstraints.isValid()) {
         ret.insert(ValueConstraintsRole, maybeConstraints);
     }
+    ret.insert(IsIviProperty, data(index, IsIviProperty));
     ret.insert(ObjectModel::ObjectIdRole, data(index, ObjectModel::ObjectIdRole));
     return ret;
 }

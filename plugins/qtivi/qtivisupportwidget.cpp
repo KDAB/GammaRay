@@ -26,11 +26,12 @@
 */
 
 #include "qtivisupportwidget.h"
-#include "qtivipropertymodel.h"
+#include "qtivipropertyclientmodel.h"
 #include "qtiviconstrainedvaluedelegate.h"
 
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
+#include <common/objectmodel.h>
 #include <ui/contextmenuextension.h>
 
 #include <QVBoxLayout>
@@ -47,7 +48,9 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
     setObjectName("QtIVIWidget");
     QAbstractItemModel *propertyModel
         = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.PropertyModel"));
-    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(propertyModel);
+    QtIviPropertyClientModel *clientModel = new QtIviPropertyClientModel(this);
+    clientModel->setSourceModel(propertyModel);
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(clientModel);
 
     QVBoxLayout *vbox = new QVBoxLayout(this);
 
@@ -55,7 +58,7 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
     m_objectTreeView->header()->setObjectName("objectTreeViewHeader");
     vbox->addWidget(m_objectTreeView);
 
-    m_objectTreeView->setModel(propertyModel);
+    m_objectTreeView->setModel(clientModel);
     m_objectTreeView->setItemDelegateForColumn(1, new QtIviConstrainedValueDelegate(this));
     m_objectTreeView->setSelectionModel(selectionModel);
     connect(selectionModel,

@@ -59,7 +59,8 @@ public:
         ValueConstraintsRole = ObjectModel::UserRole + 1, // transmits the following constraints types
         RangeConstraints, // min / max
         AvailableValuesConstraints, // list of possible values
-        RawValue // the raw variant value without any transformation
+        RawValue, // the raw variant value without any transformation
+        IsIviProperty
     };
 
     enum Columns {
