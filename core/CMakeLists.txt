@@ -34,6 +34,7 @@ set(gammaray_srcs
   qmetaobjectvalidator.cpp
   enumrepositoryserver.cpp
   enumutil.cpp
+  execution.cpp
 
   propertyadaptor.cpp
   propertyaggregator.cpp
@@ -121,6 +122,9 @@ target_link_libraries(gammaray_core
   LINK_PUBLIC gammaray_common
   LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels
 )
+if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
+  target_link_libraries(gammaray_core LINK_PRIVATE dl)
+endif()
 set_target_properties(gammaray_core PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   OUTPUT_NAME gammaray_core-${GAMMARAY_PROBE_ABI}

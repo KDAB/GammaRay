@@ -152,6 +152,12 @@ add_test(NAME probesettingstest COMMAND probesettingstest)
 
 endif()
 
+### execution inspection test
+
+add_executable(executiontest executiontest.cpp)
+target_link_libraries(executiontest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_core)
+add_test(NAME executiontest COMMAND executiontest)
+
 ### Remote model tests
 
 if(GAMMARAY_BUILD_UI AND NOT GAMMARAY_PROBE_ONLY_BUILD)
