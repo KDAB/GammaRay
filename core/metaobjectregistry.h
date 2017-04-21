@@ -61,6 +61,8 @@ public:
     const QMetaObject *parentOf(const QMetaObject *metaObject) const;
     QVector<const QMetaObject *> childrenOf(const QMetaObject *metaObject) const;
 
+    const QMetaObject* canonicalMetaObject(const QMetaObject *mo) const;
+
 public slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
@@ -128,6 +130,8 @@ private:
     /// mapping from QObject* to its owned QMetaObject (for dynamic ones only)
     /// this is needed to clean up m_aliveInstances on deletion
     QHash<QObject*, const QMetaObject*> m_dynamicMetaObjectMap;
+    /// QMO instance to canonical QMO mapping (for dynamic ones only)
+    QHash<const QMetaObject*, const QMetaObject*> m_canonicalMetaObjectMap;
 };
 }
 

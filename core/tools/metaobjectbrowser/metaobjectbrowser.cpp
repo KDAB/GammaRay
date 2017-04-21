@@ -111,6 +111,7 @@ void MetaObjectBrowser::metaObjectSelected(const QMetaObject *mo)
 {
     if (!mo)
         return;
+    mo = Probe::instance()->metaObjectRegistry()->canonicalMetaObject(mo);
     const auto indexes = m_model->match(m_model->index(0, 0), QMetaObjectModel::MetaObjectRole,
                                         QVariant::fromValue(mo),
                                         Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);

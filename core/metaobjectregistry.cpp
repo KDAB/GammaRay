@@ -297,6 +297,7 @@ void MetaObjectRegistry::addAliveInstance(QObject *obj, const QMetaObject* canon
 {
     auto aliveMO = obj->metaObject();
     m_dynamicMetaObjectMap.insert(obj, aliveMO);
+    m_canonicalMetaObjectMap.insert(aliveMO, canonicalMO);
     auto &alivePool = m_aliveInstances[canonicalMO];
     auto it = std::lower_bound(alivePool.begin(), alivePool.end(), aliveMO);
     alivePool.insert(it, aliveMO);
@@ -309,4 +310,13 @@ void MetaObjectRegistry::removeAliveInstance(QObject *obj, const QMetaObject* ca
     auto it = std::lower_bound(alivePool.begin(), alivePool.end(), aliveMO);
     if (it != alivePool.end() && *it == aliveMO)
         alivePool.erase(it);
+    m_canonicalMetaObjectMap.remove(aliveMO);
+}
+
+const QMetaObject* MetaObjectRegistry::canonicalMetaObject(const QMetaObject* mo) const
+{
+    const auto it = m_canonicalMetaObjectMap.find(mo);
+    if (it != m_canonicalMetaObjectMap.end())
+        return *it;
+    return mo;
 }
