@@ -34,6 +34,7 @@
 #include <common/objectmodel.h>
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
+#include <ui/deferredtreeview.h>
 
 #include <QVBoxLayout>
 #include <QHeaderView>
@@ -45,6 +46,7 @@ using namespace GammaRay;
 
 QtIVIWidget::QtIVIWidget(QWidget *parent)
     : QWidget(parent)
+    , m_stateManager(this)
 {
     setObjectName("QtIVIWidget");
     QAbstractItemModel *propertyModel
@@ -59,8 +61,14 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
     vbox->addWidget(searchLineEdit);
     new SearchLineController(searchLineEdit, clientModel);
 
-    m_objectTreeView = new QTreeView(this);
+    m_objectTreeView = new DeferredTreeView(this);
     m_objectTreeView->header()->setObjectName("objectTreeViewHeader");
+    m_objectTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    m_objectTreeView->setDeferredResizeMode(1, QHeaderView::Interactive);
+    m_objectTreeView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+    m_objectTreeView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
+    m_objectTreeView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
+    m_objectTreeView->setExpandNewContent(true);
     vbox->addWidget(m_objectTreeView);
 
     m_objectTreeView->setSortingEnabled(true);

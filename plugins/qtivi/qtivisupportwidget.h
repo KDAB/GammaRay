@@ -30,6 +30,7 @@
 
 #include <QWidget>
 
+#include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
 QT_BEGIN_NAMESPACE
@@ -39,6 +40,7 @@ class QItemSelection;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+class DeferredTreeView;
 
 class QtIVIWidget : public QWidget
 {
@@ -51,7 +53,8 @@ private slots:
     void contextMenu(QPoint pos);
 
 private:
-    QTreeView *m_objectTreeView;
+    DeferredTreeView *m_objectTreeView;
+    UIStateManager m_stateManager;
 };
 
 class QtIVIUiFactory : public QObject, public StandardToolUiFactory<QtIVIWidget>
