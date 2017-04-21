@@ -28,6 +28,7 @@
 
 #include "metaobjectregistry.h"
 
+#include <core/execution.h>
 #include <core/probe.h>
 #include <core/qmetaobjectvalidator.h>
 
@@ -219,7 +220,9 @@ void MetaObjectRegistry::addMetaObject(const QMetaObject *metaObject)
         addMetaObject(metaObject->superClass());
     }
 
-    m_metaObjectInfoMap[metaObject].className = metaObject->className();
+    auto &info = m_metaObjectInfoMap[metaObject];
+    info.className = metaObject->className();
+    info.isStatic = Execution::isReadOnlyData(metaObject);
     // make the parent immediately retrieveable, so that slots connected to
     // beforeMetaObjectAdded() can use parentOf().
     m_childParentMap.insert(metaObject, parentMetaObject);
@@ -259,7 +262,7 @@ void MetaObjectRegistry::objectRemoved(QObject *obj)
         const QMetaObject *parent = m_childParentMap.value(current);
         // there is no way to detect when a QMetaObject is getting actually destroyed,
         // so mark them as invalid when there are no objects if that type alive anymore.
-        if (info.inclusiveAliveCount == 0) {
+        if (info.inclusiveAliveCount == 0 && !info.isStatic) {
             info.invalid = true;
         }
         current = parent;

@@ -82,12 +82,15 @@ private:
     struct MetaObjectInfo
     {
         MetaObjectInfo()
-            : invalid(false)
+            : isStatic(false)
+            , invalid(false)
             , selfCount(0)
             , selfAliveCount(0)
             , inclusiveCount(0)
             , inclusiveAliveCount(0) {}
 
+        /// @c true if this is a static meta object that can only become invalid by DLL unloading.
+        bool isStatic;
         /**
          * True if the meta object is suspected invalid. We can't know when one is destroyed,
          * so we mark this as true when all of the objects with this type are destroyed.
