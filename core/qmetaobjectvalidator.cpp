@@ -26,12 +26,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-gammaray.h"
+
 #include "qmetaobjectvalidator.h"
+#include "execution.h"
 
 #include <QDebug>
 #include <QMetaMethod>
 #include <QMetaObject>
 #include <QMetaProperty>
+
+#ifdef HAVE_PRIVATE_QT_HEADERS
+#include <private/qobject_p.h>
+#include <private/qmetaobject_p.h>
+#endif
 
 using namespace GammaRay;
 
@@ -83,9 +91,22 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkMethod(const QMet
     return r;
 }
 
+static bool isDynamicMetaObject(const QMetaObject *mo)
+{
+#ifdef HAVE_PRIVATE_QT_HEADERS
+    Q_ASSERT(reinterpret_cast<const QMetaObjectPrivate*>(mo->d.data)->revision >= 3);
+    return reinterpret_cast<const QMetaObjectPrivate*>(mo->d.data)->flags & DynamicMetaObject;
+#else
+    return !Execution::isReadOnlyData(mo); // a reasonably safe approximation
+#endif
+}
+
 QMetaObjectValidatorResult::Results QMetaObjectValidator::check(const QMetaObject *mo)
 {
     QMetaObjectValidatorResult::Results r = QMetaObjectValidatorResult::NoIssue;
+    if (isDynamicMetaObject(mo)) // those may dynamically add properties we query...
+        return r;
+
     for (int i = mo->propertyOffset(); i < mo->propertyCount(); ++i) {
         const auto prop = mo->property(i);
         r |= checkProperty(mo, prop);

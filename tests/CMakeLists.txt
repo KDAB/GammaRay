@@ -332,7 +332,7 @@ endif()
 add_executable(qmetaobjectvalidatortest
   qmetaobjectvalidatortest.cpp
 )
-target_link_libraries(qmetaobjectvalidatortest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+target_link_libraries(qmetaobjectvalidatortest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_core)
 add_test(NAME qmetavobjectvalidatortest COMMAND qmetaobjectvalidatortest)
 
 ### Meta object tree model test
