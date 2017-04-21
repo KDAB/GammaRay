@@ -43,13 +43,7 @@ add_library(gammaray_probe ${GAMMARAY_LIBRARY_TYPE} $<TARGET_OBJECTS:gammaray_pr
 if(APPLE AND NOT GAMMARAY_INSTALL_QT_LAYOUT)
     set_target_properties(gammaray_probe PROPERTIES INSTALL_RPATH "@loader_path/../../../../Frameworks")
 endif()
-target_link_libraries(gammaray_probe
-  gammaray_core
-)
-
-if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
-  target_link_libraries(gammaray_probe dl)
-endif()
+target_link_libraries(gammaray_probe gammaray_core ${DL_LIBRARY})
 
 set_target_properties(gammaray_probe PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_INSTALL_DIR}"

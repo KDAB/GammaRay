@@ -120,11 +120,8 @@ gammaray_target_relocatable_interfaces(gammaray_core_ipaths)
 target_include_directories(gammaray_core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_core_ipaths}>)
 target_link_libraries(gammaray_core
   LINK_PUBLIC gammaray_common
-  LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels
+  LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels ${DL_LIBRARY}
 )
-if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
-  target_link_libraries(gammaray_core LINK_PRIVATE dl)
-endif()
 set_target_properties(gammaray_core PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   OUTPUT_NAME gammaray_core-${GAMMARAY_PROBE_ABI}

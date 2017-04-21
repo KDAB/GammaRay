@@ -47,16 +47,14 @@ set_target_properties(gammaray_common PROPERTIES
 gammaray_target_relocatable_interfaces(gammaray_common_ipaths)
 target_include_directories(gammaray_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_common_ipaths}>)
 if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network Qt5::Gui gammaray_kitemmodels)
+  target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network Qt5::Gui)
 else()
   target_link_libraries(gammaray_common
     LINK_PUBLIC ${QT_QTCORE_LIBRARIES}
-    LINK_PRIVATE ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} gammaray_kitemmodels
+    LINK_PRIVATE ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES}
   )
 endif()
-if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
-  target_link_libraries(gammaray_common LINK_PRIVATE dl)
-endif()
+target_link_libraries(gammaray_common LINK_PRIVATE gammaray_kitemmodels ${DL_LIBRARY})
 
 
 set(gammaray_common_internal_srcs

@@ -117,10 +117,7 @@ add_test(NAME sourcelocationtest COMMAND sourcelocationtest)
 ### self locator test
 
 add_executable(selflocatortest selflocatortest.cpp)
-target_link_libraries(selflocatortest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common)
-if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
-  target_link_libraries(selflocatortest dl)
-endif()
+target_link_libraries(selflocatortest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_common ${DL_LIBRARY})
 add_test(NAME selflocatortest COMMAND selflocatortest)
 
 ### Probe ABI test
