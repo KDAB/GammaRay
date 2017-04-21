@@ -33,6 +33,7 @@
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <ui/contextmenuextension.h>
+#include <ui/searchlinecontroller.h>
 
 #include <QVBoxLayout>
 #include <QHeaderView>
@@ -54,10 +55,15 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
 
     QVBoxLayout *vbox = new QVBoxLayout(this);
 
+    QLineEdit *searchLineEdit = new QLineEdit(this);
+    vbox->addWidget(searchLineEdit);
+    new SearchLineController(searchLineEdit, clientModel);
+
     m_objectTreeView = new QTreeView(this);
     m_objectTreeView->header()->setObjectName("objectTreeViewHeader");
     vbox->addWidget(m_objectTreeView);
 
+    m_objectTreeView->setSortingEnabled(true);
     m_objectTreeView->setModel(clientModel);
     m_objectTreeView->setItemDelegateForColumn(1, new QtIviConstrainedValueDelegate(this));
     m_objectTreeView->setSelectionModel(selectionModel);

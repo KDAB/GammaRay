@@ -35,7 +35,7 @@
 using namespace GammaRay;
 
 QtIviPropertyClientModel::QtIviPropertyClientModel(QObject *parent)
-    : QIdentityProxyModel(parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
@@ -47,11 +47,11 @@ QVariant QtIviPropertyClientModel::data(const QModelIndex &index, int role) cons
 {
     // QIviProperty's appears in italic to distinguish from plain qt properties
     if (role == Qt::FontRole) {
-        const bool isIviProperty = QIdentityProxyModel::data(index, QtIviPropertyModel::IsIviProperty).toBool();
+        const bool isIviProperty = QSortFilterProxyModel::data(index, QtIviPropertyModel::IsIviProperty).toBool();
         QFont font = QApplication::font("QAbstractItemView");
         font.setItalic(isIviProperty);
         return QVariant::fromValue(font);
     }
 
-    return QIdentityProxyModel::data(index, role);
+    return QSortFilterProxyModel::data(index, role);
 }
