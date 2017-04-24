@@ -5,6 +5,7 @@
 *.orig
 *.out
 .*
+CMakeSettings.json
 CMakeLists.txt.user
 *.qmlc
 callgrind.out.*
