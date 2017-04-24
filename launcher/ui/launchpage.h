@@ -63,6 +63,7 @@ signals:
 
 private slots:
     void showFileDialog();
+    void showDirDialog();
     void addArgument();
     void removeArgument();
     void updateArgumentButtons();

@@ -31,6 +31,7 @@
 
 #include <QVariant>
 #include <QProcess>
+#include <QDir>
 #include <QFileInfo>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QStandardPaths>
@@ -276,7 +277,14 @@ bool LaunchOptions::execute(const QString &launcherPath) const
         args += launchArguments();
     }
 
-    std::cout << "Detaching: " << qPrintable(launcherPath) << " " << qPrintable(args.join(" ")) << std::endl;
+    auto workingDir = d->workingDir;
+    if (workingDir.isEmpty()) {
+        workingDir = QDir::currentPath();
+    }
 
-    return QProcess::startDetached(launcherPath, args);
+    std::cout << "Detaching: " << qPrintable(launcherPath) << " " << qPrintable(args.join(" ")) << "\n"
+              << "Working Directory: " << qPrintable(workingDir)
+              << std::endl;
+
+    return QProcess::startDetached(launcherPath, args, workingDir);
 }
