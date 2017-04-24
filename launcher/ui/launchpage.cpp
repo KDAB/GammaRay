@@ -57,6 +57,7 @@ LaunchPage::LaunchPage(QWidget *parent)
     ui->formLayout->setContentsMargins(margins);
 #endif
     connect(ui->progSelectButton, SIGNAL(clicked()), SLOT(showFileDialog()));
+    connect(ui->workDirSelectButton, SIGNAL(clicked()), SLOT(showDirDialog()));
     connect(ui->addArgButton, SIGNAL(clicked()), SLOT(addArgument()));
     connect(ui->removeArgButton, SIGNAL(clicked()), SLOT(removeArgument()));
     connect(ui->progEdit, SIGNAL(textChanged(QString)), SLOT(detectABI(QString)));
@@ -74,6 +75,7 @@ LaunchPage::LaunchPage(QWidget *parent)
 
     QSettings settings;
     ui->progEdit->setText(settings.value(QStringLiteral("Launcher/Program")).toString());
+    ui->workDirEdit->setText(settings.value(QStringLiteral("Launcher/WorkingDirectory")).toString());
     m_argsModel->setStringList(settings.value(QStringLiteral("Launcher/Arguments")).toStringList());
     ui->accessMode->setCurrentIndex(settings.value(QStringLiteral("Launcher/AccessMode")).toInt());
     updateArgumentButtons();
@@ -88,6 +90,7 @@ void LaunchPage::writeSettings()
 {
     QSettings settings;
     settings.setValue(QStringLiteral("Launcher/Program"), ui->progEdit->text());
+    settings.setValue(QStringLiteral("Launcher/WorkingDirectory"), ui->workDirEdit->text());
     settings.setValue(QStringLiteral("Launcher/Arguments"), notEmptyString(
                           m_argsModel->stringList()));
     settings.setValue(QStringLiteral("Launcher/AccessMode"), ui->accessMode->currentIndex());
@@ -113,6 +116,8 @@ LaunchOptions LaunchPage::launchOptions() const
     l.append(notEmptyString(m_argsModel->stringList()));
     opt.setLaunchArguments(l);
     opt.setProbeABI(ui->probeBox->itemData(ui->probeBox->currentIndex()).value<ProbeABI>());
+
+    opt.setWorkingDirectory(ui->workDirEdit->text());
 
     switch (ui->accessMode->currentIndex()) {
     case 0: // local, out-of-process
@@ -161,6 +166,17 @@ void LaunchPage::showFileDialog()
     }
 #endif
     ui->progEdit->setText(exeFilePath);
+}
+
+void LaunchPage::showDirDialog()
+{
+    QString workingDirPath = QFileDialog::getExistingDirectory(
+        this, tr("Working Directory"), ui->workDirEdit->text()
+        );
+
+    if (!workingDirPath.isEmpty()) {
+        ui->workDirEdit->setText(workingDirPath);
+    }
 }
 
 void LaunchPage::addArgument()
