@@ -40,7 +40,7 @@ bool Execution::isReadOnlyData(const void* data)
 {
     Dl_info info;
     // ### technically we would also need to check if we are in a read-only section, but this close enough for our purpose
-    return dladdr(data, &info) != 0;
+    return dladdr(const_cast<void*>(data), &info) != 0;
 }
 
 #else
