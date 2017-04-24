@@ -517,14 +517,14 @@ void QuickOverlay::drawDecorations()
         const QuickDecorationsTracesInfo tracesInfo(m_settings,
                                                     m_grabedFrame.itemsGeometry,
                                                     QRectF(QPointF(), m_renderInfo.windowSize),
-                                                    m_renderInfo.dpr);
+                                                    1.0);
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Traces, painter, tracesInfo);
         drawer.drawTraces();
     } else {
         const QuickDecorationsRenderInfo renderInfo(m_settings,
                                                     m_grabedFrame.itemsGeometry.value(0),
                                                     QRectF(QPointF(), m_renderInfo.windowSize),
-                                                    m_renderInfo.dpr);
+                                                    1.0);
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Decorations, painter, renderInfo);
         drawer.drawDecorations();
     }
