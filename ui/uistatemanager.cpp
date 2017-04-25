@@ -85,6 +85,7 @@ UIStateManager::UIStateManager(QWidget *widget)
     , m_widget(widget)
     , m_stateSettings(new QSettings(this))
     , m_initialized(false)
+    , m_settingsAccess(false)
     , m_resizing(false)
     , m_targetStateSource(nullptr)
     , m_targetRestoreMethodId(-1)
@@ -206,6 +207,14 @@ void UIStateManager::restoreState()
         return;
     }
 
+    if (m_settingsAccess) {
+        qWarning() << Q_FUNC_INFO << "Recursive restore/save state detected" << widgetPath(m_widget) << m_widget;
+        Q_ASSERT(false);
+        return;
+    }
+
+    m_settingsAccess = true;
+
     restoreWindowState();
     restoreSplitterState();
     restoreHeaderState();
@@ -219,6 +228,8 @@ void UIStateManager::restoreState()
         method.invoke(target, Q_ARG(QSettings *, m_stateSettings));
         m_stateSettings->endGroup();
     }
+
+    m_settingsAccess = false;
 }
 
 void UIStateManager::saveState()
@@ -229,6 +240,14 @@ void UIStateManager::saveState()
         qWarning() << Q_FUNC_INFO << "Attempting to saveState for a not yet initialized state manager.";
         return;
     }
+
+    if (m_settingsAccess) {
+        qWarning() << Q_FUNC_INFO << "Recursive save/restore state detected" << widgetPath(m_widget) << m_widget;
+        Q_ASSERT(false);
+        return;
+    }
+
+    m_settingsAccess = true;
 
     // Allow save state per end point
     if (m_targetStateSource) {
@@ -243,6 +262,8 @@ void UIStateManager::saveState()
     saveWindowState();
     saveSplitterState();
     saveHeaderState();
+
+    m_settingsAccess = false;
 }
 
 bool UIStateManager::eventFilter(QObject *object, QEvent *event)
