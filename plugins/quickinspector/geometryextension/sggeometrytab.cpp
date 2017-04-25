@@ -40,6 +40,9 @@ SGGeometryTab::SGGeometryTab(PropertyWidget *parent)
     , m_ui(new Ui_SGGeometryTab)
 {
     m_ui->setupUi(this);
+    const QString viewName = m_ui->tableView->objectName();
+    m_ui->tableView->horizontalHeader()->setObjectName(QString::fromLatin1("%1Horizontal").arg(viewName));
+    m_ui->tableView->verticalHeader()->setObjectName(QString::fromLatin1("%1Vertical").arg(viewName));
 
     setObjectBaseName(parent->objectBaseName());
 }
