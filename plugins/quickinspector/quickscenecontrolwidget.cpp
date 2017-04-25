@@ -240,24 +240,21 @@ void QuickSceneControlWidget::serverSideDecorationsTriggered(bool enabled)
 
 void QuickSceneControlWidget::gridOffsetChanged(const QPoint &value)
 {
-    m_previewWidget->m_overlaySettings.gridOffset = value;
-    m_legendTool->setOverlaySettings(m_previewWidget->m_overlaySettings);
-    update();
-    setOverlaySettings(m_previewWidget->m_overlaySettings);
+    QuickDecorationsSettings settings = m_previewWidget->overlaySettings();
+    settings.gridOffset = value;
+    setOverlaySettings(settings);
 }
 
 void QuickSceneControlWidget::gridCellSizeChanged(const QSize &value)
 {
-    m_previewWidget->m_overlaySettings.gridCellSize = value;
-    m_legendTool->setOverlaySettings(m_previewWidget->m_overlaySettings);
-    update();
-    setOverlaySettings(m_previewWidget->m_overlaySettings);
+    QuickDecorationsSettings settings = m_previewWidget->overlaySettings();
+    settings.gridCellSize = value;
+    setOverlaySettings(settings);
 }
 
 void QuickSceneControlWidget::setOverlaySettings(const QuickDecorationsSettings &settings)
 {
     m_inspectorInterface->setOverlaySettings(settings);
-    emit m_previewWidget->stateChanged();
 }
 
 void QuickSceneControlWidget::setSupportsCustomRenderModes(
@@ -282,9 +279,10 @@ void QuickSceneControlWidget::setServerSideDecorationsState(bool enabled)
 
 void QuickSceneControlWidget::setOverlaySettingsState(const QuickDecorationsSettings &settings)
 {
-    m_previewWidget->m_overlaySettings = settings;
+    m_previewWidget->setOverlaySettings(settings);
     m_gridSettingsWidget->setOverlaySettings(settings);
     m_legendTool->setOverlaySettings(settings);
+    emit m_previewWidget->stateChanged();
 }
 
 QuickInspectorInterface::RenderMode QuickSceneControlWidget::customRenderMode() const

@@ -43,16 +43,15 @@ class QuickScenePreviewWidget : public RemoteViewWidget
 {
     Q_OBJECT
 
-    friend class QuickSceneControlWidget;
-
 public:
     explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QuickSceneControlWidget *control, QWidget *parent = nullptr);
     ~QuickScenePreviewWidget();
 
-    void restoreState(const QByteArray &state) override;
+    Q_INVOKABLE void restoreState(const QByteArray &state) override;
     QByteArray saveState() const override;
 
     QuickDecorationsSettings overlaySettings() const;
+    void setOverlaySettings(const QuickDecorationsSettings &settings);
 
 private:
     void drawDecoration(QPainter *p) override;

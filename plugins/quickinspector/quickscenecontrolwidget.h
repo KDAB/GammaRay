@@ -57,7 +57,7 @@ class QuickSceneControlWidget : public QWidget
 public:
     explicit QuickSceneControlWidget(QuickInspectorInterface *inspector, QWidget *parent = nullptr);
 
-    void setOverlaySettings(const QuickDecorationsSettings &settings);
+    Q_INVOKABLE void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings);
     void setSupportsCustomRenderModes(QuickInspectorInterface::Features supportedCustomRenderModes);
     void setServerSideDecorationsState(bool enabled);
 
