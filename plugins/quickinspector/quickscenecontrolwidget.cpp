@@ -190,6 +190,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_toolBar->addWidget(m_zoomCombobox);
     m_toolBar->addAction(m_previewWidget->zoomInAction());
 
+    connect(m_gridSettingsWidget, SIGNAL(enabledChanged(bool)), this, SLOT(gridEnabledChanged(bool)));
     connect(m_gridSettingsWidget, SIGNAL(offsetChanged(QPoint)), this, SLOT(gridOffsetChanged(QPoint)));
     connect(m_gridSettingsWidget, SIGNAL(cellSizeChanged(QSize)), this, SLOT(gridCellSizeChanged(QSize)));
 
@@ -236,6 +237,13 @@ void QuickSceneControlWidget::serverSideDecorationsTriggered(bool enabled)
     m_serverSideDecorationsEnabled->setChecked(enabled);
     m_inspectorInterface->setServerSideDecorationsEnabled(enabled);
     emit m_previewWidget->stateChanged();
+}
+
+void QuickSceneControlWidget::gridEnabledChanged(bool enabled)
+{
+    QuickDecorationsSettings settings = m_previewWidget->overlaySettings();
+    settings.gridEnabled = enabled;
+    setOverlaySettings(settings);
 }
 
 void QuickSceneControlWidget::gridOffsetChanged(const QPoint &value)

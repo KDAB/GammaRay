@@ -35,7 +35,7 @@
 #include <QPainter>
 
 using namespace GammaRay;
-static qint32 QuickScenePreviewWidgetStateVersion = 3;
+static const qint32 QuickScenePreviewWidgetStateVersion = 4;
 
 QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QuickInspectorInterface::RenderMode)
@@ -67,6 +67,7 @@ void QuickScenePreviewWidget::restoreState(const QByteArray &state)
     bool drawDecorations = m_control->serverSideDecorationsEnabled();
     QPointF gridOffset = m_overlaySettings.gridOffset;
     QSizeF gridCellSize = m_overlaySettings.gridCellSize;
+    bool gridEnabled = m_overlaySettings.gridEnabled;
     RemoteViewWidget::restoreState(stream);
 
     stream >> version;
@@ -94,6 +95,16 @@ void QuickScenePreviewWidget::restoreState(const QByteArray &state)
                 ;
         break;
     }
+    case QuickScenePreviewWidgetStateVersion: {
+        stream
+                >> mode
+                >> drawDecorations
+                >> gridOffset
+                >> gridCellSize
+                >> gridEnabled
+                ;
+        break;
+    }
     }
 
     m_control->setCustomRenderMode(mode);
@@ -103,6 +114,7 @@ void QuickScenePreviewWidget::restoreState(const QByteArray &state)
     settings.gridOffset = gridOffset;
     settings.gridCellSize = gridCellSize;
     settings.componentsTraces = (mode == QuickInspectorInterface::VisualizeTraces);
+    settings.gridEnabled = gridEnabled;
 
     if (settings != m_overlaySettings) {
         m_control->setOverlaySettings(settings);
@@ -142,6 +154,16 @@ QByteArray QuickScenePreviewWidget::saveState() const
                        ;
             break;
         }
+        case 4: {
+            stream
+                    << m_control->customRenderMode()
+                    << m_control->serverSideDecorationsEnabled()
+                    << m_overlaySettings.gridOffset
+                    << m_overlaySettings.gridCellSize
+                    << m_overlaySettings.gridEnabled
+                       ;
+            break;
+        }
         }
     }
 
@@ -161,13 +183,13 @@ void QuickScenePreviewWidget::drawDecoration(QPainter *p)
         itemGeometry.scaleTo(zoom());
         const QuickDecorationsRenderInfo renderInfo(m_overlaySettings, itemGeometry, frame().viewRect(), zoom());
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Decorations, *p, renderInfo);
-        drawer.drawDecorations();
+        drawer.render();
     } else if (frame().data().userType() == qMetaTypeId<QVector<QuickItemGeometry>>()) {
         // Scaling and translations will be done on demand
         const auto itemsGeometry = frame().data().value<QVector<QuickItemGeometry>>();
         const QuickDecorationsTracesInfo tracesInfo(m_overlaySettings, itemsGeometry, frame().viewRect(), zoom());
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Traces, *p, tracesInfo);
-        drawer.drawTraces();
+        drawer.render();
     }
 }
 

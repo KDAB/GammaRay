@@ -51,7 +51,7 @@
 #include <cstdlib>
 
 using namespace GammaRay;
-static qint32 RemoteViewWidgetStateVersion = 1;
+static const qint32 RemoteViewWidgetStateVersion = 1;
 
 QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::RemoteViewWidget::InteractionMode)
@@ -826,7 +826,7 @@ void RemoteViewWidget::restoreState(QDataStream &stream)
     stream >> version;
 
     switch (version) {
-    case 1: {
+    case RemoteViewWidgetStateVersion: {
         stream >> interactionMode;
         stream >> zoom;
         break;

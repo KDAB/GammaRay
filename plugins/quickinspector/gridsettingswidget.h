@@ -49,6 +49,7 @@ public:
     void setOverlaySettings(const QuickDecorationsSettings &settings);
 
 signals:
+    void enabledChanged(bool enabled);
     void offsetChanged(const QPoint &value);
     void cellSizeChanged(const QSize &value);
 
