@@ -45,6 +45,19 @@
 
 using namespace GammaRay;
 
+namespace {
+static QAction *checkedAction(QActionGroup *group) {
+    // For some reason QActionGroup::checkedAction() is not yet synced when needed
+    // Might be because of our direct QAction::setChecked() calls in between
+    foreach (QAction *action, group->actions()) {
+        if (action->isChecked())
+            return action;
+    }
+
+    return nullptr;
+}
+}
+
 QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspector, QWidget *parent)
     : QWidget(parent)
     , m_gridSettingsWidget(new GridSettingsWidget(this))
@@ -276,7 +289,7 @@ void QuickSceneControlWidget::setOverlaySettingsState(const QuickDecorationsSett
 
 QuickInspectorInterface::RenderMode QuickSceneControlWidget::customRenderMode() const
 {
-    const QAction *checkedAction = m_visualizeGroup->checkedAction();
+    const QAction *checkedAction = ::checkedAction(m_visualizeGroup);
 
     if (checkedAction) {
         return static_cast<QuickInspectorInterface::RenderMode>(checkedAction->data().toInt());
@@ -295,7 +308,7 @@ void QuickSceneControlWidget::setCustomRenderMode(QuickInspectorInterface::Rende
             action->setChecked(static_cast<QuickInspectorInterface::RenderMode>(action->data().toInt()) == customRenderMode);
     }
 
-    visualizeActionTriggered(m_visualizeGroup->checkedAction());
+    visualizeActionTriggered(checkedAction(m_visualizeGroup));
 }
 
 QuickScenePreviewWidget *QuickSceneControlWidget::previewWidget()
