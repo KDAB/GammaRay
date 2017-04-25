@@ -55,6 +55,41 @@ private slots:
             Execution::isReadOnlyData(&QObject::staticMetaObject);
         }
     }
+
+    void testStackTrace()
+    {
+        if (!Execution::stackTracingAvailable())
+            return;
+        const auto trace = Execution::stackTrace(32);
+        QVERIFY(trace.size() > 0);
+        const auto resolved = Execution::resolveAll(trace);
+        QCOMPARE(resolved.size(), trace.size());
+        foreach (const auto &frame, resolved) {
+            qDebug() << frame.name << frame.location.displayString();
+        }
+    }
+
+    void benchmarkStackTrace()
+    {
+        if (!Execution::stackTracingAvailable())
+            return;
+        QBENCHMARK {
+            const auto trace = Execution::stackTrace(255);
+            QVERIFY(trace.size() > 0);
+        }
+    }
+
+    void benchmarkResolveStackTrace()
+    {
+        if (!Execution::stackTracingAvailable())
+            return;
+        const auto trace = Execution::stackTrace(255);
+        QVERIFY(trace.size() > 0);
+        QBENCHMARK {
+            const auto frames = Execution::resolveAll(trace);
+            QCOMPARE(frames.size(), trace.size());
+        }
+    }
 };
 
 QTEST_MAIN(ExecutionTest)
