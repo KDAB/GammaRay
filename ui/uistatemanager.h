@@ -113,6 +113,7 @@ private:
     QPointer<QWidget> m_widget;
     QSettings *m_stateSettings;
     bool m_initialized;
+    bool m_settingsAccess;
     bool m_resizing;
     // Int -> pixels, String -> suffixe dependant (% -> percent else pixels)
     // The UISizeVector is logical index based.
