@@ -56,7 +56,7 @@ public:
 
     bool operator==(const Qt3DRender::QTextureImageDataGenerator &other) const override
     {
-        const auto otherFtor = functor_cast<Widget3DImageTextureDataGenerator>(&other);
+        const auto otherFtor = Qt3DRender::functor_cast<Widget3DImageTextureDataGenerator>(&other);
         return (otherFtor != nullptr && otherFtor->mImage == mImage);
     }
 
