@@ -77,6 +77,7 @@ signals:
 private Q_SLOTS:
     void visualizeActionTriggered(QAction* current);
     void serverSideDecorationsTriggered(bool enabled);
+    void gridEnabledChanged(bool enabled);
     void gridOffsetChanged(const QPoint &value);
     void gridCellSizeChanged(const QSize &value);
 

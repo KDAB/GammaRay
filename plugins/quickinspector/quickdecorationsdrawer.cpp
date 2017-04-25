@@ -50,11 +50,26 @@ QuickDecorationsDrawer::QuickDecorationsDrawer(QuickDecorationsDrawer::Type type
     Q_ASSERT(m_renderInfo);
 }
 
-void QuickDecorationsDrawer::drawDecorations()
+void QuickDecorationsDrawer::render()
 {
     // Draw the grid if needed
     drawGrid();
 
+    switch (m_type) {
+    case QuickDecorationsDrawer::Decorations: {
+        drawDecorations();
+        break;
+    }
+
+    case QuickDecorationsDrawer::Traces: {
+        drawTraces();
+        break;
+    }
+    }
+}
+
+void QuickDecorationsDrawer::drawDecorations()
+{
     const QuickItemGeometry itemGeometry(this->itemGeometry());
 
     if (!itemGeometry.isValid())
@@ -266,9 +281,6 @@ void QuickDecorationsDrawer::drawDecorations()
 
 void QuickDecorationsDrawer::drawTraces()
 {
-    // Draw the grid if needed
-    drawGrid();
-
     const QVector<QuickItemGeometry> itemsGeometry(this->itemsGeometry());
 
     if (itemsGeometry.isEmpty())
@@ -350,7 +362,7 @@ void QuickDecorationsDrawer::drawGrid()
     const QPointF &gridOffset(m_renderInfo->settings.gridOffset);
     const QSizeF &gridCellSize(m_renderInfo->settings.gridCellSize);
 
-    if (gridCellSize.isEmpty())
+    if (!m_renderInfo->settings.gridEnabled || gridCellSize.isEmpty())
         return;
 
     m_painter->save();
@@ -572,6 +584,7 @@ QDataStream &GammaRay::operator<<(QDataStream &stream, const GammaRay::QuickDeco
             << settings.gridCellSize
             << settings.gridColor
             << settings.componentsTraces
+            << settings.gridEnabled
     ;
 
     return stream;
@@ -594,6 +607,7 @@ QDataStream &GammaRay::operator>>(QDataStream &stream, GammaRay::QuickDecoration
             >> settings.gridCellSize
             >> settings.gridColor
             >> settings.componentsTraces
+            >> settings.gridEnabled
     ;
 
     return stream;

@@ -6,77 +6,92 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>171</width>
-    <height>152</height>
+    <width>199</width>
+    <height>190</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="lXOffset">
-     <property name="text">
-      <string>X Offset:</string>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="gbEnabled">
+     <property name="title">
+      <string>Grid enabled</string>
      </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QSpinBox" name="sbXOffset">
-     <property name="minimum">
-      <number>-9999</number>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
-     <property name="maximum">
-      <number>9999</number>
+     <property name="checked">
+      <bool>false</bool>
      </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lYOffset">
-     <property name="text">
-      <string>Y Offset:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QSpinBox" name="sbYOffset">
-     <property name="minimum">
-      <number>-9999</number>
-     </property>
-     <property name="maximum">
-      <number>9999</number>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="lCellWidth">
-     <property name="text">
-      <string>Cell Width:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QSpinBox" name="sbCellWidth">
-     <property name="minimum">
-      <number>-9999</number>
-     </property>
-     <property name="maximum">
-      <number>9999</number>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="lCellHeight">
-     <property name="text">
-      <string>Cell Height</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QSpinBox" name="sbCellHeight">
-     <property name="minimum">
-      <number>-9999</number>
-     </property>
-     <property name="maximum">
-      <number>9999</number>
-     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="lXOffset">
+        <property name="text">
+         <string>X Offset:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="sbXOffset">
+        <property name="minimum">
+         <number>-9999</number>
+        </property>
+        <property name="maximum">
+         <number>9999</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lYOffset">
+        <property name="text">
+         <string>Y Offset:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="sbYOffset">
+        <property name="minimum">
+         <number>-9999</number>
+        </property>
+        <property name="maximum">
+         <number>9999</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lCellWidth">
+        <property name="text">
+         <string>Cell Width:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="sbCellWidth">
+        <property name="minimum">
+         <number>-9999</number>
+        </property>
+        <property name="maximum">
+         <number>9999</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lCellHeight">
+        <property name="text">
+         <string>Cell Height</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QSpinBox" name="sbCellHeight">
+        <property name="minimum">
+         <number>-9999</number>
+        </property>
+        <property name="maximum">
+         <number>9999</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

@@ -52,6 +52,7 @@ struct QuickDecorationsSettings
         , gridCellSize(QSizeF(0, 0))
         , gridColor(QColor(Qt::red))
         , componentsTraces(false)
+        , gridEnabled(false)
     {
     }
 
@@ -69,7 +70,8 @@ struct QuickDecorationsSettings
                 gridOffset == other.gridOffset &&
                 gridCellSize == other.gridCellSize &&
                 gridColor == other.gridColor &&
-                componentsTraces == other.componentsTraces
+                componentsTraces == other.componentsTraces &&
+                gridEnabled == other.gridEnabled
                 ;
     }
 
@@ -91,6 +93,7 @@ struct QuickDecorationsSettings
     QSizeF gridCellSize;
     QColor gridColor;
     bool componentsTraces;
+    bool gridEnabled;
 };
 
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickDecorationsSettings &settings);
@@ -145,8 +148,7 @@ public:
     QuickDecorationsDrawer(QuickDecorationsDrawer::Type type, QPainter &painter,
                            const QuickDecorationsBaseRenderInfo &renderInfo);
 
-    void drawDecorations();
-    void drawTraces();
+    void render();
 
 private:
     struct DrawTextInfo {
@@ -170,6 +172,8 @@ private:
     QuickItemGeometry itemGeometry() const;
     QVector<QuickItemGeometry> itemsGeometry() const;
 
+    void drawDecorations();
+    void drawTraces();
     void drawGrid();
     void drawArrow(const QPointF &first, const QPointF &second);
     void drawAnchor(const QuickItemGeometry &itemGeometry, Qt::Orientation orientation,

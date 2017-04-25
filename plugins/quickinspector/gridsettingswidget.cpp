@@ -38,6 +38,7 @@ GridSettingsWidget::GridSettingsWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
+    connect(ui->gbEnabled, SIGNAL(clicked(bool)), this, SIGNAL(enabledChanged(bool)));
     connect(ui->sbXOffset, SIGNAL(editingFinished()), this, SLOT(offsetUserChanged()));
     connect(ui->sbYOffset, SIGNAL(editingFinished()), this, SLOT(offsetUserChanged()));
     connect(ui->sbCellWidth, SIGNAL(editingFinished()), this, SLOT(cellSizeUserChanged()));
@@ -51,6 +52,7 @@ GridSettingsWidget::~GridSettingsWidget()
 
 void GridSettingsWidget::setOverlaySettings(const QuickDecorationsSettings &settings)
 {
+    ui->gbEnabled->setChecked(settings.gridEnabled);
     ui->sbXOffset->setValue(settings.gridOffset.x());
     ui->sbYOffset->setValue(settings.gridOffset.y());
     ui->sbCellWidth->setValue(settings.gridCellSize.width());
