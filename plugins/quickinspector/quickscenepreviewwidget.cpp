@@ -35,7 +35,7 @@
 #include <QPainter>
 
 using namespace GammaRay;
-static qint32 QuickScenePreviewWidgetStateVersion = 2;
+static qint32 QuickScenePreviewWidgetStateVersion = 3;
 
 QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QuickInspectorInterface::RenderMode)
@@ -65,6 +65,8 @@ void QuickScenePreviewWidget::restoreState(const QByteArray &state)
     qint32 version;
     QuickInspectorInterface::RenderMode mode = m_control->customRenderMode();
     bool drawDecorations = m_control->serverSideDecorationsEnabled();
+    QPointF gridOffset = m_overlaySettings.gridOffset;
+    QSizeF gridCellSize = m_overlaySettings.gridCellSize;
     RemoteViewWidget::restoreState(stream);
 
     stream >> version;
@@ -83,10 +85,28 @@ void QuickScenePreviewWidget::restoreState(const QByteArray &state)
                 ;
         break;
     }
+    case 3: {
+        stream
+                >> mode
+                >> drawDecorations
+                >> gridOffset
+                >> gridCellSize
+                ;
+        break;
+    }
     }
 
     m_control->setCustomRenderMode(mode);
     m_control->setServerSideDecorationsEnabled(drawDecorations);
+
+    QuickDecorationsSettings settings = m_overlaySettings;
+    settings.gridOffset = gridOffset;
+    settings.gridCellSize = gridCellSize;
+    settings.componentsTraces = (mode == QuickInspectorInterface::VisualizeTraces);
+
+    if (settings != m_overlaySettings) {
+        m_control->setOverlaySettings(settings);
+    }
 }
 
 QByteArray QuickScenePreviewWidget::saveState() const
@@ -110,6 +130,15 @@ QByteArray QuickScenePreviewWidget::saveState() const
             stream
                     << m_control->customRenderMode()
                     << m_control->serverSideDecorationsEnabled()
+                       ;
+            break;
+        }
+        case 3: {
+            stream
+                    << m_control->customRenderMode()
+                    << m_control->serverSideDecorationsEnabled()
+                    << m_overlaySettings.gridOffset
+                    << m_overlaySettings.gridCellSize
                        ;
             break;
         }
@@ -145,4 +174,10 @@ void QuickScenePreviewWidget::drawDecoration(QPainter *p)
 QuickDecorationsSettings QuickScenePreviewWidget::overlaySettings() const
 {
     return m_overlaySettings;
+}
+
+void QuickScenePreviewWidget::setOverlaySettings(const QuickDecorationsSettings &settings)
+{
+    m_overlaySettings = settings;
+    update();
 }

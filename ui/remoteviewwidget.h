@@ -101,7 +101,7 @@ public:
     QAbstractItemModel *pickSourceModel() const;
     void setPickSourceModel(QAbstractItemModel *pickSourceModel);
 
-    virtual void restoreState(const QByteArray &state);
+    Q_INVOKABLE virtual void restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
 
     int flagRole() const;

@@ -74,8 +74,11 @@ static QObject *createMaterialExtension(const QString &name, QObject *parent)
 QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::QuickInspectorWidget)
+    , m_state(QuickInspectorWidget::WaitingAll)
     , m_stateManager(this)
 {
+    qRegisterMetaType<QuickInspectorWidget::StateFlag>();
+
     ui->setupUi(this);
 
     ObjectBroker::registerClientObjectFactoryCallback<QuickInspectorInterface *>(
@@ -159,29 +162,41 @@ QuickInspectorWidget::~QuickInspectorWidget()
 
 void QuickInspectorWidget::saveTargetState(QSettings *settings) const
 {
+    if (m_state != QuickInspectorWidget::Ready)
+        return;
+
     settings->setValue("tabIndex", ui->tabWidget->currentIndex());
     settings->setValue("remoteViewState", m_scenePreviewWidget->previewWidget()->saveState());
 }
 
 void QuickInspectorWidget::restoreTargetState(QSettings *settings)
 {
+    if (m_state != QuickInspectorWidget::Ready)
+        return;
+
     ui->tabWidget->setCurrentIndex(settings->value("tabIndex", 0).toInt());
-    m_scenePreviewWidget->previewWidget()->restoreState(settings->value("remoteViewState").toByteArray());
+
+    // Delay those changes as they can lead to recursive save/load issue (ie, speak to server)
+    QMetaObject::invokeMethod(m_scenePreviewWidget->previewWidget(), "restoreState", Qt::QueuedConnection,
+                              Q_ARG(QByteArray, settings->value("remoteViewState").toByteArray()));
 }
 
 void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features features)
 {
     m_scenePreviewWidget->setSupportsCustomRenderModes(features);
+    stateReceived(QuickInspectorWidget::WaitingFeatures);
 }
 
 void QuickInspectorWidget::setServerSideDecorations(bool enabled)
 {
     m_scenePreviewWidget->setServerSideDecorationsState(enabled);
+    stateReceived(QuickInspectorWidget::WaitingServerSideDecorations);
 }
 
 void QuickInspectorWidget::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)
 {
     m_scenePreviewWidget->setOverlaySettingsState(settings);
+    stateReceived(QuickInspectorWidget::WaitingOverlaySettings);
 }
 
 void QuickInspectorWidget::itemSelectionChanged(const QItemSelection &selection)
@@ -247,12 +262,33 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint &pos)
     contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos));
 }
 
+void QuickInspectorWidget::stateReceived(GammaRay::QuickInspectorWidget::StateFlag flag)
+{
+    if (!m_state.testFlag(flag)) {
+        return;
+    }
+
+    m_state &= ~flag;
+
+    if (m_state == QuickInspectorWidget::WaitingApply) {
+        QMetaObject::invokeMethod(this, "stateReceived", Qt::QueuedConnection, Q_ARG(GammaRay::QuickInspectorWidget::StateFlag, GammaRay::QuickInspectorWidget::WaitingApply));
+    } else if (m_state == QuickInspectorWidget::Ready) {
+        resetState();
+    }
+}
+
 void QuickInspectorWidget::resetState()
 {
+    if (m_state != QuickInspectorWidget::Ready)
+        return;
+
     m_stateManager.reset();
 }
 
 void QuickInspectorWidget::saveState()
 {
+    if (m_state != QuickInspectorWidget::Ready)
+        return;
+
     m_stateManager.saveState();
 }

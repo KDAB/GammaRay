@@ -56,6 +56,16 @@ class QuickInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
+    enum StateFlag {
+        Ready = 0x0,
+        WaitingApply = 0x1,
+        WaitingFeatures = 0x2,
+        WaitingServerSideDecorations = 0x4,
+        WaitingOverlaySettings = 0x8,
+        WaitingAll = WaitingApply | WaitingFeatures | WaitingServerSideDecorations | WaitingOverlaySettings
+    };
+    Q_DECLARE_FLAGS(State, StateFlag)
+
     explicit QuickInspectorWidget(QWidget *parent = nullptr);
     ~QuickInspectorWidget();
 
@@ -70,11 +80,13 @@ private slots:
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                               const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);
+    void stateReceived(GammaRay::QuickInspectorWidget::StateFlag flag);
     void resetState();
     void saveState();
 
 private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
+    QuickInspectorWidget::State m_state;
     UIStateManager m_stateManager;
     QuickSceneControlWidget *m_scenePreviewWidget;
     QuickInspectorInterface *m_interface;
@@ -89,5 +101,7 @@ class QuickInspectorUiFactory : public QObject, public StandardToolUiFactory<Qui
     void initUi() override;
 };
 }
+
+Q_DECLARE_METATYPE(GammaRay::QuickInspectorWidget::StateFlag)
 
 #endif
