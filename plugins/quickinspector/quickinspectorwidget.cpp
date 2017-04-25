@@ -150,6 +150,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(m_scenePreviewWidget, SIGNAL(stateChanged()), this, SLOT(saveState()));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(saveState()));
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()
@@ -248,8 +249,6 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint &pos)
 
 void QuickInspectorWidget::resetState()
 {
-    disconnect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
-    disconnect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     m_stateManager.reset();
 }
 
