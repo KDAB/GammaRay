@@ -77,7 +77,9 @@ QString Util::shortDisplayString(const QObject *object)
 
 QString Util::addressToString(const void *p)
 {
-    return QLatin1String("0x") + QString::number(reinterpret_cast<qlonglong>(p), 16);
+    char buf[20];
+    sprintf(buf, "0x%x\0", p);
+    return QString::fromLatin1(buf);
 }
 
 QString Util::enumToString(const QVariant& value, const char* typeName, const QObject* object)
