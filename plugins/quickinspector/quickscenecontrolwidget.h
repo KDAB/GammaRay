@@ -95,7 +95,7 @@ private:
     QAction *m_visualizeChanges;
     QAction *m_visualizeTraces;
     QAction *m_serverSideDecorationsEnabled;
-    QMenu *m_gridSettings;
+    QMenu *m_gridSettingsMenu;
 
     QuickScenePreviewWidget *m_previewWidget;
 
