@@ -126,8 +126,7 @@ void NetworkSelectionModel::sendSelection()
                 QModelIndex defaultIndex;
 
                 QMetaObject::invokeMethod(sourceModel, "defaultSelectedItem", Qt::DirectConnection,
-                                          QReturnArgument<QPair<int,
-                                                                QVariant> >("QPair<int, QVariant>",
+                                          QReturnArgument<QPair<int, QVariant> >("QPair<int,QVariant>",
                                                                             result));
 
                 if (result.second.userType() == qMetaTypeId<ModelUtils::MatchAcceptor>()) {

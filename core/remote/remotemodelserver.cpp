@@ -112,11 +112,9 @@ void RemoteModelServer::connectModel()
     connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
             SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     connect(m_model,
-            SIGNAL(layoutChanged(QList<QPersistentModelIndex>,
-                                 QAbstractItemModel::LayoutChangeHint)),
+            SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
             this,
-            SLOT(layoutChanged(QList<QPersistentModelIndex>,
-                               QAbstractItemModel::LayoutChangeHint)));
+            SLOT(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
 #endif
     connect(m_model, SIGNAL(modelReset()), SLOT(modelReset()));
     connect(m_model, SIGNAL(destroyed(QObject*)), SLOT(modelDeleted()));
@@ -152,11 +150,9 @@ void RemoteModelServer::disconnectModel()
     disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
                this, SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     disconnect(m_model,
-               SIGNAL(layoutChanged(QList<QPersistentModelIndex>,
-                                    QAbstractItemModel::LayoutChangeHint)),
+               SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
                this,
-               SLOT(layoutChanged(QList<QPersistentModelIndex>,
-                                  QAbstractItemModel::LayoutChangeHint)));
+               SLOT(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
 #endif
     disconnect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
     disconnect(m_model, SIGNAL(destroyed(QObject*)), this, SLOT(modelDeleted()));
