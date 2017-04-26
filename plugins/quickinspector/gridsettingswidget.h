@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_GRIDSETTINGSWIDGET_H
 #define GAMMARAY_QUICKINSPECTOR_GRIDSETTINGSWIDGET_H
 
-#include <QFrame>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GridSettingsWidget; }
@@ -38,7 +38,7 @@ QT_END_NAMESPACE
 namespace GammaRay {
 struct QuickDecorationsSettings;
 
-class GridSettingsWidget : public QFrame
+class GridSettingsWidget : public QWidget
 {
     Q_OBJECT
 

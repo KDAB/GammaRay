@@ -33,7 +33,7 @@
 namespace GammaRay {
 
 GridSettingsWidget::GridSettingsWidget(QWidget *parent)
-    : QFrame(parent)
+    : QWidget(parent)
     , ui(new Ui::GridSettingsWidget)
 {
     ui->setupUi(this);

@@ -60,7 +60,7 @@ static QAction *checkedAction(QActionGroup *group) {
 
 QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspector, QWidget *parent)
     : QWidget(parent)
-    , m_gridSettingsWidget(new GridSettingsWidget(this))
+    , m_gridSettingsWidget(new GridSettingsWidget) // Owned by the QWidgetAction
     , m_legendTool(new QuickOverlayLegend(this))
     , m_inspectorInterface(inspector)
 {
@@ -153,12 +153,18 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     QWidgetAction *gridSettingsAction = new QWidgetAction(this);
     gridSettingsAction->setDefaultWidget(m_gridSettingsWidget);
 
-    m_gridSettings = new QMenu(tr("Grid Settings"), this);
-    m_gridSettings->setIcon(UIResources::themedIcon(QLatin1String("grid-settings.png")));
-    m_gridSettings->setToolTip(tr("<b>Grid Settings</b><br>"
+    m_gridSettingsMenu = new QMenu(tr("Grid Settings"), this);
+    m_gridSettingsMenu->setIcon(UIResources::themedIcon(QLatin1String("grid-settings.png")));
+    m_gridSettingsMenu->setToolTip(tr("<b>Grid Settings</b><br>"
                                   "This popup a small widget to configure the grid settings."));
-    m_gridSettings->setToolTipsVisible(true);
-    m_gridSettings->addAction(gridSettingsAction);
+    m_gridSettingsMenu->setToolTipsVisible(true);
+    m_gridSettingsMenu->addAction(gridSettingsAction);
+
+#if defined(Q_OS_MAC)
+    // Workaround QTBUG-60424
+    connect(m_gridSettingsMenu, &QMenu::aboutToShow,
+            m_gridSettingsWidget, static_cast<void (QWidget::*)()>(&QWidget::update));
+#endif
 
     m_toolBar->addActions(m_visualizeGroup->actions());
     connect(m_visualizeGroup, SIGNAL(triggered(QAction*)), this,
@@ -207,7 +213,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     addActions(m_toolBar->actions()
                << menuSeparator
                << m_legendTool->visibilityAction()
-               << m_gridSettings->menuAction());
+               << m_gridSettingsMenu->menuAction());
 }
 
 void QuickSceneControlWidget::resizeEvent(QResizeEvent *e)
