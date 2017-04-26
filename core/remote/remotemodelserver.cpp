@@ -32,6 +32,7 @@
 #include <common/protocol.h>
 #include <common/message.h>
 #include <common/modelevent.h>
+#include <common/sourcelocation.h>
 
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
@@ -306,14 +307,20 @@ bool RemoteModelServer::canSerialize(const QVariant &value) const
             if (!canSerialize(v))
                 return false;
         }
+        return true;
     } else if (value.canConvert<QVariantMap>()) {
         auto iterable = value.value<QAssociativeIterable>();
         for (auto it = iterable.begin(); it != iterable.end(); ++it) {
-            if (!canSerialize(it.value()))
+            if (!canSerialize(it.value()) || !canSerialize(it.key()))
                 return false;
         }
+        return true;
     }
 #endif
+
+    // whitelist a few expensive to encode types we know we can serialize
+    if (value.userType() == qMetaTypeId<QUrl>() || value.userType() == qMetaTypeId<GammaRay::SourceLocation>())
+        return true;
 
     // ugly, but there doesn't seem to be a better way atm to find out without trying
     m_dummyBuffer->seek(0);
