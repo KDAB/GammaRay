@@ -207,7 +207,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         msg << quint32(indexes.size());
         foreach (const auto &qmIndex, indexes)
             msg << Protocol::fromQModelIndex(qmIndex)
-                          << filterItemData(m_model->itemData(qmIndex))
+                          << filterItemData(std::move(m_model->itemData(qmIndex)))
                           << qint32(m_model->flags(qmIndex));
 
         sendMessage(msg);
@@ -268,9 +268,8 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
     }
 }
 
-QMap<int, QVariant> RemoteModelServer::filterItemData(const QMap< int, QVariant > &data) const
+QMap<int, QVariant> RemoteModelServer::filterItemData(QMap<int, QVariant> &&itemData) const
 {
-    QMap<int, QVariant> itemData(data);
     for (QMap<int, QVariant>::iterator it = itemData.begin(); it != itemData.end();) {
         if (!it.value().isValid()) {
             it = itemData.erase(it);
