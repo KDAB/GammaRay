@@ -193,7 +193,6 @@ private slots:
 
     void processQueuedObjectChanges();
     void handleObjectDestroyed(QObject *obj);
-    void objectParentChanged();
 
 private:
     friend class ProbeCreator;
