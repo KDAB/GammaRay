@@ -33,7 +33,7 @@
       <item row="0" column="1">
        <widget class="QSpinBox" name="sbXOffset">
         <property name="minimum">
-         <number>-9999</number>
+         <number>0</number>
         </property>
         <property name="maximum">
          <number>9999</number>
@@ -50,7 +50,7 @@
       <item row="1" column="1">
        <widget class="QSpinBox" name="sbYOffset">
         <property name="minimum">
-         <number>-9999</number>
+         <number>0</number>
         </property>
         <property name="maximum">
          <number>9999</number>
@@ -67,7 +67,7 @@
       <item row="2" column="1">
        <widget class="QSpinBox" name="sbCellWidth">
         <property name="minimum">
-         <number>-9999</number>
+         <number>0</number>
         </property>
         <property name="maximum">
          <number>9999</number>
@@ -84,7 +84,7 @@
       <item row="3" column="1">
        <widget class="QSpinBox" name="sbCellHeight">
         <property name="minimum">
-         <number>-9999</number>
+         <number>0</number>
         </property>
         <property name="maximum">
          <number>9999</number>
