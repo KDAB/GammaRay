@@ -53,7 +53,7 @@ struct DomError {
 
     QString toString() const
     {
-        return QString::fromLatin1("An error occured at line %1, column %2: %3")
+        return QString::fromLatin1("An error occurred at line %1, column %2: %3")
                 .arg(line).arg(column).arg(error);
     }
 
