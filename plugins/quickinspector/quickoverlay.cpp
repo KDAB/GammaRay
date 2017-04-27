@@ -109,9 +109,9 @@ static QVector<QQuickItem *> findItemByClassName(const char *className, QQuickIt
     QList<QQuickItem *> childItems = parent->childItems();
     // direct children of contentItem need to be sorted the over way so overlay is draw on top of the rest
     if (parent == parent->window()->contentItem()) {
-        qStableSort(childItems.begin(), childItems.end(), quickItemZGreaterThan);
+        qSort(childItems.begin(), childItems.end(), quickItemZGreaterThan);
     } else {
-        qStableSort(childItems.begin(), childItems.end(), quickItemZLessThan);
+        qSort(childItems.begin(), childItems.end(), quickItemZLessThan);
     }
 
 
