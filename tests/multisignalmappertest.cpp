@@ -79,13 +79,13 @@ private slots:
         QVERIFY(spy.isValid());
         QVERIFY(spy.isEmpty());
 
-        emitter1.signal1(42);
+        emit emitter1.signal1(42);
         QCOMPARE(spy.size(), 1);
         QCOMPARE(spy.at(0).at(0).value<QObject *>(), &emitter1);
         QCOMPARE(spy.at(0).at(1).toInt(), emitter1.metaObject()->indexOfSignal("signal1(int)"));
         QCOMPARE(spy.at(0).at(2).value<QVector<QVariant> >().first().toInt(), 42);
 
-        emitter2.signal2(QStringLiteral("hello"));
+        emit emitter2.signal2(QStringLiteral("hello"));
         QCOMPARE(spy.size(), 2);
         QCOMPARE(spy.at(1).at(0).value<QObject *>(), &emitter2);
         QCOMPARE(spy.at(1).at(1).toInt(), emitter1.metaObject()->indexOfSignal("signal2(QString)"));
