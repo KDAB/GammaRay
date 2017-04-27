@@ -257,7 +257,9 @@ private slots:
     {
         QVERIFY(new ModelTest(m_model, this));
         QVERIFY(testIviObject(m_climate));
+#if defined(QT_IVIMEDIA_LIB)
         QVERIFY(testIviObject(m_amfm));
+#endif
     }
 
     void testModelContentChanges_data()
