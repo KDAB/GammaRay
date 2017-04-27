@@ -207,7 +207,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         msg << quint32(indexes.size());
         foreach (const auto &qmIndex, indexes)
             msg << Protocol::fromQModelIndex(qmIndex)
-                          << filterItemData(std::move(m_model->itemData(qmIndex)))
+                          << filterItemData(m_model->itemData(qmIndex))
                           << qint32(m_model->flags(qmIndex));
 
         sendMessage(msg);
