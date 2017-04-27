@@ -7,11 +7,18 @@ if(NOT CMAKE_CROSSCOMPILING)
       target_link_libraries(classesiconsextractor LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTXML_LIBRARIES})
     endif()
 
+    # Windows does not support rpath so in order to this command to succeed the Qt libraries must be in PATH
+    if (MSVC)
+      set(PATH_PREFIX PATH=%{QT_INSTALL_BINS};%PATH%)
+    else()
+      set(PATH_PREFIX)
+    endif()
+
     add_custom_command(
         OUTPUT
             ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp
         COMMAND
-            classesiconsextractor
+            ${PATH_PREFIX} classesiconsextractor
                 -qrc ${CMAKE_CURRENT_SOURCE_DIR}/../ui/resources/ui.qrc
                 -out ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp
         DEPENDS
