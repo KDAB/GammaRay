@@ -502,13 +502,13 @@ void QuickInspector::setCustomRenderMode(
     // Qt does some performance optimizations that break custom render modes.
     // Thus the optimizations are only applied if there is no custom render mode set.
     // So we need to make the scenegraph recheck whether a custom render mode is set.
-    // We do this by simply recreating the renderer.
-    // We need however to recreate the renderer in the render thread.
+    // We do this by simply cleaning the scene graph which will recreate the renderer.
+    // We need however to do that at the proper time from the gui thread.
     QMutexLocker lock(&m_pendingRenderMode.mutex);
     m_pendingRenderMode.mode = customRenderMode;
     m_pendingRenderMode.window = m_window;
     if (m_window && !m_pendingRenderMode.connection) {
-        m_pendingRenderMode.connection = connect(m_window.data(), &QQuickWindow::beforeSynchronizing, this, &QuickInspector::applyRenderMode, Qt::DirectConnection);
+        m_pendingRenderMode.connection = connect(m_window.data(), &QQuickWindow::afterAnimating, this, &QuickInspector::applyRenderMode, Qt::DirectConnection);
     }
 
 #else
@@ -554,16 +554,8 @@ void QuickInspector::applyRenderMode()
     QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
     if (winPriv->customRenderMode == mode)
         return;
-
-    QQuickItemPrivate *contentPriv = QQuickItemPrivate::get(m_window->contentItem());
-    QSGNode *rootNode = contentPriv->itemNode();
-    while (rootNode->parent())
-        rootNode = rootNode->parent();
-
-    winPriv->customRenderMode = renderModeToString(m_pendingRenderMode.mode);
-    delete winPriv->renderer;
-    winPriv->renderer = winPriv->context->createRenderer();
-    winPriv->renderer->setRootNode(static_cast<QSGRootNode *>(rootNode));
+    winPriv->customRenderMode = mode;
+    QMetaObject::invokeMethod(m_window, "cleanupSceneGraph");
 #endif
 }
 
