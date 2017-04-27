@@ -186,8 +186,16 @@ int QPaintBuffer::metric(PaintDeviceMetric metric) const
     case PdmPhysicalDpiY:
         val = qt_defaultDpiY();
         break;
+    // here & below: use values from QPaintDevice::metric to avoid runtime warnings
+    case PdmNumColors:
+        val = 256;
+        break;
+    case PdmDevicePixelRatio:
+        val = 1;
+        break;
     default:
         val = QPaintDevice::metric(metric);
+        break;
     }
 
     return val;
