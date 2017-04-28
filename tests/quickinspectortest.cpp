@@ -201,8 +201,7 @@ private slots:
 
         auto itemSelectionModel = ObjectBroker::selectionModel(itemModel);
         QVERIFY(itemSelectionModel);
-        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,
-                                                                       QItemSelection)));
+        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
         QVERIFY(itemSpy.isValid());
 
         auto sgSelectionModel = ObjectBroker::selectionModel(sgModel);

@@ -67,8 +67,7 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
     m_treeView->setModel(proxy);
     m_treeView->setSelectionModel(ObjectBroker::selectionModel(proxy));
     m_treeView->sortByColumn(0, Qt::AscendingOrder);
-    connect(m_treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,
-                                                                  QItemSelection)), this,
+    connect(m_treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this,
             SLOT(selectionChanged(QItemSelection)));
 
     auto objectSearchLine = new QLineEdit(this);
