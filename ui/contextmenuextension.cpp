@@ -78,7 +78,7 @@ bool ContextMenuExtension::discoverSourceLocation(ContextMenuExtension::Location
     if (url.isEmpty())
         return false;
 
-    setLocation(location, SourceLocation(url, 0));
+    setLocation(location, SourceLocation(url));
     return true;
 }
 

@@ -36,12 +36,28 @@
 #include <QUrl>
 
 namespace GammaRay {
-/** @brief Specifies a source code location. */
+/**
+ * @brief Specifies a source code location.
+ *
+ * A source location consists of a document and cursor position
+ *
+ * A Cursor represents a position in a Document through a tuple
+ * of two ints, namely the @ref line() and @ref column().
+ *
+ * Notes
+ * - Lines and columns start a 0 (=> zero-based numbering)
+ */
 class GAMMARAY_COMMON_EXPORT SourceLocation
 {
 public:
+    /**
+     * The default constructor creates a (invalid) cursor at position (-1, -1) with an invalid url
+     */
     SourceLocation();
-    explicit SourceLocation(const QUrl &url, int line = -1, int column = -1);
+    /**
+     * This constructor creates a (valid) cursor at position (0, 0) with @p url
+     */
+    explicit SourceLocation(const QUrl &url, int line = 0, int column = 0);
     ~SourceLocation();
 
     bool isValid() const;
@@ -55,6 +71,18 @@ public:
     int column() const;
     void setColumn(int column);
 
+    /**
+     * Returns a human-readable version of this source location
+     *
+     * @code
+     * SourceLocation loc(QUrl::fromLocalFile("file.cpp", 0, 0);
+     * qDebug() << loc.displayString();
+     *
+     * => Prints: file.cpp:1:1
+     * @endcode
+     *
+     * @note This will use one-based numbering (file.cpp:1:1 instead of file.cpp:0:0)
+     */
     QString displayString() const;
 
 private:
