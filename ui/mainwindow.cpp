@@ -96,7 +96,7 @@ static const IdeSettings ideSettings[] = {
       nullptr     },
     { "gvim", "%f +%l", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "gvim"),
       nullptr     },
-    { "qtcreator", "%f", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr     }
+    { "qtcreator", "%f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr     }
 #endif
 };
 #if defined(Q_OS_WIN) || defined(Q_OS_OSX) // Remove this #if branch when adding real data to ideSettings for Windows/OSX.
