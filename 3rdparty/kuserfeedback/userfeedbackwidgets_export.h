@@ -1,0 +1,8 @@
+#ifndef USERFEEDBACKWIDGETS_EXPORT_H
+#define USERFEEDBACKWIDGETS_EXPORT_H
+
+#include "gammaray_kuserfeedback_export.h"
+
+#define USERFEEDBACKWIDGETS_EXPORT GAMMARAY_KUSERFEEDBACK_EXPORT
+
+#endif

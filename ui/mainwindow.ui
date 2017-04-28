@@ -114,6 +114,7 @@ background-position:bottom right;
      <addaction name="actionMessageStatistics"/>
     </widget>
     <addaction name="actionHelp"/>
+    <addaction name="actionContribute"/>
     <addaction name="separator"/>
     <addaction name="menu_Diagnostics"/>
     <addaction name="separator"/>
@@ -225,6 +226,11 @@ background-position:bottom right;
    </property>
    <property name="toolTip">
     <string>Show help browser.</string>
+   </property>
+  </action>
+  <action name="actionContribute">
+   <property name="text">
+    <string>&amp;Contribute...</string>
    </property>
   </action>
  </widget>

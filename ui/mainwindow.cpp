@@ -45,6 +45,15 @@
 
 #include "kde/klinkitemselectionmodel.h"
 
+#include <3rdparty/kuserfeedback/widgets/feedbackconfigdialog.h>
+#include <3rdparty/kuserfeedback/widgets/notificationpopup.h>
+#include <3rdparty/kuserfeedback/core/applicationversionsource.h>
+#include <3rdparty/kuserfeedback/core/platforminfosource.h>
+#include <3rdparty/kuserfeedback/core/provider.h>
+#include <3rdparty/kuserfeedback/core/qtversionsource.h>
+#include <3rdparty/kuserfeedback/core/startcountsource.h>
+#include <3rdparty/kuserfeedback/core/usagetimesource.h>
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <private/qguiplatformplugin_p.h>
 #else
@@ -297,6 +306,22 @@ MainWindow::MainWindow(QWidget *parent)
             SLOT(navigateToCode(QUrl,int,int)));
 
     connect(this, SIGNAL(targetQuitRequested()), &m_stateManager, SLOT(saveState()));
+
+    connect(ui->actionContribute, SIGNAL(triggered()), this, SLOT(configureFeedback()));
+    m_feedbackProvider = new UserFeedback::Provider(this);
+    m_feedbackProvider->setProductIdentifier(QStringLiteral("com.kdab.GammaRay"));
+    m_feedbackProvider->setFeedbackServer(QUrl(QStringLiteral("https://feedback.volkerkrause.eu")));
+    m_feedbackProvider->setSubmissionInterval(1);
+    m_feedbackProvider->setApplicationStartsUntilEncouragement(5);
+    m_feedbackProvider->setEncouragementDelay(10);
+    m_feedbackProvider->addDataSource(new UserFeedback::ApplicationVersionSource, UserFeedback::Provider::BasicSystemInformation);
+    m_feedbackProvider->addDataSource(new UserFeedback::PlatformInfoSource, UserFeedback::Provider::BasicSystemInformation);
+    m_feedbackProvider->addDataSource(new UserFeedback::QtVersionSource, UserFeedback::Provider::BasicSystemInformation);
+    m_feedbackProvider->addDataSource(new UserFeedback::StartCountSource, UserFeedback::Provider::BasicUsageStatistics);
+    m_feedbackProvider->addDataSource(new UserFeedback::UsageTimeSource, UserFeedback::Provider::BasicUsageStatistics);
+
+    auto popup = new UserFeedback::NotificationPopup(this);
+    popup->setFeedbackProvider(m_feedbackProvider);
 }
 
 MainWindow::~MainWindow()
@@ -557,4 +582,11 @@ void MainWindow::detachProbe()
 {
     emit targetQuitRequested();
     ObjectBroker::object<ProbeControllerInterface *>()->detachProbe();
+}
+
+void MainWindow::configureFeedback()
+{
+    UserFeedback::FeedbackConfigDialog dlg;
+    dlg.setFeedbackProvider(m_feedbackProvider);
+    dlg.exec();
 }

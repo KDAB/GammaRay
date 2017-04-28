@@ -40,6 +40,10 @@ class QHeaderView;
 class QUrl;
 QT_END_NAMESPACE
 
+namespace UserFeedback {
+class Provider;
+}
+
 namespace GammaRay {
 namespace Ui {
 class MainWindow;
@@ -73,6 +77,7 @@ signals:
 
 private slots:
     void help();
+    void configureFeedback();
     void about();
     void aboutPlugins();
     void aboutKDAB();
@@ -97,6 +102,8 @@ private:
     QScopedPointer<Ui::MainWindow> ui;
     MainWindowUIStateManager m_stateManager;
     ClientToolFilterProxyModel *m_toolFilterModel;
+
+    UserFeedback::Provider *m_feedbackProvider;
 };
 }
 

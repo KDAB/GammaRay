@@ -40,4 +40,7 @@
 
 #define Q_STATIC_ASSERT(x)
 
+#define qCDebug(x) qDebug()
+#define qCWarning(x) qWarning()
+
 #endif
