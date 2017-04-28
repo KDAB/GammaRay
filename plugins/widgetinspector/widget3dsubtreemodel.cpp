@@ -123,9 +123,9 @@ void Widget3DSubtreeModel::populate()
         return;
     }
 
-    QList<QModelIndex> toVisit = { m_rootIndex };
+    QVector<QModelIndex> toVisit = { m_rootIndex };
     while (!toVisit.isEmpty()) {
-        const auto index = toVisit.takeFirst();
+        const auto index = toVisit.takeLast();
         Node *parent = nullptr;
         if (index != m_rootIndex) {
             parent = mNodeLookup.value(index.parent().data(Widget3DModel::IdRole).toString());
@@ -156,7 +156,7 @@ void Widget3DSubtreeModel::populate()
         for (int i = 0, c = sourceModel()->rowCount(index); i < c; ++i) {
             const auto child = index.child(i, 0);
             Q_ASSERT(child.isValid());
-            toVisit.push_front(child);
+            toVisit.push_back(child);
         }
     }
 }
@@ -167,16 +167,16 @@ QModelIndex Widget3DSubtreeModel::findIndexForObject(const QString &objectId) co
         return QModelIndex();
     }
 
-    QList<QModelIndex> toVisit = { QModelIndex() };
+    QVector<QModelIndex> toVisit = { QModelIndex() };
     while (!toVisit.isEmpty()) {
-        const auto idx = toVisit.takeFirst();
+        const auto idx = toVisit.takeLast();
         const QString v = sourceModel()->data(idx, Widget3DModel::IdRole).toString();
         if (v == objectId) {
             return idx;
         }
 
         for (int i = 0, c = sourceModel()->rowCount(idx); i < c; ++i) {
-            toVisit.prepend(sourceModel()->index(i, 0, idx));
+            toVisit.push_back(sourceModel()->index(i, 0, idx));
         }
     }
 

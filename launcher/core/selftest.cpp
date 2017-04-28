@@ -70,7 +70,7 @@ bool SelfTest::checkProbes()
 
         // TODO: we could do some more elaborate check for plugins etc here?
 
-        information(tr("Found valid probe for ABI %1 at %2.").arg(abi.id(), probePath));
+        emit information(tr("Found valid probe for ABI %1 at %2.").arg(abi.id(), probePath));
         ++validProbeCount;
     }
 

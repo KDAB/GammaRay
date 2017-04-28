@@ -78,7 +78,7 @@ QString Util::shortDisplayString(const QObject *object)
 QString Util::addressToString(const void *p)
 {
     char buf[20];
-    sprintf(buf, "0x%x\0", p);
+    qsnprintf(buf, sizeof(buf), "0x%llx", reinterpret_cast<quint64>(p));
     return QString::fromLatin1(buf);
 }
 

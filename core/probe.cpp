@@ -56,7 +56,7 @@
 #include <common/paths.h>
 
 #if USE_BACKWARD_CPP
-#include <3rdparty/backward-cpp/backward.hpp>
+#include <backward.hpp>
 #endif
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

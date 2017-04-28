@@ -207,7 +207,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         msg << quint32(indexes.size());
         foreach (const auto &qmIndex, indexes)
             msg << Protocol::fromQModelIndex(qmIndex)
-                          << filterItemData(std::move(m_model->itemData(qmIndex)))
+                          << filterItemData(m_model->itemData(qmIndex))
                           << qint32(m_model->flags(qmIndex));
 
         sendMessage(msg);
@@ -306,14 +306,15 @@ bool RemoteModelServer::canSerialize(const QVariant &value) const
             if (!canSerialize(v))
                 return false;
         }
-        return true;
+        // note: do not return true here, the fact we can write every single element
+        // does not mean we can write the entire thing, or vice vesa...
     } else if (value.canConvert<QVariantMap>()) {
         auto iterable = value.value<QAssociativeIterable>();
         for (auto it = iterable.begin(); it != iterable.end(); ++it) {
             if (!canSerialize(it.value()) || !canSerialize(it.key()))
                 return false;
         }
-        return true;
+        // see above
     }
 #endif
 

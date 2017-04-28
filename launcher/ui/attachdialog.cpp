@@ -95,7 +95,6 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
     setWindowIcon(QIcon(QStringLiteral(":/gammaray/GammaRay-128x128.png")));
 
     ui.stackedWidget->setCurrentWidget(ui.loadingLabel);
-    emit updateButtonState();
     updateProcesses();
 }
 

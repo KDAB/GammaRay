@@ -967,8 +967,7 @@ void RemoteModel::registerClient(const QString &serverObject)
     m_myAddress = Endpoint::instance()->objectAddress(serverObject);
     connect(Endpoint::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)),
             SLOT(serverRegistered(QString,Protocol::ObjectAddress)));
-    connect(Endpoint::instance(), SIGNAL(objectUnregistered(QString,
-                                                            Protocol::ObjectAddress)),
+    connect(Endpoint::instance(), SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)),
             SLOT(serverUnregistered(QString,Protocol::ObjectAddress)));
 }
 

@@ -475,7 +475,7 @@ void QtIviPropertyModel::objectAdded(QObject *obj)
         m_seenCarriers << obj;
 
         beginInsertRows(QModelIndex(), m_carriers.size(), m_carriers.size());
-        m_carriers.push_back(std::move(IviCarrier(obj)));
+        m_carriers.push_back(IviCarrier(obj));
         endInsertRows();
 
         const QMetaObject *mo(obj->metaObject());

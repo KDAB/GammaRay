@@ -288,6 +288,10 @@ static QString surfaceTypeToString(QSurface::SurfaceType type)
     case QSurface::RasterGLSurface:
         return QStringLiteral("RasterGLSurface");
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+    case QSurface::OpenVGSurface:
+        return QStringLiteral("OpenVG");
+#endif
     }
     return QStringLiteral("Unknown Surface Type");
 }
