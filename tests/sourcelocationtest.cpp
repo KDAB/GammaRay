@@ -49,19 +49,19 @@ private slots:
         QTest::newRow("invalid 2") << QUrl() << 42 << 23 << QString() << false;
         QTest::newRow("url only") << QUrl(QStringLiteral("file:///some/file")) << -1 << -1
                                   << QStringLiteral("/some/file") << true;
-        QTest::newRow("url and line") << QUrl(QStringLiteral("file:///some/file")) << 23 << -1
+        QTest::newRow("url and line") << QUrl(QStringLiteral("file:///some/file")) << 22 << -1
                                       << QStringLiteral("/some/file:23") << true;
-        QTest::newRow("complete") << QUrl(QStringLiteral("file:///some/file")) << 23 << 42
+        QTest::newRow("complete") << QUrl(QStringLiteral("file:///some/file")) << 22 << 41
                                   << QStringLiteral("/some/file:23:42") << true;
         QTest::newRow("url and column") << QUrl(QStringLiteral("file:///some/file")) << -1 << 42
                                         << QStringLiteral("/some/file") << true;
-        QTest::newRow("complete but 0 column") << QUrl(QStringLiteral("file:///some/file")) << 23
-                                               << 0 << QStringLiteral("/some/file:23") << true;
-        QTest::newRow("complete but 1 column") << QUrl(QStringLiteral("file:///some/file")) << 23
-                                               << 1 << QStringLiteral("/some/file:23:1") << true;
-        QTest::newRow("url") << QUrl::fromLocalFile(QStringLiteral("/some/file")) << 1 << 1
+        QTest::newRow("complete but 0 column") << QUrl(QStringLiteral("file:///some/file")) << 22
+                                               << -1 << QStringLiteral("/some/file:23") << true;
+        QTest::newRow("complete but 1 column") << QUrl(QStringLiteral("file:///some/file")) << 22
+                                               << 0 << QStringLiteral("/some/file:23:1") << true;
+        QTest::newRow("url") << QUrl::fromLocalFile(QStringLiteral("/some/file")) << 0 << 0
                              << QStringLiteral("/some/file:1:1") << true;
-        QTest::newRow("qrc") << QUrl(QStringLiteral("qrc:///main.qml")) << 1 << 1 << QStringLiteral(
+        QTest::newRow("qrc") << QUrl(QStringLiteral("qrc:///main.qml")) << 0 << 0 << QStringLiteral(
             "qrc:///main.qml:1:1") << true;
     }
 
