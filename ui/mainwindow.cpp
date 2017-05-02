@@ -490,8 +490,8 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
 
         const QString filePath = url.isLocalFile() ? url.toLocalFile() : url.toString();
         command.replace(QStringLiteral("%f"), filePath);
-        command.replace(QStringLiteral("%l"), QString::number(std::max(1, lineNumber)));
-        command.replace(QStringLiteral("%c"), QString::number(std::max(1, columnNumber)));
+        command.replace(QStringLiteral("%l"), QString::number(std::max(1, lineNumber + 1)));
+        command.replace(QStringLiteral("%c"), QString::number(std::max(1, columnNumber + 1)));
 
         if (!command.isEmpty()) {
             std::cout << "Detaching: " << qPrintable(command) << std::endl;

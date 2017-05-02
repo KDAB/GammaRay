@@ -94,13 +94,13 @@ QString SourceLocation::displayString() const
     else
         result = m_url.toString();
 
-    if (m_line < 1)
+    if (m_line < 0)
         return result;
 
-    result += QString::fromLatin1(":%1").arg(m_line);
+    result += QString::fromLatin1(":%1").arg(m_line + 1);
 
-    if (m_column >= 1)
-        result += QString::fromLatin1(":%1").arg(m_column);
+    if (m_column >= 0)
+        result += QString::fromLatin1(":%1").arg(m_column + 1);
 
     return result;
 }
