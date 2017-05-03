@@ -35,6 +35,11 @@
 #include <QByteArray>
 #include <QDataStream>
 
+#include <functional>
+#include <memory>
+
+class MessageBuffer;
+
 namespace GammaRay {
 /**
  * Single message send between client and server.
@@ -119,11 +124,10 @@ private:
      */
     QDataStream &payload() const;
 
-    mutable QByteArray m_buffer;
-    mutable QScopedPointer<QDataStream> m_stream;
-
     Protocol::ObjectAddress m_objectAddress;
     Protocol::MessageType m_messageType;
+
+    std::unique_ptr<MessageBuffer, std::function<void(MessageBuffer *)>> m_buffer;
 };
 }
 
