@@ -172,18 +172,13 @@ QModelIndex QuickItemModel::indexForItem(QQuickItem *item) const
         return QModelIndex();
 
     QQuickItem *parent = m_childParentMap.value(item);
-    const QModelIndex parentIndex = indexForItem(parent);
-    if (!parentIndex.isValid() && parent)
-        return QModelIndex();
-
     const QVector<QQuickItem *> &siblings = m_parentChildMap[parent];
-    QVector<QQuickItem *>::const_iterator it
-        = std::lower_bound(siblings.constBegin(), siblings.constEnd(), item);
+    const auto it = std::lower_bound(siblings.constBegin(), siblings.constEnd(), item);
     if (it == siblings.constEnd() || *it != item)
         return QModelIndex();
 
     const int row = std::distance(siblings.constBegin(), it);
-    return index(row, 0, parentIndex);
+    return createIndex(row, 0, item);
 }
 
 void QuickItemModel::objectAdded(QObject *obj)
