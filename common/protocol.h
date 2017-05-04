@@ -56,6 +56,7 @@ enum BuildInMessageType {
 
     // server -> client
     ServerVersion,
+    ServerDataVersionNegotiated,
 
     ObjectMapReply,
     ObjectAdded,
@@ -63,6 +64,7 @@ enum BuildInMessageType {
 
     // remote model messages
     // client -> server
+    ClientDataVersionNegotiated,
     ModelRowColumnCountRequest,
     ModelContentRequest,
     ModelHeaderRequest,

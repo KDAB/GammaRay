@@ -61,7 +61,7 @@ inline QByteArray uncompress(const QByteArray &src)
     return dst;
 }
 
-static const QDataStream::Version StreamVersion = QDataStream::Qt_4_8;
+static quint8 s_streamVersion = GammaRay::Message::lowestSupportedDataVersion();
 static const int minimumUncompressedSize = 32;
 
 template<typename T> static T readNumber(QIODevice *device)
@@ -124,7 +124,7 @@ QDataStream &Message::payload() const
             m_stream.reset(new QDataStream(&m_buffer, QIODevice::WriteOnly));
         else
             m_stream.reset(new QDataStream(m_buffer));
-        m_stream->setVersion(StreamVersion);
+        m_stream->setVersion(s_streamVersion);
     }
     return *m_stream;
 }
@@ -173,6 +173,31 @@ Message Message::readMessage(QIODevice *device)
         }
     }
     return msg;
+}
+
+quint8 Message::lowestSupportedDataVersion()
+{
+    return QDataStream::Qt_4_8;
+}
+
+quint8 Message::highestSupportedDataVersion()
+{
+    return QDataStream::Qt_DefaultCompiledVersion;
+}
+
+quint8 Message::negotiatedDataVersion()
+{
+    return s_streamVersion;
+}
+
+void Message::setNegotiatedDataVersion(quint8 version)
+{
+    s_streamVersion = version;
+}
+
+void Message::resetNegotiatedDataVersion()
+{
+    s_streamVersion = lowestSupportedDataVersion();
 }
 
 void Message::write(QIODevice *device) const
