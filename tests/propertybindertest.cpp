@@ -75,8 +75,8 @@ class PropertyBinderTest : public QObject
 private slots:
     void testBinding()
     {
-        MyObject *obj1 = new MyObject(this);
-        MyObject *obj2 = new MyObject(this);
+        auto *obj1 = new MyObject(this);
+        auto *obj2 = new MyObject(this);
         new PropertyBinder(obj1, "intProp", obj2, "intProp");
 
         obj1->setIntProp(5);
@@ -91,9 +91,9 @@ private slots:
 
     void testInitialBinding()
     {
-        MyObject *obj1 = new MyObject(this);
+        auto *obj1 = new MyObject(this);
         obj1->setIntProp(18);
-        MyObject *obj2 = new MyObject(this);
+        auto *obj2 = new MyObject(this);
         QVERIFY(obj1->intProp() != obj2->intProp());
         new PropertyBinder(obj1, "intProp", obj2, "intProp");
         QCOMPARE(obj2->intProp(), 18);
@@ -101,10 +101,10 @@ private slots:
 
     void testMultiBinding()
     {
-        MyObject *obj1 = new MyObject(this);
+        auto *obj1 = new MyObject(this);
         obj1->setIntProp(18);
         obj1->setIntProp2(133);
-        MyObject *obj2 = new MyObject(this);
+        auto *obj2 = new MyObject(this);
 
         auto binder = new PropertyBinder(obj1, obj2);
         binder->add("intProp", "intProp");

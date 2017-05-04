@@ -54,14 +54,14 @@ extern void qt_format_text(const QFont &font,
 QTextItemIntCopy::QTextItemIntCopy(const QTextItem &item)
     : m_item(static_cast<const QTextItemInt &>(item))
 {
-    QChar *chars = new QChar[m_item.num_chars];
-    unsigned short *logClusters = new unsigned short[m_item.num_chars];
+    auto *chars = new QChar[m_item.num_chars];
+    auto short *logClusters = new unsigned short[m_item.num_chars];
     memcpy(chars, m_item.chars, m_item.num_chars * sizeof(QChar));
     memcpy(logClusters, m_item.logClusters, m_item.num_chars * sizeof(unsigned short));
     m_item.chars = chars;
     m_item.logClusters = logClusters;
 
-    char *glyphLayoutData = new char[m_item.glyphs.numGlyphs * QGlyphLayout::SpaceNeeded];
+    auto *glyphLayoutData = new char[m_item.glyphs.numGlyphs * QGlyphLayout::SpaceNeeded];
     QGlyphLayout glyphs(glyphLayoutData, m_item.glyphs.numGlyphs);
     memcpy(glyphs.offsets, m_item.glyphs.offsets, m_item.glyphs.numGlyphs * sizeof(QFixedPoint));
     memcpy(glyphs.glyphs, m_item.glyphs.glyphs, m_item.glyphs.numGlyphs * sizeof(glyph_t));

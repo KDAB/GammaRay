@@ -68,7 +68,7 @@ void MethodsTab::setObjectBaseName(const QString &baseName)
     auto clientModel = new ClientMethodModel(this);
     clientModel->setSourceModel(ObjectBroker::model(baseName + '.' + "methods"));
 
-    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    auto *proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(clientModel);
     proxy->setSortCaseSensitivity(Qt::CaseInsensitive);

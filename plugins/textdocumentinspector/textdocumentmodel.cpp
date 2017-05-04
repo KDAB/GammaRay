@@ -133,7 +133,7 @@ void TextDocumentModel::fillTable(QTextTable *table, QStandardItem *parent)
     for (int row = 0; row < table->rows(); ++row) {
         for (int col = 0; col < table->columns(); ++col) {
             QTextTableCell cell = table->cellAt(row, col);
-            QStandardItem *item = new QStandardItem;
+            auto *item = new QStandardItem;
             item->setText(tr("Cell %1x%2").arg(row).arg(col));
             appendRow(parent, item, cell.format());
             for (QTextFrame::iterator it = cell.begin(); it != cell.end(); ++it)
@@ -170,7 +170,7 @@ void TextDocumentModel::fillBlock(const QTextBlock &block, QStandardItem *parent
 
 QStandardItem *TextDocumentModel::formatItem(const QTextFormat &format)
 {
-    QStandardItem *item = new QStandardItem;
+    auto *item = new QStandardItem;
     if (!format.isValid()) {
         item->setText(tr("no format"));
     } else if (format.isImageFormat()) {

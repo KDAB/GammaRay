@@ -57,7 +57,7 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
     ui->timerView->setDeferredResizeMode(5, QHeaderView::ResizeToContents);
     connect(ui->timerView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
 
-    QSortFilterProxyModel * const sortModel = new QSortFilterProxyModel(this);
+    auto * const sortModel = new QSortFilterProxyModel(this);
     sortModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel")));
     sortModel->setDynamicSortFilter(true);
     ui->timerView->setModel(sortModel);

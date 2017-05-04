@@ -67,7 +67,7 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
             SLOT(selectEngine(int)));
 
     auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"));
-    ClientDecorationIdentityProxyModel *clientSceneModel = new ClientDecorationIdentityProxyModel(this);
+    auto *clientSceneModel = new ClientDecorationIdentityProxyModel(this);
     clientSceneModel->setSourceModel(sceneModel);
     ui->sceneTreeView->header()->setObjectName("sceneTreeViewHeader");
     ui->sceneTreeView->setModel(clientSceneModel);
@@ -83,7 +83,7 @@ Qt3DInspectorWidget::Qt3DInspectorWidget(QWidget *parent)
                                                    "com.kdab.GammaRay.Qt3DInspector.entityPropertyController"));
 
     auto frameGraphModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.frameGraphModel"));
-    ClientDecorationIdentityProxyModel *clientFrameGraphModel = new ClientDecorationIdentityProxyModel(this);
+    auto *clientFrameGraphModel = new ClientDecorationIdentityProxyModel(this);
     clientFrameGraphModel->setSourceModel(frameGraphModel);
     ui->frameGraphView->header()->setObjectName("frameGraphViewHeader");
     ui->frameGraphView->setModel(clientFrameGraphModel);

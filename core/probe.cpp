@@ -506,7 +506,7 @@ bool Probe::filterObject(QObject *obj) const
 
 void Probe::registerModel(const QString &objectName, QAbstractItemModel *model)
 {
-    RemoteModelServer *ms = new RemoteModelServer(objectName, model);
+    auto *ms = new RemoteModelServer(objectName, model);
     ms->setModel(model);
     ObjectBroker::registerModelInternal(objectName, model);
 }

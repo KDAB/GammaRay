@@ -129,7 +129,7 @@ QSet< QString > MimeTypesModel::normalizedMimeTypeNames(const QStringList &typeN
 QList<QStandardItem *> MimeTypesModel::makeRowForType(const QMimeType &mt)
 {
     QList<QStandardItem *> row;
-    QStandardItem *item = new QStandardItem;
+    auto *item = new QStandardItem;
     item->setText(mt.name());
     row.push_back(item);
 

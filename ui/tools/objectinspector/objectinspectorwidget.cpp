@@ -53,7 +53,7 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     ui->objectPropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.ObjectInspector"));
 
     auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"));
-    ClientDecorationIdentityProxyModel *clientModel = new ClientDecorationIdentityProxyModel(this);
+    auto *clientModel = new ClientDecorationIdentityProxyModel(this);
     clientModel->setSourceModel(model);
     ui->objectTreeView->header()->setObjectName("objectTreeViewHeader");
     ui->objectTreeView->setModel(clientModel);

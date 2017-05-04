@@ -120,7 +120,7 @@ QStyleOption *StyleOption::makeStyleOptionComplex()
 
 QStyleOption *StyleOption::makeButtonStyleOption()
 {
-    QStyleOptionButton *opt = new QStyleOptionButton;
+    auto *opt = new QStyleOptionButton;
     opt->features = QStyleOptionButton::None;
     opt->text = QStringLiteral("Label");
     return opt;
@@ -128,7 +128,7 @@ QStyleOption *StyleOption::makeButtonStyleOption()
 
 QStyleOption *StyleOption::makeComboBoxStyleOption()
 {
-    QStyleOptionComboBox *opt = new QStyleOptionComboBox;
+    auto *opt = new QStyleOptionComboBox;
     opt->frame = true;
     opt->currentText = QStringLiteral("Current Text");
     return opt;
@@ -145,7 +145,7 @@ QStyleOption *StyleOption::makeFrameStyleOption()
 
 QStyleOption *StyleOption::makeGroupBoxStyleOption()
 {
-    QStyleOptionGroupBox *opt = new QStyleOptionGroupBox;
+    auto *opt = new QStyleOptionGroupBox;
     opt->lineWidth = 1;
     opt->midLineWidth = 0;
     opt->text = QStringLiteral("Label");
@@ -154,7 +154,7 @@ QStyleOption *StyleOption::makeGroupBoxStyleOption()
 
 QStyleOption *StyleOption::makeHeaderStyleOption()
 {
-    QStyleOptionHeader *opt = new QStyleOptionHeader;
+    auto *opt = new QStyleOptionHeader;
     opt->orientation = Qt::Horizontal;
     opt->text = QStringLiteral("Label");
     return opt;
@@ -170,7 +170,7 @@ QStyleOption *StyleOption::makeItemViewStyleOption()
 
 QStyleOption *StyleOption::makeMenuStyleOption()
 {
-    QStyleOptionMenuItem *opt = new QStyleOptionMenuItem;
+    auto *opt = new QStyleOptionMenuItem;
     opt->text = QStringLiteral("Label");
     return opt;
 }
@@ -186,7 +186,7 @@ QStyleOption *StyleOption::makeProgressBarStyleOption()
 
 QStyleOption *StyleOption::makeSliderStyleOption()
 {
-    QStyleOptionSlider *opt = new QStyleOptionSlider;
+    auto *opt = new QStyleOptionSlider;
     opt->minimum = 0;
     opt->maximum = 100;
     opt->sliderValue = 42;
@@ -196,7 +196,7 @@ QStyleOption *StyleOption::makeSliderStyleOption()
 
 QStyleOption *StyleOption::makeSpinBoxStyleOption()
 {
-    QStyleOptionSpinBox *opt = new QStyleOptionSpinBox;
+    auto *opt = new QStyleOptionSpinBox;
     opt->frame = true;
     return opt;
 }
@@ -222,7 +222,7 @@ QStyleOption *StyleOption::makeTabWidgetFrameStyleOption()
 
 QStyleOption *StyleOption::makeTitleBarStyleOption()
 {
-    QStyleOptionTitleBar *opt = new QStyleOptionTitleBar;
+    auto *opt = new QStyleOptionTitleBar;
     opt->text = QStringLiteral("Title");
     opt->titleBarFlags = Qt::WindowMinMaxButtonsHint
                          |Qt::WindowTitleHint
@@ -240,7 +240,7 @@ QStyleOption *StyleOption::makeToolBoxStyleOption()
 
 QStyleOption *StyleOption::makeToolButtonStyleOption()
 {
-    QStyleOptionToolButton *opt = new QStyleOptionToolButton;
+    auto *opt = new QStyleOptionToolButton;
     opt->text = QStringLiteral("Label");
     opt->toolButtonStyle = Qt::ToolButtonFollowStyle;
     return opt;

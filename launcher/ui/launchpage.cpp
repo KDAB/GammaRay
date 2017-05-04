@@ -65,8 +65,8 @@ LaunchPage::LaunchPage(QWidget *parent)
 
     ui->argsBox->setModel(m_argsModel);
 
-    QCompleter *pathCompleter = new QCompleter(this);
-    QFileSystemModel *fsModel = new QFileSystemModel(this);
+    auto *pathCompleter = new QCompleter(this);
+    auto *fsModel = new QFileSystemModel(this);
     fsModel->setRootPath(QDir::rootPath());
     pathCompleter->setModel(fsModel);
     ui->progEdit->setCompleter(pathCompleter);

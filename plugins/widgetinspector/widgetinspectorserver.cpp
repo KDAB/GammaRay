@@ -125,7 +125,7 @@ WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *par
 
     recreateOverlayWidget();
 
-    WidgetTreeModel *widgetFilterProxy = new WidgetTreeModel(this);
+    auto *widgetFilterProxy = new WidgetTreeModel(this);
     widgetFilterProxy->setSourceModel(probe->objectTreeModel());
 
     auto widgetSearchProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);

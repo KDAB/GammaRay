@@ -95,7 +95,7 @@ private:
 void loadTranslation(const QString &filename, const QString &name)
 {
     Q_ASSERT(QDir().exists(filename));
-    QTranslator *translator = new QTranslator;
+    auto *translator = new QTranslator;
     translator->setObjectName(name);
     translator->load(filename);
     qApp->installTranslator(translator);

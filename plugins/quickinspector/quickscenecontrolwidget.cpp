@@ -150,7 +150,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_serverSideDecorationsEnabled->setToolTip(tr("<b>Target Decorations</b><br>"
                                                   "This enable or not the decorations on the target application."));
 
-    QWidgetAction *gridSettingsAction = new QWidgetAction(this);
+    auto *gridSettingsAction = new QWidgetAction(this);
     gridSettingsAction->setDefaultWidget(m_gridSettingsWidget);
 
     m_gridSettingsMenu = new QMenu(tr("Grid Settings"), this);
@@ -207,7 +207,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     connect(m_previewWidget, SIGNAL(stateChanged()), this, SIGNAL(stateChanged()));
 
-    QAction *menuSeparator = new QAction(this);
+    auto *menuSeparator = new QAction(this);
     menuSeparator->setSeparator(true);
 
     addActions(m_toolBar->actions()

@@ -46,7 +46,7 @@ SignalMonitor::SignalMonitor(ProbeInterface *probe, QObject *parent)
 {
     StreamOperators::registerSignalMonitorStreamOperators();
 
-    SignalHistoryModel *model = new SignalHistoryModel(probe, this);
+    auto *model = new SignalHistoryModel(probe, this);
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(model);

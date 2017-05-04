@@ -48,7 +48,7 @@ ConnectPage::ConnectPage(QWidget *parent)
     connect(ui->host, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
     connect(ui->port, SIGNAL(valueChanged(int)), SIGNAL(updateButtonState()));
 
-    NetworkDiscoveryModel *model = new NetworkDiscoveryModel(this);
+    auto *model = new NetworkDiscoveryModel(this);
     ui->instanceView->setModel(model);
     connect(ui->instanceView->selectionModel(),
             SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(instanceSelected()));

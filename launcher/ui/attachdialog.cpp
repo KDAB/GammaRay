@@ -142,7 +142,7 @@ int AttachDialog::pid() const
 
 void AttachDialog::updateProcesses()
 {
-    QFutureWatcher<ProcDataList> *watcher = new QFutureWatcher<ProcDataList>(this);
+    auto *watcher = new QFutureWatcher<ProcDataList>(this);
     connect(watcher, SIGNAL(finished()),
             this, SLOT(updateProcessesFinished()));
     watcher->setFuture(QtConcurrent::run(processList, m_model->processes()));

@@ -51,13 +51,13 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
     setObjectName("QtIVIWidget");
     QAbstractItemModel *propertyModel
         = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.PropertyModel"));
-    QtIviPropertyClientModel *clientModel = new QtIviPropertyClientModel(this);
+    auto *clientModel = new QtIviPropertyClientModel(this);
     clientModel->setSourceModel(propertyModel);
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(clientModel);
 
-    QVBoxLayout *vbox = new QVBoxLayout(this);
+    auto *vbox = new QVBoxLayout(this);
 
-    QLineEdit *searchLineEdit = new QLineEdit(this);
+    auto *searchLineEdit = new QLineEdit(this);
     vbox->addWidget(searchLineEdit);
     new SearchLineController(searchLineEdit, clientModel);
 

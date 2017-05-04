@@ -100,7 +100,7 @@ QWidget *QtIviConstrainedValueDelegate::createEditor(QWidget *parent, const QSty
         break;
     case QtIviPropertyModel::AvailableValuesConstraints:
         {
-            SplitDataComboBox *combo = new SplitDataComboBox(parent);
+            auto *combo = new SplitDataComboBox(parent);
             combo->setAutoFillBackground(true);
             for (int i = 0; i + 1 < constraintValues.size(); i += 2) {
                 combo->addItem(constraintValues.at(i).toString(), constraintValues.at(i + 1));

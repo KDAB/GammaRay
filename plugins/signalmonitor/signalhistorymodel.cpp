@@ -195,7 +195,7 @@ void SignalHistoryModel::onObjectAdded(QObject *object)
 
     beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size());
 
-    Item * const data = new Item(object);
+    auto * const data = new Item(object);
     m_itemIndex.insert(object, m_tracedObjects.size());
     m_tracedObjects.push_back(data);
 

@@ -95,10 +95,10 @@ SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
     connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)),
             this, SLOT(objectSelected(void*,QString)));
 
-    ObjectTypeFilterProxyModel<QGraphicsScene> *sceneFilterProxy
+    auto *sceneFilterProxy
         = new ObjectTypeFilterProxyModel<QGraphicsScene>(this);
     sceneFilterProxy->setSourceModel(probe->objectListModel());
-    SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
+    auto *singleColumnProxy = new SingleColumnObjectProxyModel(this);
     singleColumnProxy->setSourceModel(sceneFilterProxy);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SceneList"), singleColumnProxy);
 

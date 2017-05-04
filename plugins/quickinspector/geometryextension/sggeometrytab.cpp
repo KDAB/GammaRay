@@ -56,11 +56,11 @@ void SGGeometryTab::setObjectBaseName(const QString &baseName)
     m_vertexModel = ObjectBroker::model(baseName + '.' + "sgGeometryVertexModel");
     m_adjacencyModel = ObjectBroker::model(baseName + '.' + "sgGeometryAdjacencyModel");
 
-    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    auto *proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(m_vertexModel);
     m_ui->tableView->setModel(proxy);
-    QItemSelectionModel *selectionModel = new QItemSelectionModel(proxy);
+    auto *selectionModel = new QItemSelectionModel(proxy);
     m_ui->tableView->setSelectionModel(selectionModel);
 
     m_ui->wireframeWidget->setModel(m_vertexModel, m_adjacencyModel);

@@ -118,7 +118,7 @@ StandardPathsWidget::StandardPathsWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    StandardPathsProxy *proxy = new StandardPathsProxy(this);
+    auto *proxy = new StandardPathsProxy(this);
     proxy->setSourceModel(ObjectBroker::model(QStringLiteral(
                                                   "com.kdab.GammaRay.StandardPathsModel")));
 

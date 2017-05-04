@@ -264,7 +264,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     menu->addSeparator();
 
-    QAction *action = new QAction(menu);
+    auto *action = new QAction(menu);
     action->setText(tr("Custom..."));
     action->setCheckable(true);
     action->setChecked(currentIdx == -1);

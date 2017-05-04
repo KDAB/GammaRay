@@ -65,7 +65,7 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
 
     QAbstractItemModel * const signalHistory
         = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"));
-    ClientDecorationIdentityProxyModel *signalHistoryProxyModel = new ClientDecorationIdentityProxyModel(this);
+    auto *signalHistoryProxyModel = new ClientDecorationIdentityProxyModel(this);
     signalHistoryProxyModel->setSourceModel(signalHistory);
     new SearchLineController(ui->objectSearchLine, signalHistoryProxyModel);
 

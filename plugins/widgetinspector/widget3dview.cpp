@@ -229,7 +229,7 @@ Widget3DView::Widget3DView(QWidget* parent)
     auto hbox = new QHBoxLayout();
     hbox->addWidget(new QLabel(tr("Window: ")));
 
-    QComboBox *combo = new QComboBox;
+    auto *combo = new QComboBox;
     combo->setModel(windowModel);
     hbox->addWidget(combo, 1);
     vbox->addLayout(hbox);

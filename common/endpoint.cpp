@@ -62,7 +62,7 @@ Endpoint::Endpoint(QObject *parent)
     Q_ASSERT(!s_instance);
     s_instance = this;
 
-    ObjectInfo *endpointObj = new ObjectInfo;
+    auto *endpointObj = new ObjectInfo;
     endpointObj->address = m_myAddress;
     endpointObj->name = QStringLiteral("com.kdab.GammaRay.Server");
     // TODO: we could set this as message handler here and use the same dispatch mechanism
@@ -245,7 +245,7 @@ void Endpoint::addObjectNameAddressMapping(const QString &objectName,
 {
     Q_ASSERT(objectAddress != Protocol::InvalidObjectAddress);
 
-    ObjectInfo *obj = new ObjectInfo;
+    auto *obj = new ObjectInfo;
     obj->address = objectAddress;
     obj->name = objectName;
     insertObjectInfo(obj);

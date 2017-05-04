@@ -42,10 +42,10 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f)
 {
     QLayout *layout = nullptr;
-    QVBoxLayout *vbox = new QVBoxLayout(this);
+    auto *vbox = new QVBoxLayout(this);
 
     {
-        QTableView *toolView = new QTableView(this);
+        auto *toolView = new QTableView(this);
         toolView->setShowGrid(false);
         toolView->setSelectionBehavior(QAbstractItemView::SelectRows);
         toolView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
@@ -59,7 +59,7 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
     }
 
     {
-        QTableView *errorView = new QTableView(this);
+        auto *errorView = new QTableView(this);
         errorView->setShowGrid(false);
         errorView->setSelectionBehavior(QAbstractItemView::SelectRows);
         errorView->setModel(ObjectBroker::model(QStringLiteral(

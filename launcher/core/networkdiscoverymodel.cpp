@@ -50,7 +50,7 @@ NetworkDiscoveryModel::NetworkDiscoveryModel(QObject *parent)
     m_socket->bind(Endpoint::broadcastPort(), QUdpSocket::ShareAddress);
     connect(m_socket, SIGNAL(readyRead()), SLOT(processPendingDatagrams()));
 
-    QTimer *expireTimer = new QTimer(this);
+    auto *expireTimer = new QTimer(this);
     expireTimer->setInterval(15 * 1000);
     expireTimer->setSingleShot(false);
     connect(expireTimer, SIGNAL(timeout()), SLOT(expireEntries()));

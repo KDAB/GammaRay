@@ -42,7 +42,7 @@ CodecBrowser::CodecBrowser(ProbeInterface *probe, QObject *parent)
 {
     ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.CodecBrowser"), this);
 
-    AllCodecsModel *model = new AllCodecsModel(this);
+    auto *model = new AllCodecsModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.AllCodecsModel"), model);
 
     m_codecSelectionModel = ObjectBroker::selectionModel(model);

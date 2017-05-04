@@ -67,7 +67,7 @@ PropertyEditorFactory::PropertyEditorFactory()
 
 PropertyEditorFactory *PropertyEditorFactory::instance()
 {
-    static PropertyEditorFactory *s_instance = new PropertyEditorFactory;
+    static auto *s_instance = new PropertyEditorFactory;
     return s_instance;
 }
 

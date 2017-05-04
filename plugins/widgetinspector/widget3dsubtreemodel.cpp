@@ -143,7 +143,7 @@ void Widget3DSubtreeModel::populate()
             }
         }
 
-        Node *node = new Node(index);
+        auto *node = new Node(index);
         node->parent = parent;
         if (parent) {
             parent->children.push_back(node);
@@ -259,7 +259,7 @@ int Widget3DSubtreeModel::sourceRowsInserted(const QModelIndex &sourceParent, in
         } else {
             Q_ASSERT(insertIndex > parentIdx);
             beginInsertRows(QModelIndex(), insertIndex, insertIndex);
-            Node *node = new Node(idx);
+            auto *node = new Node(idx);
             node->parent = parentNode;
             if (parentNode) {
                 parentNode->children.insert(i, node);

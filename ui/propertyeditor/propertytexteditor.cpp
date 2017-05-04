@@ -54,11 +54,11 @@ QString PropertyTextEditorDialog::text() const
 PropertyTextEditor::PropertyTextEditor(QWidget *parent)
     : QLineEdit(parent)
 {
-    QHBoxLayout *hl = new QHBoxLayout(this);
+    auto *hl = new QHBoxLayout(this);
     hl->setMargin(0);
     hl->setSpacing(1);
 
-    QToolButton *editButton = new QToolButton(this);
+    auto *editButton = new QToolButton(this);
     editButton->setText(QStringLiteral("..."));
 
     QMargins margins(textMargins());

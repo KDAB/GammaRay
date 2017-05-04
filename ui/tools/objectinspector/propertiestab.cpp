@@ -67,7 +67,7 @@ PropertiesTab::~PropertiesTab()
 
 void PropertiesTab::setObjectBaseName(const QString &baseName)
 {
-    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    auto *proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     QAbstractItemModel *model = ObjectBroker::model(baseName + '.' + "properties");
@@ -80,7 +80,7 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
     connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(propertyContextMenu(QPoint)));
 
-    EditableTypesModel *typesModel = new EditableTypesModel(this);
+    auto *typesModel = new EditableTypesModel(this);
     proxy = new QSortFilterProxyModel(this);
     proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxy->setSourceModel(typesModel);

@@ -61,7 +61,7 @@ void BenchSuite::probe_objectAdded()
     objects.reserve(NUM_OBJECTS + 1);
     // fill it
     for (int i = 0; i < NUM_OBJECTS; ++i) {
-        QObject *obj = new QObject;
+        auto *obj = new QObject;
         objects << obj;
     }
 

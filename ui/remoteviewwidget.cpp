@@ -226,7 +226,7 @@ void RemoteViewWidget::elementsAtReceived(const GammaRay::ObjectIds &ids, int be
     }
     else {
         const int candidate = bestCandidate == -1 ? 0 : bestCandidate;
-        ModelPickerDialog *dlg = new ModelPickerDialog(window());
+        auto *dlg = new ModelPickerDialog(window());
         m_invisibleItemsProxyModel->setSourceModel(m_pickProxyModel);
         m_invisibleItemsProxyModel->setFlagRole(flagRole());
         m_invisibleItemsProxyModel->setInvisibleMask(invisibleMask());

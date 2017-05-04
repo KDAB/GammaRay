@@ -113,7 +113,7 @@ private slots:
         m_server->addObject(42, &serverObj);
 
         // client setup
-        MyObject *clientObj = new MyObject(this);
+        auto *clientObj = new MyObject(this);
         m_client = new PropertySyncer(this);
         m_client->setRequestInitialSync(true);
         connect(m_client, SIGNAL(message(GammaRay::Message)), this,

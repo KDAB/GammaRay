@@ -113,7 +113,7 @@ public:
 protected:
     bool createProxyFactory(const PluginInfo &pluginInfo, QObject *parent) override
     {
-        Proxy *proxy = new Proxy(pluginInfo, parent);
+        auto *proxy = new Proxy(pluginInfo, parent);
         if (!proxy->isValid()) {
             m_errors << PluginLoadError(pluginInfo.path(), qApp->translate("GammaRay::PluginManager",
                                             "Failed to load plugin: %1").arg(proxy->errorString()));

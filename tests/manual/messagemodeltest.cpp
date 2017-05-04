@@ -37,7 +37,7 @@ using namespace GammaRay;
 
 MessageGenerator::MessageGenerator()
 {
-    QVBoxLayout *layout = new QVBoxLayout;
+    auto *layout = new QVBoxLayout;
 
     QPushButton *button = new QPushButton(QStringLiteral("debug"));
     connect(button, SIGNAL(clicked(bool)), SLOT(generateDebug()));

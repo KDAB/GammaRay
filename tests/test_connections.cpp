@@ -101,7 +101,7 @@ void TestConnections::timeout()
         connect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
         disconnect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
     } else if (m_type == SetParent) {
-        TestObject *obj = new TestObject;
+        auto *obj = new TestObject;
         obj->setParent(this);
         obj->child->setParent(nullptr);
         obj->child->setParent(obj);
@@ -153,7 +153,7 @@ void TestThread::run()
     TestConnections tester(m_type, m_timeOuts,
                            m_timeoutInterval == -1 ? TIMEOUTS : m_timeoutInterval);
 
-    QEventLoop *loop = new QEventLoop;
+    auto *loop = new QEventLoop;
     connect(&tester, SIGNAL(done()), loop, SLOT(quit()));
     loop->exec();
     delete loop;

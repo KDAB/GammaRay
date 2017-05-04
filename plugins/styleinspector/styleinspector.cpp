@@ -56,9 +56,9 @@ StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
     , m_standardPaletteModel(new PaletteModel(this))
     , m_styleHintModel(new StyleHintModel(this))
 {
-    ObjectTypeFilterProxyModel<QStyle> *styleFilter = new ObjectTypeFilterProxyModel<QStyle>(this);
+    auto *styleFilter = new ObjectTypeFilterProxyModel<QStyle>(this);
     styleFilter->setSourceModel(probe->objectListModel());
-    SingleColumnObjectProxyModel *singleColumnProxy = new SingleColumnObjectProxyModel(this);
+    auto *singleColumnProxy = new SingleColumnObjectProxyModel(this);
     singleColumnProxy->setSourceModel(styleFilter);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleList"), singleColumnProxy);
 

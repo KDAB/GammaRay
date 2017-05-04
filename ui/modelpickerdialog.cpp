@@ -58,8 +58,8 @@ ModelPickerDialog::ModelPickerDialog(QWidget *parent)
     m_buttons->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     m_showInvisibleItems->setChecked(true);
 
-    QVBoxLayout *vl = new QVBoxLayout(this);
-    QHBoxLayout *hl = new QHBoxLayout;
+    auto *vl = new QVBoxLayout(this);
+    auto *hl = new QHBoxLayout;
     hl->addWidget(m_searchBox);
     hl->addWidget(m_showInvisibleItems);
     vl->addLayout(hl);

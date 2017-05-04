@@ -64,7 +64,7 @@ void SelfTestPage::run()
 
 void SelfTestPage::error(const QString &msg)
 {
-    QStandardItem *item = new QStandardItem;
+    auto *item = new QStandardItem;
     item->setEditable(false);
     item->setText(msg);
     item->setIcon(style()->standardIcon(QStyle::SP_MessageBoxCritical));
@@ -73,7 +73,7 @@ void SelfTestPage::error(const QString &msg)
 
 void SelfTestPage::information(const QString &msg)
 {
-    QStandardItem *item = new QStandardItem;
+    auto *item = new QStandardItem;
     item->setEditable(false);
     item->setText(msg);
     item->setIcon(style()->standardIcon(QStyle::SP_MessageBoxInformation));

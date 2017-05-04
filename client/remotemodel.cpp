@@ -328,7 +328,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             beginInsertRows(qmi, 0, rowCount - 1);
             node->children.reserve(rowCount);
             for (int i = 0; i < rowCount; ++i) {
-                Node *child = new Node;
+                auto *child = new Node;
                 child->parent = node;
                 node->children.push_back(child);
             }
@@ -825,7 +825,7 @@ void RemoteModel::doInsertRows(RemoteModel::Node *parentNode, int first, int las
 
     // create nodes for the new rows
     for (int i = first; i <= last; ++i) {
-        Node *child = new Node;
+        auto *child = new Node;
         child->parent = parentNode;
         parentNode->children[i] = child;
     }

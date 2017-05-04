@@ -49,7 +49,7 @@ using namespace GammaRay;
 WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
 {
-    WebViewModel *webViewModel = new WebViewModel(this);
+    auto *webViewModel = new WebViewModel(this);
     webViewModel->setSourceModel(probe->objectListModel());
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.WebPages"), webViewModel);
 

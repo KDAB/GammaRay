@@ -52,7 +52,7 @@ ClassInfoTab::~ClassInfoTab()
 
 void ClassInfoTab::setObjectBaseName(const QString &baseName)
 {
-    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(this);
+    auto *proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "classInfo"));
     m_ui->classInfoView->setModel(proxy);

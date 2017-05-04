@@ -43,7 +43,7 @@ using namespace GammaRay;
 ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QObject *parent)
     : ResourceBrowserInterface(parent)
 {
-    ResourceModel *resourceModel = new ResourceModel(this);
+    auto *resourceModel = new ResourceModel(this);
     auto proxy = new ServerProxyModel<ResourceFilterModel>(this);
     proxy->setSourceModel(resourceModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ResourceModel"), proxy);

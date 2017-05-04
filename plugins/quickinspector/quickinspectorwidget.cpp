@@ -109,7 +109,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
             this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex,QVector<int>)));
 
     model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
-    ClientDecorationIdentityProxyModel *clientSceneGraphModel = new ClientDecorationIdentityProxyModel(this);
+    auto *clientSceneGraphModel = new ClientDecorationIdentityProxyModel(this);
     clientSceneGraphModel->setSourceModel(model);
     ui->sgTreeView->header()->setObjectName("sceneGraphTreeViewHeader");
     ui->sgTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
@@ -220,7 +220,7 @@ void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft,
         if (state & RemoteModelNodeState::Empty || ~state & RemoteModelNodeState::Outdated)
             continue;
 
-        QVariantAnimation *colorAnimation = new QVariantAnimation(this);
+        auto *colorAnimation = new QVariantAnimation(this);
         QPersistentModelIndex persistentIndex(index);
         connect(colorAnimation, &QVariantAnimation::valueChanged,
                 ui->itemTreeView->itemDelegate(), [persistentIndex, this](const QVariant &value) {

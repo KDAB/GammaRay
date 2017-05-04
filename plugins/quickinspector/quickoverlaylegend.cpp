@@ -213,11 +213,11 @@ QuickOverlayLegend::QuickOverlayLegend(QWidget *parent)
 {
     setWindowTitle(tr("Legend"));
 
-    QListView *view = new QListView(this);
+    auto *view = new QListView(this);
     view->setUniformItemSizes(true);
     view->setModel(m_model);
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto *layout = new QVBoxLayout(this);
     layout->addWidget(view);
 
     m_visibilityAction = new QAction(UIResources::themedIcon(QLatin1String("legend.png")),

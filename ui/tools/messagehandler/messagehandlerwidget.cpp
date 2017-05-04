@@ -127,7 +127,7 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
     QDialog dlg;
     dlg.setWindowTitle(tr("QFatal in %1 at %2").arg(app, time.toString()));
 
-    QGridLayout *layout = new QGridLayout;
+    auto *layout = new QGridLayout;
 
     QLabel *iconLabel = new QLabel;
     QIcon icon = dlg.style()->standardIcon(QStyle::SP_MessageBoxCritical, nullptr, &dlg);
@@ -142,10 +142,10 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
     errorLabel->setText(message);
     layout->addWidget(errorLabel, 0, 1);
 
-    QDialogButtonBox *buttons = new QDialogButtonBox;
+    auto *buttons = new QDialogButtonBox;
 
     if (!backtrace.isEmpty()) {
-        QListWidget *backtraceWidget = new QListWidget;
+        auto *backtraceWidget = new QListWidget;
         foreach (const QString &frame, backtrace)
             backtraceWidget->addItem(frame);
         layout->addWidget(backtraceWidget, 1, 0, 1, 2);
@@ -153,7 +153,7 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
         QPushButton *copyBacktraceButton = new QPushButton(tr("Copy Backtrace"));
         buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
 
-        QSignalMapper *mapper = new QSignalMapper(this);
+        auto *mapper = new QSignalMapper(this);
         mapper->setMapping(copyBacktraceButton, backtrace.join(QStringLiteral("\n")));
 
         connect(copyBacktraceButton, SIGNAL(clicked()), mapper, SLOT(map()));

@@ -73,15 +73,15 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
     auto objectSearchLine = new QLineEdit(this);
     new SearchLineController(objectSearchLine, proxy);
 
-    PropertyWidget *propertyWidget = new PropertyWidget(this);
+    auto *propertyWidget = new PropertyWidget(this);
     m_propertyWidget = propertyWidget;
     m_propertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"));
 
-    QVBoxLayout *vbox = new QVBoxLayout;
+    auto *vbox = new QVBoxLayout;
     vbox->addWidget(objectSearchLine);
     vbox->addWidget(m_treeView);
 
-    QHBoxLayout *hbox = new QHBoxLayout(this);
+    auto *hbox = new QHBoxLayout(this);
     hbox->addLayout(vbox);
     hbox->addWidget(propertyWidget);
 

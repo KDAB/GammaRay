@@ -46,10 +46,10 @@ using namespace GammaRay;
 ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface *probe, QObject *parent)
     : QObject(parent)
 {
-    ObjectTypeFilterProxyModel<QScriptEngine> *scriptEngineFilter
+    auto *scriptEngineFilter
         = new ObjectTypeFilterProxyModel<QScriptEngine>(this);
     scriptEngineFilter->setSourceModel(probe->objectListModel());
-    SingleColumnObjectProxyModel *singleColumnProxy
+    auto *singleColumnProxy
         = new SingleColumnObjectProxyModel(this);
     singleColumnProxy->setSourceModel(scriptEngineFilter);
 

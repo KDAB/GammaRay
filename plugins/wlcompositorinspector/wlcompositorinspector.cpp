@@ -94,7 +94,7 @@ public:
       return;
     }
 
-    QWaylandSurfaceGrabber *grabber = new QWaylandSurfaceGrabber(m_surface);
+    auto *grabber = new QWaylandSurfaceGrabber(m_surface);
     connect(grabber, &QWaylandSurfaceGrabber::success, this, [grabber, this](const QImage &img) {
       setNewFrame(img);
       grabber->deleteLater();
@@ -320,7 +320,7 @@ public:
 
         beginInsertRows(parent ? index(parent) : QModelIndex(), count, count);
 
-        Resource *r = new Resource;
+        auto *r = new Resource;
         r->parent = parent;
         r->resource = res;
         r->depth = parent ? parent->depth + 1 : 0;
@@ -564,7 +564,7 @@ void WlCompositorInspector::init(QWaylandCompositor *compositor)
         addClient(client);
     }
 
-    ClientsListener *listener = new ClientsListener;
+    auto *listener = new ClientsListener;
     wl_display_add_client_created_listener(dpy, &listener->listener);
     listener->listener.notify = [](wl_listener *listener, void *data) {
         wl_client *client = static_cast<wl_client *>(data);

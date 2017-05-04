@@ -546,7 +546,7 @@ QMimeData *ResourceModel::mimeData(const QModelIndexList &indexes) const
     for (; it != indexes.end(); ++it)
         if ((*it).column() == 0)
             urls << QUrl::fromLocalFile(filePath(*it));
-    QMimeData *data = new QMimeData();
+    auto *data = new QMimeData();
     data->setUrls(urls);
     return data;
 }

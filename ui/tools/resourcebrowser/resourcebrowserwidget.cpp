@@ -71,7 +71,7 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 
     ui->setupUi(this);
     auto resModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ResourceModel"));
-    ClientResourceModel *model = new ClientResourceModel(this);
+    auto *model = new ClientResourceModel(this);
     model->setSourceModel(resModel);
     ui->treeView->header()->setObjectName("resourceTreeViewHeader");
     ui->treeView->setExpandNewContent(true);
