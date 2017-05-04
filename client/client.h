@@ -94,12 +94,13 @@ private slots:
 
 private:
     enum InitState {
-        VersionChecked = 1,
-        ObjectMapReceived = 2,
-        ServerInfoReceived = 4,
-        ConnectionEstablished = 8,
+        VersionChecked = 0x1,
+        ObjectMapReceived = 0x2,
+        ServerInfoReceived = 0x4,
+        ServerDataVersionNegotiated = 0x8,
+        ConnectionEstablished = 0x10,
 
-        InitComplete = VersionChecked | ObjectMapReceived | ServerInfoReceived
+        InitComplete = VersionChecked | ObjectMapReceived | ServerInfoReceived | ServerDataVersionNegotiated
     };
     QUrl m_serverAddress;
     ClientDevice *m_clientDevice;

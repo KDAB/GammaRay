@@ -47,6 +47,8 @@ Client::Client(QObject *parent)
     , m_statModel(new MessageStatisticsModel(this))
     , m_initState(0)
 {
+    Message::resetNegotiatedDataVersion();
+
     connect(this, SIGNAL(disconnected()), SLOT(socketDisconnected()));
 
     m_propertySyncer->setRequestInitialSync(true);
@@ -191,11 +193,29 @@ void Client::messageReceived(const Message &msg)
             QString label;
             QString key;
             qint64 pid;
-            msg >> label >> key >> pid;
+            quint8 dataVersion;
+            msg >> label >> key >> pid >> dataVersion;
             setLabel(label);
             setKey(key);
             setPid(pid);
+
+            {
+                const quint8 version = qMin(dataVersion, Message::highestSupportedDataVersion());
+                Message msg(endpointAddress(), Protocol::ClientDataVersionNegotiated);
+                msg << version;
+                send(msg);
+            }
+
             m_initState |= ServerInfoReceived;
+            break;
+        }
+        case Protocol::ServerDataVersionNegotiated:
+        {
+            quint8 version;
+            msg >> version;
+            Message::setNegotiatedDataVersion(version);
+
+            m_initState |= ServerDataVersionNegotiated;
             break;
         }
         default:

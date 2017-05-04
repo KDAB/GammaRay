@@ -57,6 +57,8 @@ Server::Server(QObject *parent)
     , m_broadcastTimer(new QTimer(this))
     , m_signalMapper(new MultiSignalMapper(this))
 {
+    Message::resetNegotiatedDataVersion();
+
     if (!ProbeSettings::value(QStringLiteral("RemoteAccessEnabled"), true).toBool())
         return;
 
@@ -161,7 +163,7 @@ void Server::sendServerGreeting()
 
     {
         Message msg(endpointAddress(), Protocol::ServerInfo);
-        msg << label() << key() << pid(); // TODO: expand with anything else needed here: Qt/GammaRay version, hostname, that kind of stuff
+        msg << label() << key() << pid() << Message::highestSupportedDataVersion(); // TODO: expand with anything else needed here: Qt/GammaRay version, hostname, that kind of stuff
         send(msg);
     }
 
@@ -176,6 +178,20 @@ void Server::messageReceived(const Message &msg)
 {
     if (msg.address() == endpointAddress()) {
         switch (msg.type()) {
+        case Protocol::ClientDataVersionNegotiated:
+        {
+            quint8 version;
+            msg >> version;
+
+            {
+                Message msg(endpointAddress(), Protocol::ServerDataVersionNegotiated);
+                msg << version;
+                send(msg);
+            }
+
+            Message::setNegotiatedDataVersion(version);
+            break;
+        }
         case Protocol::ObjectMonitored:
         case Protocol::ObjectUnmonitored:
         {

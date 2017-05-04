@@ -105,6 +105,13 @@ public:
     /** Read the next message from @p device. */
     static Message readMessage(QIODevice *device);
 
+    static quint8 lowestSupportedDataVersion();
+    static quint8 highestSupportedDataVersion();
+
+    static quint8 negotiatedDataVersion();
+    static void setNegotiatedDataVersion(quint8 version);
+    static void resetNegotiatedDataVersion();
+
     /** Write this message to @p device. */
     void write(QIODevice *device) const;
 
