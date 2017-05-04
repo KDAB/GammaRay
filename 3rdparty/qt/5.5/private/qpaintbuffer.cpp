@@ -55,7 +55,7 @@ QTextItemIntCopy::QTextItemIntCopy(const QTextItem &item)
     : m_item(static_cast<const QTextItemInt &>(item))
 {
     auto *chars = new QChar[m_item.num_chars];
-    auto short *logClusters = new unsigned short[m_item.num_chars];
+    auto *logClusters = new unsigned short[m_item.num_chars];
     memcpy(chars, m_item.chars, m_item.num_chars * sizeof(QChar));
     memcpy(logClusters, m_item.logClusters, m_item.num_chars * sizeof(unsigned short));
     m_item.chars = chars;
