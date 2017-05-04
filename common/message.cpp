@@ -104,7 +104,6 @@ Message::Message(Protocol::ObjectAddress objectAddress, Protocol::MessageType ty
 {
 }
 
-#ifdef Q_COMPILER_RVALUE_REFS
 Message::Message(Message &&other)
     : m_buffer(std::move(other.m_buffer))
     , m_objectAddress(other.m_objectAddress)
@@ -112,8 +111,6 @@ Message::Message(Message &&other)
 {
     m_stream.swap(other.m_stream);
 }
-
-#endif
 
 Message::~Message()
 {

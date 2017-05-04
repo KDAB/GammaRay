@@ -51,13 +51,7 @@ public:
      * Construct a new message to/from @p address and message type @p type.
      */
     explicit Message(Protocol::ObjectAddress address, Protocol::MessageType type);
-#ifdef Q_COMPILER_RVALUE_REFS
     Message(Message &&other); // krazy:exclude=explicit
-#else
-    // this is only needed to make readMessage compile (due to RVO there is no actual copy though)
-    // semantically we don't want to support copying, due to the datastream state
-    Message(const Message &other);
-#endif
     ~Message();
 
     Protocol::ObjectAddress address() const;
