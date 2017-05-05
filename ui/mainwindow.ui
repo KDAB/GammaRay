@@ -229,6 +229,9 @@ background-position:bottom right;
    </property>
   </action>
   <action name="actionContribute">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Contribute...</string>
    </property>

@@ -223,6 +223,7 @@ QMainWindow *ClientConnectionManager::createMainWindow()
 {
     delete m_mainWindow;
     m_mainWindow = new MainWindow;
+    m_mainWindow->setupFeedbackProvider();
     connect(m_mainWindow, SIGNAL(targetQuitRequested()), this, SLOT(targetQuitRequested()));
     m_ignorePersistentError = false;
     m_mainWindow->show();

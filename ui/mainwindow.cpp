@@ -48,6 +48,8 @@
 #include <3rdparty/kuserfeedback/widgets/feedbackconfigdialog.h>
 #include <3rdparty/kuserfeedback/widgets/notificationpopup.h>
 #include <3rdparty/kuserfeedback/core/applicationversionsource.h>
+#include <3rdparty/kuserfeedback/core/compilerinfosource.h>
+#include <3rdparty/kuserfeedback/core/openglinfosource.h>
 #include <3rdparty/kuserfeedback/core/platforminfosource.h>
 #include <3rdparty/kuserfeedback/core/provider.h>
 #include <3rdparty/kuserfeedback/core/qtversionsource.h>
@@ -167,6 +169,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_stateManager(this)
+    , m_feedbackProvider(nullptr)
 {
     const auto styleOverride = gammarayStyleOverride();
     if (styleOverride) {
@@ -306,22 +309,6 @@ MainWindow::MainWindow(QWidget *parent)
             SLOT(navigateToCode(QUrl,int,int)));
 
     connect(this, SIGNAL(targetQuitRequested()), &m_stateManager, SLOT(saveState()));
-
-    connect(ui->actionContribute, SIGNAL(triggered()), this, SLOT(configureFeedback()));
-    m_feedbackProvider = new UserFeedback::Provider(this);
-    m_feedbackProvider->setProductIdentifier(QStringLiteral("com.kdab.GammaRay"));
-    m_feedbackProvider->setFeedbackServer(QUrl(QStringLiteral("https://feedback.volkerkrause.eu")));
-    m_feedbackProvider->setSubmissionInterval(1);
-    m_feedbackProvider->setApplicationStartsUntilEncouragement(5);
-    m_feedbackProvider->setEncouragementDelay(10);
-    m_feedbackProvider->addDataSource(new UserFeedback::ApplicationVersionSource, UserFeedback::Provider::BasicSystemInformation);
-    m_feedbackProvider->addDataSource(new UserFeedback::PlatformInfoSource, UserFeedback::Provider::BasicSystemInformation);
-    m_feedbackProvider->addDataSource(new UserFeedback::QtVersionSource, UserFeedback::Provider::BasicSystemInformation);
-    m_feedbackProvider->addDataSource(new UserFeedback::StartCountSource, UserFeedback::Provider::BasicUsageStatistics);
-    m_feedbackProvider->addDataSource(new UserFeedback::UsageTimeSource, UserFeedback::Provider::BasicUsageStatistics);
-
-    auto popup = new UserFeedback::NotificationPopup(this);
-    popup->setFeedbackProvider(m_feedbackProvider);
 }
 
 MainWindow::~MainWindow()
@@ -347,6 +334,28 @@ void MainWindow::restoreTargetState(QSettings *settings)
     Q_ASSERT(ClientToolManager::instance()->isToolListLoaded());
     const QString toolId = settings->value("selectedToolId", QStringLiteral("GammaRay::ObjectInspector")).toString();
     selectTool(toolId);
+}
+
+void MainWindow::setupFeedbackProvider()
+{
+    ui->actionContribute->setEnabled(true);
+    connect(ui->actionContribute, SIGNAL(triggered()), this, SLOT(configureFeedback()));
+    m_feedbackProvider = new UserFeedback::Provider(this);
+    m_feedbackProvider->setProductIdentifier(QStringLiteral("com.kdab.GammaRay"));
+    m_feedbackProvider->setFeedbackServer(QUrl(QStringLiteral("https://gammaray-userfeedback.kdab.com/")));
+    m_feedbackProvider->setSubmissionInterval(7);
+    m_feedbackProvider->setApplicationStartsUntilEncouragement(5);
+    m_feedbackProvider->setEncouragementDelay(30);
+    m_feedbackProvider->addDataSource(new UserFeedback::ApplicationVersionSource, UserFeedback::Provider::BasicSystemInformation);
+    m_feedbackProvider->addDataSource(new UserFeedback::CompilerInfoSource, UserFeedback::Provider::BasicSystemInformation);
+    m_feedbackProvider->addDataSource(new UserFeedback::PlatformInfoSource, UserFeedback::Provider::BasicSystemInformation);
+    m_feedbackProvider->addDataSource(new UserFeedback::QtVersionSource, UserFeedback::Provider::BasicSystemInformation);
+    m_feedbackProvider->addDataSource(new UserFeedback::StartCountSource, UserFeedback::Provider::BasicUsageStatistics);
+    m_feedbackProvider->addDataSource(new UserFeedback::UsageTimeSource, UserFeedback::Provider::BasicUsageStatistics);
+    m_feedbackProvider->addDataSource(new UserFeedback::OpenGLInfoSource, UserFeedback::Provider::DetailedSystemInformation);
+
+    auto popup = new UserFeedback::NotificationPopup(this);
+    popup->setFeedbackProvider(m_feedbackProvider);
 }
 
 void MainWindow::help()

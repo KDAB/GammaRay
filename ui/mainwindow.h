@@ -69,6 +69,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void setupFeedbackProvider();
+
     Q_INVOKABLE void saveTargetState(QSettings *settings) const;
     Q_INVOKABLE void restoreTargetState(QSettings *settings);
 
