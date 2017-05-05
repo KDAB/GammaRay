@@ -155,8 +155,10 @@ target_link_libraries(gammaray_ui_internal
   gammaray_common_internal
   gammaray_ui
   gammaray_kitemmodels
-  gammaray_kuserfeedback
 )
+if(NOT GAMMARAY_DISABLE_FEEDBACK)
+    target_link_libraries(gammaray_ui_internal gammaray_kuserfeedback)
+endif()
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   install(TARGETS gammaray_ui EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

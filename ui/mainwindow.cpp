@@ -26,6 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <config-gammaray.h>
+
 #include "mainwindow.h"
 
 #include "ui_mainwindow.h"
@@ -45,6 +47,7 @@
 
 #include "kde/klinkitemselectionmodel.h"
 
+#ifndef GAMMARAY_DISABLE_FEEDBACK
 #include <3rdparty/kuserfeedback/widgets/feedbackconfigdialog.h>
 #include <3rdparty/kuserfeedback/widgets/notificationpopup.h>
 #include <3rdparty/kuserfeedback/core/applicationversionsource.h>
@@ -55,6 +58,7 @@
 #include <3rdparty/kuserfeedback/core/qtversionsource.h>
 #include <3rdparty/kuserfeedback/core/startcountsource.h>
 #include <3rdparty/kuserfeedback/core/usagetimesource.h>
+#endif
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <private/qguiplatformplugin_p.h>
@@ -338,6 +342,7 @@ void MainWindow::restoreTargetState(QSettings *settings)
 
 void MainWindow::setupFeedbackProvider()
 {
+#ifndef GAMMARAY_DISABLE_FEEDBACK
     ui->actionContribute->setEnabled(true);
     connect(ui->actionContribute, SIGNAL(triggered()), this, SLOT(configureFeedback()));
     m_feedbackProvider = new UserFeedback::Provider(this);
@@ -356,6 +361,7 @@ void MainWindow::setupFeedbackProvider()
 
     auto popup = new UserFeedback::NotificationPopup(this);
     popup->setFeedbackProvider(m_feedbackProvider);
+#endif
 }
 
 void MainWindow::help()
@@ -595,7 +601,9 @@ void MainWindow::detachProbe()
 
 void MainWindow::configureFeedback()
 {
+#ifndef GAMMARAY_DISABLE_FEEDBACK
     UserFeedback::FeedbackConfigDialog dlg;
     dlg.setFeedbackProvider(m_feedbackProvider);
     dlg.exec();
+#endif
 }

@@ -196,6 +196,8 @@ gammaray_option(
   OFF
 )
 
+gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." OFF)
+
 #
 # Static probe setup
 #
@@ -740,7 +742,9 @@ add_subdirectory(core)
 add_subdirectory(probe)
 add_subdirectory(launcher)
 if(GAMMARAY_BUILD_UI AND (Qt5Widgets_FOUND OR QT_QTGUI_FOUND))
-  add_subdirectory(3rdparty/kuserfeedback)
+  if(NOT GAMMARAY_DISABLE_FEEDBACK)
+    add_subdirectory(3rdparty/kuserfeedback)
+  endif()
   add_subdirectory(ui)
   add_subdirectory(inprocessui)
   if(NOT GAMMARAY_PROBE_ONLY_BUILD)
