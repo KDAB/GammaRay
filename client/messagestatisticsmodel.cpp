@@ -75,6 +75,7 @@ static const MetaEnum::Value<Protocol::MessageType> message_type_table[] = {
     M(ServerAddress)
 };
 #undef M
+Q_STATIC_ASSERT(Protocol::MESSAGE_TYPE_COUNT - 1 == (sizeof(message_type_table) / sizeof(MetaEnum::Value<Protocol::MessageType>)));
 
 MessageStatisticsModel::Info::Info()
 {

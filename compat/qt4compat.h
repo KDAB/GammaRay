@@ -38,4 +38,6 @@
 #define QStringLiteral(str) QString::fromUtf8("" str "", sizeof(str) - 1)
 #define QByteArrayLiteral(str) QByteArray("" str "", sizeof(str) - 1)
 
+#define Q_STATIC_ASSERT(x)
+
 #endif
