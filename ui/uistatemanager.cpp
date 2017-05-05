@@ -122,7 +122,8 @@ QList<QHeaderView *> UIStateManager::headers() const
 
 void UIStateManager::setup()
 {
-    Q_ASSERT(Endpoint::instance()->isConnected());
+    if (!Endpoint::instance()->isConnected()) // in-process mode, don't interfere with QSettings there
+        return;
     Q_ASSERT(!m_initialized);
     if (!checkWidget(m_widget))
         return;
@@ -200,7 +201,8 @@ void UIStateManager::setup()
 
 void UIStateManager::restoreState()
 {
-    Q_ASSERT(Endpoint::instance()->isConnected());
+    if (!Endpoint::instance()->isConnected())
+        return;
 
     if (!m_initialized) {
         qWarning() << Q_FUNC_INFO << "Attempting to restoreState for a not yet initialized state manager.";
@@ -234,7 +236,8 @@ void UIStateManager::restoreState()
 
 void UIStateManager::saveState()
 {
-    Q_ASSERT(Endpoint::instance()->isConnected());
+    if (!Endpoint::instance()->isConnected())
+        return;
 
     if (!m_initialized) {
         qWarning() << Q_FUNC_INFO << "Attempting to saveState for a not yet initialized state manager.";
