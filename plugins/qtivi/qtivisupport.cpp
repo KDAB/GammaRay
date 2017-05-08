@@ -26,7 +26,11 @@
 */
 
 #include "qtivisupport.h"
+#ifdef QTIVI_DISABLE_IVIPROPERTIES
+#include "qtiviobjectmodel.h"
+#else
 #include "qtivipropertymodel.h"
+#endif
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -65,7 +69,11 @@ QtIviSupport::QtIviSupport(ProbeInterface* probe, QObject* parent)
     Q_UNUSED(probe);
     registerMetaTypes();
 
+#ifdef QTIVI_DISABLE_IVIPROPERTIES
+    auto propertyModel = new QtIviObjectModel(Probe::instance());
+#else
     auto propertyModel = new QtIviPropertyModel(Probe::instance());
+#endif
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.PropertyModel"), propertyModel);
     //m_selectionModel = ObjectBroker::selectionModel(filterModel);
