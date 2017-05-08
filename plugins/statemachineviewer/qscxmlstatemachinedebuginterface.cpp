@@ -241,21 +241,21 @@ QVector<State> QScxmlStateMachineDebugInterface::transitionTargets(Transition tr
     return result;
 }
 
-void QScxmlStateMachineDebugInterface::statesEntered(QVector<QScxmlStateMachineInfo::StateId> states)
+void QScxmlStateMachineDebugInterface::statesEntered(const QVector<QScxmlStateMachineInfo::StateId> &states)
 {
     foreach (auto state, states) {
         emit stateEntered(toState(state));
     }
 }
 
-void QScxmlStateMachineDebugInterface::statesExited(QVector<QScxmlStateMachineInfo::StateId> states)
+void QScxmlStateMachineDebugInterface::statesExited(const QVector<QScxmlStateMachineInfo::StateId> &states)
 {
     foreach (auto state, states) {
         emit stateExited(toState(state));
     }
 }
 
-void QScxmlStateMachineDebugInterface::transitionsTriggered(QVector<QScxmlStateMachineInfo::TransitionId> transitions)
+void QScxmlStateMachineDebugInterface::transitionsTriggered(const QVector<QScxmlStateMachineInfo::TransitionId> &transitions)
 {
     foreach (auto transition, transitions) {
         emit transitionTriggered(toTransition(transition));

@@ -70,9 +70,9 @@ public:
     QVector<State> transitionTargets(Transition transition) const override;
 
 private slots:
-    void statesEntered(QVector<QScxmlStateMachineInfo::StateId> states);
-    void statesExited(QVector<QScxmlStateMachineInfo::StateId> states);
-    void transitionsTriggered(QVector<QScxmlStateMachineInfo::TransitionId> transitions);
+    void statesEntered(const QVector<QScxmlStateMachineInfo::StateId> &states);
+    void statesExited(const QVector<QScxmlStateMachineInfo::StateId> &states);
+    void transitionsTriggered(const QVector<QScxmlStateMachineInfo::TransitionId> &transitions);
 
 private:
     QScxmlStateMachine *m_stateMachine;

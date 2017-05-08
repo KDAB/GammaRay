@@ -62,7 +62,7 @@ public:
     QImage image() const;
     QTransform transform() const;
     void setImage(const QImage &image);
-    void setImage(const QImage &image, const QTransform transform);
+    void setImage(const QImage &image, const QTransform &transform);
 
     /// tool specific frame data
     QVariant data() const;

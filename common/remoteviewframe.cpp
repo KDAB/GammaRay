@@ -87,7 +87,7 @@ void RemoteViewFrame::setImage(const QImage &image)
     m_image.setImage(image);
 }
 
-void RemoteViewFrame::setImage(const QImage &image, const QTransform transform)
+void RemoteViewFrame::setImage(const QImage &image, const QTransform &transform)
 {
     m_image.setImage(image);
     m_image.setTransform(transform);
