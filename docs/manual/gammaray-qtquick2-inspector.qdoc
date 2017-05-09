@@ -40,11 +40,11 @@
     The item tree is shown on the top left, and it contains the visual hierarchy of QQuickItem instances in the currently selected Qt Quick scene.
     This does not necessarily match the QObject parent/child hierarchy.
     The right side contains the same property view for the selected item you already know from the
-    \l{Object Inspector}.
+    \l{Object Browser}.
 
     \borderedimage gammaray-qq2-inspector.png
 
-    You can navigate to the object inspector (and other applicable tools) using the context menu on the item tree. Similarly, you can
+    You can navigate to the object browser (and other applicable tools) using the context menu on the item tree. Similarly, you can
     navigate to the source code locations instantiating the current item, or the file declaring the type of the current item (if available).
 
     \section1 Remote View

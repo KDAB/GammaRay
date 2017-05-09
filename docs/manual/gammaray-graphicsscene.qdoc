@@ -43,7 +43,7 @@
 
     \borderedimage gammaray-graphicsscene-inspector.png
 
-    You can navigate to the object inspector (and other applicable tools) using the context menu on the item tree. This feature is available
+    You can navigate to the object browser (and other applicable tools) using the context menu on the item tree. This feature is available
     for QGraphicsObject sub-classes only.
 
     \section1 Remote View

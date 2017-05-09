@@ -1,5 +1,5 @@
 /*
-    gammaray-objectinspector.qdoc
+    gammaray-qobject-browser.qdoc
 
     This file is part of the GammaRay documentation.
 
@@ -19,20 +19,20 @@
     \contentspage {Tools}
     \nextpage {Actions}
     \previouspage {Timers}
-    \page gammaray-object-inspector.html
+    \page gammaray-qobject-browser.html
 
-    \title Object Inspector
+    \title Object Browser
 
     \section1 Overview
 
-    The object inspector provides access to all QObject instances in a target. On the left side you have a tree view showing their parent/child relationship,
+    The object browser provides access to all QObject instances in a target. On the left side you have a tree view showing their parent/child relationship,
     on the right side you have access to properties of the selected object.
 
     \borderedimage gammaray-object-inspector.png
 
     Depending on the type of the object, the property view provides additional tabs for accessing specific details of an object.
 
-    The inspector provides the following information about the selected object:
+    The QObject browser provides the following information about the selected object:
 
     \list
         \li Properties that are accessible via the Qt introspection system.
@@ -45,7 +45,7 @@
 
     \section1 Finding and Navigating Objects
 
-    Finding objects can be done using the search field on the top-left side of the object inspector. Additionally, visual elements can be picked
+    Finding objects can be done using the search field on the top-left side of the object browser. Additionally, visual elements can be picked
     in the target application by holding the Ctrl+Shift+Left keys.
 
     If you have already selected an object and want to navigate to related objects, such as look at a model of a selected view, you
@@ -53,7 +53,7 @@
 
     \section1 Examples
 
-    The following examples make use of the QObject inspector:
+    The following examples make use of the QObject browser:
     \list
         \li \l{signal-slot}
     \endlist

@@ -58,7 +58,7 @@
     The following tools allow you to inspect and manipulate models and data structures of your application at runtime.
 
     \list
-        \li \l{Object Inspector}
+        \li \l{Object Browser}
         \li \l{Actions}
         \li \l{Models}
         \li \l{Text Documents}
