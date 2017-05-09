@@ -148,6 +148,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QWindow, QWindow *, transientParent);
     MO_ADD_PROPERTY_RO(QWindow, Qt::WindowType, type);
 
+#ifndef QT_NO_OPENGL
     MO_ADD_METAOBJECT1(QOpenGLShader, QObject);
     MO_ADD_PROPERTY_RO(QOpenGLShader, bool, isCompiled);
     MO_ADD_PROPERTY_RO(QOpenGLShader, QString, log);
@@ -175,7 +176,8 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContext *, shareContext);
     MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContextGroup *, shareGroup);
 // MO_ADD_PROPERTY_RO(QOpenGLContext, QSurface*, surface);
-#endif
+#endif // QT_NO_OPENGL
+#endif // QT_VERSION >= 5.0.0
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_METAOBJECT0(QBrush);
@@ -296,6 +298,7 @@ static QString surfaceTypeToString(QSurface::SurfaceType type)
     return QStringLiteral("Unknown Surface Type");
 }
 
+#ifndef QT_NO_OPENGL
 static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
 {
     QStringList types;
@@ -314,7 +317,7 @@ static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
         return QStringLiteral("<none>");
     return types.join(QStringLiteral(" | "));
 }
-
+#endif // QT_NO_OPENGL
 #endif
 
 static QString textLengthToString(const QTextLength &l)
@@ -347,7 +350,9 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSurfaceFormat>(surfaceFormatToString);
     VariantHandler::registerStringConverter<QSurface::SurfaceClass>(surfaceClassToString);
     VariantHandler::registerStringConverter<QSurface::SurfaceType>(surfaceTypeToString);
+#ifndef QT_NO_OPENGL
     VariantHandler::registerStringConverter<QOpenGLShader::ShaderType>(shaderTypeToString);
+#endif
 #endif
 
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);

@@ -76,7 +76,9 @@ Q_DECLARE_METATYPE(Qt::WindowState)
 Q_DECLARE_METATYPE(const QMatrix4x4 *)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#ifndef QT_NO_OPENGL
 Q_DECLARE_METATYPE(QOpenGLShader::ShaderType)
+#endif
 Q_DECLARE_METATYPE(QSurfaceFormat)
 #endif
 #endif
