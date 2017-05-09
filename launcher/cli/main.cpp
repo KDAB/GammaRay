@@ -252,7 +252,7 @@ int main(int argc, char **argv)
                 return 1;
             }
             if (ProbeFinder::findProbe(abi).isEmpty()) {
-                out << abi.id() << "is not a known probe, see --list-probes." << endl;
+                out << abi.id() << " is not a known probe, see --list-probes." << endl;
                 return 1;
             }
             options.setProbeABI(abi);
