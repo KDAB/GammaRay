@@ -212,14 +212,14 @@ QuickOverlay::QuickOverlay()
     , m_decorationsEnabled(true)
 {
     const QMetaObject *mo = metaObject();
-    m_sceneGrabbed = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneGrabbed(GammaRay::GrabedFrame)")));
+    m_sceneGrabbed = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneGrabbed(GammaRay::GrabbedFrame)")));
     Q_ASSERT(m_sceneGrabbed.methodIndex() != -1);
     m_sceneChanged = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneChanged()")));
     Q_ASSERT(m_sceneChanged.methodIndex() != -1);
     m_setIsGrabbingMode = mo->method(mo->indexOfSlot(QMetaObject::normalizedSignature("setIsGrabbingMode(bool)")));
     Q_ASSERT(m_setIsGrabbingMode.methodIndex() != -1);
 
-    qRegisterMetaType<GrabedFrame>();
+    qRegisterMetaType<GrabbedFrame>();
 }
 
 QQuickWindow *QuickOverlay::window() const
@@ -431,23 +431,23 @@ void QuickOverlay::windowAfterRendering()
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
 
     if (m_isGrabbingMode) {
-        if (m_grabedFrame.image.size() != m_renderInfo.windowSize * m_renderInfo.dpr)
-            m_grabedFrame.image = QImage(m_renderInfo.windowSize * m_renderInfo.dpr, QImage::Format_ARGB32_Premultiplied);
+        if (m_grabbedFrame.image.size() != m_renderInfo.windowSize * m_renderInfo.dpr)
+            m_grabbedFrame.image = QImage(m_renderInfo.windowSize * m_renderInfo.dpr, QImage::Format_ARGB32_Premultiplied);
 
-        m_grabedFrame.transform.reset();
+        m_grabbedFrame.transform.reset();
 #ifdef ENABLE_GL_READPIXELS
         QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
-        glFuncs->glReadPixels(0, 0, m_renderInfo.windowSize.width() * m_renderInfo.dpr, m_renderInfo.windowSize.height() * m_renderInfo.dpr, GL_BGRA, GL_UNSIGNED_BYTE, m_grabedFrame.image.bits());
+        glFuncs->glReadPixels(0, 0, m_renderInfo.windowSize.width() * m_renderInfo.dpr, m_renderInfo.windowSize.height() * m_renderInfo.dpr, GL_BGRA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
         // Mirror flip
-        m_grabedFrame.transform.scale(1.0, -1.0);
-        m_grabedFrame.transform.translate(0.0, -m_renderInfo.windowSize.height());
+        m_grabbedFrame.transform.scale(1.0, -1.0);
+        m_grabbedFrame.transform.translate(0.0, -m_renderInfo.windowSize.height());
 #else
-        m_grabedFrame.image = qt_gl_read_framebuffer(m_renderInfo.windowSize * m_renderInfo.dpr, false, QOpenGLContext::currentContext());
+        m_grabbedFrame.image = qt_gl_read_framebuffer(m_renderInfo.windowSize * m_renderInfo.dpr, false, QOpenGLContext::currentContext());
 #endif
-        m_grabedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
+        m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
-        if (!m_grabedFrame.image.isNull()) {
-            m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabedFrame, m_grabedFrame));
+        if (!m_grabbedFrame.image.isNull()) {
+            m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabbedFrame, m_grabbedFrame));
         }
     }
 
@@ -480,11 +480,11 @@ void QuickOverlay::gatherRenderInfo()
     m_renderInfo.graphicsApi = RenderInfo::OpenGL;
 #endif
 
-    m_grabedFrame.itemsGeometry.clear();
-    m_grabedFrame.itemsGeometryRect = QRectF();
+    m_grabbedFrame.itemsGeometry.clear();
+    m_grabbedFrame.itemsGeometryRect = QRectF();
 
     if (m_window) {
-        m_grabedFrame.itemsGeometryRect = QRect(QPoint(), m_renderInfo.windowSize);
+        m_grabbedFrame.itemsGeometryRect = QRect(QPoint(), m_renderInfo.windowSize);
 
         if (m_settings.componentsTraces) {
             findItemByClassName("QQuickControl",
@@ -493,16 +493,16 @@ void QuickOverlay::gatherRenderInfo()
                 if (!item->isVisible())
                     return;
                 QuickItemGeometry itemGeometry = initFromItem(item);
-                m_grabedFrame.itemsGeometry << itemGeometry;
-                m_grabedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
+                m_grabbedFrame.itemsGeometry << itemGeometry;
+                m_grabbedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
                         itemGeometry.boundingRect;
             });
         } else {
             QuickItemGeometry itemGeometry;
             if (!m_currentItem.isNull())
                 itemGeometry = initFromItem(m_currentItem.data());
-            m_grabedFrame.itemsGeometry << itemGeometry;
-            m_grabedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
+            m_grabbedFrame.itemsGeometry << itemGeometry;
+            m_grabbedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
                     itemGeometry.boundingRect;
         }
     }
@@ -523,14 +523,14 @@ void QuickOverlay::drawDecorations()
     QPainter painter(&device);
     if (m_settings.componentsTraces) {
         const QuickDecorationsTracesInfo tracesInfo(m_settings,
-                                                    m_grabedFrame.itemsGeometry,
+                                                    m_grabbedFrame.itemsGeometry,
                                                     QRectF(QPointF(), m_renderInfo.windowSize),
                                                     1.0);
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Traces, painter, tracesInfo);
         drawer.render();
     } else {
         const QuickDecorationsRenderInfo renderInfo(m_settings,
-                                                    m_grabedFrame.itemsGeometry.value(0),
+                                                    m_grabbedFrame.itemsGeometry.value(0),
                                                     QRectF(QPointF(), m_renderInfo.windowSize),
                                                     1.0);
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Decorations, painter, renderInfo);

@@ -55,7 +55,7 @@ QT_END_NAMESPACE
 namespace GammaRay {
 class PropertyController;
 class QuickOverlay;
-class GrabedFrame;
+class GrabbedFrame;
 struct QuickDecorationsSettings;
 class QuickItemModel;
 class QuickSceneGraphModel;
@@ -94,7 +94,7 @@ public slots:
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
     void pickElementId(const GammaRay::ObjectId& id);
 
-    void sendRenderedScene(const GammaRay::GrabedFrame &grabedFrame);
+    void sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFrame);
 
 protected:
     bool eventFilter(QObject *receiver, QEvent *event) override;

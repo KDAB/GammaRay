@@ -438,15 +438,15 @@ void QuickInspector::recreateOverlay()
     connect(m_overlay.data(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
 }
 
-void QuickInspector::sendRenderedScene(const GammaRay::GrabedFrame &grabedFrame)
+void QuickInspector::sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFrame)
 {
     RemoteViewFrame frame;
-    frame.setImage(grabedFrame.image, grabedFrame.transform);
-    frame.setSceneRect(grabedFrame.itemsGeometryRect);
+    frame.setImage(grabbedFrame.image, grabbedFrame.transform);
+    frame.setSceneRect(grabbedFrame.itemsGeometryRect);
     if (m_overlay->settings().componentsTraces)
-        frame.setData(QVariant::fromValue(grabedFrame.itemsGeometry));
-    else if (!grabedFrame.itemsGeometry.isEmpty())
-        frame.setData(QVariant::fromValue(grabedFrame.itemsGeometry.at(0)));
+        frame.setData(QVariant::fromValue(grabbedFrame.itemsGeometry));
+    else if (!grabbedFrame.itemsGeometry.isEmpty())
+        frame.setData(QVariant::fromValue(grabbedFrame.itemsGeometry.at(0)));
     m_remoteView->sendFrame(frame);
 }
 
@@ -465,10 +465,10 @@ void QuickInspector::slotGrabWindow()
     #elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         dpr = m_window->devicePixelRatio();
     #endif
-        GrabedFrame grabedFrame;
-        grabedFrame.image = m_window->grabWindow();
-        grabedFrame.image.setDevicePixelRatio(dpr);
-        sendRenderedScene(grabedFrame);
+        GrabbedFrame grabbedFrame;
+        grabbedFrame.image = m_window->grabWindow();
+        grabbedFrame.image.setDevicePixelRatio(dpr);
+        sendRenderedScene(grabbedFrame);
         return;
     }
 #endif

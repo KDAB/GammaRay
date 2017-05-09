@@ -70,7 +70,7 @@ private:
     QPointer<QQuickItem> m_object;
 };
 
-class GrabedFrame {
+class GrabbedFrame {
 public:
     QImage image;
     QTransform transform;
@@ -106,7 +106,7 @@ public slots:
 
 signals:
     void sceneChanged();
-    void sceneGrabbed(const GammaRay::GrabedFrame &frame);
+    void sceneGrabbed(const GammaRay::GrabbedFrame &frame);
 
 private:
     void windowAfterSynchronizing();
@@ -128,7 +128,7 @@ private:
     QuickDecorationsSettings m_settings;
     bool m_isGrabbingMode;
     bool m_decorationsEnabled;
-    GrabedFrame m_grabedFrame;
+    GrabbedFrame m_grabbedFrame;
     QMetaMethod m_sceneGrabbed;
     QMetaMethod m_sceneChanged;
     QMetaMethod m_setIsGrabbingMode;
@@ -156,6 +156,6 @@ private slots:
 };
 }
 
-Q_DECLARE_METATYPE(GammaRay::GrabedFrame)
+Q_DECLARE_METATYPE(GammaRay::GrabbedFrame)
 
 #endif
