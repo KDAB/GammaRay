@@ -38,6 +38,10 @@
 # -DGAMMARAY_BUILD_DOCS=[true|false]
 #  Build the API documentation and User Manual.
 #  Default=true (except when building the probe only)
+
+# -DGAMMARAY_ENFORCE_QT_ASSERTS=[true|false]
+#  Force QT_ASSERT in all builds.
+#  Default=false
 #
 # To build the man page from POD, run 'make man' after CMake (assumes perl is available)
 # To install the resulting man page, run 'make install'
@@ -186,6 +190,12 @@ gammaray_option(
   OFF
 )
 
+gammaray_option(
+  GAMMARAY_ENFORCE_QT_ASSERTS
+  "Force QT_ASSERT in all builds."
+  OFF
+)
+
 #
 # Static probe setup
 #
@@ -273,6 +283,10 @@ if(NOT ECM_ENABLE_SANITIZERS AND (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTE
     set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
     set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
   endif()
+endif()
+
+if (GAMMARAY_ENFORCE_QT_ASSERTS)
+  add_definitions(-DQT_FORCE_ASSERTS)
 endif()
 
 #
