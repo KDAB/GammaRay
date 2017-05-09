@@ -1,0 +1,61 @@
+/*
+    gammaray-methods.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage {Properties}
+    \page gammaray-methods.html
+
+    \title Methods
+
+    \section1 Overview
+
+    The methods view is available for all QObject and QMetaObject instances and shows methods, signals and slots declared in there.
+
+    \borderedimage gammaray-methods.png
+
+    The methods view contains four columns:
+    \list
+        \li The signature of the method, including its name and as far as the information is available, its return type and the
+            types and names of its arguments.
+        \li The method type, that is signal, slot or a Q_INVOKABLE method.
+        \li The access type of the method.
+        \li The source of the method, which normally is the class it is declared in.
+    \endlist
+
+    For some methods, additional information provided via QMetaMethod are available in a tooltip. A warning icon in the method
+    name column indicates possible issues detected by GammaRay.
+
+    \section2 Invoking Methods
+
+    Methods can also be dynamically invoked, using the \uicontrol{Invoke} action from the context menu. Similarly, you can emit
+    signals by using the \uicontrol{Emit} action from the context menu. In both cases the method invocation dialog shown below
+    is displayed.
+
+    \borderedimage gammaray-method-invocation.png
+
+    In the method invocation dialog you can specify any argument the method or signal may take, the types as in the \l{Properties}
+    view are supported here too. You can also specify whether to invoke the method directly or queued.
+
+    \section2 Monitoring Signals
+
+    It is also possible to monitor specific signals of the current QObject, by using the \uicontrol{Connect to} action in the context
+    menu of the corresponding signal.
+
+    Whenever the signal is emitted, the signal log at the bottom of the methods view shows the time stamp of the emission, as well as
+    the values of the signal arguments, if any. This can also be seen in the above screenshot.
+*/
