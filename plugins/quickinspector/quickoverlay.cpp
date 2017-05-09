@@ -211,6 +211,14 @@ QuickOverlay::QuickOverlay()
     , m_isGrabbingMode(false)
     , m_decorationsEnabled(true)
 {
+    const QMetaObject *mo = metaObject();
+    m_sceneGrabbed = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneGrabbed()")));
+    Q_ASSERT(m_sceneGrabbed.methodIndex() != -1);
+    m_sceneChanged = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneChanged(GammaRay::GrabedFrame)")));
+    Q_ASSERT(m_sceneChanged.methodIndex() != -1);
+    m_setIsGrabbingMode = mo->method(mo->indexOfSlot(QMetaObject::normalizedSignature("setIsGrabbingMode(bool)")));
+    Q_ASSERT(m_setIsGrabbingMode.methodIndex() != -1);
+
     qRegisterMetaType<GrabedFrame>();
 }
 
@@ -439,7 +447,7 @@ void QuickOverlay::windowAfterRendering()
         m_grabedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
         if (!m_grabedFrame.image.isNull()) {
-            QMetaObject::invokeMethod(this, "sceneGrabbed", Qt::QueuedConnection, Q_ARG(GammaRay::GrabedFrame, m_grabedFrame));
+            m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabedFrame, m_grabedFrame));
         }
     }
 
@@ -448,9 +456,9 @@ void QuickOverlay::windowAfterRendering()
     m_window->resetOpenGLState();
 
     if (m_isGrabbingMode) {
-        QMetaObject::invokeMethod(this, "setIsGrabbingMode", Qt::QueuedConnection, Q_ARG(bool, false));
+        m_setIsGrabbingMode.invoke(this, Qt::QueuedConnection, Q_ARG(bool, false));
     } else {
-        QMetaObject::invokeMethod(this, "sceneChanged", Qt::QueuedConnection);
+        m_sceneChanged.invoke(this, Qt::QueuedConnection);
     }
 }
 

@@ -129,6 +129,9 @@ private:
     bool m_isGrabbingMode;
     bool m_decorationsEnabled;
     GrabedFrame m_grabedFrame;
+    QMetaMethod m_sceneGrabbed;
+    QMetaMethod m_sceneChanged;
+    QMetaMethod m_setIsGrabbingMode;
     struct RenderInfo {
         // Keep in sync with QSGRendererInterface::GraphicsApi
         enum GraphicsApi {
