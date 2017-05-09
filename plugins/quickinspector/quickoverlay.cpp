@@ -212,9 +212,9 @@ QuickOverlay::QuickOverlay()
     , m_decorationsEnabled(true)
 {
     const QMetaObject *mo = metaObject();
-    m_sceneGrabbed = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneGrabbed()")));
+    m_sceneGrabbed = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneGrabbed(GammaRay::GrabedFrame)")));
     Q_ASSERT(m_sceneGrabbed.methodIndex() != -1);
-    m_sceneChanged = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneChanged(GammaRay::GrabedFrame)")));
+    m_sceneChanged = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneChanged()")));
     Q_ASSERT(m_sceneChanged.methodIndex() != -1);
     m_setIsGrabbingMode = mo->method(mo->indexOfSlot(QMetaObject::normalizedSignature("setIsGrabbingMode(bool)")));
     Q_ASSERT(m_setIsGrabbingMode.methodIndex() != -1);
