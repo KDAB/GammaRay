@@ -94,7 +94,7 @@
         \endlist
         \li \l{Object Inspection}
         \list
-            \li Properties
+            \li \l{Properties}
             \li Methods
             \li Connections
             \li Enums

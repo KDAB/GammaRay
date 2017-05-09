@@ -18,6 +18,7 @@
 /*!
     \contentspage {GammaRay User Manual}
     \previouspage {Standard Paths}
+    \nextpage {Properties}
     \page gammaray-object-inspection.html
 
     \title Object Inspection
@@ -33,7 +34,7 @@
     The following tabs are generally available on all QObject instances.
 
     \list
-        \li Properties
+        \li \l{Properties}
         \li Methods
         \li Connections
         \li Enums

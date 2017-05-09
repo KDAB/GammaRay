@@ -1,0 +1,89 @@
+/*
+    gammaray-properties.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage {Object Inspection}
+    \page gammaray-properties.html
+
+    \title Properties
+
+    \section1 Overview
+
+    The properties view is the most general way of inspecting a selected objects, and is available for all types of objects.
+
+    \borderedimage gammaray-properties.png
+
+    The view consists of four columns:
+    \list
+        \li The name of the property.
+        \li The current value of the property. If change notifications are available for a property, this value is updated live
+            when the property value changes. When looking at a QMetaObject instead of an object instance (for example in the
+            \l{Meta Object Browser}, this column is not available.
+        \li The data type of the property value.
+        \li The source of the property. This is typically a class name, but may also indicate dynamic QObject properties, QML
+            attached or context properties.
+    \endlist
+
+    Depending on the source of the property, additional information are available in a tooltip, as seen in the above screenshot.
+    Depending on the type of the property value, object navigation actions are available in the context menu, typically for properties
+    containing references to other objects.
+
+    Properties containing container or object values can often be expanded to inspect their content in more detail.
+
+    \section2 Property Sources
+
+    Properties are taken from the following sources, based on the type of the object you have selected:
+
+    \list
+        \li Static QObject properties, that is properties introspectable via QMetaProperty.
+        \li Dynamic QObject properties.
+        \li QML attached properties, if the selected object has been created via QML.
+        \li QML context properties, if the selected object is a QQmlContext.
+        \li A set of non-introspectable but well-known properties of Qt classes built into GammaRay.
+    \endlist
+
+    Additionally the following container types are supported, and exapanded depending on their content:
+
+    \list
+        \li QSequentialIterable, which covers most sequential containers like QVector and QList.
+        \li QAssociativeIterable, which covers most associative containers like QHash and QMap.
+        \li QQmlListProperty
+        \li QVariant
+        \li QJSValue
+    \endlist
+
+    \section2 Property Editing
+
+    As far as supported by a specific property, property values can be edited, with immediate effect on the application.
+    This can generally been done by double-clicking into the value column. For some complex types, an extended editing
+    dialog is available, reachable via the "..." button on the right side of the value editing field.
+
+    The following types can be edited:
+    \list
+        \li standard numeric and boolean types
+        \li QString
+        \li Qt's vector and matrix math types
+        \li most of Qt's geometry types
+        \li some of Qt's graphic types such as QFont and QColor
+        \li enum and flag types introspectable via QMetaEnum
+    \endlist
+
+    Additionally it is possible to add dynamic properties to a QObject instance with the controls at the bottom of the
+    property view. Existing dynamic properties can be edited as any other property, and can be removed via the context
+    menu.
+*/
