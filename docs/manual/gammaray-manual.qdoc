@@ -66,18 +66,19 @@
         \endlist
         \li \l{Tools}
         \list
-            \li \l{Object Browser}
             \li \l{Qt Quick 2 Inspector}
-            \li \l{State Machine Debugger}
             \li \l{Widget Inspector}
             \li \l{Graphics Scene Inspector}
             \li \l{Qt3D Inspector}
             \li \l{Styles}
             \li \l{Web Inspector}
+            \li \l{State Machine Debugger}
             \li \l{Messages}
             \li \l{Signal Plotter}
             \li \l{Timers}
             \li \l{Wayland Compositors}
+            \li Script Enginge Debugger
+            \li \l{Object Browser}
             \li \l{Actions}
             \li \l{Models}
             \li \l{Text Documents}
@@ -85,6 +86,7 @@
             \li \l{Translations}
             \li \l{Meta Object Browser}
             \li \l{Meta Type Browser}
+            \li QtIvi Inspector
             \li \l{Font Browser}
             \li \l{Locales}
             \li \l{Mime Types}
