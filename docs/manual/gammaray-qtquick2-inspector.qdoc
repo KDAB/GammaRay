@@ -25,7 +25,7 @@
 
     \section1 Overview
 
-    The Qt Quick 2 inspector is the tool of choice for investigating issues with a Qt Quick user interface. This includes:
+    The Qt Quick 2 inspector is the tool of choice for investigating issues with a \l{Qt Quick} user interface. This includes:
 
     \list
         \li Inspecting the visual item hierarchy.
@@ -72,7 +72,7 @@
 
     \section1 Scene Graph
 
-    The scene graph view shows you the internal representation used by Qt Quick 2 to render the current scene. This is particularly
+    The scene graph view shows you the internal representation used by \l{Qt Quick} to render the current scene. This is particularly
     useful for debugging performance issues related to batching and rendering of custom QQuickItem sub-classes.
 
     \borderedimage gammaray-qq2-geometry.png
