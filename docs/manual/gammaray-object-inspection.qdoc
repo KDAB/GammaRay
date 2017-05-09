@@ -56,7 +56,7 @@
     The following views allow you to inspect details about the graphical output of QWidget, \l{Qt Quick} or \l{Qt 3D} based applications.
 
     \list
-        \li SceneGraph Material
+        \li \l{Scene Graph Material}
         \li SceneGraph Geometry
         \li QPainter Analysis
         \li Widget Attributes
@@ -72,4 +72,3 @@
         \li Cookies
     \endlist
 */
-

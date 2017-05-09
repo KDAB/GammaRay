@@ -103,7 +103,7 @@
             \li Class Info
             \li \l{QML Context}
             \li QML Type
-            \li SceneGraph Material
+            \li \l{Scene Graph Material}
             \li SceneGraph Geometry
             \li QPainter Analysis
             \li Widget Attributes
