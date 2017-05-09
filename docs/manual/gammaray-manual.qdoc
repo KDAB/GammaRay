@@ -92,6 +92,23 @@
             \li \l{Text Codecs}
             \li \l{Standard Paths}
         \endlist
+        \li \l{Object Inspection}
+        \list
+            \li Properties
+            \li Methods
+            \li Connections
+            \li Enums
+            \li Class Info
+            \li QML Context
+            \li QML Type
+            \li SceneGraph Material
+            \li SceneGraph Geometry
+            \li QPainter Analysis
+            \li Widget Attributes
+            \li Qt3D Geometry
+            \li Application Attributes
+            \li Cookies
+        \endlist
         \li \l{Examples}
     \endlist
 */
