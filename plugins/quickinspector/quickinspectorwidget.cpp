@@ -118,7 +118,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     QItemSelectionModel *sgSelectionModel = ObjectBroker::selectionModel(clientSceneGraphModel);
     ui->sgTreeView->setSelectionModel(sgSelectionModel);
     connect(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(itemSelectionChanged(QItemSelection)));
+            this, SLOT(sgSelectionChanged(QItemSelection)));
 
     new QuickItemTreeWatcher(ui->itemTreeView, ui->sgTreeView, this);
 
@@ -205,6 +205,14 @@ void QuickInspectorWidget::itemSelectionChanged(const QItemSelection &selection)
         return;
     const QModelIndex &index = selection.first().topLeft();
     ui->itemTreeView->scrollTo(index);
+}
+
+void QuickInspectorWidget::sgSelectionChanged(const QItemSelection &selection)
+{
+    if (selection.isEmpty())
+        return;
+    const auto &index = selection.first().topLeft();
+    ui->sgTreeView->scrollTo(index);
 }
 
 void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft,

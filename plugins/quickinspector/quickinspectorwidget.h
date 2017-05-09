@@ -74,6 +74,7 @@ public:
 
 private slots:
     void itemSelectionChanged(const QItemSelection &selection);
+    void sgSelectionChanged(const QItemSelection &selection);
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
     void setServerSideDecorations(bool enabled);
     void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings);
