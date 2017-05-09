@@ -1,0 +1,44 @@
+/*
+    gammaray-qsggeometry.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage{Scene Graph Material}
+    \page gammaray-qsggeometry.html
+
+    \title Scene Graph Geometry
+
+    \section1 Overview
+
+    When having a scene graph node with an attached QSGGeometry instance selected (such as a QSGBasicGeometryNode
+    instance), the scene graph geometry view shows TODO. This
+    is primarily accessible via the scene graph browser in the \{Qt Quick 2 Inspector} tool.
+
+    \borderedimage gammaray-qsggeometry.png
+
+    The scene graph geometry view consists of two parts, the raw vertex data table on the left side, and the
+    vertex preview on the right side.
+
+    The raw vertex data table shows one line per vertex, the available columns depend on the specific
+    data layout of the corresponding scene graph node. Typically this includex at least the vertex
+    position (named "vertex") and the vertex color. One or multiple vertices can be selected, the selection
+    is also shown in the vertex preview on the right.
+
+    The vertex preview uses the vertex position to visualize the layout of the vertices. Individual vertices
+    can be selected by clicking on them, the selection can be extended by holding the Ctrl key while clicking
+    on a vertex. The selection is synchronized with the vertex data table on the left.
+*/

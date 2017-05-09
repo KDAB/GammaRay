@@ -18,6 +18,7 @@
 /*!
     \contentspage {GammaRay User Manual}
     \previouspage{QML Context}
+    \nextpage{Scene Graph Geometry}
     \page gammaray-qsgmaterial.html
 
     \title Scene Graph Material
