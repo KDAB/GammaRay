@@ -182,7 +182,7 @@ quint8 Message::lowestSupportedDataVersion()
 
 quint8 Message::highestSupportedDataVersion()
 {
-#if QT_VERSION > QT_VERSION_CHECK(5, 3, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     return QDataStream::Qt_DefaultCompiledVersion;
 #elif QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     return QDataStream::Qt_5_2;
