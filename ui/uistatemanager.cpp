@@ -246,7 +246,6 @@ void UIStateManager::saveState()
 
     if (m_settingsAccess) {
         qWarning() << Q_FUNC_INFO << "Recursive save/restore state detected" << widgetPath(m_widget) << m_widget;
-        Q_ASSERT(false);
         return;
     }
 
