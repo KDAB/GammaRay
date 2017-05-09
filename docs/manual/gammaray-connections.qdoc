@@ -1,0 +1,60 @@
+/*
+    gammaray-connections.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage {Methods}
+    \page gammaray-connections.html
+
+    \title Connections
+
+    \section1 Overview
+
+    The connections view is available for all QObject instances and shows inbound and outbound signal/slot connections for
+    the currently selected object.
+
+    \borderedimage gammaray-connections.png
+
+    The connections view consists of two identical parts. The upper half is showing inbound connections, that is signals
+    connected to slots of the current objects. The lower half is showing outbound connections, that is signals of the
+    current object connected to other slots or arbitrary functions or lambda expressions. The latter is displayed as "slot object".
+
+    Each of the two connection views has four columns:
+    \list
+        \li The sender object (inbound only), or the receiver object (outbound only).
+        \li The name of the signal that is connected.
+        \li The name of the slot the signal is connected to, if available.
+        \li The type of the connection (automatic, direct or queued).
+    \endlist
+
+    \section2 Navigation
+
+    The context menu on both the inbound and outbound connections view allows you to navigate to the sender or receiver object
+    respectively.
+
+    \section2 Warnings
+
+    A warning icon is displayed in the first column of the inbound and outbound connections view if GammaRay detected a
+    possible issue with the connection, such as:
+
+    \list
+        \li The connection exists multiple times.
+        \li The connection is explicitly set to direct mode, but the sender and receiver are in different threads.
+    \endlist
+
+    Note that these are merely warnings about common problems, but can in some cases actually be valid usage.
+*/
