@@ -178,6 +178,7 @@ class QmlObjectDataProvider : public AbstractObjectDataProvider
 public:
     QString name(const QObject *obj) const override;
     QString typeName(QObject *obj) const override;
+    QString shortTypeName(QObject *obj) const override;
     SourceLocation creationLocation(QObject *obj) const override;
     SourceLocation declarationLocation(QObject *obj) const override;
 };
@@ -225,6 +226,11 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
     }
 #endif
     return QString();
+}
+
+QString QmlObjectDataProvider::shortTypeName(QObject *obj) const
+{
+    return typeName(obj).section(QLatin1Char('/'), -1, -1);
 }
 
 SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const

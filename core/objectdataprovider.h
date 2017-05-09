@@ -52,6 +52,7 @@ public:
     virtual ~AbstractObjectDataProvider();
     virtual QString name(const QObject *obj) const = 0;
     virtual QString typeName(QObject *obj) const = 0;
+    virtual QString shortTypeName(QObject *obj) const = 0;
     virtual SourceLocation creationLocation(QObject *obj) const = 0;
     virtual SourceLocation declarationLocation(QObject *obj) const = 0;
 
@@ -70,6 +71,9 @@ GAMMARAY_CORE_EXPORT QString name(const QObject *obj);
 
 /** Returns the type name of @p obj. */
 GAMMARAY_CORE_EXPORT QString typeName(QObject *obj);
+
+/** Returns the short type name of @p obj. */
+GAMMARAY_CORE_EXPORT QString shortTypeName(QObject *obj);
 
 /** Returns the source location where this object was created, if known. */
 GAMMARAY_CORE_EXPORT SourceLocation creationLocation(QObject *obj);

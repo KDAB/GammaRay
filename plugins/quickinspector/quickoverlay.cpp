@@ -403,7 +403,7 @@ QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
     }
 
     itemGeometry.traceColor = colorForItem(item);
-    itemGeometry.traceTypeName = ObjectDataProvider::typeName(item);
+    itemGeometry.traceTypeName = ObjectDataProvider::shortTypeName(item);
     itemGeometry.traceName = ObjectDataProvider::name(item);
 
     return itemGeometry;

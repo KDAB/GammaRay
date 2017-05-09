@@ -80,6 +80,19 @@ QString ObjectDataProvider::typeName(QObject *obj)
     return obj->metaObject()->className();
 }
 
+QString ObjectDataProvider::shortTypeName(QObject *obj)
+{
+    if (!obj)
+        return QString();
+
+    foreach (auto provider, *s_providers()) {
+        const auto name = provider->shortTypeName(obj);
+        if (!name.isEmpty())
+            return name;
+    }
+    return obj->metaObject()->className();
+}
+
 SourceLocation ObjectDataProvider::creationLocation(QObject *obj)
 {
     SourceLocation loc;
