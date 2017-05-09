@@ -89,13 +89,16 @@ else()
     message(FATAL_ERROR "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!")
   endif()
   # uname reports different ARM versions, unlike ELF, so map all this to "arm"
-  if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+  # also, there are Yocto supplied toolchain files out there, reporting "cortexa9[hf]-neon-..." or similar here
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm" OR CMAKE_SYSTEM_PROCESSOR MATCHES "cortex")
     set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-arm")
   else()
     if(CMAKE_SYSTEM_PROCESSOR MATCHES "i[345]86")
       set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-i686")
     else()
-      set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
+      # subsequent code assumes there is no '-' in the architecture identifier
+      string(REPLACE "-" "_" _clean_processor ${CMAKE_SYSTEM_PROCESSOR})
+      set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${_clean_processor}")
     endif()
   endif()
 endif()
