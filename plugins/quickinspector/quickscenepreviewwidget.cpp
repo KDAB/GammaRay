@@ -177,15 +177,15 @@ void QuickScenePreviewWidget::resizeEvent(QResizeEvent *e)
 
 void QuickScenePreviewWidget::drawDecoration(QPainter *p)
 {
+    // Scaling and translations on QuickItemGeometry will be done on demand
+
     if (frame().data().userType() == qMetaTypeId<QuickItemGeometry>()) {
         // scaled and translated
-        auto itemGeometry = frame().data().value<QuickItemGeometry>();
-        itemGeometry.scaleTo(zoom());
+        const auto itemGeometry = frame().data().value<QuickItemGeometry>();
         const QuickDecorationsRenderInfo renderInfo(m_overlaySettings, itemGeometry, frame().viewRect(), zoom());
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Decorations, *p, renderInfo);
         drawer.render();
     } else if (frame().data().userType() == qMetaTypeId<QVector<QuickItemGeometry>>()) {
-        // Scaling and translations will be done on demand
         const auto itemsGeometry = frame().data().value<QVector<QuickItemGeometry>>();
         const QuickDecorationsTracesInfo tracesInfo(m_overlaySettings, itemsGeometry, frame().viewRect(), zoom());
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Traces, *p, tracesInfo);

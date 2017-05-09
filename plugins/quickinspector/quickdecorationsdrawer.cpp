@@ -70,13 +70,15 @@ void QuickDecorationsDrawer::render()
 
 void QuickDecorationsDrawer::drawDecorations()
 {
-    const QuickItemGeometry itemGeometry(this->itemGeometry());
+    QuickItemGeometry itemGeometry(this->itemGeometry());
 
     if (!itemGeometry.isValid())
         return;
 
     const qreal &zoom(m_renderInfo->zoom);
     DrawTextInfoList texts;
+
+    itemGeometry.scaleTo(zoom);
 
     m_painter->save();
 
