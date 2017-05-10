@@ -69,6 +69,6 @@
 
     \list
         \li Application Attributes
-        \li Cookies
+        \li \l{HTTP Cookies}
     \endlist
 */

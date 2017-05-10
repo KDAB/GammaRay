@@ -109,7 +109,7 @@
             \li Widget Attributes
             \li \l{Qt3D Geometry Inspector}
             \li Application Attributes
-            \li Cookies
+            \li \l{HTTP Cookies}
         \endlist
         \li \l{Examples}
     \endlist

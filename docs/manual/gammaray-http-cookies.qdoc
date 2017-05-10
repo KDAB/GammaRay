@@ -1,0 +1,38 @@
+/*
+    gammaray-http-cookies.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage{Qt3D Geometry Inspector}
+    \page gammaray-http-cookies.html
+
+    \title HTTP Cookies
+
+    \section1 Overview
+
+    The HTTP cookie view shows a list of cookies held by a cookie store associated with the
+    currently selected object. In particular these can be:
+
+    \list
+        \li A QNetworkCookieJar instance.
+        \li A QNetworkAccessManager instance.
+    \endlist
+
+    \borderedimage gammaray-http-cookies.png
+
+    The information shown in the HTTP cookie view correspond to the properties of QNetworkCookie.
+*/
