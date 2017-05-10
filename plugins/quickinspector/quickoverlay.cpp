@@ -456,7 +456,7 @@ void QuickOverlay::windowAfterRendering()
     m_window->resetOpenGLState();
 
     if (m_isGrabbingMode) {
-        m_setIsGrabbingMode.invoke(this, Qt::QueuedConnection, Q_ARG(bool, false));
+        setIsGrabbingMode(false);
     } else {
         m_sceneChanged.invoke(this, Qt::QueuedConnection);
     }
@@ -618,5 +618,5 @@ void QuickOverlay::requestGrabWindow()
     if (m_isGrabbingMode)
         return;
 
-    setIsGrabbingMode(true);
+    m_setIsGrabbingMode.invoke(this, Qt::QueuedConnection, Q_ARG(bool, true));
 }

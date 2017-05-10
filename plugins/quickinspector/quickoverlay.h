@@ -101,7 +101,6 @@ public:
      */
     void placeOn(const ItemOrLayoutFacade &item);
 
-public slots:
     void requestGrabWindow();
 
 signals:
