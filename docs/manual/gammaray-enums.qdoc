@@ -1,0 +1,42 @@
+/*
+    gammaray-enums.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage {Connections}
+    \nextpage {QML Context}
+    \page gammaray-enums.html
+
+    \title Enums and Flags
+
+    \section1 Overview
+
+    The enums view is available for all QObject and QMetaObject instances and shows enums and flags defined in the
+    corresponding class, as far as introspectable via QMetaEnum.
+
+    \borderedimage gammaray-enums.png
+
+    The enums and flags view shows to levels of information. On the top-level you see the list of all
+    enums and flags listed in the corresponding QMetaObject, in particular:
+    \list
+        \li The name of the enum or flag.
+        \li The amount of elements defined in the enum.
+        \li The class or namespace in which the enum has been declared.
+    \endlist
+
+    On the second level you find the names and values of each element of the corresponding enum or flag.
+*/
