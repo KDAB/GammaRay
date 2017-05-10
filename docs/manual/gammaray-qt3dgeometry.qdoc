@@ -1,0 +1,85 @@
+/*
+    gammaray-qt3dgeometry.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage{Paint Analyzer}
+    \page gammaray-qt3dgeometry-inspector.html
+
+    \title Qt3D Geometry Inspector
+
+    \section1 Overview
+
+    The \l{Qt 3D} geometry inspector allows you to look at vertices and their associated attributes
+    used by the \l{Qt 3D} renderer in various ways. The geometry inspector is available when one of
+    the following objects has been selected:
+
+    \list
+        \li A Qt3DRender::QGeometry instance.
+        \li A Qt3DRender::QBuffer or a Qt3DRender::QAttribute belonging to a Qt3DRender::QGeometry.
+        \li A Qt3DCore::QEntity with a geometry component attached to it.
+    \endlist
+
+    \borderedimage gammaray-qt3d-geometry-wireframe.png
+
+    The \l{Qt 3D} geometry inspector provides a wireframe view of the vertices, as well as a raw buffer view.
+    It is most easily accessible from within the entity tree view of the \l{Qt3D Inspector}.
+
+    The wireframe view supports a number of interactions:
+    \list
+        \li Left mouse button drag changes the view direction.
+        \li Middle mouse button drag moves the camera in an orbit around the geometry.
+        \li Arrow keys and W/A/S/D keys allow to move the camera in a first person view.
+    \endlist
+
+    \section2 Backface Culling
+
+    The wireframe view by default does backface culling as the renderer would do as well. This can be
+    disabled via the corresponding action in the toolbar at the top of the wireframe view. The culled
+    faces are then shown in red, like in the following screenshot.
+
+    \borderedimage gammaray-qt3d-geometry-backface-culling.png
+
+    \section2 Normal Vectors
+
+    The \l{Qt 3D} geometry inspector can also visualize normal vectors, assuming there is a corresponding
+    Qt3DRender::QAttribute present in the vertex buffer. Normal vector visualization is enabled using the
+    corresponding toolbar action in the wireframe view.
+
+    \borderedimage gammaray-qt3d-geometry-normals.png
+
+    Vertex normals are shown in blue, face normals are shown in yellow.
+
+    \section2 Raw Buffer View
+
+    You can switch to the raw buffer view in the toolbar on top of the \l{Qt 3D} geometry inspection view.
+    A combobox as the top allows you to select the Qt3DRender::QBuffer instance to inspect, typically there
+    is one or more vertex buffer and one index buffer present.
+
+    The buffer view shows a tables with the buffer data decoded based on its associated Qt3DRender::QAttribute
+    instances, resulting in one or more columns per attribute.
+
+    \borderedimage gammaray-qt3d-geometry-buffers.png
+
+
+    \section1 Examples
+
+    The following examples make use of the Qt3D geometry inspector:
+    \list
+        \li \l{qt3d-geometry}
+    \endlist
+*/

@@ -60,7 +60,7 @@
         \li \l{Scene Graph Geometry}
         \li \l{Paint Analyzer}
         \li Widget Attributes
-        \li Qt3D Geometry
+        \li \l{Qt3D Geometry Inspector}
     \endlist
 
     \section2 Specific Classes

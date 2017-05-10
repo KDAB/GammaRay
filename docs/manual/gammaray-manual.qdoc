@@ -107,7 +107,7 @@
             \li \l{Scene Graph Geometry}
             \li \l{Paint Analyzer}
             \li Widget Attributes
-            \li Qt3D Geometry
+            \li \l{Qt3D Geometry Inspector}
             \li Application Attributes
             \li Cookies
         \endlist

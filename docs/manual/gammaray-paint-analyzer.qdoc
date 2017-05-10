@@ -18,6 +18,7 @@
 /*!
     \contentspage {GammaRay User Manual}
     \previouspage{Scene Graph Geometry}
+    \nextpage{Qt3D Geometry Inspector}
     \page gammaray-paint-analyzer.html
 
     \title Paint Analyzer
