@@ -40,8 +40,8 @@
 
     \section2 Watch a signal emission
 
-    Select the emit button in the \l{Object Browser} or the \l{Widget Inspector} tool, and open the Methods tab on the right.
-    Find the clicked() signal in the method list, and chose "Connect to" in the context menu.
+    Select the emit button in the \l{Object Browser} or the \l{Widget Inspector} tool, and open the \l{Methods} tab on the right.
+    Find the clicked() signal in the method list, and chose \uicontrol{Connect to} in the context menu.
     Clicking on the emit button will now show each emitted clicked() signal in the method log at the bottom half on
     the right side. This allows you to verify that the signal is emitted correctly, and here in particular is only
     emitted once per click.
@@ -50,7 +50,7 @@
 
     \section2 Check existing signal/slot connections
 
-    Select the emit button in the \l{Object Browser} or the \l{Widget Inspector} tool, and open the Connections tab on the right.
+    Select the emit button in the \l{Object Browser} or the \l{Widget Inspector} tool, and open the \l{Connections} tab on the right.
     The list of outbound connections at the bottom half will show all existing connections to the LCD widget incrementing code.
     You will notice that multiple connections to the same slot exist, and that GammaRay shows a warning icon for this.
 

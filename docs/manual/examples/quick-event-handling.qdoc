@@ -50,7 +50,7 @@
 
     \section2 Live property editing
 
-    Selecting the hidden button in the \l{Qt Quick 2 Inspector} or \l{Object Browser} tools will show the property
+    Selecting the hidden button in the \l{Qt Quick 2 Inspector} or \l{Object Browser} tools will show the \l{Properties}
     view on the right. In there we can investigate why the hidden button consumes events, and test our theory by
     changing properties in the running application.
 

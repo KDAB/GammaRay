@@ -46,7 +46,7 @@
     \section2 Property inspection
 
     For the selected QWidget or QLayout instance you can look at and edit many layouting-relevant properties in the
-    property view on the right. Tweaking these values at runtime avoids lengthy recompile and restart cycles just
+    \l{Properties} view on the right. Tweaking these values at runtime avoids lengthy recompile and restart cycles just
     to verify a specific change.
 
     In our example, we can change the minimum size of the offending QLabel in the lower left to something
@@ -57,7 +57,7 @@
     A useful approach for identifying more complicated layouting issues is bisecting them, that is, take our parts
     of the UI and verify if the problem persists. You can do this at runtime with GammaRay too, without needing
     to recompile or restart the target application, by setting the relevant QWidget sub-tree to invisible in the
-    property view.
+    \l{Properties} view.
 
     In our example, we can use this to exclude the QGroupBox instances at the right side as a possible source
     for the window resizing issue. Hiding one of them makes it a lot more apparent that the actual source of the

@@ -74,9 +74,10 @@
     For this we use the scene graph view of the \l{Qt Quick 2 Inspector} view in GammaRay. This shows the
     internal scene graph items, which is what the renderer uses as input for the batching.
 
-    Looking at the combinedMatrix property of any node belonging to a slider we notice that at least one
-    value of the diagonal is negative, indicating a rotation. This is preventing the batch merging. In
-    order to identify the culprit, we can move up the hierarchy to the first node introducing this
+    Looking at the combinedMatrix property of any node belonging to a slider in the \l{Properties} view
+    we notice that at least one value of the diagonal is negative, indicating a rotation.
+    This is preventing the batch merging.
+    In order to identify the culprit, we can move up the hierarchy to the first node introducing this
     transformation.
 
     In order to match this to the actual code causing the problem, switch back to the item tree view,
@@ -86,10 +87,10 @@
     \snippet quick-batching/Slider.qml Slider transformation
 
     In order to verify that this is our problem you don't need to restart the application, you can also
-    use the property editor in the item tree view to adjust the rotation live. After doing this we see
-    that the left slider is no having a trivial diagonal in its combined transformation matrix, and thus
-    is rendered with a single OpenGL draw call. For the right slider we have to repeat this procedure to
-    identify a second transformation:
+    use the editing capabilities of the \l{Properties} tab in the item tree view to adjust the rotation live.
+    After doing this we see that the left slider is no having a trivial diagonal in its combined
+    transformation matrix, and thus is rendered with a single OpenGL draw call.
+    For the right slider we have to repeat this procedure to identify a second transformation:
 
     \snippet quick-batching/Slider.qml Slider mirroring
 

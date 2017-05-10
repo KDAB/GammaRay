@@ -58,4 +58,12 @@
     \endlist
 
     Note that these are merely warnings about common problems, but can in some cases actually be valid usage.
+
+    \section1 Examples
+
+    The following examples make use of the connections view:
+    \list
+        \li \l{signal-slot}
+    \endlist
+
 */

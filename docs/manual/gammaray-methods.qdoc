@@ -59,4 +59,11 @@
 
     Whenever the signal is emitted, the signal log at the bottom of the methods view shows the time stamp of the emission, as well as
     the values of the signal arguments, if any. This can also be seen in the above screenshot.
+
+    \section1 Examples
+
+    The following examples make use of the methods view:
+    \list
+        \li \l{signal-slot}
+    \endlist
 */

@@ -39,12 +39,12 @@
     GammaRay provides several features supporting the analysis of issues regarding
     vertex data provided via Qt3DRender::QAttribute and Qt3DRender::QBuffer. They are all
     available by opening the \l{Qt3D Inspector} view, selecting a geometry entity in the entity
-    tree view on the left side and then opening the Geometry tab on the right side.
+    tree view on the left side and then opening the \l{Qt3D Geometry Inspector} tab on the right side.
 
     \section2 Backface culling
 
     A common problem for seemingly "missing" parts of the geometry is a wrong vertex order.
-    The geometry inspector in GammaRay allows you to disable the normally active backface
+    The \l{Qt3D Geometry Inspector} in GammaRay allows you to disable the normally active backface
     culling to easily spot such cases. You find the action for that in the toolbar above
     the geometry view.
 
@@ -58,8 +58,8 @@
 
     With the geometry fixed, we can look into the shading issues. Light reflection in the
     phong model largely depends on surface normal vectors, which are also provided via
-    a Qt3DRender::QAttribute in our example. Normals can be visualized with the geometry
-    inspector by choosing the corresponding action in the toolbar above the geometry view.
+    a Qt3DRender::QAttribute in our example. Normals can be visualized with the \l{Qt3D Geometry Inspector}
+    by choosing the corresponding action in the toolbar above the geometry view.
     The resulting blue lines show the vertex normals, the yellow lines the corresponding
     face normals.
 

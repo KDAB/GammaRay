@@ -87,4 +87,13 @@
     Additionally it is possible to add dynamic properties to a QObject instance with the controls at the bottom of the
     property view. Existing dynamic properties can be edited as any other property, and can be removed via the context
     menu.
+
+    \section1 Examples
+
+    The following examples make use of the properties view:
+    \list
+        \li \l{quick-event-handling}
+        \li \l{quick-batching}
+        \li \l{widget-layouting}
+    \endlist
 */
