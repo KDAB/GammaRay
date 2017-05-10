@@ -1,0 +1,49 @@
+/*
+    gammaray-paint-analyzer.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage{Scene Graph Geometry}
+    \page gammaray-paint-analyzer.html
+
+    \title Paint Analyzer
+
+    \section1 Overview
+
+    The paint analyzer allows you to inspect every single operation performed on a QPainter. It is typically available on objects
+    using a QPainter for rendering their visual appearance, such as:
+
+    \list
+        \li QWidget
+        \li QQuickPaintedItem
+        \li QGraphicsItem
+    \endlist
+
+    Note that the paint analyzer is not applied recursively to children of the selected object, so you see only operations performed
+    by the current object itself, which can even be none for e.g. container widgets. The \l{Widget Inspector} therefore additionally
+    provides a paint analyzer showing operations of an entire window.
+
+    \borderedimage gammaray-paint-analyzer.png
+
+    The paint analyzer consits of two parts, the command list on the left and the render preview on the right. The command list
+    shows all QPainter commands in chronological order, the first column listing the command type, the second showing the command
+    arguments. Selecting a command will cause the render preview to show the visual result up to the selected command, allowing you
+    to inspect the visual output step by step.
+
+    The render preview can be panned and zoomed using the corresponding actions in the toolbar at its top. Additionally, a measurement
+    tool is available that way too.
+*/

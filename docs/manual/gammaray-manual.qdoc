@@ -105,7 +105,7 @@
             \li QML Type
             \li \l{Scene Graph Material}
             \li \l{Scene Graph Geometry}
-            \li QPainter Analysis
+            \li \l{Paint Analyzer}
             \li Widget Attributes
             \li Qt3D Geometry
             \li Application Attributes
