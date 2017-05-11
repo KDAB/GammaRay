@@ -39,7 +39,7 @@
     \section1 Item Tree
 
     The item tree is shown to the top left, and contains the visual hierarchy of QGraphicsItem instances in the currently selected graphics scene.
-    The right side contains the property view for the selected item.
+    The right side contains the \l{Object Inspection} view for the selected item.
 
     \borderedimage gammaray-graphicsscene-inspector.png
 
@@ -58,7 +58,7 @@
 
     \section1 Paint Analyzer
 
-    When selecting a graphics item in the item tree, the paint analyzer tab is activated in the property view on the right.
+    When selecting a graphics item in the item tree, the \l{Paint Analyzer} tab is activated in the property view on the right.
 
     \borderedimage gammaray-graphicsitem-paint-analyzer.png
 

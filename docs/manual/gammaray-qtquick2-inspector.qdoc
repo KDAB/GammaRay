@@ -39,8 +39,7 @@
 
     The item tree is shown on the top left, and it contains the visual hierarchy of QQuickItem instances in the currently selected Qt Quick scene.
     This does not necessarily match the QObject parent/child hierarchy.
-    The right side contains the same property view for the selected item you already know from the
-    \l{Object Browser}.
+    The right side contains universal \l{Object Inspection} view.
 
     \borderedimage gammaray-qq2-inspector.png
 
@@ -68,7 +67,7 @@
 
     \borderedimage gammaray-qqpainteditem-paint-analyzer.png
 
-    The paint analyzer allows you to inspect every single QPainter command that is executed, and look at the visual result after each step.
+    The \l{Paint Analyzer} allows you to inspect every single QPainter command that is executed, and look at the visual result after each step.
 
     \section1 Scene Graph
 
@@ -81,8 +80,8 @@
 
     \list
         \li QSGNode properties, in particularly node flags and transformation matrices.
-        \li Shader code, if the node has a material associated with it.
-        \li Geometry and other per-vertex data, when looking at a geometry node.
+        \li Shader code, if the node has a material associated with it (see \l{Scene Graph Material}).
+        \li Geometry and other per-vertex data, when looking at a geometry node (see \l{Scene Graph Geometry}).
     \endlist
 
     \section1 Examples

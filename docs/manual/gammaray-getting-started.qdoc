@@ -44,10 +44,11 @@
     \section2 Learning GammaRay's Capabilities
 
     Once you can operate GammaRay and use it to interact with a target application, there are additional resources
-    to learn about the Capabilities GammaRay provides you:
+    to learn about the capabilities GammaRay provides you:
 
     \list
         \li Documentation of all available \l{Tools}.
+        \li Documentation of all available \l{Object Inspection} views.
         \li \l{Examples} of real-world problems, and how to analyze them with GammaRay.
     \endlist
 */

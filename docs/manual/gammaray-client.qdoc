@@ -46,20 +46,22 @@
 
     An overview of all available tools can be found in the \l{Tools} section of this manual.
 
-    \section2 Object properties
+    \section2 Object Inspection
 
     Many tools in GammaRay deal with a set of objects of the target application, most commonly QObject sub-classes. To explore the properties of
-    a selected object, those tools typically show the object property inspector on the right hand side (as seen in the above screenshot).
-    The property inspector contains a number of different tabs, depending on the type of the object.
+    a selected object, those tools typically show the \l{Object Inspection} view on the right hand side (as seen in the above screenshot).
+    The object inspection view contains a number of different tabs, depending on the type of the object.
 
-    \section2 Object and code navigation
+    An overview of all available object inspection tabs can be found in the \l{Object Inspection} section of this manual.
+
+    \section2 Object and Source Code Navigation
 
     Different tools might show different aspects of the same object, so it's useful to be able to navigate to the current object in other tools.
     This is offered in most places via the context menu.
 
-    Equally, it is useful to navigate to the code that declared or instaniated an object, this is offered also via the context menu (QML only currently).
+    Equally, it is useful to navigate to the code that declared or instaniated an object, this is offered also via the context menu.
 
-    \section2 Finding objects
+    \section2 Finding Objects
 
     Finding the right objects in the manu thousands existing in a target application typically can be challenging.
     GammaRay supports this by the following means:

@@ -43,7 +43,7 @@
 
     \section1 Paint Analyzer
 
-    When selecting a QWidget sub-class in the widget tree, the paint analyzer tab is activated in the property view on the right side.
+    When selecting a QWidget sub-class in the widget tree, the \l{Paint Analyzer} tab is activated in the property view on the right side.
 
     The paint analyzer allows you to inspect every single QPainter command that is executed, and look at the visual result after each step.
 

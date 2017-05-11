@@ -48,8 +48,8 @@
 
     \section1 Geometry Inspection
 
-    When selecting an entity with a geometry component attached, or a geometry component directly in a different view, the geometry
-    inspector tab is shown on the right hand side.
+    When selecting an entity with a geometry component attached, or a geometry component directly in a different view, the
+    \l{Qt3D Geometry Inspector} tab is shown on the right hand side.
 
     The geometry inspection tab has to views:
     \list
@@ -72,7 +72,7 @@
 
     \section2 Buffer View
 
-    You can switch to the raw buffer view in the toolbar of the geometry tab, and select the Qt3DRender::QBuffer instance to inspect
+    You can switch to the raw buffer view in the toolbar of the \l{Qt3D Geometry Inspector} tab, and select the Qt3DRender::QBuffer instance to inspect
     in the combo box at the top right.
 
     \borderedimage gammaray-qt3d-buffers.png

@@ -30,17 +30,17 @@
 
     \borderedimage gammaray-object-inspector.png
 
-    Depending on the type of the object, the property view provides additional tabs for accessing specific details of an object.
+    Depending on the type of the object, the \l{Object Inspection} view provides additional tabs for accessing specific details of an object.
 
     The QObject browser provides the following information about the selected object:
 
     \list
-        \li Properties that are accessible via the Qt introspection system.
-        \li Qt signals, including the ability to monitor them for emission.
+        \li \l{Properties} that are accessible via the Qt introspection system.
+        \li Qt signals, including the ability to monitor them for emission (see \l{Methods}).
         \li Qt slots and Q_INVOKABLE methods, including the ability to invoke them.
-        \li Inbound and outbound signal/slot connections.
-        \li Enums, flags, and class information registered at Qt's meta-object system.
-        \li For objects created in a QML context, access to context properties and the current context chain is provided.
+        \li Inbound and outbound signal/slot \l{Connections}.
+        \li \l{Enums and Flags}, as well as class information registered at Qt's meta-object system.
+        \li For objects created in a \l{QML Context}, access to context properties and the current context chain is provided.
     \endlist
 
     \section1 Finding and Navigating Objects
