@@ -33,6 +33,9 @@
 #include <QDataStream>
 #include <QUdpSocket>
 #include <QTimer>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#include <QNetworkDatagram>
+#endif
 
 #include <algorithm>
 
@@ -64,11 +67,18 @@ NetworkDiscoveryModel::~NetworkDiscoveryModel()
 void NetworkDiscoveryModel::processPendingDatagrams()
 {
     while (m_socket->hasPendingDatagrams()) {
-        QByteArray datagram;
-        datagram.resize(m_socket->pendingDatagramSize());
-        m_socket->readDatagram(datagram.data(), datagram.size());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+        const auto datagram = m_socket->receiveDatagram();
+        const auto buffer = datagram.data();
+        const auto senderAddr = datagram.senderAddress();
+#else
+        QByteArray buffer;
+        buffer.resize(m_socket->pendingDatagramSize());
+        m_socket->readDatagram(buffer.data(), buffer.size());
+        const QHostAddress senderAddr;
+#endif
 
-        QDataStream stream(datagram);
+        QDataStream stream(buffer);
         qint32 broadcastVersion;
         stream >> broadcastVersion;
         if (broadcastVersion != Protocol::broadcastFormatVersion())
@@ -77,6 +87,18 @@ void NetworkDiscoveryModel::processPendingDatagrams()
         ServerInfo info;
         stream >> info.version >> info.url >> info.label;
         info.lastSeen = QDateTime::currentDateTime();
+        // sender address is more reliable in case the probe runs on
+        // a system with multiple public network interfaces
+        if (!senderAddr.isNull() && info.url.scheme() == QLatin1String("tcp")) {
+            switch (senderAddr.protocol()) {
+                case QAbstractSocket::IPv4Protocol:
+                    info.url.setHost(senderAddr.toString());
+                    break;
+                case QAbstractSocket::IPv6Protocol:
+                    info.url.setHost(QLatin1Char('[') + senderAddr.toString() + QLatin1Char(']'));
+                    break;
+            }
+        }
 
         QVector<ServerInfo>::iterator it = std::find(m_data.begin(), m_data.end(), info);
         if (it == m_data.end()) {
