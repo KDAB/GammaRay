@@ -32,8 +32,16 @@
 
 set(CMAKE_SYSTEM_NAME "Linux")
 
-string(REGEX MATCH "-march=(.*) -" PROCESSOR_ARCH "$ENV{CC}")
-set(CMAKE_SYSTEM_PROCESSOR ${PROCESSOR_ARCH})
+if(DEFINED ENV{ARCH})
+    #$ARCH is set through the yocto environment script, use this
+    set(CMAKE_SYSTEM_PROCESSOR "$ENV{ARCH}")
+elseif(DEFINED ENV{CC})
+    #No $ARCH found, trying to deduce processor from -march=<name> flag in CC
+    string(REGEX MATCH "-march=([^\ ]+)" DUMMY "$ENV{CC}")
+    set(CMAKE_SYSTEM_PROCESSOR ${CMAKE_MATCH_1})
+else()
+    message(FATAL_ERROR "Could not find processor architecture (no ARCH or CC found in environment).")
+endif()
 
 set(OE_QMAKE_PATH_EXTERNAL_HOST_BINS "$ENV{OECORE_NATIVE_SYSROOT}/usr/bin")
 set(CMAKE_FIND_ROOT_PATH "$ENV{SDKTARGETSYSROOT}")
