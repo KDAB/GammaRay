@@ -87,7 +87,7 @@ void ObjectListModel::objectAdded(QObject *obj)
     Q_ASSERT(obj);
     Q_ASSERT(Probe::instance()->isValidObject(obj));
 
-    QVector<QObject *>::iterator it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
+    auto it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
     Q_ASSERT(it == m_objects.end() || *it != obj);
 
     const int row = std::distance(m_objects.begin(), it);
@@ -103,7 +103,7 @@ void ObjectListModel::objectRemoved(QObject *obj)
 {
     Q_ASSERT(thread() == QThread::currentThread());
 
-    QVector<QObject *>::iterator it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
+    auto it = std::lower_bound(m_objects.begin(), m_objects.end(), obj);
     if (it == m_objects.end() || *it != obj) {
         // not found
         return;

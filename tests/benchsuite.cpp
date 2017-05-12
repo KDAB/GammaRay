@@ -65,8 +65,8 @@ void BenchSuite::probe_objectAdded()
         objects << obj;
     }
 
-    QVector<QObject *>::const_iterator it = objects.constBegin();
-    QVector<QObject *>::const_iterator end = objects.constEnd();
+    auto it = objects.constBegin();
+    auto end = objects.constEnd();
     QBENCHMARK_ONCE {
         while (it != end) {
             Probe::objectAdded(*it);

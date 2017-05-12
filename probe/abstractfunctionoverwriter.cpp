@@ -118,7 +118,7 @@ void *AbstractFunctionOverwriter::getMemoryNearAddress(void * const addr, size_t
     maxAddr = std::min<intptr_t>(maxAddr, reinterpret_cast<intptr_t>(addr) + 0x20000000);
 #endif
 
-    for (QList<MemorySegment>::Iterator it = memoryPool.begin(); it != memoryPool.end(); ++it) {
+    for (auto it = memoryPool.begin(); it != memoryPool.end(); ++it) {
         if (it->free >= size) {
 #if defined(ARCH_64)
             if (!((intptr_t)it->mem > minAddr && (intptr_t)it->mem < maxAddr))

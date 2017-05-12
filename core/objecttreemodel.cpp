@@ -103,7 +103,7 @@ void ObjectTreeModel::objectAdded(QObject *obj)
     Q_ASSERT(index.isValid() || !parentObject(obj));
 
     QVector<QObject *> &children = m_parentChildMap[ parentObject(obj) ];
-    QVector<QObject *>::iterator it = std::lower_bound(children.begin(), children.end(), obj);
+    auto it = std::lower_bound(children.begin(), children.end(), obj);
     const int row = std::distance(children.begin(), it);
 
     beginInsertRows(index, row, row);
@@ -139,7 +139,7 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
 
     QVector<QObject *> &siblings = m_parentChildMap[ parentObj ];
 
-    QVector<QObject *>::iterator it = std::lower_bound(siblings.begin(), siblings.end(), obj);
+    auto it = std::lower_bound(siblings.begin(), siblings.end(), obj);
     if (it == siblings.end() || *it != obj)
         return;
     const int row = std::distance(siblings.begin(), it);
@@ -179,7 +179,7 @@ void ObjectTreeModel::objectReparented(QObject *obj)
         return;
 
     QVector<QObject *> &oldSiblings = m_parentChildMap[oldParent];
-    QVector<QObject *>::iterator oldIt = std::lower_bound(oldSiblings.begin(),
+    auto oldIt = std::lower_bound(oldSiblings.begin(),
                                                           oldSiblings.end(), obj);
     if (oldIt == oldSiblings.end() || *oldIt != obj)
         return;
@@ -192,7 +192,7 @@ void ObjectTreeModel::objectReparented(QObject *obj)
     Q_ASSERT(destParent.isValid() || !parentObject(obj));
 
     QVector<QObject *> &newSiblings = m_parentChildMap[parentObject(obj)];
-    QVector<QObject *>::iterator newIt = std::lower_bound(newSiblings.begin(),
+    auto newIt = std::lower_bound(newSiblings.begin(),
                                                           newSiblings.end(), obj);
     const int destRow = std::distance(newSiblings.begin(), newIt);
 

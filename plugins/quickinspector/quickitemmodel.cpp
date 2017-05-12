@@ -219,7 +219,7 @@ void QuickItemModel::addItem(QQuickItem *item)
         return;
 
     QVector<QQuickItem *> &children = m_parentChildMap[parentItem];
-    QVector<QQuickItem *>::iterator it = std::lower_bound(children.begin(), children.end(), item);
+    auto it = std::lower_bound(children.begin(), children.end(), item);
     const int row = std::distance(children.begin(), it);
 
     beginInsertRows(index, row, row);
@@ -252,7 +252,7 @@ void QuickItemModel::removeItem(QQuickItem *item, bool danglingPointer)
         return;
 
     QVector<QQuickItem *> &siblings = m_parentChildMap[parentItem];
-    QVector<QQuickItem *>::iterator it = std::lower_bound(siblings.begin(), siblings.end(), item);
+    auto it = std::lower_bound(siblings.begin(), siblings.end(), item);
     if (it == siblings.end() || *it != item)
         return;
     const int row = std::distance(siblings.begin(), it);

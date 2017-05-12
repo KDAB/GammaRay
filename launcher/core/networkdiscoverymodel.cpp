@@ -100,7 +100,7 @@ void NetworkDiscoveryModel::processPendingDatagrams()
             }
         }
 
-        QVector<ServerInfo>::iterator it = std::find(m_data.begin(), m_data.end(), info);
+        auto it = std::find(m_data.begin(), m_data.end(), info);
         if (it == m_data.end()) {
             beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
             m_data.push_back(info);
@@ -114,7 +114,7 @@ void NetworkDiscoveryModel::processPendingDatagrams()
 void NetworkDiscoveryModel::expireEntries()
 {
     const QDateTime threshold = QDateTime::currentDateTime().addSecs(-30);
-    for (QVector<ServerInfo>::iterator it = m_data.begin(); it != m_data.end();) {
+    for (auto it = m_data.begin(); it != m_data.end();) {
         if (it->lastSeen >= threshold) {
             ++it;
         } else {

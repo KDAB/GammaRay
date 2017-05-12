@@ -270,7 +270,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
 QMap<int, QVariant> RemoteModelServer::filterItemData(QMap<int, QVariant> &&itemData) const
 {
-    for (QMap<int, QVariant>::iterator it = itemData.begin(); it != itemData.end();) {
+    for (auto it = itemData.begin(); it != itemData.end();) {
         if (!it.value().isValid()) {
             it = itemData.erase(it);
         } else if (it.value().userType() == qMetaTypeId<QIcon>()) {

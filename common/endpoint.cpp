@@ -78,8 +78,7 @@ Endpoint::Endpoint(QObject *parent)
 
 Endpoint::~Endpoint()
 {
-    for (QHash<Protocol::ObjectAddress, ObjectInfo *>::const_iterator it = m_addressMap.constBegin();
-         it != m_addressMap.constEnd(); ++it) {
+    for (auto it = m_addressMap.constBegin(); it != m_addressMap.constEnd(); ++it) {
         delete it.value();
     }
 

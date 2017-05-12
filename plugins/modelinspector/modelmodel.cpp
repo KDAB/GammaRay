@@ -132,7 +132,7 @@ void ModelModel::objectRemoved(QObject *obj)
         endRemoveRows();
     }
 
-    for (QVector<QAbstractProxyModel *>::iterator it = m_proxies.begin();
+    for (auto it = m_proxies.begin();
          it != m_proxies.end(); ++it) {
         if (*it == obj) {
             beginResetModel(); // FIXME

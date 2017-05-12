@@ -742,7 +742,7 @@ void Probe::objectRemoved(QObject *obj)
             return;
 
         QVector<QObject *> &addedBefore = s_listener()->addedBeforeProbeInstance;
-        for (QVector<QObject *>::iterator it = addedBefore.begin(); it != addedBefore.end();) {
+        for (auto it = addedBefore.begin(); it != addedBefore.end();) {
             if (*it == obj)
                 it = addedBefore.erase(it);
             else

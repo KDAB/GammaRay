@@ -136,7 +136,7 @@ void TextDocumentModel::fillTable(QTextTable *table, QStandardItem *parent)
             auto *item = new QStandardItem;
             item->setText(tr("Cell %1x%2").arg(row).arg(col));
             appendRow(parent, item, cell.format());
-            for (QTextFrame::iterator it = cell.begin(); it != cell.end(); ++it)
+            for (auto it = cell.begin(); it != cell.end(); ++it)
                 fillFrameIterator(it, item);
         }
     }
@@ -144,7 +144,7 @@ void TextDocumentModel::fillTable(QTextTable *table, QStandardItem *parent)
 
 void TextDocumentModel::fillBlock(const QTextBlock &block, QStandardItem *parent)
 {
-    for (QTextBlock::iterator it = block.begin(); it != block.end(); ++it) {
+    for (auto it = block.begin(); it != block.end(); ++it) {
         QStandardItem *item = new QStandardItem(tr("Fragment: %1").arg(it.fragment().text()));
         const QRectF b = m_document->documentLayout()->blockBoundingRect(block);
         appendRow(parent, item, it.fragment().charFormat(), b);

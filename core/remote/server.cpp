@@ -199,10 +199,7 @@ void Server::messageReceived(const Message &msg)
             msg >> addr;
             Q_ASSERT(addr > Protocol::InvalidObjectAddress);
             m_propertySyncer->setObjectEnabled(addr, msg.type() == Protocol::ObjectMonitored);
-            const QHash<Protocol::ObjectAddress,
-                        QPair<QObject *,
-                              QByteArray> >::const_iterator it = m_monitorNotifiers.constFind(
-                addr);
+            auto it = m_monitorNotifiers.constFind(addr);
             if (it == m_monitorNotifiers.constEnd())
                 break;
             // cout << Q_FUNC_INFO << " un/monitor " << (int)addr << endl;

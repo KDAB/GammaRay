@@ -571,7 +571,7 @@ bool ResourceModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     QModelIndex _parent = parent;
 
     QList<QUrl> urls = data->urls();
-    QList<QUrl>::const_iterator it = urls.constBegin();
+    auto it = urls.constBegin();
 
     switch (action) {
     case Qt::CopyAction:

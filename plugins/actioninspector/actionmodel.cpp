@@ -75,7 +75,7 @@ void ActionModel::objectAdded(QObject *object)
     if (!action)
         return;
 
-    QVector<QAction *>::iterator it = std::lower_bound(m_actions.begin(), m_actions.end(), action);
+    auto it = std::lower_bound(m_actions.begin(), m_actions.end(), action);
     Q_ASSERT(it == m_actions.end() || *it != action);
 
     const int row = std::distance(m_actions.begin(), it);
@@ -94,7 +94,7 @@ void ActionModel::objectRemoved(QObject *object)
     Q_ASSERT(thread() == QThread::currentThread());
     QAction * const action = reinterpret_cast<QAction *>(object); // never dereference this, just use for comparison
 
-    QVector<QAction *>::iterator it = std::lower_bound(m_actions.begin(),
+    auto it = std::lower_bound(m_actions.begin(),
                                                        m_actions.end(),
                                                        reinterpret_cast<QAction *>(object));
     if (it == m_actions.end() || *it != action)
