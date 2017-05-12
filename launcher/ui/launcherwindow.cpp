@@ -45,6 +45,9 @@ LauncherWindow::LauncherWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->aboutLabel->setText(AboutData::aboutText());
+    ui->aboutScrollArea->viewport()->setAutoFillBackground(false);
+    ui->aboutScrollArea->widget()->setAutoFillBackground(false);
+
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
     connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
     connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
