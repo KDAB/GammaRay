@@ -30,6 +30,7 @@
 #define GAMMARAY_METAOBJECTMODEL_H
 
 #include <QAbstractItemModel>
+#include <QCoreApplication>
 #include <QMetaObject>
 
 #include "metaobjectregistry.h"
@@ -42,6 +43,7 @@ template<typename MetaThing,
          int(QMetaObject::*MetaOffset)() const>
 class MetaObjectModel : public QAbstractItemModel
 {
+    Q_DECLARE_TR_FUNCTIONS(GammaRay::MetaObjectModel)
 public:
     explicit MetaObjectModel(QObject *parent = nullptr)
         : QAbstractItemModel(parent)
