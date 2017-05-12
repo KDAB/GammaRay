@@ -29,18 +29,15 @@
 #include <config-gammaray.h>
 #include "probefinder.h"
 #include "probeabi.h"
-#include "probeabidetector.h"
 
 #include <common/paths.h>
 
-#include <qglobal.h>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QLibrary>
 #include <QString>
-#include <QStringBuilder>
 
 #include <algorithm>
 
@@ -93,12 +90,6 @@ static QString findProbeInternal(const ProbeABI &probeAbi, const QString &rootPa
         return probe;
     return findProbeInternalNormalLayout(probeAbi, rootPath);
 #endif
-}
-
-QString findProbe(const QString &baseName, const ProbeABI &probeAbi)
-{
-    Q_UNUSED(baseName);
-    return findProbe(probeAbi);
 }
 
 QString findProbe(const ProbeABI &probeAbi, const QStringList &searchRoots)
