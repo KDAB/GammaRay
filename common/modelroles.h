@@ -51,7 +51,8 @@ enum Role {
     ToolId,
     ToolWidgetParent,
     ToolEnabled,
-    ToolHasUi
+    ToolHasUi,
+    ToolFeedbackId
 };
 }
 }

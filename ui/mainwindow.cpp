@@ -56,6 +56,7 @@
 #include <3rdparty/kuserfeedback/core/platforminfosource.h>
 #include <3rdparty/kuserfeedback/core/provider.h>
 #include <3rdparty/kuserfeedback/core/qtversionsource.h>
+#include <3rdparty/kuserfeedback/core/selectionratiosource.h>
 #include <3rdparty/kuserfeedback/core/startcountsource.h>
 #include <3rdparty/kuserfeedback/core/usagetimesource.h>
 #endif
@@ -358,6 +359,10 @@ void MainWindow::setupFeedbackProvider()
     m_feedbackProvider->addDataSource(new UserFeedback::StartCountSource, UserFeedback::Provider::BasicUsageStatistics);
     m_feedbackProvider->addDataSource(new UserFeedback::UsageTimeSource, UserFeedback::Provider::BasicUsageStatistics);
     m_feedbackProvider->addDataSource(new UserFeedback::OpenGLInfoSource, UserFeedback::Provider::DetailedSystemInformation);
+    auto toolRatioSrc = new UserFeedback::SelectionRatioSource(ui->toolSelector->selectionModel(), QStringLiteral("toolRatio"));
+    toolRatioSrc->setDescription(tr("Usage ratio of the GammaRay tools."));
+    toolRatioSrc->setRole(ToolModelRole::ToolFeedbackId);
+    m_feedbackProvider->addDataSource(toolRatioSrc, UserFeedback::Provider::DetailedUsageStatistics);
 
     auto popup = new UserFeedback::NotificationPopup(this);
     popup->setFeedbackProvider(m_feedbackProvider);
