@@ -76,6 +76,8 @@
 #include <QMainWindow>
 #include <QMouseEvent>
 #include <QEvent>
+#include <QScrollArea>
+#include <QScrollBar>
 #include <QStyle>
 #include <QToolButton>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -564,6 +566,12 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
 
     MO_ADD_METAOBJECT1(QFrame, QWidget);
     MO_ADD_METAOBJECT1(QAbstractScrollArea, QFrame);
+    MO_ADD_PROPERTY_RO(QAbstractScrollArea, QWidget*, cornerWidget);
+    MO_ADD_PROPERTY   (QAbstractScrollArea, QScrollBar*, horizontalScrollBar, setHorizontalScrollBar);
+    MO_ADD_PROPERTY_RO(QAbstractScrollArea, QSize, maximumViewportSize);
+    MO_ADD_PROPERTY   (QAbstractScrollArea, QScrollBar*, verticalScrollBar, setVerticalScrollBar);
+    MO_ADD_PROPERTY   (QAbstractScrollArea, QWidget*, viewport, setViewport);
+
     MO_ADD_METAOBJECT1(QAbstractItemView, QAbstractScrollArea);
     MO_ADD_PROPERTY_RO(QAbstractItemView, QAbstractItemModel *, model);
 
@@ -572,6 +580,9 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
 
     MO_ADD_METAOBJECT1(QAbstractButton, QWidget);
     MO_ADD_PROPERTY_RO(QAbstractButton, QButtonGroup*, group);
+
+    MO_ADD_METAOBJECT1(QScrollArea, QAbstractScrollArea);
+    MO_ADD_PROPERTY   (QScrollArea, QWidget*, widget, setWidget);
 
     MO_ADD_METAOBJECT1(QToolButton, QAbstractButton);
     MO_ADD_PROPERTY_RO(QToolButton, QAction*, defaultAction);
