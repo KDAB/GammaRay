@@ -43,7 +43,7 @@ else()
     message(FATAL_ERROR "Could not find processor architecture (no ARCH or CC found in environment).")
 endif()
 
-set(OE_QMAKE_PATH_EXTERNAL_HOST_BINS "$ENV{OECORE_NATIVE_SYSROOT}/usr/bin")
+set(OE_QMAKE_PATH_EXTERNAL_HOST_BINS "$ENV{OE_QMAKE_PATH_HOST_BINS}")
 set(CMAKE_FIND_ROOT_PATH "$ENV{SDKTARGETSYSROOT}")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
