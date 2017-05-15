@@ -8,17 +8,17 @@ if(NOT CMAKE_CROSSCOMPILING)
     endif()
 
     # Windows does not support rpath so in order to this command to succeed the Qt libraries must be in PATH
-    if (MSVC)
-      set(PATH_PREFIX PATH=%{QT_INSTALL_BINS};%PATH%)
+    if (WIN32)
+      set(RUN_WITH_PATH "${QT_INSTALL_BINS};$ENV{PATH}")
     else()
-      set(PATH_PREFIX)
+      set(RUN_WITH_PATH "$ENV{PATH}")
     endif()
 
     add_custom_command(
         OUTPUT
             ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp
         COMMAND
-            ${PATH_PREFIX} classesiconsextractor
+            ${CMAKE_COMMAND} -E env "PATH=${RUN_WITH_PATH}" classesiconsextractor
                 -qrc ${CMAKE_CURRENT_SOURCE_DIR}/../ui/resources/ui.qrc
                 -out ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp
         DEPENDS
