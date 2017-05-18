@@ -41,6 +41,8 @@
 #include <QThread>
 #include <QWaitCondition>
 
+#include <iostream>
+
 using namespace GammaRay;
 
 namespace GammaRay {
@@ -61,6 +63,7 @@ public:
     explicit ProbeSettingsReceiver(QObject *parent = nullptr);
     ~ProbeSettingsReceiver();
     Q_INVOKABLE void sendServerAddress(const QUrl &address);
+    Q_INVOKABLE void sendServerLaunchError(const QString &reason);
 
     void waitForSettingsReceived();
 
@@ -167,6 +170,23 @@ void ProbeSettingsReceiver::sendServerAddress(const QUrl &address)
     thread()->quit();
 }
 
+void ProbeSettingsReceiver::sendServerLaunchError(const QString &reason)
+{
+    if (!m_socket || m_socket->state() != QLocalSocket::ConnectedState)
+        return;
+
+    Message msg(Protocol::LauncherAddress, Protocol::ServerLaunchError);
+    msg << reason;
+    msg.write(m_socket);
+
+    m_socket->waitForBytesWritten();
+    m_socket->close();
+
+    deleteLater();
+    s_probeSettings()->receiver = nullptr;
+    thread()->quit();
+}
+
 void ProbeSettingsReceiver::settingsReceivedFallback()
 {
     // see if we got fallback data via environment variables
@@ -240,6 +260,12 @@ void ProbeSettings::sendServerAddress(const QUrl &addr)
 {
     Q_ASSERT(s_probeSettings()->receiver);
     QMetaObject::invokeMethod(s_probeSettings()->receiver, "sendServerAddress", Q_ARG(QUrl, addr));
+}
+
+void ProbeSettings::sendServerLaunchError(const QString &reason)
+{
+    Q_ASSERT(s_probeSettings()->receiver);
+    QMetaObject::invokeMethod(s_probeSettings()->receiver, "sendServerLaunchError", Q_ARG(QString, reason));
 }
 
 #include "probesettings.moc"

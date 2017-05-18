@@ -74,7 +74,8 @@ static const MetaEnum::Value<Protocol::MessageType> message_type_table[] = {
     M(PropertyValuesChanged),
     M(ServerInfo),
     M(ProbeSettings),
-    M(ServerAddress)
+    M(ServerAddress),
+    M(ServerLaunchError)
 };
 #undef M
 Q_STATIC_ASSERT(Protocol::MESSAGE_TYPE_COUNT - 1 == (sizeof(message_type_table) / sizeof(MetaEnum::Value<Protocol::MessageType>)));

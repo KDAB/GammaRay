@@ -61,6 +61,33 @@ bool TcpServerDevice::isListening() const
     return m_server->isListening();
 }
 
+QString TcpServerDevice::bestAvailableIP(const QHostAddress address) const
+{
+    QString firstHostFound;
+    foreach (const QNetworkInterface &inter, QNetworkInterface::allInterfaces()) {
+        if (!(inter.flags() & QNetworkInterface::IsUp)
+            || !(inter.flags() & QNetworkInterface::IsRunning)
+            || (inter.flags() & QNetworkInterface::IsLoopBack))
+            continue;
+
+        foreach (const QNetworkAddressEntry &addrEntry, inter.addressEntries()) {
+            const QHostAddress addr = addrEntry.ip();
+
+            // Return the ip according to the listening server protocol.
+            if (addr.protocol() != m_server->serverAddress().protocol()
+                || !addr.scopeId().isEmpty())
+                continue;
+
+            //If its our desired IP (e.g. from --listen) return early
+            if (addr == address)
+                return addr.toString();
+            if (firstHostFound.isEmpty())
+                firstHostFound = addr.toString();
+        }
+    }
+    return firstHostFound;
+}
+
 QUrl TcpServerDevice::externalAddress() const
 {
     const QHostAddress address(m_server->serverAddress());
@@ -73,26 +100,8 @@ QUrl TcpServerDevice::externalAddress() const
 #endif
         myHost = address.toString();
     } else {
-        foreach (const QNetworkInterface &inter, QNetworkInterface::allInterfaces()) {
-            if (!(inter.flags() & QNetworkInterface::IsUp)
-                || !(inter.flags() & QNetworkInterface::IsRunning)
-                || (inter.flags() & QNetworkInterface::IsLoopBack))
-                continue;
-
-            foreach (const QNetworkAddressEntry &addrEntry, inter.addressEntries()) {
-                const QHostAddress addr = addrEntry.ip();
-
-                // Return the ip according to the listening server protocol.
-                if (addr.protocol() != m_server->serverAddress().protocol()
-                    || !addr.scopeId().isEmpty())
-                    continue;
-
-                myHost = addr.toString();
-                break;
-            }
-            if (!myHost.isEmpty())
-                break;
-        }
+        //scan Interfaces for available IPs, use requested address if we can find it.
+        myHost = bestAvailableIP(address);
     }
 
     // if localhost is all we got, use that rather than nothing
