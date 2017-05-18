@@ -103,6 +103,11 @@ public:
      * be identical for all protocols (such as TCP).
      */
     QUrl externalAddress() const;
+    /**
+     * Returns the current error of the device to be displayed to the user.
+     */
+     QString errorString() const;
+
 protected:
     void messageReceived(const Message &msg) override;
     void handlerDestroyed(Protocol::ObjectAddress objectAddress,

@@ -41,7 +41,6 @@ int main(int argc, char **argv)
     ProbeSettings::receiveSettings();
 
     QUrl addr = QUrl::fromUserInput(ProbeSettings::value("TestValue").toString());
-    qDebug() << addr;
     ProbeSettings::sendServerAddress(addr);
 
     QTimer::singleShot(1000, &app, SLOT(quit()));

@@ -55,6 +55,9 @@ void resetLauncherIdentifier();
 
 /** Sends the server address used for communication with the client back to the launcher. */
 void sendServerAddress(const QUrl &addr);
+
+/** Sends an error message if no server could be launched back to the launcher */
+void sendServerLaunchError(const QString &reason);
 }
 }
 

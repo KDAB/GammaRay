@@ -101,6 +101,7 @@ enum BuildInMessageType {
     // probe settings provided by the launcher
     ProbeSettings,
     ServerAddress,
+    ServerLaunchError,
 
     MESSAGE_TYPE_COUNT // NOTE when changing this enum, also update MessageStatisticsModel!
 };

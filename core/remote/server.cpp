@@ -353,3 +353,10 @@ QUrl Server::externalAddress() const
         return QUrl();
     return m_serverDevice->externalAddress();
 }
+
+QString Server::errorString() const
+{
+    if (!m_serverDevice)
+        return QString();
+    return m_serverDevice->errorString();
+}

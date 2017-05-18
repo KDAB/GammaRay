@@ -329,6 +329,12 @@ void Launcher::readyRead()
             msg >> d->serverAddress;
             break;
         }
+        case Protocol::ServerLaunchError:
+        {
+            QString reason;
+            msg >> reason;
+            break;
+        }
         default:
             continue;
         }
