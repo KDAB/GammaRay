@@ -333,6 +333,9 @@ void Launcher::readyRead()
         {
             QString reason;
             msg >> reason;
+            std::cerr << "Failed to start server: " << qPrintable(reason)
+                      << std::endl;
+            // TODO emit error signal to also notify qtcreator, etc
             break;
         }
         default:

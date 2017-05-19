@@ -94,7 +94,6 @@ bool Server::listen()
 {
     Q_ASSERT(!m_serverDevice->isListening());
     if (!m_serverDevice->listen()) {
-        qWarning() << "Failed to start server:" << m_serverDevice->errorString();
         return false;
     }
 
