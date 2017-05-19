@@ -43,6 +43,7 @@
 #include <QFileInfo>
 #include <QLocalServer>
 #include <QLocalSocket>
+#include <QNetworkInterface>
 #include <QUrl>
 
 #include <iostream>
@@ -235,6 +236,27 @@ void Launcher::setupProbeSettingsServer()
         qWarning() << "Unable to send probe settings:" << d->server->errorString();
 }
 
+void Launcher::printAllAvailableIPs()
+{
+    std::cout << "GammaRay server listening on:"
+              << std::endl;
+
+    foreach (const QNetworkInterface &inter, QNetworkInterface::allInterfaces()) {
+        if (!(inter.flags() & QNetworkInterface::IsUp)
+            || !(inter.flags() & QNetworkInterface::IsRunning)
+            || (inter.flags() & QNetworkInterface::IsLoopBack))
+            continue;
+
+        foreach (const QNetworkAddressEntry &addrEntry, inter.addressEntries()) {
+            const QHostAddress addr = addrEntry.ip();
+            std::cout << "  interface " << qPrintable(inter.name()) << ": "
+                      << qPrintable(addr.toString()) << ":"
+                      << d->serverAddress.port()
+                      << std::endl;
+        }
+    }
+}
+
 void Launcher::startClient(const QUrl &serverAddress)
 {
     if (!d->client.launch(serverAddress)) {
@@ -347,8 +369,13 @@ void Launcher::readyRead()
         return;
 
     d->safetyTimer.stop();
-    std::cout << "GammaRay server listening on: " << qPrintable(d->serverAddress.toString())
-              << std::endl;
+    const auto listenAddress = d->options.probeSettings().value("ServerAddress");
+    if (listenAddress.isEmpty() || listenAddress.startsWith("tcp://0.0.0.0")) {
+        printAllAvailableIPs();
+    } else {
+        std::cout << "GammaRay server listening on: " << qPrintable(d->serverAddress.toString())
+                  << std::endl;
+    }
 
     if (d->options.uiMode() == LaunchOptions::OutOfProcessUi)
         startClient(d->serverAddress);
