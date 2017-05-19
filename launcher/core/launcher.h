@@ -86,6 +86,7 @@ private slots:
 private:
     void sendLauncherId();
     void setupProbeSettingsServer();
+    void printAllAvailableIPs();
     void checkDone();
 
 private:
