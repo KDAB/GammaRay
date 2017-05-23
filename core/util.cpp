@@ -141,6 +141,8 @@ struct IconCacheEntry
         : defaultIcon(-1)
     { }
 
+    /// note: this member's data is being referenced by the database's key
+    QByteArray className;
     int defaultIcon;
 
     // pair of property name and expected string value
@@ -152,8 +154,10 @@ struct IconCacheEntry
     typedef QVector<PropertyIcon> PropertyIcons;
     PropertyIcons propertyIcons;
 };
+
 /// maps latin1 class name to list of icons valid for a given property map
-typedef QHash<QByteArray, IconCacheEntry> IconDatabase;
+/// for performance reasons, the key is just a view of the contents of IconCacheEntry::className
+typedef QHash<QLatin1String, IconCacheEntry> IconDatabase;
 
 static IconDatabase readIconData()
 {
@@ -167,7 +171,15 @@ static IconDatabase readIconData()
         const QDir dir(fileInfo.path());
         const QString className = dir.dirName();
         const QString iconName = fileInfo.fileName();
-        IconCacheEntry &perClassData = data[className.toLatin1()];
+
+        const QByteArray classNameAsByteArray = className.toLatin1();
+        IconCacheEntry &perClassData =
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+            data[QLatin1String(classNameAsByteArray.data(), classNameAsByteArray.size())];
+#else
+            data[QLatin1String(classNameAsByteArray)];
+#endif
+        perClassData.className = std::move(classNameAsByteArray);
 
         if (iconName == QLatin1String("default.png")) {
             perClassData.defaultIcon = id;
@@ -194,12 +206,10 @@ static IconDatabase readIconData()
 static int iconIdForObject(const QMetaObject *mo, const QObject *obj)
 {
     static const IconDatabase iconDataBase = readIconData();
-    // stupid Qt convention to use int for sizes... the static cast shuts down warnings about conversion from size_t to int.
-    const QByteArray className
-        = QByteArray::fromRawData(mo->className(), static_cast<int>(strlen(mo->className())));
-    IconDatabase::const_iterator it = iconDataBase.constFind(className);
-    if (it != iconDataBase.constEnd()) {
-        foreach (const IconCacheEntry::PropertyIcon &propertyIcon, it->propertyIcons) {
+
+    auto it = iconDataBase.constFind(QLatin1String(mo->className()));
+    if (it != iconDataBase.end()) {
+        foreach (const auto &propertyIcon, it->propertyIcons) {
             bool allMatch = true;
             Q_ASSERT(!propertyIcon.second.isEmpty());
             foreach (const IconCacheEntry::PropertyPair &keyValue, propertyIcon.second) {
