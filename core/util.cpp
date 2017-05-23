@@ -176,9 +176,9 @@ static IconDatabase readIconData()
         const QByteArray classNameAsByteArray = className.toLatin1();
         const QLatin1String classNameKey(
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-            classNameAsByteArray.data(), perClassData.className.size()
-#else
             classNameAsByteArray
+#else
+            classNameAsByteArray.data(), classNameAsByteArray.size()
 #endif
         );
 
