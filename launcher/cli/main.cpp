@@ -340,6 +340,13 @@ int main(int argc, char **argv)
         options.setProbeABI(availableProbes.first());
     }
 
+    // use a local connection when starting gui locally with this launcher
+    if (!options.probeSettings().contains(QStringLiteral("ServerAddress").toUtf8())
+        && options.uiMode() != LaunchOptions::NoUi
+        && !LauncherFinder::findLauncher(LauncherFinder::LauncherUI).isEmpty()) {
+        options.setProbeSetting(QStringLiteral("ServerAddress"), "tcp://127.0.0.1");
+    }
+
     Launcher launcher(options);
     QObject::connect(&launcher, SIGNAL(finished()), &app, SLOT(quit()));
     QObject::connect(&launcher, SIGNAL(attached()), &app, SLOT(quit()));
