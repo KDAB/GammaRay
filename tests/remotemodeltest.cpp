@@ -143,7 +143,7 @@ private:
     }
 
 private slots:
-    void initTestCases()
+    void initTestCase()
     {
         FakeRemoteModelServer::setup();
         FakeRemoteModel::setup();

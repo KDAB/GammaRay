@@ -92,7 +92,7 @@ private:
     }
 
 private slots:
-    void initTestCases()
+    void initTestCase()
     {
         MetaObject *mo;
         MO_ADD_METAOBJECT0(QPen);
