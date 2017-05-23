@@ -151,10 +151,10 @@ private slots:
 
     void testEmptyRemoteModel()
     {
-        auto emptyModel = new QStandardItemModel(this);
+        QScopedPointer<QStandardItemModel> emptyModel(new QStandardItemModel(this));
 
         FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.EmptyModel"), this);
-        server.setModel(emptyModel);
+        server.setModel(emptyModel.data());
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.EmptyModel"), this);
@@ -173,14 +173,14 @@ private slots:
 
     void testListRemoteModel()
     {
-        auto listModel = new QStandardItemModel(this);
+        QScopedPointer<QStandardItemModel> listModel(new QStandardItemModel(this));
         listModel->appendRow(new QStandardItem(QStringLiteral("entry0")));
         listModel->appendRow(new QStandardItem(QStringLiteral("entry2")));
         listModel->appendRow(new QStandardItem(QStringLiteral("entry3")));
         listModel->appendRow(new QStandardItem(QStringLiteral("entry4")));
 
         FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.ListModel"), this);
-        server.setModel(listModel);
+        server.setModel(listModel.data());
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.ListModel"), this);
@@ -211,13 +211,11 @@ private slots:
         qDeleteAll(deleteMe);
         QTest::qWait(10);
         QCOMPARE(client.rowCount(), 4);
-
-        delete listModel;
     }
 
     void testTreeRemoteModel()
     {
-        auto treeModel = new QStandardItemModel(this);
+        QScopedPointer<QStandardItemModel> treeModel(new QStandardItemModel(this));
         auto e0 = new QStandardItem(QStringLiteral("entry0"));
         e0->appendRow(new QStandardItem(QStringLiteral("entry00")));
         e0->appendRow(new QStandardItem(QStringLiteral("entry01")));
@@ -228,7 +226,7 @@ private slots:
         treeModel->appendRow(e1);
 
         FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel"), this);
-        server.setModel(treeModel);
+        server.setModel(treeModel.data());
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel"), this);
@@ -268,14 +266,12 @@ private slots:
         i11 = client.index(0, 0, i1);
         QVERIFY(waitForData(i11));
         QCOMPARE(i11.data().toString(), QStringLiteral("entry11"));
-
-        delete treeModel;
     }
 
     // this should not make a difference if the above works, however it broke massively with Qt 5.4...
     void testSortProxy()
     {
-        auto treeModel = new QStandardItemModel(this);
+        QScopedPointer<QStandardItemModel> treeModel(new QStandardItemModel(this));
         auto e0 = new QStandardItem(QStringLiteral("entry1"));
         e0->appendRow(new QStandardItem(QStringLiteral("entry10")));
         e0->appendRow(new QStandardItem(QStringLiteral("entry11")));
@@ -288,7 +284,7 @@ private slots:
         treeModel->appendRow(e1);
 
         FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel2"), this);
-        server.setModel(treeModel);
+        server.setModel(treeModel.data());
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel2"), this);
@@ -328,8 +324,6 @@ private slots:
         // this fails with data() call batching sizes close to 1
 // QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
         QCOMPARE(proxy.rowCount(pi1), 2);
-
-        delete treeModel;
     }
 };
 
