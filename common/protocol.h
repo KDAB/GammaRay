@@ -30,10 +30,11 @@
 #define GAMMARAY_PROTOCOL_H
 
 #include "gammaray_common_export.h"
+
 #include <QAbstractItemModel>
+#include <QDataStream>
 #include <QVector>
 #include <QModelIndex>
-#include <QPair>
 
 #include <limits>
 
@@ -106,7 +107,16 @@ enum BuildInMessageType {
     MESSAGE_TYPE_COUNT // NOTE when changing this enum, also update MessageStatisticsModel!
 };
 
-typedef QVector<QPair<qint32, qint32> > ModelIndex;
+class ModelIndexData
+{
+public:
+    ModelIndexData(qint32 row_ = 0, qint32 column_ = 0)
+        : row(row_), column(column_) {}
+
+    qint32 row;
+    qint32 column;
+};
+typedef QVector<ModelIndexData> ModelIndex;
 
 /** @brief Protocol representation of an QItemSelectionRange. */
 struct ItemSelectionRange {
@@ -131,7 +141,18 @@ GAMMARAY_COMMON_EXPORT qint32 broadcastFormatVersion();
 }
 
 QT_BEGIN_NAMESPACE
-    Q_DECLARE_TYPEINFO(GammaRay::Protocol::ItemSelectionRange, Q_MOVABLE_TYPE);
+inline QDataStream& operator>>(QDataStream& s, GammaRay::Protocol::ModelIndexData& data)
+{
+    s >> data.row >> data.column;
+    return s;
+}
+inline QDataStream& operator<<(QDataStream& s, const GammaRay::Protocol::ModelIndexData& data)
+{
+    s << data.row << data.column;
+    return s;
+}
+Q_DECLARE_TYPEINFO(GammaRay::Protocol::ModelIndexData, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(GammaRay::Protocol::ItemSelectionRange, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
 #endif

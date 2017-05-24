@@ -35,7 +35,7 @@ Protocol::ModelIndex fromQModelIndex(const QModelIndex &index)
     if (!index.isValid())
         return ModelIndex();
     ModelIndex result = fromQModelIndex(index.parent());
-    result.push_back(qMakePair(index.row(), index.column()));
+    result.push_back(ModelIndexData(index.row(), index.column()));
     return result;
 }
 
@@ -44,7 +44,7 @@ QModelIndex toQModelIndex(const QAbstractItemModel *model, const Protocol::Model
     QModelIndex qmi;
 
     for (auto it = index.constBegin(), end = index.constEnd(); it != end; ++it) {
-        qmi = model->index(it->first, it->second, qmi);
+        qmi = model->index(it->row, it->column, qmi);
         if (!qmi.isValid())
             return QModelIndex(); // model isn't loaded to the full depth, so don't restart from the top
     }

@@ -351,7 +351,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             Protocol::ModelIndex index;
             msg >> index;
             Node *node = nodeForIndex(index);
-            const auto column = index.last().second;
+            const auto column = index.last().column;
             const auto state = node ? stateForColumn(node, column) : RemoteModelNodeState::NoState;
             typedef QHash<int, QVariant> ItemData;
             ItemData itemData;
@@ -426,15 +426,15 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         if (!node || node == m_root)
             break;
 
-        Q_ASSERT(beginIndex.last().first <= endIndex.last().first);
-        Q_ASSERT(beginIndex.last().second <= endIndex.last().second);
+        Q_ASSERT(beginIndex.last().row <= endIndex.last().row);
+        Q_ASSERT(beginIndex.last().column <= endIndex.last().column);
 
         // mark content as outdated (will be refetched on next request)
-        for (int row = beginIndex.last().first; row <= endIndex.last().first; ++row) {
+        for (int row = beginIndex.last().row; row <= endIndex.last().row; ++row) {
             Node *currentRow = node->parent->children.at(row);
             if (!currentRow->hasColumnData())
                 continue;
-            for (int col = beginIndex.last().second; col <= endIndex.last().second; ++col) {
+            for (int col = beginIndex.last().column; col <= endIndex.last().column; ++col) {
                 const auto state = stateForColumn(currentRow, col);
                 if ((state & RemoteModelNodeState::Outdated) == 0) {
                     Q_ASSERT(currentRow->state.size() > col);
@@ -443,8 +443,8 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             }
         }
 
-        const QModelIndex qmiBegin = modelIndexForNode(node, beginIndex.last().second);
-        const QModelIndex qmiEnd = qmiBegin.sibling(endIndex.last().first, endIndex.last().second);
+        const QModelIndex qmiBegin = modelIndexForNode(node, beginIndex.last().column);
+        const QModelIndex qmiEnd = qmiBegin.sibling(endIndex.last().row, endIndex.last().column);
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
         emit dataChanged(qmiBegin, qmiEnd);
@@ -657,9 +657,9 @@ RemoteModel::Node *RemoteModel::nodeForIndex(const Protocol::ModelIndex &index) 
 {
     Node *node = m_root;
     for (int i = 0; i < index.size(); ++i) {
-        if (node->children.size() <= index[i].first)
+        if (node->children.size() <= index[i].row)
             return nullptr;
-        node = node->children.at(index[i].first);
+        node = node->children.at(index[i].row);
     }
     return node;
 }
