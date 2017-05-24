@@ -221,10 +221,10 @@ QuickOverlayLegend::QuickOverlayLegend(QWidget *parent)
     layout->addWidget(view);
 
     m_visibilityAction = new QAction(UIResources::themedIcon(QLatin1String("legend.png")),
-                                     tr("Legend Visibility"), this);
+                                     tr("Show Legend"), this);
     m_visibilityAction->setCheckable(true);
-    m_visibilityAction->setToolTip(tr("<b>Legend Visibility</b><br>"
-                                      "This toggle the visibility of the legend tool."));
+    m_visibilityAction->setToolTip(tr("<b>Show Legend</b><br>"
+                                      "This shows a legend explaining the various diagnostic decorations."));
 
     connect(m_visibilityAction, &QAction::triggered, this, [this](bool toggled) {
         setVisible(toggled);

@@ -135,28 +135,28 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     m_visualizeTraces
             = new QAction(UIResources::themedIcon(QLatin1String("visualize-traces.png")),
-                          tr("Visualize Traces"), this);
+                          tr("Visualize Controls"), this);
     m_visualizeTraces->setActionGroup(m_visualizeGroup);
     m_visualizeTraces->setData(QuickInspectorInterface::VisualizeTraces);
     m_visualizeTraces->setCheckable(true);
-    m_visualizeTraces->setToolTip(tr("<b>Visualize Traces</b><br>"
-                                     "The QtQuick scene is rendered normaly, in addition overlay rects will "
-                                     "cover any QQ2 components. Overlay include random border and foreground "
-                                     "colors as well as item id string."));
+    m_visualizeTraces->setToolTip(tr("<b>Visualize Controls</b><br>"
+                                     "The QtQuick scene is rendered normaly, in addition overlays will "
+                                     "highlight Qt Quick Controls."));
 
     m_serverSideDecorationsEnabled = new QAction(UIResources::themedIcon(QLatin1String("server-decorations.png")),
-                                                 tr("Target Decorations"), this);
+                                                 tr("Decorate Target"), this);
     m_serverSideDecorationsEnabled->setCheckable(true);
-    m_serverSideDecorationsEnabled->setToolTip(tr("<b>Target Decorations</b><br>"
-                                                  "This enable or not the decorations on the target application."));
+    m_serverSideDecorationsEnabled->setToolTip(tr("<b>Decorate Target</b><br>"
+                                                  "This enables diagnostic decorations on the target application, "
+                                                  "such as anchor and layout information, helper grids or control overlays."));
 
     auto *gridSettingsAction = new QWidgetAction(this);
     gridSettingsAction->setDefaultWidget(m_gridSettingsWidget);
 
-    m_gridSettingsMenu = new QMenu(tr("Grid Settings"), this);
+    m_gridSettingsMenu = new QMenu(tr("Layout Grid"), this);
     m_gridSettingsMenu->setIcon(UIResources::themedIcon(QLatin1String("grid-settings.png")));
-    m_gridSettingsMenu->setToolTip(tr("<b>Grid Settings</b><br>"
-                                  "This popup a small widget to configure the grid settings."));
+    m_gridSettingsMenu->setToolTip(tr("<b>Layout Grid</b><br>"
+                                  "Configure the layout helper grid."));
     m_gridSettingsMenu->setToolTipsVisible(true);
     m_gridSettingsMenu->addAction(gridSettingsAction);
 
