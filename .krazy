@@ -8,7 +8,7 @@ EXTRA defines,null
 #EXTRA style
 
 #exclude checks now being done by clazy
-EXCLUDE foreach
+EXCLUDE foreach, strings
 
 #coding style settings
 STYLE_CPPSTYLE qt
