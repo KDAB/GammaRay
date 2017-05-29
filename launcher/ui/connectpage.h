@@ -30,6 +30,9 @@
 #define GAMMARAY_CONNECTPAGE_H
 
 #include <QWidget>
+#include <QHostAddress>
+#include <QToolButton>
+#include <QUrl>
 
 namespace GammaRay {
 namespace Ui {
@@ -56,9 +59,24 @@ signals:
 
 private slots:
     void instanceSelected();
+    void validateHostAddress(const QString &address);
 
 private:
+    void handleLocalAddress(QString &stillToParse, bool &correctSoFar);
+    void handleIPAddress(QString &stillToParse, bool &correctSoFar);
+    void handleAddressAndPort(QString &stillToParse, bool &correctSoFar, const QString &possibleAddress, bool skipPort = false);
+    void handlePortString(QString &stillToParse, bool &correctSoFar);
+
+    void showStandardPortAssumedWarning();
+
     QScopedPointer<Ui::ConnectPage> ui;
+    QUrl m_currentUrl;
+    bool m_valid;
+    QToolButton *m_portInfoLabel;
+    const QLatin1String m_localPrefix;
+    const QLatin1String m_tcpPrefix;
+    QAction *m_implicitPortWarningSign;
+    QAction *m_fileIsNotASocketWarning;
 };
 }
 

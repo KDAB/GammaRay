@@ -23,7 +23,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>&amp;Host:</string>
+        <string>Url:</string>
        </property>
        <property name="buddy">
         <cstring>host</cstring>
@@ -32,23 +32,6 @@
      </item>
      <item>
       <widget class="QLineEdit" name="host"/>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>&amp;Port:</string>
-       </property>
-       <property name="buddy">
-        <cstring>port</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="port">
-       <property name="maximum">
-        <number>65536</number>
-       </property>
-      </widget>
      </item>
     </layout>
    </item>
