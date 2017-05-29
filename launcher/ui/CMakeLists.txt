@@ -15,6 +15,8 @@ else()
   list(APPEND gammaray_launcher_ui_srcs processlist_win.cpp)
 endif()
 
+qt4_add_resources(gammaray_launcher_ui_srcs resources/ui.qrc)
+
 qt4_wrap_ui(gammaray_launcher_ui_srcs
   attachdialog.ui
   launcherwindow.ui
