@@ -128,6 +128,7 @@ static void signal_end_callback(QObject *caller, int method_index)
     QMutexLocker locker(Probe::objectLock());
     if (!Probe::instance()->isValidObject(caller)) // implies filterObject()
         return; // deleted in the slot
+    locker.unlock();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
@@ -157,6 +158,7 @@ static void slot_end_callback(QObject *caller, int method_index)
     QMutexLocker locker(Probe::objectLock());
     if (!Probe::instance()->isValidObject(caller)) // implies filterObject()
         return; // deleted in the slot
+    locker.unlock();
 
     Probe::executeSignalCallback([=](const SignalSpyCallbackSet &callbacks) {
             if (callbacks.slotEndCallback)

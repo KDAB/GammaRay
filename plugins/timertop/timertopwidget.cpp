@@ -40,6 +40,74 @@
 
 using namespace GammaRay;
 
+class ClientTimerModel : public QSortFilterProxyModel
+{
+public:
+    explicit ClientTimerModel(QObject *parent = nullptr)
+        : QSortFilterProxyModel(parent)
+    { }
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
+    {
+        if (hasIndex(index.row(), index.column()) && role == Qt::DisplayRole) {
+            switch (static_cast<TimerModel::Columns>(index.column())) {
+            case TimerModel::ColumnCount:
+                Q_ASSERT(false);
+            case TimerModel::ObjectNameColumn:
+            case TimerModel::TimerIdColumn:
+            case TimerModel::TotalWakeupsColumn:
+                // Use source model data
+                break;
+            case TimerModel::StateColumn:
+                return stateToString(QSortFilterProxyModel::data(index, role).toUInt());
+            case TimerModel::WakeupsPerSecColumn:
+                return wakeupsPerSecToString(QSortFilterProxyModel::data(index, role).toReal());
+            case TimerModel::TimePerWakeupColumn:
+                return timePerWakeupToString(QSortFilterProxyModel::data(index, role).toReal());
+            case TimerModel::MaxTimePerWakeupColumn:
+                return maxWakeupTimeToString(QSortFilterProxyModel::data(index, role).toUInt());
+            }
+        }
+
+        return QSortFilterProxyModel::data(index, role);
+    }
+
+    static QString stateToString(uint state)
+    {
+        const int timerState = (state & 0xffff);
+        const int timerInterval = (state >> 16);
+
+        switch (timerState) {
+        case 0: // None
+            return tr("None");
+        case 1: // Not Running
+            return tr("Inactive (%1 ms)").arg(timerInterval);
+        case 2: // Single Shot
+            return tr("Singleshot (%1 ms)").arg(timerInterval);
+        case 3: // Repeat
+            return tr("Repeating (%1 ms)").arg(timerInterval);
+        }
+
+        return QString();
+    }
+
+    static QString wakeupsPerSecToString(qreal value)
+    {
+        return qFuzzyIsNull(value) ? tr("0") : QString::number(value, 'f', 1);
+
+    }
+
+    static QString timePerWakeupToString(qreal value)
+    {
+        return qFuzzyIsNull(value) ? QStringLiteral("N/A") : QString::number(value, 'f', 1);
+    }
+
+    static QString maxWakeupTimeToString(uint value)
+    {
+        return value == 0 ? tr("N/A") : QString::number(value);
+    }
+};
+
 TimerTopWidget::TimerTopWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::TimerTopWidget)
@@ -57,7 +125,7 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
     ui->timerView->setDeferredResizeMode(5, QHeaderView::ResizeToContents);
     connect(ui->timerView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
 
-    auto * const sortModel = new QSortFilterProxyModel(this);
+    auto * const sortModel = new ClientTimerModel(this);
     sortModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel")));
     sortModel->setDynamicSortFilter(true);
     ui->timerView->setModel(sortModel);
