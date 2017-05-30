@@ -35,12 +35,29 @@
         \li and QMetaClassInfo.
     \endlist
 
+    GammaRay checks all QMetaObject instances for typical problems such as using unregistered or improperly qualified types on properies
+    or method arguments. In case such issues are detected, a warning icon is shown, and a tooltip informs you about the details. These
+    problems are usually harmless when working with C++ API, but tend to be relevant for dynamic invocation or language bindings, ie. most
+    commonly when exposing the affected types to QML.
+
     \section1 Instance Statistics
 
     The meta-object tree view also contains columns with information about how many instances of a specific type have been created, including and excluding sub-classes.
 
     \borderedimage gammaray-metaobject-browser.png
 
+    In particular, these numbers are:
+    \list
+        \li Self total: The total amount of instances of this type ever created, excluding instances of sub-classes.
+        \li Inclusive total: The total amount of instances of this type ever created, including sub-classes.
+        \li Self alive: The amount of instances created but not destroyed yet of this type, excluding sub-classes.
+        \li Inclusive alive: The amount of instances created but not destroyed yet of this type, including sub-classes.
+    \endlist
+
     Tooltips and colorization of these columns show the ratio of this type on the overall amount of QObject instances. This is particularly useful for identifying
     unnecessarily created instances, as QObject construction is not exactly cheap.
+
+    For dynamically created QMetaObject instances (such as found in QML defined types or dynamic QtSCXML state charts), it might not
+    be possible for GammaRay to determine the lifetime correctly, those types are greyed out in order to avoid access to already freed memory.
+    For those types you will not be able to access information beyond the basic statistics.
 */
