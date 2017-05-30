@@ -47,14 +47,10 @@ using namespace GammaRay;
 // TODO list for timer plugin
 //
 
-// BUG: Some QTimers appear as free timers
 // BUG: QTimeLine class name not shown
-// BUG: No thread safety yet
 // Related: Protect against timer deletion
-// BUG: Sorting in the view doesn't work well
 // BUG: Only top-level timers are shown (bug in probe)
 
-// ! Delete old free timers
 // ! Wakeup time for QTimers
 // ! Add button to view object info
 // ! Test timer added/removed at runtime
@@ -86,8 +82,7 @@ public:
 
 static bool processCallback()
 {
-    ///TODO: multi-threading support
-    if (!TimerModel::isInitialized() || QThread::currentThread() != QCoreApplication::instance()->thread())
+    if (!TimerModel::isInitialized())
         return false;
     return true;
 }
@@ -97,11 +92,6 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
     Q_UNUSED(argv);
     if (!processCallback())
         return;
-
-    ///TODO: support threads living in other threads
-    if (caller->thread() != qApp->thread())
-        return;
-
     TimerModel::instance()->preSignalActivate(caller, method_index);
 }
 
@@ -110,7 +100,6 @@ static void signal_end_callback(QObject *caller, int method_index)
     // NOTE: here and below the caller may be invalid, e.g. if it was deleted from a slot
     if (!processCallback())
         return;
-
     TimerModel::instance()->postSignalActivate(caller, method_index);
 }
 

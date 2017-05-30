@@ -45,6 +45,19 @@
 
 using namespace GammaRay;
 
+class Deleter : public QObject
+{
+    Q_OBJECT
+public:
+    explicit Deleter(QObject *parent = nullptr)
+        : QObject(parent)
+    { }
+
+public slots:
+    void deleteSender()
+    { delete sender(); }
+};
+
 class TimerTopTest : public QObject
 {
     Q_OBJECT
@@ -71,6 +84,16 @@ private:
         const auto idx = matchResult.at(0);
         Q_ASSERT(idx.isValid());
         return idx;
+    }
+
+    QModelIndexList indexesForName(QAbstractItemModel *model, const QString &name)
+    {
+        const auto matches = model->match(model->index(0, 0), Qt::DisplayRole, name, -1, Qt::MatchExactly | Qt::MatchRecursive);
+        if (matches.isEmpty())
+            return QModelIndexList();
+        for (const auto &idx: matches)
+            Q_ASSERT(idx.isValid());
+        return matches;
     }
 
 private slots:
@@ -141,17 +164,100 @@ private slots:
 
         setObjectName("testObject");
         auto timerId = startTimer(10);
-        QTest::qWait(100);
+
+        // The TimerModel does batch all by a 5000ms timer.
+        QTest::qWait(5000);
+
+        // Wait for the free timer discovery
+        int i = 0;
+        while (model->rowCount() == 0 && i++ < 10)
+            QTest::qWait(100);
 
         idx = indexForName(model, "testObject");
         QVERIFY(idx.isValid());
-        QEXPECT_FAIL("", "still needs to be investigated", Continue);
         QCOMPARE(idx.data(TimerModel::ObjectIdRole).value<ObjectId>(), ObjectId(this));
         idx = idx.sibling(idx.row(), 6);
         QVERIFY(idx.isValid());
         QCOMPARE(idx.data().toInt(), timerId);
 
         killTimer(timerId);
+        // remove free timers from model
+        QMetaObject::invokeMethod(model, "clearHistory");
+    }
+
+    void testTimerMultithreading()
+    {
+        createProbe();
+
+        {
+            auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel"));
+            QVERIFY(model);
+
+            QSharedPointer<QThread> mainThread(new QThread);
+            mainThread->setObjectName("mainThread");
+
+            // main thread free timer operating on "mainThread" object
+            mainThread->startTimer(125);
+
+            // main thread qtimer
+            QSharedPointer<QTimer> mainTimer(new QTimer);
+            mainTimer->setObjectName("mainTimer");
+            mainTimer->setInterval(250);
+            mainTimer->start();
+
+            // "mainThread" thread "threadTimer" qtimer
+            QSharedPointer<QTimer> threadTimer(new QTimer);
+            threadTimer->setObjectName("threadTimer");
+            threadTimer->setInterval(100);
+            threadTimer->moveToThread(mainThread.data());
+
+            connect(mainThread.data(), SIGNAL(started()), threadTimer.data(), SLOT(start()));
+
+            int timerId = -1;
+            QTimer::singleShot(500, threadTimer.data(), [&]() {
+                // "threadTimer" thread free timer operating on "threadTimer" object
+                timerId = threadTimer->QObject::startTimer(250);
+            });
+
+            QSharedPointer<Deleter> deleter(new Deleter);
+            QTimer *deleteTimer = new QTimer;
+            deleteTimer->setObjectName("deleteTimer");
+            deleteTimer->setInterval(1500);
+            connect(deleteTimer, SIGNAL(timeout()), deleter.data(), SLOT(deleteSender()));
+            deleteTimer->start();
+
+            mainThread->start();
+            QTest::qWait(6000);
+
+            QModelIndex idx;
+            QCOMPARE(model->rowCount(), 4);
+
+            idx = indexForName(model, "mainThread");
+            QVERIFY(idx.isValid());
+            QCOMPARE(idx.data(TimerModel::ObjectIdRole).value<ObjectId>(), ObjectId(mainThread.data()));
+
+            idx = indexForName(model, "mainTimer");
+            QVERIFY(idx.isValid());
+            QCOMPARE(idx.data(TimerModel::ObjectIdRole).value<ObjectId>(), ObjectId(mainTimer.data()));
+
+            auto idxs = indexesForName(model, "threadTimer");
+            QCOMPARE(idxs.count(), 2);
+            for (const auto &idx: idxs)
+                QVERIFY(idx.isValid());
+
+            QTimer::singleShot(0, threadTimer.data(), [&]() {
+                threadTimer->QObject::killTimer(timerId);
+                threadTimer->stop();
+                mainThread->quit();
+            });
+
+            QVERIFY(mainThread->wait());
+
+            // remove free timers from model
+            QMetaObject::invokeMethod(model, "clearHistory");
+        }
+
+        QTest::qWait(1);
     }
 };
 

@@ -33,14 +33,16 @@
 #include <common/modelroles.h>
 
 #include <QAbstractTableModel>
-#include <QSet>
+#include <QSharedPointer>
+#include <QMetaMethod>
+#include <QVector>
+#include <QHash>
 
 QT_BEGIN_NAMESPACE
 class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-
 class TimerModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -68,60 +70,49 @@ public:
     };
 
     enum Roles {
-        ObjectIdRole = UserRole + 1
+        ObjectIdRole = UserRole
     };
 
     void setSourceModel(QAbstractItemModel *sourceModel);
 
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
-
-    bool eventFilter(QObject *watched, QEvent *event) override;
+public slots:
+    void clearHistory();
 
 private slots:
+    void triggerPushChanges();
+    void pushChanges();
+    void applyChanges(const GammaRay::TimerIdInfoHash &changes);
+
     void slotBeginRemoveRows(const QModelIndex &parent, int start, int end);
     void slotEndRemoveRows();
     void slotBeginInsertRows(const QModelIndex &parent, int start, int end);
     void slotEndInsertRows();
     void slotBeginReset();
     void slotEndReset();
-    void flushEmitPendingChangedRows();
 
 private:
     explicit TimerModel(QObject *parent = nullptr);
 
-    // Finds only QTimers based on the timer ID, not free timers.
-    TimerInfoPtr findOrCreateQTimerTimerInfo(int timerId);
+    const TimerIdInfo *findTimerInfo(const QModelIndex &index) const;
 
-    // Finds both QTimer and free timers
-    TimerInfoPtr findOrCreateTimerInfo(const QModelIndex &index);
+    static bool eventNotifyCallback(void *data[]);
 
-    // Finds QTimer timers
-    TimerInfoPtr findOrCreateQTimerTimerInfo(QObject *timer);
-
-    // Finds QObject timers
-    TimerInfoPtr findOrCreateFreeTimerInfo(int timerId);
-
-    int rowFor(QObject *timer);
-    void emitTimerObjectChanged(int row);
-    void emitFreeTimerChanged(int row);
-
+    // model data
     QAbstractItemModel *m_sourceModel;
-    QList<TimerInfoPtr> m_freeTimers;
-    // current timer signals that are being processed
-    QHash<QObject *, TimerInfoPtr> m_currentSignals;
-    // pending dataChanged() signals
-    QSet<int> m_pendingChangedTimerObjects;
-    QSet<int> m_pendingChangedFreeTimers;
-    QTimer *m_pendingChanedRowsTimer;
+    mutable TimerIdInfoHash m_timersInfo;
+    QVector<TimerIdInfo> m_freeTimersInfo;
+
+    QTimer *m_pushTimer;
+    const QMetaMethod m_triggerPushChangesMethod;
+
     // the method index of the timeout() signal of a QTimer
     const int m_timeoutIndex;
     int m_qmlTimerTriggeredIndex;

@@ -30,194 +30,229 @@
 #include "timermodel.h"
 
 #include <core/util.h>
+#include <core/probe.h>
 
 #include <QObject>
+#include <QTimer>
+#include <QThread>
+#include <QAbstractEventDispatcher>
+#include <QMutexLocker>
 
 using namespace GammaRay;
 
-static const int maxTimeoutEvents = 1000;
-static const int maxTimeSpan = 10000;
-
-TimerInfo::TimerInfo(QObject *timer)
-    : m_type(QQmlTimerType)
-    , m_totalWakeups(0)
-    , m_timer(timer)
-    , m_timerId(-1)
-    , m_lastReceiver(nullptr)
+namespace GammaRay {
+uint qHash(const TimerId &id)
 {
-    if (QTimer *t = qobject_cast<QTimer *>(timer)) {
+    switch (id.m_type) {
+    case TimerId::InvalidType:
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        Q_UNREACHABLE();
+#else
+        Q_ASSERT(false);
+#endif
+        break;
+
+    case TimerId::QQmlTimerType:
+    case TimerId::QTimerType:
+        return ::qHash(id.m_timerAddress);
+
+    case TimerId::QObjectType:
+        return ::qHash(id.m_timerId);
+    }
+
+    return 0;
+}
+}
+
+TimerId::TimerId()
+    : m_type(InvalidType)
+    , m_timerAddress(0)
+    , m_timerId(-1)
+{
+}
+
+TimerId::TimerId(QObject *timer)
+    : m_type(QQmlTimerType)
+    , m_timerAddress(quintptr(timer))
+    , m_timerId(-1)
+{
+    Q_ASSERT(timer);
+
+    if (qobject_cast<QTimer *>(timer)) {
         m_type = QTimerType;
-        m_timerId = t->timerId();
     }
 }
 
-TimerInfo::TimerInfo(int timerId)
+TimerId::TimerId(int timerId)
     : m_type(QObjectType)
-    , m_totalWakeups(0)
+    , m_timerAddress(0)
     , m_timerId(timerId)
 {
+    Q_ASSERT(m_timerId != -1);
 }
 
-TimerInfo::Type TimerInfo::type() const
+TimerId::Type TimerId::type() const
 {
     return m_type;
 }
 
-void TimerInfo::addEvent(const TimeoutEvent &timeoutEvent)
+quintptr TimerId::address() const
 {
-    m_timeoutEvents.append(timeoutEvent);
-    removeOldEvents();
-    m_totalWakeups++;
+    return m_timerAddress;
 }
 
-int TimerInfo::numEvents() const
-{
-    return m_timeoutEvents.size();
-}
-
-QObject *TimerInfo::timerObject() const
-{
-    return m_timer;
-}
-
-QTimer *TimerInfo::timer() const
-{
-    if (m_type != QTimerType)
-        return nullptr;
-    return qobject_cast<QTimer *>(m_timer);
-}
-
-int TimerInfo::timerId() const
+int TimerId::timerId() const
 {
     return m_timerId;
 }
 
-FunctionCallTimer *TimerInfo::functionCallTimer()
+bool TimerId::operator==(const TimerId &other) const
 {
-    return &m_functionCallTimer;
-}
+    if (m_type != other.m_type)
+        return false;
 
-QString TimerInfo::wakeupsPerSec() const
-{
-    int totalWakeups = 0;
-    int start = 0;
-    int end = m_timeoutEvents.size() - 1;
-    for (int i = end; i >= 0; i--) {
-        const TimeoutEvent &event = m_timeoutEvents.at(i);
-        if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan) {
-            start = i;
-            break;
-        }
-        totalWakeups++;
-    }
-
-    if (totalWakeups > 0 && end > start) {
-        const QTime startTime = m_timeoutEvents[start].timeStamp;
-        const QTime endTime = m_timeoutEvents[end].timeStamp;
-        const int timeSpan = startTime.msecsTo(endTime);
-        const float wakeupsPerSec = totalWakeups / (float)timeSpan * 1000.0f;
-        return QString::number(wakeupsPerSec, 'f', 1);
-    }
-    return QStringLiteral("0");
-}
-
-QString TimerInfo::timePerWakeup() const
-{
-    if (m_type == QObjectType)
-        return QStringLiteral("N/A");
-
-    int totalWakeups = 0;
-    int totalTime = 0;
-    for (int i = m_timeoutEvents.size() - 1; i >= 0; i--) {
-        const TimeoutEvent &event = m_timeoutEvents.at(i);
-        if (event.timeStamp.msecsTo(QTime::currentTime()) > maxTimeSpan)
-            break;
-        totalWakeups++;
-        totalTime += event.executionTime;
-    }
-
-    if (totalWakeups > 0)
-        return QString::number(totalTime / (float)totalWakeups, 'f', 1);
-    return QStringLiteral("N/A");
-}
-
-QString TimerInfo::maxWakeupTime() const
-{
-    if (m_type == QObjectType)
-        return QStringLiteral("N/A");
-
-    int max = 0;
-    for (int i = 0; i < m_timeoutEvents.size(); i++) {
-        const TimeoutEvent &event = m_timeoutEvents.at(i);
-        if (event.executionTime > max)
-            max = event.executionTime;
-    }
-    return QString::number(max);
-}
-
-int TimerInfo::totalWakeups() const
-{
-    return m_totalWakeups;
-}
-
-QString TimerInfo::state() const
-{
-    switch (type()) {
-    case QTimerType:
-    {
-        const QTimer *t = timer();
-        if (!t)
-            return TimerModel::tr("None");
-        if (!t->isActive())
-            return TimerModel::tr("Inactive");
-        if (t->isSingleShot())
-            return TimerModel::tr("Singleshot (%1 ms)").arg(t->interval());
-        return TimerModel::tr("Repeating (%1 ms)").arg(t->interval());
-    }
-    case QQmlTimerType:
-    {
-        const QObject *obj = timerObject();
-        if (!obj)
-            return TimerModel::tr("None");
-        const int interval = obj->property("interval").toInt();
-        if (!obj->property("running").toBool())
-            return TimerModel::tr("Inactive (%1 ms)").arg(interval);
-        if (obj->property("repeat").toBool())
-            return TimerModel::tr("Repeating (%1 ms)").arg(interval);
-        return TimerModel::tr("Singleshot (%1 ms)").arg(interval);
-    }
-    case QObjectType:
-        return QStringLiteral("N/A");
-    }
-
-    Q_ASSERT(false);
-    return QString();
-}
-
-void TimerInfo::removeOldEvents()
-{
-    if (m_timeoutEvents.size() > maxTimeoutEvents)
-        m_timeoutEvents.removeFirst();
-}
-
-void TimerInfo::setLastReceiver(QObject *receiver)
-{
-    m_lastReceiver = receiver;
-}
-
-QString TimerInfo::displayName() const
-{
     switch (m_type) {
-    case QTimerType:
-    case QQmlTimerType:
-        return Util::displayString(timerObject());
-    case QObjectType:
-        if (m_lastReceiver)
-            return Util::displayString(m_lastReceiver);
-        else
-            return TimerModel::tr("Unknown QObject");
+    case TimerId::InvalidType:
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        Q_UNREACHABLE();
+#else
+        Q_ASSERT(false);
+#endif
+        break;
+
+    case TimerId::QQmlTimerType:
+    case TimerId::QTimerType:
+        return m_timerAddress == other.m_timerAddress;
+
+    case TimerId::QObjectType:
+        return m_timerId == other.m_timerId;
+    }
+
+    return false;
+}
+
+bool TimerId::operator==(QObject *timer) const
+{
+    return m_timerAddress == quintptr(timer);
+}
+
+bool TimerId::operator==(int timerId) const
+{
+    return m_timerId == timerId;
+}
+
+bool TimerId::operator<(const TimerId &other) const
+{
+    if (m_timerAddress != 0) {
+        if (other.m_timerAddress != 0)
+            return m_timerAddress < other.m_timerAddress;
+        return other.m_timerId != -1 ? m_timerAddress < quintptr(other.m_timerId) : false;
+    } else if (m_timerId != -1) {
+        if (other.m_timerId != -1)
+            return m_timerId < other.m_timerId;
+        return other.m_timerAddress != 0 ? quintptr(m_timerId) < other.m_timerAddress : false;
     }
 
     Q_ASSERT(false);
-    return QString();
+    return false;
+}
+
+void TimerIdInfo::update(const TimerId &id, QObject *receiver)
+{
+    // The objectLock() must be locked at this point, if not use lockAndUpdate() then.
+    QObject *object = receiver ? receiver : reinterpret_cast<QObject *>(id.address());
+
+    if (!Probe::instance()->isValidObject(object)) {
+//        Q_ASSERT(false);
+        return;
+    }
+
+    switch (id.type()) {
+    case TimerId::InvalidType: {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        Q_UNREACHABLE();
+#else
+        Q_ASSERT(false);
+#endif
+        break;
+    }
+
+    state = (0 << 16) | 0;
+
+    case TimerId::QQmlTimerType: {
+        timerId = -1;
+        lastReceiverAddress = id.address();
+        lastReceiverObject = object;
+        objectName = Util::displayString(object);
+
+        const int interval = object->property("interval").toInt();
+
+        if (!object->property("running").toBool())
+            state = (interval << 16) | 1;
+        else if (!object->property("repeat").toBool())
+            state = (interval << 16) | 2;
+        else
+            state = (interval << 16) | 3;
+
+        break;
+    }
+
+    case TimerId::QTimerType: {
+        const QTimer *const timer = qobject_cast<QTimer *>(object);
+        timerId = timer->timerId();
+        lastReceiverAddress = id.address();
+        lastReceiverObject = object;
+        objectName = Util::displayString(object);
+
+        const int interval = timer->interval();
+
+        if (!timer->isActive())
+            state = (interval << 16) | 1;
+        else if (timer->isSingleShot())
+            state = (interval << 16) | 2;
+        else
+            state = (interval << 16) | 3;
+
+        break;
+    }
+
+    case TimerId::QObjectType: {
+        timerId = id.timerId();
+        lastReceiverAddress = quintptr(object);
+        lastReceiverObject = receiver;
+        objectName = Util::displayString(object);
+
+        const QAbstractEventDispatcher *dispatcher = QAbstractEventDispatcher::instance(object->thread());
+        const QList<QAbstractEventDispatcher::TimerInfo> timers = dispatcher->registeredTimers(object);
+        const auto it = std::find_if(timers.constBegin(), timers.constEnd(), [this](const QAbstractEventDispatcher::TimerInfo &timer) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+            return timer.timerId == timerId;
+#else
+            return timer.first == timerId;
+#endif
+        });
+
+        if (it != timers.constEnd()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+            const int interval = (*it).interval;
+#else
+            const int interval = (*it).second;
+#endif
+            state = (interval << 16) | 3;
+        }
+
+        break;
+    }
+    }
+}
+
+void TimerIdInfo::lockAndUpdate(const TimerId &id, QObject *receiver)
+{
+    QMutexLocker locker(Probe::objectLock());
+    update(id, receiver);
+}
+
+bool TimerIdInfo::isValid() const
+{
+    return !lastReceiverObject.isNull();
 }

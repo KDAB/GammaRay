@@ -28,67 +28,83 @@
 #ifndef GAMMARAY_TIMERTOP_TIMERINFO_H
 #define GAMMARAY_TIMERTOP_TIMERINFO_H
 
-#include "functioncalltimer.h"
-
-#include <QSharedPointer>
 #include <QPointer>
-#include <QTimer>
-#include <QTime>
+#include <QHash>
 #include <QMetaType>
 
+QT_BEGIN_NAMESPACE
+class QTimer;
+QT_END_NAMESPACE
+
 namespace GammaRay {
-class TimerInfo
+class TimerId
 {
+    friend uint qHash(const TimerId &);
+
 public:
     enum Type {
+        InvalidType,
+        // A QObject, no timer id
+        QQmlTimerType,
+        // A QObject, unstable timerId across stop/start
         QTimerType,
-        QObjectType,
-        QQmlTimerType
+        // A timerId attached to a QObject
+        QObjectType
     };
 
-    struct TimeoutEvent
-    {
-        QTime timeStamp;
-        int executionTime;
-    };
+    TimerId();
+    explicit TimerId(QObject *timer);
+    explicit TimerId(int timerId);
 
-    explicit TimerInfo(QObject *timer);
-    explicit TimerInfo(int timerId);
     Type type() const;
-    void addEvent(const TimeoutEvent &timeoutEvent);
-    void setLastReceiver(QObject *receiver);
-    int numEvents() const;
-    QTimer *timer() const;
-    QObject *timerObject() const;
+    quintptr address() const;
     int timerId() const;
-    FunctionCallTimer *functionCallTimer();
-    QString wakeupsPerSec() const;
-    QString timePerWakeup() const;
-    QString maxWakeupTime() const;
-    int totalWakeups() const;
-    QString state() const;
-    QString displayName() const;
+
+    bool operator==(const TimerId &other) const;
+    bool operator==(QObject *timer) const;
+    bool operator==(int timerId) const;
+    bool operator<(const TimerId &other) const;
 
 private:
     Type m_type;
-    int m_totalWakeups;
-
-    // Only for QTimer/QQmlTimers timers
-    QPointer<QObject> m_timer;
-
+    quintptr m_timerAddress;
     int m_timerId;
-    FunctionCallTimer m_functionCallTimer;
-    QList<TimeoutEvent> m_timeoutEvents;
-
-    // Only for free timers, QObject that received the timeout event
-    QPointer<QObject> m_lastReceiver;
-
-    void removeOldEvents();
 };
 
-typedef QSharedPointer<TimerInfo> TimerInfoPtr;
-}
+struct TimerIdInfo
+{
+    TimerIdInfo()
+        : timerId(-1)
+        , totalWakeups(0)
+        , lastReceiverAddress(0)
+        , state((0 << 16) | 0)
+        , wakeupsPerSec(0.0)
+        , timePerWakeup(0.0)
+        , maxWakeupTime(0)
+    { }
 
-Q_DECLARE_METATYPE(GammaRay::TimerInfoPtr)
+    virtual ~TimerIdInfo() { }
+
+    virtual void update(const TimerId &id, QObject *receiver = nullptr);
+    void lockAndUpdate(const TimerId &id, QObject *receiver = nullptr);
+
+    bool isValid() const;
+
+    int timerId;
+    uint totalWakeups;
+    quintptr lastReceiverAddress; // The QTimer/QQmlTimer or last known receiver address
+    QPointer<QObject> lastReceiverObject;
+
+    QString objectName;
+    uint state;
+    qreal wakeupsPerSec;
+    qreal timePerWakeup;
+    uint maxWakeupTime;
+};
+
+typedef QHash<TimerId, TimerIdInfo> TimerIdInfoHash;
+
+uint qHash(const TimerId &id);
+}
 
 #endif // GAMMARAY_TIMERINFO_H
