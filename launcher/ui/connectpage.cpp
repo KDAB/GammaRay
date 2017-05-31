@@ -96,6 +96,7 @@ void ConnectPage::validateHostAddress(const QString &address)
         m_valid = true;
         palette.setColor(QPalette::Text,Qt::black);
         ui->host->setPalette(palette);
+        qWarning() << m_currentUrl;
     }
 }
 
@@ -136,16 +137,14 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
         possibleIPv6Address = QHostAddress(stillToParse);
 
     QHostAddress possibleIPv6BracketAddress;
-    QRegularExpression bracketFormat("^\\[([0-9,a-f,\\:,\\.]*)\\].*$");
-    const auto bracketFormatMatch = bracketFormat.match(stillToParse);
-    if (bracketFormatMatch.hasMatch())
-        possibleIPv6BracketAddress = QHostAddress(bracketFormatMatch.captured(1));
+    QRegExp bracketFormat("^\\[([0-9,a-f,\\:,\\.]*)\\].*$");
+    if (bracketFormat.exactMatch(stillToParse))
+        possibleIPv6BracketAddress = QHostAddress(bracketFormat.cap(1));
 
     QHostAddress possibleIPv6InterfaceAddress;
-    QRegularExpression interfaceFormat("^([^\\%]*)(\\%[^\\:]+)(:[0-9]+)?$");
-    const auto interfaceFormatMatch = interfaceFormat.match(stillToParse);
-    if (interfaceFormatMatch.hasMatch())
-        possibleIPv6InterfaceAddress = QHostAddress(interfaceFormatMatch.captured(1));
+    QRegExp interfaceFormat("^([^\\%]*)(\\%[^\\:]+)(:[0-9]+)?$");
+    if (interfaceFormat.exactMatch(stillToParse))
+        possibleIPv6InterfaceAddress = QHostAddress(interfaceFormat.cap(1));
 
     const auto skipPort = true;
     if (!possibleIPv4Address.isNull())
@@ -155,7 +154,7 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
     if (!possibleIPv6BracketAddress.isNull())
         handleAddressAndPort(stillToParse, correctSoFar, "[" + possibleIPv6BracketAddress.toString() + "]");
     if (!possibleIPv6InterfaceAddress.isNull()){
-        stillToParse.replace(interfaceFormatMatch.captured(2), "");
+        stillToParse.replace(interfaceFormat.cap(2), "");
         handleAddressAndPort(stillToParse, correctSoFar, possibleIPv6InterfaceAddress.toString());
     }
 }
@@ -178,10 +177,9 @@ void ConnectPage::handleAddressAndPort(QString &stillToParse, bool &correctSoFar
 
 void ConnectPage::handlePortString(QString &stillToParse, bool &correctSoFar)
 {
-    QRegularExpression r("\\:[0-9]{1,5}");
-    const auto portMatch = r.match(stillToParse);
-    if (portMatch.hasMatch()) {
-        auto portString = portMatch.captured(0);
+    QRegExp r("\\:[0-9]{1,5}");
+    if (r.exactMatch(stillToParse)) {
+        auto portString = r.cap(0);
         stillToParse = stillToParse.replace(portString, "");
         auto portNumber = portString.replace(":","").toInt();
         if (portNumber <= 65535){
