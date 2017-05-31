@@ -61,7 +61,7 @@ bool TcpServerDevice::isListening() const
     return m_server->isListening();
 }
 
-QString TcpServerDevice::bestAvailableIP(const QHostAddress address) const
+QString TcpServerDevice::bestAvailableIP(const QHostAddress &address) const
 {
     QString firstHostFound;
     foreach (const QNetworkInterface &inter, QNetworkInterface::allInterfaces()) {
