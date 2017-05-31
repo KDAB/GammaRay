@@ -35,7 +35,7 @@
         \li and QMetaClassInfo.
     \endlist
 
-    GammaRay checks all QMetaObject instances for typical problems such as using unregistered or improperly qualified types on properies
+    GammaRay checks all QMetaObject instances for typical problems such as using unregistered or improperly qualified types on properties
     or method arguments. In case such issues are detected, a warning icon is shown, and a tooltip informs you about the details. These
     problems are usually harmless when working with C++ API, but tend to be relevant for dynamic invocation or language bindings, ie. most
     commonly when exposing the affected types to QML.
@@ -58,6 +58,6 @@
     unnecessarily created instances, as QObject construction is not exactly cheap.
 
     For dynamically created QMetaObject instances (such as found in QML defined types or dynamic QtSCXML state charts), it might not
-    be possible for GammaRay to determine the lifetime correctly, those types are greyed out in order to avoid access to already freed memory.
+    be possible for GammaRay to determine the lifetime correctly, those types are grayed out in order to avoid access to already freed memory.
     For those types you will not be able to access information beyond the basic statistics.
 */
