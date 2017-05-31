@@ -97,6 +97,8 @@ void NetworkDiscoveryModel::processPendingDatagrams()
                 case QAbstractSocket::IPv6Protocol:
                     info.url.setHost(QLatin1Char('[') + senderAddr.toString() + QLatin1Char(']'));
                     break;
+                default:
+                    break;
             }
         }
 

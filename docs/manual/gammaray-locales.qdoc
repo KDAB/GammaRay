@@ -28,8 +28,8 @@
     The locale browser allows you to inspect static databases provided by Qt and/or the operating system around localization.
     This data is typically independent of your application, and includes:
     \list
-        \li The locale database, accesible via QLocale.
-        \li The timezone database, accesible via QTimeZone.
+        \li The locale database, accessible via QLocale.
+        \li The timezone database, accessible via QTimeZone.
     \endlist
 
     Each database is represented as its own tab in the GammaRay locale browser.
@@ -52,7 +52,7 @@
 
     The timezone browser consists of two parts. The left side shows all known timezones including some of their properties, names and identifiers,
     The right side shows all known time zone transitions for currently selected timezone, including both regular DST transitions as well as irregular
-    transitions that occured for whatever reason. This view is limited to 30 transitions before and after the current date, as the list is potentially
+    transitions that occurred for whatever reason. This view is limited to 30 transitions before and after the current date, as the list is potentially
     infinite for timezones with recurring DST transitions.
 
     The current system time zone is highlighted bold.

@@ -53,7 +53,7 @@ public:
 
 private:
     QUdpSocket *m_broadcastSocket;
-    QString bestAvailableIP(const QHostAddress address) const;
+    QString bestAvailableIP(const QHostAddress &address) const;
 };
 }
 

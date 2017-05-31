@@ -110,7 +110,7 @@ enum BuildInMessageType {
 class ModelIndexData
 {
 public:
-    ModelIndexData(qint32 row_ = 0, qint32 column_ = 0)
+    explicit ModelIndexData(qint32 row_ = 0, qint32 column_ = 0)
         : row(row_), column(column_) {}
 
     qint32 row;
