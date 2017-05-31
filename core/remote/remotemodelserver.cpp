@@ -512,7 +512,7 @@ bool RemoteModelServer::proxyDynamicSortFilter() const
 void RemoteModelServer::setProxyDynamicSortFilter(bool dynamicSortFilter)
 {
     if (auto proxy = qobject_cast<QSortFilterProxyModel *>(m_model))
-        return proxy->setDynamicSortFilter(dynamicSortFilter);
+        proxy->setDynamicSortFilter(dynamicSortFilter);
 }
 
 Qt::CaseSensitivity RemoteModelServer::proxyFilterCaseSensitivity() const
@@ -525,7 +525,7 @@ Qt::CaseSensitivity RemoteModelServer::proxyFilterCaseSensitivity() const
 void RemoteModelServer::setProxyFilterCaseSensitivity(Qt::CaseSensitivity caseSensitivity)
 {
     if (auto proxy = qobject_cast<QSortFilterProxyModel *>(m_model))
-        return proxy->setFilterCaseSensitivity(caseSensitivity);
+        proxy->setFilterCaseSensitivity(caseSensitivity);
 }
 
 int RemoteModelServer::proxyFilterKeyColumn() const
@@ -538,7 +538,7 @@ int RemoteModelServer::proxyFilterKeyColumn() const
 void RemoteModelServer::setProxyFilterKeyColumn(int column)
 {
     if (auto proxy = qobject_cast<QSortFilterProxyModel *>(m_model))
-        return proxy->setFilterKeyColumn(column);
+        proxy->setFilterKeyColumn(column);
 }
 
 QRegExp RemoteModelServer::proxyFilterRegExp() const
@@ -551,5 +551,5 @@ QRegExp RemoteModelServer::proxyFilterRegExp() const
 void RemoteModelServer::setProxyFilterRegExp(const QRegExp &regExp)
 {
     if (auto proxy = qobject_cast<QSortFilterProxyModel *>(m_model))
-        return proxy->setFilterRegExp(regExp);
+        proxy->setFilterRegExp(regExp);
 }

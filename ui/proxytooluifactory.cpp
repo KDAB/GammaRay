@@ -67,5 +67,5 @@ void ProxyToolUiFactory::initUi()
     ToolUiFactory *fac = factory();
     if (!fac)
         return;
-    return fac->initUi();
+    fac->initUi();
 }
