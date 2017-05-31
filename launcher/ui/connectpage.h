@@ -73,8 +73,8 @@ private:
     QUrl m_currentUrl;
     bool m_valid;
     QToolButton *m_portInfoLabel;
-    const QLatin1String m_localPrefix;
-    const QLatin1String m_tcpPrefix;
+    const QString m_localPrefix;
+    const QString m_tcpPrefix;
     QAction *m_implicitPortWarningSign;
     QAction *m_fileIsNotASocketWarning;
 };
