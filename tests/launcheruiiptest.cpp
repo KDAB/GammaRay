@@ -51,7 +51,13 @@ private slots:
 #endif
     }
 
+    void cleanupTestCase()
+    {
+        m_localServer.close();
+    }
+
     void testUrl_data()
+
     {
         QTest::addColumn<QString>("userInput", nullptr);
         QTest::addColumn<QString>("expectedParsed", nullptr);
@@ -78,11 +84,6 @@ private slots:
         QTest::newRow("::ffff:192.168.15.2") << "::ffff:192.168.15.2" << "tcp://[::ffff:192.168.15.2]:11732" << true << true;
     }
 
-    void cleanupTestCase()
-    {
-        m_localServer.close();
-    }
-
     void testUrl()
     {
         QFETCH(QString, userInput);
@@ -94,8 +95,10 @@ private slots:
         auto lineEdit = connectPage.findChild<QLineEdit*>("host");
         QVERIFY(lineEdit);
         lineEdit->setText(userInput);
-        while(addressParsedSpy.count() == 0)
+        for(size_t i = 0; i<500; i++) {
+            if (addressParsedSpy.count() > 0) break;
             QTest::qWait(1);
+        }
         QCOMPARE(connectPage.isValid(), isValid);
         if (!isValid)
             return;
@@ -104,6 +107,32 @@ private slots:
         QCOMPARE(lineEdit->actions().contains(connectPage.m_implicitPortWarningSign), autoPortWarning);
 #endif
     }
+
+    void testHostNames_data()
+    {
+        QTest::addColumn<QString>("userInput", nullptr);
+        QTest::addColumn<bool>("isValid", nullptr);
+
+        QTest::newRow("localhost") << "localhost" << true;
+        QTest::newRow("horsebubblewrap-plan") << "horsebubblewrap-plan" << false; //please dont exist ;)
+    }
+
+    void testHostNames()
+    {
+        QFETCH(QString, userInput);
+        QFETCH(bool, isValid);
+        ConnectPage connectPage;
+        QSignalSpy dnsDoneSpy(&connectPage, SIGNAL(dnsResolved()));
+        auto lineEdit = connectPage.findChild<QLineEdit*>("host");
+        QVERIFY(lineEdit);
+        lineEdit->setText(userInput);
+        for(size_t i = 0; i<200; i++) {
+            if (dnsDoneSpy.count() > 0) break;
+            QTest::qWait(1);
+        }
+        QCOMPARE(connectPage.isValid(), isValid);
+    }
+
 
 private:
     QLocalServer m_localServer;
