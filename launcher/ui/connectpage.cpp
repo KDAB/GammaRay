@@ -89,6 +89,10 @@ void ConnectPage::validateHostAddress(const QString &address)
     handleLocalAddress(stillToParse, correctSoFar);
     handleIPAddress(stillToParse, correctSoFar);
 
+    QRegExp hostNameFormat("^([a-z,A-Z][a-z,A-Z,0-9,\\-\\.]+[a-z,A-Z,0-9])$");
+    if (hostNameFormat.exactMatch(stillToParse))
+        handleHostName(stillToParse, correctSoFar);
+
     // if we came down here and theres nothing more to parse, we are good
     // set text back to black again
     if (correctSoFar && stillToParse.isEmpty()) {
@@ -157,6 +161,32 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
         handleAddressAndPort(stillToParse, correctSoFar, possibleIPv6InterfaceAddress.toString());
     }
 }
+
+void ConnectPage::handleHostName(QString &stillToParse, bool &correctSoFar)
+{
+    // handle tcp prefix
+    if (stillToParse.startsWith(m_tcpPrefix))
+        stillToParse.remove(0, m_tcpPrefix.size());
+
+    QHostInfo::lookupHost(stillToParse, this, SLOT(hostResponse(QHostInfo)));
+}
+
+void ConnectPage::hostResponse(QHostInfo hostInfo)
+{
+    if (hostInfo.error() != QHostInfo::NoError)
+        return;
+
+    if(hostInfo.addresses().empty())
+        return;
+
+    m_valid = true;
+    QPalette palette;
+    palette.setColor(QPalette::Text,Qt::black);
+    ui->host->setPalette(palette);
+    emit dnsResolved();
+    emit updateButtonState();
+}
+
 
 void ConnectPage::handleAddressAndPort(QString &stillToParse, bool &correctSoFar, const QString &possibleAddress, bool skipPort)
 {

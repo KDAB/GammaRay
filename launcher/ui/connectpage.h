@@ -34,6 +34,7 @@
 #include <QWidget>
 #include <QHostAddress>
 #include <QToolButton>
+#include <QHostInfo>
 #include <QUrl>
 
 class LauncherUiIPTest;
@@ -59,16 +60,19 @@ public slots:
 
 signals:
     void userInputParsed();
+    void dnsResolved();
     void updateButtonState();
     void activate();
 
 private slots:
     void instanceSelected();
+    void hostResponse(QHostInfo hostInfo);
     void validateHostAddress(const QString &address);
 
 private:
     void handleLocalAddress(QString &stillToParse, bool &correctSoFar);
     void handleIPAddress(QString &stillToParse, bool &correctSoFar);
+    void handleHostName(QString &stillToParse, bool &correctSoFar);
     void handleAddressAndPort(QString &stillToParse, bool &correctSoFar, const QString &possibleAddress, bool skipPort = false);
     void handlePortString(QString &stillToParse, bool &correctSoFar);
 
