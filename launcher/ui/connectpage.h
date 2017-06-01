@@ -72,7 +72,7 @@ private slots:
 private:
     void handleLocalAddress(QString &stillToParse, bool &correctSoFar);
     void handleIPAddress(QString &stillToParse, bool &correctSoFar);
-    void handleHostName(QString &stillToParse, bool &correctSoFar);
+    void handleHostName(QString &stillToParse);
     void handleAddressAndPort(QString &stillToParse, bool &correctSoFar, const QString &possibleAddress, bool skipPort = false);
     void handlePortString(QString &stillToParse, bool &correctSoFar);
 
