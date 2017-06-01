@@ -96,7 +96,13 @@ public:
 
     ~MessageBuffer() {}
 
-    void reset()
+    void clear()
+    {
+        data.buffer().resize(0);
+        resetStatus();
+    }
+
+    void resetStatus()
     {
         data.seek(0);
         scratchSpace.resize(0);
@@ -115,7 +121,7 @@ Message::Message()
     , m_messageType(Protocol::InvalidMessageType)
     , m_buffer(s_sharedMessageBufferPool()->acquire())
 {
-    m_buffer->reset();
+    m_buffer->clear();
     m_buffer->stream.setVersion(s_streamVersion);
 }
 
@@ -124,7 +130,7 @@ Message::Message(Protocol::ObjectAddress objectAddress, Protocol::MessageType ty
     , m_messageType(type)
     , m_buffer(s_sharedMessageBufferPool()->acquire())
 {
-    m_buffer->reset();
+    m_buffer->clear();
     m_buffer->stream.setVersion(s_streamVersion);
 }
 
@@ -200,7 +206,7 @@ Message Message::readMessage(QIODevice *device)
         }
     }
 
-    msg.m_buffer->reset();
+    msg.m_buffer->resetStatus();
 
     return msg;
 }
