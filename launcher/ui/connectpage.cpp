@@ -91,7 +91,7 @@ void ConnectPage::validateHostAddress(const QString &address)
 
     QRegExp hostNameFormat("^([a-z,A-Z][a-z,A-Z,0-9,\\-\\.]+[a-z,A-Z,0-9])$");
     if (hostNameFormat.exactMatch(stillToParse))
-        handleHostName(stillToParse, correctSoFar);
+        handleHostName(stillToParse);
 
     // if we came down here and theres nothing more to parse, we are good
     // set text back to black again
@@ -162,7 +162,7 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
     }
 }
 
-void ConnectPage::handleHostName(QString &stillToParse, bool &correctSoFar)
+void ConnectPage::handleHostName(QString &stillToParse)
 {
     // handle tcp prefix
     if (stillToParse.startsWith(m_tcpPrefix))
