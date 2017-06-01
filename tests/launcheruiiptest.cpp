@@ -95,7 +95,7 @@ private slots:
         QVERIFY(lineEdit);
         lineEdit->setText(userInput);
         while(addressParsedSpy.count() == 0)
-            addressParsedSpy.wait(1);
+            QTest::qWait(1);
         QCOMPARE(connectPage.isValid(), isValid);
         if (!isValid)
             return;
@@ -106,7 +106,6 @@ private slots:
     }
 
 private:
-    QTemporaryDir m_tmpdir;
     QLocalServer m_localServer;
 };
 
