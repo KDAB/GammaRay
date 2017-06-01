@@ -59,8 +59,8 @@ private slots:
         QTest::addColumn<bool>("autoPortWarning", nullptr);
 
 #ifdef Q_OS_UNIX
-        QTest::newRow("/tmp/socketfile") << "/tmp/socketfile" << "local:///tmp/socketfile" << true << false;
-        QTest::newRow("local:///tmp/socketfile") << "local:///tmp/socketfile" << "local:///tmp/socketfile" << true << false;
+        QTest::newRow("/tmp/socketfile") << "/tmp/socketfile" << "local:/tmp/socketfile" << true << false;
+        QTest::newRow("local:///tmp/socketfile") << "local:///tmp/socketfile" << "local:/tmp/socketfile" << true << false;
 #endif
 
         QTest::newRow("192.168.42.1") << "192.168.42.1" << "tcp://192.168.42.1:11732" << true << true;
