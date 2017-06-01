@@ -103,7 +103,7 @@ void ConnectPage::handleLocalAddress(QString &stillToParse, bool &correctSoFar)
 {
 #ifdef Q_OS_UNIX
     if (stillToParse.startsWith(m_localPrefix))
-        stillToParse.remove(0, m_localPrefix.size()-1); //dont remove second slash
+        stillToParse.remove(m_localPrefix); //dont remove second slash
 
     // Its also okay, if only a path to an existing file is given
     QFileInfo localSocketFile(stillToParse);
