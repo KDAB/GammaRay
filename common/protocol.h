@@ -33,6 +33,7 @@
 
 #include <QAbstractItemModel>
 #include <QDataStream>
+#include <QDebug>
 #include <QVector>
 #include <QModelIndex>
 
@@ -151,6 +152,13 @@ inline QDataStream& operator<<(QDataStream& s, const GammaRay::Protocol::ModelIn
     s << data.row << data.column;
     return s;
 }
+
+inline QDebug& operator<<(QDebug &s, const GammaRay::Protocol::ModelIndexData &data)
+{
+    s << '(' << data.row << ',' << data.column << ')';
+    return s;
+}
+
 Q_DECLARE_TYPEINFO(GammaRay::Protocol::ModelIndexData, Q_MOVABLE_TYPE);
 Q_DECLARE_TYPEINFO(GammaRay::Protocol::ItemSelectionRange, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
