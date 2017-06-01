@@ -29,20 +29,24 @@
 #ifndef GAMMARAY_CONNECTPAGE_H
 #define GAMMARAY_CONNECTPAGE_H
 
+#include "gammaray_launcher_ui_export.h"
+
 #include <QWidget>
 #include <QHostAddress>
 #include <QToolButton>
 #include <QUrl>
 
+class LauncherUiIPTest;
 namespace GammaRay {
 namespace Ui {
 class ConnectPage;
 }
 
 /** UI for connecting to a running GammaRay instance. */
-class ConnectPage : public QWidget
+class GAMMARAY_LAUNCHER_UI_EXPORT ConnectPage : public QWidget
 {
     Q_OBJECT
+    friend class ::LauncherUiIPTest;
 public:
     explicit ConnectPage(QWidget *parent = nullptr);
     ~ConnectPage();
@@ -54,6 +58,7 @@ public slots:
     void launchClient();
 
 signals:
+    void userInputParsed();
     void updateButtonState();
     void activate();
 

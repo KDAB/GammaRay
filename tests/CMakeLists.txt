@@ -147,10 +147,14 @@ add_executable(probesettingstest probesettingstest.cpp)
 target_link_libraries(probesettingstest gammaray_launcher gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 add_test(NAME probesettingstest COMMAND probesettingstest)
 
+### launcher ui ip test
+add_executable(launcheruiiptest launcheruiiptest.cpp)
+target_link_libraries(launcheruiiptest gammaray_launcher_ui gammaray_common ${QT_QTGUI_LIBRARIES} ${QT_QTTEST_LIBRARIES}  ${QT_QTNETWORK_LIBRARIES})
+add_test(NAME launcheruiiptest COMMAND launcheruiiptest)
+
 endif()
 
 ### execution inspection test
-
 add_executable(executiontest executiontest.cpp)
 target_link_libraries(executiontest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_core)
 add_test(NAME executiontest COMMAND executiontest)

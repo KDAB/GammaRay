@@ -96,6 +96,7 @@ void ConnectPage::validateHostAddress(const QString &address)
         palette.setColor(QPalette::Text,Qt::black);
         ui->host->setPalette(palette);
     }
+    emit userInputParsed();
 }
 
 void ConnectPage::handleLocalAddress(QString &stillToParse, bool &correctSoFar)
