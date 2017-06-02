@@ -54,8 +54,6 @@ using namespace GammaRay;
 // ! Wakeup time for QTimers
 // ! Add button to view object info
 // ! Test timer added/removed at runtime
-// Automatic column resizing
-// Filter line edit
 // Buttons to kill or slow down timer and start timer
 // Add clear button that removes all free timers and resets statistics for normal timers
 // Add big fat "total wakeups / sec" label to the status bar

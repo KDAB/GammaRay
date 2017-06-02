@@ -31,6 +31,7 @@
 #include "timermodel.h"
 
 #include <ui/contextmenuextension.h>
+#include <ui/searchlinecontroller.h>
 
 #include <common/objectbroker.h>
 
@@ -130,6 +131,8 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
     sortModel->setDynamicSortFilter(true);
     ui->timerView->setModel(sortModel);
     ui->timerView->setSelectionModel(ObjectBroker::selectionModel(sortModel));
+
+    new SearchLineController(ui->timerViewFilter, sortModel);
 
     ui->timerView->sortByColumn(TimerModel::WakeupsPerSecColumn, Qt::DescendingOrder);
 }
