@@ -277,12 +277,9 @@ bool QtIviPropertyModel::IviCarrierProperty::setValue(const QVariant &value, QOb
     if (m_iviProperty) {
         const bool wasOverride = isOverrided();
         bool isOverride = wasOverride || !isWritable();
-        bool writableChanged = false;
-        bool overrideChanged = false;
 
         if (isOverride && !wasOverride && isOverridable()) {
             setOverrided(isOverride);
-            overrideChanged = true;
         }
 
         m_iviOverrider.setValue(toSet);
@@ -291,8 +288,6 @@ bool QtIviPropertyModel::IviCarrierProperty::setValue(const QVariant &value, QOb
         // up front, so check and compensate similarly to "proper" read-only properties.
         if (!isOverride && m_iviOverrider.cppValue() != toSet) {
             isOverride = true;
-            overrideChanged = true;
-            writableChanged = true;
             setOverrided(isOverride);
             m_iviOverrider.setValue(toSet);
         }
