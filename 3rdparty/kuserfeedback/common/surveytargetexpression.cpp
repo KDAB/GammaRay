@@ -88,7 +88,7 @@ QDebug operator<<(QDebug debug, SurveyTargetExpression* expr)
 
     switch (expr->type()) {
         case SurveyTargetExpression::Value:
-            debug << expr->value();
+            debug << expr->value().toString(); //toString() is needed for Qt4 support
             break;
         case SurveyTargetExpression::ScalarElement:
             debug.nospace() << expr->source() << "." << expr->sourceElement();

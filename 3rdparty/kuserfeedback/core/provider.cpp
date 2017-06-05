@@ -299,7 +299,7 @@ void ProviderPrivate::submitFinished()
     const auto redirectTarget = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
     if (redirectTarget.isValid()) {
         if (++redirectCount >= 20) {
-            qCWarning(Log) << "Redirect loop on" << reply->url().resolved(redirectTarget);
+            qCWarning(Log) << "Redirect loop on" << reply->url().resolved(redirectTarget).toString();
             return;
         }
         submit(reply->url().resolved(redirectTarget));
