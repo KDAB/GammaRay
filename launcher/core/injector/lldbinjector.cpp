@@ -51,8 +51,8 @@ bool LldbInjector::selfTest()
     if (process.waitForStarted(-1)) {
         if (process.waitForFinished(-1)) {
             const QString output = QString::fromLocal8Bit(process.readAll()).trimmed();
-            const int major = 3;
-            const int minor = 6;
+            const auto targetMajor = 3;
+            const auto targetMinor = 6;
             QRegExp rx(QStringLiteral("\\b([\\d]\\.[\\d]+\\.[\\d]+)\\b")); // lldb version 3.7.0 ( revision )
 
             if (rx.indexIn(output) == -1) {
@@ -64,16 +64,14 @@ bool LldbInjector::selfTest()
             const QStringList parts = version.split(QLatin1Char('.'));
 
             if (parts.count() >= 2) {
-                if (parts[0].toInt() >= major) {
-                    if (parts[1].toInt() >= minor)
-                        return true;
-                }
+                const auto major = parts.at(0).toInt();
+                const auto minor = parts.at(1).toInt();
+                if (major > targetMajor || (major == targetMajor && minor >= targetMinor))
+                    return true;
             }
 
-            mErrorString
-                = tr("The debugger version is not compatible: %1 (%2.%3 min. required)").arg(version)
-                  .
-                  arg(major).arg(minor);
+            mErrorString = tr("The LLDB version is not compatible: %1 (%2.%3 or higher required)")
+                .arg(version).arg(targetMajor).arg(targetMinor);
             return false;
         }
     }
