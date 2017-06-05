@@ -44,7 +44,7 @@ class USERFEEDBACKCORE_EXPORT FeedbackConfigUiController : public QObject
     /*! Amount of supported survey modes. */
     Q_PROPERTY(int surveyModeCount READ surveyModeCount CONSTANT)
 public:
-    FeedbackConfigUiController(QObject *parent = nullptr);
+    explicit FeedbackConfigUiController(QObject *parent = nullptr);
     ~FeedbackConfigUiController();
 
     /*! Returns the feedback provider to be configured. */

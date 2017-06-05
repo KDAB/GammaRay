@@ -16,6 +16,7 @@
 */
 
 #include "openglinfosource.h"
+#include "openglinfosource_p.h"
 
 #include <QVariant>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -44,15 +45,6 @@ QVariant OpenGLInfoSource::data()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QOpenGLContext context;
     if (context.create()) {
-        switch (context.openGLModuleType()) {
-            case QOpenGLContext::LibGL:
-                m.insert(QStringLiteral("type"), QStringLiteral("GL"));
-                break;
-            case QOpenGLContext::LibGLES:
-                m.insert(QStringLiteral("type"), QStringLiteral("GLES"));
-                break;
-        }
-
         QWindow window;
         window.setSurfaceType(QSurface::OpenGLSurface);
         window.create();
@@ -61,19 +53,28 @@ QVariant OpenGLInfoSource::data()
         m.insert(QStringLiteral("vendor"), QString::fromLocal8Bit(reinterpret_cast<const char*>(functions.glGetString(GL_VENDOR))));
         m.insert(QStringLiteral("renderer"), QString::fromLocal8Bit(reinterpret_cast<const char*>(functions.glGetString(GL_RENDERER))));
 
-        int major = 0, minor = 0;
-        functions.glGetIntegerv(GL_MAJOR_VERSION, &major);
-        functions.glGetIntegerv(GL_MINOR_VERSION, &minor);
-        m.insert(QStringLiteral("version"), QString(QString::number(major) + QLatin1Char('.') + QString::number(minor)));
+        switch (context.openGLModuleType()) {
+            case QOpenGLContext::LibGL:
+            {
+                m.insert(QStringLiteral("type"), QStringLiteral("GL"));
 
-        auto vendorVersion = QString::fromLocal8Bit(reinterpret_cast<const char*>(functions.glGetString(GL_VERSION)));
-        const auto idx = vendorVersion.indexOf(QLatin1Char(' '));
-        if (idx > 0) {
-            vendorVersion = vendorVersion.mid(idx + 1);
-            if (!vendorVersion.isEmpty())
-                m.insert(QStringLiteral("vendorVersion"), vendorVersion);
+                int major = 0, minor = 0;
+                functions.glGetIntegerv(GL_MAJOR_VERSION, &major);
+                functions.glGetIntegerv(GL_MINOR_VERSION, &minor);
+                m.insert(QStringLiteral("version"), QString(QString::number(major) + QLatin1Char('.') + QString::number(minor)));
+
+                OpenGLInfoSourcePrivate::parseGLVersion(reinterpret_cast<const char*>(functions.glGetString(GL_VERSION)), m);
+                OpenGLInfoSourcePrivate::parseGLSLVersion(reinterpret_cast<const char*>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION)), m);
+                break;
+            }
+            case QOpenGLContext::LibGLES:
+            {
+                m.insert(QStringLiteral("type"), QStringLiteral("GLES"));
+                OpenGLInfoSourcePrivate::parseGLESVersion(reinterpret_cast<const char*>(functions.glGetString(GL_VERSION)), m);
+                OpenGLInfoSourcePrivate::parseESGLSLVersion(reinterpret_cast<const char*>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION)), m);
+                break;
+            }
         }
-        m.insert(QStringLiteral("glslVersion"), QString::fromLocal8Bit(reinterpret_cast<const char*>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION))));
 
         switch (context.format().profile()) {
             case QSurfaceFormat::NoProfile:

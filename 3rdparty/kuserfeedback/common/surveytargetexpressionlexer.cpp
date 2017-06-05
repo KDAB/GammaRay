@@ -1,6 +1,6 @@
-#line 2 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionlexer.cpp"
+#line 2 "surveytargetexpressionlexer.cpp"
 
-#line 4 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionlexer.cpp"
+#line 4 "surveytargetexpressionlexer.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -489,7 +489,7 @@ static yyconst flex_int16_t yy_chk[114] =
 
 extern char* unquoteString(const char *str);
 
-#line 493 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionlexer.cpp"
+#line 493 "surveytargetexpressionlexer.cpp"
 
 #define INITIAL 0
 
@@ -765,7 +765,7 @@ YY_DECL
 #line 45 "surveytargetexpressionlexer.l"
 
 
-#line 769 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionlexer.cpp"
+#line 769 "surveytargetexpressionlexer.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -944,7 +944,7 @@ YY_RULE_SETUP
 #line 88 "surveytargetexpressionlexer.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 948 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionlexer.cpp"
+#line 948 "surveytargetexpressionlexer.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

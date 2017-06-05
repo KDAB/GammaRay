@@ -193,7 +193,7 @@ QString FeedbackConfigUiController::surveyModeDescription(int surveyIndex) const
             );
         case 2:
             return tr(
-                "I will participate in web surveys whenever one is available. Surveys can of course be defered or skipped."
+                "I will participate in web surveys whenever one is available. Surveys can of course be deferred or skipped."
             );
     }
 

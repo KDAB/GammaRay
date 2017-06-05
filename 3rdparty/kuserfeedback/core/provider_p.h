@@ -39,7 +39,7 @@ namespace UserFeedback {
 class ProviderPrivate : public SurveyTargetExpressionDataProvider
 {
 public:
-    ProviderPrivate(Provider *qq);
+    explicit ProviderPrivate(Provider *qq);
     ~ProviderPrivate();
 
     int currentApplicationTime() const;

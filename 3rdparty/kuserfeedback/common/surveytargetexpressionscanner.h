@@ -2,9 +2,9 @@
 #define yyHEADER_H 1
 #define yyIN_HEADER 1
 
-#line 6 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionscanner.h"
+#line 6 "surveytargetexpressionscanner.h"
 
-#line 8 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionscanner.h"
+#line 8 "surveytargetexpressionscanner.h"
 
 #define  YY_INT_ALIGNED short int
 
@@ -342,6 +342,6 @@ extern int yylex \
 #line 88 "surveytargetexpressionlexer.l"
 
 
-#line 346 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionscanner.h"
+#line 346 "surveytargetexpressionscanner.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

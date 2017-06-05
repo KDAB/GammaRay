@@ -30,6 +30,9 @@ public:
 
     QString name;
     Provider::StatisticsCollectionMode mode;
+
+private:
+    Q_DISABLE_COPY(AbstractDataSourcePrivate)
 };
 
 }

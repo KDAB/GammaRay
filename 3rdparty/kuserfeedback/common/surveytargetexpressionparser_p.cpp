@@ -97,7 +97,7 @@ void yyerror(UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner
 }
 
 
-#line 101 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:339  */
+#line 101 "surveytargetexpressionparser_p.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -117,8 +117,8 @@ void yyerror(UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner
 
 /* In a future release of Bison, this section will be replaced
    by #include "surveytargetexpressionparser_p.h".  */
-#ifndef YY_YY_K_KDE5_BUILD_USER_FEEDBACK_SRC_COMMON_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED
-# define YY_YY_K_KDE5_BUILD_USER_FEEDBACK_SRC_COMMON_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED
+#ifndef YY_YY_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED
+# define YY_YY_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -136,7 +136,7 @@ typedef void* yyscan_t;
 #endif
 
 
-#line 140 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:355  */
+#line 140 "surveytargetexpressionparser_p.cpp" /* yacc.c:355  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -177,7 +177,7 @@ union YYSTYPE
     char *str;
     UserFeedback::SurveyTargetExpression *expression;
 
-#line 181 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:355  */
+#line 181 "surveytargetexpressionparser_p.cpp" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -189,11 +189,11 @@ typedef union YYSTYPE YYSTYPE;
 
 int yyparse (UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner);
 
-#endif /* !YY_YY_K_KDE5_BUILD_USER_FEEDBACK_SRC_COMMON_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED  */
+#endif /* !YY_YY_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
-#line 197 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:358  */
+#line 197 "surveytargetexpressionparser_p.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1039,31 +1039,31 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, UserFeedback::Surv
           case 19: /* T_STRING  */
 #line 84 "surveytargetexpressionparser.y" /* yacc.c:1257  */
       { free(((*yyvaluep).str)); }
-#line 1043 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
+#line 1043 "surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
         break;
 
     case 20: /* T_IDENTIFIER  */
 #line 84 "surveytargetexpressionparser.y" /* yacc.c:1257  */
       { free(((*yyvaluep).str)); }
-#line 1049 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
+#line 1049 "surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
         break;
 
     case 23: /* Expr  */
 #line 85 "surveytargetexpressionparser.y" /* yacc.c:1257  */
       { delete ((*yyvaluep).expression); }
-#line 1055 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
+#line 1055 "surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
         break;
 
     case 24: /* Term  */
 #line 85 "surveytargetexpressionparser.y" /* yacc.c:1257  */
       { delete ((*yyvaluep).expression); }
-#line 1061 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
+#line 1061 "surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
         break;
 
     case 25: /* Value  */
 #line 85 "surveytargetexpressionparser.y" /* yacc.c:1257  */
       { delete ((*yyvaluep).expression); }
-#line 1067 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
+#line 1067 "surveytargetexpressionparser_p.cpp" /* yacc.c:1257  */
         break;
 
 
@@ -1331,67 +1331,67 @@ yyreduce:
         case 2:
 #line 90 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { *expression = (yyvsp[0].expression); }
-#line 1335 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1335 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
 #line 93 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { printf("TERM "); (yyval.expression) = (yyvsp[0].expression); }
-#line 1341 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1341 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 94 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = (yyvsp[-1].expression); }
-#line 1347 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1347 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 5:
 #line 95 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression(SurveyTargetExpression::OpLogicAnd, (yyvsp[-2].expression), (yyvsp[0].expression)); }
-#line 1353 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1353 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 96 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression(SurveyTargetExpression::OpLogicOr, (yyvsp[-2].expression), (yyvsp[0].expression)); }
-#line 1359 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1359 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 99 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression(SurveyTargetExpression::OpEqual, (yyvsp[-2].expression), (yyvsp[0].expression)); }
-#line 1365 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1365 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 100 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression(SurveyTargetExpression::OpNotEqual, (yyvsp[-2].expression), (yyvsp[0].expression)); }
-#line 1371 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1371 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
 #line 101 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression(SurveyTargetExpression::OpGreater, (yyvsp[-2].expression), (yyvsp[0].expression)); }
-#line 1377 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1377 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 102 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression(SurveyTargetExpression::OpGreaterEqual, (yyvsp[-2].expression), (yyvsp[0].expression)); }
-#line 1383 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1383 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 11:
 #line 103 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression(SurveyTargetExpression::OpLess, (yyvsp[-2].expression), (yyvsp[0].expression)); }
-#line 1389 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1389 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 104 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression(SurveyTargetExpression::OpLessEqual, (yyvsp[-2].expression), (yyvsp[0].expression)); }
-#line 1395 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1395 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 13:
@@ -1401,7 +1401,7 @@ yyreduce:
         free((yyvsp[-2].str));
         free((yyvsp[0].str));
     }
-#line 1405 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1405 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 14:
@@ -1411,7 +1411,7 @@ yyreduce:
         free((yyvsp[-5].str));
         free((yyvsp[0].str));
     }
-#line 1415 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1415 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 15:
@@ -1422,35 +1422,35 @@ yyreduce:
         free((yyvsp[-3].str));
         free((yyvsp[0].str));
     }
-#line 1426 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1426 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 123 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression((yyvsp[0].doubleVal)); }
-#line 1432 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1432 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 124 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression((yyvsp[0].intVal)); }
-#line 1438 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1438 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 18:
 #line 125 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression((yyvsp[0].boolVal)); }
-#line 1444 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1444 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 126 "surveytargetexpressionparser.y" /* yacc.c:1646  */
     { (yyval.expression) = new SurveyTargetExpression(QString::fromUtf8((yyvsp[0].str))); free((yyvsp[0].str)); }
-#line 1450 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1450 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1454 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
+#line 1454 "surveytargetexpressionparser_p.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

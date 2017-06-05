@@ -39,6 +39,7 @@ public:
     SurveyTargetExpression *expression() const;
 
 private:
+    Q_DISABLE_COPY(SurveyTargetExpressionParser)
     SurveyTargetExpression *m_expression;
 };
 

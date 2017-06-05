@@ -32,8 +32,12 @@ class SurveyTargetExpression;
 class SurveyTargetExpressionDataProvider
 {
 public:
+    SurveyTargetExpressionDataProvider();
     virtual ~SurveyTargetExpressionDataProvider();
     virtual QVariant sourceData(const QString &sourceName) const = 0;
+
+private:
+    Q_DISABLE_COPY(SurveyTargetExpressionDataProvider)
 };
 
 class SurveyTargetExpressionEvaluator

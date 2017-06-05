@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_K_KDE5_BUILD_USER_FEEDBACK_SRC_COMMON_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED
-# define YY_YY_K_KDE5_BUILD_USER_FEEDBACK_SRC_COMMON_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED
+#ifndef YY_YY_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED
+# define YY_YY_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -49,7 +49,7 @@ typedef void* yyscan_t;
 #endif
 
 
-#line 53 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.h" /* yacc.c:1909  */
+#line 53 "surveytargetexpressionparser_p.h" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -90,7 +90,7 @@ union YYSTYPE
     char *str;
     UserFeedback::SurveyTargetExpression *expression;
 
-#line 94 "/k/kde5/build/user-feedback/src/common/surveytargetexpressionparser_p.h" /* yacc.c:1909  */
+#line 94 "surveytargetexpressionparser_p.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -102,4 +102,4 @@ typedef union YYSTYPE YYSTYPE;
 
 int yyparse (UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner);
 
-#endif /* !YY_YY_K_KDE5_BUILD_USER_FEEDBACK_SRC_COMMON_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED  */
+#endif /* !YY_YY_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED  */

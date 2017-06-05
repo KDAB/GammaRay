@@ -132,6 +132,8 @@ QVariant SelectionRatioSource::data()
     int total = 0;
     for (auto it = d->ratioSet.constBegin(); it != d->ratioSet.constEnd(); ++it)
         total += it.value() + d->baseRatioSet.value(it.key());
+    if (total <= 0)
+        return m;
 
     for (auto it = d->ratioSet.constBegin(); it != d->ratioSet.constEnd(); ++it) {
         double currentValue = it.value() + d->baseRatioSet.value(it.key());

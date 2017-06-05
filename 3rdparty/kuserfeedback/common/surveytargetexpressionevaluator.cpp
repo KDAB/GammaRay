@@ -20,6 +20,10 @@
 
 using namespace UserFeedback;
 
+SurveyTargetExpressionDataProvider::SurveyTargetExpressionDataProvider()
+{
+}
+
 SurveyTargetExpressionDataProvider::~SurveyTargetExpressionDataProvider()
 {
 }
