@@ -43,10 +43,6 @@
 #  Force QT_ASSERT in all builds.
 #  Default=false
 #
-# -DGAMMARAY_DISABLE_FEEDBACK=[true|false]
-#  Disable user feedback support (always true for Qt4).
-#  Default=false (unless building for Qt4)
-#
 # To build the man page from POD, run 'make man' after CMake (assumes perl is available)
 # To install the resulting man page, run 'make install'
 # The man page is not available on Windows.
@@ -200,7 +196,7 @@ gammaray_option(
   OFF
 )
 
-gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support (always for Qt4)." OFF)
+gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." OFF)
 
 #
 # Static probe setup
@@ -745,14 +741,9 @@ add_subdirectory(common)
 add_subdirectory(core)
 add_subdirectory(probe)
 add_subdirectory(launcher)
-if(Qt4_FOUND)
-  set(GAMMARAY_DISABLE_FEEDBACK TRUE) # no kuserfeedback for Qt4 builds
-endif()
 if(GAMMARAY_BUILD_UI AND (Qt5Widgets_FOUND OR QT_QTGUI_FOUND))
   if(NOT GAMMARAY_DISABLE_FEEDBACK)
     add_subdirectory(3rdparty/kuserfeedback)
-  else()
-    add_definitions(-DGAMMARAY_DISABLE_FEEDBACK)
   endif()
   add_subdirectory(ui)
   add_subdirectory(inprocessui)
