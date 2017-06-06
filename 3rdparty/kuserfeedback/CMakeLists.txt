@@ -28,6 +28,12 @@ qt4_wrap_ui(gammaray_userfeedback_srcs
 )
 
 add_library(gammaray_kuserfeedback SHARED ${gammaray_userfeedback_srcs})
+# Disable warnings for generated stuff
+if(MSVC)
+    set_source_files_properties(common/surveytargetexpressionlexer.cpp PROPERTIES COMPILE_FLAGS "/we4018 /we4996")
+else()
+    set_source_files_properties(common/surveytargetexpressionlexer.cpp PROPERTIES COMPILE_FLAGS "-Wno-sign-compare -Wno-unneeded-internal-declaration")
+endif()
 if(NOT HAVE_UNISTD_H)
     target_compile_definitions(gammaray_kuserfeedback PRIVATE YY_NO_UNISTD_H)
 endif()
