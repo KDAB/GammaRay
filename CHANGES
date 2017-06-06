@@ -1,6 +1,33 @@
 Release Highlights
 ==================
 
+Version 2.8.0
+-------------
+ * Fix possible deadlock in WinDLL injector.
+ * Add code navigation for C++-created objects (Linux-only, requires a debug build).
+ * Add legend for the QtQuick inspector overlay.
+ * Add QtQuickControls2 layout support in the QtQuick inspector.
+ * Add layouting grid overlay to the QtQuick inspector.
+ * Add support for non-QtIviProperty properties in QtIvi modules.
+ * Improved QtQuick2 remote view performance.
+ * Basic support for the QtQuick2 software renderer.
+ * Add QtQuick Control 2 tracing support.
+ * Improved lifetime tracking of dynamic meta objects.
+ * Fix alive instance counts not updating correcting in the meta object browser.
+ * Add instance count statistics for QML-defined types in the meta object browser.
+ * Fix crash when debugging dynamically created QtSCXML state machines.
+ * Improved object navigation to the QtIvi inspector.
+ * Improved icon visuals with light/dark color schemes.
+ * Add QTimeZone database browser to the locale inspector.
+ * Allow to specify a working directory in the graphical launcher.
+ * Fix rendering corruption caused by runtime switching of QSG render modes.
+ * Dynamically negotiate QDataStream serialization format, fixes corruption of large QDateTime values.
+ * Fix QSG scene graph expansion on item picking.
+ * Expand user manual to cover object inspection views.
+ * Improved network auto-discovery if target device has multiple interfaces.
+ * More robust ABI detection for Yocto-based cross-compilation to x86 and aarch64 platforms.
+ * Add support for QtIvi 5.10 property overrides.
+
 Version 2.7.0
 -------------
  * Improved enum and flag editor in the property view.
