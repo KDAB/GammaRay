@@ -77,7 +77,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="lCellHeight">
         <property name="text">
-         <string>Cell Height</string>
+         <string>Cell Height:</string>
         </property>
        </widget>
       </item>
