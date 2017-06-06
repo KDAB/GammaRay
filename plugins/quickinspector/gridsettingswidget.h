@@ -31,12 +31,10 @@
 
 #include <QWidget>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class GridSettingsWidget; }
-QT_END_NAMESPACE
-
 namespace GammaRay {
+
 struct QuickDecorationsSettings;
+namespace Ui { class GridSettingsWidget; }
 
 class GridSettingsWidget : public QWidget
 {
