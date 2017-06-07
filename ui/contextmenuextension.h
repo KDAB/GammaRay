@@ -41,10 +41,8 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class GAMMARAY_UI_EXPORT ContextMenuExtension : public QObject
+class GAMMARAY_UI_EXPORT ContextMenuExtension
 {
-    Q_OBJECT
-
 public:
     // UI presentation depend the order of this enum
     enum Location {

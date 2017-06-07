@@ -32,6 +32,7 @@
 #include <common/propertymodel.h>
 #include <common/modelroles.h>
 
+#include <QCoreApplication>
 #include <QMenu>
 #include <QModelIndex>
 
@@ -44,13 +45,17 @@ QString sourceLocationLabel(ContextMenuExtension::Location location,
 {
     switch (location) {
     case ContextMenuExtension::GoTo:
-        return ContextMenuExtension::tr("Go to: %1").arg(sourceLocation.displayString());
+        return qApp->translate("GammaRay::ContextMenuExtension",
+                               "Go to: %1").arg(sourceLocation.displayString());
     case ContextMenuExtension::ShowSource:
-        return ContextMenuExtension::tr("Show source: %1").arg(sourceLocation.displayString());
+        return qApp->translate("GammaRay::ContextMenuExtension",
+                               "Show source: %1").arg(sourceLocation.displayString());
     case ContextMenuExtension::Creation:
-        return ContextMenuExtension::tr("Go to creation: %1").arg(sourceLocation.displayString());
+        return qApp->translate("GammaRay::ContextMenuExtension",
+                               "Go to creation: %1").arg(sourceLocation.displayString());
     case ContextMenuExtension::Declaration:
-        return ContextMenuExtension::tr("Go to declaration: %1").arg(sourceLocation.displayString());
+        return qApp->translate("GammaRay::ContextMenuExtension",
+                               "Go to declaration: %1").arg(sourceLocation.displayString());
     }
     Q_ASSERT(false);
     return QString();
@@ -108,7 +113,7 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
         for (auto it = m_locations.constBegin(), end = m_locations.constEnd(); it != end; ++it) {
             if (it.value().isValid()) {
                 auto action = menu->addAction(sourceLocationLabel(it.key(), it.value()));
-                connect(action, &QAction::triggered, this, [it]() {
+                QObject::connect(action, &QAction::triggered, UiIntegration::instance(), [it]() {
                     UiIntegration::requestNavigateToCode(it.value().url(), it.value().line(),
                                                          it.value().column());
                 });
@@ -123,10 +128,11 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
     ClientToolManager::instance()->requestToolsForObject(m_id);
 
     // delay adding actions until we know the supported tools
-    connect(ClientToolManager::instance(), &ClientToolManager::toolsForObjectResponse,
-            menu, [this, menu](const ObjectId &id, const QVector<ToolInfo> &toolInfos) { // Capturing this due to a bug in GCC 4.6 and 4.7 regarding the tr()-call.
+    QObject::connect(ClientToolManager::instance(), &ClientToolManager::toolsForObjectResponse,
+            menu, [menu](const ObjectId &id, const QVector<ToolInfo> &toolInfos) {
         foreach (const auto &toolInfo, toolInfos) {
-            auto action = menu->addAction(tr("Show in \"%1\" tool").arg(toolInfo.name()));
+            auto action = menu->addAction(qApp->translate("GammaRay::ContextMenuExtension",
+                                                          "Show in \"%1\" tool").arg(toolInfo.name()));
             QObject::connect(action, &QAction::triggered, [id, toolInfo]() {
                 ClientToolManager::instance()->selectObject(id, toolInfo);
             });
