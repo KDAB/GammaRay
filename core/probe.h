@@ -42,7 +42,7 @@
 
 #include <memory>
 
-#ifdef Q_OS_UNIX
+#if defined(Q_OS_UNIX) && !defined(Q_OS_ANDROID)
 #define USE_BACKWARD_CPP 1
 #else
 // backward-cpp is not supported on anything else than Unix platforms, so just don't enable support here
