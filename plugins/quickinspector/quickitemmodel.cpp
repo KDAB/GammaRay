@@ -144,27 +144,33 @@ void QuickItemModel::populateFromItem(QQuickItem *item)
 
 void QuickItemModel::connectItem(QQuickItem *item)
 {
-    connect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()));
-    connect(item, SIGNAL(visibleChanged()), this, SLOT(itemUpdated()));
-    connect(item, SIGNAL(focusChanged(bool)), this, SLOT(itemUpdated()));
-    connect(item, SIGNAL(activeFocusChanged(bool)), this, SLOT(itemUpdated()));
-    connect(item, SIGNAL(widthChanged()), this, SLOT(itemUpdated()));
-    connect(item, SIGNAL(heightChanged()), this, SLOT(itemUpdated()));
-    connect(item, SIGNAL(xChanged()), this, SLOT(itemUpdated()));
-    connect(item, SIGNAL(yChanged()), this, SLOT(itemUpdated()));
+    Q_ASSERT(item);
+    auto itemUpdatedFunc = [this, item]() { itemUpdated(item); };
+    std::array<QMetaObject::Connection, 8> connections = {{
+        connect(item, &QQuickItem::parentChanged, this, [this, item]() { itemReparented(item); }),
+        connect(item, &QQuickItem::visibleChanged, this, itemUpdatedFunc),
+        connect(item, &QQuickItem::focusChanged, this, itemUpdatedFunc),
+        connect(item, &QQuickItem::activeFocusChanged, this, itemUpdatedFunc),
+        connect(item, &QQuickItem::widthChanged, this, itemUpdatedFunc),
+        connect(item, &QQuickItem::heightChanged, this, itemUpdatedFunc),
+        connect(item, &QQuickItem::xChanged, this, itemUpdatedFunc),
+        connect(item, &QQuickItem::yChanged, this, itemUpdatedFunc)
+    }};
+    m_itemConnections.emplace(std::make_pair(item, std::move(connections))); // cant construct in-place, fails to compile under MSVC2010 :(
+
     item->installEventFilter(m_clickEventFilter);
 }
 
 void QuickItemModel::disconnectItem(QQuickItem *item)
 {
-    disconnect(item, SIGNAL(parentChanged(QQuickItem*)), this, SLOT(itemReparented()));
-    disconnect(item, SIGNAL(visibleChanged()), this, SLOT(itemUpdated()));
-    disconnect(item, SIGNAL(focusChanged(bool)), this, SLOT(itemUpdated()));
-    disconnect(item, SIGNAL(activeFocusChanged(bool)), this, SLOT(itemUpdated()));
-    disconnect(item, SIGNAL(widthChanged()), this, SLOT(itemUpdated()));
-    disconnect(item, SIGNAL(heightChanged()), this, SLOT(itemUpdated()));
-    disconnect(item, SIGNAL(xChanged()), this, SLOT(itemUpdated()));
-    disconnect(item, SIGNAL(yChanged()), this, SLOT(itemUpdated()));
+    Q_ASSERT(item);
+    auto it = m_itemConnections.find(item);
+    if (it != m_itemConnections.end()) {
+        foreach (auto connection, it->second) {
+            disconnect(connection);
+        }
+        m_itemConnections.erase(it);
+    }
     item->removeEventFilter(m_clickEventFilter);
 }
 
@@ -190,7 +196,9 @@ void QuickItemModel::objectAdded(QObject *obj)
     if (!item)
         return;
 
-    connect(item, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(itemWindowChanged())); // detect if item is added to scene later
+    // detect if item is added to scene later
+    connect(item, &QQuickItem::windowChanged, this, [this, item]() { itemWindowChanged(item); });
+
     addItem(item);
 }
 
@@ -277,9 +285,9 @@ void QuickItemModel::doRemoveSubtree(QQuickItem *item, bool danglingPointer)
     }
 }
 
-void QuickItemModel::itemReparented()
+void QuickItemModel::itemReparented(QQuickItem *item)
 {
-    QQuickItem *item = qobject_cast<QQuickItem *>(sender());
+    Q_ASSERT(item);
     if (!item->parentItem()) { // Item was not deleted, but removed from the scene.
         removeItem(item, false);
         return;
@@ -314,9 +322,8 @@ void QuickItemModel::itemReparented()
     endMoveRows();
 }
 
-void QuickItemModel::itemWindowChanged()
+void QuickItemModel::itemWindowChanged(QQuickItem *item)
 {
-    QQuickItem *item = qobject_cast<QQuickItem *>(sender());
     Q_ASSERT(item);
     if (!item->window() || item->window() != m_window)
         removeItem(item);
@@ -324,15 +331,15 @@ void QuickItemModel::itemWindowChanged()
         addItem(item);
 }
 
-void QuickItemModel::itemUpdated()
+void QuickItemModel::itemUpdated(QQuickItem *item)
 {
-    QQuickItem *item = qobject_cast<QQuickItem *>(sender());
-
+    Q_ASSERT(item);
     recursivelyUpdateItem(item);
 }
 
 void QuickItemModel::recursivelyUpdateItem(QQuickItem *item)
 {
+    Q_ASSERT(item);
     if (item->parent() == QObject::parent()) // skip items injected by ourselves
         return;
 

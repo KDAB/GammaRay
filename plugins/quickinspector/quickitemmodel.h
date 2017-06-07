@@ -35,6 +35,9 @@
 #include <QPointer>
 #include <QVector>
 
+#include <array>
+#include <unordered_map>
+
 QT_BEGIN_NAMESPACE
 class QSignalMapper;
 class QQuickItem;
@@ -68,9 +71,9 @@ public slots:
     void objectRemoved(QObject *obj);
 
 private slots:
-    void itemReparented();
-    void itemWindowChanged();
-    void itemUpdated();
+    void itemReparented(QQuickItem *item);
+    void itemWindowChanged(QQuickItem *item);
+    void itemUpdated(QQuickItem *item);
 
 private:
     friend class QuickEventMonitor;
@@ -105,7 +108,11 @@ private:
 
     QHash<QQuickItem *, QQuickItem *> m_childParentMap;
     QHash<QQuickItem *, QVector<QQuickItem *> > m_parentChildMap;
+
+    // TODO: Merge these two?
     QHash<QQuickItem *, int> m_itemFlags;
+    std::unordered_map<QQuickItem *, std::array<QMetaObject::Connection, 8>> m_itemConnections;
+
     QuickEventMonitor *m_clickEventFilter;
 };
 
