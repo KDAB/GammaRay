@@ -89,6 +89,7 @@ void SurveyInfo::setTarget(const QString &target)
     d->target = target;
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 SurveyInfo SurveyInfo::fromJson(const QJsonObject& obj)
 {
     SurveyInfo s;
@@ -99,6 +100,7 @@ SurveyInfo SurveyInfo::fromJson(const QJsonObject& obj)
 #endif
     return s;
 }
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include "surveyinfo.moc"
