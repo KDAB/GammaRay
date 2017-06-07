@@ -27,6 +27,10 @@ Version 2.8.0
  * Improved network auto-discovery if target device has multiple interfaces.
  * More robust ABI detection for Yocto-based cross-compilation to x86 and aarch64 platforms.
  * Add support for QtIvi 5.10 property overrides.
+ * Fix launching/attaching to targets not having GammaRay in their DLL search path on Windows.
+ * Improved diagnostics for injector failures.
+ * Also find additional probes installed inside the Qt installation itself.
+ * Fix crash in QtQuick inspector.
 
 Version 2.7.0
 -------------
