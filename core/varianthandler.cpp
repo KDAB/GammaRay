@@ -319,8 +319,7 @@ QString VariantHandler::displayString(const QVariant &value)
         return enumStr;
 
     // custom converters
-    const QHash<int, Converter<QString> *>::const_iterator it
-        = s_variantHandlerRepository()->stringConverters.constFind(value.userType());
+    auto it = s_variantHandlerRepository()->stringConverters.constFind(value.userType());
     if (it != s_variantHandlerRepository()->stringConverters.constEnd())
         return (*it.value())(value);
 

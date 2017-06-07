@@ -58,8 +58,7 @@ ProbeABI ProbeABIDetector::abiForQtCore(const QString &path) const
     if (!fi.exists())
         return ProbeABI();
 
-    const QHash<QString, ProbeABI>::const_iterator it = m_abiForQtCoreCache.constFind(
-        fi.canonicalFilePath());
+    auto it = m_abiForQtCoreCache.constFind(fi.canonicalFilePath());
     if (it != m_abiForQtCoreCache.constEnd())
         return it.value();
 

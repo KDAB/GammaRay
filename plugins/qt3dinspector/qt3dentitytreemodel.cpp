@@ -206,9 +206,8 @@ void Qt3DEntityTreeModel::objectCreated(QObject *obj)
     const auto index = indexForEntity(parentEntity);
     Q_ASSERT(index.isValid() || !parentEntity);
 
-    QVector<Qt3DCore::QEntity *> &children = m_parentChildMap[parentEntity];
-    QVector<Qt3DCore::QEntity *>::iterator it = std::lower_bound(children.begin(),
-                                                                 children.end(), entity);
+    auto &children = m_parentChildMap[parentEntity];
+    auto it = std::lower_bound(children.begin(), children.end(), entity);
     const int row = std::distance(children.begin(), it);
 
     beginInsertRows(index, row, row);

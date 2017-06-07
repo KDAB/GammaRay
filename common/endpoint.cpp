@@ -133,12 +133,14 @@ quint16 Endpoint::broadcastPort()
 
 void Endpoint::logTransmissionRate()
 {
-    if(m_bytesTransferred != 0)
+    if(m_bytesTransferred != 0) {
+        const float transmissionRate = (m_bytesTransferred * 8 / 1024.0 / 1024.0); // in Mpbs
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-        qCWarning(networkstatistics) << "TX: \t" << (m_bytesTransferred * 8 / 1024.0 / 1024.0) << "Mbps";
+        qCWarning(networkstatistics, "TX %7.3f Mbps", transmissionRate);
 #else
-        qDebug() << networkstatistics << "TX: \t" << (m_bytesTransferred * 8 / 1024.0 / 1024.0) << "Mbps";
+        qDebug("TX %7.3f Mbps", transmissionRate);
 #endif
+    }
     m_bytesTransferred = 0;
 }
 
@@ -174,8 +176,7 @@ void Endpoint::connectionClosed()
 
 Protocol::ObjectAddress Endpoint::objectAddress(const QString &objectName) const
 {
-    const QHash<QString, ObjectInfo *>::const_iterator it = m_nameMap.constFind(objectName);
-
+    auto it = m_nameMap.constFind(objectName);
     if (it != m_nameMap.constEnd())
         return it.value()->address;
 
@@ -330,8 +331,7 @@ void Endpoint::handlerDestroyed(QObject *obj)
 
 void Endpoint::dispatchMessage(const Message &msg)
 {
-    const QHash<Protocol::ObjectAddress, ObjectInfo *>::const_iterator it = m_addressMap.constFind(
-        msg.address());
+    auto it = m_addressMap.constFind(msg.address());
     if (it == m_addressMap.constEnd()) {
         cerr << "message for unknown object address received: " << quint64(msg.address()) << endl;
         return;
@@ -368,8 +368,7 @@ QVector< QPair< Protocol::ObjectAddress, QString > > Endpoint::objectAddresses()
 {
     QVector<QPair<Protocol::ObjectAddress, QString> > addrs;
     addrs.reserve(m_addressMap.size());
-    for (QHash<Protocol::ObjectAddress, ObjectInfo *>::const_iterator it = m_addressMap.constBegin();
-         it != m_addressMap.constEnd(); ++it) {
+    for (auto it = m_addressMap.constBegin(); it != m_addressMap.constEnd(); ++it) {
         addrs.push_back(qMakePair(it.key(), it.value()->name));
     }
     return addrs;

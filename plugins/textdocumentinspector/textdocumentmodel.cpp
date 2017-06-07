@@ -98,7 +98,7 @@ void TextDocumentModel::fillModel()
 
 void TextDocumentModel::fillFrame(QTextFrame *frame, QStandardItem *parent)
 {
-    for (QTextFrame::iterator it = frame->begin(); it != frame->end(); ++it)
+    for (auto it = frame->begin(); it != frame->end(); ++it)
         fillFrameIterator(it, parent);
 }
 
