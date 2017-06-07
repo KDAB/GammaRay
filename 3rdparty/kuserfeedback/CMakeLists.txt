@@ -30,7 +30,7 @@ qt4_wrap_ui(gammaray_userfeedback_srcs
 add_library(gammaray_kuserfeedback SHARED ${gammaray_userfeedback_srcs})
 # Disable warnings for generated stuff
 if(MSVC)
-    set_source_files_properties(common/surveytargetexpressionlexer.cpp PROPERTIES COMPILE_FLAGS "/we4018 /we4996")
+    set_source_files_properties(common/surveytargetexpressionlexer.cpp PROPERTIES COMPILE_FLAGS "/wd4018 /wd4996")
 else()
     set_source_files_properties(common/surveytargetexpressionlexer.cpp PROPERTIES COMPILE_FLAGS "-Wno-sign-compare -Wno-unneeded-internal-declaration")
 endif()
