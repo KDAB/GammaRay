@@ -78,7 +78,9 @@ public:
     void setUuid(const QUuid &id);
     void setUrl(const QUrl &url);
     void setTarget(const QString &target);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     static SurveyInfo fromJson(const QJsonObject &obj);
+#endif
     ///@endcond
 private:
     QSharedDataPointer<SurveyInfoData> d;

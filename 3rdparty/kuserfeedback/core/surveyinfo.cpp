@@ -89,19 +89,16 @@ void SurveyInfo::setTarget(const QString &target)
     d->target = target;
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 SurveyInfo SurveyInfo::fromJson(const QJsonObject& obj)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     SurveyInfo s;
     s.setUuid(obj.value(QLatin1String("uuid")).toString());
     s.setUrl(QUrl(obj.value(QLatin1String("url")).toString()));
     s.setTarget(obj.value(QLatin1String("target")).toString());
     return s;
-#else
-    Q_UNUSED(obj);
-    return SurveyInfo();
-#endif
 }
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include "surveyinfo.moc"
