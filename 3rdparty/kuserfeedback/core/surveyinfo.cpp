@@ -96,6 +96,8 @@ SurveyInfo SurveyInfo::fromJson(const QJsonObject& obj)
     s.setUuid(obj.value(QLatin1String("uuid")).toString());
     s.setUrl(QUrl(obj.value(QLatin1String("url")).toString()));
     s.setTarget(obj.value(QLatin1String("target")).toString());
+#else
+    Q_UNUSED(obj);
 #endif
     return s;
 }
