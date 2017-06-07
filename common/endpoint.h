@@ -168,6 +168,8 @@ signals:
     void objectRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
     void objectUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
+    void logTransmissionRate(int bytesRead, int bytesWritten);
+
 protected:
     Endpoint(QObject *parent = nullptr);
     /** Call with the socket once you have established a connection to another endpoint, takes ownership of @p device. */
@@ -255,7 +257,8 @@ private:
 
     QPointer<QIODevice> m_socket;
     Protocol::ObjectAddress m_myAddress;
-    int m_bytesTransferred;
+    int m_bytesRead;
+    int m_bytesWritten;
     QTimer *m_bandwidthMeasurementTimer;
 
     QString m_label;

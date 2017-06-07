@@ -93,6 +93,7 @@ private slots:
     void quitHost();
     void detachProbe();
     void navigateToCode(const QUrl &url, int lineNumber, int columnNumber);
+    void logTransmissionRate(int bytesRead, int bytesWritten);
     void setCodeNavigationIDE(QAction *action);
 
 private:
