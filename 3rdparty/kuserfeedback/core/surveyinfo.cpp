@@ -91,15 +91,16 @@ void SurveyInfo::setTarget(const QString &target)
 
 SurveyInfo SurveyInfo::fromJson(const QJsonObject& obj)
 {
-    SurveyInfo s;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    SurveyInfo s;
     s.setUuid(obj.value(QLatin1String("uuid")).toString());
     s.setUrl(QUrl(obj.value(QLatin1String("url")).toString()));
     s.setTarget(obj.value(QLatin1String("target")).toString());
+    return s;
 #else
     Q_UNUSED(obj);
+    return SurveyInfo();
 #endif
-    return s;
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
