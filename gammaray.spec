@@ -116,6 +116,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/libgammaray_ui-*.so.*
 %{_libdir}/libgammaray_client.so.*
 %{_libdir}/libgammaray_kitemmodels*
+%{_libdir}/libgammaray_kuserfeedback*
 %{_libdir}/libgammaray_launcher*
 %dir %{_libdir}/gammaray/
 %dir %{_libdir}/gammaray/*/
@@ -128,6 +129,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_codecbrowser*
 %{_libdir}/gammaray/*/*/gammaray_fontbrowser*
 %{_libdir}/gammaray/*/*/gammaray_guisupport*
+%{_libdir}/gammaray/*/*/gammaray_localeinspector*
 %{_libdir}/gammaray/*/*/gammaray_mimetypes*
 %{_libdir}/gammaray/*/*/gammaray_modelinspector*
 %{_libdir}/gammaray/*/*/gammaray_network*

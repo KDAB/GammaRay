@@ -79,6 +79,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/libgammaray_core-*.so.*
 %{_libdir}/libgammaray_ui-*.so.*
 %{_libdir}/libgammaray_kitemmodels*
+%{_libdir}/libgammaray_kuserfeedback*
 %dir %{_libdir}/gammaray/
 %dir %{_libdir}/gammaray/*/
 %dir %{_libdir}/gammaray/*/*/
@@ -89,6 +90,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/gammaray/*/*/gammaray_codecbrowser*
 %{_libdir}/gammaray/*/*/gammaray_fontbrowser*
 %{_libdir}/gammaray/*/*/gammaray_guisupport*
+%{_libdir}/gammaray/*/*/gammaray_localeinspector*
 %{_libdir}/gammaray/*/*/gammaray_modelinspector*
 %{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
 %{_libdir}/gammaray/*/*/gammaray_sceneinspector*
@@ -100,7 +102,6 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/gammaray/*/*/gammaray_timertop*
 %{_libdir}/gammaray/*/*/gammaray_webinspector*
 %{_libdir}/gammaray/*/*/gammaray_widgetinspector*
-%{_libdir}/gammaray/*/*/styles/
 %exclude %{_libdir}/*.so
 %exclude %{_prefix}/share/icons/hicolor/*
 
