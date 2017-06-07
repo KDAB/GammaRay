@@ -33,8 +33,6 @@
  *  Compatibility hacks to allow usage of more modern Qt5/C++11 features in Qt4 builds.
  */
 
-#define override
-
 #define QStringLiteral(str) QString::fromUtf8("" str "", sizeof(str) - 1)
 #define QByteArrayLiteral(str) QByteArray("" str "", sizeof(str) - 1)
 
