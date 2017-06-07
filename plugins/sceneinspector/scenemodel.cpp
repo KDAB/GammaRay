@@ -175,7 +175,7 @@ QVariant SceneModel::headerData(int section, Qt::Orientation orientation, int ro
 
 QString SceneModel::typeName(int itemType) const
 {
-    const QHash<int, QString>::const_iterator it = m_typeNames.find(itemType);
+    auto it = m_typeNames.find(itemType);
     if (it != m_typeNames.end())
         return it.value();
     if (itemType == QGraphicsItem::UserType)

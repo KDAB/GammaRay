@@ -113,8 +113,7 @@ QMap<int, QVariant> QuickItemModel::itemData(const QModelIndex &index) const
 
 void QuickItemModel::clear()
 {
-    for (QHash<QQuickItem *, QQuickItem *>::const_iterator it = m_childParentMap.constBegin();
-         it != m_childParentMap.constEnd(); ++it)
+    for (auto it = m_childParentMap.constBegin(); it != m_childParentMap.constEnd(); ++it)
         disconnect(it.key(), nullptr, this, nullptr);
     m_childParentMap.clear();
     m_parentChildMap.clear();
@@ -292,9 +291,8 @@ void QuickItemModel::itemReparented()
 
     const QModelIndex sourceParentIndex = indexForItem(sourceParent);
 
-    QVector<QQuickItem *> &sourceSiblings = m_parentChildMap[sourceParent];
-    QVector<QQuickItem *>::iterator sit
-        = std::lower_bound(sourceSiblings.begin(), sourceSiblings.end(), item);
+    auto &sourceSiblings = m_parentChildMap[sourceParent];
+    auto sit = std::lower_bound(sourceSiblings.begin(), sourceSiblings.end(), item);
     Q_ASSERT(sit != sourceSiblings.end() && *sit == item);
     const int sourceRow = std::distance(sourceSiblings.begin(), sit);
 
@@ -303,8 +301,7 @@ void QuickItemModel::itemReparented()
     const QModelIndex destParentIndex = indexForItem(destParent);
 
     QVector<QQuickItem *> &destSiblings = m_parentChildMap[destParent];
-    QVector<QQuickItem *>::iterator dit
-        = std::lower_bound(destSiblings.begin(), destSiblings.end(), item);
+    auto dit = std::lower_bound(destSiblings.begin(), destSiblings.end(), item);
     const int destRow = std::distance(destSiblings.begin(), dit);
 
     beginMoveRows(sourceParentIndex, sourceRow, sourceRow, destParentIndex, destRow);

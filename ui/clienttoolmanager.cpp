@@ -230,7 +230,7 @@ QWidget *ClientToolManager::widgetForIndex(int index) const
     const ToolInfo &tool = m_tools.at(index);
     if (!tool.isEnabled())
         return nullptr;
-    const WidgetsHash::const_iterator it = m_widgets.constFind(tool.id());
+    auto it = m_widgets.constFind(tool.id());
     if (it != m_widgets.constEnd() && it.value())
         return it.value();
     ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id());

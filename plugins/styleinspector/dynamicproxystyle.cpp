@@ -72,7 +72,7 @@ void DynamicProxyStyle::setStyleHint(QStyle::StyleHint hint, int value)
 int DynamicProxyStyle::pixelMetric(QStyle::PixelMetric metric, const QStyleOption *option,
                                    const QWidget *widget) const
 {
-    QHash<QStyle::PixelMetric, int>::const_iterator it = m_pixelMetrics.find(metric);
+    auto it = m_pixelMetrics.find(metric);
     if (it != m_pixelMetrics.end())
         return it.value();
     return QProxyStyle::pixelMetric(metric, option, widget);

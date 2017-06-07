@@ -255,8 +255,7 @@ QModelIndex ObjectTreeModel::indexForObject(QObject *object) const
     if (!parentIndex.isValid() && parent)
         return QModelIndex();
     const QVector<QObject *> &siblings = m_parentChildMap[ parent ];
-    QVector<QObject *>::const_iterator it = std::lower_bound(
-        siblings.constBegin(), siblings.constEnd(), object);
+    auto it = std::lower_bound(siblings.constBegin(), siblings.constEnd(), object);
     if (it == siblings.constEnd() || *it != object)
         return QModelIndex();
 

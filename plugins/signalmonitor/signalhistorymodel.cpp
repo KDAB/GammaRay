@@ -52,8 +52,7 @@ static T internString(const T &str)
     static QSet<T> pool;
 
     // Check if the pool already contains the string...
-    const typename QSet<T>::const_iterator it = pool.find(str);
-
+    auto it = pool.find(str);
     // ...and return it if possible.
     if (it != pool.end())
         return *it;

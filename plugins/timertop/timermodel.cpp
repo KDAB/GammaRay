@@ -174,7 +174,7 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
 
 void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
 {
-    QHash<QObject *, TimerInfoPtr>::iterator it = m_currentSignals.find(caller);
+    auto it = m_currentSignals.find(caller);
     if (it == m_currentSignals.end()) {
         // Ok, likely a GammaRay timer
         // cout << "TimerModel::postSignalActivate(): Unable to find timer "

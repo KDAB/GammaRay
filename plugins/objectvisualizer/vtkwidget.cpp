@@ -282,7 +282,7 @@ qulonglong VtkWidget::addObject(const QModelIndex &index)
     static int colorIndex = 0;
     colorIndex = colorIndex % 10;
 
-    QMap< QString, int >::const_iterator it = m_typeColorMap.constFind(className);
+    auto it = m_typeColorMap.constFind(className);
     if (it != m_typeColorMap.constEnd()) {
         m_vertexPropertyArr->SetValue(2, it.value());
     } else {

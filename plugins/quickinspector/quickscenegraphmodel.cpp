@@ -188,8 +188,8 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
 
     std::sort(newChildList.begin(), newChildList.end());
 
-    QVector<QSGNode *>::iterator i = childList.begin();
-    QVector<QSGNode *>::const_iterator j = newChildList.constBegin();
+    auto i = childList.begin();
+    auto j = newChildList.constBegin();
 
     while (i != childList.end() && j != newChildList.constEnd()) {
         if (*i < *j) { // handle deleted node
@@ -328,9 +328,7 @@ QModelIndex QuickSceneGraphModel::indexForNode(QSGNode *node) const
         return QModelIndex();
 
     const QVector<QSGNode *> &siblings = m_parentChildMap[parent];
-    QVector<QSGNode *>::const_iterator it
-        = std::lower_bound(siblings.constBegin(), siblings.constEnd(), node);
-
+    auto it = std::lower_bound(siblings.constBegin(), siblings.constEnd(), node);
     if (it == siblings.constEnd() || *it != node)
         return QModelIndex();
 

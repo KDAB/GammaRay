@@ -76,7 +76,7 @@ bool ObjectBroker::hasObject(const QString &name)
 
 QObject *ObjectBroker::objectInternal(const QString &name, const QByteArray &type)
 {
-    const QHash<QString, QObject *>::const_iterator it = s_objectBroker()->objects.constFind(name);
+    auto it = s_objectBroker()->objects.constFind(name);
     if (it != s_objectBroker()->objects.constEnd())
         return it.value();
 
@@ -119,8 +119,7 @@ void ObjectBroker::registerModelInternal(const QString &name, QAbstractItemModel
 QAbstractItemModel *ObjectBroker::model(const QString &name)
 {
     ModelEvent event(true);
-    const QHash<QString,
-                QAbstractItemModel *>::const_iterator it = s_objectBroker()->models.constFind(name);
+    auto it = s_objectBroker()->models.constFind(name);
     if (it != s_objectBroker()->models.constEnd()) {
         QCoreApplication::sendEvent(it.value(), &event);
         return it.value();
@@ -179,10 +178,7 @@ static QAbstractItemModel *sourceModelForProxy(QAbstractItemModel *model)
 
 QItemSelectionModel *ObjectBroker::selectionModel(QAbstractItemModel *model)
 {
-    const QHash<QAbstractItemModel *,
-                QItemSelectionModel *>::const_iterator it
-        = s_objectBroker()->selectionModels.constFind(
-        model);
+    auto it = s_objectBroker()->selectionModels.constFind(model);
     if (it != s_objectBroker()->selectionModels.constEnd())
         return it.value();
 
