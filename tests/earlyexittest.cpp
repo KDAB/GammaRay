@@ -75,7 +75,7 @@ private slots:
 
     void testNonExistingTargetDebugger_data()
     {
-        QTest::addColumn<QString>("injectorType");
+        QTest::addColumn<QString>("injectorType", nullptr);
         QTest::newRow("dummy") << QString(); // QTestlib fails when the test data is empty...
         if (hasInjector("gdb"))
             QTest::newRow("gdb") << QStringLiteral("gdb");
@@ -148,7 +148,7 @@ private slots:
 
     void testStop_data()
     {
-        QTest::addColumn<QString>("injectorType");
+        QTest::addColumn<QString>("injectorType", nullptr);
         QTest::newRow("default") << QString();
         if (hasInjector("gdb"))
             QTest::newRow("gdb") << QStringLiteral("gdb");
