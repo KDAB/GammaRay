@@ -25,9 +25,9 @@ qt4_wrap_ui(gammaray_launcher_ui_srcs
 
 add_library(gammaray_launcher_ui SHARED ${gammaray_launcher_ui_srcs})
 generate_export_header(gammaray_launcher_ui)
-set_target_properties(gammaray_launcher PROPERTIES ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES})
+set_target_properties(gammaray_launcher_ui PROPERTIES ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES})
 
-target_include_directories(gammaray_launcher PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+target_include_directories(gammaray_launcher_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 target_link_libraries(gammaray_launcher_ui
   LINK_PUBLIC
   gammaray_launcher

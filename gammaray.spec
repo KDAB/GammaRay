@@ -12,7 +12,7 @@ Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
 BuildRequires: cmake kdstatemachineeditor-devel
 %if %{defined suse_version}
-BuildRequires: libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel
+BuildRequires: libqt5-qtbase-private-headers-devel libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel
 %if 0%{?suse_version} > 1320
 BuildRequires: libqt5-qtconnectivity-devel
 %endif
