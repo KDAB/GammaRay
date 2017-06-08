@@ -315,8 +315,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     const bool developerModeEnabled = !QString::fromLocal8Bit(qgetenv("GAMMARAY_DEVELOPERMODE")).isEmpty();
     if (developerModeEnabled) {
-        connect(Endpoint::instance(), SIGNAL(logTransmissionRate(int,int)),
-                this, SLOT(logTransmissionRate(int,int)));
+        connect(Endpoint::instance(), SIGNAL(logTransmissionRate(quint64,quint64)),
+                this, SLOT(logTransmissionRate(quint64,quint64)));
     } else {
         ui->statusBar->hide();
     }
