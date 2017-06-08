@@ -135,9 +135,11 @@ void QuickItemModel::populateFromItem(QQuickItem *item)
     QVector<QQuickItem *> &children = m_parentChildMap[item->parentItem()];
     std::sort(children.begin(), children.end());
 
-    // Make sure every items are known to the objects model as this is not always
-    // the case when attaching to running process (OSX)
-    Probe::instance()->discoverObject(item);
+    if (Probe::instance()) {
+        // Make sure every items are known to the objects model as this is not always
+        // the case when attaching to running process (OSX)
+        Probe::instance()->discoverObject(item);
+    }
 }
 
 void QuickItemModel::connectItem(QQuickItem *item)
