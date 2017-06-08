@@ -51,7 +51,8 @@ Endpoint::Endpoint(QObject *parent)
     , m_propertySyncer(new PropertySyncer(this))
     , m_socket(nullptr)
     , m_myAddress(Protocol::InvalidObjectAddress +1)
-    , m_bytesTransferred(0)
+    , m_bytesRead(0)
+    , m_bytesWritten(0)
     , m_pid(-1)
 {
     if (s_instance) {
@@ -108,7 +109,7 @@ void Endpoint::doSendMessage(const GammaRay::Message &msg)
 {
     Q_ASSERT(msg.address() != Protocol::InvalidObjectAddress);
     msg.write(m_socket);
-    m_bytesTransferred += msg.size();
+    m_bytesWritten += msg.size();
 }
 
 void Endpoint::waitForMessagesWritten()
@@ -133,15 +134,21 @@ quint16 Endpoint::broadcastPort()
 
 void Endpoint::logTransmissionRate()
 {
-    if(m_bytesTransferred != 0) {
-        const float transmissionRate = (m_bytesTransferred * 8 / 1024.0 / 1024.0); // in Mpbs
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-        qCWarning(networkstatistics, "TX %7.3f Mbps", transmissionRate);
-#else
-        qDebug("TX %7.3f Mbps", transmissionRate);
-#endif
+    emit logTransmissionRate(m_bytesRead, m_bytesWritten);
+
+    if(!isRemoteClient()) {
+        if(m_bytesRead != 0 || m_bytesWritten != 0) {
+            const float transmissionRateRX = (m_bytesRead * 8 / 1024.0 / 1024.0); // in Mpbs
+            const float transmissionRateTX = (m_bytesWritten * 8 / 1024.0 / 1024.0); // in Mpbs
+    #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+            qCWarning(networkstatistics, "RX %7.3f Mbps | TX %7.3f Mbps", transmissionRateRX, transmissionRateTX);
+    #else
+            qDebug("RX %7.3f Mbps | TX %7.3f Mbps", transmissionRateRX, transmissionRateTX);
+    #endif
+        }
     }
-    m_bytesTransferred = 0;
+    m_bytesRead = 0;
+    m_bytesWritten = 0;
 }
 
 void Endpoint::setDevice(QIODevice *device)
@@ -162,8 +169,11 @@ Protocol::ObjectAddress Endpoint::endpointAddress() const
 
 void Endpoint::readyRead()
 {
-    while (Message::canReadMessage(m_socket.data()))
-        messageReceived(Message::readMessage(m_socket.data()));
+    while (Message::canReadMessage(m_socket.data())) {
+        const auto msg = Message::readMessage(m_socket.data());
+        m_bytesRead += msg.size();
+        messageReceived(msg);
+    }
 }
 
 void Endpoint::connectionClosed()

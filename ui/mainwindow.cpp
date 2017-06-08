@@ -313,6 +313,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(UiIntegration::instance(), SIGNAL(navigateToCode(QUrl,int,int)), this,
             SLOT(navigateToCode(QUrl,int,int)));
 
+    const bool developerModeEnabled = !QString::fromLocal8Bit(qgetenv("GAMMARAY_DEVELOPERMODE")).isEmpty();
+    if (developerModeEnabled) {
+        connect(Endpoint::instance(), SIGNAL(logTransmissionRate(int,int)),
+                this, SLOT(logTransmissionRate(int,int)));
+    } else {
+        ui->statusBar->hide();
+    }
+
     connect(this, SIGNAL(targetQuitRequested()), &m_stateManager, SLOT(saveState()));
 }
 
@@ -543,6 +551,15 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
             QProcess::startDetached(command);
         }
     }
+}
+
+void MainWindow::logTransmissionRate(int bytesRead, int bytesWritten)
+{
+    const double transmissionRateRX = (bytesRead * 8 / 1024.0 / 1024.0); // in Mpbs
+    const double transmissionRateTX = (bytesWritten * 8 / 1024.0 / 1024.0); // in Mpbs
+    ui->statusBar->showMessage(tr("Transmission rate: RX %1 Mbps, TX %2 Mbps")
+        .arg(transmissionRateRX, 7, 'f', 3)
+        .arg(transmissionRateTX, 7, 'f', 3));
 }
 
 void GammaRay::MainWindow::setCodeNavigationIDE(QAction *action)
