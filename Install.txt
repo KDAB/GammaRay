@@ -49,7 +49,7 @@ $ mkdir android-build
 $ cd android-build
 $ export ANDROID_NDK=~/path/to/android-ndk
 $ cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-android.cmake \
-        -DGAMMARAY_PROBE_ONLY_BUILD=true \
+        -DGAMMARAY_BUILD_UI=OFF \
         -DCMAKE_PREFIX_PATH=/android/qt5/install/path \
         -DCMAKE_INSTALL_PREFIX=/android/qt5/install/path ..
 $ make [-j CPU_NUMBER+2]
