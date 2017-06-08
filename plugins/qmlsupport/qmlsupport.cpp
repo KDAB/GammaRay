@@ -230,7 +230,21 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
 
 QString QmlObjectDataProvider::shortTypeName(QObject *obj) const
 {
-    return typeName(obj).section(QLatin1Char('/'), -1, -1);
+    auto n = typeName(obj);
+    const auto isQmlType = !n.isEmpty();
+    if (isQmlType)
+        n = n.section(QLatin1Char('/'), -1, -1); // strip off the namespace
+    else
+        n = obj->metaObject()->className();
+
+    auto idx = n.indexOf(QLatin1String("_QMLTYPE_"));
+    if (idx > 0)
+        return n.left(idx);
+    idx = n.indexOf(QLatin1String("_QML_"));
+    if (idx > 0)
+        return n.left(idx);
+
+    return isQmlType ? n : QString(); // let somebody else handle shortening of non-QML names
 }
 
 SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
