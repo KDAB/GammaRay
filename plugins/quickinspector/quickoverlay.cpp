@@ -58,23 +58,13 @@ namespace GammaRay {
 // flickering due to color change.
 static QHash<QQuickItem *, QColor> s_itemsColor;
 
-// Return light color ranges
-static int randomColorPart()
-{
-    static int min = 100;
-    static int max = 170;
-    return qFloor(qrand() % (max - min + 1) + min);
-}
-
 static QColor colorForItem(QQuickItem *item)
 {
     QColor color = s_itemsColor.value(item, QColor());
 
     if (!color.isValid()) {
-        color = QColor(randomColorPart(),
-                       randomColorPart(),
-                       randomColorPart(),
-                       180);
+        const auto h = qHash(ObjectDataProvider::shortTypeName(item));
+        color = QColor::fromHsv(h % 360, 64 + h % 192, 128 + h % 128, 64);
         s_itemsColor[item] = color;
     }
 
