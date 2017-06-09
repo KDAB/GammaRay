@@ -499,16 +499,22 @@ void QuickInspector::setCustomRenderMode(
 #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    // Qt does some performance optimizations that break custom render modes.
-    // Thus the optimizations are only applied if there is no custom render mode set.
-    // So we need to make the scenegraph recheck whether a custom render mode is set.
-    // We do this by simply cleaning the scene graph which will recreate the renderer.
-    // We need however to do that at the proper time from the gui thread.
-    QMutexLocker lock(&m_pendingRenderMode.mutex);
-    m_pendingRenderMode.mode = customRenderMode;
-    m_pendingRenderMode.window = m_window;
-    if (m_window && !m_pendingRenderMode.connection) {
-        m_pendingRenderMode.connection = connect(m_window.data(), &QQuickWindow::afterAnimating, this, &QuickInspector::applyRenderMode, Qt::DirectConnection);
+    if (m_window) {
+        // Qt does some performance optimizations that break custom render modes.
+        // Thus the optimizations are only applied if there is no custom render mode set.
+        // So we need to make the scenegraph recheck whether a custom render mode is set.
+        // We do this by simply cleaning the scene graph which will recreate the renderer.
+        // We need however to do that at the proper time from the gui thread.
+        QMutexLocker lock(&m_pendingRenderMode.mutex);
+
+        if (!m_pendingRenderMode.connection ||
+                (m_pendingRenderMode.mode != customRenderMode || m_pendingRenderMode.window != m_window)) {
+            if (m_pendingRenderMode.connection)
+                disconnect(m_pendingRenderMode.connection);
+            m_pendingRenderMode.mode = customRenderMode;
+            m_pendingRenderMode.window = m_window;
+            m_pendingRenderMode.connection = connect(m_window.data(), &QQuickWindow::afterAnimating, this, &QuickInspector::applyRenderMode, Qt::DirectConnection);
+        }
     }
 
 #else
