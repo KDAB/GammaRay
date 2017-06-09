@@ -534,6 +534,8 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             doMoveRows(sourceParent, sourceFirst, sourceLast, destParent, destChild);
             break;
         }
+
+	break;
     }
 
     case Protocol::ModelColumnsAdded:
