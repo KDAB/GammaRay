@@ -29,8 +29,13 @@
 #include "qmlbindingnode.h"
 #include <core/util.h>
 
+#define USE_QT_BINDINGDEPENDENCY_API
+
+#ifndef USE_QT_BINDINGDEPENDENCY_API
 #define private public
 #define protected public
+#endif
+
 #include <QDebug>
 
 #include <private/qqmlabstractbinding_p.h>
@@ -108,7 +113,6 @@ QmlBindingNode::QmlBindingNode(QObject* object, int propertyIndex, QmlBindingNod
 QmlBindingNode::QmlBindingNode(QQmlBinding* binding, QmlBindingNode *parent)
     : m_parent(parent)
     , m_object(binding->targetObject())
-    , m_id(QQmlEngine::contextForObject(m_object)->nameForObject(m_object))
     , m_binding(binding)
 
 {
@@ -118,10 +122,37 @@ QmlBindingNode::QmlBindingNode(QQmlBinding* binding, QmlBindingNode *parent)
     m_propertyIndex = m_binding->targetPropertyIndex().coreIndex();
 #endif
 
+    QQmlContext *ctx = QQmlEngine::contextForObject(m_object);
+    if (ctx) {
+        m_id = ctx->nameForObject(m_object);
+    }
+
     refreshValue();
     fetchBindingCode();
     checkForLoops();
     findDependencies();
+}
+
+QmlBindingNode::QmlBindingNode(QQmlProperty property, QmlBindingNode* parent)
+    : m_parent(parent)
+    , m_object(property.object())
+    , m_propertyIndex(property.index())
+{
+    m_binding = bindingForProperty(m_object, m_propertyIndex);
+
+    QQmlContext *ctx = QQmlEngine::contextForObject(m_object);
+    if (ctx) {
+        m_id = ctx->nameForObject(m_object);
+    }
+
+    if (m_binding) {
+        fetchBindingCode();
+        checkForLoops();
+        findDependencies();
+    } else {
+        fetchPropertyCode();
+    }
+    refreshValue();
 }
 
 void GammaRay::QmlBindingNode::fetchPropertyCode()
@@ -131,6 +162,7 @@ void GammaRay::QmlBindingNode::fetchPropertyCode()
 
 void GammaRay::QmlBindingNode::fetchBindingCode()
 {
+    return;
 #if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
     QQmlEnginePrivate *ep = QQmlEnginePrivate::get(QQmlData::get(m_object)->context->engine);
     QV4::Scope scope(ep->v4engine());
@@ -142,6 +174,10 @@ void GammaRay::QmlBindingNode::fetchBindingCode()
     m_sourceLocation = SourceLocation(QUrl(loc.sourceFile), loc.line, loc.column);
 #endif
 
+    QString fileName = function->compilationUnit->fileName();
+    if (fileName.isEmpty()) {
+        return;
+    }
     QFile codeFile(QUrl(function->compilationUnit->fileName()).toLocalFile());
     if (!codeFile.open(QIODevice::ReadOnly)) {
         qDebug() << "Can't open file :(";
@@ -178,6 +214,11 @@ void GammaRay::QmlBindingNode::findDependencies()
     if (m_isBindingLoop) // Don't look for further dependencies, if this is already known to be part of a loop.
         return;
 
+#ifdef USE_QT_BINDINGDEPENDENCY_API
+    for (const auto &dependency : m_binding->dependencies()) {
+        m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(dependency, this)));
+    }
+#else
     auto context = QQmlEngine::contextForObject(m_object);
     QQmlEnginePrivate *ep = QQmlEnginePrivate::get(QQmlData::get(m_object)->context->engine);
     QV4::Scope scope(ep->v4engine());
@@ -206,17 +247,6 @@ void GammaRay::QmlBindingNode::findDependencies()
         auto notifyIndex = *(scopePropertiesDependencyTable + 2*i + 1);
         auto dependencyNode = new QmlBindingNode(m_object, propertyIndex, this);
         m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(dependencyNode));
-
-//         // Find out, if this dependency is actually active
-//         dependencyNode->m_isActive = false;
-//         auto guards = m_binding->permanentGuards;
-//         QQmlJavaScriptExpressionGuard *guard = guards.first();
-//         while (guard) {
-//             if (guard->senderAsObject() == m_object && guard->signalIndex() == notifyIndex) {
-//                 dependencyNode->m_isActive = true;
-//             }
-//             guard = guards.next(guard);
-//         }
     }
 
 
@@ -248,6 +278,7 @@ void GammaRay::QmlBindingNode::findDependencies()
     std::sort(m_dependencies.begin(), m_dependencies.end(), [](std::unique_ptr<QmlBindingNode> &a, std::unique_ptr<QmlBindingNode> &b) {
         return *a < *b;
     });
+#endif
 }
 
 bool QmlBindingNode::operator<(const QmlBindingNode& other) const

@@ -43,6 +43,11 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
         }
         Button {
+            text: "b.x--"
+            onClicked: b.x--;
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Button {
             text: "b.y++"
             onClicked: b.y++;
             anchors.horizontalCenter: parent.horizontalCenter

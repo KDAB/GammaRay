@@ -29,10 +29,11 @@
 #ifndef GAMMARAY_QMLBINDINGMODEL_H
 #define GAMMARAY_QMLBINDINGMODEL_H
 
-#include <QAbstractTableModel>
+#include <QAbstractItemModel>
 #include <QVector>
 #include <memory>
 #include <vector>
+#include <QPointer>
 
 class QQmlBinding;
 
@@ -63,11 +64,12 @@ public slots:
     void propertyChanged();
 
 private:
+    QModelIndex findEquivalent(const std::vector<std::unique_ptr<QmlBindingNode>> &container, QmlBindingNode *bindingNode) const;
     std::vector<std::unique_ptr<QmlBindingNode>> bindingsFromObject(QObject *obj);
     void refresh(QmlBindingNode *oldBindingNode, QmlBindingNode *newBindingNode,
                  const QModelIndex &index, bool emitSignals);
 
-    QObject *m_obj;
+    QPointer<QObject> m_obj;
     std::vector<std::unique_ptr<QmlBindingNode>> m_bindings;
     std::vector<QmlBindingNode *> m_currentInvestigationPath; // This stack is used to store temporary
                                                            // information while investigating all bindings

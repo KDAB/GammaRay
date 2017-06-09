@@ -35,6 +35,7 @@
 #include <vector>
 
 #include <common/sourcelocation.h>
+#include <QQmlProperty>
 
 class QQmlBinding;
 
@@ -45,6 +46,7 @@ public:
 
     QmlBindingNode(QQmlBinding *binding, QmlBindingNode *parent = Q_NULLPTR);
     QmlBindingNode(QObject *object, int propertyIndex, QmlBindingNode *parent = Q_NULLPTR);
+    QmlBindingNode(QQmlProperty property, QmlBindingNode *parent = Q_NULLPTR);
 
     QmlBindingNode *parent() const;
     void setParent(QmlBindingNode *parent);
