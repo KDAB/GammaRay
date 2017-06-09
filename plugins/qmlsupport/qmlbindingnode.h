@@ -37,14 +37,14 @@
 #include <common/sourcelocation.h>
 #include <QQmlProperty>
 
-class QQmlBinding;
+class QQmlAbstractBinding;
 
 namespace GammaRay {
 
 class QmlBindingNode {
 public:
 
-    QmlBindingNode(QQmlBinding *binding, QmlBindingNode *parent = Q_NULLPTR);
+    QmlBindingNode(QQmlAbstractBinding *binding, QmlBindingNode *parent = Q_NULLPTR);
     QmlBindingNode(QObject *object, int propertyIndex, QmlBindingNode *parent = Q_NULLPTR);
     QmlBindingNode(QQmlProperty property, QmlBindingNode *parent = Q_NULLPTR);
 
@@ -58,7 +58,7 @@ public:
     const QString &id() const;
     int propertyIndex() const;
     QMetaProperty property() const;
-    QQmlBinding *binding() const;
+    QQmlAbstractBinding *binding() const;
     bool isBinding() const;
     bool isActive() const;
     bool isBindingLoop() const;
@@ -75,7 +75,7 @@ public:
     bool operator>(const QmlBindingNode &other) const;
 
 private:
-    static QQmlBinding *bindingForProperty(QObject *obj, int propertyIndex);
+    static QQmlAbstractBinding *bindingForProperty(QObject *obj, int propertyIndex);
 
     void checkForLoops();
     void findDependencies();
@@ -86,7 +86,7 @@ private:
     QObject *m_object;
     QString m_id;
     int m_propertyIndex;
-    QQmlBinding *m_binding = Q_NULLPTR;
+    QQmlAbstractBinding *m_binding = Q_NULLPTR;
     QVariant m_value;
     bool m_isActive = true;
     bool m_isBindingLoop = false;

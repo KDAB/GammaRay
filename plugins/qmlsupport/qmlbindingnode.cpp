@@ -64,7 +64,7 @@ QDebug &GammaRay::operator<< (QDebug dbg, const QmlBindingNode &node)
     return dbg;
 }
 
-QQmlBinding *QmlBindingNode::bindingForProperty(QObject *obj, int propertyIndex)
+QQmlAbstractBinding *QmlBindingNode::bindingForProperty(QObject *obj, int propertyIndex)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     auto data = QQmlData::get(obj);
@@ -73,9 +73,6 @@ QQmlBinding *QmlBindingNode::bindingForProperty(QObject *obj, int propertyIndex)
 
     auto b = data->bindings;
     while (b) {
-        auto binding = dynamic_cast<QQmlBinding*>(b);
-        if (!binding)
-            return Q_NULLPTR;
         int index;
 #if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
         QQmlPropertyData::decodeValueTypePropertyIndex(b->targetPropertyIndex(), &index);
@@ -84,7 +81,7 @@ QQmlBinding *QmlBindingNode::bindingForProperty(QObject *obj, int propertyIndex)
 #endif
 
         if (index == propertyIndex) {
-            return binding;
+            return b;
         }
         b = b->nextBinding();
     }
@@ -110,7 +107,7 @@ QmlBindingNode::QmlBindingNode(QObject* object, int propertyIndex, QmlBindingNod
 }
 
 
-QmlBindingNode::QmlBindingNode(QQmlBinding* binding, QmlBindingNode *parent)
+QmlBindingNode::QmlBindingNode(QQmlAbstractBinding* binding, QmlBindingNode *parent)
     : m_parent(parent)
     , m_object(binding->targetObject())
     , m_binding(binding)
@@ -163,35 +160,35 @@ void GammaRay::QmlBindingNode::fetchPropertyCode()
 void GammaRay::QmlBindingNode::fetchBindingCode()
 {
     return;
-#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
-    QQmlEnginePrivate *ep = QQmlEnginePrivate::get(QQmlData::get(m_object)->context->engine);
-    QV4::Scope scope(ep->v4engine());
-    QV4::ScopedValue f(scope, m_binding->m_function.value());
-    QV4::Function *function = f->as<QV4::FunctionObject>()->function();
-#else
-    QV4::Function *function = m_binding->function();
-    QQmlSourceLocation loc = function->sourceLocation();
-    m_sourceLocation = SourceLocation(QUrl(loc.sourceFile), loc.line, loc.column);
-#endif
-
-    QString fileName = function->compilationUnit->fileName();
-    if (fileName.isEmpty()) {
-        return;
-    }
-    QFile codeFile(QUrl(function->compilationUnit->fileName()).toLocalFile());
-    if (!codeFile.open(QIODevice::ReadOnly)) {
-        qDebug() << "Can't open file :(";
-        return;
-    }
-
-    codeFile.waitForReadyRead(1000);
-    for (uint i = 1; i < function->compiledFunction->location.line; i++)
-        codeFile.readLine();
-    if (!codeFile.canReadLine()) {
-        qDebug() << "File ends before line" << function->compiledFunction->location.line;
-    }
-
-    m_expression = QString(codeFile.readLine()).trimmed();
+// #if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
+//     QQmlEnginePrivate *ep = QQmlEnginePrivate::get(QQmlData::get(m_object)->context->engine);
+//     QV4::Scope scope(ep->v4engine());
+//     QV4::ScopedValue f(scope, m_binding->m_function.value());
+//     QV4::Function *function = f->as<QV4::FunctionObject>()->function();
+// #else
+//     QV4::Function *function = m_binding->function();
+//     QQmlSourceLocation loc = function->sourceLocation();
+//     m_sourceLocation = SourceLocation(QUrl(loc.sourceFile), loc.line, loc.column);
+// #endif
+//
+//     QString fileName = function->compilationUnit->fileName();
+//     if (fileName.isEmpty()) {
+//         return;
+//     }
+//     QFile codeFile(QUrl(function->compilationUnit->fileName()).toLocalFile());
+//     if (!codeFile.open(QIODevice::ReadOnly)) {
+//         qDebug() << "Can't open file :(";
+//         return;
+//     }
+//
+//     codeFile.waitForReadyRead(1000);
+//     for (uint i = 1; i < function->compiledFunction->location.line; i++)
+//         codeFile.readLine();
+//     if (!codeFile.canReadLine()) {
+//         qDebug() << "File ends before line" << function->compiledFunction->location.line;
+//     }
+//
+//     m_expression = QString(codeFile.readLine()).trimmed();
 }
 
 void GammaRay::QmlBindingNode::checkForLoops()
@@ -312,7 +309,7 @@ const QString &QmlBindingNode::expression() const
     return m_expression;
 }
 
-QQmlBinding *QmlBindingNode::binding() const
+QQmlAbstractBinding *QmlBindingNode::binding() const
 {
     return m_binding;
 }

@@ -161,16 +161,10 @@ std::vector<std::unique_ptr<QmlBindingNode>> QmlBindingModel::bindingsFromObject
 
     auto b = data->bindings;
     while (b) {
-        if (auto qmlBinding = dynamic_cast<QQmlBinding*>(b)) {
-            QmlBindingNode *node;
+        QmlBindingNode *node = new QmlBindingNode(b);
+        QMetaObject::connect(obj, node->property().notifySignalIndex(), this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);
 
-            node = new QmlBindingNode(qmlBinding);
-            QMetaObject::connect(obj, node->property().notifySignalIndex(), this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);
-
-            bindings.push_back(std::unique_ptr<QmlBindingNode>(node));
-        } else {
-            qDebug() << "Ohhh...";
-        }
+        bindings.push_back(std::unique_ptr<QmlBindingNode>(node));
         b = b->nextBinding();
     }
 #endif
