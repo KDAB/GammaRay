@@ -61,7 +61,8 @@ void QmlBindingModel::setObject(QObject* obj)
 
     // TODO use removerows/insertrows instead of reset here
     beginResetModel();
-    disconnect(m_obj, Q_NULLPTR, this, Q_NULLPTR);
+    if (m_obj)
+        disconnect(m_obj, Q_NULLPTR, this, Q_NULLPTR);
 
     m_obj = obj;
     m_bindings = std::move(bindings);
@@ -72,12 +73,12 @@ void GammaRay::QmlBindingModel::propertyChanged()
 {
     Q_ASSERT(sender() == m_obj);
 
-    for (size_t i = 0; i < m_bindings.size(); ++i) {
-        auto binding = m_bindings[i].get();
-        if (binding->property().notifySignalIndex() == senderSignalIndex()) {
-            auto newBindingNode = new QmlBindingNode(binding->binding());
-            refresh(binding, newBindingNode, createIndex(i, 0, binding), true);
-            return;
+    for (int i = 0; i < m_bindings.size(); ++i) {
+        const auto &bindingNode = m_bindings[i];
+        if (bindingNode->property().notifySignalIndex() == senderSignalIndex()) {
+            auto changedBindingIndex = createIndex(i, 0, m_bindings[i].get());
+            auto newBindingNode = new QmlBindingNode(bindingNode->binding());
+            refresh(bindingNode.get(), newBindingNode, changedBindingIndex, true);
         }
     }
 }
@@ -184,9 +185,11 @@ int QmlBindingModel::columnCount(const QModelIndex& parent) const
 
 int QmlBindingModel::rowCount(const QModelIndex& parent) const
 {
-    if (parent.isValid())
-        return static_cast<QmlBindingNode *>(parent.internalPointer())->dependencies().size();
-    return m_bindings.size();
+    if (!parent.isValid())
+        return m_bindings.size();
+    if (parent.column() != 0)
+        return 0;
+    return static_cast<QmlBindingNode *>(parent.internalPointer())->dependencies().size();
 }
 
 QVariant QmlBindingModel::data(const QModelIndex& index, int role) const
@@ -263,24 +266,29 @@ QModelIndex GammaRay::QmlBindingModel::index(int row, int column, const QModelIn
     return index;
 }
 
-QModelIndex GammaRay::QmlBindingModel::parent(const QModelIndex& child) const
+QModelIndex QmlBindingModel::findEquivalent(const std::vector<std::unique_ptr<QmlBindingNode>> &container, QmlBindingNode *bindingNode) const
 {
-    QmlBindingNode *parent = static_cast<QmlBindingNode *>(child.internalPointer())->parent();
-    if (!parent) {
-        return QModelIndex();
-    }
-    QmlBindingNode *grandparent = parent->parent();
-    if (!grandparent) {
-        for (size_t i = 0; i < m_bindings.size(); i++) {
-            if (parent == m_bindings[i].get()) {
-                return createIndex(i, child.column(), m_bindings[i].get());
-            }
-        }
-    }
-    for (size_t i = 0; i < grandparent->dependencies().size(); i++) {
-        if (parent == grandparent->dependencies()[i].get()) {
-            return createIndex(i, child.column(), grandparent->dependencies()[i].get());
+    for (size_t i = 0; i < container.size(); i++) {
+        if (bindingNode->binding() == container[i]->binding()) {
+            return createIndex(i, 0, container[i].get());
         }
     }
     return QModelIndex();
+}
+
+QModelIndex GammaRay::QmlBindingModel::parent(const QModelIndex& child) const
+{
+    if (!child.isValid())
+        return QModelIndex();
+
+    QmlBindingNode *parent = static_cast<QmlBindingNode *>(child.internalPointer())->parent();
+    if (!parent)
+        return QModelIndex();
+
+    QmlBindingNode *grandparent = parent->parent();
+
+    if (!grandparent)
+        return findEquivalent(m_bindings, parent);
+
+    return findEquivalent(grandparent->dependencies(), parent);
 }
