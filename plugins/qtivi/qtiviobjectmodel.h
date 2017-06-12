@@ -35,6 +35,7 @@
 #include <QSet>
 #include <QMetaProperty>
 
+#include <memory>
 #include <vector>
 
 class QtIviObjectModelTest;

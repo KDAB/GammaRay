@@ -447,7 +447,7 @@ void QtIviObjectModel::objectAdded(QObject *obj)
         m_seenCarriers << obj;
 
         beginInsertRows(QModelIndex(), m_carriers.size(), m_carriers.size());
-        m_carriers.push_back(IviCarrierPtr::make_shared(featureObj));
+        m_carriers.push_back(std::make_shared<IviCarrier>(featureObj));
         endInsertRows();
 
         const QMetaObject *mo(obj->metaObject());
