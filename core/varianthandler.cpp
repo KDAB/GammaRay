@@ -178,6 +178,7 @@ QString VariantHandler::displayString(const QVariant &value)
             return QString();
 #endif
         }
+	break;
     }
 
     case QVariant::Point:

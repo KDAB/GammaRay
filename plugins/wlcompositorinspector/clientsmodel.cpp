@@ -98,6 +98,7 @@ QVariant ClientsModel::data(const QModelIndex &index, int role) const
                 return client->processId();
             if (role == ObjectIdRole)
                 return QVariant::fromValue(ObjectId(client));
+	    break;
         case CommandColumn: {
             if (role != Qt::DisplayRole)
                 return QVariant();

@@ -27,7 +27,7 @@
 
     When having a scene graph node with an attached material selected (such as a QSGGeometryNode instance),
     the scene graph material view shows details about the material property and the used shader code. This
-    is primarily accessible via the scene graph browser in the \{Qt Quick 2 Inspector} tool.
+    is primarily accessible via the scene graph browser in the \l{Qt Quick 2 Inspector} tool.
 
     \borderedimage gammaray-qsgmaterial.png
 

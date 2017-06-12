@@ -227,7 +227,7 @@ void UIStateManager::restoreState()
         m_stateSettings->beginGroup(Endpoint::instance()->key());
         QMetaMethod method = m_targetStateSource->method(m_targetRestoreMethodId);
         QObject *target = m_targetStateSource == m_widget->metaObject() ? qobject_cast<QObject *>(m_widget) : this;
-        method.invoke(target, Q_ARG(QSettings *, m_stateSettings));
+        method.invoke(target, Q_ARG(QSettings*, m_stateSettings));
         m_stateSettings->endGroup();
     }
 
@@ -257,7 +257,7 @@ void UIStateManager::saveState()
         m_stateSettings->beginGroup(Endpoint::instance()->key());
         QMetaMethod method = m_targetStateSource->method(m_targetSaveMethodId);
         QObject *target = m_targetStateSource == m_widget->metaObject() ? qobject_cast<QObject *>(m_widget) : this;
-        method.invoke(target, Q_ARG(QSettings *, m_stateSettings));
+        method.invoke(target, Q_ARG(QSettings*, m_stateSettings));
         m_stateSettings->endGroup();
     }
 
