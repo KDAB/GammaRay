@@ -80,7 +80,8 @@ QtIviObjectModel::QtIviObjectModel(Probe *probe)
 }
 
 QtIviObjectModel::IviCarrierProperty::IviCarrierProperty()
-    : m_overriding(false)
+    : m_overridable(false)
+    , m_overriding(false)
 {
 }
 
@@ -89,8 +90,9 @@ QtIviObjectModel::IviCarrierProperty::IviCarrierProperty(QtIviObjectModel::IviCa
     *this = std::move(other);
 }
 
-QtIviObjectModel::IviCarrierProperty::IviCarrierProperty(const QMetaProperty &metaProperty, const QVariant &value)
+QtIviObjectModel::IviCarrierProperty::IviCarrierProperty(const QMetaProperty &metaProperty, const QVariant &value, bool overridable)
     : m_metaProperty(metaProperty)
+    , m_overridable(overridable)
     , m_overriding(false)
     , m_originalValue(value)
 {
@@ -123,6 +125,8 @@ bool QtIviObjectModel::IviCarrierProperty::isWritable() const
 
 bool QtIviObjectModel::IviCarrierProperty::isOverridable() const
 {
+    if (!m_overridable)
+        return false;
     int propertyOffset = QIviAbstractFeature::staticMetaObject.propertyCount();
     return m_metaProperty.propertyIndex() >= propertyOffset;
 }
@@ -341,6 +345,8 @@ void QtIviObjectModel::IviCarrier::setOverride(bool override)
     if (!m_carrier)
         return;
     QIviAbstractFeaturePrivate *const pPriv = QIviAbstractFeaturePrivate::get(m_carrier);
+    if (!pPriv)
+        return;
     if (override && pPriv->m_propertyOverride == nullptr) {
         pPriv->m_propertyOverride = this;
     } else if (!override && pPriv->m_propertyOverride == this) {
@@ -459,10 +465,13 @@ void QtIviObjectModel::objectAdded(QObject *obj)
             const QModelIndex featureIndex(createIndex(featureRow, 0, -1));
             const int row(feature->propertyCount());
 
+            QIviAbstractFeaturePrivate *featureObjPrivate = QIviAbstractFeaturePrivate::get(featureObj);
+            const bool canOveride = featureObjPrivate && featureObjPrivate->m_supportsPropertyOverriding;
+
             beginInsertRows(featureIndex, row, row + propertyCount - 1);
             for (int i = 0; i < propertyCount; ++i) {
                 const QMetaProperty metaProperty(mo->property(i + propertyOffset));
-                feature->pushProperty(QtIviObjectModel::IviCarrierProperty(metaProperty, metaProperty.read(obj)));
+                feature->pushProperty(QtIviObjectModel::IviCarrierProperty(metaProperty, metaProperty.read(obj), canOveride));
                 if (metaProperty.hasNotifySignal()) {
                     const QByteArray normalizedSlot(QMetaObject::normalizedSignature("propertyChanged()"));
                     const int propertyChangedSlotIndex(staticMetaObject.indexOfSlot(normalizedSlot));

@@ -109,8 +109,8 @@ private:
 
     public:
         IviCarrierProperty();
+        explicit IviCarrierProperty(const QMetaProperty &metaProperty, const QVariant &value, bool overridable);
         IviCarrierProperty(IviCarrierProperty &&other);
-        explicit IviCarrierProperty(const QMetaProperty &metaProperty, const QVariant &value);
 
         int propertyIndex() const;
         bool isValid() const;
@@ -136,6 +136,7 @@ private:
 
     private:
         QMetaProperty m_metaProperty;
+        bool m_overridable;
         bool m_overriding;
         QVariant m_originalValue;
         QVariant m_overridenValue;
