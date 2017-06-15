@@ -513,7 +513,7 @@ void QuickInspector::setCustomRenderMode(
                 disconnect(m_pendingRenderMode.connection);
             m_pendingRenderMode.mode = customRenderMode;
             m_pendingRenderMode.window = m_window;
-            m_pendingRenderMode.connection = connect(m_window.data(), &QQuickWindow::afterAnimating, this, &QuickInspector::applyRenderMode, Qt::DirectConnection);
+            m_pendingRenderMode.connection = connect(m_window.data(), &QQuickWindow::afterRendering, this, &QuickInspector::applyRenderMode, Qt::QueuedConnection);
         }
     }
 
