@@ -267,12 +267,14 @@ static QByteArray renderModeToString(QuickInspectorInterface::RenderMode customR
 
 static QuickInspectorInterface::RenderMode stringToRenderMode(const QByteArray &customRenderMode)
 {
-    static QHash<QByteArray, QuickInspectorInterface::RenderMode> modes = {
-        { QByteArray("clip"), QuickInspectorInterface::VisualizeClipping },
-        { QByteArray("overdraw"), QuickInspectorInterface::VisualizeOverdraw },
-        { QByteArray("batches"), QuickInspectorInterface::VisualizeBatches },
-        { QByteArray("changes"), QuickInspectorInterface::VisualizeChanges }
-    };
+    static QHash<QByteArray, QuickInspectorInterface::RenderMode> modes;
+
+    if (modes.isEmpty()) {
+        modes[QByteArray("clip")] = QuickInspectorInterface::VisualizeClipping;
+        modes[QByteArray("overdraw")] = QuickInspectorInterface::VisualizeOverdraw;
+        modes[QByteArray("batches")] = QuickInspectorInterface::VisualizeBatches;
+        modes[QByteArray("changes")] = QuickInspectorInterface::VisualizeChanges;
+    }
 
     const auto it = modes.constFind(customRenderMode);
     return it != modes.constEnd() ? it.value() : QuickInspectorInterface::NormalRendering;
