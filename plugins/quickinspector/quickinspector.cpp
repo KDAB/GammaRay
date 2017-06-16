@@ -265,6 +265,19 @@ static QByteArray renderModeToString(QuickInspectorInterface::RenderMode customR
     return QByteArray();
 }
 
+static QuickInspectorInterface::RenderMode stringToRenderMode(const QByteArray &customRenderMode)
+{
+    static QHash<QByteArray, QuickInspectorInterface::RenderMode> modes = {
+        { QByteArray("clip"), QuickInspectorInterface::VisualizeClipping },
+        { QByteArray("overdraw"), QuickInspectorInterface::VisualizeOverdraw },
+        { QByteArray("batches"), QuickInspectorInterface::VisualizeBatches },
+        { QByteArray("changes"), QuickInspectorInterface::VisualizeChanges }
+    };
+
+    const auto it = modes.constFind(customRenderMode);
+    return it != modes.constEnd() ? it.value() : QuickInspectorInterface::NormalRendering;
+}
+
 QMutex RenderModeRequest::mutex;
 
 RenderModeRequest::RenderModeRequest(QObject *parent)
@@ -436,6 +449,21 @@ void QuickInspector::selectWindow(QQuickWindow *window)
         return;
     }
 
+    const bool hadWindow = m_window;
+    QuickInspectorInterface::RenderMode previousMode = m_overlay->settings().componentsTraces
+            ? QuickInspectorInterface::VisualizeTraces
+            : QuickInspectorInterface::NormalRendering;
+
+    if (m_window) {
+        const QByteArray mode = QQuickWindowPrivate::get(m_window)->customRenderMode;
+        if (!mode.isEmpty())
+            previousMode = stringToRenderMode(mode);
+
+        auto reset = new RenderModeRequest(m_window);
+        connect(reset, &RenderModeRequest::finished, reset, &RenderModeRequest::deleteLater);
+        reset->applyOrDelay(m_window, QuickInspectorInterface::NormalRendering);
+    }
+
     m_window = window;
     m_itemModel->setWindow(window);
     m_sgModel->setWindow(window);
@@ -450,6 +478,9 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     }
 
     checkFeatures();
+
+    if (hadWindow)
+        setCustomRenderMode(previousMode);
 }
 
 void QuickInspector::selectItem(QQuickItem *item)
