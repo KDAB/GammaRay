@@ -163,6 +163,7 @@ void QuickItemModel::disconnectItem(QQuickItem *item)
     disconnect(item, SIGNAL(heightChanged()), this, SLOT(itemUpdated()));
     disconnect(item, SIGNAL(xChanged()), this, SLOT(itemUpdated()));
     disconnect(item, SIGNAL(yChanged()), this, SLOT(itemUpdated()));
+    item->removeEventFilter(m_clickEventFilter);
 }
 
 QModelIndex QuickItemModel::indexForItem(QQuickItem *item) const
