@@ -103,8 +103,10 @@ void ProbeSettingsReceiver::run()
     m_socket->connectToServer(QStringLiteral("gammaray-")
                               + QString::number(ProbeSettings::launcherIdentifier()));
     if (!m_socket->waitForConnected(10000)) {
+#ifndef Q_OS_ANDROID
         qWarning() << "Failed to connect to launcher, can't receive probe settings!"
                    << m_socket->errorString();
+#endif
         settingsReceivedFallback();
     }
 }
