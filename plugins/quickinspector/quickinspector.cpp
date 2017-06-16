@@ -247,6 +247,109 @@ static bool isGoodCandidateItem(QQuickItem *item)
     return true;
 }
 
+static QByteArray renderModeToString(QuickInspectorInterface::RenderMode customRenderMode)
+{
+    switch (customRenderMode) {
+        case QuickInspectorInterface::VisualizeClipping:
+            return QByteArray("clip");
+        case QuickInspectorInterface::VisualizeOverdraw:
+            return QByteArray("overdraw");
+        case QuickInspectorInterface::VisualizeBatches:
+            return QByteArray("batches");
+        case QuickInspectorInterface::VisualizeChanges:
+            return QByteArray("changes");
+        case QuickInspectorInterface::VisualizeTraces:
+        case QuickInspectorInterface::NormalRendering:
+            break;
+    }
+    return QByteArray();
+}
+
+QMutex RenderModeRequest::mutex;
+
+RenderModeRequest::RenderModeRequest(QObject *parent)
+    : QObject(parent)
+    , mode(QuickInspectorInterface::NormalRendering)
+{
+}
+
+RenderModeRequest::~RenderModeRequest()
+{
+    QMutexLocker lock(&mutex);
+
+    window.clear();
+
+    if (connection)
+        disconnect(connection);
+}
+
+void RenderModeRequest::applyOrDelay(QQuickWindow *toWindow, QuickInspectorInterface::RenderMode customRenderMode)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+    if (toWindow) {
+        QMutexLocker lock(&mutex);
+# if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        // Qt does some performance optimizations that break custom render modes.
+        // Thus the optimizations are only applied if there is no custom render mode set.
+        // So we need to make the scenegraph recheck whether a custom render mode is set.
+        // We do this by simply cleaning the scene graph which will recreate the renderer.
+        // We need however to do that at the proper time from the gui thread.
+
+        if (!connection ||
+                (mode != customRenderMode || window != toWindow)) {
+            if (connection)
+                disconnect(connection);
+            mode = customRenderMode;
+            window = toWindow;
+            connection = connect(window.data(), &QQuickWindow::afterRendering, this, &RenderModeRequest::apply, Qt::QueuedConnection);
+            // trigger window update so afterRendering is emitted
+            QMetaObject::invokeMethod(window, "update", Qt::QueuedConnection);
+        }
+# else
+        if (window != toWindow || mode != customRenderMode) {
+            window = toWindow;
+            mode = customRenderMode;
+            QMetaObject::invokeMethod(this, "apply", Qt::QueuedConnection);
+        } else {
+            QMetaObject::invokeMethod(this, "preFinished", Qt::QueuedConnection);
+        }
+# endif
+    }
+#else
+    Q_UNUSED(toWindow);
+    Q_UNUSED(customRenderMode);
+#endif
+}
+
+void RenderModeRequest::apply()
+{
+    QMutexLocker lock(&mutex);
+
+    if (connection)
+        disconnect(connection);
+
+    if (window) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        const QByteArray mode = renderModeToString(RenderModeRequest::mode);
+        QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(window);
+        winPriv->customRenderMode = mode;
+        QMetaObject::invokeMethod(window, "cleanupSceneGraph");
+#endif
+    }
+
+    QMetaObject::invokeMethod(this, "preFinished", Qt::QueuedConnection);
+}
+
+void RenderModeRequest::preFinished()
+{
+    QMutexLocker lock(&mutex);
+
+    if (window)
+        window->update();
+
+    emit finished();
+}
+
 QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     : QuickInspectorInterface(parent)
     , m_probe(probe)
@@ -258,6 +361,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     , m_sgPropertyController(new PropertyController(QStringLiteral(
                                                         "com.kdab.GammaRay.QuickSceneGraph"), this))
     , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this))
+    , m_pendingRenderMode(new RenderModeRequest(this))
 {
     registerPCExtensions();
     registerMetaTypes();
@@ -475,63 +579,10 @@ void QuickInspector::slotGrabWindow()
     m_overlay->requestGrabWindow();
 }
 
-static QByteArray renderModeToString(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
-{
-    switch (customRenderMode) {
-        case QuickInspectorInterface::VisualizeClipping:
-            return "clip";
-        case QuickInspectorInterface::VisualizeOverdraw:
-            return "overdraw";
-        case QuickInspectorInterface::VisualizeBatches:
-            return "batches";
-        case QuickInspectorInterface::VisualizeChanges:
-            return "changes";
-        case QuickInspectorInterface::VisualizeTraces:
-        case QuickInspectorInterface::NormalRendering:
-            break;
-    }
-    return "";
-}
-
 void QuickInspector::setCustomRenderMode(
     GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    if (m_window) {
-        // Qt does some performance optimizations that break custom render modes.
-        // Thus the optimizations are only applied if there is no custom render mode set.
-        // So we need to make the scenegraph recheck whether a custom render mode is set.
-        // We do this by simply cleaning the scene graph which will recreate the renderer.
-        // We need however to do that at the proper time from the gui thread.
-        QMutexLocker lock(&m_pendingRenderMode.mutex);
-
-        if (!m_pendingRenderMode.connection ||
-                (m_pendingRenderMode.mode != customRenderMode || m_pendingRenderMode.window != m_window)) {
-            if (m_pendingRenderMode.connection)
-                disconnect(m_pendingRenderMode.connection);
-            m_pendingRenderMode.mode = customRenderMode;
-            m_pendingRenderMode.window = m_window;
-            m_pendingRenderMode.connection = connect(m_window.data(), &QQuickWindow::afterRendering, this, &QuickInspector::applyRenderMode, Qt::QueuedConnection);
-        }
-    }
-
-#else
-    if (m_window) {
-        const QByteArray mode = renderModeToString(customRenderMode);
-        QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
-        if (winPriv->customRenderMode != mode)
-            winPriv->customRenderMode = mode;
-    }
-#endif
-    if (m_window) {
-        m_window->update();
-    }
-
-#else
-    Q_UNUSED(customRenderMode);
-#endif
+    m_pendingRenderMode->applyOrDelay(m_window, customRenderMode);
 
     const bool tracing = customRenderMode == QuickInspectorInterface::VisualizeTraces;
     if (m_overlay->settings().componentsTraces != tracing) {
@@ -544,25 +595,6 @@ void QuickInspector::setCustomRenderMode(
 void QuickInspector::setServerSideDecorationsEnabled(bool enabled)
 {
     m_overlay->setDecorationsEnabled(enabled);
-}
-
-void QuickInspector::applyRenderMode()
-{
-    QMutexLocker lock(&m_pendingRenderMode.mutex);
-    disconnect(m_pendingRenderMode.connection);
-
-    if (m_pendingRenderMode.window != m_window) { //we selected another window in the meanwhile, abort
-        return;
-    }
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    const QByteArray mode = renderModeToString(m_pendingRenderMode.mode);
-    QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
-    if (winPriv->customRenderMode == mode)
-        return;
-    winPriv->customRenderMode = mode;
-    QMetaObject::invokeMethod(m_window, "cleanupSceneGraph");
-#endif
 }
 
 void QuickInspector::checkFeatures()

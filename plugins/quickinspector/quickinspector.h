@@ -63,6 +63,31 @@ class RemoteViewServer;
 class ObjectId;
 typedef QVector<ObjectId> ObjectIds;
 
+class RenderModeRequest : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit RenderModeRequest(QObject *parent = nullptr);
+    ~RenderModeRequest();
+
+    void applyOrDelay(QQuickWindow *toWindow, QuickInspectorInterface::RenderMode customRenderMode);
+
+signals:
+    void finished();
+
+private slots:
+    void apply();
+    void preFinished();
+
+private:
+    static QMutex mutex;
+
+    QuickInspectorInterface::RenderMode mode;
+    QMetaObject::Connection connection;
+    QPointer<QQuickWindow> window;
+};
+
 class QuickInspector : public QuickInspectorInterface
 {
     Q_OBJECT
@@ -117,7 +142,6 @@ private:
     void registerVariantHandlers();
     void registerPCExtensions();
     QString findSGNodeType(QSGNode *node) const;
-    void applyRenderMode();
 
     GammaRay::ObjectIds recursiveItemsAt(QQuickItem *parent, const QPointF &pos,
                                          GammaRay::RemoteViewInterface::RequestMode mode, int& bestCandidate) const;
@@ -135,12 +159,7 @@ private:
     PropertyController *m_itemPropertyController;
     PropertyController *m_sgPropertyController;
     RemoteViewServer *m_remoteView;
-    struct {
-        RenderMode mode;
-        QMetaObject::Connection connection;
-        QQuickWindow *window;
-        QMutex mutex;
-    } m_pendingRenderMode;
+    RenderModeRequest *m_pendingRenderMode;
 };
 
 class QuickInspectorFactory : public QObject,
