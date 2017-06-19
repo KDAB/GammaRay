@@ -16,6 +16,9 @@
    </property>
    <item>
     <layout class="QHBoxLayout" name="toolbarLayout">
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <property name="bottomMargin">
       <number>6</number>
      </property>
