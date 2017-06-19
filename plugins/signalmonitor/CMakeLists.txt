@@ -12,6 +12,7 @@ if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_signalmonitor_srcs
   signalmonitor.cpp
   signalhistorymodel.cpp
+  signalhistoryproxy.cpp
   relativeclock.cpp
 )
 

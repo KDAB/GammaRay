@@ -28,6 +28,7 @@
 
 #include "signalmonitor.h"
 #include "signalhistorymodel.h"
+#include "signalhistoryproxy.h"
 #include "relativeclock.h"
 #include "signalmonitorcommon.h"
 
@@ -47,7 +48,7 @@ SignalMonitor::SignalMonitor(ProbeInterface *probe, QObject *parent)
     StreamOperators::registerSignalMonitorStreamOperators();
 
     auto *model = new SignalHistoryModel(probe, this);
-    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+    auto proxy = new SignalHistoryProxy(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(model);
     m_objModel = proxy;
