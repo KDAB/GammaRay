@@ -106,9 +106,19 @@ int SignalHistoryModel::rowCount(const QModelIndex &parent) const
     return m_tracedObjects.size();
 }
 
-int SignalHistoryModel::columnCount(const QModelIndex &) const
+int SignalHistoryModel::columnCount(const QModelIndex &parent) const
 {
-    return 3;
+    if (parent.isValid())
+        return 0;
+    return EventColumn + 1;
+}
+
+Qt::ItemFlags SignalHistoryModel::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags f = QAbstractTableModel::flags(index);
+    if (static_cast<ColumnId>(index.column()) == MonitoredColumn)
+        f |= Qt::ItemIsUserCheckable;
+    return f;
 }
 
 SignalHistoryModel::Item *SignalHistoryModel::item(const QModelIndex &index) const
@@ -121,6 +131,12 @@ SignalHistoryModel::Item *SignalHistoryModel::item(const QModelIndex &index) con
 QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
 {
     switch (static_cast<ColumnId>(index.column())) {
+    case MonitoredColumn:
+        if (role == Qt::CheckStateRole)
+            return item(index)->monitored ? Qt::Checked : Qt::Unchecked;
+
+        break;
+
     case ObjectColumn:
         if (role == Qt::DisplayRole)
             return item(index)->objectName;
@@ -156,8 +172,11 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
 
 QVariant SignalHistoryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+    if ((role == Qt::DisplayRole || role == Qt::ToolTipRole) &&
+            orientation == Qt::Horizontal) {
         switch (section) {
+        case MonitoredColumn:
+            return role == Qt::ToolTipRole ? tr("Monitored") : QString();
         case ObjectColumn:
             return tr("Object");
         case TypeColumn:
@@ -180,6 +199,19 @@ QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex &index) con
     d.insert(ObjectModel::ObjectIdRole, data(index, ObjectModel::ObjectIdRole));
     d.insert(ObjectModel::DecorationIdRole, data(index, ObjectModel::DecorationIdRole));
     return d;
+}
+
+bool SignalHistoryModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (static_cast<ColumnId>(index.column()) == MonitoredColumn) {
+        if (role == Qt::CheckStateRole) {
+            item(index)->monitored = value.value<Qt::CheckState>() == Qt::Checked ? true : false;
+            emit dataChanged(index, index);
+            return true;
+        }
+    }
+
+    return QAbstractTableModel::setData(index, value, role);
 }
 
 void SignalHistoryModel::onObjectAdded(QObject *object)
@@ -214,6 +246,7 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
     Item *data = m_tracedObjects.at(itemIndex);
     Q_ASSERT(data->object == object);
     data->object = nullptr;
+    emit dataChanged(index(itemIndex, MonitoredColumn), index(itemIndex, MonitoredColumn)); // for Qt::CheckStateRole
     emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn)); // for ObjectIdRole
     emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
 }
@@ -230,6 +263,8 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
 
     Item *data = m_tracedObjects.at(itemIndex);
     Q_ASSERT(data->object == sender);
+    if (!data->monitored)
+        return;
     // ensure the item is known
     if (signalIndex > 0 && !data->signalNames.contains(signalIndex)) {
         // protect dereferencing of sender here
@@ -251,6 +286,7 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
 
 SignalHistoryModel::Item::Item(QObject *obj)
     : object(obj)
+    , monitored(false)
     , startTime(RelativeClock::sinceAppStart()->mSecs())
 {
     objectName = Util::shortDisplayString(object);
