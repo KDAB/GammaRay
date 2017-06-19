@@ -269,6 +269,17 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
     return headers.at(section).value(role);
 }
 
+bool RemoteModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+{
+    if (!isConnected())
+        return false;
+
+    Message msg(m_myAddress, Protocol::ModelSetHeaderDataRequest);
+    msg << (qint32)section << (qint8)orientation << (qint32)role << value;
+    sendMessage(msg);
+    return false;
+}
+
 void RemoteModel::sort(int column, Qt::SortOrder order)
 {
     Message msg(m_myAddress, Protocol::ModelSortRequest);
@@ -470,7 +481,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         const Qt::Orientation orientation = static_cast<Qt::Orientation>(ori);
         auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
 
-        for (int i = first; i < last && i < headers.size(); ++i)
+        for (int i = first; i <= last && i < headers.size(); ++i)
             headers[i].clear();
 
         emit headerDataChanged(orientation, first, last);

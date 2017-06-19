@@ -237,6 +237,9 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         data.insert(Qt::ToolTipRole,
                     m_model->headerData(section, static_cast<Qt::Orientation>(orientation),
                                         Qt::ToolTipRole));
+        data.insert(Qt::CheckStateRole,
+                    m_model->headerData(section, static_cast<Qt::Orientation>(orientation),
+                                        Qt::CheckStateRole));
 
         Message msg(m_myAddress, Protocol::ModelHeaderReply);
         msg << orientation << section << data;
@@ -252,6 +255,18 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         msg >> index >> role >> value;
 
         m_model->setData(Protocol::toQModelIndex(m_model, index), value, role);
+        break;
+    }
+
+    case Protocol::ModelSetHeaderDataRequest:
+    {
+        qint32 section;
+        qint8 orientation;
+        qint32 role;
+        QVariant value;
+        msg >> section >> orientation >> role >> value;
+
+        m_model->setHeaderData(section, static_cast<Qt::Orientation>(orientation), value, role);
         break;
     }
 
