@@ -69,7 +69,8 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     signalHistoryProxyModel->setSourceModel(signalHistory);
     new SearchLineController(ui->objectSearchLine, signalHistoryProxyModel);
 
-    ui->objectTreeView->header()->setObjectName("objectTreeViewHeader");
+    auto header = ui->objectTreeView->header();
+    header->setObjectName("objectTreeViewHeader");
     ui->objectTreeView->setModel(signalHistoryProxyModel);
     ui->objectTreeView->setEventScrollBar(ui->eventScrollBar);
     connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
@@ -82,11 +83,12 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
             SLOT(intervalScaleValueChanged(int)));
     connect(ui->objectTreeView->eventDelegate(), SIGNAL(isActiveChanged(bool)), this,
             SLOT(eventDelegateIsActiveChanged(bool)));
-    connect(ui->objectTreeView->header(), SIGNAL(sectionResized(int,int,int)), this,
+    connect(header, SIGNAL(sectionResized(int,int,int)), this,
             SLOT(adjustEventScrollBarSize()));
 
-    m_stateManager.setDefaultSizes(ui->objectTreeView->header(),
-                                   UISizeVector() << 200 << 200 << -1);
+    m_stateManager.setDefaultSizes(header,
+                                   UISizeVector() << ui->objectTreeView->sizeHintForColumn(0) << 200 << 200 << -1);
+    header->setSortIndicator(1, header->sortIndicatorOrder());
 }
 
 SignalMonitorWidget::~SignalMonitorWidget()

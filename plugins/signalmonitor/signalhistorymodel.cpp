@@ -34,12 +34,14 @@
 #include <core/util.h>
 #include <core/probe.h>
 
+#include <common/metatypedeclarations.h>
 #include <common/objectid.h>
 
 #include <QLocale>
 #include <QMutex>
 #include <QSet>
 #include <QThread>
+#include <QTimer>
 
 using namespace GammaRay;
 
@@ -79,10 +81,23 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 
 SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
     : QAbstractTableModel(parent)
+    , m_headerMonitorCheckState(Qt::Unchecked)
+    , m_checkStateHeaderChangedTimer(new QTimer(this))
 {
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));
     connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), this,
             SLOT(onObjectRemoved(QObject*)));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+            this, SLOT(onDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+#else
+    connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(onDataChanged(QModelIndex,QModelIndex)));
+#endif
+    connect(m_checkStateHeaderChangedTimer, SIGNAL(timeout()), this, SLOT(updateHeaderCheckState()));
+
+    m_checkStateHeaderChangedTimer->setSingleShot(true);
+    m_checkStateHeaderChangedTimer->setInterval(250);
 
     SignalSpyCallbackSet spy;
     spy.signalBeginCallback = signal_begin_callback;
@@ -182,6 +197,15 @@ QVariant SignalHistoryModel::headerData(int section, Qt::Orientation orientation
         case EventColumn:
             return tr("Events");
         }
+    } else if (role == Qt::CheckStateRole && orientation == Qt::Horizontal) {
+        switch (section) {
+            case MonitoredColumn:
+                return m_headerMonitorCheckState;
+            case ObjectColumn:
+            case TypeColumn:
+            case EventColumn:
+                break;
+        }
     }
 
     return QVariant();
@@ -203,13 +227,60 @@ bool SignalHistoryModel::setData(const QModelIndex &index, const QVariant &value
 {
     if (static_cast<ColumnId>(index.column()) == MonitoredColumn) {
         if (role == Qt::CheckStateRole) {
-            item(index)->monitored = value.value<Qt::CheckState>() == Qt::Checked ? true : false;
-            emit dataChanged(index, index);
+            const Qt::CheckState state = value.value<Qt::CheckState>();
+            Q_ASSERT(state != Qt::PartiallyChecked);
+            auto *it = item(index);
+
+            if (it->monitored == (state == Qt::Checked ? true : false)) {
+                return false;
+            }
+
+            it->monitored = state == Qt::Checked ? true : false;
+            emit dataChanged(index, index
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                             , QVector<int>() << Qt::CheckStateRole
+#endif
+                             );
             return true;
         }
     }
 
     return QAbstractTableModel::setData(index, value, role);
+}
+
+bool SignalHistoryModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+{
+    if (orientation == Qt::Horizontal && static_cast<ColumnId>(section) == MonitoredColumn) {
+        if (role == Qt::CheckStateRole) {
+            const Qt::CheckState newState = value.value<Qt::CheckState>();
+            Q_ASSERT(newState != Qt::PartiallyChecked);
+
+            if (m_headerMonitorCheckState == newState) {
+                return false;
+            }
+
+            m_headerMonitorCheckState = newState;
+            emit headerDataChanged(orientation, section, section);
+
+            for (auto it = m_tracedObjects.constBegin(), end = m_tracedObjects.constEnd(); it != end; ++it) {
+                (*it)->monitored = m_headerMonitorCheckState == Qt::Checked;
+            }
+
+            const int count = rowCount();
+
+            if (count > 0) {
+                emit dataChanged(index(0, MonitoredColumn), index(count - 1, MonitoredColumn)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                                 , QVector<int>() << Qt::CheckStateRole
+#endif
+                                 );
+            }
+
+            return true;
+        }
+    }
+
+    return QAbstractTableModel::setHeaderData(section, orientation, value, role);
 }
 
 void SignalHistoryModel::onObjectAdded(QObject *object)
@@ -226,6 +297,7 @@ void SignalHistoryModel::onObjectAdded(QObject *object)
     beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size());
 
     auto * const data = new Item(object);
+    data->monitored = m_headerMonitorCheckState == Qt::Checked;
     m_itemIndex.insert(object, m_tracedObjects.size());
     m_tracedObjects.push_back(data);
 
@@ -245,9 +317,22 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
     Item *data = m_tracedObjects.at(itemIndex);
     Q_ASSERT(data->object == object);
     data->object = nullptr;
-    emit dataChanged(index(itemIndex, MonitoredColumn), index(itemIndex, MonitoredColumn)); // for Qt::CheckStateRole
-    emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn)); // for ObjectIdRole
-    emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
+    data->monitored = false;
+    emit dataChanged(index(itemIndex, MonitoredColumn), index(itemIndex, MonitoredColumn)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                     , QVector<int>() << Qt::CheckStateRole
+#endif
+                     ); // for Qt::CheckStateRole
+    emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                     , QVector<int>() << ObjectModel::ObjectIdRole << Qt::ToolTipRole
+#endif
+                     ); // for ObjectIdRole
+    emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                     , QVector<int>() << EndTimeRole
+#endif
+                     );
 }
 
 void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
@@ -280,7 +365,43 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
     }
 
     data->events.push_back((timestamp << 16) | signalIndex);
-    emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
+    emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                     , QVector<int>() << EventsRole << EndTimeRole << SignalMapRole
+#endif
+                     );
+}
+
+void SignalHistoryModel::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                                       const QVector<int> &roles)
+{
+    if ((topLeft.column() == MonitoredColumn || bottomRight.column() == MonitoredColumn) &&
+            (roles.isEmpty() || roles.contains(Qt::CheckStateRole))) {
+        m_checkStateHeaderChangedTimer->start();
+    }
+}
+
+void SignalHistoryModel::updateHeaderCheckState()
+{
+    const int count = rowCount();
+    int checked = 0;
+
+    foreach (auto *item, m_tracedObjects) {
+        if (item->monitored) {
+            ++checked;
+        }
+    }
+
+    Qt::CheckState newState = Qt::Unchecked;
+
+    if (checked > 0) {
+        newState = checked == count ? Qt::Checked : Qt::PartiallyChecked;
+    }
+
+    if (newState != m_headerMonitorCheckState) {
+        m_headerMonitorCheckState = newState;
+        emit headerDataChanged(Qt::Horizontal, MonitoredColumn, MonitoredColumn);
+    }
 }
 
 SignalHistoryModel::Item::Item(QObject *obj)

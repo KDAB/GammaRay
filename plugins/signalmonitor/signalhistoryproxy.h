@@ -33,6 +33,7 @@
 
 QT_BEGIN_NAMESPACE
 class QSortFilterProxyModel;
+class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -44,7 +45,20 @@ class SignalHistoryProxy : public SignalHistoryBaseProxy
 public:
     explicit SignalHistoryProxy(QObject *parent = nullptr);
 
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role = Qt::DisplayRole) const override;
+    bool setHeaderData(int section, Qt::Orientation orientation,
+                       const QVariant &value, int role = Qt::EditRole) override;
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+
+private slots:
+    void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                        const QVector<int> &roles = QVector<int>());
+    void updateHeaderCheckState();
+
+private:
+    Qt::CheckState m_headerMonitorCheckState;
+    QTimer *m_checkStateHeaderChangedTimer;
 };
 } // namespace GammaRay
 

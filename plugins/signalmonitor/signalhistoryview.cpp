@@ -41,9 +41,10 @@ SignalHistoryView::SignalHistoryView(QWidget *parent)
     , m_eventDelegate(new SignalHistoryDelegate(this))
     , m_eventScrollBar(nullptr)
 {
-    setDeferredResizeMode(0, QHeaderView::Interactive);
+    setDeferredResizeMode(0, QHeaderView::Fixed);
     setDeferredResizeMode(1, QHeaderView::Interactive);
-    setDeferredResizeMode(2, QHeaderView::Stretch);
+    setDeferredResizeMode(2, QHeaderView::Interactive);
+    setDeferredResizeMode(3, QHeaderView::Stretch);
 
     setItemDelegateForColumn(SignalHistoryModel::EventColumn, m_eventDelegate);
 
@@ -52,6 +53,18 @@ SignalHistoryView::SignalHistoryView(QWidget *parent)
     connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)), this,
             SLOT(eventDelegateChanged()));
     connect(m_eventDelegate, SIGNAL(totalIntervalChanged()), this, SLOT(eventDelegateChanged()));
+}
+
+int SignalHistoryView::sizeHintForColumn(int column) const
+{
+    if (column == 0) {
+        const int margin = style()->pixelMetric(QStyle::PM_HeaderMargin);
+        const int checkIndicatorWidth = style()->pixelMetric(QStyle::PM_IndicatorWidth);
+        const int sortIndicatorWidth = style()->pixelMetric(QStyle::PM_HeaderMarkSize);
+        return checkIndicatorWidth + margin + sortIndicatorWidth;
+    }
+    
+    return QTreeView::sizeHintForColumn(column);
 }
 
 void SignalHistoryView::eventDelegateChanged()

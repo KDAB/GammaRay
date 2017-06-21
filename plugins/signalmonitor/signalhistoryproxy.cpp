@@ -31,11 +31,84 @@
 
 #include <common/metatypedeclarations.h>
 
+#include <QTimer>
+
 using namespace GammaRay;
 
 SignalHistoryProxy::SignalHistoryProxy(QObject *parent)
     : SignalHistoryBaseProxy(parent)
+    , m_headerMonitorCheckState(Qt::Unchecked)
+    , m_checkStateHeaderChangedTimer(new QTimer(this))
 {
+    m_checkStateHeaderChangedTimer->setSingleShot(true);
+    m_checkStateHeaderChangedTimer->setInterval(250);
+
+    connect(this, SIGNAL(modelReset()), m_checkStateHeaderChangedTimer, SLOT(start()));
+    connect(this, SIGNAL(layoutChanged()), m_checkStateHeaderChangedTimer, SLOT(start()));
+    connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)), m_checkStateHeaderChangedTimer, SLOT(start()));
+    connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)), m_checkStateHeaderChangedTimer, SLOT(start()));
+    connect(this, SIGNAL(headerDataChanged(Qt::Orientation,int,int)), m_checkStateHeaderChangedTimer, SLOT(start()));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+            this, SLOT(onDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+#else
+    connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(onDataChanged(QModelIndex,QModelIndex)));
+#endif
+    connect(m_checkStateHeaderChangedTimer, SIGNAL(timeout()), this, SLOT(updateHeaderCheckState()));
+}
+
+QVariant SignalHistoryProxy::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal &&
+            section == SignalHistoryModel::MonitoredColumn &&
+            role == Qt::CheckStateRole) {
+        return m_headerMonitorCheckState;
+    }
+
+    return SignalHistoryBaseProxy::headerData(section, orientation, role);
+}
+
+bool SignalHistoryProxy::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+{
+    if (orientation == Qt::Horizontal &&
+            section == SignalHistoryModel::MonitoredColumn &&
+            role == Qt::CheckStateRole) {
+        // If we are not filtering the model, let use the source model fallback
+        // wich is able to update all at once without too much overhead
+        // else update the visible indexes only.
+        // This allow to select only the filtered group of indexes instead of all.
+        if (filterRegExp().pattern().isEmpty()) {
+            return SignalHistoryBaseProxy::setHeaderData(section, orientation, value, role);
+        } else {
+            const Qt::CheckState newState = value.value<Qt::CheckState>();
+            const bool oldBlockingState = blockSignals(true);
+            const int count = rowCount();
+            QVector<QPair<int, int>> ranges; // pair of first/last
+
+            for (int i = 0; i < count; ++i) {
+                const QModelIndex index = SignalHistoryBaseProxy::index(i, section);
+
+                if (index.data(role).value<Qt::CheckState>() != newState) {
+                    if (setData(index, newState, role)) {
+                        if (ranges.isEmpty() || ranges.last().second != i - 1) {
+                            ranges << qMakePair(i, i);
+                        } else {
+                            ranges.last().second = i;
+                        }
+                    }
+                }
+            }
+
+            blockSignals(oldBlockingState);
+
+            foreach (const auto &range, ranges) {
+                emit dataChanged(index(range.first, section), index(range.second, section));
+            }
+        }
+    }
+
+    return false;
 }
 
 void SignalHistoryProxy::sort(int column, Qt::SortOrder order)
@@ -47,4 +120,49 @@ void SignalHistoryProxy::sort(int column, Qt::SortOrder order)
     }
 
     SignalHistoryBaseProxy::sort(column, order);
+}
+
+void SignalHistoryProxy::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+{
+    if ((topLeft.column() == SignalHistoryModel::MonitoredColumn ||
+         bottomRight.column() == SignalHistoryModel::MonitoredColumn) &&
+            (roles.isEmpty() || roles.contains(Qt::CheckStateRole))) {
+        m_checkStateHeaderChangedTimer->start();
+    }
+}
+
+void SignalHistoryProxy::updateHeaderCheckState()
+{
+    if (!sourceModel())
+        return;
+
+    Qt::CheckState newState = m_headerMonitorCheckState;
+
+    if (filterRegExp().pattern().isEmpty()) {
+        newState = sourceModel()->headerData(SignalHistoryModel::MonitoredColumn,
+                                                                  Qt::Horizontal, Qt::CheckStateRole).value<Qt::CheckState>();
+    } else {
+        const int count = rowCount();
+        int checked = 0;
+
+        for (int i = 0; i < count; ++i) {
+            const QModelIndex index = SignalHistoryBaseProxy::index(i, SignalHistoryModel::MonitoredColumn);
+
+            if (index.data(Qt::CheckStateRole).value<Qt::CheckState>() == Qt::Checked) {
+                ++checked;
+            }
+        }
+
+        newState = Qt::Unchecked;
+
+        if (checked > 0) {
+            newState = checked == count ? Qt::Checked : Qt::PartiallyChecked;
+        }
+    }
+
+    if (newState != m_headerMonitorCheckState) {
+        m_headerMonitorCheckState = newState;
+        emit headerDataChanged(Qt::Horizontal, SignalHistoryModel::MonitoredColumn,
+                               SignalHistoryModel::MonitoredColumn);
+    }
 }
