@@ -42,6 +42,19 @@ public:
     explicit HeaderView(Qt::Orientation orientation, QWidget *parent = nullptr);
 
     bool isState(State state) const;
+
+    bool isSectionCheckable(int logicalIndex) const;
+
+    Qt::CheckState sectionCheckState(int logicalIndex) const;
+    void setSectionCheckState(int logicalIndex, Qt::CheckState state);
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+    QSize sectionSizeFromContents(int logicalIndex) const override;
+    void paintSection(QPainter *painter, const QRect &rect, int logicalIndex) const override;
+
+private:
+    void pimpMyStyleOption(QStyleOptionHeader *option, const QRect &rect, int logicalIndex = -1) const;
 };
 }
 
