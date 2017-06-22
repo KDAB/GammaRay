@@ -75,7 +75,6 @@ void DebuggerInjector::stop()
         m_process->terminate();
         if (!m_process->waitForFinished(1000))
             m_process->kill(); // kill it softly
-        emit finished();
     }
 }
 
@@ -138,10 +137,10 @@ void DebuggerInjector::processFinished()
         mProcessError = m_process->error();
         if (mProcessError != QProcess::UnknownError)
             mErrorString = m_process->errorString();
-    }
-
-    if (!mManualError)
         emit attached();
+    } else {
+        emit finished();
+    }
 }
 
 void DebuggerInjector::readyReadStandardError()

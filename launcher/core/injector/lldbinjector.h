@@ -50,6 +50,9 @@ protected:
     void clearBreakpoints() override;
     void printBacktrace() override;
     void parseStandardError(const QByteArray & line) override;
+
+private:
+    bool m_scriptSupportIsRequired;
 };
 }
 

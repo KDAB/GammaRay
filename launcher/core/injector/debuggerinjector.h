@@ -99,9 +99,10 @@ protected:
     QProcess::ExitStatus mExitStatus;
     QString m_filePath;
     QString mErrorString;
-    bool mManualError;
 
 private:
+    bool mManualError;
+
     enum Orientation {
         In,
         Out
