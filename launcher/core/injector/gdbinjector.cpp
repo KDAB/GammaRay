@@ -109,13 +109,6 @@ void GdbInjector::readyReadStandardError()
     }
 }
 
-void GdbInjector::readyReadStandardOutput()
-{
-    QString message = QString::fromLocal8Bit(m_process->readAllStandardOutput());
-    processLog(DebuggerInjector::In, false, message);
-    emit stderrMessage(message); // Is this signal emit correct ?? stderr vs stdout
-}
-
 void GdbInjector::addFunctionBreakpoint(const QByteArray &function)
 {
     execCmd("break " + function);

@@ -81,9 +81,9 @@ protected:
 
 protected slots:
     virtual void readyReadStandardError();
-    virtual void readyReadStandardOutput();
 
 private slots:
+    void readyReadStandardOutput();
     void processFinished();
 
 protected:

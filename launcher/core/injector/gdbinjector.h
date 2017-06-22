@@ -52,7 +52,6 @@ protected:
 
 private slots:
     void readyReadStandardError() override;
-    void readyReadStandardOutput() override;
 };
 }
 
