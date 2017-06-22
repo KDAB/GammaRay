@@ -12,7 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>0</number>
+    <number>6</number>
    </property>
    <item>
     <layout class="QHBoxLayout" name="toolbarLayout">
@@ -20,7 +20,7 @@
       <number>6</number>
      </property>
      <property name="bottomMargin">
-      <number>6</number>
+      <number>0</number>
      </property>
      <item>
       <widget class="QLineEdit" name="objectSearchLine"/>
@@ -75,12 +75,6 @@
    </item>
    <item>
     <widget class="GammaRay::SignalHistoryView" name="objectTreeView">
-     <property name="contextMenuPolicy">
-      <enum>Qt::CustomContextMenu</enum>
-     </property>
-     <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
-     </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
      </property>
@@ -91,26 +85,6 @@
       <bool>true</bool>
      </property>
     </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="eventScrollBarLayout">
-     <item>
-      <widget class="QScrollBar" name="eventScrollBar">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="tracking">
-        <bool>true</bool>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>

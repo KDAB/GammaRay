@@ -52,7 +52,6 @@ public:
 
 private slots:
     void intervalScaleValueChanged(int value);
-    void adjustEventScrollBarSize();
     void pauseAndResume(bool pause);
     void eventDelegateIsActiveChanged(bool active);
     void contextMenu(QPoint pos);

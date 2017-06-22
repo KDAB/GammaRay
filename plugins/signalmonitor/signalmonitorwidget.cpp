@@ -72,7 +72,6 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     auto header = ui->objectTreeView->header();
     header->setObjectName("objectTreeViewHeader");
     ui->objectTreeView->setModel(signalHistoryProxyModel);
-    ui->objectTreeView->setEventScrollBar(ui->eventScrollBar);
     connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
     auto selectionModel = ObjectBroker::selectionModel(signalHistoryProxyModel);
     ui->objectTreeView->setSelectionModel(selectionModel);
@@ -81,10 +80,8 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     connect(ui->pauseButton, SIGNAL(toggled(bool)), this, SLOT(pauseAndResume(bool)));
     connect(ui->intervalScale, SIGNAL(valueChanged(int)), this,
             SLOT(intervalScaleValueChanged(int)));
-    connect(ui->objectTreeView->eventDelegate(), SIGNAL(isActiveChanged(bool)), this,
+    connect(ui->objectTreeView, SIGNAL(delegateIsActiveChanged(bool)), this,
             SLOT(eventDelegateIsActiveChanged(bool)));
-    connect(header, SIGNAL(sectionResized(int,int,int)), this,
-            SLOT(adjustEventScrollBarSize()));
 
     m_stateManager.setDefaultSizes(header,
                                    UISizeVector() << ui->objectTreeView->sizeHintForColumn(0) << 200 << 200 << -1);
@@ -99,32 +96,12 @@ void SignalMonitorWidget::intervalScaleValueChanged(int value)
 {
     // FIXME: Define a more reasonable formula.
     qint64 i = 5000 / std::pow(1.07, value);
-    ui->objectTreeView->eventDelegate()->setVisibleInterval(i);
-}
-
-void SignalMonitorWidget::adjustEventScrollBarSize()
-{
-    // FIXME: Would like to have this in SignalHistoryView, but letting that
-    // widget manage layouts of this widget would be nasty. Still I also I don't
-    // feel like hooking a custom scrollbar into QTreeView. Sleeping between a
-    // rock and a hard place.
-    const QWidget * const scrollBar = ui->objectTreeView->verticalScrollBar();
-    const QWidget * const viewport = ui->objectTreeView->viewport();
-
-    const int eventColumnLeft = ui->objectTreeView->eventColumnPosition();
-    const int scrollBarLeft = scrollBar->mapTo(this, scrollBar->pos()).x();
-    const int viewportLeft = viewport->mapTo(this, viewport->pos()).x();
-    const int viewportRight = viewportLeft + viewport->width();
-
-    ui->eventScrollBarLayout->setContentsMargins(eventColumnLeft,
-                                                 scrollBarLeft - viewportRight,
-                                                 width() - viewportRight,
-                                                 0);
+    ui->objectTreeView->setDelegateVisibleInterval(i);
 }
 
 void SignalMonitorWidget::pauseAndResume(bool pause)
 {
-    ui->objectTreeView->eventDelegate()->setActive(!pause);
+    ui->objectTreeView->setDelegateActive(!pause);
 }
 
 void SignalMonitorWidget::eventDelegateIsActiveChanged(bool active)

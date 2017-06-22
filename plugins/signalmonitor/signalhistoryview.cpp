@@ -39,20 +39,32 @@ using namespace GammaRay;
 SignalHistoryView::SignalHistoryView(QWidget *parent)
     : DeferredTreeView(parent)
     , m_eventDelegate(new SignalHistoryDelegate(this))
-    , m_eventScrollBar(nullptr)
+    , m_eventScrollBar(new QScrollBar(this))
 {
+
+    m_eventScrollBar->setTracking(true);
+    m_eventScrollBar->setOrientation(Qt::Horizontal);
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setItemDelegateForColumn(SignalHistoryModel::EventColumn, m_eventDelegate);
+
     setDeferredResizeMode(0, QHeaderView::Fixed);
     setDeferredResizeMode(1, QHeaderView::Interactive);
     setDeferredResizeMode(2, QHeaderView::Interactive);
-    setDeferredResizeMode(3, QHeaderView::Stretch);
+    setDeferredResizeMode(3, QHeaderView::Fixed);
 
-    setItemDelegateForColumn(SignalHistoryModel::EventColumn, m_eventDelegate);
-
-    connect(m_eventDelegate, SIGNAL(visibleOffsetChanged(qint64)), this, SLOT(
-                eventDelegateChanged()));
-    connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)), this,
-            SLOT(eventDelegateChanged()));
-    connect(m_eventDelegate, SIGNAL(totalIntervalChanged()), this, SLOT(eventDelegateChanged()));
+    connect(m_eventDelegate, SIGNAL(isActiveChanged(bool)),
+            this, SIGNAL(delegateIsActiveChanged(bool)));
+    connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)),
+            this, SIGNAL(delegateVisibleIntervalChanged(qint64)));
+    connect(m_eventDelegate, SIGNAL(visibleOffsetChanged(qint64)),
+            this, SLOT(eventDelegateChanged()));
+    connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)),
+            this, SLOT(eventDelegateChanged()));
+    connect(m_eventDelegate, SIGNAL(totalIntervalChanged()),
+            this, SLOT(eventDelegateChanged()));
+    connect(m_eventScrollBar, SIGNAL(sliderMoved(int)),
+            this, SLOT(eventScrollBarSliderMoved(int)));
 }
 
 int SignalHistoryView::sizeHintForColumn(int column) const
@@ -65,6 +77,26 @@ int SignalHistoryView::sizeHintForColumn(int column) const
     }
     
     return QTreeView::sizeHintForColumn(column);
+}
+
+bool SignalHistoryView::delegateIsActive() const
+{
+    return m_eventDelegate->isActive();
+}
+
+void SignalHistoryView::setDelegateActive(bool active)
+{
+    m_eventDelegate->setActive(active);
+}
+
+qint64 SignalHistoryView::delegateVisibleInterval() const
+{
+    return m_eventDelegate->visibleInterval();
+}
+
+void SignalHistoryView::setDelegateVisibleInterval(qint64 interval)
+{
+    m_eventDelegate->setVisibleInterval(interval);
 }
 
 void SignalHistoryView::eventDelegateChanged()
@@ -89,21 +121,6 @@ void SignalHistoryView::eventDelegateChanged()
     }
 }
 
-void SignalHistoryView::setEventScrollBar(QScrollBar *scrollBar)
-{
-    if (m_eventScrollBar != scrollBar) {
-        if (m_eventScrollBar)
-            disconnect(m_eventScrollBar, nullptr, this, nullptr);
-
-        m_eventScrollBar = scrollBar;
-
-        if (m_eventScrollBar) {
-            connect(m_eventScrollBar, SIGNAL(sliderMoved(int)),
-                    this, SLOT(eventScrollBarSliderMoved(int)));
-        }
-    }
-}
-
 int SignalHistoryView::eventColumnPosition() const
 {
     return columnViewportPosition(SignalHistoryModel::EventColumn);
@@ -118,6 +135,23 @@ void SignalHistoryView::eventScrollBarSliderMoved(int value)
 {
     m_eventDelegate->setActive(false);
     m_eventDelegate->setVisibleOffset(value);
+}
+
+void SignalHistoryView::updateGeometries()
+{
+    DeferredTreeView::updateGeometries();
+
+    const QMargins margins(0,
+                     header()->isVisible() ? header()->height() : 0,
+                     0,
+                     m_eventScrollBar->sizeHint().height());
+    setViewportMargins(margins);
+
+    const QRect rect(QPoint(eventColumnPosition(),
+                            viewport()->height() + margins.top() + 1),
+                     QSize(viewport()->width() - eventColumnPosition() + 1,
+                           margins.bottom()));
+    m_eventScrollBar->setGeometry(rect);
 }
 
 bool SignalHistoryView::viewportEvent(QEvent *event)
