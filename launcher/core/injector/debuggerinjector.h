@@ -79,6 +79,11 @@ protected:
     /** Given an interrupted process, this injects the probe and continues the process. */
     bool injectAndDetach(const QString &probeDll, const QString &probeFunc);
 
+    /** Set an error that was detected manually rather than by process monitoring.
+     *  This will terminate the debugger.
+     */
+    void setManualError(const QString &msg);
+
 protected slots:
     virtual void readyReadStandardError();
 

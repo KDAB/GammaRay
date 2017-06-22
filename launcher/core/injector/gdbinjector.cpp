@@ -81,31 +81,17 @@ void GdbInjector::readyReadStandardError()
     emit stderrMessage(error);
 
     if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
-        mManualError = true;
-        mErrorString = tr("The debuggee application is missing debug symbols which are required\n"
+        setManualError(tr("The debuggee application is missing debug symbols which are required\n"
                           "for GammaRay's GDB injector. Please recompile the debuggee.\n\n"
-                          "GDB error was: %1").arg(error);
-    } else if (error.startsWith(QLatin1String(
-                                    "Can't find member of namespace, class, struct, or union named \"QCoreApplication::exec\"")))
-    {
-        mManualError = true;
-        mErrorString = tr("Your QtCore library is missing debug symbols which are required\n"
+                          "GDB error was: %1").arg(error));
+    } else if (error.startsWith(QLatin1String("Can't find member of namespace, class, struct, or union named \"QCoreApplication::exec\""))) {
+        setManualError(tr("Your QtCore library is missing debug symbols which are required\n"
                           "for GammaRay's GDB injector. Please install the required debug symbols.\n\n"
-                          "GDB error was: %1").arg(error);
-    } else if (error.startsWith(QLatin1String(
-                    "warning: Unable to restore previously selected frame"))) {
-        mManualError = true;
-        mErrorString = tr("The debuggee application seems to have an invalid stack trace\n"
+                          "GDB error was: %1").arg(error));
+    } else if (error.startsWith(QLatin1String("warning: Unable to restore previously selected frame"))) {
+        setManualError(tr("The debuggee application seems to have an invalid stack trace\n"
                           "This can be caused by the executable being updated on disk after launching it.\n\n"
-                          "GDB error was: %1").arg(error);
-    }
-
-    if (mManualError) {
-        m_process->kill();
-        disconnect(m_process.data(), SIGNAL(readyReadStandardError()), this, nullptr);
-        disconnect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, nullptr);
-        mProcessError = QProcess::FailedToStart;
-        return;
+                          "GDB error was: %1").arg(error));
     }
 }
 

@@ -116,6 +116,17 @@ void DebuggerInjector::readyReadStandardOutput()
     emit stdoutMessage(output);
 }
 
+void DebuggerInjector::setManualError(const QString& msg)
+{
+    mManualError = true;
+    mErrorString = msg;
+
+    m_process->kill();
+    disconnect(m_process.data(), SIGNAL(readyReadStandardError()), this, nullptr);
+    disconnect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, nullptr);
+    mProcessError = QProcess::FailedToStart;
+}
+
 void DebuggerInjector::processFinished()
 {
     mExitCode = m_process->exitCode();
