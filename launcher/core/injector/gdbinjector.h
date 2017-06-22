@@ -49,9 +49,7 @@ protected:
     void clearBreakpoints() override;
     void printBacktrace() override;
     void loadSymbols(const QByteArray &library) override;
-
-private slots:
-    void readyReadStandardError() override;
+    void parseStandardError(const QByteArray & line) override;
 };
 }
 

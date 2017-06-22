@@ -74,24 +74,20 @@ void GdbInjector::disableConfirmations()
     execCmd("set confirm off");
 }
 
-void GdbInjector::readyReadStandardError()
+void GdbInjector::parseStandardError(const QByteArray &line)
 {
-    const QString error = QString::fromLocal8Bit(m_process->readAllStandardError());
-    processLog(DebuggerInjector::In, true, error);
-    emit stderrMessage(error);
-
-    if (error.startsWith(QLatin1String("Function \"main\" not defined."))) {
+    if (line.startsWith("Function \"main\" not defined.")) {
         setManualError(tr("The debuggee application is missing debug symbols which are required\n"
                           "for GammaRay's GDB injector. Please recompile the debuggee.\n\n"
-                          "GDB error was: %1").arg(error));
-    } else if (error.startsWith(QLatin1String("Can't find member of namespace, class, struct, or union named \"QCoreApplication::exec\""))) {
+                          "GDB error was: %1").arg(QString::fromLocal8Bit(line)));
+    } else if (line.startsWith("Can't find member of namespace, class, struct, or union named \"QCoreApplication::exec\"")) {
         setManualError(tr("Your QtCore library is missing debug symbols which are required\n"
                           "for GammaRay's GDB injector. Please install the required debug symbols.\n\n"
-                          "GDB error was: %1").arg(error));
-    } else if (error.startsWith(QLatin1String("warning: Unable to restore previously selected frame"))) {
+                          "GDB error was: %1").arg(QString::fromLocal8Bit(line)));
+    } else if (line.startsWith("warning: Unable to restore previously selected frame")) {
         setManualError(tr("The debuggee application seems to have an invalid stack trace\n"
                           "This can be caused by the executable being updated on disk after launching it.\n\n"
-                          "GDB error was: %1").arg(error));
+                          "GDB error was: %1").arg(QString::fromLocal8Bit(line)));
     }
 }
 

@@ -148,7 +148,9 @@ void DebuggerInjector::readyReadStandardError()
 {
     m_process->setReadChannel(QProcess::StandardError);
     while (m_process->canReadLine()) {
-        const QString error = QString::fromLocal8Bit(m_process->readLine());
+        const auto line = m_process->readLine();
+        parseStandardError(line);
+        const auto error = QString::fromLocal8Bit(line);
         processLog(DebuggerInjector::In, true, error);
         emit stderrMessage(error);
     }

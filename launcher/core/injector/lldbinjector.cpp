@@ -142,3 +142,9 @@ bool LldbInjector::attach(int pid, const QString &probeDll, const QString &probe
     disableConfirmations();
     return injectAndDetach(probeDll, probeFunc);
 }
+
+void LldbInjector::parseStandardError(const QByteArray& line)
+{
+    if (line.startsWith("error: your copy of LLDB does not support scripting"))
+        setManualError(tr("LLDB does not support scripting. Install lldb python support please."));
+}

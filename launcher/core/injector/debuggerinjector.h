@@ -84,11 +84,12 @@ protected:
      */
     void setManualError(const QString &msg);
 
-protected slots:
-    virtual void readyReadStandardError();
+    /** stderr lines for debugger-specific parsing */
+    virtual void parseStandardError(const QByteArray &line) = 0;
 
 private slots:
     void readyReadStandardOutput();
+    void readyReadStandardError();
     void processFinished();
 
 protected:
@@ -100,7 +101,7 @@ protected:
     QString mErrorString;
     bool mManualError;
 
-protected:
+private:
     enum Orientation {
         In,
         Out
