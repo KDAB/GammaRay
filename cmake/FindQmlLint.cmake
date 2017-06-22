@@ -28,7 +28,18 @@
 
 find_program(QMLLINT_EXECUTABLE qmllint)
 if (QMLLINT_EXECUTABLE AND NOT Qt5Core_VERSION VERSION_LESS 5.4)
-  set(QmlLint_FOUND TRUE)
+  if(NOT QMLLINT_IS_WORKING)
+    # Try to fix common problems on Debian-based distros -- they provide /usr/bin/qmllint, which is a symlink to
+    # /usr/lib/x86_64-linux-gnu/qt4/bin/qmllint (or the Qt5 version of it). The actual executable is part of different
+    # package, so might not even be installed => double-check whether qmllint is working by executing it
+    execute_process(COMMAND ${QMLLINT_EXECUTABLE} --version RESULT_VARIABLE _qmllint_result OUTPUT_QUIET ERROR_QUIET)
+    if (_qmllint_result EQUAL 0)
+      set(QMLLINT_IS_WORKING TRUE CACHE BOOL "Whether the found qmllint executable is actually usable" FORCE)
+    endif()
+  endif()
+  if(QMLLINT_IS_WORKING)
+    set(QmlLint_FOUND TRUE)
+  endif()
 endif()
 
 # validate a list of qml files

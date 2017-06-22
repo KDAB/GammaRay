@@ -24,7 +24,6 @@ can serve as examples for all the features described below. Additional external
 plugins can be found here:
 
 - GammaRay plugin examples: https://github.com/KDAB/GammaRay-plugin-examples
-- GammaRay QtIvi support plugin: https://codereview.qt-project.org/gitweb?p=qt-apps/gammaray-plugin-qtivi.git
 
 For best practices on plugin development, also see the \ref gammaray-plugin-design-guide "Plugin Design Guide".
 
