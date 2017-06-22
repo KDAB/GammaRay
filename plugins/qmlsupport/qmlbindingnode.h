@@ -82,6 +82,9 @@ private:
     void fetchBindingCode();
     void fetchPropertyCode();
 
+    void addImplicitDependencies();
+    void addAnchoringDependencies();
+
     QmlBindingNode *m_parent;
     QObject *m_object;
     QString m_id;
