@@ -38,6 +38,10 @@
 
 #include <QDebug>
 
+#include <QtQuick/QQuickItem>
+#include <private/qquickitem_p.h>
+#include <private/qquickitemchangelistener_p.h>
+
 #include <private/qqmlabstractbinding_p.h>
 #include <private/qqmlbinding_p.h>
 #include <private/qqmldata_p.h>
@@ -100,8 +104,12 @@ QmlBindingNode::QmlBindingNode(QObject* object, int propertyIndex, QmlBindingNod
         fetchBindingCode();
         checkForLoops();
         findDependencies();
+        addImplicitDependencies();
+        addAnchoringDependencies();
     } else {
         fetchPropertyCode();
+        addImplicitDependencies();
+        addAnchoringDependencies();
     }
     refreshValue();
 }
@@ -128,6 +136,8 @@ QmlBindingNode::QmlBindingNode(QQmlAbstractBinding* binding, QmlBindingNode *par
     fetchBindingCode();
     checkForLoops();
     findDependencies();
+    addImplicitDependencies();
+    addAnchoringDependencies();
 }
 
 QmlBindingNode::QmlBindingNode(QQmlProperty property, QmlBindingNode* parent)
@@ -146,8 +156,12 @@ QmlBindingNode::QmlBindingNode(QQmlProperty property, QmlBindingNode* parent)
         fetchBindingCode();
         checkForLoops();
         findDependencies();
+        addImplicitDependencies();
+        addAnchoringDependencies();
     } else {
         fetchPropertyCode();
+        addImplicitDependencies();
+        addAnchoringDependencies();
     }
     refreshValue();
 }
@@ -159,16 +173,19 @@ void GammaRay::QmlBindingNode::fetchPropertyCode()
 
 void GammaRay::QmlBindingNode::fetchBindingCode()
 {
-    return;
 // #if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
 //     QQmlEnginePrivate *ep = QQmlEnginePrivate::get(QQmlData::get(m_object)->context->engine);
 //     QV4::Scope scope(ep->v4engine());
 //     QV4::ScopedValue f(scope, m_binding->m_function.value());
 //     QV4::Function *function = f->as<QV4::FunctionObject>()->function();
 // #else
-//     QV4::Function *function = m_binding->function();
-//     QQmlSourceLocation loc = function->sourceLocation();
-//     m_sourceLocation = SourceLocation(QUrl(loc.sourceFile), loc.line, loc.column);
+    QQmlBinding *binding = dynamic_cast<QQmlBinding*>(m_binding);
+    if (!binding)
+        return;
+
+    QV4::Function *function = binding->function();
+    QQmlSourceLocation loc = function->sourceLocation();
+    m_sourceLocation = SourceLocation(QUrl(loc.sourceFile), loc.line, loc.column);
 // #endif
 //
 //     QString fileName = function->compilationUnit->fileName();
@@ -213,6 +230,7 @@ void GammaRay::QmlBindingNode::findDependencies()
 
 #ifdef USE_QT_BINDINGDEPENDENCY_API
     for (const auto &dependency : m_binding->dependencies()) {
+        qDebug() << "I got a  dependency:" << dependency.object() << dependency.property().name();
         m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(dependency, this)));
     }
 #else
@@ -277,6 +295,84 @@ void GammaRay::QmlBindingNode::findDependencies()
     });
 #endif
 }
+
+void GammaRay::QmlBindingNode::addImplicitDependencies()
+{
+    // So far, we can only hard code implicit dependencies.
+    qDebug() << "looking for implicitDependencies.";
+    if (QQuickItem *item = qobject_cast<QQuickItem*>(m_object)) {
+        QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
+        qDebug() << "Have an Item (" << m_propertyIndex << item->metaObject()->property(m_propertyIndex).name() << ")";
+        if (m_propertyIndex == item->metaObject()->indexOfProperty("width")) {
+//             for (auto &&listener : itemPriv->changeListeners) {
+//                 if (QQuickAnchorsPrivate *anchorPriv = dynamic_cast<QQuickAnchorsPrivate *>(listener.listener)) {
+//                     if (listener.gTypes.horizontalChange()) {
+//                         m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(m_object, "implicitWidth"), this)));
+//                     }
+//                 }
+//             }
+            if (!itemPriv->widthValid) {
+                m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(m_object, "implicitWidth"), this)));
+            }
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("height")) {
+            if (!itemPriv->heightValid) {
+                m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(m_object, "implicitHeight"), this)));
+            }
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("implicitWidth")) {
+            if (item->inherits("QQuickBasePositioner")) {
+                for (QQuickItem *child : item->childItems()) {
+                    m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(child, "width"), this)));
+                }
+            }
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("implicitHeight")) {
+            if (item->inherits("QQuickBasePositioner")) {
+                for (QQuickItem *child : item->childItems()) {
+                    m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(child, "height"), this)));
+                }
+            }
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("x")) {
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("y")) {
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("childrenRect")) {
+            for (auto &&child : item->childItems()) {
+                m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(child, "width"), this)));
+                m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(child, "height"), this)));
+            }
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("top") && itemPriv->anchors()) {
+            m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(itemPriv->anchors(), "top"), this)));
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("bottom") && itemPriv->anchors()) {
+            m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(itemPriv->anchors(), "bottom"), this)));
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("left") && itemPriv->anchors()) {
+            m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(itemPriv->anchors(), "left"), this)));
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("right") && itemPriv->anchors()) {
+            m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(itemPriv->anchors(), "right"), this)));
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("horizontalCenter") && itemPriv->anchors()) {
+            m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(itemPriv->anchors(), "horizontalCenter"), this)));
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("verticalCenter") && itemPriv->anchors()) {
+            m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(itemPriv->anchors(), "verticalCenter"), this)));
+        } else if (m_propertyIndex == item->metaObject()->indexOfProperty("baseline") && itemPriv->anchors()) {
+            m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(itemPriv->anchors(), "baseline"), this)));
+        }
+    }
+}
+
+void GammaRay::QmlBindingNode::addAnchoringDependencies()
+{
+    if (QQuickAnchors *anchors = qobject_cast<QQuickAnchors*>(m_object)) {
+        QQuickAnchorLine anchorLine = m_object->metaObject()->property(m_propertyIndex).read(m_object).value<QQuickAnchorLine>();
+        QString dependencyPropertyName = anchorLine.anchorLine == QQuickAnchors::TopAnchor ? "top"
+                                        : anchorLine.anchorLine == QQuickAnchors::BottomAnchor ? "bottom"
+                                        : anchorLine.anchorLine == QQuickAnchors::LeftAnchor ? "left"
+                                        : anchorLine.anchorLine == QQuickAnchors::RightAnchor ? "right"
+                                        : anchorLine.anchorLine == QQuickAnchors::HCenterAnchor ? "horizontalCenter"
+                                        : anchorLine.anchorLine == QQuickAnchors::VCenterAnchor ? "verticalCenter"
+                                        : anchorLine.anchorLine == QQuickAnchors::BaselineAnchor ? "baseline"
+                                        : "";
+        if (anchorLine.item) {
+            m_dependencies.push_back(std::unique_ptr<QmlBindingNode>(new QmlBindingNode(QQmlProperty(anchorLine.item, dependencyPropertyName), this)));
+        }
+    }
+}
+
 
 bool QmlBindingNode::operator<(const QmlBindingNode& other) const
 {
