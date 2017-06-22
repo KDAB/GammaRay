@@ -111,9 +111,12 @@ void DebuggerInjector::execCmd(const QByteArray &cmd, bool waitForWritten)
 
 void DebuggerInjector::readyReadStandardOutput()
 {
-    const QString output = QString::fromLocal8Bit(m_process->readAllStandardOutput());
-    processLog(DebuggerInjector::In, false, output);
-    emit stdoutMessage(output);
+    m_process->setReadChannel(QProcess::StandardOutput);
+    while (m_process->canReadLine()) {
+        const QString output = QString::fromLocal8Bit(m_process->readLine());
+        processLog(DebuggerInjector::In, false, output);
+        emit stdoutMessage(output);
+    }
 }
 
 void DebuggerInjector::setManualError(const QString& msg)
@@ -143,9 +146,12 @@ void DebuggerInjector::processFinished()
 
 void DebuggerInjector::readyReadStandardError()
 {
-    const QString error = QString::fromLocal8Bit(m_process->readAllStandardError());
-    processLog(DebuggerInjector::In, true, error);
-    emit stderrMessage(error);
+    m_process->setReadChannel(QProcess::StandardError);
+    while (m_process->canReadLine()) {
+        const QString error = QString::fromLocal8Bit(m_process->readLine());
+        processLog(DebuggerInjector::In, true, error);
+        emit stderrMessage(error);
+    }
 }
 
 bool DebuggerInjector::startDebugger(const QStringList &args, const QProcessEnvironment &env)
