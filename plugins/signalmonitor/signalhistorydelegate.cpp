@@ -90,13 +90,19 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
     painter->setPen(option.palette.color(QPalette::WindowText));
 
+    QVector<QLine> lines;
+    lines.reserve(events.size());
+
     foreach (qint64 ev, events) {
         const qint64 ts = SignalHistoryModel::timestamp(ev);
         if (ts >= startTime && ts < endTime) {
             const int x = x0 + dx * (ts - startTime) / interval;
-            painter->drawLine(x, y0 + 1, x, y0 + dy - 2);
+            lines << QLine(x, y0 + 1, x, y0 + dy - 2);
         }
     }
+
+    if (!lines.isEmpty())
+        painter->drawLines(lines);
 }
 
 QSize SignalHistoryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const
