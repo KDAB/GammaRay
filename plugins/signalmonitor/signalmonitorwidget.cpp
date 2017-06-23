@@ -41,6 +41,7 @@
 
 #include <QMenu>
 #include <QToolTip>
+#include <QSettings>
 
 #include <cmath>
 
@@ -79,12 +80,16 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
 
     connect(ui->pauseButton, SIGNAL(toggled(bool)), this, SLOT(pauseAndResume(bool)));
-    connect(ui->intervalScale, SIGNAL(valueChanged(int)), this,
+    connect(ui->intervalScale, SIGNAL(sliderMoved(int)), this,
             SLOT(intervalScaleValueChanged(int)));
-    connect(ui->fps, SIGNAL(valueChanged(int)), this,
+    connect(ui->fps, SIGNAL(sliderMoved(int)), this,
             SLOT(fpsValueChanged(int)));
     connect(ui->objectTreeView, SIGNAL(delegateIsActiveChanged(bool)), this,
             SLOT(eventDelegateIsActiveChanged(bool)));
+    connect(ui->intervalScale, SIGNAL(valueChanged(int)), this,
+            SLOT(saveState()), Qt::QueuedConnection);
+    connect(ui->fps, SIGNAL(valueChanged(int)), this,
+            SLOT(saveState()), Qt::QueuedConnection);
 
     m_stateManager.setDefaultSizes(header,
                                    UISizeVector() << ui->objectTreeView->sizeHintForColumn(0) << 200 << 200 << -1);
@@ -96,6 +101,22 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
 
 SignalMonitorWidget::~SignalMonitorWidget()
 {
+}
+
+void SignalMonitorWidget::saveTargetState(QSettings *settings) const
+{
+    settings->setValue("fps", ui->fps->value());
+    settings->setValue("intervalScale", ui->intervalScale->value());
+}
+
+void SignalMonitorWidget::restoreTargetState(QSettings *settings)
+{
+    const int fps = settings->value("fps", ui->fps->value()).toInt();
+    const int intervalScale = settings->value("intervalScale", ui->intervalScale->value()).toInt();
+    ui->fps->setValue(fps);
+    fpsValueChanged(fps);
+    ui->intervalScale->setValue(intervalScale);
+    intervalScaleValueChanged(intervalScale);
 }
 
 void SignalMonitorWidget::intervalScaleValueChanged(int value)
@@ -149,6 +170,12 @@ void SignalMonitorWidget::selectionChanged(const QItemSelection& selection)
         return;
     const auto idx = selection.at(0).topLeft();
     ui->objectTreeView->scrollTo(idx);
+}
+
+void SignalMonitorWidget::saveState()
+{
+    if (m_stateManager.initialized())
+        m_stateManager.saveState();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
