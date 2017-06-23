@@ -95,10 +95,15 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
     foreach (qint64 ev, events) {
         const qint64 ts = SignalHistoryModel::timestamp(ev);
-        if (ts >= startTime && ts < endTime) {
-            const int x = x0 + dx * (ts - startTime) / interval;
-            lines << QLine(x, y0 + 1, x, y0 + dy - 2);
-        }
+
+        if (ts < startTime)
+            continue;
+
+        if (ts >= endTime)
+            break;
+
+        const int x = x0 + dx * (ts - startTime) / interval;
+        lines << QLine(x, y0 + 1, x, y0 + dy - 2);
     }
 
     if (!lines.isEmpty())
