@@ -40,6 +40,7 @@
 #include <common/objectbroker.h>
 
 #include <QMenu>
+#include <QToolTip>
 
 #include <cmath>
 
@@ -88,6 +89,9 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(header,
                                    UISizeVector() << ui->objectTreeView->sizeHintForColumn(0) << 200 << 200 << -1);
     header->setSortIndicator(1, header->sortIndicatorOrder());
+
+    intervalScaleValueChanged(ui->intervalScale->value());
+    fpsValueChanged(ui->fps->value());
 }
 
 SignalMonitorWidget::~SignalMonitorWidget()
@@ -96,6 +100,9 @@ SignalMonitorWidget::~SignalMonitorWidget()
 
 void SignalMonitorWidget::intervalScaleValueChanged(int value)
 {
+    ui->intervalScale->setToolTip(tr("Zoom: %1").arg(value));
+    QToolTip::showText(ui->intervalScale->mapToGlobal(ui->intervalScale->rect().center()),
+                       ui->intervalScale->toolTip(), ui->intervalScale);
     // FIXME: Define a more reasonable formula.
     qint64 i = 5000 / std::pow(1.07, value);
     ui->objectTreeView->setDelegateVisibleInterval(i);
@@ -103,6 +110,9 @@ void SignalMonitorWidget::intervalScaleValueChanged(int value)
 
 void SignalMonitorWidget::fpsValueChanged(int value)
 {
+    ui->fps->setToolTip(tr("FPS: %1").arg(value));
+    QToolTip::showText(ui->fps->mapToGlobal(ui->fps->rect().center()),
+                       ui->fps->toolTip(), ui->fps);
     ui->objectTreeView->setDelegateFPS(value);
 }
 
