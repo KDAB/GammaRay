@@ -36,6 +36,42 @@
       </widget>
      </item>
      <item>
+      <spacer name="toolbarSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="fpsLabel">
+       <property name="text">
+        <string>Updates per seconds:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="fps">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
+       <property name="value">
+        <number>15</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="toolbarSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

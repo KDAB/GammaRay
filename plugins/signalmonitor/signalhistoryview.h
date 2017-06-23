@@ -49,6 +49,9 @@ public:
     qint64 delegateVisibleInterval() const;
     void setDelegateVisibleInterval(qint64 interval);
 
+    int delegateFPS() const;
+    void setDelegateFPS(int fps);
+
 signals:
     void delegateIsActiveChanged(bool active);
     void delegateVisibleIntervalChanged(qint64 interval);

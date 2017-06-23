@@ -52,6 +52,7 @@ public:
 
 private slots:
     void intervalScaleValueChanged(int value);
+    void fpsValueChanged(int value);
     void pauseAndResume(bool pause);
     void eventDelegateIsActiveChanged(bool active);
     void contextMenu(QPoint pos);

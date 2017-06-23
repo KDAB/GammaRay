@@ -47,10 +47,10 @@ SignalHistoryDelegate::SignalHistoryDelegate(QObject *parent)
     , m_visibleOffset(0)
     , m_visibleInterval(15000)
     , m_totalInterval(0)
+    , m_fps(0)
 {
     connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
-    m_updateTimer->start(1000 / 25);
-    onUpdateTimeout();
+    setFPS(15);
 
     SignalMonitorInterface *iface = ObjectBroker::object<SignalMonitorInterface *>();
     connect(iface, SIGNAL(clock(qlonglong)), this, SLOT(onServerClockChanged(qlonglong)));
@@ -120,6 +120,17 @@ void SignalHistoryDelegate::setVisibleInterval(qint64 interval)
     if (m_visibleInterval != interval) {
         m_visibleInterval = interval;
         emit visibleIntervalChanged(m_visibleInterval);
+    }
+}
+
+void SignalHistoryDelegate::setFPS(int fps)
+{
+    if (m_fps != fps) {
+        m_fps = fps;
+        m_updateTimer->start(1000 / m_fps);
+        emit fpsChanged(m_fps);
+
+        onUpdateTimeout();
     }
 }
 

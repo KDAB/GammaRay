@@ -80,6 +80,8 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     connect(ui->pauseButton, SIGNAL(toggled(bool)), this, SLOT(pauseAndResume(bool)));
     connect(ui->intervalScale, SIGNAL(valueChanged(int)), this,
             SLOT(intervalScaleValueChanged(int)));
+    connect(ui->fps, SIGNAL(valueChanged(int)), this,
+            SLOT(fpsValueChanged(int)));
     connect(ui->objectTreeView, SIGNAL(delegateIsActiveChanged(bool)), this,
             SLOT(eventDelegateIsActiveChanged(bool)));
 
@@ -97,6 +99,11 @@ void SignalMonitorWidget::intervalScaleValueChanged(int value)
     // FIXME: Define a more reasonable formula.
     qint64 i = 5000 / std::pow(1.07, value);
     ui->objectTreeView->setDelegateVisibleInterval(i);
+}
+
+void SignalMonitorWidget::fpsValueChanged(int value)
+{
+    ui->objectTreeView->setDelegateFPS(value);
 }
 
 void SignalMonitorWidget::pauseAndResume(bool pause)

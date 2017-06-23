@@ -97,6 +97,16 @@ void SignalHistoryView::setDelegateVisibleInterval(qint64 interval)
     m_eventDelegate->setVisibleInterval(interval);
 }
 
+int SignalHistoryView::delegateFPS() const
+{
+    return m_eventDelegate->fps();
+}
+
+void SignalHistoryView::setDelegateFPS(int fps)
+{
+    m_eventDelegate->setFPS(fps);
+}
+
 void SignalHistoryView::eventDelegateChanged()
 {
     viewport()->update(eventColumnPosition(), 0, eventColumnWidth(), height());

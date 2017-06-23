@@ -52,6 +52,9 @@ public:
     void setVisibleInterval(qint64 interval);
     qint64 visibleInterval() const { return m_visibleInterval; }
 
+    void setFPS(int fps);
+    int fps() const { return m_fps; }
+
     void setVisibleOffset(qint64 offset);
     qint64 visibleOffset() const { return m_visibleOffset; }
 
@@ -64,6 +67,7 @@ public:
 
 signals:
     void visibleIntervalChanged(qint64 value);
+    void fpsChanged(int value);
     void visibleOffsetChanged(qint64 value);
     void isActiveChanged(bool value);
     void totalIntervalChanged();
@@ -77,6 +81,7 @@ private:
     qint64 m_visibleOffset;
     qint64 m_visibleInterval;
     qint64 m_totalInterval;
+    int m_fps;
 };
 } // namespace GammaRay
 
