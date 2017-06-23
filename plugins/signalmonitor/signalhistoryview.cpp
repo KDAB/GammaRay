@@ -61,8 +61,6 @@ SignalHistoryView::SignalHistoryView(QWidget *parent)
             this, SLOT(eventDelegateChanged()));
     connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)),
             this, SLOT(eventDelegateChanged()));
-    connect(m_eventDelegate, SIGNAL(totalIntervalChanged()),
-            this, SLOT(eventDelegateChanged()));
     connect(m_eventScrollBar, SIGNAL(sliderMoved(int)),
             this, SLOT(eventScrollBarSliderMoved(int)));
 }
