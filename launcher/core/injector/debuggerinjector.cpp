@@ -75,7 +75,6 @@ void DebuggerInjector::stop()
         m_process->terminate();
         if (!m_process->waitForFinished(1000))
             m_process->kill(); // kill it softly
-        emit finished();
     }
 }
 
@@ -111,9 +110,23 @@ void DebuggerInjector::execCmd(const QByteArray &cmd, bool waitForWritten)
 
 void DebuggerInjector::readyReadStandardOutput()
 {
-    const QString output = QString::fromLocal8Bit(m_process->readAllStandardOutput());
-    processLog(DebuggerInjector::In, false, output);
-    emit stdoutMessage(output);
+    m_process->setReadChannel(QProcess::StandardOutput);
+    while (m_process->canReadLine()) {
+        const QString output = QString::fromLocal8Bit(m_process->readLine());
+        processLog(DebuggerInjector::In, false, output);
+        emit stdoutMessage(output);
+    }
+}
+
+void DebuggerInjector::setManualError(const QString& msg)
+{
+    mManualError = true;
+    mErrorString = msg;
+
+    m_process->kill();
+    disconnect(m_process.data(), SIGNAL(readyReadStandardError()), this, nullptr);
+    disconnect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, nullptr);
+    mProcessError = QProcess::FailedToStart;
 }
 
 void DebuggerInjector::processFinished()
@@ -124,17 +137,22 @@ void DebuggerInjector::processFinished()
         mProcessError = m_process->error();
         if (mProcessError != QProcess::UnknownError)
             mErrorString = m_process->errorString();
-    }
-
-    if (!mManualError)
         emit attached();
+    } else {
+        emit finished();
+    }
 }
 
 void DebuggerInjector::readyReadStandardError()
 {
-    const QString error = QString::fromLocal8Bit(m_process->readAllStandardError());
-    processLog(DebuggerInjector::In, true, error);
-    emit stderrMessage(error);
+    m_process->setReadChannel(QProcess::StandardError);
+    while (m_process->canReadLine()) {
+        const auto line = m_process->readLine();
+        parseStandardError(line);
+        const auto error = QString::fromLocal8Bit(line);
+        processLog(DebuggerInjector::In, true, error);
+        emit stderrMessage(error);
+    }
 }
 
 bool DebuggerInjector::startDebugger(const QStringList &args, const QProcessEnvironment &env)

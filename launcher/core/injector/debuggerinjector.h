@@ -79,11 +79,17 @@ protected:
     /** Given an interrupted process, this injects the probe and continues the process. */
     bool injectAndDetach(const QString &probeDll, const QString &probeFunc);
 
-protected slots:
-    virtual void readyReadStandardError();
-    virtual void readyReadStandardOutput();
+    /** Set an error that was detected manually rather than by process monitoring.
+     *  This will terminate the debugger.
+     */
+    void setManualError(const QString &msg);
+
+    /** stderr lines for debugger-specific parsing */
+    virtual void parseStandardError(const QByteArray &line) = 0;
 
 private slots:
+    void readyReadStandardOutput();
+    void readyReadStandardError();
     void processFinished();
 
 protected:
@@ -93,9 +99,10 @@ protected:
     QProcess::ExitStatus mExitStatus;
     QString m_filePath;
     QString mErrorString;
+
+private:
     bool mManualError;
 
-protected:
     enum Orientation {
         In,
         Out

@@ -34,6 +34,7 @@ using namespace GammaRay;
 
 LldbInjector::LldbInjector(const QString &executableOverride)
     : DebuggerInjector()
+    , m_scriptSupportIsRequired(false)
 {
     setFilePath(executableOverride.isEmpty() ? QStringLiteral("lldb") : executableOverride);
 }
@@ -122,6 +123,7 @@ void LldbInjector::printBacktrace()
 bool LldbInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
                           const QString &probeFunc, const QProcessEnvironment &env)
 {
+    m_scriptSupportIsRequired = true; // launching fails with async command mode, which we can only disable with scripting
     QStringList args;
     args.push_back(QStringLiteral("--"));
     args.append(programAndArgs);
@@ -141,4 +143,10 @@ bool LldbInjector::attach(int pid, const QString &probeDll, const QString &probe
         return false;
     disableConfirmations();
     return injectAndDetach(probeDll, probeFunc);
+}
+
+void LldbInjector::parseStandardError(const QByteArray& line)
+{
+    if (m_scriptSupportIsRequired && line.startsWith("error: your copy of LLDB does not support scripting"))
+        setManualError(tr("LLDB does not support scripting. Install lldb python support please."));
 }
