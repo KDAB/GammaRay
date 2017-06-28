@@ -190,6 +190,10 @@ void ConnectPage::hostResponse(QHostInfo hostInfo)
 
 void ConnectPage::handleAddressAndPort(QString &stillToParse, bool &correctSoFar, const QString &possibleAddress, bool skipPort)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    // Qt 4 parses Urls into Uppercase representation
+    stillToParse = stillToParse.toUpper();
+#endif
     stillToParse.replace(possibleAddress, "");
     if (stillToParse.isEmpty()) {
         correctSoFar = true;
