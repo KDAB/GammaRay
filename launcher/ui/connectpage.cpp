@@ -50,14 +50,12 @@ using namespace GammaRay;
 ConnectPage::ConnectPage(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ConnectPage)
-    , m_localPrefix("local://")
-    , m_tcpPrefix("tcp://")
 {
     ui->setupUi(this);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    m_implicitPortWarningSign = new QAction(QIcon(":/launcher/warning.png"), "No port given, will use 11732", this);
+    m_implicitPortWarningSign = new QAction(QIcon(":/launcher/warning.png"), tr("No port given, will use 11732"), this);
     m_fileIsNotASocketWarning = new QAction(qApp->style()->standardIcon(QStyle::SP_MessageBoxCritical)
-                                            , "File is not a socket"
+                                            , tr("File is not a socket")
                                             , this);
 #endif
     connect(ui->host, SIGNAL(textChanged(QString)), SLOT(validateHostAddress(const QString&)));
@@ -73,6 +71,9 @@ ConnectPage::ConnectPage(QWidget *parent)
     ui->host->setText(settings.value(QStringLiteral("Connect/Url"), QString()).toString());
 }
 
+const QString ConnectPage::localPrefix = QStringLiteral("local://");
+const QString ConnectPage::tcpPrefix = QStringLiteral("tcp://");
+
 void ConnectPage::validateHostAddress(const QString &address)
 {
     QString stillToParse = address;
@@ -81,9 +82,9 @@ void ConnectPage::validateHostAddress(const QString &address)
     m_currentUrl.clear();
 
     // Initially, set the text to red
-    QPalette palette;
-    palette.setColor(QPalette::Text,Qt::red);
-    ui->host->setPalette(palette);
+    QPalette errorPalette;
+    errorPalette.setColor(QPalette::Text, Qt::red);
+    ui->host->setPalette(errorPalette);
     clearWarnings();
 
     handleLocalAddress(stillToParse, correctSoFar);
@@ -97,8 +98,7 @@ void ConnectPage::validateHostAddress(const QString &address)
     // set text back to black again
     if (correctSoFar && stillToParse.isEmpty()) {
         m_valid = true;
-        palette.setColor(QPalette::Text,Qt::black);
-        ui->host->setPalette(palette);
+        ui->host->setPalette(this->style()->standardPalette());
     }
     emit userInputParsed();
 }
@@ -106,8 +106,8 @@ void ConnectPage::validateHostAddress(const QString &address)
 void ConnectPage::handleLocalAddress(QString &stillToParse, bool &correctSoFar)
 {
 #ifdef Q_OS_UNIX
-    if (stillToParse.startsWith(m_localPrefix))
-        stillToParse.remove(m_localPrefix); //dont remove second slash
+    if (stillToParse.startsWith(localPrefix))
+        stillToParse.remove(localPrefix); //dont remove second slash
 
     // Its also okay, if only a path to an existing file is given
     QFileInfo localSocketFile(stillToParse);
@@ -129,8 +129,8 @@ void ConnectPage::handleLocalAddress(QString &stillToParse, bool &correctSoFar)
 void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
 {
     // handle tcp prefix
-    if (stillToParse.startsWith(m_tcpPrefix))
-        stillToParse.remove(0, m_tcpPrefix.size());
+    if (stillToParse.startsWith(tcpPrefix))
+        stillToParse.remove(0, tcpPrefix.size());
 
     // Speculate on the address format
     const auto possibleIPv4Address = QHostAddress(stillToParse.split(":").first());
@@ -165,8 +165,8 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
 void ConnectPage::handleHostName(QString &stillToParse)
 {
     // handle tcp prefix
-    if (stillToParse.startsWith(m_tcpPrefix))
-        stillToParse.remove(0, m_tcpPrefix.size());
+    if (stillToParse.startsWith(tcpPrefix))
+        stillToParse.remove(0, tcpPrefix.size());
 
     QHostInfo::lookupHost(stillToParse, this, SLOT(hostResponse(QHostInfo)));
 }
@@ -181,8 +181,7 @@ void ConnectPage::hostResponse(QHostInfo hostInfo)
 
     m_valid = true;
     QPalette palette;
-    palette.setColor(QPalette::Text,Qt::black);
-    ui->host->setPalette(palette);
+    ui->host->setPalette(this->style()->standardPalette());
     emit dnsResolved();
     emit updateButtonState();
 }

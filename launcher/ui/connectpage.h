@@ -80,12 +80,13 @@ private:
     void showFileIsNotSocketWarning();
     void clearWarnings();
 
+    static const QString localPrefix;
+    static const QString tcpPrefix;
+
     QScopedPointer<Ui::ConnectPage> ui;
     QUrl m_currentUrl;
     bool m_valid;
     QToolButton *m_portInfoLabel;
-    const QString m_localPrefix;
-    const QString m_tcpPrefix;
     QAction *m_implicitPortWarningSign;
     QAction *m_fileIsNotASocketWarning;
 };
