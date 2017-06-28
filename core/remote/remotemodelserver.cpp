@@ -40,6 +40,7 @@
 #include <QDebug>
 #include <QBuffer>
 #include <QIcon>
+#include <QTimer>
 
 #include <iostream>
 
@@ -53,7 +54,12 @@ RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent)
     , m_model(nullptr)
     , m_dummyBuffer(new QBuffer(&m_dummyData, this))
     , m_monitored(false)
+    , m_pendingDataChangedTimer(new QTimer(this))
 {
+    m_pendingDataChangedTimer->setInterval(100);
+    m_pendingDataChangedTimer->setSingleShot(true);
+    connect(m_pendingDataChangedTimer, SIGNAL(timeout()), this, SLOT(emitPendingDataChanged()));
+
     setObjectName(objectName);
     m_dummyBuffer->open(QIODevice::WriteOnly);
     registerServer();
@@ -119,6 +125,8 @@ void RemoteModelServer::connectModel()
 #endif
     connect(m_model, SIGNAL(modelReset()), SLOT(modelReset()));
     connect(m_model, SIGNAL(destroyed(QObject*)), SLOT(modelDeleted()));
+
+    m_pendingDataChanged.clear();
 }
 
 void RemoteModelServer::disconnectModel()
@@ -157,6 +165,8 @@ void RemoteModelServer::disconnectModel()
 #endif
     disconnect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
     disconnect(m_model, SIGNAL(destroyed(QObject*)), this, SLOT(modelDeleted()));
+
+    m_pendingDataChanged.clear();
 }
 
 void RemoteModelServer::newRequest(const GammaRay::Message &msg)
@@ -368,9 +378,38 @@ void RemoteModelServer::dataChanged(const QModelIndex &begin, const QModelIndex 
 {
     if (!isConnected())
         return;
-    Message msg(m_myAddress, Protocol::ModelContentChanged);
-    msg << Protocol::fromQModelIndex(begin) << Protocol::fromQModelIndex(end) << roles;
-    sendMessage(msg);
+
+    for (int i = begin.row(); i <= end.row(); ++i) {
+//        qWarning()
+//                << "<<  "
+//                << "(" << i << "," << begin.column() << ")"
+//                << "(" << i << "," << end.column() << ")"
+//                << roles;
+        const QPersistentModelIndex index(begin.sibling(i, 0));
+        auto it = m_pendingDataChanged.find(index);
+
+        if (it != m_pendingDataChanged.end()) {
+            DataChanged &change = it.value();
+
+            change.left = qMin(change.left, begin.column());
+            change.right = qMax(change.right, end.column());
+
+            if (roles.isEmpty()) {
+                change.roles.clear();
+            } else if (!change.roles.isEmpty()) {
+                foreach (const int role, roles) {
+                    if (!change.roles.contains(role)) {
+                        change.roles << role;
+                    }
+                }
+            }
+        } else {
+            m_pendingDataChanged.insert(index, DataChanged(begin.column(), end.column(), roles));
+        }
+    }
+
+    if (!m_pendingDataChangedTimer->isActive())
+        m_pendingDataChangedTimer->start();
 }
 
 void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first, int last)
@@ -459,6 +498,7 @@ void RemoteModelServer::sendLayoutChanged(const QVector< Protocol::ModelIndex > 
 {
     if (!isConnected())
         return;
+    emitPendingDataChanged();
     Message msg(m_myAddress, Protocol::ModelLayoutChanged);
     msg << parents << hint;
     sendMessage(msg);
@@ -468,6 +508,7 @@ void RemoteModelServer::modelReset()
 {
     if (!isConnected())
         return;
+    m_pendingDataChanged.clear();
     sendMessage(Message(m_myAddress, Protocol::ModelReset));
 }
 
@@ -500,6 +541,72 @@ void RemoteModelServer::modelDeleted()
     m_model = nullptr;
     if (m_monitored)
         modelReset();
+}
+
+void RemoteModelServer::sendDataChanged(const QModelIndex &topLeft,
+                                        const QModelIndex &bottomRight,
+                                        const DataChanged &change)
+{
+    if (!isConnected())
+        return;
+//    qWarning()
+//            << "  >>"
+//            << "(" << topLeft.row() << "," << topLeft.column() << ")"
+//            << "(" << bottomRight.row() << "," << bottomRight.column() << ")"
+//            << change.roles;
+    Message msg(m_myAddress, Protocol::ModelContentChanged);
+    msg << Protocol::fromQModelIndex(topLeft) << Protocol::fromQModelIndex(bottomRight) << change.roles;
+    sendMessage(msg);
+}
+
+void RemoteModelServer::emitPendingDataChanged()
+{
+    if (!isConnected()) {
+        m_pendingDataChanged.clear();
+        return;
+    }
+
+    QModelIndex top;
+    QModelIndex bottom;
+    DataChanged change;
+
+    for (auto it(m_pendingDataChanged.constBegin()), end(m_pendingDataChanged.constEnd());
+         it != end; ++it) {
+        if (!it.key().isValid()) {
+            continue;
+        }
+
+        if (change.isEmpty()) {
+            // New entry
+            top = it.key().sibling(it.key().row(), it.value().left);
+            bottom = it.key().sibling(it.key().row(), it.value().right);
+            change = it.value();
+        } else if ((change.left == it.value().left && change.right == it.value().right) &&
+                   bottom.row() == it.key().row() - 1) {
+            // Contiguous entry
+            bottom = it.key().sibling(it.key().row(), it.value().right);
+
+            const QVector<int> roles = it.value().roles;
+            foreach (const int role, roles) {
+                if (!change.roles.contains(role)) {
+                    change.roles << role;
+                }
+            }
+        } else {
+            // Non contiguous/compatible entry
+            sendDataChanged(top, bottom, change);
+
+            top = it.key().sibling(it.key().row(), it.value().left);
+            bottom = it.key().sibling(it.key().row(), it.value().right);
+            change = it.value();
+        }
+    }
+
+    if (!change.isEmpty()) {
+        sendDataChanged(top, bottom, change);
+    }
+
+    m_pendingDataChanged.clear();
 }
 
 void RemoteModelServer::registerServer()
