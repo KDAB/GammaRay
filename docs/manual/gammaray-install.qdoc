@@ -57,7 +57,7 @@
     Build recipes for the following source-based software distribution systems are available:
     \list
         \li \l{https://github.com/KDAB/homebrew-tap}{Homebrew} (macOS)
-        \li \l{https://quickgit.kde.org/?p=emerge.git&a=tree&f=portage%2Fqt-apps%2Fgammaray}{KDE emerge} (Windows)
+        \li \l{https://cgit.kde.org/craft.git/tree/portage/qt-apps/gammaray}{KDE Craft} (Windows)
     \endlist
 
     \section2 Building manually
