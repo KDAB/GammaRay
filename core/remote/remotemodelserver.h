@@ -42,6 +42,7 @@
 QT_BEGIN_NAMESPACE
 class QBuffer;
 class QAbstractItemModel;
+class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -135,6 +136,8 @@ private slots:
 
     void modelDeleted();
 
+    void emitPendingDataChanged();
+
 private:
     QPointer<QAbstractItemModel> m_model;
     // those two are used for canSerialize, since recreating the QBuffer is somewhat expensive,
@@ -147,6 +150,27 @@ private:
     QList<Protocol::ModelIndex> m_preOpIndexes;
     Protocol::ObjectAddress m_myAddress;
     bool m_monitored;
+
+    struct DataChanged
+    {
+        DataChanged(int left = -1, int right = -1,
+                    const QVector<int> &roles = QVector<int>())
+            : left(left), right(right), roles(roles)
+        { }
+
+        bool isEmpty() const {
+            return left == -1 && right == -1 && roles.isEmpty();
+        }
+
+        int left;
+        int right;
+        QVector<int> roles;
+    };
+
+    void sendDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const DataChanged &change);
+
+    QMap<QPersistentModelIndex, DataChanged> m_pendingDataChanged;
+    QTimer *m_pendingDataChangedTimer;
 };
 }
 
