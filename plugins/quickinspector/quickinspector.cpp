@@ -33,6 +33,8 @@
 #include "quickpaintanalyzerextension.h"
 #include "geometryextension/sggeometryextension.h"
 #include "materialextension/materialextension.h"
+#include "textureextension/qsgtexturegrabber.h"
+#include "textureextension/textureextension.h"
 
 #include <common/modelevent.h>
 #include <common/objectbroker.h>
@@ -378,7 +380,6 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this))
     , m_pendingRenderMode(new RenderModeRequest(this))
 {
-    registerPCExtensions();
     registerMetaTypes();
     registerVariantHandlers();
     probe->installGlobalEventFilter(this);
@@ -428,6 +429,13 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     connect(this, &QuickInspector::elementsAtReceived, m_remoteView, &RemoteViewServer::elementsAtReceived);
     connect(m_remoteView, &RemoteViewServer::doPickElementId, this, &QuickInspector::pickElementId);
     connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &QuickInspector::slotGrabWindow);
+
+    auto texGrab = new QSGTextureGrabber(this);
+    // TODO find a better way to pass this to the extension, the object broker will forward signals to the client too
+    ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.QSGTextureGrabber"), texGrab);
+    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), texGrab, SLOT(objectCreated(QObject*)));
+
+    registerPCExtensions();
 }
 
 QuickInspector::~QuickInspector()
@@ -990,6 +998,7 @@ void QuickInspector::registerPCExtensions()
     PropertyController::registerExtension<MaterialExtension>();
     PropertyController::registerExtension<SGGeometryExtension>();
     PropertyController::registerExtension<QuickPaintAnalyzerExtension>();
+    PropertyController::registerExtension<TextureExtension>();
 }
 
 #define QSG_CHECK_TYPE(Class) \

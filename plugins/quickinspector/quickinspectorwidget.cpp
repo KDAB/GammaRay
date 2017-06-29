@@ -35,6 +35,7 @@
 #include "geometryextension/sggeometrytab.h"
 #include "materialextension/materialextensionclient.h"
 #include "materialextension/materialtab.h"
+#include "textureextension/texturetab.h"
 #include "quickitemdelegate.h"
 #include "ui_quickinspectorwidget.h"
 
@@ -250,6 +251,7 @@ void QuickInspectorUiFactory::initUi()
     PropertyWidget::registerTab<MaterialTab>(QStringLiteral("material"), tr("Material"));
 
     PropertyWidget::registerTab<SGGeometryTab>(QStringLiteral("sgGeometry"), tr("Geometry"));
+    PropertyWidget::registerTab<TextureTab>(QStringLiteral("texture"), tr("Texture"));
 }
 
 void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint &pos)

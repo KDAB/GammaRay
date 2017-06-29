@@ -51,6 +51,8 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
     materialextension/materialextension.cpp
     geometryextension/sggeometryextension.cpp
     geometryextension/sggeometrymodel.cpp
+    textureextension/textureextension.cpp
+    textureextension/qsgtexturegrabber.cpp
   )
 
   gammaray_add_plugin(gammaray_quickinspector
@@ -81,6 +83,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
       materialextension/materialtab.cpp
       geometryextension/sggeometrytab.cpp
       geometryextension/sgwireframewidget.cpp
+      textureextension/texturetab.cpp
     )
 
     qt4_wrap_ui(gammaray_quickinspector_ui_srcs
@@ -88,6 +91,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
       gridsettingswidget.ui
       materialextension/materialtab.ui
       geometryextension/sggeometrytab.ui
+      textureextension/texturetab.ui
     )
 
     gammaray_add_plugin(gammaray_quickinspector_ui
