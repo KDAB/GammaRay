@@ -30,9 +30,7 @@
 #include "signalhistorydelegate.h"
 #include "signalhistorymodel.h"
 
-#include <QHelpEvent>
 #include <QScrollBar>
-#include <QToolTip>
 
 using namespace GammaRay;
 
@@ -160,29 +158,4 @@ void SignalHistoryView::updateGeometries()
                      QSize(viewport()->width() - eventColumnPosition() + 1,
                            margins.bottom()));
     m_eventScrollBar->setGeometry(rect);
-}
-
-bool SignalHistoryView::viewportEvent(QEvent *event)
-{
-    if (event->type() == QEvent::ToolTip) {
-        const QHelpEvent * const help = static_cast<QHelpEvent *>(event);
-        const QModelIndex index = indexAt(help->pos());
-
-        if (index.isValid() && index.column() == SignalHistoryModel::EventColumn) {
-            const int x0 = help->pos().x() - eventColumnPosition();
-            const int dx = eventColumnWidth();
-            const QString &toolTipText = m_eventDelegate->toolTipAt(index, x0, dx);
-
-            if (!toolTipText.isEmpty()) {
-                QToolTip::showText(help->globalPos(), toolTipText);
-            } else {
-                QToolTip::hideText();
-                event->ignore();
-            }
-
-            return true;
-        }
-    }
-
-    return DeferredTreeView::viewportEvent(event);
 }

@@ -36,6 +36,8 @@
 #include <QDebug>
 #include <QPainter>
 #include <QTimer>
+#include <QHelpEvent>
+#include <QToolTip>
 
 #include <limits>
 
@@ -115,6 +117,22 @@ QSize SignalHistoryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     return QSize(0, option.fontMetrics.lineSpacing()); // FIXME: minimum height
 }
 
+bool SignalHistoryDelegate::helpEvent(QHelpEvent *event, QAbstractItemView *view,
+                                      const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    Q_UNUSED(view);
+    const QPoint indexPos(event->x() -option.rect.left(), event->y() -option.rect.top());
+    const QString &toolTipText = toolTipAt(index, indexPos.x(), option.rect.width());
+
+    if (!toolTipText.isEmpty()) {
+        QToolTip::showText(event->globalPos(), toolTipText);
+    } else {
+        QToolTip::hideText();
+    }
+
+    return false;
+}
+
 void SignalHistoryDelegate::setVisibleInterval(qint64 interval)
 {
     if (m_visibleInterval != interval) {
@@ -180,18 +198,30 @@ QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position,
     const QVector<qint64> &events
         = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
 
-    const qint64 t = m_visibleInterval * position / width + m_visibleOffset;
-    qint64 dtMin = std::numeric_limits<qint64>::max();
+    const qint64 positionTimestamp = m_visibleInterval * position / width + m_visibleOffset;
+    const bool reverse = m_updateTimer->isActive();
+    const int begin = reverse ? events.count() - 1 : 0;
+    const int end = reverse ? 0 : events.count();
+
     int signalIndex = -1;
     qint64 signalTimestamp = -1;
 
-    for (int i = 0; i < events.size(); ++i) {
-        signalTimestamp = SignalHistoryModel::timestamp(events.at(i));
-        const qint64 dt = qAbs(signalTimestamp - t);
+    // Find the nearest matching event for the given positionTimestamp
+    for (int i = begin; reverse ? i >= end : i < end; reverse ? --i : ++i) {
+        const auto &event = events.at(i);
+        const qint64 eventTimestamp = SignalHistoryModel::timestamp(event);
+        const bool match = reverse
+                ? signalTimestamp >= positionTimestamp
+                : signalTimestamp <= positionTimestamp;
 
-        if (dt < dtMin) {
-            signalIndex = SignalHistoryModel::signalIndex(events.at(i));
-            dtMin = dt;
+        if (match || signalIndex == -1) {
+            signalTimestamp = eventTimestamp;
+            signalIndex = SignalHistoryModel::signalIndex(event);
+
+            if (!match)
+                break;
+        } else {
+            break;
         }
     }
 

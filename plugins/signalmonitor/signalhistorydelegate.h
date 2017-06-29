@@ -65,6 +65,14 @@ public:
 
     QString toolTipAt(const QModelIndex &index, int position, int width);
 
+public slots:
+    bool helpEvent(QHelpEvent *event, QAbstractItemView *view,
+                   const QStyleOptionViewItem &option, const QModelIndex &index)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    override
+#endif
+    ;
+
 signals:
     void visibleIntervalChanged(qint64 value);
     void fpsChanged(int value);
