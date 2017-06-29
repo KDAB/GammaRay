@@ -90,7 +90,7 @@ void ConnectPage::validateHostAddress(const QString &address)
     handleLocalAddress(stillToParse, correctSoFar);
     handleIPAddress(stillToParse, correctSoFar);
 
-    QRegExp hostNameFormat("^([a-z,A-Z][a-z,A-Z,0-9,\\-\\.]+[a-z,A-Z,0-9])$");
+    QRegExp hostNameFormat("^([a-zA-Z][a-zA-Z0-9\\-\\.]+[a-zA-Z0-9](:[0-9]{1,5})?)$");
     if (hostNameFormat.exactMatch(stillToParse))
         handleHostName(stillToParse);
 
@@ -140,7 +140,7 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
         possibleIPv6Address = QHostAddress(stillToParse);
 
     QHostAddress possibleIPv6BracketAddress;
-    QRegExp bracketFormat("^\\[([0-9,a-f,\\:,\\.]*)\\].*$");
+    QRegExp bracketFormat("^\\[([0-9a-f\\:\\.]*)\\].*$");
     if (bracketFormat.exactMatch(stillToParse))
         possibleIPv6BracketAddress = QHostAddress(bracketFormat.cap(1));
 
@@ -167,6 +167,21 @@ void ConnectPage::handleHostName(QString &stillToParse)
     // handle tcp prefix
     if (stillToParse.startsWith(tcpPrefix))
         stillToParse.remove(0, tcpPrefix.size());
+
+    // cut off port first and handle port
+    auto portStart = stillToParse.indexOf(":");
+    bool portCorrectSoFar = true;
+    if (portStart > -1) {
+        auto portString = stillToParse.right(portStart);
+        handlePortString(portString, portCorrectSoFar);
+        stillToParse = stillToParse.left(portStart);
+    } else {
+        showStandardPortAssumedWarning();
+    }
+
+    // dont do lookup if port was wrong
+    if (!portCorrectSoFar)
+        return;
 
     QHostInfo::lookupHost(stillToParse, this, SLOT(hostResponse(QHostInfo)));
 }

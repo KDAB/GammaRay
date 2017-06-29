@@ -119,6 +119,8 @@ private slots:
         QTest::addColumn<bool>("isValid", nullptr);
 
         QTest::newRow("localhost") << "localhost" << true;
+        QTest::newRow("tcp://localhost") << "tcp://localhost" << true;
+        QTest::newRow("tcp://localhost:11732") << "tcp://localhost:11732" << true;
     }
 
     void testHostNames()
