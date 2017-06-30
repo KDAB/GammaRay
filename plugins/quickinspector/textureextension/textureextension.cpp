@@ -42,6 +42,7 @@
 #include <QSGTexture>
 
 #include <private/qquickitem_p.h>
+#include <private/qsgdistancefieldglyphnode_p_p.h>
 
 using namespace GammaRay;
 
@@ -81,6 +82,7 @@ bool TextureExtension::setQObject(QObject* obj)
     m_currentTexture = nullptr;
 
     if (auto qsgTexture = qobject_cast<QSGTexture*>(obj)) {
+        m_remoteView->resetView();
         m_currentTexture = qsgTexture;
         QMetaObject::invokeMethod(m_qsgGrabber, "requestGrab", Q_ARG(QSGTexture*, qsgTexture));
         return true;
@@ -111,6 +113,14 @@ bool TextureExtension::setObject(void* object, const QString& typeName)
         auto material = node->activeMaterial();
         if (auto mat = dynamic_cast<QSGOpaqueTextureMaterial*>(material))
             return setQObject(mat->texture());
+
+        if (auto mat = dynamic_cast<QSGDistanceFieldTextMaterial*>(material)) {
+            if (!mat->texture())
+                return false;
+            m_remoteView->resetView();
+            QMetaObject::invokeMethod(m_qsgGrabber, "requestGrab", Q_ARG(int, mat->texture()->textureId), Q_ARG(QSize, mat->texture()->size));
+            return true;
+        }
     }
 
     return false;
@@ -118,7 +128,7 @@ bool TextureExtension::setObject(void* object, const QString& typeName)
 
 void TextureExtension::textureGrabbed(QSGTexture* tex, const QImage& img)
 {
-    if (tex != m_currentTexture || !tex)
+    if (tex != m_currentTexture /* || !tex*/) // TODO reenable !tex here once we have a dedicated signal for df texture grabs
         return;
 
     RemoteViewFrame f;

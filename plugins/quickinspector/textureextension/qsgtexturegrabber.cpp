@@ -43,6 +43,7 @@ using namespace GammaRay;
 
 QSGTextureGrabber::QSGTextureGrabber(QObject* parent)
     : QObject(parent)
+    , m_textureId(-1)
 {
 }
 
@@ -66,7 +67,7 @@ void QSGTextureGrabber::addQuickWindow(QQuickWindow* window)
 void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
 {
     QMutexLocker lock(&m_mutex);
-    if (!m_pendingTexture)
+    if (!m_pendingTexture && m_textureId < 0)
         return;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
@@ -75,7 +76,7 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
 #endif
 
     // TODO this check is only correct with the threaded render loop, but might fail with multiple windows and the basic loop
-    if (QThread::currentThread() == m_pendingTexture->thread()) {
+    if (m_pendingTexture && QThread::currentThread() == m_pendingTexture->thread()) {
         qWarning() << "found the context!" << m_pendingTexture->textureSize() << m_pendingTexture->isAtlasTexture() << m_pendingTexture->normalizedTextureSubRect();
 
         const int w = std::ceil(m_pendingTexture->textureSize().width() / m_pendingTexture->normalizedTextureSubRect().width());
@@ -100,7 +101,25 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
         }
 
         emit textureGrabbed(m_pendingTexture, img);
-        m_pendingTexture = nullptr;
+        resetRequest();
+    }
+
+    // See below, this is missing a context check here. So we rely purely on the
+    // safety and plausibility checks in grabTexture.
+    if (m_textureId >= 0) {
+        auto glFuncs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_2_0>();
+        if (!glFuncs) {
+            // TODO
+            qDebug() << "probably ES2, find a way to grab the content there";
+            return;
+        }
+        QImage img(m_textureSize.width(), m_textureSize.height(), QImage::Format_ARGB32_Premultiplied);
+        glFuncs->glBindTexture(GL_TEXTURE_2D, m_textureId);
+        // TODO GL_BGRA is not always correct I think!
+        glFuncs->glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
+
+        emit textureGrabbed(nullptr, img); // TODO alternative signal
+        resetRequest();
     }
 }
 
@@ -108,4 +127,22 @@ void QSGTextureGrabber::requestGrab(QSGTexture* tex)
 {
     QMutexLocker lock(&m_mutex);
     m_pendingTexture = tex;
+}
+
+void QSGTextureGrabber::requestGrab(int textureId, const QSize& texSize)
+{
+    if (textureId < 0 || !texSize.isValid())
+        return;
+
+    QMutexLocker lock(&m_mutex);
+    // ### we are missing some context here to check if we are in the right GL context/render thread for grabbing
+    // best idea so far: use the QQItem from the texture extension, making this unavailable from the QSG view though
+    m_textureId = textureId;
+    m_textureSize = texSize;
+}
+
+void QSGTextureGrabber::resetRequest()
+{
+    m_pendingTexture = nullptr;
+    m_textureId = -1;
 }

@@ -51,6 +51,7 @@ public:
 public slots:
     void objectCreated(QObject *obj);
     void requestGrab(QSGTexture *tex);
+    void requestGrab(int textureId, const QSize &texSize);
 
 signals:
     void textureGrabbed(QSGTexture *tex, const QImage &img);
@@ -59,8 +60,13 @@ private:
     void addQuickWindow(QQuickWindow *window);
     void windowAfterRendering(QQuickWindow *window);
 
+    void resetRequest();
+
     QMutex m_mutex;
     QPointer<QSGTexture> m_pendingTexture;
+
+    int m_textureId;
+    QSize m_textureSize;
 };
 }
 
