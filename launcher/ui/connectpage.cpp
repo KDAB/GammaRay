@@ -167,6 +167,7 @@ void ConnectPage::handleHostName(QString &stillToParse)
     // handle tcp prefix
     if (stillToParse.startsWith(tcpPrefix))
         stillToParse.remove(0, tcpPrefix.size());
+    m_currentUrl.setScheme("tcp");
 
     // cut off port first and handle port
     auto portStart = stillToParse.indexOf(":");
@@ -194,6 +195,7 @@ void ConnectPage::hostResponse(QHostInfo hostInfo)
     if(hostInfo.addresses().empty())
         return;
 
+    m_currentUrl.setHost(hostInfo.hostName());
     m_valid = true;
     QPalette palette;
     ui->host->setPalette(this->style()->standardPalette());
