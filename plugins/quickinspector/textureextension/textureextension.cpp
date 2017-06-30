@@ -36,9 +36,12 @@
 
 #include <QDebug>
 #include <QImage>
+#include <QQuickItem>
 #include <QSGGeometryNode>
 #include <QSGOpaqueTextureMaterial>
 #include <QSGTexture>
+
+#include <private/qquickitem_p.h>
 
 using namespace GammaRay;
 
@@ -58,20 +61,49 @@ TextureExtension::~TextureExtension()
 {
 }
 
+static QSGGeometryNode *findGeometryNode(QSGNode *node)
+{
+    while(node) {
+        if (node->type() == QSGNode::GeometryNodeType)
+            return static_cast<QSGGeometryNode*>(node);
+        if (node->childCount() == 0)
+            return nullptr;
+        if (node->childCount() > 1 && node->firstChild()->type() != QSGNode::GeometryNodeType)
+            return nullptr;
+        node = node->firstChild();
+    }
+
+    return nullptr;
+}
+
 bool TextureExtension::setQObject(QObject* obj)
 {
+    m_currentTexture = nullptr;
+
     if (auto qsgTexture = qobject_cast<QSGTexture*>(obj)) {
         m_currentTexture = qsgTexture;
         QMetaObject::invokeMethod(m_qsgGrabber, "requestGrab", Q_ARG(QSGTexture*, qsgTexture));
         return true;
     }
 
-    m_currentTexture = nullptr;
+    if (auto item = qobject_cast<QQuickItem*>(obj)) {
+        if (item->metaObject() == &QQuickItem::staticMetaObject)
+            return false;
+        auto priv = QQuickItemPrivate::get(item);
+        if (!priv->itemNodeInstance)
+            return false;
+        auto geometryNode = findGeometryNode(priv->itemNodeInstance);
+        if (geometryNode)
+            return setObject(geometryNode, "QSGGeometryNode");
+    }
+
     return false;
 }
 
 bool TextureExtension::setObject(void* object, const QString& typeName)
 {
+    m_currentTexture = nullptr;
+
     if (typeName == QLatin1String("QSGGeometryNode")) {
         auto node = static_cast<QSGGeometryNode*>(object);
         if (Util::isNullish(node->activeMaterial()))
