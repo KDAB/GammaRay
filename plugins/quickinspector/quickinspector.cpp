@@ -85,6 +85,7 @@
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
 #include <private/qsgbatchrenderer_p.h>
+#include <private/qsgdistancefieldglyphnode_p_p.h>
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -922,6 +923,17 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_METAOBJECT1(QSGTextureMaterial, QSGOpaqueTextureMaterial);
 
     MO_ADD_METAOBJECT1(QSGVertexColorMaterial, QSGMaterial);
+
+    MO_ADD_METAOBJECT1(QSGDistanceFieldTextMaterial, QSGMaterial);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, const QVector4D&, color);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, qreal, fontScale);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, QSize, textureSize);
+
+    MO_ADD_METAOBJECT1(QSGDistanceFieldStyledTextMaterial, QSGDistanceFieldTextMaterial);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldStyledTextMaterial, const QVector4D&, styleColor);
+
+    MO_ADD_METAOBJECT1(QSGDistanceFieldShiftedStyleTextMaterial, QSGDistanceFieldStyledTextMaterial);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldShiftedStyleTextMaterial, const QPointF&, shift);
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)

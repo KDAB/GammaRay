@@ -46,6 +46,7 @@
 #include <QSGVertexColorMaterial>
 
 #include <private/qsgmaterialshader_p.h>
+#include <private/qsgdistancefieldglyphnode_p_p.h>
 
 using namespace GammaRay;
 
@@ -78,6 +79,9 @@ MaterialExtension::~MaterialExtension()
 static const char *typeForMaterial(QSGMaterial *material)
 {
 #define MT(type) if (dynamic_cast<type *>(material)) return #type;
+    MT(QSGDistanceFieldShiftedStyleTextMaterial)
+    MT(QSGDistanceFieldStyledTextMaterial)
+    MT(QSGDistanceFieldTextMaterial)
     MT(QSGFlatColorMaterial)
     MT(QSGTextureMaterial)
     MT(QSGOpaqueTextureMaterial)
