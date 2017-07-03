@@ -39,10 +39,6 @@ add_executable(attachhelper attachhelper.cpp)
 
 target_link_libraries(attachhelper ${QT_QTCORE_LIBRARIES})
 
-set(RUN_FILTER_TESTS OFF
-  CACHE BOOL "Run filter tests which fail due to a bug in QSortFilterProxyModel"
-)
-
 if(UNIX)
   find_program(GDB_EXECUTABLE gdb)
   find_program(LLDB_EXECUTABLE lldb)
@@ -75,12 +71,11 @@ foreach(injectorType ${INJECTOR_TYPES})
     ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess --listen tcp://127.0.0.1 -unittest -i ${injectorType}
     ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
   )
-  if(RUN_FILTER_TESTS)
-    add_test(connectiontest-${injectorType}-filter
-      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray -unittest --listen tcp://127.0.0.1 -filtertest -i ${injectorType}
+  add_test(connectiontest-${injectorType}-filter
+      ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray --inprocess -unittest --listen tcp://127.0.0.1 -filtertest -i ${injectorType}
       ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-    )
-  endif()
+  )
+  set_tests_properties(connectiontest-${injectorType}-filter PROPERTIES ENVIRONMENT GAMMARAY_TEST_FILTER=1)
 endforeach()
 
 if(NOT OSX_ASAN_WORKAROUND)

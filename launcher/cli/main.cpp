@@ -281,8 +281,6 @@ int main(int argc, char **argv)
         }
 
         // debug/test options
-        if (arg == QLatin1String("-filtertest"))
-            qputenv("GAMMARAY_TEST_FILTER", "1");
         if (arg == QLatin1String("-unittest"))
             qputenv("GAMMARAY_UNITTEST", "1");
         // built-in arguments of QApp, could be meant for us if we are showing the launcher window
