@@ -37,5 +37,7 @@ void Q_DECL_EXPORT gammaray_create_inprocess_mainwindow()
     GammaRay::Probe::instance()->setWindow(window);
     GammaRay::Probe::instance()->setParent(window);
     window->show();
+
+    QMetaObject::invokeMethod(window, "selectTool", Q_ARG(QString, QStringLiteral("GammaRay::ObjectInspector")));
 }
 }
