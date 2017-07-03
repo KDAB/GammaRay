@@ -372,7 +372,6 @@ void RemoteViewWidget::setZoom(double zoom)
     if (m_zoomLevels.at(index) == oldZoom)
         return;
     m_zoom = m_zoomLevels.at(index);
-    m_initialZoomDone = true;
     emit zoomChanged();
     emit zoomLevelChanged(index);
     emit stateChanged();
@@ -835,6 +834,7 @@ void RemoteViewWidget::restoreState(QDataStream &stream)
 
     setInteractionMode(interactionMode);
     setZoom(zoom);
+    m_initialZoomDone = true;
 }
 
 void RemoteViewWidget::saveState(QDataStream &stream) const
