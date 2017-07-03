@@ -133,5 +133,11 @@ void TextureExtension::textureGrabbed(QSGTexture* tex, const QImage& img)
 
     RemoteViewFrame f;
     f.setImage(img);
+    if (m_currentTexture && m_currentTexture->isAtlasTexture()) {
+        QRect subRect(img.width() * m_currentTexture->normalizedTextureSubRect().x(),
+                      img.height() * m_currentTexture->normalizedTextureSubRect().y(),
+                      m_currentTexture->textureSize().width(), m_currentTexture->textureSize().height());
+        f.setData(subRect);
+    }
     m_remoteView->sendFrame(f);
 }

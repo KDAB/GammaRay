@@ -12,15 +12,15 @@
   </property>
   <layout class="QVBoxLayout" name="layout">
    <item>
-    <widget class="GammaRay::RemoteViewWidget" name="textureView" native="true"/>
+    <widget class="GammaRay::TextureViewWidget" name="textureView" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>GammaRay::RemoteViewWidget</class>
+   <class>GammaRay::TextureViewWidget</class>
    <extends>QWidget</extends>
-   <header location="global">ui/remoteviewwidget.h</header>
+   <header location="global">textureextension/textureviewwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

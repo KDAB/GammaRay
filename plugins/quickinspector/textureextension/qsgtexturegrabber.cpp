@@ -93,13 +93,6 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
         // TODO GL_BGRA is not always correct I think!
         glFuncs->glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
 
-        if (m_pendingTexture->isAtlasTexture()) {
-            QPainter p(&img);
-            p.setPen(Qt::red);
-            p.drawRect(m_pendingTexture->normalizedTextureSubRect().x() * w, m_pendingTexture->normalizedTextureSubRect().y() * h,
-                       m_pendingTexture->textureSize().width(), m_pendingTexture->textureSize().height());
-        }
-
         emit textureGrabbed(m_pendingTexture, img);
         resetRequest();
     }

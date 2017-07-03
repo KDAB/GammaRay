@@ -84,6 +84,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
       geometryextension/sggeometrytab.cpp
       geometryextension/sgwireframewidget.cpp
       textureextension/texturetab.cpp
+      textureextension/textureviewwidget.cpp
     )
 
     qt4_wrap_ui(gammaray_quickinspector_ui_srcs
