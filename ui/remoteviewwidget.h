@@ -169,6 +169,7 @@ private:
     void setupActions();
     void updateActions();
 
+    void drawBackground(QPainter *p);
     void drawRuler(QPainter *p);
     void drawFPS(QPainter *p);
     int sourceTickLabelDistance(int viewDistance);
@@ -202,7 +203,8 @@ private slots:
 
 private:
     RemoteViewFrame m_frame;
-    QBrush m_backgroundBrush;
+    QBrush m_activeBackgroundBrush;
+    QBrush m_inactiveBackgroundBrush;
     QVector<double> m_zoomLevels;
     QStandardItemModel *m_zoomLevelModel;
     QString m_unavailableText;

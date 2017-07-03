@@ -82,13 +82,23 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     setAttribute(Qt::WA_AcceptTouchEvents);
     setAttribute(Qt::WA_TouchPadAcceptSingleTouchEvents);
 
-    // Background
-    QPixmap bgPattern(20, 20);
-    bgPattern.fill(Qt::lightGray);
-    QPainter bgPainter(&bgPattern);
-    bgPainter.fillRect(10, 0, 10, 10, Qt::gray);
-    bgPainter.fillRect(0, 10, 10, 10, Qt::gray);
-    m_backgroundBrush.setTexture(bgPattern);
+    // Background textures
+    {
+        QPixmap bgPattern(20, 20);
+        bgPattern.fill(Qt::lightGray);
+        QPainter bgPainter(&bgPattern);
+        bgPainter.fillRect(10, 0, 10, 10, Qt::gray);
+        bgPainter.fillRect(0, 10, 10, 10, Qt::gray);
+        m_activeBackgroundBrush.setTexture(bgPattern);
+    }
+    {
+        QPixmap bgPattern(20, 20);
+        bgPattern.fill(Qt::darkGray);
+        QPainter bgPainter(&bgPattern);
+        bgPainter.fillRect(10, 0, 10, 10, Qt::gray);
+        bgPainter.fillRect(0, 10, 10, 10, Qt::gray);
+        m_inactiveBackgroundBrush.setTexture(bgPattern);
+    }
 
     m_zoomLevels.reserve(8);
     m_zoomLevels <<  .1 << .25 << .5 << 1.0 << 2.0 << 4.0 << 8.0 << 16.0;
@@ -492,7 +502,7 @@ void RemoteViewWidget::paintEvent(QPaintEvent *event)
         return;
     }
 
-    p.fillRect(rect(), m_backgroundBrush);
+    drawBackground(&p);
 
     p.save();
     p.setTransform(QTransform::fromTranslate(m_x, m_y));
@@ -516,6 +526,13 @@ void RemoteViewWidget::paintEvent(QPaintEvent *event)
 
     if (m_interactionMode == Measuring && m_hasMeasurement)
         drawMeasureOverlay(&p);
+}
+
+void RemoteViewWidget::drawBackground(QPainter* p)
+{
+    // not really efficient...
+    p->fillRect(rect(), m_inactiveBackgroundBrush);
+    p->fillRect(m_x, m_y, m_zoom * m_frame.viewRect().width(), m_zoom * m_frame.viewRect().height(), m_activeBackgroundBrush);
 }
 
 void RemoteViewWidget::drawDecoration(QPainter *p)
