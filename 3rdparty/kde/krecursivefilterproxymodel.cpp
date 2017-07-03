@@ -47,7 +47,6 @@ class KRecursiveFilterProxyModelPrivate
 public:
     KRecursiveFilterProxyModelPrivate(KRecursiveFilterProxyModel *model)
         : q_ptr(model),
-          ignoreRemove(false),
           completeInsert(false)
     {
         qRegisterMetaType<QModelIndex>("QModelIndex");
@@ -146,7 +145,6 @@ public:
 
     QModelIndex lastFilteredOutAscendant(const QModelIndex &index);
 
-    bool ignoreRemove;
     bool completeInsert;
     QModelIndex lastHiddenAscendantForInsert;
 };
@@ -238,32 +236,12 @@ void KRecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &so
 
 void KRecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex &source_parent, int start, int end)
 {
-    Q_Q(KRecursiveFilterProxyModel);
-
-    bool accepted = false;
-    for (int row = start; row <= end; ++row) {
-        if (q->filterAcceptsRow(row, source_parent)) {
-            accepted = true;
-            break;
-        }
-    }
-    if (!accepted) {
-        // All removed rows are already filtered out. We don't care about the signal.
-        ignoreRemove = true;
-        return;
-    }
-
     invokeRowsAboutToBeRemoved(source_parent, start, end);
 }
 
 void KRecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &source_parent, int start, int end)
 {
     Q_Q(KRecursiveFilterProxyModel);
-
-    if (ignoreRemove) {
-        ignoreRemove = false;
-        return;
-    }
 
     invokeRowsRemoved(source_parent, start, end);
 
@@ -309,7 +287,8 @@ bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelInd
     Q_ASSERT(source_index.isValid());
     bool accepted = false;
 
-    for (int row = 0, rows = sourceModel()->rowCount(source_index); row < rows; ++row) {
+    const int numChildren = sourceModel()->rowCount(source_index);
+    for (int row = 0, rows = numChildren; row < rows; ++row) {
         if (filterAcceptsRow(row, source_index)) {
             accepted = true;
             break;
@@ -327,7 +306,7 @@ QModelIndexList KRecursiveFilterProxyModel::match(const QModelIndex &start, int 
 
     QModelIndexList list;
     if (!sourceModel())
-      return list;
+        return list;
 
     QModelIndex proxyIndex;
     Q_FOREACH (const QModelIndex &idx, sourceModel()->match(mapToSource(start), role, value, hits, flags)) {
