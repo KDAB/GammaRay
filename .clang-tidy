@@ -1,9 +1,8 @@
 ---
-Checks:          'clang-diagnostic-*,clang-analyzer-*,-clang-analyzer-alpha*,*,-google-build-using-namespace,-google-readability-braces-around-statements,-google-readability-todo,-llvm-include-order,-llvm-namespace-comment'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,-clang-analyzer-alpha*,*,-google-build-using-namespace,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-readability-else-after-return,-google-readability-braces-around-statements,-readability-implicit-bool-cast,-llvm-include-order,-cppcoreguidelines-pro-type-reinterpret-cast,-readability-named-parameter,-cppcoreguildelines-pro-bounds-array-to-pointer-decay,-google-readabilty-namespace-comments,-google-default-arguments,-readability-braces-around-statements,-cppcoreguidelines-pro-type-const-cast,-google-readability-todo,-google-runtime-references,-llvm-namespace-comment,-cppcoreguidelines-pro-bounds-constant-array-index,-clang-analyzer-alpha.core.CastToStruct,-modernize-use-override,-modernize-use-bool-literals'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
-User:            allen
 CheckOptions:
   - key:             cert-oop11-cpp.UseCERTSemantics
     value:           '1'
