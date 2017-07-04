@@ -35,7 +35,8 @@
 #include <QSGTexture>
 
 QT_BEGIN_NAMESPACE
-class QMutex;
+class QImage;
+class QOpenGLContext;
 class QQuickWindow;
 QT_END_NAMESPACE
 
@@ -59,6 +60,7 @@ signals:
 private:
     void addQuickWindow(QQuickWindow *window);
     void windowAfterRendering(QQuickWindow *window);
+    QImage grabTexture(QOpenGLContext *context, int textureId) const;
 
     void resetRequest();
 

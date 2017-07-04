@@ -31,6 +31,7 @@
 #include <QDebug>
 #include <QImage>
 #include <QOpenGLContext>
+#include <QOpenGLFunctions>
 #include <QOpenGLFunctions_2_0>
 #include <QPainter>
 #include <QQuickWindow>
@@ -75,51 +76,65 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
         return;
 #endif
 
+    auto context = QOpenGLContext::currentContext();
     // TODO this check is only correct with the threaded render loop, but might fail with multiple windows and the basic loop
     if (m_pendingTexture && QThread::currentThread() == m_pendingTexture->thread()) {
-        qWarning() << "found the context!" << m_pendingTexture->textureSize() << m_pendingTexture->isAtlasTexture() << m_pendingTexture->normalizedTextureSubRect();
-
-        const int w = std::ceil(m_pendingTexture->textureSize().width() / m_pendingTexture->normalizedTextureSubRect().width());
-        const int h = std::ceil(m_pendingTexture->textureSize().height() / m_pendingTexture->normalizedTextureSubRect().height());
-
-        auto glFuncs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_2_0>();
-        if (!glFuncs) {
-            // TODO
-            qDebug() << "probably ES2, find a way to grab the content there";
-            return;
-        }
-        QImage img(w, h, QImage::Format_ARGB32_Premultiplied);
-        m_pendingTexture->bind();
-        // TODO GL_BGRA is not always correct I think!
-        glFuncs->glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
-
-        emit textureGrabbed(m_pendingTexture, img);
+        const auto img = grabTexture(context, m_pendingTexture->textureId());
+        if (!img.isNull())
+            emit textureGrabbed(m_pendingTexture, img);
         resetRequest();
     }
 
     // See below, this is missing a context check here. So we rely purely on the
     // safety and plausibility checks in grabTexture.
     if (m_textureId >= 0) {
-        auto glFuncs = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_2_0>();
-        if (!glFuncs) {
-            // TODO
-            qDebug() << "probably ES2, find a way to grab the content there";
-            return;
-        }
-        QImage img(m_textureSize.width(), m_textureSize.height(), QImage::Format_ARGB32_Premultiplied);
-        glFuncs->glBindTexture(GL_TEXTURE_2D, m_textureId);
-        // TODO GL_BGRA is not always correct I think!
-        glFuncs->glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
-
-        emit textureGrabbed(nullptr, img); // TODO alternative signal
+        const auto img = grabTexture(context, m_textureId);
+        if (!img.isNull())
+            emit textureGrabbed(nullptr, img); // TODO alternative signal
         resetRequest();
     }
+}
+
+QImage QSGTextureGrabber::grabTexture(QOpenGLContext* context, int textureId) const
+{
+    if (context->isOpenGLES()) {
+        auto glFuncs = context->functions();
+        Q_ASSERT(glFuncs);
+
+        int prev_fbo = -1;
+        unsigned int fbo = -1;
+        glFuncs->glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prev_fbo);
+        glFuncs->glGenFramebuffers(1, &fbo);
+        glFuncs->glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFuncs->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
+        QImage img(m_textureSize.width(), m_textureSize.height(), QImage::Format_RGBA8888_Premultiplied);
+        glFuncs->glReadPixels(0, 0, m_textureSize.width(), m_textureSize.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
+        glFuncs->glBindFramebuffer(GL_FRAMEBUFFER, prev_fbo);
+        glFuncs->glDeleteFramebuffers(1, &fbo);
+        return img;
+    } else {
+        auto glFuncs = context->versionFunctions<QOpenGLFunctions_2_0>();
+        if (!glFuncs) {
+            qWarning() << "unable to obtain OpenGL2 functions, too old GL version?";
+            return QImage();
+        }
+
+        QImage img(m_textureSize.width(), m_textureSize.height(), QImage::Format_ARGB32_Premultiplied);
+        glFuncs->glBindTexture(GL_TEXTURE_2D, textureId);
+        glFuncs->glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
+        return img;
+    }
+
+    return QImage();
 }
 
 void QSGTextureGrabber::requestGrab(QSGTexture* tex)
 {
     QMutexLocker lock(&m_mutex);
     m_pendingTexture = tex;
+    const int w = std::ceil(m_pendingTexture->textureSize().width() / m_pendingTexture->normalizedTextureSubRect().width());
+    const int h = std::ceil(m_pendingTexture->textureSize().height() / m_pendingTexture->normalizedTextureSubRect().height());
+    m_textureSize = QSize(w, h);
 }
 
 void QSGTextureGrabber::requestGrab(int textureId, const QSize& texSize)
