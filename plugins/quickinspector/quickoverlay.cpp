@@ -41,10 +41,6 @@
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
 
-#ifndef GL_BGRA
-#define GL_BGRA GL_BGRA_EXT
-#endif
-
 #include <functional>
 
 QT_BEGIN_NAMESPACE
@@ -418,16 +414,16 @@ void QuickOverlay::windowAfterRendering()
 {
     // We are in the rendering thread at this point
     // And the gui thread is NOT locked
+
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
 
     if (m_isGrabbingMode) {
-        if (m_grabbedFrame.image.size() != m_renderInfo.windowSize * m_renderInfo.dpr)
-            m_grabbedFrame.image = QImage(m_renderInfo.windowSize * m_renderInfo.dpr, QImage::Format_ARGB32_Premultiplied);
-
         m_grabbedFrame.transform.reset();
 #ifdef ENABLE_GL_READPIXELS
+        if (m_grabbedFrame.image.size() != m_renderInfo.windowSize * m_renderInfo.dpr)
+            m_grabbedFrame.image = QImage(m_renderInfo.windowSize * m_renderInfo.dpr, QImage::Format_RGBA8888);
         QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
-        glFuncs->glReadPixels(0, 0, m_renderInfo.windowSize.width() * m_renderInfo.dpr, m_renderInfo.windowSize.height() * m_renderInfo.dpr, GL_BGRA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
+        glFuncs->glReadPixels(0, 0, m_renderInfo.windowSize.width() * m_renderInfo.dpr, m_renderInfo.windowSize.height() * m_renderInfo.dpr, GL_RGBA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
         // Mirror flip
         m_grabbedFrame.transform.scale(1.0, -1.0);
         m_grabbedFrame.transform.translate(0.0, -m_renderInfo.windowSize.height());
