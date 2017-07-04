@@ -66,7 +66,7 @@ signals:
 
 private slots:
     void instanceSelected();
-    void hostResponse(QHostInfo hostInfo);
+    void hostResponse(const QHostInfo &hostInfo);
     void validateHostAddress(const QString &address);
 
 private:

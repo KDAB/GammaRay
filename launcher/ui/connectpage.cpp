@@ -58,7 +58,7 @@ ConnectPage::ConnectPage(QWidget *parent)
                                             , tr("File is not a socket")
                                             , this);
 #endif
-    connect(ui->host, SIGNAL(textChanged(QString)), SLOT(validateHostAddress(const QString&)));
+    connect(ui->host, SIGNAL(textChanged(QString)), SLOT(validateHostAddress(QString)));
     connect(ui->host, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
 
     auto *model = new NetworkDiscoveryModel(this);
@@ -94,7 +94,7 @@ void ConnectPage::validateHostAddress(const QString &address)
     if (hostNameFormat.exactMatch(stillToParse))
         handleHostName(stillToParse);
 
-    // if we came down here and theres nothing more to parse, we are good
+    // if we came down here and there's nothing more to parse, we are good
     // set text back to black again
     if (correctSoFar && stillToParse.isEmpty()) {
         m_valid = true;
@@ -107,7 +107,7 @@ void ConnectPage::handleLocalAddress(QString &stillToParse, bool &correctSoFar)
 {
 #ifdef Q_OS_UNIX
     if (stillToParse.startsWith(localPrefix))
-        stillToParse.remove(localPrefix); //dont remove second slash
+        stillToParse.remove(localPrefix); //don't remove second slash
 
     // Its also okay, if only a path to an existing file is given
     QFileInfo localSocketFile(stillToParse);
@@ -133,10 +133,10 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
         stillToParse.remove(0, tcpPrefix.size());
 
     // Speculate on the address format
-    const auto possibleIPv4Address = QHostAddress(stillToParse.split(":").first());
+    const auto possibleIPv4Address = QHostAddress(stillToParse.split(QLatin1Char(':')).first());
 
     QHostAddress possibleIPv6Address;
-    if (!stillToParse.contains("%"))
+    if (!stillToParse.contains(QLatin1Char('%')))
         possibleIPv6Address = QHostAddress(stillToParse);
 
     QHostAddress possibleIPv6BracketAddress;
@@ -155,9 +155,9 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
     if (!possibleIPv6Address.isNull())
         handleAddressAndPort(stillToParse, correctSoFar, possibleIPv6Address.toString(), skipPort);
     if (!possibleIPv6BracketAddress.isNull())
-        handleAddressAndPort(stillToParse, correctSoFar, "[" + possibleIPv6BracketAddress.toString() + "]");
+        handleAddressAndPort(stillToParse, correctSoFar, QLatin1Char('[') + possibleIPv6BracketAddress.toString() + QLatin1Char(']'));
     if (!possibleIPv6InterfaceAddress.isNull()){
-        stillToParse.replace(interfaceFormat.cap(2), "");
+        stillToParse.replace(interfaceFormat.cap(2), QString());
         handleAddressAndPort(stillToParse, correctSoFar, possibleIPv6InterfaceAddress.toString());
     }
 }
@@ -170,7 +170,7 @@ void ConnectPage::handleHostName(QString &stillToParse)
     m_currentUrl.setScheme("tcp");
 
     // cut off port first and handle port
-    auto portStart = stillToParse.indexOf(":");
+    auto portStart = stillToParse.indexOf(QLatin1Char(':'));
     bool portCorrectSoFar = true;
     if (portStart > -1) {
         auto portString = stillToParse.right(portStart);
@@ -180,14 +180,14 @@ void ConnectPage::handleHostName(QString &stillToParse)
         showStandardPortAssumedWarning();
     }
 
-    // dont do lookup if port was wrong
+    // don't do lookup if port was wrong
     if (!portCorrectSoFar)
         return;
 
     QHostInfo::lookupHost(stillToParse, this, SLOT(hostResponse(QHostInfo)));
 }
 
-void ConnectPage::hostResponse(QHostInfo hostInfo)
+void ConnectPage::hostResponse(const QHostInfo &hostInfo)
 {
     if (hostInfo.error() != QHostInfo::NoError)
         return;
@@ -197,7 +197,6 @@ void ConnectPage::hostResponse(QHostInfo hostInfo)
 
     m_currentUrl.setHost(hostInfo.hostName());
     m_valid = true;
-    QPalette palette;
     ui->host->setPalette(this->style()->standardPalette());
     emit dnsResolved();
     emit updateButtonState();
@@ -210,7 +209,7 @@ void ConnectPage::handleAddressAndPort(QString &stillToParse, bool &correctSoFar
     // Qt 4 parses Urls into Uppercase representation
     stillToParse = stillToParse.toUpper();
 #endif
-    stillToParse.replace(possibleAddress, "");
+    stillToParse.replace(possibleAddress, QString());
     if (stillToParse.isEmpty()) {
         correctSoFar = true;
         m_currentUrl.setScheme("tcp");
@@ -229,8 +228,8 @@ void ConnectPage::handlePortString(QString &stillToParse, bool &correctSoFar)
     QRegExp r("\\:[0-9]{1,5}");
     if (r.exactMatch(stillToParse)) {
         auto portString = r.cap(0);
-        stillToParse = stillToParse.replace(portString, "");
-        auto portNumber = portString.replace(":","").toInt();
+        stillToParse = stillToParse.replace(portString, QString());
+        auto portNumber = portString.replace(QLatin1Char(':'), QString()).toInt();
         if (portNumber <= 65535){
             m_currentUrl.setPort(portNumber);
             correctSoFar = true;

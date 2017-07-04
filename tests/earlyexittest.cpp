@@ -121,7 +121,7 @@ private slots:
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
         // setting the probe is not strictly needed but we silence a runtime warning this way
-        options.setProbeABI(ProbeFinder::listProbeABIs().first());
+        options.setProbeABI(ProbeFinder::listProbeABIs().at(0));
         options.setWorkingDirectory(QCoreApplication::applicationDirPath());
         options.setLaunchArguments(QStringList() << QCoreApplication::applicationDirPath() + QStringLiteral("/sleep") << QStringLiteral("1"));
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
