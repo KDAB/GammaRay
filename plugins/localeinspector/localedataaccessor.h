@@ -91,7 +91,7 @@ struct LocaleDataAccessor
 #define LOCALE_DISPLAY_ACCESSOR(NAME) \
     struct Locale ## NAME ## Accessor : LocaleDataAccessor \
     { \
-        Locale ## NAME ## Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor( \
+        explicit Locale ## NAME ## Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor( \
                 registry) {} \
         QString accessorName() { return QStringLiteral(#NAME); } \
         QString display(const QLocale &locale) \
@@ -100,7 +100,7 @@ struct LocaleDataAccessor
 #define LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME) \
     struct Locale ## NAME ## Accessor : LocaleDataAccessor \
     { \
-        Locale ## NAME ## Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor( \
+        explicit Locale ## NAME ## Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor( \
                 registry, true) {} \
   \
         QString accessorName()                 \

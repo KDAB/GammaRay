@@ -33,7 +33,7 @@ using namespace GammaRay;
 class Widget3DSubtreeModel::Node
 {
 public:
-    Node(const QModelIndex &idx)
+    explicit Node(const QModelIndex &idx)
         : sourceIdx(idx),
           parent(nullptr)
     {}

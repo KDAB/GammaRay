@@ -52,7 +52,7 @@ class LegendModel : public QAbstractListModel
             Last = Line + 1
         };
 
-        Item(const QBrush &brush = QBrush(), const QPen &pen = QPen(),
+        explicit Item(const QBrush &brush = QBrush(), const QPen &pen = QPen(),
              const QByteArray &label = QByteArray())
             : brush(brush)
             , pen(pen)
@@ -108,7 +108,7 @@ class LegendModel : public QAbstractListModel
     };
 
 public:
-    LegendModel(QObject *parent = nullptr)
+    explicit LegendModel(QObject *parent = nullptr)
         : QAbstractListModel(parent)
     {
     }

@@ -37,7 +37,7 @@ namespace GammaRay
 class Widget3DImageTextureDataGenerator : public Qt3DRender::QTextureImageDataGenerator
 {
 public:
-    Widget3DImageTextureDataGenerator(const QImage &image)
+    explicit Widget3DImageTextureDataGenerator(const QImage &image)
         : Qt3DRender::QTextureImageDataGenerator()
         , mImage(image)
     {

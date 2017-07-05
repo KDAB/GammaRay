@@ -41,7 +41,7 @@ class EnumPropertyTest : public QObject
 {
     Q_OBJECT
 public:
-    EnumPropertyTest(QObject *parent = nullptr) :
+    explicit EnumPropertyTest(QObject *parent = nullptr) :
         QObject(parent)
     {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)

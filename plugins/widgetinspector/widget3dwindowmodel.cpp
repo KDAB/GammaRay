@@ -36,7 +36,7 @@ namespace GammaRay {
 class Widget3DWindowModel::WindowNode
 {
 public:
-    WindowNode(const QModelIndex &idx)
+    explicit WindowNode(const QModelIndex &idx)
         : sourceIdx(idx)
     {}
 

@@ -59,7 +59,7 @@ enum State {
 
 struct LauncherPrivate
 {
-    LauncherPrivate(const LaunchOptions &options)
+    explicit LauncherPrivate(const LaunchOptions &options)
         : options(options)
         , server(nullptr)
         , socket(nullptr)

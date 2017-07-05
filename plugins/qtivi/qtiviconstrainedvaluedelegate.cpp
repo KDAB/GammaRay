@@ -46,7 +46,7 @@ class SplitDataComboBox : public QComboBox
     Q_PROPERTY(QVariant modelData READ currentData USER true)
 
 public:
-    SplitDataComboBox(QWidget *parent = nullptr) : QComboBox(parent) {}
+    explicit SplitDataComboBox(QWidget *parent = nullptr) : QComboBox(parent) {}
 };
 
 

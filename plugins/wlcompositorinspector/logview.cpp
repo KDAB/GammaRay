@@ -44,7 +44,7 @@ namespace GammaRay {
 class View : public QWidget
 {
 public:
-  View(QWidget *p)
+  explicit View(QWidget *p)
     : QWidget(p)
     , m_lines(5000)
     , m_metrics(QFont())
@@ -313,7 +313,7 @@ public:
 class Messages : public QScrollArea
 {
 public:
-  Messages(QWidget *parent)
+  explicit Messages(QWidget *parent)
     : QScrollArea(parent)
     , m_view(new View(this))
   {
@@ -527,7 +527,7 @@ public:
     quint64 m_client;
   };
 
-  Timeline(QWidget *parent)
+  explicit Timeline(QWidget *parent)
     : QScrollArea(parent)
   {
     m_view.setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);

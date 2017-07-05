@@ -137,7 +137,7 @@ static QString stringifyProperty(const QObject *obj, const QString &propName)
 
 struct IconCacheEntry
 {
-    IconCacheEntry(const QByteArray &className_ = QByteArray())
+    explicit IconCacheEntry(const QByteArray &className_ = QByteArray())
         : className(className_)
         , defaultIcon(-1)
     {}

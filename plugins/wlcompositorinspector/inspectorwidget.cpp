@@ -54,7 +54,7 @@ using namespace GammaRay;
 class RemoteSurfaceView : public RemoteViewWidget
 {
 public:
-  RemoteSurfaceView(QWidget *parent)
+  explicit RemoteSurfaceView(QWidget *parent)
     : RemoteViewWidget(parent)
   {
     setName(QStringLiteral("com.kdab.GammaRay.WaylandCompositorSurfaceView"));

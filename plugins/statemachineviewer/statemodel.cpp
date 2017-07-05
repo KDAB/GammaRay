@@ -46,7 +46,7 @@ using namespace GammaRay;
 namespace GammaRay {
 class StateModelPrivate
 {
-    StateModelPrivate(StateModel *qq)
+    explicit StateModelPrivate(StateModel *qq)
         : q_ptr(qq)
         , m_stateMachine(nullptr)
     {

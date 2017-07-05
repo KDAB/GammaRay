@@ -45,7 +45,7 @@ using namespace GammaRay;
 namespace GammaRay {
 class TransitionModelPrivate
 {
-    TransitionModelPrivate(TransitionModel *qq)
+    explicit TransitionModelPrivate(TransitionModel *qq)
         : q_ptr(qq)
         , m_state(nullptr)
     {

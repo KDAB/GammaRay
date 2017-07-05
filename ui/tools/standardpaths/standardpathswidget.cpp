@@ -47,7 +47,7 @@ class StandardPathsProxy : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    StandardPathsProxy(QObject *parent = nullptr)
+    explicit StandardPathsProxy(QObject *parent = nullptr)
         : QIdentityProxyModel(parent) { }
 
     QVariant headerData(int section, Qt::Orientation orientation,
@@ -64,7 +64,7 @@ class StandardPathsDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    StandardPathsDelegate(QObject *parent = nullptr)
+    explicit StandardPathsDelegate(QObject *parent = nullptr)
         : QStyledItemDelegate(parent) { }
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,

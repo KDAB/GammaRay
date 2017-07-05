@@ -159,7 +159,7 @@ class Widget3DSelectionHelper : public QObject
                WRITE setCurrentObject
                NOTIFY currentObjectChanged)
 public:
-    Widget3DSelectionHelper(Widget3DSubtreeModel *widgetModel, QObject *parent = nullptr)
+    explicit Widget3DSelectionHelper(Widget3DSubtreeModel *widgetModel, QObject *parent = nullptr)
         : QObject(parent)
         , mModel(widgetModel)
     {}

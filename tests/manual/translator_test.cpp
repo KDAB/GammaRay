@@ -39,7 +39,7 @@ class Widget : public QWidget
 {
     Q_OBJECT
 public:
-    Widget(QWidget *parent = nullptr)
+    explicit Widget(QWidget *parent = nullptr)
         : QWidget(parent)
     {
         m_label1 = new QLabel(this);
