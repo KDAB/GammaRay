@@ -41,66 +41,105 @@ class QQmlAbstractBinding;
 
 namespace GammaRay {
 
-class QmlBindingNode {
+class QmlBindingExtension;
+
+class BindingNode
+{
 public:
+    BindingNode (QObject *object, int propertyIndex, BindingNode *parent = Q_NULLPTR);
 
-    QmlBindingNode(QQmlAbstractBinding *binding, QmlBindingNode *parent = Q_NULLPTR);
-    QmlBindingNode(QObject *object, int propertyIndex, QmlBindingNode *parent = Q_NULLPTR);
-    QmlBindingNode(QQmlProperty property, QmlBindingNode *parent = Q_NULLPTR);
+    void refreshValue();
 
-    QmlBindingNode *parent() const;
-    void setParent(QmlBindingNode *parent);
-    QObject *object() const;
 
     /**
-     * The qml id of the target object of this binding. No GammaRay objectId.
+     * A name describing the binding (e.g. "r1.width")
      */
-    const QString &id() const;
+    const QString &name() const;
+    /**
+     * An internal id that can be used to compare binding nodes. Do not use it to cast it back to a pointer.
+     */
+    qintptr id() const;
+    BindingNode *parent() const;
+    void setParent( BindingNode *parent);
+    QObject *object() const;
     int propertyIndex() const;
     QMetaProperty property() const;
-    QQmlAbstractBinding *binding() const;
-    bool isBinding() const;
     bool isActive() const;
     bool isBindingLoop() const;
     const QString &expression() const;
     const SourceLocation &sourceLocation() const;
-    std::vector<std::unique_ptr<QmlBindingNode>> &dependencies();
-    const std::vector<std::unique_ptr<QmlBindingNode>> &dependencies() const;
+    std::vector<std::unique_ptr<BindingNode>> &dependencies();
+    const std::vector<std::unique_ptr<BindingNode>> &dependencies() const;
+    void addDependency(std::unique_ptr<BindingNode> dependency);
+    void clearDependencies();
     const QVariant &value() const;
     uint depth() const;
 
-    void refreshValue();
+    bool operator<(const BindingNode &other) const;
+    bool operator>(const BindingNode &other) const;
 
-    bool operator<(const QmlBindingNode &other) const;
-    bool operator>(const QmlBindingNode &other) const;
 
-private:
-    static QQmlAbstractBinding *bindingForProperty(QObject *obj, int propertyIndex);
+    void setName(const QString &name);
+    void setId(qintptr id);
+    void setActive(bool active);
+    void setIsBindingLoop(bool isLoop);
+    void setExpression(const QString &expression);
+    void setSourceLocation(const SourceLocation &location);
 
     void checkForLoops();
-    void findDependencies();
-    void fetchBindingCode();
-    void fetchPropertyCode();
 
-    void addImplicitDependencies();
-    void addAnchoringDependencies();
+    std::unique_ptr<BindingNode> refresh();
 
-    QmlBindingNode *m_parent;
+private:
+    BindingNode *m_parent;
+    qintptr m_id;
     QObject *m_object;
-    QString m_id;
+    QString m_name;
     int m_propertyIndex;
-    QQmlAbstractBinding *m_binding = Q_NULLPTR;
     QVariant m_value;
     bool m_isActive = true;
     bool m_isBindingLoop = false;
     QString m_expression;
     SourceLocation m_sourceLocation;
-    std::vector<std::unique_ptr<QmlBindingNode>> m_dependencies = {};
-
+    std::vector<std::unique_ptr<BindingNode>> m_dependencies = {};
 };
 
-QDebug &operator<< (QDebug dbg, const QmlBindingNode &node);
+class AbstractBindingProvider
+{
+public:
+    struct Dependency {
+        QObject *object;
+        int propertyIndex;
+    };
+    virtual ~AbstractBindingProvider();
+    virtual std::vector<Dependency> findDependenciesFor(BindingNode *binding) = 0;
+    virtual std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject *obj) = 0;
+    virtual bool canProvideBindingsFor (QObject *object) = 0;
+};
+
+class QmlBindingProvider : public AbstractBindingProvider
+{
+public:
+    std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject * obj) override;
+    std::vector<Dependency> findDependenciesFor(GammaRay::BindingNode * binding) override;
+
+private:
+    std::unique_ptr<BindingNode> bindingNodeFromQmlProperty(QQmlProperty property, BindingNode *parent);
+    BindingNode *bindingNodeFromBinding(QQmlAbstractBinding *binding);
+    void fetchSourceLocationFor(BindingNode *node, QQmlAbstractBinding *binding);
+    QQmlAbstractBinding *bindingForProperty(QObject *obj, int propertyIndex);
+    bool canProvideBindingsFor(QObject * object) override;
+};
+
+class QuickImplicitBindingDependencyProvider : public AbstractBindingProvider
+{
+public:
+    std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject * obj) override;
+    std::vector<Dependency> findDependenciesFor(GammaRay::BindingNode * binding) override;
+    bool canProvideBindingsFor(QObject *object) override;
+};
 
 }
 
 #endif // GAMMARAY_QMLBINDINGNODE_H
+

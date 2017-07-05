@@ -39,7 +39,8 @@ class QQmlBinding;
 
 namespace GammaRay {
 
-class QmlBindingNode;
+class BindingNode;
+class AbstractBindingProvider;
 
 class QmlBindingModel : public QAbstractItemModel
 {
@@ -49,7 +50,7 @@ public:
     explicit QmlBindingModel(QObject *parent = Q_NULLPTR);
     ~QmlBindingModel();
 
-    void setObject(QObject *obj);
+    bool setObject(QObject *obj);
 
     int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
@@ -60,19 +61,15 @@ public:
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
 
-public slots:
-    void propertyChanged();
-
 private:
-    QModelIndex findEquivalent(const std::vector<std::unique_ptr<QmlBindingNode>> &container, QmlBindingNode *bindingNode) const;
-    std::vector<std::unique_ptr<QmlBindingNode>> bindingsFromObject(QObject *obj);
-    void refresh(QmlBindingNode *oldBindingNode, QmlBindingNode *newBindingNode,
-                 const QModelIndex &index, bool emitSignals);
+    QModelIndex findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const;
+    void refresh(BindingNode *oldBindingNode, const QModelIndex &index);
+    void bindingChanged(BindingNode *node);
+    void findDependenciesFor(BindingNode *node);
 
     QPointer<QObject> m_obj;
-    std::vector<std::unique_ptr<QmlBindingNode>> m_bindings;
-    std::vector<QmlBindingNode *> m_currentInvestigationPath; // This stack is used to store temporary
-                                                           // information while investigating all bindings
+    std::vector<std::unique_ptr<BindingNode>> m_bindings;
+    std::vector<std::unique_ptr<AbstractBindingProvider>> m_providers;
 };
 
 }
