@@ -51,14 +51,5 @@ bool QmlBindingExtension::setQObject(QObject* object)
     if (!object)
         return false;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    auto data = QQmlData::get(object);
-    if (!data)
-        return false;
-
-    m_bindingModel->setObject(object);
-    return true;
-#else
-    return false;
-#endif
+    return m_bindingModel->setObject(object);
 }
