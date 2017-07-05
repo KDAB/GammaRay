@@ -200,6 +200,7 @@ private slots:
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
     void frameUpdated(const GammaRay::RemoteViewFrame &frame);
     void enableFPS(const bool showFPS);
+    void updateUserViewport();
 
 private:
     RemoteViewFrame m_frame;

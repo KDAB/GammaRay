@@ -599,10 +599,11 @@ void QuickOverlay::disconnectTopItemChanges(QQuickItem *item)
     disconnect(item, &QQuickItem::heightChanged, this, &QuickOverlay::updateOverlay);
 }
 
-void QuickOverlay::requestGrabWindow()
+void QuickOverlay::requestGrabWindow(const QRectF& userViewport)
 {
     if (m_isGrabbingMode)
         return;
 
+    m_userViewport = userViewport;
     m_setIsGrabbingMode.invoke(this, Qt::QueuedConnection, Q_ARG(bool, true));
 }

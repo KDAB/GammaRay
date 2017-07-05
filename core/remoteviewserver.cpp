@@ -89,6 +89,11 @@ void RemoteViewServer::sendFrame(const RemoteViewFrame &frame)
     emit frameUpdated(frame);
 }
 
+QRectF RemoteViewServer::userViewport() const
+{
+    return m_userViewport;
+}
+
 void RemoteViewServer::sourceChanged()
 {
     m_sourceChanged = true;
@@ -186,6 +191,17 @@ void RemoteViewServer::setViewActive(bool active)
         sourceChanged();
     else
         m_updateTimer->stop();
+}
+
+void RemoteViewServer::sendUserViewport(const QRectF userViewport)
+{
+    if (userViewport.right() > m_userViewport.right()
+        || userViewport.bottom() > m_userViewport.bottom()
+        || userViewport.left() < m_userViewport.left()
+        || userViewport.top() < m_userViewport.top())
+        sourceChanged();
+
+    m_userViewport = userViewport;
 }
 
 void RemoteViewServer::clientConnectedChanged(bool connected)
