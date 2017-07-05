@@ -69,6 +69,8 @@ public:
     /// sends a new frame to the client
     void sendFrame(const RemoteViewFrame &frame);
 
+    QRectF userViewport() const;
+
 public slots:
     /// call this to indicate the source has changed and the client requires an update
     void sourceChanged();
@@ -92,6 +94,7 @@ private:
                         Qt::TouchPointStates touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints) 
                         override;
     void setViewActive(bool active) override;
+    void sendUserViewport(const QRectF userViewport) override;
     void clientViewUpdated() override;
 
     void checkRequestUpdate();
@@ -103,6 +106,7 @@ private slots:
 private:
     QPointer<EventReceiver> m_eventReceiver;
     QTimer *m_updateTimer;
+    QRectF m_userViewport;
     bool m_clientActive;
     bool m_sourceChanged;
     bool m_clientReady;

@@ -101,7 +101,7 @@ public:
      */
     void placeOn(const ItemOrLayoutFacade &item);
 
-    void requestGrabWindow();
+    void requestGrabWindow(const QRectF &userViewport);
 
 signals:
     void sceneChanged();
@@ -127,6 +127,7 @@ private:
     QuickDecorationsSettings m_settings;
     bool m_isGrabbingMode;
     bool m_decorationsEnabled;
+    QRectF m_userViewport;
     GrabbedFrame m_grabbedFrame;
     QMetaMethod m_sceneGrabbed;
     QMetaMethod m_sceneChanged;

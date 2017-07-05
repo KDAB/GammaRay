@@ -617,7 +617,7 @@ void QuickInspector::slotGrabWindow()
         return;
     }
 #endif
-    m_overlay->requestGrabWindow();
+    m_overlay->requestGrabWindow(m_remoteView->userViewport());
 }
 
 void QuickInspector::setCustomRenderMode(

@@ -51,6 +51,7 @@ public:
                         Qt::TouchPointStates touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
                         override;
     void setViewActive(bool active) override;
+    void sendUserViewport(QRectF userViewport) override;
     void clientViewUpdated() override;
 };
 }

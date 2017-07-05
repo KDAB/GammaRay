@@ -214,6 +214,16 @@ void RemoteViewWidget::enableFPS(const bool showFPS)
     m_showFps = showFPS;
 }
 
+void RemoteViewWidget::updateUserViewport()
+{
+    if (!isVisible())
+        return;
+
+    const auto userViewport = QRectF(QPointF(-m_x / m_zoom, -m_y / m_zoom),
+                               QSizeF(width() / m_zoom, height() / m_zoom));
+    m_interface->sendUserViewport(userViewport);
+}
+
 const RemoteViewFrame &RemoteViewWidget::frame() const
 {
     return m_frame;
@@ -390,6 +400,7 @@ void RemoteViewWidget::setZoom(double zoom)
     m_y = contentHeight() / 2 - (contentHeight() / 2 - m_y) * m_zoom / oldZoom;
 
     updateActions();
+    updateUserViewport();
     update();
 }
 
@@ -436,6 +447,7 @@ void RemoteViewWidget::centerView()
 {
     m_x = 0.5 * (contentWidth() - m_frame.sceneRect().width() * m_zoom);
     m_y = 0.5 * (contentHeight() - m_frame.sceneRect().height() * m_zoom);
+    updateUserViewport();
     update();
 }
 
@@ -886,6 +898,7 @@ void RemoteViewWidget::resizeEvent(QResizeEvent *event)
     m_x += 0.5 * (event->size().width() - event->oldSize().width());
     m_y += 0.5 * (event->size().height() - event->oldSize().height());
 
+    updateUserViewport();
     QWidget::resizeEvent(event);
 }
 
@@ -972,6 +985,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
         m_x = event->x() - m_mouseDownPosition.x();
         m_y = event->y() - m_mouseDownPosition.y();
         clampPanPosition();
+        updateUserViewport();
         break;
     case Measuring:
         if (event->buttons() & Qt::LeftButton)
@@ -981,7 +995,6 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
         sendMouseEvent(event);
         break;
     }
-
     update();
 }
 
@@ -1004,6 +1017,7 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
             else
                 m_x += event->delta();
             clampPanPosition();
+            updateUserViewport();
             update();
         }
         break;
@@ -1044,8 +1058,10 @@ void RemoteViewWidget::keyReleaseEvent(QKeyEvent *event)
 
 void RemoteViewWidget::showEvent(QShowEvent *event)
 {
-    if (m_interface)
+    if (m_interface) {
         m_interface->setViewActive(true);
+        updateUserViewport();
+    }
     QWidget::showEvent(event);
 }
 
