@@ -73,6 +73,7 @@ void QSGTextureGrabber::addQuickWindow(QQuickWindow* window)
     connect(window, &QQuickWindow::afterRendering, this, [this, window]() {
         windowAfterRendering(window);
     }, Qt::DirectConnection);
+    m_windows.push_back(window);
 }
 
 void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
@@ -145,6 +146,7 @@ void QSGTextureGrabber::requestGrab(QSGTexture* tex)
     const int w = std::ceil(m_pendingTexture->textureSize().width() / m_pendingTexture->normalizedTextureSubRect().width());
     const int h = std::ceil(m_pendingTexture->textureSize().height() / m_pendingTexture->normalizedTextureSubRect().height());
     m_textureSize = QSize(w, h);
+    triggerUpdate();
 }
 
 void QSGTextureGrabber::requestGrab(int textureId, const QSize& texSize)
@@ -157,6 +159,19 @@ void QSGTextureGrabber::requestGrab(int textureId, const QSize& texSize)
     // best idea so far: use the QQItem from the texture extension, making this unavailable from the QSG view though
     m_textureId = textureId;
     m_textureSize = texSize;
+    triggerUpdate();
+}
+
+void QSGTextureGrabber::triggerUpdate()
+{
+    for (auto it = m_windows.begin(); it != m_windows.end();) {
+        if (*it) {
+            (*it)->update();
+            ++it;
+        } else {
+            it = m_windows.erase(it);
+        }
+    }
 }
 
 void QSGTextureGrabber::resetRequest()

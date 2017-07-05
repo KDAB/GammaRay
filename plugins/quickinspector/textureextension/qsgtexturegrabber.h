@@ -34,6 +34,8 @@
 #include <QObject>
 #include <QSGTexture>
 
+#include <vector>
+
 QT_BEGIN_NAMESPACE
 class QImage;
 class QOpenGLContext;
@@ -64,12 +66,14 @@ private:
     void windowAfterRendering(QQuickWindow *window);
     QImage grabTexture(QOpenGLContext *context, int textureId) const;
 
+    void triggerUpdate();
     void resetRequest();
 
     static QSGTextureGrabber *s_instance;
 
     QMutex m_mutex;
     QPointer<QSGTexture> m_pendingTexture;
+    std::vector<QPointer<QQuickWindow> > m_windows;
 
     int m_textureId;
     QSize m_textureSize;
