@@ -432,10 +432,9 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &QuickInspector::slotGrabWindow);
 
     auto texGrab = new QSGTextureGrabber(this);
-    // TODO find a better way to pass this to the extension, the object broker will forward signals to the client too
-    ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.QSGTextureGrabber"), texGrab);
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), texGrab, SLOT(objectCreated(QObject*)));
 
+    // needs to be last, extensions require some of the above to be set up correctly
     registerPCExtensions();
 }
 

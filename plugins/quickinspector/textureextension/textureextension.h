@@ -57,7 +57,6 @@ private slots:
 
 private:
     QSGTexture *m_currentTexture;
-    QObject *m_qsgGrabber;
     RemoteViewServer *m_remoteView;
 };
 

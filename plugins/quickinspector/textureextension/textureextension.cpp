@@ -27,11 +27,11 @@
 */
 
 #include "textureextension.h"
+#include "qsgtexturegrabber.h"
 
 #include <core/propertycontroller.h>
 #include <core/util.h>
 #include <core/remoteviewserver.h>
-#include <common/objectbroker.h>
 #include <common/remoteviewframe.h>
 
 #include <QDebug>
@@ -50,12 +50,10 @@ TextureExtension::TextureExtension(PropertyController *controller)
     : QObject(controller)
     , PropertyControllerExtension(controller->objectBaseName() + ".texture")
     , m_currentTexture(nullptr)
-    , m_qsgGrabber(nullptr)
     , m_remoteView(new RemoteViewServer(controller->objectBaseName() + ".texture.remoteView", controller))
 {
-     m_qsgGrabber = ObjectBroker::object<QObject*>(QStringLiteral("com.kdab.GammaRay.QSGTextureGrabber"));
-     Q_ASSERT(m_qsgGrabber);
-     connect(m_qsgGrabber, SIGNAL(textureGrabbed(QSGTexture*,QImage)), this, SLOT(textureGrabbed(QSGTexture*,QImage)));
+     Q_ASSERT(QSGTextureGrabber::instance());
+     connect(QSGTextureGrabber::instance(), &QSGTextureGrabber::textureGrabbed, this, &TextureExtension::textureGrabbed);
 }
 
 TextureExtension::~TextureExtension()
@@ -84,7 +82,7 @@ bool TextureExtension::setQObject(QObject* obj)
     if (auto qsgTexture = qobject_cast<QSGTexture*>(obj)) {
         m_remoteView->resetView();
         m_currentTexture = qsgTexture;
-        QMetaObject::invokeMethod(m_qsgGrabber, "requestGrab", Q_ARG(QSGTexture*, qsgTexture));
+        QSGTextureGrabber::instance()->requestGrab(qsgTexture);
         return true;
     }
 
@@ -118,7 +116,7 @@ bool TextureExtension::setObject(void* object, const QString& typeName)
             if (!mat->texture())
                 return false;
             m_remoteView->resetView();
-            QMetaObject::invokeMethod(m_qsgGrabber, "requestGrab", Q_ARG(int, mat->texture()->textureId), Q_ARG(QSize, mat->texture()->size));
+            QSGTextureGrabber::instance()->requestGrab(mat->texture()->textureId, mat->texture()->size);
             return true;
         }
     }

@@ -42,14 +42,24 @@
 
 using namespace GammaRay;
 
+QSGTextureGrabber* QSGTextureGrabber::s_instance = nullptr;
+
 QSGTextureGrabber::QSGTextureGrabber(QObject* parent)
     : QObject(parent)
     , m_textureId(-1)
 {
+    Q_ASSERT(!s_instance);
+    s_instance = this;
 }
 
 QSGTextureGrabber::~QSGTextureGrabber()
 {
+    s_instance = nullptr;
+}
+
+QSGTextureGrabber* QSGTextureGrabber::instance()
+{
+    return s_instance;
 }
 
 void QSGTextureGrabber::objectCreated(QObject* obj)

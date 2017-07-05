@@ -49,6 +49,8 @@ public:
     explicit QSGTextureGrabber(QObject *parent = nullptr);
     ~QSGTextureGrabber();
 
+    static QSGTextureGrabber* instance();
+
 public slots:
     void objectCreated(QObject *obj);
     void requestGrab(QSGTexture *tex);
@@ -63,6 +65,8 @@ private:
     QImage grabTexture(QOpenGLContext *context, int textureId) const;
 
     void resetRequest();
+
+    static QSGTextureGrabber *s_instance;
 
     QMutex m_mutex;
     QPointer<QSGTexture> m_pendingTexture;
