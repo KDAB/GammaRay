@@ -108,7 +108,7 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
     if (m_textureId >= 0) {
         const auto img = grabTexture(context, m_textureId);
         if (!img.isNull())
-            emit textureGrabbed(nullptr, img); // TODO alternative signal
+            emit textureGrabbed(m_grabData, img);
         resetRequest();
     }
 }
@@ -194,7 +194,7 @@ void QSGTextureGrabber::requestGrab(QSGTexture* tex)
     triggerUpdate();
 }
 
-void QSGTextureGrabber::requestGrab(int textureId, const QSize& texSize)
+void QSGTextureGrabber::requestGrab(int textureId, const QSize& texSize, void *data)
 {
     if (textureId < 0 || !texSize.isValid())
         return;
@@ -204,6 +204,7 @@ void QSGTextureGrabber::requestGrab(int textureId, const QSize& texSize)
     // best idea so far: use the QQItem from the texture extension, making this unavailable from the QSG view though
     m_textureId = textureId;
     m_textureSize = texSize;
+    m_grabData = data;
     triggerUpdate();
 }
 

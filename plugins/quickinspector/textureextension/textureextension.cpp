@@ -50,10 +50,14 @@ TextureExtension::TextureExtension(PropertyController *controller)
     : QObject(controller)
     , PropertyControllerExtension(controller->objectBaseName() + ".texture")
     , m_currentTexture(nullptr)
+    , m_currentMaterial(nullptr)
     , m_remoteView(new RemoteViewServer(controller->objectBaseName() + ".texture.remoteView", controller))
 {
      Q_ASSERT(QSGTextureGrabber::instance());
-     connect(QSGTextureGrabber::instance(), &QSGTextureGrabber::textureGrabbed, this, &TextureExtension::textureGrabbed);
+     connect(QSGTextureGrabber::instance(), static_cast<void (QSGTextureGrabber::*)(QSGTexture*,const QImage&)>(&QSGTextureGrabber::textureGrabbed),
+             this, static_cast<void (TextureExtension::*)(QSGTexture*,const QImage&)>(&TextureExtension::textureGrabbed));
+     connect(QSGTextureGrabber::instance(), static_cast<void (QSGTextureGrabber::*)(void*,const QImage&)>(&QSGTextureGrabber::textureGrabbed),
+             this, static_cast<void (TextureExtension::*)(void*,const QImage&)>(&TextureExtension::textureGrabbed));
 }
 
 TextureExtension::~TextureExtension()
@@ -78,6 +82,7 @@ static QSGGeometryNode *findGeometryNode(QSGNode *node)
 bool TextureExtension::setQObject(QObject* obj)
 {
     m_currentTexture = nullptr;
+    m_currentMaterial = nullptr;
 
     if (auto qsgTexture = qobject_cast<QSGTexture*>(obj)) {
         m_remoteView->resetView();
@@ -103,6 +108,7 @@ bool TextureExtension::setQObject(QObject* obj)
 bool TextureExtension::setObject(void* object, const QString& typeName)
 {
     m_currentTexture = nullptr;
+    m_currentMaterial = nullptr;
 
     if (typeName == QLatin1String("QSGGeometryNode")) {
         auto node = static_cast<QSGGeometryNode*>(object);
@@ -116,7 +122,8 @@ bool TextureExtension::setObject(void* object, const QString& typeName)
             if (!mat->texture())
                 return false;
             m_remoteView->resetView();
-            QSGTextureGrabber::instance()->requestGrab(mat->texture()->textureId, mat->texture()->size);
+            m_currentMaterial = mat;
+            QSGTextureGrabber::instance()->requestGrab(mat->texture()->textureId, mat->texture()->size, mat);
             return true;
         }
     }
@@ -126,7 +133,7 @@ bool TextureExtension::setObject(void* object, const QString& typeName)
 
 void TextureExtension::textureGrabbed(QSGTexture* tex, const QImage& img)
 {
-    if (tex != m_currentTexture /* || !tex*/) // TODO reenable !tex here once we have a dedicated signal for df texture grabs
+    if (tex != m_currentTexture)
         return;
 
     RemoteViewFrame f;
@@ -137,5 +144,15 @@ void TextureExtension::textureGrabbed(QSGTexture* tex, const QImage& img)
                       m_currentTexture->textureSize().width(), m_currentTexture->textureSize().height());
         f.setData(subRect);
     }
+    m_remoteView->sendFrame(f);
+}
+
+void TextureExtension::textureGrabbed(void* data, const QImage& img)
+{
+    if (m_currentMaterial != data)
+        return;
+
+    RemoteViewFrame f;
+    f.setImage(img);
     m_remoteView->sendFrame(f);
 }
