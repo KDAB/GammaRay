@@ -39,7 +39,7 @@ gammaray_configure.commands = \
 gammaray_configure_docs.target = gammaray_configure_docs
 gammaray_configure_docs.commands = \
     ($$sprintf($$QMAKE_MKDIR_CMD, "build")) $$SHELL_SEP \
-    cd build $SHELL_SEP \
+    cd build $$SHELL_SEP \
     cmake $$CMAKE_PLATFORM_ARGS \
         -DCMAKE_INSTALL_PREFIX=$$SHELL_INSTALL_PREFIX \
         -DCMAKE_PREFIX_PATH=$$SHELL_INSTALL_PREFIX \
