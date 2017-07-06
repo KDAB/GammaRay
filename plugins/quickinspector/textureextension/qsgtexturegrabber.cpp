@@ -38,6 +38,10 @@
 #include <QSGTexture>
 #include <QThread>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+#include <QOpenGLExtraFunctions>
+#endif
+
 #include <cmath>
 
 using namespace GammaRay;
@@ -88,7 +92,10 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
 #endif
 
     auto context = QOpenGLContext::currentContext();
-    // TODO this check is only correct with the threaded render loop, but might fail with multiple windows and the basic loop
+    // This check is only correct with the threaded render loop, for the basic one this
+    // can fail with a non-shared context (if that is even a plausible scenario)
+    // We can't detect this, so we rely on our safety checks in grabTexture and accept
+    // a minimal chance of showing texture content from the wrong context.
     if (m_pendingTexture && QThread::currentThread() == m_pendingTexture->thread()) {
         const auto img = grabTexture(context, m_pendingTexture->textureId());
         if (!img.isNull())
@@ -112,6 +119,29 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext* context, int textureId) co
         auto glFuncs = context->functions();
         Q_ASSERT(glFuncs);
 
+        glFuncs->glBindTexture(GL_TEXTURE_2D, textureId);
+        if (const auto err = glFuncs->glGetError()) {
+            qWarning() << "Unable to bind texture for grabbing:" << err;
+            return QImage();
+        }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+        // check if the size matches our expectations (requires ES3.1, so we might have to skip this
+        auto glExtraFuncs = context->extraFunctions();
+        if (glExtraFuncs) {
+            int w = 0, h = 0;
+            glExtraFuncs->glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
+            glExtraFuncs->glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
+            if (m_textureSize.width() != w || m_textureSize.height() != h) {
+                qWarning() << "OpenGL reported texture sizes doesn't match our assumption, aborting texture grab!" << m_textureSize << w << h;
+                return QImage();
+            }
+        } else {
+            qDebug() << "Can't validate texture size (OpenGL ES < 3.1), things might go wrong in a multi-context scenario...";
+        }
+#endif
+
+        // bind texture to an FBO, and read that, direct texture reading is not supported with OpenGL ES
         int prev_fbo = -1;
         unsigned int fbo = -1;
         glFuncs->glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prev_fbo);
@@ -130,8 +160,23 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext* context, int textureId) co
             return QImage();
         }
 
-        QImage img(m_textureSize.width(), m_textureSize.height(), QImage::Format_ARGB32_Premultiplied);
         glFuncs->glBindTexture(GL_TEXTURE_2D, textureId);
+        if (const auto err = glFuncs->glGetError()) {
+            qWarning() << "Unable to bind texture for grabbing:" << err;
+            return QImage();
+        }
+
+        // check if the size matches our expectations
+        int w = 0, h = 0;
+        glFuncs->glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &w);
+        glFuncs->glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &h);
+        if (m_textureSize.width() != w || m_textureSize.height() != h) {
+            qWarning() << "OpenGL reported texture sizes doesn't match our assumption, aborting texture grab!" << m_textureSize << w << h;
+            return QImage();
+        }
+
+        // actually read the texture content
+        QImage img(m_textureSize.width(), m_textureSize.height(), QImage::Format_ARGB32_Premultiplied);
         glFuncs->glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
         return img;
     }
