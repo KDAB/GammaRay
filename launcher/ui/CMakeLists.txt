@@ -44,6 +44,12 @@ target_link_libraries(gammaray_launcher_ui
 
 install(TARGETS gammaray_launcher_ui EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+gammaray_install_headers(DESTINATION launcher
+    ${CMAKE_CURRENT_BINARY_DIR}/gammaray_launcher_ui_export.h
+    connectpage.h
+    launcherwindow.h
+)
+
 ecm_generate_pri_file(BASE_NAME GammaRayLauncherUi
                       LIB_NAME gammaray_launcher_ui
                       DEPS "core gui GammaRayLauncher"
