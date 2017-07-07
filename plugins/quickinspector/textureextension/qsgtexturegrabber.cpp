@@ -89,6 +89,8 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     if (window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
         return;
+#else
+    Q_UNUSED(window);
 #endif
 
     auto context = QOpenGLContext::currentContext();
@@ -156,6 +158,7 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext* context, int textureId) co
         glFuncs->glDeleteFramebuffers(1, &fbo);
         return img;
     } else {
+#if !defined(QT_NO_OPENGL) && !defined(QT_OPENGL_ES_2)
         auto glFuncs = context->versionFunctions<QOpenGLFunctions_2_0>();
         if (!glFuncs) {
             qWarning() << "unable to obtain OpenGL2 functions, too old GL version?";
@@ -181,6 +184,7 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext* context, int textureId) co
         QImage img(m_textureSize.width(), m_textureSize.height(), QImage::Format_ARGB32_Premultiplied);
         glFuncs->glGetTexImage(GL_TEXTURE_2D, 0, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
         return img;
+#endif
     }
 
     return QImage();
