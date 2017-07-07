@@ -319,6 +319,7 @@ MainWindow::MainWindow(QWidget *parent)
                 this, SLOT(logTransmissionRate(quint64,quint64)));
     } else {
         ui->statusBar->hide();
+        ui->menu_Diagnostics->menuAction()->setVisible(false);
     }
 
     connect(this, SIGNAL(targetQuitRequested()), &m_stateManager, SLOT(saveState()));

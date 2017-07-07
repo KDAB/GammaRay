@@ -1070,7 +1070,7 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
         menu.addSeparator();
         menu.addAction(m_zoomOutAction);
         menu.addAction(m_zoomInAction);
-        if (((event->modifiers() & Qt::ShiftModifier) && (event->modifiers() & Qt::ControlModifier)) || m_showFps)
+        if (!QString::fromLocal8Bit(qgetenv("GAMMARAY_DEVELOPERMODE")).isEmpty())
         {
             menu.addSeparator();
             menu.addAction(m_toggleFPSAction);
