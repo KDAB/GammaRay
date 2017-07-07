@@ -42,6 +42,16 @@
 #include <QOpenGLExtraFunctions>
 #endif
 
+#ifndef GL_TEXTURE_WIDTH
+#define GL_TEXTURE_WIDTH 0x1000
+#endif
+#ifndef GL_TEXTURE_HEIGHT
+#define GL_TEXTURE_HEIGHT 0x1001
+#endif
+#ifndef GL_BGRA
+#define GL_BGRA 0x80E1
+#endif
+
 #include <cmath>
 
 using namespace GammaRay;
