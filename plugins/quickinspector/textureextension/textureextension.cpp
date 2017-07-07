@@ -119,7 +119,7 @@ bool TextureExtension::setObject(void* object, const QString& typeName)
             return setQObject(mat->texture());
 
         if (auto mat = dynamic_cast<QSGDistanceFieldTextMaterial*>(material)) {
-            if (!mat->texture())
+            if (!mat->texture() || mat->texture()->textureId <= 0)
                 return false;
             m_remoteView->resetView();
             m_currentMaterial = mat;

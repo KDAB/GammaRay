@@ -83,7 +83,7 @@ void QSGTextureGrabber::addQuickWindow(QQuickWindow* window)
 void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
 {
     QMutexLocker lock(&m_mutex);
-    if (!m_pendingTexture && m_textureId < 0)
+    if (!m_pendingTexture && m_textureId <= 0)
         return;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
@@ -97,15 +97,17 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
     // We can't detect this, so we rely on our safety checks in grabTexture and accept
     // a minimal chance of showing texture content from the wrong context.
     if (m_pendingTexture && QThread::currentThread() == m_pendingTexture->thread()) {
-        const auto img = grabTexture(context, m_pendingTexture->textureId());
-        if (!img.isNull())
-            emit textureGrabbed(m_pendingTexture, img);
+        if (m_pendingTexture->textureId() > 0) {
+            const auto img = grabTexture(context, m_pendingTexture->textureId());
+            if (!img.isNull())
+                emit textureGrabbed(m_pendingTexture, img);
+        }
         resetRequest();
     }
 
     // See below, this is missing a context check here. So we rely purely on the
     // safety and plausibility checks in grabTexture.
-    if (m_textureId >= 0) {
+    if (m_textureId > 0) {
         const auto img = grabTexture(context, m_textureId);
         if (!img.isNull())
             emit textureGrabbed(m_grabData, img);
