@@ -193,7 +193,7 @@ void RemoteViewServer::setViewActive(bool active)
         m_updateTimer->stop();
 }
 
-void RemoteViewServer::sendUserViewport(const QRectF userViewport)
+void RemoteViewServer::sendUserViewport(const QRectF &userViewport)
 {
     if (userViewport.right() > m_userViewport.right()
         || userViewport.bottom() > m_userViewport.bottom()

@@ -526,7 +526,7 @@ void RemoteViewWidget::paintEvent(QPaintEvent *event)
     p.save();
     p.setTransform(QTransform().scale(m_zoom, m_zoom), true);
     p.setTransform(m_frame.transform(), true);
-    p.drawImage(QRect(QPoint(0, 0), m_frame.viewRect().size().toSize()), m_frame.image());
+    p.drawImage(QRect(QPoint(0, 0), m_frame.image().size()), m_frame.image());
     p.restore();
 
     drawDecoration(&p);
