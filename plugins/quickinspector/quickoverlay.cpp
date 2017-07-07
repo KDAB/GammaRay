@@ -42,6 +42,7 @@
 #include <private/qquickitem_p.h>
 
 #include <functional>
+#include <cmath>
 
 QT_BEGIN_NAMESPACE
 extern Q_GUI_EXPORT QImage qt_gl_read_framebuffer(const QSize &size,
@@ -416,20 +417,35 @@ void QuickOverlay::windowAfterRendering()
     // And the gui thread is NOT locked
 
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
-
     if (m_isGrabbingMode) {
+        const auto window = QRectF(QPoint(0,0), m_renderInfo.windowSize);
+        const auto intersect = m_userViewport.isValid() ? window.intersected(m_userViewport) : window ;
+
+        // readout parameters
+        // when in doubt, round x and y to floor--> reads one pixel more
+        const int x = static_cast<int>(std::floor(intersect.x() * m_renderInfo.dpr));
+        // correct y for gpu-flipped textures being read from the bottom
+        const int y = static_cast<int>(std::floor((m_renderInfo.windowSize.height() - intersect.height() - intersect.y()) * m_renderInfo.dpr));
+        // when in doubt, round up w and h --> also reads one pixel more
+        const int w = static_cast<int>(std::ceil(intersect.width() * m_renderInfo.dpr));
+        const int h = static_cast<int>(std::ceil(intersect.height() * m_renderInfo.dpr));
+
         m_grabbedFrame.transform.reset();
+
 #ifdef ENABLE_GL_READPIXELS
-        if (m_grabbedFrame.image.size() != m_renderInfo.windowSize * m_renderInfo.dpr)
-            m_grabbedFrame.image = QImage(m_renderInfo.windowSize * m_renderInfo.dpr, QImage::Format_RGBA8888);
+        if (m_grabbedFrame.image.size() != QSize(w, h))
+            m_grabbedFrame.image = QImage(w, h, QImage::Format_RGBA8888);
+
         QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
-        glFuncs->glReadPixels(0, 0, m_renderInfo.windowSize.width() * m_renderInfo.dpr, m_renderInfo.windowSize.height() * m_renderInfo.dpr, GL_RGBA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
-        // Mirror flip
+        glFuncs->glReadPixels(x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
+
+        // set transform to flip the read texture later, when displayed
         m_grabbedFrame.transform.scale(1.0, -1.0);
-        m_grabbedFrame.transform.translate(0.0, -m_renderInfo.windowSize.height());
+        m_grabbedFrame.transform.translate(intersect.x() * m_renderInfo.dpr , -intersect.y() * m_renderInfo.dpr - h);
 #else
         m_grabbedFrame.image = qt_gl_read_framebuffer(m_renderInfo.windowSize * m_renderInfo.dpr, false, QOpenGLContext::currentContext());
 #endif
+
         m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
         if (!m_grabbedFrame.image.isNull()) {
