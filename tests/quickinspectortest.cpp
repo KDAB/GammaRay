@@ -235,7 +235,7 @@ private slots:
         QSignalSpy gotFrameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
         QVERIFY(gotFrameSpy.isValid());
 
-        QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/rotationinvariant.qml")));
 
         remoteView->clientViewUpdated();
         if (!exposed)
@@ -246,12 +246,18 @@ private slots:
         QVERIFY(gotFrameSpy.size() >= 1);
         const auto frame = gotFrameSpy.at(0).at(0).value<RemoteViewFrame>();
         QImage img = frame.image();
+        QTransform transform = frame.transform();
+
+        img = img.transformed(transform);
 
         QVERIFY(!img.isNull());
         QCOMPARE(img.width(), static_cast<int>(view->width() *view->devicePixelRatio()));
         QCOMPARE(img.height(), static_cast<int>(view->height() *view->devicePixelRatio()));
 #ifndef Q_OS_WIN // this is too unstable on the CI, rendered results seem to differ in color!?
-        QCOMPARE(img.pixel(1, 1), QColor(QStringLiteral("lightsteelblue")).rgb());
+        QCOMPARE(img.pixel(1, 1), QColor(255, 0, 0).rgb());
+        QCOMPARE(img.pixel(99, 1), QColor(0, 255, 0).rgb());
+        QCOMPARE(img.pixel(1, 99), QColor(0, 0, 255).rgb());
+        QCOMPARE(img.pixel(99, 99), QColor(255, 255, 0).rgb());
 #endif
 
         remoteView->setViewActive(false);

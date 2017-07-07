@@ -1,8 +1,9 @@
 <RCC>
-  <qresource prefix="/">
-    <file>manual/reparenttest.qml</file>
-    <file>manual/quickitemcreatedestroytest.qml</file>
-    <file>manual/textures.qml</file>
-    <file>manual/lsd.png</file>
-  </qresource>
+    <qresource prefix="/">
+        <file>manual/reparenttest.qml</file>
+        <file>manual/quickitemcreatedestroytest.qml</file>
+        <file>manual/textures.qml</file>
+        <file>manual/lsd.png</file>
+        <file>manual/rotationinvariant.qml</file>
+    </qresource>
 </RCC>
