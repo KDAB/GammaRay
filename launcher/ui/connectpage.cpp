@@ -259,6 +259,11 @@ void ConnectPage::clearWarnings()
 #endif
 }
 
+QUrl ConnectPage::currentUrl() const
+{
+    return m_currentUrl;
+}
+
 ConnectPage::~ConnectPage()
 {
 }
