@@ -99,7 +99,7 @@ void RemoteViewClient::setViewActive(bool active)
     Endpoint::instance()->invokeObject(name(), "setViewActive", QVariantList() << active);
 }
 
-void RemoteViewClient::sendUserViewport(QRectF userViewport)
+void RemoteViewClient::sendUserViewport(const QRectF &userViewport)
 {
     Endpoint::instance()->invokeObject(name(), "sendUserViewport", QVariantList() << userViewport);
 }

@@ -72,7 +72,7 @@ public slots:
                                 Qt::TouchPointStates touchPointStates,
                                 const QList<QTouchEvent::TouchPoint> &touchPoints) = 0;
 
-    virtual void sendUserViewport(const QRectF userViewport) = 0;
+    virtual void sendUserViewport(const QRectF &userViewport) = 0;
 
     virtual void setViewActive(bool active) = 0;
 
