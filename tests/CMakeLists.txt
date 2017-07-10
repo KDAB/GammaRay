@@ -415,7 +415,6 @@ set(quickinspectortest_srcs
   quickinspectortest.cpp
   ../plugins/quickinspector/quickinspectorinterface.cpp
   ../plugins/quickinspector/quickitemgeometry.cpp
-  ../plugins/quickinspector/quickoverlay.cpp
   ../plugins/quickinspector/quickdecorationsdrawer.cpp
   $<TARGET_OBJECTS:modeltestobj>
   $<TARGET_OBJECTS:gammaray_probe_obj>
