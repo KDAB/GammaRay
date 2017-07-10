@@ -36,6 +36,8 @@
 #include <common/paths.h>
 #include <common/objectbroker.h>
 
+#include <3rdparty/qt/modeltest.h>
+
 #include <QAbstractItemModel>
 #include <QQuickItem>
 #include <QQuickView>
@@ -126,6 +128,7 @@ private slots:
 
         auto shaderModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.shaderModel");
         QVERIFY(shaderModel);
+        ModelTest shaderModelTest(shaderModel);
         QCOMPARE(shaderModel->rowCount(), 0);
 
         auto imageItem = m_view->rootObject();
@@ -145,12 +148,12 @@ private slots:
         QVERIFY(propModel->rowCount() > 1);
         QCOMPARE(shaderModel->rowCount(), 2);
 
-        iface->getShader(shaderModel->index(0,0).data(Qt::DisplayRole).toString());
+        iface->getShader(0);
         QCOMPARE(shaderSpy.size(), 1);
         QVERIFY(!shaderSpy.at(0).at(0).toString().isEmpty());
         shaderSpy.clear();
 
-        iface->getShader(shaderModel->index(1,0).data(Qt::DisplayRole).toString());
+        iface->getShader(1);
         QCOMPARE(shaderSpy.size(), 1);
         QVERIFY(!shaderSpy.at(0).at(0).toString().isEmpty());
 
@@ -173,6 +176,7 @@ private slots:
 
         auto shaderModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.shaderModel");
         QVERIFY(shaderModel);
+        ModelTest shaderModelTest(shaderModel);
         QCOMPARE(shaderModel->rowCount(), 0);
 
         QQuickItem *effectItem = nullptr;
@@ -192,18 +196,20 @@ private slots:
         QVERIFY(geometryNode);
         controller->setObject(geometryNode, "QSGGeometryNode");
 
-        QEXPECT_FAIL("", "not yet implemented", Abort);
+        QEXPECT_FAIL("", "not yet implemented", Continue);
         QVERIFY(propModel->rowCount() > 1);
         QCOMPARE(shaderModel->rowCount(), 2);
 
-        iface->getShader(shaderModel->index(0,0).data(Qt::DisplayRole).toString());
+        iface->getShader(0);
         QCOMPARE(shaderSpy.size(), 1);
         QVERIFY(!shaderSpy.at(0).at(0).toString().isEmpty());
+        QVERIFY(shaderSpy.at(0).at(0).toString().contains(QLatin1String("TESTVERTEXSHADER")));
         shaderSpy.clear();
 
-        iface->getShader(shaderModel->index(1,0).data(Qt::DisplayRole).toString());
+        iface->getShader(1);
         QCOMPARE(shaderSpy.size(), 1);
         QVERIFY(!shaderSpy.at(0).at(0).toString().isEmpty());
+        QVERIFY(shaderSpy.at(0).at(0).toString().contains(QLatin1String("TESTFRAGMENTSHADER")));
 
         controller->setObject(nullptr, QString());
     }

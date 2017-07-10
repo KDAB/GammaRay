@@ -31,10 +31,6 @@
 
 #include <QWidget>
 
-QT_BEGIN_NAMESPACE
-class QItemSelection;
-QT_END_NAMESPACE
-
 namespace GammaRay {
 class MaterialExtensionInterface;
 
@@ -46,13 +42,13 @@ class MaterialTab : public QWidget
     Q_OBJECT
 public:
     explicit MaterialTab(PropertyWidget *parent);
-    virtual ~MaterialTab();
+    ~MaterialTab();
 
 private:
     void setObjectBaseName(const QString &baseName);
 
 private slots:
-    void shaderSelectionChanged(const QItemSelection &selection);
+    void shaderSelectionChanged(int idx);
     void showShader(const QString &shaderSource);
 
 private:

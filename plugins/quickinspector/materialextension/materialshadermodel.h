@@ -1,11 +1,11 @@
 /*
-  materialextension.h
+  materialshadermodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2014-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
+  Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,45 +26,37 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKINSPECTOR_MATERIALEXTENSION_H
-#define GAMMARAY_QUICKINSPECTOR_MATERIALEXTENSION_H
+#ifndef GAMMARAY_MATERIALSHADERMODEL_H
+#define GAMMARAY_MATERIALSHADERMODEL_H
 
-#include <core/propertycontrollerextension.h>
-#include "materialextensioninterface.h"
-
-#include <memory>
+#include <QAbstractListModel>
 
 QT_BEGIN_NAMESPACE
-class QSGGeometryNode;
 class QSGMaterialShader;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class AggregatedPropertyModel;
-class MaterialShaderModel;
-class PropertyController;
-class ObjectEnumModel;
 
-class MaterialExtension : public MaterialExtensionInterface, public PropertyControllerExtension
+class MaterialShaderModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_INTERFACES(GammaRay::MaterialExtensionInterface)
-
 public:
-    explicit MaterialExtension(PropertyController *controller);
-    ~MaterialExtension();
+    explicit MaterialShaderModel(QObject *parent = nullptr);
+    ~MaterialShaderModel();
 
-    bool setObject(void *object, const QString &typeName) override;
+    void setMaterialShader(QSGMaterialShader *shader);
+    QByteArray shaderForRow(int row) const;
 
-public slots:
-    void getShader(int row) override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
-    QSGGeometryNode *m_node;
-    AggregatedPropertyModel *m_materialPropertyModel;
-    MaterialShaderModel *m_shaderModel;
-    std::unique_ptr<QSGMaterialShader> m_materialShader;
+    static int shaderFileCount(QSGMaterialShader *shader);
+    QString shaderFileForRow(int row) const;
+
+    QSGMaterialShader *m_shader;
+    int m_shaderFileCount;
 };
 }
 
-#endif // MATERIALEXTENSION_H
+#endif // GAMMARAY_MATERIALSHADERMODEL_H

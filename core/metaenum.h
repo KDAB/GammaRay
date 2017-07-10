@@ -54,7 +54,7 @@ template<typename T, typename F, std::size_t N>
 QString flagsToString(T flags, const Value<F>(&lookupTable)[N])
 {
     QStringList l;
-    T handledFlags = nullptr;
+    T handledFlags = T();
 
     for (std::size_t i = 0; i < N; ++i) {
         if (flags & lookupTable[i].value)

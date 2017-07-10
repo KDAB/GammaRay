@@ -46,7 +46,7 @@ signals:
     void gotShader(const QString &shaderSource);
 
 public slots:
-    virtual void getShader(const QString &fileName) = 0;
+    virtual void getShader(int row) = 0;
 
 private:
     QString m_name;

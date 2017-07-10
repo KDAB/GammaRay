@@ -45,11 +45,8 @@ MaterialTab::MaterialTab(PropertyWidget *parent)
     m_ui->setupUi(this);
     m_ui->materialPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
     m_ui->materialPropertyView->header()->setObjectName("materialPropertyViewHeader");
-    m_ui->shaderList->header()->setObjectName("shaderListHeader");
     setObjectBaseName(parent->objectBaseName());
-    connect(m_ui->shaderList->selectionModel(),
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(shaderSelectionChanged(QItemSelection)));
+    connect(m_ui->shaderList, SIGNAL(currentIndexChanged(int)), this, SLOT(shaderSelectionChanged(int)));
 
     m_ui->shaderEdit->setSyntaxDefinition(QLatin1String("GLSL"));
 
@@ -74,15 +71,12 @@ void MaterialTab::setObjectBaseName(const QString &baseName)
     m_ui->shaderList->setModel(ObjectBroker::model(baseName + ".shaderModel"));
 }
 
-void MaterialTab::shaderSelectionChanged(const QItemSelection &selection)
+void MaterialTab::shaderSelectionChanged(int idx)
 {
     m_ui->shaderEdit->clear();
-    if (selection.isEmpty())
+    if (idx < 0)
         return;
-    const QModelIndex index = selection.first().topLeft();
-    if (!index.isValid())
-        return;
-    m_interface->getShader(index.data(Qt::DisplayRole).toString());
+    m_interface->getShader(idx);
 }
 
 void MaterialTab::showShader(const QString &shaderSource)

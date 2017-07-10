@@ -49,6 +49,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
     quickpaintanalyzerextension.cpp
     quickoverlay.cpp
     materialextension/materialextension.cpp
+    materialextension/materialshadermodel.cpp
     geometryextension/sggeometryextension.cpp
     geometryextension/sggeometrymodel.cpp
     textureextension/textureextension.cpp

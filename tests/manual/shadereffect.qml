@@ -51,6 +51,7 @@ Image {
         anchors.fill: parent
         property variant src: effectSource
         vertexShader: "
+            /* TESTVERTEXSHADER */
             uniform highp mat4 qt_Matrix;
             attribute highp vec4 qt_Vertex;
             attribute highp vec2 qt_MultiTexCoord0;
@@ -60,6 +61,7 @@ Image {
                 gl_Position = qt_Matrix * qt_Vertex;
             }"
         fragmentShader: "
+            /* TESTFRAGMENTSHADER */
             varying highp vec2 coord;
             uniform sampler2D src;
             uniform lowp float qt_Opacity;

@@ -437,6 +437,7 @@ add_test(NAME quicktexturetest COMMAND quicktexturetest)
 set(quickmaterialtest_srcs
     quickmaterialtest.cpp
     $<TARGET_OBJECTS:gammaray_probe_obj>
+    $<TARGET_OBJECTS:modeltestobj>
 )
 qt4_add_resources(quickmaterialtest_srcs quickinspectortest.qrc)
 add_executable(quickmaterialtest ${quickmaterialtest_srcs})

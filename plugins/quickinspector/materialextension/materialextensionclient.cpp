@@ -41,8 +41,8 @@ MaterialExtensionClient::~MaterialExtensionClient()
 {
 }
 
-void MaterialExtensionClient::getShader(const QString &fileName)
+void MaterialExtensionClient::getShader(int row)
 {
     Endpoint::instance()->invokeObject(
-        name(), "getShader", QVariantList() << QVariant::fromValue(fileName));
+        name(), "getShader", QVariantList() << QVariant::fromValue(row));
 }

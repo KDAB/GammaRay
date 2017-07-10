@@ -29,6 +29,7 @@
 #include <config-gammaray.h>
 
 #include "materialextension.h"
+#include "materialshadermodel.h"
 
 #include <core/aggregatedpropertymodel.h>
 #include <core/objectinstance.h>
@@ -37,8 +38,6 @@
 #include <core/util.h>
 #include <common/metatypedeclarations.h>
 
-#include <QFile>
-#include <QStandardItemModel>
 #include <QSGNode>
 #include <QSGMaterial>
 #include <QSGFlatColorMaterial>
@@ -50,21 +49,12 @@
 
 using namespace GammaRay;
 
-class SGMaterialShaderThief : public QSGMaterialShader
-{
-public:
-    QHash<QOpenGLShader::ShaderType, QStringList> getShaderSources()
-    {
-        return d_func()->m_sourceFiles;
-    }
-};
-
 MaterialExtension::MaterialExtension(PropertyController *controller)
     : MaterialExtensionInterface(controller->objectBaseName() + ".material", controller)
     , PropertyControllerExtension(controller->objectBaseName() + ".material")
     , m_node(nullptr)
     , m_materialPropertyModel(new AggregatedPropertyModel(this))
-    , m_shaderModel(new QStandardItemModel(this))
+    , m_shaderModel(new MaterialShaderModel(this))
 {
     controller->registerModel(m_materialPropertyModel, QStringLiteral("materialPropertyModel"));
     controller->registerModel(m_shaderModel, QStringLiteral("shaderModel"));
@@ -93,7 +83,7 @@ static const char *typeForMaterial(QSGMaterial *material)
 bool MaterialExtension::setObject(void *object, const QString &typeName)
 {
     QSGMaterial *material = nullptr;
-    m_shaderModel->clear();
+    m_shaderModel->setMaterialShader(nullptr);
     m_materialShader.reset();
 
     if (typeName == QStringLiteral("QSGGeometryNode")) {
@@ -111,30 +101,11 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
     m_materialPropertyModel->setObject(ObjectInstance(material, typeForMaterial(material)));
 
     m_materialShader.reset(material->createShader());
-    SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief *>(m_materialShader.get());
-    const QHash<QOpenGLShader::ShaderType, QStringList> shaderSources = thief->getShaderSources();
-
-    m_shaderModel->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Shader"));
-    for (auto it = shaderSources.constBegin(); it != shaderSources.constEnd(); ++it) {
-        foreach (const QString &source, it.value()) {
-            auto *item = new QStandardItem(source);
-            item->setEditable(false);
-            item->setToolTip(tr("Shader type: %1").arg(VariantHandler::displayString(it.key())));
-            m_shaderModel->appendRow(item);
-        }
-    }
-
+    m_shaderModel->setMaterialShader(m_materialShader.get());
     return true;
 }
 
-void MaterialExtension::getShader(const QString &fileName)
+void MaterialExtension::getShader(int row)
 {
-    QFile shaderFile(fileName);
-    if (!shaderFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
-
-    QString source(shaderFile.readAll());
-
-    if (!source.isEmpty())
-        emit gotShader(source);
+    emit gotShader(m_shaderModel->shaderForRow(row));
 }
