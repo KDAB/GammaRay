@@ -42,6 +42,8 @@ class ProbeABIContext
     Q_DECLARE_TR_FUNCTIONS(GammaRay::ProbeABIContext)
 };
 
+
+// cppcheck-suppress copyCtorAndEqOperator
 class ProbeABIPrivate : public QSharedData
 {
 public:

@@ -368,6 +368,7 @@ void MainWindow::setupFeedbackProvider()
     auto popup = new KUserFeedback::NotificationPopup(this);
     popup->setFeedbackProvider(m_feedbackProvider);
 #endif
+    // cppcheck-suppress memleak popup
 }
 
 void MainWindow::help()
