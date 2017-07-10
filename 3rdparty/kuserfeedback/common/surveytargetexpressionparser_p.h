@@ -88,7 +88,7 @@ union YYSTYPE
     double doubleVal;
     bool boolVal;
     char *str;
-    UserFeedback::SurveyTargetExpression *expression;
+    KUserFeedback::SurveyTargetExpression *expression;
 
 #line 94 "surveytargetexpressionparser_p.h" /* yacc.c:1909  */
 };
@@ -100,6 +100,6 @@ typedef union YYSTYPE YYSTYPE;
 
 
 
-int yyparse (UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner);
+int yyparse (KUserFeedback::SurveyTargetExpression **expression, yyscan_t scanner);
 
 #endif /* !YY_YY_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED  */

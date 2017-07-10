@@ -15,17 +15,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_SELECTIONRATIOSOURCE_H
-#define USERFEEDBACK_SELECTIONRATIOSOURCE_H
+#ifndef KUSERFEEDBACK_SELECTIONRATIOSOURCE_H
+#define KUSERFEEDBACK_SELECTIONRATIOSOURCE_H
 
-#include "userfeedbackcore_export.h"
+#include "kuserfeedbackcore_export.h"
 #include "abstractdatasource.h"
 
 QT_BEGIN_NAMESPACE
 class QItemSelectionModel;
 QT_END_NAMESPACE
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 class SelectionRatioSourcePrivate;
 
@@ -34,8 +34,10 @@ class SelectionRatioSourcePrivate;
  *  An example use-case would be the usage ratio of a applications
  *  views/modes selected using a model-based view sidebar (such as
  *  used in e.g. Kontact).
+ *
+ *  The default telemetry mode for this source is Provider::DetailedUsageStatistics.
  */
-class USERFEEDBACKCORE_EXPORT SelectionRatioSource : public AbstractDataSource
+class KUSERFEEDBACKCORE_EXPORT SelectionRatioSource : public AbstractDataSource
 {
 public:
     /*! Create a new selection ratio data source.
@@ -69,4 +71,4 @@ private:
 
 }
 
-#endif // USERFEEDBACK_SELECTIONRATIOSOURCE_H
+#endif // KUSERFEEDBACK_SELECTIONRATIOSOURCE_H

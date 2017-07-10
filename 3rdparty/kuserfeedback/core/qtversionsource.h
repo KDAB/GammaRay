@@ -15,18 +15,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_QTVERSIONSOURCE_H
-#define USERFEEDBACK_QTVERSIONSOURCE_H
+#ifndef KUSERFEEDBACK_QTVERSIONSOURCE_H
+#define KUSERFEEDBACK_QTVERSIONSOURCE_H
 
-#include "userfeedbackcore_export.h"
+#include "kuserfeedbackcore_export.h"
 #include "abstractdatasource.h"
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
-/*! Data source reporting the Qt version used at runtime. */
-class USERFEEDBACKCORE_EXPORT QtVersionSource : public AbstractDataSource
+/*! Data source reporting the Qt version used at runtime.
+ *
+ *  The default telemetry mode for this source is Provider::BasicSystemInformation.
+ */
+class KUSERFEEDBACKCORE_EXPORT QtVersionSource : public AbstractDataSource
 {
-    Q_DECLARE_TR_FUNCTIONS(UserFeedback::QtVersionSource)
+    Q_DECLARE_TR_FUNCTIONS(KUserFeedback::QtVersionSource)
 public:
     QtVersionSource();
     QString description() const override;
@@ -34,4 +37,4 @@ public:
 };
 }
 
-#endif // USERFEEDBACK_QTVERSIONSOURCE_H
+#endif // KUSERFEEDBACK_QTVERSIONSOURCE_H

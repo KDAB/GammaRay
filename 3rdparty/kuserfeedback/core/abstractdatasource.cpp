@@ -18,7 +18,7 @@
 #include "abstractdatasource.h"
 #include "abstractdatasource_p.h"
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
 AbstractDataSourcePrivate::AbstractDataSourcePrivate()
     : mode(Provider::DetailedUsageStatistics)
@@ -29,10 +29,11 @@ AbstractDataSourcePrivate::~AbstractDataSourcePrivate()
 {
 }
 
-AbstractDataSource::AbstractDataSource(const QString &name, AbstractDataSourcePrivate* dd) :
+AbstractDataSource::AbstractDataSource(const QString &name, Provider::TelemetryMode mode, AbstractDataSourcePrivate* dd) :
     d_ptr(dd ? dd : new AbstractDataSourcePrivate)
 {
     d_ptr->name = name;
+    d_ptr->mode = mode;
 }
 
 AbstractDataSource::~AbstractDataSource()
@@ -65,19 +66,19 @@ void AbstractDataSource::reset(QSettings *settings)
     Q_UNUSED(settings);
 }
 
-Provider::StatisticsCollectionMode AbstractDataSource::collectionMode() const
+Provider::TelemetryMode AbstractDataSource::telemetryMode() const
 {
     Q_D(const AbstractDataSource);
 
-    Q_ASSERT(d->mode != Provider::NoStatistics);
-    if (d->mode == Provider::NoStatistics)
+    Q_ASSERT(d->mode != Provider::NoTelemetry);
+    if (d->mode == Provider::NoTelemetry)
         return Provider::DetailedUsageStatistics;
     return d->mode;
 }
 
-void AbstractDataSource::setCollectionMode(Provider::StatisticsCollectionMode mode)
+void AbstractDataSource::setTelemetryMode(Provider::TelemetryMode mode)
 {
     Q_D(AbstractDataSource);
-    Q_ASSERT(mode != Provider::NoStatistics);
+    Q_ASSERT(mode != Provider::NoTelemetry);
     d->mode = mode;
 }

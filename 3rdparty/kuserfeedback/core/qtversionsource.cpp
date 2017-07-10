@@ -19,10 +19,10 @@
 
 #include <QVariant>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
 QtVersionSource::QtVersionSource() :
-    AbstractDataSource(QStringLiteral("qtVersion"))
+    AbstractDataSource(QStringLiteral("qtVersion"), Provider::BasicSystemInformation)
 {
 }
 

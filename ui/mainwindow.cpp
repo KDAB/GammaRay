@@ -346,25 +346,26 @@ void MainWindow::setupFeedbackProvider()
 #ifndef GAMMARAY_DISABLE_FEEDBACK
     ui->actionContribute->setEnabled(true);
     connect(ui->actionContribute, SIGNAL(triggered()), this, SLOT(configureFeedback()));
-    m_feedbackProvider = new UserFeedback::Provider(this);
+    m_feedbackProvider = new KUserFeedback::Provider(this);
     m_feedbackProvider->setProductIdentifier(QStringLiteral("com.kdab.GammaRay"));
     m_feedbackProvider->setFeedbackServer(QUrl(QStringLiteral("https://gammaray-userfeedback.kdab.com/")));
     m_feedbackProvider->setSubmissionInterval(7);
     m_feedbackProvider->setApplicationStartsUntilEncouragement(5);
     m_feedbackProvider->setEncouragementDelay(30);
-    m_feedbackProvider->addDataSource(new UserFeedback::ApplicationVersionSource, UserFeedback::Provider::BasicSystemInformation);
-    m_feedbackProvider->addDataSource(new UserFeedback::CompilerInfoSource, UserFeedback::Provider::BasicSystemInformation);
-    m_feedbackProvider->addDataSource(new UserFeedback::PlatformInfoSource, UserFeedback::Provider::BasicSystemInformation);
-    m_feedbackProvider->addDataSource(new UserFeedback::QtVersionSource, UserFeedback::Provider::BasicSystemInformation);
-    m_feedbackProvider->addDataSource(new UserFeedback::StartCountSource, UserFeedback::Provider::BasicUsageStatistics);
-    m_feedbackProvider->addDataSource(new UserFeedback::UsageTimeSource, UserFeedback::Provider::BasicUsageStatistics);
-    m_feedbackProvider->addDataSource(new UserFeedback::OpenGLInfoSource, UserFeedback::Provider::DetailedSystemInformation);
-    auto toolRatioSrc = new UserFeedback::SelectionRatioSource(ui->toolSelector->selectionModel(), QStringLiteral("toolRatio"));
+    m_feedbackProvider->addDataSource(new KUserFeedback::ApplicationVersionSource);
+    m_feedbackProvider->addDataSource(new KUserFeedback::CompilerInfoSource);
+    m_feedbackProvider->addDataSource(new KUserFeedback::PlatformInfoSource);
+    m_feedbackProvider->addDataSource(new KUserFeedback::QtVersionSource);
+    m_feedbackProvider->addDataSource(new KUserFeedback::StartCountSource);
+    m_feedbackProvider->addDataSource(new KUserFeedback::UsageTimeSource);
+    m_feedbackProvider->addDataSource(new KUserFeedback::OpenGLInfoSource);
+    auto toolRatioSrc = new KUserFeedback::SelectionRatioSource(ui->toolSelector->selectionModel(), QStringLiteral("toolRatio"));
     toolRatioSrc->setDescription(tr("Usage ratio of the GammaRay tools."));
     toolRatioSrc->setRole(ToolModelRole::ToolFeedbackId);
-    m_feedbackProvider->addDataSource(toolRatioSrc, UserFeedback::Provider::DetailedUsageStatistics);
+    toolRatioSrc->setTelemetryMode(KUserFeedback::Provider::DetailedUsageStatistics);
+    m_feedbackProvider->addDataSource(toolRatioSrc);
 
-    auto popup = new UserFeedback::NotificationPopup(this);
+    auto popup = new KUserFeedback::NotificationPopup(this);
     popup->setFeedbackProvider(m_feedbackProvider);
 #endif
 }
@@ -607,7 +608,7 @@ void MainWindow::detachProbe()
 void MainWindow::configureFeedback()
 {
 #ifndef GAMMARAY_DISABLE_FEEDBACK
-    UserFeedback::FeedbackConfigDialog dlg;
+    KUserFeedback::FeedbackConfigDialog dlg;
     dlg.setFeedbackProvider(m_feedbackProvider);
     dlg.exec();
 #endif

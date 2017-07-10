@@ -15,23 +15,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_USAGETIMESOURCE_H
-#define USERFEEDBACK_USAGETIMESOURCE_H
+#ifndef KUSERFEEDBACK_USAGETIMESOURCE_H
+#define KUSERFEEDBACK_USAGETIMESOURCE_H
 
-#include "userfeedbackcore_export.h"
+#include "kuserfeedbackcore_export.h"
 #include "abstractdatasource.h"
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 class Provider;
 class ProviderPrivate;
 class UsageTimeSourcePrivate;
 
-/*! Data source reporting the total usage time of the application. */
-class USERFEEDBACKCORE_EXPORT UsageTimeSource :  public AbstractDataSource
+/*! Data source reporting the total usage time of the application.
+ *
+ *  The default telemetry mode for this source is Provider::BasicUsageStatistics.
+ */
+class KUSERFEEDBACKCORE_EXPORT UsageTimeSource :  public AbstractDataSource
 {
 public:
-    Q_DECLARE_TR_FUNCTIONS(UserFeedback::UsageTimeSource)
+    Q_DECLARE_TR_FUNCTIONS(KUserFeedback::UsageTimeSource)
 public:
     /*! Create a new usage time data source. */
     UsageTimeSource();
@@ -46,4 +49,4 @@ private:
 
 }
 
-#endif // USERFEEDBACK_USAGETIMESOURCE_H
+#endif // KUSERFEEDBACK_USAGETIMESOURCE_H

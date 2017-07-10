@@ -40,7 +40,7 @@ class QHeaderView;
 class QUrl;
 QT_END_NAMESPACE
 
-namespace UserFeedback {
+namespace KUserFeedback {
 class Provider;
 }
 
@@ -105,7 +105,7 @@ private:
     MainWindowUIStateManager m_stateManager;
     ClientToolFilterProxyModel *m_toolFilterModel;
 
-    UserFeedback::Provider *m_feedbackProvider;
+    KUserFeedback::Provider *m_feedbackProvider;
 };
 }
 

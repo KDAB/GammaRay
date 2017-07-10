@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-userfeedback-version.h>
+#include <kuserfeedback_version.h>
 
 #include "logging_p.h"
 #include "provider.h"
@@ -46,7 +46,7 @@
 #include <algorithm>
 #include <numeric>
 
-namespace UserFeedback {
+namespace KUserFeedback {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
 Q_LOGGING_CATEGORY(Log, "org.kde.UserFeedback", QtInfoMsg)
 #elif QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
@@ -54,14 +54,14 @@ Q_LOGGING_CATEGORY(Log, "org.kde.UserFeedback")
 #endif
 }
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
 ProviderPrivate::ProviderPrivate(Provider *qq)
     : q(qq)
     , networkAccessManager(nullptr)
     , redirectCount(0)
     , submissionInterval(-1)
-    , statisticsMode(Provider::NoStatistics)
+    , telemetryMode(Provider::NoTelemetry)
     , surveyInterval(-1)
     , startCount(0)
     , usageTime(0)
@@ -89,9 +89,9 @@ int ProviderPrivate::currentApplicationTime() const
     return usageTime + (startTime.elapsed() / 1000);
 }
 
-static QMetaEnum statisticsCollectionModeEnum()
+static QMetaEnum telemetryModeEnum()
 {
-    const auto idx = Provider::staticMetaObject.indexOfEnumerator("StatisticsCollectionMode");
+    const auto idx = Provider::staticMetaObject.indexOfEnumerator("TelemetryMode");
     Q_ASSERT(idx >= 0);
     return Provider::staticMetaObject.enumerator(idx);
 }
@@ -120,7 +120,7 @@ void ProviderPrivate::load()
     lastSubmitTime = s->value(QStringLiteral("LastSubmission")).toDateTime();
 
     const auto modeStr = s->value(QStringLiteral("StatisticsCollectionMode")).toByteArray();
-    statisticsMode = static_cast<Provider::StatisticsCollectionMode>(std::max(statisticsCollectionModeEnum().keyToValue(modeStr.constData()), 0));
+    telemetryMode = static_cast<Provider::TelemetryMode>(std::max(telemetryModeEnum().keyToValue(modeStr.constData()), 0));
 
     surveyInterval = s->value(QStringLiteral("SurveyInterval"), -1).toInt();
     lastSurveyTime = s->value(QStringLiteral("LastSurvey")).toDateTime();
@@ -178,7 +178,7 @@ bool ProviderPrivate::isValidSource(AbstractDataSource *source) const
         qCWarning(Log) << "Skipping data source with empty name!";
         return false;
     }
-    if (source->collectionMode() == Provider::NoStatistics) {
+    if (source->telemetryMode() == Provider::NoTelemetry) {
         qCWarning(Log) << "Source" << source->name() << "attempts to report data unconditionally, ignoring!";
         return false;
     }
@@ -188,7 +188,7 @@ bool ProviderPrivate::isValidSource(AbstractDataSource *source) const
     }
 
     Q_ASSERT(!source->name().isEmpty());
-    Q_ASSERT(source->collectionMode() != Provider::NoStatistics);
+    Q_ASSERT(source->telemetryMode() != Provider::NoTelemetry);
     Q_ASSERT(!source->description().isEmpty());
     return true;
 }
@@ -223,21 +223,23 @@ QByteArray variantMapToJson(const QVariantMap &m)
 }
 #endif
 
-QByteArray ProviderPrivate::jsonData(Provider::StatisticsCollectionMode mode) const
+QByteArray ProviderPrivate::jsonData(Provider::TelemetryMode mode) const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QJsonObject obj;
-    if (mode != Provider::NoStatistics) {
+    if (mode != Provider::NoTelemetry) {
         foreach (auto source, dataSources) {
             if (!isValidSource(source))
                 continue;
-            if (mode < source->collectionMode())
+            if (mode < source->telemetryMode())
                 continue;
             const auto data = source->data();
             if (data.canConvert<QVariantMap>())
                 obj.insert(source->name(), QJsonObject::fromVariantMap(data.toMap()));
             else if (data.canConvert<QVariantList>())
                 obj.insert(source->name(), QJsonArray::fromVariantList(data.value<QVariantList>()));
+            else
+                qCWarning(Log) << "wrong type for" << source->name() << data;
         }
     }
 
@@ -245,11 +247,11 @@ QByteArray ProviderPrivate::jsonData(Provider::StatisticsCollectionMode mode) co
     return doc.toJson();
 #else
     QByteArray b = "{";
-    if (mode != Provider::NoStatistics) {
+    if (mode != Provider::NoTelemetry) {
         for (auto it = dataSources.begin(); it != dataSources.end(); ++it) {
             if (!isValidSource(*it))
                 continue;
-            if (mode < (*it)->collectionMode())
+            if (mode < (*it)->telemetryMode())
                 continue;
             const auto data = (*it)->data();
             if (data.canConvert<QVariantList>()) {
@@ -276,7 +278,7 @@ QByteArray ProviderPrivate::jsonData(Provider::StatisticsCollectionMode mode) co
 void ProviderPrivate::scheduleNextSubmission()
 {
     submissionTimer.stop();
-    if (submissionInterval <= 0 || (statisticsMode == Provider::NoStatistics && surveyInterval < 0))
+    if (submissionInterval <= 0 || (telemetryMode == Provider::NoTelemetry && surveyInterval < 0))
         return;
 
     Q_ASSERT(submissionInterval > 0);
@@ -373,11 +375,11 @@ bool ProviderPrivate::selectSurvey(const SurveyInfo &survey) const
     return true;
 }
 
-Provider::StatisticsCollectionMode ProviderPrivate::highestStatisticsCollectionMode() const
+Provider::TelemetryMode ProviderPrivate::highestTelemetryMode() const
 {
-    auto mode = Provider::NoStatistics;
+    auto mode = Provider::NoTelemetry;
     foreach (auto src, dataSources)
-        mode = std::max(mode, src->collectionMode());
+        mode = std::max(mode, src->telemetryMode());
     return mode;
 }
 
@@ -395,10 +397,10 @@ void ProviderPrivate::scheduleEncouragement()
     if (encouragementStarts > startCount) // we need more starts
         return;
 
-    if (statisticsMode >= highestStatisticsCollectionMode() && surveyInterval == 0) // already everything enabled
+    if (telemetryMode >= highestTelemetryMode() && surveyInterval == 0) // already everything enabled
         return;
     // no repetition if some feedback is enabled
-    if (lastEncouragementTime.isValid() && (statisticsMode > Provider::NoStatistics || surveyInterval >= 0))
+    if (lastEncouragementTime.isValid() && (telemetryMode > Provider::NoTelemetry || surveyInterval >= 0))
         return;
 
     Q_ASSERT(encouragementDelay >= 0);
@@ -492,27 +494,25 @@ void Provider::setSubmissionInterval(int days)
     d->scheduleNextSubmission();
 }
 
-Provider::StatisticsCollectionMode Provider::statisticsCollectionMode() const
+Provider::TelemetryMode Provider::telemetryMode() const
 {
-    return d->statisticsMode;
+    return d->telemetryMode;
 }
 
-void Provider::setStatisticsCollectionMode(StatisticsCollectionMode mode)
+void Provider::setTelemetryMode(TelemetryMode mode)
 {
-    if (d->statisticsMode == mode)
+    if (d->telemetryMode == mode)
         return;
 
-    d->statisticsMode = mode;
-    d->storeOne(QStringLiteral("StatisticsCollectionMode"), QString::fromLatin1(statisticsCollectionModeEnum().valueToKey(d->statisticsMode)));
+    d->telemetryMode = mode;
+    d->storeOne(QStringLiteral("StatisticsCollectionMode"), QString::fromLatin1(telemetryModeEnum().valueToKey(d->telemetryMode)));
     d->scheduleNextSubmission();
     d->scheduleEncouragement();
-    emit statisticsCollectionModeChanged();
+    emit telemetryModeChanged();
 }
 
-void Provider::addDataSource(AbstractDataSource *source, StatisticsCollectionMode mode)
+void Provider::addDataSource(AbstractDataSource *source)
 {
-    source->setCollectionMode(mode);
-
     // special cases for sources where we track the data here, as it's needed even if we don't report it
     if (auto countSrc = dynamic_cast<StartCountSource*>(source))
         countSrc->setProvider(d);
@@ -644,9 +644,9 @@ void ProviderPrivate::submit(const QUrl &url)
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    request.setHeader(QNetworkRequest::UserAgentHeader, QString(QStringLiteral("UserFeedback/") + QStringLiteral(USERFEEDBACK_VERSION)));
+    request.setHeader(QNetworkRequest::UserAgentHeader, QString(QStringLiteral("KUserFeedback/") + QStringLiteral(KUSERFEEDBACK_VERSION_STRING)));
 #endif
-    auto reply = networkAccessManager->post(request, jsonData(statisticsMode));
+    auto reply = networkAccessManager->post(request, jsonData(telemetryMode));
     QObject::connect(reply, SIGNAL(finished()), q, SLOT(submitFinished()));
 }
 

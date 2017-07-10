@@ -20,7 +20,7 @@
 
 #include "provider.h"
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 class AbstractDataSourcePrivate
 {
@@ -29,7 +29,7 @@ public:
     virtual ~AbstractDataSourcePrivate();
 
     QString name;
-    Provider::StatisticsCollectionMode mode;
+    Provider::TelemetryMode mode;
 
 private:
     Q_DISABLE_COPY(AbstractDataSourcePrivate)

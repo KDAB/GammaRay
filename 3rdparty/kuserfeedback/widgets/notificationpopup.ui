@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UserFeedback::NotificationPopup</class>
- <widget class="QWidget" name="UserFeedback::NotificationPopup">
+ <class>KUserFeedback::NotificationPopup</class>
+ <widget class="QWidget" name="KUserFeedback::NotificationPopup">
   <property name="geometry">
    <rect>
     <x>0</x>

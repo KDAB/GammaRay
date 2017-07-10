@@ -24,9 +24,9 @@
 #include <QUrl>
 #include <QUuid>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-class UserFeedback::SurveyInfoData : public QSharedData
+class KUserFeedback::SurveyInfoData : public QSharedData
 {
 public:
     QUuid uuid;
@@ -98,8 +98,4 @@ SurveyInfo SurveyInfo::fromJson(const QJsonObject& obj)
     s.setTarget(obj.value(QLatin1String("target")).toString());
     return s;
 }
-#endif
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#include "surveyinfo.moc"
 #endif

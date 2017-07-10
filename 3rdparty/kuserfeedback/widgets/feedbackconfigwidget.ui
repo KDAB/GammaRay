@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UserFeedback::FeedbackConfigWidget</class>
- <widget class="QWidget" name="UserFeedback::FeedbackConfigWidget">
+ <class>KUserFeedback::FeedbackConfigWidget</class>
+ <widget class="QWidget" name="KUserFeedback::FeedbackConfigWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

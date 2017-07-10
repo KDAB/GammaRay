@@ -22,9 +22,9 @@
 
 #include <stdio.h>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-void yyerror(UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner, char const* msg)
+void yyerror(KUserFeedback::SurveyTargetExpression **expression, yyscan_t scanner, char const* msg)
 {
     Q_UNUSED(expression);
     Q_UNUSED(scanner);
@@ -44,7 +44,7 @@ typedef void* yyscan_t;
 
 %define api.pure
 %lex-param { yyscan_t scanner }
-%parse-param { UserFeedback::SurveyTargetExpression **expression }
+%parse-param { KUserFeedback::SurveyTargetExpression **expression }
 %parse-param { yyscan_t scanner }
 
 %union {
@@ -52,7 +52,7 @@ typedef void* yyscan_t;
     double doubleVal;
     bool boolVal;
     char *str;
-    UserFeedback::SurveyTargetExpression *expression;
+    KUserFeedback::SurveyTargetExpression *expression;
 }
 
 %left T_OP_OR

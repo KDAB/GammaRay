@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UserFeedback::FeedbackConfigDialog</class>
- <widget class="QDialog" name="UserFeedback::FeedbackConfigDialog">
+ <class>KUserFeedback::FeedbackConfigDialog</class>
+ <widget class="QDialog" name="KUserFeedback::FeedbackConfigDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="UserFeedback::FeedbackConfigWidget" name="configWidget" native="true"/>
+    <widget class="KUserFeedback::FeedbackConfigWidget" name="configWidget" native="true"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -31,7 +31,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>UserFeedback::FeedbackConfigWidget</class>
+   <class>KUserFeedback::FeedbackConfigWidget</class>
    <extends>QWidget</extends>
    <header>feedbackconfigwidget.h</header>
    <container>1</container>
@@ -42,7 +42,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>UserFeedback::FeedbackConfigDialog</receiver>
+   <receiver>KUserFeedback::FeedbackConfigDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -58,7 +58,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>UserFeedback::FeedbackConfigDialog</receiver>
+   <receiver>KUserFeedback::FeedbackConfigDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">

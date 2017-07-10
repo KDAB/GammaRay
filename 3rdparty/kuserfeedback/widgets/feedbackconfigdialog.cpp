@@ -23,9 +23,9 @@
 #include <QDebug>
 #include <QPushButton>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-namespace UserFeedback {
+namespace KUserFeedback {
 class FeedbackConfigDialogPrivate {
 public:
     void updateButtonState();
@@ -48,7 +48,7 @@ FeedbackConfigDialog::~FeedbackConfigDialog()
 {
 }
 
-void FeedbackConfigDialog::setFeedbackProvider(UserFeedback::Provider* provider)
+void FeedbackConfigDialog::setFeedbackProvider(Provider* provider)
 {
     d->ui->configWidget->setFeedbackProvider(provider);
     connect(d->ui->configWidget, SIGNAL(configurationChanged()), this, SLOT(updateButtonState()));
@@ -58,7 +58,7 @@ void FeedbackConfigDialog::setFeedbackProvider(UserFeedback::Provider* provider)
 void FeedbackConfigDialog::accept()
 {
     auto p = d->ui->configWidget->feedbackProvider();
-    p->setStatisticsCollectionMode(d->ui->configWidget->statisticsCollectionMode());
+    p->setTelemetryMode(d->ui->configWidget->telemetryMode());
     p->setSurveyInterval(d->ui->configWidget->surveyInterval());
     QDialog::accept();
 }
@@ -66,7 +66,7 @@ void FeedbackConfigDialog::accept()
 void FeedbackConfigDialogPrivate::updateButtonState()
 {
     const auto any = ui->configWidget->surveyInterval() >= 0
-        || ui->configWidget->statisticsCollectionMode() != Provider::NoStatistics;
+        || ui->configWidget->telemetryMode() != Provider::NoTelemetry;
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible(any);
     ui->buttonBox->button(QDialogButtonBox::Close)->setVisible(!any);

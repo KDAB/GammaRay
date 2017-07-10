@@ -15,10 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_SURVEYINFO_H
-#define USERFEEDBACK_SURVEYINFO_H
+#ifndef KUSERFEEDBACK_SURVEYINFO_H
+#define KUSERFEEDBACK_SURVEYINFO_H
 
-#include "userfeedbackcore_export.h"
+#include "kuserfeedbackcore_export.h"
 
 #include <QMetaType>
 #include <QSharedDataPointer>
@@ -35,14 +35,14 @@ class QUrl;
 class QUuid;
 QT_END_NAMESPACE
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 class SurveyInfoData;
 
 /*! Information about a survey request.
  *  This class is implicitly shared.
  */
-class USERFEEDBACKCORE_EXPORT SurveyInfo
+class KUSERFEEDBACKCORE_EXPORT SurveyInfo
 {
 #ifndef QT4_MOC_WORKAROUND
     Q_GADGET
@@ -88,6 +88,6 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(UserFeedback::SurveyInfo)
+Q_DECLARE_METATYPE(KUserFeedback::SurveyInfo)
 
-#endif // USERFEEDBACK_SURVEYINFO_H
+#endif // KUSERFEEDBACK_SURVEYINFO_H

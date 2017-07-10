@@ -17,7 +17,7 @@
 
 #include "surveytargetexpression.h"
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
 SurveyTargetExpression::SurveyTargetExpression(const QVariant &value)
     : m_type(Value)

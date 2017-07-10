@@ -21,9 +21,9 @@
 
 #include <QVariant>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-namespace UserFeedback {
+namespace KUserFeedback {
 class StartCountSourcePrivate : public AbstractDataSourcePrivate
 {
 public:
@@ -33,7 +33,7 @@ public:
 }
 
 StartCountSource::StartCountSource() :
-    AbstractDataSource(QStringLiteral("startCount"), new StartCountSourcePrivate)
+    AbstractDataSource(QStringLiteral("startCount"), Provider::BasicUsageStatistics, new StartCountSourcePrivate)
 {
 }
 

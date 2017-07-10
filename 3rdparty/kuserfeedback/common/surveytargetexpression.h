@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_SURVEYTARGETEXPRESSION_H
-#define USERFEEDBACK_SURVEYTARGETEXPRESSION_H
+#ifndef KUSERFEEDBACK_SURVEYTARGETEXPRESSION_H
+#define KUSERFEEDBACK_SURVEYTARGETEXPRESSION_H
 
 #include <QDebug>
 #include <QString>
@@ -24,7 +24,7 @@
 
 #include <memory>
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 class SurveyTargetExpression
 {
@@ -70,6 +70,6 @@ private:
 
 }
 
-QDebug operator<<(QDebug debug, UserFeedback::SurveyTargetExpression *expr);
+QDebug operator<<(QDebug debug, KUserFeedback::SurveyTargetExpression *expr);
 
 #endif

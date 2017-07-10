@@ -15,12 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_OPENGLINFOSOURCE_P_H
-#define USERFEEDBACK_OPENGLINFOSOURCE_P_H
+#ifndef KUSERFEEDBACK_OPENGLINFOSOURCE_P_H
+#define KUSERFEEDBACK_OPENGLINFOSOURCE_P_H
 
 #include <QVariantMap>
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 // Internal functions made accessible for unit tests
 class OpenGLInfoSourcePrivate
@@ -30,11 +30,19 @@ public:
     {
         auto vendorVersion = QString::fromLocal8Bit(version);
         const auto idx = vendorVersion.indexOf(QLatin1Char(' '));
+
+        QString glVersion;
         if (idx > 0) {
+            glVersion = vendorVersion.left(idx);
             vendorVersion = vendorVersion.mid(idx + 1);
             if (!vendorVersion.isEmpty())
-                m.insert(QStringLiteral("vendorVersion"), vendorVersion);
+                m.insert(QStringLiteral("vendorVersion"), normalizeVendorVersionString(vendorVersion));
+        } else {
+            glVersion = vendorVersion;
         }
+        // in case glGetIntegerv(GL_MAJOR_VERSION) failed...
+        if (!m.contains(QLatin1String("version")) && !glVersion.isEmpty())
+            m.insert(QStringLiteral("version"), glVersion);
     }
 
     static inline void parseGLESVersion(const char *version, QVariantMap &m)
@@ -49,7 +57,7 @@ public:
             if (idx > 0) {
                 const auto vendorVersion = rawVersion.mid(idx + 1);
                 if (!vendorVersion.isEmpty())
-                    m.insert(QStringLiteral("vendorVersion"), normalizeVendorString(vendorVersion));
+                    m.insert(QStringLiteral("vendorVersion"), normalizeVendorVersionString(vendorVersion));
                 m.insert(QStringLiteral("version"), rawVersion.left(idx));
             } else {
                 m.insert(QStringLiteral("version"), rawVersion);
@@ -92,15 +100,51 @@ public:
         }
     }
 
-private:
-    static inline QString normalizeVendorString(const QString &s)
+    static inline QString normalizeVendor(const char *vendor)
     {
-        if (!s.startsWith(QLatin1Char('(')) || !s.endsWith(QLatin1Char(')')))
+        const auto v = QString::fromLocal8Bit(vendor);
+        if (v.startsWith(QLatin1String("Intel ")))
+            return QStringLiteral("Intel");
+        return v;
+    }
+
+    static inline QString normalizeRenderer(const char *renderer)
+    {
+        auto r = QString::fromLocal8Bit(renderer);
+        // remove vendor prefixes, we already have that in the vendor field
+        if (r.startsWith(QLatin1String("Mesa DRI ")))
+            r = r.mid(9);
+        if (r.startsWith(QLatin1String("Intel(R) ")))
+            r = r.mid(9);
+        if (r.startsWith(QLatin1String("Intel ")))
+            r = r.mid(6);
+
+        // remove excessive details that could enable fingerprinting
+        if (r.startsWith(QLatin1String("ANGLE ")) || r.startsWith(QLatin1String("Gallium ")))
+            r = stripDetails(r);
+
+        return r;
+    }
+
+private:
+    static inline QString normalizeVendorVersionString(const QString &s)
+    {
+        if (s.startsWith(QLatin1Char('(')) && s.endsWith(QLatin1Char(')')))
+            return s.mid(1, s.size() - 2);
+        if (s.startsWith(QLatin1String("- ")))
+            return s.mid(2);
+        return s;
+    }
+
+    static inline QString stripDetails(const QString &s)
+    {
+        auto idx = s.indexOf(QLatin1String(" ("));
+        if (idx < 1 || !s.endsWith(QLatin1Char(')')))
             return s;
-        return s.mid(1, s.size() - 2);
+        return s.left(idx);
     }
 };
 
 }
 
-#endif // USERFEEDBACK_OPENGLINFOSOURCE_P_H
+#endif // KUSERFEEDBACK_OPENGLINFOSOURCE_P_H
