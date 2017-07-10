@@ -204,7 +204,6 @@ bool ItemOrLayoutFacade::isLayout() const
     return itemIsLayout(m_object);
 }
 
-// cppcheck-suppress uninitMemberVar
 QuickOverlay::QuickOverlay()
     : m_window(nullptr)
     , m_currentToplevelItem(nullptr)
