@@ -93,6 +93,7 @@ static const char *typeForMaterial(QSGMaterial *material)
 bool MaterialExtension::setObject(void *object, const QString &typeName)
 {
     QSGMaterial *material = nullptr;
+    m_shaderModel->clear();
 
     if (typeName == QStringLiteral("QSGGeometryNode")) {
         m_node = static_cast<QSGGeometryNode *>(object);
@@ -112,7 +113,6 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
     SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief *>(materialShader);
     const QHash<QOpenGLShader::ShaderType, QStringList> shaderSources = thief->getShaderSources();
 
-    m_shaderModel->clear();
     m_shaderModel->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Shader"));
     for (auto it = shaderSources.constBegin(); it != shaderSources.constEnd(); ++it) {
         foreach (const QString &source, it.value()) {
