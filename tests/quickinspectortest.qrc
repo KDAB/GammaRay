@@ -5,5 +5,6 @@
         <file>manual/textures.qml</file>
         <file>manual/lsd.png</file>
         <file>manual/rotationinvariant.qml</file>
+        <file>manual/shadereffect.qml</file>
     </qresource>
 </RCC>

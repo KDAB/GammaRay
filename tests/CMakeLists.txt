@@ -433,6 +433,16 @@ qt4_add_resources(quicktexturetest_srcs quickinspectortest.qrc)
 add_executable(quicktexturetest ${quicktexturetest_srcs})
 target_link_libraries(quicktexturetest gammaray_core Qt5::Test Qt5::Quick)
 add_test(NAME quicktexturetest COMMAND quicktexturetest)
+
+set(quickmaterialtest_srcs
+    quickmaterialtest.cpp
+    $<TARGET_OBJECTS:gammaray_probe_obj>
+)
+qt4_add_resources(quickmaterialtest_srcs quickinspectortest.qrc)
+add_executable(quickmaterialtest ${quickmaterialtest_srcs})
+target_include_directories(quickmaterialtest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
+target_link_libraries(quickmaterialtest gammaray_core Qt5::Test Qt5::Quick)
+add_test(NAME quickmaterialtest COMMAND quickmaterialtest)
 endif()
 
 ### ToolManager test
