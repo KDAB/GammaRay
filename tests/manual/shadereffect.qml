@@ -49,7 +49,11 @@ Image {
 
     ShaderEffect {
         anchors.fill: parent
+        opacity: 0.5
+        rotation: 45
+        scale: 2
         property variant src: effectSource
+        property real customUniform: 0.5
         vertexShader: "
             /* TESTVERTEXSHADER */
             uniform highp mat4 qt_Matrix;
@@ -65,9 +69,10 @@ Image {
             varying highp vec2 coord;
             uniform sampler2D src;
             uniform lowp float qt_Opacity;
+            uniform lowp float customUniform;
             void main() {
                 lowp vec4 tex = texture2D(src, coord);
-                gl_FragColor = vec4(vec3(dot(tex.rgb, vec3(0.344, 0.5, 0.156))), tex.a) * qt_Opacity;
+                gl_FragColor = vec4(vec3(dot(tex.rgb, vec3(0.344, customUniform, 0.156))), tex.a) * qt_Opacity;
             }"
     }
 }

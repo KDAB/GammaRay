@@ -33,6 +33,7 @@
 #include "quickpaintanalyzerextension.h"
 #include "geometryextension/sggeometryextension.h"
 #include "materialextension/materialextension.h"
+#include "materialextension/qquickopenglshadereffectmaterialadaptor.h"
 #include "textureextension/qsgtexturegrabber.h"
 #include "textureextension/textureextension.h"
 
@@ -1020,6 +1021,8 @@ void QuickInspector::registerPCExtensions()
     PropertyController::registerExtension<SGGeometryExtension>();
     PropertyController::registerExtension<QuickPaintAnalyzerExtension>();
     PropertyController::registerExtension<TextureExtension>();
+
+    PropertyAdaptorFactory::registerFactory(QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance());
 }
 
 #define QSG_CHECK_TYPE(Class) \
