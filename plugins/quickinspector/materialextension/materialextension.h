@@ -32,8 +32,11 @@
 #include <core/propertycontrollerextension.h>
 #include "materialextensioninterface.h"
 
+#include <memory>
+
 QT_BEGIN_NAMESPACE
 class QSGGeometryNode;
+class QSGMaterialShader;
 class QStandardItemModel;
 QT_END_NAMESPACE
 
@@ -60,6 +63,7 @@ private:
     QSGGeometryNode *m_node;
     AggregatedPropertyModel *m_materialPropertyModel;
     QStandardItemModel *m_shaderModel;
+    std::unique_ptr<QSGMaterialShader> m_materialShader;
 };
 }
 

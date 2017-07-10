@@ -94,6 +94,7 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
 {
     QSGMaterial *material = nullptr;
     m_shaderModel->clear();
+    m_materialShader.reset();
 
     if (typeName == QStringLiteral("QSGGeometryNode")) {
         m_node = static_cast<QSGGeometryNode *>(object);
@@ -109,8 +110,8 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
 
     m_materialPropertyModel->setObject(ObjectInstance(material, typeForMaterial(material)));
 
-    QSGMaterialShader *materialShader = material->createShader();
-    SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief *>(materialShader);
+    m_materialShader.reset(material->createShader());
+    SGMaterialShaderThief *thief = reinterpret_cast<SGMaterialShaderThief *>(m_materialShader.get());
     const QHash<QOpenGLShader::ShaderType, QStringList> shaderSources = thief->getShaderSources();
 
     m_shaderModel->setHorizontalHeaderLabels(QStringList() << QStringLiteral("Shader"));
