@@ -34,6 +34,7 @@
 
 using namespace GammaRay;
 
+// cppcheck-suppress copyCtorAndEqOperator
 class GammaRay::MethodArgumentPrivate : public QSharedData
 {
 public:
