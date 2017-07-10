@@ -38,7 +38,6 @@
 
 using namespace GammaRay;
 
-// cppcheck-suppress uninitMemberVar
 QuickDecorationsDrawer::QuickDecorationsDrawer(QuickDecorationsDrawer::Type type,
                                                QPainter &painter,
                                                const QuickDecorationsBaseRenderInfo &renderInfo)
