@@ -75,10 +75,7 @@ private:
         Q_ASSERT(false);
     }
 
-    LocalBuffer &operator=(const LocalBuffer &other)
-        : m_data(nullptr)
-        , m_size(0)
-    {
+    LocalBuffer &operator=(const LocalBuffer &other) {
         Q_UNUSED(other);
         Q_ASSERT(false);
         return *this;
