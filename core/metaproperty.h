@@ -168,6 +168,37 @@ public:
 private:
     GetterReturnType (*m_getter)();
 };
-}
 
+/** @brief Template-ed implementation of MetaProperty for member variable "properties". */
+template<typename Class, typename ValueType>
+class MetaMemberPropertyImpl : public MetaProperty
+{
+public:
+    inline MetaMemberPropertyImpl(const char *name, ValueType Class::*member)
+        : MetaProperty(name)
+        , m_member(member)
+    {
+    }
+
+    bool isReadOnly() const override
+    {
+        return true; // we could technically implement write access too, if needed...
+    }
+
+    QVariant value(void *object) const override
+    {
+        Q_ASSERT(object);
+        Q_ASSERT(m_member);
+        return QVariant::fromValue(reinterpret_cast<Class*>(object)->*m_member);
+    }
+
+    const char *typeName() const override
+    {
+        return QMetaType::typeName(qMetaTypeId<ValueType>());
+    }
+
+private:
+    ValueType Class::*m_member;
+};
+}
 #endif

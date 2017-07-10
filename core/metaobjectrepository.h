@@ -154,4 +154,10 @@ private:
                         #Getter, \
                         &Class::Getter));
 
+/** Register a member property for class @p Class. */
+#define MO_ADD_PROPERTY_MEM(Class, Type, Member) \
+    mo->addProperty(new GammaRay::MetaMemberPropertyImpl<Class, Type>( \
+                        #Member, \
+                        &Class::Member));
+
 #endif // GAMMARAY_METAOBJECTREPOSITORY_H
