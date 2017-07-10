@@ -87,9 +87,9 @@
 
 #include <stdio.h>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-void yyerror(UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner, char const* msg)
+void yyerror(KUserFeedback::SurveyTargetExpression **expression, yyscan_t scanner, char const* msg)
 {
     Q_UNUSED(expression);
     Q_UNUSED(scanner);
@@ -175,7 +175,7 @@ union YYSTYPE
     double doubleVal;
     bool boolVal;
     char *str;
-    UserFeedback::SurveyTargetExpression *expression;
+    KUserFeedback::SurveyTargetExpression *expression;
 
 #line 181 "surveytargetexpressionparser_p.cpp" /* yacc.c:355  */
 };
@@ -187,7 +187,7 @@ typedef union YYSTYPE YYSTYPE;
 
 
 
-int yyparse (UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner);
+int yyparse (KUserFeedback::SurveyTargetExpression **expression, yyscan_t scanner);
 
 #endif /* !YY_YY_SURVEYTARGETEXPRESSIONPARSER_P_H_INCLUDED  */
 
@@ -685,7 +685,7 @@ do {                                                                      \
 `----------------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, KUserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
 {
   FILE *yyo = yyoutput;
   YYUSE (yyo);
@@ -706,7 +706,7 @@ yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvalue
 `--------------------------------*/
 
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, KUserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
 {
   YYFPRINTF (yyoutput, "%s %s (",
              yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
@@ -744,7 +744,7 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule, UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
+yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule, KUserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
 {
   unsigned long int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
@@ -1024,7 +1024,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 `-----------------------------------------------*/
 
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, KUserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
 {
   YYUSE (yyvaluep);
   YYUSE (expression);
@@ -1081,7 +1081,7 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, UserFeedback::Surv
 `----------*/
 
 int
-yyparse (UserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
+yyparse (KUserFeedback::SurveyTargetExpression **expression, yyscan_t scanner)
 {
 /* The lookahead symbol.  */
 int yychar;

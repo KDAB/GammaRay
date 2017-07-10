@@ -15,15 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_CORE_LOGGING_H
-#define USERFEEDBACK_CORE_LOGGING_H
+#ifndef KUSERFEEDBACK_CORE_LOGGING_H
+#define KUSERFEEDBACK_CORE_LOGGING_H
 
 #include <qglobal.h>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 #include <QLoggingCategory>
 
-namespace UserFeedback {
+namespace KUserFeedback {
 Q_DECLARE_LOGGING_CATEGORY(Log)
 }
 #endif

@@ -29,9 +29,9 @@
 #include <algorithm>
 #include <vector>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-namespace UserFeedback {
+namespace KUserFeedback {
 class FeedbackConfigWidgetPrivate {
 public:
     void telemetrySliderChanged();
@@ -62,7 +62,7 @@ void FeedbackConfigWidgetPrivate::telemetrySliderChanged()
         ui->telemetryDetails->setHtml(controller->telemetryModeDetails(ui->telemetrySlider->value()));
     } else {
         QByteArray jsonData;
-        QMetaObject::invokeMethod(controller->feedbackProvider(), "jsonData", Q_RETURN_ARG(QByteArray, jsonData), Q_ARG(UserFeedback::Provider::StatisticsCollectionMode, controller->telemetryIndexToMode(ui->telemetrySlider->value())));
+        QMetaObject::invokeMethod(controller->feedbackProvider(), "jsonData", Q_RETURN_ARG(QByteArray, jsonData), Q_ARG(KUserFeedback::Provider::TelemetryMode, controller->telemetryIndexToMode(ui->telemetrySlider->value())));
         ui->telemetryDetails->setPlainText(QString::fromUtf8(jsonData.constData()));
     }
 }
@@ -101,7 +101,7 @@ FeedbackConfigWidget::FeedbackConfigWidget(QWidget* parent)
     d->controller = new FeedbackConfigUiController(this);
     d->ui.reset(new Ui::FeedbackConfigWidget);
     d->ui->setupUi(this);
-    d->ui->noTelemetryLabel->setText(d->controller->telemetryModeDescription(Provider::NoStatistics));
+    d->ui->noTelemetryLabel->setText(d->controller->telemetryModeDescription(Provider::NoTelemetry));
 
     connect(d->ui->telemetrySlider, SIGNAL(valueChanged(int)), this, SLOT(telemetrySliderChanged()));
     connect(d->ui->telemetrySlider, SIGNAL(valueChanged(int)), this, SIGNAL(configurationChanged()));
@@ -139,7 +139,7 @@ void FeedbackConfigWidget::setFeedbackProvider(Provider* provider)
     if (hasTelemetry)
         d->ui->telemetrySlider->setMaximum(d->controller->telemetryModeCount() - 1);
 
-    d->ui->telemetrySlider->setValue(d->controller->telemetryModeToIndex(provider->statisticsCollectionMode()));
+    d->ui->telemetrySlider->setValue(d->controller->telemetryModeToIndex(provider->telemetryMode()));
     d->ui->surveySlider->setValue(d->controller->surveyIntervalToIndex(provider->surveyInterval()));
     d->surveySliderChanged(); // update the description even if nothing changed initially
 
@@ -162,7 +162,7 @@ bool FeedbackConfigWidget::eventFilter(QObject* receiver, QEvent* event)
     return QWidget::eventFilter(receiver, event);
 }
 
-Provider::StatisticsCollectionMode FeedbackConfigWidget::statisticsCollectionMode() const
+Provider::TelemetryMode FeedbackConfigWidget::telemetryMode() const
 {
     return d->controller->telemetryIndexToMode(d->ui->telemetrySlider->value());
 }

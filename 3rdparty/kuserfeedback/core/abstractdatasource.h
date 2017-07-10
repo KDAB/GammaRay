@@ -15,10 +15,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_ABSTRACTDATASOURCE_H
-#define USERFEEDBACK_ABSTRACTDATASOURCE_H
+#ifndef KUSERFEEDBACK_ABSTRACTDATASOURCE_H
+#define KUSERFEEDBACK_ABSTRACTDATASOURCE_H
 
-#include "userfeedbackcore_export.h"
+#include "kuserfeedbackcore_export.h"
 #include "provider.h"
 
 #include <QCoreApplication>
@@ -27,12 +27,12 @@ QT_BEGIN_NAMESPACE
 class QSettings;
 QT_END_NAMESPACE
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 class AbstractDataSourcePrivate;
 
-/*! Base class for data sources for statistical data. */
-class USERFEEDBACKCORE_EXPORT AbstractDataSource
+/*! Base class for data sources for telemetry data. */
+class KUSERFEEDBACKCORE_EXPORT AbstractDataSource
 {
 public:
     virtual ~AbstractDataSource();
@@ -94,23 +94,25 @@ public:
      */
     virtual void reset(QSettings *settings);
 
-    /*! Returns which colleciton mode this data source belongs to.
-     *  @return The statistics collection category this source belongs to.
+    /*! Returns which telemetry colleciton mode this data source belongs to.
+     *  @return The telemetry collection category this source belongs to.
      */
-    Provider::StatisticsCollectionMode collectionMode() const;
+    Provider::TelemetryMode telemetryMode() const;
 
-    /*! Sets which colleciton mode this data source belongs to.
+    /*! Sets which telemetry colleciton mode this data source belongs to.
      * @param mode The data collection mode of this source.
+     * Provider::NoTelemetry is not allowed here.
      */
-    void setCollectionMode(Provider::StatisticsCollectionMode mode);
+    void setTelemetryMode(Provider::TelemetryMode mode);
 
 protected:
     /*! Create a new data source named @p name.
      *  The name of the data source must match the corresponding
      *  product schema entry.
      *  @param name Must not be empty.
+     *  @param mode The default telemetry mode.
      */
-    explicit AbstractDataSource(const QString &name, AbstractDataSourcePrivate *dd = nullptr);
+    explicit AbstractDataSource(const QString &name, Provider::TelemetryMode mode = Provider::DetailedUsageStatistics, AbstractDataSourcePrivate *dd = nullptr);
 
     /*! Set the name of this data source.
      *  The name should not change at runtime, this is only provided
@@ -129,4 +131,4 @@ private:
 };
 }
 
-#endif // USERFEEDBACK_ABSTRACTDATASOURCE_H
+#endif // KUSERFEEDBACK_ABSTRACTDATASOURCE_H

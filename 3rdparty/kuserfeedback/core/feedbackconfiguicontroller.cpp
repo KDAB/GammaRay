@@ -24,15 +24,15 @@
 #include <algorithm>
 #include <vector>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-namespace UserFeedback {
+namespace KUserFeedback {
 class FeedbackConfigUiControllerPrivate {
 public:
     FeedbackConfigUiControllerPrivate();
 
     Provider *provider;
-    std::vector<Provider::StatisticsCollectionMode> telemetryModeMap;
+    std::vector<Provider::TelemetryMode> telemetryModeMap;
 };
 }
 
@@ -65,17 +65,17 @@ void FeedbackConfigUiController::setFeedbackProvider(Provider* provider)
 
     d->telemetryModeMap.clear();
     d->telemetryModeMap.reserve(5);
-    d->telemetryModeMap.push_back(Provider::NoStatistics);
+    d->telemetryModeMap.push_back(Provider::NoTelemetry);
     d->telemetryModeMap.push_back(Provider::BasicSystemInformation);
     d->telemetryModeMap.push_back(Provider::BasicUsageStatistics);
     d->telemetryModeMap.push_back(Provider::DetailedSystemInformation);
     d->telemetryModeMap.push_back(Provider::DetailedUsageStatistics);
 
-    QSet<Provider::StatisticsCollectionMode> supportedModes;
+    QSet<Provider::TelemetryMode> supportedModes;
     supportedModes.reserve(d->telemetryModeMap.size());
-    supportedModes.insert(Provider::NoStatistics);
+    supportedModes.insert(Provider::NoTelemetry);
     foreach (const auto &src, provider->dataSources())
-        supportedModes.insert(src->collectionMode());
+        supportedModes.insert(src->telemetryMode());
     for (auto it = d->telemetryModeMap.begin(); it != d->telemetryModeMap.end();) {
         if (!supportedModes.contains(*it))
             it = d->telemetryModeMap.erase(it);
@@ -96,14 +96,14 @@ int FeedbackConfigUiController::surveyModeCount() const
     return 3;
 }
 
-Provider::StatisticsCollectionMode FeedbackConfigUiController::telemetryIndexToMode(int index) const
+Provider::TelemetryMode FeedbackConfigUiController::telemetryIndexToMode(int index) const
 {
     if (index < 0 || index >= telemetryModeCount())
-        return Provider::NoStatistics;
+        return Provider::NoTelemetry;
     return d->telemetryModeMap[index];
 }
 
-int FeedbackConfigUiController::telemetryModeToIndex(Provider::StatisticsCollectionMode mode) const
+int FeedbackConfigUiController::telemetryModeToIndex(Provider::TelemetryMode mode) const
 {
     const auto it = std::lower_bound(d->telemetryModeMap.begin(), d->telemetryModeMap.end(), mode);
     if (it == d->telemetryModeMap.end())
@@ -114,7 +114,7 @@ int FeedbackConfigUiController::telemetryModeToIndex(Provider::StatisticsCollect
 QString FeedbackConfigUiController::telemetryModeDescription(int telemetryIndex) const
 {
     switch (telemetryIndexToMode(telemetryIndex)) {
-        case Provider::NoStatistics:
+        case Provider::NoTelemetry:
             return tr(
                 "We make this application for you. You can help us improve it by contributing information on how you use it. "
                 "This allows us to make sure we focus on things that matter to you.\n"
@@ -153,7 +153,7 @@ QString FeedbackConfigUiController::telemetryModeDetails(int telemetryIndex) con
 
     auto detailsStr = QStringLiteral("<ul>");
     foreach (const auto *src, d->provider->dataSources()) {
-        if (telemetryIndex >= telemetryModeToIndex(src->collectionMode()) && !src->description().isEmpty())
+        if (telemetryIndex >= telemetryModeToIndex(src->telemetryMode()) && !src->description().isEmpty())
             detailsStr += QStringLiteral("<li>") + src->description() + QStringLiteral("</li>");
     }
     return detailsStr + QStringLiteral("</ul>");

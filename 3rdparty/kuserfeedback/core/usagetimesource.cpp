@@ -21,9 +21,9 @@
 
 #include <QVariant>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-namespace UserFeedback {
+namespace KUserFeedback {
 class UsageTimeSourcePrivate : public AbstractDataSourcePrivate
 {
 public:
@@ -33,7 +33,7 @@ public:
 }
 
 UsageTimeSource::UsageTimeSource() :
-    AbstractDataSource(QStringLiteral("usageTime"), new UsageTimeSourcePrivate)
+    AbstractDataSource(QStringLiteral("usageTime"), Provider::BasicUsageStatistics, new UsageTimeSourcePrivate)
 {
 }
 

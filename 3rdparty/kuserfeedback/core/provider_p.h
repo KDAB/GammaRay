@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_PROVIDER_P_H
-#define USERFEEDBACK_PROVIDER_P_H
+#ifndef KUSERFEEDBACK_PROVIDER_P_H
+#define KUSERFEEDBACK_PROVIDER_P_H
 
 #include "provider.h"
 
@@ -35,7 +35,7 @@ class QNetworkAccessManager;
 class QSettings;
 QT_END_NAMESPACE
 
-namespace UserFeedback {
+namespace KUserFeedback {
 class ProviderPrivate : public SurveyTargetExpressionDataProvider
 {
 public:
@@ -52,14 +52,14 @@ public:
     void aboutToQuit();
 
     bool isValidSource(AbstractDataSource *source) const;
-    QByteArray jsonData(Provider::StatisticsCollectionMode mode) const;
+    QByteArray jsonData(Provider::TelemetryMode mode) const;
     void scheduleNextSubmission();
     void submit(const QUrl &url);
     void submitFinished();
 
     bool selectSurvey(const SurveyInfo &survey) const;
 
-    Provider::StatisticsCollectionMode highestStatisticsCollectionMode() const;
+    Provider::TelemetryMode highestTelemetryMode() const;
     void scheduleEncouragement();
     void emitShowEncouragementMessage();
 
@@ -75,7 +75,7 @@ public:
     QDateTime lastSubmitTime;
     int redirectCount;
     int submissionInterval;
-    Provider::StatisticsCollectionMode statisticsMode;
+    Provider::TelemetryMode telemetryMode;
 
     int surveyInterval;
     QDateTime lastSurveyTime;

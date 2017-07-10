@@ -15,12 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_COMPILERINFOSOURCE_H
-#define USERFEEDBACK_COMPILERINFOSOURCE_H
+#ifndef KUSERFEEDBACK_COMPILERINFOSOURCE_H
+#define KUSERFEEDBACK_COMPILERINFOSOURCE_H
 
 #include "abstractdatasource.h"
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 /*! Data source reporting which compiler was used to build this code.
  *  @note This will report which compiler was used to build the feedback
@@ -28,11 +28,13 @@ namespace UserFeedback {
  *  the application code. This is particularly true for compilers that
  *  don't break ABI regularly (such as Clang and GCC), so this information
  *  is most reliable when this is not the case, e.g. with MSVC.
+ *
+ *  The default telemetry mode for this source is Provider::BasicSystemInformation.
  */
-class USERFEEDBACKCORE_EXPORT CompilerInfoSource : public AbstractDataSource
+class KUSERFEEDBACKCORE_EXPORT CompilerInfoSource : public AbstractDataSource
 {
 public:
-    Q_DECLARE_TR_FUNCTIONS(UserFeedback::CompilerInfoSource)
+    Q_DECLARE_TR_FUNCTIONS(KUserFeedback::CompilerInfoSource)
 public:
     CompilerInfoSource();
     QString description() const override;
@@ -41,4 +43,4 @@ public:
 
 }
 
-#endif // USERFEEDBACK_COMPILERINFOSOURCE_H
+#endif // KUSERFEEDBACK_COMPILERINFOSOURCE_H

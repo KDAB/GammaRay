@@ -15,18 +15,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_OPENGLINFOSOURCE_H
-#define USERFEEDBACK_OPENGLINFOSOURCE_H
+#ifndef KUSERFEEDBACK_OPENGLINFOSOURCE_H
+#define KUSERFEEDBACK_OPENGLINFOSOURCE_H
 
 #include "abstractdatasource.h"
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
-/*! Data source reporting type, version and vendor of the OpenGL stack. */
-class USERFEEDBACKCORE_EXPORT OpenGLInfoSource : public AbstractDataSource
+/*! Data source reporting type, version and vendor of the OpenGL stack.
+ *
+ *  The default telemetry mode for this source is Provider::DetailedSystemInformation.
+ */
+class KUSERFEEDBACKCORE_EXPORT OpenGLInfoSource : public AbstractDataSource
 {
 public:
-    Q_DECLARE_TR_FUNCTIONS(UserFeedback::OpenGLInfoSource)
+    Q_DECLARE_TR_FUNCTIONS(KUserFeedback::OpenGLInfoSource)
 public:
     OpenGLInfoSource();
     QString description() const override;
@@ -35,4 +38,4 @@ public:
 
 }
 
-#endif // USERFEEDBACK_OPENGLINFOSOURCE_H
+#endif // KUSERFEEDBACK_OPENGLINFOSOURCE_H

@@ -26,10 +26,10 @@
 #include <QWindow>
 #endif
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
 OpenGLInfoSource::OpenGLInfoSource()
-    : AbstractDataSource(QStringLiteral("opengl"))
+    : AbstractDataSource(QStringLiteral("opengl"), Provider::DetailedSystemInformation)
 {
 }
 
@@ -50,8 +50,8 @@ QVariant OpenGLInfoSource::data()
         window.create();
         context.makeCurrent(&window);
         QOpenGLFunctions functions(&context);
-        m.insert(QStringLiteral("vendor"), QString::fromLocal8Bit(reinterpret_cast<const char*>(functions.glGetString(GL_VENDOR))));
-        m.insert(QStringLiteral("renderer"), QString::fromLocal8Bit(reinterpret_cast<const char*>(functions.glGetString(GL_RENDERER))));
+        m.insert(QStringLiteral("vendor"), OpenGLInfoSourcePrivate::normalizeVendor(reinterpret_cast<const char*>(functions.glGetString(GL_VENDOR))));
+        m.insert(QStringLiteral("renderer"), OpenGLInfoSourcePrivate::normalizeRenderer(reinterpret_cast<const char*>(functions.glGetString(GL_RENDERER))));
 
         switch (context.openGLModuleType()) {
             case QOpenGLContext::LibGL:
@@ -61,7 +61,9 @@ QVariant OpenGLInfoSource::data()
                 int major = 0, minor = 0;
                 functions.glGetIntegerv(GL_MAJOR_VERSION, &major);
                 functions.glGetIntegerv(GL_MINOR_VERSION, &minor);
-                m.insert(QStringLiteral("version"), QString(QString::number(major) + QLatin1Char('.') + QString::number(minor)));
+                // e.g. macOS legacy profiles return 0.0 here...
+                if (major > 0)
+                    m.insert(QStringLiteral("version"), QString(QString::number(major) + QLatin1Char('.') + QString::number(minor)));
 
                 OpenGLInfoSourcePrivate::parseGLVersion(reinterpret_cast<const char*>(functions.glGetString(GL_VERSION)), m);
                 OpenGLInfoSourcePrivate::parseGLSLVersion(reinterpret_cast<const char*>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION)), m);

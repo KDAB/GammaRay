@@ -19,10 +19,10 @@
 
 #include <QVariant>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
 CompilerInfoSource::CompilerInfoSource()
-    : AbstractDataSource(QStringLiteral("compiler"))
+    : AbstractDataSource(QStringLiteral("compiler"), Provider::BasicSystemInformation)
 {
 }
 

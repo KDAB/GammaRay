@@ -15,15 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_CONSOLE_FEEDBACKCONFIGDIALOG_H
-#define USERFEEDBACK_CONSOLE_FEEDBACKCONFIGDIALOG_H
+#ifndef KUSERFEEDBACK_CONSOLE_FEEDBACKCONFIGDIALOG_H
+#define KUSERFEEDBACK_CONSOLE_FEEDBACKCONFIGDIALOG_H
 
-#include "userfeedbackwidgets_export.h"
+#include "kuserfeedbackwidgets_export.h"
 #include <QDialog>
 
 #include <memory>
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 class FeedbackConfigDialogPrivate;
 class Provider;
@@ -32,7 +32,7 @@ class Provider;
  *
  * @see FeedbackConfigWidget
  */
-class USERFEEDBACKWIDGETS_EXPORT FeedbackConfigDialog : public QDialog
+class KUSERFEEDBACKWIDGETS_EXPORT FeedbackConfigDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -43,7 +43,7 @@ public:
     ~FeedbackConfigDialog();
 
     /*! Set the feedback provider that this dialog configures. */
-    void setFeedbackProvider(UserFeedback::Provider *provider);
+    void setFeedbackProvider(KUserFeedback::Provider *provider);
 
     /*! Accepts the dialog and write changes made by the user to
      *  the feedback provider.
@@ -57,4 +57,4 @@ private:
 
 }
 
-#endif // USERFEEDBACK_CONSOLE_FEEDBACKCONFIGDIALOG_H
+#endif // KUSERFEEDBACK_CONSOLE_FEEDBACKCONFIGDIALOG_H

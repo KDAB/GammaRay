@@ -28,9 +28,9 @@
 
 #include <memory>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-namespace UserFeedback {
+namespace KUserFeedback {
 class SelectionRatioSourcePrivate : public AbstractDataSourcePrivate
 {
 public:
@@ -83,16 +83,16 @@ void SelectionRatioSourcePrivate::selectionChanged()
 
 QString SelectionRatioSourcePrivate::selectedValue() const
 {
-    if (!model->hasSelection())
-        return QString();
     const auto idxs = model->selectedIndexes();
+    if (!model->hasSelection() || idxs.isEmpty())
+        return QString();
     Q_ASSERT(!idxs.isEmpty());
     const auto idx = idxs.at(0);
     return idx.data(role).toString();
 }
 
 SelectionRatioSource::SelectionRatioSource(QItemSelectionModel* selectionModel, const QString& sampleName)
-    : AbstractDataSource(sampleName, new SelectionRatioSourcePrivate)
+    : AbstractDataSource(sampleName, Provider::DetailedUsageStatistics, new SelectionRatioSourcePrivate)
 {
     Q_D(SelectionRatioSource);
 

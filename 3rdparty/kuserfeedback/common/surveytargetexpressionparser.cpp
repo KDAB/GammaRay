@@ -59,7 +59,7 @@ char* unquoteString(const char *str)
     return out;
 }
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
 SurveyTargetExpressionParser::SurveyTargetExpressionParser()
     : m_expression(nullptr)

@@ -28,9 +28,9 @@
 #include <QKeyEvent>
 #include <QPropertyAnimation>
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
-namespace UserFeedback {
+namespace KUserFeedback {
 namespace Ui
 {
 class NotificationPopup;
@@ -173,7 +173,7 @@ void NotificationPopup::setFeedbackProvider(Provider* provider)
     Q_ASSERT(provider);
     d->provider = provider;
     connect(provider, SIGNAL(showEncouragementMessage()), this, SLOT(showEncouragement()));
-    connect(provider, SIGNAL(surveyAvailable(UserFeedback::SurveyInfo)), this, SLOT(surveyAvailable(UserFeedback::SurveyInfo)));
+    connect(provider, SIGNAL(surveyAvailable(KUserFeedback::SurveyInfo)), this, SLOT(surveyAvailable(KUserFeedback::SurveyInfo)));
 }
 
 void NotificationPopup::keyReleaseEvent(QKeyEvent* event)

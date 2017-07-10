@@ -18,7 +18,7 @@
 #include "surveytargetexpressionevaluator.h"
 #include "surveytargetexpression.h"
 
-using namespace UserFeedback;
+using namespace KUserFeedback;
 
 SurveyTargetExpressionDataProvider::SurveyTargetExpressionDataProvider()
 {

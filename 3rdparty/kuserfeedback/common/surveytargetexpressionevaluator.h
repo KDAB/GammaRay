@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USERFEEDBACK_SURVEYTARGETEXPRESSIONEVALUATOR_H
-#define USERFEEDBACK_SURVEYTARGETEXPRESSIONEVALUATOR_H
+#ifndef KUSERFEEDBACK_SURVEYTARGETEXPRESSIONEVALUATOR_H
+#define KUSERFEEDBACK_SURVEYTARGETEXPRESSIONEVALUATOR_H
 
 #include <QHash>
 
@@ -25,7 +25,7 @@ class QString;
 class QVariant;
 QT_END_NAMESPACE
 
-namespace UserFeedback {
+namespace KUserFeedback {
 
 class SurveyTargetExpression;
 
@@ -60,4 +60,4 @@ private:
 
 }
 
-#endif // USERFEEDBACK_SURVEYTARGETEXPRESSIONEVALUATOR_H
+#endif // KUSERFEEDBACK_SURVEYTARGETEXPRESSIONEVALUATOR_H
