@@ -29,9 +29,11 @@
 #include "materialtab.h"
 #include "materialextensioninterface.h"
 #include "ui_materialtab.h"
-#include <ui/propertywidget.h>
 
-#include "common/objectbroker.h"
+#include <ui/propertywidget.h>
+#include <ui/propertyeditor/propertyeditordelegate.h>
+
+#include <common/objectbroker.h>
 
 using namespace GammaRay;
 
@@ -41,6 +43,7 @@ MaterialTab::MaterialTab(PropertyWidget *parent)
     , m_interface(nullptr)
 {
     m_ui->setupUi(this);
+    m_ui->materialPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
     m_ui->materialPropertyView->header()->setObjectName("materialPropertyViewHeader");
     m_ui->shaderList->header()->setObjectName("shaderListHeader");
     setObjectBaseName(parent->objectBaseName());
