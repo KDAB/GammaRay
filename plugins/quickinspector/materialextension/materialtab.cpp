@@ -30,10 +30,15 @@
 #include "materialextensioninterface.h"
 #include "ui_materialtab.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/propertywidget.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 
 #include <common/objectbroker.h>
+#include <common/objectid.h>
+#include <common/propertymodel.h>
+
+#include <QMenu>
 
 using namespace GammaRay;
 
@@ -45,6 +50,8 @@ MaterialTab::MaterialTab(PropertyWidget *parent)
     m_ui->setupUi(this);
     m_ui->materialPropertyView->setItemDelegate(new PropertyEditorDelegate(this));
     m_ui->materialPropertyView->header()->setObjectName("materialPropertyViewHeader");
+    connect(m_ui->materialPropertyView, &QTreeView::customContextMenuRequested, this, &MaterialTab::propertyContextMenu);
+
     setObjectBaseName(parent->objectBaseName());
     connect(m_ui->shaderList, SIGNAL(currentIndexChanged(int)), this, SLOT(shaderSelectionChanged(int)));
 
@@ -82,4 +89,24 @@ void MaterialTab::shaderSelectionChanged(int idx)
 void MaterialTab::showShader(const QString &shaderSource)
 {
     m_ui->shaderEdit->setPlainText(shaderSource);
+}
+
+void MaterialTab::propertyContextMenu(QPoint pos)
+{
+    const auto idx = m_ui->materialPropertyView->indexAt(pos);
+    if (!idx.isValid())
+        return;
+
+    const auto actions = idx.data(PropertyModel::ActionRole).toInt();
+    const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
+    ContextMenuExtension ext(objectId);
+    const bool canShow = (actions == PropertyModel::NavigateTo && !objectId.isNull())
+                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+
+    if (!canShow)
+        return;
+
+    QMenu contextMenu;
+    ext.populateMenu(&contextMenu);
+    contextMenu.exec(m_ui->materialPropertyView->viewport()->mapToGlobal(pos));
 }

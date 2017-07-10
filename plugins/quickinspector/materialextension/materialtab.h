@@ -46,6 +46,7 @@ public:
 
 private:
     void setObjectBaseName(const QString &baseName);
+    void propertyContextMenu(QPoint pos);
 
 private slots:
     void shaderSelectionChanged(int idx);

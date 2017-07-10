@@ -19,7 +19,11 @@
      <property name="childrenCollapsible">
       <bool>false</bool>
      </property>
-     <widget class="GammaRay::DeferredTreeView" name="materialPropertyView"/>
+     <widget class="GammaRay::DeferredTreeView" name="materialPropertyView">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
+     </widget>
      <widget class="QWidget" name="">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
