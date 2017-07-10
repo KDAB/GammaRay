@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>561</width>
-    <height>362</height>
+    <width>727</width>
+    <height>544</height>
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -19,11 +19,7 @@
      <property name="childrenCollapsible">
       <bool>false</bool>
      </property>
-     <widget class="GammaRay::DeferredTreeView" name="materialPropertyView">
-      <property name="rootIsDecorated">
-       <bool>false</bool>
-      </property>
-     </widget>
+     <widget class="GammaRay::DeferredTreeView" name="materialPropertyView"/>
      <widget class="QWidget" name="">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>

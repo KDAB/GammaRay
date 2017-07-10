@@ -124,6 +124,7 @@ private slots:
 
         auto propModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.materialPropertyModel");
         QVERIFY(propModel);
+        ModelTest propModelTest(propModel);
         QCOMPARE(propModel->rowCount(), 0);
 
         auto shaderModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.shaderModel");
@@ -172,6 +173,7 @@ private slots:
 
         auto propModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.materialPropertyModel");
         QVERIFY(propModel);
+        ModelTest propModelTest(propModel);
         QCOMPARE(propModel->rowCount(), 0);
 
         auto shaderModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.shaderModel");
@@ -196,8 +198,9 @@ private slots:
         QVERIFY(geometryNode);
         controller->setObject(geometryNode, "QSGGeometryNode");
 
-        QEXPECT_FAIL("", "not yet implemented", Continue);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         QVERIFY(propModel->rowCount() > 1);
+#endif
         QCOMPARE(shaderModel->rowCount(), 2);
 
         iface->getShader(0);

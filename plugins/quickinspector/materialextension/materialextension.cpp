@@ -47,6 +47,10 @@
 #include <private/qsgmaterialshader_p.h>
 #include <private/qsgdistancefieldglyphnode_p_p.h>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#include <private/qquickopenglshadereffectnode_p.h>
+#endif
+
 using namespace GammaRay;
 
 MaterialExtension::MaterialExtension(PropertyController *controller)
@@ -69,6 +73,9 @@ MaterialExtension::~MaterialExtension()
 static const char *typeForMaterial(QSGMaterial *material)
 {
 #define MT(type) if (dynamic_cast<type *>(material)) return #type;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    MT(QQuickOpenGLShaderEffectMaterial)
+#endif
     MT(QSGDistanceFieldShiftedStyleTextMaterial)
     MT(QSGDistanceFieldStyledTextMaterial)
     MT(QSGDistanceFieldTextMaterial)

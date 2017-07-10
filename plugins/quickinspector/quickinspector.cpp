@@ -80,6 +80,7 @@
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #include <QSGRendererInterface>
+#include <private/qquickopenglshadereffectnode_p.h>
 #endif
 
 #include <private/qquickanchors_p.h>
@@ -934,6 +935,14 @@ void QuickInspector::registerMetaTypes()
 
     MO_ADD_METAOBJECT1(QSGDistanceFieldShiftedStyleTextMaterial, QSGDistanceFieldStyledTextMaterial);
     MO_ADD_PROPERTY_RO(QSGDistanceFieldShiftedStyleTextMaterial, const QPointF&, shift);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    MO_ADD_METAOBJECT1(QQuickOpenGLShaderEffectMaterial, QSGMaterial);
+    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, QVector<QByteArray>, attributes);
+    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, QQuickShaderEffect::CullMode, cullMode);
+    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, bool, geometryUsesTextureSubRect);
+    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, QVector<QSGTextureProvider*>, textureProviders);
+#endif
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
