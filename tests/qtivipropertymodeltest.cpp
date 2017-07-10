@@ -78,8 +78,12 @@ public:
     explicit QtIviPropertyModelTest(QObject *parent = nullptr)
         : QObject(parent)
         , m_climate(nullptr)
+#if defined(QT_IVIMEDIA_LIB)
+        , m_amfm(nullptr)
+#endif
         , m_model(nullptr)
-    { }
+    {
+    }
 
 private:
     void createIviProperties()
