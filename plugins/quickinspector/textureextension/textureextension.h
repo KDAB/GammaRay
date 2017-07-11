@@ -35,7 +35,7 @@
 
 QT_BEGIN_NAMESPACE
 class QImage;
-class QSGMaterial;
+class QSGDistanceFieldTextMaterial;
 class QSGTexture;
 QT_END_NAMESPACE
 
@@ -58,8 +58,10 @@ private slots:
     void textureGrabbed(void *data, const QImage &img);
 
 private:
+    void triggerGrab();
+
     QSGTexture *m_currentTexture;
-    QSGMaterial *m_currentMaterial;
+    QSGDistanceFieldTextMaterial *m_currentMaterial;
     RemoteViewServer *m_remoteView;
 };
 
