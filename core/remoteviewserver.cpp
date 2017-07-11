@@ -48,6 +48,7 @@ RemoteViewServer::RemoteViewServer(const QString &name, QObject *parent)
     , m_clientActive(false)
     , m_sourceChanged(false)
     , m_clientReady(true)
+    , m_pendingReset(false)
 {
     Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(
                                                     name), this, "clientConnectedChanged");
@@ -76,6 +77,8 @@ void RemoteViewServer::resetView()
 {
     if (isActive())
         emit reset();
+    else
+        m_pendingReset = true;
 }
 
 bool RemoteViewServer::isActive() const
@@ -185,6 +188,11 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
 
 void RemoteViewServer::setViewActive(bool active)
 {
+    if (m_pendingReset) {
+        emit reset();
+        m_pendingReset = false;
+    }
+
     m_clientActive = active;
     m_clientReady = active;
     if (active)
