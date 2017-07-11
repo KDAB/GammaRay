@@ -111,9 +111,9 @@ private slots:
         QVERIFY(frameSpy.wait());
         const auto frame = frameSpy.at(0).at(0).value<RemoteViewFrame>();
         QCOMPARE(frame.viewRect(), QRectF(0, 0, 360, 360));
-        QCOMPARE(frame.image().pixelColor(358, 0), QColor(Qt::red));
-        QCOMPARE(frame.image().pixelColor(119, 0), QColor(Qt::green));
-        QCOMPARE(frame.image().pixelColor(239, 0), QColor(Qt::blue));
+        QCOMPARE(frame.image().pixel(358, 0), QColor(Qt::red).rgb());
+        QCOMPARE(frame.image().pixel(119, 0), QColor(Qt::green).rgb());
+        QCOMPARE(frame.image().pixel(239, 0), QColor(Qt::blue).rgb());
     }
 
     void testDFGrab()
