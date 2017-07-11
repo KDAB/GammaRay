@@ -83,6 +83,8 @@ bool TextureExtension::setQObject(QObject* obj)
 {
     m_currentTexture = nullptr;
     m_currentMaterial = nullptr;
+    if (!obj)
+        return false;
 
     if (auto qsgTexture = qobject_cast<QSGTexture*>(obj)) {
         m_remoteView->resetView();
@@ -100,6 +102,20 @@ bool TextureExtension::setQObject(QObject* obj)
         auto geometryNode = findGeometryNode(priv->itemNodeInstance);
         if (geometryNode)
             return setObject(geometryNode, "QSGGeometryNode");
+    }
+
+    // now it gets really dirty: to find the associated QSGLayer for a QQuickShaderEffectSource
+    // we look at its incoming signal/slot connections, it's watching the layer that way...
+    if (obj->inherits("QQuickShaderEffectSource")) {
+        auto d = QObjectPrivate::get(obj);
+        if (d->senders) {
+            for (QObjectPrivate::Connection *s = d->senders; s; s = s->next) {
+                if (!s->sender)
+                    continue;
+                if (s->sender->inherits("QSGLayer"))
+                    return setQObject(s->sender);
+            }
+        }
     }
 
     return false;

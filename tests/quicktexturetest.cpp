@@ -141,6 +141,33 @@ private slots:
         QVERIFY(frame.viewRect().width() > 0);
     }
 
+    void testShaderEffectSourceGrab()
+    {
+        if (!showSource("qrc:/manual/shadereffect.qml")) {
+            qWarning() << "Skipping test due to unavailable QtQuick display.";
+            return;
+        }
+
+        auto remoteView = ObjectBroker::object<RemoteViewInterface*>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
+        QVERIFY(remoteView);
+        QSignalSpy frameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
+        QVERIFY(frameSpy.isValid());
+        remoteView->setViewActive(true);
+
+        QQuickItem *source = nullptr;
+        foreach (auto item, qFindChildren<QQuickItem*>(m_view->rootObject(), QString())) {
+            if (item->inherits("QQuickShaderEffectSource"))
+                source = item;
+        }
+        QVERIFY(source);
+        Probe::instance()->selectObject(source, QPoint());
+
+        QVERIFY(frameSpy.wait());
+        const auto frame = frameSpy.at(0).at(0).value<RemoteViewFrame>();
+        QVERIFY(frame.viewRect().height() > 0);
+        QVERIFY(frame.viewRect().width() > 0);
+    }
+
     void cleanup()
     {
         m_view.reset();
