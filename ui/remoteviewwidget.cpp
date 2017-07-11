@@ -131,6 +131,8 @@ void RemoteViewWidget::setName(const QString &name)
     connect(m_interface, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)), this, SLOT(elementsAtReceived(GammaRay::ObjectIds,int)));
     connect(m_interface, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)), this,
             SLOT(frameUpdated(GammaRay::RemoteViewFrame)));
+    if (isVisible())
+        m_interface->setViewActive(true);
     m_interface->clientViewUpdated();
 }
 
