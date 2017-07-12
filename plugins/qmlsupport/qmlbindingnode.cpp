@@ -38,163 +38,80 @@
 
 #include <private/qqmlabstractbinding_p.h>
 #include <private/qqmlbinding_p.h>
+#include <private/qqmlvaluetypeproxybinding_p.h>
 #include <private/qqmldata_p.h>
 #include <private/qqmlproperty_p.h>
 #include <QFile>
 
 using namespace GammaRay;
 
-BindingNode::BindingNode(QObject *object, int propertyIndex, BindingNode *parent)
-    : m_object(object)
-    , m_propertyIndex(propertyIndex)
-    , m_parent(parent)
+BindingNode::BindingNode(QObject *obj, int propIndex, BindingNode *parent)
+    : parent(parent)
+    , object(obj)
+    , propertyIndex(propIndex)
 {
-    QQmlContext *ctx = QQmlEngine::contextForObject(object);
-    QString propertyName = object->metaObject() ? object->metaObject()->property(propertyIndex).name() : ":(";
-    if (ctx) {
-        QString id = ctx->nameForObject(object);
-        m_name = id.isEmpty() ? propertyName : QStringLiteral("%1.%2").arg(id, propertyName);
-    } else {
-        m_name = propertyName;
-    }
+    Q_ASSERT(obj);
+    canonicalName = object->metaObject() ? object->metaObject()->property(propertyIndex).name() : ":(";
     refreshValue();
     checkForLoops();
 }
 
-std::unique_ptr<BindingNode> BindingNode::refresh()
+BindingNode::BindingNode(QObject *object, int propertyIndex, qintptr id_)
+    : BindingNode(object, propertyIndex, nullptr)
 {
-    auto clone = std::unique_ptr<BindingNode>(new BindingNode(m_object, m_propertyIndex, m_parent)); // Will refresh value, dependencies, etc.
-    clone->m_id = m_id;
-    clone->m_isActive = m_isActive;
-    clone->m_expression = m_expression;
-    clone->m_sourceLocation = m_sourceLocation;
-    return clone;
+    id = id_;
+}
+
+BindingNode::BindingNode(const BindingNode &other)
+    : parent(other.parent)
+    , object(other.object)
+    , propertyIndex(other.propertyIndex)
+    , id(other.id)
+    , canonicalName(other.canonicalName)
+    , value(other.value)
+    , isActive(other.isActive)
+    , isBindingLoop(other.isBindingLoop)
+    , expression(other.expression)
+    , sourceLocation(other.sourceLocation)
+{
+    dependencies.reserve(other.dependencies.size());
+    for (auto &&dependency : other.dependencies) {
+        dependencies.push_back(std::unique_ptr<BindingNode>(new BindingNode(*dependency)));
+    }
 }
 
 void BindingNode::checkForLoops()
 {
-    BindingNode *ancestor = m_parent;
+    BindingNode *ancestor = parent;
     while (ancestor) {
-        if (ancestor->object() == m_object
-            && ancestor->propertyIndex() == propertyIndex()) {
+        if (ancestor->object == object
+            && ancestor->propertyIndex == propertyIndex) {
             qDebug() << "Found a binding loop!";
-            m_isBindingLoop = true;
+            isBindingLoop = true;
             return;
         }
-        ancestor = ancestor->parent();
+        ancestor = ancestor->parent;
     }
-    m_isBindingLoop = false;
-}
-
-bool BindingNode::operator<(const BindingNode & other) const
-{
-    if (m_object == other.m_object) {
-        return propertyIndex() < other.propertyIndex();
-    }
-    return m_object < other.m_object;
-}
-
-bool BindingNode::operator>(const BindingNode & other) const
-{
-    if (m_object == other.m_object) {
-        return propertyIndex() > other.propertyIndex();
-    }
-    return m_object > other.m_object;
-}
-
-BindingNode *BindingNode::parent() const
-{
-    return m_parent;
-}
-
-void BindingNode::setParent(BindingNode * parent)
-{
-    m_parent = parent;
-}
-
-const QString &BindingNode::expression() const
-{
-    return m_expression;
-}
-
-QObject *BindingNode::object() const
-{
-    return m_object;
-}
-
-const QString &BindingNode::name() const
-{
-    return m_name;
-}
-
-qintptr BindingNode::id() const
-{
-    return m_id;
-}
-
-bool BindingNode::isActive() const
-{
-    return m_isActive;
-}
-
-bool BindingNode::isBindingLoop() const
-{
-    return m_isBindingLoop;
-}
-
-int BindingNode::propertyIndex() const
-{
-    return m_propertyIndex;
+    isBindingLoop = false;
 }
 
 QMetaProperty BindingNode::property() const
 {
-    return m_object->metaObject()->property(propertyIndex());
+    return object->metaObject()->property(propertyIndex);
 }
-
-const QVariant &BindingNode::value() const
-{
-    return m_value;
-}
-
 void BindingNode::refreshValue()
 {
-    m_value = m_object->metaObject()->property(propertyIndex()).read(m_object);
-}
-
-const SourceLocation &BindingNode::sourceLocation() const
-{
-    return m_sourceLocation;
-}
-
-const std::vector<std::unique_ptr<BindingNode>> &BindingNode::dependencies() const
-{
-    return m_dependencies;
-}
-
-std::vector<std::unique_ptr<BindingNode>> &BindingNode::dependencies()
-{
-    return m_dependencies;
-}
-
-void GammaRay::BindingNode::addDependency(std::unique_ptr<BindingNode> dependency)
-{
-    m_dependencies.push_back(std::move(dependency));
-}
-
-void BindingNode::clearDependencies()
-{
-    m_dependencies.clear();
+    value = object->metaObject()->property(propertyIndex).read(object);
 }
 
 uint BindingNode::depth() const
 {
     uint depth = 0;
-    if (m_isBindingLoop) {
+    if (isBindingLoop) {
         return std::numeric_limits<uint>::max(); // to be considered as infinity.
     }
-    for (const auto &dependency : m_dependencies) {
-        if (!dependency->isActive())
+    for (const auto &dependency : dependencies) {
+        if (!dependency->isActive)
             continue;
         uint depDepth = dependency->depth();
         if (depDepth == std::numeric_limits<uint>::max()) {
@@ -205,37 +122,6 @@ uint BindingNode::depth() const
         }
     }
     return depth;
-}
-
-void GammaRay::BindingNode::setActive(bool active)
-{
-    m_isActive = active;
-}
-
-void GammaRay::BindingNode::setName(const QString &name)
-{
-    m_name = name;
-}
-
-void GammaRay::BindingNode::setId(qintptr id)
-{
-    m_id = id;
-}
-
-void GammaRay::BindingNode::setIsBindingLoop(bool isLoop)
-{
-    m_isBindingLoop = isLoop;
-}
-
-
-void GammaRay::BindingNode::setExpression(const QString &expression)
-{
-    m_expression = expression;
-}
-
-void BindingNode::setSourceLocation(const SourceLocation &location)
-{
-    m_sourceLocation = location;
 }
 
 AbstractBindingProvider::~AbstractBindingProvider()
@@ -261,31 +147,27 @@ QQmlAbstractBinding *QmlBindingProvider::bindingForProperty(QObject *obj, int pr
     return Q_NULLPTR;
 }
 
-std::unique_ptr<BindingNode> QmlBindingProvider::bindingNodeFromQmlProperty(QQmlProperty property, BindingNode * parent)
-{
-    auto node = std::unique_ptr<BindingNode>(new BindingNode(property.object(), property.index(), parent));
-    auto binding = bindingForProperty(property.object(), property.index());
-
-    if (binding) {
-        fetchSourceLocationFor(node.get(), binding);
-    }
-    return node;
-}
+// std::unique_ptr<BindingNode> QmlBindingProvider::bindingNodeFromQmlProperty(QQmlProperty property, BindingNode * parent)
+// {
+//     auto node = std::unique_ptr<BindingNode>(new BindingNode(property.object(), property.index(), parent));
+//     auto binding = QQmlPropertyPrivate::binding(property.object(), QQmlPropertyIndex::fromEncoded(property.index()));
+//
+//     if (binding) {
+//         fetchSourceLocationFor(node.get(), binding);
+//     }
+//     return node;
+// }
 
 bool QmlBindingProvider::canProvideBindingsFor(QObject *object)
 {
     return QQmlData::get(object);
 }
 
-void QmlBindingProvider::fetchSourceLocationFor(BindingNode *node, QQmlAbstractBinding *abstractBinding)
+void QmlBindingProvider::fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding)
 {
-    QQmlBinding *binding = dynamic_cast<QQmlBinding*>(abstractBinding);
-    if (!binding)
-        return;
-
     QV4::Function *function = binding->function();
     QQmlSourceLocation loc = function->sourceLocation();
-    node->setSourceLocation(SourceLocation(QUrl(loc.sourceFile), loc.line, loc.column));
+    node->sourceLocation = SourceLocation(QUrl(loc.sourceFile), loc.line, loc.column);
 
 //     QString fileName = function->compilationUnit->fileName();
 //     if (fileName.isEmpty()) {
@@ -307,20 +189,20 @@ void QmlBindingProvider::fetchSourceLocationFor(BindingNode *node, QQmlAbstractB
 //     m_expression = QString(codeFile.readLine()).trimmed();
 }
 
-std::vector<AbstractBindingProvider::Dependency> QmlBindingProvider::findDependenciesFor(BindingNode *node)
+std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFor(BindingNode *node)
 {
-    std::vector<AbstractBindingProvider::Dependency> dependencies;
-    if (node->isBindingLoop()) // Don't look for further dependencies, if this is already known to be part of a loop.
+    std::vector<std::unique_ptr<BindingNode>> dependencies;
+    if (node->isBindingLoop) // Don't look for further dependencies, if this is already known to be part of a loop.
         return dependencies;
 
-    QQmlAbstractBinding *binding = bindingForProperty(node->object(), node->propertyIndex());
+    QQmlAbstractBinding *abstractBinding = QQmlPropertyPrivate::binding(node->object, QQmlPropertyIndex::fromEncoded(node->propertyIndex));
+    QQmlBinding *binding = dynamic_cast<QQmlBinding*>(abstractBinding);
     if (!binding)
         return dependencies;
 
     fetchSourceLocationFor(node, binding); // While we have the QQmlBinding at hand, let's grab the source location
     for (const auto &dependency : binding->dependencies()) {
-//         node->addDependency(std::unique_ptr<BindingNode>(new BindingNode(dependency.object(), dependency.index(), node)));
-        dependencies.push_back({ dependency.object(), dependency.index() });
+        dependencies.push_back(std::unique_ptr<BindingNode>(new BindingNode(dependency.object(), dependency.index(), node)));
     }
     return dependencies;
 }
@@ -335,6 +217,12 @@ std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findBindingsFor(QO
     auto b = data->bindings;
     while (b) {
         BindingNode *node = new BindingNode(obj, b->targetPropertyIndex().coreIndex());
+        QQmlContext *ctx = QQmlEngine::contextForObject(obj);
+        if (ctx) {
+            QString id = ctx->nameForObject(obj);
+            if (!id.isEmpty())
+                node->canonicalName = QStringLiteral("%1.%2").arg(id, node->canonicalName);
+        }
 
         bindings.push_back(std::unique_ptr<BindingNode>(node));
         b = b->nextBinding();
@@ -352,62 +240,71 @@ bool QuickImplicitBindingDependencyProvider::canProvideBindingsFor(QObject *obje
     return false;
 }
 
-std::vector<AbstractBindingProvider::Dependency> QuickImplicitBindingDependencyProvider::findDependenciesFor(BindingNode *binding)
+std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::createBindingNode(QObject* obj, const char *propertyName) const
 {
-    std::vector<AbstractBindingProvider::Dependency> dependencies;
+    if (!obj || !obj->metaObject())
+        return {};
+
+    int propertyIndex = obj->metaObject()->indexOfProperty(propertyName);
+    return std::unique_ptr<BindingNode>(new BindingNode(obj, propertyIndex));
+}
+
+std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider::findDependenciesFor(BindingNode *binding)
+{
+    std::vector<std::unique_ptr<BindingNode>> dependencies;
     // So far, we can only hard code implicit dependencies.
     qDebug() << "looking for implicitDependencies.";
-    QObject *object = binding->object();
+    QObject *object = binding->object;
     if (!object)
         return dependencies;
     if (QQuickItem *item = qobject_cast<QQuickItem*>(object)) {
         QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
-        qDebug() << "Have an Item (" << binding->propertyIndex() << item->metaObject()->property(binding->propertyIndex()).name() << ")";
-        if (binding->propertyIndex() == item->metaObject()->indexOfProperty("width")) {
+        qDebug() << "Have an Item (" << binding->propertyIndex << item->metaObject()->property(binding->propertyIndex).name() << ")";
+        if (binding->propertyIndex == item->metaObject()->indexOfProperty("width")) {
             if (!itemPriv->widthValid) {
-                dependencies.push_back({ object, object->metaObject()->indexOfProperty("implicitWidth") });
+                dependencies.push_back(createBindingNode(object, "implicitWidth"));
             }
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("height")) {
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("height")) {
             if (!itemPriv->heightValid) {
-                dependencies.push_back({ object, object->metaObject()->indexOfProperty("implicitHeight") });
+                dependencies.push_back(createBindingNode(object, "implicitHeight"));
             }
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("implicitWidth")) {
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("implicitWidth")) {
             if (item->inherits("QQuickBasePositioner")) {
                 for (QQuickItem *child : item->childItems()) {
-                    dependencies.push_back({ child, child->metaObject()->indexOfProperty("width") });
+                    dependencies.push_back(createBindingNode(child, "width"));
                 }
             }
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("implicitHeight")) {
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("implicitHeight")) {
             if (item->inherits("QQuickBasePositioner")) {
                 for (QQuickItem *child : item->childItems()) {
-                    dependencies.push_back({ child, child->metaObject()->indexOfProperty("height") });
+                    dependencies.push_back(createBindingNode(child, "height"));
                 }
             }
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("x")) {
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("y")) {
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("childrenRect")) {
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("x")) {
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("y")) {
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("childrenRect")) {
             for (auto &&child : item->childItems()) {
-                dependencies.push_back({ child, child->metaObject()->indexOfProperty("width") });
-                dependencies.push_back({ child, child->metaObject()->indexOfProperty("height") });
+                dependencies.push_back(createBindingNode(child, "width"));
+                dependencies.push_back(createBindingNode(child, "height"));
             }
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("top") && itemPriv->anchors()) {
-            dependencies.push_back({ itemPriv->anchors(), itemPriv->anchors()->metaObject()->indexOfProperty("top") });
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("bottom") && itemPriv->anchors()) {
-            dependencies.push_back({ itemPriv->anchors(), itemPriv->anchors()->metaObject()->indexOfProperty("bottom") });
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("left") && itemPriv->anchors()) {
-            dependencies.push_back({ itemPriv->anchors(), itemPriv->anchors()->metaObject()->indexOfProperty("left") });
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("right") && itemPriv->anchors()) {
-            dependencies.push_back({ itemPriv->anchors(), itemPriv->anchors()->metaObject()->indexOfProperty("right") });
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("horizontalCenter") && itemPriv->anchors()) {
-            dependencies.push_back({ itemPriv->anchors(), itemPriv->anchors()->metaObject()->indexOfProperty("horizontalCenter") });
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("verticalCenter") && itemPriv->anchors()) {
-            dependencies.push_back({ itemPriv->anchors(), itemPriv->anchors()->metaObject()->indexOfProperty("verticalCenter") });
-        } else if (binding->propertyIndex() == item->metaObject()->indexOfProperty("baseline") && itemPriv->anchors()) {
-            dependencies.push_back({ itemPriv->anchors(), itemPriv->anchors()->metaObject()->indexOfProperty("baseline") });
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("top") && itemPriv->anchors()) {
+            dependencies.push_back(createBindingNode(itemPriv->anchors(), "top"));
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("bottom") && itemPriv->anchors()) {
+            dependencies.push_back(createBindingNode(itemPriv->anchors(), "bottom"));
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("left") && itemPriv->anchors()) {
+            dependencies.push_back(createBindingNode(itemPriv->anchors(), "left"));
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("right") && itemPriv->anchors()) {
+            dependencies.push_back(createBindingNode(itemPriv->anchors(), "right"));
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("horizontalCenter") && itemPriv->anchors()) {
+            dependencies.push_back(createBindingNode(itemPriv->anchors(), "horizontalCenter"));
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("verticalCenter") && itemPriv->anchors()) {
+            dependencies.push_back(createBindingNode(itemPriv->anchors(), "verticalCenter"));
+        } else if (binding->propertyIndex == item->metaObject()->indexOfProperty("baseline") && itemPriv->anchors()) {
+            dependencies.push_back(createBindingNode(itemPriv->anchors(), "baseline"));
         }
     }
     if (QQuickAnchors *anchors = qobject_cast<QQuickAnchors*>(object)) {
-        QQuickAnchorLine anchorLine = object->metaObject()->property(binding->propertyIndex()).read(object).value<QQuickAnchorLine>();
+        QQuickAnchorLine anchorLine = object->metaObject()->property(binding->propertyIndex).read(object).value<QQuickAnchorLine>();
         auto dependencyPropertyName = anchorLine.anchorLine == QQuickAnchors::TopAnchor ? "top"
                                     : anchorLine.anchorLine == QQuickAnchors::BottomAnchor ? "bottom"
                                     : anchorLine.anchorLine == QQuickAnchors::LeftAnchor ? "left"
@@ -417,7 +314,7 @@ std::vector<AbstractBindingProvider::Dependency> QuickImplicitBindingDependencyP
                                     : anchorLine.anchorLine == QQuickAnchors::BaselineAnchor ? "baseline"
                                     : "";
         if (anchorLine.item) {
-            dependencies.push_back({ anchorLine.item, anchorLine.item->metaObject()->indexOfProperty(dependencyPropertyName) });
+            dependencies.push_back(createBindingNode(anchorLine.item, dependencyPropertyName));
         }
     }
     return dependencies;
