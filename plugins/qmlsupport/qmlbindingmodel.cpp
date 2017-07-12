@@ -36,6 +36,8 @@
 
 using namespace GammaRay;
 
+std::vector<std::unique_ptr<AbstractBindingProvider>> QmlBindingModel::s_providers;
+
 //connect to a functor
 template <typename Func>
 static inline typename std::enable_if<QtPrivate::FunctionPointer<Func>::ArgumentCount == -1, QMetaObject::Connection>::type
@@ -48,12 +50,15 @@ static inline typename std::enable_if<QtPrivate::FunctionPointer<Func>::Argument
                         new QtPrivate::QFunctorSlotObjectWithNoArgs<Func, SlotReturnType>(std::move(slot)), type);
 }
 
+void GammaRay::QmlBindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider)
+{
+    s_providers.push_back(std::move(provider));
+}
+
 QmlBindingModel::QmlBindingModel(QObject* parent)
     : QAbstractItemModel(parent)
     , m_obj(Q_NULLPTR)
 {
-    m_providers.push_back(std::unique_ptr<AbstractBindingProvider>(new QmlBindingProvider));
-    m_providers.push_back(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
 }
 
 QmlBindingModel::~QmlBindingModel()
@@ -67,7 +72,7 @@ bool QmlBindingModel::setObject(QObject* obj)
 
     bool typeMatches = false;
     m_bindings.clear();
-    for (auto &&provider : m_providers) {
+    for (auto &&provider : s_providers) {
         if (!provider->canProvideBindingsFor(obj))
             continue;
         else
@@ -99,11 +104,10 @@ bool QmlBindingModel::setObject(QObject* obj)
 
 void QmlBindingModel::findDependenciesFor(BindingNode* node)
 {
-    for (auto &&provider : m_providers) {
+    for (auto &&provider : s_providers) {
         for (auto &&dependency : provider->findDependenciesFor(node)) {
-            auto childNode = new BindingNode(dependency.object, dependency.propertyIndex, node);
-            node->addDependency(std::unique_ptr<BindingNode>(childNode));
-            findDependenciesFor(childNode);
+            findDependenciesFor(dependency.get());
+            node->dependencies.push_back(std::move(dependency));
         }
     }
 }
@@ -119,11 +123,11 @@ void QmlBindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index
 //     }
 
     // Refresh dependencies
-    auto &oldDependencies = bindingNode->dependencies();
-    std::vector<AbstractBindingProvider::Dependency> newDependencies;
-    for (auto &&provider : m_providers) {
+    auto &oldDependencies = bindingNode->dependencies;
+    std::vector<std::unique_ptr<BindingNode>> newDependencies;
+    for (auto &&provider : s_providers) {
         auto deps = provider->findDependenciesFor(bindingNode);
-        newDependencies.insert(newDependencies.end(), deps.cbegin(), deps.cend());
+        newDependencies.insert(newDependencies.end(), std::make_move_iterator(deps.begin()), std::make_move_iterator(deps.end()));
     }
     oldDependencies.reserve(newDependencies.size());
     auto i = oldDependencies.begin();
@@ -131,17 +135,17 @@ void QmlBindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index
 
     while (i != oldDependencies.end() && j != newDependencies.end()) {
         const auto idx = std::distance(oldDependencies.begin(), i);
-        if ((*i)->object() == j->object && (*i)->propertyIndex() == j->propertyIndex) { // already known node, no change
+        if ((*i)->object == (*j)->object && (*i)->propertyIndex == (*j)->propertyIndex) { // already known node, no change
             refresh(i->get(), createIndex(idx, 1, i->get()));
             ++i;
             ++j;
-        } else if ((*i)->object() < j->object || (*i)->propertyIndex() < j->propertyIndex) { // handle deleted node
+        } else if ((*i)->object < (*j)->object || (*i)->propertyIndex < (*j)->propertyIndex) { // handle deleted node
             beginRemoveRows(index, idx, idx);
             i = oldDependencies.erase(i);
             endRemoveRows();
         } else { // handle added node
             beginInsertRows(index, idx, idx);
-            i = oldDependencies.insert(i, std::unique_ptr<BindingNode>(new BindingNode(j->object, j->propertyIndex, bindingNode)));
+            i = oldDependencies.insert(i, std::unique_ptr<BindingNode>(new BindingNode((*j)->object, (*j)->propertyIndex, bindingNode)));
             endInsertRows();
             ++i;
             ++j;
@@ -154,7 +158,7 @@ void QmlBindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index
 
         beginInsertRows(index, idx, idx + count - 1);
         while (j != newDependencies.end()) {
-            oldDependencies.push_back(std::unique_ptr<BindingNode>(new BindingNode(j->object, j->propertyIndex, bindingNode)));
+            oldDependencies.push_back(std::unique_ptr<BindingNode>(new BindingNode((*j)->object, (*j)->propertyIndex, bindingNode)));
             ++j;
         }
         endInsertRows();
@@ -180,7 +184,7 @@ int QmlBindingModel::rowCount(const QModelIndex& parent) const
         return m_bindings.size();
     if (parent.column() != 0)
         return 0;
-    return static_cast<BindingNode *>(parent.internalPointer())->dependencies().size();
+    return static_cast<BindingNode *>(parent.internalPointer())->dependencies.size();
 }
 
 QVariant QmlBindingModel::data(const QModelIndex& index, int role) const
@@ -195,18 +199,18 @@ QVariant QmlBindingModel::data(const QModelIndex& index, int role) const
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
             case 0: {
-                return binding->name();
+                return binding->canonicalName;
             }
-            case 1: return binding->value();
-            case 2: return binding->expression();
-            case 3: return binding->sourceLocation().displayString();
+            case 1: return binding->value;
+            case 2: return binding->expression;
+            case 3: return binding->sourceLocation.displayString();
             case 4: {
                 uint depth = binding->depth();
                 return depth == std::numeric_limits<uint>::max() ? QStringLiteral("∞") : QString::number(depth);
             }
         }
     } else if (role == ObjectModel::DeclarationLocationRole) {
-        return QVariant::fromValue(binding->sourceLocation());
+        return QVariant::fromValue(binding->sourceLocation);
     }
 
     return QVariant();
@@ -216,7 +220,7 @@ Qt::ItemFlags QmlBindingModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
     BindingNode *binding = static_cast<BindingNode*>(index.internalPointer());
-    if (binding && !binding->isActive()) {
+    if (binding && !binding->isActive) {
         flags &= ~Qt::ItemIsEnabled;
     }
     return flags;
@@ -250,7 +254,7 @@ QModelIndex GammaRay::QmlBindingModel::index(int row, int column, const QModelIn
     }
     QModelIndex index;
     if (parent.isValid()) {
-        index = createIndex(row, column, static_cast<BindingNode *>(parent.internalPointer())->dependencies()[row].get());
+        index = createIndex(row, column, static_cast<BindingNode *>(parent.internalPointer())->dependencies[row].get());
     } else {
         index = createIndex(row, column, m_bindings[row].get());
     }
@@ -260,7 +264,7 @@ QModelIndex GammaRay::QmlBindingModel::index(int row, int column, const QModelIn
 QModelIndex QmlBindingModel::findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const
 {
     for (size_t i = 0; i < container.size(); i++) {
-        if (bindingNode->id() == container[i]->id()) {
+        if (bindingNode->id == container[i]->id) {
             return createIndex(i, 0, container[i].get());
         }
     }
@@ -272,14 +276,14 @@ QModelIndex GammaRay::QmlBindingModel::parent(const QModelIndex& child) const
     if (!child.isValid())
         return QModelIndex();
 
-    BindingNode *parent = static_cast<BindingNode *>(child.internalPointer())->parent();
+    BindingNode *parent = static_cast<BindingNode *>(child.internalPointer())->parent;
     if (!parent)
         return QModelIndex();
 
-    BindingNode *grandparent = parent->parent();
+    BindingNode *grandparent = parent->parent;
 
     if (!grandparent)
         return findEquivalent(m_bindings, parent);
 
-    return findEquivalent(grandparent->dependencies(), parent);
+    return findEquivalent(grandparent->dependencies, parent);
 }

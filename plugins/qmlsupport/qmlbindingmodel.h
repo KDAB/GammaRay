@@ -39,7 +39,7 @@ class QQmlBinding;
 
 namespace GammaRay {
 
-class BindingNode;
+struct BindingNode;
 class AbstractBindingProvider;
 
 class QmlBindingModel : public QAbstractItemModel
@@ -61,6 +61,8 @@ public:
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
 
+    static void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
+
 private:
     QModelIndex findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const;
     void refresh(BindingNode *oldBindingNode, const QModelIndex &index);
@@ -69,7 +71,7 @@ private:
 
     QPointer<QObject> m_obj;
     std::vector<std::unique_ptr<BindingNode>> m_bindings;
-    std::vector<std::unique_ptr<AbstractBindingProvider>> m_providers;
+    static std::vector<std::unique_ptr<AbstractBindingProvider>> s_providers;
 };
 
 }
