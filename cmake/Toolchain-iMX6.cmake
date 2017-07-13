@@ -33,6 +33,7 @@
 set(CMAKE_SYSTEM_NAME "Linux")
 set(CMAKE_SYSTEM_PROCESSOR "armv7-a")
 set(CMAKE_C_COMPILER "arm-linux-gcc")
+set(CMAKE_CXX_COMPILER "arm-linux-g++")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --sysroot=$ENV{SYSROOT} -march=armv7-a -mfpu=neon")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --sysroot=$ENV{SYSROOT} -march=armv7-a -mfpu=neon")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --sysroot=$ENV{SYSROOT}")
