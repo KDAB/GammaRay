@@ -30,7 +30,7 @@
 
 #include <core/propertydata.h>
 
-#if QT_VERSION > QT_VERSION_CHECK(5, 8, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #include <private/qquickopenglshadereffectnode_p.h>
 
 Q_DECLARE_METATYPE(QQuickOpenGLShaderEffectMaterial::UniformData)
