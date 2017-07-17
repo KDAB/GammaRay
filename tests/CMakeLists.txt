@@ -189,8 +189,7 @@ endif()
 if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 add_executable(multithreadingtest
   multithreadingtest.cpp
-  ../probe/probecreator.cpp
-  ../probe/hooks.cpp
+  $<TARGET_OBJECTS:gammaray_probe_obj>
 )
 target_link_libraries(multithreadingtest gammaray_core ${QT_QTTEST_LIBRARIES})
 add_test(NAME multithreadingtest COMMAND multithreadingtest)
@@ -200,8 +199,7 @@ add_test(NAME multithreadingtest COMMAND multithreadingtest)
 if(EXISTS "${QT_INSTALL_TRANSLATIONS}/qtbase_de.qm")
   add_executable(translatortest
     translatortest.cpp
-    ../probe/probecreator.cpp
-    ../probe/hooks.cpp
+    $<TARGET_OBJECTS:gammaray_probe_obj>
     $<TARGET_OBJECTS:modeltestobj>
   )
   target_link_libraries(translatortest gammaray_core ${QT_QTTEST_LIBRARIES})
@@ -386,8 +384,7 @@ if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
   add_executable(timertoptest
     timertoptest.cpp
     $<TARGET_OBJECTS:modeltestobj>
-    ${CMAKE_SOURCE_DIR}/probe/probecreator.cpp
-    ${CMAKE_SOURCE_DIR}/probe/hooks.cpp
+    $<TARGET_OBJECTS:gammaray_probe_obj>
   )
   target_link_libraries(timertoptest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
   add_test(NAME timertoptest COMMAND timertoptest)
