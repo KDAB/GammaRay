@@ -22,9 +22,6 @@ endif()
 
 # probe part
 if(KDE4_FOUND OR KF5CoreAddons_FOUND)
-  include_directories(${KDE4_INCLUDES})
-  add_definitions(${KDE4_DEFINITIONS})
-
   set(gammaray_kjob_plugin_srcs
     kjobtracker.cpp
     kjobmodel.cpp
@@ -37,6 +34,8 @@ if(KDE4_FOUND OR KF5CoreAddons_FOUND)
   )
 
   if(KDE4_FOUND)
+    target_compile_definitions(gammaray_kjobtracker_plugin PRIVATE ${KDE4_DEFINITIONS})
+    target_include_directories(gammaray_kjobtracker_plugin PRIVATE ${KDE4_INCLUDES})
     target_link_libraries(gammaray_kjobtracker_plugin
       ${KDE4_KDECORE_LIBS}
       gammaray_core

@@ -13,8 +13,6 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
         materialextension/materialextensioninterface.cpp
       )
 
-  include_directories(SYSTEM ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
-
   # Find if glReadPixels can be used with this configuration
   # If yes, find based on which platform GL/GLESv2
   if (TARGET Qt5::Gui_GLESv2)
@@ -62,6 +60,7 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
     SOURCES ${gammaray_quickinspector_srcs}
   )
 
+  target_include_directories(gammaray_quickinspector SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(gammaray_quickinspector
     gammaray_quickinspector_shared
     gammaray_core Qt5::Quick

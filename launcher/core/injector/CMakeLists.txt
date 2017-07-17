@@ -3,6 +3,7 @@ if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 
   add_library(gammaray_injector_style MODULE ${gammaray_injector_style_srcs})
 
+  target_include_directories(gammaray_injector_style SYSTEM PRIVATE ${Qt5Gui_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(gammaray_injector_style
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}

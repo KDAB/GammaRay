@@ -31,9 +31,6 @@
 #include <QQuickItem>
 #include <QtNumeric>
 
-#include <private/qquickanchors_p.h>
-#include <private/qquickitem_p.h>
-
 namespace GammaRay {
 
 bool GammaRay::QuickItemGeometry::isValid() const

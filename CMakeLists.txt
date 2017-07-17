@@ -423,11 +423,6 @@ if(Qt5Core_FOUND)
   set(HAVE_QT_WEBKIT ${Qt5WebKit_FOUND})
   set(HAVE_QT_WEBKIT1 ${Qt5WebKitWidgets_FOUND})
 
-  # TODO: Remove me once fixed in ECM module
-  # more hacks: find qpa/... includes
-  # also see https://codereview.qt-project.org/#change,30483
-  include_directories(SYSTEM ${Qt5Gui_PRIVATE_INCLUDE_DIRS})
-
   add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x040800)
   #add_definitions(-DQT_DEPRECATED_WARNINGS)
 

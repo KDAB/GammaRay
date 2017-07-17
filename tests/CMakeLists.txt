@@ -320,6 +320,7 @@ if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
     $<TARGET_OBJECTS:gammaray_probe_obj>
     $<TARGET_OBJECTS:modeltestobj>
   )
+  target_include_directories(methodmodeltest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(methodmodeltest gammaray_core ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES})
   add_test(NAME methodmodeltest COMMAND methodmodeltest)
 endif()
@@ -329,6 +330,7 @@ endif()
 add_executable(qmetaobjectvalidatortest
   qmetaobjectvalidatortest.cpp
 )
+target_include_directories(qmetaobjectvalidatortest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
 target_link_libraries(qmetaobjectvalidatortest ${QT_QTTEST_LIBRARIES} ${QT_QTGUI_LIBRARIES} gammaray_core)
 add_test(NAME qmetavobjectvalidatortest COMMAND qmetaobjectvalidatortest)
 
@@ -400,7 +402,7 @@ if(Qt5Quick_FOUND)
     ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qjsvaluepropertyadaptor.cpp
     ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlcontextpropertyadaptor.cpp
   )
-  include_directories(SYSTEM ${Qt5Qml_PRIVATE_INCLUDE_DIRS})
+  target_include_directories(qmlsupporttest SYSTEM PRIVATE ${Qt5Qml_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(qmlsupporttest gammaray_core Qt5::Quick Qt5::Test)
   add_test(NAME qmlsupporttest COMMAND qmlsupporttest)
 endif()

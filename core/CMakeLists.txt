@@ -115,7 +115,11 @@ generate_export_header(gammaray_core)
 
 gammaray_target_relocatable_interfaces(gammaray_core_ipaths)
 target_include_directories(gammaray_core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_core_ipaths}>)
-target_include_directories(gammaray_core SYSTEM PRIVATE ${CMAKE_SOURCE_DIR}/3rdparty/backward-cpp)
+target_include_directories(gammaray_core SYSTEM PRIVATE
+    ${CMAKE_SOURCE_DIR}/3rdparty/backward-cpp
+    ${Qt5Core_PRIVATE_INCLUDE_DIRS}
+    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+)
 target_link_libraries(gammaray_core
   LINK_PUBLIC gammaray_common
   LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels ${DL_LIBRARY}

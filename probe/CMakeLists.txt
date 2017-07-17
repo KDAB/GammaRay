@@ -35,6 +35,7 @@ target_include_directories(gammaray_probe_obj PUBLIC
     $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
 )
+target_include_directories(gammaray_probe_obj SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
 
 # probe lib
 # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules

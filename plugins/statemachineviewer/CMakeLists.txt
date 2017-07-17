@@ -32,7 +32,7 @@ target_link_libraries(gammaray_statemachineviewer_plugin
 
 if(Qt5Scxml_FOUND)
   target_link_libraries(gammaray_statemachineviewer_plugin Qt5::Scxml)
-  include_directories(SYSTEM ${Qt5Scxml_PRIVATE_INCLUDE_DIRS})
+  target_include_directories(gammaray_statemachineviewer_plugin SYSTEM PRIVATE ${Qt5Scxml_PRIVATE_INCLUDE_DIRS})
 endif()
 
 # UI part - dependencies
