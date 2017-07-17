@@ -56,10 +56,6 @@ if(GAMMARAY_BUILD_UI)
     kjobtrackerwidget.cpp
   )
 
-  qt4_wrap_ui(gammaray_kjob_ui_plugin_srcs
-    kjobtrackerwidget.ui
-  )
-
   gammaray_add_plugin(gammaray_kjobtracker_ui_plugin
     DESKTOP gammaray_kjobtracker_ui.desktop.in
     JSON gammaray_kjobtracker.json

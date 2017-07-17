@@ -75,37 +75,9 @@ set(gammaray_ui_srcs
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/resourcebrowser/resourcebrowserclient.cpp
   tools/standardpaths/standardpathswidget.cpp
+
+  resources/ui.qrc
 )
-
-qt4_wrap_ui(gammaray_ui_srcs
-  methodinvocationdialog.ui
-
-  paintanalyzerwidget.ui
-  paintbufferviewer.ui
-
-  propertyeditor/propertydoublepaireditor.ui
-  propertyeditor/propertyextendededitor.ui
-  propertyeditor/propertyintpaireditor.ui
-  propertyeditor/propertymatrixdialog.ui
-  propertyeditor/propertytexteditor.ui
-  propertyeditor/palettedialog.ui
-  propertyeditor/propertyrecteditor.ui
-
-  tools/messagehandler/messagehandlerwidget.ui
-  tools/metatypebrowser/metatypebrowserwidget.ui
-  tools/objectinspector/objectinspectorwidget.ui
-  tools/objectinspector/propertiestab.ui
-  tools/objectinspector/methodstab.ui
-  tools/objectinspector/connectionstab.ui
-  tools/objectinspector/enumstab.ui
-  tools/objectinspector/classinfotab.ui
-  tools/objectinspector/methodstab.ui
-  tools/objectinspector/applicationattributetab.ui
-  tools/resourcebrowser/resourcebrowserwidget.ui
-  tools/standardpaths/standardpathswidget.ui
-)
-
-qt4_add_resources(gammaray_ui_srcs resources/ui.qrc)
 
 add_library(gammaray_ui SHARED ${gammaray_ui_srcs})
 generate_export_header(gammaray_ui)
@@ -142,11 +114,6 @@ set(gammaray_ui_internal_srcs
   mainwindow.cpp
   clienttoolfilterproxymodel.cpp
   aboutdialog.cpp
-)
-
-qt4_wrap_ui(gammaray_ui_internal_srcs
-  mainwindow.ui
-  aboutdialog.ui
 )
 
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})

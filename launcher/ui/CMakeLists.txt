@@ -8,22 +8,13 @@ set(gammaray_launcher_ui_srcs
   processmodel.cpp
   processfiltermodel.cpp
   probeabimodel.cpp
+  resources/ui.qrc
 )
 if(NOT WIN32)
   list(APPEND gammaray_launcher_ui_srcs processlist_unix.cpp)
 else()
   list(APPEND gammaray_launcher_ui_srcs processlist_win.cpp)
 endif()
-
-qt4_add_resources(gammaray_launcher_ui_srcs resources/ui.qrc)
-
-qt4_wrap_ui(gammaray_launcher_ui_srcs
-  attachdialog.ui
-  launcherwindow.ui
-  launchpage.ui
-  selftestpage.ui
-  connectpage.ui
-)
 
 add_library(gammaray_launcher_ui SHARED ${gammaray_launcher_ui_srcs})
 generate_export_header(gammaray_launcher_ui)

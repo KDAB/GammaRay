@@ -61,6 +61,11 @@ macro(gammaray_add_plugin _target_name)
       qt5_wrap_cpp(_gammaray_add_plugin_SOURCES ${mainHeaderFile} DEPENDS ${_gammaray_add_plugin_JSON} TARGET ${_target_name})
       set_source_files_properties("${mainHeaderFile}" PROPERTIES SKIP_AUTOMOC TRUE)
       set_source_files_properties("${mainSourceFile}" PROPERTIES SKIP_AUTOMOC TRUE)
+      # workaround AUTOUIC failing on files with SKIP_AUTOMOC enabled
+      string(REPLACE ".cpp" ".ui" mainUiFile ${mainSourceFile})
+      if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${mainUiFile}")
+          qt5_wrap_ui(_gammaray_add_plugin_SOURCES ${mainUiFile})
+      endif()
   endif()
 
   add_library(${_target_name} ${GAMMARAY_PLUGIN_TYPE} ${_gammaray_add_plugin_SOURCES})

@@ -89,14 +89,6 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
       textureextension/textureviewwidget.cpp
     )
 
-    qt4_wrap_ui(gammaray_quickinspector_ui_srcs
-      quickinspectorwidget.ui
-      gridsettingswidget.ui
-      materialextension/materialtab.ui
-      geometryextension/sggeometrytab.ui
-      textureextension/texturetab.ui
-    )
-
     gammaray_add_plugin(gammaray_quickinspector_ui
       JSON gammaray_quickinspector.json
       SOURCES ${gammaray_quickinspector_ui_srcs}

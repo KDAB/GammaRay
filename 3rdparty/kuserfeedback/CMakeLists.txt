@@ -21,12 +21,6 @@ set(gammaray_userfeedback_srcs
     widgets/notificationpopup.cpp
 )
 
-qt4_wrap_ui(gammaray_userfeedback_srcs
-    widgets/feedbackconfigdialog.ui
-    widgets/feedbackconfigwidget.ui
-    widgets/notificationpopup.ui
-)
-
 add_library(gammaray_kuserfeedback SHARED ${gammaray_userfeedback_srcs})
 # Disable warnings for generated stuff
 if(MSVC)

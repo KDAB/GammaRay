@@ -413,13 +413,13 @@ endif()
 if(Qt5Quick_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
 set(quickinspectortest_srcs
   quickinspectortest.cpp
+  quickinspectortest.qrc
   ../plugins/quickinspector/quickinspectorinterface.cpp
   ../plugins/quickinspector/quickitemgeometry.cpp
   ../plugins/quickinspector/quickdecorationsdrawer.cpp
   $<TARGET_OBJECTS:modeltestobj>
   $<TARGET_OBJECTS:gammaray_probe_obj>
 )
-qt4_add_resources(quickinspectortest_srcs quickinspectortest.qrc)
 add_executable(quickinspectortest ${quickinspectortest_srcs})
 target_include_directories(quickinspectortest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
 target_link_libraries(quickinspectortest gammaray_core Qt5::Test Qt5::Quick)
@@ -427,19 +427,19 @@ add_test(NAME quickinspectortest COMMAND quickinspectortest)
 
 set(quicktexturetest_srcs
     quicktexturetest.cpp
+    quickinspectortest.qrc
     $<TARGET_OBJECTS:gammaray_probe_obj>
 )
-qt4_add_resources(quicktexturetest_srcs quickinspectortest.qrc)
 add_executable(quicktexturetest ${quicktexturetest_srcs})
 target_link_libraries(quicktexturetest gammaray_core Qt5::Test Qt5::Quick)
 add_test(NAME quicktexturetest COMMAND quicktexturetest)
 
 set(quickmaterialtest_srcs
     quickmaterialtest.cpp
+    quickinspectortest.qrc
     $<TARGET_OBJECTS:gammaray_probe_obj>
     $<TARGET_OBJECTS:modeltestobj>
 )
-qt4_add_resources(quickmaterialtest_srcs quickinspectortest.qrc)
 add_executable(quickmaterialtest ${quickmaterialtest_srcs})
 target_include_directories(quickmaterialtest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
 target_link_libraries(quickmaterialtest gammaray_core Qt5::Test Qt5::Quick)

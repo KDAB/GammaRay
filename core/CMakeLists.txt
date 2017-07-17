@@ -79,6 +79,8 @@ set(gammaray_srcs
   remote/tcpserverdevice.cpp
   remote/localserverdevice.cpp
   remote/serverproxymodel.cpp
+
+  ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc
 )
 
 if(Qt5Core_FOUND)
@@ -104,8 +106,6 @@ else()
     tools/messagehandler/backtrace_win.cpp
     ${CMAKE_SOURCE_DIR}/3rdparty/StackWalker/StackWalker.cpp)
 endif()
-
-qt4_add_resources(gammaray_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
 # core lib
 add_library(gammaray_core ${GAMMARAY_LIBRARY_TYPE}

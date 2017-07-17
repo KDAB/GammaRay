@@ -1,5 +1,7 @@
-set(gammaray_launcher_ui_srcs main.cpp)
-qt4_add_resources(gammaray_launcher_ui_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
+set(gammaray_launcher_ui_srcs
+    main.cpp
+    ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc
+)
 
 gammaray_add_win_icon(gammaray_launcher_ui_srcs)
 

@@ -37,10 +37,6 @@ if(GAMMARAY_BUILD_UI)
     signalmonitorclient.cpp
   )
 
-  qt4_wrap_ui(gammaray_signalmonitor_ui_srcs
-    signalmonitorwidget.ui
-  )
-
   gammaray_add_plugin(gammaray_signalmonitor_ui
     DESKTOP gammaray_signalmonitor_ui.desktop.in
     JSON gammaray_signalmonitor.json

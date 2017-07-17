@@ -23,10 +23,6 @@ if(GAMMARAY_BUILD_UI)
         textdocumentcontentview.cpp
     )
 
-    qt4_wrap_ui(gammaray_textdocumentinspector_ui_srcs
-        textdocumentinspectorwidget.ui
-    )
-
     gammaray_add_plugin(gammaray_textdocumentinspector_ui
         JSON gammaray_textdocumentinspector.json
         DESKTOP gammaray_textdocumentinspector_ui.desktop

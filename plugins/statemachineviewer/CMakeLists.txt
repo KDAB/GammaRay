@@ -52,8 +52,6 @@ set(gammaray_statemachineviewer_ui_plugin_srcs
   statemodeldelegate.cpp
 )
 
-qt4_wrap_ui(gammaray_statemachineviewer_ui_plugin_srcs statemachineviewerwidget.ui)
-
 gammaray_add_plugin(gammaray_statemachineviewer_ui_plugin
   JSON gammaray_statemachineviewer.json
   SOURCES ${gammaray_statemachineviewer_ui_plugin_srcs} ${gammaray_statemachineviewer_shared_srcs}

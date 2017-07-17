@@ -37,11 +37,6 @@ if(GAMMARAY_BUILD_UI)
     styleinspectorclient.cpp
   )
 
-  qt4_wrap_ui(gammaray_styleinspector_ui_plugin_srcs
-    styleinspectorwidget.ui
-    styleelementstatetablepage.ui
-  )
-
   gammaray_add_plugin(gammaray_styleinspector_ui_plugin
     DESKTOP gammaray_styleinspector_ui.desktop.in
     JSON gammaray_styleinspector.json

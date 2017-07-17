@@ -53,13 +53,11 @@ project(GammaRay CXX C)
 if(MSVC)
   cmake_minimum_required(VERSION 3.1.0) # b/c of TARGET_PDB_FILE_DIR generator expression
 else()
-  cmake_minimum_required(VERSION 2.8.12) # b/c of ECMGeneratePriFile.cmake
+  cmake_minimum_required(VERSION 3.0) # b/c of AUTOUIC/AUTORCC
 endif()
 
 cmake_policy(SET CMP0020 NEW)
-if(POLICY CMP0043)
-  cmake_policy(SET CMP0043 NEW)
-endif()
+cmake_policy(SET CMP0043 NEW)
 if(POLICY CMP0053)
   cmake_policy(SET CMP0053 NEW)
 endif()
@@ -69,6 +67,8 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 if(NOT DEFINED CMAKE_INSTALL_RPATH_USE_LINK_PATH)
   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -329,6 +329,7 @@ if(Qt5Core_FOUND)
     3DQuick
     Bluetooth
     Concurrent
+    Designer
     Positioning
     PrintSupport
     Qml
@@ -367,10 +368,6 @@ if(Qt5Core_FOUND)
     find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
   endif()
 
-  # starting with 5.6, the Designer module needs CMake 3.0 or higher
-  if(Qt5Core_VERSION VERSION_LESS 5.6 OR NOT CMAKE_VERSION VERSION_LESS 3.0)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Designer)
-  endif()
   if(GAMMARAY_BUILD_UI) # widgets are required for the UI
     find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
     # 3D Widget inspector requires Qt3D 5.7

@@ -28,8 +28,6 @@ if(HAVE_QT_WEBKIT)
         webinspectorwidget.cpp
       )
 
-      qt4_wrap_ui(gammaray_webinspector_ui_plugin_srcs webinspectorwidget.ui)
-
       gammaray_add_plugin(gammaray_webinspector_ui_plugin
         DESKTOP gammaray_webinspector_ui.desktop.in
         JSON gammaray_webinspector.json

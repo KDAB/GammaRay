@@ -32,10 +32,6 @@ if(GAMMARAY_BUILD_UI)
     modelcontentdelegate.cpp
   )
 
-  qt4_wrap_ui(gammaray_models_ui_srcs
-    modelinspectorwidget.ui
-  )
-
   gammaray_add_plugin(gammaray_modelinspector_ui
     DESKTOP gammaray_modelinspector_ui.desktop
     JSON gammaray_modelinspector.json

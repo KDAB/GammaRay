@@ -29,11 +29,6 @@ if(GAMMARAY_BUILD_UI)
     sceneinspectorclient.cpp
   )
 
-  qt4_wrap_ui(gammaray_sceneinspector_ui_plugin_srcs
-    graphicssceneview.ui
-    sceneinspectorwidget.ui
-  )
-
   gammaray_add_plugin(gammaray_sceneinspector_ui_plugin
     DESKTOP gammaray_sceneinspector_ui.desktop.in
     JSON gammaray_sceneinspector.json

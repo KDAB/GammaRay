@@ -21,8 +21,6 @@ if(GAMMARAY_BUILD_UI)
     scriptenginedebuggerwidget.cpp
   )
 
-  qt4_wrap_ui(gammaray_scriptenginedebugger_ui_plugin_srcs scriptenginedebuggerwidget.ui)
-
   gammaray_add_plugin(gammaray_scriptenginedebugger_ui_plugin
     DESKTOP gammaray_scriptenginedebugger_ui.desktop.in
     JSON gammaray_scriptenginedebugger.json

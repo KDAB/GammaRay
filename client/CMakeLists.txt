@@ -14,9 +14,9 @@ set(gammaray_clientlib_srcs
   remoteviewclient.cpp
   enumrepositoryclient.cpp
   classesiconsrepositoryclient.cpp
+  ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc
 )
 
-qt4_add_resources(gammaray_clientlib_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 add_library(gammaray_client SHARED ${gammaray_clientlib_srcs})
 generate_export_header(gammaray_client)
 set_target_properties(gammaray_client PROPERTIES

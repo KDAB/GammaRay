@@ -36,10 +36,6 @@ if(GAMMARAY_BUILD_UI)
     timertopwidget.cpp
   )
 
-  qt4_wrap_ui(gammaray_timertop_plugin_ui_srcs
-    timertopwidget.ui
-  )
-
   gammaray_add_plugin(gammaray_timertop_ui_plugin
     DESKTOP gammaray_timertop_ui.desktop.in
     JSON gammaray_timertop.json

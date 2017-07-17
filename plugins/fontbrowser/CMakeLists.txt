@@ -29,10 +29,6 @@ if(GAMMARAY_BUILD_UI)
     fontbrowserclient.cpp
   )
 
-  qt4_wrap_ui(gammaray_fontbrowser_plugin_ui_srcs
-    fontbrowserwidget.ui
-  )
-
   gammaray_add_plugin(gammaray_fontbrowser_ui_plugin
     DESKTOP gammaray_fontbrowser_ui.desktop.in
     JSON gammaray_fontbrowser.json

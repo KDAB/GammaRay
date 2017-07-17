@@ -73,30 +73,6 @@ foreach(_module ${_qt_modules})
     set(QT_QT${_module_upper}_FOUND ${Qt5${_module}_FOUND})
 endforeach()
 
-macro(qt4_wrap_ui)
-  qt5_wrap_ui(${ARGN})
-endmacro()
-
 macro(qt4_wrap_cpp)
   qt5_wrap_cpp(${ARGN})
-endmacro()
-
-macro(qt4_add_dbus_adaptor)
-  qt5_add_dbus_adaptor(${ARGN})
-endmacro()
-
-macro(qt4_add_dbus_interfaces)
-  qt5_add_dbus_interfaces(${ARGN})
-endmacro()
-
-macro(qt4_add_dbus_interface)
-  qt5_add_dbus_interface(${ARGN})
-endmacro()
-
-macro(qt4_generate_dbus_interface)
-  qt5_generate_dbus_interface(${ARGN})
-endmacro()
-
-macro(qt4_add_resources)
-  qt5_add_resources(${ARGN})
 endmacro()

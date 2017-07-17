@@ -67,7 +67,7 @@ if(GAMMARAY_BUILD_UI)
 
     waextension/widgetattributetab.cpp
 
-    widgetinspectorwidget.cpp
+    assets.qrc
   )
 
   if (GAMMARAY_WITH_WIDGET3D)
@@ -81,15 +81,6 @@ if(GAMMARAY_BUILD_UI)
       widget3dimagetextureimage.cpp
     )
   endif()
-
-  qt4_wrap_ui(gammaray_widgetinspector_ui_plugin_srcs
-    widgetinspectorwidget.ui
-    waextension/widgetattributetab.ui
-  )
-
-  qt4_add_resources(gammaray_widgetinspector_ui_plugin_srcs
-    assets.qrc
-  )
 
   gammaray_add_plugin(gammaray_widgetinspector_ui_plugin
     DESKTOP gammaray_widgetinspector_ui.desktop.in

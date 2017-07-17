@@ -24,10 +24,6 @@ if(GAMMARAY_BUILD_UI)
     clientactionmodel.cpp
   )
 
-  qt4_wrap_ui(gammaray_actioninspector_ui_plugin_srcs
-    actioninspectorwidget.ui
-  )
-
   gammaray_add_plugin(gammaray_actioninspector_ui_plugin
     DESKTOP gammaray_actioninspector_ui.desktop.in
     JSON gammaray_actioninspector.json

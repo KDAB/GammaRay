@@ -22,10 +22,6 @@ if(GAMMARAY_BUILD_UI)
     codecbrowserwidget.cpp
   )
 
-  qt4_wrap_ui(gammaray_codecbrowser_plugin_ui_srcs
-    codecbrowserwidget.ui
-  )
-
   gammaray_add_plugin(gammaray_codecbrowser_ui_plugin
     DESKTOP gammaray_codecbrowser_ui.desktop.in
     JSON gammaray_codecbrowser.json

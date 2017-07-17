@@ -21,10 +21,6 @@ if(GAMMARAY_BUILD_UI)
     qmlcontexttab.cpp
     qmltypetab.cpp
   )
-  qt4_wrap_ui(gammaray_qmlsupport_ui_srcs
-    qmlcontexttab.ui
-    qmltypetab.ui
-  )
   gammaray_add_plugin(gammaray_qmlsupport_ui JSON gammaray_qmlsupport.json SOURCES ${gammaray_qmlsupport_ui_srcs})
   target_link_libraries(gammaray_qmlsupport_ui gammaray_ui)
 endif()

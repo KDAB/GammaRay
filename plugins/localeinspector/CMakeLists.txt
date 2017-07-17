@@ -30,12 +30,6 @@ if(GAMMARAY_BUILD_UI)
         timezoneoffsetdataclientmodel.cpp
     )
 
-    qt4_wrap_ui(gammaray_localeinspector_plugin_ui_srcs
-        localeinspectorwidget.ui
-        localetab.ui
-        timezonetab.ui
-    )
-
     gammaray_add_plugin(gammaray_localeinspector_ui_plugin
         DESKTOP gammaray_localeinspector_ui.desktop.in
         JSON gammaray_localeinspector.json
