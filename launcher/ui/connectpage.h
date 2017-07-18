@@ -88,7 +88,6 @@ private:
     QScopedPointer<Ui::ConnectPage> ui;
     QUrl m_currentUrl;
     bool m_valid;
-    QToolButton *m_portInfoLabel;
     QAction *m_implicitPortWarningSign;
     QAction *m_fileIsNotASocketWarning;
 };

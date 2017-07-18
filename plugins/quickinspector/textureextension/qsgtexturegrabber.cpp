@@ -56,10 +56,11 @@
 
 using namespace GammaRay;
 
-QSGTextureGrabber* QSGTextureGrabber::s_instance = nullptr;
+QSGTextureGrabber *QSGTextureGrabber::s_instance = nullptr;
 
-QSGTextureGrabber::QSGTextureGrabber(QObject* parent)
+QSGTextureGrabber::QSGTextureGrabber(QObject *parent)
     : QObject(parent)
+    , m_grabData(nullptr)
     , m_textureId(-1)
 {
     Q_ASSERT(!s_instance);
@@ -71,18 +72,18 @@ QSGTextureGrabber::~QSGTextureGrabber()
     s_instance = nullptr;
 }
 
-QSGTextureGrabber* QSGTextureGrabber::instance()
+QSGTextureGrabber *QSGTextureGrabber::instance()
 {
     return s_instance;
 }
 
-void QSGTextureGrabber::objectCreated(QObject* obj)
+void QSGTextureGrabber::objectCreated(QObject *obj)
 {
     if (auto window = qobject_cast<QQuickWindow*>(obj))
         addQuickWindow(window);
 }
 
-void QSGTextureGrabber::addQuickWindow(QQuickWindow* window)
+void QSGTextureGrabber::addQuickWindow(QQuickWindow *window)
 {
     connect(window, &QQuickWindow::afterRendering, this, [this, window]() {
         windowAfterRendering(window);
@@ -90,7 +91,7 @@ void QSGTextureGrabber::addQuickWindow(QQuickWindow* window)
     m_windows.push_back(window);
 }
 
-void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
+void QSGTextureGrabber::windowAfterRendering(QQuickWindow *window)
 {
     QMutexLocker lock(&m_mutex);
     if (!m_pendingTexture && m_textureId <= 0)
@@ -127,7 +128,7 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow* window)
     }
 }
 
-QImage QSGTextureGrabber::grabTexture(QOpenGLContext* context, int textureId) const
+QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) const
 {
     if (context->isOpenGLES()) {
         auto glFuncs = context->functions();
@@ -203,7 +204,7 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext* context, int textureId) co
     return QImage();
 }
 
-void QSGTextureGrabber::requestGrab(QSGTexture* tex)
+void QSGTextureGrabber::requestGrab(QSGTexture *tex)
 {
     QMutexLocker lock(&m_mutex);
     m_pendingTexture = tex;
@@ -213,7 +214,7 @@ void QSGTextureGrabber::requestGrab(QSGTexture* tex)
     triggerUpdate();
 }
 
-void QSGTextureGrabber::requestGrab(int textureId, const QSize& texSize, void *data)
+void QSGTextureGrabber::requestGrab(int textureId, const QSize &texSize, void *data)
 {
     if (textureId < 0 || !texSize.isValid())
         return;

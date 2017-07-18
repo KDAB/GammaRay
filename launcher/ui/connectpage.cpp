@@ -50,6 +50,7 @@ using namespace GammaRay;
 ConnectPage::ConnectPage(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ConnectPage)
+    , m_valid(false)
 {
     ui->setupUi(this);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -201,7 +202,6 @@ void ConnectPage::hostResponse(const QHostInfo &hostInfo)
     emit dnsResolved();
     emit updateButtonState();
 }
-
 
 void ConnectPage::handleAddressAndPort(QString &stillToParse, bool &correctSoFar, const QString &possibleAddress, bool skipPort)
 {
