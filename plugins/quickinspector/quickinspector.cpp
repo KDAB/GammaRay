@@ -350,10 +350,12 @@ void RenderModeRequest::apply()
 
     if (window) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        emit aboutToCleanSceneGraph();
         const QByteArray mode = renderModeToString(RenderModeRequest::mode);
         QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(window);
         winPriv->customRenderMode = mode;
         QMetaObject::invokeMethod(window, "cleanupSceneGraph");
+        emit sceneGraphCleanedUp();
 #endif
     }
 
@@ -432,6 +434,8 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     connect(this, &QuickInspector::elementsAtReceived, m_remoteView, &RemoteViewServer::elementsAtReceived);
     connect(m_remoteView, &RemoteViewServer::doPickElementId, this, &QuickInspector::pickElementId);
     connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &QuickInspector::slotGrabWindow);
+    connect(m_pendingRenderMode, &RenderModeRequest::aboutToCleanSceneGraph, this, &QuickInspector::aboutToCleanSceneGraph);
+    connect(m_pendingRenderMode, &RenderModeRequest::sceneGraphCleanedUp, this, &QuickInspector::sceneGraphCleanedUp);
 
     auto texGrab = new QSGTextureGrabber(this);
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), texGrab, SLOT(objectCreated(QObject*)));
@@ -461,20 +465,10 @@ void QuickInspector::selectWindow(QQuickWindow *window)
         return;
     }
 
-    const bool hadWindow = m_window;
+    QQuickWindow *oldWindow = m_window;
     QuickInspectorInterface::RenderMode previousMode = m_overlay->settings().componentsTraces
             ? QuickInspectorInterface::VisualizeTraces
             : QuickInspectorInterface::NormalRendering;
-
-    if (m_window) {
-        const QByteArray mode = QQuickWindowPrivate::get(m_window)->customRenderMode;
-        if (!mode.isEmpty())
-            previousMode = stringToRenderMode(mode);
-
-        auto reset = new RenderModeRequest(m_window);
-        connect(reset, &RenderModeRequest::finished, reset, &RenderModeRequest::deleteLater);
-        reset->applyOrDelay(m_window, QuickInspectorInterface::NormalRendering);
-    }
 
     m_window = window;
     m_itemModel->setWindow(window);
@@ -491,8 +485,19 @@ void QuickInspector::selectWindow(QQuickWindow *window)
 
     checkFeatures();
 
-    if (hadWindow)
+    if (oldWindow) {
+        {
+            const QByteArray mode = QQuickWindowPrivate::get(oldWindow)->customRenderMode;
+            if (!mode.isEmpty())
+                previousMode = stringToRenderMode(mode);
+
+            auto reset = new RenderModeRequest(oldWindow);
+            connect(reset, &RenderModeRequest::finished, reset, &RenderModeRequest::deleteLater);
+            reset->applyOrDelay(oldWindow, QuickInspectorInterface::NormalRendering);
+        }
+
         setCustomRenderMode(previousMode);
+    }
 }
 
 void QuickInspector::selectItem(QQuickItem *item)
@@ -583,6 +588,18 @@ void QuickInspector::recreateOverlay()
     // (e.g. because the parent of the overlay got destroyed).
     // just recreate a new one in this case
     connect(m_overlay.data(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
+}
+
+void QuickInspector::aboutToCleanSceneGraph()
+{
+    m_sgModel->setWindow(nullptr);
+    m_currentSgNode = nullptr;
+    m_sgPropertyController->setObject(nullptr, QString());
+}
+
+void QuickInspector::sceneGraphCleanedUp()
+{
+    m_sgModel->setWindow(m_window);
 }
 
 void QuickInspector::sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFrame)
@@ -711,7 +728,7 @@ void QuickInspector::sgSelectionChanged(const QItemSelection &selection)
 void QuickInspector::sgNodeDeleted(QSGNode *node)
 {
     if (m_currentSgNode == node)
-        m_sgPropertyController->setObject(nullptr);
+        m_sgPropertyController->setObject(nullptr, QString());
 }
 
 void QuickInspector::requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode)

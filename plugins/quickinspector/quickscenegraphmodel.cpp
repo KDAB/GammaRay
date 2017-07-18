@@ -56,12 +56,12 @@ void QuickSceneGraphModel::setWindow(QQuickWindow *window)
     beginResetModel();
     clear();
     if (m_window)
-        disconnect(window, SIGNAL(beforeRendering()), this, SLOT(updateSGTree()));
+        disconnect(m_window, SIGNAL(afterRendering()), this, SLOT(updateSGTree()));
     m_window = window;
     m_rootNode = currentRootNode();
     if (m_window && m_rootNode) {
         updateSGTree(false);
-        connect(window, SIGNAL(beforeRendering()), this, SLOT(updateSGTree()));
+        connect(m_window, SIGNAL(afterRendering()), this, SLOT(updateSGTree()));
     }
 
     endResetModel();

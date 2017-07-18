@@ -74,6 +74,8 @@ public:
     void applyOrDelay(QQuickWindow *toWindow, QuickInspectorInterface::RenderMode customRenderMode);
 
 signals:
+    void aboutToCleanSceneGraph();
+    void sceneGraphCleanedUp();
     void finished();
 
 private slots:
@@ -133,6 +135,8 @@ private slots:
     void objectSelected(void *object, const QString &typeName);
     void objectCreated(QObject *object);
     void recreateOverlay();
+    void aboutToCleanSceneGraph();
+    void sceneGraphCleanedUp();
 
 private:
     void selectWindow(QQuickWindow *window);
