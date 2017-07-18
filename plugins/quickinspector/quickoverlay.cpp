@@ -44,11 +44,6 @@
 #include <functional>
 #include <cmath>
 
-QT_BEGIN_NAMESPACE
-extern Q_GUI_EXPORT QImage qt_gl_read_framebuffer(const QSize &size,
-                                                  bool alpha_format, bool include_alpha);
-QT_END_NAMESPACE
-
 namespace GammaRay {
 // We need random colors, but we also want the item
 // to keep its random color during scene changes to avoid
@@ -431,7 +426,6 @@ void QuickOverlay::windowAfterRendering()
 
         m_grabbedFrame.transform.reset();
 
-#ifdef ENABLE_GL_READPIXELS
         if (m_grabbedFrame.image.size() != QSize(w, h))
             m_grabbedFrame.image = QImage(w, h, QImage::Format_RGBA8888);
 
@@ -441,10 +435,6 @@ void QuickOverlay::windowAfterRendering()
         // set transform to flip the read texture later, when displayed
         m_grabbedFrame.transform.scale(1.0, -1.0);
         m_grabbedFrame.transform.translate(intersect.x() * m_renderInfo.dpr , -intersect.y() * m_renderInfo.dpr - h);
-#else
-        m_grabbedFrame.image = qt_gl_read_framebuffer(m_renderInfo.windowSize * m_renderInfo.dpr, false, QOpenGLContext::currentContext());
-#endif
-
         m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
         if (!m_grabbedFrame.image.isNull()) {

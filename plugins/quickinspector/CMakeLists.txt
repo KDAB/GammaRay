@@ -13,30 +13,8 @@ if(Qt5Quick_FOUND AND HAVE_PRIVATE_Qt5Quick_HEADERS AND NOT ${Qt5Quick_VERSION} 
         materialextension/materialextensioninterface.cpp
       )
 
-  # Find if glReadPixels can be used with this configuration
-  # If yes, find based on which platform GL/GLESv2
-  if (TARGET Qt5::Gui_GLESv2)
-      include(CheckCXXSourceCompiles)
-      set (CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} Qt5::Gui_GLESv2)
-      CHECK_CXX_SOURCE_COMPILES("int main() {return 0;}" CAN_LINK_GUI_GLESV2)
-      if (CAN_LINK_GUI_GLESV2)
-          set(HAVE_GLESv2 TRUE)
-          add_definitions(-DENABLE_GL_READPIXELS)
-      endif ()
-  endif()
-
-  find_package(OpenGL)
-  if (OpenGL_FOUND)
-      add_definitions(-DENABLE_GL_READPIXELS)
-  endif()
-
   add_library(gammaray_quickinspector_shared STATIC ${gammaray_quickinspector_shared_srcs})
   target_link_libraries(gammaray_quickinspector_shared gammaray_common Qt5::Gui Qt5::Quick)
-
-  # on embedded devices link against GLESv2 for glReadpixels
-  if (HAVE_GLESv2)
-    target_link_libraries(gammaray_quickinspector_shared Qt5::Gui_GLESv2)
-  endif()
 
   set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
