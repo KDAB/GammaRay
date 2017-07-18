@@ -153,7 +153,7 @@ void LaunchPage::showFileDialog()
 
     if (exeFilePath.isEmpty())
         return;
-#if QT_VERSION >= QT_VERSION_CHECK(4, 3, 0)
+
     {
         const QFileInfo fileInfo(exeFilePath);
         if (fileInfo.isBundle()) {
@@ -164,7 +164,7 @@ void LaunchPage::showFileDialog()
                 exeFilePath = bundleTarget;
         }
     }
-#endif
+
     ui->progEdit->setText(exeFilePath);
 }
 
