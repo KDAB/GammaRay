@@ -1,10 +1,4 @@
-
-# check if we can build the Quick inspector
-# TODO 5.1.0 and below require private V8 headers which do not provide CMake variables,
-# so we would need to find those manually
-if(Qt5Quick_FOUND AND NOT ${Qt5Quick_VERSION} VERSION_LESS 5.2.0)
-  set(HAVE_QUICK_INSPECTOR TRUE)
-
+if(Qt5Quick_FOUND)
   # shared stuff
   set(gammaray_quickinspector_shared_srcs
         quickinspectorinterface.cpp
@@ -78,9 +72,3 @@ if(Qt5Quick_FOUND AND NOT ${Qt5Quick_VERSION} VERSION_LESS 5.2.0)
     )
   endif()
 endif()
-
-add_feature_info(
-  "QtQuick 2 inspector"
-  HAVE_QUICK_INSPECTOR
-  "Requires private Qt5Quick headers and Qt >= 5.2.0 to be available."
-)

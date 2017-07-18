@@ -323,7 +323,7 @@ if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
     # static probes are only available with Qt 5.4 or newer
     find_package(Qt5Core 5.4 NO_MODULE REQUIRED)
   else()
-    find_package(Qt5Core 5.1 QUIET)
+    find_package(Qt5Core 5.3 QUIET)
   endif()
 else()
   set(Qt5Core_FOUND FALSE)
@@ -502,13 +502,8 @@ add_definitions(
   -DQT_USE_FAST_OPERATOR_PLUS
   -DQT_NO_CAST_TO_ASCII
   -DQT_NO_URL_CAST_FROM_STRING
+  -DQT_STRICT_ITERATORS
 )
-
-# disable QT_STRICT_ITERATORS on the >=Qt5.0<=Qt5.2+Windows combo
-# see: https://bugreports.qt-project.org/browse/QTBUG-29608
-if(NOT (Qt5Core_FOUND AND Qt5Core_VERSION VERSION_LESS 5.3 AND WIN32))
-  add_definitions(-DQT_STRICT_ITERATORS)
-endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]elease$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
@@ -533,14 +528,9 @@ if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
   set(DL_LIBRARY dl)
 endif()
 
-if(Qt5Core_FOUND AND Qt5Core_VERSION VERSION_LESS 5.2.2)
-  # https://codereview.qt-project.org/75530
-  message(STATUS "Disabling timer profiler plug-in due to a bug in Qt5 <= 5.2.1.")
-  set(BUILD_TIMER_PLUGIN FALSE)
-else()
-  if(WIN32 OR APPLE)
+if(WIN32 OR APPLE)
     set(BUILD_TIMER_PLUGIN TRUE)
-  else()
+else()
     check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
     gammaray_add_dummy_package(rt HAVE_CLOCK_GETTIME)
     set_package_properties(rt PROPERTIES
@@ -549,7 +539,6 @@ else()
       PURPOSE "Needed for the timer profiler plugin."
     )
     set(BUILD_TIMER_PLUGIN ${HAVE_CLOCK_GETTIME})
-  endif()
 endif()
 
 check_include_files(stdint.h HAVE_STDINT_H)

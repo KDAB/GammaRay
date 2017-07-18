@@ -119,12 +119,7 @@ bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)
                 auto wrapper = new TranslatorWrapper(obj->translators.at(i), this);
                 obj->translators[i] = wrapper;
                 m_translatorsModel->registerTranslator(wrapper);
-                connect(wrapper,
-                        &TranslatorWrapper::destroyed,
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-                        m_translationsModel,
-#endif
-                        [wrapper, this](QObject *) {
+                connect(wrapper, &TranslatorWrapper::destroyed, m_translationsModel, [wrapper, this](QObject*) {
                     m_translatorsModel->unregisterTranslator(wrapper);
                 });
             }

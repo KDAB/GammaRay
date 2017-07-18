@@ -173,11 +173,8 @@ static QString qSGNodeFlagsToString(QSGNode::Flags flags)
 static QString qSGNodeDirtyStateToString(QSGNode::DirtyState flags)
 {
     QStringList list;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     if (flags & QSGNode::DirtySubtreeBlocked)
         list << QStringLiteral("DirtySubtreeBlocked");
-
-#endif
     if (flags & QSGNode::DirtyMatrix)
         list << QStringLiteral("DirtyMatrix");
     if (flags & QSGNode::DirtyNodeAdded)
