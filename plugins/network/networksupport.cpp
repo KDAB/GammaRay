@@ -68,9 +68,7 @@ Q_DECLARE_METATYPE(QSsl::KeyType)
 Q_DECLARE_METATYPE(QSsl::SslProtocol)
 Q_DECLARE_METATYPE(QSslCertificateExtension)
 Q_DECLARE_METATYPE(QSslCipher)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
 Q_DECLARE_METATYPE(QSslConfiguration::NextProtocolNegotiationStatus)
-#endif
 Q_DECLARE_METATYPE(QSslError)
 Q_DECLARE_METATYPE(QSslKey)
 Q_DECLARE_METATYPE(QSslSocket::PeerVerifyMode)
@@ -188,10 +186,8 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslCipher, int, usedBits);
 
     MO_ADD_METAOBJECT0(QSslConfiguration);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     MO_ADD_PROPERTY(QSslConfiguration, QList<QByteArray>, allowedNextProtocols,
                     setAllowedNextProtocols);
-#endif
     MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, caCertificates,
                        setCaCertificates);
     MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCipher>, ciphers, setCiphers);
@@ -203,11 +199,9 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_CR(QSslConfiguration, QSslCertificate, localCertificate, setLocalCertificate);
     MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, localCertificateChain,
                        setLocalCertificateChain);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     MO_ADD_PROPERTY_RO(QSslConfiguration, QByteArray, nextNegotiatedProtocol);
     MO_ADD_PROPERTY_RO(QSslConfiguration, QSslConfiguration::NextProtocolNegotiationStatus,
                        nextProtocolNegotiationStatus);                                                                      // TODO enum lookup table
-#endif
     MO_ADD_PROPERTY_RO(QSslConfiguration, QSslCertificate, peerCertificate);
     MO_ADD_PROPERTY_RO(QSslConfiguration, QList<QSslCertificate>, peerCertificateChain);
     MO_ADD_PROPERTY(QSslConfiguration, int, peerVerifyDepth, setPeerVerifyDepth);
@@ -219,10 +213,8 @@ void NetworkSupport::registerMetaTypes()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QSslConfiguration, QSsl::SslProtocol, sessionProtocol);
 #endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     MO_ADD_PROPERTY_CR(QSslConfiguration, QByteArray, sessionTicket, setSessionTicket);
     MO_ADD_PROPERTY_RO(QSslConfiguration, int, sessionTicketLifeTimeHint);
-#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY_ST(QSslConfiguration, QList<QSslCertificate>, systemCaCertificates);
 #endif

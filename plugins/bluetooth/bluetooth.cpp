@@ -84,9 +84,7 @@ Bluetooth::Bluetooth(ProbeInterface *probe, QObject *parent)
 
     MO_ADD_METAOBJECT1(QBluetoothLocalDevice, QObject);
     MO_ADD_PROPERTY_RO(QBluetoothLocalDevice, QBluetoothAddress, address);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     MO_ADD_PROPERTY_RO(QBluetoothLocalDevice, QList<QBluetoothAddress>, connectedDevices);
-#endif
     MO_ADD_PROPERTY(QBluetoothLocalDevice, QBluetoothLocalDevice::HostMode, hostMode, setHostMode);
     MO_ADD_PROPERTY_RO(QBluetoothLocalDevice, bool, isValid);
     MO_ADD_PROPERTY_RO(QBluetoothLocalDevice, QString, name);
