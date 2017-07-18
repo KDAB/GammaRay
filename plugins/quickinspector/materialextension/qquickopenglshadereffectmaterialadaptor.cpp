@@ -40,7 +40,7 @@ Q_DECLARE_METATYPE(QQuickOpenGLShaderEffectMaterial::UniformData)
 
 using namespace GammaRay;
 
-QQuickOpenGLShaderEffectMaterialAdaptor::QQuickOpenGLShaderEffectMaterialAdaptor(QObject* parent)
+QQuickOpenGLShaderEffectMaterialAdaptor::QQuickOpenGLShaderEffectMaterialAdaptor(QObject *parent)
     : PropertyAdaptor(parent)
 {
 }
@@ -105,6 +105,8 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
 
         return pd;
     }
+#else
+    Q_UNUSED(index);
 #endif
 
     return pd;
@@ -121,7 +123,7 @@ PropertyAdaptor *QQuickOpenGLShaderEffectMaterialAdaptorFactory::create(const Ob
     return nullptr;
 }
 
-QQuickOpenGLShaderEffectMaterialAdaptorFactory* QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance()
+QQuickOpenGLShaderEffectMaterialAdaptorFactory *QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance()
 {
     if (!s_instance)
         s_instance = new QQuickOpenGLShaderEffectMaterialAdaptorFactory;
