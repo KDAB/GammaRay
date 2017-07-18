@@ -37,8 +37,8 @@
 #endif
 
 #include <iostream>
+#include <cstdlib>
 #include <dlfcn.h>
-#include <stdlib.h>
 
 using namespace GammaRay;
 
@@ -118,7 +118,7 @@ void DebuggerInjector::readyReadStandardOutput()
     }
 }
 
-void DebuggerInjector::setManualError(const QString& msg)
+void DebuggerInjector::setManualError(const QString &msg)
 {
     mManualError = true;
     mErrorString = msg;

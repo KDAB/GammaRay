@@ -39,7 +39,7 @@
 #include <QThread>
 #include <QTimer>
 
-#include <assert.h>
+#include <cassert>
 
 using namespace GammaRay;
 

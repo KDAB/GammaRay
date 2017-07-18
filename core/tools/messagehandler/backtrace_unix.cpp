@@ -32,7 +32,8 @@
 #include "backtrace.h"
 
 #include <QString>
-#include <stdlib.h>
+
+#include <cstdlib>
 
 #ifdef HAVE_BACKTRACE
 #include <execinfo.h>
@@ -82,8 +83,9 @@ Backtrace getBacktrace(int levels)
         n = qMin(n, levels);
 
     s.reserve(n);
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < n; ++i) {
         s << maybeDemangleName(strings[i]);
+    }
 
     if (strings)
         free(strings);

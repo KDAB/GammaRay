@@ -37,7 +37,7 @@
 #include <QMetaType>
 #include <QStringList>
 
-#include <string.h>
+#include <cstring>
 
 using namespace GammaRay;
 

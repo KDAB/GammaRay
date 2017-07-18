@@ -40,7 +40,7 @@
 #include <QTimer>
 
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
 
 using namespace GammaRay;
 
@@ -205,7 +205,7 @@ void MetaObjectRegistry::scanMetaTypes()
     addMetaObject(&staticQtMetaObject);
 }
 
-const QMetaObject* MetaObjectRegistry::addMetaObject(const QMetaObject *metaObject, bool mergeDynamic)
+const QMetaObject *MetaObjectRegistry::addMetaObject(const QMetaObject *metaObject, bool mergeDynamic)
 {
     if (isKnownMetaObject(metaObject))
         return metaObject;
@@ -284,7 +284,7 @@ bool MetaObjectRegistry::isKnownMetaObject(const QMetaObject *metaObject) const
     return m_childParentMap.contains(metaObject);
 }
 
-const QMetaObject* MetaObjectRegistry::aliveInstance(const QMetaObject* mo) const
+const QMetaObject *MetaObjectRegistry::aliveInstance(const QMetaObject *mo) const
 {
     const auto it = m_aliveInstances.find(mo);
     if (it == m_aliveInstances.end())
@@ -294,7 +294,7 @@ const QMetaObject* MetaObjectRegistry::aliveInstance(const QMetaObject* mo) cons
     return it.value().at(0);
 }
 
-void MetaObjectRegistry::addAliveInstance(QObject *obj, const QMetaObject* canonicalMO)
+void MetaObjectRegistry::addAliveInstance(QObject *obj, const QMetaObject *canonicalMO)
 {
     auto aliveMO = obj->metaObject();
     m_dynamicMetaObjectMap.insert(obj, aliveMO);
@@ -304,7 +304,7 @@ void MetaObjectRegistry::addAliveInstance(QObject *obj, const QMetaObject* canon
     alivePool.insert(it, aliveMO);
 }
 
-void MetaObjectRegistry::removeAliveInstance(QObject *obj, const QMetaObject* canonicalMO)
+void MetaObjectRegistry::removeAliveInstance(QObject *obj, const QMetaObject *canonicalMO)
 {
     auto aliveMO = m_dynamicMetaObjectMap.take(obj);
     auto &alivePool = m_aliveInstances[canonicalMO];
@@ -314,7 +314,7 @@ void MetaObjectRegistry::removeAliveInstance(QObject *obj, const QMetaObject* ca
     m_canonicalMetaObjectMap.remove(aliveMO);
 }
 
-const QMetaObject* MetaObjectRegistry::canonicalMetaObject(const QMetaObject* mo) const
+const QMetaObject *MetaObjectRegistry::canonicalMetaObject(const QMetaObject *mo) const
 {
     const auto it = m_canonicalMetaObjectMap.find(mo);
     if (it != m_canonicalMetaObjectMap.end())

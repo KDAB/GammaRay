@@ -41,7 +41,7 @@
 #include <private/qhooks_p.h>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 #include <cassert>
 
 #ifdef Q_OS_MAC
