@@ -26,7 +26,6 @@ gammaray_add_plugin(gammaray_statemachineviewer_plugin
 )
 
 target_link_libraries(gammaray_statemachineviewer_plugin
-  ${QT_QTCORE_LIBRARIES}
   gammaray_core
 )
 

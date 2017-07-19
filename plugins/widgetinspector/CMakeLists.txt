@@ -89,7 +89,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   target_link_libraries(gammaray_widgetinspector_ui_plugin
-    ${QT_QTGUI_LIBRARIES}
     gammaray_ui
   )
 

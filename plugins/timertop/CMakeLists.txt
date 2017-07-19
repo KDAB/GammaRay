@@ -15,7 +15,6 @@ gammaray_add_plugin(gammaray_timertop_plugin
 )
 
 target_link_libraries(gammaray_timertop_plugin
-  ${QT_QTCORE_LIBRARIES}
   gammaray_core
 )
 
@@ -43,8 +42,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   target_link_libraries(gammaray_timertop_ui_plugin
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
     gammaray_ui
   )
 

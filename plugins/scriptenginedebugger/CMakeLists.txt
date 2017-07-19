@@ -28,7 +28,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   target_link_libraries(gammaray_scriptenginedebugger_ui_plugin
-    ${QT_QTGUI_LIBRARIES}
     ${QT_QTSCRIPT_LIBRARIES}
     ${QT_QTSCRIPTTOOLS_LIBRARIES}
     gammaray_ui

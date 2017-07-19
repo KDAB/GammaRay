@@ -17,7 +17,6 @@ gammaray_add_plugin(gammaray_modelinspector
 )
 
 target_link_libraries(gammaray_modelinspector
-  ${QT_QTCORE_LIBRARIES}
   gammaray_core
   gammaray_kitemmodels
 )
@@ -39,8 +38,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   target_link_libraries(gammaray_modelinspector_ui
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
     gammaray_ui
   )
 

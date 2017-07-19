@@ -44,7 +44,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   target_link_libraries(gammaray_styleinspector_ui_plugin
-    ${QT_QTGUI_LIBRARIES}
     gammaray_ui
   )
 endif()

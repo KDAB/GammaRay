@@ -10,7 +10,6 @@ gammaray_add_plugin(gammaray_objectvisualizer_plugin
 )
 
 target_link_libraries(gammaray_objectvisualizer_plugin
-  ${QT_QTCORE_LIBRARIES}
   gammaray_kitemmodels
   gammaray_core
 )
@@ -75,8 +74,6 @@ gammaray_add_plugin(gammaray_objectvisualizer_ui_plugin
 )
 
 target_link_libraries(gammaray_objectvisualizer_ui_plugin
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
   ${OPTIONAL_VTK_LIBRARIES}
   ${VTK_QT_LIBRARY}
   gammaray_common

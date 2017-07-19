@@ -36,8 +36,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   target_link_libraries(gammaray_fontbrowser_ui_plugin
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
     gammaray_common
     gammaray_ui
   )
