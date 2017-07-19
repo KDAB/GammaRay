@@ -32,6 +32,8 @@
 #include <QVariant>
 #include <QWidget>
 
+#include <functional>
+
 namespace GammaRay {
 namespace Ui {
 class PropertyExtendedEditor;
@@ -43,16 +45,17 @@ class PropertyExtendedEditor : public QWidget
     Q_OBJECT
     Q_PROPERTY(QVariant value READ value WRITE setValue USER true)
 public:
+    typedef std::function<void(QWidget *,const QString&)> EditFunction;
     explicit PropertyExtendedEditor(QWidget *parent = nullptr);
     virtual ~PropertyExtendedEditor();
-
-    Qt::Alignment alignment() const;
-    void setAlignment(const Qt::Alignment &alignment);
 
     QVariant value() const;
     void setValue(const QVariant &value);
 
     void save(const QVariant &value);
+
+    void setInlineWidget(QWidget *widget, const EditFunction &func);
+    QWidget *inlineWidget() const;
 
 protected slots:
     virtual void edit() = 0;
@@ -60,6 +63,8 @@ protected slots:
 private:
     Ui::PropertyExtendedEditor *ui;
     QVariant m_value;
+    QWidget *m_inlineWidget;
+    EditFunction m_setText;
 };
 }
 

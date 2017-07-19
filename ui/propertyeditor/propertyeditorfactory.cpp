@@ -45,6 +45,7 @@ PropertyEditorFactory::PropertyEditorFactory()
     initBuiltInTypes();
 
     addEditor(QVariant::Color, new QStandardItemEditorCreator<PropertyColorEditor>());
+    addEditor(QVariant::ByteArray, new QStandardItemEditorCreator<PropertyByteArrayEditor>());
     addEditor(QVariant::Font, new QStandardItemEditorCreator<PropertyFontEditor>());
     addEditor(QVariant::Palette, new QStandardItemEditorCreator<PropertyPaletteEditor>());
     addEditor(QVariant::Point, new QStandardItemEditorCreator<PropertyPointEditor>());

@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_PROPERTYTEXTEDITOR_H
 #define GAMMARAY_PROPERTYTEXTEDITOR_H
 
+#include <ui/propertyeditor/propertyextendededitor.h>
+
 #include <QDialog>
 #include <QLineEdit>
 
@@ -42,26 +44,56 @@ class PropertyTextEditorDialog : public QDialog
 {
     Q_OBJECT
 public:
+    enum Mode {
+        NoMode,
+        StringMode,
+        HexMode
+    };
+
     explicit PropertyTextEditorDialog(const QString &text, QWidget *parent = nullptr);
+    explicit PropertyTextEditorDialog(const QByteArray &bytes, QWidget *parent = nullptr);
     ~PropertyTextEditorDialog();
 
     QString text() const;
+    QByteArray bytes() const;
+
+    void setMode(Mode mode);
+
+public Q_SLOTS:
+    void toggleMode();
 
 protected:
     QScopedPointer<Ui::PropertyTextEditorDialog> ui;
+    const QByteArray m_bytes;
+    Mode m_mode;
 };
 
 /** Property editor for texts. */
-class PropertyTextEditor : public QLineEdit
+class PropertyTextEditor : public PropertyExtendedEditor
 {
     Q_OBJECT
 public:
     explicit PropertyTextEditor(QWidget *parent = nullptr);
 
-    void save(const QString &text);
 
 protected slots:
-    void edit();
+    virtual void edit() override;
+    virtual void editFinished();
+
+protected:
+    QLineEdit *m_lineEdit;
+};
+
+class PropertyByteArrayEditor : public PropertyExtendedEditor
+{
+    Q_OBJECT
+public:
+    explicit PropertyByteArrayEditor(QWidget *parent = nullptr);
+
+
+protected slots:
+    void edit() override;
+
 };
 }
 
