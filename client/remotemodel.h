@@ -159,7 +159,7 @@ private:
     void setProxyFilterRegExp(const QRegExp &regExp);
 
 private slots:
-    void doRequestDataAndFlags() const;
+    void doRequests() const;
 
 private:
     Node *m_root;
@@ -167,8 +167,13 @@ private:
     mutable QVector<QHash<int, QVariant> > m_horizontalHeaders; // section -> role -> data
     mutable QVector<QHash<int, QVariant> > m_verticalHeaders; // section -> role -> data
 
-    mutable QVector<Protocol::ModelIndex> m_pendingDataRequests;
-    QTimer *m_pendingDataRequestsTimer;
+    enum RequestType {
+        RowColumnCount,
+        DataAndFlags
+    };
+
+    mutable QMap<RequestType, QVector<Protocol::ModelIndex>> m_pendingRequests;
+    QTimer *m_pendingRequestsTimer;
 
     QString m_serverObject;
     Protocol::ObjectAddress m_myAddress;

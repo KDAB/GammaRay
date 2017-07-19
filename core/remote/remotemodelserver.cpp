@@ -168,19 +168,26 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
     switch (msg.type()) {
     case Protocol::ModelRowColumnCountRequest:
     {
-        Protocol::ModelIndex index;
-        msg >> index;
-        const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
+        quint32 size;
+        msg >> size;
+        Q_ASSERT(size > 0);
 
-        qint32 rowCount = -1, columnCount = -1;
-        if (index.isEmpty() || qmIndex.isValid()) {
-            rowCount = m_model->rowCount(qmIndex);
-            columnCount = m_model->columnCount(qmIndex);
+        Message reply(m_myAddress, Protocol::ModelRowColumnCountReply);
+        reply << size;
+        for (quint32 i = 0; i < size; ++i) {
+            Protocol::ModelIndex index;
+            msg >> index;
+            const QModelIndex qmIndex = Protocol::toQModelIndex(m_model, index);
+
+            qint32 rowCount = -1, columnCount = -1;
+            if (index.isEmpty() || qmIndex.isValid()) {
+                rowCount = m_model->rowCount(qmIndex);
+                columnCount = m_model->columnCount(qmIndex);
+            }
+
+            reply << index << rowCount << columnCount;
         }
-
-        Message msg(m_myAddress, Protocol::ModelRowColumnCountReply);
-        msg << index << rowCount << columnCount;
-        sendMessage(msg);
+        sendMessage(reply);
         break;
     }
 
