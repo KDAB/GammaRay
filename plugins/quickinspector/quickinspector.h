@@ -164,6 +164,7 @@ private:
     PropertyController *m_sgPropertyController;
     RemoteViewServer *m_remoteView;
     RenderModeRequest *m_pendingRenderMode;
+    QuickInspectorInterface::RenderMode m_renderMode;
 };
 
 class QuickInspectorFactory : public QObject,

@@ -270,21 +270,6 @@ static QByteArray renderModeToString(QuickInspectorInterface::RenderMode customR
     return QByteArray();
 }
 
-static QuickInspectorInterface::RenderMode stringToRenderMode(const QByteArray &customRenderMode)
-{
-    static QHash<QByteArray, QuickInspectorInterface::RenderMode> modes;
-
-    if (modes.isEmpty()) {
-        modes[QByteArray("clip")] = QuickInspectorInterface::VisualizeClipping;
-        modes[QByteArray("overdraw")] = QuickInspectorInterface::VisualizeOverdraw;
-        modes[QByteArray("batches")] = QuickInspectorInterface::VisualizeBatches;
-        modes[QByteArray("changes")] = QuickInspectorInterface::VisualizeChanges;
-    }
-
-    const auto it = modes.constFind(customRenderMode);
-    return it != modes.constEnd() ? it.value() : QuickInspectorInterface::NormalRendering;
-}
-
 QMutex RenderModeRequest::mutex;
 
 RenderModeRequest::RenderModeRequest(QObject *parent)
@@ -384,6 +369,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
                                                         "com.kdab.GammaRay.QuickSceneGraph"), this))
     , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this))
     , m_pendingRenderMode(new RenderModeRequest(this))
+    , m_renderMode(QuickInspectorInterface::NormalRendering)
 {
     registerMetaTypes();
     registerVariantHandlers();
@@ -465,10 +451,15 @@ void QuickInspector::selectWindow(QQuickWindow *window)
         return;
     }
 
-    QQuickWindow *oldWindow = m_window;
-    QuickInspectorInterface::RenderMode previousMode = m_overlay->settings().componentsTraces
-            ? QuickInspectorInterface::VisualizeTraces
-            : QuickInspectorInterface::NormalRendering;
+    if (m_window) {
+        const QByteArray mode = QQuickWindowPrivate::get(m_window)->customRenderMode;
+
+        if (!mode.isEmpty()) {
+            auto reset = new RenderModeRequest(m_window);
+            connect(reset, &RenderModeRequest::finished, reset, &RenderModeRequest::deleteLater);
+            reset->applyOrDelay(m_window, QuickInspectorInterface::NormalRendering);
+        }
+    }
 
     m_window = window;
     m_itemModel->setWindow(window);
@@ -485,19 +476,8 @@ void QuickInspector::selectWindow(QQuickWindow *window)
 
     checkFeatures();
 
-    if (oldWindow) {
-        {
-            const QByteArray mode = QQuickWindowPrivate::get(oldWindow)->customRenderMode;
-            if (!mode.isEmpty())
-                previousMode = stringToRenderMode(mode);
-
-            auto reset = new RenderModeRequest(oldWindow);
-            connect(reset, &RenderModeRequest::finished, reset, &RenderModeRequest::deleteLater);
-            reset->applyOrDelay(oldWindow, QuickInspectorInterface::NormalRendering);
-        }
-
-        setCustomRenderMode(previousMode);
-    }
+    if (m_window)
+        setCustomRenderMode(m_renderMode);
 }
 
 void QuickInspector::selectItem(QQuickItem *item)
@@ -643,6 +623,8 @@ void QuickInspector::slotGrabWindow()
 void QuickInspector::setCustomRenderMode(
     GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {
+    m_renderMode = customRenderMode;
+
     m_pendingRenderMode->applyOrDelay(m_window, customRenderMode);
 
     const bool tracing = customRenderMode == QuickInspectorInterface::VisualizeTraces;
