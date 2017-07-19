@@ -246,9 +246,9 @@ static QString qsgTextureWrapModeToString(QSGTexture::WrapMode wrapMode)
 
 static bool isGoodCandidateItem(QQuickItem *item)
 {
-    if (!item->isVisible() || item->z() < 0 || qFuzzyCompare(item->opacity() + 1.0, qreal(1.0)) ||
-            !item->flags().testFlag(QQuickItem::ItemHasContents) ||
-            item->metaObject() == &QQuickItem::staticMetaObject) {
+
+    if (!item->isVisible() || qFuzzyCompare(item->opacity() + 1.0, qreal(1.0)) ||
+            !item->flags().testFlag(QQuickItem::ItemHasContents)) {
         return false;
     }
 
@@ -750,26 +750,26 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
     );
 
     for (int i = childItems.size() - 1; i >= 0; --i) { // backwards to match z order
-        auto c = childItems.at(i);
-        const QPointF p = parent->mapToItem(c, pos);
-        if (c->contains(p)) {
-            const bool hasSubChildren = !c->childItems().isEmpty();
+        auto child = childItems.at(i);
+        const QPointF requestedPoint = parent->mapToItem(child, pos);
+        if (child->contains(requestedPoint)) {
+            const bool hasSubChildren = !child->childItems().isEmpty();
 
             if (hasSubChildren) {
                 const int count = objects.count();
-                int bc;
-                objects << recursiveItemsAt(c, p, mode, bc);
+                int bc; // possibly better candidate among subChildren
+                objects << recursiveItemsAt(child, requestedPoint, mode, bc);
 
-                if (bestCandidate == -1 && bc != -1 && c->z() >= 0) {
+                if (bestCandidate == -1 && bc != -1) {
                     bestCandidate = count + bc;
                 }
             }
             else {
-                if (bestCandidate == -1 && isGoodCandidateItem(c)) {
+                if (bestCandidate == -1 && isGoodCandidateItem(child)) {
                     bestCandidate = objects.count();
                 }
 
-                objects << ObjectId(c);
+                objects << ObjectId(child);
             }
         }
 
