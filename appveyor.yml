@@ -36,11 +36,13 @@ on_finish:
     Get-ChildItem $env:USERPROFILE\.craft\* | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
     Push-AppveyorArtifact C:\CraftMaster\$env:TARGET\etc\kdesettings.ini.dump
 
-
-
-
 environment:
     matrix:
     - TARGET: msvc2015x64
     - TARGET: msvc2015x86
     - TARGET: mingw
+
+branches:
+  # whitelist
+  only:
+    - master
