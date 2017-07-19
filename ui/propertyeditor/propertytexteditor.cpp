@@ -30,16 +30,28 @@
 
 #include "ui_propertytexteditor.h"
 
-#include <QToolButton>
-
 using namespace GammaRay;
 
 PropertyTextEditorDialog::PropertyTextEditorDialog(const QString &text, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::PropertyTextEditorDialog)
+    , m_bytes(text.toUtf8())
+    , m_mode(NoMode)
 {
     ui->setupUi(this);
-    ui->plainTextEdit->setPlainText(text);
+    setMode(StringMode);
+    connect(ui->modeButton, SIGNAL(clicked(bool)), this, SLOT(toggleMode()));
+}
+
+PropertyTextEditorDialog::PropertyTextEditorDialog(const QByteArray &bytes, QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::PropertyTextEditorDialog)
+    , m_bytes(bytes)
+    , m_mode(NoMode)
+{
+    ui->setupUi(this);
+    setMode(StringMode);
+    connect(ui->modeButton, SIGNAL(clicked(bool)), this, SLOT(toggleMode()));
 }
 
 PropertyTextEditorDialog::~PropertyTextEditorDialog()
@@ -48,43 +60,72 @@ PropertyTextEditorDialog::~PropertyTextEditorDialog()
 
 QString PropertyTextEditorDialog::text() const
 {
-    return ui->plainTextEdit->toPlainText();
+    if (m_mode == StringMode)
+        return ui->plainTextEdit->toPlainText();
+    else
+        return QString::fromUtf8(bytes());
+}
+
+QByteArray PropertyTextEditorDialog::bytes() const
+{
+    if (m_mode == StringMode)
+        return ui->plainTextEdit->toPlainText().toUtf8();
+    else
+        return QByteArray::fromHex(ui->plainTextEdit->toPlainText().toUtf8());
+}
+
+void PropertyTextEditorDialog::setMode(PropertyTextEditorDialog::Mode mode)
+{
+    if (m_mode != mode) {
+        m_mode = mode;
+        if (m_mode == StringMode) {
+            ui->modeButton->setText(tr("Switch to Hex mode"));
+            ui->plainTextEdit->setPlainText(QString::fromUtf8(m_bytes));
+        } else {
+            ui->modeButton->setText(tr("Switch to String mode"));
+            ui->plainTextEdit->setPlainText(m_bytes.toHex());
+        }
+    }
+}
+
+void PropertyTextEditorDialog::toggleMode()
+{
+    setMode(m_mode == StringMode ? HexMode : StringMode);
 }
 
 PropertyTextEditor::PropertyTextEditor(QWidget *parent)
-    : QLineEdit(parent)
+    : PropertyExtendedEditor(parent)
+    , m_lineEdit(new QLineEdit)
 {
-    auto *hl = new QHBoxLayout(this);
-    hl->setMargin(0);
-    hl->setSpacing(1);
-
-    auto *editButton = new QToolButton(this);
-    editButton->setText(QStringLiteral("..."));
-
-    QMargins margins(textMargins());
-    margins.setRight(editButton->sizeHint().width() + hl->spacing());
-
-    setFrame(false);
-    setTextMargins(margins);
-
-    hl->addStretch();
-    hl->addWidget(editButton);
-
-    connect(editButton, SIGNAL(clicked()), SLOT(edit()));
-}
-
-void PropertyTextEditor::save(const QString &text)
-{
-    setText(text);
-
-    // The user already pressed Apply, don't force her/him to do again
-    QKeyEvent event(QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier);
-    QApplication::sendEvent(this, &event);
+    setInlineWidget(m_lineEdit, [](QWidget *widget, const QString &text){
+        auto edit = qobject_cast<QLineEdit*>(widget);
+        edit->setText(text);
+    });
+    connect(m_lineEdit, SIGNAL(editingFinished()), this, SLOT(editFinished()));
 }
 
 void PropertyTextEditor::edit()
 {
-    PropertyTextEditorDialog dlg(text(), this);
+    PropertyTextEditorDialog dlg(value().toString(), this);
     if (dlg.exec() == QDialog::Accepted)
         save(dlg.text());
 }
+
+void PropertyTextEditor::editFinished()
+{
+    save(m_lineEdit->text());
+}
+
+PropertyByteArrayEditor::PropertyByteArrayEditor(QWidget *parent)
+    : PropertyExtendedEditor(parent)
+{
+
+}
+
+void PropertyByteArrayEditor::edit()
+{
+    PropertyTextEditorDialog dlg(value().toByteArray(), this);
+    if (dlg.exec() == QDialog::Accepted)
+        save(dlg.bytes());
+}
+

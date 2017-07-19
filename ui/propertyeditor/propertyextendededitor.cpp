@@ -31,13 +31,22 @@
 
 #include <QColorDialog>
 #include <QKeyEvent>
+#include <QLabel>
+
 using namespace GammaRay;
 
 PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::PropertyExtendedEditor)
+    , m_inlineWidget(nullptr)
 {
     ui->setupUi(this);
+    setInlineWidget(new QLabel(this), [](QWidget *w, const QString &text){
+        auto label = qobject_cast<QLabel*>(w);
+        Q_ASSERT(label);
+        label->setText(text);
+    });
+
     // TODO: make button content smaller by using a tiny icon
     connect(ui->editButton, SIGNAL(clicked()), SLOT(edit()));
 }
@@ -45,16 +54,6 @@ PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
 PropertyExtendedEditor::~PropertyExtendedEditor()
 {
     delete ui;
-}
-
-Qt::Alignment PropertyExtendedEditor::alignment() const
-{
-    return ui->valueLabel->alignment();
-}
-
-void PropertyExtendedEditor::setAlignment(const Qt::Alignment &alignment)
-{
-    ui->valueLabel->setAlignment(alignment);
 }
 
 QVariant PropertyExtendedEditor::value() const
@@ -66,7 +65,7 @@ void PropertyExtendedEditor::setValue(const QVariant &value)
 {
     m_value = value;
     const QString displayValue = property("displayString").toString();
-    ui->valueLabel->setText(displayValue.isEmpty() ? value.toString() : displayValue);
+    m_setText(m_inlineWidget, displayValue.isEmpty() ? value.toString() : displayValue);
 }
 
 void PropertyExtendedEditor::save(const QVariant &value)
@@ -76,4 +75,18 @@ void PropertyExtendedEditor::save(const QVariant &value)
     // The user already pressed Apply, don't force her/him to do again
     QKeyEvent event(QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier);
     QApplication::sendEvent(this, &event);
+}
+
+void PropertyExtendedEditor::setInlineWidget(QWidget *widget, const PropertyExtendedEditor::EditFunction &func)
+{
+    if (m_inlineWidget)
+        m_inlineWidget->deleteLater();
+    m_inlineWidget = widget;
+    ui->inlineLayout->addWidget(m_inlineWidget);
+    m_setText = func;
+}
+
+QWidget *PropertyExtendedEditor::inlineWidget() const
+{
+    return m_inlineWidget;
 }

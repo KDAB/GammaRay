@@ -215,7 +215,7 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option,
     }
 
     // We don't want multiline texts for String values
-    if (value.type() == QVariant::String) {
+    if (value.type() == QVariant::String || value.type() == QVariant::ByteArray) {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
         QStyleOptionViewItem opt = option;
 #else
