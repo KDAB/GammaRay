@@ -321,7 +321,7 @@ void RenderModeRequest::applyOrDelay(QQuickWindow *toWindow, QuickInspectorInter
                 disconnect(connection);
             mode = customRenderMode;
             window = toWindow;
-            connection = connect(window.data(), &QQuickWindow::afterRendering, this, &RenderModeRequest::apply, Qt::QueuedConnection);
+            connection = connect(window.data(), &QQuickWindow::afterRendering, this, &RenderModeRequest::apply, Qt::DirectConnection);
             // trigger window update so afterRendering is emitted
             QMetaObject::invokeMethod(window, "update", Qt::QueuedConnection);
         }
@@ -353,8 +353,8 @@ void RenderModeRequest::apply()
         emit aboutToCleanSceneGraph();
         const QByteArray mode = renderModeToString(RenderModeRequest::mode);
         QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(window);
+        QMetaObject::invokeMethod(window, "cleanupSceneGraph", Qt::DirectConnection);
         winPriv->customRenderMode = mode;
-        QMetaObject::invokeMethod(window, "cleanupSceneGraph");
         emit sceneGraphCleanedUp();
 #endif
     }
