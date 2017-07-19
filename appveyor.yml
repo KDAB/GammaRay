@@ -21,9 +21,9 @@ build_script:
 - ps: |
     craft --no-cache --src-dir $env:APPVEYOR_BUILD_FOLDER gammaray
 
-test_script:
-- ps: |
-    craft --src-dir $env:APPVEYOR_BUILD_FOLDER --test gammaray
+#test_script:
+#- ps: |
+#    craft --src-dir $env:APPVEYOR_BUILD_FOLDER --test gammaray
 
 
 on_success:
