@@ -76,6 +76,13 @@ if (${STACK_DETAILS_AUTO_DETECT})
 	elseif(LIBBFD_FOUND)
 		LIST(APPEND BACKWARD_INCLUDE_DIRS ${LIBBFD_INCLUDE_DIRS})
 		LIST(APPEND BACKWARD_LIBRARIES ${LIBBFD_LIBRARIES})
+
+		# If we attempt to link against static bfd, make sure to link its dependencies, too
+		get_filename_component(bfd_lib_ext "${LIBBFD_LIBRARIES}" EXT)
+		if (bfd_lib_ext STREQUAL ".so")
+			list(APPEND BACKWARD_LIBRARIES iberty z)
+		endif()
+
 		set(STACK_DETAILS_DW FALSE)
 		set(STACK_DETAILS_BFD TRUE)
 		set(STACK_DETAILS_BACKTRACE_SYMBOL FALSE)
