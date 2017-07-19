@@ -3,6 +3,7 @@ init:
 - ps: |
     function craft() {
         & C:\python36\python.exe "C:\CraftMaster\$env:TARGET\craft\bin\craft.py" $args
+        if($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
     }
 
 install:
