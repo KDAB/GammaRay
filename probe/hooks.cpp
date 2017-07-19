@@ -41,7 +41,7 @@
 #include <private/qhooks_p.h>
 #endif
 
-#include <cstdio>
+#include <stdio.h> //cannot use cstdio on QNX6.6
 #include <cassert>
 
 #ifdef Q_OS_MAC
