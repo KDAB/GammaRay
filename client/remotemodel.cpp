@@ -94,7 +94,7 @@ QVariant RemoteModel::s_emptySizeHintValue;
 
 RemoteModel::RemoteModel(const QString &serverObject, QObject *parent)
     : QAbstractItemModel(parent)
-    , m_pendingDataRequestsTimer(new QTimer(this))
+    , m_pendingRequestsTimer(new QTimer(this))
     , m_serverObject(serverObject)
     , m_myAddress(Protocol::InvalidObjectAddress)
     , m_currentSyncBarrier(0)
@@ -119,9 +119,9 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent)
 
     m_root = new Node;
 
-    m_pendingDataRequestsTimer->setInterval(0);
-    m_pendingDataRequestsTimer->setSingleShot(true);
-    connect(m_pendingDataRequestsTimer, SIGNAL(timeout()), SLOT(doRequestDataAndFlags()));
+    m_pendingRequestsTimer->setInterval(0);
+    m_pendingRequestsTimer->setSingleShot(true);
+    connect(m_pendingRequestsTimer, SIGNAL(timeout()), SLOT(doRequests()));
 
     registerClient(serverObject);
     connectToServer();
@@ -284,58 +284,66 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     switch (msg.type()) {
     case Protocol::ModelRowColumnCountReply:
     {
-        Protocol::ModelIndex index;
-        msg >> index;
-        Node *node = nodeForIndex(index);
-        if (!node) {
-            // This can happen e.g. when we called a blocking operation from the remote client
-            // via the method invocation with a direct connection. Then when the blocking
-            // operation creates e.g. a QObject it is directly added/removed to the ObjectTree
-            // and we get signals for that. When we then though ask for column counts we will
-            // only get responses once the blocking operation has finished, at which point
-            // the object may already have been invalidated.
-            break;
-        }
-        qint32 rowCount, columnCount;
-        msg >> rowCount >> columnCount;
-        // we get -1/-1 if we requested for an invalid index, e.g. due to not having processed
-        // all structure changes yet. This will automatically trigger a retry.
-        Q_ASSERT((rowCount >= 0 && columnCount >= 0) || (rowCount == -1 && columnCount == -1));
-        if (node->rowCount >= 0 || node->columnCount >= 0) {
-            // This can happen in similar racy conditions as below, when we request the row/col count
-            // for two different Node* at the same index (one was deleted inbetween and then the other
-            // was created). We ignore the new data as the node it is intended for will request it again
-            // after processing all structure changes.
-            break;
-        }
+        quint32 size;
+        msg >> size;
+        Q_ASSERT(size > 0);
 
-        if (node->rowCount == -1)
-            break; // we didn't ask for this, probably outdated response for a moved node
+        for (quint32 i = 0; i < size; ++i) {
+            // We now need to read the complete entries because of the break -> continue change
+            Protocol::ModelIndex index;
+            msg >> index;
+            qint32 rowCount, columnCount;
+            msg >> rowCount >> columnCount;
 
-        Q_ASSERT(node->rowCount < -1 && node->columnCount == -1);
-
-        const QModelIndex qmi = modelIndexForNode(node, 0);
-
-        if (columnCount > 0) {
-            beginInsertColumns(qmi, 0, columnCount - 1);
-            node->columnCount = columnCount;
-            endInsertColumns();
-        } else {
-            node->columnCount = columnCount;
-        }
-
-        if (rowCount > 0) {
-            beginInsertRows(qmi, 0, rowCount - 1);
-            node->children.reserve(rowCount);
-            for (int i = 0; i < rowCount; ++i) {
-                auto *child = new Node;
-                child->parent = node;
-                node->children.push_back(child);
+            Node *node = nodeForIndex(index);
+            if (!node) {
+                // This can happen e.g. when we called a blocking operation from the remote client
+                // via the method invocation with a direct connection. Then when the blocking
+                // operation creates e.g. a QObject it is directly added/removed to the ObjectTree
+                // and we get signals for that. When we then though ask for column counts we will
+                // only get responses once the blocking operation has finished, at which point
+                // the object may already have been invalidated.
+                continue;
             }
-            node->rowCount = rowCount;
-            endInsertRows();
-        } else {
-            node->rowCount = rowCount;
+            // we get -1/-1 if we requested for an invalid index, e.g. due to not having processed
+            // all structure changes yet. This will automatically trigger a retry.
+            Q_ASSERT((rowCount >= 0 && columnCount >= 0) || (rowCount == -1 && columnCount == -1));
+            if (node->rowCount >= 0 || node->columnCount >= 0) {
+                // This can happen in similar racy conditions as below, when we request the row/col count
+                // for two different Node* at the same index (one was deleted inbetween and then the other
+                // was created). We ignore the new data as the node it is intended for will request it again
+                // after processing all structure changes.
+                continue;
+            }
+
+            if (node->rowCount == -1)
+                continue; // we didn't ask for this, probably outdated response for a moved node
+
+            Q_ASSERT(node->rowCount < -1 && node->columnCount == -1);
+
+            const QModelIndex qmi = modelIndexForNode(node, 0);
+
+            if (columnCount > 0) {
+                beginInsertColumns(qmi, 0, columnCount - 1);
+                node->columnCount = columnCount;
+                endInsertColumns();
+            } else {
+                node->columnCount = columnCount;
+            }
+
+            if (rowCount > 0) {
+                beginInsertRows(qmi, 0, rowCount - 1);
+                node->children.reserve(rowCount);
+                for (int i = 0; i < rowCount; ++i) {
+                    auto *child = new Node;
+                    child->parent = node;
+                    node->children.push_back(child);
+                }
+                node->rowCount = rowCount;
+                endInsertRows();
+            } else {
+                node->rowCount = rowCount;
+            }
         }
         break;
     }
@@ -707,9 +715,14 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
         return;
     node->rowCount = -2;
 
-    Message msg(m_myAddress, Protocol::ModelRowColumnCountRequest);
-    msg << Protocol::fromQModelIndex(index);
-    sendMessage(msg);
+    auto &indexes = m_pendingRequests[RowColumnCount];
+    indexes.push_back(Protocol::fromQModelIndex(index));
+    if (indexes.size() > 100) {
+        m_pendingRequestsTimer->stop();
+        doRequests();
+    } else {
+        m_pendingRequestsTimer->start();
+    }
 }
 
 void RemoteModel::requestDataAndFlags(const QModelIndex &index) const
@@ -724,24 +737,48 @@ void RemoteModel::requestDataAndFlags(const QModelIndex &index) const
     Q_ASSERT(node->state.size() > index.column());
     node->state[index.column()] = state | RemoteModelNodeState::Loading; // mark pending request
 
-    m_pendingDataRequests.push_back(Protocol::fromQModelIndex(index));
-    if (m_pendingDataRequests.size() > 100) {
-        m_pendingDataRequestsTimer->stop();
-        doRequestDataAndFlags();
+    auto &indexes = m_pendingRequests[DataAndFlags];
+    indexes.push_back(Protocol::fromQModelIndex(index));
+    if (indexes.size() > 100) {
+        m_pendingRequestsTimer->stop();
+        doRequests();
     } else {
-        m_pendingDataRequestsTimer->start();
+        m_pendingRequestsTimer->start();
     }
 }
 
-void RemoteModel::doRequestDataAndFlags() const
+void RemoteModel::doRequests() const
 {
-    Q_ASSERT(!m_pendingDataRequests.isEmpty());
-    Message msg(m_myAddress, Protocol::ModelContentRequest);
-    msg << quint32(m_pendingDataRequests.size());
-    foreach (const auto &index, m_pendingDataRequests)
-        msg << index;
-    m_pendingDataRequests.clear();
-    sendMessage(msg);
+    QMutableMapIterator<RequestType, QVector<Protocol::ModelIndex>> it(m_pendingRequests);
+
+    while (it.hasNext()) {
+        it.next();
+
+        Q_ASSERT(!it.value().isEmpty());
+        const auto &indexes = it.value();
+
+        switch (it.key()) {
+        case RowColumnCount: {
+            Message msg(m_myAddress, Protocol::ModelRowColumnCountRequest);
+            msg << quint32(indexes.size());
+            foreach (const auto &index, indexes)
+                msg << index;
+            sendMessage(msg);
+            break;
+        }
+
+        case DataAndFlags: {
+            Message msg(m_myAddress, Protocol::ModelContentRequest);
+            msg << quint32(indexes.size());
+            foreach (const auto &index, indexes)
+                msg << index;
+            sendMessage(msg);
+            break;
+        }
+        }
+
+        it.remove();
+    }
 }
 
 void RemoteModel::requestHeaderData(Qt::Orientation orientation, int section) const
