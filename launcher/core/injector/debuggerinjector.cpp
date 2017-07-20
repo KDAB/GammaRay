@@ -60,9 +60,9 @@ QString DebuggerInjector::filePath() const
     return m_filePath;
 }
 
-void DebuggerInjector::setFilePath(const QString &debuggerFilePath)
+void DebuggerInjector::setFilePath(const QString &filePath)
 {
-    m_filePath = debuggerFilePath;
+    m_filePath = filePath;
 }
 
 void DebuggerInjector::stop()

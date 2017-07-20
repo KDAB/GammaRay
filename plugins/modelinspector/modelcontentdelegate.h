@@ -40,7 +40,7 @@ public:
     explicit ModelContentDelegate(QObject *parent = nullptr);
     ~ModelContentDelegate();
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    void paint(QPainter *painter, const QStyleOptionViewItem &origOption, const QModelIndex &index) const override;
 };
 
 }

@@ -99,7 +99,7 @@ public:
     QAction *zoomInAction() const;
 
     QAbstractItemModel *pickSourceModel() const;
-    void setPickSourceModel(QAbstractItemModel *pickSourceModel);
+    void setPickSourceModel(QAbstractItemModel *sourceModel);
 
     Q_INVOKABLE virtual void restoreState(const QByteArray &state);
     virtual QByteArray saveState() const;
@@ -191,8 +191,6 @@ private:
     // size of the rulers
     int horizontalRulerHeight() const;
     int verticalRulerWidth() const;
-
-
 
 private slots:
     void interactionActionTriggered(QAction *action);

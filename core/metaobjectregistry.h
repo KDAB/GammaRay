@@ -56,12 +56,12 @@ public:
 
     QVariant data(const QMetaObject *metaObject, MetaObjectData type) const;
     bool isValid(const QMetaObject *metaObject) const;
-    const QMetaObject* aliveInstance(const QMetaObject *mo) const;
+    const QMetaObject *aliveInstance(const QMetaObject *metaObject) const;
 
     const QMetaObject *parentOf(const QMetaObject *metaObject) const;
     QVector<const QMetaObject *> childrenOf(const QMetaObject *metaObject) const;
 
-    const QMetaObject* canonicalMetaObject(const QMetaObject *mo) const;
+    const QMetaObject *canonicalMetaObject(const QMetaObject *metaObject) const;
 
 public slots:
     void objectAdded(QObject *obj);
@@ -73,8 +73,8 @@ signals:
     void dataChanged(const QMetaObject *metaObject);
 
 private:
-    const QMetaObject* addMetaObject(const QMetaObject *metaObject, bool mergeDynamic = false);
-    bool inheritsQObject(const QMetaObject *mo) const;
+    const QMetaObject *addMetaObject(const QMetaObject *metaObject, bool mergeDynamic = false);
+    bool inheritsQObject(const QMetaObject *metaObject) const;
 
     bool isKnownMetaObject(const QMetaObject *metaObject) const;
     void addAliveInstance(QObject *obj, const QMetaObject *canonicalMO);

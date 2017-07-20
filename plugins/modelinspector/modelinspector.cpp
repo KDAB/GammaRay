@@ -183,7 +183,7 @@ void ModelInspector::objectCreated(QObject *object)
         m_probe->discoverObject(proxy->sourceModel());
 }
 
-void ModelInspector::selectionModelSelected(const QItemSelection& selected)
+void ModelInspector::selectionModelSelected(const QItemSelection &selected)
 {
     QModelIndex idx;
     if (selected.size() > 0)

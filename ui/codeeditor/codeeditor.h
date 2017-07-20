@@ -74,7 +74,7 @@ private:
     QTextBlock blockAtPosition(int y) const;
     bool isFoldable(const QTextBlock &block) const;
     bool isFolded(const QTextBlock &block) const;
-    void toggleFold(const QTextBlock &block);
+    void toggleFold(const QTextBlock &startBlock);
 
     static KSyntaxHighlighting::Repository *s_repository;
 

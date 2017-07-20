@@ -38,7 +38,7 @@ class ModelCellModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit ModelCellModel(QObject *parent = nullptr);
-    void setModelIndex(const QModelIndex &index);
+    void setModelIndex(const QModelIndex &idx);
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value,

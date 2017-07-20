@@ -58,7 +58,7 @@ public:
 
 public slots:
     void activateMethod() override;
-    void invokeMethod(Qt::ConnectionType type) override;
+    void invokeMethod(Qt::ConnectionType connectionType) override;
     void connectToSignal() override;
 
 private slots:

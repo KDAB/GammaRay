@@ -40,7 +40,7 @@ public:
     PreloadInjector();
     QString name() const override;
     bool launch(const QStringList &programAndArgs, const QString &probeDll,
-                const QString &probeFunc, const QProcessEnvironment &env) override;
+                const QString &probeFunc, const QProcessEnvironment &_env) override;
 };
 }
 

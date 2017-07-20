@@ -46,7 +46,7 @@ public:
     bool checkEverything();
 
     /** Run tests for one specific injector only. */
-    bool checkInjector(const QString &injectorName);
+    bool checkInjector(const QString &injectorType);
 
 signals:
     /** Emitted for informational messages, ie. passing tests. */

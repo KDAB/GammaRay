@@ -53,9 +53,9 @@ class GAMMARAY_COMMON_EXPORT Message
 {
 public:
     /**
-     * Construct a new message to/from @p address and message type @p type.
+     * Construct a new message to/from @p objectAddress and message type @p type.
      */
-    explicit Message(Protocol::ObjectAddress address, Protocol::MessageType type);
+    explicit Message(Protocol::ObjectAddress objectAddress, Protocol::MessageType type);
     Message(Message &&other); // krazy:exclude=explicit
     ~Message();
 

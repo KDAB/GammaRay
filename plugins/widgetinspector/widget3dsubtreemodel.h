@@ -49,7 +49,7 @@ public:
     explicit Widget3DSubtreeModel(QObject *parent = nullptr);
     ~Widget3DSubtreeModel();
 
-    void setSourceModel(QAbstractItemModel *sourceModel) override;
+    void setSourceModel(QAbstractItemModel *newSource) override;
 
     void setRootObjectId(const QString &rootObject);
     QString rootObjectId() const;
@@ -72,7 +72,7 @@ Q_SIGNALS:
     void rootObjectIdChanged();
 
 private Q_SLOTS:
-    int sourceRowsInserted(const QModelIndex &parent, int first, int last);
+    int sourceRowsInserted(const QModelIndex &sourceParent, int first, int last);
     void sourceRowsAboutToBeRemoved(const QModelIndex &parent, int first, int last);
     void sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void sourceModelReset();

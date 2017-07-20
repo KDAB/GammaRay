@@ -33,9 +33,8 @@
 
 using namespace GammaRay;
 
-TreeExpander::TreeExpander(QTreeView* view) :
-    QObject(view),
-    m_view(view)
+TreeExpander::TreeExpander(QTreeView *view)
+    : QObject(view), m_view(view)
 {
     Q_ASSERT(m_view);
     Q_ASSERT(m_view->model());
@@ -47,18 +46,19 @@ TreeExpander::~TreeExpander()
 {
 }
 
-void TreeExpander::rowsInserted(const QModelIndex &parent, int start, int end)
+void TreeExpander::rowsInserted(const QModelIndex &index, int start, int end)
 {
     if (m_view->horizontalScrollBar()->isVisible()) {
         deleteLater();
         return;
     }
 
-    if (parent.isValid() && !m_view->isExpanded(parent))
+    if (index.isValid() && !m_view->isExpanded(index)) {
         return;
+    }
 
     for (auto row = start; row <= end; ++row) {
-        const auto idx = m_view->model()->index(row, 0, parent);
+        const auto idx = m_view->model()->index(row, 0, index);
         m_view->setExpanded(idx, true);
     }
 }

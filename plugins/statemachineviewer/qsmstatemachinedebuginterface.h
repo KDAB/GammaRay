@@ -56,20 +56,20 @@ public:
 
     State rootState() const override;
     bool stateValid(State state) const override;
-    QVector<State> stateChildren(State state) const override;
-    State parentState(State state) const override;
+    QVector<State> stateChildren(State parentId) const override;
+    State parentState(State stateId) const override;
 
-    bool isInitialState(State state) const override;
-    QString transitions(State state) const override;
+    bool isInitialState(State stateId) const override;
+    QString transitions(State stateId) const override;
 
     QString stateLabel(State state) const override;
     StateType stateType(State stateId) const override;
     QObject *stateObject(State state) const override;
 
     QVector<Transition> stateTransitions(State state) const override;
-    QString transitionLabel(Transition transition) const override;
-    State transitionSource(Transition transition) const override;
-    QVector<State> transitionTargets(Transition transition) const override;
+    QString transitionLabel(Transition t) const override;
+    State transitionSource(Transition t) const override;
+    QVector<State> transitionTargets(Transition t) const override;
     QString stateDisplay(State state) const override;
     QString stateDisplayType(State state) const override;
 

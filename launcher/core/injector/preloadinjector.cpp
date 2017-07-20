@@ -53,11 +53,11 @@ QString PreloadInjector::name() const
 }
 
 bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
-                             const QString &probeFunc, const QProcessEnvironment &e)
+                             const QString &probeFunc, const QProcessEnvironment &_env)
 {
     Q_UNUSED(probeFunc);
 
-    QProcessEnvironment env(e);
+    QProcessEnvironment env(_env);
 #ifdef Q_OS_MAC
     env.insert(QStringLiteral("DYLD_INSERT_LIBRARIES"), probeDll);
     env.insert(QStringLiteral("GAMMARAY_UNSET_DYLD"), QStringLiteral("1"));

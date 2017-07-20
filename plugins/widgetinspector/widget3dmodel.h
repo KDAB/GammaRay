@@ -26,7 +26,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef WIDGET3DMODEL_H
 #define WIDGET3DMODEL_H
 
@@ -136,7 +135,7 @@ private Q_SLOTS:
     void onWidgetDestroyed(QObject *obj);
 
 private:
-    Widget3DWidget *widgetForObject(QObject *object, const QModelIndex &index, bool createWhenMissing = true) const;
+    Widget3DWidget *widgetForObject(QObject *obj, const QModelIndex &idx, bool createWhenMissing = true) const;
     Widget3DWidget *widgetForIndex(const QModelIndex &idx, bool createWhenMissing = true) const;
 
     // mutable becasue we populate it lazily from data() const
@@ -145,6 +144,6 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(GammaRay::Widget3DWidget*)
+Q_DECLARE_METATYPE(GammaRay::Widget3DWidget *)
 
 #endif // WIDGET3DMODEL_H

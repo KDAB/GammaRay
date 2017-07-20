@@ -51,7 +51,7 @@ public:
     QString errorString() override;
 
 protected:
-    bool launchProcess(const QStringList &programAndArgs, const QProcessEnvironment &env);
+    bool launchProcess(const QStringList &programAndArgs, const QProcessEnvironment &_env);
     int mExitCode;
     QString mErrorString;
 

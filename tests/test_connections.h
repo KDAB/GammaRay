@@ -106,7 +106,7 @@ class TestMain : public QObject
 {
     Q_OBJECT
 public:
-    TestMain(int argc, char **m_argv);
+    TestMain(int argc, char **argv);
 public slots:
     void startTests();
 private slots:

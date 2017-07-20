@@ -61,16 +61,16 @@ public:
     ~Qt3DInspector();
 
 public slots:
-    void selectEngine(int index) override;
+    void selectEngine(int row) override;
 
 private slots:
     void objectSelected(QObject *obj);
 
 private:
-    void entitySelectionChanged(const QItemSelection &selected);
+    void entitySelectionChanged(const QItemSelection &selection);
     void selectEngine(Qt3DCore::QAspectEngine *engine);
     void selectEntity(Qt3DCore::QEntity *entity);
-    void frameGraphSelectionChanged(const QItemSelection &selected);
+    void frameGraphSelectionChanged(const QItemSelection &selection);
     void selectFrameGraphNode(Qt3DRender::QFrameGraphNode *node);
 
     void registerCoreMetaTypes();

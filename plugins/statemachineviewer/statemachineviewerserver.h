@@ -86,7 +86,7 @@ private slots:
 
     void repopulateGraph() override;
 
-    void handleLogMessage(const QString &label, const QString &message);
+    void handleLogMessage(const QString &label, const QString &msg);
 
     void objectSelected(QObject *obj);
 

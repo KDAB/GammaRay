@@ -44,7 +44,7 @@ public:
     explicit Widget3DWindowModel(QObject *parent = nullptr);
     ~Widget3DWindowModel();
 
-    void setSourceModel(QAbstractItemModel *sourceModel) override;
+    void setSourceModel(QAbstractItemModel *sourceModel_) override;
 
     int rowCount(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent) const override;

@@ -57,7 +57,7 @@ public:
 
     qint64 totalInterval() const { return m_totalInterval; }
 
-    void setActive(bool isActive);
+    void setActive(bool active);
     bool isActive() const;
 
     QString toolTipAt(const QModelIndex &index, int position, int width);

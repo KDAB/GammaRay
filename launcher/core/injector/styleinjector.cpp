@@ -67,9 +67,9 @@ static QChar listSeparator()
 }
 
 bool StyleInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
-                           const QString &probeFunc, const QProcessEnvironment &e)
+                           const QString &probeFunc, const QProcessEnvironment &_env)
 {
-    auto env = e.isEmpty() ? QProcessEnvironment::systemEnvironment() : e;
+    auto env = _env.isEmpty() ? QProcessEnvironment::systemEnvironment() : _env;
     env.insert(QStringLiteral("GAMMARAY_STYLEINJECTOR_PROBEDLL"), probeDll);
     env.insert(QStringLiteral("GAMMARAY_STYLEINJECTOR_PROBEFUNC"), probeFunc);
 
@@ -88,8 +88,10 @@ bool StyleInjector::launch(const QStringList &programAndArgs, const QString &pro
 bool StyleInjector::selfTest()
 {
 #ifndef GAMMARAY_CORE_ONLY_LAUNCHER
-    foreach (const auto &path, Paths::pluginPaths(GAMMARAY_PROBE_ABI)) // we have no way yet of running a self-test for a specific ABI...
+    foreach (const auto &path, Paths::pluginPaths(GAMMARAY_PROBE_ABI)) {
+        // we have no way yet of running a self-test for a specific ABI...
         QCoreApplication::addLibraryPath(path);
+    }
     if (!QStyleFactory::keys().contains(QStringLiteral("gammaray-injector"))) {
         mErrorString = tr("Injector style plugin is not found in the Qt style "
                           "plug-in search path or cannot be loaded");

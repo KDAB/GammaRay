@@ -32,10 +32,10 @@
 
 namespace GammaRay {
 
-WlCompositorInterface::WlCompositorInterface(QObject *p)
-                     : QObject(p)
+WlCompositorInterface::WlCompositorInterface(QObject *parent)
+    : QObject(parent)
 {
-  ObjectBroker::registerObject<WlCompositorInterface *>(this);
+    ObjectBroker::registerObject<WlCompositorInterface *>(this);
 }
 
 WlCompositorInterface::~WlCompositorInterface()

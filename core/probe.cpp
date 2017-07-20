@@ -365,8 +365,9 @@ void Probe::createProbe(bool findExisting)
         s_instance = QAtomicPointer<Probe>(probe);
 
         // add objects to the probe that were tracked before its creation
-        foreach (QObject *obj, s_listener()->addedBeforeProbeInstance)
+        foreach (QObject *obj, s_listener()->addedBeforeProbeInstance) {
             objectAdded(obj);
+        }
         s_listener()->addedBeforeProbeInstance.clear();
 
         // try to find existing objects by other means
@@ -912,8 +913,9 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
 
     // filters provided by plugins
     if (!filterObject(receiver)) {
-        foreach (QObject *filter, m_globalEventFilters)
+        foreach (QObject *filter, m_globalEventFilters) {
             filter->eventFilter(receiver, event);
+        }
     }
 
     return QObject::eventFilter(receiver, event);
@@ -925,24 +927,26 @@ void Probe::findExistingObjects()
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (auto guiApp = qobject_cast<QGuiApplication *>(QCoreApplication::instance())) {
-        foreach (auto window, guiApp->allWindows())
+        foreach (auto window, guiApp->allWindows()) {
             discoverObject(window);
+        }
     }
 #endif
 }
 
-void Probe::discoverObject(QObject *obj)
+void Probe::discoverObject(QObject *object)
 {
-    if (!obj)
+    if (!object)
         return;
 
     QMutexLocker lock(s_lock());
-    if (m_validObjects.contains(obj))
+    if (m_validObjects.contains(object))
         return;
 
-    objectAdded(obj);
-    foreach (QObject *child, obj->children())
+    objectAdded(object);
+    foreach (QObject *child, object->children()) {
         discoverObject(child);
+    }
 }
 
 void Probe::installGlobalEventFilter(QObject *filter)
@@ -1025,7 +1029,7 @@ void Probe::executeSignalCallback(const Func &func)
                   func);
 }
 
-SourceLocation Probe::objectCreationSourceLocation(QObject* object)
+SourceLocation Probe::objectCreationSourceLocation(QObject *object)
 {
 #if USE_BACKWARD_CPP
   if (!s_listener()->constructionBacktracesForObjects.contains(object)) {

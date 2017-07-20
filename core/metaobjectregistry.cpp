@@ -93,57 +93,57 @@ MetaObjectRegistry::~MetaObjectRegistry()
 {
 }
 
-QVariant MetaObjectRegistry::data(const QMetaObject *object, MetaObjectData type) const
+QVariant MetaObjectRegistry::data(const QMetaObject *metaObject, MetaObjectData type) const
 {
     switch (type) {
     case ClassName:
-        return m_metaObjectInfoMap.value(object).className;
+        return m_metaObjectInfoMap.value(metaObject).className;
     case Valid:
-        return isValid(object);
+        return isValid(metaObject);
     case SelfCount:
-        if (inheritsQObject(object))
-            return m_metaObjectInfoMap.value(object).selfCount;
+        if (inheritsQObject(metaObject))
+            return m_metaObjectInfoMap.value(metaObject).selfCount;
         return QStringLiteral("-");
     case InclusiveCount:
-        if (inheritsQObject(object))
-            return m_metaObjectInfoMap.value(object).inclusiveCount;
+        if (inheritsQObject(metaObject))
+            return m_metaObjectInfoMap.value(metaObject).inclusiveCount;
         return QStringLiteral("-");
     case SelfAliveCount:
-        if (inheritsQObject(object))
-            return m_metaObjectInfoMap.value(object).selfAliveCount;
+        if (inheritsQObject(metaObject))
+            return m_metaObjectInfoMap.value(metaObject).selfAliveCount;
         return QStringLiteral("-");
     case InclusiveAliveCount:
-        if (inheritsQObject(object))
-            return m_metaObjectInfoMap.value(object).inclusiveAliveCount;
+        if (inheritsQObject(metaObject))
+            return m_metaObjectInfoMap.value(metaObject).inclusiveAliveCount;
         return QStringLiteral("-");
     }
     return QVariant();
 }
 
-bool MetaObjectRegistry::isValid(const QMetaObject *mo) const
+bool MetaObjectRegistry::isValid(const QMetaObject *metaObject) const
 {
-    const auto it = m_metaObjectInfoMap.constFind(mo);
+    const auto it = m_metaObjectInfoMap.constFind(metaObject);
     if (it == m_metaObjectInfoMap.constEnd())
         return false;
     return !(*it).invalid;
 }
 
-const QMetaObject *MetaObjectRegistry::parentOf(const QMetaObject *mo) const
+const QMetaObject *MetaObjectRegistry::parentOf(const QMetaObject *metaObject) const
 {
-    return m_childParentMap.value(mo);
+    return m_childParentMap.value(metaObject);
 }
 
-QVector<const QMetaObject *> MetaObjectRegistry::childrenOf(const QMetaObject *mo) const
+QVector<const QMetaObject *> MetaObjectRegistry::childrenOf(const QMetaObject *metaObject) const
 {
-    return m_parentChildMap.value(mo);
+    return m_parentChildMap.value(metaObject);
 }
 
-bool MetaObjectRegistry::inheritsQObject(const QMetaObject *mo) const
+bool MetaObjectRegistry::inheritsQObject(const QMetaObject *metaObject) const
 {
-    while (mo) {
-        if (mo == &QObject::staticMetaObject)
+    while (metaObject) {
+        if (metaObject == &QObject::staticMetaObject)
             return true;
-        mo = m_childParentMap.value(mo);
+        metaObject = m_childParentMap.value(metaObject);
     }
 
     return false;
@@ -284,11 +284,11 @@ bool MetaObjectRegistry::isKnownMetaObject(const QMetaObject *metaObject) const
     return m_childParentMap.contains(metaObject);
 }
 
-const QMetaObject *MetaObjectRegistry::aliveInstance(const QMetaObject *mo) const
+const QMetaObject *MetaObjectRegistry::aliveInstance(const QMetaObject *metaObject) const
 {
-    const auto it = m_aliveInstances.find(mo);
+    const auto it = m_aliveInstances.find(metaObject);
     if (it == m_aliveInstances.end())
-        return mo; // static QMO
+        return metaObject; // static QMO
     if (it.value().isEmpty())
         return nullptr;
     return it.value().at(0);
@@ -314,10 +314,10 @@ void MetaObjectRegistry::removeAliveInstance(QObject *obj, const QMetaObject *ca
     m_canonicalMetaObjectMap.remove(aliveMO);
 }
 
-const QMetaObject *MetaObjectRegistry::canonicalMetaObject(const QMetaObject *mo) const
+const QMetaObject *MetaObjectRegistry::canonicalMetaObject(const QMetaObject *metaObject) const
 {
-    const auto it = m_canonicalMetaObjectMap.find(mo);
+    const auto it = m_canonicalMetaObjectMap.find(metaObject);
     if (it != m_canonicalMetaObjectMap.end())
         return *it;
-    return mo;
+    return metaObject;
 }

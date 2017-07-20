@@ -82,7 +82,7 @@ QString Util::addressToString(const void *p)
     return QString::fromLatin1(buf);
 }
 
-QString Util::enumToString(const QVariant& value, const char* typeName, const QObject* object)
+QString Util::enumToString(const QVariant &value, const char *typeName, const QObject *object)
 {
     return EnumUtil::enumToString(value, typeName, object ? object->metaObject() : nullptr);
 }
@@ -109,10 +109,9 @@ QString Util::prettyMethodSignature(const QMetaMethod &method)
 #endif
 }
 
-
-bool Util::descendantOf(const QObject *ascendant, const QObject *obj)
+bool Util::descendantOf(const QObject *ascendant, const QObject *object)
 {
-    QObject *parent = obj->parent();
+    QObject *parent = object->parent();
     if (!parent)
         return false;
     if (parent == ascendant)
@@ -238,10 +237,10 @@ static int iconIdForObject(const QMetaObject *mo, const QObject *obj)
 }
 }
 
-int Util::iconIdForObject(const QObject *obj)
+int Util::iconIdForObject(const QObject *object)
 {
-    if (obj)
-        return GammaRay::iconIdForObject(obj->metaObject(), obj);
+    if (object)
+        return GammaRay::iconIdForObject(object->metaObject(), object);
     return -1;
 }
 

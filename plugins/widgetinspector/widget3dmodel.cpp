@@ -26,7 +26,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "widget3dmodel.h"
 
 #include <QDebug>
@@ -43,10 +42,10 @@
 
 using namespace GammaRay;
 
-Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &idx,
+Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &modelIndex,
                                Widget3DWidget *parent)
     : QObject(parent)
-    , mModelIndex(idx)
+    , mModelIndex(modelIndex)
     , mQWidget(qWidget)
     , mUpdateTimer(nullptr)
     , mDepth(0)
@@ -182,7 +181,6 @@ void GammaRay::Widget3DWidget::updateTimeout()
     }
 }
 
-
 bool Widget3DWidget::updateGeometry()
 {
     if (!mGeomDirty || !mQWidget) {
@@ -277,8 +275,6 @@ bool Widget3DWidget::updateTexture()
     mTextureDirty = false;
     return true;
 }
-
-
 
 Widget3DModel::Widget3DModel(QObject *parent)
     : QSortFilterProxyModel(parent)
