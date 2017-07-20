@@ -24,7 +24,9 @@
 
 find_package(Qt5Core QUIET)
 
-set(_qmake_executable_default "qmake-qt5")
+if (Qt5Core_FOUND)
+    set(_qmake_executable_default "qmake-qt5")
+endif ()
 if (TARGET Qt5::qmake)
     get_target_property(_qmake_executable_default Qt5::qmake LOCATION)
 endif()
@@ -33,6 +35,11 @@ set(QMAKE_EXECUTABLE ${_qmake_executable_default}
 
 # This is not public API (yet)!
 function(query_qmake result_variable qt_variable)
+    if(NOT QMAKE_EXECUTABLE)
+        set(${result_variable} "" PARENT_SCOPE)
+        message(WARNING "Should specify a qmake Qt5 binary. Can't check ${qt_variable}")
+        return()
+    endif()
     execute_process(
         COMMAND ${QMAKE_EXECUTABLE} -query "${qt_variable}"
         RESULT_VARIABLE return_code

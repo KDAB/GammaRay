@@ -145,18 +145,29 @@ macro (enable_sanitizer_flags sanitize_option)
     endif ()
 endmacro ()
 
-# for each element of the ECM_ENABLE_SANITIZERS list
-foreach ( CUR_SANITIZER ${ECM_ENABLE_SANITIZERS} )
-    # lowercase filter
-    string(TOLOWER ${CUR_SANITIZER} CUR_SANITIZER)
-    # check option and enable appropriate flags
-    enable_sanitizer_flags ( ${CUR_SANITIZER} )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XSAN_COMPILE_FLAGS}" )
-    if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-        link_libraries(${XSAN_LINKER_FLAGS})
+if (ECM_ENABLE_SANITIZERS)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        # for each element of the ECM_ENABLE_SANITIZERS list
+        foreach ( CUR_SANITIZER ${ECM_ENABLE_SANITIZERS} )
+            # lowercase filter
+            string(TOLOWER ${CUR_SANITIZER} CUR_SANITIZER)
+            # check option and enable appropriate flags
+            enable_sanitizer_flags ( ${CUR_SANITIZER} )
+            # TODO: GCC will not link pthread library if enabled ASan
+            if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+              set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${XSAN_COMPILE_FLAGS}" )
+            endif()
+            set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${XSAN_COMPILE_FLAGS}" )
+            if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+              link_libraries(${XSAN_LINKER_FLAGS})
+            endif()
+            if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+                string(REPLACE "-Wl,--no-undefined" "" CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
+                string(REPLACE "-Wl,--no-undefined" "" CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
+            endif ()
+        endforeach()
+    else()
+        message(STATUS "Tried to enable sanitizers (-DECM_ENABLE_SANITIZERS=${ECM_ENABLE_SANITIZERS}), \
+but compiler (${CMAKE_CXX_COMPILER_ID}) does not have sanitizer support")
     endif()
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        string(REPLACE "-Wl,--no-undefined" "" CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
-        string(REPLACE "-Wl,--no-undefined" "" CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
-    endif ()
-endforeach ()
+endif()
