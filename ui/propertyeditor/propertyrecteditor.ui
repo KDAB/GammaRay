@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GammaRay::PropertyRectEditorDialog</class>
+ <widget class="QDialog" name="GammaRay::PropertyRectEditorDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>140</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <widget class="QWidget" name="intPage">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>TopLeft:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="GammaRay::PropertyPointEditor" name="pointWidget" native="true"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="GammaRay::PropertySizeEditor" name="sizeWidget" native="true"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="floatPage">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>TopLeft:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Size:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="GammaRay::PropertyPointFEditor" name="pointFWidget" native="true"/>
+         </item>
+         <item row="1" column="1">
+          <widget class="GammaRay::PropertySizeFEditor" name="sizeFWidget" native="true"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::PropertyPointFEditor</class>
+   <extends>QWidget</extends>
+   <header>ui/propertyeditor/propertydoublepaireditor.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::PropertySizeFEditor</class>
+   <extends>QWidget</extends>
+   <header>ui/propertyeditor/propertydoublepaireditor.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::PropertyPointEditor</class>
+   <extends>QWidget</extends>
+   <header>ui/propertyeditor/propertyintpaireditor.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::PropertySizeEditor</class>
+   <extends>QWidget</extends>
+   <header>ui/propertyeditor/propertyintpaireditor.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>GammaRay::PropertyRectEditorDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>199</x>
+     <y>114</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>GammaRay::PropertyRectEditorDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>199</x>
+     <y>114</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
