@@ -63,18 +63,15 @@ public:
 
 private slots:
     void showMessage(const QString &message);
-    // cppcheck-suppress passedByValue
     void stateAdded(const GammaRay::StateId stateId, const GammaRay::StateId parentId,
                     const bool hasChildren, const QString &label, const GammaRay::StateType type,
                     const bool connectToInitial);
     void stateConfigurationChanged(const GammaRay::StateMachineConfiguration &config);
-    // cppcheck-suppress passedByValue
-    void transitionAdded(const GammaRay::TransitionId transitionId, const GammaRay::StateId source,
-                         // cppcheck-suppress passedByValue
-                         const GammaRay::StateId target, const QString &label);
-    // cppcheck-suppress passedByValue
+    void transitionAdded(const GammaRay::TransitionId transitionId,
+                         const GammaRay::StateId sourceId,
+                         const GammaRay::StateId targetId, const QString &label);
     void statusChanged(const bool haveStateMachine, const bool running);
-    void transitionTriggered(GammaRay::TransitionId transition, const QString &label);
+    void transitionTriggered(GammaRay::TransitionId transitionId, const QString &label);
     void stateModelReset();
 
     void repopulateView();
@@ -85,8 +82,11 @@ private slots:
     void objectInspectorContextMenu(QPoint pos);
 
 private:
-    /// Show context menu for index @p index (a object inspector model index) at pos @p pos
-    void showContextMenuForObject(const QModelIndex &index, const QPoint &pos);
+    /**
+     * Show context menu for index @p index (a object inspector model index)
+     * at global position @p globalPos.
+     */
+    void showContextMenuForObject(const QModelIndex &index, const QPoint &globalPos);
 
     void loadSettings();
     void saveSettings();
