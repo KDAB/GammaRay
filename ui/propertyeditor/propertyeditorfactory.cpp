@@ -35,6 +35,7 @@
 #include "propertypaletteeditor.h"
 #include "propertymatrixeditor.h"
 #include "propertytexteditor.h"
+#include "propertyrecteditor.h"
 
 #include <QItemEditorFactory>
 
@@ -49,6 +50,8 @@ PropertyEditorFactory::PropertyEditorFactory()
     addEditor(QVariant::Palette, new QStandardItemEditorCreator<PropertyPaletteEditor>());
     addEditor(QVariant::Point, new QStandardItemEditorCreator<PropertyPointEditor>());
     addEditor(QVariant::PointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
+    addEditor(QVariant::Rect, new QStandardItemEditorCreator<PropertyRectEditor>());
+    addEditor(QVariant::RectF, new QStandardItemEditorCreator<PropertyRectFEditor>());
     addEditor(QVariant::Size, new QStandardItemEditorCreator<PropertySizeEditor>());
     addEditor(QVariant::SizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
     addEditor(QVariant::String, new QStandardItemEditorCreator<PropertyTextEditor>());

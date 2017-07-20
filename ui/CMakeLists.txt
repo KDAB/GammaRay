@@ -45,6 +45,7 @@ set(gammaray_ui_srcs
   propertyeditor/propertymatrixeditor.cpp
   propertyeditor/propertymatrixmodel.cpp
   propertyeditor/propertytexteditor.cpp
+  propertyeditor/propertyrecteditor.cpp
 
   codeeditor/codeeditor.cpp
   codeeditor/codeeditorsidebar.cpp
@@ -88,6 +89,7 @@ qt4_wrap_ui(gammaray_ui_srcs
   propertyeditor/propertymatrixdialog.ui
   propertyeditor/propertytexteditor.ui
   propertyeditor/palettedialog.ui
+  propertyeditor/propertyrecteditor.ui
 
   tools/messagehandler/messagehandlerwidget.ui
   tools/metatypebrowser/metatypebrowserwidget.ui
