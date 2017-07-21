@@ -77,7 +77,7 @@ private:
         QTest::qWait(20);
         renderSpy.wait();
         m_view->update();
-        return renderSpy.wait();
+        return renderSpy.wait() || renderSpy.count() > 2;
     }
 
     std::unique_ptr<QQuickView> m_view;
