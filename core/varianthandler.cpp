@@ -141,16 +141,22 @@ QString VariantHandler::displayString(const QVariant &value)
         return l.join(QStringLiteral(", "));
     }
     case QVariant::Line:
+    {
+        const auto line = value.toLine();
         return
             QStringLiteral("%1, %2 → %3, %4").
-            arg(value.toLine().x1()).arg(value.toLine().y1()).
-            arg(value.toLine().x2()).arg(value.toLine().y2());
+            arg(line.x1()).arg(line.y1()).
+            arg(line.x2()).arg(line.y2());
+    }
 
     case QVariant::LineF:
+    {
+        const auto line = value.toLineF();
         return
             QStringLiteral("%1, %2 → %3, %4").
-            arg(value.toLineF().x1()).arg(value.toLineF().y1()).
-            arg(value.toLineF().x2()).arg(value.toLineF().y2());
+            arg(line.x1()).arg(line.y1()).
+            arg(line.x2()).arg(line.y2());
+    }
 
     case QVariant::Locale:
         return value.toLocale().name();
@@ -178,36 +184,48 @@ QString VariantHandler::displayString(const QVariant &value)
             return QString();
 #endif
         }
-	break;
+        break;
     }
 
     case QVariant::Point:
+    {
+        const auto point = value.toPoint();
         return
             QStringLiteral("%1, %2").
-            arg(value.toPoint().x()).
-            arg(value.toPoint().y());
+            arg(point.x()).
+            arg(point.y());
+    }
 
     case QVariant::PointF:
+    {
+        const auto point = value.toPointF();
         return
             QStringLiteral("%1, %2").
-            arg(value.toPointF().x()).
-            arg(value.toPointF().y());
+            arg(point.x()).
+            arg(point.y());
+    }
 
     case QVariant::Rect:
+    {
+        const auto rect = value.toRect();
         return
             QStringLiteral("%1, %2 %3 x %4").
-            arg(value.toRect().x()).
-            arg(value.toRect().y()).
-            arg(value.toRect().width()).
-            arg(value.toRect().height());
+            arg(rect.x()).
+            arg(rect.y()).
+            arg(rect.width()).
+            arg(rect.height());
+    }
 
     case QVariant::RectF:
+    {
+        const auto rect = value.toRectF();
         return
             QStringLiteral("%1, %2 %3 x %4").
-            arg(value.toRectF().x()).
-            arg(value.toRectF().y()).
-            arg(value.toRectF().width()).
-            arg(value.toRectF().height());
+            arg(rect.x()).
+            arg(rect.y()).
+            arg(rect.width()).
+            arg(rect.height());
+    }
 
     case QVariant::Region:
     {
@@ -229,16 +247,22 @@ QString VariantHandler::displayString(const QVariant &value)
     }
 
     case QVariant::Size:
+    {
+        const auto size = value.toSize();
         return
             QStringLiteral("%1 x %2").
-            arg(value.toSize().width()).
-            arg(value.toSize().height());
+            arg(size.width()).
+            arg(size.height());
+    }
 
     case QVariant::SizeF:
+    {
+        const auto size = value.toSizeF();
         return
             QStringLiteral("%1 x %2").
-            arg(value.toSizeF().width()).
-            arg(value.toSizeF().height());
+            arg(size.width()).
+            arg(size.height());
+    }
 
     case QVariant::StringList:
     {
