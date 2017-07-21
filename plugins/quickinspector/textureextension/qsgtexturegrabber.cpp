@@ -126,6 +126,8 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow *window)
             emit textureGrabbed(m_grabData, img);
         resetRequest();
     }
+
+    window->resetOpenGLState();
 }
 
 QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) const
@@ -133,6 +135,9 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) co
     if (context->isOpenGLES()) {
         auto glFuncs = context->functions();
         Q_ASSERT(glFuncs);
+
+        // Reset the error flag, it can be a pending error that will conflict with our later check
+        glFuncs->glGetError();
 
         glFuncs->glBindTexture(GL_TEXTURE_2D, textureId);
         if (const auto err = glFuncs->glGetError()) {
@@ -171,13 +176,17 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) co
     } else {
 #if !defined(QT_NO_OPENGL) && !defined(QT_OPENGL_ES_2)
         auto glFuncs = context->versionFunctions<QOpenGLFunctions_2_0>();
-        if (!glFuncs) {
+        if (!glFuncs
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0) // didn't use to be automatic
+                || !glFuncs->initializeOpenGLFunctions()
+#endif
+                ) {
             qWarning() << "unable to obtain OpenGL2 functions, too old GL version?";
             return QImage();
         }
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0) // didn't use to be automatic
-        glFuncs->initializeOpenGLFunctions();
-#endif
+
+        // Reset the error flag, it can be a pending error that will conflict with our later check
+        glFuncs->glGetError();
 
         glFuncs->glBindTexture(GL_TEXTURE_2D, textureId);
         if (const auto err = glFuncs->glGetError()) {
