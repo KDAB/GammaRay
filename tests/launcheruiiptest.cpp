@@ -57,7 +57,6 @@ private slots:
     }
 
     void testUrl_data()
-
     {
         QTest::addColumn<QString>("userInput", nullptr);
         QTest::addColumn<QString>("expectedParsed", nullptr);
