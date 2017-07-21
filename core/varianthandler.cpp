@@ -144,18 +144,18 @@ QString VariantHandler::displayString(const QVariant &value)
     {
         const auto line = value.toLine();
         return
-            QStringLiteral("%1, %2 → %3, %4").
-            arg(line.x1()).arg(line.y1()).
-            arg(line.x2()).arg(line.y2());
+            QString().sprintf("%i, %i → %i, %i",
+                              line.x1(), line.y1(),
+                              line.x2(), line.y2());
     }
 
     case QVariant::LineF:
     {
         const auto line = value.toLineF();
         return
-            QStringLiteral("%1, %2 → %3, %4").
-            arg(line.x1()).arg(line.y1()).
-            arg(line.x2()).arg(line.y2());
+            QString().sprintf("%f, %f → %f, %f",
+                              line.x1(), line.y1(),
+                              line.x2(), line.y2());
     }
 
     case QVariant::Locale:
@@ -191,40 +191,34 @@ QString VariantHandler::displayString(const QVariant &value)
     {
         const auto point = value.toPoint();
         return
-            QStringLiteral("%1, %2").
-            arg(point.x()).
-            arg(point.y());
+            QString().sprintf("%i, %i",
+                              point.x(), point.y());
     }
 
     case QVariant::PointF:
     {
         const auto point = value.toPointF();
         return
-            QStringLiteral("%1, %2").
-            arg(point.x()).
-            arg(point.y());
+            QString().sprintf("%f, %f",
+                              point.x(), point.y());
     }
 
     case QVariant::Rect:
     {
         const auto rect = value.toRect();
         return
-            QStringLiteral("%1, %2 %3 x %4").
-            arg(rect.x()).
-            arg(rect.y()).
-            arg(rect.width()).
-            arg(rect.height());
+            QString().sprintf("%i, %i %i x %i",
+                              rect.x(), rect.y(),
+                              rect.width(), rect.height());
     }
 
     case QVariant::RectF:
     {
         const auto rect = value.toRectF();
         return
-            QStringLiteral("%1, %2 %3 x %4").
-            arg(rect.x()).
-            arg(rect.y()).
-            arg(rect.width()).
-            arg(rect.height());
+            QString().sprintf("%f, %f %f x %f",
+                              rect.x(), rect.y(),
+                              rect.width(), rect.height());
     }
 
     case QVariant::Region:
@@ -250,18 +244,16 @@ QString VariantHandler::displayString(const QVariant &value)
     {
         const auto size = value.toSize();
         return
-            QStringLiteral("%1 x %2").
-            arg(size.width()).
-            arg(size.height());
+            QString().sprintf("%i x %i",
+                              size.width(), size.height());
     }
 
     case QVariant::SizeF:
     {
         const auto size = value.toSizeF();
         return
-            QStringLiteral("%1 x %2").
-            arg(size.width()).
-            arg(size.height());
+            QString().sprintf("%f x %f",
+                              size.width(), size.height());
     }
 
     case QVariant::StringList:
@@ -281,12 +273,11 @@ QString VariantHandler::displayString(const QVariant &value)
     case QVariant::Transform:
     {
         const QTransform t = value.value<QTransform>();
-        return
-            QStringLiteral("[%1 %2 %3, %4 %5 %6, %7 %8 %9]").
-            arg(t.m11()).arg(t.m12()).arg(t.m13()).
-            arg(t.m21()).arg(t.m22()).arg(t.m23()).
-            arg(t.m31()).arg(t.m32()).arg(t.m33());
-    }
+        return QString().sprintf("[%f %f %f, %f %f %f, %f %f %f]",
+                                 t.m11(), t.m12(), t.m13(),
+                                 t.m21(), t.m22(), t.m23(),
+                                 t.m31(), t.m32(), t.m33());
+        }
     default:
         break;
     }
@@ -294,9 +285,9 @@ QString VariantHandler::displayString(const QVariant &value)
     // types with dynamic type ids
     if (value.userType() == qMetaTypeId<QMargins>()) {
         const QMargins margins = value.value<QMargins>();
-        return qApp->translate("GammaRay::VariantHandler", "left: %1, top: %2, right: %3, bottom: %4")
-               .arg(margins.left()).arg(margins.top())
-               .arg(margins.right()).arg(margins.bottom());
+        return qApp->translate("GammaRay::VariantHandler", "left: %1, top: %2, right: %3, bottom: %4").arg(
+                    QString::number(margins.left()), QString::number(margins.top()),
+                    QString::number(margins.right()), QString::number(margins.bottom()));
     }
 
     if (value.canConvert<QObject *>())
