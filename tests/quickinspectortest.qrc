@@ -6,5 +6,11 @@
         <file>manual/lsd.png</file>
         <file>manual/rotationinvariant.qml</file>
         <file>manual/shadereffect.qml</file>
+        <file>manual/picking/invisibleoverlay.qml</file>
+        <file>manual/picking/negativezordering.qml</file>
+        <file>manual/picking/opacityzerooverlay.qml</file>
+        <file>manual/picking/stackedrects.qml</file>
+        <file>manual/picking/loader.qml</file>
+        <file>manual/picking/outsideofparent.qml</file>
     </qresource>
 </RCC>
