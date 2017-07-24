@@ -80,6 +80,7 @@
 #include <QCoreApplication>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#include <QSGRenderNode>
 #include <QSGRendererInterface>
 #include <private/qquickopenglshadereffectnode_p.h>
 #endif
@@ -111,6 +112,11 @@ Q_DECLARE_METATYPE(QSGMaterial *)
 Q_DECLARE_METATYPE(QSGMaterial::Flags)
 Q_DECLARE_METATYPE(QSGTexture::WrapMode)
 Q_DECLARE_METATYPE(QSGTexture::Filtering)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+Q_DECLARE_METATYPE(QSGRenderNode *)
+Q_DECLARE_METATYPE(QSGRenderNode::RenderingFlags)
+Q_DECLARE_METATYPE(QSGRenderNode::StateFlags)
+#endif
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Qt::MouseButtons)
 #endif
@@ -903,6 +909,16 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY(QSGOpacityNode, qreal, opacity, setOpacity);
     MO_ADD_PROPERTY(QSGOpacityNode, qreal, combinedOpacity, setCombinedOpacity);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    MO_ADD_METAOBJECT1(QSGRenderNode, QSGNode);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, QSGRenderNode::StateFlags, changedStates);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, QSGRenderNode::RenderingFlags, flags);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, QRectF, rect);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, qreal, inheritedOpacity);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, const QMatrix4x4 *, matrix);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, const QSGClipNode *, clipList);
+#endif
+
     MO_ADD_METAOBJECT0(QSGMaterial);
     MO_ADD_PROPERTY_RO(QSGMaterial, QSGMaterial::Flags, flags);
 
@@ -973,6 +989,28 @@ static const MetaEnum::Value<QSGRendererInterface::ShaderType> qsg_shader_type_t
 #undef E
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#define E(x) { QSGRenderNode:: x, #x }
+static const MetaEnum::Value<QSGRenderNode::StateFlag> render_node_state_flags_table[] = {
+    E(DepthState),
+    E(StencilState),
+    E(ScissorState),
+    E(ColorState),
+    E(BlendState),
+    E(CullState),
+    E(CullState),
+    E(ViewportState),
+    E(RenderTargetState)
+};
+
+static const MetaEnum::Value<QSGRenderNode::RenderingFlag> render_node_rendering_flags_table[] = {
+    E(BoundedRectRendering),
+    E(DepthAwareRendering),
+    E(OpaqueRendering)
+};
+#undef E
+#endif
+
 void QuickInspector::registerVariantHandlers()
 {
     VariantHandler::registerStringConverter<QQuickItem::Flags>(qQuickItemFlagsToString);
@@ -994,6 +1032,16 @@ void QuickInspector::registerVariantHandlers()
     VariantHandler::registerStringConverter<QSGMaterial::Flags>(qsgMaterialFlagsToString);
     VariantHandler::registerStringConverter<QSGTexture::Filtering>(qsgTextureFilteringToString);
     VariantHandler::registerStringConverter<QSGTexture::WrapMode>(qsgTextureWrapModeToString);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    VariantHandler::registerStringConverter<QSGRenderNode *>(Util::addressToString);
+    VariantHandler::registerStringConverter<QSGRenderNode::StateFlags>([](QSGRenderNode::StateFlags f) {
+        return MetaEnum::flagsToString(f, render_node_state_flags_table);
+    });
+    VariantHandler::registerStringConverter<QSGRenderNode::RenderingFlags>([](QSGRenderNode::RenderingFlags f) {
+        return MetaEnum::flagsToString(f, render_node_rendering_flags_table);
+    });
+#endif
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     VariantHandler::registerStringConverter<QSGRendererInterface*>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGRendererInterface::GraphicsApi>([](QSGRendererInterface::GraphicsApi api) {
@@ -1029,6 +1077,10 @@ void QuickInspector::registerPCExtensions()
 QString QuickInspector::findSGNodeType(QSGNode *node) const
 {
     // keep this in reverse topological order of the class hierarchy!
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    QSG_CHECK_TYPE(QSGRenderNode);
+#endif
     QSG_CHECK_TYPE(QSGClipNode);
     QSG_CHECK_TYPE(QSGGeometryNode);
     QSG_CHECK_TYPE(QSGBasicGeometryNode);
