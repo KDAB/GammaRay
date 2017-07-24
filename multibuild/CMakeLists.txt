@@ -21,7 +21,6 @@ ExternalProject_Add(
   GammaRay-${_build_type}
   SOURCE_DIR ${CMAKE_SOURCE_DIR}
   BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/GammaRay-${_build_type}
-  INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
   EXCLUDE_FROM_ALL 1
   STEP_TARGETS build install
 
