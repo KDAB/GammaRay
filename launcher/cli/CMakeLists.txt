@@ -3,6 +3,8 @@ set(gammaray_runner_srcs
   main.cpp
 )
 
+gammaray_add_win_icon(gammaray_runner_srcs)
+
 add_executable(gammaray ${gammaray_runner_srcs})
 
 target_link_libraries(gammaray gammaray_launcher gammaray_common)
