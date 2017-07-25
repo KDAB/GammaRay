@@ -53,7 +53,7 @@ QString ToolFactory::supportedTypesString() const
     QStringList typesString;
     for (auto it = m_types.constBegin(), end = m_types.constEnd(); it != end; ++it)
         typesString << QLatin1String(*it);
-    return typesString.join(QByteArrayLiteral(", "));
+    return typesString.join(QStringLiteral(", "));
 }
 
 QVector<QByteArray> ToolFactory::selectableTypes() const
