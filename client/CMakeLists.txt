@@ -39,6 +39,7 @@ target_link_libraries(gammaray_client
 
 
 set(gammaray_client_srcs main.cpp)
+gammaray_add_win_icon(gammaray_client_srcs)
 
 add_executable(gammaray-client WIN32 ${gammaray_client_srcs})
 
