@@ -34,6 +34,8 @@
 # Usage:
 #   gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
 #
+set(_gammaray_macros_internal_location ${CMAKE_CURRENT_LIST_DIR})
+
 function(gammaray_option option description)
     set(extra_option_arguments ${ARGN})
     option(${option} "${description}" ${extra_option_arguments})
@@ -104,6 +106,13 @@ macro(gammaray_embed_info_plist _target _plist)
   if(APPLE)
     set_target_properties(${_target} PROPERTIES LINK_FLAGS "-sectcreate __TEXT __info_plist ${CMAKE_CURRENT_BINARY_DIR}/${_target}_Info.plist")
   endif()
+endmacro()
+
+macro(gammaray_add_win_icon _sources)
+    if (WIN32)
+        configure_file(${_gammaray_macros_internal_location}/gammaray.rc.cmake gammaray.rc)
+        LIST(APPEND ${_sources} ${CMAKE_CURRENT_BINARY_DIR}/gammaray.rc)
+    endif()
 endmacro()
 
 # allow to use CMake FeatureSummary with "packages" that consist only of a minor inline check

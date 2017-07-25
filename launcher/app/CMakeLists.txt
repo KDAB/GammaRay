@@ -1,8 +1,9 @@
 set(gammaray_launcher_ui_srcs main.cpp)
 qt4_add_resources(gammaray_launcher_ui_srcs ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc)
 
-add_executable(gammaray-launcher WIN32 ${gammaray_launcher_ui_srcs})
+gammaray_add_win_icon(gammaray_launcher_ui_srcs)
 
+add_executable(gammaray-launcher WIN32 ${gammaray_launcher_ui_srcs})
 target_link_libraries(gammaray-launcher
   ${QT_QTGUI_LIBRARIES}
   gammaray_common
