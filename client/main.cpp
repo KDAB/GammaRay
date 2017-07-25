@@ -51,6 +51,10 @@ int main(int argc, char **argv)
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    QGuiApplication::setDesktopFileName(QStringLiteral("GammaRay.desktop"));
+#endif
+
     QApplication app(argc, argv);
     Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
     Translator::loadStandAloneTranslations();
