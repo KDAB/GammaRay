@@ -45,6 +45,49 @@
 #include <cmath>
 
 namespace GammaRay {
+
+class QQuickItemPropertyCache {
+public:
+    static const QQuickItemPropertyCache &getPropertyCache(QQuickItem *item)
+    {
+        static QHash<const QMetaObject*, QQuickItemPropertyCache> s_cache;
+        const QMetaObject* meta = item->metaObject();
+        const auto it = s_cache.constFind(meta);
+        if (it != s_cache.cend())
+            return *it;
+        else
+            return *s_cache.insert(meta, QQuickItemPropertyCache(meta));
+    }
+
+    QQuickItemPropertyCache(const QMetaObject *meta)
+        : background(property(meta, "background"))
+        , contentItem(property(meta, "contentItem"))
+        , anchors(property(meta, "anchors"))
+        , padding(property(meta, "padding"))
+    {
+        if (padding.isValid()) {
+            leftPadding = property(meta, "leftPadding");
+            rightPadding = property(meta, "rightPadding");
+            topPadding = property(meta, "topPadding");
+            bottomPadding = property(meta, "bottomPadding");
+        }
+    }
+
+    QMetaProperty background;
+    QMetaProperty contentItem;
+    QMetaProperty anchors;
+    QMetaProperty padding;
+    QMetaProperty leftPadding;
+    QMetaProperty rightPadding;
+    QMetaProperty topPadding;
+    QMetaProperty bottomPadding;
+
+private:
+    static inline QMetaProperty property(const QMetaObject *meta, const char *name) {
+         return meta->property(meta->indexOfProperty(name));
+    }
+};
+
 // We need random colors, but we also want the item
 // to keep its random color during scene changes to avoid
 // flickering due to color change.
@@ -336,15 +379,18 @@ QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
 
     itemGeometry.boundingRect = item->mapRectToScene(item->boundingRect());
     itemGeometry.childrenRect = item->mapRectToScene(item->childrenRect());
-    QQuickItem *background = item->property("background").value<QQuickItem *>();
+
+    const QQuickItemPropertyCache &cache = QQuickItemPropertyCache::getPropertyCache(item);
+
+    QQuickItem *background = cache.background.read(item).value<QQuickItem *>();
     if (background)
         itemGeometry.backgroundRect = background->mapRectToScene(background->boundingRect());
-    QQuickItem *contentItem = item->property("contentItem").value<QQuickItem *>();
+    QQuickItem *contentItem = cache.contentItem.read(item).value<QQuickItem *>();
     if (contentItem)
         itemGeometry.contentItemRect = contentItem->mapRectToScene(contentItem->boundingRect());
     itemGeometry.transformOriginPoint = item->mapToScene(item->transformOriginPoint());
 
-    QQuickAnchors *anchors = item->property("anchors").value<QQuickAnchors *>();
+    QQuickAnchors *anchors = cache.anchors.read(item).value<QQuickAnchors *>();
 
     if (anchors) {
         QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
@@ -369,13 +415,12 @@ QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
     itemGeometry.x = item->x();
     itemGeometry.y = item->y();
 
-    const QMetaObject *mo = item->metaObject();
-    if (mo->property(mo->indexOfProperty("padding")).isValid()) {
-        itemGeometry.padding = item->property("padding").toReal();
-        itemGeometry.leftPadding = item->property("leftPadding").toReal();
-        itemGeometry.rightPadding = item->property("rightPadding").toReal();
-        itemGeometry.topPadding = item->property("topPadding").toReal();
-        itemGeometry.bottomPadding = item->property("bottomPadding").toReal();
+    if (cache.padding.isValid()) {
+        itemGeometry.padding = cache.padding.read(item).toReal();
+        itemGeometry.leftPadding = cache.leftPadding.read(item).toReal();
+        itemGeometry.rightPadding = cache.rightPadding.read(item).toReal();
+        itemGeometry.topPadding = cache.topPadding.read(item).toReal();
+        itemGeometry.bottomPadding = cache.bottomPadding.read(item).toReal();
     } else {
         itemGeometry.padding = qQNaN();
         itemGeometry.leftPadding = qQNaN();
