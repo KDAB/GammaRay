@@ -1,9 +1,11 @@
 /*
+  baseprobetest.h
+
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Kevin Funk <kevin.funk@kdab.com>
+  Author: Filipe Azevedo <filipe.azevedo@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -24,49 +26,40 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "baseprobetest.h"
+#ifndef BASEPROBETEST_H
+#define BASEPROBETEST_H
 
-#include <QCoreApplication>
-#include <QMetaObject>
+#include <config-gammaray.h>
+
+#include <probe/hooks.h>
+#include <probe/probecreator.h>
+#include <core/probe.h>
+#include <common/paths.h>
+
 #include <QObject>
-#include <QTest>
+#include <QtTest/qtest.h>
 
 using namespace GammaRay;
 
-namespace
-{
-    int argc = 1;
-    char argv0[] = "integrationtest";
-    char* argv[] = {argv0};
-}
-
-class IntegrationTest : public BaseProbeTest
+class BaseProbeTest : public QObject
 {
     Q_OBJECT
+public:
+    explicit BaseProbeTest(QObject *parent = nullptr)
+        : QObject(parent)
+    { }
 
-private slots:
-    void runQCoreApplication()
+protected:
+    virtual void createProbe()
     {
-        {
-            QCoreApplication app(argc, argv);
-            createProbe();
-
-            QMetaObject::invokeMethod(&app, "quit", Qt::QueuedConnection);
-            app.exec();
-        }
-        QVERIFY(!Probe::instance());
-    }
-
-    void runQCoreApplicationWithoutExec()
-    {
-        {
-            QCoreApplication app(argc, argv);
-            createProbe();
-        }
-        QVERIFY(!Probe::instance());
+        Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
+        qputenv("GAMMARAY_ProbePath", Paths::probePath(GAMMARAY_PROBE_ABI).toUtf8());
+        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
+        Hooks::installHooks();
+        Probe::startupHookReceived();
+        new ProbeCreator(ProbeCreator::Create);
+        QTest::qWait(1); // event loop re-entry
     }
 };
 
-QTEST_APPLESS_MAIN(IntegrationTest)
-
-#include "integrationtest.moc"
+#endif // BASEPROBETEST_H

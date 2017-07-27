@@ -24,13 +24,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
+#include "baseprobetest.h"
 
-#include <probe/probecreator.h>
-#include <core/probe.h>
-
-#include <QtTest/qtest.h>
-#include <QObject>
 #include <QPointer>
 
 using namespace GammaRay;
@@ -52,18 +47,9 @@ public slots:
     void senderDeletingSlot() { delete sender(); }
 };
 
-class SignalSpyCallbackTest : public QObject
+class SignalSpyCallbackTest : public BaseProbeTest
 {
     Q_OBJECT
-private:
-    void createProbe()
-    {
-        qputenv("GAMMARAY_ProbePath", QCoreApplication::applicationDirPath().toUtf8());
-        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-        new ProbeCreator(ProbeCreator::Create);
-        QTest::qWait(1); // event loop re-entry
-    }
-
 private slots:
     void testSenderDeletion()
     {

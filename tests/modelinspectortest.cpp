@@ -26,14 +26,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
+#include "baseprobetest.h"
+#include "testhelpers.h"
 
 #include <plugins/modelinspector/modelinspectorinterface.h>
 #include <plugins/modelinspector/modelcontentproxymodel.h>
 
-#include <probe/hooks.h>
-#include <probe/probecreator.h>
-#include <core/probe.h>
 #include <ui/clienttoolmanager.h>
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
@@ -41,41 +39,19 @@
 
 #include <3rdparty/qt/modeltest.h>
 
-#include <QtTest/qtest.h>
-
 #include <QAbstractItemView>
 #include <QItemSelectionModel>
 #include <QSignalSpy>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QStringListModel>
-#include <QObject>
 
 using namespace GammaRay;
+using namespace TestHelpers;
 
-class ModelInspectorTest : public QObject
+class ModelInspectorTest : public BaseProbeTest
 {
     Q_OBJECT
-private:
-    void createProbe()
-    {
-        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-        Hooks::installHooks();
-        Probe::startupHookReceived();
-        new ProbeCreator(ProbeCreator::Create);
-        QTest::qWait(1); // event loop re-entry
-    }
-
-    QModelIndex indexForName(QAbstractItemModel *model, const QString &name)
-    {
-        const auto matchResult = model->match(model->index(0, 0), Qt::DisplayRole, name, 1, Qt::MatchExactly | Qt::MatchRecursive);
-        if (matchResult.size() < 1)
-            return QModelIndex();
-        const auto idx = matchResult.at(0);
-        Q_ASSERT(idx.isValid());
-        return idx;
-    }
-
 private slots:
     void testModelModel()
     {
@@ -91,7 +67,7 @@ private slots:
         QVERIFY(modelModel->rowCount() >= 1); // can contain the QEmptyModel instance too
         int topRowCount = modelModel->rowCount();
 
-        auto targetModelIdx = indexForName(modelModel, QLatin1String("targetModel"));
+        auto targetModelIdx = searchFixedIndex(modelModel, QLatin1String("targetModel"), Qt::MatchRecursive);
         QVERIFY(targetModelIdx.isValid());
         QCOMPARE(targetModelIdx.data(ObjectModel::ObjectIdRole).value<ObjectId>(), ObjectId(targetModel));
         QCOMPARE(targetModelIdx.sibling(targetModelIdx.row(), 1).data().toString(), QLatin1String("QStandardItemModel"));
@@ -102,7 +78,7 @@ private slots:
         targetProxy->setSourceModel(targetModel);
         QTest::qWait(1);
 
-        targetModelIdx = indexForName(modelModel, QLatin1String("targetModel")); // re-lookup, due to model reset
+        targetModelIdx = searchFixedIndex(modelModel, QLatin1String("targetModel"), Qt::MatchRecursive); // re-lookup, due to model reset
         QVERIFY(targetModelIdx.isValid());
         QVERIFY(modelModel->hasChildren(targetModelIdx));
         QCOMPARE(modelModel->rowCount(), topRowCount);
@@ -110,7 +86,7 @@ private slots:
         delete targetProxy;
         QTest::qWait(1);
 
-        targetModelIdx = indexForName(modelModel, QLatin1String("targetModel")); // re-lookup, due to model reset
+        targetModelIdx = searchFixedIndex(modelModel, QLatin1String("targetModel"), Qt::MatchRecursive); // re-lookup, due to model reset
         QVERIFY(targetModelIdx.isValid());
         QVERIFY(!modelModel->hasChildren(targetModelIdx));
         QCOMPARE(modelModel->rowCount(), topRowCount);
@@ -120,19 +96,19 @@ private slots:
         targetProxy->setObjectName("targetProxy");
         QTest::qWait(1);
         QCOMPARE(modelModel->rowCount(), topRowCount + 1);
-        auto proxyIdx = indexForName(modelModel, "targetProxy");
+        auto proxyIdx = searchFixedIndex(modelModel, "targetProxy", Qt::MatchRecursive);
         QVERIFY(proxyIdx.isValid());
         QVERIFY(!proxyIdx.parent().isValid());
 
         targetProxy->setSourceModel(targetModel);
         QCOMPARE(modelModel->rowCount(), topRowCount);
-        proxyIdx = indexForName(modelModel, "targetProxy");
+        proxyIdx = searchFixedIndex(modelModel, "targetProxy", Qt::MatchRecursive);
         QVERIFY(proxyIdx.isValid());
         QVERIFY(proxyIdx.parent().isValid());
 
         targetProxy->setSourceModel(nullptr);
         QCOMPARE(modelModel->rowCount(), topRowCount + 1);
-        proxyIdx = indexForName(modelModel, "targetProxy");
+        proxyIdx = searchFixedIndex(modelModel, "targetProxy", Qt::MatchRecursive);
         QVERIFY(proxyIdx.isValid());
         QVERIFY(!proxyIdx.parent().isValid());
 
@@ -150,7 +126,7 @@ private slots:
         targetProxy2->setSourceModel(targetProxy);
         targetProxy->setSourceModel(targetModel);
         QCOMPARE(modelModel->rowCount(), topRowCount);
-        proxyIdx = indexForName(modelModel, "targetProxy2");
+        proxyIdx = searchFixedIndex(modelModel, "targetProxy2", Qt::MatchRecursive);
         QVERIFY(proxyIdx.isValid());
         auto idx = proxyIdx.parent();
         QVERIFY(idx.isValid());
@@ -170,7 +146,7 @@ private slots:
         delete targetModel;
         QTest::qWait(1);
 
-        targetModelIdx = indexForName(modelModel, QLatin1String("targetModel"));
+        targetModelIdx = searchFixedIndex(modelModel, QLatin1String("targetModel"), Qt::MatchRecursive);
         QVERIFY(!targetModelIdx.isValid());
         QCOMPARE(modelModel->rowCount(), topRowCount - 1);
     }
@@ -201,7 +177,7 @@ private slots:
 
         auto modelSelModel = ObjectBroker::selectionModel(modelModel);
         QVERIFY(modelSelModel);
-        auto idx = indexForName(modelModel, "targetModel");
+        auto idx = searchFixedIndex(modelModel, "targetModel", Qt::MatchRecursive);
         QVERIFY(idx.isValid());
         modelSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
         QCOMPARE(selectionModels->rowCount(), 1);
@@ -253,7 +229,7 @@ private slots:
         QSignalSpy cellContentResetSpy(cellModel, SIGNAL(modelReset()));
         QVERIFY(cellContentResetSpy.isValid());
 
-        auto targetModelIdx = indexForName(modelModel, QLatin1String("targetModel"));
+        auto targetModelIdx = searchFixedIndex(modelModel, QLatin1String("targetModel"), Qt::MatchRecursive);
         QVERIFY(targetModelIdx.isValid());
         auto modelSelModel = ObjectBroker::selectionModel(modelModel);
         QVERIFY(modelSelModel);
@@ -278,7 +254,7 @@ private slots:
         cellSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
         QVERIFY(cellModel->rowCount() > 0);
 
-        idx = indexForName(cellModel, QLatin1String("Qt::DisplayRole"));
+        idx = searchFixedIndex(cellModel, QLatin1String("Qt::DisplayRole"), Qt::MatchRecursive);
         QVERIFY(idx.isValid());
         QCOMPARE(idx.sibling(idx.row(), 1).data().toString(), QLatin1String("item0,0"));
 
@@ -318,13 +294,13 @@ private slots:
 
         auto modelSelModel = ObjectBroker::selectionModel(modelModel);
         QVERIFY(modelSelModel);
-        auto idx = indexForName(modelModel, "targetModel");
+        auto idx = searchFixedIndex(modelModel, "targetModel", Qt::MatchRecursive);
         QVERIFY(idx.isValid());
         modelSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
 
         auto selSelModel = ObjectBroker::selectionModel(selectionModels);
         QVERIFY(selSelModel);
-        idx = indexForName(selectionModels, "targetSelModel");
+        idx = searchFixedIndex(selectionModels, "targetSelModel", Qt::MatchRecursive);
         QVERIFY(idx.isValid());
         selSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
 

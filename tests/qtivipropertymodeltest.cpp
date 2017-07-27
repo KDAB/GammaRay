@@ -26,21 +26,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
+#include "baseprobetest.h"
+#include "testhelpers.h"
 
 #include <plugins/qtivi/qtivipropertymodel.h>
 
-#include <probe/hooks.h>
-#include <probe/probecreator.h>
-#include <core/probe.h>
 #include <common/objectbroker.h>
 #include <common/objectid.h>
 
 #include <3rdparty/qt/modeltest.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
-#include <QObject>
 #include <QIviServiceObject>
 #include <QIviClimateControl>
 #if defined(QT_IVIMEDIA_LIB)
@@ -49,21 +45,10 @@
 
 //#define ENABLE_LOG
 
-#define QVERIFY_RETURN_FALSE(statement) \
-do {\
-    if (!QTest::qVerify(static_cast<bool>(statement), #statement, "", __FILE__, __LINE__))\
-    return false;\
-} while (0)
-
-#define QCOMPARE_RETURN_FALSE(actual, expected) \
-do {\
-    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
-    return false;\
-} while (0)
-
 using namespace GammaRay;
+using namespace TestHelpers;
 
-class QtIviPropertyModelTest : public QObject
+class QtIviPropertyModelTest : public BaseProbeTest
 {
     Q_OBJECT
     QIviClimateControl *m_climate;
@@ -76,7 +61,7 @@ class QtIviPropertyModelTest : public QObject
 
 public:
     explicit QtIviPropertyModelTest(QObject *parent = nullptr)
-        : QObject(parent)
+        : BaseProbeTest(parent)
         , m_climate(nullptr)
 #if defined(QT_IVIMEDIA_LIB)
         , m_amfm(nullptr)
@@ -100,15 +85,6 @@ private:
         QVERIFY(m_amfm->startAutoDiscovery() == QIviAbstractFeature::SimulationBackendLoaded);
         QVERIFY(m_amfm->isValid());
 #endif
-    }
-
-    void createProbe()
-    {
-        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-        Hooks::installHooks();
-        Probe::startupHookReceived();
-        QVERIFY(new ProbeCreator(ProbeCreator::Create));
-        QTest::qWait(1); // event loop re-entry
     }
 
     QModelIndex carrierIndex(QObject *carrier, int column) const

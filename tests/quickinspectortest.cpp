@@ -24,88 +24,44 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
+#include "basequicktest.h"
+#include "testhelpers.h"
 
 #include <plugins/quickinspector/quickinspectorinterface.h>
-#include <probe/hooks.h>
-#include <probe/probecreator.h>
-#include <core/probe.h>
 #include <core/toolmanager.h>
-#include <common/paths.h>
 #include <common/objectbroker.h>
 #include <common/remoteviewinterface.h>
 #include <common/remoteviewframe.h>
 
 #include <3rdparty/qt/modeltest.h>
 
-#include <QtTest/qtest.h>
-
-#include <QQuickView>
 #include <QItemSelectionModel>
 #include <QRegExp>
-#include <QSignalSpy>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(QItemSelection)
 #endif
 
 using namespace GammaRay;
+using namespace TestHelpers;
 
-class QuickInspectorTest : public QObject
+class QuickInspectorTest : public BaseQuickTest
 {
     Q_OBJECT
-private:
-    void createProbe()
+protected:
+    bool ignoreNonExposedView() const override
     {
-        Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
-        qputenv("GAMMARAY_ProbePath", Paths::probePath(GAMMARAY_PROBE_ABI).toUtf8());
-        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-        Hooks::installHooks();
-        Probe::startupHookReceived();
-        new ProbeCreator(ProbeCreator::Create);
-        QTest::qWait(1); // event loop re-entry
+        return true;
     }
 
+private:
     void triggerSceneChange()
     {
-        QTest::keyClick(view, Qt::Key_Right);
+        QTest::keyClick(view(), Qt::Key_Right);
         QTest::qWait(20);
-        QTest::keyClick(view, Qt::Key_Left);
+        QTest::keyClick(view(), Qt::Key_Left);
         QTest::qWait(20);
-        QTest::keyClick(view, Qt::Key_Right);
-    }
-
-    bool waitForSignal(QSignalSpy *spy, bool keepResult = false)
-    {
-        if (spy->isEmpty())
-            spy->wait(1000);
-
-        bool result = !spy->isEmpty();
-        if (!keepResult)
-            spy->clear();
-
-        return result;
-    }
-
-    bool showSource(const QString &sourceFile)
-    {
-        QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
-        Q_ASSERT(renderSpy.isValid());
-
-        view->setSource(QUrl(sourceFile));
-        view->show();
-        exposed = QTest::qWaitForWindowExposed(view);
-        if (!exposed) {
-            qWarning() << "Unable to expose window, probably running tests on a headless system - "
-                       << "ignoring all following render failures.";
-        }
-
-        // wait at least two frames so we have the final window size with
-        // all the render loop/driver combinations...
-        QTest::qWait(20);
-        waitForSignal(&renderSpy);
-        view->update();
-        return !exposed || waitForSignal(&renderSpy);
+        QTest::keyClick(view(), Qt::Key_Right);
     }
 
 private slots:
@@ -114,22 +70,17 @@ private slots:
         qRegisterMetaType<QItemSelection>();
     }
 
-    void init()
+    void init() override
     {
-        createProbe();
-
-        // we need one view for the plugin to activate, otherwise the model will not be available
-        view = new QQuickView;
-        view->setResizeMode(QQuickView::SizeViewToRootObject);
-        QTest::qWait(1); // event loop re-entry
+        BaseQuickTest::init();
 
         itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
         QVERIFY(itemModel);
-        new ModelTest(itemModel, view);
+        new ModelTest(itemModel, view());
 
         sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
         QVERIFY(sgModel);
-        new ModelTest(sgModel, view);
+        new ModelTest(sgModel, view());
 
         inspector = ObjectBroker::object<QuickInspectorInterface *>();
         QVERIFY(inspector);
@@ -137,21 +88,15 @@ private slots:
         QTest::qWait(1);
     }
 
-    void cleanup()
-    {
-        delete view;
-        QTest::qWait(1);
-    }
-
     void testModelsReparent()
     {
         QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
 
-        QTest::keyClick(view, Qt::Key_Right);
+        QTest::keyClick(view(), Qt::Key_Right);
         QTest::qWait(20);
-        QTest::keyClick(view, Qt::Key_Left);
+        QTest::keyClick(view(), Qt::Key_Left);
         QTest::qWait(20);
-        QTest::keyClick(view, Qt::Key_Right);
+        QTest::keyClick(view(), Qt::Key_Right);
         QTest::qWait(20);
     }
 
@@ -161,10 +106,10 @@ private slots:
 
         // scroll through the list, to trigger creations/destructions
         for (int i = 0; i < 30; ++i)
-            QTest::keyClick(view, Qt::Key_Down);
+            QTest::keyClick(view(), Qt::Key_Down);
         QTest::qWait(20);
         for (int i = 0; i < 30; ++i)
-            QTest::keyClick(view, Qt::Key_Up);
+            QTest::keyClick(view(), Qt::Key_Up);
         QTest::qWait(20);
     }
 
@@ -185,7 +130,7 @@ private slots:
 
         // scroll through the list, to trigger creations/destructions
         for (int i = 0; i < 30; ++i)
-            QTest::keyClick(view, Qt::Key_Down);
+            QTest::keyClick(view(), Qt::Key_Down);
         QTest::qWait(20);
 
         itemModel->setProperty("filterRegExp", QRegExp());
@@ -212,15 +157,15 @@ private slots:
         QVERIFY(sgSpy.isValid());
 
         // auto center-click is broken before https://codereview.qt-project.org/141085/
-        QTest::mouseClick(view,
+        QTest::mouseClick(view(),
                           Qt::LeftButton,
                           Qt::ShiftModifier | Qt::ControlModifier,
-                          QPoint(view->width() / 2, view->height() / 2));
+                          QPoint(view()->width() / 2, view()->height() / 2));
         QTest::qWait(20);
 
         QCOMPARE(toolSpy.size(), 1);
         QCOMPARE(itemSpy.size(), 1);
-        if (!exposed)
+        if (!isViewExposed())
             return;
 
         QCOMPARE(sgSpy.size(), 1);
@@ -235,7 +180,7 @@ private slots:
         QVERIFY(remoteView);
         remoteView->setViewActive(true);
 
-        QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
+        QSignalSpy renderSpy(view(), SIGNAL(frameSwapped()));
         QVERIFY(renderSpy.isValid());
 
         QSignalSpy gotFrameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
@@ -244,7 +189,7 @@ private slots:
         QVERIFY(showSource(QStringLiteral("qrc:/manual/rotationinvariant.qml")));
 
         remoteView->clientViewUpdated();
-        if (!exposed)
+        if (!isViewExposed())
             return;
 
         QVERIFY(waitForSignal(&gotFrameSpy, true));
@@ -258,8 +203,8 @@ private slots:
         img = img.transformed(transform);
 
         QVERIFY(!img.isNull());
-        QCOMPARE(img.width(), static_cast<int>(view->width() *view->devicePixelRatio()));
-        QCOMPARE(img.height(), static_cast<int>(view->height() *view->devicePixelRatio()));
+        QCOMPARE(img.width(), static_cast<int>(view()->width() *view()->devicePixelRatio()));
+        QCOMPARE(img.height(), static_cast<int>(view()->height() *view()->devicePixelRatio()));
 #ifndef Q_OS_WIN // this is too unstable on the CI, rendered results seem to differ in color!?
         QCOMPARE(img.pixel(1, 1), QColor(255, 0, 0).rgb());
         QCOMPARE(img.pixel(99, 1), QColor(0, 255, 0).rgb());
@@ -279,7 +224,7 @@ private slots:
         QCOMPARE(featureSpy.size(), 1);
         auto features = featureSpy.at(0).at(0).value<GammaRay::QuickInspectorInterface::Features>();
 
-        QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
+        QSignalSpy renderSpy(view(), SIGNAL(frameSwapped()));
         QVERIFY(renderSpy.isValid());
 
         QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
@@ -289,7 +234,7 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeClipping);
             for (int i = 0; i < 3; i++)
                 triggerSceneChange();
-            if (exposed)
+            if (isViewExposed())
                 QVERIFY(waitForSignal(&renderSpy));
         }
 
@@ -297,7 +242,7 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeOverdraw);
             for (int i = 0; i < 3; i++)
                 triggerSceneChange();
-            if (exposed)
+            if (isViewExposed())
                 QVERIFY(waitForSignal(&renderSpy));
         }
 
@@ -305,7 +250,7 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeBatches);
             for (int i = 0; i < 3; i++)
                 triggerSceneChange();
-            if (exposed)
+            if (isViewExposed())
                 QVERIFY(waitForSignal(&renderSpy));
         }
 
@@ -313,23 +258,21 @@ private slots:
             inspector->setCustomRenderMode(QuickInspectorInterface::VisualizeChanges);
             for (int i = 0; i < 3; i++)
                 triggerSceneChange();
-            if (exposed)
+            if (isViewExposed())
                 QVERIFY(waitForSignal(&renderSpy));
         }
 
         inspector->setCustomRenderMode(QuickInspectorInterface::NormalRendering);
         for (int i = 0; i < 3; i++)
             triggerSceneChange();
-        if (exposed)
+        if (isViewExposed())
             QVERIFY(waitForSignal(&renderSpy));
     }
 
 private:
-    QQuickView *view;
     QAbstractItemModel *itemModel;
     QAbstractItemModel *sgModel;
     QuickInspectorInterface *inspector;
-    bool exposed;
 };
 
 QTEST_MAIN(QuickInspectorTest)

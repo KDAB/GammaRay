@@ -24,6 +24,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "testhelpers.h"
+
 #include <core/objectinstance.h>
 #include <core/aggregatedpropertymodel.h>
 
@@ -32,27 +34,16 @@
 #include <3rdparty/qt/modeltest.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QObject>
-#include <QThread>
 #include <QSignalSpy>
+#include <QtTest/qtest.h>
 
 using namespace GammaRay;
+using namespace TestHelpers;
 
 class PropertyModelTest : public QObject
 {
     Q_OBJECT
-private:
-    QModelIndex findRowByName(QAbstractItemModel *model, const char *name)
-    {
-        for (int i = 0; i < model->rowCount(); ++i) {
-            auto index = model->index(i, 0);
-            if (index.data(Qt::DisplayRole).toString() == QLatin1String(name))
-                return index;
-        }
-        return QModelIndex();
-    }
-
 private slots:
     void testPropertyModel()
     {
@@ -64,7 +55,7 @@ private slots:
         model.setObject(&obj);
 
         QVERIFY(model.rowCount() > 9);
-        auto dynRow = findRowByName(&model, "dynamicProperty");
+        auto dynRow = searchFixedIndex(&model, "dynamicProperty");
         QVERIFY(dynRow.isValid());
         QCOMPARE(dynRow.data(Qt::DisplayRole).toString(), QStringLiteral("dynamicProperty"));
         QVERIFY(dynRow.sibling(dynRow.row(), 1).flags() & Qt::ItemIsEditable);
@@ -72,7 +63,7 @@ private slots:
                  QStringLiteral("5"));
         QCOMPARE(dynRow.sibling(dynRow.row(), 1).data(Qt::EditRole), QVariant(5));
 
-        auto qmoRow = findRowByName(&model, "intProp");
+        auto qmoRow = searchFixedIndex(&model, "intProp");
         QVERIFY(qmoRow.isValid());
         QCOMPARE(qmoRow.data(Qt::DisplayRole).toString(), QStringLiteral("intProp"));
         auto qmoRow2 = qmoRow.sibling(qmoRow.row(), 1);
@@ -82,7 +73,7 @@ private slots:
         model.setData(qmoRow2, 12);
         QCOMPARE(obj.intProp(), 12);
 
-        auto moRow = findRowByName(&model, "thread");
+        auto moRow = searchFixedIndex(&model, "thread");
         QVERIFY(moRow.isValid());
         QCOMPARE(moRow.data(Qt::DisplayRole).toString(), QStringLiteral("thread"));
         QVERIFY((moRow.sibling(moRow.row(), 1).flags() & Qt::ItemIsEditable) == 0);
@@ -98,7 +89,7 @@ private slots:
         ModelTest modelTest(&model);
 
         QCOMPARE(model.rowCount(), 1);
-        auto qmoRow = findRowByName(&model, "prop1");
+        auto qmoRow = searchFixedIndex(&model, "prop1");
         QVERIFY(qmoRow.isValid());
     }
 
@@ -138,7 +129,7 @@ private slots:
         AggregatedPropertyModel model;
         model.setObject(ObjectInstance(&obj));
 
-        auto idx = findRowByName(&model, "gadgetReadOnly");
+        auto idx = searchFixedIndex(&model, "gadgetReadOnly");
         QVERIFY(idx.isValid());
         QCOMPARE(model.rowCount(idx), 1);
         idx = idx.child(0, 1);
@@ -154,7 +145,7 @@ private slots:
         model.setObject(ObjectInstance(&obj));
         ModelTest modelTest(&model);
 
-        auto idx = findRowByName(&model, "gadget");
+        auto idx = searchFixedIndex(&model, "gadget");
         QVERIFY(idx.isValid());
         QCOMPARE(model.rowCount(idx), 1);
         idx = idx.child(0, 1);
@@ -162,7 +153,7 @@ private slots:
         QVERIFY(model.setData(idx, 1554));
         QCOMPARE(obj.gadgetPointer()->prop1(), 1554);
 
-        idx = findRowByName(&model, "gadgetPointer");
+        idx = searchFixedIndex(&model, "gadgetPointer");
         QVERIFY(idx.isValid());
         QCOMPARE(model.rowCount(idx), 1);
         idx = idx.child(0, 1);
