@@ -92,6 +92,25 @@ to CMake, as in:
   % cmake -DGAMMARAY_ENFORCE_QT4_BUILD=true
 
 
+== Force a probe only build ==
+If you already built GammaRay in the past and that you want to support more probes,
+you don't need to rebuild entirely GammaRay for this specific Qt version.
+You can instead just build the GammaRay probe for the new Qt version and install it
+in you previous GammaRay installation.
+
+You can make probe only builds that way:
+
+  % cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_PREFIX_PATH=/path/to/Qt/version/ \
+    -DGAMMARAY_PROBE_ONLY_BUILD=true \
+    -DGAMMARAY_BUILD_UI=false  \
+    -DCMAKE_INSTALL_PREFIX=/path/to/your/previous/gammaray/prefix \
+    /path/to/gammaray/sources
+
+You can still use any cmake flags you want like CMAKE_DISABLE_FIND_PACKAGE_<PACKAGE> etc.
+
+
 == Optional Dependencies ==
 GammaRay relies on optional (FOSS) dependencies to help provide some of its
 functionality, most prominently KDSME (https://github.com/KDAB/KDStateMachineEditor).
