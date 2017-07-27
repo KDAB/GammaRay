@@ -24,50 +24,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
+#include "baseprobetest.h"
+#include "testhelpers.h"
 
 #include <plugins/actioninspector/clientactionmodel.h>
 
-#include <probe/hooks.h>
-#include <probe/probecreator.h>
-#include <core/probe.h>
-#include <common/paths.h>
 #include <common/objectbroker.h>
-
-#include <QtTest/qtest.h>
 
 #include <QAbstractItemModel>
 #include <QAction>
-#include <QObject>
 #include <QSignalSpy>
 
 using namespace GammaRay;
+using namespace TestHelpers;
 
-class ActionTest : public QObject
+class ActionTest : public BaseProbeTest
 {
     Q_OBJECT
-private:
-    void createProbe()
-    {
-        Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
-        qputenv("GAMMARAY_ProbePath", Paths::probePath(GAMMARAY_PROBE_ABI).toUtf8());
-        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-        Hooks::installHooks();
-        Probe::startupHookReceived();
-        new ProbeCreator(ProbeCreator::Create);
-        QTest::qWait(1); // event loop re-entry
-    }
-
-    QModelIndex indexForName(const QString &name, QAbstractItemModel *model)
-    {
-        for (int i = 0; i < model->rowCount(); ++i) {
-            const auto idx = model->index(i, 0);
-            if (idx.data().toString() == name)
-                return idx;
-        }
-        return QModelIndex();
-    }
-
 private slots:
     void testActionCreationDeletion()
     {
@@ -84,7 +57,7 @@ private slots:
         model->setSourceModel(sourceModel);
         QCOMPARE(model->rowCount(), 2);
 
-        auto idx = indexForName("action1", model);
+        auto idx = searchFixedIndex(model, "action1");
         QVERIFY(idx.isValid());
         idx = idx.sibling(idx.row(), 5);
         QVERIFY(idx.data().toString().isEmpty());
@@ -169,7 +142,6 @@ private slots:
         QCOMPARE(a1->isChecked(), false);
         QCOMPARE(changeSpy.size(), 2);
     }
-
 };
 
 QTEST_MAIN(ActionTest)

@@ -4,6 +4,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR})
 
 configure_file(gammaray-test-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/gammaray-test-config.h)
 
+# create intermediate modeltestobj object files which unit tests can use
 add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
 set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
 if(Qt5Core_FOUND)
@@ -13,20 +14,87 @@ else()
     target_include_directories(modeltestobj PUBLIC ${QT_QTCORE_INCLUDE_DIRS})
 endif()
 
+# create intermediate test_helpers_obj object files which unit tests can use
+add_library(test_helpers_obj OBJECT testhelpers.cpp)
+set_target_properties(test_helpers_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+if(Qt5Core_FOUND)
+    target_compile_definitions(test_helpers_obj PRIVATE ${Qt5Core_DEFINITIONS} ${Qt5Test_DEFINITIONS}) # for -DQT_NAMESPACE=...
+    target_include_directories(test_helpers_obj PUBLIC
+        ${Qt5Core_INCLUDE_DIRS}
+        ${Qt5Test_INCLUDE_DIRS}
+    )
+else()
+    target_include_directories(test_helpers_obj PUBLIC
+        ${QT_QTCORE_INCLUDE_DIRS}
+        ${QT_QTTEST_INCLUDE_DIRS}
+    )
+endif()
+
+# create intermediate base_probe_test_obj object files which unit tests can use
+add_library(base_probe_test_obj OBJECT baseprobetest.h)
+set_target_properties(base_probe_test_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_include_directories(base_probe_test_obj PUBLIC
+    $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
+)
+if(Qt5Core_FOUND)
+    target_compile_definitions(base_probe_test_obj PRIVATE ${Qt5Core_DEFINITIONS} ${Qt5Test_DEFINITIONS}) # for -DQT_NAMESPACE=...
+    target_include_directories(base_probe_test_obj PUBLIC
+        ${Qt5Core_INCLUDE_DIRS}
+        ${Qt5Test_INCLUDE_DIRS}
+    )
+else()
+    target_include_directories(base_probe_test_obj PUBLIC
+        ${QT_QTCORE_INCLUDE_DIRS}
+        ${QT_QTTEST_INCLUDE_DIRS}
+    )
+endif()
+
+if(Qt5Quick_FOUND)
+    # create intermediate base_quick_test_obj object files which unit tests can use
+    add_library(base_quick_test_obj OBJECT basequicktest.h)
+    set_target_properties(base_quick_test_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    target_compile_definitions(base_quick_test_obj PRIVATE ${Qt5Core_DEFINITIONS} ${Qt5Test_DEFINITIONS} ${Qt5Quick_DEFINITIONS}) # for -DQT_NAMESPACE=...
+    target_include_directories(base_quick_test_obj PUBLIC
+        $<TARGET_PROPERTY:base_probe_test_obj,INTERFACE_INCLUDE_DIRECTORIES>
+    )
+    target_include_directories(base_quick_test_obj PUBLIC
+        ${Qt5Quick_INCLUDE_DIRS}
+    )
+endif()
+
 add_subdirectory(shared)
 add_subdirectory(manual)
 add_subdirectory(targets)
 
 # plain unit tests
 function(gammaray_add_test _name)
-    add_executable(${_name} ${ARGN})
+    add_executable(${_name} ${ARGN}
+        $<TARGET_OBJECTS:test_helpers_obj>
+    )
     target_link_libraries(${_name} ${QT_QTTEST_LIBRARIES})
     add_test(NAME ${_name} COMMAND ${_name})
 endfunction()
 
 # unit tests requiring probe injection
 function(gammaray_add_probe_test _name)
-    add_executable(${_name} ${ARGN} $<TARGET_OBJECTS:gammaray_probe_obj>)
+    add_executable(${_name} ${ARGN}
+        $<TARGET_OBJECTS:gammaray_probe_obj>
+        $<TARGET_OBJECTS:test_helpers_obj>
+        $<TARGET_OBJECTS:base_probe_test_obj>
+    )
+    target_link_libraries(${_name} $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> ${QT_QTTEST_LIBRARIES})
+    add_test(NAME ${_name} COMMAND ${_name})
+endfunction()
+
+# unit tests requiring quick and probe injection
+function(gammaray_add_quick_test _name)
+    add_executable(${_name} ${ARGN}
+        $<TARGET_OBJECTS:gammaray_probe_obj>
+        $<TARGET_OBJECTS:test_helpers_obj>
+        $<TARGET_OBJECTS:base_probe_test_obj>
+        $<TARGET_OBJECTS:base_quick_test_obj>
+    )
     target_link_libraries(${_name} $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> ${QT_QTTEST_LIBRARIES})
     add_test(NAME ${_name} COMMAND ${_name})
 endfunction()
@@ -346,33 +414,33 @@ if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
     endif()
 
     if(Qt5Quick_FOUND)
-        gammaray_add_probe_test(quickinspectortest
+        gammaray_add_quick_test(quickinspectortest
             quickinspectortest.cpp
             quickinspectortest.qrc
             $<TARGET_OBJECTS:modeltestobj>
         )
         target_link_libraries(quickinspectortest gammaray_core gammaray_quickinspector_shared Qt5::Quick)
 
-        gammaray_add_probe_test(quickinspectorpickingtest
+        gammaray_add_quick_test(quickinspectorpickingtest
             quickinspectorpickingtest.cpp
             quickinspectortest.qrc
             $<TARGET_OBJECTS:modeltestobj>
-            )
+        )
         target_link_libraries(quickinspectorpickingtest gammaray_core Qt5::Test Qt5::Quick)
 
-        gammaray_add_probe_test(quickinspectorbench
+        gammaray_add_quick_test(quickinspectorbench
             quickinspectorbench.cpp
             ../plugins/quickinspector/quickitemmodel.cpp
         )
         target_link_libraries(quickinspectorbench gammaray_core Qt5::Test Qt5::Quick)
 
-        gammaray_add_probe_test(quicktexturetest
+        gammaray_add_quick_test(quicktexturetest
             quicktexturetest.cpp
             quickinspectortest.qrc
         )
         target_link_libraries(quicktexturetest gammaray_core Qt5::Quick)
 
-        gammaray_add_probe_test(quickmaterialtest
+        gammaray_add_quick_test(quickmaterialtest
             quickmaterialtest.cpp
             quickinspectortest.qrc
             $<TARGET_OBJECTS:modeltestobj>

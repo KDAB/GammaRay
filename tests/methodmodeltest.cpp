@@ -26,17 +26,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "baseprobetest.h"
+#include "testhelpers.h"
+
 #include <core/objectmethodmodel.h>
 #include <ui/tools/objectinspector/clientmethodmodel.h>
 #include <common/tools/objectinspector/methodmodel.h>
-#include <probe/hooks.h>
-#include <probe/probecreator.h>
 
 #include <3rdparty/qt/modeltest.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
-#include <QObject>
 
 #ifndef Q_MOC_RUN
 #define MY_TAG
@@ -47,32 +46,14 @@
 #endif
 
 using namespace GammaRay;
+using namespace TestHelpers;
 
-class MethodModelTest : public QObject
+class MethodModelTest : public BaseProbeTest
 {
     Q_OBJECT
 public slots:
     MY_TAG void taggedSlot() {}
     Q_REVISION(1407) void revisionedSlot() {}
-
-private:
-    QModelIndex indexForSignature(const QString &signature, QAbstractItemModel *model)
-    {
-        for (int i = 0; i < model->rowCount(); ++i) {
-            const auto idx = model->index(i, 0);
-            if (idx.data().toString().contains(signature))
-                return idx;
-        }
-        return QModelIndex();
-    }
-
-    void createProbe()
-    {
-        Hooks::installHooks();
-        Probe::startupHookReceived();
-        new ProbeCreator(ProbeCreator::Create);
-        QTest::qWait(1); // event loop re-entry
-    }
 
 private slots:
     void modelTest()
@@ -100,7 +81,7 @@ private slots:
 
         QVERIFY(model.rowCount() > 0);
 
-        auto idx = indexForSignature("deleteLater()", &model);
+        auto idx = searchContainsIndex(&model, "deleteLater()");
         QVERIFY(idx.isValid());
         QVERIFY(idx.data(ObjectMethodModelRole::MethodSignature).toString().startsWith(QLatin1String("deleteLater")));
         QCOMPARE(idx.sibling(idx.row(), 1).data().toString(), QLatin1String("Slot"));
@@ -133,7 +114,7 @@ private slots:
         model.setSourceModel(&srcModel);
         srcModel.setMetaObject(&staticMetaObject);
 
-        auto idx = indexForSignature(name, &model);
+        auto idx = searchContainsIndex(&model, name);
         QVERIFY(idx.isValid());
         QCOMPARE(model.columnCount(), 4);
         for (int i = 0; i < model.columnCount(); ++i) {

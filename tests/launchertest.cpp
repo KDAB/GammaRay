@@ -29,6 +29,8 @@
 #include <config-gammaray.h>
 #include <gammaray-test-config.h>
 
+#include "testhelpers.h"
+
 #include <launcher/core/injector/injectorfactory.h>
 #include <launcher/core/launchoptions.h>
 #include <launcher/core/launcher.h>
@@ -37,9 +39,9 @@
 #include <launcher/core/probeabidetector.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QObject>
 #include <QSignalSpy>
+#include <QtTest/qtest.h>
 
 #include <memory>
 
@@ -48,6 +50,7 @@
 #endif
 
 using namespace GammaRay;
+using namespace TestHelpers;
 
 class LauncherTest : public QObject
 {
@@ -60,20 +63,6 @@ private:
             return false;
 
         return injector->selfTest();
-    }
-
-    void waitForSpy(QSignalSpy *spy, int timeout)
-    {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        spy->wait(timeout);
-#else
-        int loops = 0;
-        while (loops++ < (timeout / 10)) {
-            if (spy->count() >= 1)
-                break;
-            QTest::qWait(10);
-        }
-#endif
     }
 
 private slots:

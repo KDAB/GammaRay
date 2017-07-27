@@ -24,45 +24,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
+#include "baseprobetest.h"
+
 #include <common/toolmanagerinterface.h>
 #include <ui/clienttoolmanager.h>
 
-#include <probe/hooks.h>
-#include <probe/probecreator.h>
-#include <core/probe.h>
-#include <common/paths.h>
 #include <common/objectbroker.h>
 
 #include <3rdparty/qt/modeltest.h>
 
-#include <QtTest/qtest.h>
-#include <QtTest/QSignalSpy>
-
 #include <QAbstractItemModel>
 #include <QAction>
-#include <QObject>
+#include <QSignalSpy>
 #include <QWidget>
 
 using namespace GammaRay;
 
 Q_DECLARE_METATYPE(QVector<GammaRay::ToolInfo>)
 
-class ToolManagerTest : public QObject
+class ToolManagerTest : public BaseProbeTest
 {
     Q_OBJECT
 private:
-    void createProbe()
-    {
-        Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
-        qputenv("GAMMARAY_ProbePath", Paths::probePath(GAMMARAY_PROBE_ABI).toUtf8());
-        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-        Hooks::installHooks();
-        Probe::startupHookReceived();
-        new ProbeCreator(ProbeCreator::Create);
-        QTest::qWait(1); // event loop re-entry
-    }
-
     int visibleRowCount(QAbstractItemModel *model)
     {
         int count = 0;

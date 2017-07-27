@@ -26,38 +26,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
+#include "baseprobetest.h"
+#include "testhelpers.h"
 
 #include <core/tools/metaobjectbrowser/metaobjecttreemodel.h>
 #include <ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.h>
 
-#include <probe/hooks.h>
-#include <probe/probecreator.h>
-#include <core/probe.h>
 #include <common/objectbroker.h>
 
 #include <3rdparty/qt/modeltest.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
-#include <QObject>
 
 using namespace GammaRay;
+using namespace TestHelpers;
 
-class MetaObjectTreeModelTest : public QObject
+class MetaObjectTreeModelTest : public BaseProbeTest
 {
     Q_OBJECT
 signals:
     void destroyed(); // to trigger the QMO validator
-private:
-    void createProbe()
-    {
-        qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-        Hooks::installHooks();
-        Probe::startupHookReceived();
-        new ProbeCreator(ProbeCreator::Create);
-        QTest::qWait(1); // event loop re-entry
-    }
 
 private slots:
     void modelTest()
@@ -84,12 +72,11 @@ private slots:
         model.setSourceModel(srcModel);
         Probe::instance()->discoverObject(this);
 
-        const auto l = model.match(model.index(0,0), Qt::DisplayRole, QLatin1String("MetaObjectTreeModelTest"), 1, Qt::MatchRecursive | Qt::MatchExactly);
+        const auto l = searchFixedIndexes(&model, QLatin1String("MetaObjectTreeModelTest"), Qt::MatchRecursive);
         QCOMPARE(l.size(), 1);
         auto idx = l.at(0);
         QVERIFY(idx.isValid());
 
-        QCOMPARE(idx.data(Qt::DisplayRole).toString(), QLatin1String("MetaObjectTreeModelTest"));
         QVERIFY(!idx.data(Qt::DecorationRole).isNull());
         QVERIFY(!idx.data(Qt::ToolTipRole).toString().isEmpty());
 
@@ -103,7 +90,9 @@ private slots:
         QVERIFY(!idx.data(Qt::BackgroundRole).isNull());
         QVERIFY(!idx.data(Qt::ToolTipRole).toString().isEmpty());
 
-        idx = idx.parent();
+        idx = idx.parent(); // BaseProbeTest
+        QVERIFY(idx.isValid());
+        idx = idx.parent(); // QObject
         QVERIFY(idx.isValid());
         QCOMPARE(idx.data(Qt::DisplayRole).toString(), QLatin1String("QObject"));
         QVERIFY(idx.data(Qt::DecorationRole).isNull());

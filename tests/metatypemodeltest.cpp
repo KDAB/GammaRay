@@ -26,6 +26,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "testhelpers.h"
+
+#include <config-gammaray.h>
+
 #include <core/tools/metatypebrowser/metatypesmodel.h>
 #include <ui/tools/metatypebrowser/metatypesclientmodel.h>
 #include <common/tools/metatypebrowser/metatyperoles.h>
@@ -35,27 +39,17 @@
 #include <3rdparty/qt/modeltest.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QObject>
 #include <QSignalSpy>
 #include <QThread>
+#include <QtTest/qtest.h>
 
 using namespace GammaRay;
+using namespace TestHelpers;
 
 class MetaTypeModelTest : public QObject
 {
     Q_OBJECT
-private:
-    QModelIndex indexForName(const QString &name, QAbstractItemModel *model)
-    {
-        for (int i = 0; i < model->rowCount(); ++i) {
-            const auto idx = model->index(i, 0);
-            if (idx.data().toString() == name)
-                return idx;
-        }
-        return QModelIndex();
-    }
-
 private slots:
     void testModel()
     {
@@ -67,22 +61,22 @@ private slots:
         QSignalSpy resetSpy(&model, SIGNAL(modelReset()));
         QVERIFY(resetSpy.isValid());
 
-        auto idx = indexForName("QObject*", &model);
+        auto idx = searchFixedIndex(&model, "QObject*");
         QVERIFY(idx.isValid());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         QVERIFY(!idx.data(MetaTypeRoles::MetaObjectIdRole).value<ObjectId>().isNull());
 #endif
 
-        idx = indexForName("int", &model);
+        idx = searchFixedIndex(&model, "int");
         QVERIFY(idx.isValid());
         QVERIFY(idx.data(MetaTypeRoles::MetaObjectIdRole).isNull());
 
-        idx = indexForName("QThread*", &model);
+        idx = searchFixedIndex(&model, "QThread*");
         QVERIFY(!idx.isValid());
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         qRegisterMetaType<QThread*>();
         srcModel.scanMetaTypes();
-        idx = indexForName("QThread*", &model);
+        idx = searchFixedIndex(&model, "QThread*");
         QVERIFY(idx.isValid());
 #else
         srcModel.scanMetaTypes();
