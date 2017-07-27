@@ -421,6 +421,13 @@ if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
         )
         target_link_libraries(quickinspectortest gammaray_core gammaray_quickinspector_shared Qt5::Quick)
 
+        gammaray_add_quick_test(quickinspectortest2
+            quickinspectortest2.cpp
+            quickinspectortest.qrc
+            $<TARGET_OBJECTS:modeltestobj>
+            )
+        target_link_libraries(quickinspectortest2 gammaray_core gammaray_quickinspector_shared Qt5::Quick)
+
         gammaray_add_quick_test(quickinspectorpickingtest
             quickinspectorpickingtest.cpp
             quickinspectortest.qrc
