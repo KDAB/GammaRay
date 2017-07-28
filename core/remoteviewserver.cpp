@@ -50,6 +50,7 @@ RemoteViewServer::RemoteViewServer(const QString &name, QObject *parent)
     , m_clientActive(false)
     , m_sourceChanged(false)
     , m_clientReady(true)
+    , m_grabberReady(true)
     , m_pendingReset(false)
     , m_pendingCompleteFrame(false)
 {
@@ -89,6 +90,14 @@ bool RemoteViewServer::isActive() const
     return m_clientActive;
 }
 
+void RemoteViewServer::setGrabberReady(bool ready)
+{
+    if (ready == m_grabberReady)
+        return;
+    m_grabberReady = ready;
+    checkRequestUpdate();
+}
+
 void RemoteViewServer::sendFrame(const RemoteViewFrame &frame)
 {
     m_clientReady = false;
@@ -125,7 +134,8 @@ void RemoteViewServer::clientViewUpdated()
 
 void RemoteViewServer::checkRequestUpdate()
 {
-    if (isActive() && !m_updateTimer->isActive() && m_clientReady && m_sourceChanged)
+    if (isActive() && !m_updateTimer->isActive() &&
+            m_clientReady && m_grabberReady && m_sourceChanged)
         m_updateTimer->start();
 }
 

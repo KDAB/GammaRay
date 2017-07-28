@@ -240,8 +240,6 @@ QuickOverlay::QuickOverlay()
     Q_ASSERT(m_sceneGrabbed.methodIndex() != -1);
     m_sceneChanged = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneChanged()")));
     Q_ASSERT(m_sceneChanged.methodIndex() != -1);
-    m_setIsGrabbingMode = mo->method(mo->indexOfSlot(QMetaObject::normalizedSignature("setIsGrabbingMode(bool)")));
-    Q_ASSERT(m_setIsGrabbingMode.methodIndex() != -1);
 
     qRegisterMetaType<GrabbedFrame>();
 }
@@ -349,16 +347,6 @@ void QuickOverlay::placeOn(const ItemOrLayoutFacade &item)
     updateOverlay();
 }
 
-void QuickOverlay::setIsGrabbingMode(bool isGrabbingMode)
-{
-    if (m_isGrabbingMode == isGrabbingMode)
-        return;
-
-    m_isGrabbingMode = isGrabbingMode;
-    if (m_isGrabbingMode)
-        updateOverlay();
-}
-
 QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
 {
     QuickItemGeometry itemGeometry;
@@ -443,6 +431,22 @@ QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
     return itemGeometry;
 }
 
+void QuickOverlay::setGrabbingMode(bool isGrabbingMode, const QRectF &userViewport)
+{
+    QMutexLocker locker(&m_mutex);
+
+    if (m_isGrabbingMode == isGrabbingMode)
+        return;
+
+    m_isGrabbingMode = isGrabbingMode;
+    m_userViewport = userViewport;
+
+    emit grabberReadyChanged(!m_isGrabbingMode);
+
+    if (m_isGrabbingMode)
+        updateOverlay();
+}
+
 void QuickOverlay::windowAfterSynchronizing()
 {
     // We are in the rendering thread at this point
@@ -452,10 +456,12 @@ void QuickOverlay::windowAfterSynchronizing()
 
 void QuickOverlay::windowAfterRendering()
 {
+    QMutexLocker locker(&m_mutex);
+
     // We are in the rendering thread at this point
     // And the gui thread is NOT locked
-
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
+
     if (m_isGrabbingMode) {
         const auto window = QRectF(QPoint(0,0), m_renderInfo.windowSize);
         const auto intersect = m_userViewport.isValid() ? window.intersected(m_userViewport) : window ;
@@ -482,9 +488,9 @@ void QuickOverlay::windowAfterRendering()
         m_grabbedFrame.transform.translate(intersect.x() * m_renderInfo.dpr , -intersect.y() * m_renderInfo.dpr - h);
         m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
-        if (!m_grabbedFrame.image.isNull()) {
-            m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabbedFrame, m_grabbedFrame));
-        }
+        // Let emit the signal even if our image is possibly null, this way we make perfect ping/pong
+        // reuests making it easier to unit test.
+        m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabbedFrame, m_grabbedFrame));
     }
 
     drawDecorations();
@@ -492,7 +498,8 @@ void QuickOverlay::windowAfterRendering()
     m_window->resetOpenGLState();
 
     if (m_isGrabbingMode) {
-        setIsGrabbingMode(false);
+        locker.unlock();
+        setGrabbingMode(false, QRectF());
     } else {
         m_sceneChanged.invoke(this, Qt::QueuedConnection);
     }
@@ -651,9 +658,5 @@ void QuickOverlay::disconnectTopItemChanges(QQuickItem *item)
 
 void QuickOverlay::requestGrabWindow(const QRectF &userViewport)
 {
-    if (m_isGrabbingMode)
-        return;
-
-    m_userViewport = userViewport;
-    m_setIsGrabbingMode.invoke(this, Qt::QueuedConnection, Q_ARG(bool, true));
+    setGrabbingMode(true, userViewport);
 }

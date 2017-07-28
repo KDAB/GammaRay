@@ -32,6 +32,7 @@
 #include <QObject>
 #include <QPointer>
 #include <QQuickItem>
+#include <QMutex>
 
 #include "quickdecorationsdrawer.h"
 
@@ -104,10 +105,12 @@ public:
     void requestGrabWindow(const QRectF &userViewport);
 
 signals:
+    void grabberReadyChanged(bool ready);
     void sceneChanged();
     void sceneGrabbed(const GammaRay::GrabbedFrame &frame);
 
 private:
+    void setGrabbingMode(bool isGrabbingMode, const QRectF &userViewport);
     void windowAfterSynchronizing();
     void windowAfterRendering();
     void gatherRenderInfo();
@@ -131,7 +134,7 @@ private:
     GrabbedFrame m_grabbedFrame;
     QMetaMethod m_sceneGrabbed;
     QMetaMethod m_sceneChanged;
-    QMetaMethod m_setIsGrabbingMode;
+    QMutex m_mutex;
     struct RenderInfo {
         // Keep in sync with QSGRendererInterface::GraphicsApi
         enum GraphicsApi {
@@ -150,9 +153,6 @@ private:
         QSize windowSize;
         GraphicsApi graphicsApi;
     } m_renderInfo;
-
-private slots:
-    void setIsGrabbingMode(bool isGrabbingMode);
 };
 }
 
