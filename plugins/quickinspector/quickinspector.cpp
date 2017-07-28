@@ -565,12 +565,15 @@ void QuickInspector::recreateOverlay()
     ProbeGuard guard;
     m_overlay = new QuickOverlay;
 
+    connect(m_overlay.data(), &QuickOverlay::grabberReadyChanged, m_remoteView, &RemoteViewServer::setGrabberReady);
     connect(m_overlay.data(), &QuickOverlay::sceneChanged, m_remoteView, &RemoteViewServer::sourceChanged);
     connect(m_overlay.data(), &QuickOverlay::sceneGrabbed, this, &QuickInspector::sendRenderedScene);
     // the target application might have destroyed the overlay widget
     // (e.g. because the parent of the overlay got destroyed).
     // just recreate a new one in this case
     connect(m_overlay.data(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
+
+    m_remoteView->setGrabberReady(true);
 }
 
 void QuickInspector::aboutToCleanSceneGraph()

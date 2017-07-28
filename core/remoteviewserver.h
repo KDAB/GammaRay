@@ -66,6 +66,9 @@ public:
     /// returns @c true if there is a client displaying our content
     bool isActive() const;
 
+    /// set the grabber ready state
+    void setGrabberReady(bool ready);
+
     /// sends a new frame to the client
     void sendFrame(const RemoteViewFrame &frame);
 
@@ -111,6 +114,7 @@ private:
     bool m_clientActive;
     bool m_sourceChanged;
     bool m_clientReady;
+    bool m_grabberReady;
     bool m_pendingReset;
     bool m_pendingCompleteFrame;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
