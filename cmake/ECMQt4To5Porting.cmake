@@ -200,7 +200,8 @@ if (TARGET Qt5::qdbusxml2cpp)
     get_target_property(QT_QDBUSXML2CPP_EXECUTABLE Qt5::qdbusxml2cpp LOCATION)
 endif()
 
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+#Allen: avoid redefinition warning. CMakeLists.txt already defines QT_DISABLE_DEPRECATED_BEFORE
+#add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
 macro(qt4_wrap_ui)
   qt5_wrap_ui(${ARGN})
