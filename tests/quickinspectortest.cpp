@@ -206,12 +206,12 @@ private slots:
         QVERIFY(!img.isNull());
         QCOMPARE(img.width(), static_cast<int>(view()->width() *view()->devicePixelRatio()));
         QCOMPARE(img.height(), static_cast<int>(view()->height() *view()->devicePixelRatio()));
-#ifndef Q_OS_WIN // this is too unstable on the CI, rendered results seem to differ in color!?
-        QCOMPARE(img.pixel(1, 1), QColor(255, 0, 0).rgb());
-        QCOMPARE(img.pixel(99, 1), QColor(0, 255, 0).rgb());
-        QCOMPARE(img.pixel(1, 99), QColor(0, 0, 255).rgb());
-        QCOMPARE(img.pixel(99, 99), QColor(255, 255, 0).rgb());
-#endif
+
+        // Grabbed stuff seems to alter colors depending the monitor color profile, let use plain QColor for comparison.
+        QCOMPARE(QColor(img.pixel(1 * view()->devicePixelRatio(), 1 * view()->devicePixelRatio())), QColor(255, 0, 0));
+        QCOMPARE(QColor(img.pixel(99 * view()->devicePixelRatio(), 1 * view()->devicePixelRatio())), QColor(0, 255, 0));
+        QCOMPARE(QColor(img.pixel(1 * view()->devicePixelRatio(), 99 * view()->devicePixelRatio())), QColor(0, 0, 255));
+        QCOMPARE(QColor(img.pixel(99 * view()->devicePixelRatio(), 99 * view()->devicePixelRatio())), QColor(255, 255, 0));
 
         remoteView->setViewActive(false);
     }
