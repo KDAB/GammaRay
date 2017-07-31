@@ -236,7 +236,7 @@ private slots:
                 SLOT(newRequest(GammaRay::Message)));
 
         ModelTest modelTest(&client);
-        QTest::qWait(10); // ModelTest is going to fetch stuff for us already
+        QTest::qWait(25); // ModelTest is going to fetch stuff for us already
 
         QCOMPARE(client.rowCount(), 2);
         QCOMPARE(client.hasChildren(), true);
@@ -299,7 +299,7 @@ private slots:
         proxy.setSourceModel(&client);
 
         ModelTest modelTest(&proxy);
-        QTest::qWait(10); // ModelTest is going to fetch stuff for us already
+        QTest::qWait(25); // ModelTest is going to fetch stuff for us already
 
         QCOMPARE(client.rowCount(), 2);
         QCOMPARE(proxy.rowCount(), 2);
