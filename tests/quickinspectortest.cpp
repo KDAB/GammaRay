@@ -84,6 +84,7 @@ private slots:
 
         inspector = ObjectBroker::object<QuickInspectorInterface *>();
         QVERIFY(inspector);
+        inspector->setServerSideDecorationsEnabled(false);
         inspector->selectWindow(0);
         QTest::qWait(1);
     }
