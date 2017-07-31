@@ -480,7 +480,7 @@ endif()
 ### Qt IVI property model test
 
 if(Qt5IviCore_FOUND AND Qt5IviVehicleFunctions_FOUND) # requires QHooks
-  if(Qt5IviCore_VERSION_STRING VERSION_LESS 1.2)
+  if(Qt5IviCore_VERSION VERSION_LESS 1.2 AND Qt5IviCore_VERSION_STRING VERSION_LESS 1.2)
     add_executable(qtivipropertymodeltest
       qtivipropertymodeltest.cpp
       ../plugins/qtivi/qtivipropertyoverrider.cpp
