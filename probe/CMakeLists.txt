@@ -31,7 +31,6 @@ add_library(gammaray_probe_obj OBJECT ${gammaray_probe_srcs})
 set_target_properties(gammaray_probe_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_compile_definitions(gammaray_probe_obj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
 target_include_directories(gammaray_probe_obj PUBLIC
-    ${QT_INCLUDES}
     $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
 )

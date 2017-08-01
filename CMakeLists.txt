@@ -454,7 +454,7 @@ else()
   set(HAVE_QT_WEBKIT ${QT_QTWEBKIT_FOUND})
   set(HAVE_QT_WEBKIT1 ${QT_QTWEBKIT_FOUND})
 
-  find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_INCLUDES})
+  find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_QTCORE_INCLUDE_DIRS})
   if(QT_PRIVATE_INCLUDE_DIR)
     # not enough, some of them include harfbuzz headers, so we need to find those as well
     # for now we assume a regular Qt4 source build layout, but that probably should be generalized

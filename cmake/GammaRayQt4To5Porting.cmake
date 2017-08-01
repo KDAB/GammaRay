@@ -40,13 +40,6 @@ set(QT_QTGUI_LIBRARIES
   ${Qt5Gui_LIBRARIES}
   ${Qt5Widgets_LIBRARIES}
 )
-
-set(QT_INCLUDES
-    ${Qt5Gui_INCLUDE_DIRS}
-    ${Qt5Widgets_INCLUDE_DIRS}
-    ${Qt5PrintSupport_INCLUDE_DIRS}
-    ${Qt5Svg_INCLUDE_DIRS}
-)
 set(QT_QTGUI_LIBRARY ${QT_QTGUI_LIBRARIES})
 
 set(_qt_modules
@@ -69,7 +62,6 @@ foreach(_module ${_qt_modules})
     string(TOUPPER ${_module} _module_upper)
     set(QT_QT${_module_upper}_LIBRARIES ${Qt5${_module}_LIBRARIES})
     set(QT_QT${_module_upper}_LIBRARY ${QT_QT${_module_upper}_LIBRARIES})
-    list(APPEND QT_INCLUDES ${Qt5${_module}_INCLUDE_DIRS})
     set(QT_QT${_module_upper}_FOUND ${Qt5${_module}_FOUND})
 endforeach()
 

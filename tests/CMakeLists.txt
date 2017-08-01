@@ -6,8 +6,12 @@ configure_file(gammaray-test-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/gammaray-te
 
 add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
 set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_compile_definitions(modeltestobj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
-target_include_directories(modeltestobj PUBLIC ${QT_INCLUDES})
+if(Qt5Core_FOUND)
+    target_compile_definitions(modeltestobj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
+    target_include_directories(modeltestobj PUBLIC ${Qt5Core_INCLUDE_DIRS})
+else()
+    target_include_directories(modeltestobj PUBLIC ${QT_QTCORE_INCLUDE_DIRS})
+endif()
 
 add_subdirectory(shared)
 add_subdirectory(manual)
