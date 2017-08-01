@@ -52,13 +52,8 @@ TextureExtension::TextureExtension(PropertyController *controller)
     , m_currentTexture(nullptr)
     , m_currentMaterial(nullptr)
     , m_remoteView(new RemoteViewServer(controller->objectBaseName() + ".texture.remoteView", controller))
+    , m_connected(false)
 {
-     Q_ASSERT(QSGTextureGrabber::instance());
-     connect(QSGTextureGrabber::instance(), static_cast<void (QSGTextureGrabber::*)(QSGTexture*,const QImage&)>(&QSGTextureGrabber::textureGrabbed),
-             this, static_cast<void (TextureExtension::*)(QSGTexture*,const QImage&)>(&TextureExtension::textureGrabbed));
-     connect(QSGTextureGrabber::instance(), static_cast<void (QSGTextureGrabber::*)(void*,const QImage&)>(&QSGTextureGrabber::textureGrabbed),
-             this, static_cast<void (TextureExtension::*)(void*,const QImage&)>(&TextureExtension::textureGrabbed));
-     connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &TextureExtension::triggerGrab);
 }
 
 TextureExtension::~TextureExtension()
@@ -84,7 +79,7 @@ bool TextureExtension::setQObject(QObject* obj)
 {
     m_currentTexture = nullptr;
     m_currentMaterial = nullptr;
-    if (!obj)
+    if (!obj || !ensureSetup())
         return false;
 
     if (auto qsgTexture = qobject_cast<QSGTexture*>(obj)) {
@@ -180,4 +175,18 @@ void TextureExtension::triggerGrab()
         QSGTextureGrabber::instance()->requestGrab(m_currentTexture);
     else if (m_currentMaterial)
         QSGTextureGrabber::instance()->requestGrab(m_currentMaterial->texture()->textureId, m_currentMaterial->texture()->size, m_currentMaterial);
+}
+
+bool GammaRay::TextureExtension::ensureSetup()
+{
+    if (m_connected)
+        return true;
+    if (!QSGTextureGrabber::instance())
+        return false;
+    connect(QSGTextureGrabber::instance(), static_cast<void (QSGTextureGrabber::*)(QSGTexture*,const QImage&)>(&QSGTextureGrabber::textureGrabbed),
+            this, static_cast<void (TextureExtension::*)(QSGTexture*,const QImage&)>(&TextureExtension::textureGrabbed));
+    connect(QSGTextureGrabber::instance(), static_cast<void (QSGTextureGrabber::*)(void*,const QImage&)>(&QSGTextureGrabber::textureGrabbed),
+            this, static_cast<void (TextureExtension::*)(void*,const QImage&)>(&TextureExtension::textureGrabbed));
+    connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &TextureExtension::triggerGrab);
+    return m_connected = true;
 }

@@ -58,11 +58,13 @@ private slots:
     void textureGrabbed(void *data, const QImage &img);
 
 private:
+    bool ensureSetup();
     void triggerGrab();
 
     QSGTexture *m_currentTexture;
     QSGDistanceFieldTextMaterial *m_currentMaterial;
     RemoteViewServer *m_remoteView;
+    bool m_connected;
 };
 
 }
