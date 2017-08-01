@@ -404,7 +404,7 @@ if(Qt5Core_FOUND)
   endif()
   set(HAVE_PRIVATE_QT_HEADERS TRUE)
 
-  include("cmake/ECMQt4To5Porting.cmake")
+  include("cmake/GammaRayQt4To5Porting.cmake")
 
   set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
   set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
