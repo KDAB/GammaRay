@@ -34,6 +34,8 @@
 #include <QQuickItem>
 
 #include "quickdecorationsdrawer.h"
+#include "quickitemgeometry.h"
+#include "quickinspectorinterface.h"
 
 QT_BEGIN_NAMESPACE
 class QQuickWindow;
@@ -103,6 +105,8 @@ public:
 
     void requestGrabWindow(const QRectF &userViewport);
 
+    void setGrabMode(QuickInspectorInterface::GrabMode grabMode);
+
 signals:
     void sceneChanged();
     void sceneGrabbed(const GammaRay::GrabbedFrame &frame);
@@ -150,6 +154,7 @@ private:
         QSize windowSize;
         GraphicsApi graphicsApi;
     } m_renderInfo;
+    QuickInspectorInterface::GrabMode m_grabMode;
 
 private slots:
     void setIsGrabbingMode(bool isGrabbingMode);

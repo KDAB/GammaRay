@@ -39,6 +39,7 @@ static const qint32 QuickScenePreviewWidgetStateVersion = 4;
 
 QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QuickInspectorInterface::RenderMode)
+GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QuickInspectorInterface::GrabMode)
 QT_END_NAMESPACE
 
 QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspector,
@@ -177,6 +178,10 @@ void QuickScenePreviewWidget::resizeEvent(QResizeEvent *e)
 
 void QuickScenePreviewWidget::drawDecoration(QPainter *p)
 {
+    if (m_control->grabMode() == QuickInspectorInterface::Item) {
+        return;
+    }
+
     // Scaling and translations on QuickItemGeometry will be done on demand
 
     if (frame().data().userType() == qMetaTypeId<QuickItemGeometry>()) {

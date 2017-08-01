@@ -60,6 +60,7 @@
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <QQuickView>
+#include <QQuickItemGrabResult>
 
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -370,6 +371,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this))
     , m_pendingRenderMode(new RenderModeRequest(this))
     , m_renderMode(QuickInspectorInterface::NormalRendering)
+    , m_grabMode(QuickInspectorInterface::FullWindow)
 {
     registerMetaTypes();
     registerVariantHandlers();
@@ -561,6 +563,7 @@ void QuickInspector::recreateOverlay()
 {
     ProbeGuard guard;
     m_overlay = new QuickOverlay;
+    m_overlay->setGrabMode(m_grabMode);
 
     connect(m_overlay.data(), &QuickOverlay::sceneChanged, m_remoteView, &RemoteViewServer::sourceChanged);
     connect(m_overlay.data(), &QuickOverlay::sceneGrabbed, this, &QuickInspector::sendRenderedScene);
@@ -656,6 +659,16 @@ void QuickInspector::checkFeatures()
 void QuickInspector::checkServerSideDecorations()
 {
     emit serverSideDecorations(m_overlay->decorationsEnabled());
+}
+
+void QuickInspector::setGrabMode(QuickInspectorInterface::GrabMode mode)
+{
+    if (m_grabMode == mode) {
+        return;
+    }
+
+    m_grabMode = mode;
+    m_overlay->setGrabMode(mode);
 }
 
 void QuickInspector::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)

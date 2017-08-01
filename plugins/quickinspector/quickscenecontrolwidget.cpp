@@ -63,6 +63,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     , m_gridSettingsWidget(new GridSettingsWidget) // Owned by the QWidgetAction
     , m_legendTool(new QuickOverlayLegend(this))
     , m_inspectorInterface(inspector)
+    , m_grabMode(QuickInspectorInterface::FullWindow)
 {
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(QMargins());
@@ -169,6 +170,17 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_toolBar->addActions(m_visualizeGroup->actions());
     connect(m_visualizeGroup, SIGNAL(triggered(QAction*)), this,
             SLOT(visualizeActionTriggered(QAction*)));
+
+    m_toolBar->addSeparator();
+
+    //TODO add icon
+    auto previewItem = new QAction(QIcon(""), tr("Preview only the selected item"), this);
+    previewItem->setCheckable(true);
+    connect(previewItem, &QAction::toggled, this, [this](bool checked) {
+        m_grabMode = checked ? QuickInspectorInterface::Item : QuickInspectorInterface::FullWindow;
+        m_inspectorInterface->setGrabMode(m_grabMode);
+    });
+    m_toolBar->addAction(previewItem);
 
     m_toolBar->addSeparator();
 

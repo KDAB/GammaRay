@@ -37,6 +37,7 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLPaintDevice>
+#include <QQuickItemGrabResult>
 
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
@@ -196,6 +197,7 @@ QuickOverlay::QuickOverlay()
     , m_currentToplevelItem(nullptr)
     , m_isGrabbingMode(false)
     , m_decorationsEnabled(true)
+    , m_grabMode(QuickInspectorInterface::FullWindow)
 {
     const QMetaObject *mo = metaObject();
     m_sceneGrabbed = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneGrabbed(GammaRay::GrabbedFrame)")));
@@ -431,24 +433,25 @@ void QuickOverlay::windowAfterRendering()
 
         m_grabbedFrame.transform.reset();
 
+        if (m_grabMode == QuickInspectorInterface::FullWindow) {
 #ifdef ENABLE_GL_READPIXELS
-        if (m_grabbedFrame.image.size() != QSize(w, h))
-            m_grabbedFrame.image = QImage(w, h, QImage::Format_RGBA8888);
+            if (m_grabbedFrame.image.size() != QSize(w, h))
+                m_grabbedFrame.image = QImage(w, h, QImage::Format_RGBA8888);
 
-        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
-        glFuncs->glReadPixels(x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
+            QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
+            glFuncs->glReadPixels(x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
 
-        // set transform to flip the read texture later, when displayed
-        m_grabbedFrame.transform.scale(1.0, -1.0);
-        m_grabbedFrame.transform.translate(intersect.x() * m_renderInfo.dpr , -intersect.y() * m_renderInfo.dpr - h);
+            // set transform to flip the read texture later, when displayed
+            m_grabbedFrame.transform.scale(1.0, -1.0);
+            m_grabbedFrame.transform.translate(intersect.x() * m_renderInfo.dpr , -intersect.y() * m_renderInfo.dpr - h);
 #else
-        m_grabbedFrame.image = qt_gl_read_framebuffer(m_renderInfo.windowSize * m_renderInfo.dpr, false, QOpenGLContext::currentContext());
+            m_grabbedFrame.image = qt_gl_read_framebuffer(m_renderInfo.windowSize * m_renderInfo.dpr, false, QOpenGLContext::currentContext());
 #endif
+            m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
-        m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
-
-        if (!m_grabbedFrame.image.isNull()) {
-            m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabbedFrame, m_grabbedFrame));
+            if (!m_grabbedFrame.image.isNull()) {
+                m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabbedFrame, m_grabbedFrame));
+            }
         }
     }
 
@@ -547,6 +550,28 @@ void QuickOverlay::updateOverlay()
 
         m_window->update();
     }
+
+    if (m_isGrabbingMode && m_currentItem.item() && m_grabMode == QuickInspectorInterface::Item) {
+        QSharedPointer<QQuickItemGrabResult> reply = m_currentItem.item()->grabToImage();
+
+        // The lambda needs to be 'mutable' in order to call reply.clear(), otherwise the
+        // QQuickItemGrabResult will never be deleted.
+        connect(reply.data(), &QQuickItemGrabResult::ready, this, [this, reply]() mutable {
+            m_isGrabbingMode = false;
+
+            // We don't set the pixel ratio here, as the image is not scaled up
+            m_grabbedFrame.transform.reset();
+            m_grabbedFrame.itemsGeometry.clear();
+            m_grabbedFrame.image = reply->image();
+            m_grabbedFrame.itemsGeometryRect = reply->image().rect();
+            m_grabbedFrame.itemsGeometry << initFromItem(m_currentItem.item());
+
+            m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabbedFrame, m_grabbedFrame));
+            reply.clear();
+        }, Qt::QueuedConnection);
+    } else if (m_currentToplevelItem) {
+        m_currentToplevelItem->window()->update();
+    }
 }
 
 void QuickOverlay::itemParentChanged(QQuickItem *parent)
@@ -621,4 +646,13 @@ void QuickOverlay::requestGrabWindow(const QRectF &userViewport)
 
     m_userViewport = userViewport;
     m_setIsGrabbingMode.invoke(this, Qt::QueuedConnection, Q_ARG(bool, true));
+}
+
+void QuickOverlay::setGrabMode(QuickInspectorInterface::GrabMode mode)
+{
+    if (m_grabMode == mode)
+        return;
+
+    m_grabMode = mode;
+    updateOverlay();
 }
