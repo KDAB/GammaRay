@@ -19,4 +19,4 @@ set(QNX_TARGET_HINT "C:/qnx660/target/qnx6")
 set(CMAKE_C_FLAGS "-Vgcc_ntoarmv7le" CACHE STRING "qcc c flags" FORCE)
 set(CMAKE_CXX_FLAGS "-Vgcc_ntoarmv7le -lang-c++" CACHE STRING "qcc cxx flags" FORCE)
 
-include(Toolchain-QNX-Common)
+include("${CMAKE_CURRENT_LIST_DIR}/Toolchain-QNX660-common.cmake")
