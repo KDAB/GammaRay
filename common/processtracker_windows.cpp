@@ -296,7 +296,10 @@ typedef NTSTATUS(*NtQuerySystemInformationFunc)(
     PULONG                   ReturnLength
 );
 
-static NtQuerySystemInformationFunc qt_NtQuerySystemInformation = (NtQuerySystemInformationFunc)QLibrary::resolve("NtDll", "NtQuerySystemInformation");
+static inline NtQuerySystemInformationFunc qt_NtQuerySystemInformation() {
+    static auto symbol = (NtQuerySystemInformationFunc)QLibrary::resolve("NtDll", "NtQuerySystemInformation");
+    return symbol;
+}
 }
 
 using namespace GammaRay;
@@ -310,7 +313,7 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
 {
     GammaRay::ProcessTrackerInfo pinfo(pid);
 
-    if (qt_NtQuerySystemInformation) {
+    if (qt_NtQuerySystemInformation()) {
         BOOL traced = false;
         if (pid == QCoreApplication::applicationPid()) {
             traced = IsDebuggerPresent();
@@ -367,7 +370,7 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
             }
 
             ULONG bufferNeededSize = 0;
-            NTSTATUS status = qt_NtQuerySystemInformation(SystemProcessInformation, buffer.data(), buffer.size(), &bufferNeededSize);
+            NTSTATUS status = qt_NtQuerySystemInformation()(SystemProcessInformation, buffer.data(), buffer.size(), &bufferNeededSize);
 
             if (status == STATUS_INFO_LENGTH_MISMATCH) { // The buffer was too small
                 buffer.resize(bufferNeededSize);
