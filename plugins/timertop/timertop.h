@@ -28,6 +28,8 @@
 #ifndef GAMMARAY_TIMERTOP_TIMERTOP_H
 #define GAMMARAY_TIMERTOP_TIMERTOP_H
 
+#include "timertopinterface.h"
+
 #include <core/toolfactory.h>
 
 #include <QTimer>
@@ -41,11 +43,16 @@ namespace Ui {
 class TimerTop;
 }
 
-class TimerTop : public QObject
+class TimerTop : public TimerTopInterface
 {
     Q_OBJECT
+    Q_INTERFACES(GammaRay::TimerTopInterface)
+
 public:
     explicit TimerTop(ProbeInterface *probe, QObject *parent = nullptr);
+
+public slots:
+    void clearHistory() override;
 
 private slots:
     void objectSelected(QObject *obj);
