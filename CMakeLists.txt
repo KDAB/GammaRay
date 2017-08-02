@@ -48,8 +48,6 @@
 # The man page is not available on Windows.
 #
 
-project(GammaRay CXX C)
-
 if(MSVC)
   cmake_minimum_required(VERSION 3.1.0) # b/c of TARGET_PDB_FILE_DIR generator expression
 else()
@@ -66,6 +64,8 @@ endif()
 if(POLICY CMP0063)
   cmake_policy(SET CMP0063 NEW)
 endif()
+
+project(GammaRay CXX C)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 set(CMAKE_AUTOMOC ON)
