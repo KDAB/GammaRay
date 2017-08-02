@@ -68,6 +68,10 @@ private slots:
         model.setWindow(&view);
         const auto items = createItems(root);
 
+        foreach(auto item, items) {
+            model.objectAdded(item);
+        }
+
         QBENCHMARK_ONCE {
             foreach(auto item, items) {
                 // trigger item update
