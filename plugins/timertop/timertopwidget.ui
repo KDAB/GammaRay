@@ -24,7 +24,22 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QLineEdit" name="timerViewFilter"/>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="timerViewFilter"/>
+     </item>
+     <item>
+      <widget class="QToolButton" name="clearTimers">
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../ui/resources/ui.qrc">
+         <normaloff>:/gammaray/icons/ui/classes/QCheckBox/default.png</normaloff>:/gammaray/icons/ui/classes/QCheckBox/default.png</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="GammaRay::DeferredTreeView" name="timerView">
@@ -54,6 +69,8 @@
    <header location="global">ui/deferredtreeview.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../ui/resources/ui.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -1,11 +1,11 @@
 /*
-  timertopwidget.h
+  timertopinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Thomas McGuire <thomas.mcguire@kdab.com>
+  Copyright (C) 2014-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Filipe Azevedo <filipe.azevedo@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -25,46 +25,29 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_TIMERTOP_TIMERTOPWIDGET_H
-#define GAMMARAY_TIMERTOP_TIMERTOPWIDGET_H
 
-#include <ui/uistatemanager.h>
-#include <ui/tooluifactory.h>
+#ifndef GAMMARAY_TIMERTOP_TIMERTOPINTERFACE_H
+#define GAMMARAY_TIMERTOP_TIMERTOPINTERFACE_H
 
-#include <QWidget>
-
-QT_BEGIN_NAMESPACE
-class QTimer;
-QT_END_NAMESPACE
+#include <QObject>
 
 namespace GammaRay {
-class TimerTopInterface;
-namespace Ui {
-class TimerTopWidget;
-}
-
-class TimerTopWidget : public QWidget
+class TimerTopInterface : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit TimerTopWidget(QWidget *parent = nullptr);
-    ~TimerTopWidget();
+    explicit TimerTopInterface(QObject *parent = nullptr);
+    ~TimerTopInterface();
 
-private slots:
-    void contextMenu(QPoint pos);
-
-private:
-    QScopedPointer<Ui::TimerTopWidget> ui;
-    UIStateManager m_stateManager;
-    TimerTopInterface *m_interface;
-};
-
-class TimerTopUiFactory : public QObject, public StandardToolUiFactory<TimerTopWidget>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolUiFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_timertop.json")
+public slots:
+    virtual void clearHistory() = 0;
 };
 }
 
-#endif // GAMMARAY_TIMERTOPWIDGET_H
+QT_BEGIN_NAMESPACE
+Q_DECLARE_INTERFACE(GammaRay::TimerTopInterface,
+                    "com.kdab.GammaRay.TimerTopInterface/1.0")
+QT_END_NAMESPACE
+
+#endif // GAMMARAY_TIMERTOP_TIMERTOPINTERFACE_H

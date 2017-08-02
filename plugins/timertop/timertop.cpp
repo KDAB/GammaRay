@@ -55,7 +55,6 @@ using namespace GammaRay;
 // ! Add button to view object info
 // ! Test timer added/removed at runtime
 // Buttons to kill or slow down timer and start timer
-// Add clear button that removes all free timers and resets statistics for normal timers
 // Add big fat "total wakeups / sec" label to the status bar
 // Retrieve receiver name from connection model
 // Add to view as column: receivers: slotXYZ and 3 others (shown in tooltip)
@@ -102,7 +101,7 @@ static void signal_end_callback(QObject *caller, int method_index)
 }
 
 TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
-    : QObject(parent)
+    : TimerTopInterface(parent)
 {
     Q_ASSERT(probe);
 
@@ -123,6 +122,11 @@ TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
     m_selectionModel = ObjectBroker::selectionModel(TimerModel::instance());
 
     connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+}
+
+void TimerTop::clearHistory()
+{
+    TimerModel::instance()->clearHistory();
 }
 
 void TimerTop::objectSelected(QObject* obj)
