@@ -118,10 +118,16 @@ public:
             r = r.mid(9);
         if (r.startsWith(QLatin1String("Intel ")))
             r = r.mid(6);
+        if (r.startsWith(QLatin1String("NVIDIA ")))
+            r = r.mid(7);
 
         // remove excessive details that could enable fingerprinting
         if (r.startsWith(QLatin1String("ANGLE ")) || r.startsWith(QLatin1String("Gallium ")))
             r = stripDetails(r);
+
+        // strip macOS adding " OpenGL Engine" at the end
+        if (r.endsWith(QLatin1String(" OpenGL Engine")))
+            r = r.left(r.size() - 14);
 
         return r;
     }

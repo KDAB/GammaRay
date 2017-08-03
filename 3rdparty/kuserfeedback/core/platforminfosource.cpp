@@ -45,6 +45,10 @@ QVariant PlatformInfoSource::data()
         m.insert(QStringLiteral("version"), QString(QSysInfo::productType() + QLatin1String("-tumbleweed")));
     else
         m.insert(QStringLiteral("version"), QString(QSysInfo::productType() + QLatin1Char('-') + QSysInfo::productVersion()));
+#elif defined(Q_OS_MAC)
+    // QSysInfo::productType() on macOS alternates between "osx" and "macos"...
+    m.insert(QStringLiteral("os"), QStringLiteral("macos"));
+    m.insert(QStringLiteral("version"), QSysInfo::productVersion());
 #else
     m.insert(QStringLiteral("os"), QSysInfo::productType());
     m.insert(QStringLiteral("version"), QSysInfo::productVersion());
@@ -71,7 +75,7 @@ QVariant PlatformInfoSource::data()
         default: m.insert(QStringLiteral("version"), QStringLiteral("unknown"));
     }
 #elif defined(Q_OS_MAC)
-    m.insert(QStringLiteral("os"), QStringLiteral("mac"));
+    m.insert(QStringLiteral("os"), QStringLiteral("macos"));
     switch (QSysInfo::MacintoshVersion) {
         case QSysInfo::MV_10_3: m.insert(QStringLiteral("version"), QStringLiteral("10.3")); break;
         case QSysInfo::MV_10_4: m.insert(QStringLiteral("version"), QStringLiteral("10.4")); break;

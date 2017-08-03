@@ -48,6 +48,8 @@ public:
     void reposition();
     int xPosition() const;
 
+    static QString appName();
+
     Provider *provider;
     SurveyInfo survey;
     QPropertyAnimation *animation;
@@ -70,8 +72,14 @@ void NotificationPopupPrivate::showEncouragement()
         return;
 
     survey = SurveyInfo();
-    ui->title->setText(NotificationPopup::tr("Help us make this application better!"));
-    ui->message->setText(NotificationPopup::tr("You can help us improving this application by sharing statistics and participate in surveys."));
+    const auto name = appName();
+    if (name.isEmpty()) {
+        ui->title->setText(NotificationPopup::tr("Help us make this application better!"));
+        ui->message->setText(NotificationPopup::tr("You can help us improving this application by sharing statistics and participate in surveys."));
+    } else {
+        ui->title->setText(NotificationPopup::tr("Help us make %1 better!").arg(name));
+        ui->message->setText(NotificationPopup::tr("You can help us improving %1 by sharing statistics and participate in surveys.").arg(name));
+    }
     ui->actionButton->setText(NotificationPopup::tr("Contribute..."));
     showPopup();
 }
@@ -82,8 +90,12 @@ void NotificationPopupPrivate::surveyAvailable(const SurveyInfo &info)
         return;
 
     survey = info;
+    const auto name = appName();
     ui->title->setText(NotificationPopup::tr("We are looking for your feedback!"));
-    ui->message->setText(NotificationPopup::tr("We would like a few minutes of your time to provide feedback about this application in a survey."));
+    if (name.isEmpty())
+        ui->message->setText(NotificationPopup::tr("We would like a few minutes of your time to provide feedback about this application in a survey."));
+    else
+        ui->message->setText(NotificationPopup::tr("We would like a few minutes of your time to provide feedback about %1 in a survey.").arg(name));
     ui->actionButton->setText(NotificationPopup::tr("Participate"));
     showPopup();
 }
@@ -143,6 +155,15 @@ int NotificationPopupPrivate::xPosition() const
         return q->parentWidget()->width() - q->width();
     }
     return 0;
+}
+
+QString NotificationPopupPrivate::appName()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    return QGuiApplication::applicationDisplayName();
+#else
+    return QString();
+#endif
 }
 
 

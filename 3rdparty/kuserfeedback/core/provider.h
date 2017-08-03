@@ -42,6 +42,11 @@ class SurveyInfo;
 class KUSERFEEDBACKCORE_EXPORT Provider : public QObject
 {
     Q_OBJECT
+    /*! The global enabled state of the feedback functionality.
+     *  If this is @c false, all feedback functionality has to be disabled completely.
+     */
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+
     /*! The interval in which the user accepts surveys.
      *  This should be configurable for the user.
      *  @c -1 indicates surveys are disabled.
@@ -123,6 +128,17 @@ public:
      */
     explicit Provider(QObject *parent = nullptr);
     ~Provider();
+
+    /*! Returns whether feedback functionality is enabled on this system.
+     *  This should be checked everywhere showing feedback UI to the user
+     *  to respect the global "kill switch" for this. Provider does check
+     *  this internally for encouragements, surveys and telemetry submission.
+     */
+    bool isEnabled() const;
+    /*! Set the global (user-wide) activation state for feedback functionality.
+     *  @see isEnabled
+     */
+    void setEnabled(bool enabled);
 
     /*! Returns the current product identifier. */
     QString productIdentifier() const;
@@ -247,6 +263,9 @@ Q_SIGNALS:
     /*! Emitted when any provider setting changed. */
     void providerSettingsChanged();
 
+    /*! Emitted when the global enabled state changed. */
+    void enabledChanged();
+
 private:
     friend class ProviderPrivate;
     ProviderPrivate * const d;
@@ -258,6 +277,7 @@ private:
     // for testing
     Q_PRIVATE_SLOT(d, void load())
     Q_PRIVATE_SLOT(d, void store())
+    Q_PRIVATE_SLOT(d, bool selectSurvey(const KUserFeedback::SurveyInfo&))
 };
 
 }
