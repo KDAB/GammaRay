@@ -113,6 +113,18 @@ std::unique_ptr<QSettings> ProviderPrivate::makeSettings() const
     return s;
 }
 
+std::unique_ptr<QSettings> ProviderPrivate::makeGlobalSettings() const
+{
+    const auto org =
+#ifdef Q_OS_MAC
+        QStringLiteral("kde.org");
+#else
+        QStringLiteral("KDE");
+#endif
+    std::unique_ptr<QSettings> s(new QSettings(org, QStringLiteral("UserFeedback")));
+    return s;
+}
+
 void ProviderPrivate::load()
 {
     auto s = makeSettings();
@@ -138,6 +150,11 @@ void ProviderPrivate::load()
         source->load(s.get());
         s->endGroup();
     }
+
+    auto g = makeGlobalSettings();
+    g->beginGroup(QStringLiteral("UserFeedback"));
+    lastSurveyTime = std::max(g->value(QStringLiteral("LastSurvey")).toDateTime(), lastSurveyTime);
+    lastEncouragementTime = std::max(g->value(QStringLiteral("LastEncouragement")).toDateTime(), lastEncouragementTime);
 }
 
 void ProviderPrivate::store()
@@ -163,6 +180,13 @@ void ProviderPrivate::store()
 void ProviderPrivate::storeOne(const QString &key, const QVariant &value)
 {
     auto s = makeSettings();
+    s->beginGroup(QStringLiteral("UserFeedback"));
+    s->setValue(key, value);
+}
+
+void ProviderPrivate::storeOneGlobal(const QString &key, const QVariant &value)
+{
+    auto s = makeGlobalSettings();
     s->beginGroup(QStringLiteral("UserFeedback"));
     s->setValue(key, value);
 }
@@ -278,6 +302,8 @@ QByteArray ProviderPrivate::jsonData(Provider::TelemetryMode mode) const
 void ProviderPrivate::scheduleNextSubmission()
 {
     submissionTimer.stop();
+    if (!q->isEnabled())
+        return;
     if (submissionInterval <= 0 || (telemetryMode == Provider::NoTelemetry && surveyInterval < 0))
         return;
 
@@ -351,7 +377,7 @@ QVariant ProviderPrivate::sourceData(const QString& sourceName) const
 bool ProviderPrivate::selectSurvey(const SurveyInfo &survey) const
 {
     qCDebug(Log) << "got survey:" << survey.url() << survey.target();
-    if (!survey.isValid() || completedSurveys.contains(survey.uuid().toString()))
+    if (!q->isEnabled() || !survey.isValid() || completedSurveys.contains(survey.uuid().toString()))
         return false;
 
     if (lastSurveyTime.addDays(surveyInterval) > QDateTime::currentDateTime())
@@ -386,6 +412,8 @@ Provider::TelemetryMode ProviderPrivate::highestTelemetryMode() const
 void ProviderPrivate::scheduleEncouragement()
 {
     encouragementTimer.stop();
+    if (!q->isEnabled())
+        return;
 
     // already done, not repetition
     if (lastEncouragementTime.isValid() && encouragementInterval <= 0)
@@ -409,7 +437,7 @@ void ProviderPrivate::scheduleEncouragement()
         timeToEncouragement = std::max(timeToEncouragement, encouragementTime - currentApplicationTime());
     if (lastEncouragementTime.isValid()) {
         Q_ASSERT(encouragementInterval > 0);
-        const auto targetTime = lastEncouragementTime.addDays(encouragementDelay);
+        const auto targetTime = lastEncouragementTime.addDays(encouragementInterval);
         timeToEncouragement = std::max(timeToEncouragement, (int)QDateTime::currentDateTime().secsTo(targetTime));
     }
     encouragementTimer.start(timeToEncouragement * 1000);
@@ -419,6 +447,7 @@ void ProviderPrivate::emitShowEncouragementMessage()
 {
     lastEncouragementTime = QDateTime::currentDateTime(); // TODO make this explicit, in case the host application decides to delay?
     storeOne(QStringLiteral("LastEncouragement"), lastEncouragementTime);
+    storeOneGlobal(QStringLiteral("LastEncouragement"), lastEncouragementTime);
     emit q->showEncouragementMessage();
 }
 
@@ -443,6 +472,21 @@ Provider::Provider(QObject *parent) :
 Provider::~Provider()
 {
     delete d;
+}
+
+bool Provider::isEnabled() const
+{
+    auto s = d->makeGlobalSettings();
+    s->beginGroup(QStringLiteral("UserFeedback"));
+    return s->value(QStringLiteral("Enabled"), true).toBool();
+}
+
+void Provider::setEnabled(bool enabled)
+{
+    if (enabled == isEnabled())
+        return;
+    d->storeOneGlobal(QStringLiteral("Enabled"), enabled);
+    emit enabledChanged();
 }
 
 QString Provider::productIdentifier() const
@@ -614,10 +658,16 @@ void Provider::surveyCompleted(const SurveyInfo &info)
     s->beginGroup(QStringLiteral("UserFeedback"));
     s->setValue(QStringLiteral("LastSurvey"), d->lastSurveyTime);
     s->setValue(QStringLiteral("CompletedSurveys"), d->completedSurveys);
+
+    d->storeOneGlobal(QStringLiteral("LastSurvey"), d->lastSurveyTime);
 }
 
 void Provider::submit()
 {
+    if (!isEnabled()) {
+        qCWarning(Log) << "Global kill switch is enabled";
+        return;
+    }
     if (d->productId.isEmpty()) {
         qCWarning(Log) << "No productId specified!";
         return;

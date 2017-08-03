@@ -84,8 +84,8 @@ struct QSignalSpyCallbackSet
     EndCallback signal_end_callback,
                 slot_end_callback;
 };
-extern void qt_register_signal_spy_callbacks(const QSignalSpyCallbackSet &callback_set);
-extern QSignalSpyCallbackSet qt_signal_spy_callback_set;
+extern void Q_CORE_EXPORT qt_register_signal_spy_callbacks(const QSignalSpyCallbackSet &callback_set);
+extern QSignalSpyCallbackSet Q_CORE_EXPORT qt_signal_spy_callback_set;
 #endif
 
 #include <algorithm>
