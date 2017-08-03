@@ -58,6 +58,10 @@ using namespace GammaRay;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 static void gammaray_pre_routine()
 {
+#ifdef Q_OS_WIN
+    if (qApp) // DllMain will do a better job at this, we are too early here and might not even have our staticMetaObject properly resolved
+        return;
+#endif
     new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects);
 }
 Q_COREAPP_STARTUP_FUNCTION(gammaray_pre_routine)
