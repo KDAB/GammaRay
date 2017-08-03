@@ -69,6 +69,13 @@ public:
     QString compiler() const;
     void setCompiler(const QString &compiler);
 
+    /** The compiler ABI version is currently only relevant for MSVC */
+    QString compilerVersion() const;
+    void setCompilerVersion(const QString &compilerVersion);
+
+    /** Returns @c true if the version is changing the ABI. */
+    bool isVersionRelevant() const;
+
     /** Returns if this probe ABI is fully specified. */
     bool isValid() const;
 
