@@ -1,7 +1,7 @@
 # probe plugin
 if(Qt5IviCore_FOUND)
     set(plugin_files qtivisupport.cpp)
-    if(Qt5IviCore_VERSION_STRING VERSION_GREATER 1.1)
+    if(Qt5IviCore_VERSION VERSION_GREATER 1.1)
         add_definitions(-DQTIVI_DISABLE_IVIPROPERTIES)
         set(plugin_files ${plugin_files} qtiviobjectmodel.cpp)
     else()
