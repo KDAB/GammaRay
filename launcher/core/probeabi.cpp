@@ -57,6 +57,7 @@ public:
         : QSharedData(other)
         , architecture(other.architecture)
         , compiler(other.compiler)
+        , compilerVersion(other.compilerVersion)
         , majorQtVersion(other.majorQtVersion)
         , minorQtVersion(other.minorQtVersion)
         , isDebug(other.isDebug)
@@ -64,6 +65,7 @@ public:
 
     QString architecture;
     QString compiler;
+    QString compilerVersion;
     int majorQtVersion;
     int minorQtVersion;
     bool isDebug;
@@ -133,6 +135,21 @@ void ProbeABI::setCompiler(const QString &compiler)
     d->compiler = compiler;
 }
 
+QString ProbeABI::compilerVersion() const
+{
+    return d->compilerVersion;
+}
+
+void ProbeABI::setCompilerVersion(const QString &compilerVersion)
+{
+    d->compilerVersion = compilerVersion;
+}
+
+bool ProbeABI::isVersionRelevant() const
+{
+    return compiler() == QLatin1String("MSVC");
+}
+
 bool ProbeABI::isDebug() const
 {
     return d->isDebug;
@@ -145,10 +162,10 @@ void ProbeABI::setIsDebug(bool debug)
 
 bool ProbeABI::isDebugRelevant() const
 {
-#if defined(Q_OS_MACX)
+#if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     return true;
 #else
-    return compiler() == QLatin1String("MSVC");
+    return false;
 #endif
 }
 
@@ -158,6 +175,7 @@ bool ProbeABI::isValid() const
            && !d->architecture.isEmpty()
 #ifdef Q_OS_WIN
            && !d->compiler.isEmpty()
+           && (!isVersionRelevant() || !d->compilerVersion.isEmpty())
 #endif
     ;
 }
@@ -169,6 +187,7 @@ bool ProbeABI::isCompatible(const ProbeABI &referenceABI) const
            && d->architecture == referenceABI.architecture()
 #ifdef Q_OS_WIN
            && d->compiler == referenceABI.compiler()
+           && d->compilerVersion == referenceABI.compilerVersion()
 #endif
            && (isDebugRelevant() ? d->isDebug == referenceABI.isDebug() : true)
     ;
@@ -184,6 +203,8 @@ QString ProbeABI::id() const
 
 #ifdef Q_OS_WIN
     idParts.push_back(compiler());
+    if (isVersionRelevant())
+        idParts.push_back(compilerVersion());
 #endif
 
     idParts.push_back(architecture());
@@ -210,6 +231,8 @@ ProbeABI ProbeABI::fromString(const QString &id)
     // compiler
 #ifdef Q_OS_WIN
     abi.setCompiler(idParts.value(index++));
+    if (abi.isVersionRelevant())
+        abi.setCompilerVersion(idParts.value(index++));
 #endif
 
     if (idParts.size() != index + 1)
@@ -240,6 +263,8 @@ QString ProbeABI::displayString() const
     QStringList details;
 #ifdef Q_OS_WIN
     details.push_back(compiler());
+    if (isVersionRelevant())
+        details.push_back(compilerVersion());
 #endif
     if (isDebugRelevant())
         details.push_back(isDebug() ? ProbeABIContext::tr("debug") : ProbeABIContext::tr("release"));
@@ -258,6 +283,7 @@ bool ProbeABI::operator==(const ProbeABI &rhs) const
            && minorQtVersion() == rhs.minorQtVersion()
            && architecture() == rhs.architecture()
            && compiler() == rhs.compiler()
+           && compilerVersion() == rhs.compilerVersion()
            && isDebug() == rhs.isDebug();
 }
 

@@ -42,6 +42,23 @@ endif()
 # on Windows, the compiler also matters
 if(WIN32)
   set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_CXX_COMPILER_ID}")
+  if(MSVC)
+      # based on FindBoost.cmake
+      if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 20)
+          message(FATAL_ERROR "Unsupported compiler version detected ${CMAKE_CXX_COMPILER_VERSION}")
+      elseif (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19)
+        set(GAMMARAY_COMPILER_VERSION "140")
+      elseif(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 18)
+        set(GAMMARAY_COMPILER_VERSION "120")
+      elseif(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 17)
+        set(GAMMARAY_COMPILER_VERSION "110")
+      elseif(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16)
+        set(GAMMARAY_COMPILER_VERSION "100")
+      else()
+          message(FATAL_ERROR "Unsupported compiler version detected, please use at least MSVC2010")
+      endif()
+      set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${GAMMARAY_COMPILER_VERSION}")
+  endif()
 endif()
 
 # processor architecture

@@ -98,7 +98,37 @@ static QString resolveImport(const QString &import, const QStringList &searchPat
     qDebug() << "Could not resolve import" << import << "in" << searchPaths;
     return QString();
 }
+struct Version {
+    Version(int major, int minor)
+        : major(major)
+        , minor(minor)
+    {}
+    int major;
+    int minor;
+};
 
+static Version fileVersion(const QString &path)
+{
+    // version
+    DWORD pointlessHandle;
+    DWORD fileVersionInfoSize = GetFileVersionInfoSize(
+                reinterpret_cast<LPCWSTR>(path.utf16()), &pointlessHandle);
+    if (fileVersionInfoSize) {
+        QScopedArrayPointer<BYTE> buffer(new BYTE[fileVersionInfoSize]);
+        if (GetFileVersionInfoW(reinterpret_cast<LPCWSTR>(path.utf16()), pointlessHandle,
+                                fileVersionInfoSize, buffer.data())) {
+            void *versionInfoData;
+            unsigned int versionInfoSize;
+            if (VerQueryValue(buffer.data(), TEXT("\\"), &versionInfoData,
+                              &versionInfoSize) && versionInfoSize) {
+                VS_FIXEDFILEINFO *versionInfo = reinterpret_cast<VS_FIXEDFILEINFO *>(versionInfoData);
+                if (versionInfo->dwSignature == VS_FFI_SIGNATURE)
+                    return Version(versionInfo->dwFileVersionMS >> 16, versionInfo->dwFileVersionMS & 0xFFFF);
+            }
+        }
+    }
+    return Version(-1, -1);
+}
 QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
 {
     const auto searchPaths = dllSearchPaths(path);
@@ -162,14 +192,20 @@ static QString compilerFromLibraries(const QStringList &libraries)
     return "MSVC";
 }
 
-static bool isDebugRuntime(const QStringList &libraries)
+static QString compilerVersionFromLibraries(const QStringList &libraries)
 {
     foreach (const QString &lib, libraries) {
-        if (lib.startsWith(QLatin1String("msvcr"), Qt::CaseInsensitive)
-            || lib.startsWith(QLatin1String("vcruntime"), Qt::CaseInsensitive))
-            return lib.endsWith(QLatin1String("d.dll"), Qt::CaseInsensitive);
+        if (lib.startsWith(QLatin1String("msvcp"), Qt::CaseInsensitive)
+            || lib.startsWith(QLatin1String("vcruntime"), Qt::CaseInsensitive)) {
+            return QString::number(fileVersion(lib).major * 10);
+        }
     }
-    return false;
+    return QString();
+}
+
+static bool isDebugBuild(const QString &qtCoreDll)
+{
+    return qtCoreDll.endsWith(QLatin1String("d.dll"), Qt::CaseInsensitive);
 }
 
 ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path) const
@@ -178,27 +214,11 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path) const
     if (path.isEmpty())
         return abi;
 
-    // version
-    DWORD pointlessHandle;
-    DWORD fileVersionInfoSize = GetFileVersionInfoSize(
-        reinterpret_cast<LPCWSTR>(path.utf16()), &pointlessHandle);
-    if (!fileVersionInfoSize)
-        return ProbeABI();
+    Version version = fileVersion(path);
+    if (version.major == -1)
+        return abi;
 
-    BYTE *buffer = new BYTE[fileVersionInfoSize];
-    if (GetFileVersionInfoW(reinterpret_cast<LPCWSTR>(path.utf16()), pointlessHandle,
-                            fileVersionInfoSize, buffer)) {
-        void *versionInfoData;
-        unsigned int versionInfoSize;
-        if (VerQueryValue(buffer, TEXT("\\"), &versionInfoData,
-                          &versionInfoSize) && versionInfoSize) {
-            VS_FIXEDFILEINFO *versionInfo = reinterpret_cast<VS_FIXEDFILEINFO *>(versionInfoData);
-            if (versionInfo->dwSignature == VS_FFI_SIGNATURE)
-                abi.setQtVersion(versionInfo->dwFileVersionMS >> 16,
-                                 versionInfo->dwFileVersionMS & 0xffff);
-        }
-    }
-    delete[] buffer;
+    abi.setQtVersion(version.major, version.minor);
 
     // architecture and dependent libraries
     PEFile f(path);
@@ -213,8 +233,10 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path) const
     // compiler and debug mode
     QStringList libs = f.imports();
     abi.setCompiler(compilerFromLibraries(libs));
-    if (abi.compiler() == "MSVC")
-        abi.setIsDebug(isDebugRuntime(libs));
+    abi.setIsDebug(isDebugBuild(path));
+    if (abi.compiler() == "MSVC") {
+        abi.setCompilerVersion(compilerVersionFromLibraries(libs));
+    }
 
     return abi;
 }
