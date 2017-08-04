@@ -1,5 +1,7 @@
 <plist version="1.0">
 <dict>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
     <key>CFBundleIdentifier</key>
     <string>com.kdab.GammaRay.client</string>
     <key>CFBundleInfoDictionaryVersion</key>
