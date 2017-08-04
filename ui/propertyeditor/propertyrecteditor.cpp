@@ -74,7 +74,7 @@ PropertyRectEditor::PropertyRectEditor(QWidget *parent)
 
 void PropertyRectEditor::edit()
 {
-    PropertyRectEditorDialog dlg(value().value<QRect>(), this);
+    PropertyRectEditorDialog dlg(value().toRect(), this);
     if (dlg.exec() == QDialog::Accepted)
         save(dlg.rectF().toRect());
 }
@@ -86,7 +86,7 @@ PropertyRectFEditor::PropertyRectFEditor(QWidget *parent)
 
 void PropertyRectFEditor::edit()
 {
-    PropertyRectEditorDialog dlg(value().value<QRectF>(), this);
+    PropertyRectEditorDialog dlg(value().toRectF(), this);
     if (dlg.exec() == QDialog::Accepted)
         save(dlg.rectF());
 }
