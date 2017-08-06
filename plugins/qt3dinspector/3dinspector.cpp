@@ -126,10 +126,10 @@ void Qt3DInspector::selectEngine(int row)
 {
     Qt3DCore::QAspectEngine *engine = nullptr;
     const auto idx = m_engineModel->index(row, 0);
-    if (idx.isValid())
-        engine
-            = qobject_cast<Qt3DCore::QAspectEngine *>(idx.data(
-                                                          ObjectModel::ObjectRole).value<QObject *>());
+    if (idx.isValid()) {
+        engine = qobject_cast<Qt3DCore::QAspectEngine *>(
+                     idx.data(ObjectModel::ObjectRole).value<QObject *>());
+    }
 
     selectEngine(engine);
 }
@@ -138,6 +138,7 @@ void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine *engine)
 {
     if (m_engine == engine)
         return;
+
     m_engine = engine;
     m_entityModel->setEngine(engine);
     if (!engine)
@@ -147,6 +148,7 @@ void Qt3DInspector::selectEngine(Qt3DCore::QAspectEngine *engine)
     auto rootEntity = engine->rootEntity();
     if (!rootEntity)
         return;
+
     foreach (auto component, rootEntity->components()) {
         if (auto renderSettings = qobject_cast<Qt3DRender::QRenderSettings *>(component)) {
             m_frameGraphModel->setRenderSettings(renderSettings);
@@ -169,6 +171,7 @@ void Qt3DInspector::selectEntity(Qt3DCore::QEntity *entity)
 {
     if (m_currentEntity == entity)
         return;
+
     m_currentEntity = entity;
     m_entitryPropertyController->setObject(entity);
 
@@ -183,6 +186,7 @@ void Qt3DInspector::selectEntity(Qt3DCore::QEntity *entity)
                                         Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
+
     const auto index = indexList.first();
     m_entitySelectionModel->select(index,
                                    QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows
@@ -203,6 +207,7 @@ void Qt3DInspector::selectFrameGraphNode(Qt3DRender::QFrameGraphNode *node)
 {
     if (m_currentFrameGraphNode == node)
         return;
+
     m_currentFrameGraphNode = node;
     m_frameGraphPropertyController->setObject(node);
 
@@ -217,21 +222,25 @@ void Qt3DInspector::selectFrameGraphNode(Qt3DRender::QFrameGraphNode *node)
                                         Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
+
     const auto index = indexList.first();
     m_frameGraphSelectionModel->select(index,
-                                       QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows
-                                       | QItemSelectionModel::Current);
+                                       QItemSelectionModel::Select |
+                                       QItemSelectionModel::Clear |
+                                       QItemSelectionModel::Rows |
+                                       QItemSelectionModel::Current);
 }
 
 void Qt3DInspector::objectSelected(QObject *obj)
 {
-    if (auto engine = qobject_cast<Qt3DCore::QAspectEngine *>(obj))
+    if (auto engine = qobject_cast<Qt3DCore::QAspectEngine *>(obj)) {
         selectEngine(engine);
     // TODO check if the engine matches, otherwise switch that too
-    else if (auto entity = qobject_cast<Qt3DCore::QEntity *>(obj))
+    } else if (auto entity = qobject_cast<Qt3DCore::QEntity *>(obj)) {
         selectEntity(entity);
-    else if (auto node = qobject_cast<Qt3DRender::QFrameGraphNode *>(obj))
+    } else if (auto node = qobject_cast<Qt3DRender::QFrameGraphNode *>(obj)) {
         selectFrameGraphNode(node);
+    }
 }
 
 void Qt3DInspector::registerCoreMetaTypes()

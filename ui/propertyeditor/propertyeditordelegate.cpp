@@ -304,8 +304,9 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option, const
     static const int textVMargin = 1;
 
     int width = 0;
-    for (int col = 0; col < matrix_trait<Matrix>::columns; ++col)
+    for (int col = 0; col < matrix_trait<Matrix>::columns; ++col) {
         width += columnWidth(opt, matrix, col);
+    }
     width += opt.fontMetrics.width(QStringLiteral("x")) * matrix_trait<Matrix>::columns + 2
              * parenthesisLineWidth + 2 * textHMargin;
 
@@ -319,10 +320,10 @@ int PropertyEditorDelegate::columnWidth(const QStyleOptionViewItem &option, cons
                                         int column) const
 {
     int width = 0;
-    for (int row = 0; row < matrix_trait<Matrix>::rows; ++row)
-        width
-            = qMax(width,
-                   option.fontMetrics.width(QString::number(matrix_trait<Matrix>::value(matrix, row,
-                                                                                        column))));
+    for (int row = 0; row < matrix_trait<Matrix>::rows; ++row) {
+        width = qMax(width,
+                     option.fontMetrics.width(
+                         QString::number(matrix_trait<Matrix>::value(matrix, row, column))));
+    }
     return width;
 }

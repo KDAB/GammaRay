@@ -73,13 +73,15 @@ QString ProbeABIDetector::qtCoreFromLsof(qint64 pid) const
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     lsofExe = QStandardPaths::findExecutable(QStringLiteral("lsof"));
     // on OSX it's in sbin, which usually but not always is in PATH...
-    if (lsofExe.isEmpty())
+    if (lsofExe.isEmpty()) {
         lsofExe = QStandardPaths::findExecutable(QStringLiteral("lsof"),
                                                  QStringList() << QStringLiteral(
                                                      "/usr/sbin") << QStringLiteral("/sbin"));
+    }
 #endif
-    if (lsofExe.isEmpty())
+    if (lsofExe.isEmpty()) {
         lsofExe = QStringLiteral("lsof"); // maybe QProcess has more luck
+    }
 
     QProcess proc;
     proc.setProcessChannelMode(QProcess::SeparateChannels);
@@ -110,8 +112,8 @@ static bool checkQtCorePrefix(const QByteArray &line, int index)
     if (index >= 3 && line.indexOf("lib", index - 3) == index - 3)
         return true;
 
-    if ((line.at(index - 1) >= 'a' && line.at(index - 1) <= 'z')
-        || (line.at(index - 1) >= 'A' && line.at(index - 1) <= 'Z'))
+    if ((line.at(index - 1) >= 'a' && line.at(index - 1) <= 'z') ||
+        (line.at(index - 1) >= 'A' && line.at(index - 1) <= 'Z'))
         return false;
 
     return true;
@@ -121,6 +123,7 @@ static bool checkQtCoreSuffix(const QByteArray &line, int index)
 {
     if (index >= line.size())
         return false;
+
     Q_ASSERT(line.at(index - 2) == 'Q' && line.at(index - 1) == 't');
 
     // skip version numbers
@@ -136,9 +139,9 @@ static bool checkQtCoreSuffix(const QByteArray &line, int index)
         ++index;
 
     // "Core" must not be followed by another part of the name, so we don't trigger on eg. "QtCoreAddon"
-    if (index < line.size()
-        && ((line.at(index) >= 'a' && line.at(index) <= 'z')
-            || (line.at(index) >= 'A' && line.at(index) <= 'Z')))
+    if (index < line.size() &&
+        ((line.at(index) >= 'a' && line.at(index) <= 'z') ||
+         (line.at(index) >= 'A' && line.at(index) <= 'Z')))
         return false;
 
     return true;
@@ -153,6 +156,7 @@ bool ProbeABIDetector::containsQtCore(const QByteArray &line)
     for (int index = 0; (index = line.indexOf("Qt", index)) >= 0; ++index) {
         if (!checkQtCorePrefix(line, index))
             continue;
+
         if (checkQtCoreSuffix(line, index + 2))
             return true;
     }

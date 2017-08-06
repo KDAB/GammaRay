@@ -120,47 +120,50 @@ static QString qmlListPropertyToString(const QVariant &value, bool *ok)
         = reinterpret_cast<QQmlListProperty<QObject> *>(const_cast<void *>(value.data()));
     if (!prop || !prop->count)
         return QString();
+
     const int count = prop->count(prop);
     if (!count)
         return QmlSupport::tr("<empty>");
+
     return QmlSupport::tr("<%1 entries>").arg(count);
 }
 
 static QString qjsValueToString(const QJSValue &v)
 {
-    if (v.isArray())
+    if (v.isArray()) {
         return QStringLiteral("<array>");
-    else if (v.isBool())
+    } else if (v.isBool()) {
         return v.toBool() ? QStringLiteral("true") : QStringLiteral("false");
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     // note: v.isQMetaObject() == true => v.isCallable() == true, because QV4::QMetaObjectWrapper inherits
     // QV4::FunctionObject and isCallable just checks whether the object is a function object.
     // thus the isQMetaObject check needs to come before the isCallable check
-    else if (v.isQMetaObject())
+    } else if (v.isQMetaObject()) {
         return QStringLiteral("QMetaObject[className=%1]").arg(v.toQMetaObject()->className());
 #endif
-    else if (v.isCallable())
+    } else if (v.isCallable()) {
         return callableQjsValueToString(v);
-    else if (v.isDate())
+    } else if (v.isDate()) {
         return v.toDateTime().toString();
-    else if (v.isError())
+    } else if (v.isError()) {
         return QStringLiteral("<error>");
-    else if (v.isNull())
+    } else if (v.isNull()) {
         return QStringLiteral("<null>");
-    else if (v.isNumber())
+    } else if (v.isNumber()) {
         return QString::number(v.toNumber());
-    else if (v.isObject())
+    } else if (v.isObject()) {
         return QStringLiteral("<object>");
-    else if (v.isQObject())
+    } else if (v.isQObject()) {
         return Util::displayString(v.toQObject());
-    else if (v.isRegExp())
+    } else if (v.isRegExp()) {
         return QStringLiteral("<regexp>");
-    else if (v.isString())
+    } else if (v.isString()) {
         return v.toString();
-    else if (v.isUndefined())
+    } else if (v.isUndefined()) {
         return QStringLiteral("<undefined>");
-    else if (v.isVariant())
+    } else if (v.isVariant()) {
         return VariantHandler::displayString(v.toVariant());
+    }
     return QStringLiteral("<unknown QJSValue>");
 }
 
@@ -189,6 +192,7 @@ QString QmlObjectDataProvider::name(const QObject *obj) const
     QQmlContext *ctx = QQmlEngine::contextForObject(obj);
     if (!ctx || !ctx->engine())
         return QString(); // nameForObject crashes for contexts that have no engine (yet)
+
     return ctx->nameForObject(const_cast<QObject *>(obj));
 }
 
@@ -218,11 +222,12 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
     qmlType = QQmlMetaType::qmlType(data->compilationUnit->url());
 #endif
     if (qmlType) {
-        // we get the same type for top-level types and inline types, with no known way to tell those apart...
-        if (QString::fromLatin1(obj->metaObject()->className()).startsWith(qmlType->qmlTypeName()
-                                                                           + QStringLiteral(
-                                                                               "_QMLTYPE_")))
+        // we get the same type for top-level types and inline types,
+        // with no known way to tell those apart...
+        if (QString::fromLatin1(obj->metaObject()->className()).startsWith(
+            qmlType->qmlTypeName() + QStringLiteral("_QMLTYPE_"))) {
             return qmlType->qmlTypeName();
+        }
     }
 #endif
     return QString();
@@ -232,14 +237,16 @@ QString QmlObjectDataProvider::shortTypeName(QObject *obj) const
 {
     auto n = typeName(obj);
     const auto isQmlType = !n.isEmpty();
-    if (isQmlType)
+    if (isQmlType) {
         n = n.section(QLatin1Char('/'), -1, -1); // strip off the namespace
-    else
+    } else {
         n = obj->metaObject()->className();
+    }
 
     auto idx = n.indexOf(QLatin1String("_QMLTYPE_"));
     if (idx > 0)
         return n.left(idx);
+
     idx = n.indexOf(QLatin1String("_QML_"));
     if (idx > 0)
         return n.left(idx);
@@ -253,8 +260,9 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
 
     auto objectData = QQmlData::get(obj);
     if (!objectData) {
-        if (auto context = qobject_cast<QQmlContext *>(obj))
+        if (auto context = qobject_cast<QQmlContext *>(obj)) {
             loc.setUrl(context->baseUrl());
+        }
         return loc;
     }
 

@@ -110,8 +110,9 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
              || (m_drawingMode == GL_QUAD_STRIP && i % 2)
              || m_drawingMode == GL_POLYGON
 #endif
-             ) && i > 0)
+             ) && i > 0) {
             drawWire(&painter, index, m_adjacencyList[i - 1]);
+        }
 
         // Draw a connection to the second previous vertex
         if ((m_drawingMode == GL_TRIANGLE_STRIP
@@ -119,13 +120,15 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
 #ifndef QT_OPENGL_ES_2
              || m_drawingMode == GL_QUAD_STRIP
 #endif
-             ) && i > 1)
+             ) && i > 1) {
             drawWire(&painter, index, m_adjacencyList[i - 2]);
+        }
 
         // draw a connection to the third previous vertex
 #ifndef QT_OPENGL_ES_2
-        if (m_drawingMode == GL_QUADS && i % 4 == 3)
+        if (m_drawingMode == GL_QUADS && i % 4 == 3) {
             drawWire(&painter, index, m_adjacencyList[i - 3]);
+        }
 
 #endif
 
@@ -233,7 +236,6 @@ void SGWireframeWidget::setModel(QAbstractItemModel *vertexModel, QAbstractItemM
     connect(m_vertexModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SLOT(onVertexModelRowsInserted(QModelIndex,int,int)));
 
-
     if (m_adjacencyModel) {
         disconnect(m_adjacencyModel, nullptr, this, nullptr);
     }
@@ -270,7 +272,7 @@ void SGWireframeWidget::onAdjacencyModelReset()
     update();
 }
 
-void SGWireframeWidget::onVertexModelRowsInserted(const QModelIndex& parent, int first, int last)
+void SGWireframeWidget::onVertexModelRowsInserted(const QModelIndex &parent, int first, int last)
 {
     Q_UNUSED(first);
     Q_UNUSED(last);
@@ -280,7 +282,7 @@ void SGWireframeWidget::onVertexModelRowsInserted(const QModelIndex& parent, int
     }
 }
 
-void SGWireframeWidget::onAdjacencyModelRowsInserted(const QModelIndex& parent, int first, int last)
+void SGWireframeWidget::onAdjacencyModelRowsInserted(const QModelIndex &parent, int first, int last)
 {
     Q_UNUSED(first);
     Q_UNUSED(last);
@@ -392,14 +394,13 @@ void SGWireframeWidget::mouseReleaseEvent(QMouseEvent *e)
     for (int i = 0; i < m_vertices.size(); i++) {
         int distance = QLineF(e->pos(), m_vertices.at(i) * m_zoom + m_offset).length();
         if (distance <= 5) {
-            if (e->modifiers() & Qt::ControlModifier)
-                m_highlightModel->select(m_vertexModel->index(i,
-                                                        m_positionColumn),
+            if (e->modifiers() & Qt::ControlModifier) {
+                m_highlightModel->select(m_vertexModel->index(i, m_positionColumn),
                                          QItemSelectionModel::Toggle);
-            else
-                m_highlightModel->select(m_vertexModel->index(i,
-                                                        m_positionColumn),
+            } else {
+                m_highlightModel->select(m_vertexModel->index(i, m_positionColumn),
                                          QItemSelectionModel::Select);
+            }
         }
     }
 

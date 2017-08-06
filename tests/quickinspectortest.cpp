@@ -79,9 +79,11 @@ private:
     {
         if (spy->isEmpty())
             spy->wait(1000);
+
         bool result = !spy->isEmpty();
         if (!keepResult)
             spy->clear();
+
         return result;
     }
 
@@ -93,13 +95,13 @@ private:
         view->setSource(QUrl(sourceFile));
         view->show();
         exposed = QTest::qWaitForWindowExposed(view);
-        if (!exposed)
-            qWarning()
-                <<
-            "Unable to expose window, probably running tests on a headless system - ignoring all following render failures.";
+        if (!exposed) {
+            qWarning() << "Unable to expose window, probably running tests on a headless system - "
+                       << "ignoring all following render failures.";
+        }
 
-
-        // wait at least two frames so we have the final window size with all render loop/driver combinations...
+        // wait at least two frames so we have the final window size with
+        // all the render loop/driver combinations...
         QTest::qWait(20);
         waitForSignal(&renderSpy);
         view->update();
@@ -210,22 +212,26 @@ private slots:
         QVERIFY(sgSpy.isValid());
 
         // auto center-click is broken before https://codereview.qt-project.org/141085/
-        QTest::mouseClick(view, Qt::LeftButton, Qt::ShiftModifier | Qt::ControlModifier,
-                          QPoint(view->width()/2, view->height()/2));
+        QTest::mouseClick(view,
+                          Qt::LeftButton,
+                          Qt::ShiftModifier | Qt::ControlModifier,
+                          QPoint(view->width() / 2, view->height() / 2));
         QTest::qWait(20);
 
         QCOMPARE(toolSpy.size(), 1);
         QCOMPARE(itemSpy.size(), 1);
         if (!exposed)
             return;
+
         QCOMPARE(sgSpy.size(), 1);
     }
 
     void testFetchingPreview()
     {
-        auto remoteView
-            = ObjectBroker::object<RemoteViewInterface *>(QStringLiteral(
-                                                              "com.kdab.GammaRay.QuickRemoteView"));
+        auto remoteView =
+            ObjectBroker::object<RemoteViewInterface *>(
+                QStringLiteral("com.kdab.GammaRay.QuickRemoteView"));
+
         QVERIFY(remoteView);
         remoteView->setViewActive(true);
 
@@ -240,6 +246,7 @@ private slots:
         remoteView->clientViewUpdated();
         if (!exposed)
             return;
+
         QVERIFY(waitForSignal(&gotFrameSpy, true));
 
         QVERIFY(renderSpy.size() >= 1);

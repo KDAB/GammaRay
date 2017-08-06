@@ -47,16 +47,15 @@ PaintAnalyzerExtension::PaintAnalyzerExtension(PropertyController *controller)
     : PropertyControllerExtension(controller->objectBaseName() + ".painting")
     , m_paintAnalyzer(nullptr)
 {
-    // check if the paint analyzer already exists before creating it, as we share the UI with other plugins
-    const QString analyzerName = controller->objectBaseName()
-                                 + QStringLiteral(".painting.analyzer");
-    if (ObjectBroker::hasObject(analyzerName))
-        m_paintAnalyzer
-            = qobject_cast<PaintAnalyzer *>(ObjectBroker::object<PaintAnalyzerInterface *>(
-                                                analyzerName));
-
-    else
-        m_paintAnalyzer = new PaintAnalyzer(analyzerName, controller);
+    // check if the paint analyzer already exists before creating it,
+    // as we share the UI with the other plugins.
+    const QString aName = controller->objectBaseName() + QStringLiteral(".painting.analyzer");
+    if (ObjectBroker::hasObject(aName)) {
+        m_paintAnalyzer =
+            qobject_cast<PaintAnalyzer *>(ObjectBroker::object<PaintAnalyzerInterface *>(aName));
+    } else {
+        m_paintAnalyzer = new PaintAnalyzer(aName, controller);
+    }
 }
 
 PaintAnalyzerExtension::~PaintAnalyzerExtension()

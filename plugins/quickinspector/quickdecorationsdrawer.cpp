@@ -273,6 +273,7 @@ void QuickDecorationsDrawer::drawDecorations()
     foreach (const auto &t, texts) {
         if (t.label.isEmpty())
             continue;
+
         m_painter->setPen(t.pen);
         m_painter->drawText(t.rect, t.align, t.label);
     }
@@ -376,6 +377,7 @@ void QuickDecorationsDrawer::drawGrid()
     for (qreal x = viewRect.left() + gridOffset.x(); x < viewRect.right(); x += gridCellSize.width()) {
         if (x < viewRect.left())
             continue;
+
         lines << QLineF(QPointF(x, viewRect.top()) * m_renderInfo->zoom,
                         QPointF(x, viewRect.bottom()) * m_renderInfo->zoom);
     }
@@ -383,6 +385,7 @@ void QuickDecorationsDrawer::drawGrid()
     for (qreal y = viewRect.top() + gridOffset.y(); y < viewRect.bottom(); y += gridCellSize.height()) {
         if (y < viewRect.top())
             continue;
+
         lines << QLineF(QPointF(viewRect.left(), y) * m_renderInfo->zoom,
                         QPointF(viewRect.right(), y) * m_renderInfo->zoom);
     }
@@ -434,22 +437,24 @@ void QuickDecorationsDrawer::drawAnchor(const QuickItemGeometry &itemGeometry, Q
     QPen pen(m_painter->pen());
     pen.setWidth(2);
     m_painter->setPen(pen);
-    if (orientation == Qt::Horizontal)
+    if (orientation == Qt::Horizontal) {
         m_painter->drawLine(ownAnchorLine,
                     itemGeometry.itemRect.top(), ownAnchorLine,
                     itemGeometry.itemRect.bottom());
-    else
+    } else {
         m_painter->drawLine(
                     itemGeometry.itemRect.left(), ownAnchorLine,
                     itemGeometry.itemRect.right(), ownAnchorLine);
+    }
 
     // Foreign Anchor line
     pen.setStyle(Qt::DotLine);
     m_painter->setPen(pen);
-    if (orientation == Qt::Horizontal)
+    if (orientation == Qt::Horizontal) {
         m_painter->drawLine(foreignAnchorLine, 0, foreignAnchorLine, viewRect.height() * zoom);
-    else
+    } else {
         m_painter->drawLine(0, foreignAnchorLine, viewRect.width() * zoom, foreignAnchorLine);
+    }
 
     m_painter->restore();
 }

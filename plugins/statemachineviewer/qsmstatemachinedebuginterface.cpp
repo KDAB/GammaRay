@@ -115,8 +115,9 @@ QVector<State> QSMStateMachineDebugInterface::configuration() const
     QVector<State> result;
     configuration.reserve(configuration.size());
 
-    foreach(QAbstractState *state, configuration)
+    foreach (QAbstractState *state, configuration) {
         result.append(toState(state));
+    }
 
     std::sort(result.begin(), result.end());
     return result;
@@ -193,13 +194,14 @@ StateType QSMStateMachineDebugInterface::stateType(State stateId) const
 {
     QAbstractState *state = fromState(stateId);
     StateType type = OtherState;
-    if (qobject_cast<QFinalState *>(state))
+    if (qobject_cast<QFinalState *>(state)) {
         type = FinalState;
-    else if (auto historyState = qobject_cast<QHistoryState *>(state))
-        type = historyState->historyType()
-                   == QHistoryState::ShallowHistory ? ShallowHistoryState : DeepHistoryState;
-    else if (qobject_cast<QStateMachine *>(state))
+    } else if (auto historyState = qobject_cast<QHistoryState *>(state)) {
+        type = historyState->historyType() == QHistoryState::ShallowHistory ? ShallowHistoryState :
+                                                                              DeepHistoryState;
+    } else if (qobject_cast<QStateMachine *>(state)) {
         type = StateMachineState;
+    }
     return type;
 }
 
@@ -236,11 +238,14 @@ QString QSMStateMachineDebugInterface::transitionLabel(Transition t) const
     // try to find descriptive labels for built-in transitions
     if (auto signalTransition = qobject_cast<QSignalTransition *>(transition)) {
         QString str;
-        if (signalTransition->senderObject() != transition->sourceState())
+        if (signalTransition->senderObject() != transition->sourceState()) {
             str += Util::displayString(signalTransition->senderObject()) + "\n / ";
+        }
         auto signal = signalTransition->signal();
-        if (signal.startsWith('0' + QSIGNAL_CODE)) // from QStateMachinePrivate::registerSignalTransition
+        if (signal.startsWith('0' + QSIGNAL_CODE)) {
+            // from QStateMachinePrivate::registerSignalTransition
             signal.remove(0, 1);
+        }
         str += signal;
         return str;
     }
@@ -250,16 +255,20 @@ QString QSMStateMachineDebugInterface::transitionLabel(Transition t) const
         const auto modifiers = transition->property("modifierMask").value<Qt::KeyboardModifiers>();
         if (modifiers != Qt::NoModifier) {
             const auto modIdx = staticQtMetaObject.indexOfEnumerator("KeyboardModifiers");
-            if (modIdx < 0)
+            if (modIdx < 0) {
                 return Util::displayString(transition);
+            }
+
             const auto modEnum = staticQtMetaObject.enumerator(modIdx);
             s += modEnum.valueToKey(modifiers) + QStringLiteral(" + ");
         }
 
         const auto key = transition->property("key").toInt();
         const auto keyIdx = staticQtMetaObject.indexOfEnumerator("Key");
-        if (keyIdx < 0)
+        if (keyIdx < 0) {
             return Util::displayString(transition);
+        }
+
         const auto keyEnum = staticQtMetaObject.enumerator(keyIdx);
         s += keyEnum.valueToKey(key);
         return s;

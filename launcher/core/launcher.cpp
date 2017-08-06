@@ -70,10 +70,11 @@ struct LauncherPrivate
     AbstractInjector::Ptr createInjector(QStringList *errorStrings = nullptr) const
     {
         if (options.injectorType().isEmpty()) {
-            if (options.isAttach())
+            if (options.isAttach()) {
                 return InjectorFactory::defaultInjectorForAttach(errorStrings);
-            else
+            } else {
                 return InjectorFactory::defaultInjectorForLaunch(options.probeABI(), errorStrings);
+            }
         }
         return InjectorFactory::createInjector(
             options.injectorType(), options.injectorTypeExecutableOverride());
@@ -117,6 +118,7 @@ qint64 Launcher::instanceIdentifier() const
 {
     if (d->options.isAttach())
         return d->options.pid();
+
     return QCoreApplication::applicationPid();
 }
 
@@ -145,18 +147,19 @@ bool Launcher::start()
     if (!d->injector) {
         Q_ASSERT(!errorStrings.isEmpty());
         std::cerr << "Potential errors:" << std::endl;
-        foreach (const QString& errorString, errorStrings) {
+        foreach (const QString &errorString, errorStrings) {
             std::cerr << "  Error: " << qPrintable(errorString) << std::endl;
         }
         std::cerr << std::endl;
 
         if (d->options.injectorType().isEmpty()) {
-            if (d->options.isAttach())
+            if (d->options.isAttach()) {
                 injectorError(-1,
                               tr("Uh-oh, there is no default attach injector on this platform."));
-            else
+            } else {
                 injectorError(-1,
                               tr("Uh-oh, there is no default launch injector on this platform."));
+            }
         } else {
             injectorError(-1, tr("Injector %1 not found.").arg(d->options.injectorType()));
         }
@@ -165,38 +168,42 @@ bool Launcher::start()
 
     d->injector->setTargetAbi(d->options.probeABI());
 
-    connect(d->injector.data(), SIGNAL(started()), this, SLOT(restartTimer()));
-    connect(d->injector.data(), SIGNAL(finished()), this, SLOT(
-                injectorFinished()), Qt::QueuedConnection);
-    if (d->options.isLaunch())
-        connect(d->injector.data(), SIGNAL(attached()), this, SLOT(
-                    injectorFinished()), Qt::QueuedConnection);
-    connect(d->injector.data(), SIGNAL(stderrMessage(QString)), this,
-            SIGNAL(stderrMessage(QString)));
-    connect(d->injector.data(), SIGNAL(stdoutMessage(QString)), this,
-            SIGNAL(stdoutMessage(QString)));
+    connect(d->injector.data(), SIGNAL(started()),
+            this, SLOT(restartTimer()));
+    connect(d->injector.data(), SIGNAL(finished()),
+            this, SLOT(injectorFinished()), Qt::QueuedConnection);
+    if (d->options.isLaunch()) {
+        connect(d->injector.data(), SIGNAL(attached()),
+                this, SLOT(injectorFinished()), Qt::QueuedConnection);
+    }
+    connect(d->injector.data(), SIGNAL(stderrMessage(QString)),
+            this, SIGNAL(stderrMessage(QString)));
+    connect(d->injector.data(), SIGNAL(stdoutMessage(QString)),
+            this, SIGNAL(stdoutMessage(QString)));
 
     bool success = false;
     if (d->options.isLaunch()) {
         d->injector->setWorkingDirectory(d->options.workingDirectory());
-        success
-            = d->injector->launch(d->options.launchArguments(), probeDll, QStringLiteral(
-                                      "gammaray_probe_inject"), d->options.processEnvironment());
+        success = d->injector->launch(d->options.launchArguments(), probeDll,
+                                      QStringLiteral("gammaray_probe_inject"),
+                                      d->options.processEnvironment());
     } else if (d->options.isAttach()) {
-        success
-            = d->injector->attach(d->options.pid(), probeDll, QStringLiteral(
-                                      "gammaray_probe_attach"));
+        success = d->injector->attach(d->options.pid(), probeDll,
+                                      QStringLiteral("gammaray_probe_attach"));
     }
 
     if (!success) {
         QString errorMessage;
-        if (d->options.isLaunch())
-            errorMessage = tr("Failed to launch target '%1'.").arg(
-                d->options.launchArguments().join(QStringLiteral(" ")));
-        if (d->options.isAttach())
+        if (d->options.isLaunch()) {
+            errorMessage = tr("Failed to launch target '%1'.").
+                arg(d->options.launchArguments().join(QStringLiteral(" ")));
+        }
+        if (d->options.isAttach()) {
             errorMessage = tr("Failed to attach to target with PID %1.").arg(d->options.pid());
-        if (!d->injector->errorString().isEmpty())
+        }
+        if (!d->injector->errorString().isEmpty()) {
             errorMessage += tr("\nError: %1").arg(d->injector->errorString());
+        }
         injectorError(d->injector->exitCode() ? d->injector->exitCode() : 1, errorMessage);
         return false;
     }
@@ -242,10 +249,11 @@ void Launcher::printAllAvailableIPs()
               << std::endl;
 
     foreach (const QNetworkInterface &inter, QNetworkInterface::allInterfaces()) {
-        if (!(inter.flags() & QNetworkInterface::IsUp)
-            || !(inter.flags() & QNetworkInterface::IsRunning)
-            || (inter.flags() & QNetworkInterface::IsLoopBack))
+        if (!(inter.flags() & QNetworkInterface::IsUp) ||
+            !(inter.flags() & QNetworkInterface::IsRunning) ||
+            (inter.flags() & QNetworkInterface::IsLoopBack)) {
             continue;
+        }
 
         foreach (const QNetworkAddressEntry &addrEntry, inter.addressEntries()) {
             const QHostAddress addr = addrEntry.ip();
@@ -276,8 +284,10 @@ void Launcher::injectorFinished()
         }
     }
 
-    if ((d->state & InjectorFailed) == 0)
+    if ((d->state & InjectorFailed) == 0) {
         d->state |= InjectorFinished;
+    }
+
     checkDone();
 }
 
@@ -315,8 +325,9 @@ void Launcher::checkDone()
         emit finished();
     } else if ((d->state & InjectorFailed) != 0) {
         d->client.terminate();
-        if (d->exitCode == 0)
+        if (d->exitCode == 0) {
             d->exitCode = 1;
+        }
         emit finished();
     }
 }
@@ -325,6 +336,7 @@ void Launcher::newConnection()
 {
     if (d->socket)
         return;
+
     d->socket = d->server->nextPendingConnection();
     connect(d->socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
 
