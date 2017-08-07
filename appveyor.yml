@@ -47,7 +47,7 @@ on_finish:
 
 environment:
     matrix:
-    - TARGET: msvc2015x64
+    - TARGET: msvc2017x64
     - TARGET: msvc2015x86
     - TARGET: mingw
 
