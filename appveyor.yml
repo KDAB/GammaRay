@@ -1,11 +1,12 @@
 version: '{build}-{branch}'
 
+image: Visual Studio 2017
 branches:
   # whitelist
   only:
     - master
 
-clone_depth: 1
+clone_depth: 50
 
 
 init:
