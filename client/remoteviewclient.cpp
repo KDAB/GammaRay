@@ -108,3 +108,8 @@ void RemoteViewClient::clientViewUpdated()
 {
     Endpoint::instance()->invokeObject(name(), "clientViewUpdated");
 }
+
+void RemoteViewClient::requestCompleteFrame()
+{
+    Endpoint::instance()->invokeObject(name(), "requestCompleteFrame");
+}

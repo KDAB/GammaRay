@@ -74,6 +74,7 @@ public:
 public slots:
     /// call this to indicate the source has changed and the client requires an update
     void sourceChanged();
+    void requestCompleteFrame() override;
 
 signals:
     void elementsAtRequested(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
@@ -111,6 +112,7 @@ private:
     bool m_sourceChanged;
     bool m_clientReady;
     bool m_pendingReset;
+    bool m_pendingCompleteFrame;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     std::unique_ptr<QTouchDevice> m_touchDevice;
 #endif

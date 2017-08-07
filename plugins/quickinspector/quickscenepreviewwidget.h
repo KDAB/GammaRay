@@ -39,6 +39,32 @@
 namespace GammaRay {
 class QuickInspectorInterface;
 
+struct CompleteFrameRequest {
+    CompleteFrameRequest(const QString &filePath = QString(), bool drawDecoration = false)
+        : filePath(filePath)
+        , drawDecoration(drawDecoration)
+    { }
+
+    bool isValid() const
+    { return !filePath.isEmpty(); }
+
+    void reset()
+    { filePath.clear(); drawDecoration = false; }
+
+    CompleteFrameRequest &operator=(const CompleteFrameRequest &other)
+    {
+        if (&other != this) {
+            filePath = other.filePath;
+            drawDecoration = other.drawDecoration;
+        }
+
+        return *this;
+    }
+
+    QString filePath;
+    bool drawDecoration;
+};
+
 class QuickScenePreviewWidget : public RemoteViewWidget
 {
     Q_OBJECT
@@ -53,14 +79,21 @@ public:
     QuickDecorationsSettings overlaySettings() const;
     void setOverlaySettings(const QuickDecorationsSettings &settings);
 
+    void requestCompleteFrame(const CompleteFrameRequest &request);
+
+private slots:
+    void saveScreenshot();
+
 private:
     void drawDecoration(QPainter *p) override;
     void resizeEvent(QResizeEvent *e) override;
 
+    void renderDecoration(QPainter *p, double zoom) const;
+
     QuickInspectorInterface *m_inspectorInterface;
     QuickSceneControlWidget *m_control;
-
     QuickDecorationsSettings m_overlaySettings;
+    CompleteFrameRequest m_pendingCompleteFrame;
 };
 } // namespace GammaRay
 

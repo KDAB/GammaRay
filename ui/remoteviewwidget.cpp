@@ -235,6 +235,11 @@ const RemoteViewFrame &RemoteViewWidget::frame() const
     return m_frame;
 }
 
+RemoteViewInterface *RemoteViewWidget::remoteViewInterface() const
+{
+    return m_interface.data();
+}
+
 void RemoteViewWidget::pickElementId(const QModelIndex &index)
 {
     const GammaRay::ObjectId id = index.data(ObjectModel::ObjectIdRole).value<GammaRay::ObjectId>();
@@ -280,6 +285,7 @@ void RemoteViewWidget::frameUpdated(const RemoteViewFrame &frame)
     }
 
     updateActions();
+    emit frameChanged();
     QMetaObject::invokeMethod(m_interface, "clientViewUpdated", Qt::QueuedConnection);
 }
 
@@ -291,6 +297,16 @@ int RemoteViewWidget::invisibleMask() const
 void RemoteViewWidget::setInvisibleMask(int invisibleMask)
 {
     m_invisibleMask = invisibleMask;
+}
+
+bool RemoteViewWidget::hasValidFrame() const
+{
+    return m_frame.isValid();
+}
+
+bool RemoteViewWidget::hasValidCompleteFrame() const
+{
+    return m_frame.isValid() && m_frame.image().size() == m_frame.viewRect().size().toSize();
 }
 
 int RemoteViewWidget::flagRole() const
@@ -321,6 +337,7 @@ void RemoteViewWidget::reset()
     m_frame = RemoteViewFrame();
     m_hasMeasurement = false;
     update();
+    emit frameChanged();
 }
 
 void RemoteViewWidget::setUnavailableText(const QString &msg)

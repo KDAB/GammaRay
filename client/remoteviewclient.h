@@ -53,6 +53,7 @@ public:
     void setViewActive(bool active) override;
     void sendUserViewport(const QRectF &userViewport) override;
     void clientViewUpdated() override;
+    void requestCompleteFrame() override;
 };
 }
 

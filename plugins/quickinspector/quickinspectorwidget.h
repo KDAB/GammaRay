@@ -84,6 +84,8 @@ private slots:
     void stateReceived(GammaRay::QuickInspectorWidget::StateFlag flag);
     void resetState();
     void saveState();
+    void saveAsImage();
+    void updateActions();
 
 private:
     QScopedPointer<Ui::QuickInspectorWidget> ui;
