@@ -110,6 +110,9 @@ public:
     int invisibleMask() const;
     void setInvisibleMask(int invisibleMask);
 
+    bool hasValidFrame() const;
+    bool hasValidCompleteFrame() const;
+
 public slots:
     /// Clears the current view content.
     void reset();
@@ -127,10 +130,12 @@ signals:
     void zoomLevelChanged(int zoomLevelIndex);
     void interactionModeChanged();
     void stateChanged();
+    void frameChanged();
 
 protected:
     /** Current frame data. */
     const RemoteViewFrame &frame() const;
+    RemoteViewInterface *remoteViewInterface() const;
 
     /** Override this to draw element decorations.
      *  @P p is translated to that 0,0 is the top left corner of the source image, but not scaled

@@ -28,6 +28,8 @@
 
 #include "remoteviewserver.h"
 
+#include <common/remoteviewframe.h>
+
 #include <core/remote/server.h>
 
 #include <QCoreApplication>
@@ -49,6 +51,7 @@ RemoteViewServer::RemoteViewServer(const QString &name, QObject *parent)
     , m_sourceChanged(false)
     , m_clientReady(true)
     , m_pendingReset(false)
+    , m_pendingCompleteFrame(false)
 {
     Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(
                                                     name), this, "clientConnectedChanged");
@@ -89,12 +92,14 @@ bool RemoteViewServer::isActive() const
 void RemoteViewServer::sendFrame(const RemoteViewFrame &frame)
 {
     m_clientReady = false;
+    if (m_pendingCompleteFrame && frame.image().size() == frame.viewRect().size())
+        m_pendingCompleteFrame = false;
     emit frameUpdated(frame);
 }
 
 QRectF RemoteViewServer::userViewport() const
 {
-    return m_userViewport;
+    return m_pendingCompleteFrame ? QRectF() : m_userViewport;
 }
 
 void RemoteViewServer::sourceChanged()
@@ -103,9 +108,18 @@ void RemoteViewServer::sourceChanged()
     checkRequestUpdate();
 }
 
+void RemoteViewServer::requestCompleteFrame()
+{
+    if (m_pendingCompleteFrame)
+        return;
+    m_pendingCompleteFrame = true;
+    sourceChanged();
+}
+
 void RemoteViewServer::clientViewUpdated()
 {
     m_clientReady = true;
+    m_sourceChanged = m_sourceChanged || m_pendingCompleteFrame;
     checkRequestUpdate();
 }
 
@@ -195,6 +209,7 @@ void RemoteViewServer::setViewActive(bool active)
 
     m_clientActive = active;
     m_clientReady = active;
+    m_pendingCompleteFrame = false;
     if (active)
         sourceChanged();
     else

@@ -29,6 +29,7 @@
 #include "quickscenepreviewwidget.h"
 #include "quickinspectorinterface.h"
 
+#include <common/remoteviewinterface.h>
 #include <common/streamoperators.h>
 
 #include <QMouseEvent>
@@ -48,6 +49,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspec
     , m_inspectorInterface(inspector)
     , m_control(control)
 {
+    connect(this, SIGNAL(frameChanged()), this, SLOT(saveScreenshot()));
     setName(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"));
     setUnavailableText(tr("No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
 }
@@ -175,22 +177,27 @@ void QuickScenePreviewWidget::resizeEvent(QResizeEvent *e)
     RemoteViewWidget::resizeEvent(e);
 }
 
-void QuickScenePreviewWidget::drawDecoration(QPainter *p)
+void QuickScenePreviewWidget::renderDecoration(QPainter *p, double zoom) const
 {
     // Scaling and translations on QuickItemGeometry will be done on demand
 
     if (frame().data().userType() == qMetaTypeId<QuickItemGeometry>()) {
         // scaled and translated
         const auto itemGeometry = frame().data().value<QuickItemGeometry>();
-        const QuickDecorationsRenderInfo renderInfo(m_overlaySettings, itemGeometry, frame().viewRect(), zoom());
+        const QuickDecorationsRenderInfo renderInfo(m_overlaySettings, itemGeometry, frame().viewRect(), zoom);
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Decorations, *p, renderInfo);
         drawer.render();
     } else if (frame().data().userType() == qMetaTypeId<QVector<QuickItemGeometry>>()) {
         const auto itemsGeometry = frame().data().value<QVector<QuickItemGeometry>>();
-        const QuickDecorationsTracesInfo tracesInfo(m_overlaySettings, itemsGeometry, frame().viewRect(), zoom());
+        const QuickDecorationsTracesInfo tracesInfo(m_overlaySettings, itemsGeometry, frame().viewRect(), zoom);
         QuickDecorationsDrawer drawer(QuickDecorationsDrawer::Traces, *p, tracesInfo);
         drawer.render();
     }
+}
+
+void QuickScenePreviewWidget::drawDecoration(QPainter *p)
+{
+    renderDecoration(p, zoom());
 }
 
 QuickDecorationsSettings QuickScenePreviewWidget::overlaySettings() const
@@ -202,4 +209,38 @@ void QuickScenePreviewWidget::setOverlaySettings(const QuickDecorationsSettings 
 {
     m_overlaySettings = settings;
     update();
+}
+
+void QuickScenePreviewWidget::requestCompleteFrame(const CompleteFrameRequest &request)
+{
+    if (m_pendingCompleteFrame.isValid()) {
+        qWarning("A pending complete frame request is already running.");
+        return;
+    }
+
+    m_pendingCompleteFrame = request;
+    remoteViewInterface()->requestCompleteFrame();
+}
+
+void QuickScenePreviewWidget::saveScreenshot()
+{
+    if (!m_pendingCompleteFrame.isValid() || !hasValidCompleteFrame())
+        return;
+
+    const QImage &source(frame().image());
+    QImage img(source.size(), source.format());
+    img.setDevicePixelRatio(source.devicePixelRatio());
+    QPainter p(&img);
+
+    p.save();
+    p.setTransform(frame().transform(), true);
+    p.drawImage(QPoint(), source);
+    p.restore();
+    if (m_pendingCompleteFrame.drawDecoration)
+        renderDecoration(&p, 1.0);
+    p.end();
+
+    img.save(m_pendingCompleteFrame.filePath);
+
+    m_pendingCompleteFrame.reset();
 }

@@ -58,6 +58,7 @@
 #include <QtCore/qglobal.h>
 #include <QPropertyAnimation>
 #include <QSettings>
+#include <QFileDialog>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -70,6 +71,13 @@ static QObject *createQuickInspectorClient(const QString & /*name*/, QObject *pa
 static QObject *createMaterialExtension(const QString &name, QObject *parent)
 {
     return new MaterialExtensionClient(name, parent);
+}
+
+static QAction *createSeparator(QObject *parent)
+{
+    QAction *action = new QAction(parent);
+    action->setSeparator(true);
+    return action;
 }
 
 QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
@@ -147,14 +155,22 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     m_interface->checkOverlaySettings();
 
     addActions(m_scenePreviewWidget->actions());
+    addAction(createSeparator(this));
+    addAction(ui->actionSaveAsImage);
+    addAction(ui->actionSaveAsImageWithDecoration);
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
 
+    connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
+    connect(ui->actionSaveAsImageWithDecoration, SIGNAL(triggered()), SLOT(saveAsImage()));
     connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(m_scenePreviewWidget, SIGNAL(stateChanged()), this, SLOT(saveState()));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(saveState()));
+    connect(m_scenePreviewWidget->previewWidget(), SIGNAL(frameChanged()), this, SLOT(updateActions()));
+
+    updateActions();
 }
 
 QuickInspectorWidget::~QuickInspectorWidget()
@@ -301,4 +317,27 @@ void QuickInspectorWidget::saveState()
         return;
 
     m_stateManager.saveState();
+}
+
+void QuickInspectorWidget::saveAsImage()
+{
+    const QString fileName
+        = QFileDialog::getSaveFileName(
+        this,
+        tr("Save As Image"),
+        QString(),
+        tr("Image Files (*.png *.jpg)"));
+
+    if (fileName.isEmpty())
+        return;
+
+    const CompleteFrameRequest request(fileName,
+                                       sender() ==  ui->actionSaveAsImageWithDecoration);
+    m_scenePreviewWidget->previewWidget()->requestCompleteFrame(request);
+}
+
+void QuickInspectorWidget::updateActions()
+{
+    ui->actionSaveAsImage->setEnabled(m_scenePreviewWidget->previewWidget()->hasValidFrame());
+    ui->actionSaveAsImageWithDecoration->setEnabled(ui->actionSaveAsImage->isEnabled());
 }

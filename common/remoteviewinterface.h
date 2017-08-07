@@ -79,6 +79,8 @@ public slots:
     /// Tell the server we are ready for the next frame.
     virtual void clientViewUpdated() = 0;
 
+    virtual void requestCompleteFrame() = 0;
+
 signals:
     void reset();
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
