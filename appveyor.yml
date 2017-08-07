@@ -1,6 +1,5 @@
 version: '{build}-{branch}'
 
-image: Visual Studio 2017
 branches:
   # whitelist
   only:
