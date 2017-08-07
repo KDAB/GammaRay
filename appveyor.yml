@@ -1,4 +1,13 @@
-version: '{build}'
+version: '{build}-{branch}'
+
+branches:
+  # whitelist
+  only:
+    - master
+
+clone_depth: 1
+
+
 init:
 - ps: |
     function craft() {
@@ -42,7 +51,3 @@ environment:
     - TARGET: msvc2015x86
     - TARGET: mingw
 
-branches:
-  # whitelist
-  only:
-    - master
