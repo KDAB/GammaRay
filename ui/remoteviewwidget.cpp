@@ -1108,7 +1108,7 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
         menu.addSeparator();
         menu.addAction(m_zoomOutAction);
         menu.addAction(m_zoomInAction);
-        if (!QString::fromLocal8Bit(qgetenv("GAMMARAY_DEVELOPERMODE")).isEmpty()) {
+        if (!qgetenv("GAMMARAY_DEVELOPERMODE").isEmpty()) {
             menu.addSeparator();
             menu.addAction(m_toggleFPSAction);
         }

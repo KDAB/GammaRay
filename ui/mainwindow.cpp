@@ -313,7 +313,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(UiIntegration::instance(), SIGNAL(navigateToCode(QUrl,int,int)), this,
             SLOT(navigateToCode(QUrl,int,int)));
 
-    const bool developerModeEnabled = !QString::fromLocal8Bit(qgetenv("GAMMARAY_DEVELOPERMODE")).isEmpty();
+    const bool developerModeEnabled = !qgetenv("GAMMARAY_DEVELOPERMODE").isEmpty();
     if (developerModeEnabled) {
         connect(Endpoint::instance(), SIGNAL(logTransmissionRate(quint64,quint64)),
                 this, SLOT(logTransmissionRate(quint64,quint64)));
