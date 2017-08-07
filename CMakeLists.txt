@@ -115,9 +115,6 @@ if(BAD_CXX_MESSAGE)
   message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. Please retry using a modern compiler that supports C++11 lambdas.")
 endif()
 
-# Enable the test harness
-enable_testing()
-
 # Version setup
 set(GAMMARAY_VERSION_MAJOR "2")
 set(GAMMARAY_VERSION_MINOR "8")
@@ -733,7 +730,7 @@ if(GAMMARAY_BUILD_UI AND (Qt5Widgets_FOUND OR QT_QTGUI_FOUND))
     add_subdirectory(app)
   endif()
 endif()
-if((Qt5Test_FOUND OR QT_QTTEST_FOUND) AND NOT CMAKE_CROSSCOMPILING)
+if(BUILD_TESTING AND (Qt5Test_FOUND OR QT_QTTEST_FOUND) AND NOT CMAKE_CROSSCOMPILING)
   add_subdirectory(tests)
 endif()
 add_subdirectory(plugins)
