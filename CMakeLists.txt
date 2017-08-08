@@ -179,8 +179,10 @@ gammaray_option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." O
 gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
 
 set(GAMMARAY_BUILD_DOCS_DEFAULT ON)
+set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT OFF)
 if(${GAMMARAY_PROBE_ONLY_BUILD})
   set(GAMMARAY_BUILD_DOCS_DEFAULT OFF)
+  set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT ON)
 endif()
 gammaray_option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
 gammaray_option(
@@ -195,7 +197,7 @@ gammaray_option(
   OFF
 )
 
-gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." OFF)
+gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." ${GAMMARAY_DISABLE_FEEDBACK_DEFAULT})
 
 #
 # Static probe setup
