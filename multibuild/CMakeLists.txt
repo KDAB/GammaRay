@@ -1,7 +1,7 @@
 include(ExternalProject)
 
-# on MSVC we need to build the debug/release counter-part as well
-if(NOT MSVC)
+# on Windows we need to build the debug/release counter-part as well
+if(NOT WIN32)
   return()
 endif()
 
