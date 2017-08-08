@@ -134,7 +134,7 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 {
     MODULEENTRY32 me;
     me.dwSize = sizeof(MODULEENTRY32);
-    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
     if (snapshot == INVALID_HANDLE_VALUE)
         return QString();
 
