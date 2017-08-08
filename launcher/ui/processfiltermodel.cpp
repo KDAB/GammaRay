@@ -93,7 +93,7 @@ bool ProcessFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sou
         return false;
 
     // hide ourselves as well as the process that launched us
-    if (data.ppid == m_currentProcId || data.name == QLatin1String("gammaray"))
+    if (data.ppid == m_currentProcId || data.name.startsWith(QLatin1String("gammaray"), Qt::CaseInsensitive))
         return false;
 
     if (!m_currentUser.isEmpty() && data.user != m_currentUser)
