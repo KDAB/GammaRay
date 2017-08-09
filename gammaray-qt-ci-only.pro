@@ -24,6 +24,7 @@ win32: SHELL_SEP = &
 
 # platform specific cmake arguments
 win32: CMAKE_PLATFORM_ARGS = -G\"NMake Makefiles\"
+!qtHaveModule(widgets): GAMMARAY_EXTRA_ARGS = -DGAMMARAY_BUILD_UI=OFF
 
 gammaray_configure.target = gammaray_configure
 gammaray_configure.commands = \
@@ -34,7 +35,7 @@ gammaray_configure.commands = \
         -DCMAKE_PREFIX_PATH=$$SHELL_INSTALL_PREFIX \
         -DGAMMARAY_PROBE_ONLY_BUILD=TRUE \
         -DGAMMARAY_INSTALL_QT_LAYOUT=TRUE \
-        $$SHELL_PWD
+        $$GAMMARAY_EXTRA_ARGS $$SHELL_PWD
 
 gammaray_configure_docs.target = gammaray_configure_docs
 gammaray_configure_docs.commands = \
