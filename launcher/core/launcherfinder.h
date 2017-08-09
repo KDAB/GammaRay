@@ -30,8 +30,10 @@
 #define GAMMARAY_LAUNCHERFINDER_H
 
 #include "gammaray_launcher_export.h"
+#include "probeabi.h"
 
 #include <QString>
+
 
 namespace GammaRay {
 /** Utility function to find the various executables related to the launcher. */
@@ -42,7 +44,7 @@ enum Type {
     Client
 };
 
-GAMMARAY_LAUNCHER_EXPORT QString findLauncher(Type type);
+GAMMARAY_LAUNCHER_EXPORT QString findLauncher(Type type, const ProbeABI &abi=ProbeABI());
 }
 }
 

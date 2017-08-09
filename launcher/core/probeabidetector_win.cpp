@@ -32,6 +32,8 @@
 #include "probeabi.h"
 #include "pefile.h"
 
+#include <common/commonutils.h>
+
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -164,9 +166,15 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 {
     MODULEENTRY32 me;
     me.dwSize = sizeof(MODULEENTRY32);
-    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
-    if (snapshot == INVALID_HANDLE_VALUE)
+    HANDLE snapshot = INVALID_HANDLE_VALUE;
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ms682489%28v=vs.85%29.aspx
+    // If the function fails with ERROR_BAD_LENGTH, retry the function until it succeeds.
+    do {
+        snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
+    } while(GetLastError() == ERROR_BAD_LENGTH);
+    if (GetLastError() == ERROR_ACCESS_DENIED)
         return QString();
+    WIN_ERROR_ASSERT(snapshot != INVALID_HANDLE_VALUE,return QString());
 
     for (bool hasNext = Module32First(snapshot, &me); hasNext;
          hasNext = Module32Next(snapshot, &me)) {
@@ -177,7 +185,6 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
             return path;
         }
     }
-
     CloseHandle(snapshot);
     return QString();
 }

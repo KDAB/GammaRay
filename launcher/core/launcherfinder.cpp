@@ -27,7 +27,9 @@
 */
 
 #include "launcherfinder.h"
+#include "probeabi.h"
 
+#include <config-gammaray.h>
 #include <common/paths.h>
 
 #include <QCoreApplication>
@@ -43,11 +45,16 @@ const char *executableNames[] = {
     "gammaray-client"  // the Client
 };
 
-QString LauncherFinder::findLauncher(LauncherFinder::Type type)
+QString LauncherFinder::findLauncher(LauncherFinder::Type type, const ProbeABI &abi)
 {
     QString fileName = executableNames[type];
 #ifdef Q_OS_WIN
+    if(type == Injector) {
+        fileName += "-" + (abi.isValid() ? abi.id() : GAMMARAY_PROBE_ABI);
+    }
     fileName += ".exe";
+#else
+    Q_UNUSED(abi);
 #endif
 
     QStringList appPaths; // a list of all the paths we have searched
