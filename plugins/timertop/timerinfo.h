@@ -73,11 +73,19 @@ private:
 
 struct TimerIdInfo
 {
+    enum State {
+        InvalidState,
+        InactiveState,
+        SingleShotState,
+        RepeatState
+    };
+
     TimerIdInfo()
         : timerId(-1)
+        , interval(0)
         , totalWakeups(0)
         , lastReceiverAddress(0)
-        , state((0 << 16) | 0)
+        , state(InvalidState)
         , wakeupsPerSec(0.0)
         , timePerWakeup(0.0)
         , maxWakeupTime(0)
@@ -91,12 +99,14 @@ struct TimerIdInfo
     bool isValid() const;
 
     int timerId;
+    int interval;
+
     uint totalWakeups;
     quintptr lastReceiverAddress; // The QTimer/QQmlTimer or last known receiver address
     QPointer<QObject> lastReceiverObject;
 
     QString objectName;
-    uint state;
+    State state;
     qreal wakeupsPerSec;
     qreal timePerWakeup;
     uint maxWakeupTime;

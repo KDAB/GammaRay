@@ -177,22 +177,22 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
         break;
     }
 
-    state = (0 << 16) | 0;
+    state = InvalidState;
+    interval = 0;
 
     case TimerId::QQmlTimerType: {
         timerId = -1;
+        interval = object->property("interval").toInt();
         lastReceiverAddress = id.address();
         lastReceiverObject = object;
         objectName = Util::displayString(object);
 
-        const int interval = object->property("interval").toInt();
-
         if (!object->property("running").toBool())
-            state = (interval << 16) | 1;
+            state = InactiveState;
         else if (!object->property("repeat").toBool())
-            state = (interval << 16) | 2;
+            state = SingleShotState;
         else
-            state = (interval << 16) | 3;
+            state = RepeatState;
 
         break;
     }
@@ -200,18 +200,17 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
     case TimerId::QTimerType: {
         const QTimer *const timer = qobject_cast<QTimer *>(object);
         timerId = timer->timerId();
+        interval = timer->interval();
         lastReceiverAddress = id.address();
         lastReceiverObject = object;
         objectName = Util::displayString(object);
 
-        const int interval = timer->interval();
-
         if (!timer->isActive())
-            state = (interval << 16) | 1;
+            state = InactiveState;
         else if (timer->isSingleShot())
-            state = (interval << 16) | 2;
+            state = SingleShotState;
         else
-            state = (interval << 16) | 3;
+            state = RepeatState;
 
         break;
     }
@@ -234,11 +233,11 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
 
         if (it != timers.constEnd()) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-            const int interval = (*it).interval;
+            interval = (*it).interval;
 #else
-            const int interval = (*it).second;
+            interval = (*it).second;
 #endif
-            state = (interval << 16) | 3;
+            state = RepeatState;
         }
 
         break;

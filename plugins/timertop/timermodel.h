@@ -70,7 +70,8 @@ public:
     };
 
     enum Roles {
-        ObjectIdRole = UserRole
+        ObjectIdRole = UserRole,
+        TimerIntervalRole
     };
 
     void setSourceModel(QAbstractItemModel *sourceModel);

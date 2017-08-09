@@ -61,7 +61,8 @@ public:
                 // Use source model data
                 break;
             case TimerModel::StateColumn:
-                return stateToString(QSortFilterProxyModel::data(index, role).toUInt());
+                return stateToString(QSortFilterProxyModel::data(index, role).toInt(),
+                                     QSortFilterProxyModel::data(index, TimerModel::TimerIntervalRole).toInt());
             case TimerModel::WakeupsPerSecColumn:
                 return wakeupsPerSecToString(QSortFilterProxyModel::data(index, role).toReal());
             case TimerModel::TimePerWakeupColumn:
@@ -74,20 +75,18 @@ public:
         return QSortFilterProxyModel::data(index, role);
     }
 
-    static QString stateToString(uint state)
+    static QString stateToString(int state, int interval)
     {
-        const int timerState = (state & 0xffff);
-        const int timerInterval = (state >> 16);
 
-        switch (timerState) {
-        case 0: // None
+        switch (static_cast<TimerIdInfo::State>(state)) {
+        case TimerIdInfo::InvalidState: // None
             return tr("None");
-        case 1: // Not Running
-            return tr("Inactive (%1 ms)").arg(timerInterval);
-        case 2: // Single Shot
-            return tr("Singleshot (%1 ms)").arg(timerInterval);
-        case 3: // Repeat
-            return tr("Repeating (%1 ms)").arg(timerInterval);
+        case TimerIdInfo::InactiveState: // Not Running
+            return tr("Inactive (%1 ms)").arg(interval);
+        case TimerIdInfo::SingleShotState: // Single Shot
+            return tr("Singleshot (%1 ms)").arg(interval);
+        case TimerIdInfo::RepeatState: // Repeat
+            return tr("Repeating (%1 ms)").arg(interval);
         }
 
         return QString();

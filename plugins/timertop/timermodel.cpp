@@ -102,7 +102,7 @@ struct TimerIdData : TimerIdInfo
         TimerIdInfo::totalWakeups = 0;
         TimerIdInfo::lastReceiverAddress = 0;
         TimerIdInfo::lastReceiverObject = nullptr;
-        TimerIdInfo::state = (0 << 16) | 0;
+        TimerIdInfo::state = InvalidState;
         TimerIdInfo::wakeupsPerSec = 0.0;
         TimerIdInfo::timePerWakeup = 0.0;
         TimerIdInfo::maxWakeupTime = 0;
@@ -408,12 +408,6 @@ QModelIndex TimerModel::index(int row, int column, const QModelIndex &parent) co
         } else {
             return createIndex(row, column, row - m_sourceModel->rowCount());
         }
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        Q_UNREACHABLE();
-#else
-        Q_ASSERT(false);
-#endif
     }
 
     return QModelIndex();
@@ -448,7 +442,7 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
         case ObjectNameColumn:
             return timerInfo->objectName;
         case StateColumn:
-            return timerInfo->state;
+            return int(timerInfo->state);
         case TotalWakeupsColumn:
             return timerInfo->totalWakeups;
         case WakeupsPerSecColumn:
@@ -461,6 +455,12 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
             return timerInfo->timerId;
         case ColumnCount:
             break;
+        }
+    } else if (role == TimerIntervalRole && index.column() == StateColumn) {
+        const TimerIdInfo *const timerInfo = findTimerInfo(index);
+
+        if (timerInfo) {
+            return timerInfo->interval;
         }
     }
 
@@ -510,6 +510,8 @@ QMap<int, QVariant> TimerModel::itemData(const QModelIndex &index) const
     auto d = QAbstractTableModel::itemData(index);
     if (index.column() == 0)
         d.insert(TimerModel::ObjectIdRole, QVariant::fromValue(static_cast<QObject *>(index.internalPointer())));
+    if (index.column() == StateColumn)
+        d.insert(TimerModel::TimerIntervalRole, index.data(TimerModel::TimerIntervalRole));
     return d;
 }
 
