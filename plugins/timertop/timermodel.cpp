@@ -221,6 +221,11 @@ const TimerIdInfo *TimerModel::findTimerInfo(const QModelIndex &index) const
     if (index.row() < m_sourceModel->rowCount()) {
         const QModelIndex sourceIndex = m_sourceModel->index(index.row(), 0);
         QObject * const timerObject = sourceIndex.data(ObjectModel::ObjectRole).value<QObject *>();
+
+        // The object might have already be deleted even if our index is valid
+        if (!timerObject)
+            return nullptr;
+
         const TimerId id = TimerId(timerObject);
         auto it = m_timersInfo.find(id);
 
@@ -580,8 +585,13 @@ void TimerModel::applyChanges(const GammaRay::TimerIdInfoHash &changes)
 
     // Update QQmlTimer / QTimer entries
     for (int i = 0; i < m_sourceModel->rowCount(); ++i) {
-        const QModelIndex idx = m_sourceModel->index(i, 0);
-        QObject *const timerObject = idx.data(ObjectModel::ObjectRole).value<QObject *>();
+        const QModelIndex sourceIndex = m_sourceModel->index(i, 0);
+        QObject *const timerObject = sourceIndex.data(ObjectModel::ObjectRole).value<QObject *>();
+
+        // The object might have already be deleted even if our index is valid
+        if (!timerObject)
+            return;
+
         const TimerId id(timerObject);
         const auto cit = changes.constFind(id);
         auto it = m_timersInfo.find(id);
