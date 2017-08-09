@@ -1,6 +1,8 @@
 #include "commonutils.h"
 
-#include <windows.h>
+#if defined(Q_OS_WIN)
+#include <qt_windows.h>
+#endif
 
 #if defined(Q_OS_WIN)
 QString GammaRay::CommonUtils::windowsErrorString()
