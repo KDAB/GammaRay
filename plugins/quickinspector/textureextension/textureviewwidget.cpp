@@ -29,11 +29,15 @@
 #include "textureviewwidget.h"
 
 #include <QPainter>
+#include <QPainterPath>
+#include <QFontMetrics>
+#include <cmath>
 
 using namespace GammaRay;
 
 TextureViewWidget::TextureViewWidget(QWidget* parent)
     : RemoteViewWidget(parent)
+    , m_visualizeTextureWaste(true)
 {
 }
 
@@ -41,7 +45,101 @@ TextureViewWidget::~TextureViewWidget()
 {
 }
 
-void TextureViewWidget::drawDecoration(QPainter *p)
+QRect getBoundingRect(const QImage& image)
+{
+    int top = image.height(), bottom = 0, left = image.width(), right = 0;
+
+    for(int y = 0; y < image.height(); y++)
+        for(int x = 0; x < image.width(); x++)
+        {
+            if(qAlpha(image.pixel(x,y)) != 0)
+            {
+                top = std::min(top,y);
+                bottom = std::max(bottom, y);
+                left = std::min(top,x);
+                right = std::max(right, x);
+            }
+        }
+    return QRect(QPoint(left,top),QPoint(right,bottom));
+}
+
+void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
+{
+
+    //For AtlasTiles analyze subrect, else analyze the whole image
+    QImage analyzedTexture;
+    QRect analyzedRect;
+    auto atlasSubTile = frame().data().toRect();
+    if (atlasSubTile.isValid()) { //Atlas-Case
+        analyzedTexture = frame().image().copy(atlasSubTile);
+        analyzedRect = atlasSubTile;
+        analyzedRect = analyzedRect.adjusted(-1, -1, 1, 1);
+    } else { //Whole-Texture-Case
+        analyzedTexture = frame().image();
+        analyzedRect = frame().image().rect();
+    }
+
+    //Calculate Waste
+    auto boundingRect = getBoundingRect(analyzedTexture);
+    const float imagePixelSize = (analyzedTexture.width() * analyzedTexture.height());
+    const auto pixelWaste = 1.0 - ((boundingRect.height() * boundingRect.width()) / imagePixelSize);
+    int pixelWastePercent = qRound(pixelWaste*100.0f);
+
+    //Draw Warning if more than 30% are wasted
+    if (pixelWaste > 0.3) {
+        p->save();
+        auto scaleTransform = QTransform::fromScale(zoom(),zoom());
+        p->setTransform(scaleTransform, true);
+
+        //Draw Wasted Area
+        QPen pen(Qt::red);
+        pen.setCosmetic(true);
+        p->setPen(pen);
+        QBrush brush = QBrush(Qt::red, Qt::FDiagPattern);
+        brush.setTransform(scaleTransform.inverted());
+        p->setBrush(brush);
+        auto viewRect = QPainterPath();
+        viewRect.addRect(analyzedRect);
+        auto innerRect = QPainterPath();
+        boundingRect.translate(analyzedRect.x(), analyzedRect.y());
+        innerRect.addRect(boundingRect);
+        viewRect = viewRect.subtracted(innerRect);
+        p->drawPath(viewRect);
+
+        //Draw WarningLabel
+        brush = QBrush(Qt::red, Qt::SolidPattern);
+        p->setBrush(brush);
+        const auto textRect = QRect(analyzedRect.left(), analyzedRect.bottom(),
+                              analyzedRect.width(), 20.0f / zoom());
+        p->drawRect(textRect);
+
+        //Draw fitting WarningText
+        auto font = p->font();
+        font.setPixelSize(16.0f / zoom());
+        auto metrics = QFontMetrics(font);
+        QVector<QString> possibleStrings;
+        possibleStrings.push_back(tr("! "));
+        possibleStrings.push_back(tr("%1% ").arg(pixelWastePercent));
+        possibleStrings.push_back(tr("%1% wasted! ").arg(pixelWastePercent));
+        possibleStrings.push_back(tr("%1% of memory wasted! ").arg(pixelWastePercent));
+        possibleStrings.push_back(tr("%1% of memory wasted in transparency! ").arg(pixelWastePercent));
+        QString bestfittingString;
+        for (int i = 0; i < possibleStrings.length(); i++) {
+            if (metrics.width(possibleStrings[i]) < textRect.width()) {
+                bestfittingString = possibleStrings[i];
+            } else {
+                break;
+            }
+        }
+        p->setFont(font);
+        pen.setColor(Qt::white);
+        p->setPen(pen);
+        p->drawText(textRect, Qt::AlignRight, bestfittingString);
+        p->restore();
+    }
+}
+
+void TextureViewWidget::drawActiveAtlasTile(QPainter *p) const
 {
     auto rect = frame().data().toRect();
     if (!rect.isValid())
@@ -55,4 +153,20 @@ void TextureViewWidget::drawDecoration(QPainter *p)
     p->setPen(pen);
     p->drawRect(rect);
     p->restore();
+}
+
+void TextureViewWidget::drawDecoration(QPainter *p)
+{
+    if (m_visualizeTextureWaste)
+        drawPixelWasteDecoration(p);
+
+    drawActiveAtlasTile(p);
+}
+
+void TextureViewWidget::setTextureWasteVisualizationEnabled(bool enabled)
+{
+    if (m_visualizeTextureWaste != enabled) {
+        m_visualizeTextureWaste = enabled;
+        update();
+    }
 }

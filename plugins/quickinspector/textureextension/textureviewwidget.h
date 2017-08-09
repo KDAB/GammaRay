@@ -41,6 +41,14 @@ public:
     ~TextureViewWidget();
 
     void drawDecoration(QPainter *p) override;
+    void drawPixelWasteDecoration(QPainter *p) const;
+    void drawActiveAtlasTile(QPainter *p) const;
+
+private slots:
+    void setTextureWasteVisualizationEnabled(bool enabled);
+
+private:
+    bool m_visualizeTextureWaste;
 };
 
 }

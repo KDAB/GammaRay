@@ -58,7 +58,8 @@ if(Qt5Quick_FOUND)
       geometryextension/sgwireframewidget.cpp
       textureextension/texturetab.cpp
       textureextension/textureviewwidget.cpp
-    )
+      textureextension/resources.qrc
+      )
 
     gammaray_add_plugin(gammaray_quickinspector_ui
       JSON gammaray_quickinspector.json
