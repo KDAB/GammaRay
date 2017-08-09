@@ -34,6 +34,7 @@ ExternalProject_Add(
     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
     -DLIB_SUFFIX=${LIB_SUFFIX}
+    -DBUILD_TESTING=OFF
 )
 
 # hacky way to add a dependency from the default target to the build step
