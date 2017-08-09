@@ -6,6 +6,9 @@ set(gammaray_runner_srcs
 gammaray_add_win_icon(gammaray_runner_srcs)
 
 add_executable(gammaray ${gammaray_runner_srcs})
+if (WIN32)
+  set_target_properties(gammaray PROPERTIES OUTPUT_NAME "gammaray-${GAMMARAY_PROBE_ABI}${GAMMARAY_PROBE_ABI_POSTFIX}")
+endif()
 
 target_link_libraries(gammaray gammaray_launcher gammaray_common)
 if(HAVE_QT_WIDGETS)
