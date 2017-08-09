@@ -30,6 +30,7 @@
 // https://forum.juce.com/t/detecting-if-a-process-is-being-run-under-a-debugger/2098
 
 #include "processtracker_windows.h"
+#include "common/commonutils.h"
 
 #include <QCoreApplication>
 #include <QLibrary>
@@ -364,10 +365,7 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
         // more buffer than bufferNeededSize !!
         LocalBuffer buffer(1000);
         while (true) {
-            if (!buffer.isValid()) {
-                qWarning("%s: Error: %lli", Q_FUNC_INFO, GetLastError());
-                break;
-            }
+            WIN_ERROR_ASSERT(buffer.isValid(), break);
 
             ULONG bufferNeededSize = 0;
             NTSTATUS status = qt_NtQuerySystemInformation()(SystemProcessInformation, buffer.data(), buffer.size(), &bufferNeededSize);
@@ -376,13 +374,7 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
                 buffer.resize(bufferNeededSize);
                 continue;
             }
-
-            if (!NT_SUCCESS(status)) {
-                qWarning("%s: Error: %lli, %lli", Q_FUNC_INFO, status, GetLastError());
-                buffer.clear();
-                break;
-            }
-
+            WIN_ERROR_ASSERT(NT_SUCCESS(status), buffer.clear(); break;);
             break;
         }
 
