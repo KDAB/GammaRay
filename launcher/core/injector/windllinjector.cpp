@@ -196,7 +196,7 @@ void WinDllInjector::remoteKernel32Call(const char *funcName, const QString &arg
     }
 
     // write argument into target process memory
-    int strsize = (argument.size() * 2) + 2;
+    const int strsize = (argument.size() * 2) + 2;
     void *mem = VirtualAllocEx(m_destProcess, NULL, strsize, MEM_COMMIT, PAGE_READWRITE);
     if (!mem) {
         qWarning() << "Failed to allocate memory in target process!" << CommonUtils::windowsErrorString();
@@ -221,7 +221,7 @@ void WinDllInjector::remoteKernel32Call(const char *funcName, const QString &arg
         qDebug() << Q_FUNC_INFO << funcName << argument << "succeeded";
     }
     // cleanup
-    WIN_ERROR_CHECK(VirtualFreeEx(m_destProcess, mem, strsize, MEM_RELEASE));
+    WIN_ERROR_CHECK(VirtualFreeEx(m_destProcess, mem, 0, MEM_RELEASE));
     WIN_ERROR_CHECK(CloseHandle(t));
 }
 
