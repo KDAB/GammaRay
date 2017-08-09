@@ -51,6 +51,8 @@ set(gammaray_common_srcs
   remoteviewinterface.cpp
   remoteviewframe.cpp
   transferimage.cpp
+
+  commonutils.cpp
 )
 
 if (APPLE)
@@ -139,6 +141,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     protocol.h
     sourcelocation.h
     translator.h
+    commonutils.h
   )
 
   ecm_generate_pri_file(BASE_NAME GammaRayCommon
