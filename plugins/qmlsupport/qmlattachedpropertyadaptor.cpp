@@ -27,6 +27,7 @@
 */
 
 #include "qmlattachedpropertyadaptor.h"
+#include "qmltypeutil.h"
 
 #include <core/propertydata.h>
 
@@ -81,8 +82,8 @@ PropertyData QmlAttachedPropertyAdaptor::propertyData(int index) const
         return pd;
 
     auto qmlType = QQmlMetaType::qmlType(it.value()->metaObject());
-    if (qmlType && !qmlType->elementName().isEmpty())
-        pd.setName(qmlType->elementName());
+    if (QmlType::isValid(qmlType) && !QmlType::callable(qmlType)->elementName().isEmpty())
+        pd.setName(QmlType::callable(qmlType)->elementName());
     else
         pd.setName(it.value()->metaObject()->className());
 
