@@ -56,11 +56,19 @@ TextureTab::TextureTab(PropertyWidget *parent)
     zoom->setModel(ui->textureView->zoomLevelModel());
     toolbar->addWidget(zoom);
     toolbar->addAction(ui->textureView->zoomInAction());
+    toolbar->addSeparator();
+
+    const auto warningImage = QIcon(":/resources/warning.png");
+    auto toggleTextureWasteAction = new QAction(warningImage, tr("Reveal Texture Waste"), nullptr);
+    toggleTextureWasteAction->setCheckable(true);
+    toggleTextureWasteAction->setChecked(true);
+    toolbar->addAction(toggleTextureWasteAction);
 
     ui->textureView->setSupportedInteractionModes(RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring);
 
     connect(zoom, SIGNAL(currentIndexChanged(int)), ui->textureView, SLOT(setZoomLevel(int)));
     connect(ui->textureView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
+    connect(toggleTextureWasteAction, SIGNAL(toggled(bool)), ui->textureView, SLOT(setTextureWasteVisualizationEnabled(bool)));
     zoom->setCurrentIndex(ui->textureView->zoomLevelIndex());
 }
 
