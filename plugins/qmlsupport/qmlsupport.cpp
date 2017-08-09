@@ -33,6 +33,7 @@
 #include "qmlcontextpropertyadaptor.h"
 #include "qmlcontextextension.h"
 #include "qmltypeextension.h"
+#include "qmltypeutil.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -200,8 +201,8 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
     auto qmlType = QQmlMetaType::qmlType(obj->metaObject());
     // QQC2 has some weird types with only the namespace (that is, ending in '/')
     // we get better results below, so ignore this case here
-    if (qmlType && !qmlType->qmlTypeName().endsWith(QLatin1Char('/')))
-        return qmlType->qmlTypeName();
+    if (QmlType::isValid(qmlType) && !QmlType::callable(qmlType)->qmlTypeName().endsWith(QLatin1Char('/')))
+        return QmlType::callable(qmlType)->qmlTypeName();
 
     // QML defined type
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
@@ -217,12 +218,10 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
 
     qmlType = QQmlMetaType::qmlType(data->compilationUnit->url());
 #endif
-    if (qmlType) {
+    if (QmlType::isValid(qmlType)) {
         // we get the same type for top-level types and inline types, with no known way to tell those apart...
-        if (QString::fromLatin1(obj->metaObject()->className()).startsWith(qmlType->qmlTypeName()
-                                                                           + QStringLiteral(
-                                                                               "_QMLTYPE_")))
-            return qmlType->qmlTypeName();
+        if (QString::fromLatin1(obj->metaObject()->className()).startsWith(QmlType::callable(qmlType)->qmlTypeName() + QStringLiteral("_QMLTYPE_")))
+            return QmlType::callable(qmlType)->qmlTypeName();
     }
 #endif
     return QString();
@@ -265,8 +264,8 @@ SourceLocation QmlObjectDataProvider::declarationLocation(QObject *obj) const
 
     // C++ QML type
     auto qmlType = QQmlMetaType::qmlType(obj->metaObject());
-    if (qmlType)
-        return SourceLocation(qmlType->sourceUrl());
+    if (QmlType::isValid(qmlType))
+        return SourceLocation(QmlType::callable(qmlType)->sourceUrl());
 
     // QML-defined type
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
@@ -282,8 +281,8 @@ SourceLocation QmlObjectDataProvider::declarationLocation(QObject *obj) const
 
     qmlType = QQmlMetaType::qmlType(data->compilationUnit->url());
 #endif
-    if (qmlType)
-        return SourceLocation(qmlType->sourceUrl());
+    if (QmlType::isValid(qmlType))
+        return SourceLocation(QmlType::callable(qmlType)->sourceUrl());
 #endif
     return SourceLocation();
 }
@@ -321,8 +320,13 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface *probe, QObject *parent)
 
     MO_ADD_METAOBJECT0(QQmlType);
     MO_ADD_PROPERTY_RO(QQmlType, QByteArray, typeName);
+#if QT_VERSION < QT_VERSION_CHECK(5, 9, 2)
     MO_ADD_PROPERTY_RO(QQmlType, const QString &, qmlTypeName);
     MO_ADD_PROPERTY_RO(QQmlType, const QString &, elementName);
+#else
+    MO_ADD_PROPERTY_RO(QQmlType, QString, qmlTypeName);
+    MO_ADD_PROPERTY_RO(QQmlType, QString, elementName);
+#endif
     MO_ADD_PROPERTY_RO(QQmlType, int, majorVersion);
     MO_ADD_PROPERTY_RO(QQmlType, int, minorVersion);
     MO_ADD_PROPERTY_RO(QQmlType, int, createSize);
