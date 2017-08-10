@@ -89,9 +89,7 @@ private:
     QModelIndexList indexesForName(QAbstractItemModel *model, const QString &name)
     {
         const auto matches = model->match(model->index(0, 0), Qt::DisplayRole, name, -1, Qt::MatchExactly | Qt::MatchRecursive);
-        if (matches.isEmpty())
-            return QModelIndexList();
-        for (const auto &idx: matches)
+        foreach (const QModelIndex &idx, matches)
             Q_ASSERT(idx.isValid());
         return matches;
     }
@@ -242,7 +240,7 @@ private slots:
 
             auto idxs = indexesForName(model, "threadTimer");
             QCOMPARE(idxs.count(), 2);
-            for (const auto &idx: idxs)
+            foreach (const QModelIndex &idx, idxs)
                 QVERIFY(idx.isValid());
 
             QTimer::singleShot(0, threadTimer.data(), [&]() {
