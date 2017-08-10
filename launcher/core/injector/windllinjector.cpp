@@ -148,7 +148,7 @@ bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*
 
     m_destProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
     if (!m_destProcess) {
-        qWarning() << "Failed to open process" << pid << "error code:" << CommonUtils::windowsErrorString();
+        qWarning() << "Failed to open process" << pid << "error code:" << qt_error_string();
         return false;
     }
 
@@ -191,7 +191,7 @@ void WinDllInjector::remoteKernel32Call(const char *funcName, const QString &arg
     auto kernel32handle = GetModuleHandleW(L"Kernel32");
     auto func = GetProcAddress(kernel32handle, funcName);
     if (!func) {
-        qWarning() << "Unable to resolve" << funcName << "in kernel32.dll!" << CommonUtils::windowsErrorString();
+        qWarning() << "Unable to resolve" << funcName << "in kernel32.dll!" << qt_error_string();
         return;
     }
 
@@ -199,7 +199,7 @@ void WinDllInjector::remoteKernel32Call(const char *funcName, const QString &arg
     const int strsize = (argument.size() * 2) + 2;
     void *mem = VirtualAllocEx(m_destProcess, NULL, strsize, MEM_COMMIT, PAGE_READWRITE);
     if (!mem) {
-        qWarning() << "Failed to allocate memory in target process!" << CommonUtils::windowsErrorString();
+        qWarning() << "Failed to allocate memory in target process!" << qt_error_string();
         return;
     }
     WIN_ERROR_ASSERT(WriteProcessMemory(m_destProcess, mem, (void*)argument.utf16(), strsize, NULL), return);
@@ -207,7 +207,7 @@ void WinDllInjector::remoteKernel32Call(const char *funcName, const QString &arg
     // call function pointer in remote process
     auto t = CreateRemoteThread(m_destProcess, NULL, 0, (LPTHREAD_START_ROUTINE)func, mem, 0, NULL);
     if (!t) {
-        qWarning() << "Filed to creare thread in target process!" << CommonUtils::windowsErrorString();
+        qWarning() << "Filed to creare thread in target process!" << qt_error_string();
         return;
     }
     WaitForSingleObject(t, INFINITE);
@@ -216,7 +216,7 @@ void WinDllInjector::remoteKernel32Call(const char *funcName, const QString &arg
     WIN_ERROR_CHECK(GetExitCodeThread(t, &result));
 
     if (result) {
-        qDebug() << Q_FUNC_INFO << funcName << argument << "failed" << result << CommonUtils::windowsErrorString();
+        qDebug() << Q_FUNC_INFO << funcName << argument << "failed" << result << qt_error_string();
     }else {
         qDebug() << Q_FUNC_INFO << funcName << argument << "succeeded";
     }
