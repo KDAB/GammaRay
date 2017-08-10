@@ -12,7 +12,7 @@
 namespace GammaRay {
 namespace CommonUtils {
 #if defined(Q_OS_WIN)
-QString GAMMARAY_COMMON_EXPORT windowsErrorString();
+GAMMARAY_COMMON_EXPORT QString windowsErrorString();
 #  endif
 }
 }
