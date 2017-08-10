@@ -511,103 +511,103 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
 {
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT0(QLayoutItem)
-    MO_ADD_PROPERTY(QLayoutItem, Qt::Alignment, alignment, setAlignment);
-    MO_ADD_PROPERTY_RO(QLayoutItem, QSizePolicy::ControlTypes, controlTypes);
-    MO_ADD_PROPERTY_RO(QLayoutItem, Qt::Orientations, expandingDirections);
-    MO_ADD_PROPERTY_CR(QLayoutItem, QRect, geometry, setGeometry);
-    MO_ADD_PROPERTY_RO(QLayoutItem, bool, hasHeightForWidth);
-    MO_ADD_PROPERTY_RO(QLayoutItem, bool, isEmpty);
-    MO_ADD_PROPERTY_RO(QLayoutItem, QSize, maximumSize);
-    MO_ADD_PROPERTY_RO(QLayoutItem, QSize, minimumSize);
-    MO_ADD_PROPERTY_RO(QLayoutItem, QSize, sizeHint);
+    MO_ADD_PROPERTY(QLayoutItem, alignment, setAlignment);
+    MO_ADD_PROPERTY_RO(QLayoutItem, controlTypes);
+    MO_ADD_PROPERTY_RO(QLayoutItem, expandingDirections);
+    MO_ADD_PROPERTY(QLayoutItem, geometry, setGeometry);
+    MO_ADD_PROPERTY_RO(QLayoutItem, hasHeightForWidth);
+    MO_ADD_PROPERTY_RO(QLayoutItem, isEmpty);
+    MO_ADD_PROPERTY_RO(QLayoutItem, maximumSize);
+    MO_ADD_PROPERTY_RO(QLayoutItem, minimumSize);
+    MO_ADD_PROPERTY_RO(QLayoutItem, sizeHint);
 
     MO_ADD_METAOBJECT2(QLayout, QObject, QLayoutItem);
-    MO_ADD_PROPERTY_CR(QLayout, QMargins, contentsMargins, setContentsMargins);
-    MO_ADD_PROPERTY_RO(QLayout, QRect, contentsRect);
-    MO_ADD_PROPERTY_RO(QLayout, int, count);
-    MO_ADD_PROPERTY(QLayout, bool, isEnabled, setEnabled);
-    MO_ADD_PROPERTY_RO(QLayout, QWidget *, menuBar);
-    MO_ADD_PROPERTY_RO(QLayout, QWidget *, parentWidget);
+    MO_ADD_PROPERTY(QLayout, contentsMargins, setContentsMargins);
+    MO_ADD_PROPERTY_RO(QLayout, contentsRect);
+    MO_ADD_PROPERTY_RO(QLayout, count);
+    MO_ADD_PROPERTY(QLayout, isEnabled, setEnabled);
+    MO_ADD_PROPERTY_RO(QLayout, menuBar);
+    MO_ADD_PROPERTY_RO(QLayout, parentWidget);
 
     MO_ADD_METAOBJECT1(QGridLayout, QLayout);
-    MO_ADD_PROPERTY_RO(QGridLayout, int, columnCount);
-    MO_ADD_PROPERTY_RO(QGridLayout, int, rowCount);
+    MO_ADD_PROPERTY_RO(QGridLayout, columnCount);
+    MO_ADD_PROPERTY_RO(QGridLayout, rowCount);
 
     MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
-    MO_ADD_PROPERTY_RO(QWidget, QWidget*, focusProxy);
-    MO_ADD_PROPERTY_RO(QWidget, bool, isWindow);
+    MO_ADD_PROPERTY_RO(QWidget, focusProxy);
+    MO_ADD_PROPERTY_RO(QWidget, isWindow);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QWidget, QLayout*, layout);
+    MO_ADD_PROPERTY_RO(QWidget, layout);
 #endif
-    MO_ADD_PROPERTY_RO(QWidget, QWidget*, window);
+    MO_ADD_PROPERTY_RO(QWidget, window);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QWidget, QWindow*, windowHandle);
+    MO_ADD_PROPERTY_RO(QWidget, windowHandle);
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    MO_ADD_PROPERTY   (QWidget, Qt::WindowFlags, windowFlags, setWindowFlags);
+    MO_ADD_PROPERTY   (QWidget, windowFlags, setWindowFlags);
 #endif
 
     MO_ADD_METAOBJECT1(QStyle, QObject);
-    MO_ADD_PROPERTY_RO(QStyle, const QStyle *, proxy);
-    MO_ADD_PROPERTY_RO(QStyle, QPalette, standardPalette);
+    MO_ADD_PROPERTY_RO(QStyle, proxy);
+    MO_ADD_PROPERTY_RO(QStyle, standardPalette);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_METAOBJECT1(QApplication, QGuiApplication);
-    MO_ADD_PROPERTY_ST(QApplication, QWidget *, activeModalWidget);
-    MO_ADD_PROPERTY_ST(QApplication, QWidget *, activePopupWidget);
-    MO_ADD_PROPERTY_ST(QApplication, QWidget *, activeWindow);
-    MO_ADD_PROPERTY_ST(QApplication, int, colorSpec);
-    MO_ADD_PROPERTY_ST(QApplication, QDesktopWidget *, desktop);
-    MO_ADD_PROPERTY_ST(QApplication, QWidget *, focusWidget);
-    MO_ADD_PROPERTY_ST(QApplication, QStyle *, style);
+    MO_ADD_PROPERTY_ST(QApplication, activeModalWidget);
+    MO_ADD_PROPERTY_ST(QApplication, activePopupWidget);
+    MO_ADD_PROPERTY_ST(QApplication, activeWindow);
+    MO_ADD_PROPERTY_ST(QApplication, colorSpec);
+    MO_ADD_PROPERTY_ST(QApplication, desktop);
+    MO_ADD_PROPERTY_ST(QApplication, focusWidget);
+    MO_ADD_PROPERTY_ST(QApplication, style);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    MO_ADD_PROPERTY_ST(QApplication, QWidgetList, topLevelWidgets);
+    MO_ADD_PROPERTY_ST(QApplication, topLevelWidgets);
 #endif
 
     MO_ADD_METAOBJECT1(QFrame, QWidget);
     MO_ADD_METAOBJECT1(QAbstractScrollArea, QFrame);
-    MO_ADD_PROPERTY_RO(QAbstractScrollArea, QWidget*, cornerWidget);
-    MO_ADD_PROPERTY   (QAbstractScrollArea, QScrollBar*, horizontalScrollBar, setHorizontalScrollBar);
-    MO_ADD_PROPERTY_RO(QAbstractScrollArea, QSize, maximumViewportSize);
-    MO_ADD_PROPERTY   (QAbstractScrollArea, QScrollBar*, verticalScrollBar, setVerticalScrollBar);
-    MO_ADD_PROPERTY   (QAbstractScrollArea, QWidget*, viewport, setViewport);
+    MO_ADD_PROPERTY_RO(QAbstractScrollArea, cornerWidget);
+    MO_ADD_PROPERTY   (QAbstractScrollArea, horizontalScrollBar, setHorizontalScrollBar);
+    MO_ADD_PROPERTY_RO(QAbstractScrollArea, maximumViewportSize);
+    MO_ADD_PROPERTY   (QAbstractScrollArea, verticalScrollBar, setVerticalScrollBar);
+    MO_ADD_PROPERTY   (QAbstractScrollArea, viewport, setViewport);
 
     MO_ADD_METAOBJECT1(QAbstractItemView, QAbstractScrollArea);
-    MO_ADD_PROPERTY_RO(QAbstractItemView, QAbstractItemModel *, model);
+    MO_ADD_PROPERTY_RO(QAbstractItemView, model);
 
     MO_ADD_METAOBJECT1(QComboBox, QWidget);
-    MO_ADD_PROPERTY_RO(QComboBox, QAbstractItemModel *, model);
+    MO_ADD_PROPERTY_RO(QComboBox, model);
 
     MO_ADD_METAOBJECT1(QAbstractButton, QWidget);
-    MO_ADD_PROPERTY_RO(QAbstractButton, QButtonGroup*, group);
+    MO_ADD_PROPERTY_RO(QAbstractButton, group);
 
     MO_ADD_METAOBJECT1(QScrollArea, QAbstractScrollArea);
-    MO_ADD_PROPERTY   (QScrollArea, QWidget*, widget, setWidget);
+    MO_ADD_PROPERTY   (QScrollArea, widget, setWidget);
 
     MO_ADD_METAOBJECT1(QToolButton, QAbstractButton);
-    MO_ADD_PROPERTY_RO(QToolButton, QAction*, defaultAction);
-    MO_ADD_PROPERTY_RO(QToolButton, QMenu*, menu);
+    MO_ADD_PROPERTY_RO(QToolButton, defaultAction);
+    MO_ADD_PROPERTY_RO(QToolButton, menu);
 #endif
 
     MO_ADD_METAOBJECT0(QSizePolicy);
-    MO_ADD_PROPERTY   (QSizePolicy, QSizePolicy::ControlType, controlType, setControlType);
-    MO_ADD_PROPERTY_RO(QSizePolicy, Qt::Orientations, expandingDirections);
-    MO_ADD_PROPERTY   (QSizePolicy, bool, hasHeightForWidth, setHeightForWidth);
-    MO_ADD_PROPERTY   (QSizePolicy, bool, hasWidthForHeight, setWidthForHeight);
-    MO_ADD_PROPERTY   (QSizePolicy, QSizePolicy::Policy, horizontalPolicy, setHorizontalPolicy);
+    MO_ADD_PROPERTY   (QSizePolicy, controlType, setControlType);
+    MO_ADD_PROPERTY_RO(QSizePolicy, expandingDirections);
+    MO_ADD_PROPERTY   (QSizePolicy, hasHeightForWidth, setHeightForWidth);
+    MO_ADD_PROPERTY   (QSizePolicy, hasWidthForHeight, setWidthForHeight);
+    MO_ADD_PROPERTY   (QSizePolicy, horizontalPolicy, setHorizontalPolicy);
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QSizePolicy, int, horizontalStretch);
+    MO_ADD_PROPERTY_RO(QSizePolicy, horizontalStretch);
 #else
-    MO_ADD_PROPERTY   (QSizePolicy, int, horizontalStretch, setHorizontalStretch);
+    MO_ADD_PROPERTY   (QSizePolicy, horizontalStretch, setHorizontalStretch);
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-    MO_ADD_PROPERTY   (QSizePolicy, bool, retainSizeWhenHidden, setRetainSizeWhenHidden);
+    MO_ADD_PROPERTY   (QSizePolicy, retainSizeWhenHidden, setRetainSizeWhenHidden);
 #endif
-    MO_ADD_PROPERTY   (QSizePolicy, QSizePolicy::Policy, verticalPolicy, setVerticalPolicy);
+    MO_ADD_PROPERTY   (QSizePolicy, verticalPolicy, setVerticalPolicy);
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QSizePolicy, int, verticalStretch);
+    MO_ADD_PROPERTY_RO(QSizePolicy, verticalStretch);
 #else
-    MO_ADD_PROPERTY   (QSizePolicy, int, verticalStretch, setVerticalStretch);
+    MO_ADD_PROPERTY   (QSizePolicy, verticalStretch, setVerticalStretch);
 #endif
 }
 

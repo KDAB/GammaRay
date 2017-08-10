@@ -67,21 +67,18 @@ Positioning::Positioning(ProbeInterface *probe, QObject *parent)
 
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QGeoPositionInfoSource, QObject);
-    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::Error, error);
-    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::PositioningMethods,
-                       preferredPositioningMethods);
-    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, QGeoPositionInfoSource::PositioningMethods,
-                       supportedPositioningMethods);
+    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, error);
+    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, preferredPositioningMethods);
+    MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, supportedPositioningMethods);
 
     MO_ADD_METAOBJECT1(QGeoSatelliteInfoSource, QObject);
-    MO_ADD_PROPERTY_RO(QGeoSatelliteInfoSource, QGeoSatelliteInfoSource::Error, error);
-    MO_ADD_PROPERTY_RO(QGeoSatelliteInfoSource, QString, sourceName);
+    MO_ADD_PROPERTY_RO(QGeoSatelliteInfoSource, error);
+    MO_ADD_PROPERTY_RO(QGeoSatelliteInfoSource, sourceName);
 
     MO_ADD_METAOBJECT1(QGeoAreaMonitorSource, QObject);
-    MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QGeoAreaMonitorSource::Error, error);
-    MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QString, sourceName);
-    MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, QGeoAreaMonitorSource::AreaMonitorFeatures,
-                       supportedAreaMonitorFeatures);
+    MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, error);
+    MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, sourceName);
+    MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, supportedAreaMonitorFeatures);
 
     VariantHandler::registerStringConverter<QGeoPositionInfoSource::PositioningMethods>(
         positioningMethodsToString);

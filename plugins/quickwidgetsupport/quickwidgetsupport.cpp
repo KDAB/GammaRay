@@ -53,14 +53,14 @@ QuickWidgetSupport::QuickWidgetSupport(ProbeInterface *probe, QObject *parent)
 
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQuickWidget, QWidget);
-    MO_ADD_PROPERTY_RO(QQuickWidget, QQmlEngine *, engine);
-    MO_ADD_PROPERTY_RO(QQuickWidget, QSurfaceFormat, format);
-    MO_ADD_PROPERTY_RO(QQuickWidget, QSize, initialSize);
+    MO_ADD_PROPERTY_RO(QQuickWidget, engine);
+    MO_ADD_PROPERTY_RO(QQuickWidget, format);
+    MO_ADD_PROPERTY_RO(QQuickWidget, initialSize);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    MO_ADD_PROPERTY_RO(QQuickWidget, QQuickWindow *, quickWindow);
+    MO_ADD_PROPERTY_RO(QQuickWidget, quickWindow);
 #endif
-    MO_ADD_PROPERTY_RO(QQuickWidget, QQmlContext *, rootContext);
-    MO_ADD_PROPERTY_RO(QQuickWidget, QQuickItem *, rootObject);
+    MO_ADD_PROPERTY_RO(QQuickWidget, rootContext);
+    MO_ADD_PROPERTY_RO(QQuickWidget, rootObject);
 }
 
 GammaRay::QuickWidgetSupport::~QuickWidgetSupport()

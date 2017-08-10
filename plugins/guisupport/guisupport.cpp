@@ -75,132 +75,132 @@ void GuiSupport::registerMetaTypes()
 
  #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_METAOBJECT1(QGuiApplication, QCoreApplication);
-    MO_ADD_PROPERTY_ST(QGuiApplication, Qt::ApplicationState, applicationState);
-    MO_ADD_PROPERTY_ST(QGuiApplication, bool, desktopSettingsAware);
-    MO_ADD_PROPERTY_RO(QGuiApplication, qreal, devicePixelRatio);
-    MO_ADD_PROPERTY_ST(QGuiApplication, QObject *, focusObject);
-    MO_ADD_PROPERTY_ST(QGuiApplication, QWindow *, focusWindow);
-    MO_ADD_PROPERTY_ST(QGuiApplication, QFont, font);
-    MO_ADD_PROPERTY_ST(QGuiApplication, bool, isLeftToRight);
-    MO_ADD_PROPERTY_ST(QGuiApplication, bool, isRightToLeft);
-    MO_ADD_PROPERTY_ST(QGuiApplication, QPalette, palette);
-    MO_ADD_PROPERTY_ST(QGuiApplication, QScreen *, primaryScreen);
+    MO_ADD_PROPERTY_ST(QGuiApplication, applicationState);
+    MO_ADD_PROPERTY_ST(QGuiApplication, desktopSettingsAware);
+    MO_ADD_PROPERTY_RO(QGuiApplication, devicePixelRatio);
+    MO_ADD_PROPERTY_ST(QGuiApplication, focusObject);
+    MO_ADD_PROPERTY_ST(QGuiApplication, focusWindow);
+    MO_ADD_PROPERTY_ST(QGuiApplication, font);
+    MO_ADD_PROPERTY_ST(QGuiApplication, isLeftToRight);
+    MO_ADD_PROPERTY_ST(QGuiApplication, isRightToLeft);
+    MO_ADD_PROPERTY_ST(QGuiApplication, palette);
+    MO_ADD_PROPERTY_ST(QGuiApplication, primaryScreen);
 #ifndef QT_NO_SESSIONMANAGER
-    MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSavingSession);
-    MO_ADD_PROPERTY_RO(QGuiApplication, bool, isSessionRestored);
-    MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionId);
-    MO_ADD_PROPERTY_RO(QGuiApplication, QString, sessionKey);
+    MO_ADD_PROPERTY_RO(QGuiApplication, isSavingSession);
+    MO_ADD_PROPERTY_RO(QGuiApplication, isSessionRestored);
+    MO_ADD_PROPERTY_RO(QGuiApplication, sessionId);
+    MO_ADD_PROPERTY_RO(QGuiApplication, sessionKey);
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    MO_ADD_PROPERTY_ST(QGuiApplication, QWindowList, allWindows);
-    MO_ADD_PROPERTY_ST(QGuiApplication, QWindowList, topLevelWindows);
+    MO_ADD_PROPERTY_ST(QGuiApplication, allWindows);
+    MO_ADD_PROPERTY_ST(QGuiApplication, topLevelWindows);
 #endif
 #endif
 
     MO_ADD_METAOBJECT0(QPaintDevice);
-    MO_ADD_PROPERTY_RO(QPaintDevice, int, colorCount);
+    MO_ADD_PROPERTY_RO(QPaintDevice, colorCount);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QPaintDevice, int, devicePixelRatio);
+    MO_ADD_PROPERTY_RO(QPaintDevice, devicePixelRatio);
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    MO_ADD_PROPERTY_RO(QPaintDevice, qreal, devicePixelRatioF);
+    MO_ADD_PROPERTY_RO(QPaintDevice, devicePixelRatioF);
 #endif
-    MO_ADD_PROPERTY_RO(QPaintDevice, int, heightMM);
-    MO_ADD_PROPERTY_RO(QPaintDevice, int, logicalDpiX);
-    MO_ADD_PROPERTY_RO(QPaintDevice, int, logicalDpiY);
-    MO_ADD_PROPERTY_RO(QPaintDevice, bool, paintingActive);
-    MO_ADD_PROPERTY_RO(QPaintDevice, int, physicalDpiX);
-    MO_ADD_PROPERTY_RO(QPaintDevice, int, physicalDpiY);
-    MO_ADD_PROPERTY_RO(QPaintDevice, int, widthMM);
+    MO_ADD_PROPERTY_RO(QPaintDevice, heightMM);
+    MO_ADD_PROPERTY_RO(QPaintDevice, logicalDpiX);
+    MO_ADD_PROPERTY_RO(QPaintDevice, logicalDpiY);
+    MO_ADD_PROPERTY_RO(QPaintDevice, paintingActive);
+    MO_ADD_PROPERTY_RO(QPaintDevice, physicalDpiX);
+    MO_ADD_PROPERTY_RO(QPaintDevice, physicalDpiY);
+    MO_ADD_PROPERTY_RO(QPaintDevice, widthMM);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     qRegisterMetaType<QScreen *>();
 
     MO_ADD_METAOBJECT0(QSurface);
-    MO_ADD_PROPERTY_RO(QSurface, QSurfaceFormat, format);
-    MO_ADD_PROPERTY_RO(QSurface, QSize, size);
-    MO_ADD_PROPERTY_RO(QSurface, QSurface::SurfaceClass, surfaceClass);
-    MO_ADD_PROPERTY_RO(QSurface, QSurface::SurfaceType, surfaceType);
+    MO_ADD_PROPERTY_RO(QSurface, format);
+    MO_ADD_PROPERTY_RO(QSurface, size);
+    MO_ADD_PROPERTY_RO(QSurface, surfaceClass);
+    MO_ADD_PROPERTY_RO(QSurface, surfaceType);
 
     MO_ADD_METAOBJECT2(QWindow, QObject, QSurface);
-    MO_ADD_PROPERTY_CR(QWindow, QSize, baseSize, setBaseSize);
+    MO_ADD_PROPERTY(QWindow, baseSize, setBaseSize);
 #ifndef QT_NO_CURSOR
-    MO_ADD_PROPERTY_CR(QWindow, QCursor, cursor, setCursor);
+    MO_ADD_PROPERTY(QWindow, cursor, setCursor);
 #endif
-    MO_ADD_PROPERTY_RO(QWindow, qreal, devicePixelRatio);
-    MO_ADD_PROPERTY_CR(QWindow, QString, filePath, setFilePath);
-    MO_ADD_PROPERTY_RO(QWindow, QObject *, focusObject);
-    MO_ADD_PROPERTY_RO(QWindow, QRect, frameGeometry);
-    MO_ADD_PROPERTY_RO(QWindow, QMargins, frameMargins);
-    MO_ADD_PROPERTY_CR(QWindow, QPoint, framePosition, setFramePosition);
-    MO_ADD_PROPERTY_CR(QWindow, QRect, geometry, setGeometry);
-    MO_ADD_PROPERTY_CR(QWindow, QIcon, icon, setIcon);
-    MO_ADD_PROPERTY_RO(QWindow, bool, isExposed);
-    MO_ADD_PROPERTY_RO(QWindow, bool, isTopLevel);
+    MO_ADD_PROPERTY_RO(QWindow, devicePixelRatio);
+    MO_ADD_PROPERTY(QWindow, filePath, setFilePath);
+    MO_ADD_PROPERTY_RO(QWindow,  focusObject);
+    MO_ADD_PROPERTY_RO(QWindow, frameGeometry);
+    MO_ADD_PROPERTY_RO(QWindow, frameMargins);
+    MO_ADD_PROPERTY(QWindow, framePosition, setFramePosition);
+    MO_ADD_PROPERTY(QWindow, geometry, setGeometry);
+    MO_ADD_PROPERTY(QWindow, icon, setIcon);
+    MO_ADD_PROPERTY_RO(QWindow, isExposed);
+    MO_ADD_PROPERTY_RO(QWindow, isTopLevel);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
-    MO_ADD_PROPERTY_CR(QWindow, QRegion, mask, setMask);
+    MO_ADD_PROPERTY(QWindow, mask, setMask);
 #endif
-    MO_ADD_PROPERTY_CR(QWindow, QPoint, position, setPosition);
-    MO_ADD_PROPERTY_RO(QWindow, QSurfaceFormat, requestedFormat);
-    MO_ADD_PROPERTY_RO(QWindow, QScreen *, screen);
-    MO_ADD_PROPERTY_CR(QWindow, QSize, sizeIncrement, setSizeIncrement);
-    MO_ADD_PROPERTY(QWindow, Qt::WindowState, windowState, setWindowState);
-    MO_ADD_PROPERTY_RO(QWindow, QWindow *, transientParent);
-    MO_ADD_PROPERTY_RO(QWindow, Qt::WindowType, type);
+    MO_ADD_PROPERTY(QWindow, position, setPosition);
+    MO_ADD_PROPERTY_RO(QWindow, requestedFormat);
+    MO_ADD_PROPERTY_RO(QWindow, screen);
+    MO_ADD_PROPERTY(QWindow, sizeIncrement, setSizeIncrement);
+    MO_ADD_PROPERTY(QWindow, windowState, setWindowState);
+    MO_ADD_PROPERTY_RO(QWindow, transientParent);
+    MO_ADD_PROPERTY_RO(QWindow, type);
 
 #ifndef QT_NO_OPENGL
     MO_ADD_METAOBJECT1(QOpenGLShader, QObject);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, bool, isCompiled);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, QString, log);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, uint, shaderId);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, QOpenGLShader::ShaderType, shaderType);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, QByteArray, sourceCode);
+    MO_ADD_PROPERTY_RO(QOpenGLShader, isCompiled);
+    MO_ADD_PROPERTY_RO(QOpenGLShader, log);
+    MO_ADD_PROPERTY_RO(QOpenGLShader, shaderId);
+    MO_ADD_PROPERTY_RO(QOpenGLShader, shaderType);
+    MO_ADD_PROPERTY_RO(QOpenGLShader, sourceCode);
 
     MO_ADD_METAOBJECT1(QOpenGLShaderProgram, QObject);
-    MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, bool, isLinked);
-    MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, QString, log);
+    MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, isLinked);
+    MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, log);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 // FIXME calling this asserts in debug builds of some newer Qt versions
-// MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, int, maxGeometryOutputVertices);
-    MO_ADD_PROPERTY(QOpenGLShaderProgram, int, patchVertexCount, setPatchVertexCount);
+// MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, maxGeometryOutputVertices);
+    MO_ADD_PROPERTY(QOpenGLShaderProgram, patchVertexCount, setPatchVertexCount);
 #endif
-    MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, uint, programId);
+    MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, programId);
 
     MO_ADD_METAOBJECT1(QOpenGLContext, QObject);
-    MO_ADD_PROPERTY_RO(QOpenGLContext, uint, defaultFramebufferObject);
+    MO_ADD_PROPERTY_RO(QOpenGLContext, defaultFramebufferObject);
     // crashes if context isn't current
-// MO_ADD_PROPERTY_RO(QOpenGLContext, QSet<QByteArray>, extensions);
-    MO_ADD_PROPERTY_RO(QOpenGLContext, QSurfaceFormat, format);
-    MO_ADD_PROPERTY_RO(QOpenGLContext, bool, isValid);
-    MO_ADD_PROPERTY_RO(QOpenGLContext, QScreen *, screen);
-    MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContext *, shareContext);
-    MO_ADD_PROPERTY_RO(QOpenGLContext, QOpenGLContextGroup *, shareGroup);
-// MO_ADD_PROPERTY_RO(QOpenGLContext, QSurface*, surface);
+// MO_ADD_PROPERTY_RO(QOpenGLContext, extensions);
+    MO_ADD_PROPERTY_RO(QOpenGLContext, format);
+    MO_ADD_PROPERTY_RO(QOpenGLContext, isValid);
+    MO_ADD_PROPERTY_RO(QOpenGLContext, screen);
+    MO_ADD_PROPERTY_RO(QOpenGLContext, shareContext);
+    MO_ADD_PROPERTY_RO(QOpenGLContext, shareGroup);
+// MO_ADD_PROPERTY_RO(QOpenGLContext, surface);
 #endif // QT_NO_OPENGL
 #endif // QT_VERSION >= 5.0.0
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_METAOBJECT0(QBrush);
-    MO_ADD_PROPERTY(QBrush, const QColor &, color, setColor);
-    MO_ADD_PROPERTY_RO(QBrush, bool, isOpaque);
-    MO_ADD_PROPERTY(QBrush, const QMatrix &, matrix, setMatrix);
-    MO_ADD_PROPERTY(QBrush, Qt::BrushStyle, style, setStyle);
-    MO_ADD_PROPERTY_CR(QBrush, QPixmap, texture, setTexture);
-    MO_ADD_PROPERTY_CR(QBrush, QTransform, transform, setTransform);
+    MO_ADD_PROPERTY_O2(QBrush, color, setColor);
+    MO_ADD_PROPERTY_RO(QBrush, isOpaque);
+    MO_ADD_PROPERTY(QBrush, matrix, setMatrix);
+    MO_ADD_PROPERTY(QBrush, style, setStyle);
+    MO_ADD_PROPERTY(QBrush, texture, setTexture);
+    MO_ADD_PROPERTY(QBrush, transform, setTransform);
 
     MO_ADD_METAOBJECT0(QPen);
-    MO_ADD_PROPERTY_CR(QPen, QBrush, brush, setBrush);
-    MO_ADD_PROPERTY(QPen, Qt::PenCapStyle, capStyle, setCapStyle);
-    MO_ADD_PROPERTY_CR(QPen, QColor, color, setColor);
-    MO_ADD_PROPERTY(QPen, qreal, dashOffset, setDashOffset);
-    MO_ADD_PROPERTY_CR(QPen, QVector<qreal>, dashPattern, setDashPattern);
-    MO_ADD_PROPERTY(QPen, bool, isCosmetic, setCosmetic);
-    MO_ADD_PROPERTY_RO(QPen, bool, isSolid);
-    MO_ADD_PROPERTY(QPen, Qt::PenJoinStyle, joinStyle, setJoinStyle);
-    MO_ADD_PROPERTY(QPen, qreal, miterLimit, setMiterLimit);
-    MO_ADD_PROPERTY(QPen, Qt::PenStyle, style, setStyle);
-    MO_ADD_PROPERTY(QPen, int, width, setWidth);
-    MO_ADD_PROPERTY(QPen, qreal, widthF, setWidthF);
+    MO_ADD_PROPERTY(QPen, brush, setBrush);
+    MO_ADD_PROPERTY(QPen, capStyle, setCapStyle);
+    MO_ADD_PROPERTY(QPen, color, setColor);
+    MO_ADD_PROPERTY(QPen, dashOffset, setDashOffset);
+    MO_ADD_PROPERTY(QPen, dashPattern, setDashPattern);
+    MO_ADD_PROPERTY(QPen, isCosmetic, setCosmetic);
+    MO_ADD_PROPERTY_RO(QPen, isSolid);
+    MO_ADD_PROPERTY(QPen, joinStyle, setJoinStyle);
+    MO_ADD_PROPERTY(QPen, miterLimit, setMiterLimit);
+    MO_ADD_PROPERTY(QPen, style, setStyle);
+    MO_ADD_PROPERTY(QPen, width, setWidth);
+    MO_ADD_PROPERTY(QPen, widthF, setWidthF);
 #endif
 }
 

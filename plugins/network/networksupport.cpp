@@ -96,159 +96,154 @@ void NetworkSupport::registerMetaTypes()
 {
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QAbstractSocket, QIODevice);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, bool, isValid);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, localPort);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, QHostAddress, localAddress);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, quint16, peerPort);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, QHostAddress, peerAddress);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, QString, peerName);
-    MO_ADD_PROPERTY(QAbstractSocket, qint64, readBufferSize, setReadBufferSize);
-    MO_ADD_PROPERTY(QAbstractSocket, QAbstractSocket::PauseModes, pauseMode, setPauseMode);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, qintptr, socketDescriptor);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketType, socketType);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketState, state);
-    MO_ADD_PROPERTY_RO(QAbstractSocket, QAbstractSocket::SocketError, error);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, isValid);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, localPort);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, localAddress);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, peerPort);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, peerAddress);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, peerName);
+    MO_ADD_PROPERTY(QAbstractSocket, readBufferSize, setReadBufferSize);
+    MO_ADD_PROPERTY(QAbstractSocket, pauseMode, setPauseMode);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, socketDescriptor);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, socketType);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, state);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, error);
 #ifndef QT_NO_NETWORKPROXY
-    MO_ADD_PROPERTY_RO(QAbstractSocket, QNetworkProxy, proxy);
+    MO_ADD_PROPERTY_RO(QAbstractSocket, proxy);
 #endif
 
     MO_ADD_METAOBJECT0(QHostAddress);
-    MO_ADD_PROPERTY_RO(QHostAddress, bool, isLoopback);
+    MO_ADD_PROPERTY_RO(QHostAddress, isLoopback);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    MO_ADD_PROPERTY_RO(QHostAddress, bool, isMulticast);
+    MO_ADD_PROPERTY_RO(QHostAddress, isMulticast);
 #endif
-    MO_ADD_PROPERTY_RO(QHostAddress, bool, isNull);
-    MO_ADD_PROPERTY_RO(QHostAddress, QAbstractSocket::NetworkLayerProtocol, protocol);
-    MO_ADD_PROPERTY_CR(QHostAddress, QString, scopeId, setScopeId);
+    MO_ADD_PROPERTY_RO(QHostAddress, isNull);
+    MO_ADD_PROPERTY_RO(QHostAddress, protocol);
+    MO_ADD_PROPERTY(QHostAddress, scopeId, setScopeId);
 
     MO_ADD_METAOBJECT1(QLocalSocket, QIODevice);
-    MO_ADD_PROPERTY_RO(QLocalSocket, QLocalSocket::LocalSocketError, error);
-    MO_ADD_PROPERTY_RO(QLocalSocket, QString, fullServerName);
-    MO_ADD_PROPERTY_RO(QLocalSocket, bool, isValid);
-    MO_ADD_PROPERTY_RO(QLocalSocket, QString, serverName);
-    MO_ADD_PROPERTY_RO(QLocalSocket, qintptr, socketDescriptor);
-    MO_ADD_PROPERTY_RO(QLocalSocket, QLocalSocket::LocalSocketState, state);
+    MO_ADD_PROPERTY_RO(QLocalSocket, error);
+    MO_ADD_PROPERTY_RO(QLocalSocket, fullServerName);
+    MO_ADD_PROPERTY_RO(QLocalSocket, isValid);
+    MO_ADD_PROPERTY_RO(QLocalSocket, serverName);
+    MO_ADD_PROPERTY_RO(QLocalSocket, socketDescriptor);
+    MO_ADD_PROPERTY_RO(QLocalSocket, state);
 
     MO_ADD_METAOBJECT1(QNetworkAccessManager, QObject);
-    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QAbstractNetworkCache *, cache);
-    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QNetworkCookieJar *, cookieJar);
-    MO_ADD_PROPERTY_RO(QNetworkAccessManager, QStringList, supportedSchemes);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, cache);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, cookieJar);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, supportedSchemes);
 
     // FIXME: QAbstractSocket::setSocketOption() would be nice to have
     // FIXME: QQAbstractSocket::socketOption() would be nice to have
 
     MO_ADD_METAOBJECT1(QTcpServer, QObject);
-    MO_ADD_PROPERTY_RO(QTcpServer, bool, isListening);
-    MO_ADD_PROPERTY(QTcpServer, int, maxPendingConnections, setMaxPendingConnections);
-    MO_ADD_PROPERTY_RO(QTcpServer, quint16, serverPort);
-    MO_ADD_PROPERTY_RO(QTcpServer, QHostAddress, serverAddress);
-    MO_ADD_PROPERTY_RO(QTcpServer, qintptr, socketDescriptor);
-    MO_ADD_PROPERTY_RO(QTcpServer, bool, hasPendingConnections);
-    MO_ADD_PROPERTY_RO(QTcpServer, QAbstractSocket::SocketError, serverError);
-    MO_ADD_PROPERTY_RO(QTcpServer, QString, errorString);
+    MO_ADD_PROPERTY_RO(QTcpServer, isListening);
+    MO_ADD_PROPERTY(QTcpServer, maxPendingConnections, setMaxPendingConnections);
+    MO_ADD_PROPERTY_RO(QTcpServer, serverPort);
+    MO_ADD_PROPERTY_RO(QTcpServer, serverAddress);
+    MO_ADD_PROPERTY_RO(QTcpServer, socketDescriptor);
+    MO_ADD_PROPERTY_RO(QTcpServer, hasPendingConnections);
+    MO_ADD_PROPERTY_RO(QTcpServer, serverError);
+    MO_ADD_PROPERTY_RO(QTcpServer, errorString);
 #ifndef QT_NO_NETWORKPROXY
-    MO_ADD_PROPERTY_RO(QTcpServer, QNetworkProxy, proxy);
+    MO_ADD_PROPERTY_RO(QTcpServer, proxy);
 #endif
 
     MO_ADD_METAOBJECT1(QTcpSocket, QAbstractSocket);
 
 #ifndef QT_NO_SSL
     MO_ADD_METAOBJECT0(QSslCertificate);
-    MO_ADD_PROPERTY_RO(QSslCertificate, QDateTime, effectiveDate);
-    MO_ADD_PROPERTY_RO(QSslCertificate, QDateTime, expiryDate);
-    MO_ADD_PROPERTY_RO(QSslCertificate, QList<QSslCertificateExtension>, extensions);
-    MO_ADD_PROPERTY_RO(QSslCertificate, bool, isBlacklisted);
-    MO_ADD_PROPERTY_RO(QSslCertificate, bool, isNull);
+    MO_ADD_PROPERTY_RO(QSslCertificate, effectiveDate);
+    MO_ADD_PROPERTY_RO(QSslCertificate, expiryDate);
+    MO_ADD_PROPERTY_RO(QSslCertificate, extensions);
+    MO_ADD_PROPERTY_RO(QSslCertificate, isBlacklisted);
+    MO_ADD_PROPERTY_RO(QSslCertificate, isNull);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    MO_ADD_PROPERTY_RO(QSslCertificate, bool, isSelfSigned);
+    MO_ADD_PROPERTY_RO(QSslCertificate, isSelfSigned);
 #endif
-    MO_ADD_PROPERTY_RO(QSslCertificate, QList<QByteArray>, issuerInfoAttributes);
-    MO_ADD_PROPERTY_RO(QSslCertificate, QSslKey, publicKey);
-    MO_ADD_PROPERTY_RO(QSslCertificate, QByteArray, serialNumber);
-    MO_ADD_PROPERTY_RO(QSslCertificate, QList<QByteArray>, subjectInfoAttributes);
-    MO_ADD_PROPERTY_RO(QSslCertificate, QByteArray, version);
+    MO_ADD_PROPERTY_RO(QSslCertificate, issuerInfoAttributes);
+    MO_ADD_PROPERTY_RO(QSslCertificate, publicKey);
+    MO_ADD_PROPERTY_RO(QSslCertificate, serialNumber);
+    MO_ADD_PROPERTY_RO(QSslCertificate, subjectInfoAttributes);
+    MO_ADD_PROPERTY_RO(QSslCertificate, version);
 
     MO_ADD_METAOBJECT0(QSslCertificateExtension);
-    MO_ADD_PROPERTY_RO(QSslCertificateExtension, bool, isCritical);
-    MO_ADD_PROPERTY_RO(QSslCertificateExtension, bool, isSupported);
-    MO_ADD_PROPERTY_RO(QSslCertificateExtension, QString, name);
-    MO_ADD_PROPERTY_RO(QSslCertificateExtension, QString, oid);
-    MO_ADD_PROPERTY_RO(QSslCertificateExtension, QVariant, value);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, isCritical);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, isSupported);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, name);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, oid);
+    MO_ADD_PROPERTY_RO(QSslCertificateExtension, value);
 
     MO_ADD_METAOBJECT0(QSslCipher);
-    MO_ADD_PROPERTY_RO(QSslCipher, QString, authenticationMethod);
-    MO_ADD_PROPERTY_RO(QSslCipher, QString, encryptionMethod);
-    MO_ADD_PROPERTY_RO(QSslCipher, bool, isNull);
-    MO_ADD_PROPERTY_RO(QSslCipher, QString, keyExchangeMethod);
-    MO_ADD_PROPERTY_RO(QSslCipher, QString, name);
-    MO_ADD_PROPERTY_RO(QSslCipher, QSsl::SslProtocol, protocol);
-    MO_ADD_PROPERTY_RO(QSslCipher, QString, protocolString);
-    MO_ADD_PROPERTY_RO(QSslCipher, int, usedBits);
+    MO_ADD_PROPERTY_RO(QSslCipher, authenticationMethod);
+    MO_ADD_PROPERTY_RO(QSslCipher, encryptionMethod);
+    MO_ADD_PROPERTY_RO(QSslCipher, isNull);
+    MO_ADD_PROPERTY_RO(QSslCipher, keyExchangeMethod);
+    MO_ADD_PROPERTY_RO(QSslCipher, name);
+    MO_ADD_PROPERTY_RO(QSslCipher, protocol);
+    MO_ADD_PROPERTY_RO(QSslCipher, protocolString);
+    MO_ADD_PROPERTY_RO(QSslCipher, usedBits);
 
     MO_ADD_METAOBJECT0(QSslConfiguration);
-    MO_ADD_PROPERTY(QSslConfiguration, QList<QByteArray>, allowedNextProtocols,
-                    setAllowedNextProtocols);
-    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, caCertificates,
-                       setCaCertificates);
-    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCipher>, ciphers, setCiphers);
+    MO_ADD_PROPERTY(QSslConfiguration, allowedNextProtocols, setAllowedNextProtocols);
+    MO_ADD_PROPERTY(QSslConfiguration, caCertificates, setCaCertificates);
+    MO_ADD_PROPERTY(QSslConfiguration, ciphers, setCiphers);
     // TODO 5.5 ellipticCurves
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslKey, ephemeralServerKey);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, ephemeralServerKey);
 #endif
-    MO_ADD_PROPERTY_RO(QSslConfiguration, bool, isNull);
-    MO_ADD_PROPERTY_CR(QSslConfiguration, QSslCertificate, localCertificate, setLocalCertificate);
-    MO_ADD_PROPERTY_CR(QSslConfiguration, QList<QSslCertificate>, localCertificateChain,
-                       setLocalCertificateChain);
-    MO_ADD_PROPERTY_RO(QSslConfiguration, QByteArray, nextNegotiatedProtocol);
-    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslConfiguration::NextProtocolNegotiationStatus,
-                       nextProtocolNegotiationStatus);                                                                      // TODO enum lookup table
-    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslCertificate, peerCertificate);
-    MO_ADD_PROPERTY_RO(QSslConfiguration, QList<QSslCertificate>, peerCertificateChain);
-    MO_ADD_PROPERTY(QSslConfiguration, int, peerVerifyDepth, setPeerVerifyDepth);
-    MO_ADD_PROPERTY(QSslConfiguration, QSslSocket::PeerVerifyMode, peerVerifyMode,
-                    setPeerVerifyMode);
-    MO_ADD_PROPERTY_CR(QSslConfiguration, QSslKey, privateKey, setPrivateKey);
-    MO_ADD_PROPERTY(QSslConfiguration, QSsl::SslProtocol, protocol, setProtocol);
-    MO_ADD_PROPERTY_RO(QSslConfiguration, QSslCipher, sessionCipher);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, isNull);
+    MO_ADD_PROPERTY(QSslConfiguration, localCertificate, setLocalCertificate);
+    MO_ADD_PROPERTY(QSslConfiguration, localCertificateChain, setLocalCertificateChain);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, nextNegotiatedProtocol);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, nextProtocolNegotiationStatus); // TODO enum lookup table
+    MO_ADD_PROPERTY_RO(QSslConfiguration, peerCertificate);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, peerCertificateChain);
+    MO_ADD_PROPERTY(QSslConfiguration, peerVerifyDepth, setPeerVerifyDepth);
+    MO_ADD_PROPERTY(QSslConfiguration, peerVerifyMode, setPeerVerifyMode);
+    MO_ADD_PROPERTY(QSslConfiguration, privateKey, setPrivateKey);
+    MO_ADD_PROPERTY(QSslConfiguration, protocol, setProtocol);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, sessionCipher);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    MO_ADD_PROPERTY_RO(QSslConfiguration, QSsl::SslProtocol, sessionProtocol);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, sessionProtocol);
 #endif
-    MO_ADD_PROPERTY_CR(QSslConfiguration, QByteArray, sessionTicket, setSessionTicket);
-    MO_ADD_PROPERTY_RO(QSslConfiguration, int, sessionTicketLifeTimeHint);
+    MO_ADD_PROPERTY(QSslConfiguration, sessionTicket, setSessionTicket);
+    MO_ADD_PROPERTY_RO(QSslConfiguration, sessionTicketLifeTimeHint);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-    MO_ADD_PROPERTY_ST(QSslConfiguration, QList<QSslCertificate>, systemCaCertificates);
+    MO_ADD_PROPERTY_ST(QSslConfiguration, systemCaCertificates);
 #endif
 
     MO_ADD_METAOBJECT0(QSslKey);
-    MO_ADD_PROPERTY_RO(QSslKey, QSsl::KeyAlgorithm, algorithm);
-    MO_ADD_PROPERTY_RO(QSslKey, bool, isNull);
-    MO_ADD_PROPERTY_RO(QSslKey, int, length);
-    MO_ADD_PROPERTY_RO(QSslKey, QSsl::KeyType, type);
+    MO_ADD_PROPERTY_RO(QSslKey, algorithm);
+    MO_ADD_PROPERTY_RO(QSslKey, isNull);
+    MO_ADD_PROPERTY_RO(QSslKey, length);
+    MO_ADD_PROPERTY_RO(QSslKey, type);
 
     MO_ADD_METAOBJECT1(QSslSocket, QTcpSocket);
-    MO_ADD_PROPERTY_RO(QSslSocket, bool, isEncrypted);
-    MO_ADD_PROPERTY_RO(QSslSocket, QSslCertificate, localCertificate);
-    MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslCertificate>, localCertificateChain);
-    MO_ADD_PROPERTY_RO(QSslSocket, QSslSocket::SslMode, mode);
-    MO_ADD_PROPERTY_RO(QSslSocket, QSslCertificate, peerCertificate);
-    MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslCertificate>, peerCertificateChain);
-    MO_ADD_PROPERTY(QSslSocket, int, peerVerifyDepth, setPeerVerifyDepth);
-    MO_ADD_PROPERTY(QSslSocket, QSslSocket::PeerVerifyMode, peerVerifyMode, setPeerVerifyMode);
-    MO_ADD_PROPERTY_CR(QSslSocket, QString, peerVerifyName, setPeerVerifyName);
-    MO_ADD_PROPERTY_CR(QSslSocket, QSslKey, privateKey, setPrivateKey);
-    MO_ADD_PROPERTY_RO(QSslSocket, QSsl::SslProtocol, protocol);
+    MO_ADD_PROPERTY_RO(QSslSocket, isEncrypted);
+    MO_ADD_PROPERTY_RO(QSslSocket, localCertificate);
+    MO_ADD_PROPERTY_RO(QSslSocket, localCertificateChain);
+    MO_ADD_PROPERTY_RO(QSslSocket, mode);
+    MO_ADD_PROPERTY_RO(QSslSocket, peerCertificate);
+    MO_ADD_PROPERTY_RO(QSslSocket, peerCertificateChain);
+    MO_ADD_PROPERTY(QSslSocket, peerVerifyDepth, setPeerVerifyDepth);
+    MO_ADD_PROPERTY(QSslSocket, peerVerifyMode, setPeerVerifyMode);
+    MO_ADD_PROPERTY(QSslSocket, peerVerifyName, setPeerVerifyName);
+    MO_ADD_PROPERTY(QSslSocket, privateKey, setPrivateKey);
+    MO_ADD_PROPERTY_RO(QSslSocket, protocol);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    MO_ADD_PROPERTY_RO(QSslSocket, QSsl::SslProtocol, sessionProtocol);
+    MO_ADD_PROPERTY_RO(QSslSocket, sessionProtocol);
 #endif
-    MO_ADD_PROPERTY_RO(QSslSocket, QSslCipher, sessionCipher);
-    MO_ADD_PROPERTY_CR(QSslSocket, QSslConfiguration, sslConfiguration, setSslConfiguration);
-    MO_ADD_PROPERTY_RO(QSslSocket, QList<QSslError>, sslErrors);
+    MO_ADD_PROPERTY_RO(QSslSocket, sessionCipher);
+    MO_ADD_PROPERTY(QSslSocket, sslConfiguration, setSslConfiguration);
+    MO_ADD_PROPERTY_RO(QSslSocket, sslErrors);
 #endif // QT_NO_SSL
 
     MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
-    MO_ADD_PROPERTY_RO(QSocketNotifier, qintptr, socket);
-    MO_ADD_PROPERTY_RO(QSocketNotifier, QSocketNotifier::Type, type);
-    MO_ADD_PROPERTY(QSocketNotifier, bool, isEnabled, setEnabled);
+    MO_ADD_PROPERTY_RO(QSocketNotifier, socket);
+    MO_ADD_PROPERTY_RO(QSocketNotifier, type);
+    MO_ADD_PROPERTY(QSocketNotifier, isEnabled, setEnabled);
 }
 
 #define E(x) { QAbstractSocket:: x, #x }

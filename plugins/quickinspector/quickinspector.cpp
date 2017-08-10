@@ -815,146 +815,142 @@ void QuickInspector::registerMetaTypes()
 {
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQuickWindow, QWindow);
-    MO_ADD_PROPERTY(QQuickWindow, bool, clearBeforeRendering, setClearBeforeRendering);
+    MO_ADD_PROPERTY(QQuickWindow, clearBeforeRendering, setClearBeforeRendering);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    MO_ADD_PROPERTY_RO(QQuickWindow, qreal, effectiveDevicePixelRatio);
+    MO_ADD_PROPERTY_RO(QQuickWindow, effectiveDevicePixelRatio);
 #endif
-    MO_ADD_PROPERTY(QQuickWindow, bool, isPersistentOpenGLContext, setPersistentOpenGLContext);
-    MO_ADD_PROPERTY(QQuickWindow, bool, isPersistentSceneGraph, setPersistentSceneGraph);
-    MO_ADD_PROPERTY_RO(QQuickWindow, QQuickItem *, mouseGrabberItem);
-    MO_ADD_PROPERTY_RO(QQuickWindow, QOpenGLContext *, openglContext);
-    MO_ADD_PROPERTY_RO(QQuickWindow, uint, renderTargetId);
+    MO_ADD_PROPERTY(QQuickWindow, isPersistentOpenGLContext, setPersistentOpenGLContext);
+    MO_ADD_PROPERTY(QQuickWindow, isPersistentSceneGraph, setPersistentSceneGraph);
+    MO_ADD_PROPERTY_RO(QQuickWindow, mouseGrabberItem);
+    MO_ADD_PROPERTY_RO(QQuickWindow, openglContext);
+    MO_ADD_PROPERTY_RO(QQuickWindow, renderTargetId);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    MO_ADD_PROPERTY_RO(QQuickWindow, QSGRendererInterface*, rendererInterface);
+    MO_ADD_PROPERTY_RO(QQuickWindow, rendererInterface);
 
     MO_ADD_METAOBJECT0(QSGRendererInterface);
-    MO_ADD_PROPERTY_RO(QSGRendererInterface, QSGRendererInterface::GraphicsApi, graphicsApi);
-    MO_ADD_PROPERTY_RO(QSGRendererInterface, QSGRendererInterface::ShaderCompilationTypes, shaderCompilationType);
-    MO_ADD_PROPERTY_RO(QSGRendererInterface, QSGRendererInterface::ShaderSourceTypes, shaderSourceType);
-    MO_ADD_PROPERTY_RO(QSGRendererInterface, QSGRendererInterface::ShaderType, shaderType);
+    MO_ADD_PROPERTY_RO(QSGRendererInterface, graphicsApi);
+    MO_ADD_PROPERTY_RO(QSGRendererInterface, shaderCompilationType);
+    MO_ADD_PROPERTY_RO(QSGRendererInterface, shaderSourceType);
+    MO_ADD_PROPERTY_RO(QSGRendererInterface, shaderType);
 #endif
 
     MO_ADD_METAOBJECT1(QQuickView, QQuickWindow);
-    MO_ADD_PROPERTY_RO(QQuickView, QQmlEngine *, engine);
-    MO_ADD_PROPERTY_RO(QQuickView, QList<QQmlError>, errors);
-    MO_ADD_PROPERTY_RO(QQuickView, QSize, initialSize);
-    MO_ADD_PROPERTY_RO(QQuickView, QQmlContext *, rootContext);
-    MO_ADD_PROPERTY_RO(QQuickView, QQuickItem *, rootObject);
+    MO_ADD_PROPERTY_RO(QQuickView, engine);
+    MO_ADD_PROPERTY_RO(QQuickView, errors);
+    MO_ADD_PROPERTY_RO(QQuickView, initialSize);
+    MO_ADD_PROPERTY_RO(QQuickView, rootContext);
+    MO_ADD_PROPERTY_RO(QQuickView, rootObject);
 
     MO_ADD_METAOBJECT1(QQuickItem, QObject);
-    MO_ADD_PROPERTY(QQuickItem, bool, acceptHoverEvents, setAcceptHoverEvents);
-    MO_ADD_PROPERTY(QQuickItem, Qt::MouseButtons, acceptedMouseButtons, setAcceptedMouseButtons);
-    MO_ADD_PROPERTY_CR(QQuickItem, QCursor, cursor, setCursor);
-    MO_ADD_PROPERTY(QQuickItem, bool, filtersChildMouseEvents, setFiltersChildMouseEvents);
-    MO_ADD_PROPERTY(QQuickItem, QQuickItem::Flags, flags, setFlags);
-    MO_ADD_PROPERTY_RO(QQuickItem, bool, isFocusScope);
-    MO_ADD_PROPERTY_RO(QQuickItem, bool, isTextureProvider);
-    MO_ADD_PROPERTY(QQuickItem, bool, keepMouseGrab, setKeepMouseGrab);
-    MO_ADD_PROPERTY(QQuickItem, bool, keepTouchGrab, setKeepTouchGrab);
-    // MO_ADD_PROPERTY_RO(QQuickItem, QQuickItem*, nextItemInFocusChain); // FIXME fails on the default argument
-    MO_ADD_PROPERTY_RO(QQuickItem, QQuickItem *, scopedFocusItem);
-    MO_ADD_PROPERTY_RO(QQuickItem, QQuickWindow *, window);
+    MO_ADD_PROPERTY(QQuickItem, acceptHoverEvents, setAcceptHoverEvents);
+    MO_ADD_PROPERTY(QQuickItem, acceptedMouseButtons, setAcceptedMouseButtons);
+    MO_ADD_PROPERTY(QQuickItem, cursor, setCursor);
+    MO_ADD_PROPERTY(QQuickItem, filtersChildMouseEvents, setFiltersChildMouseEvents);
+    MO_ADD_PROPERTY(QQuickItem, flags, setFlags);
+    MO_ADD_PROPERTY_RO(QQuickItem, isFocusScope);
+    MO_ADD_PROPERTY_RO(QQuickItem, isTextureProvider);
+    MO_ADD_PROPERTY(QQuickItem, keepMouseGrab, setKeepMouseGrab);
+    MO_ADD_PROPERTY(QQuickItem, keepTouchGrab, setKeepTouchGrab);
+    // MO_ADD_PROPERTY_RO(QQuickItem, nextItemInFocusChain); // FIXME fails on the default argument
+    MO_ADD_PROPERTY_RO(QQuickItem, scopedFocusItem);
+    MO_ADD_PROPERTY_RO(QQuickItem, window);
 
     MO_ADD_METAOBJECT1(QQuickPaintedItem, QQuickItem);
-    MO_ADD_PROPERTY_RO(QQuickPaintedItem, QRectF, contentsBoundingRect);
-    MO_ADD_PROPERTY(QQuickPaintedItem, bool, mipmap, setMipmap);
-    MO_ADD_PROPERTY(QQuickPaintedItem, bool, opaquePainting, setOpaquePainting);
-    MO_ADD_PROPERTY(QQuickPaintedItem, QQuickPaintedItem::PerformanceHints, performanceHints,
-                    setPerformanceHints);
+    MO_ADD_PROPERTY_RO(QQuickPaintedItem, contentsBoundingRect);
+    MO_ADD_PROPERTY(QQuickPaintedItem, mipmap, setMipmap);
+    MO_ADD_PROPERTY(QQuickPaintedItem, opaquePainting, setOpaquePainting);
+    MO_ADD_PROPERTY(QQuickPaintedItem, performanceHints, setPerformanceHints);
 
     MO_ADD_METAOBJECT1(QSGTexture, QObject);
-    MO_ADD_PROPERTY(QSGTexture, QSGTexture::Filtering, filtering, setFiltering);
-    MO_ADD_PROPERTY_RO(QSGTexture, bool, hasAlphaChannel);
-    MO_ADD_PROPERTY_RO(QSGTexture, bool, hasMipmaps);
-    MO_ADD_PROPERTY(QSGTexture, QSGTexture::WrapMode, horizontalWrapMode, setHorizontalWrapMode);
-    MO_ADD_PROPERTY_RO(QSGTexture, bool, isAtlasTexture);
-    MO_ADD_PROPERTY(QSGTexture, QSGTexture::Filtering, mipmapFiltering, setMipmapFiltering);
-    MO_ADD_PROPERTY_RO(QSGTexture, QRectF, normalizedTextureSubRect);
-    MO_ADD_PROPERTY_RO(QSGTexture, int, textureId);
-    MO_ADD_PROPERTY_RO(QSGTexture, QSize, textureSize);
-    MO_ADD_PROPERTY(QSGTexture, QSGTexture::WrapMode, verticalWrapMode, setVerticalWrapMode);
+    MO_ADD_PROPERTY(QSGTexture, filtering, setFiltering);
+    MO_ADD_PROPERTY_RO(QSGTexture, hasAlphaChannel);
+    MO_ADD_PROPERTY_RO(QSGTexture, hasMipmaps);
+    MO_ADD_PROPERTY(QSGTexture, horizontalWrapMode, setHorizontalWrapMode);
+    MO_ADD_PROPERTY_RO(QSGTexture, isAtlasTexture);
+    MO_ADD_PROPERTY(QSGTexture, mipmapFiltering, setMipmapFiltering);
+    MO_ADD_PROPERTY_RO(QSGTexture, normalizedTextureSubRect);
+    MO_ADD_PROPERTY_RO(QSGTexture, textureId);
+    MO_ADD_PROPERTY_RO(QSGTexture, textureSize);
+    MO_ADD_PROPERTY(QSGTexture, verticalWrapMode, setVerticalWrapMode);
 
     MO_ADD_METAOBJECT0(QSGNode);
-    MO_ADD_PROPERTY_RO(QSGNode, QSGNode *, parent);
-    MO_ADD_PROPERTY_RO(QSGNode, int, childCount);
-    MO_ADD_PROPERTY_RO(QSGNode, QSGNode::Flags, flags);
-    MO_ADD_PROPERTY_RO(QSGNode, bool, isSubtreeBlocked);
-    MO_ADD_PROPERTY(QSGNode, QSGNode::DirtyState, dirtyState, markDirty);
+    MO_ADD_PROPERTY_RO(QSGNode, parent);
+    MO_ADD_PROPERTY_RO(QSGNode, childCount);
+    MO_ADD_PROPERTY_RO(QSGNode, flags);
+    MO_ADD_PROPERTY_RO(QSGNode, isSubtreeBlocked);
+    MO_ADD_PROPERTY(QSGNode, dirtyState, markDirty);
 
     MO_ADD_METAOBJECT1(QSGBasicGeometryNode, QSGNode);
-    MO_ADD_PROPERTY_RO(QSGBasicGeometryNode, const QSGGeometry *, geometry);
-    MO_ADD_PROPERTY_RO(QSGBasicGeometryNode, const QMatrix4x4 *, matrix);
-    MO_ADD_PROPERTY_RO(QSGBasicGeometryNode, const QSGClipNode *, clipList);
+    MO_ADD_PROPERTY_O1(QSGBasicGeometryNode, geometry);
+    MO_ADD_PROPERTY_RO(QSGBasicGeometryNode, matrix);
+    MO_ADD_PROPERTY_RO(QSGBasicGeometryNode, clipList);
 
     MO_ADD_METAOBJECT1(QSGGeometryNode, QSGBasicGeometryNode);
-    MO_ADD_PROPERTY(QSGGeometryNode, QSGMaterial *, material, setMaterial);
-    MO_ADD_PROPERTY(QSGGeometryNode, QSGMaterial *, opaqueMaterial, setOpaqueMaterial);
-    MO_ADD_PROPERTY_RO(QSGGeometryNode, QSGMaterial *, activeMaterial);
-    MO_ADD_PROPERTY(QSGGeometryNode, int, renderOrder, setRenderOrder);
-    MO_ADD_PROPERTY(QSGGeometryNode, qreal, inheritedOpacity, setInheritedOpacity);
+    MO_ADD_PROPERTY(QSGGeometryNode, material, setMaterial);
+    MO_ADD_PROPERTY(QSGGeometryNode, opaqueMaterial, setOpaqueMaterial);
+    MO_ADD_PROPERTY_RO(QSGGeometryNode, activeMaterial);
+    MO_ADD_PROPERTY(QSGGeometryNode, renderOrder, setRenderOrder);
+    MO_ADD_PROPERTY(QSGGeometryNode, inheritedOpacity, setInheritedOpacity);
 
     MO_ADD_METAOBJECT1(QSGClipNode, QSGBasicGeometryNode);
-    MO_ADD_PROPERTY(QSGClipNode, bool, isRectangular, setIsRectangular);
-    MO_ADD_PROPERTY_CR(QSGClipNode, QRectF, clipRect, setClipRect);
-    MO_ADD_PROPERTY_RO(QSGClipNode, const QMatrix4x4 *, matrix);
-    MO_ADD_PROPERTY_RO(QSGClipNode, const QSGClipNode *, clipList);
+    MO_ADD_PROPERTY(QSGClipNode, isRectangular, setIsRectangular);
+    MO_ADD_PROPERTY(QSGClipNode, clipRect, setClipRect);
+    MO_ADD_PROPERTY_RO(QSGClipNode, matrix);
+    MO_ADD_PROPERTY_RO(QSGClipNode, clipList);
 
     MO_ADD_METAOBJECT1(QSGTransformNode, QSGNode);
-    MO_ADD_PROPERTY(QSGTransformNode, const QMatrix4x4 &, matrix, setMatrix);
-    MO_ADD_PROPERTY(QSGTransformNode, const QMatrix4x4 &, combinedMatrix, setCombinedMatrix);
+    MO_ADD_PROPERTY(QSGTransformNode, matrix, setMatrix);
+    MO_ADD_PROPERTY(QSGTransformNode, combinedMatrix, setCombinedMatrix);
 
     MO_ADD_METAOBJECT1(QSGRootNode, QSGNode);
 
     MO_ADD_METAOBJECT1(QSGOpacityNode, QSGNode);
-    MO_ADD_PROPERTY(QSGOpacityNode, qreal, opacity, setOpacity);
-    MO_ADD_PROPERTY(QSGOpacityNode, qreal, combinedOpacity, setCombinedOpacity);
+    MO_ADD_PROPERTY(QSGOpacityNode, opacity, setOpacity);
+    MO_ADD_PROPERTY(QSGOpacityNode, combinedOpacity, setCombinedOpacity);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     MO_ADD_METAOBJECT1(QSGRenderNode, QSGNode);
-    MO_ADD_PROPERTY_RO(QSGRenderNode, QSGRenderNode::StateFlags, changedStates);
-    MO_ADD_PROPERTY_RO(QSGRenderNode, QSGRenderNode::RenderingFlags, flags);
-    MO_ADD_PROPERTY_RO(QSGRenderNode, QRectF, rect);
-    MO_ADD_PROPERTY_RO(QSGRenderNode, qreal, inheritedOpacity);
-    MO_ADD_PROPERTY_RO(QSGRenderNode, const QMatrix4x4 *, matrix);
-    MO_ADD_PROPERTY_RO(QSGRenderNode, const QSGClipNode *, clipList);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, changedStates);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, flags);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, rect);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, inheritedOpacity);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, matrix);
+    MO_ADD_PROPERTY_RO(QSGRenderNode, clipList);
 #endif
 
     MO_ADD_METAOBJECT0(QSGMaterial);
-    MO_ADD_PROPERTY_RO(QSGMaterial, QSGMaterial::Flags, flags);
+    MO_ADD_PROPERTY_RO(QSGMaterial, flags);
 
     MO_ADD_METAOBJECT1(QSGFlatColorMaterial, QSGMaterial);
-    MO_ADD_PROPERTY(QSGFlatColorMaterial, const QColor &, color, setColor);
+    MO_ADD_PROPERTY(QSGFlatColorMaterial, color, setColor);
 
     MO_ADD_METAOBJECT1(QSGOpaqueTextureMaterial, QSGMaterial);
-    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, QSGTexture::Filtering, filtering, setFiltering);
-    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, QSGTexture::WrapMode, horizontalWrapMode,
-                    setHorizontalWrapMode);
-    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, QSGTexture::Filtering, mipmapFiltering,
-                    setMipmapFiltering);
-    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, QSGTexture *, texture, setTexture);
-    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, QSGTexture::WrapMode, verticalWrapMode,
-                    setVerticalWrapMode);
+    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, filtering, setFiltering);
+    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, horizontalWrapMode, setHorizontalWrapMode);
+    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, mipmapFiltering, setMipmapFiltering);
+    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, texture, setTexture);
+    MO_ADD_PROPERTY(QSGOpaqueTextureMaterial, verticalWrapMode, setVerticalWrapMode);
     MO_ADD_METAOBJECT1(QSGTextureMaterial, QSGOpaqueTextureMaterial);
 
     MO_ADD_METAOBJECT1(QSGVertexColorMaterial, QSGMaterial);
 
     MO_ADD_METAOBJECT1(QSGDistanceFieldTextMaterial, QSGMaterial);
-    MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, const QVector4D&, color);
-    MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, qreal, fontScale);
-    MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, QSize, textureSize);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, color);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, fontScale);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, textureSize);
 
     MO_ADD_METAOBJECT1(QSGDistanceFieldStyledTextMaterial, QSGDistanceFieldTextMaterial);
-    MO_ADD_PROPERTY_RO(QSGDistanceFieldStyledTextMaterial, const QVector4D&, styleColor);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldStyledTextMaterial, styleColor);
 
     MO_ADD_METAOBJECT1(QSGDistanceFieldShiftedStyleTextMaterial, QSGDistanceFieldStyledTextMaterial);
-    MO_ADD_PROPERTY_RO(QSGDistanceFieldShiftedStyleTextMaterial, const QPointF&, shift);
+    MO_ADD_PROPERTY_RO(QSGDistanceFieldShiftedStyleTextMaterial, shift);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     MO_ADD_METAOBJECT1(QQuickOpenGLShaderEffectMaterial, QSGMaterial);
-    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, QVector<QByteArray>, attributes);
-    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, QQuickShaderEffect::CullMode, cullMode);
-    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, bool, geometryUsesTextureSubRect);
-    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, QVector<QSGTextureProvider*>, textureProviders);
+    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, attributes);
+    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, cullMode);
+    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, geometryUsesTextureSubRect);
+    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, textureProviders);
 #endif
 }
 

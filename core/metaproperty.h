@@ -81,6 +81,11 @@ template<typename T>
 struct strip_const_ref<const T &> {
     typedef T type;
 };
+
+template<typename T>
+struct add_const_ref {
+    typedef const typename strip_const_ref<T>::type & type;
+};
 }
 ///@endcond
 
@@ -134,7 +139,7 @@ private:
 };
 
 /** @brief Template-ed implementation of MetaProperty for static properties. */
-template<typename Class, typename GetterReturnType>
+template<typename GetterReturnType>
 class MetaStaticPropertyImpl : public MetaProperty
 {
 private:
@@ -200,5 +205,42 @@ public:
 private:
     ValueType Class::*m_member;
 };
+
+/*! Template argument deduction factory methods for the MetaXPropertyImpl classes. */
+namespace MetaPropertyFactory
+{
+    // explicitly handle value and const ref setters, to deal with overloaded setters for arbitrary types
+    template <typename Class, typename GetterReturnType>
+    inline MetaProperty* makeProperty(const char *name, GetterReturnType(Class::*getter)() const, void(Class::*setter)(typename detail::strip_const_ref<GetterReturnType>::type))
+    {
+        return new MetaPropertyImpl<Class, GetterReturnType, typename detail::strip_const_ref<GetterReturnType>::type>(name, getter, setter);
+    }
+
+    template <typename Class, typename GetterReturnType>
+    inline MetaProperty* makeProperty(const char *name, GetterReturnType(Class::*getter)() const, void(Class::*setter)(typename detail::add_const_ref<GetterReturnType>::type))
+    {
+        return new MetaPropertyImpl<Class, GetterReturnType, typename detail::add_const_ref<GetterReturnType>::type>(name, getter, setter);
+    }
+
+    // can't merge with the above function, since MSVC2010 can't do default template arguments for template functions...
+    template <typename Class, typename GetterReturnType>
+    inline MetaProperty* makeProperty(const char *name, GetterReturnType(Class::*getter)() const)
+    {
+        return new MetaPropertyImpl<Class, GetterReturnType>(name, getter, nullptr);
+    }
+
+    template <typename GetterReturnType>
+    inline MetaProperty* makeProperty(const char *name, GetterReturnType(*getter)())
+    {
+        return new MetaStaticPropertyImpl<GetterReturnType>(name, getter);
+    }
+
+    template <typename Class, typename ValueType>
+    inline MetaProperty* makeProperty(const char *name, ValueType Class::*member)
+    {
+        return new MetaMemberPropertyImpl<Class, ValueType>(name, member);
+    }
+}
+
 }
 #endif

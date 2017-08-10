@@ -247,23 +247,19 @@ void Qt3DInspector::registerCoreMetaTypes()
 {
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(Qt3DCore::QNode, QObject);
-    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, bool, notificationsBlocked);
+    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, notificationsBlocked);
 #if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, Qt3DCore::QNodeList, childrenNodes);
+    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, childrenNodes);
 #else
-    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, Qt3DCore::QNodeVector, childNodes);
+    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, childNodes);
 #endif
 
     MO_ADD_METAOBJECT1(Qt3DCore::QComponent, Qt3DCore::QNode);
-    MO_ADD_PROPERTY_RO(Qt3DCore::QComponent, QVector<Qt3DCore::QEntity *>, entities);
+    MO_ADD_PROPERTY_RO(Qt3DCore::QComponent, entities);
 
     MO_ADD_METAOBJECT1(Qt3DCore::QEntity, Qt3DCore::QNode);
-#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QComponentList, components);
-#else
-    MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QComponentVector, components);
-#endif
-    MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, Qt3DCore::QEntity *, parentEntity);
+    MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, components);
+    MO_ADD_PROPERTY_RO(Qt3DCore::QEntity, parentEntity);
 }
 
 void Qt3DInspector::registerInputMetaTypes()

@@ -165,5 +165,5 @@ void TranslatorInspector::registerMetaTypes()
 {
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QTranslator, QObject);
-    MO_ADD_PROPERTY_RO(QTranslator, bool, isEmpty);
+    MO_ADD_PROPERTY_RO(QTranslator, isEmpty);
 }

@@ -119,19 +119,19 @@ void ActionInspector::registerMetaTypes()
 {
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QAction, QObject);
-    MO_ADD_PROPERTY_RO(QAction, QActionGroup *, actionGroup);
-    MO_ADD_PROPERTY_CR(QAction, QVariant, data, setData);
-    MO_ADD_PROPERTY(QAction, bool, isSeparator, setSeparator);
-    MO_ADD_PROPERTY_RO(QAction, QMenu *, menu);
-    MO_ADD_PROPERTY_RO(QAction, QWidget *, parentWidget);
+    MO_ADD_PROPERTY_RO(QAction, actionGroup);
+    MO_ADD_PROPERTY(QAction, data, setData);
+    MO_ADD_PROPERTY(QAction, isSeparator, setSeparator);
+    MO_ADD_PROPERTY_RO(QAction, menu);
+    MO_ADD_PROPERTY_RO(QAction, parentWidget);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    MO_ADD_PROPERTY_RO(QAction, QList<QGraphicsWidget *>, associatedGraphicsWidgets);
-    MO_ADD_PROPERTY_RO(QAction, QList<QWidget *>, associatedWidgets);
+    MO_ADD_PROPERTY_RO(QAction, associatedGraphicsWidgets);
+    MO_ADD_PROPERTY_RO(QAction, associatedWidgets);
 #endif
 
     MO_ADD_METAOBJECT1(QActionGroup, QObject);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    MO_ADD_PROPERTY_RO(QActionGroup, QList<QAction *>, actions);
+    MO_ADD_PROPERTY_RO(QActionGroup, actions);
 #endif
 }
 

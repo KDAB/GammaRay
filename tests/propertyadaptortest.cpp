@@ -96,8 +96,8 @@ private slots:
     {
         MetaObject *mo;
         MO_ADD_METAOBJECT0(QPen);
-        MO_ADD_PROPERTY_CR(QPen, QColor, color, setColor);
-        MO_ADD_PROPERTY(QPen, int, width, setWidth);
+        MO_ADD_PROPERTY(QPen, color, setColor);
+        MO_ADD_PROPERTY(QPen, width, setWidth);
     }
 
     void testQtGadget()

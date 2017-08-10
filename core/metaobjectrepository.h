@@ -127,37 +127,37 @@ private:
     GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);
 
 /** Register a read/write property for class @p Class. */
-#define MO_ADD_PROPERTY(Class, Type, Getter, Setter) \
-    mo->addProperty(new GammaRay::MetaPropertyImpl<Class, Type>( \
-                        #Getter, \
-                        &Class::Getter, \
-                        static_cast<void (Class::*)(Type)>(&Class::Setter)) \
-                    );
-
-/** Register a read/write property for class @p Class with a type that is passed as const reference. */
-#define MO_ADD_PROPERTY_CR(Class, Type, Getter, Setter) \
-    mo->addProperty(new GammaRay::MetaPropertyImpl<Class, Type, const Type &>( \
-                        #Getter, \
-                        &Class::Getter, \
-                        static_cast<void (Class::*)(const Type &)>(&Class::Setter)) \
-                    );
+#define MO_ADD_PROPERTY(Class, Getter, Setter) \
+    mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty(#Getter, &Class::Getter, &Class::Setter));
 
 /** Register a read-only property for class @p Class. */
-#define MO_ADD_PROPERTY_RO(Class, Type, Getter) \
-    mo->addProperty(new GammaRay::MetaPropertyImpl<Class, Type>( \
-                        #Getter, \
-                        &Class::Getter));
+#define MO_ADD_PROPERTY_RO(Class, Getter) \
+    mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty(#Getter, &Class::Getter));
+
+#if !defined(Q_CC_MSVC) || _MSC_VER >= 1800
+/** Register a read/write property for class @p Class.
+ *  Use this for overloaded getters or setters that would confuse older MSVC versions.
+ */
+#define MO_ADD_PROPERTY_O2(Class, Getter, Setter) \
+    mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty(#Getter, &Class::Getter, &Class::Setter));
+
+/** Register a read-only property for class @p Class.
+ *  Use this for overloaded getters or setters that would confuse older MSVC versions.
+ */
+#define MO_ADD_PROPERTY_O1(Class, Getter) \
+    mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty(#Getter, &Class::Getter));
+
+#else
+#define MO_ADD_PROPERTY_O2(Class, Getter, Setter)
+#define MO_ADD_PROPERTY_O1(Class, Getter)
+#endif
 
 /** Register a static property for class @p Class. */
-#define MO_ADD_PROPERTY_ST(Class, Type, Getter) \
-    mo->addProperty(new GammaRay::MetaStaticPropertyImpl<Class, Type>( \
-                        #Getter, \
-                        &Class::Getter));
+#define MO_ADD_PROPERTY_ST(Class, Getter) \
+    mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty(#Getter, &Class::Getter));
 
 /** Register a member property for class @p Class. */
-#define MO_ADD_PROPERTY_MEM(Class, Type, Member) \
-    mo->addProperty(new GammaRay::MetaMemberPropertyImpl<Class, Type>( \
-                        #Member, \
-                        &Class::Member));
+#define MO_ADD_PROPERTY_MEM(Class, Member) \
+    mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty(#Member, &Class::Member));
 
 #endif // GAMMARAY_METAOBJECTREPOSITORY_H

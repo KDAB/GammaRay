@@ -315,58 +315,52 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface *probe, QObject *parent)
 
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQmlComponent, QObject);
-    MO_ADD_PROPERTY_RO(QQmlComponent, QList<QQmlError>, errors);
-    MO_ADD_PROPERTY_RO(QQmlComponent, bool, isError);
-    MO_ADD_PROPERTY_RO(QQmlComponent, bool, isLoading);
-    MO_ADD_PROPERTY_RO(QQmlComponent, bool, isNull);
-    MO_ADD_PROPERTY_RO(QQmlComponent, bool, isReady);
+    MO_ADD_PROPERTY_RO(QQmlComponent, errors);
+    MO_ADD_PROPERTY_RO(QQmlComponent, isError);
+    MO_ADD_PROPERTY_RO(QQmlComponent, isLoading);
+    MO_ADD_PROPERTY_RO(QQmlComponent, isNull);
+    MO_ADD_PROPERTY_RO(QQmlComponent, isReady);
 
     MO_ADD_METAOBJECT1(QQmlContext, QObject);
-    MO_ADD_PROPERTY_CR(QQmlContext, QUrl, baseUrl, setBaseUrl);
-    MO_ADD_PROPERTY(QQmlContext, QObject *, contextObject, setContextObject);
-    MO_ADD_PROPERTY_RO(QQmlContext, QQmlEngine *, engine);
-    MO_ADD_PROPERTY_RO(QQmlContext, bool, isValid);
-    MO_ADD_PROPERTY_RO(QQmlContext, QQmlContext *, parentContext);
+    MO_ADD_PROPERTY(QQmlContext,  baseUrl, setBaseUrl);
+    MO_ADD_PROPERTY(QQmlContext, contextObject, setContextObject);
+    MO_ADD_PROPERTY_RO(QQmlContext, engine);
+    MO_ADD_PROPERTY_RO(QQmlContext, isValid);
+    MO_ADD_PROPERTY_RO(QQmlContext, parentContext);
 
     MO_ADD_METAOBJECT1(QJSEngine, QObject);
-    MO_ADD_PROPERTY_RO(QJSEngine, QJSValue, globalObject);
+    MO_ADD_PROPERTY_RO(QJSEngine, globalObject);
 
     MO_ADD_METAOBJECT1(QQmlEngine, QJSEngine);
-    MO_ADD_PROPERTY_CR(QQmlEngine, QUrl, baseUrl, setBaseUrl);
-    MO_ADD_PROPERTY_CR(QQmlEngine, QStringList, importPathList, setImportPathList);
-    MO_ADD_PROPERTY(QQmlEngine, bool, outputWarningsToStandardError,
-                    setOutputWarningsToStandardError);
-    MO_ADD_PROPERTY_CR(QQmlEngine, QStringList, pluginPathList, setPluginPathList);
-    MO_ADD_PROPERTY_RO(QQmlEngine, QQmlContext *, rootContext);
+    MO_ADD_PROPERTY(QQmlEngine, baseUrl, setBaseUrl);
+    MO_ADD_PROPERTY(QQmlEngine, importPathList, setImportPathList);
+    MO_ADD_PROPERTY(QQmlEngine, outputWarningsToStandardError, setOutputWarningsToStandardError);
+    MO_ADD_PROPERTY(QQmlEngine, pluginPathList, setPluginPathList);
+    MO_ADD_PROPERTY_RO(QQmlEngine, rootContext);
 
     MO_ADD_METAOBJECT0(QQmlType);
-    MO_ADD_PROPERTY_RO(QQmlType, QByteArray, typeName);
-#if QT_VERSION < QT_VERSION_CHECK(5, 9, 2)
-    MO_ADD_PROPERTY_RO(QQmlType, const QString &, qmlTypeName);
-    MO_ADD_PROPERTY_RO(QQmlType, const QString &, elementName);
-#else
-    MO_ADD_PROPERTY_RO(QQmlType, QString, qmlTypeName);
-    MO_ADD_PROPERTY_RO(QQmlType, QString, elementName);
-#endif
-    MO_ADD_PROPERTY_RO(QQmlType, int, majorVersion);
-    MO_ADD_PROPERTY_RO(QQmlType, int, minorVersion);
-    MO_ADD_PROPERTY_RO(QQmlType, int, createSize);
-    MO_ADD_PROPERTY_RO(QQmlType, bool, isCreatable);
-    MO_ADD_PROPERTY_RO(QQmlType, bool, isExtendedType);
-    MO_ADD_PROPERTY_RO(QQmlType, bool, isSingleton);
-    MO_ADD_PROPERTY_RO(QQmlType, bool, isInterface);
-    MO_ADD_PROPERTY_RO(QQmlType, bool, isComposite);
-    MO_ADD_PROPERTY_RO(QQmlType, bool, isCompositeSingleton);
-    MO_ADD_PROPERTY_RO(QQmlType, QString, noCreationReason);
-    MO_ADD_PROPERTY_RO(QQmlType, int, typeId);
-    MO_ADD_PROPERTY_RO(QQmlType, int, qListTypeId);
-    MO_ADD_PROPERTY_RO(QQmlType, int, metaObjectRevision);
-    MO_ADD_PROPERTY_RO(QQmlType, bool, containsRevisionedAttributes);
-// MO_ADD_PROPERTY_RO(QQmlType, const char*, interfaceIId);
-    MO_ADD_PROPERTY_RO(QQmlType, int, index);
-    MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject *, metaObject);
-    MO_ADD_PROPERTY_RO(QQmlType, const QMetaObject *, baseMetaObject);
-    MO_ADD_PROPERTY_RO(QQmlType, QUrl, sourceUrl);
+    MO_ADD_PROPERTY_RO(QQmlType, typeName);
+    MO_ADD_PROPERTY_RO(QQmlType, qmlTypeName);
+    MO_ADD_PROPERTY_RO(QQmlType, elementName);
+    MO_ADD_PROPERTY_RO(QQmlType, majorVersion);
+    MO_ADD_PROPERTY_RO(QQmlType, minorVersion);
+    MO_ADD_PROPERTY_RO(QQmlType, createSize);
+    MO_ADD_PROPERTY_RO(QQmlType, isCreatable);
+    MO_ADD_PROPERTY_RO(QQmlType, isExtendedType);
+    MO_ADD_PROPERTY_RO(QQmlType, isSingleton);
+    MO_ADD_PROPERTY_RO(QQmlType, isInterface);
+    MO_ADD_PROPERTY_RO(QQmlType, isComposite);
+    MO_ADD_PROPERTY_RO(QQmlType, isCompositeSingleton);
+    MO_ADD_PROPERTY_RO(QQmlType, noCreationReason);
+    MO_ADD_PROPERTY_RO(QQmlType, typeId);
+    MO_ADD_PROPERTY_RO(QQmlType, qListTypeId);
+    MO_ADD_PROPERTY_RO(QQmlType, metaObjectRevision);
+    MO_ADD_PROPERTY_RO(QQmlType, containsRevisionedAttributes);
+// MO_ADD_PROPERTY_RO(QQmlType, interfaceIId);
+    MO_ADD_PROPERTY_RO(QQmlType, index);
+    MO_ADD_PROPERTY_RO(QQmlType, metaObject);
+    MO_ADD_PROPERTY_RO(QQmlType, baseMetaObject);
+    MO_ADD_PROPERTY_RO(QQmlType, sourceUrl);
 
     VariantHandler::registerStringConverter<QJSValue>(qjsValueToString);
     VariantHandler::registerStringConverter<QQmlScriptString>(qqmlScriptStringToString);

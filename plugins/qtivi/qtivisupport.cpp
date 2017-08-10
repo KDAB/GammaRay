@@ -52,15 +52,15 @@ static void registerMetaTypes()
 
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT0(QIviServiceInterface);
-    MO_ADD_PROPERTY_RO(QIviServiceInterface, QStringList, interfaces);
+    MO_ADD_PROPERTY_RO(QIviServiceInterface, interfaces);
 
     MO_ADD_METAOBJECT2(QIviServiceObject, QObject, QIviServiceInterface);
 
     MO_ADD_METAOBJECT1(QIviAbstractFeature, QObject);
-    MO_ADD_PROPERTY_RO(QIviAbstractFeature, QIviAbstractFeature::Error, error);
+    MO_ADD_PROPERTY_RO(QIviAbstractFeature, error);
 
     MO_ADD_METAOBJECT1(QIviZonedFeatureInterface, QObject);
-    MO_ADD_PROPERTY_RO(QIviZonedFeatureInterface, QStringList, availableZones);
+    MO_ADD_PROPERTY_RO(QIviZonedFeatureInterface, availableZones);
 }
 
 QtIviSupport::QtIviSupport(ProbeInterface* probe, QObject* parent)

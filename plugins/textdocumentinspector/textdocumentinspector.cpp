@@ -125,27 +125,27 @@ void TextDocumentInspector::registerMetaTypes()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QTextObject, QObject);
-    MO_ADD_PROPERTY_RO(QTextObject, QTextDocument*, document);
-    MO_ADD_PROPERTY_RO(QTextObject, int, formatIndex);
-    MO_ADD_PROPERTY_RO(QTextObject, int, objectIndex);
+    MO_ADD_PROPERTY_RO(QTextObject, document);
+    MO_ADD_PROPERTY_RO(QTextObject, formatIndex);
+    MO_ADD_PROPERTY_RO(QTextObject, objectIndex);
 
     MO_ADD_METAOBJECT1(QTextFrame, QTextObject);
-    MO_ADD_PROPERTY_RO(QTextFrame, int, firstPosition);
-    MO_ADD_PROPERTY_RO(QTextFrame, int, lastPosition);
-    MO_ADD_PROPERTY_RO(QTextFrame, QTextFrame*, parentFrame);
+    MO_ADD_PROPERTY_RO(QTextFrame, firstPosition);
+    MO_ADD_PROPERTY_RO(QTextFrame, lastPosition);
+    MO_ADD_PROPERTY_RO(QTextFrame, parentFrame);
 
     MO_ADD_METAOBJECT1(QTextTable, QTextFrame);
-    MO_ADD_PROPERTY_RO(QTextTable, int, columns);
-    MO_ADD_PROPERTY_RO(QTextTable, int, rows);
+    MO_ADD_PROPERTY_RO(QTextTable, columns);
+    MO_ADD_PROPERTY_RO(QTextTable, rows);
 
     MO_ADD_METAOBJECT1(QTextBlockGroup, QTextObject);
     MO_ADD_METAOBJECT1(QTextList, QTextBlockGroup);
-    MO_ADD_PROPERTY_RO(QTextList, int, count);
+    MO_ADD_PROPERTY_RO(QTextList, count);
 
     MO_ADD_METAOBJECT1(QAbstractTextDocumentLayout, QObject);
-    MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, QTextDocument*, document);
-    MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, QSizeF, documentSize);
-    MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, int, pageCount);
+    MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, document);
+    MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, documentSize);
+    MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, pageCount);
 #endif
 }
 
