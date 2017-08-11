@@ -32,7 +32,14 @@
 #include <core/objectinstance.h>
 
 #include <private/qqmlmetatype_p.h>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 2)
+// ### temporary, until 5.9 is merged into dev...
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 2) && QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
+#define GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
+#else
+#undef GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
+#endif
+
+#ifdef GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
 Q_DECLARE_METATYPE(QQmlType)
 #endif
 
@@ -46,7 +53,7 @@ inline bool isValid(QQmlType *type)
     return type;
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 2)
+#ifdef GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
 inline bool isValid(const QQmlType &type)
 {
     return type.isValid();
@@ -68,7 +75,7 @@ inline ObjectInstance toObjectInstance(QQmlType *type)
     return ObjectInstance(type, "QQmlType");
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 2)
+#ifdef GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
 inline ObjectInstance toObjectInstance(const QQmlType &type)
 {
     return ObjectInstance(QVariant::fromValue(type));
