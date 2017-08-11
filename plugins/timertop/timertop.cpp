@@ -79,9 +79,7 @@ public:
 
 static bool processCallback()
 {
-    if (!TimerModel::isInitialized())
-        return false;
-    return true;
+    return TimerModel::isInitialized();
 }
 
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)

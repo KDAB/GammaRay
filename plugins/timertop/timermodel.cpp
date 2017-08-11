@@ -61,7 +61,7 @@ static QMutex s_mutex;
 namespace GammaRay {
 struct TimeoutEvent
 {
-    TimeoutEvent(const QTime &timeStamp = QTime(), int executionTime = -1)
+    explicit TimeoutEvent(const QTime &timeStamp = QTime(), int executionTime = -1)
         : timeStamp(timeStamp)
         , executionTime(executionTime)
     { }

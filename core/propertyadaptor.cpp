@@ -66,14 +66,12 @@ void PropertyAdaptor::addProperty(const PropertyData &data)
 {
     Q_UNUSED(data);
     Q_ASSERT(false);
-    return;
 }
 
 void PropertyAdaptor::resetProperty(int index)
 {
     Q_UNUSED(index);
     Q_ASSERT(false);
-    return;
 }
 
 void PropertyAdaptor::doSetObject(const ObjectInstance &oi)

@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    unsigned long secs = strtoul(argv[1], nullptr, 0);
+    const auto secs = strtoul(argv[1], nullptr, 0);
     QThreadAccessViolator::sleep(secs);
 
     return 0;

@@ -218,7 +218,7 @@ private slots:
             });
 
             QSharedPointer<Deleter> deleter(new Deleter);
-            QTimer *deleteTimer = new QTimer;
+            auto deleteTimer = new QTimer;
             deleteTimer->setObjectName("deleteTimer");
             deleteTimer->setInterval(1500);
             connect(deleteTimer, SIGNAL(timeout()), deleter.data(), SLOT(deleteSender()));
