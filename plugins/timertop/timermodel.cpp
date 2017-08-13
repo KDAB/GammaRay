@@ -75,6 +75,7 @@ struct TimerIdData : TimerIdInfo
     TimerIdData()
         : TimerIdInfo()
         , totalWakeupsEvents(0)
+        , changed(false)
     { }
 
     void update(const TimerId &id, QObject *receiver = nullptr) override
