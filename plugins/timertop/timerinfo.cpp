@@ -167,6 +167,9 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
         return;
     }
 
+    state = InvalidState;
+    interval = 0;
+
     switch (id.type()) {
     case TimerId::InvalidType: {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -176,9 +179,6 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
 #endif
         break;
     }
-
-    state = InvalidState;
-    interval = 0;
 
     case TimerId::QQmlTimerType: {
         timerId = -1;
