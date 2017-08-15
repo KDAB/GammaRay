@@ -352,7 +352,7 @@ private slots:
     {
         createProbe();
 
-        auto targetModel = new QStringListModel;
+        std::unique_ptr<QStringListModel> targetModel(new QStringListModel);
         targetModel->setObjectName("targetModel");
         targetModel->setStringList(QStringList() << "item1" << "item2" << "item3");
         QTest::qWait(1); // trigger model inspector plugin loading
