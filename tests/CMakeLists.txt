@@ -142,8 +142,10 @@ target_link_libraries(propertysyncertest gammaray_common ${QT_QTGUI_LIBRARIES})
 gammaray_add_test(propertyadaptortest propertyadaptortest.cpp)
 target_link_libraries(propertyadaptortest gammaray_core ${QT_QTGUI_LIBRARIES} gammaray_shared_test_data)
 
-gammaray_add_test(enumpropertytest enumpropertytest.cpp)
-target_link_libraries(enumpropertytest gammaray_core ${QT_QTGUI_LIBRARIES})
+if(HAVE_QT_WIDGETS)
+    gammaray_add_test(enumpropertytest enumpropertytest.cpp)
+    target_link_libraries(enumpropertytest gammaray_core ${QT_QTGUI_LIBRARIES})
+endif()
 
 gammaray_add_test(propertymodeltest propertymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
 target_link_libraries(propertymodeltest gammaray_core gammaray_shared_test_data)
@@ -152,13 +154,15 @@ gammaray_add_test(qmetaobjectvalidatortest qmetaobjectvalidatortest.cpp)
 target_include_directories(qmetaobjectvalidatortest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
 target_link_libraries(qmetaobjectvalidatortest ${QT_QTGUI_LIBRARIES} gammaray_core)
 
-gammaray_add_test(metatypemodeltest
-    metatypemodeltest.cpp
-    ${CMAKE_SOURCE_DIR}/core/tools/metatypebrowser/metatypesmodel.cpp
-    ${CMAKE_SOURCE_DIR}/ui/tools/metatypebrowser/metatypesclientmodel.cpp
-    $<TARGET_OBJECTS:modeltestobj>
-)
-target_link_libraries(metatypemodeltest gammaray_core ${QT_QTGUI_LIBRARIES})
+if(GAMMARAY_BUILD_UI)
+    gammaray_add_test(metatypemodeltest
+        metatypemodeltest.cpp
+        ${CMAKE_SOURCE_DIR}/core/tools/metatypebrowser/metatypesmodel.cpp
+        ${CMAKE_SOURCE_DIR}/ui/tools/metatypebrowser/metatypesclientmodel.cpp
+        $<TARGET_OBJECTS:modeltestobj>
+    )
+    target_link_libraries(metatypemodeltest gammaray_core ${QT_QTGUI_LIBRARIES})
+endif()
 
 if(NOT OSX_ASAN_WORKAROUND)
     gammaray_add_probe_test(signalspycallbacktest signalspycallbacktest.cpp)
@@ -168,16 +172,18 @@ endif()
 if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
     gammaray_add_probe_test(multithreadingtest multithreadingtest.cpp)
 
-    gammaray_add_probe_test(methodmodeltest
-        methodmodeltest.cpp
-        ${CMAKE_SOURCE_DIR}/core/objectmethodmodel.cpp
-        ${CMAKE_SOURCE_DIR}/core/qmetaobjectvalidator.cpp
-        ${CMAKE_SOURCE_DIR}/core/metaobjectregistry.cpp
-        ${CMAKE_SOURCE_DIR}/ui/tools/objectinspector/clientmethodmodel.cpp
-        $<TARGET_OBJECTS:modeltestobj>
-    )
-    target_include_directories(methodmodeltest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(methodmodeltest ${QT_QTGUI_LIBRARIES})
+    if(GAMMARAY_BUILD_UI)
+        gammaray_add_probe_test(methodmodeltest
+            methodmodeltest.cpp
+            ${CMAKE_SOURCE_DIR}/core/objectmethodmodel.cpp
+            ${CMAKE_SOURCE_DIR}/core/qmetaobjectvalidator.cpp
+            ${CMAKE_SOURCE_DIR}/core/metaobjectregistry.cpp
+            ${CMAKE_SOURCE_DIR}/ui/tools/objectinspector/clientmethodmodel.cpp
+            $<TARGET_OBJECTS:modeltestobj>
+        )
+        target_include_directories(methodmodeltest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
+        target_link_libraries(methodmodeltest ${QT_QTGUI_LIBRARIES})
+    endif()
 endif()
 
 
@@ -227,9 +233,11 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
         target_include_directories(earlyexittest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
         target_link_libraries(earlyexittest gammaray_core gammaray_launcher)
 
-        gammaray_add_test(launchertest launchertest.cpp)
-        target_include_directories(launchertest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
-        target_link_libraries(launchertest gammaray_core gammaray_launcher)
+        if(HAVE_QT_WIDGETS)
+            gammaray_add_test(launchertest launchertest.cpp)
+            target_include_directories(launchertest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
+            target_link_libraries(launchertest gammaray_core gammaray_launcher)
+        endif()
     endif()
 endif()
 
@@ -246,10 +254,10 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     gammaray_add_test(probesettingstest probesettingstest.cpp)
     target_link_libraries(probesettingstest gammaray_launcher gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 
-    gammaray_add_test(launcheruiiptest launcheruiiptest.cpp)
-    target_link_libraries(launcheruiiptest gammaray_launcher_ui gammaray_common ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
+    if(GAMMARAY_BUILD_UI)
+        gammaray_add_test(launcheruiiptest launcheruiiptest.cpp)
+        target_link_libraries(launcheruiiptest gammaray_launcher_ui gammaray_common ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES})
 
-    if(GAMMARAY_BUILD_UI AND NOT GAMMARAY_PROBE_ONLY_BUILD)
         gammaray_add_test(remotemodeltest
             remotemodeltest.cpp
             $<TARGET_OBJECTS:modeltestobj>
