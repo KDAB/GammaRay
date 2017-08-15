@@ -895,8 +895,6 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_METAOBJECT1(QSGClipNode, QSGBasicGeometryNode);
     MO_ADD_PROPERTY(QSGClipNode, isRectangular, setIsRectangular);
     MO_ADD_PROPERTY(QSGClipNode, clipRect, setClipRect);
-    MO_ADD_PROPERTY_RO(QSGClipNode, matrix);
-    MO_ADD_PROPERTY_RO(QSGClipNode, clipList);
 
     MO_ADD_METAOBJECT1(QSGTransformNode, QSGNode);
     MO_ADD_PROPERTY(QSGTransformNode, matrix, setMatrix);
