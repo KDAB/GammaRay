@@ -160,6 +160,11 @@ bool ToolInfo::remotingSupported() const
     return m_factory && m_factory->remotingSupported();
 }
 
+bool ToolInfo::isValid() const
+{
+    return !m_toolId.isEmpty();
+}
+
 
 ClientToolManager* ClientToolManager::s_instance = nullptr;
 
@@ -358,4 +363,11 @@ int ClientToolManager::toolIndexForToolId(const QString &toolId) const
             return i;
     }
     return -1;
+}
+
+ToolInfo ClientToolManager::toolForToolId(const QString &toolId) const {
+    const int index = toolIndexForToolId(toolId);
+    if (index < 0 || index >= m_tools.size())
+        return ToolInfo();
+    return m_tools.at(index);
 }
