@@ -64,6 +64,7 @@ public:
     bool hasUi() const;
     QString name() const;
     bool remotingSupported() const;
+    bool isValid() const;
 
 private:
     QString m_toolId;
@@ -94,6 +95,7 @@ public:
     QWidget *widgetForId(const QString &toolId) const;
     QWidget *widgetForIndex(int index) const;
     int toolIndexForToolId(const QString &toolId) const;
+    ToolInfo toolForToolId(const QString &toolId) const;
 
     inline QVector<ToolInfo> tools() const
     {
