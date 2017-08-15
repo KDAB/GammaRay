@@ -56,7 +56,7 @@ QRect getBoundingRect(const QImage& image)
             {
                 top = std::min(top,y);
                 bottom = std::max(bottom, y);
-                left = std::min(top,x);
+                left = std::min(left,x);
                 right = std::max(right, x);
             }
         }
