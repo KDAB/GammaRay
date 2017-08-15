@@ -157,10 +157,10 @@ void TextureViewWidget::drawActiveAtlasTile(QPainter *p) const
 
 void TextureViewWidget::drawDecoration(QPainter *p)
 {
+    drawActiveAtlasTile(p);
+
     if (m_visualizeTextureWaste)
         drawPixelWasteDecoration(p);
-
-    drawActiveAtlasTile(p);
 }
 
 void TextureViewWidget::setTextureWasteVisualizationEnabled(bool enabled)
