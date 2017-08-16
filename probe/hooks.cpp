@@ -49,11 +49,21 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/errno.h>
+#elif defined(Q_OS_WIN)
+#include <qt_windows.h>
 #endif
 
 #define IF_DEBUG(x)
 
 using namespace GammaRay;
+
+static void log_injection(char *msg) {
+#ifdef Q_OS_WIN
+    OutputDebugStringA(msg);
+#else
+    printf(msg);
+#endif
+}
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 static void gammaray_pre_routine()
@@ -159,7 +169,7 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 {
     if (!qApp)
         return;
-    printf("gammaray_probe_inject()\n");
+    log_injection("gammaray_probe_inject()\n");
     new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects);
 }
 
@@ -167,7 +177,7 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
 {
     if (!qApp)
         return;
-    printf("gammaray_probe_attach()\n");
+    log_injection("gammaray_probe_attach()\n");
     new ProbeCreator(
         ProbeCreator::Create | ProbeCreator::FindExistingObjects
         | ProbeCreator::ResendServerAddress);
