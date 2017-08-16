@@ -39,6 +39,7 @@ gammaray_install_headers(DESTINATION launcher
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_launcher_ui_export.h
     connectpage.h
     launcherwindow.h
+    attachdialog.h
 )
 
 ecm_generate_pri_file(BASE_NAME GammaRayLauncherUi

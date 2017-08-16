@@ -31,6 +31,9 @@
 #include "processfiltermodel.h"
 #include "processmodel.h"
 #include "probeabimodel.h"
+#include "processlist.h"
+
+#include "ui_attachdialog.h"
 
 #include <launcher/core/launchoptions.h>
 
@@ -50,14 +53,15 @@ using namespace GammaRay;
 
 AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
     : QWidget(parent, f)
+    , ui(new Ui::AttachDialog)
     , m_abiModel(new ProbeABIModel(this))
 {
-    ui.setupUi(this);
+    ui->setupUi(this);
 #if defined(Q_OS_MAC)
-    QMargins margins = ui.formLayout->contentsMargins();
+    QMargins margins = ui->formLayout->contentsMargins();
     margins.setRight(margins.right() +2);
     margins.setBottom(margins.bottom() +2);
-    ui.formLayout->setContentsMargins(margins);
+    ui->formLayout->setContentsMargins(margins);
 #endif
 
     m_model = new ProcessModel(this);
@@ -66,56 +70,66 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setDynamicSortFilter(true);
 
-    ui.view->setModel(m_proxyModel);
+    ui->view->setModel(m_proxyModel);
     // hide state
-    ui.view->hideColumn(ProcessModel::StateColumn);
-    ui.view->sortByColumn(ProcessModel::NameColumn, Qt::AscendingOrder);
-    ui.view->setSortingEnabled(true);
+    ui->view->hideColumn(ProcessModel::StateColumn);
+    ui->view->sortByColumn(ProcessModel::NameColumn, Qt::AscendingOrder);
+    ui->view->setSortingEnabled(true);
 
-    ui.view->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->view->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    ui.view->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui.view->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui.view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+    ui->view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->view->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(ui->view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
             this, SIGNAL(updateButtonState()));
-    connect(ui.view->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+    connect(ui->view->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(selectABI(QModelIndex)));
 
-    connect(ui.view, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
+    connect(ui->view, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
 
-    new SearchLineController(ui.filter, m_proxyModel);
+    new SearchLineController(ui->filter, m_proxyModel);
 
-    ui.probeBox->setModel(m_abiModel);
+    ui->probeBox->setModel(m_abiModel);
 
     QSettings settings;
-    ui.accessMode->setCurrentIndex(settings.value(QStringLiteral(
+    ui->accessMode->setCurrentIndex(settings.value(QStringLiteral(
                                                       "Launcher/AttachAccessMode")).toInt());
 
     setWindowTitle(tr("GammaRay - Attach to Process"));
     setWindowIcon(QIcon(QStringLiteral(":/gammaray/GammaRay-128x128.png")));
 
-    ui.stackedWidget->setCurrentWidget(ui.loadingLabel);
+    ui->stackedWidget->setCurrentWidget(ui->loadingLabel);
     updateProcesses();
+}
+
+AttachDialog::~AttachDialog()
+{
+
 }
 
 bool AttachDialog::isValid() const
 {
-    return ui.view->currentIndex().isValid();
+    return ui->view->currentIndex().isValid();
 }
 
 void AttachDialog::writeSettings()
 {
     QSettings settings;
-    settings.setValue(QStringLiteral("Launcher/AttachAccessMode"), ui.accessMode->currentIndex());
+    settings.setValue(QStringLiteral("Launcher/AttachAccessMode"), ui->accessMode->currentIndex());
+}
+
+void AttachDialog::setSettingsVisible(bool visible)
+{
+    ui->settingsWidget->setVisible(visible);
 }
 
 LaunchOptions AttachDialog::launchOptions() const
 {
     LaunchOptions opt;
     opt.setPid(pid());
-    opt.setProbeABI(ui.probeBox->itemData(ui.probeBox->currentIndex()).value<ProbeABI>());
+    opt.setProbeABI(ui->probeBox->itemData(ui->probeBox->currentIndex()).value<ProbeABI>());
 
-    switch (ui.accessMode->currentIndex()) {
+    switch (ui->accessMode->currentIndex()) {
     case 0: // local, out-of-process
         opt.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), true);
         opt.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
@@ -137,7 +151,12 @@ LaunchOptions AttachDialog::launchOptions() const
 
 int AttachDialog::pid() const
 {
-    return ui.view->currentIndex().data(ProcessModel::PIDRole).toInt();
+    return ui->view->currentIndex().data(ProcessModel::PIDRole).toInt();
+}
+
+QString GammaRay::AttachDialog::absoluteExecutablePath() const
+{
+    return ui->view->currentIndex().data(ProcessModel::NameRole).toString();
 }
 
 void AttachDialog::updateProcesses()
@@ -152,11 +171,11 @@ void AttachDialog::updateProcessesFinished()
 {
     QFutureWatcher<ProcDataList> *watcher = dynamic_cast<QFutureWatcher<ProcDataList> *>(sender());
     Q_ASSERT(watcher);
-    ui.stackedWidget->setCurrentWidget(ui.listViewPage);
+    ui->stackedWidget->setCurrentWidget(ui->listViewPage);
     const int oldPid = pid();
     m_model->mergeProcesses(watcher->result());
     if (oldPid != pid())
-        ui.view->setCurrentIndex(QModelIndex());
+        ui->view->setCurrentIndex(QModelIndex());
     watcher->deleteLater();
 
     QTimer::singleShot(1000, this, SLOT(updateProcesses()));
@@ -170,5 +189,5 @@ void AttachDialog::selectABI(const QModelIndex &processIndex)
     const ProbeABI abi = processIndex.data(ProcessModel::ABIRole).value<ProbeABI>();
     const int abiIndex = m_abiModel->indexOfBestMatchingABI(abi);
     if (abiIndex >= 0)
-        ui.probeBox->setCurrentIndex(abiIndex);
+        ui->probeBox->setCurrentIndex(abiIndex);
 }
