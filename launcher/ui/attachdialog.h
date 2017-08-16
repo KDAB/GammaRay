@@ -30,9 +30,13 @@
 #define GAMMARAY_ATTACHDIALOG_H
 
 #include <QWidget>
+#include <memory>
 
-#include "processlist.h"
-#include "ui_attachdialog.h"
+#include "gammaray_launcher_ui_export.h"
+
+QT_BEGIN_NAMESPACE
+class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 class LaunchOptions;
@@ -40,19 +44,27 @@ class ProcessModel;
 class ProcessFilterModel;
 class ProbeABIModel;
 
-class AttachDialog : public QWidget
+namespace Ui {
+    class AttachDialog;
+}
+
+class GAMMARAY_LAUNCHER_UI_EXPORT AttachDialog : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit AttachDialog(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+    ~AttachDialog();
 
     LaunchOptions launchOptions() const;
     int pid() const;
+    QString absoluteExecutablePath() const;
 
     /// Returns @c true if a valid process is selected.
     bool isValid() const;
     void writeSettings();
+
+    void setSettingsVisible(bool visible);
 
 signals:
     void updateButtonState();
@@ -64,7 +76,7 @@ private slots:
     void selectABI(const QModelIndex &processIndex);
 
 private:
-    Ui::AttachDialog ui;
+    std::unique_ptr<Ui::AttachDialog> ui;
     ProcessModel *m_model;
     ProcessFilterModel *m_proxyModel;
     ProbeABIModel *m_abiModel;
