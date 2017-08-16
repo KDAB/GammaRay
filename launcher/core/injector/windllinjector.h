@@ -62,7 +62,7 @@ private:
 
     void inject();
     void addDllDirectory();
-    void remoteKernel32Call(const char *funcName, const QString &argument);
+    int remoteKernel32Call(const char *funcName, const QString &argument);
     HANDLE m_destProcess;
     QString m_dllPath;
     FinishWaiter *m_injectThread;
