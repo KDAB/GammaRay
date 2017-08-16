@@ -103,6 +103,7 @@ private:
     explicit TimerModel(QObject *parent = nullptr);
 
     const TimerIdInfo *findTimerInfo(const QModelIndex &index) const;
+    bool canHandleCaller(QObject *caller, int methodIndex) const;
 
     static bool eventNotifyCallback(void *data[]);
 
@@ -116,7 +117,7 @@ private:
 
     // the method index of the timeout() signal of a QTimer
     const int m_timeoutIndex;
-    int m_qmlTimerTriggeredIndex;
+    mutable int m_qmlTimerTriggeredIndex;
 };
 }
 

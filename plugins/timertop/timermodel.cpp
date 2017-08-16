@@ -244,6 +244,20 @@ const TimerIdInfo *TimerModel::findTimerInfo(const QModelIndex &index) const
     return nullptr;
 }
 
+bool TimerModel::canHandleCaller(QObject *caller, int methodIndex) const
+{
+    const bool isQTimer = qobject_cast<QTimer *>(caller) != nullptr;
+    const bool isQQmlTimer = caller->inherits(s_qmlTimerClassName);
+
+    if (isQQmlTimer && m_qmlTimerTriggeredIndex < 0) {
+        m_qmlTimerTriggeredIndex = caller->metaObject()->indexOfMethod("triggered()");
+        Q_ASSERT(m_qmlTimerTriggeredIndex != -1);
+    }
+
+    return (isQTimer && m_timeoutIndex == methodIndex) |
+            (isQQmlTimer && m_qmlTimerTriggeredIndex == methodIndex);
+}
+
 bool TimerModel::eventNotifyCallback(void *data[])
 {
     Q_ASSERT(TimerModel::isInitialized());
@@ -318,16 +332,7 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
     // The probe did NOT locked the objectLock at this point.
     Q_ASSERT(TimerModel::isInitialized());
 
-    const bool isQTimer = qobject_cast<QTimer *>(caller) != nullptr;
-    const bool isQQmlTimer = caller->inherits(s_qmlTimerClassName);
-
-    if (isQQmlTimer && m_qmlTimerTriggeredIndex < 0) {
-        m_qmlTimerTriggeredIndex = caller->metaObject()->indexOfMethod("triggered()");
-        Q_ASSERT(m_qmlTimerTriggeredIndex != -1);
-    }
-
-    if (!(isQTimer && m_timeoutIndex == methodIndex) &&
-            !(isQQmlTimer && m_qmlTimerTriggeredIndex == methodIndex))
+    if (!canHandleCaller(caller, methodIndex))
         return;
 
     QMutexLocker locker(&s_mutex);
@@ -351,8 +356,10 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
     // We are in the thread of the caller emmiting the signal
     // The probe did NOT locked the objectLock at this point
     // and we garanty that caller is still valid.
-    Q_UNUSED(methodIndex);
     Q_ASSERT(TimerModel::isInitialized());
+
+    if (!canHandleCaller(caller, methodIndex))
+        return;
 
     QMutexLocker locker(&s_mutex);
     const TimerId id(caller);
