@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/gammaray">
+        <file>images/gammaray-inject-16.png</file>
+        <file>images/gammaray-inject-22.png</file>
+        <file>images/gammaray-inject-24.png</file>
+        <file>images/gammaray-inject-32.png</file>
+        <file>images/gammaray-inject-48.png</file>
+        <file>images/gammaray-inject-64.png</file>
+        <file>images/gammaray-inject-128-2x.png</file>
+    </qresource>
+</RCC>
