@@ -44,8 +44,10 @@
 #include <QWindow>
 #endif
 
+#include <QIcon>
 #include <QFont>
 #include <QPaintDevice>
+#include <QPainter>
 #include <QPainterPath>
 #include <QPalette>
 #include <QPen>
@@ -72,7 +74,18 @@ GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     registerVariantHandler();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    m_titleSuffix = tr(" (Injected by GammaRay)");
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
+
+    m_probe->installGlobalEventFilter(this);
+    foreach (auto w , qApp->topLevelWindows()) {
+        updateWindowIcon(w);
+        updateWindowTitle(w);
+    }
+    // TODO: calling this code in the destructore would cause a crash as we need a defined state of
+    // Gammaray. Enable this connect as soon as somkething like ProbeInterface::aboutToDetatch
+    // is implemented.
+    //connect(m_probe, &ProbeInterface::aboutToDetatch, this, &GuiSupport::restoreIconAndTitle);
 #endif
 }
 
@@ -459,6 +472,60 @@ void GuiSupport::registerVariantHandler()
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+void GuiSupport::updateWindowTitle(QWindow *w)
+{
+    if (w->title().endsWith(m_titleSuffix))
+        return;
+    w->setTitle(w->title() + m_titleSuffix);
+}
+
+void GuiSupport::updateWindowIcon(QWindow *w)
+{
+    static QVector<QPixmap> gammarayIcons;
+    static const auto theme = QLatin1String("gammaray");
+    if (gammarayIcons.isEmpty()) {
+        gammarayIcons << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-16.png"))
+                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-22.png"))
+                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-24.png"))
+                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-32.png"))
+                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-48.png"))
+                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-64.png"))
+                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-128.png"));
+    }
+
+    QIcon oldIcon = w->icon();
+    if (oldIcon.isNull() || oldIcon.themeName() == theme) {
+        return;
+    }
+    originalIcons.insert(w, oldIcon);
+
+    QIcon newIcon;
+    newIcon.setThemeName(theme);
+    foreach (const auto &pixmap, gammarayIcons) {
+        QPixmap pix(oldIcon.pixmap(oldIcon.actualSize(pixmap.size())));
+        {
+            QPainter p(&pix);
+            p.drawPixmap(0, 0, pixmap);
+        }
+        newIcon.addPixmap(pix);
+    }
+    w->setIcon(newIcon);
+}
+
+void GuiSupport::restoreIconAndTitle()
+{
+    if (qApp->closingDown())
+        return;
+    foreach (auto w, qApp->topLevelWindows()) {
+        const QIcon oldIcon = originalIcons.value(w);
+        if (!oldIcon.isNull()) {
+            w->setIcon(oldIcon);
+        }
+        w->setTitle(w->title().remove(m_titleSuffix));
+    }
+}
+
+
 void GuiSupport::discoverObjects()
 {
     foreach (QWindow *window, qApp->topLevelWindows())
@@ -469,6 +536,24 @@ void GuiSupport::objectCreated(QObject *object)
 {
     if (qobject_cast<QGuiApplication *>(object))
         discoverObjects();
+}
+
+bool GuiSupport::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::WindowTitleChange) {
+        if (auto w = qobject_cast<QWindow*>(watched)) {
+            if (w->isTopLevel()) {
+                updateWindowTitle(w);
+            }
+        }
+    } else if(event->type() == QEvent::WindowIconChange) {
+        if (auto w = qobject_cast<QWindow*>(watched)) {
+            if (w->isTopLevel()) {
+                updateWindowIcon(w);
+            }
+        }
+    }
+    return QObject::eventFilter(watched, event);
 }
 #endif
 

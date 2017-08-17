@@ -1,6 +1,8 @@
 # probe plugin
 set(gammaray_guisupport_srcs
   guisupport.cpp
+
+  ui.qrc
 )
 gammaray_add_plugin(gammaray_guisupport JSON gammaray_guisupport.json DESKTOP gammaray_guisupport.desktop SOURCES ${gammaray_guisupport_srcs})
 target_link_libraries(gammaray_guisupport gammaray_core)
