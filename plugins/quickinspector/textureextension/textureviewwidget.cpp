@@ -28,6 +28,7 @@
 
 #include "textureviewwidget.h"
 
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QFontMetrics>
@@ -170,3 +171,4 @@ void TextureViewWidget::setTextureWasteVisualizationEnabled(bool enabled)
         update();
     }
 }
+

@@ -53,6 +53,7 @@ namespace GammaRay {
 class RemoteViewInterface;
 class ObjectIdsFilterProxyModel;
 class VisibilityFilterProxyModel;
+class TrailingColorLabel;
 
 /** Widget showing remote screen content and providing both visual inspection
  *  capabilities as well as input redirection.
@@ -70,11 +71,12 @@ public:
     void setName(const QString &name);
 
     enum InteractionMode {
-        NoInteraction = 0, ///< use this for disabling all built-in interaction if you are adding custom interaction modes
+        NoInteraction = 0, ///< disable all
         ViewInteraction = 1, ///< panning, zooming, etc
         Measuring = 2,
         InputRedirection = 4,
-        ElementPicking = 8
+        ElementPicking = 8,
+        ColorPicking = 16
     };
     InteractionMode interactionMode() const;
     void setInteractionMode(InteractionMode mode);
@@ -166,6 +168,9 @@ protected:
     void showEvent(QShowEvent *event) override;
     void hideEvent(QHideEvent *event) override;
     void contextMenuEvent(QContextMenuEvent *event) override;
+    void enterEvent(QEvent *event) override;
+    void leaveEvent(QEvent *event) override;
+
 
     bool eventFilter(QObject *receiver, QEvent *event) override;
     bool event(QEvent *event) override;
@@ -218,6 +223,7 @@ private:
     QAction *m_zoomOutAction;
     QAction *m_toggleFPSAction;
     QPointer<RemoteViewInterface> m_interface;
+    TrailingColorLabel *m_trailingColorLabel;
     double m_zoom;
     int m_x; // view translation before zoom
     int m_y;

@@ -28,6 +28,7 @@
 
 #include "remoteviewwidget.h"
 #include "modelpickerdialog.h"
+#include "trailingcolorlabel.h"
 #include <visibilityfilterproxymodel.h>
 
 #include <common/endpoint.h>
@@ -42,8 +43,10 @@
 #include <QAction>
 #include <QActionGroup>
 #include <QApplication>
+#include <QClipboard>
 #include <QDebug>
 #include <QMenu>
+#include <QMimeData>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QStandardItemModel>
@@ -62,6 +65,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     , m_zoomLevelModel(new QStandardItemModel(this))
     , m_unavailableText(tr("No remote view available."))
     , m_interactionModeActions(new QActionGroup(this))
+    , m_trailingColorLabel(new TrailingColorLabel(this))
     , m_zoom(1.0)
     , m_x(0)
     , m_y(0)
@@ -177,6 +181,14 @@ void RemoteViewWidget::setupActions()
                           "In this mode all mouse input is redirected directly to the original application,"
                           "so you can control the application directly from within GammaRay."));
     action->setData(InputRedirection);
+    action->setActionGroup(m_interactionModeActions);
+
+    action = new QAction(UIResources::themedIcon(QLatin1String("pick-element.png")),
+                         tr("Inspect Colors"), this);
+    action->setCheckable(true);
+    action->setToolTip(tr("<b>Inspect Colors</b><br>"
+                          "Inspect the RGBA channels of the currently hovered pixel"));
+    action->setData(ColorPicking);
     action->setActionGroup(m_interactionModeActions);
 
     m_zoomOutAction = new QAction(UIResources::themedIcon(QLatin1String("zoom-out.png")), tr(
@@ -503,6 +515,9 @@ void RemoteViewWidget::setInteractionMode(RemoteViewWidget::InteractionMode mode
     case InputRedirection:
         setCursor(QCursor());
         break;
+    case ColorPicking:
+        setCursor(Qt::CrossCursor);
+        break;
     }
 
     m_interactionMode = mode;
@@ -524,9 +539,8 @@ RemoteViewWidget::InteractionModes RemoteViewWidget::supportedInteractionModes()
 void RemoteViewWidget::setSupportedInteractionModes(RemoteViewWidget::InteractionModes modes)
 {
     m_supportedInteractionModes = modes;
-    foreach (auto action, m_interactionModeActions->actions()) {
+    foreach (auto action, m_interactionModeActions->actions())
         action->setVisible(action->data().toInt() & modes);
-    }
 }
 
 void RemoteViewWidget::paintEvent(QPaintEvent *event)
@@ -978,6 +992,8 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
     case InputRedirection:
         sendMouseEvent(event);
         break;
+    case ColorPicking:
+        break;
     }
 
     QWidget::mousePressEvent(event);
@@ -1000,6 +1016,8 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent *event)
         break;
     case InputRedirection:
         sendMouseEvent(event);
+        break;
+    case ColorPicking:
         break;
     }
 
@@ -1031,6 +1049,17 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
     case InputRedirection:
         sendMouseEvent(event);
         break;
+    case ColorPicking:
+        m_trailingColorLabel->move(event->pos() + QPoint(4, 4));
+        auto sourceCoordinates = mapToSource(event->pos());
+        if (frame().viewRect().adjusted(0,0,-1,-1).contains(sourceCoordinates)) {
+            m_trailingColorLabel->show();
+            m_trailingColorLabel->setPickedColor(frame().image().pixel(sourceCoordinates));
+        } else {
+            m_trailingColorLabel->hide();
+            m_trailingColorLabel->setPickedColor(Qt::transparent);
+        }
+        break;
     }
     update();
 }
@@ -1043,6 +1072,7 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
     case ViewInteraction:
     case ElementPicking:
     case Measuring:
+    case ColorPicking:
         if (event->modifiers() & Qt::ControlModifier && event->orientation() == Qt::Vertical) {
             if (event->delta() > 0) {
                 zoomIn();
@@ -1079,6 +1109,13 @@ void RemoteViewWidget::keyPressEvent(QKeyEvent *event)
     case InputRedirection:
         sendKeyEvent(event);
         break;
+    case ColorPicking:
+        if (event->matches(QKeySequence::Copy)){
+            QMimeData *data = new QMimeData();
+            data->setColorData(m_trailingColorLabel->pickedColor());
+            qApp->clipboard()->setMimeData(data);
+            qApp->clipboard()->setText(m_trailingColorLabel->pickedColor().name());
+        }
     }
     QWidget::keyPressEvent(event);
 }
@@ -1119,6 +1156,7 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
     case ViewInteraction:
     case ElementPicking:
     case Measuring:
+    case ColorPicking:
     {
         QMenu menu;
         menu.addActions(m_interactionModeActions->actions());
@@ -1135,6 +1173,39 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
     case NoInteraction:
     case InputRedirection:
         QWidget::contextMenuEvent(event);
+        break;
+        break;
+    }
+}
+
+void RemoteViewWidget::enterEvent(QEvent *event)
+{
+    Q_UNUSED(event);
+    switch (m_interactionMode) {
+    case ViewInteraction:
+    case ElementPicking:
+    case Measuring:
+    case NoInteraction:
+    case InputRedirection:
+        break;
+    case ColorPicking:
+        m_trailingColorLabel->show();
+        break;
+    }
+}
+
+void RemoteViewWidget::leaveEvent(QEvent *event)
+{
+    Q_UNUSED(event);
+    switch (m_interactionMode) {
+    case ViewInteraction:
+    case ElementPicking:
+    case Measuring:
+    case NoInteraction:
+    case InputRedirection:
+        break;
+    case ColorPicking:
+        m_trailingColorLabel->hide();
         break;
     }
 }
