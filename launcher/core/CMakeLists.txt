@@ -65,6 +65,7 @@ gammaray_install_headers(DESTINATION launcher
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_launcher_export.h
     launcher.h
     launchoptions.h
+    launcherfinder.h
     probeabi.h
     probeabidetector.h
     probefinder.h
