@@ -25,6 +25,7 @@ set(gammaray_ui_srcs
   uistatemanager.cpp
   uiresources.cpp
   remoteviewwidget.cpp
+  trailingcolorlabel.cpp
   helpcontroller.cpp
   utils.cpp
 

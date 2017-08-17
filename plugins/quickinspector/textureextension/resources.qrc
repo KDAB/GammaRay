@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>resources/warning.png</file>
+        <file>resources/picker.png</file>
     </qresource>
 </RCC>

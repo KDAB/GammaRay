@@ -31,6 +31,7 @@
 
 #include <ui/remoteviewwidget.h>
 
+
 namespace GammaRay {
 
 class TextureViewWidget : public RemoteViewWidget
