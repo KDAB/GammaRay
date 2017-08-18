@@ -6,7 +6,7 @@ TEMPLATE = aux
 
 # convert path and command separators to platform format
 SHELL_INSTALL_PREFIX = $$shell_path($$[QT_INSTALL_PREFIX])
-SHELL_PWD = $$shell_path($$PWD)
+SHELL_PWD = $$shell_path($$PWD/..)
 SHELL_SEP = ;
 win32: SHELL_SEP = &
 
@@ -44,6 +44,7 @@ gammaray_test.depends += gammaray_configure
 gammaray_test.commands = cd build $$SHELL_SEP $(MAKE) test
 
 gammaray_online_docs.target = docs
+gammaray_online_docs.recurse = true
 gammaray_online_docs.depends += gammaray_configure_docs
 gammaray_online_docs.commands = cd build $$SHELL_SEP $(MAKE) online-docs
 

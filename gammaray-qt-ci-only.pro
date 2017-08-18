@@ -17,4 +17,10 @@ message("If you are seeing this and you are not the Qt CI, please refer to Insta
 # additional indirection is needed as the above requires conditions don't work correctly
 # in aux templates, on some platforms
 TEMPLATE = subdirs
-SUBDIRS += gammaray-qt-ci-only-internal.pro
+SUBDIRS += qt-ci-wrapper
+
+# forward non-built-in targets too
+QMAKE_EXTRA_TARGETS += gammaray_build_docs
+gammaray_build_docs.CONFIG = recursive
+gammaray_build_docs.recurse_target = docs
+gammaray_build_docs.target = docs
