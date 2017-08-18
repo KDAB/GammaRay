@@ -3,15 +3,25 @@ if(NOT CMAKE_CROSSCOMPILING)
     add_executable(classesiconsextractor classesiconsextractor.cpp)
     if(Qt5Core_FOUND)
       target_link_libraries(classesiconsextractor LINK_PUBLIC Qt5::Core Qt5::Xml)
+      query_qmake(QT_HOST_BINS QT_HOST_BINS)
     else()
+      set(QT_HOST_BINS ${QT_BINARY_DIR})
       target_link_libraries(classesiconsextractor LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTXML_LIBRARIES})
     endif()
 
+    if (WIN32)
+      set(_PATH_SEP ";")
+    else()
+      set(_PATH_SEP ":")
+    endif()
+
+    # we prepend an extra _PATH_SEP to work around an escaping issue with Windows path separators and quotes
     add_custom_command(
         OUTPUT
             ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp
         COMMAND
-            classesiconsextractor
+            ${CMAKE_COMMAND} -E env "PATH=${QT_HOST_BINS}${_PATH_SEP}$ENV{PATH}${_PATH_SEP}"
+            $<TARGET_FILE:classesiconsextractor>
                 -qrc ${CMAKE_CURRENT_SOURCE_DIR}/../ui/resources/ui.qrc
                 -out ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp
         DEPENDS
