@@ -49,7 +49,6 @@ gammaray_online_docs.depends += gammaray_configure_docs
 gammaray_online_docs.commands = cd build $$SHELL_SEP $(MAKE) online-docs
 
 gammaray_install.target = install
-gammaray_install.depends += gammaray_configure
 gammaray_install.commands = cd build $$SHELL_SEP $(MAKE) DESTDIR=$(INSTALL_ROOT) install
 
 QMAKE_EXTRA_TARGETS += \
