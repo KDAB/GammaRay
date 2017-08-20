@@ -43,8 +43,9 @@ class BaseQuickTest : public BaseProbeTest
     Q_OBJECT
 public:
     explicit BaseQuickTest(QObject *parent = nullptr)
-        : BaseProbeTest(parent)
-    { }
+        : BaseProbeTest(parent), m_exposed(false)
+    {
+    }
 
 private:
     std::unique_ptr<QQuickView> m_view;
