@@ -62,7 +62,7 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     toolbar->addAction(ui->replayWidget->zoomInAction());
 
     ui->replayWidget->setSupportedInteractionModes(
-        RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring);
+        RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring | RemoteViewWidget::ColorPicking);
 
     ui->paintAnalyzerSplitter->setStretchFactor(0, 0);
     ui->paintAnalyzerSplitter->setStretchFactor(1, 1);
