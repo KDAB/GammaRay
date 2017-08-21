@@ -117,7 +117,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     connect(m_interactionModeActions, SIGNAL(triggered(QAction*)), this,
             SLOT(interactionActionTriggered(QAction*)));
 
-    setSupportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection);
+    setSupportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection | ColorPicking);
     setInteractionMode(ViewInteraction);
 
     window()->installEventFilter(this);
@@ -183,7 +183,7 @@ void RemoteViewWidget::setupActions()
     action->setData(InputRedirection);
     action->setActionGroup(m_interactionModeActions);
 
-    action = new QAction(UIResources::themedIcon(QLatin1String("pick-element.png")),
+    action = new QAction(UIResources::themedIcon(QLatin1String("pick-color.png")),
                          tr("Inspect Colors"), this);
     action->setCheckable(true);
     action->setToolTip(tr("<b>Inspect Colors</b><br>"
@@ -1052,7 +1052,8 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
     case ColorPicking:
         m_trailingColorLabel->move(event->pos() + QPoint(4, 4));
         auto sourceCoordinates = mapToSource(event->pos());
-        if (frame().viewRect().adjusted(0,0,-1,-1).contains(sourceCoordinates)) {
+        sourceCoordinates = frame().transform().map(sourceCoordinates); // for quick view, transform is needed
+        if (frame().image().rect().adjusted(0,0,-1,-1).contains(sourceCoordinates)) {
             m_trailingColorLabel->show();
             m_trailingColorLabel->setPickedColor(frame().image().pixel(sourceCoordinates));
         } else {
@@ -1173,7 +1174,6 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
     case NoInteraction:
     case InputRedirection:
         QWidget::contextMenuEvent(event);
-        break;
         break;
     }
 }

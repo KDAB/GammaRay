@@ -28,7 +28,6 @@
 
 #include "textureviewwidget.h"
 
-#include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QFontMetrics>
