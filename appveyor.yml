@@ -19,7 +19,7 @@ install:
 - ps: |
     mkdir C:\CraftMaster | Out-Null
     #use cmd to silence powershell behaviour for stderr
-    & cmd /C "git clone -q --branch v0.1 --depth=1 git://anongit.kde.org/craftmaster.git C:\CraftMaster\CraftMaster 2>&1"
+    & cmd /C "git clone -q --branch v0.2 --depth=1 git://anongit.kde.org/craftmaster.git C:\CraftMaster\CraftMaster 2>&1"
     & C:\python36\python.exe C:\CraftMaster\CraftMaster\CraftMaster.py --config $env:APPVEYOR_BUILD_FOLDER\appveyor.ini --target $env:TARGET
     craft -p gammaray
     craft nsis
