@@ -1,13 +1,39 @@
 <RCC>
     <qresource prefix="/">
-        <file>gammaray/GammaRay-16x16.png</file>
-        <file>gammaray/GammaRay-32x32.png</file>
-        <file>gammaray/GammaRay-48x48.png</file>
-        <file>gammaray/GammaRay-128x128.png</file>
-        <file>gammaray/GammaRay-256x256.png</file>
-        <file>gammaray/GammaRay-512x512.png</file>
         <file>gammaray/GammaRay.icns</file>
         <file>gammaray/GammaRay.ico</file>
+
+        <file>gammaray/GammaRay-16x16.png</file>
+        <file>gammaray/GammaRay-16x16@2x.png</file>
+        <file>gammaray/GammaRay-16x16@3x.png</file>
+
+        <file>gammaray/GammaRay-24x24.png</file>
+        <file>gammaray/GammaRay-24x24@2x.png</file>
+        <file>gammaray/GammaRay-24x24@3x.png</file>
+
+        <file>gammaray/GammaRay-32x32.png</file>
+        <file>gammaray/GammaRay-32x32@2x.png</file>
+        <file>gammaray/GammaRay-32x32@3x.png</file>
+
+        <file>gammaray/GammaRay-48x48.png</file>
+        <file>gammaray/GammaRay-48x48@2x.png</file>
+        <file>gammaray/GammaRay-48x48@3x.png</file>
+
+        <file>gammaray/GammaRay-64x64.png</file>
+        <file>gammaray/GammaRay-64x64@2x.png</file>
+        <file>gammaray/GammaRay-64x64@3x.png</file>
+
+        <file>gammaray/GammaRay-128x128.png</file>
+        <file>gammaray/GammaRay-128x128@2x.png</file>
+        <file>gammaray/GammaRay-128x128@3x.png</file>
+
+        <file>gammaray/GammaRay-256x256.png</file>
+        <file>gammaray/GammaRay-256x256@2x.png</file>
+        <file>gammaray/GammaRay-256x256@3x.png</file>
+
+        <file>gammaray/GammaRay-512x512.png</file>
+        <file>gammaray/GammaRay-512x512@2x.png</file>
+
         <file>gammaray/GammaRay-Trademark-medium.png</file>
         <file>gammaray/GammaRay-Trademark-small.png</file>
         <file>gammaray/kdab-gammaray-logo.png</file>
