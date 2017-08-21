@@ -152,7 +152,7 @@ private:
         explicit IviCarrier(QIviAbstractFeature *carrier);
 
         QVariant property(int propertyIndex) const override;
-        void setProperty(int propertyIndex, const QVariant &value) override;
+        bool setProperty(int propertyIndex, const QVariant &value) override;
 
         QString label() const;
         QString typeName() const;
