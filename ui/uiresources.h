@@ -32,21 +32,45 @@
 #include "gammaray_ui_export.h"
 
 #include <QIcon>
+#include <QPixmap>
+#include <QImage>
 
 namespace GammaRay {
 namespace UIResources {
-    enum IconTheme {
+    enum Theme {
         Unknown,
         Light,
         Dark,
         Default = Light
     };
 
-    // Set the current theme to use for UI icons used in actions and toolbars.
-    GAMMARAY_UI_EXPORT void setIconTheme(UIResources::IconTheme theme);
+    enum ThemeEntryType {
+        Icon,
+        Pixmap
+    };
 
-    // Relative to CoreResources::themePath of the current theme
+    // Set the current theme to use for UI icons used in actions and toolbars.
+    GAMMARAY_UI_EXPORT void setTheme(UIResources::Theme theme);
+
+    // Relative to UIResources::themePath/icons of the current theme
     GAMMARAY_UI_EXPORT QIcon themedIcon(const QString &filePath);
+
+    // Relative to UIResources::themePath/pixmaps of the current theme
+    GAMMARAY_UI_EXPORT QPixmap themedPixmap(const QString &filePath, QWidget *widget);
+
+    // Relative to UIResources::themePath/pixmaps of the current theme
+    GAMMARAY_UI_EXPORT QImage themedImage(const QString &filePath, QWidget *widget);
+
+    // Relative to UIResources::themePath/[icons|pixmap] of the current theme
+    GAMMARAY_UI_EXPORT QString themedFilePath(UIResources::ThemeEntryType type, const QString &filePath, QWidget *widget);
+
+    GAMMARAY_UI_EXPORT QImage tintedImage(const QImage &image, const QColor &color);
+    GAMMARAY_UI_EXPORT QPixmap tintedPixmap(const QImage &image, const QColor &color);
+
+    // Deprecated, use setTheme
+    typedef Theme IconTheme;
+    inline GAMMARAY_UI_EXPORT void setIconTheme(UIResources::IconTheme theme)
+    { setTheme(theme); }
 }
 }
 

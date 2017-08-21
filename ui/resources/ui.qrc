@@ -1,4 +1,6 @@
 <RCC>
+    <!-- Do not use xml editors to edit this file to avoid lost of entries sorting -->
+
     <qresource prefix="/">
         <file>gammaray/GammaRay.icns</file>
         <file>gammaray/GammaRay.ico</file>
@@ -41,201 +43,201 @@
         <file>gammaray/kdabproducts.png</file>
         <file>gammaray/splashscreen.png</file>
 
-        <!-- Light icons -->
+        <!-- Light -->
 
         <!-- UI icons -->
-        <file>gammaray/icons/ui/light/active-focus.png</file>
+        <file>gammaray/ui/light/icons/active-focus.png</file>
 
-        <file>gammaray/icons/ui/light/focus.png</file>
+        <file>gammaray/ui/light/icons/focus.png</file>
 
-        <file>gammaray/icons/ui/light/grid-settings.png</file>
-        <file>gammaray/icons/ui/light/grid-settings@2x.png</file>
-        <file>gammaray/icons/ui/light/grid-settings@3x.png</file>
+        <file>gammaray/ui/light/icons/grid-settings.png</file>
+        <file>gammaray/ui/light/icons/grid-settings@2x.png</file>
+        <file>gammaray/ui/light/icons/grid-settings@3x.png</file>
 
-        <file>gammaray/icons/ui/light/legend.png</file>
-        <file>gammaray/icons/ui/light/legend@2x.png</file>
-        <file>gammaray/icons/ui/light/legend@3x.png</file>
+        <file>gammaray/ui/light/icons/legend.png</file>
+        <file>gammaray/ui/light/icons/legend@2x.png</file>
+        <file>gammaray/ui/light/icons/legend@3x.png</file>
 
-        <file>gammaray/icons/ui/light/measure-pixels.png</file>
-        <file>gammaray/icons/ui/light/measure-pixels@2x.png</file>
-        <file>gammaray/icons/ui/light/measure-pixels@3x.png</file>
+        <file>gammaray/ui/light/icons/measure-pixels.png</file>
+        <file>gammaray/ui/light/icons/measure-pixels@2x.png</file>
+        <file>gammaray/ui/light/icons/measure-pixels@3x.png</file>
 
-        <file>gammaray/icons/ui/light/move-preview.png</file>
-        <file>gammaray/icons/ui/light/move-preview@2x.png</file>
-        <file>gammaray/icons/ui/light/move-preview@3x.png</file>
+        <file>gammaray/ui/light/icons/move-preview.png</file>
+        <file>gammaray/ui/light/icons/move-preview@2x.png</file>
+        <file>gammaray/ui/light/icons/move-preview@3x.png</file>
 
-        <file>gammaray/icons/ui/light/pick-element.png</file>
-        <file>gammaray/icons/ui/light/pick-element@2x.png</file>
-        <file>gammaray/icons/ui/light/pick-element@3x.png</file>
+        <file>gammaray/ui/light/icons/pick-element.png</file>
+        <file>gammaray/ui/light/icons/pick-element@2x.png</file>
+        <file>gammaray/ui/light/icons/pick-element@3x.png</file>
 
-        <file>gammaray/icons/ui/light/redirect-input.png</file>
-        <file>gammaray/icons/ui/light/redirect-input@2x.png</file>
-        <file>gammaray/icons/ui/light/redirect-input@3x.png</file>
+        <file>gammaray/ui/light/icons/redirect-input.png</file>
+        <file>gammaray/ui/light/icons/redirect-input@2x.png</file>
+        <file>gammaray/ui/light/icons/redirect-input@3x.png</file>
 
-        <file>gammaray/icons/ui/light/server-decorations.png</file>
-        <file>gammaray/icons/ui/light/server-decorations@2x.png</file>
-        <file>gammaray/icons/ui/light/server-decorations@3x.png</file>
+        <file>gammaray/ui/light/icons/server-decorations.png</file>
+        <file>gammaray/ui/light/icons/server-decorations@2x.png</file>
+        <file>gammaray/ui/light/icons/server-decorations@3x.png</file>
 
-        <file>gammaray/icons/ui/light/visualize-batches.png</file>
-        <file>gammaray/icons/ui/light/visualize-batches@2x.png</file>
-        <file>gammaray/icons/ui/light/visualize-batches@3x.png</file>
+        <file>gammaray/ui/light/icons/visualize-batches.png</file>
+        <file>gammaray/ui/light/icons/visualize-batches@2x.png</file>
+        <file>gammaray/ui/light/icons/visualize-batches@3x.png</file>
 
-        <file>gammaray/icons/ui/light/visualize-changes.png</file>
-        <file>gammaray/icons/ui/light/visualize-changes@2x.png</file>
-        <file>gammaray/icons/ui/light/visualize-changes@3x.png</file>
+        <file>gammaray/ui/light/icons/visualize-changes.png</file>
+        <file>gammaray/ui/light/icons/visualize-changes@2x.png</file>
+        <file>gammaray/ui/light/icons/visualize-changes@3x.png</file>
 
-        <file>gammaray/icons/ui/light/visualize-clipping.png</file>
-        <file>gammaray/icons/ui/light/visualize-clipping@2x.png</file>
-        <file>gammaray/icons/ui/light/visualize-clipping@3x.png</file>
+        <file>gammaray/ui/light/icons/visualize-clipping.png</file>
+        <file>gammaray/ui/light/icons/visualize-clipping@2x.png</file>
+        <file>gammaray/ui/light/icons/visualize-clipping@3x.png</file>
 
-        <file>gammaray/icons/ui/light/visualize-overdraw.png</file>
-        <file>gammaray/icons/ui/light/visualize-overdraw@2x.png</file>
-        <file>gammaray/icons/ui/light/visualize-overdraw@3x.png</file>
+        <file>gammaray/ui/light/icons/visualize-overdraw.png</file>
+        <file>gammaray/ui/light/icons/visualize-overdraw@2x.png</file>
+        <file>gammaray/ui/light/icons/visualize-overdraw@3x.png</file>
 
-        <file>gammaray/icons/ui/light/visualize-traces.png</file>
-        <file>gammaray/icons/ui/light/visualize-traces@2x.png</file>
-        <file>gammaray/icons/ui/light/visualize-traces@3x.png</file>
+        <file>gammaray/ui/light/icons/visualize-traces.png</file>
+        <file>gammaray/ui/light/icons/visualize-traces@2x.png</file>
+        <file>gammaray/ui/light/icons/visualize-traces@3x.png</file>
 
-        <file>gammaray/icons/ui/light/warning.png</file>
+        <file>gammaray/ui/light/icons/warning.png</file>
 
-        <file>gammaray/icons/ui/light/zoom-in.png</file>
-        <file>gammaray/icons/ui/light/zoom-in@2x.png</file>
-        <file>gammaray/icons/ui/light/zoom-in@3x.png</file>
+        <file>gammaray/ui/light/icons/zoom-in.png</file>
+        <file>gammaray/ui/light/icons/zoom-in@2x.png</file>
+        <file>gammaray/ui/light/icons/zoom-in@3x.png</file>
 
-        <file>gammaray/icons/ui/light/zoom-out.png</file>
-        <file>gammaray/icons/ui/light/zoom-out@2x.png</file>
-        <file>gammaray/icons/ui/light/zoom-out@3x.png</file>
+        <file>gammaray/ui/light/icons/zoom-out.png</file>
+        <file>gammaray/ui/light/icons/zoom-out@2x.png</file>
+        <file>gammaray/ui/light/icons/zoom-out@3x.png</file>
 
 
-        <!-- Dark icons -->
+        <!-- Dark -->
 
         <!-- UI icons -->
-        <file>gammaray/icons/ui/dark/grid-settings.png</file>
-        <file>gammaray/icons/ui/dark/grid-settings@2x.png</file>
-        <file>gammaray/icons/ui/dark/grid-settings@3x.png</file>
+        <file>gammaray/ui/dark/icons/grid-settings.png</file>
+        <file>gammaray/ui/dark/icons/grid-settings@2x.png</file>
+        <file>gammaray/ui/dark/icons/grid-settings@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/legend.png</file>
-        <file>gammaray/icons/ui/dark/legend@2x.png</file>
-        <file>gammaray/icons/ui/dark/legend@3x.png</file>
+        <file>gammaray/ui/dark/icons/legend.png</file>
+        <file>gammaray/ui/dark/icons/legend@2x.png</file>
+        <file>gammaray/ui/dark/icons/legend@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/measure-pixels.png</file>
-        <file>gammaray/icons/ui/dark/measure-pixels@2x.png</file>
-        <file>gammaray/icons/ui/dark/measure-pixels@3x.png</file>
+        <file>gammaray/ui/dark/icons/measure-pixels.png</file>
+        <file>gammaray/ui/dark/icons/measure-pixels@2x.png</file>
+        <file>gammaray/ui/dark/icons/measure-pixels@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/move-preview.png</file>
-        <file>gammaray/icons/ui/dark/move-preview@2x.png</file>
-        <file>gammaray/icons/ui/dark/move-preview@3x.png</file>
+        <file>gammaray/ui/dark/icons/move-preview.png</file>
+        <file>gammaray/ui/dark/icons/move-preview@2x.png</file>
+        <file>gammaray/ui/dark/icons/move-preview@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/pick-element.png</file>
-        <file>gammaray/icons/ui/dark/pick-element@2x.png</file>
-        <file>gammaray/icons/ui/dark/pick-element@3x.png</file>
+        <file>gammaray/ui/dark/icons/pick-element.png</file>
+        <file>gammaray/ui/dark/icons/pick-element@2x.png</file>
+        <file>gammaray/ui/dark/icons/pick-element@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/redirect-input.png</file>
-        <file>gammaray/icons/ui/dark/redirect-input@2x.png</file>
-        <file>gammaray/icons/ui/dark/redirect-input@3x.png</file>
+        <file>gammaray/ui/dark/icons/redirect-input.png</file>
+        <file>gammaray/ui/dark/icons/redirect-input@2x.png</file>
+        <file>gammaray/ui/dark/icons/redirect-input@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/server-decorations.png</file>
-        <file>gammaray/icons/ui/dark/server-decorations@2x.png</file>
-        <file>gammaray/icons/ui/dark/server-decorations@3x.png</file>
+        <file>gammaray/ui/dark/icons/server-decorations.png</file>
+        <file>gammaray/ui/dark/icons/server-decorations@2x.png</file>
+        <file>gammaray/ui/dark/icons/server-decorations@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/visualize-batches.png</file>
-        <file>gammaray/icons/ui/dark/visualize-batches@2x.png</file>
-        <file>gammaray/icons/ui/dark/visualize-batches@3x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-batches.png</file>
+        <file>gammaray/ui/dark/icons/visualize-batches@2x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-batches@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/visualize-changes.png</file>
-        <file>gammaray/icons/ui/dark/visualize-changes@2x.png</file>
-        <file>gammaray/icons/ui/dark/visualize-changes@3x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-changes.png</file>
+        <file>gammaray/ui/dark/icons/visualize-changes@2x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-changes@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/visualize-clipping.png</file>
-        <file>gammaray/icons/ui/dark/visualize-clipping@2x.png</file>
-        <file>gammaray/icons/ui/dark/visualize-clipping@3x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-clipping.png</file>
+        <file>gammaray/ui/dark/icons/visualize-clipping@2x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-clipping@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/visualize-overdraw.png</file>
-        <file>gammaray/icons/ui/dark/visualize-overdraw@2x.png</file>
-        <file>gammaray/icons/ui/dark/visualize-overdraw@3x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-overdraw.png</file>
+        <file>gammaray/ui/dark/icons/visualize-overdraw@2x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-overdraw@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/visualize-traces.png</file>
-        <file>gammaray/icons/ui/dark/visualize-traces@2x.png</file>
-        <file>gammaray/icons/ui/dark/visualize-traces@3x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-traces.png</file>
+        <file>gammaray/ui/dark/icons/visualize-traces@2x.png</file>
+        <file>gammaray/ui/dark/icons/visualize-traces@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/zoom-in.png</file>
-        <file>gammaray/icons/ui/dark/zoom-in@2x.png</file>
-        <file>gammaray/icons/ui/dark/zoom-in@3x.png</file>
+        <file>gammaray/ui/dark/icons/zoom-in.png</file>
+        <file>gammaray/ui/dark/icons/zoom-in@2x.png</file>
+        <file>gammaray/ui/dark/icons/zoom-in@3x.png</file>
 
-        <file>gammaray/icons/ui/dark/zoom-out.png</file>
-        <file>gammaray/icons/ui/dark/zoom-out@2x.png</file>
-        <file>gammaray/icons/ui/dark/zoom-out@3x.png</file>
+        <file>gammaray/ui/dark/icons/zoom-out.png</file>
+        <file>gammaray/ui/dark/icons/zoom-out@2x.png</file>
+        <file>gammaray/ui/dark/icons/zoom-out@3x.png</file>
 
         <!-- QtQuick 2 class icons -->
-        <file alias="gammaray/icons/ui/classes/QQuickBorderImage/default.png">gammaray/icons/ui/classes/qtquick2/border-image-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickFlickable/default.png">gammaray/icons/ui/classes/qtquick2/flickable-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickFlipable/default.png">gammaray/icons/ui/classes/qtquick2/flipable-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickFocusScope/default.png">gammaray/icons/ui/classes/qtquick2/focusscope-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickGridView/default.png">gammaray/icons/ui/classes/qtquick2/gridview-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickImage/default.png">gammaray/icons/ui/classes/qtquick2/image-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickItem/default.png">gammaray/icons/ui/classes/qtquick2/item-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickListView/default.png">gammaray/icons/ui/classes/qtquick2/listview-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickMouseArea/default.png">gammaray/icons/ui/classes/qtquick2/mouse-area-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickPathView/default.png">gammaray/icons/ui/classes/qtquick2/pathview-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickRectangle/default.png">gammaray/icons/ui/classes/qtquick2/rect-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickTextEdit/default.png">gammaray/icons/ui/classes/qtquick2/text-edit-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickText/default.png">gammaray/icons/ui/classes/qtquick2/text-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickTextInput/default.png">gammaray/icons/ui/classes/qtquick2/text-input-icon16.png</file>
-        <file alias="gammaray/icons/ui/classes/QQuickWebView/default.png">gammaray/icons/ui/classes/qtquick2/webview-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickBorderImage/default.png">gammaray/ui/icons/classes/qtquick2/border-image-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickFlickable/default.png">gammaray/ui/icons/classes/qtquick2/flickable-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickFlipable/default.png">gammaray/ui/icons/classes/qtquick2/flipable-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickFocusScope/default.png">gammaray/ui/icons/classes/qtquick2/focusscope-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickGridView/default.png">gammaray/ui/icons/classes/qtquick2/gridview-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickImage/default.png">gammaray/ui/icons/classes/qtquick2/image-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickItem/default.png">gammaray/ui/icons/classes/qtquick2/item-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickListView/default.png">gammaray/ui/icons/classes/qtquick2/listview-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickMouseArea/default.png">gammaray/ui/icons/classes/qtquick2/mouse-area-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickPathView/default.png">gammaray/ui/icons/classes/qtquick2/pathview-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickRectangle/default.png">gammaray/ui/icons/classes/qtquick2/rect-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickTextEdit/default.png">gammaray/ui/icons/classes/qtquick2/text-edit-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickText/default.png">gammaray/ui/icons/classes/qtquick2/text-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickTextInput/default.png">gammaray/ui/icons/classes/qtquick2/text-input-icon16.png</file>
+        <file alias="gammaray/icons/ui/classes/QQuickWebView/default.png">gammaray/ui/icons/classes/qtquick2/webview-icon16.png</file>
 
         <!-- QtWidgets class icons -->
-        <file alias="gammaray/icons/ui/classes/QDateTimeEdit/default.png">gammaray/icons/ui/classes/qtwidgets/datetimeedit.png</file>
-        <file alias="gammaray/icons/ui/classes/QTextEdit/default.png">gammaray/icons/ui/classes/qtwidgets/textedit.png</file>
-        <file alias="gammaray/icons/ui/classes/QCalendarWidget/default.png">gammaray/icons/ui/classes/qtwidgets/calendarwidget.png</file>
-        <file alias="gammaray/icons/ui/classes/QProgressBar/default.png">gammaray/icons/ui/classes/qtwidgets/progress.png</file>
-        <file alias="gammaray/icons/ui/classes/QAbstractScrollArea/default.png">gammaray/icons/ui/classes/qtwidgets/scrollarea.png</file>
-<!--        <file>gammaray/icons/ui/classes/qtwidgets/spacer.png</file> -->
-        <file alias="gammaray/icons/ui/classes/QLineEdit/default.png">gammaray/icons/ui/classes/qtwidgets/lineedit.png</file>
-        <file alias="gammaray/icons/ui/classes/QDockWidget/default.png">gammaray/icons/ui/classes/qtwidgets/dockwidget.png</file>
-        <file alias="gammaray/icons/ui/classes/QScrollBar/default.png">gammaray/icons/ui/classes/qtwidgets/vscrollbar.png</file>
-<!--        <file>gammaray/icons/ui/classes/qtwidgets/groupboxcollapsible.png</file> -->
-        <file alias="gammaray/icons/ui/classes/QComboBox/default.png">gammaray/icons/ui/classes/qtwidgets/combobox.png</file>
-<!--        <file>gammaray/icons/ui/classes/qtwidgets/line.png</file> -->
-<!--        <file>gammaray/icons/ui/classes/qtwidgets/hsplit.png</file> -->
-        <file alias="gammaray/icons/ui/classes/QCommandLinkButton/default.png">gammaray/icons/ui/classes/qtwidgets/commandlinkbutton.png</file>
-        <file alias="gammaray/icons/ui/classes/QWizard/default.png">gammaray/icons/ui/classes/qtwidgets/wizard.png</file>
-        <file alias="gammaray/icons/ui/classes/QWidget/default.png">gammaray/icons/ui/classes/qtwidgets/widget.png</file>
-        <file alias="gammaray/icons/ui/classes/QSpinBox/default.png">gammaray/icons/ui/classes/qtwidgets/spinbox.png</file>
-<!--        <file>gammaray/icons/ui/classes/qtwidgets/vline.png</file> -->
-        <file alias="gammaray/icons/ui/classes/QScrollBar/orientation=Horizontal.png">gammaray/icons/ui/classes/qtwidgets/hscrollbar.png</file>
-        <file alias="gammaray/icons/ui/classes/QCheckBox/default.png">gammaray/icons/ui/classes/qtwidgets/checkbox.png</file>
-        <file alias="gammaray/icons/ui/classes/QTabWidget/default.png">gammaray/icons/ui/classes/qtwidgets/tabwidget.png</file>
-        <file alias="gammaray/icons/ui/classes/QDateEdit/default.png">gammaray/icons/ui/classes/qtwidgets/dateedit.png</file>
-        <file alias="gammaray/icons/ui/classes/QLabel/default.png">gammaray/icons/ui/classes/qtwidgets/label.png</file>
-        <file alias="gammaray/icons/ui/classes/QListView/default.png">gammaray/icons/ui/classes/qtwidgets/listbox.png</file>
-        <file alias="gammaray/icons/ui/classes/QColumnView/default.png">gammaray/icons/ui/classes/qtwidgets/columnview.png</file>
-        <file alias="gammaray/icons/ui/classes/QDial/default.png">gammaray/icons/ui/classes/qtwidgets/dial.png</file>
-        <file alias="gammaray/icons/ui/classes/QFrame/default.png">gammaray/icons/ui/classes/qtwidgets/frame.png</file>
-<!--        <file>gammaray/icons/ui/classes/qtwidgets/vspacer.png</file> -->
-        <file alias="gammaray/icons/ui/classes/QTabBar/default.png">gammaray/icons/ui/classes/qtwidgets/tabbar.png</file>
-        <file alias="gammaray/icons/ui/classes/QSlider/default.png">gammaray/icons/ui/classes/qtwidgets/hslider.png</file>
-        <file alias="gammaray/icons/ui/classes/QGroupBox/default.png">gammaray/icons/ui/classes/qtwidgets/groupbox.png</file>
-        <file alias="gammaray/icons/ui/classes/QGraphicsView/default.png">gammaray/icons/ui/classes/qtwidgets/graphicsview.png</file>
-        <file alias="gammaray/icons/ui/classes/QMdiArea/default.png">gammaray/icons/ui/classes/qtwidgets/mdiarea.png</file>
-        <file alias="gammaray/icons/ui/classes/QFontComboBox/default.png">gammaray/icons/ui/classes/qtwidgets/fontcombobox.png</file>
-        <file alias="gammaray/icons/ui/classes/QDialogButtonBox/default.png">gammaray/icons/ui/classes/qtwidgets/dialogbuttonbox.png</file>
-        <file alias="gammaray/icons/ui/classes/QToolBox/default.png">gammaray/icons/ui/classes/qtwidgets/toolbox.png</file>
-        <file alias="gammaray/icons/ui/classes/QTimeEdit/default.png">gammaray/icons/ui/classes/qtwidgets/timeedit.png</file>
-        <file alias="gammaray/icons/ui/classes/QPlainTextEdit/default.png">gammaray/icons/ui/classes/qtwidgets/plaintextedit.png</file>
-        <file alias="gammaray/icons/ui/classes/QSlider/orientation=Vertical.png">gammaray/icons/ui/classes/qtwidgets/vslider.png</file>
-        <file alias="gammaray/icons/ui/classes/QDoubleSpinBox/default.png">gammaray/icons/ui/classes/qtwidgets/doublespinbox.png</file>
-        <file alias="gammaray/icons/ui/classes/QLCDNumber/default.png">gammaray/icons/ui/classes/qtwidgets/lcdnumber.png</file>
-        <file alias="gammaray/icons/ui/classes/QToolButton/default.png">gammaray/icons/ui/classes/qtwidgets/toolbutton.png</file>
-        <file alias="gammaray/icons/ui/classes/QTableView/default.png">gammaray/icons/ui/classes/qtwidgets/table.png</file>
-        <file alias="gammaray/icons/ui/classes/QStackedWidget/default.png">gammaray/icons/ui/classes/qtwidgets/widgetstack.png</file>
-        <file alias="gammaray/icons/ui/classes/QRadioButton/default.png">gammaray/icons/ui/classes/qtwidgets/radiobutton.png</file>
-        <file alias="gammaray/icons/ui/classes/QPushButton/default.png">gammaray/icons/ui/classes/qtwidgets/pushbutton.png</file>
-        <file alias="gammaray/icons/ui/classes/QAbstractItemView/default.png">gammaray/icons/ui/classes/qtwidgets/listview.png</file>
-        <file alias="gammaray/icons/ui/classes/QSplitter/orientation=Horizontal.png">gammaray/icons/ui/classes/qtwidgets/edithlayoutsplit.png</file>
-        <file alias="gammaray/icons/ui/classes/QHBoxLayout/default.png">gammaray/icons/ui/classes/qtwidgets/edithlayout.png</file>
-        <file alias="gammaray/icons/ui/classes/QGridLayout/default.png">gammaray/icons/ui/classes/qtwidgets/editgrid.png</file>
-        <file alias="gammaray/icons/ui/classes/QSplitter/default.png">gammaray/icons/ui/classes/qtwidgets/editvlayoutsplit.png</file>
-        <file alias="gammaray/icons/ui/classes/QVBoxLayout/default.png">gammaray/icons/ui/classes/qtwidgets/editvlayout.png</file>
-        <file alias="gammaray/icons/ui/classes/QFormLayout/default.png">gammaray/icons/ui/classes/qtwidgets/editform.png</file>
+        <file alias="gammaray/icons/ui/classes/QDateTimeEdit/default.png">gammaray/ui/icons/classes/qtwidgets/datetimeedit.png</file>
+        <file alias="gammaray/icons/ui/classes/QTextEdit/default.png">gammaray/ui/icons/classes/qtwidgets/textedit.png</file>
+        <file alias="gammaray/icons/ui/classes/QCalendarWidget/default.png">gammaray/ui/icons/classes/qtwidgets/calendarwidget.png</file>
+        <file alias="gammaray/icons/ui/classes/QProgressBar/default.png">gammaray/ui/icons/classes/qtwidgets/progress.png</file>
+        <file alias="gammaray/icons/ui/classes/QAbstractScrollArea/default.png">gammaray/ui/icons/classes/qtwidgets/scrollarea.png</file>
+        <file alias="gammaray/icons/ui/classes/QLineEdit/default.png">gammaray/ui/icons/classes/qtwidgets/lineedit.png</file>
+        <file alias="gammaray/icons/ui/classes/QDockWidget/default.png">gammaray/ui/icons/classes/qtwidgets/dockwidget.png</file>
+        <file alias="gammaray/icons/ui/classes/QScrollBar/default.png">gammaray/ui/icons/classes/qtwidgets/vscrollbar.png</file>
+        <file alias="gammaray/icons/ui/classes/QComboBox/default.png">gammaray/ui/icons/classes/qtwidgets/combobox.png</file>
+        <file alias="gammaray/icons/ui/classes/QCommandLinkButton/default.png">gammaray/ui/icons/classes/qtwidgets/commandlinkbutton.png</file>
+        <file alias="gammaray/icons/ui/classes/QWizard/default.png">gammaray/ui/icons/classes/qtwidgets/wizard.png</file>
+        <file alias="gammaray/icons/ui/classes/QWidget/default.png">gammaray/ui/icons/classes/qtwidgets/widget.png</file>
+        <file alias="gammaray/icons/ui/classes/QSpinBox/default.png">gammaray/ui/icons/classes/qtwidgets/spinbox.png</file>
+        <file alias="gammaray/icons/ui/classes/QScrollBar/orientation=Horizontal.png">gammaray/ui/icons/classes/qtwidgets/hscrollbar.png</file>
+        <file alias="gammaray/icons/ui/classes/QCheckBox/default.png">gammaray/ui/icons/classes/qtwidgets/checkbox.png</file>
+        <file alias="gammaray/icons/ui/classes/QTabWidget/default.png">gammaray/ui/icons/classes/qtwidgets/tabwidget.png</file>
+        <file alias="gammaray/icons/ui/classes/QDateEdit/default.png">gammaray/ui/icons/classes/qtwidgets/dateedit.png</file>
+        <file alias="gammaray/icons/ui/classes/QLabel/default.png">gammaray/ui/icons/classes/qtwidgets/label.png</file>
+        <file alias="gammaray/icons/ui/classes/QListView/default.png">gammaray/ui/icons/classes/qtwidgets/listbox.png</file>
+        <file alias="gammaray/icons/ui/classes/QColumnView/default.png">gammaray/ui/icons/classes/qtwidgets/columnview.png</file>
+        <file alias="gammaray/icons/ui/classes/QDial/default.png">gammaray/ui/icons/classes/qtwidgets/dial.png</file>
+        <file alias="gammaray/icons/ui/classes/QFrame/default.png">gammaray/ui/icons/classes/qtwidgets/frame.png</file>
+        <file alias="gammaray/icons/ui/classes/QTabBar/default.png">gammaray/ui/icons/classes/qtwidgets/tabbar.png</file>
+        <file alias="gammaray/icons/ui/classes/QSlider/default.png">gammaray/ui/icons/classes/qtwidgets/hslider.png</file>
+        <file alias="gammaray/icons/ui/classes/QGroupBox/default.png">gammaray/ui/icons/classes/qtwidgets/groupbox.png</file>
+        <file alias="gammaray/icons/ui/classes/QGraphicsView/default.png">gammaray/ui/icons/classes/qtwidgets/graphicsview.png</file>
+        <file alias="gammaray/icons/ui/classes/QMdiArea/default.png">gammaray/ui/icons/classes/qtwidgets/mdiarea.png</file>
+        <file alias="gammaray/icons/ui/classes/QFontComboBox/default.png">gammaray/ui/icons/classes/qtwidgets/fontcombobox.png</file>
+        <file alias="gammaray/icons/ui/classes/QDialogButtonBox/default.png">gammaray/ui/icons/classes/qtwidgets/dialogbuttonbox.png</file>
+        <file alias="gammaray/icons/ui/classes/QToolBox/default.png">gammaray/ui/icons/classes/qtwidgets/toolbox.png</file>
+        <file alias="gammaray/icons/ui/classes/QTimeEdit/default.png">gammaray/ui/icons/classes/qtwidgets/timeedit.png</file>
+        <file alias="gammaray/icons/ui/classes/QPlainTextEdit/default.png">gammaray/ui/icons/classes/qtwidgets/plaintextedit.png</file>
+        <file alias="gammaray/icons/ui/classes/QSlider/orientation=Vertical.png">gammaray/ui/icons/classes/qtwidgets/vslider.png</file>
+        <file alias="gammaray/icons/ui/classes/QDoubleSpinBox/default.png">gammaray/ui/icons/classes/qtwidgets/doublespinbox.png</file>
+        <file alias="gammaray/icons/ui/classes/QLCDNumber/default.png">gammaray/ui/icons/classes/qtwidgets/lcdnumber.png</file>
+        <file alias="gammaray/icons/ui/classes/QToolButton/default.png">gammaray/ui/icons/classes/qtwidgets/toolbutton.png</file>
+        <file alias="gammaray/icons/ui/classes/QTableView/default.png">gammaray/ui/icons/classes/qtwidgets/table.png</file>
+        <file alias="gammaray/icons/ui/classes/QStackedWidget/default.png">gammaray/ui/icons/classes/qtwidgets/widgetstack.png</file>
+        <file alias="gammaray/icons/ui/classes/QRadioButton/default.png">gammaray/ui/icons/classes/qtwidgets/radiobutton.png</file>
+        <file alias="gammaray/icons/ui/classes/QPushButton/default.png">gammaray/ui/icons/classes/qtwidgets/pushbutton.png</file>
+        <file alias="gammaray/icons/ui/classes/QAbstractItemView/default.png">gammaray/ui/icons/classes/qtwidgets/listview.png</file>
+        <file alias="gammaray/icons/ui/classes/QSplitter/orientation=Horizontal.png">gammaray/ui/icons/classes/qtwidgets/edithlayoutsplit.png</file>
+        <file alias="gammaray/icons/ui/classes/QHBoxLayout/default.png">gammaray/ui/icons/classes/qtwidgets/edithlayout.png</file>
+        <file alias="gammaray/icons/ui/classes/QGridLayout/default.png">gammaray/ui/icons/classes/qtwidgets/editgrid.png</file>
+        <file alias="gammaray/icons/ui/classes/QSplitter/default.png">gammaray/ui/icons/classes/qtwidgets/editvlayoutsplit.png</file>
+        <file alias="gammaray/icons/ui/classes/QVBoxLayout/default.png">gammaray/ui/icons/classes/qtwidgets/editvlayout.png</file>
+        <file alias="gammaray/icons/ui/classes/QFormLayout/default.png">gammaray/ui/icons/classes/qtwidgets/editform.png</file>
+<!--        <file>gammaray/ui/icons/classes/qtwidgets/spacer.png</file> -->
+<!--        <file>gammaray/ui/icons/classes/qtwidgets/groupboxcollapsible.png</file> -->
+<!--        <file>gammaray/ui/icons/classes/qtwidgets/line.png</file> -->
+<!--        <file>gammaray/ui/icons/classes/qtwidgets/hsplit.png</file> -->
+<!--        <file>gammaray/ui/icons/classes/qtwidgets/vline.png</file> -->
+<!--        <file>gammaray/ui/icons/classes/qtwidgets/vspacer.png</file> -->
     </qresource>
 </RCC>

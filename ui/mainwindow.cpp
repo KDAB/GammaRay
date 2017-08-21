@@ -193,7 +193,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    UIResources::setIconTheme(UiIntegration::hasDarkUI()
+    UIResources::setTheme(UiIntegration::hasDarkUI()
                               ? UIResources::Light
                               : UIResources::Dark);
 
