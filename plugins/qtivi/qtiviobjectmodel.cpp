@@ -98,6 +98,16 @@ QtIviObjectModel::IviCarrierProperty::IviCarrierProperty(const QMetaProperty &me
 {
 }
 
+QtIviObjectModel::IviCarrierProperty &QtIviObjectModel::IviCarrierProperty::operator=(QtIviObjectModel::IviCarrierProperty &&other)
+{
+    m_metaProperty = other.m_metaProperty;
+    m_originalValue = other.m_originalValue;
+    m_overridenValue = other.m_overridenValue;
+    m_overriding = other.m_overriding;
+    m_overridable = other.m_overridable;
+    return *this;
+}
+
 int QtIviObjectModel::IviCarrierProperty::propertyIndex() const
 {
     return m_metaProperty.isValid() ? m_metaProperty.propertyIndex() : -1;
@@ -262,15 +272,6 @@ void QtIviObjectModel::IviCarrierProperty::setOriginalValue(const QVariant &edit
     m_originalValue = editValue;
 }
 
-QtIviObjectModel::IviCarrierProperty &QtIviObjectModel::IviCarrierProperty::operator=(QtIviObjectModel::IviCarrierProperty &&other)
-{
-    m_metaProperty = other.m_metaProperty;
-    m_originalValue = other.m_originalValue;
-    m_overridenValue = other.m_overridenValue;
-    m_overriding = other.m_overriding;
-    return *this;
-}
-
 bool QtIviObjectModel::IviCarrierProperty::operator==(const QByteArray &property) const
 {
     return this->m_metaProperty.name() == property;
@@ -300,13 +301,14 @@ QVariant QtIviObjectModel::IviCarrier::property(int propertyIndex) const
     return property.cppValue();
 }
 
-void QtIviObjectModel::IviCarrier::setProperty(int propertyIndex, const QVariant &value)
+bool QtIviObjectModel::IviCarrier::setProperty(int propertyIndex, const QVariant &value)
 {
     if (!m_carrier)
-        return;
+        return false;
 
     IviCarrierProperty &property = propertyForIndex(propertyIndex);
     property.setOriginalValue(value);
+    return property.isOverrided();
 }
 
 QString QtIviObjectModel::IviCarrier::label() const
