@@ -296,13 +296,14 @@ QVariant QtIviObjectModel::IviCarrier::property(int propertyIndex) const
     return property.cppValue();
 }
 
-void QtIviObjectModel::IviCarrier::setProperty(int propertyIndex, const QVariant &value)
+bool QtIviObjectModel::IviCarrier::setProperty(int propertyIndex, const QVariant &value)
 {
     if (!m_carrier)
-        return;
+        return false;
 
     IviCarrierProperty &property = propertyForIndex(propertyIndex);
     property.setOriginalValue(value);
+    return property.isOverrided();
 }
 
 QString QtIviObjectModel::IviCarrier::label() const
