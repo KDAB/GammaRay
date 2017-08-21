@@ -50,13 +50,11 @@ QRect getBoundingRect(const QImage& image)
     int top = image.height(), bottom = 0, left = image.width(), right = 0;
 
     for(int y = 0; y < image.height(); y++)
-        for(int x = 0; x < image.width(); x++)
-        {
-            if(qAlpha(image.pixel(x,y)) != 0)
-            {
-                top = std::min(top,y);
+        for(int x = 0; x < image.width(); x++) {
+            if (qAlpha(image.pixel(x, y)) != 0) {
+                top = std::min(top, y);
                 bottom = std::max(bottom, y);
-                left = std::min(left,x);
+                left = std::min(left, x);
                 right = std::max(right, x);
             }
         }
@@ -84,9 +82,13 @@ void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
     const float imagePixelSize = (analyzedTexture.width() * analyzedTexture.height());
     const auto pixelWaste = 1.0 - ((boundingRect.height() * boundingRect.width()) / imagePixelSize);
     int pixelWastePercent = qRound(pixelWaste*100.0f);
+    int pixelWasteInBytes = imagePixelSize * (boundingRect.height() * boundingRect.width()) * frame().image().depth()/8;
+
+    emit textureWasteFound(pixelWastePercent, pixelWasteInBytes);
 
     //Draw Warning if more than 30% are wasted
     if (pixelWaste > 0.3) {
+        emit textureInfoNecessary(true);
         p->save();
         auto scaleTransform = QTransform::fromScale(zoom(),zoom());
         p->setTransform(scaleTransform, true);
@@ -105,37 +107,8 @@ void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
         innerRect.addRect(boundingRect);
         viewRect = viewRect.subtracted(innerRect);
         p->drawPath(viewRect);
-
-        //Draw WarningLabel
-        brush = QBrush(Qt::red, Qt::SolidPattern);
-        p->setBrush(brush);
-        const auto textRect = QRect(analyzedRect.left(), analyzedRect.bottom(),
-                              analyzedRect.width(), 20.0f / zoom());
-        p->drawRect(textRect);
-
-        //Draw fitting WarningText
-        auto font = p->font();
-        font.setPixelSize(16.0f / zoom());
-        auto metrics = QFontMetrics(font);
-        QVector<QString> possibleStrings;
-        possibleStrings.push_back(tr("! "));
-        possibleStrings.push_back(tr("%1% ").arg(pixelWastePercent));
-        possibleStrings.push_back(tr("%1% wasted! ").arg(pixelWastePercent));
-        possibleStrings.push_back(tr("%1% of memory wasted! ").arg(pixelWastePercent));
-        possibleStrings.push_back(tr("%1% of memory wasted in transparency! ").arg(pixelWastePercent));
-        QString bestfittingString;
-        for (int i = 0; i < possibleStrings.length(); i++) {
-            if (metrics.width(possibleStrings[i]) < textRect.width()) {
-                bestfittingString = possibleStrings[i];
-            } else {
-                break;
-            }
-        }
-        p->setFont(font);
-        pen.setColor(Qt::white);
-        p->setPen(pen);
-        p->drawText(textRect, Qt::AlignRight, bestfittingString);
-        p->restore();
+    } else {
+        emit textureInfoNecessary(false);
     }
 }
 

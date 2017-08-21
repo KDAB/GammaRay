@@ -45,6 +45,10 @@ public:
     void drawPixelWasteDecoration(QPainter *p) const;
     void drawActiveAtlasTile(QPainter *p) const;
 
+signals:
+    void textureInfoNecessary(const bool isNecessary) const;
+    void textureWasteFound(const int percent, const int bytes) const;
+
 private slots:
     void setTextureWasteVisualizationEnabled(bool enabled);
 

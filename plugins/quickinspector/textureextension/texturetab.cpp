@@ -45,6 +45,8 @@ TextureTab::TextureTab(PropertyWidget *parent)
     auto toolbar = new QToolBar;
     toolbar->setIconSize(QSize(16, 16));
     toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    toolbar->layout()->setContentsMargins(9,9,9,9);
+    toolbar->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
     ui->layout->setMenuBar(toolbar);
 
     foreach (auto action, ui->textureView->interactionModeActions()->actions())
@@ -69,6 +71,12 @@ TextureTab::TextureTab(PropertyWidget *parent)
     connect(zoom, SIGNAL(currentIndexChanged(int)), ui->textureView, SLOT(setZoomLevel(int)));
     connect(ui->textureView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
     connect(toggleTextureWasteAction, SIGNAL(toggled(bool)), ui->textureView, SLOT(setTextureWasteVisualizationEnabled(bool)));
+    connect(ui->textureView, SIGNAL(textureInfoNecessary(bool)), ui->textureInfo, SLOT(setVisible(bool)));
+    connect(ui->textureView, &TextureViewWidget::textureWasteFound,
+                                    [&](int percent, int bytes){
+                                        ui->textureWasteLabel->setText("Transparency Waste: " + QString::number(percent) + "% or "
+                                                                              + QString::number(bytes) + "bytes");
+                                    });
     zoom->setCurrentIndex(ui->textureView->zoomLevelIndex());
 }
 
