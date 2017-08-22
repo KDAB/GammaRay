@@ -56,6 +56,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
     ui->aboutPage->setAuthors(AboutData::aboutAuthors());
     ui->aboutPage->setFooter(AboutData::aboutFooter());
     ui->aboutPage->layout()->setContentsMargins(ui->selfTestPage->layout()->contentsMargins());
+    ui->aboutPage->setBackgroundWindow(this);
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
     connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));

@@ -32,6 +32,7 @@
 #include "gammaray_ui_export.h"
 
 #include <QWidget>
+#include <QPointer>
 
 namespace GammaRay {
 namespace Ui {
@@ -54,8 +55,16 @@ public:
 
     void setText(const QString &text);
 
+    void setBackgroundWindow(QWidget *window);
+
+protected:
+    void showEvent(QShowEvent *event) override;
+    bool eventFilter(QObject *object, QEvent *event) override;
+
 private:
     QScopedPointer<Ui::AboutWidget> ui;
+    QPointer<QWidget> m_backgroundWindow;
+    QPixmap m_watermark;
 };
 }
 

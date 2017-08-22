@@ -45,6 +45,10 @@
         <!-- Light -->
 
         <!-- UI pixmaps -->
+        <file>gammaray/ui/light/pixmaps/watermark.png</file>
+        <file>gammaray/ui/light/pixmaps/watermark@2x.png</file>
+        <file>gammaray/ui/light/pixmaps/watermark@3x.png</file>
+
         <file>gammaray/ui/light/pixmaps/splashscreen.png</file>
         <file>gammaray/ui/light/pixmaps/splashscreen@2x.png</file>
         <file>gammaray/ui/light/pixmaps/splashscreen@3x.png</file>
@@ -114,6 +118,11 @@
 
 
         <!-- Dark -->
+
+        <!-- UI pixmaps -->
+        <file>gammaray/ui/dark/pixmaps/watermark.png</file>
+        <file>gammaray/ui/dark/pixmaps/watermark@2x.png</file>
+        <file>gammaray/ui/dark/pixmaps/watermark@3x.png</file>
 
         <!-- UI icons -->
         <file>gammaray/ui/dark/icons/grid-settings.png</file>
