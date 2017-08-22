@@ -50,7 +50,7 @@ LauncherWindow::LauncherWindow(QWidget *parent)
                               : UIResources::Dark);
 
     ui->setupUi(this);
-    ui->aboutPage->setLogo(QStringLiteral(":/gammaray/GammaRay-Trademark-medium.png"));
+    ui->aboutPage->setThemeLogo(QStringLiteral("gammaray-trademark.png"));
     ui->aboutPage->setTitle(AboutData::aboutTitle());
     ui->aboutPage->setHeader(AboutData::aboutHeader());
     ui->aboutPage->setAuthors(AboutData::aboutAuthors());

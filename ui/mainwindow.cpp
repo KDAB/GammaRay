@@ -381,7 +381,7 @@ void MainWindow::about()
     AboutDialog dialog(this);
     dialog.setWindowTitle(tr("About GammaRay"));
     dialog.setWindowIcon(QPixmap(QStringLiteral(":/gammaray/GammaRay-128x128.png")));
-    dialog.setLogo(QStringLiteral(":/gammaray/GammaRay-Trademark-medium.png"));
+    dialog.setThemeLogo(QStringLiteral("gammaray-trademark.png"));
     dialog.setTitle(AboutData::aboutTitle());
     dialog.setHeader(AboutData::aboutHeader());
     dialog.setAuthors(AboutData::aboutAuthors());
