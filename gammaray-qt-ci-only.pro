@@ -20,7 +20,18 @@ TEMPLATE = subdirs
 SUBDIRS += qt-ci-wrapper
 
 # forward non-built-in targets too
-QMAKE_EXTRA_TARGETS += gammaray_build_docs
+QMAKE_EXTRA_TARGETS += gammaray_build_docs gammaray_build_qch_docs
 gammaray_build_docs.CONFIG = recursive
 gammaray_build_docs.recurse_target = docs
 gammaray_build_docs.target = docs
+gammaray_build_qch_docs.target = qch_docs
+gammaray_build_qch_docs.depends = docs
+
+# add dummy qmake targets for doc build - only qch_docs triggers the build
+DOC_TARGETS = \
+    prepare_docs generate_docs html_docs \
+    install_html_docs uninstall_html_docs \
+    install_qch_docs uninstall_qch_docs \
+    install_docs uninstall_docs
+
+QMAKE_EXTRA_TARGETS += $$DOC_TARGETS
