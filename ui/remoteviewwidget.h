@@ -240,6 +240,7 @@ private:
     ObjectIdsFilterProxyModel *m_pickProxyModel;
     VisibilityFilterProxyModel *m_invisibleItemsProxyModel;
     bool m_initialZoomDone;
+    bool m_extraViewportUpdateNeeded;
     int m_flagRole;
     int m_invisibleMask;
     QElapsedTimer m_fpsTimer;
