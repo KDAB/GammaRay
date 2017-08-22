@@ -76,6 +76,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     , m_pickProxyModel(new ObjectIdsFilterProxyModel(this))
     , m_invisibleItemsProxyModel(new VisibilityFilterProxyModel(this))
     , m_initialZoomDone(false)
+    , m_extraViewportUpdateNeeded(true)
     , m_showFps(false)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -240,6 +241,27 @@ void RemoteViewWidget::updateUserViewport()
 
     const auto userViewport = QRectF(QPointF(std::floor(-m_x / m_zoom), std::floor(-m_y / m_zoom)),
                                QSizeF(std::ceil(width() / m_zoom) + 1, std::ceil(height() / m_zoom) + 1));
+    // If we are textureviewWidget we don't send viewports for partial tex updates
+    if (qt_metacast("GammaRay::TextureViewWidget") != nullptr)
+        return;
+
+    const auto userViewport = QRectF(QPointF(-m_x / m_zoom, -m_y / m_zoom),
+                               QSizeF(width() / m_zoom, height() / m_zoom));
+
+    // If we would skip, but need an extra update
+    if (userViewport.contains(frame().viewRect()) && m_extraViewportUpdateNeeded) {
+        m_extraViewportUpdateNeeded = false;
+        m_interface->sendUserViewport(userViewport);
+        return;
+    }
+
+    // Regular skip
+    if (userViewport.contains(frame().viewRect())) {
+        return;
+    }
+
+    // Refill extra-update again once we needed a real update
+    m_extraViewportUpdateNeeded = true;
     m_interface->sendUserViewport(userViewport);
 }
 
