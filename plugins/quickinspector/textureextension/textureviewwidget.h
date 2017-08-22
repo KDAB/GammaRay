@@ -45,15 +45,24 @@ public:
     void drawPixelWasteDecoration(QPainter *p) const;
     void drawActiveAtlasTile(QPainter *p) const;
 
+    const static int transparencyWasteLimitInPercent = 30;
+    const static int transparencyWasteLimitInBytes = 1024;
+
 signals:
     void textureInfoNecessary(const bool isNecessary) const;
     void textureWasteFound(const int percent, const int bytes) const;
 
 private slots:
     void setTextureWasteVisualizationEnabled(bool enabled);
+    void recalculateBoundingRect();
 
 private:
+
     bool m_visualizeTextureWaste;
+    int m_pixelWasteInPercent;
+    int m_pixelWasteInBytes;
+    QRect m_analyzedRect;
+    QRect m_opaqueBoundingRect; //area actually occupied
 };
 
 }

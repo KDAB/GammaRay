@@ -32,8 +32,29 @@
 
 #include <QComboBox>
 #include <QToolBar>
+#include <cmath>
 
 using namespace GammaRay;
+
+
+QString formatBytes(qint64 bytes)
+{
+    static const QVector<QString> sizes = {QLatin1String(" TiB"), QLatin1String(" GiB"),
+                                           QLatin1String(" MiB"), QLatin1String(" KiB"),
+                                           QLatin1String(" B")};
+    static const qint64 startMultiplier = std::pow(1024, sizes.size() - 1);
+
+    qint64 multiplier = startMultiplier;
+    for (int i = 0; i < sizes.size(); ++i, multiplier /= 1024) {
+        if (bytes < multiplier)
+            continue;
+        else if (bytes % multiplier == 0)
+            return QString::number(bytes / multiplier) + sizes.at(i);
+        else
+            return QString::number(bytes / static_cast<qreal>(multiplier), 'f', 2) + sizes.at(i);
+    }
+    return QStringLiteral("0 B");
+}
 
 TextureTab::TextureTab(PropertyWidget *parent)
     : QWidget(parent)
@@ -73,9 +94,9 @@ TextureTab::TextureTab(PropertyWidget *parent)
     connect(toggleTextureWasteAction, SIGNAL(toggled(bool)), ui->textureView, SLOT(setTextureWasteVisualizationEnabled(bool)));
     connect(ui->textureView, SIGNAL(textureInfoNecessary(bool)), ui->textureInfo, SLOT(setVisible(bool)));
     connect(ui->textureView, &TextureViewWidget::textureWasteFound,
-                                    [&](int percent, int bytes){
+                                    [&](int percent, int bytes) {
                                         ui->textureWasteLabel->setText("Transparency Waste: " + QString::number(percent) + "% or "
-                                                                              + QString::number(bytes) + "bytes");
+                                                                              + formatBytes(bytes));
                                     });
     zoom->setCurrentIndex(ui->textureView->zoomLevelIndex());
 }
