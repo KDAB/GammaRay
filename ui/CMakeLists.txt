@@ -3,6 +3,7 @@
 #
 set(gammaray_ui_srcs
   aboutdata.cpp
+  aboutwidget.cpp
   themedimagelabel.cpp
   clientdecorationidentityproxymodel.cpp
   clienttoolmanager.cpp
@@ -78,6 +79,8 @@ set(gammaray_ui_srcs
 )
 
 qt4_wrap_ui(gammaray_ui_srcs
+  aboutwidget.ui
+
   methodinvocationdialog.ui
 
   paintanalyzerwidget.ui
@@ -145,7 +148,6 @@ set(gammaray_ui_internal_srcs
 
 qt4_wrap_ui(gammaray_ui_internal_srcs
   mainwindow.ui
-  aboutdialog.ui
 )
 
 add_library(gammaray_ui_internal STATIC ${gammaray_ui_internal_srcs})

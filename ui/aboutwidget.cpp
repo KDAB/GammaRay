@@ -1,5 +1,5 @@
 /*
-  aboutdialog.cpp
+  aboutwidget.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,69 +26,64 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "aboutdialog.h"
 #include "aboutwidget.h"
+#include "ui_aboutwidget.h"
 
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QDialogButtonBox>
+#include <QScrollBar>
 
 using namespace GammaRay;
 
-AboutDialog::AboutDialog(QWidget *parent)
-    : QDialog(parent)
-    , ui(new AboutWidget)
+AboutWidget::AboutWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::AboutWidget)
 {
-    auto button = new QDialogButtonBox(this);
-    button->setStandardButtons(QDialogButtonBox::Close);
-
-    QVBoxLayout *vl = new QVBoxLayout(this);
-    vl->addWidget(ui);
-    vl->addWidget(button);
-
-    connect(button, SIGNAL(rejected()), this, SLOT(close()));
+    ui->setupUi(this);
+    // Try to reduce the scrollbar width to hide it a bit...
+    auto vsb = ui->textAuthors->verticalScrollBar();
+#if defined(Q_OS_MAC)
+    vsb->setAttribute(Qt::WA_MacSmallSize);
+#else
+    vsb->setFixedWidth(10);
+#endif
 }
 
-AboutDialog::~AboutDialog()
+AboutWidget::~AboutWidget()
 {
 }
 
-void AboutDialog::setLogo(const QString &iconFileName)
+void AboutWidget::setLogo(const QString &iconFileName)
 {
-    ui->setLogo(iconFileName);
+    ui->logoLabel->setPixmap(iconFileName);
 }
 
-void AboutDialog::setThemeLogo(const QString &fileName)
+void AboutWidget::setThemeLogo(const QString &fileName)
 {
-    ui->setThemeLogo(fileName);
+    ui->logoLabel->setThemeFileName(fileName);
 }
 
-void AboutDialog::setTitle(const QString &title)
+void AboutWidget::setTitle(const QString &title)
 {
-    ui->setTitle(title);
+    ui->titleLabel->setText(title);
 }
 
-void AboutDialog::setHeader(const QString &header)
+void AboutWidget::setHeader(const QString &header)
 {
-    ui->setHeader(header);
+    ui->textHeader->setText(header);
 }
 
-void AboutDialog::setAuthors(const QString &authors)
+void AboutWidget::setAuthors(const QString &authors)
 {
-    ui->setAuthors(authors);
+    ui->textAuthors->setHtml(authors);
 }
 
-void AboutDialog::setFooter(const QString &footer)
+void AboutWidget::setFooter(const QString &footer)
 {
-    ui->setFooter(footer);
+    ui->textFooter->setText(footer);
 }
 
-void AboutDialog::setText(const QString &text)
+void AboutWidget::setText(const QString &text)
 {
-    ui->setText(text);
-}
-
-QSize AboutDialog::sizeHint() const
-{
-    return QSize(960, 730);
+    setHeader(text);
+    ui->textAuthors->setVisible(false);
+    ui->textFooter->setVisible(false);
 }
