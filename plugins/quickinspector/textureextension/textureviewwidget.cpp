@@ -39,6 +39,7 @@ TextureViewWidget::TextureViewWidget(QWidget* parent)
     : RemoteViewWidget(parent)
     , m_visualizeTextureWaste(true)
 {
+    connect(this, SIGNAL(frameChanged()), this, SLOT(recalculateBoundingRect()));
 }
 
 TextureViewWidget::~TextureViewWidget()
@@ -63,31 +64,12 @@ QRect getBoundingRect(const QImage& image)
 
 void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
 {
+    if (!(m_analyzedRect.isValid() && m_opaqueBoundingRect.isValid()))
+        return;
 
-    //For AtlasTiles analyze subrect, else analyze the whole image
-    QImage analyzedTexture;
-    QRect analyzedRect;
-    auto atlasSubTile = frame().data().toRect();
-    if (atlasSubTile.isValid()) { //Atlas-Case
-        analyzedTexture = frame().image().copy(atlasSubTile);
-        analyzedRect = atlasSubTile;
-        analyzedRect = analyzedRect.adjusted(-1, -1, 1, 1);
-    } else { //Whole-Texture-Case
-        analyzedTexture = frame().image();
-        analyzedRect = frame().image().rect();
-    }
-
-    //Calculate Waste
-    auto boundingRect = getBoundingRect(analyzedTexture);
-    const float imagePixelSize = (analyzedTexture.width() * analyzedTexture.height());
-    const auto pixelWaste = 1.0 - ((boundingRect.height() * boundingRect.width()) / imagePixelSize);
-    int pixelWastePercent = qRound(pixelWaste*100.0f);
-    int pixelWasteInBytes = imagePixelSize * (boundingRect.height() * boundingRect.width()) * frame().image().depth()/8;
-
-    emit textureWasteFound(pixelWastePercent, pixelWasteInBytes);
-
-    //Draw Warning if more than 30% are wasted
-    if (pixelWaste > 0.3) {
+    //Draw Warning if more than 30% or 1KB are wasted
+    if (m_pixelWasteInPercent > transparencyWasteLimitInPercent
+        || m_pixelWasteInBytes > transparencyWasteLimitInBytes) {
         emit textureInfoNecessary(true);
         p->save();
         auto scaleTransform = QTransform::fromScale(zoom(),zoom());
@@ -101,10 +83,10 @@ void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
         brush.setTransform(scaleTransform.inverted());
         p->setBrush(brush);
         auto viewRect = QPainterPath();
-        viewRect.addRect(analyzedRect);
+        viewRect.addRect(m_analyzedRect);
         auto innerRect = QPainterPath();
-        boundingRect.translate(analyzedRect.x(), analyzedRect.y());
-        innerRect.addRect(boundingRect);
+        auto translatedBoundingRect = m_opaqueBoundingRect.translated(m_analyzedRect.x(), m_analyzedRect.y());
+        innerRect.addRect(translatedBoundingRect);
         viewRect = viewRect.subtracted(innerRect);
         p->drawPath(viewRect);
     } else {
@@ -141,6 +123,49 @@ void TextureViewWidget::setTextureWasteVisualizationEnabled(bool enabled)
     if (m_visualizeTextureWaste != enabled) {
         m_visualizeTextureWaste = enabled;
         update();
+    }
+}
+
+void TextureViewWidget::recalculateBoundingRect()
+{
+    qDebug() << "recalculating BoundingRect";
+    // For AtlasTiles analyze subrect, else analyze the whole image
+    QImage analyzedTexture;
+    QRect analyzedRect;
+    auto atlasSubTile = frame().data().toRect();
+    if (atlasSubTile.isValid()) { //Atlas-Case
+        analyzedTexture = frame().image().copy(atlasSubTile);
+        analyzedRect = atlasSubTile;
+        analyzedRect = analyzedRect.adjusted(-1, -1, 1, 1);
+    } else { // Whole-Texture-Case
+        analyzedTexture = frame().image();
+        analyzedRect = frame().image().rect();
+    }
+
+    int top = analyzedTexture.height(), bottom = 0, left = analyzedTexture.width(), right = 0;
+
+    for(int y = 0; y < analyzedTexture.height(); y++) {
+        for(int x = 0; x < analyzedTexture.width(); x++) {
+            if (qAlpha(analyzedTexture.pixel(x, y)) != 0) {
+                top = std::min(top, y);
+                bottom = std::max(bottom, y);
+                left = std::min(left, x);
+                right = std::max(right, x);
+            }
+        }
+    }
+
+    m_opaqueBoundingRect = QRect(QPoint(left, top), QPoint(right, bottom));
+
+    //Calculate Waste
+    const float imagePixelSize = (analyzedTexture.width() * analyzedTexture.height());
+    const auto pixelWaste = 1.0 - ((m_opaqueBoundingRect.height() * m_opaqueBoundingRect.width()) / imagePixelSize);
+    m_pixelWasteInPercent = qRound(pixelWaste * 100.0f);
+    m_pixelWasteInBytes = (imagePixelSize - (m_opaqueBoundingRect.height() * m_opaqueBoundingRect.width())) * frame().image().depth() / 8;
+
+    if (   m_pixelWasteInPercent > transparencyWasteLimitInPercent
+        || m_pixelWasteInBytes > transparencyWasteLimitInBytes) {
+        emit textureWasteFound(m_pixelWasteInPercent, m_pixelWasteInBytes);
     }
 }
 
