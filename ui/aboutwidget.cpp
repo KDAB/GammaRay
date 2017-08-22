@@ -29,6 +29,9 @@
 #include "aboutwidget.h"
 #include "ui_aboutwidget.h"
 
+#include <ui/uiresources.h>
+
+#include <QPainter>
 #include <QScrollBar>
 
 using namespace GammaRay;
@@ -86,4 +89,54 @@ void AboutWidget::setText(const QString &text)
     setHeader(text);
     ui->textAuthors->setVisible(false);
     ui->textFooter->setVisible(false);
+}
+
+void AboutWidget::setBackgroundWindow(QWidget *window)
+{
+    if (m_backgroundWindow == window)
+        return;
+
+    if (m_backgroundWindow) {
+        m_backgroundWindow->removeEventFilter(this);
+        m_backgroundWindow->update();
+    }
+
+    m_backgroundWindow = window;
+    m_watermark = QPixmap();
+
+    if (m_backgroundWindow) {
+        m_backgroundWindow->installEventFilter(this);
+        m_backgroundWindow->update();
+    }
+}
+
+void AboutWidget::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    setBackgroundWindow(window());
+}
+
+bool AboutWidget::eventFilter(QObject *object, QEvent *event)
+{
+    if (object == m_backgroundWindow) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+        if (event->type() == QEvent::ScreenChangeInternal)
+            m_watermark = QPixmap();
+        else
+#endif
+        if (event->type() == QEvent::Paint) {
+            if (m_watermark.isNull())
+                m_watermark = UIResources::themedPixmap(QStringLiteral("watermark.png"), this);
+
+            qreal dpr = 1.0;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+            dpr = m_watermark.devicePixelRatio();
+#endif
+            QPainter p(m_backgroundWindow);
+            p.drawPixmap(m_backgroundWindow->width() - (m_watermark.width() / dpr),
+                         m_backgroundWindow->height() - (m_watermark.height() / dpr), m_watermark);
+        }
+    }
+
+    return QWidget::eventFilter(object, event);
 }
