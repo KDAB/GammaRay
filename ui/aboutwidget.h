@@ -1,5 +1,5 @@
 /*
-  aboutdialog.h
+  aboutwidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,20 +26,24 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_ABOUTDIALOG_H
-#define GAMMARAY_ABOUTDIALOG_H
+#ifndef GAMMARAY_ABOUTWIDGET_H
+#define GAMMARAY_ABOUTWIDGET_H
 
-#include <QDialog>
+#include "gammaray_ui_export.h"
+
+#include <QWidget>
 
 namespace GammaRay {
+namespace Ui {
 class AboutWidget;
+}
 
-class AboutDialog : public QDialog
+class GAMMARAY_UI_EXPORT AboutWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AboutDialog(QWidget *parent = nullptr);
-    ~AboutDialog();
+    explicit AboutWidget(QWidget *parent = nullptr);
+    ~AboutWidget();
 
     void setLogo(const QString &iconFileName);
     void setThemeLogo(const QString &fileName);
@@ -50,11 +54,9 @@ public:
 
     void setText(const QString &text);
 
-    QSize sizeHint() const override;
-
 private:
-    AboutWidget *ui;
+    QScopedPointer<Ui::AboutWidget> ui;
 };
 }
 
-#endif // GAMMARAY_ABOUTDIALOG_H
+#endif // GAMMARAY_ABOUTWIDGET_H

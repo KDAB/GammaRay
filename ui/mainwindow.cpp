@@ -380,10 +380,12 @@ void MainWindow::about()
 {
     AboutDialog dialog(this);
     dialog.setWindowTitle(tr("About GammaRay"));
-    dialog.setTitle(AboutData::aboutTitle());
-    dialog.setText(AboutData::aboutBody());
-    dialog.setLogo(QStringLiteral(":/gammaray/GammaRay-Trademark-medium.png"));
     dialog.setWindowIcon(QPixmap(QStringLiteral(":/gammaray/GammaRay-128x128.png")));
+    dialog.setLogo(QStringLiteral(":/gammaray/GammaRay-Trademark-medium.png"));
+    dialog.setTitle(AboutData::aboutTitle());
+    dialog.setHeader(AboutData::aboutHeader());
+    dialog.setAuthors(AboutData::aboutAuthors());
+    dialog.setFooter(AboutData::aboutFooter());
     dialog.adjustSize();
     dialog.exec();
 }
@@ -399,6 +401,8 @@ void MainWindow::aboutKDAB()
 {
     AboutDialog dialog(this);
     dialog.setWindowTitle(tr("About KDAB"));
+    dialog.setWindowIcon(QPixmap(QStringLiteral(":/gammaray/kdablogo160.png")));
+    dialog.setLogo(QStringLiteral(":/gammaray/kdablogo160.png"));
     dialog.setTitle(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
     dialog.setText(
         tr("<qt><p>GammaRay is supported and maintained by KDAB</p>"
@@ -410,8 +414,6 @@ void MainWindow::aboutKDAB()
            "<p>Please visit <a href='https://www.kdab.com'>https://www.kdab.com</a> "
            "to meet the people who write code like this."
            "</p></qt>"));
-    dialog.setLogo(QStringLiteral(":/gammaray/kdablogo160.png"));
-    dialog.setWindowIcon(QPixmap(QStringLiteral(":/gammaray/kdablogo160.png")));
     dialog.exec();
 }
 

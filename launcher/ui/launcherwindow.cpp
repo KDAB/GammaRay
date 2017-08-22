@@ -50,9 +50,12 @@ LauncherWindow::LauncherWindow(QWidget *parent)
                               : UIResources::Dark);
 
     ui->setupUi(this);
-    ui->aboutLabel->setText(AboutData::aboutText());
-    ui->aboutScrollArea->viewport()->setAutoFillBackground(false);
-    ui->aboutScrollArea->widget()->setAutoFillBackground(false);
+    ui->aboutPage->setLogo(QStringLiteral(":/gammaray/GammaRay-Trademark-medium.png"));
+    ui->aboutPage->setTitle(AboutData::aboutTitle());
+    ui->aboutPage->setHeader(AboutData::aboutHeader());
+    ui->aboutPage->setAuthors(AboutData::aboutAuthors());
+    ui->aboutPage->setFooter(AboutData::aboutFooter());
+    ui->aboutPage->layout()->setContentsMargins(ui->selfTestPage->layout()->contentsMargins());
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
     connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
