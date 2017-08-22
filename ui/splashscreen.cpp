@@ -27,6 +27,7 @@
 */
 
 #include "splashscreen.h"
+#include "uiresources.h"
 
 #include <QSplashScreen>
 #include <QBitmap>
@@ -39,8 +40,9 @@ namespace GammaRay {
 void showSplashScreen()
 {
     if (!splash) {
-        QPixmap pixmap(QStringLiteral(":/gammaray/splashscreen.png"));
-        splash = new QSplashScreen(pixmap);
+        splash = new QSplashScreen;
+        QPixmap pixmap = UIResources::themedPixmap(QStringLiteral("splashscreen.png"), splash);
+        splash->setPixmap(pixmap);
         splash->setMask(pixmap.mask());
     }
 
