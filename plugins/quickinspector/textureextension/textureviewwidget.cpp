@@ -38,6 +38,8 @@ using namespace GammaRay;
 TextureViewWidget::TextureViewWidget(QWidget* parent)
     : RemoteViewWidget(parent)
     , m_visualizeTextureWaste(true)
+    , m_pixelWasteInPercent(0)
+    , m_pixelWasteInBytes(0)
 {
     connect(this, SIGNAL(frameChanged()), this, SLOT(recalculateBoundingRect()));
 }
@@ -46,27 +48,8 @@ TextureViewWidget::~TextureViewWidget()
 {
 }
 
-QRect getBoundingRect(const QImage& image)
-{
-    int top = image.height(), bottom = 0, left = image.width(), right = 0;
-
-    for(int y = 0; y < image.height(); y++)
-        for(int x = 0; x < image.width(); x++) {
-            if (qAlpha(image.pixel(x, y)) != 0) {
-                top = std::min(top, y);
-                bottom = std::max(bottom, y);
-                left = std::min(left, x);
-                right = std::max(right, x);
-            }
-        }
-    return QRect(QPoint(left,top),QPoint(right,bottom));
-}
-
 void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
 {
-    if (!(m_analyzedRect.isValid() && m_opaqueBoundingRect.isValid()))
-        return;
-
     //Draw Warning if more than 30% or 1KB are wasted
     if (m_pixelWasteInPercent > transparencyWasteLimitInPercent
         || m_pixelWasteInBytes > transparencyWasteLimitInBytes) {
@@ -89,6 +72,7 @@ void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
         innerRect.addRect(translatedBoundingRect);
         viewRect = viewRect.subtracted(innerRect);
         p->drawPath(viewRect);
+        p->restore();
     } else {
         emit textureInfoNecessary(false);
     }
@@ -142,6 +126,7 @@ void TextureViewWidget::recalculateBoundingRect()
         analyzedRect = frame().image().rect();
     }
 
+    m_analyzedRect = analyzedRect;
     int top = analyzedTexture.height(), bottom = 0, left = analyzedTexture.width(), right = 0;
 
     for(int y = 0; y < analyzedTexture.height(); y++) {
