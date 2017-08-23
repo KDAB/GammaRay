@@ -32,15 +32,6 @@
       <property name="contextMenuPolicy">
        <enum>Qt::CustomContextMenu</enum>
       </property>
-      <property name="styleSheet">
-       <string notr="true">QWidget#toolSelector{
-background-image: url(:/gammaray/kdab-gammaray-logo.png);
-background-repeat: no-repeat;
-background-attachment:fixed;
-background-position:bottom right;
-}
-</string>
-      </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>

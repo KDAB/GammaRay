@@ -36,8 +36,6 @@
         <file>gammaray/GammaRay-512x512.png</file>
         <file>gammaray/GammaRay-512x512@2x.png</file>
 
-        <file>gammaray/kdab-gammaray-logo.png</file>
-
         <!-- Light -->
 
         <!-- UI pixmaps -->
@@ -60,6 +58,10 @@
         <file>gammaray/ui/light/pixmaps/kdab-logo.png</file>
         <file>gammaray/ui/light/pixmaps/kdab-logo@2x.png</file>
         <file>gammaray/ui/light/pixmaps/kdab-logo@3x.png</file>
+
+        <file>gammaray/ui/light/pixmaps/kdab-gammaray-logo.png</file>
+        <file>gammaray/ui/light/pixmaps/kdab-gammaray-logo@2x.png</file>
+        <file>gammaray/ui/light/pixmaps/kdab-gammaray-logo@3x.png</file>
 
         <!-- UI icons -->
         <file>gammaray/ui/light/icons/active-focus.png</file>
