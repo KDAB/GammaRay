@@ -401,8 +401,8 @@ void MainWindow::aboutKDAB()
 {
     AboutDialog dialog(this);
     dialog.setWindowTitle(tr("About KDAB"));
-    dialog.setWindowIcon(QPixmap(QStringLiteral(":/gammaray/kdablogo160.png")));
-    dialog.setLogo(QStringLiteral(":/gammaray/kdablogo160.png"));
+    dialog.setWindowIcon(UIResources::themedPixmap(QStringLiteral("kdab-logo.png"), this));
+    dialog.setThemeLogo(QStringLiteral("kdab-logo.png"));
     dialog.setTitle(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
     dialog.setText(
         tr("<qt><p>GammaRay is supported and maintained by KDAB</p>"

@@ -29,24 +29,22 @@
 #ifndef GAMMARAY_PROMOLABEL_H
 #define GAMMARAY_PROMOLABEL_H
 
-#include <QLabel>
+#include <ui/themedimagelabel.h>
 
 namespace GammaRay {
-class PromoLabel : public QLabel
+class PromoLabel : public ThemedImageLabel
 {
     Q_OBJECT
 
 public:
     explicit PromoLabel(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 
-    static QImage tintedImage(const QString &image, const QColor &color);
-
 protected:
     bool event(QEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
 
 private:
-    void updatePixmap();
+    void updatePixmap() override;
 };
 }
 

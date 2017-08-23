@@ -28,6 +28,8 @@
 
 #include "promolabel.h"
 
+#include <ui/uiresources.h>
+
 #include <QDesktopServices>
 #include <QUrl>
 #include <QDebug>
@@ -36,19 +38,18 @@
 using namespace GammaRay;
 
 PromoLabel::PromoLabel(QWidget *parent, Qt::WindowFlags f)
-    : QLabel(parent, f)
+    : ThemedImageLabel(parent, f)
 {
-    updatePixmap();
-
     setCursor(QCursor(Qt::PointingHandCursor));
     setToolTip(tr("Visit KDAB Website"));
+    setThemeFileName(QStringLiteral("kdab-products.png"));
 }
 
 bool PromoLabel::event(QEvent *e)
 {
     if (e->type() == QEvent::PaletteChange)
         updatePixmap();
-    return QLabel::event(e);
+    return ThemedImageLabel::event(e);
 }
 
 void PromoLabel::mouseReleaseEvent(QMouseEvent *ev)
@@ -59,24 +60,12 @@ void PromoLabel::mouseReleaseEvent(QMouseEvent *ev)
         return;
     }
 
-    QLabel::mouseReleaseEvent(ev);
-}
-
-QImage PromoLabel::tintedImage(const QString &image, const QColor &color)
-{
-    QImage img(image);
-    img = img.alphaChannel();
-    QColor newColor = color;
-    for (int i = 0; i < img.colorCount(); ++i) {
-        newColor.setAlpha(qGray(img.color(i)));
-        img.setColor(i, newColor.rgba());
-    }
-    return img;
+    ThemedImageLabel::mouseReleaseEvent(ev);
 }
 
 void PromoLabel::updatePixmap()
 {
     // load image and adapt it to user's foreground color
-    setPixmap(QPixmap::fromImage(tintedImage(QStringLiteral(":/gammaray/kdabproducts.png"),
-                                             palette().foreground().color())));
+    const QImage image = UIResources::themedImage(themeFileName(), this);
+    setPixmap(UIResources::tintedPixmap(image, palette().foreground().color()));
 }
