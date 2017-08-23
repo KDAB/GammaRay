@@ -101,16 +101,16 @@ private:
     QModelIndex indexOfCarrier(const QObject *carrier, int column = 0 /*NameColumn*/) const;
     QModelIndex indexOfProperty(const QObject *carrier, const QByteArray &property, int column = 0 /*NameColumn*/) const;
 
-    class IviCarrier;
+    class IviOverrider;
 
-    class IviCarrierProperty
+    class IviOverriderProperty
     {
-        friend class IviCarrier;
+        friend class IviOverrider;
 
     public:
-        IviCarrierProperty();
-        explicit IviCarrierProperty(const QMetaProperty &metaProperty, const QVariant &value, bool overridable);
-        IviCarrierProperty(IviCarrierProperty &&other);
+        IviOverriderProperty();
+        explicit IviOverriderProperty(const QMetaProperty &metaProperty, const QVariant &value, bool overridable);
+        IviOverriderProperty(IviOverriderProperty &&other);
 
         int propertyIndex() const;
         bool isValid() const;
@@ -118,7 +118,7 @@ private:
         bool hasNotifySignal() const;
         bool isWritable() const;
         bool isOverridable() const;
-        bool isOverrided() const;
+        bool isOverriden() const;
         QString name() const;
         QString typeName() const;
         ObjectId objectId() const;
@@ -127,11 +127,11 @@ private:
         QVariant cppValue() const;
         QVariant iviConstraints(QIviAbstractFeature *carrier) const;
 
-        void setOverrided(bool override);
+        void setOverriden(bool override);
         bool setOverridenValue(const QVariant &editValue, QObject *carrier);
         void setOriginalValue(const QVariant &editValue);
 
-        IviCarrierProperty &operator=(IviCarrierProperty &&other);
+        IviOverriderProperty &operator=(IviOverriderProperty &&other);
         bool operator==(const QByteArray &property) const;
 
     private:
@@ -142,42 +142,56 @@ private:
         QVariant m_overridenValue;
     };
 
-    class IviCarrier: public QIviPropertyOverrider
+    class IviOverrider: public QIviPropertyOverrider
     {
         friend class QtIviObjectModel;
 
     public:
-        IviCarrier();
-        ~IviCarrier();
-        explicit IviCarrier(QIviAbstractFeature *carrier);
+        IviOverrider();
+        ~IviOverrider();
+        explicit IviOverrider(QIviAbstractFeature *carrier);
+
+        void addCarrier(QIviAbstractFeature *carrier);
+        void removeCarrier(QIviAbstractFeature *carrier);
+        int numCarriers() const;
+
+        bool handles(const QObject *carrier) const;
+        QString serviceId() const;
 
         QVariant property(int propertyIndex) const override;
         bool setProperty(int propertyIndex, const QVariant &value) override;
+        QVariant iviConstraints(int propertyIndex) const;
 
         QString label() const;
+        QString description() const;
         QString typeName() const;
         ObjectId objectId() const;
 
-        void setOverride(bool override);
+        void setOverride(bool override, QIviAbstractFeature *carrier);
+        bool setOverridenValue(int index, const QVariant &value);
         int propertyCount() const;
-        void pushProperty(IviCarrierProperty &&property);
-        const IviCarrierProperty &propertyAt(int index) const;
-        const IviCarrierProperty &propertyForIndex(int index) const;
-        IviCarrierProperty &propertyForIndex(int index);
-        IviCarrierProperty &propertyAt(int index);
+        void pushProperty(IviOverriderProperty &&property);
+        const IviOverriderProperty &propertyAt(int index) const;
+        const IviOverriderProperty &propertyForIndex(int index) const;
+        IviOverriderProperty &propertyForIndex(int index);
+        IviOverriderProperty &propertyAt(int index);
 
         int indexOfProperty(const QByteArray &property) const;
 
-        bool handles(const QObject *carrier) const;
-
     private:
-        QIviAbstractFeature *m_carrier;
-        std::vector<IviCarrierProperty> m_properties;
+        QIviServiceObject *m_serviceObject;
+        std::vector<QIviAbstractFeature *> m_carriers;
+        std::vector<IviOverriderProperty> m_properties;
     };
-    typedef std::shared_ptr<IviCarrier> IviCarrierPtr;
+    typedef std::shared_ptr<IviOverrider> IviOverriderPtr;
 
-    std::vector<IviCarrierPtr> m_carriers;
-    QSet<QObject *> m_seenCarriers;
+    struct ServiceZone {
+        QString m_zone;
+        IviOverriderPtr m_service;
+    };
+
+    std::vector<ServiceZone> m_serviceCarriers;
+    QSet<QObject *> m_handledObjects;
 };
 
 }

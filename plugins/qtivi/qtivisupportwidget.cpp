@@ -55,6 +55,10 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
     clientModel->setSourceModel(propertyModel);
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(clientModel);
 
+    connect(propertyModel, &QAbstractItemModel::destroyed, this, [clientModel]() {
+        clientModel->setSourceModel(nullptr);
+    });
+
     auto *vbox = new QVBoxLayout(this);
 
     auto *searchLineEdit = new QLineEdit(this);
