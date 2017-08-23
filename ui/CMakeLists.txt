@@ -3,6 +3,7 @@
 #
 set(gammaray_ui_srcs
   aboutdata.cpp
+  themedimagelabel.cpp
   clientdecorationidentityproxymodel.cpp
   clienttoolmanager.cpp
   clienttoolmodel.cpp
