@@ -240,13 +240,7 @@ void RemoteViewWidget::updateUserViewport()
         return;
 
     const auto userViewport = QRectF(QPointF(std::floor(-m_x / m_zoom), std::floor(-m_y / m_zoom)),
-                               QSizeF(std::ceil(width() / m_zoom) + 1, std::ceil(height() / m_zoom) + 1));
-    // If we are textureviewWidget we don't send viewports for partial tex updates
-    if (qt_metacast("GammaRay::TextureViewWidget") != nullptr)
-        return;
-
-    const auto userViewport = QRectF(QPointF(-m_x / m_zoom, -m_y / m_zoom),
-                               QSizeF(width() / m_zoom, height() / m_zoom));
+                              QSizeF(std::ceil(width() / m_zoom) + 1, std::ceil(height() / m_zoom) + 1));
 
     // If we would skip, but need an extra update
     if (userViewport.contains(frame().viewRect()) && m_extraViewportUpdateNeeded) {

@@ -110,6 +110,8 @@ private slots:
 private:
     QPointer<EventReceiver> m_eventReceiver;
     QTimer *m_updateTimer;
+    QRectF m_lastTransmittedViewRect;
+    QRectF m_lastTransmittedImageRect;
     QRectF m_userViewport;
     bool m_clientActive;
     bool m_sourceChanged;
