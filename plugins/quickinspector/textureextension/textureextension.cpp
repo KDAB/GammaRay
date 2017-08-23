@@ -145,7 +145,7 @@ bool TextureExtension::setObject(void* object, const QString& typeName)
 
 void TextureExtension::textureGrabbed(QSGTexture* tex, const QImage& img)
 {
-    if (tex != m_currentTexture)
+    if (tex != m_currentTexture || !m_remoteView->isActive())
         return;
 
     RemoteViewFrame f;
@@ -161,7 +161,7 @@ void TextureExtension::textureGrabbed(QSGTexture* tex, const QImage& img)
 
 void TextureExtension::textureGrabbed(void* data, const QImage& img)
 {
-    if (m_currentMaterial != data)
+    if (m_currentMaterial != data || !m_remoteView->isActive())
         return;
 
     RemoteViewFrame f;

@@ -41,30 +41,42 @@ public:
     explicit TextureViewWidget(QWidget *parent = nullptr);
     ~TextureViewWidget();
 
+    enum ImageFlag {
+        None = 0,
+        FullyTransparent = 1,
+        FullyOpaque = 2,
+        Unicolor = 4,
+        TextureWaste = 8
+    };
+    Q_DECLARE_FLAGS(ImageFlags, ImageFlag)
+
     void drawDecoration(QPainter *p) override;
     void drawPixelWasteDecoration(QPainter *p) const;
     void drawActiveAtlasTile(QPainter *p) const;
 
     const static int transparencyWasteLimitInPercent = 30;
-    const static int transparencyWasteLimitInBytes = 1024;
+    const static int transparencyWasteLimitInBytes = 16 * 1024;
 
 signals:
     void textureInfoNecessary(const bool isNecessary) const;
     void textureWasteFound(const int percent, const int bytes) const;
+    void textureIsUnicolor(const bool) const;
+    void textureIsFullyTransparent(const bool) const;
+    void textureHasUselessAlpha(const bool ) const;
 
 private slots:
     void setTextureWasteVisualizationEnabled(bool enabled);
-    void recalculateBoundingRect();
+    void analyzeImageFlaws();
 
 private:
-
     bool m_visualizeTextureWaste;
     int m_pixelWasteInPercent;
     int m_pixelWasteInBytes;
     QRect m_analyzedRect;
     QRect m_opaqueBoundingRect; //area actually occupied
 };
-
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::TextureViewWidget::ImageFlags)
 
 #endif // GAMMARAY_TEXTUREVIEWWIDGET_H
