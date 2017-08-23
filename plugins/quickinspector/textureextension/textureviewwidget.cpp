@@ -41,7 +41,7 @@ TextureViewWidget::TextureViewWidget(QWidget* parent)
     , m_pixelWasteInPercent(0)
     , m_pixelWasteInBytes(0)
 {
-    connect(this, SIGNAL(frameChanged()), this, SLOT(recalculateBoundingRect()));
+    connect(this, SIGNAL(frameChanged()), this, SLOT(analyzeImageFlaws()));
 }
 
 TextureViewWidget::~TextureViewWidget()
@@ -53,7 +53,6 @@ void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
     //Draw Warning if more than 30% or 1KB are wasted
     if (m_pixelWasteInPercent > transparencyWasteLimitInPercent
         || m_pixelWasteInBytes > transparencyWasteLimitInBytes) {
-        emit textureInfoNecessary(true);
         p->save();
         auto scaleTransform = QTransform::fromScale(zoom(),zoom());
         p->setTransform(scaleTransform, true);
@@ -73,8 +72,6 @@ void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
         viewRect = viewRect.subtracted(innerRect);
         p->drawPath(viewRect);
         p->restore();
-    } else {
-        emit textureInfoNecessary(false);
     }
 }
 
@@ -110,9 +107,11 @@ void TextureViewWidget::setTextureWasteVisualizationEnabled(bool enabled)
     }
 }
 
-void TextureViewWidget::recalculateBoundingRect()
+void TextureViewWidget::analyzeImageFlaws()
 {
-    qDebug() << "recalculating BoundingRect";
+    if (frame().image().isNull())
+        return;
+
     // For AtlasTiles analyze subrect, else analyze the whole image
     QImage analyzedTexture;
     QRect analyzedRect;
@@ -127,11 +126,25 @@ void TextureViewWidget::recalculateBoundingRect()
     }
 
     m_analyzedRect = analyzedRect;
+
+    QRgb possibleSingularColor = analyzedTexture.pixel(0,0);
+
     int top = analyzedTexture.height(), bottom = 0, left = analyzedTexture.width(), right = 0;
+
+    ImageFlags imageFlags = ImageFlag::FullyTransparent | ImageFlag::FullyOpaque | ImageFlag::Unicolor;
 
     for(int y = 0; y < analyzedTexture.height(); y++) {
         for(int x = 0; x < analyzedTexture.width(); x++) {
-            if (qAlpha(analyzedTexture.pixel(x, y)) != 0) {
+            auto pixel = analyzedTexture.pixel(x, y);
+
+            if (Q_UNLIKELY(imageFlags.testFlag(ImageFlag::Unicolor)) && (possibleSingularColor != pixel))
+                imageFlags.setFlag(ImageFlag::Unicolor, false);
+
+            if (Q_UNLIKELY(imageFlags.testFlag(ImageFlag::FullyOpaque)) && (qAlpha(pixel) < 255))
+                imageFlags.setFlag(ImageFlag::FullyOpaque, false);
+
+            if (qAlpha(pixel) != 0) {
+                imageFlags &= ~ImageFlag::FullyTransparent;
                 top = std::min(top, y);
                 bottom = std::max(bottom, y);
                 left = std::min(left, x);
@@ -148,9 +161,20 @@ void TextureViewWidget::recalculateBoundingRect()
     m_pixelWasteInPercent = qRound(pixelWaste * 100.0f);
     m_pixelWasteInBytes = (imagePixelSize - (m_opaqueBoundingRect.height() * m_opaqueBoundingRect.width())) * frame().image().depth() / 8;
 
-    if (   m_pixelWasteInPercent > transparencyWasteLimitInPercent
+    emit textureInfoNecessary(false);
+    qDebug() << m_pixelWasteInBytes << m_pixelWasteInPercent;
+     if (   m_pixelWasteInPercent > transparencyWasteLimitInPercent
         || m_pixelWasteInBytes > transparencyWasteLimitInBytes) {
         emit textureWasteFound(m_pixelWasteInPercent, m_pixelWasteInBytes);
+        imageFlags.setFlag(ImageFlag::TextureWaste, true);
     }
+
+    emit textureIsUnicolor(imageFlags.testFlag(ImageFlag::Unicolor));
+    emit textureIsFullyTransparent(imageFlags.testFlag(ImageFlag::FullyTransparent));
+    QVector<QImage::Format> commonFormatsWithAlpha = {QImage::Format_ARGB32, QImage::Format_ARGB32_Premultiplied};
+    emit textureHasUselessAlpha(imageFlags.testFlag(ImageFlag::FullyOpaque) && commonFormatsWithAlpha.contains(frame().image().format()));
+    qDebug() << imageFlags;
+    emit textureInfoNecessary(imageFlags != ImageFlag::None);
+
 }
 
