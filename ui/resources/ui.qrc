@@ -39,8 +39,6 @@
         <file>gammaray/GammaRay-Trademark-medium.png</file>
         <file>gammaray/GammaRay-Trademark-small.png</file>
         <file>gammaray/kdab-gammaray-logo.png</file>
-        <file>gammaray/kdablogo160.png</file>
-        <file>gammaray/kdabproducts.png</file>
 
         <!-- Light -->
 
@@ -52,6 +50,14 @@
         <file>gammaray/ui/light/pixmaps/splashscreen.png</file>
         <file>gammaray/ui/light/pixmaps/splashscreen@2x.png</file>
         <file>gammaray/ui/light/pixmaps/splashscreen@3x.png</file>
+
+        <file>gammaray/ui/light/pixmaps/kdab-products.png</file>
+        <file>gammaray/ui/light/pixmaps/kdab-products@2x.png</file>
+        <file>gammaray/ui/light/pixmaps/kdab-products@3x.png</file>
+
+        <file>gammaray/ui/light/pixmaps/kdab-logo.png</file>
+        <file>gammaray/ui/light/pixmaps/kdab-logo@2x.png</file>
+        <file>gammaray/ui/light/pixmaps/kdab-logo@3x.png</file>
 
         <!-- UI icons -->
         <file>gammaray/ui/light/icons/active-focus.png</file>
@@ -115,7 +121,6 @@
         <file>gammaray/ui/light/icons/zoom-out.png</file>
         <file>gammaray/ui/light/icons/zoom-out@2x.png</file>
         <file>gammaray/ui/light/icons/zoom-out@3x.png</file>
-
 
         <!-- Dark -->
 
