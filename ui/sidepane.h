@@ -43,10 +43,13 @@ public:
     void setModel(QAbstractItemModel *model) override;
 
 protected:
-    void resizeEvent(QResizeEvent *e) override;
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private slots:
     void updateSizeHint();
+
+private:
+    QPixmap m_background;
 };
 }
 
