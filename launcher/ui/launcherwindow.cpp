@@ -33,6 +33,8 @@
 
 #include <ui/aboutdata.h>
 #include <ui/helpcontroller.h>
+#include <ui/uiresources.h>
+#include <ui/uiintegration.h>
 
 #include <QPushButton>
 #include <QSettings>
@@ -43,6 +45,10 @@ LauncherWindow::LauncherWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::LauncherWindow)
 {
+    UIResources::setTheme(UiIntegration::hasDarkUI()
+                              ? UIResources::Light
+                              : UIResources::Dark);
+
     ui->setupUi(this);
     ui->aboutLabel->setText(AboutData::aboutText());
     ui->aboutScrollArea->viewport()->setAutoFillBackground(false);
