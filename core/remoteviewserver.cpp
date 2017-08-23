@@ -101,6 +101,10 @@ void RemoteViewServer::setGrabberReady(bool ready)
 void RemoteViewServer::sendFrame(const RemoteViewFrame &frame)
 {
     m_clientReady = false;
+
+    m_lastTransmittedViewRect = frame.viewRect();
+    m_lastTransmittedImageRect = frame.transform().mapRect(frame.image().rect());
+
     if (m_pendingCompleteFrame && frame.image().size() == frame.viewRect().size())
         m_pendingCompleteFrame = false;
     emit frameUpdated(frame);
@@ -228,13 +232,10 @@ void RemoteViewServer::setViewActive(bool active)
 
 void RemoteViewServer::sendUserViewport(const QRectF &userViewport)
 {
-    if (userViewport.right() > m_userViewport.right()
-        || userViewport.bottom() > m_userViewport.bottom()
-        || userViewport.left() < m_userViewport.left()
-        || userViewport.top() < m_userViewport.top())
-        sourceChanged();
-
     m_userViewport = userViewport;
+    auto newlyRequestedRect = userViewport.intersected(m_lastTransmittedViewRect);
+    if (!m_lastTransmittedImageRect.contains(newlyRequestedRect))
+        sourceChanged();
 }
 
 void RemoteViewServer::clientConnectedChanged(bool connected)
