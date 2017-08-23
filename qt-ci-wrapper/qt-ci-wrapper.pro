@@ -45,8 +45,10 @@ gammaray_test.commands = cd build $$SHELL_SEP $(MAKE) test
 
 gammaray_online_docs.target = docs
 gammaray_online_docs.recurse = true
-gammaray_online_docs.depends += gammaray_configure_docs
-gammaray_online_docs.commands = cd build $$SHELL_SEP $(MAKE) online-docs
+# doc build disabled temporarily until we can run this without requiring a full qtbase install,
+# which the Qt CI doesn't provide at this point
+#gammaray_online_docs.depends += gammaray_configure_docs
+#gammaray_online_docs.commands = cd build $$SHELL_SEP $(MAKE) online-docs
 
 gammaray_install.target = install
 gammaray_install.commands = cd build $$SHELL_SEP $(MAKE) DESTDIR=$(INSTALL_ROOT) install
