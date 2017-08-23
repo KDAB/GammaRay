@@ -162,7 +162,6 @@ void TextureViewWidget::analyzeImageFlaws()
     m_pixelWasteInBytes = (imagePixelSize - (m_opaqueBoundingRect.height() * m_opaqueBoundingRect.width())) * frame().image().depth() / 8;
 
     emit textureInfoNecessary(false);
-    qDebug() << m_pixelWasteInBytes << m_pixelWasteInPercent;
      if (   m_pixelWasteInPercent > transparencyWasteLimitInPercent
         || m_pixelWasteInBytes > transparencyWasteLimitInBytes) {
         emit textureWasteFound(m_pixelWasteInPercent, m_pixelWasteInBytes);
@@ -173,7 +172,6 @@ void TextureViewWidget::analyzeImageFlaws()
     emit textureIsFullyTransparent(imageFlags.testFlag(ImageFlag::FullyTransparent));
     QVector<QImage::Format> commonFormatsWithAlpha = {QImage::Format_ARGB32, QImage::Format_ARGB32_Premultiplied};
     emit textureHasUselessAlpha(imageFlags.testFlag(ImageFlag::FullyOpaque) && commonFormatsWithAlpha.contains(frame().image().format()));
-    qDebug() << imageFlags;
     emit textureInfoNecessary(imageFlags != ImageFlag::None);
 
 }
