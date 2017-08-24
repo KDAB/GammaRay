@@ -11,7 +11,8 @@ SHELL_SEP = ;
 win32: SHELL_SEP = &
 
 # platform specific cmake arguments
-win32: CMAKE_PLATFORM_ARGS = -G\"NMake Makefiles\"
+win32-msvc*: CMAKE_PLATFORM_ARGS = -G\"NMake Makefiles\"
+win32-g++:  CMAKE_PLATFORM_ARGS = -G\"MinGW Makefiles\"
 !qtHaveModule(widgets): GAMMARAY_EXTRA_ARGS = -DGAMMARAY_BUILD_UI=OFF
 
 gammaray_configure.target = gammaray_configure
