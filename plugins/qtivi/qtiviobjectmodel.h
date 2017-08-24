@@ -128,7 +128,8 @@ private:
         QVariant iviConstraints(QIviAbstractFeature *carrier) const;
 
         void setOverriden(bool override);
-        bool setOverridenValue(const QVariant &editValue, QObject *carrier);
+        bool setOverridenValue(const QVariant &value, QIviAbstractFeature *carrier);
+        bool notifyOverridenValue(const QVariant &value, QIviAbstractFeature *carrier);
         void setOriginalValue(const QVariant &editValue);
 
         IviOverriderProperty &operator=(IviOverriderProperty &&other);
@@ -153,13 +154,16 @@ private:
 
         void addCarrier(QIviAbstractFeature *carrier);
         void removeCarrier(QIviAbstractFeature *carrier);
+        void setCarrierOverride(bool override, QIviAbstractFeature *carrier);
         int numCarriers() const;
 
         bool handles(const QObject *carrier) const;
         QString serviceId() const;
 
         QVariant property(int propertyIndex) const override;
-        bool setProperty(int propertyIndex, const QVariant &value) override;
+        void setProperty(int propertyIndex, const QVariant &value) override;
+        bool isOverridden(int propertyIndex) const override;
+
         QVariant iviConstraints(int propertyIndex) const;
 
         QString label() const;
@@ -167,7 +171,7 @@ private:
         QString typeName() const;
         ObjectId objectId() const;
 
-        void setOverride(bool override, QIviAbstractFeature *carrier);
+        bool setOverride(int index, bool isOverride);
         bool setOverridenValue(int index, const QVariant &value);
         int propertyCount() const;
         void pushProperty(IviOverriderProperty &&property);

@@ -225,7 +225,7 @@ void QtIviObjectModel::IviOverriderProperty::setOverriden(bool override)
     }
 }
 
-bool QtIviObjectModel::IviOverriderProperty::setOverridenValue(const QVariant &value, QObject *carrier)
+bool QtIviObjectModel::IviOverriderProperty::setOverridenValue(const QVariant &value, QIviAbstractFeature *carrier)
 {
     Q_ASSERT(isAvailable());
 
@@ -248,7 +248,26 @@ bool QtIviObjectModel::IviOverriderProperty::setOverridenValue(const QVariant &v
     if (isOverride)
         m_overridenValue = toSet;
 
-    return m_metaProperty.write(carrier, toSet);
+    if (m_metaProperty.isWritable())
+        return m_metaProperty.write(carrier, toSet);
+    else
+        return notifyOverridenValue(value, carrier);
+}
+
+bool QtIviObjectModel::IviOverriderProperty::notifyOverridenValue(const QVariant &value, QIviAbstractFeature *carrier)
+{
+    QMetaMethod notifySignal = m_metaProperty.notifySignal();
+    if (!notifySignal.isValid() || notifySignal.parameterCount() != 1)
+        return false;
+
+    switch (value.type()) {
+    case QVariant::Int: return notifySignal.invoke(carrier, Q_ARG(int, value.value<int>()));
+    case QVariant::String: return notifySignal.invoke(carrier, Q_ARG(QString, value.value<QString>()));
+    case QVariant::Double: return notifySignal.invoke(carrier, Q_ARG(double, value.value<double>()));
+    case QVariant::Bool: return notifySignal.invoke(carrier, Q_ARG(double, value.value<bool>()));
+    default:
+        return false;
+    }
 }
 
 void QtIviObjectModel::IviOverriderProperty::setOriginalValue(const QVariant &editValue)
@@ -279,21 +298,35 @@ QtIviObjectModel::IviOverrider::IviOverrider(QIviAbstractFeature *carrier)
 QtIviObjectModel::IviOverrider::~IviOverrider()
 {
     for(auto &c : qAsConst(m_carriers))
-        setOverride(false, c);
+        setCarrierOverride(false, c);
 }
 
 void QtIviObjectModel::IviOverrider::addCarrier(QIviAbstractFeature *carrier)
 {
     m_carriers.push_back(carrier);
-    setOverride(true, carrier);
+    setCarrierOverride(true, carrier);
 }
 
 void QtIviObjectModel::IviOverrider::removeCarrier(QIviAbstractFeature *carrier)
 {
-    setOverride(false, carrier);
+    setCarrierOverride(false, carrier);
     m_carriers.erase(std::remove_if(m_carriers.begin(), m_carriers.end(), [carrier](QIviAbstractFeature *c) {
         return carrier == c;
     }), m_carriers.end());
+}
+
+void QtIviObjectModel::IviOverrider::setCarrierOverride(bool override, QIviAbstractFeature *carrier)
+{
+    if (!carrier)
+        return;
+    QIviAbstractFeaturePrivate *const pPriv = QIviAbstractFeaturePrivate::get(carrier);
+    if (!pPriv)
+        return;
+    if (override && pPriv->m_propertyOverride == nullptr) {
+        pPriv->m_propertyOverride = this;
+    } else if (!override && pPriv->m_propertyOverride == this) {
+        pPriv->m_propertyOverride = nullptr;
+    }
 }
 
 int QtIviObjectModel::IviOverrider::numCarriers() const
@@ -310,20 +343,22 @@ QVariant QtIviObjectModel::IviOverrider::property(int propertyIndex) const
     return property.cppValue();
 }
 
-bool QtIviObjectModel::IviOverrider::setProperty(int propertyIndex, const QVariant &value)
+void QtIviObjectModel::IviOverrider::setProperty(int propertyIndex, const QVariant &value)
+{
+    if (m_carriers.empty())
+        return;
+
+    IviOverriderProperty &property = propertyForIndex(propertyIndex);
+    property.setOriginalValue(value);
+}
+
+bool QtIviObjectModel::IviOverrider::isOverridden(int propertyIndex) const
 {
     if (m_carriers.empty())
         return false;
 
-    IviOverriderProperty &property = propertyForIndex(propertyIndex);
-    if (property.isOverriden()) {
-        for (const auto &carrier : m_carriers)
-            property.setOverridenValue(value, carrier);
-        return true;
-    } else {
-        property.setOriginalValue(value);
-        return false;
-    }
+    const IviOverriderProperty &property = propertyForIndex(propertyIndex);
+    return property.isOverriden();
 }
 
 QVariant QtIviObjectModel::IviOverrider::iviConstraints(int propertyIndex) const
@@ -369,18 +404,21 @@ ObjectId QtIviObjectModel::IviOverrider::objectId() const
     return ObjectId(m_serviceObject);
 }
 
-void QtIviObjectModel::IviOverrider::setOverride(bool override, QIviAbstractFeature *carrier)
+bool QtIviObjectModel::IviOverrider::setOverride(int index, bool isOverride)
 {
-    if (!carrier)
-        return;
-    QIviAbstractFeaturePrivate *const pPriv = QIviAbstractFeaturePrivate::get(carrier);
-    if (!pPriv)
-        return;
-    if (override && pPriv->m_propertyOverride == nullptr) {
-        pPriv->m_propertyOverride = this;
-    } else if (!override && pPriv->m_propertyOverride == this) {
-        pPriv->m_propertyOverride = nullptr;
+    IviOverriderProperty &property = propertyAt(index);
+    if (property.isOverridable() && isOverride != property.isOverriden()) {
+        if (!isOverride) {
+            QByteArray flag = QString("%1DirtyOverride").arg(property.name()).toLatin1();
+            for (const auto &carrier : m_carriers) {
+                carrier->setProperty(flag.data(), true);
+                property.setOverridenValue(property.m_originalValue, carrier);
+            }
+        }
+        property.setOverriden(isOverride);
+        return true;
     }
+    return false;
 }
 
 bool QtIviObjectModel::IviOverrider::setOverridenValue(int index, const QVariant &value)
@@ -559,7 +597,7 @@ void QtIviObjectModel::objectAdded(QObject *obj)
                     }
                 }
                 endInsertRows();
-                feature->setOverride(true, featureObj);
+                feature->setCarrierOverride(true, featureObj);
             }
         }
     }
@@ -855,11 +893,8 @@ bool QtIviObjectModel::setData(const QModelIndex &index, const QVariant &value, 
             if (role == Qt::CheckStateRole) {
                 const bool isOverride = value.value<Qt::CheckState>() == Qt::Checked;
 
-                if (property.isOverridable() && isOverride != property.isOverriden()) {
-                    property.setOverriden(isOverride);
-                    emitRowDataChanged(index);
+                if(carrier->setOverride(index.row(), isOverride))
                     return true;
-                }
             }
 
             break;
