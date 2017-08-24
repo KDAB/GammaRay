@@ -297,6 +297,8 @@ void RemoteViewWidget::frameUpdated(const RemoteViewFrame &frame)
     }
 
     updateActions();
+    if (m_interactionMode == InteractionMode::ColorPicking)
+        pickColor();
     emit frameChanged();
     QMetaObject::invokeMethod(m_interface, "clientViewUpdated", Qt::QueuedConnection);
 }
@@ -1024,6 +1026,18 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent *event)
     QWidget::mouseReleaseEvent(event);
 }
 
+void RemoteViewWidget::pickColor()
+{
+    auto sourceCoordinates = frame().transform().inverted().map(m_currentMousePosition); // for quick view, transform is needed
+    if (frame().image().rect().adjusted(0, 0, -1, -1).contains(sourceCoordinates)) {
+        m_trailingColorLabel->show();
+        m_trailingColorLabel->setPickedColor(frame().image().pixel(sourceCoordinates));
+    } else {
+        m_trailingColorLabel->hide();
+        m_trailingColorLabel->setPickedColor(Qt::transparent);
+    }
+}
+
 void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
 {
     m_currentMousePosition = mapToSource(event->pos());
@@ -1051,15 +1065,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
         break;
     case ColorPicking:
         m_trailingColorLabel->move(event->pos() + QPoint(4, 4));
-        auto sourceCoordinates = mapToSource(event->pos());
-        sourceCoordinates = frame().transform().map(sourceCoordinates); // for quick view, transform is needed
-        if (frame().image().rect().adjusted(0,0,-1,-1).contains(sourceCoordinates)) {
-            m_trailingColorLabel->show();
-            m_trailingColorLabel->setPickedColor(frame().image().pixel(sourceCoordinates));
-        } else {
-            m_trailingColorLabel->hide();
-            m_trailingColorLabel->setPickedColor(Qt::transparent);
-        }
+        pickColor();
         break;
     }
     update();
@@ -1089,6 +1095,7 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
             clampPanPosition();
             updateUserViewport();
             update();
+            pickColor();
         }
         break;
     case InputRedirection:

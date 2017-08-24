@@ -202,6 +202,8 @@ private:
     int horizontalRulerHeight() const;
     int verticalRulerWidth() const;
 
+    void pickColor();
+
 private slots:
     void interactionActionTriggered(QAction *action);
     void pickElementId(const QModelIndex &index);
