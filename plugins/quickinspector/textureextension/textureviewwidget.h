@@ -46,34 +46,45 @@ public:
         FullyTransparent = 1,
         FullyOpaque = 2,
         Unicolor = 4,
-        TextureWaste = 8
+        TextureWaste = 8,
+        BorderImageCandidate = 16
     };
     Q_DECLARE_FLAGS(ImageFlags, ImageFlag)
 
     void drawDecoration(QPainter *p) override;
     void drawPixelWasteDecoration(QPainter *p) const;
+    void drawBorderImageCutouts(QPainter *p) const;
+
     void drawActiveAtlasTile(QPainter *p) const;
 
     const static int transparencyWasteLimitInPercent = 30;
     const static int transparencyWasteLimitInBytes = 16 * 1024;
+    constexpr static float minimumBorderImageSavingsPercent = 30;
 
 signals:
     void textureInfoNecessary(const bool isNecessary) const;
-    void textureWasteFound(const int percent, const int bytes) const;
+    void textureWasteFound(const bool, const int percent, const int bytes) const;
     void textureIsUnicolor(const bool) const;
     void textureIsFullyTransparent(const bool) const;
-    void textureHasUselessAlpha(const bool ) const;
+    void textureHasUselessAlpha(const bool) const;
+    void textureHasHorizontalBorderImageSavings(const bool, int savingsPercent) const;
+    void textureHasVerticalBorderImageSavings(const bool, int savingsPercent) const;
 
 private slots:
     void setTextureWasteVisualizationEnabled(bool enabled);
     void analyzeImageFlaws();
 
 private:
-    bool m_visualizeTextureWaste;
+    bool m_visualizeTextureProblems;
     int m_pixelWasteInPercent;
     int m_pixelWasteInBytes;
     QRect m_analyzedRect;
-    QRect m_opaqueBoundingRect; //area actually occupied
+    QRect m_opaqueBoundingRect; //area actually occupied by opaque pixels
+    int m_horizontalBorderImageSavings;
+    QRect m_horizontalBorderRectMidCut;
+    int m_verticalBorderImageSavings;
+    QRect m_verticalBorderRectMidCut;
+
 };
 }
 

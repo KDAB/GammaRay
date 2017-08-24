@@ -37,9 +37,10 @@ using namespace GammaRay;
 
 TextureViewWidget::TextureViewWidget(QWidget* parent)
     : RemoteViewWidget(parent)
-    , m_visualizeTextureWaste(true)
+    , m_visualizeTextureProblems(true)
     , m_pixelWasteInPercent(0)
     , m_pixelWasteInBytes(0)
+    , m_horizontalBorderImageSavings(0)
 {
     connect(this, SIGNAL(frameChanged()), this, SLOT(analyzeImageFlaws()));
 }
@@ -51,29 +52,67 @@ TextureViewWidget::~TextureViewWidget()
 void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
 {
     //Draw Warning if more than 30% or 1KB are wasted
-    if (m_pixelWasteInPercent > transparencyWasteLimitInPercent
-        || m_pixelWasteInBytes > transparencyWasteLimitInBytes) {
+    if (m_pixelWasteInPercent < transparencyWasteLimitInPercent
+        && m_pixelWasteInBytes < transparencyWasteLimitInBytes)
+        return;
+
+    p->save();
+    auto scaleTransform = QTransform::fromScale(zoom(),zoom());
+    p->setTransform(scaleTransform, true);
+
+    //Draw Wasted Area
+    QPen pen(Qt::red);
+    pen.setCosmetic(true);
+    p->setPen(pen);
+    QBrush brush = QBrush(Qt::red, Qt::FDiagPattern);
+    brush.setTransform(scaleTransform.inverted());
+    p->setBrush(brush);
+    auto viewRect = QPainterPath();
+    viewRect.addRect(m_analyzedRect);
+    auto innerRect = QPainterPath();
+    auto translatedBoundingRect = m_opaqueBoundingRect.translated(m_analyzedRect.x(), m_analyzedRect.y());
+    innerRect.addRect(translatedBoundingRect);
+    viewRect = viewRect.subtracted(innerRect);
+    p->drawPath(viewRect);
+    p->restore();
+}
+
+void TextureViewWidget::drawBorderImageCutouts(QPainter *p) const
+{
+    if (m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent) {
         p->save();
         auto scaleTransform = QTransform::fromScale(zoom(),zoom());
         p->setTransform(scaleTransform, true);
 
-        //Draw Wasted Area
-        QPen pen(Qt::red);
+        QPen pen(Qt::white);
         pen.setCosmetic(true);
         p->setPen(pen);
-        QBrush brush = QBrush(Qt::red, Qt::FDiagPattern);
+        QBrush brush = QBrush(Qt::white, Qt::FDiagPattern);
         brush.setTransform(scaleTransform.inverted());
         p->setBrush(brush);
-        auto viewRect = QPainterPath();
-        viewRect.addRect(m_analyzedRect);
-        auto innerRect = QPainterPath();
-        auto translatedBoundingRect = m_opaqueBoundingRect.translated(m_analyzedRect.x(), m_analyzedRect.y());
-        innerRect.addRect(translatedBoundingRect);
-        viewRect = viewRect.subtracted(innerRect);
-        p->drawPath(viewRect);
+        p->drawRect(m_horizontalBorderRectMidCut.translated(m_analyzedRect.x(), m_analyzedRect.y()));
         p->restore();
     }
+
+    if (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent) {
+        p->save();
+        auto scaleTransform = QTransform::fromScale(zoom(),zoom());
+        p->setTransform(scaleTransform, true);
+
+        QPen pen(Qt::white);
+        pen.setCosmetic(true);
+        p->setPen(pen);
+        QBrush brush = QBrush(Qt::white, Qt::FDiagPattern);
+        brush.setTransform(scaleTransform.inverted());
+        p->setBrush(brush);
+        p->drawRect(m_verticalBorderRectMidCut.translated(m_analyzedRect.x(), m_analyzedRect.y()));
+        p->restore();
+    }
+
+
 }
+
+
 
 void TextureViewWidget::drawActiveAtlasTile(QPainter *p) const
 {
@@ -95,14 +134,16 @@ void TextureViewWidget::drawDecoration(QPainter *p)
 {
     drawActiveAtlasTile(p);
 
-    if (m_visualizeTextureWaste)
+    if (m_visualizeTextureProblems){
+        drawBorderImageCutouts(p);
         drawPixelWasteDecoration(p);
+    }
 }
 
 void TextureViewWidget::setTextureWasteVisualizationEnabled(bool enabled)
 {
-    if (m_visualizeTextureWaste != enabled) {
-        m_visualizeTextureWaste = enabled;
+    if (m_visualizeTextureProblems != enabled) {
+        m_visualizeTextureProblems = enabled;
         update();
     }
 }
@@ -128,10 +169,8 @@ void TextureViewWidget::analyzeImageFlaws()
     m_analyzedRect = analyzedRect;
 
     QRgb possibleSingularColor = analyzedTexture.pixel(0,0);
-
-    int top = analyzedTexture.height(), bottom = 0, left = analyzedTexture.width(), right = 0;
-
     ImageFlags imageFlags = ImageFlag::FullyTransparent | ImageFlag::FullyOpaque | ImageFlag::Unicolor;
+    int top = analyzedTexture.height(), bottom = 0, left = analyzedTexture.width(), right = 0;
 
     for(int y = 0; y < analyzedTexture.height(); y++) {
         for(int x = 0; x < analyzedTexture.width(); x++) {
@@ -155,24 +194,85 @@ void TextureViewWidget::analyzeImageFlaws()
 
     m_opaqueBoundingRect = QRect(QPoint(left, top), QPoint(right, bottom));
 
-    //Calculate Waste
+    // Calculate Waste
     const float imagePixelSize = (analyzedTexture.width() * analyzedTexture.height());
     const auto pixelWaste = 1.0 - ((m_opaqueBoundingRect.height() * m_opaqueBoundingRect.width()) / imagePixelSize);
     m_pixelWasteInPercent = qRound(pixelWaste * 100.0f);
     m_pixelWasteInBytes = (imagePixelSize - (m_opaqueBoundingRect.height() * m_opaqueBoundingRect.width())) * frame().image().depth() / 8;
 
     emit textureInfoNecessary(false);
-     if (   m_pixelWasteInPercent > transparencyWasteLimitInPercent
-        || m_pixelWasteInBytes > transparencyWasteLimitInBytes) {
-        emit textureWasteFound(m_pixelWasteInPercent, m_pixelWasteInBytes);
-        imageFlags.setFlag(ImageFlag::TextureWaste, true);
-    }
 
+    // Emit all possible Problems so far
+    auto hasTextureWasteProblem = (m_pixelWasteInPercent > transparencyWasteLimitInPercent || m_pixelWasteInBytes > transparencyWasteLimitInBytes);
+    emit textureWasteFound(hasTextureWasteProblem, m_pixelWasteInPercent, m_pixelWasteInBytes);
+    imageFlags.setFlag(ImageFlag::TextureWaste, hasTextureWasteProblem);
     emit textureIsUnicolor(imageFlags.testFlag(ImageFlag::Unicolor));
     emit textureIsFullyTransparent(imageFlags.testFlag(ImageFlag::FullyTransparent));
     QVector<QImage::Format> commonFormatsWithAlpha = {QImage::Format_ARGB32, QImage::Format_ARGB32_Premultiplied};
     emit textureHasUselessAlpha(imageFlags.testFlag(ImageFlag::FullyOpaque) && commonFormatsWithAlpha.contains(frame().image().format()));
-    emit textureInfoNecessary(imageFlags != ImageFlag::None);
 
+    //Analyze if Border Image would save more than 30% mem
+    auto textureWidth = analyzedTexture.width();
+    auto textureHeight = analyzedTexture.height();
+    auto midCol = textureWidth / 2;
+    auto leftCol = midCol;
+    auto breakout = false;
+    while ((leftCol >= 0) && !breakout) {
+        leftCol--;
+        for (int row = 0; row < textureHeight; row++) {
+            if (analyzedTexture.pixel(leftCol, row) != analyzedTexture.pixel(midCol, row)) {
+                breakout = true;
+                break;
+            }
+        }
+    }
+    auto rightCol = midCol;
+    breakout = false;
+    while ((rightCol < textureWidth) && !breakout) {
+        rightCol++;
+        for (int row = 0; row < textureHeight; row++) {
+            if (analyzedTexture.pixel(rightCol, row) != analyzedTexture.pixel(midCol, row)) {
+                breakout = true;
+                break;
+            }
+        }
+    }
+    m_horizontalBorderImageSavings = qRound(((rightCol - leftCol) * textureHeight) / imagePixelSize * 100) ;
+    emit textureHasHorizontalBorderImageSavings( (m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent), m_horizontalBorderImageSavings);
+    m_horizontalBorderRectMidCut = QRect(leftCol, 0, rightCol - leftCol, textureHeight);
+    imageFlags.setFlag(ImageFlag::BorderImageCandidate, (m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent));
+
+    //verticalBorderImage
+    auto midRow = textureHeight / 2;
+    auto upperRow = midRow;
+    breakout = false;
+    while ((upperRow >= 0) && !breakout) {
+        upperRow --;
+        for (int col = 0; col < textureWidth; col++) {
+            if (analyzedTexture.pixel(upperRow, col) != analyzedTexture.pixel(midRow, col)) {
+                breakout = true;
+                break;
+            }
+        }
+    }
+    auto lowerRow = midRow;
+    breakout = false;
+    while ((lowerRow < textureHeight) &&! breakout) {
+        lowerRow++;
+        for (int col = 0; col < textureWidth; col++) {
+            if (analyzedTexture.pixel(lowerRow, col) != analyzedTexture.pixel(midRow, col)) {
+                breakout = true;
+                break;
+            }
+        }
+    }
+    m_verticalBorderImageSavings = qRound(((lowerRow - upperRow) * textureWidth) / imagePixelSize * 100);
+    emit textureHasVerticalBorderImageSavings( (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent), m_verticalBorderImageSavings);
+    m_verticalBorderRectMidCut = QRect(0, upperRow, textureWidth, lowerRow - upperRow);
+    if(!imageFlags.testFlag(ImageFlag::BorderImageCandidate))
+        imageFlags.setFlag(ImageFlag::BorderImageCandidate, (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent));
+
+    // Only hide the Infobar when the texture had no flaws
+    emit textureInfoNecessary(imageFlags != ImageFlag::None);
 }
 
