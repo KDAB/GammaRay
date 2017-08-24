@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>466</width>
     <height>300</height>
    </rect>
   </property>
@@ -49,6 +49,27 @@
        <widget class="QLabel" name="textureWasteLabel">
         <property name="text">
          <string>Texture Waste:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="unicolorWarningLabel">
+        <property name="text">
+         <string>Unicolor texture, use rectangle instead.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="horizontalBorderImageLabel">
+        <property name="text">
+         <string>Border Image</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="verticalBorderImageLabel">
+        <property name="text">
+         <string>TextLabel</string>
         </property>
        </widget>
       </item>

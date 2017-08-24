@@ -82,7 +82,7 @@ TextureTab::TextureTab(PropertyWidget *parent)
     toolbar->addSeparator();
 
     const auto warningImage = QIcon(":/resources/warning.png");
-    auto toggleTextureWasteAction = new QAction(warningImage, tr("Reveal Texture Waste"), nullptr);
+    auto toggleTextureWasteAction = new QAction(warningImage, tr("Visualize Texture Problems"), nullptr);
     toggleTextureWasteAction->setCheckable(true);
     toggleTextureWasteAction->setChecked(true);
     toolbar->addAction(toggleTextureWasteAction);
@@ -94,10 +94,22 @@ TextureTab::TextureTab(PropertyWidget *parent)
     connect(toggleTextureWasteAction, SIGNAL(toggled(bool)), ui->textureView, SLOT(setTextureWasteVisualizationEnabled(bool)));
     connect(ui->textureView, SIGNAL(textureInfoNecessary(bool)), ui->textureInfo, SLOT(setVisible(bool)));
     connect(ui->textureView, &TextureViewWidget::textureWasteFound,
-                                    [&](int percent, int bytes) {
-                                        ui->textureWasteLabel->setText("Transparency Waste: " + QString::number(percent) + "% or "
-                                                                              + formatBytes(bytes));
-                                    });
+            [&](bool isProblem, int percent, int bytes) {
+                ui->textureWasteLabel->setText("Transparency Waste: " + QString::number(percent) + "% or "
+                                               + formatBytes(bytes));
+                ui->textureWasteLabel->setVisible(isProblem);
+    });
+    connect(ui->textureView, SIGNAL(textureIsUnicolor(bool)), ui->unicolorWarningLabel, SLOT(setVisible(bool)));
+    connect(ui->textureView, &TextureViewWidget::textureHasHorizontalBorderImageSavings,
+            [&](bool isProblem, int percentSaved) {
+                ui->horizontalBorderImageLabel->setText("Using a horizontal Border Image for this texture would save " + QString::number(percentSaved) + "%.");
+                ui->horizontalBorderImageLabel->setVisible(isProblem);
+    });
+    connect(ui->textureView, &TextureViewWidget::textureHasVerticalBorderImageSavings,
+            [&](bool isProblem, int percentSaved) {
+                ui->verticalBorderImageLabel->setText("Using a vertical Border Image for this texture would save " + QString::number(percentSaved) + "%.");
+                ui->verticalBorderImageLabel->setVisible(isProblem);
+    });
     zoom->setCurrentIndex(ui->textureView->zoomLevelIndex());
 }
 
