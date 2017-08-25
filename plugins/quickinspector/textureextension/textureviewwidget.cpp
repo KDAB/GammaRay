@@ -150,6 +150,8 @@ void TextureViewWidget::setTextureWasteVisualizationEnabled(bool enabled)
 
 void TextureViewWidget::analyzeImageFlaws()
 {
+    emit textureInfoNecessary(false);
+
     if (frame().image().isNull())
         return;
 
@@ -168,7 +170,7 @@ void TextureViewWidget::analyzeImageFlaws()
 
     m_analyzedRect = analyzedRect;
 
-    QRgb possibleSingularColor = analyzedTexture.pixel(0,0);
+    QRgb possibleSingularColor = analyzedTexture.pixel(0, 0);
     ImageFlags imageFlags = ImageFlag::FullyTransparent | ImageFlag::FullyOpaque | ImageFlag::Unicolor;
     int top = analyzedTexture.height(), bottom = 0, left = analyzedTexture.width(), right = 0;
 
@@ -177,13 +179,13 @@ void TextureViewWidget::analyzeImageFlaws()
             auto pixel = analyzedTexture.pixel(x, y);
 
             if (Q_UNLIKELY(imageFlags.testFlag(ImageFlag::Unicolor)) && (possibleSingularColor != pixel))
-                imageFlags.setFlag(ImageFlag::Unicolor, false);
+                imageFlags &=~ ImageFlag::Unicolor;
 
             if (Q_UNLIKELY(imageFlags.testFlag(ImageFlag::FullyOpaque)) && (qAlpha(pixel) < 255))
-                imageFlags.setFlag(ImageFlag::FullyOpaque, false);
+                imageFlags &=~ ImageFlag::FullyOpaque;
 
             if (qAlpha(pixel) != 0) {
-                imageFlags &= ~ImageFlag::FullyTransparent;
+                imageFlags &=~ ImageFlag::FullyTransparent;
                 top = std::min(top, y);
                 bottom = std::max(bottom, y);
                 left = std::min(left, x);
@@ -200,24 +202,24 @@ void TextureViewWidget::analyzeImageFlaws()
     m_pixelWasteInPercent = qRound(pixelWaste * 100.0f);
     m_pixelWasteInBytes = (imagePixelSize - (m_opaqueBoundingRect.height() * m_opaqueBoundingRect.width())) * frame().image().depth() / 8;
 
-    emit textureInfoNecessary(false);
 
     // Emit all possible Problems so far
     auto hasTextureWasteProblem = (m_pixelWasteInPercent > transparencyWasteLimitInPercent || m_pixelWasteInBytes > transparencyWasteLimitInBytes);
     emit textureWasteFound(hasTextureWasteProblem, m_pixelWasteInPercent, m_pixelWasteInBytes);
-    imageFlags.setFlag(ImageFlag::TextureWaste, hasTextureWasteProblem);
+    if (hasTextureWasteProblem) imageFlags |= ImageFlag::TextureWaste;
     emit textureIsUnicolor(imageFlags.testFlag(ImageFlag::Unicolor));
     emit textureIsFullyTransparent(imageFlags.testFlag(ImageFlag::FullyTransparent));
     QVector<QImage::Format> commonFormatsWithAlpha = {QImage::Format_ARGB32, QImage::Format_ARGB32_Premultiplied};
     emit textureHasUselessAlpha(imageFlags.testFlag(ImageFlag::FullyOpaque) && commonFormatsWithAlpha.contains(frame().image().format()));
 
-    //Analyze if Border Image would save more than 30% mem
+    // Border Image checks
+    // horizontal mid slices
     auto textureWidth = analyzedTexture.width();
     auto textureHeight = analyzedTexture.height();
     auto midCol = textureWidth / 2;
     auto leftCol = midCol;
     auto breakout = false;
-    while ((leftCol >= 0) && !breakout) {
+    while ((leftCol > 0) && !breakout) {
         leftCol--;
         for (int row = 0; row < textureHeight; row++) {
             if (analyzedTexture.pixel(leftCol, row) != analyzedTexture.pixel(midCol, row)) {
@@ -228,7 +230,7 @@ void TextureViewWidget::analyzeImageFlaws()
     }
     auto rightCol = midCol;
     breakout = false;
-    while ((rightCol < textureWidth) && !breakout) {
+    while ((rightCol < textureWidth - 1) && !breakout) {
         rightCol++;
         for (int row = 0; row < textureHeight; row++) {
             if (analyzedTexture.pixel(rightCol, row) != analyzedTexture.pixel(midCol, row)) {
@@ -238,18 +240,18 @@ void TextureViewWidget::analyzeImageFlaws()
         }
     }
     m_horizontalBorderImageSavings = qRound(((rightCol - leftCol) * textureHeight) / imagePixelSize * 100) ;
-    emit textureHasHorizontalBorderImageSavings( (m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent), m_horizontalBorderImageSavings);
+    emit textureHasHorizontalBorderImageSavings((m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent), m_horizontalBorderImageSavings);
     m_horizontalBorderRectMidCut = QRect(leftCol, 0, rightCol - leftCol, textureHeight);
-    imageFlags.setFlag(ImageFlag::BorderImageCandidate, (m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent));
+    if (m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent) imageFlags |= ImageFlag::BorderImageCandidate;
 
     //verticalBorderImage
     auto midRow = textureHeight / 2;
     auto upperRow = midRow;
     breakout = false;
-    while ((upperRow >= 0) && !breakout) {
+    while ((upperRow > 0) && !breakout) {
         upperRow --;
         for (int col = 0; col < textureWidth; col++) {
-            if (analyzedTexture.pixel(upperRow, col) != analyzedTexture.pixel(midRow, col)) {
+            if (analyzedTexture.pixel(col, upperRow) != analyzedTexture.pixel(col, midRow)) {
                 breakout = true;
                 break;
             }
@@ -257,20 +259,19 @@ void TextureViewWidget::analyzeImageFlaws()
     }
     auto lowerRow = midRow;
     breakout = false;
-    while ((lowerRow < textureHeight) &&! breakout) {
+    while ((lowerRow < textureHeight - 1) &&! breakout) {
         lowerRow++;
         for (int col = 0; col < textureWidth; col++) {
-            if (analyzedTexture.pixel(lowerRow, col) != analyzedTexture.pixel(midRow, col)) {
+            if (analyzedTexture.pixel(col, lowerRow) != analyzedTexture.pixel(col, midRow)) {
                 breakout = true;
                 break;
             }
         }
     }
     m_verticalBorderImageSavings = qRound(((lowerRow - upperRow) * textureWidth) / imagePixelSize * 100);
-    emit textureHasVerticalBorderImageSavings( (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent), m_verticalBorderImageSavings);
+    emit textureHasVerticalBorderImageSavings((m_verticalBorderImageSavings > minimumBorderImageSavingsPercent), m_verticalBorderImageSavings);
     m_verticalBorderRectMidCut = QRect(0, upperRow, textureWidth, lowerRow - upperRow);
-    if(!imageFlags.testFlag(ImageFlag::BorderImageCandidate))
-        imageFlags.setFlag(ImageFlag::BorderImageCandidate, (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent));
+    if (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent) imageFlags |= ImageFlag::BorderImageCandidate;
 
     // Only hide the Infobar when the texture had no flaws
     emit textureInfoNecessary(imageFlags != ImageFlag::None);
