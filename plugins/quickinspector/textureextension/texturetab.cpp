@@ -39,10 +39,12 @@ using namespace GammaRay;
 
 QString formatBytes(qint64 bytes)
 {
-    static const QVector<QString> sizes = {QLatin1String(" TiB"), QLatin1String(" GiB"),
-                                           QLatin1String(" MiB"), QLatin1String(" KiB"),
-                                           QLatin1String(" B")};
-    static const qint64 startMultiplier = std::pow(1024, sizes.size() - 1);
+    static QVector<QString> sizes;
+    sizes.push_back(QLatin1String(" GiB"));
+    sizes.push_back(QLatin1String(" MiB"));
+    sizes.push_back(QLatin1String(" KiB"));
+    sizes.push_back(QLatin1String(" B"));
+    static const qint64 startMultiplier = std::pow(1024.0f, sizes.size() - 1);
 
     qint64 multiplier = startMultiplier;
     for (int i = 0; i < sizes.size(); ++i, multiplier /= 1024) {

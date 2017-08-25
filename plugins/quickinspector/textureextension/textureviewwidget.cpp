@@ -209,7 +209,9 @@ void TextureViewWidget::analyzeImageFlaws()
     if (hasTextureWasteProblem) imageFlags |= ImageFlag::TextureWaste;
     emit textureIsUnicolor(imageFlags.testFlag(ImageFlag::Unicolor));
     emit textureIsFullyTransparent(imageFlags.testFlag(ImageFlag::FullyTransparent));
-    QVector<QImage::Format> commonFormatsWithAlpha = {QImage::Format_ARGB32, QImage::Format_ARGB32_Premultiplied};
+    QVector<QImage::Format> commonFormatsWithAlpha;
+    commonFormatsWithAlpha.push_back(QImage::Format_ARGB32);
+    commonFormatsWithAlpha.push_back(QImage::Format_ARGB32_Premultiplied);
     emit textureHasUselessAlpha(imageFlags.testFlag(ImageFlag::FullyOpaque) && commonFormatsWithAlpha.contains(frame().image().format()));
 
     // Border Image checks
