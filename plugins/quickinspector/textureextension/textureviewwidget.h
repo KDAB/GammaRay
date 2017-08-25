@@ -59,7 +59,7 @@ public:
 
     const static int transparencyWasteLimitInPercent = 30;
     const static int transparencyWasteLimitInBytes = 16 * 1024;
-    constexpr static float minimumBorderImageSavingsPercent = 30;
+    const static int minimumBorderImageSavingsPercent = 30;
 
 signals:
     void textureInfoNecessary(const bool isNecessary) const;
