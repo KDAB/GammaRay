@@ -144,8 +144,9 @@ private slots:
         QFETCH(bool, isDebug);
         QFETCH(QString, arch);
         QFETCH(QString, compiler);
+#ifdef Q_OS_WIN
         QFETCH(QString, compilerVersion);
-
+#endif
         const ProbeABI abi = ProbeABI::fromString(id);
         QCOMPARE(abi.isValid(), valid);
         if (!valid)
