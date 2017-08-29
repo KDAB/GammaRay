@@ -57,7 +57,7 @@
 
 using namespace GammaRay;
 
-static void log_injection(char *msg) {
+static void log_injection(const char *msg) {
 #ifdef Q_OS_WIN
     OutputDebugStringA(msg);
 #else
@@ -167,20 +167,22 @@ void Hooks::installHooks()
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 {
-    if (!qApp)
+    if (!qApp) {
         return;
+    }
     log_injection("gammaray_probe_inject()\n");
     new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects);
 }
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
 {
-    if (!qApp)
+    if (!qApp) {
         return;
+    }
     log_injection("gammaray_probe_attach()\n");
-    new ProbeCreator(
-        ProbeCreator::Create | ProbeCreator::FindExistingObjects
-        | ProbeCreator::ResendServerAddress);
+    new ProbeCreator(ProbeCreator::Create |
+                     ProbeCreator::FindExistingObjects |
+                     ProbeCreator::ResendServerAddress);
 }
 
 extern "C" Q_DECL_EXPORT void gammaray_install_hooks()
