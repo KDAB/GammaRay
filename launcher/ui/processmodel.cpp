@@ -93,7 +93,13 @@ void ProcessModel::mergeProcesses(const ProcDataList &processes)
                 endRemoveRows();
                 continue;
             } else if (newProc == oldProc) {
-                // already contained, hence increment and break
+                // already contained, hence increment and break.
+                // Update entry before if something changed (like state),
+                // this make sure m_data match exactly sortedProcesses for later Q_ASSERT check.
+                if (!newProc.equals(oldProc)) {
+                    m_data[i] = newProc;
+                    emit dataChanged(index(i, 0), index(i, columnCount() - 1));
+                }
                 ++i;
                 shouldInsert = false;
                 break;

@@ -48,6 +48,16 @@ struct ProcData
     GammaRay::ProbeABI abi;
 
     ProcData() {}
+
+    inline bool equals(const ProcData &other) const
+    {
+        return ppid == other.ppid &&
+                name == other.name &&
+                image == other.image &&
+                state == other.state &&
+                user == other.user &&
+                abi == other.abi;
+    }
 };
 
 typedef QList<ProcData> ProcDataList;
