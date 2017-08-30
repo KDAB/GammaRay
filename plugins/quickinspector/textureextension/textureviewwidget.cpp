@@ -171,7 +171,7 @@ void TextureViewWidget::analyzeImageFlaws()
     m_analyzedRect = analyzedRect;
 
     QRgb possibleSingularColor = analyzedTexture.pixel(0, 0);
-    ImageFlags imageFlags = ImageFlag::FullyTransparent | ImageFlag::FullyOpaque | ImageFlag::Unicolor;
+    ImageFlags imageFlags = ImageFlag::FullyTransparent | ImageFlag::Unicolor;
     int top = analyzedTexture.height(), bottom = 0, left = analyzedTexture.width(), right = 0;
 
     for(int y = 0; y < analyzedTexture.height(); y++) {
@@ -180,9 +180,6 @@ void TextureViewWidget::analyzeImageFlaws()
 
             if (Q_UNLIKELY(imageFlags.testFlag(ImageFlag::Unicolor)) && (possibleSingularColor != pixel))
                 imageFlags &=~ ImageFlag::Unicolor;
-
-            if (Q_UNLIKELY(imageFlags.testFlag(ImageFlag::FullyOpaque)) && (qAlpha(pixel) < 255))
-                imageFlags &=~ ImageFlag::FullyOpaque;
 
             if (qAlpha(pixel) != 0) {
                 imageFlags &=~ ImageFlag::FullyTransparent;
@@ -209,10 +206,6 @@ void TextureViewWidget::analyzeImageFlaws()
     if (hasTextureWasteProblem) imageFlags |= ImageFlag::TextureWaste;
     emit textureIsUnicolor(imageFlags.testFlag(ImageFlag::Unicolor));
     emit textureIsFullyTransparent(imageFlags.testFlag(ImageFlag::FullyTransparent));
-    QVector<QImage::Format> commonFormatsWithAlpha;
-    commonFormatsWithAlpha.push_back(QImage::Format_ARGB32);
-    commonFormatsWithAlpha.push_back(QImage::Format_ARGB32_Premultiplied);
-    emit textureHasUselessAlpha(imageFlags.testFlag(ImageFlag::FullyOpaque) && commonFormatsWithAlpha.contains(frame().image().format()));
 
     // Border Image checks
     // horizontal mid slices

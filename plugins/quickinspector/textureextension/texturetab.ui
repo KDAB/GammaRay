@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>466</width>
+    <width>661</width>
     <height>300</height>
    </rect>
   </property>
@@ -70,6 +70,13 @@
        <widget class="QLabel" name="verticalBorderImageLabel">
         <property name="text">
          <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="fullTransparencyWarningLabel">
+        <property name="text">
+         <string>Texture is fully transparent. Use margins and anchoring instead of empty spacers.</string>
         </property>
        </widget>
       </item>
