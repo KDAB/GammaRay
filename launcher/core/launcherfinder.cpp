@@ -50,7 +50,7 @@ QString LauncherFinder::findLauncher(LauncherFinder::Type type, const ProbeABI &
     QString fileName = executableNames[type];
 #ifdef Q_OS_WIN
     if(type == Injector) {
-        fileName += "-" + (abi.isValid() ? abi.id() : GAMMARAY_PROBE_ABI);
+        fileName += '-' + (abi.isValid() ? abi.id() : GAMMARAY_PROBE_ABI);
     }
     fileName += ".exe";
 #else
@@ -61,15 +61,17 @@ QString LauncherFinder::findLauncher(LauncherFinder::Type type, const ProbeABI &
 
     QString appPath = Paths::binPath() + QDir::separator() + fileName;
     QFileInfo fi(appPath);
-    if (fi.isExecutable())
+    if (fi.isExecutable()) {
         return fi.absoluteFilePath();
+    }
     appPaths.append(appPath);
 
     appPath = Paths::libexecPath() + QDir::separator() + fileName;
     if (!appPaths.contains(appPath)) {
         fi.setFile(appPath);
-        if (fi.isExecutable())
+        if (fi.isExecutable()) {
             return fi.absoluteFilePath();
+        }
         appPaths.append(appPath);
     }
 
