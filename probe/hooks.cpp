@@ -63,7 +63,7 @@ static void log_injection(const char *msg) {
 #else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-security"
-    printf(msg);
+    printf(msg); // NOLINT clang-tidy
 #pragma GCC diagnostic pop
 #endif
 }
