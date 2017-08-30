@@ -1,5 +1,5 @@
 /*
-  commonutils.h
+  basicwindllinjector.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,21 +26,27 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_COMMON_UTILS_H
-#define GAMMARAY_COMMON_UTILS_H
+#ifndef BASICWINDLLINJECTOR_H
+#define BASICWINDLLINJECTOR_H
 
-#include "gammaray_common_export.h"
+#include <windows.h>
+#include <vector>
 
-#include <QtGlobal>
 
 
-#define WIN_ERROR_ASSERT(condition, action) if (condition) {} else { qWarning("%s Error: %s failed: %s", Q_FUNC_INFO, #condition, qPrintable(qt_error_string())); action; } do {} while(false)
-#define WIN_ERROR_CHECK(condition) WIN_ERROR_ASSERT(condition, qt_noop();)
+class  BasicWinDllInjector {
+public:
+    static BOOL addDllDirectory(HANDLE destProcess, wchar_t *dllDirPath);
 
-namespace GammaRay {
-namespace CommonUtils {
+    static BOOL inject(HANDLE destProcess, wchar_t *dllPath);
 
-}
-}
+    static BOOL injectProcess(wchar_t *pid, wchar_t *path, wchar_t *probePath);
 
-#endif // GAMMARAY_COMMON_UTILS_H
+private:
+    static DWORD remoteKernel32Call(HANDLE destProcess, const char *funcName, const wchar_t *argument);
+
+    static void logError(DWORD error=GetLastError());
+    static void log(const wchar_t* msg);
+};
+
+#endif // BASICWINDLLINJECTOR_H

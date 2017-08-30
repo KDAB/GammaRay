@@ -60,11 +60,7 @@ private:
     QProcess::ExitStatus mExitStatus;
     QString mErrorString;
 
-    void inject();
-    void addDllDirectory();
-    int remoteKernel32Call(const char *funcName, const QString &argument);
     HANDLE m_destProcess;
-    QString m_dllPath;
     FinishWaiter *m_injectThread;
     friend class FinishWaiter;
 };

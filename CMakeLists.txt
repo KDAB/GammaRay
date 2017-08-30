@@ -27,6 +27,10 @@
 #  Default=false
 #  Only use for Android or when you know what you are doing.
 #
+# -DGAMMARAY_BUILD_CLI_INJECTOR=[true|false]
+#  Build the cli injector on Windows
+#  Default=true
+#
 # -DGAMMARAY_MULTI_BUILD=[true|false]
 #  Build multiple applicable probe configurations.
 #  Default=true
@@ -177,6 +181,7 @@ gammaray_option(
 gammaray_option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
 gammaray_option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." OFF)
 gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
+gammaray_option(GAMMARAY_BUILD_CLI_INJECTOR "Build command line injector on Windows." ON)
 
 set(GAMMARAY_BUILD_DOCS_DEFAULT ON)
 set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT OFF)

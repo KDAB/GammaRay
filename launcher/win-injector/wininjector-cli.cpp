@@ -1,5 +1,5 @@
 /*
-  commonutils.h
+  wininjector-cli.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,21 +26,18 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_COMMON_UTILS_H
-#define GAMMARAY_COMMON_UTILS_H
+#include "../core/injector/basicwindllinjector.h"
 
-#include "gammaray_common_export.h"
+int main()
+{
+    int argc;
+    wchar_t **argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    if (argc != 4) {
+        return -1;
+    }
+    wchar_t *pidString(argv[1]);
+    wchar_t *path(argv[2]);
+    wchar_t *probePath(argv[3]);
 
-#include <QtGlobal>
-
-
-#define WIN_ERROR_ASSERT(condition, action) if (condition) {} else { qWarning("%s Error: %s failed: %s", Q_FUNC_INFO, #condition, qPrintable(qt_error_string())); action; } do {} while(false)
-#define WIN_ERROR_CHECK(condition) WIN_ERROR_ASSERT(condition, qt_noop();)
-
-namespace GammaRay {
-namespace CommonUtils {
-
+    return BasicWinDllInjector::injectProcess(pidString, path, probePath) ? 0 : -1;
 }
-}
-
-#endif // GAMMARAY_COMMON_UTILS_H
