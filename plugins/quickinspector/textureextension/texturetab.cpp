@@ -40,10 +40,10 @@ using namespace GammaRay;
 QString formatBytes(qint64 bytes)
 {
     static QVector<QString> sizes;
-    sizes.push_back(QLatin1String(" GiB"));
-    sizes.push_back(QLatin1String(" MiB"));
-    sizes.push_back(QLatin1String(" KiB"));
-    sizes.push_back(QLatin1String(" B"));
+    sizes.push_back(TextureTab::tr(" GiB"));
+    sizes.push_back(TextureTab::tr(" MiB"));
+    sizes.push_back(TextureTab::tr(" KiB"));
+    sizes.push_back(TextureTab::tr(" B"));
     static const qint64 startMultiplier = std::pow(1024.0f, sizes.size() - 1);
 
     qint64 multiplier = startMultiplier;
@@ -97,19 +97,19 @@ TextureTab::TextureTab(PropertyWidget *parent)
     connect(ui->textureView, SIGNAL(textureInfoNecessary(bool)), ui->textureInfo, SLOT(setVisible(bool)));
     connect(ui->textureView, &TextureViewWidget::textureWasteFound,
             [&](bool isProblem, int percent, int bytes) {
-                ui->textureWasteLabel->setText("Transparency Waste: " + QString::number(percent) + "% or "
-                                               + formatBytes(bytes));
+                ui->textureWasteLabel->setText(tr("Transparency Waste:") + QString::number(percent) + tr(" or ") + formatBytes(bytes));
                 ui->textureWasteLabel->setVisible(isProblem);
     });
     connect(ui->textureView, SIGNAL(textureIsUnicolor(bool)), ui->unicolorWarningLabel, SLOT(setVisible(bool)));
+    connect(ui->textureView, SIGNAL(textureIsFullyTransparent(bool)), ui->unicolorWarningLabel, SLOT(setVisible(bool)));
     connect(ui->textureView, &TextureViewWidget::textureHasHorizontalBorderImageSavings,
             [&](bool isProblem, int percentSaved) {
-                ui->horizontalBorderImageLabel->setText("Using a horizontal Border Image for this texture would save " + QString::number(percentSaved) + "%.");
+                ui->horizontalBorderImageLabel->setText(tr("Using a horizontal Border Image for this texture would save ") + QString::number(percentSaved) + tr("%."));
                 ui->horizontalBorderImageLabel->setVisible(isProblem);
     });
     connect(ui->textureView, &TextureViewWidget::textureHasVerticalBorderImageSavings,
             [&](bool isProblem, int percentSaved) {
-                ui->verticalBorderImageLabel->setText("Using a vertical Border Image for this texture would save " + QString::number(percentSaved) + "%.");
+                ui->verticalBorderImageLabel->setText(tr("Using a vertical Border Image for this texture would save ") + QString::number(percentSaved) + tr("%."));
                 ui->verticalBorderImageLabel->setVisible(isProblem);
     });
     zoom->setCurrentIndex(ui->textureView->zoomLevelIndex());

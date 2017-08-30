@@ -44,10 +44,9 @@ public:
     enum ImageFlag {
         None = 0,
         FullyTransparent = 1,
-        FullyOpaque = 2,
-        Unicolor = 4,
-        TextureWaste = 8,
-        BorderImageCandidate = 16
+        Unicolor = 2,
+        TextureWaste = 4,
+        BorderImageCandidate = 8
     };
     Q_DECLARE_FLAGS(ImageFlags, ImageFlag)
 
@@ -66,7 +65,6 @@ signals:
     void textureWasteFound(const bool, const int percent, const int bytes) const;
     void textureIsUnicolor(const bool) const;
     void textureIsFullyTransparent(const bool) const;
-    void textureHasUselessAlpha(const bool) const;
     void textureHasHorizontalBorderImageSavings(const bool, int savingsPercent) const;
     void textureHasVerticalBorderImageSavings(const bool, int savingsPercent) const;
 
