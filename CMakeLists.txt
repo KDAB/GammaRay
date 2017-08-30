@@ -233,23 +233,23 @@ macro(add_flag_if_supported flag name)
 endmacro()
 
 function(check_private_headers_exist module private_includes_var)
-    message(STATUS "Checking whether private include directories for module ${module} exist")
-    foreach(_dir ${private_includes_var})
-        if (NOT EXISTS "${_dir}")
-            message(FATAL_ERROR "The private include directory ${_dir} for module ${module} do not exist! Please make sure your Qt5 installation contains private headers.\nThe required directories:\n  ${private_includes_var}")
-        endif()
-    endforeach()
+  message(STATUS "Checking whether private include directories for module ${module} exist")
+  foreach(_dir ${private_includes_var})
+    if(NOT EXISTS "${_dir}")
+      message(FATAL_ERROR "The private include directory ${_dir} for module ${module} do not exist! Please make sure your Qt5 installation contains private headers.\nThe required directories:\n  ${private_includes_var}")
+    endif()
+  endforeach()
 endfunction()
 function(check_private_header_exists _file _dirs)
-    set(_found FALSE)
-    foreach(_dir ${_dirs})
-        if(EXISTS "${_dir}/${_file}")
-            set(_found TRUE)
-        endif()
-    endforeach()
-    if(NOT _found)
-        message(FATAL_ERROR "The private include file ${_file} was not found in directory ${_dirs}! Please make sure your Qt5 installation contains private headers.")
+  set(_found FALSE)
+  foreach(_dir ${_dirs})
+    if(EXISTS "${_dir}/${_file}")
+      set(_found TRUE)
     endif()
+  endforeach()
+  if(NOT _found)
+    message(FATAL_ERROR "The private include file ${_file} was not found in directory ${_dirs}! Please make sure your Qt5 installation contains private headers.")
+  endif()
 endfunction()
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -264,6 +264,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 
   check_cxx_compiler_flag(-std=gnu++0x HAVE_GXX_GNUXX11)
   check_cxx_compiler_flag(-std=c++0x HAVE_GXX_CXX11)
+  check_cxx_compiler_flag(-std=c++1z HAVE_GXX_CXX17)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Woverloaded-virtual -Winit-self -Wmissing-include-dirs -Wunused -Wundef -Wpointer-arith -Wmissing-noreturn -Werror=return-type -Wswitch")
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     # -Wgnu-zero-variadic-macro-arguments (part of -pedantic) is triggered by every qCDebug() call and therefore results
@@ -275,6 +276,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x")
   elseif(HAVE_GXX_CXX11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+  endif()
+  if(HAVE_GXX_CXX17)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
   endif()
   if(MINGW)
     # mingw will error out on the crazy casts in probe.cpp without this
@@ -309,7 +313,7 @@ if(NOT ECM_ENABLE_SANITIZERS AND (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTE
   endif()
 endif()
 
-if (GAMMARAY_ENFORCE_QT_ASSERTS)
+if(GAMMARAY_ENFORCE_QT_ASSERTS)
   add_definitions(-DQT_FORCE_ASSERTS)
 endif()
 
@@ -529,16 +533,16 @@ if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
 endif()
 
 if(WIN32 OR APPLE)
-    set(BUILD_TIMER_PLUGIN TRUE)
+  set(BUILD_TIMER_PLUGIN TRUE)
 else()
-    check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
-    gammaray_add_dummy_package(rt HAVE_CLOCK_GETTIME)
-    set_package_properties(rt PROPERTIES
-      TYPE RECOMMENDED
-      DESCRIPTION "High resolution clock, part of glibc"
-      PURPOSE "Needed for the timer profiler plugin."
-    )
-    set(BUILD_TIMER_PLUGIN ${HAVE_CLOCK_GETTIME})
+  check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
+  gammaray_add_dummy_package(rt HAVE_CLOCK_GETTIME)
+  set_package_properties(rt PROPERTIES
+    TYPE RECOMMENDED
+    DESCRIPTION "High resolution clock, part of glibc"
+    PURPOSE "Needed for the timer profiler plugin."
+  )
+  set(BUILD_TIMER_PLUGIN ${HAVE_CLOCK_GETTIME})
 endif()
 
 check_include_files(stdint.h HAVE_STDINT_H)
