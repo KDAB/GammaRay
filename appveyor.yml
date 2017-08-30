@@ -43,7 +43,7 @@ on_success:
 on_finish:
 - ps: |
     Get-ChildItem $env:USERPROFILE\.craft\* | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-    Push-AppveyorArtifact C:\CraftMaster\$env:TARGET\etc\kdesettings.ini.dump
+    Push-AppveyorArtifact C:\CraftMaster\$env:TARGET\etc\CraftSettings.ini.dump
 
 environment:
     matrix:
