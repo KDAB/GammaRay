@@ -61,7 +61,10 @@ static void log_injection(const char *msg) {
 #ifdef Q_OS_WIN
     OutputDebugStringA(msg);
 #else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-security"
     printf(msg);
+#pragma GCC diagnostic pop
 #endif
 }
 
