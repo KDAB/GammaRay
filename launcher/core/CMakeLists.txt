@@ -22,6 +22,7 @@ if(WIN32)
   list(APPEND gammaray_launcher_shared_srcs
     probeabidetector_win.cpp
     pefile.cpp
+    injector/basicwindllinjector.cpp
     injector/windllinjector.cpp
   )
 else()

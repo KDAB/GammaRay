@@ -6,3 +6,8 @@ if(HAVE_QT_CONCURRENT AND GAMMARAY_BUILD_UI)
   add_subdirectory(app)
 endif()
 endif()
+
+if(GAMMARAY_BUILD_CLI_INJECTOR)
+  add_subdirectory(win-injector)
+endif()
+

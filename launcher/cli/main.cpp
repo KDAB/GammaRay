@@ -155,35 +155,6 @@ static bool startLauncher()
     return proc.exitCode() == 0;
 }
 
-
-#ifdef Q_OS_WIN
-static int startInjector(const LaunchOptions &options)
-{
-    const QString launcherPath = LauncherFinder::findLauncher(LauncherFinder::Injector, options.probeABI());
-    const auto qtCorePath = ProbeABIDetector().qtCoreForProcess(options.pid());
-    const auto workingDir = QFileInfo(qtCorePath).absoluteDir().path();
-
-    auto arguments = qApp->arguments();
-    arguments.pop_front();
-    auto env = options.processEnvironment();
-    const auto prepend = [&env](const QString &key, const QString& val) {
-        const QString path = val + QLatin1Char(';') + env.value(key, QString());
-        env.insert(key,  path);
-    };
-    prepend(QLatin1String("PATH"), workingDir);
-    prepend(QLatin1String("QT_PLUGIN_PATH"), workingDir);
-
-    QProcess proc;
-    proc.setProcessChannelMode(QProcess::ForwardedChannels);
-    proc.setEnvironment(env.toStringList());
-    proc.setWorkingDirectory(workingDir);
-    proc.start(launcherPath, arguments);
-    if (!proc.waitForFinished(-1))
-        return -1;
-    return proc.exitCode();
-}
-#endif
-
 static QUrl urlFromUserInput(const QString &s)
 {
     QUrl url(s);
@@ -367,12 +338,6 @@ int main(int argc, char **argv)
         }
         options.setProbeABI(availableProbes.first());
     }
-
-#ifdef Q_OS_WIN
-    if (!app.applicationFilePath().endsWith(options.probeABI().id() + ".exe", Qt::CaseInsensitive)) {
-        return startInjector(options);
-    }
-#endif
 
     // use a local connection when starting gui locally with this launcher
     if (!options.probeSettings().contains(QStringLiteral("ServerAddress").toUtf8())

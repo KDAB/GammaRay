@@ -44,7 +44,7 @@ enum Type {
     Client
 };
 
-GAMMARAY_LAUNCHER_EXPORT QString findLauncher(Type type, const ProbeABI &abi=ProbeABI());
+GAMMARAY_LAUNCHER_EXPORT QString findLauncher(Type type);
 }
 }
 

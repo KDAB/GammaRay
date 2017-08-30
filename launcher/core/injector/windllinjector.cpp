@@ -28,6 +28,7 @@
 // krazy:excludeall=null,captruefalse
 
 #include "windllinjector.h"
+#include "basicwindllinjector.h"
 
 #include <common/paths.h>
 #include <common/commonutils.h>
@@ -74,7 +75,7 @@ WinDllInjector::WinDllInjector()
     : mExitCode(-1)
     , mProcessError(QProcess::UnknownError)
     , mExitStatus(QProcess::NormalExit)
-    , m_destProcess(NULL)
+    , m_destProcess(INVALID_HANDLE_VALUE)
     , m_injectThread(new FinishWaiter(this))
 {
 }
@@ -123,17 +124,17 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
     PROCESS_INFORMATION pid;
     memset(&pid, 0, sizeof(PROCESS_INFORMATION));
 
-    const QString applicationName = programAndArgs.join(" ");
+    const QString applicationName = programAndArgs.join(QLatin1String(" "));
     WIN_ERROR_ASSERT(CreateProcess(0, (wchar_t *)applicationName.utf16(),
-                                 0, 0, TRUE, dwCreationFlags,
-                                 buffer.isEmpty() ? 0 : buffer.data(),
-                                 (wchar_t *)workingDirectory().utf16(),
-                                 &startupInfo, &pid),
+                                   0, 0, TRUE, dwCreationFlags,
+                                   buffer.isEmpty() ? 0 : buffer.data(),
+                                   (wchar_t *)workingDirectory().utf16(),
+                                   &startupInfo, &pid),
                      return false);
 
     m_destProcess = pid.hProcess;
-    m_dllPath = QDir::toNativeSeparators(probeDll);
-    inject();
+    const QString dllPath = QDir::toNativeSeparators(probeDll);
+    BasicWinDllInjector::inject(m_destProcess, (wchar_t*)dllPath.utf16());
     m_injectThread->stop();
     emit started();
     ResumeThread(pid.hThread);
@@ -143,19 +144,19 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
 
 bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*probeFunc*/)
 {
-    m_dllPath = QDir::toNativeSeparators(probeDll);
-
-    m_destProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
-    if (!m_destProcess) {
-        qWarning() << "Failed to open process" << pid << "error code:" << qt_error_string();
-        return false;
-    }
-
-    addDllDirectory();
-    inject();
+    const bool isX64 = probeDll.contains(QLatin1String("x86_64"), Qt::CaseInsensitive);
+    QStringList args;
+    args << QString::number(pid)
+         << QDir::toNativeSeparators(Paths::binPath())
+         << QDir::toNativeSeparators(probeDll);
+    QProcess p;
+    p.setProcessChannelMode(QProcess::ForwardedChannels);
+    p.start(QString(QLatin1String("gammaray-wininjector-%1")).arg(
+                isX64 ? QLatin1String("x86_64") : QLatin1String("i686")),
+                args);
+    p.waitForFinished(-1);
     emit started();
-    m_destProcess = 0;
-    return true;
+    return p.exitCode() == 0;
 }
 
 int WinDllInjector::exitCode()
@@ -173,52 +174,6 @@ QProcess::ExitStatus WinDllInjector::exitStatus()
     return mExitStatus;
 }
 
-void WinDllInjector::inject()
-{
-    WIN_ERROR_ASSERT(remoteKernel32Call("LoadLibraryW", m_dllPath), qDebug() << m_dllPath);
-}
-
-void WinDllInjector::addDllDirectory()
-{
-    const auto path = QDir::toNativeSeparators(Paths::binPath());
-    WIN_ERROR_ASSERT(remoteKernel32Call("SetDllDirectoryW", path), qDebug() << path);
-}
-
-int WinDllInjector::remoteKernel32Call(const char *funcName, const QString &argument)
-{
-    // resolve function pointer
-    auto kernel32handle = GetModuleHandleW(L"Kernel32");
-    auto func = GetProcAddress(kernel32handle, funcName);
-    if (!func) {
-        qWarning() << "Unable to resolve" << funcName << "in kernel32.dll!" << qt_error_string();
-        return FALSE;
-    }
-
-    // write argument into target process memory
-    const int strsize = (argument.size() * 2) + 2;
-    void *mem = VirtualAllocEx(m_destProcess, NULL, strsize, MEM_COMMIT, PAGE_READWRITE);
-    if (!mem) {
-        qWarning() << "Failed to allocate memory in target process!" << qt_error_string();
-        return FALSE;
-    }
-    WIN_ERROR_ASSERT(WriteProcessMemory(m_destProcess, mem, (void*)argument.utf16(), strsize, NULL), return FALSE);
-
-    // call function pointer in remote process
-    auto thread = CreateRemoteThread(m_destProcess, NULL, 0, (LPTHREAD_START_ROUTINE)func, mem, 0, NULL);
-    if (!thread) {
-        qWarning() << "Filed to creare thread in target process!" << qt_error_string();
-        return FALSE;
-    }
-    WaitForSingleObject(thread, INFINITE);
-
-    DWORD result;
-    WIN_ERROR_CHECK(GetExitCodeThread(thread, &result));
-    // cleanup
-    WIN_ERROR_CHECK(VirtualFreeEx(m_destProcess, mem, 0, MEM_RELEASE));
-    WIN_ERROR_CHECK(CloseHandle(thread));
-    return result;
-}
-
 QString WinDllInjector::errorString()
 {
     return mErrorString;
@@ -226,7 +181,7 @@ QString WinDllInjector::errorString()
 
 void WinDllInjector::stop()
 {
-    if (m_destProcess)
+    if (m_destProcess != INVALID_HANDLE_VALUE)
         TerminateProcess(m_destProcess, 0xff);
 }
 
