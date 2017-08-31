@@ -522,7 +522,7 @@ QMap<int, QVariant> TimerModel::itemData(const QModelIndex &index) const
 {
     auto d = QAbstractTableModel::itemData(index);
     if (index.column() == 0)
-        d.insert(TimerModel::ObjectIdRole, QVariant::fromValue(static_cast<QObject *>(index.internalPointer())));
+        d.insert(TimerModel::ObjectIdRole, index.data(TimerModel::ObjectIdRole));
     if (index.column() == StateColumn)
         d.insert(TimerModel::TimerIntervalRole, index.data(TimerModel::TimerIntervalRole));
     return d;
