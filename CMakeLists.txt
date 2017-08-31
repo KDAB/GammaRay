@@ -261,10 +261,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_flag_if_supported(-Wsizeof-pointer-memaccess POINTER_MEMACCESS)
   add_flag_if_supported(-Wreorder REORDER)
   add_flag_if_supported(-Wformat-security FORMAT_SECURITY)
+  add_flag_if_supported(-Wno-c++1z-extensions NO_CXX1Z_EXTENSIONS) #c++-17 extensions in Qt5.9
 
   check_cxx_compiler_flag(-std=gnu++0x HAVE_GXX_GNUXX11)
   check_cxx_compiler_flag(-std=c++0x HAVE_GXX_CXX11)
-  check_cxx_compiler_flag(-std=c++1z HAVE_GXX_CXX17)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Woverloaded-virtual -Winit-self -Wmissing-include-dirs -Wunused -Wundef -Wpointer-arith -Wmissing-noreturn -Werror=return-type -Wswitch")
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     # -Wgnu-zero-variadic-macro-arguments (part of -pedantic) is triggered by every qCDebug() call and therefore results
@@ -281,10 +281,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     # mingw will error out on the crazy casts in probe.cpp without this
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
   endif()
-endif()
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND APPLE AND HAVE_GXX_CXX17)
-  #for now only set this for Apple's clang
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments -Wdocumentation")
