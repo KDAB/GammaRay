@@ -1094,9 +1094,12 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
             }
             clampPanPosition();
             updateUserViewport();
-            update();
-            pickColor();
         }
+        m_currentMousePosition = mapToSource(event->pos());
+        if (m_interactionMode == ColorPicking)
+            pickColor();
+
+        update();
         break;
     case InputRedirection:
         sendWheelEvent(event);
