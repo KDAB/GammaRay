@@ -114,8 +114,6 @@ TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
     callbacks.signalEndCallback = signal_end_callback;
     probe->registerSignalSpyCallbackSet(callbacks);
 
-    probe->installGlobalEventFilter(TimerModel::instance());
-
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimerModel"), TimerModel::instance());
     m_selectionModel = ObjectBroker::selectionModel(TimerModel::instance());
 
