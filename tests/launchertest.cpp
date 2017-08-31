@@ -68,7 +68,7 @@ private:
 private slots:
     void testLauncher_data()
     {
-        QTest::addColumn<QString>("injectorType");
+        QTest::addColumn<QString>("injectorType", nullptr);
         QTest::newRow("dummy") << QString(); // workaround for QTestlib asserting on empty test data sets
 #if !defined(Q_OS_MAC) || QT_VERSION >= QT_VERSION_CHECK(5, 1, 0) // Requires at least Q_COREAPP_STARTUP_FUNCTION to work on macOS
         if (hasInjector("preload"))
@@ -157,7 +157,7 @@ private slots:
         options.setUiMode(LaunchOptions::NoUi);
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
 #ifdef Q_OS_WIN
-         options.setPid(target.pid()->dwProcessId);
+        options.setPid(target.pid()->dwProcessId);
 #else
         options.setPid(target.pid());
 #endif

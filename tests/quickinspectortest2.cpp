@@ -80,7 +80,7 @@ private slots:
 
     void testPreviewFetchingThrottler_data()
     {
-        QTest::addColumn<bool>("clientIsReplying");
+        QTest::addColumn<bool>("clientIsReplying", nullptr);
         QTest::newRow("no-reply") << false;
         QTest::newRow("reply") << true;
     }
@@ -173,12 +173,11 @@ private slots:
         const qreal animationInterval = throttlerInterval;
         const qreal animationDuration = 1400.0;
         // Qml try to render @ ~60fps
-        const qreal maxPossibleQmlRequests = clientIsReplying
-                ? animationDuration / 1000.0 * 60.0
-                : 1.0;
-        const qreal maxPossibleThrottledRequests = clientIsReplying
-                ? qMin(maxPossibleQmlRequests, animationDuration / throttlerInterval)
-                : 1.0;
+        const qreal maxPossibleQmlRequests =
+            clientIsReplying ? animationDuration / 1000.0 * 60.0 : 1.0;
+        const qreal maxPossibleThrottledRequests =
+            clientIsReplying ?
+                qMin(maxPossibleQmlRequests, animationDuration / throttlerInterval) : 1.0;
 
         // Testing dynamic scene
         for (int i = 0; i < 3; i++) {
