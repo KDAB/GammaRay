@@ -40,7 +40,11 @@ class InjectorStylePlugin : public QStylePlugin
 #endif
 public:
     QStyle *create(const QString &) override;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QStringList keys() const;
+#else
+    QStringList keys() const override;
+#endif
 
 private:
     void inject();
