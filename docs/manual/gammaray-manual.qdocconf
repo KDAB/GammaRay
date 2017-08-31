@@ -2,24 +2,22 @@ project = "GammaRay"
 description = "GammaRay User Manual"
 url = https://doc.qt.io/GammaRay
 
-sourcedirs = @CMAKE_CURRENT_SOURCE_DIR@
+sourcedirs = .
 sources.fileextensions = "*.qdoc"
 
-imagedirs = @CMAKE_CURRENT_SOURCE_DIR@/images
+imagedirs = images
 
-exampledirs = @CMAKE_SOURCE_DIR@/examples
+exampledirs = ../../examples
 examples.fileextensions = "*.h *.cpp *.qml"
 
-depends += qtcore qtnetwork qtgui qtwidgets @HAVE_QTQUICK_DOCS@ @HAVE_QTQML_DOCS@ @HAVE_QT3D_DOCS@ @HAVE_QTWAYLANDCOMPOSITOR_DOCS@
+depends += qtcore qtnetwork qtgui qtwidgets qtqml qtquick qt3d qtwaylandcompositor
 
 qhp.projects = GammaRay
+
 qhp.GammaRay.file = gammaray-manual.qhp
-qhp.GammaRay.namespace = com.kdab.GammaRay.@GAMMARAY_PLUGIN_VERSION@
+qhp.GammaRay.namespace = com.kdab.GammaRay.$QT_VERSION_TAG
 qhp.GammaRay.virtualFolder = gammaray
 qhp.GammaRay.indexTitle = GammaRay User Manual
-qhp.GammaRay.filterAttributes = gammaray @GAMMARAY_VERSION@
-qhp.GammaRay.customFilters.GammaRay.name = GammaRay @GAMMARAY_VERSION@
-qhp.GammaRay.customFilters.GammaRay.filterAttributes = gammaray @GAMMARAY_VERSION@
 qhp.GammaRay.indexRoot =
 
 qhp.GammaRay.subprojects = manual
@@ -29,7 +27,7 @@ qhp.GammaRay.subprojects.manual.type = manual
 
 navigation.homepage    = "GammaRay User Manual"
 navigation.landingpage = "GammaRay User Manual"
-buildversion = "GammaRay User Manual @GAMMARAY_VERSION_STRING@"
+buildversion = "GammaRay User Manual $QT_VERSION"
 
 # backward compatibility with Qt < 5.7
 macro.borderedimage = "\\div {class=\"border\"} \\image \1\n\\enddiv"

@@ -1,20 +1,15 @@
-include(@CMAKE_CURRENT_BINARY_DIR@/gammaray-manual.qdocconf)
-include(@QDOC_TEMPLATE_DIR@/qt-html-templates-offline.qdocconf)
+include(gammaray-manual.qdocconf)
 
-# adapted from qtbase template
-# TODO: add logo like in the doxygen case?
 HTML.footer = \
-    "        </div>\n" \
-    "       </div>\n" \
     "   </div>\n" \
-    "   </div>\n" \
-    "</div>\n" \
-    "<div class=\"footer\">\n" \
-    "   <p>\n" \
+    "   <p class=\"copy-notice\">\n" \
     "   <acronym title=\"Copyright\">&copy;</acronym> 2016-2017 <a href=\"https://www.kdab.com/\">Klar&auml;lvdalens Datakonsult AB (KDAB)</a>.\n" \
     "   Documentation contributions included herein are the copyrights of\n" \
     "   their respective owners.<br/>" \
     "   This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-sa/4.0/\">Creative Commons Attribution-ShareAlike 4.0 International License</a>." \
-    "</p>" \
-    "</div>\n" \
+    "   </p>\n"
 
+include($QT_INSTALL_DOCS/global/qt-html-templates-online.qdocconf)
+
+# Sidebar with quick links
+HTML.stylesheets += style/qt5-sidebar.html
