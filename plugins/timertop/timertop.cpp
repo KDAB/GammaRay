@@ -145,8 +145,6 @@ void TimerTop::objectSelected(QObject* obj)
 TimerTopFactory::TimerTopFactory(QObject *parent)
     : QObject(parent)
 {
-    setSupportedTypes(QVector<QByteArray>() << QByteArrayLiteral("QObject")
-                                            << QByteArrayLiteral("QTimer"));
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
