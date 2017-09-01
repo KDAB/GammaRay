@@ -88,7 +88,7 @@ private slots:
         QCOMPARE(model->rowCount(), baseRowCount + 1);
         auto idx = searchFixedIndex(model, "timer1");
         QVERIFY(idx.isValid());
-        QCOMPARE(idx.data(TimerModel::ObjectIdRole).value<ObjectId>(), ObjectId(t1));
+        QCOMPARE(idx.data(ObjectModel::ObjectIdRole).value<ObjectId>(), ObjectId(t1));
 
         delete t1;
         QTest::qWait(1);
@@ -148,7 +148,7 @@ private slots:
 
         idx = searchFixedIndex(model, "testObject");
         QVERIFY(idx.isValid());
-        QCOMPARE(idx.data(TimerModel::ObjectIdRole).value<ObjectId>(), ObjectId(this));
+        QCOMPARE(idx.data(ObjectModel::ObjectIdRole).value<ObjectId>(), ObjectId(this));
         idx = idx.sibling(idx.row(), 6);
         QVERIFY(idx.isValid());
         QCOMPARE(idx.data().toInt(), timerId);
@@ -207,11 +207,11 @@ private slots:
 
             idx = searchFixedIndex(model, "mainThread");
             QVERIFY(idx.isValid());
-            QCOMPARE(idx.data(TimerModel::ObjectIdRole).value<ObjectId>(), ObjectId(mainThread.data()));
+            QCOMPARE(idx.data(ObjectModel::ObjectIdRole).value<ObjectId>(), ObjectId(mainThread.data()));
 
             idx = searchFixedIndex(model, "mainTimer");
             QVERIFY(idx.isValid());
-            QCOMPARE(idx.data(TimerModel::ObjectIdRole).value<ObjectId>(), ObjectId(mainTimer.data()));
+            QCOMPARE(idx.data(ObjectModel::ObjectIdRole).value<ObjectId>(), ObjectId(mainTimer.data()));
 
             auto idxs = searchFixedIndexes(model, "threadTimer");
             QCOMPARE(idxs.count(), 2);

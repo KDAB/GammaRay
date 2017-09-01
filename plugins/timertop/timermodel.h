@@ -30,7 +30,7 @@
 
 #include "timerinfo.h"
 
-#include <common/modelroles.h>
+#include <common/objectmodel.h>
 
 #include <QAbstractTableModel>
 #include <QSharedPointer>
@@ -70,8 +70,7 @@ public:
     };
 
     enum Roles {
-        ObjectIdRole = UserRole,
-        TimerIntervalRole
+        TimerIntervalRole = ObjectModel::UserRole
     };
 
     void setSourceModel(QAbstractItemModel *sourceModel);

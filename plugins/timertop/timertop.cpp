@@ -132,7 +132,7 @@ void TimerTop::objectSelected(QObject* obj)
         return;
 
     const auto model = m_selectionModel->model();
-    const auto indexList = model->match(model->index(0, 0), TimerModel::ObjectIdRole,
+    const auto indexList = model->match(model->index(0, 0), ObjectModel::ObjectIdRole,
                        QVariant::fromValue(ObjectId(timer)), 1,
                        Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())

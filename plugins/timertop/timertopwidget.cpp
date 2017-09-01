@@ -158,12 +158,14 @@ void TimerTopWidget::contextMenu(QPoint pos)
         return;
     index = index.sibling(index.row(), 0);
 
-    const auto objectId = index.data(TimerModel::ObjectIdRole).value<ObjectId>();
+    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     if (objectId.isNull())
         return;
 
     QMenu menu;
     ContextMenuExtension ext(objectId);
+    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Declaration, index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.populateMenu(&menu);
     menu.exec(ui->timerView->viewport()->mapToGlobal(pos));
 }

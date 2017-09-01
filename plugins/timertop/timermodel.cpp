@@ -29,8 +29,11 @@
 #include "timermodel.h"
 #include "functioncalltimer.h"
 
+#include <core/objectdataprovider.h>
+
 #include <common/objectmodel.h>
 #include <common/objectid.h>
+#include <common/sourcelocation.h>
 
 #include <QMutexLocker>
 #include <QTimerEvent>
@@ -478,14 +481,28 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
     }
 
     if (index.column() == 0) {
-        if (role == TimerModel::ObjectIdRole) {
-            const TimerIdInfo *const timerInfo = findTimerInfo(index);
+        auto timerInfo = findTimerInfo(index);
+        if (!timerInfo)
+            return QVariant();
+        auto object = timerInfo->lastReceiverObject.data();
+        if (!object)
+            return QVariant();
 
-            if (timerInfo) {
-                QObject *const object = timerInfo->lastReceiverObject.data();
-                Q_ASSERT(index.row() >= m_sourceModel->rowCount() ||
-                         object == index.internalPointer());
+        switch (role) {
+            case ObjectModel::ObjectIdRole:
+            {
+                Q_ASSERT(index.row() >= m_sourceModel->rowCount() || object == index.internalPointer());
                 return QVariant::fromValue(ObjectId(object));
+            }
+            case ObjectModel::CreationLocationRole:
+            {
+                const auto loc = ObjectDataProvider::creationLocation(object);
+                return loc.isValid() ? QVariant::fromValue(loc) : QVariant();
+            }
+            case ObjectModel::DeclarationLocationRole:
+            {
+                const auto loc = ObjectDataProvider::declarationLocation(object);
+                return loc.isValid() ? QVariant::fromValue(loc) : QVariant();
             }
         }
     }
@@ -521,8 +538,15 @@ QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int ro
 QMap<int, QVariant> TimerModel::itemData(const QModelIndex &index) const
 {
     auto d = QAbstractTableModel::itemData(index);
-    if (index.column() == 0)
-        d.insert(TimerModel::ObjectIdRole, index.data(TimerModel::ObjectIdRole));
+    if (index.column() == 0) {
+        d.insert(ObjectModel::ObjectIdRole, index.data(ObjectModel::ObjectIdRole));
+        auto v = index.data(ObjectModel::CreationLocationRole);
+        if (v.isValid())
+            d.insert(ObjectModel::CreationLocationRole, v);
+        v = index.data(ObjectModel::DeclarationLocationRole);
+        if (v.isValid())
+            d.insert(ObjectModel::DeclarationLocationRole, v);
+    }
     if (index.column() == StateColumn)
         d.insert(TimerModel::TimerIntervalRole, index.data(TimerModel::TimerIntervalRole));
     return d;
