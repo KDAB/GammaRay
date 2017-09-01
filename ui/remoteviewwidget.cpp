@@ -45,13 +45,13 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QDebug>
-#include <QtMath>
 #include <QMenu>
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QStandardItemModel>
 
+#include <cmath>
 #include <cstdlib>
 
 using namespace GammaRay;
@@ -692,8 +692,8 @@ void RemoteViewWidget::drawRuler(QPainter *p)
     p->setPen(activePen);
     p->drawText(QRect(width() - vRulerWidth, height() - hRulerHeight, vRulerWidth, hRulerHeight),
                 QStringLiteral("%1x\n%2").
-                    arg(qFloor(m_currentMousePosition.x())).
-                    arg(qFloor(m_currentMousePosition.y())),
+                    arg(std::floor(m_currentMousePosition.x())).
+                    arg(std::floor(m_currentMousePosition.y())),
                 Qt::AlignHCenter | Qt::AlignVCenter);
     p->restore();
 }
@@ -1030,7 +1030,7 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent *event)
 void RemoteViewWidget::updatePickerVisibility() const
 {
     QPointF sourceCoordinates = frame().transform().inverted().map(QPointF(m_currentMousePosition)); // for quick view, transform is needed
-    QPoint sourceCoordinatesInt = QPoint(qFloor(sourceCoordinates.x()), qFloor(sourceCoordinates.y()));
+    QPoint sourceCoordinatesInt = QPoint(std::floor(sourceCoordinates.x()), std::floor(sourceCoordinates.y()));
     if (frame().image().rect().contains(sourceCoordinatesInt)) {
         m_trailingColorLabel->show();
     } else {
@@ -1041,7 +1041,7 @@ void RemoteViewWidget::updatePickerVisibility() const
 void RemoteViewWidget::pickColor() const
 {
     QPointF sourceCoordinates = frame().transform().inverted().map(QPointF(m_currentMousePosition)); // for quick view, transform is needed
-    QPoint sourceCoordinatesInt = QPoint(qFloor(sourceCoordinates.x()), qFloor(sourceCoordinates.y()));
+    QPoint sourceCoordinatesInt = QPoint(std::floor(sourceCoordinates.x()), std::floor(sourceCoordinates.y()));
     if (frame().image().rect().contains(sourceCoordinatesInt)) {
         m_trailingColorLabel->setPickedColor(frame().image().pixel(sourceCoordinatesInt));
     } else {
