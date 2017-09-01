@@ -239,7 +239,7 @@ void RemoteViewWidget::updateUserViewport()
         return;
 
     const auto userViewport = QRectF(QPointF(std::floor(-m_x / m_zoom), std::floor(-m_y / m_zoom)),
-                               QSizeF(std::floor(width() / m_zoom), std::floor(height() / m_zoom)));
+                               QSizeF(std::ceil(width() / m_zoom), std::ceil(height() / m_zoom)));
     m_interface->sendUserViewport(userViewport);
 }
 
