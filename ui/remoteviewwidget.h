@@ -202,7 +202,8 @@ private:
     int horizontalRulerHeight() const;
     int verticalRulerWidth() const;
 
-    void pickColor();
+    void updatePickerVisibility() const;
+    void pickColor() const;
 
 private slots:
     void interactionActionTriggered(QAction *action);
@@ -232,7 +233,7 @@ private:
     InteractionMode m_interactionMode;
     InteractionModes m_supportedInteractionModes;
     QPoint m_mouseDownPosition; // semantics depend on interaction mode
-    QPoint m_currentMousePosition; // in view coordinates
+    QPointF m_currentMousePosition; // in view coordinates
     QPoint m_measurementStartPosition; // in source coordinates
     QPoint m_measurementEndPosition; // in source coordinates
     bool m_hasMeasurement;

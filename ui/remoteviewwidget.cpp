@@ -45,6 +45,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QDebug>
+#include <QtMath>
 #include <QMenu>
 #include <QMimeData>
 #include <QMouseEvent>
@@ -691,8 +692,8 @@ void RemoteViewWidget::drawRuler(QPainter *p)
     p->setPen(activePen);
     p->drawText(QRect(width() - vRulerWidth, height() - hRulerHeight, vRulerWidth, hRulerHeight),
                 QStringLiteral("%1x\n%2").
-                    arg(m_currentMousePosition.x()).
-                    arg(m_currentMousePosition.y()),
+                    arg(qFloor(m_currentMousePosition.x())).
+                    arg(qFloor(m_currentMousePosition.y())),
                 Qt::AlignHCenter | Qt::AlignVCenter);
     p->restore();
 }
@@ -955,7 +956,7 @@ void RemoteViewWidget::resizeEvent(QResizeEvent *event)
 
 void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
 {
-    m_currentMousePosition = mapToSource(event->pos());
+    m_currentMousePosition = mapToSource(QPointF(event->pos()));
 
     switch (m_interactionMode) {
     case NoInteraction:
@@ -1003,7 +1004,7 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
 
 void RemoteViewWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    m_currentMousePosition = mapToSource(event->pos());
+    m_currentMousePosition = mapToSource(QPointF(event->pos()));
 
     switch (m_interactionMode) {
     case NoInteraction:
@@ -1026,21 +1027,31 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent *event)
     QWidget::mouseReleaseEvent(event);
 }
 
-void RemoteViewWidget::pickColor()
+void RemoteViewWidget::updatePickerVisibility() const
 {
-    auto sourceCoordinates = frame().transform().inverted().map(m_currentMousePosition); // for quick view, transform is needed
-    if (frame().image().rect().adjusted(0, 0, -1, -1).contains(sourceCoordinates)) {
+    QPointF sourceCoordinates = frame().transform().inverted().map(QPointF(m_currentMousePosition)); // for quick view, transform is needed
+    QPoint sourceCoordinatesInt = QPoint(qFloor(sourceCoordinates.x()), qFloor(sourceCoordinates.y()));
+    if (frame().image().rect().contains(sourceCoordinatesInt)) {
         m_trailingColorLabel->show();
-        m_trailingColorLabel->setPickedColor(frame().image().pixel(sourceCoordinates));
     } else {
         m_trailingColorLabel->hide();
+    }
+}
+
+void RemoteViewWidget::pickColor() const
+{
+    QPointF sourceCoordinates = frame().transform().inverted().map(QPointF(m_currentMousePosition)); // for quick view, transform is needed
+    QPoint sourceCoordinatesInt = QPoint(qFloor(sourceCoordinates.x()), qFloor(sourceCoordinates.y()));
+    if (frame().image().rect().contains(sourceCoordinatesInt)) {
+        m_trailingColorLabel->setPickedColor(frame().image().pixel(sourceCoordinatesInt));
+    } else {
         m_trailingColorLabel->setPickedColor(Qt::transparent);
     }
 }
 
 void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    m_currentMousePosition = mapToSource(event->pos());
+    m_currentMousePosition = mapToSource(QPointF(event->pos()));
 
     switch (m_interactionMode) {
     case NoInteraction:
@@ -1065,6 +1076,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
         break;
     case ColorPicking:
         m_trailingColorLabel->move(event->pos() + QPoint(4, 4));
+        updatePickerVisibility();
         pickColor();
         break;
     }
@@ -1095,10 +1107,11 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
             clampPanPosition();
             updateUserViewport();
         }
-        m_currentMousePosition = mapToSource(event->pos());
-        if (m_interactionMode == ColorPicking)
+        m_currentMousePosition = mapToSource(QPointF(event->pos()));
+        if (m_interactionMode == ColorPicking) {
+            updatePickerVisibility();
             pickColor();
-
+        }
         update();
         break;
     case InputRedirection:
@@ -1213,7 +1226,6 @@ void RemoteViewWidget::leaveEvent(QEvent *event)
     case Measuring:
     case NoInteraction:
     case InputRedirection:
-        break;
     case ColorPicking:
         m_trailingColorLabel->hide();
         break;
