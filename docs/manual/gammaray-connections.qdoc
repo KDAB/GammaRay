@@ -64,6 +64,7 @@
     The following examples make use of the connections view:
     \list
         \li \l{signal-slot}
+        \li \l{timer}
     \endlist
 
 */

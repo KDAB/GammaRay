@@ -1,0 +1,74 @@
+/*
+    timer.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \example timer
+    \title Timer
+    \brief Analyze out of control timers
+    \ingroup examples-gammaray
+
+    This examples shows GammaRay's capabilities in analyzing timer activity.
+
+    \section1 Problem
+
+    The example application shows two buttons, clicking any one of them is supposed to trigger
+    a deferred repaint of the application using two variations of a single-shot timer. In both
+    cases we however observe 100% CPU load afterwards.
+
+    Analyzing the CPU load with a debugger or profiler points to frequently firing timers, but
+    doesn't support us in finding where that timer actually came from.
+
+    \section1 Investigation
+
+    While the target application is running, open the \l{Timers} view in GammaRay
+    to obtain a list of all active timers. Sorting by \uicontrol{Total Wakeups} or
+    \uicontrol{Wakeups/Sec} allows to quickly identify timers running amok, such as the
+    recurring 0-interval timers in our example.
+
+    When working with a debug build, the context menu on the \l{Timers} view allows you directly
+    to navigate to the source code of the created timer object, or timer event receiver.
+
+    \section2 QTimer and QML Timer
+
+    When using timer objects such as QTimer or a QML Timer, you can further inspect those by
+    switching to the \l{Object Browser} via the context menu in the \l{Timers} view. In the object
+    browser the following inspection views are particularly useful for timer objects:
+    \list
+        \li The \l{Connections} view allows you to inspect to which action the timeout() signal is connected
+            to, which can help to identify the timer if source navigation is not available.
+        \li The \l{Methods} view allows to manually stop timers, to verify a specific timer is the source
+            of a problem, or to observe if it gets erroneously restarted.
+    \endlist
+
+    In the above example, we notice that the QTimer::singleShot property was accidentally left on false,
+    causing the timer to fire constantly.
+
+    \snippet timer/timer.cpp Missing setSingleShot
+
+    The \l{Signal Plotter} view of GammaRay can provide additional help in finding too frequently triggering timer
+    object, by means of observing their timeout signals.
+
+    \section2 QTimerEvent
+
+    Raw timer events are less commonly used than timer object and provide fewer options for runtime
+    diagnostics unfortunately.
+
+    In our example the source of the problem is a missing QObject::killTimer call in the QTimerEvent handler.
+
+    \snippet timer/timer.cpp Missing killTimer
+*/
+

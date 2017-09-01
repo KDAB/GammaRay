@@ -65,5 +65,6 @@
     The following examples make use of the methods view:
     \list
         \li \l{signal-slot}
+        \li \l{timer}
     \endlist
 */

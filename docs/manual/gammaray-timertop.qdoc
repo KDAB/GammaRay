@@ -44,4 +44,11 @@
     \endlist
 
     The context menu allows to navigate to different views for the timer objects.
+
+    \section1 Examples
+
+    The following examples make use of the timer view:
+    \list
+        \li \l{timer}
+    \endlist
 */
