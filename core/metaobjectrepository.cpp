@@ -39,6 +39,7 @@
 #include <QSortFilterProxyModel>
 #include <QStringList>
 #include <QThread>
+#include <QTimer>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 #include <QSaveFile>
@@ -115,6 +116,9 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_PROPERTY_RO(QThread, isRunning);
     MO_ADD_PROPERTY(QThread, priority, setPriority);
     MO_ADD_PROPERTY(QThread, stackSize, setStackSize);
+
+    MO_ADD_METAOBJECT1(QTimer, QObject);
+    MO_ADD_PROPERTY_RO(QTimer, timerId);
 
     MO_ADD_METAOBJECT1(QCoreApplication, QObject);
     MO_ADD_PROPERTY_ST(QCoreApplication, applicationDirPath);
