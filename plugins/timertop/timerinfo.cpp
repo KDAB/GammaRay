@@ -159,13 +159,7 @@ bool TimerId::operator<(const TimerId &other) const
 
 void TimerIdInfo::update(const TimerId &id, QObject *receiver)
 {
-    // The objectLock() must be locked at this point, if not use lockAndUpdate() then.
     QObject *object = receiver ? receiver : reinterpret_cast<QObject *>(id.address());
-
-    if (!Probe::instance()->isValidObject(object)) {
-//        Q_ASSERT(false);
-        return;
-    }
 
     state = InvalidState;
     interval = 0;
@@ -243,12 +237,6 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
         break;
     }
     }
-}
-
-void TimerIdInfo::lockAndUpdate(const TimerId &id, QObject *receiver)
-{
-    QMutexLocker locker(Probe::objectLock());
-    update(id, receiver);
 }
 
 bool TimerIdInfo::isValid() const

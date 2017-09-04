@@ -235,7 +235,8 @@ const TimerIdInfo *TimerModel::findTimerInfo(const QModelIndex &index) const
 
         if (it == m_timersInfo.end()) {
             it = m_timersInfo.insert(id, TimerIdInfo());
-            it.value().lockAndUpdate(id);
+            // safe, as timerObject has been validated by the source model
+            it.value().update(id);
         }
 
         return &it.value();
@@ -296,8 +297,8 @@ bool TimerModel::eventNotifyCallback(void *data[])
             }
 
             const TimeoutEvent timeoutEvent(QTime::currentTime(), -1);
-
-            it.value().lockAndUpdate(id, receiver);
+            // safe, we are called from the receiver thread
+            it.value().update(id, receiver);
             it.value().addEvent(timeoutEvent);
 
             s_timerModel->m_triggerPushChangesMethod.invoke(s_timerModel, Qt::QueuedConnection);
@@ -331,7 +332,7 @@ TimerModel *TimerModel::instance()
 
 void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
 {
-    // We are in the thread of the caller emmiting the signal
+    // We are in the thread of the caller emitting the signal
     // The probe did NOT locked the objectLock at this point.
     Q_ASSERT(TimerModel::isInitialized());
 
@@ -344,7 +345,8 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
 
     if (it == s_gatheredTimersData.end()) {
         it = s_gatheredTimersData.insert(id, TimerIdData());
-        it.value().lockAndUpdate(id);
+        // safe, we are called from the receiver thread, before a slot had a chance to delete caller
+        it.value().update(id);
     }
 
     if (!it.value().functionCallTimer.start()) {
@@ -356,9 +358,8 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
 
 void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
 {
-    // We are in the thread of the caller emmiting the signal
-    // The probe did NOT locked the objectLock at this point
-    // and we garanty that caller is still valid.
+    // We are in the thread of the caller emitting the signal
+    // The probe did unlock the objectLock at this point again but validated caller
     Q_ASSERT(TimerModel::isInitialized());
 
     if (!canHandleCaller(caller, methodIndex))
@@ -381,8 +382,8 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
     }
 
     const TimeoutEvent timeoutEvent(QTime::currentTime(), it.value().functionCallTimer.stop());
-
-    it.value().lockAndUpdate(id);
+    // safe, nobody in this thread had a chance to delete caller since Probe validated it
+    it.value().update(id);
     it.value().addEvent(timeoutEvent);
 
     m_triggerPushChangesMethod.invoke(this, Qt::QueuedConnection);
@@ -632,7 +633,8 @@ void TimerModel::applyChanges(const GammaRay::TimerIdInfoHash &changes)
             it = m_timersInfo.insert(id, TimerIdInfo());
 
             if (cit == changes.constEnd())
-                it.value().lockAndUpdate(id);
+                // safe, validated by the source model
+                it.value().update(id);
         }
 
         if (cit != changes.constEnd()) {

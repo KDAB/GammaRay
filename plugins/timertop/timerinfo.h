@@ -93,8 +93,11 @@ struct TimerIdInfo
 
     virtual ~TimerIdInfo() { }
 
+    /** Update timer information to the current state.
+     *  It's the callers responsibility to ensure the receiver or timer object
+     *  is and stays valid during this call, if necessary by using Probe::objectLock().
+     */
     virtual void update(const TimerId &id, QObject *receiver = nullptr);
-    void lockAndUpdate(const TimerId &id, QObject *receiver = nullptr);
 
     bool isValid() const;
 
