@@ -39,6 +39,9 @@ using namespace GammaRay;
 
 QString formatBytes(qint64 bytes)
 {
+    if (bytes == 0)
+        return QStringLiteral("0 B");
+
     static QVector<QString> sizes;
     sizes.push_back(TextureTab::tr(" GiB"));
     sizes.push_back(TextureTab::tr(" MiB"));
@@ -97,11 +100,11 @@ TextureTab::TextureTab(PropertyWidget *parent)
     connect(ui->textureView, SIGNAL(textureInfoNecessary(bool)), ui->textureInfo, SLOT(setVisible(bool)));
     connect(ui->textureView, &TextureViewWidget::textureWasteFound,
             [&](bool isProblem, int percent, int bytes) {
-                ui->textureWasteLabel->setText(tr("Transparency Waste:") + QString::number(percent) + tr(" or ") + formatBytes(bytes));
+                ui->textureWasteLabel->setText(tr("Transparency Waste:") + QString::number(percent) + tr("% or ") + formatBytes(bytes));
                 ui->textureWasteLabel->setVisible(isProblem);
     });
     connect(ui->textureView, SIGNAL(textureIsUnicolor(bool)), ui->unicolorWarningLabel, SLOT(setVisible(bool)));
-    connect(ui->textureView, SIGNAL(textureIsFullyTransparent(bool)), ui->unicolorWarningLabel, SLOT(setVisible(bool)));
+    connect(ui->textureView, SIGNAL(textureIsFullyTransparent(bool)), ui->fullTransparencyWarningLabel, SLOT(setVisible(bool)));
     connect(ui->textureView, &TextureViewWidget::textureHasHorizontalBorderImageSavings,
             [&](bool isProblem, int percentSaved) {
                 ui->horizontalBorderImageLabel->setText(tr("Using a horizontal Border Image for this texture would save ") + QString::number(percentSaved) + tr("%."));
