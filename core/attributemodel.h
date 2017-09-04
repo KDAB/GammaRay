@@ -34,7 +34,7 @@
 #include <QAbstractTableModel>
 #include <QMetaEnum>
 
-namespace GammaRay still broken
+namespace GammaRay still broken, not fixed yet
 class GAMMARAY_CORE_EXPORT AbstractAttributeModel : public QAbstractTableModel
 {
     Q_OBJECT
