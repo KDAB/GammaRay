@@ -39,6 +39,7 @@
 #include <vector>
 
 class QtIviObjectModelTest;
+class QIviDefaultPropertyOverrider;
 
 namespace GammaRay {
 
@@ -101,97 +102,10 @@ private:
     QModelIndex indexOfCarrier(const QObject *carrier, int column = 0 /*NameColumn*/) const;
     QModelIndex indexOfProperty(const QObject *carrier, const QByteArray &property, int column = 0 /*NameColumn*/) const;
 
-    class IviOverrider;
-
-    class IviOverriderProperty
-    {
-        friend class IviOverrider;
-
-    public:
-        IviOverriderProperty();
-        explicit IviOverriderProperty(const QMetaProperty &metaProperty, const QVariant &value, bool overridable);
-        IviOverriderProperty(IviOverriderProperty &&other);
-
-        int propertyIndex() const;
-        bool isValid() const;
-        bool isAvailable() const;
-        bool hasNotifySignal() const;
-        bool isWritable() const;
-        bool isOverridable() const;
-        bool isOverriden() const;
-        QString name() const;
-        QString typeName() const;
-        ObjectId objectId() const;
-        QString displayText() const;
-        QVariant editValue() const;
-        QVariant cppValue() const;
-        QVariant iviConstraints(QIviAbstractFeature *carrier) const;
-
-        void setOverriden(bool override);
-        bool setOverridenValue(const QVariant &value, QIviAbstractFeature *carrier);
-        bool notifyOverridenValue(const QVariant &value, QIviAbstractFeature *carrier);
-        void setOriginalValue(const QVariant &editValue);
-
-        IviOverriderProperty &operator=(IviOverriderProperty &&other);
-        bool operator==(const QByteArray &property) const;
-
-    private:
-        QMetaProperty m_metaProperty;
-        bool m_overridable;
-        bool m_overriding;
-        QVariant m_originalValue;
-        QVariant m_overridenValue;
-    };
-
-    class IviOverrider: public QIviPropertyOverrider
-    {
-        friend class QtIviObjectModel;
-
-    public:
-        IviOverrider();
-        ~IviOverrider();
-        explicit IviOverrider(QIviAbstractFeature *carrier);
-
-        void addCarrier(QIviAbstractFeature *carrier);
-        void removeCarrier(QIviAbstractFeature *carrier);
-        void setCarrierOverride(bool override, QIviAbstractFeature *carrier);
-        int numCarriers() const;
-
-        bool handles(const QObject *carrier) const;
-        QString serviceId() const;
-
-        QVariant property(int propertyIndex) const override;
-        void setProperty(int propertyIndex, const QVariant &value) override;
-        bool isOverridden(int propertyIndex) const override;
-
-        QVariant iviConstraints(int propertyIndex) const;
-
-        QString label() const;
-        QString description() const;
-        QString typeName() const;
-        ObjectId objectId() const;
-
-        bool setOverride(int index, bool isOverride);
-        bool setOverridenValue(int index, const QVariant &value);
-        int propertyCount() const;
-        void pushProperty(IviOverriderProperty &&property);
-        const IviOverriderProperty &propertyAt(int index) const;
-        const IviOverriderProperty &propertyForIndex(int index) const;
-        IviOverriderProperty &propertyForIndex(int index);
-        IviOverriderProperty &propertyAt(int index);
-
-        int indexOfProperty(const QByteArray &property) const;
-
-    private:
-        QIviServiceObject *m_serviceObject;
-        std::vector<QIviAbstractFeature *> m_carriers;
-        std::vector<IviOverriderProperty> m_properties;
-    };
-    typedef std::shared_ptr<IviOverrider> IviOverriderPtr;
-
+    typedef std::shared_ptr<QIviDefaultPropertyOverrider> QIviDefaultPropertyOverriderPtr;
     struct ServiceZone {
         QString m_zone;
-        IviOverriderPtr m_service;
+        QIviDefaultPropertyOverriderPtr m_service;
     };
 
     std::vector<ServiceZone> m_serviceCarriers;
