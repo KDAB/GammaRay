@@ -32,9 +32,7 @@
 #include <QDialog>
 
 namespace GammaRay {
-namespace Ui {
-class AboutDialog;
-}
+class AboutWidget;
 
 class AboutDialog : public QDialog
 {
@@ -43,12 +41,19 @@ public:
     explicit AboutDialog(QWidget *parent = nullptr);
     ~AboutDialog();
 
-    void setTitle(const QString &title);
-    void setText(const QString &text);
     void setLogo(const QString &iconFileName);
+    void setThemeLogo(const QString &fileName);
+    void setTitle(const QString &title);
+    void setHeader(const QString &header);
+    void setAuthors(const QString &authors);
+    void setFooter(const QString &footer);
+
+    void setText(const QString &text);
+
+    QSize sizeHint() const override;
 
 private:
-    QScopedPointer<Ui::AboutDialog> ui;
+    AboutWidget *ui;
 };
 }
 

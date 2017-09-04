@@ -27,32 +27,68 @@
 */
 
 #include "aboutdialog.h"
-#include "ui_aboutdialog.h"
+#include "aboutwidget.h"
+
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QDialogButtonBox>
 
 using namespace GammaRay;
 
 AboutDialog::AboutDialog(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::AboutDialog)
+    , ui(new AboutWidget)
 {
-    ui->setupUi(this);
+    auto button = new QDialogButtonBox(this);
+    button->setStandardButtons(QDialogButtonBox::Close);
+
+    QVBoxLayout *vl = new QVBoxLayout(this);
+    vl->addWidget(ui);
+    vl->addWidget(button);
+
+    connect(button, SIGNAL(rejected()), this, SLOT(close()));
 }
 
 AboutDialog::~AboutDialog()
 {
 }
 
+void AboutDialog::setLogo(const QString &iconFileName)
+{
+    ui->setLogo(iconFileName);
+}
+
+void AboutDialog::setThemeLogo(const QString &fileName)
+{
+    ui->setThemeLogo(fileName);
+}
+
 void AboutDialog::setTitle(const QString &title)
 {
-    ui->titleLabel->setText(title);
+    ui->setTitle(title);
+}
+
+void AboutDialog::setHeader(const QString &header)
+{
+    ui->setHeader(header);
+}
+
+void AboutDialog::setAuthors(const QString &authors)
+{
+    ui->setAuthors(authors);
+}
+
+void AboutDialog::setFooter(const QString &footer)
+{
+    ui->setFooter(footer);
 }
 
 void AboutDialog::setText(const QString &text)
 {
-    ui->textLabel->setText(text);
+    ui->setText(text);
 }
 
-void AboutDialog::setLogo(const QString &iconFileName)
+QSize AboutDialog::sizeHint() const
 {
-    ui->logoLabel->setPixmap(iconFileName);
+    return QSize(960, 730);
 }

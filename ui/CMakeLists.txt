@@ -3,6 +3,8 @@
 #
 set(gammaray_ui_srcs
   aboutdata.cpp
+  aboutwidget.cpp
+  themedimagelabel.cpp
   clientdecorationidentityproxymodel.cpp
   clienttoolmanager.cpp
   clienttoolmodel.cpp
@@ -123,6 +125,7 @@ target_link_libraries(gammaray_ui_internal
   gammaray_ui
   gammaray_kitemmodels
 )
+
 if(NOT GAMMARAY_DISABLE_FEEDBACK)
     target_link_libraries(gammaray_ui_internal gammaray_kuserfeedback)
 endif()

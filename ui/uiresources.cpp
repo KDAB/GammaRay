@@ -28,33 +28,86 @@
 
 #include "uiresources.h"
 
-#include <QFile>
 #include <QPair>
 #include <QHash>
+#include <QFile>
+#include <QFileInfo>
+#include <QWidget>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QScreen>
+#endif
+#include <QDebug>
 
 using namespace GammaRay;
 
 namespace GammaRay {
 namespace UIResources {
-typedef QPair<UIResources::IconTheme, QString> PairThemeFileName;
-typedef QHash<PairThemeFileName, QString> HashedThemeFilePaths;
-static UIResources::IconTheme s_currentTheme = UIResources::Unknown;
-static HashedThemeFilePaths s_cachedFilePaths;
+struct PairThemeFileName {
+    bool operator==(const PairThemeFileName &other) const
+    {
+        return devicePixelRatio == other.devicePixelRatio &&
+                theme == other.theme &&
+                filePath == other.filePath;
+    }
+    bool operator!=(const PairThemeFileName &other) const
+    { return !operator==(other); }
 
-UIResources::IconTheme iconTheme()
+    qreal devicePixelRatio;
+    UIResources::Theme theme;
+    QString filePath;
+};
+typedef QHash<PairThemeFileName, QString> HashedThemeFilePaths;
+
+UIResources::Theme s_currentTheme = UIResources::Unknown;
+QHash<ThemeEntryType, HashedThemeFilePaths> s_cachedFilePaths;
+
+uint qHash(const PairThemeFileName &entry)
+{
+    // qHash(double) and qHash(float) missing before 5.4
+#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
+    uint h1 = ::qHash(qRound(entry.devicePixelRatio));
+#else
+    uint h1 = ::qHash(entry.devicePixelRatio);
+#endif
+    uint h2 = ::qHash(entry.theme);
+    uint h3 = ::qHash(entry.filePath);
+    return h1 + h2 + h3;
+}
+
+qreal devicePixelRatio(QWidget *widget)
+{
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    Q_UNUSED(widget);
+    return 1.0;
+#else
+    qreal pixelRatio = qApp->devicePixelRatio();
+
+    if (widget) {
+        const int screenNumber = qMax(0, qApp->desktop()->screenNumber(widget));
+        const QScreen *screen = qApp->screens().value(screenNumber);
+        pixelRatio = screen->devicePixelRatio();
+    }
+
+    return pixelRatio;
+#endif
+}
+
+UIResources::Theme theme()
 {
     return s_currentTheme == UIResources::Unknown ? UIResources::Default : s_currentTheme;
 }
 
-QString themePath(UIResources::IconTheme theme)
+QString themePath(UIResources::Theme theme)
 {
     switch (theme) {
     case UIResources::Unknown:
         break;
     case UIResources::Light:
-        return QStringLiteral(":/gammaray/icons/ui/light");
+        return QStringLiteral(":/gammaray/ui/light");
     case UIResources::Dark:
-        return QStringLiteral(":/gammaray/icons/ui/dark");
+        return QStringLiteral(":/gammaray/ui/dark");
     }
 
     return QString();
@@ -62,46 +115,101 @@ QString themePath(UIResources::IconTheme theme)
 
 QString themePath()
 {
-    return themePath(UIResources::iconTheme());
+    return themePath(UIResources::theme());
 }
 
-QString themedPath(UIResources::IconTheme theme, const QString &extra)
+QString themedPath(UIResources::Theme theme, const QString &extra, QWidget *widget)
 {
-    return QString::fromLatin1("%1/%2").arg(UIResources::themePath(theme), extra);
+    QFileInfo candidate(QString::fromLatin1("%1/%2").arg(UIResources::themePath(theme), extra));
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    const int dpr = qRound(devicePixelRatio(widget));
+    if (dpr > 1) {
+        const QString highdpi = QString::fromLatin1("%1/%2@%4x.%3")
+                .arg(candidate.path(), candidate.baseName(), candidate.suffix())
+                .arg(dpr);
+        if (QFile::exists(highdpi))
+            candidate.setFile(highdpi);
+    }
+#else
+    Q_UNUSED(widget);
+#endif
+
+    return candidate.filePath();
 }
 
-QString themedPath(const QString &extra)
+QString themedPath(const QString &extra, QWidget *widget)
 {
-    return themedPath(UIResources::iconTheme(), extra);
+    return themedPath(UIResources::theme(), extra, widget);
 }
 
-QIcon themedIcon(UIResources::IconTheme theme, const QString &filePath)
+QString themedFilePath(ThemeEntryType type, UIResources::Theme theme, const QString &filePath, QWidget *widget)
 {
-    const auto pair = PairThemeFileName(theme, filePath);
-    auto it = s_cachedFilePaths.find(pair);
+    const PairThemeFileName pair = { devicePixelRatio(widget), theme, filePath };
+    HashedThemeFilePaths &hash(s_cachedFilePaths[type]);
+    auto it = hash.find(pair);
 
-    if (it == s_cachedFilePaths.end()) {
-        QString candidate = UIResources::themedPath(theme, filePath);
-        // Fallback to default theme icons
+    if (it == hash.end()) {
+        const QString iconFilePath = QString::fromLatin1("%1/%2")
+                .arg(type == Pixmap ? QStringLiteral("pixmaps") : QStringLiteral("icons"), filePath);
+        QString candidate(UIResources::themedPath(theme, iconFilePath, widget));
+
+        // Fallback to default theme file
         if (theme != UIResources::Default && !QFile::exists(candidate)) {
-            candidate = UIResources::themedPath(UIResources::Default, filePath);
+            const QString fallback = UIResources::themedFilePath(type, UIResources::Default, filePath, widget);
+            if (QFile::exists(fallback))
+                candidate = fallback;
         }
 
-        it = s_cachedFilePaths.insert(pair, candidate);
-        Q_ASSERT_X(QFile::exists(*it), "themedIcon", qPrintable(*it));
+        it = hash.insert(pair, candidate);
+        Q_ASSERT_X(QFile::exists(*it), "themedFilePath", qPrintable(*it));
     }
 
-    return QIcon(*it);
+    return *it;
 }
 }
 }
 
-void UIResources::setIconTheme(UIResources::IconTheme theme)
+void UIResources::setTheme(UIResources::Theme theme)
 {
     s_currentTheme = theme;
 }
 
 QIcon UIResources::themedIcon(const QString &filePath)
 {
-    return themedIcon(UIResources::iconTheme(), filePath);
+    return QIcon(themedFilePath(Icon, UIResources::theme(), filePath, nullptr));
+}
+
+QPixmap UIResources::themedPixmap(const QString &filePath, QWidget *widget)
+{
+    return QPixmap(themedFilePath(Pixmap, UIResources::theme(), filePath, widget));
+}
+
+QImage UIResources::themedImage(const QString &filePath, QWidget *widget)
+{
+    return QImage(themedFilePath(Pixmap, UIResources::theme(), filePath, widget));
+}
+
+QString UIResources::themedFilePath(UIResources::ThemeEntryType type, const QString &filePath, QWidget *widget)
+{
+    return themedFilePath(type, UIResources::theme(), filePath, widget);
+}
+
+QImage UIResources::tintedImage(const QImage &image, const QColor &color)
+{
+    QImage img(image.alphaChannel());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    img.setDevicePixelRatio(image.devicePixelRatio());
+#endif
+    QColor newColor = color;
+    for (int i = 0; i < img.colorCount(); ++i) {
+        newColor.setAlpha(qGray(img.color(i)));
+        img.setColor(i, newColor.rgba());
+    }
+    return img;
+}
+
+QPixmap UIResources::tintedPixmap(const QImage &image, const QColor &color)
+{
+    return QPixmap::fromImage(tintedImage(image, color));
 }

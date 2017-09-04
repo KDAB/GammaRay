@@ -27,8 +27,11 @@
 */
 
 #include "sidepane.h"
+#include "uiresources.h"
 
 #include <QDebug>
+#include <QEvent>
+#include <QPainter>
 #include <QStyledItemDelegate>
 
 using namespace GammaRay;
@@ -55,6 +58,7 @@ public:
 SidePane::SidePane(QWidget *parent)
     : QListView(parent)
 {
+    viewport()->installEventFilter(this);
     viewport()->setAutoFillBackground(false);
     setAttribute(Qt::WA_MacShowFocusRect, false);
 
@@ -89,11 +93,30 @@ void SidePane::setModel(QAbstractItemModel *model)
     QAbstractItemView::setModel(model);
 }
 
-void SidePane::resizeEvent(QResizeEvent *e)
+bool SidePane::eventFilter(QObject *object, QEvent *event)
 {
-    updateSizeHint();
+    if (object == viewport()) {
+        if (event->type() == QEvent::Resize)
+            updateSizeHint();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+        else if (event->type() == QEvent::ScreenChangeInternal)
+            m_background = QPixmap();
+#endif
+        else if (event->type() == QEvent::Paint) {
+            if (m_background.isNull())
+                m_background = UIResources::themedPixmap(QStringLiteral("kdab-gammaray-logo.png"), this);
 
-    QListView::resizeEvent(e);
+            qreal dpr = 1.0;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+            dpr = m_background.devicePixelRatio();
+#endif
+            QPainter p(viewport());
+            p.drawPixmap(viewport()->width() - (m_background.width() / dpr),
+                         viewport()->height() - (m_background.height() / dpr), m_background);
+        }
+    }
+
+    return QListView::eventFilter(object, event);
 }
 
 void SidePane::updateSizeHint()

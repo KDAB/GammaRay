@@ -33,6 +33,8 @@
 
 #include <ui/aboutdata.h>
 #include <ui/helpcontroller.h>
+#include <ui/uiresources.h>
+#include <ui/uiintegration.h>
 
 #include <QPushButton>
 #include <QSettings>
@@ -43,10 +45,18 @@ LauncherWindow::LauncherWindow(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::LauncherWindow)
 {
+    UIResources::setTheme(UiIntegration::hasDarkUI()
+                              ? UIResources::Light
+                              : UIResources::Dark);
+
     ui->setupUi(this);
-    ui->aboutLabel->setText(AboutData::aboutText());
-    ui->aboutScrollArea->viewport()->setAutoFillBackground(false);
-    ui->aboutScrollArea->widget()->setAutoFillBackground(false);
+    ui->aboutPage->setThemeLogo(QStringLiteral("gammaray-trademark.png"));
+    ui->aboutPage->setTitle(AboutData::aboutTitle());
+    ui->aboutPage->setHeader(AboutData::aboutHeader());
+    ui->aboutPage->setAuthors(AboutData::aboutAuthors());
+    ui->aboutPage->setFooter(AboutData::aboutFooter());
+    ui->aboutPage->layout()->setContentsMargins(ui->selfTestPage->layout()->contentsMargins());
+    ui->aboutPage->setBackgroundWindow(this);
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
     connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));

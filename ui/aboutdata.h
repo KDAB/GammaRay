@@ -38,8 +38,9 @@ namespace AboutData {
 QStringList authors();
 QStringList authorsAsHtml();
 GAMMARAY_UI_EXPORT QString aboutTitle();
-GAMMARAY_UI_EXPORT QString aboutBody();
-GAMMARAY_UI_EXPORT QString aboutText();
+GAMMARAY_UI_EXPORT QString aboutHeader();
+GAMMARAY_UI_EXPORT QString aboutAuthors();
+GAMMARAY_UI_EXPORT QString aboutFooter();
 }
 }
 
