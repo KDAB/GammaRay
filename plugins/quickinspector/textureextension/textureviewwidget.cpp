@@ -108,11 +108,7 @@ void TextureViewWidget::drawBorderImageCutouts(QPainter *p) const
         p->drawRect(m_verticalBorderRectMidCut.translated(m_analyzedRect.x(), m_analyzedRect.y()));
         p->restore();
     }
-
-
 }
-
-
 
 void TextureViewWidget::drawActiveAtlasTile(QPainter *p) const
 {
