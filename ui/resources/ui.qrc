@@ -261,5 +261,12 @@
 <!--        <file>gammaray/ui/icons/classes/qtwidgets/hsplit.png</file> -->
 <!--        <file>gammaray/ui/icons/classes/qtwidgets/vline.png</file> -->
 <!--        <file>gammaray/ui/icons/classes/qtwidgets/vspacer.png</file> -->
+
+        <file>gammaray/ui/light/icons/pick-color@3x.png</file>
+        <file>gammaray/ui/light/icons/pick-color@2x.png</file>
+        <file>gammaray/ui/light/icons/pick-color.png</file>
+        <file>gammaray/ui/dark/icons/pick-color@3x.png</file>
+        <file>gammaray/ui/dark/icons/pick-color@2x.png</file>
+        <file>gammaray/ui/dark/icons/pick-color.png</file>
     </qresource>
 </RCC>
