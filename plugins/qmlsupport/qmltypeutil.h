@@ -32,8 +32,7 @@
 #include <core/objectinstance.h>
 
 #include <private/qqmlmetatype_p.h>
-// ### temporary, until 5.9 is merged into dev...
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 2) && QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 2)
 #define GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
 #else
 #undef GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
