@@ -34,7 +34,7 @@
 #include <QHash>
 #include <QString>
 
-namespace GammaRay {
+namespace GammaRay
 namespace ClassesIconsIndex {
     typedef QHash<QString, int>::const_iterator ConstIterator;
 
