@@ -1075,7 +1075,15 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
         sendMouseEvent(event);
         break;
     case ColorPicking:
-        m_trailingColorLabel->move(event->pos() + QPoint(4, 4));
+        // label should be always fully inside the remoteviewwidget
+        auto labelPosition = event->pos() + QPoint(4, 4);
+        // flip to top if it would stick out bottom end of remoteviewwidget
+        if ((labelPosition.y() + m_trailingColorLabel->height()) > this->height())
+            labelPosition = labelPosition - QPoint(0, 8) - QPoint(0, m_trailingColorLabel->height());
+        // flip to left if it would stick out right side of remoteviewwidget
+        if ((labelPosition.x() + m_trailingColorLabel->width()) > this->width())
+            labelPosition = labelPosition - QPoint(8, 0) - QPoint(m_trailingColorLabel->width(), 0);
+        m_trailingColorLabel->move(labelPosition);
         updatePickerVisibility();
         pickColor();
         break;
