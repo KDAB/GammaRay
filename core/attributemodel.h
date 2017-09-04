@@ -34,7 +34,7 @@
 #include <QAbstractTableModel>
 #include <QMetaEnum>
 
-namespace GammaRay {
+namespace GammaRay 
 class GAMMARAY_CORE_EXPORT AbstractAttributeModel : public QAbstractTableModel
 {
     Q_OBJECT
