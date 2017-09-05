@@ -50,6 +50,8 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
+#include <functional>
+
 using namespace GammaRay;
 
 Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
@@ -359,29 +361,12 @@ static QString sslCertificateToString(const QSslCertificate &cert)
     return cert.digest().toHex();
 }
 
-static QString sslCertificateExtensionToString(const QSslCertificateExtension &ext)
-{
-    return ext.name();
-}
-
-static QString sslCipherToString(const QSslCipher &cipher)
-{
-    return cipher.name();
-}
-
-static QString sslErrorToString(const QSslError &error)
-{
-    return error.errorString();
-}
-
 #endif // QT_NO_SSL
 
 void NetworkSupport::registerVariantHandler()
 {
     VariantHandler::registerStringConverter<QAbstractSocket::PauseModes>(socketPauseModeToString);
-    VariantHandler::registerStringConverter<QHostAddress>([](const QHostAddress &addr) {
-        return addr.toString();
-    });
+    VariantHandler::registerStringConverter<QHostAddress>(std::mem_fn(&QHostAddress::toString));
     VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(
         networkAccessibilityToString);
 #ifndef QT_NO_SSL
@@ -391,10 +376,9 @@ void NetworkSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSsl::KeyType>(sslKeyTypeToString);
     VariantHandler::registerStringConverter<QSsl::SslProtocol>(sslProtocolToString);
     VariantHandler::registerStringConverter<QSslCertificate>(sslCertificateToString);
-    VariantHandler::registerStringConverter<QSslCertificateExtension>(
-        sslCertificateExtensionToString);
-    VariantHandler::registerStringConverter<QSslCipher>(sslCipherToString);
-    VariantHandler::registerStringConverter<QSslError>(sslErrorToString);
+    VariantHandler::registerStringConverter<QSslCertificateExtension>(std::mem_fn(&QSslCertificateExtension::name));
+    VariantHandler::registerStringConverter<QSslCipher>(std::mem_fn(&QSslCipher::name));
+    VariantHandler::registerStringConverter<QSslError>(std::mem_fn(&QSslError::errorString));
 #endif
 }
 

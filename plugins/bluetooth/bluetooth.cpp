@@ -39,6 +39,8 @@
 
 #include <QDebug>
 
+#include <functional>
+
 Q_DECLARE_METATYPE(QBluetooth::SecurityFlags)
 Q_DECLARE_METATYPE(QBluetoothDeviceDiscoveryAgent::Error)
 Q_DECLARE_METATYPE(QBluetoothDeviceDiscoveryAgent::InquiryType)
@@ -51,11 +53,6 @@ Q_DECLARE_METATYPE(QBluetoothSocket::SocketState)
 #endif
 
 using namespace GammaRay;
-
-static QString bluetoothAddressToString(const QBluetoothAddress &addr)
-{
-    return addr.toString();
-}
 
 static QString bluetoothInquiryTypeToString(QBluetoothDeviceDiscoveryAgent::InquiryType type)
 {
@@ -117,7 +114,7 @@ Bluetooth::Bluetooth(ProbeInterface *probe, QObject *parent)
     MO_ADD_PROPERTY_RO(QBluetoothSocket, socketType);
     MO_ADD_PROPERTY_RO(QBluetoothSocket, state);
 
-    VariantHandler::registerStringConverter<QBluetoothAddress>(bluetoothAddressToString);
+    VariantHandler::registerStringConverter<QBluetoothAddress>(std::mem_fn(&QBluetoothAddress::toString));
     VariantHandler::registerStringConverter<QBluetoothDeviceDiscoveryAgent::InquiryType>(
         bluetoothInquiryTypeToString);
 }
