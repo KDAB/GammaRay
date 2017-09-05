@@ -30,6 +30,7 @@
 #include "ui_timertopwidget.h"
 #include "timermodel.h"
 #include "timertopclient.h"
+#include "clienttimermodel.h"
 
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
@@ -41,73 +42,6 @@
 #include <QTimer>
 
 using namespace GammaRay;
-
-class ClientTimerModel : public QSortFilterProxyModel
-{
-public:
-    explicit ClientTimerModel(QObject *parent = nullptr)
-        : QSortFilterProxyModel(parent)
-    { }
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
-    {
-        if (hasIndex(index.row(), index.column()) && role == Qt::DisplayRole) {
-            switch (static_cast<TimerModel::Columns>(index.column())) {
-            case TimerModel::ColumnCount:
-                Q_ASSERT(false);
-            case TimerModel::ObjectNameColumn:
-            case TimerModel::TimerIdColumn:
-            case TimerModel::TotalWakeupsColumn:
-                // Use source model data
-                break;
-            case TimerModel::StateColumn:
-                return stateToString(QSortFilterProxyModel::data(index, role).toInt(),
-                                     QSortFilterProxyModel::data(index, TimerModel::TimerIntervalRole).toInt());
-            case TimerModel::WakeupsPerSecColumn:
-                return wakeupsPerSecToString(QSortFilterProxyModel::data(index, role).toReal());
-            case TimerModel::TimePerWakeupColumn:
-                return timePerWakeupToString(QSortFilterProxyModel::data(index, role).toReal());
-            case TimerModel::MaxTimePerWakeupColumn:
-                return maxWakeupTimeToString(QSortFilterProxyModel::data(index, role).toUInt());
-            }
-        }
-
-        return QSortFilterProxyModel::data(index, role);
-    }
-
-    static QString stateToString(int state, int interval)
-    {
-
-        switch (static_cast<TimerIdInfo::State>(state)) {
-        case TimerIdInfo::InvalidState: // None
-            return tr("None");
-        case TimerIdInfo::InactiveState: // Not Running
-            return tr("Inactive (%1 ms)").arg(interval);
-        case TimerIdInfo::SingleShotState: // Single Shot
-            return tr("Singleshot (%1 ms)").arg(interval);
-        case TimerIdInfo::RepeatState: // Repeat
-            return tr("Repeating (%1 ms)").arg(interval);
-        }
-
-        return QString();
-    }
-
-    static QString wakeupsPerSecToString(qreal value)
-    {
-        return qFuzzyIsNull(value) ? tr("0") : QString::number(value, 'f', 1);
-
-    }
-
-    static QString timePerWakeupToString(qreal value)
-    {
-        return qFuzzyIsNull(value) ? QStringLiteral("N/A") : QString::number(value, 'f', 1);
-    }
-
-    static QString maxWakeupTimeToString(uint value)
-    {
-        return value == 0 ? tr("N/A") : QString::number(value);
-    }
-};
 
 static QObject *createTimerTopClient(const QString & /*name*/, QObject *parent)
 {

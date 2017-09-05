@@ -484,31 +484,6 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant TimerModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch (section) {
-        case ObjectNameColumn:
-            return tr("Object Name");
-        case StateColumn:
-            return tr("State");
-        case TotalWakeupsColumn:
-            return tr("Total Wakeups");
-        case WakeupsPerSecColumn:
-            return tr("Wakeups/Sec");
-        case TimePerWakeupColumn:
-            return tr("Time/Wakeup [uSecs]");
-        case MaxTimePerWakeupColumn:
-            return tr("Max Wakeup Time [uSecs]");
-        case TimerIdColumn:
-            return tr("Timer ID");
-        case ColumnCount:
-            break;
-        }
-    }
-    return QAbstractTableModel::headerData(section, orientation, role);
-}
-
 QMap<int, QVariant> TimerModel::itemData(const QModelIndex &index) const
 {
     auto d = QAbstractTableModel::itemData(index);

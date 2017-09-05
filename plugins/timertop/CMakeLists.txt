@@ -36,6 +36,7 @@ if(GAMMARAY_BUILD_UI)
     timertopwidget.cpp
     timertopinterface.cpp
     timertopclient.cpp
+    clienttimermodel.cpp
   )
 
   gammaray_add_plugin(gammaray_timertop_ui_plugin
