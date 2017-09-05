@@ -67,23 +67,26 @@ struct TimeoutEvent
     int executionTime;
 };
 
-struct TimerIdData : TimerIdInfo
+struct TimerIdData
 {
     TimerIdData()
-        : TimerIdInfo()
-        , totalWakeupsEvents(0)
+        : totalWakeupsEvents(0)
         , changed(false)
     { }
 
-    void update(const TimerId &id, QObject *receiver = nullptr) override
+    bool isValid() const
+    {
+        return info.isValid();
+    }
+
+    void update(const TimerId &id, QObject *receiver = nullptr)
     {
         // If the receiver changed, the timer was stopped / restarted and is no longer the same timer.
-        if (id.type() == TimerId::QObjectType &&
-                lastReceiverAddress != quintptr(receiver)) {
+        if (id.type() == TimerId::QObjectType && info.lastReceiverAddress != quintptr(receiver)) {
             clearHistory();
         }
 
-        TimerIdInfo::update(id, receiver);
+        info.update(id, receiver);
     }
 
     void addEvent(const GammaRay::TimeoutEvent &event)
@@ -97,13 +100,13 @@ struct TimerIdData : TimerIdInfo
 
     void clearHistory()
     {
-        TimerIdInfo::totalWakeups = 0;
-        TimerIdInfo::lastReceiverAddress = 0;
-        TimerIdInfo::lastReceiverObject = nullptr;
-        TimerIdInfo::state = InvalidState;
-        TimerIdInfo::wakeupsPerSec = 0.0;
-        TimerIdInfo::timePerWakeup = 0.0;
-        TimerIdInfo::maxWakeupTime = 0;
+        info.totalWakeups = 0;
+        info.lastReceiverAddress = 0;
+        info.lastReceiverObject = nullptr;
+        info.state = TimerIdInfo::InvalidState;
+        info.wakeupsPerSec = 0.0;
+        info.timePerWakeup = 0.0;
+        info.maxWakeupTime = 0;
 
         totalWakeupsEvents = 0;
         if (functionCallTimer.active())
@@ -114,28 +117,25 @@ struct TimerIdData : TimerIdInfo
 
     TimerIdInfo &toInfo(TimerId::Type type)
     {
-        TimerIdInfo::totalWakeups =  totalWakeups(type, *this);
-        TimerIdInfo::wakeupsPerSec = wakeupsPerSec(type, *this);
-        TimerIdInfo::timePerWakeup = timePerWakeup(type, *this);
-        TimerIdInfo::maxWakeupTime = maxWakeupTime(type, *this);
-        return *this;
+        info.totalWakeups =  totalWakeups();
+        info.wakeupsPerSec = wakeupsPerSec();
+        info.timePerWakeup = timePerWakeup(type);
+        info.maxWakeupTime = maxWakeupTime(type);
+        return info;
     }
 
-    static int totalWakeups(TimerId::Type type, const TimerIdData &data)
+    int totalWakeups() const
     {
-        Q_UNUSED(type);
-        return data.totalWakeupsEvents;
+        return totalWakeupsEvents;
     }
 
-    static qreal wakeupsPerSec(TimerId::Type type, const TimerIdData &data)
+    qreal wakeupsPerSec() const
     {
-        Q_UNUSED(type);
-
         int wakeups = 0;
         int start = 0;
-        int end = data.timeoutEvents.size() - 1;
+        int end = timeoutEvents.size() - 1;
         for (int i = end; i >= 0; i--) {
-            const TimeoutEvent &event = data.timeoutEvents.at(i);
+            const TimeoutEvent &event = timeoutEvents.at(i);
             if (event.timeStamp.msecsTo(QTime::currentTime()) > s_maxTimeSpan) {
                 start = i;
                 break;
@@ -144,8 +144,8 @@ struct TimerIdData : TimerIdInfo
         }
 
         if (wakeups > 0 && end > start) {
-            const QTime startTime = data.timeoutEvents[start].timeStamp;
-            const QTime endTime = data.timeoutEvents[end].timeStamp;
+            const QTime startTime = timeoutEvents[start].timeStamp;
+            const QTime endTime = timeoutEvents[end].timeStamp;
             const int timeSpan = startTime.msecsTo(endTime);
             const qreal wakeupsPerSec = wakeups / (qreal)timeSpan * (qreal)1000;
             return wakeupsPerSec;
@@ -153,15 +153,15 @@ struct TimerIdData : TimerIdInfo
         return 0;
     }
 
-    static qreal timePerWakeup(TimerId::Type type, const TimerIdData &data)
+    qreal timePerWakeup(TimerId::Type type) const
     {
         if (type == TimerId::QObjectType)
             return 0;
 
         int wakeups = 0;
         int totalTime = 0;
-        for (int i = data.timeoutEvents.size() - 1; i >= 0; i--) {
-            const TimeoutEvent &event = data.timeoutEvents.at(i);
+        for (int i = timeoutEvents.size() - 1; i >= 0; i--) {
+            const TimeoutEvent &event = timeoutEvents.at(i);
             if (event.timeStamp.msecsTo(QTime::currentTime()) > s_maxTimeSpan)
                 break;
             wakeups++;
@@ -173,20 +173,21 @@ struct TimerIdData : TimerIdInfo
         return 0;
     }
 
-    static int maxWakeupTime(TimerId::Type type, const TimerIdData &data)
+    int maxWakeupTime(TimerId::Type type) const
     {
         if (type == TimerId::QObjectType)
             return 0;
 
         int max = 0;
-        for (int i = 0; i < data.timeoutEvents.size(); i++) {
-            const TimeoutEvent &event = data.timeoutEvents.at(i);
+        for (int i = 0; i < timeoutEvents.size(); i++) {
+            const TimeoutEvent &event = timeoutEvents.at(i);
             if (event.executionTime > max)
                 max = event.executionTime;
         }
         return max;
     }
 
+    TimerIdInfo info;
     int totalWakeupsEvents;
     FunctionCallTimer functionCallTimer;
     QList<TimeoutEvent> timeoutEvents;
