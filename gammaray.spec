@@ -155,6 +155,9 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %if 0%{?fedora} > 24
 %{_libdir}/gammaray/*/*/gammaray_3dinspector*
 %endif
+%if 0%{?suse_version} > 1320
+%{_libdir}/gammaray/*/*/gammaray_3dinspector*
+%endif
 
 %files kf5-plugins
 %defattr(-,root,root)
