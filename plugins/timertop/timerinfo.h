@@ -57,14 +57,14 @@ public:
     explicit TimerId(int timerId);
 
     Type type() const;
-    quintptr address() const;
+    QObject* address() const;
     int timerId() const;
 
     bool operator==(const TimerId &other) const;
 
 private:
     Type m_type;
-    quintptr m_timerAddress;
+    QObject *m_timerAddress;
     int m_timerId;
 };
 
@@ -81,7 +81,7 @@ struct TimerIdInfo
         : timerId(-1)
         , interval(0)
         , totalWakeups(0)
-        , lastReceiverAddress(0)
+        , lastReceiverAddress(nullptr)
         , state(InvalidState)
         , wakeupsPerSec(0.0)
         , timePerWakeup(0.0)
@@ -102,7 +102,7 @@ struct TimerIdInfo
     int interval;
 
     uint totalWakeups;
-    quintptr lastReceiverAddress; // The QTimer/QQmlTimer or last known receiver address
+    QObject* lastReceiverAddress; // The QTimer/QQmlTimer or last known receiver address
     QPointer<QObject> lastReceiverObject;
 
     QString objectName;
