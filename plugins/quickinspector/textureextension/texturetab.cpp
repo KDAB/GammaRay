@@ -39,10 +39,7 @@ using namespace GammaRay;
 
 QString formatBytes(qint64 bytes)
 {
-    if (bytes == 0)
-        return QStringLiteral("0 B");
-
-    static QVector<QString> sizes;
+    QVector<QString> sizes;
     sizes.push_back(TextureTab::tr(" GiB"));
     sizes.push_back(TextureTab::tr(" MiB"));
     sizes.push_back(TextureTab::tr(" KiB"));
