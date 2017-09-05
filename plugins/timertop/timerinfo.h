@@ -61,9 +61,6 @@ public:
     int timerId() const;
 
     bool operator==(const TimerId &other) const;
-    bool operator==(QObject *timer) const;
-    bool operator==(int timerId) const;
-    bool operator<(const TimerId &other) const;
 
 private:
     Type m_type;

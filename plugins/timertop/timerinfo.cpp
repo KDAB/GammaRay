@@ -131,32 +131,6 @@ bool TimerId::operator==(const TimerId &other) const
     return false;
 }
 
-bool TimerId::operator==(QObject *timer) const
-{
-    return m_timerAddress == quintptr(timer);
-}
-
-bool TimerId::operator==(int timerId) const
-{
-    return m_timerId == timerId;
-}
-
-bool TimerId::operator<(const TimerId &other) const
-{
-    if (m_timerAddress != 0) {
-        if (other.m_timerAddress != 0)
-            return m_timerAddress < other.m_timerAddress;
-        return other.m_timerId != -1 ? m_timerAddress < quintptr(other.m_timerId) : false;
-    } else if (m_timerId != -1) {
-        if (other.m_timerId != -1)
-            return m_timerId < other.m_timerId;
-        return other.m_timerAddress != 0 ? quintptr(m_timerId) < other.m_timerAddress : false;
-    }
-
-    Q_ASSERT(false);
-    return false;
-}
-
 void TimerIdInfo::update(const TimerId &id, QObject *receiver)
 {
     QObject *object = receiver ? receiver : reinterpret_cast<QObject *>(id.address());
