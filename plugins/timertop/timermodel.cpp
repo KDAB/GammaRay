@@ -81,11 +81,6 @@ struct TimerIdData
 
     void update(const TimerId &id, QObject *receiver = nullptr)
     {
-        // If the receiver changed, the timer was stopped / restarted and is no longer the same timer.
-        if (id.type() == TimerId::QObjectType && info.lastReceiverAddress != quintptr(receiver)) {
-            clearHistory();
-        }
-
         info.update(id, receiver);
     }
 
@@ -95,23 +90,6 @@ struct TimerIdData
         if (timeoutEvents.size() > s_maxTimeoutEvents)
             timeoutEvents.removeFirst();
         totalWakeupsEvents++;
-        changed = true;
-    }
-
-    void clearHistory()
-    {
-        info.totalWakeups = 0;
-        info.lastReceiverAddress = 0;
-        info.lastReceiverObject = nullptr;
-        info.state = TimerIdInfo::InvalidState;
-        info.wakeupsPerSec = 0.0;
-        info.timePerWakeup = 0.0;
-        info.maxWakeupTime = 0;
-
-        totalWakeupsEvents = 0;
-        if (functionCallTimer.active())
-            functionCallTimer.stop();
-        timeoutEvents.clear();
         changed = true;
     }
 
@@ -274,7 +252,7 @@ bool TimerModel::eventNotifyCallback(void *data[])
     if (event->type() == QEvent::Timer) {
         const QTimerEvent *const timerEvent = static_cast<QTimerEvent *>(event);
         Q_ASSERT(timerEvent->timerId() != -1);
-        const QTimer *const timer = qobject_cast<QTimer *>(receiver);
+        const QTimer *const timer = qobject_cast<QTimer*>(receiver);
 
         // If there is a QTimer associated with this timer ID, don't handle it here, it will be handled
         // by the signal hooks preSignalActivate/postSignalActivate.
@@ -284,7 +262,7 @@ bool TimerModel::eventNotifyCallback(void *data[])
 
         {
             QMutexLocker locker(&s_timerModel->m_mutex);
-            const TimerId id(timerEvent->timerId());
+            const TimerId id(timerEvent->timerId(), receiver);
             auto it = s_timerModel->m_gatheredTimersData.find(id);
 
             if (it == s_timerModel->m_gatheredTimersData.end()) {
@@ -650,7 +628,7 @@ void TimerModel::applyChanges(const GammaRay::TimerIdInfoHash &changes)
 
     // Update existing free timers entries
     for (auto it = m_freeTimersInfo.begin(), end = m_freeTimersInfo.end(); it != end; ++it) {
-        const TimerId id((*it).timerId);
+        const TimerId id((*it).timerId, (*it).lastReceiverAddress);
         const auto cit = changes.constFind(id);
 
         if (cit != changes.constEnd()) {

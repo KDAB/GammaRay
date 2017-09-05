@@ -57,7 +57,7 @@ uint qHash(const TimerId &id)
         return ::qHash(id.m_timerAddress);
 
     case TimerId::QObjectType:
-        return ::qHash(id.m_timerId);
+        return ::qHash(id.m_timerId) + ::qHash(id.m_timerAddress);
     }
 
     return 0;
@@ -83,9 +83,9 @@ TimerId::TimerId(QObject *timer)
     }
 }
 
-TimerId::TimerId(int timerId)
+TimerId::TimerId(int timerId, QObject *receiver)
     : m_type(QObjectType)
-    , m_timerAddress(0)
+    , m_timerAddress(receiver)
     , m_timerId(timerId)
 {
     Q_ASSERT(m_timerId != -1);
@@ -125,7 +125,7 @@ bool TimerId::operator==(const TimerId &other) const
         return m_timerAddress == other.m_timerAddress;
 
     case TimerId::QObjectType:
-        return m_timerId == other.m_timerId;
+        return m_timerId == other.m_timerId && m_timerAddress == other.m_timerAddress;
     }
 
     return false;
@@ -166,7 +166,7 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
     }
 
     case TimerId::QTimerType: {
-        const QTimer *const timer = qobject_cast<QTimer *>(object);
+        const QTimer *const timer = qobject_cast<QTimer*>(object);
         timerId = timer->timerId();
         interval = timer->interval();
         lastReceiverAddress = id.address();

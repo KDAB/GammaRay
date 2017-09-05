@@ -54,7 +54,7 @@ public:
 
     TimerId();
     explicit TimerId(QObject *timer);
-    explicit TimerId(int timerId);
+    explicit TimerId(int timerId, QObject *receiver);
 
     Type type() const;
     QObject* address() const;
