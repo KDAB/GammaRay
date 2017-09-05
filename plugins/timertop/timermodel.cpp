@@ -47,19 +47,13 @@
 #define QOBJECT_METAMETHOD(Object, Method) \
     Object::staticMetaObject.method(Object::staticMetaObject.indexOfSlot(#Method))
 
-namespace GammaRay {
-struct TimerIdData;
-}
-
 using namespace GammaRay;
 using namespace std;
 
 static QPointer<TimerModel> s_timerModel;
 static const char s_qmlTimerClassName[] = "QQmlTimer";
-static QHash<TimerId, TimerIdData> s_gatheredTimersData;
 static const int s_maxTimeoutEvents = 1000;
 static const int s_maxTimeSpan = 10000;
-static QMutex s_mutex;
 
 namespace GammaRay {
 struct TimeoutEvent
@@ -288,12 +282,12 @@ bool TimerModel::eventNotifyCallback(void *data[])
         }
 
         {
-            QMutexLocker locker(&s_mutex);
+            QMutexLocker locker(&s_timerModel->m_mutex);
             const TimerId id(timerEvent->timerId());
-            auto it = s_gatheredTimersData.find(id);
+            auto it = s_timerModel->m_gatheredTimersData.find(id);
 
-            if (it == s_gatheredTimersData.end()) {
-                it = s_gatheredTimersData.insert(id, TimerIdData());
+            if (it == s_timerModel->m_gatheredTimersData.end()) {
+                it = s_timerModel->m_gatheredTimersData.insert(id, TimerIdData());
             }
 
             const TimeoutEvent timeoutEvent(QTime::currentTime(), -1);
@@ -310,10 +304,10 @@ bool TimerModel::eventNotifyCallback(void *data[])
 
 TimerModel::~TimerModel()
 {
-    QMutexLocker locker(&s_mutex);
+    QMutexLocker locker(&m_mutex);
     QInternal::unregisterCallback(QInternal::EventNotifyCallback, eventNotifyCallback);
     m_timersInfo.clear();
-    s_gatheredTimersData.clear();
+    m_gatheredTimersData.clear();
 }
 
 bool TimerModel::isInitialized()
@@ -339,12 +333,12 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
     if (!canHandleCaller(caller, methodIndex))
         return;
 
-    QMutexLocker locker(&s_mutex);
+    QMutexLocker locker(&m_mutex);
     const TimerId id(caller);
-    auto it = s_gatheredTimersData.find(id);
+    auto it = m_gatheredTimersData.find(id);
 
-    if (it == s_gatheredTimersData.end()) {
-        it = s_gatheredTimersData.insert(id, TimerIdData());
+    if (it == m_gatheredTimersData.end()) {
+        it = m_gatheredTimersData.insert(id, TimerIdData());
         // safe, we are called from the receiver thread, before a slot had a chance to delete caller
         it.value().update(id);
     }
@@ -365,11 +359,11 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
     if (!canHandleCaller(caller, methodIndex))
         return;
 
-    QMutexLocker locker(&s_mutex);
+    QMutexLocker locker(&m_mutex);
     const TimerId id(caller);
-    auto it = s_gatheredTimersData.find(id);
+    auto it = m_gatheredTimersData.find(id);
 
-    if (it == s_gatheredTimersData.end()) {
+    if (it == m_gatheredTimersData.end()) {
         // A postSignalActivate can be triggered without a preSignalActivate first
         // and/or the caller is not yet gathered.
         return;
@@ -555,8 +549,8 @@ QMap<int, QVariant> TimerModel::itemData(const QModelIndex &index) const
 
 void TimerModel::clearHistory()
 {
-    QMutexLocker locker(&s_mutex);
-    s_gatheredTimersData.clear();
+    QMutexLocker locker(&m_mutex);
+    m_gatheredTimersData.clear();
     locker.unlock();
 
     const int count = m_sourceModel->rowCount();
@@ -584,14 +578,14 @@ void TimerModel::triggerPushChanges()
 
 void TimerModel::pushChanges()
 {
-    QMutexLocker locker(&s_mutex);
+    QMutexLocker locker(&m_mutex);
     TimerIdInfoHash infoHash;
 
-    infoHash.reserve(s_gatheredTimersData.count());
-    for (auto it = s_gatheredTimersData.begin(); it != s_gatheredTimersData.end();) {
+    infoHash.reserve(m_gatheredTimersData.count());
+    for (auto it = m_gatheredTimersData.begin(); it != m_gatheredTimersData.end();) {
         // Invalidated during the sync delay, remove entry
         if (!it.value().isValid()) {
-            it = s_gatheredTimersData.erase(it);
+            it = m_gatheredTimersData.erase(it);
             continue;
         }
 
@@ -739,7 +733,7 @@ void TimerModel::slotBeginRemoveRows(const QModelIndex &parent, int start, int e
 {
     Q_UNUSED(parent);
 
-    QMutexLocker locker(&s_mutex);
+    QMutexLocker locker(&m_mutex);
 
     beginRemoveRows(QModelIndex(), start, end);
 
@@ -749,7 +743,7 @@ void TimerModel::slotBeginRemoveRows(const QModelIndex &parent, int start, int e
         if (it.value().isValid()) {
             ++it;
         } else {
-            s_gatheredTimersData.remove(it.key());
+            m_gatheredTimersData.remove(it.key());
             it = m_timersInfo.erase(it);
         }
     }
@@ -775,11 +769,11 @@ void TimerModel::slotEndInsertRows()
 
 void TimerModel::slotBeginReset()
 {
-    QMutexLocker locker(&s_mutex);
+    QMutexLocker locker(&m_mutex);
 
     beginResetModel();
 
-    s_gatheredTimersData.clear();
+    m_gatheredTimersData.clear();
     m_timersInfo.clear();
     m_freeTimersInfo.clear();
 }

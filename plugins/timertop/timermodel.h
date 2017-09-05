@@ -33,16 +33,18 @@
 #include <common/objectmodel.h>
 
 #include <QAbstractTableModel>
-#include <QSharedPointer>
-#include <QMetaMethod>
-#include <QVector>
 #include <QHash>
+#include <QMetaMethod>
+#include <QMutex>
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
 class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+struct TimerIdData;
+
 class TimerModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -117,7 +119,11 @@ private:
     // the method index of the timeout() signal of a QTimer
     const int m_timeoutIndex;
     mutable int m_qmlTimerTriggeredIndex;
+
+    QHash<TimerId, TimerIdData> m_gatheredTimersData;
+    QMutex m_mutex; // protects m_gatheredTimersData
 };
+
 }
 
 #endif
