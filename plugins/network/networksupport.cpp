@@ -255,11 +255,6 @@ static const MetaEnum::Value<QAbstractSocket::PauseMode> socket_pause_mode_table
 };
 #undef E
 
-static QString socketPauseModeToString(QAbstractSocket::PauseModes flags)
-{
-    return MetaEnum::flagsToString(flags, socket_pause_mode_table);
-}
-
 #define E(x) { QNetworkAccessManager:: x, #x }
 static const MetaEnum::Value<QNetworkAccessManager::NetworkAccessibility>
 network_accessibility_table[] = {
@@ -268,11 +263,6 @@ network_accessibility_table[] = {
     E(Accessible)
 };
 #undef E
-
-static QString networkAccessibilityToString(QNetworkAccessManager::NetworkAccessibility value)
-{
-    return MetaEnum::enumToString(value, network_accessibility_table);
-}
 
 #ifndef QT_NO_SSL
 #define E(x) { QSslSocket:: x, #x }
@@ -283,11 +273,6 @@ static const MetaEnum::Value<QSslSocket::SslMode> ssl_mode_table[] = {
 };
 #undef E
 
-static QString sslModeToString(QSslSocket::SslMode value)
-{
-    return MetaEnum::enumToString(value, ssl_mode_table);
-}
-
 #define E(x) { QSslSocket:: x, #x }
 static const MetaEnum::Value<QSslSocket::PeerVerifyMode> ssl_peer_verify_mode_table[] = {
     E(VerifyNone),
@@ -296,11 +281,6 @@ static const MetaEnum::Value<QSslSocket::PeerVerifyMode> ssl_peer_verify_mode_ta
     E(AutoVerifyPeer)
 };
 #undef E
-
-static QString sslPeerVerifyModeToString(QSslSocket::PeerVerifyMode value)
-{
-    return MetaEnum::enumToString(value, ssl_peer_verify_mode_table);
-}
 
 #define E(x) { QSsl:: x, #x }
 static const MetaEnum::Value<QSsl::KeyAlgorithm> ssl_key_algorithm_table[] = {
@@ -313,22 +293,12 @@ static const MetaEnum::Value<QSsl::KeyAlgorithm> ssl_key_algorithm_table[] = {
 };
 #undef E
 
-static QString sslKeyAlgorithmToString(QSsl::KeyAlgorithm value)
-{
-    return MetaEnum::enumToString(value, ssl_key_algorithm_table);
-}
-
 #define E(x) { QSsl:: x, #x }
 static const MetaEnum::Value<QSsl::KeyType> ssl_key_type_table[] = {
     E(PrivateKey),
     E(PublicKey)
 };
 #undef E
-
-static QString sslKeyTypeToString(QSsl::KeyType value)
-{
-    return MetaEnum::enumToString(value, ssl_key_type_table);
-}
 
 #define E(x) { QSsl:: x, #x }
 static const MetaEnum::Value<QSsl::SslProtocol> ssl_protocol_table[] = {
@@ -349,11 +319,6 @@ static const MetaEnum::Value<QSsl::SslProtocol> ssl_protocol_table[] = {
 };
 #undef E
 
-static QString sslProtocolToString(QSsl::SslProtocol value)
-{
-    return MetaEnum::enumToString(value, ssl_protocol_table);
-}
-
 static QString sslCertificateToString(const QSslCertificate &cert)
 {
     if (cert.isNull())
@@ -365,16 +330,15 @@ static QString sslCertificateToString(const QSslCertificate &cert)
 
 void NetworkSupport::registerVariantHandler()
 {
-    VariantHandler::registerStringConverter<QAbstractSocket::PauseModes>(socketPauseModeToString);
+    VariantHandler::registerStringConverter<QAbstractSocket::PauseModes>(MetaEnum::flagsToString_fn(socket_pause_mode_table));
     VariantHandler::registerStringConverter<QHostAddress>(std::mem_fn(&QHostAddress::toString));
-    VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(
-        networkAccessibilityToString);
+    VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(MetaEnum::enumToString_fn(network_accessibility_table));
 #ifndef QT_NO_SSL
-    VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(sslPeerVerifyModeToString);
-    VariantHandler::registerStringConverter<QSslSocket::SslMode>(sslModeToString);
-    VariantHandler::registerStringConverter<QSsl::KeyAlgorithm>(sslKeyAlgorithmToString);
-    VariantHandler::registerStringConverter<QSsl::KeyType>(sslKeyTypeToString);
-    VariantHandler::registerStringConverter<QSsl::SslProtocol>(sslProtocolToString);
+    VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(MetaEnum::enumToString_fn(ssl_peer_verify_mode_table));
+    VariantHandler::registerStringConverter<QSslSocket::SslMode>(MetaEnum::enumToString_fn(ssl_mode_table));
+    VariantHandler::registerStringConverter<QSsl::KeyAlgorithm>(MetaEnum::enumToString_fn(ssl_key_algorithm_table));
+    VariantHandler::registerStringConverter<QSsl::KeyType>(MetaEnum::enumToString_fn(ssl_key_type_table));
+    VariantHandler::registerStringConverter<QSsl::SslProtocol>(MetaEnum::enumToString_fn(ssl_protocol_table));
     VariantHandler::registerStringConverter<QSslCertificate>(sslCertificateToString);
     VariantHandler::registerStringConverter<QSslCertificateExtension>(std::mem_fn(&QSslCertificateExtension::name));
     VariantHandler::registerStringConverter<QSslCipher>(std::mem_fn(&QSslCipher::name));

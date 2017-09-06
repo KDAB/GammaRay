@@ -31,6 +31,8 @@
 
 #include <QStringList>
 
+#include <type_traits>
+
 namespace GammaRay {
 /** Enum/flag stringification utilities. */
 namespace MetaEnum {
@@ -76,7 +78,66 @@ QString flagsToString(T flags, const Value<F>(&lookupTable)[N])
     }
     return l.join(QStringLiteral("|"));
 }
+
+// functors for easy use with VariantHandler::registerStringConverter
+namespace detail {
+template <typename T, std::size_t N>
+class enum_to_string_functor
+{
+public:
+    explicit enum_to_string_functor(const MetaEnum::Value<T>(&lookupTable)[N])
+        : m_lookupTable(lookupTable)
+    {}
+
+    QString operator()(T value)
+    {
+        return MetaEnum::enumToString(value, m_lookupTable);
+    }
+
+private:
+    const MetaEnum::Value<T> (&m_lookupTable)[N];
+
+};
+
+template <typename T, std::size_t N>
+class flags_to_string_functor
+{
+public:
+    explicit flags_to_string_functor(const MetaEnum::Value<T>(&lookupTable)[N])
+        : m_lookupTable(lookupTable)
+    {}
+
+#if !defined(Q_CC_MSVC) || _MSC_VER >= 1900
+    QString operator()(typename std::underlying_type<T>::type value)
+#else
+    QString operator()(unsigned int value)
+#endif
+    {
+        return MetaEnum::flagsToString(value, m_lookupTable);
+    }
+
+private:
+    const MetaEnum::Value<T> (&m_lookupTable)[N];
+
+};
+
 }
+
+/** Creates a functor for MetaEnum::enumToString and a specific lookup table. */
+template <typename T, std::size_t N>
+detail::enum_to_string_functor<T, N> enumToString_fn(const Value<T>(&lookupTable)[N])
+{
+    return detail::enum_to_string_functor<T, N>(lookupTable);
 }
+
+/** Creates a functor for MetaEnum::flagsToString and a specific lookup table. */
+template <typename T, std::size_t N>
+detail::flags_to_string_functor<T, N> flagsToString_fn(const Value<T>(&lookupTable)[N])
+{
+    return detail::flags_to_string_functor<T, N>(lookupTable);
+}
+
+} // MetaEnum
+} // GammaRay
 
 #endif

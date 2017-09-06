@@ -1031,28 +1031,16 @@ void QuickInspector::registerVariantHandlers()
     VariantHandler::registerStringConverter<QSGTexture::WrapMode>(qsgTextureWrapModeToString);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     VariantHandler::registerStringConverter<QSGRenderNode *>(Util::addressToString);
-    VariantHandler::registerStringConverter<QSGRenderNode::StateFlags>([](QSGRenderNode::StateFlags f) {
-        return MetaEnum::flagsToString(f, render_node_state_flags_table);
-    });
-    VariantHandler::registerStringConverter<QSGRenderNode::RenderingFlags>([](QSGRenderNode::RenderingFlags f) {
-        return MetaEnum::flagsToString(f, render_node_rendering_flags_table);
-    });
+    VariantHandler::registerStringConverter<QSGRenderNode::StateFlags>(MetaEnum::flagsToString_fn(render_node_rendering_flags_table));
+    VariantHandler::registerStringConverter<QSGRenderNode::RenderingFlags>(MetaEnum::flagsToString_fn(render_node_rendering_flags_table));
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     VariantHandler::registerStringConverter<QSGRendererInterface*>(Util::addressToString);
-    VariantHandler::registerStringConverter<QSGRendererInterface::GraphicsApi>([](QSGRendererInterface::GraphicsApi api) {
-        return MetaEnum::enumToString(api, qsg_graphics_api_table);
-    });
-    VariantHandler::registerStringConverter<QSGRendererInterface::ShaderCompilationTypes>([](QSGRendererInterface::ShaderCompilationTypes t) {
-        return MetaEnum::flagsToString(t, qsg_shader_compilation_type_table);
-    });
-    VariantHandler::registerStringConverter<QSGRendererInterface::ShaderSourceTypes>([](QSGRendererInterface::ShaderSourceTypes t) {
-        return MetaEnum::flagsToString(t, qsg_shader_source_type_table);
-    });
-    VariantHandler::registerStringConverter<QSGRendererInterface::ShaderType>([](QSGRendererInterface::ShaderType t) {
-        return MetaEnum::enumToString(t, qsg_shader_type_table);
-    });
+    VariantHandler::registerStringConverter<QSGRendererInterface::GraphicsApi>(MetaEnum::enumToString_fn(qsg_graphics_api_table));
+    VariantHandler::registerStringConverter<QSGRendererInterface::ShaderCompilationTypes>(MetaEnum::flagsToString_fn(qsg_shader_compilation_type_table));
+    VariantHandler::registerStringConverter<QSGRendererInterface::ShaderSourceTypes>(MetaEnum::flagsToString_fn(qsg_shader_source_type_table));
+    VariantHandler::registerStringConverter<QSGRendererInterface::ShaderType>(MetaEnum::enumToString_fn(qsg_shader_type_table));
 #endif
 }
 
