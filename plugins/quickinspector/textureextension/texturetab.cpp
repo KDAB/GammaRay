@@ -94,25 +94,42 @@ TextureTab::TextureTab(PropertyWidget *parent)
     connect(zoom, SIGNAL(currentIndexChanged(int)), ui->textureView, SLOT(setZoomLevel(int)));
     connect(ui->textureView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
     connect(toggleTextureWasteAction, SIGNAL(toggled(bool)), ui->textureView, SLOT(setTextureWasteVisualizationEnabled(bool)));
-    connect(ui->textureView, SIGNAL(textureInfoNecessary(bool)), ui->textureInfo, SLOT(setVisible(bool)));
+
+    // Texture issues infobar
+    connect(ui->textureView, &TextureViewWidget::textureInfoNecessary,
+            [&](bool infoNecessary) {
+                ui->textureInfo->setVisible(infoNecessary);
+                if (!infoNecessary)
+                    ui->infoLabel->setText(QString());
+    });
     connect(ui->textureView, &TextureViewWidget::textureWasteFound,
             [&](bool isProblem, int percent, int bytes) {
-                ui->textureWasteLabel->setText(tr("Transparency Waste:") + QString::number(percent) + tr("% or ") + formatBytes(bytes));
-                ui->textureWasteLabel->setVisible(isProblem);
+                addInfoLine(isProblem, tr("Transparency Waste: ") + QString::number(percent) + tr("% or ") + formatBytes(bytes) + tr("."));
     });
-    connect(ui->textureView, SIGNAL(textureIsUnicolor(bool)), ui->unicolorWarningLabel, SLOT(setVisible(bool)));
-    connect(ui->textureView, SIGNAL(textureIsFullyTransparent(bool)), ui->fullTransparencyWarningLabel, SLOT(setVisible(bool)));
+    connect(ui->textureView, &TextureViewWidget::textureIsUnicolor,
+            [&](bool isProblem) {
+                addInfoLine(isProblem, tr("Texture has only one color, consider using a widget or a rectangle."));
+    });
+    connect(ui->textureView, &TextureViewWidget::textureIsFullyTransparent,
+            [&](bool isProblem) {
+                addInfoLine(isProblem, tr("Texture is fully transparent, consider using margins or anchoring."));
+    });
     connect(ui->textureView, &TextureViewWidget::textureHasHorizontalBorderImageSavings,
             [&](bool isProblem, int percentSaved) {
-                ui->horizontalBorderImageLabel->setText(tr("Using a horizontal Border Image for this texture would save ") + QString::number(percentSaved) + tr("%."));
-                ui->horizontalBorderImageLabel->setVisible(isProblem);
+                addInfoLine(isProblem, tr("Using a horizontal Border Image for this texture would save ") + QString::number(percentSaved) + tr("%."));
     });
     connect(ui->textureView, &TextureViewWidget::textureHasVerticalBorderImageSavings,
             [&](bool isProblem, int percentSaved) {
-                ui->verticalBorderImageLabel->setText(tr("Using a vertical Border Image for this texture would save ") + QString::number(percentSaved) + tr("%."));
-                ui->verticalBorderImageLabel->setVisible(isProblem);
+                addInfoLine(isProblem, tr("Using a vertical Border Image for this texture would save ") + QString::number(percentSaved) + tr("%."));
     });
     zoom->setCurrentIndex(ui->textureView->zoomLevelIndex());
+}
+
+void TextureTab::addInfoLine(bool isProblem, const QString& newLine) {
+    if (!isProblem) return;
+    auto text = ui->infoLabel->text();
+    if (!text.isEmpty()) text = text + QStringLiteral("<br>");
+    ui->infoLabel->setText(text + newLine);
 }
 
 TextureTab::~TextureTab()

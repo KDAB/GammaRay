@@ -49,6 +49,8 @@ public:
     ~TextureTab();
 
 private:
+    void addInfoLine(bool isProblem, const QString &newLine);
+
     std::unique_ptr<Ui::TextureTab> ui;
 };
 }
