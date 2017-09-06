@@ -4,12 +4,12 @@ if(UNIX AND NOT APPLE AND GAMMARAY_BUILD_UI)
     foreach(size 16 24 32 48 64 128 256 512)
         foreach(scale 1 2 3)
             set(scaled_size ${size}x${size})
+            set(source gammaray/GammaRay-${scaled_size}.png)
 
             if(${scale} GREATER 1)
-                set(scaled_size ${size}x${size}@${scale}x)
+                set(scaled_size ${size}x${size}@${scale})
+                set(source gammaray/GammaRay-${scaled_size}x.png)
             endif()
-
-            set(source gammaray/GammaRay-${scaled_size}.png)
 
             if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${source})
                 install(
