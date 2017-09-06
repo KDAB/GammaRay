@@ -58,15 +58,14 @@ public:
 
     const static int transparencyWasteLimitInPercent = 30;
     const static int transparencyWasteLimitInBytes = 16 * 1024;
-    const static int minimumBorderImageSavingsPercent = 30;
+    const static int minimumBorderImageSavingsPercent = 25;
 
 signals:
     void textureInfoNecessary(const bool isNecessary) const;
     void textureWasteFound(const bool, const int percent, const int bytes) const;
     void textureIsUnicolor(const bool) const;
     void textureIsFullyTransparent(const bool) const;
-    void textureHasHorizontalBorderImageSavings(const bool, int savingsPercent) const;
-    void textureHasVerticalBorderImageSavings(const bool, int savingsPercent) const;
+    void textureHasBorderImageSavings(const bool, int percent, int bytes) const;
 
 private slots:
     void setTextureWasteVisualizationEnabled(bool enabled);
@@ -78,7 +77,7 @@ private:
     int m_pixelWasteInBytes;
     QRect m_analyzedRect;
     QRect m_opaqueBoundingRect; //area actually occupied by opaque pixels
-    int m_horizontalBorderImageSavings;
+    int m_horizontalBorderImageSavingsInPercent;
     QRect m_horizontalBorderRectMidCut;
     int m_verticalBorderImageSavings;
     QRect m_verticalBorderRectMidCut;

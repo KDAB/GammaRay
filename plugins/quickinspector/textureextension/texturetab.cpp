@@ -104,7 +104,8 @@ TextureTab::TextureTab(PropertyWidget *parent)
     });
     connect(ui->textureView, &TextureViewWidget::textureWasteFound,
             [&](bool isProblem, int percent, int bytes) {
-                addInfoLine(isProblem, tr("Transparency Waste: ") + QString::number(percent) + tr("% or ") + formatBytes(bytes) + tr("."));
+                addInfoLine(isProblem, tr("Transparency Waste: ") + QString::number(percent)
+                                     + tr("% or ") + formatBytes(bytes) + tr("."));
     });
     connect(ui->textureView, &TextureViewWidget::textureIsUnicolor,
             [&](bool isProblem) {
@@ -114,13 +115,10 @@ TextureTab::TextureTab(PropertyWidget *parent)
             [&](bool isProblem) {
                 addInfoLine(isProblem, tr("Texture is fully transparent, consider using margins or anchoring."));
     });
-    connect(ui->textureView, &TextureViewWidget::textureHasHorizontalBorderImageSavings,
-            [&](bool isProblem, int percentSaved) {
-                addInfoLine(isProblem, tr("Using a horizontal Border Image for this texture would save ") + QString::number(percentSaved) + tr("%."));
-    });
-    connect(ui->textureView, &TextureViewWidget::textureHasVerticalBorderImageSavings,
-            [&](bool isProblem, int percentSaved) {
-                addInfoLine(isProblem, tr("Using a vertical Border Image for this texture would save ") + QString::number(percentSaved) + tr("%."));
+    connect(ui->textureView, &TextureViewWidget::textureHasBorderImageSavings,
+            [&](bool isProblem, int percent, int bytes) {
+                addInfoLine(isProblem, tr("Using a Border Image for this texture would save ") + QString::number(percent)
+                                     + tr("%  or ") + formatBytes(bytes) + tr("."));
     });
     zoom->setCurrentIndex(ui->textureView->zoomLevelIndex());
 }

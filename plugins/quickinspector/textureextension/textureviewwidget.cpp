@@ -40,7 +40,7 @@ TextureViewWidget::TextureViewWidget(QWidget* parent)
     , m_visualizeTextureProblems(true)
     , m_pixelWasteInPercent(0)
     , m_pixelWasteInBytes(0)
-    , m_horizontalBorderImageSavings(0)
+    , m_horizontalBorderImageSavingsInPercent(0)
 {
     connect(this, SIGNAL(frameChanged()), this, SLOT(analyzeImageFlaws()));
 }
@@ -81,37 +81,25 @@ void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
 
 void TextureViewWidget::drawBorderImageCutouts(QPainter *p) const
 {
-    if (m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent) {
-        p->save();
-        auto scaleTransform = QTransform::fromScale(zoom(),zoom());
-        p->setTransform(scaleTransform, true);
+    p->save();
+    auto scaleTransform = QTransform::fromScale(zoom(),zoom());
+    p->setTransform(scaleTransform, true);
 
-        QPen pen(Qt::white);
-        pen.setCosmetic(true);
-        p->setPen(pen);
-        QBrush brush = QBrush(Qt::white, Qt::FDiagPattern);
-        brush.setTransform(scaleTransform.inverted());
-        p->setBrush(brush);
-        auto drawnRect = m_horizontalBorderRectMidCut.translated(m_analyzedRect.topLeft());
-        p->drawRect(drawnRect);
-        p->restore();
+    QPen pen(Qt::white);
+    pen.setCosmetic(true);
+    p->setPen(pen);
+    QBrush brush = QBrush(Qt::white, Qt::FDiagPattern);
+    brush.setTransform(scaleTransform.inverted());
+    p->setBrush(brush);
+    if (m_horizontalBorderImageSavingsInPercent > minimumBorderImageSavingsPercent) {
+        auto horizontalCutout = m_horizontalBorderRectMidCut.translated(m_analyzedRect.topLeft());
+        p->drawRect(horizontalCutout);
     }
-
     if (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent) {
-        p->save();
-        auto scaleTransform = QTransform::fromScale(zoom(),zoom());
-        p->setTransform(scaleTransform, true);
-
-        QPen pen(Qt::white);
-        pen.setCosmetic(true);
-        p->setPen(pen);
-        QBrush brush = QBrush(Qt::white, Qt::FDiagPattern);
-        brush.setTransform(scaleTransform.inverted());
-        p->setBrush(brush);
-        auto drawnRect = m_verticalBorderRectMidCut.translated(m_analyzedRect.topLeft());
-        p->drawRect(drawnRect);
-        p->restore();
+        auto verticalCutout = m_verticalBorderRectMidCut.translated(m_analyzedRect.topLeft());
+        p->drawRect(verticalCutout);
     }
+    p->restore();
 }
 
 void TextureViewWidget::drawActiveAtlasTile(QPainter *p) const
@@ -132,12 +120,12 @@ void TextureViewWidget::drawActiveAtlasTile(QPainter *p) const
 
 void TextureViewWidget::drawDecoration(QPainter *p)
 {
-    drawActiveAtlasTile(p);
-
     if (m_visualizeTextureProblems){
         drawBorderImageCutouts(p);
         drawPixelWasteDecoration(p);
     }
+
+    drawActiveAtlasTile(p);
 }
 
 void TextureViewWidget::setTextureWasteVisualizationEnabled(bool enabled)
@@ -202,7 +190,6 @@ void TextureViewWidget::analyzeImageFlaws()
     m_pixelWasteInPercent = qRound(pixelWaste * 100.0f);
     m_pixelWasteInBytes = (imagePixelSize - (m_opaqueBoundingRect.height() * m_opaqueBoundingRect.width())) * frame().image().depth() / 8;
 
-
     // Emit all possible Problems so far
     auto hasTextureWasteProblem = (m_pixelWasteInPercent > transparencyWasteLimitInPercent || m_pixelWasteInBytes > transparencyWasteLimitInBytes);
     emit textureWasteFound(hasTextureWasteProblem, m_pixelWasteInPercent, m_pixelWasteInBytes);
@@ -237,11 +224,8 @@ void TextureViewWidget::analyzeImageFlaws()
             }
         }
     }
-    m_horizontalBorderImageSavings = qRound(((rightCol - leftCol) * textureHeight) / imagePixelSize * 100) ;
-    emit textureHasHorizontalBorderImageSavings((m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent), m_horizontalBorderImageSavings);
+    m_horizontalBorderImageSavingsInPercent = qRound(((rightCol - leftCol + 1) * textureHeight) / imagePixelSize * 100);
     m_horizontalBorderRectMidCut = QRect(leftCol + atlasTextureOffset, 0, rightCol - leftCol + 1, analyzedRect.height());
-    if (m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent) imageFlags |= BorderImageCandidate;
-
     // vertical mid cut
     auto midRow = textureHeight / 2;
     int upperRow;
@@ -267,11 +251,25 @@ void TextureViewWidget::analyzeImageFlaws()
         }
     }
     m_verticalBorderImageSavings = qRound(((lowerRow - upperRow + 1) * textureWidth) / imagePixelSize * 100);
-    emit textureHasVerticalBorderImageSavings((m_verticalBorderImageSavings > minimumBorderImageSavingsPercent), m_verticalBorderImageSavings);
     m_verticalBorderRectMidCut = QRect(0, upperRow + atlasTextureOffset, analyzedRect.width(), lowerRow - upperRow + 1);
-    if (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent) imageFlags |= BorderImageCandidate;
 
-    // Only hide the Infobar when the texture had no flaws
+    auto overallSavingsInPercent = 0;
+    auto area = [](const QRect& r){return r.width() * r.height();};
+    const auto hs = (m_horizontalBorderImageSavingsInPercent > minimumBorderImageSavingsPercent);
+    const auto vs = (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent);
+    if (!hs && !vs) overallSavingsInPercent = 0;
+    if ( hs && !vs) overallSavingsInPercent = m_horizontalBorderImageSavingsInPercent;
+    if (!hs &&  vs) overallSavingsInPercent = m_verticalBorderImageSavings;
+    if ( hs &&  vs) {
+        const auto overlapRect = m_horizontalBorderRectMidCut.intersect(m_verticalBorderRectMidCut);
+        overallSavingsInPercent = area(m_horizontalBorderRectMidCut) + area(m_verticalBorderRectMidCut) - area(overlapRect);
+        overallSavingsInPercent = qRound(overallSavingsInPercent / ((float) area(m_analyzedRect)) * 100);
+    }
+    if (overallSavingsInPercent > minimumBorderImageSavingsPercent) imageFlags |= BorderImageCandidate;
+    auto overallSavingsInBytes = overallSavingsInPercent / 100.0f * area(m_analyzedRect) * frame().image().depth() / 8;
+    emit textureHasBorderImageSavings((overallSavingsInPercent > minimumBorderImageSavingsPercent), overallSavingsInPercent, overallSavingsInBytes);
+
+    // Show or hide the infobar depending on found issues
     emit textureInfoNecessary(imageFlags != None);
 }
 
