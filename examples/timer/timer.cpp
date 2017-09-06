@@ -52,6 +52,7 @@ protected:
     //! [Missing killTimer]
     void timerEvent(QTimerEvent *event) override
     {
+        Q_UNUSED(event);
         m_widget->update();
         // killTimer(event->timerId());
     }
@@ -60,7 +61,6 @@ protected:
 private:
     QWidget *m_widget;
 };
-
 
 int main(int argc, char **argv)
 {
