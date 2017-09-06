@@ -318,7 +318,7 @@ void RemoteViewWidget::frameUpdated(const RemoteViewFrame &frame)
     }
 
     updateActions();
-    if (m_interactionMode == InteractionMode::ColorPicking)
+    if (m_interactionMode == ColorPicking)
         pickColor();
     emit frameChanged();
     QMetaObject::invokeMethod(m_interface, "clientViewUpdated", Qt::QueuedConnection);
