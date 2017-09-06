@@ -52,8 +52,9 @@ TextureViewWidget::~TextureViewWidget()
 void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
 {
     //Draw Warning if more than 30% or 1KB are wasted
-    if (m_pixelWasteInPercent < transparencyWasteLimitInPercent
-        && m_pixelWasteInBytes < transparencyWasteLimitInBytes)
+    const auto hasTextureWasteProblem = (m_pixelWasteInPercent > transparencyWasteLimitInPercent
+             || m_pixelWasteInBytes > transparencyWasteLimitInBytes);
+    if (!hasTextureWasteProblem)
         return;
 
     p->save();
@@ -67,13 +68,14 @@ void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
     QBrush brush = QBrush(Qt::red, Qt::FDiagPattern);
     brush.setTransform(scaleTransform.inverted());
     p->setBrush(brush);
-    auto viewRect = QPainterPath();
-    viewRect.addRect(m_analyzedRect);
+    auto outerRect = m_analyzedRect;
+    auto wasteArea = QPainterPath();
+    wasteArea.addRect(outerRect);
     auto innerRect = QPainterPath();
-    auto translatedBoundingRect = m_opaqueBoundingRect.translated(m_analyzedRect.x(), m_analyzedRect.y());
+    auto translatedBoundingRect = m_opaqueBoundingRect.translated(m_analyzedRect.topLeft());
     innerRect.addRect(translatedBoundingRect);
-    viewRect = viewRect.subtracted(innerRect);
-    p->drawPath(viewRect);
+    wasteArea = wasteArea.subtracted(innerRect);
+    p->drawPath(wasteArea);
     p->restore();
 }
 
@@ -90,7 +92,8 @@ void TextureViewWidget::drawBorderImageCutouts(QPainter *p) const
         QBrush brush = QBrush(Qt::white, Qt::FDiagPattern);
         brush.setTransform(scaleTransform.inverted());
         p->setBrush(brush);
-        p->drawRect(m_horizontalBorderRectMidCut.translated(m_analyzedRect.x(), m_analyzedRect.y()));
+        auto drawnRect = m_horizontalBorderRectMidCut.translated(m_analyzedRect.topLeft());
+        p->drawRect(drawnRect);
         p->restore();
     }
 
@@ -105,7 +108,8 @@ void TextureViewWidget::drawBorderImageCutouts(QPainter *p) const
         QBrush brush = QBrush(Qt::white, Qt::FDiagPattern);
         brush.setTransform(scaleTransform.inverted());
         p->setBrush(brush);
-        p->drawRect(m_verticalBorderRectMidCut.translated(m_analyzedRect.x(), m_analyzedRect.y()));
+        auto drawnRect = m_verticalBorderRectMidCut.translated(m_analyzedRect.topLeft());
+        p->drawRect(drawnRect);
         p->restore();
     }
 }
@@ -154,14 +158,17 @@ void TextureViewWidget::analyzeImageFlaws()
     // For AtlasTiles analyze subrect, else analyze the whole image
     QImage analyzedTexture;
     QRect analyzedRect;
+    int atlasTextureOffset = 0; // atlas textures are 1 pixel bigger
     auto atlasSubTile = frame().data().toRect();
     if (atlasSubTile.isValid()) { //Atlas-Case
         analyzedTexture = frame().image().copy(atlasSubTile);
         analyzedRect = atlasSubTile;
         analyzedRect = analyzedRect.adjusted(-1, -1, 1, 1);
+        atlasTextureOffset = 1;
     } else { // Whole-Texture-Case
         analyzedTexture = frame().image();
         analyzedRect = frame().image().rect();
+        atlasTextureOffset = 0;
     }
 
     m_analyzedRect = analyzedRect;
@@ -187,7 +194,7 @@ void TextureViewWidget::analyzeImageFlaws()
         }
     }
 
-    m_opaqueBoundingRect = QRect(QPoint(left, top), QPoint(right, bottom));
+    m_opaqueBoundingRect = QRect(QPoint(left, top), QPoint(right, bottom)).translated(QPoint(atlasTextureOffset, atlasTextureOffset));
 
     // Calculate Waste
     const float imagePixelSize = (analyzedTexture.width() * analyzedTexture.height());
@@ -204,27 +211,27 @@ void TextureViewWidget::analyzeImageFlaws()
     emit textureIsFullyTransparent(imageFlags.testFlag(FullyTransparent));
 
     // Border Image checks
-    // horizontal mid slices
+    // horizontal mid cut
     auto textureWidth = analyzedTexture.width();
     auto textureHeight = analyzedTexture.height();
     auto midCol = textureWidth / 2;
-    auto leftCol = midCol;
     auto breakout = false;
-    while ((leftCol > 0) && !breakout) {
-        leftCol--;
-        for (int row = 0; row < textureHeight; row++) {
+    int leftCol;
+    for (leftCol = midCol; (leftCol >= 0) && !breakout; leftCol--) {
+        for (int row = 0; row < textureHeight - 1; row++) {
             if (analyzedTexture.pixel(leftCol, row) != analyzedTexture.pixel(midCol, row)) {
+                leftCol += 2;
                 breakout = true;
                 break;
             }
         }
     }
-    auto rightCol = midCol;
     breakout = false;
-    while ((rightCol < textureWidth - 1) && !breakout) {
-        rightCol++;
+    int rightCol;
+    for (rightCol = midCol; (rightCol < textureWidth) && !breakout; rightCol++) {
         for (int row = 0; row < textureHeight; row++) {
             if (analyzedTexture.pixel(rightCol, row) != analyzedTexture.pixel(midCol, row)) {
+                rightCol -= 2;
                 breakout = true;
                 break;
             }
@@ -232,36 +239,36 @@ void TextureViewWidget::analyzeImageFlaws()
     }
     m_horizontalBorderImageSavings = qRound(((rightCol - leftCol) * textureHeight) / imagePixelSize * 100) ;
     emit textureHasHorizontalBorderImageSavings((m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent), m_horizontalBorderImageSavings);
-    m_horizontalBorderRectMidCut = QRect(leftCol, 0, rightCol - leftCol, textureHeight);
+    m_horizontalBorderRectMidCut = QRect(leftCol + atlasTextureOffset, 0, rightCol - leftCol + 1, analyzedRect.height());
     if (m_horizontalBorderImageSavings > minimumBorderImageSavingsPercent) imageFlags |= BorderImageCandidate;
 
-    //verticalBorderImage
+    // vertical mid cut
     auto midRow = textureHeight / 2;
-    auto upperRow = midRow;
+    int upperRow;
     breakout = false;
-    while ((upperRow > 0) && !breakout) {
-        upperRow --;
+    for (upperRow = midRow; (upperRow >= 0) && !breakout; upperRow--) {
         for (int col = 0; col < textureWidth; col++) {
             if (analyzedTexture.pixel(col, upperRow) != analyzedTexture.pixel(col, midRow)) {
+                upperRow += 2;
                 breakout = true;
                 break;
             }
         }
     }
-    auto lowerRow = midRow;
     breakout = false;
-    while ((lowerRow < textureHeight - 1) &&! breakout) {
-        lowerRow++;
+    int lowerRow;
+    for (lowerRow = midRow; (lowerRow < textureHeight - 1) && !breakout; lowerRow++) {
         for (int col = 0; col < textureWidth; col++) {
             if (analyzedTexture.pixel(col, lowerRow) != analyzedTexture.pixel(col, midRow)) {
+                lowerRow -= 2;
                 breakout = true;
                 break;
             }
         }
     }
-    m_verticalBorderImageSavings = qRound(((lowerRow - upperRow) * textureWidth) / imagePixelSize * 100);
+    m_verticalBorderImageSavings = qRound(((lowerRow - upperRow + 1) * textureWidth) / imagePixelSize * 100);
     emit textureHasVerticalBorderImageSavings((m_verticalBorderImageSavings > minimumBorderImageSavingsPercent), m_verticalBorderImageSavings);
-    m_verticalBorderRectMidCut = QRect(0, upperRow, textureWidth, lowerRow - upperRow);
+    m_verticalBorderRectMidCut = QRect(0, upperRow + atlasTextureOffset, analyzedRect.width(), lowerRow - upperRow + 1);
     if (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent) imageFlags |= BorderImageCandidate;
 
     // Only hide the Infobar when the texture had no flaws
