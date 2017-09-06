@@ -134,6 +134,7 @@ private slots:
         QVERIFY(model);
         auto idx = searchFixedIndex(model, "testObject");
         QVERIFY(!idx.isValid());
+        const auto prevRowCount = model->rowCount();
 
         setObjectName("testObject");
         auto timerId = startTimer(10);
@@ -143,7 +144,7 @@ private slots:
 
         // Wait for the free timer discovery
         int i = 0;
-        while (model->rowCount() == 0 && i++ < 10)
+        while (model->rowCount() == prevRowCount && i++ < 10)
             QTest::qWait(100);
 
         idx = searchFixedIndex(model, "testObject");
@@ -203,7 +204,7 @@ private slots:
             QTest::qWait(6000);
 
             QModelIndex idx;
-            QCOMPARE(model->rowCount(), 4);
+            QVERIFY(model->rowCount() >= 4);
 
             idx = searchFixedIndex(model, "mainThread");
             QVERIFY(idx.isValid());
