@@ -1,5 +1,5 @@
 Name:           gammaray
-Version:        2.8.0
+Version:        2.8.1
 Release:        1
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
@@ -14,7 +14,7 @@ BuildRequires: cmake kdstatemachineeditor-devel
 %if %{defined suse_version}
 BuildRequires: libqt5-qtbase-private-headers-devel libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel
 %if 0%{?suse_version} > 1320
-BuildRequires: libqt5-qtconnectivity-devel
+BuildRequires: libqt5-qtconnectivity-devel libqt5-qt3d-devel wayland-devel libqt5-qtwayland-devel
 %endif
 # TODO: this seems only to be in the update repo?
 BuildRequires: kcoreaddons-devel
@@ -27,6 +27,9 @@ BuildRequires:  kf5-kcoreaddons-devel
 %endif
 %if 0%{?fedora} > 23
 BuildRequires:  ghostscript-core
+%endif
+%if 0%{?fedora} > 24
+BuildRequires:  qt5-qt3d-devel wayland-devel qt5-qtwayland-devel kf5-syndication-devel
 %endif
 %endif
 
@@ -149,6 +152,12 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_widgetinspector*
 %{_libdir}/gammaray/*/*/gammaray_wlcompositorinspector*
 %{_libdir}/gammaray/*/*/styles/
+%if 0%{?fedora} > 24
+%{_libdir}/gammaray/*/*/gammaray_3dinspector*
+%endif
+%if 0%{?suse_version} > 1320
+%{_libdir}/gammaray/*/*/gammaray_3dinspector*
+%endif
 
 %files kf5-plugins
 %defattr(-,root,root)
@@ -166,6 +175,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/qt5/mkspecs/modules/*
 
 %changelog
+* Tue Sep 05 2017 Allen Winter <allen.winter@kdab.com> 2.8.1
+  2.8.1 bugfix release
 * Wed Jun 07 2017 Allen Winter <allen.winter@kdab.com> 2.8.0
   2.8.0 final
 * Tue Feb 14 2017 Allen Winter <allen.winter@kdab.com> 2.7.0

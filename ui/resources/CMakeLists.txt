@@ -6,14 +6,14 @@ if(UNIX AND NOT APPLE AND GAMMARAY_BUILD_UI)
             set(scaled_size ${size}x${size})
 
             if(${scale} GREATER 1)
-                set(scaled_size ${size}x${size}@${scale})
+                set(scaled_size ${size}x${size}@${scale}x)
             endif()
 
-            set(source gammaray/GammaRay-${scaled_size}x.png)
+            set(source gammaray/GammaRay-${scaled_size}.png)
 
-            if(EXISTS ${source})
+            if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${source})
                 install(
-                    FILES ${source}
+                    FILES ${CMAKE_CURRENT_SOURCE_DIR}/${source}
                     DESTINATION "${ICON_INSTALL_DIR}/hicolor/${scaled_size}/apps" RENAME GammaRay.png
                     )
             endif()
