@@ -26,6 +26,16 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Configurations</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="GammaRay::NetworkConfigurationWidget" name="configTab" native="true"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -35,6 +45,12 @@
    <class>GammaRay::NetworkInterfaceWidget</class>
    <extends>QWidget</extends>
    <header>networkinterfacewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::NetworkConfigurationWidget</class>
+   <extends>QWidget</extends>
+   <header>networkconfigurationwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

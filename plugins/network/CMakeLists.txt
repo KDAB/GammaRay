@@ -2,6 +2,7 @@
 set(gammaray_network_srcs
     networksupport.cpp
     networkinterfacemodel.cpp
+    networkconfigurationmodel.cpp
 
     cookies/cookieextension.cpp
     cookies/cookiejarmodel.cpp
@@ -14,6 +15,8 @@ if(GAMMARAY_BUILD_UI)
   set(gammaray_network_ui_srcs
     networkwidget.cpp
     networkinterfacewidget.cpp
+    networkconfigurationwidget.cpp
+    clientnetworkconfigurationmodel.cpp
 
     cookies/cookietab.cpp
   )

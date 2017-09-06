@@ -28,6 +28,7 @@
 
 #include "networksupport.h"
 #include "networkinterfacemodel.h"
+#include "networkconfigurationmodel.h"
 #include "cookies/cookieextension.h"
 
 #include <core/enumrepositoryserver.h>
@@ -35,12 +36,15 @@
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/propertycontroller.h>
+#include <core/remote/serverproxymodel.h>
 #include <core/varianthandler.h>
 
 #include <QAbstractNetworkCache>
 #include <QHostAddress>
 #include <QLocalSocket>
 #include <QNetworkAccessManager>
+#include <QNetworkConfiguration>
+#include <QNetworkConfigurationManager>
 #include <QNetworkCookieJar>
 #include <QNetworkProxy>
 #include <QSocketNotifier>
@@ -64,6 +68,7 @@ Q_DECLARE_METATYPE(QHostAddress)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 Q_DECLARE_METATYPE(QNetworkAccessManager::NetworkAccessibility)
+Q_DECLARE_METATYPE(QNetworkConfigurationManager::Capabilities)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
 #ifndef QT_NO_SSL
 Q_DECLARE_METATYPE(QSsl::KeyAlgorithm)
@@ -84,9 +89,12 @@ NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent)
     registerMetaTypes();
     registerVariantHandler();
 
-    probe->registerModel(QStringLiteral(
-                             "com.kdab.GammaRay.NetworkInterfaceModel"),
-                         new NetworkInterfaceModel(this));
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkInterfaceModel"), new NetworkInterfaceModel(this));
+
+    auto configProxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+    configProxy->setSourceModel(new NetworkConfigurationModel(this));
+    configProxy->addRole(NetworkConfigurationModelRoles::DefaultConfigRole);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkConfigurationModel"), configProxy);
 
     PropertyController::registerExtension<CookieExtension>();
 }
@@ -114,6 +122,8 @@ void NetworkSupport::registerMetaTypes()
 #ifndef QT_NO_NETWORKPROXY
     MO_ADD_PROPERTY_RO(QAbstractSocket, proxy);
 #endif
+    // FIXME: QAbstractSocket::setSocketOption() would be nice to have
+    // FIXME: QQAbstractSocket::socketOption() would be nice to have
 
     MO_ADD_METAOBJECT0(QHostAddress);
     MO_ADD_PROPERTY_RO(QHostAddress, isLoopback);
@@ -137,8 +147,9 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, cookieJar);
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, supportedSchemes);
 
-    // FIXME: QAbstractSocket::setSocketOption() would be nice to have
-    // FIXME: QQAbstractSocket::socketOption() would be nice to have
+    MO_ADD_METAOBJECT1(QNetworkConfigurationManager, QObject);
+    MO_ADD_PROPERTY_RO(QNetworkConfigurationManager, capabilities);
+    MO_ADD_PROPERTY_RO(QNetworkConfigurationManager, isOnline);
 
     MO_ADD_METAOBJECT1(QTcpServer, QObject);
     MO_ADD_PROPERTY_RO(QTcpServer, isListening);
@@ -329,6 +340,41 @@ static QString sslCertificateToString(const QSslCertificate &cert)
 
 #endif // QT_NO_SSL
 
+#define E(x) { QNetworkConfiguration:: x, #x }
+static const MetaEnum::Value<QNetworkConfiguration::Purpose> network_config_purpose_table[] = {
+    E(UnknownPurpose),
+    E(PublicPurpose),
+    E(PrivatePurpose),
+    E(ServiceSpecificPurpose)
+};
+
+static const MetaEnum::Value<QNetworkConfiguration::StateFlag> network_config_state_table[] = {
+    E(Undefined),
+    E(Defined),
+    E(Discovered),
+    E(Active)
+};
+
+static const MetaEnum::Value<QNetworkConfiguration::Type> network_config_type_table[] = {
+    E(InternetAccessPoint),
+    E(ServiceNetwork),
+    E(UserChoice),
+    E(Invalid)
+};
+#undef E
+
+#define E(x) { QNetworkConfigurationManager:: x, #x }
+static const MetaEnum::Value<QNetworkConfigurationManager::Capabilities> network_config_manager_capabilities_table[] = {
+    E(CanStartAndStopInterfaces),
+    E(DirectConnectionRouting),
+    E(SystemSessionSupport),
+    E(ApplicationLevelRoaming),
+    E(ForcedRoaming),
+    E(DataStatistics),
+    E(NetworkSessionRequired)
+};
+#undef E
+
 void NetworkSupport::registerVariantHandler()
 {
     ER_REGISTER_FLAGS(QAbstractSocket, PauseModes, socket_pause_mode_table);
@@ -345,6 +391,11 @@ void NetworkSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSslCipher>(std::mem_fn(&QSslCipher::name));
     VariantHandler::registerStringConverter<QSslError>(std::mem_fn(&QSslError::errorString));
 #endif
+
+    ER_REGISTER_ENUM(QNetworkConfiguration, Purpose, network_config_purpose_table);
+    ER_REGISTER_FLAGS(QNetworkConfiguration, StateFlags, network_config_state_table);
+    ER_REGISTER_ENUM(QNetworkConfiguration, Type, network_config_type_table);
+    ER_REGISTER_FLAGS(QNetworkConfigurationManager, Capabilities, network_config_manager_capabilities_table);
 }
 
 NetworkSupportFactory::NetworkSupportFactory(QObject *parent)
