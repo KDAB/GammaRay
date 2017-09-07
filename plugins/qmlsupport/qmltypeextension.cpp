@@ -27,6 +27,7 @@
 */
 
 #include "qmltypeextension.h"
+#include "qmltypeutil.h"
 
 #include <core/aggregatedpropertymodel.h>
 #include <core/objectinstance.h>
@@ -75,10 +76,10 @@ bool QmlTypeExtension::setQObject(QObject *object)
 
     const auto qmlType = QQmlMetaType::qmlType(data->compilationUnit->url());
 #endif
-    if (!qmlType)
+    if (!QmlType::isValid(qmlType))
         return false;
 
-    m_typePropertyModel->setObject(ObjectInstance(qmlType, "QQmlType"));
+    m_typePropertyModel->setObject(QmlType::toObjectInstance(qmlType));
     return true;
 #else
     return false;
@@ -91,9 +92,9 @@ bool QmlTypeExtension::setMetaObject(const QMetaObject *metaObject)
         return false;
 
     const auto qmlType = QQmlMetaType::qmlType(metaObject);
-    if (!qmlType)
+    if (!QmlType::isValid(qmlType))
         return false;
 
-    m_typePropertyModel->setObject(ObjectInstance(qmlType, "QQmlType"));
+    m_typePropertyModel->setObject(QmlType::toObjectInstance(qmlType));
     return true;
 }
