@@ -28,6 +28,7 @@
 
 #include "guisupport.h"
 
+#include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/varianthandler.h>
@@ -55,6 +56,7 @@ using namespace GammaRay;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
+Q_DECLARE_METATYPE(QSurfaceFormat::FormatOptions)
 #endif
 
 GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
@@ -119,8 +121,30 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT0(QSurface);
     MO_ADD_PROPERTY_RO(QSurface, format);
     MO_ADD_PROPERTY_RO(QSurface, size);
+    MO_ADD_PROPERTY_RO(QSurface, supportsOpenGL);
     MO_ADD_PROPERTY_RO(QSurface, surfaceClass);
     MO_ADD_PROPERTY_RO(QSurface, surfaceType);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_METAOBJECT0(QSurfaceFormat);
+    MO_ADD_PROPERTY(QSurfaceFormat, alphaBufferSize, setAlphaBufferSize);
+    MO_ADD_PROPERTY(QSurfaceFormat, blueBufferSize, setBlueBufferSize);
+    MO_ADD_PROPERTY_RO(QSurfaceFormat, defaultFormat);
+    MO_ADD_PROPERTY(QSurfaceFormat, depthBufferSize, setDepthBufferSize);
+    MO_ADD_PROPERTY(QSurfaceFormat, greenBufferSize, setGreenBufferSize);
+    MO_ADD_PROPERTY_RO(QSurfaceFormat, hasAlpha);
+    MO_ADD_PROPERTY(QSurfaceFormat, majorVersion, setMajorVersion);
+    MO_ADD_PROPERTY(QSurfaceFormat, minorVersion, setMinorVersion);
+    MO_ADD_PROPERTY(QSurfaceFormat, options, setOptions);
+    MO_ADD_PROPERTY(QSurfaceFormat, profile, setProfile);
+    MO_ADD_PROPERTY(QSurfaceFormat, redBufferSize, setRedBufferSize);
+    MO_ADD_PROPERTY(QSurfaceFormat, renderableType, setRenderableType);
+    MO_ADD_PROPERTY(QSurfaceFormat, samples, setSamples);
+    MO_ADD_PROPERTY(QSurfaceFormat, stencilBufferSize, setStencilBufferSize);
+    MO_ADD_PROPERTY(QSurfaceFormat, stereo, setStereo);
+    MO_ADD_PROPERTY(QSurfaceFormat, swapBehavior, setSwapBehavior);
+    MO_ADD_PROPERTY(QSurfaceFormat, swapInterval, setSwapInterval);
+#endif
 
     MO_ADD_METAOBJECT2(QWindow, QObject, QSurface);
     MO_ADD_PROPERTY(QWindow, baseSize, setBaseSize);
@@ -250,61 +274,27 @@ static QString surfaceFormatToString(const QSurfaceFormat &format)
          +'/' + QString::number(format.blueBufferSize())
          +'/' + QString::number(format.alphaBufferSize());
 
-    s += " Depth: " + QString::number(format.depthBufferSize());
-    s += " Stencil: " + QString::number(format.stencilBufferSize());
-
-    s += QStringLiteral(" Buffer: ");
-    switch (format.swapBehavior()) {
-    case QSurfaceFormat::DefaultSwapBehavior:
-        s += QStringLiteral("default");
-        break;
-    case QSurfaceFormat::SingleBuffer:
-        s += QStringLiteral("single");
-        break;
-    case QSurfaceFormat::DoubleBuffer:
-        s += QStringLiteral("double");
-        break;
-    case QSurfaceFormat::TripleBuffer:
-        s += QStringLiteral("triple");
-        break;
-    default:
-        s += QStringLiteral("unknown");
-    }
-
     return s;
 }
 
-static QString surfaceClassToString(QSurface::SurfaceClass sc)
-{
-    switch (sc) {
-    case QSurface::Window:
-        return QStringLiteral("Window");
-#if QT_VERSION > QT_VERSION_CHECK(5, 1, 0)
-    case QSurface::Offscreen:
-        return QStringLiteral("Offscreen");
-#endif
-    }
-    return QStringLiteral("Unknown Surface Class");
-}
+#define E(x) { QSurface:: x, #x }
+static const MetaEnum::Value<QSurface::SurfaceClass> surface_class_table[] = {
+    E(Window),
+    E(Offscreen)
+};
 
-static QString surfaceTypeToString(QSurface::SurfaceType type)
-{
-    switch (type) {
-    case QSurface::RasterSurface:
-        return QStringLiteral("Raster");
-    case QSurface::OpenGLSurface:
-        return QStringLiteral("OpenGL");
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-    case QSurface::RasterGLSurface:
-        return QStringLiteral("RasterGLSurface");
-#endif
+static const MetaEnum::Value<QSurface::SurfaceType> surface_type_table[] = {
+    E(RasterSurface),
+    E(OpenGLSurface),
+    E(RasterGLSurface),
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
-    case QSurface::OpenVGSurface:
-        return QStringLiteral("OpenVG");
+    E(OpenVGSurface),
 #endif
-    }
-    return QStringLiteral("Unknown Surface Type");
-}
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    E(VulkanSurface)
+#endif
+};
+#undef E
 
 #ifndef QT_NO_OPENGL
 static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
@@ -352,12 +342,24 @@ static QString painterPathToString(const QPainterPath &path)
     return GuiSupport::tr("<%1 elements>").arg(path.elementCount());
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#define E(x) { QSurfaceFormat:: x, #x }
+static const MetaEnum::Value<QSurfaceFormat::FormatOption> surface_format_option_table[] = {
+    E(StereoBuffers),
+    E(DebugContext),
+    E(DeprecatedFunctions),
+    E(ResetNotification)
+};
+#undef E
+#endif
+
 void GuiSupport::registerVariantHandler()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     VariantHandler::registerStringConverter<QSurfaceFormat>(surfaceFormatToString);
-    VariantHandler::registerStringConverter<QSurface::SurfaceClass>(surfaceClassToString);
-    VariantHandler::registerStringConverter<QSurface::SurfaceType>(surfaceTypeToString);
+    VariantHandler::registerStringConverter<QSurface::SurfaceClass>(MetaEnum::enumToString_fn(surface_class_table));
+    VariantHandler::registerStringConverter<QSurface::SurfaceType>(MetaEnum::enumToString_fn(surface_type_table));
+    VariantHandler::registerStringConverter<QSurfaceFormat::FormatOptions>(MetaEnum::flagsToString_fn(surface_format_option_table));
 #ifndef QT_NO_OPENGL
     VariantHandler::registerStringConverter<QOpenGLShader::ShaderType>(shaderTypeToString);
 #endif
