@@ -188,6 +188,14 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY(QBrush, texture, setTexture);
     MO_ADD_PROPERTY(QBrush, transform, setTransform);
 
+    MO_ADD_METAOBJECT0(QIcon);
+    MO_ADD_PROPERTY_RO(QIcon, cacheKey);
+    MO_ADD_PROPERTY(QIcon, isMask, setIsMask);
+    MO_ADD_PROPERTY_RO(QIcon, isNull);
+    MO_ADD_PROPERTY_RO(QIcon, name);
+    MO_ADD_PROPERTY_RO(QIcon, themeName);
+    MO_ADD_PROPERTY_RO(QIcon, themeSearchPaths);
+
     MO_ADD_METAOBJECT0(QPen);
     MO_ADD_PROPERTY(QPen, brush, setBrush);
     MO_ADD_PROPERTY(QPen, capStyle, setCapStyle);
