@@ -28,6 +28,7 @@
 
 #include "guisupport.h"
 
+#include <core/enumrepositoryserver.h>
 #include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -453,18 +454,19 @@ void GuiSupport::registerVariantHandler()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     VariantHandler::registerStringConverter<QSurfaceFormat>(surfaceFormatToString);
-    VariantHandler::registerStringConverter<QSurface::SurfaceClass>(MetaEnum::enumToString_fn(surface_class_table));
-    VariantHandler::registerStringConverter<QSurface::SurfaceType>(MetaEnum::enumToString_fn(surface_type_table));
-    VariantHandler::registerStringConverter<QSurfaceFormat::FormatOptions>(MetaEnum::flagsToString_fn(surface_format_option_table));
+
+    ER_REGISTER_ENUM(QSurface, SurfaceClass, surface_class_table);
+    ER_REGISTER_ENUM(QSurface, SurfaceType, surface_type_table);
+    ER_REGISTER_FLAGS(QSurfaceFormat, FormatOptions, surface_format_option_table);
 #ifndef QT_NO_OPENGL
     VariantHandler::registerStringConverter<QOpenGLShader::ShaderType>(shaderTypeToString);
 #endif
 
-    VariantHandler::registerStringConverter<QFont::Capitalization>(MetaEnum::enumToString_fn(font_capitalization_table));
-    VariantHandler::registerStringConverter<QFont::HintingPreference>(MetaEnum::enumToString_fn(font_hinting_pref_table));
-    VariantHandler::registerStringConverter<QFont::SpacingType>(MetaEnum::enumToString_fn(font_spacing_type_table));
-    VariantHandler::registerStringConverter<QFont::Style>(MetaEnum::enumToString_fn(font_style_table));
-    VariantHandler::registerStringConverter<QFont::StyleHint>(MetaEnum::enumToString_fn(font_style_hint_table));
+    ER_REGISTER_ENUM(QFont, Capitalization, font_capitalization_table);
+    ER_REGISTER_ENUM(QFont, HintingPreference, font_hinting_pref_table);
+    ER_REGISTER_ENUM(QFont, SpacingType, font_spacing_type_table);
+    ER_REGISTER_ENUM(QFont, Style, font_style_table);
+    ER_REGISTER_ENUM(QFont, StyleHint, font_style_hint_table);
 #endif
 
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);

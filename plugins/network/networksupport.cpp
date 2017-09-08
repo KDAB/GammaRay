@@ -30,6 +30,7 @@
 #include "networkinterfacemodel.h"
 #include "cookies/cookieextension.h"
 
+#include <core/enumrepositoryserver.h>
 #include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -330,15 +331,15 @@ static QString sslCertificateToString(const QSslCertificate &cert)
 
 void NetworkSupport::registerVariantHandler()
 {
-    VariantHandler::registerStringConverter<QAbstractSocket::PauseModes>(MetaEnum::flagsToString_fn(socket_pause_mode_table));
+    ER_REGISTER_FLAGS(QAbstractSocket, PauseModes, socket_pause_mode_table);
     VariantHandler::registerStringConverter<QHostAddress>(std::mem_fn(&QHostAddress::toString));
-    VariantHandler::registerStringConverter<QNetworkAccessManager::NetworkAccessibility>(MetaEnum::enumToString_fn(network_accessibility_table));
+    ER_REGISTER_ENUM(QNetworkAccessManager, NetworkAccessibility, network_accessibility_table);
 #ifndef QT_NO_SSL
-    VariantHandler::registerStringConverter<QSslSocket::PeerVerifyMode>(MetaEnum::enumToString_fn(ssl_peer_verify_mode_table));
-    VariantHandler::registerStringConverter<QSslSocket::SslMode>(MetaEnum::enumToString_fn(ssl_mode_table));
-    VariantHandler::registerStringConverter<QSsl::KeyAlgorithm>(MetaEnum::enumToString_fn(ssl_key_algorithm_table));
-    VariantHandler::registerStringConverter<QSsl::KeyType>(MetaEnum::enumToString_fn(ssl_key_type_table));
-    VariantHandler::registerStringConverter<QSsl::SslProtocol>(MetaEnum::enumToString_fn(ssl_protocol_table));
+    ER_REGISTER_ENUM(QSslSocket, PeerVerifyMode, ssl_peer_verify_mode_table);
+    ER_REGISTER_ENUM(QSslSocket, SslMode, ssl_mode_table);
+    ER_REGISTER_ENUM(QSsl, KeyAlgorithm, ssl_key_algorithm_table);
+    ER_REGISTER_ENUM(QSsl, KeyType, ssl_key_type_table);
+    ER_REGISTER_ENUM(QSsl, SslProtocol, ssl_protocol_table);
     VariantHandler::registerStringConverter<QSslCertificate>(sslCertificateToString);
     VariantHandler::registerStringConverter<QSslCertificateExtension>(std::mem_fn(&QSslCertificateExtension::name));
     VariantHandler::registerStringConverter<QSslCipher>(std::mem_fn(&QSslCipher::name));
