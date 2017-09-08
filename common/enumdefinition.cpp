@@ -116,16 +116,37 @@ void EnumDefinition::setElements(const QVector<EnumDefinitionElement>& elements)
 QByteArray EnumDefinition::valueToString(const EnumValue& value) const
 {
     Q_ASSERT(value.id() == id());
-    QByteArray r;
-    foreach (const auto &elem, m_elements) {
-        if (elem.value() == 0 && value.value() == 0)
-            return elem.name();
-        if ((elem.value() & value.value()) == elem.value() && elem.value() != 0)
-            r += elem.name() + '|';
+    if (isFlag()) {
+        QByteArray r;
+        int handledFlags = 0;
+        foreach (const auto &elem, m_elements) {
+            if ((elem.value() & value.value()) == elem.value() && elem.value() != 0) {
+                r += elem.name() + '|';
+                handledFlags |= elem.value();
+            }
+        }
+        if (value.value() & ~handledFlags)
+            r += "flag 0x" + QByteArray::number(value.value() & ~handledFlags, 16) + '|';
+
+        if (!r.isEmpty()) {
+            r.chop(1);
+        } else {
+            // check for dedicated 0-values
+            Q_ASSERT(value.value() == 0);
+            foreach (const auto &elem, m_elements) {
+                if (elem.value() == 0)
+                    return elem.name();
+            }
+            return "<none>";
+        }
+        return r;
+    } else {
+        foreach (const auto &elem, m_elements) {
+            if (elem.value() == value.value())
+                return elem.name();
+        }
+        return "unknown (" + QByteArray::number(value.value()) + ')';
     }
-    if (!r.isEmpty())
-        r.chop(1);
-    return r;
 }
 
 namespace GammaRay {
