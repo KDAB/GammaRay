@@ -214,7 +214,9 @@ void GuiSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT0(QIcon);
     MO_ADD_PROPERTY_RO(QIcon, cacheKey);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     MO_ADD_PROPERTY(QIcon, isMask, setIsMask);
+#endif
     MO_ADD_PROPERTY_RO(QIcon, isNull);
     MO_ADD_PROPERTY_RO(QIcon, name);
     MO_ADD_PROPERTY_RO(QIcon, themeName);
