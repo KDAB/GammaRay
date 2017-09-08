@@ -27,6 +27,7 @@
 */
 
 #include <core/enumutil.h>
+#include <core/enumrepositoryserver.h>
 
 #include <QtTest/qtest.h>
 #include <QFrame>
@@ -36,6 +37,29 @@ Q_DECLARE_METATYPE(const QMetaObject *)
 Q_DECLARE_METATYPE(QSizePolicy::ControlTypes)
 
 using namespace GammaRay;
+
+class EnumHolder
+{
+public:
+    enum MyEnum {
+        Value0 = 0,
+        Value1 = 1,
+        Value2 = 2,
+        Value3 = 4
+    };
+    Q_DECLARE_FLAGS(MyFlags, MyEnum)
+};
+
+Q_DECLARE_METATYPE(EnumHolder::MyEnum)
+Q_DECLARE_METATYPE(EnumHolder::MyFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(EnumHolder::MyFlags)
+
+static const MetaEnum::Value<EnumHolder::MyEnum> my_enum_table[] = {
+    { EnumHolder::Value0, "Value0" },
+    { EnumHolder::Value1, "Value1" },
+    { EnumHolder::Value2, "Value2" }
+    // Value3 intentionally missing
+};
 
 class EnumPropertyTest : public QObject
 {
@@ -48,6 +72,10 @@ public:
         qRegisterMetaType<QFrame*>();
         qRegisterMetaType<QFrame::Shadow>();
 #endif
+
+        EnumRepositoryServer::create(this);
+        ER_REGISTER_ENUM(EnumHolder, MyEnum, my_enum_table);
+        ER_REGISTER_FLAGS(EnumHolder, MyFlags, my_enum_table);
     }
 
 private slots:
@@ -100,6 +128,17 @@ private slots:
         QTest::newRow("gadget flag, QMO") << QVariant::fromValue<QSizePolicy::ControlTypes>(QSizePolicy::Frame|QSizePolicy::Label) << QByteArray() << &QSizePolicy::staticMetaObject << QStringLiteral("Frame|Label");
         QTest::newRow("gadget flag, name") << QVariant::fromValue<QSizePolicy::ControlTypes>(QSizePolicy::Frame|QSizePolicy::Label) << QByteArray("QSizePolicy::ControlTypes") << nullObj << QStringLiteral("Frame|Label");
         QTest::newRow("gadget flag") << QVariant::fromValue<QSizePolicy::ControlTypes>(QSizePolicy::Frame|QSizePolicy::Label) << QByteArray() << nullObj << QStringLiteral("Frame|Label");
+
+        // non-Qt enum
+        QTest::newRow("plain enum, in map") << QVariant::fromValue(EnumHolder::Value2) << QByteArray() << nullObj << QStringLiteral("Value2");
+        QTest::newRow("plain enum, not in map") << QVariant::fromValue(EnumHolder::Value3) << QByteArray() << nullObj << QStringLiteral("unknown (4)");
+
+        // non-Qt flags
+        QTest::newRow("plain flag, single, in map") << QVariant::fromValue<EnumHolder::MyFlags>(EnumHolder::Value2) << QByteArray() << nullObj << QStringLiteral("Value2");
+        QTest::newRow("plain flag, double, in map") << QVariant::fromValue<EnumHolder::MyFlags>(EnumHolder::Value2 | EnumHolder::Value1) << QByteArray() << nullObj << QStringLiteral("Value1|Value2");
+        QTest::newRow("plain flag, single, not in map") << QVariant::fromValue<EnumHolder::MyFlags>(EnumHolder::Value3) << QByteArray() << nullObj << QStringLiteral("flag 0x4");
+        QTest::newRow("plain flag, double, mixed") << QVariant::fromValue<EnumHolder::MyFlags>(EnumHolder::Value2|EnumHolder::Value3) << QByteArray() << nullObj << QStringLiteral("Value2|flag 0x4");
+        QTest::newRow("plain flag, empty") << QVariant::fromValue(EnumHolder::MyFlags()) << QByteArray() << nullObj << QStringLiteral("Value0");
 #endif
     }
 

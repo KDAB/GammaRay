@@ -29,6 +29,7 @@
 #include "varianthandler.h"
 #include "util.h"
 #include "enumutil.h"
+#include "enumrepositoryserver.h"
 
 #include <common/metatypedeclarations.h>
 
@@ -461,6 +462,8 @@ QVariant VariantHandler::serializableVariant(const QVariant &value)
             return QVariant();
         return QVariant::fromValue(QMatrix4x4(*m));
     }
+    if (EnumRepositoryServer::isEnum(value.userType()))
+        return QVariant::fromValue(EnumRepositoryServer::valueFromVariant(value));
 
     return value;
 }

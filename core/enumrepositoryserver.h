@@ -30,6 +30,7 @@
 #define GAMMARAY_ENUMREPOSITORYSERVER_H
 
 #include "gammaray_core_export.h"
+#include "metaenum.h"
 
 #include <common/enumrepository.h>
 
@@ -57,8 +58,34 @@ public:
      */
     static GAMMARAY_CORE_EXPORT EnumValue valueFromMetaEnum(int value, const QMetaEnum &me);
 
+    /*! Creates an EnumValue instance for a given QVariant containing a registered
+     *  GammaRay::MetaEnum value.
+     */
+    static GAMMARAY_CORE_EXPORT EnumValue valueFromVariant(const QVariant &value);
+
+    /*! Check if the given meta type id is a known enum. */
+    static GAMMARAY_CORE_EXPORT bool isEnum(int metaTypeId);
+
     //! @cond internal
     static GAMMARAY_CORE_EXPORT EnumRepository* create(QObject *parent); // only exported for unit tests
+
+    template <typename Enum, typename V, std::size_t N>
+    static void registerEnum(const MetaEnum::Value<V>(&lookup_table)[N], const char* name, bool flag)
+    {
+        if (isEnum(qMetaTypeId<Enum>()))
+            return;
+        QVector<EnumDefinitionElement> elements;
+        elements.reserve(N);
+        for (std::size_t i = 0; i < N; ++i)
+            elements.push_back(EnumDefinitionElement(lookup_table[i].value, lookup_table[i].name));
+        registerEnum(qMetaTypeId<Enum>(), name, elements, flag);
+    }
+    static GAMMARAY_CORE_EXPORT void registerEnum(int metaTypeId, const char *name, const QVector<EnumDefinitionElement> &elems, bool flag);
+
+    static inline EnumDefinition definitionForId(EnumId id)
+    {
+        return s_instance->definition(id);
+    }
     //! @endcond
 private:
     explicit EnumRepositoryServer(QObject *parent = nullptr);
@@ -69,7 +96,18 @@ private:
     static EnumRepositoryServer *s_instance;
 
     QHash<QByteArray, EnumId> m_nameToIdMap;
+    QHash<int, EnumId> m_typeIdToIdMap;
 };
+}
+
+/*! Register a MetaEnum lookup table with the EnumRepository. */
+#define ER_REGISTER_ENUM(Class, Name, LookupTable) { \
+    EnumRepositoryServer::registerEnum<Class::Name>(LookupTable, #Class "::" #Name, false); \
+}
+
+/*! Register a MetaEnum lookup table with the EnumRepository. */
+#define ER_REGISTER_FLAGS(Class, Name, LookupTable) { \
+    EnumRepositoryServer::registerEnum<Class::Name>(LookupTable, #Class "::" #Name, true); \
 }
 
 #endif // GAMMARAY_ENUMREPOSITORYSERVER_H

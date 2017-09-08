@@ -45,6 +45,14 @@ EnumRepositoryServer::~EnumRepositoryServer()
     s_instance = nullptr;
 }
 
+bool EnumRepositoryServer::isEnum(int metaTypeId)
+{
+    if (!s_instance)
+        return false;
+    return s_instance->m_typeIdToIdMap.contains(metaTypeId);
+}
+
+
 EnumRepository* EnumRepositoryServer::create(QObject *parent)
 {
     Q_ASSERT(!s_instance);
@@ -81,4 +89,30 @@ EnumValue EnumRepositoryServer::valueFromMetaEnum(int value, const QMetaEnum &me
     s_instance->m_nameToIdMap.insert(typeName, def.id());
 
     return EnumValue(def.id(), value);
+}
+
+EnumValue EnumRepositoryServer::valueFromVariant(const QVariant& value)
+{
+    Q_ASSERT(s_instance);
+
+    const auto it = s_instance->m_typeIdToIdMap.constFind(value.userType());
+    Q_ASSERT(it != s_instance->m_typeIdToIdMap.constEnd());
+
+    const auto def = definitionForId(it.value());
+    if (def.isFlag())
+        return EnumValue(it.value(), *static_cast<const int*>(value.constData())); // see EnumUtil
+    return EnumValue(it.value(), value.toInt());
+}
+
+void EnumRepositoryServer::registerEnum(int metaTypeId, const char* name, const QVector<GammaRay::EnumDefinitionElement>& elems, bool flag)
+{
+    Q_ASSERT(s_instance);
+    Q_ASSERT(name);
+    Q_ASSERT(!elems.isEmpty());
+
+    EnumDefinition def(s_instance->m_nextId++, name);
+    def.setIsFlag(flag);
+    def.setElements(elems);
+    s_instance->addDefinition(def);
+    s_instance->m_typeIdToIdMap.insert(metaTypeId, def.id());
 }
