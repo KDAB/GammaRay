@@ -1031,7 +1031,7 @@ void QuickInspector::registerVariantHandlers()
     VariantHandler::registerStringConverter<QSGTexture::WrapMode>(qsgTextureWrapModeToString);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     VariantHandler::registerStringConverter<QSGRenderNode *>(Util::addressToString);
-    VariantHandler::registerStringConverter<QSGRenderNode::StateFlags>(MetaEnum::flagsToString_fn(render_node_rendering_flags_table));
+    VariantHandler::registerStringConverter<QSGRenderNode::StateFlags>(MetaEnum::flagsToString_fn(render_node_state_flags_table));
     VariantHandler::registerStringConverter<QSGRenderNode::RenderingFlags>(MetaEnum::flagsToString_fn(render_node_rendering_flags_table));
 #endif
 
