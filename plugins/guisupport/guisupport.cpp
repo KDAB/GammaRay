@@ -54,6 +54,11 @@
 using namespace GammaRay;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+Q_DECLARE_METATYPE(QFont::Capitalization)
+Q_DECLARE_METATYPE(QFont::HintingPreference)
+Q_DECLARE_METATYPE(QFont::SpacingType)
+Q_DECLARE_METATYPE(QFont::Style)
+Q_DECLARE_METATYPE(QFont::StyleHint)
 Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
 Q_DECLARE_METATYPE(QSurfaceFormat::FormatOptions)
@@ -212,6 +217,36 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY(QBrush, texture, setTexture);
     MO_ADD_PROPERTY(QBrush, transform, setTransform);
 
+    MO_ADD_METAOBJECT0(QFont);
+    MO_ADD_PROPERTY(QFont, bold, setBold);
+    MO_ADD_PROPERTY(QFont, capitalization, setCapitalization);
+    MO_ADD_PROPERTY_RO(QFont, defaultFamily);
+    MO_ADD_PROPERTY_RO(QFont, exactMatch);
+    MO_ADD_PROPERTY(QFont, family, setFamily);
+    MO_ADD_PROPERTY(QFont, fixedPitch, setFixedPitch);
+    MO_ADD_PROPERTY(QFont, hintingPreference, setHintingPreference);
+    MO_ADD_PROPERTY(QFont, italic, setItalic);
+    MO_ADD_PROPERTY(QFont, kerning, setKerning);
+    MO_ADD_PROPERTY_RO(QFont, key);
+    MO_ADD_PROPERTY_RO(QFont, lastResortFamily);
+//     MO_ADD_PROPERTY_RO(QFont, lastResortFont); asserts at runtime!?
+    MO_ADD_PROPERTY_RO(QFont, letterSpacing);
+    MO_ADD_PROPERTY_RO(QFont, letterSpacingType);
+    MO_ADD_PROPERTY(QFont, overline, setOverline);
+    MO_ADD_PROPERTY(QFont, pixelSize, setPixelSize);
+    MO_ADD_PROPERTY(QFont, pointSize, setPointSize);
+    MO_ADD_PROPERTY(QFont, pointSizeF, setPointSizeF);
+    MO_ADD_PROPERTY(QFont, stretch, setStretch);
+    MO_ADD_PROPERTY(QFont, strikeOut, setStrikeOut);
+    MO_ADD_PROPERTY(QFont, style, setStyle);
+    MO_ADD_PROPERTY_RO(QFont, styleHint);
+    MO_ADD_PROPERTY(QFont, styleName, setStyleName);
+    MO_ADD_PROPERTY(QFont, styleStrategy, setStyleStrategy);
+    MO_ADD_PROPERTY_RO(QFont, substitutions);
+    MO_ADD_PROPERTY(QFont, underline, setUnderline);
+    MO_ADD_PROPERTY(QFont, weight, setWeight);
+    MO_ADD_PROPERTY(QFont, wordSpacing, setWordSpacing);
+
     MO_ADD_METAOBJECT0(QIcon);
     MO_ADD_PROPERTY_RO(QIcon, cacheKey);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
@@ -357,6 +392,50 @@ static const MetaEnum::Value<QSurfaceFormat::FormatOption> surface_format_option
 #undef E
 #endif
 
+#define E(x) { QFont:: x, #x }
+static const MetaEnum::Value<QFont::Capitalization> font_capitalization_table[] = {
+    E(MixedCase),
+    E(AllUppercase),
+    E(AllLowercase),
+    E(SmallCaps),
+    E(Capitalize)
+};
+
+static const MetaEnum::Value<QFont::HintingPreference> font_hinting_pref_table[] = {
+    E(PreferDefaultHinting),
+    E(PreferNoHinting),
+    E(PreferVerticalHinting),
+    E(PreferFullHinting)
+};
+
+static const MetaEnum::Value<QFont::SpacingType> font_spacing_type_table[] = {
+    E(PercentageSpacing),
+    E(AbsoluteSpacing)
+};
+
+static const MetaEnum::Value<QFont::Style> font_style_table[] = {
+    E(StyleNormal),
+    E(StyleItalic),
+    E(StyleOblique)
+};
+
+static const MetaEnum::Value<QFont::StyleHint> font_style_hint_table[] = {
+    E(AnyStyle),
+    E(SansSerif),
+    E(Helvetica),
+    E(Serif),
+    E(Times),
+    E(TypeWriter),
+    E(Courier),
+    E(OldEnglish),
+    E(Decorative),
+    E(Monospace),
+    E(Fantasy),
+    E(Cursive),
+    E(System)
+};
+#undef E
+
 void GuiSupport::registerVariantHandler()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -367,6 +446,12 @@ void GuiSupport::registerVariantHandler()
 #ifndef QT_NO_OPENGL
     VariantHandler::registerStringConverter<QOpenGLShader::ShaderType>(shaderTypeToString);
 #endif
+
+    VariantHandler::registerStringConverter<QFont::Capitalization>(MetaEnum::enumToString_fn(font_capitalization_table));
+    VariantHandler::registerStringConverter<QFont::HintingPreference>(MetaEnum::enumToString_fn(font_hinting_pref_table));
+    VariantHandler::registerStringConverter<QFont::SpacingType>(MetaEnum::enumToString_fn(font_spacing_type_table));
+    VariantHandler::registerStringConverter<QFont::Style>(MetaEnum::enumToString_fn(font_style_table));
+    VariantHandler::registerStringConverter<QFont::StyleHint>(MetaEnum::enumToString_fn(font_style_hint_table));
 #endif
 
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
