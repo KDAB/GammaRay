@@ -125,7 +125,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSurface, surfaceClass);
     MO_ADD_PROPERTY_RO(QSurface, surfaceType);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0) // not a gadget previously
     MO_ADD_METAOBJECT0(QSurfaceFormat);
     MO_ADD_PROPERTY(QSurfaceFormat, alphaBufferSize, setAlphaBufferSize);
     MO_ADD_PROPERTY(QSurfaceFormat, blueBufferSize, setBlueBufferSize);
@@ -350,7 +350,9 @@ static const MetaEnum::Value<QSurfaceFormat::FormatOption> surface_format_option
     E(StereoBuffers),
     E(DebugContext),
     E(DeprecatedFunctions),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     E(ResetNotification)
+#endif
 };
 #undef E
 #endif
