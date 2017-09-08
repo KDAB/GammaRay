@@ -58,7 +58,7 @@ public:
     static GAMMARAY_CORE_EXPORT EnumValue valueFromMetaEnum(int value, const QMetaEnum &me);
 
     //! @cond internal
-    static void create(QObject *parent);
+    static GAMMARAY_CORE_EXPORT EnumRepository* create(QObject *parent); // only exported for unit tests
     //! @endcond
 private:
     explicit EnumRepositoryServer(QObject *parent = nullptr);

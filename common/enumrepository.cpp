@@ -28,14 +28,11 @@
 
 #include "enumrepository.h"
 
-#include <common/objectbroker.h>
-
 using namespace GammaRay;
 
 EnumRepository::EnumRepository(QObject* parent)
     : QObject(parent)
 {
-    ObjectBroker::registerObject<EnumRepository*>(this);
 }
 
 EnumRepository::~EnumRepository()

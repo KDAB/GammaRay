@@ -29,12 +29,15 @@
 #include "enumrepositoryclient.h"
 
 #include <common/endpoint.h>
+#include <common/objectbroker.h>
 
 using namespace GammaRay;
 
 EnumRepositoryClient::EnumRepositoryClient(QObject *parent)
     : EnumRepository(parent)
 {
+    ObjectBroker::registerObject<EnumRepository*>(this);
+
     connect(this, SIGNAL(definitionResponse(GammaRay::EnumDefinition)),
             this, SLOT(definitionReceived(GammaRay::EnumDefinition)));
 }

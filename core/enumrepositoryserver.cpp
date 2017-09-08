@@ -45,10 +45,11 @@ EnumRepositoryServer::~EnumRepositoryServer()
     s_instance = nullptr;
 }
 
-void EnumRepositoryServer::create(QObject *parent)
+EnumRepository* EnumRepositoryServer::create(QObject *parent)
 {
     Q_ASSERT(!s_instance);
     s_instance = new EnumRepositoryServer(parent);
+    return s_instance;
 }
 
 void EnumRepositoryServer::requestDefinition(EnumId id)
