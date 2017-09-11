@@ -59,14 +59,16 @@ QString flagsToString(T flags, const Value<F>(&lookupTable)[N])
     T handledFlags = T();
 
     for (std::size_t i = 0; i < N; ++i) {
-        if (flags & lookupTable[i].value)
+        if (flags & lookupTable[i].value) {
             l.push_back(QString::fromUtf8(lookupTable[i].name));
+        }
         handledFlags |= lookupTable[i].value;
     }
 
-    if (flags & ~handledFlags)
-        l.push_back(QStringLiteral("flag 0x")
-                    + QString::number(qulonglong(flags & ~handledFlags), 16));
+    if (flags & ~handledFlags) {
+        l.push_back(QStringLiteral("flag 0x") +
+                    QString::number(qulonglong(flags & ~handledFlags), 16));
+    }
 
     if (l.isEmpty()) {
         // check if we have a special 0-value
@@ -107,7 +109,7 @@ public:
         : m_lookupTable(lookupTable)
     {}
 
-#if !defined(Q_CC_MSVC) || _MSC_VER >= 1900
+#if !defined(Q_CC_MSVC) || _MSC_VER >= 1900 //krazy:exclude=cpp to deal with older MS compilers
     QString operator()(typename std::underlying_type<T>::type value)
 #else
     QString operator()(unsigned int value)
