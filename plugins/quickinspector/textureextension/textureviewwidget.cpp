@@ -35,12 +35,13 @@
 
 using namespace GammaRay;
 
-TextureViewWidget::TextureViewWidget(QWidget* parent)
+TextureViewWidget::TextureViewWidget(QWidget *parent)
     : RemoteViewWidget(parent)
     , m_visualizeTextureProblems(true)
     , m_pixelWasteInPercent(0)
     , m_pixelWasteInBytes(0)
     , m_horizontalBorderImageSavingsInPercent(0)
+    , m_verticalBorderImageSavings(0)
 {
     connect(this, SIGNAL(frameChanged()), this, SLOT(analyzeImageFlaws()));
 }
@@ -52,13 +53,14 @@ TextureViewWidget::~TextureViewWidget()
 void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
 {
     //Draw Warning if more than 30% or 1KB are wasted
-    const auto hasTextureWasteProblem = (m_pixelWasteInPercent > transparencyWasteLimitInPercent
-             || m_pixelWasteInBytes > transparencyWasteLimitInBytes);
+    const auto hasTextureWasteProblem =
+        (m_pixelWasteInPercent > transparencyWasteLimitInPercent ||
+         m_pixelWasteInBytes > transparencyWasteLimitInBytes);
     if (!hasTextureWasteProblem)
         return;
 
     p->save();
-    auto scaleTransform = QTransform::fromScale(zoom(),zoom());
+    auto scaleTransform = QTransform::fromScale(zoom(), zoom());
     p->setTransform(scaleTransform, true);
 
     //Draw Wasted Area
@@ -82,7 +84,7 @@ void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
 void TextureViewWidget::drawBorderImageCutouts(QPainter *p) const
 {
     p->save();
-    auto scaleTransform = QTransform::fromScale(zoom(),zoom());
+    auto scaleTransform = QTransform::fromScale(zoom(), zoom());
     p->setTransform(scaleTransform, true);
 
     QPen pen(Qt::white);
@@ -165,8 +167,8 @@ void TextureViewWidget::analyzeImageFlaws()
     ImageFlags imageFlags = FullyTransparent | Unicolor;
     int top = analyzedTexture.height(), bottom = 0, left = analyzedTexture.width(), right = 0;
 
-    for(int y = 0; y < analyzedTexture.height(); y++) {
-        for(int x = 0; x < analyzedTexture.width(); x++) {
+    for (int y = 0; y < analyzedTexture.height(); y++) {
+        for (int x = 0; x < analyzedTexture.width(); x++) {
             auto pixel = analyzedTexture.pixel(x, y);
 
             if (Q_UNLIKELY(imageFlags.testFlag(Unicolor)) && (possibleSingularColor != pixel))
@@ -254,7 +256,7 @@ void TextureViewWidget::analyzeImageFlaws()
     m_verticalBorderRectMidCut = QRect(0, upperRow + atlasTextureOffset, analyzedRect.width(), lowerRow - upperRow + 1);
 
     auto overallSavingsInPercent = 0;
-    auto area = [](const QRect& r){return r.width() * r.height();};
+    auto area = [](const QRect &r){ return r.width() * r.height(); };
     const auto hs = (m_horizontalBorderImageSavingsInPercent > minimumBorderImageSavingsPercent);
     const auto vs = (m_verticalBorderImageSavings > minimumBorderImageSavingsPercent);
     if (!hs && !vs) overallSavingsInPercent = 0;
@@ -272,4 +274,3 @@ void TextureViewWidget::analyzeImageFlaws()
     // Show or hide the infobar depending on found issues
     emit textureInfoNecessary(imageFlags != None);
 }
-
