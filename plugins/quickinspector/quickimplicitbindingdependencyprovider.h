@@ -1,11 +1,11 @@
 /*
-  qmlbindingtab.h
+  quickimplicitbindingdependencyprovider.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,33 +26,33 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QMLBINDINGTAB_H
-#define GAMMARAY_QMLBINDINGTAB_H
+#ifndef GAMMARAY_QUICKIMPLICITBINDINGDEPENDENCYPROVIDER_H
+#define GAMMARAY_QUICKIMPLICITBINDINGDEPENDENCYPROVIDER_H
 
-#include <QScopedPointer>
-#include <QWidget>
+#include <memory>
+#include <vector>
+
+#include <common/sourcelocation.h>
+#include <core/tools/bindinginspector/abstractbindingprovider.h>
+#include <QQmlProperty>
+
+class QQmlAbstractBinding;
+class QQmlBinding;
 
 namespace GammaRay {
-class PropertyWidget;
 
-namespace Ui
+class QuickImplicitBindingDependencyProvider : public AbstractBindingProvider
 {
-class QmlBindingTab;
-}
-
-class QmlBindingTab : public QWidget
-{
-    Q_OBJECT
 public:
-    explicit QmlBindingTab(PropertyWidget *parent = Q_NULLPTR);
-    ~QmlBindingTab();
-
-private slots:
-    void bindingContextMenu(QPoint pos);
+    std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject * obj) override;
+    std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(GammaRay::BindingNode * binding) override;
+    QString canonicalNameFor(GammaRay::BindingNode *binding) override;
+    bool canProvideBindingsFor(QObject *object) override;
 
 private:
-    QScopedPointer<Ui::QmlBindingTab> ui;
+    std::unique_ptr<BindingNode> createBindingNode(QObject *obj, const char *propertyName) const;
 };
+
 }
 
-#endif // GAMMARAY_QMLBINDINGTAB_H
+#endif // GAMMARAY_QUICKIMPLICITBINDINGDEPENDENCYPROVIDER_H

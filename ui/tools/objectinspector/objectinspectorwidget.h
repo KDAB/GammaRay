@@ -41,6 +41,7 @@
 #include "methodsextensionclient.h"
 #include "connectionsextensionclient.h"
 #include "applicationattributetab.h"
+#include "../bindinginspector/bindingtab.h"
 
 #include <common/objectbroker.h>
 
@@ -116,6 +117,8 @@ public:
                                                              tr(
                                                                  "Attributes"),
             PropertyWidgetTabPriority::Advanced);
+        PropertyWidget::registerTab<BindingTab>(QStringLiteral("bindings"), tr("Bindings"),
+                                               PropertyWidgetTabPriority::Advanced);
     }
 };
 }

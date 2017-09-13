@@ -53,6 +53,10 @@ set(gammaray_srcs
 
   remoteviewserver.cpp
 
+  tools/bindinginspector/abstractbindingprovider.cpp
+  tools/bindinginspector/bindingextension.cpp
+  tools/bindinginspector/qmlbindingmodel.cpp
+  tools/bindinginspector/bindingnode.cpp
   tools/metatypebrowser/metatypesmodel.cpp
   tools/messagehandler/messagehandler.cpp
   tools/messagehandler/messagemodel.cpp

@@ -418,11 +418,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINO
     if(Qt5Quick_FOUND)
         gammaray_add_probe_test(bindinginspectortest
             bindinginspectortest.cpp
-            ../probe/probecreator.cpp
-            ../probe/hooks.cpp
-            ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlbindingmodel.cpp
-            ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlbindingnode.cpp
-            ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlbindingextension.cpp
+            ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlbindingprovider.cpp
+            ${CMAKE_SOURCE_DIR}/plugins/quickinspector/quickimplicitbindingdependencyprovider.cpp
             $<TARGET_OBJECTS:modeltestobj>
         )
         target_include_directories(bindinginspectortest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})

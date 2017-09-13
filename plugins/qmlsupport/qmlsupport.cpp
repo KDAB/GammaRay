@@ -31,9 +31,7 @@
 #include "qmlattachedpropertyadaptor.h"
 #include "qjsvaluepropertyadaptor.h"
 #include "qmlcontextpropertyadaptor.h"
-#include "qmlbindingextension.h"
-#include "qmlbindingmodel.h"
-#include "qmlbindingnode.h"
+#include "qmlbindingprovider.h"
 #include "qmlcontextextension.h"
 #include "qmltypeextension.h"
 #include "qmltypeutil.h"
@@ -45,6 +43,7 @@
 #include <core/propertyadaptorfactory.h>
 #include <core/propertycontroller.h>
 #include <core/objectdataprovider.h>
+#include <core/tools/bindinginspector/qmlbindingmodel.h>
 
 #include <common/metatypedeclarations.h>
 #include <common/sourcelocation.h>
@@ -375,12 +374,10 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());
     PropertyAdaptorFactory::registerFactory(QmlContextPropertyAdaptorFactory::instance());
 
-    PropertyController::registerExtension<QmlBindingExtension>();
     PropertyController::registerExtension<QmlContextExtension>();
     PropertyController::registerExtension<QmlTypeExtension>();
 
     QmlBindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QmlBindingProvider));
-    QmlBindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
 
     static auto dataProvider = new QmlObjectDataProvider;
     ObjectDataProvider::registerProvider(dataProvider);

@@ -1,11 +1,11 @@
 /*
-  qmlbindingextension.cpp
+  abstractbindingprovider.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,30 +26,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qmlbindingextension.h"
-#include "qmlbindingmodel.h"
+#ifndef GAMMARAY_ABSTRACTBINDINGPROVIDER_H
+#define GAMMARAY_ABSTRACTBINDINGPROVIDER_H
 
-#include <core/propertycontroller.h>
+#include "gammaray_core_export.h"
 
-#include <private/qqmldata_p.h>
+#include <QString>
+#include <memory>
+#include <vector>
 
-using namespace GammaRay;
+class QObject;
 
-QmlBindingExtension::QmlBindingExtension(PropertyController* controller)
-    : PropertyControllerExtension(controller->objectBaseName() + ".qmlBindings")
-    , m_bindingModel(new QmlBindingModel(controller))
+namespace GammaRay {
+
+class BindingNode;
+
+class GAMMARAY_CORE_EXPORT AbstractBindingProvider
 {
-    controller->registerModel(m_bindingModel, QStringLiteral("qmlBindingModel"));
+public:
+    virtual ~AbstractBindingProvider();
+    virtual std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(BindingNode *binding) = 0;
+    virtual QString canonicalNameFor(BindingNode *binding) = 0;
+    virtual std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject *obj) = 0;
+    virtual bool canProvideBindingsFor (QObject *object) = 0;
+};
+
 }
 
-QmlBindingExtension::~QmlBindingExtension()
-{
-}
+#endif // GAMMARAY_QMLBINDINGNODE_H
 
-bool QmlBindingExtension::setQObject(QObject* object)
-{
-    if (!object)
-        return false;
-
-    return m_bindingModel->setObject(object);
-}
