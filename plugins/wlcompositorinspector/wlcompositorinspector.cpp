@@ -100,7 +100,7 @@ public:
       grabber->deleteLater();
     });
     connect(grabber, &QWaylandSurfaceGrabber::failed, this, [grabber, this](QWaylandSurfaceGrabber::Error error) {
-      qWarning()<<"Failed to grab surface."<<error;
+      qWarning() << "Failed to grab surface." << error;
       grabber->deleteLater();
       setNewFrame(QImage());
     });
@@ -216,6 +216,7 @@ public:
     ResourcesModel()
         : m_client(nullptr)
     {
+        m_listener.m = nullptr;
         wl_list_init(&m_listener.l.link);
     }
 
@@ -364,6 +365,7 @@ public:
     {
         if (!exists(index))
             return 0;
+
         Resource *res = static_cast<Resource *>(index.internalPointer());
         return res ? res->children.count() : m_resources.count();
     }
@@ -419,11 +421,12 @@ public:
     QWaylandClient *m_client;
 };
 
-WlCompositorInspector::WlCompositorInspector(ProbeInterface* probe, QObject* parent)
+WlCompositorInspector::WlCompositorInspector(ProbeInterface *probe, QObject *parent)
                      : WlCompositorInterface(parent)
+                     , m_compositor(nullptr)
                      , m_surfaceView(new SurfaceView(this))
 {
-    qWarning()<<"init probe"<<probe->objectTreeModel()<<probe->probe();
+    qWarning() << "init probe" << probe->objectTreeModel() << probe->probe();
 
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QWaylandObject, QObject);
@@ -468,6 +471,7 @@ void WlCompositorInspector::objectSelected(QObject *obj)
 
         if (indexList.isEmpty())
             return;
+
         const auto index = indexList.first();
         m_clientSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
     }
@@ -475,38 +479,38 @@ void WlCompositorInspector::objectSelected(QObject *obj)
 
 /* this comes from wayland */
 struct argument_details {
-       char type;
-       int nullable;
+    char type;
+    int nullable;
 };
 
 static const char *
 get_next_argument(const char *signature, struct argument_details *details)
 {
-       details->nullable = 0;
-       for(; *signature; ++signature) {
-               switch(*signature) {
-               case 'i':
-               case 'u':
-               case 'f':
-               case 's':
-               case 'o':
-               case 'n':
-               case 'a':
-               case 'h':
-                       details->type = *signature;
-                       return signature + 1;
-               case '?':
-                       details->nullable = 1;
-               }
-       }
-       details->type = '\0';
-       return signature;
+    details->nullable = 0;
+    for (; *signature; ++signature) {
+        switch(*signature) {
+        case 'i':
+        case 'u':
+        case 'f':
+        case 's':
+        case 'o':
+        case 'n':
+        case 'a':
+        case 'h':
+            details->type = *signature;
+            return signature + 1;
+        case '?':
+            details->nullable = 1;
+        }
+    }
+    details->type = '\0';
+    return signature;
 }
 /* --- */
 
 void WlCompositorInspector::init(QWaylandCompositor *compositor)
 {
-    qWarning()<<"found compositor"<<compositor;
+    qWarning() << "found compositor" << compositor;
     m_compositor = compositor;
 
     wl_display *dpy = compositor->display();
@@ -572,7 +576,6 @@ void WlCompositorInspector::init(QWaylandCompositor *compositor)
         reinterpret_cast<ClientsListener *>(listener)->inspector->addClient(client);
     };
     listener->inspector = this;
-
 }
 
 void WlCompositorInspector::addClient(wl_client *c)
@@ -580,7 +583,7 @@ void WlCompositorInspector::addClient(wl_client *c)
     QWaylandClient *client = QWaylandClient::fromWlClient(m_compositor, c);
 
     QString pid = QString::number(client->processId());
-    qWarning()<<"client"<<client<<pid;
+    qWarning() << "client" << client << pid;
     connect(client, &QObject::destroyed, this, [this, pid, client](QObject *) {
         if (m_resourcesModel->client() == client) {
           m_resourcesModel->setClient(nullptr);

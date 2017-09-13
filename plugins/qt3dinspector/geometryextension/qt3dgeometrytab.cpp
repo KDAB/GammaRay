@@ -83,6 +83,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     , m_geometryTransform(nullptr)
     , m_cullMode(nullptr)
     , m_normalsRenderPass(nullptr)
+    , m_normalLength(nullptr)
     , m_bufferModel(new BufferModel(this))
 {
     ui->setupUi(this);
@@ -101,13 +102,15 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     connect(ui->actionResetCam, &QAction::triggered, this, &Qt3DGeometryTab::resetCamera);
 
     connect(ui->actionShowNormals, &QAction::toggled, this, [this]() {
-        if (m_normalsRenderPass)
+        if (m_normalsRenderPass) {
             m_normalsRenderPass->setEnabled(ui->actionShowNormals->isChecked());
+        }
     });
     connect(ui->actionCullBack, &QAction::toggled, this, [this]() {
-        if (m_cullMode)
+        if (m_cullMode) {
             m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back :
                                 Qt3DRender::QCullFace::NoCulling);
+            }
     });
 
     auto viewGroup = new QActionGroup(this);
@@ -391,13 +394,13 @@ void Qt3DGeometryTab::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     if (m_surface && m_camera)
-        m_camera->lens()->setAspectRatio(float(m_surface->width())/float(m_surface->height()));
+        m_camera->lens()->setAspectRatio(float(m_surface->width()) / float(m_surface->height()));
 }
 
 void Qt3DGeometryTab::resetCamera()
 {
     m_camera->lens()->setPerspectiveProjection(45.0f,
-                                               float(m_surface->width())/float(m_surface->height()), 0.1f,
+                                               float(m_surface->width()) / float(m_surface->height()), 0.1f,
                                                1000.0f);
     m_camera->setViewCenter(QVector3D(0.0f, 0.0f, 0.0f));
     m_camera->setUpVector(QVector3D(0.0f, 1.0f, 0.0f));
