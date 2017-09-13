@@ -31,6 +31,7 @@
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
 #include "quickpaintanalyzerextension.h"
+#include "quickimplicitbindingdependencyprovider.h"
 #include "geometryextension/sggeometryextension.h"
 #include "materialextension/materialextension.h"
 #include "materialextension/qquickopenglshadereffectmaterialadaptor.h"
@@ -54,6 +55,7 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/varianthandler.h>
 #include <core/remoteviewserver.h>
+#include <core/tools/bindinginspector/qmlbindingmodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
@@ -1052,6 +1054,8 @@ void QuickInspector::registerPCExtensions()
     PropertyController::registerExtension<TextureExtension>();
 
     PropertyAdaptorFactory::registerFactory(QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance());
+
+    QmlBindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
 }
 
 #define QSG_CHECK_TYPE(Class) \

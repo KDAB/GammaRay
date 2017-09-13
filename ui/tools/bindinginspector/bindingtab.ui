@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GammaRay::QmlBindingTab</class>
- <widget class="QWidget" name="GammaRay::QmlBindingTab">
+ <class>GammaRay::BindingTab</class>
+ <widget class="QWidget" name="GammaRay::BindingTab">
   <property name="geometry">
    <rect>
     <x>0</x>

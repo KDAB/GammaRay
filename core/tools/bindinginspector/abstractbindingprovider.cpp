@@ -1,11 +1,11 @@
 /*
-  qmlbindingextension.h
+  abstractbindingprovider.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
   Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,26 +26,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QMLBINDINGEXTENSION_H
-#define GAMMARAY_QMLBINDINGEXTENSION_H
+#include "abstractbindingprovider.h"
 
-#include <core/propertycontrollerextension.h>
+using namespace GammaRay;
 
-namespace GammaRay {
-
-class QmlBindingModel;
-
-class QmlBindingExtension : public PropertyControllerExtension
+AbstractBindingProvider::~AbstractBindingProvider()
 {
-public:
-    explicit QmlBindingExtension(PropertyController *controller);
-    ~QmlBindingExtension();
-
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
-
-private:
-    QmlBindingModel *m_bindingModel;
-};
 }
-
-#endif // GAMMARAY_QMLBINDINGEXTENSION_H

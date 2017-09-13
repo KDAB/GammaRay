@@ -1,5 +1,5 @@
 /*
-  qmlbindingtab.cpp
+  bindingextension.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,42 +26,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qmlbindingtab.h"
-#include "ui_qmlbindingtab.h"
+#ifndef GAMMARAY_BINDINGEXTENSION_H
+#define GAMMARAY_BINDINGEXTENSION_H
 
-#include <ui/propertywidget.h>
-#include <ui/contextmenuextension.h>
-#include <common/objectbroker.h>
-#include <QMenu>
-#include <common/objectmodel.h>
+#include <core/propertycontrollerextension.h>
 
-using namespace GammaRay;
+namespace GammaRay {
 
-QmlBindingTab::QmlBindingTab(PropertyWidget* parent)
-    : QWidget(parent)
-    , ui(new Ui::QmlBindingTab)
+class QmlBindingModel;
+
+class BindingExtension : public PropertyControllerExtension
 {
-    ui->setupUi(this);
-    ui->bindingView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlBindingModel")));
-    connect(ui->bindingView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(bindingContextMenu(QPoint)));
+public:
+    explicit BindingExtension(PropertyController *controller);
+    ~BindingExtension();
+
+    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+
+private:
+    QmlBindingModel *m_bindingModel;
+};
 }
 
-QmlBindingTab::~QmlBindingTab()
-{
-}
-
-void GammaRay::QmlBindingTab::bindingContextMenu(QPoint pos)
-{
-    const auto index = ui->bindingView->indexAt(pos);
-    if (!index.isValid())
-        return;
-
-    QMenu menu;
-    ContextMenuExtension ext;
-    ext.setLocation(ContextMenuExtension::ShowSource,
-                    index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
-    ext.populateMenu(&menu);
-
-    menu.exec(ui->bindingView->viewport()->mapToGlobal(pos));
-}
+#endif // GAMMARAY_BINDINGEXTENSION_H

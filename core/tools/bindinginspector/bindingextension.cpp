@@ -1,10 +1,10 @@
 /*
-  qmlsupportuifactory.cpp
+  bindingextension.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2016-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,28 +26,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qmlsupportuifactory.h"
-#include "qmlcontexttab.h"
-#include "qmltypetab.h"
+#include "bindingextension.h"
+#include "qmlbindingmodel.h"
 
-#include <ui/propertywidget.h>
+#include <core/propertycontroller.h>
 
 using namespace GammaRay;
 
-QString QmlSupportUiFactory::id() const
+BindingExtension::BindingExtension(PropertyController* controller)
+    : PropertyControllerExtension(controller->objectBaseName() + ".bindings")
+    , m_bindingModel(new QmlBindingModel(controller))
 {
-    return QString();
+    controller->registerModel(m_bindingModel, QStringLiteral("bindingModel"));
 }
 
-void QmlSupportUiFactory::initUi()
+BindingExtension::~BindingExtension()
 {
-    PropertyWidget::registerTab<QmlContextTab>(QStringLiteral("qmlContext"), tr("QML Context"),
-                                               PropertyWidgetTabPriority::Advanced);
-    PropertyWidget::registerTab<QmlTypeTab>(QStringLiteral("qmlType"), tr("QML Type"),
-                                            PropertyWidgetTabPriority::Exotic);
 }
 
-QWidget *GammaRay::QmlSupportUiFactory::createWidget(QWidget *)
+bool BindingExtension::setQObject(QObject* object)
 {
-    return nullptr;
+    if (!object)
+        return false;
+
+    return m_bindingModel->setObject(object);
 }

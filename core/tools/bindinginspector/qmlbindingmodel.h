@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_QMLBINDINGMODEL_H
 #define GAMMARAY_QMLBINDINGMODEL_H
 
+#include "gammaray_core_export.h"
+
 #include <QAbstractItemModel>
 #include <QVector>
 #include <memory>
@@ -42,7 +44,7 @@ namespace GammaRay {
 struct BindingNode;
 class AbstractBindingProvider;
 
-class QmlBindingModel : public QAbstractItemModel
+class GAMMARAY_CORE_EXPORT QmlBindingModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
@@ -61,13 +63,14 @@ public:
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
 
-    static void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
+    static GAMMARAY_CORE_EXPORT void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
 
 private:
     QModelIndex findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const;
     void refresh(BindingNode *oldBindingNode, const QModelIndex &index);
     void bindingChanged(BindingNode *node);
     void findDependenciesFor(BindingNode *node);
+    static bool lessThan(const std::unique_ptr<BindingNode> &a, const std::unique_ptr<BindingNode> &b);
 
     QPointer<QObject> m_obj;
     std::vector<std::unique_ptr<BindingNode>> m_bindings;

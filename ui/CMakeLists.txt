@@ -53,6 +53,7 @@ set(gammaray_ui_srcs
   codeeditor/codeeditor.cpp
   codeeditor/codeeditorsidebar.cpp
 
+  tools/bindinginspector/bindingtab.cpp
   tools/messagehandler/messagedisplaymodel.cpp
   tools/messagehandler/messagehandlerwidget.cpp
   tools/messagehandler/messagehandlerclient.cpp

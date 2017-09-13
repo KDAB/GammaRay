@@ -9,9 +9,7 @@ set(gammaray_qmlsupport_srcs
   qmlcontextextension.cpp
   qmlcontextmodel.cpp
   qmltypeextension.cpp
-  qmlbindingextension.cpp
-  qmlbindingmodel.cpp
-  qmlbindingnode.cpp
+  qmlbindingprovider.cpp
 )
 gammaray_add_plugin(gammaray_qmlsupport JSON gammaray_qmlsupport.json SOURCES ${gammaray_qmlsupport_srcs})
 target_include_directories(gammaray_qmlsupport SYSTEM PRIVATE ${Qt5Qml_PRIVATE_INCLUDE_DIRS})
@@ -25,7 +23,6 @@ if(GAMMARAY_BUILD_UI)
     qmlsupportuifactory.cpp
     qmlcontexttab.cpp
     qmltypetab.cpp
-    qmlbindingtab.cpp
   )
   gammaray_add_plugin(gammaray_qmlsupport_ui JSON gammaray_qmlsupport.json SOURCES ${gammaray_qmlsupport_ui_srcs})
   target_link_libraries(gammaray_qmlsupport_ui gammaray_ui)
