@@ -43,7 +43,6 @@ void showSplashScreen()
         splash = new QSplashScreen;
         QPixmap pixmap = UIResources::themedPixmap(QStringLiteral("splashscreen.png"), splash);
         splash->setPixmap(pixmap);
-        splash->setMask(pixmap.mask());
     }
 
     const QWidget *window = qApp->activeWindow();
