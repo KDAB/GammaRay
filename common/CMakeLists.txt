@@ -48,7 +48,6 @@ set(gammaray_common_srcs
   modelutils.cpp
   objectidfilterproxymodel.cpp
   paintanalyzerinterface.cpp
-  processtracker.cpp
   selflocator.cpp
   sourcelocation.cpp
   translator.cpp
@@ -64,14 +63,6 @@ set(gammaray_common_srcs
 
   commonutils.cpp
 )
-
-if (APPLE)
-    list(APPEND gammaray_common_srcs processtracker_macos.cpp)
-elseif(UNIX)
-    list(APPEND gammaray_common_srcs processtracker_linux.cpp)
-elseif(WIN32)
-    list(APPEND gammaray_common_srcs processtracker_windows.cpp)
-endif()
 
 add_library(gammaray_common ${GAMMARAY_LIBRARY_TYPE} ${gammaray_common_srcs})
 generate_export_header(gammaray_common)
@@ -146,7 +137,6 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     objectidfilterproxymodel.h
     paths.h
     probecontrollerinterface.h
-    processtracker.h
     propertycontrollerinterface.h
     protocol.h
     sourcelocation.h

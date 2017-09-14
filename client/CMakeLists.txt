@@ -5,6 +5,7 @@ set(gammaray_clientlib_srcs
   clientconnectionmanager.cpp
   propertycontrollerclient.cpp
   probecontrollerclient.cpp
+  processtracker.cpp
   toolmanagerclient.cpp
   clientdevice.cpp
   tcpclientdevice.cpp
@@ -16,6 +17,15 @@ set(gammaray_clientlib_srcs
   classesiconsrepositoryclient.cpp
   ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc
 )
+
+if (APPLE)
+    list(APPEND gammaray_clientlib_srcs processtracker_macos.cpp)
+elseif(UNIX)
+    list(APPEND gammaray_clientlib_srcs processtracker_linux.cpp)
+elseif(WIN32)
+    list(APPEND gammaray_clientlib_srcs processtracker_windows.cpp)
+endif()
+
 
 add_library(gammaray_client SHARED ${gammaray_clientlib_srcs})
 generate_export_header(gammaray_client)
@@ -60,6 +70,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_client_export.h
     clientconnectionmanager.h
+    processtracker.h
   )
 
   ecm_generate_pri_file(BASE_NAME GammaRayClient

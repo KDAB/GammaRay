@@ -35,12 +35,12 @@
 #include "selectionmodelclient.h"
 #include "propertycontrollerclient.h"
 #include "probecontrollerclient.h"
+#include "processtracker.h"
 #include "paintanalyzerclient.h"
 #include "remoteviewclient.h"
 #include <toolmanagerclient.h>
 
 #include <common/objectbroker.h>
-#include <common/processtracker.h>
 #include <common/streamoperators.h>
 
 #include <ui/mainwindow.h>

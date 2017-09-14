@@ -1,5 +1,5 @@
 /*
-  processtracker_macos.h
+  processtracker_windows.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,19 +26,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PROCESSTRACKER_MACOS_H
-#define GAMMARAY_PROCESSTRACKER_MACOS_H
+#ifndef GAMMARAY_PROCESSTRACKER_WINDOWS_H
+#define GAMMARAY_PROCESSTRACKER_WINDOWS_H
 
 #include "processtracker.h"
 
 namespace GammaRay {
 
-class GAMMARAY_COMMON_EXPORT ProcessTrackerBackendMacOS : public ProcessTrackerBackend
+class GAMMARAY_CLIENT_EXPORT ProcessTrackerBackendWindows : public ProcessTrackerBackend
 {
     Q_OBJECT
 
 public:
-    explicit ProcessTrackerBackendMacOS(QObject *parent = nullptr);
+    explicit ProcessTrackerBackendWindows(QObject *parent = nullptr);
 
 public slots:
     void checkProcess(qint64 pid) override;
@@ -46,4 +46,4 @@ public slots:
 
 }
 
-#endif // GAMMARAY_PROCESSTRACKER_MACOS_H
+#endif // GAMMARAY_PROCESSTRACKER_WINDOWS_H

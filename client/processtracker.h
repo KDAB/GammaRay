@@ -29,7 +29,7 @@
 #ifndef GAMMARAY_PROCESSTRACKER_H
 #define GAMMARAY_PROCESSTRACKER_H
 
-#include "gammaray_common_export.h"
+#include "gammaray_client_export.h"
 
 #include <QObject>
 #include <QSharedPointer>
@@ -39,7 +39,7 @@ namespace GammaRay {
 class ProcessTrackerBackend;
 struct ProcessTrackerInfo;
 
-class GAMMARAY_COMMON_EXPORT ProcessTracker : public QObject
+class GAMMARAY_CLIENT_EXPORT ProcessTracker : public QObject
 {
     Q_OBJECT
 
@@ -73,7 +73,7 @@ private:
     QSharedPointer<D> d;
 };
 
-struct GAMMARAY_COMMON_EXPORT ProcessTrackerInfo
+struct GAMMARAY_CLIENT_EXPORT ProcessTrackerInfo
 {
     ProcessTrackerInfo(qint64 pid = -1, bool traced = false, GammaRay::ProcessTracker::State state = GammaRay::ProcessTracker::Unknown)
         : pid(pid)
@@ -89,7 +89,7 @@ struct GAMMARAY_COMMON_EXPORT ProcessTrackerInfo
     bool operator!=(const GammaRay::ProcessTrackerInfo &other) const;
 };
 
-class GAMMARAY_COMMON_EXPORT ProcessTrackerBackend : public QObject
+class GAMMARAY_CLIENT_EXPORT ProcessTrackerBackend : public QObject
 {
     Q_OBJECT
 
