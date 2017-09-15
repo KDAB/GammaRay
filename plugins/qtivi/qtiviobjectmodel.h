@@ -29,7 +29,7 @@
 #define GAMMARAY_QTIVI_QTIVIOBJECTMODEL_H
 
 #include <common/objectmodel.h>
-#include <private/qiviabstractfeature_p.h>
+#include <private/qividefaultpropertyoverrider_p.h>
 
 #include <QAbstractItemModel>
 #include <QSet>
@@ -102,7 +102,7 @@ private:
     QModelIndex indexOfCarrier(const QObject *carrier, int column = 0 /*NameColumn*/) const;
     QModelIndex indexOfProperty(const QObject *carrier, const QByteArray &property, int column = 0 /*NameColumn*/) const;
 
-    typedef std::shared_ptr<QIviDefaultPropertyOverrider> QIviDefaultPropertyOverriderPtr;
+    typedef std::shared_ptr<QT_PREPEND_NAMESPACE(QIviDefaultPropertyOverrider)> QIviDefaultPropertyOverriderPtr;
     struct ServiceZone {
         QString m_zone;
         QIviDefaultPropertyOverriderPtr m_service;

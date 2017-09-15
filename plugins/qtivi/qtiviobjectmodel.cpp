@@ -43,7 +43,7 @@
 #endif
 #include <QIviProperty>
 #include <private/qiviproperty_p.h>
-#include <private/qividefaultpropertyoverrider_p.h>
+#include <private/qiviabstractfeature_p.h>
 
 #include <QThread>
 #include <QItemSelectionModel>
@@ -63,7 +63,7 @@ static const quint64 PropertyCarrierIndex = ~quint64(0); // there is no QUINT64_
 #define IF_DEBUG(x)
 
 using namespace GammaRay;
-
+QT_USE_NAMESPACE
 
 class QIviGammarayPropertyOverrider : public QIviDefaultPropertyOverrider
 {
