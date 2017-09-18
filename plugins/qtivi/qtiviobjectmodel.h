@@ -39,7 +39,6 @@
 #include <vector>
 
 class QtIviObjectModelTest;
-class QIviDefaultPropertyOverrider;
 
 namespace GammaRay {
 
