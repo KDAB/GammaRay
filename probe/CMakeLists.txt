@@ -1,3 +1,4 @@
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_probe_srcs
   probecreator.cpp
   hooks.cpp
@@ -76,4 +77,5 @@ else()
       if(MSVC)
       install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_core>/$<TARGET_PDB_FILE_NAME:gammaray_core>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
     endif()
+endif()
 endif()

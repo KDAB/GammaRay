@@ -1,4 +1,5 @@
 # probe part
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_models_srcs
   modelinspector.cpp
   modelinspectorinterface.cpp
@@ -20,6 +21,7 @@ target_link_libraries(gammaray_modelinspector
   gammaray_core
   gammaray_kitemmodels
 )
+endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)

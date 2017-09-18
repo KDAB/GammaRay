@@ -1,5 +1,5 @@
-
 # probe part
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_sceneinspector_plugin_srcs
   sceneinspector.cpp
   scenemodel.cpp
@@ -18,6 +18,7 @@ target_link_libraries(gammaray_sceneinspector_plugin
   gammaray_kitemmodels
   gammaray_core
 )
+endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)

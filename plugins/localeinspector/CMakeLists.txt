@@ -1,4 +1,5 @@
 # probe part
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_localeinspector_plugin_srcs
     localeinspector.cpp
     localemodel.cpp
@@ -19,6 +20,7 @@ gammaray_add_plugin(gammaray_localeinspector_plugin
 )
 
 target_link_libraries(gammaray_localeinspector_plugin gammaray_core)
+endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)

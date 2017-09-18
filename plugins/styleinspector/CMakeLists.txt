@@ -1,4 +1,5 @@
 # probe part
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_styleinspector_plugin_srcs
   styleinspector.cpp
   pixelmetricmodel.cpp
@@ -26,7 +27,7 @@ target_link_libraries(gammaray_styleinspector_plugin
   ${QT_QTGUI_LIBRARIES}
   gammaray_core
 )
-
+endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)

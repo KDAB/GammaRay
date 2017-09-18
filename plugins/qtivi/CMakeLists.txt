@@ -1,4 +1,5 @@
 # probe plugin
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 if(Qt5IviCore_FOUND)
     set(plugin_files qtivisupport.cpp)
     if(Qt5IviCore_VERSION VERSION_GREATER 1.1)
@@ -16,6 +17,7 @@ if(Qt5IviCore_FOUND)
     if(Qt5IviMedia_FOUND)
         target_link_libraries(gammaray_qtivi Qt5::IviMedia)
     endif()
+endif()
 endif()
 
 # ui part

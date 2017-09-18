@@ -30,6 +30,7 @@ else()
     )
 endif()
 
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 # create intermediate base_probe_test_obj object files which unit tests can use
 add_library(base_probe_test_obj OBJECT baseprobetest.h)
 set_target_properties(base_probe_test_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -61,6 +62,7 @@ if(Qt5Quick_FOUND)
     target_include_directories(base_quick_test_obj PUBLIC
         ${Qt5Quick_INCLUDE_DIRS}
     )
+endif()
 endif()
 
 add_subdirectory(shared)
@@ -232,12 +234,12 @@ if(GAMMARAY_BUILD_UI)
     target_link_libraries(metatypemodeltest gammaray_core ${QT_QTGUI_LIBRARIES})
 endif()
 
-if(NOT OSX_ASAN_WORKAROUND)
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT OSX_ASAN_WORKAROUND)
     gammaray_add_probe_test(signalspycallbacktest signalspycallbacktest.cpp)
     gammaray_add_probe_test(integrationtest integrationtest.cpp)
 endif()
 
-if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
     gammaray_add_probe_test(multithreadingtest multithreadingtest.cpp)
 
     if(GAMMARAY_BUILD_UI)
@@ -262,7 +264,7 @@ if(GAMMARAY_BUILD_UI)
     gammaray_add_test(propertybindertest propertybindertest.cpp)
     target_link_libraries(propertybindertest gammaray_ui)
 
-    if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+    if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
         gammaray_add_probe_test(metaobjecttreemodeltest
             metaobjecttreemodeltest.cpp
             ${CMAKE_SOURCE_DIR}/ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
@@ -286,7 +288,7 @@ endif()
 add_executable(sleep sleep.cpp)
 target_link_libraries(sleep ${QT_QTCORE_LIBRARIES})
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
     gammaray_add_test(probeabitest probeabitest.cpp)
     target_link_libraries(probeabitest gammaray_launcher ${QT_QTGUI_LIBRARIES})
 
@@ -314,7 +316,7 @@ endif()
 # client unit tests
 #
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
     add_executable(probesettingsclient probesettingsclient.cpp ${CMAKE_SOURCE_DIR}/core/probesettings.cpp)
     target_compile_definitions(probesettingsclient PRIVATE GAMMARAY_CORE_STATIC_DEFINE)
     target_include_directories(probesettingsclient PRIVATE ${CMAKE_BINARY_DIR}/core)
@@ -361,7 +363,7 @@ if(NOT OSX_ASAN_WORKAROUND)
     target_link_libraries(codecmodeltest ${QT_QTGUI_LIBRARIES})
 endif()
 
-if(Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
     #does not work unless the translations are installed in QT_INSTALL_TRANSLATIONS
     if(EXISTS "${QT_INSTALL_TRANSLATIONS}/qtbase_de.qm")
         gammaray_add_probe_test(translatortest

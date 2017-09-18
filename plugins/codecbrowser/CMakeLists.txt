@@ -1,4 +1,5 @@
 # probe part
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_codecbrowser_plugin_srcs
   codecbrowser.cpp
   codecmodel.cpp
@@ -13,6 +14,7 @@ gammaray_add_plugin(gammaray_codecbrowser_plugin
 target_link_libraries(gammaray_codecbrowser_plugin
   gammaray_core
 )
+endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)

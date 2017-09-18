@@ -1,4 +1,5 @@
 # probe plugin
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_guisupport_srcs
   guisupport.cpp
 
@@ -10,6 +11,7 @@ if(Qt5Core_FOUND)
   target_link_libraries(gammaray_guisupport Qt5::Gui)
 else()
   target_link_libraries(gammaray_guisupport ${QT_GUI_LIBRARIES})
+endif()
 endif()
 
 # ui plugin

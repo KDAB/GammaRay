@@ -1,4 +1,5 @@
 # probe plugin
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_network_srcs
     networksupport.cpp
     networkinterfacemodel.cpp
@@ -9,6 +10,7 @@ set(gammaray_network_srcs
 )
 gammaray_add_plugin(gammaray_network JSON gammaray_network.json SOURCES ${gammaray_network_srcs})
 target_link_libraries(gammaray_network gammaray_core Qt5::Network)
+endif()
 
 # ui plugin
 if(GAMMARAY_BUILD_UI)

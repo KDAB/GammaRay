@@ -1,5 +1,6 @@
 if(HAVE_QT_WEBKIT)
   # probe part
+  if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
   set(gammaray_webinspector_plugin_srcs
     webinspector.cpp
     webviewmodel.cpp
@@ -14,12 +15,15 @@ if(HAVE_QT_WEBKIT)
   target_link_libraries(gammaray_webinspector_plugin
     gammaray_core
   )
+  endif()
 
   if(HAVE_QT_WEBKIT1)
+    if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
     target_link_libraries(gammaray_webinspector_plugin
       ${QT_QTWEBKIT_LIBRARIES}
       ${Qt5WebKitWidgets_LIBRARIES}
     )
+    endif()
 
     if(GAMMARAY_BUILD_UI)
       # ui part

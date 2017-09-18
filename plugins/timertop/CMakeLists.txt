@@ -1,4 +1,5 @@
 # probe part
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 if(BUILD_TIMER_PLUGIN)
 
 set(gammaray_timertop_plugin_srcs
@@ -27,6 +28,7 @@ if(NOT WIN32 AND NOT APPLE)
   target_link_libraries(gammaray_timertop_plugin rt)
 endif()
 
+endif()
 endif()
 
 # ui part
