@@ -11,6 +11,9 @@
 requires(linux:!android|win32:!winphone:!winrt)
 requires(!cross_compile)
 
+message(HOST version: $${QMAKE_HOST.version} / $${QMAKE_HOST.version_string})
+requires(!contains(QMAKE_HOST.version_string,  "win8.1"))
+
 message("QMake wrapper for the GammaRay build system is only supported for the Qt CI.")
 message("If you are seeing this and you are not the Qt CI, please refer to Install.txt!")
 
