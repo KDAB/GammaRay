@@ -29,7 +29,6 @@
 #define GAMMARAY_QTIVI_QTIVIOBJECTMODEL_H
 
 #include <common/objectmodel.h>
-#include <private/qividefaultpropertyoverrider_p.h>
 
 #include <QAbstractItemModel>
 #include <QSet>
@@ -39,6 +38,10 @@
 #include <vector>
 
 class QtIviObjectModelTest;
+
+QT_BEGIN_NAMESPACE
+class QIviDefaultPropertyOverrider;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

@@ -44,6 +44,7 @@
 #include <QIviProperty>
 #include <private/qiviproperty_p.h>
 #include <private/qiviabstractfeature_p.h>
+#include <private/qividefaultpropertyoverrider_p.h>
 
 #include <QThread>
 #include <QItemSelectionModel>
