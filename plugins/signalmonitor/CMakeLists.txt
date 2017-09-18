@@ -8,6 +8,7 @@ target_link_libraries(gammaray_signalmonitor_shared LINK_PRIVATE gammaray_common
 set_target_properties(gammaray_signalmonitor_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # probe plugin
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_signalmonitor_srcs
   signalmonitor.cpp
   signalhistorymodel.cpp
@@ -26,6 +27,7 @@ target_link_libraries(gammaray_signalmonitor
 )
 if (Qt5_FOUND)
   target_link_libraries(gammaray_signalmonitor Qt5::Gui)
+endif ()
 endif ()
 
 if(GAMMARAY_BUILD_UI)

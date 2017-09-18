@@ -15,6 +15,10 @@
 #  Build only an additional probe configuration for an already existing launcher.
 #  Default=false
 #
+# -DGAMMARAY_CLIENT_ONLY_BUILD=[true|false]
+#  Build the client part only.
+#  Default=false
+#
 # -DGAMMARAY_ENABLE_GPL_ONLY_FEATURES=[true|false]
 #  Enable features only available under GPL license.
 #  Default=false
@@ -170,13 +174,28 @@ set(GAMMARAY_BUILD_UI_DEFAULT ON)
 if(QNXNTO OR ANDROID)
   set(GAMMARAY_BUILD_UI_DEFAULT OFF)
 endif()
-gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
 
 gammaray_option(
   GAMMARAY_PROBE_ONLY_BUILD
   "Build only an additional probe configuration for an already existing launcher."
   OFF
 )
+
+gammaray_option(
+    GAMMARAY_CLIENT_ONLY_BUILD
+    "Build the client part only."
+    OFF
+)
+
+if (GAMMARAY_CLIENT_ONLY_BUILD)
+    set(GAMMARAY_BUILD_UI_DEFAULT ON)
+endif()
+
+gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
+
+if (GAMMARAY_PROBE_ONLY_BUILD AND GAMMARAY_CLIENT_ONLY_BUILD)
+    message(FATAL_ERROR "You can only use one of the *ONLY* option.")
+endif()
 
 gammaray_option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
 gammaray_option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." OFF)
@@ -752,7 +771,9 @@ if(GAMMARAY_BUILD_UI AND (Qt5Widgets_FOUND OR QT_QTGUI_FOUND))
     add_subdirectory(3rdparty/kuserfeedback)
   endif()
   add_subdirectory(ui)
-  add_subdirectory(inprocessui)
+  if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
+    add_subdirectory(inprocessui)
+  endif()
   if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     add_subdirectory(client)
     add_subdirectory(app)

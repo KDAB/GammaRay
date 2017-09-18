@@ -1,4 +1,5 @@
 # probe plugin
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_widgetinspector_plugin_srcs
   widgetinspector.cpp
   widgetinspectorinterface.cpp
@@ -22,6 +23,7 @@ target_link_libraries(gammaray_widgetinspector_plugin
   gammaray_kitemmodels
   gammaray_core
 )
+endif()
 
 # probe export actions
 add_library(gammaray_widget_export_actions SHARED
@@ -54,7 +56,6 @@ target_link_libraries(gammaray_widget_export_actions
 install(TARGETS gammaray_widget_export_actions DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
 if(MSVC)
   install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_widget_export_actions>/$<TARGET_PDB_FILE_NAME:gammaray_widget_export_actions>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
-
 endif()
 
 # UI plugin

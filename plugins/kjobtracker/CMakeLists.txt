@@ -21,6 +21,7 @@ else()
 endif()
 
 # probe part
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 if(KDE4_FOUND OR KF5CoreAddons_FOUND)
   set(gammaray_kjob_plugin_srcs
     kjobtracker.cpp
@@ -47,6 +48,7 @@ if(KDE4_FOUND OR KF5CoreAddons_FOUND)
       Qt5::Gui
     )
   endif()
+endif()
 endif()
 
 # ui part

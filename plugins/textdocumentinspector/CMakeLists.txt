@@ -1,4 +1,5 @@
 # probe plugin
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_textdocumentinspector_srcs
     textdocumentinspector.cpp
     textdocumentformatmodel.cpp
@@ -14,6 +15,7 @@ if(Qt5Core_FOUND)
   target_link_libraries(gammaray_textdocumentinspector Qt5::Gui)
 else()
   target_link_libraries(gammaray_textdocumentinspector ${QT_GUI_LIBRARIES})
+endif()
 endif()
 
 # ui plugin

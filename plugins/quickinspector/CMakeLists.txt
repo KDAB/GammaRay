@@ -12,6 +12,7 @@ if(Qt5Quick_FOUND)
 
   set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
+  if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
   set(gammaray_quickinspector_srcs
     quickinspector.cpp
     quickitemmodel.cpp
@@ -38,6 +39,7 @@ if(Qt5Quick_FOUND)
     gammaray_core Qt5::Quick
     gammaray_kitemmodels
   )
+  endif()
 
   if (TARGET Qt5::Gui_GLESv2)
        include(CheckCXXSourceCompiles)

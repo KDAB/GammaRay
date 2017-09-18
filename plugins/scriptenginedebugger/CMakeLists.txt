@@ -1,4 +1,5 @@
 # probe plugin
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_scriptenginedebugger_plugin_srcs
   scriptenginedebugger.cpp
 )
@@ -14,6 +15,7 @@ target_link_libraries(gammaray_scriptenginedebugger_plugin
   ${QT_QTSCRIPTTOOLS_LIBRARIES}
   gammaray_core
 )
+endif()
 
 # UI plugin
 if(GAMMARAY_BUILD_UI)

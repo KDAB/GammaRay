@@ -1,4 +1,5 @@
 # probe part
+if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_fontbrowser_plugin_srcs
   fontbrowser.cpp
   fontbrowserinterface.cpp
@@ -18,6 +19,7 @@ if(Qt5Core_FOUND)
   target_link_libraries(gammaray_fontbrowser_plugin Qt5::Gui)
 else()
   target_link_libraries(gammaray_fontbrowser_plugin ${QT_QTGUI_LIBRARIES})
+endif()
 endif()
 
 # ui part
