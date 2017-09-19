@@ -38,6 +38,8 @@
 
 class QQmlAbstractBinding;
 class QQmlBinding;
+class QQuickItem;
+class QQuickAnchors;
 
 namespace GammaRay {
 
@@ -50,7 +52,12 @@ public:
     bool canProvideBindingsFor(QObject *object) override;
 
 private:
-    std::unique_ptr<BindingNode> createBindingNode(QObject *obj, const char *propertyName) const;
+    std::unique_ptr<BindingNode> createBindingNode(QObject *obj, const char *propertyName, BindingNode *parent = Q_NULLPTR);
+    void anchorBindings(std::vector<std::unique_ptr<BindingNode>> &dependencies, QQuickAnchors *anchors, int propertyIndex, BindingNode *parent = Q_NULLPTR);
+    template<class Func> void childrenRectDependencies(QQuickItem *item, Func addDependency);
+    template<class Func> void positionerDependencies(QQuickItem *item, Func addDependency);
+    template<class Func> void implicitSizeDependencies(QQuickItem *item, Func addDependency);
+    template<class Func> void anchoringDependencies(QQuickItem *item, Func addDependency);
 };
 
 }

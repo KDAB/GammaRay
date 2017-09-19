@@ -119,7 +119,15 @@ std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFo
 
     fetchSourceLocationFor(node, binding); // While we have the QQmlBinding at hand, let's grab the source location
     for (const auto &dependency : binding->dependencies()) {
-        dependencies.push_back(std::unique_ptr<BindingNode>(new BindingNode(dependency.object(), dependency.index(), node)));
+        BindingNode *childNode = new BindingNode(dependency.object(), dependency.index(), node);
+        QQmlContext *ctx = QQmlEngine::contextForObject(dependency.object());
+        if (ctx) {
+            QString id = ctx->nameForObject(dependency.object());
+            if (!id.isEmpty())
+                childNode->setCanonicalName(QStringLiteral("%1.%2").arg(id, childNode->canonicalName()));
+        }
+
+        dependencies.push_back(std::unique_ptr<BindingNode>(childNode));
     }
     return dependencies;
 }
