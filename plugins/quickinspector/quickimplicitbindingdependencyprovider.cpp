@@ -45,30 +45,52 @@
 
 using namespace GammaRay;
 
-std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider::findBindingsFor(QObject *obj)
-{
-    return {};
-}
-
-bool QuickImplicitBindingDependencyProvider::canProvideBindingsFor(QObject *object)
-{
-    return false;
-}
-
-std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::createBindingNode(QObject* obj, const char *propertyName) const
+std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::createBindingNode(QObject* obj, const char *propertyName, BindingNode *parent)
 {
     if (!obj || !obj->metaObject())
         return {};
 
-    int propertyIndex = obj->metaObject()->indexOfProperty(propertyName);
-    auto node = std::unique_ptr<BindingNode>(new BindingNode(obj, propertyIndex));
+    QQmlProperty qmlProperty(obj, propertyName);
+    auto node = std::unique_ptr<BindingNode>(new BindingNode(qmlProperty.object(), qmlProperty.index(), parent));
     QQmlContext *ctx = QQmlEngine::contextForObject(obj);
+    QString canonicalName = propertyName;
     if (ctx) {
         QString id = ctx->nameForObject(obj);
         if (!id.isEmpty())
-            node->setCanonicalName(QStringLiteral("%1.%2").arg(id, node->canonicalName()));
+            canonicalName = QStringLiteral("%1.%2").arg(id, canonicalName);
     }
+    node->setCanonicalName(canonicalName);
     return node;
+}
+
+bool QuickImplicitBindingDependencyProvider::canProvideBindingsFor(QObject *object)
+{
+    return object->inherits("QQuickAnchors") || object->inherits("QQuickItem");
+}
+
+std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider::findBindingsFor(QObject *obj)
+{
+    std::vector<std::unique_ptr<BindingNode>> bindings;
+
+    if (QQuickItem *item = qobject_cast<QQuickItem*>(obj)) { //FIXME: Check for QQuickAnchors directly here, as soon as we show properties of object-properties.
+        QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
+        if (!itemPriv)
+            return bindings;
+        QQuickAnchors *anchors = itemPriv->anchors();
+        if (!anchors)
+            return bindings;
+
+        auto usedAnchors = anchors->usedAnchors();
+        if (usedAnchors & QQuickAnchors::TopAnchor)      bindings.push_back(createBindingNode(item, "anchors.top"));
+        if (usedAnchors & QQuickAnchors::BottomAnchor)   bindings.push_back(createBindingNode(item, "anchors.bottom"));
+        if (usedAnchors & QQuickAnchors::LeftAnchor)     bindings.push_back(createBindingNode(item, "anchors.left"));
+        if (usedAnchors & QQuickAnchors::RightAnchor)    bindings.push_back(createBindingNode(item, "anchors.right"));
+        if (usedAnchors & QQuickAnchors::HCenterAnchor)  bindings.push_back(createBindingNode(item, "anchors.horizontalCenter"));
+        if (usedAnchors & QQuickAnchors::VCenterAnchor)  bindings.push_back(createBindingNode(item, "anchors.verticalCenter"));
+        if (usedAnchors & QQuickAnchors::BaselineAnchor) bindings.push_back(createBindingNode(item, "anchors.baseline"));
+    }
+
+    return bindings;
 }
 
 std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider::findDependenciesFor(BindingNode *binding)
@@ -79,226 +101,248 @@ std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider
     if (!object)
         return dependencies;
 
-    auto dependency = [this, binding, object, &dependencies](const char *propName, QObject *depObj, const char *depName)
+    auto addDependency = [this, binding, object, &dependencies](const char *propName, QObject *depObj, const char *depName)
     {
         if (depObj && binding->propertyIndex() == object->metaObject()->indexOfProperty(propName)) {
-            dependencies.push_back(createBindingNode(depObj, depName));
+            dependencies.push_back(createBindingNode(depObj, depName, binding));
         }
     };
 
     if (QQuickAnchors *anchors = qobject_cast<QQuickAnchors*>(object)) {
-        QQuickAnchorLine anchorLine = object->metaObject()->property(binding->propertyIndex()).read(object).value<QQuickAnchorLine>();
-        auto dependencyPropertyName = anchorLine.anchorLine == QQuickAnchors::TopAnchor ? "top"
-                                    : anchorLine.anchorLine == QQuickAnchors::BottomAnchor ? "bottom"
-                                    : anchorLine.anchorLine == QQuickAnchors::LeftAnchor ? "left"
-                                    : anchorLine.anchorLine == QQuickAnchors::RightAnchor ? "right"
-                                    : anchorLine.anchorLine == QQuickAnchors::HCenterAnchor ? "horizontalCenter"
-                                    : anchorLine.anchorLine == QQuickAnchors::VCenterAnchor ? "verticalCenter"
-                                    : anchorLine.anchorLine == QQuickAnchors::BaselineAnchor ? "baseline"
-                                    : "";
-        if (anchorLine.item) {
-            dependencies.push_back(createBindingNode(anchorLine.item, dependencyPropertyName));
-        }
+        anchorBindings(dependencies, anchors, binding->propertyIndex(), binding);
     }
-
     if (QQuickItem *item = qobject_cast<QQuickItem*>(object)) {
-        QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
-        if (!itemPriv)
-            return dependencies;
-        QQuickAnchors *anchors = itemPriv->anchors();
-        if (!anchors)
-            return dependencies;
-
-        if (!itemPriv->widthValid) {
-            dependency("width", object, "implicitWidth");
-        }
-        if (!itemPriv->heightValid) {
-            dependency("height", object, "implicitHeight");
-        }
-        if (binding->propertyIndex()
-                   == item->metaObject()->indexOfProperty("childrenRect")) {
-            for (auto &&child : item->childItems()) {
-                dependencies.push_back(createBindingNode(child, "width"));
-                dependencies.push_back(createBindingNode(child, "height"));
-            }
+        implicitSizeDependencies(item, addDependency);
+        anchoringDependencies(item, addDependency);
+        if (binding->propertyIndex() == item->metaObject()->indexOfProperty("childrenRect")) {
+            childrenRectDependencies(item, addDependency);
         }
         if (item->inherits("QQuickBasePositioner")) {
-            if (binding->propertyIndex()
-                   == item->metaObject()->indexOfProperty("implicitWidth")) {
-                for (QQuickItem *child : item->childItems()) {
-                    dependencies.push_back(createBindingNode(child, "width"));
-                }
-            } else if (binding->propertyIndex()
-                   == item->metaObject()->indexOfProperty("implicitHeight")) {
-                for (QQuickItem *child : item->childItems()) {
-                    dependencies.push_back(createBindingNode(child, "height"));
-                }
-            }
-        }
-
-
-        // Horizontal
-        if (anchors->fill()) {
-            QQuickItem *fill = anchors->fill();
-            dependency("width", fill, "width");
-            dependency("width", anchors, "leftMargin");
-            dependency("width", anchors, "rightMargin");
-            dependency("x", fill, "left");
-            dependency("x", anchors, "leftMargin");
-            dependency("left", fill, "left");
-            dependency("left", anchors, "leftMargin");
-            dependency("right", fill, "right");
-            dependency("right", anchors, "rightMargin");
-            dependency("horizontalCenter", item, "left");
-            dependency("horizontalCenter", item, "right");
-        } else if (anchors->centerIn()) {
-            QQuickItem *centerIn = anchors->centerIn();
-            dependency("horizontalCenter", centerIn, "horizontalCenter");
-            dependency("x", centerIn, "horizontalCenter");
-            dependency("x", item, "width");
-            dependency("left", centerIn, "horizontalCenter");
-            dependency("left", item, "width");
-            dependency("right", centerIn, "horizontalCenter");
-            dependency("right", item, "width");
-        } else if (anchors->left().anchorLine != QQuickAnchors::InvalidAnchor) {
-            dependency("left", anchors, "left");
-            dependency("x", anchors, "left");
-            if (anchors->right().anchorLine != QQuickAnchors::InvalidAnchor) {
-                dependency("right", anchors, "right");
-                dependency("right", anchors, "rightMargin");
-                dependency("width", anchors, "left");
-                dependency("width", anchors, "right");
-                dependency("horizontalCenter", anchors, "left");
-                dependency("horizontalCenter", anchors, "right");
-            } else if (anchors->horizontalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
-                dependency("horizontalCenter", anchors, "horizontalCenter");
-                dependency("width", anchors, "left");
-                dependency("width", anchors, "horizontalCenter");
-                dependency("right", anchors, "left");
-                dependency("right", anchors, "horizontalCenter");
-            } else {
-                dependency("right", anchors, "left");
-                dependency("right", item, "width");
-                dependency("horizontalCenter", anchors, "left");
-                dependency("horizontalCenter", item, "width");
-            }
-        } else if (anchors->right().anchorLine != QQuickAnchors::InvalidAnchor) {
-            dependency("right", anchors, "right");
-            if (anchors->horizontalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
-                dependency("horizontalCenter", anchors, "horizontalCenter");
-                dependency("width", anchors, "right");
-                dependency("width", anchors, "horizontalCenter");
-                dependency("x", anchors, "horizontalCenter");
-                dependency("x", anchors, "right");
-                dependency("left", anchors, "horizontalCenter");
-                dependency("left", anchors, "right");
-            } else {
-                dependency("x", anchors, "right");
-                dependency("x", item, "width");
-                dependency("left", anchors, "right");
-                dependency("left", item, "width");
-                dependency("horizontalCenter", anchors, "right");
-                dependency("horizontalCenter", item, "width");
-            }
-        } else if (anchors->horizontalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
-            dependency("horizontalCenter", anchors, "horizontalCenter");
-            dependency("x", anchors, "horizontalCenter");
-            dependency("x", item, "width");
-            dependency("left", anchors, "horizontalCenter");
-            dependency("left", item, "width");
-            dependency("right", anchors, "horizontalCenter");
-            dependency("right", item, "width");
-        } else {
-            dependency("left", item, "x");
-            dependency("right", item, "x");
-            dependency("right", item, "width");
-            dependency("horizontalCenter", item, "x");
-            dependency("horizontalCenter", item, "width");
-        }
-
-
-        // Vertical TODO: Bottomline
-        if (anchors->fill()) {
-            QQuickItem *fill = anchors->fill();
-            dependency("height", fill, "height");
-            dependency("height", anchors, "topMargin");
-            dependency("height", anchors, "bottomMargin");
-            dependency("y", fill, "top");
-            dependency("y", anchors, "topMargin");
-            dependency("top", fill, "top");
-            dependency("top", anchors, "topMargin");
-            dependency("bottom", fill, "bottom");
-            dependency("bottom", anchors, "bottomMargin");
-            dependency("verticalCenter", item, "top");
-            dependency("verticalCenter", item, "bottom");
-        } else if (anchors->centerIn()) {
-            QQuickItem *centerIn = anchors->centerIn();
-            dependency("verticalCenter", centerIn, "verticalCenter");
-            dependency("y", centerIn, "verticalCenter");
-            dependency("y", item, "height");
-            dependency("top", centerIn, "verticalCenter");
-            dependency("top", item, "height");
-            dependency("bottom", centerIn, "verticalCenter");
-            dependency("bottom", item, "height");
-        } else if (anchors->top().anchorLine != QQuickAnchors::InvalidAnchor) {
-            dependency("top", anchors, "top");
-            dependency("y", anchors, "top");
-            if (anchors->bottom().anchorLine != QQuickAnchors::InvalidAnchor) {
-                dependency("bottom", anchors, "bottom");
-                dependency("bottom", anchors, "bottomMargin");
-                dependency("height", anchors, "top");
-                dependency("height", anchors, "bottom");
-                dependency("verticalCenter", anchors, "top");
-                dependency("verticalCenter", anchors, "bottom");
-            } else if (anchors->verticalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
-                dependency("verticalCenter", anchors, "verticalCenter");
-                dependency("height", anchors, "top");
-                dependency("height", anchors, "verticalCenter");
-                dependency("y", anchors, "top");
-                dependency("bottom", anchors, "top");
-                dependency("bottom", anchors, "verticalCenter");
-            } else {
-                dependency("bottom", anchors, "top");
-                dependency("bottom", item, "height");
-                dependency("verticalCenter", anchors, "top");
-                dependency("verticalCenter", item, "height");
-            }
-        } else if (anchors->bottom().anchorLine != QQuickAnchors::InvalidAnchor) {
-            dependency("bottom", anchors, "bottom");
-            if (anchors->verticalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
-                dependency("verticalCenter", anchors, "verticalCenter");
-                dependency("height", anchors, "bottom");
-                dependency("height", anchors, "verticalCenter");
-                dependency("y", anchors, "verticalCenter");
-                dependency("y", anchors, "bottom");
-                dependency("top", anchors, "verticalCenter");
-                dependency("top", anchors, "bottom");
-            } else {
-                dependency("y", anchors, "bottom");
-                dependency("y", item, "height");
-                dependency("top", anchors, "bottom");
-                dependency("top", item, "height");
-                dependency("verticalCenter", anchors, "bottom");
-                dependency("verticalCenter", item, "height");
-            }
-        } else if (anchors->verticalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
-            dependency("verticalCenter", anchors, "verticalCenter");
-            dependency("y", anchors, "verticalCenter");
-            dependency("y", item, "height");
-            dependency("top", anchors, "verticalCenter");
-            dependency("top", item, "height");
-            dependency("bottom", anchors, "verticalCenter");
-            dependency("bottom", item, "height");
-        } else {
-            dependency("top", item, "y");
-            dependency("bottom", item, "y");
-            dependency("bottom", item, "height");
-            dependency("verticalCenter", item, "y");
-            dependency("verticalCenter", item, "height");
+            positionerDependencies(item, addDependency);
         }
     }
 
     return dependencies;
+}
+
+void QuickImplicitBindingDependencyProvider::anchorBindings(std::vector<std::unique_ptr<BindingNode>> &dependencies, QQuickAnchors *anchors, int propertyIndex, BindingNode *parent)
+{
+    QQuickAnchorLine anchorLine = anchors->metaObject()->property(propertyIndex).read(anchors).value<QQuickAnchorLine>();
+    auto dependencyPropertyName = anchorLine.anchorLine == QQuickAnchors::TopAnchor ? "top"
+                                : anchorLine.anchorLine == QQuickAnchors::BottomAnchor ? "bottom"
+                                : anchorLine.anchorLine == QQuickAnchors::LeftAnchor ? "left"
+                                : anchorLine.anchorLine == QQuickAnchors::RightAnchor ? "right"
+                                : anchorLine.anchorLine == QQuickAnchors::HCenterAnchor ? "horizontalCenter"
+                                : anchorLine.anchorLine == QQuickAnchors::VCenterAnchor ? "verticalCenter"
+                                : anchorLine.anchorLine == QQuickAnchors::BaselineAnchor ? "baseline"
+                                : "";
+    if (anchorLine.item) {
+        dependencies.push_back(createBindingNode(anchorLine.item, dependencyPropertyName, parent));
+    }
+}
+
+template<class Func>
+void QuickImplicitBindingDependencyProvider::implicitSizeDependencies(QQuickItem *item, Func addDependency)
+{
+    QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
+    if (!itemPriv)
+        return;
+
+    if (!itemPriv->widthValid) {
+        addDependency("width", item, "implicitWidth");
+    }
+    if (!itemPriv->heightValid) {
+        addDependency("height", item, "implicitHeight");
+    }
+}
+
+template<class Func>
+void QuickImplicitBindingDependencyProvider::childrenRectDependencies(QQuickItem *item, Func addDependency)
+{
+    for (auto &&child : item->childItems()) {
+        addDependency("childrenRect", child, "width");
+        addDependency("childrenRect", child, "height");
+    }
+}
+template<class Func>
+void QuickImplicitBindingDependencyProvider::positionerDependencies(QQuickItem *item, Func addDependency)
+{
+    for (QQuickItem *child : item->childItems()) {
+        addDependency("implicitWidth", child, "width");
+        addDependency("implicitHeight", child, "height");
+    }
+}
+
+template<class Func>
+void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *item, Func addDependency)
+{
+    QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
+    if (!itemPriv)
+        return;
+    QQuickAnchors *anchors = itemPriv->anchors();
+    if (!anchors)
+        return;
+
+    // Horizontal
+    if (anchors->fill()) {
+        QQuickItem *fill = anchors->fill();
+        addDependency("width", fill, "width");
+        addDependency("width", item, "anchors.leftMargin");
+        addDependency("width", item, "anchors.rightMargin");
+        addDependency("x", fill, "left");
+        addDependency("x", item, "anchors.leftMargin");
+        addDependency("left", fill, "left");
+        addDependency("left", item, "anchors.leftMargin");
+        addDependency("right", fill, "right");
+        addDependency("right", item, "anchors.rightMargin");
+        addDependency("horizontalCenter", item, "left");
+        addDependency("horizontalCenter", item, "right");
+    } else if (anchors->centerIn()) {
+        QQuickItem *centerIn = anchors->centerIn();
+        addDependency("horizontalCenter", centerIn, "horizontalCenter");
+        addDependency("x", centerIn, "horizontalCenter");
+        addDependency("x", item, "width");
+        addDependency("left", centerIn, "horizontalCenter");
+        addDependency("left", item, "width");
+        addDependency("right", centerIn, "horizontalCenter");
+        addDependency("right", item, "width");
+    } else if (anchors->left().anchorLine != QQuickAnchors::InvalidAnchor) {
+        addDependency("left", item, "anchors.left");
+        addDependency("x", item, "anchors.left");
+        if (anchors->right().anchorLine != QQuickAnchors::InvalidAnchor) {
+            addDependency("right", item, "anchors.right");
+            addDependency("right", item, "anchors.rightMargin");
+            addDependency("width", item, "anchors.left");
+            addDependency("width", item, "anchors.right");
+            addDependency("horizontalCenter", item, "anchors.left");
+            addDependency("horizontalCenter", item, "anchors.right");
+        } else if (anchors->horizontalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
+            addDependency("horizontalCenter", item, "anchors.horizontalCenter");
+            addDependency("width", item, "anchors.left");
+            addDependency("width", item, "anchors.horizontalCenter");
+            addDependency("right", item, "anchors.left");
+            addDependency("right", item, "anchors.horizontalCenter");
+        } else {
+            addDependency("right", item, "anchors.left");
+            addDependency("right", item, "width");
+            addDependency("horizontalCenter", item, "anchors.left");
+            addDependency("horizontalCenter", item, "width");
+        }
+    } else if (anchors->right().anchorLine != QQuickAnchors::InvalidAnchor) {
+        addDependency("right", item, "anchors.right");
+        if (anchors->horizontalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
+            addDependency("horizontalCenter", item, "anchors.horizontalCenter");
+            addDependency("width", item, "anchors.right");
+            addDependency("width", item, "anchors.horizontalCenter");
+            addDependency("x", item, "anchors.horizontalCenter");
+            addDependency("x", item, "anchors.right");
+            addDependency("left", item, "anchors.horizontalCenter");
+            addDependency("left", item, "anchors.right");
+        } else {
+            addDependency("x", item, "anchors.right");
+            addDependency("x", item, "width");
+            addDependency("left", item, "anchors.right");
+            addDependency("left", item, "width");
+            addDependency("horizontalCenter", item, "anchors.right");
+            addDependency("horizontalCenter", item, "width");
+        }
+    } else if (anchors->horizontalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
+        addDependency("horizontalCenter", item, "anchors.horizontalCenter");
+        addDependency("x", item, "anchors.horizontalCenter");
+        addDependency("x", item, "width");
+        addDependency("left", item, "anchors.horizontalCenter");
+        addDependency("left", item, "width");
+        addDependency("right", item, "anchors.horizontalCenter");
+        addDependency("right", item, "width");
+    } else {
+        addDependency("left", item, "x");
+        addDependency("right", item, "x");
+        addDependency("right", item, "width");
+        addDependency("horizontalCenter", item, "x");
+        addDependency("horizontalCenter", item, "width");
+    }
+
+
+    // Vertical TODO: Bottomline
+    if (anchors->fill()) {
+        QQuickItem *fill = anchors->fill();
+        addDependency("height", fill, "height");
+        addDependency("height", item, "anchors.topMargin");
+        addDependency("height", item, "anchors.bottomMargin");
+        addDependency("y", fill, "top");
+        addDependency("y", item, "anchors.topMargin");
+        addDependency("top", fill, "top");
+        addDependency("top", item, "anchors.topMargin");
+        addDependency("bottom", fill, "bottom");
+        addDependency("bottom", item, "anchors.bottomMargin");
+        addDependency("verticalCenter", item, "top");
+        addDependency("verticalCenter", item, "bottom");
+    } else if (anchors->centerIn()) {
+        QQuickItem *centerIn = anchors->centerIn();
+        addDependency("verticalCenter", centerIn, "verticalCenter");
+        addDependency("y", centerIn, "verticalCenter");
+        addDependency("y", item, "height");
+        addDependency("top", centerIn, "verticalCenter");
+        addDependency("top", item, "height");
+        addDependency("bottom", centerIn, "verticalCenter");
+        addDependency("bottom", item, "height");
+    } else if (anchors->top().anchorLine != QQuickAnchors::InvalidAnchor) {
+        addDependency("top", item, "anchors.top");
+        addDependency("y", item, "anchors.top");
+        if (anchors->bottom().anchorLine != QQuickAnchors::InvalidAnchor) {
+            addDependency("bottom", item, "anchors.bottom");
+            addDependency("bottom", item, "anchors.bottomMargin");
+            addDependency("height", item, "anchors.top");
+            addDependency("height", item, "anchors.bottom");
+            addDependency("verticalCenter", item, "anchors.top");
+            addDependency("verticalCenter", item, "anchors.bottom");
+        } else if (anchors->verticalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
+            addDependency("verticalCenter", item, "anchors.verticalCenter");
+            addDependency("height", item, "anchors.top");
+            addDependency("height", item, "anchors.verticalCenter");
+            addDependency("y", item, "anchors.top");
+            addDependency("bottom", item, "anchors.top");
+            addDependency("bottom", item, "anchors.verticalCenter");
+        } else {
+            addDependency("bottom", item, "anchors.top");
+            addDependency("bottom", item, "height");
+            addDependency("verticalCenter", item, "anchors.top");
+            addDependency("verticalCenter", item, "height");
+        }
+    } else if (anchors->bottom().anchorLine != QQuickAnchors::InvalidAnchor) {
+        addDependency("bottom", item, "anchors.bottom");
+        if (anchors->verticalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
+            addDependency("verticalCenter", item, "anchors.verticalCenter");
+            addDependency("height", item, "anchors.bottom");
+            addDependency("height", item, "anchors.verticalCenter");
+            addDependency("y", item, "anchors.verticalCenter");
+            addDependency("y", item, "anchors.bottom");
+            addDependency("top", item, "anchors.verticalCenter");
+            addDependency("top", item, "anchors.bottom");
+        } else {
+            addDependency("y", item, "anchors.bottom");
+            addDependency("y", item, "height");
+            addDependency("top", item, "anchors.bottom");
+            addDependency("top", item, "height");
+            addDependency("verticalCenter", item, "anchors.bottom");
+            addDependency("verticalCenter", item, "height");
+        }
+    } else if (anchors->verticalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
+        addDependency("verticalCenter", item, "anchors.verticalCenter");
+        addDependency("y", item, "anchors.verticalCenter");
+        addDependency("y", item, "height");
+        addDependency("top", item, "anchors.verticalCenter");
+        addDependency("top", item, "height");
+        addDependency("bottom", item, "anchors.verticalCenter");
+        addDependency("bottom", item, "height");
+    } else {
+        addDependency("top", item, "y");
+        addDependency("bottom", item, "y");
+        addDependency("bottom", item, "height");
+        addDependency("verticalCenter", item, "y");
+        addDependency("verticalCenter", item, "height");
+    }
+
 }
 
 QString QuickImplicitBindingDependencyProvider::canonicalNameFor(BindingNode* binding)

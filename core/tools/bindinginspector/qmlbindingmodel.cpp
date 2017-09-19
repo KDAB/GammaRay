@@ -89,10 +89,16 @@ bool QmlBindingModel::setObject(QObject* obj)
         auto newBindings = provider->findBindingsFor(obj);
         for (std::unique_ptr<BindingNode> &nodeUnique : newBindings) {
             BindingNode *node = nodeUnique.get();
+            if (findEquivalent(m_bindings, node).isValid()) {
+                continue; // apparantly this is a duplicate.
+            }
             int index = m_bindings.size();
-            ::connect(obj, node->property().notifySignalIndex(), [this, index, node]() {
-                refresh(node, createIndex(index, 0, node));
-            }, Qt::UniqueConnection);
+            int signalIndex = node->property().notifySignalIndex();
+            if (signalIndex != -1) {
+                ::connect(obj, signalIndex, [this, index, node]() {
+                    refresh(node, createIndex(index, 0, node));
+                }, Qt::UniqueConnection);
+            }
             findDependenciesFor(node);
             m_bindings.push_back(std::move(nodeUnique));
         }
@@ -299,7 +305,7 @@ QModelIndex GammaRay::QmlBindingModel::index(int row, int column, const QModelIn
 QModelIndex QmlBindingModel::findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const
 {
     for (size_t i = 0; i < container.size(); i++) {
-        if (bindingNode->id() == container[i]->id()) {
+        if (bindingNode->object() == container[i]->object() && bindingNode->propertyIndex() == container[i]->propertyIndex()) {
             return createIndex(i, 0, container[i].get());
         }
     }

@@ -399,7 +399,7 @@ void BindingInspectorTest::testQtQuickProvider_data()
                       "        anchors.fill: parent\n"
                       "    }\n"
                       "}\n"
-        ) << "item" << "width" << QStringList {"rect.width", "leftMargin"};
+        ) << "item" << "width" << QStringList {"rect.width", "anchors.leftMargin"};
 
 
     QTest::newRow("left_and_right_determine_width")
@@ -413,7 +413,7 @@ void BindingInspectorTest::testQtQuickProvider_data()
                       "        anchors.right: parent.right\n"
                       "    }\n"
                       "}\n"
-        ) << "item" << "width" << QStringList {"left", "right"};
+        ) << "item" << "width" << QStringList {"item.anchors.left", "item.anchors.right"};
 
 
     QTest::newRow("y_and_height_determine_bottom")
@@ -850,66 +850,26 @@ void BindingInspectorTest::testModelRemovalInside()
     QCOMPARE(dataChangedSpy.at(1).at(1).value<QModelIndex>(), node1Index.sibling(0, 4));
 }
 
-// void BindingInspectorTest::testFoo()
-// {
-//     QByteArray code =
-// "            import QtQuick 2.0\n"
-// "            Column {\n"
-// "                id: col"
-// "                height: 100\n"
-// "                Rectangle {\n"
-// "                    width: col.width\n"
-// "                    height: 10\n"
-// "                    color: 'red'\n"
-// "                }\n"
-// "            }";
-//
-//
-//     QQmlEngine engine;
-//     QQmlComponent c(&engine);
-//     c.setData(code, QUrl());
-//     QObject *rect = c.create();
-//     QTest::qWait(10);
-//     QVERIFY(rect);
-//     QObject *text = rect->findChildren<QQuickRectangle *>().front();
-//
-//     bindingModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspector.qmlBindingModel"));
-//     QVERIFY(bindingModel);
-//     ModelTest modelTest(bindingModel);
-//
-//     Probe::instance()->selectObject(text);
-//     QCOMPARE(bindingModel->rowCount(), 1);
-//     QModelIndex node2Index = bindingModel->index(0, 0, QModelIndex());
-//
-//     QCOMPARE(bindingModel->rowCount(node2Index), 2);
-//     QModelIndex dependencyIndex = bindingModel->index(1, 0, node2Index);
-//     QVERIFY(dependencyIndex.isValid());
-//     QCOMPARE(bindingModel->rowCount(dependencyIndex), 1);
-//     QModelIndex dependency2Index = bindingModel->index(0, 0, dependencyIndex);
-//     QVERIFY(dependency2Index.isValid());
-//     auto data = bindingModel->itemData(dependency2Index);
-//     qDebug() << data;
-//     QVERIFY(data.size() > 0);
-//     QCOMPARE(data[0].toString(), QStringLiteral("col.implicitWidth"));
-//
-//     Probe::instance()->selectObject(0); //TODO: is this the correct way (seems to crash in an independent part of GammaRay without)
-//     delete rect;
-// }
-
 void BindingInspectorTest::testIntegration()
 {
+    provider->data = {};
+
     QByteArray code =
         "import QtQuick 2.0\n"
         "Rectangle {\n"
         "    id: a\n"
         "    objectName: 'a'\n"
         "    property string labelText: \"Hello world!\"\n"
-        "    implicitWidth: t.width\n"
-        "    Text { id: t; objectName: 'text'; text: labelText; property int foo: y; anchors.fill: parent }\n"
+        "    implicitWidth: childrenRect.width\n"
+        "    height: 200\n"
+        "    Text {\n"
+        "       id: t\n"
+        "       objectName: 'text'\n"
+        "       text: labelText\n"
+        "       property int foo: width\n"
+        "       anchors { left: parent.left; right: parent.right; bottom: parent.bottom; verticalCenter: parent.verticalCenter }\n"
+        "    }\n"
         "}";
-
-//     QmlBindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QmlBindingProvider));
-//     QmlBindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
 
     QQmlEngine engine;
     QQmlComponent c(&engine);
@@ -919,17 +879,12 @@ void BindingInspectorTest::testIntegration()
     QVERIFY(rect);
     QObject *text = rect->findChildren<QQuickText *>().front();
 
-//     QString referencedObjectName = "a";
-
-//     QObject *referencedObject = rect->objectName() == referencedObjectName ? rect : rect->findChild<QObject *>(referencedObjectName);
-//     QVERIFY(referencedObject);
-
     bindingModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspector.bindingModel"));
     QVERIFY(bindingModel);
     ModelTest modelTest(bindingModel);
 
     Probe::instance()->selectObject(text);
-    QCOMPARE(bindingModel->rowCount(), 2);
+    QCOMPARE(bindingModel->rowCount(), 6);
     QModelIndex textBindingIndex = bindingModel->index(0, 0, QModelIndex());
     QVERIFY(textBindingIndex.isValid());
     QCOMPARE(textBindingIndex.data().toString(), "t.text");
@@ -944,19 +899,111 @@ void BindingInspectorTest::testIntegration()
     QCOMPARE(labelTextIndex.sibling(0, 4).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel->rowCount(labelTextIndex), 0);
 
-    QModelIndex anchorsFillIndex = bindingModel->index(1, 0, QModelIndex());
-    QVERIFY(anchorsFillIndex.isValid());
-    QCOMPARE(anchorsFillIndex.data().toString(), "t.anchors.fill");
+    QModelIndex fooIndex = bindingModel->index(1, 0, QModelIndex());
+    QVERIFY(fooIndex.isValid());
+    QCOMPARE(fooIndex.data().toString(), "t.foo");
 //     QCOMPARE(anchorsFillIndex.sibling(0, 1).data().(), "");
-    QCOMPARE(anchorsFillIndex.sibling(1, 4).data().toString(), QStringLiteral("∞"));
-    QCOMPARE(bindingModel->rowCount(anchorsFillIndex), 1);
+    QCOMPARE(fooIndex.sibling(1, 4).data().toString(), QStringLiteral("∞"));
+    QCOMPARE(bindingModel->rowCount(fooIndex), 1);
 
-    QModelIndex implicitWidthIndex = bindingModel->index(0, 0, anchorsFillIndex);
-    QVERIFY(implicitWidthIndex.isValid());
-    QCOMPARE(implicitWidthIndex.data().toString(), "a.implicitWidth");
-//     QCOMPARE(implicitWidthIndex.sibling(0, 1).data().toString(), QStringLiteral(""));
-    QCOMPARE(implicitWidthIndex.sibling(0, 4).data().toString(), QStringLiteral("∞"));
-    QCOMPARE(bindingModel->rowCount(implicitWidthIndex), 0);
+    QModelIndex tWidthIndex = bindingModel->index(0, 0, fooIndex);
+    QVERIFY(tWidthIndex.isValid());
+    QCOMPARE(tWidthIndex.data().toString(), "t.width");
+    QCOMPARE(tWidthIndex.sibling(0, 4).data().toString(), QStringLiteral("∞"));
+    QCOMPARE(bindingModel->rowCount(tWidthIndex), 2);
+
+    QModelIndex tAnchorsRightIndex = bindingModel->index(1, 0, tWidthIndex);
+    QVERIFY(tAnchorsRightIndex.isValid());
+    QCOMPARE(tAnchorsRightIndex.data().toString(), "t.anchors.right");
+    QCOMPARE(tAnchorsRightIndex.sibling(1, 4).data().toString(), QStringLiteral("∞"));
+    QCOMPARE(bindingModel->rowCount(tAnchorsRightIndex), 2); // is `parent` and `parent.right`
+
+    QModelIndex aRightIndex;
+    QModelIndex aRightIndex0 = bindingModel->index(0, 0, tAnchorsRightIndex); // It's more or less random which row contains
+    QModelIndex aRightIndex1 = bindingModel->index(1, 0, tAnchorsRightIndex); // the correct property.
+    QVERIFY((aRightIndex0.data().toString() == "a.right" && aRightIndex1.data().toString() == "t.parent")
+            || (aRightIndex1.data().toString() == "a.right" && aRightIndex0.data().toString() == "t.parent"));
+    if (aRightIndex0.data().toString() == "a.right") {
+        aRightIndex = aRightIndex0;
+        QCOMPARE(aRightIndex.sibling(0, 4).data().toString(), QStringLiteral("∞"));
+        QCOMPARE(bindingModel->rowCount(aRightIndex), 2);
+    } else {
+        aRightIndex = aRightIndex1;
+        QCOMPARE(aRightIndex.sibling(1, 4).data().toString(), QStringLiteral("∞"));
+        QCOMPARE(bindingModel->rowCount(aRightIndex), 2);
+    }
+    QVERIFY(aRightIndex.isValid());
+
+    QModelIndex aWidthIndex = bindingModel->index(1, 0, aRightIndex);
+    QVERIFY(aWidthIndex.isValid());
+    QCOMPARE(aWidthIndex.data().toString(), "a.width");
+    QCOMPARE(aWidthIndex.sibling(1, 4).data().toString(), QStringLiteral("∞"));
+    QCOMPARE(bindingModel->rowCount(aWidthIndex), 1);
+
+    QModelIndex aImplicitWidthIndex = bindingModel->index(0, 0, aWidthIndex);
+    QVERIFY(aImplicitWidthIndex.isValid());
+    QCOMPARE(aImplicitWidthIndex.data().toString(), "a.implicitWidth");
+    QCOMPARE(aImplicitWidthIndex.sibling(0, 4).data().toString(), QStringLiteral("∞"));
+    QCOMPARE(bindingModel->rowCount(aImplicitWidthIndex), 1);
+
+    QModelIndex aChildrenRect = bindingModel->index(0, 0, aImplicitWidthIndex);
+    QVERIFY(aChildrenRect.isValid());
+    QCOMPARE(aChildrenRect.data().toString(), "a.childrenRect");
+    QCOMPARE(aChildrenRect.sibling(0, 4).data().toString(), QStringLiteral("∞"));
+    QCOMPARE(bindingModel->rowCount(aChildrenRect), 2);
+
+    QModelIndex tWidthIndex2 = bindingModel->index(0, 0, aChildrenRect);
+    QVERIFY(tWidthIndex2.isValid());
+    QCOMPARE(tWidthIndex2.data().toString(), "t.width");
+    QCOMPARE(tWidthIndex2.sibling(0, 4).data().toString(), QStringLiteral("∞"));
+    QCOMPARE(bindingModel->rowCount(tWidthIndex2), 0);
+
+    Probe::instance()->selectObject(rect);
+    QCOMPARE(bindingModel->rowCount(), 1);
+    QModelIndex aImplicitWidthIndex2 = bindingModel->index(0, 0, QModelIndex());
+    QVERIFY(aImplicitWidthIndex2.isValid());
+    QCOMPARE(aImplicitWidthIndex2.data().toString(), "a.implicitWidth");
+    QCOMPARE(aImplicitWidthIndex2.sibling(0, 1).data().toDouble(), 0.0);
+    QCOMPARE(aImplicitWidthIndex2.sibling(0, 4).data().toString(), QStringLiteral("∞"));
+    QCOMPARE(bindingModel->rowCount(aImplicitWidthIndex2), 1);
+
+    Probe::instance()->selectObject(text);
+    QCOMPARE(bindingModel->rowCount(), 6);
+    QModelIndex tAnchorsVerticalCenterIndex = bindingModel->index(5, 0, QModelIndex());
+    QVERIFY(tAnchorsVerticalCenterIndex.isValid());
+    QCOMPARE(tAnchorsVerticalCenterIndex.data().toString(), "t.anchors.verticalCenter");
+    QCOMPARE(tAnchorsVerticalCenterIndex.sibling(5, 4).data().toString(), QStringLiteral("2"));
+    QCOMPARE(bindingModel->rowCount(tAnchorsVerticalCenterIndex), 2); // is `parent` and `parent.verticalCenter`
+
+    QModelIndex aVerticalCenterIndex;
+    QModelIndex aVerticalCenterIndex0 = bindingModel->index(0, 0, tAnchorsVerticalCenterIndex); // It's more or less random which row contains
+    QModelIndex aVerticalCenterIndex1 = bindingModel->index(1, 0, tAnchorsVerticalCenterIndex); // the correct property.
+    QVERIFY((aVerticalCenterIndex0.data().toString() == "a.verticalCenter" && aVerticalCenterIndex1.data().toString() == "t.parent")
+            || (aVerticalCenterIndex1.data().toString() == "a.verticalCenter" && aVerticalCenterIndex0.data().toString() == "t.parent"));
+    if (aVerticalCenterIndex0.data().toString() == "a.verticalCenter") {
+        aVerticalCenterIndex = aVerticalCenterIndex0;
+        QCOMPARE(aVerticalCenterIndex.sibling(0, 4).data().toString(), QStringLiteral("1"));
+        QCOMPARE(bindingModel->rowCount(aVerticalCenterIndex), 2);
+    } else {
+        aVerticalCenterIndex = aVerticalCenterIndex1;
+        QCOMPARE(aVerticalCenterIndex.sibling(1, 4).data().toString(), QStringLiteral("1"));
+        QCOMPARE(bindingModel->rowCount(aVerticalCenterIndex), 2);
+    }
+    QVERIFY(aVerticalCenterIndex.isValid());
+
+    QModelIndex aYIndex = bindingModel->index(0, 0, aVerticalCenterIndex);
+    QVERIFY(aYIndex.isValid());
+    QCOMPARE(aYIndex.data().toString(), "a.y");
+    QCOMPARE(aYIndex.sibling(0, 1).data().toString(), QStringLiteral("0"));
+    QCOMPARE(aYIndex.sibling(0, 4).data().toString(), QStringLiteral("0"));
+    QCOMPARE(bindingModel->rowCount(aYIndex), 0);
+
+    QModelIndex aHeightIndex = bindingModel->index(1, 0, aVerticalCenterIndex);
+    QVERIFY(aHeightIndex.isValid());
+    QCOMPARE(aHeightIndex.data().toString(), "a.height");
+    QCOMPARE(aHeightIndex.sibling(1, 1).data().toString(), QStringLiteral("200"));
+    QCOMPARE(aHeightIndex.sibling(1, 4).data().toString(), QStringLiteral("0"));
+    QCOMPARE(bindingModel->rowCount(aHeightIndex), 0);
 
     Probe::instance()->selectObject(0); //TODO: is this the correct way (seems to crash in an independent part of GammaRay without)
     delete rect;
