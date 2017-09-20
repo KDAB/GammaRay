@@ -84,11 +84,6 @@ public:
         return nodes;
     }
 
-    QString canonicalNameFor(BindingNode *) override
-    {
-        return {};
-    }
-
     bool canProvideBindingsFor(QObject *) override
     {
         return true;

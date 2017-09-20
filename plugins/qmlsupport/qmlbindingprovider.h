@@ -46,7 +46,6 @@ class QmlBindingProvider : public AbstractBindingProvider
 public:
     std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject * obj) override;
     std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(GammaRay::BindingNode * binding) override;
-    QString canonicalNameFor(GammaRay::BindingNode *binding) override;
     bool canProvideBindingsFor(QObject *object) override;
 
 private:

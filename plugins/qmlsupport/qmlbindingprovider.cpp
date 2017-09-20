@@ -154,14 +154,3 @@ std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findBindingsFor(QO
     }
     return bindings;
 }
-
-QString QmlBindingProvider::canonicalNameFor(BindingNode* binding)
-{
-//     QQmlContext *ctx = QQmlEngine::contextForObject(binding->object());
-//     if (ctx) {
-//         QString id = ctx->nameForObject(binding->object());
-//         if (!id.isEmpty())
-//             return QStringLiteral("%1.%2").arg(id, binding->canonicalName()); //FIXME: Most probably we need to fetch the property name directly...
-//     }
-    return QString();
-}
