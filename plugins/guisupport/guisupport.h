@@ -54,11 +54,13 @@ private:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     void discoverObjects();
     void updateWindowTitle(QWindow *w);
+    QIcon createIcon(const QIcon &oldIcon, QWindow *w=nullptr);
     void updateWindowIcon(QWindow *w);
     void restoreWindowIcon(QWindow *w);
     void restoreIconAndTitle();
 
     QHash<QWindow*, QIcon> m_originalIcons;
+    QIcon m_originalAppIcon;
     QString m_titleSuffix;
 #endif
 

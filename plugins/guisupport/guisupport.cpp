@@ -78,6 +78,10 @@ GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     m_titleSuffix = tr(" (Injected by GammaRay)");
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
 
+
+    m_originalAppIcon = qApp->windowIcon();
+    qApp->setWindowIcon(createIcon(m_originalAppIcon));
+
     m_probe->installGlobalEventFilter(this);
     foreach (auto w , qApp->topLevelWindows()) {
         updateWindowIcon(w);
@@ -481,10 +485,9 @@ void GuiSupport::updateWindowTitle(QWindow *w)
     w->setTitle(w->title() + m_titleSuffix);
 }
 
-void GuiSupport::updateWindowIcon(QWindow *w)
+QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
 {
     static QIcon gammarayIcon;
-    static const auto theme = QLatin1String("gammaray");
     if (gammarayIcon.availableSizes().isEmpty()) {
         gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-16.png"));
         gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-22.png"));
@@ -495,24 +498,36 @@ void GuiSupport::updateWindowIcon(QWindow *w)
         gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-128.png"));
     }
 
-    QIcon oldIcon = w->icon();
-
     const QIcon &orgIcon = m_originalIcons[w];
-    if (oldIcon.isNull() || !orgIcon.isNull() || orgIcon.cacheKey() == oldIcon.cacheKey()) {
-        return;
+    if (!orgIcon.isNull() || orgIcon.cacheKey() == oldIcon.cacheKey()) {
+        return oldIcon;
     }
-    m_originalIcons.insert(w, oldIcon);
 
     QIcon newIcon;
     foreach (const QSize &size, gammarayIcon.availableSizes()) {
-        QPixmap pix(oldIcon.pixmap(w, oldIcon.actualSize(size)));
+        QPixmap pix;
+        if (w) {
+            pix = oldIcon.pixmap(w, oldIcon.actualSize(size));
+        } else {
+            pix = oldIcon.pixmap(oldIcon.actualSize(size));
+        }
         {
             QPainter p(&pix);
             gammarayIcon.paint(&p, pix.rect());
         }
         newIcon.addPixmap(pix);
     }
-    w->setIcon(newIcon);
+    return newIcon;
+}
+
+void GuiSupport::updateWindowIcon(QWindow *w)
+{
+    const QIcon oldIcon = w->icon();
+    const QIcon newIcon = createIcon(oldIcon, w);
+    if (oldIcon.cacheKey() != newIcon.cacheKey()) {
+        m_originalIcons.insert(w, oldIcon);
+        w->setIcon(newIcon);
+    }
 }
 
 void GuiSupport::restoreWindowIcon(QWindow *w)
@@ -531,6 +546,7 @@ void GuiSupport::restoreIconAndTitle()
         restoreWindowIcon(w);
         w->setTitle(w->title().remove(m_titleSuffix));
     }
+    qApp->setWindowIcon(m_originalAppIcon);
 }
 
 
