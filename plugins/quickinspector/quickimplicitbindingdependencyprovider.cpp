@@ -344,8 +344,3 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
     }
 
 }
-
-QString QuickImplicitBindingDependencyProvider::canonicalNameFor(BindingNode* binding)
-{
-    return QString();
-}
