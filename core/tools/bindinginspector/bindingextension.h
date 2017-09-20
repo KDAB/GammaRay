@@ -33,7 +33,7 @@
 
 namespace GammaRay {
 
-class QmlBindingModel;
+class BindingModel;
 
 class BindingExtension : public PropertyControllerExtension
 {
@@ -44,7 +44,7 @@ public:
     bool setQObject(QObject *object) Q_DECL_OVERRIDE;
 
 private:
-    QmlBindingModel *m_bindingModel;
+    BindingModel *m_bindingModel;
 };
 }
 

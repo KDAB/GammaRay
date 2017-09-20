@@ -55,7 +55,7 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/varianthandler.h>
 #include <core/remoteviewserver.h>
-#include <core/tools/bindinginspector/qmlbindingmodel.h>
+#include <core/tools/bindinginspector/bindingmodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
@@ -1055,7 +1055,7 @@ void QuickInspector::registerPCExtensions()
 
     PropertyAdaptorFactory::registerFactory(QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance());
 
-    QmlBindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
+    BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
 }
 
 #define QSG_CHECK_TYPE(Class) \

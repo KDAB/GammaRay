@@ -27,7 +27,7 @@
 */
 
 #include "bindingextension.h"
-#include "qmlbindingmodel.h"
+#include "bindingmodel.h"
 
 #include <core/propertycontroller.h>
 
@@ -35,7 +35,7 @@ using namespace GammaRay;
 
 BindingExtension::BindingExtension(PropertyController* controller)
     : PropertyControllerExtension(controller->objectBaseName() + ".bindings")
-    , m_bindingModel(new QmlBindingModel(controller))
+    , m_bindingModel(new BindingModel(controller))
 {
     controller->registerModel(m_bindingModel, QStringLiteral("bindingModel"));
 }

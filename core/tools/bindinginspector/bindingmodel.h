@@ -1,5 +1,5 @@
 /*
-  qmlbindingmodel.h
+  bindingmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,8 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QMLBINDINGMODEL_H
-#define GAMMARAY_QMLBINDINGMODEL_H
+#ifndef GAMMARAY_BINDINGMODEL_H
+#define GAMMARAY_BINDINGMODEL_H
 
 #include "gammaray_core_export.h"
 
@@ -44,13 +44,13 @@ namespace GammaRay {
 struct BindingNode;
 class AbstractBindingProvider;
 
-class GAMMARAY_CORE_EXPORT QmlBindingModel : public QAbstractItemModel
+class GAMMARAY_CORE_EXPORT BindingModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
 
-    explicit QmlBindingModel(QObject *parent = Q_NULLPTR);
-    ~QmlBindingModel();
+    explicit BindingModel (QObject *parent = Q_NULLPTR);
+    ~BindingModel();
 
     bool setObject(QObject *obj);
 
@@ -79,4 +79,4 @@ private:
 
 }
 
-#endif // GAMMARAY_QMLBINDINGMODEL_H
+#endif // GAMMARAY_BINDINGMODEL_H

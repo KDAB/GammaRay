@@ -34,7 +34,7 @@
 #include <probe/probecreator.h>
 
 #include <core/tools/bindinginspector/bindingnode.h>
-#include <core/tools/bindinginspector/qmlbindingmodel.h>
+#include <core/tools/bindinginspector/bindingmodel.h>
 #include <core/tools/bindinginspector/abstractbindingprovider.h>
 #include <plugins/qmlsupport/qmlbindingprovider.h>
 #include <plugins/quickinspector/quickimplicitbindingdependencyprovider.h>
@@ -194,7 +194,7 @@ void BindingInspectorTest::initTestCase()
 {
     QQmlEngine engine; // Needed to initialize the Qml support plugin
     provider = new MockBindingProvider;
-    QmlBindingModel::registerBindingProvider(std::unique_ptr<MockBindingProvider>(provider));
+    BindingModel::registerBindingProvider(std::unique_ptr<MockBindingProvider>(provider));
 }
 
 void BindingInspectorTest::init()
@@ -476,7 +476,7 @@ void BindingInspectorTest::testQtQuickProvider()
 
 void BindingInspectorTest::testModel()
 {
-    QmlBindingModel bindingModel;
+    BindingModel bindingModel;
     ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
     MockObject obj2 { 35, false, 'y', 3.5, "Bye, World" };
@@ -528,7 +528,7 @@ void BindingInspectorTest::testModel()
 
 void BindingInspectorTest::testModelDataChanged()
 {
-    QmlBindingModel bindingModel;
+    BindingModel bindingModel;
     ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
 
@@ -577,7 +577,7 @@ void BindingInspectorTest::testModelDataChanged()
 
 void BindingInspectorTest::testModelAdditions()
 {
-    QmlBindingModel bindingModel;
+    BindingModel bindingModel;
     ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
     provider->data = {{
@@ -652,7 +652,7 @@ void BindingInspectorTest::testModelAdditions()
 
 void BindingInspectorTest::testModelInsertions()
 {
-    QmlBindingModel bindingModel;
+    BindingModel bindingModel;
     ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
     MockObject obj2 { 35, false, 'y', 3.5, "Bye, World" };
@@ -749,7 +749,7 @@ void BindingInspectorTest::testModelInsertions()
 
 void BindingInspectorTest::testModelRemovalAtEnd()
 {
-    QmlBindingModel bindingModel;
+    BindingModel bindingModel;
     ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
 
@@ -801,7 +801,7 @@ void BindingInspectorTest::testModelRemovalAtEnd()
 
 void BindingInspectorTest::testModelRemovalInside()
 {
-    QmlBindingModel bindingModel;
+    BindingModel bindingModel;
     ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
 
