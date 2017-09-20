@@ -52,7 +52,6 @@ BindingNode::BindingNode(const BindingNode &other)
     : m_parent(other.m_parent)
     , m_object(other.m_object)
     , m_propertyIndex(other.m_propertyIndex)
-    , m_id(other.m_id)
     , m_canonicalName(other.m_canonicalName)
     , m_value(other.m_value)
     , m_isActive(other.m_isActive)
@@ -70,7 +69,6 @@ BindingNode::BindingNode(BindingNode &&other)
     : m_parent(other.m_parent)
     , m_object(other.m_object)
     , m_propertyIndex(other.m_propertyIndex)
-    , m_id(other.m_id)
     , m_canonicalName(other.m_canonicalName)
     , m_value(other.m_value)
     , m_isActive(other.m_isActive)
@@ -143,10 +141,6 @@ const QString & GammaRay::BindingNode::expression() const
 {
     return m_expression;
 }
-qintptr GammaRay::BindingNode::id() const
-{
-    return m_id;
-}
 bool GammaRay::BindingNode::isActive() const
 {
     return m_isActive;
@@ -168,10 +162,6 @@ const std::vector<std::unique_ptr<BindingNode> > & GammaRay::BindingNode::depend
     return m_dependencies;
 }
 
-void GammaRay::BindingNode::setId(qintptr id)
-{
-    m_id = id;
-}
 void GammaRay::BindingNode::setCanonicalName(const QString& name)
 {
     m_canonicalName = name;
