@@ -6,6 +6,20 @@
         <file>images/gammaray-inject-32.png</file>
         <file>images/gammaray-inject-48.png</file>
         <file>images/gammaray-inject-64.png</file>
-        <file>images/gammaray-inject-128-2x.png</file>
+        <file>images/gammaray-inject-16@2x.png</file>
+        <file>images/gammaray-inject-16@3x.png</file>
+        <file>images/gammaray-inject-22@2x.png</file>
+        <file>images/gammaray-inject-22@3x.png</file>
+        <file>images/gammaray-inject-24@2x.png</file>
+        <file>images/gammaray-inject-24@3x.png</file>
+        <file>images/gammaray-inject-32@2x.png</file>
+        <file>images/gammaray-inject-32@3x.png</file>
+        <file>images/gammaray-inject-48@2x.png</file>
+        <file>images/gammaray-inject-48@3x.png</file>
+        <file>images/gammaray-inject-64@2x.png</file>
+        <file>images/gammaray-inject-64@3x.png</file>
+        <file>images/gammaray-inject-128.png</file>
+        <file>images/gammaray-inject-128@2x.png</file>
+        <file>images/gammaray-inject-128@3x.png</file>
     </qresource>
 </RCC>
