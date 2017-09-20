@@ -43,7 +43,7 @@
 #include <core/propertyadaptorfactory.h>
 #include <core/propertycontroller.h>
 #include <core/objectdataprovider.h>
-#include <core/tools/bindinginspector/qmlbindingmodel.h>
+#include <core/tools/bindinginspector/bindingmodel.h>
 
 #include <common/metatypedeclarations.h>
 #include <common/sourcelocation.h>
@@ -377,7 +377,7 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     PropertyController::registerExtension<QmlContextExtension>();
     PropertyController::registerExtension<QmlTypeExtension>();
 
-    QmlBindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QmlBindingProvider));
+    BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QmlBindingProvider));
 
     static auto dataProvider = new QmlObjectDataProvider;
     ObjectDataProvider::registerProvider(dataProvider);

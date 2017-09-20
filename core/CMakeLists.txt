@@ -55,7 +55,7 @@ set(gammaray_srcs
 
   tools/bindinginspector/abstractbindingprovider.cpp
   tools/bindinginspector/bindingextension.cpp
-  tools/bindinginspector/qmlbindingmodel.cpp
+  tools/bindinginspector/bindingmodel.cpp
   tools/bindinginspector/bindingnode.cpp
   tools/metatypebrowser/metatypesmodel.cpp
   tools/messagehandler/messagehandler.cpp

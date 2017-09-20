@@ -1,5 +1,5 @@
 /*
-  qmlbindingmodel.cpp
+  bindingmodel.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,7 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "qmlbindingmodel.h"
+#include "bindingmodel.h"
 #include "bindingnode.h"
 #include "abstractbindingprovider.h"
 #include <common/objectmodel.h>
@@ -39,7 +39,7 @@
 
 using namespace GammaRay;
 
-std::vector<std::unique_ptr<AbstractBindingProvider>> QmlBindingModel::s_providers;
+std::vector<std::unique_ptr<AbstractBindingProvider>> BindingModel::s_providers;
 
 //connect to a functor
 template <typename Func>
@@ -53,22 +53,22 @@ static inline typename std::enable_if<QtPrivate::FunctionPointer<Func>::Argument
                         new QtPrivate::QFunctorSlotObjectWithNoArgs<Func, SlotReturnType>(std::move(slot)), type);
 }
 
-void GammaRay::QmlBindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider)
+void GammaRay::BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider)
 {
     s_providers.push_back(std::move(provider));
 }
 
-QmlBindingModel::QmlBindingModel(QObject* parent)
+BindingModel::BindingModel(QObject* parent)
     : QAbstractItemModel(parent)
     , m_obj(Q_NULLPTR)
 {
 }
 
-QmlBindingModel::~QmlBindingModel()
+BindingModel::~BindingModel()
 {
 }
 
-bool QmlBindingModel::setObject(QObject* obj)
+bool BindingModel::setObject(QObject* obj)
 {
     if (m_obj == obj)
         return true;
@@ -111,12 +111,12 @@ bool QmlBindingModel::setObject(QObject* obj)
     return typeMatches;
 }
 
-bool QmlBindingModel::lessThan(const std::unique_ptr<BindingNode> &a, const std::unique_ptr<BindingNode> &b) {
+bool BindingModel::lessThan(const std::unique_ptr<BindingNode> &a, const std::unique_ptr<BindingNode> &b) {
     return a->object() < b->object()
            || (a->object() == b->object() && a->propertyIndex() < b->propertyIndex());
 }
 
-void QmlBindingModel::findDependenciesFor(BindingNode* node)
+void BindingModel::findDependenciesFor(BindingNode* node)
 {
     if (node->isBindingLoop())
         return;
@@ -126,10 +126,10 @@ void QmlBindingModel::findDependenciesFor(BindingNode* node)
             node->dependencies().push_back(std::move(dependency));
         }
     }
-    std::sort(node->dependencies().begin(), node->dependencies().end(), &QmlBindingModel::lessThan);
+    std::sort(node->dependencies().begin(), node->dependencies().end(), &BindingModel::lessThan);
 }
 
-void QmlBindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
+void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
 {
     if (bindingNode->cachedValue() != bindingNode->readValue()) {
         bindingNode->refreshValue();
@@ -144,7 +144,7 @@ void QmlBindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index
         auto deps = provider->findDependenciesFor(bindingNode);
         newDependencies.insert(newDependencies.end(), std::make_move_iterator(deps.begin()), std::make_move_iterator(deps.end()));
     }
-    std::sort(newDependencies.begin(), newDependencies.end(), &QmlBindingModel::lessThan);
+    std::sort(newDependencies.begin(), newDependencies.end(), &BindingModel::lessThan);
     oldDependencies.reserve(newDependencies.size());
     auto oldIt = oldDependencies.begin();
     auto newIt = newDependencies.begin();
@@ -213,13 +213,13 @@ void QmlBindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index
     }
 }
 
-int QmlBindingModel::columnCount(const QModelIndex& parent) const
+int BindingModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return 5;
 }
 
-int QmlBindingModel::rowCount(const QModelIndex& parent) const
+int BindingModel::rowCount(const QModelIndex& parent) const
 {
     if (!parent.isValid())
         return m_bindings.size();
@@ -228,7 +228,7 @@ int QmlBindingModel::rowCount(const QModelIndex& parent) const
     return static_cast<BindingNode *>(parent.internalPointer())->dependencies().size();
 }
 
-QVariant QmlBindingModel::data(const QModelIndex& index, int role) const
+QVariant BindingModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -257,7 +257,7 @@ QVariant QmlBindingModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-Qt::ItemFlags QmlBindingModel::flags(const QModelIndex& index) const
+Qt::ItemFlags BindingModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
     BindingNode *binding = static_cast<BindingNode*>(index.internalPointer());
@@ -267,14 +267,14 @@ Qt::ItemFlags QmlBindingModel::flags(const QModelIndex& index) const
     return flags;
 }
 
-QMap<int, QVariant> QmlBindingModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> BindingModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
     d.insert(ObjectModel::DeclarationLocationRole, data(index, ObjectModel::DeclarationLocationRole));
     return d;
 }
 
-QVariant QmlBindingModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant BindingModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
@@ -288,7 +288,7 @@ QVariant QmlBindingModel::headerData(int section, Qt::Orientation orientation, i
     return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-QModelIndex GammaRay::QmlBindingModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex GammaRay::BindingModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!hasIndex(row, column, parent)) {
         return QModelIndex();
@@ -302,7 +302,7 @@ QModelIndex GammaRay::QmlBindingModel::index(int row, int column, const QModelIn
     return index;
 }
 
-QModelIndex QmlBindingModel::findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const
+QModelIndex BindingModel::findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const
 {
     for (size_t i = 0; i < container.size(); i++) {
         if (bindingNode->object() == container[i]->object() && bindingNode->propertyIndex() == container[i]->propertyIndex()) {
@@ -312,7 +312,7 @@ QModelIndex QmlBindingModel::findEquivalent(const std::vector<std::unique_ptr<Bi
     return QModelIndex();
 }
 
-QModelIndex GammaRay::QmlBindingModel::parent(const QModelIndex& child) const
+QModelIndex GammaRay::BindingModel::parent(const QModelIndex& child) const
 {
     if (!child.isValid())
         return QModelIndex();
