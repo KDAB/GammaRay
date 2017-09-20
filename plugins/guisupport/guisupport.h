@@ -55,9 +55,10 @@ private:
     void discoverObjects();
     void updateWindowTitle(QWindow *w);
     void updateWindowIcon(QWindow *w);
+    void restoreWindowIcon(QWindow *w);
     void restoreIconAndTitle();
 
-    QHash<QWindow*, QIcon> originalIcons;
+    QHash<QWindow*, QIcon> m_originalIcons;
     QString m_titleSuffix;
 #endif
 

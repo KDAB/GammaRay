@@ -483,35 +483,44 @@ void GuiSupport::updateWindowTitle(QWindow *w)
 
 void GuiSupport::updateWindowIcon(QWindow *w)
 {
-    static QVector<QPixmap> gammarayIcons;
+    static QIcon gammarayIcon;
     static const auto theme = QLatin1String("gammaray");
-    if (gammarayIcons.isEmpty()) {
-        gammarayIcons << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-16.png"))
-                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-22.png"))
-                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-24.png"))
-                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-32.png"))
-                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-48.png"))
-                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-64.png"))
-                      << QPixmap(QLatin1String(":/gammaray/images/gammaray-inject-128.png"));
+    if (gammarayIcon.availableSizes().isEmpty()) {
+        gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-16.png"));
+        gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-22.png"));
+        gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-24.png"));
+        gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-32.png"));
+        gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-48.png"));
+        gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-64.png"));
+        gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-128.png"));
     }
 
     QIcon oldIcon = w->icon();
-    if (oldIcon.isNull() || oldIcon.themeName() == theme) {
+
+    const QIcon &orgIcon = m_originalIcons[w];
+    if (oldIcon.isNull() || !orgIcon.isNull() || orgIcon.cacheKey() == oldIcon.cacheKey()) {
         return;
     }
-    originalIcons.insert(w, oldIcon);
+    m_originalIcons.insert(w, oldIcon);
 
     QIcon newIcon;
-    newIcon.setThemeName(theme);
-    foreach (const auto &pixmap, gammarayIcons) {
-        QPixmap pix(oldIcon.pixmap(oldIcon.actualSize(pixmap.size())));
+    foreach (const QSize &size, gammarayIcon.availableSizes()) {
+        QPixmap pix(oldIcon.pixmap(w, oldIcon.actualSize(size)));
         {
             QPainter p(&pix);
-            p.drawPixmap(0, 0, pixmap);
+            gammarayIcon.paint(&p, pix.rect());
         }
         newIcon.addPixmap(pix);
     }
     w->setIcon(newIcon);
+}
+
+void GuiSupport::restoreWindowIcon(QWindow *w)
+{
+    const QIcon oldIcon = m_originalIcons.take(w);
+    if (!oldIcon.isNull()) {
+        w->setIcon(oldIcon);
+    }
 }
 
 void GuiSupport::restoreIconAndTitle()
@@ -519,10 +528,7 @@ void GuiSupport::restoreIconAndTitle()
     if (qApp->closingDown())
         return;
     foreach (auto w, qApp->topLevelWindows()) {
-        const QIcon oldIcon = originalIcons.value(w);
-        if (!oldIcon.isNull()) {
-            w->setIcon(oldIcon);
-        }
+        restoreWindowIcon(w);
         w->setTitle(w->title().remove(m_titleSuffix));
     }
 }
@@ -555,6 +561,15 @@ bool GuiSupport::eventFilter(QObject *watched, QEvent *event)
             }
         }
     }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    else if (event->type() == QEvent::ScreenChangeInternal) {
+        if (auto w = qobject_cast<QWindow*>(watched)) {
+            if (w->isTopLevel()) {
+                restoreWindowIcon(w); // this will trigger WindowIconChange so we don't need to call it explicitly
+            }
+        }
+    }
+#endif
     return QObject::eventFilter(watched, event);
 }
 #endif
