@@ -66,7 +66,6 @@ public:
     BindingNode *parent() const;
     QObject *object() const;
     int propertyIndex() const;
-    qintptr id() const;
     const QString &canonicalName() const;
     bool isActive() const;
     bool isBindingLoop() const;
@@ -75,7 +74,6 @@ public:
     std::vector<std::unique_ptr<BindingNode>> &dependencies();
     const std::vector<std::unique_ptr<BindingNode>> &dependencies() const;
 
-    void setId(qintptr id);
     void setSourceLocation(SourceLocation location);
     void setCanonicalName(const QString &name);
 
@@ -83,10 +81,6 @@ private:
     BindingNode *m_parent;
     QObject *m_object;
     int m_propertyIndex;
-    /**
-     * An internal id that can be used to compare binding nodes. Do not use it to cast it back to a pointer.
-     */
-    qintptr m_id;
     QString m_canonicalName;
     QVariant m_value;
     bool m_isActive = true;
