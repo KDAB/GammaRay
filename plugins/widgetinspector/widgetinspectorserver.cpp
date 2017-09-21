@@ -67,6 +67,8 @@
 #include <QComboBox>
 #include <QDesktopWidget>
 #include <QDialog>
+#include <QGraphicsEffect>
+#include <QGraphicsProxyWidget>
 #include <QItemSelectionModel>
 #include <QLayout>
 #include <QLibrary>
@@ -534,17 +536,43 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_RO(QGridLayout, rowCount);
 
     MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_PROPERTY_RO(QWidget, actions);
+    MO_ADD_PROPERTY   (QWidget, backgroundRole, setBackgroundRole);
+#endif
+    MO_ADD_PROPERTY_RO(QWidget, contentsMargins);
+    MO_ADD_PROPERTY_RO(QWidget, contentsRect);
     MO_ADD_PROPERTY_RO(QWidget, focusProxy);
+    MO_ADD_PROPERTY_RO(QWidget, focusWidget);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_PROPERTY   (QWidget, foregroundRole, setForegroundRole);
+    MO_ADD_PROPERTY   (QWidget, graphicsEffect, setGraphicsEffect);
+    MO_ADD_PROPERTY_RO(QWidget, graphicsProxyWidget);
+#endif
+    MO_ADD_PROPERTY_RO(QWidget, hasFocus);
+    MO_ADD_PROPERTY_RO(QWidget, hasMouseTracking);
     MO_ADD_PROPERTY_RO(QWidget, isWindow);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QWidget, layout);
+    MO_ADD_PROPERTY   (QWidget, layout, setLayout);
 #endif
+    MO_ADD_PROPERTY_O2(QWidget, mask, setMask);
+    MO_ADD_PROPERTY_RO(QWidget, nativeParentWidget);
+    MO_ADD_PROPERTY_RO(QWidget, nextInFocusChain);
+    MO_ADD_PROPERTY_RO(QWidget, parentWidget);
+    MO_ADD_PROPERTY_RO(QWidget, previousInFocusChain);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_PROPERTY   (QWidget, style, setStyle);
+#endif
+    MO_ADD_PROPERTY_RO(QWidget, underMouse);
+    MO_ADD_PROPERTY_RO(QWidget, visibleRegion);
     MO_ADD_PROPERTY_RO(QWidget, window);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_PROPERTY_RO(QWidget, windowHandle);
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY   (QWidget, windowFlags, setWindowFlags);
+    MO_ADD_PROPERTY   (QWidget, windowRole, setWindowRole);
+    MO_ADD_PROPERTY   (QWidget, windowState, setWindowState);
 #endif
 
     MO_ADD_METAOBJECT1(QStyle, QObject);
