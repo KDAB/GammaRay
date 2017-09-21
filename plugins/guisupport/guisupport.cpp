@@ -499,17 +499,24 @@ QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
     }
 
     const QIcon &orgIcon = m_originalIcons[w];
-    if (!orgIcon.isNull() || orgIcon.cacheKey() == oldIcon.cacheKey()) {
+    if (!oldIcon.isNull() && (!orgIcon.isNull() || orgIcon.cacheKey() == oldIcon.cacheKey())) {
         return oldIcon;
     }
 
     QIcon newIcon;
     foreach (const QSize &size, gammarayIcon.availableSizes()) {
         QPixmap pix;
-        if (w) {
-            pix = oldIcon.pixmap(w, oldIcon.actualSize(size));
+        if (!oldIcon.isNull()) {
+            if (w) {
+                pix = oldIcon.pixmap(w, oldIcon.actualSize(size));
+            } else {
+                pix = oldIcon.pixmap(oldIcon.actualSize(size));
+            }
         } else {
-            pix = oldIcon.pixmap(oldIcon.actualSize(size));
+            const qreal ratio = w ? w->devicePixelRatio() : qApp->devicePixelRatio();
+            pix = QPixmap(size * ratio);
+            pix.setDevicePixelRatio(ratio);
+            pix.fill(Qt::transparent);
         }
         {
             QPainter p(&pix);
