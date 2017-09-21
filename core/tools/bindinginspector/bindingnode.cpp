@@ -39,7 +39,6 @@ BindingNode::BindingNode(QObject *obj, int propIndex, BindingNode *parent)
     : m_parent(parent)
     , m_object(obj)
     , m_propertyIndex(propIndex)
-    , m_isActive(true)
     , m_isBindingLoop(false)
 {
     Q_ASSERT(obj);
@@ -103,14 +102,6 @@ const QString & GammaRay::BindingNode::canonicalName() const
 {
     return m_canonicalName;
 }
-const QString & GammaRay::BindingNode::expression() const
-{
-    return m_expression;
-}
-bool GammaRay::BindingNode::isActive() const
-{
-    return m_isActive;
-}
 bool GammaRay::BindingNode::isBindingLoop() const
 {
     return m_isBindingLoop;
@@ -145,8 +136,6 @@ uint BindingNode::depth() const
         return std::numeric_limits<uint>::max(); // to be considered as infinity.
     }
     for (auto depIt = m_dependencies.cbegin(); depIt != m_dependencies.cend(); ++depIt) {
-        if (!(*depIt)->m_isActive)
-            continue;
         uint depDepth = (*depIt)->depth();
         if (depDepth == std::numeric_limits<uint>::max()) {
             depth = depDepth;

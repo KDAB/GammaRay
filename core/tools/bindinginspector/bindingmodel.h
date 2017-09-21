@@ -38,6 +38,7 @@
 #include <QPointer>
 
 class QQmlBinding;
+class BindingInspectorTest;
 
 namespace GammaRay {
 
@@ -61,7 +62,6 @@ public:
     QModelIndex index(int row, int column, const QModelIndex & parent) const override;
     QModelIndex parent(const QModelIndex & child) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
-    Qt::ItemFlags flags(const QModelIndex & index) const override;
 
     static void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
 
@@ -75,9 +75,16 @@ private:
     void findDependenciesFor(BindingNode *node);
     static bool lessThan(const std::unique_ptr<BindingNode> &a, const std::unique_ptr<BindingNode> &b);
 
+    const static int s_nameColumn = 0;
+    const static int s_valueColumn = 1;
+    const static int s_locationColumn = 2;
+    const static int s_depthColumn = 3;
+
     QPointer<QObject> m_obj;
     std::vector<std::unique_ptr<BindingNode>> m_bindings;
     static std::vector<std::unique_ptr<AbstractBindingProvider>> s_providers;
+
+    friend class ::BindingInspectorTest;
 };
 
 }
