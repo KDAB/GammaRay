@@ -35,7 +35,9 @@
 #include <memory>
 #include <vector>
 
+QT_BEGIN_NAMESPACE
 class QObject;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

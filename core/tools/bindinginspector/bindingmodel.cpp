@@ -79,7 +79,6 @@ bool BindingModel::setObject(QObject* obj)
             if (findEquivalent(m_bindings, node).isValid()) {
                 continue; // apparantly this is a duplicate.
             }
-            int index = m_bindings.size();
             int signalIndex = node->property().notifySignalIndex();
             if (signalIndex != -1) {
                 QMetaObject::connect(obj, signalIndex, this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);
@@ -101,7 +100,7 @@ void BindingModel::propertyChanged()
 {
     Q_ASSERT(sender() == m_obj);
 
-    for (int i = 0; i < m_bindings.size(); ++i) {
+    for (size_t i = 0; i < m_bindings.size(); ++i) {
         const auto &bindingNode = m_bindings[i];
         if (bindingNode->property().notifySignalIndex() == senderSignalIndex()) {
             refresh(bindingNode.get(), createIndex(i, 0, bindingNode.get()));
