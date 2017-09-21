@@ -31,12 +31,15 @@
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
 #include "quickpaintanalyzerextension.h"
-#include "quickimplicitbindingdependencyprovider.h"
 #include "geometryextension/sggeometryextension.h"
 #include "materialextension/materialextension.h"
 #include "materialextension/qquickopenglshadereffectmaterialadaptor.h"
 #include "textureextension/qsgtexturegrabber.h"
 #include "textureextension/textureextension.h"
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+#include "quickimplicitbindingdependencyprovider.h"
+#endif
 
 #include <common/modelevent.h>
 #include <common/objectbroker.h>
@@ -1055,7 +1058,9 @@ void QuickInspector::registerPCExtensions()
 
     PropertyAdaptorFactory::registerFactory(QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance());
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
+#endif
 }
 
 #define QSG_CHECK_TYPE(Class) \

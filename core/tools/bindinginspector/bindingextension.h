@@ -41,7 +41,7 @@ public:
     explicit BindingExtension(PropertyController *controller);
     ~BindingExtension();
 
-    bool setQObject(QObject *object) Q_DECL_OVERRIDE;
+    bool setQObject(QObject *object) override;
 
 private:
     BindingModel *m_bindingModel;

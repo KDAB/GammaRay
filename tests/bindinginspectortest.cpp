@@ -116,7 +116,7 @@ class MockObject : public QObject
 
 public:
     MockObject (int a, bool b, char c, double d, const QString &e)
-        : QObject(Q_NULLPTR)
+        : QObject(nullptr)
         , m_a(a)
         , m_b(b)
         , m_c(c)
@@ -1005,7 +1005,7 @@ void BindingInspectorTest::testIntegration()
     QCOMPARE(aHeightIndex.sibling(1, 4).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel->rowCount(aHeightIndex), 0);
 
-    Probe::instance()->selectObject(Q_NULLPTR); //TODO: is this the correct way (seems to crash in an independent part of GammaRay without)
+    Probe::instance()->selectObject(nullptr); //TODO: is this the correct way (seems to crash in an independent part of GammaRay without)
     delete rect;
 }
 

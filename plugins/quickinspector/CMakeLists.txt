@@ -19,7 +19,6 @@ if(Qt5Quick_FOUND)
     quickscenegraphmodel.cpp
     quickpaintanalyzerextension.cpp
     quickoverlay.cpp
-    quickimplicitbindingdependencyprovider.cpp
     materialextension/materialextension.cpp
     materialextension/materialshadermodel.cpp
     materialextension/qquickopenglshadereffectmaterialadaptor.cpp
@@ -33,6 +32,10 @@ if(Qt5Quick_FOUND)
     JSON gammaray_quickinspector.json
     SOURCES ${gammaray_quickinspector_srcs}
   )
+
+  if(NOT Qt5Quick_VERSION VERSION_LESS 5.7)
+    target_sources(gammaray_quickinspector PUBLIC quickimplicitbindingdependencyprovider.cpp)
+  endif()
 
   target_include_directories(gammaray_quickinspector SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(gammaray_quickinspector

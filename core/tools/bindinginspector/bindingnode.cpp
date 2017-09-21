@@ -27,7 +27,6 @@
 */
 
 #include "bindingnode.h"
-// #include "bindingextension.h"
 #include <core/util.h>
 
 #include <QDebug>
@@ -40,47 +39,14 @@ BindingNode::BindingNode(QObject *obj, int propIndex, BindingNode *parent)
     : m_parent(parent)
     , m_object(obj)
     , m_propertyIndex(propIndex)
+    , m_isActive(true)
+    , m_isBindingLoop(false)
 {
     Q_ASSERT(obj);
     m_canonicalName
         = m_object->metaObject() ? m_object->metaObject()->property(m_propertyIndex).name() : ":(";
     refreshValue();
     checkForLoops();
-}
-
-BindingNode::BindingNode(const BindingNode &other)
-    : m_parent(other.m_parent)
-    , m_object(other.m_object)
-    , m_propertyIndex(other.m_propertyIndex)
-    , m_canonicalName(other.m_canonicalName)
-    , m_value(other.m_value)
-    , m_isActive(other.m_isActive)
-    , m_isBindingLoop(other.m_isBindingLoop)
-    , m_expression(other.m_expression)
-    , m_sourceLocation(other.m_sourceLocation)
-{
-    m_dependencies.reserve(other.m_dependencies.size());
-    for (auto &&dependency : other.m_dependencies) {
-        m_dependencies.push_back(std::unique_ptr<BindingNode>(new BindingNode(*dependency)));
-    }
-}
-
-BindingNode::BindingNode(BindingNode &&other)
-    : m_parent(other.m_parent)
-    , m_object(other.m_object)
-    , m_propertyIndex(other.m_propertyIndex)
-    , m_canonicalName(other.m_canonicalName)
-    , m_value(other.m_value)
-    , m_isActive(other.m_isActive)
-    , m_isBindingLoop(other.m_isBindingLoop)
-    , m_expression(other.m_expression)
-    , m_sourceLocation(other.m_sourceLocation)
-    , m_dependencies(std::move(other.m_dependencies))
-{
-//     dependencies.reserve(other.dependencies.size());
-//     for (auto &&dependency : other.dependencies) {
-//         dependencies.push_back(std::unique_ptr<BindingNode>(new BindingNode(*dependency)));
-//     }
 }
 
 void BindingNode::checkForLoops()
@@ -178,10 +144,10 @@ uint BindingNode::depth() const
     if (m_isBindingLoop) {
         return std::numeric_limits<uint>::max(); // to be considered as infinity.
     }
-    for (const auto &dependency : m_dependencies) {
-        if (!dependency->m_isActive)
+    for (auto depIt = m_dependencies.cbegin(); depIt != m_dependencies.cend(); ++depIt) {
+        if (!(*depIt)->m_isActive)
             continue;
-        uint depDepth = dependency->depth();
+        uint depDepth = (*depIt)->depth();
         if (depDepth == std::numeric_limits<uint>::max()) {
             depth = depDepth;
             break;

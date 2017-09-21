@@ -49,7 +49,7 @@ QQmlAbstractBinding *QmlBindingProvider::bindingForProperty(QObject *obj, int pr
 {
     auto data = QQmlData::get(obj);
     if (!data || !data->hasBindingBit(propertyIndex))
-        return Q_NULLPTR;
+        return nullptr;
 
     auto b = data->bindings;
     while (b) {
@@ -61,7 +61,7 @@ QQmlAbstractBinding *QmlBindingProvider::bindingForProperty(QObject *obj, int pr
         }
         b = b->nextBinding();
     }
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 // std::unique_ptr<BindingNode> QmlBindingProvider::bindingNodeFromQmlProperty(QQmlProperty property, BindingNode * parent)
