@@ -36,8 +36,10 @@
 #include <core/tools/bindinginspector/abstractbindingprovider.h>
 #include <QQmlProperty>
 
+QT_BEGIN_NAMESPACE
 class QQmlAbstractBinding;
 class QQmlBinding;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

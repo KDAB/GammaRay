@@ -32,12 +32,10 @@
 #include "gammaray_core_export.h"
 
 #include <QAbstractItemModel>
-#include <QVector>
 #include <memory>
 #include <vector>
 #include <QPointer>
 
-class QQmlBinding;
 class BindingInspectorTest;
 
 namespace GammaRay {
