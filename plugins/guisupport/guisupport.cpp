@@ -79,8 +79,7 @@ GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
 
     if (auto guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance())) {
-        m_originalAppIcon = guiApp->windowIcon();
-        guiApp->setWindowIcon(createIcon(m_originalAppIcon));
+        updateWindowIcon();
 
         m_probe->installGlobalEventFilter(this);
         foreach (auto w , qGuiApp->topLevelWindows()) {
@@ -499,29 +498,33 @@ QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
         gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-128.png"));
     }
 
-    const QIcon &orgIcon = m_originalIcons[w];
-    if (!oldIcon.isNull() && (!orgIcon.isNull() || orgIcon.cacheKey() == oldIcon.cacheKey())) {
+    // Make sure to override the window icon with the app icon if it was initialized with it
+    if (w) {
+        const auto it = m_originalIcons.constFind(qApp);
+        const QIcon appIcon = it != m_originalIcons.constEnd() ? it.value() : qApp->windowIcon();
+        if (oldIcon.cacheKey() == appIcon.cacheKey() || oldIcon.cacheKey() == qApp->windowIcon().cacheKey()) {
+            return qApp->windowIcon();
+        }
+    }
+
+    const auto it = m_originalIcons.constFind(w ? (QObject *)w : (QObject *)qApp);
+    if (!oldIcon.isNull() && (it != m_originalIcons.constEnd() && it.value().cacheKey() == oldIcon.cacheKey())) {
         return oldIcon;
     }
 
+    const bool highDpiEnabled = qApp->testAttribute(Qt::AA_UseHighDpiPixmaps);
     QIcon newIcon;
     foreach (const QSize &size, gammarayIcon.availableSizes()) {
-        QPixmap pix;
-        if (!oldIcon.isNull()) {
-            if (w) {
-                pix = oldIcon.pixmap(w, oldIcon.actualSize(size));
-            } else {
-                pix = oldIcon.pixmap(oldIcon.actualSize(size));
-            }
-        } else {
-            const qreal ratio = w ? w->devicePixelRatio() : qApp->devicePixelRatio();
+        QPixmap pix = oldIcon.pixmap(oldIcon.actualSize(size));
+        if (pix.isNull()) {
+            const qreal ratio = highDpiEnabled ? (w ? w->devicePixelRatio() : qApp->devicePixelRatio()) : 1.0;
             pix = QPixmap(size * ratio);
             pix.setDevicePixelRatio(ratio);
             pix.fill(Qt::transparent);
         }
         {
             QPainter p(&pix);
-            gammarayIcon.paint(&p, pix.rect());
+            gammarayIcon.paint(&p, QRect(QPoint(), pix.size() / pix.devicePixelRatio()));
         }
         newIcon.addPixmap(pix);
     }
@@ -530,19 +533,26 @@ QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
 
 void GuiSupport::updateWindowIcon(QWindow *w)
 {
-    const QIcon oldIcon = w->icon();
+    const QIcon oldIcon = w ? w->icon() : qApp->windowIcon();
     const QIcon newIcon = createIcon(oldIcon, w);
     if (oldIcon.cacheKey() != newIcon.cacheKey()) {
-        m_originalIcons.insert(w, oldIcon);
-        w->setIcon(newIcon);
+        m_originalIcons.insert(w ? (QObject *)w : (QObject *)qApp, oldIcon);
+        if (w)
+            w->setIcon(newIcon);
+        else
+            qApp->setWindowIcon(newIcon);
     }
 }
 
 void GuiSupport::restoreWindowIcon(QWindow *w)
 {
-    const QIcon oldIcon = m_originalIcons.take(w);
-    if (!oldIcon.isNull()) {
-        w->setIcon(oldIcon);
+    auto it = m_originalIcons.find(w ? (QObject *)w : (QObject *)qApp);
+    if (it != m_originalIcons.end()) {
+        if (w)
+            w->setIcon(it.value());
+        else
+            qApp->setWindowIcon(it.value());
+        m_originalIcons.erase(it);
     }
 }
 
@@ -554,7 +564,7 @@ void GuiSupport::restoreIconAndTitle()
         restoreWindowIcon(w);
         w->setTitle(w->title().remove(m_titleSuffix));
     }
-    qApp->setWindowIcon(m_originalAppIcon);
+    restoreWindowIcon();
 }
 
 
@@ -585,15 +595,6 @@ bool GuiSupport::eventFilter(QObject *watched, QEvent *event)
             }
         }
     }
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-    else if (event->type() == QEvent::ScreenChangeInternal) {
-        if (auto w = qobject_cast<QWindow*>(watched)) {
-            if (w->isTopLevel()) {
-                restoreWindowIcon(w); // this will trigger WindowIconChange so we don't need to call it explicitly
-            }
-        }
-    }
-#endif
     return QObject::eventFilter(watched, event);
 }
 #endif
