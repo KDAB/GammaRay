@@ -51,8 +51,8 @@ public:
     bool canProvideBindingsFor(QObject *object) override;
 
 private:
-    std::unique_ptr<BindingNode> createBindingNode(QObject *obj, const char *propertyName, BindingNode *parent = Q_NULLPTR);
-    void anchorBindings(std::vector<std::unique_ptr<BindingNode>> &dependencies, QQuickAnchors *anchors, int propertyIndex, BindingNode *parent = Q_NULLPTR);
+    std::unique_ptr<BindingNode> createBindingNode(QObject *obj, const char *propertyName, BindingNode *parent = nullptr);
+    void anchorBindings(std::vector<std::unique_ptr<BindingNode>> &dependencies, QQuickAnchors *anchors, int propertyIndex, BindingNode *parent = nullptr);
     template<class Func> void childrenRectDependencies(QQuickItem *item, Func addDependency);
     template<class Func> void positionerDependencies(QQuickItem *item, Func addDependency);
     template<class Func> void implicitSizeDependencies(QQuickItem *item, Func addDependency);

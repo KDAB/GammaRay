@@ -44,7 +44,7 @@ class BindingTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BindingTab(PropertyWidget *parent = Q_NULLPTR);
+    explicit BindingTab(PropertyWidget *parent = nullptr);
     ~BindingTab();
 
 private slots:

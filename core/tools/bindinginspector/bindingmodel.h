@@ -41,7 +41,7 @@ class QQmlBinding;
 
 namespace GammaRay {
 
-struct BindingNode;
+class BindingNode;
 class AbstractBindingProvider;
 
 class GAMMARAY_CORE_EXPORT BindingModel : public QAbstractItemModel
@@ -49,21 +49,24 @@ class GAMMARAY_CORE_EXPORT BindingModel : public QAbstractItemModel
     Q_OBJECT
 public:
 
-    explicit BindingModel (QObject *parent = Q_NULLPTR);
+    explicit BindingModel (QObject *parent = nullptr);
     ~BindingModel();
 
     bool setObject(QObject *obj);
 
-    int rowCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex &parent) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent) const override;
+    int columnCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     QModelIndex index(int row, int column, const QModelIndex & parent) const override;
     QModelIndex parent(const QModelIndex & child) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     Qt::ItemFlags flags(const QModelIndex & index) const override;
 
-    static GAMMARAY_CORE_EXPORT void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
+    static void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
+
+private slots:
+    void propertyChanged();
 
 private:
     QModelIndex findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const;

@@ -45,12 +45,10 @@ namespace GammaRay {
 
 class QmlBindingExtension;
 
-struct GAMMARAY_CORE_EXPORT BindingNode
+class GAMMARAY_CORE_EXPORT BindingNode
 {
 public:
-    BindingNode (QObject *object, int propertyIndex, BindingNode *parent = Q_NULLPTR);
-    BindingNode(const BindingNode &other);
-    BindingNode(BindingNode &&other);
+    BindingNode (QObject *object, int propertyIndex, BindingNode *parent = nullptr);
 
     QMetaProperty property() const;
     uint depth() const;
@@ -83,11 +81,13 @@ private:
     int m_propertyIndex;
     QString m_canonicalName;
     QVariant m_value;
-    bool m_isActive = true;
-    bool m_isBindingLoop = false;
+    bool m_isActive;
+    bool m_isBindingLoop;
     QString m_expression;
     SourceLocation m_sourceLocation;
-    std::vector<std::unique_ptr<BindingNode>> m_dependencies = {};
+    std::vector<std::unique_ptr<BindingNode>> m_dependencies;
+
+    BindingNode &operator=(const BindingNode &other); // MSVC 2010-style delete
 
     friend class MockBindingProvider;
 };

@@ -159,7 +159,7 @@ void QuickImplicitBindingDependencyProvider::implicitSizeDependencies(QQuickItem
 template<class Func>
 void QuickImplicitBindingDependencyProvider::childrenRectDependencies(QQuickItem *item, Func addDependency)
 {
-    for (auto &&child : item->childItems()) {
+    foreach (auto &&child, item->childItems()) {
         addDependency("childrenRect", child, "width");
         addDependency("childrenRect", child, "height");
     }
@@ -167,7 +167,7 @@ void QuickImplicitBindingDependencyProvider::childrenRectDependencies(QQuickItem
 template<class Func>
 void QuickImplicitBindingDependencyProvider::positionerDependencies(QQuickItem *item, Func addDependency)
 {
-    for (QQuickItem *child : item->childItems()) {
+    foreach (QQuickItem *child, item->childItems()) {
         addDependency("implicitWidth", child, "width");
         addDependency("implicitHeight", child, "height");
     }

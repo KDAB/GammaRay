@@ -31,10 +31,13 @@
 #include "qmlattachedpropertyadaptor.h"
 #include "qjsvaluepropertyadaptor.h"
 #include "qmlcontextpropertyadaptor.h"
-#include "qmlbindingprovider.h"
 #include "qmlcontextextension.h"
 #include "qmltypeextension.h"
 #include "qmltypeutil.h"
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+#include "qmlbindingprovider.h"
+#endif
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -377,7 +380,9 @@ QmlSupport::QmlSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     PropertyController::registerExtension<QmlContextExtension>();
     PropertyController::registerExtension<QmlTypeExtension>();
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QmlBindingProvider));
+#endif
 
     static auto dataProvider = new QmlObjectDataProvider;
     ObjectDataProvider::registerProvider(dataProvider);
