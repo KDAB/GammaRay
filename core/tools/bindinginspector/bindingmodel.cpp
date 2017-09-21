@@ -135,7 +135,7 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
 {
     if (bindingNode->cachedValue() != bindingNode->readValue()) {
         bindingNode->refreshValue();
-        emit dataChanged(createIndex(index.row(), 1, bindingNode), createIndex(index.row(), 1, bindingNode));
+        emit dataChanged(createIndex(index.row(), s_valueColumn, bindingNode), createIndex(index.row(), s_valueColumn, bindingNode));
     }
     uint oldDepth = bindingNode->depth();
 
@@ -211,14 +211,14 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
     }
 
     if (bindingNode->depth() != oldDepth) {
-        emit dataChanged(createIndex(index.row(), 4, bindingNode), createIndex(index.row(), 4, bindingNode));
+        emit dataChanged(createIndex(index.row(), s_depthColumn, bindingNode), createIndex(index.row(), s_depthColumn, bindingNode));
     }
 }
 
 int BindingModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return 5;
+    return 4;
 }
 
 int BindingModel::rowCount(const QModelIndex& parent) const
@@ -241,13 +241,12 @@ QVariant BindingModel::data(const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case 0: {
+            case s_nameColumn: {
                 return binding->canonicalName();
             }
-            case 1: return binding->cachedValue();
-            case 2: return binding->expression();
-            case 3: return binding->sourceLocation().displayString();
-            case 4: {
+            case s_valueColumn: return binding->cachedValue();
+            case s_locationColumn: return binding->sourceLocation().displayString();
+            case s_depthColumn: {
                 uint depth = binding->depth();
                 return depth == std::numeric_limits<uint>::max() ? QStringLiteral("∞") : QString::number(depth);
             }
@@ -257,16 +256,6 @@ QVariant BindingModel::data(const QModelIndex& index, int role) const
     }
 
     return QVariant();
-}
-
-Qt::ItemFlags BindingModel::flags(const QModelIndex& index) const
-{
-    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-    BindingNode *binding = static_cast<BindingNode*>(index.internalPointer());
-    if (binding && !binding->isActive()) {
-        flags &= ~Qt::ItemIsEnabled;
-    }
-    return flags;
 }
 
 QMap<int, QVariant> BindingModel::itemData(const QModelIndex &index) const
@@ -280,11 +269,10 @@ QVariant BindingModel::headerData(int section, Qt::Orientation orientation, int 
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return tr("Property");
-            case 1: return tr("Value");
-            case 2: return tr("Expression");
-            case 3: return tr("Source");
-            case 4: return tr("Depth");
+            case s_nameColumn: return tr("Property");
+            case s_valueColumn: return tr("Value");
+            case s_locationColumn: return tr("Source");
+            case s_depthColumn: return tr("Depth");
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);

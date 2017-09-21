@@ -26,52 +26,48 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QMLBINDINGNODE_H
-#define GAMMARAY_QMLBINDINGNODE_H
+#ifndef GAMMARAY_BINDINGNODE_H
+#define GAMMARAY_BINDINGNODE_H
 
-#include <QAbstractTableModel>
-#include <QVector>
+// Own
+#include "gammaray_core_export.h"
+#include <common/sourcelocation.h>
+
+// Qt
+#include <QVariant>
+
+// Std
 #include <memory>
 #include <vector>
 
-#include "gammaray_core_export.h"
-
-#include <common/sourcelocation.h>
-
-class QQmlAbstractBinding;
-class QQmlBinding;
+class MockBindingProvider;
 
 namespace GammaRay {
-
-class QmlBindingExtension;
 
 class GAMMARAY_CORE_EXPORT BindingNode
 {
 public:
     BindingNode (QObject *object, int propertyIndex, BindingNode *parent = nullptr);
 
+    BindingNode *parent() const;
+    QObject *object() const;
+    int propertyIndex() const;
     QMetaProperty property() const;
+
+    const QString &canonicalName() const;
+    bool isBindingLoop() const;
+    SourceLocation sourceLocation() const;
     uint depth() const;
+    QVariant cachedValue() const;
+    QVariant readValue() const;
+
+    std::vector<std::unique_ptr<BindingNode>> &dependencies();
+    const std::vector<std::unique_ptr<BindingNode>> &dependencies() const;
 
     void refreshValue();
     void checkForLoops();
 
     void setParent(BindingNode *newParent);
-
-    QVariant cachedValue() const;
-    QVariant readValue() const;
-
-    BindingNode *parent() const;
-    QObject *object() const;
-    int propertyIndex() const;
-    const QString &canonicalName() const;
-    bool isActive() const;
-    bool isBindingLoop() const;
-    const QString &expression() const;
-    SourceLocation sourceLocation() const;
-    std::vector<std::unique_ptr<BindingNode>> &dependencies();
-    const std::vector<std::unique_ptr<BindingNode>> &dependencies() const;
-
     void setSourceLocation(SourceLocation location);
     void setCanonicalName(const QString &name);
 
@@ -81,18 +77,18 @@ private:
     int m_propertyIndex;
     QString m_canonicalName;
     QVariant m_value;
-    bool m_isActive;
     bool m_isBindingLoop;
-    QString m_expression;
     SourceLocation m_sourceLocation;
     std::vector<std::unique_ptr<BindingNode>> m_dependencies;
 
     BindingNode &operator=(const BindingNode &other); // MSVC 2010-style delete
+    BindingNode(const BindingNode &other);
+    BindingNode(BindingNode &&other);
 
-    friend class MockBindingProvider;
+    friend class ::MockBindingProvider;
 };
 
 }
 
-#endif // GAMMARAY_QMLBINDINGNODE_H
+#endif // GAMMARAY_BINDINGNODE_H
 
