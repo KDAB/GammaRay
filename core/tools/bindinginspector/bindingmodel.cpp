@@ -4,8 +4,9 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Authors: Volker Krause <volker.krause@kdab.com>
+           Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,12 +27,15 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Own
 #include "bindingmodel.h"
 #include "bindingnode.h"
 #include "abstractbindingprovider.h"
+
 #include <common/objectmodel.h>
 #include <core/util.h>
 
+// Qt
 #include <QDebug>
 #include <QMetaProperty>
 
@@ -89,9 +93,6 @@ bool BindingModel::setObject(QObject* obj)
 
         endResetModel();
     }
-//     std::sort(m_bindings.begin(), m_bindings.end(), [](std::unique_ptr<BindingNode>& node1, std::unique_ptr<BindingNode>& node2){
-//         return node1->
-//     });
     m_obj = obj;
     return typeMatches;
 }
@@ -166,10 +167,6 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
             }
             beginInsertRows(index, idx, idx + count - 1);
             for (int i = 0; i < count; ++i) {
-//                 auto newNode = new BindingNode(*newIt->get());
-//                 newNode->setParent(bindingNode);
-//                 findDependenciesFor(newNode);
-//                 oldIt = oldDependencies.insert(oldIt, std::unique_ptr<BindingNode>(newNode));
                 (*newIt)->setParent(bindingNode);
                 findDependenciesFor(newIt->get());
                 oldIt = oldDependencies.insert(oldIt, std::move(*newIt));
@@ -190,10 +187,6 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
 
         beginInsertRows(index, idx, idx + count - 1);
         while (newIt != newDependencies.end()) {
-//             auto newNode = new BindingNode(*newIt->get());
-//             newNode->setParent(bindingNode);
-//             findDependenciesFor(newNode);
-//             oldDependencies.push_back(std::unique_ptr<BindingNode>(newNode));
             (*newIt)->setParent(bindingNode);
             findDependenciesFor(newIt->get());
             oldDependencies.push_back(std::move(*newIt));
