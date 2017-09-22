@@ -30,6 +30,7 @@
 #define GAMMARAY_WIDGETINSPECTOR_OVERLAYWIDGET_H
 
 #include <QLayout>
+#include <QPointer>
 #include <QWidget>
 
 namespace GammaRay {
@@ -75,10 +76,10 @@ public:
 
 private:
     inline bool isLayout() const { Q_ASSERT(!isNull()); return qobject_cast<QLayout *>(m_object); }
-    inline QLayout *asLayout() const { return static_cast<QLayout *>(m_object); }
-    inline QWidget *asWidget() const { return static_cast<QWidget *>(m_object); }
+    inline QLayout *asLayout() const { return static_cast<QLayout *>(m_object.data()); }
+    inline QWidget *asWidget() const { return static_cast<QWidget *>(m_object.data()); }
 
-    QObject *m_object;
+    QPointer<QObject> m_object;
 };
 
 class OverlayWidget : public QWidget
