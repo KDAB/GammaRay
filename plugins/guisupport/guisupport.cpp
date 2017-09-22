@@ -78,19 +78,20 @@ GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     m_titleSuffix = tr(" (Injected by GammaRay)");
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
 
+    if (auto guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance())) {
+        m_originalAppIcon = guiApp->windowIcon();
+        guiApp->setWindowIcon(createIcon(m_originalAppIcon));
 
-    m_originalAppIcon = qApp->windowIcon();
-    qApp->setWindowIcon(createIcon(m_originalAppIcon));
-
-    m_probe->installGlobalEventFilter(this);
-    foreach (auto w , qApp->topLevelWindows()) {
-        updateWindowIcon(w);
-        updateWindowTitle(w);
+        m_probe->installGlobalEventFilter(this);
+        foreach (auto w , qGuiApp->topLevelWindows()) {
+            updateWindowIcon(w);
+            updateWindowTitle(w);
+        }
+        // TODO: calling this code in the destructore would cause a crash as we need a defined state of
+        // Gammaray. Enable this connect as soon as somkething like ProbeInterface::aboutToDetatch
+        // is implemented.
+        //connect(m_probe, &ProbeInterface::aboutToDetatch, this, &GuiSupport::restoreIconAndTitle);
     }
-    // TODO: calling this code in the destructore would cause a crash as we need a defined state of
-    // Gammaray. Enable this connect as soon as somkething like ProbeInterface::aboutToDetatch
-    // is implemented.
-    //connect(m_probe, &ProbeInterface::aboutToDetatch, this, &GuiSupport::restoreIconAndTitle);
 #endif
 }
 
