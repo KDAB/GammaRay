@@ -3,8 +3,8 @@
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
-//
-  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+
+  Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,22 +26,18 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Own
 #include "quickimplicitbindingdependencyprovider.h"
+
 #include <core/util.h>
 #include <core/tools/bindinginspector/bindingnode.h>
 
+// Qt
 #include <QDebug>
 
 #include <QtQuick/QQuickItem>
 #include <private/qquickitem_p.h>
 #include <private/qquickitemchangelistener_p.h>
-
-#include <private/qqmlabstractbinding_p.h>
-#include <private/qqmlbinding_p.h>
-#include <private/qqmlvaluetypeproxybinding_p.h>
-#include <private/qqmldata_p.h>
-#include <private/qqmlproperty_p.h>
-#include <QFile>
 
 using namespace GammaRay;
 

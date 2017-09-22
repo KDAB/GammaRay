@@ -4,8 +4,9 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Authors: Volker Krause <volker.krause@kdab.com>
+           Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -29,12 +30,16 @@
 #ifndef GAMMARAY_BINDINGMODEL_H
 #define GAMMARAY_BINDINGMODEL_H
 
+// Own
 #include "gammaray_core_export.h"
 
+// Qt
 #include <QAbstractItemModel>
+#include <QPointer>
+
+// Std
 #include <memory>
 #include <vector>
-#include <QPointer>
 
 class BindingInspectorTest;
 

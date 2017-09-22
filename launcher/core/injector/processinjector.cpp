@@ -84,13 +84,11 @@ bool ProcessInjector::launchProcess(const QStringList &programAndArgs,
         newArgs += args;
         args = newArgs;
         qDebug() << "Launching with target wrapper:" << args;
-    } else if (int gdbVal = env.value(QStringLiteral("GAMMARAY_GDB")).toInt()) {
+    } else if (env.value(QStringLiteral("GAMMARAY_GDB")).toInt()) {
         QStringList newArgs;
         newArgs << QStringLiteral("gdb");
 #ifndef Q_OS_MAC
-        if (gdbVal == 2) {
-            newArgs << QStringLiteral("--eval-command") << QStringLiteral("run");
-        }
+        newArgs << QStringLiteral("--eval-command") << QStringLiteral("run");
 #endif
         newArgs << QStringLiteral("--args");
         newArgs += args;
