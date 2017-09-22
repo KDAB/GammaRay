@@ -52,6 +52,7 @@ WidgetInspectorInterface::WidgetInspectorInterface(QObject *parent)
     : QObject(parent)
 {
     qRegisterMetaTypeStreamOperators<Features>();
+    qRegisterMetaTypeStreamOperators<WidgetFrameData>();
     ObjectBroker::registerObject<WidgetInspectorInterface *>(this);
 }
 
@@ -71,4 +72,17 @@ void WidgetInspectorInterface::setFeatures(WidgetInspectorInterface::Features fe
     m_features = features;
     emit featuresChanged();
 }
+
+QDataStream& operator<<(QDataStream &out, const WidgetFrameData &data)
+{
+    out << data.tabFocusRects;
+    return out;
+}
+
+QDataStream& operator>>(QDataStream& in, WidgetFrameData &data)
+{
+    in >> data.tabFocusRects;
+    return in;
+}
+
 }

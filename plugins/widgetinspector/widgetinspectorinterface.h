@@ -29,8 +29,11 @@
 #ifndef GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTORINTERFACE_H
 #define GAMMARAY_WIDGETINSPECTOR_WIDGETINSPECTORINTERFACE_H
 
-#include <QObject>
+#include <QDataStream>
 #include <QMetaType>
+#include <QObject>
+#include <QRect>
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
 class QImage;
@@ -73,9 +76,20 @@ signals:
 private:
     Features m_features;
 };
+
+class WidgetFrameData
+{
+public:
+    QVector<QRect> tabFocusRects;
+};
+
+QDataStream &operator<<(QDataStream &out, const WidgetFrameData &data);
+QDataStream &operator>>(QDataStream &in, WidgetFrameData &data);
+
 }
 
 Q_DECLARE_METATYPE(GammaRay::WidgetInspectorInterface::Features)
+Q_DECLARE_METATYPE(GammaRay::WidgetFrameData)
 Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::WidgetInspectorInterface::Features)
 QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::WidgetInspectorInterface, "com.kdab.GammaRay.WidgetInspector")

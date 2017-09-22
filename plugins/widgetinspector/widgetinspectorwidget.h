@@ -39,9 +39,9 @@ class QModelIndex;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class RemoteViewWidget;
 class WidgetInspectorInterface;
 class Widget3DView;
+class WidgetRemoteView;
 
 namespace Ui {
 class WidgetInspectorWidget;
@@ -74,7 +74,7 @@ private:
     QScopedPointer<Ui::WidgetInspectorWidget> ui;
     UIStateManager m_stateManager;
     WidgetInspectorInterface *m_inspector;
-    RemoteViewWidget *m_remoteView;
+    WidgetRemoteView *m_remoteView;
     Widget3DView *m_3dView;
 };
 

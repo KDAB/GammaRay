@@ -92,6 +92,7 @@ private slots:
     void analyzePainting() override;
 
     void updateWidgetPreview();
+    QVector<QRect> tabFocusChain(QWidget *window) const;
 
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
     void pickElementId(const GammaRay::ObjectId& id);

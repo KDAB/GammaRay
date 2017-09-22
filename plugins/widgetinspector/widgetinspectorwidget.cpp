@@ -34,6 +34,7 @@
 #include "ui_widgetinspectorwidget.h"
 #include "waextension/widgetattributetab.h"
 #include "widgetmodelroles.h"
+#include "widgetremoteview.h"
 
 #ifdef GAMMARAY_WITH_WIDGET3D
 #include "widget3dview.h"
@@ -46,8 +47,8 @@
 
 #include <ui/contextmenuextension.h>
 #include <ui/paintbufferviewer.h>
-#include <ui/remoteviewwidget.h>
 #include <ui/searchlinecontroller.h>
+#include <ui/uiresources.h>
 
 #include <QComboBox>
 #include <QDebug>
@@ -72,7 +73,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     , ui(new Ui::WidgetInspectorWidget)
     , m_stateManager(this)
     , m_inspector(nullptr)
-    , m_remoteView(new RemoteViewWidget(this))
+    , m_remoteView(new WidgetRemoteView(this))
     , m_3dView(nullptr)
 {
     ObjectBroker::registerClientObjectFactoryCallback<WidgetInspectorInterface *>(
@@ -114,6 +115,12 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
 
     foreach (auto action, m_remoteView->interactionModeActions()->actions())
         toolbar->addAction(action);
+    toolbar->addSeparator();
+
+    auto action = new QAction(UIResources::themedIcon(QLatin1String("active-focus.png")), tr("Show Tab Focus Chain"), this);
+    action->setCheckable(true);
+    connect(action, SIGNAL(toggled(bool)), m_remoteView, SLOT(setTabFocusOverlayEnabled(bool)));
+    toolbar->addAction(action);
     toolbar->addSeparator();
 
     toolbar->addAction(m_remoteView->zoomOutAction());

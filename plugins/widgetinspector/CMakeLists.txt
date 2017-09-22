@@ -64,6 +64,7 @@ if(GAMMARAY_BUILD_UI)
     widgetinspectorinterface.cpp
     widgetinspectorclient.cpp
     widgetclientmodel.cpp
+    widgetremoteview.cpp
 
     waextension/widgetattributetab.cpp
 

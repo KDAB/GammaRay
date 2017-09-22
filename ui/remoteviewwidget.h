@@ -151,6 +151,7 @@ protected:
     // translates from source coordinates to view coordinates
     QPoint mapFromSource(QPoint pos) const;
     QPointF mapFromSource(QPointF pos) const;
+    QRectF mapFromSource(const QRect &rect) const;
     // translate from view to source coordinates
     QTouchEvent::TouchPoint mapToSource(const QTouchEvent::TouchPoint &point);
 

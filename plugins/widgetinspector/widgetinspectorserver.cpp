@@ -269,7 +269,33 @@ void WidgetInspectorServer::updateWidgetPreview()
 
     RemoteViewFrame frame;
     frame.setImage(imageForWidget(m_selectedWidget->window()));
+    WidgetFrameData data;
+    data.tabFocusRects = tabFocusChain(m_selectedWidget->window());
+    frame.setData(QVariant::fromValue(data));
     m_remoteView->sendFrame(frame);
+}
+
+QVector<QRect> WidgetInspectorServer::tabFocusChain(QWidget* window) const
+{
+    QVector<QRect> r;
+    QSet<QWidget*> widgets;
+    auto w = window;
+    while (w->nextInFocusChain()) {
+        w = w->nextInFocusChain();
+        if (widgets.contains(w))
+            break;
+        widgets.insert(w);
+        if (!w->isVisible() || !w->isEnabled())
+            continue;
+        if ((w->focusPolicy() & Qt::TabFocus) == 0)
+            continue;
+        const auto rect = QRect(w->mapTo(window, QPoint(0, 0)), w->size());
+        if (!window->rect().contains(rect)) // happens for example for inactive dock widgets
+            continue;
+        r.push_back(rect);
+    }
+
+    return r;
 }
 
 void WidgetInspectorServer::requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode)
