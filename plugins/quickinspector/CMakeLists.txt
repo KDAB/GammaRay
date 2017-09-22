@@ -39,6 +39,16 @@ if(Qt5Quick_FOUND)
     gammaray_kitemmodels
   )
 
+  if (TARGET Qt5::Gui_GLESv2)
+       include(CheckCXXSourceCompiles)
+       set (CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} Qt5::Gui_GLESv2)
+       CHECK_CXX_SOURCE_COMPILES("int main() {return 0;}" CAN_LINK_GUI_GLESV2)
+       if (CAN_LINK_GUI_GLESV2)
+           set(HAVE_GLESv2 TRUE)
+           target_link_libraries(gammaray_quickinspector Qt5::Gui_GLESv2)
+       endif ()
+  endif()
+
   if(GAMMARAY_BUILD_UI)
     # ui plugin
     set(gammaray_quickinspector_ui_srcs
