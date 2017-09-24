@@ -54,10 +54,12 @@ ConnectPage::ConnectPage(QWidget *parent)
 {
     ui->setupUi(this);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    m_implicitPortWarningSign = new QAction(QIcon(":/launcher/warning.png"), tr("No port given, will use 11732"), this);
-    m_fileIsNotASocketWarning = new QAction(qApp->style()->standardIcon(QStyle::SP_MessageBoxCritical)
-                                            , tr("File is not a socket")
-                                            , this);
+    m_implicitPortWarningSign =
+        new QAction(QIcon(":/launcher/warning.png"), tr("No port given, will use 11732"), this);
+
+    m_fileIsNotASocketWarning =
+        new QAction(qApp->style()->standardIcon(QStyle::SP_MessageBoxCritical),
+                    tr("File is not a socket"), this);
 #endif
     connect(ui->host, SIGNAL(textChanged(QString)), SLOT(validateHostAddress(QString)));
     connect(ui->host, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
@@ -110,18 +112,19 @@ void ConnectPage::handleLocalAddress(QString &stillToParse, bool &correctSoFar)
     if (stillToParse.startsWith(localPrefix))
         stillToParse.remove(localPrefix); //don't remove second slash
 
-    // Its also okay, if only a path to an existing file is given
+    // It's okay if only a path to an existing file is given
     QFileInfo localSocketFile(stillToParse);
     if (localSocketFile.exists() && !localSocketFile.isDir() && !localSocketFile.isSymLink()) {
         QT_STATBUF statbuf;
-        QT_STAT(QFile::encodeName(localSocketFile.filePath()), &statbuf);
-        if(!S_ISSOCK(statbuf.st_mode)) {
-            showFileIsNotSocketWarning();
-        } else {
-            stillToParse = "";
-            correctSoFar = true;
-            m_currentUrl.setScheme("local");
-            m_currentUrl.setPath(localSocketFile.filePath());
+        if (QT_STAT(QFile::encodeName(localSocketFile.filePath()), &statbuf) == 0) {
+            if(!S_ISSOCK(statbuf.st_mode)) {
+                showFileIsNotSocketWarning();
+            } else {
+                stillToParse = "";
+                correctSoFar = true;
+                m_currentUrl.setScheme("local");
+                m_currentUrl.setPath(localSocketFile.filePath());
+            }
         }
     }
 #endif
@@ -151,12 +154,19 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
         possibleIPv6InterfaceAddress = QHostAddress(interfaceFormat.cap(1));
 
     const auto skipPort = true;
-    if (!possibleIPv4Address.isNull())
+    if (!possibleIPv4Address.isNull()) {
         handleAddressAndPort(stillToParse, correctSoFar, possibleIPv4Address.toString());
-    if (!possibleIPv6Address.isNull())
+    }
+
+    if (!possibleIPv6Address.isNull()) {
         handleAddressAndPort(stillToParse, correctSoFar, possibleIPv6Address.toString(), skipPort);
-    if (!possibleIPv6BracketAddress.isNull())
-        handleAddressAndPort(stillToParse, correctSoFar, QLatin1Char('[') + possibleIPv6BracketAddress.toString() + QLatin1Char(']'));
+    }
+
+    if (!possibleIPv6BracketAddress.isNull()) {
+        handleAddressAndPort(stillToParse, correctSoFar,
+                             QLatin1Char('[') + possibleIPv6BracketAddress.toString() + QLatin1Char(']'));
+    }
+
     if (!possibleIPv6InterfaceAddress.isNull()){
         stillToParse.replace(interfaceFormat.cap(2), QString());
         handleAddressAndPort(stillToParse, correctSoFar, possibleIPv6InterfaceAddress.toString());
@@ -166,8 +176,9 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
 void ConnectPage::handleHostName(QString &stillToParse)
 {
     // handle tcp prefix
-    if (stillToParse.startsWith(tcpPrefix))
+    if (stillToParse.startsWith(tcpPrefix)) {
         stillToParse.remove(0, tcpPrefix.size());
+    }
     m_currentUrl.setScheme("tcp");
 
     // cut off port first and handle port
