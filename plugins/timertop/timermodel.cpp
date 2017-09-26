@@ -74,11 +74,6 @@ struct TimerIdData
         , changed(false)
     { }
 
-    bool isValid() const
-    {
-        return info.isValid();
-    }
-
     void update(const TimerId &id, QObject *receiver = nullptr)
     {
         info.update(id, receiver);
@@ -251,7 +246,6 @@ bool TimerModel::eventNotifyCallback(void *data[])
 
     if (event->type() == QEvent::Timer) {
         const QTimerEvent *const timerEvent = static_cast<QTimerEvent *>(event);
-        Q_ASSERT(timerEvent->timerId() != -1);
         const QTimer *const timer = qobject_cast<QTimer*>(receiver);
 
         // If there is a QTimer associated with this timer ID, don't handle it here, it will be handled
@@ -535,36 +529,63 @@ void TimerModel::triggerPushChanges()
 void TimerModel::pushChanges()
 {
     QMutexLocker locker(&m_mutex);
-    TimerIdInfoHash infoHash;
+    TimerIdInfoContainer changes;
+    QSet<int> activeQTimers;
 
-    infoHash.reserve(m_gatheredTimersData.count());
+    // TimerId are sort by types matching the TimerId::Type order first
+    // so we garranty that free timers checks are done after any qqmltimer/qtimer.
     for (auto it = m_gatheredTimersData.begin(); it != m_gatheredTimersData.end();) {
-        // Invalidated during the sync delay, remove entry
-        if (!it.value().isValid()) {
-            it = m_gatheredTimersData.erase(it);
-            continue;
-        }
-
         TimerIdData &itInfo = it.value();
 
+        // If a free timer did not changed and own an active QTimer id,
+        // then make it invalid.
+        if (!itInfo.changed) {
+            if (it.key().type() == TimerId::QObjectType) {
+                if (itInfo.info.state > TimerIdInfo::InactiveState) {
+                    if (activeQTimers.contains(itInfo.info.timerId) ||
+                            !itInfo.info.lastReceiverObject) {
+                        itInfo.info.type = TimerId::InvalidType;
+                        itInfo.info.state = TimerIdInfo::InvalidState;
+                        itInfo.changed = true;
+                    }
+                }
+            }
+        }
+
         if (itInfo.changed) {
-            infoHash.insert(it.key(), itInfo.toInfo(it.key().type()));
+            // If a TimerId of type TimerId::QObjectType just changed,
+            // then this free timer id is still valid, remove it from activeQTimers.
+            if (it.key().type() == TimerId::QObjectType) {
+                if (itInfo.info.state > TimerIdInfo::InactiveState) {
+                    if (itInfo.info.lastReceiverObject) {
+                        activeQTimers.remove(itInfo.info.timerId);
+                    } else {
+                        itInfo.info.type = TimerId::InvalidType;
+                        itInfo.info.state = TimerIdInfo::InvalidState;
+                    }
+                }
+            }
+
+            changes.insert(it.key(), itInfo.toInfo(it.key().type()));
             itInfo.changed = false;
+        }
+
+        // Remember active QTimer id to detect invalid free timers
+        if (it.key().type() == TimerId::QTimerType && itInfo.info.state > TimerIdInfo::InactiveState) {
+            activeQTimers << itInfo.info.timerId;
         }
 
         ++it;
     }
-    infoHash.squeeze();
 
     locker.unlock();
-    applyChanges(infoHash);
+    applyChanges(changes);
 }
 
-void TimerModel::applyChanges(const GammaRay::TimerIdInfoHash &changes)
+void TimerModel::applyChanges(const TimerIdInfoContainer &changes)
 {
     QSet<TimerId> updatedIds;
     QVector<QPair<int, int>> dataChangedRanges; // pair of first/last
-    QSet<int> qtimerIds;
 
     // Update QQmlTimer / QTimer entries
     for (int i = 0; i < m_sourceModel->rowCount(); ++i) {
@@ -597,10 +618,6 @@ void TimerModel::applyChanges(const GammaRay::TimerIdInfoHash &changes)
                 dataChangedRanges.last().second = i;
             }
         }
-
-        // Remember valid QTimer id's for later
-        if (it.value().timerId != -1)
-            qtimerIds << it.value().timerId;
     }
 
     // Update existing free timers entries
@@ -625,11 +642,6 @@ void TimerModel::applyChanges(const GammaRay::TimerIdInfoHash &changes)
     QVector<TimerIdInfo> freeTimersToInsert;
     freeTimersToInsert.reserve(changes.count() - updatedIds.count());
     for (auto it = changes.constBegin(), end = changes.constEnd(); it != end; ++it) {
-        // If a TimerId of type TimerId::QObjectType just changed then this free timer id is still valid,
-        // remove it from qtimerIds.
-        if (it.key().type() == TimerId::QObjectType)
-            qtimerIds.remove(it.key().timerId());
-
         if (updatedIds.contains(it.key()))
             continue;
 
@@ -640,6 +652,11 @@ void TimerModel::applyChanges(const GammaRay::TimerIdInfoHash &changes)
         freeTimersToInsert << it.value();
     }
 
+    // Inform model about data changes
+    foreach (const auto &range, dataChangedRanges) {
+        emit dataChanged(index(range.first, 0), index(range.second, columnCount() - 1));
+    }
+
     // Inform model about new rows
     if (!freeTimersToInsert.isEmpty()) {
         const int first = m_sourceModel->rowCount() + m_freeTimersInfo.count();
@@ -647,41 +664,6 @@ void TimerModel::applyChanges(const GammaRay::TimerIdInfoHash &changes)
         beginInsertRows(QModelIndex(), first, last);
         m_freeTimersInfo << freeTimersToInsert;
         endInsertRows();
-    }
-
-    // Inform model about data changes
-    foreach (const auto &range, dataChangedRanges) {
-        emit dataChanged(index(range.first, 0), index(range.second, columnCount() - 1));
-    }
-
-    // Check for invalid free timers
-    // Invalid QQmlTimer/QTimer are handled in the source model begin remove rows slot already.
-    // We considere free timers invalid if an id is used by a qtimer already and free timer id
-    // is not part of this changes.
-    QVector<QPair<int, int>> removeRowsRanges; // pair of first/last
-
-    for (int row = 0; row < m_freeTimersInfo.count(); ++row) {
-        const TimerIdInfo &it = m_freeTimersInfo[row];
-
-        // This is an invalid free timer
-        if (qtimerIds.contains(it.timerId)) {
-            const int i = m_sourceModel->rowCount() + row;
-
-            if (removeRowsRanges.isEmpty() || removeRowsRanges.last().second != i - 1) {
-                removeRowsRanges << qMakePair(i, i);
-            } else {
-                removeRowsRanges.last().second = i;
-            }
-        }
-    }
-
-    // Inform model about rows removal
-    for (int i = removeRowsRanges.count() -1; i >= 0; --i) {
-        const auto &range = removeRowsRanges[i];
-
-        beginRemoveRows(QModelIndex(), range.first, range.second);
-        m_freeTimersInfo.remove(range.first - m_sourceModel->rowCount(), range.second - range.first + 1);
-        endRemoveRows();
     }
 }
 
@@ -696,20 +678,20 @@ void TimerModel::slotBeginRemoveRows(const QModelIndex &parent, int start, int e
     // TODO: Use a delayed timer for that so the hash is iterated once only for a
     // group of successive removal ?
     for (auto it = m_timersInfo.begin(); it != m_timersInfo.end();) {
-        if (it.value().isValid()) {
+        if (it.value().lastReceiverObject) {
             ++it;
         } else {
             m_gatheredTimersData.remove(it.key());
             it = m_timersInfo.erase(it);
         }
     }
-
-    // TODO: Automatically remove invalidated free timers because of the removal of deleted objects.
 }
 
 void TimerModel::slotEndRemoveRows()
 {
     endRemoveRows();
+
+    triggerPushChanges();
 }
 
 void TimerModel::slotBeginInsertRows(const QModelIndex &parent, int start, int end)

@@ -33,7 +33,7 @@
 #include <common/objectmodel.h>
 
 #include <QAbstractTableModel>
-#include <QHash>
+#include <QMap>
 #include <QMetaMethod>
 #include <QMutex>
 #include <QVector>
@@ -48,6 +48,9 @@ struct TimerIdData;
 class TimerModel : public QAbstractTableModel
 {
     Q_OBJECT
+    typedef QMap<TimerId, TimerIdInfo> TimerIdInfoContainer;
+    typedef QMap<TimerId, TimerIdData> TimerIdDataContainer;
+
 public:
     virtual ~TimerModel();
 
@@ -90,7 +93,7 @@ public slots:
 private slots:
     void triggerPushChanges();
     void pushChanges();
-    void applyChanges(const GammaRay::TimerIdInfoHash &changes);
+    void applyChanges(const GammaRay::TimerModel::TimerIdInfoContainer &changes);
 
     void slotBeginRemoveRows(const QModelIndex &parent, int start, int end);
     void slotEndRemoveRows();
@@ -109,7 +112,7 @@ private:
 
     // model data
     QAbstractItemModel *m_sourceModel;
-    mutable TimerIdInfoHash m_timersInfo;
+    mutable TimerIdInfoContainer m_timersInfo;
     QVector<TimerIdInfo> m_freeTimersInfo;
 
     QTimer *m_pushTimer;
@@ -119,7 +122,7 @@ private:
     const int m_timeoutIndex;
     mutable int m_qmlTimerTriggeredIndex;
 
-    QHash<TimerId, TimerIdData> m_gatheredTimersData;
+    TimerIdDataContainer m_gatheredTimersData;
     QMutex m_mutex; // protects m_gatheredTimersData
 };
 
