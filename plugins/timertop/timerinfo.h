@@ -78,7 +78,8 @@ struct TimerIdInfo
     };
 
     TimerIdInfo()
-        : timerId(-1)
+        : type(TimerId::InvalidType)
+        , timerId(-1)
         , interval(0)
         , totalWakeups(0)
         , lastReceiverAddress(nullptr)
@@ -98,6 +99,7 @@ struct TimerIdInfo
 
     bool isValid() const;
 
+    TimerId::Type type;
     int timerId;
     int interval;
 

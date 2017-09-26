@@ -31,6 +31,10 @@
 #include "timerinfo.h"
 #include "timermodel.h"
 
+#include <QApplication>
+#include <QFont>
+#include <QColor>
+
 using namespace GammaRay;
 
 ClientTimerModel::ClientTimerModel(QObject *parent)
@@ -44,24 +48,60 @@ ClientTimerModel::~ClientTimerModel()
 
 QVariant ClientTimerModel::data(const QModelIndex &index, int role) const
 {
-    if (hasIndex(index.row(), index.column()) && role == Qt::DisplayRole) {
-        switch (static_cast<TimerModel::Columns>(index.column())) {
-        case TimerModel::ColumnCount:
-            Q_ASSERT(false);
-        case TimerModel::ObjectNameColumn:
-        case TimerModel::TimerIdColumn:
-        case TimerModel::TotalWakeupsColumn:
-            // Use source model data
-            break;
-        case TimerModel::StateColumn:
-            return stateToString(QSortFilterProxyModel::data(index, role).toInt(),
-                                 QSortFilterProxyModel::data(index, TimerModel::TimerIntervalRole).toInt());
-        case TimerModel::WakeupsPerSecColumn:
-            return wakeupsPerSecToString(QSortFilterProxyModel::data(index, role).toReal());
-        case TimerModel::TimePerWakeupColumn:
-            return timePerWakeupToString(QSortFilterProxyModel::data(index, role).toReal());
-        case TimerModel::MaxTimePerWakeupColumn:
-            return maxWakeupTimeToString(QSortFilterProxyModel::data(index, role).toUInt());
+    if (hasIndex(index.row(), index.column())) {
+        if (role == Qt::DisplayRole) {
+            switch (static_cast<TimerModel::Columns>(index.column())) {
+            case TimerModel::ColumnCount:
+                Q_ASSERT(false);
+            case TimerModel::ObjectNameColumn:
+            case TimerModel::TimerIdColumn:
+            case TimerModel::TotalWakeupsColumn:
+                // Use source model data
+                break;
+            case TimerModel::StateColumn:
+                return stateToString(QSortFilterProxyModel::data(index, role).toInt(),
+                                     QSortFilterProxyModel::data(index, TimerModel::TimerIntervalRole).toInt());
+            case TimerModel::WakeupsPerSecColumn:
+                return wakeupsPerSecToString(QSortFilterProxyModel::data(index, role).toReal());
+            case TimerModel::TimePerWakeupColumn:
+                return timePerWakeupToString(QSortFilterProxyModel::data(index, role).toReal());
+            case TimerModel::MaxTimePerWakeupColumn:
+                return maxWakeupTimeToString(QSortFilterProxyModel::data(index, role).toUInt());
+            }
+        } else if (role == Qt::ToolTipRole) {
+            const QModelIndex sibling = index.sibling(index.row(), TimerModel::ObjectNameColumn);
+            const TimerId::Type type = TimerId::Type(sibling.data(TimerModel::TimerTypeRole).toInt());
+            switch (type) {
+            case TimerId::InvalidType:
+                return tr("Invalid");
+            case TimerId::QQmlTimerType:
+                return tr("QQmlTimer");
+            case TimerId::QTimerType:
+                return tr("QTimer");
+            case TimerId::QObjectType:
+                return tr("Free Timer");
+            }
+        } else if (role == Qt::FontRole) {
+            const QModelIndex stateSibling = index.sibling(index.row(), TimerModel::StateColumn);
+            const TimerIdInfo::State state = TimerIdInfo::State(QSortFilterProxyModel::data(stateSibling, Qt::DisplayRole).toInt());
+            const QModelIndex typeSibling = index.sibling(index.row(), TimerModel::ObjectNameColumn);
+            const TimerId::Type type = TimerId::Type(typeSibling.data(TimerModel::TimerTypeRole).toInt());
+            QFont font = QApplication::font("QAbstractItemView");
+            font.setStrikeOut(type == TimerId::InvalidType || state == TimerIdInfo::InvalidState);
+            return QVariant::fromValue(font);
+        } else if(role == Qt::BackgroundRole) {
+            const QModelIndex sibling = index.sibling(index.row(), TimerModel::ObjectNameColumn);
+            const TimerId::Type type = TimerId::Type(sibling.data(TimerModel::TimerTypeRole).toInt());
+            switch (type) {
+            case TimerId::InvalidType:
+                return QColor(255, 0, 0, 80);
+            case TimerId::QQmlTimerType:
+                return QColor(80, 0, 0, 40);
+            case TimerId::QTimerType:
+                return QColor(0, 80, 0, 40);
+            case TimerId::QObjectType:
+                return QColor(0, 0, 80, 40);
+            }
         }
     }
 
@@ -97,7 +137,7 @@ QString ClientTimerModel::stateToString(int state, int interval)
 {
     switch (static_cast<TimerIdInfo::State>(state)) {
     case TimerIdInfo::InvalidState: // None
-        return tr("None");
+        return tr("None (%1 ms)").arg(interval);
     case TimerIdInfo::InactiveState: // Not Running
         return tr("Inactive (%1 ms)").arg(interval);
     case TimerIdInfo::SingleShotState: // Single Shot
