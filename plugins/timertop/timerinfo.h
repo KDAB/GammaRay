@@ -61,6 +61,7 @@ public:
     int timerId() const;
 
     bool operator==(const TimerId &other) const;
+    bool operator<(const TimerId &other) const;
 
 private:
     Type m_type;
@@ -97,8 +98,6 @@ struct TimerIdInfo
      */
     void update(const TimerId &id, QObject *receiver = nullptr);
 
-    bool isValid() const;
-
     TimerId::Type type;
     int timerId;
     int interval;
@@ -113,8 +112,6 @@ struct TimerIdInfo
     qreal timePerWakeup;
     uint maxWakeupTime;
 };
-
-typedef QHash<TimerId, TimerIdInfo> TimerIdInfoHash;
 
 uint qHash(const TimerId &id);
 }

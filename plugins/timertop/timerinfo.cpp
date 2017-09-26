@@ -131,6 +131,34 @@ bool TimerId::operator==(const TimerId &other) const
     return false;
 }
 
+bool TimerId::operator<(const TimerId &other) const
+{
+    if (m_type == other.m_type) {
+        switch (m_type) {
+        case TimerId::InvalidType: {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+            Q_UNREACHABLE();
+#else
+            Q_ASSERT(false);
+#endif
+            return false;
+        }
+
+        case TimerId::QQmlTimerType:
+        case TimerId::QTimerType:
+            return m_timerAddress < other.m_timerAddress;
+
+        case TimerId::QObjectType: {
+            if (m_timerId == other.m_timerId)
+                return m_timerAddress < other.m_timerAddress;
+            return m_timerId < other.m_timerId;
+        }
+        }
+    }
+
+    return m_type < other.m_type;
+}
+
 void TimerIdInfo::update(const TimerId &id, QObject *receiver)
 {
     QObject *object = receiver ? receiver : id.address();
@@ -212,9 +240,4 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
         break;
     }
     }
-}
-
-bool TimerIdInfo::isValid() const
-{
-    return !lastReceiverObject.isNull();
 }
