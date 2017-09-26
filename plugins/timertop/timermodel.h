@@ -107,6 +107,7 @@ private:
 
     const TimerIdInfo *findTimerInfo(const QModelIndex &index) const;
     bool canHandleCaller(QObject *caller, int methodIndex) const;
+    void checkDispatcherStatus(QObject *object);
 
     static bool eventNotifyCallback(void *data[]);
 
@@ -121,6 +122,7 @@ private:
     // the method index of the timeout() signal of a QTimer
     const int m_timeoutIndex;
     mutable int m_qmlTimerTriggeredIndex;
+    mutable int m_qmlTimerRunningChangedIndex;
 
     TimerIdDataContainer m_gatheredTimersData;
     QMutex m_mutex; // protects m_gatheredTimersData
