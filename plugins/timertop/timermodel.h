@@ -72,7 +72,8 @@ public:
     };
 
     enum Roles {
-        TimerIntervalRole = ObjectModel::UserRole
+        TimerIntervalRole = ObjectModel::UserRole,
+        TimerTypeRole
     };
 
     void setSourceModel(QAbstractItemModel *sourceModel);

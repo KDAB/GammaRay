@@ -135,6 +135,7 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
 {
     QObject *object = receiver ? receiver : id.address();
 
+    type = id.type();
     state = InvalidState;
     interval = 0;
 

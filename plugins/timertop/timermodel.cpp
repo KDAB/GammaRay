@@ -285,8 +285,9 @@ TimerModel::~TimerModel()
 {
     QMutexLocker locker(&m_mutex);
     QInternal::unregisterCallback(QInternal::EventNotifyCallback, eventNotifyCallback);
-    m_timersInfo.clear();
     m_gatheredTimersData.clear();
+    m_timersInfo.clear();
+    m_freeTimersInfo.clear();
 }
 
 bool TimerModel::isInitialized()
@@ -452,9 +453,7 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
         if (timerInfo) {
             return timerInfo->interval;
         }
-    }
-
-    if (index.column() == 0) {
+    } else if (index.column() == 0) {
         auto timerInfo = findTimerInfo(index);
         if (!timerInfo)
             return QVariant();
@@ -478,6 +477,8 @@ QVariant TimerModel::data(const QModelIndex &index, int role) const
                 const auto loc = ObjectDataProvider::declarationLocation(object);
                 return loc.isValid() ? QVariant::fromValue(loc) : QVariant();
             }
+            case TimerTypeRole:
+                return int(timerInfo->type);
         }
     }
 
@@ -495,6 +496,7 @@ QMap<int, QVariant> TimerModel::itemData(const QModelIndex &index) const
         v = index.data(ObjectModel::DeclarationLocationRole);
         if (v.isValid())
             d.insert(ObjectModel::DeclarationLocationRole, v);
+        d.insert(TimerTypeRole, index.data(TimerTypeRole));
     }
     if (index.column() == StateColumn)
         d.insert(TimerModel::TimerIntervalRole, index.data(TimerModel::TimerIntervalRole));
