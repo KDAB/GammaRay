@@ -165,6 +165,13 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
 
     type = id.type();
     state = InvalidState;
+
+    // The timer became invalid
+    if (!object || (lastReceiverAddress == object && !lastReceiverObject)) {
+        type = TimerId::InvalidType;
+        return;
+    }
+
     interval = 0;
 
     switch (id.type()) {

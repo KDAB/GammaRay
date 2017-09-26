@@ -39,6 +39,7 @@
 #include <QTimerEvent>
 #include <QTime>
 #include <QTimer>
+#include <QAbstractEventDispatcher>
 
 #include <QInternal>
 
@@ -178,6 +179,7 @@ TimerModel::TimerModel(QObject *parent)
     , m_triggerPushChangesMethod(QOBJECT_METAMETHOD(TimerModel, triggerPushChanges()))
     , m_timeoutIndex(QTimer::staticMetaObject.indexOfSignal("timeout()"))
     , m_qmlTimerTriggeredIndex(-1)
+    , m_qmlTimerRunningChangedIndex(-1)
 {
     Q_ASSERT(m_triggerPushChangesMethod.methodIndex() != -1);
 
@@ -224,10 +226,52 @@ bool TimerModel::canHandleCaller(QObject *caller, int methodIndex) const
     if (isQQmlTimer && m_qmlTimerTriggeredIndex < 0) {
         m_qmlTimerTriggeredIndex = caller->metaObject()->indexOfMethod("triggered()");
         Q_ASSERT(m_qmlTimerTriggeredIndex != -1);
+        m_qmlTimerRunningChangedIndex = caller->metaObject()->indexOfMethod("runningChanged()");
+        Q_ASSERT(m_qmlTimerRunningChangedIndex != -1);
     }
 
-    return (isQTimer && m_timeoutIndex == methodIndex) |
-            (isQQmlTimer && m_qmlTimerTriggeredIndex == methodIndex);
+    return (isQTimer && m_timeoutIndex == methodIndex) ||
+            (isQQmlTimer && (m_qmlTimerTriggeredIndex == methodIndex ||
+                             m_qmlTimerRunningChangedIndex == methodIndex));
+}
+
+void TimerModel::checkDispatcherStatus(QObject *object)
+{
+    // m_mutex have to be locked!!
+    static QHash<QAbstractEventDispatcher *, QTime> dispatcherChecks;
+    QAbstractEventDispatcher *dispatcher = QAbstractEventDispatcher::instance(object->thread());
+    auto it = dispatcherChecks.find(dispatcher);
+
+    if (it == dispatcherChecks.end()) {
+        it = dispatcherChecks.insert(dispatcher, QTime());
+        it.value().start();
+    }
+
+    if (it.value().elapsed() < m_pushTimer->interval())
+        return;
+
+    for (auto gIt = m_gatheredTimersData.begin(), end = m_gatheredTimersData.end(); gIt != end; ++gIt) {
+        QObject *gItObject = gIt.value().info.lastReceiverObject;
+        QAbstractEventDispatcher *gItDispatcher = QAbstractEventDispatcher::instance(gItObject ? gItObject->thread() : nullptr);
+
+        if (gItDispatcher != dispatcher) {
+            if (!gItObject)
+                gIt.value().update(gIt.key(), gItObject);
+            continue;
+        }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        const int remaining = dispatcher->remainingTime(gIt.key().timerId());
+#else
+        const int remaining = gIt.value().info.lastReceiverObject ? 0 : -1;
+#endif
+
+        // Timer inactive or invalid
+        if (remaining == -1)
+            gIt.value().update(gIt.key(), gItObject);
+    }
+
+    it.value().restart();
 }
 
 bool TimerModel::eventNotifyCallback(void *data[])
@@ -268,6 +312,7 @@ bool TimerModel::eventNotifyCallback(void *data[])
             it.value().update(id, receiver);
             it.value().addEvent(timeoutEvent);
 
+            s_timerModel->checkDispatcherStatus(receiver);
             s_timerModel->m_triggerPushChangesMethod.invoke(s_timerModel, Qt::QueuedConnection);
         }
     }
@@ -317,10 +362,12 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
         it.value().update(id);
     }
 
-    if (!it.value().functionCallTimer.start()) {
-        cout << "TimerModel::preSignalActivate(): Recursive timeout for timer "
-             << (void *)caller << "!" << endl;
-        return;
+    if (methodIndex != m_qmlTimerRunningChangedIndex) {
+        if (!it.value().functionCallTimer.start()) {
+            cout << "TimerModel::preSignalActivate(): Recursive timeout for timer "
+                 << (void *)caller << "!" << endl;
+            return;
+        }
     }
 }
 
@@ -343,17 +390,23 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
         return;
     }
 
-    if (!it.value().functionCallTimer.active()) {
-        cout << "TimerModel::postSignalActivate(): Timer not active: "
-             << (void *)caller << "!" << endl;
-        return;
+    if (methodIndex != m_qmlTimerRunningChangedIndex) {
+        if (!it.value().functionCallTimer.active()) {
+            cout << "TimerModel::postSignalActivate(): Timer not active: "
+                 << (void *)caller << "!" << endl;
+            return;
+        }
     }
 
-    const TimeoutEvent timeoutEvent(QTime::currentTime(), it.value().functionCallTimer.stop());
     // safe, nobody in this thread had a chance to delete caller since Probe validated it
     it.value().update(id);
-    it.value().addEvent(timeoutEvent);
 
+    if (methodIndex != m_qmlTimerRunningChangedIndex) {
+        const TimeoutEvent timeoutEvent(QTime::currentTime(), it.value().functionCallTimer.stop());
+        it.value().addEvent(timeoutEvent);
+    }
+
+    checkDispatcherStatus(caller);
     m_triggerPushChangesMethod.invoke(this, Qt::QueuedConnection);
 }
 
