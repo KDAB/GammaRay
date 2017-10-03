@@ -9,6 +9,7 @@
 # described in Install. txt
 
 requires(linux:!android|win32:!winphone:!winrt)
+requires(!integrity)
 requires(!cross_compile)
 
 win32: requires(!contains(QMAKE_HOST.version_string,  $$re_escape(8.1)))
