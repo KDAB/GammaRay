@@ -307,7 +307,7 @@ void Launcher::timeout()
 {
     d->state |= InjectorFailed;
 
-    std::cerr << "Target not responding - timeout." << std::endl;
+    std::cerr << "Target not responding - timeout. Try setting the env variable GAMMARAY_LAUNCHER_TIMEOUT to a bigger value (in seconds)." << std::endl;
     std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting"
               <<  std::endl;
     checkDone();
