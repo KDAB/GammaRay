@@ -53,7 +53,7 @@ protected:
     void timerEvent(QTimerEvent *event) override
     {
         Q_UNUSED(event);
-        m_widget->update();
+        m_widget->repaint();
         // killTimer(event->timerId());
     }
     //! [Missing killTimer]
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     QObject::connect(btn, &QPushButton::clicked, &w, [&w]() {
         //! [Missing setSingleShot]
         auto timer = new QTimer(&w);
-        QObject::connect(timer, SIGNAL(timeout()), &w, SLOT(update()));
+        QObject::connect(timer, SIGNAL(timeout()), &w, SLOT(repaint()));
         timer->setInterval(0);
         // timer->setSingleShot(true);
         timer->start();
