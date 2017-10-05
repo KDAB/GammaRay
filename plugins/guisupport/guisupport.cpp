@@ -76,6 +76,7 @@ GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     m_titleSuffix = tr(" (Injected by GammaRay)");
+    m_restoringIconsAndTitle = false;
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
 
     if (auto guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance())) {
@@ -86,10 +87,7 @@ GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
             updateWindowIcon(w);
             updateWindowTitle(w);
         }
-        // TODO: calling this code in the destructore would cause a crash as we need a defined state of
-        // Gammaray. Enable this connect as soon as somkething like ProbeInterface::aboutToDetatch
-        // is implemented.
-        //connect(m_probe, &ProbeInterface::aboutToDetatch, this, &GuiSupport::restoreIconAndTitle);
+        connect(m_probe->probe(), SIGNAL(aboutToDetach()), this, SLOT(restoreIconAndTitle()), Qt::DirectConnection);
     }
 #endif
 }
@@ -558,6 +556,7 @@ void GuiSupport::restoreWindowIcon(QWindow *w)
 
 void GuiSupport::restoreIconAndTitle()
 {
+    m_restoringIconsAndTitle = true;
     if (qApp->closingDown())
         return;
     foreach (auto w, qApp->topLevelWindows()) {
@@ -582,16 +581,18 @@ void GuiSupport::objectCreated(QObject *object)
 
 bool GuiSupport::eventFilter(QObject *watched, QEvent *event)
 {
-    if (event->type() == QEvent::WindowTitleChange) {
-        if (auto w = qobject_cast<QWindow*>(watched)) {
-            if (w->isTopLevel()) {
-                updateWindowTitle(w);
+    if (!m_restoringIconsAndTitle) {
+        if (event->type() == QEvent::WindowTitleChange) {
+            if (auto w = qobject_cast<QWindow*>(watched)) {
+                if (w->isTopLevel()) {
+                    updateWindowTitle(w);
+                }
             }
-        }
-    } else if(event->type() == QEvent::WindowIconChange) {
-        if (auto w = qobject_cast<QWindow*>(watched)) {
-            if (w->isTopLevel()) {
-                updateWindowIcon(w);
+        } else if(event->type() == QEvent::WindowIconChange) {
+            if (auto w = qobject_cast<QWindow*>(watched)) {
+                if (w->isTopLevel()) {
+                    updateWindowIcon(w);
+                }
             }
         }
     }
