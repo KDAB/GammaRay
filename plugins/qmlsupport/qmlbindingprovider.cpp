@@ -30,7 +30,7 @@
 #include "qmlbindingprovider.h"
 
 #include <core/util.h>
-#include <core/tools/bindinginspector/bindingnode.h>
+#include <core/bindingnode.h>
 
 // Qt
 #include <private/qqmlabstractbinding_p.h>
@@ -41,7 +41,7 @@
 
 using namespace GammaRay;
 
-QQmlAbstractBinding *QmlBindingProvider::bindingForProperty(QObject *obj, int propertyIndex)
+QQmlAbstractBinding *QmlBindingProvider::bindingForProperty(QObject *obj, int propertyIndex) const
 {
     auto data = QQmlData::get(obj);
     if (!data || !data->hasBindingBit(propertyIndex))
@@ -60,19 +60,19 @@ QQmlAbstractBinding *QmlBindingProvider::bindingForProperty(QObject *obj, int pr
     return nullptr;
 }
 
-bool QmlBindingProvider::canProvideBindingsFor(QObject *object)
+bool QmlBindingProvider::canProvideBindingsFor(QObject *object) const
 {
     return QQmlData::get(object);
 }
 
-void QmlBindingProvider::fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding)
+void QmlBindingProvider::fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding) const
 {
     QV4::Function *function = binding->function();
     QQmlSourceLocation loc = function->sourceLocation();
     node->setSourceLocation(SourceLocation(QUrl(loc.sourceFile), loc.line, loc.column));
 }
 
-std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFor(BindingNode *node)
+std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFor(BindingNode *node) const
 {
     std::vector<std::unique_ptr<BindingNode>> dependencies;
     if (node->isBindingLoop()) // Don't look for further dependencies, if this is already known to be part of a loop.
@@ -98,7 +98,7 @@ std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFo
     return dependencies;
 }
 
-std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findBindingsFor(QObject *obj)
+std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findBindingsFor(QObject *obj) const
 {
     std::vector<std::unique_ptr<BindingNode>> bindings;
     auto data = QQmlData::get(obj);

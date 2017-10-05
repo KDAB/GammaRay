@@ -1,5 +1,5 @@
 /*
-  bindingextension.cpp
+  bindingtab.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -27,29 +27,34 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Own
-#include "bindingextension.h"
-#include "bindingmodel.h"
+#ifndef GAMMARAY_BINDINGTAB_H
+#define GAMMARAY_BINDINGTAB_H
 
-#include <core/propertycontroller.h>
+// Qt
+#include <QScopedPointer>
+#include <QWidget>
 
-using namespace GammaRay;
+namespace GammaRay {
+class PropertyWidget;
 
-BindingExtension::BindingExtension(PropertyController* controller)
-    : PropertyControllerExtension(controller->objectBaseName() + ".bindings")
-    , m_bindingModel(new BindingModel(controller))
+namespace Ui
 {
-    controller->registerModel(m_bindingModel, QStringLiteral("bindingModel"));
+class BindingTab;
 }
 
-BindingExtension::~BindingExtension()
+class BindingTab : public QWidget
 {
+    Q_OBJECT
+public:
+    explicit BindingTab(PropertyWidget *parent = nullptr);
+    ~BindingTab();
+
+private slots:
+    void bindingContextMenu(const QPoint &pos);
+
+private:
+    QScopedPointer<Ui::BindingTab> ui;
+};
 }
 
-bool BindingExtension::setQObject(QObject* object)
-{
-    if (!object)
-        return false;
-
-    return m_bindingModel->setObject(object);
-}
+#endif // GAMMARAY_BINDINGTAB_H

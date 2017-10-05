@@ -51,12 +51,12 @@ class GAMMARAY_CORE_EXPORT AbstractBindingProvider
 {
 public:
     virtual ~AbstractBindingProvider();
-    virtual std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(BindingNode *binding) = 0;
-    virtual std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject *obj) = 0;
-    virtual bool canProvideBindingsFor (QObject *object) = 0;
+    virtual std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(BindingNode *binding) const = 0;
+    virtual std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject *obj) const = 0;
+    virtual bool canProvideBindingsFor (QObject *object) const = 0;
 };
 
 }
 
-#endif // GAMMARAY_QMLBINDINGNODE_H
+#endif // GAMMARAY_ABSTRACTBINDINGPROVIDER_H
 

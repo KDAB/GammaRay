@@ -53,7 +53,6 @@ set(gammaray_ui_srcs
   codeeditor/codeeditor.cpp
   codeeditor/codeeditorsidebar.cpp
 
-  tools/bindinginspector/bindingtab.cpp
   tools/messagehandler/messagedisplaymodel.cpp
   tools/messagehandler/messagehandlerwidget.cpp
   tools/messagehandler/messagehandlerclient.cpp
@@ -75,6 +74,7 @@ set(gammaray_ui_srcs
   tools/objectinspector/classinfotab.cpp
   tools/objectinspector/methodstab.cpp
   tools/objectinspector/applicationattributetab.cpp
+  tools/objectinspector/bindingtab.cpp
   tools/resourcebrowser/clientresourcemodel.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/resourcebrowser/resourcebrowserclient.cpp

@@ -30,7 +30,7 @@
 #include "quickimplicitbindingdependencyprovider.h"
 
 #include <core/util.h>
-#include <core/tools/bindinginspector/bindingnode.h>
+#include <core/bindingnode.h>
 
 // Qt
 #include <QDebug>
@@ -41,7 +41,7 @@
 
 using namespace GammaRay;
 
-std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::createBindingNode(QObject* obj, const char *propertyName, BindingNode *parent)
+std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::createBindingNode(QObject* obj, const char *propertyName, BindingNode *parent) const
 {
     if (!obj || !obj->metaObject())
         return {};
@@ -59,12 +59,12 @@ std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::c
     return node;
 }
 
-bool QuickImplicitBindingDependencyProvider::canProvideBindingsFor(QObject *object)
+bool QuickImplicitBindingDependencyProvider::canProvideBindingsFor(QObject *object) const
 {
     return object->inherits("QQuickAnchors") || object->inherits("QQuickItem");
 }
 
-std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider::findBindingsFor(QObject *obj)
+std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider::findBindingsFor(QObject *obj) const
 {
     std::vector<std::unique_ptr<BindingNode>> bindings;
 
@@ -89,7 +89,7 @@ std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider
     return bindings;
 }
 
-std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider::findDependenciesFor(BindingNode *binding)
+std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider::findDependenciesFor(BindingNode *binding) const
 {
     std::vector<std::unique_ptr<BindingNode>> dependencies;
     // So far, we can only hard code implicit dependencies.
@@ -121,7 +121,9 @@ std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider
     return dependencies;
 }
 
-void QuickImplicitBindingDependencyProvider::anchorBindings(std::vector<std::unique_ptr<BindingNode>> &dependencies, QQuickAnchors *anchors, int propertyIndex, BindingNode *parent)
+void QuickImplicitBindingDependencyProvider::anchorBindings(std::vector<std::unique_ptr<BindingNode>> &dependencies,
+                                                            QQuickAnchors *anchors, int propertyIndex,
+                                                            BindingNode *parent) const
 {
     QQuickAnchorLine anchorLine = anchors->metaObject()->property(propertyIndex).read(anchors).value<QQuickAnchorLine>();
     auto dependencyPropertyName = anchorLine.anchorLine == QQuickAnchors::TopAnchor ? "top"
@@ -138,7 +140,7 @@ void QuickImplicitBindingDependencyProvider::anchorBindings(std::vector<std::uni
 }
 
 template<class Func>
-void QuickImplicitBindingDependencyProvider::implicitSizeDependencies(QQuickItem *item, Func addDependency)
+void QuickImplicitBindingDependencyProvider::implicitSizeDependencies(QQuickItem *item, Func addDependency) const
 {
     QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
     if (!itemPriv)
@@ -153,7 +155,7 @@ void QuickImplicitBindingDependencyProvider::implicitSizeDependencies(QQuickItem
 }
 
 template<class Func>
-void QuickImplicitBindingDependencyProvider::childrenRectDependencies(QQuickItem *item, Func addDependency)
+void QuickImplicitBindingDependencyProvider::childrenRectDependencies(QQuickItem *item, Func addDependency) const
 {
     foreach (auto &&child, item->childItems()) {
         addDependency("childrenRect", child, "width");
@@ -161,7 +163,7 @@ void QuickImplicitBindingDependencyProvider::childrenRectDependencies(QQuickItem
     }
 }
 template<class Func>
-void QuickImplicitBindingDependencyProvider::positionerDependencies(QQuickItem *item, Func addDependency)
+void QuickImplicitBindingDependencyProvider::positionerDependencies(QQuickItem *item, Func addDependency) const
 {
     foreach (QQuickItem *child, item->childItems()) {
         addDependency("implicitWidth", child, "width");
@@ -170,7 +172,7 @@ void QuickImplicitBindingDependencyProvider::positionerDependencies(QQuickItem *
 }
 
 template<class Func>
-void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *item, Func addDependency)
+void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *item, Func addDependency) const
 {
     QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
     if (!itemPriv)

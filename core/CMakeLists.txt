@@ -1,7 +1,9 @@
 set(gammaray_srcs
   ${CMAKE_SOURCE_DIR}/3rdparty/qt/resourcemodel.cpp
 
+  abstractbindingprovider.cpp
   aggregatedpropertymodel.cpp
+  bindingnode.cpp
   metaobject.cpp
   metaobjectregistry.cpp
   metaobjectrepository.cpp
@@ -53,10 +55,6 @@ set(gammaray_srcs
 
   remoteviewserver.cpp
 
-  tools/bindinginspector/abstractbindingprovider.cpp
-  tools/bindinginspector/bindingextension.cpp
-  tools/bindinginspector/bindingmodel.cpp
-  tools/bindinginspector/bindingnode.cpp
   tools/metatypebrowser/metatypesmodel.cpp
   tools/messagehandler/messagehandler.cpp
   tools/messagehandler/messagemodel.cpp
@@ -73,6 +71,8 @@ set(gammaray_srcs
   tools/objectinspector/enumsextension.cpp
   tools/objectinspector/classinfoextension.cpp
   tools/objectinspector/applicationattributeextension.cpp
+  tools/objectinspector/bindingextension.cpp
+  tools/objectinspector/bindingmodel.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
 

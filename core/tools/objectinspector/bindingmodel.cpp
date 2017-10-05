@@ -29,10 +29,10 @@
 
 // Own
 #include "bindingmodel.h"
-#include "bindingnode.h"
-#include "abstractbindingprovider.h"
 
 #include <common/objectmodel.h>
+#include <core/abstractbindingprovider.h>
+#include <core/bindingnode.h>
 #include <core/util.h>
 
 // Qt
@@ -58,42 +58,55 @@ BindingModel::~BindingModel()
 {
 }
 
+void BindingModel::clear()
+{
+    beginResetModel();
+    m_bindings.clear();
+    if (m_obj)
+        disconnect(m_obj, nullptr, this, nullptr);
+    m_obj = nullptr;
+    endResetModel();
+
+}
+
 bool BindingModel::setObject(QObject* obj)
 {
     if (m_obj == obj)
-        return true;
+        return obj;
 
+    // TODO use removerows/insertrows instead of reset here
+    beginResetModel();
+    if (m_obj)
+        disconnect(m_obj, nullptr, this, nullptr);
     bool typeMatches = false;
     m_bindings.clear();
-    for (auto providerIt = s_providers.begin(); providerIt != s_providers.cend(); ++providerIt) {
-        auto &&provider = *providerIt;
-        if (!provider->canProvideBindingsFor(obj))
-            continue;
-        else
-            typeMatches = true;
+    if (obj) {
+        for (auto providerIt = s_providers.begin(); providerIt != s_providers.cend(); ++providerIt) {
+            auto &&provider = *providerIt;
+            if (!provider->canProvideBindingsFor(obj))
+                continue;
+            else
+                typeMatches = true;
 
-        // TODO use removerows/insertrows instead of reset here
-        beginResetModel();
-        if (m_obj)
-            disconnect(m_obj, nullptr, this, nullptr);
+            auto newBindings = provider->findBindingsFor(obj);
+            for (auto nodeIt = newBindings.begin(); nodeIt != newBindings.end(); ++nodeIt) {
+                BindingNode *node = nodeIt->get();
+                if (findEquivalent(m_bindings, node).isValid()) {
+                    continue; // apparantly this is a duplicate.
+                }
+                int signalIndex = node->property().notifySignalIndex();
+                if (signalIndex != -1) {
+                    QMetaObject::connect(obj, signalIndex, this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);
+                }
+                findDependenciesFor(node);
+                m_bindings.push_back(std::move(*nodeIt));
+            }
 
-        auto newBindings = provider->findBindingsFor(obj);
-        for (auto nodeIt = newBindings.begin(); nodeIt != newBindings.end(); ++nodeIt) {
-            BindingNode *node = nodeIt->get();
-            if (findEquivalent(m_bindings, node).isValid()) {
-                continue; // apparantly this is a duplicate.
-            }
-            int signalIndex = node->property().notifySignalIndex();
-            if (signalIndex != -1) {
-                QMetaObject::connect(obj, signalIndex, this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);
-            }
-            findDependenciesFor(node);
-            m_bindings.push_back(std::move(*nodeIt));
         }
-
-        endResetModel();
     }
     m_obj = obj;
+    connect(obj, SIGNAL(destroyed()), this, SLOT(clear()));
+    endResetModel();
     return typeMatches;
 }
 
@@ -135,7 +148,7 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
 {
     if (bindingNode->cachedValue() != bindingNode->readValue()) {
         bindingNode->refreshValue();
-        emit dataChanged(createIndex(index.row(), s_valueColumn, bindingNode), createIndex(index.row(), s_valueColumn, bindingNode));
+        emit dataChanged(createIndex(index.row(), ValueColumn, bindingNode), createIndex(index.row(), ValueColumn, bindingNode));
     }
     uint oldDepth = bindingNode->depth();
 
@@ -203,7 +216,7 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
     }
 
     if (bindingNode->depth() != oldDepth) {
-        emit dataChanged(createIndex(index.row(), s_depthColumn, bindingNode), createIndex(index.row(), s_depthColumn, bindingNode));
+        emit dataChanged(createIndex(index.row(), DepthColumn, bindingNode), createIndex(index.row(), DepthColumn, bindingNode));
     }
 }
 
@@ -233,12 +246,12 @@ QVariant BindingModel::data(const QModelIndex& index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case s_nameColumn: {
+            case NameColumn: {
                 return binding->canonicalName();
             }
-            case s_valueColumn: return binding->cachedValue();
-            case s_locationColumn: return binding->sourceLocation().displayString();
-            case s_depthColumn: {
+            case ValueColumn: return binding->cachedValue();
+            case LocationColumn: return binding->sourceLocation().displayString();
+            case DepthColumn: {
                 uint depth = binding->depth();
                 return depth == std::numeric_limits<uint>::max() ? QStringLiteral("∞") : QString::number(depth);
             }
@@ -261,10 +274,10 @@ QVariant BindingModel::headerData(int section, Qt::Orientation orientation, int 
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case s_nameColumn: return tr("Property");
-            case s_valueColumn: return tr("Value");
-            case s_locationColumn: return tr("Source");
-            case s_depthColumn: return tr("Depth");
+            case NameColumn: return tr("Property");
+            case ValueColumn: return tr("Value");
+            case LocationColumn: return tr("Source");
+            case DepthColumn: return tr("Depth");
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);
