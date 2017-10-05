@@ -271,6 +271,7 @@ Probe::Probe(QObject *parent)
 
 Probe::~Probe()
 {
+    emit aboutToDetach();
     IF_DEBUG(cerr << "detaching GammaRay probe" << endl;
              )
 

@@ -184,6 +184,8 @@ signals:
     void objectDestroyed(QObject *obj);
     void objectReparented(QObject *obj);
 
+    void aboutToDetach();
+
 protected:
     bool eventFilter(QObject *receiver, QEvent *event) override;
 

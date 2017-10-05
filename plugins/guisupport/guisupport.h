@@ -57,10 +57,11 @@ private:
     QIcon createIcon(const QIcon &oldIcon, QWindow *w=nullptr);
     void updateWindowIcon(QWindow *w=nullptr);
     void restoreWindowIcon(QWindow *w=nullptr);
-    void restoreIconAndTitle();
 
     QHash<QObject*, QIcon> m_originalIcons;
     QString m_titleSuffix;
+
+    bool m_restoringIconsAndTitle;
 #endif
 
 private:
@@ -70,6 +71,7 @@ private slots:
 #ifdef QT4_MOC_WORKAROUND
 #else
     void objectCreated(QObject *object);
+    void restoreIconAndTitle();
 #endif
 };
 
