@@ -57,19 +57,29 @@ public:
     /**
      * This constructor creates a (valid) cursor at position (0, 0) with @p url
      */
-    explicit SourceLocation(const QUrl &url, int line = 0, int column = 0);
+    explicit SourceLocation(const QUrl &url);
     ~SourceLocation();
+    static SourceLocation fromZeroBased(const QUrl &url, int line, int column = 0);
+    static SourceLocation fromOneBased(const QUrl &url, int line, int column = 1);
 
     bool isValid() const;
 
     QUrl url() const;
     void setUrl(const QUrl &url);
 
+    /**
+     * Returns the zero-based line number.
+     */
     int line() const;
-    void setLine(int line);
+    void setZeroBasedLine(int line);
+    void setOneBasedLine(int line);
 
+    /**
+     * Returns the zero-based column number.
+     */
     int column() const;
-    void setColumn(int column);
+    void setZeroBasedColumn(int column);
+    void setOneBasedColumn(int column);
 
     /**
      * Returns a human-readable version of this source location
@@ -86,6 +96,11 @@ public:
     QString displayString() const;
 
 private:
+    /**
+     * This constructor creates a (valid) cursor at given @p line and @p column with @p url.
+     * Expects line and column to be zero-based.
+     */
+    explicit SourceLocation(const QUrl &url, int line, int column);
     friend GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out,
                                                           const SourceLocation &location);
     friend GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in,

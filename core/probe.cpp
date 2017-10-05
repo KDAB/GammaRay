@@ -1065,8 +1065,8 @@ SourceLocation Probe::objectCreationSourceLocation(QObject *object)
 
   SourceLocation loc;
   loc.setUrl(QUrl::fromLocalFile(QString::fromStdString(trace.source.filename)));
-  loc.setLine(trace.source.line - 1);
-  loc.setColumn(trace.source.col - 1);
+  loc.setOneBasedLine(trace.source.line);
+  loc.setOneBasedColumn(trace.source.col);
 
   return loc;
 #else
