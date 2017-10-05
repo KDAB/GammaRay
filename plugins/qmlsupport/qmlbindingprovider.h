@@ -31,7 +31,7 @@
 
 // Own
 #include <common/sourcelocation.h>
-#include <core/tools/bindinginspector/abstractbindingprovider.h>
+#include <core/abstractbindingprovider.h>
 
 // Qt
 #include <QQmlProperty>
@@ -50,15 +50,15 @@ namespace GammaRay {
 class QmlBindingProvider : public AbstractBindingProvider
 {
 public:
-    std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject * obj) override;
-    std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(GammaRay::BindingNode * binding) override;
-    bool canProvideBindingsFor(QObject *object) override;
+    std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject * obj) const override;
+    std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(GammaRay::BindingNode * binding) const override;
+    bool canProvideBindingsFor(QObject *object) const override;
 
 private:
-    std::unique_ptr<BindingNode> bindingNodeFromQmlProperty(QQmlProperty property, BindingNode *parent);
-    BindingNode *bindingNodeFromBinding(QQmlAbstractBinding *binding);
-    void fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding);
-    QQmlAbstractBinding *bindingForProperty(QObject *obj, int propertyIndex);
+    std::unique_ptr<BindingNode> bindingNodeFromQmlProperty(QQmlProperty property, BindingNode *parent) const;
+    BindingNode *bindingNodeFromBinding(QQmlAbstractBinding *binding) const;
+    void fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding) const;
+    QQmlAbstractBinding *bindingForProperty(QObject *obj, int propertyIndex) const;
 };
 
 }

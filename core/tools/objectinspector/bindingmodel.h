@@ -52,24 +52,32 @@ class GAMMARAY_CORE_EXPORT BindingModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
+    enum {
+        NameColumn = 0,
+        ValueColumn = 1,
+        DepthColumn = 2,
+        LocationColumn = 3
+    };
 
     explicit BindingModel (QObject *parent = nullptr);
     ~BindingModel();
 
     bool setObject(QObject *obj);
 
-    int rowCount(const QModelIndex &parent) const override;
-    int columnCount(const QModelIndex &parent) const override;
-    QVariant data(const QModelIndex &index, int role) const override;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-    QModelIndex index(int row, int column, const QModelIndex & parent) const override;
-    QModelIndex parent(const QModelIndex & child) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
     static void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
+    //FIXME: ^ Move this function out of here, this class should purely be an implementation detail
 
 private slots:
     void propertyChanged();
+    void clear();
 
 private:
     QModelIndex findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const;
@@ -78,16 +86,9 @@ private:
     void findDependenciesFor(BindingNode *node);
     static bool lessThan(const std::unique_ptr<BindingNode> &a, const std::unique_ptr<BindingNode> &b);
 
-    const static int s_nameColumn = 0;
-    const static int s_valueColumn = 1;
-    const static int s_locationColumn = 2;
-    const static int s_depthColumn = 3;
-
     QPointer<QObject> m_obj;
     std::vector<std::unique_ptr<BindingNode>> m_bindings;
     static std::vector<std::unique_ptr<AbstractBindingProvider>> s_providers;
-
-    friend class ::BindingInspectorTest;
 };
 
 }

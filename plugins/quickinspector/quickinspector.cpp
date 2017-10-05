@@ -58,7 +58,7 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/varianthandler.h>
 #include <core/remoteviewserver.h>
-#include <core/tools/bindinginspector/bindingmodel.h>
+#include <core/tools/objectinspector/bindingmodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 

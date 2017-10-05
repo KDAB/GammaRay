@@ -35,7 +35,7 @@
 #include "propertiesextension.h"
 #include "connectionsextension.h"
 #include "applicationattributeextension.h"
-#include "../bindinginspector/bindingextension.h"
+#include "bindingextension.h"
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>

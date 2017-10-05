@@ -46,7 +46,7 @@
 #include <core/propertyadaptorfactory.h>
 #include <core/propertycontroller.h>
 #include <core/objectdataprovider.h>
-#include <core/tools/bindinginspector/bindingmodel.h>
+#include <core/tools/objectinspector/bindingmodel.h>
 
 #include <common/metatypedeclarations.h>
 #include <common/sourcelocation.h>

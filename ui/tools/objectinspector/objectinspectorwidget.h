@@ -41,7 +41,7 @@
 #include "methodsextensionclient.h"
 #include "connectionsextensionclient.h"
 #include "applicationattributetab.h"
-#include "../bindinginspector/bindingtab.h"
+#include "bindingtab.h"
 
 #include <common/objectbroker.h>
 
