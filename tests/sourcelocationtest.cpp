@@ -37,6 +37,35 @@ class SourceLocationTest : public QObject
 {
     Q_OBJECT
 private slots:
+    void testZeroAndOneBasedNumbering()
+    {
+        SourceLocation loc;
+        loc = SourceLocation::fromZeroBased(QUrl(QStringLiteral("file:///some/file")), 0, 0);
+        QVERIFY(loc.isValid() == true);
+        QCOMPARE(loc.line(), 0);
+        QCOMPARE(loc.column(), 0);
+        QStringLiteral("/some/file:1:1");
+        loc.setZeroBasedLine(78);
+        loc.setZeroBasedColumn(87);
+        QVERIFY(loc.isValid() == true);
+        QCOMPARE(loc.line(), 78);
+        QCOMPARE(loc.column(), 87);
+        QStringLiteral("/some/file:79:88");
+        loc = SourceLocation::fromOneBased(QUrl(QStringLiteral("file:///some/file")), 0, 0);
+        QVERIFY(loc.isValid() == true);
+        loc = SourceLocation::fromOneBased(QUrl(QStringLiteral("file:///some/file")), 1, 1);
+        QVERIFY(loc.isValid() == true);
+        QCOMPARE(loc.line(), 0);
+        QCOMPARE(loc.column(), 0);
+        QStringLiteral("/some/file:1:1");
+        loc.setOneBasedLine(78);
+        loc.setOneBasedColumn(87);
+        QVERIFY(loc.isValid() == true);
+        QCOMPARE(loc.line(), 77);
+        QCOMPARE(loc.column(), 86);
+        QStringLiteral("/some/file:78:87");
+    }
+
     void testDisplayString_data()
     {
         QTest::addColumn<QUrl>("url", nullptr);
@@ -73,7 +102,7 @@ private slots:
         QFETCH(QString, displayString);
         QFETCH(bool, valid);
 
-        SourceLocation loc(url, line, column);
+        SourceLocation loc = SourceLocation::fromZeroBased(url, line, column);
         QCOMPARE(loc.displayString(), displayString);
         QVERIFY(loc.isValid() == valid);
     }

@@ -279,8 +279,8 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
     loc.setUrl(context->url);
 #endif
 
-    loc.setLine(static_cast<int>(objectData->lineNumber) - 1);
-    loc.setColumn(static_cast<int>(objectData->columnNumber) - 1);
+    loc.setOneBasedLine(static_cast<int>(objectData->lineNumber));
+    loc.setOneBasedColumn(static_cast<int>(objectData->columnNumber));
     return loc;
 }
 

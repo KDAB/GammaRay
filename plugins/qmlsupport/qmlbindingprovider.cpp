@@ -69,7 +69,7 @@ void QmlBindingProvider::fetchSourceLocationFor(BindingNode *node, QQmlBinding *
 {
     QV4::Function *function = binding->function();
     QQmlSourceLocation loc = function->sourceLocation();
-    node->setSourceLocation(SourceLocation(QUrl(loc.sourceFile), loc.line, loc.column));
+    node->setSourceLocation(SourceLocation::fromOneBased(QUrl(loc.sourceFile), loc.line, loc.column));
 }
 
 std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFor(BindingNode *node) const

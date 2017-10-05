@@ -36,6 +36,13 @@ SourceLocation::SourceLocation()
 {
 }
 
+SourceLocation::SourceLocation(const QUrl &url)
+    : m_url(url)
+    , m_line(0)
+    , m_column(0)
+{
+}
+
 SourceLocation::SourceLocation(const QUrl &url, int line, int column)
     : m_url(url)
     , m_line(line)
@@ -45,6 +52,16 @@ SourceLocation::SourceLocation(const QUrl &url, int line, int column)
 
 SourceLocation::~SourceLocation()
 {
+}
+
+GammaRay::SourceLocation GammaRay::SourceLocation::fromZeroBased(const QUrl& url, int line, int column)
+{
+    return SourceLocation(url, line, column);
+}
+
+GammaRay::SourceLocation GammaRay::SourceLocation::fromOneBased(const QUrl& url, int line, int column)
+{
+    return SourceLocation(url, line - 1, column - 1);
 }
 
 bool SourceLocation::isValid() const
@@ -67,9 +84,14 @@ int SourceLocation::line() const
     return m_line;
 }
 
-void SourceLocation::setLine(int line)
+void SourceLocation::setZeroBasedLine(int line)
 {
     m_line = line;
+}
+
+void SourceLocation::setOneBasedLine(int line)
+{
+    m_line = line - 1;
 }
 
 int SourceLocation::column() const
@@ -77,9 +99,14 @@ int SourceLocation::column() const
     return m_column;
 }
 
-void SourceLocation::setColumn(int column)
+void SourceLocation::setZeroBasedColumn(int column)
 {
     m_column = column;
+}
+
+void SourceLocation::setOneBasedColumn(int column)
+{
+    m_column = column - 1;
 }
 
 QString SourceLocation::displayString() const
