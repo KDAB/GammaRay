@@ -38,7 +38,6 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE /*hInstance*/, DWORD dwReason, LPVOID /
 {
     switch (dwReason) {
     case DLL_PROCESS_ATTACH:
-    case DLL_THREAD_ATTACH:
         Hooks::installHooks();
         if (!Probe::isInitialized())
             gammaray_probe_inject();
