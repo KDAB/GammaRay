@@ -167,16 +167,19 @@ QVariant QIviGammarayPropertyOverrider::iviConstraintsAt(int index) const
         QJsonArray vals = constraints.toObject().value(range).toArray();
         return QVariantList() << static_cast<uint>(QtIviObjectModel::RangeConstraints) << vals.at(0).toDouble() << vals.at(1).toDouble();
     }
+    QVariantList result;
     QLatin1String minimum("minimum");
     if (constraints.toObject().contains(minimum)) {
         double val = constraints.toObject().value(minimum).toDouble();
-        return QVariantList() << static_cast<uint>(QtIviObjectModel::MinRangeConstraints) << val;
+        result << static_cast<uint>(QtIviObjectModel::MinRangeConstraints) << val;
     }
     QLatin1String maximum("maximum");
     if (constraints.toObject().contains(maximum)) {
         double val = constraints.toObject().value(maximum).toDouble();
-        return QVariantList() << static_cast<uint>(QtIviObjectModel::MaxRangeConstraints) << val;
+        result << static_cast<uint>(QtIviObjectModel::MaxRangeConstraints) << val;
     }
+    if (!result.isEmpty())
+        return result;
     QLatin1String domain("domain");
     if (constraints.toObject().contains(domain)) {
         const QVariantList vals = constraints.toObject().value(domain).toArray().toVariantList();
@@ -452,8 +455,13 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
                         return carrier->nameAt(index.row());
                     case ValueColumn:
                         return carrier->displayTextAt(index.row());
-                    case TypeColumn:
-                        return carrier->typeNameAt(index.row());
+                    case TypeColumn: {
+                        QString result = carrier->typeNameAt(index.row());
+                        QVariant v = carrier->iviConstraintsAt(index.row());
+                        if (v.isValid() && v.type() == QVariant::List)
+                            result += QLatin1String(" (!)");
+                        return result;
+                    }
                     default:
                         break;
                     }
@@ -478,6 +486,55 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
                         return carrier->isWritableAt(index.row()) || carrier->isOverriddenAt(index.row()) ? Qt::Checked : Qt::Unchecked;
                     case OverrideColumn:
                         return carrier->isOverriddenAt(index.row()) ? Qt::Checked : Qt::Unchecked;
+                    default:
+                        break;
+                    }
+
+                    break;
+                }
+
+                case Qt::ToolTipRole: {
+                    switch (index.column()) {
+                    case TypeColumn:
+                    case ValueColumn: {
+                        QVariant v = carrier->iviConstraintsAt(index.row());
+                        if (!v.isValid() || v.type() != QVariant::List)
+                            return  {};
+                        QVariantList vl = v.toList();
+                        QString result;
+                        while (!vl.isEmpty()) {
+                            switch (vl.front().toUInt()) {
+                            case QtIviObjectModel::RangeConstraints:
+                                result += QString(QLatin1String("Range: [%1 - %2]\n")).arg(vl.at(1).toDouble()).arg(vl.at(2).toDouble());
+                                vl.pop_front();
+                                vl.pop_front();
+                                vl.pop_front();
+                                break;
+                            case QtIviObjectModel::MinRangeConstraints:
+                                result += QString(QLatin1String("Minimum: %1\n")).arg(vl.at(1).toDouble());
+                                vl.pop_front();
+                                vl.pop_front();
+                                break;
+                            case QtIviObjectModel::MaxRangeConstraints:
+                                result += QString(QLatin1String("Maximum: %1\n")).arg(vl.at(1).toDouble());
+                                vl.pop_front();
+                                vl.pop_front();
+                                break;
+                            case QtIviObjectModel::AvailableValuesConstraints: {
+                                vl.pop_front();
+                                QStringList valstrings;
+                                for(const auto &vi: qAsConst(vl))
+                                    valstrings << vi.toString();
+                                result += QString(QLatin1String("Valid Values: [%1]\n")).arg(valstrings.join(QLatin1String(", ")));
+                                vl.clear();
+                                break;
+                            }
+                            default:
+                                break;
+                            }
+                        }
+                        return result.trimmed();
+                    }
                     default:
                         break;
                     }
