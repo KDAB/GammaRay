@@ -213,6 +213,7 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) co
         return img;
 #endif
     }
+    return QImage();
 }
 
 void QSGTextureGrabber::requestGrab(QSGTexture *tex)
