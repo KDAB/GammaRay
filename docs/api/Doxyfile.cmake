@@ -3,7 +3,7 @@
 #---------------------------------------------------------------------------
 PROJECT_NAME           = "GammaRay API Documentation"
 PROJECT_NUMBER         = @GAMMARAY_VERSION@
-OUTPUT_DIRECTORY       = @DOXYGEN_OUTPUT_DIR@
+OUTPUT_DIRECTORY       = "@DOXYGEN_OUTPUT_DIR@"
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 BRIEF_MEMBER_DESC      = YES
@@ -88,9 +88,9 @@ FILE_PATTERNS          = *.cpp \
                          *.hpp \
                          *.dox
 RECURSIVE              = YES
-EXCLUDE                = @CMAKE_SOURCE_DIR@/common/gammaray_common_export.h \
-                         @CMAKE_SOURCE_DIR@/core/gammaray_core_export.h \
-                         @CMAKE_SOURCE_DIR@/ui/gammaray_ui_export.h
+EXCLUDE                = "@CMAKE_SOURCE_DIR@/common/gammaray_common_export.h" \
+                         "@CMAKE_SOURCE_DIR@/core/gammaray_core_export.h" \
+                         "@CMAKE_SOURCE_DIR@/ui/gammaray_ui_export.h"
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */.svn/* \
                          */.git/* \
@@ -106,7 +106,7 @@ EXCLUDE_PATTERNS       = */.svn/* \
 EXAMPLE_PATH           =
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
-IMAGE_PATH             = @CMAKE_CURRENT_SOURCE_DIR@
+IMAGE_PATH             = "@CMAKE_CURRENT_SOURCE_DIR@"
 INPUT_FILTER           =
 FILTER_PATTERNS        =
 FILTER_SOURCE_FILES    = NO
@@ -134,8 +134,8 @@ GENERATE_HTML          = YES
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
 HTML_HEADER            =
-HTML_FOOTER            = @CMAKE_CURRENT_SOURCE_DIR@/footer.html
-HTML_EXTRA_FILES       = @CMAKE_CURRENT_SOURCE_DIR@/kdab-logo-16x16.png @CMAKE_CURRENT_SOURCE_DIR@/kdab-gammaray-logo-16x16.png
+HTML_FOOTER            = "@CMAKE_CURRENT_SOURCE_DIR@/footer.html"
+HTML_EXTRA_FILES       = "@CMAKE_CURRENT_SOURCE_DIR@/kdab-logo-16x16.png" "@CMAKE_CURRENT_SOURCE_DIR@/kdab-gammaray-logo-16x16.png"
 DISABLE_INDEX          = NO
 ENUM_VALUES_PER_LINE   = 4
 GENERATE_TREEVIEW      = NO

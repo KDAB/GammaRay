@@ -10,7 +10,7 @@ endif()
 file(GLOB _dox_deps *.dox *.html)
 gammaray_all_installed_headers(_all_hdrs)
 list(APPEND _all_hdrs ${_dox_deps})
-gammaray_join_list(DOXYGEN_INPUT " " ${_all_hdrs})
+gammaray_join_list(DOXYGEN_INPUT " \\\\\n" ${_all_hdrs})
 set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 #apidox generation using doxygen

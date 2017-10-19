@@ -88,7 +88,7 @@ endmacro()
 macro(gammaray_join_list _var _sep)
   set(${_var} "")
   foreach(_element ${ARGN})
-    set(${_var} "${${_var}}${_sep}${_element}")
+    set(${_var} "${${_var}}${_sep}\"${_element}\"")
   endforeach()
 endmacro()
 
