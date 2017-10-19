@@ -38,7 +38,7 @@ class  BasicWinDllInjector {
 public:
     static BOOL addDllDirectory(HANDLE destProcess, wchar_t *dllDirPath);
 
-    static BOOL inject(HANDLE destProcess, wchar_t *dllPath);
+    static void inject(HANDLE destProcess, wchar_t *dllPath);
 
     static BOOL injectProcess(wchar_t *pid, wchar_t *path, wchar_t *probePath);
 

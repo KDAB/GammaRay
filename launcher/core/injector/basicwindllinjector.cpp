@@ -48,14 +48,9 @@ BOOL BasicWinDllInjector::addDllDirectory(HANDLE destProcess, wchar_t *dllDirPat
     return TRUE;
 }
 
-BOOL BasicWinDllInjector::inject(HANDLE destProcess, wchar_t *dllPath) {
-    if (!remoteKernel32Call(destProcess, "LoadLibraryW", dllPath)) {
-        std::wstringstream stream;
-        stream << L"Failed to call LoadLibraryW" << dllPath;
-        log(stream.str().c_str());
-        return FALSE;
-    }
-    return TRUE;
+void BasicWinDllInjector::inject(HANDLE destProcess, wchar_t *dllPath) {
+    // the probe loader will return false to get unloaded so don't check for success
+    remoteKernel32Call(destProcess, "LoadLibraryW", dllPath);
 }
 
 BOOL BasicWinDllInjector::injectProcess(wchar_t *pidString, wchar_t *path, wchar_t *probePath)
@@ -69,7 +64,10 @@ BOOL BasicWinDllInjector::injectProcess(wchar_t *pidString, wchar_t *path, wchar
         BasicWinDllInjector::logError();
         return FALSE;
     }
-    return addDllDirectory(destProcess, path) && inject(destProcess, probePath);
+    if(!addDllDirectory(destProcess, path))
+        return FALSE;
+    inject(destProcess, probePath);
+    return TRUE;
 }
 
 DWORD BasicWinDllInjector::remoteKernel32Call(HANDLE destProcess, const char *funcName, const wchar_t *argument)
