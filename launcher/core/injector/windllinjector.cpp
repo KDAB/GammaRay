@@ -133,7 +133,7 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
                      return false);
 
     m_destProcess = pid.hProcess;
-    const QString dllPath = QDir::toNativeSeparators(probeDll);
+    QString dllPath = fixProbeDllPath(probeDll);
     BasicWinDllInjector::inject(m_destProcess, (wchar_t*)dllPath.utf16());
     m_injectThread->stop();
     emit started();
@@ -148,7 +148,7 @@ bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*
     QStringList args;
     args << QString::number(pid)
          << QDir::toNativeSeparators(Paths::binPath())
-         << QDir::toNativeSeparators(probeDll);
+         << fixProbeDllPath(probeDll);
     QProcess p;
     p.setProcessChannelMode(QProcess::ForwardedChannels);
     p.start(QString(QLatin1String("gammaray-wininjector-%1")).arg(
@@ -189,6 +189,13 @@ void WinDllInjector::processExited(int exitCode)
 {
     mExitCode = exitCode;
     emit finished();
+}
+
+QString WinDllInjector::fixProbeDllPath(const QString &probeDll)
+{
+    QString dllPath = QDir::toNativeSeparators(probeDll);
+    dllPath.replace(QLatin1String("gammaray_probe"), QLatin1String("gammaray_probe_win"));
+    return dllPath;
 }
 
 }// namespace GammaRay

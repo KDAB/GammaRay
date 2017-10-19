@@ -55,6 +55,8 @@ public:
 private slots:
     void processExited(int exitCode);
 private:
+    QString fixProbeDllPath(const QString &probeDll);
+
     int mExitCode;
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;

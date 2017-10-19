@@ -26,22 +26,49 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "hooks.h"
+#include <windows.h>
 
-#include <core/probe.h>
+#include <string>
 
-#include <qt_windows.h>
+typedef void (*gammaray_probe_inject)(void);
 
-using namespace GammaRay;
+namespace {
+static const std::wstring LOADER_NAME = L"gammaray_probe_win";
+static const std::wstring PROBE_NAME = L"gammaray_probe";
+}
 
-extern "C" BOOL WINAPI DllMain(HINSTANCE /*hInstance*/, DWORD dwReason, LPVOID /*lpvReserved*/)
+extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpvReserved*/)
 {
     switch (dwReason) {
     case DLL_PROCESS_ATTACH:
-        Hooks::installHooks();
-        if (!Probe::isInitialized())
-            gammaray_probe_inject();
+    {
+        wchar_t buffer[MAX_PATH * 2];
+        const int size = GetModuleFileNameW(hInstance, buffer, MAX_PATH * 2);
+        if (!size) {
+            OutputDebugStringW(L"GammaRay: GetModuleFileNameW failed");
+            break;
+        }
+        std::wstring path(buffer, size);
+        path.replace(path.find(LOADER_NAME), LOADER_NAME.length(), PROBE_NAME);
+
+        HMODULE probe = GetModuleHandleW(path.c_str());
+        if (!probe) {
+            probe = LoadLibraryW(path.c_str());
+            if (!probe) {
+                OutputDebugStringW(L"GammaRay: Failed to load: ");
+                OutputDebugStringW(path.c_str());
+                break;
+            }
+        }
+        gammaray_probe_inject inject = (gammaray_probe_inject)GetProcAddress(probe, "gammaray_probe_inject");
+        if (!inject) {
+            OutputDebugStringW(L"GammaRay: Failed to resolve gammaray_probe_inject");
+            break;
+        }
+        inject();
+    }
         break;
     }
-    return TRUE; // krazy:exclude=captruefalse
+    // return false to get unloaded
+    return FALSE; // krazy:exclude=captruefalse
 }

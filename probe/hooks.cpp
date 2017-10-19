@@ -173,6 +173,7 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
     if (!qApp) {
         return;
     }
+    Hooks::installHooks();
     log_injection("gammaray_probe_inject()\n");
     new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects);
 }
