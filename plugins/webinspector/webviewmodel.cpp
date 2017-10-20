@@ -26,15 +26,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <config-gammaray.h>
 #include "webviewmodel.h"
 #include "webviewmodelroles.h"
 
 #include "common/objectmodel.h"
-
-#ifdef HAVE_QT_WEBKIT1
-#include <QWebPage>
-#endif
 
 using namespace GammaRay;
 
@@ -57,16 +52,12 @@ QVariant WebViewModel::data(const QModelIndex &index, int role) const
         return QSortFilterProxyModel::data(index, role);
 
     const QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
-#ifdef HAVE_QT_WEBKIT1
-    const bool isWk1 = qobject_cast<const QWebPage *>(obj);
-#else
-    const bool isWk1 = false;
-#endif
+    const bool isWk2 = obj->inherits("QQuickWebView");
 
     if (role == Qt::DisplayRole)
-        return QString(Util::displayString(obj) + (isWk1 ? " [WebKit1]" : " [WebKit2]"));
+        return QString(Util::displayString(obj) + (isWk2 ? QStringLiteral(" [WebKit2]") : QStringLiteral(" [WebEngine]")));
     if (role == WebViewModelRoles::WebKitVersionRole)
-        return isWk1 ? 1 : 2;
+        return isWk2 ? 2 : 3;
 
     Q_ASSERT(!"WTF?");
     return QVariant();
@@ -74,7 +65,8 @@ QVariant WebViewModel::data(const QModelIndex &index, int role) const
 
 QMap< int, QVariant > WebViewModel::itemData(const QModelIndex &index) const
 {
-    QMap<int, QVariant> d = ObjectFilterProxyModelBase::itemData(index);
+    QMap<int, QVariant> d;
+    d.insert(Qt::DisplayRole, data(index, Qt::DisplayRole));
     d.insert(WebViewModelRoles::WebKitVersionRole,
              data(index, WebViewModelRoles::WebKitVersionRole));
     return d;
@@ -83,8 +75,7 @@ QMap< int, QVariant > WebViewModel::itemData(const QModelIndex &index) const
 bool WebViewModel::filterAcceptsObject(QObject *object) const
 {
     return
-#ifdef HAVE_QT_WEBKIT1
-        qobject_cast<QWebPage *>(object) ||
-#endif
-        object->inherits("QQuickWebView");
+        object->inherits("QQuickWebView") ||
+        object->inherits("QQuickWebEngineView") ||
+        object->inherits("QWebEnginePage");
 }

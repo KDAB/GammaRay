@@ -43,6 +43,7 @@ WebInspectorWidget::WebInspectorWidget(QWidget *parent)
     ui->setupUi(this);
     ui->webPageComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WebPages")));
     connect(ui->webPageComboBox, SIGNAL(activated(int)), SLOT(webPageSelected(int)));
+    webPageSelected(0);
 }
 
 WebInspectorWidget::~WebInspectorWidget()
@@ -51,35 +52,13 @@ WebInspectorWidget::~WebInspectorWidget()
 
 void WebInspectorWidget::webPageSelected(int index)
 {
-    QObject *obj = ui->webPageComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject *>();
-
-    // Wk 1, local
-    if (QWebPage *page = qobject_cast<QWebPage *>(obj)) {
-        page->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
-        ui->webInspector->setPage(page);
-        // webinspector needs a show event to actually show anything, just setting the page is not enough...
-        ui->webInspector->hide();
-        ui->webInspector->show();
-
-        ui->stack->setCurrentWidget(ui->wk1LocalPage);
-    } else if (ui->webPageComboBox->itemData(index,
-                                             WebViewModelRoles::WebKitVersionRole).toInt() == 2) {
-        const QUrl serverUrl = Endpoint::instance()->serverAddress();
-        if (serverUrl.scheme() == QLatin1String("tcp")) {
-            QUrl inspectorUrl;
-            inspectorUrl.setScheme(QStringLiteral("http"));
-            inspectorUrl.setHost(serverUrl.host());
-            inspectorUrl.setPort(Endpoint::defaultPort() + 1);
-            ui->webView->setUrl(inspectorUrl);
-            ui->stack->setCurrentWidget(ui->wk2Page);
-        }
-    }
-    // WK1, remote
-    else {
-        ui->stack->setCurrentWidget(ui->wk1RemotePage);
+    Q_UNUSED(index);
+    const QUrl serverUrl = Endpoint::instance()->serverAddress();
+    if (serverUrl.scheme() == QLatin1String("tcp")) {
+        QUrl inspectorUrl;
+        inspectorUrl.setScheme(QStringLiteral("http"));
+        inspectorUrl.setHost(serverUrl.host());
+        inspectorUrl.setPort(Endpoint::defaultPort() + 1);
+        ui->webView->setUrl(inspectorUrl);
     }
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(WebInspectorUiFactory)
-#endif

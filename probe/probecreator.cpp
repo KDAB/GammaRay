@@ -64,6 +64,9 @@ ProbeCreator::ProbeCreator(CreateFlags flags)
     qputenv("QTWEBKIT_INSPECTOR_SERVER",
             QByteArray(GAMMARAY_DEFAULT_ANY_ADDRESS) + ':'
             + QByteArray::number(Endpoint::defaultPort() + 1));
+    qputenv("QTWEBENGINE_REMOTE_DEBUGGING",
+            QByteArray(GAMMARAY_DEFAULT_ANY_ADDRESS) + ':'
+            + QByteArray::number(Endpoint::defaultPort() + 1));
 }
 
 void ProbeCreator::createProbe()

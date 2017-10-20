@@ -380,8 +380,7 @@ if(Qt5Core_FOUND)
     Script
     ScriptTools
     Test
-    WebKit
-    WebKitWidgets
+    WebEngineWidgets
     Widgets
     WaylandCompositor
   )
@@ -465,8 +464,6 @@ if(Qt5Core_FOUND)
       set(HAVE_QT_PRINTSUPPORT ON)
     endif()
   endif()
-  set(HAVE_QT_WEBKIT ${Qt5WebKit_FOUND})
-  set(HAVE_QT_WEBKIT1 ${Qt5WebKitWidgets_FOUND})
 
   add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x040800)
   #add_definitions(-DQT_DEPRECATED_WARNINGS)
@@ -495,8 +492,6 @@ else()
     set(HAVE_QT_DESIGNER true)
   endif()
   set(HAVE_QT_PRINTSUPPORT true)
-  set(HAVE_QT_WEBKIT ${QT_QTWEBKIT_FOUND})
-  set(HAVE_QT_WEBKIT1 ${QT_QTWEBKIT_FOUND})
 
   find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_QTCORE_INCLUDE_DIRS})
   if(QT_PRIVATE_INCLUDE_DIR)
@@ -562,7 +557,6 @@ else()
 endif()
 
 add_feature_info("QtScript debugger" QT_QTSCRIPTTOOLS_FOUND "Requires QtScript and QtScriptTools.")
-add_feature_info("Web inspector" HAVE_QT_WEBKIT1 "Requires QtWebKit.")
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
 add_feature_info("3D Widget Inspector" GAMMARAY_WITH_WIDGET3D "Requires Qt5 >= 5.7, Qt3D and QtQuick Controls")
 

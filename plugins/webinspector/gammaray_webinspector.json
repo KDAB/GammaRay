@@ -3,7 +3,8 @@
     "name": "Web Inspector",
     "name[de]": "Web Inspektor",
     "types": [
-        "QWebPage",
-        "QQuickWebView"
+        "QWebEnginePage",
+        "QQuickWebView",
+        "QQuickWebEngineView"
     ]
 }

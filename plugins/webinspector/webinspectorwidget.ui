@@ -15,55 +15,21 @@
     <widget class="QComboBox" name="webPageComboBox"/>
    </item>
    <item>
-    <widget class="QStackedWidget" name="stack">
-     <widget class="QWidget" name="wk1LocalPage">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QWebInspector" name="webInspector" native="true"/>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="wk1RemotePage">
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Sorry, WebKit1 introspection is not available remotely/out-of-process.</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="wk2Page">
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <item>
-        <widget class="QWebView" name="webView">
-         <property name="url">
-          <url>
-           <string>about:blank</string>
-          </url>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+    <widget class="QWebEngineView" name="webView">
+     <property name="url">
+      <url>
+       <string>about:blank</string>
+      </url>
+     </property>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QWebView</class>
+   <class>QWebEngineView</class>
    <extends>QWidget</extends>
-   <header>QtWebKitWidgets/QWebView</header>
-  </customwidget>
-  <customwidget>
-   <class>QWebInspector</class>
-   <extends>QWidget</extends>
-   <header>qwebinspector.h</header>
+   <header location="global">QtWebEngineWidgets/QWebEngineView</header>
   </customwidget>
  </customwidgets>
  <resources/>

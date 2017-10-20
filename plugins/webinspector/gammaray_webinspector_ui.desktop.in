@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Web Inspector
-X-GammaRay-Id=gammaray_webinspector
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
-Exec=${plugin_exec}

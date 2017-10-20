@@ -31,7 +31,6 @@
 
 #include <ui/tooluifactory.h>
 
-#include <QWebPage>
 #include <QWidget>
 
 namespace GammaRay {

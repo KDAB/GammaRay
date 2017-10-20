@@ -27,7 +27,6 @@
 */
 
 #include <config-gammaray.h>
-
 #include "webinspector.h"
 #include "webviewmodel.h"
 
@@ -39,10 +38,6 @@
 #include <QDebug>
 #include <QUrl>
 #include <QtPlugin>
-
-#ifdef HAVE_QT_WEBKIT1
-#include <QWebPage>
-#endif
 
 using namespace GammaRay;
 
@@ -59,8 +54,10 @@ WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
     QString serverAddress(GAMMARAY_DEFAULT_ANY_ADDRESS);
     if (serverUrl.scheme() == QLatin1String("tcp"))
         serverAddress = serverUrl.host();
+    // see also probecreator.cpp
     qputenv("QTWEBKIT_INSPECTOR_SERVER",
             serverAddress.toLocal8Bit() + ':' + QByteArray::number(Endpoint::defaultPort() + 1));
+    qputenv("QTWEBENGINE_REMOTE_DEBUGGING", QByteArray::number(Endpoint::defaultPort() + 1));
 }
 
 void WebInspector::objectAdded(QObject *obj)
@@ -87,12 +84,6 @@ void WebInspector::objectAdded(QObject *obj)
 WebInspectorFactory::WebInspectorFactory(QObject *parent)
     : QObject(parent)
 {
-    QVector<QByteArray> types;
-#ifdef HAVE_QT_WEBKIT1
-    types << QWebPage::staticMetaObject.className();
-#endif
-    types << QByteArrayLiteral("QQuickWebView");
-    setSupportedTypes(types);
 }
 
 QString WebInspectorFactory::id() const
