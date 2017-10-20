@@ -5,8 +5,12 @@
 # qdoc toolchain
 # TODO: some of this probably should be upstreamed to Qt's cmake files...
 # TODO replace with Qt5::qhelpgenerator for Qt >= 5.7.1
-find_program(QHELPGEN_EXECUTABLE qhelpgenerator)
-find_program(QDOC_EXECUTABLE qdoc)
+find_program(QHELPGEN_EXECUTABLE qhelpgenerator
+  HINTS ${QT_INSTALL_BINS}
+)
+find_program(QDOC_EXECUTABLE qdoc
+  HINTS ${QT_INSTALL_BINS}
+)
 
 find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf
   HINTS ${QT_INSTALL_DOCS}
