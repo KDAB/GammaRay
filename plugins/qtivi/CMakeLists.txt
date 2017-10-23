@@ -1,12 +1,6 @@
 # probe plugin
 if(Qt5IviCore_FOUND)
-    set(plugin_files qtivisupport.cpp)
-    if(Qt5IviCore_VERSION VERSION_GREATER 1.1)
-        add_definitions(-DQTIVI_DISABLE_IVIPROPERTIES)
-        set(plugin_files ${plugin_files} qtiviobjectmodel.cpp)
-    else()
-        set(plugin_files ${plugin_files} qtivipropertymodel.cpp qtivipropertyoverrider.cpp)
-    endif()
+    set(plugin_files qtivisupport.cpp qtivipropertymodel.cpp qtivipropertyoverrider.cpp)
     gammaray_add_plugin(gammaray_qtivi JSON gammaray_qtivi.json SOURCES ${plugin_files})
     target_include_directories(gammaray_qtivi SYSTEM PRIVATE ${Qt5IviCore_PRIVATE_INCLUDE_DIRS})
     target_link_libraries(gammaray_qtivi gammaray_core ${QT_QTGUI_LIBRARIES} Qt5::IviCore)
