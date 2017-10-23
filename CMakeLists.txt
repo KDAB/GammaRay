@@ -551,10 +551,6 @@ add_feature_info("3D Widget Inspector" GAMMARAY_WITH_WIDGET3D "Requires Qt5 >= 5
 # Additional dependencies
 #
 
-if(NOT WIN32 AND NOT QNXNTO AND NOT ANDROID)
-  set(DL_LIBRARY dl)
-endif()
-
 if(Qt5Core_FOUND AND Qt5Core_VERSION VERSION_LESS 5.2.2)
   # https://codereview.qt-project.org/75530
   message(STATUS "Disabling timer profiler plug-in due to a bug in Qt5 <= 5.2.1.")
