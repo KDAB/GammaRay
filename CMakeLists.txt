@@ -355,6 +355,10 @@ if(Qt5Core_FOUND)
     # only starting with 5.5 Qt started to use 'override' throughout the code base
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override")
   endif()
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_EQUAL 5.9.1)
+    # hide -Wc++1z-extensions warnings in this Qt version -- see: https://bugreports.qt.io/browse/QTBUG-61840
+    add_flag_if_supported(-Wno-c++1z-extensions NO_CPP1Z_EXTENSIONS)
+  endif()
   if(Qt5Core_VERSION VERSION_GREATER 5.7)
     # Qt 5.8 is the first minor version to use nullptr more broadly
     # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
