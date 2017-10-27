@@ -46,7 +46,7 @@ class Client;
 class MainWindow;
 class ProcessTracker;
 class ProcessTrackerBackend;
-struct ProcessTrackerInfo;
+class ProcessTrackerInfo;
 
 /** @brief Pre-MainWindow connection setup logic.
  *

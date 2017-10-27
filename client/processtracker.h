@@ -37,7 +37,7 @@
 
 namespace GammaRay {
 class ProcessTrackerBackend;
-struct ProcessTrackerInfo;
+class ProcessTrackerInfo;
 
 class GAMMARAY_CLIENT_EXPORT ProcessTracker : public QObject
 {
@@ -73,8 +73,9 @@ private:
     QSharedPointer<D> d;
 };
 
-struct GAMMARAY_CLIENT_EXPORT ProcessTrackerInfo
+class GAMMARAY_CLIENT_EXPORT ProcessTrackerInfo
 {
+public:
     ProcessTrackerInfo(qint64 pid = -1, bool traced = false, GammaRay::ProcessTracker::State state = GammaRay::ProcessTracker::Unknown)
         : pid(pid)
         , traced(traced)
