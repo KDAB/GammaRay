@@ -47,6 +47,7 @@ class MainWindow;
 class ProcessTracker;
 class ProcessTrackerBackend;
 class ProcessTrackerInfo;
+class ClientToolManager;
 
 /** @brief Pre-MainWindow connection setup logic.
  *
@@ -61,6 +62,7 @@ public:
     explicit ClientConnectionManager(QObject *parent = nullptr, bool showSplashScreenOnStartUp = true);
     ~ClientConnectionManager();
 
+    ClientToolManager *toolManager() const;
     QMainWindow *mainWindow() const;
 
     /** Connect to a GammaRay probe at @p url. */
@@ -133,6 +135,7 @@ private:
     QUrl m_serverUrl;
     Client *m_client;
     GammaRay::ProcessTracker *m_processTracker;
+    ClientToolManager *m_toolManager;
     QPointer<MainWindow> m_mainWindow;
     QTime m_connectionTimeout;
     bool m_ignorePersistentError;

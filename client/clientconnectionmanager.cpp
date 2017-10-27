@@ -125,6 +125,7 @@ ClientConnectionManager::ClientConnectionManager(QObject *parent, bool showSplas
     : QObject(parent)
     , m_client(new Client(this))
     , m_processTracker(new GammaRay::ProcessTracker(this))
+    , m_toolManager(new ClientToolManager(this))
     , m_mainWindow(nullptr)
     , m_ignorePersistentError(false)
     , m_tries(0)
@@ -143,14 +144,17 @@ ClientConnectionManager::ClientConnectionManager(QObject *parent, bool showSplas
             SIGNAL(persistentConnectionError(QString)));
     connect(this, SIGNAL(persistentConnectionError(QString)), SLOT(delayedHideSplashScreen()));
     connect(this, SIGNAL(ready()), this, SLOT(delayedHideSplashScreen()));
-
-    auto toolManager = new ClientToolManager(this);
-    connect(toolManager, SIGNAL(toolListAvailable()), this, SIGNAL(ready()));
+    connect(m_toolManager, SIGNAL(toolListAvailable()), this, SIGNAL(ready()));
 }
 
 ClientConnectionManager::~ClientConnectionManager()
 {
     delete m_mainWindow;
+}
+
+ClientToolManager *ClientConnectionManager::toolManager() const
+{
+    return m_toolManager;
 }
 
 QMainWindow *ClientConnectionManager::mainWindow() const
