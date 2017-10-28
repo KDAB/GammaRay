@@ -130,7 +130,7 @@ public:
             // corresponding Node does not have "Loading" flag set). So we do the sneaky
             // trick with a timer to force RemoteModel to fetch the data from the server,
             // because we really want them.
-            QTimer::singleShot(0, [this, source_idx]() {
+            QTimer::singleShot(0, [source_idx]() {
                 source_idx.data(Widget3DModel::IdRole);
             });
             return false;
