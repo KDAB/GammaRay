@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015-2016 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -118,26 +118,70 @@ class MockObject : public QObject
     Q_PROPERTY(QString e READ e WRITE setE NOTIFY eChanged)
 
 public:
-    MockObject (int a, bool b, char c, double d, const QString &e)
+    MockObject(int a, bool b, char c, double d, const QString &e)
         : QObject(nullptr)
         , m_a(a)
         , m_b(b)
         , m_c(c)
         , m_d(d)
         , m_e(e)
-    {}
+    {
+    }
 
-    int a() const { return m_a; }
-    bool b() const { return m_b; }
-    char c() const { return m_c; }
-    double d() const { return m_d; }
-    const QString &e() const { return m_e; }
+    int a() const
+    {
+        return m_a;
+    }
 
-    void setA(int a) { m_a = a;     emit aChanged(); }
-    void setB(bool b) { m_b = b;    emit bChanged(); }
-    void setC(char c) { m_c = c;    emit cChanged(); }
-    void setD(double d) { m_d = d;  emit dChanged(); }
-    void setE(QString e) { m_e = e; emit eChanged(); }
+    bool b() const
+    {
+        return m_b;
+    }
+
+    char c() const
+    {
+        return m_c;
+    }
+
+    double d() const
+    {
+        return m_d;
+    }
+
+    const QString &e() const
+    {
+        return m_e;
+    }
+
+    void setA(int a)
+    {
+        m_a = a;
+        emit aChanged();
+    }
+
+    void setB(bool b)
+    {
+        m_b = b;
+        emit bChanged();
+    }
+
+    void setC(char c)
+    {
+        m_c = c;
+        emit cChanged();
+    }
+
+    void setD(double d)
+    {
+        m_d = d;
+        emit dChanged();
+    }
+
+    void setE(QString e)
+    {
+        m_e = e;
+        emit eChanged();
+    }
 
 signals:
     void aChanged();
@@ -186,7 +230,6 @@ private:
     MockBindingProvider *provider;
 };
 
-
 void BindingInspectorTest::initTestCase()
 {
     QQmlEngine engine; // Needed to initialize the Qml support plugin
@@ -219,8 +262,8 @@ void BindingInspectorTest::testMockProvider()
     auto bindings1 = provider->findBindingsFor(&obj1);
     auto &&bindingNode1 = bindings1.front();
 
-    QVERIFY(bindingNode1);
-    QCOMPARE(bindingNode1->parent(), nullptr);
+    QVERIFY(bindingNode1 != nullptr);
+    QVERIFY(bindingNode1->parent() == nullptr);
     QCOMPARE(bindingNode1->object(), &obj1);
     QCOMPARE(bindingNode1->property().name(), "a");
     QCOMPARE(bindingNode1->isBindingLoop(), false);
@@ -232,8 +275,8 @@ void BindingInspectorTest::testMockProvider()
     auto bindings2 = provider->findBindingsFor(&obj1);
     auto &&bindingNode2 = bindings2.back();
 
-    QVERIFY(bindingNode2);
-    QCOMPARE(bindingNode2->parent(), nullptr);
+    QVERIFY(bindingNode2 != nullptr);
+    QVERIFY(bindingNode2->parent() == nullptr);
     QCOMPARE(bindingNode2->object(), &obj1);
     QCOMPARE(bindingNode2->property().name(), "c");
     QCOMPARE(bindingNode2->isBindingLoop(), false);
@@ -363,19 +406,21 @@ void BindingInspectorTest::testQmlBindingProvider()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
 void BindingInspectorTest::testQtQuickProvider_data()
 {
-    QTest::addColumn<QByteArray>("code");
-    QTest::addColumn<QString>("objName");
-    QTest::addColumn<QString>("propertyName");
-    QTest::addColumn<QStringList>("expectedDependencies");
+    QTest::addColumn<QByteArray>("code", nullptr);
+    QTest::addColumn<QString>("objName", nullptr);
+    QTest::addColumn<QString>("propertyName", nullptr);
+    QTest::addColumn<QStringList>("expectedDependencies", nullptr);
 
     QTest::newRow("implicitWidth_determines_width_noLoop")
         << QByteArray("import QtQuick 2.0\n"
-                    "Rectangle {\n"
-                        "id: rect\n"
-                        "objectName: 'rect'\n"
-                        "implicitWidth: 20\n"
-                        "Text { objectName: 'text'; width: parent.width }\n"
-                    "}") << "rect" << "width" << QStringList { "rect.implicitWidth" };
+                      "Rectangle {\n"
+                      "    id: rect\n"
+                      "    objectName: 'rect'\n"
+                      "    implicitWidth: 20\n"
+                      "    Text { objectName: 'text'; width: parent.width }\n"
+                      "}\n"
+                      )
+        << "rect" << "width" << QStringList { "rect.implicitWidth" };
 
     QTest::newRow("fill_determines_width")
         << QByteArray("import QtQuick 2.0\n"
@@ -386,8 +431,8 @@ void BindingInspectorTest::testQtQuickProvider_data()
                       "        anchors.fill: parent\n"
                       "    }\n"
                       "}\n"
-        ) << "item" << "width" << QStringList {"rect.width", "anchors.leftMargin"};
-
+                      )
+        << "item" << "width" << QStringList {"rect.width", "anchors.leftMargin"};
 
     QTest::newRow("left_and_right_determine_width")
         << QByteArray("import QtQuick 2.0\n"
@@ -400,8 +445,8 @@ void BindingInspectorTest::testQtQuickProvider_data()
                       "        anchors.right: parent.right\n"
                       "    }\n"
                       "}\n"
-        ) << "item" << "width" << QStringList {"item.anchors.left", "item.anchors.right"};
-
+                      )
+        << "item" << "width" << QStringList {"item.anchors.left", "item.anchors.right"};
 
     QTest::newRow("y_and_height_determine_bottom")
         << QByteArray("import QtQuick 2.0\n"
@@ -413,8 +458,8 @@ void BindingInspectorTest::testQtQuickProvider_data()
                       "        y: 50\n"
                       "        height: 100\n"
                       "    }\n"
-                      "}\n"
-        ) << "item" << "bottom" << QStringList {"item.y", "item.height"};
+                      "}\n")
+        << "item" << "bottom" << QStringList {"item.y", "item.height"};
 
     QTest::newRow("childrenRect")
         << QByteArray("import QtQuick 2.0\n"
@@ -425,7 +470,8 @@ void BindingInspectorTest::testQtQuickProvider_data()
                       "        text: 'Hello World!'\n"
                       "    }\n"
                       "}\n"
-        ) << "rect" << "childrenRect" << QStringList {"t.height"};
+                      )
+        << "rect" << "childrenRect" << QStringList {"t.height"};
 }
 
 void BindingInspectorTest::testQtQuickProvider()
@@ -551,7 +597,7 @@ void BindingInspectorTest::testModelDataChanged()
     QCOMPARE(obj1dIndex.sibling(2, BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel.rowCount(obj1dIndex), 0);
 
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(dataChangedSpy.isValid());
 
     obj1.setD(3.1415926535897932);
@@ -597,8 +643,8 @@ void BindingInspectorTest::testModelAdditions()
     QCOMPARE(obj1cIndex.sibling(0, BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel.rowCount(obj1cIndex), 0);
 
-    QSignalSpy rowAddedSpy(&bindingModel, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+    QSignalSpy rowAddedSpy(&bindingModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(rowAddedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -676,8 +722,8 @@ void BindingInspectorTest::testModelInsertions()
     QCOMPARE(obj1eIndex.sibling(0, BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel.rowCount(obj1eIndex), 0);
 
-    QSignalSpy rowAddedSpy(&bindingModel, SIGNAL(rowsInserted(const QModelIndex &, int, int)));
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+    QSignalSpy rowAddedSpy(&bindingModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(rowAddedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -703,8 +749,6 @@ void BindingInspectorTest::testModelInsertions()
     QCOMPARE(obj1eIndex.sibling(2, BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
     QCOMPARE(bindingModel.rowCount(obj1eIndex), 1);
 
-
-
     QModelIndex obj1bIndex = bindingModel.index(0, 0, obj1aIndex);
     QVERIFY(obj1bIndex.isValid());
     QCOMPARE(obj1bIndex.data().toString(), QStringLiteral("b"));
@@ -726,7 +770,6 @@ void BindingInspectorTest::testModelInsertions()
     QCOMPARE(obj2aIndex.sibling(0, BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel.rowCount(obj2aIndex), 0);
 
-
     QCOMPARE(rowAddedSpy.back().at(0).value<QModelIndex>(), obj1eIndex);
     QCOMPARE(rowAddedSpy.back().at(1).toInt(), 0);
     QCOMPARE(rowAddedSpy.back().at(2).toInt(), 0);
@@ -737,7 +780,6 @@ void BindingInspectorTest::testModelInsertions()
     QCOMPARE(obj2aIndex2.sibling(0, BindingModel::ValueColumn).data().toInt(), 35);
     QCOMPARE(obj2aIndex2.sibling(0, BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel.rowCount(obj2aIndex2), 0);
-
 
     QCOMPARE(dataChangedSpy.size(), 3);
     QCOMPARE(dataChangedSpy.at(0).at(0).value<QModelIndex>(), obj1aIndex.sibling(0, BindingModel::ValueColumn)); // Fair enough, we did change the value.
@@ -770,8 +812,8 @@ void BindingInspectorTest::testModelRemovalAtEnd()
     QCOMPARE(obj1aIndex.sibling(0, BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
     QCOMPARE(bindingModel.rowCount(obj1aIndex), 3);
 
-    QSignalSpy rowRemovedSpy(&bindingModel, SIGNAL(rowsRemoved(const QModelIndex &, int, int)));
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+    QSignalSpy rowRemovedSpy(&bindingModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(rowRemovedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -824,8 +866,8 @@ void BindingInspectorTest::testModelRemovalInside()
     QCOMPARE(obj1aIndex.sibling(0, BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
     QCOMPARE(bindingModel.rowCount(obj1aIndex), 3);
 
-    QSignalSpy rowRemovedSpy(&bindingModel, SIGNAL(rowsRemoved(const QModelIndex &, int, int)));
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+    QSignalSpy rowRemovedSpy(&bindingModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(rowRemovedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -926,8 +968,8 @@ void BindingInspectorTest::testIntegration()
     QModelIndex aRightIndex;
     QModelIndex aRightIndex0 = bindingModel->index(0, 0, tAnchorsRightIndex); // It's more or less random which row contains
     QModelIndex aRightIndex1 = bindingModel->index(1, 0, tAnchorsRightIndex); // the correct property.
-    QVERIFY((aRightIndex0.data().toString() == QStringLiteral("a.right") && aRightIndex1.data().toString() == QStringLiteral("t.parent"))
-            || (aRightIndex1.data().toString() == QStringLiteral("a.right")) && aRightIndex0.data().toString() == QStringLiteral("t.parent")));
+    QVERIFY((aRightIndex0.data().toString() == QStringLiteral("a.right") && aRightIndex1.data().toString() == QStringLiteral("t.parent")) ||
+            (aRightIndex1.data().toString() == QStringLiteral("a.right")) && aRightIndex0.data().toString() == QStringLiteral("t.parent")));
     if (aRightIndex0.data().toString() == QStringLiteral("a.right")) {
         aRightIndex = aRightIndex0;
         QCOMPARE(aRightIndex.sibling(0, BindingModel::DepthColumn).data().toString(), QStringLiteral("∞"));
@@ -983,10 +1025,10 @@ void BindingInspectorTest::testIntegration()
     QModelIndex aVerticalCenterIndex;
     QModelIndex aVerticalCenterIndex0 = bindingModel->index(0, 0, tAnchorsVerticalCenterIndex); // It's more or less random which row contains
     QModelIndex aVerticalCenterIndex1 = bindingModel->index(1, 0, tAnchorsVerticalCenterIndex); // the correct property.
-    QVERIFY((aVerticalCenterIndex0.data().toString() == QStringLiteral("a.verticalCenter")
-                && aVerticalCenterIndex1.data().toString() == QStringLiteral("t.parent"))
-            || (aVerticalCenterIndex1.data().toString() == QStringLiteral("a.verticalCenter")
-                && aVerticalCenterIndex0.data().toString() == QStringLiteral("t.parent")));
+    QVERIFY((aVerticalCenterIndex0.data().toString() == QStringLiteral("a.verticalCenter") &&
+             aVerticalCenterIndex1.data().toString() == QStringLiteral("t.parent")) ||
+            (aVerticalCenterIndex1.data().toString() == QStringLiteral("a.verticalCenter") &&
+             aVerticalCenterIndex0.data().toString() == QStringLiteral("t.parent")));
     if (aVerticalCenterIndex0.data().toString() == QStringLiteral("a.verticalCenter")) {
         aVerticalCenterIndex = aVerticalCenterIndex0;
         QCOMPARE(aVerticalCenterIndex.sibling(0, BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
@@ -1014,7 +1056,6 @@ void BindingInspectorTest::testIntegration()
 
     delete rect;
     QCOMPARE(bindingModel->rowCount(), 0);
-
 }
 #endif
 
