@@ -76,11 +76,13 @@ private:
 class GAMMARAY_CLIENT_EXPORT ProcessTrackerInfo
 {
 public:
-    ProcessTrackerInfo(qint64 pid = -1, bool traced = false, GammaRay::ProcessTracker::State state = GammaRay::ProcessTracker::Unknown)
+    explicit ProcessTrackerInfo(qint64 pid = -1, bool traced = false,
+                                GammaRay::ProcessTracker::State state = GammaRay::ProcessTracker::Unknown)
         : pid(pid)
         , traced(traced)
         , state(state)
-    { }
+    {
+    }
 
     qint64 pid;
     bool traced;
