@@ -83,7 +83,7 @@ GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
         updateWindowIcon();
 
         m_probe->installGlobalEventFilter(this);
-        foreach (auto w , qGuiApp->topLevelWindows()) {
+        foreach (auto w , guiApp->topLevelWindows()) {
             updateWindowIcon(w);
             updateWindowTitle(w);
         }
