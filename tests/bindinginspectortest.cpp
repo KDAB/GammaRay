@@ -969,7 +969,7 @@ void BindingInspectorTest::testIntegration()
     QModelIndex aRightIndex0 = bindingModel->index(0, 0, tAnchorsRightIndex); // It's more or less random which row contains
     QModelIndex aRightIndex1 = bindingModel->index(1, 0, tAnchorsRightIndex); // the correct property.
     QVERIFY((aRightIndex0.data().toString() == QStringLiteral("a.right") && aRightIndex1.data().toString() == QStringLiteral("t.parent")) ||
-            (aRightIndex1.data().toString() == QStringLiteral("a.right")) && aRightIndex0.data().toString() == QStringLiteral("t.parent")));
+            (aRightIndex1.data().toString() == QStringLiteral("a.right")) && aRightIndex0.data().toString() == QStringLiteral("t.parent"));
     if (aRightIndex0.data().toString() == QStringLiteral("a.right")) {
         aRightIndex = aRightIndex0;
         QCOMPARE(aRightIndex.sibling(0, BindingModel::DepthColumn).data().toString(), QStringLiteral("∞"));
