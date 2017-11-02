@@ -520,7 +520,7 @@ void BindingInspectorTest::testQtQuickProvider()
     QuickImplicitBindingDependencyProvider provider;
     auto bindingNodes = provider.findDependenciesFor(&parentNode);
 
-    for (QString depName : expectedDependencies) {
+    for (const QString &depName : expectedDependencies) {
         bool found = false;
         for (auto &&bindingNode: bindingNodes) {
             if (bindingNode->canonicalName() == depName) {
