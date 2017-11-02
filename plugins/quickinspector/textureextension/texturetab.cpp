@@ -96,26 +96,26 @@ TextureTab::TextureTab(PropertyWidget *parent)
     connect(toggleTextureWasteAction, SIGNAL(toggled(bool)), ui->textureView, SLOT(setTextureWasteVisualizationEnabled(bool)));
 
     // Texture issues infobar
-    connect(ui->textureView, &TextureViewWidget::textureInfoNecessary,
+    connect(ui->textureView, &TextureViewWidget::textureInfoNecessary, this,
             [&](bool infoNecessary) {
                 ui->textureInfo->setVisible(infoNecessary);
                 if (!infoNecessary)
                     ui->infoLabel->setText(QString());
     });
-    connect(ui->textureView, &TextureViewWidget::textureWasteFound,
+    connect(ui->textureView, &TextureViewWidget::textureWasteFound, this,
             [&](bool isProblem, int percent, int bytes) {
                 addInfoLine(isProblem, tr("Transparency Waste: ") + QString::number(percent)
                                      + tr("% or ") + formatBytes(bytes) + tr("."));
     });
-    connect(ui->textureView, &TextureViewWidget::textureIsUnicolor,
+    connect(ui->textureView, &TextureViewWidget::textureIsUnicolor, this,
             [&](bool isProblem) {
                 addInfoLine(isProblem, tr("Texture has only one color, consider using a widget or a rectangle."));
     });
-    connect(ui->textureView, &TextureViewWidget::textureIsFullyTransparent,
+    connect(ui->textureView, &TextureViewWidget::textureIsFullyTransparent, this,
             [&](bool isProblem) {
                 addInfoLine(isProblem, tr("Texture is fully transparent, consider using margins or anchoring."));
     });
-    connect(ui->textureView, &TextureViewWidget::textureHasBorderImageSavings,
+    connect(ui->textureView, &TextureViewWidget::textureHasBorderImageSavings, this,
             [&](bool isProblem, int percent, int bytes) {
                 addInfoLine(isProblem, tr("Using a Border Image for this texture would save ") + QString::number(percent)
                                      + tr("%  or ") + formatBytes(bytes) + tr("."));
