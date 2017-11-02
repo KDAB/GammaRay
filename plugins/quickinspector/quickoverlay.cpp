@@ -59,7 +59,7 @@ public:
             return *s_cache.insert(meta, QQuickItemPropertyCache(meta));
     }
 
-    QQuickItemPropertyCache(const QMetaObject *meta)
+    explicit QQuickItemPropertyCache(const QMetaObject *meta)
         : background(property(meta, "background"))
         , contentItem(property(meta, "contentItem"))
         , anchors(property(meta, "anchors"))
