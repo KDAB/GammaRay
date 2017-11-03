@@ -404,7 +404,7 @@ if(Qt5Core_FOUND)
   endif()
 
   # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
-  if(NOT CMAKE_CROSSCOMPILING)
+  if(GAMMARAY_BUILD_DOCS)
     find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
   endif()
 
