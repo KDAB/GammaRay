@@ -1,0 +1,34 @@
+/*
+    gammaray-qmltype.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \nextpage{Scene Graph Material}
+    \previouspage{QML Context}
+    \page gammaray-qmltype.html
+
+    \title QML Type
+
+    \section1 Overview
+
+    The QML type view shows additional type information that QQmlEngine holds internally
+    for the type of the currently selected object. This is available both for types defined
+    in C++ and in QML code.
+
+    \borderedimage gammaray-qmltype.png
+
+*/
