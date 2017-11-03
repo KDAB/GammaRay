@@ -1,0 +1,47 @@
+/*
+    gammaray-qmlbindings.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \nextpage {Enums and Flags}
+    \previouspage {Connections}
+    \page gammaray-qmlbindings.html
+
+    \title Bindings
+
+    \section1 Overview
+
+    The bindings view is available for all QObject instances instantiated from QML and shows active property
+    bindings for the selected object, including their dependencies on other properties.
+
+    \borderedimage gammaray-bindings.png
+
+    At the top level, the binding view shows all QML property bindings of the currently selected object. Below
+    each bindings, its dependencies are shown, which themselves can be property bindings again. Dependencies can
+    be explicit, that is they are specified in your code, or implicit. Implicit dependencies will not show a
+    corresponding source code location and are mainly introduced by the Qt Quick layouting system.
+
+    The displayed information include:
+    \list
+        \li The name of the property.
+        \li The current value of the property.
+        \li The depth of the dependency tree. The depth is shown as infinite on binding loops.
+        \li The source code location of the binding. You can directly navigate to the source
+            code using the context menu. Implicit dependencies caused for example by the Qt Quick layouting
+            system will not show a source code location.
+    \endlist
+*/
