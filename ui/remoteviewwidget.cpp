@@ -341,7 +341,13 @@ bool RemoteViewWidget::hasValidFrame() const
 
 bool RemoteViewWidget::hasValidCompleteFrame() const
 {
-    return m_frame.isValid() && m_frame.image().size() == m_frame.viewRect().size().toSize();
+    return m_frame.isValid()
+            && (m_frame.image().size()
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                / m_frame.image().devicePixelRatio()
+#endif
+                )
+            == m_frame.viewRect().size().toSize();
 }
 
 int RemoteViewWidget::flagRole() const
@@ -589,7 +595,7 @@ void RemoteViewWidget::paintEvent(QPaintEvent *event)
     p.save();
     p.setTransform(QTransform().scale(m_zoom, m_zoom), true);
     p.setTransform(m_frame.transform(), true);
-    p.drawImage(QRect(QPoint(0, 0), m_frame.image().size()), m_frame.image());
+    p.drawImage(QPoint(), m_frame.image());
     p.restore();
 
     drawDecoration(&p);
