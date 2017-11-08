@@ -464,7 +464,7 @@ void QuickOverlay::windowAfterRendering()
 
     if (m_isGrabbingMode) {
         const auto window = QRectF(QPoint(0,0), m_renderInfo.windowSize);
-        const auto intersect = m_userViewport.isValid() ? window.intersected(m_userViewport) : window ;
+        const auto intersect = m_userViewport.isValid() ? window.intersected(m_userViewport) : window;
 
         // readout parameters
         // when in doubt, round x and y to floor--> reads one pixel more
@@ -484,8 +484,9 @@ void QuickOverlay::windowAfterRendering()
         glFuncs->glReadPixels(x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
 
         // set transform to flip the read texture later, when displayed
+        // Keep in mind that transforms are local coordinate (ie, not impacted by the device pixel ratio)
         m_grabbedFrame.transform.scale(1.0, -1.0);
-        m_grabbedFrame.transform.translate(intersect.x() * m_renderInfo.dpr , -intersect.y() * m_renderInfo.dpr - h);
+        m_grabbedFrame.transform.translate(intersect.x() , -intersect.y() - intersect.height());
         m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
         // Let emit the signal even if our image is possibly null, this way we make perfect ping/pong
