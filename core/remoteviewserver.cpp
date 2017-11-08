@@ -102,10 +102,15 @@ void RemoteViewServer::sendFrame(const RemoteViewFrame &frame)
 {
     m_clientReady = false;
 
+    const QSize frameImageSize = frame.image().size()
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+        / frame.image().devicePixelRatio()
+#endif
+    ;
     m_lastTransmittedViewRect = frame.viewRect();
-    m_lastTransmittedImageRect = frame.transform().mapRect(frame.image().rect());
+    m_lastTransmittedImageRect = frame.transform().mapRect(QRect(QPoint(), frameImageSize));
 
-    if (m_pendingCompleteFrame && frame.image().size() == frame.viewRect().size())
+    if (m_pendingCompleteFrame && frameImageSize == frame.viewRect().size())
         m_pendingCompleteFrame = false;
     emit frameUpdated(frame);
 }
