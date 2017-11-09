@@ -222,6 +222,7 @@ QuickOverlayLegend::QuickOverlayLegend(QWidget *parent)
 
     m_visibilityAction = new QAction(UIResources::themedIcon(QLatin1String("legend.png")),
                                      tr("Show Legend"), this);
+    m_visibilityAction->setObjectName("aShowLegend");
     m_visibilityAction->setCheckable(true);
     m_visibilityAction->setToolTip(tr("<b>Show Legend</b><br>"
                                       "This shows a legend explaining the various diagnostic decorations."));

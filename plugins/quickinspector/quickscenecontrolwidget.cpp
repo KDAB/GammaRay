@@ -81,6 +81,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_visualizeClipping = new QAction(UIResources::themedIcon(QLatin1String("visualize-clipping.png")),
                                       tr("Visualize Clipping"),
                                       this);
+    m_visualizeClipping->setObjectName("aVisualizeClipping");
     m_visualizeClipping->setActionGroup(m_visualizeGroup);
     m_visualizeClipping->setData(QuickInspectorInterface::VisualizeClipping);
     m_visualizeClipping->setCheckable(true);
@@ -95,6 +96,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
             = new QAction(UIResources::themedIcon(QLatin1String("visualize-overdraw.png")),
                           tr("Visualize Overdraw"),
                           this);
+    m_visualizeOverdraw->setObjectName("aVisualizeOverdraw");
     m_visualizeOverdraw->setActionGroup(m_visualizeGroup);
     m_visualizeOverdraw->setData(QuickInspectorInterface::VisualizeOverdraw);
     m_visualizeOverdraw->setCheckable(true);
@@ -108,6 +110,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     m_visualizeBatches = new QAction(UIResources::themedIcon(QLatin1String("visualize-batches.png")),
                                      tr("Visualize Batches"), this);
+    m_visualizeBatches->setObjectName("aVisualizeBatches");
     m_visualizeBatches->setActionGroup(m_visualizeGroup);
     m_visualizeBatches->setData(QuickInspectorInterface::VisualizeBatches);
     m_visualizeBatches->setCheckable(true);
@@ -124,6 +127,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     m_visualizeChanges = new QAction(UIResources::themedIcon(QLatin1String("visualize-changes.png")),
                                      tr("Visualize Changes"), this);
+    m_visualizeChanges->setObjectName("aVisualizeChanges");
     m_visualizeChanges->setActionGroup(m_visualizeGroup);
     m_visualizeChanges->setData(QuickInspectorInterface::VisualizeChanges);
     m_visualizeChanges->setCheckable(true);
@@ -136,6 +140,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_visualizeTraces
             = new QAction(UIResources::themedIcon(QLatin1String("visualize-traces.png")),
                           tr("Visualize Controls"), this);
+    m_visualizeTraces->setObjectName("aVisualizeTraces");
     m_visualizeTraces->setActionGroup(m_visualizeGroup);
     m_visualizeTraces->setData(QuickInspectorInterface::VisualizeTraces);
     m_visualizeTraces->setCheckable(true);
@@ -145,15 +150,19 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     m_serverSideDecorationsEnabled = new QAction(UIResources::themedIcon(QLatin1String("server-decorations.png")),
                                                  tr("Decorate Target"), this);
+    m_serverSideDecorationsEnabled->setObjectName("aServerSideDecorationsEnabled");
     m_serverSideDecorationsEnabled->setCheckable(true);
     m_serverSideDecorationsEnabled->setToolTip(tr("<b>Decorate Target</b><br>"
                                                   "This enables diagnostic decorations on the target application, "
                                                   "such as anchor and layout information, helper grids or control overlays."));
 
     auto *gridSettingsAction = new QWidgetAction(this);
+    gridSettingsAction->setObjectName("aGridSettingsAction");
     gridSettingsAction->setDefaultWidget(m_gridSettingsWidget);
 
     m_gridSettingsMenu = new QMenu(tr("Layout Grid"), this);
+    m_gridSettingsMenu->setObjectName("mLayoutGrid");
+    m_gridSettingsMenu->menuAction()->setObjectName("aLayoutGrid");
     m_gridSettingsMenu->setIcon(UIResources::themedIcon(QLatin1String("grid-settings.png")));
     m_gridSettingsMenu->setToolTip(tr("<b>Layout Grid</b><br>"
                                   "Configure the layout helper grid."));
@@ -172,9 +181,8 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 
     m_toolBar->addSeparator();
 
-    foreach (auto action, m_previewWidget->interactionModeActions()->actions()) {
-        m_toolBar->addAction(action);
-    }
+    m_toolBar->addActions(m_previewWidget->interactionModeActions()->actions());
+
     m_toolBar->addSeparator();
 
     m_toolBar->addAction(m_serverSideDecorationsEnabled);
@@ -193,7 +201,8 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
             &QComboBox::setCurrentIndex);
     m_zoomCombobox->setCurrentIndex(m_previewWidget->zoomLevelIndex());
 
-    m_toolBar->addWidget(m_zoomCombobox);
+    QAction *zoomComboBox = m_toolBar->addWidget(m_zoomCombobox);
+    zoomComboBox->setObjectName("aZoomComboBox");
     m_toolBar->addAction(m_previewWidget->zoomInAction());
 
     connect(m_gridSettingsWidget, SIGNAL(enabledChanged(bool)), this, SLOT(gridEnabledChanged(bool)));

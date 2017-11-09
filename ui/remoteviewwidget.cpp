@@ -151,6 +151,7 @@ void RemoteViewWidget::setupActions()
 
     auto action = new QAction(UIResources::themedIcon(QLatin1String("move-preview.png")), tr(
                                   "Pan View"), this);
+    action->setObjectName("aPanView");
     action->setCheckable(true);
     action->setToolTip(tr("<b>Pan view</b><br>"
                           "Default mode. Click and drag to move the preview. Won't impact the original application in any way."));
@@ -159,6 +160,7 @@ void RemoteViewWidget::setupActions()
 
     action = new QAction(UIResources::themedIcon(QLatin1String("measure-pixels.png")),
                          tr("Measure Pixel Sizes"), this);
+    action->setObjectName("aMeasurePixelSizes");
     action->setCheckable(true);
     action->setToolTip(tr("<b>Measure pixel-sizes</b><br>"
                           "Choose this mode, click somewhere and drag to measure the distance between the "
@@ -168,6 +170,7 @@ void RemoteViewWidget::setupActions()
     action->setActionGroup(m_interactionModeActions);
 
     action = new QAction(tr("Pick Element"), this);
+    action->setObjectName("aPickElement");
     action->setIconText(tr("Pick"));
     action->setIcon(UIResources::themedIcon(QLatin1String("pick-element.png")));
     action->setCheckable(true);
@@ -178,6 +181,7 @@ void RemoteViewWidget::setupActions()
 
     action = new QAction(UIResources::themedIcon(QLatin1String("redirect-input.png")),
                          tr("Redirect Input"), this);
+    action->setObjectName("aRedirectInput");
     action->setCheckable(true);
     action->setToolTip(tr("<b>Redirect Input</b><br>"
                           "In this mode all mouse input is redirected directly to the original application,"
@@ -187,6 +191,7 @@ void RemoteViewWidget::setupActions()
 
     action = new QAction(UIResources::themedIcon(QLatin1String("pick-color.png")),
                          tr("Inspect Colors"), this);
+    action->setObjectName("aInspectColors");
     action->setCheckable(true);
     action->setToolTip(tr("<b>Inspect Colors</b><br>"
                           "Inspect the RGBA channels of the currently hovered pixel"));
@@ -195,6 +200,7 @@ void RemoteViewWidget::setupActions()
 
     m_zoomOutAction = new QAction(UIResources::themedIcon(QLatin1String("zoom-out.png")), tr(
                                       "Zoom Out"), this);
+    m_zoomOutAction->setObjectName("aZoomOut");
     m_zoomOutAction->setShortcutContext(Qt::WidgetShortcut);
     m_zoomOutAction->setShortcuts(QKeySequence::ZoomOut);
     connect(m_zoomOutAction, SIGNAL(triggered(bool)), this, SLOT(zoomOut()));
@@ -202,12 +208,14 @@ void RemoteViewWidget::setupActions()
 
     m_zoomInAction = new QAction(UIResources::themedIcon(QLatin1String("zoom-in.png")), tr(
                                      "Zoom In"), this);
+    m_zoomInAction->setObjectName("aZoomIn");
     m_zoomInAction->setShortcutContext(Qt::WidgetShortcut);
     m_zoomInAction->setShortcuts(QKeySequence::ZoomIn);
     connect(m_zoomInAction, SIGNAL(triggered(bool)), this, SLOT(zoomIn()));
     addAction(m_zoomInAction);
 
     m_toggleFPSAction = new QAction(tr("Display FPS"), this);
+    m_toggleFPSAction->setObjectName("aToggleFPS");
     m_toggleFPSAction->setCheckable(true);
     m_toggleFPSAction->setToolTip("<b>Display FPS</b><br>"
                                   "Shows rate of received frames from debuggee.");

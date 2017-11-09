@@ -85,6 +85,7 @@ TextureTab::TextureTab(PropertyWidget *parent)
 
     const auto warningImage = QIcon(":/resources/warning.png");
     auto toggleTextureWasteAction = new QAction(warningImage, tr("Visualize Texture Problems"), nullptr);
+    toggleTextureWasteAction->setObjectName("aVisualizeTextureProblems");
     toggleTextureWasteAction->setCheckable(true);
     toggleTextureWasteAction->setChecked(true);
     toolbar->addAction(toggleTextureWasteAction);
