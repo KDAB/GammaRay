@@ -123,7 +123,7 @@ static const MetaEnum::Value<Qt::ItemFlag> item_flag_table[] = {
     { Qt::ItemIsSelectable,     "Selectable" },
     { Qt::ItemIsEditable,       "Editable" },
     { Qt::ItemIsDragEnabled,    "DragEnabled" },
-    { Qt::ItemIsDropEnabled,    "DropEnableD" },
+    { Qt::ItemIsDropEnabled,    "DropEnabled" },
     { Qt::ItemIsUserCheckable,  "UserCheckable" },
     { Qt::ItemIsEnabled,        "Enabled" },
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
