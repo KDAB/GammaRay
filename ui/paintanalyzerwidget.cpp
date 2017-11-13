@@ -28,6 +28,7 @@
 
 #include "ui_paintanalyzerwidget.h"
 
+#include <ui/propertyeditor/propertyeditordelegate.h>
 #include <common/paintanalyzerinterface.h>
 #include <common/objectbroker.h>
 
@@ -44,6 +45,7 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
 {
     ui->setupUi(this);
     ui->commandView->header()->setObjectName("commandViewHeader");
+    ui->commandView->setItemDelegate(new PropertyEditorDelegate(this));
 
     auto toolbar = new QToolBar;
     // Our icons are 16x16 and support hidpi, so let force iconSize on every styles

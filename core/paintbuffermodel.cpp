@@ -28,7 +28,14 @@
 
 #include <config-gammaray.h>
 
+#include <core/enumutil.h>
 #include <core/varianthandler.h>
+
+#include <common/metatypedeclarations.h>
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
+Q_DECLARE_METATYPE(Qt::BGMode)
+Q_DECLARE_METATYPE(Qt::ClipOperation)
+#endif
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include "paintbuffermodel.h"
@@ -117,6 +124,152 @@ QPaintBuffer PaintBufferModel::buffer() const
     return m_buffer;
 }
 
+template <typename T, typename Data>
+static QString geometryListToString(const Data *data, int offset, int size)
+{
+    QStringList l;
+    l.reserve(size);
+    auto *elem = reinterpret_cast<const T*>(data + offset);
+    for (int i = 0; i < size; ++i)
+        l.push_back(VariantHandler::displayString(*elem++));
+    return l.join(QLatin1String("; "));
+}
+
+QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) const
+{
+    // TODO complete this to eventually replace m_buffer.commandDescription()
+    switch (cmd.id) {
+        case QPaintBufferPrivate::Cmd_Save:
+        case QPaintBufferPrivate::Cmd_Restore:
+            break;
+
+        case QPaintBufferPrivate::Cmd_SetBrush:
+            break; // TODO, see below
+        case QPaintBufferPrivate::Cmd_SetBrushOrigin:
+            return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
+        case QPaintBufferPrivate::Cmd_SetClipEnabled:
+            return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
+        case QPaintBufferPrivate::Cmd_SetCompositionMode:
+            return EnumUtil::enumToString(QVariant::fromValue(static_cast<QPainter::CompositionMode>(cmd.extra)));
+        case QPaintBufferPrivate::Cmd_SetOpacity:
+            return QString::number(m_privateBuffer->variants.at(cmd.offset).toDouble());
+        case QPaintBufferPrivate::Cmd_SetPen:
+            // TODO: our pen to string code lacks details compared to the old method
+            //return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
+            break;
+
+        case QPaintBufferPrivate::Cmd_SetRenderHints:
+            return EnumUtil::enumToString(QVariant::fromValue(static_cast<QPainter::RenderHints>(cmd.extra)));
+        case QPaintBufferPrivate::Cmd_SetTransform:
+            return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
+        case QPaintBufferPrivate::Cmd_SetBackgroundMode:
+            return EnumUtil::enumToString(QVariant::fromValue(static_cast<Qt::BGMode>(cmd.extra)));
+
+        case QPaintBufferPrivate::Cmd_ClipPath:
+            break; // TODO
+        case QPaintBufferPrivate::Cmd_ClipRect:
+            return EnumUtil::enumToString(QVariant::fromValue(static_cast<Qt::ClipOperation>(cmd.extra)))
+                + QLatin1String(": ")
+                + VariantHandler::displayString(QRect(
+                    QPoint(m_privateBuffer->ints.at(cmd.offset), m_privateBuffer->ints.at(cmd.offset + 1)),
+                    QPoint(m_privateBuffer->ints.at(cmd.offset + 2), m_privateBuffer->ints.at(cmd.offset + 3))
+                ));
+        case QPaintBufferPrivate::Cmd_ClipRegion:
+            break; // TODO
+        case QPaintBufferPrivate::Cmd_ClipVectorPath:
+            break; // TODO
+
+        case QPaintBufferPrivate::Cmd_DrawVectorPath:
+            break; // TODO
+        case QPaintBufferPrivate::Cmd_FillVectorPath:
+            break; // TODO
+        case QPaintBufferPrivate::Cmd_StrokeVectorPath:
+            break; // TODO
+
+        case QPaintBufferPrivate::Cmd_DrawEllipseF:
+            return VariantHandler::displayString(*reinterpret_cast<const QRectF*>(m_privateBuffer->floats.constData() + cmd.offset));
+        case QPaintBufferPrivate::Cmd_DrawEllipseI:
+            return VariantHandler::displayString(*reinterpret_cast<const QRect*>(m_privateBuffer->ints.constData() + cmd.offset));
+        case QPaintBufferPrivate::Cmd_DrawLineF:
+            return geometryListToString<QLineF>(m_privateBuffer->floats.constData(), cmd.offset, cmd.size);
+        case QPaintBufferPrivate::Cmd_DrawLineI:
+            return geometryListToString<QLine>(m_privateBuffer->ints.constData(), cmd.offset, cmd.size);
+        case QPaintBufferPrivate::Cmd_DrawPath:
+            break; // TODO
+        case QPaintBufferPrivate::Cmd_DrawPolygonF:
+            return EnumUtil::enumToString(QVariant::fromValue(static_cast<QPaintEngine::PolygonDrawMode>(cmd.extra)))
+                + QLatin1String(": ") +
+                geometryListToString<QPointF>(m_privateBuffer->floats.constData(), cmd.offset, cmd.size);
+        case QPaintBufferPrivate::Cmd_DrawPolygonI:
+            return EnumUtil::enumToString(QVariant::fromValue(static_cast<QPaintEngine::PolygonDrawMode>(cmd.extra)))
+                + QLatin1String(": ") +
+                geometryListToString<QPoint>(m_privateBuffer->ints.constData(), cmd.offset, cmd.size);
+        case QPaintBufferPrivate::Cmd_DrawPointsF:
+        case QPaintBufferPrivate::Cmd_DrawConvexPolygonF:
+        case QPaintBufferPrivate::Cmd_DrawPolylineF:
+            return geometryListToString<QPointF>(m_privateBuffer->floats.constData(), cmd.offset, cmd.size);
+        case QPaintBufferPrivate::Cmd_DrawPointsI:
+        case QPaintBufferPrivate::Cmd_DrawConvexPolygonI:
+        case QPaintBufferPrivate::Cmd_DrawPolylineI:
+            return geometryListToString<QPoint>(m_privateBuffer->ints.constData(), cmd.offset, cmd.size);
+        case QPaintBufferPrivate::Cmd_DrawRectF:
+            return geometryListToString<QRectF>(m_privateBuffer->floats.constData(), cmd.offset, cmd.size);
+        case QPaintBufferPrivate::Cmd_DrawRectI:
+            return geometryListToString<QRect>(m_privateBuffer->ints.constData(), cmd.offset, cmd.size);
+
+        case QPaintBufferPrivate::Cmd_FillRectBrush:
+        {
+            // TODO: brush to string conversion is missing
+            /*const auto brush = m_privateBuffer->variants.at(cmd.extra);
+            const auto *rect = reinterpret_cast<const QRectF*>(m_privateBuffer->floats.constData() + cmd.offset);
+            return VariantHandler::displayString(*rect) + QLatin1String(", ") + VariantHandler::displayString(brush);*/
+            break;
+        }
+        case QPaintBufferPrivate::Cmd_FillRectColor:
+            return VariantHandler::displayString(*reinterpret_cast<const QRectF*>(m_privateBuffer->floats.constData() + cmd.offset))
+                + QLatin1String(", ") + VariantHandler::displayString(m_privateBuffer->variants.at(cmd.extra));
+
+        case QPaintBufferPrivate::Cmd_DrawText:
+        {
+            QPointF pos(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1));
+            const auto vl = m_privateBuffer->variants.at(cmd.offset).value<QList<QVariant> >();
+            return tr("position: %1, text: \"%2\", font: %3").arg(
+                VariantHandler::displayString(pos),
+                vl.at(1).toString(), VariantHandler::displayString(vl.at(0)));
+        }
+        case QPaintBufferPrivate::Cmd_DrawTextItem:
+            break; // TODO
+
+        case QPaintBufferPrivate::Cmd_DrawImagePos:
+        case QPaintBufferPrivate::Cmd_DrawPixmapPos:
+            return VariantHandler::displayString(QPointF(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra+1)));
+        case QPaintBufferPrivate::Cmd_DrawImageRect:
+        case QPaintBufferPrivate::Cmd_DrawPixmapRect:
+        {
+            QRectF r(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1),
+                     m_privateBuffer->floats.at(cmd.extra + 2), m_privateBuffer->floats.at(cmd.extra + 3));
+            QRectF sr(m_privateBuffer->floats.at(cmd.extra + 4), m_privateBuffer->floats.at(cmd.extra + 5),
+                      m_privateBuffer->floats.at(cmd.extra + 6), m_privateBuffer->floats.at(cmd.extra + 7));
+            return tr("%1 source: %2").arg(VariantHandler::displayString(r), VariantHandler::displayString(sr));
+        }
+        case QPaintBufferPrivate::Cmd_DrawTiledPixmap:
+        {
+            QRectF r(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1),
+                     m_privateBuffer->floats.at(cmd.extra + 2), m_privateBuffer->floats.at(cmd.extra + 3));
+            QPointF offset(m_privateBuffer->floats.at(cmd.extra + 4), m_privateBuffer->floats.at(cmd.extra + 5));
+            return tr("%1 offset: %2").arg(VariantHandler::displayString(r), VariantHandler::displayString(offset));
+        }
+
+        case QPaintBufferPrivate::Cmd_SystemStateChanged:
+            break; // TODO
+        case QPaintBufferPrivate::Cmd_Translate:
+            return VariantHandler::displayString(QPointF(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1)));
+        case QPaintBufferPrivate::Cmd_DrawStaticText:
+            break; // TODO
+    }
+    return QString();
+}
+
 QVariant PaintBufferModel::argumentDecoration(const QPaintBufferCommand &cmd) const
 {
     switch (cmd.id) {
@@ -149,8 +302,11 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
             return cmdTypes[cmd.id].name;
         case 1:
         {
+            auto desc = argumentDisplayString(cmd);
+            if (!desc.isEmpty())
+                return desc;
 #ifndef QT_NO_DEBUG_STREAM
-            QString desc = m_buffer.commandDescription(index.row());
+            desc = m_buffer.commandDescription(index.row());
             const QString prefix = QLatin1String("Cmd_") + QLatin1String(cmdTypes[cmd.id].name);
 
             if (desc.startsWith(prefix))
@@ -166,6 +322,9 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
         if (index.column() == 1) {
             return argumentDecoration(cmd);
         }
+    } else if (role == Qt::EditRole && index.column() == 1) { // for fancy matrix rendering in the client
+        if (cmd.id == QPaintBufferPrivate::Cmd_SetTransform)
+            return m_privateBuffer->variants.at(cmd.offset);
     }
 
     return QVariant();
@@ -174,11 +333,7 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
 int PaintBufferModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-#ifndef QT_NO_DEBUG_STREAM
     return 2;
-#else
-    return 1;
-#endif
 }
 
 int PaintBufferModel::rowCount(const QModelIndex &parent) const

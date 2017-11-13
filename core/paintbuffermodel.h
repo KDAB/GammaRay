@@ -64,6 +64,7 @@ public:
                         int role = Qt::DisplayRole) const override;
 
 private:
+    QString argumentDisplayString(const QPaintBufferCommand &cmd) const;
     QVariant argumentDecoration(const QPaintBufferCommand &cmd) const;
 
     QPaintBuffer m_buffer;

@@ -452,6 +452,71 @@ static const MetaEnum::Value<QFont::StyleHint> font_style_hint_table[] = {
 };
 #undef E
 
+#define E(x) { QPainter:: x, #x }
+static const MetaEnum::Value<QPainter::CompositionMode> painter_composition_mode_table[] = {
+    E(CompositionMode_SourceOver),
+    E(CompositionMode_DestinationOver),
+    E(CompositionMode_Clear),
+    E(CompositionMode_Source),
+    E(CompositionMode_Destination),
+    E(CompositionMode_SourceIn),
+    E(CompositionMode_DestinationIn),
+    E(CompositionMode_SourceOut),
+    E(CompositionMode_DestinationOut),
+    E(CompositionMode_SourceAtop),
+    E(CompositionMode_DestinationAtop),
+    E(CompositionMode_Xor),
+    E(CompositionMode_Plus),
+    E(CompositionMode_Multiply),
+    E(CompositionMode_Screen),
+    E(CompositionMode_Overlay),
+    E(CompositionMode_Darken),
+    E(CompositionMode_Lighten),
+    E(CompositionMode_ColorDodge),
+    E(CompositionMode_ColorBurn),
+    E(CompositionMode_HardLight),
+    E(CompositionMode_SoftLight),
+    E(CompositionMode_Difference),
+    E(CompositionMode_Exclusion),
+    E(RasterOp_SourceOrDestination),
+    E(RasterOp_SourceAndDestination),
+    E(RasterOp_SourceXorDestination),
+    E(RasterOp_NotSourceAndNotDestination),
+    E(RasterOp_NotSourceOrNotDestination),
+    E(RasterOp_NotSourceXorDestination),
+    E(RasterOp_NotSource),
+    E(RasterOp_NotSourceAndDestination),
+    E(RasterOp_SourceAndNotDestination),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    E(RasterOp_NotSourceOrDestination),
+    E(RasterOp_ClearDestination),
+    E(RasterOp_SetDestination),
+    E(RasterOp_NotDestination),
+    E(RasterOp_SourceOrNotDestination)
+#endif
+};
+
+static const MetaEnum::Value<QPainter::RenderHint> painter_render_hint_table[] = {
+    E(Antialiasing),
+    E(TextAntialiasing),
+    E(SmoothPixmapTransform),
+    E(HighQualityAntialiasing),
+    E(NonCosmeticDefaultPen),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    E(Qt4CompatiblePainting)
+#endif
+};
+#undef E
+
+#define E(x) { QPaintEngine:: x, #x }
+static const MetaEnum::Value<QPaintEngine::PolygonDrawMode> paintengine_polygon_draw_mode_table[] = {
+    E(OddEvenMode),
+    E(WindingMode),
+    E(ConvexMode),
+    E(PolylineMode)
+};
+#undef E
+
 void GuiSupport::registerVariantHandler()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -470,6 +535,10 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QFont, Style, font_style_table);
     ER_REGISTER_ENUM(QFont, StyleHint, font_style_hint_table);
 #endif
+
+    ER_REGISTER_ENUM(QPainter, CompositionMode, painter_composition_mode_table);
+    ER_REGISTER_FLAGS(QPainter, RenderHints, painter_render_hint_table);
+    ER_REGISTER_ENUM(QPaintEngine, PolygonDrawMode, paintengine_polygon_draw_mode_table);
 
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);

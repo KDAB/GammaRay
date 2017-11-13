@@ -45,6 +45,8 @@
 #include <QMargins>
 #include <QPainterPath>
 #include <QMatrix4x4>
+#include <QPainter>
+#include <QPaintEngine>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QGuiApplication>
@@ -74,6 +76,12 @@ Q_DECLARE_METATYPE(QMargins)
 Q_DECLARE_METATYPE(Qt::WindowType)
 Q_DECLARE_METATYPE(Qt::WindowState)
 Q_DECLARE_METATYPE(const QMatrix4x4 *)
+
+Q_DECLARE_METATYPE(QPainter::CompositionMode)
+#if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
+Q_DECLARE_METATYPE(QPainter::RenderHints)
+#endif
+Q_DECLARE_METATYPE(QPaintEngine::PolygonDrawMode)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #ifndef QT_NO_OPENGL
