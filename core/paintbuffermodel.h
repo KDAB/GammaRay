@@ -38,6 +38,7 @@
 
 QT_BEGIN_NAMESPACE
 class QPaintBuffer;
+struct QPaintBufferCommand;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -63,6 +64,8 @@ public:
                         int role = Qt::DisplayRole) const override;
 
 private:
+    QVariant argumentDecoration(const QPaintBufferCommand &cmd) const;
+
     QPaintBuffer m_buffer;
     QPaintBufferPrivate *m_privateBuffer;
 };

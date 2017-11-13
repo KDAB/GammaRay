@@ -27,6 +27,9 @@
 */
 
 #include <config-gammaray.h>
+
+#include <core/varianthandler.h>
+
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include "paintbuffermodel.h"
 
@@ -114,13 +117,33 @@ QPaintBuffer PaintBufferModel::buffer() const
     return m_buffer;
 }
 
+QVariant PaintBufferModel::argumentDecoration(const QPaintBufferCommand &cmd) const
+{
+    switch (cmd.id) {
+        case QPaintBufferPrivate::Cmd_SetBrush:
+        case QPaintBufferPrivate::Cmd_SetPen:
+        case QPaintBufferPrivate::Cmd_DrawPixmapRect:
+        case QPaintBufferPrivate::Cmd_DrawPixmapPos:
+        case QPaintBufferPrivate::Cmd_DrawTiledPixmap:
+        case QPaintBufferPrivate::Cmd_DrawImageRect:
+        case QPaintBufferPrivate::Cmd_DrawImagePos:
+            return VariantHandler::decoration(m_privateBuffer->variants.at(cmd.offset));
+        case QPaintBufferPrivate::Cmd_FillRectBrush:
+        case QPaintBufferPrivate::Cmd_FillVectorPath:
+        case QPaintBufferPrivate::Cmd_StrokeVectorPath:
+        case QPaintBufferPrivate::Cmd_FillRectColor:
+            return VariantHandler::decoration(m_privateBuffer->variants.at(cmd.extra));
+    }
+    return QVariant();
+}
+
 QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || !m_privateBuffer)
         return QVariant();
 
+    const auto cmd = m_privateBuffer->commands.at(index.row());
     if (role == Qt::DisplayRole) {
-        const QPaintBufferCommand cmd = m_privateBuffer->commands.at(index.row());
         switch (index.column()) {
         case 0:
             return cmdTypes[cmd.id].name;
@@ -138,6 +161,10 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
             return desc;
 #endif
         }
+        }
+    } else if (role == Qt::DecorationRole) {
+        if (index.column() == 1) {
+            return argumentDecoration(cmd);
         }
     }
 
