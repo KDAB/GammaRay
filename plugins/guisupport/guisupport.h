@@ -32,6 +32,7 @@
 #include <core/toolfactory.h>
 
 #include <QIcon>
+#include <QSet>
 
 QT_BEGIN_NAMESPACE
 class QWindow;
@@ -53,15 +54,30 @@ private:
     void registerVariantHandler();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     void discoverObjects();
-    void updateWindowTitle(QWindow *w);
+    QObject *targetObject(QObject *object) const;
     QIcon createIcon(const QIcon &oldIcon, QWindow *w=nullptr);
     void updateWindowIcon(QWindow *w=nullptr);
+    void updateWindowTitle(QWindow *w);
     void restoreWindowIcon(QWindow *w=nullptr);
+    void restoreWindowTitle(QWindow *w);
 
-    QHash<QObject*, QIcon> m_originalIcons;
-    QString m_titleSuffix;
+    struct IconAndTitleOverriderData {
+        struct Icons {
+            explicit Icons(const QIcon &originalIcon = QIcon(),
+                           const QIcon &gammarayIcon = QIcon())
+                : originalIcon(originalIcon)
+                , gammarayIcon(gammarayIcon)
+            { }
 
-    bool m_restoringIconsAndTitle;
+            QIcon originalIcon;
+            QIcon gammarayIcon;
+        };
+
+        QSet<QObject *> updatingObjectsIcon;
+        QSet<QObject *> updatingObjectsTitle;
+        QHash<QObject *, Icons> objectsIcons;
+        QString titleSuffix;
+    } m_iconAndTitleOverrider;
 #endif
 
 private:
