@@ -91,6 +91,19 @@ Q_DECLARE_METATYPE(QPixelFormat::TypeInterpretation)
 Q_DECLARE_METATYPE(QPixelFormat::YUVLayout)
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+static bool isAcceptableWindow(QWindow *w)
+{
+    return w
+            && w->isTopLevel()
+            && w->surfaceClass() != QSurface::Offscreen
+            // Offscreen windows can have a surface different than Offscreen,
+            // but they contains a window title 'Offscreen'
+            && w->title() != QStringLiteral("Offscreen")
+    ;
+}
+#endif
+
 GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     : QObject(parent)
     , m_probe(probe)
@@ -99,17 +112,16 @@ GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
     registerVariantHandler();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    m_titleSuffix = tr(" (Injected by GammaRay)");
-    m_restoringIconsAndTitle = false;
+    m_iconAndTitleOverrider.titleSuffix = tr(" (Injected by GammaRay)");
     connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
 
     if (auto guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance())) {
         updateWindowIcon();
 
         m_probe->installGlobalEventFilter(this);
-        foreach (auto w , guiApp->topLevelWindows()) {
-            updateWindowIcon(w);
-            updateWindowTitle(w);
+        foreach (auto w, guiApp->topLevelWindows()) {
+            if (isAcceptableWindow(w))
+                updateWindowTitle(w);
         }
         connect(m_probe->probe(), SIGNAL(aboutToDetach()), this, SLOT(restoreIconAndTitle()), Qt::DirectConnection);
     }
@@ -822,11 +834,9 @@ void GuiSupport::registerVariantHandler()
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-void GuiSupport::updateWindowTitle(QWindow *w)
+QObject *GuiSupport::targetObject(QObject *object) const
 {
-    if (w->title().endsWith(m_titleSuffix))
-        return;
-    w->setTitle(w->title() + m_titleSuffix);
+    return object ? object : qobject_cast<QObject *>(qApp);
 }
 
 QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
@@ -842,17 +852,35 @@ QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
         gammarayIcon.addFile(QLatin1String(":/gammaray/images/gammaray-inject-128.png"));
     }
 
-    // Make sure to override the window icon with the app icon if it was initialized with it
-    if (w) {
-        const auto it = m_originalIcons.constFind(qApp);
-        const QIcon appIcon = it != m_originalIcons.constEnd() ? it.value() : qApp->windowIcon();
-        if (oldIcon.cacheKey() == appIcon.cacheKey() || oldIcon.cacheKey() == qApp->windowIcon().cacheKey()) {
-            return qApp->windowIcon();
+    QObject *target = targetObject(w);
+
+    // As windows icon can be provided by the qXXApplication::windowIcon()
+    // We need to compute this one first.
+    if (target != qApp) {
+        // There is no real notification to track application window icon change.
+        // Then make sure the application icon is uptodate first.
+        const auto ait = m_iconAndTitleOverrider.objectsIcons.find(qApp);
+
+        if (ait != m_iconAndTitleOverrider.objectsIcons.end()) {
+            // The application window icon changed... rebuild it.
+            if (ait.value().gammarayIcon.cacheKey() != qApp->windowIcon().cacheKey()) {
+                m_iconAndTitleOverrider.objectsIcons.erase(ait);
+                m_iconAndTitleOverrider.updatingObjectsIcon.remove(w);
+                updateWindowIcon();
+                m_iconAndTitleOverrider.updatingObjectsIcon << w;
+                return oldIcon;
+            }
+        } else {
+            // Build the application icon
+            m_iconAndTitleOverrider.updatingObjectsIcon.remove(w);
+            updateWindowIcon();
+            m_iconAndTitleOverrider.updatingObjectsIcon << w;
+            return oldIcon;
         }
     }
 
-    const auto it = m_originalIcons.constFind(w ? (QObject *)w : (QObject *)qApp);
-    if (!oldIcon.isNull() && (it != m_originalIcons.constEnd() && it.value().cacheKey() == oldIcon.cacheKey())) {
+    const auto it = m_iconAndTitleOverrider.objectsIcons.constFind(target);
+    if (it != m_iconAndTitleOverrider.objectsIcons.constEnd() && it.value().gammarayIcon.cacheKey() == oldIcon.cacheKey()) {
         return oldIcon;
     }
 
@@ -877,41 +905,90 @@ QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
 
 void GuiSupport::updateWindowIcon(QWindow *w)
 {
+    QObject *target = targetObject(w);
+    Q_ASSERT(!m_iconAndTitleOverrider.updatingObjectsIcon.contains(target));
+    m_iconAndTitleOverrider.updatingObjectsIcon << target;
+
     const QIcon oldIcon = w ? w->icon() : qApp->windowIcon();
     const QIcon newIcon = createIcon(oldIcon, w);
+
     if (oldIcon.cacheKey() != newIcon.cacheKey()) {
-        m_originalIcons.insert(w ? (QObject *)w : (QObject *)qApp, oldIcon);
+        m_iconAndTitleOverrider.objectsIcons.insert(target,
+                                                    IconAndTitleOverriderData::Icons(oldIcon, newIcon));
         if (w)
             w->setIcon(newIcon);
         else
             qApp->setWindowIcon(newIcon);
     }
+
+    m_iconAndTitleOverrider.updatingObjectsIcon.remove(target);
+
+    if (!w && m_iconAndTitleOverrider.updatingObjectsIcon.isEmpty()) {
+        foreach (auto w, qApp->topLevelWindows()) {
+            if (isAcceptableWindow(w))
+                updateWindowIcon(w);
+        }
+    }
+}
+
+void GuiSupport::updateWindowTitle(QWindow *w)
+{
+    QObject *target = targetObject(w);
+    Q_ASSERT(!m_iconAndTitleOverrider.updatingObjectsTitle.contains(target));
+    m_iconAndTitleOverrider.updatingObjectsTitle << target;
+
+    if (!w->title().endsWith(m_iconAndTitleOverrider.titleSuffix))
+        w->setTitle(w->title() + m_iconAndTitleOverrider.titleSuffix);
+
+    m_iconAndTitleOverrider.updatingObjectsTitle.remove(target);
 }
 
 void GuiSupport::restoreWindowIcon(QWindow *w)
 {
-    auto it = m_originalIcons.find(w ? (QObject *)w : (QObject *)qApp);
-    if (it != m_originalIcons.end()) {
+    QObject *target = targetObject(w);
+    Q_ASSERT(!m_iconAndTitleOverrider.updatingObjectsIcon.contains(target));
+    m_iconAndTitleOverrider.updatingObjectsIcon << target;
+
+    auto it = m_iconAndTitleOverrider.objectsIcons.find(target);
+    if (it != m_iconAndTitleOverrider.objectsIcons.end()) {
         if (w)
-            w->setIcon(it.value());
+            w->setIcon(it.value().originalIcon);
         else
-            qApp->setWindowIcon(it.value());
-        m_originalIcons.erase(it);
+            qApp->setWindowIcon(it.value().originalIcon);
+        m_iconAndTitleOverrider.objectsIcons.erase(it);
     }
+
+    m_iconAndTitleOverrider.updatingObjectsIcon.remove(target);
+
+    if (!w && m_iconAndTitleOverrider.updatingObjectsIcon.isEmpty()) {
+        foreach (auto w, qApp->topLevelWindows()) {
+            if (isAcceptableWindow(w))
+                restoreWindowIcon(w);
+        }
+    }
+}
+
+void GuiSupport::restoreWindowTitle(QWindow *w)
+{
+    Q_ASSERT(!m_iconAndTitleOverrider.updatingObjectsTitle.contains(w));
+    m_iconAndTitleOverrider.updatingObjectsTitle << w;
+
+    w->setTitle(w->title().remove(m_iconAndTitleOverrider.titleSuffix));
+
+    m_iconAndTitleOverrider.updatingObjectsTitle.remove(w);
 }
 
 void GuiSupport::restoreIconAndTitle()
 {
-    m_restoringIconsAndTitle = true;
     if (qApp->closingDown())
         return;
-    foreach (auto w, qApp->topLevelWindows()) {
-        restoreWindowIcon(w);
-        w->setTitle(w->title().remove(m_titleSuffix));
-    }
-    restoreWindowIcon();
-}
 
+    restoreWindowIcon();
+    foreach (auto w, qApp->topLevelWindows()) {
+        if (isAcceptableWindow(w))
+            restoreWindowTitle(w);
+    }
+}
 
 void GuiSupport::discoverObjects()
 {
@@ -927,21 +1004,24 @@ void GuiSupport::objectCreated(QObject *object)
 
 bool GuiSupport::eventFilter(QObject *watched, QEvent *event)
 {
-    if (!m_restoringIconsAndTitle) {
-        if (event->type() == QEvent::WindowTitleChange) {
-            if (auto w = qobject_cast<QWindow*>(watched)) {
-                if (w->isTopLevel()) {
-                    updateWindowTitle(w);
-                }
-            }
-        } else if(event->type() == QEvent::WindowIconChange) {
-            if (auto w = qobject_cast<QWindow*>(watched)) {
-                if (w->isTopLevel()) {
+    if (event->type() == QEvent::WindowIconChange) {
+        if (auto w = qobject_cast<QWindow*>(watched)) {
+            if (!m_iconAndTitleOverrider.updatingObjectsIcon.contains(qApp)
+                    && !m_iconAndTitleOverrider.updatingObjectsIcon.contains(w)) {
+                if (isAcceptableWindow(w))
                     updateWindowIcon(w);
-                }
+            }
+        }
+    } else if (event->type() == QEvent::WindowTitleChange) {
+        if (auto w = qobject_cast<QWindow*>(watched)) {
+            if (!m_iconAndTitleOverrider.updatingObjectsTitle.contains(qApp)
+                    && !m_iconAndTitleOverrider.updatingObjectsTitle.contains(w)) {
+                if (isAcceptableWindow(w))
+                    updateWindowTitle(w);
             }
         }
     }
+
     return QObject::eventFilter(watched, event);
 }
 #endif
