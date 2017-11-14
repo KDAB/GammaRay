@@ -38,22 +38,34 @@
 #include <common/remoteviewframe.h>
 
 #include <QItemSelectionModel>
+#include <QSortFilterProxyModel>
 
 using namespace GammaRay;
+
+class PaintBufferModelFilterProxy : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    explicit PaintBufferModelFilterProxy(QObject *parent = nullptr)
+        : QSortFilterProxyModel(parent) {}
+    void sort(int, Qt::SortOrder) override {} // never sort, that has no semantics here
+};
 
 PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
     : PaintAnalyzerInterface(name, parent)
     , m_paintBufferModel(nullptr)
+    , m_paintBufferFilter(nullptr)
     , m_selectionModel(nullptr)
     , m_paintBuffer(nullptr)
     , m_remoteView(new RemoteViewServer(name + QStringLiteral(".remoteView"), this))
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBufferModel = new PaintBufferModel(this);
-    Probe::instance()->registerModel(name + QStringLiteral(".paintBufferModel"),
-                                     m_paintBufferModel);
+    m_paintBufferFilter = new PaintBufferModelFilterProxy(this);
+    m_paintBufferFilter->setSourceModel(m_paintBufferModel);
+    Probe::instance()->registerModel(name + QStringLiteral(".paintBufferModel"), m_paintBufferFilter);
 
-    m_selectionModel = ObjectBroker::selectionModel(m_paintBufferModel);
+    m_selectionModel = ObjectBroker::selectionModel(m_paintBufferFilter);
     connect(m_selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)), m_remoteView,
             SLOT(sourceChanged()));
 #endif
@@ -88,7 +100,7 @@ void PaintAnalyzer::repaint()
     const auto start = m_paintBufferModel->buffer().frameStartIndex(0);
 
     // include selected row or paint all if nothing is selected
-    const auto index = ObjectBroker::selectionModel(m_paintBufferModel)->currentIndex();
+    const auto index = m_paintBufferFilter->mapToSource(m_selectionModel->currentIndex());
     const auto end = index.isValid() ? index.row() + 1 : m_paintBufferModel->rowCount();
     auto depth = m_paintBufferModel->buffer().processCommands(&painter, start, start + end);
     for (; depth > 0; --depth)
@@ -140,8 +152,8 @@ void PaintAnalyzer::endAnalyzePainting()
     m_remoteView->resetView();
     m_remoteView->sourceChanged();
 
-    if (auto rowCount = m_paintBufferModel->rowCount()) {
-        const auto idx = m_paintBufferModel->index(rowCount - 1, 0);
+    if (auto rowCount = m_paintBufferFilter->rowCount()) {
+        const auto idx = m_paintBufferFilter->index(rowCount - 1, 0);
         m_selectionModel->select(idx,
                                  QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows
                                  | QItemSelectionModel::Current);
@@ -157,3 +169,5 @@ bool PaintAnalyzer::isAvailable()
     return false;
 #endif
 }
+
+#include "paintanalyzer.moc"

@@ -28,6 +28,7 @@
 
 #include "ui_paintanalyzerwidget.h"
 
+#include <ui/searchlinecontroller.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 #include <common/paintanalyzerinterface.h>
 #include <common/objectbroker.h>
@@ -83,6 +84,7 @@ void PaintAnalyzerWidget::setBaseName(const QString &name)
     auto model = ObjectBroker::model(name + QStringLiteral(".paintBufferModel"));
     ui->commandView->setModel(model);
     ui->commandView->setSelectionModel(ObjectBroker::selectionModel(ui->commandView->model()));
+    new SearchLineController(ui->commandSearchLine, model);
 
     ui->replayWidget->setName(name + QStringLiteral(".remoteView"));
 }

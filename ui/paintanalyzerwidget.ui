@@ -19,10 +19,22 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="GammaRay::DeferredTreeView" name="commandView">
-      <property name="rootIsDecorated">
-       <bool>false</bool>
-      </property>
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLineEdit" name="commandSearchLine"/>
+       </item>
+       <item>
+        <widget class="GammaRay::DeferredTreeView" name="commandView">
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="replayContainer">

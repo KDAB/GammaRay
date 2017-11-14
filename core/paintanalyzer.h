@@ -38,6 +38,7 @@ class QItemSelectionModel;
 class QPaintBuffer;
 class QPaintDevice;
 class QRectF;
+class QSortFilterProxyModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -67,6 +68,7 @@ private slots:
 
 private:
     PaintBufferModel *m_paintBufferModel;
+    QSortFilterProxyModel *m_paintBufferFilter;
     QItemSelectionModel *m_selectionModel;
     QPaintBuffer *m_paintBuffer;
     RemoteViewServer *m_remoteView;
