@@ -29,6 +29,7 @@
 #include "guisupport.h"
 
 #include <core/enumrepositoryserver.h>
+#include <core/enumutil.h>
 #include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -65,6 +66,9 @@ Q_DECLARE_METATYPE(QFont::StyleHint)
 Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
 Q_DECLARE_METATYPE(QSurfaceFormat::FormatOptions)
+#endif
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
+Q_DECLARE_METATYPE(Qt::BrushStyle)
 #endif
 
 GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
@@ -517,6 +521,11 @@ static const MetaEnum::Value<QPaintEngine::PolygonDrawMode> paintengine_polygon_
 };
 #undef E
 
+static QString brushToString(const QBrush &b)
+{
+    return VariantHandler::displayString(b.color()) + QLatin1String(", ") + EnumUtil::enumToString(QVariant::fromValue(b.style()));
+}
+
 void GuiSupport::registerVariantHandler()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -540,6 +549,7 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_FLAGS(QPainter, RenderHints, painter_render_hint_table);
     ER_REGISTER_ENUM(QPaintEngine, PolygonDrawMode, paintengine_polygon_draw_mode_table);
 
+    VariantHandler::registerStringConverter<QBrush>(brushToString);
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
 }

@@ -144,9 +144,7 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
             break;
 
         case QPaintBufferPrivate::Cmd_SetBrush:
-            break; // TODO, see below
         case QPaintBufferPrivate::Cmd_SetBrushOrigin:
-            return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
         case QPaintBufferPrivate::Cmd_SetClipEnabled:
             return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
         case QPaintBufferPrivate::Cmd_SetCompositionMode:
@@ -218,16 +216,9 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
             return geometryListToString<QRect>(m_privateBuffer->ints.constData(), cmd.offset, cmd.size);
 
         case QPaintBufferPrivate::Cmd_FillRectBrush:
-        {
-            // TODO: brush to string conversion is missing
-            /*const auto brush = m_privateBuffer->variants.at(cmd.extra);
-            const auto *rect = reinterpret_cast<const QRectF*>(m_privateBuffer->floats.constData() + cmd.offset);
-            return VariantHandler::displayString(*rect) + QLatin1String(", ") + VariantHandler::displayString(brush);*/
-            break;
-        }
         case QPaintBufferPrivate::Cmd_FillRectColor:
             return VariantHandler::displayString(*reinterpret_cast<const QRectF*>(m_privateBuffer->floats.constData() + cmd.offset))
-                + QLatin1String(", ") + VariantHandler::displayString(m_privateBuffer->variants.at(cmd.extra));
+                + QLatin1String(" - ") + VariantHandler::displayString(m_privateBuffer->variants.at(cmd.extra));
 
         case QPaintBufferPrivate::Cmd_DrawText:
         {
