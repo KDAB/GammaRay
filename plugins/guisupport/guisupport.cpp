@@ -69,6 +69,9 @@ Q_DECLARE_METATYPE(QSurfaceFormat::FormatOptions)
 #endif
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Qt::BrushStyle)
+Q_DECLARE_METATYPE(Qt::PenStyle)
+Q_DECLARE_METATYPE(Qt::PenCapStyle)
+Q_DECLARE_METATYPE(Qt::PenJoinStyle)
 #endif
 
 GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
@@ -526,6 +529,29 @@ static QString brushToString(const QBrush &b)
     return VariantHandler::displayString(b.color()) + QLatin1String(", ") + EnumUtil::enumToString(QVariant::fromValue(b.style()));
 }
 
+static QString penToString(const QPen &p)
+{
+    QStringList l;
+    l.reserve(8);
+    l.push_back(GuiSupport::tr("width: %1").arg(p.width()));
+    l.push_back(GuiSupport::tr("brush: %1").arg(brushToString(p.brush())));
+    l.push_back(EnumUtil::enumToString(QVariant::fromValue(p.style())));
+    l.push_back(EnumUtil::enumToString(QVariant::fromValue(p.capStyle())));
+    l.push_back(EnumUtil::enumToString(QVariant::fromValue(p.joinStyle())));
+    if (p.joinStyle() == Qt::MiterJoin)
+        l.push_back(GuiSupport::tr("miter limit: %1").arg(p.miterLimit()));
+    if (!p.dashPattern().isEmpty()) {
+        QStringList dashes;
+        dashes.reserve(p.dashPattern().size());
+        foreach (auto v, p.dashPattern())
+            dashes.push_back(QString::number(v));
+        l.push_back(GuiSupport::tr("dash pattern: (%1)").arg(dashes.join(QLatin1String(", "))));
+    }
+    if (p.dashOffset() != 0.0)
+        l.push_back(GuiSupport::tr("dash offset: %1").arg(p.dashOffset()));
+    return l.join(QLatin1String(", "));
+}
+
 void GuiSupport::registerVariantHandler()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -551,6 +577,7 @@ void GuiSupport::registerVariantHandler()
 
     VariantHandler::registerStringConverter<QBrush>(brushToString);
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
+    VariantHandler::registerStringConverter<QPen>(penToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
 }
 

@@ -152,9 +152,7 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
         case QPaintBufferPrivate::Cmd_SetOpacity:
             return QString::number(m_privateBuffer->variants.at(cmd.offset).toDouble());
         case QPaintBufferPrivate::Cmd_SetPen:
-            // TODO: our pen to string code lacks details compared to the old method
-            //return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
-            break;
+            return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
 
         case QPaintBufferPrivate::Cmd_SetRenderHints:
             return EnumUtil::enumToString(QVariant::fromValue(static_cast<QPainter::RenderHints>(cmd.extra)));

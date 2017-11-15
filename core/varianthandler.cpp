@@ -162,32 +162,6 @@ QString VariantHandler::displayString(const QVariant &value)
     case QVariant::Locale:
         return value.toLocale().name();
 
-    case QVariant::Pen:
-    {
-        const auto pen = value.value<QPen>();
-        switch (pen.style()) {
-        case Qt::NoPen:
-            return QStringLiteral("NoPen");
-        case Qt::SolidLine:
-            return QStringLiteral("SolidLine");
-        case Qt::DashLine:
-            return QStringLiteral("DashLine");
-        case Qt::DotLine:
-            return QStringLiteral("DotLine");
-        case Qt::DashDotLine:
-            return QStringLiteral("DashDotLine");
-        case Qt::DashDotDotLine:
-            return QStringLiteral("DashDotDotLine");
-        case Qt::CustomDashLine:
-            return QStringLiteral("CustomDashLine");
-#if !defined(Q_MOC_RUN)
-        case Qt::MPenStyle:
-            return QString();
-#endif
-        }
-        break;
-    }
-
     case QVariant::Point:
     {
         const auto point = value.toPoint();
