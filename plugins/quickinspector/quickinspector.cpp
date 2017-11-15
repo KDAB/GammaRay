@@ -341,6 +341,11 @@ void RenderModeRequest::apply()
     if (connection)
         disconnect(connection);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    if (window && window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
+        return;
+#endif
+
     if (window) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         emit aboutToCleanSceneGraph();
