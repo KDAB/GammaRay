@@ -202,17 +202,6 @@ QString VariantHandler::displayString(const QVariant &value)
             arg(rect.height());
     }
 
-    case QVariant::Region:
-    {
-        const QRegion region = value.value<QRegion>();
-        if (region.isEmpty())
-            return QStringLiteral("<empty>");
-        if (region.rectCount() == 1)
-            return displayString(region.rects().at(0));
-        else
-            return QStringLiteral("<%1 rects>").arg(region.rectCount());
-    }
-
     case QVariant::Palette:
     {
         const QPalette pal = value.value<QPalette>();

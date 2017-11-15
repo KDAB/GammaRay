@@ -171,7 +171,9 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
                     QPoint(m_privateBuffer->ints.at(cmd.offset + 2), m_privateBuffer->ints.at(cmd.offset + 3))
                 ));
         case QPaintBufferPrivate::Cmd_ClipRegion:
-            break; // TODO
+            return EnumUtil::enumToString(QVariant::fromValue(static_cast<Qt::ClipOperation>(cmd.extra)))
+                + QLatin1String(": ")
+                + VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
         case QPaintBufferPrivate::Cmd_ClipVectorPath:
             break; // TODO
 
@@ -250,7 +252,7 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
         }
 
         case QPaintBufferPrivate::Cmd_SystemStateChanged:
-            break; // TODO
+            return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
         case QPaintBufferPrivate::Cmd_Translate:
             return VariantHandler::displayString(QPointF(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1)));
         case QPaintBufferPrivate::Cmd_DrawStaticText:

@@ -552,6 +552,28 @@ static QString penToString(const QPen &p)
     return l.join(QLatin1String(", "));
 }
 
+static QString regionToString(const QRegion &region)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    if (region.isNull())
+        return QStringLiteral("<null>");
+#endif
+    if (region.isEmpty())
+        return QStringLiteral("<empty>");
+    if (region.rectCount() == 1)
+        return VariantHandler::displayString(region.rects().at(0));
+
+    QStringList rects;
+    rects.reserve(region.rectCount());
+    foreach (const auto &r, region.rects())
+        rects.push_back(VariantHandler::displayString(r));
+
+    return GuiSupport::tr("[%1]: %2").arg(
+        VariantHandler::displayString(region.boundingRect()),
+        rects.join(QLatin1String("; "))
+    );
+}
+
 void GuiSupport::registerVariantHandler()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -578,6 +600,7 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QBrush>(brushToString);
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
     VariantHandler::registerStringConverter<QPen>(penToString);
+    VariantHandler::registerStringConverter<QRegion>(regionToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
 }
 
