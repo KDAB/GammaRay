@@ -402,10 +402,19 @@ QVariant VariantHandler::decoration(const QVariant &value)
     case QVariant::Pixmap:
     {
         const QPixmap p = value.value<QPixmap>();
-        if (!p.isNull())
-            return QVariant::fromValue(p.scaled(16, 16, Qt::KeepAspectRatio,
-                                                Qt::FastTransformation));
-        break;
+        if (p.isNull())
+            break;
+        QPixmap deco(16, 16);
+        QPainter painter(&deco);
+        Util::drawTransparencyPattern(&painter, deco.rect(), 4);
+
+        QPixmap scaled(p);
+        if (p.width() > deco.width() || p.height() > deco.height())
+            scaled = p.scaled(deco.width(), deco.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        painter.drawPixmap((deco.width() - scaled.width()) / 2, (deco.height() - scaled.height()) / 2, scaled);
+
+        painter.drawRect(0, 0, deco.width() - 1, deco.height() - 1);
+        return deco;
     }
     default:
         break;
