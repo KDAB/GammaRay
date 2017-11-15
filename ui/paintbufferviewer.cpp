@@ -36,7 +36,7 @@
 #include <QComboBox>
 #include <QDebug>
 #include <QLabel>
-#include <QToolBar>
+#include <QSettings>
 
 using namespace GammaRay;
 
@@ -50,8 +50,15 @@ PaintBufferViewer::PaintBufferViewer(const QString &name, QWidget *parent)
     setModal(true);
 
     ui->paintAnalyzerWidget->setBaseName(name);
+
+    QSettings settings;
+    settings.beginGroup(QStringLiteral("PaintBufferViewer"));
+    restoreGeometry(settings.value(QStringLiteral("Geometry")).toByteArray());
 }
 
 PaintBufferViewer::~PaintBufferViewer()
 {
+    QSettings settings;
+    settings.beginGroup(QStringLiteral("PaintBufferViewer"));
+    settings.setValue(QStringLiteral("Geometry"), saveGeometry());
 }
