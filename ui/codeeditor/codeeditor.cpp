@@ -49,10 +49,10 @@
 using namespace GammaRay;
 
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
-KSyntaxHighlighting::Repository* CodeEditor::s_repository = nullptr;
+KSyntaxHighlighting::Repository *CodeEditor::s_repository = nullptr;
 #endif
 
-CodeEditor::CodeEditor(QWidget* parent) :
+CodeEditor::CodeEditor(QWidget *parent) :
     QPlainTextEdit(parent),
     m_sideBar(new CodeEditorSidebar(this)),
     m_highlighter(nullptr)
@@ -73,7 +73,7 @@ CodeEditor::~CodeEditor()
 {
 }
 
-void CodeEditor::setFileName(const QString& fileName)
+void CodeEditor::setFileName(const QString &fileName)
 {
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
     ensureHighlighterExists();
@@ -84,7 +84,7 @@ void CodeEditor::setFileName(const QString& fileName)
 #endif
 }
 
-void CodeEditor::setSyntaxDefinition(const QString& syntaxName)
+void CodeEditor::setSyntaxDefinition(const QString &syntaxName)
 {
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
     ensureHighlighterExists();
@@ -138,18 +138,22 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
     foreach (const auto &def, s_repository->definitions()) {
         if (def.isHidden())
             continue;
+
         if (currentGroup != def.section()) {
             currentGroup = def.section();
             hlSubMenu = hlGroupMenu->addMenu(def.translatedSection());
         }
 
         Q_ASSERT(hlSubMenu);
-        auto action = hlSubMenu->addAction(def.translatedName());
-        action->setCheckable(true);
-        action->setData(def.name());
-        hlActionGroup->addAction(action);
-        if (def.name() == m_highlighter->definition().name())
-            action->setChecked(true);
+        if (hlSubMenu) {
+            auto action = hlSubMenu->addAction(def.translatedName());
+            action->setCheckable(true);
+            action->setData(def.name());
+            hlActionGroup->addAction(action);
+            if (def.name() == m_highlighter->definition().name()) {
+                action->setChecked(true);
+            }
+        }
     }
     connect(hlActionGroup, SIGNAL(triggered(QAction*)), this, SLOT(syntaxSelected(QAction*)));
 #endif
@@ -157,7 +161,6 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
     menu->exec(event->globalPos());
     delete menu;
 }
-
 
 void CodeEditor::resizeEvent(QResizeEvent *event)
 {
@@ -172,15 +175,16 @@ void CodeEditor::updateSidebarGeometry()
     m_sideBar->setGeometry(QRect(r.left(), r.top(), sidebarWidth(), r.height()));
 }
 
-void CodeEditor::updateSidebarArea(const QRect& rect, int dy)
+void CodeEditor::updateSidebarArea(const QRect &rect, int dy)
 {
-    if (dy)
+    if (dy) {
         m_sideBar->scroll(0, dy);
-    else
+    } else {
         m_sideBar->update(0, rect.y(), m_sideBar->width(), rect.height());
+    }
 }
 
-void CodeEditor::sidebarPaintEvent(QPaintEvent* event)
+void CodeEditor::sidebarPaintEvent(QPaintEvent *event)
 {
     QPainter painter(m_sideBar);
     painter.fillRect(event->rect(), palette().color(QPalette::Window));
@@ -244,7 +248,7 @@ void CodeEditor::highlightCurrentLine()
     setExtraSelections(extraSelections);
 }
 
-void CodeEditor::syntaxSelected(QAction* action)
+void CodeEditor::syntaxSelected(QAction *action)
 {
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
     Q_ASSERT(action);
@@ -268,9 +272,9 @@ void CodeEditor::ensureHighlighterExists()
 
     if (!m_highlighter) {
         m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(document());
-        m_highlighter->setTheme(Utils::isDarkColor(palette().color(QPalette::Base))
-            ? s_repository->defaultTheme(KSyntaxHighlighting::Repository::DarkTheme)
-            : s_repository->defaultTheme(KSyntaxHighlighting::Repository::LightTheme));
+        m_highlighter->setTheme(Utils::isDarkColor(palette().color(QPalette::Base)) ?
+                                s_repository->defaultTheme(KSyntaxHighlighting::Repository::DarkTheme) :
+                                s_repository->defaultTheme(KSyntaxHighlighting::Repository::LightTheme));
     }
 #endif
 }
@@ -284,8 +288,9 @@ QTextBlock CodeEditor::blockAtPosition(int y) const
     int top = blockBoundingGeometry(block).translated(contentOffset()).top();
     int bottom = top + blockBoundingRect(block).height();
     do {
-        if (top <= y && y <= bottom)
+        if (top <= y && y <= bottom) {
             return block;
+        }
         block = block.next();
         top = bottom;
         bottom = top + blockBoundingRect(block).height();
@@ -307,9 +312,11 @@ bool CodeEditor::isFolded(const QTextBlock &block) const
 {
     if (!block.isValid())
         return false;
+
     const auto nextBlock = block.next();
     if (!nextBlock.isValid())
         return false;
+
     return !nextBlock.isVisible();
 }
 
