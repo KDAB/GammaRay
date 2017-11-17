@@ -161,8 +161,6 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
         case QPaintBufferPrivate::Cmd_SetBackgroundMode:
             return EnumUtil::enumToString(QVariant::fromValue(static_cast<Qt::BGMode>(cmd.extra)));
 
-        case QPaintBufferPrivate::Cmd_ClipPath:
-            break; // TODO
         case QPaintBufferPrivate::Cmd_ClipRect:
             return EnumUtil::enumToString(QVariant::fromValue(static_cast<Qt::ClipOperation>(cmd.extra)))
                 + QLatin1String(": ")
@@ -170,6 +168,7 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
                     QPoint(m_privateBuffer->ints.at(cmd.offset), m_privateBuffer->ints.at(cmd.offset + 1)),
                     QPoint(m_privateBuffer->ints.at(cmd.offset + 2), m_privateBuffer->ints.at(cmd.offset + 3))
                 ));
+        case QPaintBufferPrivate::Cmd_ClipPath:
         case QPaintBufferPrivate::Cmd_ClipRegion:
             return EnumUtil::enumToString(QVariant::fromValue(static_cast<Qt::ClipOperation>(cmd.extra)))
                 + QLatin1String(": ")
@@ -193,7 +192,7 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
         case QPaintBufferPrivate::Cmd_DrawLineI:
             return geometryListToString<QLine>(m_privateBuffer->ints.constData(), cmd.offset, cmd.size);
         case QPaintBufferPrivate::Cmd_DrawPath:
-            break; // TODO
+            return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
         case QPaintBufferPrivate::Cmd_DrawPolygonF:
             return EnumUtil::enumToString(QVariant::fromValue(static_cast<QPaintEngine::PolygonDrawMode>(cmd.extra)))
                 + QLatin1String(": ") +
