@@ -135,6 +135,20 @@ static QString geometryListToString(const Data *data, int offset, int size)
     return l.join(QLatin1String("; "));
 }
 
+static QString vectorPathToString(QPaintBufferPrivate *data, const QPaintBufferCommand &cmd)
+{
+    QVectorPath path(
+        data->floats.constData() + cmd.offset, cmd.size,
+        cmd.offset2 & 0x80000000 ? nullptr : reinterpret_cast<const QPainterPath::ElementType*>(data->ints.constData() + cmd.offset2 + 1),
+        *(data->ints.constData() + (cmd.offset2 & 0x7FFFFFFF))
+    );
+    if (path.isEmpty())
+        return PaintBufferModel::tr("<empty>");
+    return PaintBufferModel::tr("control rect: %1, elements: %2").arg(
+        VariantHandler::displayString(path.controlPointRect()),
+        QString::number(path.elementCount()));
+}
+
 QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) const
 {
     // TODO complete this to eventually replace m_buffer.commandDescription()
@@ -174,14 +188,20 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
                 + QLatin1String(": ")
                 + VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
         case QPaintBufferPrivate::Cmd_ClipVectorPath:
-            break; // TODO
+            return EnumUtil::enumToString(QVariant::fromValue(static_cast<Qt::ClipOperation>(cmd.extra)))
+                + QLatin1String(": ")
+                + vectorPathToString(m_privateBuffer, cmd);
 
         case QPaintBufferPrivate::Cmd_DrawVectorPath:
-            break; // TODO
+            return vectorPathToString(m_privateBuffer, cmd);
         case QPaintBufferPrivate::Cmd_FillVectorPath:
-            break; // TODO
+            return tr("%1, brush: %2").arg(
+                vectorPathToString(m_privateBuffer, cmd),
+                VariantHandler::displayString(m_privateBuffer->variants.at(cmd.extra)));
         case QPaintBufferPrivate::Cmd_StrokeVectorPath:
-            break; // TODO
+            return tr("%1, pen: %2").arg(
+                vectorPathToString(m_privateBuffer, cmd),
+                VariantHandler::displayString(m_privateBuffer->variants.at(cmd.extra)));
 
         case QPaintBufferPrivate::Cmd_DrawEllipseF:
             return VariantHandler::displayString(*reinterpret_cast<const QRectF*>(m_privateBuffer->floats.constData() + cmd.offset));
