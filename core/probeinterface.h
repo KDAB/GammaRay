@@ -143,6 +143,14 @@ public:
                               const QPoint &pos = QPoint()) = 0;
 
     /**
+     * Notify the probe about the user selecting one of "your" objects property via in-app interaction.
+     *
+     * @since 3.0
+     */
+    virtual void selectObjectProperty(QObject *object, const QByteArray &property) = 0;
+    virtual void selectObjectProperty(QObject *object, const QByteArray &property, const QString &toolId) = 0;
+
+    /**
      * Notify the probe about the user selecting one of "your" objects.
      *
      * @since 2.1

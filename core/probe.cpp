@@ -990,6 +990,24 @@ void Probe::selectObject(QObject *object, const QString &toolId, const QPoint &p
     emit objectSelected(object, pos);
 }
 
+void Probe::selectObjectProperty(QObject *object, const QByteArray &property)
+{
+    const auto tools = m_toolManager->toolsForObject(object);
+    m_toolManager->selectTool(tools.value(0));
+    emit objectPropertySelected(object, property);
+}
+
+void Probe::selectObjectProperty(QObject *object, const QByteArray &property, const QString &toolId)
+{
+    if (!m_toolManager->hasTool(toolId)) {
+        std::cerr << "Invalid tool id: " << qPrintable(toolId) << std::endl;
+        return;
+    }
+
+    m_toolManager->selectTool(toolId);
+    emit objectPropertySelected(object, property);
+}
+
 void Probe::selectObject(void *object, const QString &typeName)
 {
     const auto tools = m_toolManager->toolsForObject(object, typeName);

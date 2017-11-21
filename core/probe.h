@@ -112,6 +112,8 @@ public:
     void selectObject(QObject *object, const QPoint &pos = QPoint()) override;
     void selectObject(QObject *object, const QString &toolId,
                       const QPoint &pos = QPoint()) override;
+    void selectObjectProperty(QObject *object, const QByteArray &property) override;
+    void selectObjectProperty(QObject *object, const QByteArray &property, const QString &toolId) override;
     void selectObject(void *object, const QString &typeName) override;
     void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) override;
 
@@ -148,6 +150,7 @@ signals:
      * Emitted when the user selected @p object at position @p pos in the probed application.
      */
     void objectSelected(QObject *object, const QPoint &pos);
+    void objectPropertySelected(QObject *object, const QByteArray &property);
     void nonQObjectSelected(void *object, const QString &typeName);
 
     /**
