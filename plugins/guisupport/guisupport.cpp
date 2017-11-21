@@ -711,6 +711,8 @@ void GuiSupport::objectCreated(QObject *object)
 bool GuiSupport::eventFilter(QObject *watched, QEvent *event)
 {
     if (!m_restoringIconsAndTitle) {
+        // prevent recursion, esp. when tracing e.g. plasmashell
+        m_restoringIconsAndTitle = true;
         if (event->type() == QEvent::WindowTitleChange) {
             if (auto w = qobject_cast<QWindow*>(watched)) {
                 if (w->isTopLevel()) {
@@ -724,6 +726,7 @@ bool GuiSupport::eventFilter(QObject *watched, QEvent *event)
                 }
             }
         }
+        m_restoringIconsAndTitle = false;
     }
     return QObject::eventFilter(watched, event);
 }
