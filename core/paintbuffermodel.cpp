@@ -151,7 +151,6 @@ static QString vectorPathToString(QPaintBufferPrivate *data, const QPaintBufferC
 
 QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) const
 {
-    // TODO complete this to eventually replace m_buffer.commandDescription()
     switch (cmd.id) {
         case QPaintBufferPrivate::Cmd_Save:
         case QPaintBufferPrivate::Cmd_Restore:
@@ -248,7 +247,15 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
                 vl.at(1).toString(), VariantHandler::displayString(vl.at(0)));
         }
         case QPaintBufferPrivate::Cmd_DrawTextItem:
-            break; // TODO
+        {
+            QPointF pos(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1));
+            auto textItem = reinterpret_cast<QTextItemIntCopy*>(m_privateBuffer->variants.at(cmd.offset).value<void*>());
+            return tr("position: %1, text: \"%2\", font: %3").arg(
+                VariantHandler::displayString(pos),
+                (*textItem)().text(),
+                VariantHandler::displayString((*textItem)().font())
+            );
+        }
 
         case QPaintBufferPrivate::Cmd_DrawImagePos:
         case QPaintBufferPrivate::Cmd_DrawPixmapPos:
@@ -275,7 +282,12 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
         case QPaintBufferPrivate::Cmd_Translate:
             return VariantHandler::displayString(QPointF(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1)));
         case QPaintBufferPrivate::Cmd_DrawStaticText:
-            break; // TODO
+        {
+            const auto variants = m_privateBuffer->variants.at(cmd.offset).value<QVariantList>();
+            return tr("glyphs: %1, font: %2").arg(
+                QString::number((variants.size() - 1) / 2),
+                VariantHandler::displayString(variants.at(0)));
+        }
     }
     return QString();
 }
@@ -311,22 +323,7 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
         case 0:
             return cmdTypes[cmd.id].name;
         case 1:
-        {
-            auto desc = argumentDisplayString(cmd);
-            if (!desc.isEmpty())
-                return desc;
-#ifndef QT_NO_DEBUG_STREAM
-            desc = m_buffer.commandDescription(index.row());
-            const QString prefix = QLatin1String("Cmd_") + QLatin1String(cmdTypes[cmd.id].name);
-
-            if (desc.startsWith(prefix))
-                desc = desc.mid(prefix.length());
-
-            if (desc.startsWith(QLatin1String(": ")) || desc.startsWith(QLatin1String(", ")))
-                desc = desc.mid(2);
-            return desc;
-#endif
-        }
+            return argumentDisplayString(cmd);
         }
     } else if (role == Qt::DecorationRole) {
         if (index.column() == 1) {
