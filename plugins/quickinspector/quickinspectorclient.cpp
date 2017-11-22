@@ -88,3 +88,8 @@ void QuickInspectorClient::checkOverlaySettings()
 {
     Endpoint::instance()->invokeObject(objectName(), "checkOverlaySettings");
 }
+
+void QuickInspectorClient::analyzePainting()
+{
+    Endpoint::instance()->invokeObject(objectName(), "analyzePainting");
+}

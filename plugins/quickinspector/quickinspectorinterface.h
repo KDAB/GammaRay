@@ -58,7 +58,8 @@ public:
         CustomRenderModeTraces = 16,
         AllCustomRenderModes = CustomRenderModeClipping | CustomRenderModeOverdraw
                                | CustomRenderModeBatches | CustomRenderModeChanges
-                               | CustomRenderModeTraces
+                               | CustomRenderModeTraces,
+        AnalyzePainting
     };
 
     enum RenderMode {
@@ -91,6 +92,8 @@ public slots:
     virtual void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings) = 0;
 
     virtual void checkOverlaySettings() = 0;
+
+    virtual void analyzePainting() = 0;
 
 signals:
     void features(GammaRay::QuickInspectorInterface::Features features);

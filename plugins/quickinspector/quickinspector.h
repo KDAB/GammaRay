@@ -61,6 +61,7 @@ class QuickItemModel;
 class QuickSceneGraphModel;
 class RemoteViewServer;
 class ObjectId;
+class PaintAnalyzer;
 typedef QVector<ObjectId> ObjectIds;
 
 class RenderModeRequest : public QObject
@@ -123,6 +124,8 @@ public slots:
 
     void sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFrame);
 
+    void analyzePainting() override;
+
 protected:
     bool eventFilter(QObject *receiver, QEvent *event) override;
 
@@ -165,6 +168,7 @@ private:
     RemoteViewServer *m_remoteView;
     RenderModeRequest *m_pendingRenderMode;
     QuickInspectorInterface::RenderMode m_renderMode;
+    PaintAnalyzer* m_paintAnalyzer;
 };
 
 class QuickInspectorFactory : public QObject,

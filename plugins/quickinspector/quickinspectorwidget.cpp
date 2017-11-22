@@ -48,6 +48,7 @@
 
 #include <ui/clientdecorationidentityproxymodel.h>
 #include <ui/contextmenuextension.h>
+#include <ui/paintbufferviewer.h>
 #include <ui/searchlinecontroller.h>
 
 #include <QEvent>
@@ -156,6 +157,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
     addActions(m_scenePreviewWidget->actions());
     addAction(createSeparator(this));
+    addAction(ui->actionAnalyzePainting);
+    addAction(createSeparator(this));
     addAction(ui->actionSaveAsImage);
     addAction(ui->actionSaveAsImageWithDecoration);
 
@@ -164,6 +167,11 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
     connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
     connect(ui->actionSaveAsImageWithDecoration, SIGNAL(triggered()), SLOT(saveAsImage()));
+    connect(ui->actionAnalyzePainting, &QAction::triggered, this, [this]() {
+        m_interface->analyzePainting();
+        auto viewer = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this);
+        viewer->show();
+    });
     connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(m_scenePreviewWidget, SIGNAL(stateChanged()), this, SLOT(saveState()));
@@ -201,6 +209,7 @@ void QuickInspectorWidget::restoreTargetState(QSettings *settings)
 void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features features)
 {
     m_scenePreviewWidget->setSupportsCustomRenderModes(features);
+    ui->actionAnalyzePainting->setEnabled(features & QuickInspectorInterface::AnalyzePainting);
     stateReceived(QuickInspectorWidget::WaitingFeatures);
 }
 

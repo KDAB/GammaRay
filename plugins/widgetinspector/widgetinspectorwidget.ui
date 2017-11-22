@@ -99,6 +99,9 @@
    <property name="text">
     <string>&amp;Analyze Painting...</string>
    </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
   </action>
  </widget>
  <customwidgets>

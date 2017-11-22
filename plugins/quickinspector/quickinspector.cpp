@@ -58,6 +58,7 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/varianthandler.h>
 #include <core/remoteviewserver.h>
+#include <core/paintanalyzer.h>
 #include <core/tools/objectinspector/bindingmodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
@@ -88,6 +89,8 @@
 #include <QSGRenderNode>
 #include <QSGRendererInterface>
 #include <private/qquickopenglshadereffectnode_p.h>
+#include <private/qsgsoftwarecontext_p.h>
+#include <private/qsgsoftwarerenderer_p.h>
 #endif
 
 #include <private/qquickanchors_p.h>
@@ -383,6 +386,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     , m_remoteView(new RemoteViewServer(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"), this))
     , m_pendingRenderMode(new RenderModeRequest(this))
     , m_renderMode(QuickInspectorInterface::NormalRendering)
+    , m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this))
 {
     registerMetaTypes();
     registerVariantHandlers();
@@ -659,13 +663,20 @@ void QuickInspector::setServerSideDecorationsEnabled(bool enabled)
 void QuickInspector::checkFeatures()
 {
     Features f;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-    if (m_window
+    if (!m_window) {
+        emit features(f);
+        return;
+    }
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-        && m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL
+    if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL)
+        f = AllCustomRenderModes;
+    else if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
+        f = AnalyzePainting;
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+    f = AllCustomRenderModes;
 #endif
-    ) f = AllCustomRenderModes;
-#endif
+
     emit features(f);
 }
 
@@ -683,6 +694,44 @@ void QuickInspector::setOverlaySettings(const GammaRay::QuickDecorationsSettings
 void QuickInspector::checkOverlaySettings()
 {
     emit overlaySettings(m_overlay->settings());
+}
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 3) // only with 5.9.3 the SW renderer got exported
+class SGSoftwareRendererPrivacyViolater : public QSGAbstractSoftwareRenderer
+{
+public:
+    using QSGAbstractSoftwareRenderer::renderNodes;
+    using QSGAbstractSoftwareRenderer::buildRenderList;
+    using QSGAbstractSoftwareRenderer::optimizeRenderList;
+};
+#endif
+
+void QuickInspector::analyzePainting()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 3)
+    if (!m_window || m_window->rendererInterface()->graphicsApi() != QSGRendererInterface::Software || !PaintAnalyzer::isAvailable())
+        return;
+
+    m_paintAnalyzer->beginAnalyzePainting();
+    m_paintAnalyzer->setBoundingRect(QRect(QPoint(), m_window->size()));
+    {
+        auto w = QQuickWindowPrivate::get(m_window);
+        auto renderer = static_cast<SGSoftwareRendererPrivacyViolater*>(w->renderer);
+
+        // this replicates what QSGSoftwareRender is doing
+        QPainter painter(m_paintAnalyzer->paintDevice());
+        painter.setRenderHint(QPainter::Antialiasing);
+        auto rc = static_cast<QSGSoftwareRenderContext*>(w->renderer->context());
+        auto prevPainter = rc->m_activePainter;
+        rc->m_activePainter = &painter;
+        renderer->markDirty();
+        renderer->buildRenderList();
+        renderer->optimizeRenderList();
+        renderer->renderNodes(&painter);
+        rc->m_activePainter = prevPainter;
+    }
+    m_paintAnalyzer->endAnalyzePainting();
+#endif
 }
 
 void QuickInspector::itemSelectionChanged(const QItemSelection &selection)

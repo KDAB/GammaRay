@@ -148,6 +148,17 @@
     <string>Save current frame with decoration rendered as image.</string>
    </property>
   </action>
+  <action name="actionAnalyzePainting">
+   <property name="text">
+    <string>Analyze Painting...</string>
+   </property>
+   <property name="toolTip">
+    <string>Analyzer software renderer paint operations.</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
