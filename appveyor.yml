@@ -49,7 +49,8 @@ environment:
     matrix:
     - TARGET: windows-msvc2015_32-cl
     - TARGET: windows-mingw_32-gcc
-    - TARGET: windows-msvc2015_64-cl
+    - TARGET: windows-msvc2017_64-cl
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 
 artifacts:
   - path: binaries/*
