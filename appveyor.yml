@@ -30,7 +30,7 @@ build_script:
 
 after_build:
 - ps: |
-    if ($env:TARGET -eq "windows-msvc2015_64-cl") {
+    if ($env:TARGET -eq "windows-msvc2017_64-cl") {
         craft gammaray-probes
     }
     craft --src-dir $env:APPVEYOR_BUILD_FOLDER --package gammaray
