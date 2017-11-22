@@ -154,9 +154,18 @@ bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*
     p.start(QString(QLatin1String("gammaray-wininjector-%1")).arg(
                 isX64 ? QLatin1String("x86_64") : QLatin1String("i686")),
                 args);
-    p.waitForFinished(-1);
+    if (p.error() != QProcess::UnknownError){
+        qDebug() << "Injection failed:" << p.arguments() << p.errorString();
+        return false;
+    }
+    if (p.exitCode() != 0) {
+        qDebug() << "Injection failed:" << p.arguments();
+        qDebug() << "Exit code:" << p.exitCode();
+        qDebug() << "Output:" << p.readAll();
+        return false;
+    }
     emit started();
-    return p.exitCode() == 0;
+    return true;
 }
 
 int WinDllInjector::exitCode()
