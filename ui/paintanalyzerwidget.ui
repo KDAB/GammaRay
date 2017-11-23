@@ -19,22 +19,32 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QLineEdit" name="commandSearchLine"/>
-       </item>
-       <item>
-        <widget class="GammaRay::DeferredTreeView" name="commandView">
-         <property name="indentation">
-          <number>10</number>
-         </property>
-         <property name="sortingEnabled">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
+     <widget class="QSplitter" name="argumentSplitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLineEdit" name="commandSearchLine"/>
+        </item>
+        <item>
+         <widget class="GammaRay::DeferredTreeView" name="commandView">
+          <property name="indentation">
+           <number>10</number>
+          </property>
+          <property name="sortingEnabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QTreeView" name="argumentView">
+       <property name="indentation">
+        <number>10</number>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="replayContainer">
@@ -56,7 +66,7 @@
   <customwidget>
    <class>GammaRay::RemoteViewWidget</class>
    <extends>QWidget</extends>
-   <header>remoteviewwidget.h</header>
+   <header location="global">ui/remoteviewwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

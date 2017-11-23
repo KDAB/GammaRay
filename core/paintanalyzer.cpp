@@ -31,6 +31,7 @@
 #include "paintanalyzer.h"
 #include "paintbuffermodel.h"
 
+#include <core/aggregatedpropertymodel.h>
 #include <core/probe.h>
 #include <core/remoteviewserver.h>
 
@@ -58,6 +59,7 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
     , m_selectionModel(nullptr)
     , m_paintBuffer(nullptr)
     , m_remoteView(new RemoteViewServer(name + QStringLiteral(".remoteView"), this))
+    , m_argumentModel(new AggregatedPropertyModel(this))
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBufferModel = new PaintBufferModel(this);
@@ -69,6 +71,8 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
     connect(m_selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)), m_remoteView,
             SLOT(sourceChanged()));
 #endif
+
+    Probe::instance()->registerModel(name + QStringLiteral(".argumentProperties"), m_argumentModel);
 
     connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(repaint()));
 }
@@ -99,8 +103,12 @@ void PaintAnalyzer::repaint()
     QPainter painter(&image);
     const auto start = m_paintBufferModel->buffer().frameStartIndex(0);
 
-    // include selected row or paint all if nothing is selected
     auto index = m_paintBufferFilter->mapToSource(m_selectionModel->currentIndex());
+    m_currentArgument = index.data(PaintBufferModel::ValueRole);
+    m_argumentModel->setObject(m_currentArgument);
+    setHasArgumentDetails(m_argumentModel->rowCount());
+
+    // include selected row or paint all if nothing is selected
     if (index.parent().isValid())
         index = index.parent();
     const auto end = index.isValid() ? index.row() + 1 : m_paintBufferModel->rowCount();

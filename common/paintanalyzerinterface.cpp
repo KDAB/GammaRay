@@ -35,6 +35,7 @@ using namespace GammaRay;
 PaintAnalyzerInterface::PaintAnalyzerInterface(const QString &name, QObject *parent)
     : QObject(parent)
     , m_name(name)
+    , m_hasArgumentDetails(false)
 {
     ObjectBroker::registerObject(name, this);
 }
@@ -42,4 +43,17 @@ PaintAnalyzerInterface::PaintAnalyzerInterface(const QString &name, QObject *par
 QString PaintAnalyzerInterface::name() const
 {
     return m_name;
+}
+
+bool PaintAnalyzerInterface::hasArgumentDetails() const
+{
+    return m_hasArgumentDetails;
+}
+
+void PaintAnalyzerInterface::setHasArgumentDetails(bool hasDetails)
+{
+    if (m_hasArgumentDetails == hasDetails)
+        return;
+    m_hasArgumentDetails = hasDetails;
+    emit hasArgumentDetailsChanged(hasDetails);
 }

@@ -43,10 +43,12 @@ using namespace GammaRay;
 PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::PaintAnalyzerWidget)
+    , m_iface(nullptr)
 {
     ui->setupUi(this);
     ui->commandView->header()->setObjectName("commandViewHeader");
     ui->commandView->setItemDelegate(new PropertyEditorDelegate(this));
+    ui->argumentView->setItemDelegate(new PropertyEditorDelegate(this));
 
     auto toolbar = new QToolBar;
     // Our icons are 16x16 and support hidpi, so let force iconSize on every styles
@@ -73,6 +75,7 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     connect(zoom, SIGNAL(currentIndexChanged(int)), ui->replayWidget, SLOT(setZoomLevel(int)));
     connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
     zoom->setCurrentIndex(ui->replayWidget->zoomLevelIndex());
+
 }
 
 PaintAnalyzerWidget::~PaintAnalyzerWidget()
@@ -86,5 +89,11 @@ void PaintAnalyzerWidget::setBaseName(const QString &name)
     ui->commandView->setSelectionModel(ObjectBroker::selectionModel(ui->commandView->model()));
     new SearchLineController(ui->commandSearchLine, model);
 
+    ui->argumentView->setModel(ObjectBroker::model(name + QStringLiteral(".argumentProperties")));
+
     ui->replayWidget->setName(name + QStringLiteral(".remoteView"));
+
+    m_iface = ObjectBroker::object<PaintAnalyzerInterface*>(name);
+    ui->argumentView->setVisible(m_iface->hasArgumentDetails());
+    connect(m_iface, SIGNAL(hasArgumentDetailsChanged(bool)), ui->argumentView, SLOT(setVisible(bool)));
 }

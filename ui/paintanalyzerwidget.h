@@ -35,6 +35,7 @@ namespace GammaRay {
 namespace Ui {
 class PaintAnalyzerWidget;
 }
+class PaintAnalyzerInterface;
 
 /**
  * A widget to look at the command list in a QPaintBuffer.
@@ -50,6 +51,7 @@ public:
 
 private:
     QScopedPointer<Ui::PaintAnalyzerWidget> ui;
+    PaintAnalyzerInterface *m_iface;
 };
 }
 

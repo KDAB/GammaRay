@@ -42,12 +42,20 @@ namespace GammaRay {
 class GAMMARAY_COMMON_EXPORT PaintAnalyzerInterface : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool hasArgumentDetails READ hasArgumentDetails WRITE setHasArgumentDetails NOTIFY hasArgumentDetailsChanged)
 public:
     explicit PaintAnalyzerInterface(const QString &name, QObject *parent = nullptr);
     QString name() const;
 
+    bool hasArgumentDetails() const;
+    void setHasArgumentDetails(bool hasDetails);
+
+Q_SIGNALS:
+    void hasArgumentDetailsChanged(bool);
+
 private:
     QString m_name;
+    bool m_hasArgumentDetails;
 };
 }
 

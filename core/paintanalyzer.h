@@ -31,6 +31,8 @@
 
 #include "gammaray_core_export.h"
 
+#include <core/objectinstance.h>
+
 #include <common/paintanalyzerinterface.h>
 
 QT_BEGIN_NAMESPACE
@@ -42,6 +44,7 @@ class QSortFilterProxyModel;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+class AggregatedPropertyModel;
 class PaintBufferModel;
 class RemoteViewServer;
 
@@ -72,6 +75,8 @@ private:
     QItemSelectionModel *m_selectionModel;
     QPaintBuffer *m_paintBuffer;
     RemoteViewServer *m_remoteView;
+    AggregatedPropertyModel *m_argumentModel;
+    ObjectInstance m_currentArgument;
 };
 }
 

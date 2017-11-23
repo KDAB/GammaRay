@@ -27,6 +27,7 @@
 */
 
 #include <config-gammaray.h>
+#include "paintbuffermodel.h"
 
 #include <core/enumutil.h>
 #include <core/varianthandler.h>
@@ -41,7 +42,6 @@ Q_DECLARE_METATYPE(Qt::ClipOperation)
 #endif
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
-#include "paintbuffermodel.h"
 
 using namespace GammaRay;
 
@@ -180,6 +180,14 @@ static QString vectorPathToString(QPaintBufferPrivate *data, const QPaintBufferC
 QVariant PaintBufferModel::argumentAt(const QPaintBufferCommand& cmd, int index) const
 {
     switch (cmd.id) {
+        // single argument commands
+        case QPaintBufferPrivate::Cmd_SetBrush:
+        case QPaintBufferPrivate::Cmd_SetPen:
+            return m_privateBuffer->variants.at(cmd.offset);
+        case QPaintBufferPrivate::Cmd_FillRectBrush:
+            return m_privateBuffer->variants.at(cmd.extra);
+
+        // multi argument commands
         case QPaintBufferPrivate::Cmd_DrawText:
             switch (index) {
                 case 0:
@@ -386,20 +394,22 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
 
     if (!index.parent().isValid()) {
         const auto cmd = m_privateBuffer->commands.at(index.row());
-        if (role == Qt::DisplayRole) {
-            switch (index.column()) {
-            case 0:
-                return cmdTypes[cmd.id].name;
-            case 1:
+        switch (role) {
+            case Qt::DisplayRole:
+                if (index.column() == 0)
+                    return cmdTypes[cmd.id].name;
                 return argumentDisplayString(cmd);
-            }
-        } else if (role == Qt::DecorationRole) {
-            if (index.column() == 1) {
-                return argumentDecoration(cmd);
-            }
-        } else if (role == Qt::EditRole && index.column() == 1) { // for fancy matrix rendering in the client
-            if (cmd.id == QPaintBufferPrivate::Cmd_SetTransform)
-                return m_privateBuffer->variants.at(cmd.offset);
+            case Qt::DecorationRole:
+                if (index.column() == 1)
+                    return argumentDecoration(cmd);
+                break;
+            case Qt::EditRole:
+                // for fancy matrix rendering in the client
+                if (index.column() == 1 && cmd.id == QPaintBufferPrivate::Cmd_SetTransform)
+                    return m_privateBuffer->variants.at(cmd.offset);
+                break;
+            case ValueRole:
+                return argumentAt(cmd, 0);
         }
     } else {
         const auto cmd = m_privateBuffer->commands.at(index.internalId());
@@ -409,6 +419,9 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
                     return cmd_argument_names[cmdTypes[cmd.id].argumentName + index.row()];
                 else if (index.column() == 1)
                     return VariantHandler::displayString(argumentAt(cmd, index.row()));
+                break;
+            case ValueRole:
+                return argumentAt(cmd, index.row());
         }
     }
 

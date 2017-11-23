@@ -31,6 +31,8 @@
 
 #include <config-gammaray.h>
 
+#include <common/modelroles.h>
+
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <QAbstractItemModel>
 
@@ -49,6 +51,9 @@ class PaintBufferModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
+    enum Role {
+        ValueRole = GammaRay::UserRole + 1
+    };
     explicit PaintBufferModel(QObject *parent = nullptr);
 
     void setPaintBuffer(const QPaintBuffer &buffer);
