@@ -122,11 +122,11 @@ const std::vector<std::unique_ptr<BindingNode> > & GammaRay::BindingNode::depend
     return m_dependencies;
 }
 
-void GammaRay::BindingNode::setCanonicalName(const QString& name)
+void BindingNode::setCanonicalName(const QString& name)
 {
     m_canonicalName = name;
 }
-void GammaRay::BindingNode::setSourceLocation(GammaRay::SourceLocation location)
+void BindingNode::setSourceLocation(const SourceLocation &location)
 {
     m_sourceLocation = location;
 }

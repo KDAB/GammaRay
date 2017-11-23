@@ -69,7 +69,7 @@ public:
     void checkForLoops();
 
     void setParent(BindingNode *newParent);
-    void setSourceLocation(SourceLocation location);
+    void setSourceLocation(const SourceLocation &location);
     void setCanonicalName(const QString &name);
 
 private:

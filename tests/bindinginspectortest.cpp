@@ -59,7 +59,7 @@
 using namespace GammaRay;
 
 template<typename CompareFunc>
-    std::vector<QModelIndex> getSortedChildren(QModelIndex index, const QAbstractItemModel *model, CompareFunc compare)
+    std::vector<QModelIndex> getSortedChildren(const QModelIndex &index, const QAbstractItemModel *model, CompareFunc compare)
 {
     std::vector<QModelIndex> childIndices;
     int rowCount = model->rowCount(index);
@@ -70,12 +70,12 @@ template<typename CompareFunc>
     return childIndices;
 }
 
-std::vector<QModelIndex> getSortedChildren(QModelIndex index, const QAbstractItemModel *model = nullptr)
+std::vector<QModelIndex> getSortedChildren(const QModelIndex &index, const QAbstractItemModel *model = nullptr)
 {
     if (!model) {
         model = index.model();
     }
-    return getSortedChildren(index, model, [](QModelIndex a, QModelIndex b) { return a.data().toString() < b.data().toString(); });
+    return getSortedChildren(index, model, [](const QModelIndex &a, const QModelIndex &b) { return a.data().toString() < b.data().toString(); });
 }
 
 class MockBindingProvider : public AbstractBindingProvider
@@ -197,7 +197,7 @@ public:
         emit dChanged();
     }
 
-    void setE(QString e)
+    void setE(const QString &e)
     {
         m_e = e;
         emit eChanged();

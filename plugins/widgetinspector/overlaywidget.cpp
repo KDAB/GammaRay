@@ -57,7 +57,7 @@ OverlayWidget::OverlayWidget()
     setFocusPolicy(Qt::NoFocus);
 }
 
-void OverlayWidget::placeOn(WidgetOrLayoutFacade item)
+void OverlayWidget::placeOn(const WidgetOrLayoutFacade &item)
 {
     if (item.isNull()) {
         if (!m_currentItem.isNull())

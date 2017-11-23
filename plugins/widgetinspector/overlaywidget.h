@@ -94,7 +94,7 @@ public:
      *
      * @param item The overlay can be cover a widget or a layout
      */
-    void placeOn(WidgetOrLayoutFacade item);
+    void placeOn(const WidgetOrLayoutFacade &item);
 
     bool eventFilter(QObject *receiver, QEvent *event) override;
 
