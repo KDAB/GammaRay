@@ -61,11 +61,11 @@ public:
     const static int minimumBorderImageSavingsPercent = 25;
 
 signals:
-    void textureInfoNecessary(const bool isNecessary) const;
-    void textureWasteFound(const bool, const int percent, const int bytes) const;
-    void textureIsUnicolor(const bool) const;
-    void textureIsFullyTransparent(const bool) const;
-    void textureHasBorderImageSavings(const bool, int percent, int bytes) const;
+    void textureInfoNecessary(bool isNecessary);
+    void textureWasteFound(bool, int percent, int bytes);
+    void textureIsUnicolor(bool uniColor);
+    void textureIsFullyTransparent(bool fullyTransparent);
+    void textureHasBorderImageSavings(bool isBorderImage, int percent, int bytes);
 
 private slots:
     void setTextureWasteVisualizationEnabled(bool enabled);
