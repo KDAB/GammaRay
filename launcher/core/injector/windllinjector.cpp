@@ -145,21 +145,21 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
 bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*probeFunc*/)
 {
     const bool isX64 = probeDll.contains(QLatin1String("x86_64"), Qt::CaseInsensitive);
+    QString application = QString (QLatin1String("gammaray-wininjector-%1")).arg(
+                            isX64 ? QLatin1String("x86_64") : QLatin1String("i686"));
     QStringList args;
     args << QString::number(pid)
          << QDir::toNativeSeparators(Paths::binPath())
          << fixProbeDllPath(probeDll);
     QProcess p;
     p.setProcessChannelMode(QProcess::ForwardedChannels);
-    p.start(QString(QLatin1String("gammaray-wininjector-%1")).arg(
-                isX64 ? QLatin1String("x86_64") : QLatin1String("i686")),
-                args);
+    p.start(application, args);
     if (p.error() != QProcess::UnknownError){
-        qDebug() << "Injection failed:" << p.arguments() << p.errorString();
+        qDebug() << "Injection failed:" << application << args << p.errorString();
         return false;
     }
     if (p.exitCode() != 0) {
-        qDebug() << "Injection failed:" << p.arguments();
+        qDebug() << "Injection failed:" << application << args;
         qDebug() << "Exit code:" << p.exitCode();
         qDebug() << "Output:" << p.readAll();
         return false;
