@@ -635,10 +635,10 @@ void BindingInspectorTest::testModelDataChanged()
 
     TestHelpers::waitForSpy(&dataChangedSpy, 500);
     QCOMPARE(dataChangedSpy.size(), 2);
-    QCOMPARE(dataChangedSpy.at(0).at(0).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
-    QCOMPARE(dataChangedSpy.at(0).at(1).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
-    QCOMPARE(dataChangedSpy.at(1).at(0).value<QModelIndex>(), obj1dIndex.sibling(obj1dIndex.row(), BindingModel::ValueColumn));
-    QCOMPARE(dataChangedSpy.at(1).at(1).value<QModelIndex>(), obj1dIndex.sibling(obj1dIndex.row(), BindingModel::ValueColumn));
+    QCOMPARE(dataChangedSpy.at(0).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
+    QCOMPARE(dataChangedSpy.at(0).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
+    QCOMPARE(dataChangedSpy.at(1).at(0).toModelIndex(), obj1dIndex.sibling(obj1dIndex.row(), BindingModel::ValueColumn));
+    QCOMPARE(dataChangedSpy.at(1).at(1).toModelIndex(), obj1dIndex.sibling(obj1dIndex.row(), BindingModel::ValueColumn));
 
     QCOMPARE(bindingModel.rowCount(obj1aIndex), 3);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
@@ -687,15 +687,15 @@ void BindingInspectorTest::testModelAdditions()
     QCOMPARE(rowAddedSpy.size(), 1);
     QCOMPARE(rowAddedSpy.front().at(1).toInt(), 0);
     QCOMPARE(rowAddedSpy.front().at(2).toInt(), 1);
-    QCOMPARE(rowAddedSpy.front().front().value<QModelIndex>(), obj1cIndex);
+    QCOMPARE(rowAddedSpy.front().front().toModelIndex(), obj1cIndex);
 
     QCOMPARE(dataChangedSpy.size(), 3);
-    QCOMPARE(dataChangedSpy.at(0).at(0).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
-    QCOMPARE(dataChangedSpy.at(0).at(1).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
-    QCOMPARE(dataChangedSpy.at(1).at(0).value<QModelIndex>(), obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn)); // depth changed
-    QCOMPARE(dataChangedSpy.at(1).at(1).value<QModelIndex>(), obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn));
-    QCOMPARE(dataChangedSpy.at(2).at(0).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn)); // depth changed
-    QCOMPARE(dataChangedSpy.at(2).at(1).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
+    QCOMPARE(dataChangedSpy.at(0).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
+    QCOMPARE(dataChangedSpy.at(0).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
+    QCOMPARE(dataChangedSpy.at(1).at(0).toModelIndex(), obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn)); // depth changed
+    QCOMPARE(dataChangedSpy.at(1).at(1).toModelIndex(), obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn));
+    QCOMPARE(dataChangedSpy.at(2).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn)); // depth changed
+    QCOMPARE(dataChangedSpy.at(2).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
 
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 12);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("∞"));
@@ -766,7 +766,7 @@ void BindingInspectorTest::testModelInsertions()
 
     TestHelpers::waitForSpy(&rowAddedSpy, 500);
     QCOMPARE(rowAddedSpy.size(), 2);
-    QCOMPARE(rowAddedSpy.front().at(0).value<QModelIndex>(), obj1aIndex);
+    QCOMPARE(rowAddedSpy.front().at(0).toModelIndex(), obj1aIndex);
     QCOMPARE(rowAddedSpy.front().at(1).toInt(), 0);
     QCOMPARE(rowAddedSpy.front().at(2).toInt(), 1);
 
@@ -802,7 +802,7 @@ void BindingInspectorTest::testModelInsertions()
     QCOMPARE(obj2aIndex.sibling(obj2aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel.rowCount(obj2aIndex), 0);
 
-    QCOMPARE(rowAddedSpy.back().at(0).value<QModelIndex>(), obj1eIndex);
+    QCOMPARE(rowAddedSpy.back().at(0).toModelIndex(), obj1eIndex);
     QCOMPARE(rowAddedSpy.back().at(1).toInt(), 0);
     QCOMPARE(rowAddedSpy.back().at(2).toInt(), 0);
 
@@ -814,12 +814,12 @@ void BindingInspectorTest::testModelInsertions()
     QCOMPARE(bindingModel.rowCount(obj2aIndex2), 0);
 
     QCOMPARE(dataChangedSpy.size(), 3);
-    QCOMPARE(dataChangedSpy.at(0).at(0).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
-    QCOMPARE(dataChangedSpy.at(0).at(1).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
-    QCOMPARE(dataChangedSpy.at(1).at(0).value<QModelIndex>(), obj1eIndex.sibling(obj1eIndex.row(), BindingModel::DepthColumn)); // depth changed
-    QCOMPARE(dataChangedSpy.at(1).at(1).value<QModelIndex>(), obj1eIndex.sibling(obj1eIndex.row(), BindingModel::DepthColumn));
-    QCOMPARE(dataChangedSpy.at(2).at(0).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn)); // depth changed
-    QCOMPARE(dataChangedSpy.at(2).at(1).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
+    QCOMPARE(dataChangedSpy.at(0).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
+    QCOMPARE(dataChangedSpy.at(0).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
+    QCOMPARE(dataChangedSpy.at(1).at(0).toModelIndex(), obj1eIndex.sibling(obj1eIndex.row(), BindingModel::DepthColumn)); // depth changed
+    QCOMPARE(dataChangedSpy.at(1).at(1).toModelIndex(), obj1eIndex.sibling(obj1eIndex.row(), BindingModel::DepthColumn));
+    QCOMPARE(dataChangedSpy.at(2).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn)); // depth changed
+    QCOMPARE(dataChangedSpy.at(2).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
 }
 
 void BindingInspectorTest::testModelRemovalAtEnd()
@@ -857,7 +857,7 @@ void BindingInspectorTest::testModelRemovalAtEnd()
     QCOMPARE(rowRemovedSpy.size(), 1);
     QCOMPARE(rowRemovedSpy.front().at(1).toInt(), 1);
     QCOMPARE(rowRemovedSpy.front().at(2).toInt(), 2);
-    QCOMPARE(rowRemovedSpy.front().front().value<QModelIndex>(), obj1aIndex);
+    QCOMPARE(rowRemovedSpy.front().front().toModelIndex(), obj1aIndex);
 
     QCOMPARE(bindingModel.rowCount(obj1aIndex), 1);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
@@ -871,10 +871,10 @@ void BindingInspectorTest::testModelRemovalAtEnd()
     QCOMPARE(bindingModel.rowCount(obj1bIndex), 0);
 
     QCOMPARE(dataChangedSpy.size(), 2);
-    QCOMPARE(dataChangedSpy.at(0).at(0).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
-    QCOMPARE(dataChangedSpy.at(0).at(1).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
-    QCOMPARE(dataChangedSpy.at(1).at(0).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn)); // depth changed
-    QCOMPARE(dataChangedSpy.at(1).at(1).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
+    QCOMPARE(dataChangedSpy.at(0).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
+    QCOMPARE(dataChangedSpy.at(0).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
+    QCOMPARE(dataChangedSpy.at(1).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn)); // depth changed
+    QCOMPARE(dataChangedSpy.at(1).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
 }
 
 void BindingInspectorTest::testModelRemovalInside()
@@ -910,7 +910,7 @@ void BindingInspectorTest::testModelRemovalInside()
 
     TestHelpers::waitForSpy(&rowRemovedSpy, 500);
     QCOMPARE(rowRemovedSpy.size(), 1);
-    QCOMPARE(rowRemovedSpy.front().front().value<QModelIndex>(), obj1aIndex);
+    QCOMPARE(rowRemovedSpy.front().front().toModelIndex(), obj1aIndex);
     QCOMPARE(rowRemovedSpy.front().at(1).toInt(), 0);
     QCOMPARE(rowRemovedSpy.front().at(2).toInt(), 1);
 
@@ -926,10 +926,10 @@ void BindingInspectorTest::testModelRemovalInside()
     QCOMPARE(bindingModel.rowCount(obj1dIndex), 0);
 
     QCOMPARE(dataChangedSpy.size(), 2);
-    QCOMPARE(dataChangedSpy.at(0).at(0).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
-    QCOMPARE(dataChangedSpy.at(0).at(1).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
-    QCOMPARE(dataChangedSpy.at(1).at(0).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn)); // depth changed
-    QCOMPARE(dataChangedSpy.at(1).at(1).value<QModelIndex>(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
+    QCOMPARE(dataChangedSpy.at(0).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
+    QCOMPARE(dataChangedSpy.at(0).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
+    QCOMPARE(dataChangedSpy.at(1).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn)); // depth changed
+    QCOMPARE(dataChangedSpy.at(1).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
