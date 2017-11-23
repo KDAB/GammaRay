@@ -31,6 +31,10 @@
 
 using namespace GammaRay;
 
+AbstractBindingProvider::AbstractBindingProvider()
+{
+}
+
 AbstractBindingProvider::~AbstractBindingProvider()
 {
 }
