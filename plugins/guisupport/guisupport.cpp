@@ -574,6 +574,16 @@ static QString regionToString(const QRegion &region)
     );
 }
 
+static QString imageToString(const QImage &image)
+{
+    return VariantHandler::displayString(image.size());
+}
+
+static QString pixmapToString(const QPixmap &pixmap)
+{
+    return VariantHandler::displayString(pixmap.size());
+}
+
 void GuiSupport::registerVariantHandler()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -598,8 +608,10 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QPaintEngine, PolygonDrawMode, paintengine_polygon_draw_mode_table);
 
     VariantHandler::registerStringConverter<QBrush>(brushToString);
+    VariantHandler::registerStringConverter<QImage>(imageToString);
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
     VariantHandler::registerStringConverter<QPen>(penToString);
+    VariantHandler::registerStringConverter<QPixmap>(pixmapToString);
     VariantHandler::registerStringConverter<QRegion>(regionToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
 }

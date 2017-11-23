@@ -100,7 +100,9 @@ void PaintAnalyzer::repaint()
     const auto start = m_paintBufferModel->buffer().frameStartIndex(0);
 
     // include selected row or paint all if nothing is selected
-    const auto index = m_paintBufferFilter->mapToSource(m_selectionModel->currentIndex());
+    auto index = m_paintBufferFilter->mapToSource(m_selectionModel->currentIndex());
+    if (index.parent().isValid())
+        index = index.parent();
     const auto end = index.isValid() ? index.row() + 1 : m_paintBufferModel->rowCount();
     auto depth = m_paintBufferModel->buffer().processCommands(&painter, start, start + end);
     for (; depth > 0; --depth)

@@ -26,8 +26,8 @@
        </item>
        <item>
         <widget class="GammaRay::DeferredTreeView" name="commandView">
-         <property name="rootIsDecorated">
-          <bool>false</bool>
+         <property name="indentation">
+          <number>10</number>
          </property>
          <property name="sortingEnabled">
           <bool>false</bool>

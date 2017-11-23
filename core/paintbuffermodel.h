@@ -45,7 +45,7 @@ namespace GammaRay {
 /**
  * Model that shows commands stored in a QPaintBuffer.
  */
-class PaintBufferModel : public QAbstractTableModel
+class PaintBufferModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
@@ -60,10 +60,14 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
+    QModelIndex index(int row, int column, const QModelIndex & parent) const override;
+    QModelIndex parent(const QModelIndex & child) const override;
+
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
 
 private:
+    QVariant argumentAt(const QPaintBufferCommand &cmd, int index) const;
     QString argumentDisplayString(const QPaintBufferCommand &cmd) const;
     QVariant argumentDecoration(const QPaintBufferCommand &cmd) const;
 

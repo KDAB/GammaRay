@@ -32,6 +32,9 @@
 #include <core/varianthandler.h>
 
 #include <common/metatypedeclarations.h>
+
+#include <limits>
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Qt::BGMode)
 Q_DECLARE_METATYPE(Qt::ClipOperation)
@@ -42,60 +45,85 @@ Q_DECLARE_METATYPE(Qt::ClipOperation)
 
 using namespace GammaRay;
 
+static const char* cmd_argument_names[] = {
+    "position", // DrawText
+    "text",
+    "font",
+    "position", // DrawImagePos
+    "image",
+    "target", // DrawImageRect
+    "image",
+    "source",
+    "position", // DrawPixmapPos
+    "pixmap",
+    "target", // DrawPixmapRect
+    "pixmap",
+    "source",
+    "rectangle", // DrawTiledPixmap
+    "pixmap",
+    "position",
+};
+
 struct cmd_t {
     QPaintBufferPrivate::Command cmd;
     const char *name;
+    int argumentCount;
+    int argumentName;
 };
 
-#define CMD(cmd) { QPaintBufferPrivate::Cmd_ ## cmd, #cmd }
+#define CMD(cmd) QPaintBufferPrivate::Cmd_ ## cmd, #cmd
 
 static const cmd_t cmdTypes[] = {
-    CMD(Save),
-    CMD(Restore),
-    CMD(SetBrush),
-    CMD(SetBrushOrigin),
-    CMD(SetClipEnabled),
-    CMD(SetCompositionMode),
-    CMD(SetOpacity),
-    CMD(SetPen),
-    CMD(SetRenderHints),
-    CMD(SetTransform),
-    CMD(SetBackgroundMode),
-    CMD(ClipPath),
-    CMD(ClipRect),
-    CMD(ClipRegion),
-    CMD(ClipVectorPath),
-    CMD(DrawVectorPath),
-    CMD(FillVectorPath),
-    CMD(StrokeVectorPath),
-    CMD(DrawConvexPolygonF),
-    CMD(DrawConvexPolygonI),
-    CMD(DrawEllipseF),
-    CMD(DrawEllipseI),
-    CMD(DrawLineF),
-    CMD(DrawLineI),
-    CMD(DrawPath),
-    CMD(DrawPointsF),
-    CMD(DrawPointsI),
-    CMD(DrawPolygonF),
-    CMD(DrawPolygonI),
-    CMD(DrawPolylineF),
-    CMD(DrawPolylineI),
-    CMD(DrawRectF),
-    CMD(DrawRectI),
-    CMD(FillRectBrush),
-    CMD(FillRectColor),
-    CMD(DrawText),
-    CMD(DrawTextItem),
-    CMD(DrawImagePos),
-    CMD(DrawImageRect),
-    CMD(DrawPixmapPos),
-    CMD(DrawPixmapRect),
-    CMD(DrawTiledPixmap),
-    CMD(SystemStateChanged),
-    CMD(Translate),
-    CMD(DrawStaticText)
+    { CMD(Save), 0, 0 },
+    { CMD(Restore), 0, 0 },
+    { CMD(SetBrush), 0, 0 },
+    { CMD(SetBrushOrigin), 0, 0 },
+    { CMD(SetClipEnabled), 0, 0 },
+    { CMD(SetCompositionMode), 0, 0 },
+    { CMD(SetOpacity), 0, 0 },
+    { CMD(SetPen), 0, 0 },
+    { CMD(SetRenderHints), 0, 0 },
+    { CMD(SetTransform), 0, 0 },
+    { CMD(SetBackgroundMode), 0, 0 },
+    { CMD(ClipPath), 0, 0 },
+    { CMD(ClipRect), 0, 0 },
+    { CMD(ClipRegion), 0, 0 },
+    { CMD(ClipVectorPath), 0, 0 },
+    { CMD(DrawVectorPath), 0, 0 },
+    { CMD(FillVectorPath), 0, 0 },
+    { CMD(StrokeVectorPath), 0, 0 },
+    { CMD(DrawConvexPolygonF), 0, 0 },
+    { CMD(DrawConvexPolygonI), 0, 0 },
+    { CMD(DrawEllipseF), 0, 0 },
+    { CMD(DrawEllipseI), 0, 0 },
+    { CMD(DrawLineF), 0, 0 },
+    { CMD(DrawLineI), 0, 0 },
+    { CMD(DrawPath), 0, 0 },
+    { CMD(DrawPointsF), 0, 0 },
+    { CMD(DrawPointsI), 0, 0 },
+    { CMD(DrawPolygonF), 0, 0 },
+    { CMD(DrawPolygonI), 0, 0 },
+    { CMD(DrawPolylineF), 0, 0 },
+    { CMD(DrawPolylineI), 0, 0 },
+    { CMD(DrawRectF), 0, 0 },
+    { CMD(DrawRectI), 0, 0 },
+    { CMD(FillRectBrush), 0, 0 },
+    { CMD(FillRectColor), 0, 0 },
+    { CMD(DrawText), 3, 0 },
+    { CMD(DrawTextItem), 0, 0 },
+    { CMD(DrawImagePos), 2, 3 },
+    { CMD(DrawImageRect), 3, 5 },
+    { CMD(DrawPixmapPos), 2, 8 },
+    { CMD(DrawPixmapRect), 3, 10 },
+    { CMD(DrawTiledPixmap), 3, 13 },
+    { CMD(SystemStateChanged), 0, 0 },
+    { CMD(Translate), 0, 0 },
+    { CMD(DrawStaticText), 0, 0 }
 };
+
+#undef CMD
+
+static const int TopLevelId = std::numeric_limits<int>::max();
 
 class PaintBufferPrivacyViolater : public QPainterReplayer
 {
@@ -104,7 +132,7 @@ public:
 };
 
 PaintBufferModel::PaintBufferModel(QObject *parent)
-    : QAbstractTableModel(parent)
+    : QAbstractItemModel(parent)
     , m_privateBuffer(nullptr)
 {
 }
@@ -147,6 +175,55 @@ static QString vectorPathToString(QPaintBufferPrivate *data, const QPaintBufferC
     return PaintBufferModel::tr("control rect: %1, elements: %2").arg(
         VariantHandler::displayString(path.controlPointRect()),
         QString::number(path.elementCount()));
+}
+
+QVariant PaintBufferModel::argumentAt(const QPaintBufferCommand& cmd, int index) const
+{
+    switch (cmd.id) {
+        case QPaintBufferPrivate::Cmd_DrawText:
+            switch (index) {
+                case 0:
+                    return QPointF(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1));
+                case 1:
+                    return m_privateBuffer->variants.at(cmd.offset).value<QList<QVariant> >().at(1);
+                case 2:
+                    return m_privateBuffer->variants.at(cmd.offset).value<QList<QVariant> >().at(0);
+            }
+        case QPaintBufferPrivate::Cmd_DrawImagePos:
+        case QPaintBufferPrivate::Cmd_DrawPixmapPos:
+            switch (index) {
+                case 0:
+                    return QPointF(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra+1));
+                case 1:
+                    return m_privateBuffer->variants.at(cmd.offset);
+            }
+        case QPaintBufferPrivate::Cmd_DrawImageRect:
+        case QPaintBufferPrivate::Cmd_DrawPixmapRect:
+            switch (index) {
+                case 0:
+                    return QRectF(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1),
+                                  m_privateBuffer->floats.at(cmd.extra + 2), m_privateBuffer->floats.at(cmd.extra + 3));
+                case 1:
+                    return m_privateBuffer->variants.at(cmd.offset);
+                case 2:
+                    return QRectF(m_privateBuffer->floats.at(cmd.extra + 4), m_privateBuffer->floats.at(cmd.extra + 5),
+                                  m_privateBuffer->floats.at(cmd.extra + 6), m_privateBuffer->floats.at(cmd.extra + 7));
+
+            }
+        case QPaintBufferPrivate::Cmd_DrawTiledPixmap:
+            switch (index) {
+                case 0:
+                    return QRectF(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1),
+                                  m_privateBuffer->floats.at(cmd.extra + 2), m_privateBuffer->floats.at(cmd.extra + 3));
+                case 1:
+                    return m_privateBuffer->variants.at(cmd.offset);
+                case 2:
+                    return QPointF(m_privateBuffer->floats.at(cmd.extra + 4), m_privateBuffer->floats.at(cmd.extra + 5));
+            }
+        default:
+            break;
+    }
+    return QVariant();
 }
 
 QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) const
@@ -239,13 +316,10 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
                 + QLatin1String(" - ") + VariantHandler::displayString(m_privateBuffer->variants.at(cmd.extra));
 
         case QPaintBufferPrivate::Cmd_DrawText:
-        {
-            QPointF pos(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1));
-            const auto vl = m_privateBuffer->variants.at(cmd.offset).value<QList<QVariant> >();
             return tr("position: %1, text: \"%2\", font: %3").arg(
-                VariantHandler::displayString(pos),
-                vl.at(1).toString(), VariantHandler::displayString(vl.at(0)));
-        }
+                VariantHandler::displayString(argumentAt(cmd, 0)),
+                VariantHandler::displayString(argumentAt(cmd, 1)),
+                VariantHandler::displayString(argumentAt(cmd, 2)));
         case QPaintBufferPrivate::Cmd_DrawTextItem:
         {
             QPointF pos(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1));
@@ -259,23 +333,16 @@ QString PaintBufferModel::argumentDisplayString(const QPaintBufferCommand &cmd) 
 
         case QPaintBufferPrivate::Cmd_DrawImagePos:
         case QPaintBufferPrivate::Cmd_DrawPixmapPos:
-            return VariantHandler::displayString(QPointF(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra+1)));
+            return VariantHandler::displayString(argumentAt(cmd, 0));
         case QPaintBufferPrivate::Cmd_DrawImageRect:
         case QPaintBufferPrivate::Cmd_DrawPixmapRect:
-        {
-            QRectF r(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1),
-                     m_privateBuffer->floats.at(cmd.extra + 2), m_privateBuffer->floats.at(cmd.extra + 3));
-            QRectF sr(m_privateBuffer->floats.at(cmd.extra + 4), m_privateBuffer->floats.at(cmd.extra + 5),
-                      m_privateBuffer->floats.at(cmd.extra + 6), m_privateBuffer->floats.at(cmd.extra + 7));
-            return tr("%1 source: %2").arg(VariantHandler::displayString(r), VariantHandler::displayString(sr));
-        }
+            return tr("%1 source: %2").arg(
+                VariantHandler::displayString(argumentAt(cmd, 0)),
+                VariantHandler::displayString(argumentAt(cmd, 2)));
         case QPaintBufferPrivate::Cmd_DrawTiledPixmap:
-        {
-            QRectF r(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1),
-                     m_privateBuffer->floats.at(cmd.extra + 2), m_privateBuffer->floats.at(cmd.extra + 3));
-            QPointF offset(m_privateBuffer->floats.at(cmd.extra + 4), m_privateBuffer->floats.at(cmd.extra + 5));
-            return tr("%1 offset: %2").arg(VariantHandler::displayString(r), VariantHandler::displayString(offset));
-        }
+            return tr("%1 offset: %2").arg(
+                VariantHandler::displayString(argumentAt(cmd, 0)),
+                VariantHandler::displayString(argumentAt(cmd, 2)));
 
         case QPaintBufferPrivate::Cmd_SystemStateChanged:
             return VariantHandler::displayString(m_privateBuffer->variants.at(cmd.offset));
@@ -317,21 +384,32 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || !m_privateBuffer)
         return QVariant();
 
-    const auto cmd = m_privateBuffer->commands.at(index.row());
-    if (role == Qt::DisplayRole) {
-        switch (index.column()) {
-        case 0:
-            return cmdTypes[cmd.id].name;
-        case 1:
-            return argumentDisplayString(cmd);
+    if (!index.parent().isValid()) {
+        const auto cmd = m_privateBuffer->commands.at(index.row());
+        if (role == Qt::DisplayRole) {
+            switch (index.column()) {
+            case 0:
+                return cmdTypes[cmd.id].name;
+            case 1:
+                return argumentDisplayString(cmd);
+            }
+        } else if (role == Qt::DecorationRole) {
+            if (index.column() == 1) {
+                return argumentDecoration(cmd);
+            }
+        } else if (role == Qt::EditRole && index.column() == 1) { // for fancy matrix rendering in the client
+            if (cmd.id == QPaintBufferPrivate::Cmd_SetTransform)
+                return m_privateBuffer->variants.at(cmd.offset);
         }
-    } else if (role == Qt::DecorationRole) {
-        if (index.column() == 1) {
-            return argumentDecoration(cmd);
+    } else {
+        const auto cmd = m_privateBuffer->commands.at(index.internalId());
+        switch (role) {
+            case Qt::DisplayRole:
+                if (index.column() == 0)
+                    return cmd_argument_names[cmdTypes[cmd.id].argumentName + index.row()];
+                else if (index.column() == 1)
+                    return VariantHandler::displayString(argumentAt(cmd, index.row()));
         }
-    } else if (role == Qt::EditRole && index.column() == 1) { // for fancy matrix rendering in the client
-        if (cmd.id == QPaintBufferPrivate::Cmd_SetTransform)
-            return m_privateBuffer->variants.at(cmd.offset);
     }
 
     return QVariant();
@@ -345,9 +423,27 @@ int PaintBufferModel::columnCount(const QModelIndex &parent) const
 
 int PaintBufferModel::rowCount(const QModelIndex &parent) const
 {
-    if (!m_privateBuffer || parent.isValid())
+    if (!m_privateBuffer)
         return 0;
+    if (parent.isValid()) {
+        const auto cmd = m_privateBuffer->commands.at(parent.row());
+        return cmdTypes[cmd.id].argumentCount;
+    }
     return m_privateBuffer->commands.size();
+}
+
+QModelIndex PaintBufferModel::index(int row, int column, const QModelIndex& parent) const
+{
+    if (!parent.isValid())
+        return createIndex(row, column, TopLevelId);
+    return createIndex(row, column, parent.row());
+}
+
+QModelIndex PaintBufferModel::parent(const QModelIndex& child) const
+{
+    if (child.internalId() == TopLevelId)
+        return QModelIndex();
+    return createIndex(child.internalId(), 0, TopLevelId);
 }
 
 QVariant PaintBufferModel::headerData(int section, Qt::Orientation orientation, int role) const
