@@ -256,6 +256,10 @@ QString VariantHandler::displayString(const QVariant &value)
     }
 
     // types with dynamic type ids
+    if (value.userType() == qMetaTypeId<uchar>()) {
+        const auto v = value.value<uchar>();
+        return QString::number(v) + QLatin1String(" '") + QChar(v) + QLatin1Char('\'');
+    }
     if (value.userType() == qMetaTypeId<QMargins>()) {
         const QMargins margins = value.value<QMargins>();
         return qApp->translate("GammaRay::VariantHandler", "left: %1, top: %2, right: %3, bottom: %4")

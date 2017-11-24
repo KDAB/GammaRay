@@ -90,7 +90,7 @@ struct add_const_ref {
 ///@endcond
 
 /** @brief Template-ed implementation of MetaProperty for member properties. */
-template<typename Class, typename GetterReturnType, typename SetterArgType = GetterReturnType>
+template<typename Class, typename GetterReturnType, typename SetterArgType = GetterReturnType, typename GetterSignature = GetterReturnType (Class::*)() const>
 class MetaPropertyImpl : public MetaProperty
 {
 private:
@@ -98,7 +98,7 @@ private:
 
 public:
     inline MetaPropertyImpl(
-        const char *name, GetterReturnType(Class::*getter)() const,
+        const char *name, GetterSignature getter,
         void(Class::*setter)(SetterArgType) = nullptr)
         : MetaProperty(name)
         , m_getter(getter)
@@ -134,7 +134,7 @@ public:
     }
 
 private:
-    GetterReturnType (Class::*m_getter)() const;
+    GetterSignature m_getter;
     void (Class::*m_setter)(SetterArgType);
 };
 
@@ -227,6 +227,13 @@ namespace MetaPropertyFactory
     inline MetaProperty* makeProperty(const char *name, GetterReturnType(Class::*getter)() const)
     {
         return new MetaPropertyImpl<Class, GetterReturnType>(name, getter, nullptr);
+    }
+
+    // non-const getters...
+    template <typename Class, typename GetterReturnType>
+    inline MetaProperty* makePropertyNonConst(const char *name, GetterReturnType(Class::*getter)())
+    {
+        return new MetaPropertyImpl<Class, GetterReturnType, GetterReturnType, GetterReturnType (Class::*)()>(name, getter, nullptr);
     }
 
     template <typename GetterReturnType>

@@ -33,6 +33,7 @@
 #include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/util.h>
 #include <core/varianthandler.h>
 
 #include <common/metatypedeclarations.h>
@@ -44,6 +45,8 @@
 #include <QOpenGLShaderProgram>
 #include <QScreen>
 #include <QWindow>
+
+#include <qpa/qplatformpixmap.h>
 #endif
 
 #include <QIcon>
@@ -63,6 +66,9 @@ Q_DECLARE_METATYPE(QFont::HintingPreference)
 Q_DECLARE_METATYPE(QFont::SpacingType)
 Q_DECLARE_METATYPE(QFont::Style)
 Q_DECLARE_METATYPE(QFont::StyleHint)
+Q_DECLARE_METATYPE(QImage*)
+Q_DECLARE_METATYPE(QPlatformPixmap*)
+Q_DECLARE_METATYPE(QPlatformPixmap::ClassId)
 Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
 Q_DECLARE_METATYPE(QSurfaceFormat::FormatOptions)
@@ -72,6 +78,17 @@ Q_DECLARE_METATYPE(Qt::BrushStyle)
 Q_DECLARE_METATYPE(Qt::PenStyle)
 Q_DECLARE_METATYPE(Qt::PenCapStyle)
 Q_DECLARE_METATYPE(Qt::PenJoinStyle)
+#endif
+Q_DECLARE_METATYPE(QImage::Format)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+Q_DECLARE_METATYPE(QPixelFormat)
+Q_DECLARE_METATYPE(QPixelFormat::AlphaUsage)
+Q_DECLARE_METATYPE(QPixelFormat::AlphaPosition)
+Q_DECLARE_METATYPE(QPixelFormat::AlphaPremultiplied)
+Q_DECLARE_METATYPE(QPixelFormat::ByteOrder)
+Q_DECLARE_METATYPE(QPixelFormat::ColorModel)
+Q_DECLARE_METATYPE(QPixelFormat::TypeInterpretation)
+Q_DECLARE_METATYPE(QPixelFormat::YUVLayout)
 #endif
 
 GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
@@ -129,21 +146,57 @@ void GuiSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT0(QPaintDevice);
     MO_ADD_PROPERTY_RO(QPaintDevice, colorCount);
+    MO_ADD_PROPERTY_RO(QPaintDevice, depth);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_PROPERTY_RO(QPaintDevice, devicePixelRatio);
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     MO_ADD_PROPERTY_RO(QPaintDevice, devicePixelRatioF);
 #endif
+    MO_ADD_PROPERTY_RO(QPaintDevice, height);
     MO_ADD_PROPERTY_RO(QPaintDevice, heightMM);
     MO_ADD_PROPERTY_RO(QPaintDevice, logicalDpiX);
     MO_ADD_PROPERTY_RO(QPaintDevice, logicalDpiY);
     MO_ADD_PROPERTY_RO(QPaintDevice, paintingActive);
     MO_ADD_PROPERTY_RO(QPaintDevice, physicalDpiX);
     MO_ADD_PROPERTY_RO(QPaintDevice, physicalDpiY);
+    MO_ADD_PROPERTY_RO(QPaintDevice, width);
     MO_ADD_PROPERTY_RO(QPaintDevice, widthMM);
 
+    MO_ADD_METAOBJECT1(QImage, QPaintDevice);
+    MO_ADD_PROPERTY_RO(QImage, allGray);
+    MO_ADD_PROPERTY_RO(QImage, bitPlaneCount);
+    MO_ADD_PROPERTY_RO(QImage, byteCount);
+    MO_ADD_PROPERTY_RO(QImage, bytesPerLine);
+    MO_ADD_PROPERTY_RO(QImage, cacheKey);
+    MO_ADD_PROPERTY   (QImage, dotsPerMeterX, setDotsPerMeterX);
+    MO_ADD_PROPERTY   (QImage, dotsPerMeterY, setDotsPerMeterY);
+    MO_ADD_PROPERTY_RO(QImage, format);
+    MO_ADD_PROPERTY_RO(QImage, hasAlphaChannel);
+    MO_ADD_PROPERTY_RO(QImage, isGrayscale);
+    MO_ADD_PROPERTY_RO(QImage, isNull);
+    MO_ADD_PROPERTY   (QImage, offset, setOffset);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    MO_ADD_PROPERTY_RO(QImage, pixelFormat);
+#endif
+    MO_ADD_PROPERTY_RO(QImage, rect);
+    MO_ADD_PROPERTY_RO(QImage, size);
+    MO_ADD_PROPERTY_RO(QImage, textKeys);
+
+    MO_ADD_METAOBJECT1(QPixmap, QPaintDevice);
+    MO_ADD_PROPERTY_RO(QPixmap, cacheKey);
+    MO_ADD_PROPERTY_RO(QPixmap, hasAlpha);
+    MO_ADD_PROPERTY_RO(QPixmap, hasAlphaChannel);
+    MO_ADD_PROPERTY_RO(QPixmap, isNull);
+    MO_ADD_PROPERTY_RO(QPixmap, isQBitmap);
+    MO_ADD_PROPERTY_RO(QPixmap, rect);
+    MO_ADD_PROPERTY_RO(QPixmap, size);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    MO_ADD_PROPERTY_RO(QPixmap, handle);
+    MO_ADD_METAOBJECT0(QPlatformPixmap);
+    MO_ADD_PROPERTY_NC(QPlatformPixmap, buffer);
+    MO_ADD_PROPERTY_RO(QPlatformPixmap, classId);
+
     qRegisterMetaType<QScreen *>();
 
     MO_ADD_METAOBJECT0(QSurface);
@@ -293,6 +346,31 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY(QPen, style, setStyle);
     MO_ADD_PROPERTY(QPen, width, setWidth);
     MO_ADD_PROPERTY(QPen, widthF, setWidthF);
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    MO_ADD_METAOBJECT0(QPixelFormat);
+    MO_ADD_PROPERTY_RO(QPixelFormat, alphaPosition);
+    MO_ADD_PROPERTY_RO(QPixelFormat, alphaSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, alphaUsage);
+    MO_ADD_PROPERTY_RO(QPixelFormat, bitsPerPixel);
+    MO_ADD_PROPERTY_RO(QPixelFormat, blackSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, blueSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, brightnessSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, byteOrder);
+    MO_ADD_PROPERTY_RO(QPixelFormat, channelCount);
+    MO_ADD_PROPERTY_RO(QPixelFormat, colorModel);
+    MO_ADD_PROPERTY_RO(QPixelFormat, cyanSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, greenSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, hueSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, lightnessSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, magentaSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, premultiplied);
+    MO_ADD_PROPERTY_RO(QPixelFormat, redSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, saturationSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, typeInterpretation);
+    MO_ADD_PROPERTY_RO(QPixelFormat, yellowSize);
+    MO_ADD_PROPERTY_RO(QPixelFormat, yuvLayout);
 #endif
 }
 
@@ -524,6 +602,117 @@ static const MetaEnum::Value<QPaintEngine::PolygonDrawMode> paintengine_polygon_
 };
 #undef E
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#define E(x) { QPlatformPixmap:: x, #x }
+static const MetaEnum::Value<QPlatformPixmap::ClassId> platformpixmap_classid_table[] = {
+    E(RasterClass),
+    E(DirectFBClass),
+    E(BlitterClass),
+    E(Direct2DClass),
+    E(CustomClass)
+};
+#undef E
+#endif
+
+#define E(x) { QImage:: x, #x }
+static const MetaEnum::Value<QImage::Format> image_format_table[] = {
+    E(Format_Invalid),
+    E(Format_Mono),
+    E(Format_MonoLSB),
+    E(Format_Indexed8),
+    E(Format_RGB32),
+    E(Format_ARGB32),
+    E(Format_ARGB32_Premultiplied),
+    E(Format_RGB16),
+    E(Format_ARGB8565_Premultiplied),
+    E(Format_RGB666),
+    E(Format_ARGB6666_Premultiplied),
+    E(Format_RGB555),
+    E(Format_ARGB8555_Premultiplied),
+    E(Format_RGB888),
+    E(Format_RGB444),
+    E(Format_ARGB4444_Premultiplied),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+    E(Format_RGBX8888),
+    E(Format_RGBA8888),
+    E(Format_RGBA8888_Premultiplied),
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    E(Format_BGR30),
+    E(Format_A2BGR30_Premultiplied),
+    E(Format_RGB30),
+    E(Format_A2RGB30_Premultiplied),
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    E(Format_Alpha8),
+    E(Format_Grayscale8)
+#endif
+};
+#undef E
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+#define E(x) { QPixelFormat:: x, #x }
+static const MetaEnum::Value<QPixelFormat::AlphaPosition> pixelformat_alphaposition_table[] = {
+    E(AtBeginning),
+    E(AtEnd)
+};
+
+static const MetaEnum::Value<QPixelFormat::AlphaPremultiplied> pixelformat_alphapremultiplied_table[] = {
+    E(NotPremultiplied),
+    E(Premultiplied)
+};
+
+static const MetaEnum::Value<QPixelFormat::AlphaUsage> pixelformat_alphausage_table[] = {
+    E(UsesAlpha),
+    E(IgnoresAlpha)
+};
+
+static const MetaEnum::Value<QPixelFormat::ByteOrder> pixelformat_byteorder_table[] = {
+    E(LittleEndian),
+    E(BigEndian),
+    E(CurrentSystemEndian)
+};
+
+static const MetaEnum::Value<QPixelFormat::ColorModel> pixelformat_colormodel_table[] = {
+    E(RGB),
+    E(BGR),
+    E(Indexed),
+    E(Grayscale),
+    E(CMYK),
+    E(HSL),
+    E(HSV),
+    E(YUV),
+    E(Alpha)
+};
+
+static const MetaEnum::Value<QPixelFormat::TypeInterpretation> pixelformat_typeinterpretation_table[] = {
+    E(UnsignedInteger),
+    E(UnsignedShort),
+    E(UnsignedByte),
+    E(FloatingPoint)
+};
+
+static const MetaEnum::Value<QPixelFormat::YUVLayout> pixelformat_yuvlayout_table[] = {
+    E(YUV444),
+    E(YUV422),
+    E(YUV411),
+    E(YUV420P),
+    E(YUV420SP),
+    E(YV12),
+    E(UYVY),
+    E(YUYV),
+    E(NV12),
+    E(NV21),
+    E(IMC1),
+    E(IMC2),
+    E(IMC3),
+    E(IMC4),
+    E(Y8),
+    E(Y16)
+};
+#undef E
+#endif
+
 static QString brushToString(const QBrush &b)
 {
     return VariantHandler::displayString(b.color()) + QLatin1String(", ") + EnumUtil::enumToString(QVariant::fromValue(b.style()));
@@ -603,6 +792,7 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QFont, StyleHint, font_style_hint_table);
 #endif
 
+    ER_REGISTER_ENUM(QImage, Format, image_format_table);
     ER_REGISTER_ENUM(QPainter, CompositionMode, painter_composition_mode_table);
     ER_REGISTER_FLAGS(QPainter, RenderHints, painter_render_hint_table);
     ER_REGISTER_ENUM(QPaintEngine, PolygonDrawMode, paintengine_polygon_draw_mode_table);
@@ -614,6 +804,21 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QPixmap>(pixmapToString);
     VariantHandler::registerStringConverter<QRegion>(regionToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    ER_REGISTER_ENUM(QPlatformPixmap, ClassId, platformpixmap_classid_table);
+    VariantHandler::registerStringConverter<QImage*>(Util::addressToString);
+    VariantHandler::registerStringConverter<QPlatformPixmap*>(Util::addressToString);
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
+    ER_REGISTER_ENUM(QPixelFormat, AlphaPosition, pixelformat_alphaposition_table);
+    ER_REGISTER_ENUM(QPixelFormat, AlphaPremultiplied, pixelformat_alphapremultiplied_table);
+    ER_REGISTER_ENUM(QPixelFormat, AlphaUsage, pixelformat_alphausage_table);
+    ER_REGISTER_ENUM(QPixelFormat, ByteOrder, pixelformat_byteorder_table);
+    ER_REGISTER_ENUM(QPixelFormat, ColorModel, pixelformat_colormodel_table);
+    ER_REGISTER_ENUM(QPixelFormat, TypeInterpretation, pixelformat_typeinterpretation_table);
+    ER_REGISTER_ENUM(QPixelFormat, YUVLayout, pixelformat_yuvlayout_table);
+#endif
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)

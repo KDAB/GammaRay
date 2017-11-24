@@ -134,6 +134,10 @@ private:
 #define MO_ADD_PROPERTY_RO(Class, Getter) \
     mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty(#Getter, &Class::Getter));
 
+/** Register a non-const read-only property for class @p Class. */
+#define MO_ADD_PROPERTY_NC(Class, Getter) \
+    mo->addProperty(GammaRay::MetaPropertyFactory::makePropertyNonConst(#Getter, &Class::Getter));
+
 #if !defined(Q_CC_MSVC) || _MSC_VER >= 1900 //krazy:exclude=cpp
 /** Register a read/write property for class @p Class.
  *  Use this for overloaded getters or setters that would confuse older MSVC versions.
