@@ -50,7 +50,7 @@ set_target_properties(gammaray_launcher PROPERTIES
 
 gammaray_target_relocatable_interfaces(gammaray_launcher_ipaths)
 target_include_directories(gammaray_launcher PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_launcher_ipaths}>)
-target_link_libraries(gammaray_launcher LINK_PUBLIC ${QT_QTCORE_LIBRARIES} LINK_PRIVATE gammaray_common ${QT_QTNETWORK_LIBRARIES} ${DL_LIBRARY})
+target_link_libraries(gammaray_launcher LINK_PUBLIC ${QT_QTCORE_LIBRARIES} LINK_PRIVATE gammaray_common ${QT_QTNETWORK_LIBRARIES} ${CMAKE_DL_LIBS})
 if(HAVE_QT_WIDGETS)
   target_link_libraries(gammaray_launcher LINK_PRIVATE ${QT_QTGUI_LIBRARIES})
 endif()

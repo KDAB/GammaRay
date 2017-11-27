@@ -84,7 +84,7 @@ else()
     LINK_PRIVATE ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES}
   )
 endif()
-target_link_libraries(gammaray_common LINK_PRIVATE gammaray_kitemmodels ${DL_LIBRARY})
+target_link_libraries(gammaray_common LINK_PRIVATE gammaray_kitemmodels ${CMAKE_DL_LIBS})
 
 
 set(gammaray_common_internal_srcs

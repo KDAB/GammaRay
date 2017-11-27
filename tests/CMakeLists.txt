@@ -195,7 +195,7 @@ gammaray_add_test(sourcelocationtest sourcelocationtest.cpp)
 target_link_libraries(sourcelocationtest ${QT_QTGUI_LIBRARIES} gammaray_common)
 
 gammaray_add_test(selflocatortest selflocatortest.cpp)
-target_link_libraries(selflocatortest ${QT_QTGUI_LIBRARIES} gammaray_common ${DL_LIBRARY})
+target_link_libraries(selflocatortest ${QT_QTGUI_LIBRARIES} gammaray_common ${CMAKE_DL_LIBS})
 
 gammaray_add_test(executiontest executiontest.cpp)
 target_link_libraries(executiontest ${QT_QTGUI_LIBRARIES} gammaray_core)

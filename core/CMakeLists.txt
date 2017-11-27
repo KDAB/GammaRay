@@ -126,7 +126,7 @@ target_include_directories(gammaray_core SYSTEM PRIVATE
 )
 target_link_libraries(gammaray_core
   LINK_PUBLIC gammaray_common
-  LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels ${DL_LIBRARY}
+  LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels ${CMAKE_DL_LIBS}
 )
 set_target_properties(gammaray_core PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
