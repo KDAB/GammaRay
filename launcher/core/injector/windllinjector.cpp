@@ -154,6 +154,7 @@ bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*
     QProcess p;
     p.setProcessChannelMode(QProcess::ForwardedChannels);
     p.start(application, args);
+    p.waitForFinished(-1);
     if (p.error() != QProcess::UnknownError){
         qDebug() << "Injection failed:" << application << args << p.errorString();
         return false;
