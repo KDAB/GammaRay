@@ -1067,11 +1067,30 @@ static const MetaEnum::Value<QSGRenderNode::RenderingFlag> render_node_rendering
 #undef E
 #endif
 
+static QString anchorLineToString(const QQuickAnchorLine &line)
+{
+    if (!line.item || line.anchorLine == QQuickAnchors::InvalidAnchor)
+        return QStringLiteral("<none>");
+    const auto s = Util::shortDisplayString(line.item);
+    switch (line.anchorLine) {
+        case QQuickAnchors::LeftAnchor: return s + QStringLiteral(".left");
+        case QQuickAnchors::RightAnchor: return s + QStringLiteral(".right");
+        case QQuickAnchors::TopAnchor: return s + QStringLiteral(".top");
+        case QQuickAnchors::BottomAnchor: return s + QStringLiteral(".bottom");
+        case QQuickAnchors::HCenterAnchor: return s + QStringLiteral(".horizontalCenter");
+        case QQuickAnchors::VCenterAnchor: return s + QStringLiteral(".verticalCenter");
+        case QQuickAnchors::BaselineAnchor: return s + QStringLiteral(".baseline");
+        default: break;
+    }
+    return s;
+}
+
 void QuickInspector::registerVariantHandlers()
 {
     VariantHandler::registerStringConverter<QQuickItem::Flags>(qQuickItemFlagsToString);
     VariantHandler::registerStringConverter<QQuickPaintedItem::PerformanceHints>(
         qQuickPaintedItemPerformanceHintsToString);
+    VariantHandler::registerStringConverter<QQuickAnchorLine>(anchorLineToString);
     VariantHandler::registerStringConverter<QSGNode *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGBasicGeometryNode *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGGeometryNode *>(Util::addressToString);
