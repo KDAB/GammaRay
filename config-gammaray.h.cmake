@@ -1,5 +1,3 @@
-#include <qglobal.h>
-
 #if !defined(CONFIG_GAMMARAY_H)
 #define CONFIG_GAMMARAY_H
 

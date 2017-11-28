@@ -26,15 +26,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <windows.h>
+#include <config-gammaray.h>
 
+#include <windows.h>
 #include <string>
 
 typedef void (*gammaray_probe_inject)(void);
 
 namespace {
-static const std::wstring LOADER_NAME = L"gammaray_probe_win";
-static const std::wstring PROBE_NAME = L"gammaray_probe";
+static const std::wstring LOADER_NAME = L"gammaray_winloader";
+static const std::string PROBE_NAME = GAMMARAY_PROBE_BASENAME;
 }
 
 extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpvReserved*/)
@@ -48,8 +49,9 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpv
             OutputDebugStringW(L"GammaRay: GetModuleFileNameW failed");
             break;
         }
+        const std::wstring probeName(PROBE_NAME.cbegin(), PROBE_NAME.cend());
         std::wstring path(buffer, size);
-        path.replace(path.find(LOADER_NAME), LOADER_NAME.length(), PROBE_NAME);
+        path.replace(path.find(LOADER_NAME), LOADER_NAME.length(), probeName);
 
         HMODULE probe = GetModuleHandleW(path.c_str());
         if (!probe) {
