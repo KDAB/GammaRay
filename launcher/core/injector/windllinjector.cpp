@@ -30,6 +30,7 @@
 #include "windllinjector.h"
 #include "basicwindllinjector.h"
 
+#include <config-gammaray.h>
 #include <common/paths.h>
 #include <common/commonutils.h>
 
@@ -204,7 +205,8 @@ void WinDllInjector::processExited(int exitCode)
 QString WinDllInjector::fixProbeDllPath(const QString &probeDll)
 {
     QString dllPath = QDir::toNativeSeparators(probeDll);
-    dllPath.replace(QLatin1String("gammaray_probe"), QLatin1String("gammaray_probe_win"));
+    dllPath.replace(QLatin1String(GAMMARAY_PROBE_BASENAME), QLatin1String("gammaray_winloader"));
+    Q_ASSERT_X(QFileInfo::exists(dllPath), Q_FUNC_INFO, qPrintable(QString(QLatin1String("%1 does not exists!")).arg(dllPath)));
     return dllPath;
 }
 
