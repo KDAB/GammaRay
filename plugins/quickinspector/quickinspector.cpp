@@ -1069,8 +1069,13 @@ static const MetaEnum::Value<QSGRenderNode::RenderingFlag> render_node_rendering
 
 static QString anchorLineToString(const QQuickAnchorLine &line)
 {
-    if (!line.item || line.anchorLine == QQuickAnchors::InvalidAnchor)
+    if (!line.item
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+        || line.anchorLine == QQuickAnchors::InvalidAnchor
+#endif
+    ) {
         return QStringLiteral("<none>");
+    }
     const auto s = Util::shortDisplayString(line.item);
     switch (line.anchorLine) {
         case QQuickAnchors::LeftAnchor: return s + QStringLiteral(".left");
