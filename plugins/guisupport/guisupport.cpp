@@ -682,7 +682,9 @@ static const MetaEnum::Value<QPixelFormat::ColorModel> pixelformat_colormodel_ta
     E(HSL),
     E(HSV),
     E(YUV),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     E(Alpha)
+#endif
 };
 
 static const MetaEnum::Value<QPixelFormat::TypeInterpretation> pixelformat_typeinterpretation_table[] = {
