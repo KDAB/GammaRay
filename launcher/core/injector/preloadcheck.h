@@ -27,10 +27,10 @@
 #ifndef GAMMARAY_PRELOADCHECK
 #define GAMMARAY_PRELOADCHECK
 
-#if !defined Q_OS_WIN && !defined Q_OS_MAC
-
 #include <QCoreApplication>
 #include <QString>
+
+#if !defined Q_OS_WIN && !defined Q_OS_MAC
 
 namespace GammaRay {
 /**
