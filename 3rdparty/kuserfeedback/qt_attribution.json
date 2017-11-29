@@ -1,0 +1,15 @@
+{
+    "Id": "kuserfeedback",
+    "Name": "KUserFeedback",
+    "QDocModule": "gammaray-manual",
+    "QtUsage": "Optionally used in the GammaRay client to gather usage telemetry. Disable using -DGAMMARAY_DISABLE_FEEDBACK=ON.",
+
+    "Description": "Telemetry and targeted survey framework.",
+    "Homepage": "https://api.kde.org/frameworks/kuserfeedback/html/index.html",
+    "Version": "0.9.84",
+
+    "License": "GNU Library General Public License v2 or later",
+    "LicenseId": "LGPL-2.0",
+    "LicenseFile": "COPYING.LIB",
+    "Copyright": "Copyright (C) 2016-2017 Volker Krause"
+}

@@ -11,6 +11,9 @@ find_program(QHELPGEN_EXECUTABLE qhelpgenerator
 find_program(QDOC_EXECUTABLE qdoc
   HINTS ${QT_INSTALL_BINS}
 )
+find_program(QTATTRIBUTIONSSCANNER_EXECUTABLE qtattributionsscanner
+  HINTS ${QT_INSTALL_BINS}
+)
 
 find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf
   HINTS ${QT_INSTALL_DOCS}
@@ -22,10 +25,11 @@ find_file(QDOC_QTCORE_INDEX qtcore.index
   HINTS ${QT_INSTALL_DATA}/doc/qtcore
 )
 
-if(NOT QDOC_EXECUTABLE OR NOT QHELPGEN_EXECUTABLE OR NOT QDOC_TEMPLATE OR NOT QDOC_QTCORE_INDEX OR NOT Qt5Core_FOUND OR Qt5Core_VERSION VERSION_LESS 5.4.0)
+if(NOT QDOC_EXECUTABLE OR NOT QHELPGEN_EXECUTABLE OR NOT QDOC_TEMPLATE OR NOT QDOC_QTCORE_INDEX OR NOT QTATTRIBUTIONSSCANNER_EXECUTABLE OR NOT Qt5Core_FOUND OR Qt5Core_VERSION VERSION_LESS 5.4.0)
   message(STATUS "Unable to build user manual in qch format.")
   message(STATUS "qdoc exectuable: ${QDOC_EXECUTABLE}")
   message(STATUS "qhelpgenerator exectuable: ${QHELPGEN_EXECUTABLE}")
+  message(STATUS "qtattributionsscanner executable: ${QTATTRIBUTIONSSCANNER_EXECUTABLE}")
   message(STATUS "qdoc template (qt-html-templates-offline.qdocconf): ${QDOC_TEMPLATE}")
   message(STATUS "qdoc qtcore index (qtcore.index): ${QDOC_QTCORE_INDEX}")
   set(GAMMARAY_USER_MANUAL_BUILD False)
@@ -33,7 +37,7 @@ else()
   set(GAMMARAY_USER_MANUAL_BUILD True)
 endif()
 
-add_feature_info("User Manual creation in qch format" GAMMARAY_USER_MANUAL_BUILD "Requires qdoc, qhelpgenerator, the qdoc templates and index files, and Qt 5.4 or higher")
+add_feature_info("User Manual creation in qch format" GAMMARAY_USER_MANUAL_BUILD "Requires qdoc, qhelpgenerator, qtattributionsscanner, the qdoc templates and index files, and Qt 5.4 or higher")
 
 # Doxygen
 find_package(Doxygen)

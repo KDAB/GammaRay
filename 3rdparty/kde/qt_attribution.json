@@ -1,0 +1,18 @@
+{
+    "Id": "kitemmodels",
+    "Name": "KItemModels",
+    "QDocModule": "gammaray-manual",
+    "QtUsage": "QAbstractItemModel extensions used in various places of GammaRay.",
+
+    "Description": "Set of item models extending the Qt model-view framework.",
+    "Homepage": "https://api.kde.org/frameworks/kitemmodels/html/index.html",
+    "Version": "KF5",
+
+    "License": "GNU Library General Public License v2 or later",
+    "LicenseId": "LGPL-2.0",
+    "LicenseFile": "COPYING.LIB",
+    "Copyright": "
+        Copyright (C) 2009 Stephen Kelly <steveire@gmail.com>
+        Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net, author Stephen Kelly <stephen@kdab.com>
+    "
+}

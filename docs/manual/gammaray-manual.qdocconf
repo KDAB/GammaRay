@@ -2,7 +2,7 @@ project = "GammaRay"
 description = "GammaRay User Manual"
 url = https://doc.qt.io/GammaRay
 
-sourcedirs = .
+sourcedirs += . $$BUILDDIR
 sources.fileextensions = "*.qdoc"
 
 imagedirs = images

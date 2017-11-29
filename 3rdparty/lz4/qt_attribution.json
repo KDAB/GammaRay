@@ -1,0 +1,15 @@
+{
+    "Id": "lz4",
+    "Name": "LZ4",
+    "QDocModule": "gammaray-manual",
+    "QtUsage": "Used for compressing the GammaRay client/server communication.",
+
+    "Description": "Fast compression algorithm.",
+    "Homepage": "https://github.com/lz4/lz4",
+    "Version": "1.7",
+
+    "License": "BSD 2-clause License",
+    "LicenseId": "BSD-2-Clause",
+    "LicenseFile": "LICENSE",
+    "Copyright": "Copyright (c) 2011-2016, Yann Collet"
+}

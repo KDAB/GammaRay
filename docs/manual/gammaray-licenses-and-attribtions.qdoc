@@ -1,0 +1,32 @@
+/*
+    gammaray-licenses-and-attribtions.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage{GammaRay User Manual}
+    \page gammaray-licenses-and-attributions.html
+
+    \title Licenses and Attributions
+
+    \section1 Overview
+
+    GammaRay is available under commercial Qt Automotive Suite licenses.
+    In addition, it is available under the GNU General Public License, version 2.
+
+    Furthermore GammaRay contains third party modules under following licenses:
+
+    \generatelist{groupsbymodule attributions-gammaray-manual}
+*/
