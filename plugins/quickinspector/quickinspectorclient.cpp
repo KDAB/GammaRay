@@ -93,3 +93,16 @@ void QuickInspectorClient::analyzePainting()
 {
     Endpoint::instance()->invokeObject(objectName(), "analyzePainting");
 }
+
+void QuickInspectorClient::checkSlowMode()
+{
+    Endpoint::instance()->invokeObject(objectName(), "checkSlowMode");
+}
+
+void QuickInspectorClient::setSlowMode(bool slow)
+{
+    Endpoint::instance()->invokeObject(objectName(),
+                                       "setSlowMode",
+                                       QVariantList()
+                                       << slow);
+}

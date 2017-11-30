@@ -95,10 +95,14 @@ public slots:
 
     virtual void analyzePainting() = 0;
 
+    virtual void checkSlowMode() = 0;
+    virtual void setSlowMode(bool slow) = 0;
+
 signals:
     void features(GammaRay::QuickInspectorInterface::Features features);
     void serverSideDecorations(bool enabled);
     void overlaySettings(const GammaRay::QuickDecorationsSettings &settings);
+    void slowModeChanged(bool slow);
 };
 }
 

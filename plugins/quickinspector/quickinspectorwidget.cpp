@@ -148,12 +148,15 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     connect(m_interface, SIGNAL(serverSideDecorations(bool)), this, SLOT(setServerSideDecorations(bool)));
     connect(m_interface, SIGNAL(overlaySettings(GammaRay::QuickDecorationsSettings)), this, SLOT(setOverlaySettings(GammaRay::QuickDecorationsSettings)));
 
+    connect(m_interface, &QuickInspectorInterface::slowModeChanged, this, &QuickInspectorWidget::setSlowMode);
+
     connect(ui->itemTreeView, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(itemContextMenu(QPoint)));
 
     m_interface->checkFeatures();
     m_interface->checkServerSideDecorations();
     m_interface->checkOverlaySettings();
+    m_interface->checkSlowMode();
 
     addActions(m_scenePreviewWidget->actions());
     addAction(createSeparator(this));
@@ -161,6 +164,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     addAction(createSeparator(this));
     addAction(ui->actionSaveAsImage);
     addAction(ui->actionSaveAsImageWithDecoration);
+    addAction(createSeparator(this));
+    addAction(ui->actionSlowDownMode);
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
@@ -172,6 +177,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
         auto viewer = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this);
         viewer->show();
     });
+    connect(ui->actionSlowDownMode, &QAction::triggered, m_interface, &QuickInspectorInterface::setSlowMode);
     connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
     connect(m_scenePreviewWidget, SIGNAL(stateChanged()), this, SLOT(saveState()));
@@ -223,6 +229,11 @@ void QuickInspectorWidget::setOverlaySettings(const GammaRay::QuickDecorationsSe
 {
     m_scenePreviewWidget->setOverlaySettingsState(settings);
     stateReceived(QuickInspectorWidget::WaitingOverlaySettings);
+}
+
+void QuickInspectorWidget::setSlowMode(bool slow)
+{
+    ui->actionSlowDownMode->setChecked(slow);
 }
 
 void QuickInspectorWidget::itemSelectionChanged(const QItemSelection &selection)

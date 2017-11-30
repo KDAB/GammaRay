@@ -97,6 +97,7 @@
 #include <private/qquickitem_p.h>
 #include <private/qsgbatchrenderer_p.h>
 #include <private/qsgdistancefieldglyphnode_p_p.h>
+#include <private/qabstractanimation_p.h>
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -387,6 +388,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     , m_pendingRenderMode(new RenderModeRequest(this))
     , m_renderMode(QuickInspectorInterface::NormalRendering)
     , m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this))
+    , m_slowDownEnabled(false)
 {
     registerMetaTypes();
     registerVariantHandlers();
@@ -732,6 +734,39 @@ void QuickInspector::analyzePainting()
     }
     m_paintAnalyzer->endAnalyzePainting();
 #endif
+}
+
+void QuickInspector::checkSlowMode()
+{
+    // We can't check that for now as there is no getter for the property...
+    emit slowModeChanged(m_slowDownEnabled);
+}
+
+void QuickInspector::setSlowMode(bool slow)
+{
+    if (m_slowDownEnabled == slow)
+        return;
+
+    static QHash<QQuickWindow *, QMetaObject::Connection> connections;
+
+    m_slowDownEnabled = slow;
+
+    for (int i = 0; i < m_windowModel->rowCount(); ++i) {
+        const QModelIndex index = m_windowModel->index(i, 0);
+        QQuickWindow *window = index.data(ObjectModel::ObjectRole).value<QQuickWindow *>();
+        auto it = connections.find(window);
+
+        if (it == connections.end()) {
+            connections.insert(window, connect(window, &QQuickWindow::beforeRendering, this, [this, window]() {
+                auto it = connections.find(window);
+                QUnifiedTimer::instance()->setSlowModeEnabled(m_slowDownEnabled);
+                QObject::disconnect(it.value());
+                connections.erase(it);
+            }, Qt::DirectConnection));
+        }
+    }
+
+    emit slowModeChanged(m_slowDownEnabled);
 }
 
 void QuickInspector::itemSelectionChanged(const QItemSelection &selection)

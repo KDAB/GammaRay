@@ -159,6 +159,17 @@
     <string>F9</string>
    </property>
   </action>
+  <action name="actionSlowDownMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Enable slow down mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable slow down mode for animations</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
