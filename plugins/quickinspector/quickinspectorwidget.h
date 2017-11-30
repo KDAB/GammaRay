@@ -78,6 +78,7 @@ private slots:
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
     void setServerSideDecorations(bool enabled);
     void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings);
+    void setSlowMode(bool slow);
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
                               const QVector<int> &roles);
     void itemContextMenu(const QPoint &pos);

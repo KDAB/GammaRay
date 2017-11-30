@@ -126,6 +126,9 @@ public slots:
 
     void analyzePainting() override;
 
+    void checkSlowMode() override;
+    void setSlowMode(bool slow) override;
+
 protected:
     bool eventFilter(QObject *receiver, QEvent *event) override;
 
@@ -169,6 +172,7 @@ private:
     RenderModeRequest *m_pendingRenderMode;
     QuickInspectorInterface::RenderMode m_renderMode;
     PaintAnalyzer* m_paintAnalyzer;
+    bool m_slowDownEnabled;
 };
 
 class QuickInspectorFactory : public QObject,

@@ -64,6 +64,9 @@ public slots:
     void checkOverlaySettings() override;
 
     void analyzePainting() override;
+
+    void checkSlowMode() override;
+    void setSlowMode(bool slow) override;
 };
 }
 
