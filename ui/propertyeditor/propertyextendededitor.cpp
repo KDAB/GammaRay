@@ -38,14 +38,9 @@ using namespace GammaRay;
 PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::PropertyExtendedEditor)
-    , m_inlineWidget(nullptr)
 {
     ui->setupUi(this);
-    setInlineWidget(new QLabel(this), [](QWidget *w, const QString &text){
-        auto label = qobject_cast<QLabel*>(w);
-        Q_ASSERT(label);
-        label->setText(text);
-    });
+    setInlineEditable(false);
 
     // TODO: make button content smaller by using a tiny icon
     connect(ui->editButton, SIGNAL(clicked()), SLOT(edit()));
@@ -53,11 +48,12 @@ PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
 
 PropertyExtendedEditor::~PropertyExtendedEditor()
 {
-    delete ui;
 }
 
 QVariant PropertyExtendedEditor::value() const
 {
+    if (isInlineEditable())
+        return ui->lineEdit->text();
     return m_value;
 }
 
@@ -65,7 +61,7 @@ void PropertyExtendedEditor::setValue(const QVariant &value)
 {
     m_value = value;
     const QString displayValue = property("displayString").toString();
-    m_setText(m_inlineWidget, displayValue.isEmpty() ? value.toString() : displayValue);
+    ui->lineEdit->setText(displayValue.isEmpty() ? value.toString() : displayValue);
 }
 
 void PropertyExtendedEditor::save(const QVariant &value)
@@ -77,16 +73,18 @@ void PropertyExtendedEditor::save(const QVariant &value)
     QApplication::sendEvent(this, &event);
 }
 
-void PropertyExtendedEditor::setInlineWidget(QWidget *widget, const PropertyExtendedEditor::EditFunction &func)
+bool PropertyExtendedEditor::isInlineEditable() const
 {
-    if (m_inlineWidget)
-        m_inlineWidget->deleteLater();
-    m_inlineWidget = widget;
-    ui->inlineLayout->addWidget(m_inlineWidget);
-    m_setText = func;
+    return m_inlineEditable;
 }
 
-QWidget *PropertyExtendedEditor::inlineWidget() const
+void PropertyExtendedEditor::setInlineEditable(bool editable)
 {
-    return m_inlineWidget;
+    m_inlineEditable = editable;
+    ui->lineEdit->setReadOnly(!isInlineEditable());
+
+    if (editable)
+        setFocusProxy(ui->lineEdit);
+    else
+        setFocusProxy(ui->editButton);
 }

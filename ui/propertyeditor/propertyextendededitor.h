@@ -32,7 +32,7 @@
 #include <QVariant>
 #include <QWidget>
 
-#include <functional>
+#include <memory>
 
 namespace GammaRay {
 namespace Ui {
@@ -54,17 +54,16 @@ public:
 
     void save(const QVariant &value);
 
-    void setInlineWidget(QWidget *widget, const EditFunction &func);
-    QWidget *inlineWidget() const;
+    bool isInlineEditable() const;
+    void setInlineEditable(bool editable);
 
 protected slots:
     virtual void edit() = 0;
 
 private:
-    Ui::PropertyExtendedEditor *ui;
+    std::unique_ptr<Ui::PropertyExtendedEditor> ui;
     QVariant m_value;
-    QWidget *m_inlineWidget;
-    EditFunction m_setText;
+    bool m_inlineEditable;
 };
 }
 

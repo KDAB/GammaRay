@@ -95,13 +95,8 @@ void PropertyTextEditorDialog::toggleMode()
 
 PropertyTextEditor::PropertyTextEditor(QWidget *parent)
     : PropertyExtendedEditor(parent)
-    , m_lineEdit(new QLineEdit)
 {
-    setInlineWidget(m_lineEdit, [](QWidget *widget, const QString &text){
-        auto edit = qobject_cast<QLineEdit*>(widget);
-        edit->setText(text);
-    });
-    connect(m_lineEdit, SIGNAL(editingFinished()), this, SLOT(editFinished()));
+    setInlineEditable(true);
 }
 
 void PropertyTextEditor::edit()
@@ -109,11 +104,6 @@ void PropertyTextEditor::edit()
     PropertyTextEditorDialog dlg(value().toString(), this);
     if (dlg.exec() == QDialog::Accepted)
         save(dlg.text());
-}
-
-void PropertyTextEditor::editFinished()
-{
-    save(m_lineEdit->text());
 }
 
 PropertyByteArrayEditor::PropertyByteArrayEditor(QWidget *parent)

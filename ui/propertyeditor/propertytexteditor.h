@@ -78,7 +78,6 @@ public:
 
 protected slots:
     virtual void edit() override;
-    virtual void editFinished();
 
 protected:
     QLineEdit *m_lineEdit;
