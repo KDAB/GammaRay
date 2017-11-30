@@ -45,7 +45,6 @@ class PropertyExtendedEditor : public QWidget
     Q_OBJECT
     Q_PROPERTY(QVariant value READ value WRITE setValue USER true)
 public:
-    typedef std::function<void(QWidget *,const QString&)> EditFunction;
     explicit PropertyExtendedEditor(QWidget *parent = nullptr);
     virtual ~PropertyExtendedEditor();
 
