@@ -72,6 +72,7 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
             SLOT(sourceChanged()));
 #endif
 
+    m_argumentModel->setReadOnly(true);
     Probe::instance()->registerModel(name + QStringLiteral(".argumentProperties"), m_argumentModel);
 
     connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(repaint()));

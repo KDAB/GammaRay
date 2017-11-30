@@ -49,6 +49,7 @@ public:
     ~AggregatedPropertyModel();
 
     void setObject(const ObjectInstance &oi);
+    void setReadOnly(bool readOnly);
 
     QVariant data(const QModelIndex &index, int role) const override;
     bool setData(const QModelIndex &index, const QVariant &value,
@@ -84,6 +85,7 @@ private:
     PropertyAdaptor *m_rootAdaptor;
     mutable QHash<PropertyAdaptor *, QVector<PropertyAdaptor *> > m_parentChildrenMap;
     bool m_inhibitAdaptorCreation;
+    bool m_readOnly;
 };
 }
 

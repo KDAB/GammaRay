@@ -50,6 +50,7 @@ AggregatedPropertyModel::AggregatedPropertyModel(QObject *parent)
     : QAbstractItemModel(parent)
     , m_rootAdaptor(nullptr)
     , m_inhibitAdaptorCreation(false)
+    , m_readOnly(false)
 {
     qRegisterMetaType<GammaRay::PropertyAdaptor *>();
 }
@@ -77,6 +78,11 @@ void AggregatedPropertyModel::setObject(const ObjectInstance &oi)
 
     if (count)
         endInsertRows();
+}
+
+void AggregatedPropertyModel::setReadOnly(bool readOnly)
+{
+    m_readOnly = readOnly;
 }
 
 void AggregatedPropertyModel::clear()
@@ -272,7 +278,7 @@ int AggregatedPropertyModel::rowCount(const QModelIndex &parent) const
 Qt::ItemFlags AggregatedPropertyModel::flags(const QModelIndex &index) const
 {
     const auto baseFlags = QAbstractItemModel::flags(index);
-    if (!index.isValid() || index.column() != 1)
+    if (!index.isValid() || index.column() != 1 || m_readOnly)
         return baseFlags;
 
     auto adaptor = adaptorForIndex(index);
