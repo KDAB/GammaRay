@@ -86,6 +86,7 @@ protected:
     virtual void doSetObject(const ObjectInstance &oi);
 
 private:
+    friend class PropertyAggregator;
     ObjectInstance m_oi;
 };
 }

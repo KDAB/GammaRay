@@ -88,6 +88,7 @@ void PropertyAggregator::writeProperty(int index, const QVariant &value)
     foreach (const auto adaptor, m_propertyAdaptors) {
         if (index < offset + adaptor->count()) {
             adaptor->writeProperty(index - offset, value);
+            m_oi = adaptor->object(); // propagate changes back to us, particularly matters for value types
             return;
         }
         offset += adaptor->count();
