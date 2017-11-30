@@ -41,9 +41,10 @@ PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
 {
     ui->setupUi(this);
     setInlineEditable(false);
+    setReadOnly(false);
 
     // TODO: make button content smaller by using a tiny icon
-    connect(ui->editButton, SIGNAL(clicked()), SLOT(edit()));
+    connect(ui->editButton, SIGNAL(clicked()), SLOT(slotEdit()));
 }
 
 PropertyExtendedEditor::~PropertyExtendedEditor()
@@ -66,6 +67,9 @@ void PropertyExtendedEditor::setValue(const QVariant &value)
 
 void PropertyExtendedEditor::save(const QVariant &value)
 {
+    if (isReadOnly())
+        return;
+
     setValue(value);
 
     // The user already pressed Apply, don't force her/him to do again
@@ -87,4 +91,21 @@ void PropertyExtendedEditor::setInlineEditable(bool editable)
         setFocusProxy(ui->lineEdit);
     else
         setFocusProxy(ui->editButton);
+    ui->lineEdit->setFrame(editable);
+}
+
+bool PropertyExtendedEditor::isReadOnly() const
+{
+    return m_readOnly;
+}
+
+void PropertyExtendedEditor::setReadOnly(bool readOnly)
+{
+    m_readOnly = readOnly;
+    setInlineEditable(false);
+}
+
+void PropertyExtendedEditor::slotEdit()
+{
+    showEditor(this);
 }

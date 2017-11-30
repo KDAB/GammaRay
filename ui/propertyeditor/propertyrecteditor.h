@@ -58,9 +58,7 @@ class PropertyRectEditor : public PropertyExtendedEditor
     Q_OBJECT
 public:
     explicit PropertyRectEditor(QWidget *parent = nullptr);
-
-protected slots:
-    void edit() override;
+    void showEditor(QWidget * parent) override;
 };
 
 class PropertyRectFEditor : public PropertyExtendedEditor
@@ -68,9 +66,7 @@ class PropertyRectFEditor : public PropertyExtendedEditor
     Q_OBJECT
 public:
     explicit PropertyRectFEditor(QWidget *parent = nullptr);
-
-protected slots:
-    void edit() override;
+    void showEditor(QWidget * parent) override;
 };
 }
 

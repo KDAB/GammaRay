@@ -37,10 +37,11 @@ PropertyFontEditor::PropertyFontEditor(QWidget *parent)
 {
 }
 
-void PropertyFontEditor::edit()
+void PropertyFontEditor::showEditor(QWidget* parent)
 {
     bool ok = false;
-    const QFont font = QFontDialog::getFont(&ok, value().value<QFont>(), this);
+    const QFont font = QFontDialog::getFont(&ok, value().value<QFont>(), parent);
     if (ok)
         save(font);
+    emit editorClosed();
 }

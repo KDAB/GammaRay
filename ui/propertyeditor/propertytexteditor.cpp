@@ -58,6 +58,11 @@ PropertyTextEditorDialog::~PropertyTextEditorDialog()
 {
 }
 
+void PropertyTextEditorDialog::setReadOnly(bool readOnly)
+{
+    ui->plainTextEdit->setReadOnly(readOnly);
+}
+
 QString PropertyTextEditorDialog::text() const
 {
     if (m_mode == StringMode)
@@ -99,23 +104,26 @@ PropertyTextEditor::PropertyTextEditor(QWidget *parent)
     setInlineEditable(true);
 }
 
-void PropertyTextEditor::edit()
+void PropertyTextEditor::showEditor(QWidget* parent)
 {
-    PropertyTextEditorDialog dlg(value().toString(), this);
+    PropertyTextEditorDialog dlg(value().toString(), parent);
+    dlg.setReadOnly(isReadOnly());
     if (dlg.exec() == QDialog::Accepted)
         save(dlg.text());
+    emit editorClosed();
 }
 
 PropertyByteArrayEditor::PropertyByteArrayEditor(QWidget *parent)
     : PropertyExtendedEditor(parent)
 {
-
 }
 
-void PropertyByteArrayEditor::edit()
+void PropertyByteArrayEditor::showEditor(QWidget* parent)
 {
-    PropertyTextEditorDialog dlg(value().toByteArray(), this);
+    PropertyTextEditorDialog dlg(value().toByteArray(), parent);
+    dlg.setReadOnly(isReadOnly());
     if (dlg.exec() == QDialog::Accepted)
         save(dlg.bytes());
+    emit editorClosed();
 }
 

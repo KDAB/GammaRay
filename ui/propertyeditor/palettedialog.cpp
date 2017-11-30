@@ -64,3 +64,9 @@ QPalette PaletteDialog::editedPalette() const
 {
     return m_model->palette();
 }
+
+void PaletteDialog::setEditable(bool editable)
+{
+    m_model->setEditable(editable);
+    ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(editable);
+}

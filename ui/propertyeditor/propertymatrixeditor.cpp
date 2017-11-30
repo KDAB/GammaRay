@@ -37,11 +37,12 @@ PropertyMatrixEditor::PropertyMatrixEditor(QWidget *parent)
 {
 }
 
-void PropertyMatrixEditor::edit()
+void PropertyMatrixEditor::showEditor(QWidget* parent)
 {
-    PropertyMatrixDialog dlg;
+    PropertyMatrixDialog dlg(parent);
     dlg.setMatrix(value());
 
     if (dlg.exec())
         save(dlg.matrix());
+    emit editorClosed();
 }

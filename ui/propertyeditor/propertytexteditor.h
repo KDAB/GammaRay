@@ -54,6 +54,8 @@ public:
     explicit PropertyTextEditorDialog(const QByteArray &bytes, QWidget *parent = nullptr);
     ~PropertyTextEditorDialog();
 
+    void setReadOnly(bool readOnly);
+
     QString text() const;
     QByteArray bytes() const;
 
@@ -74,12 +76,9 @@ class PropertyTextEditor : public PropertyExtendedEditor
     Q_OBJECT
 public:
     explicit PropertyTextEditor(QWidget *parent = nullptr);
+    void showEditor(QWidget * parent) override;
 
-
-protected slots:
-    virtual void edit() override;
-
-protected:
+private:
     QLineEdit *m_lineEdit;
 };
 
@@ -88,11 +87,7 @@ class PropertyByteArrayEditor : public PropertyExtendedEditor
     Q_OBJECT
 public:
     explicit PropertyByteArrayEditor(QWidget *parent = nullptr);
-
-
-protected slots:
-    void edit() override;
-
+    void showEditor(QWidget * parent) override;
 };
 }
 

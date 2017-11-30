@@ -49,6 +49,7 @@ public:
     explicit PaletteDialog(const QPalette &palette, QWidget *parent = nullptr);
     virtual ~PaletteDialog();
 
+    void setEditable(bool editable);
     QPalette editedPalette() const;
 
 private:
