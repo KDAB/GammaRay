@@ -232,7 +232,7 @@ void WidgetInspectorWidget::widgetSelected(const QItemSelection &selection)
 {
     ui->tabWidget->setCurrentIndex(0); // select the tree view tab
     QModelIndex index;
-    if (selection.size() > 0)
+    if (!selection.isEmpty())
         index = selection.first().topLeft();
 
     if (index.isValid()) {

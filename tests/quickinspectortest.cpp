@@ -195,8 +195,8 @@ private slots:
 
         QVERIFY(waitForSignal(&gotFrameSpy, true));
 
-        QVERIFY(renderSpy.size() >= 1);
-        QVERIFY(gotFrameSpy.size() >= 1);
+        QVERIFY(!renderSpy.isEmpty());
+        QVERIFY(!gotFrameSpy.isEmpty());
         const auto frame = gotFrameSpy.at(0).at(0).value<RemoteViewFrame>();
         QImage img = frame.image();
         QTransform transform = frame.transform();

@@ -68,7 +68,7 @@ QWidget *QtIviConstrainedValueDelegate::createEditor(QWidget *parent, const QSty
     const QVariant constraintsContainer = index.data(QtIviPropertyModel::ValueConstraintsRole);
     if (constraintsContainer.isValid() && constraintsContainer.canConvert<QVariantList>()) {
         QVariantList constraints = constraintsContainer.value<QVariantList>();
-        if (constraints.size() >= 1) {
+        if (!constraints.isEmpty()) {
             const QVariant type = constraints.takeFirst();
             if (type.isValid() && type.canConvert<uint>()) {
                 constraintsType = type.toUInt();

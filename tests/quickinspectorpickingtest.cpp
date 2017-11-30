@@ -158,7 +158,7 @@ private slots:
         QTest::mouseClick(view, Qt::LeftButton, Qt::ShiftModifier | Qt::ControlModifier,
                           QPoint(view->width()/2, view->height()/2));
 
-        if (itemSpy.size() == 0)
+        if (itemSpy.isEmpty())
             QVERIFY(itemSpy.wait());
         QCOMPARE(itemSpy.size(), 1);
 

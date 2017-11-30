@@ -98,7 +98,7 @@ ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
 void ModelInspector::modelSelected(const QItemSelection &selected)
 {
     QModelIndex index;
-    if (selected.size() >= 1)
+    if (!selected.isEmpty())
         index = selected.first().topLeft();
 
     if (index.isValid()) {
@@ -154,7 +154,7 @@ void ModelInspector::objectSelected(QObject *object)
 void ModelInspector::cellSelectionChanged(const QItemSelection &selection)
 {
     QModelIndex index;
-    if (selection.size() >= 1)
+    if (!selection.isEmpty())
         index = selection.at(0).topLeft();
 
     const QModelIndex sourceIndex = m_modelContentProxyModel->mapToSource(index);
@@ -186,7 +186,7 @@ void ModelInspector::objectCreated(QObject *object)
 void ModelInspector::selectionModelSelected(const QItemSelection &selected)
 {
     QModelIndex idx;
-    if (selected.size() > 0)
+    if (!selected.isEmpty())
         idx = selected.at(0).topLeft();
     if (!idx.isValid()) {
         m_modelContentProxyModel->setSelectionModel(nullptr);

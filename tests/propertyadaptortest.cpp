@@ -279,7 +279,7 @@ private slots:
         QSignalSpy invalidatedSpy(adaptor, SIGNAL(objectInvalidated()));
         QVERIFY(invalidatedSpy.isValid());
         delete obj;
-        QVERIFY(invalidatedSpy.size() > 0);
+        QVERIFY(!invalidatedSpy.isEmpty());
     }
 
     void testQtMetaObject()

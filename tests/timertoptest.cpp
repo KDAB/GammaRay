@@ -119,7 +119,7 @@ private slots:
         QTest::qWait(10 * 1000); // there's a 5sec throttle on dataChanged
 
         // TODO verify data
-        QVERIFY(dataChangeSpy.size() > 0);
+        QVERIFY(!dataChangeSpy.isEmpty());
         QVERIFY(dataChangeSpy.size() < 5);
 
         delete t1;

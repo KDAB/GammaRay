@@ -110,7 +110,7 @@ ModelInspectorWidget::~ModelInspectorWidget()
 void ModelInspectorWidget::modelSelected(const QItemSelection &selected)
 {
     QModelIndex index;
-    if (selected.size() >= 1)
+    if (!selected.isEmpty())
         index = selected.first().topLeft();
 
     if (index.isValid())

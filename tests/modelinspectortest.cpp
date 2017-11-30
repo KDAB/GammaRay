@@ -318,7 +318,7 @@ private slots:
         QVERIFY(contentModel->index(1, 0).data(ModelContentProxyModel::SelectedRole).toBool());
         QVERIFY(contentModel->index(2, 0).data(ModelContentProxyModel::SelectedRole).isNull());
 
-        QVERIFY(contentSpy.size() > 0);
+        QVERIFY(!contentSpy.isEmpty());
 
         delete targetSelModel;
         delete targetModel;

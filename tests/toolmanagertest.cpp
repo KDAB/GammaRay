@@ -84,7 +84,7 @@ private slots:
         availableToolsSpy.wait(500);
         QCOMPARE(availableToolsSpy.size(), 1);
         const auto &list = availableToolsSpy[0][0].value<QVector<ToolData> >();
-        QVERIFY(list.size() > 0);
+        QVERIFY(!list.isEmpty());
 
         bool hasBasicTools = false;
         const ToolData *actionInspector = nullptr;
@@ -183,7 +183,7 @@ private:
         // Create QAction to enable action inspector
         QAction action("Test Action", this);
         toolEnabledSpy.wait(50);
-        QVERIFY(toolEnabledSpy.size() >= 1);
+        QVERIFY(!toolEnabledSpy.isEmpty());
         QStringList enabledTools;
         for (auto i = toolEnabledSpy.constBegin(); i != toolEnabledSpy.constEnd(); ++i)
             enabledTools << i->first().toString();
