@@ -50,6 +50,7 @@ public:
     QWidget *createEditor(TypeId type, QWidget *parent) const override;
 
     static QVector<int> supportedTypes();
+    static bool hasExtendedEditor(int typeId);
 
 protected:
     PropertyEditorFactory();
@@ -57,9 +58,10 @@ protected:
 private:
     Q_DISABLE_COPY(PropertyEditorFactory)
     void initBuiltInTypes();
-    void addEditor(TypeId type, QItemEditorCreatorBase *creator);
+    void addEditor(TypeId type, QItemEditorCreatorBase *creator, bool extended = false);
 
     QVector<int> m_supportedTypes;
+    QVector<int> m_extendedTypes;
 };
 }
 

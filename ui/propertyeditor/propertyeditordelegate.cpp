@@ -28,6 +28,7 @@
 
 #include "propertyeditordelegate.h"
 #include "propertyeditorfactory.h"
+#include "propertyextendededitor.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -326,4 +327,32 @@ int PropertyEditorDelegate::columnWidth(const QStyleOptionViewItem &option, cons
                          QString::number(matrix_trait<Matrix>::value(matrix, row, column))));
     }
     return width;
+}
+
+bool PropertyEditorDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    // if this is a read-only cell containing a complex type we have a suitable editor for, we'll show that in read-only mode
+    if (index.isValid() && event->type() == QEvent::MouseButtonDblClick && ((index.flags() & Qt::ItemIsEditable) == 0) && (index.flags() & Qt::ItemIsEnabled)) {
+        const auto value = index.data(Qt::EditRole);
+        if (value.isNull() || !PropertyEditorFactory::hasExtendedEditor(value.userType()))
+            return QStyledItemDelegate::editorEvent(event, model, option, index);
+
+        // special cases for strings, short ones don't benefit from the external editor
+        if (value.type() == QVariant::String && !value.toString().contains(QLatin1Char('\n')))
+            return QStyledItemDelegate::editorEvent(event, model, option, index);
+        else if (value.type() == QVariant::ByteArray && !value.toByteArray().contains('\n'))
+            return QStyledItemDelegate::editorEvent(event, model, option, index);
+
+        const auto editor = qobject_cast<PropertyExtendedEditor*>(PropertyEditorFactory::instance()->createEditor(value.userType(), nullptr));
+        if (editor) {
+            editor->setReadOnly(true);
+            editor->setValue(value);
+            connect(editor, SIGNAL(editorClosed()), editor, SLOT(deleteLater()));
+            editor->showEditor(const_cast<QWidget*>(option.widget));
+        }
+    }
+#endif
+
+    return QStyledItemDelegate::editorEvent(event, model, option, index);
 }

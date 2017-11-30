@@ -39,6 +39,8 @@
 
 #include <QItemEditorFactory>
 
+#include <algorithm>
+
 using namespace GammaRay;
 
 PropertyEditorFactory::PropertyEditorFactory()
@@ -46,16 +48,16 @@ PropertyEditorFactory::PropertyEditorFactory()
     initBuiltInTypes();
 
     addEditor(QVariant::Color, new QStandardItemEditorCreator<PropertyColorEditor>());
-    addEditor(QVariant::ByteArray, new QStandardItemEditorCreator<PropertyByteArrayEditor>());
+    addEditor(QVariant::ByteArray, new QStandardItemEditorCreator<PropertyByteArrayEditor>(), true);
     addEditor(QVariant::Font, new QStandardItemEditorCreator<PropertyFontEditor>());
-    addEditor(QVariant::Palette, new QStandardItemEditorCreator<PropertyPaletteEditor>());
+    addEditor(QVariant::Palette, new QStandardItemEditorCreator<PropertyPaletteEditor>(), true);
     addEditor(QVariant::Point, new QStandardItemEditorCreator<PropertyPointEditor>());
     addEditor(QVariant::PointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
     addEditor(QVariant::Rect, new QStandardItemEditorCreator<PropertyRectEditor>());
     addEditor(QVariant::RectF, new QStandardItemEditorCreator<PropertyRectFEditor>());
     addEditor(QVariant::Size, new QStandardItemEditorCreator<PropertySizeEditor>());
     addEditor(QVariant::SizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
-    addEditor(QVariant::String, new QStandardItemEditorCreator<PropertyTextEditor>());
+    addEditor(QVariant::String, new QStandardItemEditorCreator<PropertyTextEditor>(), true);
     addEditor(QVariant::Transform, new QStandardItemEditorCreator<PropertyMatrixEditor>());
     addEditor(QVariant::Matrix, new QStandardItemEditorCreator<PropertyMatrixEditor>());
     addEditor(QVariant::Matrix4x4, new QStandardItemEditorCreator<PropertyMatrixEditor>());
@@ -114,9 +116,17 @@ void PropertyEditorFactory::initBuiltInTypes()
 #endif
 }
 
-void PropertyEditorFactory::addEditor(PropertyEditorFactory::TypeId type,
-                                      QItemEditorCreatorBase *creator)
+void PropertyEditorFactory::addEditor(PropertyEditorFactory::TypeId type, QItemEditorCreatorBase *creator, bool extended)
 {
     registerEditor(type, creator);
     m_supportedTypes.push_back(type);
+    if (extended) {
+        auto it = std::lower_bound(m_extendedTypes.begin(), m_extendedTypes.end(), type);
+        m_extendedTypes.insert(it, type);
+    }
+}
+
+bool PropertyEditorFactory::hasExtendedEditor(int typeId)
+{
+    return std::binary_search(instance()->m_extendedTypes.constBegin(), instance()->m_extendedTypes.constEnd(), typeId);
 }
