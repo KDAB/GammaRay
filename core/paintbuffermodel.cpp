@@ -43,6 +43,8 @@ Q_DECLARE_METATYPE(Qt::ClipOperation)
 #endif
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
+#include <private/qvectorpath_p.h>
+#include <private/qpainterpath_p.h>
 
 using namespace GammaRay;
 
@@ -523,13 +525,11 @@ QPainterPath PaintBufferModel::clipPath(int row) const
                 op = static_cast<Qt::ClipOperation>(cmd.extra);
                 break;
             case QPaintBufferPrivate::Cmd_ClipVectorPath:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
                 p = QVectorPath(m_privateBuffer->floats.constData() + cmd.offset, cmd.size,
                                 cmd.offset2 & 0x80000000 ? nullptr : reinterpret_cast<const QPainterPath::ElementType*>(m_privateBuffer->ints.constData() + cmd.offset2 + 1),
                                 *(m_privateBuffer->ints.constData() + (cmd.offset2 & 0x7FFFFFFF))).convertToPainterPath();
                 p = t.map(p);
                 op = static_cast<Qt::ClipOperation>(cmd.extra);
-#endif
                 break;
             case QPaintBufferPrivate::Cmd_SystemStateChanged:
                 p.addRegion(m_privateBuffer->variants.at(cmd.offset).value<QRegion>());
