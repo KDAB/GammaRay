@@ -836,9 +836,6 @@ void GuiSupport::registerVariantHandler()
 
     VariantHandler::registerStringConverter<QBrush>(brushToString);
     VariantHandler::registerStringConverter<const QGradient*>(Util::addressToString);
-    VariantHandler::registerStringConverter<QPair<double, QColor> >([](const QPair<double, QColor> &p) {
-        return QString(VariantHandler::displayString(p.first) + QLatin1String(": ") + VariantHandler::displayString(p.second));
-    });
     VariantHandler::registerStringConverter<QImage>(imageToString);
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
     VariantHandler::registerStringConverter<QPen>(penToString);
@@ -846,6 +843,9 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QRegion>(regionToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    VariantHandler::registerStringConverter<QPair<double, QColor> >([](const QPair<double, QColor> &p) {
+        return QString(VariantHandler::displayString(p.first) + QLatin1String(": ") + VariantHandler::displayString(p.second));
+    });
     ER_REGISTER_ENUM(QPlatformPixmap, ClassId, platformpixmap_classid_table);
     VariantHandler::registerStringConverter<QImage*>(Util::addressToString);
     VariantHandler::registerStringConverter<QPlatformPixmap*>(Util::addressToString);
