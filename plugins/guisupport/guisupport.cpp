@@ -80,6 +80,7 @@ Q_DECLARE_METATYPE(Qt::PenCapStyle)
 Q_DECLARE_METATYPE(Qt::PenJoinStyle)
 #endif
 Q_DECLARE_METATYPE(QImage::Format)
+Q_DECLARE_METATYPE(const QGradient*)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
 Q_DECLARE_METATYPE(QPixelFormat)
 Q_DECLARE_METATYPE(QPixelFormat::AlphaUsage)
@@ -297,8 +298,30 @@ void GuiSupport::registerMetaTypes()
 #endif // QT_VERSION >= 5.0.0
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_METAOBJECT0(QGradient);
+    MO_ADD_PROPERTY   (QGradient, coordinateMode, setCoordinateMode);
+    MO_ADD_PROPERTY   (QGradient, spread, setSpread);
+    MO_ADD_PROPERTY   (QGradient, stops, setStops);
+    MO_ADD_PROPERTY_RO(QGradient, type);
+
+    MO_ADD_METAOBJECT1(QConicalGradient, QGradient);
+    MO_ADD_PROPERTY   (QConicalGradient, angle, setAngle);
+    MO_ADD_PROPERTY_O2(QConicalGradient, center, setCenter);
+
+    MO_ADD_METAOBJECT1(QLinearGradient, QGradient);
+    MO_ADD_PROPERTY_O2(QLinearGradient, finalStop, setFinalStop);
+    MO_ADD_PROPERTY_O2(QLinearGradient, start, setStart);
+
+    MO_ADD_METAOBJECT1(QRadialGradient, QGradient);
+    MO_ADD_PROPERTY_O2(QRadialGradient, center, setCenter);
+    MO_ADD_PROPERTY   (QRadialGradient, centerRadius, setCenterRadius);
+    MO_ADD_PROPERTY_O2(QRadialGradient, focalPoint, setFocalPoint);
+    MO_ADD_PROPERTY   (QRadialGradient, focalRadius, setFocalRadius);
+    MO_ADD_PROPERTY   (QRadialGradient, radius, setRadius);
+
     MO_ADD_METAOBJECT0(QBrush);
     MO_ADD_PROPERTY_O2(QBrush, color, setColor);
+    MO_ADD_PROPERTY_RO(QBrush, gradient);
     MO_ADD_PROPERTY_RO(QBrush, isOpaque);
     MO_ADD_PROPERTY(QBrush, matrix, setMatrix);
     MO_ADD_PROPERTY(QBrush, style, setStyle);
@@ -812,6 +835,10 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QPaintEngine, PolygonDrawMode, paintengine_polygon_draw_mode_table);
 
     VariantHandler::registerStringConverter<QBrush>(brushToString);
+    VariantHandler::registerStringConverter<const QGradient*>(Util::addressToString);
+    VariantHandler::registerStringConverter<QPair<double, QColor> >([](const QPair<double, QColor> &p) {
+        return QString(VariantHandler::displayString(p.first) + QLatin1String(": ") + VariantHandler::displayString(p.second));
+    });
     VariantHandler::registerStringConverter<QImage>(imageToString);
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
     VariantHandler::registerStringConverter<QPen>(penToString);
