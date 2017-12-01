@@ -35,6 +35,7 @@
 #include <common/metatypedeclarations.h>
 
 #include <limits>
+#include <vector>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Qt::BGMode)
@@ -410,6 +411,8 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
                 break;
             case ValueRole:
                 return argumentAt(cmd, 0);
+            case ClipPathRole:
+                return QVariant::fromValue(clipPath(index.row()));
         }
     } else {
         const auto cmd = m_privateBuffer->commands.at(index.internalId());
@@ -470,6 +473,85 @@ QVariant PaintBufferModel::headerData(int section, Qt::Orientation orientation, 
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);
+}
+
+QPainterPath PaintBufferModel::clipPath(int row) const
+{
+    QPainterPath clip;
+    QTransform t;
+    std::vector<QPainterPath> clipStack;
+    std::vector<QTransform> transformStack;
+
+    for (int i = 0; i <= row; ++i) {
+        const auto cmd = m_privateBuffer->commands.at(i);
+
+        QPainterPath p;
+        Qt::ClipOperation op = Qt::NoClip;
+        switch (cmd.id) {
+            case QPaintBufferPrivate::Cmd_Save:
+                clipStack.push_back(clip);
+                transformStack.push_back(t);
+                continue;
+            case QPaintBufferPrivate::Cmd_Restore:
+                if (clipStack.empty() || transformStack.empty())
+                    return QPainterPath();
+                clip = clipStack.back();
+                clipStack.pop_back();
+                t = transformStack.back();
+                transformStack.pop_back();
+                continue;
+            case QPaintBufferPrivate::Cmd_SetTransform:
+                t = m_privateBuffer->variants.at(cmd.offset).value<QTransform>();
+                continue;
+            case QPaintBufferPrivate::Cmd_Translate:
+                t.translate(m_privateBuffer->floats.at(cmd.extra), m_privateBuffer->floats.at(cmd.extra + 1));
+                continue;
+            case QPaintBufferPrivate::Cmd_ClipRect:
+                p.addRect(QRect(QPoint(m_privateBuffer->ints.at(cmd.offset), m_privateBuffer->ints.at(cmd.offset + 1)),
+                                QPoint(m_privateBuffer->ints.at(cmd.offset + 2), m_privateBuffer->ints.at(cmd.offset + 3))));
+                p = t.map(p);
+                op = static_cast<Qt::ClipOperation>(cmd.extra);
+                break;
+            case QPaintBufferPrivate::Cmd_ClipRegion:
+                p.addRegion(m_privateBuffer->variants.at(cmd.offset).value<QRegion>());
+                p = t.map(p);
+                op = static_cast<Qt::ClipOperation>(cmd.extra);
+                break;
+            case QPaintBufferPrivate::Cmd_ClipPath:
+                p = m_privateBuffer->variants.at(cmd.offset).value<QPainterPath>();
+                p = t.map(p);
+                op = static_cast<Qt::ClipOperation>(cmd.extra);
+                break;
+            case QPaintBufferPrivate::Cmd_ClipVectorPath:
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+                p = QVectorPath(m_privateBuffer->floats.constData() + cmd.offset, cmd.size,
+                                cmd.offset2 & 0x80000000 ? nullptr : reinterpret_cast<const QPainterPath::ElementType*>(m_privateBuffer->ints.constData() + cmd.offset2 + 1),
+                                *(m_privateBuffer->ints.constData() + (cmd.offset2 & 0x7FFFFFFF))).convertToPainterPath();
+                p = t.map(p);
+                op = static_cast<Qt::ClipOperation>(cmd.extra);
+#endif
+                break;
+            case QPaintBufferPrivate::Cmd_SystemStateChanged:
+                p.addRegion(m_privateBuffer->variants.at(cmd.offset).value<QRegion>());
+                op = Qt::ReplaceClip;
+                break;
+            default:
+                continue;
+        }
+
+        switch (op) {
+            case Qt::NoClip:
+                clip = QPainterPath();
+                break;
+            case Qt::ReplaceClip:
+                clip = p;
+                break;
+            case Qt::IntersectClip:
+                clip = clip.intersected(p);
+                break;
+        }
+    }
+    return clip;
 }
 
 #endif

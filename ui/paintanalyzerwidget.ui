@@ -49,13 +49,24 @@
      <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="replayContainer">
        <item>
-        <widget class="GammaRay::RemoteViewWidget" name="replayWidget" native="true"/>
+        <widget class="GammaRay::PaintAnalyzerReplayView" name="replayWidget" native="true"/>
        </item>
       </layout>
      </widget>
     </widget>
    </item>
   </layout>
+  <action name="actionShowClipArea">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Visualize Clip Area</string>
+   </property>
+   <property name="toolTip">
+    <string>Highlight current clipping area.</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -64,9 +75,9 @@
    <header location="global">ui/deferredtreeview.h</header>
   </customwidget>
   <customwidget>
-   <class>GammaRay::RemoteViewWidget</class>
+   <class>GammaRay::PaintAnalyzerReplayView</class>
    <extends>QWidget</extends>
-   <header location="global">ui/remoteviewwidget.h</header>
+   <header location="global">ui/paintanalyzerreplayview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

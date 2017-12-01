@@ -32,6 +32,7 @@ set(gammaray_ui_srcs
   utils.cpp
 
   paintanalyzerwidget.cpp
+  paintanalyzerreplayview.cpp
   paintbufferviewer.cpp
 
   propertyeditor/propertycoloreditor.cpp

@@ -35,6 +35,7 @@
 #include <core/probe.h>
 #include <core/remoteviewserver.h>
 
+#include <common/metatypedeclarations.h>
 #include <common/objectbroker.h>
 #include <common/remoteviewframe.h>
 
@@ -118,8 +119,13 @@ void PaintAnalyzer::repaint()
         painter.restore();
     painter.end();
 
+    PaintAnalyzerFrameData data;
+    if (index.isValid())
+        data.clipPath = index.data(PaintBufferModel::ClipPathRole).value<QPainterPath>();
+
     RemoteViewFrame frame;
     frame.setImage(image);
+    frame.setData(QVariant::fromValue(data));
     m_remoteView->sendFrame(frame);
 #endif
 }

@@ -31,13 +31,17 @@
 
 #include "gammaray_common_export.h"
 
+#include <QDataStream>
+#include <QMetaType>
 #include <QObject>
+#include <QPainterPath>
 
 QT_BEGIN_NAMESPACE
 class QImage;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+
 /** Communication interface for GammaRay::PaintAnalyzer. */
 class GAMMARAY_COMMON_EXPORT PaintAnalyzerInterface : public QObject
 {
@@ -57,8 +61,17 @@ private:
     QString m_name;
     bool m_hasArgumentDetails;
 };
+
+struct PaintAnalyzerFrameData
+{
+    QPainterPath clipPath;
+};
+
+QDataStream &operator<<(QDataStream &stream, const GammaRay::PaintAnalyzerFrameData &data);
+QDataStream &operator>>(QDataStream &stream, GammaRay::PaintAnalyzerFrameData &data);
 }
 
+Q_DECLARE_METATYPE(GammaRay::PaintAnalyzerFrameData)
 QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::PaintAnalyzerInterface, "com.kdab.GammaRay.PaintAnalyzer/1.0")
 QT_END_NAMESPACE

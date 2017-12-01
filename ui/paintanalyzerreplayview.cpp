@@ -1,0 +1,74 @@
+/*
+  paintanalyzerreplayview.cpp
+
+  This file is part of GammaRay, the Qt application inspection and
+  manipulation tool.
+
+  Copyright (C) 2017 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Volker Krause <volker.krause@kdab.com>
+
+  Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+  accordance with GammaRay Commercial License Agreement provided with the Software.
+
+  Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "paintanalyzerreplayview.h"
+
+#include <common/paintanalyzerinterface.h>
+
+#include <QDebug>
+#include <QPainter>
+
+using namespace GammaRay;
+
+PaintAnalyzerReplayView::PaintAnalyzerReplayView(QWidget* parent)
+    : RemoteViewWidget(parent)
+    , m_showClipArea(true)
+{
+}
+
+PaintAnalyzerReplayView::~PaintAnalyzerReplayView()
+{
+}
+
+bool PaintAnalyzerReplayView::showClipArea() const
+{
+    return m_showClipArea;
+}
+
+void PaintAnalyzerReplayView::setShowClipArea(bool show)
+{
+    m_showClipArea = show;
+    update();
+}
+
+void PaintAnalyzerReplayView::drawDecoration(QPainter* p)
+{
+    const auto data = frame().data().value<PaintAnalyzerFrameData>();
+    if (data.clipPath.isEmpty() || !m_showClipArea)
+        return;
+
+    QPainterPath invertedClipPath;
+    invertedClipPath.addRect(frame().sceneRect());
+    invertedClipPath -= data.clipPath;
+
+    p->save();
+    p->setTransform(QTransform().scale(zoom(), zoom()), true);
+    QBrush brush(Qt::red, Qt::BDiagPattern);
+    p->fillPath(invertedClipPath, brush);
+    p->restore();
+}

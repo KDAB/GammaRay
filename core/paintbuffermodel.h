@@ -41,6 +41,7 @@
 QT_BEGIN_NAMESPACE
 class QPaintBuffer;
 struct QPaintBufferCommand;
+class QPainterPath;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -52,7 +53,8 @@ class PaintBufferModel : public QAbstractItemModel
     Q_OBJECT
 public:
     enum Role {
-        ValueRole = GammaRay::UserRole + 1
+        ValueRole = GammaRay::UserRole + 1,
+        ClipPathRole
     };
     explicit PaintBufferModel(QObject *parent = nullptr);
 
@@ -75,6 +77,8 @@ private:
     QVariant argumentAt(const QPaintBufferCommand &cmd, int index) const;
     QString argumentDisplayString(const QPaintBufferCommand &cmd) const;
     QVariant argumentDecoration(const QPaintBufferCommand &cmd) const;
+
+    QPainterPath clipPath(int row) const;
 
     QPaintBuffer m_buffer;
     QPaintBufferPrivate *m_privateBuffer;

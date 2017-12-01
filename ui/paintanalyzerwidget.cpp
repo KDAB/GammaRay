@@ -30,6 +30,8 @@
 
 #include <ui/searchlinecontroller.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
+#include <ui/uiresources.h>
+
 #include <common/paintanalyzerinterface.h>
 #include <common/objectbroker.h>
 
@@ -65,6 +67,8 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     zoom->setModel(ui->replayWidget->zoomLevelModel());
     toolbar->addWidget(zoom);
     toolbar->addAction(ui->replayWidget->zoomInAction());
+    toolbar->addSeparator();
+    toolbar->addAction(ui->actionShowClipArea);
 
     ui->replayWidget->setSupportedInteractionModes(
         RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring | RemoteViewWidget::ColorPicking);
@@ -76,6 +80,9 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
     zoom->setCurrentIndex(ui->replayWidget->zoomLevelIndex());
 
+    ui->actionShowClipArea->setIcon(UIResources::themedIcon(QLatin1String("visualize-overdraw.png")));
+    connect(ui->actionShowClipArea, SIGNAL(toggled(bool)), ui->replayWidget, SLOT(setShowClipArea(bool)));
+    ui->actionShowClipArea->setChecked(ui->replayWidget->showClipArea());
 }
 
 PaintAnalyzerWidget::~PaintAnalyzerWidget()

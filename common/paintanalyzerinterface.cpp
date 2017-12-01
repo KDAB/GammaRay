@@ -38,6 +38,7 @@ PaintAnalyzerInterface::PaintAnalyzerInterface(const QString &name, QObject *par
     , m_hasArgumentDetails(false)
 {
     ObjectBroker::registerObject(name, this);
+    qRegisterMetaTypeStreamOperators<PaintAnalyzerFrameData>();
 }
 
 QString PaintAnalyzerInterface::name() const
@@ -56,4 +57,18 @@ void PaintAnalyzerInterface::setHasArgumentDetails(bool hasDetails)
         return;
     m_hasArgumentDetails = hasDetails;
     emit hasArgumentDetailsChanged(hasDetails);
+}
+
+namespace GammaRay {
+QDataStream& operator<<(QDataStream &stream, const PaintAnalyzerFrameData &data)
+{
+    stream << data.clipPath;
+    return stream;
+}
+
+QDataStream& operator>>(QDataStream &stream, PaintAnalyzerFrameData &data)
+{
+    stream >> data.clipPath;
+    return stream;
+}
 }
