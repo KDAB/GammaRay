@@ -260,14 +260,37 @@ void TimerModel::checkDispatcherStatus(QObject *object)
             continue;
         }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        const int remaining = dispatcher->remainingTime(gIt.key().timerId());
-#else
-        const int remaining = gIt.value().info.lastReceiverObject ? 0 : -1;
-#endif
+        switch(gIt.key().type()) {
+        case TimerId::InvalidType:
+        case TimerId::QQmlTimerType:
+            continue;
+        case TimerId::QTimerType:
+        case TimerId::QObjectType:
+            break;
+        }
 
-        // Timer inactive or invalid
-        if (remaining == -1)
+        switch(gIt.value().info.state) {
+        case TimerIdInfo::InactiveState:
+            gIt.value().update(gIt.key(), gItObject);
+        case TimerIdInfo::InvalidState:
+            continue;
+        case TimerIdInfo::SingleShotState:
+        case TimerIdInfo::RepeatState:
+            break;
+        }
+
+        int remaining = -1;
+
+        if (gIt.key().timerId() > -1) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+            remaining = dispatcher->remainingTime(gIt.key().timerId());
+#else
+            remaining = gIt.value().info.lastReceiverObject ? 0 : -1;
+#endif
+        }
+
+        // Timer inactive or invalid, or free timer
+        if (remaining == -1 || gIt.key().type() == TimerId::QObjectType)
             gIt.value().update(gIt.key(), gItObject);
     }
 
