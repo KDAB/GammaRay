@@ -39,7 +39,6 @@
 #include "quickitemdelegate.h"
 #include "ui_quickinspectorwidget.h"
 
-#include <common/endpoint.h>
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <common/objectid.h>

@@ -41,6 +41,7 @@
 #include "quickimplicitbindingdependencyprovider.h"
 #endif
 
+#include <common/endpoint.h>
 #include <common/modelevent.h>
 #include <common/objectbroker.h>
 #include <common/probecontrollerinterface.h>
@@ -444,6 +445,11 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
 
     auto texGrab = new QSGTextureGrabber(this);
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), texGrab, SLOT(objectCreated(QObject*)));
+
+    connect(Endpoint::instance(), &Endpoint::disconnected, this, [this]() {
+        if (m_overlay)
+            m_overlay->placeOn(ItemOrLayoutFacade());
+    });
 
     // needs to be last, extensions require some of the above to be set up correctly
     registerPCExtensions();
