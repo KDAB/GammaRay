@@ -40,6 +40,10 @@ class TranslationsModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
+    enum CustomRoles {
+        IsOverridenRole = 256 // Qt 5 Qt::UserRole is 256 while Qt 4 one is 32
+    };
+
     explicit TranslationsModel(TranslatorWrapper *translator);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -48,6 +52,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
     void resetTranslations(const QModelIndex &first, const QModelIndex &last);
     QString translation(const char *context, const char *sourceText, const char *disambiguation,

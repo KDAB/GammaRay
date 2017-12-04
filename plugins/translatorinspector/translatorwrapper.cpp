@@ -71,10 +71,8 @@ QVariant TranslationsModel::data(const QModelIndex &index, int role) const
             return node.translation;
         }
     }
-    if (role == Qt::FontRole && index.column() == 3 && node.isOverriden) {
-        QFont font;
-        font.setItalic(true);
-        return font;
+    if (role == IsOverridenRole && index.column() == 3) {
+        return node.isOverriden;
     }
     return QVariant();
 }
@@ -117,6 +115,16 @@ Qt::ItemFlags TranslationsModel::flags(const QModelIndex &index) const
     if (index.column() == 3)
         return f | Qt::ItemIsEditable;
     return f;
+}
+
+QMap<int, QVariant> TranslationsModel::itemData(const QModelIndex &index) const
+{
+    auto data = QAbstractTableModel::itemData(index);
+    if (hasIndex(index.row(), index.column(), index.parent())) {
+        if (index.column() == 3)
+            data[IsOverridenRole] = m_nodes.at(index.row()).isOverriden;
+    }
+    return data;
 }
 
 void TranslationsModel::resetTranslations(const QModelIndex &first, const QModelIndex &last)

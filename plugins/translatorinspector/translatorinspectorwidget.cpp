@@ -29,6 +29,7 @@
 #include "translatorinspectorwidget.h"
 #include "ui_translatorinspectorwidget.h"
 #include "translatorsmodel.h" // use only for its role enums
+#include "translatorwrapper.h" // use only for its role enums
 
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
@@ -38,9 +39,30 @@
 #include <common/endpoint.h>
 
 #include <QMenu>
-#include <QSortFilterProxyModel>
+#include <QIdentityProxyModel>
 
 using namespace GammaRay;
+
+class TranslatorWrapperProxy : public QIdentityProxyModel
+{
+public:
+    using QIdentityProxyModel::QIdentityProxyModel;
+
+    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const override
+    {
+        if (hasIndex(proxyIndex.row(), proxyIndex.column(), proxyIndex.parent())) {
+            if (role == Qt::FontRole) {
+                const bool overriden = proxyIndex.sibling(proxyIndex.row(), 3)
+                        .data(TranslationsModel::IsOverridenRole).toBool();
+                QFont font;
+                font.setItalic(overriden);
+                return font;
+            }
+        }
+
+        return QIdentityProxyModel::data(proxyIndex, role);
+    }
+};
 
 TranslatorInspectorClient::TranslatorInspectorClient(const QString &name, QObject *parent)
     : TranslatorInspectorInterface(name, parent)
@@ -78,9 +100,12 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
 
     // searching for translations
     {
+        auto proxy = new TranslatorWrapperProxy(this);
+        proxy->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel")));
+
         ui->translationsView->header()->setObjectName("translationsViewHeader");
         ui->translationsView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-        ui->translationsView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel")));
+        ui->translationsView->setModel(proxy);
         connect(ui->translationsView, &QTreeView::customContextMenuRequested, this, &TranslatorInspectorWidget::translationsContextMenu);
 
         const auto selectionModel = ObjectBroker::selectionModel(ui->translationsView->model());
