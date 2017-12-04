@@ -309,6 +309,10 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
             target_link_libraries(launchertest gammaray_core gammaray_launcher)
         endif()
     endif()
+
+    gammaray_add_test(clientconnectiontest
+        clientconnectiontest.cpp)
+    target_link_libraries(clientconnectiontest gammaray_core gammaray_launcher gammaray_client ${QT_QTWIDGETS_LIBRARIES})
 endif()
 
 
