@@ -95,7 +95,7 @@ void TranslatorInspector::resetTranslations()
         = m_translatorsModel->translator(translatorsSelection.first().topLeft());
     Q_ASSERT(translator);
     const QItemSelection translationsSelection
-        = m_translationsSelectionModel->selection();
+        = m_translationsModel->mapSelectionToSource(m_translationsSelectionModel->selection());
     if (translationsSelection.isEmpty())
         return;
     translator->model()->resetTranslations(

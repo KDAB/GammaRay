@@ -131,11 +131,10 @@ void TranslationsModel::resetTranslations(const QModelIndex &first, const QModel
 {
     if (!first.isValid() || !last.isValid())
         return;
-    int top = first.row();
-    int bottom = last.row();
+    int top = qMin(first.row(), last.row());
+    int bottom = qMax(first.row(), last.row());
     beginRemoveRows(QModelIndex(), top, bottom);
-    for (int i = 0; i < (bottom - top + 1); ++i)
-        m_nodes.remove(top);
+    m_nodes.remove(top, bottom - top + 1);
     endRemoveRows();
 }
 
