@@ -30,7 +30,7 @@
     \list
         \li Inspecting the visual item hierarchy.
         \li Remote view of the rendered content with diagnostic overlays.
-        \li Inspecting the scene graph used for rendering the user interface on the GPU.
+        \li Inspecting the scene graph used for rendering the user interface on the GPU or via the software renderer.
     \endlist
 
     If your target has multiple QQuickView instances, the combo box at the top can be used to switch between them.
@@ -55,11 +55,25 @@
         \li Element picking.
         \li Diagnostic overlays with layout information.
         \li Input event forwarding, for working with embedded targets.
+        \li Color picking.
         \li A measurement tool.
-        \li Enabling of diagnostic render modes on target (availability depends on Qt version).
+        \li Enabling of diagnostic render modes on target (availability depends on Qt version and renderer backend).
     \endlist
 
     \borderedimage gammaray-qq2-qsg-visualize.png
+
+    The diagnostic render modes include:
+    \list
+        \li Clipping visualization: Highlights items using clipping, which is a potentially expensive operations on the OpenGL render backend.
+        \li Overdraw visualization: Allows to spot out-of-view elements that are drawn, as well as elements that are drawn on top of each other,
+        both of which are potentially expensive operations.
+        \li Batch visualization: Highlights items that are in the same render batch on the OpenGL renderer, as well as unmerged batches. Unmerged
+        batches, and more batches in general, can have significant render performance impact with the OpenGL renderer.
+        \li Change visualization: Highlights areas causing view updates.
+        \li Control tracing: Highlights Qt Quick Controls 2 outlines, which can help to identify layouting issues.
+    \endlist
+
+    Diagnostic render modes can be enabled individually, both on the target and the GammaRay client.
 
     \section1 Paint Analyzer
 
@@ -68,6 +82,9 @@
     \borderedimage gammaray-qqpainteditem-paint-analyzer.png
 
     The \l{Paint Analyzer} allows you to inspect every single QPainter command that is executed, and look at the visual result after each step.
+
+    When using the Qt Quick software renderer, a full-scene paint analysis is also available via the \uicontrol{Quick Scenes} menu
+    (requires Qt 5.9.3 or newer).
 
     \section1 Scene Graph
 

@@ -65,8 +65,8 @@
     You can obtain the source code of GammaRay on \l{https://github.com/KDAB/GammaRay}{Github}. To build it you need
     the following requirements:
     \list
-        \li Qt 4.8 or 5.2 or newer
-        \li CMake 2.8.12 or newer
+        \li Qt 4.8 or 5.3 or newer
+        \li CMake 3.0 or newer
         \li a C++11 compatible compiler
     \endlist
 
@@ -88,6 +88,10 @@
     In all other cases, including non-Linux target systems, refer to the cross-compilation instructions below.
 
     \section2 Yocto
+
+    A Yocto recipe for \l{Qt Automotive Suite} is available as part of the meta-boot2qt Yocto layer
+    \l{http://code.qt.io/cgit/yocto/meta-boot2qt.git/tree/recipes-qt/automotive/gammaray_git.bb}{here}.
+    See the example below on how to customize this to your needs.
 
     Example gammaray_git.bb:
 
@@ -137,7 +141,8 @@
 
     GammaRay can be cross-compiled using the normal cross-compilation mechanism of \l{CMake},
     ie. passing CMake a toolchain file. The GammaRay source code contains a number of example
-    toolchain files for Linux (RPI, iMX6), QNX (6.5, 6.6) and Android you can use or adjust.
+    toolchain files for Linux (generic Yocto, RaspberryPI, iMX6), QNX (6.5, 6.6, 7.0) and
+    Android you can use or adjust.
 
     The toolchain file is passed to CMake using the -DCMAKE_TOOLCHAIN_FILE command line option.
     Note that this only works on the very first CMake run, CMake doesn't like changing the toolchain

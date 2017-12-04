@@ -47,6 +47,7 @@
     but also includes \l{Qt 3D} or even custom use of the QQmlEngine.
 
     \list
+        \li \l{Bindings}
         \li \l{QML Context}
         \li QML Type
     \endlist
@@ -58,6 +59,7 @@
     \list
         \li \l{Scene Graph Material}
         \li \l{Scene Graph Geometry}
+        \li \l{Scene Graph Texture}
         \li \l{Paint Analyzer}
         \li Widget Attributes
         \li \l{Qt3D Geometry Inspector}
