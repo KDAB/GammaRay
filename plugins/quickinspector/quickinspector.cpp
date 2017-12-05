@@ -47,6 +47,7 @@
 #include <common/probecontrollerinterface.h>
 #include <common/remoteviewframe.h>
 
+#include <core/enumrepositoryserver.h>
 #include <core/metaenum.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -122,6 +123,9 @@ Q_DECLARE_METATYPE(QSGMaterial *)
 Q_DECLARE_METATYPE(QSGMaterial::Flags)
 Q_DECLARE_METATYPE(QSGTexture::WrapMode)
 Q_DECLARE_METATYPE(QSGTexture::Filtering)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+Q_DECLARE_METATYPE(QSGTexture::AnisotropyLevel)
+#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 Q_DECLARE_METATYPE(QSGRenderNode *)
 Q_DECLARE_METATYPE(QSGRenderNode::RenderingFlags)
@@ -140,23 +144,15 @@ Q_DECLARE_METATYPE(QSGRendererInterface::ShaderType)
 
 using namespace GammaRay;
 
-static QString qQuickItemFlagsToString(QQuickItem::Flags flags)
-{
-    QStringList list;
-    if (flags & QQuickItem::ItemClipsChildrenToShape)
-        list << QStringLiteral("ItemClipsChildrenToShape");
-    if (flags & QQuickItem::ItemAcceptsInputMethod)
-        list << QStringLiteral("ItemAcceptsInputMethod");
-    if (flags & QQuickItem::ItemIsFocusScope)
-        list << QStringLiteral("ItemIsFocusScope");
-    if (flags & QQuickItem::ItemHasContents)
-        list << QStringLiteral("ItemHasContents");
-    if (flags & QQuickItem::ItemAcceptsDrops)
-        list << QStringLiteral("ItemAcceptsDrops");
-    if (list.isEmpty())
-        return QStringLiteral("<none>");
-    return list.join(QStringLiteral(" | "));
-}
+#define E(x) { QQuickItem:: x, #x }
+static const MetaEnum::Value<QQuickItem::Flag> qqitem_flag_table[] = {
+    E(ItemClipsChildrenToShape),
+    E(ItemAcceptsInputMethod),
+    E(ItemIsFocusScope),
+    E(ItemHasContents),
+    E(ItemAcceptsDrops)
+};
+#undef E
 
 static QString qQuickPaintedItemPerformanceHintsToString(QQuickPaintedItem::PerformanceHints hints)
 {
@@ -168,51 +164,28 @@ static QString qQuickPaintedItemPerformanceHintsToString(QQuickPaintedItem::Perf
     return list.join(QStringLiteral(" | "));
 }
 
-static QString qSGNodeFlagsToString(QSGNode::Flags flags)
-{
-    QStringList list;
-    if (flags & QSGNode::OwnedByParent)
-        list << QStringLiteral("OwnedByParent");
-    if (flags & QSGNode::UsePreprocess)
-        list << QStringLiteral("UsePreprocess");
-    if (flags & QSGNode::OwnsGeometry)
-        list << QStringLiteral("OwnsGeometry");
-    if (flags & QSGNode::OwnsMaterial)
-        list << QStringLiteral("OwnsMaterial");
-    if (flags & QSGNode::OwnsOpaqueMaterial)
-        list << QStringLiteral("OwnsOpaqueMaterial");
-    if (list.isEmpty())
-        return QStringLiteral("<none>");
-    return list.join(QStringLiteral(" | "));
-}
+#define E(x) { QSGNode:: x, #x }
+static const MetaEnum::Value<QSGNode::Flag> qsg_node_flag_table[] = {
+    E(OwnedByParent),
+    E(UsePreprocess),
+    E(OwnsGeometry),
+    E(OwnsMaterial),
+    E(OwnsOpaqueMaterial)
+};
 
-static QString qSGNodeDirtyStateToString(QSGNode::DirtyState flags)
-{
-    QStringList list;
-    if (flags & QSGNode::DirtySubtreeBlocked)
-        list << QStringLiteral("DirtySubtreeBlocked");
-    if (flags & QSGNode::DirtyMatrix)
-        list << QStringLiteral("DirtyMatrix");
-    if (flags & QSGNode::DirtyNodeAdded)
-        list << QStringLiteral("DirtyNodeAdded");
-    if (flags & QSGNode::DirtyNodeRemoved)
-        list << QStringLiteral("DirtyNodeRemoved");
-    if (flags & QSGNode::DirtyGeometry)
-        list << QStringLiteral("DirtyGeometry");
-    if (flags & QSGNode::DirtyMaterial)
-        list << QStringLiteral("DirtyMaterial");
-    if (flags & QSGNode::DirtyOpacity)
-        list << QStringLiteral("DirtyOpacity");
-    if (flags & QSGNode::DirtyForceUpdate)
-        list << QStringLiteral("DirtyForceUpdate");
-    if (flags & QSGNode::DirtyUsePreprocess)
-        list << QStringLiteral("DirtyUsePreprocess");
-    if (flags & QSGNode::DirtyPropagationMask)
-        list << QStringLiteral("DirtyPropagationMask");
-    if (list.isEmpty())
-        return QStringLiteral("Clean");
-    return list.join(QStringLiteral(" | "));
-}
+static const MetaEnum::Value<QSGNode::DirtyStateBit> qsg_node_dirtystate_table[] = {
+    E(DirtySubtreeBlocked),
+    E(DirtyMatrix),
+    E(DirtyNodeAdded),
+    E(DirtyNodeRemoved),
+    E(DirtyGeometry),
+    E(DirtyMaterial),
+    E(DirtyOpacity),
+    E(DirtyForceUpdate),
+    E(DirtyUsePreprocess),
+    E(DirtyPropagationMask)
+};
+#undef E
 
 static QString qsgMaterialFlagsToString(QSGMaterial::Flags flags)
 {
@@ -230,29 +203,32 @@ static QString qsgMaterialFlagsToString(QSGMaterial::Flags flags)
     return list.join(QStringLiteral(" | "));
 }
 
-static QString qsgTextureFilteringToString(QSGTexture::Filtering filtering)
-{
-    switch (filtering) {
-    case QSGTexture::None:
-        return QStringLiteral("None");
-    case QSGTexture::Nearest:
-        return QStringLiteral("Nearest");
-    case QSGTexture::Linear:
-        return QStringLiteral("Linear");
-    }
-    return QStringLiteral("Unknown: %1").arg(filtering);
-}
+#define E(x) { QSGTexture:: x, #x }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+static const MetaEnum::Value<QSGTexture::AnisotropyLevel> qsg_texture_anisotropy_table[] = {
+    E(AnisotropyNone),
+    E(Anisotropy2x),
+    E(Anisotropy4x),
+    E(Anisotropy8x),
+    E(Anisotropy16x)
+};
+#endif
 
-static QString qsgTextureWrapModeToString(QSGTexture::WrapMode wrapMode)
-{
-    switch (wrapMode) {
-    case QSGTexture::Repeat:
-        return QStringLiteral("Repeat");
-    case QSGTexture::ClampToEdge:
-        return QStringLiteral("ClampToEdge");
-    }
-    return QStringLiteral("Unknown: %1").arg(wrapMode);
-}
+static const MetaEnum::Value<QSGTexture::Filtering> qsg_texture_filtering_table[] = {
+    E(None),
+    E(Nearest),
+    E(Linear)
+};
+
+static const MetaEnum::Value<QSGTexture::WrapMode> qsg_texture_wrapmode_table[] = {
+    E(Repeat),
+    E(ClampToEdge),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    E(MirroredRepeat)
+#endif
+};
+
+#undef E
 
 static bool isGoodCandidateItem(QQuickItem *item)
 {
@@ -965,6 +941,9 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY(QQuickPaintedItem, performanceHints, setPerformanceHints);
 
     MO_ADD_METAOBJECT1(QSGTexture, QObject);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+    MO_ADD_PROPERTY(QSGTexture, anisotropyLevel, setAnisotropyLevel);
+#endif
     MO_ADD_PROPERTY(QSGTexture, filtering, setFiltering);
     MO_ADD_PROPERTY_RO(QSGTexture, hasAlphaChannel);
     MO_ADD_PROPERTY_RO(QSGTexture, hasMipmaps);
@@ -1133,7 +1112,15 @@ static QString anchorLineToString(const QQuickAnchorLine &line)
 
 void QuickInspector::registerVariantHandlers()
 {
-    VariantHandler::registerStringConverter<QQuickItem::Flags>(qQuickItemFlagsToString);
+    ER_REGISTER_FLAGS(QQuickItem, Flags, qqitem_flag_table);
+    ER_REGISTER_FLAGS(QSGNode, DirtyState, qsg_node_dirtystate_table);
+    ER_REGISTER_FLAGS(QSGNode, Flags, qsg_node_flag_table);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+    ER_REGISTER_ENUM(QSGTexture, AnisotropyLevel, qsg_texture_anisotropy_table);
+#endif
+    ER_REGISTER_ENUM(QSGTexture, Filtering, qsg_texture_filtering_table);
+    ER_REGISTER_ENUM(QSGTexture, WrapMode, qsg_texture_wrapmode_table);
+
     VariantHandler::registerStringConverter<QQuickPaintedItem::PerformanceHints>(
         qQuickPaintedItemPerformanceHintsToString);
     VariantHandler::registerStringConverter<QQuickAnchorLine>(anchorLineToString);
@@ -1145,14 +1132,10 @@ void QuickInspector::registerVariantHandlers()
     VariantHandler::registerStringConverter<QSGTransformNode *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGRootNode *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGOpacityNode *>(Util::addressToString);
-    VariantHandler::registerStringConverter<QSGNode::Flags>(qSGNodeFlagsToString);
-    VariantHandler::registerStringConverter<QSGNode::DirtyState>(qSGNodeDirtyStateToString);
     VariantHandler::registerStringConverter<QSGGeometry *>(Util::addressToString);
     VariantHandler::registerStringConverter<const QSGGeometry *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGMaterial *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGMaterial::Flags>(qsgMaterialFlagsToString);
-    VariantHandler::registerStringConverter<QSGTexture::Filtering>(qsgTextureFilteringToString);
-    VariantHandler::registerStringConverter<QSGTexture::WrapMode>(qsgTextureWrapModeToString);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     VariantHandler::registerStringConverter<QSGRenderNode *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGRenderNode::StateFlags>(MetaEnum::flagsToString_fn(render_node_state_flags_table));
