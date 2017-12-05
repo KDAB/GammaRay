@@ -171,7 +171,7 @@ PropertyEnumEditor::PropertyEnumEditor(QWidget* parent) :
     connect(repo, SIGNAL(definitionChanged(int)), this, SLOT(definitionChanged(int)));
 
     setEnabled(false);
-    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(currentIndexChanged(int)));
+    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurrentIndexChanged(int)));
 }
 
 PropertyEnumEditor::~PropertyEnumEditor()
@@ -234,7 +234,7 @@ void PropertyEnumEditor::setupView()
     }
 }
 
-void PropertyEnumEditor::currentIndexChanged(int index)
+void PropertyEnumEditor::slotCurrentIndexChanged(int index)
 {
     const auto def = m_model->definition();
     if (!def.isValid() || def.isFlag() || index < 0)

@@ -54,7 +54,7 @@ protected:
 
 private slots:
     void definitionChanged(int id);
-    void currentIndexChanged(int index);
+    void slotCurrentIndexChanged(int index);
 
 private:
     void updateCurrentIndex();
