@@ -46,7 +46,9 @@ using namespace GammaRay;
 class TranslatorWrapperProxy : public QIdentityProxyModel
 {
 public:
-    using QIdentityProxyModel::QIdentityProxyModel;
+    explicit TranslatorWrapperProxy(QObject *parent = nullptr)
+        : QIdentityProxyModel(parent)
+    { }
 
     QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const override
     {
