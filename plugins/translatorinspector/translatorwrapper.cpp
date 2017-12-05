@@ -29,6 +29,7 @@
 #include "translatorwrapper.h"
 
 #include <QFont>
+#include <QItemSelection>
 
 using namespace GammaRay;
 
@@ -127,15 +128,37 @@ QMap<int, QVariant> TranslationsModel::itemData(const QModelIndex &index) const
     return data;
 }
 
-void TranslationsModel::resetTranslations(const QModelIndex &first, const QModelIndex &last)
+void TranslationsModel::resetTranslations(const QItemSelection &selection)
 {
-    if (!first.isValid() || !last.isValid())
+    if (selection.isEmpty())
         return;
-    int top = qMin(first.row(), last.row());
-    int bottom = qMax(first.row(), last.row());
-    beginRemoveRows(QModelIndex(), top, bottom);
-    m_nodes.remove(top, bottom - top + 1);
-    endRemoveRows();
+
+    // The mapping to source make the linear selection ... non linear
+    // Let rebuild linear ranges to avoid overflood...
+
+    const QModelIndexList indexes = selection.indexes();
+    QMap<int, int> rows;
+    for (const QModelIndex &index: indexes)
+        rows[index.row()] = -1;
+
+    QVector<QPair<int, int>> ranges; // pair of first/last
+    for (auto it = rows.constBegin(), end = rows.constEnd(); it != end; ++it) {
+        const int &row = it.key();
+        Q_ASSERT(row >= 0);
+
+        if (ranges.isEmpty() || ranges.last().second != row - 1) {
+            ranges << qMakePair(row, row);
+        } else {
+            ranges.last().second = row;
+        }
+    }
+
+    for (int i = ranges.count() -1; i >= 0; --i) {
+        const auto &range = ranges[i];
+        beginRemoveRows(QModelIndex(), range.first, range.second);
+        m_nodes.remove(range.first, range.second - range.first + 1);
+        endRemoveRows();
+    }
 }
 
 QString TranslationsModel::translation(const char *context, const char *sourceText,
@@ -154,7 +177,7 @@ void TranslationsModel::resetAllUnchanged()
 {
     for (int i = 0; i < m_nodes.size(); ++i) {
         if (!m_nodes[i].isOverriden)
-            resetTranslations(index(i, 0), index(i, 0));
+            resetTranslations(QItemSelection(index(i, 0), index(i, 0)));
     }
 }
 

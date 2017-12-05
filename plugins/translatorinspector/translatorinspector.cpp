@@ -94,13 +94,12 @@ void TranslatorInspector::resetTranslations()
     TranslatorWrapper *translator
         = m_translatorsModel->translator(translatorsSelection.first().topLeft());
     Q_ASSERT(translator);
-    const QItemSelection translationsSelection
-        = m_translationsModel->mapSelectionToSource(m_translationsSelectionModel->selection());
-    if (translationsSelection.isEmpty())
+    const QItemSelection translationsProxySelection = m_translationsSelectionModel->selection();
+    const QItemSelection translationsSourceSelection
+        = m_translationsModel->mapSelectionToSource(translationsProxySelection);
+    if (translationsSourceSelection.isEmpty())
         return;
-    translator->model()->resetTranslations(
-        translationsSelection.first().topLeft(),
-        translationsSelection.last().bottomRight());
+    translator->model()->resetTranslations(translationsSourceSelection);
 }
 
 bool TranslatorInspector::eventFilter(QObject *object, QEvent *event)

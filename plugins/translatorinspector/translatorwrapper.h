@@ -32,6 +32,10 @@
 #include <QAbstractItemModel>
 #include <QTranslator>
 
+QT_BEGIN_NAMESPACE
+class QItemSelection;
+QT_END_NAMESPACE
+
 namespace GammaRay {
 class TranslatorWrapper;
 
@@ -54,7 +58,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
-    void resetTranslations(const QModelIndex &first, const QModelIndex &last);
+    void resetTranslations(const QItemSelection &selection);
     QString translation(const char *context, const char *sourceText, const char *disambiguation,
                         const int n, const QString &default_);
 
