@@ -59,6 +59,7 @@
 #include <QGraphicsWidget>
 #include <QGraphicsView>
 #include <QItemSelectionModel>
+#include <QTextDocument>
 
 #include <iostream>
 
@@ -364,6 +365,18 @@ void SceneInspector::registerGraphicsViewMetaTypes()
 
     // no extra properties, but we need the inheritance connection for anything above to work
     MO_ADD_METAOBJECT2(QGraphicsObject, QObject, QGraphicsItem);
+
+    MO_ADD_METAOBJECT1(QGraphicsTextItem, QGraphicsObject);
+    MO_ADD_PROPERTY(QGraphicsTextItem, defaultTextColor, setDefaultTextColor);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_PROPERTY(QGraphicsTextItem, document, setDocument);
+#endif
+    MO_ADD_PROPERTY(QGraphicsTextItem, font, setFont);
+    MO_ADD_PROPERTY(QGraphicsTextItem, tabChangesFocus, setTabChangesFocus);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_PROPERTY(QGraphicsTextItem, textInteractionFlags, setTextInteractionFlags);
+#endif
+    MO_ADD_PROPERTY(QGraphicsTextItem, textWidth, setTextWidth);
 
     MO_ADD_METAOBJECT0(QGraphicsLayoutItem);
     MO_ADD_PROPERTY_RO(QGraphicsLayoutItem, contentsRect);
