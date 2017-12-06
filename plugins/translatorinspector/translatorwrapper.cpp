@@ -47,6 +47,7 @@ int TranslationsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
+
     return m_nodes.size();
 }
 
@@ -59,6 +60,7 @@ QVariant TranslationsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
+
     Row node = m_nodes.at(index.row());
     if (role == Qt::DisplayRole || role == Qt::EditRole) {
         switch (index.column()) {
@@ -72,8 +74,8 @@ QVariant TranslationsModel::data(const QModelIndex &index, int role) const
             return node.translation;
         }
     }
-    if (role == IsOverridenRole && index.column() == 3) {
-        return node.isOverriden;
+    if (role == IsOverriddenRole && index.column() == 3) {
+        return node.isOverridden;
     }
     return QVariant();
 }
@@ -82,10 +84,11 @@ bool TranslationsModel::setData(const QModelIndex &index, const QVariant &value,
 {
     if (role == Qt::EditRole && index.column() == 3) {
         Row &node = m_nodes[index.row()];
-        if (node.translation == value.toString())
+        if (node.translation == value.toString()) {
             return true;
+        }
         node.translation = value.toString();
-        node.isOverriden = true;
+        node.isOverridden = true;
         emit dataChanged(index, index, QVector<int>() << Qt::DisplayRole
                                                       << Qt::EditRole);
         return true;
@@ -113,8 +116,9 @@ QVariant TranslationsModel::headerData(int section, Qt::Orientation orientation,
 Qt::ItemFlags TranslationsModel::flags(const QModelIndex &index) const
 {
     const auto f = QAbstractTableModel::flags(index);
-    if (index.column() == 3)
+    if (index.column() == 3) {
         return f | Qt::ItemIsEditable;
+    }
     return f;
 }
 
@@ -123,7 +127,7 @@ QMap<int, QVariant> TranslationsModel::itemData(const QModelIndex &index) const
     auto data = QAbstractTableModel::itemData(index);
     if (hasIndex(index.row(), index.column(), index.parent())) {
         if (index.column() == 3)
-            data[IsOverridenRole] = m_nodes.at(index.row()).isOverriden;
+            data[IsOverriddenRole] = m_nodes.at(index.row()).isOverridden;
     }
     return data;
 }
@@ -138,8 +142,9 @@ void TranslationsModel::resetTranslations(const QItemSelection &selection)
 
     const QModelIndexList indexes = selection.indexes();
     QMap<int, int> rows;
-    foreach (const QModelIndex &index, indexes)
+    foreach (const QModelIndex &index, indexes) {
         rows[index.row()] = -1;
+    }
 
     QVector<QPair<int, int>> ranges; // pair of first/last
     for (auto it = rows.constBegin(), end = rows.constEnd(); it != end; ++it) {
@@ -165,30 +170,32 @@ QString TranslationsModel::translation(const char *context, const char *sourceTe
                                        const char *disambiguation, const int n,
                                        const QString &default_)
 {
-    QModelIndex existingIndex
-        = findNode(context, sourceText, disambiguation, n, true);
+    QModelIndex existingIndex = findNode(context, sourceText, disambiguation, n, true);
     Row &row = m_nodes[existingIndex.row()];
-    if (!row.isOverriden)
+    if (!row.isOverridden)
         setTranslation(existingIndex, default_);
+
     return row.translation;
 }
 
 void TranslationsModel::resetAllUnchanged()
 {
     for (int i = 0; i < m_nodes.size(); ++i) {
-        if (!m_nodes[i].isOverriden)
+        if (!m_nodes[i].isOverridden)
             resetTranslations(QItemSelection(index(i, 0), index(i, 0)));
     }
 }
 
 void TranslationsModel::setTranslation(const QModelIndex &index, const QString &translation)
 {
-    if (!index.isValid())
+    if (!index.isValid()) {
         return;
+    }
 
     auto &row = m_nodes[index.row()];
-    if (row.isOverriden || row.translation == translation)
+    if (row.isOverridden || row.translation == translation) {
         return;
+    }
     row.translation = translation;
     emit dataChanged(index, index);
 }
@@ -200,9 +207,11 @@ QModelIndex TranslationsModel::findNode(const char *context, const char *sourceT
     // QUESTION make use of n?
     for (int i = 0; i < m_nodes.size(); ++i) {
         const Row &node = m_nodes.at(i);
-        if (node.context == context && node.sourceText == sourceText
-            && node.disambiguation == disambiguation)
+        if (node.context == context &&
+            node.sourceText == sourceText &&
+            node.disambiguation == disambiguation) {
             return index(i, 0);
+        }
     }
     if (create) {
         Row node;
@@ -243,9 +252,11 @@ QString TranslatorWrapper::translate(const char *context, const char *sourceText
 
     if (context && strncmp(context, "GammaRay::", 10) == 0)
         return translation;
+
     // it's not for this translator
     if (translation.isNull())
         return translation;
+
     return m_model->translation(context, sourceText, disambiguation, n, translation);
 }
 

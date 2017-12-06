@@ -54,10 +54,10 @@ public:
     {
         if (hasIndex(proxyIndex.row(), proxyIndex.column(), proxyIndex.parent())) {
             if (role == Qt::FontRole) {
-                const bool overriden = proxyIndex.sibling(proxyIndex.row(), 3)
-                        .data(TranslationsModel::IsOverridenRole).toBool();
+                const bool overridden =
+                    proxyIndex.sibling(proxyIndex.row(), 3).data(TranslationsModel::IsOverriddenRole).toBool();
                 QFont font;
-                font.setItalic(overriden);
+                font.setItalic(overridden);
                 return font;
             }
         }
@@ -137,6 +137,7 @@ void TranslatorInspectorWidget::translatorContextMenu(QPoint pos)
     auto index = ui->translatorList->indexAt(pos);
     if (!index.isValid())
         return;
+
     index = index.sibling(index.row(), 0);
 
     const auto objectId = index.data(TranslatorsModel::ObjectIdRole).value<ObjectId>();
@@ -160,7 +161,6 @@ void TranslatorInspectorWidget::updateActions()
 {
     ui->actionReset->setEnabled(!ui->translationsView->selectionModel()->selectedRows().isEmpty());
 }
-
 
 static QObject *translatorInspectorClientFactory(const QString &name, QObject *parent)
 {

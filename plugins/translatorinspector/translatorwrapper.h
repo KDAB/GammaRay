@@ -45,7 +45,7 @@ class TranslationsModel : public QAbstractTableModel
 
 public:
     enum CustomRoles {
-        IsOverridenRole = 256 // Qt 5 Qt::UserRole is 256 while Qt 4 one is 32
+        IsOverriddenRole = 256 // Qt 5 Qt::UserRole is 256 while Qt 4 one is 32
     };
 
     explicit TranslationsModel(TranslatorWrapper *translator);
@@ -79,12 +79,12 @@ private:
     struct Row
     {
         Row()
-            : isOverriden(false) {}
+            : isOverridden(false) {}
         QByteArray context;
         QByteArray sourceText;
         QByteArray disambiguation;
         QString translation;
-        bool isOverriden;
+        bool isOverridden;
     };
     QVector<Row> m_nodes;
 
