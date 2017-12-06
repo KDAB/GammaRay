@@ -71,18 +71,20 @@ class QIviGammarayPropertyOverrider : public QIviDefaultPropertyOverrider
 public:
     explicit QIviGammarayPropertyOverrider(QIviAbstractFeature *carrier, QObject *parent = nullptr);
 
-    bool setOverriddenValue(int index, const QVariant &value) override;
+    bool setOverridenValue(int index, const QVariant &value) override;
     QString displayTextAt(int index) const override;
     QVariant editValueAt(int index) const override;
     QVariant iviConstraintsAt(int index) const override;
 };
 
+
 QIviGammarayPropertyOverrider::QIviGammarayPropertyOverrider(QIviAbstractFeature *carrier, QObject *parent)
     : QIviDefaultPropertyOverrider(carrier, parent)
 {
+
 }
 
-bool QIviGammarayPropertyOverrider::setOverriddenValue(int index, const QVariant &value)
+bool QIviGammarayPropertyOverrider::setOverridenValue(int index, const QVariant &value)
 {
     if (m_carriers.empty())
         return {};
@@ -100,7 +102,7 @@ bool QIviGammarayPropertyOverrider::setOverriddenValue(int index, const QVariant
         }
     }
 
-    return QIviDefaultPropertyOverrider::setOverriddenValue(index, toSet);
+    return QIviDefaultPropertyOverrider::setOverridenValue(index, toSet);
 }
 
 QString QIviGammarayPropertyOverrider::displayTextAt(int index) const
@@ -114,7 +116,6 @@ QString QIviGammarayPropertyOverrider::displayTextAt(int index) const
     const QString enumStr(EnumUtil::enumToString(value, nullptr, mo));
     if (!enumStr.isEmpty())
         return enumStr;
-
     return VariantHandler::displayString(value);
 }
 
@@ -179,7 +180,6 @@ QVariant QIviGammarayPropertyOverrider::iviConstraintsAt(int index) const
     }
     if (!result.isEmpty())
         return result;
-
     QLatin1String domain("domain");
     if (constraints.toObject().contains(domain)) {
         const QVariantList vals = constraints.toObject().value(domain).toArray().toVariantList();
@@ -189,6 +189,7 @@ QVariant QIviGammarayPropertyOverrider::iviConstraintsAt(int index) const
     }
     return {};
 }
+
 
 QtIviObjectModel::QtIviObjectModel(Probe *probe)
     : QAbstractItemModel(probe)
@@ -227,12 +228,10 @@ QModelIndex QtIviObjectModel::indexOfProperty(const QObject *c, const QByteArray
     const int carrierRow = rowOfCarrier(c);
     if (carrierRow < 0)
         return QModelIndex();
-
     const auto &carrier = m_serviceCarriers.at(carrierRow).m_service;
     const int propertyIndex = carrier->indexOfProperty(property);
     if (propertyIndex < 0)
         return QModelIndex();
-
     return createIndex(propertyIndex, column, carrierRow);
 }
 
@@ -294,8 +293,8 @@ void QtIviObjectModel::objectRemoved(QObject *obj)
 
     if (m_handledObjects.contains(obj)) {
         QIviAbstractFeature *featureObj = qobject_cast<QIviAbstractFeature *>(obj);
-        for (auto &c : m_serviceCarriers) {
-            if (c.m_service->handles(obj)) {
+        for(auto &c : m_serviceCarriers) {
+            if(c.m_service->handles(obj)) {
                 c.m_service->removeCarrier(featureObj);
 
                 if (c.m_service->numCarriers() == 0) {
@@ -367,29 +366,26 @@ Qt::ItemFlags QtIviObjectModel::flags(const QModelIndex &index) const
 
         switch (index.column()) {
         case ValueColumn: {
-            if (carrier->isWritableAt(index.row()) || carrier->isOverridableAt(index.row())) {
+            if (carrier->isWritableAt(index.row()) || carrier->isOverridableAt(index.row()))
                 flags |= Qt::ItemIsEditable;
-            }
             break;
         }
 
         case WritableColumn: {
             flags |= Qt::ItemIsUserCheckable;
-            if (carrier->isOverriddenAt(index.row()) && !carrier->isWritableAt(index.row())) {
+            if (carrier->isOverriddenAt(index.row()) && !carrier->isWritableAt(index.row()))
                 flags |= Qt::ItemIsEditable;
-            } else {
+            else
                 flags &= ~Qt::ItemIsEnabled;
-            }
             break;
         }
 
         case OverrideColumn: {
             flags |= Qt::ItemIsUserCheckable;
-            if (carrier->isOverridableAt(index.row()) || carrier->isOverriddenAt(index.row())) {
+            if (carrier->isOverridableAt(index.row()) || carrier->isOverriddenAt(index.row()))
                 flags |= Qt::ItemIsEditable;
-            } else {
+            else
                 flags &= ~Qt::ItemIsEnabled;
-            }
             break;
         }
 
@@ -462,9 +458,8 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
                     case TypeColumn: {
                         QString result = carrier->typeNameAt(index.row());
                         QVariant v = carrier->iviConstraintsAt(index.row());
-                        if (v.isValid() && v.type() == QVariant::List) {
+                        if (v.isValid() && v.type() == QVariant::List)
                             result += QLatin1String(" (!)");
-                        }
                         return result;
                     }
                     default:
@@ -503,9 +498,8 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
                     case TypeColumn:
                     case ValueColumn: {
                         QVariant v = carrier->iviConstraintsAt(index.row());
-                        if (!v.isValid() || v.type() != QVariant::List) {
-                            return {};
-                        }
+                        if (!v.isValid() || v.type() != QVariant::List)
+                            return  {};
                         QVariantList vl = v.toList();
                         QString result;
                         while (!vl.isEmpty()) {
@@ -529,9 +523,8 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
                             case QtIviObjectModel::AvailableValuesConstraints: {
                                 vl.pop_front();
                                 QStringList valstrings;
-                                for (const auto &vi: qAsConst(vl)) {
+                                for(const auto &vi: qAsConst(vl))
                                     valstrings << vi.toString();
-                                }
                                 result += QString(QLatin1String("Valid Values: [%1]\n")).arg(valstrings.join(QLatin1String(", ")));
                                 vl.clear();
                                 break;
@@ -570,6 +563,7 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
 //                case RawValue:
 //                    return property.cppValue();
                 }
+
             }
         }
     }
@@ -603,7 +597,7 @@ bool QtIviObjectModel::setData(const QModelIndex &index, const QVariant &value, 
         switch (index.column()) {
         case ValueColumn: {
             if (role == Qt::DisplayRole || role == Qt::EditRole) {
-                if (carrier->setOverriddenValue(index.row(), value)) {
+                if (carrier->setOverridenValue(index.row(), value)) {
                     if (!carrier->hasNotifySignalAt(index.row())) {
                         emitRowDataChanged(index);
                     }
