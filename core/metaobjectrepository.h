@@ -36,6 +36,9 @@
 #include "gammaray_core_export.h"
 #include <QHash>
 
+#include <unordered_map>
+#include <vector>
+
 QT_BEGIN_NAMESPACE
 class QString;
 QT_END_NAMESPACE
@@ -68,6 +71,17 @@ public:
     MetaObject *metaObject(const QString &typeName) const;
 
     /**
+     * Returns the introspection information for the given object instance.
+     * This behaves as the above function for non-polymorphic types, for polymorphic
+     * types it tries to find the most specific derived type for the given instance.
+     * @param obj The object pointer is modified if necessary for the corresponding type.
+     * This is necessary to support multiple inheritance.
+     */
+    MetaObject *metaObject(const QString &typeName, void *&obj) const;
+    /** Same as the above method, just using an already looked-up MetaObject. */
+    MetaObject *metaObject(MetaObject *mo, void *&obj) const;
+
+    /**
      * Returns whether a meta object is known for the given type name.
      */
     bool hasMetaObject(const QString &typeName) const;
@@ -89,7 +103,8 @@ private:
     void initIOTypes();
 
 private:
-    QHash<QString, MetaObject *> m_metaObjects;
+    QHash<QString, MetaObject*> m_metaObjects;
+    std::unordered_map<MetaObject*, std::vector<MetaObject*> > m_derivedTypes;
     bool m_initialized;
 };
 }

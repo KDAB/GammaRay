@@ -110,6 +110,25 @@ void *MetaObject::castTo(void *object, const QString &baseClass) const
     return nullptr;
 }
 
+bool MetaObject::isPolymorphic() const
+{
+    if (isClassPolymorphic())
+        return true;
+    foreach (const auto &baseClass, m_baseClasses) {
+        if (baseClass->isPolymorphic())
+            return true;
+    }
+    return false;
+}
+
+void* MetaObject::castFrom(void *object, MetaObject *baseClass) const
+{
+    const auto idx = m_baseClasses.indexOf(baseClass);
+    if (idx < 0)
+        return nullptr;
+    return castFromBaseClass(object, idx);
+}
+
 MetaObject *MetaObject::superClass(int index) const
 {
     if (m_baseClasses.size() <= index)

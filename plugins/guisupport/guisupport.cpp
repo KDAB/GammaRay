@@ -92,6 +92,24 @@ Q_DECLARE_METATYPE(QPixelFormat::TypeInterpretation)
 Q_DECLARE_METATYPE(QPixelFormat::YUVLayout)
 #endif
 
+// QGradient is pseudo-polymorphic, make it introspectable nevertheless
+#define MAKE_GRADIENT_CAST(Type) \
+    template<> Q ## Type *DynamicCast<Q ## Type *>(QGradient *g) { \
+        if (g->type() == QGradient:: Type) return static_cast<Q ## Type *>(g); \
+        return nullptr; \
+    }
+
+namespace GammaRay
+{
+MAKE_GRADIENT_CAST(ConicalGradient)
+MAKE_GRADIENT_CAST(LinearGradient)
+MAKE_GRADIENT_CAST(RadialGradient)
+
+template <>
+bool IsPolymorphic<QGradient>() { return true; }
+}
+#undef MAKE_GRADIENT_CAST
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 static bool isAcceptableWindow(QWindow *w)
 {

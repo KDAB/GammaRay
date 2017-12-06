@@ -32,6 +32,7 @@
 #include "gammaray_core_export.h"
 
 #include "metaproperty.h"
+#include "typetraits.h"
 
 #include <QVector>
 
@@ -76,14 +77,36 @@ public:
 
     void setClassName(const QString &className);
 
+    /** Returns the MetaObject for the @p index base class. */
     MetaObject *superClass(int index = 0) const;
     bool inherits(const QString &className) const;
 
+    /** Returns @c true if this is a polymorphic type.
+     *  @see std::is_polymorphic
+     */
+    bool isPolymorphic() const;
+
+    /** Casts to a void pointer for an instance of this type
+     *  coming from the given base class. This performs the equivalent
+     *  of a dynamic_cast and thus can return @p nullptr.
+     */
+    void* castFrom(void *object, MetaObject *baseClass) const;
+
 protected:
-    /** Casts down to base class @p baseClassIndex.
+    /** Casts up to base class @p baseClassIndex.
      * This is important when traversing multi-inheritance trees.
      */
     virtual void *castToBaseClass(void *object, int baseClassIndex) const = 0;
+
+    /** Casts down from base class @p baseClassIndex.
+     *  This performs a dynamic cast on polymorphic types, and is undefined for non-polymorphic types.
+     */
+    virtual void *castFromBaseClass(void *object, int baseClassIndex) const = 0;
+
+    /** Returns if this type is polymorphic. This can but does not require
+     *  to return @c true for types derives from a polymorphic type.
+     */
+    virtual bool isClassPolymorphic() const = 0;
 
 protected:
     QVector<MetaObject *> m_baseClasses;
@@ -94,11 +117,13 @@ private:
     QString m_className;
 };
 
+/** @endcond */
+
 /** @brief Template implementation of MetaObject. */
 template<typename T, typename Base1 = void, typename Base2 = void, typename Base3 = void>
 class MetaObjectImpl : public MetaObject
 {
-public:
+protected:
     void *castToBaseClass(void *object, int baseClassIndex) const override
     {
         Q_ASSERT(baseClassIndex >= 0 && baseClassIndex < m_baseClasses.size());
@@ -113,6 +138,26 @@ public:
         Q_ASSERT_X(false, "MetaObjectImpl::castToBaseClass",
                    "Unexpected baseClassIndex encountered");
         return nullptr;
+    }
+
+    void *castFromBaseClass(void *object, int baseClassIndex) const override
+    {
+        Q_ASSERT(baseClassIndex >= 0 && baseClassIndex < m_baseClasses.size());
+        Q_ASSERT(isPolymorphic());
+        switch (baseClassIndex) {
+            case 0:
+                return DynamicCast<T*>(static_cast<Base1*>(object));
+            case 1:
+                return DynamicCast<T*>(static_cast<Base2*>(object));
+            case 2:
+                return DynamicCast<T*>(static_cast<Base3*>(object));
+        }
+        return nullptr;
+    }
+
+    bool isClassPolymorphic() const override
+    {
+        return IsPolymorphic<T>();
     }
 };
 }

@@ -226,6 +226,9 @@ void MetaObjectRepository::addMetaObject(MetaObject *mo)
     Q_ASSERT(!mo->className().isEmpty());
     Q_ASSERT(!m_metaObjects.contains(mo->className()));
     m_metaObjects.insert(mo->className(), mo);
+    int idx = 0;
+    while (auto super = mo->superClass(idx++))
+        m_derivedTypes[super].push_back(mo);
 }
 
 MetaObject *MetaObjectRepository::metaObject(const QString &typeName) const
@@ -237,6 +240,29 @@ MetaObject *MetaObjectRepository::metaObject(const QString &typeName) const
     typeName_.remove(QStringLiteral(" const"));
     typeName_.remove(' ');
     return m_metaObjects.value(typeName_);
+}
+
+MetaObject* MetaObjectRepository::metaObject(const QString& typeName, void *&obj) const
+{
+    auto mo = metaObject(typeName);
+    return metaObject(mo, obj);
+}
+
+MetaObject* MetaObjectRepository::metaObject(MetaObject *mo, void *&obj) const
+{
+    if (!mo || !mo->isPolymorphic())
+        return mo;
+    const auto derivedIt = m_derivedTypes.find(mo);
+    if (derivedIt == m_derivedTypes.end())
+        return mo;
+    for (auto it = (*derivedIt).second.begin(); it != (*derivedIt).second.end(); ++it) {
+        auto childObj = (*it)->castFrom(obj, mo);
+        if (!childObj)
+            continue;
+        obj = childObj;
+        return metaObject(*it, obj);
+    }
+    return mo;
 }
 
 bool MetaObjectRepository::hasMetaObject(const QString &typeName) const
