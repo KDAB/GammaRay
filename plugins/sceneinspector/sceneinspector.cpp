@@ -214,7 +214,7 @@ void SceneInspector::sceneItemSelected(const QItemSelection &selection)
         if (obj)
             m_propertyController->setObject(obj);
         else
-            m_propertyController->setObject(item, findBestType(item));
+            m_propertyController->setObject(item, QStringLiteral("QGraphicsItem"));
         emit itemSelected(item->mapRectToScene(item->boundingRect()));
     } else {
         m_propertyController->setObject(nullptr);
@@ -263,28 +263,6 @@ void SceneInspector::sceneClicked(const QPointF &pos)
     QGraphicsItem *item = m_sceneModel->scene()->itemAt(pos);
     if (item)
         sceneItemSelected(item);
-}
-
-#define QGV_CHECK_TYPE(Class) \
-    if (dynamic_cast<Class *>(item) \
-        && MetaObjectRepository::instance()->hasMetaObject(QStringLiteral(#Class))) \
-        return QStringLiteral(#Class)
-
-QString SceneInspector::findBestType(QGraphicsItem *item)
-{
-    // keep this in reverse topological order of the class hierarchy!
-    // QObject-based types are covered elsewhere, so we don't need those here
-    QGV_CHECK_TYPE(QGraphicsEllipseItem);
-    QGV_CHECK_TYPE(QGraphicsPathItem);
-    QGV_CHECK_TYPE(QGraphicsPolygonItem);
-    QGV_CHECK_TYPE(QGraphicsSimpleTextItem);
-    QGV_CHECK_TYPE(QGraphicsRectItem);
-    QGV_CHECK_TYPE(QAbstractGraphicsShapeItem);
-    QGV_CHECK_TYPE(QGraphicsLineItem);
-    QGV_CHECK_TYPE(QGraphicsItemGroup);
-    QGV_CHECK_TYPE(QGraphicsPixmapItem);
-
-    return QStringLiteral("QGraphicsItem");
 }
 
 void SceneInspector::registerGraphicsViewMetaTypes()

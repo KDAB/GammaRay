@@ -783,7 +783,9 @@ void QuickInspector::sgSelectionChanged(const QItemSelection &selection)
     if (!m_sgModel->verifyNodeValidity(m_currentSgNode))
         return; // Apparently the node has been deleted meanwhile, so don't access it.
 
-    m_sgPropertyController->setObject(m_currentSgNode, findSGNodeType(m_currentSgNode));
+    void *obj = m_currentSgNode;
+    auto mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QSGNode"), obj);
+    m_sgPropertyController->setObject(m_currentSgNode, mo->className());
 
     m_currentItem = m_sgModel->itemForSgNode(m_currentSgNode);
     selectItem(m_currentItem);
@@ -1163,26 +1165,4 @@ void QuickInspector::registerPCExtensions()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
 #endif
-}
-
-#define QSG_CHECK_TYPE(Class) \
-    if (dynamic_cast<Class *>(node) \
-        && MetaObjectRepository::instance()->hasMetaObject(QStringLiteral(#Class))) \
-        return QStringLiteral(#Class)
-
-QString QuickInspector::findSGNodeType(QSGNode *node) const
-{
-    // keep this in reverse topological order of the class hierarchy!
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    QSG_CHECK_TYPE(QSGRenderNode);
-#endif
-    QSG_CHECK_TYPE(QSGClipNode);
-    QSG_CHECK_TYPE(QSGGeometryNode);
-    QSG_CHECK_TYPE(QSGBasicGeometryNode);
-    QSG_CHECK_TYPE(QSGTransformNode);
-    QSG_CHECK_TYPE(QSGRootNode);
-    QSG_CHECK_TYPE(QSGOpacityNode);
-
-    return QStringLiteral("QSGNode");
 }

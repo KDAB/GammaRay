@@ -68,25 +68,6 @@ MaterialExtension::~MaterialExtension()
 {
 }
 
-#include <iostream>
-
-static const char *typeForMaterial(QSGMaterial *material)
-{
-#define MT(type) if (dynamic_cast<type *>(material)) return #type;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    MT(QQuickOpenGLShaderEffectMaterial)
-#endif
-    MT(QSGDistanceFieldShiftedStyleTextMaterial)
-    MT(QSGDistanceFieldStyledTextMaterial)
-    MT(QSGDistanceFieldTextMaterial)
-    MT(QSGFlatColorMaterial)
-    MT(QSGTextureMaterial)
-    MT(QSGOpaqueTextureMaterial)
-    MT(QSGVertexColorMaterial)
-#undef MT
-    return "QSGMaterial";
-}
-
 bool MaterialExtension::setObject(void *object, const QString &typeName)
 {
     QSGMaterial *material = nullptr;
@@ -105,7 +86,7 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
         return false;
     }
 
-    m_materialPropertyModel->setObject(ObjectInstance(material, typeForMaterial(material)));
+    m_materialPropertyModel->setObject(ObjectInstance(material, "QSGMaterial"));
 
     m_materialShader.reset(material->createShader());
     m_shaderModel->setMaterialShader(m_materialShader.get());
