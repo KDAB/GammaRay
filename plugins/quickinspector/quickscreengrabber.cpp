@@ -26,7 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "quickoverlay.h"
+#include "quickscreengrabber.h"
 
 #include <core/objectdataprovider.h>
 
@@ -37,9 +37,12 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLPaintDevice>
+#include <QQuickRenderControl>
 
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
+#include <private/qquickwindow_p.h>
+#include <private/qsgsoftwarerenderer_p.h>
 
 #include <functional>
 #include <cmath>
@@ -229,56 +232,61 @@ bool ItemOrLayoutFacade::isLayout() const
     return itemIsLayout(m_object);
 }
 
-QuickOverlay::QuickOverlay()
-    : m_window(nullptr)
+std::unique_ptr<AbstractScreenGrabber> AbstractScreenGrabber::get(QQuickWindow* window)
+{
+    switch (graphicsApiFor(window)) {
+        case RenderInfo::OpenGL:
+            return std::unique_ptr<AbstractScreenGrabber>(new OpenGLScreenGrabber(window));
+        case RenderInfo::Software:
+            return std::unique_ptr<AbstractScreenGrabber>(new SoftwareScreenGrabber(window));
+        default:
+            return nullptr;
+    }
+}
+
+AbstractScreenGrabber::RenderInfo::GraphicsApi AbstractScreenGrabber::graphicsApiFor(QQuickWindow* window)
+{
+    if (!window) {
+        return RenderInfo::Unknown;
+    }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    return static_cast<RenderInfo::GraphicsApi>(window->rendererInterface()->graphicsApi());
+#else
+    return RenderInfo::OpenGL;
+#endif
+}
+
+AbstractScreenGrabber::AbstractScreenGrabber(QQuickWindow *window)
+    : m_window(window)
     , m_currentToplevelItem(nullptr)
-    , m_isGrabbingMode(false)
     , m_decorationsEnabled(true)
 {
     const QMetaObject *mo = metaObject();
-    m_sceneGrabbed = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneGrabbed(GammaRay::GrabbedFrame)")));
-    Q_ASSERT(m_sceneGrabbed.methodIndex() != -1);
     m_sceneChanged = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneChanged()")));
     Q_ASSERT(m_sceneChanged.methodIndex() != -1);
+    m_sceneGrabbed = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneGrabbed(GammaRay::GrabbedFrame)")));
+    Q_ASSERT(m_sceneGrabbed.methodIndex() != -1);
 
     qRegisterMetaType<GrabbedFrame>();
+
+    placeOn(ItemOrLayoutFacade());
 }
 
-QQuickWindow *QuickOverlay::window() const
+GammaRay::AbstractScreenGrabber::~AbstractScreenGrabber()
+{}
+
+QQuickWindow *AbstractScreenGrabber::window() const
 {
     return m_window;
 }
 
-void QuickOverlay::setWindow(QQuickWindow *window)
-{
-    if (m_window == window)
-        return;
-
-    if (m_window) {
-        disconnect(m_window.data(), &QQuickWindow::afterSynchronizing,
-                   this, &QuickOverlay::windowAfterSynchronizing);
-        disconnect(m_window.data(), &QQuickWindow::afterRendering,
-                   this, &QuickOverlay::windowAfterRendering);
-    }
-
-    placeOn(ItemOrLayoutFacade());
-    m_window = window;
-
-    if (m_window) {
-        // Force DirectConnection else Auto lead to Queued which is not good.
-        connect(m_window.data(), &QQuickWindow::afterSynchronizing,
-                   this, &QuickOverlay::windowAfterSynchronizing, Qt::DirectConnection);
-        connect(m_window.data(), &QQuickWindow::afterRendering,
-                this, &QuickOverlay::windowAfterRendering, Qt::DirectConnection);
-    }
-}
-
-QuickDecorationsSettings QuickOverlay::settings() const
+QuickDecorationsSettings AbstractScreenGrabber::settings() const
 {
     return m_settings;
 }
 
-void QuickOverlay::setSettings(const QuickDecorationsSettings &settings)
+void AbstractScreenGrabber::setSettings(const QuickDecorationsSettings &settings)
 {
     if (m_settings == settings)
         return;
@@ -286,12 +294,12 @@ void QuickOverlay::setSettings(const QuickDecorationsSettings &settings)
     updateOverlay();
 }
 
-bool QuickOverlay::decorationsEnabled() const
+bool AbstractScreenGrabber::decorationsEnabled() const
 {
     return m_decorationsEnabled;
 }
 
-void QuickOverlay::setDecorationsEnabled(bool enabled)
+void AbstractScreenGrabber::setDecorationsEnabled(bool enabled)
 {
     if (m_decorationsEnabled == enabled)
         return;
@@ -300,7 +308,7 @@ void QuickOverlay::setDecorationsEnabled(bool enabled)
     updateOverlay();
 }
 
-void QuickOverlay::placeOn(const ItemOrLayoutFacade &item)
+void AbstractScreenGrabber::placeOn(const ItemOrLayoutFacade &item)
 {
     if (item.isNull()) {
         if (!m_currentItem.isNull())
@@ -347,7 +355,7 @@ void QuickOverlay::placeOn(const ItemOrLayoutFacade &item)
     updateOverlay();
 }
 
-QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
+QuickItemGeometry AbstractScreenGrabber::initFromItem(QQuickItem *item)
 {
     QuickItemGeometry itemGeometry;
 
@@ -431,82 +439,7 @@ QuickItemGeometry QuickOverlay::initFromItem(QQuickItem *item) const
     return itemGeometry;
 }
 
-void QuickOverlay::setGrabbingMode(bool isGrabbingMode, const QRectF &userViewport)
-{
-    QMutexLocker locker(&m_mutex);
-
-    if (m_isGrabbingMode == isGrabbingMode)
-        return;
-
-    m_isGrabbingMode = isGrabbingMode;
-    m_userViewport = userViewport;
-
-    emit grabberReadyChanged(!m_isGrabbingMode);
-
-    if (m_isGrabbingMode)
-        updateOverlay();
-}
-
-void QuickOverlay::windowAfterSynchronizing()
-{
-    // We are in the rendering thread at this point
-    // And the gui thread is locked
-    gatherRenderInfo();
-}
-
-void QuickOverlay::windowAfterRendering()
-{
-    QMutexLocker locker(&m_mutex);
-
-    // We are in the rendering thread at this point
-    // And the gui thread is NOT locked
-    Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
-
-    if (m_isGrabbingMode) {
-        const auto window = QRectF(QPoint(0,0), m_renderInfo.windowSize);
-        const auto intersect = m_userViewport.isValid() ? window.intersected(m_userViewport) : window;
-
-        // readout parameters
-        // when in doubt, round x and y to floor--> reads one pixel more
-        const int x = static_cast<int>(std::floor(intersect.x() * m_renderInfo.dpr));
-        // correct y for gpu-flipped textures being read from the bottom
-        const int y = static_cast<int>(std::floor((m_renderInfo.windowSize.height() - intersect.height() - intersect.y()) * m_renderInfo.dpr));
-        // when in doubt, round up w and h --> also reads one pixel more
-        const int w = static_cast<int>(std::ceil(intersect.width() * m_renderInfo.dpr));
-        const int h = static_cast<int>(std::ceil(intersect.height() * m_renderInfo.dpr));
-
-        m_grabbedFrame.transform.reset();
-
-        if (m_grabbedFrame.image.size() != QSize(w, h))
-            m_grabbedFrame.image = QImage(w, h, QImage::Format_RGBA8888);
-
-        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
-        glFuncs->glReadPixels(x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
-
-        // set transform to flip the read texture later, when displayed
-        // Keep in mind that transforms are local coordinate (ie, not impacted by the device pixel ratio)
-        m_grabbedFrame.transform.scale(1.0, -1.0);
-        m_grabbedFrame.transform.translate(intersect.x() , -intersect.y() - intersect.height());
-        m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
-
-        // Let emit the signal even if our image is possibly null, this way we make perfect ping/pong
-        // reuests making it easier to unit test.
-        m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabbedFrame, m_grabbedFrame));
-    }
-
-    drawDecorations();
-
-    m_window->resetOpenGLState();
-
-    if (m_isGrabbingMode) {
-        locker.unlock();
-        setGrabbingMode(false, QRectF());
-    } else {
-        m_sceneChanged.invoke(this, Qt::QueuedConnection);
-    }
-}
-
-void QuickOverlay::gatherRenderInfo()
+void AbstractScreenGrabber::gatherRenderInfo()
 {
     // We are in the rendering thread at this point
     // And the gui thread is locked
@@ -552,19 +485,11 @@ void QuickOverlay::gatherRenderInfo()
     }
 }
 
-void QuickOverlay::drawDecorations()
+void AbstractScreenGrabber::doDrawDecorations(QPainter &painter)
 {
-    // We are in the rendering thread at this point
-    // And the gui thread is NOT locked
     if (!m_decorationsEnabled)
         return;
 
-    if (m_renderInfo.graphicsApi != RenderInfo::OpenGL)
-        return; // TODO
-
-    QOpenGLPaintDevice device(m_renderInfo.windowSize * m_renderInfo.dpr);
-    device.setDevicePixelRatio(m_renderInfo.dpr);
-    QPainter painter(&device);
     if (m_settings.componentsTraces) {
         const QuickDecorationsTracesInfo tracesInfo(m_settings,
                                                     m_grabbedFrame.itemsGeometry,
@@ -582,7 +507,7 @@ void QuickOverlay::drawDecorations()
     }
 }
 
-void QuickOverlay::updateOverlay()
+void AbstractScreenGrabber::updateOverlay()
 {
     if (m_window) {
         if (!m_currentItem.isNull())
@@ -592,14 +517,14 @@ void QuickOverlay::updateOverlay()
     }
 }
 
-void QuickOverlay::itemParentChanged(QQuickItem *parent)
+void AbstractScreenGrabber::itemParentChanged(QQuickItem *parent)
 {
     Q_UNUSED(parent);
     if (!m_currentItem.isNull())
         placeOn(m_currentItem);
 }
 
-void QuickOverlay::itemWindowChanged(QQuickWindow *window)
+void AbstractScreenGrabber::itemWindowChanged(QQuickWindow *window)
 {
     if (m_window == window) {
         if (!m_currentItem.isNull())
@@ -609,55 +534,256 @@ void QuickOverlay::itemWindowChanged(QQuickWindow *window)
     }
 }
 
-void QuickOverlay::connectItemChanges(QQuickItem *item)
+void AbstractScreenGrabber::connectItemChanges(QQuickItem *item)
 {
-    connect(item, &QQuickItem::childrenRectChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::rotationChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::scaleChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::widthChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::heightChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::xChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::yChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::zChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::visibleChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::parentChanged, this, &QuickOverlay::itemParentChanged);
-    connect(item, &QQuickItem::windowChanged, this, &QuickOverlay::itemWindowChanged);
+    connect(item, &QQuickItem::childrenRectChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::rotationChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::scaleChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::widthChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::heightChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::xChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::yChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::zChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::visibleChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::parentChanged, this, &AbstractScreenGrabber::itemParentChanged);
+    connect(item, &QQuickItem::windowChanged, this, &AbstractScreenGrabber::itemWindowChanged);
 }
 
-void QuickOverlay::disconnectItemChanges(QQuickItem *item)
+void AbstractScreenGrabber::disconnectItemChanges(QQuickItem *item)
 {
-    disconnect(item, &QQuickItem::childrenRectChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::rotationChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::scaleChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::widthChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::heightChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::xChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::yChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::zChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::visibleChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::parentChanged, this, &QuickOverlay::itemParentChanged);
-    disconnect(item, &QQuickItem::windowChanged, this, &QuickOverlay::itemWindowChanged);
+    disconnect(item, &QQuickItem::childrenRectChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::rotationChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::scaleChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::widthChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::heightChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::xChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::yChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::zChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::visibleChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::parentChanged, this, &AbstractScreenGrabber::itemParentChanged);
+    disconnect(item, &QQuickItem::windowChanged, this, &AbstractScreenGrabber::itemWindowChanged);
 }
 
-void QuickOverlay::connectTopItemChanges(QQuickItem *item)
+void AbstractScreenGrabber::connectTopItemChanges(QQuickItem *item)
 {
-    connect(item, &QQuickItem::childrenRectChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::rotationChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::scaleChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::widthChanged, this, &QuickOverlay::updateOverlay);
-    connect(item, &QQuickItem::heightChanged, this, &QuickOverlay::updateOverlay);
+    connect(item, &QQuickItem::childrenRectChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::rotationChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::scaleChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::widthChanged, this, &AbstractScreenGrabber::updateOverlay);
+    connect(item, &QQuickItem::heightChanged, this, &AbstractScreenGrabber::updateOverlay);
 }
 
-void QuickOverlay::disconnectTopItemChanges(QQuickItem *item)
+void AbstractScreenGrabber::disconnectTopItemChanges(QQuickItem *item)
 {
-    disconnect(item, &QQuickItem::childrenRectChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::rotationChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::scaleChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::widthChanged, this, &QuickOverlay::updateOverlay);
-    disconnect(item, &QQuickItem::heightChanged, this, &QuickOverlay::updateOverlay);
+    disconnect(item, &QQuickItem::childrenRectChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::rotationChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::scaleChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::widthChanged, this, &AbstractScreenGrabber::updateOverlay);
+    disconnect(item, &QQuickItem::heightChanged, this, &AbstractScreenGrabber::updateOverlay);
 }
 
-void QuickOverlay::requestGrabWindow(const QRectF &userViewport)
+OpenGLScreenGrabber::OpenGLScreenGrabber(QQuickWindow *window)
+    : AbstractScreenGrabber(window)
+{
+    // Force DirectConnection else Auto lead to Queued which is not good.
+    connect(m_window.data(), &QQuickWindow::afterSynchronizing,
+            this, &OpenGLScreenGrabber::windowAfterSynchronizing, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::afterRendering,
+            this, &OpenGLScreenGrabber::windowAfterRendering, Qt::DirectConnection);
+}
+
+OpenGLScreenGrabber::~OpenGLScreenGrabber()
+{
+}
+
+void OpenGLScreenGrabber::requestGrabWindow(const QRectF &userViewport)
 {
     setGrabbingMode(true, userViewport);
 }
+
+void OpenGLScreenGrabber::setGrabbingMode(bool isGrabbing, const QRectF &userViewport)
+{
+    QMutexLocker locker(&m_mutex);
+
+    if (m_isGrabbing == isGrabbing)
+        return;
+
+    m_isGrabbing = isGrabbing;
+    m_userViewport = userViewport;
+
+    emit grabberReadyChanged(!m_isGrabbing);
+
+    if (m_isGrabbing)
+        updateOverlay();
+}
+
+void OpenGLScreenGrabber::windowAfterSynchronizing()
+{
+    // We are in the rendering thread at this point
+    // And the gui thread is locked
+    gatherRenderInfo();
+}
+
+void OpenGLScreenGrabber::windowAfterRendering()
+{
+    QMutexLocker locker(&m_mutex);
+
+    // We are in the rendering thread at this point
+    // And the gui thread is NOT locked
+    Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
+
+    if (m_isGrabbing) {
+        const auto window = QRectF(QPoint(0,0), m_renderInfo.windowSize);
+        const auto intersect = m_userViewport.isValid() ? window.intersected(m_userViewport) : window;
+
+        // readout parameters
+        // when in doubt, round x and y to floor--> reads one pixel more
+        const int x = static_cast<int>(std::floor(intersect.x() * m_renderInfo.dpr));
+        // correct y for gpu-flipped textures being read from the bottom
+        const int y = static_cast<int>(std::floor((m_renderInfo.windowSize.height() - intersect.height() - intersect.y()) * m_renderInfo.dpr));
+        // when in doubt, round up w and h --> also reads one pixel more
+        const int w = static_cast<int>(std::ceil(intersect.width() * m_renderInfo.dpr));
+        const int h = static_cast<int>(std::ceil(intersect.height() * m_renderInfo.dpr));
+
+        m_grabbedFrame.transform.reset();
+
+        if (m_grabbedFrame.image.size() != QSize(w, h))
+            m_grabbedFrame.image = QImage(w, h, QImage::Format_RGBA8888);
+
+        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
+        glFuncs->glReadPixels(x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
+
+        // set transform to flip the read texture later, when displayed
+        // Keep in mind that transforms are local coordinate (ie, not impacted by the device pixel ratio)
+        m_grabbedFrame.transform.scale(1.0, -1.0);
+        m_grabbedFrame.transform.translate(intersect.x() , -intersect.y() - intersect.height());
+        m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
+
+        // Let emit the signal even if our image is possibly null, this way we make perfect ping/pong
+        // reuests making it easier to unit test.
+        m_sceneGrabbed.invoke(this, Qt::QueuedConnection, Q_ARG(GammaRay::GrabbedFrame, m_grabbedFrame));
+    }
+
+    drawDecorations();
+
+    m_window->resetOpenGLState();
+
+    if (m_isGrabbing) {
+        locker.unlock();
+        setGrabbingMode(false, QRectF());
+    } else {
+        m_sceneChanged.invoke(this, Qt::QueuedConnection);
+    }
+}
+
+void OpenGLScreenGrabber::drawDecorations()
+{
+    // We are in the rendering thread at this point
+    // And the gui thread is NOT locked
+    QOpenGLPaintDevice device(m_renderInfo.windowSize * m_renderInfo.dpr);
+    device.setDevicePixelRatio(m_renderInfo.dpr);
+    QPainter p(&device);
+    doDrawDecorations(p);
+}
+
+SoftwareScreenGrabber::SoftwareScreenGrabber(QQuickWindow* window)
+    : AbstractScreenGrabber(window)
+{
+    connect(m_window.data(), &QQuickWindow::afterRendering,
+            this, &SoftwareScreenGrabber::windowAfterRendering, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::beforeRendering,
+            this, &SoftwareScreenGrabber::windowBeforeRendering, Qt::DirectConnection);
+}
+
+SoftwareScreenGrabber::~SoftwareScreenGrabber()
+{}
+
+void SoftwareScreenGrabber::updateOverlay()
+{
+    if (m_window) {
+        if (!m_currentItem.isNull())
+            Q_ASSERT(m_currentItem.item()->window() == m_window);
+
+        auto renderer = softwareRenderer();
+        if (renderer)
+            renderer->markDirty();
+
+        m_window->update();
+    }
+}
+
+void SoftwareScreenGrabber::requestGrabWindow(const QRectF& userViewport)
+{
+    m_isGrabbing = true;
+    qreal dpr = 1.0;
+    // See QTBUG-53795
+    dpr = m_window->effectiveDevicePixelRatio();
+
+    m_grabbedFrame.image = QImage(m_window->size() * dpr, QImage::Format_ARGB32_Premultiplied);
+    m_grabbedFrame.image.setDevicePixelRatio(dpr);
+    m_grabbedFrame.image.fill(Qt::white);
+
+    QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
+    QSGSoftwareRenderer *renderer = softwareRenderer();
+    if (!renderer)
+        return;
+
+    QPaintDevice *regularRenderDevice = renderer->currentPaintDevice();
+    renderer->setCurrentPaintDevice(&m_grabbedFrame.image);
+    renderer->markDirty();
+    winPriv->polishItems();
+    winPriv->syncSceneGraph();
+    winPriv->renderSceneGraph(m_window->size());
+    renderer->setCurrentPaintDevice(regularRenderDevice);
+
+    m_isGrabbing = false;
+
+    emit sceneGrabbed(m_grabbedFrame);
+    return;
+}
+
+void SoftwareScreenGrabber::drawDecorations()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    auto renderer = softwareRenderer();
+    if (!renderer)
+        return;
+    QPainter p(renderer->currentPaintDevice());
+    p.setClipRegion(renderer->flushRegion());
+    doDrawDecorations(p);
+#endif
+}
+
+void SoftwareScreenGrabber::windowBeforeRendering()
+{
+    QuickItemGeometry oldItemRect = m_grabbedFrame.itemsGeometry.size() ? m_grabbedFrame.itemsGeometry.front() : QuickItemGeometry(); // So far the vector never has more than one element...
+    gatherRenderInfo();
+    QuickItemGeometry newItemRect = m_grabbedFrame.itemsGeometry.size() ? m_grabbedFrame.itemsGeometry.front() : QuickItemGeometry();
+    if (m_decorationsEnabled && newItemRect != oldItemRect) {
+        // The item's scene coordinates can change unrecognizedly. If they do, we need a
+        // full window repaint though, for the overlay to be correct.
+        softwareRenderer()->markDirty();
+    }
+
+}
+
+void SoftwareScreenGrabber::windowAfterRendering()
+{
+    if (!m_isGrabbing) {
+        drawDecorations();
+        m_sceneChanged.invoke(this, Qt::QueuedConnection);
+    } else {
+        m_isGrabbing = false;
+    }
+}
+
+QSGSoftwareRenderer *SoftwareScreenGrabber::softwareRenderer() const
+{
+    QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
+    if (!winPriv)
+        return nullptr;
+    QSGSoftwareRenderer *softwareRenderer = dynamic_cast<QSGSoftwareRenderer*>(winPriv->renderer);
+    return softwareRenderer;
+}
+
+

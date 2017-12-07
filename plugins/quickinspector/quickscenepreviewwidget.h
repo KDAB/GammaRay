@@ -29,9 +29,9 @@
 #ifndef GAMMARAY_QUICKINSPECTOR_QUICKSCENEPREVIEWWIDGET_H
 #define GAMMARAY_QUICKINSPECTOR_QUICKSCENEPREVIEWWIDGET_H
 
+#include "quickdecorationsdrawer.h"
 #include "quickitemgeometry.h"
 #include "quickinspectorinterface.h"
-#include "quickoverlay.h"
 #include "quickscenecontrolwidget.h"
 
 #include <ui/remoteviewwidget.h>

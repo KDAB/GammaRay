@@ -251,6 +251,6 @@ void RemoteViewServer::clientConnectedChanged(bool connected)
 
 void RemoteViewServer::requestUpdateTimeout()
 {
-    emit requestUpdate();
     m_sourceChanged = false;
+    emit requestUpdate();
 }

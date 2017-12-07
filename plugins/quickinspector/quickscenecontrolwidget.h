@@ -31,8 +31,8 @@
 
 #include <QWidget>
 
+#include "quickdecorationsdrawer.h"
 #include "quickinspectorinterface.h"
-#include "quickoverlay.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
