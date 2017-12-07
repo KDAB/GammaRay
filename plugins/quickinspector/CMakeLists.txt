@@ -18,7 +18,7 @@ if(Qt5Quick_FOUND)
     quickitemmodel.cpp
     quickscenegraphmodel.cpp
     quickpaintanalyzerextension.cpp
-    quickoverlay.cpp
+    quickscreengrabber.cpp
     materialextension/materialextension.cpp
     materialextension/materialshadermodel.cpp
     materialextension/qquickopenglshadereffectmaterialadaptor.cpp

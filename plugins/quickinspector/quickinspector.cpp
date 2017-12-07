@@ -27,9 +27,9 @@
 */
 
 #include "quickinspector.h"
-#include "quickoverlay.h"
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
+#include "quickscreengrabber.h"
 #include "quickpaintanalyzerextension.h"
 #include "geometryextension/sggeometryextension.h"
 #include "materialextension/materialextension.h"
@@ -371,8 +371,6 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
     registerVariantHandlers();
     probe->installGlobalEventFilter(this);
 
-    recreateOverlay();
-
     QAbstractProxyModel *windowModel = new ObjectTypeFilterProxyModel<QQuickWindow>(this);
     windowModel->setSourceModel(probe->objectListModel());
     QAbstractProxyModel *proxy = new SingleColumnObjectProxyModel(this);
@@ -434,8 +432,7 @@ QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
 QuickInspector::~QuickInspector()
 {
     if (m_overlay) {
-        disconnect(m_overlay.data(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
-        delete m_overlay.data();
+        disconnect(m_overlay.get(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
     }
 }
 
@@ -467,7 +464,7 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     m_sgModel->setWindow(window);
     m_remoteView->setEventReceiver(m_window);
     m_remoteView->resetView();
-    m_overlay->setWindow(m_window);
+    recreateOverlay();
 
     if (m_window) {
         // make sure we have selected something for the property editor to not be entirely empty
@@ -561,15 +558,18 @@ void QuickInspector::objectCreated(QObject *object)
 void QuickInspector::recreateOverlay()
 {
     ProbeGuard guard;
-    m_overlay = new QuickOverlay;
+    disconnect(m_overlay.get(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
 
-    connect(m_overlay.data(), &QuickOverlay::grabberReadyChanged, m_remoteView, &RemoteViewServer::setGrabberReady);
-    connect(m_overlay.data(), &QuickOverlay::sceneChanged, m_remoteView, &RemoteViewServer::sourceChanged);
-    connect(m_overlay.data(), &QuickOverlay::sceneGrabbed, this, &QuickInspector::sendRenderedScene);
+    m_overlay = AbstractScreenGrabber::get(m_window);
+
+    connect(m_overlay.get(), &AbstractScreenGrabber::grabberReadyChanged, m_remoteView, &RemoteViewServer::setGrabberReady);
+    connect(m_overlay.get(), &AbstractScreenGrabber::sceneChanged, m_remoteView, &RemoteViewServer::sourceChanged);
+    connect(m_overlay.get(), &AbstractScreenGrabber::sceneGrabbed, this, &QuickInspector::sendRenderedScene);
     // the target application might have destroyed the overlay widget
     // (e.g. because the parent of the overlay got destroyed).
     // just recreate a new one in this case
-    connect(m_overlay.data(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
+    connect(m_overlay.get(), &QObject::destroyed, this, &QuickInspector::recreateOverlay); //FIXME Is it really needed?
+                                                                                           // It is for the widget inspector, but for qt quick?
 
     m_remoteView->setGrabberReady(true);
 }
@@ -592,7 +592,7 @@ void QuickInspector::sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFram
     frame.setImage(grabbedFrame.image, grabbedFrame.transform);
     frame.setSceneRect(grabbedFrame.itemsGeometryRect);
     frame.setViewRect(QRect(0, 0, m_window->width(), m_window->height()));
-    if (m_overlay->settings().componentsTraces)
+    if (m_overlay && m_overlay->settings().componentsTraces)
         frame.setData(QVariant::fromValue(grabbedFrame.itemsGeometry));
     else if (!grabbedFrame.itemsGeometry.isEmpty())
         frame.setData(QVariant::fromValue(grabbedFrame.itemsGeometry.at(0)));
@@ -605,23 +605,9 @@ void QuickInspector::slotGrabWindow()
         return;
 
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    if (m_window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL) {
-        qreal dpr = 1.0;
-        // See QTBUG-53795
-    #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
-        dpr = m_window->effectiveDevicePixelRatio();
-    #elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        dpr = m_window->devicePixelRatio();
-    #endif
-        GrabbedFrame grabbedFrame;
-        grabbedFrame.image = m_window->grabWindow();
-        grabbedFrame.image.setDevicePixelRatio(dpr);
-        sendRenderedScene(grabbedFrame);
-        return;
+    if (m_overlay) {
+        m_overlay->requestGrabWindow(m_remoteView->userViewport());
     }
-#endif
-    m_overlay->requestGrabWindow(m_remoteView->userViewport());
 }
 
 void QuickInspector::setCustomRenderMode(
@@ -632,7 +618,7 @@ void QuickInspector::setCustomRenderMode(
     m_pendingRenderMode->applyOrDelay(m_window, customRenderMode);
 
     const bool tracing = customRenderMode == QuickInspectorInterface::VisualizeTraces;
-    if (m_overlay->settings().componentsTraces != tracing) {
+    if (m_overlay && m_overlay->settings().componentsTraces != tracing) {
         auto settings = m_overlay->settings();
         settings.componentsTraces = tracing;
         setOverlaySettings(settings);
@@ -641,6 +627,9 @@ void QuickInspector::setCustomRenderMode(
 
 void QuickInspector::setServerSideDecorationsEnabled(bool enabled)
 {
+    if (!m_overlay)
+        return;
+
     m_overlay->setDecorationsEnabled(enabled);
 }
 
@@ -666,18 +655,23 @@ void QuickInspector::checkFeatures()
 
 void QuickInspector::checkServerSideDecorations()
 {
-    emit serverSideDecorations(m_overlay->decorationsEnabled());
+    emit serverSideDecorations(m_overlay ? m_overlay->decorationsEnabled() : false);
 }
 
 void QuickInspector::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)
 {
+    if (!m_overlay) {
+        emit overlaySettings(QuickDecorationsSettings()); // Let's not leave the client without an answer.
+        return;
+    }
+
     m_overlay->setSettings(settings);
     emit overlaySettings(m_overlay->settings());
 }
 
 void QuickInspector::checkOverlaySettings()
 {
-    emit overlaySettings(m_overlay->settings());
+    emit overlaySettings(m_overlay ? m_overlay->settings() : QuickDecorationsSettings());
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 3) // only with 5.9.3 the SW renderer got exported
@@ -770,7 +764,8 @@ void QuickInspector::itemSelectionChanged(const QItemSelection &selection)
                                    |QItemSelectionModel::Current);
     }
 
-    m_overlay->placeOn(m_currentItem.data());
+    if (m_overlay)
+        m_overlay->placeOn(m_currentItem.data());
 }
 
 void QuickInspector::sgSelectionChanged(const QItemSelection &selection)

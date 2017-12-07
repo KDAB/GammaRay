@@ -27,7 +27,7 @@
 */
 
 #include "quickinspectorclient.h"
-#include "quickoverlay.h"
+#include "quickdecorationsdrawer.h"
 
 #include <common/endpoint.h>
 

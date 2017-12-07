@@ -27,7 +27,7 @@
 */
 
 #include "quickoverlaylegend.h"
-#include "quickoverlay.h"
+#include "quickdecorationsdrawer.h"
 
 #include <ui/uiresources.h>
 

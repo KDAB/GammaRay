@@ -28,7 +28,7 @@
 
 #include "gridsettingswidget.h"
 #include "ui_gridsettingswidget.h"
-#include "quickoverlay.h"
+#include "quickscreengrabber.h"
 
 namespace GammaRay {
 

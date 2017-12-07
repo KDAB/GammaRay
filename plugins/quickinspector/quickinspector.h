@@ -37,6 +37,7 @@
 #include <QQuickWindow>
 #include <QImage>
 #include <QMutex>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 class QQuickShaderEffectSource;
@@ -54,7 +55,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class PropertyController;
-class QuickOverlay;
+class AbstractScreenGrabber;
 class GrabbedFrame;
 struct QuickDecorationsSettings;
 class QuickItemModel;
@@ -157,7 +158,7 @@ private:
                                          GammaRay::RemoteViewInterface::RequestMode mode, int& bestCandidate) const;
 
     ProbeInterface *m_probe;
-    QPointer<QuickOverlay> m_overlay;
+    std::unique_ptr<AbstractScreenGrabber> m_overlay;
     QPointer<QQuickWindow> m_window;
     QPointer<QQuickItem> m_currentItem;
     QSGNode *m_currentSgNode;
