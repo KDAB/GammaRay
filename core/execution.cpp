@@ -89,7 +89,7 @@ bool Execution::isReadOnlyData(const void* data)
     return dladdr(const_cast<void*>(data), &info) != 0;
 }
 
-bool Execution::stackTracingAvailable()
+static bool stackTracingAvailableImpl()
 {
 #if defined(USE_BACKWARD_CPP) || defined(HAVE_BACKTRACE)
     return true;
@@ -98,7 +98,7 @@ bool Execution::stackTracingAvailable()
 #endif
 }
 
-bool Execution::hasFastStackTrace()
+static bool hasFastStackTraceImpl()
 {
     return true;
 }
@@ -233,7 +233,7 @@ bool Execution::isReadOnlyData(const void* data)
     return GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, reinterpret_cast<LPCWSTR>(data), &handle);
 }
 
-bool Execution::stackTracingAvailable()
+static bool stackTracingAvailableImpl()
 {
 #ifdef USE_STACKWALKER
     return true;
@@ -242,7 +242,7 @@ bool Execution::stackTracingAvailable()
 #endif
 }
 
-bool Execution::hasFastStackTrace()
+static bool hasFastStackTraceImpl()
 {
     return false;
 }
@@ -317,6 +317,20 @@ QVector<Execution::ResolvedFrame> Execution::resolveAll(const Execution::Trace &
 //BEGIN generic code applicable for all platforms
 namespace GammaRay {
 namespace Execution {
+
+bool stackTracingAvailable()
+{
+    static const bool disableStackTracing = qgetenv("GAMMARAY_DISABLE_STACKTRACE") == "1";
+    if (disableStackTracing)
+        return false;
+    return stackTracingAvailableImpl();
+}
+
+bool hasFastStackTrace()
+{
+    return stackTracingAvailable() && hasFastStackTraceImpl();
+}
+
 Trace::Trace()
     : d(new TracePrivate)
 {
