@@ -32,6 +32,7 @@
 
 #include "probe.h"
 #include "enumrepositoryserver.h"
+#include "execution.h"
 #include "classesiconsrepositoryserver.h"
 #include "metaobjectrepository.h"
 #include "objectlistmodel.h"
@@ -54,10 +55,6 @@
 #include <common/objectbroker.h>
 #include <common/streamoperators.h>
 #include <common/paths.h>
-
-#if USE_BACKWARD_CPP
-#include <backward.hpp>
-#endif
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #include <QApplication>
@@ -203,9 +200,7 @@ struct Listener
     bool trackDestroyed;
     QVector<QObject *> addedBeforeProbeInstance;
 
-#if USE_BACKWARD_CPP
-    QHash<QObject *, backward::StackTrace> constructionBacktracesForObjects;
-#endif
+    QHash<QObject*, Execution::Trace> constructionBacktracesForObjects;
 };
 
 Q_GLOBAL_STATIC(Listener, s_listener)
@@ -222,9 +217,6 @@ Probe::Probe(QObject *parent)
     , m_metaObjectRegistry(new MetaObjectRegistry(this))
     , m_queueTimer(new QTimer(this))
     , m_server(nullptr)
-#if USE_BACKWARD_CPP
-    , m_traceResolver(new backward::TraceResolver())
-#endif
 {
     Q_ASSERT(thread() == qApp->thread());
     IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
@@ -577,14 +569,9 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 
 #endif
 
-#if USE_BACKWARD_CPP
-    static const bool disableBacktraceLogging = qgetenv("GAMMARAY_DISABLE_BACKTRACE_LOGGING") == "1";
-    if (!disableBacktraceLogging) {
-        if (fromCtor) {
-            s_listener()->constructionBacktracesForObjects[obj].load_here(32);
-        }
+    if (Execution::hasFastStackTrace() && fromCtor) {
+        s_listener()->constructionBacktracesForObjects.insert(obj, Execution::stackTrace(32));
     }
-#endif
 
     if (!isInitialized()) {
         IF_DEBUG(cout
@@ -1034,15 +1021,13 @@ void Probe::executeSignalCallback(const Func &func)
 
 SourceLocation Probe::objectCreationSourceLocation(QObject *object)
 {
-#if USE_BACKWARD_CPP
   if (!s_listener()->constructionBacktracesForObjects.contains(object)) {
     IF_DEBUG(std::cout << "No backtrace for object available" << object << "." << std::endl;)
     return SourceLocation();
   }
 
-  backward::StackTrace &st = s_listener()->constructionBacktracesForObjects[object];
+  const auto &st = s_listener()->constructionBacktracesForObjects.value(object);
   int distanceToQObject = 0;
-  m_traceResolver->load_stacktrace(st);
 
   const QMetaObject *metaObject = object->metaObject();
   while (metaObject && metaObject != &QObject::staticMetaObject) {
@@ -1050,27 +1035,8 @@ SourceLocation Probe::objectCreationSourceLocation(QObject *object)
     metaObject = metaObject->superClass();
   }
 
-  IF_DEBUG(std::cout << " - Distance: " << distanceToQObject << std::endl;
-    for (size_t i = 4; i < (uint)6 + distanceToQObject; ++i) {
-        backward::ResolvedTrace trace = m_traceResolver->resolve(st[i]);
-        std::cout << "#" << i
-            << " " << trace.object_function
-            << " " << trace.source.filename
-            << ":" << trace.source.line
-            << ":" << trace.source.col
-        << std::endl;
-    })
-
-  backward::ResolvedTrace trace = m_traceResolver->resolve(st[4 + distanceToQObject + 1]);
-
-  SourceLocation loc;
-  loc.setUrl(QUrl::fromLocalFile(QString::fromStdString(trace.source.filename)));
-  loc.setOneBasedLine(trace.source.line);
-  loc.setOneBasedColumn(trace.source.col);
-
-  return loc;
-#else
-  IF_DEBUG(std::cout << "No backtrace for object available (no backward-cpp support builtin)" << object << "." << std::endl;)
-  return SourceLocation();
-#endif
+  // TODO the trace offsets below should be handled by Execution::stackTrace() already,
+  // as they vary from backend to backend!
+  const auto frame = Execution::resolveOne(st, 5 + distanceToQObject + 1);
+  return frame.location;
 }
