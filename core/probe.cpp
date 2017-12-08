@@ -1019,7 +1019,7 @@ void Probe::executeSignalCallback(const Func &func)
                   func);
 }
 
-SourceLocation Probe::objectCreationSourceLocation(QObject *object)
+SourceLocation Probe::objectCreationSourceLocation(QObject *object) const
 {
   if (!s_listener()->constructionBacktracesForObjects.contains(object)) {
     IF_DEBUG(std::cout << "No backtrace for object available" << object << "." << std::endl;)
@@ -1037,4 +1037,9 @@ SourceLocation Probe::objectCreationSourceLocation(QObject *object)
 
   const auto frame = Execution::resolveOne(st, distanceToQObject + 1);
   return frame.location;
+}
+
+Execution::Trace Probe::objectCreationStackTrace(QObject *object) const
+{
+    return s_listener()->constructionBacktracesForObjects.value(object);
 }

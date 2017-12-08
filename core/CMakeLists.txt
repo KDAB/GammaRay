@@ -22,6 +22,7 @@ set(gammaray_srcs
   multisignalmapper.cpp
   signalspycallbackset.cpp
   singlecolumnobjectproxymodel.cpp
+  stacktracemodel.cpp
   toolfactory.cpp
   toolmanager.cpp
   toolpluginmodel.cpp
@@ -73,6 +74,7 @@ set(gammaray_srcs
   tools/objectinspector/applicationattributeextension.cpp
   tools/objectinspector/bindingextension.cpp
   tools/objectinspector/bindingmodel.cpp
+  tools/objectinspector/stacktraceextension.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
 

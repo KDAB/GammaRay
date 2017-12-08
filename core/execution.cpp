@@ -368,6 +368,11 @@ Trace& Trace::operator=(const Trace &other)
     return *this;
 }
 
+bool Trace::empty() const
+{
+    return d->data.size() == 0;
+}
+
 int Trace::size() const
 {
     return d->data.size();

@@ -36,6 +36,7 @@
 #include "connectionsextension.h"
 #include "applicationattributeextension.h"
 #include "bindingextension.h"
+#include "stacktraceextension.h"
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
@@ -118,6 +119,7 @@ void ObjectInspector::registerPCExtensions()
     PropertyController::registerExtension<ConnectionsExtension>();
     PropertyController::registerExtension<ApplicationAttributeExtension>();
     PropertyController::registerExtension<BindingExtension>();
+    PropertyController::registerExtension<StackTraceExtension>();
 }
 
 QVector<QByteArray> GammaRay::ObjectInspectorFactory::selectableTypes() const

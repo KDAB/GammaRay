@@ -60,6 +60,7 @@ class BenchSuite;
 class Server;
 class ToolManager;
 class MetaObjectRegistry;
+namespace Execution { class Trace; }
 
 /**
  * @brief Central entity of GammaRay: The probe is tracking the Qt application under test
@@ -102,7 +103,10 @@ public:
     void selectObject(void *object, const QString &typeName) override;
     void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) override;
 
-    SourceLocation objectCreationSourceLocation(QObject *object);
+    /*! Returns the source code location @p object was created at. */
+    SourceLocation objectCreationSourceLocation(QObject *object) const;
+    /*! Returns the entire stack trace for the creation of @p object. */
+    Execution::Trace objectCreationStackTrace(QObject *object) const;
 
     QObject *window() const;
     void setWindow(QObject *window);

@@ -65,6 +65,7 @@ public:
     ~Trace();
     Trace& operator=(const Trace &other);
 
+    bool empty() const;
     int size() const;
 private:
     friend class TracePrivate;

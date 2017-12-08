@@ -76,6 +76,7 @@ set(gammaray_ui_srcs
   tools/objectinspector/methodstab.cpp
   tools/objectinspector/applicationattributetab.cpp
   tools/objectinspector/bindingtab.cpp
+  tools/objectinspector/stacktracetab.cpp
   tools/resourcebrowser/clientresourcemodel.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/resourcebrowser/resourcebrowserclient.cpp

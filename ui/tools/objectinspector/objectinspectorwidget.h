@@ -42,6 +42,7 @@
 #include "connectionsextensionclient.h"
 #include "applicationattributetab.h"
 #include "bindingtab.h"
+#include "stacktracetab.h"
 
 #include <common/objectbroker.h>
 
@@ -92,33 +93,29 @@ public:
     }
     void initUi() override
     {
-        PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), tr(
-                                                       "Properties"),
+        PropertyWidget::registerTab<PropertiesTab>(QStringLiteral("properties"), tr("Properties"),
                                                    PropertyWidgetTabPriority::First);
         ObjectBroker::registerClientObjectFactoryCallback<PropertiesExtensionInterface *>(
             createExtension<PropertiesExtensionClient>);
-        PropertyWidget::registerTab<MethodsTab>(QStringLiteral("methods"), tr(
-                                                    "Methods"),
+        PropertyWidget::registerTab<MethodsTab>(QStringLiteral("methods"), tr("Methods"),
                                                 PropertyWidgetTabPriority::Basic - 1);
         ObjectBroker::registerClientObjectFactoryCallback<MethodsExtensionInterface *>(
             createExtension<MethodsExtensionClient>);
-        PropertyWidget::registerTab<ConnectionsTab>(QStringLiteral("connections"), tr(
-                                                        "Connections"),
+        PropertyWidget::registerTab<ConnectionsTab>(QStringLiteral("connections"), tr("Connections"),
                                                     PropertyWidgetTabPriority::Basic - 1);
         ObjectBroker::registerClientObjectFactoryCallback<ConnectionsExtensionInterface *>(
             createExtension<ConnectionsExtensionClient>);
         PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), tr(
                                                   "Enums"), PropertyWidgetTabPriority::Exotic - 1);
-        PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), tr(
-                                                      "Class Info"),
+        PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), tr("Class Info"),
                                                   PropertyWidgetTabPriority::Exotic - 1);
-        PropertyWidget::registerTab<ApplicationAttributeTab>(QStringLiteral(
-                                                                 "applicationAttributes"),
-                                                             tr(
-                                                                 "Attributes"),
+        PropertyWidget::registerTab<ApplicationAttributeTab>(QStringLiteral("applicationAttributes"),
+                                                             tr("Attributes"),
             PropertyWidgetTabPriority::Advanced);
         PropertyWidget::registerTab<BindingTab>(QStringLiteral("bindings"), tr("Bindings"),
                                                PropertyWidgetTabPriority::Advanced);
+        PropertyWidget::registerTab<StackTraceTab>(QStringLiteral("stackTrace"), tr("Stack Trace"),
+                                                   PropertyWidgetTabPriority::Exotic);
     }
 };
 }

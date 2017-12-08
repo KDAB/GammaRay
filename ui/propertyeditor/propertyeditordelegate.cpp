@@ -30,6 +30,8 @@
 #include "propertyeditorfactory.h"
 #include "propertyextendededitor.h"
 
+#include <common/sourcelocation.h>
+
 #include <QApplication>
 #include <QDebug>
 #include <QMatrix>
@@ -355,4 +357,11 @@ bool PropertyEditorDelegate::editorEvent(QEvent* event, QAbstractItemModel* mode
 #endif
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);
+}
+
+QString PropertyEditorDelegate::displayText(const QVariant& value, const QLocale& locale) const
+{
+    if (value.userType() == qMetaTypeId<SourceLocation>())
+        return value.value<SourceLocation>().displayString();
+    return QStyledItemDelegate::displayText(value, locale);
 }
