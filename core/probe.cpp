@@ -570,7 +570,7 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
 #endif
 
     if (Execution::hasFastStackTrace() && fromCtor) {
-        s_listener()->constructionBacktracesForObjects.insert(obj, Execution::stackTrace(32));
+        s_listener()->constructionBacktracesForObjects.insert(obj, Execution::stackTrace(32, 2)); // skip 2: this and the hook function calling us
     }
 
     if (!isInitialized()) {
@@ -1035,8 +1035,6 @@ SourceLocation Probe::objectCreationSourceLocation(QObject *object)
     metaObject = metaObject->superClass();
   }
 
-  // TODO the trace offsets below should be handled by Execution::stackTrace() already,
-  // as they vary from backend to backend!
-  const auto frame = Execution::resolveOne(st, 5 + distanceToQObject + 1);
+  const auto frame = Execution::resolveOne(st, distanceToQObject + 1);
   return frame.location;
 }

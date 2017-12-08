@@ -58,7 +58,10 @@ namespace GammaRay {
 namespace Execution {
 
 #ifdef USE_BACKWARD_CPP
-typedef backward::StackTrace TraceData;
+class TraceData : public backward::StackTrace {
+public:
+    using backward::StackTrace::skip_n_firsts;
+};
 #elif defined(Q_OS_WIN)
 typedef QVector<ResolvedFrame> TraceData;
 #else
@@ -103,21 +106,24 @@ static bool hasFastStackTraceImpl()
     return true;
 }
 
-Execution::Trace Execution::stackTrace(int maxDepth)
+Execution::Trace Execution::stackTrace(int maxDepth, int skip)
 {
     Trace t;
+    auto &data = TracePrivate::get(t);
 #ifdef USE_BACKWARD_CPP
-    TracePrivate::get(t).load_here(maxDepth);
+    data.load_here(maxDepth);
+    data.skip_n_firsts(skip + data.skip_n_firsts() + 3); // skip 3: 2 calls in backward-cpp, plus this method
 #elif defined(HAVE_BACKTRACE)
-    auto &v = TracePrivate::get(t);
-    v.resize(maxDepth);
-    const auto size = backtrace(v.data(), maxDepth);
+    data.resize(maxDepth);
+    const auto size = backtrace(data.data(), maxDepth);
     if (size <= 0)
-        v.clear();
+        data.clear();
     else
-        v.resize(size);
+        data.resize(size);
+    data.remove(0, skip + 1); // skip 1: this method
 #else
     Q_UNUSED(maxDepth);
+    Q_UNUSED(skip);
 #endif
     return t;
 }
@@ -251,9 +257,11 @@ static bool hasFastStackTraceImpl()
 class ResolvingStackWalker : public StackWalker
 {
 public:
-    void stackTrace(QVector<Execution::ResolvedFrame> *frames)
+    void stackTrace(QVector<Execution::ResolvedFrame> *frames, int maxDepth, int skip)
     {
         m_frames = frames;
+        m_maxDepth = maxDepth;
+        m_skip = skip;
         ShowCallstack();
     }
 
@@ -264,6 +272,12 @@ protected:
     void OnCallstackEntry(CallstackEntryType eType, CallstackEntry &entry) override
     {
         if (eType == lastEntry || entry.offset == 0)
+            return;
+        if (m_skip > 0) {
+            --m_skip;
+            return;
+        }
+        if (m_maxDepth > 0 && m_frames->size() >= m_maxDepth)
             return;
 
         Execution::ResolvedFrame frame;
@@ -279,20 +293,23 @@ protected:
 
 private:
     QVector<Execution::ResolvedFrame> *m_frames;
+    int m_maxDepth;
+    int m_skip;
 };
 
 #endif
 
-Execution::Trace Execution::stackTrace(int maxDepth)
+Execution::Trace Execution::stackTrace(int maxDepth, int skip)
 {
     Trace t;
 #ifdef USE_STACKWALKER
     static ResolvingStackWalker s_stackWalker;
 
     auto &v = TracePrivate::get(t);
-    s_stackWalker.stackTrace(&v);
+    s_stackWalker.stackTrace(&v, maxDepth, skip + 2); // skip 2: this and StackWalker::stackTrace
 #else
     Q_UNUSED(maxDepth);
+    Q_UNUSED(skip);
 #endif
     return t;
 }

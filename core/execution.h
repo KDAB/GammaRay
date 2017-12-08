@@ -71,8 +71,14 @@ private:
     std::shared_ptr<TracePrivate> d;
 };
 
-/*! Create a backtrace. */
-GAMMARAY_CORE_EXPORT Trace stackTrace(int maxDepth);
+/*! Create a backtrace.
+ *  @param maxDepth The maximum amount of frames to trace
+ *  @param skip The amount of frames to skip from the beginning. This is useful to
+ *  exclude the code triggering the trace for example. Traces returned by this function
+ *  already start at the calling frame, so you do not need to account for the internals
+ *  of this here.
+ */
+GAMMARAY_CORE_EXPORT Trace stackTrace(int maxDepth, int skip = 0);
 
 /*! A resolved frame in a stack trace. */
 class GAMMARAY_CORE_EXPORT ResolvedFrame {
