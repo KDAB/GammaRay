@@ -101,14 +101,8 @@ if(NOT Qt5Gui_VERSION VERSION_LESS 5.5.0) # QPaintBuffer was removed in 5.5
   list(APPEND gammaray_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/private/qpaintbuffer.cpp)
 endif()
 
-if(NOT WIN32)
-  set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_unix.cpp)
-elseif(MINGW)
-  set(gammaray_srcs ${gammaray_srcs} tools/messagehandler/backtrace_dummy.cpp)
-else()
-  set(gammaray_srcs ${gammaray_srcs}
-    tools/messagehandler/backtrace_win.cpp
-    ${CMAKE_SOURCE_DIR}/3rdparty/StackWalker/StackWalker.cpp)
+if(WIN32 AND NOT MINGW)
+  list(APPEND gammaray_srcs ${CMAKE_SOURCE_DIR}/3rdparty/StackWalker/StackWalker.cpp)
 endif()
 
 # core lib

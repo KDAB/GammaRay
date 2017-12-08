@@ -32,8 +32,7 @@
 #include "loggingcategorymodel.h"
 #endif
 
-#include "backtrace.h"
-
+#include <core/execution.h>
 #include <core/probeguard.h>
 #include <core/remote/serverproxymodel.h>
 
@@ -89,21 +88,30 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
     message.line = context.line;
 #endif
 
-    if (type == QtCriticalMsg || type == QtFatalMsg
-        || (type == QtWarningMsg && !ProbeGuard::insideProbe())) {
-        message.backtrace = getBacktrace(50);
+    if (type == QtCriticalMsg || type == QtFatalMsg || (type == QtWarningMsg && !ProbeGuard::insideProbe())) {
+        const auto trace = Execution::stackTrace(50);
+        auto frames = Execution::resolveAll(trace);
         // remove trailing internal functions
         // be a bit careful and first make sure that we find this function...
         // TODO: go even higher until qWarning/qFatal/qDebug/... ?
         int removeUntil = -1;
-        for (int i = 0; i < message.backtrace.size(); ++i) {
-            if (message.backtrace.at(i).contains(QLatin1String("handleMessage"))) {
+        for (int i = 0; i < frames.size(); ++i) {
+            if (frames.at(i).name.contains(QLatin1String("handleMessage"))) {
                 removeUntil = i;
                 break;
             }
         }
         if (removeUntil != -1)
-            message.backtrace = message.backtrace.mid(removeUntil + 1);
+            frames.remove(0, removeUntil + 1);
+
+        // TODO this should eventually be ported to a proper stack trace model with on-demand resolution
+        message.backtrace.reserve(frames.size());
+        foreach (const auto &frame, frames) {
+            if (frame.location.isValid())
+                message.backtrace.push_back(frame.name + QLatin1String(" (") + frame.location.displayString() + QLatin1Char(')'));
+            else
+                message.backtrace.push_back(frame.name);
+        }
     }
 
     if (!message.backtrace.isEmpty()
