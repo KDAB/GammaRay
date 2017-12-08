@@ -953,7 +953,8 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSGTexture, isAtlasTexture);
     MO_ADD_PROPERTY(QSGTexture, mipmapFiltering, setMipmapFiltering);
     MO_ADD_PROPERTY_RO(QSGTexture, normalizedTextureSubRect);
-    MO_ADD_PROPERTY_RO(QSGTexture, textureId);
+    // crashes without a current GL context
+    //MO_ADD_PROPERTY_RO(QSGTexture, textureId);
     MO_ADD_PROPERTY_RO(QSGTexture, textureSize);
     MO_ADD_PROPERTY(QSGTexture, verticalWrapMode, setVerticalWrapMode);
 
