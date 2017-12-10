@@ -46,7 +46,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="replayLayoutWidget">
       <layout class="QVBoxLayout" name="replayContainer">
        <item>
         <widget class="GammaRay::PaintAnalyzerReplayView" name="replayWidget" native="true"/>
