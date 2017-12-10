@@ -127,6 +127,9 @@ void ConnectPage::handleLocalAddress(QString &stillToParse, bool &correctSoFar)
             }
         }
     }
+#else
+    Q_UNUSED(stillToParse);
+    Q_UNUSED(correctSoFar);
 #endif
 }
 
