@@ -46,25 +46,28 @@ namespace InjectorFactory {
 AbstractInjector::Ptr createInjector(const QString &name, const QString &executableOverride)
 {
 #ifndef Q_OS_WIN
-    if (name == QLatin1String("gdb"))
+    if (name == QLatin1String("gdb")) {
         return AbstractInjector::Ptr(new GdbInjector(executableOverride));
-    if (name == QLatin1String("lldb"))
+    }
+    if (name == QLatin1String("lldb")) {
         return AbstractInjector::Ptr(new LldbInjector(executableOverride));
-
+    }
 #else
     Q_UNUSED(executableOverride);
 #endif
-    if (name == QLatin1String("style"))
+
+    if (name == QLatin1String("style")) {
         return AbstractInjector::Ptr(new StyleInjector);
+    }
 
 #ifndef Q_OS_WIN
-    if (name == QLatin1String("preload"))
+    if (name == QLatin1String("preload")) {
         return AbstractInjector::Ptr(new PreloadInjector);
-
+    }
 #else
-    if (name == QLatin1String("windll"))
+    if (name == QLatin1String("windll")) {
         return AbstractInjector::Ptr(new WinDllInjector);
-
+    }
 #endif
     return AbstractInjector::Ptr(nullptr);
 }
@@ -93,8 +96,9 @@ static AbstractInjector::Ptr findFirstWorkingInjector(const QStringList &types, 
 AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi, QStringList *errorStrings)
 {
 #if defined(Q_OS_MAC)
-    if (abi.majorQtVersion() >= 5 && abi.minorQtVersion() >= 4)
+    if (abi.majorQtVersion() >= 5 && abi.minorQtVersion() >= 4) {
         return createInjector(QStringLiteral("preload"));
+    }
     return findFirstWorkingInjector(QStringList() << QStringLiteral("lldb")
                                                   << QStringLiteral("gdb"), errorStrings);
 #elif defined(Q_OS_UNIX)
@@ -117,6 +121,7 @@ AbstractInjector::Ptr defaultInjectorForAttach(QStringList *errorStrings)
     return findFirstWorkingInjector(QStringList() << QStringLiteral("gdb")
                                                   << QStringLiteral("lldb"), errorStrings);
 #else
+    Q_UNUSED(errorStrings);
     return createInjector(QStringLiteral("windll"));
 #endif
 }
