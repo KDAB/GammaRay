@@ -128,29 +128,21 @@ static const cmd_t cmdTypes[] = {
 
 static const int TopLevelId = std::numeric_limits<int>::max();
 
-class PaintBufferPrivacyViolater : public QPainterReplayer
-{
-public:
-    QPaintBufferPrivate *extract() const { return d; }
-};
-
 PaintBufferModel::PaintBufferModel(QObject *parent)
     : QAbstractItemModel(parent)
     , m_privateBuffer(nullptr)
 {
 }
 
-void PaintBufferModel::setPaintBuffer(const QPaintBuffer &buffer)
+void PaintBufferModel::setPaintBuffer(const PaintBuffer &buffer)
 {
     beginResetModel();
     m_buffer = buffer;
-    PaintBufferPrivacyViolater p;
-    p.processCommands(buffer, nullptr, 0, -1); // end < begin -> no processing
-    m_privateBuffer = p.extract();
+    m_privateBuffer = buffer.data();
     endResetModel();
 }
 
-QPaintBuffer PaintBufferModel::buffer() const
+PaintBuffer PaintBufferModel::buffer() const
 {
     return m_buffer;
 }

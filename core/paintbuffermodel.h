@@ -30,16 +30,14 @@
 #define GAMMARAY_WIDGETINSPECTOR_PAINTBUFFERMODEL_H
 
 #include <config-gammaray.h>
+#include "paintbuffer.h"
 
 #include <common/modelroles.h>
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <QAbstractItemModel>
 
-#include <private/qpaintbuffer_p.h>
-
 QT_BEGIN_NAMESPACE
-class QPaintBuffer;
 struct QPaintBufferCommand;
 class QPainterPath;
 QT_END_NAMESPACE
@@ -58,8 +56,8 @@ public:
     };
     explicit PaintBufferModel(QObject *parent = nullptr);
 
-    void setPaintBuffer(const QPaintBuffer &buffer);
-    QPaintBuffer buffer() const;
+    void setPaintBuffer(const PaintBuffer &buffer);
+    PaintBuffer buffer() const;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
@@ -80,7 +78,7 @@ private:
 
     QPainterPath clipPath(int row) const;
 
-    QPaintBuffer m_buffer;
+    PaintBuffer m_buffer;
     QPaintBufferPrivate *m_privateBuffer;
 };
 }

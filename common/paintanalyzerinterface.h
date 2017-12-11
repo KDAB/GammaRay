@@ -47,6 +47,7 @@ class GAMMARAY_COMMON_EXPORT PaintAnalyzerInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool hasArgumentDetails READ hasArgumentDetails WRITE setHasArgumentDetails NOTIFY hasArgumentDetailsChanged)
+    Q_PROPERTY(bool hasStackTrace READ hasStackTrace WRITE setHasStackTrace NOTIFY hasStackTraceChanged)
 public:
     explicit PaintAnalyzerInterface(const QString &name, QObject *parent = nullptr);
     QString name() const;
@@ -54,12 +55,17 @@ public:
     bool hasArgumentDetails() const;
     void setHasArgumentDetails(bool hasDetails);
 
+    bool hasStackTrace() const;
+    void setHasStackTrace(bool hasStackTrace);
+
 Q_SIGNALS:
     void hasArgumentDetailsChanged(bool);
+    void hasStackTraceChanged(bool);
 
 private:
     QString m_name;
     bool m_hasArgumentDetails;
+    bool m_hasStackTrace;
 };
 
 struct PaintAnalyzerFrameData

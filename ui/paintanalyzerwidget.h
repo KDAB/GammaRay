@@ -49,6 +49,10 @@ public:
 
     void setBaseName(const QString &name);
 
+private slots:
+    void detailsChanged();
+    void stackTraceContextMenu(QPoint pos);
+
 private:
     QScopedPointer<Ui::PaintAnalyzerWidget> ui;
     PaintAnalyzerInterface *m_iface;

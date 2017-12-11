@@ -40,10 +40,44 @@
         </item>
        </layout>
       </widget>
-      <widget class="QTreeView" name="argumentView">
-       <property name="indentation">
-        <number>10</number>
+      <widget class="QTabWidget" name="detailsTabWidget">
+       <property name="currentIndex">
+        <number>0</number>
        </property>
+       <widget class="QWidget" name="argumentTab">
+        <attribute name="title">
+         <string>Argument</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QTreeView" name="argumentView">
+           <property name="indentation">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="stackTraceTab">
+        <attribute name="title">
+         <string>Stack Trace</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QTreeView" name="stackTraceView">
+           <property name="contextMenuPolicy">
+            <enum>Qt::CustomContextMenu</enum>
+           </property>
+           <property name="rootIsDecorated">
+            <bool>false</bool>
+           </property>
+           <property name="uniformRowHeights">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
      <widget class="QWidget" name="replayLayoutWidget">

@@ -51,6 +51,7 @@ set(gammaray_srcs
   objectinstance.cpp
   propertyadaptorfactory.cpp
 
+  paintbuffer.cpp
   paintbuffermodel.cpp
   paintanalyzer.cpp
 

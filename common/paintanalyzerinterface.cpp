@@ -36,6 +36,7 @@ PaintAnalyzerInterface::PaintAnalyzerInterface(const QString &name, QObject *par
     : QObject(parent)
     , m_name(name)
     , m_hasArgumentDetails(false)
+    , m_hasStackTrace(false)
 {
     ObjectBroker::registerObject(name, this);
     qRegisterMetaTypeStreamOperators<PaintAnalyzerFrameData>();
@@ -57,6 +58,19 @@ void PaintAnalyzerInterface::setHasArgumentDetails(bool hasDetails)
         return;
     m_hasArgumentDetails = hasDetails;
     emit hasArgumentDetailsChanged(hasDetails);
+}
+
+bool PaintAnalyzerInterface::hasStackTrace() const
+{
+    return m_hasStackTrace;
+}
+
+void PaintAnalyzerInterface::setHasStackTrace(bool hasStackTrace)
+{
+    if (m_hasStackTrace == hasStackTrace)
+        return;
+    m_hasStackTrace = hasStackTrace;
+    emit hasStackTraceChanged(hasStackTrace);
 }
 
 namespace GammaRay {

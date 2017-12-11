@@ -28,16 +28,19 @@
 
 #include "ui_paintanalyzerwidget.h"
 
+#include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 #include <ui/uiresources.h>
 
 #include <common/paintanalyzerinterface.h>
 #include <common/objectbroker.h>
+#include <common/sourcelocation.h>
 
 #include <QComboBox>
 #include <QDebug>
 #include <QLabel>
+#include <QMenu>
 #include <QToolBar>
 
 using namespace GammaRay;
@@ -51,6 +54,7 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     ui->commandView->header()->setObjectName("commandViewHeader");
     ui->commandView->setItemDelegate(new PropertyEditorDelegate(this));
     ui->argumentView->setItemDelegate(new PropertyEditorDelegate(this));
+    ui->stackTraceView->setItemDelegate(new PropertyEditorDelegate(this));
 
     auto toolbar = new QToolBar;
     // Our icons are 16x16 and support hidpi, so let force iconSize on every styles
@@ -80,9 +84,11 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
     zoom->setCurrentIndex(ui->replayWidget->zoomLevelIndex());
 
-    ui->actionShowClipArea->setIcon(UIResources::themedIcon(QLatin1String("visualize-overdraw.png")));
+    ui->actionShowClipArea->setIcon(UIResources::themedIcon(QLatin1String("visualize-clipping.png")));
     connect(ui->actionShowClipArea, SIGNAL(toggled(bool)), ui->replayWidget, SLOT(setShowClipArea(bool)));
     ui->actionShowClipArea->setChecked(ui->replayWidget->showClipArea());
+
+    connect(ui->stackTraceView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(stackTraceContextMenu(QPoint)));
 }
 
 PaintAnalyzerWidget::~PaintAnalyzerWidget()
@@ -97,10 +103,46 @@ void PaintAnalyzerWidget::setBaseName(const QString &name)
     new SearchLineController(ui->commandSearchLine, model);
 
     ui->argumentView->setModel(ObjectBroker::model(name + QStringLiteral(".argumentProperties")));
+    ui->stackTraceView->setModel(ObjectBroker::model(name + QStringLiteral(".stackTrace")));
 
     ui->replayWidget->setName(name + QStringLiteral(".remoteView"));
 
     m_iface = ObjectBroker::object<PaintAnalyzerInterface*>(name);
-    ui->argumentView->setVisible(m_iface->hasArgumentDetails());
-    connect(m_iface, SIGNAL(hasArgumentDetailsChanged(bool)), ui->argumentView, SLOT(setVisible(bool)));
+    connect(m_iface, SIGNAL(hasArgumentDetailsChanged(bool)), this, SLOT(detailsChanged()));
+    connect(m_iface, SIGNAL(hasStackTraceChanged(bool)), this, SLOT(detailsChanged()));
+    detailsChanged();
+}
+
+void PaintAnalyzerWidget::detailsChanged()
+{
+    const auto hasAnyDetails = m_iface->hasArgumentDetails() || m_iface->hasStackTrace();
+    ui->detailsTabWidget->setVisible(hasAnyDetails);
+    if (!hasAnyDetails)
+        return;
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    const auto hasAllDetails = m_iface->hasArgumentDetails() && m_iface->hasStackTrace();
+    ui->detailsTabWidget->tabBar()->setVisible(hasAllDetails);
+    if (hasAllDetails)
+        return;
+
+    ui->detailsTabWidget->setCurrentWidget(m_iface->hasArgumentDetails() ? ui->argumentTab : ui->stackTraceTab);
+#endif
+}
+
+void PaintAnalyzerWidget::stackTraceContextMenu(QPoint pos)
+{
+    const auto idx = ui->stackTraceView->indexAt(pos);
+    if (!idx.isValid())
+        return;
+
+    const auto loc = idx.sibling(idx.row(), 1).data().value<SourceLocation>();
+    if (!loc.isValid())
+        return;
+
+    QMenu contextMenu;
+    ContextMenuExtension cme;
+    cme.setLocation(ContextMenuExtension::ShowSource, loc);
+    cme.populateMenu(&contextMenu);
+    contextMenu.exec(ui->stackTraceView->viewport()->mapToGlobal(pos));
 }

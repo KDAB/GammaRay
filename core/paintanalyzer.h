@@ -37,7 +37,6 @@
 
 QT_BEGIN_NAMESPACE
 class QItemSelectionModel;
-class QPaintBuffer;
 class QPaintDevice;
 class QRectF;
 class QSortFilterProxyModel;
@@ -45,8 +44,10 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class AggregatedPropertyModel;
+class PaintBuffer;
 class PaintBufferModel;
 class RemoteViewServer;
+class StackTraceModel;
 
 /** Inspects individual operations on a QPainter. */
 class GAMMARAY_CORE_EXPORT PaintAnalyzer : public PaintAnalyzerInterface
@@ -73,10 +74,11 @@ private:
     PaintBufferModel *m_paintBufferModel;
     QSortFilterProxyModel *m_paintBufferFilter;
     QItemSelectionModel *m_selectionModel;
-    QPaintBuffer *m_paintBuffer;
+    PaintBuffer *m_paintBuffer;
     RemoteViewServer *m_remoteView;
     AggregatedPropertyModel *m_argumentModel;
     ObjectInstance m_currentArgument;
+    StackTraceModel *m_stackTraceModel;
 };
 }
 

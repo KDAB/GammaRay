@@ -29,11 +29,13 @@
 #include <config-gammaray.h>
 
 #include "paintanalyzer.h"
+#include "paintbuffer.h"
 #include "paintbuffermodel.h"
 
 #include <core/aggregatedpropertymodel.h>
 #include <core/probe.h>
 #include <core/remoteviewserver.h>
+#include <core/stacktracemodel.h>
 
 #include <common/metatypedeclarations.h>
 #include <common/objectbroker.h>
@@ -61,6 +63,7 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
     , m_paintBuffer(nullptr)
     , m_remoteView(new RemoteViewServer(name + QStringLiteral(".remoteView"), this))
     , m_argumentModel(new AggregatedPropertyModel(this))
+    , m_stackTraceModel(new StackTraceModel(this))
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBufferModel = new PaintBufferModel(this);
@@ -75,6 +78,7 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
 
     m_argumentModel->setReadOnly(true);
     Probe::instance()->registerModel(name + QStringLiteral(".argumentProperties"), m_argumentModel);
+    Probe::instance()->registerModel(name + QStringLiteral(".stackTrace"), m_stackTraceModel);
 
     connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(repaint()));
 }
@@ -127,6 +131,13 @@ void PaintAnalyzer::repaint()
     frame.setImage(image);
     frame.setData(QVariant::fromValue(data));
     m_remoteView->sendFrame(frame);
+
+    if (index.isValid()) {
+        m_stackTraceModel->setStackTrace(m_paintBufferModel->buffer().stackTrace(index.row()));
+        setHasStackTrace(m_stackTraceModel->rowCount() > 0);
+    } else {
+        setHasStackTrace(0);
+    }
 #endif
 }
 
@@ -134,7 +145,7 @@ void PaintAnalyzer::beginAnalyzePainting()
 {
     Q_ASSERT(!m_paintBuffer);
 #ifdef HAVE_PRIVATE_QT_HEADERS
-    m_paintBuffer = new QPaintBuffer;
+    m_paintBuffer = new PaintBuffer;
 #endif
 }
 
