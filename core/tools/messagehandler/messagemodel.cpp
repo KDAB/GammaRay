@@ -115,8 +115,8 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
     } else if (role == MessageModelRole::Line && index.column() == MessageModelColumn::File) {
         return msg.line;
 #endif
-    } else if (role == MessageModelRole::Backtrace && index.column() == 0) {
-        return msg.backtrace;
+    } else if (role == MessageModelRole::Backtrace) {
+        return QVariant::fromValue(msg.backtrace);
     }
 
     return QVariant();

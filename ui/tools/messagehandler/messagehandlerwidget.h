@@ -34,7 +34,6 @@
 
 QT_BEGIN_NAMESPACE
 class QItemSelection;
-class QStringListModel;
 class QTime;
 QT_END_NAMESPACE
 
@@ -55,12 +54,11 @@ private slots:
                               const QStringList &backtrace);
     void copyToClipboard(const QString &message);
     void messageContextMenu(const QPoint &pos);
-    void messageSelected(const QItemSelection &selection);
+    void stackTraceContextMenu(QPoint pos);
 
 private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
     UIStateManager m_stateManager;
-    QStringListModel *m_backtraceModel;
 };
 }
 

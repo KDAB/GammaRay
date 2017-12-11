@@ -33,10 +33,24 @@ using namespace GammaRay;
 
 MessageHandlerInterface::MessageHandlerInterface(QObject *parent)
     : QObject(parent)
+    , m_stackTraceAvailable(false)
 {
     ObjectBroker::registerObject<MessageHandlerInterface *>(this);
 }
 
 MessageHandlerInterface::~MessageHandlerInterface()
 {
+}
+
+bool MessageHandlerInterface::stackTraceAvailable() const
+{
+    return m_stackTraceAvailable;
+}
+
+void MessageHandlerInterface::setStackTraceAvailable(bool available)
+{
+    if (m_stackTraceAvailable == available)
+        return;
+    m_stackTraceAvailable = available;
+    emit stackTraceAvailableChanged(available);
 }

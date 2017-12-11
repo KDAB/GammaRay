@@ -33,6 +33,7 @@
 
 #include <common/sourcelocation.h>
 
+#include <QMetaType>
 #include <QVector>
 
 #include <memory>
@@ -96,5 +97,7 @@ GAMMARAY_CORE_EXPORT QVector<ResolvedFrame> resolveAll(const Trace &trace);
 }
 
 }
+
+Q_DECLARE_METATYPE(GammaRay::Execution::Trace)
 
 #endif // GAMMARAY_EXECUTION_H

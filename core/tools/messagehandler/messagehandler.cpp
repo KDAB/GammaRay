@@ -35,12 +35,14 @@
 #include <core/execution.h>
 #include <core/probeguard.h>
 #include <core/remote/serverproxymodel.h>
+#include <core/stacktracemodel.h>
 
 #include "common/objectbroker.h"
 #include "common/endpoint.h"
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QItemSelectionModel>
 #include <QMutex>
 #include <QSortFilterProxyModel>
 #include <QThread>
@@ -89,40 +91,19 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
 #endif
 
     if (type == QtCriticalMsg || type == QtFatalMsg || (type == QtWarningMsg && !ProbeGuard::insideProbe())) {
-        const auto trace = Execution::stackTrace(50);
-        auto frames = Execution::resolveAll(trace);
-        // remove trailing internal functions
-        // be a bit careful and first make sure that we find this function...
         // TODO: go even higher until qWarning/qFatal/qDebug/... ?
-        int removeUntil = -1;
-        for (int i = 0; i < frames.size(); ++i) {
-            if (frames.at(i).name.contains(QLatin1String("handleMessage"))) {
-                removeUntil = i;
-                break;
-            }
-        }
-        if (removeUntil != -1)
-            frames.remove(0, removeUntil + 1);
-
-        // TODO this should eventually be ported to a proper stack trace model with on-demand resolution
-        message.backtrace.reserve(frames.size());
-        foreach (const auto &frame, frames) {
-            if (frame.location.isValid())
-                message.backtrace.push_back(frame.name + QLatin1String(" (") + frame.location.displayString() + QLatin1Char(')'));
-            else
-                message.backtrace.push_back(frame.name);
-        }
+        message.backtrace = Execution::stackTrace(50, 1); // skip this, ie. start at our caller
     }
 
-    if (!message.backtrace.isEmpty()
+    if (!message.backtrace.empty()
         && (qgetenv("GAMMARAY_UNITTEST") == "1" || type == QtFatalMsg)) {
         if (type == QtFatalMsg)
             std::cerr << "QFatal in " << qPrintable(qApp->applicationName()) << " (" << qPrintable(
                 qApp->applicationFilePath()) << ')' << std::endl;
         std::cerr << "START BACKTRACE:" << std::endl;
         int i = 0;
-        foreach (const QString &frame, message.backtrace)
-            std::cerr << (++i) << "\t" << qPrintable(frame) << std::endl;
+        foreach (const auto &frame, Execution::resolveAll(message.backtrace))
+            std::cerr << (++i) << "\t" << qPrintable(frame.name) << " (" << qPrintable(frame.location.displayString()) << ")" << std::endl;
         std::cerr << "END BACKTRACE" << std::endl;
     }
 
@@ -167,6 +148,7 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
 MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
     : MessageHandlerInterface(parent)
     , m_messageModel(new MessageModel(this))
+    , m_stackTraceModel(new StackTraceModel(this))
 {
     Q_ASSERT(s_model == nullptr);
     s_model = m_messageModel;
@@ -174,10 +156,14 @@ MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     proxy->addRole(MessageModelRole::Type);
     proxy->addRole(MessageModelRole::Line);
-    proxy->addRole(MessageModelRole::Backtrace);
     proxy->setSourceModel(m_messageModel);
     proxy->setSortRole(MessageModelRole::Sort);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.MessageModel"), proxy);
+
+    auto selModel = ObjectBroker::selectionModel(proxy);
+    connect(selModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(messageSelected(QItemSelection)));
+
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.MessageStackTraceModel"), m_stackTraceModel);
 
     // install handler directly, catches most cases,
     // i.e. user has no special handler or the handler
@@ -224,9 +210,29 @@ void MessageHandler::handleFatalMessage(const DebugMessage &message)
     const QString app = qApp->applicationName().isEmpty()
                         ? qApp->applicationFilePath()
                         : qApp->applicationName();
-    emit fatalMessageReceived(app, message.message, message.time, message.backtrace);
+    QStringList bt;
+    bt.reserve(message.backtrace.size());
+    foreach (const auto &frame, Execution::resolveAll(message.backtrace)) {
+        if (frame.location.isValid())
+            bt.push_back(frame.name + QLatin1String(" (") + frame.location.displayString() + QLatin1Char(')'));
+        else
+            bt.push_back(frame.name);
+    }
+    emit fatalMessageReceived(app, message.message, message.time, bt);
     if (Endpoint::isConnected())
         Endpoint::instance()->waitForMessagesWritten();
+}
+
+void MessageHandler::messageSelected(const QItemSelection& selection)
+{
+    if (selection.isEmpty()) {
+        setStackTraceAvailable(false);
+        return;
+    }
+
+    const auto idx = selection.at(0).topLeft();
+    m_stackTraceModel->setStackTrace(idx.data(MessageModelRole::Backtrace).value<Execution::Trace>());
+    setStackTraceAvailable(m_stackTraceModel->rowCount() > 0);
 }
 
 MessageHandlerFactory::MessageHandlerFactory(QObject *parent)

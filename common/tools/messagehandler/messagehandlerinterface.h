@@ -39,13 +39,21 @@ namespace GammaRay {
 class MessageHandlerInterface : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool stackTraceAvailable READ stackTraceAvailable WRITE setStackTraceAvailable NOTIFY stackTraceAvailableChanged)
 public:
     explicit MessageHandlerInterface(QObject *parent = nullptr);
     virtual ~MessageHandlerInterface();
 
+    bool stackTraceAvailable() const;
+    void setStackTraceAvailable(bool available);
+
 signals:
     void fatalMessageReceived(const QString &app, const QString &message, const QTime &time,
                               const QStringList &backtrace);
+    void stackTraceAvailableChanged(bool available);
+
+private:
+    bool m_stackTraceAvailable;
 };
 }
 

@@ -28,6 +28,7 @@
 #ifndef GAMMARAY_MESSAGEHANDLER_MESSAGEMODEL_H
 #define GAMMARAY_MESSAGEHANDLER_MESSAGEMODEL_H
 
+#include <core/execution.h>
 #include <common/tools/messagehandler/messagemodelroles.h>
 
 #include <QAbstractTableModel>
@@ -40,7 +41,7 @@ struct DebugMessage {
     QtMsgType type;
     QString message;
     QTime time;
-    QStringList backtrace;
+    Execution::Trace backtrace;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QString category;
     QString file;

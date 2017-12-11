@@ -32,9 +32,14 @@
 
 #include <common/tools/messagehandler/messagehandlerinterface.h>
 
+QT_BEGIN_NAMESPACE
+class QItemSelection;
+QT_END_NAMESPACE
+
 namespace GammaRay {
 struct DebugMessage;
 class MessageModel;
+class StackTraceModel;
 
 namespace Ui {
 class MessageHandler;
@@ -51,9 +56,11 @@ public:
 private slots:
     void ensureHandlerInstalled();
     void handleFatalMessage(const GammaRay::DebugMessage &message);
+    void messageSelected(const QItemSelection &selection);
 
 private:
     MessageModel *m_messageModel;
+    StackTraceModel *m_stackTraceModel;
 };
 
 class MessageHandlerFactory : public QObject, public StandardToolFactory<QObject, MessageHandler>

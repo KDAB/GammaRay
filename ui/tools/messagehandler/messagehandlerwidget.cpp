@@ -34,6 +34,7 @@
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
 #include <ui/uiintegration.h>
+#include <ui/propertyeditor/propertyeditordelegate.h>
 
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
@@ -50,7 +51,6 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QSignalMapper>
-#include <QStringListModel>
 #include <QUrl>
 
 using namespace GammaRay;
@@ -64,7 +64,6 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::MessageHandlerWidget)
     , m_stateManager(this)
-    , m_backtraceModel(new QStringListModel(this))
 {
     ObjectBroker::registerClientObjectFactoryCallback<MessageHandlerInterface *>(
         createClientMessageHandler);
@@ -94,17 +93,17 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
     displayModel->setSourceModel(messageModel);
     new SearchLineController(ui->messageSearchLine, displayModel);
     ui->messageView->setModel(displayModel);
+    ui->messageView->setSelectionModel(ObjectBroker::selectionModel(displayModel));
     connect(ui->messageView, SIGNAL(customContextMenuRequested(QPoint)), this,
             SLOT(messageContextMenu(QPoint)));
-    connect(ui->messageView->selectionModel(),
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(messageSelected(QItemSelection)));
 
-    ui->backtraceView->hide();
-    ui->backtraceView->setModel(m_backtraceModel);
+    ui->backtraceView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MessageStackTraceModel")));
+    ui->backtraceView->setVisible(handler->stackTraceAvailable());
+    ui->backtraceView->setItemDelegate(new PropertyEditorDelegate(ui->backtraceView));
+    connect(handler, SIGNAL(stackTraceAvailableChanged(bool)), ui->backtraceView, SLOT(setVisible(bool)));
+    connect(ui->backtraceView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(stackTraceContextMenu(QPoint)));
 
-    ui->categoriesView->setModel(ObjectBroker::model(QStringLiteral(
-                                                         "com.kdab.GammaRay.LoggingCategoryModel")));
+    ui->categoriesView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel")));
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->messageView->header(),
@@ -200,20 +199,19 @@ void MessageHandlerWidget::messageContextMenu(const QPoint &pos)
     contextMenu.exec(ui->messageView->viewport()->mapToGlobal(pos));
 }
 
-void MessageHandlerWidget::messageSelected(const QItemSelection &selection)
+void MessageHandlerWidget::stackTraceContextMenu(QPoint pos)
 {
-    if (selection.isEmpty())
+    const auto idx = ui->backtraceView->indexAt(pos);
+    if (!idx.isValid())
         return;
 
-    auto index = selection.first().topLeft();
-    if (!index.isValid())
+    const auto loc = idx.sibling(idx.row(), 1).data().value<SourceLocation>();
+    if (!loc.isValid())
         return;
 
-    const auto bt = index.sibling(index.row(), 0).data(MessageModelRole::Backtrace).toStringList();
-    if (bt.isEmpty()) {
-        ui->backtraceView->hide();
-    } else {
-        ui->backtraceView->show();
-        m_backtraceModel->setStringList(bt);
-    }
+    QMenu contextMenu;
+    ContextMenuExtension cme;
+    cme.setLocation(ContextMenuExtension::ShowSource, loc);
+    cme.populateMenu(&contextMenu);
+    contextMenu.exec(ui->backtraceView->viewport()->mapToGlobal(pos));
 }
