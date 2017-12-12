@@ -33,8 +33,6 @@
 #define GAMMARAY_DEFAULT_ANY_TCP_URL "tcp://0.0.0.0"
 
 // build options
-#cmakedefine BUILD_TIMER_PLUGIN
-
 #cmakedefine HAVE_PRIVATE_QT_HEADERS
 
 #cmakedefine HAVE_STDINT_H

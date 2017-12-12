@@ -27,7 +27,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "timermodel.h"
-#include "functioncalltimer.h"
 
 #include <core/objectdataprovider.h>
 
@@ -35,6 +34,7 @@
 #include <common/objectid.h>
 #include <common/sourcelocation.h>
 
+#include <QElapsedTimer>
 #include <QMutexLocker>
 #include <QTimerEvent>
 #include <QTime>
@@ -163,7 +163,7 @@ struct TimerIdData
 
     TimerIdInfo info;
     int totalWakeupsEvents;
-    FunctionCallTimer functionCallTimer;
+    QElapsedTimer functionCallTimer;
     QList<TimeoutEvent> timeoutEvents;
 
     bool changed;
@@ -386,11 +386,12 @@ void TimerModel::preSignalActivate(QObject *caller, int methodIndex)
     }
 
     if (methodIndex != m_qmlTimerRunningChangedIndex) {
-        if (!it.value().functionCallTimer.start()) {
+        if (it.value().functionCallTimer.isValid()) {
             cout << "TimerModel::preSignalActivate(): Recursive timeout for timer "
                  << (void *)caller << "!" << endl;
             return;
         }
+        it.value().functionCallTimer.start();
     }
 }
 
@@ -414,7 +415,7 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
     }
 
     if (methodIndex != m_qmlTimerRunningChangedIndex) {
-        if (!it.value().functionCallTimer.active()) {
+        if (!it.value().functionCallTimer.isValid()) {
             cout << "TimerModel::postSignalActivate(): Timer not active: "
                  << (void *)caller << "!" << endl;
             return;
@@ -425,8 +426,9 @@ void TimerModel::postSignalActivate(QObject *caller, int methodIndex)
     it.value().update(id);
 
     if (methodIndex != m_qmlTimerRunningChangedIndex) {
-        const TimeoutEvent timeoutEvent(QTime::currentTime(), it.value().functionCallTimer.stop());
+        const TimeoutEvent timeoutEvent(QTime::currentTime(), it.value().functionCallTimer.nsecsElapsed() / 1000); // expected unit is µs
         it.value().addEvent(timeoutEvent);
+        it.value().functionCallTimer.invalidate();
     }
 
     checkDispatcherStatus(caller);

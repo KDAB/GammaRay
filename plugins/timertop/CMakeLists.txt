@@ -1,13 +1,10 @@
 # probe part
 if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
-if(BUILD_TIMER_PLUGIN)
-
 set(gammaray_timertop_plugin_srcs
   timertop.cpp
   timertopinterface.cpp
   timermodel.cpp
   timerinfo.cpp
-  functioncalltimer.cpp
 )
 
 gammaray_add_plugin(gammaray_timertop_plugin
@@ -19,16 +16,6 @@ gammaray_add_plugin(gammaray_timertop_plugin
 target_link_libraries(gammaray_timertop_plugin
   gammaray_core
 )
-
-if (LINUX)
-  target_link_libraries(pthread)
-endif()
-
-if(NOT WIN32 AND NOT APPLE)
-  target_link_libraries(gammaray_timertop_plugin rt)
-endif()
-
-endif()
 endif()
 
 # ui part

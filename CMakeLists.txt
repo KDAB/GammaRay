@@ -568,19 +568,6 @@ add_feature_info("3D Widget Inspector" GAMMARAY_WITH_WIDGET3D "Requires Qt5 >= 5
 # Additional dependencies
 #
 
-if(WIN32 OR APPLE)
-  set(BUILD_TIMER_PLUGIN TRUE)
-else()
-  check_library_exists(rt clock_gettime "" HAVE_CLOCK_GETTIME)
-  gammaray_add_dummy_package(rt HAVE_CLOCK_GETTIME)
-  set_package_properties(rt PROPERTIES
-    TYPE RECOMMENDED
-    DESCRIPTION "High resolution clock, part of glibc"
-    PURPOSE "Needed for the timer profiler plugin."
-  )
-  set(BUILD_TIMER_PLUGIN ${HAVE_CLOCK_GETTIME})
-endif()
-
 check_include_files(stdint.h HAVE_STDINT_H)
 check_include_files(unistd.h HAVE_UNISTD_H)
 check_symbol_exists(backtrace execinfo.h HAVE_BACKTRACE)
