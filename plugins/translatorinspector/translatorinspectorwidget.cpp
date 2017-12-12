@@ -54,10 +54,10 @@ public:
     {
         if (hasIndex(proxyIndex.row(), proxyIndex.column(), proxyIndex.parent())) {
             if (role == Qt::FontRole) {
-                const bool overriden = proxyIndex.sibling(proxyIndex.row(), 3)
-                        .data(TranslationsModel::IsOverridenRole).toBool();
+                const bool overridden = proxyIndex.sibling(proxyIndex.row(), 3)
+                        .data(TranslationsModel::IsOverriddenRole).toBool();
                 QFont font;
-                font.setItalic(overriden);
+                font.setItalic(overridden);
                 return font;
             }
         }
