@@ -96,6 +96,15 @@ void HelpControllerPrivate::sendCommand(const QByteArray &cmd)
 
 Q_GLOBAL_STATIC(HelpControllerPrivate, s_helpController)
 
+static QString assistantExecutableName()
+{
+#ifdef Q_OS_OSX
+    return QStringLiteral("Assistant.app");
+#else
+    return QStringLiteral("assistant");
+#endif
+}
+
 bool HelpController::isAvailable()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
@@ -103,11 +112,11 @@ bool HelpController::isAvailable()
     if (!d->assistantPath.isEmpty() && !d->qhcPath.isEmpty())
         return true;
 
-    d->assistantPath = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator() + QStringLiteral("assistant");
+    d->assistantPath = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator() + assistantExecutableName();
     QFileInfo assistFile(d->assistantPath);
     if (!assistFile.isExecutable()) {
         qDebug() << "Qt Assistant not found in QT_INSTALL_BINS. Looking in standard Path next.";
-        d->assistantPath = QStandardPaths::findExecutable(QStringLiteral("assistant"));
+        d->assistantPath = QStandardPaths::findExecutable(assistantExecutableName());
         if (d->assistantPath.isEmpty()) {
             qDebug() << "Qt Assistant not found, help not available.";
             return false;
