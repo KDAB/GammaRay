@@ -129,12 +129,15 @@ static QStringList readRPaths(const QString &path)
         return rpaths;
 
     // read load commands
+    const auto pathBase = QFileInfo(path).absolutePath();
     for (int i = 0; i < ncmds; ++i) {
         const load_command *cmd = reinterpret_cast<const load_command *>(data + offset);
         if (cmd->cmd == LC_RPATH) {
             const rpath_command *rpcmd = reinterpret_cast<const rpath_command *>(data + offset);
-            rpaths.push_back(QString::fromUtf8(reinterpret_cast<const char *>(rpcmd)
-                                               + rpcmd->path.offset));
+            auto rpath = QString::fromUtf8(reinterpret_cast<const char *>(rpcmd) + rpcmd->path.offset);
+            rpath.replace(QStringLiteral("@executable_path"), pathBase);
+            rpath.replace(QStringLiteral("@loader_path"), pathBase);
+            rpaths.push_back(rpath);
         }
         offset += cmd->cmdsize;
     }
