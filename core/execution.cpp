@@ -156,15 +156,23 @@ static Execution::ResolvedFrame toResolvedFrame(const backward::ResolvedTrace &r
 static QString maybeDemangleName(char *name)
 {
 #ifdef HAVE_CXA_DEMANGLE
-    auto mangledNameStart = strstr(name, "(_Z");
+#if defined(Q_OS_OSX)
+    const char MANGLED_START[] = " _Z";
+    const char MANGLED_END[] = " ";
+#else
+    const char MANGLED_START[] = "(_Z";
+    const char MANGLED_END[] = "+";
+#endif
+
+    auto mangledNameStart = strstr(name, MANGLED_START);
     if (mangledNameStart) {
         ++mangledNameStart;
-        const auto mangledNameEnd = strstr(mangledNameStart, "+");
+        const auto mangledNameEnd = strstr(mangledNameStart, MANGLED_END);
         if (mangledNameEnd) {
             int status;
             *mangledNameEnd = 0;
             auto demangled = abi::__cxa_demangle(mangledNameStart, nullptr, nullptr, &status);
-            *mangledNameEnd = '+';
+            *mangledNameEnd = MANGLED_END[0];
             if (status == 0 && demangled) {
                 QString ret = QString::fromLatin1(name, mangledNameStart - name)
                               +QString::fromLatin1(demangled)
