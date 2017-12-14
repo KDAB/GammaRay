@@ -323,9 +323,6 @@ QModelIndex QuickSceneGraphModel::indexForNode(QSGNode *node) const
         return QModelIndex();
 
     QSGNode *parent = m_childParentMap.value(node);
-    const QModelIndex parentIndex = indexForNode(parent);
-    if (!parentIndex.isValid() && parent)
-        return QModelIndex();
 
     const QVector<QSGNode *> &siblings = m_parentChildMap[parent];
     auto it = std::lower_bound(siblings.constBegin(), siblings.constEnd(), node);
@@ -333,7 +330,7 @@ QModelIndex QuickSceneGraphModel::indexForNode(QSGNode *node) const
         return QModelIndex();
 
     const int row = std::distance(siblings.constBegin(), it);
-    return index(row, 0, parentIndex);
+    return createIndex(row, 0, node);
 }
 
 QSGNode *QuickSceneGraphModel::sgNodeForItem(QQuickItem *item) const
