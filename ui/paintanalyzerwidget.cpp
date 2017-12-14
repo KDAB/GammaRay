@@ -25,8 +25,8 @@
 */
 
 #include "paintanalyzerwidget.h"
-
 #include "ui_paintanalyzerwidget.h"
+#include "paintbufferclientmodel.h"
 
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
@@ -53,6 +53,11 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     ui->setupUi(this);
     ui->commandView->header()->setObjectName("commandViewHeader");
     ui->commandView->setItemDelegate(new PropertyEditorDelegate(this));
+    ui->commandView->setStretchLastSection(false);
+    ui->commandView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->commandView->setDeferredResizeMode(1, QHeaderView::Stretch);
+    ui->commandView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
+
     ui->argumentView->setItemDelegate(new PropertyEditorDelegate(this));
     ui->stackTraceView->setItemDelegate(new PropertyEditorDelegate(this));
 
@@ -77,8 +82,8 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     ui->replayWidget->setSupportedInteractionModes(
         RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring | RemoteViewWidget::ColorPicking);
 
-    ui->paintAnalyzerSplitter->setStretchFactor(0, 0);
-    ui->paintAnalyzerSplitter->setStretchFactor(1, 1);
+    ui->paintAnalyzerSplitter->setStretchFactor(0, 1);
+    ui->paintAnalyzerSplitter->setStretchFactor(1, 2);
 
     connect(zoom, SIGNAL(currentIndexChanged(int)), ui->replayWidget, SLOT(setZoomLevel(int)));
     connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
@@ -98,9 +103,11 @@ PaintAnalyzerWidget::~PaintAnalyzerWidget()
 void PaintAnalyzerWidget::setBaseName(const QString &name)
 {
     auto model = ObjectBroker::model(name + QStringLiteral(".paintBufferModel"));
-    ui->commandView->setModel(model);
-    ui->commandView->setSelectionModel(ObjectBroker::selectionModel(ui->commandView->model()));
-    new SearchLineController(ui->commandSearchLine, model);
+    auto proxy = new PaintBufferClientModel(this);
+    proxy->setSourceModel(model);
+    ui->commandView->setModel(proxy);
+    ui->commandView->setSelectionModel(ObjectBroker::selectionModel(proxy));
+    new SearchLineController(ui->commandSearchLine, proxy);
 
     ui->argumentView->setModel(ObjectBroker::model(name + QStringLiteral(".argumentProperties")));
     ui->stackTraceView->setModel(ObjectBroker::model(name + QStringLiteral(".stackTrace")));

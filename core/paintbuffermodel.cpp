@@ -33,7 +33,9 @@
 #include <core/varianthandler.h>
 
 #include <common/metatypedeclarations.h>
+#include <common/paintbuffermodelroles.h>
 
+#include <algorithm>
 #include <limits>
 #include <vector>
 
@@ -131,6 +133,7 @@ static const int TopLevelId = std::numeric_limits<int>::max();
 PaintBufferModel::PaintBufferModel(QObject *parent)
     : QAbstractItemModel(parent)
     , m_privateBuffer(nullptr)
+    , m_maxCost(0.0)
 {
 }
 
@@ -139,12 +142,23 @@ void PaintBufferModel::setPaintBuffer(const PaintBuffer &buffer)
     beginResetModel();
     m_buffer = buffer;
     m_privateBuffer = buffer.data();
+    m_costs.clear();
+    m_maxCost = 0.0;
     endResetModel();
 }
 
 PaintBuffer PaintBufferModel::buffer() const
 {
     return m_buffer;
+}
+
+void PaintBufferModel::setCosts(const QVector<double>& costs)
+{
+    m_costs = costs;
+    if (rowCount() > 0) {
+        m_maxCost = *std::max_element(m_costs.constBegin(), m_costs.constEnd());
+        emit dataChanged(index(0, 2, QModelIndex()), index(rowCount() - 1, 2, QModelIndex()));
+    }
 }
 
 template <typename T, typename Data>
@@ -393,7 +407,11 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
             case Qt::DisplayRole:
                 if (index.column() == 0)
                     return cmdTypes[cmd.id].name;
-                return argumentDisplayString(cmd);
+                else if (index.column() == 1)
+                    return argumentDisplayString(cmd);
+                else if (index.column() == 2 && m_costs.size() >= index.row())
+                    return m_costs.at(index.row());
+                break;
             case Qt::DecorationRole:
                 if (index.column() == 1)
                     return argumentDecoration(cmd);
@@ -403,10 +421,14 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
                 if (index.column() == 1 && cmd.id == QPaintBufferPrivate::Cmd_SetTransform)
                     return m_privateBuffer->variants.at(cmd.offset);
                 break;
-            case ValueRole:
+            case PaintBufferModelRoles::ValueRole:
                 return argumentAt(cmd, 0);
-            case ClipPathRole:
+            case PaintBufferModelRoles::ClipPathRole:
                 return QVariant::fromValue(clipPath(index.row()));
+            case PaintBufferModelRoles::MaxCostRole:
+                if (index.column() == 2 && index.row() == 0)
+                    return m_maxCost;
+                break;
         }
     } else {
         const auto cmd = m_privateBuffer->commands.at(index.internalId());
@@ -417,7 +439,7 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
                 else if (index.column() == 1)
                     return VariantHandler::displayString(argumentAt(cmd, index.row()));
                 break;
-            case ValueRole:
+            case PaintBufferModelRoles::ValueRole:
                 return argumentAt(cmd, index.row());
         }
     }
@@ -428,7 +450,11 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
 int PaintBufferModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
+#ifdef USE_GAMMARAY_PAINTBUFFER
+    return 3;
+#else
     return 2;
+#endif
 }
 
 int PaintBufferModel::rowCount(const QModelIndex &parent) const
@@ -454,19 +480,6 @@ QModelIndex PaintBufferModel::parent(const QModelIndex& child) const
     if (child.internalId() == TopLevelId)
         return QModelIndex();
     return createIndex(child.internalId(), 0, TopLevelId);
-}
-
-QVariant PaintBufferModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch (section) {
-        case 0:
-            return tr("Command");
-        case 1:
-            return tr("Arguments");
-        }
-    }
-    return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 QPainterPath PaintBufferModel::clipPath(int row) const

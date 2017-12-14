@@ -50,14 +50,12 @@ class PaintBufferModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    enum Role {
-        ValueRole = GammaRay::UserRole + 1,
-        ClipPathRole
-    };
     explicit PaintBufferModel(QObject *parent = nullptr);
 
     void setPaintBuffer(const PaintBuffer &buffer);
     PaintBuffer buffer() const;
+
+    void setCosts(const QVector<double> &costs);
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
@@ -68,9 +66,6 @@ public:
     QModelIndex index(int row, int column, const QModelIndex & parent) const override;
     QModelIndex parent(const QModelIndex & child) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation,
-                        int role = Qt::DisplayRole) const override;
-
 private:
     QVariant argumentAt(const QPaintBufferCommand &cmd, int index) const;
     QString argumentDisplayString(const QPaintBufferCommand &cmd) const;
@@ -80,6 +75,8 @@ private:
 
     PaintBuffer m_buffer;
     QPaintBufferPrivate *m_privateBuffer;
+    QVector<double> m_costs;
+    double m_maxCost;
 };
 }
 

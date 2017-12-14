@@ -31,15 +31,18 @@
 #include "paintanalyzer.h"
 #include "paintbuffer.h"
 #include "paintbuffermodel.h"
+#include "painterprofilingreplayer.h"
 
 #include <core/aggregatedpropertymodel.h>
 #include <core/probe.h>
 #include <core/remoteviewserver.h>
 #include <core/stacktracemodel.h>
+#include <core/remote/serverproxymodel.h>
 
 #include <common/metatypedeclarations.h>
 #include <common/objectbroker.h>
 #include <common/remoteviewframe.h>
+#include <common/paintbuffermodelroles.h>
 
 #include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
@@ -67,7 +70,9 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBufferModel = new PaintBufferModel(this);
-    m_paintBufferFilter = new PaintBufferModelFilterProxy(this);
+    auto proxy = new ServerProxyModel<PaintBufferModelFilterProxy>(this);
+    proxy->addRole(PaintBufferModelRoles::MaxCostRole);
+    m_paintBufferFilter = proxy;
     m_paintBufferFilter->setSourceModel(m_paintBufferModel);
     Probe::instance()->registerModel(name + QStringLiteral(".paintBufferModel"), m_paintBufferFilter);
 
@@ -110,7 +115,7 @@ void PaintAnalyzer::repaint()
     const auto start = m_paintBufferModel->buffer().frameStartIndex(0);
 
     auto index = m_paintBufferFilter->mapToSource(m_selectionModel->currentIndex());
-    m_currentArgument = index.data(PaintBufferModel::ValueRole);
+    m_currentArgument = index.data(PaintBufferModelRoles::ValueRole);
     m_argumentModel->setObject(m_currentArgument);
     setHasArgumentDetails(m_argumentModel->rowCount());
 
@@ -125,7 +130,7 @@ void PaintAnalyzer::repaint()
 
     PaintAnalyzerFrameData data;
     if (index.isValid())
-        data.clipPath = index.data(PaintBufferModel::ClipPathRole).value<QPainterPath>();
+        data.clipPath = index.data(PaintBufferModelRoles::ClipPathRole).value<QPainterPath>();
 
     RemoteViewFrame frame;
     frame.setImage(image);
@@ -186,6 +191,10 @@ void PaintAnalyzer::endAnalyzePainting()
                                  QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows
                                  | QItemSelectionModel::Current);
     }
+
+    PainterProfilingReplayer profiler;
+    profiler.profile(m_paintBufferModel->buffer());
+    m_paintBufferModel->setCosts(profiler.costs());
 #endif
 }
 

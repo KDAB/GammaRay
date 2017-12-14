@@ -54,6 +54,7 @@ set(gammaray_srcs
   paintbuffer.cpp
   paintbuffermodel.cpp
   paintanalyzer.cpp
+  painterprofilingreplayer.cpp
 
   remoteviewserver.cpp
 
