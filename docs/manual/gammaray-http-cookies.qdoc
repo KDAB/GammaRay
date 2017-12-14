@@ -32,7 +32,7 @@
         \li A QNetworkAccessManager instance.
     \endlist
 
-    \borderedimage gammaray-http-cookies.png
+    \image gammaray-http-cookies.png
 
     The information shown in the HTTP cookie view correspond to the properties of QNetworkCookie.
 */

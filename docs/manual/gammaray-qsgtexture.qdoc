@@ -36,7 +36,7 @@
     \endlist
     This is primarily accessible via the scene graph browser in the \l{Qt Quick 2 Inspector} tool.
 
-    \borderedimage gammaray-qsgtexture.png
+    \image gammaray-qsgtexture.png
 
     The texture view offers a number of generic interactions also available in other image inspection
     views in GammaRay, such as:

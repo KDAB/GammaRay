@@ -41,7 +41,7 @@
     The item tree is shown to the top left, and contains the visual hierarchy of QGraphicsItem instances in the currently selected graphics scene.
     The right side contains the \l{Object Inspection} view for the selected item.
 
-    \borderedimage gammaray-graphicsscene-inspector.png
+    \image gammaray-graphicsscene-inspector.png
 
     You can navigate to the object browser (and other applicable tools) using the context menu on the item tree. This feature is available
     for QGraphicsObject sub-classes only.
@@ -60,7 +60,7 @@
 
     When selecting a graphics item in the item tree, the \l{Paint Analyzer} tab is activated in the property view on the right.
 
-    \borderedimage gammaray-graphicsitem-paint-analyzer.png
+    \image gammaray-graphicsitem-paint-analyzer.png
 
     The paint analyzer allows you to inspect every single QPainter command that is executed, and look at the visual result after each step.
 

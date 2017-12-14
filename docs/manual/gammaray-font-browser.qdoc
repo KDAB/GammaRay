@@ -27,7 +27,7 @@
 
     The font browser allows you to inspect the fonts accessible to QFontDatabase inside your target application.
 
-    \borderedimage gammaray-font-browser.png
+    \image gammaray-font-browser.png
 
     The tree view on the left side shows all font families and their corresponding styles found on the target system, or manually
     made available to QFontDatabase, as well as their supported sizes.

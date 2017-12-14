@@ -27,7 +27,7 @@
 
     The GammaRay web inspector tool allows you to inspect HTML5 content inside a QWebEngineView.
 
-    \borderedimage gammaray-web-inspector.png
+    \image gammaray-web-inspector.png
 
     The web inspector enables access to the built-in diagnostics tool, which allows you to:
 

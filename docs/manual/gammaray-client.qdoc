@@ -34,7 +34,7 @@
         \li as \l{Qt Creator} plugin (for \l{Qt Automotive Suite} only)
     \endlist
 
-    \borderedimage gammaray-object-inspector.png
+    \image gammaray-object-inspector.png
 
     \section2 Tools
 

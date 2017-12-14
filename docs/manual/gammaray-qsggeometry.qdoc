@@ -29,7 +29,7 @@
     instance), the scene graph geometry view shows the vertex data associated with that node.
     This is primarily accessible via the scene graph browser in the \l{Qt Quick 2 Inspector} tool.
 
-    \borderedimage gammaray-qsggeometry.png
+    \image gammaray-qsggeometry.png
 
     The scene graph geometry view consists of two parts, the raw vertex data table on the left side, and the
     vertex preview on the right side.

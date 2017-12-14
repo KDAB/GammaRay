@@ -41,7 +41,7 @@
 
     The logging category configuration shows all QLoggingCategory instances detected on the running target, as well as their current configuration.
 
-    \borderedimage gammaray-logging-categories.png
+    \image gammaray-logging-categories.png
 
     Here you can enable or disable individual logging categories at runtime, which takes immediate effect.
     This is particularly useful to only enable output of high-volume diagnostics for a short period of time.

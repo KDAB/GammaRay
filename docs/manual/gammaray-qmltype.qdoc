@@ -29,6 +29,6 @@
     for the type of the currently selected object. This is available both for types defined
     in C++ and in QML code.
 
-    \borderedimage gammaray-qmltype.png
+    \image gammaray-qmltype.png
 
 */

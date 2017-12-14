@@ -29,7 +29,7 @@
     The tree view on the left side shows the file and folder hierarchy, the content view on the right allows to inspect the file content
     if it is a supported text or image format.
 
-    \borderedimage gammaray-qrc-browser.png
+    \image gammaray-qrc-browser.png
 
     The context menu on the folder tree on the left side allows to save individual files or entire folders to disk. This also works for
     remote embedded targets.

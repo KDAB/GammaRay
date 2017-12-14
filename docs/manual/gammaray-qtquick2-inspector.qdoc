@@ -41,7 +41,7 @@
     This does not necessarily match the QObject parent/child hierarchy.
     The right side contains universal \l{Object Inspection} view.
 
-    \borderedimage gammaray-qq2-inspector.png
+    \image gammaray-qq2-inspector.png
 
     You can navigate to the object browser (and other applicable tools) using the context menu on the item tree. Similarly, you can
     navigate to the source code locations instantiating the current item, or the file declaring the type of the current item (if available).
@@ -60,7 +60,7 @@
         \li Enabling of diagnostic render modes on target (availability depends on Qt version and renderer backend).
     \endlist
 
-    \borderedimage gammaray-qq2-qsg-visualize.png
+    \image gammaray-qq2-qsg-visualize.png
 
     The diagnostic render modes include:
     \list
@@ -79,7 +79,7 @@
 
     When selecting a QQuickPaintedItem sub-class in the item tree, the paint analyzer tab is activated in the property view on the right.
 
-    \borderedimage gammaray-qqpainteditem-paint-analyzer.png
+    \image gammaray-qqpainteditem-paint-analyzer.png
 
     The \l{Paint Analyzer} allows you to inspect every single QPainter command that is executed, and look at the visual result after each step.
 
@@ -91,7 +91,7 @@
     The scene graph view shows you the internal representation used by \l{Qt Quick} to render the current scene. This is particularly
     useful for debugging performance issues related to batching and rendering of custom QQuickItem sub-classes.
 
-    \borderedimage gammaray-qq2-geometry.png
+    \image gammaray-qq2-geometry.png
 
     For nodes in the scene graph you have access to:
 

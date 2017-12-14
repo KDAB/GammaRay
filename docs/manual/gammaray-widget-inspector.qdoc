@@ -27,7 +27,7 @@
 
     The widget inspector allows you browse the QWidget and QLayout hierarchy of your target application.
 
-    \borderedimage gammaray-widget-inspector.png
+    \image gammaray-widget-inspector.png
 
     \section1 Remote View
 

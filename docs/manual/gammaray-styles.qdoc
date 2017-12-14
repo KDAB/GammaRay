@@ -27,7 +27,7 @@
 
     The Styles tool is used for working on and debugging custom QStyle sub-classes.
 
-    \borderedimage gammaray-style-controls.png
+    \image gammaray-style-controls.png
 
     This tool allows you to look at:
 

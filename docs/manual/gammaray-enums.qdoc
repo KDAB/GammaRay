@@ -28,7 +28,7 @@
     The enums view is available for all QObject and QMetaObject instances and shows enums and flags defined in the
     corresponding class, as far as introspectable via QMetaEnum.
 
-    \borderedimage gammaray-enums.png
+    \image gammaray-enums.png
 
     The enums and flags view shows to levels of information. On the top-level you see the list of all
     enums and flags listed in the corresponding QMetaObject, in particular:

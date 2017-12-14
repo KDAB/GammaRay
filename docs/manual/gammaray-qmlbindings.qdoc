@@ -28,7 +28,7 @@
     The bindings view is available for all QObject instances instantiated from QML and shows active property
     bindings for the selected object, including their dependencies on other properties.
 
-    \borderedimage gammaray-bindings.png
+    \image gammaray-bindings.png
 
     At the top level, the binding view shows all QML property bindings of the currently selected object. Below
     each bindings, its dependencies are shown, which themselves can be property bindings again. Dependencies can

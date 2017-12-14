@@ -28,7 +28,7 @@
     The signal plotter visualizes the lifetime of all QObject instances on the target (gray horizontal bars), and shows the emission
     of every signal on the target (vertical black bar on the emitting sender QObject).
 
-    \borderedimage gammaray-signal-plotter.png
+    \image gammaray-signal-plotter.png
 
     Tooltips on each signal emission show information about the signal, including the signal name and the time of the emission.
 

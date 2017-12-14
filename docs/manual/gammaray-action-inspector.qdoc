@@ -28,7 +28,7 @@
     The action inspector shows all QAction instances that exist in the target application. Information about
     the display name, checkable states, and shortcuts with their priorities are displayed.
 
-    \borderedimage gammaray-action-inspector.png
+    \image gammaray-action-inspector.png
 
     The action inspector warns about shortcut conflicts (that is, two QAction instances using the same
     shortcut sequence and thus making it ambiguous) with a warning icon in its shortcut column.

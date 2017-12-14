@@ -27,7 +27,7 @@
 
     The properties view is the most general way of inspecting a selected objects, and is available for all types of objects.
 
-    \borderedimage gammaray-properties.png
+    \image gammaray-properties.png
 
     The view consists of four columns:
     \list

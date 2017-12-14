@@ -47,7 +47,7 @@
     You just have to select an applcation from the list at the top, and specify command line arguments in the field
     below.
 
-    \borderedimage gammaray-launcher-launch.png
+    \image gammaray-launcher-launch.png
 
     GammaRay automatically selects the best matching probe for the target application. You can verify this in
     the combo box at the bottom of the page. If GammaRay could not find a compatible probe, launching fails.
@@ -62,7 +62,7 @@
 
     A tooltip in the process list shows detailed information about the Qt version and used probe for each process.
 
-    \borderedimage gammaray-launcher-attach.png
+    \image gammaray-launcher-attach.png
 
     \section1 Connecting to a Remote Target
 
@@ -76,13 +76,13 @@
     Should GammaRay not be able to discover the desired target automatically, the network address of the target can also
     be specified manually in the entry field on the top. This might be necessary depending on your local network setup.
 
-    \borderedimage gammaray-launcher-connect.png
+    \image gammaray-launcher-connect.png
 
     \section1 Troubleshooting
 
     Opening the \uicontrol{Self Test} tab makes GammaRay verify its installation and identify problems (if any). The results are
     displayed on this page.
 
-    \borderedimage gammaray-launcher-selftest.png
+    \image gammaray-launcher-selftest.png
 
 */

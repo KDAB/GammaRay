@@ -30,7 +30,7 @@
 
     This information is usually independent of the target application, but rather depend on the system.
 
-    \borderedimage gammaray-codec-browser.png
+    \image gammaray-codec-browser.png
 
     The list on the left side contains all codecs known by QTextCodec, as well as their aliases. You can select
     one or more of these codecs for looking at their encoding results on the test string at the upper-right side.

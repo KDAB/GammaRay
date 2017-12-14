@@ -30,7 +30,7 @@
 
     This tool is particularly useful for finding timers that fire too often and thus cause unnecessary system wakeup on energy constrained devices.
 
-    \borderedimage gammaray-timertop.png
+    \image gammaray-timertop.png
 
     The list view shows the following information:
 

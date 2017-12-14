@@ -28,7 +28,7 @@
     The mime type browser allows you to inspect the details of every QMimeType instance available via QMimeDatabase on the target system. This information is usually independent of the
     target application, but rather depend on the system.
 
-    \borderedimage gammaray-mime-types.png
+    \image gammaray-mime-types.png
 
     The tree view shows the entire hierarchy of all known mime types. The hierarchy matches the specified inheritance of a mime type. In the subsequent columns,
     additional information for each mime type is shown, including:

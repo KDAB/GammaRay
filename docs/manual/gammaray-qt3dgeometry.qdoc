@@ -35,7 +35,7 @@
         \li A Qt3DCore::QEntity with a geometry component attached to it.
     \endlist
 
-    \borderedimage gammaray-qt3d-geometry-wireframe.png
+    \image gammaray-qt3d-geometry-wireframe.png
 
     The \l{Qt 3D} geometry inspector provides a wireframe view of the vertices, as well as a raw buffer view.
     It is most easily accessible from within the entity tree view of the \l{Qt3D Inspector}.
@@ -53,7 +53,7 @@
     disabled via the corresponding action in the toolbar at the top of the wireframe view. The culled
     faces are then shown in red, like in the following screenshot.
 
-    \borderedimage gammaray-qt3d-geometry-backface-culling.png
+    \image gammaray-qt3d-geometry-backface-culling.png
 
     \section2 Normal Vectors
 
@@ -61,7 +61,7 @@
     Qt3DRender::QAttribute present in the vertex buffer. Normal vector visualization is enabled using the
     corresponding toolbar action in the wireframe view.
 
-    \borderedimage gammaray-qt3d-geometry-normals.png
+    \image gammaray-qt3d-geometry-normals.png
 
     Vertex normals are shown in blue, face normals are shown in yellow.
 
@@ -74,7 +74,7 @@
     The buffer view shows a tables with the buffer data decoded based on its associated Qt3DRender::QAttribute
     instances, resulting in one or more columns per attribute.
 
-    \borderedimage gammaray-qt3d-geometry-buffers.png
+    \image gammaray-qt3d-geometry-buffers.png
 
 
     \section1 Examples

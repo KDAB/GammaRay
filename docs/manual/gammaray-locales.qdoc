@@ -38,7 +38,7 @@
 
     The locale browser is allowing you to inspect the details of every QLocale configuration present on the target system.
 
-    \borderedimage gammaray-locales.png
+    \image gammaray-locales.png
 
     The upper area allows to select the aspects of the locales you are interested in (for example, date/time settings, currency-related information, number formatting rules, and so on).
     This translates to columns in the table below. Each row in the lower section of the locale browser corresponds with a QLocale configuration present on the target system
@@ -48,7 +48,7 @@
 
     The timezone tab allows you to inspect the timezone database as seen by your application.
 
-    \borderedimage gammaray-timezones.png
+    \image gammaray-timezones.png
 
     The timezone browser consists of two parts. The left side shows all known timezones including some of their properties, names and identifiers,
     The right side shows all known time zone transitions for currently selected timezone, including both regular DST transitions as well as irregular

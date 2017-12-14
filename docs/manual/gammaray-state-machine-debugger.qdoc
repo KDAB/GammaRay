@@ -27,7 +27,7 @@
 
     The state machine debugger allows you to graphically observe the configuration of state machines in realtime.
 
-    \borderedimage gammaray-qsm-debugger.png
+    \image gammaray-qsm-debugger.png
 
     The following state machine frameworks are supported:
 

@@ -27,7 +27,7 @@
 
     The network interface view shows you all network interfaces and their corresponding states as seen by Qt on the target system.
 
-    \borderedimage gammaray-network-interfaces.png
+    \image gammaray-network-interfaces.png
 
     For each interface you see its:
 

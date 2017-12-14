@@ -137,14 +137,6 @@ nav.breadcrumbHolder ul li:nth-last-child(2) {
 }
 
 /* content styling */
-/* TODO restrict this only to qdoc content, classes with WP style */
-.border {
-    border: 0px;
-}
-.border img {
-   box-shadow:3px 3px 8px 3px rgba(200,200,200,0.5)
-}
-
 table {
   border-collapse:collapse;
   border-spacing:0;

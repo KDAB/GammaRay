@@ -38,7 +38,7 @@
     by the current object itself, which can even be none for e.g. container widgets. The \l{Widget Inspector} therefore additionally
     provides a paint analyzer showing operations of an entire window.
 
-    \borderedimage gammaray-paint-analyzer.png
+    \image gammaray-paint-analyzer.png
 
     The paint analyzer consits of two parts, the command list on the left and the render preview on the right. The command list
     shows all QPainter commands in chronological order, the first column listing the command type, the second showing the command

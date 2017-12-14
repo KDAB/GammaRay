@@ -27,7 +27,7 @@
 
     The methods view is available for all QObject and QMetaObject instances and shows methods, signals and slots declared in there.
 
-    \borderedimage gammaray-methods.png
+    \image gammaray-methods.png
 
     The methods view contains four columns:
     \list
@@ -47,7 +47,7 @@
     signals by using the \uicontrol{Emit} action from the context menu. In both cases the method invocation dialog shown below
     is displayed.
 
-    \borderedimage gammaray-method-invocation.png
+    \image gammaray-method-invocation.png
 
     In the method invocation dialog you can specify any argument the method or signal may take, the types as in the \l{Properties}
     view are supported here too. You can also specify whether to invoke the method directly or queued.

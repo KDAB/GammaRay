@@ -29,7 +29,7 @@
     the scene graph material view shows details about the material property and the used shader code. This
     is primarily accessible via the scene graph browser in the \l{Qt Quick 2 Inspector} tool.
 
-    \borderedimage gammaray-qsgmaterial.png
+    \image gammaray-qsgmaterial.png
 
     The upper half of the material view shows the properties of the QSGMaterial instance. This works similarly
     to the generic \l{Properties} view.

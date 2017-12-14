@@ -28,7 +28,7 @@
     The object browser provides access to all QObject instances in a target. On the left side you have a tree view showing their parent/child relationship,
     on the right side you have access to properties of the selected object.
 
-    \borderedimage gammaray-object-inspector.png
+    \image gammaray-object-inspector.png
 
     Depending on the type of the object, the \l{Object Inspection} view provides additional tabs for accessing specific details of an object.
 

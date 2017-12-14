@@ -29,7 +29,7 @@
     context in which the current object has been created. The QML context view is available for any
     QObject instantiated from within QML.
 
-    \borderedimage gammaray-qmlcontext.png
+    \image gammaray-qmlcontext.png
 
     The QML context views consists of two parts, the context chain view on the top, and the context property
     view at the bottom. The context property view shows the currently selected context from the context chain

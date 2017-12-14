@@ -44,7 +44,7 @@
 
     The meta-object tree view also contains columns with information about how many instances of a specific type have been created, including and excluding sub-classes.
 
-    \borderedimage gammaray-metaobject-browser.png
+    \image gammaray-metaobject-browser.png
 
     In particular, these numbers are:
     \list

@@ -28,7 +28,7 @@
     The model inspector allows you to look at QAbstractItemModel instances, chains of QAbstractProxyModel instances
     built on top of these, as well as QItemSelectionModel instances associated with any of them.
 
-    \borderedimage gammaray-model-inspector.png
+    \image gammaray-model-inspector.png
 
     \section2 Model Inspection
 

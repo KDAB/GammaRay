@@ -28,7 +28,7 @@
     The connections view is available for all QObject instances and shows inbound and outbound signal/slot connections for
     the currently selected object.
 
-    \borderedimage gammaray-connections.png
+    \image gammaray-connections.png
 
     The connections view consists of two identical parts. The upper half is showing inbound connections, that is signals
     connected to slots of the current objects. The lower half is showing outbound connections, that is signals of the

@@ -31,7 +31,7 @@
     active project configuration. Code navigation from GammaRay will directly open the corresponding source
     file inside Qt Creator.
 
-    \borderedimage gammaray-qtcreator.png
+    \image gammaray-qtcreator.png
 
     The GammaRay Qt Creator integration plug-in is only available in the \l{Qt Automotive Suite}.
 
@@ -55,7 +55,7 @@
     This will show you the standard process selection dialog of \l{Qt Creator}. Select the process you want to attach
     to and press \uicontrol{Attach to Process}. After attaching the GammaRay client will be shown inside Qt Creator.
 
-    \borderedimage gammaray-qtcreator-attach.png
+    \image gammaray-qtcreator-attach.png
 
     \section1 Connecting to a Running Application
 
@@ -63,7 +63,7 @@
     This option is available under \uicontrol{Analyze} > \uicontrol{Connect GammaRay to a remote running process}.
     Selecting this option will show the connection dialog depicted in the following screenshot.
 
-    \borderedimage gammaray-qtcreator-connect.png
+    \image gammaray-qtcreator-connect.png
 
     GammaRay tries to automatically discover viable targets on your local network, these are displayed in the list view
     in this dialog, and can be used by selecting the corresponding items. Discovered targets using an incompatible

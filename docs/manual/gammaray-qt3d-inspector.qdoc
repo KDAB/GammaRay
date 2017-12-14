@@ -66,7 +66,7 @@
         \li Wrong normal vectors. Toggle the normal vector visualization to get vertex and face normals displayed.
     \endlist
 
-    \borderedimage gammaray-qt3d-geometry.png
+    \image gammaray-qt3d-geometry.png
 
     You can move the camera in the wireframe view using mouse (left and middle mouse buttons) or keyboard (arrow keys, page up/page down, W/A/S/D).
 
@@ -75,7 +75,7 @@
     You can switch to the raw buffer view in the toolbar of the \l{Qt3D Geometry Inspector} tab, and select the Qt3DRender::QBuffer instance to inspect
     in the combo box at the top right.
 
-    \borderedimage gammaray-qt3d-buffers.png
+    \image gammaray-qt3d-buffers.png
 
     The buffer view then shows the buffer data decoded based on its associated Qt3DRender::QAttribute instances.
 

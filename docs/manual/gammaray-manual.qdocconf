@@ -28,6 +28,3 @@ qhp.GammaRay.subprojects.manual.type = manual
 navigation.homepage    = "GammaRay User Manual"
 navigation.landingpage = "GammaRay User Manual"
 buildversion = "GammaRay User Manual $QT_VERSION"
-
-# backward compatibility with Qt < 5.7
-macro.borderedimage = "\\div {class=\"border\"} \\image \1\n\\enddiv"
