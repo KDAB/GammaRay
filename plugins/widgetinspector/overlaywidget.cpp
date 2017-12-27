@@ -40,9 +40,12 @@ static QWidget *toplevelWidget(QWidget *widget)
 {
     Q_ASSERT(widget);
     QWidget *parent = widget;
+    auto isTopLevel = [](QWidget *widget) {
+        return widget->isWindow();
+    };
     while (parent->parentWidget() &&
-            !qobject_cast<QDialog*>(parent->parentWidget()) &&
-            !qobject_cast<QDialog*>(parent)) {
+            !isTopLevel(parent->parentWidget()) &&
+            !isTopLevel(parent)) {
         parent = parent->parentWidget();
     }
 
