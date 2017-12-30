@@ -18,7 +18,7 @@ BuildRequires: libqt4-devel libQtWebKit-devel libkde4-devel
 %endif
 
 %if %{defined fedora}
-BuildRequires: qt-devel qtwebkit-devel kdelibs-devel
+BuildRequires: qt-devel qtwebkit-devel kdelibs-devel udisks2
 %if 0%{?fedora} >= 22
 BuildRequires: qca
 %endif
