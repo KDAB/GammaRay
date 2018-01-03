@@ -64,26 +64,22 @@ set_target_properties(gammaray-client PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}"
 )
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
-  install(TARGETS gammaray_client EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS gammaray_client EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-  gammaray_install_headers(
+gammaray_install_headers(
     ${CMAKE_CURRENT_BINARY_DIR}/gammaray_client_export.h
     clientconnectionmanager.h
     processtracker.h
-  )
+)
 
-  ecm_generate_pri_file(BASE_NAME GammaRayClient
-                        LIB_NAME gammaray_client
-                        DEPS "core gui widgets network GammaRayCommon GammaRayUi"
-                        FILENAME_VAR PRI_FILENAME
-                        INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
-  )
+ecm_generate_pri_file(BASE_NAME GammaRayClient
+                      LIB_NAME gammaray_client
+                      DEPS "core gui widgets network GammaRayCommon GammaRayUi"
+                      FILENAME_VAR PRI_FILENAME
+                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
+)
 
-  install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
-else()
-  install(TARGETS gammaray_client ${INSTALL_TARGETS_DEFAULT_ARGS})
-endif()
+install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
 if(MSVC)
   install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_client>/$<TARGET_PDB_FILE_NAME:gammaray_client>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
 endif()
