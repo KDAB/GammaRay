@@ -280,7 +280,7 @@ void BindingInspectorTest::testMockProvider()
     }};
 
     auto bindings1 = provider->findBindingsFor(&obj1);
-    auto &&bindingNode1 = bindings1.front();
+    auto &&bindingNode1 = bindings1.at(0);
 
     QVERIFY(bindingNode1 != nullptr);
     QVERIFY(bindingNode1->parent() == nullptr);
@@ -304,7 +304,7 @@ void BindingInspectorTest::testMockProvider()
 
     auto dependencies2 = provider->findDependenciesFor(bindingNode2.get());
     QCOMPARE(dependencies2.size(), size_t(2));
-    auto &&dependency2 = dependencies2.front();
+    auto &&dependency2 = dependencies2.at(0);
     QCOMPARE(dependency2->parent(), bindingNode2.get());
     QCOMPARE(dependency2->object(), &obj1);
     QCOMPARE(dependency2->property().name(), "b");
