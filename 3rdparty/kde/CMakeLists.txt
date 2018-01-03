@@ -17,6 +17,7 @@ set_target_properties(gammaray_kitemmodels PROPERTIES
   OUTPUT_NAME gammaray_kitemmodels-${GAMMARAY_PROBE_ABI}
   DEFINE_SYMBOL MAKE_KITEMMODELS_LIB
 )
+gammaray_set_rpath(gammaray_kitemmodels ${LIB_INSTALL_DIR})
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   install(TARGETS gammaray_kitemmodels EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

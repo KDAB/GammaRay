@@ -90,6 +90,7 @@ macro(gammaray_add_plugin _target_name)
       set_target_properties(${_target_name} PROPERTIES INSTALL_RPATH "@loader_pathd/../../../../Frameworks")
     endif()
   endif()
+  gammaray_set_rpath(${_target_name} ${PROBE_PLUGIN_INSTALL_DIR})
 
   install(TARGETS ${_target_name} DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
   if(NOT ${Qt5Core_FOUND} AND _gammaray_add_plugin_DESKTOP)

@@ -47,6 +47,7 @@ generate_export_header(gammaray_launcher)
 set_target_properties(gammaray_launcher PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
 )
+gammaray_set_rpath(gammaray_launcher ${LIB_INSTALL_DIR})
 
 gammaray_target_relocatable_interfaces(gammaray_launcher_ipaths)
 target_include_directories(gammaray_launcher PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_launcher_ipaths}>)

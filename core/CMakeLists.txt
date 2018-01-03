@@ -130,6 +130,7 @@ set_target_properties(gammaray_core PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   OUTPUT_NAME gammaray_core-${GAMMARAY_PROBE_ABI}
 )
+gammaray_set_rpath(gammaray_core ${LIB_INSTALL_DIR})
 
 if(Qt5Core_FOUND)
   target_link_libraries(gammaray_core LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Gui)

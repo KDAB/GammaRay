@@ -127,3 +127,11 @@ macro(gammaray_add_dummy_package _package _found)
   list(APPEND _packages ${_package})
   set_property(GLOBAL PROPERTY ${_property_name} "${_packages}")
 endmacro()
+
+# Common RPATH setup
+function(gammaray_set_rpath _target_name _install_prefix)
+    gammaray_inverse_dir(_inverse_install_dir "${_install_prefix}")
+    if (UNIX AND NOT APPLE)
+        set_target_properties(${_target_name} PROPERTIES INSTALL_RPATH "\$ORIGIN/${_inverse_install_dir}/${LIB_INSTALL_DIR}")
+    endif()
+endfunction()

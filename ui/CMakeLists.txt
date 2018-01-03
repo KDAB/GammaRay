@@ -92,6 +92,7 @@ set_target_properties(gammaray_ui PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   OUTPUT_NAME gammaray_ui-${GAMMARAY_PROBE_ABI}
 )
+gammaray_set_rpath(gammaray_ui ${LIB_INSTALL_DIR})
 
 gammaray_target_relocatable_interfaces(gammaray_ui_ipaths)
 target_include_directories(gammaray_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_ui_ipaths}>)

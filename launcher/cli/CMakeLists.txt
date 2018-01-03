@@ -13,6 +13,7 @@ if(HAVE_QT_WIDGETS)
 endif()
 
 gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)
+gammaray_set_rpath(gammaray ${BIN_INSTALL_DIR})
 
 install(TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS})
 if(MSVC)

@@ -49,6 +49,7 @@ target_include_directories(gammaray_kuserfeedback
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/widgets
 )
 set_target_properties(gammaray_kuserfeedback PROPERTIES ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES})
+gammaray_set_rpath(gammaray_kuserfeedback ${LIB_INSTALL_DIR})
 generate_export_header(gammaray_kuserfeedback)
 
 if(Qt5Core_FOUND)

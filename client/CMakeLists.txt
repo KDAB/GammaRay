@@ -32,6 +32,7 @@ generate_export_header(gammaray_client)
 set_target_properties(gammaray_client PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
 )
+gammaray_set_rpath(gammaray_client ${LIBEXEC_INSTALL_DIR})
 
 gammaray_target_relocatable_interfaces(gammaray_client_ipaths)
 target_include_directories(gammaray_client PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_client_ipaths}>)
@@ -63,6 +64,7 @@ gammaray_embed_info_plist(gammaray-client ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
 set_target_properties(gammaray-client PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}"
 )
+gammaray_set_rpath(gammaray-client ${LIB_INSTALL_DIR})
 
 install(TARGETS gammaray_client EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 

@@ -85,7 +85,7 @@ else()
   )
 endif()
 target_link_libraries(gammaray_common LINK_PRIVATE gammaray_kitemmodels ${CMAKE_DL_LIBS})
-
+gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
 
 set(gammaray_common_internal_srcs
   plugininfo.cpp

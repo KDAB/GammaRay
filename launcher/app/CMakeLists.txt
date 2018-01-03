@@ -16,5 +16,6 @@ gammaray_embed_info_plist(gammaray-launcher ${CMAKE_CURRENT_SOURCE_DIR}/Info.pli
 set_target_properties(gammaray-launcher PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${LIBEXEC_INSTALL_DIR}"
 )
+gammaray_set_rpath(gammaray-launcher ${BIN_INSTALL_DIR})
 
 install(TARGETS gammaray-launcher DESTINATION ${LIBEXEC_INSTALL_DIR})

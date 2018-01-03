@@ -74,6 +74,7 @@ function(gammaray_add_test _name)
     add_executable(${_name} ${ARGN}
         $<TARGET_OBJECTS:test_helpers_obj>
     )
+    gammaray_set_rpath(${_name} ${BIN_INSTALL_DIR})
     target_link_libraries(${_name} ${QT_QTTEST_LIBRARIES})
     add_test(NAME ${_name} COMMAND ${_name})
 endfunction()
@@ -85,6 +86,7 @@ function(gammaray_add_probe_test _name)
         $<TARGET_OBJECTS:test_helpers_obj>
         $<TARGET_OBJECTS:base_probe_test_obj>
     )
+    gammaray_set_rpath(${_name} ${BIN_INSTALL_DIR})
     target_link_libraries(${_name} $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> ${QT_QTTEST_LIBRARIES})
     add_test(NAME ${_name} COMMAND ${_name})
 endfunction()
@@ -97,6 +99,7 @@ function(gammaray_add_quick_test _name)
         $<TARGET_OBJECTS:base_probe_test_obj>
         $<TARGET_OBJECTS:base_quick_test_obj>
     )
+    gammaray_set_rpath(${_name} ${BIN_INSTALL_DIR})
     target_link_libraries(${_name} $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> ${QT_QTTEST_LIBRARIES})
     add_test(NAME ${_name} COMMAND ${_name})
 endfunction()
@@ -105,6 +108,7 @@ endfunction()
 
 if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_executable(benchsuite benchsuite.cpp)
+  gammaray_set_rpath(benchsuite ${BIN_INSTALL_DIR})
 
   target_link_libraries(benchsuite
     ${QT_QTCORE_LIBRARIES}
@@ -118,6 +122,7 @@ if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 # Full-scale injection tests
 #
   add_executable(connectiontest test_connections.cpp)
+  gammaray_set_rpath(connectiontest ${BIN_INSTALL_DIR})
 
   target_link_libraries(connectiontest
     ${QT_QTCORE_LIBRARIES}
@@ -128,6 +133,7 @@ if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
 endif()
 
 add_executable(attachhelper attachhelper.cpp)
+gammaray_set_rpath(attachhelper ${BIN_INSTALL_DIR})
 
 target_link_libraries(attachhelper ${QT_QTCORE_LIBRARIES})
 
@@ -325,6 +331,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
     target_compile_definitions(probesettingsclient PRIVATE GAMMARAY_CORE_STATIC_DEFINE)
     target_include_directories(probesettingsclient PRIVATE ${CMAKE_BINARY_DIR}/core)
     target_link_libraries(probesettingsclient gammaray_common ${QT_QTNETWORK_LIBRARIES})
+    gammaray_set_rpath(probesettingsclient ${BIN_INSTALL_DIR})
     gammaray_add_test(probesettingstest probesettingstest.cpp)
     target_link_libraries(probesettingstest gammaray_launcher gammaray_common ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES})
 

@@ -4,6 +4,7 @@ set_target_properties(gammaray_inprocessui PROPERTIES
   PREFIX ""
   LIBRARY_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_PLUGIN_INSTALL_DIR}"
 )
+gammaray_set_rpath(gammaray_inprocessui ${PROBE_PLUGIN_INSTALL_DIR})
 
 if(GAMMARAY_INSTALL_QT_LAYOUT)
   set_target_properties(gammaray_inprocessui PROPERTIES OUTPUT_NAME gammaray_inprocessui-${GAMMARAY_PROBE_ABI})
