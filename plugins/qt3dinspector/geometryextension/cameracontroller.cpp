@@ -67,7 +67,17 @@ CameraController::CameraController(Qt3DCore::QNode *parent)
     midMouseButtonInput->setButtons({Qt3DInput::QMouseEvent::MiddleButton});
     midMouseButtonInput->setSourceDevice(mouseDevice);
     m_midMouseButtonAction->addInput(midMouseButtonInput);
-    // TODO: wheel zoom
+
+    // mouse wheel zoom/strafe
+    auto xWheelInput = new Qt3DInput::QAnalogAxisInput(this);
+    xWheelInput->setAxis(Qt3DInput::QMouseDevice::WheelX);
+    xWheelInput->setSourceDevice(mouseDevice);
+    m_axis[TX]->addInput(xWheelInput);
+    auto yWheelInput = new Qt3DInput::QAnalogAxisInput(this);
+    yWheelInput->setAxis(Qt3DInput::QMouseDevice::WheelY);
+    yWheelInput->setSourceDevice(mouseDevice);
+    m_axis[TZ]->addInput(yWheelInput);
+
     // TODO: shift for slow motion, ctrl for fast motion
 
     // X rotation
