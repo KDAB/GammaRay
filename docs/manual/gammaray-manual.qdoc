@@ -99,9 +99,10 @@
             \li \l{Properties}
             \li \l{Methods}
             \li \l{Connections}
-            \li \l{Bindings}
             \li \l{Enums and Flags}
             \li Class Info
+            \li \l{Stack Trace}
+            \li \l{Bindings}
             \li \l{QML Context}
             \li \l{QML Type}
             \li \l{Scene Graph Material}

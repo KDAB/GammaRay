@@ -17,8 +17,8 @@
 
 /*!
     \contentspage {GammaRay User Manual}
-    \previouspage {Bindings}
-    \nextpage {QML Context}
+    \previouspage {Connections}
+    \nextpage {Stack Trace}
     \page gammaray-enums.html
 
     \title Enums and Flags
