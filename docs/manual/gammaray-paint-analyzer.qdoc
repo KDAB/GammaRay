@@ -25,8 +25,12 @@
 
     \section1 Overview
 
-    The paint analyzer allows you to inspect every single operation performed on a QPainter. It is typically available on objects
-    using a QPainter for rendering their visual appearance, such as:
+    The paint analyzer allows you to inspect every single operation performed on a QPainter. It is available on objects
+    using a QPainter for rendering their visual appearance, as well as on entire scenes.
+
+
+    For individual objects, the paint analyzer is typically not applied recursively to child elements of the selected object, so
+    you only see operations by the current object itself. Supported object types for this include:
 
     \list
         \li QWidget
@@ -34,17 +38,43 @@
         \li QGraphicsItem
     \endlist
 
-    Note that the paint analyzer is not applied recursively to children of the selected object, so you see only operations performed
-    by the current object itself, which can even be none for e.g. container widgets. The \l{Widget Inspector} therefore additionally
-    provides a paint analyzer showing operations of an entire window.
+    Alternatively you can apply the paint analyzer to full scenes recursively. This is available in the following tools:
+
+    \list
+        \li The \l{Widget Inspector}.
+        \li The \l{Qt Quick 2 Inspector} for windows using the Qt Quick software renderer backend.
+    \endlist
 
     \image gammaray-paint-analyzer.png
 
-    The paint analyzer consits of two parts, the command list on the left and the render preview on the right. The command list
-    shows all QPainter commands in chronological order, the first column listing the command type, the second showing the command
-    arguments. Selecting a command will cause the render preview to show the visual result up to the selected command, allowing you
-    to inspect the visual output step by step.
+    The paint analyzer consists of three main elements, the command list on the top left, the command details view on the bottom left
+    and the render preview on the right side.
+
+
+    \section1 Command and Argument Inspection
+
+    The command list shows all QPainter commands in chronological order. The following information are provided:
+
+    \list
+        \li The command type, in the first column.
+        \li The command arguments. This is either shown directly in the second column if there is only one argument
+        for a command, or as sub-entries in the list for multiple arguments. If an argument is of a complex type,
+        the argument value is also shown in the \uicontrol Argument tab in the argument details view.
+        \li The relative contribution of a command to the overall rendering cost, in the third column.
+    \endlist
+
+    The argument details view will also show a stack trace for the currently selected painter command, showing what call chain
+    lead to the command being executed. If debug information are available for the corresponding code, the corresponding source
+    location is also shown, and can be directly opened using the context menu.
+
+    \section1 Render Preview
+
+    Selecting a command in the command list view will cause the render preview to show the visual result up to the selected command,
+    allowing you to inspect the visual output step by step.
 
     The render preview can be panned and zoomed using the corresponding actions in the toolbar at its top. Additionally, a measurement
-    tool is available that way too.
+    and color picking tool is available that way too.
+
+    The render preview can also visualize the current clip area of the QPainter, at the selected command. This is shown with a red
+    shaded overlay, areas covered by this will be clipped.
 */
