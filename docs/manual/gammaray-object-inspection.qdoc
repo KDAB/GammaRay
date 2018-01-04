@@ -50,7 +50,7 @@
     \list
         \li \l{Bindings}
         \li \l{QML Context}
-        \li QML Type
+        \li \l{QML Type}
     \endlist
 
     \section2 Graphical Output
@@ -62,7 +62,7 @@
         \li \l{Scene Graph Geometry}
         \li \l{Scene Graph Texture}
         \li \l{Paint Analyzer}
-        \li Widget Attributes
+        \li \l{Widget Attributes}
         \li \l{Qt3D Geometry Inspector}
     \endlist
 
@@ -71,7 +71,7 @@
     The following views are showing information about a specific class.
 
     \list
-        \li Application Attributes
+        \li \l{Application Attributes}
         \li \l{HTTP Cookies}
     \endlist
 */

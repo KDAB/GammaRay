@@ -1,0 +1,34 @@
+/*
+    gammaray-widget-attributes.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage {Paint Analyzer}
+    \nextpage {Qt3D Geometry Inspector}
+    \page gammaray-widget-attributes.html
+
+    \title Widget Attributes
+
+    \section1 Overview
+
+    The widget attribute inspection tab allows you to see and toggle QWidget attributes (see Qt::WidgetAttribute).
+    This is available when selecting a QWidget instance in e.g. the \l{Widget Inspector}.
+
+    \image gammaray-widget-attributes.png
+*/
+
+

@@ -17,8 +17,8 @@
 
 /*!
     \contentspage {GammaRay User Manual}
-    \previouspage{Paint Analyzer}
-    \nextpage{HTTP Cookies}
+    \previouspage{Widget Attributes}
+    \nextpage{Application Attributes}
     \page gammaray-qt3dgeometry-inspector.html
 
     \title Qt3D Geometry Inspector

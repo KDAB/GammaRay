@@ -109,9 +109,9 @@
             \li \l{Scene Graph Geometry}
             \li \l{Scene Graph Texture}
             \li \l{Paint Analyzer}
-            \li Widget Attributes
+            \li \l{Widget Attributes}
             \li \l{Qt3D Geometry Inspector}
-            \li Application Attributes
+            \li \l{Application Attributes}
             \li \l{HTTP Cookies}
         \endlist
         \li \l{Examples}
