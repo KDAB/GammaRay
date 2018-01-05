@@ -54,6 +54,7 @@ ModelPickerDialog::ModelPickerDialog(QWidget *parent)
 {
     setAttribute(Qt::WA_DeleteOnClose);
 
+    m_view->setUniformRowHeights(true);
     m_view->setExpandNewContent(true);
     m_buttons->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     m_showInvisibleItems->setChecked(true);
