@@ -33,7 +33,6 @@
 
 #include <common/endpoint.h>
 
-#include <QIcon>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -54,8 +53,17 @@ QVariant ClientDecorationIdentityProxyModel::data(const QModelIndex &index, int 
         }
 
         if (m_classesIconsRepository) {
-            const QVariant iconId = QIdentityProxyModel::data(index, ObjectModel::DecorationIdRole);
-            return iconId.isNull() ? QVariant() : QVariant(QIcon(m_classesIconsRepository->filePath(iconId.toInt())));
+            const auto iconId = QIdentityProxyModel::data(index, ObjectModel::DecorationIdRole);
+            if (iconId.isNull())
+                return QVariant();
+            const auto it = m_icons.constFind(iconId.toInt());
+            if (it != m_icons.constEnd())
+                return it.value();
+            const auto icon = QIcon(m_classesIconsRepository->filePath(iconId.toInt()));
+            if (icon.isNull())
+                return QVariant();
+            m_icons.insert(iconId.toInt(), icon);
+            return QVariant::fromValue(icon);
         }
 
         return QVariant();

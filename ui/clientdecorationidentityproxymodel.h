@@ -32,6 +32,8 @@
 #include "gammaray_ui_export.h"
 
 #include <QIdentityProxyModel>
+#include <QHash>
+#include <QIcon>
 #include <QPointer>
 
 namespace GammaRay {
@@ -48,6 +50,7 @@ public:
 
 private:
     QPointer<ClassesIconsRepository> m_classesIconsRepository;
+    mutable QHash<int, QIcon> m_icons;
 };
 }
 
