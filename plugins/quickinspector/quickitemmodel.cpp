@@ -315,11 +315,22 @@ void QuickItemModel::itemReparented(QQuickItem *item)
     auto dit = std::lower_bound(destSiblings.begin(), destSiblings.end(), item);
     const int destRow = std::distance(destSiblings.begin(), dit);
 
+    // as of Qt 5.10, QSFPM translates moves into layout changes, which is way worse for us than remove/insert
+#if 0
     beginMoveRows(sourceParentIndex, sourceRow, sourceRow, destParentIndex, destRow);
     destSiblings.insert(dit, item);
     sourceSiblings.erase(sit);
     m_childParentMap.insert(item, destParent);
     endMoveRows();
+#else
+    beginRemoveRows(sourceParentIndex, sourceRow, sourceRow);
+    sourceSiblings.erase(sit);
+    endRemoveRows();
+    beginInsertRows(destParentIndex, destRow, destRow);
+    destSiblings.insert(dit, item);
+    m_childParentMap.insert(item, destParent);
+    endInsertRows();
+#endif
 }
 
 void QuickItemModel::itemWindowChanged(QQuickItem *item)
