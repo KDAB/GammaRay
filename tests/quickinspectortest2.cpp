@@ -125,7 +125,7 @@ private slots:
             remoteView->setViewActive(true);
             // Activating the view trigger an update request
             QVERIFY(waitForSignal(&updatedSpy, true));
-            QVERIFY(requestedSpy.count() == 1 || requestedSpy.count() == 2); // should be 1, but we might see spuroious repaints on windows
+            QVERIFY(requestedSpy.count() == 1 || requestedSpy.count() == 2); // should be 1, but we might see spurious repaints on windows
             QVERIFY(updatedSpy.count() == 1 || updatedSpy.count() == 2);
             if (!clientIsReplying)
                 remoteView->clientViewUpdated();
@@ -148,8 +148,8 @@ private slots:
                 }
 
                 QVERIFY(waitForSignal(&requestedSpy, true));
-                QCOMPARE(requestedSpy.count(), 1);
-                QCOMPARE(updatedSpy.count(), 1);
+                QVERIFY(requestedSpy.count() == 1 || requestedSpy.count() == 2);
+                QVERIFY(updatedSpy.count() == 1 || updatedSpy.count() == 2);
             } else {
                 // The client is not answering with clientViewUpdated automatically.
                 // Only 1 request and 1 frame sent should trigger.
@@ -160,8 +160,8 @@ private slots:
                     QVERIFY(waitForSignal(&updatedSpy, true));
                 }
 
-                QCOMPARE(requestedSpy.count(), 1);
-                QCOMPARE(updatedSpy.count(), 1);
+                QVERIFY(requestedSpy.count() == 1 || requestedSpy.count() == 2);
+                QVERIFY(updatedSpy.count() == 1 || updatedSpy.count() == 2);
             }
 
             requestedSpy.clear();
