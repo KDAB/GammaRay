@@ -40,9 +40,6 @@ target_include_directories(gammaray_probe_obj SYSTEM PRIVATE ${Qt5Core_PRIVATE_I
 # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
 # Windows also needs SHARED rather than MODULE here, to end up in bin/
 add_library(gammaray_probe ${GAMMARAY_LIBRARY_TYPE} $<TARGET_OBJECTS:gammaray_probe_obj>)
-if(APPLE AND NOT GAMMARAY_INSTALL_QT_LAYOUT)
-    set_target_properties(gammaray_probe PROPERTIES INSTALL_RPATH "@loader_path/../../../../Frameworks")
-endif()
 target_link_libraries(gammaray_probe gammaray_core ${CMAKE_DL_LIBS})
 
 set_target_properties(gammaray_probe PROPERTIES
