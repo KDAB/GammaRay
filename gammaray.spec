@@ -76,15 +76,7 @@ developing GammaRay plug-ins.
 %setup -q
 
 %build
-%if %{defined fedora}
-%cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
-%else
-%if "%{_lib}"=="lib64"
-cmake . -DLIB_SUFFIX=64 -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
-%else
 cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
-%endif
-%endif
 %__make %{?_smp_mflags}
 
 %post -p /sbin/ldconfig
