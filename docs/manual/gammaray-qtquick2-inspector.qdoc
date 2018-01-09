@@ -57,7 +57,7 @@
         \li Input event forwarding, for working with embedded targets.
         \li Color picking.
         \li A measurement tool.
-        \li Enabling of diagnostic render modes on target (availability depends on Qt version and renderer backend).
+        \li Taking screenshots of the target output, with or without diagnostic overlays.
     \endlist
 
     \image gammaray-qq2-qsg-visualize.png
@@ -71,9 +71,12 @@
         batches, and more batches in general, can have significant render performance impact with the OpenGL renderer.
         \li Change visualization: Highlights areas causing view updates.
         \li Control tracing: Highlights Qt Quick Controls 2 outlines, which can help to identify layouting issues.
+        \li Showing a customized layouting grid.
+        \li Slowing down the animation timer to diagnose motion design issues.
     \endlist
 
-    Diagnostic render modes can be enabled individually, both on the target and the GammaRay client.
+    Diagnostic render modes can be enabled individually, both on the target and the GammaRay client via the \uicontrol{Quick Scenes} > \uicontrol{Decorate Target}
+    menu option, or the corresponding remote view toolbar action.
 
     \section1 Paint Analyzer
 
@@ -99,6 +102,7 @@
         \li QSGNode properties, in particularly node flags and transformation matrices.
         \li Shader code, if the node has a material associated with it (see \l{Scene Graph Material}).
         \li Geometry and other per-vertex data, when looking at a geometry node (see \l{Scene Graph Geometry}).
+        \li Texture data for image elements, shader effects or distance-field rendered text elements (see \l{Scene Graph Texture}).
     \endlist
 
     \section1 Examples
