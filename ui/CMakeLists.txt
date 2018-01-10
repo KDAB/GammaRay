@@ -84,6 +84,7 @@ set(gammaray_ui_srcs
   tools/standardpaths/standardpathswidget.cpp
 
   resources/ui.qrc
+  ${CMAKE_CURRENT_BINARY_DIR}/resources/classicons.qrc
 )
 
 add_library(gammaray_ui SHARED ${gammaray_ui_srcs})

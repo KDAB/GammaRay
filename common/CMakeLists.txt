@@ -1,35 +1,17 @@
-if(NOT CMAKE_CROSSCOMPILING)
-    # classes icons tool
-    add_executable(classesiconsextractor classesiconsextractor.cpp)
-    if(Qt5Core_FOUND)
-      target_link_libraries(classesiconsextractor LINK_PUBLIC Qt5::Core Qt5::Xml)
-      query_qmake(QT_HOST_BINS QT_HOST_BINS)
-    else()
-      set(QT_HOST_BINS ${QT_BINARY_DIR})
-      target_link_libraries(classesiconsextractor LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTXML_LIBRARIES})
+# generate the class icon index map
+file(READ "../ui/resources/classiconindex.map" _map_content)
+string(REPLACE "\n" ";" _map_content ${_map_content})
+set(CLASS_ICON_INDEX_CODE "")
+foreach (_icon_data IN LISTS _map_content)
+    if (NOT _icon_data)
+        continue()
     endif()
-
-    if (WIN32)
-      set(_PATH_SEP ";")
-    else()
-      set(_PATH_SEP ":")
-    endif()
-
-    # we prepend an extra _PATH_SEP to work around an escaping issue with Windows path separators and quotes
-    add_custom_command(
-        OUTPUT
-            ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp
-        COMMAND
-            ${CMAKE_COMMAND} -E env "PATH=${QT_HOST_BINS}${_PATH_SEP}$ENV{PATH}${_PATH_SEP}"
-            $<TARGET_FILE:classesiconsextractor>
-                -qrc ${CMAKE_CURRENT_SOURCE_DIR}/../ui/resources/ui.qrc
-                -out ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp
-        DEPENDS
-            ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsextractor.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/../ui/resources/ui.qrc
-    )
-    add_custom_target(classesiconsindex_data DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp)
-endif()
+    string(REPLACE " " ";" _icon_data ${_icon_data})
+    list(GET _icon_data 0 _icon_name)
+    set(CLASS_ICON_INDEX_CODE "${CLASS_ICON_INDEX_CODE}\n    ADD_ICON(\"${_icon_name}\")")
+endforeach()
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp.in
+               ${CMAKE_CURRENT_BINARY_DIR}/classesiconsindex_data.cpp)
 
 #
 # Shared non-UI code between probe and client
@@ -70,9 +52,6 @@ set_target_properties(gammaray_common PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   OUTPUT_NAME gammaray_common-${GAMMARAY_PROBE_ABI}
 )
-if(NOT CMAKE_CROSSCOMPILING)
-    add_dependencies(gammaray_common classesiconsindex_data)
-endif()
 
 gammaray_target_relocatable_interfaces(gammaray_common_ipaths)
 target_include_directories(gammaray_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_common_ipaths}>)
