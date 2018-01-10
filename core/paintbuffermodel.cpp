@@ -409,7 +409,7 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
                     return cmdTypes[cmd.id].name;
                 else if (index.column() == 1)
                     return argumentDisplayString(cmd);
-                else if (index.column() == 2 && m_costs.size() >= index.row())
+                else if (index.column() == 2 && m_costs.size() > index.row())
                     return m_costs.at(index.row());
                 break;
             case Qt::DecorationRole:
