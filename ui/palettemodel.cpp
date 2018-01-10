@@ -164,7 +164,7 @@ QVariant PaletteModel::headerData(int section, Qt::Orientation orientation, int 
 
 Qt::ItemFlags PaletteModel::flags(const QModelIndex &index) const
 {
-    const Qt::ItemFlags baseFlags = QAbstractItemModel::flags(index);
+    const Qt::ItemFlags baseFlags = QAbstractTableModel::flags(index);
     if (m_editable && index.column() > 0)
         return baseFlags | Qt::ItemIsEditable;
     return baseFlags;

@@ -406,7 +406,7 @@ QVariant StyleHintModel::styleHintData(QStyle::StyleHint hint) const
 
 Qt::ItemFlags StyleHintModel::flags(const QModelIndex &index) const
 {
-    const auto baseFlags = QAbstractItemModel::flags(index);
+    const auto baseFlags = QAbstractTableModel::flags(index);
     if (!index.isValid() || index.column() != 1 || !isMainStyle() ||
         style_hint_table[index.row()].extraType != StyleHintExtraType::None) {
         return baseFlags;

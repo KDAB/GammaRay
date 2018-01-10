@@ -107,7 +107,7 @@ void ClientToolModel::finishReset()
 
 Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    Qt::ItemFlags flags = QAbstractListModel::flags(index);
     if (!index.isValid())
         return flags;
 

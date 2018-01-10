@@ -224,7 +224,7 @@ Qt::ItemFlags ProcessModel::flags(const QModelIndex &index) const
     const ProbeABI abi = index.data(ABIRole).value<ProbeABI>();
     const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(abi, m_availableABIs);
 
-    const Qt::ItemFlags f = QAbstractItemModel::flags(index);
+    const Qt::ItemFlags f = QAbstractTableModel::flags(index);
     if (!bestABI.isValid())
         return f & ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     return f;

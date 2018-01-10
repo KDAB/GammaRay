@@ -119,7 +119,7 @@ QVariant MethodArgumentModel::headerData(int section, Qt::Orientation orientatio
 
 Qt::ItemFlags MethodArgumentModel::flags(const QModelIndex &index) const
 {
-    const Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    const Qt::ItemFlags flags = QAbstractTableModel::flags(index);
     if (index.column() == 1)
         return flags | Qt::ItemIsEditable;
     return flags;

@@ -185,7 +185,7 @@ QVariant NetworkDiscoveryModel::headerData(int section, Qt::Orientation orientat
 
 Qt::ItemFlags NetworkDiscoveryModel::flags(const QModelIndex &index) const
 {
-    const Qt::ItemFlags baseFlags = QAbstractItemModel::flags(index);
+    const Qt::ItemFlags baseFlags = QAbstractTableModel::flags(index);
     if (!index.isValid())
         return baseFlags;
 

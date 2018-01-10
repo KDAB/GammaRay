@@ -57,7 +57,7 @@ int LocaleAccessorModel::rowCount(const QModelIndex &parent) const
 
 Qt::ItemFlags LocaleAccessorModel::flags(const QModelIndex &index) const
 {
-    return QAbstractItemModel::flags(index) | Qt::ItemIsUserCheckable;
+    return QAbstractTableModel::flags(index) | Qt::ItemIsUserCheckable;
 }
 
 QVariant LocaleAccessorModel::data(const QModelIndex &index, int role) const
