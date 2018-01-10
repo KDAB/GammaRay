@@ -104,7 +104,7 @@ void PainterProfilingReplayer::profile(const PaintBuffer& buffer)
         std::nth_element(samples.get() + i * runs, samples.get() + i * runs + runs/2, samples.get() + i * runs + runs);
         m_costs.push_back(samples[i * runs + runs/2]);
     }
-    const auto sum = std::accumulate(m_costs.constBegin(), m_costs.constEnd(), 0);
+    const auto sum = std::accumulate(m_costs.constBegin(), m_costs.constEnd(), 0.0);
     std::for_each(m_costs.begin(), m_costs.end(), [sum](double &c) { c = 100.0 * c / sum; });
 #else
     Q_UNUSED(buffer);
