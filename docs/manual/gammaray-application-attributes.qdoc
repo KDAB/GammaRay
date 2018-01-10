@@ -26,7 +26,7 @@
     \section1 Overview
 
     The application attribute inspection tab allows you to see and toggle QCoreApplication attributes (see Qt::ApplicationAttribute).
-    This is available when selecting a QCoreApplication instance in e.g. the \l{QObject Browser}.
+    This is available when selecting a QCoreApplication instance in e.g. the \l{Object Browser}.
 
     \image gammaray-application-attributes.png
 */
