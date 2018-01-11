@@ -26,7 +26,6 @@
  */
 
 #include "uiintegration.h"
-#include "utils.h"
 
 #include <QUrl>
 #include <QApplication>
@@ -61,5 +60,5 @@ void UiIntegration::requestNavigateToCode(const QUrl &url, int lineNumber, int c
 
 bool UiIntegration::hasDarkUI()
 {
-    return Utils::isDarkColor(QApplication::palette().color(QPalette::Base));
+    return QApplication::palette().color(QPalette::Base).lightness() < 128;
 }

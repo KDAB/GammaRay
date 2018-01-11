@@ -29,7 +29,6 @@ set(gammaray_ui_srcs
   remoteviewwidget.cpp
   trailingcolorlabel.cpp
   helpcontroller.cpp
-  utils.cpp
 
   paintanalyzerwidget.cpp
   paintanalyzerreplayview.cpp
@@ -150,7 +149,6 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     uiintegration.h
     uistatemanager.h
     uiresources.h
-    utils.h
   )
 
   ecm_generate_pri_file(BASE_NAME GammaRayUi
