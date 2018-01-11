@@ -107,7 +107,6 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     enumdefinition.h
     enumrepository.h
     enumvalue.h
-    classesiconsrepository.h
     metatypedeclarations.h
     modelroles.h
     objectbroker.h

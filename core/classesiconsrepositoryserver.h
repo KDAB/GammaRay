@@ -29,8 +29,6 @@
 #ifndef GAMMARAY_CLASSESICONSREPOSITORYSERVER_H
 #define GAMMARAY_CLASSESICONSREPOSITORYSERVER_H
 
-#include "gammaray_core_export.h"
-
 #include <common/classesiconsrepository.h>
 
 namespace GammaRay {
