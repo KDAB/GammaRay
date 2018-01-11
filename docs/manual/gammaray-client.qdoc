@@ -59,18 +59,38 @@
     Different tools might show different aspects of the same object, so it's useful to be able to navigate to the current object in other tools.
     This is offered in most places via the context menu.
 
-    Equally, it is useful to navigate to the code that declared or instanciated an object, this is offered also via the context menu.
+    Equally, it is useful to navigate to the code that declared or instantiated an object, this is offered also via the context menu.
     This information is available under the following conditions:
     \list
         \li For objects created via QML you can navigate to the QML source line triggering the creation.
         \li For type declared in QML you can navigate to the QML source file containing the type.
         \li For objects created via C++ you can navigate to the C++ source code line creating the object given you have a debug build of the target
-            code and the target OS is Linux.
+            code.
     \endlist
+
+    If you are using GammaRay stand-alone (ie. not inside Qt Creator), you can configure the text editor to use for source code navigation
+    via \uicontrol{Settings} > \uicontrol{Code Navigation}. Depending on your platform, a number of common pre-configured editors and IDEs can be
+    selected. A custom editor command line can also be specified, using the following placeholders:
+
+    \table
+    \header
+        \li Placeholder
+        \li Content
+    \row
+        \li \c %f
+        \li The full path to the source file.
+    \row
+        \li \c %l
+        \li The line number.
+    \row
+        \li \c %c
+        \li The column number.
+    \endtable
+
 
     \section2 Finding Objects
 
-    Finding the right objects in the manu thousands existing in a target application typically can be challenging.
+    Finding the right objects in the many thousands existing in a target application typically can be challenging.
     GammaRay supports this by the following means:
     \list
         \li Search fields for most object tree or list views, to quickly filter by type, object name or other displayed properties.
