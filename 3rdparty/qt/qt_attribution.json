@@ -1,0 +1,13 @@
+{
+    "Id": "qt",
+    "Name": "Qt",
+    "QDocModule": "gammaray-manual",
+    "QtUsage": "Several bits of Qt and Qt Creator code are copied into GammaRay: ModelTest, ResourceModel, Qt Designer type icons, QPaintBuffer.",
+
+    "Description": "The Qt toolkit.",
+    "Homepage": "https://qt.io/",
+    "Version": "4.8 - 5.10",
+
+    "License": "GPLv3, LGPLv3, commercial",
+    "Copyright": "Copyright (C) 2015 The Qt Company Ltd."
+}
