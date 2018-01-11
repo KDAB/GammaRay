@@ -1,0 +1,69 @@
+/*
+    gammaray-advanced-usage.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage {Examples}
+    \nextpage {Licenses and Attributions}
+    \page gammaray-advanced-usage.html
+
+    \title Advanced Usage
+
+    \section1 Integrating the GammaRay Probe into an Application
+
+    In some scenarios it might be desirable to not use GammaRay's dynamic injection mechanism,
+    but to build the GammaRay probe into the target application at compile time already. Static
+    linking is one such use-case, as dynamic injection doesn't work then.
+
+    There are two ways available to integrate the probe into a target application:
+
+    \list
+        \li Dynamic linking to the GammaRay probe DLL. This is useful for example for use with
+        application bundles on platforms that allow dynamic linking (e.g. on Android). GammaRay
+        provides the probe DLL as link tarket for qmake and CMake based build systems. You need
+        to ensure to deploy all GammaRay DLLs and probe plugins too in this scenario.
+        \li Static linking to the GammaRay probe and all relevant plugins. This is a more complex
+        setup but your only option when using a statically linked Qt. Compile GammaRay with the
+        \c -DGAMMARAY_STATIC_PROBE=ON CMake option, add the \c GAMMARAY_STATIC_INJECT macro to your
+        application code and link the application against the GammaRay probe and all relevant plugins.
+        See \c tests/manual/staticinjectiontest in the GammaRay source code for an example.
+    \endlist
+
+    Be sure to review the licensing terms before distributing an application with GammaRay
+    integrated permanently, in particular when using the open source version of GammaRay.
+
+    \section1 Creating Custom GammaRay Plug-ins
+
+    GammaRay can be extended with custom plugins. The main extension points for plugins are:
+
+    \list
+        \li Add entirely new \l{Tools}, for example for additional frameworks.
+        \li Add additional tabs to the \l{Object Inspection} view. This is most useful for
+        inspecting aspects of objects shown in multiple tools.
+        \li Extend the \l{Properties} view by additional means to retrieve object properties.
+    \endlist
+
+    For more details on implementing GammaRay plugins, please refer to the \l{https://docs.kdab.com/gammaray/latest/}{API documentation}.
+
+    \section1 Integrating the GammaRay Client into an IDE
+
+    The \l{GammaRay Client} can be integrated into integrated development environments (IDE). Such
+    an integration is available for \l{Qt Creator} as part of the \l{Qt Automotive Suite}.
+
+    For more details on how to integrate the GammaRay client with and IDE, please see the
+    \l{https://docs.kdab.com/gammaray/latest/}{API documentation}.
+*/
