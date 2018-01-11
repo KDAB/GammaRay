@@ -165,6 +165,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     signalspycallbackset.h
     singlecolumnobjectproxymodel.h
     toolfactory.h
+    typetraits.h
     util.h
     varianthandler.h
   )

@@ -101,3 +101,16 @@ macro(gammaray_add_plugin _target_name)
     install(FILES "$<TARGET_PDB_FILE_DIR:${_target_name}>/$<TARGET_PDB_FILE_NAME:${_target_name}>" DESTINATION ${PROBE_PLUGIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
   endif()
 endmacro()
+
+# Common RPATH setup
+# @internal
+function(gammaray_set_rpath _target_name _install_prefix)
+    get_filename_component(_clean_prefix "${CMAKE_INSTALL_PREFIX}/${_install_prefix}" ABSOLUTE)
+    file(RELATIVE_PATH _relative_rpath ${_clean_prefix} "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
+    if (UNIX AND NOT APPLE)
+        set_target_properties(${_target_name} PROPERTIES INSTALL_RPATH "\$ORIGIN/${_relative_rpath}")
+    endif()
+    if (APPLE)
+        set_target_properties(${_target_name} PROPERTIES INSTALL_RPATH "@loader_path/${_relative_rpath}")
+    endif()
+endfunction()
