@@ -54,8 +54,9 @@ class GAMMARAY_UI_EXPORT ToolInfo
 {
 public:
     ToolInfo();
-    /** @internal */
+    ///@cond internal
     explicit ToolInfo(const ToolData &toolData, ToolUiFactory *factory);
+    ///@endcond
     ~ToolInfo();
 
     QString id() const;
@@ -73,7 +74,7 @@ private:
     ToolUiFactory *m_factory;
 };
 
-/** @brief Tool Management API for the client to find out, which tools exist,
+/*! Tool Management API for the client to find out, which tools exist,
  *  get the tool's widgets, etc.
  *
  *  This is needed when implementing your own client UI embedded into a different application.

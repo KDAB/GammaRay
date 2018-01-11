@@ -49,8 +49,8 @@ QT_END_NAMESPACE
 namespace GammaRay {
 struct SignalSpyCallbackSet;
 
-/**
- * @brief An abstract interface for accessing the core GammaRay probe.
+/*!
+ * An abstract interface for accessing the core GammaRay probe.
  *
  * The ProbeInterface is an abstract interface that allows one to access
  * the core GammaRay probe without linking to it.
@@ -63,19 +63,19 @@ public:
     {
     }
 
-    /**
+    /*!
      * Returns the object list model.
      * @return a pointer to a QAbstractItemModel instance.
      */
     virtual QAbstractItemModel *objectListModel() const = 0;
 
-    /**
+    /*!
      * Returns the object tree model.
      * @return a pointer to a QAbstractItemModel instance.
      */
     virtual QAbstractItemModel *objectTreeModel() const = 0;
 
-    /**
+    /*!
      * Determines if the specified QObject belongs to the GammaRay Probe or Window.
      *
      * These objects should not be tracked or shown to the user,
@@ -87,26 +87,27 @@ public:
      */
     virtual bool filterObject(QObject *object) const = 0;
 
-    /**
+    /*!
      * Returns the probe QObject for connecting signals.
      * @return a pointer to a QObject instance.
      */
     virtual QObject *probe() const = 0;
 
-    /**
+    /*!
      * Register a model for remote usage.
-     * @param objectName unique identifier for the model, typically in reverse domain notation.
+     * @param objectName Unique identifier for the model, typically in reverse domain notation.
+     * @param model The model to register.
      */
     virtual void registerModel(const QString &objectName, QAbstractItemModel *model) = 0;
 
-    /**
+    /*!
      * Install a global event filter.
      * Use this rather than installing the filter manually on QCoreApplication,
      * this will filter out GammaRay-internal events and objects already for you.
      */
     virtual void installGlobalEventFilter(QObject *filter) = 0;
 
-    /**
+    /*!
      * Returns @c true if we haven't been able to track all objects from startup, ie. usually
      * when attaching at runtime.
      * If this is the case, we try to discover QObjects by walking the hierarchy, starting
@@ -121,7 +122,7 @@ public:
      */
     virtual bool needsObjectDiscovery() const = 0;
 
-    /**
+    /*!
      * Notify the probe about QObjects your plug-in can discover by using information about
      * the types it can handle.
      * Only use this if needsObjectDiscovery() returns @c true to maximise performance.
@@ -131,7 +132,7 @@ public:
      */
     virtual void discoverObject(QObject *object) = 0;
 
-    /**
+    /*!
      * Notify the probe about the user selecting one of "your" objects via in-app interaction.
      * If you know the exact position the user interacted with, pass that in as @p pos.
      *
@@ -142,14 +143,14 @@ public:
     virtual void selectObject(QObject *object, const QString &toolId,
                               const QPoint &pos = QPoint()) = 0;
 
-    /**
+    /*!
      * Notify the probe about the user selecting one of "your" objects.
      *
      * @since 2.1
      */
     virtual void selectObject(void *object, const QString &typeName) = 0;
 
-    /**
+    /*!
      * Register a signal spy callback set.
      * Signal indexes provided as arguments are mapped to method indexes, ie. argument semantics
      * are the same with Qt4 and Qt5.

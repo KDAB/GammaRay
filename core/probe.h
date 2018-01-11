@@ -62,10 +62,10 @@ class ToolManager;
 class MetaObjectRegistry;
 namespace Execution { class Trace; }
 
-/**
- * @brief Central entity of GammaRay: The probe is tracking the Qt application under test
+/*!
+ * Central entity of GammaRay: The probe is tracking the Qt application under test
  *
- * NOTE: The Probe lifetime is strongly coupled with the QCoreApplication lifetime, if there's
+ * @note The Probe lifetime is strongly coupled with the QCoreApplication lifetime, if there's
  * no QCoreApplication instance, then there's no probe.
  *
  * To get a hold of the probe, call Probe::instance()
@@ -76,20 +76,25 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
 public:
     ~Probe();
 
-    /**
-     * NOTE: You must hold the object lock when operating on the instance!
+    /*!
+     * Returns the current instance of the probe.
+     *
+     * @note You must hold the object lock when using the probe's object tracking
+     * functionality.
      *
      * @sa objectLock()
      */
     static Probe *instance();
 
-    /**
+    /*!
      * Returns true if the probe is initialized, false otherwise.
      */
     static bool isInitialized();
 
+    ///@cond internal
     static void objectAdded(QObject *obj, bool fromCtor = false);
     static void objectRemoved(QObject *obj);
+    ///@endcond
 
     QAbstractItemModel *objectListModel() const override;
     QAbstractItemModel *objectTreeModel() const override;
@@ -108,40 +113,43 @@ public:
     /*! Returns the entire stack trace for the creation of @p object. */
     Execution::Trace objectCreationStackTrace(QObject *object) const;
 
+    ///@cond internal
     QObject *window() const;
     void setWindow(QObject *window);
+    ///@endcond
 
     QObject *probe() const override;
 
     MetaObjectRegistry *metaObjectRegistry() const;
 
-    /**
+    /*!
      * Lock this to check the validity of a QObject
      * and to access it safely afterwards.
      */
     static QMutex *objectLock();
 
-    /**
-     * check whether @p obj is still valid
+    /*!
+     * Check whether @p obj is still valid.
      *
-     * NOTE: the objectLock must be locked when this is called!
+     * @note The objectLock must be locked when this is called!
      */
     bool isValidObject(QObject *obj) const;
 
     bool filterObject(QObject *obj) const override;
 
-    /// internal
+    ///@cond internal
     static void startupHookReceived();
     template<typename Func> static void executeSignalCallback(const Func &func);
+    ///@endcond
 
 signals:
-    /**
+    /*!
      * Emitted when the user selected @p object at position @p pos in the probed application.
      */
     void objectSelected(QObject *object, const QPoint &pos);
     void nonQObjectSelected(void *object, const QString &typeName);
 
-    /**
+    /*!
      * Emitted for newly created QObjects.
      *
      * Note:
@@ -161,7 +169,7 @@ signals:
      */
     void objectCreated(QObject *obj);
 
-    /**
+    /*!
      * Emitted for destroyed objects.
      *
      * Note:
@@ -178,7 +186,9 @@ signals:
     void aboutToDetach();
 
 protected:
+    ///@cond internal
     bool eventFilter(QObject *receiver, QEvent *event) override;
+    ///@endcond
 
 private slots:
     void delayedInit();
@@ -207,7 +217,7 @@ private:
 
     void findExistingObjects();
 
-    /** Check if we are capable of showing widgets. */
+    /*! Check if we are capable of showing widgets. */
     static bool canShowWidgets();
     void showInProcessUi();
 
@@ -217,7 +227,7 @@ private:
     explicit Probe(QObject *parent = nullptr);
     static QAtomicPointer<Probe> s_instance;
 
-    /** Set up all needed signal spy callbacks. */
+    /*! Set up all needed signal spy callbacks. */
     void setupSignalSpyCallbacks();
 
     ObjectListModel *m_objectListModel;

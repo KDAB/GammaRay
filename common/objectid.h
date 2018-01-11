@@ -101,6 +101,7 @@ private:
     QByteArray m_typeName;
 };
 
+///@cond internal
 inline QDebug &operator<<(QDebug dbg, const ObjectId &id)
 {
     dbg.nospace() << "ObjectId(" << id.type() << ", " << id.id() << ", " << id.typeName() << ")";
@@ -131,6 +132,7 @@ inline QDataStream &operator>>(QDataStream &in, ObjectId &id)
     in >> id.m_typeName;
     return in;
 }
+///@endcond
 }
 
 Q_DECLARE_METATYPE(GammaRay::ObjectId)

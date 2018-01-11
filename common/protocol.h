@@ -40,16 +40,23 @@
 #include <limits>
 
 namespace GammaRay {
-/** @brief Helper functions and constants defining the communication protocol between client and server. */
+/*! Helper functions and constants defining the communication protocol between client and server. */
 namespace Protocol {
+/*! Message payload size type. */
 typedef qint32 PayloadSize;
+/*! Remote object address type. */
 typedef quint16 ObjectAddress;
+/*! Message type type. */
 typedef quint8 MessageType;
 
+/*! Invalid object address. */
 static const ObjectAddress InvalidObjectAddress = 0;
+/*! Address of the launcher remote object for probe <-> launcher communication. */
 static const ObjectAddress LauncherAddress = std::numeric_limits<ObjectAddress>::max();
+/*! Invalid message type. */
 static const MessageType InvalidMessageType = 0;
 
+/*! Protocol message types. */
 enum BuildInMessageType {
     // object management
     // client -> server
@@ -108,6 +115,8 @@ enum BuildInMessageType {
     MESSAGE_TYPE_COUNT // NOTE when changing this enum, also update MessageStatisticsModel!
 };
 
+///@cond internal
+/*! Transport protocol representation of a model index element. */
 class ModelIndexData
 {
 public:
@@ -117,30 +126,34 @@ public:
     qint32 row;
     qint32 column;
 };
+/*! Transport protocol representation of a QModelIndex. */
 typedef QVector<ModelIndexData> ModelIndex;
 
-/** @brief Protocol representation of an QItemSelectionRange. */
+/*! Protocol representation of an QItemSelectionRange. */
 struct ItemSelectionRange {
     ModelIndex topLeft;
     ModelIndex bottomRight;
 };
+/*! Protocol representation of an QItemSelection. */
 typedef QVector<ItemSelectionRange> ItemSelection;
 
-/** Serializes a QModelIndex. */
+/*! Serializes a QModelIndex. */
 GAMMARAY_COMMON_EXPORT ModelIndex fromQModelIndex(const QModelIndex &index);
 
-/** Deserializes a QModelIndex. */
+/*! Deserializes a QModelIndex. */
 GAMMARAY_COMMON_EXPORT QModelIndex toQModelIndex(const QAbstractItemModel *model,
                                                  const ModelIndex &index);
+///@endcond
 
-/** Protocol version, must match exactly between client and server. */
+/*! Protocol version, must match exactly between client and server. */
 GAMMARAY_COMMON_EXPORT qint32 version();
 
-/** Broadcast format version. */
+/*! Broadcast format version. */
 GAMMARAY_COMMON_EXPORT qint32 broadcastFormatVersion();
 }
 }
 
+///@cond internal
 QT_BEGIN_NAMESPACE
 inline QDataStream& operator>>(QDataStream& s, GammaRay::Protocol::ModelIndexData& data)
 {
@@ -158,6 +171,7 @@ inline QDebug& operator<<(QDebug &s, const GammaRay::Protocol::ModelIndexData &d
     s << '(' << data.row << ',' << data.column << ')';
     return s;
 }
+///@endcond
 
 Q_DECLARE_TYPEINFO(GammaRay::Protocol::ModelIndexData, Q_MOVABLE_TYPE);
 Q_DECLARE_TYPEINFO(GammaRay::Protocol::ItemSelectionRange, Q_MOVABLE_TYPE);

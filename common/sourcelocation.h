@@ -36,25 +36,24 @@
 #include <QUrl>
 
 namespace GammaRay {
-/**
- * @brief Specifies a source code location.
+/*!
+ * Specifies a source code location.
  *
  * A source location consists of a document and cursor position
  *
  * A Cursor represents a position in a Document through a tuple
  * of two ints, namely the @ref line() and @ref column().
  *
- * Notes
- * - Lines and columns start a 0 (=> zero-based numbering)
+ * @note Lines and columns start a 0 (=> zero-based numbering).
  */
 class GAMMARAY_COMMON_EXPORT SourceLocation
 {
 public:
-    /**
+    /*!
      * The default constructor creates a (invalid) cursor at position (-1, -1) with an invalid url
      */
     SourceLocation();
-    /**
+    /*!
      * This constructor creates a (valid) cursor at position (0, 0) with @p url
      */
     explicit SourceLocation(const QUrl &url);
@@ -67,21 +66,21 @@ public:
     QUrl url() const;
     void setUrl(const QUrl &url);
 
-    /**
+    /*!
      * Returns the zero-based line number.
      */
     int line() const;
     void setZeroBasedLine(int line);
     void setOneBasedLine(int line);
 
-    /**
+    /*!
      * Returns the zero-based column number.
      */
     int column() const;
     void setZeroBasedColumn(int column);
     void setOneBasedColumn(int column);
 
-    /**
+    /*!
      * Returns a human-readable version of this source location
      *
      * @code
@@ -96,7 +95,7 @@ public:
     QString displayString() const;
 
 private:
-    /**
+    /*!
      * This constructor creates a (valid) cursor at given @p line and @p column with @p url.
      * Expects line and column to be zero-based.
      */
@@ -111,8 +110,10 @@ private:
     int m_column;
 };
 
+///@cond internal
 GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out, const SourceLocation &location);
 GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, SourceLocation &location);
+///@endcond
 }
 
 Q_DECLARE_METATYPE(GammaRay::SourceLocation)

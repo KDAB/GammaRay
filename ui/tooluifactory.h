@@ -34,8 +34,8 @@
 #include <QtPlugin>
 
 namespace GammaRay {
-/**
- * @brief An abstract interface for creating the UI parts of probe tools.
+/*!
+ * An abstract interface for creating the UI parts of probe tools.
  *
  * The ToolUiFactory class is an abstract base class for creating UIs for probe tools
  * for GammaRay. The unique identifier used for the UI must match the one of the corresponding
@@ -47,7 +47,7 @@ public:
     ToolUiFactory();
     virtual ~ToolUiFactory();
 
-    /**
+    /*!
      * Unique id of this tool, must match the id of a the corresponding probe tool.
      * @return a QString containing the tool id.
      */
@@ -60,20 +60,20 @@ public:
      */
     virtual QString name() const;
 
-    /**
+    /*!
      * Return @c true if this tool supports remoting, @c false otherwise.
      * The default implementation returns @c true.
      */
     virtual bool remotingSupported() const;
 
-    /**
+    /*!
      * Create the UI part of this tool.
      * @param parentWidget The parent widget for the visual elements of this tool.
      * @return a pointer to the created QwWidget.
      */
     virtual QWidget *createWidget(QWidget *parentWidget) = 0;
 
-    /**
+    /*!
      * Initialize UI related stuff for this tool. This function is called on loading
      * the plugin, before the widget itself is needed. Use createWidget to create
      * the actual widget.
@@ -84,8 +84,8 @@ private:
     Q_DISABLE_COPY(ToolUiFactory)
 };
 
-/**
- * @brief A templated convenience ToolUiFactory applicable for most use-cases.
+/*!
+ * A templated convenience ToolUiFactory applicable for most use-cases.
  */
 template<typename ToolUi>
 class StandardToolUiFactory : public ToolUiFactory

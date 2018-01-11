@@ -41,7 +41,7 @@ QT_END_NAMESPACE
 namespace GammaRay {
 class SourceLocation;
 
-/** @brief Base class for custom object data providers.
+/*! Base class for custom object data providers.
  * Inherit from this and register at ObjectDataProvider, to support basic QObject information
  * retrieval from dynamic language bindings, such as QML.
  */
@@ -50,35 +50,41 @@ class GAMMARAY_CORE_EXPORT AbstractObjectDataProvider
 public:
     AbstractObjectDataProvider();
     virtual ~AbstractObjectDataProvider();
+    /*! Returns a name or identifier for @p obj. */
     virtual QString name(const QObject *obj) const = 0;
+    /*! Returns the full name of the type of @p obj. */
     virtual QString typeName(QObject *obj) const = 0;
+    /*! Returns a shortened type name (e.g. excluding namespaces) for @p obj. */
     virtual QString shortTypeName(QObject *obj) const = 0;
+    /*! Returns the source location where @p obj has been created. */
     virtual SourceLocation creationLocation(QObject *obj) const = 0;
+    /*! Returns the source location where the type of @p obj has been declared. */
     virtual SourceLocation declarationLocation(QObject *obj) const = 0;
 
 private:
     Q_DISABLE_COPY(AbstractObjectDataProvider)
 };
 
-/** @brief Retrieve basic information about QObject instances. */
+/*! Retrieve basic information about QObject instances. */
 namespace ObjectDataProvider {
+/*! Register an additional object data provider. */
 GAMMARAY_CORE_EXPORT void registerProvider(AbstractObjectDataProvider *provider);
 
-/** Returns the object name, considering possibly available information from
+/*! Returns the object name, considering possibly available information from
  * dynamic language runtimes, such as QML ids.
  */
 GAMMARAY_CORE_EXPORT QString name(const QObject *obj);
 
-/** Returns the type name of @p obj. */
+/*! Returns the type name of @p obj. */
 GAMMARAY_CORE_EXPORT QString typeName(QObject *obj);
 
-/** Returns the short type name of @p obj. */
+/*! Returns the short type name of @p obj. */
 GAMMARAY_CORE_EXPORT QString shortTypeName(QObject *obj);
 
-/** Returns the source location where this object was created, if known. */
+/*! Returns the source location where this object was created, if known. */
 GAMMARAY_CORE_EXPORT SourceLocation creationLocation(QObject *obj);
 
-/** Returns the source location where the type of this object was declared, if known. */
+/*! Returns the source location where the type of this object was declared, if known. */
 GAMMARAY_CORE_EXPORT SourceLocation declarationLocation(QObject *obj);
 }
 }

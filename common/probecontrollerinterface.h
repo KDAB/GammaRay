@@ -36,7 +36,7 @@
 #include <QVector>
 
 namespace GammaRay {
-/** @brief Probe and host process remote control functions. */
+/*! Probe and host process remote control functions. */
 class ProbeControllerInterface : public QObject
 {
     Q_OBJECT
@@ -45,10 +45,10 @@ public:
     explicit ProbeControllerInterface(QObject *parent = nullptr);
     virtual ~ProbeControllerInterface();
 
-    /** Terminate host application. */
+    /*! Terminate host application. */
     virtual void quitHost() = 0;
 
-    /** Detach GammaRay but keep host application running. */
+    /*! Detach GammaRay but keep host application running. */
     virtual void detachProbe() = 0;
 
 private:

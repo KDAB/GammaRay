@@ -49,7 +49,7 @@ class ProcessTrackerBackend;
 class ProcessTrackerInfo;
 class ClientToolManager;
 
-/** @brief Pre-MainWindow connection setup logic.
+/*! Pre-MainWindow connection setup logic.
  *
  * This is useful for embedding the GammaRay client into another application
  *
@@ -65,10 +65,10 @@ public:
     ClientToolManager *toolManager() const;
     QMainWindow *mainWindow() const;
 
-    /** Connect to a GammaRay probe at @p url. */
+    /*! Connect to a GammaRay probe at @p url. */
     void connectToHost(const QUrl &url, int tryAgain = 0);
 
-    /** Manually show the splash screen. */
+    /*! Manually show the splash screen. */
     void showSplashScreen();
 
     GammaRay::ProcessTrackerBackend *processTrackerBackend() const;
@@ -81,23 +81,23 @@ public:
     QString endPointKey() const;
     qint64 endPointPid() const;
 
-    /** One-time initialization of stream operators and factory callbacks. */
+    /*! One-time initialization of stream operators and factory callbacks. */
     static void init();
 
 signals:
-    /** Emitted when the connection is established and the tool model is populated.
+    /*! Emitted when the connection is established and the tool model is populated.
      *  If you want to bring up the standard main window, connect this to createMainWindow(),
      *  otherwise use this to show your own UI at this point.
      */
     void ready();
 
-    /** Emitted when there has been a persistent connection error.
+    /*! Emitted when there has been a persistent connection error.
      *  You can connect this to handlePersistentConnectionError() for a standard
      *  message box and application exit handling.
      */
     void persistentConnectionError(const QString &msg);
 
-    /** Emitted when the connection to the target has been closed, for whatever reason.
+    /*! Emitted when the connection to the target has been closed, for whatever reason.
      *  For a stand-alone client you probably want to connect this to QApplication::quit().
      */
     void disconnected();
@@ -106,15 +106,15 @@ signals:
     void processTrackerInfoChanged(const GammaRay::ProcessTrackerInfo &info);
 
 public slots:
-    /** Disconnect GammaRay. */
+    /*! Disconnect GammaRay. */
     void disconnectFromHost();
 
-    /** Brings up a client main window for the current connection.
+    /*! Brings up a client main window for the current connection.
      *  If you want to use this, connect this slot to ready().
      */
     QMainWindow *createMainWindow();
 
-    /** Standard persistent connection error handler.
+    /*! Standard persistent connection error handler.
      *  @see persistentConnectionError()
      */
     void handlePersistentConnectionError(const QString &msg);

@@ -36,7 +36,7 @@
 namespace GammaRay {
 class ProbeABIPrivate;
 
-/** @brief Describes a probe ABI.
+/*! Describes a probe ABI.
  *  The probe ABI is everything that determines if a probe is compatible
  *  with a given target or not.
  */
@@ -49,51 +49,51 @@ public:
 
     ProbeABI &operator=(const ProbeABI &other);
 
-    /** Qt version. */
+    /*! Qt version. */
     int majorQtVersion() const;
     int minorQtVersion() const;
     void setQtVersion(int major, int minor);
     bool hasQtVersion() const;
 
-    /** Processor architecture. */
+    /*! Processor architecture. */
     QString architecture() const;
     void setArchitecture(const QString &architecture);
 
-    /** Debug vs. release. */
+    /*! Debug vs. release. */
     bool isDebug() const;
     void setIsDebug(bool debug);
-    /** Returns @c true if debug vs. release is changing the ABI. */
+    /*! Returns @c true if debug vs. release is changing the ABI. */
     bool isDebugRelevant() const;
 
-    /** Compiler ABI is currently only relevant for MSVC vs. Mingw. */
+    /*! Compiler ABI is currently only relevant for MSVC vs. Mingw. */
     QString compiler() const;
     void setCompiler(const QString &compiler);
 
-    /** The compiler ABI version is currently only relevant for MSVC */
+    /*! The compiler ABI version is currently only relevant for MSVC */
     QString compilerVersion() const;
     void setCompilerVersion(const QString &compilerVersion);
 
-    /** Returns @c true if the version is changing the ABI. */
+    /*! Returns @c true if the version is changing the ABI. */
     bool isVersionRelevant() const;
 
-    /** Returns if this probe ABI is fully specified. */
+    /*! Returns if this probe ABI is fully specified. */
     bool isValid() const;
 
-    /** Checks if this is ABI is compatible with @p referenceABI. */
+    /*! Checks if this is ABI is compatible with @p referenceABI. */
     bool isCompatible(const ProbeABI &referenceABI) const;
 
     bool operator==(const ProbeABI &rhs) const;
 
-    /** @brief Orders probes by Qt version.
+    /*! @brief Orders probes by Qt version.
      *  This is useful to pick the best matching one of multiple compatible ones.
      */
     bool operator<(const ProbeABI &rhs) const;
 
-    /** Conversion from and to probe ABI identifiers. */
+    /*! Conversion from and to probe ABI identifiers. */
     QString id() const;
     static ProbeABI fromString(const QString &id);
 
-    /** User-visible name of this ABI. */
+    /*! User-visible name of this ABI. */
     QString displayString() const;
 
 private:

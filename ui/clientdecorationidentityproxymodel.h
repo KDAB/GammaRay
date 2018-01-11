@@ -39,6 +39,7 @@
 namespace GammaRay {
 class ClassesIconsRepository;
 
+/*! Proxy model for client-side resolution of class icons. */
 class GAMMARAY_UI_EXPORT ClientDecorationIdentityProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT

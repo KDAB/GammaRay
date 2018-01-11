@@ -43,7 +43,7 @@ namespace Ui {
 class ConnectPage;
 }
 
-/** UI for connecting to a running GammaRay instance. */
+/*! UI for connecting to a running GammaRay instance. */
 class GAMMARAY_LAUNCHER_UI_EXPORT ConnectPage : public QWidget
 {
     Q_OBJECT

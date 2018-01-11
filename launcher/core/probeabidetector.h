@@ -37,7 +37,7 @@
 #include <QString>
 
 namespace GammaRay {
-/** @brief Detect the probe ABI required for a given target.
+/*! Detect the probe ABI required for a given target.
  *  A target can be specified as either a process id or a path to an executable to be launched.
  */
 class GAMMARAY_LAUNCHER_EXPORT ProbeABIDetector
@@ -45,35 +45,37 @@ class GAMMARAY_LAUNCHER_EXPORT ProbeABIDetector
 public:
     ProbeABIDetector();
 
-    /** Detect the ABI of the executable at @p path. */
+    /*! Detect the ABI of the executable at @p path. */
     ProbeABI abiForExecutable(const QString &path) const;
 
-    /** Detect the ABI of the process running with PID @p pid. */
+    /*! Detect the ABI of the process running with PID @p pid. */
     ProbeABI abiForProcess(qint64 pid) const;
 
-    /** Returns the full path to QtCore used by the given executable. */
+    /*! Returns the full path to QtCore used by the given executable. */
     QString qtCoreForExecutable(const QString &path) const;
 
-    /** Returns the full path to QtCore used by the process with PID @p pid. */
+    /*! Returns the full path to QtCore used by the process with PID @p pid. */
     QString qtCoreForProcess(quint64 pid) const;
 
-    /** Check if the given line contains a mention of the QtCore library.
+    ///@cond internal
+    /*! Check if the given line contains a mention of the QtCore library.
      *  @internal
      */
     static bool containsQtCore(const QByteArray &line);
+    ///@endcond
 
 private:
-    /** Returns the ABI of the given QtCore DLL.
+    /*! Returns the ABI of the given QtCore DLL.
      *  Implementation of abiForXXX() should call this as it implements caching.
      */
     ProbeABI abiForQtCore(const QString &path) const;
 
-    /** Detect the ABI of the given QtCore DLL.
+    /*! Detect the ABI of the given QtCore DLL.
      *  This needs to be implemented for every platform.
      */
     ProbeABI detectAbiForQtCore(const QString &path) const;
 
-    /** Path to the QtCore DLL for @p pid, using the lsof tool
+    /*! Path to the QtCore DLL for @p pid, using the lsof tool
      *  on UNIX-like systems.
      */
     QString qtCoreFromLsof(qint64 pid) const;

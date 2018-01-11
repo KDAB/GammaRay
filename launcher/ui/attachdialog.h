@@ -48,6 +48,7 @@ namespace Ui {
     class AttachDialog;
 }
 
+/*! Widget for selecting a process to attach GammaRay to. */
 class GAMMARAY_LAUNCHER_UI_EXPORT AttachDialog : public QWidget
 {
     Q_OBJECT

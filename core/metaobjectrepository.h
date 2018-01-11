@@ -74,6 +74,7 @@ public:
      * Returns the introspection information for the given object instance.
      * This behaves as the above function for non-polymorphic types, for polymorphic
      * types it tries to find the most specific derived type for the given instance.
+     * @param typeName The name of the (base) type of @p obj.
      * @param obj The object pointer is modified if necessary for the corresponding type.
      * This is necessary to support multiple inheritance.
      */

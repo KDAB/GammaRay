@@ -39,6 +39,7 @@ namespace Ui {
 class LauncherWindow;
 }
 
+/*! Widget for launching a new process with GammaRay injected. */
 class GAMMARAY_LAUNCHER_UI_EXPORT LauncherWindow : public QDialog
 {
     Q_OBJECT

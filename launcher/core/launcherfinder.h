@@ -36,14 +36,16 @@
 
 
 namespace GammaRay {
-/** Utility function to find the various executables related to the launcher. */
+/*! Utility function to find the various executables related to the launcher. */
 namespace LauncherFinder {
+/*! Identifies a launcher helper executable type. */
 enum Type {
     Injector,
     LauncherUI,
     Client
 };
 
+/*! Returns the path to the helper executable of type @p type. */
 GAMMARAY_LAUNCHER_EXPORT QString findLauncher(Type type);
 }
 }

@@ -36,15 +36,16 @@
  * @brief A collection of custom model roles shared between client and server.
  */
 namespace GammaRay {
-/** Portable replacement for Qt::UserRole.
+/*! Portable replacement for Qt::UserRole.
  * Qt4 uses 32, Qt5 256, use the latter globally to allow combining Qt4/5 client/servers.
  */
 static const int UserRole = 256;
 
-/** @brief  Custom roles for GammaRay::ToolModel.
+/*! Custom roles for GammaRay::ToolModel.
  * @todo These can be split again, between core tool model and UI tool model.
  */
 namespace ToolModelRole {
+/*! Tool model data roles. */
 enum Role {
     ToolFactory = UserRole + 1,
     ToolWidget,

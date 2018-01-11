@@ -37,20 +37,21 @@
 namespace GammaRay {
 class PropertyWidget;
 
-/** @brief Priority values for property widget extension tabs.
+/*! Priority values for property widget extension tabs.
  *  It is recommended to specify tab priorities relating to these
  *  constants.
  */
 namespace PropertyWidgetTabPriority {
+/*! Tab priority constants. */
 enum Priority {
-    First = 0,     ///< the main property inspector, the left-most one.
-    Basic = 100,     ///< QObject data that is of common use
-    Advanced = 200,     ///< tools with common and high value use for a small sub-set of classes
-    Exotic = 300     ///< rarely used information, or data that is only valuable to a small amount of users.
+    First = 0,     ///< The main property inspector, the left-most one.
+    Basic = 100,     ///< QObject data that is of common use.
+    Advanced = 200,     ///< Tools with common and high value use for a small sub-set of classes.
+    Exotic = 300     ///< Rarely used information, or data that is only valuable to a small amount of users.
 };
 }
 
-/** @brief Interface for tabs in the property widget. */
+/*! Interface for tabs in the property widget. */
 class GAMMARAY_UI_EXPORT PropertyWidgetTabFactoryBase
 {
 public:
@@ -71,7 +72,7 @@ private:
     int m_priority;
 };
 
-/** @brief Template implementation of PropertyWidgetTabFactoryBase. */
+/*! Template implementation of PropertyWidgetTabFactoryBase. */
 template<typename T>
 class PropertyWidgetTabFactory : public PropertyWidgetTabFactoryBase
 {

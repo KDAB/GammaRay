@@ -37,7 +37,7 @@ class QUrl;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-/** @brief Interface for UI plugins to integrate with the client UI.
+/*! Interface for UI plugins to integrate with the client UI.
  *  This is especially relevant when the client is embedded inside another application
  *  such as an IDE.
  */
@@ -51,7 +51,7 @@ public:
 
     static UiIntegration *instance();
 
-    /** Show the source code at the given position.
+    /*! Show the source code at the given position.
      *  The stand-alone client will launch a text editor for this,
      *  if the client is embedded in an IDE it can chose to navigate directly.
      */
@@ -63,7 +63,7 @@ Q_SIGNALS:
     void navigateToCode(const QUrl &url, int lineNumber, int columnNumber);
 
 private:
-    /** Singleton instance. */
+    /*! Singleton instance. */
     static UiIntegration *s_uiIntegrationInstance;
 };
 } // namespace GammaRay

@@ -41,22 +41,22 @@
 #include <Qt>
 
 namespace GammaRay {
-/**
- * @brief GammaRay Object Models.
+/*!
+ * GammaRay Object Models.
  *
  * Public object model roles, for use by tool plugins without needing access
  * to the real object model classes.
  */
 namespace ObjectModel {
-/** Role enum, to be used with the object list and tree models. */
+/*! Role enum, to be used with the object list and tree models. */
 enum Role {
     // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globally to allow combining Qt4/5 client/servers.
-    ObjectRole = 256 + 1,   /**< the Object role */
-    ObjectIdRole,           /**< return ObjectId object */
-    CreationLocationRole,   /**< source location where this object was created, if known. */
-    DeclarationLocationRole,/**< source location where the type for this object has been declared, if known. */
-    DecorationIdRole,       /**< the classes icon id to display as Qt::DecorationRole. */
-    UserRole                /**< the UserRole, as defined by Qt */
+    ObjectRole = 256 + 1,   /**< Pointer to the represented object (available in the probe code only). */
+    ObjectIdRole,           /**< ObjectId instance for represented object. */
+    CreationLocationRole,   /**< Source location where this object was created, if known. */
+    DeclarationLocationRole,/**< Source location where the type for this object has been declared, if known. */
+    DecorationIdRole,       /**< The classes icon id to display as Qt::DecorationRole (see ClientDecorationIdentityProxyModel). */
+    UserRole                /**< UserRole, as defined by Qt. */
 };
 }
 }

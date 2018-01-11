@@ -50,14 +50,12 @@
 #include <QObject>
 
 namespace GammaRay {
-/**
- * @brief A container for a generic Object Model derived from some Base.
- */
+/*! A container for a generic Object Model derived from some Base. */
 template<typename Base>
 class ObjectModelBase : public Base
 {
 public:
-    /**
+    /*!
      * Constructor.
      * @param parent is the parent object for this instance.
      */
@@ -65,7 +63,7 @@ public:
     {
     }
 
-    /**
+    /*!
      * Returns the number of columns in the specified model (currently this is
      * always 2).
      * @param parent is the model QModelIndex.
@@ -77,7 +75,7 @@ public:
         return 2;
     }
 
-    /**
+    /*!
      * Returns the data for the specified object.
      * @param object is a pointer to a QObject.
      * @param index is the model QModelIndex.
@@ -129,7 +127,7 @@ public:
         return map;
     }
 
-    /**
+    /*!
      * Returns the header data for the Object, given a section (column),
      * orientation and role.
      * @param section an integer (either 0 or 1) corresponding to the section (column).

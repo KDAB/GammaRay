@@ -53,7 +53,7 @@ namespace GammaRay {
 class Message;
 class PropertySyncer;
 
-/** @brief Network protocol endpoint.
+/*! Network protocol endpoint.
  *
  *  Contains:
  *  - object address <-> object name mapping
@@ -65,27 +65,27 @@ class GAMMARAY_COMMON_EXPORT Endpoint : public QObject
 public:
     ~Endpoint();
 
-    /** Send @p msg to the connected endpoint. */
+    /*! Send @p msg to the connected endpoint. */
     static void send(const Message &msg);
 
-    /** Returns @c true if we are currently connected to another endpoint. */
+    /*! Returns @c true if we are currently connected to another endpoint. */
     static bool isConnected();
 
     static quint16 defaultPort();
     static quint16 broadcastPort();
 
-    /** Returns the object address for @p objectName, or @c Protocol::InvalidObjectAddress if not known. */
+    /*! Returns the object address for @p objectName, or @c Protocol::InvalidObjectAddress if not known. */
     Protocol::ObjectAddress objectAddress(const QString &objectName) const;
 
-    /** Singleton accessor. */
+    /*! Singleton accessor. */
     static Endpoint *instance();
 
-    /**
+    /*!
      * Register an object of the given name for transparent server/client communication.
      */
     virtual Protocol::ObjectAddress registerObject(const QString &name, QObject *object);
 
-    /**
+    /*!
      * Invoke @p method on the object called @p objectName with the given @p args.
      *
      * This also works with signals.
@@ -97,119 +97,120 @@ public:
     virtual void invokeObject(const QString &objectName, const char *method,
                               const QVariantList &args = QVariantList()) const;
 
-    /**
+    /*!
      * Write all pending data and block until this is done.
      *
      * This should only be used in very rare situations.
      */
     void waitForMessagesWritten();
 
-    /**
+    /*!
      * Returns a human-readable string describing the host program.
      */
     QString label() const;
 
-    /**
+    /*!
      * Sets the human-readable label of this instance used e.g. when advertising on the network.
      */
     void setLabel(const QString &label);
 
-    /**
+    /*!
      * Returns a fixed string uniquely describing the host program.
      */
     QString key() const;
 
-    /**
+    /*!
      * Sets the fixed key of this instance used e.g. when saving settings.
      */
     void setKey(const QString &key);
 
-    /**
+    /*!
      * Returns the process identifier (pid) of the host program.
      */
     qint64 pid() const;
 
-    /**
+    /*!
      * Sets the process identifier of the host program of this instance used e.g. when querying system pid.
      */
     void setPid(qint64 pid);
 
-    /**
+    /*!
      * Returns true for remote clients and false for the in-probe server endpoint.
      */
     virtual bool isRemoteClient() const = 0;
 
-    /**
+    /*!
      * Returns the listening address of the server, in case you need to connect to a different service there
      * (such as the web inspector server).
      */
     virtual QUrl serverAddress() const = 0;
 
-    /** Register the slot @p messageHandlerName on @p receiver as the handler for messages to/from @p objectAddress.
+    /*! Register the slot @p messageHandlerName on @p receiver as the handler for messages to/from @p objectAddress.
      *  @see dispatchMessage()
      */
     virtual void registerMessageHandler(Protocol::ObjectAddress objectAddress, QObject *receiver,
                                         const char *messageHandlerName);
 
-    /** Unregister the message handler for @p objectAddress. */
+    /*! Unregister the message handler for @p objectAddress. */
     virtual void unregisterMessageHandler(Protocol::ObjectAddress objectAddress);
 
 public slots:
-    /** Convenience overload of send(), to directly send message delivered via signals. */
+    /*! Convenience overload of send(), to directly send message delivered via signals. */
     void sendMessage(const GammaRay::Message &msg);
 
 signals:
-    /** Emitted when a connection to another endpoint was successfully established and passed the protocol version handshake step. */
+    /*! Emitted when a connection to another endpoint was successfully established and passed the protocol version handshake step. */
     void connectionEstablished();
-    /** Emitted when we lost the connection to the other endpoint. */
+    /*! Emitted when we lost the connection to the other endpoint. */
     void disconnected();
 
-    /** Emitted when a new object with name @p objectName has been registered at address @p objectAddress. */
+    /*! Emitted when a new object with name @p objectName has been registered at address @p objectAddress. */
     void objectRegistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
     void objectUnregistered(const QString &objectName, Protocol::ObjectAddress objectAddress);
 
     void logTransmissionRate(quint64 bytesRead, quint64 bytesWritten);
 
 protected:
+    ///@cond internal
     Endpoint(QObject *parent = nullptr);
-    /** Call with the socket once you have established a connection to another endpoint, takes ownership of @p device. */
+    /*! Call with the socket once you have established a connection to another endpoint, takes ownership of @p device. */
     void setDevice(QIODevice *device);
 
-    /** The object address of the other endpoint. */
+    /*! The object address of the other endpoint. */
     Protocol::ObjectAddress endpointAddress() const;
 
-    /** Called for every incoming message.
+    /*! Called for every incoming message.
      *  @see dispatchMessage().
      */
     virtual void messageReceived(const Message &msg) = 0;
 
-    /** Call this when learning about a new object <-> address mapping. */
+    /*! Call this when learning about a new object <-> address mapping. */
     void addObjectNameAddressMapping(const QString &objectName,
                                      Protocol::ObjectAddress objectAddress);
-    /** Call this when learning about a dissolved object <-> address mapping. */
+    /*! Call this when learning about a dissolved object <-> address mapping. */
     void removeObjectNameAddressMapping(const QString &objectName);
 
-    /** Called when the current handler of the object identified by @p objectAddress has been destroyed. */
+    /*! Called when the current handler of the object identified by @p objectAddress has been destroyed. */
     virtual void handlerDestroyed(Protocol::ObjectAddress objectAddress,
                                   const QString &objectName) = 0;
 
-    /** Called when a registered object identified by @p objectAddress has been destroyed. */
+    /*! Called when a registered object identified by @p objectAddress has been destroyed. */
     virtual void objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName,
                                  QObject *object) = 0;
 
-    /** Calls the message handler registered for the receiver of @p msg. */
+    /*! Calls the message handler registered for the receiver of @p msg. */
     void dispatchMessage(const GammaRay::Message &msg);
 
-    /** Sends a given message. */
+    /*! Sends a given message. */
     virtual void doSendMessage(const Message &msg);
 
-    /** All current object name/address pairs. */
+    /*! All current object name/address pairs. */
     QVector<QPair<Protocol::ObjectAddress, QString> > objectAddresses() const;
 
-    /** Singleton instance. */
+    /*! Singleton instance. */
     static Endpoint *s_instance;
 
-    /**
+    /*!
      * Invoke @p method on @p object with the given @p args.
      *
      * This is invokes the method directly on the local object.
@@ -217,6 +218,7 @@ protected:
     void invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) const;
 
     PropertySyncer *m_propertySyncer;
+    ///@endcond
 
 private slots:
     void readyRead();
@@ -245,9 +247,9 @@ private:
         QMetaMethod messageHandler;
     };
 
-    /** Inserts @p oi into all maps. */
+    /*! Inserts @p oi into all maps. */
     void insertObjectInfo(ObjectInfo *oi);
-    /** Removes @p oi from all maps and destroys it. */
+    /*! Removes @p oi from all maps and destroys it. */
     void removeObjectInfo(ObjectInfo *oi);
 
     QHash<QString, ObjectInfo *> m_nameMap;

@@ -42,6 +42,7 @@ class GAMMARAY_COMMON_EXPORT EnumDefinitionElement
 {
 public:
     EnumDefinitionElement();
+    /*! Create a new enum definition element with name @p name and value @p value. */
     EnumDefinitionElement(int value, const char *name);
 
     /*! The numeric value represented of this enum definition element. */
@@ -62,6 +63,7 @@ class GAMMARAY_COMMON_EXPORT EnumDefinition
 {
 public:
     EnumDefinition();
+    /*! Create a new definition for an enum named @p name and internal id @p id. */
     explicit EnumDefinition(EnumId id, const QByteArray &name);
 
     /*! Returns whether this is a valid enum definition.
@@ -102,8 +104,10 @@ private:
     QVector<EnumDefinitionElement> m_elements;
 };
 
+///@cond internal
 GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out, const EnumDefinition &def);
 GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, EnumDefinition &def);
+///@endcond
 
 }
 

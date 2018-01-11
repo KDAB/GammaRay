@@ -41,24 +41,28 @@ QT_END_NAMESPACE
 namespace GammaRay {
 class ProbeABI;
 
-/** @brief Functions to locate a suitable probe. */
+/*! Functions to locate a suitable probe. */
 namespace ProbeFinder {
-/**
+/*!
  * Attempts to find the full path of the probe DLL with ABI @p probeAbi, considering
  * the additional search paths @p searchRoots.
  */
 GAMMARAY_LAUNCHER_EXPORT QString findProbe(const ProbeABI &probeAbi,
                                            const QStringList &searchRoots = QStringList());
 
-/**
- * Find the best matching probe for the given @p targetABI.
+/*!
+ * Find the best matching probe for the given @p targetABI out of all installed ones.
  * An invalid ProbeABI instance is returned if there is no compatible probe installed.
  */
 GAMMARAY_LAUNCHER_EXPORT ProbeABI findBestMatchingABI(const ProbeABI &targetABI);
+/*!
+ * Find the best matching probe for the given @p targetABI out of @p availableABIs.
+ * An invalid ProbeABI instance is returned if there is no compatible probe installed.
+ */
 GAMMARAY_LAUNCHER_EXPORT ProbeABI findBestMatchingABI(const ProbeABI &targetABI,
                                                       const QVector<ProbeABI> &availableABIs);
 
-/**
+/*!
  * List all available probe ABIs.
  */
 GAMMARAY_LAUNCHER_EXPORT QVector<ProbeABI> listProbeABIs();

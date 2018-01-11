@@ -36,10 +36,11 @@
 namespace GammaRay {
 class MetaObject;
 
-/** @brief Introspectable adaptor to non-QObject properties. */
+/*! Introspectable adaptor to non-QObject properties. */
 class GAMMARAY_CORE_EXPORT MetaProperty
 {
 public:
+    /*! Create a new MetaProperty instance for a property named @p name. */
     explicit MetaProperty(const char *name);
     virtual ~MetaProperty();
 
@@ -87,9 +88,8 @@ struct add_const_ref {
     typedef const typename strip_const_ref<T>::type & type;
 };
 }
-///@endcond
 
-/** @brief Template-ed implementation of MetaProperty for member properties. */
+/*! Template-ed implementation of MetaProperty for member properties. */
 template<typename Class, typename GetterReturnType, typename SetterArgType = GetterReturnType, typename GetterSignature = GetterReturnType (Class::*)() const>
 class MetaPropertyImpl : public MetaProperty
 {
@@ -138,7 +138,7 @@ private:
     void (Class::*m_setter)(SetterArgType);
 };
 
-/** @brief Template-ed implementation of MetaProperty for static properties. */
+/*! Template-ed implementation of MetaProperty for static properties. */
 template<typename GetterReturnType>
 class MetaStaticPropertyImpl : public MetaProperty
 {
@@ -174,7 +174,7 @@ private:
     GetterReturnType (*m_getter)();
 };
 
-/** @brief Template-ed implementation of MetaProperty for member variable "properties". */
+/*! Template-ed implementation of MetaProperty for member variable "properties". */
 template<typename Class, typename ValueType>
 class MetaMemberPropertyImpl : public MetaProperty
 {
@@ -248,6 +248,7 @@ namespace MetaPropertyFactory
         return new MetaMemberPropertyImpl<Class, ValueType>(name, member);
     }
 }
+///@endcond
 
 }
 #endif

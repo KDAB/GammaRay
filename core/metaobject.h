@@ -37,79 +37,83 @@
 #include <QVector>
 
 namespace GammaRay {
-/** @brief Compile-time introspection adaptor for non-QObject classes. */
+/*! Compile-time introspection adaptor for non-QObject classes. */
 class GAMMARAY_CORE_EXPORT MetaObject
 {
 public:
     MetaObject();
     virtual ~MetaObject();
 
-    /**
+    /*!
      * Returns the amount of properties available in this class (including base classes).
      */
     int propertyCount() const;
 
-    /**
+    /*!
      * Returns the property adaptor for index @p index.
      */
     MetaProperty *propertyAt(int index) const;
 
-    /** Add a base class meta object. */
+    /*! Add a base class meta object. */
     void addBaseClass(MetaObject *baseClass);
 
-    /** Add a property for this class. This transfers ownership. */
+    /*! Add a property for this class. This transfers ownership. */
     void addProperty(MetaProperty *property);
 
-    /// Returns the name of the class represented by this object.
+    /*! Returns the name of the class represented by this object. */
     QString className() const;
 
-    /** Casts a void pointer for an instance of this type to one appropriate
+    /*! Casts a void pointer for an instance of this type to one appropriate
      * for use with the property at index @p index.
      * Make sure to use this when dealing with multi-inheritance.
      */
     void *castForPropertyAt(void *object, int index) const;
 
-    /** Casts to a void pointer for an instance of this type to one referring
+    /*! Casts to a void pointer for an instance of this type to one referring
      *  to the given base class type. If @p baseClass is not a base class
      *  of this type, @c nullptr is returned.
      */
     void *castTo(void *object, const QString &baseClass) const;
 
+    /*! Sets the name of this class to @p className. */
     void setClassName(const QString &className);
 
-    /** Returns the MetaObject for the @p index base class. */
+    /*! Returns the MetaObject for the @p index base class. */
     MetaObject *superClass(int index = 0) const;
+    /*! Returns @c true if this class inherits (directly or indirectly) a class named @p className. */
     bool inherits(const QString &className) const;
 
-    /** Returns @c true if this is a polymorphic type.
+    /*! Returns @c true if this is a polymorphic type.
      *  @see std::is_polymorphic
      */
     bool isPolymorphic() const;
 
-    /** Casts to a void pointer for an instance of this type
+    /*! Casts to a void pointer for an instance of this type
      *  coming from the given base class. This performs the equivalent
      *  of a dynamic_cast and thus can return @p nullptr.
      */
     void* castFrom(void *object, MetaObject *baseClass) const;
 
 protected:
-    /** Casts up to base class @p baseClassIndex.
+    /*! Casts up to base class @p baseClassIndex.
      * This is important when traversing multi-inheritance trees.
      */
     virtual void *castToBaseClass(void *object, int baseClassIndex) const = 0;
 
-    /** Casts down from base class @p baseClassIndex.
+    /*! Casts down from base class @p baseClassIndex.
      *  This performs a dynamic cast on polymorphic types, and is undefined for non-polymorphic types.
      */
     virtual void *castFromBaseClass(void *object, int baseClassIndex) const = 0;
 
-    /** Returns if this type is polymorphic. This can but does not require
+    /*! Returns if this type is polymorphic. This can but does not require
      *  to return @c true for types derives from a polymorphic type.
      */
     virtual bool isClassPolymorphic() const = 0;
 
 protected:
+    ///@cond internal
     QVector<MetaObject *> m_baseClasses;
+    ///@endcond
 
 private:
     Q_DISABLE_COPY(MetaObject)
@@ -117,9 +121,8 @@ private:
     QString m_className;
 };
 
-/** @endcond */
-
-/** @brief Template implementation of MetaObject. */
+///@cond internal
+/*! Template implementation of MetaObject. */
 template<typename T, typename Base1 = void, typename Base2 = void, typename Base3 = void>
 class MetaObjectImpl : public MetaObject
 {
@@ -160,6 +163,7 @@ protected:
         return IsPolymorphic<T>();
     }
 };
+///@endcond
 }
 
 #endif // GAMMARAY_METAOBJECT_H

@@ -42,11 +42,13 @@ Out DynamicCast(In *in)
     return dynamic_cast<Out>(in);
 }
 
+///@cond internal
 template <typename Out>
 Out DynamicCast(void*)
 {
     return nullptr;
 }
+///@endcond
 
 /** Specializable variant of std::is_polymorphic, for use with pseudo-polymorphic Qt types. */
 template <typename T>

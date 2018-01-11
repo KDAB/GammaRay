@@ -43,7 +43,7 @@ namespace GammaRay {
 class LaunchOptions;
 struct LauncherPrivate;
 
-/** @brief Manages launching a target process, injecting the probe and if needed also starting the client application. */
+/*! Manages launching a target process, injecting the probe and if needed also starting the client application. */
 class GAMMARAY_LAUNCHER_EXPORT Launcher : public QObject
 {
     Q_OBJECT
@@ -51,17 +51,17 @@ public:
     explicit Launcher(const LaunchOptions &options, QObject *parent = nullptr);
     ~Launcher();
 
-    /** This is used to identify the communication channels used by the launcher and the target process. */
+    /*! This is used to identify the communication channels used by the launcher and the target process. */
     qint64 instanceIdentifier() const;
     bool start();
     void stop();
 
-    /** Target exit code, in case we launched it. */
+    /*! Target exit code, in case we launched it. */
     int exitCode() const;
-    /** Error message from attaching/launching the target, if any. */
+    /*! Error message from attaching/launching the target, if any. */
     QString errorMessage() const;
 
-    /** Address for the client to connect to, valid once received from the target. */
+    /*! Address for the client to connect to, valid once received from the target. */
     QUrl serverAddress() const;
 signals:
     void started();

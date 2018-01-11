@@ -38,6 +38,7 @@ namespace GammaRay {
 
 /*! Unique identifier for EnumDefinition instances. */
 typedef int EnumId;
+/*! Special value constants for GammaRay::EnumId. */
 enum EnumIds {
     InvalidEnumId = -1,
     FirstValidEnumId = 0
@@ -48,6 +49,7 @@ class GAMMARAY_COMMON_EXPORT EnumValue
 {
 public:
     EnumValue();
+    /*! Create a new enum value for EnumDefinition with @p id and value @p value. */
     explicit EnumValue(EnumId id, int value);
 
     /*! The unique identifier of the definition of this enum.
@@ -71,8 +73,10 @@ private:
     int m_value;
 };
 
+///@cond internal
 GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out, const EnumValue &v);
 GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, EnumValue &v);
+///@endcond
 
 }
 

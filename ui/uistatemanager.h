@@ -45,7 +45,9 @@ class QHeaderView;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-/** @brief Interface for UI plugins to manage their states.
+typedef QVector<QVariant> UISizeVector;
+
+/*! Interface for UI plugins to manage their states.
  *
  * The manager is able to track if changes appear and only persists them in this case.
  * That mean any not moved splitter handle will not be persisted, and % based sizes
@@ -61,9 +63,6 @@ namespace GammaRay {
  * Do not store size related things or native Qt save/restore states here, that's the role
  * of UIStateManager itself.
  */
-
-typedef QVector<QVariant> UISizeVector;
-
 class GAMMARAY_UI_EXPORT UIStateManager : public QObject
 {
     Q_OBJECT
@@ -91,6 +90,7 @@ public slots:
     virtual void saveState();
 
 protected:
+    ///@cond internal
     bool eventFilter(QObject *object, QEvent *event) override;
 
     QString widgetName(QWidget *widget) const;
@@ -108,6 +108,7 @@ protected slots:
     void saveSplitterState(QSplitter *splitter = nullptr);
     void restoreHeaderState(QHeaderView *header = nullptr);
     void saveHeaderState(QHeaderView *header = nullptr);
+    ///@endcond
 
 private:
     QPointer<QWidget> m_widget;
