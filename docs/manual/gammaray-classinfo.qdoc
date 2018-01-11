@@ -1,0 +1,39 @@
+/*
+    gammaray-classinfo.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage {Enums and Flags}
+    \nextpage {Stack Trace}
+    \page gammaray-classinfo.html
+
+    \title Class Info
+
+    \section1 Overview
+
+    The class info view is available for all QObject and QMetaObject instances and shows per-class information defined
+    in the corresponding QMetaClassInfo instance.
+
+    \image gammaray-classinfo.png
+
+    The class info view shows the following information:
+    \list
+        \li The name of the class information.
+        \li The value of the class information.
+        \li The class or namespace in which the class information has been declared.
+    \endlist
+*/

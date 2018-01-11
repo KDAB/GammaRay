@@ -18,7 +18,7 @@
 /*!
     \contentspage {GammaRay User Manual}
     \previouspage {Connections}
-    \nextpage {Stack Trace}
+    \nextpage {Class Info}
     \page gammaray-enums.html
 
     \title Enums and Flags
@@ -30,7 +30,7 @@
 
     \image gammaray-enums.png
 
-    The enums and flags view shows to levels of information. On the top-level you see the list of all
+    The enums and flags view shows two levels of information. On the top-level you see the list of all
     enums and flags listed in the corresponding QMetaObject, in particular:
     \list
         \li The name of the enum or flag.
