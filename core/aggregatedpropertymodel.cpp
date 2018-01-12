@@ -143,6 +143,8 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex &index) 
     if (index.column() == 1) {
         res.insert(Qt::EditRole, data(adaptor, d, index.column(), Qt::EditRole));
         res.insert(Qt::DecorationRole, data(adaptor, d, index.column(), Qt::DecorationRole));
+        if (d.value().type() == QVariant::Bool)
+            res.insert(Qt::CheckStateRole, data(adaptor, d, index.column(), Qt::CheckStateRole));
     }
     return res;
 }
@@ -162,6 +164,8 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
             const QString enumStr = EnumUtil::enumToString(d.value(), d.typeName().toLatin1(), adaptor->object().metaObject());
             if (!enumStr.isEmpty())
                 return enumStr;
+            if (d.value().type() == QVariant::Bool && (d.flags() & PropertyData::Writable))
+                return QVariant();
             return VariantHandler::displayString(d.value());
         }
         case 2:
@@ -185,6 +189,10 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
     case Qt::DecorationRole:
         if (column == 1)
             return VariantHandler::decoration(d.value());
+        break;
+    case Qt::CheckStateRole:
+        if (column == 1 && d.value().type() == QVariant::Bool && (d.flags() & PropertyData::Writable))
+            return d.value().toBool() ? Qt::Checked : Qt::Unchecked;
         break;
     case PropertyModel::ActionRole:
     {
@@ -237,6 +245,10 @@ bool AggregatedPropertyModel::setData(const QModelIndex &index, const QVariant &
         propagateWrite(adaptor);
         return true;
     }
+    case Qt::CheckStateRole:
+        adaptor->writeProperty(index.row(), value.toInt() == Qt::Checked);
+        propagateWrite(adaptor);
+        return true;
     case PropertyModel::ResetActionRole:
         adaptor->resetProperty(index.row());
         return true;
@@ -283,8 +295,10 @@ Qt::ItemFlags AggregatedPropertyModel::flags(const QModelIndex &index) const
 
     auto adaptor = adaptorForIndex(index);
     auto data = adaptor->propertyData(index.row());
-    // we can't edit value types (yet)
     const auto editable = (data.flags() & PropertyData::Writable) && isParentEditable(adaptor);
+    const auto booleanEditable = editable && data.value().type() == QVariant::Bool;
+    if (booleanEditable)
+        return baseFlags | Qt::ItemIsUserCheckable;
     return editable ? (baseFlags | Qt::ItemIsEditable) : baseFlags;
 }
 
