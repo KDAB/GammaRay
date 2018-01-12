@@ -28,7 +28,6 @@
 
 #include "translatorwrapper.h"
 
-#include <QFont>
 #include <QItemSelection>
 
 using namespace GammaRay;
