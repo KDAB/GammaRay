@@ -4,6 +4,7 @@ in VertexFormat {
     vec3 position;
     vec3 normal;
     noperspective vec3 edgeDistance;
+    vec4 color;
 } fs_in;
 
 out vec4 fragColor;
@@ -33,6 +34,8 @@ uniform float shininess = 25; // Specular shininess factor
 
 uniform float lineWidth = 0.4;
 uniform vec4 lineColor = vec4(0.4, 1.0, 0.8, 1.0);
+
+uniform int shadingMode = 0;
 
 vec3 adsModel( const in vec3 pos, const in vec3 normal )
 {
@@ -66,10 +69,14 @@ void main()
 {
     // Calculate the color from the phong model
     vec4 color;
-    if (gl_FrontFacing)
-        color = vec4( adsModel( fs_in.position, normalize( fs_in.normal ) ), 1.0 );
-    else
+    if (gl_FrontFacing) {
+        if (shadingMode == 1)
+            color = vec4( adsModel( fs_in.position, normalize( fs_in.normal ) ), 1.0 );
+        else
+            color = fs_in.color;
+    } else {
         color = vec4(1.0, 0.0, 0.0, 1.0);
+    }
 
     // Find the smallest distance between the fragment and a triangle edge
     float d = min( fs_in.edgeDistance.x, fs_in.edgeDistance.y );

@@ -49,6 +49,7 @@ class QGeometryRenderer;
 class QParameter;
 class QRenderPass;
 }
+class QComboBox;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -81,6 +82,7 @@ private:
                                const QByteArray &bufferData);
 
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
+    QComboBox *m_shadingModeCombo;
     Qt3DGeometryExtensionInterface *m_interface;
 
     QWindow *m_surface;
@@ -91,6 +93,7 @@ private:
     Qt3DRender::QCullFace *m_cullMode;
     Qt3DRender::QRenderPass *m_normalsRenderPass;
     Qt3DRender::QParameter *m_normalLength;
+    Qt3DRender::QParameter *m_shadingMode;
     BoundingVolume m_boundingVolume;
 
     BufferModel *m_bufferModel;

@@ -73,6 +73,16 @@
 
 using namespace GammaRay;
 
+// ### keep in sync with wireframe.vert/wireframe.frag
+enum ShadingMode {
+    ShadingModeFlat = 0,
+    ShadingModePhong = 1,
+    ShadingModeTexture = 2,
+    ShadingModeNormal = 3,
+    ShadingModeTangent = 4,
+    ShadingModeColor = 5
+};
+
 Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Qt3DGeometryTab)
@@ -84,6 +94,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     , m_cullMode(nullptr)
     , m_normalsRenderPass(nullptr)
     , m_normalLength(nullptr)
+    , m_shadingMode(nullptr)
     , m_bufferModel(new BufferModel(this))
 {
     ui->setupUi(this);
@@ -98,6 +109,11 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     toolbar->addAction(ui->actionShowNormals);
     toolbar->addAction(ui->actionShowTangents);
     toolbar->addAction(ui->actionCullBack);
+    toolbar->addSeparator();
+    toolbar->addWidget(new QLabel(tr("Shading:"), toolbar));
+    m_shadingModeCombo = new QComboBox(toolbar);
+    m_shadingModeCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+    toolbar->addWidget(m_shadingModeCombo);
 
     connect(ui->actionResetCam, &QAction::triggered, this, &Qt3DGeometryTab::resetCamera);
 
@@ -110,7 +126,12 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
         if (m_cullMode) {
             m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back :
                                 Qt3DRender::QCullFace::NoCulling);
-            }
+        }
+    });
+    connect(m_shadingModeCombo, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [this]() {
+        if (m_shadingMode && m_geometryRenderer->geometry() && m_shadingModeCombo->currentData().isValid()) {
+            m_shadingMode->setValue(m_shadingModeCombo->currentData());
+        }
     });
 
     auto viewGroup = new QActionGroup(this);
@@ -226,9 +247,11 @@ Qt3DCore::QComponent *Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
     auto material = new Qt3DRender::QMaterial(parent);
 
     // wireframe render pass
+    m_shadingMode = new Qt3DRender::QParameter(QStringLiteral("shadingMode"), m_shadingModeCombo->currentData(), material);
+    material->addParameter(m_shadingMode);
     auto wireframeShader = new Qt3DRender::QShaderProgram;
     wireframeShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
-                                                                                         "qrc:/gammaray/qt3dinspector/geometryextension/passthrough.vert"))));
+                                                                                         "qrc:/gammaray/qt3dinspector/geometryextension/wireframe.vert"))));
     wireframeShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(
                                                                                       QStringLiteral(
                                                                                           "qrc:/gammaray/qt3dinspector/geometryextension/wireframe.geom"))));
@@ -333,6 +356,9 @@ void Qt3DGeometryTab::updateGeometry()
     ui->actionShowNormals->setEnabled(false);
     ui->actionShowTangents->setEnabled(false);
     ui->bufferBox->clear();
+    const auto prevShadingMode = m_shadingModeCombo->currentData();
+    m_shadingModeCombo->clear();
+    m_shadingModeCombo->addItem(tr("Flat"), 0);
 
     if (!m_geometryRenderer)
         return;
@@ -340,7 +366,7 @@ void Qt3DGeometryTab::updateGeometry()
     const auto geo = m_interface->geometryData();
     m_bufferModel->setGeometryData(geo);
 
-    auto geometry = new Qt3DRender::QGeometry(m_geometryRenderer);
+    auto geometry = new Qt3DRender::QGeometry();
     QVector<Qt3DRender::QBuffer *> buffers;
     buffers.reserve(geo.buffers.size());
     for (const auto &bufferData : geo.buffers) {
@@ -369,12 +395,38 @@ void Qt3DGeometryTab::updateGeometry()
             normalAttr->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
             geometry->addAttribute(normalAttr);
             ui->actionShowNormals->setEnabled(true);
+            m_shadingModeCombo->addItem(tr("Phong"), ShadingModePhong);
+            m_shadingModeCombo->addItem(tr("Normal"), ShadingModeNormal);
         } else if (attrData.attributeType == Qt3DRender::QAttribute::IndexAttribute) {
             auto indexAttr = new Qt3DRender::QAttribute();
             indexAttr->setAttributeType(Qt3DRender::QAttribute::IndexAttribute);
             indexAttr->setBuffer(buffers.at(attrData.bufferIndex));
             setupAttribute(indexAttr, attrData);
             geometry->addAttribute(indexAttr);
+        } else if (attrData.name == Qt3DRender::QAttribute::defaultTextureCoordinateAttributeName()) {
+            auto texCoordAttr = new Qt3DRender::QAttribute();
+            texCoordAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+            texCoordAttr->setBuffer(buffers.at(attrData.bufferIndex));
+            setupAttribute(texCoordAttr, attrData);
+            texCoordAttr->setName(Qt3DRender::QAttribute::defaultTextureCoordinateAttributeName());
+            geometry->addAttribute(texCoordAttr);
+            m_shadingModeCombo->addItem(tr("Texture Coordinate"), ShadingModeTexture);
+        } else if (attrData.name == Qt3DRender::QAttribute::defaultTangentAttributeName()) {
+            auto tangentAttr = new Qt3DRender::QAttribute();
+            tangentAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+            tangentAttr->setBuffer(buffers.at(attrData.bufferIndex));
+            setupAttribute(tangentAttr, attrData);
+            tangentAttr->setName(Qt3DRender::QAttribute::defaultTangentAttributeName());
+            geometry->addAttribute(tangentAttr);
+            m_shadingModeCombo->addItem(tr("Tangent"), ShadingModeTangent);
+        } else if (attrData.name == Qt3DRender::QAttribute::defaultColorAttributeName()) {
+            auto colorAttr = new Qt3DRender::QAttribute();
+            colorAttr->setAttributeType(Qt3DRender::QAttribute::VertexAttribute);
+            colorAttr->setBuffer(buffers.at(attrData.bufferIndex));
+            setupAttribute(colorAttr, attrData);
+            colorAttr->setName(Qt3DRender::QAttribute::defaultColorAttributeName());
+            geometry->addAttribute(colorAttr);
+            m_shadingModeCombo->addItem(tr("Color"), ShadingModeColor);
         }
     }
 
@@ -386,6 +438,10 @@ void Qt3DGeometryTab::updateGeometry()
     auto oldGeometry = m_geometryRenderer->geometry();
     m_geometryRenderer->setGeometry(geometry);
     delete oldGeometry;
+
+    const auto prevShadingModeIdx = m_shadingModeCombo->findData(prevShadingMode);
+    if (prevShadingModeIdx >= 0)
+        m_shadingModeCombo->setCurrentIndex(prevShadingModeIdx);
 
     resetCamera();
 }

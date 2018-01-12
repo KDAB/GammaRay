@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="gammaray/qt3dinspector">
     <file>geometryextension/passthrough.vert</file>
+    <file>geometryextension/wireframe.vert</file>
     <file>geometryextension/wireframe.geom</file>
     <file>geometryextension/wireframe.frag</file>
     <file>geometryextension/normals.geom</file>

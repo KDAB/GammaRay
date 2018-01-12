@@ -6,12 +6,14 @@ layout (triangle_strip, max_vertices = 3) out;
 in VertexFormat {
     vec3 position;
     vec3 normal;
+    vec4 color;
 } gs_in[];
 
 out VertexFormat {
     vec3 position;
     vec3 normal;
     noperspective vec3 edgeDistance;
+    vec4 color;
 } gs_out;
 
 uniform mat4 viewportMatrix;
@@ -44,6 +46,7 @@ void main()
     gs_out.edgeDistance = vec3( ha, 0, 0 );
     gs_out.normal = gs_in[0].normal;
     gs_out.position = gs_in[0].position;
+    gs_out.color = gs_in[0].color;
     gl_Position = gl_in[0].gl_Position;
     EmitVertex();
 
@@ -51,6 +54,7 @@ void main()
     gs_out.edgeDistance = vec3( 0, hb, 0 );
     gs_out.normal = gs_in[1].normal;
     gs_out.position = gs_in[1].position;
+    gs_out.color = gs_in[1].color;
     gl_Position = gl_in[1].gl_Position;
     EmitVertex();
 
@@ -58,6 +62,7 @@ void main()
     gs_out.edgeDistance = vec3( 0, 0, hc );
     gs_out.normal = gs_in[2].normal;
     gs_out.position = gs_in[2].position;
+    gs_out.color = gs_in[2].color;
     gl_Position = gl_in[2].gl_Position;
     EmitVertex();
 
