@@ -10,12 +10,12 @@ endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)
-  qt5_wrap_ui(translatorinspector_ui_srcs
-    translatorinspectorwidget.ui
-  )
   gammaray_add_plugin(gammaray_translatorinspector_ui
     JSON gammaray_translatorinspector.json
-    SOURCES translatorinspectorwidget.cpp translatorinspectorinterface.cpp ${translatorinspector_ui_srcs}
+    SOURCES
+        translatorinspectorwidget.cpp
+        translatorinspectorinterface.cpp
+        translatorwrapperproxy.cpp
   )
   target_link_libraries(gammaray_translatorinspector_ui gammaray_ui)
 endif()

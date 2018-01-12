@@ -92,23 +92,6 @@ bool TranslationsModel::setData(const QModelIndex &index, const QVariant &value,
     return false;
 }
 
-QVariant TranslationsModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch (section) {
-        case 0:
-            return tr("Context");
-        case 1:
-            return tr("Source Text");
-        case 2:
-            return tr("Disambiguation");
-        case 3:
-            return tr("Translation");
-        }
-    }
-    return QVariant();
-}
-
 Qt::ItemFlags TranslationsModel::flags(const QModelIndex &index) const
 {
     const auto f = QAbstractTableModel::flags(index);

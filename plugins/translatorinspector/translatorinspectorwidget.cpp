@@ -29,7 +29,7 @@
 #include "translatorinspectorwidget.h"
 #include "ui_translatorinspectorwidget.h"
 #include "translatorsmodel.h" // use only for its role enums
-#include "translatorwrapper.h" // use only for its role enums
+#include "translatorwrapperproxy.h"
 
 #include <ui/contextmenuextension.h>
 #include <ui/searchlinecontroller.h>
@@ -42,29 +42,6 @@
 #include <QIdentityProxyModel>
 
 using namespace GammaRay;
-
-class TranslatorWrapperProxy : public QIdentityProxyModel
-{
-public:
-    explicit TranslatorWrapperProxy(QObject *parent = nullptr)
-        : QIdentityProxyModel(parent)
-    { }
-
-    QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const override
-    {
-        if (hasIndex(proxyIndex.row(), proxyIndex.column(), proxyIndex.parent())) {
-            if (role == Qt::FontRole) {
-                const bool overridden = proxyIndex.sibling(proxyIndex.row(), 3)
-                        .data(TranslationsModel::IsOverriddenRole).toBool();
-                QFont font;
-                font.setItalic(overridden);
-                return font;
-            }
-        }
-
-        return QIdentityProxyModel::data(proxyIndex, role);
-    }
-};
 
 TranslatorInspectorClient::TranslatorInspectorClient(const QString &name, QObject *parent)
     : TranslatorInspectorInterface(name, parent)
