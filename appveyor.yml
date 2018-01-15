@@ -18,7 +18,7 @@ init:
 install:
 - ps: |
     #use cmd to silence powershell behaviour for stderr
-    & cmd /C "git clone -q --branch v0.2.2 --depth=1 git://anongit.kde.org/craftmaster.git C:\CraftMaster\CraftMaster 2>&1"
+    & cmd /C "git clone -q --depth=1 git://anongit.kde.org/craftmaster.git C:\CraftMaster\CraftMaster 2>&1"
     & C:\python36\python.exe C:\CraftMaster\CraftMaster\CraftMaster.py --config "$env:APPVEYOR_BUILD_FOLDER\appveyor.ini" --variables "APPVEYOR_BUILD_FOLDER=$env:APPVEYOR_BUILD_FOLDER" --target $env:TARGET
     craft -p gammaray
     craft nsis
@@ -57,4 +57,5 @@ artifacts:
 
 deploy:
     - provider: Environment
-      name: kdab
+      name: kdab2
+      folder: gammaray
