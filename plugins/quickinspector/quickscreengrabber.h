@@ -26,16 +26,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_QUICKINSPECTOR_SCENEGRABBER_H
-#define GAMMARAY_QUICKINSPECTOR_SCENEGRABBER_H
+#ifndef GAMMARAY_QUICKINSPECTOR_QUICKSCREENGRABBER_H
+#define GAMMARAY_QUICKINSPECTOR_QUICKSCREENGRABBER_H
+
+#include "quickdecorationsdrawer.h"
 
 #include <QObject>
 #include <QPointer>
 #include <QQuickItem>
 #include <QMutex>
-#include <memory>
 
-#include "quickdecorationsdrawer.h"
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 class QQuickWindow;
@@ -61,20 +62,44 @@ public:
     bool isVisible() const;
     QPointF pos() const;
 
-    inline bool isNull() const { return !m_object; }
-    inline QQuickItem* data() { return m_object; }
-    inline QQuickItem* operator->() const { Q_ASSERT(!isNull()); return m_object; }
-    inline void clear() { m_object = nullptr; }
+    inline bool isNull() const
+    {
+        return !m_object;
+    }
+
+    inline QQuickItem *data()
+    {
+        return m_object;
+    }
+
+    inline QQuickItem *operator->() const
+    {
+        Q_ASSERT(!isNull());
+        return m_object;
+    }
+
+    inline void clear()
+    {
+        m_object = nullptr;
+    }
 
 private:
     bool isLayout() const;
-    inline QQuickItem *asLayout() const { return m_object; }
-    inline QQuickItem *asItem() const { return m_object; }
+    inline QQuickItem *asLayout() const
+    {
+        return m_object;
+    }
+
+    inline QQuickItem *asItem() const
+    {
+        return m_object;
+    }
 
     QPointer<QQuickItem> m_object;
 };
 
-class GrabbedFrame {
+class GrabbedFrame
+{
 public:
     QImage image;
     QTransform transform;
@@ -98,7 +123,8 @@ public:
         RenderInfo()
             : dpr(qQNaN())
             , graphicsApi(Unknown)
-        { }
+        {
+        }
 
         qreal dpr;
         QSize windowSize;
