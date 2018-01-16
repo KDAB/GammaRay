@@ -37,6 +37,10 @@ uniform vec4 lineColor = vec4(0.4, 1.0, 0.8, 1.0);
 
 uniform int shadingMode = 0;
 
+const int ShadingModePhong = 1;
+const int ShadingModeWireframe = 6;
+
+
 vec3 adsModel( const in vec3 pos, const in vec3 normal )
 {
     // Calculate the vector from the fragment to the light
@@ -67,15 +71,17 @@ vec3 adsModel( const in vec3 pos, const in vec3 normal )
 
 void main()
 {
-    // Calculate the color from the phong model
     vec4 color;
     if (gl_FrontFacing) {
-        if (shadingMode == 1)
+        if (shadingMode == ShadingModePhong)
             color = vec4( adsModel( fs_in.position, normalize( fs_in.normal ) ), 1.0 );
         else
             color = fs_in.color;
     } else {
-        color = vec4(1.0, 0.0, 0.0, 1.0);
+        if (shadingMode == ShadingModeWireframe)
+            color = fs_in.color;
+        else
+            color = vec4(1.0, 0.0, 0.0, 1.0);
     }
 
     // Find the smallest distance between the fragment and a triangle edge

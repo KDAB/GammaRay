@@ -40,6 +40,8 @@
 #include <Qt3DExtras/QForwardRenderer>
 
 #include <Qt3DRender/QAttribute>
+#include <Qt3DRender/QBlendEquation>
+#include <Qt3DRender/QBlendEquationArguments>
 #include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QCullFace>
@@ -80,7 +82,8 @@ enum ShadingMode {
     ShadingModeTexture = 2,
     ShadingModeNormal = 3,
     ShadingModeTangent = 4,
-    ShadingModeColor = 5
+    ShadingModeColor = 5,
+    ShadingModeWireframe = 6
 };
 
 Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
@@ -92,6 +95,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     , m_geometryRenderer(nullptr)
     , m_geometryTransform(nullptr)
     , m_cullMode(nullptr)
+    , m_depthTest(nullptr)
     , m_normalsRenderPass(nullptr)
     , m_normalLength(nullptr)
     , m_shadingMode(nullptr)
@@ -129,8 +133,19 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
         }
     });
     connect(m_shadingModeCombo, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [this]() {
-        if (m_shadingMode && m_geometryRenderer->geometry() && m_shadingModeCombo->currentData().isValid()) {
-            m_shadingMode->setValue(m_shadingModeCombo->currentData());
+        const auto shadingMode = m_shadingModeCombo->currentData();
+        if (!shadingMode.isValid() || !m_shadingMode || !m_cullMode)
+            return;
+        m_shadingMode->setValue(shadingMode);
+        if (shadingMode.toInt() == ShadingModeWireframe) {
+            ui->actionCullBack->setEnabled(false);
+            m_cullMode->setMode(Qt3DRender::QCullFace::NoCulling);
+            m_depthTest->setDepthFunction(Qt3DRender::QDepthTest::Always);
+        } else {
+            ui->actionCullBack->setEnabled(true);
+            m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back :
+                                Qt3DRender::QCullFace::NoCulling);
+            m_depthTest->setDepthFunction(Qt3DRender::QDepthTest::Less);
         }
     });
 
@@ -199,6 +214,19 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     renderSettings->setActiveFrameGraph(forwardRenderer);
     rootEntity->addComponent(renderSettings);
 
+    auto skyboxEntity = new Qt3DCore::QEntity(rootEntity);
+    auto skyBoxGeometry = new Qt3DExtras::QCuboidMesh;
+    skyBoxGeometry->setXYMeshResolution(QSize(2, 2));
+    skyBoxGeometry->setXZMeshResolution(QSize(2, 2));
+    skyBoxGeometry->setYZMeshResolution(QSize(2, 2));
+    auto skyboxTransform = new Qt3DCore::QTransform;
+    skyboxTransform->setTranslation(m_camera->position());
+    connect(m_camera, &Qt3DRender::QCamera::positionChanged, skyboxTransform,
+            &Qt3DCore::QTransform::setTranslation);
+    skyboxEntity->addComponent(skyBoxGeometry);
+    skyboxEntity->addComponent(createSkyboxMaterial(rootEntity));
+    skyboxEntity->addComponent(skyboxTransform);
+
     auto geometryEntity = new Qt3DCore::QEntity(rootEntity);
     m_geometryRenderer = new Qt3DRender::QGeometryRenderer;
     geometryEntity->addComponent(m_geometryRenderer);
@@ -214,19 +242,6 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     lightTransform->setTranslation(m_camera->position());
     connect(m_camera, &Qt3DRender::QCamera::positionChanged, lightTransform, &Qt3DCore::QTransform::setTranslation);
     lightEntity->addComponent(lightTransform);
-
-    auto skyboxEntity = new Qt3DCore::QEntity(rootEntity);
-    auto skyBoxGeometry = new Qt3DExtras::QCuboidMesh;
-    skyBoxGeometry->setXYMeshResolution(QSize(2, 2));
-    skyBoxGeometry->setXZMeshResolution(QSize(2, 2));
-    skyBoxGeometry->setYZMeshResolution(QSize(2, 2));
-    auto skyboxTransform = new Qt3DCore::QTransform;
-    skyboxTransform->setTranslation(m_camera->position());
-    connect(m_camera, &Qt3DRender::QCamera::positionChanged, skyboxTransform,
-            &Qt3DCore::QTransform::setTranslation);
-    skyboxEntity->addComponent(skyBoxGeometry);
-    skyboxEntity->addComponent(createSkyboxMaterial(rootEntity));
-    skyboxEntity->addComponent(skyboxTransform);
 
     // input handling
     m_aspectEngine->registerAspect(new Qt3DLogic::QLogicAspect);
@@ -265,6 +280,19 @@ Qt3DCore::QComponent *Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
     m_cullMode->setMode(
         ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back : Qt3DRender::QCullFace::NoCulling);
     wireframeRenderPass->addRenderState(m_cullMode);
+
+    auto blendEquationArgs = new Qt3DRender::QBlendEquationArguments(wireframeRenderPass);
+    blendEquationArgs->setSourceRgb(Qt3DRender::QBlendEquationArguments::SourceAlpha);
+    blendEquationArgs->setDestinationRgb(Qt3DRender::QBlendEquationArguments::OneMinusSourceAlpha);
+    wireframeRenderPass->addRenderState(blendEquationArgs);
+    auto blendEquation = new Qt3DRender::QBlendEquation(wireframeRenderPass);
+    blendEquation->setBlendFunction(Qt3DRender::QBlendEquation::Add);
+    wireframeRenderPass->addRenderState(blendEquation);
+
+    m_depthTest = new Qt3DRender::QDepthTest(wireframeRenderPass);
+    m_depthTest->setDepthFunction(Qt3DRender::QDepthTest::Less);
+    wireframeRenderPass->addRenderState(m_depthTest);
+
 
     // normal render pass
     m_normalLength = new Qt3DRender::QParameter(QStringLiteral("normalLength"), 0.1, material);
@@ -358,7 +386,8 @@ void Qt3DGeometryTab::updateGeometry()
     ui->bufferBox->clear();
     const auto prevShadingMode = m_shadingModeCombo->currentData();
     m_shadingModeCombo->clear();
-    m_shadingModeCombo->addItem(tr("Flat"), 0);
+    m_shadingModeCombo->addItem(tr("Flat"), ShadingModeFlat);
+    m_shadingModeCombo->addItem(tr("Wireframe"), ShadingModeWireframe);
 
     if (!m_geometryRenderer)
         return;

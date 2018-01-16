@@ -24,6 +24,7 @@ const int ShadingModeTexture = 2;
 const int ShadingModeNormal = 3;
 const int ShadingModeTangent = 4;
 const int ShadingModeColor = 5;
+const int ShadingModeWireframe = 6;
 
 void main()
 {
@@ -39,13 +40,16 @@ void main()
             vs_out.color = vec4(0.0, vertexTexCoord.x, vertexTexCoord.y, 1.0);
             break;
         case ShadingModeNormal:
-            vs_out.color = normalize(vec4(vertexNormal.x + 1.0, vertexNormal.y + 1.0, vertexNormal.z + 1.0, 1.0));
+            vs_out.color = vec4(normalize(vertexNormal + vec3(1.0, 1.0, 1.0)), 1.0);
             break;
         case ShadingModeTangent:
-            vs_out.color = normalize(vec4(vertexTangent.x + 1.0, vertexTangent.y + 1.0, vertexTangent.z + 1.0, 1.0));
+            vs_out.color = vec4(normalize(vertexTangent.xyz + vec3(1.0, 1.0, 1.0)), 1.0);
             break;
         case ShadingModeColor:
             vs_out.color = vertexColor;
+            break;
+        case ShadingModeWireframe:
+            vs_out.color = vec4(1.0, 1.0, 1.0, 0.0);
             break;
     }
 

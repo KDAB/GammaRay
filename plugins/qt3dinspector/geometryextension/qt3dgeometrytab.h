@@ -45,6 +45,7 @@ class QTransform;
 namespace Qt3DRender {
 class QCamera;
 class QCullFace;
+class QDepthTest;
 class QGeometryRenderer;
 class QParameter;
 class QRenderPass;
@@ -91,6 +92,7 @@ private:
     Qt3DRender::QGeometryRenderer *m_geometryRenderer;
     Qt3DCore::QTransform *m_geometryTransform;
     Qt3DRender::QCullFace *m_cullMode;
+    Qt3DRender::QDepthTest *m_depthTest;
     Qt3DRender::QRenderPass *m_normalsRenderPass;
     Qt3DRender::QParameter *m_normalLength;
     Qt3DRender::QParameter *m_shadingMode;
