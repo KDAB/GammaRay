@@ -114,10 +114,10 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     toolbar->addAction(ui->actionShowTangents);
     toolbar->addAction(ui->actionCullBack);
     toolbar->addSeparator();
-    toolbar->addWidget(new QLabel(tr("Shading:"), toolbar));
+    auto shadingModeLabel = toolbar->addWidget(new QLabel(tr("Shading:"), toolbar));
     m_shadingModeCombo = new QComboBox(toolbar);
     m_shadingModeCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-    toolbar->addWidget(m_shadingModeCombo);
+    auto shadingModeAction = toolbar->addWidget(m_shadingModeCombo);
 
     connect(ui->actionResetCam, &QAction::triggered, this, &Qt3DGeometryTab::resetCamera);
 
@@ -153,13 +153,15 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     viewGroup->setExclusive(true);
     viewGroup->addAction(ui->actionViewGeometry);
     viewGroup->addAction(ui->actionViewBuffers);
-    connect(viewGroup, &QActionGroup::triggered, this, [this]() {
+    connect(viewGroup, &QActionGroup::triggered, this, [this, shadingModeLabel, shadingModeAction]() {
         const auto geoView = ui->actionViewGeometry->isChecked();
         ui->stackedWidget->setCurrentWidget(geoView ? ui->geometryPage : ui->bufferPage);
         ui->actionResetCam->setVisible(geoView);
         ui->actionShowNormals->setVisible(geoView);
         ui->actionShowTangents->setVisible(geoView);
         ui->actionCullBack->setVisible(geoView);
+        shadingModeLabel->setVisible(geoView);
+        shadingModeAction->setVisible(geoView);
     });
 
     ui->bufferView->setModel(m_bufferModel);
