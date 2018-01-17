@@ -65,6 +65,26 @@
 
     Vertex normals are shown in blue, face normals are shown in yellow.
 
+    \section2 Diagnostic Shading Modes
+
+    The 3D geometry view can use a number of different diagnostic shading modes to highlight specific aspects
+    of the vertex data. Some shading modes depend on the availability of specific vertex data (such as normals,
+    texture coordinates or tangents), and are only selectable if corresponding vertex attributes exist.
+
+    \list
+        \li \uicontrol{Wireframe}: No shading is applied to faces, allowing you to see through the model.
+        \li \uicontrol{Flat}: Just colors faces with a solid color.
+        \li \uicontrol{Phong}: Basic phong shading is applied, which can help to validate correctness of vertex normal data.
+        \li \uicontrol{Texture Coordinates}: Uses the vertex texture coordinates for the green and blue color channels.
+        \li \uicontrol{Normal}: Uses the vertex normal as the vertex color. This is useful to spot discontinuities in surface normals.
+        \li \uicontrol{Tangent}: Uses the x, y and z component of the vertex tangent and vertex color.
+        \li \uicontrol{Color}: Uses the vertex color attribute for shading.
+    \endlist
+
+    \image gammaray-qt3d-geometry-diagnostic-shading.png
+
+    The diagnostic shading mode can be selected using the \uicontrol{Shading} combobox in the toolbar.
+
     \section2 Raw Buffer View
 
     You can switch to the raw buffer view in the toolbar on top of the \l{Qt 3D} geometry inspection view.
@@ -79,7 +99,7 @@
 
     \section1 Examples
 
-    The following examples make use of the Qt3D geometry inspector:
+    The following examples make use of the \l{Qt 3D} geometry inspector:
     \list
         \li \l{qt3d-geometry}
     \endlist

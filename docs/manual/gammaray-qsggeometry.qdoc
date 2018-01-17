@@ -35,7 +35,7 @@
     vertex preview on the right side.
 
     The raw vertex data table shows one line per vertex, the available columns depend on the specific
-    data layout of the corresponding scene graph node. Typically this includex at least the vertex
+    data layout of the corresponding scene graph node. Typically this includes at least the vertex
     position (named "vertex") and the vertex color. One or multiple vertices can be selected, the selection
     is also shown in the vertex preview on the right.
 
