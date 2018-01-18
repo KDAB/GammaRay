@@ -93,6 +93,7 @@
 #include <private/qquickopenglshadereffectnode_p.h>
 #include <private/qsgsoftwarecontext_p.h>
 #include <private/qsgsoftwarerenderer_p.h>
+#include <private/qsgsoftwarerenderablenode_p.h>
 #endif
 
 #include <private/qquickanchors_p.h>
@@ -668,6 +669,9 @@ void QuickInspector::checkOverlaySettings()
 class SGSoftwareRendererPrivacyViolater : public QSGAbstractSoftwareRenderer
 {
 public:
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+    using QSGAbstractSoftwareRenderer::renderableNodes;
+#endif
     using QSGAbstractSoftwareRenderer::renderNodes;
     using QSGAbstractSoftwareRenderer::buildRenderList;
     using QSGAbstractSoftwareRenderer::optimizeRenderList;
@@ -695,7 +699,23 @@ void QuickInspector::analyzePainting()
         renderer->markDirty();
         renderer->buildRenderList();
         renderer->optimizeRenderList();
+#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
         renderer->renderNodes(&painter);
+#else
+        auto iterator = renderer->renderableNodes().begin();
+        // First node is the background and needs to painted without blending
+        auto backgroundNode = *iterator;
+        backgroundNode->renderNode(&painter, /*force opaque painting*/ true);
+        iterator++;
+
+        for (; iterator != renderer->renderableNodes().end(); ++iterator) {
+            auto node = *iterator;
+            QQuickItem *origin = m_sgModel->itemForSgNode(node->handle());
+            m_paintAnalyzer->setOrigin(ObjectId(origin));
+            node->renderNode(&painter);
+        }
+#endif
+
         rc->m_activePainter = prevPainter;
     }
     m_paintAnalyzer->endAnalyzePainting();

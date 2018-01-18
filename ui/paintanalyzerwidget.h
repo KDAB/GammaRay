@@ -51,6 +51,7 @@ public:
 
 private slots:
     void detailsChanged();
+    void commandContextMenu(QPoint pos);
     void stackTraceContextMenu(QPoint pos);
 
 private:

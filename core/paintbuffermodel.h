@@ -58,6 +58,7 @@ public:
     void setCosts(const QVector<double> &costs);
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 

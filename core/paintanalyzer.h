@@ -31,6 +31,7 @@
 
 #include "gammaray_core_export.h"
 
+#include <common/objectid.h>
 #include <core/objectinstance.h>
 
 #include <common/paintanalyzerinterface.h>
@@ -64,8 +65,15 @@ public:
     QPaintDevice *paintDevice() const;
     void endAnalyzePainting();
 
+
     /** Returns @c true if paint analysis is available (needs access to Qt private headers at compile time). */
     static bool isAvailable();
+
+    /**
+     * Marks all following paint operations to origin from the given QWidget/QQuickItem
+     * until this is called with another object.
+     */
+    void setOrigin(ObjectId obj);
 
 private slots:
     void repaint();
