@@ -267,9 +267,6 @@ QString VariantHandler::displayString(const QVariant &value)
                .arg(margins.right()).arg(margins.bottom());
     }
 
-    if (value.canConvert<QObject *>())
-        return Util::displayString(value.value<QObject *>());
-
     if (value.userType() == qMetaTypeId<const QMetaObject *>()) {
         const auto mo = value.value<const QMetaObject *>();
         if (!mo)
@@ -341,6 +338,27 @@ QString VariantHandler::displayString(const QVariant &value)
         const QString s = converter(value, &ok);
         if (ok)
             return s;
+    }
+
+    // catch-all QObject handler
+    // search the entire hierarchy for custom converters, so we can override this
+    // for entire sub-trees
+    if (value.canConvert<QObject*>()) {
+        const auto obj = value.value<QObject*>();
+        if (!obj || obj->metaObject() == &QObject::staticMetaObject)
+            return Util::displayString(obj);
+
+        auto mo = value.value<QObject*>()->metaObject()->superClass();
+        while (mo) {
+            auto type = QMetaType::type(QByteArray(mo->className()) + "*");
+            if (type > 0) {
+                auto it = s_variantHandlerRepository()->stringConverters.constFind(type);
+                if (it != s_variantHandlerRepository()->stringConverters.constEnd())
+                    return (*it.value())(value);
+            }
+            mo = mo->superClass();
+        }
+        return Util::displayString(value.value<QObject*>());
     }
 
     return value.toString();
