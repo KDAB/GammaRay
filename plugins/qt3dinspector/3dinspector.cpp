@@ -37,19 +37,27 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/propertycontroller.h>
 #include <core/remote/serverproxymodel.h>
+#include <core/varianthandler.h>
 
 #include <common/modelevent.h>
 #include <common/objectbroker.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
+#include <Qt3DRender/QAbstractTexture>
+#include <Qt3DRender/QAbstractTextureImage>
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QEffect>
 #include <Qt3DRender/QFrameGraphNode>
+#include <Qt3DRender/QGeometry>
 #include <Qt3DRender/QGraphicsApiFilter>
+#include <Qt3DRender/QMaterial>
+#include <Qt3DRender/QParameter>
 #include <Qt3DRender/QRenderSettings>
+#include <Qt3DRender/QTechnique>
+#include <Qt3DRender/QTextureWrapMode>
 
 #include <Qt3DInput/QAbstractPhysicalDevice>
 
@@ -267,14 +275,110 @@ void Qt3DInspector::registerInputMetaTypes()
     qRegisterMetaType<Qt3DInput::QAbstractPhysicalDevice*>();
 }
 
+static QString attributeToString(Qt3DRender::QAttribute *attr)
+{
+    if (!attr || attr->name().isEmpty())
+        return Util::displayString(attr);
+    const auto name = ObjectDataProvider::name(attr);
+    if (name.isEmpty())
+        return attr->name() + QLatin1String(" [") + Util::addressToString(attr) + QLatin1Char(']');
+    return Util::displayString(attr);
+}
+
+static QString filterKeyToString(Qt3DRender::QFilterKey *key)
+{
+    if (!key || key->name().isEmpty())
+        return Util::displayString(key);
+    const auto value = VariantHandler::displayString(key->value());
+    if (value.isEmpty())
+        return Util::displayString(key);
+    return key->name() + QLatin1String(" = ") + value;
+}
+
+static QString graphicsApiFilterToString(Qt3DRender::QGraphicsApiFilter *filter)
+{
+    if (!filter)
+        return Util::displayString(filter);
+
+    using namespace Qt3DRender;
+
+    QString s;
+    switch (filter->api()) {
+        case QGraphicsApiFilter::OpenGLES:
+            s = QStringLiteral("OpenGL ES ");
+            break;
+        case QGraphicsApiFilter::OpenGL:
+            s = QStringLiteral("OpenGL ");
+            break;
+        default:
+            return Util::displayString(filter);
+    }
+    s += QString::fromLatin1("%1.%2").arg(filter->majorVersion()).arg(filter->minorVersion());
+
+    switch (filter->profile()) {
+        case QGraphicsApiFilter::NoProfile:
+            break;
+        case QGraphicsApiFilter::CoreProfile:
+            s += QStringLiteral(" core");
+            break;
+        case QGraphicsApiFilter::CompatibilityProfile:
+            s += QStringLiteral(" compat");
+            break;
+    }
+
+    return s;
+}
+
+static QString parameterToString(Qt3DRender::QParameter *parameter)
+{
+    if (!parameter || parameter->name().isEmpty())
+        return VariantHandler::displayString(parameter);
+    const auto value = VariantHandler::displayString(parameter->value());
+    if (value.isEmpty())
+        return VariantHandler::displayString(parameter);
+    return parameter->name() + QLatin1String(" = ") + value;
+}
+
 void Qt3DInspector::registerRenderMetaTypes()
 {
-    qRegisterMetaType<Qt3DRender::QAttribute *>();
-    qRegisterMetaType<Qt3DRender::QBuffer *>();
-    qRegisterMetaType<Qt3DRender::QCamera *>();
-    qRegisterMetaType<Qt3DRender::QEffect *>();
-    qRegisterMetaType<Qt3DRender::QFrameGraphNode *>();
-    qRegisterMetaType<Qt3DRender::QGraphicsApiFilter *>();
+    qRegisterMetaType<Qt3DRender::QAttribute*>();
+    qRegisterMetaType<Qt3DRender::QBuffer*>();
+    qRegisterMetaType<Qt3DRender::QCamera*>();
+    qRegisterMetaType<Qt3DRender::QEffect*>();
+    qRegisterMetaType<Qt3DRender::QFrameGraphNode*>();
+    qRegisterMetaType<Qt3DRender::QGraphicsApiFilter*>();
+    qRegisterMetaType<Qt3DRender::QTextureWrapMode*>();
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    MetaObject *mo = nullptr;
+    MO_ADD_METAOBJECT1(Qt3DRender::QMaterial, Qt3DCore::QComponent);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QMaterial, parameters);
+
+    MO_ADD_METAOBJECT1(Qt3DRender::QEffect, Qt3DCore::QNode);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QEffect, parameters);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QEffect, techniques);
+
+    MO_ADD_METAOBJECT1(Qt3DRender::QGeometry, Qt3DCore::QNode);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QGeometry, attributes);
+
+    MO_ADD_METAOBJECT1(Qt3DRender::QTechnique, Qt3DCore::QNode);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QTechnique, filterKeys);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QTechnique, parameters);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QTechnique, renderPasses);
+
+    MO_ADD_METAOBJECT1(Qt3DRender::QRenderPass, Qt3DCore::QNode);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QRenderPass, filterKeys);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QRenderPass, parameters);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QRenderPass, renderStates);
+
+    MO_ADD_METAOBJECT1(Qt3DRender::QAbstractTexture, Qt3DCore::QNode);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QAbstractTexture, textureImages);
+#endif
+
+    VariantHandler::registerStringConverter<Qt3DRender::QAttribute*>(attributeToString);
+    VariantHandler::registerStringConverter<Qt3DRender::QFilterKey*>(filterKeyToString);
+    VariantHandler::registerStringConverter<Qt3DRender::QGraphicsApiFilter*>(graphicsApiFilterToString);
+    VariantHandler::registerStringConverter<Qt3DRender::QParameter*>(parameterToString);
 }
 
 void Qt3DInspector::registerExtensions()
