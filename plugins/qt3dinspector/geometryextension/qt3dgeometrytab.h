@@ -48,6 +48,7 @@ class QCullFace;
 class QDepthTest;
 class QGeometryRenderer;
 class QParameter;
+class QPickEvent;
 class QRenderPass;
 }
 class QComboBox;
@@ -81,6 +82,8 @@ private:
     void resetCamera();
     void computeBoundingVolume(const Qt3DGeometryAttributeData &vertexAttr,
                                const QByteArray &bufferData);
+    void trianglePicked(Qt3DRender::QPickEvent *pick);
+    bool isIndexBuffer(unsigned int bufferIndex) const;
 
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
     QComboBox *m_shadingModeCombo;

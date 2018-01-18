@@ -51,6 +51,8 @@
 #include <Qt3DRender/QGeometryRenderer>
 #include <Qt3DRender/QGraphicsApiFilter>
 #include <Qt3DRender/QMaterial>
+#include <Qt3DRender/QObjectPicker>
+#include <Qt3DRender/QPickTriangleEvent>
 #include <Qt3DRender/QPointLight>
 #include <Qt3DRender/QParameter>
 #include <Qt3DRender/QRenderAspect>
@@ -132,7 +134,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
                                 Qt3DRender::QCullFace::NoCulling);
         }
     });
-    connect(m_shadingModeCombo, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [this]() {
+    connect(m_shadingModeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this]() {
         const auto shadingMode = m_shadingModeCombo->currentData();
         if (!shadingMode.isValid() || !m_shadingMode || !m_cullMode)
             return;
@@ -165,8 +167,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     });
 
     ui->bufferView->setModel(m_bufferModel);
-    connect(ui->bufferBox, QOverload<int>::of(
-                &QComboBox::currentIndexChanged), m_bufferModel, &BufferModel::setBufferIndex);
+    connect(ui->bufferBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_bufferModel, &BufferModel::setBufferIndex);
 
     m_surface = new QWindow;
     m_surface->setSurfaceType(QSurface::OpenGLSurface);
@@ -214,6 +215,11 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
 
     auto renderSettings = new Qt3DRender::QRenderSettings;
     renderSettings->setActiveFrameGraph(forwardRenderer);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    renderSettings->pickingSettings()->setFaceOrientationPickingMode(Qt3DRender::QPickingSettings::FrontFace);
+    renderSettings->pickingSettings()->setPickMethod(Qt3DRender::QPickingSettings::TrianglePicking);
+    renderSettings->pickingSettings()->setPickResultMode(Qt3DRender::QPickingSettings::NearestPick);
+#endif
     rootEntity->addComponent(renderSettings);
 
     auto skyboxEntity = new Qt3DCore::QEntity(rootEntity);
@@ -235,6 +241,9 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     geometryEntity->addComponent(createMaterial(rootEntity));
     m_geometryTransform = new Qt3DCore::QTransform;
     geometryEntity->addComponent(m_geometryTransform);
+    auto picker = new Qt3DRender::QObjectPicker;
+    connect(picker, &Qt3DRender::QObjectPicker::clicked, this, &Qt3DGeometryTab::trianglePicked);
+    geometryEntity->addComponent(picker);
     updateGeometry();
 
     auto lightEntity = new Qt3DCore::QEntity(rootEntity);
@@ -521,4 +530,40 @@ void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData &ver
         }
         m_boundingVolume.addPoint(v);
     }
+}
+
+bool Qt3DGeometryTab::isIndexBuffer(unsigned int bufferIndex) const
+{
+    foreach (const auto &attr, m_interface->geometryData().attributes) {
+        if (attr.bufferIndex == bufferIndex)
+            return attr.attributeType == Qt3DRender::QAttribute::IndexAttribute;
+    }
+    return false;
+}
+
+
+void Qt3DGeometryTab::trianglePicked(Qt3DRender::QPickEvent* pick)
+{
+    if (pick->button() != Qt3DRender::QPickEvent::LeftButton)
+        return;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    const auto trianglePick = qobject_cast<Qt3DRender::QPickTriangleEvent*>(pick);
+
+    qDebug() << trianglePick << trianglePick->vertex1Index() << trianglePick->vertex2Index() << trianglePick->vertex3Index() << trianglePick->localIntersection() << trianglePick->triangleIndex() << m_interface->geometryData().buffers.at(ui->bufferBox->currentIndex()).type << ui->bufferBox->currentIndex();
+    auto selModel = ui->bufferView->selectionModel();
+    selModel->clear();
+    if (isIndexBuffer(ui->bufferBox->currentIndex())) {
+        selModel->select(selModel->model()->index(trianglePick->triangleIndex() * 3, 0), QItemSelectionModel::Rows | QItemSelectionModel::Select);
+        selModel->select(selModel->model()->index(trianglePick->triangleIndex() * 3 + 1, 0), QItemSelectionModel::Rows | QItemSelectionModel::Select);
+        selModel->select(selModel->model()->index(trianglePick->triangleIndex() * 3 + 2, 0), QItemSelectionModel::Rows | QItemSelectionModel::Select);
+    } else {
+        // TODO we could pick one here based on pick->localIntersection() and smallest distance to one of the three candidates?
+        selModel->select(selModel->model()->index(trianglePick->vertex1Index(), 0), QItemSelectionModel::Rows | QItemSelectionModel::Select);
+        selModel->select(selModel->model()->index(trianglePick->vertex2Index(), 0), QItemSelectionModel::Rows | QItemSelectionModel::Select);
+        selModel->select(selModel->model()->index(trianglePick->vertex3Index(), 0), QItemSelectionModel::Rows | QItemSelectionModel::Select);
+    }
+
+    foreach (const auto &row, selModel->selectedRows())
+        ui->bufferView->scrollTo(row, QAbstractItemView::EnsureVisible);
+#endif
 }
