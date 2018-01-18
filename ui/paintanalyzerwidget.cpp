@@ -34,6 +34,7 @@
 #include <ui/uiresources.h>
 
 #include <common/paintanalyzerinterface.h>
+#include <common/paintbuffermodelroles.h>
 #include <common/objectbroker.h>
 #include <common/sourcelocation.h>
 
@@ -93,6 +94,7 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     connect(ui->actionShowClipArea, SIGNAL(toggled(bool)), ui->replayWidget, SLOT(setShowClipArea(bool)));
     ui->actionShowClipArea->setChecked(ui->replayWidget->showClipArea());
 
+    connect(ui->commandView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(commandContextMenu(QPoint)));
     connect(ui->stackTraceView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(stackTraceContextMenu(QPoint)));
 }
 
@@ -135,6 +137,20 @@ void PaintAnalyzerWidget::detailsChanged()
 
     ui->detailsTabWidget->setCurrentWidget(m_iface->hasArgumentDetails() ? ui->argumentTab : ui->stackTraceTab);
 #endif
+}
+
+void PaintAnalyzerWidget::commandContextMenu(QPoint pos)
+{
+    const auto idx = ui->commandView->indexAt(pos);
+    if (!idx.isValid())
+        return;
+
+    const auto objectId = idx.data(PaintBufferModelRoles::ObjectIdRole).value<ObjectId>();
+
+    QMenu contextMenu;
+    ContextMenuExtension cme(objectId);
+    cme.populateMenu(&contextMenu);
+    contextMenu.exec(ui->commandView->viewport()->mapToGlobal(pos));
 }
 
 void PaintAnalyzerWidget::stackTraceContextMenu(QPoint pos)

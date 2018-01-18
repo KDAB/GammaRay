@@ -30,6 +30,7 @@
 #define GAMMARAY_PAINTBUFFER_H
 
 #include <config-gammaray.h>
+#include <common/objectid.h>
 #include <QVector>
 
 // prior to 5.5, QPaintBufferEngine is not exported, so we can't inherit it
@@ -105,6 +106,7 @@ public:
 
 private:
     void createStackTrace();
+    void pushOrigin();
 
     GammaRay::PaintBuffer *m_buffer;
 };
@@ -122,8 +124,19 @@ public:
 
     QPaintEngine *paintEngine() const override;
 
+    /**
+     * Marks all following paint operations to origin from the given QWidget/QQuickItem
+     * until this is called with another object.
+     */
+    void setOrigin(ObjectId obj);
+
     /** Returns the stack trace of command at @p index. */
     Execution::Trace stackTrace(int index) const;
+
+    /** Returns the origin of command at @p index. */
+    ObjectId origin(int index) const;
+
+
 
     QPaintBufferPrivate* data() const;
 private:
@@ -132,6 +145,9 @@ private:
 #endif
     QPaintBufferPrivate *d; // not protected in the base class, somewhat nasty to get to
     QVector<Execution::Trace> m_stackTraces;
+public:
+    QVector<ObjectId> m_origins;
+    ObjectId m_currentOrigin;
 };
 
 }

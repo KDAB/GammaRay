@@ -429,6 +429,8 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
                 if (index.column() == 2 && index.row() == 0)
                     return m_maxCost;
                 break;
+            case PaintBufferModelRoles::ObjectIdRole:
+                return QVariant::fromValue(m_buffer.origin(index.row()));
         }
     } else {
         const auto cmd = m_privateBuffer->commands.at(index.internalId());
@@ -445,6 +447,14 @@ QVariant PaintBufferModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
+}
+
+QMap<int, QVariant> PaintBufferModel::itemData(const QModelIndex &index) const
+{
+    QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
+    d.insert(PaintBufferModelRoles::MaxCostRole, data(index, PaintBufferModelRoles::MaxCostRole));
+    d.insert(PaintBufferModelRoles::ObjectIdRole, data(index, PaintBufferModelRoles::ObjectIdRole));
+    return d;
 }
 
 int PaintBufferModel::columnCount(const QModelIndex &parent) const
