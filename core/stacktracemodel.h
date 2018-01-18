@@ -48,7 +48,6 @@ public:
     ~StackTraceModel();
 
     void setStackTrace(const Execution::Trace &trace);
-    void setStackTrace(const QVector<Execution::ResolvedFrame> &frames);
 
     int columnCount(const QModelIndex &parent) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -56,7 +55,8 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
 private:
-    QVector<Execution::ResolvedFrame> m_frames;
+    mutable QVector<Execution::ResolvedFrame> m_frames;
+    Execution::Trace m_trace;
 };
 }
 

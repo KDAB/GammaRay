@@ -43,20 +43,16 @@ StackTraceModel::~StackTraceModel()
 
 void StackTraceModel::setStackTrace(const Execution::Trace& trace)
 {
-    setStackTrace(Execution::resolveAll(trace));
-}
-
-void StackTraceModel::setStackTrace(const QVector<Execution::ResolvedFrame> &frames)
-{
-    if (!m_frames.empty()) {
-        beginRemoveRows(QModelIndex(), 0, m_frames.size() - 1);
+    if (!m_trace.empty()) {
+        beginRemoveRows(QModelIndex(), 0, m_trace.size() - 1);
         m_frames.clear();
         endRemoveRows();
     }
 
-    if (!frames.empty()) {
-        beginInsertRows(QModelIndex(), 0, frames.size() - 1);
-        m_frames = frames;
+    if (!trace.empty()) {
+        beginInsertRows(QModelIndex(), 0, trace.size() - 1);
+        m_trace = trace;
+        m_frames.clear();
         endInsertRows();
     }
 }
@@ -71,13 +67,17 @@ int StackTraceModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return m_frames.size();
+    return m_trace.size();
 }
 
 QVariant StackTraceModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
+
+    if (m_trace.size() && !m_frames.size()) {
+        m_frames = Execution::resolveAll(m_trace);
+    }
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
