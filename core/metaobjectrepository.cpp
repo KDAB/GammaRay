@@ -34,6 +34,7 @@
 #include <QAbstractItemModel>
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QEasingCurve>
 #include <QFile>
 #include <QObject>
 #include <QSortFilterProxyModel>
@@ -165,6 +166,14 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_PROPERTY_RO(QTimeZone, hasTransitions);
     MO_ADD_PROPERTY_RO(QTimeZone, id);
     MO_ADD_PROPERTY_RO(QTimeZone, isValid);
+#endif
+
+    MO_ADD_METAOBJECT0(QEasingCurve);
+    MO_ADD_PROPERTY(QEasingCurve, amplitude, setAmplitude);
+    MO_ADD_PROPERTY(QEasingCurve, overshoot, setOvershoot);
+    MO_ADD_PROPERTY(QEasingCurve, period, setPeriod);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_PROPERTY(QEasingCurve, type, setType);
 #endif
 }
 

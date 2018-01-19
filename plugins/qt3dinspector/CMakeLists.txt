@@ -20,6 +20,9 @@ set(gammaray_3dinspector_srcs
 )
 gammaray_add_plugin(gammaray_3dinspector JSON gammaray_3dinspector.json SOURCES ${gammaray_3dinspector_srcs})
 target_link_libraries(gammaray_3dinspector gammaray_core gammaray_kitemmodels Qt5::3DInput Qt5::3DRender)
+if (TARGET Qt5::3DAnimation)
+    target_link_libraries(gammaray_3dinspector Qt5::3DAnimation)
+endif()
 endif()
 
 # ui plugin

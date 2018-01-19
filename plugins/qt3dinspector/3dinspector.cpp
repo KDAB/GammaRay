@@ -57,10 +57,16 @@
 #include <Qt3DRender/QMaterial>
 #include <Qt3DRender/QParameter>
 #include <Qt3DRender/QRenderSettings>
+#include <Qt3DRender/QSceneLoader>
 #include <Qt3DRender/QTechnique>
 #include <Qt3DRender/QTextureWrapMode>
 
 #include <Qt3DInput/QAbstractPhysicalDevice>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+#include <Qt3DAnimation/QAnimationController>
+#include <Qt3DAnimation/QAnimationGroup>
+#endif
 
 #include <Qt3DCore/QAspectEngine>
 #include <Qt3DCore/QComponent>
@@ -89,6 +95,7 @@ Qt3DInspector::Qt3DInspector(ProbeInterface *probe, QObject *parent)
     registerCoreMetaTypes();
     registerInputMetaTypes();
     registerRenderMetaTypes();
+    registerAnimationMetaTypes();
     registerExtensions();
 
     auto engineFilterModel = new ObjectTypeFilterProxyModel<Qt3DCore::QAspectEngine>(this);
@@ -350,7 +357,6 @@ void Qt3DInspector::registerRenderMetaTypes()
     qRegisterMetaType<Qt3DRender::QGraphicsApiFilter*>();
     qRegisterMetaType<Qt3DRender::QTextureWrapMode*>();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(Qt3DRender::QMaterial, Qt3DCore::QComponent);
     MO_ADD_PROPERTY_RO(Qt3DRender::QMaterial, parameters);
@@ -374,12 +380,27 @@ void Qt3DInspector::registerRenderMetaTypes()
 
     MO_ADD_METAOBJECT1(Qt3DRender::QAbstractTexture, Qt3DCore::QNode);
     MO_ADD_PROPERTY_RO(Qt3DRender::QAbstractTexture, textureImages);
-#endif
+
+    MO_ADD_METAOBJECT1(Qt3DRender::QSceneLoader, Qt3DCore::QComponent);
+    MO_ADD_PROPERTY_RO(Qt3DRender::QSceneLoader, entityNames);
+
 
     VariantHandler::registerStringConverter<Qt3DRender::QAttribute*>(attributeToString);
     VariantHandler::registerStringConverter<Qt3DRender::QFilterKey*>(filterKeyToString);
     VariantHandler::registerStringConverter<Qt3DRender::QGraphicsApiFilter*>(graphicsApiFilterToString);
     VariantHandler::registerStringConverter<Qt3DRender::QParameter*>(parameterToString);
+}
+
+void Qt3DInspector::registerAnimationMetaTypes()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+    MetaObject *mo = nullptr;
+    MO_ADD_METAOBJECT1(Qt3DAnimation::QAnimationController, QObject);
+    MO_ADD_PROPERTY_NC(Qt3DAnimation::QAnimationController, animationGroupList);
+
+    MO_ADD_METAOBJECT1(Qt3DAnimation::QAnimationGroup, QObject);
+    MO_ADD_PROPERTY_NC(Qt3DAnimation::QAnimationGroup, animationList);
+#endif
 }
 
 void Qt3DInspector::registerExtensions()

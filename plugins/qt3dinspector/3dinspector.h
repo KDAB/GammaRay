@@ -76,6 +76,7 @@ private:
     void registerCoreMetaTypes();
     void registerInputMetaTypes();
     void registerRenderMetaTypes();
+    void registerAnimationMetaTypes();
     void registerExtensions();
 
 private:

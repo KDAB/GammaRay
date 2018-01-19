@@ -368,6 +368,7 @@ if(Qt5Core_FOUND)
   set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
   find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
   find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+    3DAnimation
     3DExtras
     3DInput
     3DLogic

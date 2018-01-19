@@ -42,6 +42,7 @@
 #include <QCursor>
 #include <QDebug>
 #include <QDir>
+#include <QEasingCurve>
 #include <QIcon>
 #include <QMatrix4x4>
 #include <QMetaEnum>
@@ -302,6 +303,13 @@ QString VariantHandler::displayString(const QVariant &value)
         return l.join(QStringLiteral(", "));
     }
 #endif // Qt5
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    if (value.userType() == qMetaTypeId<QEasingCurve>()) {
+        const auto ec = value.value<QEasingCurve>();
+        return EnumUtil::enumToString(QVariant::fromValue<QEasingCurve::Type>(ec.type()));
+    }
+#endif
 
     // enums
     const QString enumStr = EnumUtil::enumToString(value);
