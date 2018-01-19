@@ -30,6 +30,7 @@
 #include "qt3dentitytreemodel.h"
 #include "framegraphmodel.h"
 #include "geometryextension/qt3dgeometryextension.h"
+#include "paintanalyzerextension/qt3dpaintedtextureanalyzerextension.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -384,4 +385,5 @@ void Qt3DInspector::registerRenderMetaTypes()
 void Qt3DInspector::registerExtensions()
 {
     PropertyController::registerExtension<Qt3DGeometryExtension>();
+    PropertyController::registerExtension<Qt3DPaintedTextureAnalyzerExtension>();
 }

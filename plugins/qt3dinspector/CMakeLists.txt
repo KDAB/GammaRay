@@ -14,6 +14,7 @@ set(gammaray_3dinspector_srcs
   framegraphmodel.cpp
 
   geometryextension/qt3dgeometryextension.cpp
+  paintanalyzerextension/qt3dpaintedtextureanalyzerextension.cpp
 
   ${gammaray_3dinspector_shared_srcs}
 )
