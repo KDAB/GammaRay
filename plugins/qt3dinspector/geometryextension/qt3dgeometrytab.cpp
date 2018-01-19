@@ -215,7 +215,7 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
 
     auto renderSettings = new Qt3DRender::QRenderSettings;
     renderSettings->setActiveFrameGraph(forwardRenderer);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     renderSettings->pickingSettings()->setFaceOrientationPickingMode(Qt3DRender::QPickingSettings::FrontFace);
     renderSettings->pickingSettings()->setPickMethod(Qt3DRender::QPickingSettings::TrianglePicking);
     renderSettings->pickingSettings()->setPickResultMode(Qt3DRender::QPickingSettings::NearestPick);
@@ -544,9 +544,9 @@ bool Qt3DGeometryTab::isIndexBuffer(unsigned int bufferIndex) const
 
 void Qt3DGeometryTab::trianglePicked(Qt3DRender::QPickEvent* pick)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     if (pick->button() != Qt3DRender::QPickEvent::LeftButton)
         return;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     const auto trianglePick = qobject_cast<Qt3DRender::QPickTriangleEvent*>(pick);
 
     qDebug() << trianglePick << trianglePick->vertex1Index() << trianglePick->vertex2Index() << trianglePick->vertex3Index() << trianglePick->localIntersection() << trianglePick->triangleIndex() << m_interface->geometryData().buffers.at(ui->bufferBox->currentIndex()).type << ui->bufferBox->currentIndex();
@@ -565,5 +565,7 @@ void Qt3DGeometryTab::trianglePicked(Qt3DRender::QPickEvent* pick)
 
     foreach (const auto &row, selModel->selectedRows())
         ui->bufferView->scrollTo(row, QAbstractItemView::EnsureVisible);
+#else
+    Q_UNUSED(pick);
 #endif
 }
