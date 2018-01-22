@@ -77,9 +77,6 @@ class PropertyTextEditor : public PropertyExtendedEditor
 public:
     explicit PropertyTextEditor(QWidget *parent = nullptr);
     void showEditor(QWidget * parent) override;
-
-private:
-    QLineEdit *m_lineEdit;
 };
 
 class PropertyByteArrayEditor : public PropertyExtendedEditor
