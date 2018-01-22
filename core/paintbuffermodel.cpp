@@ -206,6 +206,7 @@ QVariant PaintBufferModel::argumentAt(const QPaintBufferCommand& cmd, int index)
                 case 2:
                     return m_privateBuffer->variants.at(cmd.offset).value<QList<QVariant> >().at(0);
             }
+            break;
         case QPaintBufferPrivate::Cmd_DrawImagePos:
         case QPaintBufferPrivate::Cmd_DrawPixmapPos:
             switch (index) {
@@ -214,6 +215,7 @@ QVariant PaintBufferModel::argumentAt(const QPaintBufferCommand& cmd, int index)
                 case 1:
                     return m_privateBuffer->variants.at(cmd.offset);
             }
+            break;
         case QPaintBufferPrivate::Cmd_DrawImageRect:
         case QPaintBufferPrivate::Cmd_DrawPixmapRect:
             switch (index) {
@@ -225,8 +227,8 @@ QVariant PaintBufferModel::argumentAt(const QPaintBufferCommand& cmd, int index)
                 case 2:
                     return QRectF(m_privateBuffer->floats.at(cmd.extra + 4), m_privateBuffer->floats.at(cmd.extra + 5),
                                   m_privateBuffer->floats.at(cmd.extra + 6), m_privateBuffer->floats.at(cmd.extra + 7));
-
             }
+            break;
         case QPaintBufferPrivate::Cmd_DrawTiledPixmap:
             switch (index) {
                 case 0:
@@ -237,6 +239,7 @@ QVariant PaintBufferModel::argumentAt(const QPaintBufferCommand& cmd, int index)
                 case 2:
                     return QPointF(m_privateBuffer->floats.at(cmd.extra + 4), m_privateBuffer->floats.at(cmd.extra + 5));
             }
+            break;
         default:
             break;
     }
