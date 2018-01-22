@@ -588,6 +588,7 @@ void AbstractScreenGrabber::disconnectTopItemChanges(QQuickItem *item)
 
 OpenGLScreenGrabber::OpenGLScreenGrabber(QQuickWindow *window)
     : AbstractScreenGrabber(window)
+    , m_isGrabbing(false)
 {
     // Force DirectConnection else Auto lead to Queued which is not good.
     connect(m_window.data(), &QQuickWindow::afterSynchronizing,
