@@ -51,9 +51,9 @@
     When selecting an entity with a geometry component attached, or a geometry component directly in a different view, the
     \l{Qt3D Geometry Inspector} tab is shown on the right hand side.
 
-    The geometry inspection tab has to views:
+    The geometry inspection tab has two views:
     \list
-        \li A graphical wireframe view of the geometry.
+        \li A graphical wireframe view of the geometry with various diagnostic shading modes.
         \li A raw data view on its associated Qt3DRender::QBuffer instances.
     \endlist
 

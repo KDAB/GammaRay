@@ -45,6 +45,8 @@
         \li Left mouse button drag changes the view direction.
         \li Middle mouse button drag moves the camera in an orbit around the geometry.
         \li Arrow keys and W/A/S/D keys allow to move the camera in a first person view.
+        \li Mouse wheel changes zoom.
+        \li Left mouse click on a triangle face selects the corresponding elements in the raw buffer view.
     \endlist
 
     \section2 Backface Culling

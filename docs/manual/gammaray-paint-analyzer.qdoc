@@ -36,6 +36,7 @@
         \li QWidget
         \li QQuickPaintedItem
         \li QGraphicsItem
+        \li Qt3DRender::QPaintedTextureImage
     \endlist
 
     Alternatively you can apply the paint analyzer to full scenes recursively. This is available in the following tools:
