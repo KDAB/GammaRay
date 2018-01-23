@@ -657,7 +657,11 @@ else()
   include(GNUInstallDirs)
 
   set(BIN_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}") # relative, usually "bin"
-  set(LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}") # "lib" or "lib64"
+  if (GAMMARAY_INSTALL_QT_LAYOUT)
+    set(LIB_INSTALL_DIR "lib") # Qt always uses "lib"
+  else ()
+    set(LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}") # "lib" or "lib64"
+  endif()
   set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/gammaray")
   set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/GammaRay)
   set(DATAROOTDIR "${CMAKE_INSTALL_DATAROOTDIR}" CACHE PATH "Define install directory for read-only architecture-independent data")
