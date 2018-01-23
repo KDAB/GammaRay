@@ -382,8 +382,9 @@ void Qt3DInspector::registerRenderMetaTypes()
     MO_ADD_PROPERTY_RO(Qt3DRender::QAbstractTexture, textureImages);
 
     MO_ADD_METAOBJECT1(Qt3DRender::QSceneLoader, Qt3DCore::QComponent);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     MO_ADD_PROPERTY_RO(Qt3DRender::QSceneLoader, entityNames);
-
+#endif
 
     VariantHandler::registerStringConverter<Qt3DRender::QAttribute*>(attributeToString);
     VariantHandler::registerStringConverter<Qt3DRender::QFilterKey*>(filterKeyToString);
