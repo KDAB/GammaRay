@@ -167,6 +167,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     });
 
     ui->bufferView->setModel(m_bufferModel);
+    ui->bufferView->horizontalHeader()->setObjectName(QStringLiteral("bufferViewHeader"));
     connect(ui->bufferBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_bufferModel, &BufferModel::setBufferIndex);
 
     m_surface = new QWindow;

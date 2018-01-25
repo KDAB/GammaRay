@@ -47,6 +47,7 @@ GammaRay::StackTraceTab::StackTraceTab(PropertyWidget *parent)
     ui->setupUi(this);
     ui->stackTraceView->setItemDelegate(new PropertyEditorDelegate(ui->stackTraceView));
     ui->stackTraceView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".stackTraceModel")));
+    ui->stackTraceView->header()->setObjectName(QStringLiteral("stackTraceViewHeader"));
     connect(ui->stackTraceView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenuRequested(QPoint)));
 }
 

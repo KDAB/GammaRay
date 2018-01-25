@@ -481,7 +481,7 @@ void UIStateManager::restoreHeaderState(QHeaderView *header)
 {
     const QHeaderViewList headers = header ? (QHeaderViewList() << header) : this->headers();
     foreach (QHeaderView *header, headers) {
-        if (!checkWidget(header) || header->count() == 0)
+        if (header->orientation() == Qt::Vertical || !checkWidget(header) || header->count() == 0)
             continue;
 
         const QByteArray state = m_stateSettings->value(widgetStateKey(header)).toByteArray();
@@ -559,7 +559,7 @@ void UIStateManager::saveHeaderState(QHeaderView *header)
 {
     const QHeaderViewList headers = header ? (QHeaderViewList() << header) : this->headers();
     foreach (QHeaderView *header, headers) {
-        if (!checkWidget(header) || header->count() == 0
+        if (header->orientation() == Qt::Vertical || !checkWidget(header) || header->count() == 0
             || !header->property(WIDGET_CUSTOMIZED).toBool())
             continue;
 
