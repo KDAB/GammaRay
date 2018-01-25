@@ -64,7 +64,7 @@ namespace GammaRay {
 class VariantHandlerRepository
 {
 public:
-    VariantHandlerRepository() {};
+    VariantHandlerRepository() {}
     ~VariantHandlerRepository();
     void clear();
 
@@ -94,8 +94,9 @@ static QString displayMatrix4x4(const QMatrix4x4 &matrix)
     for (int i = 0; i < 4; ++i) {
         QStringList cols;
         cols.reserve(4);
-        for (int j = 0; j < 4; ++j)
+        for (int j = 0; j < 4; ++j) {
             cols.push_back(QString::number(matrix(i, j)));
+        }
         rows.push_back(cols.join(QStringLiteral(" ")));
     }
     return '[' + rows.join(QStringLiteral(", ")) + ']';
@@ -103,8 +104,9 @@ static QString displayMatrix4x4(const QMatrix4x4 &matrix)
 
 static QString displayMatrix4x4(const QMatrix4x4 *matrix)
 {
-    if (matrix)
+    if (matrix) {
         return displayMatrix4x4(*matrix);
+    }
     return QStringLiteral("<null>");
 }
 
@@ -112,8 +114,9 @@ template<int Dim, typename T>
 static QString displayVector(const T &vector)
 {
     QStringList v;
-    for (int i = 0; i < Dim; ++i)
+    for (int i = 0; i < Dim; ++i) {
         v.push_back(QString::number(vector[i]));
+    }
     return '[' + v.join(QStringLiteral(", ")) + ']';
 }
 }
@@ -133,13 +136,15 @@ QString VariantHandler::displayString(const QVariant &value)
     case QVariant::Icon:
     {
         const QIcon icon = value.value<QIcon>();
-        if (icon.isNull())
+        if (icon.isNull()) {
             return qApp->translate("GammaRay::VariantHandler", "<no icon>");
+        }
         const auto sizes = icon.availableSizes();
         QStringList l;
         l.reserve(sizes.size());
-        foreach (QSize size, sizes)
+        foreach (QSize size, sizes) {
             l.push_back(displayString(size));
+        }
         return l.join(QStringLiteral(", "));
     }
     case QVariant::Line:
@@ -206,8 +211,9 @@ QString VariantHandler::displayString(const QVariant &value)
     case QVariant::Palette:
     {
         const QPalette pal = value.value<QPalette>();
-        if (pal == qApp->palette())
+        if (pal == qApp->palette()) {
             return QStringLiteral("<inherited>");
+        }
         return QStringLiteral("<custom>");
     }
 
@@ -233,10 +239,12 @@ QString VariantHandler::displayString(const QVariant &value)
     {
         const auto l = value.toStringList();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-        if (l.isEmpty())
+        if (l.isEmpty()) {
             return QStringLiteral("<empty>");
-        if (l.size() == 1)
+        }
+        if (l.size() == 1) {
             return l.at(0);
+        }
         return QStringLiteral("<%1 entries>").arg(l.size());
 #else
         return l.join(", ");
@@ -270,8 +278,9 @@ QString VariantHandler::displayString(const QVariant &value)
 
     if (value.userType() == qMetaTypeId<const QMetaObject *>()) {
         const auto mo = value.value<const QMetaObject *>();
-        if (!mo)
+        if (!mo) {
             return QStringLiteral("0x0");
+        }
         return mo->className();
     }
 
@@ -282,15 +291,18 @@ QString VariantHandler::displayString(const QVariant &value)
         return displayMatrix4x4(value.value<const QMatrix4x4 *>());
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
-    if (value.userType() == qMetaTypeId<QVector2D>())
+    if (value.userType() == qMetaTypeId<QVector2D>()) {
         return displayVector<2>(value.value<QVector2D>());
-    if (value.userType() == qMetaTypeId<QVector3D>())
+    }
+    if (value.userType() == qMetaTypeId<QVector3D>()) {
         return displayVector<3>(value.value<QVector3D>());
-    if (value.userType() == qMetaTypeId<QVector4D>())
+    }
+    if (value.userType() == qMetaTypeId<QVector4D>()) {
         return displayVector<4>(value.value<QVector4D>());
-
-    if (value.userType() == qMetaTypeId<QTimeZone>())
+    }
+    if (value.userType() == qMetaTypeId<QTimeZone>()) {
         return value.value<QTimeZone>().id();
+    }
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
@@ -298,8 +310,9 @@ QString VariantHandler::displayString(const QVariant &value)
         const QSet<QByteArray> set = value.value<QSet<QByteArray> >();
         QStringList l;
         l.reserve(set.size());
-        foreach (const QByteArray &b, set)
+        foreach (const QByteArray &b, set) {
             l.push_back(QString::fromUtf8(b));
+        }
         return l.join(QStringLiteral(", "));
     }
 #endif // Qt5
@@ -313,28 +326,32 @@ QString VariantHandler::displayString(const QVariant &value)
 
     // enums
     const QString enumStr = EnumUtil::enumToString(value);
-    if (!enumStr.isEmpty())
+    if (!enumStr.isEmpty()) {
         return enumStr;
+    }
 
     // custom converters
     auto it = s_variantHandlerRepository()->stringConverters.constFind(value.userType());
-    if (it != s_variantHandlerRepository()->stringConverters.constEnd())
+    if (it != s_variantHandlerRepository()->stringConverters.constEnd()) {
         return (*it.value())(value);
+    }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     if (value.canConvert<QVariantList>()) {
         QSequentialIterable it = value.value<QSequentialIterable>();
-        if (it.size() == 0)
+        if (it.size() == 0) {
             return QStringLiteral("<empty>");
-        else
+        } else {
             return QStringLiteral("<%1 entries>").arg(it.size());
+        }
     }
     if (value.canConvert<QVariantHash>()) {
         auto it = value.value<QAssociativeIterable>();
-        if (it.size() == 0)
+        if (it.size() == 0) {
             return QStringLiteral("<empty>");
-        else
+        } else {
             return QStringLiteral("<%1 entries>").arg(it.size());
+        }
     }
 #endif
 
@@ -358,7 +375,7 @@ QString VariantHandler::displayString(const QVariant &value)
 
         auto mo = value.value<QObject*>()->metaObject()->superClass();
         while (mo) {
-            auto type = QMetaType::type(QByteArray(mo->className()) + "*");
+            auto type = QMetaType::type(QByteArray(mo->className()) + '*');
             if (type > 0) {
                 auto it = s_variantHandlerRepository()->stringConverters.constFind(type);
                 if (it != s_variantHandlerRepository()->stringConverters.constEnd())
@@ -405,8 +422,9 @@ QVariant VariantHandler::decoration(const QVariant &value)
     case QVariant::Cursor:
     {
         const QCursor c = value.value<QCursor>();
-        if (!c.pixmap().isNull())
+        if (!c.pixmap().isNull()) {
             return c.pixmap().scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation);
+        }
         break;
     }
 #endif
@@ -432,15 +450,18 @@ QVariant VariantHandler::decoration(const QVariant &value)
     case QVariant::Pixmap:
     {
         const QPixmap p = value.value<QPixmap>();
-        if (p.isNull())
+        if (p.isNull()) {
             break;
+        }
+
         QPixmap deco(16, 16);
         QPainter painter(&deco);
         Util::drawTransparencyPattern(&painter, deco.rect(), 4);
 
         QPixmap scaled(p);
-        if (p.width() > deco.width() || p.height() > deco.height())
+        if (p.width() > deco.width() || p.height() > deco.height()) {
             scaled = p.scaled(deco.width(), deco.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        }
         painter.drawPixmap((deco.width() - scaled.width()) / 2, (deco.height() - scaled.height()) / 2, scaled);
 
         painter.drawRect(0, 0, deco.width() - 1, deco.height() - 1);
@@ -469,12 +490,14 @@ QVariant VariantHandler::serializableVariant(const QVariant &value)
 {
     if (value.userType() == qMetaTypeId<const QMatrix4x4 *>()) {
         const QMatrix4x4 *m = value.value<const QMatrix4x4 *>();
-        if (!m)
+        if (!m) {
             return QVariant();
+        }
         return QVariant::fromValue(QMatrix4x4(*m));
     }
-    if (EnumRepositoryServer::isEnum(value.userType()))
+    if (EnumRepositoryServer::isEnum(value.userType())) {
         return QVariant::fromValue(EnumRepositoryServer::valueFromVariant(value));
+    }
 
     return value;
 }
