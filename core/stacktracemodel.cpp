@@ -46,6 +46,7 @@ void StackTraceModel::setStackTrace(const Execution::Trace& trace)
     if (!m_trace.empty()) {
         beginRemoveRows(QModelIndex(), 0, m_trace.size() - 1);
         m_frames.clear();
+        m_trace = Execution::Trace();
         endRemoveRows();
     }
 
