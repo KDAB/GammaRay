@@ -367,29 +367,88 @@ endif()
 if(Qt5Core_FOUND)
   set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
   find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
-  find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+  option(ENABLE_3D "Enable Qt3D libraries" OFF)
+  if (ENABLE_3D)
+   find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     3DAnimation
     3DExtras
     3DInput
     3DLogic
     3DRender
     3DQuick
+ )
+ endif(ENABLE_3D)
+
+ option(ENABLE_BLUETOOTH "Enable Qt Bluetooth support" OFF)
+ if (ENABLE_BLUETOOTH)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     Bluetooth
+    )
+ endif(ENABLE_BLUETOOTH)
+
+ option(ENABLE_CONCURRENT "Enable Qt Concurrent" OFF)
+ if (ENABLE_CONCURRENT)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     Concurrent
+    )
+endif(ENABLE_CONCURRENT)
+
+option(ENABLE_DESIGNER "Enable Designer support" OFF)
+if (ENABLE_DESIGNER)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     Designer
-    Positioning
-    PrintSupport
+    )
+endif(ENABLE_DESIGNER)
+
+option(ENABLE_QUICK "Enable QML support" OFF)
+if (ENABLE_QUICK)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     Qml
     Quick
     QuickWidgets
-    Svg
+    )
+endif(ENABLE_QUICK)
+
+option(ENABLE_SCRIPT "Enable Qt Script support" OFF)
+if (ENABLE_SCRIPT)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     Script
     ScriptTools
+    )
+endif(ENABLE_SCRIPT)
+
+
+option(ENABLE_WAYLAND "Enable wayland compositor support" OFF)
+if (ENABLE_WAYLAND)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+    WaylandCompositor
+    )
+endif(ENABLE_WAYLAND)
+
+option(ENABLE_SVG "Enable Qt svg support" OFF)
+if (ENABLE_SVG)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+    svg
+    )
+endif(ENABLE_SVG)
+
+option(ENABLE_PRINTSUPPORT "Enable Qt print support" OFF)
+if (ENABLE_PRINTSUPPORT)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+    PrintSupport
+    )
+endif(ENABLE_PRINTSUPPORT)
+
+option(ENABLE_EXTRA "Enable extra Qt libraries" OFF)
+if (ENABLE_EXTRA)
+    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
     Test
     WebEngineWidgets
     Widgets
-    WaylandCompositor
-  )
+    Positioning
+    )
+endif(ENABLE_EXTRA)
+
   # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
   # so we can retrieve those packages even when installed into a different prefix
   find_package(Qt5IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
