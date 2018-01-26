@@ -367,94 +367,114 @@ endif()
 if(Qt5Core_FOUND)
   set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
   find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
-  option(ENABLE_3D "Enable Qt3D libraries" OFF)
-  if (ENABLE_3D)
-   find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    3DAnimation
-    3DExtras
-    3DInput
-    3DLogic
-    3DRender
-    3DQuick
- )
- endif(ENABLE_3D)
 
- option(ENABLE_BLUETOOTH "Enable Qt Bluetooth support" OFF)
- if (ENABLE_BLUETOOTH)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    Bluetooth
+    option(ENABLE_QT53D "Enable Qt3D libraries" OFF)
+    if (ENABLE_QT53D)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        3DAnimation
+        3DExtras
+        3DInput
+        3DLogic
+        3DRender
+        3DQuick
     )
- endif(ENABLE_BLUETOOTH)
+    endif(ENABLE_QT53D)
 
- option(ENABLE_CONCURRENT "Enable Qt Concurrent" OFF)
- if (ENABLE_CONCURRENT)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    Concurrent
+    option(ENABLE_QT5BLUETOOTH "Enable Qt Bluetooth support" OFF)
+        if (ENABLE_QT5BLUETOOTH)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        Bluetooth
+        )
+    endif(ENABLE_QT5BLUETOOTH)
+
+    option(ENABLE_QT5CONCURRENT "Enable Qt Concurrent" OFF)
+    if (ENABLE_QT5CONCURRENT)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        Concurrent
     )
-endif(ENABLE_CONCURRENT)
+    endif(ENABLE_QT5CONCURRENT)
 
-option(ENABLE_DESIGNER "Enable Designer support" OFF)
-if (ENABLE_DESIGNER)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    Designer
-    )
-endif(ENABLE_DESIGNER)
+    option(ENABLE_QT5DESIGNER "Enable Designer support" OFF)
+    if (ENABLE_QT5DESIGNER)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        Designer
+        )
+    endif(ENABLE_QT5DESIGNER)
 
-option(ENABLE_QUICK "Enable QML support" OFF)
-if (ENABLE_QUICK)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    Qml
-    Quick
-    QuickWidgets
-    )
-endif(ENABLE_QUICK)
+    option(ENABLE_QT5QML "Enable QML support" OFF)
+    if (ENABLE_QT5QML)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        Qml
+        Quick
+        QuickWidgets
+        )
+    endif(ENABLE_QT5QML)
 
-option(ENABLE_SCRIPT "Enable Qt Script support" OFF)
-if (ENABLE_SCRIPT)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    Script
-    ScriptTools
-    )
-endif(ENABLE_SCRIPT)
+    option(ENABLE_QT5SCRIPT "Enable Qt Script support" OFF)
+    if (ENABLE_QT5SCRIPT)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        Script
+        ScriptTools
+        )
+    endif(ENABLE_QT5SCRIPT)
 
+    option(ENABLE_QT5SVG "Enable Qt svg support" OFF)
+    if (ENABLE_QT5SVG)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        svg
+        )
+    endif(ENABLE_QT5SVG)
 
-option(ENABLE_WAYLAND "Enable wayland compositor support" OFF)
-if (ENABLE_WAYLAND)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    WaylandCompositor
-    )
-endif(ENABLE_WAYLAND)
+    option(ENABLE_QT5POSITIONING "Enable Qt print support" OFF)
+    if (ENABLE_QT5POSITIONING)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        Positioning
+        )
+    endif(ENABLE_QT5POSITIONING)
 
-option(ENABLE_SVG "Enable Qt svg support" OFF)
-if (ENABLE_SVG)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    svg
-    )
-endif(ENABLE_SVG)
+    option(ENABLE_QT5PRINTSUPPORT "Enable Qt print support" OFF)
+    if (ENABLE_QT5PRINTSUPPORT)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        PrintSupport
+        )
+    endif(ENABLE_QT5PRINTSUPPORT)
 
-option(ENABLE_PRINTSUPPORT "Enable Qt print support" OFF)
-if (ENABLE_PRINTSUPPORT)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    PrintSupport
-    )
-endif(ENABLE_PRINTSUPPORT)
+    option(ENABLE_QT5TESTING "Build the testing tree" OFF)
+    if (ENABLE_QT5TESTING)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        Test
+        )
+    endif(ENABLE_QT5TESTING)
 
-option(ENABLE_EXTRA "Enable extra Qt libraries" OFF)
-if (ENABLE_EXTRA)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    Test
-    WebEngineWidgets
-    Widgets
-    Positioning
-    )
-endif(ENABLE_EXTRA)
+    option(ENABLE_QT5WAYLAND "Enable wayland compositor support" OFF)
+    if (ENABLE_QT5WAYLAND)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        WaylandCompositor
+        )
+    endif(ENABLE_QT5WAYLAND)
+
+    option(ENABLE_QT5WEBENGINE "Enable Qt WebEngine" OFF)
+    if (ENABLE_QT5WEBENGINE)
+        find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+        WebEngine
+        )
+    option(ENABLE_QT5WEBENGINE_WIDGETS "Enable Qt WebEngineWidgets" OFF)
+        if (ENABLE_QT5WEBENGINE_WIDGETS)
+            find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+                WebEngineWidgets
+                )
+                endif(ENABLE_QT5WEBENGINE_WIDGETS)
+    endif(ENABLE_QT5WEBENGINE)
 
   # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
   # so we can retrieve those packages even when installed into a different prefix
   find_package(Qt5IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
   find_package(Qt5IviVehicleFunctions 1.1 NO_MODULE QUIET)
   find_package(Qt5IviMedia 1.1 NO_MODULE QUIET)
-  find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
+    option(ENABLE_QT5SCXML "Enable Qt Scxml" OFF)
+    if (ENABLE_QT5SCXML)
+        find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
+    endif (ENABLE_QT5SCXML)
 
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_LESS 5.5)
     # disable warnings about inconsistent usage of 'override' specifier for Qt <5.5
