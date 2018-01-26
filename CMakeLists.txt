@@ -184,19 +184,19 @@ gammaray_option(
 )
 
 gammaray_option(
-    GAMMARAY_CLIENT_ONLY_BUILD
-    "Build the client part only."
-    OFF
+  GAMMARAY_CLIENT_ONLY_BUILD
+  "Build the client part only."
+  OFF
 )
 
-if (GAMMARAY_CLIENT_ONLY_BUILD)
-    set(GAMMARAY_BUILD_UI_DEFAULT ON)
+if(GAMMARAY_CLIENT_ONLY_BUILD)
+  set(GAMMARAY_BUILD_UI_DEFAULT ON)
 endif()
 
 gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
 
-if (GAMMARAY_PROBE_ONLY_BUILD AND GAMMARAY_CLIENT_ONLY_BUILD)
-    message(FATAL_ERROR "You can only use one of the *ONLY* option.")
+if(GAMMARAY_PROBE_ONLY_BUILD AND GAMMARAY_CLIENT_ONLY_BUILD)
+  message(FATAL_ERROR "You can only use one of the *ONLY* option.")
 endif()
 
 gammaray_option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
@@ -329,14 +329,19 @@ endif()
 if(WIN32)
   add_definitions(-DUNICODE -D_UNICODE -D_USING_V110_SDK71_=1)
 endif()
+
 if(QNXNTO)
   add_definitions(-D_QNX_SOURCE)
 endif()
 
+if(CYGWIN)
+  add_definitions(-D_GNU_SOURCE)
+endif()
+
 # linker flags
 if((CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU) AND (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-    set(_linker_flags "-Wl,-z,origin")
-  if(NOT ECM_ENABLE_SANITIZERS )
+  set(_linker_flags "-Wl,-z,origin")
+  if(NOT ECM_ENABLE_SANITIZERS)
     set(_linker_flags "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${_linker_flags}")
   endif()
   set(CMAKE_SHARED_LINKER_FLAGS "${_linker_flags} ${CMAKE_SHARED_LINKER_FLAGS}")
@@ -657,9 +662,9 @@ else()
   include(GNUInstallDirs)
 
   set(BIN_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}") # relative, usually "bin"
-  if (GAMMARAY_INSTALL_QT_LAYOUT)
+  if(GAMMARAY_INSTALL_QT_LAYOUT)
     set(LIB_INSTALL_DIR "lib") # Qt always uses "lib"
-  else ()
+  else()
     set(LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}") # "lib" or "lib64"
   endif()
   set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/gammaray")
@@ -757,7 +762,7 @@ if(GAMMARAY_BUILD_UI AND (Qt5Widgets_FOUND OR QT_QTGUI_FOUND))
     add_subdirectory(3rdparty/kuserfeedback)
   endif()
   add_subdirectory(ui)
-  if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
+  if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     add_subdirectory(inprocessui)
   endif()
   if(NOT GAMMARAY_PROBE_ONLY_BUILD)
