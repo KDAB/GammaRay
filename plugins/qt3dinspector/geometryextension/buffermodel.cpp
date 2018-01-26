@@ -91,7 +91,7 @@ void BufferModel::updateAttribute(const GammaRay::Qt3DGeometryAttributeData &att
             col.name += QLatin1Char('[') + QString::number(i) + QLatin1Char(']');
         col.offset = attrData.byteOffset + i * Attribute::size(attrData.vertexBaseType);
         col.type = attrData.vertexBaseType;
-        col.stride = std::max(attrData.byteStride, (uint)Attribute::size(attrData.vertexBaseType));
+        col.stride = std::max(attrData.byteStride, (uint)Attribute::size(attrData.vertexBaseType) * attrData.vertexSize);
         m_attrs.push_back(col);
     }
 }
