@@ -425,6 +425,7 @@ void Qt3DGeometryTab::updateGeometry()
             setupAttribute(posAttr, attrData);
             posAttr->setName(Qt3DRender::QAttribute::defaultPositionAttributeName());
             geometry->addAttribute(posAttr);
+            geometry->setBoundingVolumePositionAttribute(posAttr);
             computeBoundingVolume(attrData, posAttr->buffer()->data());
             m_geometryTransform->setTranslation(-m_boundingVolume.center());
             m_normalLength->setValue(0.025 * m_boundingVolume.radius());
