@@ -64,8 +64,11 @@
 #include <Qt3DInput/QAbstractPhysicalDevice>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+#include <Qt3DAnimation/QAnimationClipData>
 #include <Qt3DAnimation/QAnimationController>
 #include <Qt3DAnimation/QAnimationGroup>
+#include <Qt3DAnimation/QChannelMapper>
+#include <Qt3DAnimation/QChannelMapping>
 #endif
 
 #include <Qt3DCore/QAspectEngine>
@@ -340,10 +343,10 @@ static QString graphicsApiFilterToString(Qt3DRender::QGraphicsApiFilter *filter)
 static QString parameterToString(Qt3DRender::QParameter *parameter)
 {
     if (!parameter || parameter->name().isEmpty())
-        return VariantHandler::displayString(parameter);
+        return Util::displayString(parameter);
     const auto value = VariantHandler::displayString(parameter->value());
     if (value.isEmpty())
-        return VariantHandler::displayString(parameter);
+        return Util::displayString(parameter);
     return parameter->name() + QLatin1String(" = ") + value;
 }
 
@@ -392,15 +395,35 @@ void Qt3DInspector::registerRenderMetaTypes()
     VariantHandler::registerStringConverter<Qt3DRender::QParameter*>(parameterToString);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+static QString channelMappingToString(Qt3DAnimation::QChannelMapping *mapping)
+{
+    if (!mapping || mapping->channelName().isEmpty() || mapping->property().isEmpty())
+        return Util::displayString(mapping);
+    return mapping->channelName() + QLatin1String(" -> ") + Util::displayString(mapping->target())
+        + QLatin1Char('.') + mapping->property();
+}
+#endif
+
 void Qt3DInspector::registerAnimationMetaTypes()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     MetaObject *mo = nullptr;
+    MO_ADD_METAOBJECT0(Qt3DAnimation::QAnimationClipData);
+    MO_ADD_PROPERTY_RO(Qt3DAnimation::QAnimationClipData, channelCount);
+    MO_ADD_PROPERTY_RO(Qt3DAnimation::QAnimationClipData, isValid);
+    MO_ADD_PROPERTY   (Qt3DAnimation::QAnimationClipData, name, setName);
+
     MO_ADD_METAOBJECT1(Qt3DAnimation::QAnimationController, QObject);
     MO_ADD_PROPERTY_NC(Qt3DAnimation::QAnimationController, animationGroupList);
 
     MO_ADD_METAOBJECT1(Qt3DAnimation::QAnimationGroup, QObject);
     MO_ADD_PROPERTY_NC(Qt3DAnimation::QAnimationGroup, animationList);
+
+    MO_ADD_METAOBJECT1(Qt3DAnimation::QChannelMapper, Qt3DCore::QNode);
+    MO_ADD_PROPERTY_RO(Qt3DAnimation::QChannelMapper, mappings);
+
+    VariantHandler::registerStringConverter<Qt3DAnimation::QChannelMapping*>(channelMappingToString);
 #endif
 }
 
