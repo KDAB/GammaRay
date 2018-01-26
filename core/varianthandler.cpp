@@ -373,7 +373,7 @@ QString VariantHandler::displayString(const QVariant &value)
         if (!obj || obj->metaObject() == &QObject::staticMetaObject)
             return Util::displayString(obj);
 
-        auto mo = value.value<QObject*>()->metaObject()->superClass();
+        auto mo = value.value<QObject*>()->metaObject();
         while (mo) {
             auto type = QMetaType::type(QByteArray(mo->className()) + '*');
             if (type > 0) {
@@ -383,7 +383,7 @@ QString VariantHandler::displayString(const QVariant &value)
             }
             mo = mo->superClass();
         }
-        return Util::displayString(value.value<QObject*>());
+        return Util::displayString(obj);
     }
 
     return value.toString();
