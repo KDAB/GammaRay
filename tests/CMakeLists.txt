@@ -447,8 +447,6 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINO
             quickinspectortest.qrc
             $<TARGET_OBJECTS:modeltestobj>
         )
-        add_test(NAME quickinspectortest_softwarecontext COMMAND quickinspectortest)
-        set_tests_properties(quickinspectortest_softwarecontext PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=softwarecontext")
         target_link_libraries(quickinspectortest gammaray_core gammaray_quickinspector_shared Qt5::Quick)
 
         gammaray_add_quick_test(quickinspectortest2
@@ -456,9 +454,16 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINO
             quickinspectortest.qrc
             $<TARGET_OBJECTS:modeltestobj>
             )
-        add_test(NAME quickinspectortest2_softwarecontext COMMAND quickinspectortest2)
-        set_tests_properties(quickinspectortest2_softwarecontext PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=softwarecontext")
         target_link_libraries(quickinspectortest2 gammaray_core gammaray_quickinspector_shared Qt5::Quick)
+
+        # sw renderer support is only available in Qt 5.9.3 or newer
+        if(NOT Qt5Quick_VERSION VERSION_LESS 5.9.3)
+            add_test(NAME quickinspectortest2_softwarecontext COMMAND quickinspectortest2)
+            set_tests_properties(quickinspectortest2_softwarecontext PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=softwarecontext")
+
+            add_test(NAME quickinspectortest_softwarecontext COMMAND quickinspectortest)
+            set_tests_properties(quickinspectortest_softwarecontext PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=softwarecontext")
+        endif()
 
         gammaray_add_quick_test(quickinspectorpickingtest
             quickinspectorpickingtest.cpp
