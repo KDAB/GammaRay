@@ -47,12 +47,18 @@ set_package_properties(Doxygen PROPERTIES
   URL "http://www.doxygen.org"
   PURPOSE "Needed to build the API documention."
 )
+if(DOXYGEN_DOT_EXECUTABLE)
+  set(HAVE_DOT "YES")
+else()
+  set(HAVE_DOT "NO")
+  message(STATUS "Unable to provide inheritance diagrams for the API documentation. To fix, install the graphviz project from http://www.graphviz.org")
+endif()
+
 if(DOXYGEN_FOUND AND QHELPGEN_EXECUTABLE)
   set(GAMMARAY_API_DOCS_BUILD True)
 else()
   set(GAMMARAY_API_DOCS_BUILD False)
 endif()
-
 
 #
 # generate docs
