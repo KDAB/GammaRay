@@ -69,7 +69,7 @@ namespace UIResources {
 
     // Deprecated, use setTheme
     typedef Theme IconTheme;
-    inline GAMMARAY_UI_EXPORT void setIconTheme(UIResources::IconTheme theme)
+    inline void setIconTheme(UIResources::IconTheme theme)
     { setTheme(theme); }
 }
 }
