@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/gammaray/icons/ui/classes/">
+        @QRC_CONTENT@
+    </qresource>
+</RCC>

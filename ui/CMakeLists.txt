@@ -107,7 +107,10 @@ qt4_wrap_ui(gammaray_ui_srcs
   tools/standardpaths/standardpathswidget.ui
 )
 
-qt4_add_resources(gammaray_ui_srcs resources/ui.qrc)
+qt4_add_resources(gammaray_ui_srcs
+    resources/ui.qrc
+    ${CMAKE_CURRENT_BINARY_DIR}/resources/classicons.qrc
+)
 
 add_library(gammaray_ui SHARED ${gammaray_ui_srcs})
 generate_export_header(gammaray_ui)
