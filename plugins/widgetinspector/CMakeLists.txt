@@ -31,6 +31,8 @@ add_library(gammaray_widget_export_actions SHARED
 
 set_target_properties(gammaray_widget_export_actions PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_PLUGIN_INSTALL_DIR}"
+  RUNTIME_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_PLUGIN_INSTALL_DIR}"
+  PREFIX "lib"
 )
 
 if(GAMMARAY_INSTALL_QT_LAYOUT)
@@ -53,8 +55,7 @@ target_link_libraries(gammaray_widget_export_actions
 
 install(TARGETS gammaray_widget_export_actions DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
 if(MSVC)
-  install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_widget_export_actions>/$<TARGET_PDB_FILE_NAME:gammaray_widget_export_actions>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
-
+  install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_widget_export_actions>/$<TARGET_PDB_FILE_NAME:gammaray_widget_export_actions>" DESTINATION ${PROBE_PLUGIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
 endif()
 
 # UI plugin
