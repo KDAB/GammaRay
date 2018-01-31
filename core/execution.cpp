@@ -112,7 +112,10 @@ Execution::Trace Execution::stackTrace(int maxDepth, int skip)
     auto &data = TracePrivate::get(t);
 #ifdef USE_BACKWARD_CPP
     data.load_here(maxDepth);
-    data.skip_n_firsts(skip + data.skip_n_firsts() + 3); // skip 3: 2 calls in backward-cpp, plus this method
+    // skip 3: 2 calls in backward-cpp, plus this method
+    // however, don't skip more frames than we actually got, as that confuses backward-cpp massively
+    // (this can happen in release builds on ARM apparently)
+    data.skip_n_firsts(std::min(data.size(), skip + data.skip_n_firsts() + 3));
 #elif defined(HAVE_BACKTRACE)
     data.resize(maxDepth);
     const auto size = backtrace(data.data(), maxDepth);
@@ -190,6 +193,8 @@ static QString maybeDemangleName(char *name)
 Execution::ResolvedFrame Execution::resolveOne(const Execution::Trace &trace, int index)
 {
     ResolvedFrame frame;
+    if (index >= trace.size())
+        return frame;
 
 #ifdef USE_BACKWARD_CPP
     auto &st = TracePrivate::get(trace);
