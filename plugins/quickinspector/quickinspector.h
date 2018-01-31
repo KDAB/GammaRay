@@ -112,10 +112,6 @@ public slots:
 
     void checkFeatures() override;
 
-    void setServerSideDecorationsEnabled(bool enabled) override;
-
-    void checkServerSideDecorations() override;
-
     void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings) override;
 
     void checkOverlaySettings() override;

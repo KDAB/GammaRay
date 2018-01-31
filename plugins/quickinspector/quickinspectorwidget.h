@@ -60,9 +60,8 @@ public:
         Ready = 0x0,
         WaitingApply = 0x1,
         WaitingFeatures = 0x2,
-        WaitingServerSideDecorations = 0x4,
         WaitingOverlaySettings = 0x8,
-        WaitingAll = WaitingApply | WaitingFeatures | WaitingServerSideDecorations | WaitingOverlaySettings
+        WaitingAll = WaitingApply | WaitingFeatures | WaitingOverlaySettings
     };
     Q_DECLARE_FLAGS(State, StateFlag)
 
@@ -76,7 +75,6 @@ private slots:
     void itemSelectionChanged(const QItemSelection &selection);
     void sgSelectionChanged(const QItemSelection &selection);
     void setFeatures(GammaRay::QuickInspectorInterface::Features features);
-    void setServerSideDecorations(bool enabled);
     void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings);
     void setSlowMode(bool slow);
     void itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,

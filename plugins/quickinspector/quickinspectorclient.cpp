@@ -63,19 +63,6 @@ void QuickInspectorClient::checkFeatures()
     Endpoint::instance()->invokeObject(objectName(), "checkFeatures");
 }
 
-void GammaRay::QuickInspectorClient::setServerSideDecorationsEnabled(bool enabled)
-{
-    Endpoint::instance()->invokeObject(objectName(),
-                                       "setServerSideDecorationsEnabled",
-                                       QVariantList()
-                                       << enabled);
-}
-
-void QuickInspectorClient::checkServerSideDecorations()
-{
-    Endpoint::instance()->invokeObject(objectName(), "checkServerSideDecorations");
-}
-
 void QuickInspectorClient::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)
 {
     Endpoint::instance()->invokeObject(objectName(),

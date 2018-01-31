@@ -558,7 +558,8 @@ void QuickInspector::objectCreated(QObject *object)
 void QuickInspector::recreateOverlay()
 {
     ProbeGuard guard;
-    disconnect(m_overlay.get(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
+    if (m_overlay)
+        disconnect(m_overlay.get(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
 
     m_overlay = AbstractScreenGrabber::get(m_window);
 
@@ -570,6 +571,8 @@ void QuickInspector::recreateOverlay()
     // just recreate a new one in this case
     connect(m_overlay.get(), &QObject::destroyed, this, &QuickInspector::recreateOverlay); //FIXME Is it really needed?
                                                                                            // It is for the widget inspector, but for qt quick?
+    connect(this, &QuickInspectorInterface::serverSideDecorationChanged, m_overlay.get(), &AbstractScreenGrabber::setDecorationsEnabled);
+    m_overlay->setDecorationsEnabled(serverSideDecorationEnabled());
 
     m_remoteView->setGrabberReady(true);
 }
@@ -625,14 +628,6 @@ void QuickInspector::setCustomRenderMode(
     }
 }
 
-void QuickInspector::setServerSideDecorationsEnabled(bool enabled)
-{
-    if (!m_overlay)
-        return;
-
-    m_overlay->setDecorationsEnabled(enabled);
-}
-
 void QuickInspector::checkFeatures()
 {
     Features f;
@@ -651,11 +646,6 @@ void QuickInspector::checkFeatures()
 #endif
 
     emit features(f);
-}
-
-void QuickInspector::checkServerSideDecorations()
-{
-    emit serverSideDecorations(m_overlay ? m_overlay->decorationsEnabled() : false);
 }
 
 void QuickInspector::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)

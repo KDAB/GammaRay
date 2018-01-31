@@ -48,6 +48,7 @@ struct QuickDecorationsSettings;
 class QuickInspectorInterface : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool serverSideDecoration READ serverSideDecorationEnabled WRITE setServerSideDecorationsEnabled NOTIFY serverSideDecorationChanged)
 public:
     enum Feature {
         NoFeatures = 0,
@@ -77,6 +78,9 @@ public:
     explicit QuickInspectorInterface(QObject *parent = nullptr);
     ~QuickInspectorInterface();
 
+    bool serverSideDecorationEnabled() const;
+    void setServerSideDecorationsEnabled(bool enabled);
+
 public slots:
     virtual void selectWindow(int index) = 0;
 
@@ -84,10 +88,6 @@ public slots:
         GammaRay::QuickInspectorInterface::RenderMode customRenderMode) = 0;
 
     virtual void checkFeatures() = 0;
-
-    virtual void setServerSideDecorationsEnabled(bool enabled) = 0;
-
-    virtual void checkServerSideDecorations() = 0;
 
     virtual void setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings) = 0;
 
@@ -100,9 +100,12 @@ public slots:
 
 signals:
     void features(GammaRay::QuickInspectorInterface::Features features);
-    void serverSideDecorations(bool enabled);
+    void serverSideDecorationChanged(bool enabled);
     void overlaySettings(const GammaRay::QuickDecorationsSettings &settings);
     void slowModeChanged(bool slow);
+
+private:
+    bool m_serverSideDecoration;
 };
 }
 

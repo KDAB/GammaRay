@@ -143,8 +143,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
     connect(m_interface, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)),
             this, SLOT(setFeatures(GammaRay::QuickInspectorInterface::Features)));
-
-    connect(m_interface, SIGNAL(serverSideDecorations(bool)), this, SLOT(setServerSideDecorations(bool)));
+    connect(m_interface, &QuickInspectorInterface::serverSideDecorationChanged, m_scenePreviewWidget, &QuickSceneControlWidget::setServerSideDecorationsEnabled);
     connect(m_interface, SIGNAL(overlaySettings(GammaRay::QuickDecorationsSettings)), this, SLOT(setOverlaySettings(GammaRay::QuickDecorationsSettings)));
 
     connect(m_interface, &QuickInspectorInterface::slowModeChanged, this, &QuickInspectorWidget::setSlowMode);
@@ -153,7 +152,6 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
             this, SLOT(itemContextMenu(QPoint)));
 
     m_interface->checkFeatures();
-    m_interface->checkServerSideDecorations();
     m_interface->checkOverlaySettings();
     m_interface->checkSlowMode();
 
@@ -216,12 +214,6 @@ void QuickInspectorWidget::setFeatures(QuickInspectorInterface::Features feature
     m_scenePreviewWidget->setSupportsCustomRenderModes(features);
     ui->actionAnalyzePainting->setEnabled(features & QuickInspectorInterface::AnalyzePainting);
     stateReceived(QuickInspectorWidget::WaitingFeatures);
-}
-
-void QuickInspectorWidget::setServerSideDecorations(bool enabled)
-{
-    m_scenePreviewWidget->setServerSideDecorationsState(enabled);
-    stateReceived(QuickInspectorWidget::WaitingServerSideDecorations);
 }
 
 void QuickInspectorWidget::setOverlaySettings(const GammaRay::QuickDecorationsSettings &settings)

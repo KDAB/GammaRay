@@ -34,6 +34,8 @@
 
 #include <QDataStream>
 
+using namespace GammaRay;
+
 namespace GammaRay {
 QDataStream &operator<<(QDataStream &out, QuickInspectorInterface::Features value)
 {
@@ -62,9 +64,11 @@ QDataStream &operator>>(QDataStream &in, QuickInspectorInterface::RenderMode &va
     value = static_cast<QuickInspectorInterface::RenderMode>(t);
     return in;
 }
+}
 
 QuickInspectorInterface::QuickInspectorInterface(QObject *parent)
     : QObject(parent)
+    , m_serverSideDecoration(false)
 {
     ObjectBroker::registerObject<QuickInspectorInterface *>(this);
     qRegisterMetaTypeStreamOperators<Features>();
@@ -77,4 +81,16 @@ QuickInspectorInterface::QuickInspectorInterface(QObject *parent)
 QuickInspectorInterface::~QuickInspectorInterface()
 {
 }
+
+bool QuickInspectorInterface::serverSideDecorationEnabled() const
+{
+    return m_serverSideDecoration;
+}
+
+void QuickInspectorInterface::setServerSideDecorationsEnabled(bool enabled)
+{
+    if (m_serverSideDecoration == enabled)
+        return;
+    m_serverSideDecoration = enabled;
+    emit serverSideDecorationChanged(enabled);
 }
