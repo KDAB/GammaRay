@@ -43,4 +43,8 @@ add_custom_target(multibuild_build ALL DEPENDS GammaRay-${_build_type}-build)
 # even hackier way to postpone external project installation to install time
 add_custom_target(multibuild_install)
 add_dependencies(multibuild_install GammaRay-${_build_type}-install)
+_ep_get_step_stampfile(GammaRay-${_build_type} "install" install_stamp_file)
+if(install_stamp_file)
+    install(CODE "execute_process(COMMAND \"${CMAKE_COMMAND}\" -E remove \"${install_stamp_file}\")")
+endif()
 install(CODE "execute_process(COMMAND \"${CMAKE_COMMAND}\" --build \"${CMAKE_BINARY_DIR}\" --target multibuild_install)")
