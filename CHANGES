@@ -1,6 +1,16 @@
 Release Highlights
 ==================
 
+Version 2.8.2
+-------------
+ * Fix high-dpi icon installation.
+ * Fix documentation build with spaces in the path.
+ * Fix build of the QtIvi inspector with Qt 5.10.
+ * Fix detection of libdl.
+ * Fix incomplete installation of multi-probe builds on second make install run.
+ * Fix build issues in some Windows and cross-compilation setups.
+ * Fix widget export action plugin loading on Windows.
+
 Version 2.8.1
 -------------
  * Fix compilation with interestingly packaged qmllint on Ubuntu.
