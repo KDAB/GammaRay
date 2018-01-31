@@ -67,7 +67,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_layout = new QVBoxLayout(this);
     m_layout->setContentsMargins(QMargins());
 
-    m_previewWidget = new QuickScenePreviewWidget(m_inspectorInterface, this, this);
+    m_previewWidget = new QuickScenePreviewWidget(this, this);
 
     m_toolBar = new QToolBar(this);
     m_toolBar->setAutoFillBackground(true);

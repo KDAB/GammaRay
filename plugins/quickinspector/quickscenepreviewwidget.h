@@ -70,7 +70,7 @@ class QuickScenePreviewWidget : public RemoteViewWidget
     Q_OBJECT
 
 public:
-    explicit QuickScenePreviewWidget(QuickInspectorInterface *inspector, QuickSceneControlWidget *control, QWidget *parent = nullptr);
+    explicit QuickScenePreviewWidget(QuickSceneControlWidget *control, QWidget *parent = nullptr);
     ~QuickScenePreviewWidget();
 
     Q_INVOKABLE void restoreState(const QByteArray &state) override;
@@ -90,7 +90,6 @@ private:
 
     void renderDecoration(QPainter *p, double zoom) const;
 
-    QuickInspectorInterface *m_inspectorInterface;
     QuickSceneControlWidget *m_control;
     QuickDecorationsSettings m_overlaySettings;
     CompleteFrameRequest m_pendingCompleteFrame;

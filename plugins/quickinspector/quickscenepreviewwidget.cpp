@@ -42,11 +42,9 @@ QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QuickInspectorInterface::RenderMode)
 QT_END_NAMESPACE
 
-QuickScenePreviewWidget::QuickScenePreviewWidget(QuickInspectorInterface *inspector,
-                                                 QuickSceneControlWidget *control,
+QuickScenePreviewWidget::QuickScenePreviewWidget(QuickSceneControlWidget *control,
                                                  QWidget *parent)
     : RemoteViewWidget(parent)
-    , m_inspectorInterface(inspector)
     , m_control(control)
 {
     connect(this, SIGNAL(frameChanged()), this, SLOT(saveScreenshot()));
