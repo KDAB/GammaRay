@@ -319,7 +319,7 @@ QString VariantHandler::displayString(const QVariant &value)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     if (value.userType() == qMetaTypeId<QEasingCurve>()) {
-        const auto ec = value.value<QEasingCurve>();
+        const auto ec = value.toEasingCurve();
         return EnumUtil::enumToString(QVariant::fromValue<QEasingCurve::Type>(ec.type()));
     }
 #endif
