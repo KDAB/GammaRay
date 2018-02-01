@@ -58,7 +58,7 @@
 
 #include <iostream>
 
-static const quint64 PropertyCarrierIndex = ~quint64(0); // there is no QUINT64_MAX
+static const quintptr PropertyCarrierIndex = ~quintptr(0);
 
 //#define IF_DEBUG(x) (x)
 #define IF_DEBUG(x)
@@ -408,7 +408,7 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    const quint64 parentRow = index.internalId();
+    const auto parentRow = index.internalId();
     if (parentRow == PropertyCarrierIndex) {
         // Carrier
 
@@ -584,7 +584,7 @@ QMap<int, QVariant> QtIviObjectModel::itemData(const QModelIndex &index) const
 
 bool QtIviObjectModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    const quint64 parentRow = index.internalId();
+    const auto parentRow = index.internalId();
     if (!index.isValid() || parentRow == PropertyCarrierIndex ||
             parentRow >= m_serviceCarriers.size() || !flags(index).testFlag(Qt::ItemIsEditable)) {
         return false;
@@ -692,7 +692,7 @@ int QtIviObjectModel::columnCount(const QModelIndex &) const
 QModelIndex QtIviObjectModel::parent(const QModelIndex &child) const
 {
     if (child.isValid()) {
-        const  quint64 parentRow = child.internalId();
+        const auto parentRow = child.internalId();
         if (parentRow != PropertyCarrierIndex) {
             return createIndex(parentRow, 0, PropertyCarrierIndex);
         }
@@ -710,7 +710,7 @@ QModelIndex QtIviObjectModel::index(int row, int column, const QModelIndex &pare
     if (column >= 0 && column < ColumnCount) {
         if (parent.isValid()) {
             // create an index to a property
-            const quint64 grandparentRow = parent.internalId();
+            const auto grandparentRow = parent.internalId();
             // only carriers have another level of children
             if (grandparentRow == PropertyCarrierIndex &&
                 parent.row() >= 0 && uint(parent.row()) < m_serviceCarriers.size()) {
