@@ -93,7 +93,7 @@ QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
             return QVariant();
         return QVariant::fromValue<const QMetaObject *>(registry()->aliveInstance(object));
     } else if (role == QMetaObjectModel::MetaObjectIssues && index.column() == QMetaObjectModel::ObjectColumn) {
-        if (!registry()->isValid(object))
+        if (!registry()->isStatic(object))
             return QVariant();
         const auto r = QMetaObjectValidator::check(registry()->aliveInstance(object));
         return r == QMetaObjectValidatorResult::NoIssue ? QVariant() : QVariant::fromValue(r);

@@ -56,6 +56,7 @@ public:
 
     QVariant data(const QMetaObject *metaObject, MetaObjectData type) const;
     bool isValid(const QMetaObject *metaObject) const;
+    bool isStatic(const QMetaObject *metaObject) const;
     const QMetaObject *aliveInstance(const QMetaObject *metaObject) const;
 
     const QMetaObject *parentOf(const QMetaObject *metaObject) const;

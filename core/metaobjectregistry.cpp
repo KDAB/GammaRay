@@ -128,6 +128,14 @@ bool MetaObjectRegistry::isValid(const QMetaObject *metaObject) const
     return !(*it).invalid;
 }
 
+bool MetaObjectRegistry::isStatic(const QMetaObject *metaObject) const
+{
+    const auto it = m_metaObjectInfoMap.constFind(metaObject);
+    if (it == m_metaObjectInfoMap.constEnd())
+        return false;
+    return (*it).isStatic;
+}
+
 const QMetaObject *MetaObjectRegistry::parentOf(const QMetaObject *metaObject) const
 {
     return m_childParentMap.value(metaObject);
