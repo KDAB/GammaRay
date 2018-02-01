@@ -31,7 +31,8 @@ build_script:
 after_build:
 - ps: |
     if ($env:TARGET -eq "windows-msvc2017_64-cl") {
-        craft gammaray-probes
+        craft --add-blueprint-repository [git]https://github.com/KDAB/craft-blueprints-kdab.git
+        craft gammaray-binary-probes
     }
     craft --src-dir $env:APPVEYOR_BUILD_FOLDER --package gammaray
 
