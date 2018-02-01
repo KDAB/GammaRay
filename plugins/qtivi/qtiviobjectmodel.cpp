@@ -626,8 +626,10 @@ bool QtIviObjectModel::setData(const QModelIndex &index, const QVariant &value, 
             if (role == Qt::CheckStateRole) {
                 const bool isOverride = value.value<Qt::CheckState>() == Qt::Checked;
 
-                if(carrier->setOverride(index.row(), isOverride))
+                if(carrier->setOverride(index.row(), isOverride)) {
+                    emitRowDataChanged(index);
                     return true;
+                }
             }
 
             break;
