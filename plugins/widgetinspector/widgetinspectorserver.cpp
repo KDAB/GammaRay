@@ -481,7 +481,7 @@ void WidgetInspectorServer::callExternalExportAction(const char *name, QWidget *
 {
     if (!m_externalExportActions->isLoaded()) {
         foreach (const auto &path, Paths::pluginPaths(GAMMARAY_PROBE_ABI)) {
-            const auto baseName = path + QLatin1String("/libgammaray_widget_export_actions");
+            const QString baseName = path + QLatin1String("/libgammaray_widget_export_actions");
             m_externalExportActions->setFileName(baseName + QLatin1Char('-') + QStringLiteral(GAMMARAY_PROBE_ABI));
             if (m_externalExportActions->load())
                 break;
