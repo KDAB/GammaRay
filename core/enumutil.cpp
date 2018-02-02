@@ -56,12 +56,13 @@ static const QMetaObject *metaObjectForClass(const QByteArray &name)
 
 QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
 {
-    QByteArray enumTypeName(typeName);
-    if (enumTypeName.isEmpty())
-        enumTypeName = value.typeName();
+    QByteArray fullTypeName(typeName);
+    if (fullTypeName.isEmpty())
+        fullTypeName = value.typeName();
 
     // split class name and enum name
     QByteArray className;
+    QByteArray enumTypeName(fullTypeName);
     const int pos = enumTypeName.lastIndexOf("::");
     if (pos >= 0) {
         className = enumTypeName.left(pos);
@@ -75,7 +76,7 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
         enumIndex = mo->indexOfEnumerator(enumTypeName);
     }
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    if (enumIndex < 0 && (mo = QMetaType::metaObjectForType(QMetaType::type(typeName)))) {
+    if (enumIndex < 0 && (mo = QMetaType::metaObjectForType(QMetaType::type(fullTypeName)))) {
         enumIndex = mo->indexOfEnumerator(enumTypeName);
     }
     if (enumIndex < 0 && (mo = metaObjectForClass(className))) {

@@ -61,6 +61,28 @@ static const MetaEnum::Value<EnumHolder::MyEnum> my_enum_table[] = {
     // Value3 intentionally missing
 };
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+namespace EnumNS {
+    Q_NAMESPACE
+    enum UnscopedEnum { AVal, BVal };
+    Q_ENUM_NS(UnscopedEnum)
+    enum class ScopedEnum { CVal, DVal };
+    Q_ENUM_NS(ScopedEnum)
+
+    enum UnscopedFlag { AFlag = 1, BFlag = 2, CFlag = 4 };
+    Q_DECLARE_FLAGS(UnscopedFlags, UnscopedFlag)
+    Q_FLAG_NS(UnscopedFlags)
+#if 0 // see QTBUG-47652
+    enum class ScopedFlag { DFlag = 8, EFlag = 16, FFlag = 32 };
+    Q_DECLARE_FLAGS(ScopedFlags, ScopedFlag)
+    Q_FLAG_NS(ScopedFlags)
+#endif
+}
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(EnumNS::UnscopedFlags)
+// Q_DECLARE_OPERATORS_FOR_FLAGS(EnumNS::ScopedFlags)
+#endif
+
 class EnumPropertyTest : public QObject
 {
     Q_OBJECT
@@ -139,6 +161,42 @@ private slots:
         QTest::newRow("plain flag, single, not in map") << QVariant::fromValue<EnumHolder::MyFlags>(EnumHolder::Value3) << QByteArray() << nullObj << QStringLiteral("flag 0x4");
         QTest::newRow("plain flag, double, mixed") << QVariant::fromValue<EnumHolder::MyFlags>(EnumHolder::Value2|EnumHolder::Value3) << QByteArray() << nullObj << QStringLiteral("Value2|flag 0x4");
         QTest::newRow("plain flag, empty") << QVariant::fromValue(EnumHolder::MyFlags()) << QByteArray() << nullObj << QStringLiteral("Value0");
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+        // namespaced unscoped enum
+        QTest::newRow("ns enum as int, QMO/name") << QVariant::fromValue<int>(EnumNS::BVal) << QByteArray("EnumNS::UnscopedEnum") << &EnumNS::staticMetaObject << QStringLiteral("BVal");
+        QTest::newRow("ns enum as int, name") << QVariant::fromValue<int>(EnumNS::AVal) << QByteArray("EnumNS::UnscopedEnum") << nullObj << QStringLiteral("AVal");
+        QTest::newRow("ns enum, QMO/name") << QVariant::fromValue<EnumNS::UnscopedEnum>(EnumNS::BVal) << QByteArray("EnumNS::UnscopedEnum") << &EnumNS::staticMetaObject << QStringLiteral("BVal");
+        QTest::newRow("ns enum, QMO") << QVariant::fromValue<EnumNS::UnscopedEnum>(EnumNS::BVal) << QByteArray() << &EnumNS::staticMetaObject << QStringLiteral("BVal");
+        QTest::newRow("ns enum, name") << QVariant::fromValue<EnumNS::UnscopedEnum>(EnumNS::BVal) << QByteArray("EnumNS::UnscopedEnum") << nullObj << QStringLiteral("BVal");
+        QTest::newRow("ns enum") << QVariant::fromValue<EnumNS::UnscopedEnum>(EnumNS::BVal) << QByteArray() << nullObj << QStringLiteral("BVal");
+
+        // namespaced scoped enum
+        QTest::newRow("ns scoped enum as int, QMO/name") << QVariant::fromValue<int>(static_cast<int>(EnumNS::ScopedEnum::DVal)) << QByteArray("EnumNS::ScopedEnum") << &EnumNS::staticMetaObject << QStringLiteral("DVal");
+        QTest::newRow("ns scoped enum as int, name") << QVariant::fromValue<int>(static_cast<int>(EnumNS::ScopedEnum::CVal)) << QByteArray("EnumNS::ScopedEnum") << nullObj << QStringLiteral("CVal");
+        QTest::newRow("ns scoped enum, QMO/name") << QVariant::fromValue<EnumNS::ScopedEnum>(EnumNS::ScopedEnum::DVal) << QByteArray("EnumNS::ScopedEnum") << &EnumNS::staticMetaObject << QStringLiteral("DVal");
+        QTest::newRow("ns scoped enum, QMO") << QVariant::fromValue<EnumNS::ScopedEnum>(EnumNS::ScopedEnum::DVal) << QByteArray() << &EnumNS::staticMetaObject << QStringLiteral("DVal");
+        QTest::newRow("ns scoped enum, name") << QVariant::fromValue<EnumNS::ScopedEnum>(EnumNS::ScopedEnum::DVal) << QByteArray("EnumNS::ScopedEnum") << nullObj << QStringLiteral("DVal");
+        QTest::newRow("ns scoped enum") << QVariant::fromValue<EnumNS::ScopedEnum>(EnumNS::ScopedEnum::DVal) << QByteArray() << nullObj << QStringLiteral("DVal");
+
+        // namespaced unscoped flag
+        QTest::newRow("ns flag as int, QMO/name") << QVariant::fromValue<int>(EnumNS::BFlag | EnumNS::CFlag) << QByteArray("EnumNS::UnscopedFlags") << &EnumNS::staticMetaObject << QStringLiteral("BFlag|CFlag");
+        QTest::newRow("ns flag as int, name") << QVariant::fromValue<int>(EnumNS::AFlag | EnumNS::CFlag) << QByteArray("EnumNS::UnscopedFlags") << nullObj << QStringLiteral("AFlag|CFlag");
+        QTest::newRow("ns flag, QMO/name") << QVariant::fromValue<EnumNS::UnscopedFlags>(EnumNS::BFlag | EnumNS::CFlag) << QByteArray("EnumNS::UnscopedFlags") << &EnumNS::staticMetaObject << QStringLiteral("BFlag|CFlag");
+        QTest::newRow("ns flag, QMO") << QVariant::fromValue<EnumNS::UnscopedFlags>(EnumNS::BFlag | EnumNS::CFlag) << QByteArray() << &EnumNS::staticMetaObject << QStringLiteral("BFlag|CFlag");
+        QTest::newRow("ns flag, name") << QVariant::fromValue<EnumNS::UnscopedFlags>(EnumNS::BFlag | EnumNS::CFlag) << QByteArray("EnumNS::UnscopedFlags") << nullObj << QStringLiteral("BFlag|CFlag");
+        QTest::newRow("ns flag") << QVariant::fromValue<EnumNS::UnscopedFlags>(EnumNS::BFlag | EnumNS::CFlag) << QByteArray() << nullObj << QStringLiteral("BFlag|CFlag");
+
+#if 0 // see QTBUG-47652
+        // namespaced scoped flag
+        QTest::newRow("ns scoped flag as int, QMO/name") << QVariant::fromValue<int>(static_cast<int>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag)) << QByteArray("EnumNS::ScopedFlags") << &EnumNS::staticMetaObject << QStringLiteral("EFlag|FFlag");
+        QTest::newRow("ns scoped flag as int, name") << QVariant::fromValue<int>(static_cast<int>(EnumNS::ScopedFlag::DFlag | EnumNS::ScopedFlag::FFlag)) << QByteArray("EnumNS::ScopedFlags") << nullObj << QStringLiteral("DFlag|FFlag");
+        QTest::newRow("ns scoped flag, QMO/name") << QVariant::fromValue<EnumNS::ScopedFlags>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag) << QByteArray("EnumNS::ScopedFlags") << &EnumNS::staticMetaObject << QStringLiteral("EFlag|FFlag");
+        QTest::newRow("ns scoped flag, QMO") << QVariant::fromValue<EnumNS::ScopedFlags>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag) << QByteArray() << &EnumNS::staticMetaObject << QStringLiteral("EFlag|FFlag");
+        QTest::newRow("ns scoped flag, name") << QVariant::fromValue<EnumNS::ScopedFlags>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag) << QByteArray("EnumNS::ScopedFlags") << nullObj << QStringLiteral("EFlag|FFlag");
+        QTest::newRow("ns scoped flag") << QVariant::fromValue<EnumNS::ScopedFlags>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag) << QByteArray() << nullObj << QStringLiteral("EFlag|FFlag");
+#endif
 #endif
     }
 
