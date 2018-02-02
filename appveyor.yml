@@ -21,7 +21,6 @@ install:
     & cmd /C "git clone -q --depth=1 git://anongit.kde.org/craftmaster.git C:\CraftMaster\CraftMaster 2>&1"
     & C:\python36\python.exe C:\CraftMaster\CraftMaster\CraftMaster.py --config "$env:APPVEYOR_BUILD_FOLDER\appveyor.ini" --variables "APPVEYOR_BUILD_FOLDER=$env:APPVEYOR_BUILD_FOLDER" --target $env:TARGET
     craft -p gammaray
-    craft nsis
     craft --install-deps gammaray
 
 build_script:
@@ -33,6 +32,7 @@ after_build:
     if ($env:TARGET -eq "windows-msvc2017_64-cl") {
         craft --add-blueprint-repository [git]https://github.com/KDAB/craft-blueprints-kdab.git
         craft gammaray-binary-probes
+        craft nsis
     }
     craft --src-dir $env:APPVEYOR_BUILD_FOLDER --package gammaray
 
