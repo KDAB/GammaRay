@@ -13,7 +13,11 @@ win32: SHELL_SEP = &
 # platform specific cmake arguments
 win32-msvc*: CMAKE_PLATFORM_ARGS = -G\"NMake Makefiles\"
 win32-g++:  CMAKE_PLATFORM_ARGS = -G\"MinGW Makefiles\"
-!qtHaveModule(widgets): GAMMARAY_EXTRA_ARGS = -DGAMMARAY_BUILD_UI=OFF
+# build the full configuration for the release build, and only extra probes if
+# the target platform also receives a dedicated debug build (like Windows does)
+debug {
+    GAMMARAY_EXTRA_ARGS = -DGAMMARAY_PROBE_ONLY_BUILD=TRUE
+}
 
 gammaray_configure.target = gammaray_configure
 gammaray_configure.commands = \
@@ -22,8 +26,10 @@ gammaray_configure.commands = \
     cmake $$CMAKE_PLATFORM_ARGS \
         -DCMAKE_INSTALL_PREFIX=$$SHELL_INSTALL_PREFIX \
         -DCMAKE_PREFIX_PATH=$$SHELL_INSTALL_PREFIX \
-        -DGAMMARAY_PROBE_ONLY_BUILD=TRUE \
         -DGAMMARAY_INSTALL_QT_LAYOUT=TRUE \
+        -DGAMMARAY_BUILD_DOCS=FALSE \
+        -DGAMMARAY_DISABLE_FEEDBACK=TRUE \
+        -DGAMMARAY_BUILD_UI=FALSE \
         $$GAMMARAY_EXTRA_ARGS $$SHELL_PWD
 
 gammaray_build.target = gammaray_build

@@ -316,8 +316,10 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
 
         endif()
 
-        gammaray_add_test(clientconnectiontest clientconnectiontest.cpp)
-        target_link_libraries(clientconnectiontest gammaray_core gammaray_launcher gammaray_client)
+        if(TARGET gammaray_client)
+            gammaray_add_test(clientconnectiontest clientconnectiontest.cpp)
+            target_link_libraries(clientconnectiontest gammaray_core gammaray_launcher gammaray_client)
+        endif()
     endif()
 endif()
 
