@@ -27,6 +27,7 @@
 #include <QDesktopServices>
 #include <QKeyEvent>
 #include <QPropertyAnimation>
+#include <QStyle>
 
 using namespace KUserFeedback;
 
