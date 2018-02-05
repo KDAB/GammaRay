@@ -72,6 +72,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QHeaderView>
 #include <QInputDialog>
 #include <QLabel>
 #include <QMenu>
