@@ -124,6 +124,20 @@ For instance:
   % cmake -DCMAKE_DISABLE_FIND_PACKAGE_VTK=True
 
 
+== RPATH Settings (Linux only) ==
+
+By default GammaRay will be build with RPATHs set to the absolute install location
+of its dependencies (such as Qt). This is useful for easily using a self-built
+GammaRay, but it might not be what you want when building installers or packages.
+
+You can therefore change this via the following CMake options:
+- CMAKE_INSTALL_RPATH_USE_LINK_PATH=OFF will disable settings RPATH to the location
+  of dependencies. It will however still set relative RPATHs between the various
+  GammaRay components. This is typically desired for Linux distros, where GammaRay's
+  dependencies are all in the default search path anyway.
+- CMAKE_INSTALL_RPATH=<path(s)> will add the specified absolute paths to RPATH,
+  additionally to the relative RPATHs between GammaRay's components.
+
 == Warning! (Qt <= 5.4 only) ==
 If your Qt is linked with the "-Bsymbolic-function" option preloading will be
 broken.  When this is enabled, references to global functions will be bound to
