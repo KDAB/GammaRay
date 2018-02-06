@@ -8,7 +8,7 @@ macro(qt5_build_doc _qdocconf_name)
   get_filename_component(QDOC_INDEX_DIR ${QDOC_INDEX_DIR} DIRECTORY)
 
   # run the attribution scanner to collect 3rdparty license information
-  file(GLOB _qt_attributions ${CMAKE_SOURCE_DIR} "3rdparty/*/qt_attribution.json")
+  file(GLOB_RECURSE _qt_attributions "${CMAKE_SOURCE_DIR}/3rdparty/*/qt_attribution.json")
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/codecontributions.qdoc
     COMMAND ${QTATTRIBUTIONSSCANNER_EXECUTABLE}
