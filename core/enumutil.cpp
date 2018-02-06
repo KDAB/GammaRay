@@ -29,6 +29,7 @@
 #include "enumutil.h"
 #include "enumrepositoryserver.h"
 
+#include <QDebug>
 #include <QMetaEnum>
 
 using namespace GammaRay;
@@ -83,6 +84,17 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
         enumIndex = mo->indexOfEnumerator(enumTypeName);
     }
 #endif
+
+    // attempt to recover namespaces from semi-qualified type names
+    if (enumIndex < 0 && metaObject) {
+        QByteArray n(metaObject->className());
+        const int pos = n.lastIndexOf("::");
+        if (pos > 0) {
+            n = n.left(pos + 2) + fullTypeName;
+            return metaEnum(value, n, nullptr);
+        }
+    }
+
     if (enumIndex < 0)
         return QMetaEnum();
     return mo->enumerator(enumIndex);

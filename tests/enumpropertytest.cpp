@@ -83,6 +83,25 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(EnumNS::UnscopedFlags)
 // Q_DECLARE_OPERATORS_FOR_FLAGS(EnumNS::ScopedFlags)
 #endif
 
+#ifndef QT4_MOC_WORKAROUND
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+namespace MyNS {
+class MyObject : public QObject
+{
+    Q_OBJECT
+public:
+    enum MyEnum { MyValue1, MyValue2 };
+    Q_ENUM(MyEnum)
+};
+
+class MyOtherObject : public QObject
+{
+    Q_OBJECT
+};
+}
+#endif
+#endif
+
 class EnumPropertyTest : public QObject
 {
     Q_OBJECT
@@ -93,6 +112,7 @@ public:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         qRegisterMetaType<QFrame*>();
         qRegisterMetaType<QFrame::Shadow>();
+        qRegisterMetaType<MyNS::MyObject*>();
 #endif
 
         EnumRepositoryServer::create(this);
@@ -197,6 +217,15 @@ private slots:
         QTest::newRow("ns scoped flag, name") << QVariant::fromValue<EnumNS::ScopedFlags>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag) << QByteArray("EnumNS::ScopedFlags") << nullObj << QStringLiteral("EFlag|FFlag");
         QTest::newRow("ns scoped flag") << QVariant::fromValue<EnumNS::ScopedFlags>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag) << QByteArray() << nullObj << QStringLiteral("EFlag|FFlag");
 #endif
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        // enums from namespace QObjects
+        QTest::newRow("ns object as int, QMO/name") << QVariant::fromValue<int>(MyNS::MyObject::MyValue2) << QByteArray("MyNS::MyObject::MyEnum") << &MyNS::MyObject::staticMetaObject << QStringLiteral("MyValue2");
+        QTest::newRow("ns object as int, name") << QVariant::fromValue<int>(MyNS::MyObject::MyValue2) << QByteArray("MyNS::MyObject::MyEnum") << nullObj << QStringLiteral("MyValue2");
+        // semi-qualified namespaced QObjects (ie. Q_PROPERTY missing the namespace but mentioning the class)
+        QTest::newRow("ns object as int, semi-qualified enum") << QVariant::fromValue<int>(MyNS::MyObject::MyValue2) << QByteArray("MyObject::MyEnum") << &MyNS::MyObject::staticMetaObject << QStringLiteral("MyValue2");
+        QTest::newRow("ns object as int, semi-qualified enum in different object") << QVariant::fromValue<int>(MyNS::MyObject::MyValue2) << QByteArray("MyObject::MyEnum") << &MyNS::MyOtherObject::staticMetaObject << QStringLiteral("MyValue2");
 #endif
     }
 
