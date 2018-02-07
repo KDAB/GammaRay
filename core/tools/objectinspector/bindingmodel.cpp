@@ -103,9 +103,9 @@ bool BindingModel::setObject(QObject* obj)
             }
 
         }
+        connect(obj, SIGNAL(destroyed()), this, SLOT(clear()));
     }
     m_obj = obj;
-    connect(obj, SIGNAL(destroyed()), this, SLOT(clear()));
     endResetModel();
     return typeMatches;
 }
