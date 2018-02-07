@@ -1,6 +1,64 @@
 Release Highlights
 ==================
 
+Version 2.9.0
+-------------
+ * Improve Qt Quick Controls 2 tracer coloring.
+ * Fix issues with QSG diagnostic render modes in combination with QQuickWidget.
+ * Improve input validation in the connect dialog.
+ * Fix Qt Quick remote view on targets without GL_BGRA support.
+ * Add texture and texture atlas inspection for QSGMaterial using objects.
+ * Only read and send the actually visible screen content in the Qt Quick remote view.
+ * Support dynamic shaders in the QSGMaterial shader view.
+ * Show vertex and fragment uniforms for shader effects in the QSGMaterial tab.
+ * Fix crashes during changing/restoring QSG diagnostic render modes.
+ * Batch row/column count requests for better remote model performance.
+ * Drop support for CMake 2.8, at least 3.0 is required now.
+ * Improved performance in the Qt Quick inspector.
+ * Add support for QSGRenderNode.
+ * Consider compiler version as part of the probe ABI on Windows.
+ * Fix multithreading issues in the timer inspector.
+ * Add search line to timer inspector.
+ * Add screenshot support in Qt Quick inspector.
+ * Improve item picking support in Qt Quick inspector.
+ * Add texture waste indicator to texture inspection tab.
+ * Add color picker for remote views.
+ * Add object navigation and source navigation to the timer inspector.
+ * Add support for cross-architecture injection on Windows.
+ * Add support for editing enum/flag properties not registered with the Qt meta object system.
+ * Add network configuration view.
+ * Improved indication that a target process is being inspected by GammaRay.
+ * Add widget tab focus chain visualization.
+ * Fix re-attaching to a target application on Windows.
+ * Add QML binding inspector (requires Qt 5.10 or newer).
+ * Add support for QtWebEngine to the web inspector tool.
+ * Improved argument inspection in the QPainter analyzer.
+ * Support paint analysis with the Qt Quick software renderer (requires Qt 5.9.3 or newer).
+ * Improved Qt Quick anchor property display.
+ * Fix property editing of gadget value types.
+ * Fix interaction issues in string type property editor.
+ * Add action to slow down Qt Quick animation timers.
+ * Add support for visualizing clip areas in the Qt Quick software renderer.
+ * Clear Qt Quick target overlay on GammaRay client disconnect.
+ * Add automatic down-cast support to GammaRay metatype system.
+ * Add QObject creation stack trace view.
+ * Add source code navigation to the message browser stack trace view.
+ * Add stack trace view for painter operations in the paint analyzer view.
+ * Fix rpath support in probe ABI detection on macOS.
+ * Fix user manual access on macOS.
+ * Add profiling support to the paint analyzer.
+ * Use relative RPATHs on Linux, to make installations fully relocatable.
+ * Add mouse wheel zoom in the Qt 3D geometry inspector.
+ * Improve performance of the Qt Quick scene graph model.
+ * Improve editing of boolean properties.
+ * Add diagnostic shading modes to the Qt 3D geometry inspector.
+ * Support vertex picking in the Qt 3D geometry inspector.
+ * Support Qt 3D painted textures in the paint analyzer.
+ * Fix Qt 3D buffer decoding for tightly packed attributes.
+ * Fix server-side decoration state going out-of-sync in the Qt Quick inspector.
+ * Fix crash when validating dynamic meta objects.
+ * Fix support of namespaced and semi-qualified enums/flags.
+
 Version 2.8.2
 -------------
  * Fix high-dpi icon installation.
