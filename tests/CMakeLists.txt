@@ -387,7 +387,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINO
     timertoptest.cpp
     $<TARGET_OBJECTS:modeltestobj>
   )
-  target_link_libraries(timertoptest Qt5::Gui)
+  target_link_libraries(timertoptest gammaray_core Qt5::Gui)
 
   if(Qt5Widgets_FOUND)
     gammaray_add_probe_test(widgettest
