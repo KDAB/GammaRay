@@ -257,7 +257,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINO
       $<TARGET_OBJECTS:modeltestobj>
     )
     target_include_directories(methodmodeltest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(methodmodeltest ${QT_QTGUI_LIBRARIES})
+    target_link_libraries(methodmodeltest gammaray_core ${QT_QTGUI_LIBRARIES})
   endif()
 endif()
 
