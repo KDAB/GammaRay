@@ -40,6 +40,9 @@ Authors:
 --------
      The GammaRay Team <gammaray-interest@kdab.com>
 
+%define debug_package %{nil}
+%global __debug_install_post %{nil}
+
 %package kde4-plugins
 Summary:        GammaRay plug-ins to introspect KDE4 applications
 Group:          Development/Tools

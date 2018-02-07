@@ -54,6 +54,9 @@ Authors:
 --------
      The GammaRay Team <gammaray-interest@kdab.com>
 
+%define debug_package %{nil}
+%global __debug_install_post %{nil}
+
 %package kf5-plugins
 Summary:        GammaRay plug-ins to introspect KF5 applications
 Group:          Development/Tools
