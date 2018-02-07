@@ -241,6 +241,7 @@ endif()
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT OSX_ASAN_WORKAROUND)
   gammaray_add_probe_test(signalspycallbacktest signalspycallbacktest.cpp)
   gammaray_add_probe_test(integrationtest integrationtest.cpp)
+  target_link_libraries(integrationtest gammaray_core)
 endif()
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
