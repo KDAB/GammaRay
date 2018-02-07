@@ -55,7 +55,7 @@ QString formatBytes(qint64 bytes)
         else
             return QString::number(bytes / static_cast<qreal>(multiplier), 'f', 2) + sizes.at(i);
     }
-    return QStringLiteral("0 B");
+    return TextureTab::tr("0 B");
 }
 
 TextureTab::TextureTab(PropertyWidget *parent)
@@ -105,8 +105,7 @@ TextureTab::TextureTab(PropertyWidget *parent)
     });
     connect(ui->textureView, &TextureViewWidget::textureWasteFound, this,
             [&](bool isProblem, int percent, int bytes) {
-                addInfoLine(isProblem, tr("Transparency Waste: ") + QString::number(percent)
-                                     + tr("% or ") + formatBytes(bytes) + tr("."));
+                addInfoLine(isProblem, tr("Transparency waste: %1% / %2.").arg(QString::number(percent), formatBytes(bytes)));
     });
     connect(ui->textureView, &TextureViewWidget::textureIsUnicolor, this,
             [&](bool isProblem) {
@@ -118,8 +117,8 @@ TextureTab::TextureTab(PropertyWidget *parent)
     });
     connect(ui->textureView, &TextureViewWidget::textureHasBorderImageSavings, this,
             [&](bool isProblem, int percent, int bytes) {
-                addInfoLine(isProblem, tr("Using a Border Image for this texture would save ") + QString::number(percent)
-                                     + tr("%  or ") + formatBytes(bytes) + tr("."));
+                addInfoLine(isProblem, tr("Using a BorderImage for this texture would save %1% / %2.")
+                    .arg(QString::number(percent), formatBytes(bytes)));
     });
     zoom->setCurrentIndex(ui->textureView->zoomLevelIndex());
 }
