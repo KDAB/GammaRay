@@ -407,7 +407,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINO
       ${CMAKE_SOURCE_DIR}/plugins/modelinspector/modelinspectorinterface.cpp
       $<TARGET_OBJECTS:modeltestobj>
     )
-    target_link_libraries(modelinspectortest gammaray_ui Qt5::Gui)
+    target_link_libraries(modelinspectortest gammaray_core gammaray_ui Qt5::Gui)
   endif()
 
   if(Qt5Quick_FOUND)
