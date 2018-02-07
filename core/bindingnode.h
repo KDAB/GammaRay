@@ -73,6 +73,7 @@ public:
     void setCanonicalName(const QString &name);
 
 private:
+    Q_DISABLE_COPY(BindingNode)
     BindingNode *m_parent;
     QObject *m_object;
     int m_propertyIndex;
@@ -81,10 +82,6 @@ private:
     bool m_isBindingLoop;
     SourceLocation m_sourceLocation;
     std::vector<std::unique_ptr<BindingNode>> m_dependencies;
-
-    BindingNode &operator=(const BindingNode &other); // MSVC 2010-style delete
-    BindingNode(const BindingNode &other);
-    BindingNode(BindingNode &&other);
 
     friend class ::MockBindingProvider;
 };
