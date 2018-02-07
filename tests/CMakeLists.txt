@@ -274,7 +274,7 @@ if(GAMMARAY_BUILD_UI)
       ${CMAKE_SOURCE_DIR}/ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
       $<TARGET_OBJECTS:modeltestobj>
     )
-    target_link_libraries(metaobjecttreemodeltest gammaray_ui Qt5::Gui)
+    target_link_libraries(metaobjecttreemodeltest gammaray_core gammaray_ui Qt5::Gui)
 
     gammaray_add_probe_test(toolmanagertest
       toolmanagertest.cpp
