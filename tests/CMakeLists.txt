@@ -240,6 +240,7 @@ endif()
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT OSX_ASAN_WORKAROUND)
   gammaray_add_probe_test(signalspycallbacktest signalspycallbacktest.cpp)
+  target_link_libraries(signalspycallbacktest gammaray_core)
   gammaray_add_probe_test(integrationtest integrationtest.cpp)
   target_link_libraries(integrationtest gammaray_core)
 endif()
