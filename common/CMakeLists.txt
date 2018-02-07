@@ -2,16 +2,17 @@
 file(READ "../ui/resources/classiconindex.map" _map_content)
 string(REPLACE "\n" ";" _map_content ${_map_content})
 set(CLASS_ICON_INDEX_CODE "")
-foreach (_icon_data IN LISTS _map_content)
-    if (NOT _icon_data)
-        continue()
-    endif()
+foreach(_icon_data IN LISTS _map_content)
+  if(_icon_data)
     string(REPLACE " " ";" _icon_data ${_icon_data})
     list(GET _icon_data 0 _icon_name)
     set(CLASS_ICON_INDEX_CODE "${CLASS_ICON_INDEX_CODE}\n    ADD_ICON(\"${_icon_name}\")")
+  endif()
 endforeach()
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp.in
-               ${CMAKE_CURRENT_BINARY_DIR}/classesiconsindex_data.cpp)
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/classesiconsindex_data.cpp.in
+  ${CMAKE_CURRENT_BINARY_DIR}/classesiconsindex_data.cpp
+)
 
 #
 # Shared non-UI code between probe and client

@@ -40,6 +40,9 @@ Authors:
 --------
      The GammaRay Team <gammaray-interest@kdab.com>
 
+%define debug_package %{nil}
+%global __debug_install_post %{nil}
+
 %package kde4-plugins
 Summary:        GammaRay plug-ins to introspect KDE4 applications
 Group:          Development/Tools
@@ -79,7 +82,6 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/libgammaray_core-*.so.*
 %{_libdir}/libgammaray_ui-*.so.*
 %{_libdir}/libgammaray_kitemmodels*
-%{_libdir}/libgammaray_kuserfeedback*
 %dir %{_libdir}/gammaray/
 %dir %{_libdir}/gammaray/*/
 %dir %{_libdir}/gammaray/*/*/
@@ -100,7 +102,6 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/gammaray/*/*/gammaray_styleinspector*
 %{_libdir}/gammaray/*/*/gammaray_textdocumentinspector*
 %{_libdir}/gammaray/*/*/gammaray_timertop*
-%{_libdir}/gammaray/*/*/gammaray_webinspector*
 %{_libdir}/gammaray/*/*/gammaray_widgetinspector*
 %exclude %{_libdir}/*.so
 %exclude %{_prefix}/share/icons/hicolor/*
