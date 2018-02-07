@@ -247,6 +247,7 @@ endif()
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
   gammaray_add_probe_test(multithreadingtest multithreadingtest.cpp)
+  target_link_libraries(multithreadingtest gammaray_core)
 
   if(GAMMARAY_BUILD_UI)
     gammaray_add_probe_test(methodmodeltest
