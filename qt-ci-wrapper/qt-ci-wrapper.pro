@@ -13,11 +13,6 @@ win32: SHELL_SEP = &
 # platform specific cmake arguments
 win32-msvc*: CMAKE_PLATFORM_ARGS = -G\"NMake Makefiles\"
 win32-g++:  CMAKE_PLATFORM_ARGS = -G\"MinGW Makefiles\"
-# build the full configuration for the release build, and only extra probes if
-# the target platform also receives a dedicated debug build (like Windows does)
-debug {
-    GAMMARAY_EXTRA_ARGS = -DGAMMARAY_PROBE_ONLY_BUILD=TRUE
-}
 
 gammaray_configure.target = gammaray_configure
 gammaray_configure.commands = \
