@@ -394,7 +394,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINO
       widgettest.cpp
       $<TARGET_OBJECTS:modeltestobj>
     )
-    target_link_libraries(widgettest Qt5::Widgets)
+    target_link_libraries(widgettest gammaray_core Qt5::Widgets)
 
     gammaray_add_probe_test(actiontest
       actiontest.cpp
