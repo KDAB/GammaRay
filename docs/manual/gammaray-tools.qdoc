@@ -50,7 +50,7 @@
         \li \l{Signal Plotter}
         \li \l{Timers}
         \li \l{Wayland Compositors}
-        \li Script Enginge Debugger
+        \li Script Engine Debugger
     \endlist
 
     \section2 Model and Data Structure Inspection
