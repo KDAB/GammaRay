@@ -412,11 +412,14 @@ void Probe::delayedInit()
     // The applicationName might be translated, so let's go with the application file base name
     m_server->setKey(QFileInfo(qApp->applicationFilePath()).completeBaseName());
     m_server->setPid(qApp->applicationPid());
-    bool serverStarted = m_server->listen();
-    if (serverStarted) {
-        ProbeSettings::sendServerAddress(m_server->externalAddress());
-    } else {
-        ProbeSettings::sendServerLaunchError(m_server->errorString());
+
+    if (ProbeSettings::value(QStringLiteral("RemoteAccessEnabled"), true).toBool()) {
+        const auto serverStarted = m_server->listen();
+        if (serverStarted) {
+            ProbeSettings::sendServerAddress(m_server->externalAddress());
+        } else {
+            ProbeSettings::sendServerLaunchError(m_server->errorString());
+        }
     }
 
     if (ProbeSettings::value(QStringLiteral("InProcessUi"), false).toBool())
