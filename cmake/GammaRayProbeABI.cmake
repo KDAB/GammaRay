@@ -85,7 +85,7 @@ elseif(APPLE)
   endif()
 
 # on Android we derive this from ANDROID_ABI
-elseif(ANDROID)
+elseif(ANDROID OR CMAKE_SYSTEM_NAME MATCHES "Android")
   if(NOT ANDROID_ABI)
     message(FATAL_ERROR "Unknown target ABI. Make sure ANDROID_ABI is set!")
   endif()
