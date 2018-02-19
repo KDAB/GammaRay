@@ -89,7 +89,14 @@ static QString callableQjsValueToString(const QJSValue &v)
 #if defined(QT_DEPRECATED) && QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     // note: QJSValue::engine() is deprecated
     // note: QJSValuePrivate::convertedToValue got introduced in Qt 5.5.0
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+    // QJSEngine::handle() changed signature in 5.12
+    QV4::ExecutionEngine *jsEngine = v.engine()->handle();
+#else
     QV4::ExecutionEngine *jsEngine = QV8Engine::getV4(v.engine());
+#endif
+
     QV4::Scope scope(jsEngine);
 
     QV4::Scoped<QV4::QObjectMethod> qobjectMethod(scope, QJSValuePrivate::convertedToValue(jsEngine,
