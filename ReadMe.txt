@@ -1,5 +1,8 @@
 # <a name="title"></a> [![Logo](ui/resources/gammaray/ui/light/pixmaps/gammaray-trademark.png)](http://www.kdab.com/gammaray)
-Introduction [![Windows Build status](https://ci.appveyor.com/api/projects/status/bff5abu59vm3i73x/branch/master?svg=true)](https://ci.appveyor.com/project/KDAB/gammaray/branch/master)
+
+Introduction [![Packaging status](https://repology.org/badge/tiny-repos/gammaray.svg)](https://repology.org/metapackage/gammaray) [![Windows Build status](https://ci.appveyor.com/api/projects/status/bff5abu59vm3i73x/branch/master?svg=true)](https://ci.appveyor.com/project/KDAB/gammaray/branch/master)
+=======
+
 GammaRay is a software introspection tool for Qt applications developed by KDAB.
 Leveraging the QObject introspection mechanism it allows you to observe and
 manipulate your application at runtime. This works both locally on your
