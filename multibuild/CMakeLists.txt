@@ -5,12 +5,6 @@ if(NOT WIN32)
   return()
 endif()
 
-# STEP_TARGETS and EXCLUDE_FROM_ALL only work with CMake >= 3.1
-if(CMAKE_VERSION VERSION_LESS 3.1)
-  message("You need at least CMake 3.1 for multi-probe builds!")
-  return()
-endif()
-
 if(CMAKE_BUILD_TYPE MATCHES "^[Rr]el")
   set(_build_type "Debug")
 else()
