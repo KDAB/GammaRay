@@ -28,14 +28,14 @@ if(Qt5Quick_FOUND)
     textureextension/qsgtexturegrabber.cpp
   )
 
+  if(NOT Qt5Quick_VERSION VERSION_LESS 5.7)
+    set(gammaray_quickinspector_srcs ${gammaray_quickinspector_srcs} quickimplicitbindingdependencyprovider.cpp)
+  endif()
+
   gammaray_add_plugin(gammaray_quickinspector
     JSON gammaray_quickinspector.json
     SOURCES ${gammaray_quickinspector_srcs}
   )
-
-  if(NOT Qt5Quick_VERSION VERSION_LESS 5.7)
-    target_sources(gammaray_quickinspector PUBLIC quickimplicitbindingdependencyprovider.cpp)
-  endif()
 
   target_include_directories(gammaray_quickinspector SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(gammaray_quickinspector

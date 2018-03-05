@@ -425,19 +425,18 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINO
   endif()
 
   if(Qt5Quick_FOUND AND NOT Qt5Quick_VERSION VERSION_LESS 5.7) # requires MSVC 2013 or higher
-    gammaray_add_quick_test(bindinginspectortest
+    set(bindinginspectortest_srcs
       bindinginspectortest.cpp
       $<TARGET_OBJECTS:modeltestobj>
-    )
-    target_include_directories(bindinginspectortest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(bindinginspectortest gammaray_core Qt5::Quick)
-    target_sources(bindinginspectortest PUBLIC
       ${CMAKE_SOURCE_DIR}/plugins/quickinspector/quickimplicitbindingdependencyprovider.cpp
     )
     if(NOT Qt5Qml_VERSION VERSION_LESS 5.10)
-      target_sources(bindinginspectortest PUBLIC
+      set(bindinginspectortest_srcs ${bindinginspectortest_srcs}
         ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlbindingprovider.cpp)
     endif()
+    gammaray_add_quick_test(bindinginspectortest ${bindinginspectortest_srcs})
+    target_include_directories(bindinginspectortest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
+    target_link_libraries(bindinginspectortest gammaray_core Qt5::Quick)
   endif()
 
   if(Qt5Quick_FOUND)
