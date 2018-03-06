@@ -11,7 +11,7 @@ clone_depth: 50
 init:
 - ps: |
     function craft() {
-        & C:\python36\python.exe "C:\CraftMaster\$env:TARGET\craft\bin\craft.py" $args
+        & "C:\python36\python.exe" "C:\CraftMaster\CraftMaster\CraftMaster.py" --config "$env:APPVEYOR_BUILD_FOLDER\appveyor.ini" --variables "APPVEYOR_BUILD_FOLDER=$env:APPVEYOR_BUILD_FOLDER" --target $env:TARGET -c $args
         if($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
     }
 
@@ -19,8 +19,7 @@ install:
 - ps: |
     #use cmd to silence powershell behaviour for stderr
     & cmd /C "git clone -q --depth=1 git://anongit.kde.org/craftmaster.git C:\CraftMaster\CraftMaster 2>&1"
-    & C:\python36\python.exe C:\CraftMaster\CraftMaster\CraftMaster.py --config "$env:APPVEYOR_BUILD_FOLDER\appveyor.ini" --variables "APPVEYOR_BUILD_FOLDER=$env:APPVEYOR_BUILD_FOLDER" --target $env:TARGET
-    craft -p gammaray
+    craft craft
     craft --install-deps gammaray
 
 build_script:
@@ -34,16 +33,11 @@ after_build:
         craft gammaray-binary-probes
         craft nsis
     }
-    craft --src-dir $env:APPVEYOR_BUILD_FOLDER --package gammaray
-
-
-on_finish:
-- ps: |
-    Get-ChildItem $env:USERPROFILE\.craft\* | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+    craft --no-cache --src-dir $env:APPVEYOR_BUILD_FOLDER --package gammaray
 
 #test_script:
 #- ps: |
-   #craft --src-dir $env:APPVEYOR_BUILD_FOLDER --test gammaray
+   #craft --no-cache --src-dir $env:APPVEYOR_BUILD_FOLDER --test gammaray
 test: off
 
 environment:
@@ -54,7 +48,8 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 
 artifacts:
-  - path: binaries/*
+  - path: cache\**\.*
+  - path: binaries\*
 
 deploy:
     - provider: Environment
