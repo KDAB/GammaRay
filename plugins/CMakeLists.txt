@@ -31,7 +31,9 @@ if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   add_subdirectory(styleinspector)
 endif()
 
-if(QT_QTSCRIPTTOOLS_FOUND OR Qt5ScriptTools_FOUND)
+# just checking whether Qt5::ScriptTools is found should be enough, but it isn't.
+# thus check both that Qt5::Script & Qt5::ScriptTools are found to fix https://github.com/KDAB/GammaRay/issues/492
+if((QT_QTSCRIPT_FOUND AND QT_QTSCRIPTTOOLS_FOUND) OR (Qt5Script_FOUND AND Qt5ScriptTools_FOUND))
   add_subdirectory(scriptenginedebugger)
 endif()
 
