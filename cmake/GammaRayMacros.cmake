@@ -74,11 +74,7 @@ macro(gammaray_add_plugin _target_name)
   set_target_properties(${_target_name} PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${_build_target_dir}
   )
-  if(NOT ANDROID)
-    set_target_properties(${_target_name} PROPERTIES PREFIX "")
-  else()
-    set_target_properties(${_target_name} PROPERTIES PREFIX "libplugins_gammaray_")
-  endif()
+  set_target_properties(${_target_name} PROPERTIES PREFIX "")
   if(GAMMARAY_STATIC_PROBE)
     set_target_properties(${_target_name} PROPERTIES COMPILE_DEFINITIONS QT_STATICPLUGIN)
   endif()
