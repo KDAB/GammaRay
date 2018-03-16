@@ -74,6 +74,9 @@ void PainterProfilingReplayer::profile(const PaintBuffer& buffer)
 {
 #ifdef USE_GAMMARAY_PAINTBUFFER
     const auto sourceSize = buffer.boundingRect().size().toSize();
+    if (sourceSize.width() <= 0 || sourceSize.height() <= 0)
+        return;
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     const auto ratio = buffer.devicePixelRatioF();
 #else
