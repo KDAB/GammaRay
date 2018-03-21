@@ -27,6 +27,8 @@
 #ifndef GAMMARAY_PROPERTYMODEL_H
 #define GAMMARAY_PROPERTYMODEL_H
 
+#include "modelroles.h"
+
 namespace GammaRay {
 /**
  * @brief GammaRay property model roles.
@@ -37,9 +39,8 @@ namespace GammaRay {
 namespace PropertyModel {
 /** Role enum, to be used with the property models. */
 enum Role {
-    // Qt4 uses 32, Qt5 256, for Qt::UserRole - use the latter globally to allow combining Qt4/5 client/servers.
-    ActionRole = 256 + 1,   /**< the property action role */
-    UserRole,                /**< the UserRole, as defined by Qt */
+    ActionRole = GammaRay::UserRole + 1, /**< the property action role */
+    DeprecatedRole,                /**< @deprecated do not use */
     ObjectIdRole,
     ResetActionRole
 };

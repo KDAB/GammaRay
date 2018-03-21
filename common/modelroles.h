@@ -29,8 +29,6 @@
 #ifndef GAMMARAY_MODELROLES_H
 #define GAMMARAY_MODELROLES_H
 
-#include <QAbstractItemModel>
-
 /**
  * @file modelroles.h
  * @brief A collection of custom model roles shared between client and server.

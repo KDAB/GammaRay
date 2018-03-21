@@ -29,6 +29,8 @@
 #ifndef TRANSLATORWRAPPER_H
 #define TRANSLATORWRAPPER_H
 
+#include <common/modelroles.h>
+
 #include <QAbstractItemModel>
 #include <QTranslator>
 
@@ -45,7 +47,7 @@ class TranslationsModel : public QAbstractTableModel
 
 public:
     enum CustomRoles {
-        IsOverriddenRole = 256 // Qt 5 Qt::UserRole is 256 while Qt 4 one is 32
+        IsOverriddenRole = GammaRay::UserRole
     };
 
     explicit TranslationsModel(TranslatorWrapper *translator);
