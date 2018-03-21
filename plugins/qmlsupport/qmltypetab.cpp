@@ -29,6 +29,7 @@
 #include "qmltypetab.h"
 #include "ui_qmltypetab.h"
 
+#include <ui/clientpropertymodel.h>
 #include <ui/contextmenuextension.h>
 #include <ui/propertywidget.h>
 
@@ -47,8 +48,9 @@ QmlTypeTab::QmlTypeTab(PropertyWidget *parent)
 
     ui->typeView->header()->setObjectName("qmlTypeViewHeader");
     ui->typeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-    ui->typeView->setModel(ObjectBroker::model(parent->objectBaseName()
-                                               + QStringLiteral(".qmlTypeModel")));
+    auto clientPropModel = new ClientPropertyModel(this);
+    clientPropModel->setSourceModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlTypeModel")));
+    ui->typeView->setModel(clientPropModel);
 
     connect(ui->typeView, &QWidget::customContextMenuRequested, this, &QmlTypeTab::contextMenu);
 }

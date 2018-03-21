@@ -6,6 +6,7 @@ set(gammaray_ui_srcs
   aboutwidget.cpp
   themedimagelabel.cpp
   clientdecorationidentityproxymodel.cpp
+  clientpropertymodel.cpp
   clienttoolmanager.cpp
   clienttoolmodel.cpp
   contextmenuextension.cpp

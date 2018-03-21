@@ -29,6 +29,7 @@
 #include "qmlcontexttab.h"
 #include "ui_qmlcontexttab.h"
 
+#include <ui/clientpropertymodel.h>
 #include <ui/contextmenuextension.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 #include <ui/uiintegration.h>
@@ -57,11 +58,12 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent)
     connect(ui->contextView, &QWidget::customContextMenuRequested, this,
             &QmlContextTab::contextContextMenu);
 
-    auto propertyModel
-        = ObjectBroker::model(parent->objectBaseName()
+    auto propertyModel = ObjectBroker::model(parent->objectBaseName()
                               + QStringLiteral(".qmlContextPropertyModel"));
+    auto propertyClient = new ClientPropertyModel(this);
+    propertyClient->setSourceModel(propertyModel);
     auto propertyProxy = new QSortFilterProxyModel(this);
-    propertyProxy->setSourceModel(propertyModel);
+    propertyProxy->setSourceModel(propertyClient);
     propertyProxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     ui->contextPropertyView->header()->setObjectName("contextPropertyViewHeader");
     ui->contextPropertyView->setModel(propertyProxy);

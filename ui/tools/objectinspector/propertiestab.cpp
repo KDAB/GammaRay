@@ -31,6 +31,7 @@
 #include "propertywidget.h"
 #include "editabletypesmodel.h"
 
+#include <ui/clientpropertymodel.h>
 #include <ui/contextmenuextension.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 #include <ui/propertyeditor/propertyeditorfactory.h>
@@ -67,11 +68,14 @@ PropertiesTab::~PropertiesTab()
 
 void PropertiesTab::setObjectBaseName(const QString &baseName)
 {
-    auto *proxy = new QSortFilterProxyModel(this);
+    auto model = ObjectBroker::model(baseName + '.' + "properties");
+    auto clientModel = new ClientPropertyModel(this);
+    clientModel->setSourceModel(model);
+
+    auto proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
-    QAbstractItemModel *model = ObjectBroker::model(baseName + '.' + "properties");
-    proxy->setSourceModel(model);
+    proxy->setSourceModel(clientModel);
     m_ui->propertyView->setModel(proxy);
     m_ui->propertyView->sortByColumn(0, Qt::AscendingOrder);
     m_ui->propertyView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
@@ -80,7 +84,7 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
     connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(propertyContextMenu(QPoint)));
 
-    auto *typesModel = new EditableTypesModel(this);
+    auto typesModel = new EditableTypesModel(this);
     proxy = new QSortFilterProxyModel(this);
     proxy->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxy->setSourceModel(typesModel);

@@ -30,6 +30,7 @@
 #include "materialextensioninterface.h"
 #include "ui_materialtab.h"
 
+#include <ui/clientpropertymodel.h>
 #include <ui/contextmenuextension.h>
 #include <ui/propertywidget.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
@@ -70,11 +71,12 @@ void MaterialTab::setObjectBaseName(const QString &baseName)
     if (m_interface)
         disconnect(m_interface, nullptr, this, nullptr);
 
-    m_interface
-        = ObjectBroker::object<MaterialExtensionInterface *>(baseName + ".material");
+    m_interface = ObjectBroker::object<MaterialExtensionInterface *>(baseName + ".material");
     connect(m_interface, SIGNAL(gotShader(QString)), this, SLOT(showShader(QString)));
 
-    m_ui->materialPropertyView->setModel(ObjectBroker::model(baseName + ".materialPropertyModel"));
+    auto clientPropModel = new ClientPropertyModel(this);
+    clientPropModel->setSourceModel(ObjectBroker::model(baseName + ".materialPropertyModel"));
+    m_ui->materialPropertyView->setModel(clientPropModel);
     m_ui->shaderList->setModel(ObjectBroker::model(baseName + ".shaderModel"));
 }
 
