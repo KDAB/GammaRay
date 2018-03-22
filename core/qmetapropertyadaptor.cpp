@@ -81,35 +81,6 @@ int QMetaPropertyAdaptor::count() const
     return mo->propertyCount();
 }
 
-static QString translateBool(bool value)
-{
-    static const QString yesStr = QMetaPropertyAdaptor::tr("yes");
-    static const QString noStr = QMetaPropertyAdaptor::tr("no");
-    return value ? yesStr : noStr;
-}
-
-QString QMetaPropertyAdaptor::detailString(const QMetaProperty &prop) const
-{
-    QObject *obj = object().qtObject();
-    QStringList s;
-    s << tr("Constant: %1").arg(translateBool(prop.isConstant()));
-    s << tr("Designable: %1").arg(translateBool(prop.isDesignable(obj)));
-    s << tr("Final: %1").arg(translateBool(prop.isFinal()));
-    if (prop.hasNotifySignal())
-        s << tr("Notification: %1").arg(Util::prettyMethodSignature(prop.notifySignal()));
-    else
-        s << tr("Notification: no");
-    s << tr("Resetable: %1").arg(translateBool(prop.isResettable()));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
-    s << tr("Revision: %1").arg(prop.revision());
-#endif
-    s << tr("Scriptable: %1").arg(translateBool(prop.isScriptable(obj)));
-    s << tr("Stored: %1").arg(translateBool(prop.isStored(obj)));
-    s << tr("User: %1").arg(translateBool(prop.isUser(obj)));
-    s << tr("Writable: %1").arg(translateBool(prop.isWritable()));
-    return s.join(QStringLiteral("\n"));
-}
-
 PropertyData QMetaPropertyAdaptor::propertyData(int index) const
 {
     PropertyData data;
@@ -150,14 +121,36 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
         }
     }
 
-    data.setDetails(detailString(prop));
+    PropertyModel::PropertyFlags f(PropertyModel::None);
+    if (prop.isConstant())
+        f |= PropertyModel::Constant;
+    if (prop.isDesignable(object().qtObject()))
+        f |= PropertyModel::Designable;
+    if (prop.isFinal())
+        f |= PropertyModel::Final;
+    if (prop.isResettable())
+        f |= PropertyModel::Resetable;
+    if (prop.isScriptable(object().qtObject()))
+        f |= PropertyModel::Scriptable;
+    if (prop.isStored(object().qtObject()))
+        f |= PropertyModel::Stored;
+    if (prop.isUser(object().qtObject()))
+        f |= PropertyModel::User;
+    if (prop.isWritable())
+        f |= PropertyModel::Writable;
+    data.setPropertyFlags(f);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+    data.setRevision(prop.revision());
+#endif
+    if (prop.hasNotifySignal())
+        data.setNotifySignal(Util::prettyMethodSignature(prop.notifySignal()));
 
-    PropertyData::Flags flags = PropertyData::Readable;
+    PropertyData::AccessFlags flags = PropertyData::Readable;
     if (prop.isWritable())
         flags |= PropertyData::Writable;
     if (prop.isResettable())
         flags |= PropertyData::Resettable;
-    data.setFlags(flags);
+    data.setAccessFlags(flags);
 
     m_notifyGuard = false;
     return data;

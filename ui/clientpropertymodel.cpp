@@ -30,6 +30,8 @@
 
 #include <common/propertymodel.h>
 
+#include <QStringList>
+
 using namespace GammaRay;
 
 ClientPropertyModel::ClientPropertyModel(QObject *parent)
@@ -43,6 +45,42 @@ ClientPropertyModel::~ClientPropertyModel()
 
 QVariant ClientPropertyModel::data(const QModelIndex& index, int role) const
 {
+    if (role == Qt::ToolTipRole && index.isValid()) {
+        const auto idx0 = index.sibling(index.row(), 0);
+        const auto f = idx0.data(PropertyModel::PropertyFlagsRole).value<PropertyModel::PropertyFlags>();
+        const auto revision = idx0.data(PropertyModel::PropertyRevisionRole);
+        const auto notifySignal = idx0.data(PropertyModel::NotifySignalRole).toString();
+
+        QStringList tt;
+        if (f != PropertyModel::None) {
+            QStringList fs;
+            if (f & PropertyModel::Constant)
+                fs.push_back(tr("constant"));
+            if (f & PropertyModel::Designable)
+                fs.push_back(tr("designable"));
+            if (f & PropertyModel::Final)
+                fs.push_back(tr("final"));
+            if (f & PropertyModel::Resetable)
+                fs.push_back(tr("resetable"));
+            if (f & PropertyModel::Scriptable)
+                fs.push_back(tr("scriptable"));
+            if (f & PropertyModel::Stored)
+                fs.push_back(tr("stored"));
+            if (f & PropertyModel::User)
+                fs.push_back(tr("user"));
+            if (f & PropertyModel::Writable)
+                fs.push_back(tr("writable"));
+            tt.push_back(tr("Attributes: %1").arg(fs.join(QLatin1String(", "))));
+        }
+        if (!revision.isNull()) {
+            tt.push_back(tr("Revision: %1").arg(revision.toInt()));
+        }
+        if (!notifySignal.isEmpty()) {
+            tt.push_back(tr("Notify signal: %1").arg(notifySignal));
+        }
+
+        return tt.join(QLatin1String("\n"));
+    }
     return QIdentityProxyModel::data(index, role);
 }
 

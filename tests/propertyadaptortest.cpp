@@ -56,7 +56,7 @@ class PropertyAdaptorTest : public QObject
     Q_OBJECT
 private:
     void testProperty(PropertyAdaptor *adaptor, const char *name, const char *typeName,
-                      const char *className, PropertyData::Flags flags)
+                      const char *className, PropertyData::AccessFlags flags)
     {
         for (int i = 0; i < adaptor->count(); ++i) {
             auto prop = adaptor->propertyData(i);
@@ -64,7 +64,7 @@ private:
                 continue;
             QCOMPARE(prop.typeName(), QString(typeName));
             QCOMPARE(prop.className(), QString(className));
-            QCOMPARE(prop.flags(), flags);
+            QCOMPARE(prop.accessFlags(), flags);
             return;
         }
         qDebug() << name;
@@ -157,7 +157,7 @@ private slots:
         QVERIFY(spy.isValid());
 
         auto idx = indexOfProperty(adaptor, "priority");
-        QCOMPARE(adaptor->propertyData(idx).flags(), PropertyData::Writable);
+        QCOMPARE(adaptor->propertyData(idx).accessFlags(), PropertyData::Writable);
         adaptor->writeProperty(idx, QThread::LowPriority);
         QCOMPARE(spy.size(), 1);
         QCOMPARE(spy.at(0).at(0).toInt(), idx);
@@ -225,7 +225,11 @@ private slots:
 
         auto propIdx = indexOfProperty(adaptor, "intProp");
         QVERIFY(propIdx >= 0);
-        QVERIFY(!adaptor->propertyData(propIdx).details().isEmpty());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+        QCOMPARE(adaptor->propertyData(propIdx).revision(), 0);
+#endif
+        QCOMPARE(adaptor->propertyData(propIdx).notifySignal(), QLatin1String("void intPropChanged()"));
+        QCOMPARE(adaptor->propertyData(propIdx).propertyFlags(), PropertyModel::Writable | PropertyModel::Designable | PropertyModel::Stored | PropertyModel::Scriptable);
         QCOMPARE(adaptor->propertyData(propIdx).value(), QVariant(0));
         adaptor->writeProperty(propIdx, 2);
         QCOMPARE(adaptor->propertyData(propIdx).value(), QVariant(2));
@@ -241,7 +245,11 @@ private slots:
 
         propIdx = indexOfProperty(adaptor, "readOnlyProp");
         QVERIFY(propIdx >= 0);
-        QVERIFY(!adaptor->propertyData(propIdx).details().isEmpty());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
+        QCOMPARE(adaptor->propertyData(propIdx).revision(), 0);
+#endif
+        QCOMPARE(adaptor->propertyData(propIdx).notifySignal(), QString());
+        QCOMPARE(adaptor->propertyData(propIdx).propertyFlags(), PropertyModel::Resetable | PropertyModel::Designable | PropertyModel::Stored | PropertyModel::Scriptable);
         adaptor->resetProperty(propIdx);
         QCOMPARE(obj->intProp(), 5);
         QVERIFY(changeSpy.size() >= 3);

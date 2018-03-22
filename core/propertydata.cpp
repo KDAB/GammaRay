@@ -31,7 +31,9 @@
 using namespace GammaRay;
 
 PropertyData::PropertyData()
-    : m_flags(PropertyData::Readable)
+    : m_accessFlags(PropertyData::Readable)
+    , m_propertyFlags(PropertyModel::None)
+    , m_revision(-1)
 {
 }
 
@@ -77,22 +79,42 @@ void PropertyData::setClassName(const QString &className)
     m_className = className;
 }
 
-QString PropertyData::details() const
+PropertyData::AccessFlags PropertyData::accessFlags() const
 {
-    return m_details;
+    return m_accessFlags;
 }
 
-void PropertyData::setDetails(const QString &details)
+void PropertyData::setAccessFlags(PropertyData::AccessFlags flags)
 {
-    m_details = details;
+    m_accessFlags = flags;
 }
 
-PropertyData::Flags PropertyData::flags() const
+PropertyModel::PropertyFlags PropertyData::propertyFlags() const
 {
-    return m_flags;
+    return m_propertyFlags;
 }
 
-void PropertyData::setFlags(PropertyData::Flags flags)
+void PropertyData::setPropertyFlags(PropertyModel::PropertyFlags flags)
 {
-    m_flags = flags;
+    m_propertyFlags = flags;
+}
+
+int PropertyData::revision() const
+{
+    return m_revision;
+}
+
+void PropertyData::setRevision(int rev)
+{
+    m_revision = rev;
+}
+
+QString PropertyData::notifySignal() const
+{
+    return m_notifySignal;
+}
+
+void PropertyData::setNotifySignal(const QString& notifySignal)
+{
+    m_notifySignal = notifySignal;
 }

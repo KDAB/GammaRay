@@ -135,12 +135,21 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex &index) 
     const auto d = adaptor->propertyData(index.row());
 
     res.insert(Qt::DisplayRole, data(adaptor, d, index.column(), Qt::DisplayRole));
-    res.insert(Qt::ToolTipRole, data(adaptor, d, index.column(), Qt::ToolTipRole));
     res.insert(PropertyModel::ActionRole, data(adaptor, d,
                                                index.column(), PropertyModel::ActionRole));
     res.insert(PropertyModel::ObjectIdRole,
                data(adaptor, d, index.column(), PropertyModel::ObjectIdRole));
-    if (index.column() == 1) {
+    if (index.column() == 0) {
+        auto v = data(adaptor, d, index.column(), PropertyModel::PropertyFlagsRole);
+        if (!v.isNull())
+            res.insert(PropertyModel::PropertyFlagsRole, v);
+        v = data(adaptor, d, index.column(), PropertyModel::PropertyRevisionRole);
+        if (!v.isNull())
+            res.insert(PropertyModel::PropertyRevisionRole, v);
+        v = data(adaptor, d, index.column(), PropertyModel::NotifySignalRole);
+        if (!v.isNull())
+            res.insert(PropertyModel::NotifySignalRole, v);
+    } else if (index.column() == 1) {
         res.insert(Qt::EditRole, data(adaptor, d, index.column(), Qt::EditRole));
         res.insert(Qt::DecorationRole, data(adaptor, d, index.column(), Qt::DecorationRole));
         if (d.value().type() == QVariant::Bool)
@@ -164,7 +173,7 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
             const QString enumStr = EnumUtil::enumToString(d.value(), d.typeName().toLatin1(), adaptor->object().metaObject());
             if (!enumStr.isEmpty())
                 return enumStr;
-            if (d.value().type() == QVariant::Bool && (d.flags() & PropertyData::Writable))
+            if (d.value().type() == QVariant::Bool && (d.accessFlags() & PropertyData::Writable))
                 return QVariant();
             return VariantHandler::displayString(d.value());
         }
@@ -184,22 +193,20 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
             return VariantHandler::serializableVariant(d.value());
         }
         break;
-    case Qt::ToolTipRole:
-        return d.details();
     case Qt::DecorationRole:
         if (column == 1)
             return VariantHandler::decoration(d.value());
         break;
     case Qt::CheckStateRole:
-        if (column == 1 && d.value().type() == QVariant::Bool && (d.flags() & PropertyData::Writable))
+        if (column == 1 && d.value().type() == QVariant::Bool && (d.accessFlags() & PropertyData::Writable))
             return d.value().toBool() ? Qt::Checked : Qt::Unchecked;
         break;
     case PropertyModel::ActionRole:
     {
         int actions = PropertyModel::NoAction;
-        if (d.flags() & PropertyData::Resettable)
+        if (d.accessFlags() & PropertyData::Resettable)
             actions |= PropertyModel::Reset;
-        if (d.flags() & PropertyData::Deletable)
+        if (d.accessFlags() & PropertyData::Deletable)
             actions |= PropertyModel::Delete;
         if ((MetaObjectRepository::instance()->metaObject(d.typeName())
              && *reinterpret_cast<void * const *>(d.value().data()))
@@ -216,8 +223,19 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
                                                 v.typeName()));
         }
         return QVariant();
+    case PropertyModel::PropertyFlagsRole:
+        if (column == 0 && d.propertyFlags() != PropertyModel::None)
+            return QVariant::fromValue(d.propertyFlags());
+        return QVariant();
+    case PropertyModel::PropertyRevisionRole:
+        if (column == 0 && d.revision() >= 0)
+            return d.revision();
+        return QVariant();
+    case PropertyModel::NotifySignalRole:
+        if (column == 0 && !d.notifySignal().isEmpty())
+            return d.notifySignal();
+        return QVariant();
     }
-
     return QVariant();
 }
 
@@ -295,7 +313,7 @@ Qt::ItemFlags AggregatedPropertyModel::flags(const QModelIndex &index) const
 
     auto adaptor = adaptorForIndex(index);
     auto data = adaptor->propertyData(index.row());
-    const auto editable = (data.flags() & PropertyData::Writable) && isParentEditable(adaptor);
+    const auto editable = (data.accessFlags() & PropertyData::Writable) && isParentEditable(adaptor);
     const auto booleanEditable = editable && data.value().type() == QVariant::Bool;
     if (booleanEditable)
         return baseFlags | Qt::ItemIsUserCheckable;
@@ -491,7 +509,7 @@ bool AggregatedPropertyModel::isParentEditable(PropertyAdaptor *adaptor) const
         Q_ASSERT(row >= 0);
 
         const auto pd = parentAdaptor->propertyData(row);
-        if ((pd.flags() & PropertyData::Writable) == 0)
+        if ((pd.accessFlags() & PropertyData::Writable) == 0)
             return false;
     }
 

@@ -68,7 +68,7 @@ PropertyData QmlContextPropertyAdaptor::propertyData(int index) const
     pd.setName(m_contextPropertyNames.at(index));
     pd.setValue(context->contextProperty(m_contextPropertyNames.at(index)));
     pd.setClassName(tr("QML Context Property"));
-    pd.setFlags(PropertyData::Writable);
+    pd.setAccessFlags(PropertyData::Writable);
     return pd;
 }
 

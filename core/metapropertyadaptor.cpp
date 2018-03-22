@@ -95,7 +95,7 @@ PropertyData MetaPropertyAdaptor::propertyData(int index) const
     data.setName(property->name());
     data.setTypeName(property->typeName());
     data.setClassName(property->metaObject()->className());
-    data.setFlags(property->isReadOnly() ? PropertyData::Readable : PropertyData::Writable);
+    data.setAccessFlags(property->isReadOnly() ? PropertyData::Readable : PropertyData::Writable);
 
     if (m_obj) {
         const auto value = property->value(m_metaObj->castForPropertyAt(m_obj, index));

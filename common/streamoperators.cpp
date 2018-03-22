@@ -34,6 +34,7 @@
 #include "objectid.h"
 #include "enumdefinition.h"
 #include "enumvalue.h"
+#include "propertymodel.h"
 
 #include <QMetaMethod>
 
@@ -44,6 +45,7 @@ GAMMARAY_ENUM_STREAM_OPERATORS(QMetaMethod::Access)
 GAMMARAY_ENUM_STREAM_OPERATORS(QMetaMethod::MethodType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt::ConnectionType)
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QMetaObjectValidatorResult::Results)
+GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::PropertyModel::PropertyFlags)
 QT_END_NAMESPACE
 
 void StreamOperators::registerOperators()
@@ -69,6 +71,7 @@ void StreamOperators::registerOperators()
     qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
     qRegisterMetaTypeStreamOperators<GammaRay::SourceLocation>();
     qRegisterMetaTypeStreamOperators<GammaRay::QMetaObjectValidatorResult::Results>();
+    qRegisterMetaTypeStreamOperators<GammaRay::PropertyModel::PropertyFlags>();
 
     qRegisterMetaTypeStreamOperators<EnumDefinition>();
     qRegisterMetaTypeStreamOperators<EnumValue>();

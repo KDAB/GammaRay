@@ -29,6 +29,9 @@
 
 #include "modelroles.h"
 
+#include <QMetaType>
+#include <QFlags>
+
 namespace GammaRay {
 /**
  * @brief GammaRay property model roles.
@@ -42,7 +45,10 @@ enum Role {
     ActionRole = GammaRay::UserRole + 1, /**< the property action role */
     DeprecatedRole,                /**< @deprecated do not use */
     ObjectIdRole,
-    ResetActionRole
+    ResetActionRole,
+    PropertyFlagsRole,
+    PropertyRevisionRole,
+    NotifySignalRole
 };
 
 /** Available property actions. */
@@ -60,7 +66,27 @@ enum Column {
     TypeColumn,
     ClassColumn
 };
+
+/** Property flags.
+ *  @see QMetaProperty
+ */
+enum PropertyFlag {
+    None = 0,
+    Constant = 1,
+    Designable = 2,
+    Final = 4,
+    Resetable = 8,
+    Scriptable = 16,
+    Stored = 32,
+    User = 64,
+    Writable = 128
+};
+Q_DECLARE_FLAGS(PropertyFlags, PropertyFlag)
+
 }
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::PropertyModel::PropertyFlags)
+Q_DECLARE_METATYPE(GammaRay::PropertyModel::PropertyFlags)
 
 #endif
