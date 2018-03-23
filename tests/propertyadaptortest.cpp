@@ -227,8 +227,8 @@ private slots:
         QVERIFY(propIdx >= 0);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
         QCOMPARE(adaptor->propertyData(propIdx).revision(), 0);
-#endif
         QCOMPARE(adaptor->propertyData(propIdx).notifySignal(), QLatin1String("void intPropChanged()"));
+#endif
         QCOMPARE(adaptor->propertyData(propIdx).propertyFlags(), PropertyModel::Writable | PropertyModel::Designable | PropertyModel::Stored | PropertyModel::Scriptable);
         QCOMPARE(adaptor->propertyData(propIdx).value(), QVariant(0));
         adaptor->writeProperty(propIdx, 2);
