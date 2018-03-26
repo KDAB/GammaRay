@@ -35,7 +35,6 @@ if(VTK_FOUND)
     add_feature_info("QVTKWidget header" VTK_FOUND "Object visualizer plugin requires QVTKWidget.h header.")
   endif()
 endif()
-set(HAVE_VTK ${VTK_FOUND})
 
 # VTK includes QtGui/... stuff => breaks compilation with Qt5
 if(VTK_FOUND AND NOT Qt5Core_FOUND AND GAMMARAY_BUILD_UI)
