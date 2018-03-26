@@ -90,7 +90,7 @@ static vtkGraphLayoutStrategy *layoutStrategyForName(const QString &layoutName)
     } else if (layoutName == "simple2D") {
         return vtkSimple2DLayoutStrategy::New();
     } else {
-        return 0;
+        return nullptr;
     }
 }
 
