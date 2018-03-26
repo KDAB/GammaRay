@@ -151,7 +151,8 @@ private slots:
     {
         QVERIFY(m_process.state() == QProcess::Running);
         m_process.terminate();
-        QVERIFY(m_process.waitForFinished());
+        m_process.kill();
+        QVERIFY(m_process.waitForFinished(5000));
     }
 
 private:
