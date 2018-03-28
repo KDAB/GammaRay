@@ -51,6 +51,7 @@ static const MetaEnum::Value<Protocol::MessageType> message_type_table[] = {
     M(ModelContentRequest),
     M(ModelHeaderRequest),
     M(ModelSetDataRequest),
+    M(ModelSetHeaderDataRequest),
     M(ModelSortRequest),
     M(ModelSyncBarrier),
     M(SelectionModelStateRequest),

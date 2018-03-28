@@ -30,28 +30,79 @@
 #include "signalhistorydelegate.h"
 #include "signalhistorymodel.h"
 
-#include <QHelpEvent>
 #include <QScrollBar>
-#include <QToolTip>
 
 using namespace GammaRay;
 
 SignalHistoryView::SignalHistoryView(QWidget *parent)
     : DeferredTreeView(parent)
     , m_eventDelegate(new SignalHistoryDelegate(this))
-    , m_eventScrollBar(nullptr)
+    , m_eventScrollBar(new QScrollBar(this))
 {
-    setDeferredResizeMode(0, QHeaderView::Interactive);
-    setDeferredResizeMode(1, QHeaderView::Interactive);
-    setDeferredResizeMode(2, QHeaderView::Stretch);
 
+    m_eventScrollBar->setTracking(true);
+    m_eventScrollBar->setOrientation(Qt::Horizontal);
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setItemDelegateForColumn(SignalHistoryModel::EventColumn, m_eventDelegate);
 
-    connect(m_eventDelegate, SIGNAL(visibleOffsetChanged(qint64)), this, SLOT(
-                eventDelegateChanged()));
-    connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)), this,
-            SLOT(eventDelegateChanged()));
-    connect(m_eventDelegate, SIGNAL(totalIntervalChanged()), this, SLOT(eventDelegateChanged()));
+    setDeferredResizeMode(0, QHeaderView::Fixed);
+    setDeferredResizeMode(1, QHeaderView::Interactive);
+    setDeferredResizeMode(2, QHeaderView::Interactive);
+    setDeferredResizeMode(3, QHeaderView::Fixed);
+
+    connect(m_eventDelegate, SIGNAL(isActiveChanged(bool)),
+            this, SIGNAL(delegateIsActiveChanged(bool)));
+    connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)),
+            this, SIGNAL(delegateVisibleIntervalChanged(qint64)));
+    connect(m_eventDelegate, SIGNAL(visibleOffsetChanged(qint64)),
+            this, SLOT(eventDelegateChanged()));
+    connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)),
+            this, SLOT(eventDelegateChanged()));
+    connect(m_eventScrollBar, SIGNAL(sliderMoved(int)),
+            this, SLOT(eventScrollBarSliderMoved(int)));
+}
+
+int SignalHistoryView::sizeHintForColumn(int column) const
+{
+    if (column == 0) {
+        const int margin = style()->pixelMetric(QStyle::PM_HeaderMargin);
+        const int checkIndicatorWidth = style()->pixelMetric(QStyle::PM_IndicatorWidth);
+        const int sortIndicatorWidth = style()->pixelMetric(QStyle::PM_HeaderMarkSize);
+        return checkIndicatorWidth + margin + sortIndicatorWidth;
+    }
+    
+    return QTreeView::sizeHintForColumn(column);
+}
+
+bool SignalHistoryView::delegateIsActive() const
+{
+    return m_eventDelegate->isActive();
+}
+
+void SignalHistoryView::setDelegateActive(bool active)
+{
+    m_eventDelegate->setActive(active);
+}
+
+qint64 SignalHistoryView::delegateVisibleInterval() const
+{
+    return m_eventDelegate->visibleInterval();
+}
+
+void SignalHistoryView::setDelegateVisibleInterval(qint64 interval)
+{
+    m_eventDelegate->setVisibleInterval(interval);
+}
+
+int SignalHistoryView::delegateFPS() const
+{
+    return m_eventDelegate->fps();
+}
+
+void SignalHistoryView::setDelegateFPS(int fps)
+{
+    m_eventDelegate->setFPS(fps);
 }
 
 void SignalHistoryView::eventDelegateChanged()
@@ -76,21 +127,6 @@ void SignalHistoryView::eventDelegateChanged()
     }
 }
 
-void SignalHistoryView::setEventScrollBar(QScrollBar *scrollBar)
-{
-    if (m_eventScrollBar != scrollBar) {
-        if (m_eventScrollBar)
-            disconnect(m_eventScrollBar, nullptr, this, nullptr);
-
-        m_eventScrollBar = scrollBar;
-
-        if (m_eventScrollBar) {
-            connect(m_eventScrollBar, SIGNAL(sliderMoved(int)),
-                    this, SLOT(eventScrollBarSliderMoved(int)));
-        }
-    }
-}
-
 int SignalHistoryView::eventColumnPosition() const
 {
     return columnViewportPosition(SignalHistoryModel::EventColumn);
@@ -107,27 +143,19 @@ void SignalHistoryView::eventScrollBarSliderMoved(int value)
     m_eventDelegate->setVisibleOffset(value);
 }
 
-bool SignalHistoryView::viewportEvent(QEvent *event)
+void SignalHistoryView::updateGeometries()
 {
-    if (event->type() == QEvent::ToolTip) {
-        const QHelpEvent * const help = static_cast<QHelpEvent *>(event);
-        const QModelIndex index = indexAt(help->pos());
+    DeferredTreeView::updateGeometries();
 
-        if (index.isValid() && index.column() == SignalHistoryModel::EventColumn) {
-            const int x0 = help->pos().x() - eventColumnPosition();
-            const int dx = eventColumnWidth();
-            const QString &toolTipText = m_eventDelegate->toolTipAt(index, x0, dx);
+    const QMargins margins(0,
+                     header()->isVisible() ? header()->height() : 0,
+                     0,
+                     m_eventScrollBar->sizeHint().height());
+    setViewportMargins(margins);
 
-            if (!toolTipText.isEmpty()) {
-                QToolTip::showText(help->globalPos(), toolTipText);
-            } else {
-                QToolTip::hideText();
-                event->ignore();
-            }
-
-            return true;
-        }
-    }
-
-    return DeferredTreeView::viewportEvent(event);
+    const QRect rect(QPoint(eventColumnPosition(),
+                            viewport()->height() + margins.top() + 1),
+                     QSize(viewport()->width() - eventColumnPosition() + 1,
+                           margins.bottom()));
+    m_eventScrollBar->setGeometry(rect);
 }

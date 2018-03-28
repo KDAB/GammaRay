@@ -95,4 +95,8 @@ Q_DECLARE_METATYPE(QSurfaceFormat)
 Q_DECLARE_METATYPE(Qt::ApplicationState)
 #endif
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
+Q_DECLARE_METATYPE(Qt::CheckState)
+#endif
+
 #endif

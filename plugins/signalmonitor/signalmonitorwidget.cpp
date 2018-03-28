@@ -40,6 +40,8 @@
 #include <common/objectbroker.h>
 
 #include <QMenu>
+#include <QToolTip>
+#include <QSettings>
 
 #include <cmath>
 
@@ -69,60 +71,75 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     signalHistoryProxyModel->setSourceModel(signalHistory);
     new SearchLineController(ui->objectSearchLine, signalHistoryProxyModel);
 
-    ui->objectTreeView->header()->setObjectName("objectTreeViewHeader");
+    auto header = ui->objectTreeView->header();
+    header->setObjectName("objectTreeViewHeader");
     ui->objectTreeView->setModel(signalHistoryProxyModel);
-    ui->objectTreeView->setEventScrollBar(ui->eventScrollBar);
     connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
     auto selectionModel = ObjectBroker::selectionModel(signalHistoryProxyModel);
     ui->objectTreeView->setSelectionModel(selectionModel);
     connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
 
     connect(ui->pauseButton, SIGNAL(toggled(bool)), this, SLOT(pauseAndResume(bool)));
-    connect(ui->intervalScale, SIGNAL(valueChanged(int)), this,
+    connect(ui->intervalScale, SIGNAL(sliderMoved(int)), this,
             SLOT(intervalScaleValueChanged(int)));
-    connect(ui->objectTreeView->eventDelegate(), SIGNAL(isActiveChanged(bool)), this,
+    connect(ui->fps, SIGNAL(sliderMoved(int)), this,
+            SLOT(fpsValueChanged(int)));
+    connect(ui->objectTreeView, SIGNAL(delegateIsActiveChanged(bool)), this,
             SLOT(eventDelegateIsActiveChanged(bool)));
-    connect(ui->objectTreeView->header(), SIGNAL(sectionResized(int,int,int)), this,
-            SLOT(adjustEventScrollBarSize()));
+    connect(ui->intervalScale, SIGNAL(valueChanged(int)), this,
+            SLOT(saveState()), Qt::QueuedConnection);
+    connect(ui->fps, SIGNAL(valueChanged(int)), this,
+            SLOT(saveState()), Qt::QueuedConnection);
 
-    m_stateManager.setDefaultSizes(ui->objectTreeView->header(),
-                                   UISizeVector() << 200 << 200 << -1);
+    m_stateManager.setDefaultSizes(header,
+                                   UISizeVector() << ui->objectTreeView->sizeHintForColumn(0) << 200 << 200 << -1);
+    header->setSortIndicator(1, header->sortIndicatorOrder());
+
+    intervalScaleValueChanged(ui->intervalScale->value());
+    fpsValueChanged(ui->fps->value());
 }
 
 SignalMonitorWidget::~SignalMonitorWidget()
 {
 }
 
-void SignalMonitorWidget::intervalScaleValueChanged(int value)
+void SignalMonitorWidget::saveTargetState(QSettings *settings) const
 {
-    // FIXME: Define a more reasonable formula.
-    qint64 i = 5000 / std::pow(1.07, value);
-    ui->objectTreeView->eventDelegate()->setVisibleInterval(i);
+    settings->setValue("fps", ui->fps->value());
+    settings->setValue("intervalScale", ui->intervalScale->value());
 }
 
-void SignalMonitorWidget::adjustEventScrollBarSize()
+void SignalMonitorWidget::restoreTargetState(QSettings *settings)
 {
-    // FIXME: Would like to have this in SignalHistoryView, but letting that
-    // widget manage layouts of this widget would be nasty. Still I also I don't
-    // feel like hooking a custom scrollbar into QTreeView. Sleeping between a
-    // rock and a hard place.
-    const QWidget * const scrollBar = ui->objectTreeView->verticalScrollBar();
-    const QWidget * const viewport = ui->objectTreeView->viewport();
+    const int fps = settings->value("fps", ui->fps->value()).toInt();
+    const int intervalScale = settings->value("intervalScale", ui->intervalScale->value()).toInt();
+    ui->fps->setValue(fps);
+    fpsValueChanged(fps);
+    ui->intervalScale->setValue(intervalScale);
+    intervalScaleValueChanged(intervalScale);
+}
 
-    const int eventColumnLeft = ui->objectTreeView->eventColumnPosition();
-    const int scrollBarLeft = scrollBar->mapTo(this, scrollBar->pos()).x();
-    const int viewportLeft = viewport->mapTo(this, viewport->pos()).x();
-    const int viewportRight = viewportLeft + viewport->width();
+void SignalMonitorWidget::intervalScaleValueChanged(int value)
+{
+    ui->intervalScale->setToolTip(tr("Zoom: %1").arg(value));
+    QToolTip::showText(ui->intervalScale->mapToGlobal(ui->intervalScale->rect().center()),
+                       ui->intervalScale->toolTip(), ui->intervalScale);
+    // FIXME: Define a more reasonable formula.
+    qint64 i = 5000 / std::pow(1.07, value);
+    ui->objectTreeView->setDelegateVisibleInterval(i);
+}
 
-    ui->eventScrollBarLayout->setContentsMargins(eventColumnLeft,
-                                                 scrollBarLeft - viewportRight,
-                                                 width() - viewportRight,
-                                                 0);
+void SignalMonitorWidget::fpsValueChanged(int value)
+{
+    ui->fps->setToolTip(tr("FPS: %1").arg(value));
+    QToolTip::showText(ui->fps->mapToGlobal(ui->fps->rect().center()),
+                       ui->fps->toolTip(), ui->fps);
+    ui->objectTreeView->setDelegateFPS(value);
 }
 
 void SignalMonitorWidget::pauseAndResume(bool pause)
 {
-    ui->objectTreeView->eventDelegate()->setActive(!pause);
+    ui->objectTreeView->setDelegateActive(!pause);
 }
 
 void SignalMonitorWidget::eventDelegateIsActiveChanged(bool active)
@@ -153,6 +170,12 @@ void SignalMonitorWidget::selectionChanged(const QItemSelection& selection)
         return;
     const auto idx = selection.at(0).topLeft();
     ui->objectTreeView->scrollTo(idx);
+}
+
+void SignalMonitorWidget::saveState()
+{
+    if (m_stateManager.initialized())
+        m_stateManager.saveState();
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

@@ -75,4 +75,7 @@ void StreamOperators::registerOperators()
 
     qRegisterMetaTypeStreamOperators<EnumDefinition>();
     qRegisterMetaTypeStreamOperators<EnumValue>();
+
+    // Needed by RemoteModel and RemoteModelServer
+    qRegisterMetaType<Qt::CheckState>();
 }

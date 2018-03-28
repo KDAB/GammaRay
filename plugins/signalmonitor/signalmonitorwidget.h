@@ -50,13 +50,17 @@ public:
     explicit SignalMonitorWidget(QWidget *parent = nullptr);
     ~SignalMonitorWidget();
 
+    Q_INVOKABLE void saveTargetState(QSettings *settings) const;
+    Q_INVOKABLE void restoreTargetState(QSettings *settings);
+
 private slots:
     void intervalScaleValueChanged(int value);
-    void adjustEventScrollBarSize();
+    void fpsValueChanged(int value);
     void pauseAndResume(bool pause);
     void eventDelegateIsActiveChanged(bool active);
     void contextMenu(QPoint pos);
     void selectionChanged(const QItemSelection &selection);
+    void saveState();
 
 private:
     static const QString ITEM_TYPE_NAME_OBJECT;

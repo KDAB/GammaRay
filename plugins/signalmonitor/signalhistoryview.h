@@ -37,33 +37,38 @@ class SignalHistoryDelegate;
 class SignalHistoryView : public DeferredTreeView
 {
     Q_OBJECT
-    Q_PROPERTY(
-        QScrollBar *eventScrollBar READ eventScrollBar WRITE setEventScrollBar NOTIFY eventScrollBarChanged)
-    Q_PROPERTY(SignalHistoryDelegate *eventDelegate READ eventDelegate FINAL CONSTANT)
 
 public:
     explicit SignalHistoryView(QWidget *parent = nullptr);
 
-    void setEventScrollBar(QScrollBar *scrollBar);
-    QScrollBar *eventScrollBar() const { return m_eventScrollBar; }
-    SignalHistoryDelegate *eventDelegate() const { return m_eventDelegate; }
+    int sizeHintForColumn(int column) const override;
 
+    bool delegateIsActive() const;
+    void setDelegateActive(bool active);
+
+    qint64 delegateVisibleInterval() const;
+    void setDelegateVisibleInterval(qint64 interval);
+
+    int delegateFPS() const;
+    void setDelegateFPS(int fps);
+
+signals:
+    void delegateIsActiveChanged(bool active);
+    void delegateVisibleIntervalChanged(qint64 interval);
+
+protected:
     int eventColumnPosition() const;
     int eventColumnWidth() const;
 
-signals:
-    void eventScrollBarChanged(QScrollBar *scrollBar);
-
-protected:
-    bool viewportEvent(QEvent *event) override;
-
 private slots:
+    void updateGeometries() override;
+
     void eventDelegateChanged();
     void eventScrollBarSliderMoved(int value);
 
 private:
     SignalHistoryDelegate * const m_eventDelegate;
-    QScrollBar *m_eventScrollBar;
+    QScrollBar *const m_eventScrollBar;
 };
 } // namespace GammaRay
 

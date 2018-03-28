@@ -325,6 +325,106 @@ private slots:
 // QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
         QCOMPARE(proxy.rowCount(pi1), 2);
     }
+
+    void testRateLimitedDataChanged()
+    {
+        QScopedPointer<QStandardItemModel> listModel(new QStandardItemModel(50, 4, this));
+
+        FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.ListModel"), this);
+        server.setModel(listModel.data());
+        server.modelMonitored(true);
+
+        FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.ListModel"), this);
+        connect(&server, SIGNAL(message(GammaRay::Message)), &client,
+                SLOT(newMessage(GammaRay::Message)));
+        connect(&client, SIGNAL(message(GammaRay::Message)), &server,
+                SLOT(newRequest(GammaRay::Message)));
+
+        QSignalSpy sourceSpy(listModel.data(), SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QVERIFY(sourceSpy.isValid());
+
+        QSignalSpy clientSpy(&client, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QVERIFY(clientSpy.isValid());
+
+        {
+            // Emit listModel::rowCount() * listModel::columnCount() dataChanged signals.
+            for (int row = 0; row < listModel->rowCount(); ++row) {
+                for (int column = 0; column < listModel->columnCount(); ++column) {
+                    const QModelIndex index = listModel->index(row, column);
+                    listModel->setData(index, QString::fromLatin1("Item %1, %2").arg(row).arg(column), Qt::DisplayRole);
+                }
+            }
+
+            // Wait for client model layout
+            while (client.columnCount() != listModel->columnCount() &&
+                   client.rowCount() != listModel->rowCount()) {
+                QTest::qWait(25);
+            }
+
+            // RemoteModelServer is compressing and batching the dataChanged signals it has to forward.
+            // For this test we are emitting a call change for any cells that should result to a
+            // listModel->rowCount() * listModel->columnCount() (50*4 = 200) number of emited signals.
+            // As they are in the same loop and all cells are changed, they will be batched as a single
+            // dataChanged sent to the client.
+            // Wait for the client dataChanged call.
+            while (clientSpy.isEmpty()) {
+                QTest::qWait(25);
+            }
+            QTest::qWait(250); // Make sure we are not receiving more dataChanged
+            QCOMPARE(clientSpy.count(), 1);
+
+            // Request each cells in a non blocking batch
+            for (int row = 0; row < listModel->rowCount(); ++row) {
+                for (int column = 0; column < listModel->columnCount(); ++column) {
+                    client.index(row, column).data();
+                }
+            }
+
+            // Wait for cells data in a blocking state
+            for (int row = 0; row < listModel->rowCount(); ++row) {
+                for (int column = 0; column < listModel->columnCount(); ++column) {
+                    waitForData(client.index(row, column));
+                    QCOMPARE(client.index(row, column).data(), listModel->index(row, column).data());
+                }
+            }
+
+            QCOMPARE(sourceSpy.count(), listModel->rowCount() * listModel->columnCount());
+            QVERIFY(sourceSpy.count() > clientSpy.count());
+        }
+
+        {
+            sourceSpy.clear();
+            clientSpy.clear();
+
+            for (int row = 0; row < listModel->rowCount(); row += row % 2 == 0 ? 1 : 3) {
+                for (int column = 0; column < listModel->columnCount(); ++column) {
+                    const QModelIndex index = listModel->index(row, column);
+                    listModel->setData(index, QString::fromLatin1("Index %1, %2").arg(row).arg(column), Qt::DisplayRole);
+                }
+            }
+
+            // RemoteModelServer has a timeout of 100ms.
+            QTest::qWait(150);
+            QCOMPARE(clientSpy.count(), sourceSpy.count() / listModel->columnCount() / 2);
+
+            // Request each cells in a non blocking batch
+            for (int row = 0; row < listModel->rowCount(); ++row) {
+                for (int column = 0; column < listModel->columnCount(); ++column) {
+                    client.index(row, column).data();
+                }
+            }
+
+            // Wait for cells data in a blocking state
+            for (int row = 0; row < listModel->rowCount(); ++row) {
+                for (int column = 0; column < listModel->columnCount(); ++column) {
+                    waitForData(client.index(row, column));
+                    QCOMPARE(client.index(row, column).data(), listModel->index(row, column).data());
+                }
+            }
+
+            QVERIFY(sourceSpy.count() > clientSpy.count());
+        }
+    }
 };
 
 QTEST_MAIN(RemoteModelTest)

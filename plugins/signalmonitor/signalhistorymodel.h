@@ -50,6 +50,7 @@ private:
         Item(QObject *obj);
 
         QObject *object; // never dereference, might be invalid!
+        bool monitored;
         QHash<int, QByteArray> signalNames;
         QString objectName;
         QByteArray objectType;
@@ -64,6 +65,7 @@ private:
 
 public:
     enum ColumnId {
+        MonitoredColumn = 0,
         ObjectColumn,
         TypeColumn,
         EventColumn
@@ -81,10 +83,14 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value,
+                       int role = Qt::EditRole) override;
 
     static qint64 timestamp(qint64 ev) { return ev >> 16; }
     static int signalIndex(qint64 ev) { return ev & 0xffff; }
@@ -96,10 +102,15 @@ private slots:
     void onObjectAdded(QObject *object);
     void onObjectRemoved(QObject *object);
     void onSignalEmitted(QObject *sender, int signalIndex);
+    void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight,
+                       const QVector<int> &roles = QVector<int>());
+    void updateHeaderCheckState();
 
 private:
     QVector<Item *> m_tracedObjects;
     QHash<QObject *, int> m_itemIndex;
+    Qt::CheckState m_headerMonitorCheckState;
+    QTimer *m_checkStateHeaderChangedTimer;
 };
 } // namespace GammaRay
 

@@ -78,6 +78,7 @@ enum BuildInMessageType {
     ModelContentRequest,
     ModelHeaderRequest,
     ModelSetDataRequest,
+    ModelSetHeaderDataRequest,
     ModelSortRequest,
     ModelSyncBarrier,
     SelectionModelStateRequest,
