@@ -524,11 +524,6 @@ QAbstractItemModel *Probe::objectTreeModel() const
     return m_objectTreeModel;
 }
 
-QObject *Probe::probe() const
-{
-    return const_cast<GammaRay::Probe *>(this);
-}
-
 bool Probe::isValidObject(QObject *obj) const
 {
     ///TODO: can we somehow assert(s_lock().isLocked()) ?!

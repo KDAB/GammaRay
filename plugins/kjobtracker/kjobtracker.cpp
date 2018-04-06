@@ -39,10 +39,8 @@ KJobTracker::KJobTracker(Probe *probe, QObject *parent)
     : QObject(parent)
     , m_jobModel(new KJobModel(this))
 {
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
-            m_jobModel, SLOT(objectAdded(QObject*)));
-    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
-            m_jobModel, SLOT(objectRemoved(QObject*)));
+    connect(probe, SIGNAL(objectCreated(QObject*)), m_jobModel, SLOT(objectAdded(QObject*)));
+    connect(probe, SIGNAL(objectDestroyed(QObject*)), m_jobModel, SLOT(objectRemoved(QObject*)));
 
     auto proxy = new QSortFilterProxyModel(this);
     proxy->setSourceModel(m_jobModel);

@@ -65,9 +65,9 @@ MetaObjectBrowser::MetaObjectBrowser(Probe *probe, QObject *parent)
 
     m_propertyController->setMetaObject(nullptr); // init
 
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this,
+    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this,
             SLOT(objectSelected(QObject*)));
-    connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)), this,
+    connect(probe, SIGNAL(nonQObjectSelected(void*,QString)), this,
             SLOT(objectSelected(void*,QString)));
 
     ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this);

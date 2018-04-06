@@ -109,12 +109,9 @@ Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral(
                              "com.kdab.GammaRay.Qt3DInspector.engineModel"), m_engineModel);
 
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_entityModel,
-            SLOT(objectCreated(QObject*)));
-    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_entityModel,
-            SLOT(objectDestroyed(QObject*)));
-    connect(probe->probe(), SIGNAL(objectReparented(QObject*)), m_entityModel,
-            SLOT(objectReparented(QObject*)));
+    connect(probe, &Probe::objectCreated, m_entityModel, &Qt3DEntityTreeModel::objectCreated);
+    connect(probe, &Probe::objectDestroyed, m_entityModel, &Qt3DEntityTreeModel::objectDestroyed);
+    connect(probe, &Probe::objectReparented, m_entityModel, &Qt3DEntityTreeModel::objectReparented);
     auto entityProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     entityProxy->setSourceModel(m_entityModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), entityProxy);
@@ -122,9 +119,9 @@ Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     connect(m_entitySelectionModel, &QItemSelectionModel::selectionChanged, this,
             &Qt3DInspector::entitySelectionChanged);
 
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), m_frameGraphModel, SLOT(objectCreated(QObject*)));
-    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), m_frameGraphModel, SLOT(objectDestroyed(QObject*)));
-    connect(probe->probe(), SIGNAL(objectReparented(QObject*)), m_frameGraphModel, SLOT(objectReparented(QObject*)));
+    connect(probe, &Probe::objectCreated, m_frameGraphModel, &FrameGraphModel::objectCreated);
+    connect(probe, &Probe::objectDestroyed, m_frameGraphModel, &FrameGraphModel::objectDestroyed);
+    connect(probe, &Probe::objectReparented, m_frameGraphModel, &FrameGraphModel::objectReparented);
     auto frameGraphProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     frameGraphProxy->setSourceModel(m_frameGraphModel);
     probe->registerModel(QStringLiteral(
@@ -133,8 +130,7 @@ Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     connect(m_frameGraphSelectionModel, &QItemSelectionModel::selectionChanged, this,
             &Qt3DInspector::frameGraphSelectionChanged);
 
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this,
-            SLOT(objectSelected(QObject*)));
+    connect(probe, &Probe::objectSelected, this, &Qt3DInspector::objectSelected);
 }
 
 Qt3DInspector::~Qt3DInspector()

@@ -48,7 +48,7 @@ WebInspector::WebInspector(Probe *probe, QObject *parent)
     webViewModel->setSourceModel(probe->objectListModel());
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.WebPages"), webViewModel);
 
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectAdded(QObject*)));
+    connect(probe, &Probe::objectCreated, this, &WebInspector::objectAdded);
 
     const QUrl serverUrl = Endpoint::instance()->serverAddress();
     QString serverAddress(GAMMARAY_DEFAULT_ANY_ADDRESS);

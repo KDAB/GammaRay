@@ -71,7 +71,7 @@ TextDocumentInspector::TextDocumentInspector(Probe *probe, QObject *parent)
     m_textDocumentFormatModel = new TextDocumentFormatModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentFormatModel"), m_textDocumentFormatModel);
 
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
 }
 
 void TextDocumentInspector::objectSelected(QObject* obj)

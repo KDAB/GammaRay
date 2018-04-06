@@ -426,7 +426,7 @@ WlCompositorInspector::WlCompositorInspector(Probe *probe, QObject *parent)
                      , m_compositor(nullptr)
                      , m_surfaceView(new SurfaceView(this))
 {
-    qWarning() << "init probe" << probe->objectTreeModel() << probe->probe();
+    qWarning() << "init probe" << probe->objectTreeModel() << probe;
 
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QWaylandObject, QObject);
@@ -441,8 +441,8 @@ WlCompositorInspector::WlCompositorInspector(Probe *probe, QObject *parent)
 
     m_logger = new Logger(this, this);
 
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+    connect(probe, &Probe::objectCreated, this, &WlCompositorInspector::objectAdded);
+    connect(probe, &Probe::objectSelected, this, &WlCompositorInspector::objectSelected);
 }
 
 WlCompositorInspector::~WlCompositorInspector()

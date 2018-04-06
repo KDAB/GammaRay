@@ -59,7 +59,7 @@ SignalMonitor::SignalMonitor(Probe *probe, QObject *parent)
     m_clock->setSingleShot(false);
     connect(m_clock, SIGNAL(timeout()), this, SLOT(timeout()));
 
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
 }
 
 SignalMonitor::~SignalMonitor()

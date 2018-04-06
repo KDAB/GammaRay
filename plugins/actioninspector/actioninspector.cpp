@@ -59,11 +59,11 @@ ActionInspector::ActionInspector(Probe *probe, QObject *parent)
     ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.ActionInspector"), this);
 
     auto *actionModel = new ActionModel(this);
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), actionModel,
+    connect(probe, SIGNAL(objectCreated(QObject*)), actionModel,
             SLOT(objectAdded(QObject*)));
-    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)), actionModel,
+    connect(probe, SIGNAL(objectDestroyed(QObject*)), actionModel,
             SLOT(objectRemoved(QObject*)));
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
+    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)),
             SLOT(objectSelected(QObject*)));
 
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);

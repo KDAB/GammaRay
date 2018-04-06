@@ -148,11 +148,11 @@ WidgetInspectorServer::WidgetInspectorServer(Probe *probe, QObject *parent)
             SLOT(widgetSelected(QItemSelection)));
 
     if (m_probe->needsObjectDiscovery()) {
-        connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
+        connect(m_probe, SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
         discoverObjects();
     }
 
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), this,
+    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this,
             SLOT(objectSelected(QObject*)));
 
     connect(m_remoteView, SIGNAL(elementsAtRequested(QPoint,GammaRay::RemoteViewInterface::RequestMode)), this, SLOT(requestElementsAt(QPoint,GammaRay::RemoteViewInterface::RequestMode)));

@@ -88,12 +88,6 @@ public:
     virtual bool filterObject(QObject *object) const = 0;
 
     /*!
-     * Returns the probe QObject for connecting signals.
-     * @return a pointer to a QObject instance.
-     */
-    virtual QObject *probe() const = 0;
-
-    /*!
      * Register a model for remote usage.
      * @param objectName Unique identifier for the model, typically in reverse domain notation.
      * @param model The model to register.

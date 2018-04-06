@@ -67,7 +67,7 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(objectSelectionChanged(QItemSelection)));
 
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
+    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)),
             SLOT(objectSelected(QObject*)));
 }
 

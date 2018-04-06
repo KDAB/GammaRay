@@ -49,7 +49,7 @@ QuickWidgetSupport::QuickWidgetSupport(Probe *probe, QObject *parent)
     Q_ASSERT(s_quickWidgetSupportInstance == nullptr);
     s_quickWidgetSupportInstance = this;
 
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
+    connect(probe, &Probe::objectCreated, this, &QuickWidgetSupport::objectAdded);
 
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQuickWidget, QWidget);

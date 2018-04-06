@@ -123,8 +123,6 @@ public:
     void setWindow(QObject *window);
     ///@endcond
 
-    QObject *probe() const override;
-
     MetaObjectRegistry *metaObjectRegistry() const;
 
     /*!

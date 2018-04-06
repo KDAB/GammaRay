@@ -77,7 +77,7 @@ TranslatorInspector::TranslatorInspector(Probe *probe, QObject *parent)
     qApp->installEventFilter(this);
     sendLanguageChangeEvent();
 
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+    connect(probe, &Probe::objectSelected, this, &TranslatorInspector::objectSelected);
 }
 
 void TranslatorInspector::sendLanguageChangeEvent()

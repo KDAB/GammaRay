@@ -384,18 +384,13 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickItemModel"), filterProxy);
 
     if (m_probe->needsObjectDiscovery()) {
-        connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)),
-                SLOT(objectCreated(QObject*)));
+        connect(m_probe, &Probe::objectCreated, this, &QuickInspector::objectCreated);
     }
 
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)),
-            m_itemModel, SLOT(objectAdded(QObject*)));
-    connect(probe->probe(), SIGNAL(objectDestroyed(QObject*)),
-            m_itemModel, SLOT(objectRemoved(QObject*)));
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
-            SLOT(objectSelected(QObject*)));
-    connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)),
-            SLOT(objectSelected(void*,QString)));
+    connect(probe, &Probe::objectCreated, m_itemModel, &QuickItemModel::objectAdded);
+    connect(probe, &Probe::objectDestroyed, m_itemModel, &QuickItemModel::objectRemoved);
+    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+    connect(probe, SIGNAL(nonQObjectSelected(void*,QString)), SLOT(objectSelected(void*,QString)));
 
     m_itemSelectionModel = ObjectBroker::selectionModel(filterProxy);
     connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged,
@@ -418,7 +413,7 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     connect(m_pendingRenderMode, &RenderModeRequest::sceneGraphCleanedUp, this, &QuickInspector::sceneGraphCleanedUp);
 
     auto texGrab = new QSGTextureGrabber(this);
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), texGrab, SLOT(objectCreated(QObject*)));
+    connect(probe, &Probe::objectCreated, texGrab, &QSGTextureGrabber::objectCreated);
 
     connect(Endpoint::instance(), &Endpoint::disconnected, this, [this]() {
         if (m_overlay)

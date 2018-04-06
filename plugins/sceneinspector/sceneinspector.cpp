@@ -91,9 +91,9 @@ SceneInspector::SceneInspector(Probe *probe, QObject *parent)
     registerGraphicsViewMetaTypes();
     registerVariantHandlers();
 
-    connect(probe->probe(), SIGNAL(objectSelected(QObject*,QPoint)),
+    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)),
             SLOT(objectSelected(QObject*,QPoint)));
-    connect(probe->probe(), SIGNAL(nonQObjectSelected(void*,QString)),
+    connect(probe, SIGNAL(nonQObjectSelected(void*,QString)),
             this, SLOT(objectSelected(void*,QString)));
 
     auto *sceneFilterProxy

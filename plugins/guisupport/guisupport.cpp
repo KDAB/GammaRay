@@ -132,7 +132,7 @@ GuiSupport::GuiSupport(Probe *probe, QObject *parent)
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     m_iconAndTitleOverrider.titleSuffix = tr(" (Injected by GammaRay)");
-    connect(m_probe->probe(), SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
+    connect(m_probe, &Probe::objectCreated, this, &GuiSupport::objectCreated);
 
     if (auto guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance())) {
         updateWindowIcon();
@@ -142,7 +142,7 @@ GuiSupport::GuiSupport(Probe *probe, QObject *parent)
             if (isAcceptableWindow(w))
                 updateWindowTitle(w);
         }
-        connect(m_probe->probe(), SIGNAL(aboutToDetach()), this, SLOT(restoreIconAndTitle()), Qt::DirectConnection);
+        connect(m_probe, &Probe::aboutToDetach, this, &GuiSupport::restoreIconAndTitle, Qt::DirectConnection);
     }
 #endif
 }
