@@ -53,7 +53,7 @@ on the probe side and GammaRay::PropertyWidget on the client side.
 
 On the probe side, plugins have various ways of accessing target information.
 
-- GammaRay::ProbeInterface and GammaRay::Probe provide access to object models
+- GammaRay::Probe provides access to object models
   and notifications about created/destroyed objects.
 - GammaRay::SignalSpyCallbackSet allows to monitor all QObject signal/slot
   communication.

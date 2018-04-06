@@ -38,7 +38,6 @@
 #include <core/propertycontroller.h>
 #include <core/varianthandler.h>
 #include <core/objecttypefilterproxymodel.h>
-#include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/server.h>
 #include <core/remote/serverproxymodel.h>

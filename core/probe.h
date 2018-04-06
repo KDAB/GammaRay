@@ -30,23 +30,23 @@
 #define GAMMARAY_PROBE_H
 
 #include "gammaray_core_export.h"
-#include "probeinterface.h"
 #include "signalspycallbackset.h"
 
 #include <common/sourcelocation.h>
 
 #include <QObject>
 #include <QList>
+#include <QPoint>
 #include <QSet>
 #include <QVector>
 
 #include <memory>
 
 QT_BEGIN_NAMESPACE
+class QAbstractItemModel;
 class QItemSelectionModel;
 class QModelIndex;
 class QThread;
-class QPoint;
 class QTimer;
 class QMutex;
 QT_END_NAMESPACE
@@ -70,7 +70,7 @@ namespace Execution { class Trace; }
  *
  * To get a hold of the probe, call Probe::instance()
  */
-class GAMMARAY_CORE_EXPORT Probe : public QObject, public ProbeInterface
+class GAMMARAY_CORE_EXPORT Probe : public QObject
 {
     Q_OBJECT
 public:
@@ -96,13 +96,58 @@ public:
     static void objectRemoved(QObject *obj);
     ///@endcond
 
-    QAbstractItemModel *objectListModel() const override;
-    QAbstractItemModel *objectTreeModel() const override;
-    void registerModel(const QString &objectName, QAbstractItemModel *model) override;
-    void installGlobalEventFilter(QObject *filter) override;
-    bool needsObjectDiscovery() const override;
-    void discoverObject(QObject *object) override;
-    void selectObject(QObject *object, const QPoint &pos = QPoint()) override;
+    /*!
+     * Returns the object list model.
+     * @return a pointer to a QAbstractItemModel instance.
+     */
+    QAbstractItemModel *objectListModel() const;
+    /*!
+     * Returns the object tree model.
+     * @return a pointer to a QAbstractItemModel instance.
+     */
+    QAbstractItemModel *objectTreeModel() const;
+    /*!
+     * Register a model for remote usage.
+     * @param objectName Unique identifier for the model, typically in reverse domain notation.
+     * @param model The model to register.
+     */
+    void registerModel(const QString &objectName, QAbstractItemModel *model);
+    /*!
+     * Install a global event filter.
+     * Use this rather than installing the filter manually on QCoreApplication,
+     * this will filter out GammaRay-internal events and objects already for you.
+     */
+    void installGlobalEventFilter(QObject *filter);
+    /*!
+     * Returns @c true if we haven't been able to track all objects from startup, ie. usually
+     * when attaching at runtime.
+     * If this is the case, we try to discover QObjects by walking the hierarchy, starting
+     * from known singletons, and by watching out for unknown receivers of events.
+     * This is far from complete obviously, and plug-ins can help finding more objects, using
+     * specific knowledge about the types they are responsible for.
+     *
+     * Connect to the objectAdded(QObject*) signal on probe(), and call discoverObject(QObject*)
+     * for "your" objects.
+     *
+     * @since 2.5
+     */
+    bool needsObjectDiscovery() const;
+    /*!
+     * Notify the probe about QObjects your plug-in can discover by using information about
+     * the types it can handle.
+     * Only use this if needsObjectDiscovery() returns @c true to maximise performance.
+     *
+     * @see needsObjectDiscovery()
+     * @since 2.0
+     */
+    void discoverObject(QObject *object);
+    /*!
+     * Notify the probe about the user selecting one of "your" objects via in-app interaction.
+     * If you know the exact position the user interacted with, pass that in as @p pos.
+     *
+     * @since 2.0
+     */
+    void selectObject(QObject *object, const QPoint &pos = QPoint());
     void selectObject(QObject *object, const QString &toolId,
                       const QPoint &pos = QPoint());
     /*!
@@ -111,7 +156,14 @@ public:
      * @since 2.1
      */
     void selectObject(void *object, const QString &typeName);
-    void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) override;
+    /*!
+     * Register a signal spy callback set.
+     * Signal indexes provided as arguments are mapped to method indexes, ie. argument semantics
+     * are the same with Qt4 and Qt5.
+     *
+     * @since 2.2
+     */
+    void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks);
 
     /*! Returns the source code location @p object was created at. */
     SourceLocation objectCreationSourceLocation(QObject *object) const;
@@ -138,7 +190,17 @@ public:
      */
     bool isValidObject(QObject *obj) const;
 
-    bool filterObject(QObject *obj) const override;
+    /*!
+     * Determines if the specified QObject belongs to the GammaRay Probe or Window.
+     *
+     * These objects should not be tracked or shown to the user,
+     * hence must be explictly filtered.
+     * @param object is a pointer to a QObject instance.
+     *
+     * @return true if the specified QObject belongs to the GammaRay Probe
+     * or Window; false otherwise.
+     */
+    bool filterObject(QObject *obj) const;
 
     ///@cond internal
     static void startupHookReceived();

@@ -30,7 +30,6 @@
 #include "relativeclock.h"
 #include "signalmonitorcommon.h"
 
-#include <core/probeinterface.h>
 #include <core/util.h>
 #include <core/probe.h>
 

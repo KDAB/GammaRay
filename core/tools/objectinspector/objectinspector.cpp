@@ -28,7 +28,6 @@
 
 #include "objectinspector.h"
 #include "propertycontroller.h"
-#include "probeinterface.h"
 #include "methodsextension.h"
 #include "classinfoextension.h"
 #include "enumsextension.h"

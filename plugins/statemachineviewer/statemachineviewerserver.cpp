@@ -37,7 +37,6 @@
 #include "transitionmodel.h"
 
 #include <core/objecttypefilterproxymodel.h>
-#include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/serverproxymodel.h>
 #include <common/objectbroker.h>

@@ -29,7 +29,6 @@
 #include "timertop.h"
 #include "timermodel.h"
 
-#include <core/probeinterface.h>
 #include <core/objecttypefilterproxymodel.h>
 #include <core/signalspycallbackset.h>
 

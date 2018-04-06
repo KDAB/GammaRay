@@ -29,7 +29,6 @@
 #include "scriptenginedebugger.h"
 
 #include <core/objecttypefilterproxymodel.h>
-#include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
 
 #include <QScriptEngine>

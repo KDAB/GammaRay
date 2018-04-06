@@ -32,7 +32,6 @@
 
 #include <common/endpoint.h>
 #include <core/objecttypefilterproxymodel.h>
-#include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
 
 #include <QDebug>

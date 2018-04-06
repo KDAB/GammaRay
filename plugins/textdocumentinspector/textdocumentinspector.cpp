@@ -34,7 +34,6 @@
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/objecttypefilterproxymodel.h>
-#include <core/probeinterface.h>
 
 #include <common/objectbroker.h>
 

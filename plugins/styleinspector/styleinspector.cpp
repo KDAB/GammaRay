@@ -35,7 +35,6 @@
 #include "stylehintmodel.h"
 
 #include <core/objecttypefilterproxymodel.h>
-#include <core/probeinterface.h>
 #include <core/singlecolumnobjectproxymodel.h>
 
 #include <ui/palettemodel.h>

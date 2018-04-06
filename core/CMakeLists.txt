@@ -157,7 +157,6 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     objectdataprovider.h
     objecttypefilterproxymodel.h
     probe.h
-    probeinterface.h
     probecontroller.h
     propertycontroller.h
     propertycontrollerextension.h

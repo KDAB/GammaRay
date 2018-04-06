@@ -27,7 +27,6 @@
 #include "actioninspector.h"
 #include "actionmodel.h"
 
-#include <core/probeinterface.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/remote/serverproxymodel.h>
