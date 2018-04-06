@@ -1,0 +1,8 @@
+{
+    "id": "gammaray_sysinfo",
+    "name": "System",
+    "types": [
+        "QObject"
+    ],
+    "selectableTypes": []
+}
