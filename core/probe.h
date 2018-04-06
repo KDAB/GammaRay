@@ -104,8 +104,13 @@ public:
     void discoverObject(QObject *object) override;
     void selectObject(QObject *object, const QPoint &pos = QPoint()) override;
     void selectObject(QObject *object, const QString &toolId,
-                      const QPoint &pos = QPoint()) override;
-    void selectObject(void *object, const QString &typeName) override;
+                      const QPoint &pos = QPoint());
+    /*!
+     * Notify the probe about the user selecting one of "your" objects.
+     *
+     * @since 2.1
+     */
+    void selectObject(void *object, const QString &typeName);
     void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks) override;
 
     /*! Returns the source code location @p object was created at. */

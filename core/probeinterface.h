@@ -140,16 +140,6 @@ public:
      */
     virtual void selectObject(QObject *object, const QPoint &pos = QPoint()) = 0;
 
-    virtual void selectObject(QObject *object, const QString &toolId,
-                              const QPoint &pos = QPoint()) = 0;
-
-    /*!
-     * Notify the probe about the user selecting one of "your" objects.
-     *
-     * @since 2.1
-     */
-    virtual void selectObject(void *object, const QString &typeName) = 0;
-
     /*!
      * Register a signal spy callback set.
      * Signal indexes provided as arguments are mapped to method indexes, ie. argument semantics
