@@ -81,7 +81,7 @@
 
 using namespace GammaRay;
 
-Qt3DInspector::Qt3DInspector(ProbeInterface *probe, QObject *parent)
+Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     : Qt3DInspectorInterface(parent)
     , m_engine(nullptr)
     , m_entityModel(new Qt3DEntityTreeModel(this))

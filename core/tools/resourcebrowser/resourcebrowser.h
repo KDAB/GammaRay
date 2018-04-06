@@ -42,7 +42,7 @@ class ResourceBrowser : public ResourceBrowserInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::ResourceBrowserInterface)
 public:
-    explicit ResourceBrowser(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit ResourceBrowser(Probe *probe, QObject *parent = nullptr);
 
 public slots:
     void downloadResource(const QString &sourceFilePath,

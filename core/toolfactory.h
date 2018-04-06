@@ -39,7 +39,7 @@
 #define GAMMARAY_TOOLFACTORY_H
 
 #include "gammaray_core_export.h"
-#include "probeinterface.h"
+#include "probe.h"
 
 #include <QMetaType>
 #include <QStringList>
@@ -47,7 +47,6 @@
 #include <QVector>
 
 namespace GammaRay {
-class ProbeInterface;
 
 /*!
  * An abstract interface for probe tools.
@@ -93,7 +92,7 @@ public:
      * object tracking models etc.
      * @param probe The probe interface allowing access to the object models.
      */
-    virtual void init(ProbeInterface *probe) = 0;
+    virtual void init(Probe *probe) = 0;
 
     /*!
      * Allows to hide a plug-in from the UI.
@@ -135,9 +134,9 @@ public:
         return Tool::staticMetaObject.className();
     }
 
-    void init(ProbeInterface *probe) override
+    void init(Probe *probe) override
     {
-        new Tool(probe, probe->probe());
+        new Tool(probe, probe);
     }
 };
 }

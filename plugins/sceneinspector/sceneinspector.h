@@ -50,7 +50,7 @@ class SceneInspector : public SceneInspectorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::SceneInspectorInterface)
 public:
-    explicit SceneInspector(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit SceneInspector(Probe *probe, QObject *parent = nullptr);
 
 private slots:
     void initializeGui() override;

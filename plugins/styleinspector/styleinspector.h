@@ -53,7 +53,7 @@ class StyleInspector : public StyleInspectorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::StyleInspectorInterface)
 public:
-    explicit StyleInspector(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit StyleInspector(Probe *probe, QObject *parent = nullptr);
     virtual ~StyleInspector();
 
 private slots:

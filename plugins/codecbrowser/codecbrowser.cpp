@@ -37,7 +37,7 @@
 
 using namespace GammaRay;
 
-CodecBrowser::CodecBrowser(ProbeInterface *probe, QObject *parent)
+CodecBrowser::CodecBrowser(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.CodecBrowser"), this);

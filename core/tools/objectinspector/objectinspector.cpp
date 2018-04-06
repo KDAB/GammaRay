@@ -49,7 +49,7 @@
 
 using namespace GammaRay;
 
-ObjectInspector::ObjectInspector(ProbeInterface *probe, QObject *parent)
+ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     registerPCExtensions();

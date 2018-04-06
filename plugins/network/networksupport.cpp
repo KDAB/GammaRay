@@ -83,7 +83,7 @@ Q_DECLARE_METATYPE(QSslSocket::PeerVerifyMode)
 Q_DECLARE_METATYPE(QSslSocket::SslMode)
 #endif // QT_NO_SSL
 
-NetworkSupport::NetworkSupport(ProbeInterface *probe, QObject *parent)
+NetworkSupport::NetworkSupport(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     registerMetaTypes();

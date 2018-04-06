@@ -79,7 +79,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
     }
 }
 
-SignalHistoryModel::SignalHistoryModel(ProbeInterface *probe, QObject *parent)
+SignalHistoryModel::SignalHistoryModel(Probe *probe, QObject *parent)
     : QAbstractTableModel(parent)
 {
     connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));

@@ -34,6 +34,7 @@
 #include <core/toolfactory.h>
 
 QT_BEGIN_NAMESPACE
+class QAbstractItemModel;
 class QItemSelectionModel;
 class QTimer;
 QT_END_NAMESPACE
@@ -44,7 +45,7 @@ class SignalMonitor : public SignalMonitorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::SignalMonitorInterface)
 public:
-    explicit SignalMonitor(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit SignalMonitor(Probe *probe, QObject *parent = nullptr);
     ~SignalMonitor();
 
 public slots:

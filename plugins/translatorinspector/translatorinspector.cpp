@@ -46,7 +46,7 @@
 
 using namespace GammaRay;
 
-TranslatorInspector::TranslatorInspector(ProbeInterface *probe, QObject *parent)
+TranslatorInspector::TranslatorInspector(Probe *probe, QObject *parent)
     : TranslatorInspectorInterface(QStringLiteral("com.kdab.GammaRay.TranslatorInspector"), parent)
     , m_probe(probe)
 {

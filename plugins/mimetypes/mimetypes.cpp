@@ -33,7 +33,7 @@
 
 using namespace GammaRay;
 
-MimeTypes::MimeTypes(ProbeInterface *probe, QObject *parent)
+MimeTypes::MimeTypes(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     auto model = new MimeTypesModel(this);

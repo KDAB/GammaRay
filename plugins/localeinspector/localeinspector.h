@@ -41,7 +41,7 @@ class LocaleInspector : public QObject
 {
     Q_OBJECT
 public:
-    explicit LocaleInspector(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit LocaleInspector(Probe *probe, QObject *parent = nullptr);
 
 private:
     void timezoneSelected(const QItemSelection &selection);

@@ -60,7 +60,7 @@ static QString positioningMethodsToString(QGeoPositionInfoSource::PositioningMet
     return l.join(QLatin1Char('|'));
 }
 
-Positioning::Positioning(ProbeInterface *probe, QObject *parent)
+Positioning::Positioning(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     Q_UNUSED(probe);

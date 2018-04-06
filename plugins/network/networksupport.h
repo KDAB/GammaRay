@@ -36,7 +36,7 @@ class NetworkSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit NetworkSupport(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit NetworkSupport(Probe *probe, QObject *parent = nullptr);
     ~NetworkSupport();
 
 private:

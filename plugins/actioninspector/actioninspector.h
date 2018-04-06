@@ -41,7 +41,7 @@ class ActionInspector : public QObject
     Q_OBJECT
 
 public:
-    explicit ActionInspector(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit ActionInspector(Probe *probe, QObject *parent = nullptr);
     virtual ~ActionInspector();
 
 public Q_SLOTS:

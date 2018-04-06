@@ -33,7 +33,7 @@
 
 using namespace GammaRay;
 
-GraphViewer::GraphViewer(ProbeInterface *probe, QObject *parent)
+GraphViewer::GraphViewer(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     auto model = new ServerProxyModel<ObjectVisualizerModel>(this);

@@ -29,7 +29,6 @@
 #include "proxytoolfactory.h"
 
 using namespace GammaRay;
-using namespace std;
 
 ProxyToolFactory::ProxyToolFactory(const PluginInfo &pluginInfo, QObject *parent)
     : ProxyFactory<ToolFactory>(pluginInfo, parent)
@@ -50,7 +49,7 @@ bool ProxyToolFactory::isValid() const
         && !supportedTypes().isEmpty();
 }
 
-void ProxyToolFactory::init(ProbeInterface *probe)
+void ProxyToolFactory::init(Probe *probe)
 {
     loadPlugin();
     ToolFactory *fac = factory();

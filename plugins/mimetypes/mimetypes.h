@@ -40,7 +40,7 @@ class MimeTypes : public QObject
 {
     Q_OBJECT
 public:
-    explicit MimeTypes(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit MimeTypes(Probe *probe, QObject *parent = nullptr);
     ~MimeTypes();
 };
 

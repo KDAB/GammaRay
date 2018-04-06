@@ -43,7 +43,7 @@
 #include "core/varianthandler.h"
 #include "core/probesettings.h"
 #include "core/objecttypefilterproxymodel.h"
-#include "core/probeinterface.h"
+#include <core/probe.h>
 #include "core/probeguard.h"
 #include <core/paintanalyzer.h>
 #include <core/remoteviewserver.h>
@@ -110,7 +110,7 @@ static bool isGoodCandidateWidget(QWidget *widget)
     return true;
 }
 
-WidgetInspectorServer::WidgetInspectorServer(ProbeInterface *probe, QObject *parent)
+WidgetInspectorServer::WidgetInspectorServer(Probe *probe, QObject *parent)
     : WidgetInspectorInterface(parent)
     , m_externalExportActions(new QLibrary(this))
     , m_propertyController(new PropertyController(objectName(), this))

@@ -63,7 +63,7 @@ static void registerMetaTypes()
     MO_ADD_PROPERTY_RO(QIviZonedFeatureInterface, availableZones);
 }
 
-QtIviSupport::QtIviSupport(ProbeInterface* probe, QObject* parent)
+QtIviSupport::QtIviSupport(Probe* probe, QObject* parent)
    : QObject(parent)
 {
     Q_UNUSED(probe);

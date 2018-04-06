@@ -43,7 +43,7 @@ using namespace GammaRay;
 ///      Also it seems that we get another crash when the interrupt action
 ///      was triggered and we close the mainwindow.
 
-ScriptEngineDebugger::ScriptEngineDebugger(ProbeInterface *probe, QObject *parent)
+ScriptEngineDebugger::ScriptEngineDebugger(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     auto *scriptEngineFilter

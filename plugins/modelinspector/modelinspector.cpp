@@ -34,7 +34,6 @@
 #include "modelcontentproxymodel.h"
 #include "selectionmodelmodel.h"
 
-#include <core/probeinterface.h>
 #include <core/remote/serverproxymodel.h>
 #include <common/objectbroker.h>
 
@@ -45,7 +44,7 @@
 
 using namespace GammaRay;
 
-ModelInspector::ModelInspector(ProbeInterface *probe, QObject *parent)
+ModelInspector::ModelInspector(Probe *probe, QObject *parent)
     : ModelInspectorInterface(parent)
     , m_probe(probe)
     , m_modelModel(nullptr)

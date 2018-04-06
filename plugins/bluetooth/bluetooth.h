@@ -34,7 +34,7 @@ class Bluetooth : public QObject
 {
     Q_OBJECT
 public:
-    explicit Bluetooth(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit Bluetooth(Probe *probe, QObject *parent = nullptr);
 };
 
 class BluetoothFactory : public QObject, public StandardToolFactory<QObject, Bluetooth>

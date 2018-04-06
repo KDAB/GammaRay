@@ -59,7 +59,7 @@ class StateMachineViewerServer : public StateMachineViewerInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::StateMachineViewerInterface)
 public:
-    explicit StateMachineViewerServer(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit StateMachineViewerServer(Probe *probe, QObject *parent = nullptr);
 
     void addState(State state);
     void addTransition(Transition transition);

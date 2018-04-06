@@ -57,7 +57,7 @@ class Qt3DInspector : public Qt3DInspectorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::Qt3DInspectorInterface)
 public:
-    explicit Qt3DInspector(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit Qt3DInspector(Probe *probe, QObject *parent = nullptr);
     ~Qt3DInspector();
 
 public slots:

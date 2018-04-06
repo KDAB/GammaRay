@@ -29,15 +29,13 @@
 #include "kjobtracker.h"
 #include "kjobmodel.h"
 
-#include <core/probeinterface.h>
-
 #include <QDebug>
 #include <QSortFilterProxyModel>
 #include <QtPlugin>
 
 using namespace GammaRay;
 
-KJobTracker::KJobTracker(ProbeInterface *probe, QObject *parent)
+KJobTracker::KJobTracker(Probe *probe, QObject *parent)
     : QObject(parent)
     , m_jobModel(new KJobModel(this))
 {

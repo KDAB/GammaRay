@@ -38,7 +38,7 @@
 
 using namespace GammaRay;
 
-MetaTypeBrowser::MetaTypeBrowser(ProbeInterface *probe, QObject *parent)
+MetaTypeBrowser::MetaTypeBrowser(Probe *probe, QObject *parent)
     : MetaTypeBrowserInterface(parent)
     , m_mtm(new MetaTypesModel(this))
 {

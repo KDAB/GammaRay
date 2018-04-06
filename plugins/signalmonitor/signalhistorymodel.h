@@ -38,7 +38,7 @@
 #include <QByteArray>
 
 namespace GammaRay {
-class ProbeInterface;
+class Probe;
 
 class SignalHistoryModel : public QAbstractTableModel
 {
@@ -76,7 +76,7 @@ public:
         SignalMapRole
     };
 
-    explicit SignalHistoryModel(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit SignalHistoryModel(Probe *probe, QObject *parent = nullptr);
     ~SignalHistoryModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

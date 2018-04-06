@@ -47,7 +47,7 @@ class CodecBrowser : public QObject
 {
     Q_OBJECT
 public:
-    explicit CodecBrowser(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit CodecBrowser(Probe *probe, QObject *parent = nullptr);
 
 public slots:
     void textChanged(const QString &text);

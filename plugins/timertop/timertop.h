@@ -49,7 +49,7 @@ class TimerTop : public TimerTopInterface
     Q_INTERFACES(GammaRay::TimerTopInterface)
 
 public:
-    explicit TimerTop(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit TimerTop(Probe *probe, QObject *parent = nullptr);
 
 public slots:
     void clearHistory() override;

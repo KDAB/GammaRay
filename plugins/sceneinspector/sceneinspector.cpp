@@ -77,7 +77,7 @@ Q_DECLARE_METATYPE(QGraphicsItem::GraphicsItemFlags)
 Q_DECLARE_METATYPE(QGraphicsItem::PanelModality)
 Q_DECLARE_METATYPE(QGraphicsPixmapItem::ShapeMode)
 
-SceneInspector::SceneInspector(ProbeInterface *probe, QObject *parent)
+SceneInspector::SceneInspector(Probe *probe, QObject *parent)
     : SceneInspectorInterface(parent)
     , m_propertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.SceneInspector"),
                                                   this))

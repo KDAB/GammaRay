@@ -32,15 +32,15 @@
 #include "fontmodel.h"
 #include "fontdatabasemodel.h"
 
+#include <core/probe.h>
 #include <common/objectbroker.h>
-#include <core/probeinterface.h>
 
 #include <QItemSelectionModel>
 #include <QFontDatabase>
 
 using namespace GammaRay;
 
-FontBrowserServer::FontBrowserServer(ProbeInterface *probe, QObject *parent)
+FontBrowserServer::FontBrowserServer(Probe *probe, QObject *parent)
     : FontBrowserInterface(parent)
     , m_selectedFontModel(new FontModel(this))
 {

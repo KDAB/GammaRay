@@ -56,7 +56,7 @@
 using namespace GammaRay;
 using namespace std;
 
-StateMachineViewerServer::StateMachineViewerServer(ProbeInterface *probe, QObject *parent)
+StateMachineViewerServer::StateMachineViewerServer(Probe *probe, QObject *parent)
     : StateMachineViewerInterface(parent)
     , m_stateModel(new StateModel(this))
     , m_transitionModel(new TransitionModel(this))

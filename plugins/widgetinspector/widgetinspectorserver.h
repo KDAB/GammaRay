@@ -44,7 +44,7 @@ class QPoint;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class ProbeInterface;
+class Probe;
 class PropertyController;
 class OverlayWidget;
 class PaintAnalyzer;
@@ -57,7 +57,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::WidgetInspectorInterface)
 public:
-    explicit WidgetInspectorServer(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit WidgetInspectorServer(Probe *probe, QObject *parent = nullptr);
     ~WidgetInspectorServer();
 
 signals:
@@ -105,7 +105,7 @@ private:
     QPointer<QWidget> m_selectedWidget;
     PaintAnalyzer *m_paintAnalyzer;
     RemoteViewServer *m_remoteView;
-    ProbeInterface *m_probe;
+    Probe *m_probe;
 };
 }
 

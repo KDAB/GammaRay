@@ -123,7 +123,7 @@ static bool isAcceptableWindow(QWindow *w)
 }
 #endif
 
-GuiSupport::GuiSupport(GammaRay::ProbeInterface *probe, QObject *parent)
+GuiSupport::GuiSupport(Probe *probe, QObject *parent)
     : QObject(parent)
     , m_probe(probe)
 {

@@ -46,7 +46,7 @@
 
 using namespace GammaRay;
 
-StyleInspector::StyleInspector(ProbeInterface *probe, QObject *parent)
+StyleInspector::StyleInspector(Probe *probe, QObject *parent)
     : StyleInspectorInterface(parent)
     , m_primitiveModel(new PrimitiveModel(this))
     , m_controlModel(new ControlModel(this))

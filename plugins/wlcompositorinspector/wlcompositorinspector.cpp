@@ -421,7 +421,7 @@ public:
     QWaylandClient *m_client;
 };
 
-WlCompositorInspector::WlCompositorInspector(ProbeInterface *probe, QObject *parent)
+WlCompositorInspector::WlCompositorInspector(Probe *probe, QObject *parent)
                      : WlCompositorInterface(parent)
                      , m_compositor(nullptr)
                      , m_surfaceView(new SurfaceView(this))

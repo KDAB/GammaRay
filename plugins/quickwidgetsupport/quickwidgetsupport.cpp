@@ -42,7 +42,7 @@ using namespace GammaRay;
 
 static QuickWidgetSupport *s_quickWidgetSupportInstance = nullptr;
 
-QuickWidgetSupport::QuickWidgetSupport(ProbeInterface *probe, QObject *parent)
+QuickWidgetSupport::QuickWidgetSupport(Probe *probe, QObject *parent)
     : QObject(parent)
     , m_probe(probe)
 {

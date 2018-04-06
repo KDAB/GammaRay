@@ -320,7 +320,7 @@ SourceLocation QmlObjectDataProvider::declarationLocation(QObject *obj) const
     return SourceLocation();
 }
 
-QmlSupport::QmlSupport(GammaRay::ProbeInterface *probe, QObject *parent)
+QmlSupport::QmlSupport(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     Q_UNUSED(probe);

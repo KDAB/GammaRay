@@ -45,7 +45,7 @@
 
 using namespace GammaRay;
 
-MetaObjectBrowser::MetaObjectBrowser(ProbeInterface *probe, QObject *parent)
+MetaObjectBrowser::MetaObjectBrowser(Probe *probe, QObject *parent)
     : QObject(parent)
     , m_propertyController(new PropertyController(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this))
     , m_motm(new MetaObjectTreeModel(this))

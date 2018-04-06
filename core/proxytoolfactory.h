@@ -55,7 +55,7 @@ public:
     bool isHidden() const override;
     QVector<QByteArray> selectableTypes() const override;
 
-    void init(ProbeInterface *probe) override;
+    void init(Probe *probe) override;
 };
 }
 

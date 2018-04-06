@@ -38,14 +38,14 @@ class QuickWidgetSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit QuickWidgetSupport(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit QuickWidgetSupport(Probe *probe, QObject *parent = nullptr);
     ~QuickWidgetSupport();
 
 private slots:
     void objectAdded(QObject *obj);
 
 private:
-    ProbeInterface *m_probe;
+    Probe *m_probe;
 };
 
 class QuickWidgetSupportFactory : public QObject,

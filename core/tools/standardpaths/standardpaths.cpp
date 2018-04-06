@@ -31,7 +31,7 @@
 
 using namespace GammaRay;
 
-StandardPaths::StandardPaths(ProbeInterface *probe, QObject *parent)
+StandardPaths::StandardPaths(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     auto *model = new StandardPathsModel(this);

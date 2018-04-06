@@ -46,7 +46,7 @@
 
 using namespace GammaRay;
 
-TextDocumentInspector::TextDocumentInspector(ProbeInterface *probe, QObject *parent)
+TextDocumentInspector::TextDocumentInspector(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     registerMetaTypes();

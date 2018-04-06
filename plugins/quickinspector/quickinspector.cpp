@@ -53,7 +53,6 @@
 #include <core/metaobjectrepository.h>
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeguard.h>
-#include <core/probeinterface.h>
 #include <core/propertycontroller.h>
 #include <core/remote/server.h>
 #include <core/remote/serverproxymodel.h>
@@ -352,7 +351,7 @@ void RenderModeRequest::preFinished()
     emit finished();
 }
 
-QuickInspector::QuickInspector(ProbeInterface *probe, QObject *parent)
+QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     : QuickInspectorInterface(parent)
     , m_probe(probe)
     , m_currentSgNode(nullptr)

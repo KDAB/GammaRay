@@ -43,7 +43,7 @@ class GuiSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit GuiSupport(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit GuiSupport(Probe *probe, QObject *parent = nullptr);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     bool eventFilter(QObject *watched, QEvent *event);
@@ -81,7 +81,7 @@ private:
 #endif
 
 private:
-    ProbeInterface *m_probe;
+    Probe *m_probe;
 
 private slots:
 #ifdef QT4_MOC_WORKAROUND

@@ -41,7 +41,7 @@
 
 using namespace GammaRay;
 
-SignalMonitor::SignalMonitor(ProbeInterface *probe, QObject *parent)
+SignalMonitor::SignalMonitor(Probe *probe, QObject *parent)
     : SignalMonitorInterface(parent)
 {
     StreamOperators::registerSignalMonitorStreamOperators();

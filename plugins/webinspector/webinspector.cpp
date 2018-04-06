@@ -41,7 +41,7 @@
 
 using namespace GammaRay;
 
-WebInspector::WebInspector(ProbeInterface *probe, QObject *parent)
+WebInspector::WebInspector(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     auto *webViewModel = new WebViewModel(this);
@@ -91,9 +91,9 @@ QString WebInspectorFactory::id() const
     return WebInspector::staticMetaObject.className();
 }
 
-void WebInspectorFactory::init(ProbeInterface *probe)
+void WebInspectorFactory::init(Probe *probe)
 {
-    new WebInspector(probe, probe->probe());
+    new WebInspector(probe, probe);
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)

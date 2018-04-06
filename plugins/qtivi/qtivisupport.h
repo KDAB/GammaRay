@@ -38,7 +38,7 @@ class QtIviSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit QtIviSupport(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit QtIviSupport(Probe *probe, QObject *parent = nullptr);
 };
 
 class QtIviSupportFactory : public QObject, public StandardToolFactory<QIviProperty, QtIviSupport>

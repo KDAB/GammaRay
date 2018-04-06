@@ -41,7 +41,7 @@ class KJobTracker : public QObject
 {
     Q_OBJECT
 public:
-    explicit KJobTracker(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit KJobTracker(Probe *probe, QObject *parent = nullptr);
     virtual ~KJobTracker();
 
 private:

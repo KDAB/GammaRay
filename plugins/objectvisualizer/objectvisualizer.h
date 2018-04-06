@@ -35,7 +35,7 @@ class GraphViewer : public QObject
     Q_OBJECT
 
 public:
-    explicit GraphViewer(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit GraphViewer(Probe *probe, QObject *parent = nullptr);
     ~GraphViewer();
 };
 

@@ -48,7 +48,7 @@ class TextDocumentInspector : public QObject
 {
     Q_OBJECT
 public:
-    explicit TextDocumentInspector(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit TextDocumentInspector(Probe *probe, QObject *parent = nullptr);
 
 private slots:
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);

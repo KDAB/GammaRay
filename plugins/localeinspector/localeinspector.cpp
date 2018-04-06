@@ -44,7 +44,7 @@
 
 using namespace GammaRay;
 
-LocaleInspector::LocaleInspector(ProbeInterface *probe, QObject *parent)
+LocaleInspector::LocaleInspector(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     auto *registry = new LocaleDataAccessorRegistry(this);

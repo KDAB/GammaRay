@@ -54,7 +54,7 @@ class WlCompositorInspector: public WlCompositorInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::WlCompositorInterface)
 public:
-    explicit WlCompositorInspector(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit WlCompositorInspector(Probe *probe, QObject *parent = nullptr);
     ~WlCompositorInspector();
 
 public slots:

@@ -52,7 +52,7 @@ Q_DECLARE_METATYPE(QActionGroup *)
 Q_DECLARE_METATYPE(QMenu *)
 #endif
 
-ActionInspector::ActionInspector(ProbeInterface *probe, QObject *parent)
+ActionInspector::ActionInspector(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     registerMetaTypes();

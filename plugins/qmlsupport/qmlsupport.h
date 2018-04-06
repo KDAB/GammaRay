@@ -38,7 +38,7 @@ class QmlSupport : public QObject
 {
     Q_OBJECT
 public:
-    explicit QmlSupport(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit QmlSupport(Probe *probe, QObject *parent = nullptr);
 };
 
 class QmlSupportFactory : public QObject, public StandardToolFactory<QJSEngine, QmlSupport>

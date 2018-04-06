@@ -98,7 +98,7 @@ static void signal_end_callback(QObject *caller, int method_index)
     TimerModel::instance()->postSignalActivate(caller, method_index);
 }
 
-TimerTop::TimerTop(ProbeInterface *probe, QObject *parent)
+TimerTop::TimerTop(Probe *probe, QObject *parent)
     : TimerTopInterface(parent)
 {
     Q_ASSERT(probe);

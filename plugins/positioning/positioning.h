@@ -39,7 +39,7 @@ class Positioning : public QObject
 {
     Q_OBJECT
 public:
-    explicit Positioning(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit Positioning(Probe *probe, QObject *parent = nullptr);
 };
 
 class PositioningFactory : public QObject,

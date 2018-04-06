@@ -98,7 +98,7 @@ class QuickInspector : public QuickInspectorInterface
     Q_INTERFACES(GammaRay::QuickInspectorInterface)
 
 public:
-    explicit QuickInspector(ProbeInterface *probe, QObject *parent = nullptr);
+    explicit QuickInspector(Probe *probe, QObject *parent = nullptr);
     ~QuickInspector();
 
 signals:
@@ -153,7 +153,7 @@ private:
     GammaRay::ObjectIds recursiveItemsAt(QQuickItem *parent, const QPointF &pos,
                                          GammaRay::RemoteViewInterface::RequestMode mode, int& bestCandidate) const;
 
-    ProbeInterface *m_probe;
+    Probe *m_probe;
     std::unique_ptr<AbstractScreenGrabber> m_overlay;
     QPointer<QQuickWindow> m_window;
     QPointer<QQuickItem> m_currentItem;

@@ -66,7 +66,7 @@ static QString bluetoothInquiryTypeToString(QBluetoothDeviceDiscoveryAgent::Inqu
     return QString();
 }
 
-Bluetooth::Bluetooth(ProbeInterface *probe, QObject *parent)
+Bluetooth::Bluetooth(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     Q_UNUSED(probe);

@@ -145,7 +145,7 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
     }
 }
 
-MessageHandler::MessageHandler(ProbeInterface *probe, QObject *parent)
+MessageHandler::MessageHandler(Probe *probe, QObject *parent)
     : MessageHandlerInterface(parent)
     , m_messageModel(new MessageModel(this))
     , m_stackTraceModel(new StackTraceModel(this))

@@ -53,7 +53,7 @@ class TranslatorInspector : public TranslatorInspectorInterface
     Q_INTERFACES(GammaRay::TranslatorInspectorInterface)
 
 public:
-    explicit TranslatorInspector(GammaRay::ProbeInterface *probe, QObject *parent = nullptr);
+    explicit TranslatorInspector(Probe *probe, QObject *parent = nullptr);
 
 public slots:
     void sendLanguageChangeEvent() override;
@@ -73,7 +73,7 @@ private:
     QItemSelectionModel *m_translationsSelectionModel;
     TranslatorsModel *m_translatorsModel;
     QAbstractProxyModel *m_translationsModel;
-    ProbeInterface *m_probe;
+    Probe *m_probe;
     TranslatorWrapper *m_fallbackWrapper;
 };
 

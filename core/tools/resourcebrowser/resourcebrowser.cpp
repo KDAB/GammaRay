@@ -40,7 +40,7 @@
 
 using namespace GammaRay;
 
-ResourceBrowser::ResourceBrowser(ProbeInterface *probe, QObject *parent)
+ResourceBrowser::ResourceBrowser(Probe *probe, QObject *parent)
     : ResourceBrowserInterface(parent)
 {
     auto *resourceModel = new ResourceModel(this);

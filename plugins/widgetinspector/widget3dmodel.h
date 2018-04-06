@@ -40,8 +40,6 @@
 
 namespace GammaRay {
 
-class ProbeInterface;
-
 class Widget3DWidget : public QObject
 {
     Q_OBJECT
