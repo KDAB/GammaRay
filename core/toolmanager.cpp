@@ -39,9 +39,6 @@
 #include "tools/resourcebrowser/resourcebrowser.h"
 #include "tools/messagehandler/messagehandler.h"
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#include "tools/standardpaths/standardpaths.h"
-#endif
 
 #include <QDebug>
 #include <QCoreApplication>
@@ -62,9 +59,6 @@ ToolManager::ToolManager(QObject *parent)
     addToolFactory(new MetaObjectBrowserFactory(this));
     addToolFactory(new MetaTypeBrowserFactory(this));
     addToolFactory(new MessageHandlerFactory(this));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    addToolFactory(new StandardPathsFactory(this));
-#endif
 
     Q_FOREACH (ToolFactory *factory, m_toolPluginManager->plugins())
         addToolFactory(factory);

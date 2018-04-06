@@ -35,7 +35,6 @@
 #include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
 #include <ui/tools/resourcebrowser/resourcebrowserwidget.h>
-#include <ui/tools/standardpaths/standardpathswidget.h>
 
 #include <common/endpoint.h>
 #include <common/modelroles.h>
@@ -63,7 +62,6 @@ MAKE_FACTORY(MessageHandler,    qApp->translate("GammaRay::MessageHandlerFactory
 MAKE_FACTORY(MetaObjectBrowser, qApp->translate("GammaRay::MetaObjectBrowserFactory", "Meta Objects"));
 MAKE_FACTORY(MetaTypeBrowser,   qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"));
 MAKE_FACTORY(ResourceBrowser,   qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"));
-MAKE_FACTORY(StandardPaths,     qApp->translate("GammaRay::StandardPathsFactory", "Standard Paths"));
 
 struct PluginRepository {
     PluginRepository() {}
@@ -97,7 +95,6 @@ static void initPluginRepository()
     insertFactory(new MetaTypeBrowserFactory);
     insertFactory(new ObjectInspectorFactory);
     insertFactory(new ResourceBrowserFactory);
-    insertFactory(new StandardPathsFactory);
 
     PluginManager<ToolUiFactory, ProxyToolUiFactory> pm;
     foreach (ToolUiFactory *factory, pm.plugins())

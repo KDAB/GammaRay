@@ -1,5 +1,5 @@
 /*
-  standardpaths.cpp
+  standardpathswidget.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,18 +26,31 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "standardpaths.h"
-#include "standardpathsmodel.h"
+#ifndef GAMMARAY_STANDARDPATHSWIDGET_H
+#define GAMMARAY_STANDARDPATHSWIDGET_H
 
-using namespace GammaRay;
+#include <ui/uistatemanager.h>
 
-StandardPaths::StandardPaths(Probe *probe, QObject *parent)
-    : QObject(parent)
-{
-    auto *model = new StandardPathsModel(this);
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.StandardPathsModel"), model);
+#include <QWidget>
+
+#include <memory>
+
+namespace GammaRay {
+namespace Ui {
+class StandardPathsWidget;
 }
 
-StandardPaths::~StandardPaths()
+class StandardPathsWidget : public QWidget
 {
+    Q_OBJECT
+public:
+    explicit StandardPathsWidget(QWidget *parent = nullptr);
+    ~StandardPathsWidget();
+
+private:
+    std::unique_ptr<Ui::StandardPathsWidget> ui;
+    UIStateManager m_stateManager;
+};
 }
+
+#endif // GAMMARAY_STANDARDPATHSWIDGET_H

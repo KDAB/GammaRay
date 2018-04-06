@@ -81,7 +81,6 @@ set(gammaray_ui_srcs
   tools/resourcebrowser/clientresourcemodel.cpp
   tools/resourcebrowser/resourcebrowserwidget.cpp
   tools/resourcebrowser/resourcebrowserclient.cpp
-  tools/standardpaths/standardpathswidget.cpp
 
   resources/ui.qrc
   ${CMAKE_CURRENT_BINARY_DIR}/resources/classicons.qrc

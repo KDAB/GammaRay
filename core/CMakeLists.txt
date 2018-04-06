@@ -95,8 +95,6 @@ if(Qt5Core_FOUND)
   set(gammaray_srcs
     ${gammaray_srcs}
     tools/messagehandler/loggingcategorymodel.cpp
-    tools/standardpaths/standardpaths.cpp
-    tools/standardpaths/standardpathsmodel.cpp
   )
 endif()
 
