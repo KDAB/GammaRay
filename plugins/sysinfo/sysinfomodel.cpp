@@ -28,6 +28,7 @@
 
 #include "sysinfomodel.h"
 
+#include <QLibraryInfo>
 #include <QSysInfo>
 
 using namespace GammaRay;
@@ -40,6 +41,7 @@ struct sysinfo_t {
 
 #define S(x) { QSysInfo:: x, #x }
 static const sysinfo_t sysInfoTable[] = {
+    { []() { return QString::fromLatin1(QLibraryInfo::build()); }, "build" },
     S(buildAbi),
     S(buildCpuArchitecture),
     S(currentCpuArchitecture),
