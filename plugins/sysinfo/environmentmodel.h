@@ -1,5 +1,5 @@
 /*
-  sysinfowidget.cpp
+  environmentmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,27 +26,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "sysinfowidget.h"
-#include "ui_sysinfowidget.h"
+#ifndef GAMMARAY_ENVIRONMENTMODEL_H
+#define GAMMARAY_ENVIRONMENTMODEL_H
 
-#include <common/objectbroker.h>
+#include <QAbstractTableModel>
+#include <QProcessEnvironment>
 
-using namespace GammaRay;
+namespace GammaRay {
 
-SysInfoWidget::SysInfoWidget(QWidget* parent)
-    : QWidget(parent)
-    , ui(new Ui::SysInfoWidget)
+class EnvironmentModel : public QAbstractTableModel
 {
-    ui->setupUi(this);
+    Q_OBJECT
+public:
+    explicit EnvironmentModel(QObject *parent = nullptr);
+    ~EnvironmentModel();
 
-    ui->sysInfoView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SysInfoModel")));
-    ui->sysInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
-    ui->libInfoView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LibraryInfoModel")));
-    ui->libInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
-    ui->envView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EnvironmentModel")));
-    ui->envView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    int columnCount(const QModelIndex & parent) const override;
+    int rowCount(const QModelIndex & parent) const override;
+    QVariant data(const QModelIndex & index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+
+private:
+    QProcessEnvironment m_env;
+};
 }
 
-SysInfoWidget::~SysInfoWidget()
-{
-}
+#endif // GAMMARAY_ENVIRONMENTMODEL_H

@@ -2,6 +2,7 @@
 if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
     set(sysinfo_probe_srcs
         sysinfo.cpp
+        environmentmodel.cpp
         libraryinfomodel.cpp
         standardpathsmodel.cpp
         sysinfomodel.cpp

@@ -27,6 +27,7 @@
 */
 
 #include "sysinfo.h"
+#include "environmentmodel.h"
 #include "libraryinfomodel.h"
 #include "standardpathsmodel.h"
 #include "sysinfomodel.h"
@@ -38,6 +39,7 @@ SysInfo::SysInfo(Probe *probe, QObject *parent)
 {
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SysInfoModel"), new SysInfoModel(this));
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.LibraryInfoModel"), new LibraryInfoModel(this));
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.EnvironmentModel"), new EnvironmentModel(this));
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.StandardPathsModel"), new StandardPathsModel(this));
 }
