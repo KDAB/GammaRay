@@ -58,8 +58,6 @@ public:
 protected:
     /** Execute a raw command on the debugger. */
     virtual void execCmd(const QByteArray &cmd, bool waitForWritten = true);
-    /** Turn off confirmations */
-    virtual void disableConfirmations() = 0;
     /** Break in the function @p function, specify name without parenthesis. */
     virtual void addFunctionBreakpoint(const QByteArray &function) = 0;
     /** Break in the method @p method, specify name without parenthesis. */
