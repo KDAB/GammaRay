@@ -34,6 +34,7 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QDebug>
+#include <QApplication>
 
 using namespace GammaRay;
 
@@ -75,6 +76,6 @@ QVariant AbstractStyleElementStateTable::headerData(int section, Qt::Orientation
 void AbstractStyleElementStateTable::fillStyleOption(QStyleOption *option, int column) const
 {
     option->rect = QRect(0, 0, m_interface->cellWidth(), m_interface->cellHeight());
-    option->palette = m_style->standardPalette();
+    option->palette = qApp->palette();
     option->state = StyleOption::prettyState(column);
 }
