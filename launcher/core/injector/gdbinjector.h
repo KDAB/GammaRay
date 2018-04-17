@@ -43,7 +43,7 @@ public:
     bool attach(int pid, const QString &probeDll, const QString &probeFunc) override;
 
 protected:
-    void disableConfirmations();
+    void setupGdb();
     void addFunctionBreakpoint(const QByteArray &function) override;
     void addMethodBreakpoint(const QByteArray &method) override;
     void clearBreakpoints() override;

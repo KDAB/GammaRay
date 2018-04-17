@@ -55,7 +55,7 @@ bool GdbInjector::launch(const QStringList &programAndArgs, const QString &probe
     if (!startDebugger(gdbArgs, env))
         return -1;
 
-    disableConfirmations();
+    setupGdb();
     waitForMain();
     return injectAndDetach(probeDll, probeFunc);
 }
@@ -65,13 +65,14 @@ bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeF
     Q_ASSERT(pid > 0);
     if (!startDebugger(QStringList() << QStringLiteral("-pid") << QString::number(pid)))
         return false;
-    disableConfirmations();
+    setupGdb();
     return injectAndDetach(probeDll, probeFunc);
 }
 
-void GdbInjector::disableConfirmations()
+void GdbInjector::setupGdb()
 {
     execCmd("set confirm off");
+    execCmd("set auto-solib-add off");
 }
 
 void GdbInjector::parseStandardError(const QByteArray &line)
