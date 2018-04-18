@@ -122,7 +122,7 @@ static bool quickItemZGreaterThan(QQuickItem *lhs, QQuickItem *rhs)
 }
 
 static QVector<QQuickItem *> findItemByClassName(const char *className, QQuickItem *parent,
-                                                 std::function<void(QQuickItem *)> walker)
+                                                 const std::function<void(QQuickItem *)> &walker)
 {
     Q_ASSERT(parent);
     QVector<QQuickItem *> items;

@@ -198,7 +198,7 @@ void PaintAnalyzer::endAnalyzePainting()
 #endif
 }
 
-void GammaRay::PaintAnalyzer::setOrigin(ObjectId obj)
+void GammaRay::PaintAnalyzer::setOrigin(const ObjectId &obj)
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBuffer->setOrigin(obj);

@@ -128,7 +128,7 @@ public:
      * Marks all following paint operations to origin from the given QWidget/QQuickItem
      * until this is called with another object.
      */
-    void setOrigin(ObjectId obj);
+    void setOrigin(const ObjectId &obj);
 
     /** Returns the stack trace of command at @p index. */
     Execution::Trace stackTrace(int index) const;

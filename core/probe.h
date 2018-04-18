@@ -195,7 +195,7 @@ public:
      *
      * These objects should not be tracked or shown to the user,
      * hence must be explictly filtered.
-     * @param object is a pointer to a QObject instance.
+     * @param obj is a pointer to a QObject instance.
      *
      * @return true if the specified QObject belongs to the GammaRay Probe
      * or Window; false otherwise.

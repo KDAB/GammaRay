@@ -375,7 +375,7 @@ ObjectId PaintBuffer::origin(int index) const
     return m_origins.at(index);
 }
 
-void PaintBuffer::setOrigin(ObjectId obj)
+void PaintBuffer::setOrigin(const ObjectId &obj)
 {
     m_currentOrigin = obj;
 }
