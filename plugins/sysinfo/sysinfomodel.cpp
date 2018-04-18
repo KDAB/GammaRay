@@ -41,7 +41,9 @@ struct sysinfo_t {
 
 #define S(x) { QSysInfo:: x, #x }
 static const sysinfo_t sysInfoTable[] = {
+#if !defined(_MSC_VER) || _MSC_VER > 1600
     { []() { return QString::fromLatin1(QLibraryInfo::build()); }, "build" },
+#endif
     S(buildAbi),
     S(buildCpuArchitecture),
     S(currentCpuArchitecture),
