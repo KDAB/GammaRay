@@ -63,7 +63,12 @@ bool GdbInjector::launch(const QStringList &programAndArgs, const QString &probe
 bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeFunc)
 {
     Q_ASSERT(pid > 0);
-    if (!startDebugger(QStringList() << QStringLiteral("-pid") << QString::number(pid)))
+    QStringList gdbArgs;
+    // disable symbol loading early, otherwise it would happen directly after the attach
+    // before we could execute the setupGdb commands below
+    gdbArgs << QStringLiteral("-iex") << QStringLiteral("set auto-solib-add off");
+    gdbArgs << QStringLiteral("-pid") << QString::number(pid);
+    if (!startDebugger(gdbArgs))
         return false;
     setupGdb();
     return injectAndDetach(probeDll, probeFunc);
