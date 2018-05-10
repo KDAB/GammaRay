@@ -8,7 +8,7 @@ EXTRA kdabcopyright,kdabcommercial
 #EXTRA style
 
 #exclude checks now being done by clazy or clang-tools
-EXCLUDE strings,explicit,normalize,passbyvalue,operators,nullstrcompare,nullstrassign,doublequote_chars
+EXCLUDE strings,explicit,normalize,passbyvalue,operators,nullstrcompare,nullstrassign,doublequote_chars,qobject,sigsandslots,staticobjects
 #exclude more checks
 EXCLUDE qminmax,captruefalse
 
