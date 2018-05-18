@@ -59,6 +59,9 @@ public:
     explicit PaintAnalyzer(const QString &name, QObject *parent = nullptr);
     ~PaintAnalyzer();
 
+    /** Reset the paint analyzer state for providing a new analysis asynchronously. */
+    void reset();
+
     // call the following 4 methods in this order to trigger a paint analysis
     void beginAnalyzePainting();
     void setBoundingRect(const QRectF &boundingBox);
@@ -74,6 +77,10 @@ public:
      * until this is called with another object.
      */
     void setOrigin(const ObjectId &obj);
+
+signals:
+    /** Polling for updated analysis. */
+    void requestUpdate();
 
 private slots:
     void repaint();

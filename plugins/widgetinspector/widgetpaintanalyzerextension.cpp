@@ -40,6 +40,7 @@ using namespace GammaRay;
 WidgetPaintAnalyzerExtension::WidgetPaintAnalyzerExtension(PropertyController *controller)
     : PropertyControllerExtension(controller->objectBaseName() + ".painting")
     , m_paintAnalyzer(nullptr)
+    , m_widget(nullptr)
 {
     // check if the paint analyzer already exists before creating it,
     // as we share the UI with the other plugins.
@@ -50,6 +51,10 @@ WidgetPaintAnalyzerExtension::WidgetPaintAnalyzerExtension(PropertyController *c
     } else {
         m_paintAnalyzer = new PaintAnalyzer(aName, controller);
     }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QObject::connect(m_paintAnalyzer, &PaintAnalyzer::requestUpdate, [this]() { analyze(); });
+#endif
 }
 
 WidgetPaintAnalyzerExtension::~WidgetPaintAnalyzerExtension()
@@ -58,13 +63,24 @@ WidgetPaintAnalyzerExtension::~WidgetPaintAnalyzerExtension()
 
 bool WidgetPaintAnalyzerExtension::setQObject(QObject *object)
 {
-    auto widget = qobject_cast<QWidget *>(object);
-    if (!PaintAnalyzer::isAvailable() || !widget)
+    m_widget = qobject_cast<QWidget *>(object);
+    if (!PaintAnalyzer::isAvailable() || !m_widget)
         return false;
 
-    m_paintAnalyzer->beginAnalyzePainting();
-    m_paintAnalyzer->setBoundingRect(widget->rect());
-    widget->render(m_paintAnalyzer->paintDevice(), QPoint(), QRegion(), nullptr);
-    m_paintAnalyzer->endAnalyzePainting();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    m_paintAnalyzer->reset();
+#else
+    analyze();
+#endif
     return true;
+}
+
+void WidgetPaintAnalyzerExtension::analyze()
+{
+    if (!m_widget)
+        return;
+    m_paintAnalyzer->beginAnalyzePainting();
+    m_paintAnalyzer->setBoundingRect(m_widget->rect());
+    m_widget->render(m_paintAnalyzer->paintDevice(), QPoint(), QRegion(), nullptr);
+    m_paintAnalyzer->endAnalyzePainting();
 }

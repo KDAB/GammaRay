@@ -92,12 +92,25 @@ PaintAnalyzer::~PaintAnalyzer()
 {
 }
 
+void PaintAnalyzer::reset()
+{
+    m_remoteView->sourceChanged();
+#ifdef HAVE_PRIVATE_QT_HEADERS
+    m_paintBufferModel->setPaintBuffer(PaintBuffer());
+#endif
+}
+
 void PaintAnalyzer::repaint()
 {
     if (!m_remoteView->isActive())
         return;
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
+    if (m_paintBufferModel->rowCount() == 0) {
+        emit requestUpdate();
+        return;
+    }
+
     const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     const qreal ratio = m_paintBufferModel->buffer().devicePixelRatioF();

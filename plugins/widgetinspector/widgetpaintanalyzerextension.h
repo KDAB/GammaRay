@@ -31,6 +31,8 @@
 
 #include <core/propertycontrollerextension.h>
 
+class QWidget;
+
 namespace GammaRay {
 class PaintAnalyzer;
 class PropertyController;
@@ -44,7 +46,10 @@ public:
     bool setQObject(QObject *object) override;
 
 private:
+    void analyze();
+
     PaintAnalyzer *m_paintAnalyzer;
+    QWidget *m_widget;
 };
 }
 
