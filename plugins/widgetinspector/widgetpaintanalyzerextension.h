@@ -31,7 +31,9 @@
 
 #include <core/propertycontrollerextension.h>
 
+QT_BEGIN_NAMESPACE
 class QWidget;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 class PaintAnalyzer;
