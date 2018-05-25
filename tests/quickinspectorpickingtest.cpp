@@ -137,7 +137,6 @@ private slots:
         QTest::newRow("Invisible overlay") << "qrc:/manual/picking/invisibleoverlay.qml" << "redrect";
         QTest::newRow("Opacity:0 overlay") << "qrc:/manual/picking/opacityzerooverlay.qml" << "yellowrect";
         QTest::newRow("Loader") << "qrc:/manual/picking/loader.qml" << "bluerect";
-        //Does not Work
         QTest::newRow("Outside of parent") << "qrc:/manual/picking/outsideofparent.qml" << "redrectchild";
     }
 
@@ -165,7 +164,6 @@ private slots:
         QItemSelection selectedItem = qvariant_cast<QItemSelection>(itemSpy.at(0).at(0));
         QVariant id = itemModel->data(selectedItem.indexes().first());
 
-        QEXPECT_FAIL("Outside of parent", "Should Fail, Everything outside ParentRect is not selectable.", Continue);
         QCOMPARE(id.toString(), pickedObjectId);
     }
 

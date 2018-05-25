@@ -830,27 +830,23 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
     );
 
     for (int i = childItems.size() - 1; i >= 0; --i) { // backwards to match z order
-        auto child = childItems.at(i);
-        const QPointF requestedPoint = parent->mapToItem(child, pos);
+        const auto child = childItems.at(i);
+        const auto requestedPoint = parent->mapToItem(child, pos);
+        if (!child->childItems().isEmpty() && (child->contains(requestedPoint) || child->childrenRect().contains(requestedPoint))) {
+            const int count = objects.count();
+            int bc; // possibly better candidate among subChildren
+            objects << recursiveItemsAt(child, requestedPoint, mode, bc);
+
+            if (bestCandidate == -1 && bc != -1) {
+                bestCandidate = count + bc;
+            }
+        }
+
         if (child->contains(requestedPoint)) {
-            const bool hasSubChildren = !child->childItems().isEmpty();
-
-            if (hasSubChildren) {
-                const int count = objects.count();
-                int bc; // possibly better candidate among subChildren
-                objects << recursiveItemsAt(child, requestedPoint, mode, bc);
-
-                if (bestCandidate == -1 && bc != -1) {
-                    bestCandidate = count + bc;
-                }
+            if (bestCandidate == -1 && isGoodCandidateItem(child)) {
+                bestCandidate = objects.count();
             }
-            else {
-                if (bestCandidate == -1 && isGoodCandidateItem(child)) {
-                    bestCandidate = objects.count();
-                }
-
-                objects << ObjectId(child);
-            }
+            objects << ObjectId(child);
         }
 
         if (bestCandidate != -1 && mode == RemoteViewInterface::RequestBest) {
