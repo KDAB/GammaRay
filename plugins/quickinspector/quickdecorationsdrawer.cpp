@@ -82,19 +82,21 @@ void QuickDecorationsDrawer::drawDecorations()
     m_painter->save();
 
     // bounding box
-    m_painter->setPen(m_renderInfo->settings.boundingRectColor);
-    m_painter->setBrush(m_renderInfo->settings.boundingRectBrush);
-    m_painter->drawRect(itemGeometry.boundingRect);
+    if (itemGeometry.boundingRect.isValid()) {
+        m_painter->setPen(m_renderInfo->settings.boundingRectColor);
+        m_painter->setBrush(m_renderInfo->settings.boundingRectBrush);
+        m_painter->drawRect(itemGeometry.boundingRect);
+    }
 
     // original geometry
-    if (itemGeometry.itemRect != itemGeometry.boundingRect) {
+    if (itemGeometry.itemRect.isValid() && itemGeometry.itemRect != itemGeometry.boundingRect) {
         m_painter->setPen(m_renderInfo->settings.geometryRectColor);
         m_painter->setBrush(m_renderInfo->settings.geometryRectBrush);
         m_painter->drawRect(itemGeometry.itemRect);
     }
 
     // children rect
-    if (itemGeometry.itemRect != itemGeometry.boundingRect &&
+    if (itemGeometry.childrenRect.isValid() && itemGeometry.itemRect != itemGeometry.boundingRect &&
             itemGeometry.transform.isIdentity()) {
         // If this item is transformed the children rect will be painted wrongly,
         // so for now skip painting it.
