@@ -66,7 +66,7 @@ Positioning::Positioning(Probe *probe, QObject *parent)
 {
     qRegisterMetaTypeStreamOperators<QGeoPositionInfo>("QGeoPositionInfo");
     registerMetaTypes();
-    connect(probe->probe(), SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
+    connect(probe, &Probe::objectCreated, this, &Positioning::objectAdded);
 }
 
 void Positioning::objectAdded(QObject* obj)

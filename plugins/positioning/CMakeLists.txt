@@ -16,6 +16,7 @@ set(gammaray_geopositioninfosource_srcs
 )
 
 add_library(gammaray_geopositioninfosource MODULE ${gammaray_geopositioninfosource_srcs})
+target_include_directories(gammaray_geopositioninfosource SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
 target_link_libraries(gammaray_geopositioninfosource
   gammaray_common
   Qt5::Positioning
@@ -29,17 +30,10 @@ if(GAMMARAY_BUILD_UI AND Qt5Location_FOUND AND Qt5QuickWidgets_FOUND)
     positioninginterface.cpp
     positioningclient.cpp
     mapcontroller.cpp
+    positioningwidget.qrc
   )
 
-  qt4_wrap_ui(gammaray_positioning_ui_srcs
-    positioningwidget.ui
-  )
-  qt4_add_resources(gammaray_positioning_ui_srcs positioningwidget.qrc)
-
-  gammaray_add_plugin(gammaray_positioning_ui
-    gammaray_positioning_ui.desktop
-    ${gammaray_positioning_ui_srcs}
-  )
+  gammaray_add_plugin(gammaray_positioning_ui JSON gammaray_positioning.json SOURCES ${gammaray_positioning_ui_srcs})
 
   target_link_libraries(gammaray_positioning_ui
     gammaray_ui
