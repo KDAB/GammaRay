@@ -53,6 +53,7 @@ void StreamOperators::registerOperators()
     qRegisterMetaTypeStreamOperators<QMetaMethod::Access>();
     qRegisterMetaTypeStreamOperators<QMetaMethod::MethodType>();
     qRegisterMetaTypeStreamOperators<Qt::ConnectionType>();
+    qRegisterMetaTypeStreamOperators<QHash<int, QByteArray> >();
 
     qRegisterMetaType<ObjectId>();
     qRegisterMetaTypeStreamOperators<ObjectId>();

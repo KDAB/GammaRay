@@ -140,6 +140,7 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_METAOBJECT1(QAbstractItemModel, QObject);
     MO_ADD_PROPERTY_RO(QAbstractItemModel, mimeTypes);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+    MO_ADD_PROPERTY_RO(QAbstractItemModel, roleNames);
     MO_ADD_PROPERTY_RO(QAbstractItemModel, supportedDragActions);
     MO_ADD_PROPERTY_RO(QAbstractItemModel, supportedDropActions);
 #endif

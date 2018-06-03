@@ -35,5 +35,4 @@ using namespace GammaRay;
 void GammaRay::StreamOperators::registerSignalMonitorStreamOperators()
 {
     qRegisterMetaTypeStreamOperators<QVector<qlonglong> >();
-    qRegisterMetaTypeStreamOperators<QHash<int, QByteArray> >();
 }
