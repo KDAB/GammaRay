@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -35,8 +35,8 @@ using namespace GammaRay;
 
 GeoPositionInfoSource::GeoPositionInfoSource(QObject* parent) :
     QGeoPositionInfoSource(parent),
-    m_source(Q_NULLPTR),
-    m_interface(Q_NULLPTR)
+    m_source(nullptr),
+    m_interface(nullptr)
 {
 }
 
@@ -126,8 +126,8 @@ void GeoPositionInfoSource::setInterface(PositioningInterface* iface)
 {
     Q_ASSERT(iface);
     m_interface = iface;
-    connect(m_interface, SIGNAL(positioningOverrideEnabledChanged()), this, SLOT(overrideChanged()));
-    connect(m_interface, SIGNAL(positionInfoOverrideChanged()), this, SLOT(positionInfoOverrideChanged()));
+    connect(m_interface, &PositioningInterface::positioningOverrideEnabledChanged, this, &GeoPositionInfoSource::overrideChanged);
+    connect(m_interface, &PositioningInterface::positionInfoOverrideChanged, this, &GeoPositionInfoSource::positionInfoOverrideChanged);
     if (overrideEnabled())
         emit positionUpdated(lastKnownPosition());
     setupSourceUpdate();
@@ -157,9 +157,9 @@ void GeoPositionInfoSource::connectSource()
 {
     if (!m_source)
         return;
-    connect(m_source, SIGNAL(error(QGeoPositionInfoSource::Error)), this, SIGNAL(error(QGeoPositionInfoSource::Error)), Qt::UniqueConnection);
-    connect(m_source, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SIGNAL(positionUpdated(QGeoPositionInfo)), Qt::UniqueConnection);
-    connect(m_source, SIGNAL(updateTimeout()), this, SIGNAL(updateTimeout()), Qt::UniqueConnection);
+    connect(m_source, QOverload<QGeoPositionInfoSource::Error>::of(&QGeoPositionInfoSource::error), this, &GeoPositionInfoSource::error, Qt::UniqueConnection);
+    connect(m_source, &QGeoPositionInfoSource::positionUpdated, this, &GeoPositionInfoSource::positionUpdated, Qt::UniqueConnection);
+    connect(m_source, &QGeoPositionInfoSource::updateTimeout, this, &GeoPositionInfoSource::updateTimeout, Qt::UniqueConnection);
     QGeoPositionInfoSource::setPreferredPositioningMethods(m_source->preferredPositioningMethods());
     QGeoPositionInfoSource::setUpdateInterval(m_source->updateInterval());
 }
@@ -168,9 +168,9 @@ void GeoPositionInfoSource::disconnectSource()
 {
     if (!m_source)
         return;
-    disconnect(m_source, SIGNAL(error(QGeoPositionInfoSource::Error)), this, SIGNAL(error(QGeoPositionInfoSource::Error)));
-    disconnect(m_source, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SIGNAL(positionUpdated(QGeoPositionInfo)));
-    disconnect(m_source, SIGNAL(updateTimeout()), this, SIGNAL(updateTimeout()));
+    disconnect(m_source, QOverload<QGeoPositionInfoSource::Error>::of(&QGeoPositionInfoSource::error), this, &GeoPositionInfoSource::error);
+    disconnect(m_source, &QGeoPositionInfoSource::positionUpdated, this, &GeoPositionInfoSource::positionUpdated);
+    disconnect(m_source, &QGeoPositionInfoSource::updateTimeout, this, &GeoPositionInfoSource::updateTimeout);
 }
 
 void GeoPositionInfoSource::setupSourceUpdate()

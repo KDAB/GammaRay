@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -77,7 +77,7 @@ QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject
     });
 
     // actually try the plugins
-    QGeoPositionInfoSource *source = Q_NULLPTR;
+    QGeoPositionInfoSource *source = nullptr;
     for (auto it = indexes.constBegin(); it != indexes.constEnd(); ++it) {
       const auto data = metaData.at(*it).value(QStringLiteral("MetaData")).toObject();
       const auto provider = data.value(QStringLiteral("Provider")).toString();
@@ -94,11 +94,11 @@ QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject
 QGeoSatelliteInfoSource* GeoPositionInfoSourceFactory::satelliteInfoSource(QObject *parent)
 {
     Q_UNUSED(parent);
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 QGeoAreaMonitorSource* GeoPositionInfoSourceFactory::areaMonitor(QObject *parent)
 {
     Q_UNUSED(parent);
-    return Q_NULLPTR;
+    return nullptr;
 }

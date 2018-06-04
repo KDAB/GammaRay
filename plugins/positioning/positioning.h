@@ -37,7 +37,9 @@
 #include <QObject>
 #include <QVector>
 
+QT_BEGIN_NAMESPACE
 class QGeoPositionInfoSource;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 

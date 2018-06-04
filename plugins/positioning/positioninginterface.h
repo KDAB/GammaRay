@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -41,7 +41,7 @@ class PositioningInterface : public QObject
     Q_PROPERTY(bool positioningOverrideEnabled READ positioningOverrideEnabled WRITE setPositioningOverrideEnabled NOTIFY positioningOverrideEnabledChanged)
     Q_PROPERTY(QGeoPositionInfo positionInfoOverride READ positionInfoOverride WRITE setPositionInfoOverride NOTIFY positionInfoOverrideChanged)
 public:
-    explicit PositioningInterface(QObject* parent = Q_NULLPTR);
+    explicit PositioningInterface(QObject* parent = nullptr);
 
     /** Position info from the source. */
     QGeoPositionInfo positionInfo() const;
@@ -70,6 +70,8 @@ private:
 
 }
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::PositioningInterface, "com.kdab.GammaRay.PositioningInterface")
+QT_END_NAMESPACE
 
 #endif // GAMMARAY_POSITIONINGINTERFACE_H

@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -32,7 +32,9 @@
 #include <QObject>
 #include <QGeoPositionInfoSourceFactory>
 
+QT_BEGIN_NAMESPACE
 class QFactoryLoader;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 
@@ -42,12 +44,12 @@ class GeoPositionInfoSourceFactory : public QObject, QGeoPositionInfoSourceFacto
     Q_PLUGIN_METADATA(IID "org.qt-project.qt.position.sourcefactory/5.0" FILE "geopositioninfosourcefactory.json")
     Q_INTERFACES(QGeoPositionInfoSourceFactory)
 public:
-    explicit GeoPositionInfoSourceFactory(QObject *parent = Q_NULLPTR);
+    explicit GeoPositionInfoSourceFactory(QObject *parent = nullptr);
     ~GeoPositionInfoSourceFactory();
 
-    QGeoPositionInfoSource *positionInfoSource(QObject *parent) Q_DECL_OVERRIDE;
-    QGeoSatelliteInfoSource *satelliteInfoSource(QObject *parent) Q_DECL_OVERRIDE;
-    QGeoAreaMonitorSource *areaMonitor(QObject *parent) Q_DECL_OVERRIDE;
+    QGeoPositionInfoSource *positionInfoSource(QObject *parent) override;
+    QGeoSatelliteInfoSource *satelliteInfoSource(QObject *parent) override;
+    QGeoAreaMonitorSource *areaMonitor(QObject *parent) override;
 
 private:
     QFactoryLoader *m_factoryLoader;

@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -45,7 +45,7 @@ class MapController : public QObject
     Q_PROPERTY(double overrideHorizontalAccuracy READ overrideHorizontalAccuracy WRITE setOverrideHorizontalAccuracy NOTIFY overrideHorizontalAccuracyChanged)
     Q_PROPERTY(double overrideDirection READ overrideDirection WRITE setOverrideDirection NOTIFY overrideDirectionChanged)
 public:
-    explicit MapController(QObject *parent = Q_NULLPTR);
+    explicit MapController(QObject *parent = nullptr);
     ~MapController();
 
     QGeoCoordinate sourceCoordinate() const;

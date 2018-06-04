@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -39,22 +39,22 @@ class GeoPositionInfoSource : public QGeoPositionInfoSource
 {
     Q_OBJECT
 public:
-    explicit GeoPositionInfoSource(QObject *parent = Q_NULLPTR);
+    explicit GeoPositionInfoSource(QObject *parent = nullptr);
     ~GeoPositionInfoSource();
 
     void setSource(QGeoPositionInfoSource *source);
 
-    Error error() const Q_DECL_OVERRIDE;
-    QGeoPositionInfo lastKnownPosition(bool fromSatellitePositioningMethodsOnly = false) const Q_DECL_OVERRIDE;
-    int minimumUpdateInterval() const Q_DECL_OVERRIDE;
-    void setPreferredPositioningMethods(PositioningMethods methods) Q_DECL_OVERRIDE;
-    void setUpdateInterval(int msec) Q_DECL_OVERRIDE;
-    PositioningMethods supportedPositioningMethods() const Q_DECL_OVERRIDE;
+    Error error() const override;
+    QGeoPositionInfo lastKnownPosition(bool fromSatellitePositioningMethodsOnly = false) const override;
+    int minimumUpdateInterval() const override;
+    void setPreferredPositioningMethods(PositioningMethods methods) override;
+    void setUpdateInterval(int msec) override;
+    PositioningMethods supportedPositioningMethods() const override;
 
 public slots:
-    void requestUpdate(int timeout = 0) Q_DECL_OVERRIDE;
-    void startUpdates() Q_DECL_OVERRIDE;
-    void stopUpdates() Q_DECL_OVERRIDE;
+    void requestUpdate(int timeout = 0) override;
+    void startUpdates() override;
+    void stopUpdates() override;
 
     void setInterface(PositioningInterface* iface);
 

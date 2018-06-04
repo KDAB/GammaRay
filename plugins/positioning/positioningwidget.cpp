@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -55,7 +55,7 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     QWidget(parent),
     ui(new Ui::PositioningWidget),
     m_mapController(new MapController(this)),
-    m_replaySource(Q_NULLPTR),
+    m_replaySource(nullptr),
     m_updateLock(false)
 {
     ui->setupUi(this);
@@ -72,16 +72,16 @@ PositioningWidget::PositioningWidget(QWidget* parent):
         m_mapController->setSourceCoordinate(m_interface->positionInfo().coordinate());
     });
 
-    connect(ui->overrideBox, SIGNAL(toggled(bool)), this, SLOT(updatePosition()));
-    connect(ui->latitude, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
-    connect(ui->longitude, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
-    connect(ui->horizontalSpeed, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
-    connect(ui->horizontalAccuracy, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
-    connect(ui->altitude, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
-    connect(ui->verticalSpeed, SIGNAL(valueChanged(double)), this, SLOT(updatePosition()));
-    connect(ui->verticalAccuracy, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
-    connect(ui->direction, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
-    connect(ui->magneticVariation, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
+    connect(ui->overrideBox, &QCheckBox::toggled, this, &PositioningWidget::updatePosition);
+    connect(ui->latitude, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
+    connect(ui->longitude, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
+    connect(ui->horizontalSpeed, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
+    connect(ui->horizontalAccuracy, QOverload<int>::of(&QSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
+    connect(ui->altitude, QOverload<int>::of(&QSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
+    connect(ui->verticalSpeed, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
+    connect(ui->verticalAccuracy, QOverload<int>::of(&QSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
+    connect(ui->direction, QOverload<int>::of(&QSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
+    connect(ui->magneticVariation, QOverload<int>::of(&QSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
 
     connect(m_mapController, &MapController::overrideCoordinateChanged, this, [this]() {
         m_updateLock = true;
@@ -190,7 +190,7 @@ void PositioningWidget::loadNmeaFile()
     connect(m_replaySource, &QNmeaPositionInfoSource::updateTimeout, this, []() {
         qDebug() << "NMEA source update timeout!";
     });
-    connect(m_replaySource, SIGNAL(error(QGeoPositionInfoSource::Error)), this, SLOT(nmeaError()));
+    connect(m_replaySource, QOverload<QGeoPositionInfoSource::Error>::of(&QGeoPositionInfoSource::error), this, &PositioningWidget::nmeaError);
 }
 
 void PositioningWidget::nmeaError()
