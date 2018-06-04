@@ -31,6 +31,7 @@
 #include "signalmonitorinterface.h"
 #include "signalmonitorcommon.h"
 
+#include <common/metatypedeclarations.h>
 #include <common/objectbroker.h>
 
 #include <QDebug>

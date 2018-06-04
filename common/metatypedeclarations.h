@@ -59,6 +59,10 @@ Q_DECLARE_METATYPE(Qt::ConnectionType)
 Q_DECLARE_METATYPE(QMetaMethod::Access)
 Q_DECLARE_METATYPE(QMetaMethod::MethodType)
 Q_DECLARE_METATYPE(const QMetaObject *)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+typedef QHash<int, QByteArray> IntByteArrayHash;
+Q_DECLARE_METATYPE(IntByteArrayHash)
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 #include <QTimeZone>

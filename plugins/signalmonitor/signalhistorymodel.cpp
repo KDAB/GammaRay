@@ -33,6 +33,7 @@
 #include <core/util.h>
 #include <core/probe.h>
 
+#include <common/metatypedeclarations.h>
 #include <common/objectid.h>
 
 #include <QLocale>
