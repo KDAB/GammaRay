@@ -72,6 +72,7 @@ PositioningWidget::PositioningWidget(QWidget* parent):
         m_mapController->setSourceCoordinate(m_interface->positionInfo().coordinate());
     });
 
+    connect(ui->overrideBox, &QCheckBox::toggled, this, &PositioningWidget::updateWidgetState);
     connect(ui->overrideBox, &QCheckBox::toggled, this, &PositioningWidget::updatePosition);
     connect(ui->latitude, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
     connect(ui->longitude, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
@@ -106,6 +107,8 @@ PositioningWidget::PositioningWidget(QWidget* parent):
 
     new PropertyBinder(m_interface, "positioningOverrideEnabled", ui->overrideBox, "checked");
     new PropertyBinder(m_interface, "positioningOverrideEnabled", m_mapController, "overrideEnabled");
+
+    updateWidgetState();
 }
 
 PositioningWidget::~PositioningWidget()
@@ -196,4 +199,18 @@ void PositioningWidget::loadNmeaFile()
 void PositioningWidget::nmeaError()
 {
     qDebug() << m_replaySource->error();
+}
+
+void PositioningWidget::updateWidgetState()
+{
+    const auto e = ui->overrideBox->isEnabled() && ui->overrideBox->isChecked();
+    ui->latitude->setEnabled(e);
+    ui->longitude->setEnabled(e);
+    ui->horizontalSpeed->setEnabled(e);
+    ui->horizontalAccuracy->setEnabled(e);
+    ui->altitude->setEnabled(e);
+    ui->verticalSpeed->setEnabled(e);
+    ui->verticalAccuracy->setEnabled(e);
+    ui->direction->setEnabled(e);
+    ui->magneticVariation->setEnabled(e);
 }
