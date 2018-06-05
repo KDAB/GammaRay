@@ -43,13 +43,17 @@ public:
     bool attach(int pid, const QString &probeDll, const QString &probeFunc) override;
 
 protected:
-    void setupGdb();
     void addFunctionBreakpoint(const QByteArray &function) override;
     void addMethodBreakpoint(const QByteArray &method) override;
     void clearBreakpoints() override;
     void printBacktrace() override;
     void loadSymbols(const QByteArray &library) override;
     void parseStandardError(const QByteArray & line) override;
+
+private:
+    void setupGdb();
+    /** Certain configurations crash with auto-solib-add off. */
+    bool supportsAutoSolibAddOff() const;
 };
 }
 

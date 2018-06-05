@@ -66,7 +66,9 @@ bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeF
     QStringList gdbArgs;
     // disable symbol loading early, otherwise it would happen directly after the attach
     // before we could execute the setupGdb commands below
-    gdbArgs << QStringLiteral("-iex") << QStringLiteral("set auto-solib-add off");
+    if (supportsAutoSolibAddOff()) {
+        gdbArgs << QStringLiteral("-iex") << QStringLiteral("set auto-solib-add off");
+    }
     gdbArgs << QStringLiteral("-pid") << QString::number(pid);
     if (!startDebugger(gdbArgs))
         return false;
@@ -77,7 +79,9 @@ bool GdbInjector::attach(int pid, const QString &probeDll, const QString &probeF
 void GdbInjector::setupGdb()
 {
     execCmd("set confirm off");
-    execCmd("set auto-solib-add off");
+    if (supportsAutoSolibAddOff()) {
+        execCmd("set auto-solib-add off");
+    }
 }
 
 void GdbInjector::parseStandardError(const QByteArray &line)
@@ -128,4 +132,13 @@ void GdbInjector::loadSymbols(const QByteArray &library)
 #else
     Q_UNUSED(library);
 #endif
+}
+
+bool GdbInjector::supportsAutoSolibAddOff() const
+{
+#ifdef Q_OS_LINUX
+    // 32bit Linux crashes with this
+    return targetAbi().architecture() != QLatin1String("i686");
+#endif
+    return true;
 }
