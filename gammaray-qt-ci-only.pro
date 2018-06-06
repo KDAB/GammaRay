@@ -8,7 +8,7 @@
 # If you are building GammaRay yourself, please use CMake as
 # described in Install. txt
 
-requires(linux:!android|win32:!winphone:!winrt)
+requires(linux:!android|win32:!winphone:!winrt|osx)
 requires(!integrity)
 requires(!cross_compile)
 
