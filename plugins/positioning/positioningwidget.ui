@@ -261,6 +261,31 @@
     </layout>
    </item>
   </layout>
+  <action name="actionLoadNMEA">
+   <property name="icon">
+    <iconset theme="document-open"/>
+   </property>
+   <property name="text">
+    <string>Load NMEA file...</string>
+   </property>
+   <property name="toolTip">
+    <string>Load a GPS recording from an NMEA file.</string>
+   </property>
+  </action>
+  <action name="actionCenterOn">
+   <property name="icon">
+    <iconset theme="crosshairs"/>
+   </property>
+   <property name="text">
+    <string>Center on position</string>
+   </property>
+   <property name="toolTip">
+    <string>Center map on current position.</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

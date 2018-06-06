@@ -70,6 +70,8 @@ public:
     void setOverrideDirection(double dir);
 
 signals:
+    void centerOnPosition();
+
     void sourceChanged();
     void overrideEnabledChanged();
     void overrideCoordinateChanged();

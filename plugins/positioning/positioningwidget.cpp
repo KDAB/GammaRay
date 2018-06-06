@@ -101,9 +101,10 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     mapView->setResizeMode(QQuickWidget::SizeRootObjectToView);
     mapView->setSource(QUrl(QStringLiteral("qrc:/gammaray/positioning/mapview.qml")));
 
-    auto loadAction = new QAction(tr("Load NMEA file..."), this);
-    connect(loadAction, &QAction::triggered, this, &PositioningWidget::loadNmeaFile);
-    addAction(loadAction);
+    connect(ui->actionCenterOn, &QAction::triggered, m_mapController, &MapController::centerOnPosition);
+    addAction(ui->actionCenterOn);
+    connect(ui->actionLoadNMEA, &QAction::triggered, this, &PositioningWidget::loadNmeaFile);
+    addAction(ui->actionLoadNMEA);
 
     new PropertyBinder(m_interface, "positioningOverrideAvailable", ui->overrideBox, "enabled");
     new PropertyBinder(m_interface, "positioningOverrideEnabled", ui->overrideBox, "checked");
@@ -214,4 +215,6 @@ void PositioningWidget::updateWidgetState()
     ui->verticalAccuracy->setEnabled(e);
     ui->direction->setEnabled(e);
     ui->magneticVariation->setEnabled(e);
+
+    ui->actionLoadNMEA->setEnabled(e);
 }

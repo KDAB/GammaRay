@@ -164,4 +164,9 @@ Item {
             }
         }
     }
+
+    Connections {
+        target: _controller
+        onCenterOnPosition: map.center = _controller.overrideEnabled ? _controller.overrideCoordinate : _controller.sourceCoordinate
+    }
 }
