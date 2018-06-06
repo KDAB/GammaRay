@@ -105,6 +105,7 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     connect(loadAction, &QAction::triggered, this, &PositioningWidget::loadNmeaFile);
     addAction(loadAction);
 
+    new PropertyBinder(m_interface, "positioningOverrideAvailable", ui->overrideBox, "enabled");
     new PropertyBinder(m_interface, "positioningOverrideEnabled", ui->overrideBox, "checked");
     new PropertyBinder(m_interface, "positioningOverrideEnabled", m_mapController, "overrideEnabled");
 

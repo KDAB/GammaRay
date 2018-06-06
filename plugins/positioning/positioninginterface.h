@@ -38,6 +38,7 @@ class PositioningInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QGeoPositionInfo positionInfo READ positionInfo WRITE setPositionInfo NOTIFY positionInfoChanged)
+    Q_PROPERTY(bool positioningOverrideAvailable READ positioningOverrideAvailable WRITE setPositioningOverrideAvailable NOTIFY positioningOverrideAvailableChanged)
     Q_PROPERTY(bool positioningOverrideEnabled READ positioningOverrideEnabled WRITE setPositioningOverrideEnabled NOTIFY positioningOverrideEnabledChanged)
     Q_PROPERTY(QGeoPositionInfo positionInfoOverride READ positionInfoOverride WRITE setPositionInfoOverride NOTIFY positionInfoOverrideChanged)
 public:
@@ -45,6 +46,10 @@ public:
 
     /** Position info from the source. */
     QGeoPositionInfo positionInfo() const;
+
+    /** Overriding the position information is possible. */
+    bool positioningOverrideAvailable() const;
+    void setPositioningOverrideAvailable(bool available);
 
     /** Override source position info with the override provided by the client. */
     bool positioningOverrideEnabled() const;
@@ -59,13 +64,15 @@ public slots:
 
 signals:
     void positionInfoChanged();
+    void positioningOverrideAvailableChanged();
     void positioningOverrideEnabledChanged();
     void positionInfoOverrideChanged();
 
 private:
     QGeoPositionInfo m_postionInfo;
-    bool m_positioningOverrideEnabled;
     QGeoPositionInfo m_postionInfoOverride;
+    bool m_positioningOverrideAvailable;
+    bool m_positioningOverrideEnabled;
 };
 
 }

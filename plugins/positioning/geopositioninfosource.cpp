@@ -126,6 +126,7 @@ void GeoPositionInfoSource::setInterface(PositioningInterface* iface)
 {
     Q_ASSERT(iface);
     m_interface = iface;
+    m_interface->setPositioningOverrideAvailable(true);
     connect(m_interface, &PositioningInterface::positioningOverrideEnabledChanged, this, &GeoPositionInfoSource::overrideChanged);
     connect(m_interface, &PositioningInterface::positionInfoOverrideChanged, this, &GeoPositionInfoSource::positionInfoOverrideChanged);
     if (overrideEnabled())
