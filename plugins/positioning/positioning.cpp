@@ -72,10 +72,23 @@ Positioning::Positioning(Probe *probe, QObject *parent)
 void Positioning::objectAdded(QObject* obj)
 {
     if (auto geoInfoSource = qobject_cast<QGeoPositionInfoSource*>(obj)) {
-        if (geoInfoSource->sourceName() != QLatin1Literal("gammaray"))
-            return;
-        m_positionInfoSources.push_back(geoInfoSource);
-        QMetaObject::invokeMethod(geoInfoSource, "setInterface", Q_ARG(PositioningInterface*, this));
+        if (geoInfoSource->sourceName() != QLatin1Literal("gammaray")) {
+            if (positioningOverrideAvailable()) // we already have a proxy source taking care of things
+                return;
+            // until we have a proxy, just forward the position from the real source
+            connect(geoInfoSource, &QGeoPositionInfoSource::positionUpdated, this, &Positioning::setPositionInfo);
+            setPositionInfo(geoInfoSource->lastKnownPosition());
+            m_nonProxyPositionInfoSources.push_back(geoInfoSource);
+        } else {
+            // we previously got non-proxied sources, disconnect those
+            if (!m_nonProxyPositionInfoSources.empty()) {
+                std::for_each(m_nonProxyPositionInfoSources.begin(), m_nonProxyPositionInfoSources.end(), [this](QGeoPositionInfoSource *source) {
+                    disconnect(source, &QGeoPositionInfoSource::positionUpdated, this, &Positioning::setPositionInfo);
+                });
+                m_nonProxyPositionInfoSources.clear();
+            }
+            QMetaObject::invokeMethod(geoInfoSource, "setInterface", Q_ARG(PositioningInterface*, this));
+        }
     }
 }
 

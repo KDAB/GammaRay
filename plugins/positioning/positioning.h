@@ -35,7 +35,8 @@
 
 #include <QGeoPositionInfoSource>
 #include <QObject>
-#include <QVector>
+
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 class QGeoPositionInfoSource;
@@ -55,7 +56,7 @@ private slots:
 private:
     void registerMetaTypes();
 
-    QVector<QGeoPositionInfoSource*> m_positionInfoSources;
+    std::vector<QGeoPositionInfoSource*> m_nonProxyPositionInfoSources;
 };
 
 class PositioningFactory : public QObject,
