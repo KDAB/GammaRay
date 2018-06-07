@@ -7,7 +7,8 @@
         "Qt3DCore::QEntity",
         "Qt3DRender::QFrameGraphNode"
     ],
-    "types": [
+   "types": [
+        "Qt3DCore::QAspectEngine",
         "Qt3DCore::QNode"
     ],
     "hidden": false
