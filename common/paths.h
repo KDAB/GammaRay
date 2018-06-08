@@ -71,13 +71,21 @@ GAMMARAY_COMMON_EXPORT QString libexecPath();
  */
 GAMMARAY_COMMON_DEPRECATED_EXPORT QString currentProbePath();
 
-/*! Returns a list of plugin search paths for the given ABI.
+/*! Returns a list of probe plugin search paths for the given ABI.
  *  This includes candidates based on Qt's plugin search paths, and GammaRay's
  *  install layout.
  *  @param probeABI The ABI identifier we are looking for plugins for. If you
  *   are actually loading plugins, this must be GAMMARAY_PROBE_ABI.
  */
 GAMMARAY_COMMON_EXPORT QStringList pluginPaths(const QString &probeABI);
+
+/*! Returns a list of target plugin search paths for the given ABI.
+ *  This includes candidates based on Qt's plugin search paths, and GammaRay's
+ *  install layout.
+ *  @param probeABI The ABI identifier we are looking for plugins for. If you
+ *   are actually loading plugins, this must be GAMMARAY_PROBE_ABI.
+ */
+GAMMARAY_COMMON_EXPORT QStringList targetPluginPaths(const QString &probeABI);
 
 /*! Returns the path to the current plugins location.
  *  This is the same as currentProbePath() when using the GammaRay installation layout,

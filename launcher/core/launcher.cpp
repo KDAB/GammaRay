@@ -36,10 +36,12 @@
 
 #include <common/endpoint.h>
 #include <common/message.h>
+#include <common/paths.h>
 
 #include <QByteArray>
 #include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #include <QFileInfo>
 #include <QLocalServer>
 #include <QLocalSocket>
@@ -128,6 +130,18 @@ void Launcher::stop()
         d->injector->stop();
 }
 
+static QProcessEnvironment addTargetPluginPaths(QProcessEnvironment env, const ProbeABI &abi)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+    QString qtPluginPath = env.value(QStringLiteral("QT_PLUGIN_PATH"));
+    if (!qtPluginPath.isEmpty())
+        qtPluginPath.append(QDir::listSeparator());
+    qtPluginPath.append(Paths::targetPluginPaths(abi.id()).join(QDir::listSeparator()));
+    env.insert(QStringLiteral("QT_PLUGIN_PATH"), qtPluginPath);
+#endif
+    return env;
+}
+
 bool Launcher::start()
 {
     auto probeDll = d->options.probePath();
@@ -186,7 +200,7 @@ bool Launcher::start()
         d->injector->setWorkingDirectory(d->options.workingDirectory());
         success = d->injector->launch(d->options.launchArguments(), probeDll,
                                       QStringLiteral("gammaray_probe_inject"),
-                                      d->options.processEnvironment());
+                                      addTargetPluginPaths(d->options.processEnvironment(), d->options.probeABI()));
     } else if (d->options.isAttach()) {
         success = d->injector->attach(d->options.pid(), probeDll,
                                       QStringLiteral("gammaray_probe_attach"));

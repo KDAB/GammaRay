@@ -21,7 +21,7 @@ if (NOT Qt5Core_VERSION VERSION_LESS 5.7)
     gammaray_common
     Qt5::Positioning
     )
-    install(TARGETS gammaray_geopositioninfosource DESTINATION ${PROBE_PLUGIN_INSTALL_DIR}/position)
+    install(TARGETS gammaray_geopositioninfosource DESTINATION ${TARGET_PLUGIN_INSTALL_DIR}/position)
 endif()
 endif()
 
