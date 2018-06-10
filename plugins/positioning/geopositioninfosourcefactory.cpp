@@ -79,12 +79,14 @@ QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject
     // actually try the plugins
     QGeoPositionInfoSource *source = nullptr;
     for (auto it = indexes.constBegin(); it != indexes.constEnd(); ++it) {
-      const auto data = metaData.at(*it).value(QStringLiteral("MetaData")).toObject();
-      const auto provider = data.value(QStringLiteral("Provider")).toString();
-      if (provider.isEmpty())
-          continue;
-      if (auto s = QGeoPositionInfoSource::createSource(provider, proxy))
-          source = s;
+        const auto data = metaData.at(*it).value(QStringLiteral("MetaData")).toObject();
+        const auto provider = data.value(QStringLiteral("Provider")).toString();
+        if (provider.isEmpty())
+            continue;
+        if (auto s = QGeoPositionInfoSource::createSource(provider, proxy)) {
+            source = s;
+            break;
+        }
     }
 
     proxy->setSource(source);
