@@ -70,7 +70,7 @@ Item {
             sourceItem: Item {
                 id: sourceMarker
                 property color color: "blue"
-                width: Math.abs(map.fromCoordinate(_controller.souceCoordinate, false).x - map.fromCoordinate(_controller.sourceCoordinate.atDistanceAndAzimuth(_controller.sourceeHorizontalAccuracy, 90), false).x) + 0 * map.zoomLevel
+                width: Math.abs(map.fromCoordinate(_controller.souceCoordinate, false).x - map.fromCoordinate(_controller.sourceCoordinate.atDistanceAndAzimuth(_controller.sourceHorizontalAccuracy, 90), false).x) + 0 * map.zoomLevel
                 height: width
 
                 Rectangle {

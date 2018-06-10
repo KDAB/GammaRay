@@ -70,10 +70,20 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     Q_ASSERT(m_interface);
     connect(m_interface, &PositioningInterface::positionInfoChanged, this, [this]() {
         m_mapController->setSourceCoordinate(m_interface->positionInfo().coordinate());
+        if (ui->overrideBox->isChecked())
+            return;
+        setUiToPosition(m_interface->positionInfo());
     });
 
-    connect(ui->overrideBox, &QCheckBox::toggled, this, &PositioningWidget::updateWidgetState);
-    connect(ui->overrideBox, &QCheckBox::toggled, this, &PositioningWidget::updatePosition);
+    connect(ui->overrideBox, &QCheckBox::toggled, this, [this](bool enabled) {
+        if (enabled && m_interface->positionInfoOverride().isValid()) {
+            setUiToPosition(m_interface->positionInfoOverride());
+        } else if (!enabled && m_interface->positionInfo().isValid()) {
+            setUiToPosition(m_interface->positionInfo());
+        }
+        updateWidgetState();
+        updatePosition();
+    });
     connect(ui->latitude, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
     connect(ui->longitude, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
     connect(ui->horizontalSpeed, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
@@ -140,31 +150,8 @@ void PositioningWidget::updatePosition()
 
 void PositioningWidget::replayPosition()
 {
-    m_updateLock = true;
-
     const auto pos = m_replaySource->lastKnownPosition();
-
-    if (pos.coordinate().type() != QGeoCoordinate::InvalidCoordinate) {
-        ui->latitude->setValue(pos.coordinate().latitude());
-        ui->longitude->setValue(pos.coordinate().longitude());
-    }
-    if (pos.coordinate().type() == QGeoCoordinate::Coordinate3D)
-        ui->altitude->setValue(pos.coordinate().altitude());
-
-    if (pos.hasAttribute(QGeoPositionInfo::Direction))
-        ui->direction->setValue(pos.attribute(QGeoPositionInfo::Direction));
-    if (pos.hasAttribute(QGeoPositionInfo::GroundSpeed))
-      ui->horizontalSpeed->setValue(pos.attribute(QGeoPositionInfo::GroundSpeed));
-    if (pos.hasAttribute(QGeoPositionInfo::VerticalSpeed))
-      ui->verticalSpeed->setValue(pos.attribute(QGeoPositionInfo::VerticalSpeed));
-    if (pos.hasAttribute(QGeoPositionInfo::MagneticVariation))
-      ui->magneticVariation->setValue(pos.attribute(QGeoPositionInfo::MagneticVariation));
-    if (pos.hasAttribute(QGeoPositionInfo::HorizontalAccuracy))
-      ui->horizontalAccuracy->setValue(pos.attribute(QGeoPositionInfo::HorizontalAccuracy));
-    if (pos.hasAttribute(QGeoPositionInfo::VerticalAccuracy))
-      ui->verticalAccuracy->setValue(pos.attribute(QGeoPositionInfo::VerticalAccuracy));
-
-    m_updateLock = false;
+    setUiToPosition(pos);
     updatePosition();
 }
 
@@ -217,4 +204,29 @@ void PositioningWidget::updateWidgetState()
     ui->magneticVariation->setEnabled(e);
 
     ui->actionLoadNMEA->setEnabled(e);
+}
+
+void PositioningWidget::setUiToPosition(const QGeoPositionInfo &pos)
+{
+    m_updateLock = true;
+    if (pos.coordinate().type() != QGeoCoordinate::InvalidCoordinate) {
+        ui->latitude->setValue(pos.coordinate().latitude());
+        ui->longitude->setValue(pos.coordinate().longitude());
+    }
+    if (pos.coordinate().type() == QGeoCoordinate::Coordinate3D)
+        ui->altitude->setValue(pos.coordinate().altitude());
+
+    if (pos.hasAttribute(QGeoPositionInfo::Direction))
+        ui->direction->setValue(pos.attribute(QGeoPositionInfo::Direction));
+    if (pos.hasAttribute(QGeoPositionInfo::GroundSpeed))
+        ui->horizontalSpeed->setValue(pos.attribute(QGeoPositionInfo::GroundSpeed));
+    if (pos.hasAttribute(QGeoPositionInfo::VerticalSpeed))
+        ui->verticalSpeed->setValue(pos.attribute(QGeoPositionInfo::VerticalSpeed));
+    if (pos.hasAttribute(QGeoPositionInfo::MagneticVariation))
+        ui->magneticVariation->setValue(pos.attribute(QGeoPositionInfo::MagneticVariation));
+    if (pos.hasAttribute(QGeoPositionInfo::HorizontalAccuracy))
+        ui->horizontalAccuracy->setValue(pos.attribute(QGeoPositionInfo::HorizontalAccuracy));
+    if (pos.hasAttribute(QGeoPositionInfo::VerticalAccuracy))
+        ui->verticalAccuracy->setValue(pos.attribute(QGeoPositionInfo::VerticalAccuracy));
+    m_updateLock = false;
 }

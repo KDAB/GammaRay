@@ -80,7 +80,7 @@ void MapController::setSourceDirection(double dir)
     if (m_sourceDirection == dir)
         return;
     m_sourceDirection = dir;
-    emit sourceDirection();
+    emit sourceChanged();
 }
 
 bool MapController::overrideEnabled() const

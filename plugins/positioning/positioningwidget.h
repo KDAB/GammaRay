@@ -35,6 +35,7 @@
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
+class QGeoPositionInfo;
 class QNmeaPositionInfoSource;
 QT_END_NAMESPACE
 
@@ -63,6 +64,8 @@ private slots:
     void updateWidgetState();
 
 private:
+    void setUiToPosition(const QGeoPositionInfo &pos);
+
     QScopedPointer<Ui::PositioningWidget> ui;
     PositioningInterface *m_interface;
     MapController *m_mapController;
