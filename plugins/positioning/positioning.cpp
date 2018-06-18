@@ -37,6 +37,9 @@
 #include <QGeoSatelliteInfoSource>
 #include <QGeoAreaMonitorSource>
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
+Q_DECLARE_METATYPE(QGeoPositionInfo)
+#endif
 Q_DECLARE_METATYPE(QGeoPositionInfoSource::Error)
 Q_DECLARE_METATYPE(QGeoPositionInfoSource::PositioningMethods)
 Q_DECLARE_METATYPE(QGeoSatelliteInfoSource::Error)
@@ -95,8 +98,13 @@ void Positioning::objectAdded(QObject* obj)
 void Positioning::registerMetaTypes()
 {
     MetaObject *mo = nullptr;
+    MO_ADD_METAOBJECT0(QGeoPositionInfo);
+    MO_ADD_PROPERTY_RO(QGeoPositionInfo, coordinate);
+    MO_ADD_PROPERTY   (QGeoPositionInfo, timestamp, setTimestamp);
+
     MO_ADD_METAOBJECT1(QGeoPositionInfoSource, QObject);
     MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, error);
+    MO_ADD_PROPERTY_LD(QGeoPositionInfoSource, lastKnownPosition, [](QGeoPositionInfoSource *s) { return s->lastKnownPosition(); });
     MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, preferredPositioningMethods);
     MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, supportedPositioningMethods);
 
@@ -109,6 +117,11 @@ void Positioning::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, sourceName);
     MO_ADD_PROPERTY_RO(QGeoAreaMonitorSource, supportedAreaMonitorFeatures);
 
-    VariantHandler::registerStringConverter<QGeoPositionInfoSource::PositioningMethods>(
-        positioningMethodsToString);
+    VariantHandler::registerStringConverter<QGeoPositionInfoSource::PositioningMethods>(positioningMethodsToString);
+    VariantHandler::registerStringConverter<QGeoPositionInfo>([](const QGeoPositionInfo &info) {
+        return VariantHandler::displayString(info.coordinate());
+    });
+    VariantHandler::registerStringConverter<QGeoCoordinate>([](const QGeoCoordinate &coord) {
+        return coord.toString();
+    });
 }

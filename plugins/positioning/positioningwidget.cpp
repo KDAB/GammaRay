@@ -43,6 +43,10 @@
 #include <QQuickWidget>
 #include <QQmlContext>
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
+Q_DECLARE_METATYPE(QGeoPositionInfo)
+#endif
+
 using namespace GammaRay;
 
 static QObject *createPositioningClient(const QString &name, QObject *parent)
@@ -63,7 +67,6 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     mapView->rootContext()->setContextProperty(QStringLiteral("_controller"), m_mapController);
     ui->topLayout->addWidget(mapView);
 
-    qRegisterMetaTypeStreamOperators<QGeoPositionInfo>("QGeoPositionInfo");
     ObjectBroker::registerClientObjectFactoryCallback<PositioningInterface*>(createPositioningClient);
 
     m_interface = ObjectBroker::object<PositioningInterface*>();
@@ -229,4 +232,9 @@ void PositioningWidget::setUiToPosition(const QGeoPositionInfo &pos)
     if (pos.hasAttribute(QGeoPositionInfo::VerticalAccuracy))
         ui->verticalAccuracy->setValue(pos.attribute(QGeoPositionInfo::VerticalAccuracy));
     m_updateLock = false;
+}
+
+void PositioningUiFactory::initUi()
+{
+    qRegisterMetaTypeStreamOperators<QGeoPositionInfo>("QGeoPositionInfo");
 }

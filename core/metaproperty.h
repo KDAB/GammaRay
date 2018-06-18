@@ -33,6 +33,8 @@
 
 #include <QVariant>
 
+#include <functional>
+
 namespace GammaRay {
 class MetaObject;
 
@@ -206,6 +208,36 @@ private:
     ValueType Class::*m_member;
 };
 
+/*! Lambda "property" implementation of MetaProperty. */
+template<typename Class, typename ValueType>
+class MetaLambdaPropertyImpl : public MetaProperty
+{
+public:
+    inline explicit MetaLambdaPropertyImpl(const char *name, const std::function<ValueType(Class*)> &func)
+        : MetaProperty(name)
+        , m_func(func)
+    {
+    }
+
+    bool isReadOnly() const override
+    {
+        return true; // we could extend this to setters too, eventually
+    }
+
+    QVariant value(void *object) const override
+    {
+        return QVariant::fromValue(m_func(reinterpret_cast<Class*>(object)));
+    }
+
+    const char *typeName() const override
+    {
+        return QMetaType::typeName(qMetaTypeId<ValueType>());
+    }
+
+private:
+    const std::function<ValueType(Class*)> m_func;
+};
+
 /*! Template argument deduction factory methods for the MetaXPropertyImpl classes. */
 namespace MetaPropertyFactory
 {
@@ -246,6 +278,13 @@ namespace MetaPropertyFactory
     inline MetaProperty* makeProperty(const char *name, ValueType Class::*member)
     {
         return new MetaMemberPropertyImpl<Class, ValueType>(name, member);
+    }
+
+    // lamda getters
+    template <typename Class, typename GetterReturnType>
+    inline MetaProperty* makeProperty(const char *name, const std::function<GetterReturnType(Class*)> &func)
+    {
+        return new MetaLambdaPropertyImpl<Class, GetterReturnType>(name, func);
     }
 }
 ///@endcond

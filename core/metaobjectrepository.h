@@ -155,6 +155,13 @@ private:
     mo->addProperty(GammaRay::MetaPropertyFactory::makePropertyNonConst(#Getter, &Class::Getter));
 
 #if !defined(Q_CC_MSVC) || _MSC_VER >= 1900 //krazy:exclude=cpp
+/** Register a lamda property getter for class @p Class. */
+#define MO_ADD_PROPERTY_LD(Class, Name, Func) \
+{ \
+    const auto ld = Func; \
+    mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty<Class, decltype(ld(std::declval<Class*>()))>(#Name, ld)); \
+}
+
 /** Register a read/write property for class @p Class.
  *  Use this for overloaded getters or setters that would confuse older MSVC versions.
  */
@@ -168,6 +175,7 @@ private:
     mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty(#Getter, &Class::Getter));
 
 #else
+#define MO_ADD_PROPERTY_LD(Class, Name, Func)
 #define MO_ADD_PROPERTY_O2(Class, Getter, Setter)
 #define MO_ADD_PROPERTY_O1(Class, Getter)
 #endif
