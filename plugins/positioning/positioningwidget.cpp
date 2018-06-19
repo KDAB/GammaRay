@@ -73,6 +73,8 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     Q_ASSERT(m_interface);
     connect(m_interface, &PositioningInterface::positionInfoChanged, this, [this]() {
         m_mapController->setSourceCoordinate(m_interface->positionInfo().coordinate());
+        m_mapController->setSourceDirection(m_interface->positionInfo().attribute(QGeoPositionInfo::Direction));
+        m_mapController->setSourceHorizontalAccuracy(m_interface->positionInfo().attribute(QGeoPositionInfo::HorizontalAccuracy));
         if (ui->overrideBox->isChecked())
             return;
         setUiToPosition(m_interface->positionInfo());

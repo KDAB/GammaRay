@@ -70,7 +70,7 @@ Item {
             sourceItem: Item {
                 id: sourceMarker
                 property color color: "blue"
-                width: Math.abs(map.fromCoordinate(_controller.souceCoordinate, false).x - map.fromCoordinate(_controller.sourceCoordinate.atDistanceAndAzimuth(_controller.sourceHorizontalAccuracy, 90), false).x) + 0 * map.zoomLevel
+                width: Math.abs(map.fromCoordinate(_controller.sourceCoordinate, false).x - map.fromCoordinate(_controller.sourceCoordinate.atDistanceAndAzimuth(_controller.sourceHorizontalAccuracy, 90), false).x) * 2 + 0 * map.zoomLevel
                 height: width
 
                 Rectangle {
@@ -111,7 +111,7 @@ Item {
             sourceItem: Item {
                 id: overrideMarker
                 property color color: "red"
-                width: Math.abs(map.fromCoordinate(_controller.overrideCoordinate, false).x - map.fromCoordinate(_controller.overrideCoordinate.atDistanceAndAzimuth(_controller.overrideHorizontalAccuracy, 90), false).x) + 0 * map.zoomLevel
+                width: Math.abs(map.fromCoordinate(_controller.overrideCoordinate, false).x - map.fromCoordinate(_controller.overrideCoordinate.atDistanceAndAzimuth(_controller.overrideHorizontalAccuracy, 90), false).x) * 2 + 0 * map.zoomLevel
                 height: width
                 visible: _controller.overrideEnabled
 
