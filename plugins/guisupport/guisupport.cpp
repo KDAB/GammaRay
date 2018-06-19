@@ -830,6 +830,7 @@ static QString pixmapToString(const QPixmap &pixmap)
 
 void GuiSupport::registerVariantHandler()
 {
+    VariantHandler::registerStringConverter<const QValidator*>(Util::displayString);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     VariantHandler::registerStringConverter<QSurfaceFormat>(surfaceFormatToString);
 

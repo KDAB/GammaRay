@@ -65,6 +65,7 @@
 #include <QApplication>
 #include <QButtonGroup>
 #include <QComboBox>
+#include <QCompleter>
 #include <QDesktopWidget>
 #include <QDialog>
 #include <QGraphicsEffect>
@@ -72,6 +73,7 @@
 #include <QItemSelectionModel>
 #include <QLayout>
 #include <QLibrary>
+#include <QLineEdit>
 #include <QMenu>
 #include <QPainter>
 #include <QPixmap>
@@ -88,7 +90,7 @@
 
 #include <iostream>
 
-Q_DECLARE_METATYPE(const QStyle *)
+Q_DECLARE_METATYPE(const QStyle*)
 Q_DECLARE_METATYPE(QSizePolicy::ControlType)
 Q_DECLARE_METATYPE(QSizePolicy::ControlTypes)
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
@@ -618,6 +620,15 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_ST(QApplication, topLevelWidgets);
 #endif
 
+    MO_ADD_METAOBJECT1(QCompleter, QObject);
+    MO_ADD_PROPERTY_RO(QCompleter, completionCount);
+    MO_ADD_PROPERTY_RO(QCompleter, completionModel);
+    MO_ADD_PROPERTY_RO(QCompleter, currentCompletion);
+    MO_ADD_PROPERTY_RO(QCompleter, currentRow);
+    MO_ADD_PROPERTY   (QCompleter, model, setModel);
+    MO_ADD_PROPERTY   (QCompleter, popup, setPopup);
+    MO_ADD_PROPERTY_RO(QCompleter, widget);
+
     MO_ADD_METAOBJECT1(QFrame, QWidget);
     MO_ADD_METAOBJECT1(QAbstractScrollArea, QFrame);
     MO_ADD_PROPERTY_RO(QAbstractScrollArea, cornerWidget);
@@ -629,11 +640,20 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_METAOBJECT1(QAbstractItemView, QAbstractScrollArea);
     MO_ADD_PROPERTY_RO(QAbstractItemView, model);
 
-    MO_ADD_METAOBJECT1(QComboBox, QWidget);
-    MO_ADD_PROPERTY_RO(QComboBox, model);
-
     MO_ADD_METAOBJECT1(QAbstractButton, QWidget);
     MO_ADD_PROPERTY_RO(QAbstractButton, group);
+
+    MO_ADD_METAOBJECT1(QComboBox, QWidget);
+    MO_ADD_PROPERTY_RO(QComboBox, completer);
+    MO_ADD_PROPERTY_RO(QComboBox, itemDelegate);
+    MO_ADD_PROPERTY_RO(QComboBox, lineEdit);
+    MO_ADD_PROPERTY_RO(QComboBox, model);
+    MO_ADD_PROPERTY   (QComboBox, validator, setValidator);
+    MO_ADD_PROPERTY   (QComboBox, view, setView);
+
+    MO_ADD_METAOBJECT1(QLineEdit, QWidget);
+    MO_ADD_PROPERTY   (QLineEdit, completer, setCompleter);
+    MO_ADD_PROPERTY   (QLineEdit, validator, setValidator);
 
     MO_ADD_METAOBJECT1(QScrollArea, QAbstractScrollArea);
     MO_ADD_PROPERTY   (QScrollArea, widget, setWidget);
