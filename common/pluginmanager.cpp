@@ -71,8 +71,6 @@ QStringList PluginManagerBase::pluginFilter() const
 #else
     filter.push_back(QStringLiteral("*.desktop"));
 #endif
-#elif defined(Q_OS_ANDROID)
-    filter.push_back(QStringLiteral("libplugins_gammaray_gammaray_*") + Paths::pluginExtension());
 #else
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
     filter.push_back(QStringLiteral("*") + QStringLiteral(
