@@ -43,6 +43,12 @@ struct Value {
 };
 
 template<typename T, std::size_t N>
+std::size_t count(const Value<T>(&)[N])
+{
+    return N;
+}
+
+template<typename T, std::size_t N>
 QString enumToString(T value, const Value<T>(&lookupTable)[N])
 {
     for (std::size_t i = 0; i < N; ++i) {

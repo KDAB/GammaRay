@@ -27,6 +27,7 @@
 */
 
 #include "positioning.h"
+#include "positioninfopropertyadaptor.h"
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -124,4 +125,6 @@ void Positioning::registerMetaTypes()
     VariantHandler::registerStringConverter<QGeoCoordinate>([](const QGeoCoordinate &coord) {
         return coord.toString();
     });
+
+    PropertyAdaptorFactory::registerFactory(PositionInfoPropertyAdaptorFactory::instance());
 }
