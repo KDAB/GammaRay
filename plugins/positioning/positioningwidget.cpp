@@ -134,7 +134,7 @@ PositioningWidget::~PositioningWidget()
 
 void PositioningWidget::updatePosition()
 {
-    if (m_updateLock)
+    if (m_updateLock || !ui->overrideBox->isChecked())
         return;
 
     QGeoPositionInfo info;
