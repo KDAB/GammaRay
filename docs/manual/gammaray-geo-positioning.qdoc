@@ -1,0 +1,62 @@
+/*
+    gammaray-geo-positioning.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Geo Positioning}
+    \nextpage {Font Browser}
+    \previouspage {Meta Type Browser}
+    \page gammaray-geo-positioning.html
+
+    \title Geo Positioning
+
+    \section1 Overview
+
+    The geo positioning view allows you to observe the QGeoPositionInfo data supplied by a
+    QGeoPositionInfoSource to your application, in textual form as well as on a map view.
+    It is also possible to override that positioning information manually or via a pre-recorded
+    NMEA file, enabling you to easily test location-aware application.
+
+    \image gammaray-geo-positioning.png
+
+    By default the input widgets at the top of the view show the current positioning information
+    provided by QtPositioning. The map view at the bottom highlights the current position with a
+    blue marker, and the movement history with a blue line. You can center the map on the current
+    position using the corresponding menu action or the keyboard shortcut \uicontrol F3.
+
+    \section2 Manual Override
+
+    You can switch the geo positioning view into override mode using the checkbox at the top left.
+    This will enabling editing on all input widget on the top, and show a second position marker
+    and movement track on the map, in red. For the application the positing information are replaced
+    with what you enter here now, independent of what the QtPositioning backend reports.
+
+    Besides changing individual values of QGeoPositionInfo in the widgets at the top, you can also set
+    a position on the map view directly:
+    \list
+        \li Left-click will change latitude and longitude.
+        \li Ctrl + mouse wheel will change the direction.
+    \endlist
+
+    Note that the override mode is only available when the target application has been started with
+    GammaRay, not when attaching to it at runtime. Observing the data is possible in both cases.
+
+    \section2 NMEA Replay
+
+    Besides manual override it is also possible to replay a recorded NMEA track from a satellite positioning
+    source. For using this switch the to manual override mode and select \uicontrol Positioning >
+    \uicontrol{Load NMEA file...} from the menu.
+*/

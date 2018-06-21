@@ -10,7 +10,7 @@ imagedirs = images
 exampledirs = ../../examples
 examples.fileextensions = "*.h *.cpp *.qml"
 
-depends += qtcore qtnetwork qtgui qtwidgets qtqml qtquick qt3d qtwaylandcompositor
+depends += qtcore qtnetwork qtgui qtwidgets qtqml qtquick qt3d qtwaylandcompositor qtpositioning
 
 qhp.projects = GammaRay
 
