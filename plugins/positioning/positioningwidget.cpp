@@ -98,17 +98,24 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     connect(ui->verticalAccuracy, QOverload<int>::of(&QSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
     connect(ui->direction, QOverload<int>::of(&QSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
     connect(ui->magneticVariation, QOverload<int>::of(&QSpinBox::valueChanged), this, &PositioningWidget::updatePosition);
+    connect(ui->timestamp, &QDateTimeEdit::dateTimeChanged, this, &PositioningWidget::updatePosition);
 
     connect(m_mapController, &MapController::overrideCoordinateChanged, this, [this]() {
+        if (m_updateLock)
+            return;
         m_updateLock = true;
         ui->latitude->setValue(m_mapController->overrideCoordinate().latitude());
         ui->longitude->setValue(m_mapController->overrideCoordinate().longitude());
+        ui->timestamp->setDateTime(QDateTime::currentDateTime());
         m_updateLock = false;
         updatePosition();
     });
     connect(m_mapController, &MapController::overrideDirectionChanged, this, [this]() {
+        if (m_updateLock)
+            return;
         m_updateLock = true;
         ui->direction->setValue(m_mapController->overrideDirection());
+        ui->timestamp->setDateTime(QDateTime::currentDateTime());
         m_updateLock = false;
         updatePosition();
     });
@@ -136,10 +143,11 @@ void PositioningWidget::updatePosition()
 {
     if (m_updateLock || !ui->overrideBox->isChecked())
         return;
+    m_updateLock = true;
 
     QGeoPositionInfo info;
     info.setCoordinate(QGeoCoordinate(ui->latitude->value(), ui->longitude->value(), ui->altitude->value()));
-    info.setTimestamp(QDateTime::currentDateTime());
+    info.setTimestamp(ui->timestamp->dateTime());
     info.setAttribute(QGeoPositionInfo::Direction, ui->direction->value());
     info.setAttribute(QGeoPositionInfo::GroundSpeed, ui->horizontalSpeed->value());
     info.setAttribute(QGeoPositionInfo::VerticalSpeed, ui->verticalSpeed->value());
@@ -151,6 +159,8 @@ void PositioningWidget::updatePosition()
     m_mapController->setOverrideCoordinate(QGeoCoordinate(ui->latitude->value(), ui->longitude->value()));
     m_mapController->setOverrideHorizontalAccuracy(ui->horizontalAccuracy->value());
     m_mapController->setOverrideDirection(ui->direction->value());
+
+    m_updateLock = false;
 }
 
 void PositioningWidget::replayPosition()
@@ -207,6 +217,7 @@ void PositioningWidget::updateWidgetState()
     ui->verticalAccuracy->setEnabled(e);
     ui->direction->setEnabled(e);
     ui->magneticVariation->setEnabled(e);
+    ui->timestamp->setEnabled(e);
 
     ui->actionLoadNMEA->setEnabled(e);
 }
@@ -233,6 +244,7 @@ void PositioningWidget::setUiToPosition(const QGeoPositionInfo &pos)
         ui->horizontalAccuracy->setValue(pos.attribute(QGeoPositionInfo::HorizontalAccuracy));
     if (pos.hasAttribute(QGeoPositionInfo::VerticalAccuracy))
         ui->verticalAccuracy->setValue(pos.attribute(QGeoPositionInfo::VerticalAccuracy));
+    ui->timestamp->setDateTime(pos.timestamp());
     m_updateLock = false;
 }
 
