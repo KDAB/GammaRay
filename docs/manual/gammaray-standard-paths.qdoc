@@ -16,20 +16,38 @@
 */
 
 /*!
-    \contentspage {Standard Paths}
+    \contentspage {System Information}
     \previouspage {Text Codecs}
     \nextpage {Object Inspection}
     \page gammaray-standard-paths.html
 
-    \title Standard Paths
+    \title System Information
 
     \section1 Overview
 
-    The standard paths view provides access to the infromation of QStandardPaths. For each
+    The system information view shows a number of information about the environment the
+    inspected application runs in, such as the used Qt build, the standard paths and the
+    environment variables.
+
+    \section2 Qt Installation
+
+    The \uicontrol Qt tab shows information about the Qt build used by the inspected application.
+    This includes the version as well as information about the build configuration and architecture,
+    as well as the installation location of Qt. You can also find details about the platform the
+    application runs on (OS, version, architecture, etc) here. All information here is retrieved
+    via QLibraryInfo and QSysInfo and therefore reflects Qt's view.
+
+    \section2 Standard Paths
+
+    The standard paths view provides access to the information of QStandardPaths. For each
     standard location (see QStandardPaths::StandardLocation) it shows the readable and writable
     locations as seen by the target process.
 
     \image gammaray-standard-paths.png
 
+    \section2 Environment Variables
+
+    The \uicontrol Environment tab shows a table of all environment variables and their corresponding
+    value, as seen by QProcessEnvironment::systemEnvironment() in the target process.
 */
 
