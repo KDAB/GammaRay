@@ -647,15 +647,23 @@ void OpenGLScreenGrabber::windowAfterRendering()
         // correct y for gpu-flipped textures being read from the bottom
         const int y = static_cast<int>(std::floor((m_renderInfo.windowSize.height() - intersect.height() - intersect.y()) * m_renderInfo.dpr));
         // when in doubt, round up w and h --> also reads one pixel more
-        const int w = static_cast<int>(std::ceil(intersect.width() * m_renderInfo.dpr));
-        const int h = static_cast<int>(std::ceil(intersect.height() * m_renderInfo.dpr));
+        int w = static_cast<int>(std::ceil(intersect.width() * m_renderInfo.dpr));
+        int h = static_cast<int>(std::ceil(intersect.height() * m_renderInfo.dpr));
+
+        // cap to viewport size (which we can overshoot due to rounding errors in highdpi scaling)
+        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
+        int viewport[4];
+        glFuncs->glGetIntegerv(GL_VIEWPORT, viewport);
+        if (x + w > viewport[2])
+            w = viewport[2] - x;
+        if (y + h > viewport[3])
+            h = viewport[3] - y;
 
         m_grabbedFrame.transform.reset();
 
         if (m_grabbedFrame.image.size() != QSize(w, h))
             m_grabbedFrame.image = QImage(w, h, QImage::Format_RGBA8888);
 
-        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
         glFuncs->glReadPixels(x, y, w, h, GL_RGBA, GL_UNSIGNED_BYTE, m_grabbedFrame.image.bits());
 
         // set transform to flip the read texture later, when displayed
