@@ -6,7 +6,6 @@ set(gammaray_userfeedback_srcs
     common/surveytargetexpressionparser_p.cpp
     core/abstractdatasource.cpp
     core/applicationversionsource.cpp
-    core/auditloguicontroller.cpp
     core/compilerinfosource.cpp
     core/feedbackconfiguicontroller.cpp
     core/openglinfosource.cpp
@@ -17,11 +16,16 @@ set(gammaray_userfeedback_srcs
     core/startcountsource.cpp
     core/surveyinfo.cpp
     core/usagetimesource.cpp
-    widgets/auditlogbrowserdialog.cpp
     widgets/feedbackconfigdialog.cpp
     widgets/feedbackconfigwidget.cpp
     widgets/notificationpopup.cpp
 )
+if (Qt5Core_FOUND)
+    list(APPEND gammaray_userfeedback_srcs
+        core/auditloguicontroller.cpp
+        widgets/auditlogbrowserdialog.cpp
+    )
+endif()
 
 add_library(gammaray_kuserfeedback SHARED ${gammaray_userfeedback_srcs})
 # Disable warnings for generated stuff

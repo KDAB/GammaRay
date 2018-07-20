@@ -199,7 +199,7 @@ QString AuditLogUiController::logEntry(const QDateTime &dt) const
         entries.push_back(e);
     }
 
-    std::sort(entries.begin(), entries.end(), [](const Entry &lhs, const Entry &rhs) {
+    std::sort(entries.begin(), entries.end(), [](const Entry &lhs, const Entry &rhs) -> bool {
         if (lhs.mode == rhs.mode)
             return lhs.key < rhs.key;
         return lhs.mode < rhs.mode;
