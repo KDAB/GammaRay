@@ -58,12 +58,14 @@ QVariant OpenGLInfoSource::data()
             {
                 m.insert(QStringLiteral("type"), QStringLiteral("GL"));
 
+#if defined(GL_MAJOR_VERSION) && defined(GL_MINOR_VERSION)
                 int major = 0, minor = 0;
                 functions.glGetIntegerv(GL_MAJOR_VERSION, &major);
                 functions.glGetIntegerv(GL_MINOR_VERSION, &minor);
                 // e.g. macOS legacy profiles return 0.0 here...
                 if (major > 0)
                     m.insert(QStringLiteral("version"), QString(QString::number(major) + QLatin1Char('.') + QString::number(minor)));
+#endif
 
                 OpenGLInfoSourcePrivate::parseGLVersion(reinterpret_cast<const char*>(functions.glGetString(GL_VERSION)), m);
                 OpenGLInfoSourcePrivate::parseGLSLVersion(reinterpret_cast<const char*>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION)), m);

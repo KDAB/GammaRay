@@ -41,10 +41,19 @@ QVariant PlatformInfoSource::data()
     m.insert(QStringLiteral("os"), QStringLiteral("linux"));
 
     // openSUSE Tumbleweed has the current date as version number, that is a bit too precise for us
-    if (QSysInfo::productType() == QLatin1String("opensuse") && QSysInfo::productVersion().startsWith(QLatin1String("20")))
+    if (QSysInfo::productType() == QLatin1String("opensuse") && QSysInfo::productVersion().startsWith(QLatin1String("201"))) {
+        // old form in use until early 2018
         m.insert(QStringLiteral("version"), QString(QSysInfo::productType() + QLatin1String("-tumbleweed")));
-    else
+    } else if (QSysInfo::productType() == QLatin1String("opensuse-tumbleweed")) {
+        // new form in use since early 2018
+        m.insert(QStringLiteral("version"), QSysInfo::productType());
+    }
+    // Arch and other rolling-release distros set productVersion to "unknown"
+    else if (QSysInfo::productVersion() == QLatin1String("unknown")) {
+        m.insert(QStringLiteral("version"), QSysInfo::productType());
+    } else {
         m.insert(QStringLiteral("version"), QString(QSysInfo::productType() + QLatin1Char('-') + QSysInfo::productVersion()));
+    }
 #elif defined(Q_OS_MAC)
     // QSysInfo::productType() on macOS alternates between "osx" and "macos"...
     m.insert(QStringLiteral("os"), QStringLiteral("macos"));

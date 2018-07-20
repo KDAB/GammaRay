@@ -6,6 +6,7 @@ set(gammaray_userfeedback_srcs
     common/surveytargetexpressionparser_p.cpp
     core/abstractdatasource.cpp
     core/applicationversionsource.cpp
+    core/auditloguicontroller.cpp
     core/compilerinfosource.cpp
     core/feedbackconfiguicontroller.cpp
     core/openglinfosource.cpp
@@ -16,6 +17,7 @@ set(gammaray_userfeedback_srcs
     core/startcountsource.cpp
     core/surveyinfo.cpp
     core/usagetimesource.cpp
+    widgets/auditlogbrowserdialog.cpp
     widgets/feedbackconfigdialog.cpp
     widgets/feedbackconfigwidget.cpp
     widgets/notificationpopup.cpp

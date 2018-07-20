@@ -111,10 +111,12 @@ public:
     static inline QString normalizeRenderer(const char *renderer)
     {
         auto r = QString::fromLocal8Bit(renderer);
+        // remove trademark indicators
+        r.remove(QLatin1String("(R)"), Qt::CaseInsensitive);
+        r.remove(QLatin1String("(TM)"), Qt::CaseInsensitive);
+
         // remove vendor prefixes, we already have that in the vendor field
         if (r.startsWith(QLatin1String("Mesa DRI ")))
-            r = r.mid(9);
-        if (r.startsWith(QLatin1String("Intel(R) ")))
             r = r.mid(9);
         if (r.startsWith(QLatin1String("Intel ")))
             r = r.mid(6);
@@ -122,14 +124,14 @@ public:
             r = r.mid(7);
 
         // remove excessive details that could enable fingerprinting
-        if (r.startsWith(QLatin1String("ANGLE ")) || r.startsWith(QLatin1String("Gallium ")))
+        if (r.startsWith(QLatin1String("ANGLE ")) || r.startsWith(QLatin1String("Gallium ")) || r.startsWith(QLatin1String("AMD ")))
             r = stripDetails(r);
 
         // strip macOS adding " OpenGL Engine" at the end
         if (r.endsWith(QLatin1String(" OpenGL Engine")))
             r = r.left(r.size() - 14);
 
-        return r;
+        return r.simplified();
     }
 
 private:
