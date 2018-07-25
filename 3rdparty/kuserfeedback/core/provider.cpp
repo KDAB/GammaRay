@@ -30,10 +30,12 @@
 
 #include <QCoreApplication>
 #include <QDebug>
+#include <QDir>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QStandardPaths>
 #endif
 #include <QMetaEnum>
 #include <QNetworkAccessManager>
@@ -340,6 +342,8 @@ void ProviderPrivate::submitFinished()
     s->beginGroup(QStringLiteral("UserFeedback"));
     s->setValue(QStringLiteral("LastSubmission"), lastSubmitTime);
     s->endGroup();
+
+    writeAuditLog(lastSubmitTime);
 
     // reset source counters
     foreach (auto source, dataSources) {
@@ -698,6 +702,44 @@ void ProviderPrivate::submit(const QUrl &url)
 #endif
     auto reply = networkAccessManager->post(request, jsonData(telemetryMode));
     QObject::connect(reply, SIGNAL(finished()), q, SLOT(submitFinished()));
+}
+
+void ProviderPrivate::writeAuditLog(const QDateTime &dt)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QStringLiteral("/kuserfeedback/audit");
+    QDir().mkpath(path);
+
+    QJsonObject docObj;
+    foreach (auto source, dataSources) {
+        if (!isValidSource(source) || telemetryMode < source->telemetryMode())
+            continue;
+        QJsonObject obj;
+        const auto data = source->data();
+        if (data.canConvert<QVariantMap>())
+            obj.insert(QLatin1String("data"), QJsonObject::fromVariantMap(data.toMap()));
+        else if (data.canConvert<QVariantList>())
+            obj.insert(QLatin1String("data"), QJsonArray::fromVariantList(data.value<QVariantList>()));
+        if (obj.isEmpty())
+            continue;
+        obj.insert(QLatin1String("telemetryMode"), QString::fromLatin1(telemetryModeEnum().valueToKey(source->telemetryMode())));
+        obj.insert(QLatin1String("description"), source->description());
+        docObj.insert(source->name(), obj);
+    }
+
+    QFile file(path + QLatin1Char('/') + dt.toString(QStringLiteral("yyyyMMdd-hhmmss")) + QStringLiteral(".log"));
+    if (!file.open(QFile::WriteOnly)) {
+        qCWarning(Log) << "Unable to open audit log file:" << file.fileName() << file.errorString();
+        return;
+    }
+
+    QJsonDocument doc(docObj);
+    file.write(doc.toJson());
+
+    qCDebug(Log) << "Audit log written:" << file.fileName();
+#else
+    Q_UNUSED(dt);
+#endif
 }
 
 #include "moc_provider.cpp"

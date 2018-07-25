@@ -122,6 +122,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="auditLogLabel">
+     <property name="text">
+      <string>&lt;a href=&quot;auditLog&quot;&gt;View previously submitted data...&lt;/a&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLabel" name="label_2">
      <property name="font">
       <font>

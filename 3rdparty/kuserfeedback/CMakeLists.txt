@@ -20,6 +20,12 @@ set(gammaray_userfeedback_srcs
     widgets/feedbackconfigwidget.cpp
     widgets/notificationpopup.cpp
 )
+if (Qt5Core_FOUND)
+    list(APPEND gammaray_userfeedback_srcs
+        core/auditloguicontroller.cpp
+        widgets/auditlogbrowserdialog.cpp
+    )
+endif()
 
 add_library(gammaray_kuserfeedback SHARED ${gammaray_userfeedback_srcs})
 # Disable warnings for generated stuff

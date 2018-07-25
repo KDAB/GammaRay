@@ -65,6 +65,8 @@ public:
     void scheduleEncouragement();
     void emitShowEncouragementMessage();
 
+    void writeAuditLog(const QDateTime &dt);
+
     QVariant sourceData(const QString &sourceName) const override;
 
     Provider *q;

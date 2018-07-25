@@ -17,8 +17,12 @@
 
 #include "feedbackconfigwidget.h"
 #include "ui_feedbackconfigwidget.h"
+#include "auditlogbrowserdialog.h"
 
 #include <abstractdatasource.h>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <auditloguicontroller.h>
+#endif
 #include <feedbackconfiguicontroller.h>
 #include <provider.h>
 
@@ -41,6 +45,9 @@ public:
 
     FeedbackConfigUiController *controller;
     std::unique_ptr<Ui::FeedbackConfigWidget> ui;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    AuditLogUiController *auditLogController;
+#endif
 };
 
 }
@@ -113,6 +120,21 @@ FeedbackConfigWidget::FeedbackConfigWidget(QWidget* parent)
     d->ui->rawTelemetryButton->setIcon(style()->standardPixmap(QStyle::SP_DialogHelpButton));
     d->ui->telemetryDetails->installEventFilter(this);
     connect(d->ui->rawTelemetryButton, SIGNAL(toggled(bool)), this, SLOT(telemetrySliderChanged()));
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    d->auditLogController = new AuditLogUiController(this);
+    d->ui->auditLogLabel->setVisible(d->auditLogController->hasLogEntries());
+    connect(d->auditLogController, &AuditLogUiController::logEntryCountChanged, this, [this]() {
+        d->ui->auditLogLabel->setVisible(d->auditLogController->hasLogEntries());
+    });
+    connect(d->ui->auditLogLabel, &QLabel::linkActivated, this, [this](){
+        AuditLogBrowserDialog dlg(this);
+        dlg.setUiController(d->auditLogController);
+        dlg.exec();
+    });
+#else
+    d->ui->auditLogLabel->hide();
+#endif
 
     setEnabled(false); // see setFeedbackProvider
 }
