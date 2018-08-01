@@ -87,7 +87,7 @@ For example, if your Qt build is in /data/Qt/4.8 then:
 
 == Force a Qt4 build ==
 On systems with both Qt4 and Qt5 available, the CMake buildsystem will always
-attempt to use Qt5. To force a Qt build, pass -DGAMMARAY_ENFORCE_QT4_BUILD=true
+attempt to use Qt5. To force a Qt4 build, pass -DGAMMARAY_ENFORCE_QT4_BUILD=true
 to CMake, as in:
   % cmake -DGAMMARAY_ENFORCE_QT4_BUILD=true
 
