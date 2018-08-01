@@ -1,6 +1,18 @@
 Release Highlights
 ==================
 
+Version 2.9.1
+-------------
+ * Fix crash in in-process mode with networking disabled.
+ * Fix compilation with Qt 5.12.
+ * Update Android toolchain file.
+ * Allow to disable QtScript dependency.
+ * Fix crash on zero-sized paint operations.
+ * Fix plugin deployment on Android.
+ * Fix crash in Qt Quick inspector when encountering invalid bounding rects.
+ * Fix activating the Qt3D plugin when attaching to a Qt3D application at runtime.
+ * Fix out-of-bounds framebuffer read in Qt Quick remote view for some non-integer scaling factors.
+
 Version 2.9.0
 -------------
  * Improve Qt Quick Controls 2 tracer coloring.
