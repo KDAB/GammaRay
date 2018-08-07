@@ -15,6 +15,8 @@ if(Qt5Quick_FOUND)
   if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
   set(gammaray_quickinspector_srcs
     quickinspector.cpp
+
+    quickanchorspropertyadaptor.cpp
     quickitemmodel.cpp
     quickscenegraphmodel.cpp
     quickpaintanalyzerextension.cpp

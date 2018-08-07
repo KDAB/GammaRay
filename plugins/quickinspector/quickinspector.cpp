@@ -27,6 +27,8 @@
 */
 
 #include "quickinspector.h"
+
+#include "quickanchorspropertyadaptor.h"
 #include "quickitemmodel.h"
 #include "quickscenegraphmodel.h"
 #include "quickscreengrabber.h"
@@ -54,6 +56,7 @@
 #include <core/objecttypefilterproxymodel.h>
 #include <core/probeguard.h>
 #include <core/propertycontroller.h>
+#include <core/propertyfilter.h>
 #include <core/remote/server.h>
 #include <core/remote/serverproxymodel.h>
 #include <core/singlecolumnobjectproxymodel.h>
@@ -1158,6 +1161,8 @@ void QuickInspector::registerPCExtensions()
     PropertyController::registerExtension<TextureExtension>();
 
     PropertyAdaptorFactory::registerFactory(QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance());
+    PropertyAdaptorFactory::registerFactory(QuickAnchorsPropertyAdaptorFactory::instance());
+    PropertyFilters::registerFilter(PropertyFilter {"QQuickAnchors", "anchors"});
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
