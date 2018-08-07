@@ -51,12 +51,14 @@ protected:
 
 private:
     QString detailString(const QMetaProperty &prop) const;
+    PropertyData propertyMetaData(int index) const;
 
 private slots:
     void propertyUpdated();
 
 private:
     QHash<int, int> m_notifyToPropertyMap;
+    QVector<int> m_rowToPropertyIndex;
     mutable bool m_notifyGuard;
 };
 }
