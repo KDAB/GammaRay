@@ -26,6 +26,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "propertyfilter.h"
 #include "qmetapropertyadaptor.h"
 #include "objectinstance.h"
 #include "propertydata.h"
@@ -66,6 +67,10 @@ void QMetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 #endif
                     , this, SLOT(propertyUpdated()));
             m_notifyToPropertyMap.insert(prop.notifySignalIndex(), i);
+
+            if (!PropertyFilters::matches(propertyMetaData(i))) {
+                m_rowToPropertyIndex.push_back(i);
+            }
         }
     }
 }
@@ -75,51 +80,27 @@ int QMetaPropertyAdaptor::count() const
     if (!object().isValid())
         return 0;
 
-    auto mo = object().metaObject();
-    if (!mo)
-        return 0;
-    return mo->propertyCount();
+    return m_rowToPropertyIndex.count();
 }
 
-PropertyData QMetaPropertyAdaptor::propertyData(int index) const
+PropertyData QMetaPropertyAdaptor::propertyMetaData(int propertyIndex) const
 {
     PropertyData data;
     if (!object().isValid())
         return data;
 
-    m_notifyGuard = true;
     const auto mo = object().metaObject();
     Q_ASSERT(mo);
 
-    const auto prop = mo->property(index);
+    const auto prop = mo->property(propertyIndex);
 
     data.setName(prop.name());
     data.setTypeName(prop.typeName());
 
     auto pmo = mo;
-    while (pmo->propertyOffset() > index)
+    while (pmo->propertyOffset() > propertyIndex)
         pmo = pmo->superClass();
     data.setClassName(pmo->className());
-
-    // we call out to the target here, so suspend the probe guard, otherwise we'll miss on-demand created object (e.g. in QQ2)
-    {
-        ProbeGuardSuspender g;
-        switch (object().type()) {
-        case ObjectInstance::QtObject:
-            if (object().qtObject())
-                data.setValue(prop.read(object().qtObject()));
-            break;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-        case ObjectInstance::QtGadgetPointer:
-        case ObjectInstance::QtGadgetValue:
-            if (object().object())
-                data.setValue(prop.readOnGadget(object().object()));
-            break;
-#endif
-        default:
-            break;
-        }
-    }
 
     PropertyModel::PropertyFlags f(PropertyModel::None);
     if (prop.isConstant())
@@ -152,22 +133,59 @@ PropertyData QMetaPropertyAdaptor::propertyData(int index) const
         flags |= PropertyData::Resettable;
     data.setAccessFlags(flags);
 
+    return data;
+}
+
+PropertyData QMetaPropertyAdaptor::propertyData(int row) const
+{
+    int propertyIndex = m_rowToPropertyIndex[row];
+
+    PropertyData data = propertyMetaData(propertyIndex);
+    if (!object().isValid())
+        return data;
+
+    m_notifyGuard = true;
+    const auto mo = object().metaObject();
+    Q_ASSERT(mo);
+    const auto prop = mo->property(propertyIndex);
+
+    // we call out to the target here, so suspend the probe guard, otherwise we'll miss on-demand created object (e.g. in QQ2)
+    {
+        ProbeGuardSuspender g;
+        switch (object().type()) {
+        case ObjectInstance::QtObject:
+            if (object().qtObject())
+                data.setValue(prop.read(object().qtObject()));
+            break;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+        case ObjectInstance::QtGadgetPointer:
+        case ObjectInstance::QtGadgetValue:
+            if (object().object())
+                data.setValue(prop.readOnGadget(object().object()));
+            break;
+#endif
+        default:
+            break;
+        }
+    }
+
     m_notifyGuard = false;
     return data;
 }
 
-void QMetaPropertyAdaptor::writeProperty(int index, const QVariant &value)
+void QMetaPropertyAdaptor::writeProperty(int row, const QVariant &value)
 {
+    int propertyIndex = m_rowToPropertyIndex[row];
     const auto mo = object().metaObject();
     Q_ASSERT(mo);
 
-    const auto prop = mo->property(index);
+    const auto prop = mo->property(propertyIndex);
     switch (object().type()) {
     case ObjectInstance::QtObject:
         if (object().qtObject()) {
             prop.write(object().qtObject(), value);
             if (!prop.hasNotifySignal())
-                emit propertyChanged(index, index);
+                emit propertyChanged(row, row);
         }
         break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
@@ -175,7 +193,7 @@ void QMetaPropertyAdaptor::writeProperty(int index, const QVariant &value)
     case ObjectInstance::QtGadgetValue:
         if (object().object()) {
             prop.writeOnGadget(object().object(), value);
-            emit propertyChanged(index, index);
+            emit propertyChanged(row, row);
         }
         break;
 #endif
@@ -184,18 +202,19 @@ void QMetaPropertyAdaptor::writeProperty(int index, const QVariant &value)
     }
 }
 
-void QMetaPropertyAdaptor::resetProperty(int index)
+void QMetaPropertyAdaptor::resetProperty(int row)
 {
+    int propertyIndex = m_rowToPropertyIndex[row];
     const auto mo = object().metaObject();
     Q_ASSERT(mo);
 
-    const auto prop = mo->property(index);
+    const auto prop = mo->property(propertyIndex);
     switch (object().type()) {
     case ObjectInstance::QtObject:
         if (object().qtObject()) {
             prop.reset(object().qtObject());
             if (!prop.hasNotifySignal())
-                emit propertyChanged(index, index);
+                emit propertyChanged(row, row);
         }
         break;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
@@ -203,7 +222,7 @@ void QMetaPropertyAdaptor::resetProperty(int index)
     case ObjectInstance::QtGadgetPointer:
         if (object().object()) {
             prop.resetOnGadget(object().object());
-            emit propertyChanged(index, index);
+            emit propertyChanged(row, row);
         }
         break;
 #endif
