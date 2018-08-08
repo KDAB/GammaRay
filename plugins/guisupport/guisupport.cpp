@@ -49,8 +49,10 @@
 #include <qpa/qplatformpixmap.h>
 #endif
 
+#include <QClipboard>
 #include <QIcon>
 #include <QFont>
+#include <QMimeData>
 #include <QPaintDevice>
 #include <QPainter>
 #include <QPainterPath>
@@ -72,6 +74,7 @@ Q_DECLARE_METATYPE(QPlatformPixmap::ClassId)
 Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
 Q_DECLARE_METATYPE(QSurfaceFormat::FormatOptions)
+Q_DECLARE_METATYPE(const QMimeData*)
 #endif
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Qt::BrushStyle)
@@ -152,8 +155,31 @@ void GuiSupport::registerMetaTypes()
     MetaObject *mo;
 
  #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    MO_ADD_METAOBJECT1(QMimeData, QObject);
+    MO_ADD_PROPERTY   (QMimeData, colorData, setColorData);
+    MO_ADD_PROPERTY_RO(QMimeData, formats);
+    MO_ADD_PROPERTY_RO(QMimeData, hasColor);
+    MO_ADD_PROPERTY_RO(QMimeData, hasHtml);
+    MO_ADD_PROPERTY_RO(QMimeData, hasText);
+    MO_ADD_PROPERTY_RO(QMimeData, hasUrls);
+    MO_ADD_PROPERTY   (QMimeData, html, setHtml);
+    MO_ADD_PROPERTY   (QMimeData, imageData, setImageData);
+    MO_ADD_PROPERTY   (QMimeData, text, setText);
+    MO_ADD_PROPERTY   (QMimeData, urls, setUrls);
+
+    MO_ADD_METAOBJECT1(QClipboard, QObject);
+    MO_ADD_PROPERTY_LD(QClipboard, clipboardMimeData, [](QClipboard *cb) { return cb->mimeData(QClipboard::Clipboard); });
+    MO_ADD_PROPERTY_LD(QClipboard, findBufferMimeData, [](QClipboard *cb) { return cb->mimeData(QClipboard::FindBuffer); });
+    MO_ADD_PROPERTY_RO(QClipboard, ownsClipboard);
+    MO_ADD_PROPERTY_RO(QClipboard, ownsFindBuffer);
+    MO_ADD_PROPERTY_RO(QClipboard, ownsSelection);
+    MO_ADD_PROPERTY_LD(QClipboard, selectionMimeData, [](QClipboard *cb) { return cb->mimeData(QClipboard::Selection); });
+    MO_ADD_PROPERTY_RO(QClipboard, supportsFindBuffer);
+    MO_ADD_PROPERTY_RO(QClipboard, supportsSelection);
+
     MO_ADD_METAOBJECT1(QGuiApplication, QCoreApplication);
     MO_ADD_PROPERTY_ST(QGuiApplication, applicationState);
+    MO_ADD_PROPERTY_ST(QGuiApplication, clipboard);
     MO_ADD_PROPERTY_ST(QGuiApplication, desktopSettingsAware);
     MO_ADD_PROPERTY_RO(QGuiApplication, devicePixelRatio);
     MO_ADD_PROPERTY_ST(QGuiApplication, focusObject);
@@ -832,6 +858,7 @@ void GuiSupport::registerVariantHandler()
 {
     VariantHandler::registerStringConverter<const QValidator*>(Util::displayString);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    VariantHandler::registerStringConverter<const QMimeData*>(Util::displayString);
     VariantHandler::registerStringConverter<QSurfaceFormat>(surfaceFormatToString);
 
     ER_REGISTER_ENUM(QSurface, SurfaceClass, surface_class_table);
