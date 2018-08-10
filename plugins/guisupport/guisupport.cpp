@@ -167,6 +167,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY   (QMimeData, text, setText);
     MO_ADD_PROPERTY   (QMimeData, urls, setUrls);
 
+#ifndef QT_NO_CLIPBOARD
     MO_ADD_METAOBJECT1(QClipboard, QObject);
     MO_ADD_PROPERTY_LD(QClipboard, clipboardMimeData, [](QClipboard *cb) { return cb->mimeData(QClipboard::Clipboard); });
     MO_ADD_PROPERTY_LD(QClipboard, findBufferMimeData, [](QClipboard *cb) { return cb->mimeData(QClipboard::FindBuffer); });
@@ -176,10 +177,13 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_LD(QClipboard, selectionMimeData, [](QClipboard *cb) { return cb->mimeData(QClipboard::Selection); });
     MO_ADD_PROPERTY_RO(QClipboard, supportsFindBuffer);
     MO_ADD_PROPERTY_RO(QClipboard, supportsSelection);
+#endif
 
     MO_ADD_METAOBJECT1(QGuiApplication, QCoreApplication);
     MO_ADD_PROPERTY_ST(QGuiApplication, applicationState);
+#ifndef QT_NO_CLIPBOARD
     MO_ADD_PROPERTY_ST(QGuiApplication, clipboard);
+#endif
     MO_ADD_PROPERTY_ST(QGuiApplication, desktopSettingsAware);
     MO_ADD_PROPERTY_RO(QGuiApplication, devicePixelRatio);
     MO_ADD_PROPERTY_ST(QGuiApplication, focusObject);
