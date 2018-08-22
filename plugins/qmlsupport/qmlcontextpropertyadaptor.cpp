@@ -100,8 +100,13 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
     QV4::IdentifierHashEntry *e = propNames.d->entries;
     QV4::IdentifierHashEntry *end = e + propNames.d->alloc;
     while (e < end) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
         if (e->identifier)
             m_contextPropertyNames.push_back(e->identifier->string);
+#else
+        if (e->identifier.isValid())
+            m_contextPropertyNames.push_back(e->identifier.toQString());
+#endif
         ++e;
     }
 #else
