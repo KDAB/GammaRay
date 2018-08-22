@@ -35,6 +35,7 @@
 // Qt
 #include <private/qqmlabstractbinding_p.h>
 #include <private/qqmlbinding_p.h>
+#include <private/qqmlglobal_p.h>
 #include <private/qqmlvaluetypeproxybinding_p.h>
 #include <private/qqmldata_p.h>
 #include <private/qqmlproperty_p.h>
