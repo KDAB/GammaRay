@@ -39,6 +39,8 @@ namespace VariantHandler {
 ///@cond internal
 template<typename RetT> struct Converter
 {
+    virtual ~Converter() {}
+
     virtual RetT operator()(const QVariant &v) = 0;
 };
 
