@@ -501,7 +501,7 @@ else()
     # minimum set
     find_package(Qt4 4.8.0 REQUIRED QtCore QtGui QtNetwork QtXml)
   endif()
-  find_package(Qt4 4.8.0 QUIET COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
+  find_package(Qt4 4.8.0 QUIET OPTIONAL_COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
 
   include(${QT_USE_FILE})
   set(HAVE_QT_CONCURRENT true)
