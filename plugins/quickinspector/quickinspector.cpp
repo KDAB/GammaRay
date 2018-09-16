@@ -927,8 +927,8 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QQuickItem, isTextureProvider);
     MO_ADD_PROPERTY(QQuickItem, keepMouseGrab, setKeepMouseGrab);
     MO_ADD_PROPERTY(QQuickItem, keepTouchGrab, setKeepTouchGrab);
-    MO_ADD_PROPERTY_LD(QQuickItem, nextItemInFocusChain, [](QQuickItem *item) { return item->nextItemInFocusChain(); });
-    MO_ADD_PROPERTY_LD(QQuickItem, previousItemInFocusChain, [](QQuickItem *item) { return item->nextItemInFocusChain(false); });
+    MO_ADD_PROPERTY_LD(QQuickItem, nextItemInFocusChain, [](QQuickItem *item) { return item->isVisible() ? item->nextItemInFocusChain() : nullptr; });
+    MO_ADD_PROPERTY_LD(QQuickItem, previousItemInFocusChain, [](QQuickItem *item) { return item->isVisible() ? item->nextItemInFocusChain(false) : nullptr; });
     MO_ADD_PROPERTY_RO(QQuickItem, scopedFocusItem);
     MO_ADD_PROPERTY_RO(QQuickItem, window);
 
