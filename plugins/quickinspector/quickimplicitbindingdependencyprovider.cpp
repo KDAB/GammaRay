@@ -72,7 +72,7 @@ std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider
         QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
         if (!itemPriv)
             return bindings;
-        QQuickAnchors *anchors = itemPriv->anchors();
+        QQuickAnchors *anchors = itemPriv->_anchors;
         if (!anchors)
             return bindings;
 
@@ -177,12 +177,10 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
     QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
     if (!itemPriv)
         return;
-    QQuickAnchors *anchors = itemPriv->anchors();
-    if (!anchors)
-        return;
+    QQuickAnchors *anchors = itemPriv->_anchors;
 
     // Horizontal
-    if (anchors->fill()) {
+    if (anchors && anchors->fill()) {
         QQuickItem *fill = anchors->fill();
         addDependency("width", fill, "width");
         addDependency("width", item, "anchors.leftMargin");
@@ -195,7 +193,7 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
         addDependency("right", item, "anchors.rightMargin");
         addDependency("horizontalCenter", item, "left");
         addDependency("horizontalCenter", item, "right");
-    } else if (anchors->centerIn()) {
+    } else if (anchors && anchors->centerIn()) {
         QQuickItem *centerIn = anchors->centerIn();
         addDependency("horizontalCenter", centerIn, "horizontalCenter");
         addDependency("x", centerIn, "horizontalCenter");
@@ -204,7 +202,7 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
         addDependency("left", item, "width");
         addDependency("right", centerIn, "horizontalCenter");
         addDependency("right", item, "width");
-    } else if (anchors->left().anchorLine != QQuickAnchors::InvalidAnchor) {
+    } else if (anchors && anchors->left().anchorLine != QQuickAnchors::InvalidAnchor) {
         addDependency("left", item, "anchors.left");
         addDependency("x", item, "anchors.left");
         if (anchors->right().anchorLine != QQuickAnchors::InvalidAnchor) {
@@ -226,7 +224,7 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
             addDependency("horizontalCenter", item, "anchors.left");
             addDependency("horizontalCenter", item, "width");
         }
-    } else if (anchors->right().anchorLine != QQuickAnchors::InvalidAnchor) {
+    } else if (anchors && anchors->right().anchorLine != QQuickAnchors::InvalidAnchor) {
         addDependency("right", item, "anchors.right");
         if (anchors->horizontalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
             addDependency("horizontalCenter", item, "anchors.horizontalCenter");
@@ -244,7 +242,7 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
             addDependency("horizontalCenter", item, "anchors.right");
             addDependency("horizontalCenter", item, "width");
         }
-    } else if (anchors->horizontalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
+    } else if (anchors && anchors->horizontalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
         addDependency("horizontalCenter", item, "anchors.horizontalCenter");
         addDependency("x", item, "anchors.horizontalCenter");
         addDependency("x", item, "width");
@@ -262,7 +260,7 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
 
 
     // Vertical TODO: Bottomline
-    if (anchors->fill()) {
+    if (anchors && anchors->fill()) {
         QQuickItem *fill = anchors->fill();
         addDependency("height", fill, "height");
         addDependency("height", item, "anchors.topMargin");
@@ -275,7 +273,7 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
         addDependency("bottom", item, "anchors.bottomMargin");
         addDependency("verticalCenter", item, "top");
         addDependency("verticalCenter", item, "bottom");
-    } else if (anchors->centerIn()) {
+    } else if (anchors && anchors->centerIn()) {
         QQuickItem *centerIn = anchors->centerIn();
         addDependency("verticalCenter", centerIn, "verticalCenter");
         addDependency("y", centerIn, "verticalCenter");
@@ -284,7 +282,7 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
         addDependency("top", item, "height");
         addDependency("bottom", centerIn, "verticalCenter");
         addDependency("bottom", item, "height");
-    } else if (anchors->top().anchorLine != QQuickAnchors::InvalidAnchor) {
+    } else if (anchors && anchors->top().anchorLine != QQuickAnchors::InvalidAnchor) {
         addDependency("top", item, "anchors.top");
         addDependency("y", item, "anchors.top");
         if (anchors->bottom().anchorLine != QQuickAnchors::InvalidAnchor) {
@@ -307,7 +305,7 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
             addDependency("verticalCenter", item, "anchors.top");
             addDependency("verticalCenter", item, "height");
         }
-    } else if (anchors->bottom().anchorLine != QQuickAnchors::InvalidAnchor) {
+    } else if (anchors && anchors->bottom().anchorLine != QQuickAnchors::InvalidAnchor) {
         addDependency("bottom", item, "anchors.bottom");
         if (anchors->verticalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
             addDependency("verticalCenter", item, "anchors.verticalCenter");
@@ -325,7 +323,7 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
             addDependency("verticalCenter", item, "anchors.bottom");
             addDependency("verticalCenter", item, "height");
         }
-    } else if (anchors->verticalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
+    } else if (anchors && anchors->verticalCenter().anchorLine != QQuickAnchors::InvalidAnchor) {
         addDependency("verticalCenter", item, "anchors.verticalCenter");
         addDependency("y", item, "anchors.verticalCenter");
         addDependency("y", item, "height");

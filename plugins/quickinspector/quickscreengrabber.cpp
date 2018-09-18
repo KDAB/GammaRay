@@ -67,7 +67,6 @@ public:
     explicit QQuickItemPropertyCache(const QMetaObject *meta)
         : background(property(meta, "background"))
         , contentItem(property(meta, "contentItem"))
-        , anchors(property(meta, "anchors"))
         , padding(property(meta, "padding"))
     {
         if (padding.isValid()) {
@@ -80,7 +79,6 @@ public:
 
     QMetaProperty background;
     QMetaProperty contentItem;
-    QMetaProperty anchors;
     QMetaProperty padding;
     QMetaProperty leftPadding;
     QMetaProperty rightPadding;
@@ -390,7 +388,8 @@ QuickItemGeometry AbstractScreenGrabber::initFromItem(QQuickItem *item)
         itemGeometry.contentItemRect = contentItem->mapRectToScene(contentItem->boundingRect());
     itemGeometry.transformOriginPoint = item->mapToScene(item->transformOriginPoint());
 
-    QQuickAnchors *anchors = cache.anchors.read(item).value<QQuickAnchors *>();
+    QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
+    QQuickAnchors *anchors = itemPriv->_anchors;
 
     if (anchors) {
         QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
@@ -429,7 +428,6 @@ QuickItemGeometry AbstractScreenGrabber::initFromItem(QQuickItem *item)
         itemGeometry.bottomPadding = qQNaN();
     }
 
-    QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
     itemGeometry.transform = itemPriv->itemToWindowTransform();
     if (parent) {
         QQuickItemPrivate *parentPriv = QQuickItemPrivate::get(parent);
