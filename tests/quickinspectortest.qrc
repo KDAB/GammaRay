@@ -6,6 +6,7 @@
         <file>manual/lsd.png</file>
         <file>manual/rotationinvariant.qml</file>
         <file>manual/shadereffect.qml</file>
+        <file>manual/anchorspropertyfiltertest.qml</file>
         <file>manual/picking/invisibleoverlay.qml</file>
         <file>manual/picking/negativezordering.qml</file>
         <file>manual/picking/opacityzerooverlay.qml</file>
