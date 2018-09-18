@@ -446,6 +446,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINO
       quickinspectortest.qrc
         $<TARGET_OBJECTS:modeltestobj>
     )
+    target_include_directories(quickinspectortest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
     target_link_libraries(quickinspectortest gammaray_core gammaray_quickinspector_shared Qt5::Quick)
 
     gammaray_add_quick_test(quickinspectortest2

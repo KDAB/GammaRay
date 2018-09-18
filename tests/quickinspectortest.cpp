@@ -36,7 +36,11 @@
 #include <3rdparty/qt/modeltest.h>
 
 #include <QItemSelectionModel>
+#include <QSortFilterProxyModel>
 #include <QRegExp>
+
+#include <QQuickItem>
+#include <private/qquickitem_p.h>
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(QItemSelection)
@@ -268,6 +272,58 @@ private slots:
             triggerSceneChange();
         if (isViewExposed())
             QVERIFY(waitForSignal(&renderSpy));
+    }
+
+    void testAnchorsPropertyFilter()
+    {
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/anchorspropertyfiltertest.qml")));
+
+        auto rectWithoutAnchors = view()->rootObject()->findChild<QQuickItem*>("rectWithoutAnchors");
+        auto rectWithAnchors = view()->rootObject()->findChild<QQuickItem*>("rectWithAnchors");
+
+        auto rectWithoutAnchorsPriv = QQuickItemPrivate::get(rectWithoutAnchors);
+        auto rectWithAnchorsPriv = QQuickItemPrivate::get(rectWithAnchors);
+
+        QVERIFY(!rectWithoutAnchorsPriv->_anchors);
+        QVERIFY(rectWithAnchorsPriv->_anchors);
+
+        auto propertyModel = ObjectBroker::model("com.kdab.GammaRay.ObjectInspector.properties");
+        QVERIFY(propertyModel);
+        QSortFilterProxyModel anchorsFilterModel;
+        anchorsFilterModel.setSourceModel(propertyModel);
+        anchorsFilterModel.setFilterKeyColumn(0);
+        anchorsFilterModel.setFilterFixedString("anchors");
+
+        Probe::instance()->selectObject(rectWithoutAnchors);
+        QVERIFY(propertyModel->rowCount());
+        QCOMPARE(anchorsFilterModel.rowCount(), 1);
+        auto rectWithoutAnchorsAnchorsValue = anchorsFilterModel.data(anchorsFilterModel.index(0, 1), Qt::EditRole);
+        QVERIFY(rectWithoutAnchorsAnchorsValue.canConvert<QObject*>());
+        QCOMPARE(rectWithoutAnchorsAnchorsValue.value<QObject*>(), nullptr);
+
+        Probe::instance()->selectObject(rectWithAnchors);
+        QCOMPARE(anchorsFilterModel.rowCount(), 1);
+        auto rectWithAnchorsAnchorsValue = anchorsFilterModel.data(anchorsFilterModel.index(0, 1), Qt::EditRole);
+        QVERIFY(rectWithAnchorsAnchorsValue.canConvert<QObject*>());
+        QVERIFY(rectWithAnchorsAnchorsValue.value<QObject*>() != nullptr);
+
+
+        Probe::instance()->selectObject(rectWithoutAnchors);
+        // We want to trigger as much QuiickInspector-code as possible to check that
+        // QQuickItemPrivate::anchors is not called by any GammaRay-code as that
+        // would render the filter useless.
+        auto remoteView =
+            ObjectBroker::object<RemoteViewInterface *>(
+                QStringLiteral("com.kdab.GammaRay.QuickRemoteView"));
+
+        QVERIFY(remoteView);
+        remoteView->setViewActive(true);
+        remoteView->clientViewUpdated();
+        QTest::qWait(10);
+
+        rectWithoutAnchorsAnchorsValue = anchorsFilterModel.data(anchorsFilterModel.index(0, 1), Qt::EditRole);
+        QVERIFY(rectWithoutAnchorsAnchorsValue.canConvert<QObject*>());
+        QCOMPARE(rectWithoutAnchorsAnchorsValue.value<QObject*>(), nullptr);
     }
 
 private:
