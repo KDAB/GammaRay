@@ -1162,7 +1162,7 @@ void QuickInspector::registerPCExtensions()
 
     PropertyAdaptorFactory::registerFactory(QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance());
     PropertyAdaptorFactory::registerFactory(QuickAnchorsPropertyAdaptorFactory::instance());
-    PropertyFilters::registerFilter(PropertyFilter {"QQuickAnchors", "anchors"});
+    PropertyFilters::registerFilter(PropertyFilter("QQuickAnchors", "anchors"));
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));

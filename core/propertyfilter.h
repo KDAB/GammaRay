@@ -40,13 +40,13 @@ namespace GammaRay {
 class GAMMARAY_CORE_EXPORT PropertyFilter
 {
 public:
-    explicit PropertyFilter() = default;
+    explicit PropertyFilter() {}
     explicit PropertyFilter(
         QString className,
         QString name,
-        QString typeName = {},
-        PropertyData::AccessFlags accessFlags = {},
-        PropertyModel::PropertyFlags propertyFlags = {}
+        QString typeName = QString(),
+        PropertyData::AccessFlags accessFlags = nullptr,
+        PropertyModel::PropertyFlags propertyFlags = nullptr
     );
     static PropertyFilter classAndPropertyName(QString className, QString propertyName);
 

@@ -50,7 +50,7 @@ protected:
     void doSetObject(const ObjectInstance &oi) override;
 
 private:
-    int m_anchorsPropertyIndex = -1;
+    int m_anchorsPropertyIndex;
     mutable bool m_notifyGuard;
 };
 

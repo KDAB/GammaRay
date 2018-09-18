@@ -39,6 +39,8 @@ using namespace GammaRay;
 
 QuickAnchorsPropertyAdaptor::QuickAnchorsPropertyAdaptor(QObject *parent)
     : PropertyAdaptor(parent)
+    , m_anchorsPropertyIndex(-1)
+    , m_notifyGuard(false)
 {
 }
 
