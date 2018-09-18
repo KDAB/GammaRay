@@ -50,7 +50,7 @@ GammaRay::PropertyFilter::PropertyFilter(
 
 GammaRay::PropertyFilter GammaRay::PropertyFilter::classAndPropertyName(QString className, QString propertyName)
 {
-    return PropertyFilter { className, propertyName };
+    return PropertyFilter(className, propertyName);
 }
 
 bool GammaRay::PropertyFilter::matches(const GammaRay::PropertyData& prop) const
