@@ -36,56 +36,48 @@ Item {
     property real maxValue: 100
     property real value: 50
 
-    //! [Slider mirroring]
-    transform: Rotation {
-        angle: mirrorSlider ? 180 : 0
-        axis { x: 0; y: 1; z: 0 }
-        origin { x: root.width/2; y: root.height/2 }
-    }
-    //! [Slider mirroring]
-
-    //! [Slider transformation]
     ListView {
         id: view
         anchors.fill: parent
-        anchors.rightMargin: handle.width
+        anchors.rightMargin: mirrorSlider ? 0 : handle.width
+        anchors.leftMargin: mirrorSlider ? handle.width : 0
 
-        rotation: 180 // for bottom -> top layouting
         orientation: Qt.Vertical
         interactive: false
-    //! [Slider transformation]
 
         property int itemHeight: 7
         model: height/itemHeight
 
         currentIndex: (root.value - root.minValue) / (root.maxValue - root.minValue) * view.count
-        onCurrentItemChanged: if (currentItem) handle.currentItemY = currentItem.y
 
         delegate: Item {
             width: view.width
             height: view.itemHeight
             property int entry: index
 
+            //! [Slider delegate]
             Rectangle {
-                property bool active: view.currentIndex >= index
+                property bool active: view.currentIndex <= index
                 anchors.right: parent.right
                 width: parent.width
                 height: parent.height - 3
-                color: Qt.hsva((index/view.count)/3, active ? 1.0 : 0.5, active ? 1.0 : 0.75);
+                color: Qt.hsva((index/view.count)/3, active ? 1.0 : 0.5, active ? 1.0 : 0.75)
+                opacity: active ? 1.0 : 1.0 - (view.currentIndex - index) / view.model
                 scale: active ? 1.0 : 0.9
             }
+            //! [Slider delegate]
         }
 
         Rectangle {
             id: handle
             property real currentItemY: view.currentItem ? view.currentItem.y : 0
-            anchors.right: parent.left
+            anchors.left: mirrorSlider ? undefined : parent.right
+            anchors.right: mirrorSlider ? parent.left : undefined
             width: 10
             height: width
             radius: 5
             color: "darkgray"
             y: currentItemY - height / 2 + 3
-            rotation: root.mirrorSlider ? -180 : 180
         }
 
         MouseArea {
