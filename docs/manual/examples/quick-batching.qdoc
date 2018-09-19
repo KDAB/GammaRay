@@ -25,7 +25,9 @@
 
     \section1 Problem
 
-    The example application shows two custom Qt Quick sliders consisting of flat colored rectangles.
+    The example application shows two custom Qt Quick sliders consisting of flat colored rectangles
+    forming a gradient from green to blue. Inactive rectangles (that is rectangles above the handle)
+    are drawn smaller and slightly greyed out.
 
     \snippet quick-batching/quick-batching.qml Slider setup
 
@@ -62,40 +64,42 @@
     color indicate batches of elements that are rendered in a single draw call. This is the optimal scenario
     we are trying to achieve. Areas with diagonal lines represent sets of items that have some Common
     state but are rendered by individual draw calls. The scene graph renderer calls this case "unmerged
-    batch", this is what we are hitting in our example for the elements in the sliders.
+    batch". In our example one observes a colorful output with all inactive elements in the sliders in
+    their own colors.
 
     \section2 Scene graph inspection
 
-    After having established that our problem comes from unmerged batched in the scene graph renderer we
-    need to investigate what prevents merging in our case. Batches can't be merged when non-opaque items
-    overlap, or when they have a non-trivial transformation matrix. As our code does neither overlap nor
-    use transparency we can look at the transformation matrices.
+    After having established that our problem comes from rectangles not being batched in the scene graph renderer, we
+    need to investigate what prevents batching in our case. Items for example can't be batched when they
+    use clipping or differ in their opacity. For Qt versions < 5.8 batching is also disabled if
+    non-opaque items overlap, or when Items have a non-trivial transformation matrix.
 
-    For this we use the scene graph view of the \l{Qt Quick 2 Inspector} view in GammaRay. This shows the
+    For this we use the scene graph view of the \l{Qt Quick 2 Inspector} view in GammaRay. It shows the
     internal scene graph items, which is what the renderer uses as input for the batching.
 
-    Looking at the combinedMatrix property of any node belonging to a slider in the \l{Properties} view
-    we notice that at least one value of the diagonal is negative, indicating a rotation.
-    This is preventing the batch merging.
-    In order to identify the culprit, we can move up the hierarchy to the first node introducing this
-    transformation.
+    Comparing the subtrees belonging to active and inactive rectangles scenegraph-node tree view,
+    we notice that the inactive ones have an Opacity node, while the active ones don't. The opacity
+    node indicates transparency.
 
-    In order to match this to the actual code causing the problem, switch back to the item tree view,
-    and use the context menu action "Go to declaration", which will open a code editor around the
-    following piece of code:
+    Now we can check the opacity property in the \l {Properties} tab of the Item view, so we switch back to
+    "Items". The Item corresponding to the previously selected Opacity node is already pre-selected, so
+    we only need to look for the property. In fact we find it to have value < 1.
 
-    \snippet quick-batching/Slider.qml Slider transformation
+    In order to match this to the actual code causing the problem, use the context menu action
+    "Go to declaration", which will open a code editor around the following piece of code:
 
-    In order to verify that this is our problem you don't need to restart the application, you can also
-    use the editing capabilities of the \l{Properties} tab in the item tree view to adjust the rotation live.
-    After doing this we see that the left slider is no having a trivial diagonal in its combined
-    transformation matrix, and thus is rendered with a single OpenGL draw call.
-    For the right slider we have to repeat this procedure to identify a second transformation:
+    \snippet quick-batching/Slider.qml Slider delegate
 
-    \snippet quick-batching/Slider.qml Slider mirroring
+    In fact we see that the opacity value is set to a value depending on the index. That means that all
+    rectangles get a different opacity value and that rules out batching.
+    In order to verify that this is actually our problem you don't need to restart the application,
+    you can also use the editing capabilities of the \l{Properties} tab in the item tree view to adjust
+    the opacity live. If you still have the batch rendering visualization activated, after setting the
+    opacity to 1, you'll observe how the selected rectangle gets the same color as all the active
+    rectangles.
 
-    Just removing the transformations is of course not a proper fix (as it changes the visual appearance
-    of the application), it merely verifies that it's these rotations causing our performance problem.
-    You would now need to refactor the code in a way that it achieves the same behavior and visual
-    appearance without the use of rotational transformations.
+    Just removing the opacity is of course not a proper fix, it merely verifies that it's these opacities
+    causing our performance problem.
+    To retain the same visual appearance as with opacity set, you could e.g. use the alpha component of
+    the color property to obtain the transparency, without impairing the batching.
 */
