@@ -28,10 +28,12 @@
 #include "testhelpers.h"
 
 #include <plugins/quickinspector/quickinspectorinterface.h>
-#include <core/toolmanager.h>
 #include <common/objectbroker.h>
 #include <common/remoteviewinterface.h>
 #include <common/remoteviewframe.h>
+#include <core/propertydata.h>
+#include <core/propertyfilter.h>
+#include <core/toolmanager.h>
 
 #include <3rdparty/qt/modeltest.h>
 
@@ -276,6 +278,14 @@ private slots:
 
     void testAnchorsPropertyFilter()
     {
+        PropertyData testData;
+        testData.setName("something");
+        testData.setClassName("QQuickItem");
+        testData.setTypeName("QQuickAnchors");
+        QVERIFY(!PropertyFilters::matches(testData));
+        testData.setName("anchors");
+        QVERIFY(PropertyFilters::matches(testData));
+
         QVERIFY(showSource(QStringLiteral("qrc:/manual/anchorspropertyfiltertest.qml")));
 
         auto rectWithoutAnchors = view()->rootObject()->findChild<QQuickItem*>("rectWithoutAnchors");

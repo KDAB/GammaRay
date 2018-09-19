@@ -51,26 +51,26 @@ QMetaPropertyAdaptor::~QMetaPropertyAdaptor()
 void QMetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
     auto mo = oi.metaObject();
-    if (!mo || oi.type() != ObjectInstance::QtObject || !oi.qtObject())
+    if (!mo)
         return;
 
-    connect(oi.qtObject(), SIGNAL(destroyed(QObject*)), this, SIGNAL(objectInvalidated()));
+    if (oi.type() == ObjectInstance::QtObject && oi.qtObject())
+        connect(oi.qtObject(), SIGNAL(destroyed(QObject*)), this, SIGNAL(objectInvalidated()));
 
     for (int i = 0; i < mo->propertyCount(); ++i) {
         const QMetaProperty prop = mo->property(i);
-        if (prop.hasNotifySignal()) {
-            connect(oi.qtObject(), QByteArray("2") +
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-                    prop.notifySignal().signature()
-#else
-                    prop.notifySignal().methodSignature()
-#endif
-                    , this, SLOT(propertyUpdated()));
-            m_notifyToPropertyMap.insert(prop.notifySignalIndex(), i);
-
-            if (!PropertyFilters::matches(propertyMetaData(i))) {
-                m_rowToPropertyIndex.push_back(i);
+        if (!PropertyFilters::matches(propertyMetaData(i))) {
+            if (oi.type() == ObjectInstance::QtObject && oi.qtObject() && prop.hasNotifySignal()) {
+                connect(oi.qtObject(), QByteArray("2") +
+    #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+                        prop.notifySignal().signature()
+    #else
+                        prop.notifySignal().methodSignature()
+    #endif
+                        , this, SLOT(propertyUpdated()));
+                m_notifyToRowMap.insert(prop.notifySignalIndex(), m_rowToPropertyIndex.size());
             }
+            m_rowToPropertyIndex.push_back(i);
         }
     }
 }
@@ -237,6 +237,6 @@ void QMetaPropertyAdaptor::propertyUpdated()
     if (m_notifyGuard) // do not emit change notifications during reading (happens for eg. lazy computed properties like QQItem::childrenRect, that confuses the hell out of QSFPM)
         return;
 
-    const int propertyIndex = m_notifyToPropertyMap.value(senderSignalIndex());
-    emit propertyChanged(propertyIndex, propertyIndex);
+    const int row = m_notifyToRowMap.value(senderSignalIndex());
+    emit propertyChanged(row, row);
 }

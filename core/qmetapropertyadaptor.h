@@ -57,7 +57,7 @@ private slots:
     void propertyUpdated();
 
 private:
-    QHash<int, int> m_notifyToPropertyMap;
+    QHash<int, int> m_notifyToRowMap;
     QVector<int> m_rowToPropertyIndex;
     mutable bool m_notifyGuard;
 };
