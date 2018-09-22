@@ -36,6 +36,7 @@
 
 #include "tools/metatypebrowser/metatypebrowser.h"
 #include "tools/objectinspector/objectinspector.h"
+#include "tools/problemreporter/problemreporter.h"
 #include "tools/resourcebrowser/resourcebrowser.h"
 #include "tools/messagehandler/messagehandler.h"
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
@@ -59,6 +60,7 @@ ToolManager::ToolManager(QObject *parent)
     addToolFactory(new MetaObjectBrowserFactory(this));
     addToolFactory(new MetaTypeBrowserFactory(this));
     addToolFactory(new MessageHandlerFactory(this));
+    addToolFactory(new ProblemReporterFactory(this));
 
     Q_FOREACH (ToolFactory *factory, m_toolPluginManager->plugins())
         addToolFactory(factory);

@@ -59,6 +59,7 @@ class MainWindow;
 class BenchSuite;
 class Server;
 class ToolManager;
+class ProblemCollector;
 class MetaObjectRegistry;
 namespace Execution { class Trace; }
 
@@ -207,6 +208,8 @@ public:
     template<typename Func> static void executeSignalCallback(const Func &func);
     ///@endcond
 
+    ProblemCollector *problemCollector() const;
+
 signals:
     /*!
      * Emitted when the user selected @p object at position @p pos in the probed application.
@@ -297,6 +300,7 @@ private:
 
     ObjectListModel *m_objectListModel;
     ObjectTreeModel *m_objectTreeModel;
+    ProblemCollector *m_problemCollector;
     ToolManager *m_toolManager;
     QObject *m_window;
     QSet<QObject *> m_validObjects;

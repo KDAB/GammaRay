@@ -34,6 +34,7 @@
 #include <ui/tools/metaobjectbrowser/metaobjectbrowserwidget.h>
 #include <ui/tools/metatypebrowser/metatypebrowserwidget.h>
 #include <ui/tools/objectinspector/objectinspectorwidget.h>
+#include <ui/tools/problemreporter/problemreporterwidget.h>
 #include <ui/tools/resourcebrowser/resourcebrowserwidget.h>
 
 #include <common/endpoint.h>
@@ -61,6 +62,7 @@ using namespace GammaRay;
 MAKE_FACTORY(MessageHandler,    qApp->translate("GammaRay::MessageHandlerFactory", "Messages"));
 MAKE_FACTORY(MetaObjectBrowser, qApp->translate("GammaRay::MetaObjectBrowserFactory", "Meta Objects"));
 MAKE_FACTORY(MetaTypeBrowser,   qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"));
+MAKE_FACTORY(ProblemReporter,   qApp->translate("GammaRay::ProblemReporterFactory", "Problem Reporter"));
 MAKE_FACTORY(ResourceBrowser,   qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"));
 
 struct PluginRepository {
@@ -94,6 +96,7 @@ static void initPluginRepository()
     insertFactory(new MetaObjectBrowserFactory);
     insertFactory(new MetaTypeBrowserFactory);
     insertFactory(new ObjectInspectorFactory);
+    insertFactory(new ProblemReporterFactory);
     insertFactory(new ResourceBrowserFactory);
 
     PluginManager<ToolUiFactory, ProxyToolUiFactory> pm;

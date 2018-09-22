@@ -1,11 +1,11 @@
 /*
-  clienttoolmodel.h
+  problemmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2016-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,53 +26,56 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CLIENTTOOLMODEL_H
-#define GAMMARAY_CLIENTTOOLMODEL_H
+#ifndef GAMMARAY_PROBLEMMODEL_H
+#define GAMMARAY_PROBLEMMODEL_H
 
 #include <QAbstractListModel>
 #include <QItemSelectionModel>
 
+#include <common/objectmodel.h>
+
 namespace GammaRay {
 
-class ClientToolManager;
+class ProblemCollector;
 
 /*! Model of all selectable client tools. */
-class ClientToolModel : public QAbstractListModel
+class ProblemModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit ClientToolModel(ClientToolManager *manager);
-    virtual ~ClientToolModel();
+    explicit ProblemModel(QObject *parent);
+    virtual ~ProblemModel();
 
     QVariant data(const QModelIndex &index, int role) const override;
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
 private slots:
-    void startReset();
-    void finishReset();
-    void toolEnabled(int toolIndex);
+    void aboutToAddProblem(int row);
+    void problemAdded();
+    void aboutToRemoveProblem(int row);
+    void problemRemoved();
 
 private:
-    ClientToolManager *m_toolManager;
+    ProblemCollector *m_problemCollector;
 };
 
 /*! Selection model that automatically syncs ClientToolModel with ClientToolManager. */
-class ClientToolSelectionModel : public QItemSelectionModel
-{
-    Q_OBJECT
-public:
-    explicit ClientToolSelectionModel(ClientToolManager *manager);
-    ~ClientToolSelectionModel();
-
-private slots:
-    void selectTool(int index);
-    void selectDefaultTool();
-
-private:
-    ClientToolManager *m_toolManager;
-};
+// class ClientToolSelectionModel : public QItemSelectionModel
+// {
+//     Q_OBJECT
+// public:
+//     explicit ClientToolSelectionModel(ClientToolManager *manager);
+//     ~ClientToolSelectionModel();
+//
+// private slots:
+//     void selectTool(int index);
+//     void selectDefaultTool();
+//
+// private:
+//     ClientToolManager *m_toolManager;
+// };
 
 }
 
-#endif // GAMMARAY_CLIENTTOOLMODEL_H
+#endif // GAMMARAY_PROBLEMMODEL_H

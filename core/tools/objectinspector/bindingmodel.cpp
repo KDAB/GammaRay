@@ -31,6 +31,9 @@
 #include "bindingmodel.h"
 
 #include <common/objectmodel.h>
+#include <common/problem.h>
+#include <core/problemcollector.h>
+#include <core/objectdataprovider.h>
 #include <core/abstractbindingprovider.h>
 #include <core/bindingnode.h>
 #include <core/util.h>
@@ -99,6 +102,7 @@ bool BindingModel::setObject(QObject* obj)
                     QMetaObject::connect(obj, signalIndex, this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);
                 }
                 findDependenciesFor(node);
+
                 m_bindings.push_back(std::move(*nodeIt));
             }
 
@@ -163,6 +167,16 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
     oldDependencies.reserve(newDependencies.size());
     auto oldIt = oldDependencies.begin();
     auto newIt = newDependencies.begin();
+
+    if (bindingNode->isBindingLoop()) {
+        Problem p;
+        p.severity = Problem::Error;
+        p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(bindingNode->object())).arg(bindingNode->canonicalName());
+        p.object = ObjectId(bindingNode->object());
+        p.location = bindingNode->sourceLocation();
+        p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(bindingNode->object())).arg(bindingNode->propertyIndex());
+        ProblemCollector::addProblem(p);
+    }
 
     while (oldIt != oldDependencies.end() && newIt != newDependencies.end()) {
         const auto idx = std::distance(oldDependencies.begin(), oldIt);
@@ -253,6 +267,17 @@ QVariant BindingModel::data(const QModelIndex& index, int role) const
             case LocationColumn: return binding->sourceLocation().displayString();
             case DepthColumn: {
                 uint depth = binding->depth();
+
+                //FIXME: This can't stay here!
+                if (binding->isBindingLoop()) {
+                    Problem p;
+                    p.severity = Problem::Error;
+                    p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(binding->object())).arg(binding->canonicalName());
+                    p.object = ObjectId(binding->object());
+                    p.location = binding->sourceLocation();
+                    p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(binding->object())).arg(binding->propertyIndex());
+                    ProblemCollector::addProblem(p);
+                }
                 return depth == std::numeric_limits<uint>::max() ? QStringLiteral("∞") : QString::number(depth);
             }
         }

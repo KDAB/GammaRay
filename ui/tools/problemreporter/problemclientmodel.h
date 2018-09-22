@@ -1,5 +1,5 @@
 /*
-  clienttoolmodel.h
+  problemclientmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,53 +26,25 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_CLIENTTOOLMODEL_H
-#define GAMMARAY_CLIENTTOOLMODEL_H
+#ifndef GAMMARAY_PROBLEMCLIENTMODEL_H
+#define GAMMARAY_PROBLEMCLIENTMODEL_H
 
-#include <QAbstractListModel>
-#include <QItemSelectionModel>
+#include <QSortFilterProxyModel>
 
 namespace GammaRay {
 
-class ClientToolManager;
-
-/*! Model of all selectable client tools. */
-class ClientToolModel : public QAbstractListModel
+/*! Client-side part of the meta types model. */
+class ProblemClientModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit ClientToolModel(ClientToolManager *manager);
-    virtual ~ClientToolModel();
+    explicit ProblemClientModel(QObject *parent = nullptr);
+    ~ProblemClientModel();
 
-    QVariant data(const QModelIndex &index, int role) const override;
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-
-private slots:
-    void startReset();
-    void finishReset();
-    void toolEnabled(int toolIndex);
-
-private:
-    ClientToolManager *m_toolManager;
-};
-
-/*! Selection model that automatically syncs ClientToolModel with ClientToolManager. */
-class ClientToolSelectionModel : public QItemSelectionModel
-{
-    Q_OBJECT
-public:
-    explicit ClientToolSelectionModel(ClientToolManager *manager);
-    ~ClientToolSelectionModel();
-
-private slots:
-    void selectTool(int index);
-    void selectDefaultTool();
-
-private:
-    ClientToolManager *m_toolManager;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 };
 
 }
 
-#endif // GAMMARAY_CLIENTTOOLMODEL_H
+#endif // GAMMARAY_PROBLEMCLIENTMODEL_H
