@@ -39,6 +39,7 @@
 #include "objecttreemodel.h"
 #include "probesettings.h"
 #include "probecontroller.h"
+#include "problemcollector.h"
 #include "toolmanager.h"
 #include "toolpluginmodel.h"
 #include "util.h"
@@ -230,6 +231,8 @@ Probe::Probe(QObject *parent)
     ObjectBroker::registerObject<ProbeControllerInterface *>(new ProbeController(this));
     m_toolManager = new ToolManager(this);
     ObjectBroker::registerObject<ToolManagerInterface *>(m_toolManager);
+
+    m_problemCollector = new ProblemCollector(this);
 
     ObjectBroker::registerObject<EnumRepository*>(EnumRepositoryServer::create(this));
     ClassesIconsRepositoryServer::create(this);
@@ -522,6 +525,11 @@ QAbstractItemModel *Probe::objectListModel() const
 QAbstractItemModel *Probe::objectTreeModel() const
 {
     return m_objectTreeModel;
+}
+
+ProblemCollector *Probe::problemCollector() const
+{
+    return m_problemCollector;
 }
 
 bool Probe::isValidObject(QObject *obj) const

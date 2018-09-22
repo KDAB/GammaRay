@@ -30,6 +30,9 @@
 
 #include <QAction>
 
+#include <core/problemcollector.h>
+#include <common/problem.h>
+
 using namespace GammaRay;
 
 QT_BEGIN_NAMESPACE
@@ -69,7 +72,7 @@ void ActionValidator::clearActions()
 {
     m_shortcutActionMap.clear();
 }
-
+#include <iostream>
 void ActionValidator::insert(QAction *action)
 {
     Q_ASSERT(action);
@@ -77,6 +80,15 @@ void ActionValidator::insert(QAction *action)
     Q_FOREACH(const QKeySequence &sequence, action->shortcuts()) {
         if (m_shortcutActionMap.values(sequence).contains(action))
             continue;
+
+        if (m_shortcutActionMap.contains(sequence)) {
+            Problem p;
+            p.severity = Problem::Error;
+            p.description = QStringLiteral("Key sequence %1 is ambigous.").arg(sequence.toString());
+            p.object = ObjectId(action);
+            std::cout << "###################GammaRay synes" << qPrintable(p.description) << std::endl;
+            ProblemCollector::addProblem(p);
+        }
 
         m_shortcutActionMap.insertMulti(sequence, action);
     }

@@ -18,6 +18,7 @@ set(gammaray_srcs
   objectenummodel.cpp
   objecttreemodel.cpp
   objecttypefilterproxymodel.cpp
+  problemcollector.cpp
   methodargumentmodel.cpp
   multisignalmapper.cpp
   signalspycallbackset.cpp
@@ -77,6 +78,8 @@ set(gammaray_srcs
   tools/objectinspector/bindingextension.cpp
   tools/objectinspector/bindingmodel.cpp
   tools/objectinspector/stacktraceextension.cpp
+  tools/problemreporter/problemmodel.cpp
+  tools/problemreporter/problemreporter.cpp
   tools/resourcebrowser/resourcebrowser.cpp
   tools/resourcebrowser/resourcefiltermodel.cpp
 
