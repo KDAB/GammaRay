@@ -51,6 +51,10 @@ ProblemClientModel::~ProblemClientModel()
 QVariant ProblemClientModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DecorationRole) {
+        if (index.column() != 0) {
+            return QVariant();
+        }
+
         auto severity = QSortFilterProxyModel::data(index, ProblemModelRoles::SeverityRole).value<int>();
         switch (severity) {
         case Problem::Info:
@@ -72,24 +76,7 @@ QVariant ProblemClientModel::headerData(int section, Qt::Orientation orientation
                 case 0:
                     return tr("Problem Description");
                 case 1:
-                    return tr("Meta Type Id");
-                case 2:
-                    return tr("Size");
-                case 3:
-                    return tr("Meta Object");
-                case 4:
-                    return tr("Type Flags");
-                case 5:
-                    return tr("Compare");
-                case 6:
-                    return tr("Debug");
-            }
-        } else if (role == Qt::ToolTipRole) {
-            switch (section) {
-                case 5:
-                    return tr("Has equality comparison operators registered.");
-                case 6:
-                    return tr("Has debug stream operators registered.");
+                    return tr("Source Location");
             }
         }
         return QVariant();

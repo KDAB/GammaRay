@@ -49,6 +49,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent) const override;
 
 private slots:
     void aboutToAddProblem(int row);
