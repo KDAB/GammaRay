@@ -57,7 +57,12 @@ QVariant ProblemModel::data(const QModelIndex &index, int role) const
     const Problem &problem = m_problemCollector->problems().at(index.row());
     switch (role) {
         case Qt::DisplayRole:
-            return problem.description;
+            switch (index.column()) {
+            case 0:
+                return problem.description;
+            case 1:
+                return problem.location.displayString();
+            }
         case ObjectModel::ObjectIdRole:
             return QVariant::fromValue(problem.object);
         case ProblemModelRoles::SourceLocationRole:
@@ -82,6 +87,13 @@ int ProblemModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
     return m_problemCollector->problems().count();
+}
+int ProblemModel::columnCount(const QModelIndex &parent) const
+{
+    if (parent.isValid())
+        return 0;
+
+    return 2;
 }
 
 void GammaRay::ProblemModel::aboutToAddProblem(int row)

@@ -30,6 +30,7 @@
 
 #include <QAction>
 
+#include <core/objectdataprovider.h>
 #include <core/problemcollector.h>
 #include <common/problem.h>
 
@@ -86,6 +87,7 @@ void ActionValidator::insert(QAction *action)
             p.severity = Problem::Error;
             p.description = QStringLiteral("Key sequence %1 is ambigous.").arg(sequence.toString());
             p.object = ObjectId(action);
+            p.location = ObjectDataProvider::creationLocation(action);
             std::cout << "###################GammaRay synes" << qPrintable(p.description) << std::endl;
             ProblemCollector::addProblem(p);
         }
