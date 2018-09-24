@@ -58,6 +58,8 @@ void ProblemCollector::removeProblem(const QString& problemId)
 {
     auto self = instance();
     auto it = std::find_if(self->m_problems.begin(), self->m_problems.end(), [&](const Problem &problem) { return problem.problemId == problemId; });
+    if (it == self->m_problems.end())
+        return;
     auto row = std::distance(self->m_problems.begin(), it);
 
     emit self->aboutToRemoveProblem(row);
