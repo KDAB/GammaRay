@@ -286,7 +286,7 @@ void BindingInspectorTest::testMockProvider()
     QVERIFY(bindingNode1->parent() == nullptr);
     QCOMPARE(bindingNode1->object(), &obj1);
     QCOMPARE(bindingNode1->property().name(), "a");
-    QCOMPARE(bindingNode1->isBindingLoop(), false);
+    QCOMPARE(bindingNode1->isPartOfBindingLoop(), false);
     QCOMPARE(bindingNode1->cachedValue().toInt(), 53);
 
     auto dependencies1 = provider->findDependenciesFor(bindingNode1.get());
@@ -299,7 +299,7 @@ void BindingInspectorTest::testMockProvider()
     QVERIFY(bindingNode2->parent() == nullptr);
     QCOMPARE(bindingNode2->object(), &obj1);
     QCOMPARE(bindingNode2->property().name(), "c");
-    QCOMPARE(bindingNode2->isBindingLoop(), false);
+    QCOMPARE(bindingNode2->isPartOfBindingLoop(), false);
     QCOMPARE(bindingNode2->cachedValue().toChar(), QChar('x'));
 
     auto dependencies2 = provider->findDependenciesFor(bindingNode2.get());
@@ -308,13 +308,13 @@ void BindingInspectorTest::testMockProvider()
     QCOMPARE(dependency2->parent(), bindingNode2.get());
     QCOMPARE(dependency2->object(), &obj1);
     QCOMPARE(dependency2->property().name(), "b");
-    QCOMPARE(dependency2->isBindingLoop(), false);
+    QCOMPARE(dependency2->isPartOfBindingLoop(), false);
     QCOMPARE(dependency2->cachedValue().toBool(), true);
     auto &&dependency3 = dependencies2.back();
     QCOMPARE(dependency3->parent(), bindingNode2.get());
     QCOMPARE(dependency3->object(), &obj2);
     QCOMPARE(dependency3->property().name(), "b");
-    QCOMPARE(dependency3->isBindingLoop(), false);
+    QCOMPARE(dependency3->isPartOfBindingLoop(), false);
     QCOMPARE(dependency3->cachedValue().toBool(), false);
 }
 
@@ -412,7 +412,7 @@ void BindingInspectorTest::testQmlBindingProvider()
     QVERIFY(bindingNode);
     QCOMPARE(bindingNode->object(), text);
     QCOMPARE(bindingNode->property().name(), "text");
-    QCOMPARE(bindingNode->isBindingLoop(), false);
+    QCOMPARE(bindingNode->isPartOfBindingLoop(), false);
     QCOMPARE(bindingNode->cachedValue(), QStringLiteral("Hello world!"));
 
     auto dependencies = provider.findDependenciesFor(bindingNode.get());
@@ -420,7 +420,7 @@ void BindingInspectorTest::testQmlBindingProvider()
     const std::unique_ptr<BindingNode> &dependency = dependencies.front();
     QCOMPARE(dependency->object(), referencedObject);
     QCOMPARE(dependency->property().name(), "labelText");
-    QCOMPARE(dependency->isBindingLoop(), false);
+    QCOMPARE(dependency->isPartOfBindingLoop(), false);
     QCOMPARE(dependency->cachedValue(), QStringLiteral("Hello world!"));
     QCOMPARE(dependency->dependencies().size(), 0);
 

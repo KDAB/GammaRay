@@ -56,7 +56,14 @@ public:
     QMetaProperty property() const;
 
     const QString &canonicalName() const;
-    bool isBindingLoop() const;
+    /**
+     * This function returns true, if checkForLoops() found a loop.
+     * It usually only returns true for one node in a binding loop.
+     *
+     * \sa isPartOfBindingLoop()
+     */
+    bool hasFoundBindingLoop() const;
+    bool isPartOfBindingLoop() const;
     SourceLocation sourceLocation() const;
     uint depth() const;
     QVariant cachedValue() const;
@@ -79,7 +86,7 @@ private:
     int m_propertyIndex;
     QString m_canonicalName;
     QVariant m_value;
-    bool m_isBindingLoop;
+    bool m_foundBindingLoop;
     SourceLocation m_sourceLocation;
     std::vector<std::unique_ptr<BindingNode>> m_dependencies;
 

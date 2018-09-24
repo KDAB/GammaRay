@@ -78,7 +78,7 @@ void QmlBindingProvider::fetchSourceLocationFor(BindingNode *node, QQmlBinding *
 std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFor(BindingNode *node) const
 {
     std::vector<std::unique_ptr<BindingNode>> dependencies;
-    if (node->isBindingLoop()) // Don't look for further dependencies, if this is already known to be part of a loop.
+    if (node->hasFoundBindingLoop()) // Don't look for further dependencies, if this is already known to be part of a loop.
         return dependencies;
 
     QQmlAbstractBinding *abstractBinding = QQmlPropertyPrivate::binding(node->object(), QQmlPropertyIndex::fromEncoded(node->propertyIndex()));
