@@ -309,7 +309,7 @@ private slots:
         QCOMPARE(anchorsFilterModel.rowCount(), 1);
         auto rectWithoutAnchorsAnchorsValue = anchorsFilterModel.data(anchorsFilterModel.index(0, 1), Qt::EditRole);
         QVERIFY(rectWithoutAnchorsAnchorsValue.canConvert<QObject*>());
-        QCOMPARE(rectWithoutAnchorsAnchorsValue.value<QObject*>(), nullptr);
+        QVERIFY(rectWithoutAnchorsAnchorsValue.value<QObject*>() == nullptr);
 
         Probe::instance()->selectObject(rectWithAnchors);
         QCOMPARE(anchorsFilterModel.rowCount(), 1);
@@ -333,7 +333,7 @@ private slots:
 
         rectWithoutAnchorsAnchorsValue = anchorsFilterModel.data(anchorsFilterModel.index(0, 1), Qt::EditRole);
         QVERIFY(rectWithoutAnchorsAnchorsValue.canConvert<QObject*>());
-        QCOMPARE(rectWithoutAnchorsAnchorsValue.value<QObject*>(), nullptr);
+        QVERIFY(rectWithoutAnchorsAnchorsValue.value<QObject*>() == nullptr);
     }
 
 private:
