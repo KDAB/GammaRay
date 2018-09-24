@@ -42,7 +42,7 @@ BindingNode::BindingNode(QObject *obj, int propIndex, BindingNode *parent)
     : m_parent(parent)
     , m_object(obj)
     , m_propertyIndex(propIndex)
-    , m_isBindingLoop(false)
+    , m_foundBindingLoop(false)
 {
     Q_ASSERT(obj);
     m_canonicalName
@@ -57,12 +57,12 @@ void BindingNode::checkForLoops()
     while (ancestor) {
         if (ancestor->m_object == m_object
             && ancestor->m_propertyIndex == m_propertyIndex) {
-            m_isBindingLoop = true;
+            m_foundBindingLoop = true;
             return;
         }
         ancestor = ancestor->m_parent;
     }
-    m_isBindingLoop = false;
+    m_foundBindingLoop = false;
 }
 
 QMetaProperty BindingNode::property() const
@@ -105,9 +105,21 @@ const QString & GammaRay::BindingNode::canonicalName() const
 {
     return m_canonicalName;
 }
-bool GammaRay::BindingNode::isBindingLoop() const
+bool GammaRay::BindingNode::hasFoundBindingLoop() const
 {
-    return m_isBindingLoop;
+    return m_foundBindingLoop;
+}
+bool GammaRay::BindingNode::isPartOfBindingLoop() const
+{
+    if (m_foundBindingLoop) {
+        return true;
+    }
+    for (auto depIt = m_dependencies.cbegin(); depIt != m_dependencies.cend(); ++depIt) {
+        if ((*depIt)->isPartOfBindingLoop()) {
+            return true;
+        }
+    }
+    return false;
 }
 GammaRay::SourceLocation GammaRay::BindingNode::sourceLocation() const
 {
@@ -135,7 +147,7 @@ void BindingNode::setSourceLocation(const SourceLocation &location)
 uint BindingNode::depth() const
 {
     uint depth = 0;
-    if (m_isBindingLoop) {
+    if (m_foundBindingLoop) {
         return std::numeric_limits<uint>::max(); // to be considered as infinity.
     }
     for (auto depIt = m_dependencies.cbegin(); depIt != m_dependencies.cend(); ++depIt) {
