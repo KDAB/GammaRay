@@ -60,6 +60,14 @@ public:
 
     Q_INVOKABLE QPair<int, QVariant> defaultSelectedItem() const;
 
+    /*!
+     * Returns a list of all objects.
+     *
+     * FIXME: This is a dirty hack. Instead of offering a getter to the internal data
+     * here, we should move it out and only give the model a view of the data.
+     */
+    const QVector<QObject*> &objects() const;
+
 private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);

@@ -522,6 +522,11 @@ QAbstractItemModel *Probe::objectListModel() const
     return m_objectListModel;
 }
 
+const QVector<QObject *> &Probe::allQObjects() const
+{
+    return m_objectListModel->objects();
+}
+
 QAbstractItemModel *Probe::objectTreeModel() const
 {
     return m_objectTreeModel;
