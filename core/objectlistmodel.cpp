@@ -117,3 +117,8 @@ void ObjectListModel::objectRemoved(QObject *obj)
     m_objects.erase(it);
     endRemoveRows();
 }
+
+const QVector<QObject *> &ObjectListModel::objects() const
+{
+    return m_objects;
+}

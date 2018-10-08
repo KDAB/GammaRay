@@ -98,6 +98,15 @@ public:
     ///@endcond
 
     /*!
+     * Returns a list of all QObjects we know about.
+     *
+     * @note This getter can be used without the object lock. Do acquire the
+     * object lock and check the pointer with @e isValidObject though, before
+     * dereferencing any of the QObject pointers.
+     */
+    const QVector<QObject*> &allQObjects() const;
+
+    /*!
      * Returns the object list model.
      * @return a pointer to a QAbstractItemModel instance.
      */

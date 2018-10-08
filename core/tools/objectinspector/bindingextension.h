@@ -67,6 +67,7 @@ public:
 private slots:
     void propertyChanged();
     void clear();
+    void scanForBindingLoops() const;
 
 private:
     QPointer<QObject> m_object;

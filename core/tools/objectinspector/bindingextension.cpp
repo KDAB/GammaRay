@@ -33,6 +33,9 @@
 
 #include <core/abstractbindingprovider.h>
 #include <core/bindingnode.h>
+#include <core/objectdataprovider.h>
+#include <core/probe.h>
+#include <core/problemcollector.h>
 #include <core/propertycontroller.h>
 #include <common/objectbroker.h>
 
@@ -57,6 +60,8 @@ BindingExtension::BindingExtension(PropertyController* controller)
 {
     ObjectBroker::registerObject(controller->objectBaseName() + ".bindingsExtension", this);
     controller->registerModel(m_bindingModel, QStringLiteral("bindingModel"));
+
+    connect(ProblemCollector::instance(), SIGNAL(problemScanRequested()), this, SLOT(scanForBindingLoops()));
 }
 
 BindingExtension::~BindingExtension()
@@ -164,6 +169,28 @@ std::vector<std::unique_ptr<BindingNode>> BindingExtension::bindingTreeForObject
         }
     }
     return bindings;
+}
+
+void GammaRay::BindingExtension::scanForBindingLoops() const
+{
+    const QVector<QObject*> &allObjects = Probe::instance()->allQObjects();
+
+    foreach (QObject *obj, allObjects) {
+        auto bindings = bindingTreeForObject(obj);
+        for (auto it = bindings.begin(); it != bindings.end(); ++it) {
+            auto &&bindingNode = *it;
+            if (bindingNode->isPartOfBindingLoop()) {
+                Problem p;
+                p.severity = Problem::Error;
+                p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(bindingNode->object())).arg(bindingNode->canonicalName());
+                p.object = ObjectId(bindingNode->object());
+                p.location = bindingNode->sourceLocation();
+                p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(bindingNode->object())).arg(bindingNode->propertyIndex());
+                p.findingCategory = Problem::Scan;
+                ProblemCollector::addProblem(p);
+            }
+        }
+    }
 }
 
 BindingModel *BindingExtension::model() const
