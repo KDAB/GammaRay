@@ -1,5 +1,5 @@
 /*
-  problemcollector.h
+  problemreporterinterface.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,56 +26,28 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PROBLEMCOLLECTOR_H
-#define GAMMARAY_PROBLEMCOLLECTOR_H
+#ifndef GAMMARAY_PROBLEMREPORTERINTERFACE_H
+#define GAMMARAY_PROBLEMREPORTERINTERFACE_H
 
-// Own
-#include "gammaray_core_export.h"
-
-#include <common/problem.h>
-#include <common/objectid.h>
-#include <common/sourcelocation.h>
-
-// Qt
-#include <QAbstractItemModel>
-
-// Std
-#include <memory>
-#include <vector>
+#include <QObject>
 
 namespace GammaRay {
 
-class ProblemModel;
-
-class GAMMARAY_CORE_EXPORT ProblemCollector : public QObject
+/*! communication interface for the problem reporter tool. */
+class ProblemReporterInterface : public QObject
 {
     Q_OBJECT
-
 public:
-    static void addProblem(const Problem &problem);
-    static void removeProblem(const QString &problemId);
-    static ProblemCollector *instance();
-
-    const QVector<Problem> &problems();
-
-signals:
-    void aboutToAddProblem(int row);
-    void problemAdded();
-    void aboutToRemoveProblems(int first, int count = 1);
-    void problemsRemoved();
-    void problemScanRequested();
+    explicit ProblemReporterInterface(QObject *parent = nullptr);
+    ~ProblemReporterInterface();
 
 public slots:
-    void requestScan();
-
-private:
-    explicit ProblemCollector(QObject *parent);
-
-    QVector<Problem> m_problems;
-
-    friend class Probe;
+    virtual void requestScan() = 0;
 };
 }
 
-#endif // GAMMARAY_PROBLEMCOLLECTOR_H
+QT_BEGIN_NAMESPACE
+Q_DECLARE_INTERFACE(GammaRay::ProblemReporterInterface, "com.kdab.GammaRay.ProblemReporterInterface")
+QT_END_NAMESPACE
 
+#endif // GAMMARAY_PROBLEMREPORTERINTERFACE_H

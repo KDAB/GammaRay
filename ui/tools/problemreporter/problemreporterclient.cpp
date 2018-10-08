@@ -1,5 +1,5 @@
 /*
-  problemcollector.h
+  problemreporterclient.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -26,56 +26,22 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PROBLEMCOLLECTOR_H
-#define GAMMARAY_PROBLEMCOLLECTOR_H
+#include "problemreporterclient.h"
 
-// Own
-#include "gammaray_core_export.h"
+#include <common/endpoint.h>
 
-#include <common/problem.h>
-#include <common/objectid.h>
-#include <common/sourcelocation.h>
+using namespace GammaRay;
 
-// Qt
-#include <QAbstractItemModel>
-
-// Std
-#include <memory>
-#include <vector>
-
-namespace GammaRay {
-
-class ProblemModel;
-
-class GAMMARAY_CORE_EXPORT ProblemCollector : public QObject
+ProblemReporterClient::ProblemReporterClient(QObject* parent)
+    : ProblemReporterInterface(parent)
 {
-    Q_OBJECT
-
-public:
-    static void addProblem(const Problem &problem);
-    static void removeProblem(const QString &problemId);
-    static ProblemCollector *instance();
-
-    const QVector<Problem> &problems();
-
-signals:
-    void aboutToAddProblem(int row);
-    void problemAdded();
-    void aboutToRemoveProblems(int first, int count = 1);
-    void problemsRemoved();
-    void problemScanRequested();
-
-public slots:
-    void requestScan();
-
-private:
-    explicit ProblemCollector(QObject *parent);
-
-    QVector<Problem> m_problems;
-
-    friend class Probe;
-};
 }
 
-#endif // GAMMARAY_PROBLEMCOLLECTOR_H
+ProblemReporterClient::~ProblemReporterClient()
+{
+}
 
+void ProblemReporterClient::requestScan()
+{
+    Endpoint::instance()->invokeObject(objectName(), "requestScan");
+}

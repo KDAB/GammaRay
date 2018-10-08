@@ -82,6 +82,7 @@ set(gammaray_common_internal_srcs
   tools/objectinspector/connectionsextensioninterface.cpp
   tools/messagehandler/messagehandlerinterface.cpp
   tools/metatypebrowser/metatypebrowserinterface.cpp
+  tools/problemreporter/problemreporterinterface.cpp
   tools/resourcebrowser/resourcebrowserinterface.cpp
 )
 

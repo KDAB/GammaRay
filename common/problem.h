@@ -48,6 +48,17 @@ struct Problem {
         Warning,
         Error
     };
+    enum FindingCategory {
+        Unknown,
+        Opportunistic,
+        Scan,
+        Permanent
+    };
+
+    Problem()
+        : severity(Error)
+        , findingCategory(Unknown)
+    {}
 
     Severity severity;
     ObjectId object;
@@ -55,6 +66,7 @@ struct Problem {
     SourceLocation location;
     QString reportingTool; ///< Tool which reported the issue
     QString problemId; ///< tool-specific unique id for the problem
+    FindingCategory findingCategory;
 
     bool operator==(const Problem &other) const
     {

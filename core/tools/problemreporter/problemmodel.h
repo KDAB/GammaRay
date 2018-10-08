@@ -54,8 +54,8 @@ public:
 private slots:
     void aboutToAddProblem(int row);
     void problemAdded();
-    void aboutToRemoveProblem(int row);
-    void problemRemoved();
+    void aboutToRemoveProblems(int row, int count = 1);
+    void problemsRemoved();
 
 private:
     ProblemCollector *m_problemCollector;
