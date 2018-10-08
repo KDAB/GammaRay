@@ -29,18 +29,22 @@
 #define GAMMARAY_PROBLEMREPORTER_PROBLEMREPORTER_H
 
 #include <core/toolfactory.h>
+#include <common/tools/problemreporter/problemreporterinterface.h>
 
 namespace GammaRay {
 
 class ProblemModel;
 
-class ProblemReporter : public QObject
+class ProblemReporter : public ProblemReporterInterface
 {
     Q_OBJECT
-//     Q_INTERFACES(GammaRay::ProblemReporterInterface)
+    Q_INTERFACES(GammaRay::ProblemReporterInterface)
 public:
     explicit ProblemReporter(Probe *probe, QObject *parent = nullptr);
     ~ProblemReporter();
+
+public slots:
+    void requestScan() override;
 
 private:
     ProblemModel *m_problemModel;

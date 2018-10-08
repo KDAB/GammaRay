@@ -24,6 +24,13 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="QPushButton" name="scanButton">
+     <property name="text">
+      <string>Scan for Problems</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>

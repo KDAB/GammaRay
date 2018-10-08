@@ -29,10 +29,12 @@
 #include "problemreporter.h"
 #include "problemmodel.h"
 
+#include <core/problemcollector.h>
+
 using namespace GammaRay;
 
 ProblemReporter::ProblemReporter(Probe *probe, QObject *parent)
-    : QObject(parent)
+    : ProblemReporterInterface(parent)
     , m_problemModel(new ProblemModel(this))
 {
 //     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
@@ -43,4 +45,9 @@ ProblemReporter::ProblemReporter(Probe *probe, QObject *parent)
 
 ProblemReporter::~ProblemReporter()
 {
+}
+
+void GammaRay::ProblemReporter::requestScan()
+{
+    ProblemCollector::instance()->requestScan();
 }

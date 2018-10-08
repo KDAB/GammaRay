@@ -29,6 +29,7 @@
 #include "problemreporterwidget.h"
 #include "ui_problemreporterwidget.h"
 #include "problemclientmodel.h"
+#include "problemreporterclient.h"
 
 #include <ui/searchlinecontroller.h>
 #include <ui/contextmenuextension.h>
@@ -41,12 +42,23 @@
 
 using namespace GammaRay;
 
+static QObject *createProblemReporterClient(const QString & /*name*/, QObject *parent)
+{
+    return new ProblemReporterClient(parent);
+}
+
 ProblemReporterWidget::ProblemReporterWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ProblemReporterWidget)
     , m_stateManager(this)
 {
     ui->setupUi(this);
+
+    ObjectBroker::registerClientObjectFactoryCallback<ProblemReporterInterface *>(
+        createProblemReporterClient);
+    ProblemReporterInterface *iface = ObjectBroker::object<ProblemReporterInterface *>();
+
+    connect(ui->scanButton, SIGNAL(clicked()), iface, SLOT(requestScan()));
 
     auto model = new ProblemClientModel(this);
     model->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ProblemModel")));

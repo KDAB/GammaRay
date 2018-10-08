@@ -41,8 +41,8 @@ ProblemModel::ProblemModel(QObject *parent)
 {
     connect(m_problemCollector, SIGNAL(aboutToAddProblem(int)), this, SLOT(aboutToAddProblem(int)));
     connect(m_problemCollector, SIGNAL(problemAdded()), this, SLOT(problemAdded()));
-    connect(m_problemCollector, SIGNAL(aboutToRemoveProblem(int)), this, SLOT(aboutToRemoveProblem(int)));
-    connect(m_problemCollector, SIGNAL(problemRemoved()), this, SLOT(problemRemoved()));
+    connect(m_problemCollector, SIGNAL(aboutToRemoveProblems(int, int)), this, SLOT(aboutToRemoveProblems(int, int)));
+    connect(m_problemCollector, SIGNAL(problemsRemoved()), this, SLOT(problemsRemoved()));
 }
 
 ProblemModel::~ProblemModel()
@@ -63,6 +63,7 @@ QVariant ProblemModel::data(const QModelIndex &index, int role) const
             case 1:
                 return problem.location.displayString();
             }
+            break;
         case ObjectModel::ObjectIdRole:
             return QVariant::fromValue(problem.object);
         case ProblemModelRoles::SourceLocationRole:
@@ -100,15 +101,15 @@ void GammaRay::ProblemModel::aboutToAddProblem(int row)
 {
     beginInsertRows(QModelIndex(), row, row);
 }
-void GammaRay::ProblemModel::aboutToRemoveProblem(int row)
+void GammaRay::ProblemModel::aboutToRemoveProblems(int row, int count)
 {
-    beginRemoveRows(QModelIndex(), row, row);
+    beginRemoveRows(QModelIndex(), row, row + count - 1);
 }
 void GammaRay::ProblemModel::problemAdded()
 {
     endInsertRows();
 }
-void GammaRay::ProblemModel::problemRemoved()
+void GammaRay::ProblemModel::problemsRemoved()
 {
     endRemoveRows();
 }
