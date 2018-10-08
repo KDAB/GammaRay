@@ -60,7 +60,7 @@
 #include <core/varianthandler.h>
 #include <core/remoteviewserver.h>
 #include <core/paintanalyzer.h>
-#include <core/tools/objectinspector/bindingmodel.h>
+#include <core/tools/objectinspector/bindingextension.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
@@ -1160,6 +1160,6 @@ void QuickInspector::registerPCExtensions()
     PropertyAdaptorFactory::registerFactory(QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance());
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-    BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
+    BindingExtension::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
 #endif
 }

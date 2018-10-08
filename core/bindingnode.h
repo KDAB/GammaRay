@@ -50,6 +50,8 @@ class GAMMARAY_CORE_EXPORT BindingNode
 public:
     BindingNode (QObject *object, int propertyIndex, BindingNode *parent = nullptr);
 
+    bool operator==(const BindingNode &other) const;
+
     BindingNode *parent() const;
     QObject *object() const;
     int propertyIndex() const;

@@ -44,16 +44,10 @@
 
 using namespace GammaRay;
 
-std::vector<std::unique_ptr<AbstractBindingProvider>> BindingModel::s_providers;
-
-void GammaRay::BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider)
-{
-    s_providers.push_back(std::move(provider));
-}
-
 BindingModel::BindingModel(QObject* parent)
     : QAbstractItemModel(parent)
     , m_obj(nullptr)
+    , m_bindings(nullptr)
 {
 }
 
@@ -61,81 +55,33 @@ BindingModel::~BindingModel()
 {
 }
 
-void BindingModel::clear()
+void BindingModel::aboutToClear()
 {
     beginResetModel();
-    m_bindings.clear();
-    if (m_obj)
-        disconnect(m_obj, nullptr, this, nullptr);
-    m_obj = nullptr;
-    endResetModel();
-
 }
 
-bool BindingModel::setObject(QObject* obj)
+void BindingModel::cleared()
+{
+    m_obj = nullptr;
+    endResetModel();
+}
+
+void BindingModel::setObject(QObject* obj, std::vector<std::unique_ptr<BindingNode>> &bindings)
 {
     if (m_obj == obj)
-        return obj;
+        return;
 
     // TODO use removerows/insertrows instead of reset here
     beginResetModel();
-    if (m_obj)
-        disconnect(m_obj, nullptr, this, nullptr);
-    bool typeMatches = false;
-    m_bindings.clear();
-    if (obj) {
-        for (auto providerIt = s_providers.begin(); providerIt != s_providers.cend(); ++providerIt) {
-            auto &&provider = *providerIt;
-            if (!provider->canProvideBindingsFor(obj))
-                continue;
-            else
-                typeMatches = true;
-
-            auto newBindings = provider->findBindingsFor(obj);
-            for (auto nodeIt = newBindings.begin(); nodeIt != newBindings.end(); ++nodeIt) {
-                BindingNode *node = nodeIt->get();
-                if (findEquivalent(m_bindings, node).isValid()) {
-                    continue; // apparantly this is a duplicate.
-                }
-                int signalIndex = node->property().notifySignalIndex();
-                if (signalIndex != -1) {
-                    QMetaObject::connect(obj, signalIndex, this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);
-                }
-                findDependenciesFor(node);
-
-                if (node->isPartOfBindingLoop()) {
-                    Problem p;
-                    p.severity = Problem::Error;
-                    p.description = QStringLiteral("Object %1 / Property %2 has a node loop.").arg(ObjectDataProvider::typeName(node->object())).arg(node->canonicalName());
-                    p.object = ObjectId(node->object());
-                    p.location = node->sourceLocation();
-                    p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(node->object())).arg(node->propertyIndex());
-                    ProblemCollector::addProblem(p);
-                }
-
-                m_bindings.push_back(std::move(*nodeIt));
-            }
-
-        }
-        connect(obj, SIGNAL(destroyed()), this, SLOT(clear()));
-    }
+    m_bindings = &bindings;
     m_obj = obj;
     endResetModel();
-    return typeMatches;
 }
 
-void BindingModel::propertyChanged()
+void GammaRay::BindingModel::refresh(int row, std::vector<std::unique_ptr<BindingNode>> &&newDependencies)
 {
-    Q_ASSERT(sender() == m_obj);
-
-    for (size_t i = 0; i < m_bindings.size(); ++i) {
-        const auto &bindingNode = m_bindings[i];
-        if (bindingNode->property().notifySignalIndex() == senderSignalIndex()) {
-            refresh(bindingNode.get(), createIndex(i, 0, bindingNode.get()));
-            // There can be more than one property with the same notify signal,
-            // so no break here...
-        }
-    }
+    Q_ASSERT(m_bindings);
+    refresh((*m_bindings)[row].get(), std::move(newDependencies), createIndex(row, 0, (*m_bindings)[row].get()));
 }
 
 bool BindingModel::lessThan(const std::unique_ptr<BindingNode> &a, const std::unique_ptr<BindingNode> &b) {
@@ -143,36 +89,16 @@ bool BindingModel::lessThan(const std::unique_ptr<BindingNode> &a, const std::un
            || (a->object() == b->object() && a->propertyIndex() < b->propertyIndex());
 }
 
-void BindingModel::findDependenciesFor(BindingNode* node)
+void BindingModel::refresh(BindingNode *oldBindingNode, std::vector<std::unique_ptr<BindingNode>> &&newDependencies, const QModelIndex &index)
 {
-    if (node->isPartOfBindingLoop())
-        return;
-    for (auto providerIt = s_providers.cbegin(); providerIt != s_providers.cend(); ++providerIt) {
-        auto &&provider = *providerIt;
-        auto dependencies = provider->findDependenciesFor(node);
-        for (auto dependencyIt = dependencies.begin(); dependencyIt != dependencies.end(); ++dependencyIt) {
-            findDependenciesFor(dependencyIt->get());
-            node->dependencies().push_back(std::move(*dependencyIt));
-        }
+    if (oldBindingNode->cachedValue() != oldBindingNode->readValue()) {
+        oldBindingNode->refreshValue();
+        emit dataChanged(createIndex(index.row(), ValueColumn, oldBindingNode), createIndex(index.row(), ValueColumn, oldBindingNode));
     }
-    std::sort(node->dependencies().begin(), node->dependencies().end(), &BindingModel::lessThan);
-}
-
-void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
-{
-    if (bindingNode->cachedValue() != bindingNode->readValue()) {
-        bindingNode->refreshValue();
-        emit dataChanged(createIndex(index.row(), ValueColumn, bindingNode), createIndex(index.row(), ValueColumn, bindingNode));
-    }
-    uint oldDepth = bindingNode->depth();
+    uint oldDepth = oldBindingNode->depth();
 
     // Refresh dependencies
-    auto &oldDependencies = bindingNode->dependencies();
-    std::vector<std::unique_ptr<BindingNode>> newDependencies;
-    for (auto providerIt = s_providers.begin(); providerIt != s_providers.cend(); ++providerIt) {
-        auto deps = (*providerIt)->findDependenciesFor(bindingNode);
-        newDependencies.insert(newDependencies.end(), std::make_move_iterator(deps.begin()), std::make_move_iterator(deps.end()));
-    }
+    auto &oldDependencies = oldBindingNode->dependencies();
     std::sort(newDependencies.begin(), newDependencies.end(), &BindingModel::lessThan);
     oldDependencies.reserve(newDependencies.size());
     auto oldIt = oldDependencies.begin();
@@ -194,15 +120,14 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
             }
             beginInsertRows(index, idx, idx + count - 1);
             for (int i = 0; i < count; ++i) {
-                (*newIt)->setParent(bindingNode);
-                findDependenciesFor(newIt->get());
+                (*newIt)->setParent(oldBindingNode);
                 oldIt = oldDependencies.insert(oldIt, std::move(*newIt));
                 ++oldIt;
                 ++newIt;
             }
             endInsertRows();
         } else { // already known node, no change
-            refresh(oldIt->get(), createIndex(idx, 0, oldIt->get()));
+            refresh(oldIt->get(), std::move(newIt->get()->dependencies()), createIndex(idx, 0, oldIt->get()));
             ++oldIt;
             ++newIt;
         }
@@ -214,8 +139,7 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
 
         beginInsertRows(index, idx, idx + count - 1);
         while (newIt != newDependencies.end()) {
-            (*newIt)->setParent(bindingNode);
-            findDependenciesFor(newIt->get());
+            (*newIt)->setParent(oldBindingNode);
             oldDependencies.push_back(std::move(*newIt));
             ++newIt;
         }
@@ -229,20 +153,20 @@ void BindingModel::refresh(BindingNode *bindingNode, const QModelIndex &index)
         endRemoveRows();
     }
 
-    if (bindingNode->depth() != oldDepth) {
-        emit dataChanged(createIndex(index.row(), DepthColumn, bindingNode), createIndex(index.row(), DepthColumn, bindingNode));
+    if (oldBindingNode->depth() != oldDepth) {
+        emit dataChanged(createIndex(index.row(), DepthColumn, oldBindingNode), createIndex(index.row(), DepthColumn, oldBindingNode));
     }
 
-    if (bindingNode->isPartOfBindingLoop()) {
+    if (oldBindingNode->isPartOfBindingLoop()) {
         Problem p;
         p.severity = Problem::Error;
-        p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(bindingNode->object())).arg(bindingNode->canonicalName());
-        p.object = ObjectId(bindingNode->object());
-        p.location = bindingNode->sourceLocation();
-        p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(bindingNode->object())).arg(bindingNode->propertyIndex());
+        p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(oldBindingNode->object())).arg(oldBindingNode->canonicalName());
+        p.object = ObjectId(oldBindingNode->object());
+        p.location = oldBindingNode->sourceLocation();
+        p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(oldBindingNode->object())).arg(oldBindingNode->propertyIndex());
         ProblemCollector::addProblem(p);
     } else {
-        ProblemCollector::removeProblem(QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(bindingNode->object())).arg(bindingNode->propertyIndex()));
+        ProblemCollector::removeProblem(QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(oldBindingNode->object())).arg(oldBindingNode->propertyIndex()));
     }
 }
 
@@ -254,8 +178,10 @@ int BindingModel::columnCount(const QModelIndex& parent) const
 
 int BindingModel::rowCount(const QModelIndex& parent) const
 {
+    if (!m_bindings)
+        return 0;
     if (!parent.isValid())
-        return m_bindings.size();
+        return m_bindings->size();
     if (parent.column() != 0)
         return 0;
     return static_cast<BindingNode *>(parent.internalPointer())->dependencies().size();
@@ -311,14 +237,14 @@ QVariant BindingModel::headerData(int section, Qt::Orientation orientation, int 
 
 QModelIndex GammaRay::BindingModel::index(int row, int column, const QModelIndex& parent) const
 {
-    if (!hasIndex(row, column, parent)) {
+    if (!m_bindings || !hasIndex(row, column, parent)) {
         return QModelIndex();
     }
     QModelIndex index;
     if (parent.isValid()) {
         index = createIndex(row, column, static_cast<BindingNode *>(parent.internalPointer())->dependencies()[row].get());
     } else {
-        index = createIndex(row, column, m_bindings[row].get());
+        index = createIndex(row, column, (*m_bindings)[row].get());
     }
     return index;
 }
@@ -335,7 +261,7 @@ QModelIndex BindingModel::findEquivalent(const std::vector<std::unique_ptr<Bindi
 
 QModelIndex GammaRay::BindingModel::parent(const QModelIndex& child) const
 {
-    if (!child.isValid())
+    if (!m_bindings || !child.isValid())
         return QModelIndex();
 
     BindingNode *parent = static_cast<BindingNode *>(child.internalPointer())->parent();
@@ -345,7 +271,7 @@ QModelIndex GammaRay::BindingModel::parent(const QModelIndex& child) const
     BindingNode *grandparent = parent->parent();
 
     if (!grandparent)
-        return findEquivalent(m_bindings, parent);
+        return findEquivalent(*m_bindings, parent);
 
     return findEquivalent(grandparent->dependencies(), parent);
 }

@@ -31,7 +31,6 @@
 #define GAMMARAY_BINDINGMODEL_H
 
 // Own
-#include "gammaray_core_export.h"
 
 // Qt
 #include <QAbstractItemModel>
@@ -48,7 +47,7 @@ namespace GammaRay {
 class BindingNode;
 class AbstractBindingProvider;
 
-class GAMMARAY_CORE_EXPORT BindingModel : public QAbstractItemModel
+class BindingModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
@@ -62,7 +61,9 @@ public:
     explicit BindingModel (QObject *parent = nullptr);
     ~BindingModel();
 
-    bool setObject(QObject *obj);
+    void setObject(QObject *obj, std::vector<std::unique_ptr<BindingNode>> &bindings);
+
+    void refresh(int row, std::vector<std::unique_ptr<BindingNode>> &&newDependencies);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -72,23 +73,18 @@ public:
     QModelIndex parent(const QModelIndex &child) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
-    static void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
-    //FIXME: ^ Move this function out of here, this class should purely be an implementation detail
-
-private slots:
-    void propertyChanged();
-    void clear();
+    void aboutToClear();
+    void cleared();
 
 private:
     QModelIndex findEquivalent(const std::vector<std::unique_ptr<BindingNode>> &container, BindingNode *bindingNode) const;
-    void refresh(BindingNode *oldBindingNode, const QModelIndex &index);
+    void refresh(BindingNode *oldBindingNode, std::vector<std::unique_ptr<BindingNode>> &&newDependencies, const QModelIndex &index);
     void bindingChanged(BindingNode *node);
     void findDependenciesFor(BindingNode *node);
     static bool lessThan(const std::unique_ptr<BindingNode> &a, const std::unique_ptr<BindingNode> &b);
 
     QPointer<QObject> m_obj;
-    std::vector<std::unique_ptr<BindingNode>> m_bindings;
-    static std::vector<std::unique_ptr<AbstractBindingProvider>> s_providers;
+    std::vector<std::unique_ptr<BindingNode>> *m_bindings;
 };
 
 }
