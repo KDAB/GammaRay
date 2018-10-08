@@ -32,21 +32,48 @@
 
 // Own
 #include <core/propertycontrollerextension.h>
+#include "gammaray_core_export.h"
+
+// Qt
+#include <QObject>
+#include <QPointer>
+
+// Std
+#include <memory>
+#include <vector>
 
 namespace GammaRay {
 
+class AbstractBindingProvider;
 class BindingModel;
+class BindingNode;
 
-class BindingExtension : public PropertyControllerExtension
+class GAMMARAY_CORE_EXPORT BindingExtension : public QObject, public PropertyControllerExtension
 {
+    Q_OBJECT
 public:
     explicit BindingExtension(PropertyController *controller);
     ~BindingExtension();
 
     bool setQObject(QObject *object) override;
 
+    std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(BindingNode* node) const;
+    std::vector<std::unique_ptr<BindingNode>> bindingTreeForObject(QObject* obj) const;
+
+    static void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
+
+    BindingModel *model() const;
+
+private slots:
+    void propertyChanged();
+    void clear();
+
 private:
+    QPointer<QObject> m_object;
+    std::vector<std::unique_ptr<BindingNode>> m_bindings;
+
     BindingModel *m_bindingModel;
+    static std::vector<std::unique_ptr<AbstractBindingProvider>> s_providers;
 };
 }
 

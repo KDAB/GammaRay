@@ -31,6 +31,7 @@
 
 #include <config-gammaray.h>
 #include <core/probe.h>
+#include <core/propertycontroller.h>
 #include <common/paths.h>
 #include <common/objectbroker.h>
 #include <probe/hooks.h>
@@ -38,6 +39,7 @@
 
 #include <core/abstractbindingprovider.h>
 #include <core/bindingnode.h>
+#include <core/tools/objectinspector/bindingextension.h>
 #include <core/tools/objectinspector/bindingmodel.h>
 #include <plugins/qmlsupport/qmlbindingprovider.h>
 #include <plugins/quickinspector/quickimplicitbindingdependencyprovider.h>
@@ -247,13 +249,23 @@ private slots:
 
 private:
     MockBindingProvider *provider;
+    BindingExtension *bindingExtension;
+    std::unique_ptr<ModelTest> modelTest;
+    BindingModel *bindingModel;
 };
 
 void BindingInspectorTest::initTestCase()
 {
     QQmlEngine engine; // Needed to initialize the Qml support plugin
     provider = new MockBindingProvider;
-    BindingModel::registerBindingProvider(std::unique_ptr<MockBindingProvider>(provider));
+    BindingExtension::registerBindingProvider(std::unique_ptr<MockBindingProvider>(provider));
+
+    QTest::qWait(1);
+    bindingExtension = ObjectBroker::object<BindingExtension*>("com.kdab.GammaRay.ObjectInspector.bindingsExtension");
+    QVERIFY(bindingExtension);
+    bindingModel = bindingExtension->model();
+    QVERIFY(bindingModel);
+    modelTest.reset(new ModelTest(bindingModel));
 }
 
 void BindingInspectorTest::init()
@@ -543,8 +555,6 @@ void BindingInspectorTest::testQtQuickProvider()
 
 void BindingInspectorTest::testModel()
 {
-    BindingModel bindingModel;
-    ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
     MockObject obj2 { 35, false, 'y', 3.5, "Bye, World" };
 
@@ -556,15 +566,15 @@ void BindingInspectorTest::testModel()
         {&obj2, "a", &obj1, "a"},
     }};
 
-    bindingModel.setObject(&obj1);
-    QCOMPARE(bindingModel.rowCount(QModelIndex()), 2);
-    auto topLevelIndices = getSortedChildren(QModelIndex(), &bindingModel);
+    bindingExtension->setQObject(&obj1);
+    QCOMPARE(bindingModel->rowCount(QModelIndex()), 2);
+    auto topLevelIndices = getSortedChildren(QModelIndex(), bindingModel);
     QModelIndex obj1cIndex = topLevelIndices[0];
     QVERIFY(obj1cIndex.isValid());
     QCOMPARE(obj1cIndex.data().toString(), QStringLiteral("c"));
     QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::ValueColumn).data().toChar(), QChar('x'));
     QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("3"));
-    QCOMPARE(bindingModel.rowCount(obj1cIndex), 2);
+    QCOMPARE(bindingModel->rowCount(obj1cIndex), 2);
 
     auto obj1cChildIndices = getSortedChildren(obj1cIndex);
     QModelIndex obj1bIndex = obj1cChildIndices[0];
@@ -572,34 +582,32 @@ void BindingInspectorTest::testModel()
     QCOMPARE(obj1bIndex.data().toString(), QStringLiteral("b"));
     QCOMPARE(obj1bIndex.sibling(obj1bIndex.row(), BindingModel::ValueColumn).data().toBool(), true);
     QCOMPARE(obj1bIndex.sibling(obj1bIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj1bIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj1bIndex), 0);
 
     QModelIndex obj2bIndex = obj1cChildIndices[1];
     QVERIFY(obj2bIndex.isValid());
     QCOMPARE(obj2bIndex.data().toString(), QStringLiteral("d"));
     QCOMPARE(obj2bIndex.sibling(obj2bIndex.row(), BindingModel::ValueColumn).data().toDouble(), 3.5);
     QCOMPARE(obj2bIndex.sibling(obj2bIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
-    QCOMPARE(bindingModel.rowCount(obj2bIndex), 1);
+    QCOMPARE(bindingModel->rowCount(obj2bIndex), 1);
 
-    QModelIndex obj2aIndex = bindingModel.index(0, 0, obj2bIndex);
+    QModelIndex obj2aIndex = bindingModel->index(0, 0, obj2bIndex);
     QVERIFY(obj2aIndex.isValid());
     QCOMPARE(obj2aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(obj2aIndex.sibling(obj2aIndex.row(), BindingModel::ValueColumn).data().toInt(), 35);
     QCOMPARE(obj2aIndex.sibling(obj2aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
-    QCOMPARE(bindingModel.rowCount(obj2aIndex), 1);
+    QCOMPARE(bindingModel->rowCount(obj2aIndex), 1);
 
-    QModelIndex obj1aIndex = bindingModel.index(0, 0, obj2aIndex);
+    QModelIndex obj1aIndex = bindingModel->index(0, 0, obj2aIndex);
     QVERIFY(obj1aIndex.isValid());
     QCOMPARE(obj1aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 53);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 0);
 }
 
 void BindingInspectorTest::testModelDataChanged()
 {
-    BindingModel bindingModel;
-    ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
 
     provider->data = {{
@@ -609,15 +617,15 @@ void BindingInspectorTest::testModelDataChanged()
         { &obj1, "b", &obj1, "e" },
     }};
 
-    bindingModel.setObject(&obj1);
-    QCOMPARE(bindingModel.rowCount(QModelIndex()), 2);
-    auto topLevelIndices = getSortedChildren(QModelIndex(), &bindingModel);
+    bindingExtension->setQObject(&obj1);
+    QCOMPARE(bindingModel->rowCount(QModelIndex()), 2);
+    auto topLevelIndices = getSortedChildren(QModelIndex(), bindingModel);
     QModelIndex obj1aIndex = topLevelIndices[0];
     QVERIFY(obj1aIndex.isValid());
     QCOMPARE(obj1aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 53);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 3);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 3);
 
     auto obj1aChildren = getSortedChildren(obj1aIndex);
     QModelIndex obj1dIndex = obj1aChildren[2];
@@ -625,9 +633,9 @@ void BindingInspectorTest::testModelDataChanged()
     QCOMPARE(obj1dIndex.data().toString(), QStringLiteral("d"));
     QCOMPARE(obj1dIndex.sibling(obj1dIndex.row(), BindingModel::ValueColumn).data().toDouble(), 5.3);
     QCOMPARE(obj1dIndex.sibling(obj1dIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj1dIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj1dIndex), 0);
 
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(dataChangedSpy.isValid());
 
     obj1.setD(3.1415926535897932);
@@ -640,7 +648,7 @@ void BindingInspectorTest::testModelDataChanged()
     QCOMPARE(dataChangedSpy.at(1).at(0).toModelIndex(), obj1dIndex.sibling(obj1dIndex.row(), BindingModel::ValueColumn));
     QCOMPARE(dataChangedSpy.at(1).at(1).toModelIndex(), obj1dIndex.sibling(obj1dIndex.row(), BindingModel::ValueColumn));
 
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 3);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 3);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 12);
 
@@ -650,31 +658,29 @@ void BindingInspectorTest::testModelDataChanged()
 
 void BindingInspectorTest::testModelAdditions()
 {
-    BindingModel bindingModel;
-    ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
     provider->data = {{
         { &obj1, "a", &obj1, "c" }
     }};
 
-    bindingModel.setObject(&obj1);
-    QCOMPARE(bindingModel.rowCount(QModelIndex()), 1);
-    QModelIndex obj1aIndex = bindingModel.index(0, 0, QModelIndex());
+    bindingExtension->setQObject(&obj1);
+    QCOMPARE(bindingModel->rowCount(QModelIndex()), 1);
+    QModelIndex obj1aIndex = bindingModel->index(0, 0, QModelIndex());
     QVERIFY(obj1aIndex.isValid());
     QCOMPARE(obj1aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 53);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 1);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 1);
 
-    QModelIndex obj1cIndex = bindingModel.index(0, 0, obj1aIndex);
+    QModelIndex obj1cIndex = bindingModel->index(0, 0, obj1aIndex);
     QVERIFY(obj1cIndex.isValid());
     QCOMPARE(obj1cIndex.data().toString(), QStringLiteral("c"));
     QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::ValueColumn).data().toChar(), QChar('x'));
     QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj1cIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj1cIndex), 0);
 
-    QSignalSpy rowAddedSpy(&bindingModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    QSignalSpy rowAddedSpy(bindingModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(rowAddedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -701,7 +707,7 @@ void BindingInspectorTest::testModelAdditions()
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("∞"));
 
     QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("∞"));
-    QCOMPARE(bindingModel.rowCount(obj1cIndex), 2);
+    QCOMPARE(bindingModel->rowCount(obj1cIndex), 2);
 
     auto obj1cChildren = getSortedChildren(obj1cIndex);
     QModelIndex node1aIndex = obj1cChildren[0];
@@ -709,27 +715,25 @@ void BindingInspectorTest::testModelAdditions()
     QCOMPARE(node1aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(node1aIndex.sibling(node1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 12);
     QCOMPARE(node1aIndex.sibling(node1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("∞"));
-    QCOMPARE(bindingModel.rowCount(node1aIndex), 0);
+    QCOMPARE(bindingModel->rowCount(node1aIndex), 0);
 
     QModelIndex obj1bIndex = obj1cChildren[1];
     QVERIFY(obj1bIndex.isValid());
     QCOMPARE(obj1bIndex.data().toString(), QStringLiteral("b"));
     QCOMPARE(obj1bIndex.sibling(obj1bIndex.row(), BindingModel::ValueColumn).data().toBool(), true);
     QCOMPARE(obj1bIndex.sibling(obj1bIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
-    QCOMPARE(bindingModel.rowCount(obj1bIndex), 1);
+    QCOMPARE(bindingModel->rowCount(obj1bIndex), 1);
 
-    QModelIndex obj1dIndex = bindingModel.index(0, 0, obj1bIndex);
+    QModelIndex obj1dIndex = bindingModel->index(0, 0, obj1bIndex);
     QVERIFY(obj1dIndex.isValid());
     QCOMPARE(obj1dIndex.data().toString(), QStringLiteral("d"));
     QCOMPARE(obj1dIndex.sibling(obj1dIndex.row(), BindingModel::ValueColumn).data().toDouble(), 5.3);
     QCOMPARE(obj1dIndex.sibling(obj1dIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj1dIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj1dIndex), 0);
 }
 
 void BindingInspectorTest::testModelInsertions()
 {
-    BindingModel bindingModel;
-    ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
     MockObject obj2 { 35, false, 'y', 3.5, "Bye, World" };
 
@@ -737,24 +741,24 @@ void BindingInspectorTest::testModelInsertions()
         { &obj1, "a", &obj1, "e" }
     }};
 
-    bindingModel.setObject(&obj1);
-    QCOMPARE(bindingModel.rowCount(QModelIndex()), 1);
-    QModelIndex obj1aIndex = bindingModel.index(0, 0, QModelIndex());
+    bindingExtension->setQObject(&obj1);
+    QCOMPARE(bindingModel->rowCount(QModelIndex()), 1);
+    QModelIndex obj1aIndex = bindingModel->index(0, 0, QModelIndex());
     QVERIFY(obj1aIndex.isValid());
     QCOMPARE(obj1aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 53);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 1);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 1);
 
-    QModelIndex obj1eIndex = bindingModel.index(0, 0, obj1aIndex);
+    QModelIndex obj1eIndex = bindingModel->index(0, 0, obj1aIndex);
     QVERIFY(obj1eIndex.isValid());
     QCOMPARE(obj1eIndex.data().toString(), QStringLiteral("e"));
     QCOMPARE(obj1eIndex.sibling(obj1eIndex.row(), BindingModel::ValueColumn).data().toString(), QStringLiteral("Hello World"));
     QCOMPARE(obj1eIndex.sibling(obj1eIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj1eIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj1eIndex), 0);
 
-    QSignalSpy rowAddedSpy(&bindingModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    QSignalSpy rowAddedSpy(bindingModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(rowAddedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -771,7 +775,7 @@ void BindingInspectorTest::testModelInsertions()
     QCOMPARE(rowAddedSpy.front().at(2).toInt(), 1);
 
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 3);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 3);
 
     auto obj1aChildren = getSortedChildren(obj1aIndex);
     obj1eIndex = obj1aChildren[2];
@@ -779,39 +783,39 @@ void BindingInspectorTest::testModelInsertions()
     QCOMPARE(obj1eIndex.data().toString(), QStringLiteral("e"));
     QCOMPARE(obj1eIndex.sibling(obj1eIndex.row(), BindingModel::ValueColumn).data().toString(), QStringLiteral("Hello World"));
     QCOMPARE(obj1eIndex.sibling(obj1eIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
-    QCOMPARE(bindingModel.rowCount(obj1eIndex), 1);
+    QCOMPARE(bindingModel->rowCount(obj1eIndex), 1);
 
     QModelIndex obj1bIndex = obj1aChildren[0];
     QVERIFY(obj1bIndex.isValid());
     QCOMPARE(obj1bIndex.data().toString(), QStringLiteral("b"));
     QCOMPARE(obj1bIndex.sibling(obj1bIndex.row(), BindingModel::ValueColumn).data().toBool(), true);
     QCOMPARE(obj1bIndex.sibling(obj1bIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj1bIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj1bIndex), 0);
 
     QModelIndex obj1cIndex = obj1aChildren[1];
     QVERIFY(obj1cIndex.isValid());
     QCOMPARE(obj1cIndex.data().toString(), QStringLiteral("c"));
     QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::ValueColumn).data().toChar(), QChar('x'));
     QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
-    QCOMPARE(bindingModel.rowCount(obj1cIndex), 1);
+    QCOMPARE(bindingModel->rowCount(obj1cIndex), 1);
 
-    QModelIndex obj2aIndex = bindingModel.index(0, 0, obj1cIndex);
+    QModelIndex obj2aIndex = bindingModel->index(0, 0, obj1cIndex);
     QVERIFY(obj2aIndex.isValid());
     QCOMPARE(obj2aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(obj2aIndex.sibling(obj2aIndex.row(), BindingModel::ValueColumn).data().toInt(), 35);
     QCOMPARE(obj2aIndex.sibling(obj2aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj2aIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj2aIndex), 0);
 
     QCOMPARE(rowAddedSpy.back().at(0).toModelIndex(), obj1eIndex);
     QCOMPARE(rowAddedSpy.back().at(1).toInt(), 0);
     QCOMPARE(rowAddedSpy.back().at(2).toInt(), 0);
 
-    QModelIndex obj2aIndex2 = bindingModel.index(0, 0, obj1eIndex);
+    QModelIndex obj2aIndex2 = bindingModel->index(0, 0, obj1eIndex);
     QVERIFY(obj2aIndex2.isValid());
     QCOMPARE(obj2aIndex2.data().toString(), QStringLiteral("a"));
     QCOMPARE(obj2aIndex2.sibling(obj2aIndex2.row(), BindingModel::ValueColumn).data().toInt(), 35);
     QCOMPARE(obj2aIndex2.sibling(obj2aIndex2.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj2aIndex2), 0);
+    QCOMPARE(bindingModel->rowCount(obj2aIndex2), 0);
 
     QCOMPARE(dataChangedSpy.size(), 3);
     QCOMPARE(dataChangedSpy.at(0).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
@@ -824,8 +828,6 @@ void BindingInspectorTest::testModelInsertions()
 
 void BindingInspectorTest::testModelRemovalAtEnd()
 {
-    BindingModel bindingModel;
-    ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
 
     provider->data = {{
@@ -835,18 +837,18 @@ void BindingInspectorTest::testModelRemovalAtEnd()
         { &obj1, "d", &obj1, "e" },
     }};
 
-    bindingModel.setObject(&obj1);
-    QCOMPARE(bindingModel.rowCount(QModelIndex()), 2);
-    auto topLevelIndices = getSortedChildren(QModelIndex(), &bindingModel);
+    bindingExtension->setQObject(&obj1);
+    QCOMPARE(bindingModel->rowCount(QModelIndex()), 2);
+    auto topLevelIndices = getSortedChildren(QModelIndex(), bindingModel);
     QModelIndex obj1aIndex = topLevelIndices[0];
     QVERIFY(obj1aIndex.isValid());
     QCOMPARE(obj1aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 53);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 3);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 3);
 
-    QSignalSpy rowRemovedSpy(&bindingModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    QSignalSpy rowRemovedSpy(bindingModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(rowRemovedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -859,16 +861,16 @@ void BindingInspectorTest::testModelRemovalAtEnd()
     QCOMPARE(rowRemovedSpy.front().at(2).toInt(), 2);
     QCOMPARE(rowRemovedSpy.front().front().toModelIndex(), obj1aIndex);
 
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 1);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 1);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 12);
 
-    QModelIndex obj1bIndex = bindingModel.index(0, 0, obj1aIndex);
+    QModelIndex obj1bIndex = bindingModel->index(0, 0, obj1aIndex);
     QVERIFY(obj1bIndex.isValid());
     QCOMPARE(obj1bIndex.data().toString(), QStringLiteral("b"));
     QCOMPARE(obj1bIndex.sibling(obj1bIndex.row(), BindingModel::ValueColumn).data().toBool(), true);
     QCOMPARE(obj1bIndex.sibling(obj1bIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj1bIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj1bIndex), 0);
 
     QCOMPARE(dataChangedSpy.size(), 2);
     QCOMPARE(dataChangedSpy.at(0).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.
@@ -879,8 +881,6 @@ void BindingInspectorTest::testModelRemovalAtEnd()
 
 void BindingInspectorTest::testModelRemovalInside()
 {
-    BindingModel bindingModel;
-    ModelTest modelTest(&bindingModel);
     MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
 
     provider->data = {{
@@ -890,18 +890,18 @@ void BindingInspectorTest::testModelRemovalInside()
         { &obj1, "b", &obj1, "e" },
     }};
 
-    bindingModel.setObject(&obj1);
-    QCOMPARE(bindingModel.rowCount(QModelIndex()), 2);
-    auto topLevelIndices = getSortedChildren(QModelIndex(), &bindingModel);
+    bindingExtension->setQObject(&obj1);
+    QCOMPARE(bindingModel->rowCount(QModelIndex()), 2);
+    auto topLevelIndices = getSortedChildren(QModelIndex(), bindingModel);
     QModelIndex obj1aIndex = topLevelIndices[0];
     QVERIFY(obj1aIndex.isValid());
     QCOMPARE(obj1aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 53);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 3);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 3);
 
-    QSignalSpy rowRemovedSpy(&bindingModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
-    QSignalSpy dataChangedSpy(&bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    QSignalSpy rowRemovedSpy(bindingModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     QVERIFY(rowRemovedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -914,16 +914,16 @@ void BindingInspectorTest::testModelRemovalInside()
     QCOMPARE(rowRemovedSpy.front().at(1).toInt(), 0);
     QCOMPARE(rowRemovedSpy.front().at(2).toInt(), 1);
 
-    QCOMPARE(bindingModel.rowCount(obj1aIndex), 1);
+    QCOMPARE(bindingModel->rowCount(obj1aIndex), 1);
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("1"));
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 12);
 
-    QModelIndex obj1dIndex = bindingModel.index(0, 0, obj1aIndex);
+    QModelIndex obj1dIndex = bindingModel->index(0, 0, obj1aIndex);
     QVERIFY(obj1dIndex.isValid());
     QCOMPARE(obj1dIndex.data().toString(), QStringLiteral("d"));
     QCOMPARE(obj1dIndex.sibling(obj1dIndex.row(), BindingModel::ValueColumn).data().toDouble(), 5.3);
     QCOMPARE(obj1dIndex.sibling(obj1dIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
-    QCOMPARE(bindingModel.rowCount(obj1dIndex), 0);
+    QCOMPARE(bindingModel->rowCount(obj1dIndex), 0);
 
     QCOMPARE(dataChangedSpy.size(), 2);
     QCOMPARE(dataChangedSpy.at(0).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn)); // Fair enough, we did change the value.

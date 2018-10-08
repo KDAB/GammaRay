@@ -46,7 +46,7 @@
 #include <core/propertyadaptorfactory.h>
 #include <core/propertycontroller.h>
 #include <core/objectdataprovider.h>
-#include <core/tools/objectinspector/bindingmodel.h>
+#include <core/tools/objectinspector/bindingextension.h>
 
 #include <common/metatypedeclarations.h>
 #include <common/sourcelocation.h>
@@ -388,7 +388,7 @@ QmlSupport::QmlSupport(Probe *probe, QObject *parent)
     PropertyController::registerExtension<QmlTypeExtension>();
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-    BindingModel::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QmlBindingProvider));
+    BindingExtension::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QmlBindingProvider));
 #endif
 
     static auto dataProvider = new QmlObjectDataProvider;

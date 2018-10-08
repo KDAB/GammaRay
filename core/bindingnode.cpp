@@ -51,6 +51,11 @@ BindingNode::BindingNode(QObject *obj, int propIndex, BindingNode *parent)
     checkForLoops();
 }
 
+bool BindingNode::operator==(const BindingNode& other) const
+{
+    return m_object == other.m_object && m_propertyIndex == other.m_propertyIndex;
+}
+
 void BindingNode::checkForLoops()
 {
     BindingNode *ancestor = m_parent;
