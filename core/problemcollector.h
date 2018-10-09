@@ -38,6 +38,7 @@
 
 // Qt
 #include <QAbstractItemModel>
+#include <QTimer>
 
 // Std
 #include <memory>
@@ -58,20 +59,55 @@ public:
 
     const QVector<Problem> &problems();
 
+    /**
+     * Use this method from a problem provider as a response to a scan request
+     * to inform the problem collector and thereby the client that you started
+     * to scan for problems. This information will i.a. be used to show a busy
+     * indicator to the user.
+     */
+    static void reportScanStarted();
+    /**
+     * Use this method from a problem provider as a response to a scan request
+     * to inform the problem collector and thereby the client that your scan
+     * finished, no matter if you found any problems or not. This information
+     * will i.a. be used to operate a busy indicator in the client.
+     */
+    static void reportScanFinished();
+
 signals:
+    /**
+     * These signals are directed at the problem model to inform about changes
+     * in the result set.
+     */
     void aboutToAddProblem(int row);
     void problemAdded();
     void aboutToRemoveProblems(int first, int count = 1);
     void problemsRemoved();
+
+    /**
+     * This signal is directed at tools that can provide scans for problems
+     * and shall be used as a trigger to start a scan.
+     */
     void problemScanRequested();
+
+    /**
+     * This signal is directed at the Problem Reporter tool to inform that
+     * the problem providing tools have started scanning for problems.
+     */
+    void problemScansFinished();
 
 public slots:
     void requestScan();
+
+private slots:
+    void maybeEmitScansFinished();
 
 private:
     explicit ProblemCollector(QObject *parent);
 
     QVector<Problem> m_problems;
+    uint16_t m_runningScanCount;
+    QTimer *m_reportFinishedTimer;
 
     friend class Probe;
 };

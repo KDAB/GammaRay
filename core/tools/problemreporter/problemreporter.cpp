@@ -41,6 +41,8 @@ ProblemReporter::ProblemReporter(Probe *probe, QObject *parent)
 //     proxy->setSourceModel(m_problemModel);
 //     proxy->addRole(MetaTypeRoles::MetaObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ProblemModel"), m_problemModel);
+
+    connect(ProblemCollector::instance(), SIGNAL(problemScansFinished()), this, SIGNAL(problemScansFinished()));
 }
 
 ProblemReporter::~ProblemReporter()
