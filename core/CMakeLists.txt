@@ -3,6 +3,7 @@ set(gammaray_srcs
 
   abstractbindingprovider.cpp
   aggregatedpropertymodel.cpp
+  bindingaggregator.cpp
   bindingnode.cpp
   metaobject.cpp
   metaobjectregistry.cpp

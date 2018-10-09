@@ -1,5 +1,5 @@
 /*
-  bindingextension.h
+  bindingaggregator.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -27,8 +27,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_BINDINGEXTENSION_H
-#define GAMMARAY_BINDINGEXTENSION_H
+#ifndef GAMMARAY_BINDINGAGGREGATOR_H
+#define GAMMARAY_BINDINGAGGREGATOR_H
 
 // Own
 #include <core/propertycontrollerextension.h>
@@ -43,31 +43,18 @@
 #include <vector>
 
 namespace GammaRay {
-
-class BindingModel;
+class AbstractBindingProvider;
 class BindingNode;
 
-class GAMMARAY_CORE_EXPORT BindingExtension : public QObject, public PropertyControllerExtension
+namespace BindingAggregator
 {
-    Q_OBJECT
-public:
-    explicit BindingExtension(PropertyController *controller);
-    ~BindingExtension();
+    GAMMARAY_CORE_EXPORT bool providerAvailableFor(QObject *object);
+    GAMMARAY_CORE_EXPORT std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(BindingNode* node);
+    GAMMARAY_CORE_EXPORT std::vector<std::unique_ptr<BindingNode>> bindingTreeForObject(QObject* obj);
+    GAMMARAY_CORE_EXPORT void scanForBindingLoops();
 
-    bool setQObject(QObject *object) override;
-
-    BindingModel *model() const;
-
-private slots:
-    void propertyChanged();
-    void clear();
-
-private:
-    QPointer<QObject> m_object;
-    std::vector<std::unique_ptr<BindingNode>> m_bindings;
-
-    BindingModel *m_bindingModel;
-};
+    GAMMARAY_CORE_EXPORT void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
+}
 }
 
-#endif // GAMMARAY_BINDINGEXTENSION_H
+#endif // GAMMARAY_BINDINGAGGREGATOR_H

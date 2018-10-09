@@ -38,6 +38,7 @@
 #include <probe/probecreator.h>
 
 #include <core/abstractbindingprovider.h>
+#include <core/bindingaggregator.h>
 #include <core/bindingnode.h>
 #include <core/tools/objectinspector/bindingextension.h>
 #include <core/tools/objectinspector/bindingmodel.h>
@@ -258,7 +259,7 @@ void BindingInspectorTest::initTestCase()
 {
     QQmlEngine engine; // Needed to initialize the Qml support plugin
     provider = new MockBindingProvider;
-    BindingExtension::registerBindingProvider(std::unique_ptr<MockBindingProvider>(provider));
+    BindingAggregator::registerBindingProvider(std::unique_ptr<MockBindingProvider>(provider));
 
     QTest::qWait(1);
     bindingExtension = ObjectBroker::object<BindingExtension*>("com.kdab.GammaRay.ObjectInspector.bindingsExtension");

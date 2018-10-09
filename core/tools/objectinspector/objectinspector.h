@@ -52,6 +52,7 @@ private slots:
     void objectSelected(const QModelIndex &index);
     void objectSelectionChanged(const QItemSelection &selection);
     void objectSelected(QObject *object);
+    void scanForBindingLoops();
 
 private:
     void registerPCExtensions();

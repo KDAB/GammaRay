@@ -39,6 +39,8 @@
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
+#include <core/bindingaggregator.h>
+#include <core/problemcollector.h>
 #include <remote/serverproxymodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
@@ -68,6 +70,8 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
 
     connect(probe, SIGNAL(objectSelected(QObject*,QPoint)),
             SLOT(objectSelected(QObject*)));
+
+    connect(ProblemCollector::instance(), SIGNAL(problemScanRequested()), this, SLOT(scanForBindingLoops()));
 }
 
 void ObjectInspector::objectSelectionChanged(const QItemSelection &selection)
@@ -107,6 +111,11 @@ void ObjectInspector::objectSelected(QObject *object)
     // TODO: move this to the client side!
     // ui->objectTreeView->scrollTo(index);
     objectSelected(index);
+}
+
+void ObjectInspector::scanForBindingLoops()
+{
+    BindingAggregator::scanForBindingLoops();
 }
 
 void ObjectInspector::registerPCExtensions()
