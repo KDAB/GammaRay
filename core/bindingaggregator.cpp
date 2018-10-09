@@ -44,19 +44,19 @@
 
 using namespace GammaRay;
 
-static std::vector<std::unique_ptr<AbstractBindingProvider>> s_providers;
+Q_GLOBAL_STATIC(std::vector<std::unique_ptr<AbstractBindingProvider>>, s_providers)
 
 void BindingAggregator::registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider)
 {
-    s_providers.push_back(std::move(provider));
+    s_providers()->push_back(std::move(provider));
 }
 
 bool GammaRay::BindingAggregator::providerAvailableFor(QObject* object)
 {
-    return std::find_if(s_providers.begin(), s_providers.end(),
+    return std::find_if(s_providers()->begin(), s_providers()->end(),
                                         [object](const std::unique_ptr<AbstractBindingProvider>& provider) {
                                             return provider->canProvideBindingsFor(object);
-                                        }) != s_providers.end();
+                                        }) != s_providers()->end();
 }
 
 std::vector<std::unique_ptr<BindingNode>> BindingAggregator::findDependenciesFor(BindingNode* node)
@@ -65,7 +65,7 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::findDependenciesFor
     if (node->isPartOfBindingLoop())
         return allDependencies;
 
-    for (auto providerIt = s_providers.cbegin(); providerIt != s_providers.cend(); ++providerIt) {
+    for (auto providerIt = s_providers()->cbegin(); providerIt != s_providers()->cend(); ++providerIt) {
         auto &&provider = *providerIt;
         auto providerDependencies = provider->findDependenciesFor(node);
         for (auto dependencyIt = providerDependencies.begin(); dependencyIt != providerDependencies.end(); ++dependencyIt) {
@@ -87,7 +87,7 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::bindingTreeForObjec
 {
     std::vector<std::unique_ptr<BindingNode>> bindings;
     if (obj) {
-        for (auto providerIt = s_providers.begin(); providerIt != s_providers.cend(); ++providerIt) {
+        for (auto providerIt = s_providers()->begin(); providerIt != s_providers()->cend(); ++providerIt) {
             auto newBindings = (*providerIt)->findBindingsFor(obj);
             for (auto nodeIt = newBindings.begin(); nodeIt != newBindings.end(); ++nodeIt) {
                 BindingNode *node = nodeIt->get();
