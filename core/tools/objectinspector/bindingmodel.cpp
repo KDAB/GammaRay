@@ -156,18 +156,6 @@ void BindingModel::refresh(BindingNode *oldBindingNode, std::vector<std::unique_
     if (oldBindingNode->depth() != oldDepth) {
         emit dataChanged(createIndex(index.row(), DepthColumn, oldBindingNode), createIndex(index.row(), DepthColumn, oldBindingNode));
     }
-
-    if (oldBindingNode->isPartOfBindingLoop()) {
-        Problem p;
-        p.severity = Problem::Error;
-        p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(oldBindingNode->object())).arg(oldBindingNode->canonicalName());
-        p.object = ObjectId(oldBindingNode->object());
-        p.location = oldBindingNode->sourceLocation();
-        p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(oldBindingNode->object())).arg(oldBindingNode->propertyIndex());
-        ProblemCollector::addProblem(p);
-    } else {
-        ProblemCollector::removeProblem(QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(oldBindingNode->object())).arg(oldBindingNode->propertyIndex()));
-    }
 }
 
 int BindingModel::columnCount(const QModelIndex& parent) const

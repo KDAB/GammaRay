@@ -402,7 +402,7 @@ void QuickItemModel::updateItemFlags(QQuickItem *item)
                 p.description = QStringLiteral("QtQuick Item %1 is visible, but out of view.").arg(ObjectDataProvider::typeName(item));
                 p.object = ObjectId(item);
                 p.location = ObjectDataProvider::creationLocation(item);
-                p.problemId = QString::number(reinterpret_cast<qintptr>(item)) + ".OutOfView";
+                p.problemId = QString::number(reinterpret_cast<quintptr>(item)) + ".OutOfView";
                 ProblemCollector::addProblem(p);
                 break;
             }
