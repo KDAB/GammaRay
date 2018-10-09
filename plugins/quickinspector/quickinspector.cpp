@@ -63,7 +63,7 @@
 #include <core/varianthandler.h>
 #include <core/remoteviewserver.h>
 #include <core/paintanalyzer.h>
-#include <core/tools/objectinspector/bindingextension.h>
+#include <core/bindingaggregator.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
@@ -1165,6 +1165,6 @@ void QuickInspector::registerPCExtensions()
     PropertyFilters::registerFilter(PropertyFilter("QQuickItem", "anchors"));
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-    BindingExtension::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
+    BindingAggregator::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
 #endif
 }
