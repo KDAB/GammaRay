@@ -25,6 +25,16 @@
     </widget>
    </item>
    <item>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="maximum">
+      <number>0</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QPushButton" name="scanButton">
      <property name="text">
       <string>Scan for Problems</string>

@@ -59,6 +59,9 @@ ProblemReporterWidget::ProblemReporterWidget(QWidget *parent)
     ProblemReporterInterface *iface = ObjectBroker::object<ProblemReporterInterface *>();
 
     connect(ui->scanButton, SIGNAL(clicked()), iface, SLOT(requestScan()));
+    connect(ui->scanButton, SIGNAL(clicked()), ui->progressBar, SLOT(show()));
+    connect(iface, SIGNAL(problemScansFinished()), ui->progressBar, SLOT(hide()));
+    ui->progressBar->setVisible(false);
 
     auto model = new ProblemClientModel(this);
     model->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ProblemModel")));

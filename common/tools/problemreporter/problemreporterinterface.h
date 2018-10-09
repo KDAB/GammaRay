@@ -41,6 +41,9 @@ public:
     explicit ProblemReporterInterface(QObject *parent = nullptr);
     virtual ~ProblemReporterInterface();
 
+signals:
+    void problemScansFinished();
+
 public slots:
     virtual void requestScan() = 0;
 };

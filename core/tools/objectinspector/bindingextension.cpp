@@ -173,6 +173,8 @@ std::vector<std::unique_ptr<BindingNode>> BindingExtension::bindingTreeForObject
 
 void GammaRay::BindingExtension::scanForBindingLoops() const
 {
+    ProblemCollector::reportScanStarted();
+
     const QVector<QObject*> &allObjects = Probe::instance()->allQObjects();
 
     foreach (QObject *obj, allObjects) {
@@ -191,6 +193,8 @@ void GammaRay::BindingExtension::scanForBindingLoops() const
             }
         }
     }
+
+    ProblemCollector::reportScanFinished();
 }
 
 BindingModel *BindingExtension::model() const
