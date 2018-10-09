@@ -185,7 +185,7 @@ void GammaRay::BindingExtension::scanForBindingLoops() const
                 p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(bindingNode->object())).arg(bindingNode->canonicalName());
                 p.object = ObjectId(bindingNode->object());
                 p.location = bindingNode->sourceLocation();
-                p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<qintptr>(bindingNode->object())).arg(bindingNode->propertyIndex());
+                p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<quintptr>(bindingNode->object())).arg(bindingNode->propertyIndex());
                 p.findingCategory = Problem::Scan;
                 ProblemCollector::addProblem(p);
             }

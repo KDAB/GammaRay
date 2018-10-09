@@ -39,7 +39,7 @@ class ProblemReporterInterface : public QObject
     Q_OBJECT
 public:
     explicit ProblemReporterInterface(QObject *parent = nullptr);
-    ~ProblemReporterInterface();
+    virtual ~ProblemReporterInterface();
 
 public slots:
     virtual void requestScan() = 0;
