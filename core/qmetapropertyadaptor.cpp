@@ -26,8 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "propertyfilter.h"
 #include "qmetapropertyadaptor.h"
+#include "propertyfilter.h"
 #include "objectinstance.h"
 #include "propertydata.h"
 #include "util.h"
