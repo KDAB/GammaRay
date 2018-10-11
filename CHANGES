@@ -1,6 +1,10 @@
 Release Highlights
 ==================
 
+Version NEXT
+------------
+ * VTK minimum version increased from 6.1 to 7.1
+
 Version 2.9.1
 -------------
  * Fix crash in in-process mode with networking disabled.
