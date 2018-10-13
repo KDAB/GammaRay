@@ -42,13 +42,14 @@ class GAMMARAY_CORE_EXPORT PropertyFilter
 public:
     explicit PropertyFilter() {}
     explicit PropertyFilter(
-        QString className,
-        QString name,
-        QString typeName = QString(),
+        const QString &className,
+        const QString &name,
+        const QString &typeName = QString(),
         PropertyData::AccessFlags accessFlags = nullptr,
         PropertyModel::PropertyFlags propertyFlags = nullptr
     );
-    static PropertyFilter classAndPropertyName(QString className, QString propertyName);
+    static PropertyFilter classAndPropertyName(const QString &className,
+                                               const QString &propertyName);
 
     bool matches(const PropertyData &prop) const;
 
@@ -77,7 +78,6 @@ namespace PropertyFilters
     */
     GAMMARAY_CORE_EXPORT void registerFilter(const PropertyFilter &filter);
 }
-
 
 }
 

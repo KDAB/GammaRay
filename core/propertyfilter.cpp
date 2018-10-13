@@ -34,9 +34,9 @@ using namespace GammaRay;
 Q_GLOBAL_STATIC(QVector<PropertyFilter>, s_propertyFilters)
 
 GammaRay::PropertyFilter::PropertyFilter(
-        QString className,
-        QString name,
-        QString typeName,
+        const QString &className,
+        const QString &name,
+        const QString &typeName,
         PropertyData::AccessFlags accessFlags,
         PropertyModel::PropertyFlags propertyFlags
     )
@@ -48,12 +48,13 @@ GammaRay::PropertyFilter::PropertyFilter(
 {
 }
 
-GammaRay::PropertyFilter GammaRay::PropertyFilter::classAndPropertyName(QString className, QString propertyName)
+GammaRay::PropertyFilter GammaRay::PropertyFilter::classAndPropertyName(const QString &className,
+                                                                        const QString &propertyName)
 {
     return PropertyFilter(className, propertyName);
 }
 
-bool GammaRay::PropertyFilter::matches(const GammaRay::PropertyData& prop) const
+bool GammaRay::PropertyFilter::matches(const GammaRay::PropertyData &prop) const
 {
     if (!m_className.isEmpty() && prop.className() != m_className) {
         return false;
@@ -73,15 +74,16 @@ bool GammaRay::PropertyFilter::matches(const GammaRay::PropertyData& prop) const
     return true;
 }
 
-bool GammaRay::PropertyFilters::matches(const GammaRay::PropertyData& prop)
+bool GammaRay::PropertyFilters::matches(const GammaRay::PropertyData &prop)
 {
-    return std::any_of(s_propertyFilters()->begin(), s_propertyFilters()->end(), [&prop](const PropertyFilter &filter) { return filter.matches(prop); });
+    return std::any_of(s_propertyFilters()->begin(),
+                       s_propertyFilters()->end(),
+                       [&prop](const PropertyFilter &filter) {
+                           return filter.matches(prop);
+                       });
 }
 
-
-void PropertyFilters::registerFilter(const PropertyFilter& filter)
+void PropertyFilters::registerFilter(const PropertyFilter &filter)
 {
     s_propertyFilters()->push_back(filter);
 }
-
-
