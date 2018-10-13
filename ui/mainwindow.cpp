@@ -194,9 +194,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    UIResources::setTheme(UiIntegration::hasDarkUI()
-                              ? UIResources::Light
-                              : UIResources::Dark);
+    UIResources::setTheme(UiIntegration::hasDarkUI() ? UIResources::Light : UIResources::Dark);
 
     ui->setupUi(this);
 
@@ -249,16 +247,15 @@ MainWindow::MainWindow(QWidget *parent)
     m_toolFilterModel->setFilterInactiveTools(settings.value(QLatin1String("FilterInactive"), false).toBool());
     settings.endGroup();
 
-
     // hide unused tool bar for now
     ui->mainToolBar->setHidden(true);
 
     setWindowTitle(tr("GammaRay (%1)").arg(Endpoint::instance()->label()));
 
     // Code Navigation
-    QAction *configAction = new QAction(QIcon::fromTheme(QStringLiteral(
-                                                             "applications-development")),
-                                        tr("Code Navigation"), this);
+    QAction *configAction =
+        new QAction(QIcon::fromTheme(QStringLiteral("applications-development")),
+                    tr("Code Navigation"), this);
     auto menu = new QMenu(this);
     auto group = new QActionGroup(this);
     group->setExclusive(true);
@@ -269,8 +266,9 @@ MainWindow::MainWindow(QWidget *parent)
     for (int i = 0; i < ideSettingsSize; ++i) {
         auto action = new QAction(menu);
         action->setText(tr(ideSettings[i].name));
-        if (ideSettings[i].icon)
+        if (ideSettings[i].icon) {
             action->setIcon(QIcon::fromTheme(ideSettings[i].icon));
+        }
         action->setCheckable(true);
         action->setChecked(currentIdx == i);
         action->setData(i);
@@ -302,8 +300,8 @@ MainWindow::MainWindow(QWidget *parent)
     menu->addAction(action);
 #endif
 
-    QObject::connect(group, SIGNAL(triggered(QAction*)), this, SLOT(setCodeNavigationIDE(
-                                                                         QAction *)));
+    QObject::connect(group, SIGNAL(triggered(QAction*)),
+                     this, SLOT(setCodeNavigationIDE(QAction*)));
 
     configAction->setMenu(menu);
     ui->menuSettings->addMenu(menu);
@@ -442,13 +440,14 @@ bool MainWindow::selectTool(const QString &id)
     if (id.isEmpty())
         return false;
 
-    const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect
-                                                               | QItemSelectionModel::Rows
-                                                               | QItemSelectionModel::Current;
+    const QItemSelectionModel::SelectionFlags selectionFlags =
+        QItemSelectionModel::ClearAndSelect |
+        QItemSelectionModel::Rows |
+        QItemSelectionModel::Current;
     const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
     const QAbstractItemModel *model = ui->toolSelector->model();
-    const QModelIndex toolIndex = model->match(model->index(0,0), ToolModelRole::ToolId, id, 1,
-                                               matchFlags).value(0);
+    const QModelIndex toolIndex =
+        model->match(model->index(0, 0), ToolModelRole::ToolId, id, 1, matchFlags).value(0);
     if (!toolIndex.isValid())
         return false;
 
@@ -462,8 +461,10 @@ void MainWindow::toolSelected()
     ui->actionsMenu->clear();
     QModelIndexList list = ui->toolSelector->selectionModel()->selectedRows();
     int row = -1;
+
     if (!list.isEmpty())
         row = list[0].row();
+
     if (row == -1)
         return;
 
@@ -563,9 +564,10 @@ void MainWindow::logTransmissionRate(quint64 bytesRead, quint64 bytesWritten)
 {
     const double transmissionRateRX = (bytesRead * 8 / 1024.0 / 1024.0); // in Mpbs
     const double transmissionRateTX = (bytesWritten * 8 / 1024.0 / 1024.0); // in Mpbs
-    ui->statusBar->showMessage(tr("Transmission rate: RX %1 Mbps, TX %2 Mbps")
-        .arg(transmissionRateRX, 7, 'f', 3)
-        .arg(transmissionRateTX, 7, 'f', 3));
+    ui->statusBar->showMessage(
+        tr("Transmission rate: RX %1 Mbps, TX %2 Mbps").
+            arg(transmissionRateRX, 7, 'f', 3).
+            arg(transmissionRateTX, 7, 'f', 3));
 }
 
 void GammaRay::MainWindow::setCodeNavigationIDE(QAction *action)
@@ -591,7 +593,7 @@ void GammaRay::MainWindow::setCodeNavigationIDE(QAction *action)
     settings.setValue(QStringLiteral("IDE"), defaultIde);
 }
 
-void MainWindow::applyStyle(QStyle* style)
+void MainWindow::applyStyle(QStyle *style)
 {
     qDebug() << "Using" << style << "style";
 
