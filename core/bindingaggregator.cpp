@@ -41,6 +41,7 @@
 // Qt
 #include <QMetaProperty>
 #include <QMetaObject>
+#include <QMutexLocker>
 
 using namespace GammaRay;
 
@@ -111,7 +112,11 @@ void BindingAggregator::scanForBindingLoops()
 
     const QVector<QObject*> &allObjects = Probe::instance()->allQObjects();
 
+    QMutexLocker lock(Probe::objectLock());
     foreach (QObject *obj, allObjects) {
+        if (!Probe::instance()->isValidObject(obj))
+            continue;
+
         auto bindings = bindingTreeForObject(obj);
         for (auto it = bindings.begin(); it != bindings.end(); ++it) {
             auto &&bindingNode = *it;
