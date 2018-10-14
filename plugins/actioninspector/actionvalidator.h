@@ -57,6 +57,8 @@ public:
 
     /// helper method to find out if action has an ambiguous shortcut
     bool hasAmbiguousShortcut(const QAction *action) const;
+    bool isAmbigous(const QAction *action, const QKeySequence &sequence) const;
+    QVector<QKeySequence> findAmbiguousShortcuts(const QAction *action) const;
 
 private Q_SLOTS:
     void handleActionDestroyed(QObject *object);

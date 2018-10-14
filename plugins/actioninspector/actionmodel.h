@@ -75,6 +75,7 @@ public:
 public slots:
     void objectAdded(QObject *object);
     void objectRemoved(QObject *object);
+    void scanForShortcutDuplicates() const;
 
 private slots:
     void actionChanged();

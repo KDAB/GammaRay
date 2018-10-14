@@ -73,7 +73,7 @@ void ActionValidator::clearActions()
 {
     m_shortcutActionMap.clear();
 }
-#include <iostream>
+
 void ActionValidator::insert(QAction *action)
 {
     Q_ASSERT(action);
@@ -82,16 +82,6 @@ void ActionValidator::insert(QAction *action)
         if (m_shortcutActionMap.values(sequence).contains(action))
             continue;
 
-        if (m_shortcutActionMap.contains(sequence)) {
-            Problem p;
-            p.severity = Problem::Error;
-            p.description = QStringLiteral("Key sequence %1 is ambigous.").arg(sequence.toString());
-            p.object = ObjectId(action);
-            p.location = ObjectDataProvider::creationLocation(action);
-            std::cout << "###################GammaRay synes" << qPrintable(p.description) << std::endl;
-            ProblemCollector::addProblem(p);
-        }
-
         m_shortcutActionMap.insertMulti(sequence, action);
     }
 
@@ -99,6 +89,8 @@ void ActionValidator::insert(QAction *action)
     connect(action, SIGNAL(destroyed(QObject*)),
             SLOT(handleActionDestroyed(QObject*)));
 }
+
+
 
 void ActionValidator::remove(QAction *action)
 {
@@ -130,12 +122,71 @@ void ActionValidator::handleActionDestroyed(QObject *object)
 
 bool ActionValidator::hasAmbiguousShortcut(const QAction *action) const
 {
+    return std::any_of(action->shortcuts().cbegin(), action->shortcuts().cend(),
+                       [action, this](const QKeySequence &seq) { return isAmbigous(action, seq); });
+}
+
+QVector<QKeySequence> GammaRay::ActionValidator::findAmbiguousShortcuts(const QAction* action) const
+{
+    QVector<QKeySequence> shortcuts;
+
+
     if (!action)
-        return false;
+        return shortcuts;
 
     Q_FOREACH(const QKeySequence &sequence, action->shortcuts()) {
-        if (m_shortcutActionMap.count(sequence) > 1)
+        if (isAmbigous(action, sequence)) {
+            shortcuts.push_back(sequence);
+        }
+    }
+    return shortcuts;
+}
+
+bool GammaRay::ActionValidator::isAmbigous(const QAction *action, const QKeySequence &sequence) const
+{
+    Q_FOREACH(const QAction *other, m_shortcutActionMap.values(sequence)) {
+        if (other == action) {
+            continue;
+        }
+        if (action->shortcutContext() == Qt::ApplicationShortcut
+            || other->shortcutContext() == Qt::ApplicationShortcut)
             return true;
+        if (action->shortcutContext() == Qt::WindowShortcut || other->shortcutContext() == Qt::WindowShortcut) {
+            Q_FOREACH (QWidget *w1, action->associatedWidgets()) {
+                Q_FOREACH (QWidget *w2, other->associatedWidgets()) {
+                    if (w1->window() == w2->window())
+                        return true;
+                }
+            }
+        }
+        if (action->shortcutContext() == Qt::WidgetWithChildrenShortcut) {
+            Q_FOREACH (QWidget *w1, action->associatedWidgets()) {
+                Q_FOREACH (QWidget *w2, other->associatedWidgets()) {
+                    for (QWidget *ancestor = w2; ancestor; ancestor = ancestor->parentWidget()) {
+                        if (w1 == ancestor)
+                            return true;
+                    }
+                }
+            }
+        }
+        if (other->shortcutContext() == Qt::WidgetWithChildrenShortcut) {
+            Q_FOREACH (QWidget *w1, other->associatedWidgets()) {
+                Q_FOREACH (QWidget *w2, action->associatedWidgets()) {
+                    for (QWidget *ancestor = w2; ancestor; ancestor = ancestor->parentWidget()) {
+                        if (w1 == ancestor)
+                            return true;
+                    }
+                }
+            }
+        }
+        if (action->shortcutContext() == Qt::WidgetShortcut && other->shortcutContext() == Qt::WidgetShortcut) {
+            Q_FOREACH (QWidget *w1, action->associatedWidgets()) {
+                Q_FOREACH (QWidget *w2, other->associatedWidgets()) {
+                    if (w1 == w2)
+                        return true;
+                }
+            }
+        }
     }
     return false;
 }
