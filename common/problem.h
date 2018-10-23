@@ -50,9 +50,9 @@ struct Problem {
     };
     enum FindingCategory {
         Unknown,
-        Opportunistic,
-        Scan,
-        Permanent
+        Live, ///< is added and removed as the problem arises/vanishes by the reporting tool
+        Scan, ///< is added in response to a scan request and removed by the problem collector in advance to the next scan
+        Permanent ///< is valid during the whole application lifetime and not meant to be removed at all
     };
 
     Problem()
