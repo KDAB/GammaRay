@@ -79,6 +79,7 @@ set(gammaray_srcs
   tools/objectinspector/bindingextension.cpp
   tools/objectinspector/bindingmodel.cpp
   tools/objectinspector/stacktraceextension.cpp
+  tools/problemreporter/availablecheckersmodel.cpp
   tools/problemreporter/problemmodel.cpp
   tools/problemreporter/problemreporter.cpp
   tools/resourcebrowser/resourcebrowser.cpp

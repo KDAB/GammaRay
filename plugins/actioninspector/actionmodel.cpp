@@ -61,7 +61,10 @@ ActionModel::ActionModel(QObject *parent)
     : QAbstractTableModel(parent)
     , m_duplicateFinder(new ActionValidator(this))
 {
-    connect(ProblemCollector::instance(), SIGNAL(problemScanRequested()), this, SLOT(scanForShortcutDuplicates()));
+    ProblemCollector::registerProblemChecker("gammaray_actioninspector.ShortcutDuplicates",
+                                          "Shortcut Duplicates",
+                                          "Scans for potential shortcut conflicts in QActions",
+                                          [this]() { scanForShortcutDuplicates(); });
 }
 
 ActionModel::~ActionModel()
@@ -215,19 +218,16 @@ void ActionModel::actionChanged()
 
 void ActionModel::scanForShortcutDuplicates() const
 {
-    ProblemCollector::reportScanStarted();
-
-        Q_FOREACH(QAction *action, m_actions) {
-            Q_FOREACH (const QKeySequence &sequence, m_duplicateFinder->findAmbiguousShortcuts(action)) {
-                Problem p;
-                p.severity = Problem::Error;
-                p.description = QStringLiteral("Key sequence %1 is ambigous.").arg(sequence.toString(QKeySequence::NativeText));
-                p.problemId = QStringLiteral("AbigousKeySequence:%1").arg(sequence.toString(QKeySequence::PortableText));
-                p.object = ObjectId(action);
-                p.location = ObjectDataProvider::creationLocation(action);
-                p.findingCategory = Problem::Scan;
-                ProblemCollector::addProblem(p);
-            }
+    Q_FOREACH(QAction *action, m_actions) {
+        Q_FOREACH (const QKeySequence &sequence, m_duplicateFinder->findAmbiguousShortcuts(action)) {
+            Problem p;
+            p.severity = Problem::Error;
+            p.description = QStringLiteral("Key sequence %1 is ambigous.").arg(sequence.toString(QKeySequence::NativeText));
+            p.problemId = QStringLiteral("gammaray_actioninspector.ShortcutDuplicates:%1").arg(sequence.toString(QKeySequence::PortableText));
+            p.object = ObjectId(action);
+            p.location = ObjectDataProvider::creationLocation(action);
+            p.findingCategory = Problem::Scan;
+            ProblemCollector::addProblem(p);
         }
-        ProblemCollector::reportScanFinished();
+    }
 }
