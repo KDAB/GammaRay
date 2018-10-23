@@ -399,12 +399,19 @@ void QuickItemModel::updateItemFlags(QQuickItem *item)
             if (outOfView) {
                 Problem p;
                 p.severity = Problem::Info;
-                p.description = QStringLiteral("QtQuick Item %1 is visible, but out of view.").arg(ObjectDataProvider::typeName(item));
+                p.description = QStringLiteral("QtQuick: %1 %2 (0x%3) is visible, but out of view.").arg(
+                    ObjectDataProvider::typeName(item),
+                    ObjectDataProvider::name(item),
+                    QString::number(reinterpret_cast<quintptr>(item), 16)
+                );
                 p.object = ObjectId(item);
                 p.location = ObjectDataProvider::creationLocation(item);
-                p.problemId = QString::number(reinterpret_cast<quintptr>(item)) + ".OutOfView";
+                p.problemId = QStringLiteral("OutOfView:%1").arg(reinterpret_cast<quintptr>(item));
+                p.findingCategory = Problem::Live;
                 ProblemCollector::addProblem(p);
                 break;
+            } else {
+                ProblemCollector::removeProblem(QStringLiteral("OutOfView:%1").arg(reinterpret_cast<quintptr>(item)));
             }
         }
         ancestor = ancestor->parentItem();
