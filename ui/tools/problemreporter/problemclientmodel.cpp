@@ -83,3 +83,30 @@ QVariant ProblemClientModel::headerData(int section, Qt::Orientation orientation
     }
     return QSortFilterProxyModel::headerData(section, orientation, role);
 }
+
+bool ProblemClientModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+{
+    if (!QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent)) { // Implement the usual search-bar filtering
+        return false;
+    }
+
+    auto index = sourceModel()->index(source_row, 0, source_parent);
+    auto id = index.data(ProblemModelRoles::ProblemIdRole).toString();
+
+    return std::none_of(m_disabledCheckers.begin(), m_disabledCheckers.end(),
+        [id](const QString &checkerId) { return id.startsWith(checkerId); });
+}
+
+void ProblemClientModel::disableChecker(const QString& id)
+{
+    if (m_disabledCheckers.contains(id))
+        return;
+
+    m_disabledCheckers.push_back(id);
+    invalidateFilter();
+}
+void ProblemClientModel::enableChecker(const QString& id)
+{
+    m_disabledCheckers.removeAll(id);
+    invalidateFilter();
+}

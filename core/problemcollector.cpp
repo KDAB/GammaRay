@@ -35,17 +35,19 @@ using namespace GammaRay;
 
 ProblemCollector::ProblemCollector(QObject *parent)
     : QObject(parent)
-    , m_runningScanCount(0)
-    , m_reportFinishedTimer(new QTimer(this))
 {
-    connect(m_reportFinishedTimer, SIGNAL(timeout()), this, SLOT(maybeEmitScansFinished()));
-    m_reportFinishedTimer->setSingleShot(true);
-    m_reportFinishedTimer->setInterval(10);
 }
 
 ProblemCollector * ProblemCollector::instance()
 {
     return Probe::instance()->problemCollector();
+}
+
+void ProblemCollector::registerProblemChecker(const QString& id,
+                                           const QString& name, const QString& description,
+                                           const std::function<void ()>& callback)
+{
+    instance()->m_availableCheckers.push_back({id, name, description, callback, true});
 }
 
 void GammaRay::ProblemCollector::requestScan()
@@ -71,7 +73,11 @@ void GammaRay::ProblemCollector::requestScan()
         }
     }
 
-    emit problemScanRequested();
+    foreach (const auto &checker, m_availableCheckers) {
+        if (checker.enabled)
+            checker.callback();
+    }
+    emit problemScansFinished();
 }
 
 void ProblemCollector::addProblem(const Problem& problem)
@@ -103,34 +109,9 @@ const QVector<Problem> & ProblemCollector::problems()
     return m_problems;
 }
 
-void GammaRay::ProblemCollector::reportScanStarted()
+QVector<ProblemCollector::Checker> &ProblemCollector::availableCheckers()
 {
-    auto self = instance();
-
-    ++self->m_runningScanCount;
-    self->m_reportFinishedTimer->stop();
-}
-void GammaRay::ProblemCollector::reportScanFinished()
-{
-    auto self = instance();
-    Q_ASSERT(self->m_runningScanCount > 0);
-
-    --self->m_runningScanCount;
-
-    if (self->m_runningScanCount == 0) {
-        // As lots of the problem collecting runs single-threaded and
-        // synchronous, it's a common scenario that one scan starts and
-        // finishes before another one has the chance to start. That's why we
-        // defer sending a finished signal to the client by 10ms.
-        self->m_reportFinishedTimer->start();
-    }
-}
-
-void GammaRay::ProblemCollector::maybeEmitScansFinished()
-{
-    if (m_runningScanCount == 0) {
-        emit problemScansFinished();
-    }
+    return m_availableCheckers;
 }
 
 

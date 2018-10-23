@@ -38,11 +38,11 @@
 
 // Qt
 #include <QAbstractItemModel>
-#include <QTimer>
 
 // Std
 #include <memory>
 #include <vector>
+#include <functional>
 
 namespace GammaRay {
 
@@ -54,25 +54,41 @@ class GAMMARAY_CORE_EXPORT ProblemCollector : public QObject
 
 public:
     static void addProblem(const Problem &problem);
+
+    /**
+     * Removes the problem with the \p problemId. It's ok to call this method
+     * with a problemId that is not registered, in this case nothing happens.
+     *
+     * It's not required to call this for problems with findingCategory Scan,
+     * as those are removed automatically in advance to a new scan.
+     */
     static void removeProblem(const QString &problemId);
     static ProblemCollector *instance();
 
     const QVector<Problem> &problems();
 
     /**
-     * Use this method from a problem provider as a response to a scan request
-     * to inform the problem collector and thereby the client that you started
-     * to scan for problems. This information will i.a. be used to show a busy
-     * indicator to the user.
+     * Use this method from a tool to register a scan, which the tool is able
+     * to do.
+     *
+     * \p name and \p description are user-readable strings, \p id is some
+     * internal string that will be used to identify the checkers. This can be
+     * chosen at will, but must be unique.
+     * \p callback will be called to start the scan
      */
-    static void reportScanStarted();
-    /**
-     * Use this method from a problem provider as a response to a scan request
-     * to inform the problem collector and thereby the client that your scan
-     * finished, no matter if you found any problems or not. This information
-     * will i.a. be used to operate a busy indicator in the client.
-     */
-    static void reportScanFinished();
+    static void registerProblemChecker(const QString &id,
+                                    const QString &name, const QString &description,
+                                    const std::function<void()> &callback);
+
+private:
+    struct Checker {
+        QString id;
+        QString name;
+        QString description;
+        std::function<void()> callback;
+        bool enabled;
+    };
+    QVector<Checker> &availableCheckers();
 
 signals:
     /**
@@ -85,31 +101,29 @@ signals:
     void problemsRemoved();
 
     /**
-     * This signal is directed at tools that can provide scans for problems
-     * and shall be used as a trigger to start a scan.
-     */
-    void problemScanRequested();
-
-    /**
      * This signal is directed at the Problem Reporter tool to inform that
      * the problem providing tools have started scanning for problems.
      */
     void problemScansFinished();
 
+    /**
+     * These signals are directed at the available checkers model to inform newly
+     * available checkers
+     */
+    void aboutToAddChecker();
+    void checkerAdded();
+
 public slots:
     void requestScan();
-
-private slots:
-    void maybeEmitScansFinished();
 
 private:
     explicit ProblemCollector(QObject *parent);
 
+    QVector<Checker> m_availableCheckers;
     QVector<Problem> m_problems;
-    uint16_t m_runningScanCount;
-    QTimer *m_reportFinishedTimer;
 
     friend class Probe;
+    friend class AvailableCheckersModel;
 };
 }
 

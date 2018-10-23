@@ -1,11 +1,11 @@
 /*
-  problemclientmodel.h
+  availablecheckersmodel.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2016-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,33 +26,38 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_PROBLEMCLIENTMODEL_H
-#define GAMMARAY_PROBLEMCLIENTMODEL_H
+#ifndef GAMMARAY_AVAILABLECHECKERSMODEL_H
+#define GAMMARAY_AVAILABLECHECKERSMODEL_H
 
-#include <QSortFilterProxyModel>
+#include <QAbstractListModel>
+#include <QItemSelectionModel>
+
+#include <core/problemcollector.h>
 
 namespace GammaRay {
 
-/*! Client-side part of the meta types model. */
-class ProblemClientModel : public QSortFilterProxyModel
+class AvailableCheckersModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit ProblemClientModel(QObject *parent = nullptr);
-    ~ProblemClientModel();
+    AvailableCheckersModel(QObject *parent);
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex & index, int role) const override;
 
-    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const override;
+    int rowCount(const QModelIndex & parent) const override;
 
-    void disableChecker (const QString &id);
-    void enableChecker (const QString &id);
+    bool setData(const QModelIndex & index, const QVariant & value, int role) override;
+
+    Qt::ItemFlags flags(const QModelIndex & index) const override;
+
+private slots:
+    void aboutToAddChecker();
+    void checkerAdded();
 
 private:
-    QVector<QString> m_disabledCheckers; // holds the ids of the disabled checkers
+    QVector<ProblemCollector::Checker> *m_availableCheckers;
 };
 
 }
 
-#endif // GAMMARAY_PROBLEMCLIENTMODEL_H
+#endif // GAMMARAY_AVAILABLECHECKERSMODEL_H

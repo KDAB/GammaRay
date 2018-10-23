@@ -4,8 +4,8 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2012-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -39,8 +39,94 @@
 #include <common/tools/problemreporter/problemmodelroles.h>
 
 #include <QMenu>
+#include <QStandardItemModel>
+#include <QStyledItemDelegate>
+#include <QPainter>
+#include <QMouseEvent>
 
 using namespace GammaRay;
+
+class ProblemFilterDelegate : public QStyledItemDelegate
+{
+public:
+    explicit ProblemFilterDelegate(QAbstractItemView *view)
+     : QStyledItemDelegate(view)
+    {}
+
+protected:
+    void paint(QPainter *painter, const QStyleOptionViewItem &option,
+               const QModelIndex &index) const override
+    {
+        QStyle *style = option.widget ? option.widget->style() : QApplication::style();
+        QStyleOptionButton checkboxOption = copyStyleOptions(option, index);
+        painter->save();
+        QString title = index.data(Qt::DisplayRole).toString();
+        const QString description = index.data(Qt::ToolTipRole).toString();
+        const int vMargin = option.widget->style()->pixelMetric(QStyle::PM_FocusFrameVMargin);
+        const int hMargin = option.widget->style()->pixelMetric(QStyle::PM_FocusFrameHMargin)
+                          + option.widget->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
+        const QRect checkboxRect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &checkboxOption, option.widget);
+        const QRect rect = option.rect.adjusted(checkboxRect.width() + hMargin, vMargin, -hMargin, -vMargin);
+        const int lineHeight = rect.height() / 2;
+        const QRect titleRect(rect.left() + hMargin,
+                              rect.top() + vMargin,
+                              rect.width(),
+                              lineHeight);
+        const QRect authorRect(rect.left() + hMargin,
+                               rect.top() + vMargin + lineHeight,
+                               rect.width(),
+                               lineHeight);
+
+        painter->save();
+        painter->drawText(titleRect, Qt::AlignLeft | Qt::AlignVCenter, title);
+        painter->restore();
+        painter->setOpacity(0.5);
+        painter->drawText(authorRect, Qt::AlignLeft | Qt::AlignVCenter, description);
+        painter->restore();
+
+        style->drawControl(QStyle::CE_CheckBox, &checkboxOption, painter, option.widget);
+    }
+
+    QStyleOptionButton copyStyleOptions(QStyleOptionViewItem viewOption, const QModelIndex &index) const
+    {
+        initStyleOption(&viewOption, index);
+        QStyleOptionButton checkboxOption;
+        checkboxOption.direction = viewOption.direction;
+        checkboxOption.fontMetrics = viewOption.fontMetrics;
+        checkboxOption.palette = viewOption.palette;
+        checkboxOption.rect = viewOption.rect;
+        checkboxOption.state = viewOption.state;
+        checkboxOption.styleObject = viewOption.styleObject;
+        if (viewOption.checkState == Qt::Checked) {
+            checkboxOption.state |= QStyle::State_On;
+        }
+        return checkboxOption;
+    }
+
+    QSize sizeHint(const QStyleOptionViewItem &option,
+                   const QModelIndex &index) const override
+    {
+        QStyleOptionButton checkboxOption = copyStyleOptions(option, index);
+
+        const QString title = index.data(Qt::DisplayRole).toString();
+        const QString description = index.data(Qt::ToolTipRole).toString();
+        const QFontMetrics metrics(option.font);
+        const int vMargin = option.widget->style()->pixelMetric(QStyle::PM_FocusFrameVMargin);
+        const int hMargin = option.widget->style()->pixelMetric(QStyle::PM_FocusFrameHMargin)
+                          + option.widget->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
+        const QRect checkboxRect = option.widget->style()->subElementRect(QStyle::SE_CheckBoxIndicator, &checkboxOption, option.widget);
+        const int textWidth = qMax(metrics.width(title), metrics.width(description));
+        const int textHeight = metrics.height() * 2;
+        const int totalWidth = checkboxRect.width() + textWidth + hMargin * 2;
+        const int totalHeight = textHeight + vMargin * 3;
+
+        return QSize(totalWidth, totalHeight);
+    }
+
+private:
+    QAbstractItemView *m_view;
+};
+
 
 static QObject *createProblemReporterClient(const QString & /*name*/, QObject *parent)
 {
@@ -63,17 +149,25 @@ ProblemReporterWidget::ProblemReporterWidget(QWidget *parent)
     connect(iface, SIGNAL(problemScansFinished()), ui->progressBar, SLOT(hide()));
     ui->progressBar->setVisible(false);
 
-    auto model = new ProblemClientModel(this);
-    model->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ProblemModel")));
+    m_problemsModel = new ProblemClientModel(this);
+    m_problemsModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ProblemModel")));
     ui->problemView->header()->setObjectName("problemViewHeader");
     ui->problemView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->problemView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
-    ui->problemView->setModel(model);
+    ui->problemView->setModel(m_problemsModel);
     ui->problemView->sortByColumn(0, Qt::AscendingOrder);
 
     connect(ui->problemView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(problemViewContextMenu(QPoint)));
 
-    new SearchLineController(ui->searchLine, model);
+    new SearchLineController(ui->searchLine, m_problemsModel);
+
+    m_availableCheckersModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.AvailableProblemCheckersModel"));
+    ui->problemfilterwidget->viewport()->setAutoFillBackground(false);
+    ui->problemfilterwidget->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->problemfilterwidget->setItemDelegate(new ProblemFilterDelegate(ui->problemfilterwidget));
+    ui->problemfilterwidget->setModel(m_availableCheckersModel);
+
+    connect(m_availableCheckersModel, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)), this, SLOT(updateFilter(QModelIndex, QModelIndex, QVector<int>)));
 }
 
 ProblemReporterWidget::~ProblemReporterWidget()
@@ -91,4 +185,24 @@ void ProblemReporterWidget::problemViewContextMenu(const QPoint &p)
     ext.populateMenu(&menu);
 
     menu.exec(ui->problemView->viewport()->mapToGlobal(p));
+}
+
+void GammaRay::ProblemReporterWidget::updateFilter(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+{
+    if (!roles.empty() && !roles.contains(Qt::CheckStateRole))
+        return;
+
+    for (int i = topLeft.row(); i <= bottomRight.row(); ++i) {
+        auto index = topLeft.siblingAtRow(i);
+        auto checkState = index.data(Qt::CheckStateRole);
+        auto id = index.data(Qt::EditRole).toString();
+        if (!checkState.canConvert<Qt::CheckState>())
+            continue;
+
+        if (index.data(Qt::CheckStateRole).value<Qt::CheckState>() == Qt::Checked) {
+            m_problemsModel->enableChecker(id);
+        } else {
+            m_problemsModel->disableChecker(id);
+        }
+    }
 }

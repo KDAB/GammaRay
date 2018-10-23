@@ -70,6 +70,8 @@ QVariant ProblemModel::data(const QModelIndex &index, int role) const
             return QVariant::fromValue(problem.location);
         case ProblemModelRoles::SeverityRole:
             return problem.severity;
+        case ProblemModelRoles::ProblemIdRole:
+            return problem.problemId;
     }
     return QVariant();
 }
@@ -80,6 +82,7 @@ QMap<int, QVariant> ProblemModel::itemData(const QModelIndex &index) const
     d.insert(ObjectModel::ObjectIdRole, data(index, ObjectModel::ObjectIdRole));
     d.insert(ProblemModelRoles::SourceLocationRole, data(index, ProblemModelRoles::SourceLocationRole));
     d.insert(ProblemModelRoles::SeverityRole, data(index, ProblemModelRoles::SeverityRole));
+    d.insert(ProblemModelRoles::ProblemIdRole, data(index, ProblemModelRoles::ProblemIdRole));
     return d;
 }
 

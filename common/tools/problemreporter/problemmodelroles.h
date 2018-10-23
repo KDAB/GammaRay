@@ -36,7 +36,8 @@ namespace ProblemModelRoles {
 
 enum Roles {
     SeverityRole = ObjectModel::UserRole + 1,
-    SourceLocationRole
+    SourceLocationRole,
+    ProblemIdRole
 };
 
 }

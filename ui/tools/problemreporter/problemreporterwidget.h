@@ -4,8 +4,8 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2012-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Anton Kreuzkamp <anton.kreuzkamp@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -34,10 +34,13 @@
 
 #include <QWidget>
 
+class QAbstractItemModel;
+
 namespace GammaRay {
 namespace Ui {
 class ProblemReporterWidget;
 }
+class ProblemClientModel;
 
 class ProblemReporterWidget : public QWidget
 {
@@ -48,10 +51,13 @@ public:
 
 private slots:
     void problemViewContextMenu(const QPoint &p);
+    void updateFilter(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 
 private:
     QScopedPointer<Ui::ProblemReporterWidget> ui;
     UIStateManager m_stateManager;
+    QAbstractItemModel *m_availableCheckersModel;
+    ProblemClientModel *m_problemsModel;
 };
 
 }

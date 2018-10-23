@@ -72,6 +72,11 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
             SLOT(objectSelected(QObject*)));
 
     connect(ProblemCollector::instance(), SIGNAL(problemScanRequested()), this, SLOT(scanForBindingLoops()));
+    ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.BindingLoopScan",
+                                          "Binding Loops",
+                                          "Scans all QObjects for binding loops",
+                                          &BindingAggregator::scanForBindingLoops);
+
 }
 
 void ObjectInspector::objectSelectionChanged(const QItemSelection &selection)
@@ -111,11 +116,6 @@ void ObjectInspector::objectSelected(QObject *object)
     // TODO: move this to the client side!
     // ui->objectTreeView->scrollTo(index);
     objectSelected(index);
-}
-
-void ObjectInspector::scanForBindingLoops()
-{
-    BindingAggregator::scanForBindingLoops();
 }
 
 void ObjectInspector::registerPCExtensions()

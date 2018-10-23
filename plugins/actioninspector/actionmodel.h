@@ -75,12 +75,13 @@ public:
 public slots:
     void objectAdded(QObject *object);
     void objectRemoved(QObject *object);
-    void scanForShortcutDuplicates() const;
 
 private slots:
     void actionChanged();
 
 private:
+    void scanForShortcutDuplicates() const;
+
     // sorted vector of QActions
     QVector<QAction *> m_actions;
 

@@ -28,6 +28,7 @@
 
 #include "problemreporter.h"
 #include "problemmodel.h"
+#include "availablecheckersmodel.h"
 
 #include <core/problemcollector.h>
 
@@ -37,10 +38,8 @@ ProblemReporter::ProblemReporter(Probe *probe, QObject *parent)
     : ProblemReporterInterface(parent)
     , m_problemModel(new ProblemModel(this))
 {
-//     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-//     proxy->setSourceModel(m_problemModel);
-//     proxy->addRole(MetaTypeRoles::MetaObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ProblemModel"), m_problemModel);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.AvailableProblemCheckersModel"), new AvailableCheckersModel(this));
 
     connect(ProblemCollector::instance(), SIGNAL(problemScansFinished()), this, SIGNAL(problemScansFinished()));
 }

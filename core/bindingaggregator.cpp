@@ -108,8 +108,6 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::bindingTreeForObjec
 
 void BindingAggregator::scanForBindingLoops()
 {
-    ProblemCollector::reportScanStarted();
-
     const QVector<QObject*> &allObjects = Probe::instance()->allQObjects();
 
     QMutexLocker lock(Probe::objectLock());
@@ -126,12 +124,10 @@ void BindingAggregator::scanForBindingLoops()
                 p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(bindingNode->object())).arg(bindingNode->canonicalName());
                 p.object = ObjectId(bindingNode->object());
                 p.location = bindingNode->sourceLocation();
-                p.problemId = QString("BindingLoop:%1.%2").arg(reinterpret_cast<quintptr>(bindingNode->object())).arg(bindingNode->propertyIndex());
+                p.problemId = QString("com.kdab.GammaRay.ObjectInspector.BindingLoopScan:%1.%2").arg(reinterpret_cast<quintptr>(bindingNode->object())).arg(bindingNode->propertyIndex());
                 p.findingCategory = Problem::Scan;
                 ProblemCollector::addProblem(p);
             }
         }
     }
-
-    ProblemCollector::reportScanFinished();
 }
