@@ -47,7 +47,8 @@ void ProblemCollector::registerProblemChecker(const QString& id,
                                            const QString& name, const QString& description,
                                            const std::function<void ()>& callback)
 {
-    instance()->m_availableCheckers.push_back({id, name, description, callback, true});
+    Checker c = {id, name, description, callback, true};
+    instance()->m_availableCheckers.push_back(c);
 }
 
 void GammaRay::ProblemCollector::requestScan()

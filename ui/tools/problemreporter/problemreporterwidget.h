@@ -32,9 +32,13 @@
 #include <ui/uistatemanager.h>
 #include <ui/tooluifactory.h>
 
+#include <QVector>
 #include <QWidget>
 
+QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
+class QModelIndex;
+QT_END_NAMESPACE
 
 namespace GammaRay {
 namespace Ui {

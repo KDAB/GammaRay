@@ -122,7 +122,7 @@ void ActionValidator::handleActionDestroyed(QObject *object)
 
 bool ActionValidator::hasAmbiguousShortcut(const QAction *action) const
 {
-    return std::any_of(action->shortcuts().cbegin(), action->shortcuts().cend(),
+    return std::any_of(action->shortcuts().constBegin(), action->shortcuts().constEnd(),
                        [action, this](const QKeySequence &seq) { return isAmbigous(action, seq); });
 }
 
