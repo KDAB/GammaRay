@@ -29,6 +29,7 @@
 #ifndef GAMMARAY_PROBLEMCLIENTMODEL_H
 #define GAMMARAY_PROBLEMCLIENTMODEL_H
 
+#include <QVector>
 #include <QSortFilterProxyModel>
 
 namespace GammaRay {

@@ -43,6 +43,12 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QStyleOptionViewItemV4>
+
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
+Q_DECLARE_METATYPE(Qt::CheckState)
+#endif
 
 using namespace GammaRay;
 
@@ -57,15 +63,17 @@ protected:
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
                const QModelIndex &index) const override
     {
-        QStyle *style = option.widget ? option.widget->style() : QApplication::style();
+        const QStyleOptionViewItemV4 *viewItemOption =
+           qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option); // This is for Qt4 compatibility. Should be a noop in Qt5
+        QStyle *style = viewItemOption->widget ? viewItemOption->widget->style() : QApplication::style();
         QStyleOptionButton checkboxOption = copyStyleOptions(option, index);
         painter->save();
         QString title = index.data(Qt::DisplayRole).toString();
         const QString description = index.data(Qt::ToolTipRole).toString();
-        const int vMargin = option.widget->style()->pixelMetric(QStyle::PM_FocusFrameVMargin);
-        const int hMargin = option.widget->style()->pixelMetric(QStyle::PM_FocusFrameHMargin)
-                          + option.widget->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
-        const QRect checkboxRect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &checkboxOption, option.widget);
+        const int vMargin = viewItemOption->widget->style()->pixelMetric(QStyle::PM_FocusFrameVMargin);
+        const int hMargin = viewItemOption->widget->style()->pixelMetric(QStyle::PM_FocusFrameHMargin)
+                          + viewItemOption->widget->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
+        const QRect checkboxRect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &checkboxOption, viewItemOption->widget);
         const QRect rect = option.rect.adjusted(checkboxRect.width() + hMargin, vMargin, -hMargin, -vMargin);
         const int lineHeight = rect.height() / 2;
         const QRect titleRect(rect.left() + hMargin,
@@ -84,10 +92,10 @@ protected:
         painter->drawText(authorRect, Qt::AlignLeft | Qt::AlignVCenter, description);
         painter->restore();
 
-        style->drawControl(QStyle::CE_CheckBox, &checkboxOption, painter, option.widget);
+        style->drawControl(QStyle::CE_CheckBox, &checkboxOption, painter, viewItemOption->widget);
     }
 
-    QStyleOptionButton copyStyleOptions(QStyleOptionViewItem viewOption, const QModelIndex &index) const
+    QStyleOptionButton copyStyleOptions(QStyleOptionViewItemV4 viewOption, const QModelIndex &index) const
     {
         initStyleOption(&viewOption, index);
         QStyleOptionButton checkboxOption;
@@ -96,7 +104,9 @@ protected:
         checkboxOption.palette = viewOption.palette;
         checkboxOption.rect = viewOption.rect;
         checkboxOption.state = viewOption.state;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         checkboxOption.styleObject = viewOption.styleObject;
+#endif
         if (viewOption.checkState == Qt::Checked) {
             checkboxOption.state |= QStyle::State_On;
         }
@@ -106,15 +116,19 @@ protected:
     QSize sizeHint(const QStyleOptionViewItem &option,
                    const QModelIndex &index) const override
     {
-        QStyleOptionButton checkboxOption = copyStyleOptions(option, index);
+        const QStyleOptionViewItemV4 *viewItemOption =
+           qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option); // This is for Qt4 compatibility. Should be a noop in Qt5
+        Q_ASSERT(viewItemOption);
+
+        QStyleOptionButton checkboxOption = copyStyleOptions(*viewItemOption, index);
 
         const QString title = index.data(Qt::DisplayRole).toString();
         const QString description = index.data(Qt::ToolTipRole).toString();
         const QFontMetrics metrics(option.font);
-        const int vMargin = option.widget->style()->pixelMetric(QStyle::PM_FocusFrameVMargin);
-        const int hMargin = option.widget->style()->pixelMetric(QStyle::PM_FocusFrameHMargin)
-                          + option.widget->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
-        const QRect checkboxRect = option.widget->style()->subElementRect(QStyle::SE_CheckBoxIndicator, &checkboxOption, option.widget);
+        const int vMargin = viewItemOption->widget->style()->pixelMetric(QStyle::PM_FocusFrameVMargin);
+        const int hMargin = viewItemOption->widget->style()->pixelMetric(QStyle::PM_FocusFrameHMargin)
+                          + viewItemOption->widget->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
+        const QRect checkboxRect = viewItemOption->widget->style()->subElementRect(QStyle::SE_CheckBoxIndicator, &checkboxOption, viewItemOption->widget);
         const int textWidth = qMax(metrics.width(title), metrics.width(description));
         const int textHeight = metrics.height() * 2;
         const int totalWidth = checkboxRect.width() + textWidth + hMargin * 2;
@@ -122,9 +136,6 @@ protected:
 
         return QSize(totalWidth, totalHeight);
     }
-
-private:
-    QAbstractItemView *m_view;
 };
 
 
@@ -193,7 +204,7 @@ void GammaRay::ProblemReporterWidget::updateFilter(const QModelIndex &topLeft, c
         return;
 
     for (int i = topLeft.row(); i <= bottomRight.row(); ++i) {
-        auto index = topLeft.siblingAtRow(i);
+        auto index = topLeft.sibling(i, 0);
         auto checkState = index.data(Qt::CheckStateRole);
         auto id = index.data(Qt::EditRole).toString();
         if (!checkState.canConvert<Qt::CheckState>())

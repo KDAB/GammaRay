@@ -107,6 +107,6 @@ void ProblemClientModel::disableChecker(const QString& id)
 }
 void ProblemClientModel::enableChecker(const QString& id)
 {
-    m_disabledCheckers.removeAll(id);
+    m_disabledCheckers.erase(std::remove(m_disabledCheckers.begin(), m_disabledCheckers.end(), id), m_disabledCheckers.end());
     invalidateFilter();
 }
