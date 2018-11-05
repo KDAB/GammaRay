@@ -53,7 +53,7 @@ bool GdbInjector::launch(const QStringList &programAndArgs, const QString &probe
     gdbArgs.append(programAndArgs);
 
     if (!startDebugger(gdbArgs, env))
-        return -1;
+        return false;
 
     setupGdb();
     waitForMain();
