@@ -29,8 +29,10 @@
 #include "actionvalidator.h"
 
 #include <QAction>
+#include <QMutexLocker>
 
 #include <core/objectdataprovider.h>
+#include <core/probe.h>
 #include <core/problemcollector.h>
 #include <common/problem.h>
 
@@ -144,8 +146,14 @@ QVector<QKeySequence> GammaRay::ActionValidator::findAmbiguousShortcuts(const QA
 
 bool GammaRay::ActionValidator::isAmbigous(const QAction *action, const QKeySequence &sequence) const
 {
+    Q_ASSERT(action);
+    QMutexLocker lock(Probe::objectLock());
+    if (!Probe::instance()->isValidObject(action)) {
+        return false;
+    }
+
     Q_FOREACH(const QAction *other, m_shortcutActionMap.values(sequence)) {
-        if (other == action) {
+        if (!other || other == action || !Probe::instance()->isValidObject(other)) {
             continue;
         }
         if (action->shortcutContext() == Qt::ApplicationShortcut
