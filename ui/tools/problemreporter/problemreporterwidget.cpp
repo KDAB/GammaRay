@@ -74,23 +74,24 @@ protected:
         const int hMargin = viewItemOption->widget->style()->pixelMetric(QStyle::PM_FocusFrameHMargin)
                           + viewItemOption->widget->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
         const QRect checkboxRect = style->subElementRect(QStyle::SE_CheckBoxIndicator, &checkboxOption, viewItemOption->widget);
-        const QRect rect = option.rect.adjusted(checkboxRect.width() + hMargin, vMargin, -hMargin, -vMargin);
-        const int lineHeight = rect.height() / 2;
-        const QRect titleRect(rect.left() + hMargin,
-                              rect.top() + vMargin,
-                              rect.width(),
-                              lineHeight);
-        const QRect authorRect(rect.left() + hMargin,
-                               rect.top() + vMargin + lineHeight,
-                               rect.width(),
-                               lineHeight);
+        const QRect textRect = option.rect.adjusted(checkboxRect.width() + hMargin, vMargin, -hMargin, -vMargin);
+        const QFontMetrics metrics(option.font);
+        const QRect titleRect(textRect.left(),
+                              textRect.top(),
+                              textRect.width(),
+                              metrics.height());
+        const QRect descriptionRect = metrics.boundingRect(textRect, Qt::TextWordWrap, description)
+                                             .translated(0, vMargin + titleRect.height());
+
+        const QRect descriptionRect2 = metrics.boundingRect(viewItemOption->rect.adjusted(checkboxRect.width(),0,0,0), Qt::TextWordWrap, description);
 
         painter->save();
         painter->drawText(titleRect, Qt::AlignLeft | Qt::AlignVCenter, title);
         painter->restore();
         painter->setOpacity(0.5);
-        painter->drawText(authorRect, Qt::AlignLeft | Qt::AlignVCenter, description);
+        painter->drawText(descriptionRect, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap, description);
         painter->restore();
+
 
         style->drawControl(QStyle::CE_CheckBox, &checkboxOption, painter, viewItemOption->widget);
     }
@@ -129,8 +130,12 @@ protected:
         const int hMargin = viewItemOption->widget->style()->pixelMetric(QStyle::PM_FocusFrameHMargin)
                           + viewItemOption->widget->style()->pixelMetric(QStyle::PM_CheckBoxLabelSpacing);
         const QRect checkboxRect = viewItemOption->widget->style()->subElementRect(QStyle::SE_CheckBoxIndicator, &checkboxOption, viewItemOption->widget);
-        const int textWidth = qMax(metrics.width(title), metrics.width(description));
-        const int textHeight = metrics.height() * 2;
+        const QRect titleRect = metrics.boundingRect(title);
+        const int textAvailableWidth = qobject_cast<const QListView*>(viewItemOption->widget)->width() // FIXME this is the wrong size if the view has a horizontal scrollbar...
+            - 2 * viewItemOption->widget->style()->pixelMetric(QStyle::PM_FocusFrameHMargin) - checkboxRect.width();
+        const QRect descriptionRect = metrics.boundingRect(QRect(0,0,textAvailableWidth, 0), Qt::TextWordWrap, description);
+        const int textWidth = qMax(titleRect.width(), descriptionRect.width());
+        const int textHeight = titleRect.height() + descriptionRect.height();
         const int totalWidth = checkboxRect.width() + textWidth + hMargin * 2;
         const int totalHeight = textHeight + vMargin * 3;
 
