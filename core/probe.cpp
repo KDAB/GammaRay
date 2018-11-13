@@ -537,7 +537,7 @@ ProblemCollector *Probe::problemCollector() const
     return m_problemCollector;
 }
 
-bool Probe::isValidObject(QObject *obj) const
+bool Probe::isValidObject(const QObject *obj) const
 {
     ///TODO: can we somehow assert(s_lock().isLocked()) ?!
     ///  -> Not with a recursive mutex. Make it non-recursive, and you can do Q_ASSERT(!s_lock().tryLock());

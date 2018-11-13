@@ -58,6 +58,9 @@ private Q_SLOTS:
 private:
     void metaObjectSelected(const QMetaObject *mo);
 
+    static void scanForMetaObjectProblems();
+    static void doProblemScan(const QMetaObject *parent);
+
     PropertyController *m_propertyController;
     MetaObjectTreeModel *m_motm;
     QAbstractProxyModel *m_model;

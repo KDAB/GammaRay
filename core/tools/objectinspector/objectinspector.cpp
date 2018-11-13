@@ -71,7 +71,6 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
     connect(probe, SIGNAL(objectSelected(QObject*,QPoint)),
             SLOT(objectSelected(QObject*)));
 
-    connect(ProblemCollector::instance(), SIGNAL(problemScanRequested()), this, SLOT(scanForBindingLoops()));
     ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.BindingLoopScan",
                                           "Binding Loops",
                                           "Scans all QObjects for binding loops",

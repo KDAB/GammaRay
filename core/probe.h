@@ -198,7 +198,7 @@ public:
      *
      * @note The objectLock must be locked when this is called!
      */
-    bool isValidObject(QObject *obj) const;
+    bool isValidObject(const QObject *obj) const;
 
     /*!
      * Determines if the specified QObject belongs to the GammaRay Probe or Window.
@@ -312,7 +312,7 @@ private:
     ProblemCollector *m_problemCollector;
     ToolManager *m_toolManager;
     QObject *m_window;
-    QSet<QObject *> m_validObjects;
+    QSet<const QObject *> m_validObjects;
     MetaObjectRegistry *m_metaObjectRegistry;
 
     // all delayed object changes need to go through a single queue, as the order is crucial
