@@ -252,7 +252,7 @@ private:
     MockBindingProvider *provider;
     BindingExtension *bindingExtension;
     std::unique_ptr<ModelTest> modelTest;
-    BindingModel *bindingModel;
+    QAbstractItemModel *bindingModel;
 };
 
 void BindingInspectorTest::initTestCase()

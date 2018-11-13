@@ -30,6 +30,9 @@
 
 #include "qmetaobjectvalidator.h"
 #include "execution.h"
+#include "metaobjectregistry.h"
+#include "probe.h"
+#include "problemcollector.h"
 
 #include <QDebug>
 #include <QMetaMethod>

@@ -32,6 +32,8 @@
 #include <core/metaobjectregistry.h>
 #include <core/probe.h>
 #include <core/propertycontroller.h>
+#include <core/problemcollector.h>
+#include <core/qmetaobjectvalidator.h>
 #include <core/remote/serverproxymodel.h>
 
 #include <common/objectbroker.h>
@@ -71,6 +73,12 @@ MetaObjectBrowser::MetaObjectBrowser(Probe *probe, QObject *parent)
             SLOT(objectSelected(void*,QString)));
 
     ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this);
+
+    ProblemCollector::registerProblemChecker("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator",
+                                             "QMetaObject Validator",
+                                             "Checks for common errors with meta objects, like invocable functions with unregistered parameter types.",
+                                             &MetaObjectBrowser::scanForMetaObjectProblems
+                                            );
 }
 
 void MetaObjectBrowser::rescanMetaTypes()
@@ -126,4 +134,44 @@ void MetaObjectBrowser::metaObjectSelected(const QMetaObject *mo)
 QVector<QByteArray> MetaObjectBrowserFactory::selectableTypes() const
 {
     return QVector<QByteArray>() << QObject::staticMetaObject.className() << "QMetaObject";
+}
+
+void MetaObjectBrowser::scanForMetaObjectProblems()
+{
+    doProblemScan(nullptr);
+}
+
+void MetaObjectBrowser::doProblemScan(const QMetaObject *parent)
+{
+    auto registry = Probe::instance()->metaObjectRegistry();
+
+    QVector<const QMetaObject *> metaObjects = registry->childrenOf(parent);
+
+    foreach(const QMetaObject *mo, metaObjects) {
+        auto results = QMetaObjectValidator::check(mo);
+        if (results != QMetaObjectValidatorResult::NoIssue) {
+            //TODO do we want the Problem descriptions have more detail, i.e. have one problem listed
+            //     for each method/property that has issues instead of one for each metaobject?
+            Problem p;
+            p.severity = Problem::Warning;
+            QStringList issueList;
+
+            if (results & QMetaObjectValidatorResult::SignalOverride)
+                issueList.push_back(QStringLiteral("overrides base class signal"));
+            if (results & QMetaObjectValidatorResult::UnknownMethodParameterType)
+                issueList.push_back(QStringLiteral("uses a parameter type not registerd with the meta type system"));
+            if (results & QMetaObjectValidatorResult::PropertyOverride)
+                issueList.push_back(QStringLiteral("overrides base class property"));
+            if (results & QMetaObjectValidatorResult::UnknownPropertyType)
+                issueList.push_back(QStringLiteral("has a property with a type not registered with the meta type system"));
+
+            p.description = QStringLiteral("%1 %2.").arg(mo->className(), issueList.join(", "));
+            p.object = ObjectId(const_cast<QMetaObject*>(mo), "const QMetaObject*");
+            p.problemId = QString("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator:%1").arg(reinterpret_cast<quintptr>(mo));
+            p.findingCategory = Problem::Scan;
+            ProblemCollector::addProblem(p);
+        }
+
+        doProblemScan(mo);
+    }
 }
