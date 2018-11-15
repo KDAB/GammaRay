@@ -61,13 +61,13 @@ QVariant ProblemModel::data(const QModelIndex &index, int role) const
             case 0:
                 return problem.description;
             case 1:
-                return problem.location.displayString();
+                return problem.locations.size() ? problem.locations.front().displayString() : QString();
             }
             break;
         case ObjectModel::ObjectIdRole:
             return QVariant::fromValue(problem.object);
         case ProblemModelRoles::SourceLocationRole:
-            return QVariant::fromValue(problem.location);
+            return QVariant::fromValue(problem.locations);
         case ProblemModelRoles::SeverityRole:
             return problem.severity;
         case ProblemModelRoles::ProblemIdRole:

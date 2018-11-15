@@ -34,6 +34,7 @@
 #include <QMetaType>
 #include <QDataStream>
 #include <QUrl>
+#include <QVector>
 
 namespace GammaRay {
 /*!
@@ -60,6 +61,8 @@ public:
     ~SourceLocation();
     static SourceLocation fromZeroBased(const QUrl &url, int line, int column = 0);
     static SourceLocation fromOneBased(const QUrl &url, int line, int column = 1);
+
+    bool operator==(const SourceLocation &other) const;
 
     bool isValid() const;
 
@@ -117,5 +120,6 @@ GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, SourceLocation &
 }
 
 Q_DECLARE_METATYPE(GammaRay::SourceLocation)
+Q_DECLARE_METATYPE(QVector<GammaRay::SourceLocation>)
 
 #endif // GAMMARAY_SOURCELOCATION_H

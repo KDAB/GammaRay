@@ -64,6 +64,11 @@ GammaRay::SourceLocation GammaRay::SourceLocation::fromOneBased(const QUrl& url,
     return SourceLocation(url, line - 1, column - 1);
 }
 
+bool SourceLocation::operator==(const SourceLocation &other) const
+{
+    return m_url == other.m_url && m_line == other.m_line && m_column == other.m_column;
+}
+
 bool SourceLocation::isValid() const
 {
     return m_url.isValid();

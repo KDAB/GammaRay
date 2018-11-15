@@ -85,8 +85,14 @@ void ProblemCollector::addProblem(const Problem& problem)
 {
     auto self = instance();
 
-    if (self->m_problems.contains(problem))
+    auto i = std::find(self->m_problems.begin(), self->m_problems.end(), problem);
+    if (i != self->m_problems.end()) {
+        // if an already reported problem is reported a second time, but with a different source location,
+        // then the problem involves multiple source locations. So let's keep all of them.
+        std::remove_copy_if(problem.locations.begin(), problem.locations.end(), std::back_inserter(i->locations),
+                            [&](const SourceLocation &loc) { return i->locations.contains(loc); });
         return;
+    }
 
     emit self->aboutToAddProblem(self->m_problems.size());
     self->m_problems.push_back(problem);

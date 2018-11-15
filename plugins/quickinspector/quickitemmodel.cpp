@@ -405,7 +405,7 @@ void QuickItemModel::updateItemFlags(QQuickItem *item)
                     QString::number(reinterpret_cast<quintptr>(item), 16)
                 );
                 p.object = ObjectId(item);
-                p.location = ObjectDataProvider::creationLocation(item);
+                p.locations.push_back(ObjectDataProvider::creationLocation(item));
                 p.problemId = QStringLiteral("OutOfView:%1").arg(reinterpret_cast<quintptr>(item));
                 p.findingCategory = Problem::Live;
                 ProblemCollector::addProblem(p);

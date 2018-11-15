@@ -197,7 +197,10 @@ void ProblemReporterWidget::problemViewContextMenu(const QPoint &p)
 
     QMenu menu;
     ContextMenuExtension ext(objectId);
-    ext.setLocation(ContextMenuExtension::GoTo, index.data(ProblemModelRoles::SourceLocationRole).value<SourceLocation>());
+    auto sourceLocations = index.data(ProblemModelRoles::SourceLocationRole).value<QVector<SourceLocation>>();
+    foreach (const SourceLocation &sourceLocation, sourceLocations) {
+        ext.setLocation(ContextMenuExtension::GoTo, sourceLocation);
+    }
     ext.populateMenu(&menu);
 
     menu.exec(ui->problemView->viewport()->mapToGlobal(p));

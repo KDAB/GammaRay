@@ -66,7 +66,7 @@ public:
 
 private:
     ObjectId m_id;
-    QMap<Location, SourceLocation> m_locations;
+    QVector<QPair<Location, SourceLocation>> m_locations;
 };
 }
 
