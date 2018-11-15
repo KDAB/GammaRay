@@ -63,7 +63,7 @@ struct Problem {
     Severity severity;
     ObjectId object;
     QString description;
-    SourceLocation location;
+    QVector<SourceLocation> locations;
     QString reportingTool; ///< Tool which reported the issue
     QString problemId; ///< tool-specific unique id for the problem
     FindingCategory findingCategory;

@@ -71,6 +71,7 @@ void StreamOperators::registerOperators()
 
     qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
     qRegisterMetaTypeStreamOperators<GammaRay::SourceLocation>();
+    qRegisterMetaTypeStreamOperators<QVector<SourceLocation>>();
     qRegisterMetaTypeStreamOperators<GammaRay::QMetaObjectValidatorResult::Results>();
     qRegisterMetaTypeStreamOperators<GammaRay::PropertyModel::PropertyFlags>();
 

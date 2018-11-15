@@ -225,7 +225,7 @@ void ActionModel::scanForShortcutDuplicates() const
             p.description = QStringLiteral("Key sequence %1 is ambigous.").arg(sequence.toString(QKeySequence::NativeText));
             p.problemId = QStringLiteral("gammaray_actioninspector.ShortcutDuplicates:%1").arg(sequence.toString(QKeySequence::PortableText));
             p.object = ObjectId(action);
-            p.location = ObjectDataProvider::creationLocation(action);
+            p.locations.push_back(ObjectDataProvider::creationLocation(action));
             p.findingCategory = Problem::Scan;
             ProblemCollector::addProblem(p);
         }

@@ -123,7 +123,7 @@ void BindingAggregator::scanForBindingLoops()
                 p.severity = Problem::Error;
                 p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(bindingNode->object())).arg(bindingNode->canonicalName());
                 p.object = ObjectId(bindingNode->object());
-                p.location = bindingNode->sourceLocation();
+                p.locations.push_back(bindingNode->sourceLocation());
                 p.problemId = QString("com.kdab.GammaRay.ObjectInspector.BindingLoopScan:%1.%2").arg(reinterpret_cast<quintptr>(bindingNode->object())).arg(bindingNode->propertyIndex());
                 p.findingCategory = Problem::Scan;
                 ProblemCollector::addProblem(p);

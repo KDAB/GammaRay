@@ -71,7 +71,7 @@ ContextMenuExtension::ContextMenuExtension(const ObjectId &id)
 void ContextMenuExtension::setLocation(ContextMenuExtension::Location location,
                                        const SourceLocation &sourceLocation)
 {
-    m_locations[location] = sourceLocation;
+    m_locations.push_back(QPair<Location, SourceLocation>(location, sourceLocation));
 }
 
 bool ContextMenuExtension::discoverSourceLocation(ContextMenuExtension::Location location,
@@ -111,11 +111,11 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (UiIntegration::instance()) {
         for (auto it = m_locations.constBegin(), end = m_locations.constEnd(); it != end; ++it) {
-            if (it.value().isValid()) {
-                auto action = menu->addAction(sourceLocationLabel(it.key(), it.value()));
+            if (it->second.isValid()) {
+                auto action = menu->addAction(sourceLocationLabel(it->first, it->second));
                 QObject::connect(action, &QAction::triggered, UiIntegration::instance(), [it]() {
-                    UiIntegration::requestNavigateToCode(it.value().url(), it.value().line(),
-                                                         it.value().column());
+                    UiIntegration::requestNavigateToCode(it->second.url(), it->second.line(),
+                                                         it->second.column());
                 });
             }
         }
