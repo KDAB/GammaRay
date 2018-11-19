@@ -62,7 +62,7 @@ using namespace GammaRay;
 MAKE_FACTORY(MessageHandler,    qApp->translate("GammaRay::MessageHandlerFactory", "Messages"));
 MAKE_FACTORY(MetaObjectBrowser, qApp->translate("GammaRay::MetaObjectBrowserFactory", "Meta Objects"));
 MAKE_FACTORY(MetaTypeBrowser,   qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"));
-MAKE_FACTORY(ProblemReporter,   qApp->translate("GammaRay::ProblemReporterFactory", "Problem Reporter"));
+MAKE_FACTORY(ProblemReporter,   qApp->translate("GammaRay::ProblemReporterFactory", "Problems"));
 MAKE_FACTORY(ResourceBrowser,   qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"));
 
 struct PluginRepository {
