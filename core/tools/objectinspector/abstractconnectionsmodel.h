@@ -52,7 +52,6 @@ public:
                         int role = Qt::DisplayRole) const override;
     QMap< int, QVariant > itemData(const QModelIndex &index) const override;
 
-protected:
     struct Connection {
         QPointer<QObject> endpoint;
         int signalIndex;
@@ -60,6 +59,7 @@ protected:
         int type;
     };
 
+protected:
     static QString displayString(QObject *object, int methodIndex);
     static QString displayString(QObject *object);
 
@@ -67,6 +67,10 @@ protected:
 
     void clear();
     void setConnections(const QVector<Connection> &connections);
+
+public:
+    static bool isDuplicate(const QVector<Connection> &connections, const Connection &conn);
+    static bool isDirectCrossThreadConnection(QObject *object, const Connection &conn);
 
 protected:
     QPointer<QObject> m_object;

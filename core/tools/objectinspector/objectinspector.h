@@ -56,6 +56,8 @@ private slots:
 private:
     void registerPCExtensions();
 
+    static void scanForConnectionIssues();
+
     PropertyController *m_propertyController;
     QItemSelectionModel *m_selectionModel;
 };

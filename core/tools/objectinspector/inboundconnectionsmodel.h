@@ -42,6 +42,8 @@ public:
 
     void setObject(QObject *object) override;
 
+    static QVector<Connection> inboundConnectionsForObject(QObject *object);
+
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;

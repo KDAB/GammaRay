@@ -37,16 +37,24 @@
 #include "bindingextension.h"
 #include "stacktraceextension.h"
 
+#include "inboundconnectionsmodel.h"
+#include "outboundconnectionsmodel.h"
+#include "objectdataprovider.h"
+
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <core/bindingaggregator.h>
 #include <core/problemcollector.h>
+#include <core/util.h>
 #include <remote/serverproxymodel.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
 #include <QCoreApplication>
 #include <QItemSelectionModel>
+#include <QMetaMethod>
+
+#include <QMutexLocker>
 
 using namespace GammaRay;
 
@@ -75,6 +83,10 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
                                           "Binding Loops",
                                           "Scans all QObjects for binding loops",
                                           &BindingAggregator::scanForBindingLoops);
+    ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck",
+                                          "Connection issues",
+                                          "Scans all QObjects for direct cross-thread and duplicate connections",
+                                          &ObjectInspector::scanForConnectionIssues);
 
 }
 
@@ -132,4 +144,65 @@ void ObjectInspector::registerPCExtensions()
 QVector<QByteArray> GammaRay::ObjectInspectorFactory::selectableTypes() const
 {
     return QVector<QByteArray>() << QObject::staticMetaObject.className();
+}
+
+void ObjectInspector::scanForConnectionIssues()
+{
+    const QVector<QObject*> &allObjects = Probe::instance()->allQObjects();
+
+    QMutexLocker lock(Probe::objectLock());
+    foreach (QObject *obj, allObjects) {
+        if (!Probe::instance()->isValidObject(obj))
+            continue;
+
+        auto reportProblem = [obj](const AbstractConnectionsModel::Connection &connection, const QString &descriptionTemplate, const QString &problemType, bool isOutbound) {
+                QObject *sender = isOutbound ? obj : connection.endpoint.data();
+                QObject *receiver = isOutbound ? connection.endpoint.data() : obj;
+                if (!sender || !receiver) {
+                    return;
+                }
+
+                QString signalName = sender->metaObject()->method(connection.signalIndex).name();
+                QString slotName = connection.slotIndex < 0 ? tr("<slot object>") : receiver->metaObject()->method(connection.slotIndex).name();
+                QString senderName = Util::displayString(sender);
+                QString receiverName = Util::displayString(receiver);
+                Problem p;
+                p.severity = Problem::Warning;
+                p.description = descriptionTemplate.arg(receiverName, slotName, senderName, signalName);
+                p.object = ObjectId(receiver);
+//                 p.location = bindingNode->sourceLocation(); //TODO can we get source locations of connect-statements?
+                p.problemId = QString("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck:%1-%2.%3-%4.%5")
+                    .arg(problemType,
+                            QString::number(reinterpret_cast<quintptr>(sender)),
+                            QString::number(connection.signalIndex),
+                            QString::number(reinterpret_cast<quintptr>(receiver)),
+                            QString::number(connection.slotIndex));
+                p.findingCategory = Problem::Scan;
+                ProblemCollector::addProblem(p);
+        };
+
+        auto connections = InboundConnectionsModel::inboundConnectionsForObject(obj);
+        for (auto it = connections.begin(); it != connections.end(); ++it) {
+            auto &&connection = *it;
+
+            if (AbstractConnectionsModel::isDuplicate(connections, connection)) {
+                reportProblem(connection, QStringLiteral("The slot %1->%2 is connected to the signal %3->%4 multiple times."), QStringLiteral("Duplicate"), false);
+            }
+            if (AbstractConnectionsModel::isDirectCrossThreadConnection(obj, connection)) {
+                reportProblem(connection, QStringLiteral("The connection of slot %1->%2 to the signal %3->%4 is a Direct cross-thread connection."), QStringLiteral("CrossTread"), false);
+            }
+        }
+
+        connections = OutboundConnectionsModel::outboundConnectionsForObject(obj);
+        for (auto it = connections.begin(); it != connections.end(); ++it) {
+            auto &&connection = *it;
+
+            if (AbstractConnectionsModel::isDuplicate(connections, connection)) {
+                reportProblem(connection, QStringLiteral("The slot %1->%2 is connected to the signal %3->%4 multiple times."), QStringLiteral("Duplicate"), true);
+            }
+            if (AbstractConnectionsModel::isDirectCrossThreadConnection(obj, connection)) {
+                reportProblem(connection, QStringLiteral("The connection of slot %1->%2 to the signal %3->%4 is a Direct cross-thread connection."), QStringLiteral("CrossTread"), true);
+            }
+        }
+    }
 }

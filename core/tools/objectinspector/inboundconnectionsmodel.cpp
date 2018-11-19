@@ -77,6 +77,11 @@ void InboundConnectionsModel::setObject(QObject *object)
     if (!object)
         return;
 
+    setConnections(inboundConnectionsForObject(object));
+}
+
+QVector<AbstractConnectionsModel::Connection> InboundConnectionsModel::inboundConnectionsForObject(QObject* object)
+{
     QVector<Connection> connections;
 #ifdef HAVE_PRIVATE_QT_HEADERS
     QObjectPrivate *d = QObjectPrivate::get(object);
@@ -104,7 +109,8 @@ void InboundConnectionsModel::setObject(QObject *object)
         }
     }
 #endif
-    setConnections(connections);
+
+    return connections;
 }
 
 QVariant InboundConnectionsModel::data(const QModelIndex &index, int role) const
