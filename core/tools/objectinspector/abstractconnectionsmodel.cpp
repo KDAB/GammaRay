@@ -157,9 +157,9 @@ QMap< int, QVariant > AbstractConnectionsModel::itemData(const QModelIndex &inde
     return d;
 }
 
-bool AbstractConnectionsModel::isDuplicate(const Connection &conn) const
+bool AbstractConnectionsModel::isDuplicate(const QVector<Connection> &connections, const AbstractConnectionsModel::Connection& conn)
 {
-    foreach (const Connection &c, m_connections) {
+    foreach (const Connection &c, connections) {
         if (&c == &conn)
             continue;
         if (c.endpoint == conn.endpoint
@@ -170,11 +170,22 @@ bool AbstractConnectionsModel::isDuplicate(const Connection &conn) const
     return false;
 }
 
-bool AbstractConnectionsModel::isDirectCrossThreadConnection(const Connection &conn) const
+bool AbstractConnectionsModel::isDuplicate(const Connection &conn) const
 {
-    if (!conn.endpoint || !m_object || conn.endpoint->thread() == m_object->thread())
+    return isDuplicate(m_connections, conn);
+}
+
+bool AbstractConnectionsModel::isDirectCrossThreadConnection(QObject *object, const AbstractConnectionsModel::Connection &conn)
+{
+    if (!conn.endpoint || !object || conn.endpoint->thread() == object->thread())
         return false;
     return conn.type == 1; // direct
+}
+
+
+bool AbstractConnectionsModel::isDirectCrossThreadConnection(const Connection &conn) const
+{
+    return isDirectCrossThreadConnection(m_object, conn);
 }
 
 void AbstractConnectionsModel::clear()

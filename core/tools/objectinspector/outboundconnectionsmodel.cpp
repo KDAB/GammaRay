@@ -52,6 +52,12 @@ void OutboundConnectionsModel::setObject(QObject *object)
     if (!object)
         return;
 
+
+    setConnections(outboundConnectionsForObject(object));
+}
+
+QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outboundConnectionsForObject(QObject* object)
+{
     QVector<Connection> connections;
 #ifdef HAVE_PRIVATE_QT_HEADERS
     QObjectPrivate *d = QObjectPrivate::get(object);
@@ -69,7 +75,7 @@ void OutboundConnectionsModel::setObject(QObject *object)
 
                 Connection conn;
                 conn.endpoint = c->receiver;
-                conn.signalIndex = signalIndexToMethodIndex(m_object, signalIndex);
+                conn.signalIndex = signalIndexToMethodIndex(object, signalIndex);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
                 if (c->isSlotObject)
                     conn.slotIndex = -1;
@@ -83,7 +89,8 @@ void OutboundConnectionsModel::setObject(QObject *object)
         }
     }
 #endif
-    setConnections(connections);
+
+    return connections;
 }
 
 QVariant OutboundConnectionsModel::data(const QModelIndex &index, int role) const
