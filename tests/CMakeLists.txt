@@ -207,6 +207,15 @@ target_link_libraries(executiontest ${QT_QTGUI_LIBRARIES} gammaray_core)
 gammaray_add_test(metaobjecttest metaobjecttest.cpp)
 target_link_libraries(metaobjecttest gammaray_core)
 
+gammaray_add_probe_test(problemreportertest problemreportertest.cpp $<TARGET_OBJECTS:modeltestobj>)
+target_link_libraries(problemreportertest gammaray_core)
+if(Qt5Qml_FOUND)
+    target_link_libraries(problemreportertest Qt5::Qml)
+endif()
+if (Qt5Widgets_FOUND)
+    target_link_libraries(problemreportertest Qt5::Widgets)
+endif()
+
 gammaray_add_test(objectinstancetest objectinstancetest.cpp)
 target_link_libraries(objectinstancetest gammaray_core)
 

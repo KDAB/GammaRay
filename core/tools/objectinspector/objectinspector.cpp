@@ -164,10 +164,10 @@ void ObjectInspector::scanForConnectionIssues()
 
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0)
                 QString signalName = sender->metaObject()->method(connection.signalIndex).signature();
-                QString slotName = connection.slotIndex < 0 ? tr("<slot object>") : receiver->metaObject()->method(connection.slotIndex).signature();
+                QString slotName = connection.slotIndex < 0 ? QStringLiteral("<slot object>") : receiver->metaObject()->method(connection.slotIndex).signature();
 #else
                 QString signalName = sender->metaObject()->method(connection.signalIndex).name();
-                QString slotName = connection.slotIndex < 0 ? tr("<slot object>") : receiver->metaObject()->method(connection.slotIndex).name();
+                QString slotName = connection.slotIndex < 0 ? QStringLiteral("<slot object>") : receiver->metaObject()->method(connection.slotIndex).name();
 #endif
                 QString senderName = Util::displayString(sender);
                 QString receiverName = Util::displayString(receiver);
@@ -176,7 +176,7 @@ void ObjectInspector::scanForConnectionIssues()
                 p.description = descriptionTemplate.arg(receiverName, slotName, senderName, signalName);
                 p.object = ObjectId(receiver);
 //                 p.location = bindingNode->sourceLocation(); //TODO can we get source locations of connect-statements?
-                p.problemId = QString("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck:%1-%2.%3-%4.%5")
+                p.problemId = QString("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.%1:%2.%3-%4.%5")
                     .arg(problemType,
                             QString::number(reinterpret_cast<quintptr>(sender)),
                             QString::number(connection.signalIndex),
@@ -194,7 +194,7 @@ void ObjectInspector::scanForConnectionIssues()
                 reportProblem(connection, QStringLiteral("The slot %1->%2 is connected to the signal %3->%4 multiple times."), QStringLiteral("Duplicate"), false);
             }
             if (AbstractConnectionsModel::isDirectCrossThreadConnection(obj, connection)) {
-                reportProblem(connection, QStringLiteral("The connection of slot %1->%2 to the signal %3->%4 is a Direct cross-thread connection."), QStringLiteral("CrossTread"), false);
+                reportProblem(connection, QStringLiteral("The connection of slot %1->%2 to the signal %3->%4 is a direct cross-thread connection."), QStringLiteral("CrossTread"), false);
             }
         }
 
@@ -206,7 +206,7 @@ void ObjectInspector::scanForConnectionIssues()
                 reportProblem(connection, QStringLiteral("The slot %1->%2 is connected to the signal %3->%4 multiple times."), QStringLiteral("Duplicate"), true);
             }
             if (AbstractConnectionsModel::isDirectCrossThreadConnection(obj, connection)) {
-                reportProblem(connection, QStringLiteral("The connection of slot %1->%2 to the signal %3->%4 is a Direct cross-thread connection."), QStringLiteral("CrossTread"), true);
+                reportProblem(connection, QStringLiteral("The connection of slot %1->%2 to the signal %3->%4 is a direct cross-thread connection."), QStringLiteral("CrossTread"), true);
             }
         }
     }

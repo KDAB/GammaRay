@@ -148,6 +148,9 @@ void MetaObjectBrowser::doProblemScan(const QMetaObject *parent)
     QVector<const QMetaObject *> metaObjects = registry->childrenOf(parent);
 
     foreach(const QMetaObject *mo, metaObjects) {
+        if (!registry->isValid(mo))
+            continue;
+
         auto results = QMetaObjectValidator::check(mo);
         if (results != QMetaObjectValidatorResult::NoIssue) {
             //TODO do we want the Problem descriptions have more detail, i.e. have one problem listed
@@ -159,7 +162,7 @@ void MetaObjectBrowser::doProblemScan(const QMetaObject *parent)
             if (results & QMetaObjectValidatorResult::SignalOverride)
                 issueList.push_back(QStringLiteral("overrides base class signal"));
             if (results & QMetaObjectValidatorResult::UnknownMethodParameterType)
-                issueList.push_back(QStringLiteral("uses a parameter type not registerd with the meta type system"));
+                issueList.push_back(QStringLiteral("uses a parameter type not registered with the meta type system"));
             if (results & QMetaObjectValidatorResult::PropertyOverride)
                 issueList.push_back(QStringLiteral("overrides base class property"));
             if (results & QMetaObjectValidatorResult::UnknownPropertyType)
