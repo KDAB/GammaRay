@@ -79,8 +79,10 @@ private slots:
 
         QAction *a1 = new QAction(QStringLiteral("Action 1"), this);
         a1->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));
+        a1->setShortcutContext(Qt::ApplicationShortcut);
         QAction *a2 = new QAction(QStringLiteral("Action 2"), this);
         a2->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));
+        a2->setShortcutContext(Qt::WidgetShortcut);
         QTest::qWait(1); // event loop re-entry
 
         auto sourceModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));

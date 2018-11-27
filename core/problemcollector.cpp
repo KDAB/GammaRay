@@ -53,26 +53,7 @@ void ProblemCollector::registerProblemChecker(const QString& id,
 
 void GammaRay::ProblemCollector::requestScan()
 {
-    // Remove all elements which originate from a previous scan, before doing a new scan
-    // and do so, properly informing the model about all changes.
-    auto firstToDeleteIt = m_problems.begin();
-    auto it = firstToDeleteIt;
-    while (true) {
-        if (it != m_problems.end() && it->findingCategory == Problem::Scan) {
-            ++it;
-        } else if (firstToDeleteIt != it) { // this is supposed to be called also if `it == m_problems.end()`
-            auto firstRow = std::distance(m_problems.begin(), firstToDeleteIt);
-            auto count = std::distance(m_problems.begin(), it) - firstRow;
-            emit aboutToRemoveProblems(firstRow, count);
-            firstToDeleteIt = it = m_problems.erase(firstToDeleteIt, it);
-            emit problemsRemoved();
-        } else if (it != m_problems.end()) {
-            ++it;
-            ++firstToDeleteIt;
-        } else {
-            break;
-        }
-    }
+    clearScans();
 
     foreach (const auto &checker, m_availableCheckers) {
         if (checker.enabled)
@@ -109,6 +90,30 @@ void ProblemCollector::removeProblem(const QString& problemId)
     emit self->aboutToRemoveProblems(row);
     self->m_problems.erase(it);
     emit self->problemsRemoved();
+}
+
+void ProblemCollector::clearScans()
+{
+    // Remove all elements which originate from a previous scan, before doing a new scan
+    // and do so, properly informing the model about all changes.
+    auto firstToDeleteIt = m_problems.begin();
+    auto it = firstToDeleteIt;
+    while (true) {
+        if (it != m_problems.end() && it->findingCategory == Problem::Scan) {
+            ++it;
+        } else if (firstToDeleteIt != it) { // this is supposed to be called also if `it == m_problems.end()`
+            auto firstRow = std::distance(m_problems.begin(), firstToDeleteIt);
+            auto count = std::distance(m_problems.begin(), it) - firstRow;
+            emit aboutToRemoveProblems(firstRow, count);
+            firstToDeleteIt = it = m_problems.erase(firstToDeleteIt, it);
+            emit problemsRemoved();
+        } else if (it != m_problems.end()) {
+            ++it;
+            ++firstToDeleteIt;
+        } else {
+            break;
+        }
+    }
 }
 
 const QVector<Problem> & ProblemCollector::problems()

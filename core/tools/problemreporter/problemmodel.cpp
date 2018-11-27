@@ -69,7 +69,7 @@ QVariant ProblemModel::data(const QModelIndex &index, int role) const
         case ProblemModelRoles::SourceLocationRole:
             return QVariant::fromValue(problem.locations);
         case ProblemModelRoles::SeverityRole:
-            return problem.severity;
+            return static_cast<int>(problem.severity);
         case ProblemModelRoles::ProblemIdRole:
             return problem.problemId;
     }

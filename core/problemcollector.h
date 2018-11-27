@@ -118,12 +118,14 @@ public slots:
 
 private:
     explicit ProblemCollector(QObject *parent);
+    void clearScans();
 
     QVector<Checker> m_availableCheckers;
     QVector<Problem> m_problems;
 
     friend class Probe;
     friend class AvailableCheckersModel;
+    friend class ProblemReporterTest;
 };
 }
 
