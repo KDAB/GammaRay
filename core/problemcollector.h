@@ -78,7 +78,8 @@ public:
      */
     static void registerProblemChecker(const QString &id,
                                     const QString &name, const QString &description,
-                                    const std::function<void()> &callback);
+                                    const std::function<void()> &callback,
+                                    bool enabled = true);
 
 private:
     struct Checker {

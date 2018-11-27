@@ -45,9 +45,9 @@ ProblemCollector * ProblemCollector::instance()
 
 void ProblemCollector::registerProblemChecker(const QString& id,
                                            const QString& name, const QString& description,
-                                           const std::function<void ()>& callback)
+                                           const std::function<void ()>& callback, bool enabled)
 {
-    Checker c = {id, name, description, callback, true};
+    Checker c = {id, name, description, callback, enabled};
     instance()->m_availableCheckers.push_back(c);
 }
 
