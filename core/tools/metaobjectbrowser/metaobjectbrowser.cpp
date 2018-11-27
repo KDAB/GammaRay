@@ -77,7 +77,8 @@ MetaObjectBrowser::MetaObjectBrowser(Probe *probe, QObject *parent)
     ProblemCollector::registerProblemChecker("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator",
                                              "QMetaObject Validator",
                                              "Checks for common errors with meta objects, like invocable functions with unregistered parameter types.",
-                                             &MetaObjectBrowser::scanForMetaObjectProblems
+                                             &MetaObjectBrowser::scanForMetaObjectProblems,
+                                             /*enabled=*/ false
                                             );
 }
 

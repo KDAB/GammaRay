@@ -379,9 +379,11 @@ private slots:
         QTest::qWait(1);
 
         auto &checkers = ProblemCollector::instance()->availableCheckers();
-        QVERIFY(std::any_of(checkers.begin(), checkers.end(),
+        auto checker = std::find_if(checkers.begin(), checkers.end(),
                     [](ProblemCollector::Checker &c){ return c.id == "com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator"; }
-                   ));
+                   );
+        QVERIFY(checker != checkers.end());
+        checker->enabled = true;
 
         ProblemCollector::instance()->requestScan();
 
