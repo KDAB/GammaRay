@@ -149,7 +149,7 @@ void MetaObjectBrowser::doProblemScan(const QMetaObject *parent)
     QVector<const QMetaObject *> metaObjects = registry->childrenOf(parent);
 
     foreach(const QMetaObject *mo, metaObjects) {
-        if (!registry->isValid(mo))
+        if (!registry->isValid(mo) || !registry->isStatic(mo))
             continue;
 
         auto results = QMetaObjectValidator::check(mo);
