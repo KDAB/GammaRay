@@ -83,6 +83,12 @@ private:
     void clear();
     void populateFromItem(QQuickItem *item);
 
+    /**
+     * Reports problems (e.g. visible but out of view) about all items of this
+     * model. Uses the item flags from the model.
+     */
+    void reportProblems();
+
     /// Track all changes to item @p item in this model (parentChanged, windowChanged, ...)
     void connectItem(QQuickItem *item);
 

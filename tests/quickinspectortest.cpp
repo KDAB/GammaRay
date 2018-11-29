@@ -28,6 +28,7 @@
 #include "testhelpers.h"
 
 #include <plugins/quickinspector/quickinspectorinterface.h>
+#include <core/problemcollector.h>
 #include <common/objectbroker.h>
 #include <common/remoteviewinterface.h>
 #include <common/remoteviewframe.h>
@@ -40,6 +41,7 @@
 #include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
 #include <QRegExp>
+#include <QQuickItem>
 
 #include <QQuickItem>
 #include <private/qquickitem_p.h>
@@ -334,6 +336,27 @@ private slots:
         rectWithoutAnchorsAnchorsValue = anchorsFilterModel.data(anchorsFilterModel.index(0, 1), Qt::EditRole);
         QVERIFY(rectWithoutAnchorsAnchorsValue.canConvert<QObject*>());
         QVERIFY(rectWithoutAnchorsAnchorsValue.value<QObject*>() == nullptr);
+    }
+
+    void testProblemReporting()
+    {
+        //TODO using this qml-file as testcase might stop working if qt decides to be
+        // smarter with out of view items in ListViews
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
+
+        QVERIFY(ProblemCollector::instance()->isCheckerRegistered("com.kdab.GammaRay.QuickItemChecker"));
+
+        ProblemCollector::instance()->requestScan();
+
+        const auto &problems = ProblemCollector::instance()->problems();
+        QVERIFY(std::any_of(problems.begin(), problems.end(),
+            [&](const Problem &p){
+                return p.problemId.startsWith("com.kdab.GammaRay.QuickItemChecker")
+                    && !p.object.isNull()
+                    && p.description.contains("out of view")
+                    && p.locations.size() > 0;
+            }
+        ));
     }
 
 private:
