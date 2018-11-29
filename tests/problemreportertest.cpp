@@ -303,10 +303,7 @@ private slots:
         QTest::qWait(1);
         QVERIFY(static_cast<bool>(obj));
 
-        auto &checkers = ProblemCollector::instance()->availableCheckers();
-        QVERIFY(std::any_of(checkers.begin(), checkers.end(),
-                    [](ProblemCollector::Checker &c){ return c.id == "com.kdab.GammaRay.ObjectInspector.BindingLoopScan"; }
-                   ));
+        QVERIFY(ProblemCollector::instance()->isCheckerRegistered("com.kdab.GammaRay.ObjectInspector.BindingLoopScan"));
 
         ProblemCollector::instance()->requestScan();
 
@@ -322,10 +319,7 @@ private slots:
 
     void testConnectionIssues()
     {
-        auto &checkers = ProblemCollector::instance()->availableCheckers();
-        QVERIFY(std::any_of(checkers.begin(), checkers.end(),
-                    [](ProblemCollector::Checker &c){ return c.id == "com.kdab.GammaRay.ObjectInspector.ConnectionsCheck"; }
-                   ));
+        QVERIFY(ProblemCollector::instance()->isCheckerRegistered("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck"));
 
         auto task = std::unique_ptr<CrossThreadConnectionTask>(new CrossThreadConnectionTask());
         task->mainThreadObj.reset(new QObject());
@@ -427,10 +421,7 @@ private slots:
         a2->setShortcutContext(Qt::WidgetShortcut);
         QTest::qWait(1); // event loop re-entry
 
-        auto &checkers = ProblemCollector::instance()->availableCheckers();
-        QVERIFY(std::any_of(checkers.begin(), checkers.end(),
-                    [](ProblemCollector::Checker &c){ return c.id == "gammaray_actioninspector.ShortcutDuplicates"; }
-                   ));
+        QVERIFY(ProblemCollector::instance()->isCheckerRegistered("gammaray_actioninspector.ShortcutDuplicates"));
 
         ProblemCollector::instance()->requestScan();
 

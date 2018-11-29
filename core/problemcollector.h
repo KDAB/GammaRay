@@ -81,6 +81,9 @@ public:
                                     const std::function<void()> &callback,
                                     bool enabled = true);
 
+    /// Meant to be used in unit tests
+    bool isCheckerRegistered(const QString &id) const;
+
 private:
     struct Checker {
         QString id;

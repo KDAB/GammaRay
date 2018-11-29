@@ -126,4 +126,11 @@ QVector<ProblemCollector::Checker> &ProblemCollector::availableCheckers()
     return m_availableCheckers;
 }
 
+bool ProblemCollector::isCheckerRegistered(const QString& id) const
+{
+    return std::any_of(m_availableCheckers.begin(), m_availableCheckers.end(),
+                        [&id](const Checker &c){ return c.id == id; }
+                      );
+}
+
 

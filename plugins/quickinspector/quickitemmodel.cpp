@@ -31,8 +31,6 @@
 
 #include <core/paintanalyzer.h>
 #include <core/probe.h>
-#include <core/problemcollector.h>
-#include <common/problem.h>
 
 #include <QQuickItem>
 #include <QQuickWindow>
@@ -397,21 +395,7 @@ void QuickItemModel::updateItemFlags(QQuickItem *item)
             outOfView = partiallyOutOfView && !rect.intersects(ancestorRect);
 
             if (outOfView) {
-                Problem p;
-                p.severity = Problem::Info;
-                p.description = QStringLiteral("QtQuick: %1 %2 (0x%3) is visible, but out of view.").arg(
-                    ObjectDataProvider::typeName(item),
-                    ObjectDataProvider::name(item),
-                    QString::number(reinterpret_cast<quintptr>(item), 16)
-                );
-                p.object = ObjectId(item);
-                p.locations.push_back(ObjectDataProvider::creationLocation(item));
-                p.problemId = QStringLiteral("OutOfView:%1").arg(reinterpret_cast<quintptr>(item));
-                p.findingCategory = Problem::Live;
-                ProblemCollector::addProblem(p);
                 break;
-            } else {
-                ProblemCollector::removeProblem(QStringLiteral("OutOfView:%1").arg(reinterpret_cast<quintptr>(item)));
             }
         }
         ancestor = ancestor->parentItem();

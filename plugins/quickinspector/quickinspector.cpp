@@ -47,6 +47,7 @@
 #include <common/modelevent.h>
 #include <common/objectbroker.h>
 #include <common/probecontrollerinterface.h>
+#include <common/problem.h>
 #include <common/remoteviewframe.h>
 
 #include <core/enumrepositoryserver.h>
@@ -64,6 +65,7 @@
 #include <core/remoteviewserver.h>
 #include <core/paintanalyzer.h>
 #include <core/bindingaggregator.h>
+#include <core/problemcollector.h>
 
 #include <3rdparty/kde/krecursivefilterproxymodel.h>
 
@@ -88,6 +90,7 @@
 #include <private/qquickshadereffectsource_p.h>
 #include <QMatrix4x4>
 #include <QCoreApplication>
+#include <QMutexLocker>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #include <QSGRenderNode>
@@ -422,6 +425,11 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
         if (m_overlay)
             m_overlay->placeOn(ItemOrLayoutFacade());
     });
+
+    ProblemCollector::registerProblemChecker("com.kdab.GammaRay.QuickItemChecker",
+                                          "QtQuick Item check",
+                                          "Warns about items that are visible but out of view.",
+                                          &QuickInspector::scanForProblems);
 
     // needs to be last, extensions require some of the above to be set up correctly
     registerPCExtensions();
@@ -869,6 +877,45 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
     }
 
     return objects;
+}
+
+
+void QuickInspector::scanForProblems()
+{
+    const QVector<QObject*> &allObjects = Probe::instance()->allQObjects();
+
+    QMutexLocker lock(Probe::objectLock());
+    foreach (QObject *obj, allObjects) {
+        QQuickItem *item;
+        if (!Probe::instance()->isValidObject(obj) || !(item = qobject_cast<QQuickItem*>(obj)))
+            continue;
+
+        QQuickItem *ancestor = item->parentItem();
+        auto rect = item->mapRectToScene(QRectF(0, 0, item->width(), item->height()));
+
+        while (ancestor && item->window() && ancestor != item->window()->contentItem()) {
+            if (ancestor->parentItem() == item->window()->contentItem() || ancestor->clip()) {
+                auto ancestorRect = ancestor->mapRectToScene(QRectF(0, 0, ancestor->width(), ancestor->height()));
+
+                if (!ancestorRect.contains(rect) && !rect.intersects(ancestorRect)) {
+                    Problem p;
+                    p.severity = Problem::Info;
+                    p.description = QStringLiteral("QtQuick: %1 %2 (0x%3) is visible, but out of view.").arg(
+                        ObjectDataProvider::typeName(item),
+                        ObjectDataProvider::name(item),
+                        QString::number(reinterpret_cast<quintptr>(item), 16)
+                    );
+                    p.object = ObjectId(item);
+                    p.locations.push_back(ObjectDataProvider::creationLocation(item));
+                    p.problemId = QStringLiteral("com.kdab.GammaRay.QuickItemChecker.OutOfView:%1").arg(reinterpret_cast<quintptr>(item));
+                    p.findingCategory = Problem::Scan;
+                    ProblemCollector::addProblem(p);
+                    break;
+                }
+            }
+            ancestor = ancestor->parentItem();
+        }
+    }
 }
 
 bool QuickInspector::eventFilter(QObject *receiver, QEvent *event)

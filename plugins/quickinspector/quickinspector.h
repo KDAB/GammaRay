@@ -149,6 +149,7 @@ private:
     void registerVariantHandlers();
     void registerPCExtensions();
     QString findSGNodeType(QSGNode *node) const;
+    static void scanForProblems();
 
     GammaRay::ObjectIds recursiveItemsAt(QQuickItem *parent, const QPointF &pos,
                                          GammaRay::RemoteViewInterface::RequestMode mode, int& bestCandidate) const;
