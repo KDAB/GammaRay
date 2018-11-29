@@ -27,7 +27,7 @@
 
     The example application shows two custom Qt Quick sliders consisting of flat colored rectangles
     forming a gradient from green to blue. Inactive rectangles (that is rectangles above the handle)
-    are drawn smaller and slightly greyed out.
+    are drawn smaller and slightly grayed out.
 
     \snippet quick-batching/quick-batching.qml Slider setup
 
