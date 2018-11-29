@@ -44,7 +44,6 @@ public:
 
     int count() const override;
     PropertyData propertyData(int index) const override;
-    void writeProperty(int index, const QVariant &value) override;
 
 protected:
     void doSetObject(const ObjectInstance &oi) override;

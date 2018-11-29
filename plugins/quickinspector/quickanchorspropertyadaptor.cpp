@@ -123,20 +123,10 @@ PropertyData QuickAnchorsPropertyAdaptor::propertyData(int index) const
     if (prop.hasNotifySignal())
         data.setNotifySignal(Util::prettyMethodSignature(prop.notifySignal()));
 
-    PropertyData::AccessFlags flags = PropertyData::Readable;
-    if (prop.isWritable())
-        flags |= PropertyData::Writable;
-    if (prop.isResettable())
-        flags |= PropertyData::Resettable;
-    data.setAccessFlags(flags);
+    data.setAccessFlags(PropertyData::Readable);
 
     m_notifyGuard = false;
     return data;
-}
-
-void QuickAnchorsPropertyAdaptor::writeProperty(int index, const QVariant &value)
-{
-    Q_ASSERT(index == 0);
 }
 
 QuickAnchorsPropertyAdaptorFactory *QuickAnchorsPropertyAdaptorFactory::s_instance = nullptr;
