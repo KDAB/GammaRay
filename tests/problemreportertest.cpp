@@ -440,7 +440,8 @@ private slots:
                 return p.problemId.startsWith("gammaray_actioninspector.ShortcutDuplicates")
                        && (p.object == ObjectId(a1) || p.object == ObjectId(a2))
                        && p.description.contains("ambigous")
-                       && p.description.contains(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::PortableText));
+                       && p.description.contains(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::NativeText))
+                       && p.problemId.endsWith(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::PortableText));
             }
         ));
     }
