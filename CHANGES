@@ -1,9 +1,26 @@
 Release Highlights
 ==================
 
-Version NEXT
-------------
- * VTK minimum version increased from 6.1 to 7.1
+Version 2.10.0
+--------------
+
+ * Increase CMake requirement to version 3.1 on all platforms.
+ * Add object navigation to the paint analyzer.
+ * Reduce network load by moving more property model features to the client side.
+ * Port object hierarchy visualizer plugin to Qt 5.
+ * Add new system information plugin, which supersedes the standard paths plugin.
+ * Use application palette rather than style palette in the style inspector.
+ * Improve gdb injector performance.
+ * Reduce performance impact of the widget paint analyzer in Windows debug builds.
+ * Improve Qt Quick item picking in case of zero-sized parent elements.
+ * Provide access to QAbstractItemModel role name mapping.
+ * Add QtPositioning plugin allowing to monitor and simulate geo localization.
+ * Add NMEA geo localization playback.
+ * Add support for generic functor property accessors.
+ * Add property access for mime data and clipboard types.
+ * Add infrastructure to override generic property access, such as Qt Quick anchor properties.
+ * Add custom property access for Qt Quick anchors properties to no longer trigger their on-demand creation.
+ * Add generic problem reporter infrastructure, and port some existing checks to it.
 
 Version 2.9.1
 -------------
