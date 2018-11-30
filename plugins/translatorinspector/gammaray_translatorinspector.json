@@ -2,10 +2,10 @@
     "id": "gammaray_translationinspector",
     "name": "Translations",
     "name[de]": "Übersetzungen",
-    "types": [
+    "selectableTypes": [
         "QTranslator"
     ],
-    "selectableTypes": [
+    "types": [
         "QTranslator"
     ]
 }

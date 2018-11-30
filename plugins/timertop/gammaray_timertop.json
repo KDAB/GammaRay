@@ -2,13 +2,13 @@
     "id": "gammaray_timertop",
     "name": "Timers",
     "name[de]": "Timer",
+    "selectableTypes": [
+        "QTimer"
+    ],
     "types": [
         "QTimer",
         "QQmlTimer",
         "QUnifiedTimer",
         "QObject"
-    ],
-    "selectableTypes": [
-        "QTimer"
     ]
 }
