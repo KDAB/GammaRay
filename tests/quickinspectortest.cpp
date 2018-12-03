@@ -41,7 +41,6 @@
 #include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
 #include <QRegExp>
-#include <QQuickItem>
 
 #include <QQuickItem>
 #include <private/qquickitem_p.h>
