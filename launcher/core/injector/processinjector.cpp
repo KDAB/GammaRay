@@ -84,13 +84,24 @@ bool ProcessInjector::launchProcess(const QStringList &programAndArgs,
         newArgs += args;
         args = newArgs;
         qDebug() << "Launching with target wrapper:" << args;
-    } else if (env.value(QStringLiteral("GAMMARAY_GDB")).toInt()) {
+    } else if (env.value(QStringLiteral("GAMMARAY_DEBUG")).compare(QStringLiteral("GDB"), Qt::CaseInsensitive) == 0
+                || env.value(QStringLiteral("GAMMARAY_GDB")).toInt()) {
         QStringList newArgs;
         newArgs << QStringLiteral("gdb");
 #ifndef Q_OS_MAC
         newArgs << QStringLiteral("--eval-command") << QStringLiteral("run");
 #endif
         newArgs << QStringLiteral("--args");
+        newArgs += args;
+        args = newArgs;
+    } else if (env.value(QStringLiteral("GAMMARAY_DEBUG")).compare(QStringLiteral("GDB_NORUN"), Qt::CaseInsensitive) == 0) {
+        QStringList newArgs;
+        newArgs << QStringLiteral("gdb") << QStringLiteral("--args");
+        newArgs += args;
+        args = newArgs;
+    } else if (env.value(QStringLiteral("GAMMARAY_DEBUG")).compare(QStringLiteral("RR"), Qt::CaseInsensitive)) {
+        QStringList newArgs;
+        newArgs << QStringLiteral("rr") << QStringLiteral("record");
         newArgs += args;
         args = newArgs;
     }
