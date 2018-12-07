@@ -133,18 +133,20 @@ void PaintAnalyzer::repaint()
     setHasArgumentDetails(m_argumentModel->rowCount());
 
     // include selected row or paint all if nothing is selected
-    if (index.parent().isValid())
+    if (index.parent().isValid()) {
         index = index.parent();
+    }
     const auto end = index.isValid() ? index.row() + 1 : m_paintBufferModel->rowCount();
     auto depth = m_paintBufferModel->buffer().processCommands(&painter, start, start + end);
-    for (; depth > 0; --depth)
+    for (; depth > 0; --depth) {
         painter.restore();
+    }
     painter.end();
 
     PaintAnalyzerFrameData data;
-    if (index.isValid())
+    if (index.isValid()) {
         data.clipPath = index.data(PaintBufferModelRoles::ClipPathRole).value<QPainterPath>();
-
+    }
     RemoteViewFrame frame;
     frame.setImage(image);
     frame.setData(QVariant::fromValue(data));
@@ -201,8 +203,9 @@ void PaintAnalyzer::endAnalyzePainting()
     if (auto rowCount = m_paintBufferFilter->rowCount()) {
         const auto idx = m_paintBufferFilter->index(rowCount - 1, 0);
         m_selectionModel->select(idx,
-                                 QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows
-                                 | QItemSelectionModel::Current);
+                                 QItemSelectionModel::ClearAndSelect |
+                                 QItemSelectionModel::Rows |
+                                 QItemSelectionModel::Current);
     }
 
     PainterProfilingReplayer profiler;
@@ -215,6 +218,8 @@ void GammaRay::PaintAnalyzer::setOrigin(const ObjectId &obj)
 {
 #ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBuffer->setOrigin(obj);
+#else
+    Q_UNUSED(obj);
 #endif
 }
 
