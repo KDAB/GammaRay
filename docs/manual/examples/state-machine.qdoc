@@ -18,7 +18,7 @@
 /*!
     \example state-machine
     \title State Machines
-    \brief Debug state machine runtime behavior
+    \brief Debug state machine runtime behavior.
     \ingroup examples-gammaray
 
     This examples shows GammaRay's capabilities in analyzing state machine behavior at runtime.

@@ -18,7 +18,7 @@
 /*!
     \example qt3d-geometry
     \title Qt3D Geometry
-    \brief Geometry data inspection
+    \brief Geometry data inspection.
     \ingroup examples-gammaray
 
     This examples shows GammaRay's capabilities for inspecting \l{Qt 3D} vertex and index attribute
