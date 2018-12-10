@@ -1,12 +1,12 @@
-if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if(Qt5Widgets_FOUND)
   set(gammaray_injector_style_srcs injectorstyleplugin.cpp)
 
   add_library(gammaray_injector_style MODULE ${gammaray_injector_style_srcs})
 
   target_include_directories(gammaray_injector_style SYSTEM PRIVATE ${Qt5Gui_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(gammaray_injector_style
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
+    ${Qt5Core_LIBRARIES}
+    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
   )
 
   set_target_properties(gammaray_injector_style

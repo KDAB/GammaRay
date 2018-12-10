@@ -18,7 +18,7 @@ target_link_libraries(gammaray_fontbrowser_plugin gammaray_core)
 if(Qt5Core_FOUND)
   target_link_libraries(gammaray_fontbrowser_plugin Qt5::Gui)
 else()
-  target_link_libraries(gammaray_fontbrowser_plugin ${QT_QTGUI_LIBRARIES})
+  target_link_libraries(gammaray_fontbrowser_plugin ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 endif()
 endif()
 

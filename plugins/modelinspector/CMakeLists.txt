@@ -9,7 +9,7 @@ set(gammaray_models_srcs
   modelcontentproxymodel.cpp
   selectionmodelmodel.cpp
 )
-qt4_wrap_cpp(gammaray_models_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.h)
+qt5_wrap_cpp(gammaray_models_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.h)
 
 gammaray_add_plugin(gammaray_modelinspector
   DESKTOP gammaray_modelinspector.desktop

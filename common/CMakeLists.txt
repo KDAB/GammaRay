@@ -60,8 +60,8 @@ if(Qt5Core_FOUND)
   target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network Qt5::Gui)
 else()
   target_link_libraries(gammaray_common
-    LINK_PUBLIC ${QT_QTCORE_LIBRARIES}
-    LINK_PRIVATE ${QT_QTGUI_LIBRARIES} ${QT_QTNETWORK_LIBRARIES}
+    LINK_PUBLIC ${Qt5Core_LIBRARIES}
+    LINK_PRIVATE ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${Qt5Network_LIBRARIES}
   )
 endif()
 target_link_libraries(gammaray_common LINK_PRIVATE gammaray_kitemmodels ${CMAKE_DL_LIBS})
@@ -94,9 +94,9 @@ if(Qt5Core_FOUND)
   target_link_libraries(gammaray_common_internal Qt5::Core Qt5::Network)
 else()
   target_link_libraries(gammaray_common_internal
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
-    ${QT_QTNETWORK_LIBRARIES}
+    ${Qt5Core_LIBRARIES}
+    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
+    ${Qt5Network_LIBRARIES}
   )
 endif()
 
