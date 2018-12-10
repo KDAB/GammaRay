@@ -9,7 +9,7 @@ add_library(gammaray_kitemmodels SHARED ${gammaray_kitemmodels_srcs})
 if(Qt5Core_FOUND)
   target_link_libraries(gammaray_kitemmodels LINK_PUBLIC Qt5::Core)
 else()
-  target_link_libraries(gammaray_kitemmodels LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES})
+  target_link_libraries(gammaray_kitemmodels LINK_PUBLIC ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 endif()
 
 set_target_properties(gammaray_kitemmodels PROPERTIES

@@ -61,7 +61,7 @@ generate_export_header(gammaray_kuserfeedback)
 if(Qt5Core_FOUND)
     target_link_libraries(gammaray_kuserfeedback PUBLIC Qt5::Widgets PRIVATE Qt5::Gui Qt5::Network)
 else()
-    target_link_libraries(gammaray_kuserfeedback PUBLIC ${QT_QTGUI_LIBRARIES} PRIVATE ${QT_QTNETWORK_LIBRARIES})
+    target_link_libraries(gammaray_kuserfeedback PUBLIC ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} PRIVATE ${Qt5Network_LIBRARIES})
 endif()
 
 install(TARGETS gammaray_kuserfeedback EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

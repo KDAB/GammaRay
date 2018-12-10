@@ -11,7 +11,7 @@ if(APPLE)
     add_executable(gammaray-app ${gammaray_app_srcs})
 
     target_link_libraries(gammaray-app
-      ${QT_QTGUI_LIBRARIES}
+      ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
       gammaray_common
       gammaray_launcher
       gammaray_launcher_ui

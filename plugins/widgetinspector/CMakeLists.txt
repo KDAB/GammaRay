@@ -19,7 +19,7 @@ gammaray_add_plugin(gammaray_widgetinspector_plugin
 )
 
 target_link_libraries(gammaray_widgetinspector_plugin
-  ${QT_QTGUI_LIBRARIES}
+  ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
   gammaray_kitemmodels
   gammaray_core
 )
@@ -44,13 +44,13 @@ endif()
 
 set(EXTRA_LIBS)
 if(HAVE_QT_DESIGNER)
-  list(APPEND EXTRA_LIBS ${QT_QTDESIGNER_LIBRARIES})
+  list(APPEND EXTRA_LIBS ${Qt5Designer_LIBRARIES})
 endif()
 
 target_link_libraries(gammaray_widget_export_actions
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
-  ${QT_QTSVG_LIBRARIES}
+  ${Qt5Core_LIBRARIES}
+  ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
+  ${Qt5Svg_LIBRARIES}
   ${Qt5PrintSupport_LIBRARIES}
 
   ${EXTRA_LIBS}

@@ -20,12 +20,12 @@ if(Qt5Core_FOUND)
 endif()
 
 
-if(Qt5Gui_FOUND OR QT_QTGUI_FOUND)
+if(Qt5Gui_FOUND)
   add_subdirectory(guisupport)
   add_subdirectory(textdocumentinspector)
 endif()
 
-if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if(Qt5Widgets_FOUND)
   add_subdirectory(actioninspector)
   add_subdirectory(widgetinspector)
   add_subdirectory(sceneinspector)
@@ -34,7 +34,7 @@ endif()
 
 # just checking whether Qt5::ScriptTools is found should be enough, but it isn't.
 # thus check both that Qt5::Script & Qt5::ScriptTools are found to fix https://github.com/KDAB/GammaRay/issues/492
-if((QT_QTSCRIPT_FOUND AND QT_QTSCRIPTTOOLS_FOUND) OR (Qt5Script_FOUND AND Qt5ScriptTools_FOUND))
+if((Qt5Script_FOUND AND Qt5ScriptTools_FOUND) OR (Qt5Script_FOUND AND Qt5ScriptTools_FOUND))
   add_subdirectory(scriptenginedebugger)
 endif()
 

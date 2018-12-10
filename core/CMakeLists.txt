@@ -140,8 +140,8 @@ if(Qt5Core_FOUND)
   target_link_libraries(gammaray_core LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Gui)
 else()
   target_link_libraries(gammaray_core
-    LINK_PUBLIC ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} # GUI is needed for QItemSelectionModel
-    LINK_PRIVATE ${QT_QTNETWORK_LIBRARIES}
+    LINK_PUBLIC ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} # GUI is needed for QItemSelectionModel
+    LINK_PRIVATE ${Qt5Network_LIBRARIES}
   )
 endif()
 

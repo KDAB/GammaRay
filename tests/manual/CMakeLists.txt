@@ -1,4 +1,4 @@
-if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
+if(Qt5Widgets_FOUND)
   set(gammaray_messagemodeltest_srcs
     messagemodeltest.cpp
   )
@@ -8,19 +8,19 @@ if(Qt5Widgets_FOUND OR QT_QTGUI_FOUND)
   )
 
   target_link_libraries(messagemodeltest
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
+    ${Qt5Core_LIBRARIES}
+    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
   )
 
   add_executable(modelstest modelstest.cpp)
-  target_link_libraries(modelstest ${QT_QTGUI_LIBRARIES} gammaray_shared_test_data)
+  target_link_libraries(modelstest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} gammaray_shared_test_data)
 endif()
 
 add_executable(propertytest propertytest.cpp)
-target_link_libraries(propertytest ${QT_QTCORE_LIBRARIES} gammaray_shared_test_data)
+target_link_libraries(propertytest ${Qt5Core_LIBRARIES} gammaray_shared_test_data)
 
 add_executable(connectionstest connectionstest.cpp)
-target_link_libraries(connectionstest ${QT_QTCORE_LIBRARIES})
+target_link_libraries(connectionstest ${Qt5Core_LIBRARIES})
 
 if(Qt5Widgets_FOUND)
   add_executable(translator_test translator_test.cpp)
@@ -31,13 +31,13 @@ if(Qt5Widgets_FOUND)
   add_dependencies(translator_test translator_test_qm)
 endif()
 
-if(QT_QTWEBKIT_FOUND)
+if(Qt5Webkit_FOUND)
   add_executable(wk1application wk1application.cpp)
   target_link_libraries(wk1application
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
-    ${QT_QTWEBKIT_LIBRARIES}
-    ${QT_QTWEBKITWIDGETS_LIBRARIES}
+    ${Qt5Core_LIBRARIES}
+    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
+    ${Qt5Webkit_LIBRARIES}
+    ${Qt5WebkitWidgets_LIBRARIES}
   )
 endif()
 
@@ -50,12 +50,12 @@ endif()
 add_executable(signalmonitortest signalmonitortest.cpp)
 
 target_link_libraries(signalmonitortest
-  ${QT_QTCORE_LIBRARIES}
-  ${QT_QTGUI_LIBRARIES}
+  ${Qt5Core_LIBRARIES}
+  ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
 )
 
 add_executable(objectreparenttest objectreparenttest.cpp)
-target_link_libraries(objectreparenttest ${QT_QTCORE_LIBRARIES})
+target_link_libraries(objectreparenttest ${Qt5Core_LIBRARIES})
 
 if(Qt5QuickWidgets_FOUND)
   set(quickwidgettest_srcs quickwidgettest.cpp quickwidgettest.qrc)
