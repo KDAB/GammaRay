@@ -128,6 +128,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_mimetypes*
 %{_libdir}/gammaray/*/*/gammaray_modelinspector*
 %{_libdir}/gammaray/*/*/gammaray_network*
+%{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
 %{_libdir}/gammaray/*/*/gammaray_qmlsupport*
 %{_libdir}/gammaray/*/*/gammaray_qtivi_ui*
 %{_libdir}/gammaray/*/*/gammaray_quickinspector*
@@ -137,6 +138,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_signalmonitor*
 %{_libdir}/gammaray/*/*/gammaray_statemachineviewer*
 %{_libdir}/gammaray/*/*/gammaray_styleinspector*
+%{_libdir}/gammaray/*/*/gammaray_sysinfo*
 %{_libdir}/gammaray/*/*/gammaray_textdocumentinspector*
 %{_libdir}/gammaray/*/*/gammaray_timertop*
 %{_libdir}/gammaray/*/*/gammaray_translatorinspector*
@@ -164,7 +166,9 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/libgammaray_ui-*.so
 %{_libdir}/libgammaray_client.so
 %{_libdir}/cmake/GammaRay/
-%{_libdir}/qt5/mkspecs/modules/*
+%dir %{_prefix}/mkspecs/
+%dir %{_prefix}/mkspecs/modules/
+%{_prefix}/mkspecs/modules/*.pri
 
 %changelog
 * Sun Dec 16 2018 Allen Winter <allen.winter@kdab.com> 2.10.0
