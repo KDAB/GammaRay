@@ -94,7 +94,6 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DGAMMARAY_PROBE_
 %{_libdir}/gammaray/*/*/gammaray_guisupport*
 %{_libdir}/gammaray/*/*/gammaray_localeinspector*
 %{_libdir}/gammaray/*/*/gammaray_modelinspector*
-%{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
 %{_libdir}/gammaray/*/*/gammaray_sceneinspector*
 %{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
 %{_libdir}/gammaray/*/*/gammaray_signalmonitor*
