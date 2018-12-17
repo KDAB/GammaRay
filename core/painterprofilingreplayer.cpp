@@ -38,7 +38,6 @@ using namespace GammaRay;
 
 namespace GammaRay {
 
-#ifdef USE_GAMMARAY_PAINTBUFFER
 class Replayer : public QPaintEngineExReplayer
 {
 public:
@@ -56,7 +55,6 @@ public:
             QPainterReplayer::process(cmd);
     }
 };
-#endif
 
 }
 
@@ -70,7 +68,6 @@ PainterProfilingReplayer::~PainterProfilingReplayer()
 
 void PainterProfilingReplayer::profile(const PaintBuffer& buffer)
 {
-#ifdef USE_GAMMARAY_PAINTBUFFER
     const auto sourceSize = buffer.boundingRect().size().toSize();
     if (sourceSize.width() <= 0 || sourceSize.height() <= 0)
         return;
@@ -107,9 +104,6 @@ void PainterProfilingReplayer::profile(const PaintBuffer& buffer)
     }
     const auto sum = std::accumulate(m_costs.constBegin(), m_costs.constEnd(), 0.0);
     std::for_each(m_costs.begin(), m_costs.end(), [sum](double &c) { c = 100.0 * c / sum; });
-#else
-    Q_UNUSED(buffer);
-#endif
 }
 
 QVector<double> PainterProfilingReplayer::costs() const

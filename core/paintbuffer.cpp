@@ -32,7 +32,6 @@
 
 using namespace GammaRay;
 
-#ifdef USE_GAMMARAY_PAINTBUFFER
 PaintBufferEngine::PaintBufferEngine(GammaRay::PaintBuffer *buffer)
     : QPaintBufferEngine(buffer->data())
     , m_buffer(buffer)
@@ -305,7 +304,6 @@ void PaintBufferEngine::pushOrigin()
         m_buffer->m_origins.push_back(m_buffer->m_currentOrigin);
     }
 }
-#endif
 
 
 class PaintBufferPrivacyViolater : public QPainterReplayer
@@ -350,13 +348,9 @@ PaintBuffer& PaintBuffer::operator=(const PaintBuffer& other)
 
 QPaintEngine* PaintBuffer::paintEngine() const
 {
-#ifdef USE_GAMMARAY_PAINTBUFFER
     if (!d->engine)
         d->engine = new PaintBufferEngine(const_cast<PaintBuffer*>(this));
     return d->engine;
-#else
-    return QPaintBuffer::paintEngine();
-#endif
 }
 
 Execution::Trace PaintBuffer::stackTrace(int index) const

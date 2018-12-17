@@ -457,11 +457,7 @@ QMap<int, QVariant> PaintBufferModel::itemData(const QModelIndex &index) const
 int PaintBufferModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-#ifdef USE_GAMMARAY_PAINTBUFFER
     return 3;
-#else
-    return 2;
-#endif
 }
 
 int PaintBufferModel::rowCount(const QModelIndex &parent) const

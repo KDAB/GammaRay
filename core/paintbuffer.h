@@ -33,8 +33,6 @@
 #include <common/objectid.h>
 #include <QVector>
 
-#define USE_GAMMARAY_PAINTBUFFER // FIXME USE_GAMMARAY_PAINTBUFFER is now always defined
-
 #include <private/qpaintbuffer_p.h>
 
 namespace GammaRay {
@@ -44,7 +42,6 @@ class Trace;
 
 class PaintBuffer;
 
-#ifdef USE_GAMMARAY_PAINTBUFFER
 class PaintBufferEngine : public QPaintBufferEngine
 {
 public:
@@ -106,9 +103,6 @@ private:
 
     GammaRay::PaintBuffer *m_buffer;
 };
-#else
-typedef QPaintBufferEngine PaintBufferEngine;
-#endif
 
 class PaintBuffer : public QPaintBuffer
 {
@@ -136,9 +130,7 @@ public:
 
     QPaintBufferPrivate* data() const;
 private:
-#ifdef USE_GAMMARAY_PAINTBUFFER
     friend class PaintBufferEngine;
-#endif
     QPaintBufferPrivate *d; // not protected in the base class, somewhat nasty to get to
     QVector<Execution::Trace> m_stackTraces;
 public:
