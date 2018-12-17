@@ -586,14 +586,6 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     Q_ASSERT(!obj->parent() || instance()->m_validObjects.contains(obj->parent()));
 
     instance()->m_validObjects << obj;
-    if (!instance()->hasReliableObjectTracking()) {
-        // when we did not use a preload variant that
-        // overwrites qt_removeObject we must track object
-        // deletion manually
-        connect(obj, SIGNAL(destroyed(QObject*)),
-                instance(), SLOT(handleObjectDestroyed(QObject*)),
-                Qt::DirectConnection);
-    }
 
     if (!fromCtor && obj->parent() && instance()->isObjectCreationQueued(obj->parent())) {
         // when a child event triggers a call to objectAdded while inside the ctor
@@ -843,12 +835,9 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
                 emit objectReparented(obj);
             }
         } else if (tracked) {
-            if (hasReliableObjectTracking()) { // defer processing this until we know its final location
-                m_pendingReparents.push_back(obj);
-                notifyQueuedObjectChanges();
-            } else {
-                objectRemoved(obj);
-            }
+            // defer processing this until we know its final location
+            m_pendingReparents.push_back(obj);
+            notifyQueuedObjectChanges();
         }
     }
 
