@@ -83,7 +83,6 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(EnumNS::UnscopedFlags)
 // Q_DECLARE_OPERATORS_FOR_FLAGS(EnumNS::ScopedFlags)
 #endif
 
-#ifndef QT4_MOC_WORKAROUND
 namespace MyNS {
 class MyObject : public QObject
 {
@@ -98,7 +97,6 @@ class MyOtherObject : public QObject
     Q_OBJECT
 };
 }
-#endif
 
 class EnumPropertyTest : public QObject
 {

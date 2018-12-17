@@ -34,7 +34,6 @@
 
 #include <common/modelroles.h>
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <QAbstractItemModel>
 
 QT_BEGIN_NAMESPACE
@@ -80,7 +79,5 @@ private:
     double m_maxCost;
 };
 }
-
-#endif
 
 #endif // GAMMARAY_PAINTBUFFERMODEL_H

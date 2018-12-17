@@ -65,23 +65,7 @@
 #include <QUrl>
 #include <QThread>
 #include <QTimer>
-
-#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qobject_p.h>
-#else
-struct QSignalSpyCallbackSet
-{
-    typedef void (*BeginCallback)(QObject *caller, int method_index, void **argv);
-    typedef void (*EndCallback)(QObject *caller, int method_index);
-    BeginCallback signal_begin_callback,
-                  slot_begin_callback;
-    EndCallback signal_end_callback,
-                slot_end_callback;
-};
-extern void Q_CORE_EXPORT qt_register_signal_spy_callbacks(const QSignalSpyCallbackSet &callback_set);
-extern QSignalSpyCallbackSet Q_CORE_EXPORT qt_signal_spy_callback_set;
-#endif
-
 #include <algorithm>
 #include <iostream>
 #include <cstdio>

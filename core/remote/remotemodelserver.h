@@ -118,12 +118,8 @@ private slots:
     void columnsMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
                       const QModelIndex &destinationParent, int destinationColumn);
     void columnsRemoved(const QModelIndex &parent, int start, int end);
-#ifdef QT4_MOC_WORKAROUND // Qt4 moc doesn't understand QT_VERSION preprocessor conditionals
-    void layoutChanged();
-#else
     void layoutChanged(const QList<QPersistentModelIndex> &parents,
                        QAbstractItemModel::LayoutChangeHint hint);
-#endif
 
     void modelReset();
 

@@ -34,8 +34,6 @@
 #define GAMMARAY_DEFAULT_ANY_TCP_URL "tcp://0.0.0.0"
 
 // build options
-#cmakedefine HAVE_PRIVATE_QT_HEADERS
-
 #cmakedefine HAVE_STDINT_H
 #cmakedefine HAVE_BACKTRACE
 #cmakedefine HAVE_CXA_DEMANGLE

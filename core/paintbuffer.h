@@ -35,7 +35,6 @@
 
 #define USE_GAMMARAY_PAINTBUFFER // FIXME USE_GAMMARAY_PAINTBUFFER is now always defined
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qpaintbuffer_p.h>
 
 namespace GammaRay {
@@ -149,5 +148,4 @@ public:
 
 }
 
-#endif
 #endif // GAMMARAY_PAINTBUFFER_H

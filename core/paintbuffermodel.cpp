@@ -39,7 +39,6 @@
 #include <limits>
 #include <vector>
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qvectorpath_p.h>
 #include <private/qpainterpath_p.h>
 
@@ -566,5 +565,3 @@ QPainterPath PaintBufferModel::clipPath(int row) const
     }
     return clip;
 }
-
-#endif

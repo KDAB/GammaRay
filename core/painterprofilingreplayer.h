@@ -34,7 +34,6 @@
 
 namespace GammaRay {
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
 class PainterProfilingReplayer
 {
 public:
@@ -47,7 +46,6 @@ public:
 private:
     QVector<double> m_costs;
 };
-#endif
 
 }
 
