@@ -441,7 +441,6 @@ if(Qt5Quick_FOUND)
   endif()
   check_private_header_exists("private/qquickitem_p.h" "${Qt5Quick_PRIVATE_INCLUDE_DIRS}")
 endif()
-set(HAVE_PRIVATE_QT_HEADERS TRUE)
 
 set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
 set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})

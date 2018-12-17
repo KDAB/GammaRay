@@ -32,9 +32,7 @@
 
 #include <QTimer>
 
-#if defined(HAVE_PRIVATE_QT_HEADERS)
 #include <private/qheaderview_p.h>
-#endif
 
 using namespace GammaRay;
 
@@ -57,13 +55,8 @@ HeaderView::HeaderView(Qt::Orientation orientation, QWidget *parent)
 
 bool HeaderView::isState(State state) const
 {
-#if defined(HAVE_PRIVATE_QT_HEADERS)
     QHeaderViewPrivate *d = reinterpret_cast<QHeaderViewPrivate *>(d_ptr.data());
     return d->state == QHeaderViewPrivate::State(state);
-#else
-    Q_UNUSED(state);
-    return false;
-#endif
 }
 
 DeferredTreeView::DeferredHeaderProperties::DeferredHeaderProperties()

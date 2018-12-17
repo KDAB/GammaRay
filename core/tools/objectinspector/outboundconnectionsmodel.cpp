@@ -30,9 +30,7 @@
 #include "outboundconnectionsmodel.h"
 #include "core/probe.h"
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qobject_p.h>
-#endif
 
 using namespace GammaRay;
 

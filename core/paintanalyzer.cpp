@@ -68,7 +68,6 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
     , m_argumentModel(new AggregatedPropertyModel(this))
     , m_stackTraceModel(new StackTraceModel(this))
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBufferModel = new PaintBufferModel(this);
     auto proxy = new ServerProxyModel<PaintBufferModelFilterProxy>(this);
     proxy->addRole(PaintBufferModelRoles::MaxCostRole);
@@ -79,7 +78,6 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
     m_selectionModel = ObjectBroker::selectionModel(m_paintBufferFilter);
     connect(m_selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)), m_remoteView,
             SLOT(sourceChanged()));
-#endif
 
     m_argumentModel->setReadOnly(true);
     Probe::instance()->registerModel(name + QStringLiteral(".argumentProperties"), m_argumentModel);
@@ -95,9 +93,7 @@ PaintAnalyzer::~PaintAnalyzer()
 void PaintAnalyzer::reset()
 {
     m_remoteView->sourceChanged();
-#ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBufferModel->setPaintBuffer(PaintBuffer());
-#endif
 }
 
 void PaintAnalyzer::repaint()
@@ -105,7 +101,6 @@ void PaintAnalyzer::repaint()
     if (!m_remoteView->isActive())
         return;
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
     if (m_paintBufferModel->rowCount() == 0) {
         emit requestUpdate();
         return;
@@ -154,40 +149,28 @@ void PaintAnalyzer::repaint()
     } else {
         setHasStackTrace(0);
     }
-#endif
 }
 
 void PaintAnalyzer::beginAnalyzePainting()
 {
     Q_ASSERT(!m_paintBuffer);
-#ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBuffer = new PaintBuffer;
-#endif
 }
 
 void PaintAnalyzer::setBoundingRect(const QRectF &boundingBox)
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
     Q_ASSERT(m_paintBuffer);
     m_paintBuffer->setBoundingRect(boundingBox);
-#else
-    Q_UNUSED(boundingBox);
-#endif
 }
 
 QPaintDevice *PaintAnalyzer::paintDevice() const
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
     Q_ASSERT(m_paintBuffer);
     return m_paintBuffer;
-#else
-    return nullptr;
-#endif
 }
 
 void PaintAnalyzer::endAnalyzePainting()
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
     Q_ASSERT(m_paintBuffer);
     Q_ASSERT(m_paintBufferModel);
     m_paintBufferModel->setPaintBuffer(*m_paintBuffer);
@@ -207,25 +190,16 @@ void PaintAnalyzer::endAnalyzePainting()
     PainterProfilingReplayer profiler;
     profiler.profile(m_paintBufferModel->buffer());
     m_paintBufferModel->setCosts(profiler.costs());
-#endif
 }
 
 void GammaRay::PaintAnalyzer::setOrigin(const ObjectId &obj)
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
     m_paintBuffer->setOrigin(obj);
-#else
-    Q_UNUSED(obj);
-#endif
 }
 
 bool PaintAnalyzer::isAvailable()
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
     return true;
-#else
-    return false;
-#endif
 }
 
 #include "paintanalyzer.moc"

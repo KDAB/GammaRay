@@ -60,11 +60,7 @@ bool ConnectionsExtension::setQObject(QObject *object)
     m_inboundModel->setObject(object);
     m_outboundModel->setObject(object);
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
     return true;
-#else
-    return false; // the above models wont have any content
-#endif
 }
 
 void ConnectionsExtension::navigateToSender(int modelRow)

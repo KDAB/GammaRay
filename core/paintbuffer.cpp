@@ -29,7 +29,6 @@
 #include "paintbuffer.h"
 #include "execution.h"
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
 
 using namespace GammaRay;
 
@@ -384,5 +383,3 @@ QPaintBufferPrivate* PaintBuffer::data() const
 {
     return d;
 }
-
-#endif

@@ -44,10 +44,8 @@
 #include <QObject>
 #include <QPainter>
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qobject_p.h>
 #include <private/qmetaobject_p.h>
-#endif
 
 #include <iostream>
 

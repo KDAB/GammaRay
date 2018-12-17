@@ -39,10 +39,8 @@
 #include <QMetaObject>
 #include <QMetaProperty>
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qobject_p.h>
 #include <private/qmetaobject_p.h>
-#endif
 
 using namespace GammaRay;
 
@@ -89,12 +87,8 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkMethod(const QMet
 
 static bool isDynamicMetaObject(const QMetaObject *mo)
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
     Q_ASSERT(reinterpret_cast<const QMetaObjectPrivate*>(mo->d.data)->revision >= 3);
     return reinterpret_cast<const QMetaObjectPrivate*>(mo->d.data)->flags & DynamicMetaObject;
-#else
-    return !Execution::isReadOnlyData(mo); // a reasonably safe approximation
-#endif
 }
 
 QMetaObjectValidatorResult::Results QMetaObjectValidator::check(const QMetaObject *mo)

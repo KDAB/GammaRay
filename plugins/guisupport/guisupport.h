@@ -80,11 +80,8 @@ private:
     Probe *m_probe;
 
 private slots:
-#ifdef QT4_MOC_WORKAROUND
-#else
     void objectCreated(QObject *object);
     void restoreIconAndTitle();
-#endif
 };
 
 class GuiSupportFactory : public QObject, public StandardToolFactory<QObject, GuiSupport>

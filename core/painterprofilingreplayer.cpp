@@ -36,8 +36,6 @@
 
 using namespace GammaRay;
 
-#ifdef HAVE_PRIVATE_QT_HEADERS
-
 namespace GammaRay {
 
 #ifdef USE_GAMMARAY_PAINTBUFFER
@@ -118,5 +116,3 @@ QVector<double> PainterProfilingReplayer::costs() const
 {
     return m_costs;
 }
-
-#endif
