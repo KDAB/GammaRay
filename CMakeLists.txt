@@ -3,10 +3,6 @@
 # Pass the following variables to cmake to control the build:
 # (See Install.txt for more information)
 #
-# -DGAMMARAY_ENFORCE_QT4_BUILD=[true|false]
-#  Force building against Qt4, even if Qt5 is found.
-#  Default=false
-#
 # -DGAMMARAY_BUILD_UI=[true|false]
 #  Build the client and in-process UI.
 #  Default=true (except on QNX and Android)
@@ -170,12 +166,6 @@ message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TY
 #
 # Build options
 #
-gammaray_option(
-  GAMMARAY_ENFORCE_QT4_BUILD
-  "Enforce a build with Qt4 (by default GammaRay looks out for Qt5 first)"
-  OFF
-)
-
 set(GAMMARAY_BUILD_UI_DEFAULT ON)
 if(QNXNTO OR ANDROID)
   set(GAMMARAY_BUILD_UI_DEFAULT OFF)
@@ -235,7 +225,6 @@ gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." ${GAM
 if(GAMMARAY_STATIC_PROBE)
   set(GAMMARAY_BUILD_UI OFF)
   set(GAMMARAY_PROBE_ONLY_BUILD ON)
-  set(GAMMARAY_ENFORCE_QT4_BUILD OFF)
 
   set(GAMMARAY_LIBRARY_TYPE STATIC)
   set(GAMMARAY_PLUGIN_TYPE STATIC)
@@ -359,188 +348,126 @@ endif()
 #
 # Finding Qt
 #
+find_package(Qt5Core 5.4 NO_MODULE REQUIRED)
 
-# try Qt5 first, and prefer that (if found), but only if not disabled via option
-if(NOT GAMMARAY_ENFORCE_QT4_BUILD)
-  if(GAMMARAY_STATIC_PROBE)
-    # static probes are only available with Qt 5.4 or newer
-    find_package(Qt5Core 5.4 NO_MODULE REQUIRED)
-  else()
-    find_package(Qt5Core 5.3 QUIET)
-  endif()
-else()
-  set(Qt5Core_FOUND FALSE)
+set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
+find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
+find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+  3DAnimation
+  3DExtras
+  3DInput
+  3DLogic
+  3DRender
+  3DQuick
+  Bluetooth
+  Concurrent
+  Designer
+  Location
+  Positioning
+  PrintSupport
+  Qml
+  Quick
+  QuickWidgets
+  Svg
+  Script
+  ScriptTools
+  Test
+  WebEngineWidgets
+  Widgets
+  WaylandCompositor
+)
+# Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
+# so we can retrieve those packages even when installed into a different prefix
+find_package(Qt5IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
+find_package(Qt5IviVehicleFunctions 1.1 NO_MODULE QUIET)
+find_package(Qt5IviMedia 1.1 NO_MODULE QUIET)
+find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_LESS 5.5)
+  # disable warnings about inconsistent usage of 'override' specifier for Qt <5.5
+  # only starting with 5.5 Qt started to use 'override' throughout the code base
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override")
+endif()
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_EQUAL 5.9.1)
+  # hide -Wc++1z-extensions warnings in this Qt version -- see: https://bugreports.qt.io/browse/QTBUG-61840
+  add_flag_if_supported(-Wno-c++1z-extensions NO_CPP1Z_EXTENSIONS)
+endif()
+if(Qt5Core_VERSION VERSION_GREATER 5.7)
+  # Qt 5.8 is the first minor version to use nullptr more broadly
+  # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
+  #   .../examples/widget-layouting/ui_contactform.h:606:85: warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
+  add_flag_if_supported(-Wzero-as-null-pointer-constant ZERO_AS_NULL_POINTER_CONSTANT)
 endif()
 
-if(Qt5Core_FOUND)
-  set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
-  find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
-  find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
-    3DAnimation
-    3DExtras
-    3DInput
-    3DLogic
-    3DRender
-    3DQuick
-    Bluetooth
-    Concurrent
-    Designer
-    Location
-    Positioning
-    PrintSupport
-    Qml
-    Quick
-    QuickWidgets
-    Svg
-    Script
-    ScriptTools
-    Test
-    WebEngineWidgets
-    Widgets
-    WaylandCompositor
-  )
-  # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
-  # so we can retrieve those packages even when installed into a different prefix
-  find_package(Qt5IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
-  find_package(Qt5IviVehicleFunctions 1.1 NO_MODULE QUIET)
-  find_package(Qt5IviMedia 1.1 NO_MODULE QUIET)
-  find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
-
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_LESS 5.5)
-    # disable warnings about inconsistent usage of 'override' specifier for Qt <5.5
-    # only starting with 5.5 Qt started to use 'override' throughout the code base
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override")
-  endif()
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_EQUAL 5.9.1)
-    # hide -Wc++1z-extensions warnings in this Qt version -- see: https://bugreports.qt.io/browse/QTBUG-61840
-    add_flag_if_supported(-Wno-c++1z-extensions NO_CPP1Z_EXTENSIONS)
-  endif()
-  if(Qt5Core_VERSION VERSION_GREATER 5.7)
-    # Qt 5.8 is the first minor version to use nullptr more broadly
-    # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
-    #   .../examples/widget-layouting/ui_contactform.h:606:85: warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
-    add_flag_if_supported(-Wzero-as-null-pointer-constant ZERO_AS_NULL_POINTER_CONSTANT)
-  endif()
-
-  # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
-  if(GAMMARAY_BUILD_DOCS)
-    find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
-  endif()
-
-  if(GAMMARAY_BUILD_UI) # widgets are required for the UI
-    find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
-    # 3D Widget inspector requires Qt3D 5.7
-    if(Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
-      if(${Qt53DRender_FOUND} AND ${Qt53DInput_FOUND} AND ${Qt53DLogic_FOUND} AND ${Qt53DQuick_FOUND})
-        set(GAMMARAY_WITH_WIDGET3D TRUE)
-      else()
-        message(STATUS "Not building GammaRay Widget 3D")
-      endif()
-    endif()
-  endif()
-
-  # Sanity checking, we need private includes for the following modules
-  check_private_headers_exist("Qt5Core" "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
-  check_private_header_exists("private/qobject_p.h" "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
-  check_private_headers_exist("Qt5Gui" "${Qt5Gui_PRIVATE_INCLUDE_DIRS}")
-  if(Qt5Qml_FOUND)
-    check_private_headers_exist("Qt5Qml" "${Qt5Qml_PRIVATE_INCLUDE_DIRS}")
-    #HACK: CMake with broken Qt5Qml_PRIVATE_INCLUDE_DIRS
-    if(NOT "${Qt5Qml_PRIVATE_INCLUDE_DIRS}" MATCHES "/QtQml/")
-      string(REPLACE "/QtCore" "/QtQml" replaceme "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
-      list(APPEND Qt5Qml_PRIVATE_INCLUDE_DIRS ${replaceme})
-      list(REMOVE_DUPLICATES Qt5Qml_PRIVATE_INCLUDE_DIRS)
-    endif()
-    check_private_header_exists("private/qqmlabstractbinding_p.h" "${Qt5Qml_PRIVATE_INCLUDE_DIRS}")
-  endif()
-  if(Qt5Quick_FOUND)
-    check_private_headers_exist("Qt5Quick" "${Qt5Quick_PRIVATE_INCLUDE_DIRS}")
-    #HACK: CMake with broken Qt5Quick_PRIVATE_INCLUDE_DIRS
-    if(NOT "${Qt5Quick_PRIVATE_INCLUDE_DIRS}" MATCHES "/QtQuick/")
-      string(REPLACE "/QtCore" "/QtQuick" replaceme "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
-      list(APPEND Qt5Quick_PRIVATE_INCLUDE_DIRS ${Qt5Qml_PRIVATE_INCLUDE_DIRS})
-      list(APPEND Qt5Quick_PRIVATE_INCLUDE_DIRS ${replaceme})
-      list(REMOVE_DUPLICATES Qt5Quick_PRIVATE_INCLUDE_DIRS)
-    endif()
-    check_private_header_exists("private/qquickitem_p.h" "${Qt5Quick_PRIVATE_INCLUDE_DIRS}")
-  endif()
-  set(HAVE_PRIVATE_QT_HEADERS TRUE)
-
-  set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
-  set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
-  set(HAVE_QT_SVG ${Qt5Svg_FOUND})
-  set(HAVE_QT_SCXML ${Qt5Scxml_FOUND})
-  set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
-
-  if(Qt5PrintSupport_FOUND)
-    cmake_push_check_state()
-    set(CMAKE_REQUIRED_LIBRARIES Qt5::PrintSupport)
-    check_cxx_symbol_exists(QT_NO_PRINTER "QPrinter" QT_NO_PRINTER)
-    cmake_pop_check_state()
-    if(NOT QT_NO_PRINTER)
-      set(HAVE_QT_PRINTSUPPORT ON)
-    endif()
-  endif()
-
-  add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x040800)
-  #add_definitions(-DQT_DEPRECATED_WARNINGS)
-
-  set_package_properties(Qt5 PROPERTIES URL "https://qt.io/")
-  set_package_properties(Qt5Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
-  set_package_properties(Qt5Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
-  set_package_properties(Qt5Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
-  set_package_properties(Qt5PrintSupport PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget PDF export.")
-else()
-  # Qt4
-  set(QT_USE_IMPORTED_TARGETS true)
-  find_package(Qt4 4.8.0)
-  set_package_properties(Qt4 PROPERTIES TYPE OPTIONAL)
-  if(Qt4_FOUND)
-    # minimum set
-    find_package(Qt4 4.8.0 REQUIRED QtCore QtGui QtNetwork QtXml)
-  endif()
-  find_package(Qt4 4.8.0 QUIET OPTIONAL_COMPONENTS QtScript QtScriptTools QtWebKit QtDesigner QtSvg QtTest)
-
-  include(${QT_USE_FILE})
-  set(HAVE_QT_CONCURRENT true)
-  set(HAVE_QT_WIDGETS true)
-  set(HAVE_QT_SVG true)
-  if(QT_QTDESIGNER_FOUND)
-    set(HAVE_QT_DESIGNER true)
-  endif()
-  set(HAVE_QT_PRINTSUPPORT true)
-
-  find_path(QT_PRIVATE_INCLUDE_DIR private/qobject_p.h PATHS ${QT_QTCORE_INCLUDE_DIRS})
-  if(QT_PRIVATE_INCLUDE_DIR)
-    # not enough, some of them include harfbuzz headers, so we need to find those as well
-    # for now we assume a regular Qt4 source build layout, but that probably should be generalized
-    find_path(HARFBUZZ_INCLUDE_DIR harfbuzz.h PATH ${QT_PRIVATE_INCLUDE_DIR}/../../src/3rdparty/harfbuzz/src)
-  endif()
-
-  if(QT_PRIVATE_INCLUDE_DIR AND HARFBUZZ_INCLUDE_DIR)
-    set(HAVE_PRIVATE_QT_HEADERS TRUE)
-    include_directories(SYSTEM ${HARFBUZZ_INCLUDE_DIR})
-  else()
-    set(HAVE_PRIVATE_QT_HEADERS FALSE)
-    # needs to go before Qt includes, in case we have non-working headers with the same name there
-    include_directories(BEFORE ${CMAKE_SOURCE_DIR}/3rdparty/qt/4.8)
-  endif()
-
-  set_package_properties(Qt4 PROPERTIES URL "https://qt.io/")
-  add_feature_info("QPainter analyzer" HAVE_PRIVATE_QT_HEADERS
-    "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
-  )
-
-  # C++11/Qt5 compatibility
-  if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI\"${CMAKE_SOURCE_DIR}\\compat\\qt4compat.h\"")
-  else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include \"${CMAKE_SOURCE_DIR}/compat/qt4compat.h\"")
-  endif()
-
-  # Qt4 moc limitation workaround (Qt4 moc cannot evaluate QT_VERSION preprocessor conditionals
-  add_definitions(-DQT4_MOC_WORKAROUND)
+# if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
+if(GAMMARAY_BUILD_DOCS)
+  find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
 endif()
+
+if(GAMMARAY_BUILD_UI) # widgets are required for the UI
+  find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
+  # 3D Widget inspector requires Qt3D 5.7
+  if(Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
+    if(${Qt53DRender_FOUND} AND ${Qt53DInput_FOUND} AND ${Qt53DLogic_FOUND} AND ${Qt53DQuick_FOUND})
+      set(GAMMARAY_WITH_WIDGET3D TRUE)
+    else()
+      message(STATUS "Not building GammaRay Widget 3D")
+    endif()
+  endif()
+endif()
+
+# Sanity checking, we need private includes for the following modules
+check_private_headers_exist("Qt5Core" "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
+check_private_header_exists("private/qobject_p.h" "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
+check_private_headers_exist("Qt5Gui" "${Qt5Gui_PRIVATE_INCLUDE_DIRS}")
+if(Qt5Qml_FOUND)
+  check_private_headers_exist("Qt5Qml" "${Qt5Qml_PRIVATE_INCLUDE_DIRS}")
+  #HACK: CMake with broken Qt5Qml_PRIVATE_INCLUDE_DIRS
+  if(NOT "${Qt5Qml_PRIVATE_INCLUDE_DIRS}" MATCHES "/QtQml/")
+    string(REPLACE "/QtCore" "/QtQml" replaceme "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
+    list(APPEND Qt5Qml_PRIVATE_INCLUDE_DIRS ${replaceme})
+    list(REMOVE_DUPLICATES Qt5Qml_PRIVATE_INCLUDE_DIRS)
+  endif()
+  check_private_header_exists("private/qqmlabstractbinding_p.h" "${Qt5Qml_PRIVATE_INCLUDE_DIRS}")
+endif()
+if(Qt5Quick_FOUND)
+  check_private_headers_exist("Qt5Quick" "${Qt5Quick_PRIVATE_INCLUDE_DIRS}")
+  #HACK: CMake with broken Qt5Quick_PRIVATE_INCLUDE_DIRS
+  if(NOT "${Qt5Quick_PRIVATE_INCLUDE_DIRS}" MATCHES "/QtQuick/")
+    string(REPLACE "/QtCore" "/QtQuick" replaceme "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
+    list(APPEND Qt5Quick_PRIVATE_INCLUDE_DIRS ${Qt5Qml_PRIVATE_INCLUDE_DIRS})
+    list(APPEND Qt5Quick_PRIVATE_INCLUDE_DIRS ${replaceme})
+    list(REMOVE_DUPLICATES Qt5Quick_PRIVATE_INCLUDE_DIRS)
+  endif()
+  check_private_header_exists("private/qquickitem_p.h" "${Qt5Quick_PRIVATE_INCLUDE_DIRS}")
+endif()
+set(HAVE_PRIVATE_QT_HEADERS TRUE)
+
+set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
+set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
+set(HAVE_QT_SVG ${Qt5Svg_FOUND})
+set(HAVE_QT_SCXML ${Qt5Scxml_FOUND})
+set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
+
+if(Qt5PrintSupport_FOUND)
+  cmake_push_check_state()
+  set(CMAKE_REQUIRED_LIBRARIES Qt5::PrintSupport)
+  check_cxx_symbol_exists(QT_NO_PRINTER "QPrinter" QT_NO_PRINTER)
+  cmake_pop_check_state()
+  if(NOT QT_NO_PRINTER)
+    set(HAVE_QT_PRINTSUPPORT ON)
+  endif()
+endif()
+
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x040800)
+#add_definitions(-DQT_DEPRECATED_WARNINGS)
+
+set_package_properties(Qt5 PROPERTIES URL "https://qt.io/")
+set_package_properties(Qt5Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
+set_package_properties(Qt5Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
+set_package_properties(Qt5Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
+set_package_properties(Qt5PrintSupport PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget PDF export.")
+
 
 # debug suffixes for qmake compatibility
 if(WIN32)
@@ -600,12 +527,10 @@ set_package_properties(Glslang PROPERTIES URL "https://github.com/KhronosGroup/g
 find_package(QmlLint)
 set_package_properties(QmlLint PROPERTIES URL "https://qt.io" PURPOSE "Validate QML code.")
 
-if(Qt5Core_FOUND)
-  find_package(KF5SyntaxHighlighting 5.28 NO_MODULE QUIET)
-  set_package_properties(KF5SyntaxHighlighting PROPERTIES TYPE RECOMMENDED URL "https://www.kde.org/" PURPOSE "Syntax highlighting for code editor.")
-  if(TARGET KF5::SyntaxHighlighting)
-    set(HAVE_SYNTAX_HIGHLIGHTING TRUE)
-  endif()
+find_package(KF5SyntaxHighlighting 5.28 NO_MODULE QUIET)
+set_package_properties(KF5SyntaxHighlighting PROPERTIES TYPE RECOMMENDED URL "https://www.kde.org/" PURPOSE "Syntax highlighting for code editor.")
+if(TARGET KF5::SyntaxHighlighting)
+  set(HAVE_SYNTAX_HIGHLIGHTING TRUE)
 endif()
 
 #
@@ -748,7 +673,6 @@ include_directories(
   ${CMAKE_BINARY_DIR}
 )
 
-if(Qt5Core_FOUND OR Qt4_FOUND)
 include(QtInstallPaths) #to set QT_INSTALL_FOO variables
 add_subdirectory(cmake)
 add_subdirectory(3rdparty/kde)
@@ -782,7 +706,6 @@ endif()
 if(GAMMARAY_BUILD_DOCS)
   add_subdirectory(examples)
   add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
-endif()
 endif()
 
 set(LICENSE_FILE "LICENSE.GPL.txt")
@@ -907,7 +830,3 @@ endif()
 include(CPack)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-if(NOT Qt5Core_FOUND AND NOT Qt4_FOUND)
-  message(FATAL_ERROR "GammaRay needs either Qt5 or Qt4!")
-endif()

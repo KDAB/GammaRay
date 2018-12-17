@@ -15,11 +15,7 @@ gammaray_add_plugin(gammaray_fontbrowser_plugin
 )
 
 target_link_libraries(gammaray_fontbrowser_plugin gammaray_core)
-if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_fontbrowser_plugin Qt5::Gui)
-else()
-  target_link_libraries(gammaray_fontbrowser_plugin ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
-endif()
+target_link_libraries(gammaray_fontbrowser_plugin Qt5::Gui)
 endif()
 
 # ui part

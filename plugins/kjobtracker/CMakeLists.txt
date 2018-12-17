@@ -1,24 +1,10 @@
-if(Qt5Core_FOUND)
-  find_package(KF5CoreAddons NO_MODULE QUIET)
-  set_package_properties(KF5CoreAddons PROPERTIES
-    TYPE OPTIONAL
-    DESCRIPTION "KDE KCoreAddons Framework"
-    URL "https://www.kde.org/"
-    PURPOSE "Required for the KJob tracker plug-in."
-  )
-else()
-  # ugly workaround for FindKDE4Internal messing with the install rpath (https://github.com/KDAB/GammaRay/issues/36)
-  set(_old_CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_RPATH})
-  find_package(KDE4)
-  set(CMAKE_INSTALL_RPATH ${_old_CMAKE_INSTALL_RPATH})
-
-  set_package_properties(KDE4 PROPERTIES
-    TYPE OPTIONAL
-    DESCRIPTION "KDE libraries"
-    URL "https://www.kde.org/"
-    PURPOSE "Required for the KJob tracker plug-in."
-  )
-endif()
+find_package(KF5CoreAddons NO_MODULE QUIET)
+set_package_properties(KF5CoreAddons PROPERTIES
+  TYPE OPTIONAL
+  DESCRIPTION "KDE KCoreAddons Framework"
+  URL "https://www.kde.org/"
+  PURPOSE "Required for the KJob tracker plug-in."
+)
 
 # probe part
 if (NOT GAMMARAY_CLIENT_ONLY_BUILD)

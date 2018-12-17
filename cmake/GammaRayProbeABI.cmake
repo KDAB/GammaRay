@@ -33,11 +33,7 @@
 # This contains all properties that define ABI compatibility of a probe with a target
 
 # Qt version
-if(Qt5Core_FOUND)
-  set(GAMMARAY_PROBE_ABI "qt${Qt5Core_VERSION_MAJOR}_${Qt5Core_VERSION_MINOR}")
-else()
-  set(GAMMARAY_PROBE_ABI "qt${QT_VERSION_MAJOR}_${QT_VERSION_MINOR}")
-endif()
+set(GAMMARAY_PROBE_ABI "qt${Qt5Core_VERSION_MAJOR}_${Qt5Core_VERSION_MINOR}")
 
 # on Windows, the compiler also matters
 if(WIN32)

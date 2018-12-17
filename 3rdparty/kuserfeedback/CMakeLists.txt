@@ -20,12 +20,10 @@ set(gammaray_userfeedback_srcs
     widgets/feedbackconfigwidget.cpp
     widgets/notificationpopup.cpp
 )
-if (Qt5Core_FOUND)
-    list(APPEND gammaray_userfeedback_srcs
-        core/auditloguicontroller.cpp
-        widgets/auditlogbrowserdialog.cpp
-    )
-endif()
+list(APPEND gammaray_userfeedback_srcs
+    core/auditloguicontroller.cpp
+    widgets/auditlogbrowserdialog.cpp
+)
 
 add_library(gammaray_kuserfeedback SHARED ${gammaray_userfeedback_srcs})
 # Disable warnings for generated stuff
@@ -58,10 +56,6 @@ set_target_properties(gammaray_kuserfeedback PROPERTIES ${GAMMARAY_DEFAULT_LIBRA
 gammaray_set_rpath(gammaray_kuserfeedback ${LIB_INSTALL_DIR})
 generate_export_header(gammaray_kuserfeedback)
 
-if(Qt5Core_FOUND)
-    target_link_libraries(gammaray_kuserfeedback PUBLIC Qt5::Widgets PRIVATE Qt5::Gui Qt5::Network)
-else()
-    target_link_libraries(gammaray_kuserfeedback PUBLIC ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} PRIVATE ${Qt5Network_LIBRARIES})
-endif()
+target_link_libraries(gammaray_kuserfeedback PUBLIC Qt5::Widgets PRIVATE Qt5::Gui Qt5::Network)
 
 install(TARGETS gammaray_kuserfeedback EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

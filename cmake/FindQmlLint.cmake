@@ -27,7 +27,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 find_program(QMLLINT_EXECUTABLE qmllint)
-if (QMLLINT_EXECUTABLE AND NOT Qt5Core_VERSION VERSION_LESS 5.4)
+if (QMLLINT_EXECUTABLE)
   if(NOT QMLLINT_IS_WORKING)
     # Try to fix common problems on Debian-based distros -- they provide /usr/bin/qmllint, which is a symlink to
     # /usr/lib/x86_64-linux-gnu/qt4/bin/qmllint (or the Qt5 version of it). The actual executable is part of different

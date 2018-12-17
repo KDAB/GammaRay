@@ -97,12 +97,10 @@ set(gammaray_srcs
   ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc
 )
 
-if(Qt5Core_FOUND)
-  set(gammaray_srcs
-    ${gammaray_srcs}
-    tools/messagehandler/loggingcategorymodel.cpp
-  )
-endif()
+set(gammaray_srcs
+  ${gammaray_srcs}
+  tools/messagehandler/loggingcategorymodel.cpp
+)
 
 if(NOT Qt5Gui_VERSION VERSION_LESS 5.5.0) # QPaintBuffer was removed in 5.5
   include_directories(${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/)
@@ -136,14 +134,7 @@ set_target_properties(gammaray_core PROPERTIES
 )
 gammaray_set_rpath(gammaray_core ${LIB_INSTALL_DIR})
 
-if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_core LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Gui)
-else()
-  target_link_libraries(gammaray_core
-    LINK_PUBLIC ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} # GUI is needed for QItemSelectionModel
-    LINK_PRIVATE ${Qt5Network_LIBRARIES}
-  )
-endif()
+target_link_libraries(gammaray_core LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Gui)
 
 add_backward(gammaray_core)
 

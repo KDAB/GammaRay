@@ -40,7 +40,7 @@ if(VTK_FOUND)
 endif()
 
 # Only possibly build the plugin under Qt5 (and when VTK was built with Qt5 support as well)
-if(VTK_FOUND AND Qt5Core_FOUND AND VTK_QT_VERSION EQUAL 5 AND GAMMARAY_BUILD_UI)
+if(VTK_FOUND AND VTK_QT_VERSION EQUAL 5 AND GAMMARAY_BUILD_UI)
   set(OPTIONAL_VTK_LIBRARIES)
 
   add_definitions(-DVTKGUI_ENABLED -DVTK_EXCLUDE_STRSTREAM_HEADERS)

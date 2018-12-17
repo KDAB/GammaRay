@@ -31,8 +31,7 @@ include(CMakeParseArguments)
 #
 # GAMMARAY_ADD_PLUGIN: create a gammaray plugin, install at the right place, etc
 # arguments:
-# - DESKTOP <file> - the Qt4 plugin .desktop file (optional)
-# - JSON <file> - the Qt5 plugin .json file (optional)
+# - JSON <file> - the plugin .json file
 # - SOURCES <files> - the plugin sources
 #
 macro(gammaray_add_plugin _target_name)
