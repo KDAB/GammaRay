@@ -64,7 +64,6 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
         }
         case 1:
             return metaTypeId;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         case 2:
             return QMetaType::sizeOf(metaTypeId);
         case 3:
@@ -83,26 +82,19 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
             F(WeakPointerToQObject);
             F(TrackingPointerToQObject);
             F(WasDeclaredAsMetaType);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
             F(IsGadget);
-#endif
         #undef F
 
             return l.join(QStringLiteral(", "));
         }
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
         case 5:
             return QMetaType::hasRegisteredComparators(metaTypeId);
         case 6:
             return QMetaType::hasRegisteredDebugStreamOperator(metaTypeId);
-#endif
         }
     } else if (role == MetaTypeRoles::MetaObjectIdRole && index.column() == 0) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         if (auto mo = QMetaType::metaObjectForType(metaTypeId))
             return QVariant::fromValue(ObjectId(const_cast<QMetaObject*>(mo), "const QMetaObject*"));
-#endif
     }
 
     return QVariant();
@@ -121,23 +113,12 @@ int MetaTypesModel::columnCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    return 2;
-#elif QT_VERSION < QT_VERSION_CHECK(5, 2, 0)
-    return 5;
-#else
     return 7;
-#endif
 }
 
 void MetaTypesModel::scanMetaTypes()
 {
     QVector<int> metaTypes;
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    for (int mtId = 0; QMetaType::isRegistered(mtId); ++mtId)
-        metaTypes.push_back(mtId);
-
-#else
     for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
         if (!QMetaType::isRegistered(mtId))
             continue;
@@ -145,7 +126,6 @@ void MetaTypesModel::scanMetaTypes()
         if (strstr(name, "GammaRay::") != name)
             metaTypes.push_back(mtId);
     }
-#endif
 
     auto itOld = m_metaTypes.constBegin();
     auto itNew = metaTypes.constBegin();

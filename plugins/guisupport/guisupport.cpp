@@ -38,7 +38,6 @@
 
 #include <common/metatypedeclarations.h>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QGuiApplication>
 #include <QOpenGLContext>
 #include <QOpenGLShader>
@@ -47,7 +46,6 @@
 #include <QWindow>
 
 #include <qpa/qplatformpixmap.h>
-#endif
 
 #include <QClipboard>
 #include <QIcon>
@@ -62,7 +60,6 @@
 
 using namespace GammaRay;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QFont::Capitalization)
 Q_DECLARE_METATYPE(QFont::HintingPreference)
 Q_DECLARE_METATYPE(QFont::SpacingType)
@@ -75,16 +72,8 @@ Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
 Q_DECLARE_METATYPE(QSurfaceFormat::FormatOptions)
 Q_DECLARE_METATYPE(const QMimeData*)
-#endif
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Qt::BrushStyle)
-Q_DECLARE_METATYPE(Qt::PenStyle)
-Q_DECLARE_METATYPE(Qt::PenCapStyle)
-Q_DECLARE_METATYPE(Qt::PenJoinStyle)
-#endif
 Q_DECLARE_METATYPE(QImage::Format)
 Q_DECLARE_METATYPE(const QGradient*)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
 Q_DECLARE_METATYPE(QPixelFormat)
 Q_DECLARE_METATYPE(QPixelFormat::AlphaUsage)
 Q_DECLARE_METATYPE(QPixelFormat::AlphaPosition)
@@ -93,7 +82,6 @@ Q_DECLARE_METATYPE(QPixelFormat::ByteOrder)
 Q_DECLARE_METATYPE(QPixelFormat::ColorModel)
 Q_DECLARE_METATYPE(QPixelFormat::TypeInterpretation)
 Q_DECLARE_METATYPE(QPixelFormat::YUVLayout)
-#endif
 
 // QGradient is pseudo-polymorphic, make it introspectable nevertheless
 #define MAKE_GRADIENT_CAST(Type) \
@@ -113,7 +101,6 @@ bool IsPolymorphic<QGradient>() { return true; }
 }
 #undef MAKE_GRADIENT_CAST
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 static bool isAcceptableWindow(QWindow *w)
 {
     return w
@@ -124,7 +111,6 @@ static bool isAcceptableWindow(QWindow *w)
             && w->title() != QStringLiteral("Offscreen")
     ;
 }
-#endif
 
 GuiSupport::GuiSupport(Probe *probe, QObject *parent)
     : QObject(parent)
@@ -133,7 +119,6 @@ GuiSupport::GuiSupport(Probe *probe, QObject *parent)
     registerMetaTypes();
     registerVariantHandler();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     m_iconAndTitleOverrider.titleSuffix = tr(" (Injected by GammaRay)");
     connect(m_probe, &Probe::objectCreated, this, &GuiSupport::objectCreated);
 
@@ -147,14 +132,12 @@ GuiSupport::GuiSupport(Probe *probe, QObject *parent)
         }
         connect(m_probe, &Probe::aboutToDetach, this, &GuiSupport::restoreIconAndTitle, Qt::DirectConnection);
     }
-#endif
 }
 
 void GuiSupport::registerMetaTypes()
 {
     MetaObject *mo;
 
- #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_METAOBJECT1(QMimeData, QObject);
     MO_ADD_PROPERTY   (QMimeData, colorData, setColorData);
     MO_ADD_PROPERTY_RO(QMimeData, formats);
@@ -199,18 +182,13 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QGuiApplication, sessionId);
     MO_ADD_PROPERTY_RO(QGuiApplication, sessionKey);
 #endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_ST(QGuiApplication, allWindows);
     MO_ADD_PROPERTY_ST(QGuiApplication, topLevelWindows);
-#endif
-#endif
 
     MO_ADD_METAOBJECT0(QPaintDevice);
     MO_ADD_PROPERTY_RO(QPaintDevice, colorCount);
     MO_ADD_PROPERTY_RO(QPaintDevice, depth);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_PROPERTY_RO(QPaintDevice, devicePixelRatio);
-#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     MO_ADD_PROPERTY_RO(QPaintDevice, devicePixelRatioF);
 #endif
@@ -237,9 +215,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QImage, isGrayscale);
     MO_ADD_PROPERTY_RO(QImage, isNull);
     MO_ADD_PROPERTY   (QImage, offset, setOffset);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QImage, pixelFormat);
-#endif
     MO_ADD_PROPERTY_RO(QImage, rect);
     MO_ADD_PROPERTY_RO(QImage, size);
     MO_ADD_PROPERTY_RO(QImage, textKeys);
@@ -252,7 +228,6 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QPixmap, isQBitmap);
     MO_ADD_PROPERTY_RO(QPixmap, rect);
     MO_ADD_PROPERTY_RO(QPixmap, size);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_PROPERTY_RO(QPixmap, handle);
     MO_ADD_METAOBJECT0(QPlatformPixmap);
     MO_ADD_PROPERTY_NC(QPlatformPixmap, buffer);
@@ -303,9 +278,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY(QWindow, icon, setIcon);
     MO_ADD_PROPERTY_RO(QWindow, isExposed);
     MO_ADD_PROPERTY_RO(QWindow, isTopLevel);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
     MO_ADD_PROPERTY(QWindow, mask, setMask);
-#endif
     MO_ADD_PROPERTY(QWindow, position, setPosition);
     MO_ADD_PROPERTY_RO(QWindow, requestedFormat);
     MO_ADD_PROPERTY_RO(QWindow, screen);
@@ -343,9 +316,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QOpenGLContext, shareGroup);
 // MO_ADD_PROPERTY_RO(QOpenGLContext, surface);
 #endif // QT_NO_OPENGL
-#endif // QT_VERSION >= 5.0.0
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_METAOBJECT0(QGradient);
     MO_ADD_PROPERTY   (QGradient, coordinateMode, setCoordinateMode);
     MO_ADD_PROPERTY   (QGradient, spread, setSpread);
@@ -429,9 +400,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY(QPen, style, setStyle);
     MO_ADD_PROPERTY(QPen, width, setWidth);
     MO_ADD_PROPERTY(QPen, widthF, setWidthF);
-#endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_METAOBJECT0(QPixelFormat);
     MO_ADD_PROPERTY_RO(QPixelFormat, alphaPosition);
     MO_ADD_PROPERTY_RO(QPixelFormat, alphaSize);
@@ -454,10 +423,8 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QPixelFormat, typeInterpretation);
     MO_ADD_PROPERTY_RO(QPixelFormat, yellowSize);
     MO_ADD_PROPERTY_RO(QPixelFormat, yuvLayout);
-#endif
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 static QString surfaceFormatToString(const QSurfaceFormat &format)
 {
     QString s;
@@ -537,7 +504,6 @@ static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
     return types.join(QStringLiteral(" | "));
 }
 #endif // QT_NO_OPENGL
-#endif
 
 static QString textLengthToString(const QTextLength &l)
 {
@@ -563,7 +529,6 @@ static QString painterPathToString(const QPainterPath &path)
     return GuiSupport::tr("<%1 elements>").arg(path.elementCount());
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #define E(x) { QSurfaceFormat:: x, #x }
 static const MetaEnum::Value<QSurfaceFormat::FormatOption> surface_format_option_table[] = {
     E(StereoBuffers),
@@ -574,7 +539,6 @@ static const MetaEnum::Value<QSurfaceFormat::FormatOption> surface_format_option
 #endif
 };
 #undef E
-#endif
 
 #define E(x) { QFont:: x, #x }
 static const MetaEnum::Value<QFont::Capitalization> font_capitalization_table[] = {
@@ -655,13 +619,11 @@ static const MetaEnum::Value<QPainter::CompositionMode> painter_composition_mode
     E(RasterOp_NotSource),
     E(RasterOp_NotSourceAndDestination),
     E(RasterOp_SourceAndNotDestination),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     E(RasterOp_NotSourceOrDestination),
     E(RasterOp_ClearDestination),
     E(RasterOp_SetDestination),
     E(RasterOp_NotDestination),
     E(RasterOp_SourceOrNotDestination)
-#endif
 };
 
 static const MetaEnum::Value<QPainter::RenderHint> painter_render_hint_table[] = {
@@ -670,9 +632,7 @@ static const MetaEnum::Value<QPainter::RenderHint> painter_render_hint_table[] =
     E(SmoothPixmapTransform),
     E(HighQualityAntialiasing),
     E(NonCosmeticDefaultPen),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     E(Qt4CompatiblePainting)
-#endif
 };
 #undef E
 
@@ -685,7 +645,6 @@ static const MetaEnum::Value<QPaintEngine::PolygonDrawMode> paintengine_polygon_
 };
 #undef E
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #define E(x) { QPlatformPixmap:: x, #x }
 static const MetaEnum::Value<QPlatformPixmap::ClassId> platformpixmap_classid_table[] = {
     E(RasterClass),
@@ -695,7 +654,6 @@ static const MetaEnum::Value<QPlatformPixmap::ClassId> platformpixmap_classid_ta
     E(CustomClass)
 };
 #undef E
-#endif
 
 #define E(x) { QImage:: x, #x }
 static const MetaEnum::Value<QImage::Format> image_format_table[] = {
@@ -715,25 +673,18 @@ static const MetaEnum::Value<QImage::Format> image_format_table[] = {
     E(Format_RGB888),
     E(Format_RGB444),
     E(Format_ARGB4444_Premultiplied),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     E(Format_RGBX8888),
     E(Format_RGBA8888),
     E(Format_RGBA8888_Premultiplied),
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     E(Format_BGR30),
     E(Format_A2BGR30_Premultiplied),
     E(Format_RGB30),
     E(Format_A2RGB30_Premultiplied),
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     E(Format_Alpha8),
     E(Format_Grayscale8)
-#endif
 };
 #undef E
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
 #define E(x) { QPixelFormat:: x, #x }
 static const MetaEnum::Value<QPixelFormat::AlphaPosition> pixelformat_alphaposition_table[] = {
     E(AtBeginning),
@@ -765,9 +716,7 @@ static const MetaEnum::Value<QPixelFormat::ColorModel> pixelformat_colormodel_ta
     E(HSL),
     E(HSV),
     E(YUV),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     E(Alpha)
-#endif
 };
 
 static const MetaEnum::Value<QPixelFormat::TypeInterpretation> pixelformat_typeinterpretation_table[] = {
@@ -796,7 +745,6 @@ static const MetaEnum::Value<QPixelFormat::YUVLayout> pixelformat_yuvlayout_tabl
     E(Y16)
 };
 #undef E
-#endif
 
 static QString brushToString(const QBrush &b)
 {
@@ -828,10 +776,8 @@ static QString penToString(const QPen &p)
 
 static QString regionToString(const QRegion &region)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (region.isNull())
         return QStringLiteral("<null>");
-#endif
     if (region.isEmpty())
         return QStringLiteral("<empty>");
     if (region.rectCount() == 1)
@@ -861,7 +807,6 @@ static QString pixmapToString(const QPixmap &pixmap)
 void GuiSupport::registerVariantHandler()
 {
     VariantHandler::registerStringConverter<const QValidator*>(Util::displayString);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     VariantHandler::registerStringConverter<const QMimeData*>(Util::displayString);
     VariantHandler::registerStringConverter<QSurfaceFormat>(surfaceFormatToString);
 
@@ -877,7 +822,6 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QFont, SpacingType, font_spacing_type_table);
     ER_REGISTER_ENUM(QFont, Style, font_style_table);
     ER_REGISTER_ENUM(QFont, StyleHint, font_style_hint_table);
-#endif
 
     ER_REGISTER_ENUM(QImage, Format, image_format_table);
     ER_REGISTER_ENUM(QPainter, CompositionMode, painter_composition_mode_table);
@@ -892,16 +836,13 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QPixmap>(pixmapToString);
     VariantHandler::registerStringConverter<QRegion>(regionToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     VariantHandler::registerStringConverter<QPair<double, QColor> >([](const QPair<double, QColor> &p) {
         return QString(VariantHandler::displayString(p.first) + QLatin1String(": ") + VariantHandler::displayString(p.second));
     });
     ER_REGISTER_ENUM(QPlatformPixmap, ClassId, platformpixmap_classid_table);
     VariantHandler::registerStringConverter<QImage*>(Util::addressToString);
     VariantHandler::registerStringConverter<QPlatformPixmap*>(Util::addressToString);
-#endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     ER_REGISTER_ENUM(QPixelFormat, AlphaPosition, pixelformat_alphaposition_table);
     ER_REGISTER_ENUM(QPixelFormat, AlphaPremultiplied, pixelformat_alphapremultiplied_table);
     ER_REGISTER_ENUM(QPixelFormat, AlphaUsage, pixelformat_alphausage_table);
@@ -909,10 +850,8 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QPixelFormat, ColorModel, pixelformat_colormodel_table);
     ER_REGISTER_ENUM(QPixelFormat, TypeInterpretation, pixelformat_typeinterpretation_table);
     ER_REGISTER_ENUM(QPixelFormat, YUVLayout, pixelformat_yuvlayout_table);
-#endif
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 QObject *GuiSupport::targetObject(QObject *object) const
 {
     return object ? object : qobject_cast<QObject *>(qApp);
@@ -1103,13 +1042,8 @@ bool GuiSupport::eventFilter(QObject *watched, QEvent *event)
 
     return QObject::eventFilter(watched, event);
 }
-#endif
 
 GuiSupportFactory::GuiSupportFactory(QObject *parent)
     : QObject(parent)
 {
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(GuiSupportFactory)
-#endif

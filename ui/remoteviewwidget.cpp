@@ -350,11 +350,7 @@ bool RemoteViewWidget::hasValidFrame() const
 bool RemoteViewWidget::hasValidCompleteFrame() const
 {
     return m_frame.isValid()
-            && (m_frame.image().size()
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-                / m_frame.image().devicePixelRatio()
-#endif
-                )
+            && (m_frame.image().size() / m_frame.image().devicePixelRatio())
             == m_frame.viewRect().size().toSize();
 }
 
@@ -903,9 +899,7 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
 {
     QTouchEvent::TouchPoint p;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     p.setFlags(point.flags());
-#endif
     p.setId(point.id());
     p.setPressure(point.pressure());
     p.setState(point.state());
@@ -1299,9 +1293,7 @@ bool RemoteViewWidget::event(QEvent *event)
     if (m_interactionMode == InputRedirection) {
         switch (event->type()) {
         case QEvent::TouchBegin:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         case QEvent::TouchCancel:
-#endif
         case QEvent::TouchEnd:
         case QEvent::TouchUpdate:
             sendTouchEvent(static_cast<QTouchEvent *>(event));
@@ -1355,17 +1347,8 @@ void RemoteViewWidget::sendKeyEvent(QKeyEvent *event)
 
 void RemoteViewWidget::sendWheelEvent(QWheelEvent *event)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     auto angleDelta = event->angleDelta();
     auto pixelDelta = event->pixelDelta();
-#else
-    QPoint angleDelta;
-    if (event->orientation() == Qt::Horizontal)
-        angleDelta.setX(event->delta());
-    else
-        angleDelta.setY(event->delta());
-    QPoint pixelDelta;
-#endif
     m_interface->sendWheelEvent(mapToSource(event->pos()), pixelDelta, angleDelta,
                                 event->buttons(), event->modifiers());
 }
@@ -1379,19 +1362,13 @@ void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)
         touchPoints << mapToSource(point);
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QTouchDevice::Capabilities caps = event->device()->capabilities();
     caps &= ~QTouchDevice::RawPositions; //we don't have a way to meaningfully map the raw positions to the source
     caps &= ~QTouchDevice::Velocity; //neither for velocity
-#endif
 
     m_interface->sendTouchEvent(event->type(),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
                                 event->device()->type(),
                                 caps,
                                 event->device()->maximumTouchPoints(),
-#else
-                                event->deviceType(), 0, 0,
-#endif
                                 event->modifiers(), event->touchPointStates(), touchPoints);
 }

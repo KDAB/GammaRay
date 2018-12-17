@@ -34,9 +34,7 @@
 
 #include <QProcess>
 #include <QDebug>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QStandardPaths>
-#endif
 
 #include <cstdlib>
 
@@ -69,9 +67,7 @@ bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &p
 #else
 
     auto exePath = programAndArgs.first();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     exePath = QStandardPaths::findExecutable(exePath);
-#endif
 
     // ASAN requires to be loaded first, so check if the target uses that
     // and if so inject it before GammaRay

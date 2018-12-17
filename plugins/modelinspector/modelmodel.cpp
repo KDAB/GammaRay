@@ -94,7 +94,6 @@ void ModelModel::objectAdded(QObject *obj)
         else
             m_models.push_back(proxy);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         connect(proxy, &QAbstractProxyModel::sourceModelChanged, this, [this, proxy]() {
             beginResetModel(); // FIXME
             if (proxy->sourceModel()) {
@@ -110,7 +109,6 @@ void ModelModel::objectAdded(QObject *obj)
             }
             endResetModel();
         });
-#endif
         endResetModel();
         return;
     }

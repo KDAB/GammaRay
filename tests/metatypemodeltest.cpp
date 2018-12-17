@@ -63,9 +63,7 @@ private slots:
 
         auto idx = searchFixedIndex(&model, "QObject*");
         QVERIFY(idx.isValid());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         QVERIFY(!idx.data(MetaTypeRoles::MetaObjectIdRole).value<ObjectId>().isNull());
-#endif
 
         idx = searchFixedIndex(&model, "int");
         QVERIFY(idx.isValid());
@@ -73,14 +71,10 @@ private slots:
 
         idx = searchFixedIndex(&model, "QThread*");
         QVERIFY(!idx.isValid());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         qRegisterMetaType<QThread*>();
         srcModel.scanMetaTypes();
         idx = searchFixedIndex(&model, "QThread*");
         QVERIFY(idx.isValid());
-#else
-        srcModel.scanMetaTypes();
-#endif
 
         QCOMPARE(resetSpy.size(), 0);
     }

@@ -73,9 +73,6 @@ static const control_element_t controlElements[] = {
     MAKE_CE_X(CE_Header, makeHeaderStyleOption),
     MAKE_CE_X(CE_HeaderSection, makeHeaderStyleOption),
     MAKE_CE_X(CE_HeaderLabel, makeHeaderStyleOption),
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    MAKE_CE(CE_Q3DockWindowEmptyArea),
-#endif
     MAKE_CE_X(CE_ToolBoxTab, makeToolBoxStyleOption),
     MAKE_CE(CE_SizeGrip),
     MAKE_CE(CE_Splitter),

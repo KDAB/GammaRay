@@ -53,10 +53,6 @@
 #include <QKeySequence>
 #endif
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <qtest_global.h>
-#endif
-
 namespace GammaRay {
 
 class CrossThreadConnectionTask : public QRunnable
@@ -341,10 +337,6 @@ private slots:
         o1->disconnect();
         task->newThreadObj->disconnect();
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        QEXPECT_FAIL("", "Can't access the connections of object in Qt4.", Abort);
-#endif
-
         const auto &problems = ProblemCollector::instance()->problems();
         auto crossThreadProblem = std::find_if(problems.begin(), problems.end(),
             [](const Problem &p){ return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.CrossTread"); }
@@ -390,9 +382,6 @@ private slots:
             }
         ));
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        QEXPECT_FAIL("", "Can't find unregistered types in Qt4.", Abort);
-#endif
         QVERIFY(std::any_of(problems.begin(), problems.end(),
             [&obj](const Problem &p){
                 return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")

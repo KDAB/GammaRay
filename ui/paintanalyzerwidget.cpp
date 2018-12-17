@@ -132,14 +132,12 @@ void PaintAnalyzerWidget::detailsChanged()
     if (!hasAnyDetails)
         return;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     const auto hasAllDetails = m_iface->hasArgumentDetails() && m_iface->hasStackTrace();
     ui->detailsTabWidget->tabBar()->setVisible(hasAllDetails);
     if (hasAllDetails)
         return;
 
     ui->detailsTabWidget->setCurrentWidget(m_iface->hasArgumentDetails() ? ui->argumentTab : ui->stackTraceTab);
-#endif
 }
 
 void PaintAnalyzerWidget::commandContextMenu(QPoint pos)

@@ -79,12 +79,10 @@ PropertyEditorFactory *PropertyEditorFactory::instance()
 
 QWidget *PropertyEditorFactory::createEditor(TypeId type, QWidget *parent) const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (type == QMetaType::Float) {
         /* coverity[mixed_enums] */
         type = QVariant::Double;
     }
-#endif
 
     QWidget *w = QItemEditorFactory::createEditor(type, parent);
     if (!w)
@@ -111,9 +109,7 @@ void PropertyEditorFactory::initBuiltInTypes()
         << QVariant::DateTime
         << QVariant::Time;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     m_supportedTypes << QMetaType::Float;
-#endif
 }
 
 void PropertyEditorFactory::addEditor(PropertyEditorFactory::TypeId type, QItemEditorCreatorBase *creator, bool extended)

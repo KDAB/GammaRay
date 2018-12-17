@@ -78,7 +78,3 @@ void ScriptEngineDebuggerWidget::scriptEngineSelected(int index)
 // debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
     }
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(ScriptEngineDebuggerUiFactory)
-#endif

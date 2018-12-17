@@ -56,7 +56,3 @@ KJobTrackerWidget::KJobTrackerWidget(QWidget *parent)
 KJobTrackerWidget::~KJobTrackerWidget()
 {
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(KJobTrackerUiFactory)
-#endif

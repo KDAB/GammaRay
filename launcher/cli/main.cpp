@@ -267,14 +267,12 @@ int main(int argc, char **argv)
         }
         if (arg == QLatin1String("--self-test")) {
             SelfTest selfTest;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
             QObject::connect(&selfTest, &SelfTest::information, [](const QString &msg) {
                 out << msg << endl;
             });
             QObject::connect(&selfTest, &SelfTest::error, [](const QString &msg) {
                 err << "Error: " << msg << endl;
             });
-#endif
             if (args.isEmpty() || args.first().startsWith('-'))
                 return selfTest.checkEverything() ? 0 : 1;
             const auto injectorType = args.takeFirst();

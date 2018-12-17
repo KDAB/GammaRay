@@ -93,17 +93,9 @@ bool WinFunctionOverwriter::commitMemory(void *mem, size_t size)
 
 void *WinFunctionOverwriter::qtCoreFunctionLookup(const QString &function)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    static HMODULE qtCoreDllHandle = GetModuleHandle(L"QtCore4");
-    if (qtCoreDllHandle == NULL)
-        qtCoreDllHandle = GetModuleHandle(L"QtCored4");
-
-#else
     static HMODULE qtCoreDllHandle = GetModuleHandle(L"Qt5Core");
     if (qtCoreDllHandle == NULL)
         qtCoreDllHandle = GetModuleHandle(L"Qt5Cored");
-
-#endif
 
     if (qtCoreDllHandle == NULL) {
         cerr << "no handle for QtCore found!" << endl;

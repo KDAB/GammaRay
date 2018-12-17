@@ -34,9 +34,6 @@
 #include <QApplication>
 #include <QIdentityProxyModel>
 #include <QStyledItemDelegate>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QStyleOptionViewItemV4>
-#endif
 #include <QPainter>
 #include <QDebug>
 
@@ -71,12 +68,7 @@ public:
                const QModelIndex &index) const override
     {
         if (index.column() == 2) {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
             QStyleOptionViewItem opt = option;
-#else
-            QStyleOptionViewItemV4 opt
-                = *qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option);
-#endif
             initStyleOption(&opt, index);
 
             const QWidget *widget = opt.widget;

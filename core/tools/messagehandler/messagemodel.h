@@ -42,12 +42,10 @@ struct DebugMessage {
     QString message;
     QTime time;
     Execution::Trace backtrace;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QString category;
     QString file;
     QString function;
     int line;
-#endif
 };
 }
 

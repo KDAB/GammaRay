@@ -279,9 +279,7 @@ void Endpoint::registerMessageHandler(Protocol::ObjectAddress objectAddress, QOb
     ObjectInfo *obj = m_addressMap.value(objectAddress);
     Q_ASSERT(obj);
     Q_ASSERT(!obj->receiver);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     Q_ASSERT(!obj->messageHandler.isValid());
-#endif
     obj->receiver = receiver;
 
     QByteArray signature(messageHandlerName);

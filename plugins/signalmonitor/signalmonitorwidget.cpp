@@ -154,7 +154,3 @@ void SignalMonitorWidget::selectionChanged(const QItemSelection& selection)
     const auto idx = selection.at(0).topLeft();
     ui->objectTreeView->scrollTo(idx);
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(SignalMonitorUiFactory)
-#endif

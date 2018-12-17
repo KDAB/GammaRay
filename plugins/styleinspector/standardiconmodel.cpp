@@ -96,9 +96,7 @@ QVariant StandardIconModel::doData(int row, int column, int role) const
     MAKE_SP(SP_FileDialogListView);
     MAKE_SP(SP_FileDialogBack);
     MAKE_SP(SP_DirIcon);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MAKE_SP(SP_DirLinkOpenIcon);
-#endif
     MAKE_SP(SP_DialogOkButton);
     MAKE_SP(SP_DialogCancelButton);
     MAKE_SP(SP_DialogHelpButton);

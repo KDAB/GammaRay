@@ -52,12 +52,9 @@ static void connectObjects(QObject *sender, QObject *receiver)
                          mySlot4()), Qt::BlockingQueuedConnection);
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 static void dummyFunction()
 {
 }
-
-#endif
 
 int main(int argc, char **argv)
 {
@@ -95,15 +92,11 @@ int main(int argc, char **argv)
     connectObjects(&doubleSender, &doubleReceiver);
     connectObjects(&doubleSender, &doubleReceiver);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MyTestObject lambdaSender, lambdaContext;
     lambdaSender.setObjectName(QStringLiteral("lambdaSender"));
     lambdaContext.setObjectName(QStringLiteral("lambdaContext"));
     QObject::connect(&lambdaSender, &MyTestObject::mySignal1, &dummyFunction);
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     QObject::connect(&lambdaSender, &MyTestObject::mySignal2, &lambdaContext, &dummyFunction);
-#endif
 
     return app.exec();
 }

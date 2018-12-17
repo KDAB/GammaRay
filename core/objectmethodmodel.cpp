@@ -58,17 +58,11 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
     } else if (role == ObjectMethodModelRole::MethodAccess && index.column() == 2) {
         return QVariant::fromValue(method.access());
     } else if (role == ObjectMethodModelRole::MethodSignature && index.column() == 0) {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        return method.signature();
-#else
         return method.methodSignature();
-#endif
     } else if (role == ObjectMethodModelRole::MethodTag && index.column() == 0 && qstrlen(method.tag())) {
         return method.tag();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
     } else if (role == ObjectMethodModelRole::MethodRevision && index.column() == 0) {
         return method.revision();
-#endif
     } else if (role == ObjectMethodModelRole::MethodIssues && index.column() == 0) {
         const QMetaObject *mo = m_metaObject;
         while (mo->methodOffset() > index.row())

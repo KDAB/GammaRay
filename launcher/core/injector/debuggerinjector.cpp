@@ -32,9 +32,7 @@
 #include <QFile>
 #include <QProcess>
 #include <QTime>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QStandardPaths>
-#endif
 
 #include <iostream>
 #include <cstdlib>
@@ -187,12 +185,10 @@ bool DebuggerInjector::startDebugger(const QStringList &args, const QProcessEnvi
 
 bool DebuggerInjector::selfTest()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (QStandardPaths::findExecutable(filePath()).isEmpty()) {
         mErrorString = tr("The debugger executable '%1' could not be found").arg(filePath());
         return false;
     }
-#endif
 
     // check for the Yama prtrace_scope setting, which can prevent attaching to work
     QFile file(QStringLiteral("/proc/sys/kernel/yama/ptrace_scope"));
@@ -214,11 +210,7 @@ void DebuggerInjector::waitForMain()
     addFunctionBreakpoint("main");
     execCmd("run");
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    loadSymbols("QtCore");
-#else
     loadSymbols("Qt5Core");
-#endif
     addMethodBreakpoint("QCoreApplication::exec");
     execCmd("continue");
 }

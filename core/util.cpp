@@ -89,9 +89,6 @@ QString Util::enumToString(const QVariant &value, const char *typeName, const QO
 
 QString Util::prettyMethodSignature(const QMetaMethod &method)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    return method.signature();
-#else
     QString signature = method.typeName();
     signature += ' ' + method.name() + '(';
     QStringList args;
@@ -106,7 +103,6 @@ QString Util::prettyMethodSignature(const QMetaMethod &method)
     }
     signature += args.join(QStringLiteral(", ")) + ')';
     return signature;
-#endif
 }
 
 bool Util::descendantOf(const QObject *ascendant, const QObject *object)
@@ -173,13 +169,7 @@ static IconDatabase readIconData()
         const QString iconName = fileInfo.fileName();
 
         const QByteArray classNameAsByteArray = className.toLatin1();
-        const QLatin1String classNameKey(
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-            classNameAsByteArray
-#else
-            classNameAsByteArray.data(), classNameAsByteArray.size()
-#endif
-        );
+        const QLatin1String classNameKey(classNameAsByteArray.data(), classNameAsByteArray.size());
 
         auto dataIt = data.find(classNameKey);
         if (dataIt == data.end()) {
@@ -272,45 +262,7 @@ void Util::drawTransparencyPattern(QPainter *painter, const QRect &rect, int squ
     painter->fillRect(rect, bgBrush);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0) && defined(HAVE_PRIVATE_QT_HEADERS)
-// from Qt4's qobject.cpp
-static void computeOffsets(const QMetaObject *mo, int *signalOffset, int *methodOffset)
-{
-    *signalOffset = *methodOffset = 0;
-    const QMetaObject *m = mo->superClass();
-    while (m) {
-        const QMetaObjectPrivate *d = QMetaObjectPrivate::get(m);
-        *methodOffset += d->methodCount;
-        *signalOffset += d->signalCount;
-        m = m->superClass();
-    }
-}
-
-#endif
-
 int Util::signalIndexToMethodIndex(const QMetaObject *metaObject, int signalIndex)
 {
-#ifdef HAVE_PRIVATE_QT_HEADERS
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     return QMetaObjectPrivate::signal(metaObject, signalIndex).methodIndex();
-#else
-
-    if (signalIndex < 0)
-        return signalIndex;
-    Q_ASSERT(metaObject);
-
-    int signalOffset, methodOffset;
-    computeOffsets(metaObject, &signalOffset, &methodOffset);
-    while (signalOffset > signalIndex) {
-        metaObject = metaObject->superClass();
-        computeOffsets(metaObject, &signalOffset, &methodOffset);
-    }
-    const int offset = methodOffset - signalOffset;
-    return metaObject->method(signalIndex + offset).methodIndex();
-#endif
-#else
-    Q_UNUSED(metaObject);
-    Q_UNUSED(signalIndex);
-    return -1;
-#endif
 }

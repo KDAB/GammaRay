@@ -32,9 +32,7 @@
 #include <QFileIconProvider>
 #include <QIdentityProxyModel>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QMimeDatabase>
-#endif
 
 namespace GammaRay {
 /**
@@ -52,9 +50,7 @@ public:
 
 private:
     QFileIconProvider m_iconProvider;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QMimeDatabase m_mimeDb;
-#endif
 };
 }
 

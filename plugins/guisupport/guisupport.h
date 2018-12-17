@@ -45,14 +45,11 @@ class GuiSupport : public QObject
 public:
     explicit GuiSupport(Probe *probe, QObject *parent = nullptr);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     bool eventFilter(QObject *watched, QEvent *event);
-#endif
 
 private:
     void registerMetaTypes();
     void registerVariantHandler();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     void discoverObjects();
     QObject *targetObject(QObject *object) const;
     QIcon createIcon(const QIcon &oldIcon, QWindow *w=nullptr);
@@ -78,7 +75,6 @@ private:
         QHash<QObject *, Icons> objectsIcons;
         QString titleSuffix;
     } m_iconAndTitleOverrider;
-#endif
 
 private:
     Probe *m_probe;

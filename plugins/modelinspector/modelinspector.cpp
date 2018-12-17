@@ -189,7 +189,3 @@ void ModelInspector::selectionModelSelected(const QItemSelection &selected)
     }
     m_modelContentProxyModel->setSelectionModel(qobject_cast<QItemSelectionModel*>(idx.data(ObjectModel::ObjectRole).value<QObject*>()));
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(ModelInspectorFactory)
-#endif

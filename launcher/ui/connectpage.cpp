@@ -53,14 +53,12 @@ ConnectPage::ConnectPage(QWidget *parent)
     , m_valid(false)
 {
     ui->setupUi(this);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     m_implicitPortWarningSign =
         new QAction(QIcon(":/launcher/warning.png"), tr("No port given, will use 11732"), this);
 
     m_fileIsNotASocketWarning =
         new QAction(qApp->style()->standardIcon(QStyle::SP_MessageBoxCritical),
                     tr("File is not a socket"), this);
-#endif
     connect(ui->host, SIGNAL(textChanged(QString)), SLOT(validateHostAddress(QString)));
     connect(ui->host, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
 
@@ -219,10 +217,6 @@ void ConnectPage::hostResponse(const QHostInfo &hostInfo)
 
 void ConnectPage::handleAddressAndPort(QString &stillToParse, bool &correctSoFar, const QString &possibleAddress, bool skipPort)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    // Qt 4 parses Urls into Uppercase representation
-    stillToParse = stillToParse.toUpper();
-#endif
     stillToParse.replace(possibleAddress, QString());
     if (stillToParse.isEmpty()) {
         correctSoFar = true;
@@ -253,24 +247,18 @@ void ConnectPage::handlePortString(QString &stillToParse, bool &correctSoFar)
 
 void ConnectPage::showStandardPortAssumedWarning()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     ui->host->addAction(m_implicitPortWarningSign, QLineEdit::TrailingPosition);
-#endif
 }
 
 void ConnectPage::showFileIsNotSocketWarning()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     ui->host->addAction(m_fileIsNotASocketWarning, QLineEdit::TrailingPosition);
-#endif
 }
 
 void ConnectPage::clearWarnings()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     ui->host->removeAction(m_implicitPortWarningSign);
     ui->host->removeAction(m_fileIsNotASocketWarning);
-#endif
 }
 
 QUrl ConnectPage::currentUrl() const

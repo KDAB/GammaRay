@@ -94,7 +94,3 @@ void StyleInspectorWidget::styleSelected(int index)
                                                              0),
                            QItemSelectionModel::ClearAndSelect);
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(StyleInspectorUiFactory)
-#endif

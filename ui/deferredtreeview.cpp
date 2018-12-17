@@ -41,20 +41,12 @@ using namespace GammaRay;
 namespace {
 QHeaderView::ResizeMode sectionResizeMode(QHeaderView *header, int logicalIndex)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     return header->sectionResizeMode(logicalIndex);
-#else
-    return header->resizeMode(logicalIndex);
-#endif
 }
 
 void setSectionResizeMode(QHeaderView *header, int logicalIndex, QHeaderView::ResizeMode mode)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     header->setSectionResizeMode(logicalIndex, mode);
-#else
-    header->setResizeMode(logicalIndex, mode);
-#endif
 }
 }
 
@@ -93,11 +85,7 @@ DeferredTreeView::DeferredTreeView(QWidget *parent)
     setHeader(new HeaderView(header()->orientation(), this));
 
     // Default QTreeView header properties
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     header()->setSectionsMovable(true);
-#else
-    header()->setMovable(true);
-#endif
     header()->setStretchLastSection(true);
     header()->setDefaultAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     // Custom

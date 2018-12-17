@@ -295,9 +295,6 @@ void SceneInspector::registerGraphicsViewMetaTypes()
     MO_ADD_PROPERTY_RO(QGraphicsItem, isActive);
     MO_ADD_PROPERTY_RO(QGraphicsItem, isClipped);
     MO_ADD_PROPERTY(QGraphicsItem, isEnabled, setEnabled);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QGraphicsItem, isObscured);
-#endif
     MO_ADD_PROPERTY_RO(QGraphicsItem, isPanel);
     MO_ADD_PROPERTY(QGraphicsItem, isSelected, setSelected);
     MO_ADD_PROPERTY_RO(QGraphicsItem, isUnderMouse);
@@ -469,19 +466,9 @@ void SceneInspector::registerVariantHandlers()
     VariantHandler::registerStringConverter<QGraphicsLayoutItem *>(Util::addressToString);
     VariantHandler::registerStringConverter<QGraphicsLayout *>(Util::addressToString);
 
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-    VariantHandler::registerStringConverter<QGraphicsEffect *>(Util::displayString);
-    VariantHandler::registerStringConverter<QGraphicsObject *>(Util::displayString);
-    VariantHandler::registerStringConverter<QGraphicsWidget *>(Util::displayString);
-#endif
-
     VariantHandler::registerStringConverter<QGraphicsItem::GraphicsItemFlags>(
         graphicsItemFlagsToString);
     VariantHandler::registerStringConverter<QGraphicsItem::CacheMode>(graphicsItemCacheModeToString);
     VariantHandler::registerStringConverter<QGraphicsItem::PanelModality>(
         graphicsItemPanelModalityToString);
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(SceneInspectorFactory)
-#endif

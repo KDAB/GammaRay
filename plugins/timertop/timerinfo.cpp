@@ -45,11 +45,7 @@ uint qHash(const TimerId &id)
 {
     switch (id.m_type) {
     case TimerId::InvalidType:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         Q_UNREACHABLE();
-#else
-        Q_ASSERT(false);
-#endif
         break;
 
     case TimerId::QQmlTimerType:
@@ -113,11 +109,7 @@ bool TimerId::operator==(const TimerId &other) const
 
     switch (m_type) {
     case TimerId::InvalidType:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         Q_UNREACHABLE();
-#else
-        Q_ASSERT(false);
-#endif
         break;
 
     case TimerId::QQmlTimerType:
@@ -136,11 +128,7 @@ bool TimerId::operator<(const TimerId &other) const
     if (m_type == other.m_type) {
         switch (m_type) {
         case TimerId::InvalidType: {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
             Q_UNREACHABLE();
-#else
-            Q_ASSERT(false);
-#endif
             return false;
         }
 
@@ -176,11 +164,7 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
 
     switch (id.type()) {
     case TimerId::InvalidType: {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         Q_UNREACHABLE();
-#else
-        Q_ASSERT(false);
-#endif
         break;
     }
 
@@ -228,19 +212,11 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
         const QAbstractEventDispatcher *dispatcher = QAbstractEventDispatcher::instance(object->thread());
         const QList<QAbstractEventDispatcher::TimerInfo> timers = dispatcher->registeredTimers(object);
         const auto it = std::find_if(timers.constBegin(), timers.constEnd(), [this](const QAbstractEventDispatcher::TimerInfo &timer) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
             return timer.timerId == timerId;
-#else
-            return timer.first == timerId;
-#endif
         });
 
         if (it != timers.constEnd()) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
             interval = (*it).interval;
-#else
-            interval = (*it).second;
-#endif
             state = RepeatState;
         }
 

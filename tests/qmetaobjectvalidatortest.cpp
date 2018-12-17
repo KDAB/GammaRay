@@ -57,7 +57,6 @@ public slots:
 private slots:
     void testSignalOverride()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         for (int i = staticMetaObject.methodOffset(); i < staticMetaObject.methodCount(); ++i) {
             const auto method = staticMetaObject.method(i);
             if (method.methodType() == QMetaMethod::Signal)
@@ -69,12 +68,10 @@ private slots:
             const auto method = QObject::staticMetaObject.method(i);
             QVERIFY((QMetaObjectValidator::checkMethod(&QObject::staticMetaObject, method) & QMetaObjectValidatorResult::SignalOverride) == 0);
         }
-#endif
     }
 
     void testParameterTypes()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         for (int i = staticMetaObject.methodOffset(); i < staticMetaObject.methodCount(); ++i) {
             const auto method = staticMetaObject.method(i);
             if (method.name().startsWith("unknown")) //krazy:exclude=strings
@@ -82,12 +79,10 @@ private slots:
             else
                 QVERIFY((QMetaObjectValidator::checkMethod(&staticMetaObject, method) & QMetaObjectValidatorResult::UnknownMethodParameterType) == 0);
         }
-#endif
     }
 
     void testPropertyType()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         for (int i = staticMetaObject.propertyOffset(); i < staticMetaObject.propertyCount(); ++i) {
             const auto property = staticMetaObject.property(i);
             if (strstr(property.name(), "fail") == property.name())
@@ -95,17 +90,14 @@ private slots:
             else
                 QVERIFY((QMetaObjectValidator::checkProperty(&staticMetaObject, property) & QMetaObjectValidatorResult::UnknownPropertyType) == 0);
         }
-#endif
     }
 
     void testObject()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         QCOMPARE(QMetaObjectValidator::check(&staticMetaObject),
                  QMetaObjectValidatorResult::SignalOverride |
                  QMetaObjectValidatorResult::UnknownMethodParameterType |
                  QMetaObjectValidatorResult::UnknownPropertyType);
-#endif
         QCOMPARE(QMetaObjectValidator::check(&QObject::staticMetaObject), QMetaObjectValidatorResult::NoIssue);
     }
 };

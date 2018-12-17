@@ -129,9 +129,7 @@ bool AboutWidget::eventFilter(QObject *object, QEvent *event)
                 m_watermark = UIResources::themedPixmap(QStringLiteral("watermark.png"), this);
 
             qreal dpr = 1.0;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
             dpr = m_watermark.devicePixelRatio();
-#endif
             QPainter p(m_backgroundWindow);
             p.drawPixmap(m_backgroundWindow->width() - (m_watermark.width() / dpr),
                          m_backgroundWindow->height() - (m_watermark.height() / dpr), m_watermark);

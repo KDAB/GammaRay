@@ -282,11 +282,7 @@ void TimerModel::checkDispatcherStatus(QObject *object)
         int remaining = -1;
 
         if (gIt.key().timerId() > -1) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
             remaining = dispatcher->remainingTime(gIt.key().timerId());
-#else
-            remaining = gIt.value().info.lastReceiverObject ? 0 : -1;
-#endif
         }
 
         // Timer inactive or invalid, or free timer

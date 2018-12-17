@@ -41,11 +41,7 @@ class GAMMARAY_UI_EXPORT PropertyEditorFactory : public QItemEditorFactory
 public:
     static PropertyEditorFactory *instance();
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    typedef QVariant::Type TypeId;
-#else
     typedef int TypeId;
-#endif
 
     QWidget *createEditor(TypeId type, QWidget *parent) const override;
 

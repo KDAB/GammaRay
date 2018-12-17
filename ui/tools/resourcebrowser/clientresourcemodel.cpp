@@ -49,7 +49,6 @@ QVariant ClientResourceModel::data(const QModelIndex &index, int role) const
         if (hasChildren(index))
             return m_iconProvider.icon(QFileIconProvider::Folder);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         QList<QMimeType> types = m_mimeDb.mimeTypesForFileName(index.data(
                                                                    Qt::DisplayRole).toString());
         foreach (const QMimeType &mt, types) {
@@ -60,7 +59,6 @@ QVariant ClientResourceModel::data(const QModelIndex &index, int role) const
             if (!icon.isNull())
                 return icon;
         }
-#endif
         return m_iconProvider.icon(QFileIconProvider::File);
     }
     return QIdentityProxyModel::data(index, role);

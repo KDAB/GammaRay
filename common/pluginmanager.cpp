@@ -64,20 +64,11 @@ QStringList PluginManagerBase::pluginPaths() const
 QStringList PluginManagerBase::pluginFilter() const
 {
     QStringList filter;
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-    filter.push_back(QStringLiteral("*") + QStringLiteral(GAMMARAY_PROBE_ABI)
-                     + QStringLiteral(".desktop"));
-#else
-    filter.push_back(QStringLiteral("*.desktop"));
-#endif
-#else
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
     filter.push_back(QStringLiteral("*") + QStringLiteral(
                          GAMMARAY_PROBE_ABI) + Paths::pluginExtension());
 #else
     filter.push_back(QStringLiteral("*") + Paths::pluginExtension());
-#endif
 #endif
     return filter;
 }

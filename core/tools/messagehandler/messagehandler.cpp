@@ -51,44 +51,28 @@
 
 using namespace GammaRay;
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-typedef QtMsgHandler MessageHandlerCallback;
-static MessageHandlerCallback(*const installMessageHandler)(MessageHandlerCallback)
-    = qInstallMsgHandler;
-#else
 typedef QtMessageHandler MessageHandlerCallback;
 static MessageHandlerCallback(*const installMessageHandler)(MessageHandlerCallback)
     = qInstallMessageHandler;
-#endif
 
 static MessageModel *s_model = nullptr;
 static MessageHandlerCallback s_handler = nullptr;
 static bool s_handlerDisabled = false;
 static QMutex s_mutex(QMutex::Recursive);
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-static void handleMessage(QtMsgType type, const char *rawMsg)
-#else
 static void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-#endif
 {
     ///WARNING: do not trigger *any* kind of debug output here
     ///         this would trigger an infinite loop and hence crash!
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    const QString msg = QString::fromLocal8Bit(rawMsg);
-#endif
 
     DebugMessage message;
     message.type = type;
     message.message = msg;
     message.time = QTime::currentTime();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     message.category = QString::fromUtf8(context.category);
     message.file = QString::fromUtf8(context.file);
     message.function = QString::fromUtf8(context.function);
     message.line = context.line;
-#endif
 
     if (type == QtCriticalMsg || type == QtFatalMsg || (type == QtWarningMsg && !ProbeGuard::insideProbe())) {
         // TODO: go even higher until qWarning/qFatal/qDebug/... ?
@@ -121,18 +105,10 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
     QMutexLocker lock(&s_mutex);
     s_handlerDisabled = true;
     if (s_handler) { // try a direct call to the previous handler first, that avoids triggering the recursion detection in Qt5
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         s_handler(type, context, msg);
-#else
-        s_handler(type, rawMsg);
-#endif
     } else {
         installMessageHandler(s_handler);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         qt_message_output(type, context, msg);
-#else
-        qt_message_output(type, rawMsg);
-#endif
         installMessageHandler(handleMessage);
     }
     s_handlerDisabled = false;
@@ -173,10 +149,8 @@ MessageHandler::MessageHandler(Probe *probe, QObject *parent)
     // installs a handler after QApp but before .exec()
     QMetaObject::invokeMethod(this, "ensureHandlerInstalled", Qt::QueuedConnection);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     auto catModel = new LoggingCategoryModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel"), catModel);
-#endif
 }
 
 MessageHandler::~MessageHandler()

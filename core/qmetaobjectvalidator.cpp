@@ -57,11 +57,9 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkProperty(const QM
             r |= QMetaObjectValidatorResult::PropertyOverride;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     // check if property uses a known type
     if (property.userType() == QMetaType::UnknownType)
         r |= QMetaObjectValidatorResult::UnknownPropertyType;
-#endif
 
     return r;
 }
@@ -71,7 +69,6 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkMethod(const QMet
     QMetaObjectValidatorResult::Results r = QMetaObjectValidatorResult::NoIssue;
 
     // check for parameters with unknown type
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     // don't check internal methods such as _q_createJSWrapper() from QQuickItem
     if (!method.name().startsWith("_q")) { //krazy:exclude=strings
         for (int j = 0; j < method.parameterCount(); ++j) {
@@ -86,10 +83,6 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkMethod(const QMet
         if (baseIdx >= 0)
             r |= QMetaObjectValidatorResult::SignalOverride;
     }
-#else
-    Q_UNUSED(mo);
-    Q_UNUSED(method);
-#endif
 
     return r;
 }

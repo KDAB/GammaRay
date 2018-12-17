@@ -80,9 +80,7 @@ private slots:
         QTest::newRow("fe80::9c0e:f1f4:d51d:a557%enp0s31f6:2342") << "fe80::9c0e:f1f4:d51d:a557%enp0s31f6:2342" << "tcp://[fe80::9c0e:f1f4:d51d:a557]:2342" << true << false;
         QTest::newRow("[fe80::9c0e:f1f4:d51d:a557]") << "[fe80::9c0e:f1f4:d51d:a557]" << "tcp://[fe80::9c0e:f1f4:d51d:a557]:11732" << true << true;
         QTest::newRow("tcp://[fe80::9c0e:f1f4:d51d:a557]:2342") << "tcp://[fe80::9c0e:f1f4:d51d:a557]:2342" << "tcp://[fe80::9c0e:f1f4:d51d:a557]:2342" << true << false;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         QTest::newRow("::ffff:192.168.15.2") << "::ffff:192.168.15.2" << "tcp://[::ffff:192.168.15.2]:11732" << true << true;
-#endif
     }
 
     void testUrl()
@@ -105,11 +103,7 @@ private slots:
         if (!isValid)
             return;
         QCOMPARE(connectPage.m_currentUrl.toString(), expectedParsed);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         QCOMPARE(lineEdit->actions().contains(connectPage.m_implicitPortWarningSign), autoPortWarning);
-#else
-        Q_UNUSED(autoPortWarning)
-#endif
     }
 
     void testHostNames_data()

@@ -253,11 +253,7 @@ bool Widget3DWidget::updateTexture()
 
     mIsPainting = true;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     const QImage::Format format = QImage::Format_RGBA8888;
-#else
-    const QImage::Format format = QImage::Format_ARGB32;
-#endif
     mTextureImage = QImage(mTextureGeometry.size(), format);
     mTextureImage.fill(mQWidget->palette().button().color());
 
@@ -279,9 +275,6 @@ bool Widget3DWidget::updateTexture()
 Widget3DModel::Widget3DModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    setRoleNames(roleNames());
-#endif
 }
 
 Widget3DModel::~Widget3DModel()
@@ -405,12 +398,7 @@ void Widget3DModel::onWidgetChanged(const QVector<int> &roles)
         return;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     Q_EMIT dataChanged(idx, idx, roles);
-#else
-    Q_UNUSED(roles);
-    Q_EMIT dataChanged(idx, idx);
-#endif
 }
 
 void Widget3DModel::onWidgetDestroyed(QObject *obj)

@@ -42,7 +42,6 @@ public:
 };
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 static const QMetaObject *metaObjectForClass(const QByteArray &name)
 {
     if (name.isEmpty())
@@ -53,7 +52,6 @@ static const QMetaObject *metaObjectForClass(const QByteArray &name)
     mo = QMetaType::metaObjectForType(QMetaType::type(name + '*')); // try pointer version, more likely for QObjects
     return mo;
 }
-#endif
 
 QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
 {
@@ -76,14 +74,12 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
         mo = metaObject;
         enumIndex = mo->indexOfEnumerator(enumTypeName);
     }
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (enumIndex < 0 && (mo = QMetaType::metaObjectForType(QMetaType::type(fullTypeName)))) {
         enumIndex = mo->indexOfEnumerator(enumTypeName);
     }
     if (enumIndex < 0 && (mo = metaObjectForClass(className))) {
         enumIndex = mo->indexOfEnumerator(enumTypeName);
     }
-#endif
 
     // attempt to recover namespaces from semi-qualified type names
     if (enumIndex < 0 && metaObject) {
@@ -102,13 +98,9 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
 
 int EnumUtil::enumToInt(const QVariant &value, const QMetaEnum &metaEnum)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     // QVariant has no implicit QFlag to int conversion as of Qt 5.7
     if (metaEnum.isFlag() && QMetaType::sizeOf(value.userType()) == sizeof(int)) // int should be enough, QFlag has that hardcoded
         return value.constData() ? *static_cast<const int*>(value.constData()) : 0;
-#else
-    Q_UNUSED(metaEnum);
-#endif
     return value.toInt();
 }
 

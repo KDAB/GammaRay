@@ -33,11 +33,7 @@
 
 #include <common/metatypedeclarations.h>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <QApplication>
-#else
 #include <QGuiApplication>
-#endif
 
 #include <QCursor>
 #include <QDebug>
@@ -305,7 +301,6 @@ QString VariantHandler::displayString(const QVariant &value)
     }
 #endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (value.userType() == qMetaTypeId<QSet<QByteArray> >()) {
         const QSet<QByteArray> set = value.value<QSet<QByteArray> >();
         QStringList l;
@@ -315,7 +310,6 @@ QString VariantHandler::displayString(const QVariant &value)
         }
         return l.join(QStringLiteral(", "));
     }
-#endif // Qt5
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     if (value.userType() == qMetaTypeId<QEasingCurve>()) {
