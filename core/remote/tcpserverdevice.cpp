@@ -93,11 +93,7 @@ QUrl TcpServerDevice::externalAddress() const
     const QHostAddress address(m_server->serverAddress());
     QString myHost;
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    if (address == QHostAddress::LocalHost || address == QHostAddress::LocalHostIPv6) {
-#else
     if (address.isLoopback()) {
-#endif
         myHost = address.toString();
     } else {
         //scan Interfaces for available IPs, use requested address if we can find it.
@@ -108,9 +104,7 @@ QUrl TcpServerDevice::externalAddress() const
     if (myHost.isEmpty()) {
         switch (m_server->serverAddress().protocol()) {
         case QAbstractSocket::IPv4Protocol:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         case QAbstractSocket::AnyIPProtocol:
-#endif
             myHost = QHostAddress(QHostAddress::LocalHost).toString();
             break;
         case QAbstractSocket::IPv6Protocol:
@@ -134,11 +128,7 @@ void TcpServerDevice::broadcast(const QByteArray &data)
     const QHostAddress address = m_server->serverAddress();
 
     // broadcast announcement only if we are actually listinging to remote connections
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    if (address == QHostAddress::LocalHost || address == QHostAddress::LocalHostIPv6)
-#else
     if (address.isLoopback())
-#endif
         return;
 
     m_broadcastSocket->writeDatagram(data.data(),

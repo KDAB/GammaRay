@@ -62,7 +62,6 @@ struct HelpControllerPrivate
 
 void HelpControllerPrivate::startProcess()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (proc)
         return;
 
@@ -83,7 +82,6 @@ void HelpControllerPrivate::startProcess()
     proc->start();
     proc->waitForStarted();
     sendCommand("expandToc 2;");
-#endif
 }
 
 void HelpControllerPrivate::sendCommand(const QByteArray &cmd)

@@ -520,11 +520,7 @@ void UIStateManager::restoreHeaderState(QHeaderView *header)
                         Q_ASSERT(false);
                     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
                     switch (header->sectionResizeMode(i)) {
-#else
-                    switch (header->resizeMode(i)) {
-#endif
                     case QHeaderView::Interactive:
                     case QHeaderView::Fixed:
                         header->resizeSection(i, size == -1 ? header->sectionSizeHint(i) : size);

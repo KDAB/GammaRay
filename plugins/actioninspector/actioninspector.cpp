@@ -45,12 +45,6 @@
 using namespace GammaRay;
 using namespace std;
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_DECLARE_METATYPE(QAction *)
-Q_DECLARE_METATYPE(QActionGroup *)
-Q_DECLARE_METATYPE(QMenu *)
-#endif
-
 ActionInspector::ActionInspector(Probe *probe, QObject *parent)
     : QObject(parent)
 {
@@ -123,17 +117,9 @@ void ActionInspector::registerMetaTypes()
     MO_ADD_PROPERTY(QAction, isSeparator, setSeparator);
     MO_ADD_PROPERTY_RO(QAction, menu);
     MO_ADD_PROPERTY_RO(QAction, parentWidget);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QAction, associatedGraphicsWidgets);
     MO_ADD_PROPERTY_RO(QAction, associatedWidgets);
-#endif
 
     MO_ADD_METAOBJECT1(QActionGroup, QObject);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QActionGroup, actions);
-#endif
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(ActionInspectorFactory)
-#endif

@@ -71,13 +71,7 @@ void PropertyBinder::add(const char *sourceProp, const char *destProp)
     b.sourceProperty = m_source->metaObject()->property(sourceIndex);
     Q_ASSERT(b.sourceProperty.isValid());
     Q_ASSERT(b.sourceProperty.hasNotifySignal());
-    connect(m_source, QByteArray("2") +
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-            b.sourceProperty.notifySignal().signature()
-#else
-            b.sourceProperty.notifySignal().methodSignature()
-#endif
-            , this, SLOT(syncSourceToDestination()));
+    connect(m_source, QByteArray("2") + b.sourceProperty.notifySignal().methodSignature(), this, SLOT(syncSourceToDestination()));
 
     const auto destIndex = m_destination->metaObject()->indexOfProperty(destProp);
     b.destinationProperty = m_destination->metaObject()->property(destIndex);
@@ -90,13 +84,7 @@ void PropertyBinder::add(const char *sourceProp, const char *destProp)
     if (!b.destinationProperty.hasNotifySignal() || !b.sourceProperty.isWritable())
         return;
 
-    connect(m_destination, QByteArray("2") +
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-            b.destinationProperty.notifySignal().signature()
-#else
-            b.destinationProperty.notifySignal().methodSignature()
-#endif
-            , this, SLOT(syncDestinationToSource()));
+    connect(m_destination, QByteArray("2") + b.destinationProperty.notifySignal().methodSignature(), this, SLOT(syncDestinationToSource()));
 }
 
 void PropertyBinder::syncSourceToDestination()

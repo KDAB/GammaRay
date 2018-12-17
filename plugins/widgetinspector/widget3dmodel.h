@@ -115,11 +115,7 @@ public:
     explicit Widget3DModel(QObject *parent = nullptr);
     ~Widget3DModel();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QHash<int, QByteArray> roleNames() const override;
-#else
-    QHash<int, QByteArray> roleNames() const;
-#endif
 
     QVariant data(const QModelIndex &index, int role) const override;
 

@@ -45,33 +45,6 @@ InboundConnectionsModel::~InboundConnectionsModel()
 {
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0) && defined(HAVE_PRIVATE_QT_HEADERS)
-static int signalIndexForConnection(QObjectPrivate::Connection *connection, QObject *sender)
-{
-    QObjectPrivate *d = QObjectPrivate::get(sender);
-    if (!d->connectionLists) {
-        return -1;
-    }
-
-    // HACK: the declaration of d->connectionsLists is not accessible for us...
-    const QVector<QObjectPrivate::ConnectionList> *cl =
-        reinterpret_cast<QVector<QObjectPrivate::ConnectionList> *>(d->connectionLists);
-    for (int signalIndex = 0; signalIndex < cl->count(); ++signalIndex) {
-        const QObjectPrivate::Connection *c = cl->at(signalIndex).first;
-        while (c) {
-            if (c == connection) {
-                return signalIndex;
-            }
-            c = c->nextConnectionList;
-            continue;
-        }
-    }
-
-    return -1;
-}
-
-#endif
-
 void InboundConnectionsModel::setObject(QObject *object)
 {
     clear();
@@ -85,7 +58,6 @@ void InboundConnectionsModel::setObject(QObject *object)
 QVector<AbstractConnectionsModel::Connection> InboundConnectionsModel::inboundConnectionsForObject(QObject *object)
 {
     QVector<Connection> connections;
-#ifdef HAVE_PRIVATE_QT_HEADERS
     QObjectPrivate *d = QObjectPrivate::get(object);
     if (d->senders) {
         for (QObjectPrivate::Connection *s = d->senders; s; s = s->next) {
@@ -94,25 +66,16 @@ QVector<AbstractConnectionsModel::Connection> InboundConnectionsModel::inboundCo
 
             Connection conn;
             conn.endpoint = s->sender;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
             conn.signalIndex = signalIndexToMethodIndex(s->sender, s->signal_index);
             if (s->isSlotObject) {
                 conn.slotIndex = -1;
             } else {
                 conn.slotIndex = s->method();
             }
-#else
-            conn.slotIndex = s->method();
-            conn.signalIndex =
-                signalIndexToMethodIndex(s->sender, signalIndexForConnection(s, s->sender));
-#endif
             conn.type = s->connectionType;
             connections.push_back(conn);
         }
     }
-#else
-    Q_UNUSED(object);
-#endif
 
     return connections;
 }

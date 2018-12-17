@@ -89,7 +89,3 @@ void SignalMonitor::objectSelected(QObject* obj)
     const auto index = indexList.first();
     m_objSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(SignalMonitorFactory)
-#endif

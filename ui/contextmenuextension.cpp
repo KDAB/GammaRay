@@ -38,7 +38,6 @@
 
 using namespace GammaRay;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 namespace {
 QString sourceLocationLabel(ContextMenuExtension::Location location,
                             const SourceLocation &sourceLocation)
@@ -61,7 +60,6 @@ QString sourceLocationLabel(ContextMenuExtension::Location location,
     return QString();
 }
 }
-#endif
 
 ContextMenuExtension::ContextMenuExtension(const ObjectId &id)
     : m_id(id)
@@ -108,7 +106,6 @@ bool ContextMenuExtension::discoverPropertySourceLocation(ContextMenuExtension::
 
 void ContextMenuExtension::populateMenu(QMenu *menu)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (UiIntegration::instance()) {
         for (auto it = m_locations.constBegin(), end = m_locations.constEnd(); it != end; ++it) {
             if (it->second.isValid()) {
@@ -138,7 +135,4 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
             });
         }
     });
-#else
-    Q_UNUSED(menu);
-#endif
 }

@@ -105,13 +105,8 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent)
 {
     if (s_emptyDisplayValue.isNull()) {
         s_emptyDisplayValue = tr("Loading...");
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        QStyleOptionViewItemV4 opt;
-        opt.features |= QStyleOptionViewItemV4::HasDisplay;
-#else
         QStyleOptionViewItem opt;
         opt.features |= QStyleOptionViewItem::HasDisplay;
-#endif
         opt.text = s_emptyDisplayValue.toString();
         s_emptySizeHintValue = QApplication::style()->sizeFromContents(QStyle::CT_ItemViewItem,
                                                                        &opt, QSize(), nullptr);
@@ -375,12 +370,10 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                 node->flags[column] = static_cast<Qt::ItemFlags>(flags);
                 node->state[column] = state & ~(RemoteModelNodeState::Loading | RemoteModelNodeState::Empty | RemoteModelNodeState::Outdated);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
                 if ((flags & Qt::ItemNeverHasChildren) && column == 0) {
                     node->rowCount = 0;
                     node->columnCount = node->data.size();
                 }
-#endif
 
                 // group by parent, and emit dataChange for the bounding rect per hierarchy level
                 // as an approximiation of perfect range batching
@@ -454,11 +447,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         const QModelIndex qmiBegin = modelIndexForNode(node, beginIndex.last().column);
         const QModelIndex qmiEnd = qmiBegin.sibling(endIndex.last().row, endIndex.last().column);
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        emit dataChanged(qmiBegin, qmiEnd);
-#else
         emit dataChanged(qmiBegin, qmiEnd, roles);
-#endif
         break;
     }
 

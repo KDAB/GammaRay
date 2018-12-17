@@ -82,9 +82,6 @@ void MetaObjectRepository::initBuiltInTypes()
     initIOTypes();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_DECLARE_METATYPE(QThread *)
-#endif
 Q_DECLARE_METATYPE(QThread::Priority)
 
 void MetaObjectRepository::initQObjectTypes()
@@ -128,64 +125,45 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_PROPERTY_ST(QCoreApplication, arguments);
     MO_ADD_PROPERTY_ST(QCoreApplication, closingDown);
     MO_ADD_PROPERTY_ST(QCoreApplication, hasPendingEvents);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_PROPERTY_ST(QCoreApplication, isQuitLockEnabled);
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     MO_ADD_PROPERTY_ST(QCoreApplication, isSetuidAllowed);
-#endif
     MO_ADD_PROPERTY_ST(QCoreApplication, libraryPaths);
     MO_ADD_PROPERTY_ST(QCoreApplication, startingUp);
 
     MO_ADD_METAOBJECT1(QAbstractItemModel, QObject);
     MO_ADD_PROPERTY_RO(QAbstractItemModel, mimeTypes);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY_RO(QAbstractItemModel, roleNames);
     MO_ADD_PROPERTY_RO(QAbstractItemModel, supportedDragActions);
     MO_ADD_PROPERTY_RO(QAbstractItemModel, supportedDropActions);
-#endif
     MO_ADD_METAOBJECT1(QAbstractProxyModel, QAbstractItemModel);
     MO_ADD_METAOBJECT1(QSortFilterProxyModel, QAbstractProxyModel);
     MO_ADD_PROPERTY_RO(QSortFilterProxyModel, sortOrder);
 
     MO_ADD_METAOBJECT0(QDateTime);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     MO_ADD_PROPERTY_RO(QDateTime, isDaylightTime);
-#endif
     MO_ADD_PROPERTY_RO(QDateTime, isNull);
     MO_ADD_PROPERTY_RO(QDateTime, isValid);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     MO_ADD_PROPERTY_RO(QDateTime, offsetFromUtc);
     MO_ADD_PROPERTY(QDateTime, timeZone, setTimeZone);
 
     MO_ADD_METAOBJECT0(QTimeZone);
     MO_ADD_PROPERTY_RO(QTimeZone, comment);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY_RO(QTimeZone, country);
-#endif
     MO_ADD_PROPERTY_RO(QTimeZone, hasDaylightTime);
     MO_ADD_PROPERTY_RO(QTimeZone, hasTransitions);
     MO_ADD_PROPERTY_RO(QTimeZone, id);
     MO_ADD_PROPERTY_RO(QTimeZone, isValid);
-#endif
 
     MO_ADD_METAOBJECT0(QEasingCurve);
     MO_ADD_PROPERTY(QEasingCurve, amplitude, setAmplitude);
     MO_ADD_PROPERTY(QEasingCurve, overshoot, setOvershoot);
     MO_ADD_PROPERTY(QEasingCurve, period, setPeriod);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY(QEasingCurve, type, setType);
-#endif
 }
 
 Q_DECLARE_METATYPE(QIODevice::OpenMode)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 Q_DECLARE_METATYPE(QFileDevice::FileError)
 Q_DECLARE_METATYPE(QFileDevice::Permissions)
-#endif
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Qt::SortOrder)
-#endif
 
 void MetaObjectRepository::initIOTypes()
 {
@@ -207,7 +185,6 @@ void MetaObjectRepository::initIOTypes()
 
     // FIXME: QIODevice::readAll() would be nice to have
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_METAOBJECT1(QFileDevice, QIODevice);
     MO_ADD_PROPERTY_RO(QFileDevice, error);
     MO_ADD_PROPERTY_RO(QFileDevice, fileName);
@@ -218,10 +195,7 @@ void MetaObjectRepository::initIOTypes()
     MO_ADD_PROPERTY_RO(QFile, exists);
     MO_ADD_PROPERTY_RO(QFile, symLinkTarget);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
     MO_ADD_METAOBJECT1(QSaveFile, QFileDevice);
-#endif
-#endif
 }
 
 MetaObjectRepository *MetaObjectRepository::instance()

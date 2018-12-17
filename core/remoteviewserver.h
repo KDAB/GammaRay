@@ -52,11 +52,7 @@ class GAMMARAY_CORE_EXPORT RemoteViewServer : public RemoteViewInterface
 public:
     explicit RemoteViewServer(const QString &name, QObject *parent = nullptr);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     typedef QWindow EventReceiver;
-#else
-    typedef QObject EventReceiver;
-#endif
     /// event receiver for input redirection
     void setEventReceiver(EventReceiver *receiver);
 
@@ -119,9 +115,7 @@ private:
     bool m_grabberReady;
     bool m_pendingReset;
     bool m_pendingCompleteFrame;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     std::unique_ptr<QTouchDevice> m_touchDevice;
-#endif
 };
 }
 

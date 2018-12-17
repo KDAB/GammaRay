@@ -116,11 +116,9 @@ void ProcessInjector::processFinished()
     mExitCode = m_proc.exitCode();
     mExitStatus = m_proc.exitStatus();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (mProcessError == QProcess::FailedToStart)
         mErrorString.prepend(QStringLiteral("Could not start '%1': ").arg(m_proc.program()));
 
-#endif
     emit finished();
 }
 

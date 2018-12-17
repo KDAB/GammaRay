@@ -49,7 +49,6 @@ QDataStream &operator>>(QDataStream &s, Qt::TouchPointStates &states)
     return s;
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 QDataStream &operator<<(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags flags)
 {
     return s << (int)flags;
@@ -62,7 +61,6 @@ QDataStream &operator>>(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags &flag
     flags = QTouchEvent::TouchPoint::InfoFlags(f);
     return s;
 }
-#endif
 
 QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &points)
 {
@@ -75,11 +73,9 @@ QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &po
         s << p.startPos() << p.startScenePos() << p.startScreenPos() << p.startNormalizedPos();
         s << p.lastPos() << p.lastScenePos() << p.lastScreenPos() << p.lastNormalizedPos();
         s << p.pressure();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         s << p.velocity();
         s << p.flags();
         s << p.rawScreenPositions();
-#endif
     }
     return s;
 }
@@ -120,12 +116,10 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
         setPointValue(s, p, &QTouchEvent::TouchPoint::setLastNormalizedPos);
 
         setPointValue(s, p, &QTouchEvent::TouchPoint::setPressure);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         setPointValue(s, p, &QTouchEvent::TouchPoint::setVelocity);
 
         setPointValue(s, p, &QTouchEvent::TouchPoint::setFlags);
         setPointValue(s, p, &QTouchEvent::TouchPoint::setRawScreenPositions);
-#endif
 
         points.append(p);
     }
@@ -149,9 +143,7 @@ RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
     qRegisterMetaTypeStreamOperators<GammaRay::RemoteViewFrame>();
     qRegisterMetaTypeStreamOperators<Qt::TouchPointStates>();
     qRegisterMetaTypeStreamOperators<QList<QTouchEvent::TouchPoint>>();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     qRegisterMetaTypeStreamOperators<QTouchEvent::TouchPoint::InfoFlags>();
-#endif
 }
 
 QString RemoteViewInterface::name() const

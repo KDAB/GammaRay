@@ -61,12 +61,8 @@
 #include <3rdparty/kuserfeedback/core/usagetimesource.h>
 #endif
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <private/qguiplatformplugin_p.h>
-#else
 #include <qpa/qplatformtheme.h>
 #include <private/qguiapplication_p.h>
-#endif
 
 #include <QAction>
 #include <QCoreApplication>
@@ -84,9 +80,7 @@
 #include <QUrl>
 #include <QWidgetAction>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QStandardPaths>
-#endif
 
 #include <iostream>
 
@@ -140,10 +134,6 @@ QStyle *gammarayStyleOverride()
 
 QStyle *gammarayDefaultStyle()
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    QGuiPlatformPlugin defaultGuiPlatform;
-    return QStyleFactory::create(defaultGuiPlatform.styleName());
-#else
     foreach (const QString &styleName,
              QGuiApplicationPrivate::platform_theme->themeHint(QPlatformTheme::StyleNames).
              toStringList()) {
@@ -151,7 +141,6 @@ QStyle *gammarayDefaultStyle()
             return style;
         }
     }
-#endif
     return nullptr;
 }
 }
@@ -272,9 +261,7 @@ MainWindow::MainWindow(QWidget *parent)
         action->setCheckable(true);
         action->setChecked(currentIdx == i);
         action->setData(i);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0) // It's not worth it to reimplement missing findExecutable for Qt4.
         action->setEnabled(!QStandardPaths::findExecutable(ideSettings[i].app).isEmpty());
-#endif
         group->addAction(action);
         menu->addAction(action);
     }

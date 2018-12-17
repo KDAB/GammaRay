@@ -68,13 +68,7 @@ void PropertySyncer::addObject(Protocol::ObjectAddress addr, QObject *obj)
         const auto prop = obj->metaObject()->property(i);
         if (!prop.hasNotifySignal())
             continue;
-        connect(obj, QByteArray("2") +
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-                prop.notifySignal().signature()
-#else
-                prop.notifySignal().methodSignature()
-#endif
-                , this, SLOT(propertyChanged()));
+        connect(obj, QByteArray("2") + prop.notifySignal().methodSignature(), this, SLOT(propertyChanged()));
     }
 
     connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));

@@ -57,11 +57,7 @@ void MessageModel::addMessage(const DebugMessage &message)
 int MessageModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    return 2;
-#else
     return MessageModelColumn::COUNT;
-#endif
 }
 
 int MessageModel::rowCount(const QModelIndex &parent) const
@@ -85,14 +81,12 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
             return msg.message;
         case MessageModelColumn::Time:
             return msg.time.toString();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         case MessageModelColumn::Category:
             return msg.category;
         case MessageModelColumn::Function:
             return msg.function;
         case MessageModelColumn::File:
             return msg.file;
-#endif
         }
     } else if (role == MessageModelRole::Sort) {
         switch (index.column()) {
@@ -100,21 +94,17 @@ QVariant MessageModel::data(const QModelIndex &index, int role) const
             return msg.time;
         case MessageModelColumn::Message:
             return msg.message;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         case MessageModelColumn::Category:
             return msg.category;
         case MessageModelColumn::Function:
             return msg.function;
         case MessageModelColumn::File:
             return QString::fromLatin1("%1:%2").arg(msg.file).arg(msg.line);
-#endif
         }
     } else if (role == MessageModelRole::Type && index.column() == 0) {
         return static_cast<int>(msg.type);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     } else if (role == MessageModelRole::Line && index.column() == MessageModelColumn::File) {
         return msg.line;
-#endif
     } else if (role == MessageModelRole::Backtrace) {
         return QVariant::fromValue(msg.backtrace);
     }

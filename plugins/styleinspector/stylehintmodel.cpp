@@ -167,11 +167,7 @@ static const StyleHintInfo style_hint_table[] = {
     SH(SH_ToolBox_SelectedPageTitleBold,                  Bool,                 None   )
     SH(SH_TabBar_PreferNoArrows,                          Bool,                 None   )
     SH(SH_ScrollBar_LeftClickAbsolutePosition,            Bool,                 None   )
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     SH(SH_ListViewExpand_SelectMouseType,                 EventType,            None   )
-#else
-    SH(SH_Q3ListViewExpand_SelectMouseType,               EventType,            None   )
-#endif
     SH(SH_UnderlineShortcut,                              Bool,                 None   )
     SH(SH_SpinBox_AnimateButton,                          Bool,                 None   )
     SH(SH_SpinBox_KeyPressAutoRepeatRate,                 Int,                  None   )
@@ -181,9 +177,6 @@ static const StyleHintInfo style_hint_table[] = {
     SH(SH_DrawMenuBarSeparator,                           Bool,                 None   )
     SH(SH_TitleBar_ModifyNotification,                    Bool,                 None   )
     SH(SH_Button_FocusPolicy,                             FocusPolicy,          None   )
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    SH(SH_MenuBar_DismissOnSecondClick,                   Bool,                 None   )
-#endif
     SH(SH_MessageBox_UseBorderForButtonSpacing,           Bool,                 None   )
     SH(SH_TitleBar_AutoRaise,                             Bool,                 None   )
     SH(SH_ToolButton_PopupDelay,                          Int,                  None   )
@@ -231,31 +224,21 @@ static const StyleHintInfo style_hint_table[] = {
     SH(SH_DockWidget_ButtonsHaveFrame,                    Bool,                 None   )
     SH(SH_ToolButtonStyle,                                ToolButtonStyle,      None   )
     SH(SH_RequestSoftwareInputPanel,                      RequestInputPanel,    None   )
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     SH(SH_ScrollBar_Transient,                            Bool,                 None   )
     SH(SH_Menu_SupportsSections,                          Bool,                 None   )
     SH(SH_ToolTip_WakeUpDelay,                            Int,                  None   )
     SH(SH_ToolTip_FallAsleepDelay,                        Int,                  None   )
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     SH(SH_Widget_Animate,                                 Bool,                 None   )
     SH(SH_Splitter_OpaqueResize,                          Bool,                 None   )
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     SH(SH_ComboBox_UseNativePopup,                        Bool,                 None   )
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     SH(SH_LineEdit_PasswordMaskDelay,                     Int,                  None   )
     SH(SH_TabBar_ChangeCurrentDelay,                      Int,                  None   )
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     SH(SH_Menu_SubMenuUniDirection,                       Bool,                 None   )
     SH(SH_Menu_SubMenuUniDirectionFailCount,              Int,                  None   )
     SH(SH_Menu_SubMenuSloppySelectOtherActions,           Bool,                 None   )
     SH(SH_Menu_SubMenuSloppyCloseTimeout,                 Int,                  None   )
     SH(SH_Menu_SubMenuResetWhenReenteringParent,          Bool,                 None   )
     SH(SH_Menu_SubMenuDontStartSloppyOnLeave,             Bool,                 None   )
-#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     SH(SH_ItemView_ScrollMode,                            ScrollMode,           None   )
 #endif

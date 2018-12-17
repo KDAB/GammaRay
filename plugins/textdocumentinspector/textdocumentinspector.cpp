@@ -121,7 +121,6 @@ void TextDocumentInspector::documentElementSelected(const QItemSelection &select
 
 void TextDocumentInspector::registerMetaTypes()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QTextObject, QObject);
     MO_ADD_PROPERTY_RO(QTextObject, document);
@@ -145,9 +144,4 @@ void TextDocumentInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, document);
     MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, documentSize);
     MO_ADD_PROPERTY_RO(QAbstractTextDocumentLayout, pageCount);
-#endif
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(TextDocumentInspectorFactory)
-#endif

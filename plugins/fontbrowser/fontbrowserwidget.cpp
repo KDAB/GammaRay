@@ -106,7 +106,3 @@ void FontBrowserWidget::delayedInit()
     m_fontBrowser->setColors(palette().color(QPalette::Foreground),
                              palette().color(QPalette::Base));
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(FontBrowserUiFactory)
-#endif

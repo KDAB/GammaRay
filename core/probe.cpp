@@ -57,12 +57,8 @@
 #include <common/streamoperators.h>
 #include <common/paths.h>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <QApplication>
-#else
 #include <QGuiApplication>
 #include <QWindow>
-#endif
 #include <QDir>
 #include <QLibrary>
 #include <QMouseEvent>
@@ -109,9 +105,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
     if (method_index == 0 || Probe::instance()->filterObject(caller))
         return;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
-#endif
     Probe::executeSignalCallback([=](const SignalSpyCallbackSet &callbacks) {
             if (callbacks.signalBeginCallback)
                 callbacks.signalBeginCallback(caller, method_index, argv);
@@ -128,9 +122,7 @@ static void signal_end_callback(QObject *caller, int method_index)
         return; // deleted in the slot
     locker.unlock();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
-#endif
     Probe::executeSignalCallback([=](const SignalSpyCallbackSet &callbacks) {
             if (callbacks.signalEndCallback)
                 callbacks.signalEndCallback(caller, method_index);
@@ -303,11 +295,7 @@ MetaObjectRegistry *Probe::metaObjectRegistry() const
 
 Probe *GammaRay::Probe::instance()
 {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-    return s_instance;
-#else
     return s_instance.load();
-#endif
 }
 
 bool Probe::isInitialized()
@@ -317,12 +305,7 @@ bool Probe::isInitialized()
 
 bool Probe::canShowWidgets()
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    const QApplication * const qGuiApplication = qobject_cast<const QApplication *>(qApp);
-    return qGuiApplication && qGuiApplication->type() != QApplication::Tty;
-#else
     return QCoreApplication::instance()->inherits("QApplication");
-#endif
 }
 
 void Probe::createProbe(bool findExisting)
@@ -574,11 +557,9 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
         return;
 
     // ignore objects created when global statics are already getting destroyed (on exit)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (s_listener.isDestroyed())
         return;
 
-#endif
 
     if (Execution::hasFastStackTrace() && fromCtor) {
         s_listener()->constructionBacktracesForObjects.insert(obj, Execution::stackTrace(32, 2)); // skip 2: this and the hook function calling us
@@ -926,13 +907,11 @@ void Probe::findExistingObjects()
 {
     discoverObject(QCoreApplication::instance());
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (auto guiApp = qobject_cast<QGuiApplication *>(QCoreApplication::instance())) {
         foreach (auto window, guiApp->allWindows()) {
             discoverObject(window);
         }
     }
-#endif
 }
 
 void Probe::discoverObject(QObject *object)

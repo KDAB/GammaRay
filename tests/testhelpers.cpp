@@ -60,17 +60,7 @@ static QModelIndexList searchMatchesAll(QAbstractItemModel *model, const QVarian
 
 void TestHelpers::waitForSpy(QSignalSpy *spy, int timeout)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     spy->wait(timeout);
-#else
-    int loops = 0;
-    while (loops++ < (timeout / 10)) {
-        if (spy->count() >= 1) {
-            break;
-        }
-        QTest::qWait(10);
-    }
-#endif
 }
 
 bool TestHelpers::waitForSignal(QSignalSpy *spy, bool keepResult)

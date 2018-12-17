@@ -282,11 +282,7 @@ void Server::forwardSignal(QObject *sender, int signalIndex, const QVector< QVar
     const QMetaMethod signal = sender->metaObject()->method(signalIndex);
     Q_ASSERT(signal.methodType() == QMetaMethod::Signal);
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    QByteArray name = signal.signature();
-#else
     QByteArray name = signal.methodSignature();
-#endif
     // get the name of the function to invoke, excluding the parens and function arguments.
     name = name.mid(0, name.indexOf('('));
 

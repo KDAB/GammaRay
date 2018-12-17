@@ -131,12 +131,8 @@ static const MetaEnum::Value<Qt::ItemFlag> item_flag_table[] = {
 #else
     { Qt::ItemIsTristate,       "AutoTristate" },
 #endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     { Qt::ItemNeverHasChildren, "ItemNeverHasChildren" },
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     { Qt::ItemIsUserTristate,   "UserTristate" }
-#endif
 };
 #undef F
 
@@ -191,7 +187,3 @@ void ModelInspectorWidget::selectionModelContextMenu(QPoint pos)
 
     menu.exec(ui->selectionModelsView->viewport()->mapToGlobal(pos));
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(ModelInspectorUiFactory)
-#endif

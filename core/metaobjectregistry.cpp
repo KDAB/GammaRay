@@ -201,7 +201,6 @@ void MetaObjectRegistry::objectAdded(QObject *obj)
 
 void MetaObjectRegistry::scanMetaTypes()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
         if (!QMetaType::isRegistered(mtId))
             continue;
@@ -209,7 +208,6 @@ void MetaObjectRegistry::scanMetaTypes()
         if (mt)
             addMetaObject(mt);
     }
-#endif
     addMetaObject(&staticQtMetaObject);
 }
 

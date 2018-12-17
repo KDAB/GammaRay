@@ -98,18 +98,14 @@ bool SidePane::eventFilter(QObject *object, QEvent *event)
     if (object == viewport()) {
         if (event->type() == QEvent::Resize)
             updateSizeHint();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
         else if (event->type() == QEvent::ScreenChangeInternal)
             m_background = QPixmap();
-#endif
         else if (event->type() == QEvent::Paint) {
             if (m_background.isNull())
                 m_background = UIResources::themedPixmap(QStringLiteral("kdab-gammaray-logo.png"), this);
 
             qreal dpr = 1.0;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
             dpr = m_background.devicePixelRatio();
-#endif
             QPainter p(viewport());
             p.drawPixmap(viewport()->width() - (m_background.width() / dpr),
                          viewport()->height() - (m_background.height() / dpr), m_background);

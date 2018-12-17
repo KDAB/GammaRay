@@ -71,9 +71,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
         const int signalIndex = method_index + 1; // offset 1, so unknown signals end up at 0
         static const QMetaMethod m = s_historyModel->metaObject()->method(
             s_historyModel->metaObject()->indexOfMethod("onSignalEmitted(QObject*,int)"));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         Q_ASSERT(m.isValid());
-#endif
         m.invoke(s_historyModel, Qt::AutoConnection, Q_ARG(QObject*, caller),
                  Q_ARG(int, signalIndex));
     }
@@ -235,12 +233,7 @@ void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)
         QMutexLocker lock(Probe::objectLock());
         if (!Probe::instance()->isValidObject(sender))
             return;
-        const QByteArray signalName = sender->metaObject()->method(signalIndex - 1)
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-                                      .signature();
-#else
-                                      .methodSignature();
-#endif
+        const QByteArray signalName = sender->metaObject()->method(signalIndex - 1).methodSignature();
         data->signalNames.insert(signalIndex, internString(signalName));
     }
 

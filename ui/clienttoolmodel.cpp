@@ -88,11 +88,7 @@ QVariant ClientToolModel::data(const QModelIndex &index, int role) const
 void ClientToolModel::toolEnabled(int toolIndex)
 {
     QModelIndex i = index(toolIndex, 0);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    emit dataChanged(i, i);
-#else
     emit dataChanged(i, i, QVector<int>() << ToolModelRole::ToolEnabled);
-#endif
 }
 
 void ClientToolModel::startReset()

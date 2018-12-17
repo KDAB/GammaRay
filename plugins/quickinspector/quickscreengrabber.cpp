@@ -447,11 +447,7 @@ void AbstractScreenGrabber::gatherRenderInfo()
     // And the gui thread is locked
     m_renderInfo.dpr = 1.0;
     // See QTBUG-53795
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     m_renderInfo.dpr = m_window->effectiveDevicePixelRatio();
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    m_renderInfo.dpr = m_window->devicePixelRatio();
-#endif
     m_renderInfo.windowSize = m_window->size();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     m_renderInfo.graphicsApi = static_cast<RenderInfo::GraphicsApi>(m_window->rendererInterface()->graphicsApi());

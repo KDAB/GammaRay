@@ -51,12 +51,8 @@ void MethodArgumentModel::setMethod(const QMetaMethod &method)
 
 QVariant MethodArgumentModel::data(const QModelIndex &index, int role) const
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    if (!m_method.signature() ||
-#else
-    if (m_method.methodSignature().isEmpty() ||
-#endif
-        m_arguments.isEmpty()
+    if (m_method.methodSignature().isEmpty()
+        || m_arguments.isEmpty()
         || index.row() < 0
         || index.row() >= m_arguments.size())
         return QVariant();

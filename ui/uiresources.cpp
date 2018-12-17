@@ -33,11 +33,9 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QWidget>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QScreen>
-#endif
 #include <QDebug>
 
 using namespace GammaRay;
@@ -65,12 +63,7 @@ QHash<ThemeEntryType, HashedThemeFilePaths> s_cachedFilePaths;
 
 uint qHash(const PairThemeFileName &entry)
 {
-    // qHash(double) and qHash(float) missing before 5.4
-#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
-    uint h1 = ::qHash(qRound(entry.devicePixelRatio));
-#else
     uint h1 = ::qHash(entry.devicePixelRatio);
-#endif
     uint h2 = ::qHash(entry.theme);
     uint h3 = ::qHash(entry.filePath);
     return h1 + h2 + h3;
@@ -78,10 +71,6 @@ uint qHash(const PairThemeFileName &entry)
 
 qreal devicePixelRatio(QWidget *widget)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    Q_UNUSED(widget);
-    return 1.0;
-#else
     qreal pixelRatio = qApp->devicePixelRatio();
 
     if (widget) {
@@ -91,7 +80,6 @@ qreal devicePixelRatio(QWidget *widget)
     }
 
     return pixelRatio;
-#endif
 }
 
 UIResources::Theme theme()
@@ -122,7 +110,6 @@ QString themedPath(UIResources::Theme theme, const QString &extra, QWidget *widg
 {
     QFileInfo candidate(QString::fromLatin1("%1/%2").arg(UIResources::themePath(theme), extra));
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     const int dpr = qRound(devicePixelRatio(widget));
     if (dpr > 1) {
         const QString highdpi = QString::fromLatin1("%1/%2@%4x.%3")
@@ -131,9 +118,6 @@ QString themedPath(UIResources::Theme theme, const QString &extra, QWidget *widg
         if (QFile::exists(highdpi))
             candidate.setFile(highdpi);
     }
-#else
-    Q_UNUSED(widget);
-#endif
 
     return candidate.filePath();
 }
@@ -198,9 +182,7 @@ QString UIResources::themedFilePath(UIResources::ThemeEntryType type, const QStr
 QImage UIResources::tintedImage(const QImage &image, const QColor &color)
 {
     QImage img(image.alphaChannel());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     img.setDevicePixelRatio(image.devicePixelRatio());
-#endif
     QColor newColor = color;
     for (int i = 0; i < img.colorCount(); ++i) {
         newColor.setAlpha(qGray(img.color(i)));

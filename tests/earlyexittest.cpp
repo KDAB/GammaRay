@@ -100,17 +100,7 @@ private slots:
         QSignalSpy spy(&launcher, SIGNAL(finished()));
         QVERIFY(launcher.start());
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         spy.wait(10000);
-#else
-        int loops = 0;
-        while (loops++ < 100) {
-            if (spy.count() == 1) {
-                break;
-            }
-            QTest::qWait(100);
-        }
-#endif
         QCOMPARE(spy.count(), 1);
         QEXPECT_FAIL("", "Debug injectors miss error detection for this case.", Continue);
         QVERIFY(!launcher.errorMessage().isEmpty());
@@ -131,17 +121,7 @@ private slots:
 
         QVERIFY(launcher.start());
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         spy.wait(10000);
-#else
-        int loops = 0;
-        while (loops++ < 100) {
-            if (spy.count() == 1) {
-                break;
-            }
-            QTest::qWait(100);
-        }
-#endif
 
         QCOMPARE(spy.count(), 1);
     }
@@ -174,17 +154,7 @@ private slots:
 
         QVERIFY(launcher.start());
         launcher.stop();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         spy.wait(1000);
-#else
-        int loops = 0;
-        while (loops++ < 100) {
-            if (spy.count() == 1) {
-                break;
-            }
-            QTest::qWait(10);
-        }
-#endif
         QCOMPARE(spy.count(), 1);
     }
 };

@@ -28,9 +28,6 @@
 #include "itemdelegate.h"
 
 #include <QApplication>
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-#include <QStyleOptionViewItemV4>
-#endif
 
 using namespace GammaRay;
 
@@ -78,11 +75,7 @@ QString ItemDelegateInterface::defaultDisplayText(const QModelIndex &index) cons
 
 const QWidget *ItemDelegateInterface::widget(const QStyleOptionViewItem &option) const
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     const QStyleOptionViewItem &opt(option);
-#else
-    const QStyleOptionViewItemV4 &opt(*qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option));
-#endif
     return opt.widget;
 }
 
@@ -101,11 +94,7 @@ ItemDelegate::ItemDelegate(QObject *parent)
 void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     QStyleOptionViewItem opt = option;
-#else
-    QStyleOptionViewItemV4 opt = *qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option);
-#endif
     opt.text = defaultDisplayText(index);
     initStyleOption(&opt, index);
 

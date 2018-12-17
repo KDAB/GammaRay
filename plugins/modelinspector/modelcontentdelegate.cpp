@@ -47,11 +47,7 @@ ModelContentDelegate::~ModelContentDelegate()
 void ModelContentDelegate::paint(QPainter *painter, const QStyleOptionViewItem &origOption, const QModelIndex &index) const
 {
     Q_ASSERT(index.isValid());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     auto option = origOption;
-#else
-    QStyleOptionViewItemV4 option = origOption;
-#endif
     initStyleOption(&option, index);
     if (index.data(ModelContentProxyModel::DisabledRole).toBool())
         option.state = option.state & ~QStyle::State_Enabled;

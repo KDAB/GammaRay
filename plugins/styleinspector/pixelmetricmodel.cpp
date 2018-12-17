@@ -82,10 +82,6 @@ static const pixel_metric_t pixelMetrics[] = {
     MAKE_PM(PM_IndicatorHeight),
     MAKE_PM(PM_ExclusiveIndicatorWidth),
     MAKE_PM(PM_ExclusiveIndicatorHeight),
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    MAKE_PM(PM_CheckListButtonSize),
-    MAKE_PM(PM_CheckListControllerSize),
-#endif
     MAKE_PM(PM_DialogButtonsSeparator),
     MAKE_PM(PM_DialogButtonsButtonWidth),
     MAKE_PM(PM_DialogButtonsButtonHeight),

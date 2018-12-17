@@ -52,9 +52,7 @@ WidgetPaintAnalyzerExtension::WidgetPaintAnalyzerExtension(PropertyController *c
         m_paintAnalyzer = new PaintAnalyzer(aName, controller);
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QObject::connect(m_paintAnalyzer, &PaintAnalyzer::requestUpdate, [this]() { analyze(); });
-#endif
 }
 
 WidgetPaintAnalyzerExtension::~WidgetPaintAnalyzerExtension()
@@ -67,11 +65,7 @@ bool WidgetPaintAnalyzerExtension::setQObject(QObject *object)
     if (!PaintAnalyzer::isAvailable() || !m_widget)
         return false;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     m_paintAnalyzer->reset();
-#else
-    analyze();
-#endif
     return true;
 }
 

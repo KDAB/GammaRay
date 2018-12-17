@@ -219,11 +219,7 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option,
 
     // We don't want multiline texts for String values
     if (value.type() == QVariant::String || value.type() == QVariant::ByteArray) {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
         QStyleOptionViewItem opt = option;
-#else
-        QStyleOptionViewItemV4 opt = *qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option);
-#endif
 
         QSize sh = QStyledItemDelegate::sizeHint(opt, index);
 
@@ -238,11 +234,7 @@ template<typename Matrix>
 void PropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                                    const QModelIndex &index, const Matrix &matrix) const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QStyleOptionViewItem opt = option;
-#else
-    QStyleOptionViewItemV4 opt = option;
-#endif
     initStyleOption(&opt, index);
     opt.text.clear();
     QApplication::style()->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
@@ -294,11 +286,7 @@ template<typename Matrix>
 QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index,
                                        const Matrix &matrix) const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QStyleOptionViewItem opt = option;
-#else
-    QStyleOptionViewItemV4 opt = option;
-#endif
     initStyleOption(&opt, index);
 
     static const int parenthesisLineWidth = 1;
@@ -333,7 +321,6 @@ int PropertyEditorDelegate::columnWidth(const QStyleOptionViewItem &option, cons
 
 bool PropertyEditorDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     // if this is a read-only cell containing a complex type we have a suitable editor for, we'll show that in read-only mode
     if (index.isValid() && event->type() == QEvent::MouseButtonDblClick && ((index.flags() & Qt::ItemIsEditable) == 0) && (index.flags() & Qt::ItemIsEnabled)) {
         const auto value = index.data(Qt::EditRole);
@@ -354,7 +341,6 @@ bool PropertyEditorDelegate::editorEvent(QEvent* event, QAbstractItemModel* mode
             editor->showEditor(const_cast<QWidget*>(option.widget));
         }
     }
-#endif
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }

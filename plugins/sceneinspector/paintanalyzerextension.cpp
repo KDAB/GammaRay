@@ -100,11 +100,9 @@ bool PaintAnalyzerExtension::analyzePainting(QGraphicsItem *item)
     option.levelOfDetail = 1;
     option.exposedRect = item->boundingRect();
 
-#if QT_VERSION > QT_VERSION_CHECK(5, 0, 0)
     option.styleObject = item->toGraphicsObject();
     if (!option.styleObject)
         option.styleObject = item->scene();
-#endif
 
     if (item->isSelected())
         option.state |= QStyle::State_Selected;

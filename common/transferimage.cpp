@@ -72,11 +72,7 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::TransferImage &imag
         stream << img;
         break;
     case TransferImage::RawFormat:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         stream << (double)img.devicePixelRatio();
-#else
-        stream << 1.0;
-#endif
         stream << (quint32)img.format() << (quint32)img.width() << (quint32)img.height() << image.transform();
         stream.device()->write((const char*)img.constBits(), img.byteCount());
         break;
@@ -106,9 +102,7 @@ QDataStream &operator>>(QDataStream &stream, TransferImage &image)
         QTransform transform;
         stream >> r >> f >> w >> h >> transform;
         QImage img(w, h, static_cast<QImage::Format>(f));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         img.setDevicePixelRatio(r);
-#endif
         for (int i = 0; i < img.height(); ++i) {
             const QByteArray buffer = stream.device()->read(img.bytesPerLine());
             memcpy(img.scanLine(i), buffer.constData(), img.bytesPerLine());

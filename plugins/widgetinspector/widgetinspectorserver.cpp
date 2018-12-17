@@ -84,9 +84,7 @@
 #include <QScrollBar>
 #include <QStyle>
 #include <QToolButton>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QWindow>
-#endif
 
 #include <iostream>
 
@@ -200,9 +198,7 @@ void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
     if (!m_selectedWidget || !widget || m_selectedWidget->window() != widget->window())
         m_remoteView->resetView();
     m_selectedWidget = widget;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     m_remoteView->setEventReceiver(m_selectedWidget ? m_selectedWidget->window()->windowHandle() : nullptr);
-#endif
 
     if (m_selectedWidget
         && (qobject_cast<QDesktopWidget *>(m_selectedWidget)
@@ -329,9 +325,7 @@ QImage WidgetInspectorServer::imageForWidget(QWidget *widget)
     // low dpi rendering. See QTBUG-53801
     const qreal ratio = 1; // widget->window()->devicePixelRatio();
     QImage img(widget->size() * ratio, QImage::Format_ARGB32);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     img.setDevicePixelRatio(ratio);
-#endif
     img.fill(Qt::transparent);
     widget->render(&img);
     return img;
@@ -531,9 +525,7 @@ void WidgetInspectorServer::checkFeatures()
 #endif
     if (PaintAnalyzer::isAvailable())
         f |= AnalyzePainting;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     f |= InputRedirection;
-#endif
     setFeatures(f);
 }
 
@@ -564,50 +556,37 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_RO(QGridLayout, rowCount);
 
     MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY_RO(QWidget, actions);
     MO_ADD_PROPERTY   (QWidget, backgroundRole, setBackgroundRole);
-#endif
     MO_ADD_PROPERTY_RO(QWidget, contentsMargins);
     MO_ADD_PROPERTY_RO(QWidget, contentsRect);
     MO_ADD_PROPERTY_RO(QWidget, focusProxy);
     MO_ADD_PROPERTY_RO(QWidget, focusWidget);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY   (QWidget, foregroundRole, setForegroundRole);
     MO_ADD_PROPERTY   (QWidget, graphicsEffect, setGraphicsEffect);
     MO_ADD_PROPERTY_RO(QWidget, graphicsProxyWidget);
-#endif
     MO_ADD_PROPERTY_RO(QWidget, hasFocus);
     MO_ADD_PROPERTY_RO(QWidget, hasMouseTracking);
     MO_ADD_PROPERTY_RO(QWidget, isWindow);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_PROPERTY   (QWidget, layout, setLayout);
-#endif
     MO_ADD_PROPERTY_O2(QWidget, mask, setMask);
     MO_ADD_PROPERTY_RO(QWidget, nativeParentWidget);
     MO_ADD_PROPERTY_RO(QWidget, nextInFocusChain);
     MO_ADD_PROPERTY_RO(QWidget, parentWidget);
     MO_ADD_PROPERTY_RO(QWidget, previousInFocusChain);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY   (QWidget, style, setStyle);
-#endif
     MO_ADD_PROPERTY_RO(QWidget, underMouse);
     MO_ADD_PROPERTY_RO(QWidget, visibleRegion);
     MO_ADD_PROPERTY_RO(QWidget, window);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_PROPERTY_RO(QWidget, windowHandle);
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY   (QWidget, windowFlags, setWindowFlags);
     MO_ADD_PROPERTY   (QWidget, windowRole, setWindowRole);
     MO_ADD_PROPERTY   (QWidget, windowState, setWindowState);
-#endif
 
     MO_ADD_METAOBJECT1(QStyle, QObject);
     MO_ADD_PROPERTY_RO(QStyle, proxy);
     MO_ADD_PROPERTY_RO(QStyle, standardPalette);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_METAOBJECT1(QApplication, QGuiApplication);
     MO_ADD_PROPERTY_ST(QApplication, activeModalWidget);
     MO_ADD_PROPERTY_ST(QApplication, activePopupWidget);
@@ -616,9 +595,7 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_ST(QApplication, desktop);
     MO_ADD_PROPERTY_ST(QApplication, focusWidget);
     MO_ADD_PROPERTY_ST(QApplication, style);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_ST(QApplication, topLevelWidgets);
-#endif
 
     MO_ADD_METAOBJECT1(QCompleter, QObject);
     MO_ADD_PROPERTY_RO(QCompleter, completionCount);
@@ -661,7 +638,6 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_METAOBJECT1(QToolButton, QAbstractButton);
     MO_ADD_PROPERTY_RO(QToolButton, defaultAction);
     MO_ADD_PROPERTY_RO(QToolButton, menu);
-#endif
 
     MO_ADD_METAOBJECT0(QSizePolicy);
     MO_ADD_PROPERTY   (QSizePolicy, controlType, setControlType);
@@ -669,20 +645,10 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY   (QSizePolicy, hasHeightForWidth, setHeightForWidth);
     MO_ADD_PROPERTY   (QSizePolicy, hasWidthForHeight, setWidthForHeight);
     MO_ADD_PROPERTY   (QSizePolicy, horizontalPolicy, setHorizontalPolicy);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QSizePolicy, horizontalStretch);
-#else
     MO_ADD_PROPERTY   (QSizePolicy, horizontalStretch, setHorizontalStretch);
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     MO_ADD_PROPERTY   (QSizePolicy, retainSizeWhenHidden, setRetainSizeWhenHidden);
-#endif
     MO_ADD_PROPERTY   (QSizePolicy, verticalPolicy, setVerticalPolicy);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    MO_ADD_PROPERTY_RO(QSizePolicy, verticalStretch);
-#else
     MO_ADD_PROPERTY   (QSizePolicy, verticalStretch, setVerticalStretch);
-#endif
 }
 
 static QString sizePolicyPolicyToString(QSizePolicy::Policy policy)
@@ -702,10 +668,6 @@ void WidgetInspectorServer::registerVariantHandlers()
 {
     VariantHandler::registerStringConverter<QSizePolicy>(sizePolicyToString);
     VariantHandler::registerStringConverter<const QStyle*>(Util::displayString);
-
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-    VariantHandler::registerStringConverter<QWidget *>(Util::displayString);
-#endif
 }
 
 void WidgetInspectorServer::discoverObjects()

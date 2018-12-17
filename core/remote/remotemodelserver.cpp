@@ -105,18 +105,12 @@ void RemoteModelServer::connectModel()
             SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
     connect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)),
             SLOT(columnsRemoved(QModelIndex,int,int)));
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            SLOT(dataChanged(QModelIndex,QModelIndex)));
-    connect(m_model, SIGNAL(layoutChanged()), SLOT(layoutChanged()));
-#else
     connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
             SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     connect(m_model,
             SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
             this,
             SLOT(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
-#endif
     connect(m_model, SIGNAL(modelReset()), SLOT(modelReset()));
     connect(m_model, SIGNAL(destroyed(QObject*)), SLOT(modelDeleted()));
 }
@@ -142,19 +136,12 @@ void RemoteModelServer::disconnectModel()
                this, SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
     disconnect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)),
                this, SLOT(columnsRemoved(QModelIndex,int,int)));
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-               this, SLOT(dataChanged(QModelIndex,QModelIndex)));
-    disconnect(m_model, SIGNAL(layoutChanged()),
-               this, SLOT(layoutChanged()));
-#else
     disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
                this, SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
     disconnect(m_model,
                SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
                this,
                SLOT(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
-#endif
     disconnect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
     disconnect(m_model, SIGNAL(destroyed(QObject*)), this, SLOT(modelDeleted()));
 }
@@ -419,13 +406,6 @@ void RemoteModelServer::columnsRemoved(const QModelIndex &parent, int start, int
     sendAddRemoveMessage(Protocol::ModelColumnsRemoved, parent, start, end);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-void RemoteModelServer::layoutChanged()
-{
-    sendLayoutChanged();
-}
-
-#else
 
 void RemoteModelServer::layoutChanged(const QList<QPersistentModelIndex> &parents,
                                       QAbstractItemModel::LayoutChangeHint hint)
@@ -437,7 +417,6 @@ void RemoteModelServer::layoutChanged(const QList<QPersistentModelIndex> &parent
     sendLayoutChanged(indexes, hint);
 }
 
-#endif
 
 void RemoteModelServer::sendLayoutChanged(const QVector< Protocol::ModelIndex > &parents,
                                           quint32 hint)

@@ -110,7 +110,3 @@ void ActionInspectorWidget::selectionChanged(const QItemSelection& selection)
     const auto idx = selection.at(0).topLeft();
     ui->actionView->scrollTo(idx);
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(ActionInspectorUiFactory)
-#endif

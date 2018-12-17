@@ -255,7 +255,3 @@ void SceneInspectorWidget::propertyWidgetTabsChanged()
 void SceneInspectorUiFactory::initUi()
 {
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(SceneInspectorUiFactory)
-#endif

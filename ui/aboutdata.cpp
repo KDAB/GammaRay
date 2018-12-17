@@ -61,11 +61,7 @@ QStringList AboutData::authorsAsHtml()
     QStringList a;
     a.reserve(plainAuthors.size());
     foreach (const QString &author, plainAuthors) {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-        a.push_back(Qt::escape(author));
-#else
         a.push_back(author.toHtmlEscaped());
-#endif
     }
     return a;
 }

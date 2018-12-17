@@ -28,30 +28,18 @@
 
 #include "injectorstyleplugin.h"
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <private/qguiplatformplugin_p.h>
-#else
 #include <qpa/qplatformtheme.h>
 #include <private/qguiapplication_p.h>
-#endif
 
 #include <QDebug>
 #include <QLibrary>
 #include <QStyleFactory>
-
-#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
-typedef void *QFunctionPointer;
-#endif
 
 using namespace GammaRay;
 
 QStyle *InjectorStylePlugin::create(const QString &)
 {
     inject();
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    static QGuiPlatformPlugin defaultGuiPlatform;
-    return QStyleFactory::create(defaultGuiPlatform.styleName());
-#else
     const QStringList styleNameList
         = QGuiApplicationPrivate::platform_theme->themeHint(
         QPlatformTheme::StyleNames).toStringList();
@@ -60,7 +48,6 @@ QStyle *InjectorStylePlugin::create(const QString &)
             return style;
     }
     return nullptr;
-#endif
 }
 
 QStringList InjectorStylePlugin::keys() const
@@ -95,7 +82,3 @@ void InjectorStylePlugin::inject()
     else
         qWarning() << "Resolving probe function failed:" << probeDll.errorString();
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN2(gammaray_injector_style, GammaRay::InjectorStylePlugin)
-#endif

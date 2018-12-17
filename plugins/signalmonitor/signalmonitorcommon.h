@@ -34,10 +34,6 @@
 #include <QMetaType>
 #include <QVector>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_DECLARE_METATYPE(QVector<qlonglong>)
-#endif
-
 namespace GammaRay {
 namespace StreamOperators {
 void registerSignalMonitorStreamOperators();

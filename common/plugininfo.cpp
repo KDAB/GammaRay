@@ -37,12 +37,10 @@
 #include <QSettings>
 #include <QCoreApplication>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QPluginLoader>
-#endif
 
 using namespace GammaRay;
 
@@ -127,7 +125,6 @@ bool PluginInfo::isValid() const
     return !m_id.isEmpty() && (isStatic() || !m_path.isEmpty()) && !m_interface.isEmpty();
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 static QString readLocalized(const QLocale &locale, const QJsonObject &obj, const QString &baseKey)
 {
     const QString qtcLanguage = qApp->property("qtc_locale").toString();
@@ -164,40 +161,26 @@ static QString readLocalized(const QLocale &locale, const QJsonObject &obj, cons
 
     return obj.value(baseKey).toString();
 }
-#endif
 
 bool PluginInfo::isStatic() const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     return m_staticPlugin.instance && m_staticPlugin.rawMetaData;
-#else
-    return false;
-#endif
 }
 
 QObject* PluginInfo::staticInstance() const
 {
     Q_ASSERT(isStatic());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     return m_staticPlugin.instance();
-#else
-    return nullptr;
-#endif
 }
 
 void PluginInfo::initFromJSON(const QString &path)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     const QPluginLoader loader(path);
     const QJsonObject metaData = loader.metaData();
     initFromJSON(metaData);
     m_path = path;
-#else
-    Q_UNUSED(path);
-#endif
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 void PluginInfo::initFromJSON(const QJsonObject &metaData)
 {
     m_interface = metaData.value(QStringLiteral("IID")).toString();
@@ -218,7 +201,6 @@ void PluginInfo::initFromJSON(const QJsonObject &metaData)
     for (auto it = selectable.begin(); it != selectable.end(); ++it)
         m_selectableTypes.push_back((*it).toString().toUtf8());
 }
-#endif
 
 void PluginInfo::initFromDesktopFile(const QString &path)
 {

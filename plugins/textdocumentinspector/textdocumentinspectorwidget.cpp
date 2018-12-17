@@ -138,7 +138,3 @@ void TextDocumentInspectorWidget::documentContextMenu(QPoint pos)
 
     menu.exec(ui->documentList->viewport()->mapToGlobal(pos));
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-Q_EXPORT_PLUGIN(TextDocumentInspectorWidgetFactory)
-#endif

@@ -262,11 +262,7 @@ QModelIndex StateModel::index(int row, int column, const QModelIndex &parent) co
     if (row >= c.size())
         return QModelIndex();
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    return createIndex(row, column, reinterpret_cast<void*>(internalPointer.m_id));
-#else
     return createIndex(row, column, internalPointer);
-#endif
 }
 
 QModelIndex StateModel::parent(const QModelIndex &index) const
@@ -282,11 +278,7 @@ QModelIndex StateModel::parent(const QModelIndex &index) const
 
     State grandParent = d->m_stateMachine->parentState(parent);
     int row = d->children(grandParent).indexOf(parent);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    return createIndex(row, 0, reinterpret_cast<void*>(grandParent.m_id));
-#else
     return createIndex(row, 0, grandParent);
-#endif
 }
 
 QVariant StateModel::headerData(int section, Qt::Orientation orientation, int role) const

@@ -77,9 +77,7 @@ private slots:
         QVERIFY(moRow.isValid());
         QCOMPARE(moRow.data(Qt::DisplayRole).toString(), QStringLiteral("thread"));
         QVERIFY((moRow.sibling(moRow.row(), 1).flags() & Qt::ItemIsEditable) == 0);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         QVERIFY(!moRow.sibling(moRow.row(), 1).data(Qt::DisplayRole).toString().isEmpty());
-#endif
     }
 
     void testMetaObject()

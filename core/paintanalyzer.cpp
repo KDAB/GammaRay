@@ -114,15 +114,11 @@ void PaintAnalyzer::repaint()
     const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     const qreal ratio = m_paintBufferModel->buffer().devicePixelRatioF();
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
-    const qreal ratio = m_paintBufferModel->buffer().devicePixelRatio();
 #else
-    const qreal ratio = 1.0;
+    const qreal ratio = m_paintBufferModel->buffer().devicePixelRatio();
 #endif
     QImage image(sourceSize * ratio, QImage::Format_ARGB32);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     image.setDevicePixelRatio(ratio);
-#endif
     image.fill(Qt::transparent);
     QPainter painter(&image);
     const auto start = m_paintBufferModel->buffer().frameStartIndex(0);

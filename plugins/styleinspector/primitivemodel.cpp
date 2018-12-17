@@ -47,13 +47,6 @@ struct primitive_element_t {
 #define MAKE_PE_X(primitive, factory) { #primitive, QStyle:: primitive, &StyleOption:: factory }
 
 static const primitive_element_t primititveElements[] = {
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    MAKE_PE(PE_Q3CheckListController),
-    MAKE_PE(PE_Q3CheckListExclusiveIndicator),
-    MAKE_PE(PE_Q3CheckListIndicator),
-    MAKE_PE(PE_Q3DockWindowSeparator),
-    MAKE_PE(PE_Q3Separator),
-#endif
     MAKE_PE_X(PE_Frame, makeFrameStyleOption),
     MAKE_PE(PE_FrameDefaultButton),
     MAKE_PE_X(PE_FrameDockWidget, makeFrameStyleOption),

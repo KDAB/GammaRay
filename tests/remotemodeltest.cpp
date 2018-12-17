@@ -127,7 +127,6 @@ private:
             return false;
         idx.data(); // trigger the request
         Q_ASSERT(spy.isEmpty());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         while (spy.wait()) {
             for (auto it = spy.constBegin(); it != spy.constEnd(); ++it) {
                 if ((*it).contains(idx))
@@ -136,10 +135,6 @@ private:
             spy.clear();
         }
         return false;
-#else
-        QTest::qWait(100);
-        return true;
-#endif
     }
 
 private slots:

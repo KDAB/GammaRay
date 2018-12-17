@@ -37,9 +37,7 @@
 #include <QMouseEvent>
 #include <QTimer>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QWindow>
-#endif
 
 using namespace GammaRay;
 
@@ -102,11 +100,7 @@ void RemoteViewServer::sendFrame(const RemoteViewFrame &frame)
 {
     m_clientReady = false;
 
-    const QSize frameImageSize = frame.image().size()
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-        / frame.image().devicePixelRatio()
-#endif
-    ;
+    const QSize frameImageSize = frame.image().size() / frame.image().devicePixelRatio();
     m_lastTransmittedViewRect = frame.viewRect();
     m_lastTransmittedImageRect = frame.transform().mapRect(QRect(QPoint(), frameImageSize));
 
@@ -177,18 +171,10 @@ void RemoteViewServer::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
     if (!m_eventReceiver)
         return;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(
                                      localPos), pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical,
                                  /*not used*/ (Qt::MouseButtons)buttons,
                                  (Qt::KeyboardModifiers)modifiers);
-#else
-    Q_UNUSED(pixelDelta);
-    auto orientation = angleDelta.x() == 0 ? Qt::Vertical : Qt::Horizontal;
-    auto delta = orientation == Qt::Horizontal ? angleDelta.x() : angleDelta.y();
-    auto event = new QWheelEvent(localPos, delta, (Qt::MouseButtons)buttons,
-                                 (Qt::KeyboardModifiers)modifiers, orientation);
-#endif
     QCoreApplication::postEvent(m_eventReceiver, event);
 }
 
@@ -198,7 +184,6 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
     if (!m_eventReceiver)
         return;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     if (!m_touchDevice) {
         //create our own touch device, the system may not have one already, or it may not have
         //the properties we want
@@ -211,11 +196,6 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
     auto event = new QTouchEvent(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), touchPointStates, touchPoints);
     event->setWindow(m_eventReceiver);
 
-#else
-    Q_UNUSED(deviceCaps)
-    Q_UNUSED(touchDeviceMaxTouchPoints)
-    auto event = new QTouchEvent(QEvent::Type(type), QTouchEvent::DeviceType(touchDeviceType), Qt::KeyboardModifiers(modifiers), touchPointStates, touchPoints);
-#endif
     QCoreApplication::sendEvent(m_eventReceiver, event);
 }
 
