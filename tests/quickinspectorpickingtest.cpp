@@ -45,10 +45,6 @@
 #include <QRegExp>
 #include <QSignalSpy>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(QItemSelection)
-#endif
-
 using namespace GammaRay;
 
 class QuickInspectorPickingTest : public QObject

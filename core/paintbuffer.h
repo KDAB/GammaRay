@@ -33,10 +33,7 @@
 #include <common/objectid.h>
 #include <QVector>
 
-// prior to 5.5, QPaintBufferEngine is not exported, so we can't inherit it
-#if defined(HAVE_PRIVATE_QT_HEADERS) && QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
-#define USE_GAMMARAY_PAINTBUFFER
-#endif
+#define USE_GAMMARAY_PAINTBUFFER // FIXME USE_GAMMARAY_PAINTBUFFER is now always defined
 
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qpaintbuffer_p.h>

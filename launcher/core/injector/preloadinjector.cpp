@@ -85,16 +85,7 @@ bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &p
     ProbeABIDetector abiDetector;
     const auto qtCorePath = abiDetector.qtCoreForExecutable(exePath);
     PreloadCheck check;
-    const bool success = check.test(qtCorePath, QStringLiteral("qt_startup_hook"));
-#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0) // before 5.4 this is fatal, after that we have the built-in hooks and DLL initialization as an even better way
-    if (!success && !qtCorePath.isEmpty()) {
-        mExitCode = 1;
-        mErrorString = check.errorString();
-        return false;
-    }
-#else
-    Q_UNUSED(success);
-#endif
+    check.test(qtCorePath, QStringLiteral("qt_startup_hook")); // FIXME: Why do we test, if we don't use the result?
 
 #endif
 

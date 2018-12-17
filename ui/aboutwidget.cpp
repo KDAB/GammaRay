@@ -119,11 +119,9 @@ void AboutWidget::showEvent(QShowEvent *event)
 bool AboutWidget::eventFilter(QObject *object, QEvent *event)
 {
     if (object == m_backgroundWindow) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
         if (event->type() == QEvent::ScreenChangeInternal)
             m_watermark = QPixmap();
         else
-#endif
         if (event->type() == QEvent::Paint) {
             if (m_watermark.isNull())
                 m_watermark = UIResources::themedPixmap(QStringLiteral("watermark.png"), this);

@@ -31,9 +31,7 @@
 #include "propertydata.h"
 #include "varianthandler.h"
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 #include <QAssociativeIterable>
-#endif
 
 using namespace GammaRay;
 
@@ -52,7 +50,6 @@ void AssociativePropertyAdaptor::doSetObject(const ObjectInstance &oi)
         m_value = oi.variant();
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 int AssociativePropertyAdaptor::count() const
 {
     if (!m_value.canConvert<QVariantHash>())
@@ -76,5 +73,3 @@ PropertyData AssociativePropertyAdaptor::propertyData(int index) const
 
     return data;
 }
-
-#endif

@@ -31,11 +31,6 @@
 #include <QHash>
 #include <QVariant>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 2, 0)
-typedef QHash<QString, int> StringIntHash;
-Q_DECLARE_METATYPE(StringIntHash)
-#endif
-
 VariantPropertyObject::VariantPropertyObject(QObject *parent)
     : QObject(parent)
     , m_object(new QObject)

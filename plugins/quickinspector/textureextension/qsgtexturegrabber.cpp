@@ -180,11 +180,7 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) co
     } else {
 #if !defined(QT_NO_OPENGL) && !defined(QT_OPENGL_ES_2)
         auto glFuncs = context->versionFunctions<QOpenGLFunctions_2_0>();
-        if (!glFuncs
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0) // didn't use to be automatic
-                || !glFuncs->initializeOpenGLFunctions()
-#endif
-                ) {
+        if (!glFuncs) {
             qWarning() << "unable to obtain OpenGL2 functions, too old GL version?";
             return QImage();
         }

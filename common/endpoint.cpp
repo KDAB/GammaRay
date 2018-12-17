@@ -33,13 +33,9 @@
 
 #include <iostream>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
 #include <QLoggingCategory>
 //we use qCWarning, which we turn off by default, but which is not compiled out in releasebuilds
 Q_LOGGING_CATEGORY(networkstatistics, "gammaray.network.statistics", QtMsgType::QtCriticalMsg)
-#else
-const QLatin1String networkstatistics("gammaray.network.statistics");
-#endif
 
 using namespace GammaRay;
 using namespace std;
@@ -140,11 +136,7 @@ void Endpoint::logTransmissionRate()
         if(m_bytesRead != 0 || m_bytesWritten != 0) {
             const float transmissionRateRX = (m_bytesRead * 8 / 1024.0 / 1024.0); // in Mpbs
             const float transmissionRateTX = (m_bytesWritten * 8 / 1024.0 / 1024.0); // in Mpbs
-    #if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
             qCWarning(networkstatistics, "RX %7.3f Mbps | TX %7.3f Mbps", transmissionRateRX, transmissionRateTX);
-    #else
-            qDebug("RX %7.3f Mbps | TX %7.3f Mbps", transmissionRateRX, transmissionRateTX);
-    #endif
         }
     }
     m_bytesRead = 0;

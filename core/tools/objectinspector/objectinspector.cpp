@@ -162,13 +162,8 @@ void ObjectInspector::scanForConnectionIssues()
                     return;
                 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
-                QString signalName = sender->metaObject()->method(connection.signalIndex).signature();
-                QString slotName = connection.slotIndex < 0 ? QStringLiteral("<slot object>") : receiver->metaObject()->method(connection.slotIndex).signature();
-#else
                 QString signalName = sender->metaObject()->method(connection.signalIndex).name();
                 QString slotName = connection.slotIndex < 0 ? QStringLiteral("<slot object>") : receiver->metaObject()->method(connection.slotIndex).name();
-#endif
                 QString senderName = Util::displayString(sender);
                 QString receiverName = Util::displayString(receiver);
                 Problem p;

@@ -143,8 +143,6 @@ private slots:
         auto idx = indexOfProperty(adaptor, "a1");
         QVERIFY(idx >= 0);
 
-        // Qt < 5.4 returned a QVariant here
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
         auto data = adaptor->propertyData(idx);
         auto jsValueAdaptor = PropertyAdaptorFactory::create(data.value(), this);
         QVERIFY(jsValueAdaptor);
@@ -160,7 +158,6 @@ private slots:
         data = jsValueAdaptor->propertyData(1);
         QCOMPARE(data.name(), QStringLiteral("1"));
         QCOMPARE(data.value(), QVariant("world"));
-#endif
 
         delete obj;
     }
@@ -173,7 +170,6 @@ private slots:
         auto adaptor = PropertyAdaptorFactory::create(engine.rootContext(), this);
         QVERIFY(adaptor);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         auto idx = indexOfProperty(adaptor, "myContextProp");
         QVERIFY(idx >= 0);
 
@@ -183,7 +179,6 @@ private slots:
 
         adaptor->writeProperty(idx, 23);
         QCOMPARE(engine.rootContext()->contextProperty("myContextProp").toInt(), 23);
-#endif
     }
 };
 

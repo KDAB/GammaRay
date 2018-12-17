@@ -37,10 +37,6 @@
 #include <QItemSelectionModel>
 #include <QQuickItem>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(QItemSelection)
-#endif
-
 using namespace GammaRay;
 using namespace TestHelpers;
 

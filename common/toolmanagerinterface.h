@@ -91,8 +91,5 @@ Q_DECLARE_INTERFACE(GammaRay::ToolManagerInterface, "com.kdab.GammaRay.ToolManag
 QT_END_NAMESPACE
 Q_DECLARE_METATYPE(GammaRay::ToolData)
 Q_DECLARE_METATYPE(QVector<GammaRay::ToolData>)
-#if QT_VERSION <= QT_VERSION_CHECK(5, 2, 0)
-Q_DECLARE_METATYPE(QVector<QString>)
-#endif
 
 #endif // GAMMARAY_TOOLMANAGERINTERFACE_H

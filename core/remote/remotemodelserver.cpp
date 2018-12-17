@@ -293,7 +293,6 @@ bool RemoteModelServer::canSerialize(const QVariant &value) const
     }
 
     // recurse into containers
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     if (value.canConvert<QVariantList>()) {
         QSequentialIterable it = value.value<QSequentialIterable>();
         foreach (const QVariant &v, it) {
@@ -310,7 +309,6 @@ bool RemoteModelServer::canSerialize(const QVariant &value) const
         }
         // see above
     }
-#endif
 
     // whitelist a few expensive to encode types we know we can serialize
     if (value.userType() == qMetaTypeId<QUrl>() || value.userType() == qMetaTypeId<GammaRay::SourceLocation>())

@@ -41,10 +41,6 @@
 #define MY_TAG
 #endif
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 1, 0)
-#define Q_REVISION(v)
-#endif
-
 using namespace GammaRay;
 using namespace TestHelpers;
 
@@ -99,9 +95,7 @@ private slots:
         QTest::addColumn<QString>("toolTip", nullptr);
 
         QTest::newRow("tagged") << "taggedSlot" << "MY_TAG";
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
         QTest::newRow("revision") << "revisionedSlot" << "1407";
-#endif
     }
 
     void testToolTip()

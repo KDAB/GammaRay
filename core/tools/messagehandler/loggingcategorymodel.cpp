@@ -91,10 +91,8 @@ QVariant LoggingCategoryModel::data(const QModelIndex &index, int role) const
         switch (index.column()) {
         case 1:
             return cat->isDebugEnabled() ? Qt::Checked : Qt::Unchecked;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         case 2:
             return cat->isInfoEnabled() ? Qt::Checked : Qt::Unchecked;
-#endif
         case 3:
             return cat->isWarningEnabled() ? Qt::Checked : Qt::Unchecked;
         case 4:
@@ -108,10 +106,8 @@ QVariant LoggingCategoryModel::data(const QModelIndex &index, int role) const
 Qt::ItemFlags LoggingCategoryModel::flags(const QModelIndex &index) const
 {
     const auto baseFlags = QAbstractTableModel::flags(index);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     if (index.column() == 2) // info not available in Qt < 5.5
         return baseFlags;
-#endif
     if (index.column() > 0)
         return baseFlags | Qt::ItemIsUserCheckable;
     return baseFlags;
@@ -122,13 +118,8 @@ bool LoggingCategoryModel::setData(const QModelIndex &index, const QVariant &val
     if (!index.isValid() || index.column() == 0 || role != Qt::CheckStateRole)
         return false;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     static const QtMsgType type_map[]
         = { QtDebugMsg, QtDebugMsg, QtInfoMsg, QtWarningMsg, QtCriticalMsg };
-#else
-    static const QtMsgType type_map[]
-        = { QtDebugMsg, QtDebugMsg, QtDebugMsg, QtWarningMsg, QtCriticalMsg };
-#endif
 
     const auto enabled = value.toInt() == Qt::Checked;
     auto cat = m_categories.at(index.row());

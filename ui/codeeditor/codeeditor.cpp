@@ -55,9 +55,7 @@ CodeEditor::CodeEditor(QWidget *parent) :
     m_sideBar(new CodeEditorSidebar(this)),
     m_highlighter(nullptr)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-#endif
 
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSidebarGeometry()));
     connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateSidebarArea(QRect,int)));
@@ -115,11 +113,7 @@ int CodeEditor::foldingBarWidth() const
 
 void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     auto menu = createStandardContextMenu(event->pos());
-#else
-    auto menu = createStandardContextMenu();
-#endif
 
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
     ensureHighlighterExists();

@@ -35,15 +35,7 @@ QT_BEGIN_NAMESPACE
 class QObject;
 QT_END_NAMESPACE
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
 #define GAMMARAY_USE_QHOOKS
-#else
-
-// MSVC release builds merges all the functions we want to override into one, breaking this
-#if (defined(Q_OS_WIN) && (!defined(_MSC_VER) || defined(_DEBUG))) || defined(Q_OS_MAC)
-#define GAMMARAY_USE_FUNCTION_OVERWRITE
-#endif
-#endif
 
 extern "C" {
 extern Q_DECL_EXPORT void gammaray_startup_hook();

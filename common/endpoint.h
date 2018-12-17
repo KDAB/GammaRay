@@ -37,12 +37,8 @@
 #include <QPointer>
 #include <QTimer>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(networkstatistics)
-#else
-#include <QDebug>
-#endif
 
 QT_BEGIN_NAMESPACE
 class QIODevice;

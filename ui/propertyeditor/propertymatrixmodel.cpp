@@ -67,9 +67,7 @@ int PropertyMatrixModel::rowCount(const QModelIndex &parent) const
     case QVariant::Matrix:
     case QVariant::Transform:
     case QVariant::Vector3D:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     case QVariant::Quaternion:
-#endif
         return 3;
 
     case QVariant::Matrix4x4:
@@ -90,9 +88,7 @@ int PropertyMatrixModel::columnCount(const QModelIndex &parent) const
     case QVariant::Vector2D:
     case QVariant::Vector3D:
     case QVariant::Vector4D:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     case QVariant::Quaternion:
-#endif
         return 1;
 
     case QVariant::Matrix:
@@ -217,7 +213,6 @@ QVariant PropertyMatrixModel::data(const QModelIndex &index, int role) const
         break;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     case QVariant::Quaternion:
     {
         float pitch, yaw, roll;
@@ -235,7 +230,6 @@ QVariant PropertyMatrixModel::data(const QModelIndex &index, int role) const
 
         break;
     }
-#endif
 
     default:
         break;
@@ -316,7 +310,6 @@ bool PropertyMatrixModel::setData(const QModelIndex &index, const QVariant &data
         break;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     case QVariant::Quaternion:
     {
         float pitch, yaw, roll;
@@ -338,7 +331,6 @@ bool PropertyMatrixModel::setData(const QModelIndex &index, const QVariant &data
         m_matrix = QQuaternion::fromEulerAngles(pitch, yaw, roll);
         break;
     }
-#endif
 
     case QVariant::Matrix:
     {
@@ -560,7 +552,6 @@ QVariant PropertyMatrixModel::headerData(int section, Qt::Orientation orientatio
             }
             break;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         case QVariant::Quaternion:
             switch (section) {
             case 0:
@@ -571,7 +562,6 @@ QVariant PropertyMatrixModel::headerData(int section, Qt::Orientation orientatio
                 return tr("roll");
             }
             break;
-#endif
         default:
             break;
         }

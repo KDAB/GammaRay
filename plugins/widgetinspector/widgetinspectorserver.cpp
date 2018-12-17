@@ -91,11 +91,6 @@
 Q_DECLARE_METATYPE(const QStyle*)
 Q_DECLARE_METATYPE(QSizePolicy::ControlType)
 Q_DECLARE_METATYPE(QSizePolicy::ControlTypes)
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Qt::Orientations)
-Q_DECLARE_METATYPE(Qt::Alignment)
-Q_DECLARE_METATYPE(QSizePolicy::Policy)
-#endif
 
 using namespace GammaRay;
 using namespace std;

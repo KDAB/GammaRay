@@ -364,14 +364,10 @@ void SceneInspector::registerGraphicsViewMetaTypes()
 
     MO_ADD_METAOBJECT1(QGraphicsTextItem, QGraphicsObject);
     MO_ADD_PROPERTY(QGraphicsTextItem, defaultTextColor, setDefaultTextColor);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY(QGraphicsTextItem, document, setDocument);
-#endif
     MO_ADD_PROPERTY(QGraphicsTextItem, font, setFont);
     MO_ADD_PROPERTY(QGraphicsTextItem, tabChangesFocus, setTabChangesFocus);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY(QGraphicsTextItem, textInteractionFlags, setTextInteractionFlags);
-#endif
     MO_ADD_PROPERTY(QGraphicsTextItem, textWidth, setTextWidth);
 
     MO_ADD_METAOBJECT0(QGraphicsLayoutItem);
@@ -425,9 +421,7 @@ static const MetaEnum::Value<QGraphicsItem::GraphicsItemFlag> graphics_item_flag
     E(ItemSendsScenePositionChanges),
     E(ItemStopsClickFocusPropagation),
     E(ItemStopsFocusHandling),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     E(ItemContainsChildrenInShape)
-#endif
 };
 
 static QString graphicsItemFlagsToString(QGraphicsItem::GraphicsItemFlags flags)

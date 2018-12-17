@@ -39,11 +39,6 @@
 #include <limits>
 #include <vector>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Qt::BGMode)
-Q_DECLARE_METATYPE(Qt::ClipOperation)
-#endif
-
 #ifdef HAVE_PRIVATE_QT_HEADERS
 #include <private/qvectorpath_p.h>
 #include <private/qpainterpath_p.h>

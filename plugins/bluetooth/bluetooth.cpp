@@ -46,11 +46,6 @@ Q_DECLARE_METATYPE(QBluetoothDeviceDiscoveryAgent::Error)
 Q_DECLARE_METATYPE(QBluetoothDeviceDiscoveryAgent::InquiryType)
 Q_DECLARE_METATYPE(QBluetoothServer::Error)
 Q_DECLARE_METATYPE(QBluetoothServiceInfo::Protocol)
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(QBluetoothServiceDiscoveryAgent::Error)
-Q_DECLARE_METATYPE(QBluetoothSocket::SocketError)
-Q_DECLARE_METATYPE(QBluetoothSocket::SocketState)
-#endif
 
 using namespace GammaRay;
 

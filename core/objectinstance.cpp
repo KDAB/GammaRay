@@ -76,7 +76,6 @@ ObjectInstance::ObjectInstance(const QVariant &value)
             m_type = QtObject;
         }
     } else {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         if (QMetaType::typeFlags(value.userType()) & QMetaType::IsGadget) {
             m_metaObj = QMetaType::metaObjectForType(value.userType());
             if (m_metaObj)
@@ -84,7 +83,6 @@ ObjectInstance::ObjectInstance(const QVariant &value)
         } else {
             unpackVariant();
         }
-#endif
     }
 }
 
@@ -203,7 +201,6 @@ void ObjectInstance::copy(const ObjectInstance &other)
 
 void ObjectInstance::unpackVariant()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     const auto mo = MetaObjectRepository::instance()->metaObject(m_variant.typeName());
     if (mo && strstr(m_variant.typeName(), "*") != nullptr) { // pointer types
         QMetaType::construct(m_variant.userType(), &m_obj, m_variant.constData());
@@ -237,5 +234,4 @@ void ObjectInstance::unpackVariant()
             }
         }
     }
-#endif
 }

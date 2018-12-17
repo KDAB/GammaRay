@@ -60,10 +60,6 @@
 using namespace GammaRay;
 
 Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(QAbstractSocket::NetworkLayerProtocol)
-Q_DECLARE_METATYPE(QAbstractSocket::SocketType)
-#endif
 Q_DECLARE_METATYPE(QHostAddress)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
@@ -173,9 +169,7 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslCertificate, extensions);
     MO_ADD_PROPERTY_RO(QSslCertificate, isBlacklisted);
     MO_ADD_PROPERTY_RO(QSslCertificate, isNull);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QSslCertificate, isSelfSigned);
-#endif
     MO_ADD_PROPERTY_RO(QSslCertificate, issuerInfoAttributes);
     MO_ADD_PROPERTY_RO(QSslCertificate, publicKey);
     MO_ADD_PROPERTY_RO(QSslCertificate, serialNumber);
@@ -219,14 +213,10 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY(QSslConfiguration, privateKey, setPrivateKey);
     MO_ADD_PROPERTY(QSslConfiguration, protocol, setProtocol);
     MO_ADD_PROPERTY_RO(QSslConfiguration, sessionCipher);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QSslConfiguration, sessionProtocol);
-#endif
     MO_ADD_PROPERTY(QSslConfiguration, sessionTicket, setSessionTicket);
     MO_ADD_PROPERTY_RO(QSslConfiguration, sessionTicketLifeTimeHint);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY_ST(QSslConfiguration, systemCaCertificates);
-#endif
 
     MO_ADD_METAOBJECT0(QSslKey);
     MO_ADD_PROPERTY_RO(QSslKey, algorithm);
@@ -246,9 +236,7 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY(QSslSocket, peerVerifyName, setPeerVerifyName);
     MO_ADD_PROPERTY(QSslSocket, privateKey, setPrivateKey);
     MO_ADD_PROPERTY_RO(QSslSocket, protocol);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QSslSocket, sessionProtocol);
-#endif
     MO_ADD_PROPERTY_RO(QSslSocket, sessionCipher);
     MO_ADD_PROPERTY(QSslSocket, sslConfiguration, setSslConfiguration);
     MO_ADD_PROPERTY_RO(QSslSocket, sslErrors);
@@ -299,9 +287,7 @@ static const MetaEnum::Value<QSsl::KeyAlgorithm> ssl_key_algorithm_table[] = {
     E(Opaque),
     E(Rsa),
     E(Dsa),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     E(Ec)
-#endif
 };
 #undef E
 
@@ -322,11 +308,9 @@ static const MetaEnum::Value<QSsl::SslProtocol> ssl_protocol_table[] = {
     E(AnyProtocol),
     E(TlsV1SslV3),
     E(SecureProtocols),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     E(TlsV1_0OrLater),
     E(TlsV1_1OrLater),
     E(TlsV1_2OrLater),
-#endif
     E(UnknownProtocol)
 };
 #undef E

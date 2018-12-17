@@ -37,11 +37,6 @@
 #include <QStandardItemModel>
 #include <QtEndian>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(QItemSelection)
-Q_DECLARE_METATYPE(QModelIndex)
-#endif
-
 QT_BEGIN_NAMESPACE
 namespace QTest {
 template<> bool qCompare(const QPersistentModelIndex &lhs, const QModelIndex &rhs,

@@ -112,12 +112,7 @@ void NetworkSelectionModel::sendSelection()
                   |QItemSelectionModel::Rows
                   | QItemSelectionModel::Current;
             const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
             QAbstractItemModel *sourceModel = findSourceModel(model());
-#else
-            QAbstractItemModel *sourceModel
-                = findSourceModel(const_cast<QAbstractItemModel *>(model()));
-#endif
             QModelIndex index = model()->index(0, 0);
 
             // Query the model to get its default selected index

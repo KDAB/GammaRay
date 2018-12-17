@@ -84,7 +84,6 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(EnumNS::UnscopedFlags)
 #endif
 
 #ifndef QT4_MOC_WORKAROUND
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
 namespace MyNS {
 class MyObject : public QObject
 {
@@ -100,7 +99,6 @@ class MyOtherObject : public QObject
 };
 }
 #endif
-#endif
 
 class EnumPropertyTest : public QObject
 {
@@ -109,11 +107,9 @@ public:
     explicit EnumPropertyTest(QObject *parent = nullptr) :
         QObject(parent)
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         qRegisterMetaType<QFrame*>();
         qRegisterMetaType<QFrame::Shadow>();
         qRegisterMetaType<MyNS::MyObject*>();
-#endif
 
         EnumRepositoryServer::create(this);
         ER_REGISTER_ENUM(EnumHolder, MyEnum, my_enum_table);
@@ -132,7 +128,6 @@ private slots:
         QTest::newRow("null") << QVariant() << QByteArray() << nullObj << QString();
         QTest::newRow("int") << QVariant(42) << QByteArray() << &staticMetaObject << QString();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         // global enum
         QTest::newRow("global enum as int, QMO/name") << QVariant::fromValue<int>(Qt::LeftToRight) << QByteArray("Qt::LayoutDirection") << &QFrame::staticMetaObject << QStringLiteral("LeftToRight");
         QTest::newRow("global enum as int, name") << QVariant::fromValue<int>(Qt::LeftToRight) << QByteArray("Qt::LayoutDirection") << nullObj << QStringLiteral("LeftToRight");
@@ -181,7 +176,6 @@ private slots:
         QTest::newRow("plain flag, single, not in map") << QVariant::fromValue<EnumHolder::MyFlags>(EnumHolder::Value3) << QByteArray() << nullObj << QStringLiteral("flag 0x4");
         QTest::newRow("plain flag, double, mixed") << QVariant::fromValue<EnumHolder::MyFlags>(EnumHolder::Value2|EnumHolder::Value3) << QByteArray() << nullObj << QStringLiteral("Value2|flag 0x4");
         QTest::newRow("plain flag, empty") << QVariant::fromValue(EnumHolder::MyFlags()) << QByteArray() << nullObj << QStringLiteral("Value0");
-#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         // namespaced unscoped enum
@@ -219,14 +213,12 @@ private slots:
 #endif
 #endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         // enums from namespace QObjects
         QTest::newRow("ns object as int, QMO/name") << QVariant::fromValue<int>(MyNS::MyObject::MyValue2) << QByteArray("MyNS::MyObject::MyEnum") << &MyNS::MyObject::staticMetaObject << QStringLiteral("MyValue2");
         QTest::newRow("ns object as int, name") << QVariant::fromValue<int>(MyNS::MyObject::MyValue2) << QByteArray("MyNS::MyObject::MyEnum") << nullObj << QStringLiteral("MyValue2");
         // semi-qualified namespaced QObjects (ie. Q_PROPERTY missing the namespace but mentioning the class)
         QTest::newRow("ns object as int, semi-qualified enum") << QVariant::fromValue<int>(MyNS::MyObject::MyValue2) << QByteArray("MyObject::MyEnum") << &MyNS::MyObject::staticMetaObject << QStringLiteral("MyValue2");
         QTest::newRow("ns object as int, semi-qualified enum in different object") << QVariant::fromValue<int>(MyNS::MyObject::MyValue2) << QByteArray("MyObject::MyEnum") << &MyNS::MyOtherObject::staticMetaObject << QStringLiteral("MyValue2");
-#endif
     }
 
     void testEnumToString()
