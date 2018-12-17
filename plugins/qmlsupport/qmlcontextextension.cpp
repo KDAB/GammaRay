@@ -70,11 +70,9 @@ bool QmlContextExtension::setQObject(QObject *object)
 
     auto context = qobject_cast<QQmlContext *>(object);
     if (!context) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         auto data = QQmlData::get(object);
         if (data && data->context)
             context = data->context->asQQmlContext();
-#endif
     }
 
     m_contextModel->setContext(context);

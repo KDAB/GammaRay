@@ -62,7 +62,6 @@ private slots:
 
     void testMetaObjectVariantPointer()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         QDateTime dt;
 
         ObjectInstance oi(QVariant::fromValue(&dt));
@@ -78,12 +77,10 @@ private slots:
         QDateTime dt2;
         oi2 = ObjectInstance(QVariant::fromValue(&dt2));
         QVERIFY(!(oi == oi2));
-#endif
     }
 
     void testMetaObjectVariantValue()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         QDateTime dt;
 
         ObjectInstance oi(QVariant::fromValue(dt));
@@ -102,7 +99,6 @@ private slots:
         QVERIFY(dt == dt2);
         QVERIFY(oi.variant() == oi2.variant());
         QVERIFY(oi == oi2);
-#endif
     }
 
     void testUnknownVariantValue()

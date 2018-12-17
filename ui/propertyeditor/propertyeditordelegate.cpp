@@ -106,7 +106,6 @@ template<> struct matrix_trait<QTransform> {
     }
 };
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 template<> struct matrix_trait<QVector2D> {
     static const int rows = 2;
     static const int columns = 1;
@@ -124,9 +123,7 @@ template<> struct matrix_trait<QVector4D> {
     static const int columns = 1;
     static qreal value(const QVector4D &vec, int r, int) { return vec[r]; }
 };
-#endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
 template<> struct matrix_trait<QQuaternion> {
     static const int rows = 3;
     static const int columns = 1;
@@ -147,7 +144,6 @@ template<> struct matrix_trait<QQuaternion> {
         return 0.0;
     }
 };
-#endif
 }
 
 PropertyEditorDelegate::PropertyEditorDelegate(QObject *parent)
@@ -176,18 +172,14 @@ void PropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
         paint(painter, option, index, value.value<QMatrix>());
     } else if (value.type() == QVariant::Transform) {
         paint(painter, option, index, value.value<QTransform>());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     } else if (value.canConvert<QVector2D>()) {
         paint(painter, option, index, value.value<QVector2D>());
     } else if (value.canConvert<QVector3D>()) {
         paint(painter, option, index, value.value<QVector3D>());
     } else if (value.canConvert<QVector4D>()) {
         paint(painter, option, index, value.value<QVector4D>());
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     } else if (value.type() == QVariant::Quaternion) {
         paint(painter, option, index, value.value<QQuaternion>());
-#endif
     } else {
         QStyledItemDelegate::paint(painter, option, index);
     }
@@ -203,18 +195,14 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option,
         return sizeHint(option, index, value.value<QMatrix>());
     } else if (value.type() == QVariant::Transform) {
         return sizeHint(option, index, value.value<QTransform>());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     } else if (value.canConvert<QVector2D>()) {
         return sizeHint(option, index, value.value<QVector2D>());
     } else if (value.canConvert<QVector3D>()) {
         return sizeHint(option, index, value.value<QVector3D>());
     } else if (value.canConvert<QVector4D>()) {
         return sizeHint(option, index, value.value<QVector4D>());
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     } else if (value.type() == QVariant::Quaternion) {
         return sizeHint(option, index, value.value<QQuaternion>());
-#endif
     }
 
     // We don't want multiline texts for String values

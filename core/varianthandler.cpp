@@ -234,7 +234,6 @@ QString VariantHandler::displayString(const QVariant &value)
     case QVariant::StringList:
     {
         const auto l = value.toStringList();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
         if (l.isEmpty()) {
             return QStringLiteral("<empty>");
         }
@@ -242,9 +241,6 @@ QString VariantHandler::displayString(const QVariant &value)
             return l.at(0);
         }
         return QStringLiteral("<%1 entries>").arg(l.size());
-#else
-        return l.join(", ");
-#endif
     }
 
     case QVariant::Transform:
@@ -286,7 +282,6 @@ QString VariantHandler::displayString(const QVariant &value)
     if (value.userType() == qMetaTypeId<const QMatrix4x4 *>())
         return displayMatrix4x4(value.value<const QMatrix4x4 *>());
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     if (value.userType() == qMetaTypeId<QVector2D>()) {
         return displayVector<2>(value.value<QVector2D>());
     }
@@ -299,7 +294,6 @@ QString VariantHandler::displayString(const QVariant &value)
     if (value.userType() == qMetaTypeId<QTimeZone>()) {
         return value.value<QTimeZone>().id();
     }
-#endif
 
     if (value.userType() == qMetaTypeId<QSet<QByteArray> >()) {
         const QSet<QByteArray> set = value.value<QSet<QByteArray> >();
@@ -311,12 +305,10 @@ QString VariantHandler::displayString(const QVariant &value)
         return l.join(QStringLiteral(", "));
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     if (value.userType() == qMetaTypeId<QEasingCurve>()) {
         const auto ec = value.toEasingCurve();
         return EnumUtil::enumToString(QVariant::fromValue<QEasingCurve::Type>(ec.type()));
     }
-#endif
 
     // enums
     const QString enumStr = EnumUtil::enumToString(value);
@@ -330,7 +322,6 @@ QString VariantHandler::displayString(const QVariant &value)
         return (*it.value())(value);
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     if (value.canConvert<QVariantList>()) {
         QSequentialIterable it = value.value<QSequentialIterable>();
         if (it.size() == 0) {
@@ -347,7 +338,6 @@ QString VariantHandler::displayString(const QVariant &value)
             return QStringLiteral("<%1 entries>").arg(it.size());
         }
     }
-#endif
 
     // generic converters
     QVector<VariantHandler::GenericStringConverter> genStrConverters

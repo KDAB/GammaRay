@@ -78,7 +78,6 @@ void PluginManagerBase::scan(const QString &serviceType)
     m_errors.clear();
     QStringList loadedPluginNames;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     foreach (const auto &staticPlugin, QPluginLoader::staticPlugins()) {
         PluginInfo pluginInfo(staticPlugin);
 
@@ -90,7 +89,6 @@ void PluginManagerBase::scan(const QString &serviceType)
         if (createProxyFactory(pluginInfo, m_parent))
             loadedPluginNames.push_back(pluginInfo.id());
     }
-#endif
 
     foreach (const QString &pluginPath, pluginPaths()) {
         const QDir dir(pluginPath);

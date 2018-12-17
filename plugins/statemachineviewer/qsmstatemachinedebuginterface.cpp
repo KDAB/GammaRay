@@ -40,9 +40,7 @@
 #include <QStateMachine>
 #include <QStringList>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
 Q_DECLARE_METATYPE(Qt::KeyboardModifiers)
-#endif
 
 namespace GammaRay {
 

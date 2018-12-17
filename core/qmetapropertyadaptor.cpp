@@ -114,9 +114,7 @@ PropertyData QMetaPropertyAdaptor::propertyMetaData(int propertyIndex) const
     if (prop.isWritable())
         f |= PropertyModel::Writable;
     data.setPropertyFlags(f);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
     data.setRevision(prop.revision());
-#endif
     if (prop.hasNotifySignal())
         data.setNotifySignal(Util::prettyMethodSignature(prop.notifySignal()));
 
@@ -151,13 +149,11 @@ PropertyData QMetaPropertyAdaptor::propertyData(int row) const
             if (object().qtObject())
                 data.setValue(prop.read(object().qtObject()));
             break;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         case ObjectInstance::QtGadgetPointer:
         case ObjectInstance::QtGadgetValue:
             if (object().object())
                 data.setValue(prop.readOnGadget(object().object()));
             break;
-#endif
         default:
             break;
         }
@@ -182,7 +178,6 @@ void QMetaPropertyAdaptor::writeProperty(int row, const QVariant &value)
                 emit propertyChanged(row, row);
         }
         break;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     case ObjectInstance::QtGadgetPointer:
     case ObjectInstance::QtGadgetValue:
         if (object().object()) {
@@ -190,7 +185,6 @@ void QMetaPropertyAdaptor::writeProperty(int row, const QVariant &value)
             emit propertyChanged(row, row);
         }
         break;
-#endif
     default:
         break;
     }
@@ -211,7 +205,6 @@ void QMetaPropertyAdaptor::resetProperty(int row)
                 emit propertyChanged(row, row);
         }
         break;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     case ObjectInstance::QtGadgetValue:
     case ObjectInstance::QtGadgetPointer:
         if (object().object()) {
@@ -219,7 +212,6 @@ void QMetaPropertyAdaptor::resetProperty(int row)
             emit propertyChanged(row, row);
         }
         break;
-#endif
     default:
         break;
     }

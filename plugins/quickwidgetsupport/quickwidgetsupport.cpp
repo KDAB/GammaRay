@@ -56,9 +56,7 @@ QuickWidgetSupport::QuickWidgetSupport(Probe *probe, QObject *parent)
     MO_ADD_PROPERTY_RO(QQuickWidget, engine);
     MO_ADD_PROPERTY_RO(QQuickWidget, format);
     MO_ADD_PROPERTY_RO(QQuickWidget, initialSize);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     MO_ADD_PROPERTY_RO(QQuickWidget, quickWindow);
-#endif
     MO_ADD_PROPERTY_RO(QQuickWidget, rootContext);
     MO_ADD_PROPERTY_RO(QQuickWidget, rootObject);
 }
@@ -73,8 +71,6 @@ void GammaRay::QuickWidgetSupport::objectAdded(QObject *obj)
     auto qqw = qobject_cast<QQuickWidget *>(obj);
     if (!qqw)
         return;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     if (m_probe->needsObjectDiscovery())
         m_probe->discoverObject(qqw->quickWindow());
-#endif
 }

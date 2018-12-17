@@ -137,9 +137,6 @@ Q_DECLARE_METATYPE(QSGRenderNode *)
 Q_DECLARE_METATYPE(QSGRenderNode::RenderingFlags)
 Q_DECLARE_METATYPE(QSGRenderNode::StateFlags)
 #endif
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Qt::MouseButtons)
-#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 Q_DECLARE_METATYPE(QSGRendererInterface*)
 Q_DECLARE_METATYPE(QSGRendererInterface::GraphicsApi)
@@ -285,10 +282,8 @@ RenderModeRequest::~RenderModeRequest()
 
 void RenderModeRequest::applyOrDelay(QQuickWindow *toWindow, QuickInspectorInterface::RenderMode customRenderMode)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     if (toWindow) {
         QMutexLocker lock(&mutex);
-# if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         // Qt does some performance optimizations that break custom render modes.
         // Thus the optimizations are only applied if there is no custom render mode set.
         // So we need to make the scenegraph recheck whether a custom render mode is set.
@@ -305,20 +300,7 @@ void RenderModeRequest::applyOrDelay(QQuickWindow *toWindow, QuickInspectorInter
             // trigger window update so afterRendering is emitted
             QMetaObject::invokeMethod(window, "update", Qt::QueuedConnection);
         }
-# else
-        if (window != toWindow || mode != customRenderMode) {
-            window = toWindow;
-            mode = customRenderMode;
-            QMetaObject::invokeMethod(this, "apply", Qt::QueuedConnection);
-        } else {
-            QMetaObject::invokeMethod(this, "preFinished", Qt::QueuedConnection);
-        }
-# endif
     }
-#else
-    Q_UNUSED(toWindow);
-    Q_UNUSED(customRenderMode);
-#endif
 }
 
 void RenderModeRequest::apply()
@@ -334,14 +316,12 @@ void RenderModeRequest::apply()
 #endif
 
     if (window) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         emit aboutToCleanSceneGraph();
         const QByteArray mode = renderModeToString(RenderModeRequest::mode);
         QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(window);
         QMetaObject::invokeMethod(window, "cleanupSceneGraph", Qt::DirectConnection);
         winPriv->customRenderMode = mode;
         emit sceneGraphCleanedUp();
-#endif
     }
 
     QMetaObject::invokeMethod(this, "preFinished", Qt::QueuedConnection);
@@ -647,7 +627,7 @@ void QuickInspector::checkFeatures()
         f = AllCustomRenderModes;
     else if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
         f = AnalyzePainting;
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+#else
     f = AllCustomRenderModes;
 #endif
 
@@ -942,9 +922,7 @@ void QuickInspector::registerMetaTypes()
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQuickWindow, QWindow);
     MO_ADD_PROPERTY(QQuickWindow, clearBeforeRendering, setClearBeforeRendering);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     MO_ADD_PROPERTY_RO(QQuickWindow, effectiveDevicePixelRatio);
-#endif
     MO_ADD_PROPERTY(QQuickWindow, isPersistentOpenGLContext, setPersistentOpenGLContext);
     MO_ADD_PROPERTY(QQuickWindow, isPersistentSceneGraph, setPersistentSceneGraph);
     MO_ADD_PROPERTY_RO(QQuickWindow, mouseGrabberItem);

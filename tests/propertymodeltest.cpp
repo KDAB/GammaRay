@@ -122,7 +122,6 @@ private slots:
 
     void testGadgetRO()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         PropertyTestObject obj;
         AggregatedPropertyModel model;
         model.setObject(ObjectInstance(&obj));
@@ -132,12 +131,10 @@ private slots:
         QCOMPARE(model.rowCount(idx), 1);
         idx = idx.child(0, 1);
         QVERIFY((idx.flags() & Qt::ItemIsEditable) == 0);
-#endif
     }
 
     void testGadgetRW()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         PropertyTestObject obj;
         AggregatedPropertyModel model;
         model.setObject(ObjectInstance(&obj));
@@ -158,7 +155,6 @@ private slots:
         QVERIFY(idx.flags() & Qt::ItemIsEditable);
         QVERIFY(model.setData(idx, 1559));
         QCOMPARE(obj.gadgetPointer()->prop1(), 1559);
-#endif
     }
 };
 

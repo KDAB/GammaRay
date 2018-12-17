@@ -43,12 +43,8 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 #include <QMouseEvent>
-#include <QStyleOptionViewItemV4>
+#include <QStyleOptionViewItem>
 
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
-Q_DECLARE_METATYPE(Qt::CheckState)
-#endif
 
 using namespace GammaRay;
 
@@ -64,7 +60,7 @@ protected:
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
                const QModelIndex &index) const override
     {
-        QStyleOptionViewItemV4 opt = option; // we need V4 for Qt4, on Qt5 it's just a typedef for QStyleOptionViewItem
+        QStyleOptionViewItem opt = option;
         initStyleOption(&opt, index);
         QString title = index.data(Qt::DisplayRole).toString();
         QString description = index.data(Qt::ToolTipRole).toString();
@@ -87,7 +83,7 @@ protected:
     QSize sizeHint(const QStyleOptionViewItem &option,
                    const QModelIndex &index) const override
     {
-        QStyleOptionViewItemV4 opt = option; // we need V4 for Qt4, on Qt5 it's just a typedef for QStyleOptionViewItem
+        QStyleOptionViewItem opt = option;
         initStyleOption(&opt, index);
         opt.text = index.data(Qt::DisplayRole).toString() + QChar(QChar::LineSeparator) + index.data(Qt::ToolTipRole).toString();
         QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();

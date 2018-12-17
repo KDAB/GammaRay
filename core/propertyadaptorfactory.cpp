@@ -64,7 +64,6 @@ PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObjec
         || oi.type() == ObjectInstance::Value || oi.type() == ObjectInstance::QtGadgetPointer || oi.type() == ObjectInstance::QtGadgetValue)
         adaptors.push_back(new MetaPropertyAdaptor(parent));
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     if (oi.type() == ObjectInstance::QtVariant && oi.typeName() != "QJSValue") {
         const auto v = oi.variant();
         if (v.canConvert<QVariantList>())
@@ -72,7 +71,6 @@ PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObjec
         else if (v.canConvert<QVariantHash>())
             adaptors.push_back(new AssociativePropertyAdaptor(parent));
     }
-#endif
 
     foreach (auto factory, *s_propertyAdaptorFactories()) {
         auto a = factory->create(oi, parent);

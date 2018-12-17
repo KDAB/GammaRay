@@ -61,23 +61,19 @@ PluginInfo::PluginInfo(const QString& path)
         qDebug("%s: %s not a library, nor a .desktop file.", Q_FUNC_INFO, qPrintable(path));
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 PluginInfo::PluginInfo(const QStaticPlugin &staticPlugin)
 {
     init();
     m_staticPlugin = staticPlugin;
     initFromJSON(staticPlugin.metaData());
 }
-#endif
 
 void PluginInfo::init()
 {
     m_remoteSupport = true;
     m_hidden = false;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     m_staticPlugin.instance = nullptr;
     m_staticPlugin.rawMetaData = nullptr;
-#endif
 }
 
 QString PluginInfo::path() const

@@ -63,7 +63,6 @@ bool QmlTypeExtension::setQObject(QObject *object)
         return true;
 
     // QML-defined type
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     auto data = QQmlData::get(object);
 #if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
     if (!data || !data->compiledData)
@@ -81,9 +80,6 @@ bool QmlTypeExtension::setQObject(QObject *object)
 
     m_typePropertyModel->setObject(QmlType::toObjectInstance(qmlType));
     return true;
-#else
-    return false;
-#endif
 }
 
 bool QmlTypeExtension::setMetaObject(const QMetaObject *metaObject)

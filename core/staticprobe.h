@@ -31,10 +31,6 @@
 
 #include <qplugin.h>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 4, 0)
-#error "Static injection is only available with Qt >= 5.4."
-#endif
-
 /* Determine which plugins to include.
  * This isn't entirely correct, as it ignores dlopened DSOs for example.
  * However the main motivation for static injection is iOS where we have

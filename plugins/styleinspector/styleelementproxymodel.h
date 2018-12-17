@@ -29,12 +29,7 @@
 #ifndef GAMMARAY_STYLEINSPECTOR_STYLEELEMENTPROXYMODEL_H
 #define GAMMARAY_STYLEINSPECTOR_STYLEELEMENTPROXYMODEL_H
 
-#if QT_VERSION < QT_VERSION_CHECK(4, 8, 0)
-#include <QSortFilterProxyModel>
-typedef QSortFilterProxyModel QIdentityProxyModel;
-#else
 #include <QIdentityProxyModel>
-#endif
 
 #include <QSize>
 

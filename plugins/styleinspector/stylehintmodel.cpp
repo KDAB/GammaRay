@@ -82,17 +82,9 @@ struct StyleHintTypeInfo {
 // ### must be the same order as the above enum
 static const struct StyleHintTypeInfo style_hint_type_table[] = {
     { "Qt::Alignment", nullptr },
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     { "QEvent::Type", &QEvent::staticMetaObject },
-#else
-    { nullptr, nullptr },
-#endif
     { "Qt::FocusPolicy", nullptr },
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     { "QPalette::ColorRole", &QPalette::staticMetaObject },
-#else
-    { nullptr, nullptr },
-#endif
     { "Qt::TextElideMode", nullptr },
     { "Qt::MouseButtons", nullptr },
     { "Qt::LayoutDirection", nullptr },
@@ -102,11 +94,7 @@ static const struct StyleHintTypeInfo style_hint_type_table[] = {
     { "QFormLayout::RowWrapPolicy", &QFormLayout::staticMetaObject },
     { "QFormLayout::FieldGrowthPolicy", &QFormLayout::staticMetaObject },
     { "Qt::ToolButtonStyle", nullptr },
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     { "QStyle::RequestSoftwareInputPanel", &QStyle::staticMetaObject },
-#else
-    { nullptr, nullptr },
-#endif
     { "QAbstractItemView::ScrollMode", &QAbstractItemView::staticMetaObject }
 };
 

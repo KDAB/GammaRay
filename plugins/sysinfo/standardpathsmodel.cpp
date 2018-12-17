@@ -56,13 +56,9 @@ static const standard_path_t standard_paths[] = {
     P(ConfigLocation),
     P(DownloadLocation),
     P(GenericCacheLocation),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     P(GenericConfigLocation),
     P(AppDataLocation),
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     P(AppConfigLocation),
-#endif
 };
 
 #undef P

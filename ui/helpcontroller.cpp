@@ -38,10 +38,8 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QString>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 #include <QLibraryInfo>
 #include <QStandardPaths>
-#endif
 
 using namespace GammaRay;
 
@@ -107,7 +105,6 @@ static QString assistantExecutableName()
 
 bool HelpController::isAvailable()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     auto d = s_helpController();
     if (!d->assistantPath.isEmpty() && !d->qhcPath.isEmpty())
         return true;
@@ -131,7 +128,6 @@ bool HelpController::isAvailable()
         qDebug() << "gammaray.qhc not found in" << Paths::documentationPath()
                  << " - help not available";
     }
-#endif
     return false;
 }
 

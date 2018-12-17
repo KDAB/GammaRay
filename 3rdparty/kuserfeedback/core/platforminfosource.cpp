@@ -78,9 +78,7 @@ QVariant PlatformInfoSource::data()
         case QSysInfo::WV_VISTA: m.insert(QStringLiteral("version"), QStringLiteral("6.0")); break;
         case QSysInfo::WV_WINDOWS7: m.insert(QStringLiteral("version"), QStringLiteral("6.1")); break;
         case QSysInfo::WV_WINDOWS8: m.insert(QStringLiteral("version"), QStringLiteral("6.2")); break;
-#if QT_VERSION > QT_VERSION_CHECK(4, 8, 5)
         case QSysInfo::WV_WINDOWS8_1: m.insert(QStringLiteral("version"), QStringLiteral("6.3")); break;
-#endif
         default: m.insert(QStringLiteral("version"), QStringLiteral("unknown"));
     }
 #elif defined(Q_OS_MAC)

@@ -86,7 +86,6 @@ void QmlContextPropertyAdaptor::writeProperty(int index, const QVariant &value)
 
 void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     auto context = qobject_cast<QQmlContext *>(oi.qtObject());
     Q_ASSERT(context);
 
@@ -109,9 +108,6 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 #endif
         ++e;
     }
-#else
-    Q_UNUSED(oi);
-#endif
 }
 
 QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::s_instance = nullptr;
@@ -119,16 +115,11 @@ QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::s_instance =
 PropertyAdaptor *QmlContextPropertyAdaptorFactory::create(const ObjectInstance &oi,
                                                           QObject *parent) const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     if (oi.type() != ObjectInstance::QtObject || !oi.qtObject())
         return nullptr;
 
     if (qobject_cast<QQmlContext *>(oi.qtObject()))
         return new QmlContextPropertyAdaptor(parent);
-#else
-    Q_UNUSED(oi);
-    Q_UNUSED(parent);
-#endif
 
     return nullptr;
 }

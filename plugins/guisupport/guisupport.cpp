@@ -298,11 +298,9 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QOpenGLShaderProgram, QObject);
     MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, isLinked);
     MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, log);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 // FIXME calling this asserts in debug builds of some newer Qt versions
 // MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, maxGeometryOutputVertices);
     MO_ADD_PROPERTY(QOpenGLShaderProgram, patchVertexCount, setPatchVertexCount);
-#endif
     MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, programId);
 
     MO_ADD_METAOBJECT1(QOpenGLContext, QObject);
@@ -491,12 +489,10 @@ static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
 #define ST(t) if (type & QOpenGLShader::t) types.push_back(QStringLiteral(#t));
     ST(Vertex)
     ST(Fragment)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
     ST(Geometry)
     ST(TessellationControl)
     ST(TessellationEvaluation)
     ST(Compute)
-#endif
 #undef ST
 
     if (types.isEmpty())
@@ -534,9 +530,7 @@ static const MetaEnum::Value<QSurfaceFormat::FormatOption> surface_format_option
     E(StereoBuffers),
     E(DebugContext),
     E(DeprecatedFunctions),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     E(ResetNotification)
-#endif
 };
 #undef E
 

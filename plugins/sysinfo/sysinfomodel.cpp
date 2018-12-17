@@ -33,7 +33,6 @@
 
 using namespace GammaRay;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
 struct sysinfo_t {
     QString(*func)();
     const char* name;
@@ -58,7 +57,6 @@ static const sysinfo_t sysInfoTable[] = {
 };
 #undef S
 static const auto sysInfoTableSize = sizeof(sysInfoTable) / sizeof(sysinfo_t);
-#endif
 
 SysInfoModel::SysInfoModel(QObject* parent)
     : QAbstractTableModel(parent)
@@ -75,11 +73,7 @@ int SysInfoModel::rowCount(const QModelIndex& parent) const
 {
     if (parent.isValid())
         return 0;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     return sysInfoTableSize;
-#else
-    return 0;
-#endif
 }
 
 QVariant SysInfoModel::data(const QModelIndex& index, int role) const
@@ -87,14 +81,12 @@ QVariant SysInfoModel::data(const QModelIndex& index, int role) const
     if (!index.isValid())
         return QVariant();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
             case 0: return sysInfoTable[index.row()].name;
             case 1: return sysInfoTable[index.row()].func();
         }
     }
-#endif
 
     return QVariant();
 }

@@ -57,17 +57,13 @@ void StreamOperators::registerOperators()
 
     qRegisterMetaType<ObjectId>();
     qRegisterMetaTypeStreamOperators<ObjectId>();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     // This is needed so QVariant based comparison works (ie: QAIM::match)
     QMetaType::registerComparators<ObjectId>();
-#endif
 
     qRegisterMetaType<ObjectIds>();
     qRegisterMetaTypeStreamOperators<ObjectIds>();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     // This is needed so QVariant based comparison works (ie: QAIM::match)
     QMetaType::registerComparators<ObjectIds>();
-#endif
 
     qRegisterMetaTypeStreamOperators<GammaRay::VariantWrapper>();
     qRegisterMetaTypeStreamOperators<GammaRay::SourceLocation>();

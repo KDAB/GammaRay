@@ -30,9 +30,7 @@
 #include "objectinstance.h"
 #include "propertydata.h"
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 #include <QSequentialIterable>
-#endif
 
 using namespace GammaRay;
 
@@ -51,7 +49,6 @@ void SequentialPropertyAdaptor::doSetObject(const ObjectInstance &oi)
         m_value = oi.variant();
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 int SequentialPropertyAdaptor::count() const
 {
     if (!m_value.canConvert<QVariantList>())
@@ -75,5 +72,3 @@ PropertyData SequentialPropertyAdaptor::propertyData(int index) const
 
     return data;
 }
-
-#endif

@@ -54,10 +54,8 @@ void ThemedImageLabel::setThemeFileName(const QString &themeFileName)
 
 bool ThemedImageLabel::event(QEvent *e)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     if (e->type() == QEvent::ScreenChangeInternal)
         updatePixmap();
-#endif
     return QLabel::event(e);
 }
 

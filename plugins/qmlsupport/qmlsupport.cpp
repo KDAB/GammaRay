@@ -75,7 +75,7 @@ Q_DECLARE_METATYPE(QQmlError)
 
 using namespace GammaRay;
 
-#if defined(QT_DEPRECATED) && QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+#if defined(QT_DEPRECATED)
 static QString metaMethodToString(const QObject *object, const QMetaMethod &method)
 {
     return QStringLiteral("%1 bound on %2").arg(method.methodSignature(), Util::displayString(
@@ -86,7 +86,7 @@ static QString metaMethodToString(const QObject *object, const QMetaMethod &meth
 
 static QString callableQjsValueToString(const QJSValue &v)
 {
-#if defined(QT_DEPRECATED) && QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
+#if defined(QT_DEPRECATED)
     // note: QJSValue::engine() is deprecated
     // note: QJSValuePrivate::convertedToValue got introduced in Qt 5.5.0
 
@@ -221,7 +221,6 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
         return QmlType::callable(qmlType)->qmlTypeName();
 
     // QML defined type
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     auto data = QQmlData::get(obj);
 #if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
     if (!data || !data->compiledData)
@@ -239,7 +238,6 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
         if (QString::fromLatin1(obj->metaObject()->className()).startsWith(QmlType::callable(qmlType)->qmlTypeName() + QStringLiteral("_QMLTYPE_")))
             return QmlType::callable(qmlType)->qmlTypeName();
     }
-#endif
     return QString();
 }
 
@@ -280,11 +278,7 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
     if (!context)
         return loc;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     loc.setUrl(context->url());
-#else
-    loc.setUrl(context->url);
-#endif
 
     loc.setOneBasedLine(static_cast<int>(objectData->lineNumber));
     loc.setOneBasedColumn(static_cast<int>(objectData->columnNumber));
@@ -301,7 +295,6 @@ SourceLocation QmlObjectDataProvider::declarationLocation(QObject *obj) const
         return SourceLocation(QmlType::callable(qmlType)->sourceUrl());
 
     // QML-defined type
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
     auto data = QQmlData::get(obj);
 #if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
     if (!data || !data->compiledData)
@@ -316,7 +309,6 @@ SourceLocation QmlObjectDataProvider::declarationLocation(QObject *obj) const
 #endif
     if (QmlType::isValid(qmlType))
         return SourceLocation(QmlType::callable(qmlType)->sourceUrl());
-#endif
     return SourceLocation();
 }
 

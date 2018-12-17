@@ -42,13 +42,8 @@
 #include <QThread>
 #include <QTimer>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
 #include <QSaveFile>
-#endif
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 #include <QTimeZone>
-#endif
 
 using namespace GammaRay;
 
@@ -108,9 +103,7 @@ void MetaObjectRepository::initQObjectTypes()
 
     MO_ADD_METAOBJECT1(QThread, QObject)
     MO_ADD_PROPERTY_RO(QThread, isFinished);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     MO_ADD_PROPERTY_RO(QThread, isInterruptionRequested);
-#endif
     MO_ADD_PROPERTY_RO(QThread, isRunning);
     MO_ADD_PROPERTY(QThread, priority, setPriority);
     MO_ADD_PROPERTY(QThread, stackSize, setStackSize);

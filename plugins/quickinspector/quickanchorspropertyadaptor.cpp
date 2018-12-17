@@ -117,9 +117,7 @@ PropertyData QuickAnchorsPropertyAdaptor::propertyData(int index) const
     if (prop.isWritable())
         f |= PropertyModel::Writable;
     data.setPropertyFlags(f);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
     data.setRevision(prop.revision());
-#endif
     if (prop.hasNotifySignal())
         data.setNotifySignal(Util::prettyMethodSignature(prop.notifySignal()));
 

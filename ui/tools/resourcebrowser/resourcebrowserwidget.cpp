@@ -91,9 +91,7 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
 
     ui->resourceLabel->setText(tr("Select a Resource to Preview"));
     ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     ui->textBrowser->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-#endif
 }
 
 ResourceBrowserWidget::~ResourceBrowserWidget()

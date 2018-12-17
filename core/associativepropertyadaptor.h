@@ -42,10 +42,8 @@ public:
     explicit AssociativePropertyAdaptor(QObject *parent = nullptr);
     ~AssociativePropertyAdaptor();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
     int count() const override;
     PropertyData propertyData(int index) const override;
-#endif
 
 protected:
     void doSetObject(const ObjectInstance &oi) override;

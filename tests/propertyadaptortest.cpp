@@ -44,10 +44,6 @@
 
 Q_DECLARE_METATYPE(QVector<int>)
 Q_DECLARE_METATYPE(QPen *)
-#if QT_VERSION < QT_VERSION_CHECK(5, 2, 0)
-typedef QHash<QString, int> StringIntHash;
-Q_DECLARE_METATYPE(StringIntHash)
-#endif
 
 using namespace GammaRay;
 
@@ -117,7 +113,6 @@ private slots:
         QSignalSpy spy(adaptor, SIGNAL(propertyChanged(int,int)));
         QVERIFY(spy.isValid());
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         QCOMPARE(adaptor->propertyData(0).value(), QVariant(42));
         adaptor->writeProperty(0, 23);
         QCOMPARE(adaptor->propertyData(0).value(), QVariant(23));
@@ -128,7 +123,6 @@ private slots:
         adaptor->resetProperty(0);
         QCOMPARE(adaptor->propertyData(0).value(), QVariant(5));
         QCOMPARE(spy.size(), 2);
-#endif
     }
 
     void testROMetaObject()
@@ -170,7 +164,6 @@ private slots:
 
     void testSequentialContainer()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
         auto v = QVector<int>() << 2 << 3 << 5 << 12;
         auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(QVariant::fromValue(v)), this);
 
@@ -180,12 +173,10 @@ private slots:
         testProperty(adaptor, "0", "int", "QVector<int>", PropertyData::Readable);
         testProperty(adaptor, "3", "int", "QVector<int>", PropertyData::Readable);
         QVERIFY(!adaptor->canAddProperty());
-#endif
     }
 
     void testAssociativeContainer()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
         QHash<QString, int> h;
         h["A"] = 2;
         h["B"] = 3;
@@ -199,7 +190,6 @@ private slots:
         testProperty(adaptor, "A", "int", "QHash<QString,int>", PropertyData::Readable);
         testProperty(adaptor, "C", "int", "QHash<QString,int>", PropertyData::Readable);
         QVERIFY(!adaptor->canAddProperty());
-#endif
     }
 
     void testQtObject()
@@ -225,10 +215,8 @@ private slots:
 
         auto propIdx = indexOfProperty(adaptor, "intProp");
         QVERIFY(propIdx >= 0);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
         QCOMPARE(adaptor->propertyData(propIdx).revision(), 0);
         QCOMPARE(adaptor->propertyData(propIdx).notifySignal(), QLatin1String("void intPropChanged()"));
-#endif
         QCOMPARE(adaptor->propertyData(propIdx).propertyFlags(), PropertyModel::Writable | PropertyModel::Designable | PropertyModel::Stored | PropertyModel::Scriptable);
         QCOMPARE(adaptor->propertyData(propIdx).value(), QVariant(0));
         adaptor->writeProperty(propIdx, 2);
@@ -245,9 +233,7 @@ private slots:
 
         propIdx = indexOfProperty(adaptor, "readOnlyProp");
         QVERIFY(propIdx >= 0);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 1, 0)
         QCOMPARE(adaptor->propertyData(propIdx).revision(), 0);
-#endif
         QCOMPARE(adaptor->propertyData(propIdx).notifySignal(), QString());
         QCOMPARE(adaptor->propertyData(propIdx).propertyFlags(), PropertyModel::Resetable | PropertyModel::Designable | PropertyModel::Stored | PropertyModel::Scriptable);
         adaptor->resetProperty(propIdx);
@@ -307,7 +293,6 @@ private slots:
         auto valuePen = QVariant::fromValue(pen);
         auto pointerPen = QVariant::fromValue(&pen);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
         auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(valuePen), this);
         QVERIFY(adaptor);
         QVERIFY(adaptor->count() >= 2);
@@ -317,7 +302,6 @@ private slots:
         QVERIFY(adaptor);
         QVERIFY(adaptor->count() >= 2);
         verifyPropertyData(adaptor);
-#endif
     }
 };
 
