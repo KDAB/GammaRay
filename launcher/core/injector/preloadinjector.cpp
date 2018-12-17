@@ -27,7 +27,6 @@
 */
 
 #include "preloadinjector.h"
-#include "preloadcheck.h"
 
 #include <libraryutil.h>
 #include <probeabidetector.h>
@@ -81,11 +80,6 @@ bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &p
     ldPreload.push_back(probeDll);
     env.insert(QStringLiteral("LD_PRELOAD"), ldPreload.join(QLatin1String(":")));
     env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));
-
-    ProbeABIDetector abiDetector;
-    const auto qtCorePath = abiDetector.qtCoreForExecutable(exePath);
-    PreloadCheck check;
-    check.test(qtCorePath, QStringLiteral("qt_startup_hook")); // FIXME: Why do we test, if we don't use the result?
 
 #endif
 

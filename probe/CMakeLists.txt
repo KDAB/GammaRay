@@ -4,27 +4,7 @@ set(gammaray_probe_srcs
   hooks.cpp
 )
 
-if(UNIX AND Qt5Core_VERSION VERSION_LESS 5.4.0)
-  list(APPEND gammaray_probe_srcs preload.cpp)
-endif()
-
-if(WIN32 OR APPLE)
-  list(APPEND gammaray_probe_srcs
-    abstractfunctionoverwriter.cpp
-    functionoverwriterfactory.cpp
-    unixfunctionoverwriter.cpp
-  )
-endif()
-
-if(WIN32)
-  list(APPEND gammaray_probe_srcs
-    winfunctionoverwriter.cpp
-  )
-endif()
-
-if(APPLE OR NOT Qt5Core_VERSION VERSION_LESS 5.4.0)
-  list(APPEND gammaray_probe_srcs entry_unix.cpp)
-endif()
+list(APPEND gammaray_probe_srcs entry_unix.cpp)
 
 # create intermediate gammaray_probe object files which unit tests can use
 add_library(gammaray_probe_obj OBJECT ${gammaray_probe_srcs})

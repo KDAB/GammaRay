@@ -30,16 +30,13 @@
 #include <config-gammaray.h>
 
 #include "hooks.h"
-#include "functionoverwriterfactory.h"
 #include "probecreator.h"
 
 #include <core/probe.h>
 
 #include <QCoreApplication>
 
-#ifdef GAMMARAY_USE_QHOOKS
 #include <private/qhooks_p.h>
-#endif
 
 #include <stdio.h> //cannot use cstdio on QNX6.6
 #include <cassert>
@@ -108,7 +105,6 @@ extern "C" Q_DECL_EXPORT void gammaray_removeObject(QObject *obj)
         gammaray_next_removeObject(obj);
 }
 
-#ifdef GAMMARAY_USE_QHOOKS
 static void installQHooks()
 {
     Q_ASSERT(qtHookData[QHooks::HookDataVersion] >= 1);
@@ -126,32 +122,9 @@ static void installQHooks()
     qtHookData[QHooks::Startup] = reinterpret_cast<quintptr>(&gammaray_startup_hook);
 }
 
-#endif
-
-#ifdef GAMMARAY_USE_FUNCTION_OVERWRITE
-static bool functionsOverwritten = false;
-
-static void overwriteQtFunctions()
-{
-    functionsOverwritten = true;
-    AbstractFunctionOverwriter *overwriter = FunctionOverwriterFactory::createFunctionOverwriter();
-
-    overwriter->overwriteFunction(QLatin1String("qt_startup_hook"), (void *)gammaray_startup_hook);
-    overwriter->overwriteFunction(QLatin1String("qt_addObject"), (void *)gammaray_addObject);
-    overwriter->overwriteFunction(QLatin1String("qt_removeObject"), (void *)gammaray_removeObject);
-}
-
-#endif
-
 bool Hooks::hooksInstalled()
 {
-#ifdef GAMMARAY_USE_QHOOKS
     return qtHookData[QHooks::AddQObject] == reinterpret_cast<quintptr>(&gammaray_addObject);
-#elif defined(GAMMARAY_USE_FUNCTION_OVERWRITE)
-    return functionsOverwritten;
-#else
-    return false;
-#endif
 }
 
 void Hooks::installHooks()
@@ -159,11 +132,7 @@ void Hooks::installHooks()
     if (hooksInstalled())
         return;
 
-#ifdef GAMMARAY_USE_QHOOKS
     installQHooks();
-#elif defined(GAMMARAY_USE_FUNCTION_OVERWRITE)
-    overwriteQtFunctions();
-#endif
 }
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject()

@@ -35,8 +35,6 @@ QT_BEGIN_NAMESPACE
 class QObject;
 QT_END_NAMESPACE
 
-#define GAMMARAY_USE_QHOOKS
-
 extern "C" {
 extern Q_DECL_EXPORT void gammaray_startup_hook();
 extern Q_DECL_EXPORT void gammaray_addObject(QObject *obj);

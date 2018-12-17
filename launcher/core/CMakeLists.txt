@@ -30,7 +30,6 @@ else()
     injector/debuggerinjector.cpp
     injector/gdbinjector.cpp
     injector/lldbinjector.cpp
-    injector/preloadcheck.cpp
     injector/preloadinjector.cpp
   )
   if(APPLE)
