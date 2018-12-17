@@ -56,14 +56,7 @@ set_target_properties(gammaray_common PROPERTIES
 
 gammaray_target_relocatable_interfaces(gammaray_common_ipaths)
 target_include_directories(gammaray_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_common_ipaths}>)
-if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network Qt5::Gui)
-else()
-  target_link_libraries(gammaray_common
-    LINK_PUBLIC ${Qt5Core_LIBRARIES}
-    LINK_PRIVATE ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${Qt5Network_LIBRARIES}
-  )
-endif()
+target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network Qt5::Gui)
 target_link_libraries(gammaray_common LINK_PRIVATE gammaray_kitemmodels ${CMAKE_DL_LIBS})
 gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
 
@@ -90,15 +83,7 @@ add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
 set_target_properties(gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(gammaray_common_internal gammaray_common)
-if(Qt5Core_FOUND)
-  target_link_libraries(gammaray_common_internal Qt5::Core Qt5::Network)
-else()
-  target_link_libraries(gammaray_common_internal
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
-    ${Qt5Network_LIBRARIES}
-  )
-endif()
+target_link_libraries(gammaray_common_internal Qt5::Core Qt5::Network)
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   install(TARGETS gammaray_common EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

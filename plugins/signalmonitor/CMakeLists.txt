@@ -25,9 +25,7 @@ target_link_libraries(gammaray_signalmonitor
   gammaray_core
   gammaray_signalmonitor_shared
 )
-if (Qt5_FOUND)
-  target_link_libraries(gammaray_signalmonitor Qt5::Gui)
-endif ()
+target_link_libraries(gammaray_signalmonitor Qt5::Gui)
 endif ()
 
 if(GAMMARAY_BUILD_UI)

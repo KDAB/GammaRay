@@ -7,28 +7,17 @@ configure_file(gammaray-test-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/gammaray-te
 # create intermediate modeltestobj object files which unit tests can use
 add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
 set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-if(Qt5Core_FOUND)
-  target_compile_definitions(modeltestobj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
-  target_include_directories(modeltestobj PUBLIC ${Qt5Core_INCLUDE_DIRS})
-else()
-  target_include_directories(modeltestobj PUBLIC ${Qt5Core_INCLUDE_DIRS})
-endif()
+target_compile_definitions(modeltestobj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
+target_include_directories(modeltestobj PUBLIC ${Qt5Core_INCLUDE_DIRS})
 
 # create intermediate test_helpers_obj object files which unit tests can use
 add_library(test_helpers_obj OBJECT testhelpers.cpp)
 set_target_properties(test_helpers_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-if(Qt5Core_FOUND)
-  target_compile_definitions(test_helpers_obj PRIVATE ${Qt5Core_DEFINITIONS} ${Qt5Test_DEFINITIONS}) # for -DQT_NAMESPACE=...
-  target_include_directories(test_helpers_obj PUBLIC
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Test_INCLUDE_DIRS}
-  )
-else()
-  target_include_directories(test_helpers_obj PUBLIC
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Test_INCLUDE_DIRS}
-  )
-endif()
+target_compile_definitions(test_helpers_obj PRIVATE ${Qt5Core_DEFINITIONS} ${Qt5Test_DEFINITIONS}) # for -DQT_NAMESPACE=...
+target_include_directories(test_helpers_obj PUBLIC
+  ${Qt5Core_INCLUDE_DIRS}
+  ${Qt5Test_INCLUDE_DIRS}
+)
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
 # create intermediate base_probe_test_obj object files which unit tests can use
@@ -38,18 +27,11 @@ target_include_directories(base_probe_test_obj PUBLIC
   $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
 )
-if(Qt5Core_FOUND)
-  target_compile_definitions(base_probe_test_obj PRIVATE ${Qt5Core_DEFINITIONS} ${Qt5Test_DEFINITIONS}) # for -DQT_NAMESPACE=...
-  target_include_directories(base_probe_test_obj PUBLIC
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Test_INCLUDE_DIRS}
-  )
-else()
-  target_include_directories(base_probe_test_obj PUBLIC
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Test_INCLUDE_DIRS}
-  )
-endif()
+target_compile_definitions(base_probe_test_obj PRIVATE ${Qt5Core_DEFINITIONS} ${Qt5Test_DEFINITIONS}) # for -DQT_NAMESPACE=...
+target_include_directories(base_probe_test_obj PUBLIC
+  ${Qt5Core_INCLUDE_DIRS}
+  ${Qt5Test_INCLUDE_DIRS}
+)
 
 if(Qt5Quick_FOUND)
   # create intermediate base_quick_test_obj object files which unit tests can use
@@ -142,20 +124,12 @@ endif()
 
 set(INJECTOR_TYPES)
 if(UNIX)
-  # OSX+ASAN+Qt4 (triggers a bug in Qt4, see http://stackoverflow.com/questions/22696071/how-to-make-addresssanitizer-not-stop-after-one-error-and-other-issues)
-  string(REGEX MATCH -fsanitize=address ASAN_ENABLED ${CMAKE_CXX_FLAGS})
-  if(APPLE AND ASAN_ENABLED AND NOT Qt5Core_FOUND)
-    set(OSX_ASAN_WORKAROUND ON)
-  endif()
-
-  if(NOT OSX_ASAN_WORKAROUND)
-    list(APPEND INJECTOR_TYPES preload style)
-  endif()
+  list(APPEND INJECTOR_TYPES preload style)
 
   if(GDB_EXECUTABLE)
     list(APPEND INJECTOR_TYPES gdb)
   endif()
-  if(LLDB_EXECUTABLE AND NOT OSX_ASAN_WORKAROUND)
+  if(LLDB_EXECUTABLE)
     list(APPEND INJECTOR_TYPES lldb)
   endif()
 elseif(WIN32)
@@ -173,21 +147,6 @@ foreach(injectorType ${INJECTOR_TYPES})
   )
   set_tests_properties(connectiontest-${injectorType}-filter PROPERTIES ENVIRONMENT GAMMARAY_TEST_FILTER=1)
 endforeach()
-
-if(NOT OSX_ASAN_WORKAROUND)
-add_test(NAME attachtest-gdb
-  COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray gdb
-  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-)
-add_test(NAME attachtest-lldb
-  COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray lldb
-  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-)
-add_test(NAME attachtest-windll
-  COMMAND ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/attachhelper ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray windll
-  ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-)
-endif()
 
 #
 # common and core unit tests
@@ -247,14 +206,14 @@ if(GAMMARAY_BUILD_UI)
   target_link_libraries(metatypemodeltest gammaray_core ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 endif()
 
-if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT OSX_ASAN_WORKAROUND)
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
   gammaray_add_probe_test(signalspycallbacktest signalspycallbacktest.cpp)
   target_link_libraries(signalspycallbacktest gammaray_core)
   gammaray_add_probe_test(integrationtest integrationtest.cpp)
   target_link_libraries(integrationtest gammaray_core)
 endif()
 
-if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
   gammaray_add_probe_test(multithreadingtest multithreadingtest.cpp)
   target_link_libraries(multithreadingtest gammaray_core)
 
@@ -279,7 +238,7 @@ if(GAMMARAY_BUILD_UI)
   gammaray_add_test(propertybindertest propertybindertest.cpp)
   target_link_libraries(propertybindertest gammaray_ui)
 
-  if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+  if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     gammaray_add_probe_test(metaobjecttreemodeltest
       metaobjecttreemodeltest.cpp
       ${CMAKE_SOURCE_DIR}/ui/tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
@@ -309,24 +268,22 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   gammaray_add_test(probeabidetectortest probeabidetectortest.cpp)
   target_link_libraries(probeabidetectortest gammaray_launcher ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 
-  if(NOT OSX_ASAN_WORKAROUND)
-    gammaray_add_test(selftesttest selftesttest.cpp)
-    target_link_libraries(selftesttest gammaray_launcher gammaray_common ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+  gammaray_add_test(selftesttest selftesttest.cpp)
+  target_link_libraries(selftesttest gammaray_launcher gammaray_common ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 
-    gammaray_add_test(earlyexittest earlyexittest.cpp)
-    target_include_directories(earlyexittest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
-    target_link_libraries(earlyexittest gammaray_core gammaray_launcher)
+  gammaray_add_test(earlyexittest earlyexittest.cpp)
+  target_include_directories(earlyexittest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
+  target_link_libraries(earlyexittest gammaray_core gammaray_launcher)
 
-    if(HAVE_QT_WIDGETS)
-      gammaray_add_test(launchertest launchertest.cpp)
-      target_include_directories(launchertest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
-      target_link_libraries(launchertest gammaray_core gammaray_launcher)
-    endif()
+  if(HAVE_QT_WIDGETS)
+    gammaray_add_test(launchertest launchertest.cpp)
+    target_include_directories(launchertest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
+    target_link_libraries(launchertest gammaray_core gammaray_launcher)
+  endif()
 
-    if(TARGET gammaray_client)
-      gammaray_add_test(clientconnectiontest clientconnectiontest.cpp)
-      target_link_libraries(clientconnectiontest gammaray_core gammaray_launcher gammaray_client)
-    endif()
+  if(TARGET gammaray_client)
+    gammaray_add_test(clientconnectiontest clientconnectiontest.cpp)
+    target_link_libraries(clientconnectiontest gammaray_core gammaray_launcher gammaray_client)
   endif()
 endif()
 
@@ -372,16 +329,14 @@ gammaray_add_test(fontdatabasemodeltest
 )
 target_link_libraries(fontdatabasemodeltest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 
-if(NOT OSX_ASAN_WORKAROUND)
-  gammaray_add_test(codecmodeltest
-    codecmodeltest.cpp
-    ${CMAKE_SOURCE_DIR}/plugins/codecbrowser/codecmodel.cpp
-    $<TARGET_OBJECTS:modeltestobj>
-  )
-  target_link_libraries(codecmodeltest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
-endif()
+gammaray_add_test(codecmodeltest
+  codecmodeltest.cpp
+  ${CMAKE_SOURCE_DIR}/plugins/codecbrowser/codecmodel.cpp
+  $<TARGET_OBJECTS:modeltestobj>
+)
+target_link_libraries(codecmodeltest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
 
-if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND Qt5Core_FOUND AND NOT Qt5Core_VERSION_MINOR LESS 4) # requires QHooks
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
   #does not work unless the translations are installed in QT_INSTALL_TRANSLATIONS
   if(EXISTS "${QT_INSTALL_TRANSLATIONS}/qtbase_de.qm")
     gammaray_add_probe_test(translatortest

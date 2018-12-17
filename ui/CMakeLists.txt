@@ -99,13 +99,7 @@ gammaray_set_rpath(gammaray_ui ${LIB_INSTALL_DIR})
 
 gammaray_target_relocatable_interfaces(gammaray_ui_ipaths)
 target_include_directories(gammaray_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_ui_ipaths}>)
-if(HAVE_PRIVATE_QT_HEADERS)
-    target_include_directories(gammaray_ui SYSTEM PRIVATE ${Qt5Widgets_PRIVATE_INCLUDE_DIRS})
-else(HAVE_PRIVATE_QT_HEADERS)
-  add_feature_info("QHeaderView geometry/state restoration" HAVE_PRIVATE_QT_HEADERS
-    "You must have a build version of Qt available. Make sure the qmake found first in your execute comes from this build version."
-  )
-endif(HAVE_PRIVATE_QT_HEADERS)
+target_include_directories(gammaray_ui SYSTEM PRIVATE ${Qt5Widgets_PRIVATE_INCLUDE_DIRS})
 
 target_link_libraries(gammaray_ui
   LINK_PUBLIC ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} gammaray_common
