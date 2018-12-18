@@ -39,10 +39,10 @@ ProblemModel::ProblemModel(QObject *parent)
     : QAbstractListModel(parent)
     , m_problemCollector(ProblemCollector::instance())
 {
-    connect(m_problemCollector, SIGNAL(aboutToAddProblem(int)), this, SLOT(aboutToAddProblem(int)));
-    connect(m_problemCollector, SIGNAL(problemAdded()), this, SLOT(problemAdded()));
-    connect(m_problemCollector, SIGNAL(aboutToRemoveProblems(int, int)), this, SLOT(aboutToRemoveProblems(int, int)));
-    connect(m_problemCollector, SIGNAL(problemsRemoved()), this, SLOT(problemsRemoved()));
+    connect(m_problemCollector, &ProblemCollector::aboutToAddProblem, this, &ProblemModel::aboutToAddProblem);
+    connect(m_problemCollector, &ProblemCollector::problemAdded, this, &ProblemModel::problemAdded);
+    connect(m_problemCollector, &ProblemCollector::aboutToRemoveProblems, this, &ProblemModel::aboutToRemoveProblems);
+    connect(m_problemCollector, &ProblemCollector::problemsRemoved, this, &ProblemModel::problemsRemoved);
 }
 
 ProblemModel::~ProblemModel()

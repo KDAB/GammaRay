@@ -106,7 +106,7 @@ Launcher::Launcher(const LaunchOptions &options, QObject *parent)
     const auto timeout = qgetenv("GAMMARAY_LAUNCHER_TIMEOUT").toInt();
     d->safetyTimer.setInterval(std::max(60, timeout) * 1000);
     d->safetyTimer.setSingleShot(true);
-    connect(&d->safetyTimer, SIGNAL(timeout()), SLOT(timeout()));
+    connect(&d->safetyTimer, &QTimer::timeout, this, &Launcher::timeout);
 }
 
 Launcher::~Launcher()
@@ -185,18 +185,18 @@ bool Launcher::start()
 
     d->injector->setTargetAbi(d->options.probeABI());
 
-    connect(d->injector.data(), SIGNAL(started()),
-            this, SLOT(restartTimer()));
-    connect(d->injector.data(), SIGNAL(finished()),
-            this, SLOT(injectorFinished()), Qt::QueuedConnection);
+    connect(d->injector.data(), &AbstractInjector::started,
+            this, &Launcher::restartTimer);
+    connect(d->injector.data(), &AbstractInjector::finished,
+            this, &Launcher::injectorFinished, Qt::QueuedConnection);
     if (d->options.isLaunch()) {
-        connect(d->injector.data(), SIGNAL(attached()),
-                this, SLOT(injectorFinished()), Qt::QueuedConnection);
+        connect(d->injector.data(), &AbstractInjector::attached,
+                this, &Launcher::injectorFinished, Qt::QueuedConnection);
     }
-    connect(d->injector.data(), SIGNAL(stderrMessage(QString)),
-            this, SIGNAL(stderrMessage(QString)));
-    connect(d->injector.data(), SIGNAL(stdoutMessage(QString)),
-            this, SIGNAL(stdoutMessage(QString)));
+    connect(d->injector.data(), &AbstractInjector::stderrMessage,
+            this, &Launcher::stderrMessage);
+    connect(d->injector.data(), &AbstractInjector::stdoutMessage,
+            this, &Launcher::stdoutMessage);
 
     bool success = false;
     if (d->options.isLaunch()) {
@@ -253,7 +253,7 @@ void Launcher::setupProbeSettingsServer()
 {
     d->server = new QLocalServer(this);
     d->server->setMaxPendingConnections(1);
-    connect(d->server, SIGNAL(newConnection()), this, SLOT(newConnection()));
+    connect(d->server, &QLocalServer::newConnection, this, &Launcher::newConnection);
     const QString serverName = QStringLiteral("gammaray-") + QString::number(instanceIdentifier());
     d->server->removeServer(serverName);
     if (!d->server->listen(serverName))
@@ -355,7 +355,7 @@ void Launcher::newConnection()
         return;
 
     d->socket = d->server->nextPendingConnection();
-    connect(d->socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(d->socket, &QIODevice::readyRead, this, &Launcher::readyRead);
 
     {
         Message msg(Protocol::LauncherAddress, Protocol::ServerVersion);

@@ -87,8 +87,8 @@ DeferredTreeView::DeferredTreeView(QWidget *parent)
     setIndentation(10);
     setSortingEnabled(true);
 
-    connect(header(), SIGNAL(sectionCountChanged(int,int)), SLOT(sectionCountChanged()));
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    connect(header(), &QHeaderView::sectionCountChanged, this, &DeferredTreeView::sectionCountChanged);
+    connect(m_timer, &QTimer::timeout, this, &DeferredTreeView::timeout);
 }
 
 void DeferredTreeView::setModel(QAbstractItemModel *model)

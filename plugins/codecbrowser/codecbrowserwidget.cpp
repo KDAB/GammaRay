@@ -51,7 +51,7 @@ CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
     ui->selectedCodecs->setModel(ObjectBroker::model(QStringLiteral(
                                                          "com.kdab.GammaRay.SelectedCodecsModel")));
 
-    connect(ui->codecText, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)));
+    connect(ui->codecText, &QLineEdit::textChanged, this, &CodecBrowserWidget::textChanged);
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
 }

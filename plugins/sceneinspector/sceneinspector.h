@@ -57,10 +57,10 @@ private slots:
     void renderScene(const QTransform &transform, const QSize &size) override;
 
     void sceneSelected(const QItemSelection &selection);
-    void sceneItemSelected(const QItemSelection &selection);
+    void sceneItemSelectionChanged(const QItemSelection &selection);
     void sceneItemSelected(QGraphicsItem *item);
-    void objectSelected(QObject *object, const QPoint &pos);
-    void objectSelected(void *obj, const QString &typeName);
+    void qObjectSelected(QObject *object, const QPoint &pos);
+    void nonQObjectSelected(void *obj, const QString &typeName);
     void sceneClicked(const QPointF &pos) override;
 
     void clientConnectedChanged(bool clientConnected);

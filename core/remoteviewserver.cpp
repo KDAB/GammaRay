@@ -57,7 +57,7 @@ RemoteViewServer::RemoteViewServer(const QString &name, QObject *parent)
 
     m_updateTimer->setSingleShot(true);
     m_updateTimer->setInterval(10);
-    connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(requestUpdateTimeout()));
+    connect(m_updateTimer, &QTimer::timeout, this, &RemoteViewServer::requestUpdateTimeout);
 }
 
 void RemoteViewServer::setEventReceiver(EventReceiver *receiver)

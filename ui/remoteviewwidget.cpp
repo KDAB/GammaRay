@@ -116,8 +116,8 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
     }
 
     setupActions();
-    connect(m_interactionModeActions, SIGNAL(triggered(QAction*)), this,
-            SLOT(interactionActionTriggered(QAction*)));
+    connect(m_interactionModeActions, &QActionGroup::triggered, this,
+            &RemoteViewWidget::interactionActionTriggered);
 
     setSupportedInteractionModes(ViewInteraction | Measuring | ElementPicking | InputRedirection | ColorPicking);
     setInteractionMode(ViewInteraction);
@@ -133,12 +133,12 @@ RemoteViewWidget::~RemoteViewWidget()
 void RemoteViewWidget::setName(const QString &name)
 {
     m_interface = ObjectBroker::object<RemoteViewInterface *>(name);
-    connect(m_interface, SIGNAL(reset()),
-            this, SLOT(reset()));
-    connect(m_interface, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)),
-            this, SLOT(elementsAtReceived(GammaRay::ObjectIds,int)));
-    connect(m_interface, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)),
-            this, SLOT(frameUpdated(GammaRay::RemoteViewFrame)));
+    connect(m_interface.data(), &RemoteViewInterface::reset,
+            this, &RemoteViewWidget::reset);
+    connect(m_interface.data(), &RemoteViewInterface::elementsAtReceived,
+            this, &RemoteViewWidget::elementsAtReceived);
+    connect(m_interface.data(), &RemoteViewInterface::frameUpdated,
+            this, &RemoteViewWidget::frameUpdated);
     if (isVisible()) {
         m_interface->setViewActive(true);
     }
@@ -203,7 +203,7 @@ void RemoteViewWidget::setupActions()
     m_zoomOutAction->setObjectName("aZoomOut");
     m_zoomOutAction->setShortcutContext(Qt::WidgetShortcut);
     m_zoomOutAction->setShortcuts(QKeySequence::ZoomOut);
-    connect(m_zoomOutAction, SIGNAL(triggered(bool)), this, SLOT(zoomOut()));
+    connect(m_zoomOutAction, &QAction::triggered, this, &RemoteViewWidget::zoomOut);
     addAction(m_zoomOutAction); // needed to make the WidgetShortcut context work
 
     m_zoomInAction = new QAction(UIResources::themedIcon(QLatin1String("zoom-in.png")), tr(
@@ -211,7 +211,7 @@ void RemoteViewWidget::setupActions()
     m_zoomInAction->setObjectName("aZoomIn");
     m_zoomInAction->setShortcutContext(Qt::WidgetShortcut);
     m_zoomInAction->setShortcuts(QKeySequence::ZoomIn);
-    connect(m_zoomInAction, SIGNAL(triggered(bool)), this, SLOT(zoomIn()));
+    connect(m_zoomInAction, &QAction::triggered, this, &RemoteViewWidget::zoomIn);
     addAction(m_zoomInAction);
 
     m_toggleFPSAction = new QAction(tr("Display FPS"), this);
@@ -219,7 +219,7 @@ void RemoteViewWidget::setupActions()
     m_toggleFPSAction->setCheckable(true);
     m_toggleFPSAction->setToolTip("<b>Display FPS</b><br>"
                                   "Shows rate of received frames from debuggee.");
-    connect(m_toggleFPSAction, SIGNAL(toggled(bool)), this, SLOT(enableFPS(bool)));
+    connect(m_toggleFPSAction, &QAction::toggled, this, &RemoteViewWidget::enableFPS);
     addAction(m_toggleFPSAction);
 
     updateActions();
@@ -304,8 +304,8 @@ void RemoteViewWidget::elementsAtReceived(const GammaRay::ObjectIds &ids, int be
 
         dlg->setModel(m_invisibleItemsProxyModel);
         dlg->setCurrentIndex(ObjectModel::ObjectIdRole, QVariant::fromValue(ids[candidate]));
-        connect(dlg, SIGNAL(activated(QModelIndex)), this, SLOT(pickElementId(QModelIndex)));
-        connect(dlg, SIGNAL(checkBoxStateChanged(bool)), m_invisibleItemsProxyModel, SLOT(setHideItems(bool)));
+        connect(dlg, &ModelPickerDialog::activated, this, &RemoteViewWidget::pickElementId);
+        connect(dlg, &ModelPickerDialog::checkBoxStateChanged, m_invisibleItemsProxyModel, &VisibilityFilterProxyModel::setHideItems);
         dlg->open();
     }
 }

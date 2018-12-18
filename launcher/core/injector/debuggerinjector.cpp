@@ -122,8 +122,8 @@ void DebuggerInjector::setManualError(const QString &msg)
     mErrorString = msg;
 
     m_process->kill();
-    disconnect(m_process.data(), SIGNAL(readyReadStandardError()), this, nullptr);
-    disconnect(m_process.data(), SIGNAL(readyReadStandardOutput()), this, nullptr);
+    disconnect(m_process.data(), &QProcess::readyReadStandardError, this, nullptr);
+    disconnect(m_process.data(), &QProcess::readyReadStandardOutput, this, nullptr);
     mProcessError = QProcess::FailedToStart;
 }
 
@@ -158,14 +158,14 @@ bool DebuggerInjector::startDebugger(const QStringList &args, const QProcessEnvi
     m_process.reset(new QProcess);
     if (!env.isEmpty())
         m_process->setProcessEnvironment(env);
-    connect(m_process.data(), SIGNAL(readyReadStandardError()),
-            this, SLOT(readyReadStandardError()));
-    connect(m_process.data(), SIGNAL(readyReadStandardOutput()),
-            this, SLOT(readyReadStandardOutput()));
-    connect(m_process.data(), SIGNAL(started()),
-            this, SIGNAL(started()));
-    connect(m_process.data(), SIGNAL(finished(int)),
-            this, SLOT(processFinished()));
+    connect(m_process.data(), &QProcess::readyReadStandardError,
+            this, &DebuggerInjector::readyReadStandardError);
+    connect(m_process.data(), &QProcess::readyReadStandardOutput,
+            this, &DebuggerInjector::readyReadStandardOutput);
+    connect(m_process.data(), &QProcess::started,
+            this, &AbstractInjector::started);
+    connect(m_process.data(), static_cast<void(QProcess::*)(int)>(&QProcess::finished),
+            this, &DebuggerInjector::processFinished);
     m_process->setProcessChannelMode(QProcess::SeparateChannels);
     m_process->start(filePath(), args);
     bool status = m_process->waitForStarted(-1);

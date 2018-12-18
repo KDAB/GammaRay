@@ -40,7 +40,7 @@ TcpServerDevice::TcpServerDevice(QObject *parent)
     , m_broadcastSocket(new QUdpSocket(this))
 {
     m_server = new QTcpServer(this);
-    connect(m_server, SIGNAL(newConnection()), this, SIGNAL(newConnection()));
+    connect(m_server, &QTcpServer::newConnection, this, &ServerDevice::newConnection);
 }
 
 TcpServerDevice::~TcpServerDevice()

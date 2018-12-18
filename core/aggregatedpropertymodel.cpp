@@ -356,9 +356,9 @@ void AggregatedPropertyModel::addPropertyAdaptor(PropertyAdaptor *adaptor) const
     QVector<PropertyAdaptor *> children;
     children.resize(adaptor->count());
     m_parentChildrenMap.insert(adaptor, children);
-    connect(adaptor, SIGNAL(propertyChanged(int,int)), this, SLOT(propertyChanged(int,int)));
-    connect(adaptor, SIGNAL(propertyAdded(int,int)), this, SLOT(propertyAdded(int,int)));
-    connect(adaptor, SIGNAL(propertyRemoved(int,int)), this, SLOT(propertyRemoved(int,int)));
+    connect(adaptor, &PropertyAdaptor::propertyChanged, this, &AggregatedPropertyModel::propertyChanged);
+    connect(adaptor, &PropertyAdaptor::propertyAdded, this, &AggregatedPropertyModel::propertyAdded);
+    connect(adaptor, &PropertyAdaptor::propertyRemoved, this, &AggregatedPropertyModel::propertyRemoved);
 }
 
 void AggregatedPropertyModel::propertyChanged(int first, int last)

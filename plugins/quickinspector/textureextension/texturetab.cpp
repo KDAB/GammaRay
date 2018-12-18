@@ -92,9 +92,10 @@ TextureTab::TextureTab(PropertyWidget *parent)
 
     ui->textureView->setSupportedInteractionModes(RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring | RemoteViewWidget::ColorPicking);
 
-    connect(zoom, SIGNAL(currentIndexChanged(int)), ui->textureView, SLOT(setZoomLevel(int)));
-    connect(ui->textureView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
-    connect(toggleTextureWasteAction, SIGNAL(toggled(bool)), ui->textureView, SLOT(setTextureWasteVisualizationEnabled(bool)));
+    connect(zoom, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            ui->textureView, &RemoteViewWidget::setZoomLevel);
+    connect(ui->textureView, &RemoteViewWidget::zoomLevelChanged, zoom, &QComboBox::setCurrentIndex);
+    connect(toggleTextureWasteAction, &QAction::toggled, ui->textureView, &TextureViewWidget::setTextureWasteVisualizationEnabled);
 
     // Texture issues infobar
     connect(ui->textureView, &TextureViewWidget::textureInfoNecessary, this,

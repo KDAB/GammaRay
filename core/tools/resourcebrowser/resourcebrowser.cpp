@@ -48,8 +48,8 @@ ResourceBrowser::ResourceBrowser(Probe *probe, QObject *parent)
     proxy->setSourceModel(resourceModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ResourceModel"), proxy);
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
-    connect(selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(currentChanged(QModelIndex)));
+    connect(selectionModel, &QItemSelectionModel::currentChanged,
+            this, [this](const QModelIndex &index) { currentChanged(index); });
 }
 
 void ResourceBrowser::downloadResource(const QString &sourceFilePath, const QString &targetFilePath)

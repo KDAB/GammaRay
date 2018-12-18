@@ -76,13 +76,13 @@ QSMStateMachineDebugInterface::QSMStateMachineDebugInterface(QStateMachine *stat
     , m_stateMachine(stateMachine)
     , m_stateMachineWatcher(new StateMachineWatcher(this))
 {
-    connect(stateMachine, SIGNAL(started()), this, SLOT(updateRunning()));
-    connect(stateMachine, SIGNAL(stopped()), this, SLOT(updateRunning()));
-    connect(stateMachine, SIGNAL(finished()), this, SLOT(updateRunning()));
+    connect(stateMachine, &QStateMachine::started, this, &QSMStateMachineDebugInterface::updateRunning);
+    connect(stateMachine, &QStateMachine::stopped, this, &QSMStateMachineDebugInterface::updateRunning);
+    connect(stateMachine, &QState::finished, this, &QSMStateMachineDebugInterface::updateRunning);
 
-    connect(m_stateMachineWatcher, SIGNAL(stateEntered(State)), this, SIGNAL(stateEntered(State)));
-    connect(m_stateMachineWatcher, SIGNAL(stateExited(State)), this, SIGNAL(stateExited(State)));
-    connect(m_stateMachineWatcher, SIGNAL(transitionTriggered(Transition)), this, SIGNAL(transitionTriggered(Transition)));
+    connect(m_stateMachineWatcher, &StateMachineWatcher::stateEntered, this, &StateMachineDebugInterface::stateEntered);
+    connect(m_stateMachineWatcher, &StateMachineWatcher::stateExited, this, &StateMachineDebugInterface::stateExited);
+    connect(m_stateMachineWatcher, &StateMachineWatcher::transitionTriggered, this, &StateMachineDebugInterface::transitionTriggered);
 
     m_stateMachineWatcher->setWatchedStateMachine(stateMachine);
 }

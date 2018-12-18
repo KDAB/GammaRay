@@ -66,18 +66,18 @@ Server::Server(QObject *parent)
     if (!m_serverDevice)
         return;
 
-    connect(m_serverDevice, SIGNAL(newConnection()), this, SLOT(newConnection()));
+    connect(m_serverDevice, &ServerDevice::newConnection, this, &Server::newConnection);
 
     m_broadcastTimer->setInterval(5 * 1000);
     m_broadcastTimer->setSingleShot(false);
 #ifndef Q_OS_ANDROID
     m_broadcastTimer->start();
 #endif
-    connect(m_broadcastTimer, SIGNAL(timeout()), SLOT(broadcast()));
-    connect(this, SIGNAL(disconnected()), m_broadcastTimer, SLOT(start()));
+    connect(m_broadcastTimer, &QTimer::timeout, this, &Server::broadcast);
+    connect(this, &Server::disconnected, m_broadcastTimer, [this]{ m_broadcastTimer->start(); });
 
-    connect(m_signalMapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)),
-            this, SLOT(forwardSignal(QObject*,int,QVector<QVariant>)));
+    connect(m_signalMapper, &MultiSignalMapper::signalEmitted,
+            this, &Server::forwardSignal);
 
     Endpoint::addObjectNameAddressMapping(QStringLiteral(
                                               "com.kdab.GammaRay.PropertySyncer"), ++m_nextAddress);
@@ -143,6 +143,8 @@ void Server::newConnection()
 
     m_broadcastTimer->stop();
     auto con = m_serverDevice->nextPendingConnection();
+    // FIXME Use proper type for m_serverDevice->nextPendingConnection, instead
+    // of relying on runtime-connect to a slot which doesn't exist in QIODevice
     connect(con, SIGNAL(disconnected()), con, SLOT(deleteLater()));
     setDevice(con);
 

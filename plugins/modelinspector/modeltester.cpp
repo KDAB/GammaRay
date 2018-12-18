@@ -71,7 +71,7 @@ void ModelTester::objectAdded(QObject *obj)
     if (model) {
         // TODO filter out our own models, way too slow otherwise
         // or even better allow to specify somehow to which models we want to attach
-        connect(model, SIGNAL(destroyed(QObject*)), SLOT(modelDestroyed(QObject*)));
+        connect(model, &QObject::destroyed, this, &ModelTester::modelDestroyed);
         auto *result = new ModelTestResult;
         m_modelTestMap.insert(model, result); // needs to be available for the
                                               // initial calls to failure() already

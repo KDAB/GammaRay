@@ -57,7 +57,7 @@ void SelectionModelModel::objectCreated(QObject* obj)
     if (it != m_selectionModels.end() && *it == model)
         return;
     m_selectionModels.insert(it, model);
-    connect(model, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged()));
+    connect(model, &QItemSelectionModel::selectionChanged, this, &SelectionModelModel::selectionChanged);
     connect(model, &QItemSelectionModel::modelChanged, this, &SelectionModelModel::sourceModelChanged);
 
     if (!m_model || model->model() != m_model)

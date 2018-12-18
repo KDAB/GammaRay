@@ -53,8 +53,8 @@ void MetaObjectTreeClientProxyModel::setSourceModel(QAbstractItemModel *source)
 {
     QIdentityProxyModel::setSourceModel(source);
 
-    connect(source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(findQObjectIndex()));
-    connect(source, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(findQObjectIndex()));
+    connect(source, &QAbstractItemModel::rowsInserted, this, &MetaObjectTreeClientProxyModel::findQObjectIndex);
+    connect(source, &QAbstractItemModel::dataChanged, this, &MetaObjectTreeClientProxyModel::findQObjectIndex);
     findQObjectIndex();
 }
 
@@ -193,10 +193,10 @@ void MetaObjectTreeClientProxyModel::findQObjectIndex()
         return;
 
     m_qobjIndex = idxList.first();
-    disconnect(sourceModel(), SIGNAL(rowsInserted(QModelIndex,int,int)), this,
-               SLOT(findQObjectIndex()));
-    disconnect(sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), this,
-               SLOT(findQObjectIndex()));
+    disconnect(sourceModel(), &QAbstractItemModel::rowsInserted, this,
+               &MetaObjectTreeClientProxyModel::findQObjectIndex);
+    disconnect(sourceModel(), &QAbstractItemModel::dataChanged, this,
+               &MetaObjectTreeClientProxyModel::findQObjectIndex);
 }
 
 bool MetaObjectTreeClientProxyModel::needsBackground(const QModelIndex &index) const

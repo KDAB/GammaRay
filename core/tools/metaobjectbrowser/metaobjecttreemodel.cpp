@@ -52,13 +52,13 @@ MetaObjectTreeModel::MetaObjectTreeModel(QObject *parent)
     : QAbstractItemModel(parent)
     , m_pendingDataChangedTimer(new QTimer(this))
 {
-    connect(registry(), SIGNAL(beforeMetaObjectAdded(const QMetaObject*)), this, SLOT(addMetaObject(const QMetaObject*)));
-    connect(registry(), SIGNAL(afterMetaObjectAdded(const QMetaObject*)), this, SLOT(endAddMetaObject(const QMetaObject*)));
-    connect(registry(), SIGNAL(dataChanged(const QMetaObject*)), this, SLOT(scheduleDataChange(const QMetaObject*)));
+    connect(registry(), &MetaObjectRegistry::beforeMetaObjectAdded, this, &MetaObjectTreeModel::addMetaObject);
+    connect(registry(), &MetaObjectRegistry::afterMetaObjectAdded, this, &MetaObjectTreeModel::endAddMetaObject);
+    connect(registry(), &MetaObjectRegistry::dataChanged, this, &MetaObjectTreeModel::scheduleDataChange);
 
     m_pendingDataChangedTimer->setInterval(100);
     m_pendingDataChangedTimer->setSingleShot(true);
-    connect(m_pendingDataChangedTimer, SIGNAL(timeout()), this, SLOT(emitPendingDataChanged()));
+    connect(m_pendingDataChangedTimer, &QTimer::timeout, this, &MetaObjectTreeModel::emitPendingDataChanged);
 }
 
 MetaObjectTreeModel::~MetaObjectTreeModel()

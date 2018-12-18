@@ -34,8 +34,9 @@ LocalClientDevice::LocalClientDevice(QObject *parent)
     : ClientDeviceImpl<QLocalSocket>(parent)
 {
     m_socket = new QLocalSocket(this);
-    connect(m_socket, SIGNAL(connected()), this, SIGNAL(connected()));
-    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)), this, SLOT(socketError()));
+    connect(m_socket, &QLocalSocket::connected, this, &ClientDevice::connected);
+    connect(m_socket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
+            this, &LocalClientDevice::socketError);
 }
 
 void LocalClientDevice::connectToHost()

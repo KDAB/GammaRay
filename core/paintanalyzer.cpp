@@ -76,14 +76,14 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
     Probe::instance()->registerModel(name + QStringLiteral(".paintBufferModel"), m_paintBufferFilter);
 
     m_selectionModel = ObjectBroker::selectionModel(m_paintBufferFilter);
-    connect(m_selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)), m_remoteView,
-            SLOT(sourceChanged()));
+    connect(m_selectionModel, &QItemSelectionModel::currentChanged, m_remoteView,
+            &RemoteViewServer::sourceChanged);
 
     m_argumentModel->setReadOnly(true);
     Probe::instance()->registerModel(name + QStringLiteral(".argumentProperties"), m_argumentModel);
     Probe::instance()->registerModel(name + QStringLiteral(".stackTrace"), m_stackTraceModel);
 
-    connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(repaint()));
+    connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &PaintAnalyzer::repaint);
 }
 
 PaintAnalyzer::~PaintAnalyzer()

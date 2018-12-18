@@ -80,12 +80,12 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
     m_objectTreeView->setItemDelegateForColumn(1, new QtIviConstrainedValueDelegate(this));
     m_objectTreeView->setSelectionModel(selectionModel);
     connect(selectionModel,
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(objectSelected(QItemSelection)));
+            &QItemSelectionModel::selectionChanged,
+            this, &QtIVIWidget::objectSelected);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     m_objectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(m_objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
+    connect(m_objectTreeView, &QWidget::customContextMenuRequested, this, &QtIVIWidget::contextMenu);
 }
 
 void QtIVIWidget::objectSelected(const QItemSelection &selection)

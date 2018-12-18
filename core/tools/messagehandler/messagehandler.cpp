@@ -135,7 +135,7 @@ MessageHandler::MessageHandler(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.MessageModel"), proxy);
 
     auto selModel = ObjectBroker::selectionModel(proxy);
-    connect(selModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(messageSelected(QItemSelection)));
+    connect(selModel, &QItemSelectionModel::selectionChanged, this, &MessageHandler::messageSelected);
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.MessageStackTraceModel"), m_stackTraceModel);
 

@@ -67,8 +67,8 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
     ui->timerView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
     ui->timerView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
     ui->timerView->setDeferredResizeMode(5, QHeaderView::ResizeToContents);
-    connect(ui->timerView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
-    connect(ui->clearTimers, SIGNAL(clicked()), m_interface, SLOT(clearHistory()));
+    connect(ui->timerView, &QWidget::customContextMenuRequested, this, &TimerTopWidget::contextMenu);
+    connect(ui->clearTimers, &QAbstractButton::clicked, m_interface, &TimerTopInterface::clearHistory);
 
     auto * const sortModel = new ClientTimerModel(this);
     sortModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel")));

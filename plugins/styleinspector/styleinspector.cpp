@@ -62,8 +62,8 @@ StyleInspector::StyleInspector(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleList"), singleColumnProxy);
 
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(singleColumnProxy);
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(styleSelected(QItemSelection)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged,
+            this, &StyleInspector::styleSelected);
 
     probe->registerModel(QStringLiteral(
                              "com.kdab.GammaRay.StyleInspector.PrimitiveModel"), m_primitiveModel);

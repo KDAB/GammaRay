@@ -325,7 +325,7 @@ bool PropertyEditorDelegate::editorEvent(QEvent* event, QAbstractItemModel* mode
         if (editor) {
             editor->setReadOnly(true);
             editor->setValue(value);
-            connect(editor, SIGNAL(editorClosed()), editor, SLOT(deleteLater()));
+            connect(editor, &PropertyExtendedEditor::editorClosed, editor, &QObject::deleteLater);
             editor->showEditor(const_cast<QWidget*>(option.widget));
         }
     }

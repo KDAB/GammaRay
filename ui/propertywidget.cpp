@@ -52,8 +52,8 @@ PropertyWidget::PropertyWidget(QWidget *parent)
     m_tabsUpdatedTimer->setInterval(100);
     m_tabsUpdatedTimer->setSingleShot(true);
     s_propertyWidgets.push_back(this);
-    connect(this, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentTabChanged()));
-    connect(m_tabsUpdatedTimer, SIGNAL(timeout()), this, SIGNAL(tabsUpdated()));
+    connect(this, &QTabWidget::currentChanged, this, &PropertyWidget::slotCurrentTabChanged);
+    connect(m_tabsUpdatedTimer, &QTimer::timeout, this, &PropertyWidget::tabsUpdated);
 }
 
 PropertyWidget::~PropertyWidget()
@@ -79,11 +79,11 @@ void PropertyWidget::setObjectBaseName(const QString &baseName)
         return; // unknown property controller, likely disabled/not supported on the server
 
     if (m_controller)
-        disconnect(m_controller, SIGNAL(availableExtensionsChanged()), this,
-                   SLOT(updateShownTabs()));
+        disconnect(m_controller, &PropertyControllerInterface::availableExtensionsChanged, this,
+                   &PropertyWidget::updateShownTabs);
     m_controller = ObjectBroker::object<PropertyControllerInterface *>(
         m_objectBaseName + ".controller");
-    connect(m_controller, SIGNAL(availableExtensionsChanged()), this, SLOT(updateShownTabs()));
+    connect(m_controller, &PropertyControllerInterface::availableExtensionsChanged, this, &PropertyWidget::updateShownTabs);
 
     updateShownTabs();
 }

@@ -67,8 +67,10 @@ signals:
     void textureIsFullyTransparent(bool fullyTransparent);
     void textureHasBorderImageSavings(bool isBorderImage, int percent, int bytes);
 
-private slots:
+public slots:
     void setTextureWasteVisualizationEnabled(bool enabled);
+
+private slots:
     void analyzeImageFlaws();
 
 private:

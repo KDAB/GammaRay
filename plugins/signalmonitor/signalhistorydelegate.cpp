@@ -49,12 +49,12 @@ SignalHistoryDelegate::SignalHistoryDelegate(QObject *parent)
     , m_visibleInterval(15000)
     , m_totalInterval(0)
 {
-    connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(onUpdateTimeout()));
+    connect(m_updateTimer, &QTimer::timeout, this, &SignalHistoryDelegate::onUpdateTimeout);
     m_updateTimer->start(1000 / 25);
     onUpdateTimeout();
 
     SignalMonitorInterface *iface = ObjectBroker::object<SignalMonitorInterface *>();
-    connect(iface, SIGNAL(clock(qlonglong)), this, SLOT(onServerClockChanged(qlonglong)));
+    connect(iface, &SignalMonitorInterface::clock, this, &SignalHistoryDelegate::onServerClockChanged);
     iface->sendClockUpdates(true);
 }
 

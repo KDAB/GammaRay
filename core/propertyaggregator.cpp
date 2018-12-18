@@ -144,10 +144,10 @@ void PropertyAggregator::resetProperty(int index)
 void PropertyAggregator::addPropertyAdaptor(PropertyAdaptor *adaptor)
 {
     m_propertyAdaptors.push_back(adaptor);
-    connect(adaptor, SIGNAL(propertyChanged(int,int)), this, SLOT(slotPropertyChanged(int,int)));
-    connect(adaptor, SIGNAL(propertyAdded(int,int)), this, SLOT(slotPropertyAdded(int,int)));
-    connect(adaptor, SIGNAL(propertyRemoved(int,int)), this, SLOT(slotPropertyRemoved(int,int)));
-    connect(adaptor, SIGNAL(objectInvalidated()), this, SIGNAL(objectInvalidated()));
+    connect(adaptor, &PropertyAdaptor::propertyChanged, this, &PropertyAggregator::slotPropertyChanged);
+    connect(adaptor, &PropertyAdaptor::propertyAdded, this, &PropertyAggregator::slotPropertyAdded);
+    connect(adaptor, &PropertyAdaptor::propertyRemoved, this, &PropertyAggregator::slotPropertyRemoved);
+    connect(adaptor, &PropertyAdaptor::objectInvalidated, this, &PropertyAdaptor::objectInvalidated);
 }
 
 void PropertyAggregator::slotPropertyChanged(int first, int last)

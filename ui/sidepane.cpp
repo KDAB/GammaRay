@@ -85,10 +85,10 @@ QSize SidePane::sizeHint() const
 void SidePane::setModel(QAbstractItemModel *model)
 {
     if (model) {
-        connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(updateSizeHint()));
-        connect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(updateSizeHint()));
-        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(updateSizeHint()));
-        connect(model, SIGNAL(modelReset()), SLOT(updateSizeHint()));
+        connect(model, &QAbstractItemModel::rowsInserted, this, &SidePane::updateSizeHint);
+        connect(model, &QAbstractItemModel::rowsRemoved, this, &SidePane::updateSizeHint);
+        connect(model, &QAbstractItemModel::dataChanged, this, &SidePane::updateSizeHint);
+        connect(model, &QAbstractItemModel::modelReset, this, &SidePane::updateSizeHint);
     }
     QAbstractItemView::setModel(model);
 }

@@ -93,10 +93,10 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetModel));
     new SearchLineController(ui->widgetSearchLine, widgetModel);
     connect(ui->widgetTreeView->selectionModel(),
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(widgetSelected(QItemSelection)));
-    connect(ui->widgetTreeView, SIGNAL(customContextMenuRequested(QPoint)), this,
-            SLOT(widgetTreeContextMenu(QPoint)));
+            &QItemSelectionModel::selectionChanged,
+            this, &WidgetInspectorWidget::widgetSelected);
+    connect(ui->widgetTreeView, &QWidget::customContextMenuRequested, this,
+            &WidgetInspectorWidget::widgetTreeContextMenu);
 
     m_remoteView->setName(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"));
     m_remoteView->setPickSourceModel(widgetModel);
@@ -119,7 +119,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
 
     auto action = new QAction(UIResources::themedIcon(QLatin1String("active-focus.png")), tr("Show Tab Focus Chain"), this);
     action->setCheckable(true);
-    connect(action, SIGNAL(toggled(bool)), m_remoteView, SLOT(setTabFocusOverlayEnabled(bool)));
+    connect(action, &QAction::toggled, m_remoteView, &WidgetRemoteView::setTabFocusOverlayEnabled);
     toolbar->addAction(action);
     toolbar->addSeparator();
 
@@ -129,18 +129,19 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     zoom->setAttribute(Qt::WA_MacSmallSize);
     zoom->setModel(m_remoteView->zoomLevelModel());
     toolbar->addWidget(zoom);
-    connect(zoom, SIGNAL(currentIndexChanged(int)), m_remoteView, SLOT(setZoomLevel(int)));
-    connect(m_remoteView, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
+    connect(zoom, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            m_remoteView, &RemoteViewWidget::setZoomLevel);
+    connect(m_remoteView, &RemoteViewWidget::zoomLevelChanged, zoom, &QComboBox::setCurrentIndex);
     zoom->setCurrentIndex(m_remoteView->zoomLevelIndex());
     toolbar->addAction(m_remoteView->zoomInAction());
 
-    connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
-    connect(ui->actionSaveAsSvg, SIGNAL(triggered()), SLOT(saveAsSvg()));
-    connect(ui->actionSaveAsPdf, SIGNAL(triggered()), SLOT(saveAsPdf()));
-    connect(ui->actionSaveAsUiFile, SIGNAL(triggered()), SLOT(saveAsUiFile()));
-    connect(ui->actionAnalyzePainting, SIGNAL(triggered()), SLOT(analyzePainting()));
+    connect(ui->actionSaveAsImage, &QAction::triggered, this, &WidgetInspectorWidget::saveAsImage);
+    connect(ui->actionSaveAsSvg, &QAction::triggered, this, &WidgetInspectorWidget::saveAsSvg);
+    connect(ui->actionSaveAsPdf, &QAction::triggered, this, &WidgetInspectorWidget::saveAsPdf);
+    connect(ui->actionSaveAsUiFile, &QAction::triggered, this, &WidgetInspectorWidget::saveAsUiFile);
+    connect(ui->actionAnalyzePainting, &QAction::triggered, this, &WidgetInspectorWidget::analyzePainting);
 
-    connect(m_inspector, SIGNAL(featuresChanged()), this, SLOT(updateActions()));
+    connect(m_inspector, &WidgetInspectorInterface::featuresChanged, this, &WidgetInspectorWidget::updateActions);
 
     addAction(ui->actionSaveAsImage);
     addAction(ui->actionSaveAsSvg);
@@ -170,8 +171,8 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     qFindChild<QTabBar *>(ui->tabWidget)->hide();
 #endif
 
-    connect(ui->widgetPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
-    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
+    connect(ui->widgetPropertyWidget, &PropertyWidget::tabsUpdated, this, &WidgetInspectorWidget::propertyWidgetTabsChanged);
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &WidgetInspectorWidget::onTabChanged);
 }
 
 WidgetInspectorWidget::~WidgetInspectorWidget()

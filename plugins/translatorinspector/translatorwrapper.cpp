@@ -36,10 +36,10 @@ TranslationsModel::TranslationsModel(TranslatorWrapper *translator)
     : QAbstractTableModel(translator)
     , m_translator(translator)
 {
-    connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            SIGNAL(rowCountChanged()));
-    connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            SIGNAL(rowCountChanged()));
+    connect(this, &QAbstractItemModel::rowsInserted,
+            this, &TranslationsModel::rowCountChanged);
+    connect(this, &QAbstractItemModel::rowsRemoved,
+            this, &TranslationsModel::rowCountChanged);
 }
 
 int TranslationsModel::rowCount(const QModelIndex &parent) const

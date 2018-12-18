@@ -51,9 +51,9 @@ public Q_SLOTS:
     void rescanMetaTypes();
 
 private Q_SLOTS:
-    void objectSelected(const QItemSelection &selection);
-    void objectSelected(QObject *obj);
-    void objectSelected(void *obj, const QString &typeName);
+    void objectSelectionChanged(const QItemSelection &selection);
+    void qobjectSelected(QObject *obj);
+    void voidPtrObjectSelected(void *obj, const QString &typeName);
 
 private:
     void metaObjectSelected(const QMetaObject *mo);

@@ -38,8 +38,8 @@ EnumRepositoryClient::EnumRepositoryClient(QObject *parent)
 {
     ObjectBroker::registerObject<EnumRepository*>(this);
 
-    connect(this, SIGNAL(definitionResponse(GammaRay::EnumDefinition)),
-            this, SLOT(definitionReceived(GammaRay::EnumDefinition)));
+    connect(this, &EnumRepository::definitionResponse,
+            this, &EnumRepositoryClient::definitionReceived);
 }
 
 EnumRepositoryClient::~EnumRepositoryClient()

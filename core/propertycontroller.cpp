@@ -83,9 +83,9 @@ void PropertyController::registerModel(QAbstractItemModel *model, const QString 
 void PropertyController::setObject(QObject *object)
 {
     if (m_object)
-        disconnect(m_object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
+        disconnect(m_object.data(), &QObject::destroyed, this, &PropertyController::objectDestroyed);
     if (object)
-        connect(object, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed()));
+        connect(object, &QObject::destroyed, this, &PropertyController::objectDestroyed);
 
     m_object = object;
 

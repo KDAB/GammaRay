@@ -92,7 +92,7 @@ bool BindingExtension::setQObject(QObject* object)
                 QMetaObject::connect(object, signalIndex, this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);
             }
         }
-        connect(object, SIGNAL(destroyed()), this, SLOT(clear()));
+        connect(object, &QObject::destroyed, this, &BindingExtension::clear);
     }
 
     m_bindingModel->setObject(object, m_bindings);

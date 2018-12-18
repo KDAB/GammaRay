@@ -42,7 +42,8 @@ WebInspectorWidget::WebInspectorWidget(QWidget *parent)
 {
     ui->setupUi(this);
     ui->webPageComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WebPages")));
-    connect(ui->webPageComboBox, SIGNAL(activated(int)), SLOT(webPageSelected(int)));
+    connect(ui->webPageComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated),
+            this, &WebInspectorWidget::webPageSelected);
     webPageSelected(0);
 }
 

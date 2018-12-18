@@ -132,19 +132,19 @@ ClientConnectionManager::ClientConnectionManager(QObject *parent, bool showSplas
 {
     if (showSplashScreenOnStartUp)
         showSplashScreen();
-    connect(m_processTracker, SIGNAL(backendChanged(GammaRay::ProcessTrackerBackend*)), this,
-            SIGNAL(processTrackerBackendChanged(GammaRay::ProcessTrackerBackend*)));
-    connect(m_processTracker, SIGNAL(infoChanged(GammaRay::ProcessTrackerInfo)), this,
-            SIGNAL(processTrackerInfoChanged(GammaRay::ProcessTrackerInfo)));
-    connect(this, SIGNAL(ready()), this, SLOT(clientConnected()));
-    connect(this, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
-    connect(m_client, SIGNAL(disconnected()), SIGNAL(disconnected()));
-    connect(m_client, SIGNAL(transientConnectionError()), SLOT(transientConnectionError()));
-    connect(m_client, SIGNAL(persisitentConnectionError(QString)),
-            SIGNAL(persistentConnectionError(QString)));
-    connect(this, SIGNAL(persistentConnectionError(QString)), SLOT(delayedHideSplashScreen()));
-    connect(this, SIGNAL(ready()), this, SLOT(delayedHideSplashScreen()));
-    connect(m_toolManager, SIGNAL(toolListAvailable()), this, SIGNAL(ready()));
+    connect(m_processTracker, &ProcessTracker::backendChanged, this,
+            &ClientConnectionManager::processTrackerBackendChanged);
+    connect(m_processTracker, &ProcessTracker::infoChanged, this,
+            &ClientConnectionManager::processTrackerInfoChanged);
+    connect(this, &ClientConnectionManager::ready, this, &ClientConnectionManager::clientConnected);
+    connect(this, &ClientConnectionManager::disconnected, this, &ClientConnectionManager::clientDisconnected);
+    connect(m_client, &Endpoint::disconnected, this, &ClientConnectionManager::disconnected);
+    connect(m_client, &Client::transientConnectionError, this, &ClientConnectionManager::transientConnectionError);
+    connect(m_client, &Client::persisitentConnectionError,
+            this, &ClientConnectionManager::persistentConnectionError);
+    connect(this, &ClientConnectionManager::persistentConnectionError, this, &ClientConnectionManager::delayedHideSplashScreen);
+    connect(this, &ClientConnectionManager::ready, this, &ClientConnectionManager::delayedHideSplashScreen);
+    connect(m_toolManager, &ClientToolManager::toolListAvailable, this, &ClientConnectionManager::ready);
 }
 
 ClientConnectionManager::~ClientConnectionManager()
@@ -167,7 +167,7 @@ void ClientConnectionManager::connectToHost(const QUrl &url, int tryAgain)
     m_serverUrl = url;
     m_connectionTimeout.start();
     m_tries = tryAgain;
-    connectToHost();
+    doConnectToHost();
 }
 
 void ClientConnectionManager::showSplashScreen()
@@ -218,7 +218,7 @@ void ClientConnectionManager::disconnectFromHost()
     m_client->disconnectFromHost();
 }
 
-void ClientConnectionManager::connectToHost()
+void ClientConnectionManager::doConnectToHost()
 {
     m_client->connectToHost(m_serverUrl, m_tries ? m_tries-- : 0);
 }
@@ -228,7 +228,7 @@ QMainWindow *ClientConnectionManager::createMainWindow()
     delete m_mainWindow;
     m_mainWindow = new MainWindow;
     m_mainWindow->setupFeedbackProvider();
-    connect(m_mainWindow, SIGNAL(targetQuitRequested()), this, SLOT(targetQuitRequested()));
+    connect(m_mainWindow.data(), &MainWindow::targetQuitRequested, this, &ClientConnectionManager::targetQuitRequested);
     m_ignorePersistentError = false;
     m_mainWindow->show();
     return m_mainWindow;
@@ -238,7 +238,7 @@ void ClientConnectionManager::transientConnectionError()
 {
     if (m_connectionTimeout.elapsed() < 60 * 1000) {
         // client wasn't up yet, keep trying
-        QTimer::singleShot(1000, this, SLOT(connectToHost()));
+        QTimer::singleShot(1000, this, &ClientConnectionManager::doConnectToHost);
     } else {
         emit persistentConnectionError(tr("Connection refused."));
     }
@@ -261,7 +261,7 @@ void ClientConnectionManager::handlePersistentConnectionError(const QString &msg
 
 void ClientConnectionManager::delayedHideSplashScreen()
 {
-    QTimer::singleShot(0, this, SLOT(hideSplashScreen()));
+    QTimer::singleShot(0, this, &ClientConnectionManager::hideSplashScreen);
 }
 
 void ClientConnectionManager::hideSplashScreen()

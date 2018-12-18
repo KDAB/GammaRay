@@ -96,10 +96,10 @@ void ProbeSettingsReceiver::run()
     m_mutex.unlock();
 
     m_socket = new QLocalSocket;
-    connect(m_socket, SIGNAL(disconnected()), this, SLOT(settingsReceivedFallback()));
-    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)), this,
-            SLOT(settingsReceivedFallback()));
-    connect(m_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(m_socket, &QLocalSocket::disconnected, this, &ProbeSettingsReceiver::settingsReceivedFallback);
+    connect(m_socket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
+            this, &ProbeSettingsReceiver::settingsReceivedFallback);
+    connect(m_socket, &QIODevice::readyRead, this, &ProbeSettingsReceiver::readyRead);
     m_socket->connectToServer(QStringLiteral("gammaray-")
                               + QString::number(ProbeSettings::launcherIdentifier()));
     if (!m_socket->waitForConnected(10000)) {
@@ -234,7 +234,7 @@ QVariant ProbeSettings::value(const QString &key, const QVariant &defaultValue)
 void ProbeSettings::receiveSettings()
 {
     auto t = new QThread;
-    QObject::connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
+    QObject::connect(t, &QThread::finished, t, &QObject::deleteLater);
     t->start();
     auto receiver = new ProbeSettingsReceiver;
     s_probeSettings()->receiver = receiver;

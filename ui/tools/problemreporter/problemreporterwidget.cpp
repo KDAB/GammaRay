@@ -108,9 +108,9 @@ ProblemReporterWidget::ProblemReporterWidget(QWidget *parent)
         createProblemReporterClient);
     ProblemReporterInterface *iface = ObjectBroker::object<ProblemReporterInterface *>();
 
-    connect(ui->scanButton, SIGNAL(clicked()), iface, SLOT(requestScan()));
-    connect(ui->scanButton, SIGNAL(clicked()), ui->progressBar, SLOT(show()));
-    connect(iface, SIGNAL(problemScansFinished()), ui->progressBar, SLOT(hide()));
+    connect(ui->scanButton, &QAbstractButton::clicked, iface, &ProblemReporterInterface::requestScan);
+    connect(ui->scanButton, &QAbstractButton::clicked, ui->progressBar, &QWidget::show);
+    connect(iface, &ProblemReporterInterface::problemScansFinished, ui->progressBar, &QWidget::hide);
     ui->progressBar->setVisible(false);
 
     m_problemsModel = new ProblemClientModel(this);
@@ -121,7 +121,7 @@ ProblemReporterWidget::ProblemReporterWidget(QWidget *parent)
     ui->problemView->setModel(m_problemsModel);
     ui->problemView->sortByColumn(0, Qt::AscendingOrder);
 
-    connect(ui->problemView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(problemViewContextMenu(QPoint)));
+    connect(ui->problemView, &QWidget::customContextMenuRequested, this, &ProblemReporterWidget::problemViewContextMenu);
 
     new SearchLineController(ui->searchLine, m_problemsModel);
 
@@ -131,7 +131,7 @@ ProblemReporterWidget::ProblemReporterWidget(QWidget *parent)
     ui->problemfilterwidget->setItemDelegate(new ProblemFilterDelegate(ui->problemfilterwidget));
     ui->problemfilterwidget->setModel(m_availableCheckersModel);
 
-    connect(m_availableCheckersModel, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)), this, SLOT(updateFilter(QModelIndex, QModelIndex, QVector<int>)));
+    connect(m_availableCheckersModel, &QAbstractItemModel::dataChanged, this, &ProblemReporterWidget::updateFilter);
 }
 
 ProblemReporterWidget::~ProblemReporterWidget()

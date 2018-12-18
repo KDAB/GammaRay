@@ -63,11 +63,11 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
     ObjectBroker::registerClientObjectFactoryCallback<ResourceBrowserInterface *>(
         createResourceBrowserClient);
     m_interface = ObjectBroker::object<ResourceBrowserInterface *>();
-    connect(m_interface, SIGNAL(resourceDeselected()), this, SLOT(resourceDeselected()));
-    connect(m_interface, SIGNAL(resourceSelected(QByteArray,int,int)), this,
-            SLOT(resourceSelected(QByteArray,int,int)));
-    connect(m_interface, SIGNAL(resourceDownloaded(QString,QByteArray)), this,
-            SLOT(resourceDownloaded(QString,QByteArray)));
+    connect(m_interface, &ResourceBrowserInterface::resourceDeselected, this, &ResourceBrowserWidget::resourceDeselected);
+    connect(m_interface, &ResourceBrowserInterface::resourceSelected, this,
+            &ResourceBrowserWidget::resourceSelected);
+    connect(m_interface, &ResourceBrowserInterface::resourceDownloaded, this,
+            &ResourceBrowserWidget::resourceDownloaded);
 
     ui->setupUi(this);
     auto resModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ResourceModel"));
@@ -83,11 +83,11 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
     ui->treeView->setSelectionModel(ObjectBroker::selectionModel(ui->treeView->model()));
     new SearchLineController(ui->searchLine, model);
 
-    connect(ui->treeView, SIGNAL(newContentExpanded()), SLOT(setupLayout()));
+    connect(ui->treeView, &DeferredTreeView::newContentExpanded, this, &ResourceBrowserWidget::setupLayout);
 
     ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->treeView, SIGNAL(customContextMenuRequested(QPoint)), this,
-            SLOT(handleCustomContextMenu(QPoint)));
+    connect(ui->treeView, &QWidget::customContextMenuRequested, this,
+            &ResourceBrowserWidget::handleCustomContextMenu);
 
     ui->resourceLabel->setText(tr("Select a Resource to Preview"));
     ui->stackedWidget->setCurrentWidget(ui->contentLabelPage);

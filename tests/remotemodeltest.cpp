@@ -153,10 +153,10 @@ private slots:
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.EmptyModel"), this);
-        connect(&server, SIGNAL(message(GammaRay::Message)), &client,
-                SLOT(newMessage(GammaRay::Message)));
-        connect(&client, SIGNAL(message(GammaRay::Message)), &server,
-                SLOT(newRequest(GammaRay::Message)));
+        connect(&server, &FakeRemoteModelServer::message, &client,
+                &RemoteModel::newMessage);
+        connect(&client, &FakeRemoteModel::message, &server,
+                &RemoteModelServer::newRequest);
 
         ModelTest modelTest(&client);
 
@@ -179,10 +179,10 @@ private slots:
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.ListModel"), this);
-        connect(&server, SIGNAL(message(GammaRay::Message)), &client,
-                SLOT(newMessage(GammaRay::Message)));
-        connect(&client, SIGNAL(message(GammaRay::Message)), &server,
-                SLOT(newRequest(GammaRay::Message)));
+        connect(&server, &FakeRemoteModelServer::message, &client,
+                &RemoteModel::newMessage);
+        connect(&client, &FakeRemoteModel::message, &server,
+                &RemoteModelServer::newRequest);
 
         ModelTest modelTest(&client);
         QTest::qWait(100); // ModelTest is going to fetch stuff for us already
@@ -225,10 +225,10 @@ private slots:
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel"), this);
-        connect(&server, SIGNAL(message(GammaRay::Message)), &client,
-                SLOT(newMessage(GammaRay::Message)));
-        connect(&client, SIGNAL(message(GammaRay::Message)), &server,
-                SLOT(newRequest(GammaRay::Message)));
+        connect(&server, &FakeRemoteModelServer::message, &client,
+                &RemoteModel::newMessage);
+        connect(&client, &FakeRemoteModel::message, &server,
+                &RemoteModelServer::newRequest);
 
         ModelTest modelTest(&client);
         QTest::qWait(25); // ModelTest is going to fetch stuff for us already
@@ -283,10 +283,10 @@ private slots:
         server.modelMonitored(true);
 
         FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.TreeModel2"), this);
-        connect(&server, SIGNAL(message(GammaRay::Message)), &client,
-                SLOT(newMessage(GammaRay::Message)));
-        connect(&client, SIGNAL(message(GammaRay::Message)), &server,
-                SLOT(newRequest(GammaRay::Message)));
+        connect(&server, &FakeRemoteModelServer::message, &client,
+                &RemoteModel::newMessage);
+        connect(&client, &FakeRemoteModel::message, &server,
+                &RemoteModelServer::newRequest);
 
         QSortFilterProxyModel proxy;
         proxy.setDynamicSortFilter(true);

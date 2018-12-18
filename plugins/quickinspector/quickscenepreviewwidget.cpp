@@ -47,7 +47,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickSceneControlWidget *contro
     : RemoteViewWidget(parent)
     , m_control(control)
 {
-    connect(this, SIGNAL(frameChanged()), this, SLOT(saveScreenshot()));
+    connect(this, &RemoteViewWidget::frameChanged, this, &QuickScenePreviewWidget::saveScreenshot);
     setName(QStringLiteral("com.kdab.GammaRay.QuickRemoteView"));
     setUnavailableText(tr("No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
 }

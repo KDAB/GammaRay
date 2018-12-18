@@ -36,8 +36,8 @@ int main(int argc, char **argv)
     QCoreApplication app(argc, argv);
     PropertyTestObject obj;
     QTimer timer;
-    QObject::connect(&timer, SIGNAL(timeout()), obj.changingPropertyObject(),
-                     SLOT(changeProperties()));
+    QObject::connect(&timer, &QTimer::timeout, obj.changingPropertyObject(),
+                     &ChangingPropertyObject::changeProperties);
     timer.start(5000);
 
     return app.exec();

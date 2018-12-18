@@ -36,8 +36,8 @@ AvailableCheckersModel::AvailableCheckersModel(QObject *parent)
     : QAbstractListModel(parent)
     , m_availableCheckers(&ProblemCollector::instance()->availableCheckers())
 {
-    connect(ProblemCollector::instance(), SIGNAL(aboutToAddChecker()), this, SLOT(aboutToAddChecker()));
-    connect(ProblemCollector::instance(), SIGNAL(checkerAdded()), this, SLOT(checkerAdded()));
+    connect(ProblemCollector::instance(), &ProblemCollector::aboutToAddChecker, this, &AvailableCheckersModel::aboutToAddChecker);
+    connect(ProblemCollector::instance(), &ProblemCollector::checkerAdded, this, &AvailableCheckersModel::checkerAdded);
 }
 
 QVariant AvailableCheckersModel::data(const QModelIndex & index, int role) const

@@ -67,8 +67,8 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
     m_treeView->setModel(proxy);
     m_treeView->setSelectionModel(ObjectBroker::selectionModel(proxy));
     m_treeView->sortByColumn(0, Qt::AscendingOrder);
-    connect(m_treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this,
-            SLOT(selectionChanged(QItemSelection)));
+    connect(m_treeView->selectionModel(), &QItemSelectionModel::selectionChanged, this,
+            &MetaObjectBrowserWidget::selectionChanged);
 
     auto objectSearchLine = new QLineEdit(this);
     new SearchLineController(objectSearchLine, proxy);
@@ -85,7 +85,7 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
     hbox->addLayout(vbox);
     hbox->addWidget(propertyWidget);
 
-    connect(m_propertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
+    connect(m_propertyWidget, &PropertyWidget::tabsUpdated, this, &MetaObjectBrowserWidget::propertyWidgetTabsChanged);
 
 	Endpoint::instance()->invokeObject(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), "rescanMetaTypes");
 }

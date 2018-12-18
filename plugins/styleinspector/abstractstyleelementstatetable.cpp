@@ -42,7 +42,7 @@ AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject *parent)
     : AbstractStyleElementModel(parent)
     , m_interface(ObjectBroker::object<StyleInspectorInterface *>())
 {
-    connect(m_interface, SIGNAL(cellSizeChanged()), SLOT(cellSizeChanged()));
+    connect(m_interface, &StyleInspectorInterface::cellSizeChanged, this, &AbstractStyleElementStateTable::cellSizeChanged);
 }
 
 void AbstractStyleElementStateTable::cellSizeChanged()

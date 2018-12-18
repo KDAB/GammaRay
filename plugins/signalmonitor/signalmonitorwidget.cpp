@@ -72,18 +72,18 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     ui->objectTreeView->header()->setObjectName("objectTreeViewHeader");
     ui->objectTreeView->setModel(signalHistoryProxyModel);
     ui->objectTreeView->setEventScrollBar(ui->eventScrollBar);
-    connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
+    connect(ui->objectTreeView, &QWidget::customContextMenuRequested, this, &SignalMonitorWidget::contextMenu);
     auto selectionModel = ObjectBroker::selectionModel(signalHistoryProxyModel);
     ui->objectTreeView->setSelectionModel(selectionModel);
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &SignalMonitorWidget::selectionChanged);
 
-    connect(ui->pauseButton, SIGNAL(toggled(bool)), this, SLOT(pauseAndResume(bool)));
-    connect(ui->intervalScale, SIGNAL(valueChanged(int)), this,
-            SLOT(intervalScaleValueChanged(int)));
-    connect(ui->objectTreeView->eventDelegate(), SIGNAL(isActiveChanged(bool)), this,
-            SLOT(eventDelegateIsActiveChanged(bool)));
-    connect(ui->objectTreeView->header(), SIGNAL(sectionResized(int,int,int)), this,
-            SLOT(adjustEventScrollBarSize()));
+    connect(ui->pauseButton, &QAbstractButton::toggled, this, &SignalMonitorWidget::pauseAndResume);
+    connect(ui->intervalScale, &QAbstractSlider::valueChanged, this,
+            &SignalMonitorWidget::intervalScaleValueChanged);
+    connect(ui->objectTreeView->eventDelegate(), &SignalHistoryDelegate::isActiveChanged, this,
+            &SignalMonitorWidget::eventDelegateIsActiveChanged);
+    connect(ui->objectTreeView->header(), &QHeaderView::sectionResized, this,
+            &SignalMonitorWidget::adjustEventScrollBarSize);
 
     m_stateManager.setDefaultSizes(ui->objectTreeView->header(),
                                    UISizeVector() << 200 << 200 << -1);

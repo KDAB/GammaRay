@@ -151,8 +151,7 @@ void UIStateManager::setup()
 
         knownNames << name;
 
-        connect(splitter, SIGNAL(splitterMoved(int,int)), this, SLOT(
-                    widgetCustomized()), Qt::UniqueConnection);
+        connect(splitter, &QSplitter::splitterMoved, this, &UIStateManager::widgetCustomized, Qt::UniqueConnection);
     }
 
     foreach (QHeaderView *header, headers()) {
@@ -168,10 +167,9 @@ void UIStateManager::setup()
 
         knownNames << name;
 
-        connect(header, SIGNAL(sectionResized(int,int,int)), this, SLOT(
-                    widgetCustomized()), Qt::UniqueConnection);
-        connect(header, SIGNAL(sectionCountChanged(int,int)), this,
-                SLOT(headerSectionCountChanged()), Qt::UniqueConnection);
+        connect(header, &QHeaderView::sectionResized, this, &UIStateManager::widgetCustomized, Qt::UniqueConnection);
+        connect(header, &QHeaderView::sectionCountChanged, this,
+                &UIStateManager::headerSectionCountChanged, Qt::UniqueConnection);
 
         QAbstractItemView *view = headerView(header);
         view->removeEventFilter(this);

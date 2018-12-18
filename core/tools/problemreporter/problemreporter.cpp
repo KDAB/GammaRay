@@ -41,7 +41,7 @@ ProblemReporter::ProblemReporter(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ProblemModel"), m_problemModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.AvailableProblemCheckersModel"), new AvailableCheckersModel(this));
 
-    connect(ProblemCollector::instance(), SIGNAL(problemScansFinished()), this, SIGNAL(problemScansFinished()));
+    connect(ProblemCollector::instance(), &ProblemCollector::problemScansFinished, this, &ProblemReporterInterface::problemScansFinished);
 }
 
 ProblemReporter::~ProblemReporter()

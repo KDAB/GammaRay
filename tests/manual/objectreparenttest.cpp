@@ -42,7 +42,7 @@ public:
 
         auto t = new QTimer(this);
         t->start(10000);
-        connect(t, SIGNAL(timeout()), SLOT(reparent()));
+        connect(t, &QTimer::timeout, this, &MyObject::reparent);
 
         auto gc = new QObject(c);
         new QObject(gc);

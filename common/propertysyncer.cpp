@@ -71,7 +71,7 @@ void PropertySyncer::addObject(Protocol::ObjectAddress addr, QObject *obj)
         connect(obj, QByteArray("2") + prop.notifySignal().methodSignature(), this, SLOT(propertyChanged()));
     }
 
-    connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(objectDestroyed(QObject*)));
+    connect(obj, &QObject::destroyed, this, &PropertySyncer::objectDestroyed);
 
     ObjectInfo info;
     info.addr = addr;

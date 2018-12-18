@@ -46,8 +46,8 @@ CodecBrowser::CodecBrowser(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.AllCodecsModel"), model);
 
     m_codecSelectionModel = ObjectBroker::selectionModel(model);
-    connect(m_codecSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(updateCodecs(QItemSelection,QItemSelection)));
+    connect(m_codecSelectionModel, &QItemSelectionModel::selectionChanged,
+            this, &CodecBrowser::updateCodecs);
 
     m_selectedCodecsModel = new SelectedCodecsModel(this);
     probe->registerModel(QStringLiteral(

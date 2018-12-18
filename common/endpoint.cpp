@@ -66,11 +66,11 @@ Endpoint::Endpoint(QObject *parent)
     insertObjectInfo(endpointObj);
 
     m_bandwidthMeasurementTimer = new QTimer(this);
-    connect(m_bandwidthMeasurementTimer, SIGNAL(timeout()), this, SLOT(logTransmissionRate()));
+    connect(m_bandwidthMeasurementTimer, &QTimer::timeout, this, &Endpoint::doLogTransmissionRate);
     m_bandwidthMeasurementTimer->start(1000);
 
-    connect(m_propertySyncer, SIGNAL(message(GammaRay::Message)), this,
-            SLOT(sendMessage(GammaRay::Message)));
+    connect(m_propertySyncer, &PropertySyncer::message, this,
+            &Endpoint::sendMessage);
 }
 
 Endpoint::~Endpoint()
@@ -128,7 +128,7 @@ quint16 Endpoint::broadcastPort()
     return 13325;
 }
 
-void Endpoint::logTransmissionRate()
+void Endpoint::doLogTransmissionRate()
 {
     emit logTransmissionRate(m_bytesRead, m_bytesWritten);
 
@@ -148,7 +148,9 @@ void Endpoint::setDevice(QIODevice *device)
     Q_ASSERT(!m_socket);
     Q_ASSERT(device);
     m_socket = device;
-    connect(m_socket.data(), SIGNAL(readyRead()), SLOT(readyRead()));
+    connect(m_socket.data(), &QIODevice::readyRead, this, &Endpoint::readyRead);
+    // FIXME Use proper type for m_socket, instead of relying on runtime-connect
+    // to a slot which doesn't exist in QIODevice
     connect(m_socket.data(), SIGNAL(disconnected()), SLOT(connectionClosed()));
     if (m_socket->bytesAvailable())
         readyRead();
@@ -170,7 +172,7 @@ void Endpoint::readyRead()
 
 void Endpoint::connectionClosed()
 {
-    disconnect(m_socket.data(), SIGNAL(readyRead()), this, SLOT(readyRead()));
+    disconnect(m_socket.data(), &QIODevice::readyRead, this, &Endpoint::readyRead);
     disconnect(m_socket.data(), SIGNAL(disconnected()), this, SLOT(connectionClosed()));
     m_socket = nullptr;
     emit disconnected();
@@ -202,7 +204,7 @@ Protocol::ObjectAddress Endpoint::registerObject(const QString &name, QObject *o
     Q_ASSERT(!m_objectMap.contains(object));
     m_objectMap[object] = obj;
 
-    connect(object, SIGNAL(destroyed(QObject*)), SLOT(objectDestroyed(QObject*)));
+    connect(object, &QObject::destroyed, this, &Endpoint::slotObjectDestroyed);
 
     return obj->address;
 }
@@ -283,7 +285,7 @@ void Endpoint::registerMessageHandler(Protocol::ObjectAddress objectAddress, QOb
     Q_ASSERT(!m_handlerMap.contains(receiver, obj));
     m_handlerMap.insert(receiver, obj);
     if (obj->receiver != obj->object)
-        connect(receiver, SIGNAL(destroyed(QObject*)), SLOT(handlerDestroyed(QObject*)));
+        connect(receiver, &QObject::destroyed, this, &Endpoint::slotHandlerDestroyed);
 }
 
 void Endpoint::unregisterMessageHandler(Protocol::ObjectAddress objectAddress)
@@ -292,14 +294,14 @@ void Endpoint::unregisterMessageHandler(Protocol::ObjectAddress objectAddress)
     ObjectInfo *obj = m_addressMap.value(objectAddress);
     Q_ASSERT(obj);
     Q_ASSERT(obj->receiver);
-    disconnect(obj->receiver, SIGNAL(destroyed(QObject*)), this,
-               SLOT(handlerDestroyed(QObject*)));
+    disconnect(obj->receiver, &QObject::destroyed, this,
+               &Endpoint::slotHandlerDestroyed);
     m_handlerMap.remove(obj->receiver, obj);
     obj->receiver = nullptr;
     obj->messageHandler = QMetaMethod();
 }
 
-void Endpoint::objectDestroyed(QObject *obj)
+void Endpoint::slotObjectDestroyed(QObject *obj)
 {
     ObjectInfo *info = m_objectMap.value(obj, nullptr);
 #if !defined(NDEBUG)
@@ -316,7 +318,7 @@ void Endpoint::objectDestroyed(QObject *obj)
     objectDestroyed(info->address, QString(info->name), obj);
 }
 
-void Endpoint::handlerDestroyed(QObject *obj)
+void Endpoint::slotHandlerDestroyed(QObject *obj)
 {
     // copy, the virtual method below likely changes the maps.
     const QList<ObjectInfo *> objs = m_handlerMap.values(obj);
@@ -396,14 +398,14 @@ void Endpoint::removeObjectInfo(Endpoint::ObjectInfo *oi)
     m_nameMap.remove(oi->name);
 
     if (oi->receiver) {
-        disconnect(oi->receiver, SIGNAL(destroyed(QObject*)), this,
-                   SLOT(handlerDestroyed(QObject*)));
+        disconnect(oi->receiver, &QObject::destroyed, this,
+                   &Endpoint::slotHandlerDestroyed);
         m_handlerMap.remove(oi->receiver, oi);
     }
 
     if (oi->object) {
-        disconnect(oi->object, SIGNAL(destroyed(QObject*)), this,
-                   SLOT(objectDestroyed(QObject*)));
+        disconnect(oi->object, &QObject::destroyed, this,
+                   &Endpoint::slotObjectDestroyed);
         m_objectMap.remove(oi->object);
     }
 

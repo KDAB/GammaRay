@@ -78,7 +78,7 @@ private:
     QVector<QRect> tabFocusChain(QWidget *window) const;
 
 private slots:
-    void widgetSelected(const QItemSelection &selection);
+    void widgetSelectionChanged(const QItemSelection &selection);
     void widgetSelected(QWidget *widget);
     void objectSelected(QObject *obj);
     void objectCreated(QObject *object);

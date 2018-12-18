@@ -121,9 +121,9 @@ void KJobModel::objectAdded(QObject *obj)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     KJobInfo jobInfo;
     jobInfo.job = job;
-    connect(job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)));
-    connect(job, SIGNAL(finished(KJob*)), SLOT(jobFinished(KJob*)));
-    connect(job, SIGNAL(infoMessage(KJob*,QString,QString)), SLOT(jobInfo(KJob*,QString)));
+    connect(job, &KJob::result, this, &KJobModel::jobResult);
+    connect(job, &KJob::finished, this, &KJobModel::jobFinished);
+    connect(job, &KJob::infoMessage, this, &KJobModel::jobInfo);
     jobInfo.name = obj->objectName().isEmpty() ? Util::addressToString(obj) : obj->objectName();
     jobInfo.type = obj->metaObject()->className();
     jobInfo.state = KJobInfo::Running;

@@ -87,16 +87,17 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     ui->paintAnalyzerSplitter->setStretchFactor(0, 1);
     ui->paintAnalyzerSplitter->setStretchFactor(1, 2);
 
-    connect(zoom, SIGNAL(currentIndexChanged(int)), ui->replayWidget, SLOT(setZoomLevel(int)));
-    connect(ui->replayWidget, SIGNAL(zoomLevelChanged(int)), zoom, SLOT(setCurrentIndex(int)));
+    connect(zoom, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            ui->replayWidget, &RemoteViewWidget::setZoomLevel);
+    connect(ui->replayWidget, &RemoteViewWidget::zoomLevelChanged, zoom, &QComboBox::setCurrentIndex);
     zoom->setCurrentIndex(ui->replayWidget->zoomLevelIndex());
 
     ui->actionShowClipArea->setIcon(UIResources::themedIcon(QLatin1String("visualize-clipping.png")));
-    connect(ui->actionShowClipArea, SIGNAL(toggled(bool)), ui->replayWidget, SLOT(setShowClipArea(bool)));
+    connect(ui->actionShowClipArea, &QAction::toggled, ui->replayWidget, &PaintAnalyzerReplayView::setShowClipArea);
     ui->actionShowClipArea->setChecked(ui->replayWidget->showClipArea());
 
-    connect(ui->commandView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(commandContextMenu(QPoint)));
-    connect(ui->stackTraceView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(stackTraceContextMenu(QPoint)));
+    connect(ui->commandView, &QWidget::customContextMenuRequested, this, &PaintAnalyzerWidget::commandContextMenu);
+    connect(ui->stackTraceView, &QWidget::customContextMenuRequested, this, &PaintAnalyzerWidget::stackTraceContextMenu);
 }
 
 PaintAnalyzerWidget::~PaintAnalyzerWidget()
@@ -120,8 +121,8 @@ void PaintAnalyzerWidget::setBaseName(const QString &name)
     ui->replayWidget->setName(name + QStringLiteral(".remoteView"));
 
     m_iface = ObjectBroker::object<PaintAnalyzerInterface*>(name);
-    connect(m_iface, SIGNAL(hasArgumentDetailsChanged(bool)), this, SLOT(detailsChanged()));
-    connect(m_iface, SIGNAL(hasStackTraceChanged(bool)), this, SLOT(detailsChanged()));
+    connect(m_iface, &PaintAnalyzerInterface::hasArgumentDetailsChanged, this, &PaintAnalyzerWidget::detailsChanged);
+    connect(m_iface, &PaintAnalyzerInterface::hasStackTraceChanged, this, &PaintAnalyzerWidget::detailsChanged);
     detailsChanged();
 }
 

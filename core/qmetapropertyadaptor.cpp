@@ -55,7 +55,7 @@ void QMetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
         return;
 
     if (oi.type() == ObjectInstance::QtObject && oi.qtObject())
-        connect(oi.qtObject(), SIGNAL(destroyed(QObject*)), this, SIGNAL(objectInvalidated()));
+        connect(oi.qtObject(), &QObject::destroyed, this, &PropertyAdaptor::objectInvalidated);
 
     for (int i = 0; i < mo->propertyCount(); ++i) {
         const QMetaProperty prop = mo->property(i);

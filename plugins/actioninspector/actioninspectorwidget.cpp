@@ -62,14 +62,14 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
     ui->actionView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
     ui->actionView->setModel(actionModel);
     ui->actionView->sortByColumn(ActionModel::ShortcutsPropColumn);
-    connect(ui->actionView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
+    connect(ui->actionView, &QWidget::customContextMenuRequested, this, &ActionInspectorWidget::contextMenu);
 
     auto selectionModel = ObjectBroker::selectionModel(actionModel);
     ui->actionView->setSelectionModel(selectionModel);
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &ActionInspectorWidget::selectionChanged);
 
     m_stateManager.setDefaultSizes(ui->actionView->header(), UISizeVector() << -1 << 200 << -1 << -1 << -1 << 200);
-    connect(ui->actionView, SIGNAL(doubleClicked(QModelIndex)), SLOT(triggerAction(QModelIndex)));
+    connect(ui->actionView, &QAbstractItemView::doubleClicked, this, &ActionInspectorWidget::triggerAction);
 }
 
 ActionInspectorWidget::~ActionInspectorWidget()

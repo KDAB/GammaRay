@@ -58,15 +58,15 @@ LauncherWindow::LauncherWindow(QWidget *parent)
     ui->aboutPage->layout()->setContentsMargins(ui->selfTestPage->layout()->contentsMargins());
     ui->aboutPage->setBackgroundWindow(this);
 
-    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged()));
-    connect(ui->attachPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
-    connect(ui->launchPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
-    connect(ui->connectPage, SIGNAL(updateButtonState()), SLOT(tabChanged()));
-    connect(ui->attachPage, SIGNAL(activate()),
-            ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
-    connect(ui->connectPage, SIGNAL(activate()),
-            ui->buttonBox->button(QDialogButtonBox::Ok), SLOT(click()));
-    connect(ui->buttonBox, SIGNAL(helpRequested()), this, SLOT(help()));
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &LauncherWindow::tabChanged);
+    connect(ui->attachPage, &AttachDialog::updateButtonState, this, &LauncherWindow::tabChanged);
+    connect(ui->launchPage, &LaunchPage::updateButtonState, this, &LauncherWindow::tabChanged);
+    connect(ui->connectPage, &ConnectPage::updateButtonState, this, &LauncherWindow::tabChanged);
+    connect(ui->attachPage, &AttachDialog::activate,
+            ui->buttonBox->button(QDialogButtonBox::Ok), &QAbstractButton::click);
+    connect(ui->connectPage, &ConnectPage::activate,
+            ui->buttonBox->button(QDialogButtonBox::Ok), &QAbstractButton::click);
+    connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &LauncherWindow::help);
 
     setWindowTitle(tr("GammaRay Launcher"));
     ui->buttonBox->button(QDialogButtonBox::Help)->setEnabled(HelpController::isAvailable());

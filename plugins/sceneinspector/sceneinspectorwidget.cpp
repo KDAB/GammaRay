@@ -77,7 +77,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
     ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.SceneInspector"));
 
     ui->sceneComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneList")));
-    connect(ui->sceneComboBox, SIGNAL(currentIndexChanged(int)), SLOT(sceneSelected(int)));
+    connect(ui->sceneComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &SceneInspectorWidget::sceneSelected);
 
     auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"));
     ui->sceneTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
@@ -86,32 +87,32 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
 
     QItemSelectionModel *itemSelection = ObjectBroker::selectionModel(sceneModel);
     ui->sceneTreeView->setSelectionModel(itemSelection);
-    connect(itemSelection, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(sceneItemSelected(QItemSelection)));
+    connect(itemSelection, &QItemSelectionModel::selectionChanged,
+            this, &SceneInspectorWidget::sceneItemSelected);
 
-    connect(ui->sceneTreeView, SIGNAL(customContextMenuRequested(QPoint)), this,
-            SLOT(sceneContextMenu(QPoint)));
+    connect(ui->sceneTreeView, &QWidget::customContextMenuRequested, this,
+            &SceneInspectorWidget::sceneContextMenu);
 
     ui->graphicsSceneView->setGraphicsScene(m_scene);
-    connect(m_interface, SIGNAL(sceneRectChanged(QRectF)),
-            this, SLOT(sceneRectChanged(QRectF)));
-    connect(m_interface, SIGNAL(sceneChanged()),
-            this, SLOT(sceneChanged()));
-    connect(m_interface, SIGNAL(sceneRendered(QPixmap)),
-            this, SLOT(sceneRendered(QPixmap)));
-    connect(m_interface, SIGNAL(itemSelected(QRectF)),
-            this, SLOT(itemSelected(QRectF)));
+    connect(m_interface, &SceneInspectorInterface::sceneRectChanged,
+            this, &SceneInspectorWidget::sceneRectChanged);
+    connect(m_interface, &SceneInspectorInterface::sceneChanged,
+            this, &SceneInspectorWidget::sceneChanged);
+    connect(m_interface, &SceneInspectorInterface::sceneRendered,
+            this, &SceneInspectorWidget::sceneRendered);
+    connect(m_interface, &SceneInspectorInterface::itemSelected,
+            this, &SceneInspectorWidget::itemSelected);
 
     m_interface->initializeGui();
 
     m_pixmap->setFlag(QGraphicsItem::ItemIgnoresTransformations);
     m_scene->addItem(m_pixmap);
-    connect(ui->graphicsSceneView->view(), SIGNAL(transformChanged()),
-            this, SLOT(visibleSceneRectChanged()));
-    connect(ui->graphicsSceneView->view()->horizontalScrollBar(), SIGNAL(valueChanged(int)),
-            this, SLOT(visibleSceneRectChanged()));
-    connect(ui->graphicsSceneView->view()->verticalScrollBar(), SIGNAL(valueChanged(int)),
-            this, SLOT(visibleSceneRectChanged()));
+    connect(ui->graphicsSceneView->view(), &GraphicsView::transformChanged,
+            this, &SceneInspectorWidget::visibleSceneRectChanged);
+    connect(ui->graphicsSceneView->view()->horizontalScrollBar(), &QAbstractSlider::valueChanged,
+            this, &SceneInspectorWidget::visibleSceneRectChanged);
+    connect(ui->graphicsSceneView->view()->verticalScrollBar(), &QAbstractSlider::valueChanged,
+            this, &SceneInspectorWidget::visibleSceneRectChanged);
 
     if (Endpoint::instance()->isRemoteClient())
         ui->graphicsSceneView->view()->viewport()->installEventFilter(this);
@@ -125,13 +126,13 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
-    connect(ui->scenePropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
+    connect(ui->scenePropertyWidget, &PropertyWidget::tabsUpdated, this, &SceneInspectorWidget::propertyWidgetTabsChanged);
 
     // limit fps to prevent bad performance, and to group update requests which is esp. required
     // for scrolling and similar high-frequency update requests
     m_updateTimer->setSingleShot(true);
     m_updateTimer->setInterval(100);
-    connect(m_updateTimer, SIGNAL(timeout()), SLOT(requestSceneUpdate()));
+    connect(m_updateTimer, &QTimer::timeout, this, &SceneInspectorWidget::requestSceneUpdate);
 }
 
 SceneInspectorWidget::~SceneInspectorWidget()

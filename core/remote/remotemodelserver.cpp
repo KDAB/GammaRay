@@ -89,30 +89,30 @@ void RemoteModelServer::connectModel()
     Q_ASSERT(m_model);
     Model::used(m_model);
 
-    connect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)),
-            SLOT(headerDataChanged(Qt::Orientation,int,int)));
-    connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            SLOT(rowsInserted(QModelIndex,int,int)));
-    connect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)),
-            SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
-    connect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-            SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
-    connect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            SLOT(rowsRemoved(QModelIndex,int,int)));
-    connect(m_model, SIGNAL(columnsInserted(QModelIndex,int,int)),
-            SLOT(columnsInserted(QModelIndex,int,int)));
-    connect(m_model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)),
-            SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
-    connect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)),
-            SLOT(columnsRemoved(QModelIndex,int,int)));
-    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-            SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
-    connect(m_model,
-            SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
+    connect(m_model.data(), &QAbstractItemModel::headerDataChanged,
+            this, &RemoteModelServer::headerDataChanged);
+    connect(m_model.data(), &QAbstractItemModel::rowsInserted,
+            this, &RemoteModelServer::rowsInserted);
+    connect(m_model.data(), &QAbstractItemModel::rowsAboutToBeMoved,
+            this, &RemoteModelServer::rowsAboutToBeMoved);
+    connect(m_model.data(), &QAbstractItemModel::rowsMoved,
+            this, &RemoteModelServer::rowsMoved);
+    connect(m_model.data(), &QAbstractItemModel::rowsRemoved,
+            this, &RemoteModelServer::rowsRemoved);
+    connect(m_model.data(), &QAbstractItemModel::columnsInserted,
+            this, &RemoteModelServer::columnsInserted);
+    connect(m_model.data(), &QAbstractItemModel::columnsMoved,
+            this, &RemoteModelServer::columnsMoved);
+    connect(m_model.data(), &QAbstractItemModel::columnsRemoved,
+            this, &RemoteModelServer::columnsRemoved);
+    connect(m_model.data(), &QAbstractItemModel::dataChanged,
+            this, &RemoteModelServer::dataChanged);
+    connect(m_model.data(),
+            &QAbstractItemModel::layoutChanged,
             this,
-            SLOT(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
-    connect(m_model, SIGNAL(modelReset()), SLOT(modelReset()));
-    connect(m_model, SIGNAL(destroyed(QObject*)), SLOT(modelDeleted()));
+            &RemoteModelServer::layoutChanged);
+    connect(m_model.data(), &QAbstractItemModel::modelReset, this, &RemoteModelServer::modelReset);
+    connect(m_model.data(), &QObject::destroyed, this, &RemoteModelServer::modelDeleted);
 }
 
 void RemoteModelServer::disconnectModel()
@@ -120,30 +120,28 @@ void RemoteModelServer::disconnectModel()
     Q_ASSERT(m_model);
     Model::unused(m_model);
 
-    disconnect(m_model, SIGNAL(headerDataChanged(Qt::Orientation,int,int)),
-               this, SLOT(headerDataChanged(Qt::Orientation,int,int)));
-    disconnect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-               this, SLOT(rowsInserted(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)),
-               this, SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
-    disconnect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-               this, SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
-    disconnect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-               this, SLOT(rowsRemoved(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(columnsInserted(QModelIndex,int,int)),
-               this, SLOT(columnsInserted(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)),
-               this, SLOT(columnsMoved(QModelIndex,int,int,QModelIndex,int)));
-    disconnect(m_model, SIGNAL(columnsRemoved(QModelIndex,int,int)),
-               this, SLOT(columnsRemoved(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-               this, SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
-    disconnect(m_model,
-               SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)),
-               this,
-               SLOT(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)));
-    disconnect(m_model, SIGNAL(modelReset()), this, SLOT(modelReset()));
-    disconnect(m_model, SIGNAL(destroyed(QObject*)), this, SLOT(modelDeleted()));
+    disconnect(m_model.data(), &QAbstractItemModel::headerDataChanged,
+               this, &RemoteModelServer::headerDataChanged);
+    disconnect(m_model.data(), &QAbstractItemModel::rowsInserted,
+               this, &RemoteModelServer::rowsInserted);
+    disconnect(m_model.data(), &QAbstractItemModel::rowsAboutToBeMoved,
+               this, &RemoteModelServer::rowsAboutToBeMoved);
+    disconnect(m_model.data(), &QAbstractItemModel::rowsMoved,
+               this, &RemoteModelServer::rowsMoved);
+    disconnect(m_model.data(), &QAbstractItemModel::rowsRemoved,
+               this, &RemoteModelServer::rowsRemoved);
+    disconnect(m_model.data(), &QAbstractItemModel::columnsInserted,
+               this, &RemoteModelServer::columnsInserted);
+    disconnect(m_model.data(), &QAbstractItemModel::columnsMoved,
+               this, &RemoteModelServer::columnsMoved);
+    disconnect(m_model.data(), &QAbstractItemModel::columnsRemoved,
+               this, &RemoteModelServer::columnsRemoved);
+    disconnect(m_model.data(), &QAbstractItemModel::dataChanged,
+               this, &RemoteModelServer::dataChanged);
+    disconnect(m_model.data(), &QAbstractItemModel::layoutChanged,
+               this, &RemoteModelServer::layoutChanged);
+    disconnect(m_model.data(), &QAbstractItemModel::modelReset, this, &RemoteModelServer::modelReset);
+    disconnect(m_model.data(), &QObject::destroyed, this, &RemoteModelServer::modelDeleted);
 }
 
 void RemoteModelServer::newRequest(const GammaRay::Message &msg)
@@ -473,7 +471,7 @@ void RemoteModelServer::registerServer()
     m_myAddress = Server::instance()->registerObject(objectName(), this, Server::ExportProperties);
     Server::instance()->registerMessageHandler(m_myAddress, this, "newRequest");
     Server::instance()->registerMonitorNotifier(m_myAddress, this, "modelMonitored");
-    connect(Endpoint::instance(), SIGNAL(disconnected()), this, SLOT(modelMonitored()));
+    connect(Endpoint::instance(), &Endpoint::disconnected, this, [this] { modelMonitored(); });
 }
 
 bool RemoteModelServer::isConnected() const

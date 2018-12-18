@@ -50,7 +50,7 @@ void DynamicPropertyAdaptor::doSetObject(const ObjectInstance &oi)
     if (obj) {
         m_propNames = obj->dynamicPropertyNames();
         obj->installEventFilter(this);
-        connect(obj, SIGNAL(destroyed(QObject*)), this, SIGNAL(objectInvalidated()));
+        connect(obj, &QObject::destroyed, this, &PropertyAdaptor::objectInvalidated);
     }
 }
 

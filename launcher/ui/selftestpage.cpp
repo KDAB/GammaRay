@@ -57,8 +57,8 @@ void SelfTestPage::run()
 {
     m_resultModel->clear();
     SelfTest selfTest;
-    connect(&selfTest, SIGNAL(information(QString)), this, SLOT(information(QString)));
-    connect(&selfTest, SIGNAL(error(QString)), this, SLOT(error(QString)));
+    connect(&selfTest, &SelfTest::information, this, &SelfTestPage::information);
+    connect(&selfTest, &SelfTest::error, this, &SelfTestPage::error);
     selfTest.checkEverything();
 }
 

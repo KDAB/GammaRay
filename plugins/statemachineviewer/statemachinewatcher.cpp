@@ -80,16 +80,16 @@ void StateMachineWatcher::watchState(QAbstractState *state)
     if (state->machine() != m_watchedStateMachine)
         return;
 
-    connect(state, SIGNAL(entered()),
-            this, SLOT(handleStateEntered()), Qt::UniqueConnection);
-    connect(state, SIGNAL(exited()),
-            this, SLOT(handleStateExited()), Qt::UniqueConnection);
-    connect(state, SIGNAL(destroyed(QObject*)),
-            this, SLOT(handleStateDestroyed()), Qt::UniqueConnection);
+    connect(state, &QAbstractState::entered,
+            this, &StateMachineWatcher::handleStateEntered, Qt::UniqueConnection);
+    connect(state, &QAbstractState::exited,
+            this, &StateMachineWatcher::handleStateExited, Qt::UniqueConnection);
+    connect(state, &QObject::destroyed,
+            this, &StateMachineWatcher::handleStateDestroyed, Qt::UniqueConnection);
 
     Q_FOREACH(QAbstractTransition *transition, state->findChildren<QAbstractTransition *>()) {
-        connect(transition, SIGNAL(triggered()),
-                this, SLOT(handleTransitionTriggered()), Qt::UniqueConnection);
+        connect(transition, &QAbstractTransition::triggered,
+                this, &StateMachineWatcher::handleTransitionTriggered, Qt::UniqueConnection);
     }
     m_watchedStates << state;
 }
@@ -97,12 +97,12 @@ void StateMachineWatcher::watchState(QAbstractState *state)
 void StateMachineWatcher::clearWatchedStates()
 {
     Q_FOREACH(QAbstractState *state, m_watchedStates) {
-        disconnect(state, SIGNAL(entered()), this, SLOT(handleStateEntered()));
-        disconnect(state, SIGNAL(exited()), this, SLOT(handleStateExited()));
-        disconnect(state, SIGNAL(destroyed(QObject*)), this, SLOT(handleStateDestroyed()));
+        disconnect(state, &QAbstractState::entered, this, &StateMachineWatcher::handleStateEntered);
+        disconnect(state, &QAbstractState::exited, this, &StateMachineWatcher::handleStateExited);
+        disconnect(state, &QObject::destroyed, this, &StateMachineWatcher::handleStateDestroyed);
 
         Q_FOREACH(QAbstractTransition *transition, state->findChildren<QAbstractTransition *>()) {
-            disconnect(transition, SIGNAL(triggered()), this, SLOT(handleTransitionTriggered()));
+            disconnect(transition, &QAbstractTransition::triggered, this, &StateMachineWatcher::handleTransitionTriggered);
         }
     }
     m_watchedStates.clear();

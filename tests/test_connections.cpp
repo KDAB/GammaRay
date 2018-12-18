@@ -47,18 +47,18 @@ TestObject::TestObject(QObject *parent)
     setObjectName(QStringLiteral("TestObject"));
     child->setObjectName(QStringLiteral("TestObjectChild"));
     // test connect/disconnect in ctor
-    connect(child, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
-    disconnect(child, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+    connect(child, &QObject::destroyed, this, &TestObject::dummySlot);
+    disconnect(child, &QObject::destroyed, this, &TestObject::dummySlot);
     // now connect again for dtor
-    connect(child, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+    connect(child, &QObject::destroyed, this, &TestObject::dummySlot);
 }
 
 TestObject::~TestObject()
 {
     // test disconnect
-    disconnect(child, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+    disconnect(child, &QObject::destroyed, this, &TestObject::dummySlot);
     // test connect, and leave it around to test disconnect-on-delete
-    connect(child, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+    connect(child, &QObject::destroyed, this, &TestObject::dummySlot);
 }
 
 // END TestObject
@@ -71,7 +71,7 @@ TestConnections::TestConnections(TestConnections::Type type, int timeOuts, int t
     , m_timer(new QTimer(this))
 {
     m_timer = new QTimer(this);
-    connect(m_timer, SIGNAL(timeout()), SLOT(timeout()));
+    connect(m_timer, &QTimer::timeout, this, &TestConnections::timeout);
     m_timer->start(timeoutInterval == -1 ? TIMEOUTINTERVAL : timeoutInterval);
 }
 
@@ -94,12 +94,12 @@ void TestConnections::timeout()
     if (m_type == NoEventLoop) {
         // directly create and delete objects without eventloop in between
         QObject *obj = new TestObject(this);
-        connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+        connect(obj, &QObject::destroyed, this, &TestConnections::dummySlot);
         delete obj;
     } else if (m_type == Stack) {
         QObject obj;
-        connect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
-        disconnect(&obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+        connect(&obj, &QObject::destroyed, this, &TestConnections::dummySlot);
+        disconnect(&obj, &QObject::destroyed, this, &TestConnections::dummySlot);
     } else if (m_type == SetParent) {
         auto *obj = new TestObject;
         obj->setParent(this);
@@ -127,7 +127,7 @@ void TestConnections::timeout()
         for (int i = 0; i < OBJECTS; ++i) {
             QObject *obj = new TestObject(this);
             m_objects << obj;
-            connect(obj, SIGNAL(destroyed(QObject*)), this, SLOT(dummySlot()));
+            connect(obj, &QObject::destroyed, this, &TestConnections::dummySlot);
         }
     }
 }
@@ -154,7 +154,7 @@ void TestThread::run()
                            m_timeoutInterval == -1 ? TIMEOUTS : m_timeoutInterval);
 
     auto *loop = new QEventLoop;
-    connect(&tester, SIGNAL(done()), loop, SLOT(quit()));
+    connect(&tester, &TestConnections::done, loop, &QEventLoop::quit);
     loop->exec();
     delete loop;
 }
@@ -164,7 +164,7 @@ void TestThread::run()
 // BEGIN TestWaiter
 void TestWaiter::addTester(TestConnections *tester)
 {
-    connect(tester, SIGNAL(done()), SLOT(testerDone()));
+    connect(tester, &TestConnections::done, this, &TestWaiter::testerDone);
     m_tester << tester;
 }
 
@@ -178,7 +178,7 @@ void TestWaiter::testerDone()
 
 void TestWaiter::addThread(TestThread *thread)
 {
-    connect(thread, SIGNAL(finished()), SLOT(threadFinished()));
+    connect(thread, &QThread::finished, this, &TestWaiter::threadFinished);
     m_threads << thread;
 }
 

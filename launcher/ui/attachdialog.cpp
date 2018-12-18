@@ -80,12 +80,12 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
 
     ui->view->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->view->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(ui->view->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-            this, SIGNAL(updateButtonState()));
-    connect(ui->view->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(selectABI(QModelIndex)));
+    connect(ui->view->selectionModel(), &QItemSelectionModel::currentRowChanged,
+            this, &AttachDialog::updateButtonState);
+    connect(ui->view->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &AttachDialog::selectABI);
 
-    connect(ui->view, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
+    connect(ui->view, &QAbstractItemView::activated, this, &AttachDialog::activate);
 
     new SearchLineController(ui->filter, m_proxyModel);
 
@@ -162,8 +162,8 @@ QString GammaRay::AttachDialog::absoluteExecutablePath() const
 void AttachDialog::updateProcesses()
 {
     auto *watcher = new QFutureWatcher<ProcDataList>(this);
-    connect(watcher, SIGNAL(finished()),
-            this, SLOT(updateProcessesFinished()));
+    connect(watcher, &QFutureWatcherBase::finished,
+            this, &AttachDialog::updateProcessesFinished);
     watcher->setFuture(QtConcurrent::run(processList, m_model->processes()));
 }
 
@@ -178,7 +178,7 @@ void AttachDialog::updateProcessesFinished()
         ui->view->setCurrentIndex(QModelIndex());
     watcher->deleteLater();
 
-    QTimer::singleShot(1000, this, SLOT(updateProcesses()));
+    QTimer::singleShot(1000, this, &AttachDialog::updateProcesses);
 }
 
 void AttachDialog::selectABI(const QModelIndex &processIndex)

@@ -69,6 +69,7 @@ private slots:
 
     void slotCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
 
+protected slots:
     void clearPendingSelection();
 
 private:

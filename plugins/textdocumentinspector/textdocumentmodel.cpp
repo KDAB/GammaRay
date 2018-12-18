@@ -64,13 +64,13 @@ TextDocumentModel::TextDocumentModel(QObject *parent)
 void TextDocumentModel::setDocument(QTextDocument *doc)
 {
     if (m_document)
-        disconnect(m_document, SIGNAL(contentsChanged()), this, SLOT(documentChanged()));
+        disconnect(m_document, &QTextDocument::contentsChanged, this, &TextDocumentModel::documentChanged);
 
     m_document = doc;
     fillModel();
 
     if (m_document)
-        connect(m_document, SIGNAL(contentsChanged()), SLOT(documentChanged()));
+        connect(m_document, &QTextDocument::contentsChanged, this, &TextDocumentModel::documentChanged);
 }
 
 void TextDocumentModel::documentChanged()

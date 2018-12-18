@@ -90,10 +90,10 @@ SceneInspector::SceneInspector(Probe *probe, QObject *parent)
     registerGraphicsViewMetaTypes();
     registerVariantHandlers();
 
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)),
-            SLOT(objectSelected(QObject*,QPoint)));
-    connect(probe, SIGNAL(nonQObjectSelected(void*,QString)),
-            this, SLOT(objectSelected(void*,QString)));
+    connect(probe, &Probe::objectSelected,
+            this, &SceneInspector::qObjectSelected);
+    connect(probe, &Probe::nonQObjectSelected,
+            this, &SceneInspector::nonQObjectSelected);
 
     auto *sceneFilterProxy
         = new ObjectTypeFilterProxyModel<QGraphicsScene>(this);
@@ -103,8 +103,8 @@ SceneInspector::SceneInspector(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SceneList"), singleColumnProxy);
 
     QItemSelectionModel *sceneSelection = ObjectBroker::selectionModel(singleColumnProxy);
-    connect(sceneSelection, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(sceneSelected(QItemSelection)));
+    connect(sceneSelection, &QItemSelectionModel::selectionChanged,
+            this, &SceneInspector::sceneSelected);
 
     m_sceneModel = new SceneModel(this);
     auto sceneProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
@@ -112,8 +112,8 @@ SceneInspector::SceneInspector(Probe *probe, QObject *parent)
     sceneProxy->addRole(ObjectModel::ObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"), sceneProxy);
     m_itemSelectionModel = ObjectBroker::selectionModel(sceneProxy);
-    connect(m_itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(sceneItemSelected(QItemSelection)));
+    connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged,
+            this, &SceneInspector::sceneItemSelectionChanged);
 }
 
 void SceneInspector::sceneSelected(const QItemSelection &selection)
@@ -140,10 +140,10 @@ void SceneInspector::connectToScene()
     if (!scene || !m_clientConnected)
         return;
 
-    connect(scene, SIGNAL(sceneRectChanged(QRectF)),
-            this, SIGNAL(sceneRectChanged(QRectF)));
-    connect(scene, SIGNAL(changed(QList<QRectF>)),
-            this, SIGNAL(sceneChanged()));
+    connect(scene, &QGraphicsScene::sceneRectChanged,
+            this, &SceneInspectorInterface::sceneRectChanged);
+    connect(scene, &QGraphicsScene::changed,
+            this, &SceneInspectorInterface::sceneChanged);
 
     initializeGui();
 }
@@ -202,7 +202,7 @@ void SceneInspector::renderScene(const QTransform &transform, const QSize &size)
     emit sceneRendered(view);
 }
 
-void SceneInspector::sceneItemSelected(const QItemSelection &selection)
+void SceneInspector::sceneItemSelectionChanged(const QItemSelection &selection)
 {
     QModelIndex index;
     if (!selection.isEmpty())
@@ -222,7 +222,7 @@ void SceneInspector::sceneItemSelected(const QItemSelection &selection)
     }
 }
 
-void SceneInspector::objectSelected(QObject *object, const QPoint &pos)
+void SceneInspector::qObjectSelected(QObject *object, const QPoint &pos)
 {
     QWidget *widget = qobject_cast<QWidget *>(object);
     QGraphicsView *qgv = Util::findParentOfType<QGraphicsView>(object);
@@ -237,7 +237,7 @@ void SceneInspector::objectSelected(QObject *object, const QPoint &pos)
         sceneItemSelected(item);
 }
 
-void SceneInspector::objectSelected(void *obj, const QString &typeName)
+void SceneInspector::nonQObjectSelected(void *obj, const QString &typeName)
 {
     if (typeName == QLatin1String("QGraphicsItem*"))   // TODO: can we get sub-classes here?
         sceneItemSelected(reinterpret_cast<QGraphicsItem *>(obj));

@@ -65,16 +65,16 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
     ui->selectedFontsView->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
     ui->selectedFontsView->setModel(m_selectedFontModel);
 
-    connect(ui->fontText, SIGNAL(textChanged(QString)),
-            m_fontBrowser, SLOT(updateText(QString)));
-    connect(ui->boldBox, SIGNAL(toggled(bool)),
-            m_fontBrowser, SLOT(toggleBoldFont(bool)));
-    connect(ui->italicBox, SIGNAL(toggled(bool)),
-            m_fontBrowser, SLOT(toggleItalicFont(bool)));
-    connect(ui->underlineBox, SIGNAL(toggled(bool)),
-            m_fontBrowser, SLOT(toggleUnderlineFont(bool)));
-    connect(ui->pointSize, SIGNAL(valueChanged(int)),
-            m_fontBrowser, SLOT(setPointSize(int)));
+    connect(ui->fontText, &QLineEdit::textChanged,
+            m_fontBrowser, &FontBrowserInterface::updateText);
+    connect(ui->boldBox, &QAbstractButton::toggled,
+            m_fontBrowser, &FontBrowserInterface::toggleBoldFont);
+    connect(ui->italicBox, &QAbstractButton::toggled,
+            m_fontBrowser, &FontBrowserInterface::toggleItalicFont);
+    connect(ui->underlineBox, &QAbstractButton::toggled,
+            m_fontBrowser, &FontBrowserInterface::toggleUnderlineFont);
+    connect(ui->pointSize, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            m_fontBrowser, &FontBrowserInterface::setPointSize);
 
     QAbstractItemModel *fontModel = ObjectBroker::model(QStringLiteral(
                                                             "com.kdab.GammaRay.FontModel"));

@@ -36,8 +36,9 @@ TcpClientDevice::TcpClientDevice(QObject *parent)
     : ClientDeviceImpl<QTcpSocket>(parent)
 {
     m_socket = new QTcpSocket(this);
-    connect(m_socket, SIGNAL(connected()), this, SIGNAL(connected()));
-    connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError()));
+    connect(m_socket, &QAbstractSocket::connected, this, &ClientDevice::connected);
+    connect(m_socket, static_cast<void(QAbstractSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error),
+            this, &TcpClientDevice::socketError);
 }
 
 void TcpClientDevice::connectToHost()

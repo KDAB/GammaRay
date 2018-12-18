@@ -218,10 +218,10 @@ protected:
 
 private slots:
     void readyRead();
-    void logTransmissionRate();
+    void doLogTransmissionRate();
     void connectionClosed();
-    void handlerDestroyed(QObject *obj);
-    void objectDestroyed(QObject *obj);
+    void slotHandlerDestroyed(QObject *obj);
+    void slotObjectDestroyed(QObject *obj);
 
 private:
     struct ObjectInfo

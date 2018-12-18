@@ -59,8 +59,8 @@ ConnectionsTab::ConnectionsTab(PropertyWidget *parent)
     ui->inboundView->setModel(proxy);
     ui->inboundView->sortByColumn(0, Qt::AscendingOrder);
     new SearchLineController(ui->inboundSearchLine, proxy);
-    connect(ui->inboundView, SIGNAL(customContextMenuRequested(QPoint)),
-            SLOT(inboundContextMenu(QPoint)));
+    connect(ui->inboundView, &QWidget::customContextMenuRequested,
+            this, &ConnectionsTab::inboundContextMenu);
 
     proxy = new ConnectionsClientProxyModel(this);
     proxy->setDynamicSortFilter(true);
@@ -68,8 +68,8 @@ ConnectionsTab::ConnectionsTab(PropertyWidget *parent)
     ui->outboundView->setModel(proxy);
     ui->outboundView->sortByColumn(0, Qt::AscendingOrder);
     new SearchLineController(ui->outboundSearchLine, proxy);
-    connect(ui->outboundView, SIGNAL(customContextMenuRequested(QPoint)),
-            SLOT(outboundContextMenu(QPoint)));
+    connect(ui->outboundView, &QWidget::customContextMenuRequested,
+            this, &ConnectionsTab::outboundContextMenu);
 }
 
 ConnectionsTab::~ConnectionsTab()

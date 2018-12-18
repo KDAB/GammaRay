@@ -176,8 +176,8 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
 #endif
 
     m_toolBar->addActions(m_visualizeGroup->actions());
-    connect(m_visualizeGroup, SIGNAL(triggered(QAction*)), this,
-            SLOT(visualizeActionTriggered(QAction*)));
+    connect(m_visualizeGroup, &QActionGroup::triggered, this,
+            &QuickSceneControlWidget::visualizeActionTriggered);
 
     m_toolBar->addSeparator();
 
@@ -186,8 +186,8 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_toolBar->addSeparator();
 
     m_toolBar->addAction(m_serverSideDecorationsEnabled);
-    connect(m_serverSideDecorationsEnabled, SIGNAL(triggered(bool)), this,
-            SLOT(serverSideDecorationsTriggered(bool)));
+    connect(m_serverSideDecorationsEnabled, &QAction::triggered, this,
+            &QuickSceneControlWidget::serverSideDecorationsTriggered);
     m_toolBar->addSeparator();
 
     m_toolBar->addAction(m_previewWidget->zoomOutAction());
@@ -195,8 +195,8 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_zoomCombobox->setModel(m_previewWidget->zoomLevelModel());
     // macOS and some platforms expect to use *small* controls in such small toolbar
     m_zoomCombobox->setAttribute(Qt::WA_MacSmallSize);
-    connect(m_zoomCombobox, SIGNAL(currentIndexChanged(int)), m_previewWidget,
-            SLOT(setZoomLevel(int)));
+    connect(m_zoomCombobox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            m_previewWidget, &RemoteViewWidget::setZoomLevel);
     connect(m_previewWidget, &RemoteViewWidget::zoomLevelChanged, m_zoomCombobox,
             &QComboBox::setCurrentIndex);
     m_zoomCombobox->setCurrentIndex(m_previewWidget->zoomLevelIndex());
@@ -205,16 +205,16 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     zoomComboBox->setObjectName("aZoomComboBox");
     m_toolBar->addAction(m_previewWidget->zoomInAction());
 
-    connect(m_gridSettingsWidget, SIGNAL(enabledChanged(bool)), this, SLOT(gridEnabledChanged(bool)));
-    connect(m_gridSettingsWidget, SIGNAL(offsetChanged(QPoint)), this, SLOT(gridOffsetChanged(QPoint)));
-    connect(m_gridSettingsWidget, SIGNAL(cellSizeChanged(QSize)), this, SLOT(gridCellSizeChanged(QSize)));
+    connect(m_gridSettingsWidget, &GridSettingsWidget::enabledChanged, this, &QuickSceneControlWidget::gridEnabledChanged);
+    connect(m_gridSettingsWidget, &GridSettingsWidget::offsetChanged, this, &QuickSceneControlWidget::gridOffsetChanged);
+    connect(m_gridSettingsWidget, &GridSettingsWidget::cellSizeChanged, this, &QuickSceneControlWidget::gridCellSizeChanged);
 
     setMinimumWidth(std::max(minimumWidth(), m_toolBar->sizeHint().width()));
 
     m_layout->setMenuBar(m_toolBar);
     m_layout->addWidget(m_previewWidget);
 
-    connect(m_previewWidget, SIGNAL(stateChanged()), this, SIGNAL(stateChanged()));
+    connect(m_previewWidget, &RemoteViewWidget::stateChanged, this, &QuickSceneControlWidget::stateChanged);
 
     auto *menuSeparator = new QAction(this);
     menuSeparator->setSeparator(true);

@@ -36,8 +36,8 @@ ClassesIconsRepositoryClient::ClassesIconsRepositoryClient(QObject *parent)
     : ClassesIconsRepository(parent)
     , m_ready(false)
 {
-    connect(this, SIGNAL(indexResponse(QVector<QString>)),
-            this, SLOT(indexReceived(QVector<QString>)));
+    connect(this, &ClassesIconsRepository::indexResponse,
+            this, &ClassesIconsRepositoryClient::indexReceived);
 }
 
 ClassesIconsRepositoryClient::~ClassesIconsRepositoryClient()

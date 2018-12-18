@@ -42,12 +42,12 @@ SelectionModelServer::SelectionModelServer(const QString &objectName, QAbstractI
     // We do use a timer to group requests to avoid network overhead
     m_timer->setSingleShot(true);
     m_timer->setInterval(125);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    connect(m_timer, &QTimer::timeout, this, &SelectionModelServer::timeout);
 
     m_myAddress = Server::instance()->registerObject(objectName, this, Server::ExportNothing);
     Server::instance()->registerMessageHandler(m_myAddress, this, "newMessage");
     Server::instance()->registerMonitorNotifier(m_myAddress, this, "modelMonitored");
-    connect(Endpoint::instance(), SIGNAL(disconnected()), this, SLOT(modelMonitored()));
+    connect(Endpoint::instance(), &Endpoint::disconnected, this, [this]{ modelMonitored(); });
 }
 
 SelectionModelServer::~SelectionModelServer()
@@ -78,18 +78,14 @@ void SelectionModelServer::modelMonitored(bool monitored)
 void SelectionModelServer::connectModel()
 {
     Q_ASSERT(model());
-    connect(model(), SIGNAL(modelReset()),
-            m_timer, SLOT(start()));
-    connect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-            m_timer, SLOT(start()));
-    connect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-            m_timer, SLOT(start()));
-    connect(model(), SIGNAL(columnsInserted(QModelIndex,int,int)),
-            m_timer, SLOT(start()));
-    connect(model(), SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)),
-            m_timer, SLOT(start()));
-    connect(model(), SIGNAL(layoutChanged()),
-            m_timer, SLOT(start()));
+
+    auto startTimer = [this](){ m_timer->start(); };
+    connect(model(), &QAbstractItemModel::modelReset, m_timer, startTimer);
+    connect(model(), &QAbstractItemModel::rowsInserted, m_timer, startTimer);
+    connect(model(), &QAbstractItemModel::rowsMoved, m_timer, startTimer);
+    connect(model(), &QAbstractItemModel::columnsInserted, m_timer, startTimer);
+    connect(model(), &QAbstractItemModel::columnsMoved, m_timer, startTimer);
+    connect(model(), &QAbstractItemModel::layoutChanged, m_timer, startTimer);
 }
 
 void SelectionModelServer::disconnectModel()
@@ -97,15 +93,10 @@ void SelectionModelServer::disconnectModel()
     if (!model())
         return;
 
-    disconnect(model(), SIGNAL(modelReset()),
-               m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-               m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-               m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(columnsInserted(QModelIndex,int,int)),
-               m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)),
-               m_timer, SLOT(start()));
-    disconnect(model(), SIGNAL(layoutChanged()), m_timer, SLOT(start()));
+    disconnect(model(), &QAbstractItemModel::modelReset, m_timer, nullptr);
+    disconnect(model(), &QAbstractItemModel::rowsInserted, m_timer, nullptr);
+    disconnect(model(), &QAbstractItemModel::rowsMoved, m_timer, nullptr);
+    disconnect(model(), &QAbstractItemModel::columnsInserted, m_timer, nullptr);
+    disconnect(model(), &QAbstractItemModel::columnsMoved, m_timer, nullptr);
+    disconnect(model(), &QAbstractItemModel::layoutChanged, m_timer, nullptr);
 }

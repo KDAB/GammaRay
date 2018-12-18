@@ -120,8 +120,8 @@ void TranslatorsModel::registerTranslator(TranslatorWrapper *translator)
     beginInsertRows(QModelIndex(), 0, 0);
     m_translators.prepend(translator);
     endInsertRows();
-    connect(translator->model(), SIGNAL(rowCountChanged()),
-            SLOT(sourceDataChanged()));
+    connect(translator->model(), &TranslationsModel::rowCountChanged,
+            this, &TranslatorsModel::sourceDataChanged);
 }
 
 void TranslatorsModel::unregisterTranslator(TranslatorWrapper *translator)

@@ -59,7 +59,7 @@ public slots:
     {
         //! [Mismatching reconnect]
         disconnect(m_emitButton, &QPushButton::clicked, this, &Widget::signalEmitted);
-        connect(m_emitButton, SIGNAL(clicked()), this, SLOT(signalEmitted()));
+        connect(m_emitButton, &QAbstractButton::clicked, this, &Widget::signalEmitted);
         //! [Mismatching reconnect]
     }
 

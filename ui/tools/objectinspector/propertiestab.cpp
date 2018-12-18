@@ -81,8 +81,8 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
     m_ui->propertyView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     new SearchLineController(m_ui->propertySearchLine, proxy);
     m_ui->propertyView->setItemDelegate(new PropertyEditorDelegate(this));
-    connect(m_ui->propertyView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(propertyContextMenu(QPoint)));
+    connect(m_ui->propertyView, &QWidget::customContextMenuRequested,
+            this, &PropertiesTab::propertyContextMenu);
 
     auto typesModel = new EditableTypesModel(this);
     proxy = new QSortFilterProxyModel(this);
@@ -90,21 +90,21 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
     proxy->setSourceModel(typesModel);
     proxy->sort(0);
     m_ui->newPropertyType->setModel(proxy);
-    connect(m_ui->newPropertyType, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(updateNewPropertyValueEditor()));
+    connect(m_ui->newPropertyType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &PropertiesTab::updateNewPropertyValueEditor);
     updateNewPropertyValueEditor();
-    connect(m_ui->newPropertyName, SIGNAL(textChanged(QString)),
-            this, SLOT(validateNewProperty()));
+    connect(m_ui->newPropertyName, &QLineEdit::textChanged,
+            this, &PropertiesTab::validateNewProperty);
     validateNewProperty();
-    connect(m_ui->newPropertyButton, SIGNAL(clicked()),
-            this, SLOT(addNewProperty()));
+    connect(m_ui->newPropertyButton, &QAbstractButton::clicked,
+            this, &PropertiesTab::addNewProperty);
 
     m_interface = ObjectBroker::object<PropertiesExtensionInterface *>(
         baseName + ".propertiesExtension");
     new PropertyBinder(m_interface, "canAddProperty", m_ui->newPropertyBar, "visible");
     m_ui->propertyView->setDeferredHidden(1, !m_interface->hasPropertyValues());
     m_ui->propertyView->setRootIsDecorated(m_interface->hasPropertyValues());
-    connect(m_interface, SIGNAL(hasPropertyValuesChanged()), this, SLOT(hasValuesChanged()));
+    connect(m_interface, &PropertiesExtensionInterface::hasPropertyValuesChanged, this, &PropertiesTab::hasValuesChanged);
 }
 
 static PropertyEditorFactory::TypeId selectedTypeId(QComboBox *box)

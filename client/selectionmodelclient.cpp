@@ -42,21 +42,20 @@ SelectionModelClient::SelectionModelClient(const QString &objectName, QAbstractI
     m_timer->setInterval(125);
     Q_ASSERT(model);
     // We do use a timer to group requests to avoid network overhead
-    connect(model, SIGNAL(modelAboutToBeReset()), this, SLOT(clearPendingSelection()));
-    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    connect(model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer, SLOT(
-                start()));
-    connect(model, SIGNAL(columnsInserted(QModelIndex,int,int)), m_timer, SLOT(start()));
-    connect(model, SIGNAL(columnsMoved(QModelIndex,int,int,QModelIndex,int)), m_timer,
-            SLOT(start()));
-    connect(model, SIGNAL(layoutChanged()), m_timer, SLOT(start()));
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    auto startTimer = [this](){ m_timer->start(); };
+    connect(model, &QAbstractItemModel::modelAboutToBeReset, this, &SelectionModelClient::clearPendingSelection);
+    connect(model, &QAbstractItemModel::rowsInserted, m_timer, startTimer);
+    connect(model, &QAbstractItemModel::rowsMoved, m_timer, startTimer);
+    connect(model, &QAbstractItemModel::columnsInserted, m_timer, startTimer);
+    connect(model, &QAbstractItemModel::columnsMoved, m_timer, startTimer);
+    connect(model, &QAbstractItemModel::layoutChanged, m_timer, startTimer);
+    connect(m_timer, &QTimer::timeout, this, &SelectionModelClient::timeout);
 
     m_myAddress = Client::instance()->objectAddress(objectName);
-    connect(Client::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)),
-            SLOT(serverRegistered(QString,Protocol::ObjectAddress)));
-    connect(Client::instance(), SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)),
-            SLOT(serverUnregistered(QString,Protocol::ObjectAddress)));
+    connect(Client::instance(), &Endpoint::objectRegistered,
+            this, &SelectionModelClient::serverRegistered);
+    connect(Client::instance(), &Endpoint::objectUnregistered,
+            this, &SelectionModelClient::serverUnregistered);
     connectToServer();
 }
 
@@ -75,7 +74,7 @@ void SelectionModelClient::connectToServer()
     // Probably a better way would be to consider some GammaRay::Message to be pendable and put them in a pool
     // to be handled again later.
     // connectionEstablished does not seems to help here (bader).
-    QTimer::singleShot(125, this, SLOT(requestSelection()));
+    QTimer::singleShot(125, this, &SelectionModelClient::requestSelection);
 }
 
 void SelectionModelClient::timeout()

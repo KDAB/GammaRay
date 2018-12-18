@@ -120,7 +120,7 @@ public slots:
     void handlePersistentConnectionError(const QString &msg);
 
 private slots:
-    void connectToHost();
+    void doConnectToHost();
     void transientConnectionError();
 
     void delayedHideSplashScreen();

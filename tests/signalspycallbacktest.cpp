@@ -59,14 +59,14 @@ private slots:
         QPointer<Sender> s2 = new Sender;
         Receiver r;
 
-        connect(s1, SIGNAL(mySignal()), &r, SLOT(senderDeletingSlot()));
+        connect(s1.data(), &Sender::mySignal, &r, &Receiver::senderDeletingSlot);
         s1->emitSignal(); // must not crash
         QVERIFY(s1.isNull());
 
         // give the probe time to process s and r2 (needs one event loop re-entry)
         QTest::qWait(1);
 
-        connect(s2, SIGNAL(mySignal()), &r, SLOT(senderDeletingSlot()));
+        connect(s2.data(), &Sender::mySignal, &r, &Receiver::senderDeletingSlot);
         s2->emitSignal(); // must not crash
         QVERIFY(s2.isNull());
     }

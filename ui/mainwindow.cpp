@@ -187,24 +187,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
-    connect(ui->actionRetractProbe, SIGNAL(triggered(bool)), SLOT(detachProbe()));
+    connect(ui->actionRetractProbe, &QAction::triggered, this, &MainWindow::detachProbe);
 
-    connect(QApplication::instance(), SIGNAL(aboutToQuit()), SLOT(close()));
-    connect(ui->actionQuit, SIGNAL(triggered(bool)), this, SLOT(quitHost()));
+    connect(QApplication::instance(), &QCoreApplication::aboutToQuit, this, &QWidget::close);
+    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitHost);
     ui->actionQuit->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
 
     ui->actionHelp->setShortcut(QKeySequence::HelpContents);
     ui->actionHelp->setEnabled(HelpController::isAvailable());
 
-    connect(ui->actionHelp, SIGNAL(triggered(bool)), this, SLOT(help()));
-    connect(ui->actionPlugins, SIGNAL(triggered(bool)),
-            this, SLOT(aboutPlugins()));
-    connect(ui->actionMessageStatistics, SIGNAL(triggered(bool)), this, SLOT(
-                showMessageStatistics()));
-    connect(ui->actionAboutQt, SIGNAL(triggered(bool)),
-            QApplication::instance(), SLOT(aboutQt()));
-    connect(ui->actionAboutGammaRay, SIGNAL(triggered(bool)), SLOT(about()));
-    connect(ui->actionAboutKDAB, SIGNAL(triggered(bool)), SLOT(aboutKDAB()));
+    connect(ui->actionHelp, &QAction::triggered, this, &MainWindow::help);
+    connect(ui->actionPlugins, &QAction::triggered,
+            this, &MainWindow::aboutPlugins);
+    connect(ui->actionMessageStatistics, &QAction::triggered, this, &MainWindow::showMessageStatistics);
+    connect(ui->actionAboutQt, &QAction::triggered,
+            qobject_cast<QApplication*>(QApplication::instance()), &QApplication::aboutQt);
+    connect(ui->actionAboutGammaRay, &QAction::triggered, this, &MainWindow::about);
+    connect(ui->actionAboutKDAB, &QAction::triggered, this, &MainWindow::aboutKDAB);
 
     setWindowIcon(QIcon(QStringLiteral(":/gammaray/GammaRay-128x128.png")));
 
@@ -227,9 +226,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->toolSelector->setModel(m_toolFilterModel);
     ui->toolSelector->setSelectionModel(new KLinkItemSelectionModel(m_toolFilterModel, sourceSelectionModel, sourceModel));
     ui->toolSelector->resize(ui->toolSelector->minimumSize());
-    connect(toolManager->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(toolSelected()));
-    connect(ui->toolSelector, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(toolContextMenu(QPoint)));
+    connect(toolManager->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &MainWindow::toolSelected);
+    connect(ui->toolSelector, &QWidget::customContextMenuRequested, this, &MainWindow::toolContextMenu);
 
     QSettings settings;
     settings.beginGroup("Sidebar");
@@ -287,8 +286,8 @@ MainWindow::MainWindow(QWidget *parent)
     menu->addAction(action);
 #endif
 
-    QObject::connect(group, SIGNAL(triggered(QAction*)),
-                     this, SLOT(setCodeNavigationIDE(QAction*)));
+    QObject::connect(group, &QActionGroup::triggered,
+                     this, &MainWindow::setCodeNavigationIDE);
 
     configAction->setMenu(menu);
     ui->menuSettings->addMenu(menu);
@@ -296,19 +295,19 @@ MainWindow::MainWindow(QWidget *parent)
     // Initialize UiIntegration singleton
     new UiIntegration(this);
 
-    connect(UiIntegration::instance(), SIGNAL(navigateToCode(QUrl,int,int)), this,
-            SLOT(navigateToCode(QUrl,int,int)));
+    connect(UiIntegration::instance(), &UiIntegration::navigateToCode, this,
+            &MainWindow::navigateToCode);
 
     const bool developerModeEnabled = !qgetenv("GAMMARAY_DEVELOPERMODE").isEmpty();
     if (developerModeEnabled) {
-        connect(Endpoint::instance(), SIGNAL(logTransmissionRate(quint64,quint64)),
-                this, SLOT(logTransmissionRate(quint64,quint64)));
+        connect(Endpoint::instance(), &Endpoint::logTransmissionRate,
+                this, &MainWindow::logTransmissionRate);
     } else {
         ui->statusBar->hide();
         ui->menu_Diagnostics->menuAction()->setVisible(false);
     }
 
-    connect(this, SIGNAL(targetQuitRequested()), &m_stateManager, SLOT(saveState()));
+    connect(this, &MainWindow::targetQuitRequested, &m_stateManager, &UIStateManager::saveState);
 }
 
 MainWindow::~MainWindow()
@@ -340,7 +339,7 @@ void MainWindow::setupFeedbackProvider()
 {
 #ifndef GAMMARAY_DISABLE_FEEDBACK
     ui->actionContribute->setEnabled(true);
-    connect(ui->actionContribute, SIGNAL(triggered()), this, SLOT(configureFeedback()));
+    connect(ui->actionContribute, &QAction::triggered, this, &MainWindow::configureFeedback);
     m_feedbackProvider = new KUserFeedback::Provider(this);
     m_feedbackProvider->setProductIdentifier(QStringLiteral("com.kdab.GammaRay"));
     m_feedbackProvider->setFeedbackServer(QUrl(QStringLiteral("https://gammaray-userfeedback.kdab.com/")));
@@ -503,7 +502,7 @@ void MainWindow::toolContextMenu(QPoint pos)
     auto action = menu.addAction(tr("Hide inactive tools"));
     action->setCheckable(true);
     action->setChecked(m_toolFilterModel->filterInactiveTools());
-    connect(action, SIGNAL(toggled(bool)), m_toolFilterModel, SLOT(setFilterInactiveTools(bool)));
+    connect(action, &QAction::toggled, m_toolFilterModel, &ClientToolFilterProxyModel::setFilterInactiveTools);
     menu.exec(ui->toolSelector->viewport()->mapToGlobal(pos));
 }
 

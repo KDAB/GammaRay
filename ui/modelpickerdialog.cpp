@@ -70,11 +70,11 @@ ModelPickerDialog::ModelPickerDialog(QWidget *parent)
     selectionChanged();
     resize(640, 480);
 
-    connect(m_view, SIGNAL(newContentExpanded()), this, SLOT(updatePendingSelection()));
-    connect(m_view, SIGNAL(activated(QModelIndex)), this, SLOT(accept()));
-    connect(m_buttons, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(m_buttons, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(m_showInvisibleItems, SIGNAL(toggled(bool)), this, SIGNAL(checkBoxStateChanged(bool)));
+    connect(m_view, &DeferredTreeView::newContentExpanded, this, &ModelPickerDialog::updatePendingSelection);
+    connect(m_view, &DeferredTreeView::activated, this, &ModelPickerDialog::accept);
+    connect(m_buttons, &QDialogButtonBox::accepted, this, &ModelPickerDialog::accept);
+    connect(m_buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(m_showInvisibleItems, &QAbstractButton::toggled, this, &ModelPickerDialog::checkBoxStateChanged);
 }
 
 QAbstractItemModel *ModelPickerDialog::model() const
@@ -86,7 +86,7 @@ void ModelPickerDialog::setModel(QAbstractItemModel *model)
 {
     m_view->setModel(model);
 
-    connect(m_view->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged()));
+    connect(m_view->selectionModel(), &QItemSelectionModel::selectionChanged, this, &ModelPickerDialog::selectionChanged);
     new SearchLineController(m_searchBox, model);
 
     for (int i = 0; i < m_view->model()->columnCount(); ++i) {

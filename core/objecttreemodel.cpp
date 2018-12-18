@@ -48,12 +48,12 @@ using namespace GammaRay;
 ObjectTreeModel::ObjectTreeModel(Probe *probe)
     : ObjectModelBase< QAbstractItemModel >(probe)
 {
-    connect(probe, SIGNAL(objectCreated(QObject*)),
-            this, SLOT(objectAdded(QObject*)));
-    connect(probe, SIGNAL(objectDestroyed(QObject*)),
-            this, SLOT(objectRemoved(QObject*)));
-    connect(probe, SIGNAL(objectReparented(QObject*)),
-            this, SLOT(objectReparented(QObject*)));
+    connect(probe, &Probe::objectCreated,
+            this, &ObjectTreeModel::objectAdded);
+    connect(probe, &Probe::objectDestroyed,
+            this, &ObjectTreeModel::objectRemoved);
+    connect(probe, &Probe::objectReparented,
+            this, &ObjectTreeModel::objectReparented);
 }
 
 QPair<int, QVariant> ObjectTreeModel::defaultSelectedItem() const

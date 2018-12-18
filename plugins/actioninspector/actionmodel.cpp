@@ -91,7 +91,7 @@ void ActionModel::objectAdded(QObject *object)
     m_actions.insert(it, action);
     Q_ASSERT(m_actions.at(row) == action);
     m_duplicateFinder->insert(action);
-    connect(action, SIGNAL(changed()), this, SLOT(actionChanged()));
+    connect(action, &QAction::changed, this, &ActionModel::actionChanged);
     endInsertRows();
 }
 

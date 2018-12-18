@@ -42,10 +42,10 @@ using namespace std;
 ObjectListModel::ObjectListModel(Probe *probe)
     : ObjectModelBase< QAbstractTableModel >(probe)
 {
-    connect(probe, SIGNAL(objectCreated(QObject*)),
-            this, SLOT(objectAdded(QObject*)));
-    connect(probe, SIGNAL(objectDestroyed(QObject*)),
-            this, SLOT(objectRemoved(QObject*)));
+    connect(probe, &Probe::objectCreated,
+            this, &ObjectListModel::objectAdded);
+    connect(probe, &Probe::objectDestroyed,
+            this, &ObjectListModel::objectRemoved);
 }
 
 QPair<int, QVariant> ObjectListModel::defaultSelectedItem() const

@@ -97,8 +97,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
     ui->windowComboBox->setModel(ObjectBroker::model(QStringLiteral(
                                                          "com.kdab.GammaRay.QuickWindowModel")));
-    connect(ui->windowComboBox, SIGNAL(currentIndexChanged(int)),
-            m_interface, SLOT(selectWindow(int)));
+    connect(ui->windowComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            m_interface, &QuickInspectorInterface::selectWindow);
     if (ui->windowComboBox->currentIndex() >= 0)
         m_interface->selectWindow(ui->windowComboBox->currentIndex());
 
@@ -112,10 +112,10 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     new SearchLineController(ui->itemTreeSearchLine, proxy);
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
     ui->itemTreeView->setSelectionModel(selectionModel);
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(itemSelectionChanged(QItemSelection)));
-    connect(proxy, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-            this, SLOT(itemModelDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged,
+            this, &QuickInspectorWidget::itemSelectionChanged);
+    connect(proxy, &QAbstractItemModel::dataChanged,
+            this, &QuickInspectorWidget::itemModelDataChanged);
 
     model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
     auto *clientSceneGraphModel = new ClientDecorationIdentityProxyModel(this);
@@ -126,8 +126,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     new SearchLineController(ui->sgTreeSearchLine, clientSceneGraphModel);
     QItemSelectionModel *sgSelectionModel = ObjectBroker::selectionModel(clientSceneGraphModel);
     ui->sgTreeView->setSelectionModel(sgSelectionModel);
-    connect(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(sgSelectionChanged(QItemSelection)));
+    connect(sgSelectionModel, &QItemSelectionModel::selectionChanged,
+            this, &QuickInspectorWidget::sgSelectionChanged);
 
     new QuickItemTreeWatcher(ui->itemTreeView, ui->sgTreeView, this);
 
@@ -141,15 +141,14 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
 
     ui->previewTreeSplitter->addWidget(m_scenePreviewWidget);
 
-    connect(m_interface, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)),
-            this, SLOT(setFeatures(GammaRay::QuickInspectorInterface::Features)));
+    connect(m_interface, &QuickInspectorInterface::features, this, &QuickInspectorWidget::setFeatures);
     connect(m_interface, &QuickInspectorInterface::serverSideDecorationChanged, m_scenePreviewWidget, &QuickSceneControlWidget::setServerSideDecorationsEnabled);
-    connect(m_interface, SIGNAL(overlaySettings(GammaRay::QuickDecorationsSettings)), this, SLOT(setOverlaySettings(GammaRay::QuickDecorationsSettings)));
+    connect(m_interface, &QuickInspectorInterface::overlaySettings, this, &QuickInspectorWidget::setOverlaySettings);
 
     connect(m_interface, &QuickInspectorInterface::slowModeChanged, this, &QuickInspectorWidget::setSlowMode);
 
-    connect(ui->itemTreeView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(itemContextMenu(QPoint)));
+    connect(ui->itemTreeView, &QWidget::customContextMenuRequested,
+            this, &QuickInspectorWidget::itemContextMenu);
 
     m_interface->checkFeatures();
     m_interface->checkOverlaySettings();
@@ -167,19 +166,19 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
 
-    connect(ui->actionSaveAsImage, SIGNAL(triggered()), SLOT(saveAsImage()));
-    connect(ui->actionSaveAsImageWithDecoration, SIGNAL(triggered()), SLOT(saveAsImage()));
+    connect(ui->actionSaveAsImage, &QAction::triggered, this, &QuickInspectorWidget::saveAsImage);
+    connect(ui->actionSaveAsImageWithDecoration, &QAction::triggered, this, &QuickInspectorWidget::saveAsImage);
     connect(ui->actionAnalyzePainting, &QAction::triggered, this, [this]() {
         m_interface->analyzePainting();
         auto viewer = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.QuickPaintAnalyzer"), this);
         viewer->show();
     });
     connect(ui->actionSlowDownMode, &QAction::triggered, m_interface, &QuickInspectorInterface::setSlowMode);
-    connect(ui->itemPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
-    connect(ui->sgPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(resetState()));
-    connect(m_scenePreviewWidget, SIGNAL(stateChanged()), this, SLOT(saveState()));
-    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(saveState()));
-    connect(m_scenePreviewWidget->previewWidget(), SIGNAL(frameChanged()), this, SLOT(updateActions()));
+    connect(ui->itemPropertyWidget, &PropertyWidget::tabsUpdated, this, &QuickInspectorWidget::resetState);
+    connect(ui->sgPropertyWidget, &PropertyWidget::tabsUpdated, this, &QuickInspectorWidget::resetState);
+    connect(m_scenePreviewWidget, &QuickSceneControlWidget::stateChanged, this, &QuickInspectorWidget::saveState);
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &QuickInspectorWidget::saveState);
+    connect(m_scenePreviewWidget->previewWidget(), &RemoteViewWidget::frameChanged, this, &QuickInspectorWidget::updateActions);
 
     updateActions();
 }
