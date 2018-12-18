@@ -41,10 +41,12 @@ ProcessInjector::ProcessInjector()
     , mExitStatus(QProcess::NormalExit)
 {
     m_proc.setInputChannelMode(QProcess::ForwardedInputChannel);
-    connect(&m_proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(processFailed()));
-    connect(&m_proc, SIGNAL(finished(int)), this, SLOT(processFinished()));
-    connect(&m_proc, SIGNAL(readyReadStandardError()), this, SLOT(readStdErr()));
-    connect(&m_proc, SIGNAL(readyReadStandardOutput()), this, SLOT(readStdOut()));
+    connect(&m_proc, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error),
+               this, &ProcessInjector::processFailed);
+    connect(&m_proc, static_cast<void(QProcess::*)(int)>(&QProcess::finished),
+            this, &ProcessInjector::processFinished);
+    connect(&m_proc, &QProcess::readyReadStandardError, this, &ProcessInjector::readStdErr);
+    connect(&m_proc, &QProcess::readyReadStandardOutput, this, &ProcessInjector::readStdOut);
 }
 
 ProcessInjector::~ProcessInjector()
@@ -54,7 +56,8 @@ ProcessInjector::~ProcessInjector()
 
 void ProcessInjector::stop()
 {
-    disconnect(&m_proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(processFailed()));
+    disconnect(&m_proc, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error),
+               this, &ProcessInjector::processFailed);
     if (m_proc.state() != QProcess::Running)
         return;
     m_proc.terminate();

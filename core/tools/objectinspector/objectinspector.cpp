@@ -73,11 +73,11 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
     m_selectionModel = ObjectBroker::selectionModel(proxy);
 
     connect(m_selectionModel,
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(objectSelectionChanged(QItemSelection)));
+            &QItemSelectionModel::selectionChanged,
+            this, &ObjectInspector::objectSelectionChanged);
 
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)),
-            SLOT(objectSelected(QObject*)));
+    connect(probe, &Probe::objectSelected,
+            this, &ObjectInspector::objectSelected);
 
     ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.BindingLoopScan",
                                           "Binding Loops",
@@ -93,12 +93,12 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
 void ObjectInspector::objectSelectionChanged(const QItemSelection &selection)
 {
     if (selection.isEmpty())
-        objectSelected(QModelIndex());
+        modelIndexSelected(QModelIndex());
     else
-        objectSelected(selection.first().topLeft());
+        modelIndexSelected(selection.first().topLeft());
 }
 
-void ObjectInspector::objectSelected(const QModelIndex &index)
+void ObjectInspector::modelIndexSelected(const QModelIndex &index)
 {
     if (index.isValid()) {
         QObject *obj = index.data(ObjectModel::ObjectRole).value<QObject *>();
@@ -126,7 +126,7 @@ void ObjectInspector::objectSelected(QObject *object)
         |QItemSelectionModel::Rows | QItemSelectionModel::Current);
     // TODO: move this to the client side!
     // ui->objectTreeView->scrollTo(index);
-    objectSelected(index);
+    modelIndexSelected(index);
 }
 
 void ObjectInspector::registerPCExtensions()

@@ -56,21 +56,21 @@ TextDocumentInspector::TextDocumentInspector(Probe *probe, QObject *parent)
     m_documentsModel = documentFilter;
 
     m_documentSelectionModel = ObjectBroker::selectionModel(documentFilter);
-    connect(m_documentSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(documentSelected(QItemSelection,QItemSelection)));
+    connect(m_documentSelectionModel, &QItemSelectionModel::selectionChanged,
+            this, &TextDocumentInspector::documentSelected);
 
     m_textDocumentModel = new TextDocumentModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentModel"),
                          m_textDocumentModel);
 
     auto selectionModel = ObjectBroker::selectionModel(m_textDocumentModel);
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(documentElementSelected(QItemSelection,QItemSelection)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged,
+            this, &TextDocumentInspector::documentElementSelected);
 
     m_textDocumentFormatModel = new TextDocumentFormatModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TextDocumentFormatModel"), m_textDocumentFormatModel);
 
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+    connect(probe, &Probe::objectSelected, this, &TextDocumentInspector::objectSelected);
 }
 
 void TextDocumentInspector::objectSelected(QObject* obj)

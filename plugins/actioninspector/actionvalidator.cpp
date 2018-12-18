@@ -88,8 +88,8 @@ void ActionValidator::insert(QAction *action)
     }
 
     // also track object destruction
-    connect(action, SIGNAL(destroyed(QObject*)),
-            SLOT(handleActionDestroyed(QObject*)));
+    connect(action, &QObject::destroyed,
+            this, &ActionValidator::handleActionDestroyed);
 }
 
 

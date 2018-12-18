@@ -47,11 +47,10 @@ SignalHistoryView::SignalHistoryView(QWidget *parent)
 
     setItemDelegateForColumn(SignalHistoryModel::EventColumn, m_eventDelegate);
 
-    connect(m_eventDelegate, SIGNAL(visibleOffsetChanged(qint64)), this, SLOT(
-                eventDelegateChanged()));
-    connect(m_eventDelegate, SIGNAL(visibleIntervalChanged(qint64)), this,
-            SLOT(eventDelegateChanged()));
-    connect(m_eventDelegate, SIGNAL(totalIntervalChanged()), this, SLOT(eventDelegateChanged()));
+    connect(m_eventDelegate, &SignalHistoryDelegate::visibleOffsetChanged, this, &SignalHistoryView::eventDelegateChanged);
+    connect(m_eventDelegate, &SignalHistoryDelegate::visibleIntervalChanged, this,
+            &SignalHistoryView::eventDelegateChanged);
+    connect(m_eventDelegate, &SignalHistoryDelegate::totalIntervalChanged, this, &SignalHistoryView::eventDelegateChanged);
 }
 
 void SignalHistoryView::eventDelegateChanged()
@@ -85,8 +84,8 @@ void SignalHistoryView::setEventScrollBar(QScrollBar *scrollBar)
         m_eventScrollBar = scrollBar;
 
         if (m_eventScrollBar) {
-            connect(m_eventScrollBar, SIGNAL(sliderMoved(int)),
-                    this, SLOT(eventScrollBarSliderMoved(int)));
+            connect(m_eventScrollBar, &QAbstractSlider::sliderMoved,
+                    this, &SignalHistoryView::eventScrollBarSliderMoved);
         }
     }
 }

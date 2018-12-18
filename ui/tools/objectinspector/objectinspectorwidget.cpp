@@ -64,8 +64,8 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
 
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(ui->objectTreeView->model());
     ui->objectTreeView->setSelectionModel(selectionModel);
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(objectSelectionChanged(QItemSelection)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged,
+            this, &ObjectInspectorWidget::objectSelectionChanged);
 
     if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
         QMetaObject::invokeMethod(ui->objectSearchLine, "setText",
@@ -73,12 +73,12 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
                                   Q_ARG(QString, QStringLiteral("Object")));
     }
 
-    connect(ui->objectTreeView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(objectContextMenuRequested(QPoint)));
+    connect(ui->objectTreeView, &QWidget::customContextMenuRequested,
+            this, &ObjectInspectorWidget::objectContextMenuRequested);
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "60%" << "40%");
 
-    connect(ui->objectPropertyWidget, SIGNAL(tabsUpdated()), this, SLOT(propertyWidgetTabsChanged()));
+    connect(ui->objectPropertyWidget, &PropertyWidget::tabsUpdated, this, &ObjectInspectorWidget::propertyWidgetTabsChanged);
 }
 
 ObjectInspectorWidget::~ObjectInspectorWidget()

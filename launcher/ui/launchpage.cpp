@@ -56,12 +56,12 @@ LaunchPage::LaunchPage(QWidget *parent)
     margins.setBottom(margins.bottom() +2);
     ui->formLayout->setContentsMargins(margins);
 #endif
-    connect(ui->progSelectButton, SIGNAL(clicked()), SLOT(showFileDialog()));
-    connect(ui->workDirSelectButton, SIGNAL(clicked()), SLOT(showDirDialog()));
-    connect(ui->addArgButton, SIGNAL(clicked()), SLOT(addArgument()));
-    connect(ui->removeArgButton, SIGNAL(clicked()), SLOT(removeArgument()));
-    connect(ui->progEdit, SIGNAL(textChanged(QString)), SLOT(detectABI(QString)));
-    connect(ui->progEdit, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
+    connect(ui->progSelectButton, &QAbstractButton::clicked, this, &LaunchPage::showFileDialog);
+    connect(ui->workDirSelectButton, &QAbstractButton::clicked, this, &LaunchPage::showDirDialog);
+    connect(ui->addArgButton, &QAbstractButton::clicked, this, &LaunchPage::addArgument);
+    connect(ui->removeArgButton, &QAbstractButton::clicked, this, &LaunchPage::removeArgument);
+    connect(ui->progEdit, &QLineEdit::textChanged, this, &LaunchPage::detectABI);
+    connect(ui->progEdit, &QLineEdit::textChanged, this, &LaunchPage::updateButtonState);
 
     ui->argsBox->setModel(m_argsModel);
 

@@ -38,11 +38,11 @@ GridSettingsWidget::GridSettingsWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->gbEnabled, SIGNAL(clicked(bool)), this, SIGNAL(enabledChanged(bool)));
-    connect(ui->sbXOffset, SIGNAL(editingFinished()), this, SLOT(offsetUserChanged()));
-    connect(ui->sbYOffset, SIGNAL(editingFinished()), this, SLOT(offsetUserChanged()));
-    connect(ui->sbCellWidth, SIGNAL(editingFinished()), this, SLOT(cellSizeUserChanged()));
-    connect(ui->sbCellHeight, SIGNAL(editingFinished()), this, SLOT(cellSizeUserChanged()));
+    connect(ui->gbEnabled, &QGroupBox::clicked, this, &GridSettingsWidget::enabledChanged);
+    connect(ui->sbXOffset, &QAbstractSpinBox::editingFinished, this, &GridSettingsWidget::offsetUserChanged);
+    connect(ui->sbYOffset, &QAbstractSpinBox::editingFinished, this, &GridSettingsWidget::offsetUserChanged);
+    connect(ui->sbCellWidth, &QAbstractSpinBox::editingFinished, this, &GridSettingsWidget::cellSizeUserChanged);
+    connect(ui->sbCellHeight, &QAbstractSpinBox::editingFinished, this, &GridSettingsWidget::cellSizeUserChanged);
 }
 
 GridSettingsWidget::~GridSettingsWidget()

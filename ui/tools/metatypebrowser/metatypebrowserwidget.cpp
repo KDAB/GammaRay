@@ -67,12 +67,12 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
     ui->metaTypeView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
     ui->metaTypeView->setModel(mtm);
     ui->metaTypeView->sortByColumn(1, Qt::AscendingOrder); // sort by type id
-    connect(ui->metaTypeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextMenu(QPoint)));
+    connect(ui->metaTypeView, &QWidget::customContextMenuRequested, this, &MetaTypeBrowserWidget::contextMenu);
 
     new SearchLineController(ui->metaTypeSearchLine, mtm->sourceModel());
 
     auto iface = ObjectBroker::object<MetaTypeBrowserInterface*>();
-    connect(ui->actionRescanTypes, SIGNAL(triggered()), iface, SLOT(rescanTypes()));
+    connect(ui->actionRescanTypes, &QAction::triggered, iface, &MetaTypeBrowserInterface::rescanTypes);
     iface->rescanTypes();
 
     addAction(ui->actionRescanTypes);

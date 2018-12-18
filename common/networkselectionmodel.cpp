@@ -82,8 +82,8 @@ NetworkSelectionModel::NetworkSelectionModel(const QString &objectName, QAbstrac
     , m_handlingRemoteMessage(false)
 {
     setObjectName(m_objectName + QLatin1String("Network"));
-    connect(this, SIGNAL(currentChanged(QModelIndex,QModelIndex)), this,
-            SLOT(slotCurrentChanged(QModelIndex,QModelIndex)));
+    connect(this, &QItemSelectionModel::currentChanged, this,
+            &NetworkSelectionModel::slotCurrentChanged);
 }
 
 NetworkSelectionModel::~NetworkSelectionModel()

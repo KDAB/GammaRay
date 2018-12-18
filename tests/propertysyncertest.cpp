@@ -107,8 +107,8 @@ private slots:
         MyObject serverObj;
         serverObj.setIntProp(14);
         m_server = new PropertySyncer(this);
-        connect(m_server, SIGNAL(message(GammaRay::Message)), this,
-                SLOT(server2client(GammaRay::Message)));
+        connect(m_server, &PropertySyncer::message, this,
+                &PropertySyncerTest::server2client);
         m_server->setAddress(1);
         m_server->addObject(42, &serverObj);
 
@@ -116,8 +116,8 @@ private slots:
         auto *clientObj = new MyObject(this);
         m_client = new PropertySyncer(this);
         m_client->setRequestInitialSync(true);
-        connect(m_client, SIGNAL(message(GammaRay::Message)), this,
-                SLOT(client2server(GammaRay::Message)));
+        connect(m_client, &PropertySyncer::message, this,
+                &PropertySyncerTest::client2server);
         m_client->setAddress(1);
         m_client->addObject(42, clientObj);
         m_server->setObjectEnabled(42, true);

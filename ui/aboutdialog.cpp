@@ -46,7 +46,7 @@ AboutDialog::AboutDialog(QWidget *parent)
     vl->addWidget(ui);
     vl->addWidget(button);
 
-    connect(button, SIGNAL(rejected()), this, SLOT(close()));
+    connect(button, &QDialogButtonBox::rejected, this, &QWidget::close);
 }
 
 AboutDialog::~AboutDialog()

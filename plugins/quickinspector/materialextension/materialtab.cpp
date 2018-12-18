@@ -54,7 +54,8 @@ MaterialTab::MaterialTab(PropertyWidget *parent)
     connect(m_ui->materialPropertyView, &QTreeView::customContextMenuRequested, this, &MaterialTab::propertyContextMenu);
 
     setObjectBaseName(parent->objectBaseName());
-    connect(m_ui->shaderList, SIGNAL(currentIndexChanged(int)), this, SLOT(shaderSelectionChanged(int)));
+    connect(m_ui->shaderList, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &MaterialTab::shaderSelectionChanged);
 
     m_ui->shaderEdit->setSyntaxDefinition(QLatin1String("GLSL"));
 
@@ -72,7 +73,7 @@ void MaterialTab::setObjectBaseName(const QString &baseName)
         disconnect(m_interface, nullptr, this, nullptr);
 
     m_interface = ObjectBroker::object<MaterialExtensionInterface *>(baseName + ".material");
-    connect(m_interface, SIGNAL(gotShader(QString)), this, SLOT(showShader(QString)));
+    connect(m_interface, &MaterialExtensionInterface::gotShader, this, &MaterialTab::showShader);
 
     auto clientPropModel = new ClientPropertyModel(this);
     clientPropModel->setSourceModel(ObjectBroker::model(baseName + ".materialPropertyModel"));

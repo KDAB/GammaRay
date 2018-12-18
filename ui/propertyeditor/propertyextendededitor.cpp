@@ -44,7 +44,7 @@ PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
     setReadOnly(false);
 
     // TODO: make button content smaller by using a tiny icon
-    connect(ui->editButton, SIGNAL(clicked()), SLOT(slotEdit()));
+    connect(ui->editButton, &QAbstractButton::clicked, this, &PropertyExtendedEditor::slotEdit);
 }
 
 PropertyExtendedEditor::~PropertyExtendedEditor()

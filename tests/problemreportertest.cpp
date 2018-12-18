@@ -62,7 +62,7 @@ public:
     {
         newThreadObj.reset(new QObject());
         newThreadObj->setObjectName("newThreadObj");
-        QObject::connect(newThreadObj.get(), SIGNAL(destroyed(QObject*)), mainThreadObj.get(), SLOT(deleteLater()), Qt::DirectConnection);
+        QObject::connect(newThreadObj.get(), &QObject::destroyed, mainThreadObj.get(), &QObject::deleteLater, Qt::DirectConnection);
     }
     std::unique_ptr<QObject> newThreadObj;
     std::unique_ptr<QObject> mainThreadObj;
@@ -328,8 +328,8 @@ private slots:
         o1->setObjectName("o1");
         auto o2 = std::unique_ptr<QObject>(new QObject());
         o2->setObjectName("o2");
-        connect(o1.get(), SIGNAL(destroyed(QObject*)), o2.get(), SLOT(deleteLater()));
-        connect(o1.get(), SIGNAL(destroyed(QObject*)), o2.get(), SLOT(deleteLater()));
+        connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
+        connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
 
         QTest::qWait(10);
         ProblemCollector::instance()->requestScan();

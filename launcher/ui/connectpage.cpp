@@ -59,14 +59,14 @@ ConnectPage::ConnectPage(QWidget *parent)
     m_fileIsNotASocketWarning =
         new QAction(qApp->style()->standardIcon(QStyle::SP_MessageBoxCritical),
                     tr("File is not a socket"), this);
-    connect(ui->host, SIGNAL(textChanged(QString)), SLOT(validateHostAddress(QString)));
-    connect(ui->host, SIGNAL(textChanged(QString)), SIGNAL(updateButtonState()));
+    connect(ui->host, &QLineEdit::textChanged, this, &ConnectPage::validateHostAddress);
+    connect(ui->host, &QLineEdit::textChanged, this, &ConnectPage::updateButtonState);
 
     auto *model = new NetworkDiscoveryModel(this);
     ui->instanceView->setModel(model);
     connect(ui->instanceView->selectionModel(),
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(instanceSelected()));
-    connect(ui->instanceView, SIGNAL(activated(QModelIndex)), SIGNAL(activate()));
+            &QItemSelectionModel::selectionChanged, this, &ConnectPage::instanceSelected);
+    connect(ui->instanceView, &QAbstractItemView::activated, this, &ConnectPage::activate);
 
     QSettings settings;
     ui->host->setText(settings.value(QStringLiteral("Connect/Url"), QString()).toString());

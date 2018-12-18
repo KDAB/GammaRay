@@ -65,9 +65,9 @@ StateMachineViewerServer::StateMachineViewerServer(Probe *probe, QObject *parent
     proxyModel->addRole(StateModel::StateIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.StateModel"), proxyModel);
     m_stateSelectionModel = ObjectBroker::selectionModel(proxyModel);
-    connect(m_stateSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(stateSelectionChanged()));
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+    connect(m_stateSelectionModel, &QItemSelectionModel::selectionChanged,
+            this, &StateMachineViewerServer::stateSelectionChanged);
+    connect(probe, &Probe::objectSelected, this, &StateMachineViewerServer::objectSelected);
 
 #ifdef HAVE_QT_SCXML
     auto stateMachineFilter = new ObjectTypeFilterProxyModel<QStateMachine, QScxmlStateMachine>(this);
@@ -164,11 +164,11 @@ void StateMachineViewerServer::setSelectedStateMachine(StateMachineDebugInterfac
     if (machine) {
         machine->setParent(this);
 
-        connect(machine, SIGNAL(runningChanged(bool)), this, SLOT(updateStartStop()));
-        connect(machine, SIGNAL(stateEntered(State)), this, SLOT(stateEntered(State)));
-        connect(machine, SIGNAL(stateExited(State)), this, SLOT(stateExited(State)));
-        connect(machine, SIGNAL(transitionTriggered(Transition)), this, SLOT(handleTransitionTriggered(Transition)));
-        connect(machine, SIGNAL(logMessage(QString,QString)), this, SLOT(handleLogMessage(QString,QString)));
+        connect(machine, &StateMachineDebugInterface::runningChanged, this, &StateMachineViewerServer::updateStartStop);
+        connect(machine, &StateMachineDebugInterface::stateEntered, this, &StateMachineViewerServer::stateEntered);
+        connect(machine, &StateMachineDebugInterface::stateExited, this, &StateMachineViewerServer::stateExited);
+        connect(machine, &StateMachineDebugInterface::transitionTriggered, this, &StateMachineViewerServer::handleTransitionTriggered);
+        connect(machine, &StateMachineDebugInterface::logMessage, this, &StateMachineViewerServer::handleLogMessage);
     }
     updateStartStop();
 

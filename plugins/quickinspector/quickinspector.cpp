@@ -375,8 +375,8 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
 
     connect(probe, &Probe::objectCreated, m_itemModel, &QuickItemModel::objectAdded);
     connect(probe, &Probe::objectDestroyed, m_itemModel, &QuickItemModel::objectRemoved);
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
-    connect(probe, SIGNAL(nonQObjectSelected(void*,QString)), SLOT(objectSelected(void*,QString)));
+    connect(probe, &Probe::objectSelected, this, &QuickInspector::qObjectSelected);
+    connect(probe, &Probe::nonQObjectSelected, this, &QuickInspector::nonQObjectSelected);
 
     m_itemSelectionModel = ObjectBroker::selectionModel(filterProxy);
     connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged,
@@ -507,7 +507,7 @@ void QuickInspector::selectSGNode(QSGNode *node)
                                |QItemSelectionModel::Current);
 }
 
-void QuickInspector::objectSelected(QObject *object)
+void QuickInspector::qObjectSelected(QObject *object)
 {
     if (auto item = qobject_cast<QQuickItem *>(object))
         selectItem(item);
@@ -515,7 +515,7 @@ void QuickInspector::objectSelected(QObject *object)
         selectWindow(window);
 }
 
-void QuickInspector::objectSelected(void *object, const QString &typeName)
+void QuickInspector::nonQObjectSelected(void *object, const QString &typeName)
 {
     auto metaObject = MetaObjectRepository::instance()->metaObject(typeName);
     if (metaObject && metaObject->inherits(QStringLiteral("QSGNode")))

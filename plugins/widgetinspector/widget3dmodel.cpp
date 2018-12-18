@@ -53,14 +53,14 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &mo
     , mGeomDirty(true)
     , mTextureDirty(true)
 {
-    connect(qWidget, SIGNAL(destroyed(QObject*)),
-            this, SLOT(deleteLater()));
+    connect(qWidget, &QObject::destroyed,
+            this, &QObject::deleteLater);
 
     mUpdateTimer = new QTimer(this);
     mUpdateTimer->setSingleShot(true);
     mUpdateTimer->setInterval(200);
-    connect(mUpdateTimer, SIGNAL(timeout()),
-            this, SLOT(updateTimeout()));
+    connect(mUpdateTimer, &QTimer::timeout,
+            this, &Widget3DWidget::updateTimeout);
 
     if (qWidget->isVisible()) {
         updateTimeout();
@@ -362,10 +362,10 @@ Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, const QModelIndex &
             parent = widgetForObject(obj->parent(), idx.parent(), createWhenMissing);
         }
         widget = new Widget3DWidget(qobject_cast<QWidget*>(obj), idx, parent);
-        connect(widget, SIGNAL(changed(QVector<int>)),
-                this, SLOT(onWidgetChanged(QVector<int>)));
-        connect(obj, SIGNAL(destroyed(QObject*)),
-                this, SLOT(onWidgetDestroyed(QObject*)));
+        connect(widget, &Widget3DWidget::changed,
+                this, &Widget3DModel::onWidgetChanged);
+        connect(obj, &QObject::destroyed,
+                this, &Widget3DModel::onWidgetDestroyed);
         mDataCache.insert(obj, widget);
     }
     return widget;

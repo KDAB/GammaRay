@@ -41,7 +41,7 @@ SignalMonitorTest::SignalMonitorTest(QObject *parent)
 
     auto *t2 = new QTimer(this);
     t2->setObjectName(nextTimerName());
-    connect(t2, SIGNAL(timeout()), this, SLOT(onTimeout()));
+    connect(t2, &QTimer::timeout, this, &SignalMonitorTest::onTimeout);
     t2->start(1500);
 }
 
@@ -54,7 +54,7 @@ void SignalMonitorTest::onTimeout()
 {
     auto *tx = new QTimer(this);
     tx->setObjectName(nextTimerName());
-    connect(tx, SIGNAL(timeout()), tx, SLOT(deleteLater()));
+    connect(tx, &QTimer::timeout, tx, &QObject::deleteLater);
     tx->start(2500);
 }
 

@@ -39,10 +39,10 @@ QuickItemTreeWatcher::QuickItemTreeWatcher(QTreeView *itemView, QTreeView *sgVie
     , m_itemView(itemView)
     , m_sgView(sgView)
 {
-    connect(itemView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(itemModelRowsInserted(QModelIndex,int,int)));
-    connect(sgView->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(sgModelRowsInserted(QModelIndex,int,int)));
+    connect(itemView->model(), &QAbstractItemModel::rowsInserted,
+            this, &QuickItemTreeWatcher::itemModelRowsInserted);
+    connect(sgView->model(), &QAbstractItemModel::rowsInserted,
+            this, &QuickItemTreeWatcher::sgModelRowsInserted);
 }
 
 QuickItemTreeWatcher::~QuickItemTreeWatcher()

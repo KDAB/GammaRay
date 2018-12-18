@@ -62,15 +62,13 @@ MetaObjectBrowser::MetaObjectBrowser(Probe *probe, QObject *parent)
 
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(m_model);
 
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(objectSelected(QItemSelection)));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged,
+            this, &MetaObjectBrowser::objectSelectionChanged);
 
     m_propertyController->setMetaObject(nullptr); // init
 
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this,
-            SLOT(objectSelected(QObject*)));
-    connect(probe, SIGNAL(nonQObjectSelected(void*,QString)), this,
-            SLOT(objectSelected(void*,QString)));
+    connect(probe, &Probe::objectSelected, this, &MetaObjectBrowser::qobjectSelected);
+    connect(probe, &Probe::nonQObjectSelected, this, &MetaObjectBrowser::voidPtrObjectSelected);
 
     ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this);
 
@@ -87,7 +85,7 @@ void MetaObjectBrowser::rescanMetaTypes()
     Probe::instance()->metaObjectRegistry()->scanMetaTypes();
 }
 
-void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
+void MetaObjectBrowser::objectSelectionChanged(const QItemSelection &selection)
 {
     QModelIndex index;
     if (selection.size() == 1)
@@ -102,14 +100,14 @@ void MetaObjectBrowser::objectSelected(const QItemSelection &selection)
     }
 }
 
-void MetaObjectBrowser::objectSelected(QObject *obj)
+void MetaObjectBrowser::qobjectSelected(QObject *obj)
 {
     if (!obj)
         return;
     metaObjectSelected(obj->metaObject());
 }
 
-void MetaObjectBrowser::objectSelected(void *obj, const QString &typeName)
+void MetaObjectBrowser::voidPtrObjectSelected(void *obj, const QString &typeName)
 {
     if (typeName != QLatin1String("const QMetaObject*"))
         return;

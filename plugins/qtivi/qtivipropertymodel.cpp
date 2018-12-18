@@ -49,7 +49,6 @@
 #include <QMetaObject>
 #include <QMetaProperty>
 #include <QMutexLocker>
-#include <QSignalMapper>
 
 #include <iostream>
 

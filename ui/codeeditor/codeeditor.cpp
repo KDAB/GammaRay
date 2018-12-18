@@ -57,9 +57,9 @@ CodeEditor::CodeEditor(QWidget *parent) :
 {
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
-    connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateSidebarGeometry()));
-    connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateSidebarArea(QRect,int)));
-    connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
+    connect(this, &QPlainTextEdit::blockCountChanged, this, &CodeEditor::updateSidebarGeometry);
+    connect(this, &QPlainTextEdit::updateRequest, this, &CodeEditor::updateSidebarArea);
+    connect(this, &QPlainTextEdit::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
 
     updateSidebarGeometry();
     highlightCurrentLine();
@@ -147,7 +147,7 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
             }
         }
     }
-    connect(hlActionGroup, SIGNAL(triggered(QAction*)), this, SLOT(syntaxSelected(QAction*)));
+    connect(hlActionGroup, &QActionGroup::triggered, this, &CodeEditor::syntaxSelected);
 #endif
 
     menu->exec(event->globalPos());

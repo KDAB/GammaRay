@@ -55,8 +55,8 @@ ModelInspector::ModelInspector(Probe *probe, QObject *parent)
     , m_modelTester(nullptr)
 {
     auto modelModelSource = new ModelModel(this);
-    connect(probe, SIGNAL(objectCreated(QObject*)), modelModelSource, SLOT(objectAdded(QObject*)));
-    connect(probe, SIGNAL(objectDestroyed(QObject*)), modelModelSource, SLOT(objectRemoved(QObject*)));
+    connect(probe, &Probe::objectCreated, modelModelSource, &ModelModel::objectAdded);
+    connect(probe, &Probe::objectDestroyed, modelModelSource, &ModelModel::objectRemoved);
 
     auto modelModelProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     modelModelProxy->setSourceModel(modelModelSource);
@@ -64,30 +64,30 @@ ModelInspector::ModelInspector(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelModel"), m_modelModel);
 
     m_modelSelectionModel = ObjectBroker::selectionModel(m_modelModel);
-    connect(m_modelSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(modelSelected(QItemSelection)));
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), SLOT(objectSelected(QObject*)));
+    connect(m_modelSelectionModel, &QItemSelectionModel::selectionChanged,
+            this, &ModelInspector::modelSelected);
+    connect(probe, &Probe::objectSelected, this, &ModelInspector::objectSelected);
 
-    connect(probe, SIGNAL(objectCreated(QObject*)), m_selectionModelsModel, SLOT(objectCreated(QObject*)));
-    connect(probe, SIGNAL(objectDestroyed(QObject*)), m_selectionModelsModel, SLOT(objectDestroyed(QObject*)));
+    connect(probe, &Probe::objectCreated, m_selectionModelsModel, &SelectionModelModel::objectCreated);
+    connect(probe, &Probe::objectDestroyed, m_selectionModelsModel, &SelectionModelModel::objectDestroyed);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SelectionModels"), m_selectionModelsModel);
     m_selectionModelsSelectionModel = ObjectBroker::selectionModel(m_selectionModelsModel);
-    connect(m_selectionModelsSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(selectionModelSelected(QItemSelection)));
+    connect(m_selectionModelsSelectionModel, &QItemSelectionModel::selectionChanged,
+            this, &ModelInspector::selectionModelSelected);
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelContent"), m_modelContentProxyModel);
     m_modelContentSelectionModel = ObjectBroker::selectionModel(m_modelContentProxyModel);
-    connect(m_modelContentSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(cellSelectionChanged(QItemSelection)));
+    connect(m_modelContentSelectionModel, &QItemSelectionModel::selectionChanged,
+            this, &ModelInspector::cellSelectionChanged);
 
     m_cellModel = new ModelCellModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelCellModel"), m_cellModel);
 
     m_modelTester = new ModelTester(this);
-    connect(probe, SIGNAL(objectCreated(QObject*)), m_modelTester, SLOT(objectAdded(QObject*)));
+    connect(probe, &Probe::objectCreated, m_modelTester, &ModelTester::objectAdded);
 
     if (m_probe->needsObjectDiscovery())
-        connect(m_probe, SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
+        connect(m_probe, &Probe::objectCreated, this, &ModelInspector::objectCreated);
 }
 
 void ModelInspector::modelSelected(const QItemSelection &selected)

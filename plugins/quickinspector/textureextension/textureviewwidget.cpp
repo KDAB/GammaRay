@@ -43,7 +43,7 @@ TextureViewWidget::TextureViewWidget(QWidget *parent)
     , m_horizontalBorderImageSavingsInPercent(0)
     , m_verticalBorderImageSavings(0)
 {
-    connect(this, SIGNAL(frameChanged()), this, SLOT(analyzeImageFlaws()));
+    connect(this, &RemoteViewWidget::frameChanged, this, &TextureViewWidget::analyzeImageFlaws);
 }
 
 TextureViewWidget::~TextureViewWidget()

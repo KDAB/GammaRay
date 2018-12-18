@@ -40,11 +40,11 @@ ClientToolModel::ClientToolModel(ClientToolManager *manager)
     : QAbstractListModel(manager)
     , m_toolManager(manager)
 {
-    connect(m_toolManager, SIGNAL(aboutToReceiveData()), this, SLOT(startReset()));
-    connect(m_toolManager, SIGNAL(toolListAvailable()), this, SLOT(finishReset()));
-    connect(m_toolManager, SIGNAL(aboutToReset()), this, SLOT(startReset()));
-    connect(m_toolManager, SIGNAL(reset()), this, SLOT(finishReset()));
-    connect(m_toolManager, SIGNAL(toolEnabledByIndex(int)), this, SLOT(toolEnabled(int)));
+    connect(m_toolManager, &ClientToolManager::aboutToReceiveData, this, &ClientToolModel::startReset);
+    connect(m_toolManager, &ClientToolManager::toolListAvailable, this, &ClientToolModel::finishReset);
+    connect(m_toolManager, &ClientToolManager::aboutToReset, this, &ClientToolModel::startReset);
+    connect(m_toolManager, &ClientToolManager::reset, this, &ClientToolModel::finishReset);
+    connect(m_toolManager, &ClientToolManager::toolEnabledByIndex, this, &ClientToolModel::toolEnabled);
 }
 
 ClientToolModel::~ClientToolModel()
@@ -125,8 +125,8 @@ ClientToolSelectionModel::ClientToolSelectionModel(ClientToolManager *manager)
     : QItemSelectionModel(manager->model())
     , m_toolManager(manager)
 {
-    connect(manager, SIGNAL(toolSelectedByIndex(int)), this, SLOT(selectTool(int)));
-    connect(manager, SIGNAL(toolListAvailable()), this, SLOT(selectDefaultTool()));
+    connect(manager, &ClientToolManager::toolSelectedByIndex, this, &ClientToolSelectionModel::selectTool);
+    connect(manager, &ClientToolManager::toolListAvailable, this, &ClientToolSelectionModel::selectDefaultTool);
 }
 
 ClientToolSelectionModel::~ClientToolSelectionModel()

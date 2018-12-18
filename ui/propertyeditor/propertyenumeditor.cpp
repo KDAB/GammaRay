@@ -165,13 +165,14 @@ PropertyEnumEditor::PropertyEnumEditor(QWidget* parent) :
     m_model(new PropertyEnumEditorModel(this))
 {
     setModel(m_model);
-    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(update()));
+    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(update())); // FIXME: Clazy sais 4 overloads for update, but I find not a single one...
 
     auto repo = ObjectBroker::object<EnumRepository*>();
-    connect(repo, SIGNAL(definitionChanged(int)), this, SLOT(definitionChanged(int)));
+    connect(repo, &EnumRepository::definitionChanged, this, &PropertyEnumEditor::definitionChanged);
 
     setEnabled(false);
-    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurrentIndexChanged(int)));
+    connect(this, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &PropertyEnumEditor::slotCurrentIndexChanged);
 }
 
 PropertyEnumEditor::~PropertyEnumEditor()

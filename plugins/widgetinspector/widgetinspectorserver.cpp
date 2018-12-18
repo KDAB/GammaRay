@@ -120,7 +120,7 @@ WidgetInspectorServer::WidgetInspectorServer(Probe *probe, QObject *parent)
     PropertyController::registerExtension<WidgetPaintAnalyzerExtension>();
     PropertyController::registerExtension<WidgetAttributeExtension>();
 
-    connect(m_remoteView, SIGNAL(requestUpdate()), this, SLOT(updateWidgetPreview()));
+    connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &WidgetInspectorServer::updateWidgetPreview);
 
     recreateOverlayWidget();
 
@@ -139,32 +139,32 @@ WidgetInspectorServer::WidgetInspectorServer(Probe *probe, QObject *parent)
 
     m_widgetSelectionModel = ObjectBroker::selectionModel(widgetSearchProxy);
     connect(m_widgetSelectionModel,
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(widgetSelected(QItemSelection)));
+            &QItemSelectionModel::selectionChanged,
+            this, &WidgetInspectorServer::widgetSelectionChanged);
 
     if (m_probe->needsObjectDiscovery()) {
-        connect(m_probe, SIGNAL(objectCreated(QObject*)), SLOT(objectCreated(QObject*)));
+        connect(m_probe, &Probe::objectCreated, this, &WidgetInspectorServer::objectCreated);
         discoverObjects();
     }
 
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this,
-            SLOT(objectSelected(QObject*)));
+    connect(probe, &Probe::objectSelected, this,
+            &WidgetInspectorServer::objectSelected);
 
-    connect(m_remoteView, SIGNAL(elementsAtRequested(QPoint,GammaRay::RemoteViewInterface::RequestMode)), this, SLOT(requestElementsAt(QPoint,GammaRay::RemoteViewInterface::RequestMode)));
-    connect(this, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)), m_remoteView, SIGNAL(elementsAtReceived(GammaRay::ObjectIds,int)));
-    connect(m_remoteView, SIGNAL(doPickElementId(GammaRay::ObjectId)), this, SLOT(pickElementId(GammaRay::ObjectId)));
+    connect(m_remoteView, &RemoteViewServer::elementsAtRequested, this, &WidgetInspectorServer::requestElementsAt);
+    connect(this, &WidgetInspectorServer::elementsAtReceived, m_remoteView, &RemoteViewInterface::elementsAtReceived);
+    connect(m_remoteView, &RemoteViewServer::doPickElementId, this, &WidgetInspectorServer::pickElementId);
 
     checkFeatures();
 }
 
 WidgetInspectorServer::~WidgetInspectorServer()
 {
-    disconnect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
-               this, SLOT(recreateOverlayWidget()));
+    disconnect(m_overlayWidget.data(), &QObject::destroyed,
+               this, &WidgetInspectorServer::recreateOverlayWidget);
     delete m_overlayWidget.data();
 }
 
-void WidgetInspectorServer::widgetSelected(const QItemSelection &selection)
+void WidgetInspectorServer::widgetSelectionChanged(const QItemSelection &selection)
 {
     ProbeGuard guard;
 
@@ -335,8 +335,8 @@ void WidgetInspectorServer::recreateOverlayWidget()
     // the target application might have destroyed the overlay widget
     // (e.g. because the parent of the overlay got destroyed).
     // just recreate a new one in this case
-    connect(m_overlayWidget, SIGNAL(destroyed(QObject*)),
-            this, SLOT(recreateOverlayWidget()));
+    connect(m_overlayWidget.data(), &QObject::destroyed,
+            this, &WidgetInspectorServer::recreateOverlayWidget);
 }
 
 void WidgetInspectorServer::widgetSelected(QWidget *widget)

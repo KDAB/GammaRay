@@ -56,14 +56,14 @@ void ModelContentProxyModel::setSelectionModel(QItemSelectionModel *selectionMod
         return;
 
     if (m_selectionModel) {
-        disconnect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
+        disconnect(m_selectionModel.data(), &QItemSelectionModel::selectionChanged, this, &ModelContentProxyModel::selectionChanged);
         emitDataChangedForSelection(m_selectionModel->selection());
     }
 
     m_selectionModel = selectionModel;
 
     if (m_selectionModel) {
-        connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(selectionChanged(QItemSelection,QItemSelection)));
+        connect(m_selectionModel.data(), &QItemSelectionModel::selectionChanged, this, &ModelContentProxyModel::selectionChanged);
         emitDataChangedForSelection(m_selectionModel->selection());
     }
 }

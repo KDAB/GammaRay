@@ -52,8 +52,8 @@ BindingTab::BindingTab(PropertyWidget* parent)
     ui->bindingView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->bindingView->header()->setObjectName("bindingViewHeader");
     ui->bindingView->setModel(ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".bindingModel")));
-    connect(ui->bindingView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(bindingContextMenu(QPoint)));
+    connect(ui->bindingView, &QWidget::customContextMenuRequested,
+            this, &BindingTab::bindingContextMenu);
 }
 
 BindingTab::~BindingTab()

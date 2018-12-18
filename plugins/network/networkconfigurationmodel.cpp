@@ -57,7 +57,7 @@ int NetworkConfigurationModel::rowCount(const QModelIndex& parent) const
     // has tons of side-effects such as D-Bus communication on Linux, that will possibly
     // fail when holding the Probe::objectLock
     if (!m_mgr) {
-        QTimer::singleShot(0, this, SLOT(init()));
+        QTimer::singleShot(0, this, &NetworkConfigurationModel::init);
         return 0;
     }
 

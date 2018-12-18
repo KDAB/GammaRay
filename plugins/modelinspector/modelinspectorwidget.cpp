@@ -62,15 +62,15 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
 
     ui->modelView->header()->setObjectName("modelViewHeader");
     ui->modelView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
-    connect(ui->modelView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(modelContextMenu(QPoint)));
+    connect(ui->modelView, &QWidget::customContextMenuRequested,
+            this, &ModelInspectorWidget::modelContextMenu);
 
     auto selectionModels = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectionModels"));
     ui->selectionModelsView->setModel(selectionModels);
     ui->selectionModelsView->header()->setObjectName("selectionModelsViewHeader");
     ui->selectionModelsView->header()->setResizeMode(QHeaderView::ResizeToContents);
-    connect(ui->selectionModelsView, SIGNAL(customContextMenuRequested(QPoint)),
-            this, SLOT(selectionModelContextMenu(QPoint)));
+    connect(ui->selectionModelsView, &QWidget::customContextMenuRequested,
+            this, &ModelInspectorWidget::selectionModelContextMenu);
     ui->selectionModelsView->setSelectionModel(ObjectBroker::selectionModel(selectionModels));
 
     auto contentModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelContent"));
@@ -85,15 +85,15 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
     ObjectBroker::registerClientObjectFactoryCallback<ModelInspectorInterface *>(
         createModelInspectorClient);
     m_interface = ObjectBroker::object<ModelInspectorInterface *>();
-    connect(m_interface, SIGNAL(currentCellDataChanged()), this, SLOT(cellDataChanged()));
+    connect(m_interface, &ModelInspectorInterface::currentCellDataChanged, this, &ModelInspectorWidget::cellDataChanged);
 
     auto modelModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ModelModel"));
     ui->modelView->setModel(modelModel);
     ui->modelView->setSelectionModel(ObjectBroker::selectionModel(modelModel));
     new SearchLineController(ui->modelSearchLine, modelModel);
     connect(ui->modelView->selectionModel(),
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(modelSelected(QItemSelection)));
+            &QItemSelectionModel::selectionChanged,
+            this, &ModelInspectorWidget::modelSelected);
 
     ui->modelCellView->setModel(ObjectBroker::model(QStringLiteral(
                                                         "com.kdab.GammaRay.ModelCellModel")));

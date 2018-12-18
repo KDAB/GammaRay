@@ -40,7 +40,7 @@ PropertyTextEditorDialog::PropertyTextEditorDialog(const QString &text, QWidget 
 {
     ui->setupUi(this);
     setMode(StringMode);
-    connect(ui->modeButton, SIGNAL(clicked(bool)), this, SLOT(toggleMode()));
+    connect(ui->modeButton, &QAbstractButton::clicked, this, &PropertyTextEditorDialog::toggleMode);
 }
 
 PropertyTextEditorDialog::PropertyTextEditorDialog(const QByteArray &bytes, QWidget *parent)
@@ -51,7 +51,7 @@ PropertyTextEditorDialog::PropertyTextEditorDialog(const QByteArray &bytes, QWid
 {
     ui->setupUi(this);
     setMode(StringMode);
-    connect(ui->modeButton, SIGNAL(clicked(bool)), this, SLOT(toggleMode()));
+    connect(ui->modeButton, &QAbstractButton::clicked, this, &PropertyTextEditorDialog::toggleMode);
 }
 
 PropertyTextEditorDialog::~PropertyTextEditorDialog()

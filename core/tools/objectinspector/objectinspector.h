@@ -49,7 +49,7 @@ public:
     explicit ObjectInspector(Probe *probe, QObject *parent = nullptr);
 
 private slots:
-    void objectSelected(const QModelIndex &index);
+    void modelIndexSelected(const QModelIndex &index);
     void objectSelectionChanged(const QItemSelection &selection);
     void objectSelected(QObject *object);
 

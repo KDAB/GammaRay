@@ -116,7 +116,7 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent)
 
     m_pendingRequestsTimer->setInterval(0);
     m_pendingRequestsTimer->setSingleShot(true);
-    connect(m_pendingRequestsTimer, SIGNAL(timeout()), SLOT(doRequests()));
+    connect(m_pendingRequestsTimer, &QTimer::timeout, this, &RemoteModel::doRequests);
 
     registerClient(serverObject);
     connectToServer();
@@ -993,10 +993,10 @@ void RemoteModel::registerClient(const QString &serverObject)
         return;
     }
     m_myAddress = Endpoint::instance()->objectAddress(serverObject);
-    connect(Endpoint::instance(), SIGNAL(objectRegistered(QString,Protocol::ObjectAddress)),
-            SLOT(serverRegistered(QString,Protocol::ObjectAddress)));
-    connect(Endpoint::instance(), SIGNAL(objectUnregistered(QString,Protocol::ObjectAddress)),
-            SLOT(serverUnregistered(QString,Protocol::ObjectAddress)));
+    connect(Endpoint::instance(), &Endpoint::objectRegistered,
+            this, &RemoteModel::serverRegistered);
+    connect(Endpoint::instance(), &Endpoint::objectUnregistered,
+            this, &RemoteModel::serverUnregistered);
 }
 
 void RemoteModel::sendMessage(const Message &msg) const

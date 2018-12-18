@@ -224,8 +224,8 @@ Probe::Probe(QObject *parent)
 
     m_queueTimer->setSingleShot(true);
     m_queueTimer->setInterval(0);
-    connect(m_queueTimer, SIGNAL(timeout()),
-            this, SLOT(processQueuedObjectChanges()));
+    connect(m_queueTimer, &QTimer::timeout,
+            this, &Probe::processQueuedObjectChanges);
 
     m_previousSignalSpyCallbackSet.signalBeginCallback
         = qt_signal_spy_callback_set.signal_begin_callback;
@@ -236,8 +236,8 @@ Probe::Probe(QObject *parent)
     m_previousSignalSpyCallbackSet.slotEndCallback = qt_signal_spy_callback_set.slot_end_callback;
     registerSignalSpyCallbackSet(m_previousSignalSpyCallbackSet); // daisy-chain existing callbacks
 
-    connect(this, SIGNAL(objectCreated(QObject*)), m_metaObjectRegistry, SLOT(objectAdded(QObject*)));
-    connect(this, SIGNAL(objectDestroyed(QObject*)), m_metaObjectRegistry, SLOT(objectRemoved(QObject*)));
+    connect(this, &Probe::objectCreated, m_metaObjectRegistry, &MetaObjectRegistry::objectAdded);
+    connect(this, &Probe::objectDestroyed, m_metaObjectRegistry, &MetaObjectRegistry::objectRemoved);
 }
 
 Probe::~Probe()
@@ -311,11 +311,11 @@ void Probe::createProbe(bool findExisting)
     IF_DEBUG(cout << "done setting up new probe instance" << endl;
              )
 
-    connect(qApp, SIGNAL(aboutToQuit()), probe, SLOT(shutdown()));
+    connect(qApp, &QCoreApplication::aboutToQuit, probe, &Probe::shutdown);
 
     // Our safety net, if there's no call to QCoreApplication::exec() we'll never receive the aboutToQuit() signal
     // Make sure we still cleanup safely after the application instance got destroyed
-    connect(qApp, SIGNAL(destroyed()), probe, SLOT(shutdown()));
+    connect(qApp, &QObject::destroyed, probe, &Probe::shutdown);
 
     // now we can get the lock and add items which where added before this point in time
     {

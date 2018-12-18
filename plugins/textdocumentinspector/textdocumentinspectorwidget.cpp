@@ -55,9 +55,9 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent)
     ui->documentList->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TextDocumentsModel")));
     ui->documentList->setSelectionModel(ObjectBroker::selectionModel(ui->documentList->model()));
     connect(ui->documentList->selectionModel(),
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(documentSelected(QItemSelection,QItemSelection)));
-    connect(ui->documentList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(documentContextMenu(QPoint)));
+            &QItemSelectionModel::selectionChanged,
+            this, &TextDocumentInspectorWidget::documentSelected);
+    connect(ui->documentList, &QWidget::customContextMenuRequested, this, &TextDocumentInspectorWidget::documentContextMenu);
 
     ui->documentTree->header()->setObjectName("documentTreeHeader");
     ui->documentTree->setDeferredResizeMode(0, QHeaderView::Stretch);
@@ -66,8 +66,8 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent)
                                                        "com.kdab.GammaRay.TextDocumentModel")));
     ui->documentTree->setSelectionModel(ObjectBroker::selectionModel(ui->documentTree->model()));
     connect(ui->documentTree->selectionModel(),
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(documentElementSelected(QItemSelection,QItemSelection)));
+            &QItemSelectionModel::selectionChanged,
+            this, &TextDocumentInspectorWidget::documentElementSelected);
 
     ui->documentFormatView->header()->setObjectName("documentFormatViewHeader");
     ui->documentFormatView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
@@ -96,14 +96,14 @@ void TextDocumentInspectorWidget::documentSelected(const QItemSelection &selecte
     QTextDocument *doc = qobject_cast<QTextDocument *>(selectedObj);
 
     if (m_currentDocument) {
-        disconnect(m_currentDocument, SIGNAL(contentsChanged()),
-                   this, SLOT(documentContentChanged()));
+        disconnect(m_currentDocument.data(), &QTextDocument::contentsChanged,
+                   this, &TextDocumentInspectorWidget::documentContentChanged);
     }
     m_currentDocument = QPointer<QTextDocument>(doc);
 
     if (doc) {
         ui->documentView->setDocument(doc);
-        connect(doc, SIGNAL(contentsChanged()), SLOT(documentContentChanged()));
+        connect(doc, &QTextDocument::contentsChanged, this, &TextDocumentInspectorWidget::documentContentChanged);
         documentContentChanged();
     }
 }

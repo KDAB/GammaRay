@@ -61,8 +61,8 @@ TranslatorInspector::TranslatorInspector(Probe *probe, QObject *parent)
 
     m_selectionModel = ObjectBroker::selectionModel(m_translatorsModel);
     connect(m_selectionModel,
-            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(selectionChanged(QItemSelection)));
+            &QItemSelectionModel::selectionChanged,
+            this, &TranslatorInspector::selectionChanged);
 
     m_translationsSelectionModel
         = ObjectBroker::selectionModel(m_translationsModel);

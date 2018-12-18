@@ -52,8 +52,8 @@ AttachHelper::AttachHelper(const QString &gammaray, const QString &injector,
     , m_injector(injector)
 {
     m_proc->setProcessChannelMode(QProcess::ForwardedChannels);
-    connect(m_proc, SIGNAL(started()), this, SLOT(processStarted()));
-    connect(m_proc, SIGNAL(finished(int)), this, SLOT(processFinished(int)));
+    connect(m_proc, &QProcess::started, this, &AttachHelper::processStarted);
+    connect(m_proc, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, &AttachHelper::processFinished);
     m_proc->start(debuggee, arguments);
 }
 
@@ -64,7 +64,7 @@ void AttachHelper::processStarted()
     const int timeout = qrand() % 1500 + 1;
     qDebug() << "attaching gammaray in" << timeout << "ms";
     m_timer->setSingleShot(true);
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(attach()));
+    connect(m_timer, &QTimer::timeout, this, &AttachHelper::attach);
     m_timer->start(timeout);
 }
 

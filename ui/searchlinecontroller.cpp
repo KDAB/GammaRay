@@ -79,8 +79,8 @@ SearchLineController::SearchLineController(QLineEdit *lineEdit, QAbstractItemMod
     auto timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(300);
-    connect(lineEdit, SIGNAL(textChanged(QString)), timer, SLOT(start()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(activateSearch()));
+    connect(lineEdit, &QLineEdit::textChanged, timer, [timer]{ timer->start(); });
+    connect(timer, &QTimer::timeout, this, &SearchLineController::activateSearch);
 }
 
 SearchLineController::~SearchLineController()

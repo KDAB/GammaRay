@@ -41,10 +41,10 @@ GraphicsSceneView::GraphicsSceneView(QWidget *parent)
     ui->sceneCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
     ui->itemCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
 
-    connect(ui->graphicsView, SIGNAL(sceneCoordinatesChanged(QPointF)),
-            SLOT(sceneCoordinatesChanged(QPointF)));
-    connect(ui->graphicsView, SIGNAL(itemCoordinatesChanged(QPointF)),
-            SLOT(itemCoordinatesChanged(QPointF)));
+    connect(ui->graphicsView, &GraphicsView::sceneCoordinatesChanged,
+            this, &GraphicsSceneView::sceneCoordinatesChanged);
+    connect(ui->graphicsView, &GraphicsView::itemCoordinatesChanged,
+            this, &GraphicsSceneView::itemCoordinatesChanged);
 }
 
 GraphicsSceneView::~GraphicsSceneView()

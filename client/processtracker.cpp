@@ -53,7 +53,7 @@ public:
     {
         ticker->setSingleShot(false);
 
-        connect(ticker, SIGNAL(timeout()), this, SLOT(requestUpdate()));
+        connect(ticker, &QTimer::timeout, this, &D::requestUpdate);
     }
 
 public slots:
@@ -109,15 +109,15 @@ void ProcessTracker::setBackend(GammaRay::ProcessTrackerBackend *backend)
     }
 
     if (d->backend) {
-        disconnect(d->backend, SIGNAL(processChecked(GammaRay::ProcessTrackerInfo)),
-                   d.data(), SLOT(processChecked(GammaRay::ProcessTrackerInfo)));
+        disconnect(d->backend, &ProcessTrackerBackend::processChecked,
+                   d.data(), &D::processChecked);
     }
 
     d->backend = backend;
 
     if (d->backend) {
-        connect(d->backend, SIGNAL(processChecked(GammaRay::ProcessTrackerInfo)),
-                d.data(), SLOT(processChecked(GammaRay::ProcessTrackerInfo)), Qt::QueuedConnection);
+        connect(d->backend, &ProcessTrackerBackend::processChecked,
+                d.data(), &D::processChecked, Qt::QueuedConnection);
     }
 
     emit backendChanged(d->backend);

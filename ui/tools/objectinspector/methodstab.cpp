@@ -78,10 +78,10 @@ void MethodsTab::setObjectBaseName(const QString &baseName)
     m_ui->methodView->setSelectionModel(ObjectBroker::selectionModel(proxy));
     m_ui->methodView->header()->setResizeMode(QHeaderView::ResizeToContents);
     new SearchLineController(m_ui->methodSearchLine, proxy);
-    connect(m_ui->methodView, SIGNAL(doubleClicked(QModelIndex)),
-            SLOT(methodActivated(QModelIndex)));
-    connect(m_ui->methodView, SIGNAL(customContextMenuRequested(QPoint)),
-            SLOT(methodContextMenu(QPoint)));
+    connect(m_ui->methodView, &QAbstractItemView::doubleClicked,
+            this, &MethodsTab::methodActivated);
+    connect(m_ui->methodView, &QWidget::customContextMenuRequested,
+            this, &MethodsTab::methodContextMenu);
     m_ui->methodLog->setModel(ObjectBroker::model(baseName + '.' + "methodLog"));
 
     m_interface = ObjectBroker::object<MethodsExtensionInterface *>(baseName + ".methodsExtension");

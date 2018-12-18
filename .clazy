@@ -2,7 +2,7 @@
 SKIP /3rdparty/
 
 #clazy checks specification
-CHECKS level2,no-qenums,no-qgetenv,no-old-style-connect
+CHECKS level2,no-qenums,no-qgetenv
 
 #Turn-on Qt4 compatibility
 QT4

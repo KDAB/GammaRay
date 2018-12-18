@@ -42,7 +42,8 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
     ui->setupUi(this);
 
     ui->styleSelector->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleList")));
-    connect(ui->styleSelector, SIGNAL(currentIndexChanged(int)), SLOT(styleSelected(int)));
+    connect(ui->styleSelector, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            this, &StyleInspectorWidget::styleSelected);
 
     ui->primitivePage->setModel(ObjectBroker::model(QStringLiteral(
                                                         "com.kdab.GammaRay.StyleInspector.PrimitiveModel")));

@@ -179,8 +179,8 @@ ClientToolManager::ClientToolManager(QObject *parent)
 
     initPluginRepository();
 
-    connect(Endpoint::instance(), SIGNAL(disconnected()), this, SLOT(clear()));
-    connect(Endpoint::instance(), SIGNAL(connectionEstablished()), this, SLOT(requestAvailableTools()));
+    connect(Endpoint::instance(), &Endpoint::disconnected, this, &ClientToolManager::clear);
+    connect(Endpoint::instance(), &Endpoint::connectionEstablished, this, &ClientToolManager::requestAvailableTools);
 }
 
 ClientToolManager::~ClientToolManager()
@@ -206,14 +206,14 @@ void ClientToolManager::requestAvailableTools()
 {
     m_remote = ObjectBroker::object<ToolManagerInterface *>();
 
-    connect(m_remote, SIGNAL(availableToolsResponse(QVector<GammaRay::ToolData>)),
-            this, SLOT(gotTools(QVector<GammaRay::ToolData>)));
-    connect(m_remote, SIGNAL(toolEnabled(QString)),
-            this, SLOT(toolGotEnabled(QString)));
-    connect(m_remote, SIGNAL(toolSelected(QString)),
-            this, SLOT(toolGotSelected(QString)));
-    connect(m_remote, SIGNAL(toolsForObjectResponse(GammaRay::ObjectId,QVector<QString>)),
-            this, SLOT(toolsForObjectReceived(GammaRay::ObjectId,QVector<QString>)));
+    connect(m_remote.data(), &ToolManagerInterface::availableToolsResponse,
+            this, &ClientToolManager::gotTools);
+    connect(m_remote.data(), &ToolManagerInterface::toolEnabled,
+            this, &ClientToolManager::toolGotEnabled);
+    connect(m_remote.data(), &ToolManagerInterface::toolSelected,
+            this, &ClientToolManager::toolGotSelected);
+    connect(m_remote.data(), &ToolManagerInterface::toolsForObjectResponse,
+            this, &ClientToolManager::toolsForObjectReceived);
 
     m_remote->requestAvailableTools();
 }
@@ -271,8 +271,8 @@ void ClientToolManager::gotTools(const QVector<GammaRay::ToolData> &tools)
     emit toolListAvailable();
 
     if (m_remote) {
-        disconnect(m_remote, SIGNAL(availableToolsResponse(QVector<GammaRay::ToolData>)),
-                   this, SLOT(gotTools(QVector<GammaRay::ToolData>)));
+        disconnect(m_remote.data(), &ToolManagerInterface::availableToolsResponse,
+                   this, &ClientToolManager::gotTools);
     }
 }
 

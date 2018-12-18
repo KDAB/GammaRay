@@ -116,7 +116,7 @@ TimerTop::TimerTop(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimerModel"), TimerModel::instance());
     m_selectionModel = ObjectBroker::selectionModel(TimerModel::instance());
 
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+    connect(probe, &Probe::objectSelected, this, &TimerTop::objectSelected);
 }
 
 void TimerTop::clearHistory()

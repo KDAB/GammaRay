@@ -39,7 +39,6 @@
 #include <unordered_map>
 
 QT_BEGIN_NAMESPACE
-class QSignalMapper;
 class QQuickItem;
 class QQuickWindow;
 QT_END_NAMESPACE

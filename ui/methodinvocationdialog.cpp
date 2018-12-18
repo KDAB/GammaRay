@@ -48,8 +48,8 @@ MethodInvocationDialog::MethodInvocationDialog(QWidget *parent)
     ui->argumentView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Invoke"));
-    connect(ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));
-    connect(ui->buttonBox, SIGNAL(rejected()), SLOT(reject()));
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     ui->connectionTypeComboBox->addItem(tr("Auto"), QVariant::fromValue(Qt::AutoConnection));
     ui->connectionTypeComboBox->addItem(tr("Direct"), QVariant::fromValue(Qt::DirectConnection));

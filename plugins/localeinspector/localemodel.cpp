@@ -37,8 +37,8 @@ LocaleModel::LocaleModel(LocaleDataAccessorRegistry *registry, QObject *parent)
     , m_registry(registry)
 {
     init();
-    connect(registry, SIGNAL(accessorAdded()), SLOT(accessorAdded()));
-    connect(registry, SIGNAL(accessorRemoved(int)), SLOT(accessorRemoved(int)));
+    connect(registry, &LocaleDataAccessorRegistry::accessorAdded, this, &LocaleModel::accessorAdded);
+    connect(registry, &LocaleDataAccessorRegistry::accessorRemoved, this, &LocaleModel::accessorRemoved);
 }
 
 int LocaleModel::columnCount(const QModelIndex &parent) const

@@ -134,8 +134,8 @@ private slots:
     void itemSelectionChanged(const QItemSelection &selection);
     void sgSelectionChanged(const QItemSelection &selection);
     void sgNodeDeleted(QSGNode *node);
-    void objectSelected(QObject *object);
-    void objectSelected(void *object, const QString &typeName);
+    void qObjectSelected(QObject *object);
+    void nonQObjectSelected(void *object, const QString &typeName);
     void objectCreated(QObject *object);
     void recreateOverlay();
     void aboutToCleanSceneGraph();

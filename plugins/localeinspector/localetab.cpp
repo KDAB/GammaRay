@@ -54,13 +54,13 @@ LocaleTab::LocaleTab(QWidget *parent)
 
     ui->accessorTable->resizeColumnsToContents();
     ui->localeTable->resizeColumnsToContents();
-    connect(localeModel, SIGNAL(modelReset()), ui->localeTable, SLOT(resizeColumnsToContents()));
-    connect(accessorModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), ui->accessorTable,
-            SLOT(resizeColumnsToContents()));
+    connect(localeModel, &QAbstractItemModel::modelReset, ui->localeTable, &QTableView::resizeColumnsToContents);
+    connect(accessorModel, &QAbstractItemModel::dataChanged, ui->accessorTable,
+            &QTableView::resizeColumnsToContents);
 
     QMetaObject::invokeMethod(this, "initSplitterPosition", Qt::QueuedConnection);
-    connect(accessorModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            SLOT(initSplitterPosition()));
+    connect(accessorModel, &QAbstractItemModel::rowsInserted,
+            this, &LocaleTab::initSplitterPosition);
 }
 
 LocaleTab::~LocaleTab()

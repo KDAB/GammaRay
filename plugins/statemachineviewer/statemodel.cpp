@@ -164,12 +164,7 @@ void StateModel::setStateMachine(StateMachineDebugInterface *stateMachine)
         return;
 
     if (d->m_stateMachine) {
-        disconnect(d->m_stateMachine, SIGNAL(destroyed(QObject*)),
-                   this, SLOT(handleMachineDestroyed(QObject*)));
-        disconnect(d->m_stateMachine, SIGNAL(stateEntered(State)),
-                   this, SLOT(stateConfigurationChanged()));
-        disconnect(d->m_stateMachine, SIGNAL(stateExited(State)),
-                   this, SLOT(stateConfigurationChanged()));
+        disconnect(d->m_stateMachine, nullptr, this, nullptr);
     }
 
     beginResetModel();
@@ -178,12 +173,12 @@ void StateModel::setStateMachine(StateMachineDebugInterface *stateMachine)
     endResetModel();
 
     if (d->m_stateMachine) {
-        connect(d->m_stateMachine, SIGNAL(destroyed(QObject*)),
-                this, SLOT(handleMachineDestroyed(QObject*)));
-        connect(d->m_stateMachine, SIGNAL(stateEntered(State)),
-                this, SLOT(stateConfigurationChanged()));
-        connect(d->m_stateMachine, SIGNAL(stateExited(State)),
-                this, SLOT(stateConfigurationChanged()));
+        connect(d->m_stateMachine, &QObject::destroyed,
+                this, [this](QObject *obj) { Q_D(StateModel); d->handleMachineDestroyed(obj); });
+        connect(d->m_stateMachine, &StateMachineDebugInterface::stateEntered,
+                this, [this] { Q_D(StateModel); d->stateConfigurationChanged(); });
+        connect(d->m_stateMachine, &StateMachineDebugInterface::stateEntered,
+                this, [this] { Q_D(StateModel); d->stateConfigurationChanged(); });
     }
 }
 

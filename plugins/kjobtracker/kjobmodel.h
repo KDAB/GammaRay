@@ -50,9 +50,11 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
 
-private slots:
+public slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
+
+private slots:
     void jobResult(KJob *job);
     void jobFinished(KJob *obj);
     void jobInfo(KJob *job, const QString &plainMessage);

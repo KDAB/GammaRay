@@ -54,7 +54,7 @@ public:
         m_layout->addWidget(m_button);
         setLayout(m_layout);
 
-        connect(m_button, SIGNAL(clicked()), SLOT(openFonts()));
+        connect(m_button, &QAbstractButton::clicked, this, &Widget::openFonts);
 
         retranslate();
 

@@ -185,7 +185,7 @@ private slots:
             threadTimer->setInterval(100);
             threadTimer->moveToThread(mainThread.data());
 
-            connect(mainThread.data(), SIGNAL(started()), threadTimer.data(), SLOT(start()));
+            connect(mainThread.data(), &QThread::started, threadTimer.data(), static_cast<void(QTimer::*)()>(&QTimer::start));
 
             int timerId = -1;
             QTimer::singleShot(500, threadTimer.data(), [&]() {
@@ -197,7 +197,7 @@ private slots:
             auto deleteTimer = new QTimer;
             deleteTimer->setObjectName("deleteTimer");
             deleteTimer->setInterval(1500);
-            connect(deleteTimer, SIGNAL(timeout()), deleter.data(), SLOT(deleteSender()));
+            connect(deleteTimer, &QTimer::timeout, deleter.data(), &Deleter::deleteSender);
             deleteTimer->start();
 
             mainThread->start();

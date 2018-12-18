@@ -49,7 +49,7 @@ Client::Client(QObject *parent)
 {
     Message::resetNegotiatedDataVersion();
 
-    connect(this, SIGNAL(disconnected()), SLOT(socketDisconnected()));
+    connect(this, &Endpoint::disconnected, this, &Client::socketDisconnected);
 
     m_propertySyncer->setRequestInitialSync(true);
 
@@ -89,11 +89,11 @@ void Client::connectToHost(const QUrl &url, int tryAgain)
         return;
     }
 
-    connect(m_clientDevice, SIGNAL(connected()), this, SLOT(socketConnected()));
-    connect(m_clientDevice, SIGNAL(transientError()), this, SIGNAL(transientConnectionError()));
-    connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SIGNAL(persisitentConnectionError(QString)));
-    connect(m_clientDevice, SIGNAL(transientError()), this, SLOT(resetClientDevice()));
-    connect(m_clientDevice, SIGNAL(persistentError(QString)), this, SLOT(resetClientDevice()));
+    connect(m_clientDevice, &ClientDevice::connected, this, &Client::socketConnected);
+    connect(m_clientDevice, &ClientDevice::transientError, this, &Client::transientConnectionError);
+    connect(m_clientDevice, &ClientDevice::persistentError, this, &Client::persisitentConnectionError);
+    connect(m_clientDevice, &ClientDevice::transientError, this, &Client::resetClientDevice);
+    connect(m_clientDevice, &ClientDevice::persistentError, this, &Client::resetClientDevice);
     m_clientDevice->setTryAgain(tryAgain);
     m_clientDevice->connectToHost();
 }

@@ -229,24 +229,24 @@ void SGWireframeWidget::setModel(QAbstractItemModel *vertexModel, QAbstractItemM
     }
     m_vertexModel = vertexModel;
     m_vertexModel->rowCount();
-    connect(m_vertexModel, SIGNAL(modelReset()),
-            this, SLOT(onVertexModelReset()));
-    connect(m_vertexModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(onVertexModelDataChanged(QModelIndex,QModelIndex)));
-    connect(m_vertexModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(onVertexModelRowsInserted(QModelIndex,int,int)));
+    connect(m_vertexModel, &QAbstractItemModel::modelReset,
+            this, &SGWireframeWidget::onVertexModelReset);
+    connect(m_vertexModel, &QAbstractItemModel::dataChanged,
+            this, &SGWireframeWidget::onVertexModelDataChanged);
+    connect(m_vertexModel, &QAbstractItemModel::rowsInserted,
+            this, &SGWireframeWidget::onVertexModelRowsInserted);
 
     if (m_adjacencyModel) {
         disconnect(m_adjacencyModel, nullptr, this, nullptr);
     }
     m_adjacencyModel = adjacencyModel;
     m_adjacencyModel->rowCount();
-    connect(m_adjacencyModel, SIGNAL(modelReset()),
-            this, SLOT(onAdjacencyModelReset()));
-    connect(m_adjacencyModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(onAdjacencyModelDataChanged(QModelIndex,QModelIndex)));
-    connect(m_adjacencyModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(onAdjacencyModelRowsInserted(QModelIndex,int,int)));
+    connect(m_adjacencyModel, &QAbstractItemModel::modelReset,
+            this, &SGWireframeWidget::onAdjacencyModelReset);
+    connect(m_adjacencyModel, &QAbstractItemModel::dataChanged,
+            this, &SGWireframeWidget::onAdjacencyModelDataChanged);
+    connect(m_adjacencyModel, &QAbstractItemModel::rowsInserted,
+            this, &SGWireframeWidget::onAdjacencyModelRowsInserted);
 }
 
 void SGWireframeWidget::setHighlightModel(QItemSelectionModel *selectionModel)
@@ -256,8 +256,8 @@ void SGWireframeWidget::setHighlightModel(QItemSelectionModel *selectionModel)
 
     m_highlightModel = selectionModel;
 
-    connect(m_highlightModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(onHighlightDataChanged(QItemSelection,QItemSelection)));
+    connect(m_highlightModel, &QItemSelectionModel::selectionChanged,
+            this, &SGWireframeWidget::onHighlightDataChanged);
 }
 
 void SGWireframeWidget::onVertexModelReset()

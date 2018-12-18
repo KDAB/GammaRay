@@ -50,7 +50,6 @@
 #include <QPushButton>
 #include <QClipboard>
 #include <QApplication>
-#include <QSignalMapper>
 #include <QUrl>
 
 using namespace GammaRay;
@@ -69,8 +68,8 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
         createClientMessageHandler);
     MessageHandlerInterface *handler = ObjectBroker::object<MessageHandlerInterface *>();
 
-    connect(handler, SIGNAL(fatalMessageReceived(QString,QString,QTime,QStringList)),
-            this, SLOT(fatalMessageReceived(QString,QString,QTime,QStringList)));
+    connect(handler, &MessageHandlerInterface::fatalMessageReceived,
+            this, &MessageHandlerWidget::fatalMessageReceived);
 
     ui->setupUi(this);
 
@@ -94,14 +93,14 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
     new SearchLineController(ui->messageSearchLine, displayModel);
     ui->messageView->setModel(displayModel);
     ui->messageView->setSelectionModel(ObjectBroker::selectionModel(displayModel));
-    connect(ui->messageView, SIGNAL(customContextMenuRequested(QPoint)), this,
-            SLOT(messageContextMenu(QPoint)));
+    connect(ui->messageView, &QWidget::customContextMenuRequested, this,
+            &MessageHandlerWidget::messageContextMenu);
 
     ui->backtraceView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MessageStackTraceModel")));
     ui->backtraceView->setVisible(handler->stackTraceAvailable());
     ui->backtraceView->setItemDelegate(new PropertyEditorDelegate(ui->backtraceView));
-    connect(handler, SIGNAL(stackTraceAvailableChanged(bool)), ui->backtraceView, SLOT(setVisible(bool)));
-    connect(ui->backtraceView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(stackTraceContextMenu(QPoint)));
+    connect(handler, &MessageHandlerInterface::stackTraceAvailableChanged, ui->backtraceView, &QWidget::setVisible);
+    connect(ui->backtraceView, &QWidget::customContextMenuRequested, this, &MessageHandlerWidget::stackTraceContextMenu);
 
     ui->categoriesView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel")));
 
@@ -152,18 +151,15 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
         QPushButton *copyBacktraceButton = new QPushButton(tr("Copy Backtrace"));
         buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
 
-        auto *mapper = new QSignalMapper(this);
-        mapper->setMapping(copyBacktraceButton, backtrace.join(QStringLiteral("\n")));
-
-        connect(copyBacktraceButton, SIGNAL(clicked()), mapper, SLOT(map()));
-        connect(mapper, SIGNAL(mapped(QString)), this, SLOT(copyToClipboard(QString)));
+        auto joinedBacktrace = backtrace.join(QStringLiteral("\n"));
+        connect(copyBacktraceButton, &QPushButton::clicked, this, [this, joinedBacktrace] { copyToClipboard(joinedBacktrace); });
     }
 
     buttons->addButton(QDialogButtonBox::Close);
-    QObject::connect(buttons, SIGNAL(accepted()),
-                     &dlg, SLOT(accept()));
-    QObject::connect(buttons, SIGNAL(rejected()),
-                     &dlg, SLOT(reject()));
+    QObject::connect(buttons, &QDialogButtonBox::accepted,
+                     &dlg, &QDialog::accept);
+    QObject::connect(buttons, &QDialogButtonBox::rejected,
+                     &dlg, &QDialog::reject);
     layout->addWidget(buttons, 2, 0, 1, 2);
 
     dlg.setLayout(layout);

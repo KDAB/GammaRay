@@ -185,7 +185,7 @@ TimerModel::TimerModel(QObject *parent)
 
     m_pushTimer->setSingleShot(true);
     m_pushTimer->setInterval(5000);
-    connect(m_pushTimer, SIGNAL(timeout()), this, SLOT(pushChanges()));
+    connect(m_pushTimer, &QTimer::timeout, this, &TimerModel::pushChanges);
 
     QInternal::registerCallback(QInternal::EventNotifyCallback, eventNotifyCallback);
 }
@@ -437,22 +437,22 @@ void TimerModel::setSourceModel(QAbstractItemModel *sourceModel)
     beginResetModel();
     m_sourceModel = sourceModel;
 
-    connect(m_sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-            this, SLOT(slotBeginInsertRows(QModelIndex,int,int)));
-    connect(m_sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SLOT(slotEndInsertRows()));
-    connect(m_sourceModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-            this, SLOT(slotBeginRemoveRows(QModelIndex,int,int)));
-    connect(m_sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            this, SLOT(slotEndRemoveRows()));
-    connect(m_sourceModel, SIGNAL(modelAboutToBeReset()),
-            this, SLOT(slotBeginReset()));
-    connect(m_sourceModel, SIGNAL(modelReset()),
-            this, SLOT(slotEndReset()));
-    connect(m_sourceModel, SIGNAL(layoutAboutToBeChanged()),
-            this, SLOT(slotBeginReset()));
-    connect(m_sourceModel, SIGNAL(layoutChanged()),
-            this, SLOT(slotEndReset()));
+    connect(m_sourceModel, &QAbstractItemModel::rowsAboutToBeInserted,
+            this, &TimerModel::slotBeginInsertRows);
+    connect(m_sourceModel, &QAbstractItemModel::rowsInserted,
+            this, &TimerModel::slotEndInsertRows);
+    connect(m_sourceModel, &QAbstractItemModel::rowsAboutToBeRemoved,
+            this, &TimerModel::slotBeginRemoveRows);
+    connect(m_sourceModel, &QAbstractItemModel::rowsRemoved,
+            this, &TimerModel::slotEndRemoveRows);
+    connect(m_sourceModel, &QAbstractItemModel::modelAboutToBeReset,
+            this, &TimerModel::slotBeginReset);
+    connect(m_sourceModel, &QAbstractItemModel::modelReset,
+            this, &TimerModel::slotEndReset);
+    connect(m_sourceModel, &QAbstractItemModel::layoutAboutToBeChanged,
+            this, &TimerModel::slotBeginReset);
+    connect(m_sourceModel, &QAbstractItemModel::layoutChanged,
+            this, &TimerModel::slotEndReset);
 
     endResetModel();
 }

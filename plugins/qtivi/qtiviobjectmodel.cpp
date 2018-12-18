@@ -51,7 +51,6 @@
 #include <QMetaObject>
 #include <QMetaProperty>
 #include <QMutexLocker>
-#include <QSignalMapper>
 
 #include <QJsonDocument>
 #include <QJsonArray>

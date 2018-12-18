@@ -51,12 +51,12 @@ NetworkDiscoveryModel::NetworkDiscoveryModel(QObject *parent)
     , m_socket(new QUdpSocket(this))
 {
     m_socket->bind(Endpoint::broadcastPort(), QUdpSocket::ShareAddress);
-    connect(m_socket, SIGNAL(readyRead()), SLOT(processPendingDatagrams()));
+    connect(m_socket, &QIODevice::readyRead, this, &NetworkDiscoveryModel::processPendingDatagrams);
 
     auto *expireTimer = new QTimer(this);
     expireTimer->setInterval(15 * 1000);
     expireTimer->setSingleShot(false);
-    connect(expireTimer, SIGNAL(timeout()), SLOT(expireEntries()));
+    connect(expireTimer, &QTimer::timeout, this, &NetworkDiscoveryModel::expireEntries);
     expireTimer->start();
 }
 

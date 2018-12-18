@@ -80,8 +80,8 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 SignalHistoryModel::SignalHistoryModel(Probe *probe, QObject *parent)
     : QAbstractTableModel(parent)
 {
-    connect(probe, SIGNAL(objectCreated(QObject*)), this, SLOT(onObjectAdded(QObject*)));
-    connect(probe, SIGNAL(objectDestroyed(QObject*)), this, SLOT(onObjectRemoved(QObject*)));
+    connect(probe, &Probe::objectCreated, this, &SignalHistoryModel::onObjectAdded);
+    connect(probe, &Probe::objectDestroyed, this, &SignalHistoryModel::onObjectRemoved);
 
     SignalSpyCallbackSet spy;
     spy.signalBeginCallback = signal_begin_callback;
