@@ -348,7 +348,7 @@ endif()
 #
 # Finding Qt
 #
-find_package(Qt5Core 5.4 NO_MODULE REQUIRED)
+find_package(Qt5Core 5.5 NO_MODULE REQUIRED)
 
 set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
 find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
