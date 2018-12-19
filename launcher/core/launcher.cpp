@@ -134,10 +134,13 @@ static QProcessEnvironment addTargetPluginPaths(QProcessEnvironment env, const P
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     QString qtPluginPath = env.value(QStringLiteral("QT_PLUGIN_PATH"));
-    if (!qtPluginPath.isEmpty())
+    if (!qtPluginPath.isEmpty()) {
         qtPluginPath.append(QDir::listSeparator());
+    }
     qtPluginPath.append(Paths::targetPluginPaths(abi.id()).join(QDir::listSeparator()));
     env.insert(QStringLiteral("QT_PLUGIN_PATH"), qtPluginPath);
+#else
+    Q_UNUSED(abi);
 #endif
     return env;
 }

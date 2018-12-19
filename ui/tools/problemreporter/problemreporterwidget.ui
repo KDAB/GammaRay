@@ -16,8 +16,8 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout">
+     <widget class="QWidget" name="layoutLeftWidget">
+      <layout class="QVBoxLayout" name="verticalLeftLayout">
        <property name="margin">
         <number>0</number>
        </property>
@@ -59,8 +59,8 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="layoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout">
+     <widget class="QWidget" name="layoutRightWidget">
+      <layout class="QVBoxLayout" name="verticalRightLayout">
        <property name="margin">
         <number>0</number>
        </property>

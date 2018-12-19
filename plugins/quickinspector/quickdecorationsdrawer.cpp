@@ -305,9 +305,10 @@ void QuickDecorationsDrawer::drawTraces()
         m_painter->setBrush(m_painter->pen().color());
 
         const int margin = m_painter->fontMetrics().width(QLatin1Char('X')) / 2;
-        const QRectF classRect = itemGeometry.boundingRect
-                .adjusted(0, 0, 0, -(itemGeometry.boundingRect.height()
-                                     -(m_painter->fontMetrics().height() * 1.6)));
+        const QRectF classRect =
+            itemGeometry.boundingRect.adjusted(
+                0, 0, 0,
+                -(itemGeometry.boundingRect.height() - (m_painter->fontMetrics().height() * 1.6)));
         m_painter->drawRect(classRect);
 
         // type name label
@@ -340,7 +341,7 @@ QuickItemGeometry QuickDecorationsDrawer::itemGeometry() const
 {
     switch (m_type) {
     case QuickDecorationsDrawer::Decorations:
-        return static_cast<const QuickDecorationsRenderInfo *const>(m_renderInfo)->itemGeometry;
+        return static_cast<const QuickDecorationsRenderInfo *>(m_renderInfo)->itemGeometry;
     case QuickDecorationsDrawer::Traces:
         break;
     }
@@ -354,7 +355,7 @@ QVector<QuickItemGeometry> QuickDecorationsDrawer::itemsGeometry() const
     case QuickDecorationsDrawer::Decorations:
         break;
     case QuickDecorationsDrawer::Traces:
-        return static_cast<const QuickDecorationsTracesInfo *const>(m_renderInfo)->itemsGeometry;
+        return static_cast<const QuickDecorationsTracesInfo *>(m_renderInfo)->itemsGeometry;
     }
 
     return QVector<QuickItemGeometry>();

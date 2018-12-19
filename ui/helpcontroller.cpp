@@ -77,10 +77,9 @@ void HelpControllerPrivate::startProcess()
     });
     proc->setProgram(assistantPath);
     proc->setArguments(QStringList()
-                       <<QLatin1String("-collectionFile")
-                       <<qhcPath
-                       <<QLatin1String("-enableRemoteControl")
-                       );
+                       << QLatin1String("-collectionFile")
+                       << qhcPath
+                       << QLatin1String("-enableRemoteControl"));
     proc->start();
     proc->waitForStarted();
     sendCommand("expandToc 2;");
@@ -89,13 +88,15 @@ void HelpControllerPrivate::startProcess()
 
 void HelpControllerPrivate::sendCommand(const QByteArray &cmd)
 {
-    if (!proc)
+    if (!proc) {
         return;
+    }
     proc->write(cmd);
 }
 
 Q_GLOBAL_STATIC(HelpControllerPrivate, s_helpController)
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 static QString assistantExecutableName()
 {
 #ifdef Q_OS_OSX
@@ -104,6 +105,7 @@ static QString assistantExecutableName()
     return QStringLiteral("assistant");
 #endif
 }
+#endif
 
 bool HelpController::isAvailable()
 {

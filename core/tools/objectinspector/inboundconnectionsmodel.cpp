@@ -49,17 +49,19 @@ InboundConnectionsModel::~InboundConnectionsModel()
 static int signalIndexForConnection(QObjectPrivate::Connection *connection, QObject *sender)
 {
     QObjectPrivate *d = QObjectPrivate::get(sender);
-    if (!d->connectionLists)
+    if (!d->connectionLists) {
         return -1;
+    }
 
     // HACK: the declaration of d->connectionsLists is not accessible for us...
-    const QVector<QObjectPrivate::ConnectionList> *cl
-        = reinterpret_cast<QVector<QObjectPrivate::ConnectionList> *>(d->connectionLists);
+    const QVector<QObjectPrivate::ConnectionList> *cl =
+        reinterpret_cast<QVector<QObjectPrivate::ConnectionList> *>(d->connectionLists);
     for (int signalIndex = 0; signalIndex < cl->count(); ++signalIndex) {
         const QObjectPrivate::Connection *c = cl->at(signalIndex).first;
         while (c) {
-            if (c == connection)
+            if (c == connection) {
                 return signalIndex;
+            }
             c = c->nextConnectionList;
             continue;
         }
@@ -80,7 +82,7 @@ void InboundConnectionsModel::setObject(QObject *object)
     setConnections(inboundConnectionsForObject(object));
 }
 
-QVector<AbstractConnectionsModel::Connection> InboundConnectionsModel::inboundConnectionsForObject(QObject* object)
+QVector<AbstractConnectionsModel::Connection> InboundConnectionsModel::inboundConnectionsForObject(QObject *object)
 {
     QVector<Connection> connections;
 #ifdef HAVE_PRIVATE_QT_HEADERS
@@ -94,20 +96,22 @@ QVector<AbstractConnectionsModel::Connection> InboundConnectionsModel::inboundCo
             conn.endpoint = s->sender;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
             conn.signalIndex = signalIndexToMethodIndex(s->sender, s->signal_index);
-            if (s->isSlotObject)
+            if (s->isSlotObject) {
                 conn.slotIndex = -1;
-            else
+            } else {
                 conn.slotIndex = s->method();
-
+            }
 #else
             conn.slotIndex = s->method();
-            conn.signalIndex
-                = signalIndexToMethodIndex(s->sender, signalIndexForConnection(s, s->sender));
+            conn.signalIndex =
+                signalIndexToMethodIndex(s->sender, signalIndexForConnection(s, s->sender));
 #endif
             conn.type = s->connectionType;
             connections.push_back(conn);
         }
     }
+#else
+    Q_UNUSED(object);
 #endif
 
     return connections;
@@ -126,8 +130,9 @@ QVariant InboundConnectionsModel::data(const QModelIndex &index, int role) const
         case 1:
             return displayString(conn.endpoint, conn.signalIndex);
         case 2:
-            if (conn.slotIndex < 0)
+            if (conn.slotIndex < 0) {
                 return tr("<slot object context>");
+            }
             return displayString(m_object, conn.slotIndex);
         }
     }

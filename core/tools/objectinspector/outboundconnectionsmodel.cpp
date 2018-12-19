@@ -49,14 +49,13 @@ void OutboundConnectionsModel::setObject(QObject *object)
 {
     clear();
     m_object = object;
-    if (!object)
+    if (!object) {
         return;
-
-
+    }
     setConnections(outboundConnectionsForObject(object));
 }
 
-QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outboundConnectionsForObject(QObject* object)
+QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outboundConnectionsForObject(QObject *object)
 {
     QVector<Connection> connections;
 #ifdef HAVE_PRIVATE_QT_HEADERS
@@ -88,6 +87,8 @@ QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outbound
             }
         }
     }
+#else
+    Q_UNUSED(object);
 #endif
 
     return connections;
@@ -106,8 +107,9 @@ QVariant OutboundConnectionsModel::data(const QModelIndex &index, int role) cons
         case 1:
             return displayString(conn.endpoint);
         case 2:
-            if (conn.slotIndex < 0)
+            if (conn.slotIndex < 0) {
                 return tr("<slot object>");
+            }
             return displayString(conn.endpoint, conn.slotIndex);
         }
     }

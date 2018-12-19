@@ -18,7 +18,7 @@
 /*!
     \example timer
     \title Timer
-    \brief Analyze out of control timers
+    \brief Analyze out of control timers.
     \ingroup examples-gammaray
 
     This examples shows GammaRay's capabilities in analyzing timer activity.
