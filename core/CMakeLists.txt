@@ -102,10 +102,8 @@ set(gammaray_srcs
   tools/messagehandler/loggingcategorymodel.cpp
 )
 
-if(NOT Qt5Gui_VERSION VERSION_LESS 5.5.0) # QPaintBuffer was removed in 5.5
-  include_directories(${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/)
-  list(APPEND gammaray_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/private/qpaintbuffer.cpp)
-endif()
+include_directories(${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/)
+list(APPEND gammaray_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/private/qpaintbuffer.cpp)
 
 if(WIN32 AND NOT MINGW)
   list(APPEND gammaray_srcs ${CMAKE_SOURCE_DIR}/3rdparty/StackWalker/StackWalker.cpp)
