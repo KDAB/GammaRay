@@ -37,7 +37,7 @@ else()
   set(GAMMARAY_USER_MANUAL_BUILD True)
 endif()
 
-add_feature_info("User Manual creation in qch format" GAMMARAY_USER_MANUAL_BUILD "Requires qdoc, qhelpgenerator, qtattributionsscanner, the qdoc templates and index files, and Qt 5.4 or higher")
+add_feature_info("User Manual creation in qch format" GAMMARAY_USER_MANUAL_BUILD "Requires qdoc, qhelpgenerator, qtattributionsscanner, the qdoc templates and index files")
 
 # Doxygen
 find_package(Doxygen)

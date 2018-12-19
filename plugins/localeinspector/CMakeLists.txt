@@ -6,12 +6,10 @@ set(gammaray_localeinspector_plugin_srcs
     localedataaccessor.cpp
     localeaccessormodel.cpp
 )
-if(NOT Qt5Core_VERSION VERSION_LESS 5.2.0)
-    list(APPEND gammaray_localeinspector_plugin_srcs
-        timezonemodel.cpp
-        timezoneoffsetdatamodel.cpp
-    )
-endif()
+list(APPEND gammaray_localeinspector_plugin_srcs
+    timezonemodel.cpp
+    timezoneoffsetdatamodel.cpp
+)
 
 gammaray_add_plugin(gammaray_localeinspector_plugin
     DESKTOP gammaray_localeinspector.desktop.in

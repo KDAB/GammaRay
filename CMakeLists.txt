@@ -36,7 +36,7 @@
 #  Default=true
 #
 # -DGAMMARAY_STATIC_PROBE=[true|false]
-#  Build the probe as static library for compile-time injection (requires Qt 5.4 or newer).
+#  Build the probe as static library for compile-time injection
 #  Default=false
 #
 # -DGAMMARAY_BUILD_DOCS=[true|false]
@@ -207,7 +207,7 @@ endif()
 gammaray_option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
 gammaray_option(
   GAMMARAY_STATIC_PROBE
-  "Build the probe as static library for compile-time injection (requires Qt 5.4 or newer)."
+  "Build the probe as static library for compile-time injection."
   OFF
 )
 
@@ -383,11 +383,6 @@ find_package(Qt5IviVehicleFunctions 1.1 NO_MODULE QUIET)
 find_package(Qt5IviMedia 1.1 NO_MODULE QUIET)
 find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_LESS 5.5)
-  # disable warnings about inconsistent usage of 'override' specifier for Qt <5.5
-  # only starting with 5.5 Qt started to use 'override' throughout the code base
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override")
-endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_EQUAL 5.9.1)
   # hide -Wc++1z-extensions warnings in this Qt version -- see: https://bugreports.qt.io/browse/QTBUG-61840
   add_flag_if_supported(-Wno-c++1z-extensions NO_CPP1Z_EXTENSIONS)
