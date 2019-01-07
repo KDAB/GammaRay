@@ -60,11 +60,6 @@ public:
 
 Q_GLOBAL_STATIC(StaticMetaObjectRepository, s_instance)
 
-MetaObjectRepository::MetaObjectRepository()
-    : m_initialized(false)
-{
-}
-
 MetaObjectRepository::~MetaObjectRepository()
 {
     qDeleteAll(m_metaObjects);

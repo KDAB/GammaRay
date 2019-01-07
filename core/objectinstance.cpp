@@ -33,16 +33,8 @@
 
 using namespace GammaRay;
 
-ObjectInstance::ObjectInstance()
-    : m_obj(nullptr)
-    , m_metaObj(nullptr)
-    , m_type(Invalid)
-{
-}
-
 ObjectInstance::ObjectInstance(QObject *obj)
-    : m_obj(nullptr)
-    , m_qtObj(obj)
+    : m_qtObj(obj)
     , m_type(QtObject)
 {
     m_metaObj = obj ? obj->metaObject() : nullptr;
@@ -57,16 +49,13 @@ ObjectInstance::ObjectInstance(void *obj, const QMetaObject *metaObj)
 
 ObjectInstance::ObjectInstance(void *obj, const char *typeName)
     : m_obj(obj)
-    , m_metaObj(nullptr)
     , m_typeName(typeName)
     , m_type(Object)
 {
 }
 
 ObjectInstance::ObjectInstance(const QVariant &value)
-    : m_obj(nullptr)
-    , m_metaObj(nullptr)
-    , m_type(QtVariant)
+    : m_type(QtVariant)
 {
     m_variant = value;
     if (value.canConvert<QObject *>()) {

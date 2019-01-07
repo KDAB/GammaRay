@@ -95,7 +95,7 @@ public:
     void clear();
 
 protected:
-    MetaObjectRepository();
+    MetaObjectRepository() = default;
 
 private:
     Q_DISABLE_COPY(MetaObjectRepository)
@@ -106,7 +106,7 @@ private:
 private:
     QHash<QString, MetaObject*> m_metaObjects;
     std::unordered_map<MetaObject*, std::vector<MetaObject*> > m_derivedTypes;
-    bool m_initialized;
+    bool m_initialized = false;
 };
 }
 ///@cond internal

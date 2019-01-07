@@ -49,7 +49,7 @@ public:
     };
     Q_DECLARE_FLAGS(AccessFlags, AccessFlag)
 
-    PropertyData();
+    PropertyData() = default;
 
     QString name() const;
     void setName(const QString &name);
@@ -75,9 +75,9 @@ private:
     QString m_typeName;
     QString m_className;
     QString m_notifySignal;
-    AccessFlags m_accessFlags;
-    PropertyModel::PropertyFlags m_propertyFlags;
-    int m_revision;
+    AccessFlags m_accessFlags = Readable;
+    PropertyModel::PropertyFlags m_propertyFlags = PropertyModel::None;
+    int m_revision = -1;
 };
 }
 

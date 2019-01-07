@@ -31,10 +31,6 @@
 #include <QDebug>
 
 namespace GammaRay {
-TransferImage::TransferImage()
-{
-}
-
 TransferImage::TransferImage(const QImage &image)
     : m_image(image)
     , m_transform()

@@ -49,7 +49,7 @@ protected slots:
     void requestIndex() override;
 
 private:
-    bool m_ready;
+    bool m_ready = false;
 };
 
 }

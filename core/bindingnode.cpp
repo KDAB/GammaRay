@@ -42,7 +42,6 @@ BindingNode::BindingNode(QObject *obj, int propIndex, BindingNode *parent)
     : m_parent(parent)
     , m_object(obj)
     , m_propertyIndex(propIndex)
-    , m_foundBindingLoop(false)
 {
     Q_ASSERT(obj);
     m_canonicalName

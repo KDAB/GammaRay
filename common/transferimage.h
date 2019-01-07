@@ -38,7 +38,7 @@ namespace GammaRay {
 class TransferImage
 {
 public:
-    TransferImage();
+    TransferImage() = default;
     explicit TransferImage(const QImage &image);
 
     const QImage &image() const;

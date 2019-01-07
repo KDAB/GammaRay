@@ -36,14 +36,14 @@ namespace GammaRay {
 
 struct ModelCellData
 {
-    ModelCellData();
+    ModelCellData() = default;
     bool operator==(const ModelCellData &other) const;
 
-    int row;
-    int column;
+    int row = -1;
+    int column = -1;
     QString internalId;
     QString internalPtr;
-    Qt::ItemFlags flags;
+    Qt::ItemFlags flags = Qt::NoItemFlags;
 };
 
 class ModelInspectorInterface : public QObject

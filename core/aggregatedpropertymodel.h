@@ -80,10 +80,10 @@ private slots:
     void objectInvalidated(GammaRay::PropertyAdaptor *adaptor);
 
 private:
-    PropertyAdaptor *m_rootAdaptor;
+    PropertyAdaptor *m_rootAdaptor = nullptr;
     mutable QHash<PropertyAdaptor *, QVector<PropertyAdaptor *> > m_parentChildrenMap;
-    bool m_inhibitAdaptorCreation;
-    bool m_readOnly;
+    bool m_inhibitAdaptorCreation = false;
+    bool m_readOnly = false;
 };
 }
 

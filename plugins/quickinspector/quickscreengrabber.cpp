@@ -192,11 +192,6 @@ static bool itemIsLayout(QQuickItem *item)
 
 using namespace GammaRay;
 
-ItemOrLayoutFacade::ItemOrLayoutFacade()
-    : m_object(nullptr)
-{
-}
-
 ItemOrLayoutFacade::ItemOrLayoutFacade(QQuickItem *item)
     : m_object(item)
 {
@@ -262,7 +257,6 @@ AbstractScreenGrabber::RenderInfo::GraphicsApi AbstractScreenGrabber::graphicsAp
 AbstractScreenGrabber::AbstractScreenGrabber(QQuickWindow *window)
     : m_window(window)
     , m_currentToplevelItem(nullptr)
-    , m_decorationsEnabled(true)
 {
     const QMetaObject *mo = metaObject();
     m_sceneChanged = mo->method(mo->indexOfSignal(QMetaObject::normalizedSignature("sceneChanged()")));

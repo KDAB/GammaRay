@@ -109,13 +109,6 @@ static bool toolLessThan(const ToolInfo &lhs, const ToolInfo &rhs)
     return lhs.name().localeAwareCompare(rhs.name()) < 0;
 }
 
-ToolInfo::ToolInfo() :
-    m_isEnabled(false),
-    m_hasUi(false),
-    m_factory(nullptr)
-{
-}
-
 ToolInfo::ToolInfo(const ToolData &toolData, ToolUiFactory *factory) :
     m_toolId(toolData.id),
     m_isEnabled(toolData.enabled),

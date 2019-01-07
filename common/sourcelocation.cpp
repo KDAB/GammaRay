@@ -30,12 +30,6 @@
 
 using namespace GammaRay;
 
-SourceLocation::SourceLocation()
-    : m_line(-1)
-    , m_column(-1)
-{
-}
-
 SourceLocation::SourceLocation(const QUrl &url)
     : m_url(url)
     , m_line(0)

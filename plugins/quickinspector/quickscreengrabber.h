@@ -49,7 +49,7 @@ namespace GammaRay {
 class ItemOrLayoutFacade
 {
 public:
-    ItemOrLayoutFacade();
+    ItemOrLayoutFacade() = default;
     ItemOrLayoutFacade(QQuickItem *item); //krazy:exclude=explicit
 
     /// Get either the layout of the widget or the this-pointer
@@ -181,7 +181,7 @@ protected:
     QPointer<QQuickItem> m_currentToplevelItem;
     ItemOrLayoutFacade m_currentItem;
     QuickDecorationsSettings m_settings;
-    bool m_decorationsEnabled;
+    bool m_decorationsEnabled = true;
     QRectF m_userViewport;
     GrabbedFrame m_grabbedFrame;
     QMetaMethod m_sceneChanged;

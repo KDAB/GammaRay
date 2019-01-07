@@ -55,7 +55,7 @@ public:
         Value,
         QtGadgetValue ///< a gadget value type stored in the QVariant
     };
-    ObjectInstance();
+    ObjectInstance() = default;
     ObjectInstance(QObject *obj); // krazy:exclude=explicit
     /// use this for Q_GADGETs
     ObjectInstance(void *obj, const QMetaObject *metaObj);
@@ -94,12 +94,12 @@ private:
     void copy(const ObjectInstance &other);
     void unpackVariant();
 
-    void *m_obj;
+    void *m_obj = nullptr;
     QPointer<QObject> m_qtObj;
     QVariant m_variant;
-    const QMetaObject *m_metaObj;
+    const QMetaObject *m_metaObj = nullptr;
     QByteArray m_typeName;
-    Type m_type;
+    Type m_type = Invalid;
 };
 }
 

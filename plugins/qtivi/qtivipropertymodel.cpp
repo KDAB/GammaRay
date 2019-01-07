@@ -102,11 +102,6 @@ QtIviPropertyModel::QtIviPropertyModel(Probe *probe)
     connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
 }
 
-QtIviPropertyModel::IviCarrierProperty::IviCarrierProperty()
-    : m_iviProperty(nullptr)
-{
-}
-
 QtIviPropertyModel::IviCarrierProperty::IviCarrierProperty(QtIviPropertyModel::IviCarrierProperty &&other)
 {
     *this = std::move(other);
@@ -323,11 +318,6 @@ bool QtIviPropertyModel::IviCarrierProperty::operator==(const QIviProperty *prop
 bool QtIviPropertyModel::IviCarrierProperty::operator==(const QByteArray &property) const
 {
     return this->m_metaProperty.name() == property;
-}
-
-QtIviPropertyModel::IviCarrier::IviCarrier()
-    : m_carrier(nullptr)
-{
 }
 
 QtIviPropertyModel::IviCarrier::IviCarrier(QObject *carrier)

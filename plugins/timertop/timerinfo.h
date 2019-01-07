@@ -52,7 +52,7 @@ public:
         QObjectType
     };
 
-    TimerId();
+    TimerId() = default;
     explicit TimerId(QObject *timer);
     explicit TimerId(int timerId, QObject *receiver);
 
@@ -64,9 +64,9 @@ public:
     bool operator<(const TimerId &other) const;
 
 private:
-    Type m_type;
-    QObject *m_timerAddress;
-    int m_timerId;
+    Type m_type = InvalidType;
+    QObject *m_timerAddress = nullptr;
+    int m_timerId = -1;
 };
 
 struct TimerIdInfo

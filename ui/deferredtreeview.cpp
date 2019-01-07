@@ -59,13 +59,6 @@ bool HeaderView::isState(State state) const
     return d->state == QHeaderViewPrivate::State(state);
 }
 
-DeferredTreeView::DeferredHeaderProperties::DeferredHeaderProperties()
-    : initialized(false)
-    , resizeMode(-1)
-    , hidden(-1)
-{
-}
-
 DeferredTreeView::DeferredTreeView(QWidget *parent)
     : QTreeView(parent)
     , m_expandNewContent(false)

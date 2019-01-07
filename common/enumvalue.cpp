@@ -30,12 +30,6 @@
 
 using namespace GammaRay;
 
-EnumValue::EnumValue()
-    : m_id(InvalidEnumId)
-    , m_value(0)
-{
-}
-
 EnumValue::EnumValue(EnumId id, int value)
     : m_id(id)
     , m_value(value)

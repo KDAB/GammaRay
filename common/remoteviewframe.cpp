@@ -31,10 +31,6 @@
 #include <QDataStream>
 
 namespace GammaRay {
-RemoteViewFrame::RemoteViewFrame()
-{
-}
-
 RemoteViewFrame::~RemoteViewFrame()
 {
 }

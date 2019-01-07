@@ -47,7 +47,7 @@ QDataStream &operator>>(QDataStream &stream, GammaRay::RemoteViewFrame &frame);
 class GAMMARAY_COMMON_EXPORT RemoteViewFrame
 {
 public:
-    RemoteViewFrame();
+    RemoteViewFrame() = default;
     ~RemoteViewFrame();
 
     bool isValid() const;

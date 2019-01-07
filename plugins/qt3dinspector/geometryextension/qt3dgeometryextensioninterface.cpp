@@ -55,18 +55,6 @@ static QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
 }
 QT_END_NAMESPACE
 
-Qt3DGeometryAttributeData::Qt3DGeometryAttributeData()
-    : attributeType(Qt3DRender::QAttribute::VertexAttribute)
-    , byteOffset(0)
-    , byteStride(0)
-    , count(0)
-    , divisor(0)
-    , vertexBaseType(Qt3DRender::QAttribute::UnsignedShort)
-    , vertexSize(0)
-    , bufferIndex(0)
-{
-}
-
 bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData &rhs) const
 {
     return
@@ -94,11 +82,6 @@ static QDataStream &operator>>(QDataStream &in, Qt3DGeometryBufferData &data)
     return in;
 }
 QT_END_NAMESPACE
-
-Qt3DGeometryBufferData::Qt3DGeometryBufferData()
-    : type(Qt3DRender::QBuffer::VertexBuffer)
-{
-}
 
 bool Qt3DGeometryBufferData::operator==(const Qt3DGeometryBufferData &rhs) const
 {
