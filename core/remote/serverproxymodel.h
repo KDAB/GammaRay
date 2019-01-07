@@ -69,9 +69,9 @@ public:
     {
         const QModelIndex sourceIndex = BaseProxy::mapToSource(index);
         auto d = BaseProxy::sourceModel()->itemData(sourceIndex);
-        foreach (int role, m_extraRoles)
+        for (int role : m_extraRoles)
             d.insert(role, sourceIndex.data(role));
-        foreach (int role, m_extraProxyRoles)
+        for (int role : m_extraProxyRoles)
             d.insert(role, index.data(role));
         return d;
     }

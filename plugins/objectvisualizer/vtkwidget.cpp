@@ -363,7 +363,7 @@ void VtkWidget::clear()
 {
     // TODO: there must be an easier/faster way to clean the graph data
     // Just re-create the vtk graph data object?
-    Q_FOREACH(const qulonglong &objectId, m_objectIdMap) {
+    for (const qulonglong &objectId : qAsConst(m_objectIdMap)) {
         removeObjectInternal(objectId);
     }
     m_objectIdMap.clear();
@@ -433,8 +433,8 @@ bool VtkWidget::filterAcceptsObject(const QModelIndex &index) const
     if (!m_selectionModel)
         return true;
 
-    QModelIndexList rows = m_selectionModel->selectedRows();
-    foreach (const QModelIndex &row, rows) {
+    const QModelIndexList rows = m_selectionModel->selectedRows();
+    for (const QModelIndex &row : rows) {
         const QModelIndex sourceRow = mapToSource(row);
         if (index == sourceRow)
             return true;

@@ -58,7 +58,7 @@ void FontBrowserServer::updateFonts()
     const auto rows = m_fontSelectionModel->selectedRows();
     QVector<QFont> currentFonts;
     currentFonts.reserve(rows.size());
-    foreach (const QModelIndex &index, rows)
+    for (const QModelIndex &index : rows)
         currentFonts << index.data(Qt::UserRole + 1).value<QFont>();
     m_selectedFontModel->updateFonts(currentFonts);
 }

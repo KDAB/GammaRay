@@ -412,7 +412,7 @@ void UIStateManager::saveWindowState()
 void UIStateManager::restoreSplitterState(QSplitter *splitter)
 {
     const QSplitterList splitters = splitter ? (QSplitterList() << splitter) : this->splitters();
-    foreach (QSplitter *splitter, splitters) {
+    for (QSplitter *splitter : splitters) {
         if (!checkWidget(splitter))
             continue;
 
@@ -427,7 +427,7 @@ void UIStateManager::restoreSplitterState(QSplitter *splitter)
                 QList<int> sizes;
                 sizes.reserve(defaultSizes.count());
 
-                foreach (const QVariant &size, defaultSizes) {
+                for (const QVariant &size : defaultSizes) {
                     switch (size.type()) {
                     case QVariant::Int: // Pixels
                         sizes << size.toInt();
@@ -467,7 +467,7 @@ void UIStateManager::restoreSplitterState(QSplitter *splitter)
 void UIStateManager::saveSplitterState(QSplitter *splitter)
 {
     const QSplitterList splitters = splitter ? (QSplitterList() << splitter) : this->splitters();
-    foreach (QSplitter *splitter, splitters) {
+    for (QSplitter *splitter : splitters) {
         if (!checkWidget(splitter) || !splitter->property(WIDGET_CUSTOMIZED).toBool())
             continue;
 
@@ -478,7 +478,7 @@ void UIStateManager::saveSplitterState(QSplitter *splitter)
 void UIStateManager::restoreHeaderState(QHeaderView *header)
 {
     const QHeaderViewList headers = header ? (QHeaderViewList() << header) : this->headers();
-    foreach (QHeaderView *header, headers) {
+    for (QHeaderView *header : headers) {
         if (header->orientation() == Qt::Vertical || !checkWidget(header) || header->count() == 0)
             continue;
 
@@ -552,7 +552,7 @@ void UIStateManager::restoreHeaderState(QHeaderView *header)
 void UIStateManager::saveHeaderState(QHeaderView *header)
 {
     const QHeaderViewList headers = header ? (QHeaderViewList() << header) : this->headers();
-    foreach (QHeaderView *header, headers) {
+    for (QHeaderView *header : headers) {
         if (header->orientation() == Qt::Vertical || !checkWidget(header) || header->count() == 0
             || !header->property(WIDGET_CUSTOMIZED).toBool())
             continue;

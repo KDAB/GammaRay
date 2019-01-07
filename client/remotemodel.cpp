@@ -387,7 +387,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             Q_ASSERT(!indexes.isEmpty());
             int r1 = std::numeric_limits<int>::max(), r2 = 0, c1 = std::numeric_limits<int>::max(),
                 c2 = 0;
-            foreach (const auto &index, indexes) {
+            for (const auto &index : indexes) {
                 r1 = std::min(r1, index.row());
                 r2 = std::max(r2, index.row());
                 c1 = std::min(c1, index.column());
@@ -591,7 +591,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
 
         QVector<Node *> parentNodes;
         parentNodes.reserve(parents.size());
-        foreach (const auto &p, parents) {
+        for (const auto &p : qAsConst(parents)) {
             auto node = nodeForIndex(p);
             if (!node)
                 continue;
@@ -604,14 +604,14 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         foreach (const auto &persistentIndex, persistentIndexList()) {
             auto persistentNode = nodeForIndex(persistentIndex);
             Q_ASSERT(persistentNode);
-            foreach (auto node, parentNodes) {
+            for (auto node : qAsConst(parentNodes)) {
                 if (!isAncestor(node, persistentNode))
                     continue;
                 changePersistentIndex(persistentIndex, QModelIndex());
                 break;
             }
         }
-        foreach (auto node, parentNodes) {
+        for (auto node : qAsConst(parentNodes)) {
             if (hint == 0)
                 node->clearChildrenStructure();
             else
@@ -750,7 +750,7 @@ void RemoteModel::doRequests() const
         case RowColumnCount: {
             Message msg(m_myAddress, Protocol::ModelRowColumnCountRequest);
             msg << quint32(indexes.size());
-            foreach (const auto &index, indexes)
+            for (const auto &index : indexes)
                 msg << index;
             sendMessage(msg);
             break;
@@ -759,7 +759,7 @@ void RemoteModel::doRequests() const
         case DataAndFlags: {
             Message msg(m_myAddress, Protocol::ModelContentRequest);
             msg << quint32(indexes.size());
-            foreach (const auto &index, indexes)
+            for (const auto &index : indexes)
                 msg << index;
             sendMessage(msg);
             break;
@@ -945,7 +945,7 @@ void RemoteModel::doInsertColumns(RemoteModel::Node *parentNode, int first, int 
         m_horizontalHeaders.insert(first, newColCount, QHash<int, QVariant>());
 
     // adjust column data in all child nodes, if available
-    foreach (auto node, parentNode->children) {
+    for (auto node : qAsConst(parentNode->children)) {
         if (!node->hasColumnData())
             continue;
 
@@ -972,7 +972,7 @@ void RemoteModel::doRemoveColumns(RemoteModel::Node *parentNode, int first, int 
         m_horizontalHeaders.remove(first, delColCount);
 
     // adjust column data in all child nodes, if available
-    foreach (auto node, parentNode->children) {
+    for (auto node : qAsConst(parentNode->children)) {
         if (!node->hasColumnData())
             continue;
         node->data.remove(first, delColCount);

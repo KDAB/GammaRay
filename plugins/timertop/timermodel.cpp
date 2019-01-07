@@ -727,7 +727,7 @@ void TimerModel::applyChanges(const TimerIdInfoContainer &changes)
     }
 
     // Inform model about data changes
-    foreach (const auto &range, dataChangedRanges) {
+    for (const auto &range : qAsConst(dataChangedRanges)) {
         emit dataChanged(index(range.first, 0), index(range.second, columnCount() - 1));
     }
 

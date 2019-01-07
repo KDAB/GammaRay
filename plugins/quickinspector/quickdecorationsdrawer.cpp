@@ -272,7 +272,7 @@ void QuickDecorationsDrawer::drawDecorations()
 
     // Finally draw texts over the traced rectangles and lines
     // This make sure texts are always readable
-    foreach (const auto &t, texts) {
+    for (const auto &t : qAsConst(texts)) {
         if (t.label.isEmpty())
             continue;
 
@@ -292,7 +292,7 @@ void QuickDecorationsDrawer::drawTraces()
 
     m_painter->save();
 
-    foreach (auto itemGeometry, itemsGeometry) {
+    for (auto itemGeometry : itemsGeometry) {
         itemGeometry.scaleTo(m_renderInfo->zoom);
 
         // bounding box

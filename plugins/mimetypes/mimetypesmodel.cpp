@@ -105,7 +105,7 @@ void MimeTypesModel::makeItemsForType(const QString &mimeTypeName)
     } else {
         // parentMimeTypes contains duplicates and aliases
         const QSet<QString> parentMimeTypeNames = normalizedMimeTypeNames(mt.parentMimeTypes());
-        foreach (const QString &parentTypeName, parentMimeTypeNames) {
+        for (const QString &parentTypeName : parentMimeTypeNames) {
             foreach (QStandardItem *parentItem, itemsForType(parentTypeName)) {
                 const QList<QStandardItem *> row = makeRowForType(mt);
                 parentItem->appendRow(row);
@@ -118,7 +118,7 @@ void MimeTypesModel::makeItemsForType(const QString &mimeTypeName)
 QSet< QString > MimeTypesModel::normalizedMimeTypeNames(const QStringList &typeNames) const
 {
     QSet<QString> res;
-    foreach (const QString &typeName, typeNames) {
+    for (const QString &typeName : typeNames) {
         const QMimeType mt = m_db.mimeTypeForName(typeName);
         res.insert(mt.name());
     }

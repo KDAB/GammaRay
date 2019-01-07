@@ -96,7 +96,7 @@ void StateMachineViewerServer::repopulateGraph()
     if (m_filteredStates.isEmpty()) {
         addState(m_stateModel->stateMachine()->rootState());
     } else {
-        foreach (State state, m_filteredStates)
+        for (State state : qAsConst(m_filteredStates))
             addState(state);
     }
     m_recursionGuard.clear();
@@ -117,7 +117,7 @@ bool StateMachineViewerServer::mayAddState(State state)
     if (m_recursionGuard.contains(state))
         return false;
 
-    foreach (State filter, m_filteredStates) {
+    for (State filter : qAsConst(m_filteredStates)) {
         if (filter == state || selectedStateMachine()->isDescendantOf(filter, state)) {
             return true;
         }
@@ -136,7 +136,7 @@ void StateMachineViewerServer::setFilteredStates(const QVector<State> &states)
     } else {
         QStringList stateNames;
         stateNames.reserve(states.size());
-        foreach (State state, states)
+        for (State state : states)
             stateNames << selectedStateMachine()->stateLabel(state);
         emit message(tr("Setting filter on: %1").arg(stateNames.join(QStringLiteral(", "))));
     }
@@ -206,13 +206,13 @@ void StateMachineViewerServer::stateSelectionChanged()
     qDebug() << selection;
     QVector<State> filter;
     filter.reserve(selection.size());
-    foreach (const QModelIndex &index, selection) {
+    for (const QModelIndex &index : selection) {
         State state = index.data(StateModel::StateValueRole).value<State>();
         bool addState = true;
         /// only pick the top-level items of the selection
         // NOTE: this might be slow for large selections, if someone wants to come up with a better
         // algorithm, please - go for it!
-        foreach (State potentialParent, filter) {
+        for (State potentialParent : qAsConst(filter)) {
             if (selectedStateMachine()->isDescendantOf(potentialParent, state)) {
                 addState = false;
                 break;
@@ -254,7 +254,7 @@ void StateMachineViewerServer::stateConfigurationChanged()
 
     StateMachineConfiguration config;
     config.reserve(newConfig.size());
-    foreach (State state, newConfig)
+    for (State state : qAsConst(newConfig))
         config << StateId(state);
 
     emit stateConfigurationChanged(config);

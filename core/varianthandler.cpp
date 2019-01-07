@@ -138,7 +138,7 @@ QString VariantHandler::displayString(const QVariant &value)
         const auto sizes = icon.availableSizes();
         QStringList l;
         l.reserve(sizes.size());
-        foreach (QSize size, sizes) {
+        for (QSize size : sizes) {
             l.push_back(displayString(size));
         }
         return l.join(QStringLiteral(", "));
@@ -299,7 +299,7 @@ QString VariantHandler::displayString(const QVariant &value)
         const QSet<QByteArray> set = value.value<QSet<QByteArray> >();
         QStringList l;
         l.reserve(set.size());
-        foreach (const QByteArray &b, set) {
+        for (const QByteArray &b : set) {
             l.push_back(QString::fromUtf8(b));
         }
         return l.join(QStringLiteral(", "));
@@ -340,9 +340,9 @@ QString VariantHandler::displayString(const QVariant &value)
     }
 
     // generic converters
-    QVector<VariantHandler::GenericStringConverter> genStrConverters
+    const QVector<VariantHandler::GenericStringConverter> genStrConverters
         = s_variantHandlerRepository()->genericStringConverters;
-    foreach (auto converter, genStrConverters) {
+    for (auto converter : genStrConverters) {
         bool ok = false;
         const QString s = converter(value, &ok);
         if (ok)

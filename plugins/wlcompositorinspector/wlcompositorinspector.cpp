@@ -256,7 +256,7 @@ public:
 
     void clear()
     {
-        foreach (Resource *res, m_resources) {
+        for (Resource *res : qAsConst(m_resources)) {
             destroy(res);
         }
         m_resources.clear();
@@ -264,7 +264,7 @@ public:
 
     void destroy(Resource *res)
     {
-        foreach (Resource *child, res->children) {
+        for (Resource *child : qAsConst(res->children)) {
             destroy(child);
         }
 

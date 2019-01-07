@@ -118,7 +118,7 @@ void ToolManager::requestAvailableTools()
 {
     QVector<ToolData> toolInfos;
     toolInfos.reserve(m_tools.size());
-    foreach (ToolFactory *factory, m_tools)
+    for (ToolFactory *factory : qAsConst(m_tools))
         toolInfos.push_back(toolInfoForFactory(factory));
     emit availableToolsResponse(toolInfos);
 }
@@ -134,7 +134,7 @@ ToolData ToolManager::toolInfoForFactory(ToolFactory *factory) const
 
 bool ToolManager::hasTool(const QString &id) const
 {
-    foreach (ToolFactory *factory, m_tools) {
+    for (ToolFactory *factory : m_tools) {
         if (factory->id() == id)
             return true;
     }
@@ -204,7 +204,7 @@ void ToolManager::objectAdded(const QMetaObject *mo)
     if (mo->superClass())
         objectAdded(mo->superClass());
 
-    foreach (ToolFactory *factory, m_disabledTools) {
+    for (ToolFactory *factory : qAsConst(m_disabledTools)) {
         const auto begin = factory->supportedTypes().constBegin();
         const auto end = factory->supportedTypes().constEnd();
         if (std::find(begin, end, mo->className()) != end) {

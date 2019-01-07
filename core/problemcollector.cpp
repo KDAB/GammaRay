@@ -55,7 +55,7 @@ void GammaRay::ProblemCollector::requestScan()
 {
     clearScans();
 
-    foreach (const auto &checker, m_availableCheckers) {
+    for (const auto &checker : qAsConst(m_availableCheckers)) {
         if (checker.enabled)
             checker.callback();
     }

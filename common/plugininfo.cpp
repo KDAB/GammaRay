@@ -128,7 +128,7 @@ static QString readLocalized(const QLocale &locale, const QJsonObject &obj, cons
     if (!qtcLanguage.isEmpty())
         names.prepend(qtcLanguage);
 
-    foreach (auto name, names) {
+    for (auto name : qAsConst(names)) {
         const QLocale uiLocale(name);
 
         // We are natively English, skip...
@@ -219,7 +219,7 @@ void PluginInfo::initFromDesktopFile(const QString &path)
                                                                                                ';'),
                                                                                            QString::SkipEmptyParts);
     m_selectableTypes.reserve(selectable.size());
-    foreach (const auto &t, selectable)
+    for (const auto &t : selectable)
         m_selectableTypes.push_back(t.toUtf8());
 
     const QString dllBaseName = desktopFile.value(QStringLiteral("Exec")).toString();

@@ -204,7 +204,7 @@ void TestWaiter::startThreadsAndWaitForFinished()
     if (m_threads.isEmpty() && m_tester.isEmpty())
         return;
 
-    foreach (TestThread *thread, m_threads) {
+    for (TestThread *thread : qAsConst(m_threads)) {
         thread->start();
     }
 

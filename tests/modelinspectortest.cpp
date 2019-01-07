@@ -339,8 +339,8 @@ private slots:
         QVERIFY(widget);
         widget->show();
 
-        auto views = widget->findChildren<QAbstractItemView*>();
-        foreach (auto view, views) {
+        const auto views = widget->findChildren<QAbstractItemView*>();
+        for (auto view : views) {
             QVERIFY(view->model());
         }
     }

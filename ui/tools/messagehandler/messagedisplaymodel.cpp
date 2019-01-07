@@ -96,7 +96,7 @@ QVariant MessageDisplayModel::data(const QModelIndex &proxyIndex, int role) cons
         if (!backtrace.isEmpty()) {
             QString bt;
             int i = 0;
-            foreach (const auto &frame, backtrace) {
+            for (const auto &frame : backtrace) {
                 bt += QStringLiteral("#%1: %2\n").arg(i, 2).arg(frame.trimmed());
                 ++i;
             }

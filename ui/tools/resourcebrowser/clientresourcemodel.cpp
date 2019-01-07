@@ -49,9 +49,9 @@ QVariant ClientResourceModel::data(const QModelIndex &index, int role) const
         if (hasChildren(index))
             return m_iconProvider.icon(QFileIconProvider::Folder);
 
-        QList<QMimeType> types = m_mimeDb.mimeTypesForFileName(index.data(
+        const QList<QMimeType> types = m_mimeDb.mimeTypesForFileName(index.data(
                                                                    Qt::DisplayRole).toString());
-        foreach (const QMimeType &mt, types) {
+        for (const QMimeType &mt : types) {
             QIcon icon = QIcon::fromTheme(mt.iconName());
             if (!icon.isNull())
                 return icon;

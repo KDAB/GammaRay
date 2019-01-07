@@ -60,7 +60,7 @@ QStringList AboutData::authorsAsHtml()
     const auto plainAuthors = authors();
     QStringList a;
     a.reserve(plainAuthors.size());
-    foreach (const QString &author, plainAuthors) {
+    for (const QString &author : plainAuthors) {
         a.push_back(author.toHtmlEscaped());
     }
     return a;

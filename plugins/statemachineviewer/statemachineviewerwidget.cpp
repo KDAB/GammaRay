@@ -131,7 +131,7 @@ KDSME::RuntimeController::Configuration toSmeConfiguration(const StateMachineCon
                                                                        KDSME::State *> &map)
 {
     KDSME::RuntimeController::Configuration result;
-    foreach (const StateId &id, config) {
+    for (const StateId &id : config) {
         if (auto state = map.value(id))
             result << state;
     }

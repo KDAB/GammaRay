@@ -43,7 +43,7 @@ QStyle *InjectorStylePlugin::create(const QString &)
     const QStringList styleNameList
         = QGuiApplicationPrivate::platform_theme->themeHint(
         QPlatformTheme::StyleNames).toStringList();
-    foreach (const QString &styleName, styleNameList) {
+    for (const QString &styleName : styleNameList) {
         if (QStyle *style = QStyleFactory::create(styleName))
             return style;
     }

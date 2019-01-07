@@ -144,9 +144,9 @@ void MetaObjectBrowser::doProblemScan(const QMetaObject *parent)
 {
     auto registry = Probe::instance()->metaObjectRegistry();
 
-    QVector<const QMetaObject *> metaObjects = registry->childrenOf(parent);
+    const QVector<const QMetaObject *> metaObjects = registry->childrenOf(parent);
 
-    foreach(const QMetaObject *mo, metaObjects) {
+    for (const QMetaObject *mo : metaObjects) {
         if (!registry->isValid(mo) || !registry->isStatic(mo))
             continue;
 

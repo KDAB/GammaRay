@@ -214,9 +214,9 @@ private slots:
             QVERIFY(idx.isValid());
             QCOMPARE(idx.data(ObjectModel::ObjectIdRole).value<ObjectId>(), ObjectId(mainTimer.data()));
 
-            auto idxs = searchFixedIndexes(model, "threadTimer");
+            const auto idxs = searchFixedIndexes(model, "threadTimer");
             QCOMPARE(idxs.count(), 2);
-            foreach (const QModelIndex &idx, idxs)
+            for (const QModelIndex &idx : idxs)
                 QVERIFY(idx.isValid());
 
             QTimer::singleShot(0, threadTimer.data(), [&]() {

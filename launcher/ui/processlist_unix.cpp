@@ -127,7 +127,7 @@ ProcDataList processList(const ProcDataList &previous)
     const QStringList procIds = procDir.entryList();
     if (procIds.isEmpty())
         return rc;
-    foreach (const QString &procId, procIds) {
+    for (const QString &procId : procIds) {
         if (!isUnixProcessId(procId))
             continue;
         QString filename = QStringLiteral("/proc/");

@@ -120,7 +120,7 @@ void TranslationsModel::resetTranslations(const QItemSelection &selection)
 
     const QModelIndexList indexes = selection.indexes();
     QMap<int, int> rows;
-    foreach (const QModelIndex &index, indexes)
+    for (const QModelIndex &index : indexes)
         rows[index.row()] = -1;
 
     QVector<QPair<int, int>> ranges; // pair of first/last

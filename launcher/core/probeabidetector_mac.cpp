@@ -147,7 +147,7 @@ static QStringList readRPaths(const QString &path)
 
 static QString resolveRPath(const QString &path, const QStringList &rpaths)
 {
-    foreach (const auto &rpath, rpaths) {
+    for (const auto &rpath : rpaths) {
         auto resolvedPath = path;
         resolvedPath.replace("@rpath", rpath);
         if (QFile::exists(resolvedPath))

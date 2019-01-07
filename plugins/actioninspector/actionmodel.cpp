@@ -51,7 +51,7 @@ static QString toString(const QList<QKeySequence> &list)
 {
     QStringList items;
     items.reserve(list.size());
-    Q_FOREACH(const auto &item, list) {
+    for (const auto &item : list) {
         items << item.toString();
     }
     return items.join(QStringLiteral(", "));
@@ -218,7 +218,7 @@ void ActionModel::actionChanged()
 
 void ActionModel::scanForShortcutDuplicates() const
 {
-    Q_FOREACH(QAction *action, m_actions) {
+    for (QAction *action : m_actions) {
         Q_FOREACH (const QKeySequence &sequence, m_duplicateFinder->findAmbiguousShortcuts(action)) {
             Problem p;
             p.severity = Problem::Error;

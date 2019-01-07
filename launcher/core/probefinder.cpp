@@ -94,7 +94,7 @@ static QString findProbeInternal(const ProbeABI &probeAbi, const QString &rootPa
 
 QString findProbe(const ProbeABI &probeAbi, const QStringList &searchRoots)
 {
-    foreach (const auto &searchRoot, searchRoots) {
+    for (const auto &searchRoot : searchRoots) {
         const auto path = findProbeInternal(probeAbi, searchRoot);
         if (!path.isEmpty())
             return path;
@@ -119,7 +119,7 @@ ProbeABI findBestMatchingABI(const ProbeABI &targetABI)
 ProbeABI findBestMatchingABI(const ProbeABI &targetABI, const QVector<ProbeABI> &availableABIs)
 {
     QVector<ProbeABI> compatABIs;
-    foreach (const ProbeABI &abi, availableABIs) {
+    for (const ProbeABI &abi : availableABIs) {
         if (targetABI.isCompatible(abi))
             compatABIs.push_back(abi);
     }

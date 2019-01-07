@@ -56,7 +56,7 @@ void Translator::loadTranslations(const QString &catalog, const QString &path, c
     if (!overrideLanguage.isEmpty())
         names.prepend(overrideLanguage);
 
-    foreach (const QString &name, names) {
+    for (const QString &name : qAsConst(names)) {
         const QLocale uiLocale(name);
         auto translator = new QTranslator(QCoreApplication::instance());
         if (translator->load(uiLocale, catalog, QStringLiteral("_"), path)) {

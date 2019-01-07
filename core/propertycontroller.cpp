@@ -44,7 +44,7 @@ PropertyController::PropertyController(const QString &baseName, QObject *parent)
 {
     s_instances << this;
     m_extensions.reserve(s_extensionFactories.size());
-    foreach (PropertyControllerExtensionFactoryBase *factory, s_extensionFactories)
+    for (PropertyControllerExtensionFactoryBase *factory : qAsConst(s_extensionFactories))
         m_extensions << factory->create(this);
 }
 
@@ -66,7 +66,7 @@ void PropertyController::registerExtension(PropertyControllerExtensionFactoryBas
     if (s_extensionFactories.indexOf(factory) >= 0)
         return;
     s_extensionFactories << factory;
-    foreach (PropertyController *instance, s_instances)
+    for (PropertyController *instance : qAsConst(s_instances))
         instance->loadExtension(factory);
 }
 
@@ -91,7 +91,7 @@ void PropertyController::setObject(QObject *object)
 
     QStringList availableExtensions;
 
-    foreach (PropertyControllerExtension *extension, m_extensions) {
+    for (PropertyControllerExtension *extension : qAsConst(m_extensions)) {
         if (extension->setQObject(object))
             availableExtensions << extension->name();
     }
@@ -105,7 +105,7 @@ void PropertyController::setObject(void *object, const QString &className)
 
     QStringList availableExtensions;
 
-    foreach (PropertyControllerExtension *extension, m_extensions) {
+    for (PropertyControllerExtension *extension : qAsConst(m_extensions)) {
         if (extension->setObject(object, className))
             availableExtensions << extension->name();
     }
@@ -119,7 +119,7 @@ void PropertyController::setMetaObject(const QMetaObject *metaObject)
 
     QStringList availableExtensions;
 
-    foreach (PropertyControllerExtension *extension, m_extensions) {
+    for (PropertyControllerExtension *extension : qAsConst(m_extensions)) {
         if (extension->setMetaObject(metaObject))
             availableExtensions << extension->name();
     }

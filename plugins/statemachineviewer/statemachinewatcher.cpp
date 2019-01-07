@@ -96,7 +96,7 @@ void StateMachineWatcher::watchState(QAbstractState *state)
 
 void StateMachineWatcher::clearWatchedStates()
 {
-    Q_FOREACH(QAbstractState *state, m_watchedStates) {
+    for (QAbstractState *state : qAsConst(m_watchedStates)) {
         disconnect(state, &QAbstractState::entered, this, &StateMachineWatcher::handleStateEntered);
         disconnect(state, &QAbstractState::exited, this, &StateMachineWatcher::handleStateExited);
         disconnect(state, &QObject::destroyed, this, &StateMachineWatcher::handleStateDestroyed);

@@ -44,7 +44,7 @@ static int extractMessages(const QStringList &jsons, const QString &outFileName)
         return 1;
     }
 
-    foreach (const auto &jsonFile, jsons) {
+    for (const auto &jsonFile : jsons) {
         QFile inFile(jsonFile);
         if (!inFile.open(QFile::ReadOnly)) {
             qWarning() << "Can't open input file" << jsonFile;
@@ -76,7 +76,7 @@ static int mergeMessages(const QStringList &jsons, const QString &qmFile, const 
         }
     }
 
-    foreach (const auto &jsonFile, jsons) {
+    for (const auto &jsonFile : jsons) {
         QFile inFile(jsonFile);
         if (!inFile.open(QFile::ReadOnly)) {
             qWarning() << "Can't open input file" << jsonFile;

@@ -83,12 +83,12 @@ void QScxmlStateMachineDebugInterface::stop()
 
 QVector<State> QScxmlStateMachineDebugInterface::configuration() const
 {
-    QVector<QScxmlStateMachineInfo::StateId> configuration = m_info->configuration();
+    const QVector<QScxmlStateMachineInfo::StateId> configuration = m_info->configuration();
 
     QVector<State> result;
     result.reserve(configuration.size());
 
-    foreach (auto stateId, configuration)
+    for (auto stateId : configuration)
         result.append(toState(stateId));
 
     std::sort(result.begin(), result.end());
@@ -102,12 +102,12 @@ State QScxmlStateMachineDebugInterface::rootState() const
 
 QVector<State> QScxmlStateMachineDebugInterface::stateChildren(State state) const
 {
-    QVector<QScxmlStateMachineInfo::StateId> children = m_info->stateChildren(fromState(state));
+    const QVector<QScxmlStateMachineInfo::StateId> children = m_info->stateChildren(fromState(state));
 
     QVector<State> result;
     result.reserve(children.size());
 
-    foreach (auto stateId, children)
+    for (auto stateId : children)
         result.append(toState(stateId));
 
     return result;
@@ -199,7 +199,7 @@ QVector<Transition> QScxmlStateMachineDebugInterface::stateTransitions(State sta
     const auto initialTransition = m_info->initialTransition(stateId);
 
     QVector<Transition> result;
-    foreach (auto transition, transitions) {
+    for (auto transition : transitions) {
         if (transition != initialTransition && m_info->transitionSource(transition) == stateId)
             result.append(toTransition(transition));
     }
@@ -230,12 +230,12 @@ State QScxmlStateMachineDebugInterface::transitionSource(Transition transition) 
 
 QVector<State> QScxmlStateMachineDebugInterface::transitionTargets(Transition transition) const
 {
-    auto targets = m_info->transitionTargets(fromTransition(transition));
+    const auto targets = m_info->transitionTargets(fromTransition(transition));
 
     QVector<State> result;
     result.reserve(targets.size());
 
-    foreach (auto stateId, targets)
+    for (auto stateId : targets)
         result.append(toState(stateId));
 
     return result;
@@ -243,21 +243,21 @@ QVector<State> QScxmlStateMachineDebugInterface::transitionTargets(Transition tr
 
 void QScxmlStateMachineDebugInterface::statesEntered(const QVector<QScxmlStateMachineInfo::StateId> &states)
 {
-    foreach (auto state, states) {
+    for (auto state : states) {
         emit stateEntered(toState(state));
     }
 }
 
 void QScxmlStateMachineDebugInterface::statesExited(const QVector<QScxmlStateMachineInfo::StateId> &states)
 {
-    foreach (auto state, states) {
+    for (auto state : states) {
         emit stateExited(toState(state));
     }
 }
 
 void QScxmlStateMachineDebugInterface::transitionsTriggered(const QVector<QScxmlStateMachineInfo::TransitionId> &transitions)
 {
-    foreach (auto transition, transitions) {
+    for (auto transition : transitions) {
         emit transitionTriggered(toTransition(transition));
     }
 }

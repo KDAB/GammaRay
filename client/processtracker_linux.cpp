@@ -74,7 +74,7 @@ void ProcessTrackerBackendLinux::checkProcess(qint64 pid)
     if (!buffer.isEmpty()) {
         const QStringList values = buffer.remove(QLatin1Char('\t')).split(QLatin1Char('\n'));
 
-        foreach (const QString &value, values) {
+        for (const QString &value : values) {
             if (value.startsWith(QStringLiteral("TracerPid:"))) {
                 pinfo.traced = value.split(QLatin1Char(':')).value(1).simplified().toLongLong();
             }

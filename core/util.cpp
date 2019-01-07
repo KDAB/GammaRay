@@ -183,7 +183,7 @@ static IconDatabase readIconData()
             propString.chop(4);
             const QStringList props = propString.split(';');
             IconCacheEntry::PropertyMap propertyMap;
-            foreach (const QString &prop, props) {
+            for (const QString &prop : qAsConst(props)) {
                 const QStringList keyValue = prop.split(QLatin1Char('='));
                 if (keyValue.size() != 2)
                     continue;
@@ -203,10 +203,10 @@ static int iconIdForObject(const QMetaObject *mo, const QObject *obj)
 
     auto it = iconDataBase.constFind(QLatin1String(mo->className()));
     if (it != iconDataBase.end()) {
-        foreach (const auto &propertyIcon, it->propertyIcons) {
+        for (const auto &propertyIcon : qAsConst(it->propertyIcons)) {
             bool allMatch = true;
             Q_ASSERT(!propertyIcon.second.isEmpty());
-            foreach (const IconCacheEntry::PropertyPair &keyValue, propertyIcon.second) {
+            for (const IconCacheEntry::PropertyPair &keyValue : qAsConst(propertyIcon.second)) {
                 if (stringifyProperty(obj, keyValue.first) != keyValue.second) {
                     allMatch = false;
                     break;
