@@ -91,7 +91,7 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
     painter->setPen(option.palette.color(QPalette::WindowText));
 
-    foreach (qint64 ev, events) {
+    for (qint64 ev : events) {
         const qint64 ts = SignalHistoryModel::timestamp(ev);
         if (ts >= startTime && ts < endTime) {
             const int x = x0 + dx * (ts - startTime) / interval;

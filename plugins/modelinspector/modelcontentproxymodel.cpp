@@ -126,7 +126,7 @@ QMap<int, QVariant> ModelContentProxyModel::itemData(const QModelIndex &index) c
 
 void ModelContentProxyModel::emitDataChangedForSelection(const QItemSelection &selection)
 {
-    foreach (const auto &range, selection) {
+    for (const auto &range : selection) {
         if (!range.isValid())
             continue;
         emit dataChanged(range.topLeft(), range.bottomRight());

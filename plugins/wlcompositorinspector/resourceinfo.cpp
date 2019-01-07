@@ -134,9 +134,9 @@ QString ResourceInfo::name() const
 
 QString ResourceInfo::info() const
 {
-  QStringList lines = infoLines();
+  const QStringList lines = infoLines();
   QString str;
-  foreach (const QString &line, lines) {
+  for (const QString &line : lines) {
     if (!str.isEmpty()) {
       str += QLatin1Char('\n');
     }

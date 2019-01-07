@@ -54,7 +54,7 @@ QDataStream &operator>>(QDataStream &in, QItemSelectionModel::SelectionFlags &co
 static void writeSelection(Message *msg, const QItemSelection &selection)
 {
     *msg << qint32(selection.size());
-    foreach (const QItemSelectionRange &range, selection)
+    for (const QItemSelectionRange &range : selection)
         *msg << Protocol::fromQModelIndex(range.topLeft()) << Protocol::fromQModelIndex(
             range.bottomRight());
 }
@@ -169,7 +169,7 @@ bool GammaRay::NetworkSelectionModel::translateSelection(const Protocol::ItemSel
                                                          QItemSelection &qselection) const
 {
     qselection.clear();
-    foreach (const auto &range, selection) {
+    for (const auto &range : selection) {
         const QModelIndex qmiTopLeft = Protocol::toQModelIndex(model(), range.topLeft);
         const QModelIndex qmiBottomRight = Protocol::toQModelIndex(model(), range.bottomRight);
         if (!qmiTopLeft.isValid() && !qmiBottomRight.isValid())

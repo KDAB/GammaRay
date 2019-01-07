@@ -74,7 +74,7 @@ void WidgetRemoteView::drawDecoration(QPainter* p)
 
     p->save();
     p->setPen(Qt::darkGreen);
-    foreach (const auto &rect, data.tabFocusRects)
+    for (const auto &rect : data.tabFocusRects)
         p->drawRect(mapFromSource(rect));
 
     QVector<QLineF> lines;
@@ -85,7 +85,7 @@ void WidgetRemoteView::drawDecoration(QPainter* p)
 
         p->setPen(Qt::green);
         QLineF l(r1.center(), r2.center());
-        foreach (const auto &prevLine, lines) {
+        for (const auto &prevLine : qAsConst(lines)) {
             QPointF pnt;
             if (l.intersect(prevLine, &pnt) == QLineF::BoundedIntersection && pnt != l.p1() && pnt != l.p2()) {
                 p->setPen(Qt::red);

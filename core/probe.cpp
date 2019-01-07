@@ -616,7 +616,7 @@ void Probe::processQueuedObjectChanges()
     // must be called from the main thread via timeout
     Q_ASSERT(QThread::currentThread() == thread());
 
-    foreach (const auto &change, m_queuedObjectChanges) {
+    for (const auto &change : qAsConst(m_queuedObjectChanges)) {
         switch (change.type) {
         case ObjectChange::Create:
             objectFullyConstructed(change.obj);
@@ -632,7 +632,7 @@ void Probe::processQueuedObjectChanges()
 
     m_queuedObjectChanges.clear();
 
-    foreach (QObject *obj, m_pendingReparents) {
+    for (QObject *obj : qAsConst(m_pendingReparents)) {
         if (!isValidObject(obj))
             continue;
         if (filterObject(obj)) // the move might have put it under a hidden parent
@@ -868,7 +868,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
 
     // filters provided by plugins
     if (!filterObject(receiver)) {
-        foreach (QObject *filter, m_globalEventFilters) {
+        for (QObject *filter : qAsConst(m_globalEventFilters)) {
             filter->eventFilter(receiver, event);
         }
     }

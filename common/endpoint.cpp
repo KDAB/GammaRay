@@ -323,7 +323,7 @@ void Endpoint::slotHandlerDestroyed(QObject *obj)
     // copy, the virtual method below likely changes the maps.
     const QList<ObjectInfo *> objs = m_handlerMap.values(obj);
     m_handlerMap.remove(obj);
-    foreach (ObjectInfo *obj, objs) {
+    for (ObjectInfo *obj : objs) {
         obj->receiver = nullptr;
         obj->messageHandler = QMetaMethod();
         // copy the name, in case unregisterMessageHandlerInternal() is called inside

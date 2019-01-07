@@ -50,7 +50,7 @@ static QModelIndexList searchMatchesAll(QAbstractItemModel *model, const QVarian
 {
     const auto matches = model->match(model->index(0, column), role, value, -1, flags);
 
-    foreach (const QModelIndex &idx, matches) {
+    for (const QModelIndex &idx : matches) {
         Q_UNUSED(idx);
         Q_ASSERT(idx.isValid());
     }

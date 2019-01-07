@@ -64,7 +64,7 @@ private slots:
         QVERIFY(trace.size() > 0);
         const auto resolved = Execution::resolveAll(trace);
         QCOMPARE(resolved.size(), trace.size());
-        foreach (const auto &frame, resolved) {
+        for (const auto &frame : resolved) {
             qDebug() << frame.name << frame.location.displayString();
         }
     }

@@ -246,7 +246,7 @@ QWidget *ClientToolManager::widgetForIndex(int index) const
 void ClientToolManager::gotTools(const QVector<GammaRay::ToolData> &tools)
 {
     emit aboutToReceiveData();
-    foreach (const auto &tool, tools) {
+    for (const auto &tool : tools) {
         ToolUiFactory *factory = s_pluginRepository()->factories.value(tool.id);
         // hide tools we have no UI plugin for
         if (tool.hasUi && factory) {
@@ -308,7 +308,7 @@ void ClientToolManager::toolsForObjectReceived(const ObjectId &id, const QVector
 {
     QVector<ToolInfo> t;
     t.reserve(toolIds.size());
-    foreach (const auto &toolId, toolIds) {
+    for (const auto &toolId : toolIds) {
         const auto i = toolIndexForToolId(toolId);
         if (i >= 0)
             t.push_back(m_tools.at(i));

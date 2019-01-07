@@ -121,14 +121,14 @@ void StateModelPrivate::stateConfigurationChanged()
     std::set_difference(newConfig.begin(), newConfig.end(),
                         m_lastConfiguration.begin(), m_lastConfiguration.end(),
                         std::back_inserter(difference));
-    foreach (State state, difference)
+    for (State state : qAsConst(difference))
         emitDataChangedForState(state);
     // states which became inactive
     difference.clear();
     std::set_difference(m_lastConfiguration.begin(), m_lastConfiguration.end(),
                         newConfig.begin(), newConfig.end(),
                         std::back_inserter(difference));
-    foreach (State state, difference)
+    for (State state : qAsConst(difference))
         emitDataChangedForState(state);
     m_lastConfiguration = newConfig;
 }

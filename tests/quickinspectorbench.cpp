@@ -54,7 +54,7 @@ private slots:
         const auto items = createItems(root);
 
         QBENCHMARK_ONCE {
-            foreach(auto item, items) {
+            for (auto item : items) {
                 model.objectAdded(item);
             }
         }
@@ -68,12 +68,12 @@ private slots:
         model.setWindow(&view);
         const auto items = createItems(root);
 
-        foreach(auto item, items) {
+        for (auto item : items) {
             model.objectAdded(item);
         }
 
         QBENCHMARK_ONCE {
-            foreach(auto item, items) {
+            for (auto item : items) {
                 // trigger item update
                 item->setX(item->x() + 1);
             }

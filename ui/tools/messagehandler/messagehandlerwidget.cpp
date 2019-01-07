@@ -144,7 +144,7 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
 
     if (!backtrace.isEmpty()) {
         auto *backtraceWidget = new QListWidget;
-        foreach (const QString &frame, backtrace)
+        for (const QString &frame : backtrace)
             backtraceWidget->addItem(frame);
         layout->addWidget(backtraceWidget, 1, 0, 1, 2);
 

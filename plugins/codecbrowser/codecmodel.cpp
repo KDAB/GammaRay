@@ -50,13 +50,13 @@ QVariant AllCodecsModel::data(const QModelIndex &index, int role) const
         if (index.column() == 0)
             return m_codecs.at(index.row());
         if (index.column() == 1) {
-            QList<QByteArray> aliases
+            const QList<QByteArray> aliases
                 = QTextCodec::codecForName(m_codecs.at(index.row()))->aliases();
 
             QString result;
             int size = aliases.size();
             int i = 0;
-            foreach (const QByteArray &ba, aliases) {
+            for (const QByteArray &ba : aliases) {
                 result.append(ba);
 
                 ++i;

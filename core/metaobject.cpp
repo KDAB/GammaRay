@@ -42,14 +42,14 @@ MetaObject::~MetaObject()
 int MetaObject::propertyCount() const
 {
     int count = 0;
-    foreach (MetaObject *mo, m_baseClasses)
+    for (MetaObject *mo : m_baseClasses)
         count += mo->propertyCount();
     return count + m_properties.size();
 }
 
 MetaProperty *MetaObject::propertyAt(int index) const
 {
-    foreach (MetaObject *mo, m_baseClasses) {
+    for (MetaObject *mo : m_baseClasses) {
         if (index >= mo->propertyCount())
             index -= mo->propertyCount();
         else
@@ -114,7 +114,7 @@ bool MetaObject::isPolymorphic() const
 {
     if (isClassPolymorphic())
         return true;
-    foreach (const auto &baseClass, m_baseClasses) {
+    for (const auto &baseClass : m_baseClasses) {
         if (baseClass->isPolymorphic())
             return true;
     }
@@ -140,7 +140,7 @@ bool MetaObject::inherits(const QString &className) const
 {
     if (className == m_className)
         return true;
-    foreach (MetaObject *metaObject, m_baseClasses) {
+    for (MetaObject *metaObject : m_baseClasses) {
         if (metaObject->inherits(className))
             return true;
     }

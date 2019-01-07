@@ -164,7 +164,7 @@ QVector<QAbstractProxyModel *> ModelModel::proxiesForModel(QAbstractItemModel *m
     if (!model)
         return proxies;
 
-    foreach (QAbstractProxyModel *proxy, m_proxies) {
+    for (QAbstractProxyModel *proxy : m_proxies) {
         if (proxy && proxy->sourceModel() == model)
             proxies.push_back(proxy);
     }

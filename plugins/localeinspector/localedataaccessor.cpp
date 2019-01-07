@@ -204,7 +204,7 @@ void LocaleDataAccessorRegistry::init()
                                    const auto wds = locale.weekdays();
                                    QStringList resultList;
                                    resultList.reserve(wds.size());
-                                   Q_FOREACH(Qt::DayOfWeek dayNumber, wds) {
+                                   for (Qt::DayOfWeek dayNumber : wds) {
         resultList << QLocale().dayName(dayNumber);
     }
                                    return QLocale().createSeparatedList(resultList);

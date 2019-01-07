@@ -203,7 +203,7 @@ void SGWireframeWidget::drawWire(QPainter *painter, int vertexIndex1, int vertex
 void SGWireframeWidget::drawHighlightedFace(QPainter *painter, const QVector<int> &vertexIndices)
 {
     QVector<QPointF> vertices;
-    foreach (int index, vertexIndices) {
+    for (int index : vertexIndices) {
         if (!m_highlightedVertices.contains(index))
             return; // There is one vertex that is not highlighted. Don't highlight the face.
         vertices << m_vertices.at(index) * m_zoom + m_offset;

@@ -65,7 +65,7 @@ QDataStream &operator>>(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags &flag
 QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &points)
 {
     s << points.count();
-    foreach (const auto &p, points) {
+    for (const auto &p : points) {
         s << p.id();
         s << p.state();
         s << p.rect() << p.sceneRect() << p.screenRect();

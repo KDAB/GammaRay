@@ -66,7 +66,7 @@ void ActionValidator::setActions(const QList<QAction *> &actions)
     clearActions();
 
     m_shortcutActionMap.reserve(actions.size());
-    Q_FOREACH(QAction *action, actions) {
+    for (QAction *action : actions) {
         insert(action);
     }
 }

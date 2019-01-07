@@ -108,12 +108,12 @@ void QSMStateMachineDebugInterface::stop()
 
 QVector<State> QSMStateMachineDebugInterface::configuration() const
 {
-    QSet<QAbstractState *> configuration = m_stateMachine->configuration();
+    const QSet<QAbstractState *> configuration = m_stateMachine->configuration();
 
     QVector<State> result;
-    configuration.reserve(configuration.size());
+    result.reserve(configuration.size());
 
-    foreach (QAbstractState *state, configuration) {
+    for (QAbstractState *state : configuration) {
         result.append(toState(state));
     }
 
@@ -174,9 +174,9 @@ QString QSMStateMachineDebugInterface::transitions(State stateId) const
     const auto l = childrenOfType<QAbstractState>(parent);
 
     QStringList nums;
-    QList<QAbstractTransition *> trs = state->transitions();
+    const QList<QAbstractTransition *> trs = state->transitions();
     nums.reserve(trs.size());
-    foreach (auto t, trs) {
+    for (auto t : trs) {
         QAbstractState *child = t->targetState();
         nums << QString::number(l.indexOf(child) - l.indexOf(state));
     }

@@ -88,7 +88,7 @@ static QStringList dllSearchPaths(const QString &exePath)
 /** Resolves imports given a list of search paths. */
 static QString resolveImport(const QString &import, const QStringList &searchPaths, const QString &arch)
 {
-    foreach (const auto &path, searchPaths) {
+    for (const auto &path : searchPaths) {
         const QString absPath = path + '/' + import;
         if (!QFile::exists(absPath))
             continue;
@@ -138,13 +138,13 @@ QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
     QSet<QString> checkedImports;
 
     while (!resolvedImports.isEmpty()) {
-        foreach (const auto &import, resolvedImports) {
+        for (const auto &import : qAsConst(resolvedImports)) {
             if (containsQtCore(import.toUtf8()))
                 return import;
         }
 
         QStringList resolvedSubImports;
-        foreach (const auto &import, resolvedImports) {
+        for (const auto &import : qAsConst(resolvedImports)) {
             PEFile f(import);
             if (!f.isValid())
                 continue;
@@ -191,7 +191,7 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 
 static QString compilerFromLibraries(const QStringList &libraries)
 {
-    foreach (const QString &lib, libraries) {
+    for (const QString &lib : libraries) {
         if (lib.startsWith(QLatin1String("libgcc"), Qt::CaseInsensitive))
             return "GNU";
     }
@@ -201,7 +201,7 @@ static QString compilerFromLibraries(const QStringList &libraries)
 
 static QString compilerVersionFromLibraries(const QStringList &libraries)
 {
-    foreach (const QString &lib, libraries) {
+    for (const QString &lib : libraries) {
         if (lib.startsWith(QLatin1String("msvcp"), Qt::CaseInsensitive)
             || lib.startsWith(QLatin1String("vcruntime"), Qt::CaseInsensitive)) {
             return QString::number(fileVersion(lib).major * 10);

@@ -89,7 +89,7 @@ private slots:
         bool hasBasicTools = false;
         const ToolData *actionInspector = nullptr;
         const ToolData *guiSupport = nullptr;
-        foreach (const auto &tool, list) {
+        for (const auto &tool : list) {
             if (tool.id == "GammaRay::ObjectInspector")
                 hasBasicTools = true;
             else if (tool.id == "gammaray_actioninspector")
@@ -126,7 +126,7 @@ private slots:
         QCOMPARE(actionId.asQObject(), &action);
         const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<QString> >();
         QStringList supportedToolIds;
-        foreach (const auto &tool, actionTools)
+        for (const auto &tool : actionTools)
             supportedToolIds << tool;
         QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::ObjectInspector")));
         QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::MetaObjectBrowser")));
@@ -219,7 +219,7 @@ private:
         QCOMPARE(actionId.asQObject(), &action);
         const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<ToolInfo> >();
         QStringList supportedToolIds;
-        foreach (const auto &tool, actionTools) {
+        for (const auto &tool : actionTools) {
             QVERIFY(!tool.name().isEmpty());
             QVERIFY(tool.name() != tool.id());
             supportedToolIds << tool.id();

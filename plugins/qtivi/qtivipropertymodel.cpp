@@ -213,7 +213,7 @@ QVariant QtIviPropertyModel::IviCarrierProperty::iviConstraints() const
         QVariantList avail;
         avail << uint(QtIviPropertyModel::AvailableValuesConstraints);
 
-        foreach (const QVariant &qmlVar, rawAvail) {
+        for (const QVariant &qmlVar : rawAvail) {
             const QVariant v = convertToCppType(qmlVar, QIviPropertyPrivate::get(m_iviProperty)->m_type);
 
             // For convenience on the view side, send for each allowed value:

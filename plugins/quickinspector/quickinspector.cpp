@@ -865,7 +865,7 @@ void QuickInspector::scanForProblems()
     const QVector<QObject*> &allObjects = Probe::instance()->allQObjects();
 
     QMutexLocker lock(Probe::objectLock());
-    foreach (QObject *obj, allObjects) {
+    for (QObject *obj : allObjects) {
         QQuickItem *item;
         if (!Probe::instance()->isValidObject(obj) || !(item = qobject_cast<QQuickItem*>(obj)))
             continue;

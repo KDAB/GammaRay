@@ -137,7 +137,7 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
 
         Message msg(m_address, Protocol::PropertyValuesChanged);
         msg << addr << (quint32)values.size();
-        foreach (const auto &value, values)
+        for (const auto &value : qAsConst(values))
             msg << value.first << value.second;
         emit message(msg);
         break;
@@ -203,7 +203,7 @@ void PropertySyncer::propertyChanged()
 
     Message msg(m_address, Protocol::PropertyValuesChanged);
     msg << (*it).addr << (quint32)changes.size();
-    foreach (const auto &change, changes)
+    for (const auto &change : qAsConst(changes))
         msg << change.first << change.second;
     emit message(msg);
 }

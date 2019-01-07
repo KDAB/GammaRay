@@ -97,7 +97,7 @@ void MethodsExtension::signalEmitted(QObject *sender, int signalIndex,
 
     QStringList prettyArgs;
     prettyArgs.reserve(args.size());
-    foreach (const QVariant &v, args)
+    for (const QVariant &v : args)
         prettyArgs.push_back(VariantHandler::displayString(v));
 
     m_methodLogModel->appendRow(

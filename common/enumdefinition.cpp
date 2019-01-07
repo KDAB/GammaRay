@@ -107,7 +107,7 @@ QByteArray EnumDefinition::valueToString(const EnumValue& value) const
     if (isFlag()) {
         QByteArray r;
         int handledFlags = 0;
-        foreach (const auto &elem, m_elements) {
+        for (const auto &elem : m_elements) {
             if ((elem.value() & value.value()) == elem.value() && elem.value() != 0) {
                 r += elem.name() + '|';
                 handledFlags |= elem.value();
@@ -121,7 +121,7 @@ QByteArray EnumDefinition::valueToString(const EnumValue& value) const
         } else {
             // check for dedicated 0-values
             Q_ASSERT(value.value() == 0);
-            foreach (const auto &elem, m_elements) {
+            for (const auto &elem : m_elements) {
                 if (elem.value() == 0)
                     return elem.name();
             }
@@ -129,7 +129,7 @@ QByteArray EnumDefinition::valueToString(const EnumValue& value) const
         }
         return r;
     } else {
-        foreach (const auto &elem, m_elements) {
+        for (const auto &elem : m_elements) {
             if (elem.value() == value.value())
                 return elem.name();
         }

@@ -127,7 +127,7 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
     // delay adding actions until we know the supported tools
     QObject::connect(ClientToolManager::instance(), &ClientToolManager::toolsForObjectResponse,
             menu, [menu](const ObjectId &id, const QVector<ToolInfo> &toolInfos) {
-        foreach (const auto &toolInfo, toolInfos) {
+        for (const auto &toolInfo : toolInfos) {
             auto action = menu->addAction(qApp->translate("GammaRay::ContextMenuExtension",
                                                           "Show in \"%1\" tool").arg(toolInfo.name()));
             QObject::connect(action, &QAction::triggered, [id, toolInfo]() {

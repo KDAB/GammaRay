@@ -55,7 +55,7 @@ bool SelfTest::checkProbes()
 {
     int validProbeCount = 0;
     const QVector<ProbeABI> probeABIs = ProbeFinder::listProbeABIs();
-    foreach (const ProbeABI &abi, probeABIs) {
+    for (const ProbeABI &abi : probeABIs) {
         const QString probePath = ProbeFinder::findProbe(abi);
         if (probePath.isEmpty()) {
             emit error(tr("No probe found for ABI %1.").arg(abi.id()));
@@ -83,7 +83,7 @@ bool SelfTest::checkInjectors()
 {
     const auto injectors = InjectorFactory::availableInjectors();
     int viableInjectors = 0;
-    foreach (const auto &injector, injectors) {
+    for (const auto &injector : injectors) {
         if (checkInjector(injector))
             ++viableInjectors;
     }

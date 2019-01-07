@@ -197,7 +197,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
         Message msg(m_myAddress, Protocol::ModelContentReply);
         msg << quint32(indexes.size());
-        foreach (const auto &qmIndex, indexes)
+        for (const auto &qmIndex : qAsConst(indexes))
             msg << Protocol::fromQModelIndex(qmIndex)
                           << filterItemData(m_model->itemData(qmIndex))
                           << qint32(m_model->flags(qmIndex));
@@ -293,7 +293,7 @@ bool RemoteModelServer::canSerialize(const QVariant &value) const
     // recurse into containers
     if (value.canConvert<QVariantList>()) {
         QSequentialIterable it = value.value<QSequentialIterable>();
-        foreach (const QVariant &v, it) {
+        for (const QVariant &v : it) {
             if (!canSerialize(v))
                 return false;
         }
@@ -408,7 +408,7 @@ void RemoteModelServer::layoutChanged(const QList<QPersistentModelIndex> &parent
 {
     QVector<Protocol::ModelIndex> indexes;
     indexes.reserve(parents.size());
-    foreach (const auto &index, parents)
+    for (const auto &index : parents)
         indexes.push_back(Protocol::fromQModelIndex(index));
     sendLayoutChanged(indexes, hint);
 }

@@ -145,8 +145,8 @@ void ProblemReporterWidget::problemViewContextMenu(const QPoint &p)
 
     QMenu menu;
     ContextMenuExtension ext(objectId);
-    auto sourceLocations = index.data(ProblemModelRoles::SourceLocationRole).value<QVector<SourceLocation>>();
-    foreach (const SourceLocation &sourceLocation, sourceLocations) {
+    const auto sourceLocations = index.data(ProblemModelRoles::SourceLocationRole).value<QVector<SourceLocation>>();
+    for (const SourceLocation &sourceLocation : sourceLocations) {
         ext.setLocation(ContextMenuExtension::GoTo, sourceLocation);
     }
     ext.populateMenu(&menu);

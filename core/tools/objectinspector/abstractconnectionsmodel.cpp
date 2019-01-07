@@ -159,7 +159,7 @@ QMap< int, QVariant > AbstractConnectionsModel::itemData(const QModelIndex &inde
 
 bool AbstractConnectionsModel::isDuplicate(const QVector<Connection> &connections, const AbstractConnectionsModel::Connection& conn)
 {
-    foreach (const Connection &c, connections) {
+    for (const Connection &c : qAsConst(connections)) {
         if (&c == &conn)
             continue;
         if (c.endpoint == conn.endpoint

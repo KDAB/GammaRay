@@ -278,7 +278,7 @@ QVariant MessageStatisticsModel::headerData(int section, Qt::Orientation orienta
 int MessageStatisticsModel::countPerType(int msgType) const
 {
     int c = 0;
-    foreach (const auto &info, m_data) {
+    for (const auto &info : m_data) {
         c += info.messageCount.at(msgType);
     }
     return c;
@@ -287,7 +287,7 @@ int MessageStatisticsModel::countPerType(int msgType) const
 quint64 MessageStatisticsModel::sizePerType(int msgType) const
 {
     int c = 0;
-    foreach (const auto &info, m_data) {
+    for (const auto &info : m_data) {
         c += info.messageSize.at(msgType);
     }
     return c;

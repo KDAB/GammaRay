@@ -208,7 +208,7 @@ void GammaRay::MetaObjectTreeModel::scheduleDataChange(const QMetaObject *mo)
 
 void GammaRay::MetaObjectTreeModel::emitPendingDataChanged()
 {
-    foreach (auto mo, m_pendingDataChanged) {
+    for (auto mo : qAsConst(m_pendingDataChanged)) {
         auto index = indexForMetaObject(mo);
         if (!index.isValid())
             continue;

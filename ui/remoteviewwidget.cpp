@@ -108,7 +108,7 @@ RemoteViewWidget::RemoteViewWidget(QWidget *parent)
 
     m_zoomLevels.reserve(8);
     m_zoomLevels <<  .1 << .25 << .5 << 1.0 << 2.0 << 4.0 << 8.0 << 16.0;
-    foreach (const auto level, m_zoomLevels) {
+    for (const auto level : qAsConst(m_zoomLevels)) {
         auto item = new QStandardItem;
         item->setText(QString::number(level * 100.0) + locale().percent());
         item->setData(level, Qt::UserRole);
