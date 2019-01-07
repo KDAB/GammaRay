@@ -41,7 +41,7 @@ namespace GammaRay {
 class GAMMARAY_COMMON_EXPORT EnumDefinitionElement
 {
 public:
-    EnumDefinitionElement();
+    EnumDefinitionElement() = default;
     /*! Create a new enum definition element with name @p name and value @p value. */
     EnumDefinitionElement(int value, const char *name);
 
@@ -54,7 +54,7 @@ private:
     friend QDataStream &operator<<(QDataStream &out, const EnumDefinitionElement &elem);
     friend QDataStream &operator>>(QDataStream &in, EnumDefinitionElement &elem);
 
-    int m_value;
+    int m_value = 0;
     QByteArray m_name;
 };
 
@@ -62,7 +62,7 @@ private:
 class GAMMARAY_COMMON_EXPORT EnumDefinition
 {
 public:
-    EnumDefinition();
+    EnumDefinition() = default;
     /*! Create a new definition for an enum named @p name and internal id @p id. */
     explicit EnumDefinition(EnumId id, const QByteArray &name);
 
@@ -98,8 +98,8 @@ private:
     friend GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out, const EnumDefinition &def);
     friend GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, EnumDefinition &def);
 
-    EnumId m_id;
-    bool m_isFlag;
+    EnumId m_id = InvalidEnumId;
+    bool m_isFlag = false;
     QByteArray m_name;
     QVector<EnumDefinitionElement> m_elements;
 };

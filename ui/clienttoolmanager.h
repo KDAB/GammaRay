@@ -53,7 +53,7 @@ class ToolUiFactory;
 class GAMMARAY_UI_EXPORT ToolInfo
 {
 public:
-    ToolInfo();
+    ToolInfo() = default;
     ///@cond internal
     explicit ToolInfo(const ToolData &toolData, ToolUiFactory *factory);
     ///@endcond
@@ -69,9 +69,9 @@ public:
 
 private:
     QString m_toolId;
-    bool m_isEnabled;
-    bool m_hasUi;
-    ToolUiFactory *m_factory;
+    bool m_isEnabled = false;
+    bool m_hasUi = false;
+    ToolUiFactory *m_factory = nullptr;
 };
 
 /*! Tool Management API for the client to find out, which tools exist,

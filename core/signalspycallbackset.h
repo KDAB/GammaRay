@@ -44,16 +44,16 @@ namespace GammaRay {
  */
 struct GAMMARAY_CORE_EXPORT SignalSpyCallbackSet
 {
-    SignalSpyCallbackSet();
+    SignalSpyCallbackSet() = default;
     bool isNull() const;
 
     typedef void (*BeginCallback)(QObject *caller, int methodIndex, void **argv);
     typedef void (*EndCallback)(QObject *caller, int methodIndex);
 
-    BeginCallback signalBeginCallback;
-    EndCallback signalEndCallback;
-    BeginCallback slotBeginCallback;
-    EndCallback slotEndCallback;
+    BeginCallback signalBeginCallback = nullptr;
+    EndCallback signalEndCallback = nullptr;
+    BeginCallback slotBeginCallback = nullptr;
+    EndCallback slotEndCallback = nullptr;
 };
 }
 

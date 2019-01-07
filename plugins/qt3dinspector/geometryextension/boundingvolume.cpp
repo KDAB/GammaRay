@@ -32,11 +32,6 @@
 
 using namespace GammaRay;
 
-BoundingVolume::BoundingVolume()
-    : m_null(true)
-{
-}
-
 void BoundingVolume::addPoint(const QVector3D &p)
 {
     if (m_null) {

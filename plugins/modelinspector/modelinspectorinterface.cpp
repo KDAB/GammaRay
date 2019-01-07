@@ -49,13 +49,6 @@ static QDataStream &operator>>(QDataStream &in, ModelCellData &data)
 }
 QT_END_NAMESPACE
 
-ModelCellData::ModelCellData() :
-    row(-1),
-    column(-1),
-    flags(Qt::NoItemFlags)
-{
-}
-
 bool ModelCellData::operator==(const ModelCellData& other) const
 {
     return row == other.row &&

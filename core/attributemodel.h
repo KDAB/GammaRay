@@ -65,7 +65,6 @@ class AttributeModel : public AbstractAttributeModel
 public:
     explicit AttributeModel(QObject *parent = nullptr)
         : AbstractAttributeModel(parent)
-        , m_obj(nullptr)
     {
     }
 
@@ -97,7 +96,7 @@ protected:
     }
 
 private:
-    Class *m_obj;
+    Class *m_obj = nullptr;
 };
 }
 

@@ -35,28 +35,28 @@
 namespace GammaRay {
 struct Qt3DGeometryAttributeData
 {
-    Qt3DGeometryAttributeData();
+    Qt3DGeometryAttributeData() = default;
     bool operator==(const Qt3DGeometryAttributeData &rhs) const;
 
     QString name;
-    Qt3DRender::QAttribute::AttributeType attributeType;
-    uint byteOffset;
-    uint byteStride;
-    uint count;
-    uint divisor;
-    Qt3DRender::QAttribute::VertexBaseType vertexBaseType;
-    uint vertexSize;
-    uint bufferIndex;
+    Qt3DRender::QAttribute::AttributeType attributeType = Qt3DRender::QAttribute::VertexAttribute;
+    uint byteOffset = 0;
+    uint byteStride = 0;
+    uint count = 0;
+    uint divisor = 0;
+    Qt3DRender::QAttribute::VertexBaseType vertexBaseType = Qt3DRender::QAttribute::UnsignedShort;
+    uint vertexSize = 0;
+    uint bufferIndex = 0;
 };
 
 struct Qt3DGeometryBufferData
 {
-    Qt3DGeometryBufferData();
+    Qt3DGeometryBufferData() = default;
     bool operator==(const Qt3DGeometryBufferData &rhs) const;
 
     QString name;
     QByteArray data;
-    Qt3DRender::QBuffer::BufferType type;
+    Qt3DRender::QBuffer::BufferType type = Qt3DRender::QBuffer::VertexBuffer;
 };
 
 struct Qt3DGeometryData

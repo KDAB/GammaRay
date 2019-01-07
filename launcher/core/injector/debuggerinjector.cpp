@@ -40,14 +40,6 @@
 
 using namespace GammaRay;
 
-DebuggerInjector::DebuggerInjector()
-    : mExitCode(-1)
-    , mProcessError(QProcess::UnknownError)
-    , mExitStatus(QProcess::NormalExit)
-    , mManualError(false)
-{
-}
-
 DebuggerInjector::~DebuggerInjector()
 {
     stop();

@@ -30,13 +30,6 @@
 
 using namespace GammaRay;
 
-PropertyData::PropertyData()
-    : m_accessFlags(PropertyData::Readable)
-    , m_propertyFlags(PropertyModel::None)
-    , m_revision(-1)
-{
-}
-
 QString PropertyData::name() const
 {
     return m_name;

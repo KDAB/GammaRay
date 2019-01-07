@@ -123,15 +123,6 @@ public:
 
 QtIviPropertyOverrider::QtIviPropertyOverrider(QIviProperty *overriddenProperty)
    : m_prop(overriddenProperty)
-   , m_originalValueGetter(nullptr)
-   , m_originalValueSetter(nullptr)
-{
-}
-
-QtIviPropertyOverrider::QtIviPropertyOverrider()
-  : m_prop(nullptr)
-  , m_originalValueGetter(nullptr)
-  , m_originalValueSetter(nullptr)
 {
 }
 

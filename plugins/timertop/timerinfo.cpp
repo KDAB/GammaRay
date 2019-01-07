@@ -60,17 +60,9 @@ uint qHash(const TimerId &id)
 }
 }
 
-TimerId::TimerId()
-    : m_type(InvalidType)
-    , m_timerAddress(nullptr)
-    , m_timerId(-1)
-{
-}
-
 TimerId::TimerId(QObject *timer)
     : m_type(QQmlTimerType)
     , m_timerAddress(timer)
-    , m_timerId(-1)
 {
     Q_ASSERT(timer);
 

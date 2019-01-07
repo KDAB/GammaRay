@@ -79,15 +79,15 @@ protected slots:
 private:
     struct DeferredHeaderProperties
     {
-        DeferredHeaderProperties();
+        DeferredHeaderProperties() = default;
 
-        bool initialized;
+        bool initialized = false;
         // When trying to only play with hidden, we guess the resizeMode using header->resizeMode().
         // Though hidden/unexisting columns always return resize mode Fixed, which is bad.
         // Also when trying to only play with resizeMode, we guess the hidden property, can be wrong too.
         // Let use int with -1 meaning don't apply the property.
-        int resizeMode;
-        int hidden;
+        int resizeMode = -1;
+        int hidden = -1;
     };
 
     typedef QMap<int, DeferredHeaderProperties> SectionsProperties;

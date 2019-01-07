@@ -39,7 +39,7 @@ namespace GammaRay {
 class QtIviPropertyOverrider
 {
 public:
-    QtIviPropertyOverrider();
+    QtIviPropertyOverrider() = default;
     explicit QtIviPropertyOverrider(QIviProperty *property);
     explicit QtIviPropertyOverrider(QtIviPropertyOverrider &&other);
 
@@ -59,8 +59,8 @@ private:
     friend class OverrideValueGetter;
 
     QPointer<QIviProperty> m_prop;
-    QtPrivate::QSlotObjectBase *m_originalValueGetter;
-    QtPrivate::QSlotObjectBase *m_originalValueSetter;
+    QtPrivate::QSlotObjectBase *m_originalValueGetter = nullptr;
+    QtPrivate::QSlotObjectBase *m_originalValueSetter = nullptr;
     QVariant m_overrideValue;
 };
 

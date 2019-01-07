@@ -88,7 +88,7 @@ private:
     int m_propertyIndex;
     QString m_canonicalName;
     QVariant m_value;
-    bool m_foundBindingLoop;
+    bool m_foundBindingLoop = false;
     SourceLocation m_sourceLocation;
     std::vector<std::unique_ptr<BindingNode>> m_dependencies;
 

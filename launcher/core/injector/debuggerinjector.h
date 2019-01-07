@@ -40,7 +40,7 @@ class DebuggerInjector : public AbstractInjector
 {
     Q_OBJECT
 public:
-    DebuggerInjector();
+    DebuggerInjector() = default;
     ~DebuggerInjector();
 
     // The debugger executable location
@@ -92,14 +92,14 @@ private slots:
 
 protected:
     QScopedPointer<QProcess> m_process;
-    int mExitCode;
-    QProcess::ProcessError mProcessError;
-    QProcess::ExitStatus mExitStatus;
+    int mExitCode = -1;
+    QProcess::ProcessError mProcessError = QProcess::UnknownError;
+    QProcess::ExitStatus mExitStatus = QProcess::NormalExit;
     QString m_filePath;
     QString mErrorString;
 
 private:
-    bool mManualError;
+    bool mManualError = false;
 
     enum Orientation {
         In,

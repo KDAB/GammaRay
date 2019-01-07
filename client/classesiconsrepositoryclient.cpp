@@ -34,7 +34,6 @@ using namespace GammaRay;
 
 ClassesIconsRepositoryClient::ClassesIconsRepositoryClient(QObject *parent)
     : ClassesIconsRepository(parent)
-    , m_ready(false)
 {
     connect(this, &ClassesIconsRepository::indexResponse,
             this, &ClassesIconsRepositoryClient::indexReceived);

@@ -35,7 +35,7 @@ namespace GammaRay {
 class BoundingVolume
 {
 public:
-    BoundingVolume();
+    BoundingVolume() = default;
     void addPoint(const QVector3D &p);
 
     QVector3D center() const;
@@ -44,7 +44,7 @@ public:
 private:
     QVector3D m_p1;
     QVector3D m_p2;
-    bool m_null;
+    bool m_null = true;
 };
 }
 

@@ -53,7 +53,7 @@ public:
     /*!
      * The default constructor creates a (invalid) cursor at position (-1, -1) with an invalid url
      */
-    SourceLocation();
+    SourceLocation() = default;
     /*!
      * This constructor creates a (valid) cursor at position (0, 0) with @p url
      */
@@ -109,8 +109,8 @@ private:
                                                           SourceLocation &location);
 
     QUrl m_url;
-    int m_line;
-    int m_column;
+    int m_line = -1;
+    int m_column = -1;
 };
 
 ///@cond internal

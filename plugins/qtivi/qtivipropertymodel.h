@@ -106,7 +106,7 @@ private:
         friend class ::QtIviPropertyModelTest;
 
     public:
-        IviCarrierProperty();
+        IviCarrierProperty() = default;
         IviCarrierProperty(IviCarrierProperty &&other);
         explicit IviCarrierProperty(QIviProperty *iviProperty, const QMetaProperty &metaProperty);
         explicit IviCarrierProperty(const QMetaProperty &metaProperty);
@@ -134,7 +134,7 @@ private:
 
     private:
         QMetaProperty m_metaProperty;
-        QIviProperty *m_iviProperty;
+        QIviProperty *m_iviProperty = nullptr;
         QtIviPropertyOverrider m_iviOverrider;
     };
 
@@ -143,7 +143,7 @@ private:
         friend class QtIviPropertyModel;
 
     public:
-        IviCarrier();
+        IviCarrier() = default;
         explicit IviCarrier(QObject *carrier);
 
         QString label() const;
@@ -161,7 +161,7 @@ private:
         bool operator==(const QObject *carrier) const;
 
     private:
-        QObject *m_carrier;
+        QObject *m_carrier = nullptr;
         std::vector<IviCarrierProperty> m_properties;
     };
 

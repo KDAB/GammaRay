@@ -48,7 +48,7 @@ enum EnumIds {
 class GAMMARAY_COMMON_EXPORT EnumValue
 {
 public:
-    EnumValue();
+    EnumValue() = default;
     /*! Create a new enum value for EnumDefinition with @p id and value @p value. */
     explicit EnumValue(EnumId id, int value);
 
@@ -69,8 +69,8 @@ private:
     friend GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &out, const EnumValue &v);
     friend GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &in, EnumValue &v);
 
-    EnumId m_id;
-    int m_value;
+    EnumId m_id = InvalidEnumId;
+    int m_value = 0;
 };
 
 ///@cond internal

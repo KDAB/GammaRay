@@ -48,9 +48,6 @@ using namespace GammaRay;
 
 AggregatedPropertyModel::AggregatedPropertyModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , m_rootAdaptor(nullptr)
-    , m_inhibitAdaptorCreation(false)
-    , m_readOnly(false)
 {
     qRegisterMetaType<GammaRay::PropertyAdaptor *>();
 }

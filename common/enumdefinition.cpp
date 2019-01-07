@@ -30,11 +30,6 @@
 
 using namespace GammaRay;
 
-EnumDefinitionElement::EnumDefinitionElement()
-    : m_value(0)
-{
-}
-
 EnumDefinitionElement::EnumDefinitionElement(int value, const char *name)
     : m_value(value)
     , m_name(name)
@@ -65,15 +60,8 @@ QDataStream& operator>>(QDataStream &in, EnumDefinitionElement &elem)
 }
 }
 
-EnumDefinition::EnumDefinition()
-    : m_id(InvalidEnumId)
-    , m_isFlag(false)
-{
-}
-
 EnumDefinition::EnumDefinition(EnumId id, const QByteArray &name)
     : m_id(id)
-    , m_isFlag(false)
     , m_name(name)
 {
 }
