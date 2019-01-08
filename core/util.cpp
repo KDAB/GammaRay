@@ -142,10 +142,10 @@ struct IconCacheEntry
     // pair of property name and expected string value
     typedef QPair<QString, QString> PropertyPair;
     // a list of property pairs
-    typedef QVector<PropertyPair> PropertyMap;
+    using PropertyMap = QVector<PropertyPair>;
     // pair of icon and property map, for which this icon is valid
     typedef QPair<int, PropertyMap> PropertyIcon;
-    typedef QVector<PropertyIcon> PropertyIcons;
+    using PropertyIcons = QVector<PropertyIcon>;
     PropertyIcons propertyIcons;
 };
 

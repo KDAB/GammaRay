@@ -106,7 +106,7 @@ inline QDataStream &operator>>(QDataStream &in, StateType &value)
     return in;
 }
 
-typedef QVector<StateId> StateMachineConfiguration;
+using StateMachineConfiguration = QVector<StateId>;
 
 class StateMachineViewerInterface : public QObject
 {

@@ -45,7 +45,7 @@ class QHeaderView;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-typedef QVector<QVariant> UISizeVector;
+using UISizeVector = QVector<QVariant>;
 
 /*! Interface for UI plugins to manage their states.
  *

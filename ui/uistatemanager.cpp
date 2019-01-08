@@ -76,8 +76,8 @@ void distributeSpace(QList<int> &sizes, int size, int handleSize)
     }
 }
 
-typedef QList<QSplitter *> QSplitterList;
-typedef QList<QHeaderView *> QHeaderViewList;
+using QSplitterList = QList<QSplitter *>;
+using QHeaderViewList = QList<QHeaderView *>;
 }
 
 UIStateManager::UIStateManager(QWidget *widget)

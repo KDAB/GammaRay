@@ -52,7 +52,7 @@ public:
      */
     virtual QString filePath(int id) const;
 
-    typedef QVector<QString>::const_iterator ConstIterator;
+    using ConstIterator = QVector<QString>::const_iterator;
 
     ConstIterator constBegin();
     ConstIterator constEnd();

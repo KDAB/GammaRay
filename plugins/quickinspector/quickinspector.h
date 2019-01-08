@@ -63,7 +63,7 @@ class QuickSceneGraphModel;
 class RemoteViewServer;
 class ObjectId;
 class PaintAnalyzer;
-typedef QVector<ObjectId> ObjectIds;
+using ObjectIds = QVector<ObjectId>;
 
 class RenderModeRequest : public QObject
 {

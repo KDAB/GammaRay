@@ -47,8 +47,8 @@ struct GAMMARAY_CORE_EXPORT SignalSpyCallbackSet
     SignalSpyCallbackSet() = default;
     bool isNull() const;
 
-    typedef void (*BeginCallback)(QObject *caller, int methodIndex, void **argv);
-    typedef void (*EndCallback)(QObject *caller, int methodIndex);
+    using BeginCallback = void (*)(QObject *, int, void **);
+    using EndCallback = void (*)(QObject *, int);
 
     BeginCallback signalBeginCallback = nullptr;
     EndCallback signalEndCallback = nullptr;

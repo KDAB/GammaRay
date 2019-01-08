@@ -41,7 +41,7 @@
 
 namespace GammaRay {
 /** @brief Type-safe and cross-process object identifier vector. */
-typedef QVector<class ObjectId> ObjectIds;
+using ObjectIds = QVector<class ObjectId>;
 
 /** @brief Type-safe and cross-process object identifier. */
 class ObjectId

@@ -52,7 +52,7 @@ class GAMMARAY_CORE_EXPORT RemoteViewServer : public RemoteViewInterface
 public:
     explicit RemoteViewServer(const QString &name, QObject *parent = nullptr);
 
-    typedef QWindow EventReceiver;
+    using EventReceiver = QWindow;
     /// event receiver for input redirection
     void setEventReceiver(EventReceiver *receiver);
 
