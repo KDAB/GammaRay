@@ -81,7 +81,7 @@ private slots:
 
         QTest::newRow("win1") << "QtCore.dll" << true;
         QTest::newRow("win2") << "Qt5Core.dll" << true;
-        QTest::newRow("win3") << "c:\\path\\to\\Qt6Core.dll" << true;
+        QTest::newRow("win3") << R"(c:\path\to\Qt6Core.dll)" << true;
         QTest::newRow("win debug1") << "QtCored.dll" << true;
         QTest::newRow("win debug2") << "Qt5Cored.dll" << true;
 

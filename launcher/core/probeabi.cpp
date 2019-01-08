@@ -223,7 +223,7 @@ ProbeABI ProbeABI::fromString(const QString &id)
     ProbeABI abi;
 
     // version
-    static QRegExp versionRegExp("^qt(\\d+)\\_(\\d+)$");
+    static QRegExp versionRegExp(R"(^qt(\d+)\_(\d+)$)");
     if (versionRegExp.indexIn(idParts.value(index++)) != 0)
         return ProbeABI();
     abi.setQtVersion(versionRegExp.cap(1).toInt(), versionRegExp.cap(2).toInt());
