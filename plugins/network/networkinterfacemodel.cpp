@@ -121,7 +121,7 @@ QVariant NetworkInterfaceModel::headerData(int section, Qt::Orientation orientat
 QModelIndex NetworkInterfaceModel::parent(const QModelIndex &child) const
 {
     if (!child.isValid() || child.internalId() == IFACE_ID)
-        return QModelIndex();
+        return {};
     return createIndex(child.internalId(), 0, IFACE_ID);
 }
 
@@ -131,5 +131,5 @@ QModelIndex NetworkInterfaceModel::index(int row, int column, const QModelIndex 
         return createIndex(row, column, IFACE_ID);
     if (parent.internalId() == IFACE_ID)
         return createIndex(row, column, parent.row());
-    return QModelIndex();
+    return {};
 }

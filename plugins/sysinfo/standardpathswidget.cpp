@@ -94,8 +94,8 @@ public:
         if (index.column() == 2) {
             QSize s1 = QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 2));
             QSize s2 = QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 3));
-            return QSize(qMax(s1.width(), s2.width()),
-                         s1.height() + s2.height() + option.fontMetrics.height());
+            return {qMax(s1.width(), s2.width()),
+                         s1.height() + s2.height() + option.fontMetrics.height()};
         } else {
             return QStyledItemDelegate::sizeHint(option, index);
         }

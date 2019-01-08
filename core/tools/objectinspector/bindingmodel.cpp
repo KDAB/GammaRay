@@ -226,7 +226,7 @@ QVariant BindingModel::headerData(int section, Qt::Orientation orientation, int 
 QModelIndex GammaRay::BindingModel::index(int row, int column, const QModelIndex& parent) const
 {
     if (!m_bindings || !hasIndex(row, column, parent)) {
-        return QModelIndex();
+        return {};
     }
     QModelIndex index;
     if (parent.isValid()) {
@@ -244,13 +244,13 @@ QModelIndex BindingModel::findEquivalent(const std::vector<std::unique_ptr<Bindi
             return createIndex(i, 0, container[i].get());
         }
     }
-    return QModelIndex();
+    return {};
 }
 
 QModelIndex GammaRay::BindingModel::parent(const QModelIndex& child) const
 {
     if (!m_bindings || !child.isValid())
-        return QModelIndex();
+        return {};
 
     BindingNode *parent = static_cast<BindingNode *>(child.internalPointer())->parent();
     if (!parent)

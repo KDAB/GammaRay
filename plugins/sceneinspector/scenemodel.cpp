@@ -126,7 +126,7 @@ int SceneModel::rowCount(const QModelIndex &parent) const
 QModelIndex SceneModel::parent(const QModelIndex &child) const
 {
     if (!child.isValid())
-        return QModelIndex();
+        return {};
     QGraphicsItem *item = static_cast<QGraphicsItem *>(child.internalPointer());
     if (!item->parentItem())
         return QModelIndex();
@@ -139,7 +139,7 @@ QModelIndex SceneModel::parent(const QModelIndex &child) const
 QModelIndex SceneModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (column < 0 || column >= columnCount())
-        return QModelIndex();
+        return {};
     if (!parent.isValid() && row >= 0 && row < topLevelItems().size())
         return createIndex(row, column, topLevelItems().at(row));
     QGraphicsItem *parentItem = static_cast<QGraphicsItem *>(parent.internalPointer());

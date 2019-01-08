@@ -144,7 +144,7 @@ QModelIndex ProcessModel::indexForPid(const QString &pid) const
         if (m_data.at(i).ppid == pid)
             return index(i, 0);
     }
-    return QModelIndex();
+    return {};
 }
 
 QVariant ProcessModel::headerData(int section, Qt::Orientation orientation, int role) const

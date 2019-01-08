@@ -50,7 +50,7 @@ PropertyPointFEditor::PropertyPointFEditor(QWidget *parent)
 
 QPointF PropertyPointFEditor::pointF() const
 {
-    return QPointF(ui->xBox->value(), ui->yBox->value());
+    return {ui->xBox->value(), ui->yBox->value()};
 }
 
 void PropertyPointFEditor::setPointF(const QPointF &point)
@@ -66,7 +66,7 @@ PropertySizeFEditor::PropertySizeFEditor(QWidget *parent)
 
 QSizeF PropertySizeFEditor::sizeF() const
 {
-    return QSizeF(ui->xBox->value(), ui->yBox->value());
+    return {ui->xBox->value(), ui->yBox->value()};
 }
 
 void PropertySizeFEditor::setSizeF(const QSizeF &size)

@@ -291,7 +291,7 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option, const
 
     const int height = opt.fontMetrics.lineSpacing() * matrix_trait<Matrix>::rows + 2* textVMargin;
 
-    return QSize(width, height);
+    return {width, height};
 }
 
 template<typename Matrix>

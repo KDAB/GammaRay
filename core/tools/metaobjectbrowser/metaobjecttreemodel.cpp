@@ -122,7 +122,7 @@ int MetaObjectTreeModel::rowCount(const QModelIndex &parent) const
 QModelIndex MetaObjectTreeModel::parent(const QModelIndex &child) const
 {
     if (!child.isValid())
-        return QModelIndex();
+        return {};
 
     const QMetaObject *object = metaObjectForIndex(child);
     Q_ASSERT(object);
@@ -135,7 +135,7 @@ QModelIndex MetaObjectTreeModel::index(int row, int column, const QModelIndex &p
     const QMetaObject *parentObject = metaObjectForIndex(parent);
     const QVector<const QMetaObject *> &children = registry()->childrenOf(parentObject);
     if (row < 0 || column < 0 || row >= children.size() || column >= columnCount())
-        return QModelIndex();
+        return {};
 
     const QMetaObject *object = children.at(row);
     return createIndex(row, column, const_cast<QMetaObject *>(object));
@@ -174,7 +174,7 @@ void MetaObjectTreeModel::endAddMetaObject(const QMetaObject *metaObject)
 QModelIndex MetaObjectTreeModel::indexForMetaObject(const QMetaObject *metaObject) const
 {
     if (!metaObject)
-        return QModelIndex();
+        return {};
 
     const QMetaObject *parentObject = registry()->parentOf(metaObject);
     Q_ASSERT(parentObject != metaObject);

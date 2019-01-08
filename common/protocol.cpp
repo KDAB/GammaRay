@@ -46,7 +46,7 @@ QModelIndex toQModelIndex(const QAbstractItemModel *model, const Protocol::Model
     for (auto it = index.constBegin(), end = index.constEnd(); it != end; ++it) {
         qmi = model->index(it->row, it->column, qmi);
         if (!qmi.isValid())
-            return QModelIndex(); // model isn't loaded to the full depth, so don't restart from the top
+            return {}; // model isn't loaded to the full depth, so don't restart from the top
     }
 
     return qmi;

@@ -74,7 +74,7 @@ class FaultyMetaObjectBaseClass : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(UnregisteredType someProp READ someProp CONSTANT)
-    UnregisteredType someProp() const { return UnregisteredType(); }
+    UnregisteredType someProp() const { return {}; }
 };
 
 class FaultyMetaObjectClass : public FaultyMetaObjectBaseClass
@@ -86,7 +86,7 @@ class FaultyMetaObjectClass : public FaultyMetaObjectBaseClass
 public:
     Q_INVOKABLE void noop(UnregisteredType param) { Q_UNUSED(param) }
 
-    UnregisteredType someProp() const { return UnregisteredType(); }
+    UnregisteredType someProp() const { return {}; }
 };
 
 class ProblemReporterTest : public BaseProbeTest

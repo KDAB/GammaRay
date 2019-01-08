@@ -481,7 +481,7 @@ QModelIndex PaintBufferModel::index(int row, int column, const QModelIndex& pare
 QModelIndex PaintBufferModel::parent(const QModelIndex& child) const
 {
     if (child.internalId() == TopLevelId)
-        return QModelIndex();
+        return {};
     return createIndex(child.internalId(), 0, TopLevelId);
 }
 

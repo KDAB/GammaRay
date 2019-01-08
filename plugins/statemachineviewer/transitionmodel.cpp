@@ -159,7 +159,7 @@ QModelIndex TransitionModel::index(int row, int column, const QModelIndex &paren
     Q_D(const TransitionModel);
 
     if (parent.isValid() || !d->m_state)
-        return QModelIndex();
+        return {};
 
     if (row < 0 || column < 0 || column > 3)
         return QModelIndex();
@@ -184,5 +184,5 @@ QModelIndex TransitionModel::parent(const QModelIndex &index) const
 {
     Q_UNUSED(index);
     // Q_D(const TransitionModel);
-    return QModelIndex();
+    return {};
 }

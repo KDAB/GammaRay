@@ -65,7 +65,7 @@ QModelIndex ModelModel::parent(const QModelIndex &child) const
     QAbstractItemModel *model = static_cast<QAbstractItemModel *>(child.internalPointer());
     Q_ASSERT(model);
     if (m_models.contains(model))
-        return QModelIndex();
+        return {};
 
     QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>(model);
     Q_ASSERT(proxy);
@@ -78,7 +78,7 @@ QModelIndex ModelModel::index(int row, int column, const QModelIndex &parent) co
         QAbstractItemModel *model = static_cast<QAbstractItemModel *>(parent.internalPointer());
         const QVector<QAbstractProxyModel *> proxies = proxiesForModel(model);
         if (proxies.size() <= row)
-            return QModelIndex();
+            return {};
         return createIndex(row, column, proxies.at(row));
     }
     return createIndex(row, column, m_models.at(row));
@@ -144,7 +144,7 @@ void ModelModel::objectRemoved(QObject *obj)
 QModelIndex ModelModel::indexForModel(QAbstractItemModel *model) const
 {
     if (!model)
-        return QModelIndex();
+        return {};
     QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>(model);
     if (!proxy) {
         Q_ASSERT(m_models.contains(model));

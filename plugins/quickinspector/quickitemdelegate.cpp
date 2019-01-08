@@ -138,8 +138,8 @@ QSize QuickItemDelegate::sizeHint(const QStyleOptionViewItem &option,
         decorationSize = QSize(icons * 20, 16);
     }
 
-    return QSize(textSize.width() + decorationSize.width() + 5,
-                 qMax(textSize.height(), decorationSize.height()));
+    return {textSize.width() + decorationSize.width() + 5,
+                 qMax(textSize.height(), decorationSize.height())};
 }
 
 void QuickItemDelegate::setTextColor(const QVariant &textColor, const QPersistentModelIndex &index)

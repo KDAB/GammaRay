@@ -215,7 +215,7 @@ QModelIndex GammaRay::SGVertexModel::index(int row, int column, const QModelInde
         || row >= m_geometry->vertexCount()
         || column >= m_geometry->attributeCount()
         || parent.isValid())
-        return QModelIndex();
+        return {};
 
     char *attr = static_cast<char *>(m_geometry->vertexData());
     attr += m_geometry->sizeOfVertex() * row;

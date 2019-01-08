@@ -212,7 +212,7 @@ public:
       x += m_metrics.width(c);
     }
 
-    return QPoint(lineX, line);
+    return {lineX, line};
   }
 
   void mousePressEvent(QMouseEvent *e) override
@@ -586,7 +586,7 @@ LogView::LogView(QWidget *p)
 
 QSize LogView::sizeHint() const
 {
-  return QSize(200, 200);
+  return {200, 200};
 }
 
 void LogView::logMessage(quint64 pid, qint64 time, const QByteArray &msg)

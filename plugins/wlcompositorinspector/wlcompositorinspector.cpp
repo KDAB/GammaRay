@@ -290,7 +290,7 @@ public:
         Resource *parentres = exists(parent) ? static_cast<Resource *>(parent.internalPointer()) : nullptr;
         const auto &resources = parentres ? parentres->children : m_resources;
         if (resources.count() <= row) {
-            return QModelIndex();
+            return {};
         }
         Resource *res = resources.at(row);
         return createIndex(row, column, res);
@@ -302,7 +302,7 @@ public:
         if (exists(idx) && res->parent) {
             return index(res->parent);
         }
-        return QModelIndex();
+        return {};
     }
 
     int row(Resource *res) const

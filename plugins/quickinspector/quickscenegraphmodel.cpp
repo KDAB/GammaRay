@@ -156,7 +156,7 @@ QModelIndex QuickSceneGraphModel::index(int row, int column, const QModelIndex &
     const QVector<QSGNode *> children = m_parentChildMap.value(parentNode);
 
     if (row < 0 || column < 0 || row >= children.size() || column >= columnCount())
-        return QModelIndex();
+        return {};
 
     return createIndex(row, column, children.at(row));
 }
@@ -320,7 +320,7 @@ void QuickSceneGraphModel::collectItemNodes(QQuickItem *item)
 QModelIndex QuickSceneGraphModel::indexForNode(QSGNode *node) const
 {
     if (!node)
-        return QModelIndex();
+        return {};
 
     QSGNode *parent = m_childParentMap.value(node);
 

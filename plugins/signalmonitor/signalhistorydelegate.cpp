@@ -102,7 +102,7 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
 QSize SignalHistoryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const
 {
-    return QSize(0, option.fontMetrics.lineSpacing()); // FIXME: minimum height
+    return {0, option.fontMetrics.lineSpacing()}; // FIXME: minimum height
 }
 
 void SignalHistoryDelegate::setVisibleInterval(qint64 interval)

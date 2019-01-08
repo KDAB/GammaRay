@@ -162,7 +162,7 @@ static QQuickItem *toplevelItem(QQuickItem *item)
 static QPointF itemPos(QQuickItem *item)
 {
     Q_ASSERT(item);
-    return QPointF(item->x(), item->y());
+    return {item->x(), item->y()};
 }
 
 static QSizeF itemSize(QQuickItem *item)
