@@ -118,8 +118,8 @@ bool GammaRay::BindingNode::isPartOfBindingLoop() const
     if (m_foundBindingLoop) {
         return true;
     }
-    for (auto depIt = m_dependencies.cbegin(); depIt != m_dependencies.cend(); ++depIt) {
-        if ((*depIt)->isPartOfBindingLoop()) {
+    for (const auto &dependency : m_dependencies) {
+        if (dependency->isPartOfBindingLoop()) {
             return true;
         }
     }
@@ -154,8 +154,8 @@ uint BindingNode::depth() const
     if (m_foundBindingLoop) {
         return std::numeric_limits<uint>::max(); // to be considered as infinity.
     }
-    for (auto depIt = m_dependencies.cbegin(); depIt != m_dependencies.cend(); ++depIt) {
-        uint depDepth = (*depIt)->depth();
+    for (const auto &dependency : m_dependencies) {
+        uint depDepth = dependency->depth();
         if (depDepth == std::numeric_limits<uint>::max()) {
             depth = depDepth;
             break;

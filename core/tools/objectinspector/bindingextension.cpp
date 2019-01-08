@@ -85,8 +85,7 @@ bool BindingExtension::setQObject(QObject* object)
         }
 
         m_bindings = BindingAggregator::bindingTreeForObject(object);
-        for (size_t i = 0; i < m_bindings.size(); ++i) {
-            const auto &node = m_bindings[i];
+        for (const auto &node : m_bindings) {
             int signalIndex = node->property().notifySignalIndex();
             if (signalIndex != -1) {
                 QMetaObject::connect(object, signalIndex, this, metaObject()->indexOfMethod("propertyChanged()"), Qt::UniqueConnection);

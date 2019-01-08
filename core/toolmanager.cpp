@@ -150,8 +150,7 @@ QVector<QString> ToolManager::toolsForObject(QObject *object) const
     QSet<ToolFactory *> knownTools;
     const QMetaObject *metaObject = object->metaObject();
     while (metaObject) {
-        for (int i = 0; i < m_tools.size(); i++) {
-            ToolFactory *factory = m_tools.at(i);
+        for (auto factory : m_tools) {
             if (factory && !factory->isHidden() && factory->selectableTypes().contains(metaObject->className()) && !knownTools.contains(factory)) {
                 knownTools << factory;
                 ret.append(factory->id());
@@ -170,8 +169,7 @@ QVector<QString> ToolManager::toolsForObject(const void *object, const QString &
     QVector<QString> ret;
     const MetaObject *metaObject = MetaObjectRepository::instance()->metaObject(typeName);
     while (metaObject) {
-        for (int i = 0; i < m_tools.size(); i++) {
-            ToolFactory *factory = m_tools.at(i);
+        for (auto factory : m_tools) {
             if (factory && !factory->isHidden()
                 && factory->selectableTypes().contains(metaObject->className().toUtf8()))
                 ret.append(factory->id());

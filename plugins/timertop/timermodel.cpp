@@ -153,8 +153,7 @@ struct TimerIdData
             return 0;
 
         int max = 0;
-        for (int i = 0; i < timeoutEvents.size(); i++) {
-            const TimeoutEvent &event = timeoutEvents.at(i);
+        for (auto event : timeoutEvents) {
             if (event.executionTime > max)
                 max = event.executionTime;
         }

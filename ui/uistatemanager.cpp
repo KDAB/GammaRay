@@ -40,6 +40,7 @@
 #include <QEvent>
 #include <QTimer>
 #include <QDebug>
+#include <vector>
 
 #define WIDGET_CUSTOMIZED "customized"
 
@@ -58,21 +59,21 @@ QAbstractItemView *headerView(QHeaderView *header)
 
 void distributeSpace(QList<int> &sizes, int size, int handleSize)
 {
-    QList<QList<int>::Iterator> its;
+    std::vector<QList<int>::Iterator> its;
     int usedSpace = 0;
 
     for (auto it = sizes.begin(), end = sizes.end(); it != end; ++it) {
         if ((*it) == -1)
-            its << it;
+            its.push_back(it);
         else
             usedSpace += (*it);
     }
 
-    if (!its.isEmpty()) {
+    if (!its.empty()) {
         const int freeSpace = size - usedSpace - (sizes.count() * handleSize) - handleSize;
-        const int space = freeSpace / its.count();
-        for (auto it = its.begin(), end = its.end(); it != end; ++it)
-            (*(*it)) = space;
+        const int space = freeSpace / its.size();
+        for (auto & it : its)
+            (*it) = space;
     }
 }
 

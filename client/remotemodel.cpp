@@ -655,10 +655,10 @@ RemoteModel::Node *RemoteModel::nodeForIndex(const QModelIndex &index) const
 RemoteModel::Node *RemoteModel::nodeForIndex(const Protocol::ModelIndex &index) const
 {
     Node *node = m_root;
-    for (int i = 0; i < index.size(); ++i) {
-        if (node->children.size() <= index[i].row)
+    for (auto i : index) {
+        if (node->children.size() <= i.row)
             return nullptr;
-        node = node->children.at(index[i].row);
+        node = node->children.at(i.row);
     }
     return node;
 }

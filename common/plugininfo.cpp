@@ -192,10 +192,10 @@ void PluginInfo::initFromJSON(const QJsonObject &metaData)
     for (auto it = types.constBegin(); it != types.constEnd(); ++it)
         m_supportedTypes.push_back((*it).toString());
 
-    const auto selectable = customData.value(QStringLiteral("selectableTypes")).toArray();
-    m_selectableTypes.reserve(selectable.size());
-    for (auto it = selectable.begin(); it != selectable.end(); ++it)
-        m_selectableTypes.push_back((*it).toString().toUtf8());
+    const auto selectableTypes = customData.value(QStringLiteral("selectableTypes")).toArray();
+    m_selectableTypes.reserve(selectableTypes.size());
+    for (auto &&selectable : selectableTypes)
+        m_selectableTypes.push_back(selectable.toString().toUtf8());
 }
 
 void PluginInfo::initFromDesktopFile(const QString &path)

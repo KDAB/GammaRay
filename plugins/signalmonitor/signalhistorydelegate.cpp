@@ -164,12 +164,12 @@ QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position,
     int signalIndex = -1;
     qint64 signalTimestamp = -1;
 
-    for (int i = 0; i < events.size(); ++i) {
-        signalTimestamp = SignalHistoryModel::timestamp(events.at(i));
+    for (long long event : events) {
+        signalTimestamp = SignalHistoryModel::timestamp(event);
         const qint64 dt = qAbs(signalTimestamp - t);
 
         if (dt < dtMin) {
-            signalIndex = SignalHistoryModel::signalIndex(events.at(i));
+            signalIndex = SignalHistoryModel::signalIndex(event);
             dtMin = dt;
         }
     }
