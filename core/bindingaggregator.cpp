@@ -66,12 +66,11 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::findDependenciesFor
     if (node->isPartOfBindingLoop())
         return allDependencies;
 
-    for (auto providerIt = s_providers()->cbegin(); providerIt != s_providers()->cend(); ++providerIt) {
-        auto &&provider = *providerIt;
+    for (const auto &provider : *s_providers()) {
         auto providerDependencies = provider->findDependenciesFor(node);
-        for (auto dependencyIt = providerDependencies.begin(); dependencyIt != providerDependencies.end(); ++dependencyIt) {
-            dependencyIt->get()->dependencies() = findDependenciesFor(dependencyIt->get());
-            allDependencies.push_back(std::move(*dependencyIt));
+        for (auto &&providerDependency : providerDependencies) {
+            providerDependency.get()->dependencies() = findDependenciesFor(providerDependency.get());
+            allDependencies.push_back(std::move(providerDependency));
         }
     }
     std::sort(
@@ -90,15 +89,15 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::bindingTreeForObjec
     if (obj) {
         for (auto providerIt = s_providers()->begin(); providerIt != s_providers()->cend(); ++providerIt) {
             auto newBindings = (*providerIt)->findBindingsFor(obj);
-            for (auto nodeIt = newBindings.begin(); nodeIt != newBindings.end(); ++nodeIt) {
-                BindingNode *node = nodeIt->get();
+            for (auto &&newBinding : newBindings) {
+                BindingNode *node = newBinding.get();
                 if (std::find_if(bindings.begin(), bindings.end(),
                     [node](const std::unique_ptr<BindingNode> &other){ return *node == *other; }) != bindings.end()) {
                     continue; // apparantly this is a duplicate.
                 }
                 node->dependencies() = findDependenciesFor(node);
 
-                bindings.push_back(std::move(*nodeIt));
+                bindings.push_back(std::move(newBinding));
             }
 
         }
@@ -116,8 +115,7 @@ void BindingAggregator::scanForBindingLoops()
             continue;
 
         auto bindings = bindingTreeForObject(obj);
-        for (auto it = bindings.begin(); it != bindings.end(); ++it) {
-            auto &&bindingNode = *it;
+        for (auto &&bindingNode : bindings) {
             if (bindingNode->isPartOfBindingLoop()) {
                 Problem p;
                 p.severity = Problem::Error;

@@ -105,8 +105,8 @@ QVector<ModelCellModel::RoleInfo> ModelCellModel::rolesForModel(const QAbstractI
 
     for (auto it = roleNames.constBegin(); it != roleNames.constEnd(); ++it) {
         bool roleFound = false;
-        for (int i = 0; i < roles.size(); ++i) {
-            if (roles.at(i).first == it.key()) {
+        for (const auto &role : qAsConst(roles)) {
+            if (role.first == it.key()) {
                 roleFound = true;
                 break;
             }

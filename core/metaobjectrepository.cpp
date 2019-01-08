@@ -227,12 +227,12 @@ MetaObject* MetaObjectRepository::metaObject(MetaObject *mo, void *&obj) const
     const auto derivedIt = m_derivedTypes.find(mo);
     if (derivedIt == m_derivedTypes.end())
         return mo;
-    for (auto it = (*derivedIt).second.begin(); it != (*derivedIt).second.end(); ++it) {
-        auto childObj = (*it)->castFrom(obj, mo);
+    for (auto derivedMo : (*derivedIt).second) {
+        auto childObj = derivedMo->castFrom(obj, mo);
         if (!childObj)
             continue;
         obj = childObj;
-        return metaObject(*it, obj);
+        return metaObject(derivedMo, obj);
     }
     return mo;
 }
