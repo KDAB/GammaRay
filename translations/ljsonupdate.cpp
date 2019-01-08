@@ -55,7 +55,7 @@ static int extractMessages(const QStringList &jsons, const QString &outFileName)
         const auto str = obj.value("name").toString(); // TODO make the keys configurable too
         if (str.isEmpty())
             continue;
-        out.write("QT_TRANSLATE_NOOP(\"GammaRay::PluginMetaData\", \"");
+        out.write(R"(QT_TRANSLATE_NOOP("GammaRay::PluginMetaData", ")");
         out.write(str.toUtf8());
         out.write("\");\n");
     }

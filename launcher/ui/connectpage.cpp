@@ -145,12 +145,12 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
         possibleIPv6Address = QHostAddress(stillToParse);
 
     QHostAddress possibleIPv6BracketAddress;
-    QRegExp bracketFormat("^\\[([0-9a-f\\:\\.]*)\\].*$");
+    QRegExp bracketFormat(R"(^\[([0-9a-f\:\.]*)\].*$)");
     if (bracketFormat.exactMatch(stillToParse))
         possibleIPv6BracketAddress = QHostAddress(bracketFormat.cap(1));
 
     QHostAddress possibleIPv6InterfaceAddress;
-    QRegExp interfaceFormat("^([^\\%]*)(\\%[^\\:]+)(:[0-9]+)?$");
+    QRegExp interfaceFormat(R"(^([^\%]*)(\%[^\:]+)(:[0-9]+)?$)");
     if (interfaceFormat.exactMatch(stillToParse))
         possibleIPv6InterfaceAddress = QHostAddress(interfaceFormat.cap(1));
 
