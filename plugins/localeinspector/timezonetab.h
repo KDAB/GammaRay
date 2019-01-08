@@ -45,7 +45,7 @@ class TimezoneTab : public QWidget
     Q_OBJECT
 public:
     explicit TimezoneTab(QWidget *parent = nullptr);
-    ~TimezoneTab();
+    ~TimezoneTab() override;
 
 private:
     std::unique_ptr<Ui::TimezoneTab> ui;

@@ -38,7 +38,7 @@ class InboundConnectionsModel : public AbstractConnectionsModel
     Q_OBJECT
 public:
     explicit InboundConnectionsModel(QObject *parent = nullptr);
-    ~InboundConnectionsModel();
+    ~InboundConnectionsModel() override;
 
     void setObject(QObject *object) override;
 

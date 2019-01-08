@@ -44,7 +44,7 @@ class SysInfoWidget : public QWidget
     Q_OBJECT
 public:
     explicit SysInfoWidget(QWidget *parent = nullptr);
-    ~SysInfoWidget();
+    ~SysInfoWidget() override;
 
 private:
     std::unique_ptr<Ui::SysInfoWidget> ui;

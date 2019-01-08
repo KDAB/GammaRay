@@ -64,7 +64,7 @@ public:
     };
 
     explicit ActionModel(QObject *parent = nullptr);
-    ~ActionModel();
+    ~ActionModel() override;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

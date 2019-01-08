@@ -47,7 +47,7 @@ class MethodInvocationDialog : public QDialog
     Q_OBJECT
 public:
     explicit MethodInvocationDialog(QWidget *parent = nullptr);
-    ~MethodInvocationDialog();
+    ~MethodInvocationDialog() override;
 
     Qt::ConnectionType connectionType() const;
     void setArgumentModel(QAbstractItemModel *model);

@@ -38,7 +38,7 @@ class QJSValuePropertyAdaptor : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit QJSValuePropertyAdaptor(QObject *parent = nullptr);
-    ~QJSValuePropertyAdaptor();
+    ~QJSValuePropertyAdaptor() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

@@ -41,7 +41,7 @@ class MimeTypes : public QObject
     Q_OBJECT
 public:
     explicit MimeTypes(Probe *probe, QObject *parent = nullptr);
-    ~MimeTypes();
+    ~MimeTypes() override;
 };
 
 class MimeTypesFactory : public QObject, public StandardToolFactory<QObject, MimeTypes>

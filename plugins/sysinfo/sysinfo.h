@@ -38,7 +38,7 @@ class SysInfo : public QObject
     Q_OBJECT
 public:
     explicit SysInfo(Probe *probe, QObject *parent = nullptr);
-    ~SysInfo();
+    ~SysInfo() override;
 
 private:
 };

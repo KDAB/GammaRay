@@ -55,7 +55,7 @@ class QuickItemModel : public ObjectModelBase<QAbstractItemModel>
 
 public:
     explicit QuickItemModel(QObject *parent = nullptr);
-    ~QuickItemModel();
+    ~QuickItemModel() override;
 
     void setWindow(QQuickWindow *window);
 

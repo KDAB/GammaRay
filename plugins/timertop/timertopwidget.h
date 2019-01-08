@@ -48,7 +48,7 @@ class TimerTopWidget : public QWidget
     Q_OBJECT
 public:
     explicit TimerTopWidget(QWidget *parent = nullptr);
-    ~TimerTopWidget();
+    ~TimerTopWidget() override;
 
 private slots:
     void contextMenu(QPoint pos);

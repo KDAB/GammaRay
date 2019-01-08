@@ -52,7 +52,7 @@ class GAMMARAY_UI_EXPORT SearchLineController : public QObject
 public:
     /** Establish a connection between @p lineEdit and @p proxyModel. */
     explicit SearchLineController(QLineEdit *lineEdit, QAbstractItemModel *proxyModel);
-    ~SearchLineController();
+    ~SearchLineController() override;
 
 private slots:
     void activateSearch();

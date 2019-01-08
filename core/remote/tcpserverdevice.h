@@ -44,7 +44,7 @@ class TcpServerDevice : public ServerDeviceImpl<QTcpServer>
     Q_OBJECT
 public:
     explicit TcpServerDevice(QObject *parent = nullptr);
-    ~TcpServerDevice();
+    ~TcpServerDevice() override;
 
     bool listen() override;
     bool isListening() const override;

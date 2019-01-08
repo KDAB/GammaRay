@@ -42,7 +42,7 @@ class ClientToolModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit ClientToolModel(ClientToolManager *manager);
-    virtual ~ClientToolModel();
+    ~ClientToolModel() override;
 
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -63,7 +63,7 @@ class ClientToolSelectionModel : public QItemSelectionModel
     Q_OBJECT
 public:
     explicit ClientToolSelectionModel(ClientToolManager *manager);
-    ~ClientToolSelectionModel();
+    ~ClientToolSelectionModel() override;
 
 private slots:
     void selectTool(int index);

@@ -38,7 +38,7 @@ class QtIviPropertyClientModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit QtIviPropertyClientModel(QObject *parent = nullptr);
-    ~QtIviPropertyClientModel();
+    ~QtIviPropertyClientModel() override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 };

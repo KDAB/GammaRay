@@ -43,7 +43,7 @@ class ConnectionsTab : public QWidget
     Q_OBJECT
 public:
     explicit ConnectionsTab(PropertyWidget *parent = nullptr);
-    ~ConnectionsTab();
+    ~ConnectionsTab() override;
 
 private slots:
     void inboundContextMenu(const QPoint &pos);

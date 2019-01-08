@@ -43,7 +43,7 @@ class ServerDevice : public QObject
     Q_OBJECT
 public:
     explicit ServerDevice(QObject *parent = nullptr);
-    ~ServerDevice();
+    ~ServerDevice() override;
 
     void setServerAddress(const QUrl &serverAddress);
 
@@ -79,7 +79,7 @@ public:
     {
     }
 
-    ~ServerDeviceImpl()
+    ~ServerDeviceImpl() override
     {
     }
 

@@ -39,7 +39,7 @@ class OutboundConnectionsModel : public AbstractConnectionsModel
 
 public:
     explicit OutboundConnectionsModel(QObject *parent = nullptr);
-    ~OutboundConnectionsModel();
+    ~OutboundConnectionsModel() override;
 
     void setObject(QObject *object) override;
 

@@ -65,7 +65,7 @@ class StateMachineDebugInterface : public QObject
 
 public:
     explicit StateMachineDebugInterface(QObject *parent = nullptr);
-    virtual ~StateMachineDebugInterface();
+    ~StateMachineDebugInterface() override;
 
     virtual bool isRunning() const = 0;
 

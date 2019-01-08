@@ -45,7 +45,7 @@ class PropertyEnumEditorModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit PropertyEnumEditorModel(QObject *parent = nullptr);
-    ~PropertyEnumEditorModel();
+    ~PropertyEnumEditorModel() override;
 
     EnumValue value() const;
     void setValue(const EnumValue &value);

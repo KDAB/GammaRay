@@ -47,7 +47,7 @@ class SGGeometryTab : public QWidget
 
 public:
     explicit SGGeometryTab(PropertyWidget *parent);
-    virtual ~SGGeometryTab();
+    ~SGGeometryTab() override;
 
 private:
     void setObjectBaseName(const QString &baseName);

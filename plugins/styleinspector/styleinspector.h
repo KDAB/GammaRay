@@ -54,7 +54,7 @@ class StyleInspector : public StyleInspectorInterface
     Q_INTERFACES(GammaRay::StyleInspectorInterface)
 public:
     explicit StyleInspector(Probe *probe, QObject *parent = nullptr);
-    virtual ~StyleInspector();
+    ~StyleInspector() override;
 
 private slots:
     void styleSelected(const QItemSelection &selection);

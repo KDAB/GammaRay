@@ -44,7 +44,7 @@ class ApplicationAttributeTab : public QWidget
     Q_OBJECT
 public:
     explicit ApplicationAttributeTab(PropertyWidget *parent = nullptr);
-    ~ApplicationAttributeTab();
+    ~ApplicationAttributeTab() override;
 
 private:
     QScopedPointer<Ui::ApplicationAttributeTab> ui;

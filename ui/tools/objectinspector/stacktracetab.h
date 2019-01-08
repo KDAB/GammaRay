@@ -44,7 +44,7 @@ class StackTraceTab : public QWidget
     Q_OBJECT
 public:
     explicit StackTraceTab(PropertyWidget *parent = nullptr);
-    ~StackTraceTab();
+    ~StackTraceTab() override;
 
 private Q_SLOTS:
     void contextMenuRequested(QPoint pos);

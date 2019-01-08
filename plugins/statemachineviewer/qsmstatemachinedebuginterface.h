@@ -45,7 +45,7 @@ class QSMStateMachineDebugInterface : public StateMachineDebugInterface
 
 public:
     explicit QSMStateMachineDebugInterface(QStateMachine *stateMachine, QObject *parent = nullptr);
-    ~QSMStateMachineDebugInterface();
+    ~QSMStateMachineDebugInterface() override;
 
     bool isRunning() const override;
 

@@ -71,7 +71,7 @@ class QuickScenePreviewWidget : public RemoteViewWidget
 
 public:
     explicit QuickScenePreviewWidget(QuickSceneControlWidget *control, QWidget *parent = nullptr);
-    ~QuickScenePreviewWidget();
+    ~QuickScenePreviewWidget() override;
 
     Q_INVOKABLE void restoreState(const QByteArray &state) override;
     QByteArray saveState() const override;

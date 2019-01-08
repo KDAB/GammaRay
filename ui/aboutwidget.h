@@ -44,7 +44,7 @@ class GAMMARAY_UI_EXPORT AboutWidget : public QWidget
     Q_OBJECT
 public:
     explicit AboutWidget(QWidget *parent = nullptr);
-    ~AboutWidget();
+    ~AboutWidget() override;
 
     void setLogo(const QString &iconFileName);
     void setThemeLogo(const QString &fileName);

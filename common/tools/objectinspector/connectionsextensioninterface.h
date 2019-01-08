@@ -38,7 +38,7 @@ class ConnectionsExtensionInterface : public QObject
     Q_OBJECT
 public:
     explicit ConnectionsExtensionInterface(const QString &name, QObject *parent = nullptr);
-    ~ConnectionsExtensionInterface();
+    ~ConnectionsExtensionInterface() override;
 
     QString name() const;
 

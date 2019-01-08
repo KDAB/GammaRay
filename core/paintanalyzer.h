@@ -57,7 +57,7 @@ class GAMMARAY_CORE_EXPORT PaintAnalyzer : public PaintAnalyzerInterface
     Q_INTERFACES(GammaRay::PaintAnalyzerInterface)
 public:
     explicit PaintAnalyzer(const QString &name, QObject *parent = nullptr);
-    ~PaintAnalyzer();
+    ~PaintAnalyzer() override;
 
     /** Reset the paint analyzer state for providing a new analysis asynchronously. */
     void reset();

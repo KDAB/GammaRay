@@ -249,7 +249,7 @@ public:
 
     QWaylandClient *client() const { return m_client; }
 
-    ~ResourcesModel()
+    ~ResourcesModel() override
     {
         clear();
     }

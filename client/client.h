@@ -44,7 +44,7 @@ class Client : public Endpoint
     Q_OBJECT
 public:
     explicit Client(QObject *parent = nullptr);
-    ~Client();
+    ~Client() override;
 
     /** Connect to a server reachable on @p url. */
     void connectToHost(const QUrl &url, int tryAgain = 0);

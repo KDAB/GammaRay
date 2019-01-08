@@ -54,7 +54,7 @@ public:
     };
 
     explicit StateModel(QObject *parent = nullptr);
-    ~StateModel();
+    ~StateModel() override;
 
     void setStateMachine(StateMachineDebugInterface *stateMachine);
     StateMachineDebugInterface *stateMachine() const;

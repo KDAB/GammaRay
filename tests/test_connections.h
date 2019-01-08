@@ -42,7 +42,7 @@ class TestObject : public QObject
     Q_OBJECT
 public:
     explicit TestObject(QObject *parent = nullptr);
-    ~TestObject();
+    ~TestObject() override;
 
 private slots:
     void dummySlot()
@@ -66,7 +66,7 @@ public:
     };
 
     TestConnections(Type type, int timeOuts, int timeoutInterval = -1);
-    ~TestConnections();
+    ~TestConnections() override;
 
 public slots:
     void timeout();
@@ -93,7 +93,7 @@ class TestThread : public QThread
 public:
     TestThread(TestConnections::Type type, int timeOuts, int timeoutInterval = -1,
                QObject *parent = nullptr);
-    ~TestThread();
+    ~TestThread() override;
     void run() override;
 
 private:

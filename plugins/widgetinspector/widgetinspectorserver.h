@@ -58,7 +58,7 @@ class WidgetInspectorServer : public WidgetInspectorInterface
     Q_INTERFACES(GammaRay::WidgetInspectorInterface)
 public:
     explicit WidgetInspectorServer(Probe *probe, QObject *parent = nullptr);
-    ~WidgetInspectorServer();
+    ~WidgetInspectorServer() override;
 
 signals:
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);

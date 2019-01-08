@@ -42,7 +42,7 @@ class GAMMARAY_CORE_EXPORT PropertyAggregator : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit PropertyAggregator(QObject *parent = nullptr);
-    ~PropertyAggregator();
+    ~PropertyAggregator() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

@@ -45,7 +45,7 @@ class LocaleInspectorWidget : public QWidget
     Q_OBJECT
 public:
     explicit LocaleInspectorWidget(QWidget *parent = nullptr);
-    ~LocaleInspectorWidget();
+    ~LocaleInspectorWidget() override;
 
 private:
     std::unique_ptr<Ui::LocaleInspectorWidget> ui;

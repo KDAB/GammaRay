@@ -47,7 +47,7 @@ class SceneInspectorInterface : public QObject
     Q_OBJECT
 public:
     explicit SceneInspectorInterface(QObject *parent = nullptr);
-    virtual ~SceneInspectorInterface();
+    ~SceneInspectorInterface() override;
 
     virtual void initializeGui() = 0;
 

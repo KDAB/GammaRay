@@ -59,7 +59,7 @@ class TranslatorInspectorWidget : public QWidget
 
 public:
     explicit TranslatorInspectorWidget(QWidget *parent);
-    ~TranslatorInspectorWidget();
+    ~TranslatorInspectorWidget() override;
 
 private:
     void translatorContextMenu(QPoint pos);

@@ -47,7 +47,7 @@ public:
     };
 
     explicit ObjectVisualizerModel(QObject *parent);
-    ~ObjectVisualizerModel();
+    ~ObjectVisualizerModel() override;
 
     QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const override;
 };

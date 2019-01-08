@@ -38,7 +38,7 @@ class SceneInspectorClient : public SceneInspectorInterface
     Q_INTERFACES(GammaRay::SceneInspectorInterface)
 public:
     explicit SceneInspectorClient(QObject *parent = nullptr);
-    ~SceneInspectorClient();
+    ~SceneInspectorClient() override;
 
     void initializeGui() override;
     void renderScene(const QTransform &transform, const QSize &size) override;

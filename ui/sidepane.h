@@ -37,7 +37,7 @@ class SidePane : public QListView
     Q_OBJECT
 public:
     explicit SidePane(QWidget *parent = nullptr);
-    ~SidePane();
+    ~SidePane() override;
 
     QSize sizeHint() const override;
     void setModel(QAbstractItemModel *model) override;

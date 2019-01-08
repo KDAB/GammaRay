@@ -40,7 +40,7 @@ class NetworkSelectionModel : public QItemSelectionModel
 {
     Q_OBJECT
 public:
-    ~NetworkSelectionModel();
+    ~NetworkSelectionModel() override;
 
     void select(const QItemSelection &selection,
                 QItemSelectionModel::SelectionFlags command) override;

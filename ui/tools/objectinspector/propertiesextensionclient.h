@@ -38,7 +38,7 @@ class PropertiesExtensionClient : public PropertiesExtensionInterface
     Q_INTERFACES(GammaRay::PropertiesExtensionInterface)
 public:
     explicit PropertiesExtensionClient(const QString &name, QObject *parent = nullptr);
-    ~PropertiesExtensionClient();
+    ~PropertiesExtensionClient() override;
 
 public slots:
     void setProperty(const QString &propertyName, const QVariant &value) override;

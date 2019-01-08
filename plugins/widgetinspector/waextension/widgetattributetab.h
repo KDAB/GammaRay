@@ -44,7 +44,7 @@ class WidgetAttributeTab : public QWidget
     Q_OBJECT
 public:
     explicit WidgetAttributeTab(PropertyWidget *parent = nullptr);
-    ~WidgetAttributeTab();
+    ~WidgetAttributeTab() override;
 
 private:
     QScopedPointer<Ui::WidgetAttributeTab> ui;

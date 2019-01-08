@@ -42,7 +42,7 @@ class StyleInspectorWidget : public QWidget
     Q_OBJECT
 public:
     explicit StyleInspectorWidget(QWidget *parent = nullptr);
-    virtual ~StyleInspectorWidget();
+    ~StyleInspectorWidget() override;
 
 private slots:
     void styleSelected(int index);

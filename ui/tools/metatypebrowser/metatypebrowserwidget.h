@@ -43,7 +43,7 @@ class MetaTypeBrowserWidget : public QWidget
     Q_OBJECT
 public:
     explicit MetaTypeBrowserWidget(QWidget *parent = nullptr);
-    ~MetaTypeBrowserWidget();
+    ~MetaTypeBrowserWidget() override;
 
 private slots:
     void contextMenu(QPoint pos);

@@ -44,7 +44,7 @@ class KJobTrackerWidget : public QWidget
     Q_OBJECT
 public:
     explicit KJobTrackerWidget(QWidget *parent = nullptr);
-    ~KJobTrackerWidget();
+    ~KJobTrackerWidget() override;
 
 private:
     QScopedPointer<Ui::KJobTrackerWidget> ui;

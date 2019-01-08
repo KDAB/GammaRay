@@ -38,7 +38,7 @@ class ModelInspectorClient : public ModelInspectorInterface
     Q_INTERFACES(GammaRay::ModelInspectorInterface)
 public:
     explicit ModelInspectorClient(QObject *parent = nullptr);
-    virtual ~ModelInspectorClient();
+    ~ModelInspectorClient() override;
 };
 }
 

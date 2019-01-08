@@ -76,7 +76,7 @@ public:
     Q_DECLARE_FLAGS(Features, Feature)
 
     explicit QuickInspectorInterface(QObject *parent = nullptr);
-    ~QuickInspectorInterface();
+    ~QuickInspectorInterface() override;
 
     bool serverSideDecorationEnabled() const;
     void setServerSideDecorationsEnabled(bool enabled);

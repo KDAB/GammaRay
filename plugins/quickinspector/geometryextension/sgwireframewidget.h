@@ -48,7 +48,7 @@ class SGWireframeWidget : public QWidget
 
 public:
     explicit SGWireframeWidget(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-    ~SGWireframeWidget();
+    ~SGWireframeWidget() override;
 
     QAbstractItemModel *model() const;
     void setModel(QAbstractItemModel *vertexModel, QAbstractItemModel *adjacencyModel);

@@ -53,7 +53,7 @@ class GAMMARAY_UI_EXPORT PropertyEditorDelegate : public QStyledItemDelegate
     Q_OBJECT
 public:
     explicit PropertyEditorDelegate(QObject *parent);
-    ~PropertyEditorDelegate();
+    ~PropertyEditorDelegate() override;
 
     void setEditorData(QWidget *editor, const QModelIndex &index) const override;
     void paint(QPainter *painter, const QStyleOptionViewItem &option,

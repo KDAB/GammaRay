@@ -42,7 +42,7 @@ class MessageStatisticsModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit MessageStatisticsModel(QObject *parent = nullptr);
-    ~MessageStatisticsModel();
+    ~MessageStatisticsModel() override;
 
     void clear();
     void addObject(Protocol::ObjectAddress addr, const QString &name);

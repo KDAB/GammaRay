@@ -39,7 +39,7 @@ class PaintAnalyzerTab : public PaintAnalyzerWidget
     Q_OBJECT
 public:
     explicit PaintAnalyzerTab(PropertyWidget *parent);
-    ~PaintAnalyzerTab();
+    ~PaintAnalyzerTab() override;
 };
 }
 

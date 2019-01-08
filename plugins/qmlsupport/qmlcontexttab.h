@@ -43,7 +43,7 @@ class QmlContextTab : public QWidget
     Q_OBJECT
 public:
     explicit QmlContextTab(PropertyWidget *parent = nullptr);
-    ~QmlContextTab();
+    ~QmlContextTab() override;
 
 private:
     void contextContextMenu(QPoint pos);

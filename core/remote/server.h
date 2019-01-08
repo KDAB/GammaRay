@@ -50,7 +50,7 @@ class GAMMARAY_CORE_EXPORT Server : public Endpoint
     Q_OBJECT
 public:
     explicit Server(QObject *parent = nullptr);
-    ~Server();
+    ~Server() override;
 
     /** Indicates which parts of a QObject should be exported to the client. */
     enum ObjectExportOption {

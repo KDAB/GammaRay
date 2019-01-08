@@ -68,7 +68,7 @@ class ObjectInspectorWidget : public QWidget
     Q_OBJECT
 public:
     explicit ObjectInspectorWidget(QWidget *parent = nullptr);
-    ~ObjectInspectorWidget();
+    ~ObjectInspectorWidget() override;
 
 private slots:
     void objectSelectionChanged(const QItemSelection &selection);

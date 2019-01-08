@@ -46,7 +46,7 @@ class SignalMonitor : public SignalMonitorInterface
     Q_INTERFACES(GammaRay::SignalMonitorInterface)
 public:
     explicit SignalMonitor(Probe *probe, QObject *parent = nullptr);
-    ~SignalMonitor();
+    ~SignalMonitor() override;
 
 public slots:
     void sendClockUpdates(bool enabled) override;

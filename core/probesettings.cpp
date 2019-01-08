@@ -61,7 +61,7 @@ class ProbeSettingsReceiver : public QObject
     Q_OBJECT
 public:
     explicit ProbeSettingsReceiver(QObject *parent = nullptr);
-    ~ProbeSettingsReceiver();
+    ~ProbeSettingsReceiver() override;
     Q_INVOKABLE void sendServerAddress(const QUrl &address);
     Q_INVOKABLE void sendServerLaunchError(const QString &reason);
 

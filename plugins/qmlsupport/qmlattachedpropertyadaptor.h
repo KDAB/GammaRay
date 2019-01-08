@@ -38,7 +38,7 @@ class QmlAttachedPropertyAdaptor : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit QmlAttachedPropertyAdaptor(QObject *parent = nullptr);
-    ~QmlAttachedPropertyAdaptor();
+    ~QmlAttachedPropertyAdaptor() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

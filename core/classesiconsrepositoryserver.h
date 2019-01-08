@@ -42,7 +42,7 @@ class ClassesIconsRepositoryServer : public ClassesIconsRepository
     Q_INTERFACES(GammaRay::ClassesIconsRepository)
 
 public:
-    ~ClassesIconsRepositoryServer();
+    ~ClassesIconsRepositoryServer() override;
 
     //! @cond internal
     static void create(QObject *parent);

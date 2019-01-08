@@ -39,7 +39,7 @@ class TimerTopClient : public TimerTopInterface
 
 public:
     explicit TimerTopClient(QObject *parent = nullptr);
-    ~TimerTopClient();
+    ~TimerTopClient() override;
 
 public slots:
     void clearHistory() override;

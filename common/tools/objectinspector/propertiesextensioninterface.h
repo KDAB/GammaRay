@@ -42,7 +42,7 @@ class PropertiesExtensionInterface : public QObject
         bool hasPropertyValues READ hasPropertyValues WRITE setHasPropertyValues NOTIFY hasPropertyValuesChanged)
 public:
     explicit PropertiesExtensionInterface(const QString &name, QObject *parent = nullptr);
-    virtual ~PropertiesExtensionInterface();
+    ~PropertiesExtensionInterface() override;
 
     const QString &name() const;
 

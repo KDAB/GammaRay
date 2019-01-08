@@ -51,7 +51,7 @@ class ProblemReporterWidget : public QWidget
     Q_OBJECT
 public:
     explicit ProblemReporterWidget(QWidget *parent = nullptr);
-    ~ProblemReporterWidget();
+    ~ProblemReporterWidget() override;
 
 private slots:
     void problemViewContextMenu(const QPoint &p);

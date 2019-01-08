@@ -37,7 +37,7 @@ class SignalMonitorInterface : public QObject
     Q_OBJECT
 public:
     explicit SignalMonitorInterface(QObject *parent = nullptr);
-    ~SignalMonitorInterface();
+    ~SignalMonitorInterface() override;
 
 public slots:
     virtual void sendClockUpdates(bool enabled) = 0;

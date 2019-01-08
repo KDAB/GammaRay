@@ -39,7 +39,7 @@ class ScriptEngineDebugger : public QObject
     Q_OBJECT
 public:
     explicit ScriptEngineDebugger(Probe *probe, QObject *parent = nullptr);
-    virtual ~ScriptEngineDebugger();
+    ~ScriptEngineDebugger() override;
 };
 
 class ScriptEngineDebuggerFactory : public QObject,

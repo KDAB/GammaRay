@@ -49,7 +49,7 @@ class ResourceBrowserWidget : public QWidget
     Q_OBJECT
 public:
     explicit ResourceBrowserWidget(QWidget *parent = nullptr);
-    ~ResourceBrowserWidget();
+    ~ResourceBrowserWidget() override;
 
 public slots:
     void selectResource(const QString &sourceFilePath, int line = -1, int column = -1);

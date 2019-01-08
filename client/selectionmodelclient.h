@@ -42,7 +42,7 @@ class SelectionModelClient : public NetworkSelectionModel
     Q_OBJECT
 public:
     SelectionModelClient(const QString &objectName, QAbstractItemModel *model, QObject *parent);
-    ~SelectionModelClient();
+    ~SelectionModelClient() override;
 
 private slots:
     void timeout();

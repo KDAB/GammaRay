@@ -48,7 +48,7 @@ class GraphicsSceneView : public QWidget
     Q_OBJECT
 public:
     explicit GraphicsSceneView(QWidget *parent = nullptr);
-    ~GraphicsSceneView();
+    ~GraphicsSceneView() override;
 
     GraphicsView *view() const;
 

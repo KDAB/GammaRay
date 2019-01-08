@@ -41,7 +41,7 @@ class ProblemReporter : public ProblemReporterInterface
     Q_INTERFACES(GammaRay::ProblemReporterInterface)
 public:
     explicit ProblemReporter(Probe *probe, QObject *parent = nullptr);
-    ~ProblemReporter();
+    ~ProblemReporter() override;
 
 public slots:
     void requestScan() override;

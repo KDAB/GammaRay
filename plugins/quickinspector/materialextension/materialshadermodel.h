@@ -42,7 +42,7 @@ class MaterialShaderModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit MaterialShaderModel(QObject *parent = nullptr);
-    ~MaterialShaderModel();
+    ~MaterialShaderModel() override;
 
     void setMaterialShader(QSGMaterialShader *shader);
     QByteArray shaderForRow(int row) const;

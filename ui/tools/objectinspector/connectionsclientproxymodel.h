@@ -38,7 +38,7 @@ class ConnectionsClientProxyModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit ConnectionsClientProxyModel(QObject *parent = nullptr);
-    virtual ~ConnectionsClientProxyModel();
+    ~ConnectionsClientProxyModel() override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 };

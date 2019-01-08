@@ -42,7 +42,7 @@ class ProxyFactoryBase : public QObject
     Q_OBJECT
 public:
     explicit ProxyFactoryBase(const PluginInfo &pluginInfo, QObject *parent = nullptr);
-    ~ProxyFactoryBase();
+    ~ProxyFactoryBase() override;
 
     PluginInfo pluginInfo() const;
     QString errorString() const;
@@ -63,7 +63,7 @@ class ProxyFactory : public ProxyFactoryBase, public IFace
 public:
     explicit inline ProxyFactory(const PluginInfo &pluginInfo, QObject *parent = nullptr)
         : ProxyFactoryBase(pluginInfo, parent) {}
-    inline ~ProxyFactory() {}
+    inline ~ProxyFactory() override {}
 
     QString id() const override
     {

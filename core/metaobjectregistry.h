@@ -50,7 +50,7 @@ public:
     };
 
     explicit MetaObjectRegistry(QObject *parent = nullptr);
-    ~MetaObjectRegistry();
+    ~MetaObjectRegistry() override;
 
     void scanMetaTypes();
 

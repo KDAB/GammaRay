@@ -38,7 +38,7 @@ class WidgetRemoteView : public RemoteViewWidget
     Q_OBJECT
 public:
     explicit WidgetRemoteView(QWidget *parent = nullptr);
-    ~WidgetRemoteView();
+    ~WidgetRemoteView() override;
 
 public slots:
     void setTabFocusOverlayEnabled(bool enabled);

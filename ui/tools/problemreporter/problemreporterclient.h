@@ -39,7 +39,7 @@ class ProblemReporterClient : public ProblemReporterInterface
     Q_INTERFACES(GammaRay::ProblemReporterInterface)
 public:
     explicit ProblemReporterClient(QObject *parent);
-    ~ProblemReporterClient();
+    ~ProblemReporterClient() override;
 
     void requestScan() override;
 };

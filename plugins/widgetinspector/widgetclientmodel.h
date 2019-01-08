@@ -38,7 +38,7 @@ class WidgetClientModel : public ClientDecorationIdentityProxyModel
     Q_OBJECT
 public:
     explicit WidgetClientModel(QObject *parent = nullptr);
-    ~WidgetClientModel();
+    ~WidgetClientModel() override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 };

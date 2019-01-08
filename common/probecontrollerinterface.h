@@ -43,7 +43,7 @@ class ProbeControllerInterface : public QObject
 
 public:
     explicit ProbeControllerInterface(QObject *parent = nullptr);
-    virtual ~ProbeControllerInterface();
+    ~ProbeControllerInterface() override;
 
     /*! Terminate host application. */
     virtual void quitHost() = 0;

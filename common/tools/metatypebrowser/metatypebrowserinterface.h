@@ -39,7 +39,7 @@ class MetaTypeBrowserInterface : public QObject
     Q_OBJECT
 public:
     explicit MetaTypeBrowserInterface(QObject *parent = nullptr);
-    ~MetaTypeBrowserInterface();
+    ~MetaTypeBrowserInterface() override;
 
 public slots:
     virtual void rescanTypes() = 0;

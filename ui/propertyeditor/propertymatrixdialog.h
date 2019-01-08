@@ -43,7 +43,7 @@ class PropertyMatrixDialog : public QDialog
     Q_OBJECT
 public:
     explicit PropertyMatrixDialog(QWidget *parent = nullptr);
-    ~PropertyMatrixDialog();
+    ~PropertyMatrixDialog() override;
 
     void setMatrix(const QVariant &matrix);
     QVariant matrix() const;

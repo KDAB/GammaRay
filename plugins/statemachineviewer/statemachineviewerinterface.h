@@ -113,7 +113,7 @@ class StateMachineViewerInterface : public QObject
     Q_OBJECT
 public:
     explicit StateMachineViewerInterface(QObject *parent = nullptr);
-    virtual ~StateMachineViewerInterface();
+    ~StateMachineViewerInterface() override;
 
 public slots:
     virtual void selectStateMachine(int index) = 0;

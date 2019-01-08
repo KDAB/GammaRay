@@ -42,7 +42,7 @@ class MaterialTab : public QWidget
     Q_OBJECT
 public:
     explicit MaterialTab(PropertyWidget *parent);
-    ~MaterialTab();
+    ~MaterialTab() override;
 
 private:
     void setObjectBaseName(const QString &baseName);

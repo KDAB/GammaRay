@@ -55,7 +55,7 @@ public:
     };
 
     explicit ModelContentProxyModel(QObject *parent = nullptr);
-    ~ModelContentProxyModel();
+    ~ModelContentProxyModel() override;
 
     /*! Will provide the selection via a custom role for rendering in ModelContentDelegate. */
     void setSelectionModel(QItemSelectionModel *selectionModel);

@@ -37,7 +37,7 @@ class QtIviConstrainedValueDelegate : public PropertyEditorDelegate
     Q_OBJECT
 public:
     explicit QtIviConstrainedValueDelegate(QObject *parent);
-    ~QtIviConstrainedValueDelegate();
+    ~QtIviConstrainedValueDelegate() override;
 
     // Override or modify the editor for certain cases:
     // - Set limits in spinboxes for numeric ranges

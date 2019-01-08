@@ -42,7 +42,7 @@ class ProcessInjector : public AbstractInjector
     Q_OBJECT
 public:
     ProcessInjector();
-    ~ProcessInjector();
+    ~ProcessInjector() override;
 
     void stop() override;
     int exitCode() override;

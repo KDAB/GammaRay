@@ -38,7 +38,7 @@ class TranslatorInspectorInterface : public QObject
 
 public:
     explicit TranslatorInspectorInterface(const QString &name, QObject *parent);
-    virtual ~TranslatorInspectorInterface();
+    ~TranslatorInspectorInterface() override;
 
     const QString &name() const { return m_name; }
 

@@ -44,7 +44,7 @@ class WlCompositorInterface : public QObject
   Q_OBJECT
 public:
   explicit WlCompositorInterface(QObject *parent);
-  ~WlCompositorInterface();
+  ~WlCompositorInterface() override;
 
 public slots:
   virtual void connected() = 0;

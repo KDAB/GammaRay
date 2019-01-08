@@ -46,7 +46,7 @@ class Widget3DWidget : public QObject
 
 public:
     Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &modelIndex, Widget3DWidget *parent);
-    ~Widget3DWidget();
+    ~Widget3DWidget() override;
 
     inline QImage texture() const { return mTextureImage; }
     inline QImage backTexture() const { return mBackTextureImage; }
@@ -113,7 +113,7 @@ public:
     };
 
     explicit Widget3DModel(QObject *parent = nullptr);
-    ~Widget3DModel();
+    ~Widget3DModel() override;
 
     QHash<int, QByteArray> roleNames() const override;
 

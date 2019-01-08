@@ -41,7 +41,7 @@ class PropertyControllerInterface : public QObject
         QStringList availableExtensions READ availableExtensions WRITE setAvailableExtensions NOTIFY availableExtensionsChanged)
 public:
     explicit PropertyControllerInterface(const QString &name, QObject *parent = nullptr);
-    virtual ~PropertyControllerInterface();
+    ~PropertyControllerInterface() override;
 
     QString name() const;
 

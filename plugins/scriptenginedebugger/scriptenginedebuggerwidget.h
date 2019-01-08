@@ -48,7 +48,7 @@ class ScriptEngineDebuggerWidget : public QWidget
     Q_OBJECT
 public:
     explicit ScriptEngineDebuggerWidget(QWidget *parent = nullptr);
-    virtual ~ScriptEngineDebuggerWidget();
+    ~ScriptEngineDebuggerWidget() override;
 private slots:
     void scriptEngineSelected(int index);
 

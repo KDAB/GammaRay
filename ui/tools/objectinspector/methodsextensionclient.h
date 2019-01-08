@@ -38,7 +38,7 @@ class MethodsExtensionClient : public MethodsExtensionInterface
     Q_INTERFACES(GammaRay::MethodsExtensionInterface)
 public:
     explicit MethodsExtensionClient(const QString &name, QObject *parent = nullptr);
-    ~MethodsExtensionClient();
+    ~MethodsExtensionClient() override;
 
 public slots:
     void activateMethod() override;

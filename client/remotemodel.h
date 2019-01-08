@@ -58,7 +58,7 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
 
 public:
     explicit RemoteModel(const QString &serverObject, QObject *parent = nullptr);
-    ~RemoteModel();
+    ~RemoteModel() override;
 
     bool isConnected() const;
 

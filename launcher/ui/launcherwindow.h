@@ -45,7 +45,7 @@ class GAMMARAY_LAUNCHER_UI_EXPORT LauncherWindow : public QDialog
     Q_OBJECT
 public:
     explicit LauncherWindow(QWidget *parent = nullptr);
-    ~LauncherWindow();
+    ~LauncherWindow() override;
 
     /// returns all information required to perform the launch/attach
     LaunchOptions launchOptions() const;

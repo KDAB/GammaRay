@@ -42,7 +42,7 @@ class VariantPropertyObject : public QObject
     Q_PROPERTY(QVector<int> intVector READ widgetVector CONSTANT)
 public:
     explicit VariantPropertyObject(QObject *parent = nullptr);
-    ~VariantPropertyObject();
+    ~VariantPropertyObject() override;
 
     QSharedPointer<QObject> sharedObject() const;
     QPointer<QObject> trackingObject() const;

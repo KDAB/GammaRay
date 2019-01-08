@@ -45,7 +45,7 @@ class NetworkConfigurationWidget : public QWidget
     Q_OBJECT
 public:
     explicit NetworkConfigurationWidget(QWidget *parent = nullptr);
-    ~NetworkConfigurationWidget();
+    ~NetworkConfigurationWidget() override;
 
 private:
     std::unique_ptr<Ui::NetworkConfigurationWidget> ui;

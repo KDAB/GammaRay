@@ -42,7 +42,7 @@ class ActionInspector : public QObject
 
 public:
     explicit ActionInspector(Probe *probe, QObject *parent = nullptr);
-    virtual ~ActionInspector();
+    ~ActionInspector() override;
 
 public Q_SLOTS:
     void triggerAction(int row);

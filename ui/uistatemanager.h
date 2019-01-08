@@ -69,7 +69,7 @@ class GAMMARAY_UI_EXPORT UIStateManager : public QObject
 
 public:
     explicit UIStateManager(QWidget *widget);
-    virtual ~UIStateManager();
+    ~UIStateManager() override;
 
     QWidget *widget() const;
     bool initialized() const;

@@ -45,7 +45,7 @@ class GAMMARAY_CORE_EXPORT StackTraceModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit StackTraceModel(QObject *parent = nullptr);
-    ~StackTraceModel();
+    ~StackTraceModel() override;
 
     void setStackTrace(const Execution::Trace &trace);
 

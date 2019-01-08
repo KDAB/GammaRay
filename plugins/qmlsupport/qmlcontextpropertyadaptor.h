@@ -40,7 +40,7 @@ class QmlContextPropertyAdaptor : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit QmlContextPropertyAdaptor(QObject *parent = nullptr);
-    ~QmlContextPropertyAdaptor();
+    ~QmlContextPropertyAdaptor() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

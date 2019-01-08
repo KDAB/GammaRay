@@ -52,7 +52,7 @@ class FontBrowserWidget : public QWidget
     Q_OBJECT
 public:
     explicit FontBrowserWidget(QWidget *parent = nullptr);
-    ~FontBrowserWidget();
+    ~FontBrowserWidget() override;
 
 private slots:
     void delayedInit();

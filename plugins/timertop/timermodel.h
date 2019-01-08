@@ -52,7 +52,7 @@ class TimerModel : public QAbstractTableModel
     typedef QMap<TimerId, TimerIdData> TimerIdDataContainer;
 
 public:
-    virtual ~TimerModel();
+    ~TimerModel() override;
 
     /// @return True in case instance() would return a valid pointer, else false
     static bool isInitialized();

@@ -42,7 +42,7 @@ class NetworkInterfaceWidget : public QWidget
     Q_OBJECT
 public:
     explicit NetworkInterfaceWidget(QWidget *parent = nullptr);
-    ~NetworkInterfaceWidget();
+    ~NetworkInterfaceWidget() override;
 
 private:
     QScopedPointer<Ui::NetworkInterfaceWidget> ui;

@@ -39,7 +39,7 @@ class EnvironmentModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit EnvironmentModel(QObject *parent = nullptr);
-    ~EnvironmentModel();
+    ~EnvironmentModel() override;
 
     int columnCount(const QModelIndex & parent) const override;
     int rowCount(const QModelIndex & parent) const override;

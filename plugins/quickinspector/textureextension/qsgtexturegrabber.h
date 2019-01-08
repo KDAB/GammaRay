@@ -49,7 +49,7 @@ class QSGTextureGrabber : public QObject
     Q_OBJECT
 public:
     explicit QSGTextureGrabber(QObject *parent = nullptr);
-    ~QSGTextureGrabber();
+    ~QSGTextureGrabber() override;
 
     static QSGTextureGrabber* instance();
 

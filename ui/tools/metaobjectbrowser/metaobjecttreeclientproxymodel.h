@@ -39,7 +39,7 @@ class MetaObjectTreeClientProxyModel : public QIdentityProxyModel
     Q_OBJECT
 public:
     explicit MetaObjectTreeClientProxyModel(QObject *parent = nullptr);
-    ~MetaObjectTreeClientProxyModel();
+    ~MetaObjectTreeClientProxyModel() override;
 
     void setSourceModel(QAbstractItemModel *source) override;
     QVariant data(const QModelIndex &index, int role) const override;

@@ -41,7 +41,7 @@ class ProbeABIModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit ProbeABIModel(QObject *parent = nullptr);
-    ~ProbeABIModel();
+    ~ProbeABIModel() override;
 
     QVariant data(const QModelIndex &index, int role) const override;
     int rowCount(const QModelIndex &parent) const override;

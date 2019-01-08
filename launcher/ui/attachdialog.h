@@ -55,7 +55,7 @@ class GAMMARAY_LAUNCHER_UI_EXPORT AttachDialog : public QWidget
 
 public:
     explicit AttachDialog(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-    ~AttachDialog();
+    ~AttachDialog() override;
 
     LaunchOptions launchOptions() const;
     int pid() const;

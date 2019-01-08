@@ -49,7 +49,7 @@ class GAMMARAY_UI_EXPORT CodeEditor : public QPlainTextEdit
     Q_OBJECT
 public:
     explicit CodeEditor(QWidget *parent = nullptr);
-    ~CodeEditor();
+    ~CodeEditor() override;
 
     void setFileName(const QString &fileName);
     void setSyntaxDefinition(const QString &syntaxName);

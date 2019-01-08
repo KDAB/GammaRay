@@ -41,7 +41,7 @@ class ClassInfoTab : public QWidget
     Q_OBJECT
 public:
     explicit ClassInfoTab(PropertyWidget *parent);
-    virtual ~ClassInfoTab();
+    ~ClassInfoTab() override;
 
 private:
     void setObjectBaseName(const QString &baseName);

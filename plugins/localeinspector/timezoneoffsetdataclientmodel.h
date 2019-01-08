@@ -38,7 +38,7 @@ class TimezoneOffsetDataClientModel : public QIdentityProxyModel
     Q_OBJECT
 public:
     explicit TimezoneOffsetDataClientModel(QObject *parent = nullptr);
-    ~TimezoneOffsetDataClientModel();
+    ~TimezoneOffsetDataClientModel() override;
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 };

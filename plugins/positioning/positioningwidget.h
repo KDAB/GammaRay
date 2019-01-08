@@ -54,7 +54,7 @@ class PositioningWidget : public QWidget
     Q_OBJECT
 public:
     explicit PositioningWidget(QWidget *parent = nullptr);
-    ~PositioningWidget();
+    ~PositioningWidget() override;
 
 private slots:
     void updatePosition();

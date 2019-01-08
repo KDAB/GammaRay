@@ -46,7 +46,7 @@ class GAMMARAY_CORE_EXPORT AggregatedPropertyModel : public QAbstractItemModel
     Q_OBJECT
 public:
     explicit AggregatedPropertyModel(QObject *parent = nullptr);
-    ~AggregatedPropertyModel();
+    ~AggregatedPropertyModel() override;
 
     void setObject(const ObjectInstance &oi);
     void setReadOnly(bool readOnly);

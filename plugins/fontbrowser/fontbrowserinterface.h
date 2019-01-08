@@ -41,7 +41,7 @@ class FontBrowserInterface : public QObject
     Q_OBJECT
 public:
     explicit FontBrowserInterface(QObject *parent);
-    virtual ~FontBrowserInterface();
+    ~FontBrowserInterface() override;
 
 public slots:
     virtual void updateText(const QString &text) = 0;

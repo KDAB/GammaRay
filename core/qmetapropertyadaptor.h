@@ -39,7 +39,7 @@ class QMetaPropertyAdaptor : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit QMetaPropertyAdaptor(QObject *parent = nullptr);
-    ~QMetaPropertyAdaptor();
+    ~QMetaPropertyAdaptor() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

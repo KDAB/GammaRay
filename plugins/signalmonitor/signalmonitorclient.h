@@ -38,7 +38,7 @@ class SignalMonitorClient : public SignalMonitorInterface
     Q_INTERFACES(GammaRay::SignalMonitorInterface)
 public:
     explicit SignalMonitorClient(QObject *parent = nullptr);
-    ~SignalMonitorClient();
+    ~SignalMonitorClient() override;
 
 public slots:
     void sendClockUpdates(bool enabled) override;

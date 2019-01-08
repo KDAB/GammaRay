@@ -48,7 +48,7 @@ class SignalMonitorWidget : public QWidget
     Q_OBJECT
 public:
     explicit SignalMonitorWidget(QWidget *parent = nullptr);
-    ~SignalMonitorWidget();
+    ~SignalMonitorWidget() override;
 
 private slots:
     void intervalScaleValueChanged(int value);

@@ -52,7 +52,7 @@ public:
 
     explicit PropertyTextEditorDialog(const QString &text, QWidget *parent = nullptr);
     explicit PropertyTextEditorDialog(const QByteArray &bytes, QWidget *parent = nullptr);
-    ~PropertyTextEditorDialog();
+    ~PropertyTextEditorDialog() override;
 
     void setReadOnly(bool readOnly);
 

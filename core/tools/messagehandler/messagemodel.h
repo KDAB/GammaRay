@@ -60,7 +60,7 @@ class MessageModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit MessageModel(QObject *parent = nullptr);
-    ~MessageModel();
+    ~MessageModel() override;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;

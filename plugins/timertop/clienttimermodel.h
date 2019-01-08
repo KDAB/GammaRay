@@ -38,7 +38,7 @@ class ClientTimerModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit ClientTimerModel(QObject *parent = nullptr);
-    ~ClientTimerModel();
+    ~ClientTimerModel() override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;

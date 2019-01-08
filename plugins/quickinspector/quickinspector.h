@@ -71,7 +71,7 @@ class RenderModeRequest : public QObject
 
 public:
     explicit RenderModeRequest(QObject *parent = nullptr);
-    ~RenderModeRequest();
+    ~RenderModeRequest() override;
 
     void applyOrDelay(QQuickWindow *toWindow, QuickInspectorInterface::RenderMode customRenderMode);
 
@@ -99,7 +99,7 @@ class QuickInspector : public QuickInspectorInterface
 
 public:
     explicit QuickInspector(Probe *probe, QObject *parent = nullptr);
-    ~QuickInspector();
+    ~QuickInspector() override;
 
 signals:
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);

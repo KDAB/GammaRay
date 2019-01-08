@@ -38,7 +38,7 @@ class TimerTopInterface : public QObject
 
 public:
     explicit TimerTopInterface(QObject *parent = nullptr);
-    ~TimerTopInterface();
+    ~TimerTopInterface() override;
 
 public slots:
     virtual void clearHistory() = 0;
