@@ -90,5 +90,5 @@ void AboutDialog::setText(const QString &text)
 
 QSize AboutDialog::sizeHint() const
 {
-    return QSize(960, 730);
+    return {960, 730};
 }

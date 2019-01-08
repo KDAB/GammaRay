@@ -38,7 +38,7 @@ static QModelIndex searchMatchesOne(QAbstractItemModel *model, const QVariant &v
     const auto matches = model->match(model->index(0, column), role, value, 1, flags);
 
     if (matches.isEmpty())
-        return QModelIndex();
+        return {};
 
     const QModelIndex idx = matches.at(0);
     Q_ASSERT(idx.isValid());

@@ -99,7 +99,7 @@ QModelIndex QuickItemModel::index(int row, int column, const QModelIndex &parent
     QQuickItem *parentItem = reinterpret_cast<QQuickItem *>(parent.internalPointer());
     const QVector<QQuickItem *> children = m_parentChildMap.value(parentItem);
     if (row < 0 || column < 0 || row >= children.size() || column >= columnCount())
-        return QModelIndex();
+        return {};
     return createIndex(row, column, children.at(row));
 }
 
@@ -177,7 +177,7 @@ void QuickItemModel::disconnectItem(QQuickItem *item)
 QModelIndex QuickItemModel::indexForItem(QQuickItem *item) const
 {
     if (!item)
-        return QModelIndex();
+        return {};
 
     QQuickItem *parent = m_childParentMap.value(item);
     const QVector<QQuickItem *> &siblings = m_parentChildMap[parent];

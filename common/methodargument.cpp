@@ -109,5 +109,5 @@ MethodArgument::operator QGenericArgument() const
         return QGenericArgument(d->name.constData(), d->data);
     }
 
-    return QGenericArgument();
+    return {};
 }

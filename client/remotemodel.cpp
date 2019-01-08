@@ -135,7 +135,7 @@ bool RemoteModel::isConnected() const
 QModelIndex RemoteModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!isConnected() || row < 0 || column < 0)
-        return QModelIndex();
+        return {};
 
     Node *parentNode = nodeForIndex(parent);
     Q_ASSERT(parentNode->children.size() >= parentNode->rowCount);
@@ -151,7 +151,7 @@ QModelIndex RemoteModel::parent(const QModelIndex &index) const
     Node *currentNode = nodeForIndex(index);
     Q_ASSERT(currentNode);
     if (currentNode == m_root || currentNode->parent == m_root)
-        return QModelIndex();
+        return {};
     Q_ASSERT(currentNode->parent && currentNode->parent->parent);
     Q_ASSERT(currentNode->parent->children.contains(currentNode));
     Q_ASSERT(currentNode->parent->parent->children.contains(currentNode->parent));
@@ -667,7 +667,7 @@ QModelIndex RemoteModel::modelIndexForNode(Node *node, int column) const
 {
     Q_ASSERT(node);
     if (node == m_root)
-        return QModelIndex();
+        return {};
     return createIndex(node->parent->children.indexOf(node), column, node);
 }
 

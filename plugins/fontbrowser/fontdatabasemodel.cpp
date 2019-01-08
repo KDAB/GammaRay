@@ -120,7 +120,7 @@ QVariant FontDatabaseModel::headerData(int section, Qt::Orientation orientation,
 QModelIndex FontDatabaseModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (row < 0 || column < 0 || column >= columnCount())
-        return QModelIndex();
+        return {};
 
     if (parent.isValid()) {
         if (row >= m_styles.at(parent.row()).size())
@@ -133,7 +133,7 @@ QModelIndex FontDatabaseModel::index(int row, int column, const QModelIndex &par
 QModelIndex FontDatabaseModel::parent(const QModelIndex &child) const
 {
     if (!child.isValid() || child.internalId() == TopLevelId)
-        return QModelIndex();
+        return {};
     return createIndex(child.internalId(), 0, TopLevelId);
 }
 

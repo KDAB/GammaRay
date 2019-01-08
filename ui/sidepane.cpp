@@ -79,7 +79,7 @@ QSize SidePane::sizeHint() const
     const int width = sizeHintForColumn(0) + widthMargin;
     const int height = QListView::sizeHint().height();
 
-    return QSize(width, height);
+    return {width, height};
 }
 
 void SidePane::setModel(QAbstractItemModel *model)

@@ -892,7 +892,7 @@ QPointF RemoteViewWidget::mapFromSource(QPointF pos) const
 
 QRectF RemoteViewWidget::mapFromSource(const QRect& rect) const
 {
-    return QRectF(rect.x() * m_zoom, rect.y() * m_zoom, rect.width() * m_zoom, rect.height() * m_zoom);
+    return {rect.x() * m_zoom, rect.y() * m_zoom, rect.width() * m_zoom, rect.height() * m_zoom};
 }
 
 QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPoint &point)

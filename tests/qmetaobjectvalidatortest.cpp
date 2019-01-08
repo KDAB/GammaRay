@@ -44,8 +44,8 @@ class QMetaObjectValidatorTest : public QObject
     Q_PROPERTY(UnknownCustomType failUnknownType READ failUnknownType)
     Q_PROPERTY(KnownCustomType knownType READ knownType)
 public:
-    UnknownCustomType failUnknownType() const { return UnknownCustomType(); }
-    KnownCustomType knownType() const { return KnownCustomType(); }
+    UnknownCustomType failUnknownType() const { return {}; }
+    KnownCustomType knownType() const { return {}; }
 
 signals:
     void destroyed();

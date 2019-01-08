@@ -92,7 +92,7 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
     }
 
     if (enumIndex < 0)
-        return QMetaEnum();
+        return {};
     return mo->enumerator(enumIndex);
 }
 

@@ -100,7 +100,7 @@ State StateModelPrivate::mapModelIndex2State(const QModelIndex &index) const
 QModelIndex StateModelPrivate::indexForState(State state) const
 {
     if (!m_stateMachine)
-        return QModelIndex();
+        return {};
 
     if (state == m_stateMachine->rootState())
         return QModelIndex();
@@ -242,7 +242,7 @@ QModelIndex StateModel::index(int row, int column, const QModelIndex &parent) co
 {
     Q_D(const StateModel);
     if (row < 0 || column < 0 || column > 1)
-        return QModelIndex();
+        return {};
 
     State internalPointer(0);
     if (!parent.isValid()) {
@@ -264,7 +264,7 @@ QModelIndex StateModel::parent(const QModelIndex &index) const
 {
     Q_D(const StateModel);
     if (!index.isValid() || !d->m_stateMachine)
-        return QModelIndex();
+        return {};
     State state = d->mapModelIndex2State(index);
     State parent = d->m_stateMachine->parentState(state);
 

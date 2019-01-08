@@ -468,7 +468,7 @@ QModelIndex TimerModel::index(int row, int column, const QModelIndex &parent) co
         }
     }
 
-    return QModelIndex();
+    return {};
 }
 
 int TimerModel::columnCount(const QModelIndex &parent) const

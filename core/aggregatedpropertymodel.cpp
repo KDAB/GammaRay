@@ -321,7 +321,7 @@ QModelIndex AggregatedPropertyModel::parent(const QModelIndex &child) const
 {
     auto childAdaptor = adaptorForIndex(child);
     if (childAdaptor == m_rootAdaptor)
-        return QModelIndex();
+        return {};
 
     auto parentAdaptor = childAdaptor->parentAdaptor();
     return createIndex(m_parentChildrenMap.value(parentAdaptor).indexOf(
@@ -331,7 +331,7 @@ QModelIndex AggregatedPropertyModel::parent(const QModelIndex &child) const
 QModelIndex AggregatedPropertyModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent) || !m_rootAdaptor)
-        return QModelIndex();
+        return {};
 
     if (!parent.isValid())
         return createIndex(row, column, m_rootAdaptor);

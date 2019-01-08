@@ -197,7 +197,7 @@ QModelIndex TranslationsModel::findNode(const char *context, const char *sourceT
         endInsertRows();
         return index(newRow, 0);
     }
-    return QModelIndex();
+    return {};
 }
 
 TranslatorWrapper::TranslatorWrapper(QTranslator *wrapped, QObject *parent)
