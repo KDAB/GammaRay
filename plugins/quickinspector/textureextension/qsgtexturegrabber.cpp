@@ -88,7 +88,7 @@ void QSGTextureGrabber::addQuickWindow(QQuickWindow *window)
     connect(window, &QQuickWindow::afterRendering, this, [this, window]() {
         windowAfterRendering(window);
     }, Qt::DirectConnection);
-    m_windows.push_back(window);
+    m_windows.emplace_back(window);
 }
 
 void QSGTextureGrabber::windowAfterRendering(QQuickWindow *window)

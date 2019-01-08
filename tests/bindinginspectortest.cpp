@@ -685,9 +685,9 @@ void BindingInspectorTest::testModelAdditions()
     QVERIFY(rowAddedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
-    provider->data.push_back({ &obj1, "c", &obj1, "a" });
-    provider->data.push_back({ &obj1, "c", &obj1, "b" });
-    provider->data.push_back({ &obj1, "b", &obj1, "d" });
+    provider->data.emplace_back( &obj1, "c", &obj1, "a" );
+    provider->data.emplace_back( &obj1, "c", &obj1, "b" );
+    provider->data.emplace_back( &obj1, "b", &obj1, "d" );
     obj1.setA(12);
 
     TestHelpers::waitForSpy(&rowAddedSpy, 500);
