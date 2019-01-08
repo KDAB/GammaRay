@@ -147,7 +147,7 @@ void PaintAnalyzer::repaint()
         m_stackTraceModel->setStackTrace(m_paintBufferModel->buffer().stackTrace(index.row()));
         setHasStackTrace(m_stackTraceModel->rowCount() > 0);
     } else {
-        setHasStackTrace(0);
+        setHasStackTrace(false);
     }
 }
 
