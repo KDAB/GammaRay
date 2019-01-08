@@ -44,7 +44,7 @@ class QuickItemTreeWatcher : public QObject
 
 public:
     explicit QuickItemTreeWatcher(QTreeView *itemView, QTreeView *sgView, QObject *parent = nullptr);
-    ~QuickItemTreeWatcher();
+    ~QuickItemTreeWatcher() override;
 
 private slots:
     void itemModelRowsInserted(const QModelIndex &parent, int start, int end);

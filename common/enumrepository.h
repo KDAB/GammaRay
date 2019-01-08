@@ -42,7 +42,7 @@ class GAMMARAY_COMMON_EXPORT EnumRepository : public QObject
 {
     Q_OBJECT
 public:
-    ~EnumRepository();
+    ~EnumRepository() override;
 
     /*! Request the enum definition for the given enum id.
      *  On the client side the response can be invalid on first request,

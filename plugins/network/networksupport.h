@@ -37,7 +37,7 @@ class NetworkSupport : public QObject
     Q_OBJECT
 public:
     explicit NetworkSupport(Probe *probe, QObject *parent = nullptr);
-    ~NetworkSupport();
+    ~NetworkSupport() override;
 
 private:
     void registerMetaTypes();

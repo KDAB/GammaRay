@@ -40,7 +40,7 @@ class StyleHintModel : public AbstractStyleElementModel
     Q_OBJECT
 public:
     explicit StyleHintModel(QObject *parent = nullptr);
-    ~StyleHintModel();
+    ~StyleHintModel() override;
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;

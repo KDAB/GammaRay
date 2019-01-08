@@ -51,7 +51,7 @@ class MethodsExtension : public MethodsExtensionInterface, public PropertyContro
 
 public:
     explicit MethodsExtension(PropertyController *controller);
-    ~MethodsExtension();
+    ~MethodsExtension() override;
 
     bool setQObject(QObject *object) override;
     bool setMetaObject(const QMetaObject *metaObject) override;

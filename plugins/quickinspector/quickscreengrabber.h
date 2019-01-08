@@ -132,7 +132,7 @@ public:
     };
 
     explicit AbstractScreenGrabber(QQuickWindow *window);
-    virtual ~AbstractScreenGrabber();
+    ~AbstractScreenGrabber() override;
 
     static RenderInfo::GraphicsApi graphicsApiFor(QQuickWindow *window);
     static std::unique_ptr<AbstractScreenGrabber> get(QQuickWindow *window);
@@ -194,7 +194,7 @@ class OpenGLScreenGrabber : public AbstractScreenGrabber
     Q_OBJECT
 public:
     explicit OpenGLScreenGrabber(QQuickWindow *window);
-    ~OpenGLScreenGrabber();
+    ~OpenGLScreenGrabber() override;
 
     void requestGrabWindow(const QRectF &userViewport) override;
     void drawDecorations() override;
@@ -214,7 +214,7 @@ class SoftwareScreenGrabber : public AbstractScreenGrabber
     Q_OBJECT
 public:
     explicit SoftwareScreenGrabber(QQuickWindow *window);
-    ~SoftwareScreenGrabber();
+    ~SoftwareScreenGrabber() override;
 
     void requestGrabWindow(const QRectF &userViewport) override;
     void drawDecorations() override;

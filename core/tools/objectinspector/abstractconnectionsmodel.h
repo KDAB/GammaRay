@@ -41,7 +41,7 @@ class AbstractConnectionsModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit AbstractConnectionsModel(QObject *parent = nullptr);
-    ~AbstractConnectionsModel();
+    ~AbstractConnectionsModel() override;
 
     virtual void setObject(QObject *object) = 0;
 

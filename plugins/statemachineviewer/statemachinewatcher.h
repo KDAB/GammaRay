@@ -46,7 +46,7 @@ class StateMachineWatcher : public QObject
     Q_OBJECT
 public:
     explicit StateMachineWatcher(QObject *parent = nullptr);
-    virtual ~StateMachineWatcher();
+    ~StateMachineWatcher() override;
 
     void setWatchedStateMachine(QStateMachine *machine);
     QStateMachine *watchedStateMachine() const;

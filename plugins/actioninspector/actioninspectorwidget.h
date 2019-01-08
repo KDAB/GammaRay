@@ -50,7 +50,7 @@ class ActionInspectorWidget : public QWidget
 
 public:
     explicit ActionInspectorWidget(QWidget *parent = nullptr);
-    ~ActionInspectorWidget();
+    ~ActionInspectorWidget() override;
 
 private Q_SLOTS:
     void triggerAction(const QModelIndex &index);

@@ -52,7 +52,7 @@ class MaterialExtension : public MaterialExtensionInterface, public PropertyCont
 
 public:
     explicit MaterialExtension(PropertyController *controller);
-    ~MaterialExtension();
+    ~MaterialExtension() override;
 
     bool setObject(void *object, const QString &typeName) override;
 

@@ -38,7 +38,7 @@ class TranslatorWrapperProxy : public QIdentityProxyModel
     Q_OBJECT
 public:
     explicit TranslatorWrapperProxy(QObject *parent = nullptr);
-    ~TranslatorWrapperProxy();
+    ~TranslatorWrapperProxy() override;
 
     QVariant data(const QModelIndex &proxyIndex, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;

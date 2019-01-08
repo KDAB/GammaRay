@@ -47,7 +47,7 @@ class AbstractInjector : public QObject
 
 public:
     typedef QSharedPointer<AbstractInjector> Ptr;
-    virtual ~AbstractInjector();
+    ~AbstractInjector() override;
 
     /**
      * Injector Name

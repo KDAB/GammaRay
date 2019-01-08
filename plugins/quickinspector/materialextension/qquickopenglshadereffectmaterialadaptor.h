@@ -39,7 +39,7 @@ class QQuickOpenGLShaderEffectMaterialAdaptor : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit QQuickOpenGLShaderEffectMaterialAdaptor(QObject *parent = nullptr);
-    ~QQuickOpenGLShaderEffectMaterialAdaptor();
+    ~QQuickOpenGLShaderEffectMaterialAdaptor() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

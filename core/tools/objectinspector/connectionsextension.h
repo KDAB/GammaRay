@@ -43,7 +43,7 @@ class ConnectionsExtension : public ConnectionsExtensionInterface,
     Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)
 public:
     explicit ConnectionsExtension(PropertyController *controller);
-    ~ConnectionsExtension();
+    ~ConnectionsExtension() override;
 
     bool setQObject(QObject *object) override;
 

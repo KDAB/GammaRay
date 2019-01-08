@@ -47,7 +47,7 @@ class MethodsTab : public QWidget
     Q_OBJECT
 public:
     explicit MethodsTab(PropertyWidget *parent);
-    virtual ~MethodsTab();
+    ~MethodsTab() override;
 
 private:
     void setObjectBaseName(const QString &baseName);

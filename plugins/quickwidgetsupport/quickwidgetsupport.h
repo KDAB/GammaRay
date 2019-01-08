@@ -39,7 +39,7 @@ class QuickWidgetSupport : public QObject
     Q_OBJECT
 public:
     explicit QuickWidgetSupport(Probe *probe, QObject *parent = nullptr);
-    ~QuickWidgetSupport();
+    ~QuickWidgetSupport() override;
 
 private slots:
     void objectAdded(QObject *obj);

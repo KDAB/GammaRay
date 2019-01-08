@@ -52,7 +52,7 @@ class GAMMARAY_CORE_EXPORT BindingExtension : public QObject, public PropertyCon
     Q_OBJECT
 public:
     explicit BindingExtension(PropertyController *controller);
-    ~BindingExtension();
+    ~BindingExtension() override;
 
     bool setQObject(QObject *object) override;
 

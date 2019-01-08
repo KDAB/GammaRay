@@ -40,7 +40,7 @@ class TimezoneModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit TimezoneModel(QObject *parent = nullptr);
-    ~TimezoneModel();
+    ~TimezoneModel() override;
 
     int columnCount(const QModelIndex & parent) const override;
     int rowCount(const QModelIndex & parent) const override;

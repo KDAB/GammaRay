@@ -40,7 +40,7 @@ class AssociativePropertyAdaptor : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit AssociativePropertyAdaptor(QObject *parent = nullptr);
-    ~AssociativePropertyAdaptor();
+    ~AssociativePropertyAdaptor() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

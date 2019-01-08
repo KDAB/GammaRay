@@ -52,7 +52,7 @@ class GAMMARAY_UI_EXPORT PaintBufferViewer : public QDialog
     Q_OBJECT
 public:
     explicit PaintBufferViewer(const QString &name, QWidget *parent = nullptr);
-    virtual ~PaintBufferViewer();
+    ~PaintBufferViewer() override;
 
 private:
     QScopedPointer<Ui::PaintBufferViewer> ui;

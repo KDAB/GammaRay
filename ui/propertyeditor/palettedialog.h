@@ -47,7 +47,7 @@ class PaletteDialog : public QDialog
     Q_OBJECT
 public:
     explicit PaletteDialog(const QPalette &palette, QWidget *parent = nullptr);
-    virtual ~PaletteDialog();
+    ~PaletteDialog() override;
 
     void setEditable(bool editable);
     QPalette editedPalette() const;

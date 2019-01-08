@@ -36,7 +36,7 @@ class GraphViewer : public QObject
 
 public:
     explicit GraphViewer(Probe *probe, QObject *parent = nullptr);
-    ~GraphViewer();
+    ~GraphViewer() override;
 };
 
 class GraphViewerFactory : public QObject, public StandardToolFactory<QObject, GraphViewer>

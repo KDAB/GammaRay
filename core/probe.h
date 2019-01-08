@@ -75,7 +75,7 @@ class GAMMARAY_CORE_EXPORT Probe : public QObject
 {
     Q_OBJECT
 public:
-    ~Probe();
+    ~Probe() override;
 
     /*!
      * Returns the current instance of the probe.

@@ -42,7 +42,7 @@ class MessageHandlerInterface : public QObject
     Q_PROPERTY(bool stackTraceAvailable READ stackTraceAvailable WRITE setStackTraceAvailable NOTIFY stackTraceAvailableChanged)
 public:
     explicit MessageHandlerInterface(QObject *parent = nullptr);
-    virtual ~MessageHandlerInterface();
+    ~MessageHandlerInterface() override;
 
     bool stackTraceAvailable() const;
     void setStackTraceAvailable(bool available);

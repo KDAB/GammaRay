@@ -37,7 +37,7 @@ class ResourceBrowserInterface : public QObject
     Q_OBJECT
 public:
     explicit ResourceBrowserInterface(QObject *parent = nullptr);
-    virtual ~ResourceBrowserInterface();
+    ~ResourceBrowserInterface() override;
 
 public slots:
     virtual void downloadResource(const QString &sourceFilePath, const QString &targetFilePath) = 0;

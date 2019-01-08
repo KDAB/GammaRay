@@ -39,7 +39,7 @@ class TextureViewWidget : public RemoteViewWidget
     Q_OBJECT
 public:
     explicit TextureViewWidget(QWidget *parent = nullptr);
-    ~TextureViewWidget();
+    ~TextureViewWidget() override;
 
     enum ImageFlag {
         None = 0,

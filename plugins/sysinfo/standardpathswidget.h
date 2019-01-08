@@ -45,7 +45,7 @@ class StandardPathsWidget : public QWidget
     Q_OBJECT
 public:
     explicit StandardPathsWidget(QWidget *parent = nullptr);
-    ~StandardPathsWidget();
+    ~StandardPathsWidget() override;
 
 private:
     std::unique_ptr<Ui::StandardPathsWidget> ui;

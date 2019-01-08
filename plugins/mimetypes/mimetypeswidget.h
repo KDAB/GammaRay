@@ -44,7 +44,7 @@ class MimeTypesWidget : public QWidget
     Q_OBJECT
 public:
     explicit MimeTypesWidget(QWidget *parent = nullptr);
-    ~MimeTypesWidget();
+    ~MimeTypesWidget() override;
 
 private:
     QScopedPointer<Ui::MimeTypesWidget> ui;

@@ -52,7 +52,7 @@ class WidgetInspectorWidget : public QWidget
     Q_OBJECT
 public:
     explicit WidgetInspectorWidget(QWidget *parent = nullptr);
-    ~WidgetInspectorWidget();
+    ~WidgetInspectorWidget() override;
 
     Q_INVOKABLE void saveTargetState(QSettings *settings) const;
     Q_INVOKABLE void restoreTargetState(QSettings *settings);

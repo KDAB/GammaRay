@@ -46,7 +46,7 @@ class TextureTab : public QWidget
     Q_OBJECT
 public:
     explicit TextureTab(PropertyWidget *parent);
-    ~TextureTab();
+    ~TextureTab() override;
 
 private:
     void addInfoLine(bool isProblem, const QString &newLine);

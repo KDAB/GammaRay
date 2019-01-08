@@ -41,7 +41,7 @@ class LocaleDataAccessorRegistry : public QObject
     Q_OBJECT
 public:
     explicit LocaleDataAccessorRegistry(QObject *parent = nullptr);
-    ~LocaleDataAccessorRegistry();
+    ~LocaleDataAccessorRegistry() override;
 
     void registerAccessor(LocaleDataAccessor *accessor);
     void setAccessorEnabled(LocaleDataAccessor *accessor, bool enabled);

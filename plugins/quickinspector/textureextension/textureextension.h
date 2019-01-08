@@ -48,7 +48,7 @@ class TextureExtension : public QObject, public PropertyControllerExtension
     Q_OBJECT
 public:
     explicit TextureExtension(PropertyController *controller);
-    ~TextureExtension();
+    ~TextureExtension() override;
 
     bool setQObject(QObject *obj) override;
     bool setObject(void * object, const QString & typeName) override;

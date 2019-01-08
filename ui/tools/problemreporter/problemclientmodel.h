@@ -40,7 +40,7 @@ class ProblemClientModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit ProblemClientModel(QObject *parent = nullptr);
-    ~ProblemClientModel();
+    ~ProblemClientModel() override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;

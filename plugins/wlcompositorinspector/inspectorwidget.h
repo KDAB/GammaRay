@@ -52,7 +52,7 @@ class InspectorWidget : public QWidget
 Q_OBJECT
 public:
     explicit InspectorWidget(QWidget *parent = nullptr);
-    ~InspectorWidget();
+    ~InspectorWidget() override;
 
 protected:
     bool eventFilter(QObject *o, QEvent *e) override;

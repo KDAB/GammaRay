@@ -48,7 +48,7 @@ class PropertiesExtension : public PropertiesExtensionInterface, public Property
 
 public:
     explicit PropertiesExtension(PropertyController *controller);
-    ~PropertiesExtension();
+    ~PropertiesExtension() override;
 
     void setProperty(const QString &name, const QVariant &value) override;
 

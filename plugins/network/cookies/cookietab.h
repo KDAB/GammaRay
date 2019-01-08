@@ -44,7 +44,7 @@ class CookieTab : public QWidget
     Q_OBJECT
 public:
     explicit CookieTab(PropertyWidget *parent = nullptr);
-    ~CookieTab();
+    ~CookieTab() override;
 
 private:
     QScopedPointer<Ui::CookieTab> ui;

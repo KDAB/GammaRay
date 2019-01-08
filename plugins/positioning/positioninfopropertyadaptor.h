@@ -38,7 +38,7 @@ class PositionInfoPropertyAdaptor : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit PositionInfoPropertyAdaptor(QObject *parent = nullptr);
-    ~PositionInfoPropertyAdaptor();
+    ~PositionInfoPropertyAdaptor() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

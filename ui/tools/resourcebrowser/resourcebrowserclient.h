@@ -39,7 +39,7 @@ class ResourceBrowserClient : public ResourceBrowserInterface
     Q_INTERFACES(GammaRay::ResourceBrowserInterface)
 public:
     explicit ResourceBrowserClient(QObject *parent);
-    virtual ~ResourceBrowserClient();
+    ~ResourceBrowserClient() override;
 
     void downloadResource(const QString &sourceFilePath,
                           const QString &targetFilePath) override;

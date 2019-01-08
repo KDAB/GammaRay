@@ -51,7 +51,7 @@ class MessageHandler : public MessageHandlerInterface
     Q_INTERFACES(GammaRay::MessageHandlerInterface)
 public:
     explicit MessageHandler(Probe *probe, QObject *parent = nullptr);
-    ~MessageHandler();
+    ~MessageHandler() override;
 
 private slots:
     void ensureHandlerInstalled();

@@ -52,7 +52,7 @@ class SceneInspectorWidget : public QWidget
     Q_OBJECT
 public:
     explicit SceneInspectorWidget(QWidget *parent = nullptr);
-    ~SceneInspectorWidget();
+    ~SceneInspectorWidget() override;
 
 private slots:
     void sceneSelected(int index);

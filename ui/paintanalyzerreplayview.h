@@ -38,7 +38,7 @@ class PaintAnalyzerReplayView : public RemoteViewWidget
     Q_OBJECT
 public:
     explicit PaintAnalyzerReplayView(QWidget *parent = nullptr);
-    ~PaintAnalyzerReplayView();
+    ~PaintAnalyzerReplayView() override;
 
     bool showClipArea() const;
 

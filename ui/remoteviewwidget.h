@@ -65,7 +65,7 @@ class GAMMARAY_UI_EXPORT RemoteViewWidget : public QWidget
     Q_OBJECT
 public:
     explicit RemoteViewWidget(QWidget *parent = nullptr);
-    ~RemoteViewWidget();
+    ~RemoteViewWidget() override;
 
     /// Set the object name for connecting to the server.
     void setName(const QString &name);

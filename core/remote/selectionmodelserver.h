@@ -43,7 +43,7 @@ class SelectionModelServer : public NetworkSelectionModel
 public:
     explicit SelectionModelServer(const QString &objectName, QAbstractItemModel *model,
                                   QObject *parent);
-    ~SelectionModelServer();
+    ~SelectionModelServer() override;
 
 protected:
     bool isConnected() const override;

@@ -40,7 +40,7 @@ class SequentialPropertyAdaptor : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit SequentialPropertyAdaptor(QObject *parent = nullptr);
-    ~SequentialPropertyAdaptor();
+    ~SequentialPropertyAdaptor() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

@@ -39,7 +39,7 @@ class MethodsExtensionInterface : public QObject
     Q_PROPERTY(bool hasObject READ hasObject WRITE setHasObject NOTIFY hasObjectChanged)
 public:
     explicit MethodsExtensionInterface(const QString &name, QObject *parent = nullptr);
-    virtual ~MethodsExtensionInterface();
+    ~MethodsExtensionInterface() override;
 
     const QString &name() const;
 

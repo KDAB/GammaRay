@@ -59,7 +59,7 @@ class GAMMARAY_COMMON_EXPORT Endpoint : public QObject
 {
     Q_OBJECT
 public:
-    ~Endpoint();
+    ~Endpoint() override;
 
     /*! Send @p msg to the connected endpoint. */
     static void send(const Message &msg);

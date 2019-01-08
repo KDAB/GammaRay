@@ -40,7 +40,7 @@ class CodeEditorSidebar : public QWidget
     Q_OBJECT
 public:
     explicit CodeEditorSidebar(CodeEditor *editor);
-    ~CodeEditorSidebar();
+    ~CodeEditorSidebar() override;
 
     QSize sizeHint() const override;
 

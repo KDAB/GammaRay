@@ -44,7 +44,7 @@ class ProblemModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit ProblemModel(QObject *parent);
-    virtual ~ProblemModel();
+    ~ProblemModel() override;
 
     QVariant data(const QModelIndex &index, int role) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;

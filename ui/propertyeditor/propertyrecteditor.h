@@ -45,7 +45,7 @@ class PropertyRectEditorDialog : public QDialog
 public:
     explicit PropertyRectEditorDialog(const QRectF &rect, QWidget *parent = nullptr);
     explicit PropertyRectEditorDialog(const QRect &rect, QWidget *parent = nullptr);
-    ~PropertyRectEditorDialog();
+    ~PropertyRectEditorDialog() override;
 
     QRectF rectF() const;
 

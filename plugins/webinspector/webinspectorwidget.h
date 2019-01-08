@@ -43,7 +43,7 @@ class WebInspectorWidget : public QWidget
     Q_OBJECT
 public:
     explicit WebInspectorWidget(QWidget *parent = nullptr);
-    ~WebInspectorWidget();
+    ~WebInspectorWidget() override;
 
 private slots:
     void webPageSelected(int index);

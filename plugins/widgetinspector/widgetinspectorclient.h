@@ -40,7 +40,7 @@ class WidgetInspectorClient : public WidgetInspectorInterface
 
 public:
     explicit WidgetInspectorClient(QObject *parent);
-    ~WidgetInspectorClient();
+    ~WidgetInspectorClient() override;
 
 private:
     void saveAsImage(const QString &fileName) override;

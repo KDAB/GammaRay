@@ -38,7 +38,7 @@ class MaterialExtensionInterface : public QObject
     Q_OBJECT
 public:
     explicit MaterialExtensionInterface(const QString &name, QObject *parent = nullptr);
-    virtual ~MaterialExtensionInterface();
+    ~MaterialExtensionInterface() override;
 
     const QString &name() const;
 

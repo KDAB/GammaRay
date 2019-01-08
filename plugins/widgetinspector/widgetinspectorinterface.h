@@ -57,7 +57,7 @@ public:
     Q_DECLARE_FLAGS(Features, Feature)
 
     explicit WidgetInspectorInterface(QObject *parent = nullptr);
-    virtual ~WidgetInspectorInterface();
+    ~WidgetInspectorInterface() override;
 
     Features features() const;
     void setFeatures(Features features);

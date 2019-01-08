@@ -56,7 +56,7 @@ public:
     explicit PropertyBinder(QObject *source, const char *sourceProp, QObject *destination,
                             const char *destProp);
 
-    ~PropertyBinder();
+    ~PropertyBinder() override;
 
     /** Adds another binding between @p sourceProp and @p destProp.
      *  At least the source property must have a change notification signal.

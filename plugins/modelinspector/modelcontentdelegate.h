@@ -38,7 +38,7 @@ class ModelContentDelegate : public QStyledItemDelegate
     Q_OBJECT
 public:
     explicit ModelContentDelegate(QObject *parent = nullptr);
-    ~ModelContentDelegate();
+    ~ModelContentDelegate() override;
 
     void paint(QPainter *painter, const QStyleOptionViewItem &origOption, const QModelIndex &index) const override;
 };

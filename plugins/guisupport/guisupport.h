@@ -45,7 +45,7 @@ class GuiSupport : public QObject
 public:
     explicit GuiSupport(Probe *probe, QObject *parent = nullptr);
 
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     void registerMetaTypes();

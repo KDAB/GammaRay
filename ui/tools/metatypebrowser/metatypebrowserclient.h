@@ -39,7 +39,7 @@ class MetaTypeBrowserClient : public MetaTypeBrowserInterface
     Q_INTERFACES(GammaRay::MetaTypeBrowserInterface)
 public:
     explicit MetaTypeBrowserClient(QObject *parent);
-    ~MetaTypeBrowserClient();
+    ~MetaTypeBrowserClient() override;
 
     void rescanTypes() override;
 };

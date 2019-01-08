@@ -40,7 +40,7 @@ class GeoPositionInfoSource : public QGeoPositionInfoSource
     Q_OBJECT
 public:
     explicit GeoPositionInfoSource(QObject *parent = nullptr);
-    ~GeoPositionInfoSource();
+    ~GeoPositionInfoSource() override;
 
     void setSource(QGeoPositionInfoSource *source);
 

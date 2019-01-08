@@ -53,7 +53,7 @@ class TextDocumentInspectorWidget : public QWidget
     Q_OBJECT
 public:
     explicit TextDocumentInspectorWidget(QWidget *parent = nullptr);
-    ~TextDocumentInspectorWidget();
+    ~TextDocumentInspectorWidget() override;
 
 private slots:
     void documentSelected(const QItemSelection &selected, const QItemSelection &deselected);

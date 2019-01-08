@@ -45,7 +45,7 @@ class LocaleTab : public QWidget
     Q_OBJECT
 public:
     explicit LocaleTab(QWidget *parent = nullptr);
-    ~LocaleTab();
+    ~LocaleTab() override;
 
 private slots:
     void initSplitterPosition();

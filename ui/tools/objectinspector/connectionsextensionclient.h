@@ -38,7 +38,7 @@ class ConnectionsExtensionClient : public ConnectionsExtensionInterface
     Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)
 public:
     explicit ConnectionsExtensionClient(const QString &name, QObject *parent = nullptr);
-    virtual ~ConnectionsExtensionClient();
+    ~ConnectionsExtensionClient() override;
 
 public slots:
     void navigateToReceiver(int modelRow) override;

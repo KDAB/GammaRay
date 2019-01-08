@@ -39,7 +39,7 @@ class AboutDialog : public QDialog
     Q_OBJECT
 public:
     explicit AboutDialog(QWidget *parent = nullptr);
-    ~AboutDialog();
+    ~AboutDialog() override;
 
     void setLogo(const QString &iconFileName);
     void setThemeLogo(const QString &fileName);

@@ -46,7 +46,7 @@ class PropertyIntPairEditor : public QWidget
     Q_OBJECT
 public:
     explicit PropertyIntPairEditor(QWidget *parent = nullptr);
-    ~PropertyIntPairEditor();
+    ~PropertyIntPairEditor() override;
 
 protected:
     QScopedPointer<Ui::PropertyIntPairEditor> ui;

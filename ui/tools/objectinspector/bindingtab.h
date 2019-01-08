@@ -47,7 +47,7 @@ class BindingTab : public QWidget
     Q_OBJECT
 public:
     explicit BindingTab(PropertyWidget *parent = nullptr);
-    ~BindingTab();
+    ~BindingTab() override;
 
 private slots:
     void bindingContextMenu(const QPoint &pos);

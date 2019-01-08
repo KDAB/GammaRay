@@ -38,7 +38,7 @@ class ToolPluginErrorModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit ToolPluginErrorModel(const PluginLoadErrors &errors, QObject *parent = nullptr);
-    ~ToolPluginErrorModel();
+    ~ToolPluginErrorModel() override;
 
     QVariant data(const QModelIndex &index, int role) const override;
     int columnCount(const QModelIndex &parent) const override;

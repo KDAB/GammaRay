@@ -66,7 +66,7 @@ public:
     Q_DECLARE_FLAGS(State, StateFlag)
 
     explicit QuickInspectorWidget(QWidget *parent = nullptr);
-    ~QuickInspectorWidget();
+    ~QuickInspectorWidget() override;
 
     Q_INVOKABLE void saveTargetState(QSettings *settings) const;
     Q_INVOKABLE void restoreTargetState(QSettings *settings);

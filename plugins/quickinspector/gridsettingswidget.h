@@ -42,7 +42,7 @@ class GridSettingsWidget : public QWidget
 
 public:
     explicit GridSettingsWidget(QWidget *parent = nullptr);
-    ~GridSettingsWidget();
+    ~GridSettingsWidget() override;
 
     void setOverlaySettings(const QuickDecorationsSettings &settings);
 

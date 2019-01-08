@@ -39,7 +39,7 @@ class TimezoneOffsetDataModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit TimezoneOffsetDataModel(QObject *parent = nullptr);
-    ~TimezoneOffsetDataModel();
+    ~TimezoneOffsetDataModel() override;
 
     void setTimezone(const QTimeZone &tz);
 

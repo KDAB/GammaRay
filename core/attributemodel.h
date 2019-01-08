@@ -40,7 +40,7 @@ class GAMMARAY_CORE_EXPORT AbstractAttributeModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit AbstractAttributeModel(QObject *parent = nullptr);
-    ~AbstractAttributeModel();
+    ~AbstractAttributeModel() override;
 
     void setAttributeType(const char *name);
 
@@ -68,7 +68,7 @@ public:
     {
     }
 
-    ~AttributeModel() {}
+    ~AttributeModel() override {}
 
     void setObject(Class *obj)
     {

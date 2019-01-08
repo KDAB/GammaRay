@@ -38,7 +38,7 @@ class PaintBufferClientModel : public QIdentityProxyModel
     Q_OBJECT
 public:
     explicit PaintBufferClientModel(QObject *parent = nullptr);
-    ~PaintBufferClientModel();
+    ~PaintBufferClientModel() override;
 
     QVariant data(const QModelIndex & index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;

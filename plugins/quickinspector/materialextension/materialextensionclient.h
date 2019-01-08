@@ -39,7 +39,7 @@ class MaterialExtensionClient : public MaterialExtensionInterface
 
 public:
     explicit MaterialExtensionClient(const QString &name, QObject *parent = nullptr);
-    virtual ~MaterialExtensionClient();
+    ~MaterialExtensionClient() override;
 
 public slots:
     void getShader(int row) override;

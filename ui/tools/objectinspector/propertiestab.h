@@ -47,7 +47,7 @@ class PropertiesTab : public QWidget
     Q_OBJECT
 public:
     explicit PropertiesTab(PropertyWidget *parent);
-    virtual ~PropertiesTab();
+    ~PropertiesTab() override;
 
 private:
     void setObjectBaseName(const QString &baseName);

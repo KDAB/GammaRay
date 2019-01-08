@@ -51,7 +51,7 @@ class NetworkConfigurationModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit NetworkConfigurationModel(QObject *parent = nullptr);
-    ~NetworkConfigurationModel();
+    ~NetworkConfigurationModel() override;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

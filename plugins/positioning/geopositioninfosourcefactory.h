@@ -45,7 +45,7 @@ class GeoPositionInfoSourceFactory : public QObject, QGeoPositionInfoSourceFacto
     Q_INTERFACES(QGeoPositionInfoSourceFactory)
 public:
     explicit GeoPositionInfoSourceFactory(QObject *parent = nullptr);
-    ~GeoPositionInfoSourceFactory();
+    ~GeoPositionInfoSourceFactory() override;
 
     QGeoPositionInfoSource *positionInfoSource(QObject *parent) override;
     QGeoSatelliteInfoSource *satelliteInfoSource(QObject *parent) override;

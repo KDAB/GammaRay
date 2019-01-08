@@ -53,7 +53,7 @@ class ToolManagerInterface : public QObject
 
 public:
     explicit ToolManagerInterface(QObject *parent = nullptr);
-    virtual ~ToolManagerInterface();
+    ~ToolManagerInterface() override;
 
     virtual void selectObject(const ObjectId &id, const QString &toolId) = 0;
     virtual void requestToolsForObject(const ObjectId &id) = 0;

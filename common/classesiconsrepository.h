@@ -42,7 +42,7 @@ class GAMMARAY_COMMON_EXPORT ClassesIconsRepository : public QObject
     Q_OBJECT
 
 public:
-    ~ClassesIconsRepository();
+    ~ClassesIconsRepository() override;
 
     /*! Request the icon file path for the given icon id.
      *  On the client side the response can be invalid on first request,

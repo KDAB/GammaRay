@@ -43,7 +43,7 @@ class QmlContextModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit QmlContextModel(QObject *parent = nullptr);
-    ~QmlContextModel();
+    ~QmlContextModel() override;
 
     void clear();
     void setContext(QQmlContext *leafContext);

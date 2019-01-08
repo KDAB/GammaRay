@@ -46,7 +46,7 @@ class MapController : public QObject
     Q_PROPERTY(double overrideDirection READ overrideDirection WRITE setOverrideDirection NOTIFY overrideDirectionChanged)
 public:
     explicit MapController(QObject *parent = nullptr);
-    ~MapController();
+    ~MapController() override;
 
     QGeoCoordinate sourceCoordinate() const;
     void setSourceCoordinate(const QGeoCoordinate &coord);

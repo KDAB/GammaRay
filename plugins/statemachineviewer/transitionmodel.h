@@ -43,7 +43,7 @@ class TransitionModel : public ObjectModelBase<QAbstractItemModel>
     Q_OBJECT
 public:
     explicit TransitionModel(QObject *parent = nullptr);
-    ~TransitionModel();
+    ~TransitionModel() override;
     void setState(QAbstractState *state);
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

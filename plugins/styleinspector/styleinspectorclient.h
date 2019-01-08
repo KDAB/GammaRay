@@ -38,7 +38,7 @@ class StyleInspectorClient : public StyleInspectorInterface
     Q_INTERFACES(GammaRay::StyleInspectorInterface)
 public:
     explicit StyleInspectorClient(QObject *parent = nullptr);
-    ~StyleInspectorClient();
+    ~StyleInspectorClient() override;
 
     void setCellHeight(int height) override;
     void setCellWidth(int width) override;

@@ -49,7 +49,7 @@ class EnumRepositoryServer : public EnumRepository
 {
     Q_OBJECT
 public:
-    ~EnumRepositoryServer();
+    ~EnumRepositoryServer() override;
 
     /*! Creates an EnumValue instance for the given numeric value and QMetaEnum.
      *  If not yet present, the enum definition with be registered

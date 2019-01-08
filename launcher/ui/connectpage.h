@@ -50,7 +50,7 @@ class GAMMARAY_LAUNCHER_UI_EXPORT ConnectPage : public QWidget
     friend class ::LauncherUiIPTest;
 public:
     explicit ConnectPage(QWidget *parent = nullptr);
-    ~ConnectPage();
+    ~ConnectPage() override;
 
     bool isValid() const;
     void writeSettings();

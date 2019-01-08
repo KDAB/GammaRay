@@ -45,7 +45,7 @@ class QuickInspectorClient : public QuickInspectorInterface
 
 public:
     explicit QuickInspectorClient(QObject *parent = nullptr);
-    ~QuickInspectorClient();
+    ~QuickInspectorClient() override;
 
 public slots:
     void selectWindow(int index) override;

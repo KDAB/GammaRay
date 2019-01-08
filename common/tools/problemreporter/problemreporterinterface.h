@@ -39,7 +39,7 @@ class ProblemReporterInterface : public QObject
     Q_OBJECT
 public:
     explicit ProblemReporterInterface(QObject *parent = nullptr);
-    virtual ~ProblemReporterInterface();
+    ~ProblemReporterInterface() override;
 
 signals:
     void problemScansFinished();

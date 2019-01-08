@@ -41,7 +41,7 @@ class EnumsTab : public QWidget
     Q_OBJECT
 public:
     explicit EnumsTab(PropertyWidget *parent);
-    ~EnumsTab();
+    ~EnumsTab() override;
 
 private:
     void setObjectBaseName(const QString &baseName);

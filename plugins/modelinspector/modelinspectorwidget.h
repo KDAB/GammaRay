@@ -51,7 +51,7 @@ class ModelInspectorWidget : public QWidget
     Q_OBJECT
 public:
     explicit ModelInspectorWidget(QWidget *parent = nullptr);
-    ~ModelInspectorWidget();
+    ~ModelInspectorWidget() override;
 
 private slots:
     void cellDataChanged();

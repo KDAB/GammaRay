@@ -77,7 +77,7 @@ public:
     };
 
     explicit SignalHistoryModel(Probe *probe, QObject *parent = nullptr);
-    ~SignalHistoryModel();
+    ~SignalHistoryModel() override;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;

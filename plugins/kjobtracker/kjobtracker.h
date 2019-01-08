@@ -42,7 +42,7 @@ class KJobTracker : public QObject
     Q_OBJECT
 public:
     explicit KJobTracker(Probe *probe, QObject *parent = nullptr);
-    virtual ~KJobTracker();
+    ~KJobTracker() override;
 
 private:
     KJobModel *m_jobModel;

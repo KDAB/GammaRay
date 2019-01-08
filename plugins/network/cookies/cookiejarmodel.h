@@ -43,7 +43,7 @@ class CookieJarModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit CookieJarModel(QObject *parent = nullptr);
-    ~CookieJarModel();
+    ~CookieJarModel() override;
 
     void setCookieJar(QNetworkCookieJar *cookieJar);
 

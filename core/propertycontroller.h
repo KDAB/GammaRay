@@ -49,7 +49,7 @@ class GAMMARAY_CORE_EXPORT PropertyController : public PropertyControllerInterfa
     Q_INTERFACES(GammaRay::PropertyControllerInterface)
 public:
     explicit PropertyController(const QString &baseName, QObject *parent);
-    ~PropertyController();
+    ~PropertyController() override;
 
     const QString &objectBaseName();
 

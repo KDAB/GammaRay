@@ -40,7 +40,7 @@ class QuickAnchorsPropertyAdaptor : public PropertyAdaptor
     Q_OBJECT
 public:
     explicit QuickAnchorsPropertyAdaptor(QObject *parent = nullptr);
-    ~QuickAnchorsPropertyAdaptor();
+    ~QuickAnchorsPropertyAdaptor() override;
 
     int count() const override;
     PropertyData propertyData(int index) const override;

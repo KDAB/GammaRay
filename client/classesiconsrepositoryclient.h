@@ -40,7 +40,7 @@ class ClassesIconsRepositoryClient : public ClassesIconsRepository
 
 public:
     explicit ClassesIconsRepositoryClient(QObject *parent = nullptr);
-    ~ClassesIconsRepositoryClient();
+    ~ClassesIconsRepositoryClient() override;
 
     QString filePath(int id) const override;
 

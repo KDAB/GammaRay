@@ -59,7 +59,7 @@ public:
     };
 
     explicit BindingModel (QObject *parent = nullptr);
-    ~BindingModel();
+    ~BindingModel() override;
 
     void setObject(QObject *obj, std::vector<std::unique_ptr<BindingNode>> &bindings);
 
