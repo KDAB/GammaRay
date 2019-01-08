@@ -44,7 +44,7 @@ class ResourceInfoExtractors
 {
     Q_DECLARE_TR_FUNCTIONS(GammaRay::ResourceInfoExtractors)
 public:
-  typedef std::function<void (wl_resource *, QStringList &)> Function;
+  using Function = std::function<void (wl_resource *, QStringList &)>;
 
   ResourceInfoExtractors()
   {

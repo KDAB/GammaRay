@@ -50,7 +50,7 @@ class OverlayWidget;
 class PaintAnalyzer;
 class RemoteViewServer;
 class ObjectId;
-typedef QVector<ObjectId> ObjectIds;
+using ObjectIds = QVector<ObjectId>;
 
 class WidgetInspectorServer : public WidgetInspectorInterface
 {

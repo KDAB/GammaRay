@@ -46,7 +46,7 @@ class AbstractInjector : public QObject
     Q_OBJECT
 
 public:
-    typedef QSharedPointer<AbstractInjector> Ptr;
+    using Ptr = QSharedPointer<AbstractInjector>;
     ~AbstractInjector() override;
 
     /**

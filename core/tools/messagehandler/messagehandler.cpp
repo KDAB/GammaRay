@@ -49,7 +49,7 @@
 
 using namespace GammaRay;
 
-typedef QtMessageHandler MessageHandlerCallback;
+using MessageHandlerCallback = QtMessageHandler;
 static MessageHandlerCallback(*const installMessageHandler)(MessageHandlerCallback)
     = qInstallMessageHandler;
 

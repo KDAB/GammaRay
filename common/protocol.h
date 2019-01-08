@@ -43,11 +43,11 @@ namespace GammaRay {
 /*! Helper functions and constants defining the communication protocol between client and server. */
 namespace Protocol {
 /*! Message payload size type. */
-typedef qint32 PayloadSize;
+using PayloadSize = qint32;
 /*! Remote object address type. */
-typedef quint16 ObjectAddress;
+using ObjectAddress = quint16;
 /*! Message type type. */
-typedef quint8 MessageType;
+using MessageType = quint8;
 
 /*! Invalid object address. */
 static const ObjectAddress InvalidObjectAddress = 0;
@@ -127,7 +127,7 @@ public:
     qint32 column;
 };
 /*! Transport protocol representation of a QModelIndex. */
-typedef QVector<ModelIndexData> ModelIndex;
+using ModelIndex = QVector<ModelIndexData>;
 
 /*! Protocol representation of an QItemSelectionRange. */
 struct ItemSelectionRange {
@@ -135,7 +135,7 @@ struct ItemSelectionRange {
     ModelIndex bottomRight;
 };
 /*! Protocol representation of an QItemSelection. */
-typedef QVector<ItemSelectionRange> ItemSelection;
+using ItemSelection = QVector<ItemSelectionRange>;
 
 /*! Serializes a QModelIndex. */
 GAMMARAY_COMMON_EXPORT ModelIndex fromQModelIndex(const QModelIndex &index);
