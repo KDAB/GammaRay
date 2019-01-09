@@ -45,9 +45,7 @@ MetaObjectTreeClientProxyModel::MetaObjectTreeClientProxyModel(QObject *parent)
 {
 }
 
-MetaObjectTreeClientProxyModel::~MetaObjectTreeClientProxyModel()
-{
-}
+MetaObjectTreeClientProxyModel::~MetaObjectTreeClientProxyModel() = default;
 
 void MetaObjectTreeClientProxyModel::setSourceModel(QAbstractItemModel *source)
 {

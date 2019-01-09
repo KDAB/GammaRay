@@ -88,8 +88,7 @@ signals:
 
 private:
     struct Node { // represents one row
-        Node()
-        {}
+        Node() = default;
         ~Node();
         Q_DISABLE_COPY(Node)
         // delete all cached children data, but assume row/column count on this level is still accurate

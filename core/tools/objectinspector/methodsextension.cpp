@@ -58,9 +58,7 @@ MethodsExtension::MethodsExtension(PropertyController *controller)
     ObjectBroker::selectionModel(m_model); // trigger creation
 }
 
-MethodsExtension::~MethodsExtension()
-{
-}
+MethodsExtension::~MethodsExtension() = default;
 
 bool MethodsExtension::setQObject(QObject *object)
 {

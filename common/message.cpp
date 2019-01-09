@@ -94,7 +94,7 @@ public:
         scratchSpace.reserve(32);
     }
 
-    ~MessageBuffer() {}
+    ~MessageBuffer() = default;
 
     void clear()
     {
@@ -141,9 +141,7 @@ Message::Message(Message &&other)
 {
 }
 
-Message::~Message()
-{
-}
+Message::~Message() = default;
 
 Protocol::ObjectAddress Message::address() const
 {

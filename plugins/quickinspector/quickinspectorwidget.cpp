@@ -183,9 +183,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     updateActions();
 }
 
-QuickInspectorWidget::~QuickInspectorWidget()
-{
-}
+QuickInspectorWidget::~QuickInspectorWidget() = default;
 
 void QuickInspectorWidget::saveTargetState(QSettings *settings) const
 {

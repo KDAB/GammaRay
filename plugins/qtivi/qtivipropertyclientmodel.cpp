@@ -39,9 +39,7 @@ QtIviPropertyClientModel::QtIviPropertyClientModel(QObject *parent)
 {
 }
 
-QtIviPropertyClientModel::~QtIviPropertyClientModel()
-{
-}
+QtIviPropertyClientModel::~QtIviPropertyClientModel() = default;
 
 QVariant QtIviPropertyClientModel::data(const QModelIndex &index, int role) const
 {

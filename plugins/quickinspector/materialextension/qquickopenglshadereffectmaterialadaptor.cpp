@@ -45,9 +45,7 @@ QQuickOpenGLShaderEffectMaterialAdaptor::QQuickOpenGLShaderEffectMaterialAdaptor
 {
 }
 
-QQuickOpenGLShaderEffectMaterialAdaptor::~QQuickOpenGLShaderEffectMaterialAdaptor()
-{
-}
+QQuickOpenGLShaderEffectMaterialAdaptor::~QQuickOpenGLShaderEffectMaterialAdaptor() = default;
 
 int QQuickOpenGLShaderEffectMaterialAdaptor::count() const
 {

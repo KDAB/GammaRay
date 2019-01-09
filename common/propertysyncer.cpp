@@ -48,9 +48,7 @@ PropertySyncer::PropertySyncer(QObject *parent)
 {
 }
 
-PropertySyncer::~PropertySyncer()
-{
-}
+PropertySyncer::~PropertySyncer() = default;
 
 void PropertySyncer::setRequestInitialSync(bool initialSync)
 {

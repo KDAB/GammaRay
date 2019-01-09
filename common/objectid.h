@@ -63,8 +63,7 @@ public:
         : m_type(QObjectType)
         , m_id(reinterpret_cast<quint64>(obj))
     {}
-    explicit ObjectId()
-    {}
+    explicit ObjectId() = default;
     inline bool isNull() const { return m_id == 0; }
     inline quint64 id() const { return m_id; }
     inline Type type() const { return m_type; }

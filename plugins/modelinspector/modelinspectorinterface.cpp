@@ -67,9 +67,7 @@ ModelInspectorInterface::ModelInspectorInterface(QObject *parent)
     ObjectBroker::registerObject<ModelInspectorInterface *>(this);
 }
 
-ModelInspectorInterface::~ModelInspectorInterface()
-{
-}
+ModelInspectorInterface::~ModelInspectorInterface() = default;
 
 ModelCellData ModelInspectorInterface::currentCellData() const
 {

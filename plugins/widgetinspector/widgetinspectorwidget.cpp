@@ -175,9 +175,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &WidgetInspectorWidget::onTabChanged);
 }
 
-WidgetInspectorWidget::~WidgetInspectorWidget()
-{
-}
+WidgetInspectorWidget::~WidgetInspectorWidget() = default;
 
 void WidgetInspectorWidget::saveTargetState(QSettings *settings) const
 {

@@ -41,9 +41,7 @@ ServerDevice::ServerDevice(QObject *parent)
 {
 }
 
-ServerDevice::~ServerDevice()
-{
-}
+ServerDevice::~ServerDevice() = default;
 
 void ServerDevice::setServerAddress(const QUrl &serverAddress)
 {

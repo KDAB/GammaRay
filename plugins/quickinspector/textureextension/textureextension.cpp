@@ -56,9 +56,7 @@ TextureExtension::TextureExtension(PropertyController *controller)
 {
 }
 
-TextureExtension::~TextureExtension()
-{
-}
+TextureExtension::~TextureExtension() = default;
 
 static QSGGeometryNode *findGeometryNode(QSGNode *node)
 {

@@ -40,9 +40,7 @@ DynamicPropertyAdaptor::DynamicPropertyAdaptor(QObject *parent)
 {
 }
 
-DynamicPropertyAdaptor::~DynamicPropertyAdaptor()
-{
-}
+DynamicPropertyAdaptor::~DynamicPropertyAdaptor() = default;
 
 void DynamicPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {

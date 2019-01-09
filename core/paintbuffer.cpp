@@ -38,9 +38,7 @@ PaintBufferEngine::PaintBufferEngine(GammaRay::PaintBuffer *buffer)
 {
 }
 
-PaintBufferEngine::~PaintBufferEngine()
-{
-}
+PaintBufferEngine::~PaintBufferEngine() = default;
 
 void PaintBufferEngine::clip(const QVectorPath& path, Qt::ClipOperation op)
 {
@@ -333,9 +331,7 @@ PaintBuffer::PaintBuffer(const PaintBuffer& other)
     d = PaintBufferPrivacyViolater::get(this);
 }
 
-PaintBuffer::~PaintBuffer()
-{
-}
+PaintBuffer::~PaintBuffer() = default;
 
 PaintBuffer& PaintBuffer::operator=(const PaintBuffer& other)
 {

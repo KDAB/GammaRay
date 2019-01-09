@@ -38,9 +38,7 @@ WebViewModel::WebViewModel(QObject *parent)
 {
 }
 
-WebViewModel::~WebViewModel()
-{
-}
+WebViewModel::~WebViewModel() = default;
 
 QVariant WebViewModel::data(const QModelIndex &index, int role) const
 {

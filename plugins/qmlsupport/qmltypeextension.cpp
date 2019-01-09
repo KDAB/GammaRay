@@ -50,9 +50,7 @@ QmlTypeExtension::QmlTypeExtension(PropertyController *controller)
     controller->registerModel(m_typePropertyModel, QStringLiteral("qmlTypeModel"));
 }
 
-QmlTypeExtension::~QmlTypeExtension()
-{
-}
+QmlTypeExtension::~QmlTypeExtension() = default;
 
 bool QmlTypeExtension::setQObject(QObject *object)
 {

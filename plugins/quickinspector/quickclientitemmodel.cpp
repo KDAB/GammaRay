@@ -41,9 +41,7 @@ QuickClientItemModel::QuickClientItemModel(QObject *parent)
 {
 }
 
-QuickClientItemModel::~QuickClientItemModel()
-{
-}
+QuickClientItemModel::~QuickClientItemModel() = default;
 
 QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
 {

@@ -60,9 +60,7 @@ NetworkDiscoveryModel::NetworkDiscoveryModel(QObject *parent)
     expireTimer->start();
 }
 
-NetworkDiscoveryModel::~NetworkDiscoveryModel()
-{
-}
+NetworkDiscoveryModel::~NetworkDiscoveryModel() = default;
 
 void NetworkDiscoveryModel::processPendingDatagrams()
 {

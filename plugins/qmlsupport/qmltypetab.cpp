@@ -55,9 +55,7 @@ QmlTypeTab::QmlTypeTab(PropertyWidget *parent)
     connect(ui->typeView, &QWidget::customContextMenuRequested, this, &QmlTypeTab::contextMenu);
 }
 
-QmlTypeTab::~QmlTypeTab()
-{
-}
+QmlTypeTab::~QmlTypeTab() = default;
 
 void QmlTypeTab::contextMenu(QPoint pos)
 {

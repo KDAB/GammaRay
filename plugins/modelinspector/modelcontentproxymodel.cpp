@@ -39,9 +39,7 @@ ModelContentProxyModel::ModelContentProxyModel(QObject *parent)
 {
 }
 
-ModelContentProxyModel::~ModelContentProxyModel()
-{
-}
+ModelContentProxyModel::~ModelContentProxyModel() = default;
 
 void ModelContentProxyModel::setSourceModel(QAbstractItemModel *model)
 {

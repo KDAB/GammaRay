@@ -31,10 +31,6 @@
 
 using namespace GammaRay;
 
-AbstractBindingProvider::AbstractBindingProvider()
-{
-}
+AbstractBindingProvider::AbstractBindingProvider() = default;
 
-AbstractBindingProvider::~AbstractBindingProvider()
-{
-}
+AbstractBindingProvider::~AbstractBindingProvider() = default;

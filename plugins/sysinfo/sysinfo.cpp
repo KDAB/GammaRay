@@ -44,6 +44,4 @@ SysInfo::SysInfo(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.StandardPathsModel"), new StandardPathsModel(this));
 }
 
-SysInfo::~SysInfo()
-{
-}
+SysInfo::~SysInfo() = default;

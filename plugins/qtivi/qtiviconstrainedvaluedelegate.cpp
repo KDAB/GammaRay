@@ -55,9 +55,7 @@ QtIviConstrainedValueDelegate::QtIviConstrainedValueDelegate(QObject *parent)
 {
 }
 
-QtIviConstrainedValueDelegate::~QtIviConstrainedValueDelegate()
-{
-}
+QtIviConstrainedValueDelegate::~QtIviConstrainedValueDelegate() = default;
 
 QWidget *QtIviConstrainedValueDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                                                      const QModelIndex &index) const

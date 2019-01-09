@@ -51,6 +51,4 @@ MimeTypesWidget::MimeTypesWidget(QWidget *parent)
     new SearchLineController(ui->searchLine, model);
 }
 
-MimeTypesWidget::~MimeTypesWidget()
-{
-}
+MimeTypesWidget::~MimeTypesWidget() = default;

@@ -39,9 +39,7 @@ MethodsExtensionClient::MethodsExtensionClient(const QString &name, QObject *par
 {
 }
 
-MethodsExtensionClient::~MethodsExtensionClient()
-{
-}
+MethodsExtensionClient::~MethodsExtensionClient() = default;
 
 void MethodsExtensionClient::activateMethod()
 {

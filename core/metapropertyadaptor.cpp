@@ -43,9 +43,7 @@ MetaPropertyAdaptor::MetaPropertyAdaptor(QObject *parent)
 {
 }
 
-MetaPropertyAdaptor::~MetaPropertyAdaptor()
-{
-}
+MetaPropertyAdaptor::~MetaPropertyAdaptor() = default;
 
 void MetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {

@@ -63,6 +63,4 @@ TimezoneTab::TimezoneTab(QWidget *parent)
     ui->offsetView->header()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
-TimezoneTab::~TimezoneTab()
-{
-}
+TimezoneTab::~TimezoneTab() = default;

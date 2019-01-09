@@ -79,9 +79,7 @@ public:
     {
     }
 
-    ~ServerDeviceImpl() override
-    {
-    }
+    ~ServerDeviceImpl() override = default;
 
     QString errorString() const override
     {

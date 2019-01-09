@@ -72,9 +72,7 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
     connect(ui->actionView, &QAbstractItemView::doubleClicked, this, &ActionInspectorWidget::triggerAction);
 }
 
-ActionInspectorWidget::~ActionInspectorWidget()
-{
-}
+ActionInspectorWidget::~ActionInspectorWidget() = default;
 
 void ActionInspectorWidget::triggerAction(const QModelIndex &index)
 {

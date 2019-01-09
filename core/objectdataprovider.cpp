@@ -36,13 +36,9 @@
 
 namespace GammaRay {
 
-AbstractObjectDataProvider::AbstractObjectDataProvider()
-{
-}
+AbstractObjectDataProvider::AbstractObjectDataProvider() = default;
 
-AbstractObjectDataProvider::~AbstractObjectDataProvider()
-{
-}
+AbstractObjectDataProvider::~AbstractObjectDataProvider() = default;
 
 Q_GLOBAL_STATIC(QVector<AbstractObjectDataProvider *>, s_providers)
 

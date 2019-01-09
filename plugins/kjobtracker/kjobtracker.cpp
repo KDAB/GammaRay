@@ -48,6 +48,4 @@ KJobTracker::KJobTracker(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.KJobModel"), proxy);
 }
 
-KJobTracker::~KJobTracker()
-{
-}
+KJobTracker::~KJobTracker() = default;

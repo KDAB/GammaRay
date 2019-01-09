@@ -86,9 +86,7 @@ PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
     connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &PaintAnalyzer::repaint);
 }
 
-PaintAnalyzer::~PaintAnalyzer()
-{
-}
+PaintAnalyzer::~PaintAnalyzer() = default;
 
 void PaintAnalyzer::reset()
 {

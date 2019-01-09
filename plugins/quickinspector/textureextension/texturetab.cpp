@@ -131,6 +131,4 @@ void TextureTab::addInfoLine(bool isProblem, const QString& newLine) {
     ui->infoLabel->setText(text + newLine);
 }
 
-TextureTab::~TextureTab()
-{
-}
+TextureTab::~TextureTab() = default;

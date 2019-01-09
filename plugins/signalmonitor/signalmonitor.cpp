@@ -62,9 +62,7 @@ SignalMonitor::SignalMonitor(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectSelected, this, &SignalMonitor::objectSelected);
 }
 
-SignalMonitor::~SignalMonitor()
-{
-}
+SignalMonitor::~SignalMonitor() = default;
 
 void SignalMonitor::timeout()
 {

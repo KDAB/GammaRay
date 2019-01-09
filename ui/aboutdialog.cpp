@@ -49,9 +49,7 @@ AboutDialog::AboutDialog(QWidget *parent)
     connect(button, &QDialogButtonBox::rejected, this, &QWidget::close);
 }
 
-AboutDialog::~AboutDialog()
-{
-}
+AboutDialog::~AboutDialog() = default;
 
 void AboutDialog::setLogo(const QString &iconFileName)
 {

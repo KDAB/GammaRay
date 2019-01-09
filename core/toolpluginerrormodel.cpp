@@ -34,9 +34,7 @@ ToolPluginErrorModel::ToolPluginErrorModel(const PluginLoadErrors &errors, QObje
 {
 }
 
-ToolPluginErrorModel::~ToolPluginErrorModel()
-{
-}
+ToolPluginErrorModel::~ToolPluginErrorModel() = default;
 
 int ToolPluginErrorModel::columnCount(const QModelIndex &parent) const
 {

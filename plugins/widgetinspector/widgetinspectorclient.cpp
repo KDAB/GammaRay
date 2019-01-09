@@ -37,9 +37,7 @@ WidgetInspectorClient::WidgetInspectorClient(QObject *parent)
 {
 }
 
-WidgetInspectorClient::~WidgetInspectorClient()
-{
-}
+WidgetInspectorClient::~WidgetInspectorClient() = default;
 
 #define WRAP_REMOTE(func, type) \
     void WidgetInspectorClient::func(type arg) \

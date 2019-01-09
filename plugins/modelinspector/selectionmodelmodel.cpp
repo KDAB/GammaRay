@@ -42,9 +42,7 @@ SelectionModelModel::SelectionModelModel(QObject *parent) :
 {
 }
 
-SelectionModelModel::~SelectionModelModel()
-{
-}
+SelectionModelModel::~SelectionModelModel() = default;
 
 void SelectionModelModel::objectCreated(QObject* obj)
 {

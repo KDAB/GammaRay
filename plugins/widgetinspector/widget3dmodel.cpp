@@ -92,9 +92,7 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &mo
     }
 }
 
-Widget3DWidget::~Widget3DWidget()
-{
-}
+Widget3DWidget::~Widget3DWidget() = default;
 
 bool Widget3DWidget::isWindow() const
 {
@@ -277,9 +275,7 @@ Widget3DModel::Widget3DModel(QObject *parent)
 {
 }
 
-Widget3DModel::~Widget3DModel()
-{
-}
+Widget3DModel::~Widget3DModel() = default;
 
 QHash<int, QByteArray> Widget3DModel::roleNames() const
 {

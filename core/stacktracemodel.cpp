@@ -37,9 +37,7 @@ StackTraceModel::StackTraceModel(QObject* parent)
 {
 }
 
-StackTraceModel::~StackTraceModel()
-{
-}
+StackTraceModel::~StackTraceModel() = default;
 
 void StackTraceModel::setStackTrace(const Execution::Trace& trace)
 {

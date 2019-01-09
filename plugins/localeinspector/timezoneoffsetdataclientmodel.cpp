@@ -35,9 +35,7 @@ TimezoneOffsetDataClientModel::TimezoneOffsetDataClientModel(QObject* parent)
 {
 }
 
-TimezoneOffsetDataClientModel::~TimezoneOffsetDataClientModel()
-{
-}
+TimezoneOffsetDataClientModel::~TimezoneOffsetDataClientModel() = default;
 
 QVariant TimezoneOffsetDataClientModel::headerData(int section, Qt::Orientation orientation, int role) const
 {

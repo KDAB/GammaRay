@@ -84,9 +84,7 @@ StyleInspector::StyleInspector(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.StyleInspector.StyleHintModel"), m_styleHintModel);
 }
 
-StyleInspector::~StyleInspector()
-{
-}
+StyleInspector::~StyleInspector() = default;
 
 void StyleInspector::styleSelected(const QItemSelection &selection)
 {

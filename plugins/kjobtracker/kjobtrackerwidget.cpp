@@ -53,6 +53,4 @@ KJobTrackerWidget::KJobTrackerWidget(QWidget *parent)
     ui->jobView->setModel(model);
 }
 
-KJobTrackerWidget::~KJobTrackerWidget()
-{
-}
+KJobTrackerWidget::~KJobTrackerWidget() = default;

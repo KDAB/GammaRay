@@ -60,9 +60,7 @@ ProcessModel::ProcessModel(QObject *parent)
     m_availableABIs = ProbeFinder::listProbeABIs();
 }
 
-ProcessModel::~ProcessModel()
-{
-}
+ProcessModel::~ProcessModel() = default;
 
 void ProcessModel::setProcesses(const ProcDataList &processes)
 {

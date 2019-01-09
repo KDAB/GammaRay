@@ -241,9 +241,7 @@ StyleHintModel::StyleHintModel(QObject *parent) :
 {
 }
 
-StyleHintModel::~StyleHintModel()
-{
-}
+StyleHintModel::~StyleHintModel() = default;
 
 QVariant StyleHintModel::headerData(int section, Qt::Orientation orientation, int role) const
 {

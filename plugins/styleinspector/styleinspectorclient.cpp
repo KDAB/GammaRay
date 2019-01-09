@@ -40,9 +40,7 @@ StyleInspectorClient::StyleInspectorClient(QObject *parent)
     setCellZoom(cellZoom());
 }
 
-StyleInspectorClient::~StyleInspectorClient()
-{
-}
+StyleInspectorClient::~StyleInspectorClient() = default;
 
 void StyleInspectorClient::setCellHeight(int height)
 {

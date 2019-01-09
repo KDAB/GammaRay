@@ -35,9 +35,7 @@ AbstractAttributeModel::AbstractAttributeModel(QObject *parent)
 {
 }
 
-AbstractAttributeModel::~AbstractAttributeModel()
-{
-}
+AbstractAttributeModel::~AbstractAttributeModel() = default;
 
 void AbstractAttributeModel::setAttributeType(const char *name)
 {

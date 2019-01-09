@@ -42,9 +42,7 @@ VariantPropertyObject::VariantPropertyObject(QObject *parent)
     setProperty("dynamicProperty", QVariant::fromValue(mapping));
 }
 
-VariantPropertyObject::~VariantPropertyObject()
-{
-}
+VariantPropertyObject::~VariantPropertyObject() = default;
 
 QSharedPointer<QObject> VariantPropertyObject::sharedObject() const
 {

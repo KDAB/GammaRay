@@ -38,9 +38,7 @@ MessageHandlerInterface::MessageHandlerInterface(QObject *parent)
     ObjectBroker::registerObject<MessageHandlerInterface *>(this);
 }
 
-MessageHandlerInterface::~MessageHandlerInterface()
-{
-}
+MessageHandlerInterface::~MessageHandlerInterface() = default;
 
 bool MessageHandlerInterface::stackTraceAvailable() const
 {

@@ -39,9 +39,7 @@ TimezoneModel::TimezoneModel(QObject* parent)
 {
 }
 
-TimezoneModel::~TimezoneModel()
-{
-}
+TimezoneModel::~TimezoneModel() = default;
 
 int TimezoneModel::columnCount(const QModelIndex& parent) const
 {

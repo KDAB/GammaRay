@@ -51,9 +51,7 @@ ConnectionsExtension::ConnectionsExtension(PropertyController *controller)
     controller->registerModel(m_outboundModel, QStringLiteral("outboundConnections"));
 }
 
-ConnectionsExtension::~ConnectionsExtension()
-{
-}
+ConnectionsExtension::~ConnectionsExtension() = default;
 
 bool ConnectionsExtension::setQObject(QObject *object)
 {

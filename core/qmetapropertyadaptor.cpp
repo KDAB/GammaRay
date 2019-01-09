@@ -44,9 +44,7 @@ QMetaPropertyAdaptor::QMetaPropertyAdaptor(QObject *parent)
 {
 }
 
-QMetaPropertyAdaptor::~QMetaPropertyAdaptor()
-{
-}
+QMetaPropertyAdaptor::~QMetaPropertyAdaptor() = default;
 
 void QMetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {

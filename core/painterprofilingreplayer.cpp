@@ -58,13 +58,9 @@ public:
 
 }
 
-PainterProfilingReplayer::PainterProfilingReplayer()
-{
-}
+PainterProfilingReplayer::PainterProfilingReplayer() = default;
 
-PainterProfilingReplayer::~PainterProfilingReplayer()
-{
-}
+PainterProfilingReplayer::~PainterProfilingReplayer() = default;
 
 void PainterProfilingReplayer::profile(const PaintBuffer& buffer)
 {

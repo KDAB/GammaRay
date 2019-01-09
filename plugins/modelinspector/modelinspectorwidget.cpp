@@ -103,9 +103,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
     cellDataChanged();
 }
 
-ModelInspectorWidget::~ModelInspectorWidget()
-{
-}
+ModelInspectorWidget::~ModelInspectorWidget() = default;
 
 void ModelInspectorWidget::modelSelected(const QItemSelection &selected)
 {

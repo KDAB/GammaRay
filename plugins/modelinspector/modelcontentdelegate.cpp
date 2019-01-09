@@ -40,9 +40,7 @@ ModelContentDelegate::ModelContentDelegate(QObject* parent) :
 {
 }
 
-ModelContentDelegate::~ModelContentDelegate()
-{
-}
+ModelContentDelegate::~ModelContentDelegate() = default;
 
 void ModelContentDelegate::paint(QPainter *painter, const QStyleOptionViewItem &origOption, const QModelIndex &index) const
 {

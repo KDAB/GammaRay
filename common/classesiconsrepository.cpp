@@ -40,9 +40,7 @@ ClassesIconsRepository::ClassesIconsRepository(QObject *parent)
     ObjectBroker::registerObject<ClassesIconsRepository *>(this);
 }
 
-ClassesIconsRepository::~ClassesIconsRepository()
-{
-}
+ClassesIconsRepository::~ClassesIconsRepository() = default;
 
 QString ClassesIconsRepository::filePath(int id) const
 {

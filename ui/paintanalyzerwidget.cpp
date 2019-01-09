@@ -100,9 +100,7 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     connect(ui->stackTraceView, &QWidget::customContextMenuRequested, this, &PaintAnalyzerWidget::stackTraceContextMenu);
 }
 
-PaintAnalyzerWidget::~PaintAnalyzerWidget()
-{
-}
+PaintAnalyzerWidget::~PaintAnalyzerWidget() = default;
 
 void PaintAnalyzerWidget::setBaseName(const QString &name)
 {

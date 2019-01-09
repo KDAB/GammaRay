@@ -169,9 +169,7 @@ void dumpObject(QObject *obj)
 
 struct Listener
 {
-    Listener()
-    {
-    }
+    Listener() = default;
 
     bool trackDestroyed = true;
     QVector<QObject *> addedBeforeProbeInstance;

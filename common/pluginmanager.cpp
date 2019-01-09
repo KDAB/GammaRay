@@ -48,9 +48,7 @@ PluginManagerBase::PluginManagerBase(QObject *parent)
 {
 }
 
-PluginManagerBase::~PluginManagerBase()
-{
-}
+PluginManagerBase::~PluginManagerBase() = default;
 
 QStringList PluginManagerBase::pluginPaths() const
 {

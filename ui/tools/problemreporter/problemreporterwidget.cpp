@@ -134,9 +134,7 @@ ProblemReporterWidget::ProblemReporterWidget(QWidget *parent)
     connect(m_availableCheckersModel, &QAbstractItemModel::dataChanged, this, &ProblemReporterWidget::updateFilter);
 }
 
-ProblemReporterWidget::~ProblemReporterWidget()
-{
-}
+ProblemReporterWidget::~ProblemReporterWidget() = default;
 
 void ProblemReporterWidget::problemViewContextMenu(const QPoint &p)
 {

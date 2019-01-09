@@ -81,9 +81,7 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
     ui->timerView->sortByColumn(TimerModel::WakeupsPerSecColumn, Qt::DescendingOrder);
 }
 
-TimerTopWidget::~TimerTopWidget()
-{
-}
+TimerTopWidget::~TimerTopWidget() = default;
 
 void TimerTopWidget::contextMenu(QPoint pos)
 {

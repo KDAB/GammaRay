@@ -135,9 +135,7 @@ PositioningWidget::PositioningWidget(QWidget* parent):
     updateWidgetState();
 }
 
-PositioningWidget::~PositioningWidget()
-{
-}
+PositioningWidget::~PositioningWidget() = default;
 
 void PositioningWidget::updatePosition()
 {

@@ -39,6 +39,4 @@ PropertyControllerClient::PropertyControllerClient(const QString &name, QObject 
 {
 }
 
-PropertyControllerClient::~PropertyControllerClient()
-{
-}
+PropertyControllerClient::~PropertyControllerClient() = default;

@@ -105,9 +105,7 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
     updateActions();
 }
 
-TranslatorInspectorWidget::~TranslatorInspectorWidget()
-{
-}
+TranslatorInspectorWidget::~TranslatorInspectorWidget() = default;
 
 void TranslatorInspectorWidget::translatorContextMenu(QPoint pos)
 {

@@ -87,9 +87,7 @@ QSMStateMachineDebugInterface::QSMStateMachineDebugInterface(QStateMachine *stat
     m_stateMachineWatcher->setWatchedStateMachine(stateMachine);
 }
 
-QSMStateMachineDebugInterface::~QSMStateMachineDebugInterface()
-{
-}
+QSMStateMachineDebugInterface::~QSMStateMachineDebugInterface() = default;
 
 bool QSMStateMachineDebugInterface::isRunning() const
 {

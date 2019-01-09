@@ -65,9 +65,7 @@ SidePane::SidePane(QWidget *parent)
     setItemDelegate(new Delegate(this));
 }
 
-SidePane::~SidePane()
-{
-}
+SidePane::~SidePane() = default;
 
 QSize SidePane::sizeHint() const
 {

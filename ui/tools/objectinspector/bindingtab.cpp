@@ -56,9 +56,7 @@ BindingTab::BindingTab(PropertyWidget* parent)
             this, &BindingTab::bindingContextMenu);
 }
 
-BindingTab::~BindingTab()
-{
-}
+BindingTab::~BindingTab() = default;
 
 void GammaRay::BindingTab::bindingContextMenu(const QPoint &pos)
 {

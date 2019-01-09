@@ -81,9 +81,7 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     connect(ui->objectPropertyWidget, &PropertyWidget::tabsUpdated, this, &ObjectInspectorWidget::propertyWidgetTabsChanged);
 }
 
-ObjectInspectorWidget::~ObjectInspectorWidget()
-{
-}
+ObjectInspectorWidget::~ObjectInspectorWidget() = default;
 
 void ObjectInspectorWidget::objectSelectionChanged(const QItemSelection &selection)
 {

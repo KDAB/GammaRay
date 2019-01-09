@@ -61,9 +61,7 @@ MetaObjectTreeModel::MetaObjectTreeModel(QObject *parent)
     connect(m_pendingDataChangedTimer, &QTimer::timeout, this, &MetaObjectTreeModel::emitPendingDataChanged);
 }
 
-MetaObjectTreeModel::~MetaObjectTreeModel()
-{
-}
+MetaObjectTreeModel::~MetaObjectTreeModel() = default;
 
 QVariant MetaObjectTreeModel::data(const QModelIndex &index, int role) const
 {

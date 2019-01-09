@@ -444,9 +444,7 @@ WlCompositorInspector::WlCompositorInspector(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectSelected, this, &WlCompositorInspector::objectSelected);
 }
 
-WlCompositorInspector::~WlCompositorInspector()
-{
-}
+WlCompositorInspector::~WlCompositorInspector() = default;
 
 struct ClientsListener {
     wl_listener listener;

@@ -38,6 +38,4 @@ SignalMonitorInterface::SignalMonitorInterface(QObject *parent)
     ObjectBroker::registerObject<SignalMonitorInterface *>(this);
 }
 
-SignalMonitorInterface::~SignalMonitorInterface()
-{
-}
+SignalMonitorInterface::~SignalMonitorInterface() = default;

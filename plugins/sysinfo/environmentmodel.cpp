@@ -36,9 +36,7 @@ EnvironmentModel::EnvironmentModel(QObject* parent)
 {
 }
 
-EnvironmentModel::~EnvironmentModel()
-{
-}
+EnvironmentModel::~EnvironmentModel() = default;
 
 int EnvironmentModel::columnCount(const QModelIndex& parent) const
 {

@@ -39,9 +39,7 @@ ModelEvent::ModelEvent(bool modelUsed)
 {
 }
 
-ModelEvent::~ModelEvent()
-{
-}
+ModelEvent::~ModelEvent() = default;
 
 bool ModelEvent::used() const
 {

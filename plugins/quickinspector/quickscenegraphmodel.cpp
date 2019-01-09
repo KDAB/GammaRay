@@ -47,9 +47,7 @@ QuickSceneGraphModel::QuickSceneGraphModel(QObject *parent)
 {
 }
 
-QuickSceneGraphModel::~QuickSceneGraphModel()
-{
-}
+QuickSceneGraphModel::~QuickSceneGraphModel() = default;
 
 void QuickSceneGraphModel::setWindow(QQuickWindow *window)
 {

@@ -39,9 +39,7 @@ PropertyDoublePairEditor::PropertyDoublePairEditor(QWidget *parent)
     ui->setupUi(this);
 }
 
-PropertyDoublePairEditor::~PropertyDoublePairEditor()
-{
-}
+PropertyDoublePairEditor::~PropertyDoublePairEditor() = default;
 
 PropertyPointFEditor::PropertyPointFEditor(QWidget *parent)
     : PropertyDoublePairEditor(parent)

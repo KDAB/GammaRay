@@ -60,7 +60,7 @@ namespace GammaRay {
 class VariantHandlerRepository
 {
 public:
-    VariantHandlerRepository() {}
+    VariantHandlerRepository() = default;
     ~VariantHandlerRepository();
     void clear();
 

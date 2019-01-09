@@ -38,9 +38,7 @@ TranslatorWrapperProxy::TranslatorWrapperProxy(QObject* parent)
 {
 }
 
-TranslatorWrapperProxy::~TranslatorWrapperProxy()
-{
-}
+TranslatorWrapperProxy::~TranslatorWrapperProxy() = default;
 
 QVariant TranslatorWrapperProxy::data(const QModelIndex& proxyIndex, int role) const
 {

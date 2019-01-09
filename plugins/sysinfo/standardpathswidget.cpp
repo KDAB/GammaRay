@@ -123,8 +123,6 @@ StandardPathsWidget::StandardPathsWidget(QWidget *parent)
     ui->pathView->setModel(proxy);
 }
 
-StandardPathsWidget::~StandardPathsWidget()
-{
-}
+StandardPathsWidget::~StandardPathsWidget() = default;
 
 #include "standardpathswidget.moc"

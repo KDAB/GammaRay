@@ -37,9 +37,7 @@ TimezoneOffsetDataModel::TimezoneOffsetDataModel(QObject* parent)
 {
 }
 
-TimezoneOffsetDataModel::~TimezoneOffsetDataModel()
-{
-}
+TimezoneOffsetDataModel::~TimezoneOffsetDataModel() = default;
 
 void TimezoneOffsetDataModel::setTimezone(const QTimeZone& tz)
 {

@@ -43,6 +43,4 @@ LocaleInspectorWidget::LocaleInspectorWidget(QWidget *parent)
         Endpoint::instance()->objectAddress(QLatin1String("com.kdab.GammaRay.TimezoneModel")) != Protocol::InvalidObjectAddress);
 }
 
-LocaleInspectorWidget::~LocaleInspectorWidget()
-{
-}
+LocaleInspectorWidget::~LocaleInspectorWidget() = default;

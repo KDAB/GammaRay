@@ -70,8 +70,7 @@ struct TimeoutEvent
 
 struct TimerIdData
 {
-    TimerIdData()
-    {}
+    TimerIdData() = default;
 
     void update(const TimerId &id, QObject *receiver = nullptr)
     {

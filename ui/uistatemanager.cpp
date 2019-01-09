@@ -97,9 +97,7 @@ UIStateManager::UIStateManager(QWidget *widget)
     m_widget->installEventFilter(this);
 }
 
-UIStateManager::~UIStateManager()
-{
-}
+UIStateManager::~UIStateManager() = default;
 
 QWidget *UIStateManager::widget() const
 {

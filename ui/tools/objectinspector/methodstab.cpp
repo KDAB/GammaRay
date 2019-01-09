@@ -57,9 +57,7 @@ MethodsTab::MethodsTab(PropertyWidget *parent)
     setObjectBaseName(parent->objectBaseName());
 }
 
-MethodsTab::~MethodsTab()
-{
-}
+MethodsTab::~MethodsTab() = default;
 
 void MethodsTab::setObjectBaseName(const QString &baseName)
 {

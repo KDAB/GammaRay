@@ -41,9 +41,7 @@ EnumsExtension::EnumsExtension(PropertyController *controller)
     controller->registerModel(m_model, QStringLiteral("enums"));
 }
 
-EnumsExtension::~EnumsExtension()
-{
-}
+EnumsExtension::~EnumsExtension() = default;
 
 bool EnumsExtension::setQObject(QObject *object)
 {

@@ -38,9 +38,7 @@ ResourceBrowserClient::ResourceBrowserClient(QObject *parent)
 {
 }
 
-ResourceBrowserClient::~ResourceBrowserClient()
-{
-}
+ResourceBrowserClient::~ResourceBrowserClient() = default;
 
 void ResourceBrowserClient::downloadResource(const QString &sourceFilePath,
                                              const QString &targetFilePath)

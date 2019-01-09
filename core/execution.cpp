@@ -366,20 +366,11 @@ Trace::Trace()
 {
 }
 
-Trace::Trace(const Trace &other)
-    : d(other.d)
-{
-}
+Trace::Trace(const Trace &other) = default;
 
-Trace::~Trace()
-{
-}
+Trace::~Trace() = default;
 
-Trace& Trace::operator=(const Trace &other)
-{
-    d = other.d;
-    return *this;
-}
+Trace& Trace::operator=(const Trace &other) = default;
 
 bool Trace::empty() const
 {

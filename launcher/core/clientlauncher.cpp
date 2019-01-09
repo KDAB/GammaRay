@@ -40,9 +40,7 @@ ClientLauncher::ClientLauncher()
     m_process.setProcessChannelMode(QProcess::ForwardedChannels);
 }
 
-ClientLauncher::~ClientLauncher()
-{
-}
+ClientLauncher::~ClientLauncher() = default;
 
 QString ClientLauncher::clientPath()
 {

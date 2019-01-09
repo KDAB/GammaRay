@@ -39,9 +39,7 @@ ClassesIconsRepositoryClient::ClassesIconsRepositoryClient(QObject *parent)
             this, &ClassesIconsRepositoryClient::indexReceived);
 }
 
-ClassesIconsRepositoryClient::~ClassesIconsRepositoryClient()
-{
-}
+ClassesIconsRepositoryClient::~ClassesIconsRepositoryClient() = default;
 
 QString ClassesIconsRepositoryClient::filePath(int id) const
 {

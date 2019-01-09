@@ -78,9 +78,7 @@ QuickInspectorInterface::QuickInspectorInterface(QObject *parent)
     qRegisterMetaTypeStreamOperators<QuickDecorationsSettings>();
 }
 
-QuickInspectorInterface::~QuickInspectorInterface()
-{
-}
+QuickInspectorInterface::~QuickInspectorInterface() = default;
 
 bool QuickInspectorInterface::serverSideDecorationEnabled() const
 {

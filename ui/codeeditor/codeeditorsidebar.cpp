@@ -41,9 +41,7 @@ CodeEditorSidebar::CodeEditorSidebar(CodeEditor *editor) :
 {
 }
 
-CodeEditorSidebar::~CodeEditorSidebar()
-{
-}
+CodeEditorSidebar::~CodeEditorSidebar() = default;
 
 QSize CodeEditorSidebar::sizeHint() const
 {

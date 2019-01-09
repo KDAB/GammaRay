@@ -42,9 +42,7 @@ PaintBufferClientModel::PaintBufferClientModel(QObject* parent)
 {
 }
 
-PaintBufferClientModel::~PaintBufferClientModel()
-{
-}
+PaintBufferClientModel::~PaintBufferClientModel() = default;
 
 QVariant PaintBufferClientModel::data(const QModelIndex& index, int role) const
 {

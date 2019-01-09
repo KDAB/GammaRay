@@ -40,9 +40,7 @@ ConnectionsClientProxyModel::ConnectionsClientProxyModel(QObject *parent)
 {
 }
 
-ConnectionsClientProxyModel::~ConnectionsClientProxyModel()
-{
-}
+ConnectionsClientProxyModel::~ConnectionsClientProxyModel() = default;
 
 QVariant ConnectionsClientProxyModel::data(const QModelIndex &index, int role) const
 {

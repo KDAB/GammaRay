@@ -45,9 +45,7 @@ ProblemModel::ProblemModel(QObject *parent)
     connect(m_problemCollector, &ProblemCollector::problemsRemoved, this, &ProblemModel::problemsRemoved);
 }
 
-ProblemModel::~ProblemModel()
-{
-}
+ProblemModel::~ProblemModel() = default;
 
 QVariant ProblemModel::data(const QModelIndex &index, int role) const
 {

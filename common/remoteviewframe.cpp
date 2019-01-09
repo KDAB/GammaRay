@@ -31,9 +31,7 @@
 #include <QDataStream>
 
 namespace GammaRay {
-RemoteViewFrame::~RemoteViewFrame()
-{
-}
+RemoteViewFrame::~RemoteViewFrame() = default;
 
 bool RemoteViewFrame::isValid() const
 {

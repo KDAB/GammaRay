@@ -37,9 +37,7 @@ ProblemReporterClient::ProblemReporterClient(QObject* parent)
 {
 }
 
-ProblemReporterClient::~ProblemReporterClient()
-{
-}
+ProblemReporterClient::~ProblemReporterClient() = default;
 
 void ProblemReporterClient::requestScan()
 {

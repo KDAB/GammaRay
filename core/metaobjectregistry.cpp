@@ -89,9 +89,7 @@ MetaObjectRegistry::MetaObjectRegistry(QObject *parent)
     scanMetaTypes();
 }
 
-MetaObjectRegistry::~MetaObjectRegistry()
-{
-}
+MetaObjectRegistry::~MetaObjectRegistry() = default;
 
 QVariant MetaObjectRegistry::data(const QMetaObject *metaObject, MetaObjectData type) const
 {

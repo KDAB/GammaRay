@@ -38,9 +38,7 @@ ClientToolFilterProxyModel::ClientToolFilterProxyModel(QObject* parent) :
 {
 }
 
-ClientToolFilterProxyModel::~ClientToolFilterProxyModel()
-{
-}
+ClientToolFilterProxyModel::~ClientToolFilterProxyModel() = default;
 
 bool ClientToolFilterProxyModel::filterInactiveTools() const
 {

@@ -135,9 +135,7 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
     connect(m_updateTimer, &QTimer::timeout, this, &SceneInspectorWidget::requestSceneUpdate);
 }
 
-SceneInspectorWidget::~SceneInspectorWidget()
-{
-}
+SceneInspectorWidget::~SceneInspectorWidget() = default;
 
 bool SceneInspectorWidget::eventFilter(QObject *obj, QEvent *event)
 {

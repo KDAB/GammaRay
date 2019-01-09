@@ -35,6 +35,4 @@ ModelInspectorClient::ModelInspectorClient(QObject *parent)
 {
 }
 
-ModelInspectorClient::~ModelInspectorClient()
-{
-}
+ModelInspectorClient::~ModelInspectorClient() = default;

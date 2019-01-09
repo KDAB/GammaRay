@@ -41,9 +41,7 @@ SceneInspectorInterface::SceneInspectorInterface(QObject *parent)
     ObjectBroker::registerObject<SceneInspectorInterface *>(this);
 }
 
-SceneInspectorInterface::~SceneInspectorInterface()
-{
-}
+SceneInspectorInterface::~SceneInspectorInterface() = default;
 
 void SceneInspectorInterface::paintItemDecoration(QGraphicsItem *item, const QTransform &transform,
                                                   QPainter *painter)

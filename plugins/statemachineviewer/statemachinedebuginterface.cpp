@@ -36,9 +36,7 @@ StateMachineDebugInterface::StateMachineDebugInterface(QObject *parent)
 {
 }
 
-StateMachineDebugInterface::~StateMachineDebugInterface()
-{
-}
+StateMachineDebugInterface::~StateMachineDebugInterface() = default;
 
 bool StateMachineDebugInterface::isDescendantOf(State ascendant, State state) const
 {

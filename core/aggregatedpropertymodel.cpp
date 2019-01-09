@@ -52,9 +52,7 @@ AggregatedPropertyModel::AggregatedPropertyModel(QObject *parent)
     qRegisterMetaType<GammaRay::PropertyAdaptor *>();
 }
 
-AggregatedPropertyModel::~AggregatedPropertyModel()
-{
-}
+AggregatedPropertyModel::~AggregatedPropertyModel() = default;
 
 void AggregatedPropertyModel::setObject(const ObjectInstance &oi)
 {

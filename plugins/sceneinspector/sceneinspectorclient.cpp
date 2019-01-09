@@ -39,9 +39,7 @@ SceneInspectorClient::SceneInspectorClient(QObject *parent)
 {
 }
 
-SceneInspectorClient::~SceneInspectorClient()
-{
-}
+SceneInspectorClient::~SceneInspectorClient() = default;
 
 void SceneInspectorClient::initializeGui()
 {

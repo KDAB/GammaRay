@@ -50,9 +50,7 @@ SGWireframeWidget::SGWireframeWidget(QWidget *parent, Qt::WindowFlags f)
 {
 }
 
-SGWireframeWidget::~SGWireframeWidget()
-{
-}
+SGWireframeWidget::~SGWireframeWidget() = default;
 
 void SGWireframeWidget::paintEvent(QPaintEvent *)
 {

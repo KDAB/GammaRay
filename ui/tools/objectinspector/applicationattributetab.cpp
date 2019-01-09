@@ -46,6 +46,4 @@ ApplicationAttributeTab::ApplicationAttributeTab(PropertyWidget *parent)
                                                     + QStringLiteral(".applicationAttributeModel")));
 }
 
-ApplicationAttributeTab::~ApplicationAttributeTab()
-{
-}
+ApplicationAttributeTab::~ApplicationAttributeTab() = default;

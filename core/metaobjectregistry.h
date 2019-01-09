@@ -87,8 +87,7 @@ private:
 
     struct MetaObjectInfo
     {
-        MetaObjectInfo()
-        {}
+        MetaObjectInfo() = default;
 
         /// @c true if this is a static meta object that can only become invalid by DLL unloading.
         bool isStatic = false;

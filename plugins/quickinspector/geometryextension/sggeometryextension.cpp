@@ -46,9 +46,7 @@ SGGeometryExtension::SGGeometryExtension(PropertyController *controller)
     controller->registerModel(m_adjacencyModel, QStringLiteral("sgGeometryAdjacencyModel"));
 }
 
-SGGeometryExtension::~SGGeometryExtension()
-{
-}
+SGGeometryExtension::~SGGeometryExtension() = default;
 
 bool SGGeometryExtension::setObject(void *object, const QString &typeName)
 {

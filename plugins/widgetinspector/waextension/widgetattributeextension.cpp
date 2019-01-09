@@ -43,9 +43,7 @@ WidgetAttributeExtension::WidgetAttributeExtension(PropertyController *controlle
     controller->registerModel(m_attributeModel, QStringLiteral("widgetAttributeModel"));
 }
 
-WidgetAttributeExtension::~WidgetAttributeExtension()
-{
-}
+WidgetAttributeExtension::~WidgetAttributeExtension() = default;
 
 bool WidgetAttributeExtension::setQObject(QObject *object)
 {

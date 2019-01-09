@@ -38,9 +38,7 @@ ClientNetworkConfigurationModel::ClientNetworkConfigurationModel(QObject* parent
 {
 }
 
-ClientNetworkConfigurationModel::~ClientNetworkConfigurationModel()
-{
-}
+ClientNetworkConfigurationModel::~ClientNetworkConfigurationModel() = default;
 
 QVariant ClientNetworkConfigurationModel::data(const QModelIndex& index, int role) const
 {

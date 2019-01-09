@@ -65,4 +65,4 @@ void ProbeGuard::setInsideProbe(bool inside)
 
 ProbeGuardSuspender::ProbeGuardSuspender()
     : ProbeGuard(false) {}
-ProbeGuardSuspender::~ProbeGuardSuspender() {}
+ProbeGuardSuspender::~ProbeGuardSuspender() = default;

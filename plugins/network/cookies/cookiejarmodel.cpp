@@ -53,9 +53,7 @@ CookieJarModel::CookieJarModel(QObject *parent)
 {
 }
 
-CookieJarModel::~CookieJarModel()
-{
-}
+CookieJarModel::~CookieJarModel() = default;
 
 void CookieJarModel::setCookieJar(QNetworkCookieJar *cookieJar)
 {

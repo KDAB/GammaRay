@@ -40,9 +40,7 @@ using namespace GammaRay;
 
 namespace GammaRay {
 struct ModelTester::ModelTestResult {
-    ModelTestResult()
-    {
-    }
+    ModelTestResult() = default;
 
     ~ModelTestResult()
     {

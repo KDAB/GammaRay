@@ -43,9 +43,7 @@ FontDatabaseModel::FontDatabaseModel(QObject *parent)
 {
 }
 
-FontDatabaseModel::~FontDatabaseModel()
-{
-}
+FontDatabaseModel::~FontDatabaseModel() = default;
 
 int FontDatabaseModel::rowCount(const QModelIndex &parent) const
 {

@@ -41,9 +41,7 @@ NetworkWidget::NetworkWidget(QWidget *parent)
     ui->setupUi(this);
 }
 
-NetworkWidget::~NetworkWidget()
-{
-}
+NetworkWidget::~NetworkWidget() = default;
 
 void NetworkWidgetFactory::initUi()
 {

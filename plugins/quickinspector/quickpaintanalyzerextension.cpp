@@ -53,9 +53,7 @@ QuickPaintAnalyzerExtension::QuickPaintAnalyzerExtension(PropertyController *con
     }
 }
 
-QuickPaintAnalyzerExtension::~QuickPaintAnalyzerExtension()
-{
-}
+QuickPaintAnalyzerExtension::~QuickPaintAnalyzerExtension() = default;
 
 bool QuickPaintAnalyzerExtension::setQObject(QObject *object)
 {

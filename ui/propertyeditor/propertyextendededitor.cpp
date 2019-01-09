@@ -47,9 +47,7 @@ PropertyExtendedEditor::PropertyExtendedEditor(QWidget *parent)
     connect(ui->editButton, &QAbstractButton::clicked, this, &PropertyExtendedEditor::slotEdit);
 }
 
-PropertyExtendedEditor::~PropertyExtendedEditor()
-{
-}
+PropertyExtendedEditor::~PropertyExtendedEditor() = default;
 
 QVariant PropertyExtendedEditor::value() const
 {

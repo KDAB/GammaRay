@@ -94,9 +94,7 @@ ResourceBrowserWidget::ResourceBrowserWidget(QWidget *parent)
     ui->textBrowser->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 }
 
-ResourceBrowserWidget::~ResourceBrowserWidget()
-{
-}
+ResourceBrowserWidget::~ResourceBrowserWidget() = default;
 
 void ResourceBrowserWidget::selectResource(const QString &sourceFilePath, int line, int column)
 {

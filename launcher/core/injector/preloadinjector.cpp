@@ -39,9 +39,7 @@
 
 using namespace GammaRay;
 
-PreloadInjector::PreloadInjector()
-{
-}
+PreloadInjector::PreloadInjector() = default;
 
 QString PreloadInjector::name() const
 {

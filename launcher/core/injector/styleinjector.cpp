@@ -45,9 +45,7 @@
 
 using namespace GammaRay;
 
-StyleInjector::StyleInjector()
-{
-}
+StyleInjector::StyleInjector() = default;
 
 QString StyleInjector::name() const
 {

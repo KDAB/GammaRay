@@ -46,6 +46,4 @@ WidgetAttributeTab::WidgetAttributeTab(PropertyWidget *parent)
                                                     + QStringLiteral(".widgetAttributeModel")));
 }
 
-WidgetAttributeTab::~WidgetAttributeTab()
-{
-}
+WidgetAttributeTab::~WidgetAttributeTab() = default;

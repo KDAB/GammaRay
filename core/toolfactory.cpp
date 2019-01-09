@@ -30,13 +30,9 @@
 
 using namespace GammaRay;
 
-ToolFactory::ToolFactory()
-{
-}
+ToolFactory::ToolFactory() = default;
 
-ToolFactory::~ToolFactory()
-{
-}
+ToolFactory::~ToolFactory() = default;
 
 const QVector<QByteArray> &ToolFactory::supportedTypes() const
 {

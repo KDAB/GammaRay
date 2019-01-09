@@ -47,9 +47,7 @@ ClientToolModel::ClientToolModel(ClientToolManager *manager)
     connect(m_toolManager, &ClientToolManager::toolEnabledByIndex, this, &ClientToolModel::toolEnabled);
 }
 
-ClientToolModel::~ClientToolModel()
-{
-}
+ClientToolModel::~ClientToolModel() = default;
 
 QVariant ClientToolModel::data(const QModelIndex &index, int role) const
 {
@@ -129,9 +127,7 @@ ClientToolSelectionModel::ClientToolSelectionModel(ClientToolManager *manager)
     connect(manager, &ClientToolManager::toolListAvailable, this, &ClientToolSelectionModel::selectDefaultTool);
 }
 
-ClientToolSelectionModel::~ClientToolSelectionModel()
-{
-}
+ClientToolSelectionModel::~ClientToolSelectionModel() = default;
 
 void ClientToolSelectionModel::selectTool(int index)
 {

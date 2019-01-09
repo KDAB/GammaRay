@@ -40,9 +40,7 @@ PropertiesExtensionInterface::PropertiesExtensionInterface(const QString &name, 
     ObjectBroker::registerObject(name, this);
 }
 
-PropertiesExtensionInterface::~PropertiesExtensionInterface()
-{
-}
+PropertiesExtensionInterface::~PropertiesExtensionInterface() = default;
 
 const QString &PropertiesExtensionInterface::name() const
 {

@@ -47,6 +47,4 @@ SysInfoWidget::SysInfoWidget(QWidget* parent)
     ui->envView->header()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
-SysInfoWidget::~SysInfoWidget()
-{
-}
+SysInfoWidget::~SysInfoWidget() = default;

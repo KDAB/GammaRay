@@ -35,9 +35,7 @@ ToolPluginModel::ToolPluginModel(const QVector<ToolFactory *> &plugins, QObject 
 {
 }
 
-ToolPluginModel::~ToolPluginModel()
-{
-}
+ToolPluginModel::~ToolPluginModel() = default;
 
 int ToolPluginModel::columnCount(const QModelIndex &parent) const
 {

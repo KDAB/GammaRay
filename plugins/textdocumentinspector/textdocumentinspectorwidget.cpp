@@ -83,9 +83,7 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->structureSplitter, UISizeVector() << "50%" << "50%");
 }
 
-TextDocumentInspectorWidget::~TextDocumentInspectorWidget()
-{
-}
+TextDocumentInspectorWidget::~TextDocumentInspectorWidget() = default;
 
 void TextDocumentInspectorWidget::documentSelected(const QItemSelection &selected,
                                                    const QItemSelection &deselected)

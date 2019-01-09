@@ -39,6 +39,4 @@ PaintAnalyzerTab::PaintAnalyzerTab(PropertyWidget *parent)
     setBaseName(parent->objectBaseName() + ".painting.analyzer");
 }
 
-PaintAnalyzerTab::~PaintAnalyzerTab()
-{
-}
+PaintAnalyzerTab::~PaintAnalyzerTab() = default;
