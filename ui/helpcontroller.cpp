@@ -47,14 +47,14 @@ namespace GammaRay {
 struct HelpControllerPrivate
 {
     HelpControllerPrivate()
-        : proc(nullptr) {}
+    {}
 
     void startProcess();
     void sendCommand(const QByteArray &cmd);
 
     QString assistantPath;
     QString qhcPath;
-    QProcess *proc;
+    QProcess *proc = nullptr;
 };
 }
 

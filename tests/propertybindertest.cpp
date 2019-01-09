@@ -39,8 +39,7 @@ class MyObject : public QObject
 public:
     explicit MyObject(QObject *parent = nullptr)
         : QObject(parent)
-        , p1(0)
-        , p2(23) {}
+    {}
     int intProp() { return p1; }
     int intProp2() { return p2; }
     void setIntProp(int i)
@@ -64,7 +63,7 @@ signals:
     void intProp2Changed();
 
 private:
-    int p1, p2;
+    int p1 = 0, p2 = 23;
 };
 
 using namespace GammaRay;

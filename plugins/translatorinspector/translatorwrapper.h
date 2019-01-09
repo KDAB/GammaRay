@@ -80,12 +80,12 @@ private:
     struct Row
     {
         Row()
-            : isOverridden(false) {}
+        {}
         QByteArray context;
         QByteArray sourceText;
         QByteArray disambiguation;
         QString translation;
-        bool isOverridden;
+        bool isOverridden = false;
     };
     QVector<Row> m_nodes;
 

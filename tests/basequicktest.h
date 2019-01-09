@@ -43,13 +43,13 @@ class BaseQuickTest : public BaseProbeTest
     Q_OBJECT
 public:
     explicit BaseQuickTest(QObject *parent = nullptr)
-        : BaseProbeTest(parent), m_exposed(false)
+        : BaseProbeTest(parent)
     {
     }
 
 private:
     std::unique_ptr<QQuickView> m_view;
-    bool m_exposed;
+    bool m_exposed = false;
 
 protected slots:
     virtual void init()

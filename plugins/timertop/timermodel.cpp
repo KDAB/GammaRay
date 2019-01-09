@@ -71,9 +71,7 @@ struct TimeoutEvent
 struct TimerIdData
 {
     TimerIdData()
-        : totalWakeupsEvents(0)
-        , changed(false)
-    { }
+    {}
 
     void update(const TimerId &id, QObject *receiver = nullptr)
     {
@@ -161,11 +159,11 @@ struct TimerIdData
     }
 
     TimerIdInfo info;
-    int totalWakeupsEvents;
+    int totalWakeupsEvents = 0;
     QElapsedTimer functionCallTimer;
     QList<TimeoutEvent> timeoutEvents;
 
-    bool changed;
+    bool changed = false;
 };
 }
 

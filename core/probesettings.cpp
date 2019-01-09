@@ -74,14 +74,13 @@ private slots:
 private:
     Q_INVOKABLE void run();
     void setRootPathFromProbePath(const QString &probePath);
-    QLocalSocket *m_socket;
+    QLocalSocket *m_socket = nullptr;
     QWaitCondition m_waitCondition;
     QMutex m_mutex;
 };
 
 ProbeSettingsReceiver::ProbeSettingsReceiver(QObject *parent)
     : QObject(parent)
-    , m_socket(nullptr)
 {
 }
 

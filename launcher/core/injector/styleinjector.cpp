@@ -46,7 +46,6 @@
 using namespace GammaRay;
 
 StyleInjector::StyleInjector()
-    : ProcessInjector()
 {
 }
 

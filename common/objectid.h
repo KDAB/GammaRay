@@ -64,8 +64,6 @@ public:
         , m_id(reinterpret_cast<quint64>(obj))
     {}
     explicit ObjectId()
-        : m_type(Invalid)
-        , m_id(0)
     {}
     inline bool isNull() const { return m_id == 0; }
     inline quint64 id() const { return m_id; }
@@ -96,8 +94,8 @@ private:
     friend QDataStream &operator<<(QDataStream &out, const ObjectId &id);
     friend QDataStream &operator>>(QDataStream &out, ObjectId &id);
 
-    Type m_type;
-    quint64 m_id;
+    Type m_type = Invalid;
+    quint64 m_id = 0;
     QByteArray m_typeName;
 };
 

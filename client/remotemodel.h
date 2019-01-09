@@ -89,9 +89,7 @@ signals:
 private:
     struct Node { // represents one row
         Node()
-            : parent(nullptr)
-            , rowCount(-1)
-            , columnCount(-1) {}
+        {}
         ~Node();
         Q_DISABLE_COPY(Node)
         // delete all cached children data, but assume row/column count on this level is still accurate
@@ -104,10 +102,10 @@ private:
         // returns whether columns are allocated
         bool hasColumnData() const;
 
-        Node *parent;
+        Node *parent = nullptr;
         QVector<Node *> children;
-        qint32 rowCount;
-        qint32 columnCount;
+        qint32 rowCount = -1;
+        qint32 columnCount = -1;
         QVector<QHash<int, QVariant> > data; // column -> role -> data
         QVector<Qt::ItemFlags> flags;      // column -> flags
         QVector<RemoteModelNodeState::NodeStates> state;         // column -> state (cache outdated, waiting for data, etc)

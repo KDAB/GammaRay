@@ -40,7 +40,6 @@
 using namespace GammaRay;
 
 PreloadInjector::PreloadInjector()
-    : ProcessInjector()
 {
 }
 

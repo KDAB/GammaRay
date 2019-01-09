@@ -170,11 +170,10 @@ void dumpObject(QObject *obj)
 struct Listener
 {
     Listener()
-        : trackDestroyed(true)
     {
     }
 
-    bool trackDestroyed;
+    bool trackDestroyed = true;
     QVector<QObject *> addedBeforeProbeInstance;
 
     QHash<QObject*, Execution::Trace> constructionBacktracesForObjects;

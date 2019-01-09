@@ -43,14 +43,13 @@
 namespace GammaRay {
 struct ObjectlBrokerData {
     ObjectlBrokerData()
-        : modelCallback(nullptr)
-        , selectionCallback(nullptr) {}
+    {}
     QHash<QString, QObject *> objects;
     QHash<QString, QAbstractItemModel *> models;
     QHash<QAbstractItemModel *, QItemSelectionModel *> selectionModels;
     QHash<QByteArray, ObjectBroker::ClientObjectFactoryCallback> clientObjectFactories;
-    ObjectBroker::ModelFactoryCallback modelCallback;
-    ObjectBroker::selectionModelFactoryCallback selectionCallback;
+    ObjectBroker::ModelFactoryCallback modelCallback = nullptr;
+    ObjectBroker::selectionModelFactoryCallback selectionCallback = nullptr;
     QVector<QObject *> ownedObjects;
 };
 

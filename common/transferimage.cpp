@@ -33,7 +33,6 @@
 namespace GammaRay {
 TransferImage::TransferImage(const QImage &image)
     : m_image(image)
-    , m_transform()
 {
 }
 

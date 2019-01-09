@@ -132,12 +132,11 @@ struct IconCacheEntry
 {
     explicit IconCacheEntry(const QByteArray &className_ = QByteArray())
         : className(className_)
-        , defaultIcon(-1)
     {}
 
     /// note: this member's data is being referenced by the database's key
     QByteArray className;
-    int defaultIcon;
+    int defaultIcon = -1;
 
     // pair of property name and expected string value
     typedef QPair<QString, QString> PropertyPair;

@@ -88,34 +88,28 @@ private:
     struct MetaObjectInfo
     {
         MetaObjectInfo()
-            : isStatic(false)
-            , isDynamic(false)
-            , invalid(false)
-            , selfCount(0)
-            , selfAliveCount(0)
-            , inclusiveCount(0)
-            , inclusiveAliveCount(0) {}
+        {}
 
         /// @c true if this is a static meta object that can only become invalid by DLL unloading.
-        bool isStatic;
+        bool isStatic = false;
         /// @c true if this is a merged dynamic meta object, as e.g. in use by QML
-        bool isDynamic;
+        bool isDynamic = false;
         /**
          * True if the meta object is suspected invalid. We can't know when one is destroyed,
          * so we mark this as true when all of the objects with this type are destroyed.
          */
-        bool invalid;
+        bool invalid = false;
         /// Number of objects of a particular meta object type ever created
-        int selfCount;
+        int selfCount = 0;
         /// Number of instances of a meta object currently alive
-        int selfAliveCount;
+        int selfAliveCount = 0;
         /**
          * Number of objects of the exact meta object type
          * + number of objects of type that inherit from this meta type
          */
-        int inclusiveCount;
+        int inclusiveCount = 0;
         /// Inclusive instance count currently alive
-        int inclusiveAliveCount;
+        int inclusiveAliveCount = 0;
         /// A copy of QMetaObject::className()
         QByteArray className;
     };
