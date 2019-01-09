@@ -41,14 +41,14 @@ class Gadget
 
 public:
     Gadget()
-        : m_prop1(42) {}
+    {}
     int prop1() const { return m_prop1; }
     void setProp1(int v) { m_prop1 = v; }
     void resetProp1() { m_prop1 = 5; }
     Q_INVOKABLE void someMethod();
 
 private:
-    int m_prop1;
+    int m_prop1 = 42;
 };
 
 Q_DECLARE_METATYPE(Gadget)
@@ -67,7 +67,7 @@ class PropertyTestObject : public QObject
 public:
     explicit PropertyTestObject(QObject *parent = nullptr)
         : QObject(parent)
-        , p1(0) {}
+    {}
     int intProp() { return p1; }
     void setIntProp(int i)
     {
@@ -92,7 +92,7 @@ signals:
     void intPropChanged();
 
 private:
-    int p1;
+    int p1 = 0;
     Gadget g;
     VariantPropertyObject vpo;
     ChangingPropertyObject cpo;

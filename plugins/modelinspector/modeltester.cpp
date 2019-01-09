@@ -41,7 +41,6 @@ using namespace GammaRay;
 namespace GammaRay {
 struct ModelTester::ModelTestResult {
     ModelTestResult()
-        : modelTest(nullptr)
     {
     }
 
@@ -50,7 +49,7 @@ struct ModelTester::ModelTestResult {
         delete modelTest;
     }
 
-    ModelTest *modelTest;
+    ModelTest *modelTest = nullptr;
     QHash<int, QString> failures;
 };
 }

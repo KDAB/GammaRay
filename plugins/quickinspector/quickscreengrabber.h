@@ -122,13 +122,12 @@ public:
 
         RenderInfo()
             : dpr(qQNaN())
-            , graphicsApi(Unknown)
         {
         }
 
         qreal dpr;
         QSize windowSize;
-        GraphicsApi graphicsApi;
+        GraphicsApi graphicsApi = Unknown;
     };
 
     explicit AbstractScreenGrabber(QQuickWindow *window);

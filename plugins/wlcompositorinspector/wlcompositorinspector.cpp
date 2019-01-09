@@ -214,7 +214,6 @@ public:
     };
 
     ResourcesModel()
-        : m_client(nullptr)
     {
         m_listener.m = nullptr;
         wl_list_init(&m_listener.l.link);
@@ -418,7 +417,7 @@ public:
     QVector<Resource *> m_resources;
     QSet<Resource *> m_allResources;
     ClientListener m_listener;
-    QWaylandClient *m_client;
+    QWaylandClient *m_client = nullptr;
 };
 
 WlCompositorInspector::WlCompositorInspector(Probe *probe, QObject *parent)

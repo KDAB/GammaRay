@@ -52,7 +52,6 @@ class StaticMetaObjectRepository : public MetaObjectRepository
 {
 public:
     StaticMetaObjectRepository()
-        : MetaObjectRepository()
     {
     }
 };

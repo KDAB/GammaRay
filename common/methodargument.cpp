@@ -39,9 +39,7 @@ class GammaRay::MethodArgumentPrivate : public QSharedData
 {
 public:
     MethodArgumentPrivate()
-        : QSharedData()
-        , data(nullptr)
-        , unwrapVariant(true) {}
+    {}
 
     MethodArgumentPrivate(const MethodArgumentPrivate &other)
         : QSharedData(other)
@@ -60,8 +58,8 @@ public:
 
     QVariant value;
     QByteArray name;
-    void *data;
-    bool unwrapVariant;
+    void *data = nullptr;
+    bool unwrapVariant = true;
 };
 
 MethodArgument::MethodArgument()

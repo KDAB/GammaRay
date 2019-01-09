@@ -266,11 +266,11 @@ public:
   }
 
   struct Line {
-      quint64 pid;
+      quint64 pid = 0;
       QStaticText text;
-      int *counter;
+      int *counter = nullptr;
 
-      Line() : pid(0), counter(nullptr)
+      Line()
       {
       }
 
@@ -396,10 +396,6 @@ public:
 
     View()
       : m_data(5000)
-      , m_zoom(100000)
-      , m_start(0)
-      , m_timespan(0)
-      , m_client(0)
     {
       resize(100, 100);
       setAttribute(Qt::WA_OpaquePaintEvent);
@@ -521,10 +517,10 @@ public:
     }
 
     RingBuffer<DataPoint> m_data;
-    qreal m_zoom;
-    qint64 m_start;
-    qint64 m_timespan;
-    quint64 m_client;
+    qreal m_zoom = 100000;
+    qint64 m_start = 0;
+    qint64 m_timespan = 0;
+    quint64 m_client = 0;
   };
 
   explicit Timeline(QWidget *parent)

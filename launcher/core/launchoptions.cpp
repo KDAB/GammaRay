@@ -42,17 +42,15 @@ class LaunchOptionsPrivate : public QSharedData
 {
 public:
     LaunchOptionsPrivate()
-        : pid(-1)
-        , uiMode(LaunchOptions::OutOfProcessUi)
-        , env(QProcessEnvironment::systemEnvironment())
+        : env(QProcessEnvironment::systemEnvironment())
     {}
 
     QStringList launchArguments;
     QString injectorType;
     QString injectorTypeExecutableOverride;
     ProbeABI probeABI;
-    int pid;
-    LaunchOptions::UiMode uiMode;
+    int pid = -1;
+    LaunchOptions::UiMode uiMode = LaunchOptions::OutOfProcessUi;
     QHash<QByteArray, QByteArray> probeSettings;
     QProcessEnvironment env;
     QString workingDir;

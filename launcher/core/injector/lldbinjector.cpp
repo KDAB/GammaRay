@@ -33,8 +33,7 @@
 using namespace GammaRay;
 
 LldbInjector::LldbInjector(const QString &executableOverride)
-    : DebuggerInjector()
-    , m_scriptSupportIsRequired(false)
+    : m_scriptSupportIsRequired(false)
 {
     setFilePath(executableOverride.isEmpty() ? QStringLiteral("lldb") : executableOverride);
 }

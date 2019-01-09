@@ -228,18 +228,16 @@ private:
     {
         ObjectInfo()
             : address(Protocol::InvalidObjectAddress)
-            , object(nullptr)
-            , receiver(nullptr)
         {
         }
 
         QString name;
         Protocol::ObjectAddress address;
         // the locally registered object
-        QObject *object;
+        QObject *object = nullptr;
 
         // custom message handling support
-        QObject *receiver;
+        QObject *receiver = nullptr;
         QMetaMethod messageHandler;
     };
 

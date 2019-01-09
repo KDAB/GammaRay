@@ -37,9 +37,7 @@ class Thread : public QThread
     Q_OBJECT
 public:
     Thread()
-        : batchSize(1)
-        , delay(0)
-        , iterations(100) {}
+    {}
 
     void run() override
     {
@@ -55,9 +53,9 @@ public:
     }
 
     QVector<QObject *> objects;
-    int batchSize;
-    int delay;
-    int iterations;
+    int batchSize = 1;
+    int delay = 0;
+    int iterations = 100;
 };
 
 class MultiThreadingTest : public BaseProbeTest

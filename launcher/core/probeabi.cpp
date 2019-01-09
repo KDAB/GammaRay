@@ -48,9 +48,6 @@ class ProbeABIPrivate : public QSharedData
 {
 public:
     ProbeABIPrivate()
-        : majorQtVersion(-1)
-        , minorQtVersion(-1)
-        , isDebug(false)
     {}
 
     ProbeABIPrivate(const ProbeABIPrivate &other)
@@ -66,9 +63,9 @@ public:
     QString architecture;
     QString compiler;
     QString compilerVersion;
-    int majorQtVersion;
-    int minorQtVersion;
-    bool isDebug;
+    int majorQtVersion = -1;
+    int minorQtVersion = -1;
+    bool isDebug = false;
 };
 }
 

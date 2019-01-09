@@ -47,8 +47,6 @@ class MetaObjectModel : public QAbstractItemModel
 public:
     explicit MetaObjectModel(QObject *parent = nullptr)
         : QAbstractItemModel(parent)
-        , m_metaObject(nullptr)
-        , m_rowCount(0)
     {
     }
 
@@ -145,11 +143,11 @@ protected:
 protected:
     // let's assume that meta objects never get destroyed
     // very funny, never heard of QML? ;)
-    const QMetaObject *m_metaObject;
+    const QMetaObject *m_metaObject = nullptr;
 
     // cached row count, so we don't need to dereference a potentially stale m_metaObject
     // in setMetaObject again, as that might have been destroyed meanwhile
-    int m_rowCount;
+    int m_rowCount = 0;
 };
 }
 

@@ -42,7 +42,7 @@ class MyObject : public QObject
 public:
     explicit MyObject(QObject *parent = nullptr)
         : QObject(parent)
-        , p1(0) {}
+    {}
     int intProp() { return p1; }
     void setIntProp(int i)
     {
@@ -56,7 +56,7 @@ signals:
     void intPropChanged();
 
 private:
-    int p1;
+    int p1 = 0;
 };
 
 class PropertySyncerTest : public QObject
@@ -65,10 +65,6 @@ class PropertySyncerTest : public QObject
 public:
     explicit PropertySyncerTest(QObject *parent = nullptr)
         : QObject(parent)
-        , m_server2ClientCount(0)
-        , m_client2ServerCount(0)
-        , m_client(nullptr)
-        , m_server(nullptr)
     {
     }
 
@@ -150,9 +146,9 @@ private slots:
     }
 
 private:
-    int m_server2ClientCount, m_client2ServerCount;
-    PropertySyncer *m_client;
-    PropertySyncer *m_server;
+    int m_server2ClientCount = 0, m_client2ServerCount = 0;
+    PropertySyncer *m_client = nullptr;
+    PropertySyncer *m_server = nullptr;
 };
 
 QTEST_MAIN(PropertySyncerTest)
