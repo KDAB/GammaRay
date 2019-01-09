@@ -1,90 +1,46 @@
 #
-# (C) Copyright 2009 Johns Hopkins University (JHU), All Rights
-# Reserved.
+# Copyright (C) 2018 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# All rights reserved.
 #
-# --- begin cisst license - do not edit ---
+# Author: Kevin Funk <kevin.funk@kdab.com>
 #
-# This software is provided "as is" under an open source license, with
-# no warranty.  The complete license can be found in license.txt and
-# http://www.cisst.org/cisst/license.txt.
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
 #
-# --- end cisst license ---
+# 1. Redistributions of source code must retain the copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. The name of the author may not be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-SET(CMAKE_SYSTEM_NAME QNX)
-SET(CMAKE_SYSTEM_VERSION 7.0.0)
-SET(CMAKE_SYSTEM_PROCESSOR armv7)
-SET(TOOLCHAIN QNX)
 
-#SET(CMAKE_IMPORT_LIBRARY_SUFFIX ".a")
+#
+# Create variables for all the various install paths for the Qt version in use
+# Make sure to have found Qt4 or Qt5 before using this.
+# sets variables like QT_INSTALL_PREFIX, QT_INSTALL_DATA, QT_INSTALL_DOCS, etc.
+# run qmake -query to see a full list
 
-SET(CMAKE_SHARED_LIBRARY_PREFIX "lib")
-SET(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
-SET(CMAKE_STATIC_LIBRARY_PREFIX "lib")
-SET(CMAKE_STATIC_LIBRARY_SUFFIX ".a")
+set(QNX_VERSION 7.0.0)
+set(QNX_PROCESSOR armv7)
 
-IF(CMAKE_HOST_WIN32)
-  SET(HOST_EXECUTABLE_SUFFIX ".exe")
-ENDIF(CMAKE_HOST_WIN32)
+set(QNX_HOST_HINT "C:/qnx700/host/win32/x86")
+set(QNX_TARGET_HINT "C:/qnx700/target/qnx6")
 
-FIND_PATH(QNX_HOST
-  NAME usr/bin/qcc${HOST_EXECUTABLE_SUFFIX}
-  PATHS $ENV{QNX_HOST} C:/qnx700/host/win32/x86
-  NO_CMAKE_PATH
-  NO_CMAKE_ENVIRONMENT_PATH
-)
+set(CMAKE_C_FLAGS "-Vgcc_ntoarmv7le" CACHE STRING "qcc c flags" FORCE)
+set(CMAKE_CXX_FLAGS "-Vgcc_ntoarmv7le -lang-c++" CACHE STRING "qcc cxx flags" FORCE)
 
-FIND_PATH(QNX_TARGET
-  NAME usr/include/qconfig.mk
-  PATHS $ENV{QNX_TARGET} C:/qnx700/target/qnx7
-  NO_CMAKE_PATH
-  NO_CMAKE_ENVIRONMENT_PATH
-)
-
-IF(CMAKE_HOST_WIN32)
-  FIND_PATH(QNX_CONFIGURATION
-    NAME bin/qnxactivate.exe
-    PATHS $ENV{QNX_CONFIGURATION}
-    "C:/Program Files/QNX Software Systems/qconfig"
-    NO_CMAKE_PATH
-    NO_CMAKE_ENVIRONMENT_PATH
- )
-ENDIF(CMAKE_HOST_WIN32)
-
-SET(ENV{QNX_HOST} ${QNX_HOST})
-SET(ENV{QNX_TARGET} ${QNX_TARGET})
-
-IF(CMAKE_HOST_WIN32)
-  SET(ENV{QNX_CONFIGURATION} ${QNX_CONFIGURATION})
-  SET(ENV{PATH} "$ENV{PATH};${QNX_HOST}/usr/bin")
-ENDIF(CMAKE_HOST_WIN32)
-
-SET(CMAKE_MAKE_PROGRAM "${QNX_HOST}/usr/bin/make${HOST_EXECUTABLE_SUFFIX}"    CACHE PATH "QNX Make Program")
-SET(CMAKE_SH           "${QNX_HOST}/usr/bin/sh${HOST_EXECUTABLE_SUFFIX}"      CACHE PATH "QNX shell Program")
-SET(CMAKE_AR           "${QNX_HOST}/usr/bin/nto${CMAKE_SYSTEM_PROCESSOR}-ar${HOST_EXECUTABLE_SUFFIX}"      CACHE PATH "QNX ar Program")
-SET(CMAKE_RANLIB       "${QNX_HOST}/usr/bin/nto${CMAKE_SYSTEM_PROCESSOR}-ranlib${HOST_EXECUTABLE_SUFFIX}"      CACHE PATH "QNX ranlib Program")
-SET(CMAKE_NM           "${QNX_HOST}/usr/bin/nto${CMAKE_SYSTEM_PROCESSOR}-nm${HOST_EXECUTABLE_SUFFIX}"      CACHE PATH "QNX nm Program")
-SET(CMAKE_OBJCOPY      "${QNX_HOST}/usr/bin/nto${CMAKE_SYSTEM_PROCESSOR}-objcopy${HOST_EXECUTABLE_SUFFIX}" CACHE PATH "QNX objcopy Program")
-SET(CMAKE_OBJDUMP      "${QNX_HOST}/usr/bin/nto${CMAKE_SYSTEM_PROCESSOR}-objdump${HOST_EXECUTABLE_SUFFIX}" CACHE PATH "QNX objdump Program")
-SET(CMAKE_LINKER       "${QNX_HOST}/usr/bin/nto${CMAKE_SYSTEM_PROCESSOR}-ld${HOST_EXECUTABLE_SUFFIX}"     CACHE PATH "QNX Linker Program")
-SET(CMAKE_STRIP        "${QNX_HOST}/usr/bin/nto${CMAKE_SYSTEM_PROCESSOR}-strip${HOST_EXECUTABLE_SUFFIX}"   CACHE PATH "QNX Strip Program")
-
-SET(CMAKE_C_COMPILER ${QNX_HOST}/usr/bin/qcc${HOST_EXECUTABLE_SUFFIX})
-SET(CMAKE_C_FLAGS_DEBUG "-g")
-SET(CMAKE_C_FLAGS_MINSIZEREL "-Os -DNDEBUG")
-SET(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG")
-SET(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
-
-SET(CMAKE_CXX_COMPILER ${QNX_HOST}/usr/bin/qcc${HOST_EXECUTABLE_SUFFIX})
-SET(CMAKE_CXX_FLAGS_DEBUG "-g")
-SET(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -DNDEBUG")
-SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
-SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-
-SET(CMAKE_FIND_ROOT_PATH ${QNX_TARGET})
-set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-
-SET(CMAKE_C_FLAGS "-Vgcc_ntoarmv7le" CACHE STRING "qcc c flags" FORCE)
-SET(CMAKE_CXX_FLAGS "-Vgcc_ntoarmv7le -lang-c++" CACHE STRING "qcc cxx flags" FORCE)
+include("${CMAKE_CURRENT_LIST_DIR}/Toolchain-QNX700-common.cmake")
