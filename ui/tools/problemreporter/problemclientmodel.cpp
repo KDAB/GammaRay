@@ -44,9 +44,7 @@ ProblemClientModel::ProblemClientModel(QObject* parent)
 {
 }
 
-ProblemClientModel::~ProblemClientModel()
-{
-}
+ProblemClientModel::~ProblemClientModel() = default;
 
 QVariant ProblemClientModel::data(const QModelIndex& index, int role) const
 {

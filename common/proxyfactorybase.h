@@ -63,7 +63,7 @@ class ProxyFactory : public ProxyFactoryBase, public IFace
 public:
     explicit inline ProxyFactory(const PluginInfo &pluginInfo, QObject *parent = nullptr)
         : ProxyFactoryBase(pluginInfo, parent) {}
-    inline ~ProxyFactory() override {}
+    inline ~ProxyFactory() override = default;
 
     QString id() const override
     {

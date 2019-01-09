@@ -37,9 +37,7 @@ MetaTypeBrowserClient::MetaTypeBrowserClient(QObject* parent)
 {
 }
 
-MetaTypeBrowserClient::~MetaTypeBrowserClient()
-{
-}
+MetaTypeBrowserClient::~MetaTypeBrowserClient() = default;
 
 void MetaTypeBrowserClient::rescanTypes()
 {

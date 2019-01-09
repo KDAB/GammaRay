@@ -36,9 +36,7 @@
 
 using namespace GammaRay;
 
-ProbeABIDetector::ProbeABIDetector()
-{
-}
+ProbeABIDetector::ProbeABIDetector() = default;
 
 ProbeABI ProbeABIDetector::abiForExecutable(const QString &path) const
 {

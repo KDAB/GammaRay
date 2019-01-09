@@ -37,9 +37,7 @@ TimerTopClient::TimerTopClient(QObject *parent)
 {
 }
 
-TimerTopClient::~TimerTopClient()
-{
-}
+TimerTopClient::~TimerTopClient() = default;
 
 void TimerTopClient::clearHistory()
 {

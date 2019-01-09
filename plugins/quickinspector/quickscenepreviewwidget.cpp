@@ -52,9 +52,7 @@ QuickScenePreviewWidget::QuickScenePreviewWidget(QuickSceneControlWidget *contro
     setUnavailableText(tr("No remote view available.\n(This happens e.g. when the window is minimized or the scene is hidden)"));
 }
 
-QuickScenePreviewWidget::~QuickScenePreviewWidget()
-{
-}
+QuickScenePreviewWidget::~QuickScenePreviewWidget() = default;
 
 void QuickScenePreviewWidget::restoreState(const QByteArray &state)
 {

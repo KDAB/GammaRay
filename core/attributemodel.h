@@ -68,7 +68,7 @@ public:
     {
     }
 
-    ~AttributeModel() override {}
+    ~AttributeModel() override = default;
 
     void setObject(Class *obj)
     {

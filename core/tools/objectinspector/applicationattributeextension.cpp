@@ -44,9 +44,7 @@ ApplicationAttributeExtension::ApplicationAttributeExtension(
     controller->registerModel(m_attributeModel, QStringLiteral("applicationAttributeModel"));
 }
 
-ApplicationAttributeExtension::~ApplicationAttributeExtension()
-{
-}
+ApplicationAttributeExtension::~ApplicationAttributeExtension() = default;
 
 bool ApplicationAttributeExtension::setQObject(QObject *object)
 {

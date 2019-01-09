@@ -54,9 +54,7 @@ PropertyTextEditorDialog::PropertyTextEditorDialog(const QByteArray &bytes, QWid
     connect(ui->modeButton, &QAbstractButton::clicked, this, &PropertyTextEditorDialog::toggleMode);
 }
 
-PropertyTextEditorDialog::~PropertyTextEditorDialog()
-{
-}
+PropertyTextEditorDialog::~PropertyTextEditorDialog() = default;
 
 void PropertyTextEditorDialog::setReadOnly(bool readOnly)
 {

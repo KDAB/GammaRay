@@ -38,9 +38,7 @@ MetaTypesClientModel::MetaTypesClientModel(QObject* parent)
 {
 }
 
-MetaTypesClientModel::~MetaTypesClientModel()
-{
-}
+MetaTypesClientModel::~MetaTypesClientModel() = default;
 
 QVariant MetaTypesClientModel::data(const QModelIndex& index, int role) const
 {

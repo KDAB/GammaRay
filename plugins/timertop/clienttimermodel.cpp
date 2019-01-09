@@ -42,9 +42,7 @@ ClientTimerModel::ClientTimerModel(QObject *parent)
 {
 }
 
-ClientTimerModel::~ClientTimerModel()
-{
-}
+ClientTimerModel::~ClientTimerModel() = default;
 
 QVariant ClientTimerModel::data(const QModelIndex &index, int role) const
 {

@@ -46,9 +46,7 @@ ClassInfoTab::ClassInfoTab(PropertyWidget *parent)
     setObjectBaseName(parent->objectBaseName());
 }
 
-ClassInfoTab::~ClassInfoTab()
-{
-}
+ClassInfoTab::~ClassInfoTab() = default;
 
 void ClassInfoTab::setObjectBaseName(const QString &baseName)
 {

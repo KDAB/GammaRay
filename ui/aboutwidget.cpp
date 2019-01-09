@@ -50,9 +50,7 @@ AboutWidget::AboutWidget(QWidget *parent)
 #endif
 }
 
-AboutWidget::~AboutWidget()
-{
-}
+AboutWidget::~AboutWidget() = default;
 
 void AboutWidget::setLogo(const QString &iconFileName)
 {

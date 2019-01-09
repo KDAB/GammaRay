@@ -65,9 +65,7 @@ CodeEditor::CodeEditor(QWidget *parent) :
     highlightCurrentLine();
 }
 
-CodeEditor::~CodeEditor()
-{
-}
+CodeEditor::~CodeEditor() = default;
 
 void CodeEditor::setFileName(const QString &fileName)
 {

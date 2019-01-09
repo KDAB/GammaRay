@@ -47,9 +47,7 @@ SGGeometryTab::SGGeometryTab(PropertyWidget *parent)
     setObjectBaseName(parent->objectBaseName());
 }
 
-SGGeometryTab::~SGGeometryTab()
-{
-}
+SGGeometryTab::~SGGeometryTab() = default;
 
 void SGGeometryTab::setObjectBaseName(const QString &baseName)
 {

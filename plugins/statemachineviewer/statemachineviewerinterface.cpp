@@ -43,6 +43,4 @@ StateMachineViewerInterface::StateMachineViewerInterface(QObject *parent)
     ObjectBroker::registerObject<StateMachineViewerInterface *>(this);
 }
 
-StateMachineViewerInterface::~StateMachineViewerInterface()
-{
-}
+StateMachineViewerInterface::~StateMachineViewerInterface() = default;

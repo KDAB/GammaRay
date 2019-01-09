@@ -39,9 +39,7 @@ OutboundConnectionsModel::OutboundConnectionsModel(QObject *parent)
 {
 }
 
-OutboundConnectionsModel::~OutboundConnectionsModel()
-{
-}
+OutboundConnectionsModel::~OutboundConnectionsModel() = default;
 
 void OutboundConnectionsModel::setObject(QObject *object)
 {

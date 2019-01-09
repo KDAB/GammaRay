@@ -40,8 +40,7 @@ class Gadget
     Q_PROPERTY(int prop1 READ prop1 WRITE setProp1 RESET resetProp1)
 
 public:
-    Gadget()
-    {}
+    Gadget() = default;
     int prop1() const { return m_prop1; }
     void setProp1(int v) { m_prop1 = v; }
     void resetProp1() { m_prop1 = 5; }

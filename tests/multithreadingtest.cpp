@@ -36,8 +36,7 @@ class Thread : public QThread
 {
     Q_OBJECT
 public:
-    Thread()
-    {}
+    Thread() = default;
 
     void run() override
     {

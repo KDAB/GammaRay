@@ -58,9 +58,7 @@ PaintAnalyzerExtension::PaintAnalyzerExtension(PropertyController *controller)
     }
 }
 
-PaintAnalyzerExtension::~PaintAnalyzerExtension()
-{
-}
+PaintAnalyzerExtension::~PaintAnalyzerExtension() = default;
 
 bool PaintAnalyzerExtension::setQObject(QObject *object)
 {

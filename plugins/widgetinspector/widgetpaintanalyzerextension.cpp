@@ -55,9 +55,7 @@ WidgetPaintAnalyzerExtension::WidgetPaintAnalyzerExtension(PropertyController *c
     QObject::connect(m_paintAnalyzer, &PaintAnalyzer::requestUpdate, [this]() { analyze(); });
 }
 
-WidgetPaintAnalyzerExtension::~WidgetPaintAnalyzerExtension()
-{
-}
+WidgetPaintAnalyzerExtension::~WidgetPaintAnalyzerExtension() = default;
 
 bool WidgetPaintAnalyzerExtension::setQObject(QObject *object)
 {

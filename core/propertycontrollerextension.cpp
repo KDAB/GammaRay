@@ -35,9 +35,7 @@ PropertyControllerExtension::PropertyControllerExtension(const QString &name)
 {
 }
 
-PropertyControllerExtension::~PropertyControllerExtension()
-{
-}
+PropertyControllerExtension::~PropertyControllerExtension() = default;
 
 QString PropertyControllerExtension::name() const
 {

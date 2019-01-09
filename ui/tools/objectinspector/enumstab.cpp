@@ -48,9 +48,7 @@ EnumsTab::EnumsTab(PropertyWidget *parent)
     setObjectBaseName(parent->objectBaseName());
 }
 
-EnumsTab::~EnumsTab()
-{
-}
+EnumsTab::~EnumsTab() = default;
 
 void EnumsTab::setObjectBaseName(const QString &baseName)
 {

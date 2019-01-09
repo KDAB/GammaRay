@@ -58,9 +58,7 @@ MessageDisplayModel::MessageDisplayModel(QObject *parent)
 {
 }
 
-MessageDisplayModel::~MessageDisplayModel()
-{
-}
+MessageDisplayModel::~MessageDisplayModel() = default;
 
 QVariant MessageDisplayModel::data(const QModelIndex &proxyIndex, int role) const
 {

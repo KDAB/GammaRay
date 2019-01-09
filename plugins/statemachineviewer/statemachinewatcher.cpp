@@ -51,9 +51,7 @@ StateMachineWatcher::StateMachineWatcher(QObject *parent)
 {
 }
 
-StateMachineWatcher::~StateMachineWatcher()
-{
-}
+StateMachineWatcher::~StateMachineWatcher() = default;
 
 void StateMachineWatcher::setWatchedStateMachine(QStateMachine *machine)
 {

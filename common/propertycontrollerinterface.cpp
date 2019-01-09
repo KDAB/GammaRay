@@ -38,9 +38,7 @@ PropertyControllerInterface::PropertyControllerInterface(const QString &name, QO
     ObjectBroker::registerObject(name, this);
 }
 
-PropertyControllerInterface::~PropertyControllerInterface()
-{
-}
+PropertyControllerInterface::~PropertyControllerInterface() = default;
 
 QString PropertyControllerInterface::name() const
 {

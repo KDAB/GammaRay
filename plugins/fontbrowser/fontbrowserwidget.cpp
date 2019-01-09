@@ -97,9 +97,7 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
     QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
 }
 
-FontBrowserWidget::~FontBrowserWidget()
-{
-}
+FontBrowserWidget::~FontBrowserWidget() = default;
 
 void FontBrowserWidget::delayedInit()
 {

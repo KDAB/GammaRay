@@ -79,8 +79,7 @@ private:
 
     struct Row
     {
-        Row()
-        {}
+        Row() = default;
         QByteArray context;
         QByteArray sourceText;
         QByteArray disambiguation;

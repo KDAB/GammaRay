@@ -269,8 +269,7 @@ AbstractScreenGrabber::AbstractScreenGrabber(QQuickWindow *window)
     placeOn(ItemOrLayoutFacade());
 }
 
-GammaRay::AbstractScreenGrabber::~AbstractScreenGrabber()
-{}
+GammaRay::AbstractScreenGrabber::~AbstractScreenGrabber() = default;
 
 QQuickWindow *AbstractScreenGrabber::window() const
 {
@@ -585,9 +584,7 @@ OpenGLScreenGrabber::OpenGLScreenGrabber(QQuickWindow *window)
             this, &OpenGLScreenGrabber::windowAfterRendering, Qt::DirectConnection);
 }
 
-OpenGLScreenGrabber::~OpenGLScreenGrabber()
-{
-}
+OpenGLScreenGrabber::~OpenGLScreenGrabber() = default;
 
 void OpenGLScreenGrabber::requestGrabWindow(const QRectF &userViewport)
 {
@@ -697,8 +694,7 @@ SoftwareScreenGrabber::SoftwareScreenGrabber(QQuickWindow* window)
             this, &SoftwareScreenGrabber::windowBeforeRendering, Qt::DirectConnection);
 }
 
-SoftwareScreenGrabber::~SoftwareScreenGrabber()
-{}
+SoftwareScreenGrabber::~SoftwareScreenGrabber() = default;
 
 void SoftwareScreenGrabber::updateOverlay()
 {

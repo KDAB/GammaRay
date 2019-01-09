@@ -74,9 +74,7 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent)
             &QmlContextTab::propertiesContextMenu);
 }
 
-QmlContextTab::~QmlContextTab()
-{
-}
+QmlContextTab::~QmlContextTab() = default;
 
 void QmlContextTab::contextContextMenu(QPoint pos)
 {

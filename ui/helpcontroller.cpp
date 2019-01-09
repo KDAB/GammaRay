@@ -46,8 +46,7 @@ using namespace GammaRay;
 namespace GammaRay {
 struct HelpControllerPrivate
 {
-    HelpControllerPrivate()
-    {}
+    HelpControllerPrivate() = default;
 
     void startProcess();
     void sendCommand(const QByteArray &cmd);

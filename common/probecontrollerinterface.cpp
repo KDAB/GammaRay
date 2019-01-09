@@ -35,6 +35,4 @@ ProbeControllerInterface::ProbeControllerInterface(QObject *parent)
 {
 }
 
-ProbeControllerInterface::~ProbeControllerInterface()
-{
-}
+ProbeControllerInterface::~ProbeControllerInterface() = default;

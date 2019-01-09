@@ -64,9 +64,7 @@ MaterialExtension::MaterialExtension(PropertyController *controller)
     controller->registerModel(m_shaderModel, QStringLiteral("shaderModel"));
 }
 
-MaterialExtension::~MaterialExtension()
-{
-}
+MaterialExtension::~MaterialExtension() = default;
 
 bool MaterialExtension::setObject(void *object, const QString &typeName)
 {

@@ -56,9 +56,7 @@ PositionInfoPropertyAdaptor::PositionInfoPropertyAdaptor(QObject *parent)
 {
 }
 
-PositionInfoPropertyAdaptor::~PositionInfoPropertyAdaptor()
-{
-}
+PositionInfoPropertyAdaptor::~PositionInfoPropertyAdaptor() = default;
 
 int PositionInfoPropertyAdaptor::count() const
 {

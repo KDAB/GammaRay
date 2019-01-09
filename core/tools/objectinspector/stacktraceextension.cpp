@@ -43,9 +43,7 @@ StackTraceExtension::StackTraceExtension(PropertyController* controller)
     controller->registerModel(m_model, QStringLiteral("stackTraceModel"));
 }
 
-StackTraceExtension::~StackTraceExtension()
-{
-}
+StackTraceExtension::~StackTraceExtension() = default;
 
 bool StackTraceExtension::setQObject(QObject *object)
 {

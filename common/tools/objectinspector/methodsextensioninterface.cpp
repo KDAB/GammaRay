@@ -39,9 +39,7 @@ MethodsExtensionInterface::MethodsExtensionInterface(const QString &name, QObjec
     ObjectBroker::registerObject(name, this);
 }
 
-MethodsExtensionInterface::~MethodsExtensionInterface()
-{
-}
+MethodsExtensionInterface::~MethodsExtensionInterface() = default;
 
 const QString &MethodsExtensionInterface::name() const
 {

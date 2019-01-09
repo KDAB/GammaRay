@@ -72,9 +72,7 @@ ConnectionsTab::ConnectionsTab(PropertyWidget *parent)
             this, &ConnectionsTab::outboundContextMenu);
 }
 
-ConnectionsTab::~ConnectionsTab()
-{
-}
+ConnectionsTab::~ConnectionsTab() = default;
 
 static int mapToSourceRow(const QModelIndex &index)
 {

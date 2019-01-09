@@ -47,18 +47,9 @@ class ProbeABIContext
 class ProbeABIPrivate : public QSharedData
 {
 public:
-    ProbeABIPrivate()
-    {}
+    ProbeABIPrivate() = default;
 
-    ProbeABIPrivate(const ProbeABIPrivate &other)
-        : QSharedData(other)
-        , architecture(other.architecture)
-        , compiler(other.compiler)
-        , compilerVersion(other.compilerVersion)
-        , majorQtVersion(other.majorQtVersion)
-        , minorQtVersion(other.minorQtVersion)
-        , isDebug(other.isDebug)
-    {}
+    ProbeABIPrivate(const ProbeABIPrivate &other) = default;
 
     QString architecture;
     QString compiler;
@@ -76,20 +67,11 @@ ProbeABI::ProbeABI()
 {
 }
 
-ProbeABI::ProbeABI(const ProbeABI &other)
-    : d(other.d)
-{
-}
+ProbeABI::ProbeABI(const ProbeABI &other) = default;
 
-ProbeABI::~ProbeABI()
-{
-}
+ProbeABI::~ProbeABI() = default;
 
-ProbeABI &ProbeABI::operator=(const ProbeABI &other)
-{
-    d = other.d;
-    return *this;
-}
+ProbeABI &ProbeABI::operator=(const ProbeABI &other) = default;
 
 int ProbeABI::majorQtVersion() const
 {

@@ -39,9 +39,7 @@ PropertiesExtensionClient::PropertiesExtensionClient(const QString &name, QObjec
 {
 }
 
-PropertiesExtensionClient::~PropertiesExtensionClient()
-{
-}
+PropertiesExtensionClient::~PropertiesExtensionClient() = default;
 
 void PropertiesExtensionClient::setProperty(const QString &propertyName, const QVariant &value)
 {

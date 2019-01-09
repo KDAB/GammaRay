@@ -43,9 +43,7 @@ CookieExtension::CookieExtension(PropertyController *controller)
     controller->registerModel(m_cookieJarModel, QStringLiteral("cookieJarModel"));
 }
 
-CookieExtension::~CookieExtension()
-{
-}
+CookieExtension::~CookieExtension() = default;
 
 bool CookieExtension::setQObject(QObject *object)
 {

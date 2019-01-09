@@ -67,9 +67,7 @@ ActionModel::ActionModel(QObject *parent)
                                           [this]() { scanForShortcutDuplicates(); });
 }
 
-ActionModel::~ActionModel()
-{
-}
+ActionModel::~ActionModel() = default;
 
 void ActionModel::objectAdded(QObject *object)
 {

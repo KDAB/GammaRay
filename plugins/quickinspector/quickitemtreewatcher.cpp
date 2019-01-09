@@ -45,9 +45,7 @@ QuickItemTreeWatcher::QuickItemTreeWatcher(QTreeView *itemView, QTreeView *sgVie
             this, &QuickItemTreeWatcher::sgModelRowsInserted);
 }
 
-QuickItemTreeWatcher::~QuickItemTreeWatcher()
-{
-}
+QuickItemTreeWatcher::~QuickItemTreeWatcher() = default;
 
 void QuickItemTreeWatcher::itemModelRowsInserted(const QModelIndex &parent, int start, int end)
 {

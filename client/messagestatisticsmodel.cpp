@@ -103,9 +103,7 @@ MessageStatisticsModel::MessageStatisticsModel(QObject *parent)
 {
 }
 
-MessageStatisticsModel::~MessageStatisticsModel()
-{
-}
+MessageStatisticsModel::~MessageStatisticsModel() = default;
 
 void MessageStatisticsModel::clear()
 {

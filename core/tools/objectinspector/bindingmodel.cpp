@@ -51,9 +51,7 @@ BindingModel::BindingModel(QObject* parent)
 {
 }
 
-BindingModel::~BindingModel()
-{
-}
+BindingModel::~BindingModel() = default;
 
 void BindingModel::aboutToClear()
 {

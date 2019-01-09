@@ -38,9 +38,7 @@ MaterialExtensionInterface::MaterialExtensionInterface(const QString &name, QObj
     ObjectBroker::registerObject(name, this);
 }
 
-MaterialExtensionInterface::~MaterialExtensionInterface()
-{
-}
+MaterialExtensionInterface::~MaterialExtensionInterface() = default;
 
 const QString &MaterialExtensionInterface::name() const
 {

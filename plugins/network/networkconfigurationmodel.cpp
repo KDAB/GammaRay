@@ -41,9 +41,7 @@ NetworkConfigurationModel::NetworkConfigurationModel(QObject *parent)
 {
 }
 
-NetworkConfigurationModel::~NetworkConfigurationModel()
-{
-}
+NetworkConfigurationModel::~NetworkConfigurationModel() = default;
 
 int NetworkConfigurationModel::columnCount(const QModelIndex& parent) const
 {

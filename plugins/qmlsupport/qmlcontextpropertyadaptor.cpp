@@ -43,9 +43,7 @@ QmlContextPropertyAdaptor::QmlContextPropertyAdaptor(QObject *parent)
 {
 }
 
-QmlContextPropertyAdaptor::~QmlContextPropertyAdaptor()
-{
-}
+QmlContextPropertyAdaptor::~QmlContextPropertyAdaptor() = default;
 
 int QmlContextPropertyAdaptor::count() const
 {

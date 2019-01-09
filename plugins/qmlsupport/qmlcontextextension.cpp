@@ -59,9 +59,7 @@ QmlContextExtension::QmlContextExtension(PropertyController *controller)
     controller->registerModel(m_propertyModel, QStringLiteral("qmlContextPropertyModel"));
 }
 
-QmlContextExtension::~QmlContextExtension()
-{
-}
+QmlContextExtension::~QmlContextExtension() = default;
 
 bool QmlContextExtension::setQObject(QObject *object)
 {

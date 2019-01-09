@@ -38,6 +38,4 @@ MetaTypeBrowserInterface::MetaTypeBrowserInterface(QObject* parent)
     ObjectBroker::registerObject<MetaTypeBrowserInterface*>(this);
 }
 
-MetaTypeBrowserInterface::~MetaTypeBrowserInterface()
-{
-}
+MetaTypeBrowserInterface::~MetaTypeBrowserInterface() = default;

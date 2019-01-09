@@ -40,9 +40,7 @@ MessageModel::MessageModel(QObject *parent)
     qRegisterMetaType<DebugMessage>();
 }
 
-MessageModel::~MessageModel()
-{
-}
+MessageModel::~MessageModel() = default;
 
 void MessageModel::addMessage(const DebugMessage &message)
 {

@@ -38,9 +38,7 @@ ProbeABIModel::ProbeABIModel(QObject *parent)
     m_abis = ProbeFinder::listProbeABIs();
 }
 
-ProbeABIModel::~ProbeABIModel()
-{
-}
+ProbeABIModel::~ProbeABIModel() = default;
 
 QVariant ProbeABIModel::data(const QModelIndex &index, int role) const
 {

@@ -40,9 +40,7 @@ AssociativePropertyAdaptor::AssociativePropertyAdaptor(QObject *parent)
 {
 }
 
-AssociativePropertyAdaptor::~AssociativePropertyAdaptor()
-{
-}
+AssociativePropertyAdaptor::~AssociativePropertyAdaptor() = default;
 
 void AssociativePropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {

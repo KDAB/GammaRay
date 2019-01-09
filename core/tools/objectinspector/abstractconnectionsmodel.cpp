@@ -42,9 +42,7 @@ AbstractConnectionsModel::AbstractConnectionsModel(QObject *parent)
 {
 }
 
-AbstractConnectionsModel::~AbstractConnectionsModel()
-{
-}
+AbstractConnectionsModel::~AbstractConnectionsModel() = default;
 
 int AbstractConnectionsModel::columnCount(const QModelIndex &parent) const
 {

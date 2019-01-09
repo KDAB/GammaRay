@@ -270,9 +270,7 @@ public:
       QStaticText text;
       int *counter = nullptr;
 
-      Line()
-      {
-      }
+      Line() = default;
 
       Line(quint64 p, const QStaticText &t, int *cnt)
         : pid(p), text(t), counter(cnt)

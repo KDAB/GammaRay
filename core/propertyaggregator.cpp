@@ -42,9 +42,7 @@ PropertyAggregator::PropertyAggregator(QObject *parent)
 {
 }
 
-PropertyAggregator::~PropertyAggregator()
-{
-}
+PropertyAggregator::~PropertyAggregator() = default;
 
 void PropertyAggregator::doSetObject(const ObjectInstance &oi)
 {

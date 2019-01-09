@@ -56,9 +56,7 @@ MethodInvocationDialog::MethodInvocationDialog(QWidget *parent)
     ui->connectionTypeComboBox->addItem(tr("Queued"), QVariant::fromValue(Qt::QueuedConnection));
 }
 
-MethodInvocationDialog::~MethodInvocationDialog()
-{
-}
+MethodInvocationDialog::~MethodInvocationDialog() = default;
 
 Qt::ConnectionType MethodInvocationDialog::connectionType() const
 {

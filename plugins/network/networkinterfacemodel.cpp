@@ -55,9 +55,7 @@ NetworkInterfaceModel::NetworkInterfaceModel(QObject *parent)
     m_interfaces = QNetworkInterface::allInterfaces();
 }
 
-NetworkInterfaceModel::~NetworkInterfaceModel()
-{
-}
+NetworkInterfaceModel::~NetworkInterfaceModel() = default;
 
 int NetworkInterfaceModel::columnCount(const QModelIndex &parent) const
 {

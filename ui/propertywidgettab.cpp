@@ -38,9 +38,7 @@ PropertyWidgetTabFactoryBase::PropertyWidgetTabFactoryBase(const QString &name,
 {
 }
 
-PropertyWidgetTabFactoryBase::~PropertyWidgetTabFactoryBase()
-{
-}
+PropertyWidgetTabFactoryBase::~PropertyWidgetTabFactoryBase() = default;
 
 QString PropertyWidgetTabFactoryBase::name() const
 {

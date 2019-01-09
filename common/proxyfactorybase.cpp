@@ -39,9 +39,7 @@ ProxyFactoryBase::ProxyFactoryBase(const PluginInfo &pluginInfo, QObject *parent
 {
 }
 
-ProxyFactoryBase::~ProxyFactoryBase()
-{
-}
+ProxyFactoryBase::~ProxyFactoryBase() = default;
 
 PluginInfo ProxyFactoryBase::pluginInfo() const
 {

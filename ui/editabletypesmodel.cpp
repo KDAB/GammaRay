@@ -37,9 +37,7 @@ EditableTypesModel::EditableTypesModel(QObject *parent)
     m_types = PropertyEditorFactory::supportedTypes();
 }
 
-EditableTypesModel::~EditableTypesModel()
-{
-}
+EditableTypesModel::~EditableTypesModel() = default;
 
 int EditableTypesModel::rowCount(const QModelIndex &parent) const
 {

@@ -41,9 +41,7 @@ ClassInfoExtension::ClassInfoExtension(PropertyController *controller)
     controller->registerModel(m_model, QStringLiteral("classInfo"));
 }
 
-ClassInfoExtension::~ClassInfoExtension()
-{
-}
+ClassInfoExtension::~ClassInfoExtension() = default;
 
 bool ClassInfoExtension::setQObject(QObject *object)
 {

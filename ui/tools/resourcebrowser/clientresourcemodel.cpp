@@ -37,9 +37,7 @@ ClientResourceModel::ClientResourceModel(QObject *parent)
 {
 }
 
-ClientResourceModel::~ClientResourceModel()
-{
-}
+ClientResourceModel::~ClientResourceModel() = default;
 
 QVariant ClientResourceModel::data(const QModelIndex &index, int role) const
 {

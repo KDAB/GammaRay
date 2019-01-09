@@ -38,6 +38,4 @@ FontBrowserInterface::FontBrowserInterface(QObject *parent)
     ObjectBroker::registerObject<FontBrowserInterface *>(this);
 }
 
-FontBrowserInterface::~FontBrowserInterface()
-{
-}
+FontBrowserInterface::~FontBrowserInterface() = default;

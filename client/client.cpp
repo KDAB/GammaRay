@@ -58,9 +58,7 @@ Client::Client(QObject *parent)
                                         m_statModel);
 }
 
-Client::~Client()
-{
-}
+Client::~Client() = default;
 
 Client *Client::instance()
 {

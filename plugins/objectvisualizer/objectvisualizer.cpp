@@ -44,6 +44,4 @@ GraphViewer::GraphViewer(Probe *probe, QObject *parent)
     probe->registerModel("com.kdab.GammaRay.ObjectVisualizerModel", model);
 }
 
-GraphViewer::~GraphViewer()
-{
-}
+GraphViewer::~GraphViewer() = default;

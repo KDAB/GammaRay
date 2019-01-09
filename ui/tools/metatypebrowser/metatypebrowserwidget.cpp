@@ -78,9 +78,7 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
     addAction(ui->actionRescanTypes);
 }
 
-MetaTypeBrowserWidget::~MetaTypeBrowserWidget()
-{
-}
+MetaTypeBrowserWidget::~MetaTypeBrowserWidget() = default;
 
 void MetaTypeBrowserWidget::contextMenu(QPoint pos)
 {

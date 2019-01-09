@@ -89,9 +89,7 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
                                    UISizeVector() << 200 << 200 << -1);
 }
 
-SignalMonitorWidget::~SignalMonitorWidget()
-{
-}
+SignalMonitorWidget::~SignalMonitorWidget() = default;
 
 void SignalMonitorWidget::intervalScaleValueChanged(int value)
 {

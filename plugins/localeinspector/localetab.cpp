@@ -63,9 +63,7 @@ LocaleTab::LocaleTab(QWidget *parent)
             this, &LocaleTab::initSplitterPosition);
 }
 
-LocaleTab::~LocaleTab()
-{
-}
+LocaleTab::~LocaleTab() = default;
 
 void LocaleTab::initSplitterPosition()
 {

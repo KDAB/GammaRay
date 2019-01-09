@@ -86,9 +86,7 @@ Server::Server(QObject *parent)
     registerMessageHandler(m_nextAddress, m_propertySyncer, "handleMessage");
 }
 
-Server::~Server()
-{
-}
+Server::~Server() = default;
 
 bool Server::listen()
 {

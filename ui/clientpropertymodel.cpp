@@ -39,9 +39,7 @@ ClientPropertyModel::ClientPropertyModel(QObject *parent)
 {
 }
 
-ClientPropertyModel::~ClientPropertyModel()
-{
-}
+ClientPropertyModel::~ClientPropertyModel() = default;
 
 QVariant ClientPropertyModel::data(const QModelIndex& index, int role) const
 {

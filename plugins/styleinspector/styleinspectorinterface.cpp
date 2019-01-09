@@ -41,9 +41,7 @@ StyleInspectorInterface::StyleInspectorInterface(QObject *parent)
     ObjectBroker::registerObject<StyleInspectorInterface *>(this);
 }
 
-StyleInspectorInterface::~StyleInspectorInterface()
-{
-}
+StyleInspectorInterface::~StyleInspectorInterface() = default;
 
 int StyleInspectorInterface::cellHeight() const
 {

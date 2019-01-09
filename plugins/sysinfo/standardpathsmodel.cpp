@@ -70,9 +70,7 @@ StandardPathsModel::StandardPathsModel(QObject *parent)
 {
 }
 
-StandardPathsModel::~StandardPathsModel()
-{
-}
+StandardPathsModel::~StandardPathsModel() = default;
 
 QVariant StandardPathsModel::data(const QModelIndex &index, int role) const
 {

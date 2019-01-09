@@ -40,9 +40,7 @@ GeoPositionInfoSource::GeoPositionInfoSource(QObject* parent) :
 {
 }
 
-GeoPositionInfoSource::~GeoPositionInfoSource()
-{
-}
+GeoPositionInfoSource::~GeoPositionInfoSource() = default;
 
 void GeoPositionInfoSource::setSource(QGeoPositionInfoSource* source)
 {

@@ -42,8 +42,7 @@
 
 namespace GammaRay {
 struct ObjectlBrokerData {
-    ObjectlBrokerData()
-    {}
+    ObjectlBrokerData() = default;
     QHash<QString, QObject *> objects;
     QHash<QString, QAbstractItemModel *> models;
     QHash<QAbstractItemModel *, QItemSelectionModel *> selectionModels;

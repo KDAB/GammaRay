@@ -43,9 +43,7 @@ TcpServerDevice::TcpServerDevice(QObject *parent)
     connect(m_server, &QTcpServer::newConnection, this, &ServerDevice::newConnection);
 }
 
-TcpServerDevice::~TcpServerDevice()
-{
-}
+TcpServerDevice::~TcpServerDevice() = default;
 
 bool TcpServerDevice::listen()
 {

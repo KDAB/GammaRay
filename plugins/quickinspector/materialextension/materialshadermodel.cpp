@@ -68,9 +68,7 @@ MaterialShaderModel::MaterialShaderModel(QObject* parent)
 {
 }
 
-MaterialShaderModel::~MaterialShaderModel()
-{
-}
+MaterialShaderModel::~MaterialShaderModel() = default;
 
 void MaterialShaderModel::setMaterialShader(QSGMaterialShader* shader)
 {

@@ -40,9 +40,7 @@ ClientDevice::ClientDevice(QObject *parent)
 {
 }
 
-ClientDevice::~ClientDevice()
-{
-}
+ClientDevice::~ClientDevice() = default;
 
 ClientDevice *ClientDevice::create(const QUrl &url, QObject *parent)
 {

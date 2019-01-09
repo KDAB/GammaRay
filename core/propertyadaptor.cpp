@@ -36,9 +36,7 @@ PropertyAdaptor::PropertyAdaptor(QObject *parent)
 {
 }
 
-PropertyAdaptor::~PropertyAdaptor()
-{
-}
+PropertyAdaptor::~PropertyAdaptor() = default;
 
 const ObjectInstance &PropertyAdaptor::object() const
 {

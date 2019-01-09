@@ -75,9 +75,7 @@ TestConnections::TestConnections(TestConnections::Type type, int timeOuts, int t
     m_timer->start(timeoutInterval == -1 ? TIMEOUTINTERVAL : timeoutInterval);
 }
 
-TestConnections::~TestConnections()
-{
-}
+TestConnections::~TestConnections() = default;
 
 void TestConnections::timeout()
 {
@@ -144,9 +142,7 @@ TestThread::TestThread(TestConnections::Type type, int timeOuts, int timeoutInte
 {
 }
 
-TestThread::~TestThread()
-{
-}
+TestThread::~TestThread() = default;
 
 void TestThread::run()
 {

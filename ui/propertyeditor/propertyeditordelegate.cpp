@@ -152,9 +152,7 @@ PropertyEditorDelegate::PropertyEditorDelegate(QObject *parent)
     setItemEditorFactory(PropertyEditorFactory::instance());
 }
 
-PropertyEditorDelegate::~PropertyEditorDelegate()
-{
-}
+PropertyEditorDelegate::~PropertyEditorDelegate() = default;
 
 void PropertyEditorDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {

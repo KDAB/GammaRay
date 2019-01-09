@@ -38,8 +38,6 @@ WlCompositorInterface::WlCompositorInterface(QObject *parent)
     ObjectBroker::registerObject<WlCompositorInterface *>(this);
 }
 
-WlCompositorInterface::~WlCompositorInterface()
-{
-}
+WlCompositorInterface::~WlCompositorInterface() = default;
 
 }

@@ -46,9 +46,7 @@ TextureViewWidget::TextureViewWidget(QWidget *parent)
     connect(this, &RemoteViewWidget::frameChanged, this, &TextureViewWidget::analyzeImageFlaws);
 }
 
-TextureViewWidget::~TextureViewWidget()
-{
-}
+TextureViewWidget::~TextureViewWidget() = default;
 
 void TextureViewWidget::drawPixelWasteDecoration(QPainter *p) const
 {

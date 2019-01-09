@@ -56,9 +56,7 @@ BindingExtension::BindingExtension(PropertyController* controller)
     controller->registerModel(m_bindingModel, QStringLiteral("bindingModel"));
 }
 
-BindingExtension::~BindingExtension()
-{
-}
+BindingExtension::~BindingExtension() = default;
 
 void BindingExtension::clear()
 {

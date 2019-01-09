@@ -39,9 +39,7 @@ MetaProperty::MetaProperty(const char *name)
 {
 }
 
-MetaProperty::~MetaProperty()
-{
-}
+MetaProperty::~MetaProperty() = default;
 
 const char *MetaProperty::name() const
 {

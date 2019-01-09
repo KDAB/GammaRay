@@ -50,6 +50,4 @@ NetworkConfigurationWidget::NetworkConfigurationWidget(QWidget *parent)
     new SearchLineController(ui->searchLine, model);
 }
 
-NetworkConfigurationWidget::~NetworkConfigurationWidget()
-{
-}
+NetworkConfigurationWidget::~NetworkConfigurationWidget() = default;

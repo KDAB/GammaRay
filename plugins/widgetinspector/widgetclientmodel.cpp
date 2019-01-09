@@ -39,9 +39,7 @@ WidgetClientModel::WidgetClientModel(QObject *parent)
 {
 }
 
-WidgetClientModel::~WidgetClientModel()
-{
-}
+WidgetClientModel::~WidgetClientModel() = default;
 
 QVariant WidgetClientModel::data(const QModelIndex &index, int role) const
 {

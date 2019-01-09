@@ -69,7 +69,7 @@ struct LocaleDataAccessor
             registry->setAccessorEnabled(this, true);
     }
 
-    virtual ~LocaleDataAccessor() {}
+    virtual ~LocaleDataAccessor() = default;
 
     virtual QString accessorName() = 0;
 

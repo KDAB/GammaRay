@@ -45,6 +45,4 @@ CookieTab::CookieTab(GammaRay::PropertyWidget *parent)
                                                     + QStringLiteral(".cookieJarModel")));
 }
 
-CookieTab::~CookieTab()
-{
-}
+CookieTab::~CookieTab() = default;

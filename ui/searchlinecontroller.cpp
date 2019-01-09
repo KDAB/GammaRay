@@ -83,9 +83,7 @@ SearchLineController::SearchLineController(QLineEdit *lineEdit, QAbstractItemMod
     connect(timer, &QTimer::timeout, this, &SearchLineController::activateSearch);
 }
 
-SearchLineController::~SearchLineController()
-{
-}
+SearchLineController::~SearchLineController() = default;
 
 void SearchLineController::activateSearch()
 {

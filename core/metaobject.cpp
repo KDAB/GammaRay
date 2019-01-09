@@ -30,9 +30,7 @@
 
 using namespace GammaRay;
 
-MetaObject::MetaObject()
-{
-}
+MetaObject::MetaObject() = default;
 
 MetaObject::~MetaObject()
 {

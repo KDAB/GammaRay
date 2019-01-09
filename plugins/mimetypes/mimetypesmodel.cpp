@@ -39,9 +39,7 @@ MimeTypesModel::MimeTypesModel(QObject *parent)
 {
 }
 
-MimeTypesModel::~MimeTypesModel()
-{
-}
+MimeTypesModel::~MimeTypesModel() = default;
 
 QVariant MimeTypesModel::data(const QModelIndex &index, int role) const
 {

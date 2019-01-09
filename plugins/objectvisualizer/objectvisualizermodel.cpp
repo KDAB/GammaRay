@@ -37,9 +37,7 @@ ObjectVisualizerModel::ObjectVisualizerModel(QObject *parent)
 {
 }
 
-ObjectVisualizerModel::~ObjectVisualizerModel()
-{
-}
+ObjectVisualizerModel::~ObjectVisualizerModel() = default;
 
 QVariant ObjectVisualizerModel::data(const QModelIndex &proxyIndex, int role) const
 {

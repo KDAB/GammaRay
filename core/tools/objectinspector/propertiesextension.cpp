@@ -46,9 +46,7 @@ PropertiesExtension::PropertiesExtension(PropertyController *controller)
     controller->registerModel(m_aggregatedPropertyModel, QStringLiteral("properties"));
 }
 
-PropertiesExtension::~PropertiesExtension()
-{
-}
+PropertiesExtension::~PropertiesExtension() = default;
 
 bool PropertiesExtension::setQObject(QObject *object)
 {

@@ -109,9 +109,7 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
                                    UISizeVector() << -1 << 300 << -1 << -1 << -1);
 }
 
-MessageHandlerWidget::~MessageHandlerWidget()
-{
-}
+MessageHandlerWidget::~MessageHandlerWidget() = default;
 
 void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QString &message,
                                                 const QTime &time, const QStringList &backtrace)

@@ -50,9 +50,7 @@ SelectionModelServer::SelectionModelServer(const QString &objectName, QAbstractI
     connect(Endpoint::instance(), &Endpoint::disconnected, this, [this]{ modelMonitored(); });
 }
 
-SelectionModelServer::~SelectionModelServer()
-{
-}
+SelectionModelServer::~SelectionModelServer() = default;
 
 bool SelectionModelServer::isConnected() const
 {

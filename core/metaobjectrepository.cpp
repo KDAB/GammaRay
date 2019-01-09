@@ -51,9 +51,7 @@ namespace GammaRay {
 class StaticMetaObjectRepository : public MetaObjectRepository
 {
 public:
-    StaticMetaObjectRepository()
-    {
-    }
+    StaticMetaObjectRepository() = default;
 };
 }
 

@@ -56,9 +56,7 @@ WidgetInspectorInterface::WidgetInspectorInterface(QObject *parent)
     ObjectBroker::registerObject<WidgetInspectorInterface *>(this);
 }
 
-WidgetInspectorInterface::~WidgetInspectorInterface()
-{
-}
+WidgetInspectorInterface::~WidgetInspectorInterface() = default;
 
 WidgetInspectorInterface::Features WidgetInspectorInterface::features() const
 {

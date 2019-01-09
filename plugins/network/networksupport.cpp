@@ -95,9 +95,7 @@ NetworkSupport::NetworkSupport(Probe *probe, QObject *parent)
     PropertyController::registerExtension<CookieExtension>();
 }
 
-NetworkSupport::~NetworkSupport()
-{
-}
+NetworkSupport::~NetworkSupport() = default;
 
 void NetworkSupport::registerMetaTypes()
 {

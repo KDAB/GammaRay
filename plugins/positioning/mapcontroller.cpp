@@ -40,9 +40,7 @@ MapController::MapController(QObject* parent):
 {
 }
 
-MapController::~MapController()
-{
-}
+MapController::~MapController() = default;
 
 QGeoCoordinate MapController::sourceCoordinate() const
 {

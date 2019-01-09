@@ -44,6 +44,4 @@ NetworkInterfaceWidget::NetworkInterfaceWidget(QWidget *parent)
     ui->interfaceView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
-NetworkInterfaceWidget::~NetworkInterfaceWidget()
-{
-}
+NetworkInterfaceWidget::~NetworkInterfaceWidget() = default;

@@ -38,8 +38,7 @@ using namespace GammaRay;
 class GammaRay::MethodArgumentPrivate : public QSharedData
 {
 public:
-    MethodArgumentPrivate()
-    {}
+    MethodArgumentPrivate() = default;
 
     MethodArgumentPrivate(const MethodArgumentPrivate &other)
         : QSharedData(other)
@@ -81,20 +80,11 @@ MethodArgument::MethodArgument(const QVariant &v)
     }
 }
 
-MethodArgument::MethodArgument(const MethodArgument &other)
-    : d(other.d)
-{
-}
+MethodArgument::MethodArgument(const MethodArgument &other) = default;
 
-MethodArgument::~MethodArgument()
-{
-}
+MethodArgument::~MethodArgument() = default;
 
-MethodArgument &MethodArgument::operator=(const MethodArgument &other)
-{
-    d = other.d;
-    return *this;
-}
+MethodArgument &MethodArgument::operator=(const MethodArgument &other) = default;
 
 MethodArgument::operator QGenericArgument() const
 {

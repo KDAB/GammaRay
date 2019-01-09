@@ -42,9 +42,7 @@ EnumRepositoryClient::EnumRepositoryClient(QObject *parent)
             this, &EnumRepositoryClient::definitionReceived);
 }
 
-EnumRepositoryClient::~EnumRepositoryClient()
-{
-}
+EnumRepositoryClient::~EnumRepositoryClient() = default;
 
 EnumDefinition EnumRepositoryClient::definition(EnumId id) const
 {

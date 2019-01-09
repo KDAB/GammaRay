@@ -43,9 +43,7 @@ ClientMethodModel::ClientMethodModel(QObject *parent)
 {
 }
 
-ClientMethodModel::~ClientMethodModel()
-{
-}
+ClientMethodModel::~ClientMethodModel() = default;
 
 QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
 {

@@ -39,9 +39,7 @@ InboundConnectionsModel::InboundConnectionsModel(QObject *parent)
 {
 }
 
-InboundConnectionsModel::~InboundConnectionsModel()
-{
-}
+InboundConnectionsModel::~InboundConnectionsModel() = default;
 
 void InboundConnectionsModel::setObject(QObject *object)
 {

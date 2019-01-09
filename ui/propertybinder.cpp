@@ -57,9 +57,7 @@ PropertyBinder::PropertyBinder(QObject *source, const char *sourceProp, QObject 
     syncSourceToDestination();
 }
 
-PropertyBinder::~PropertyBinder()
-{
-}
+PropertyBinder::~PropertyBinder() = default;
 
 void PropertyBinder::add(const char *sourceProp, const char *destProp)
 {

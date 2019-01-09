@@ -42,9 +42,7 @@ QmlAttachedPropertyAdaptor::QmlAttachedPropertyAdaptor(QObject *parent)
 {
 }
 
-QmlAttachedPropertyAdaptor::~QmlAttachedPropertyAdaptor()
-{
-}
+QmlAttachedPropertyAdaptor::~QmlAttachedPropertyAdaptor() = default;
 
 void QmlAttachedPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {

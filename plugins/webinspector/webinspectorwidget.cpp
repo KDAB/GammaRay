@@ -47,9 +47,7 @@ WebInspectorWidget::WebInspectorWidget(QWidget *parent)
     webPageSelected(0);
 }
 
-WebInspectorWidget::~WebInspectorWidget()
-{
-}
+WebInspectorWidget::~WebInspectorWidget() = default;
 
 void WebInspectorWidget::webPageSelected(int index)
 {

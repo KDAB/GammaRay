@@ -39,4 +39,4 @@ TranslatorInspectorInterface::TranslatorInspectorInterface(const QString &name, 
     ObjectBroker::registerObject(name, this);
 }
 
-TranslatorInspectorInterface::~TranslatorInspectorInterface() {}
+TranslatorInspectorInterface::~TranslatorInspectorInterface() = default;

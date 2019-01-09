@@ -66,7 +66,7 @@ MAKE_FACTORY(ProblemReporter,   qApp->translate("GammaRay::ProblemReporterFactor
 MAKE_FACTORY(ResourceBrowser,   qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"));
 
 struct PluginRepository {
-    PluginRepository() {}
+    PluginRepository() = default;
     Q_DISABLE_COPY(PluginRepository)
     ~PluginRepository()
     {
@@ -117,9 +117,7 @@ ToolInfo::ToolInfo(const ToolData &toolData, ToolUiFactory *factory) :
 {
 }
 
-ToolInfo::~ToolInfo()
-{
-}
+ToolInfo::~ToolInfo() = default;
 
 QString ToolInfo::id() const
 {

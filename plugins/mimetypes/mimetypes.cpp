@@ -42,6 +42,4 @@ MimeTypes::MimeTypes(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"), proxy);
 }
 
-MimeTypes::~MimeTypes()
-{
-}
+MimeTypes::~MimeTypes() = default;

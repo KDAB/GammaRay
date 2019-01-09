@@ -39,9 +39,7 @@ ConnectionsExtensionInterface::ConnectionsExtensionInterface(const QString &name
     ObjectBroker::registerObject(name, this);
 }
 
-ConnectionsExtensionInterface::~ConnectionsExtensionInterface()
-{
-}
+ConnectionsExtensionInterface::~ConnectionsExtensionInterface() = default;
 
 QString ConnectionsExtensionInterface::name() const
 {

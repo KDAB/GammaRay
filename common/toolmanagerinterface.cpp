@@ -41,6 +41,4 @@ ToolManagerInterface::ToolManagerInterface(QObject *parent)
     qRegisterMetaTypeStreamOperators<QVector<QString> >();
 }
 
-ToolManagerInterface::~ToolManagerInterface()
-{
-}
+ToolManagerInterface::~ToolManagerInterface() = default;

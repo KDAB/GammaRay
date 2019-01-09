@@ -38,9 +38,7 @@ ConnectionsExtensionClient::ConnectionsExtensionClient(const QString &name, QObj
 {
 }
 
-ConnectionsExtensionClient::~ConnectionsExtensionClient()
-{
-}
+ConnectionsExtensionClient::~ConnectionsExtensionClient() = default;
 
 void ConnectionsExtensionClient::navigateToSender(int modelRow)
 {

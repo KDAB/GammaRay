@@ -73,9 +73,7 @@ PropertyEnumEditorModel::PropertyEnumEditorModel(QObject *parent) :
 {
 }
 
-PropertyEnumEditorModel::~PropertyEnumEditorModel()
-{
-}
+PropertyEnumEditorModel::~PropertyEnumEditorModel() = default;
 
 EnumValue PropertyEnumEditorModel::value() const
 {
@@ -175,9 +173,7 @@ PropertyEnumEditor::PropertyEnumEditor(QWidget* parent) :
             this, &PropertyEnumEditor::slotCurrentIndexChanged);
 }
 
-PropertyEnumEditor::~PropertyEnumEditor()
-{
-}
+PropertyEnumEditor::~PropertyEnumEditor() = default;
 
 EnumValue PropertyEnumEditor::enumValue() const
 {

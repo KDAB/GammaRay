@@ -62,9 +62,7 @@ PropertiesTab::PropertiesTab(PropertyWidget *parent)
     setObjectBaseName(parent->objectBaseName());
 }
 
-PropertiesTab::~PropertiesTab()
-{
-}
+PropertiesTab::~PropertiesTab() = default;
 
 void PropertiesTab::setObjectBaseName(const QString &baseName)
 {

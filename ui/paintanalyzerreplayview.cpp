@@ -41,9 +41,7 @@ PaintAnalyzerReplayView::PaintAnalyzerReplayView(QWidget* parent)
 {
 }
 
-PaintAnalyzerReplayView::~PaintAnalyzerReplayView()
-{
-}
+PaintAnalyzerReplayView::~PaintAnalyzerReplayView() = default;
 
 bool PaintAnalyzerReplayView::showClipArea() const
 {

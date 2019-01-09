@@ -39,9 +39,7 @@ ClientActionModel::ClientActionModel(QObject* parent)
 {
 }
 
-ClientActionModel::~ClientActionModel()
-{
-}
+ClientActionModel::~ClientActionModel() = default;
 
 QVariant ClientActionModel::data(const QModelIndex& index, int role) const
 {

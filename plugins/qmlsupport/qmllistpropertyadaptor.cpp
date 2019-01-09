@@ -39,9 +39,7 @@ QmlListPropertyAdaptor::QmlListPropertyAdaptor(QObject *parent)
 {
 }
 
-QmlListPropertyAdaptor::~QmlListPropertyAdaptor()
-{
-}
+QmlListPropertyAdaptor::~QmlListPropertyAdaptor() = default;
 
 int QmlListPropertyAdaptor::count() const
 {

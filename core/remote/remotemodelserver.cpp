@@ -59,9 +59,7 @@ RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent)
     registerServer();
 }
 
-RemoteModelServer::~RemoteModelServer()
-{
-}
+RemoteModelServer::~RemoteModelServer() = default;
 
 QAbstractItemModel *RemoteModelServer::model() const
 {

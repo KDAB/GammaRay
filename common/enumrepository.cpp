@@ -35,9 +35,7 @@ EnumRepository::EnumRepository(QObject* parent)
 {
 }
 
-EnumRepository::~EnumRepository()
-{
-}
+EnumRepository::~EnumRepository() = default;
 
 EnumDefinition EnumRepository::definition(EnumId id) const
 {

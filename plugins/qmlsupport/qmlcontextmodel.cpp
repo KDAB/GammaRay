@@ -42,9 +42,7 @@ QmlContextModel::QmlContextModel(QObject *parent)
 {
 }
 
-QmlContextModel::~QmlContextModel()
-{
-}
+QmlContextModel::~QmlContextModel() = default;
 
 void QmlContextModel::clear()
 {

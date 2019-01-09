@@ -37,7 +37,5 @@ TimerTopInterface::TimerTopInterface(QObject *parent)
     ObjectBroker::registerObject<TimerTopInterface *>(this);
 }
 
-TimerTopInterface::~TimerTopInterface()
-{
-}
+TimerTopInterface::~TimerTopInterface() = default;
 }

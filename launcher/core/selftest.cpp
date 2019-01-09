@@ -40,9 +40,7 @@ SelfTest::SelfTest(QObject *parent)
 {
 }
 
-SelfTest::~SelfTest()
-{
-}
+SelfTest::~SelfTest() = default;
 
 bool SelfTest::checkEverything()
 {

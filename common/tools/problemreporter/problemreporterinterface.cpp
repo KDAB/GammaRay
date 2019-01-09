@@ -38,6 +38,4 @@ ProblemReporterInterface::ProblemReporterInterface(QObject* parent)
     ObjectBroker::registerObject<ProblemReporterInterface*>(this);
 }
 
-ProblemReporterInterface::~ProblemReporterInterface()
-{
-}
+ProblemReporterInterface::~ProblemReporterInterface() = default;

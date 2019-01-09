@@ -40,9 +40,7 @@ QJSValuePropertyAdaptor::QJSValuePropertyAdaptor(QObject *parent)
 {
 }
 
-QJSValuePropertyAdaptor::~QJSValuePropertyAdaptor()
-{
-}
+QJSValuePropertyAdaptor::~QJSValuePropertyAdaptor() = default;
 
 int QJSValuePropertyAdaptor::count() const
 {

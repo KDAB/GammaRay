@@ -39,9 +39,7 @@ SequentialPropertyAdaptor::SequentialPropertyAdaptor(QObject *parent)
 {
 }
 
-SequentialPropertyAdaptor::~SequentialPropertyAdaptor()
-{
-}
+SequentialPropertyAdaptor::~SequentialPropertyAdaptor() = default;
 
 void SequentialPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {

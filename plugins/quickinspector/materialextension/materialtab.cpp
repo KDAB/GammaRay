@@ -63,9 +63,7 @@ MaterialTab::MaterialTab(PropertyWidget *parent)
     m_ui->splitter->setStretchFactor(1, 3);
 }
 
-MaterialTab::~MaterialTab()
-{
-}
+MaterialTab::~MaterialTab() = default;
 
 void MaterialTab::setObjectBaseName(const QString &baseName)
 {

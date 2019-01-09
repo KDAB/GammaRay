@@ -64,20 +64,11 @@ LaunchOptions::LaunchOptions()
 {
 }
 
-LaunchOptions::~LaunchOptions()
-{
-}
+LaunchOptions::~LaunchOptions() = default;
 
-LaunchOptions::LaunchOptions(const LaunchOptions &other)
-    : d(other.d)
-{
-}
+LaunchOptions::LaunchOptions(const LaunchOptions &other) = default;
 
-LaunchOptions &LaunchOptions::operator=(const LaunchOptions &other)
-{
-    d = other.d;
-    return *this;
-}
+LaunchOptions &LaunchOptions::operator=(const LaunchOptions &other) = default;
 
 bool LaunchOptions::isLaunch() const
 {

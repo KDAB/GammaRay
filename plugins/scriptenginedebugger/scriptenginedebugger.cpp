@@ -55,6 +55,4 @@ ScriptEngineDebugger::ScriptEngineDebugger(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ScriptEngines"), singleColumnProxy);
 }
 
-ScriptEngineDebugger::~ScriptEngineDebugger()
-{
-}
+ScriptEngineDebugger::~ScriptEngineDebugger() = default;

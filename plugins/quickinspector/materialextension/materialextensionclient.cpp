@@ -37,9 +37,7 @@ MaterialExtensionClient::MaterialExtensionClient(const QString &name, QObject *p
 {
 }
 
-MaterialExtensionClient::~MaterialExtensionClient()
-{
-}
+MaterialExtensionClient::~MaterialExtensionClient() = default;
 
 void MaterialExtensionClient::getShader(int row)
 {

@@ -44,9 +44,7 @@ ProblemReporter::ProblemReporter(Probe *probe, QObject *parent)
     connect(ProblemCollector::instance(), &ProblemCollector::problemScansFinished, this, &ProblemReporterInterface::problemScansFinished);
 }
 
-ProblemReporter::~ProblemReporter()
-{
-}
+ProblemReporter::~ProblemReporter() = default;
 
 void GammaRay::ProblemReporter::requestScan()
 {

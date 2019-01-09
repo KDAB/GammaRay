@@ -40,9 +40,7 @@ WidgetRemoteView::WidgetRemoteView(QWidget* parent)
 {
 }
 
-WidgetRemoteView::~WidgetRemoteView()
-{
-}
+WidgetRemoteView::~WidgetRemoteView() = default;
 
 void WidgetRemoteView::setTabFocusOverlayEnabled(bool enabled)
 {

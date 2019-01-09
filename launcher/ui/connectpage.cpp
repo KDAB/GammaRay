@@ -266,9 +266,7 @@ QUrl ConnectPage::currentUrl() const
     return m_currentUrl;
 }
 
-ConnectPage::~ConnectPage()
-{
-}
+ConnectPage::~ConnectPage() = default;
 
 bool ConnectPage::isValid() const
 {

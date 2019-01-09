@@ -40,9 +40,7 @@ QuickInspectorClient::QuickInspectorClient(QObject *parent)
 {
 }
 
-QuickInspectorClient::~QuickInspectorClient()
-{
-}
+QuickInspectorClient::~QuickInspectorClient() = default;
 
 void QuickInspectorClient::selectWindow(int index)
 {

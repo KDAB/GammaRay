@@ -51,9 +51,7 @@ GammaRay::StackTraceTab::StackTraceTab(PropertyWidget *parent)
     connect(ui->stackTraceView, &QWidget::customContextMenuRequested, this, &StackTraceTab::contextMenuRequested);
 }
 
-StackTraceTab::~StackTraceTab()
-{
-}
+StackTraceTab::~StackTraceTab() = default;
 
 void StackTraceTab::contextMenuRequested(QPoint pos)
 {

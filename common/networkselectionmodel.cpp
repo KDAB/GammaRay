@@ -86,9 +86,7 @@ NetworkSelectionModel::NetworkSelectionModel(const QString &objectName, QAbstrac
             &NetworkSelectionModel::slotCurrentChanged);
 }
 
-NetworkSelectionModel::~NetworkSelectionModel()
-{
-}
+NetworkSelectionModel::~NetworkSelectionModel() = default;
 
 void NetworkSelectionModel::requestSelection()
 {

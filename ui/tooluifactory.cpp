@@ -30,13 +30,9 @@
 
 using namespace GammaRay;
 
-ToolUiFactory::ToolUiFactory()
-{
-}
+ToolUiFactory::ToolUiFactory() = default;
 
-ToolUiFactory::~ToolUiFactory()
-{
-}
+ToolUiFactory::~ToolUiFactory() = default;
 
 QString ToolUiFactory::name() const
 {

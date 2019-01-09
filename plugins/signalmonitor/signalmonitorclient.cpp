@@ -37,9 +37,7 @@ SignalMonitorClient::SignalMonitorClient(QObject *parent)
 {
 }
 
-SignalMonitorClient::~SignalMonitorClient()
-{
-}
+SignalMonitorClient::~SignalMonitorClient() = default;
 
 void SignalMonitorClient::sendClockUpdates(bool enabled)
 {

@@ -44,9 +44,7 @@ QuickAnchorsPropertyAdaptor::QuickAnchorsPropertyAdaptor(QObject *parent)
 {
 }
 
-QuickAnchorsPropertyAdaptor::~QuickAnchorsPropertyAdaptor()
-{
-}
+QuickAnchorsPropertyAdaptor::~QuickAnchorsPropertyAdaptor() = default;
 
 void QuickAnchorsPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {

@@ -41,9 +41,7 @@ ClientsModel::ClientsModel(QObject *parent)
 {
 }
 
-ClientsModel::~ClientsModel()
-{
-}
+ClientsModel::~ClientsModel() = default;
 
 QWaylandClient *ClientsModel::client(int index) const
 {

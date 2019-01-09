@@ -37,6 +37,4 @@ ResourceBrowserInterface::ResourceBrowserInterface(QObject *parent)
     ObjectBroker::registerObject<ResourceBrowserInterface *>(this);
 }
 
-ResourceBrowserInterface::~ResourceBrowserInterface()
-{
-}
+ResourceBrowserInterface::~ResourceBrowserInterface() = default;

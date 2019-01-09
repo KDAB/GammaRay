@@ -102,10 +102,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
     updateProcesses();
 }
 
-AttachDialog::~AttachDialog()
-{
-
-}
+AttachDialog::~AttachDialog() = default;
 
 bool AttachDialog::isValid() const
 {

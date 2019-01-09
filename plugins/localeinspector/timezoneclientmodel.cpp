@@ -40,9 +40,7 @@ TimezoneClientModel::TimezoneClientModel(QObject* parent)
 {
 }
 
-TimezoneClientModel::~TimezoneClientModel()
-{
-}
+TimezoneClientModel::~TimezoneClientModel() = default;
 
 QVariant TimezoneClientModel::data(const QModelIndex& index, int role) const
 {

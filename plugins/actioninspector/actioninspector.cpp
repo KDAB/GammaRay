@@ -67,9 +67,7 @@ ActionInspector::ActionInspector(Probe *probe, QObject *parent)
     m_selectionModel = ObjectBroker::selectionModel(proxy);
 }
 
-ActionInspector::~ActionInspector()
-{
-}
+ActionInspector::~ActionInspector() = default;
 
 void ActionInspector::triggerAction(int row)
 {

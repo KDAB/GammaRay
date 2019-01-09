@@ -50,9 +50,7 @@ QuickItemModel::QuickItemModel(QObject *parent)
     m_clickEventFilter = new QuickEventMonitor(this);
 }
 
-QuickItemModel::~QuickItemModel()
-{
-}
+QuickItemModel::~QuickItemModel() = default;
 
 void QuickItemModel::setWindow(QQuickWindow *window)
 {

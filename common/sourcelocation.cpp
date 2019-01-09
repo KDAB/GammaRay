@@ -44,9 +44,7 @@ SourceLocation::SourceLocation(const QUrl &url, int line, int column)
 {
 }
 
-SourceLocation::~SourceLocation()
-{
-}
+SourceLocation::~SourceLocation() = default;
 
 GammaRay::SourceLocation GammaRay::SourceLocation::fromZeroBased(const QUrl& url, int line, int column)
 {
