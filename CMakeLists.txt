@@ -109,12 +109,12 @@ include(GenerateExportHeader)
 include("3rdparty/backward-cpp/BackwardMacros.cmake")
 
 # Exit for blacklisted compilers (those that don't support C++11 very well)
-#  MSVC++ < 2010 aka 10.0 aka 1600
-#  Clang 3.0
+#  MSVC++ < 2013 aka 1800
+#  Clang 3.1
 set(BAD_CXX_MESSAGE "")
 if(MSVC)
-  if(MSVC_VERSION LESS 1600)
-    set(BAD_CXX_MESSAGE "MSVC 2010 or higher")
+  if(MSVC_VERSION LESS 1800)
+    set(BAD_CXX_MESSAGE "MSVC 2013 or higher")
   endif()
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -123,7 +123,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   endif()
 endif()
 if(BAD_CXX_MESSAGE)
-  message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. Please retry using a modern compiler that supports C++11 lambdas.")
+  message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. Please retry using a modern compiler that supports C++11.")
 endif()
 
 # Version setup
