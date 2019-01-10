@@ -114,6 +114,7 @@ add_library(gammaray_core ${GAMMARAY_LIBRARY_TYPE}
   ${gammaray_srcs}
 )
 generate_export_header(gammaray_core)
+target_compile_features(gammaray_core PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 gammaray_target_relocatable_interfaces(gammaray_core_ipaths)
 target_include_directories(gammaray_core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_core_ipaths}>)

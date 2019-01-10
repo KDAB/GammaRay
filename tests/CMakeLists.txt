@@ -7,12 +7,14 @@ configure_file(gammaray-test-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/gammaray-te
 # create intermediate modeltestobj object files which unit tests can use
 add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
 set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_features(modeltestobj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 target_compile_definitions(modeltestobj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
 target_include_directories(modeltestobj PUBLIC ${Qt5Core_INCLUDE_DIRS})
 
 # create intermediate test_helpers_obj object files which unit tests can use
 add_library(test_helpers_obj OBJECT testhelpers.cpp)
 set_target_properties(test_helpers_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_features(test_helpers_obj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 target_compile_definitions(test_helpers_obj PRIVATE ${Qt5Core_DEFINITIONS} ${Qt5Test_DEFINITIONS}) # for -DQT_NAMESPACE=...
 target_include_directories(test_helpers_obj PUBLIC
   ${Qt5Core_INCLUDE_DIRS}
@@ -23,6 +25,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
 # create intermediate base_probe_test_obj object files which unit tests can use
 add_library(base_probe_test_obj OBJECT baseprobetest.h)
 set_target_properties(base_probe_test_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_features(base_probe_test_obj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 target_include_directories(base_probe_test_obj PUBLIC
   $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
@@ -37,6 +40,7 @@ if(Qt5Quick_FOUND)
   # create intermediate base_quick_test_obj object files which unit tests can use
   add_library(base_quick_test_obj OBJECT basequicktest.h)
   set_target_properties(base_quick_test_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  target_compile_features(base_quick_test_obj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
   target_compile_definitions(base_quick_test_obj PRIVATE ${Qt5Core_DEFINITIONS} ${Qt5Test_DEFINITIONS} ${Qt5Quick_DEFINITIONS}) # for -DQT_NAMESPACE=...
   target_include_directories(base_quick_test_obj PUBLIC
     $<TARGET_PROPERTY:base_probe_test_obj,INTERFACE_INCLUDE_DIRECTORIES>

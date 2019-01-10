@@ -14,6 +14,7 @@ if(Qt5Widgets_FOUND)
     LIBRARY_OUTPUT_DIRECTORY ${GAMMARAY_OUTPUT_PREFIX}/${PROBE_PLUGIN_INSTALL_DIR}/styles
   )
   gammaray_set_rpath(gammaray_injector_style ${PROBE_PLUGIN_INSTALL_DIR}/styles)
+  target_compile_features(gammaray_injector_style PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
   if(GAMMARAY_INSTALL_QT_LAYOUT)
     set_target_properties(gammaray_injector_style PROPERTIES OUTPUT_NAME gammaray_injector_style-${GAMMARAY_PROBE_ABI})

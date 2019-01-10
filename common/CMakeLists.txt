@@ -53,6 +53,7 @@ set_target_properties(gammaray_common PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   OUTPUT_NAME gammaray_common-${GAMMARAY_PROBE_ABI}
 )
+target_compile_features(gammaray_common PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 gammaray_target_relocatable_interfaces(gammaray_common_ipaths)
 target_include_directories(gammaray_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_common_ipaths}>)
@@ -81,6 +82,7 @@ set(gammaray_common_internal_srcs
 
 add_library(gammaray_common_internal STATIC ${gammaray_common_internal_srcs})
 set_target_properties(gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_features(gammaray_common_internal PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 target_link_libraries(gammaray_common_internal gammaray_common)
 target_link_libraries(gammaray_common_internal Qt5::Core Qt5::Network)
