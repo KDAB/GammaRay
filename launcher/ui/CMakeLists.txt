@@ -20,6 +20,7 @@ add_library(gammaray_launcher_ui SHARED ${gammaray_launcher_ui_srcs})
 generate_export_header(gammaray_launcher_ui)
 set_target_properties(gammaray_launcher_ui PROPERTIES ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES})
 gammaray_set_rpath(gammaray_launcher_ui ${LIB_INSTALL_DIR})
+target_compile_features(gammaray_launcher_ui PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 target_include_directories(gammaray_launcher_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 target_link_libraries(gammaray_launcher_ui

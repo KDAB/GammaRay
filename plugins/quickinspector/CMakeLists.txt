@@ -11,6 +11,7 @@ if(Qt5Quick_FOUND)
   target_link_libraries(gammaray_quickinspector_shared gammaray_common Qt5::Gui Qt5::Quick)
 
   set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  target_compile_features(gammaray_quickinspector_shared PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
   if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
   set(gammaray_quickinspector_srcs

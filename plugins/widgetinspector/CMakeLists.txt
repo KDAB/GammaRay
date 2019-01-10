@@ -37,6 +37,7 @@ set_target_properties(gammaray_widget_export_actions PROPERTIES
   PREFIX "lib"
 )
 gammaray_set_rpath(gammaray_widget_export_actions ${PROBE_PLUGIN_INSTALL_DIR})
+target_compile_features(gammaray_widget_export_actions PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 if(GAMMARAY_INSTALL_QT_LAYOUT)
   set_target_properties(gammaray_widget_export_actions PROPERTIES OUTPUT_NAME gammaray_widget_export_actions-${GAMMARAY_PROBE_ABI})

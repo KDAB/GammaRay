@@ -33,6 +33,7 @@ set_target_properties(gammaray_client PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
 )
 gammaray_set_rpath(gammaray_client ${LIB_INSTALL_DIR})
+target_compile_features(gammaray_client PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 gammaray_target_relocatable_interfaces(gammaray_client_ipaths)
 target_include_directories(gammaray_client PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_client_ipaths}>)

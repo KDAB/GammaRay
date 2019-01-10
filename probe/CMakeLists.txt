@@ -9,6 +9,7 @@ list(APPEND gammaray_probe_srcs entry_unix.cpp)
 # create intermediate gammaray_probe object files which unit tests can use
 add_library(gammaray_probe_obj OBJECT ${gammaray_probe_srcs})
 set_target_properties(gammaray_probe_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_features(gammaray_probe_obj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 target_compile_definitions(gammaray_probe_obj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
 target_include_directories(gammaray_probe_obj PUBLIC
     $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
@@ -26,6 +27,7 @@ set_target_properties(gammaray_probe PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_INSTALL_DIR}"
   RUNTIME_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_INSTALL_DIR}"
 )
+target_compile_features(gammaray_probe PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 if(WIN32)
   add_library(gammaray_winloader SHARED entry_win.cpp)
@@ -33,6 +35,7 @@ if(WIN32)
     LIBRARY_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_INSTALL_DIR}"
     RUNTIME_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_INSTALL_DIR}"
   )
+    target_compile_features(gammaray_winloader PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 endif()
 
 if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
