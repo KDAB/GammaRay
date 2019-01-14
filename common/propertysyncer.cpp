@@ -29,6 +29,8 @@
 #include "propertysyncer.h"
 #include "message.h"
 
+#include <compat/qasconst.h>
+
 #include <QDebug>
 #include <QMetaProperty>
 

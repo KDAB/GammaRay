@@ -30,6 +30,8 @@
 
 #include "probe.h"
 
+#include <compat/qasconst.h>
+
 #include <QStringList>
 
 using namespace GammaRay;

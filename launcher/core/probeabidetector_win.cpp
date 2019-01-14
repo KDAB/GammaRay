@@ -34,6 +34,8 @@
 
 #include <common/commonutils.h>
 
+#include <compat/qasconst.h>
+
 #include <QDebug>
 #include <QDir>
 #include <QFile>

@@ -34,6 +34,8 @@
 #include <common/objectid.h>
 #include <common/sourcelocation.h>
 
+#include <compat/qasconst.h>
+
 #include <QElapsedTimer>
 #include <QMutexLocker>
 #include <QTimerEvent>

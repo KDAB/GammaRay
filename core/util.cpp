@@ -36,6 +36,8 @@
 #include "objectdataprovider.h"
 #include "enumutil.h"
 
+#include <compat/qasconst.h>
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>

@@ -57,6 +57,8 @@
 #include <common/streamoperators.h>
 #include <common/paths.h>
 
+#include <compat/qasconst.h>
+
 #include <QGuiApplication>
 #include <QWindow>
 #include <QDir>

@@ -28,6 +28,8 @@
 
 #include "propertybinder.h"
 
+#include <compat/qasconst.h>
+
 #include <QDebug>
 #include <QMetaProperty>
 

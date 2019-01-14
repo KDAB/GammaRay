@@ -38,6 +38,8 @@
 #include <common/message.h>
 #include <common/paths.h>
 
+#include <compat/qasconst.h>
+
 #include <QByteArray>
 #include <QCoreApplication>
 #include <QDebug>

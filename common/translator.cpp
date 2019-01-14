@@ -31,6 +31,8 @@
 #include "translator.h"
 #include "paths.h"
 
+#include <compat/qasconst.h>
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QLibraryInfo>

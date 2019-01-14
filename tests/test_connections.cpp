@@ -28,6 +28,8 @@
 
 #include "test_connections.h"
 
+#include <compat/qasconst.h>
+
 #include <QApplication>
 #include <QDebug>
 #include <QProcessEnvironment>

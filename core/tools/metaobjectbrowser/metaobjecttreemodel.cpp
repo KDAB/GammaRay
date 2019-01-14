@@ -35,6 +35,8 @@
 #include <common/metatypedeclarations.h>
 #include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
 
+#include <compat/qasconst.h>
+
 #include <QDebug>
 #include <QThread>
 #include <QTimer>

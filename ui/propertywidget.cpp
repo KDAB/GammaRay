@@ -32,6 +32,8 @@
 #include "common/objectbroker.h"
 #include "common/propertycontrollerinterface.h"
 
+#include <compat/qasconst.h>
+
 #include <QCoreApplication>
 #include <QTimer>
 

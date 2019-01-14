@@ -29,6 +29,8 @@
 #include "remotemodel.h"
 #include "client.h"
 
+#include <compat/qasconst.h>
+
 #include <common/message.h>
 
 #include <QApplication>

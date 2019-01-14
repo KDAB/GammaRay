@@ -41,6 +41,8 @@
 #include "tools/messagehandler/messagehandler.h"
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
 
+#include <compat/qasconst.h>
+
 #include <QDebug>
 #include <QCoreApplication>
 #include <QMutexLocker>

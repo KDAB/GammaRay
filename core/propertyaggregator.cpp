@@ -30,6 +30,8 @@
 #include "propertydata.h"
 #include "objectinstance.h"
 
+#include <compat/qasconst.h>
+
 #include <QDebug>
 
 #include <algorithm>

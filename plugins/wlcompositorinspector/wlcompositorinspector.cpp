@@ -43,6 +43,8 @@
 #include <common/objectmodel.h>
 #include <common/remoteviewframe.h>
 
+#include <compat/qasconst.h>
+
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/objecttypefilterproxymodel.h>

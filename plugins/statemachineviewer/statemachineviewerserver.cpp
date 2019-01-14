@@ -40,6 +40,7 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/serverproxymodel.h>
 #include <common/objectbroker.h>
+#include <compat/qasconst.h>
 
 #include <QStateMachine>
 #include <QItemSelectionModel>
