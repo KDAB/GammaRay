@@ -29,6 +29,8 @@
 #include "plugininfo.h"
 #include "paths.h"
 
+#include <compat/qasconst.h>
+
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>

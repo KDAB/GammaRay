@@ -29,6 +29,8 @@
 #include "widgetremoteview.h"
 #include "widgetinspectorinterface.h"
 
+#include <compat/qasconst.h>
+
 #include <QPainter>
 #include <QVector2D>
 

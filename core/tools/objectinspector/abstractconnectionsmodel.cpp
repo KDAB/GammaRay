@@ -32,6 +32,8 @@
 #include "common/tools/objectinspector/connectionsmodelroles.h"
 #include "core/util.h"
 
+#include <compat/qasconst.h>
+
 #include <QMetaMethod>
 #include <QStringList>
 

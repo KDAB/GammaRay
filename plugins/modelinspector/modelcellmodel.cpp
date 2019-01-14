@@ -28,6 +28,8 @@
 
 #include "modelcellmodel.h"
 
+#include <compat/qasconst.h>
+
 #include <core/varianthandler.h>
 
 #include <QAbstractProxyModel>

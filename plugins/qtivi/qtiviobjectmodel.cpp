@@ -35,6 +35,7 @@
 #include <common/objectbroker.h>
 #include <common/objectid.h>
 #include <common/objectmodel.h>
+#include <compat/qasconst.h>
 
 #include <QIviServiceObject>
 #include <QIviAbstractZonedFeature>

@@ -29,6 +29,8 @@
 #include "processmodel.h"
 #include "probeabimodel.h"
 
+#include <compat/qasconst.h>
+
 #include <launcher/core/probefinder.h>
 
 #include <QDebug>

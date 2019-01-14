@@ -38,6 +38,8 @@
 #include <common/remoteviewinterface.h>
 #include <common/streamoperators.h>
 
+#include <compat/qasconst.h>
+
 #include <ui/uiresources.h>
 
 #include <QAction>

@@ -30,6 +30,8 @@
 
 #include "common/objectmodel.h"
 
+#include <compat/qasconst.h>
+
 #include <QAbstractItemModel>
 #include <QDebug>
 #include <QItemSelectionModel>

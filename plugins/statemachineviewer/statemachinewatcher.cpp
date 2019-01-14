@@ -26,6 +26,8 @@
 
 #include "statemachinewatcher.h"
 
+#include <compat/qasconst.h>
+
 #include <QAbstractTransition>
 #include <QFinalState>
 #include <QState>

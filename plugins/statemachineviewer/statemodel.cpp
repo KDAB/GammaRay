@@ -29,6 +29,8 @@
 #include "statemachinedebuginterface.h"
 #include "statemachinewatcher.h"
 
+#include <compat/qasconst.h>
+
 #include <core/objectmodelbase.h>
 #include <core/util.h>
 

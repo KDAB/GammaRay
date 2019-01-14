@@ -31,6 +31,8 @@
 
 #include "probe.h"
 
+#include <compat/qasconst.h>
+
 using namespace GammaRay;
 
 ProblemCollector::ProblemCollector(QObject *parent)

@@ -34,6 +34,8 @@
 #include <common/modelevent.h>
 #include <common/sourcelocation.h>
 
+#include <compat/qasconst.h>
+
 #include <QAbstractItemModel>
 #include <QSortFilterProxyModel>
 #include <QDataStream>

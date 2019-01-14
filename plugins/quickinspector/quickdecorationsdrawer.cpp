@@ -28,6 +28,8 @@
 
 #include "quickdecorationsdrawer.h"
 
+#include <compat/qasconst.h>
+
 #include <QDebug>
 #include <QPainter>
 #include <QVector2D>
