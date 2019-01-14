@@ -328,8 +328,8 @@ private slots:
         o1->setObjectName("o1");
         auto o2 = std::unique_ptr<QObject>(new QObject());
         o2->setObjectName("o2");
-        connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
-        connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
+        connect(o1.get(), SIGNAL(destroyed(QObject*)), o2.get(), SLOT(deleteLater()));
+        connect(o1.get(), SIGNAL(destroyed(QObject*)), o2.get(), SLOT(deleteLater()));
 
         QTest::qWait(10);
         ProblemCollector::instance()->requestScan();
@@ -357,6 +357,30 @@ private slots:
         QVERIFY(duplicateProblem->description.contains("multiple times"));
         QVERIFY(duplicateProblem->description.contains("signal o1"));
         QVERIFY(duplicateProblem->description.contains("slot o2"));
+
+
+        disconnect(o1.get(), 0, o2.get(), 0);
+        connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
+        connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
+        QTest::qWait(10);
+        ProblemCollector::instance()->requestScan();
+
+        const auto &problems2 = ProblemCollector::instance()->problems();
+        auto duplicateProblem2 = std::find_if(problems2.begin(), problems2.end(),
+            [&o2](const Problem &p){
+                return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.Duplicate")
+                       && p.object == ObjectId(o2.get());
+            }
+        );
+
+        QEXPECT_FAIL("", "We can't find duplicates with PMF connects, yet.", Abort);
+        QVERIFY(duplicateProblem2 != problems2.end());
+        QCOMPARE(duplicateProblem2->object, ObjectId(o2.get()));
+        QVERIFY(duplicateProblem2->description.contains("multiple times"));
+        QVERIFY(duplicateProblem2->description.contains("signal o1"));
+        QVERIFY(duplicateProblem2->description.contains("slot o2"));
+
+
     }
 
     void testMetaTypeChecks()
