@@ -202,13 +202,16 @@ void ToolManager::objectAdded(const QMetaObject *mo)
     if (mo->superClass())
         objectAdded(mo->superClass());
 
-    for (ToolFactory *factory : qAsConst(m_disabledTools)) {
+    for (auto it = m_disabledTools.begin(); it != m_disabledTools.end();) {
+        ToolFactory *factory = *it;
         const auto begin = factory->supportedTypes().constBegin();
         const auto end = factory->supportedTypes().constEnd();
         if (std::find(begin, end, mo->className()) != end) {
-            m_disabledTools.remove(factory);
+            it = m_disabledTools.erase(it);
             factory->init(Probe::instance());
             emit toolEnabled(factory->id());
+        } else {
+            ++it;
         }
     }
 }
