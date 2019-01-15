@@ -2,6 +2,8 @@
     Copyright (C) 2010 Klarälvdalens Datakonsult AB,
         a KDAB Group company, info@kdab.net,
         author Stephen Kelly <stephen@kdab.com>
+    Copyright (c) 2016 Ableton AG <info@ableton.com>
+        Author Stephen Kelly <stephen.kelly@ableton.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,35 +22,30 @@
 */
 
 #include "kmodelindexproxymapper.h"
+#include "kitemmodels_debug.h"
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QPointer>
-#include <QtCore/QDebug>
+#include <QAbstractItemModel>
+#include <QPointer>
 #include <QAbstractProxyModel>
 #include <QItemSelectionModel>
-
-// super dirty backward compat hack with Qt4
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <QtCore/QWeakPointer>
-#define QPointer QWeakPointer
-#endif
 
 class KModelIndexProxyMapperPrivate
 {
     KModelIndexProxyMapperPrivate(const QAbstractItemModel *leftModel, const QAbstractItemModel *rightModel, KModelIndexProxyMapper *qq)
-        : q_ptr(qq), m_leftModel(leftModel), m_rightModel(rightModel)
+        : q_ptr(qq), m_leftModel(leftModel), m_rightModel(rightModel), mConnected(false)
     {
         createProxyChain();
     }
 
     void createProxyChain();
-    bool assertValid();
+    void checkConnected();
+    void setConnected(bool connected);
 
     bool assertSelectionValid(const QItemSelection &selection) const
     {
         Q_FOREACH (const QItemSelectionRange &range, selection) {
             if (!range.isValid()) {
-                qDebug() << selection << m_leftModel << m_rightModel << m_proxyChainDown << m_proxyChainUp;
+                qCDebug(KITEMMODELS_LOG) << selection << m_leftModel << m_rightModel << m_proxyChainDown << m_proxyChainUp;
             }
             Q_ASSERT(range.isValid());
         }
@@ -63,6 +60,8 @@ class KModelIndexProxyMapperPrivate
 
     QPointer<const QAbstractItemModel> m_leftModel;
     QPointer<const QAbstractItemModel> m_rightModel;
+
+    bool mConnected;
 };
 
 /*
@@ -103,60 +102,68 @@ class KModelIndexProxyMapperPrivate
 
 void KModelIndexProxyMapperPrivate::createProxyChain()
 {
+    Q_FOREACH (auto p, m_proxyChainUp) {
+        p->disconnect(q_ptr);
+    }
+    Q_FOREACH (auto p, m_proxyChainDown) {
+        p->disconnect(q_ptr);
+    }
+    m_proxyChainUp.clear();
+    m_proxyChainDown.clear();
     QPointer<const QAbstractItemModel> targetModel = m_rightModel;
 
-    if (!targetModel) {
-        return;
-    }
-
-    if (m_leftModel == targetModel) {
-        return;
-    }
-
     QList<QPointer<const QAbstractProxyModel> > proxyChainDown;
-    QPointer<const QAbstractProxyModel> selectionTargetProxyModel = qobject_cast<const QAbstractProxyModel *>(targetModel.data());
+    QPointer<const QAbstractProxyModel> selectionTargetProxyModel = qobject_cast<const QAbstractProxyModel *>(targetModel);
     while (selectionTargetProxyModel) {
         proxyChainDown.prepend(selectionTargetProxyModel);
+        QObject::connect(selectionTargetProxyModel.data(), &QAbstractProxyModel::sourceModelChanged, q_ptr,
+            [this]{ createProxyChain(); });
 
-        selectionTargetProxyModel = qobject_cast<const QAbstractProxyModel *>(selectionTargetProxyModel.data()->sourceModel());
+        selectionTargetProxyModel = qobject_cast<const QAbstractProxyModel *>(selectionTargetProxyModel->sourceModel());
 
-        if (selectionTargetProxyModel.data() == m_leftModel.data()) {
+        if (selectionTargetProxyModel == m_leftModel) {
             m_proxyChainDown = proxyChainDown;
+            checkConnected();
             return;
         }
     }
 
     QPointer<const QAbstractItemModel> sourceModel = m_leftModel;
-    QPointer<const QAbstractProxyModel> sourceProxyModel = qobject_cast<const QAbstractProxyModel *>(sourceModel.data());
+    QPointer<const QAbstractProxyModel> sourceProxyModel = qobject_cast<const QAbstractProxyModel *>(sourceModel);
 
     while (sourceProxyModel) {
         m_proxyChainUp.append(sourceProxyModel);
+        QObject::connect(sourceProxyModel.data(), &QAbstractProxyModel::sourceModelChanged, q_ptr,
+            [this]{ createProxyChain(); });
 
-        sourceProxyModel = qobject_cast<const QAbstractProxyModel *>(sourceProxyModel.data()->sourceModel());
+        sourceProxyModel = qobject_cast<const QAbstractProxyModel *>(sourceProxyModel->sourceModel());
 
         const int targetIndex = proxyChainDown.indexOf(sourceProxyModel);
 
         if (targetIndex != -1) {
             m_proxyChainDown = proxyChainDown.mid(targetIndex + 1, proxyChainDown.size());
+            checkConnected();
             return;
         }
     }
     m_proxyChainDown = proxyChainDown;
-    Q_ASSERT(assertValid());
+    checkConnected();
 }
 
-bool KModelIndexProxyMapperPrivate::assertValid()
+void KModelIndexProxyMapperPrivate::checkConnected()
 {
-    if (m_proxyChainDown.isEmpty()) {
-        Q_ASSERT(!m_proxyChainUp.isEmpty());
-        Q_ASSERT(m_proxyChainUp.last().data()->sourceModel() == m_rightModel.data());
-    } else if (m_proxyChainUp.isEmpty()) {
-        Q_ASSERT(!m_proxyChainDown.isEmpty());
-        Q_ASSERT(m_proxyChainDown.first().data()->sourceModel() == m_leftModel.data());
-    } else {
-        Q_ASSERT(m_proxyChainDown.first().data()->sourceModel() == m_proxyChainUp.last().data()->sourceModel());
+    auto konamiRight = m_proxyChainUp.isEmpty() ? m_leftModel : m_proxyChainUp.last()->sourceModel();
+    auto konamiLeft = m_proxyChainDown.isEmpty() ? m_rightModel : m_proxyChainDown.first()->sourceModel();
+    setConnected(konamiLeft && (konamiLeft == konamiRight));
+}
+
+void KModelIndexProxyMapperPrivate::setConnected(bool connected)
+{
+    if (mConnected != connected) {
+        Q_Q(KModelIndexProxyMapper);
+        mConnected = connected;
+        Q_EMIT q->isConnectedChanged();
     }
-    return true;
 }
 
 KModelIndexProxyMapper::KModelIndexProxyMapper(const QAbstractItemModel *leftModel, const QAbstractItemModel *rightModel, QObject *parent)
@@ -190,40 +197,18 @@ QModelIndex KModelIndexProxyMapper::mapRightToLeft(const QModelIndex &index) con
     return selection.indexes().first();
 }
 
-// QAbstractProxyModel::mapSelectionFromSource creates invalid ranges to we filter
-// those out manually in a loop. Hopefully fixed in Qt 4.7.2, so we ifdef it out.
-// http://qt.gitorious.org/qt/qt/merge_requests/2474
-// http://qt.gitorious.org/qt/qt/merge_requests/831
-#if QT_VERSION < 0x040702
-#define RANGE_FIX_HACK
-#endif
-
-#ifdef RANGE_FIX_HACK
-static QItemSelection removeInvalidRanges(const QItemSelection &selection)
-{
-    QItemSelection result;
-    Q_FOREACH (const QItemSelectionRange &range, selection) {
-        if (!range.isValid()) {
-            continue;
-        }
-        result << range;
-    }
-    return result;
-}
-#endif
-
 QItemSelection KModelIndexProxyMapper::mapSelectionLeftToRight(const QItemSelection &selection) const
 {
     Q_D(const KModelIndexProxyMapper);
 
-    if (selection.isEmpty()) {
+    if (selection.isEmpty() || !d->mConnected) {
         return QItemSelection();
     }
 
-    if (selection.first().model() != d->m_leftModel.data()) {
-        qDebug() << "FAIL" << selection.first().model() << d->m_leftModel << d->m_rightModel;
+    if (selection.first().model() != d->m_leftModel) {
+        qCDebug(KITEMMODELS_LOG) << "FAIL" << selection.first().model() << d->m_leftModel << d->m_rightModel;
     }
-    Q_ASSERT(selection.first().model() == d->m_leftModel.data());
+    Q_ASSERT(selection.first().model() == d->m_leftModel);
 
     QItemSelection seekSelection = selection;
     Q_ASSERT(d->assertSelectionValid(seekSelection));
@@ -234,11 +219,11 @@ QItemSelection KModelIndexProxyMapper::mapSelectionLeftToRight(const QItemSelect
         if (!proxy) {
             return QItemSelection();
         }
-        seekSelection = proxy.data()->mapSelectionToSource(seekSelection);
 
-#ifdef RANGE_FIX_HACK
-        seekSelection = removeInvalidRanges(seekSelection);
-#endif
+        Q_ASSERT(seekSelection.isEmpty() || seekSelection.first().model() == proxy);
+        seekSelection = proxy->mapSelectionToSource(seekSelection);
+        Q_ASSERT(seekSelection.isEmpty() || seekSelection.first().model() == proxy->sourceModel());
+
         Q_ASSERT(d->assertSelectionValid(seekSelection));
     }
 
@@ -249,15 +234,14 @@ QItemSelection KModelIndexProxyMapper::mapSelectionLeftToRight(const QItemSelect
         if (!proxy) {
             return QItemSelection();
         }
-        seekSelection = proxy.data()->mapSelectionFromSource(seekSelection);
+        Q_ASSERT(seekSelection.isEmpty() || seekSelection.first().model() == proxy->sourceModel());
+        seekSelection = proxy->mapSelectionFromSource(seekSelection);
+        Q_ASSERT(seekSelection.isEmpty() || seekSelection.first().model() == proxy);
 
-#ifdef RANGE_FIX_HACK
-        seekSelection = removeInvalidRanges(seekSelection);
-#endif
         Q_ASSERT(d->assertSelectionValid(seekSelection));
     }
 
-    Q_ASSERT((!seekSelection.isEmpty() && seekSelection.first().model() == d->m_rightModel.data()) || true);
+    Q_ASSERT((!seekSelection.isEmpty() && seekSelection.first().model() == d->m_rightModel) || true);
     return seekSelection;
 }
 
@@ -265,14 +249,14 @@ QItemSelection KModelIndexProxyMapper::mapSelectionRightToLeft(const QItemSelect
 {
     Q_D(const KModelIndexProxyMapper);
 
-    if (selection.isEmpty()) {
+    if (selection.isEmpty() || !d->mConnected) {
         return QItemSelection();
     }
 
-    if (selection.first().model() != d->m_rightModel.data()) {
-        qDebug() << "FAIL" << selection.first().model() << d->m_leftModel << d->m_rightModel;
+    if (selection.first().model() != d->m_rightModel) {
+        qCDebug(KITEMMODELS_LOG) << "FAIL" << selection.first().model() << d->m_leftModel << d->m_rightModel;
     }
-    Q_ASSERT(selection.first().model() == d->m_rightModel.data());
+    Q_ASSERT(selection.first().model() == d->m_rightModel);
 
     QItemSelection seekSelection = selection;
     Q_ASSERT(d->assertSelectionValid(seekSelection));
@@ -284,11 +268,8 @@ QItemSelection KModelIndexProxyMapper::mapSelectionRightToLeft(const QItemSelect
         if (!proxy) {
             return QItemSelection();
         }
-        seekSelection = proxy.data()->mapSelectionToSource(seekSelection);
+        seekSelection = proxy->mapSelectionToSource(seekSelection);
 
-#ifdef RANGE_FIX_HACK
-        seekSelection = removeInvalidRanges(seekSelection);
-#endif
         Q_ASSERT(d->assertSelectionValid(seekSelection));
     }
 
@@ -300,15 +281,17 @@ QItemSelection KModelIndexProxyMapper::mapSelectionRightToLeft(const QItemSelect
         if (!proxy) {
             return QItemSelection();
         }
-        seekSelection = proxy.data()->mapSelectionFromSource(seekSelection);
+        seekSelection = proxy->mapSelectionFromSource(seekSelection);
 
-#ifdef RANGE_FIX_HACK
-        seekSelection = removeInvalidRanges(seekSelection);
-#endif
         Q_ASSERT(d->assertSelectionValid(seekSelection));
     }
 
-    Q_ASSERT((!seekSelection.isEmpty() && seekSelection.first().model() == d->m_leftModel.data()) || true);
+    Q_ASSERT((!seekSelection.isEmpty() && seekSelection.first().model() == d->m_leftModel) || true);
     return seekSelection;
 }
 
+bool KModelIndexProxyMapper::isConnected() const
+{
+    Q_D(const KModelIndexProxyMapper);
+    return d->mConnected;
+}

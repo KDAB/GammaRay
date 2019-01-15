@@ -2,6 +2,8 @@
     Copyright (C) 2010 Klarälvdalens Datakonsult AB,
         a KDAB Group company, info@kdab.net,
         author Stephen Kelly <stephen@kdab.com>
+    Copyright (c) 2016 Ableton AG <info@ableton.com>
+        Author Stephen Kelly <stephen.kelly@ableton.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,23 +22,23 @@
 */
 
 #include "klinkitemselectionmodel.h"
-
+#include "kitemmodels_debug.h"
 #include "kmodelindexproxymapper.h"
 
 #include <QItemSelection>
-#include <QDebug>
 
 class KLinkItemSelectionModelPrivate
 {
 public:
-    KLinkItemSelectionModelPrivate(KLinkItemSelectionModel *proxySelectionModel, QAbstractItemModel *model,
-                                   QItemSelectionModel *linkedItemSelectionModel)
-        : q_ptr(proxySelectionModel),
-          m_model(model),
-          m_linkedItemSelectionModel(linkedItemSelectionModel),
-          m_ignoreCurrentChanged(false),
-          m_indexMapper(new KModelIndexProxyMapper(model, linkedItemSelectionModel->model(), proxySelectionModel))
+    KLinkItemSelectionModelPrivate(KLinkItemSelectionModel *proxySelectionModel)
+        : q_ptr(proxySelectionModel)
     {
+        QObject::connect(q_ptr, &QItemSelectionModel::currentChanged, q_ptr,
+            [this](const QModelIndex& idx) { slotCurrentChanged(idx); } );
+
+        QObject::connect(q_ptr, &QItemSelectionModel::modelChanged, q_ptr, [this] {
+            reinitializeIndexMapper();
+        });
     }
 
     Q_DECLARE_PUBLIC(KLinkItemSelectionModel)
@@ -46,35 +48,85 @@ public:
     {
         Q_FOREACH (const QItemSelectionRange &range, selection) {
             if (!range.isValid()) {
-                qDebug() << selection;
+                qCDebug(KITEMMODELS_LOG) << selection;
             }
             Q_ASSERT(range.isValid());
         }
         return true;
     }
 
+    void reinitializeIndexMapper()
+    {
+        delete m_indexMapper;
+        m_indexMapper = nullptr;
+        if (!q_ptr->model()
+                || !m_linkedItemSelectionModel
+                || !m_linkedItemSelectionModel->model()) {
+            return;
+        }
+        m_indexMapper = new KModelIndexProxyMapper(
+            q_ptr->model(),
+            m_linkedItemSelectionModel->model(),
+            q_ptr);
+        const QItemSelection mappedSelection = m_indexMapper->mapSelectionRightToLeft(m_linkedItemSelectionModel->selection());
+        q_ptr->QItemSelectionModel::select(mappedSelection, QItemSelectionModel::ClearAndSelect);
+    }
+
     void sourceSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void sourceCurrentChanged(const QModelIndex &current);
     void slotCurrentChanged(const QModelIndex &current);
 
-    QAbstractItemModel *const m_model;
-    QItemSelectionModel *const m_linkedItemSelectionModel;
-    bool m_ignoreCurrentChanged;
-    KModelIndexProxyMapper *const m_indexMapper;
+    QItemSelectionModel *m_linkedItemSelectionModel = nullptr;
+    bool m_ignoreCurrentChanged = false;
+    KModelIndexProxyMapper * m_indexMapper = nullptr;
 };
 
 KLinkItemSelectionModel::KLinkItemSelectionModel(QAbstractItemModel *model, QItemSelectionModel *proxySelector, QObject *parent)
     : QItemSelectionModel(model, parent),
-      d_ptr(new KLinkItemSelectionModelPrivate(this, model, proxySelector))
+      d_ptr(new KLinkItemSelectionModelPrivate(this))
 {
-    connect(proxySelector, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(sourceSelectionChanged(QItemSelection,QItemSelection)));
-    connect(proxySelector, SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(sourceCurrentChanged(QModelIndex)));
-    connect(this, SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(slotCurrentChanged(QModelIndex)));
+    setLinkedItemSelectionModel(proxySelector);
+}
+
+KLinkItemSelectionModel::KLinkItemSelectionModel(QObject *parent)
+    : QItemSelectionModel(nullptr, parent),
+      d_ptr(new KLinkItemSelectionModelPrivate(this))
+{
 }
 
 KLinkItemSelectionModel::~KLinkItemSelectionModel()
 {
     delete d_ptr;
+}
+
+QItemSelectionModel *KLinkItemSelectionModel::linkedItemSelectionModel() const
+{
+    Q_D(const KLinkItemSelectionModel);
+    return d->m_linkedItemSelectionModel;
+}
+
+void KLinkItemSelectionModel::setLinkedItemSelectionModel(QItemSelectionModel *selectionModel)
+{
+    Q_D(KLinkItemSelectionModel);
+    if (d->m_linkedItemSelectionModel != selectionModel) {
+
+        if (d->m_linkedItemSelectionModel) {
+            disconnect(d->m_linkedItemSelectionModel);
+        }
+
+        d->m_linkedItemSelectionModel = selectionModel;
+
+        if (d->m_linkedItemSelectionModel) {
+            connect(d->m_linkedItemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(sourceSelectionChanged(QItemSelection,QItemSelection)));
+            connect(d->m_linkedItemSelectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(sourceCurrentChanged(QModelIndex)));
+
+            connect(d->m_linkedItemSelectionModel, &QItemSelectionModel::modelChanged, this, [this] {
+                d_ptr->reinitializeIndexMapper();
+            });
+        }
+        d->reinitializeIndexMapper();
+        Q_EMIT linkedItemSelectionModelChanged();
+    }
 }
 
 void KLinkItemSelectionModel::select(const QModelIndex &index, QItemSelectionModel::SelectionFlags command)
@@ -107,37 +159,12 @@ void KLinkItemSelectionModel::select(const QModelIndex &index, QItemSelectionMod
     }
 }
 
-// QAbstractProxyModel::mapSelectionFromSource creates invalid ranges to we filter
-// those out manually in a loop. Hopefully fixed in Qt 4.7.2, so we ifdef it out.
-// http://qt.gitorious.org/qt/qt/merge_requests/2474
-// http://qt.gitorious.org/qt/qt/merge_requests/831
-#if QT_VERSION < 0x040702
-#define RANGE_FIX_HACK
-#endif
-
-#ifdef RANGE_FIX_HACK
-static QItemSelection klink_removeInvalidRanges(const QItemSelection &selection)
-{
-    QItemSelection result;
-    Q_FOREACH (const QItemSelectionRange &range, selection) {
-        if (!range.isValid()) {
-            continue;
-        }
-        result << range;
-    }
-    return result;
-}
-#endif
 
 void KLinkItemSelectionModel::select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command)
 {
     Q_D(KLinkItemSelectionModel);
     d->m_ignoreCurrentChanged = true;
-#ifdef RANGE_FIX_HACK
-    QItemSelection _selection = klink_removeInvalidRanges(selection);
-#else
     QItemSelection _selection = selection;
-#endif
     QItemSelectionModel::select(_selection, command);
     Q_ASSERT(d->assertSelectionValid(_selection));
     QItemSelection mappedSelection = d->m_indexMapper->mapSelectionLeftToRight(_selection);
@@ -158,13 +185,8 @@ void KLinkItemSelectionModelPrivate::slotCurrentChanged(const QModelIndex &curre
 void KLinkItemSelectionModelPrivate::sourceSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
     Q_Q(KLinkItemSelectionModel);
-#ifdef RANGE_FIX_HACK
-    QItemSelection _selected = klink_removeInvalidRanges(selected);
-    QItemSelection _deselected = klink_removeInvalidRanges(deselected);
-#else
     QItemSelection _selected = selected;
     QItemSelection _deselected = deselected;
-#endif
     Q_ASSERT(assertSelectionValid(_selected));
     Q_ASSERT(assertSelectionValid(_deselected));
     const QItemSelection mappedDeselection = m_indexMapper->mapSelectionRightToLeft(_deselected);

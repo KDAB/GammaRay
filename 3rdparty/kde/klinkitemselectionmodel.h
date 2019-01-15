@@ -2,6 +2,8 @@
     Copyright (C) 2010 Klarälvdalens Datakonsult AB,
         a KDAB Group company, info@kdab.net,
         author Stephen Kelly <stephen@kdab.com>
+    Copyright (c) 2016 Ableton AG <info@ableton.com>
+        Author Stephen Kelly <stephen.kelly@ableton.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -30,9 +32,11 @@
 class KLinkItemSelectionModelPrivate;
 
 /**
+  @class KLinkItemSelectionModel klinkitemselectionmodel.h KLinkItemSelectionModel
+
   @brief Makes it possible to share a selection in multiple views which do not have the same source model
 
-  Although <a href="http://doc.trolltech.com/4.6/model-view-view.html#sharing-selections-between-views">multiple views can share the same QItemSelectionModel</a>, the views then need to have the same source model.
+  Although <a href="https://doc.qt.io/qt-5/model-view-programming.html#handling-selections-of-items">multiple views can share the same QItemSelectionModel</a>, the views then need to have the same source model.
 
   If there is a proxy model between the model and one of the views, or different proxy models in each, this class makes
   it possible to share the selection between the views.
@@ -86,7 +90,7 @@ class KLinkItemSelectionModelPrivate;
     view2->setSelectionModel( view2SelectionModel );
   @endcode
 
-  See also <a href="http://websvn.kde.org/trunk/KDE/kdelibs/kdeui/tests/proxymodeltestapp/proxyitemselectionwidget.cpp?view=markup">kdelibs/kdeui/tests/proxymodeltestapp/proxyitemselectionwidget.cpp</a>.
+  See also <a href="https://commits.kde.org/kitemmodels?path=tests/proxymodeltestapp/proxyitemselectionwidget.cpp">kitemmodels: tests/proxymodeltestapp/proxyitemselectionwidget.cpp</a>.
 
   @since 4.5
   @author Stephen Kelly <steveire@gmail.com>
@@ -95,14 +99,26 @@ class KLinkItemSelectionModelPrivate;
 class KITEMMODELS_EXPORT KLinkItemSelectionModel : public QItemSelectionModel
 {
     Q_OBJECT
+    Q_PROPERTY(QItemSelectionModel *linkedItemSelectionModel READ linkedItemSelectionModel
+        WRITE setLinkedItemSelectionModel NOTIFY linkedItemSelectionModelChanged)
 public:
     /**
       Constructor.
     */
     KLinkItemSelectionModel(QAbstractItemModel *targetModel, QItemSelectionModel *linkedItemSelectionModel, QObject *parent = nullptr);
-    ~KLinkItemSelectionModel();
+
+    explicit KLinkItemSelectionModel(QObject *parent = nullptr);
+
+    ~KLinkItemSelectionModel() override;
+
+    QItemSelectionModel *linkedItemSelectionModel() const;
+    void setLinkedItemSelectionModel(QItemSelectionModel *selectionModel);
+
     void select(const QModelIndex &index, QItemSelectionModel::SelectionFlags command) override;
     void select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command) override;
+
+Q_SIGNALS:
+    void linkedItemSelectionModelChanged();
 
 protected:
     KLinkItemSelectionModelPrivate *const d_ptr;

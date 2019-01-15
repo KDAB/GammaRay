@@ -21,17 +21,21 @@
 #define KRECURSIVEFILTERPROXYMODEL_H
 
 #include <QSortFilterProxyModel>
-#include <QVector>
 
 #include "kitemmodels_export.h"
 
 class KRecursiveFilterProxyModelPrivate;
 
 /**
+  @class KRecursiveFilterProxyModel krecursivefilterproxymodel.h KRecursiveFilterProxyModel
+
   @brief Implements recursive filtering of models
 
-  QSortFilterProxyModel does not recurse when invoking a filtering stage, so that
+  Until Qt 5.10, QSortFilterProxyModel did not recurse when invoking a filtering stage, so that
   if a particular row is filtered out, its children are not even checked to see if they match the filter.
+
+  If you can depend on Qt >= 5.10, then just use QSortFilterProxyModel::setRecursiveFilteringEnabled(true),
+  and you don't need to use KRecursiveFilterProxyModel.
 
   For example, given a source model:
 
@@ -96,16 +100,16 @@ public:
     /**
       Destructor
     */
-    virtual ~KRecursiveFilterProxyModel();
+    ~KRecursiveFilterProxyModel() override;
 
     /** @reimp */
-    void setSourceModel(QAbstractItemModel *model);
+    void setSourceModel(QAbstractItemModel *model) override;
 
     /**
      * @reimplemented
      */
-    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
-                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const;
+    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
+                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:
     /**
@@ -114,7 +118,7 @@ protected:
     virtual bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
 
     /** @reimp */
-    virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
     KRecursiveFilterProxyModelPrivate *const d_ptr;
 
