@@ -28,9 +28,11 @@
 
 #include "kitemmodels_export.h"
 
+QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
 class QModelIndex;
 class QItemSelection;
+QT_END_NAMESPACE
 class KModelIndexProxyMapperPrivate;
 
 /**
