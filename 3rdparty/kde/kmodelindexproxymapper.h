@@ -2,6 +2,8 @@
     Copyright (C) 2010 Klarälvdalens Datakonsult AB,
         a KDAB Group company, info@kdab.net,
         author Stephen Kelly <stephen@kdab.com>
+    Copyright (c) 2016 Ableton AG <info@ableton.com>
+        Author Stephen Kelly <stephen.kelly@ableton.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -22,18 +24,18 @@
 #ifndef KMODELINDEXPROXYMAPPER_H
 #define KMODELINDEXPROXYMAPPER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "kitemmodels_export.h"
 
-QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
 class QModelIndex;
 class QItemSelection;
-QT_END_NAMESPACE
 class KModelIndexProxyMapperPrivate;
 
 /**
+ * @class KModelIndexProxyMapper kmodelindexproxymapper.h KModelIndexProxyMapper
+ *
  * @brief This class facilitates easy mapping of indexes and selections through proxy models.
  *
  * In a complex system of proxy models there can be a need to map indexes and selections between them,
@@ -75,12 +77,22 @@ class KModelIndexProxyMapperPrivate;
  *   Proxy 2   Proxy 4
  * @endverbatim
  *
+ * The isConnected property indicates whether there is a
+ * path from the left side to the right side.
+ *
  * @author Stephen Kelly <steveire@gmail.com>
  *
  */
 class KITEMMODELS_EXPORT KModelIndexProxyMapper : public QObject
 {
     Q_OBJECT
+
+    /**
+     * Indicates whether there is a chain that can be followed from leftModel to rightModel.
+     *
+     * This value can change if the sourceModel of an intermediate proxy is changed.
+     */
+    Q_PROPERTY(bool isConnected READ isConnected NOTIFY isConnectedChanged)
 public:
     /**
      * Constructor
@@ -108,6 +120,11 @@ public:
      * Maps the @p selection from the right model to the left model.
      */
     QItemSelection mapSelectionRightToLeft(const QItemSelection &selection) const;
+
+    bool isConnected() const;
+
+Q_SIGNALS:
+    void isConnectedChanged();
 
 private:
     //@cond PRIVATE
