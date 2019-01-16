@@ -209,6 +209,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
             if (m_childParentMap.contains(*j)) { // move from elsewhere in our tree
                 const auto sourceIdx = indexForNode(*j);
                 Q_ASSERT(sourceIdx.isValid());
+#if 0
                 if (emitSignals)
                     beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex,
                                   idx);
@@ -217,6 +218,22 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
                 i = childList.insert(i, *j);
                 if (emitSignals)
                     endMoveRows();
+#else
+                if (emitSignals) {
+                    beginRemoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row());
+                }
+                m_parentChildMap[m_childParentMap.value(*j)].remove(sourceIdx.row());
+                m_childParentMap.remove(*j);
+                if (emitSignals) {
+                    endRemoveRows();
+                    beginInsertRows(myIndex, idx, idx);
+                }
+                m_childParentMap.insert(*j, node);
+                i = childList.insert(i, *j);
+                if (emitSignals) {
+                    endInsertRows();
+                }
+#endif
                 populateFromNode(*j, emitSignals);
             } else { // entirely new
                 if (emitSignals)
@@ -264,6 +281,7 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
             if (j != newChildList.constEnd() && m_childParentMap.contains(*j)) { // one moved element, important to recheck if this is still a move, in case the above has removed it meanwhile...
                 const auto sourceIdx = indexForNode(*j);
                 Q_ASSERT(sourceIdx.isValid());
+#if 0
                 if (emitSignals) {
                     const auto idx = childList.size();
                     beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex,
@@ -274,6 +292,23 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
                 childList.append(*j);
                 if (emitSignals)
                     endMoveRows();
+#else
+                if (emitSignals) {
+                    beginRemoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row());
+                }
+                m_parentChildMap[m_childParentMap.value(*j)].remove(sourceIdx.row());
+                m_childParentMap.remove(*j);
+                if (emitSignals) {
+                    endRemoveRows();
+                    const auto idx = childList.size();
+                    beginInsertRows(myIndex, idx, idx);
+                }
+                m_childParentMap.insert(*j, node);
+                childList.append(*j);
+                if (emitSignals) {
+                    endInsertRows();
+                }
+#endif
                 populateFromNode(*j, emitSignals);
                 ++j;
             }
