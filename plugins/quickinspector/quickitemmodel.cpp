@@ -329,6 +329,7 @@ void QuickItemModel::itemReparented(QQuickItem *item)
 #else
     beginRemoveRows(sourceParentIndex, sourceRow, sourceRow);
     sourceSiblings.erase(sit);
+    m_childParentMap.remove(item);
     endRemoveRows();
     beginInsertRows(destParentIndex, destRow, destRow);
     destSiblings.insert(dit, item);
