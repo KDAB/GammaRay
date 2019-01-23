@@ -8,19 +8,19 @@ if(Qt5Widgets_FOUND)
   )
 
   target_link_libraries(messagemodeltest
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
+    Qt5::Core
+    Qt5::Gui Qt5::Widgets
   )
 
   add_executable(modelstest modelstest.cpp)
-  target_link_libraries(modelstest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} gammaray_shared_test_data)
+  target_link_libraries(modelstest Qt5::Gui Qt5::Widgets gammaray_shared_test_data)
 endif()
 
 add_executable(propertytest propertytest.cpp)
-target_link_libraries(propertytest ${Qt5Core_LIBRARIES} gammaray_shared_test_data)
+target_link_libraries(propertytest Qt5::Core gammaray_shared_test_data)
 
 add_executable(connectionstest connectionstest.cpp)
-target_link_libraries(connectionstest ${Qt5Core_LIBRARIES})
+target_link_libraries(connectionstest Qt5::Core)
 
 if(Qt5Widgets_FOUND)
   add_executable(translator_test translator_test.cpp)
@@ -34,10 +34,10 @@ endif()
 if(Qt5Webkit_FOUND)
   add_executable(wk1application wk1application.cpp)
   target_link_libraries(wk1application
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
-    ${Qt5Webkit_LIBRARIES}
-    ${Qt5WebkitWidgets_LIBRARIES}
+    Qt5::Core
+    Qt5::Gui Qt5::Widgets
+    Qt5::Webkit
+    Qt5::WebkitWidgets
   )
 endif()
 
@@ -50,12 +50,12 @@ endif()
 add_executable(signalmonitortest signalmonitortest.cpp)
 
 target_link_libraries(signalmonitortest
-  ${Qt5Core_LIBRARIES}
-  ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
+  Qt5::Core
+  Qt5::Gui Qt5::Widgets
 )
 
 add_executable(objectreparenttest objectreparenttest.cpp)
-target_link_libraries(objectreparenttest ${Qt5Core_LIBRARIES})
+target_link_libraries(objectreparenttest Qt5::Core)
 
 if(Qt5QuickWidgets_FOUND)
   set(quickwidgettest_srcs quickwidgettest.cpp quickwidgettest.qrc)
