@@ -59,7 +59,7 @@ add_subdirectory(targets)
 function(gammaray_add_test _name)
   add_executable(${_name} ${ARGN} $<TARGET_OBJECTS:test_helpers_obj>)
   gammaray_set_rpath(${_name} ${BIN_INSTALL_DIR})
-  target_link_libraries(${_name} ${Qt5Test_LIBRARIES})
+  target_link_libraries(${_name} Qt5::Test)
   add_test(NAME ${_name} COMMAND ${_name})
 endfunction()
 
@@ -71,7 +71,7 @@ function(gammaray_add_probe_test _name)
     $<TARGET_OBJECTS:base_probe_test_obj>
   )
   gammaray_set_rpath(${_name} ${BIN_INSTALL_DIR})
-  target_link_libraries(${_name} $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> ${Qt5Test_LIBRARIES})
+  target_link_libraries(${_name} $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> Qt5::Test)
   add_test(NAME ${_name} COMMAND ${_name})
 endfunction()
 
@@ -84,7 +84,7 @@ function(gammaray_add_quick_test _name)
     $<TARGET_OBJECTS:base_quick_test_obj>
   )
   gammaray_set_rpath(${_name} ${BIN_INSTALL_DIR})
-  target_link_libraries(${_name} $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> ${Qt5Test_LIBRARIES})
+  target_link_libraries(${_name} $<TARGET_PROPERTY:gammaray_probe,LINK_LIBRARIES> Qt5::Test)
   add_test(NAME ${_name} COMMAND ${_name})
 endfunction()
 
@@ -95,9 +95,9 @@ if(Qt5Widgets_FOUND)
   gammaray_set_rpath(benchsuite ${BIN_INSTALL_DIR})
 
   target_link_libraries(benchsuite
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
-    ${Qt5Test_LIBRARIES}
+    Qt5::Core
+    Qt5::Gui Qt5::Widgets
+    Qt5::Test
     gammaray_common
     gammaray_core
   )
@@ -109,9 +109,9 @@ if(Qt5Widgets_FOUND)
   gammaray_set_rpath(connectiontest ${BIN_INSTALL_DIR})
 
   target_link_libraries(connectiontest
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
-    ${Qt5Test_LIBRARIES}
+    Qt5::Core
+    Qt5::Gui Qt5::Widgets
+    Qt5::Test
   )
 
 endif()
@@ -119,7 +119,7 @@ endif()
 add_executable(attachhelper attachhelper.cpp)
 gammaray_set_rpath(attachhelper ${BIN_INSTALL_DIR})
 
-target_link_libraries(attachhelper ${Qt5Core_LIBRARIES})
+target_link_libraries(attachhelper Qt5::Core)
 
 if(UNIX)
   find_program(GDB_EXECUTABLE gdb)
@@ -156,16 +156,16 @@ endforeach()
 # common and core unit tests
 #
 gammaray_add_test(multisignalmappertest multisignalmappertest.cpp ../core/multisignalmapper.cpp)
-target_link_libraries(multisignalmappertest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+target_link_libraries(multisignalmappertest Qt5::Gui Qt5::Widgets)
 
 gammaray_add_test(sourcelocationtest sourcelocationtest.cpp)
-target_link_libraries(sourcelocationtest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} gammaray_common)
+target_link_libraries(sourcelocationtest Qt5::Gui Qt5::Widgets gammaray_common)
 
 gammaray_add_test(selflocatortest selflocatortest.cpp)
-target_link_libraries(selflocatortest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} gammaray_common ${CMAKE_DL_LIBS})
+target_link_libraries(selflocatortest Qt5::Gui Qt5::Widgets gammaray_common ${CMAKE_DL_LIBS})
 
 gammaray_add_test(executiontest executiontest.cpp)
-target_link_libraries(executiontest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} gammaray_core)
+target_link_libraries(executiontest Qt5::Gui Qt5::Widgets gammaray_core)
 
 gammaray_add_test(metaobjecttest metaobjecttest.cpp)
 target_link_libraries(metaobjecttest gammaray_core)
@@ -183,14 +183,14 @@ gammaray_add_test(objectinstancetest objectinstancetest.cpp)
 target_link_libraries(objectinstancetest gammaray_core)
 
 gammaray_add_test(propertysyncertest propertysyncertest.cpp)
-target_link_libraries(propertysyncertest gammaray_common ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+target_link_libraries(propertysyncertest gammaray_common Qt5::Gui Qt5::Widgets)
 
 gammaray_add_test(propertyadaptortest propertyadaptortest.cpp)
-target_link_libraries(propertyadaptortest gammaray_core ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} gammaray_shared_test_data)
+target_link_libraries(propertyadaptortest gammaray_core Qt5::Gui Qt5::Widgets gammaray_shared_test_data)
 
 if(HAVE_QT_WIDGETS)
   gammaray_add_test(enumpropertytest enumpropertytest.cpp)
-  target_link_libraries(enumpropertytest gammaray_core ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+  target_link_libraries(enumpropertytest gammaray_core Qt5::Gui Qt5::Widgets)
 endif()
 
 gammaray_add_test(propertymodeltest propertymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
@@ -198,7 +198,7 @@ target_link_libraries(propertymodeltest gammaray_core gammaray_shared_test_data)
 
 gammaray_add_test(qmetaobjectvalidatortest qmetaobjectvalidatortest.cpp)
 target_include_directories(qmetaobjectvalidatortest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
-target_link_libraries(qmetaobjectvalidatortest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} gammaray_core)
+target_link_libraries(qmetaobjectvalidatortest Qt5::Gui Qt5::Widgets gammaray_core)
 
 if(GAMMARAY_BUILD_UI)
   gammaray_add_test(metatypemodeltest
@@ -207,7 +207,7 @@ if(GAMMARAY_BUILD_UI)
     ${CMAKE_SOURCE_DIR}/ui/tools/metatypebrowser/metatypesclientmodel.cpp
     $<TARGET_OBJECTS:modeltestobj>
   )
-  target_link_libraries(metatypemodeltest gammaray_core ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+  target_link_libraries(metatypemodeltest gammaray_core Qt5::Gui Qt5::Widgets)
 endif()
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
@@ -231,7 +231,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
       $<TARGET_OBJECTS:modeltestobj>
     )
     target_include_directories(methodmodeltest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(methodmodeltest gammaray_core ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+    target_link_libraries(methodmodeltest gammaray_core Qt5::Gui Qt5::Widgets)
   endif()
 endif()
 
@@ -263,17 +263,17 @@ endif()
 # launcher unit tests
 #
 add_executable(sleep sleep.cpp)
-target_link_libraries(sleep ${Qt5Core_LIBRARIES})
+target_link_libraries(sleep Qt5::Core)
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   gammaray_add_test(probeabitest probeabitest.cpp)
-  target_link_libraries(probeabitest gammaray_launcher ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+  target_link_libraries(probeabitest gammaray_launcher Qt5::Gui Qt5::Widgets)
 
   gammaray_add_test(probeabidetectortest probeabidetectortest.cpp)
-  target_link_libraries(probeabidetectortest gammaray_launcher ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+  target_link_libraries(probeabidetectortest gammaray_launcher Qt5::Gui Qt5::Widgets)
 
   gammaray_add_test(selftesttest selftesttest.cpp)
-  target_link_libraries(selftesttest gammaray_launcher gammaray_common ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+  target_link_libraries(selftesttest gammaray_launcher gammaray_common Qt5::Gui Qt5::Widgets)
 
   gammaray_add_test(earlyexittest earlyexittest.cpp)
   target_include_directories(earlyexittest PRIVATE ${CMAKE_BINARY_DIR}/launcher)
@@ -299,27 +299,27 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
   add_executable(probesettingsclient probesettingsclient.cpp ${CMAKE_SOURCE_DIR}/core/probesettings.cpp)
   target_compile_definitions(probesettingsclient PRIVATE GAMMARAY_CORE_STATIC_DEFINE)
   target_include_directories(probesettingsclient PRIVATE ${CMAKE_BINARY_DIR}/core)
-  target_link_libraries(probesettingsclient gammaray_common ${Qt5Network_LIBRARIES})
+  target_link_libraries(probesettingsclient gammaray_common Qt5::Network)
   gammaray_set_rpath(probesettingsclient ${BIN_INSTALL_DIR})
   gammaray_add_test(probesettingstest probesettingstest.cpp)
-  target_link_libraries(probesettingstest gammaray_launcher gammaray_common ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+  target_link_libraries(probesettingstest gammaray_launcher gammaray_common Qt5::Core Qt5::Gui Qt5::Widgets)
 
   if(GAMMARAY_BUILD_UI)
     gammaray_add_test(launcheruiiptest launcheruiiptest.cpp)
-    target_link_libraries(launcheruiiptest gammaray_launcher_ui gammaray_common ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${Qt5Network_LIBRARIES})
+    target_link_libraries(launcheruiiptest gammaray_launcher_ui gammaray_common Qt5::Gui Qt5::Widgets Qt5::Network)
 
     gammaray_add_test(remotemodeltest
       remotemodeltest.cpp
       $<TARGET_OBJECTS:modeltestobj>
       ../core/remote/remotemodelserver.cpp
     )
-    target_link_libraries(remotemodeltest gammaray_core gammaray_client ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${Qt5Network_LIBRARIES})
+    target_link_libraries(remotemodeltest gammaray_core gammaray_client Qt5::Gui Qt5::Widgets Qt5::Network)
 
     gammaray_add_test(networkselectionmodeltest
       networkselectionmodeltest.cpp
       ${CMAKE_SOURCE_DIR}/common/networkselectionmodel.cpp
     )
-    target_link_libraries(networkselectionmodeltest gammaray_common ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+    target_link_libraries(networkselectionmodeltest gammaray_common Qt5::Gui Qt5::Widgets)
   endif()
 endif()
 
@@ -331,14 +331,14 @@ gammaray_add_test(fontdatabasemodeltest
     ${CMAKE_SOURCE_DIR}/plugins/fontbrowser/fontdatabasemodel.cpp
     $<TARGET_OBJECTS:modeltestobj>
 )
-target_link_libraries(fontdatabasemodeltest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+target_link_libraries(fontdatabasemodeltest Qt5::Gui Qt5::Widgets)
 
 gammaray_add_test(codecmodeltest
   codecmodeltest.cpp
   ${CMAKE_SOURCE_DIR}/plugins/codecbrowser/codecmodel.cpp
   $<TARGET_OBJECTS:modeltestobj>
 )
-target_link_libraries(codecmodeltest ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES})
+target_link_libraries(codecmodeltest Qt5::Gui Qt5::Widgets)
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
   #does not work unless the translations are installed in QT_INSTALL_TRANSLATIONS

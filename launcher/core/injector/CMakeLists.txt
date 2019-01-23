@@ -5,8 +5,8 @@ if(Qt5Widgets_FOUND)
 
   target_include_directories(gammaray_injector_style SYSTEM PRIVATE ${Qt5Gui_PRIVATE_INCLUDE_DIRS})
   target_link_libraries(gammaray_injector_style
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
+    Qt5::Core
+    Qt5::Gui Qt5::Widgets
   )
 
   set_target_properties(gammaray_injector_style

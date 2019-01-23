@@ -39,14 +39,14 @@ gammaray_target_relocatable_interfaces(gammaray_client_ipaths)
 target_include_directories(gammaray_client PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_client_ipaths}>)
 target_link_libraries(gammaray_client
   LINK_PUBLIC
-  ${Qt5Core_LIBRARIES}
+  Qt5::Core
 
   LINK_PRIVATE
   gammaray_ui
   gammaray_ui_internal
   gammaray_common
-  ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
-  ${Qt5Network_LIBRARIES}
+  Qt5::Gui Qt5::Widgets
+  Qt5::Network
 )
 
 
@@ -58,7 +58,7 @@ add_executable(gammaray-client WIN32 ${gammaray_client_srcs})
 target_link_libraries(gammaray-client
   gammaray_client
   gammaray_common
-  ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
+  Qt5::Gui Qt5::Widgets
 )
 
 gammaray_embed_info_plist(gammaray-client ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)

@@ -11,8 +11,8 @@ gammaray_add_plugin(gammaray_scriptenginedebugger_plugin
 )
 
 target_link_libraries(gammaray_scriptenginedebugger_plugin
-  ${Qt5Script_LIBRARIES}
-  ${Qt5ScriptTools_LIBRARIES}
+  Qt5::Script
+  Qt5::ScriptTools
   gammaray_core
 )
 endif()
@@ -30,8 +30,8 @@ if(GAMMARAY_BUILD_UI)
   )
 
   target_link_libraries(gammaray_scriptenginedebugger_ui_plugin
-    ${Qt5Script_LIBRARIES}
-    ${Qt5ScriptTools_LIBRARIES}
+    Qt5::Script
+    Qt5::ScriptTools
     gammaray_ui
   )
 endif()

@@ -103,7 +103,7 @@ target_include_directories(gammaray_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_
 target_include_directories(gammaray_ui SYSTEM PRIVATE ${Qt5Widgets_PRIVATE_INCLUDE_DIRS})
 
 target_link_libraries(gammaray_ui
-  LINK_PUBLIC ${Qt5Core_LIBRARIES} ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES} gammaray_common
+  LINK_PUBLIC Qt5::Core Qt5::Gui Qt5::Widgets gammaray_common
   LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels
 )
 if(TARGET KF5::SyntaxHighlighting)
@@ -123,8 +123,8 @@ set_target_properties(gammaray_ui_internal PROPERTIES POSITION_INDEPENDENT_CODE 
 target_compile_features(gammaray_ui_internal PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 target_include_directories(gammaray_ui_internal SYSTEM PRIVATE ${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 target_link_libraries(gammaray_ui_internal
-  ${Qt5Core_LIBRARIES}
-  ${Qt5Gui_LIBRARIES} ${Qt5Widgets_LIBRARIES}
+  Qt5::Core
+  Qt5::Gui Qt5::Widgets
   gammaray_common_internal
   gammaray_ui
   gammaray_kitemmodels
