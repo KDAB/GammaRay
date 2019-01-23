@@ -45,8 +45,6 @@ QT_END_NAMESPACE
 
 namespace TestHelpers
 {
-void waitForSpy(QSignalSpy *spy, int timeout);
-
 bool waitForSignal(QSignalSpy *spy, bool keepResult = false);
 
 QModelIndex searchFixedIndex(QAbstractItemModel *model, const QString &value,

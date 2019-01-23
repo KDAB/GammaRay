@@ -642,7 +642,7 @@ void BindingInspectorTest::testModelDataChanged()
     obj1.setD(3.1415926535897932);
     obj1.setA(12);
 
-    TestHelpers::waitForSpy(&dataChangedSpy, 500);
+    dataChangedSpy.wait(500);
     QCOMPARE(dataChangedSpy.size(), 2);
     QCOMPARE(dataChangedSpy.at(0).at(0).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
     QCOMPARE(dataChangedSpy.at(0).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn));
@@ -690,7 +690,7 @@ void BindingInspectorTest::testModelAdditions()
     provider->data.emplace_back( &obj1, "b", &obj1, "d" );
     obj1.setA(12);
 
-    TestHelpers::waitForSpy(&rowAddedSpy, 500);
+    rowAddedSpy.wait(500);
     QCOMPARE(rowAddedSpy.size(), 1);
     QCOMPARE(rowAddedSpy.front().at(1).toInt(), 0);
     QCOMPARE(rowAddedSpy.front().at(2).toInt(), 1);
@@ -769,7 +769,7 @@ void BindingInspectorTest::testModelInsertions()
     provider->data.emplace(provider->data.end(), &obj1, "e", &obj2, "a");
     obj1.setA(12);
 
-    TestHelpers::waitForSpy(&rowAddedSpy, 500);
+    rowAddedSpy.wait(500);
     QCOMPARE(rowAddedSpy.size(), 2);
     QCOMPARE(rowAddedSpy.front().at(0).toModelIndex(), obj1aIndex);
     QCOMPARE(rowAddedSpy.front().at(1).toInt(), 0);
@@ -856,7 +856,7 @@ void BindingInspectorTest::testModelRemovalAtEnd()
     provider->data.erase(provider->data.end() - 3, provider->data.end());
     obj1.setA(12);
 
-    TestHelpers::waitForSpy(&rowRemovedSpy, 500);
+    rowRemovedSpy.wait(500);
     QCOMPARE(rowRemovedSpy.size(), 1);
     QCOMPARE(rowRemovedSpy.front().at(1).toInt(), 1);
     QCOMPARE(rowRemovedSpy.front().at(2).toInt(), 2);
@@ -909,7 +909,7 @@ void BindingInspectorTest::testModelRemovalInside()
     provider->data.erase(provider->data.begin(), provider->data.begin() + 2);
     obj1.setA(12);
 
-    TestHelpers::waitForSpy(&rowRemovedSpy, 500);
+    rowRemovedSpy.wait(500);
     QCOMPARE(rowRemovedSpy.size(), 1);
     QCOMPARE(rowRemovedSpy.front().front().toModelIndex(), obj1aIndex);
     QCOMPARE(rowRemovedSpy.front().at(1).toInt(), 0);

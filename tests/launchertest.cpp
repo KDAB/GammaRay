@@ -101,12 +101,12 @@ private slots:
         QVERIFY(finishSpy.isValid());
 
         QVERIFY(launcher.start());
-        waitForSpy(&startSpy, 1000);
+        startSpy.wait(1000);
         QCOMPARE(startSpy.count(), 1);
         QCOMPARE(finishSpy.count(), 0);
 
         launcher.stop();
-        waitForSpy(&finishSpy, 1000);
+        finishSpy.wait(1000);
         QCOMPARE(finishSpy.count(), 1);
     }
 
@@ -132,12 +132,12 @@ private slots:
         QVERIFY(finishSpy.isValid());
 
         QVERIFY(launcher.start());
-        waitForSpy(&startSpy, 10000);
+        startSpy.wait(10000);
         QCOMPARE(startSpy.count(), 1);
         QCOMPARE(finishSpy.count(), 0);
 
         launcher.stop();
-        waitForSpy(&finishSpy, 10000);
+        finishSpy.wait(10000);
         QCOMPARE(finishSpy.count(), 1);
     }
 #endif
@@ -166,7 +166,7 @@ private slots:
         QVERIFY(spy.isValid());
         QVERIFY(launcher.start());
 
-        waitForSpy(&spy, 30000);
+        spy.wait(30000);
         QCOMPARE(spy.count(), 1);
 
         target.kill();

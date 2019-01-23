@@ -89,7 +89,7 @@ private slots:
             QVERIFY(spy.isValid());
             QVERIFY(launcher.start());
 
-            waitForSpy(&spy, 30000);
+            spy.wait(30000);
             QCOMPARE(spy.count(), 1);
 
             m_serverUrl = launcher.serverAddress();
