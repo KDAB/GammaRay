@@ -29,8 +29,6 @@
 #include "buffermodel.h"
 #include "attribute.h"
 
-#include <compat/qasconst.h>
-
 #include <QDebug>
 
 using namespace GammaRay;
