@@ -57,4 +57,6 @@
 
 #cmakedefine GAMMARAY_WITH_WIDGET3D
 
+#cmakedefine QT_LIBINFIX "@QT_LIBINFIX@"
+
 #endif // CONFIG_GAMMARAY_H
