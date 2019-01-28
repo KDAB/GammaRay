@@ -124,11 +124,14 @@ static bool checkQtCoreSuffix(const QByteArray &line, int index)
     while (index < line.size() && line.at(index) >= '0' && line.at(index) <= '9')
         ++index;
 
-    if (line.indexOf("Core", index) != index)
+    const auto core = QByteArrayLiteral("Core" QT_LIBINFIX);
+    if (line.indexOf(core, index) != index)
         return false;
 
+    // skip Core + QT_LIBINFIX
+    index += core.size();
+
     // deal with the "d" and "_debug" debug suffixes
-    index += 4;
     if (index < line.size() && line.at(index) == 'd')
         ++index;
 
