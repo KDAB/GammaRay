@@ -127,7 +127,7 @@ if(BAD_CXX_MESSAGE)
 endif()
 set(GAMMARAY_REQUIRED_CXX_FEATURES
         cxx_lambdas cxx_nullptr cxx_range_for cxx_raw_string_literals cxx_uniform_initialization
-        cxx_variadic_templates cxx_rvalue_references cxx_defaulted_functions cxx_deleted_functions
+        cxx_variadic_templates cxx_rvalue_references cxx_defaulted_functions
         cxx_override cxx_final cxx_nonstatic_member_init
    )
 
