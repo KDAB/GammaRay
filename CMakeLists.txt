@@ -125,11 +125,22 @@ endif()
 if(BAD_CXX_MESSAGE)
   message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. Please retry using a modern compiler that supports C++11.")
 endif()
-set(GAMMARAY_REQUIRED_CXX_FEATURES
-        cxx_lambdas cxx_nullptr cxx_range_for cxx_raw_string_literals cxx_uniform_initialization
-        cxx_variadic_templates cxx_rvalue_references cxx_defaulted_functions
-        cxx_override cxx_final cxx_nonstatic_member_init
-   )
+
+if(MSVC AND MSVC_VERSION VERSION_EQUAL 1800)
+  # MSVC 2013 implements some C++11 features only partially, which is why cmake
+  # doesn't list these features as supported, still support is good enough for us.
+  set(GAMMARAY_REQUIRED_CXX_FEATURES
+            cxx_lambdas cxx_nullptr cxx_range_for cxx_raw_string_literals cxx_uniform_initialization
+            cxx_variadic_templates cxx_rvalue_references cxx_defaulted_functions
+            cxx_override cxx_final
+  )
+else()
+  set(GAMMARAY_REQUIRED_CXX_FEATURES
+            cxx_lambdas cxx_nullptr cxx_range_for cxx_raw_string_literals cxx_uniform_initialization
+            cxx_variadic_templates cxx_rvalue_references cxx_defaulted_functions cxx_deleted_functions
+            cxx_override cxx_final cxx_nonstatic_member_init
+  )
+endif()
 
 # Version setup
 set(GAMMARAY_VERSION_MAJOR "2")
