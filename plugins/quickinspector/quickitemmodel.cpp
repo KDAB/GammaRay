@@ -308,6 +308,10 @@ void QuickItemModel::itemReparented(QQuickItem *item)
     QQuickItem *destParent = item->parentItem();
     Q_ASSERT(destParent);
     const QModelIndex destParentIndex = indexForItem(destParent);
+    if (!destParentIndex.isValid()) { // item was moved to a parent we don't know (yet?)
+        removeItem(item, false);
+        return;
+    }
 
     QVector<QQuickItem *> &destSiblings = m_parentChildMap[destParent];
     auto dit = std::lower_bound(destSiblings.begin(), destSiblings.end(), item);
@@ -323,6 +327,7 @@ void QuickItemModel::itemReparented(QQuickItem *item)
 #else
     beginRemoveRows(sourceParentIndex, sourceRow, sourceRow);
     sourceSiblings.erase(sit);
+    m_childParentMap.remove(item);
     endRemoveRows();
     beginInsertRows(destParentIndex, destRow, destRow);
     destSiblings.insert(dit, item);

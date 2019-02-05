@@ -27,13 +27,6 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-#
-# Create variables for all the various install paths for the Qt version in use
-# Make sure to have found Qt4 or Qt5 before using this.
-# sets variables like QT_INSTALL_PREFIX, QT_INSTALL_DATA, QT_INSTALL_DOCS, etc.
-# run qmake -query to see a full list
-
 set(QNX_VERSION 7.0.0)
 set(QNX_PROCESSOR armv7)
 
