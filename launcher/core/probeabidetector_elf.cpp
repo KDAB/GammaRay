@@ -122,8 +122,8 @@ static ProbeABI qtVersionFromExec(const QString &path)
     proc.start(path);
     proc.waitForFinished();
     const QByteArray line = proc.readLine();
-    const int pos = line.lastIndexOf(' ');
-    const QList<QByteArray> version = line.mid(pos).split('.');
+    const int pos = line.indexOf("Qt ");
+    const QList<QByteArray> version = line.mid(pos + 2).split('.');
     if (version.size() < 3)
         return abi;
 
