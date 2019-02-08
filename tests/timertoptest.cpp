@@ -216,8 +216,9 @@ private slots:
 
             const auto idxs = searchFixedIndexes(model, "threadTimer");
             QCOMPARE(idxs.count(), 2);
-            for (const QModelIndex &idx : idxs)
+            for (const QModelIndex &idx : idxs) {
                 QVERIFY(idx.isValid());
+            }
 
             QTimer::singleShot(0, threadTimer.data(), [&]() {
                 threadTimer->QObject::killTimer(timerId);
