@@ -63,6 +63,9 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
     ///WARNING: do not trigger *any* kind of debug output here
     ///         this would trigger an infinite loop and hence crash!
 
+    if (s_handlerDisabled) // recursion detected
+        return;
+
     DebugMessage message;
     message.type = type;
     message.message = msg;
