@@ -75,6 +75,9 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
     ///WARNING: do not trigger *any* kind of debug output here
     ///         this would trigger an infinite loop and hence crash!
 
+    if (s_handlerDisabled) // recursion detected
+        return;
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     const QString msg = QString::fromLocal8Bit(rawMsg);
 #endif
