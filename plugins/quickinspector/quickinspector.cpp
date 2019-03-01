@@ -236,7 +236,7 @@ static const MetaEnum::Value<QSGTexture::WrapMode> qsg_texture_wrapmode_table[] 
 static bool isGoodCandidateItem(QQuickItem *item)
 {
 
-    if (!item->isVisible() || qFuzzyCompare(item->opacity() + 1.0, qreal(1.0)) ||
+    if (!item->isVisible() || qFuzzyCompare(item->opacity() + qreal(1.0), qreal(1.0)) ||
             !item->flags().testFlag(QQuickItem::ItemHasContents)) {
         return false;
     }
