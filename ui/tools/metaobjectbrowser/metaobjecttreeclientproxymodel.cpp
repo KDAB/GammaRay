@@ -77,7 +77,7 @@ static QString issuesToString(QMetaObjectValidatorResult::Results r)
     if (r & QMetaObjectValidatorResult::SignalOverride)
         l.push_back(MetaObjectTreeClientProxyModel::tr("overrides base class signal"));
     if (r & QMetaObjectValidatorResult::UnknownMethodParameterType)
-        l.push_back(MetaObjectTreeClientProxyModel::tr("method uses parameter type not registerd with the meta type system"));
+        l.push_back(MetaObjectTreeClientProxyModel::tr("method uses parameter type not registered with the meta type system"));
     if (r & QMetaObjectValidatorResult::PropertyOverride)
         l.push_back(MetaObjectTreeClientProxyModel::tr("overrides base class property"));
     if (r & QMetaObjectValidatorResult::UnknownPropertyType)
