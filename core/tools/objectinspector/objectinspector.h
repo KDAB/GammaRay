@@ -57,6 +57,7 @@ private:
     void registerPCExtensions();
 
     static void scanForConnectionIssues();
+    static void scanForThreadAffinityIssues();
 
     PropertyController *m_propertyController;
     QItemSelectionModel *m_selectionModel;
