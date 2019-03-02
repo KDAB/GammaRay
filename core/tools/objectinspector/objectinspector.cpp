@@ -55,6 +55,7 @@
 #include <QMetaMethod>
 
 #include <QMutexLocker>
+#include <QThread>
 
 using namespace GammaRay;
 
@@ -80,14 +81,17 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
             this, &ObjectInspector::objectSelected);
 
     ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.BindingLoopScan",
-                                          "Binding Loops",
-                                          "Scans all QObjects for binding loops",
-                                          &BindingAggregator::scanForBindingLoops);
+                                             "Binding Loops",
+                                             "Scans all QObjects for binding loops",
+                                             &BindingAggregator::scanForBindingLoops);
     ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck",
-                                          "Connection issues",
-                                          "Scans all QObjects for direct cross-thread and duplicate connections",
-                                          &ObjectInspector::scanForConnectionIssues);
-
+                                             "Connection issues",
+                                             "Scans all QObjects for direct cross-thread and duplicate connections",
+                                             &ObjectInspector::scanForConnectionIssues);
+    ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck",
+                                             "Threading issues",
+                                             "Scans all QObjects for thread affinity issues",
+                                             &ObjectInspector::scanForThreadAffinityIssues);
 }
 
 void ObjectInspector::objectSelectionChanged(const QItemSelection &selection)
@@ -203,6 +207,64 @@ void ObjectInspector::scanForConnectionIssues()
             if (AbstractConnectionsModel::isDirectCrossThreadConnection(obj, connection)) {
                 reportProblem(connection, QStringLiteral("The connection of slot %1->%2 to the signal %3->%4 is a direct cross-thread connection."), QStringLiteral("CrossTread"), true);
             }
+        }
+    }
+}
+
+void ObjectInspector::scanForThreadAffinityIssues()
+{
+    const auto &objects = Probe::instance()->allQObjects();
+
+    QMutexLocker lock(Probe::objectLock());
+    for (const auto object : objects) {
+        if (!Probe::instance()->isValidObject(object)) {
+            continue;
+        }
+
+        const auto objectName = Util::displayString(object);
+        if (object == object->thread()) {
+            const auto objectName = Util::displayString(object);
+            Problem problem;
+            problem.severity = Problem::Warning;
+            problem.description = QStringLiteral("The thread %1 has affinity with itself.").arg(objectName);
+            problem.object = ObjectId(object);
+            // p.location = bindingNode->sourceLocation(); //TODO can we get source locations of new-statements?
+            problem.problemId = QStringLiteral("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck.Self.%1")
+                    .arg(QString::number(reinterpret_cast<quintptr>(object)));
+            problem.findingCategory = Problem::Scan;
+            ProblemCollector::addProblem(problem);
+        }
+
+        const auto parent = object->parent();
+        if (parent == nullptr) {
+            continue;
+        }
+
+        const auto parentName = Util::displayString(parent);
+        if (object->thread() != parent->thread()) {
+            Problem problem;
+            problem.severity = Problem::Warning;
+            problem.description = QStringLiteral("The object %1 doesn't have the same thread affinity as its parent %2.").arg(objectName, parentName);
+            problem.object = ObjectId(object);
+            // p.location = bindingNode->sourceLocation(); //TODO can we get source locations of new-statements?
+            problem.problemId = QStringLiteral("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck.%1:%2")
+                    .arg(QString::number(reinterpret_cast<quintptr>(object)),
+                         QString::number(reinterpret_cast<quintptr>(parent)));
+            problem.findingCategory = Problem::Scan;
+            ProblemCollector::addProblem(problem);
+        }
+
+        if (parent->inherits("QThread") && object->thread() != object->parent()) {
+            Problem problem;
+            problem.severity = Problem::Warning;
+            problem.description = QStringLiteral("The object %1 has thread %2 as parent, but doesn't have affinity with it.").arg(objectName, parentName);
+            problem.object = ObjectId(object);
+            // p.location = bindingNode->sourceLocation(); //TODO can we get source locations of new-statements?
+            problem.problemId = QStringLiteral("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck.Parent.%1")
+                    .arg(QString::number(reinterpret_cast<quintptr>(object)),
+                         QString::number(reinterpret_cast<quintptr>(parent)));
+            problem.findingCategory = Problem::Scan;
+            ProblemCollector::addProblem(problem);
         }
     }
 }
