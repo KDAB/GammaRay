@@ -70,9 +70,9 @@ SHOW_FILES             = NO
 #---------------------------------------------------------------------------
 QUIET                  = NO
 WARNINGS               = YES
-WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
-WARN_NO_PARAMDOC       = NO
+WARN_NO_PARAMDOC       = YES
 WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           = doxygen.log
 #---------------------------------------------------------------------------
