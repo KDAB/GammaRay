@@ -39,7 +39,11 @@
 
 using namespace GammaRay;
 
-PreloadInjector::PreloadInjector() = default;
+PreloadInjector::PreloadInjector(const QString &probeDllOverride)
+    : ProcessInjector()
+    , m_probeDllOverride(probeDllOverride)
+{
+}
 
 QString PreloadInjector::name() const
 {
@@ -51,13 +55,15 @@ bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &p
 {
     Q_UNUSED(probeFunc);
 
+    const QString actualProbeDll = m_probeDllOverride.isEmpty() ? probeDll : m_probeDllOverride;
+
     QProcessEnvironment env(_env);
 #ifdef Q_OS_MAC
-    env.insert(QStringLiteral("DYLD_INSERT_LIBRARIES"), probeDll);
+    env.insert(QStringLiteral("DYLD_INSERT_LIBRARIES"), actualProbeDll);
     env.insert(QStringLiteral("GAMMARAY_UNSET_DYLD"), QStringLiteral("1"));
 
     // Make sure Qt do load it's correct libs/plugins.
-    if (probeDll.contains(QStringLiteral("_debug"), Qt::CaseInsensitive))
+    if (actualProbeDll.contains(QStringLiteral("_debug"), Qt::CaseInsensitive))
         env.insert(QStringLiteral("DYLD_IMAGE_SUFFIX"), QStringLiteral("_debug"));
 
 #else
@@ -74,7 +80,7 @@ bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &p
             break;
         }
     }
-    ldPreload.push_back(probeDll);
+    ldPreload.push_back(actualProbeDll);
     env.insert(QStringLiteral("LD_PRELOAD"), ldPreload.join(QLatin1String(":")));
     env.insert(QStringLiteral("GAMMARAY_UNSET_PRELOAD"), QStringLiteral("1"));
 

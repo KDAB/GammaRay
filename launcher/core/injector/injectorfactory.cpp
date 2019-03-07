@@ -62,7 +62,7 @@ AbstractInjector::Ptr createInjector(const QString &name, const QString &executa
 
 #ifndef Q_OS_WIN
     if (name == QLatin1String("preload")) {
-        return AbstractInjector::Ptr(new PreloadInjector);
+        return AbstractInjector::Ptr(new PreloadInjector(executableOverride));
     }
 #else
     if (name == QLatin1String("windll")) {
