@@ -68,7 +68,7 @@ bool PreloadInjector::launch(const QStringList &programAndArgs, const QString &p
     // ASAN requires to be loaded first, so check if the target uses that
     // and if so inject it before GammaRay
     QStringList ldPreload;
-    foreach (const auto &lib, LibraryUtil::dependencies(exePath)) {
+    for (const auto &lib: LibraryUtil::dependencies(exePath)) {
         if (lib.contains("libasan.so") || lib.contains("libclang_rt.asan")) {
             ldPreload.push_back(QString::fromLocal8Bit(lib));
             break;
