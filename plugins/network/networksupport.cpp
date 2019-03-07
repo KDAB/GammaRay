@@ -41,6 +41,9 @@
 
 #include <QAbstractNetworkCache>
 #include <QHostAddress>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+#include <QHstsPolicy>
+#endif
 #include <QLocalSocket>
 #include <QNetworkAccessManager>
 #include <QNetworkConfiguration>
@@ -61,6 +64,9 @@ using namespace GammaRay;
 
 Q_DECLARE_METATYPE(QAbstractSocket::PauseModes)
 Q_DECLARE_METATYPE(QHostAddress)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+Q_DECLARE_METATYPE(QHstsPolicy)
+#endif
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 Q_DECLARE_METATYPE(QNetworkAccessManager::NetworkAccessibility)
@@ -128,6 +134,13 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QHostAddress, protocol);
     MO_ADD_PROPERTY(QHostAddress, scopeId, setScopeId);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+    MO_ADD_METAOBJECT0(QHstsPolicy);
+    MO_ADD_PROPERTY   (QHstsPolicy, expiry, setExpiry);
+    MO_ADD_PROPERTY_LD(QHstsPolicy, host, [](QHstsPolicy *policy) { return policy->host(); });
+    MO_ADD_PROPERTY   (QHstsPolicy, includesSubDomains, setIncludesSubDomains);
+#endif
+
     MO_ADD_METAOBJECT1(QLocalSocket, QIODevice);
     MO_ADD_PROPERTY_RO(QLocalSocket, error);
     MO_ADD_PROPERTY_RO(QLocalSocket, fullServerName);
@@ -139,6 +152,12 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QNetworkAccessManager, QObject);
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, cache);
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, cookieJar);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+    MO_ADD_PROPERTY   (QNetworkAccessManager, isStrictTransportSecurityEnabled, setStrictTransportSecurityEnabled);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, isStrictTransportSecurityStoreEnabled);
+    MO_ADD_PROPERTY   (QNetworkAccessManager, redirectPolicy, setRedirectPolicy);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, strictTransportSecurityHosts);
+#endif
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, supportedSchemes);
 
     MO_ADD_METAOBJECT1(QNetworkConfigurationManager, QObject);
@@ -357,6 +376,17 @@ static const MetaEnum::Value<QNetworkConfigurationManager::Capabilities> network
 };
 #undef E
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+#define E(x) { QNetworkRequest:: x, #x }
+static const MetaEnum::Value<QNetworkRequest::RedirectPolicy> network_redirect_policy_table[] = {
+    E(ManualRedirectPolicy),
+    E(NoLessSafeRedirectPolicy),
+    E(SameOriginRedirectPolicy),
+    E(UserVerifiedRedirectPolicy)
+};
+#undef E
+#endif
+
 void NetworkSupport::registerVariantHandler()
 {
     ER_REGISTER_FLAGS(QAbstractSocket, PauseModes, socket_pause_mode_table);
@@ -378,6 +408,10 @@ void NetworkSupport::registerVariantHandler()
     ER_REGISTER_FLAGS(QNetworkConfiguration, StateFlags, network_config_state_table);
     ER_REGISTER_ENUM(QNetworkConfiguration, Type, network_config_type_table);
     ER_REGISTER_FLAGS(QNetworkConfigurationManager, Capabilities, network_config_manager_capabilities_table);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+    ER_REGISTER_ENUM(QNetworkRequest, RedirectPolicy, network_redirect_policy_table);
+#endif
 }
 
 NetworkSupportFactory::NetworkSupportFactory(QObject *parent)
