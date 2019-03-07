@@ -154,7 +154,9 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, cookieJar);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     MO_ADD_PROPERTY   (QNetworkAccessManager, isStrictTransportSecurityEnabled, setStrictTransportSecurityEnabled);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, isStrictTransportSecurityStoreEnabled);
+#endif
     MO_ADD_PROPERTY   (QNetworkAccessManager, redirectPolicy, setRedirectPolicy);
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, strictTransportSecurityHosts);
 #endif
