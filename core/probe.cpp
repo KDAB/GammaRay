@@ -251,14 +251,22 @@ Probe::Probe(QObject *parent)
     connect(m_queueTimer, SIGNAL(timeout()),
             this, SLOT(processQueuedObjectChanges()));
 
-    m_previousSignalSpyCallbackSet.signalBeginCallback
-        = qt_signal_spy_callback_set.signal_begin_callback;
-    m_previousSignalSpyCallbackSet.signalEndCallback
-        = qt_signal_spy_callback_set.signal_end_callback;
-    m_previousSignalSpyCallbackSet.slotBeginCallback
-        = qt_signal_spy_callback_set.slot_begin_callback;
-    m_previousSignalSpyCallbackSet.slotEndCallback = qt_signal_spy_callback_set.slot_end_callback;
-    registerSignalSpyCallbackSet(m_previousSignalSpyCallbackSet); // daisy-chain existing callbacks
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+    const auto* signal_spy_set = qt_signal_spy_callback_set.load();
+#else
+    const auto* signal_spy_set = &qt_signal_spy_callback_set;
+#endif
+    if (signal_spy_set) {
+        m_previousSignalSpyCallbackSet.signalBeginCallback
+            = signal_spy_set->signal_begin_callback;
+        m_previousSignalSpyCallbackSet.signalEndCallback
+            = signal_spy_set->signal_end_callback;
+        m_previousSignalSpyCallbackSet.slotBeginCallback
+            = signal_spy_set->slot_begin_callback;
+        m_previousSignalSpyCallbackSet.slotEndCallback
+            = signal_spy_set->slot_end_callback;
+        registerSignalSpyCallbackSet(m_previousSignalSpyCallbackSet); // daisy-chain existing callbacks
+    }
 
     connect(this, SIGNAL(objectCreated(QObject*)), m_metaObjectRegistry, SLOT(objectAdded(QObject*)));
     connect(this, SIGNAL(objectDestroyed(QObject*)), m_metaObjectRegistry, SLOT(objectRemoved(QObject*)));
@@ -276,7 +284,11 @@ Probe::~Probe()
         m_previousSignalSpyCallbackSet.signalEndCallback,
         m_previousSignalSpyCallbackSet.slotEndCallback
     };
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+    qt_register_signal_spy_callbacks(&prevCallbacks);
+#else
     qt_register_signal_spy_callbacks(prevCallbacks);
+#endif
 
     ObjectBroker::clear();
     ProbeSettings::resetLauncherIdentifier();
@@ -1019,7 +1031,11 @@ void Probe::setupSignalSpyCallbacks()
         if (it.slotBeginCallback) cbs.slot_begin_callback = slot_begin_callback;
         if (it.slotEndCallback) cbs.slot_end_callback = slot_end_callback;
     }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+    qt_register_signal_spy_callbacks(&cbs);
+#else
     qt_register_signal_spy_callbacks(cbs);
+#endif
 }
 
 template<typename Func>
