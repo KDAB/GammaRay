@@ -173,7 +173,9 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QNetworkConfiguration, bearerTypeFamily);
     MO_ADD_PROPERTY_RO(QNetworkConfiguration, bearerTypeName);
     MO_ADD_PROPERTY_RO(QNetworkConfiguration, children);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     MO_ADD_PROPERTY_RO(QNetworkConfiguration, connectTimeout);
+#endif
     MO_ADD_PROPERTY_RO(QNetworkConfiguration, identifier);
     MO_ADD_PROPERTY_RO(QNetworkConfiguration, isRoamingAvailable);
     MO_ADD_PROPERTY_RO(QNetworkConfiguration, isValid);
@@ -444,8 +446,10 @@ static const MetaEnum::Value<QNetworkProxy::Capability> network_proxy_capabiliti
     E(UdpTunnelingCapability),
     E(CachingCapability),
     E(HostNameLookupCapability),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     E(SctpTunnelingCapability),
     E(SctpListeningCapability)
+#endif
 };
 
 static const MetaEnum::Value<QNetworkProxy::ProxyType> network_proxy_type_table[] = {
