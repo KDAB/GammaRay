@@ -70,7 +70,10 @@ Q_DECLARE_METATYPE(QHstsPolicy)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 Q_DECLARE_METATYPE(QNetworkAccessManager::NetworkAccessibility)
+Q_DECLARE_METATYPE(QNetworkConfiguration::BearerType)
 Q_DECLARE_METATYPE(QNetworkConfigurationManager::Capabilities)
+Q_DECLARE_METATYPE(QNetworkProxy::Capabilities)
+Q_DECLARE_METATYPE(QNetworkProxy::ProxyType)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
 #ifndef QT_NO_SSL
 Q_DECLARE_METATYPE(QSsl::KeyAlgorithm)
@@ -150,21 +153,50 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QLocalSocket, state);
 
     MO_ADD_METAOBJECT1(QNetworkAccessManager, QObject);
+    MO_ADD_PROPERTY_RO(QNetworkAccessManager, activeConfiguration);
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, cache);
+    MO_ADD_PROPERTY   (QNetworkAccessManager, configuration, setConfiguration);
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, cookieJar);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     MO_ADD_PROPERTY   (QNetworkAccessManager, isStrictTransportSecurityEnabled, setStrictTransportSecurityEnabled);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, isStrictTransportSecurityStoreEnabled);
 #endif
+    MO_ADD_PROPERTY   (QNetworkAccessManager, proxy, setProxy);
     MO_ADD_PROPERTY   (QNetworkAccessManager, redirectPolicy, setRedirectPolicy);
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, strictTransportSecurityHosts);
 #endif
     MO_ADD_PROPERTY_RO(QNetworkAccessManager, supportedSchemes);
 
+    MO_ADD_METAOBJECT0(QNetworkConfiguration);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, bearerType);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, bearerTypeFamily);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, bearerTypeName);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, children);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, connectTimeout);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, identifier);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, isRoamingAvailable);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, isValid);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, name);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, purpose);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, state);
+    MO_ADD_PROPERTY_RO(QNetworkConfiguration, type);
+
     MO_ADD_METAOBJECT1(QNetworkConfigurationManager, QObject);
     MO_ADD_PROPERTY_RO(QNetworkConfigurationManager, capabilities);
     MO_ADD_PROPERTY_RO(QNetworkConfigurationManager, isOnline);
+
+    MO_ADD_METAOBJECT0(QNetworkProxy);
+    MO_ADD_PROPERTY_ST(QNetworkProxy, applicationProxy);
+    MO_ADD_PROPERTY   (QNetworkProxy, capabilities, setCapabilities);
+    MO_ADD_PROPERTY   (QNetworkProxy, hostName, setHostName);
+    MO_ADD_PROPERTY_RO(QNetworkProxy, isCachingProxy);
+    MO_ADD_PROPERTY_RO(QNetworkProxy, isTransparentProxy);
+    MO_ADD_PROPERTY   (QNetworkProxy, password, setPassword);
+    MO_ADD_PROPERTY   (QNetworkProxy, port, setPort);
+    //MO_ADD_PROPERTY_RO(QNetworkProxy, rawHeaderList);
+    MO_ADD_PROPERTY   (QNetworkProxy, type, setType);
+    MO_ADD_PROPERTY   (QNetworkProxy, user, setUser);
 
     MO_ADD_METAOBJECT1(QTcpServer, QObject);
     MO_ADD_PROPERTY_RO(QTcpServer, isListening);
@@ -344,6 +376,22 @@ static QString sslCertificateToString(const QSslCertificate &cert)
 #endif // QT_NO_SSL
 
 #define E(x) { QNetworkConfiguration:: x, #x }
+static const MetaEnum::Value<QNetworkConfiguration::BearerType> network_config_bearer_type_table[] = {
+    E(BearerUnknown),
+    E(BearerEthernet),
+    E(BearerWLAN),
+    E(Bearer2G),
+    E(Bearer3G),
+    E(Bearer4G),
+    E(BearerCDMA2000),
+    E(BearerWCDMA),
+    E(BearerHSPA),
+    E(BearerBluetooth),
+    E(BearerWiMAX),
+    E(BearerEVDO),
+    E(BearerLTE)
+};
+
 static const MetaEnum::Value<QNetworkConfiguration::Purpose> network_config_purpose_table[] = {
     E(UnknownPurpose),
     E(PublicPurpose),
@@ -389,6 +437,32 @@ static const MetaEnum::Value<QNetworkRequest::RedirectPolicy> network_redirect_p
 #undef E
 #endif
 
+#define E(x) { QNetworkProxy:: x, #x }
+static const MetaEnum::Value<QNetworkProxy::Capability> network_proxy_capabilitiy_table[] = {
+    E(TunnelingCapability),
+    E(ListeningCapability),
+    E(UdpTunnelingCapability),
+    E(CachingCapability),
+    E(HostNameLookupCapability),
+    E(SctpTunnelingCapability),
+    E(SctpListeningCapability)
+};
+
+static const MetaEnum::Value<QNetworkProxy::ProxyType> network_proxy_type_table[] = {
+    E(NoProxy),
+    E(DefaultProxy),
+    E(QNetworkProxy::Socks5Proxy),
+    E(HttpProxy),
+    E(HttpCachingProxy),
+    E(FtpCachingProxy)
+};
+#undef E
+
+static QString proxyToString(const QNetworkProxy proxy)
+{
+    return VariantHandler::displayString(proxy.type());
+}
+
 void NetworkSupport::registerVariantHandler()
 {
     ER_REGISTER_FLAGS(QAbstractSocket, PauseModes, socket_pause_mode_table);
@@ -406,14 +480,20 @@ void NetworkSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QSslError>(std::mem_fn(&QSslError::errorString));
 #endif
 
+    ER_REGISTER_ENUM(QNetworkConfiguration, BearerType, network_config_bearer_type_table);
     ER_REGISTER_ENUM(QNetworkConfiguration, Purpose, network_config_purpose_table);
     ER_REGISTER_FLAGS(QNetworkConfiguration, StateFlags, network_config_state_table);
     ER_REGISTER_ENUM(QNetworkConfiguration, Type, network_config_type_table);
+    VariantHandler::registerStringConverter<QNetworkConfiguration>(std::mem_fn(&QNetworkConfiguration::name));
     ER_REGISTER_FLAGS(QNetworkConfigurationManager, Capabilities, network_config_manager_capabilities_table);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     ER_REGISTER_ENUM(QNetworkRequest, RedirectPolicy, network_redirect_policy_table);
 #endif
+
+    ER_REGISTER_FLAGS(QNetworkProxy, Capabilities, network_proxy_capabilitiy_table);
+    ER_REGISTER_ENUM(QNetworkProxy, ProxyType, network_proxy_type_table);
+    VariantHandler::registerStringConverter<QNetworkProxy>(proxyToString);
 }
 
 NetworkSupportFactory::NetworkSupportFactory(QObject *parent)
