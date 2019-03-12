@@ -278,7 +278,7 @@ Probe::~Probe()
     IF_DEBUG(cerr << "detaching GammaRay probe" << endl;
              )
 
-    const QSignalSpyCallbackSet prevCallbacks = {
+    QSignalSpyCallbackSet prevCallbacks = {
         m_previousSignalSpyCallbackSet.signalBeginCallback,
         m_previousSignalSpyCallbackSet.slotBeginCallback,
         m_previousSignalSpyCallbackSet.signalEndCallback,
