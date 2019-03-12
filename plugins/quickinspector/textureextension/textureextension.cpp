@@ -102,8 +102,15 @@ bool TextureExtension::setQObject(QObject* obj)
     // we look at its incoming signal/slot connections, it's watching the layer that way...
     if (obj->inherits("QQuickShaderEffectSource")) {
         auto d = QObjectPrivate::get(obj);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+        QObjectPrivate::ConnectionData *cd = d->connections.load();
+        if (cd && cd->senders) {
+            auto *senders = cd->senders;
+#else
         if (d->senders) {
-            for (QObjectPrivate::Connection *s = d->senders; s; s = s->next) {
+            auto *senders = d->senders;
+#endif
+            for (QObjectPrivate::Connection *s = senders; s; s = s->next) {
                 if (!s->sender)
                     continue;
                 if (s->sender->inherits("QSGLayer"))
