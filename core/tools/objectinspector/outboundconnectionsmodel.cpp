@@ -60,12 +60,17 @@ QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outbound
     QVector<Connection> connections;
 #ifdef HAVE_PRIVATE_QT_HEADERS
     QObjectPrivate *d = QObjectPrivate::get(object);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+    QObjectPrivate::ConnectionData *cd = d->connections.load();
+    if (cd) {
+        const auto &cl = cd->signalVector;
+#else
     if (d->connectionLists) {
         // HACK: the declaration of d->connectionsLists is not accessible for us...
-        const QVector<QObjectPrivate::ConnectionList> *cl
-            = reinterpret_cast<QVector<QObjectPrivate::ConnectionList> *>(d->connectionLists);
-        for (int signalIndex = 0; signalIndex < cl->count(); ++signalIndex) {
-            const QObjectPrivate::Connection *c = cl->at(signalIndex).first;
+        const auto &cl = *reinterpret_cast<QVector<QObjectPrivate::ConnectionList> *>(d->connectionLists);
+#endif
+        for (int signalIndex = 0; signalIndex < cl.count(); ++signalIndex) {
+            const QObjectPrivate::Connection *c = cl.at(signalIndex).first;
             while (c) {
                 if (!c->receiver || Probe::instance()->filterObject(c->receiver)) {
                     c = c->nextConnectionList;
