@@ -71,11 +71,20 @@ Q_DECLARE_METATYPE(QHstsPolicy)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketError)
 Q_DECLARE_METATYPE(QLocalSocket::LocalSocketState)
 Q_DECLARE_METATYPE(QNetworkAccessManager::NetworkAccessibility)
+#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
+Q_DECLARE_METATYPE(QNetworkAddressEntry)
+#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
 Q_DECLARE_METATYPE(QNetworkAddressEntry::DnsEligibilityStatus)
 #endif
 Q_DECLARE_METATYPE(QNetworkConfiguration::BearerType)
 Q_DECLARE_METATYPE(QNetworkConfigurationManager::Capabilities)
+#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
+Q_DECLARE_METATYPE(QNetworkInterface)
+#endif
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
+Q_DECLARE_METATYPE(QNetworkInterface::InterfaceFlags)
+#endif
 Q_DECLARE_METATYPE(QNetworkProxy::Capabilities)
 Q_DECLARE_METATYPE(QNetworkProxy::ProxyType)
 Q_DECLARE_METATYPE(QSocketNotifier::Type)
@@ -462,7 +471,7 @@ static const MetaEnum::Value<QNetworkConfiguration::Type> network_config_type_ta
 };
 #undef E
 
-#ifdef QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
 #define E(x) { QNetworkAddressEntry:: x, #x }
 static const MetaEnum::Value<QNetworkAddressEntry::DnsEligibilityStatus> network_address_entry_dns_eligibility_table[] = {
     E(DnsEligibilityUnknown),
