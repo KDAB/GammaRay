@@ -627,7 +627,8 @@ void Probe::processQueuedObjectChanges()
     // must be called from the main thread via timeout
     Q_ASSERT(QThread::currentThread() == thread());
 
-    for (const auto &change : qAsConst(m_queuedObjectChanges)) {
+    const auto queuedObjectChanges = m_queuedObjectChanges; // copy, in case this gets modified while we iterate (which can actually happen)
+    for (const auto &change : queuedObjectChanges) {
         switch (change.type) {
         case ObjectChange::Create:
             objectFullyConstructed(change.obj);
