@@ -284,7 +284,7 @@ Probe::~Probe()
         m_previousSignalSpyCallbackSet.signalEndCallback,
         m_previousSignalSpyCallbackSet.slotEndCallback
     };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     qt_register_signal_spy_callbacks(&prevCallbacks);
 #else
     qt_register_signal_spy_callbacks(prevCallbacks);
@@ -1031,7 +1031,7 @@ void Probe::setupSignalSpyCallbacks()
         if (it.slotBeginCallback) cbs.slot_begin_callback = slot_begin_callback;
         if (it.slotEndCallback) cbs.slot_end_callback = slot_end_callback;
     }
-#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     qt_register_signal_spy_callbacks(&cbs);
 #else
     qt_register_signal_spy_callbacks(cbs);

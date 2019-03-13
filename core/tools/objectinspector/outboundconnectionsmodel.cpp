@@ -60,7 +60,7 @@ QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outbound
     QVector<Connection> connections;
 #ifdef HAVE_PRIVATE_QT_HEADERS
     QObjectPrivate *d = QObjectPrivate::get(object);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     QObjectPrivate::ConnectionData *cd = d->connections.load();
     if (cd) {
         const auto &cl = cd->signalVector;
