@@ -60,7 +60,7 @@ PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObjec
         || oi.type() == ObjectInstance::Value || oi.type() == ObjectInstance::QtGadgetPointer || oi.type() == ObjectInstance::QtGadgetValue)
         adaptors.push_back(new MetaPropertyAdaptor(parent));
 
-    if (oi.type() == ObjectInstance::QtVariant && oi.typeName() != "QJSValue") {
+    if (oi.type() == ObjectInstance::QtVariant && oi.typeName() != "QJSValue" && oi.typeName() != "QJsonObject") {
         const auto v = oi.variant();
         if (v.canConvert<QVariantList>())
             adaptors.push_back(new SequentialPropertyAdaptor(parent));
