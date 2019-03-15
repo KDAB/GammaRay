@@ -520,7 +520,7 @@ static const MetaEnum::Value<QNetworkProxy::Capability> network_proxy_capabiliti
 static const MetaEnum::Value<QNetworkProxy::ProxyType> network_proxy_type_table[] = {
     E(NoProxy),
     E(DefaultProxy),
-    E(QNetworkProxy::Socks5Proxy),
+    E(Socks5Proxy),
     E(HttpProxy),
     E(HttpCachingProxy),
     E(FtpCachingProxy)
