@@ -251,7 +251,7 @@ Probe::Probe(QObject *parent)
     connect(m_queueTimer, SIGNAL(timeout()),
             this, SLOT(processQueuedObjectChanges()));
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     const auto* signal_spy_set = qt_signal_spy_callback_set.load();
 #else
     const auto* signal_spy_set = &qt_signal_spy_callback_set;
