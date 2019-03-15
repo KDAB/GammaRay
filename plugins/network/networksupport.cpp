@@ -29,6 +29,7 @@
 #include "networksupport.h"
 #include "networkinterfacemodel.h"
 #include "networkconfigurationmodel.h"
+#include "networkreplymodel.h"
 #include "cookies/cookieextension.h"
 
 #include <core/enumrepositoryserver.h>
@@ -113,6 +114,10 @@ NetworkSupport::NetworkSupport(Probe *probe, QObject *parent)
     configProxy->setSourceModel(new NetworkConfigurationModel(this));
     configProxy->addRole(NetworkConfigurationModelRoles::DefaultConfigRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkConfigurationModel"), configProxy);
+
+    auto replyModel = new NetworkReplyModel(this);
+    connect(probe, &Probe::objectCreated, replyModel, &NetworkReplyModel::objectCreated);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkReplyModel"), replyModel);
 
     PropertyController::registerExtension<CookieExtension>();
 }

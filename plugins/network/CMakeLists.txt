@@ -4,6 +4,7 @@ set(gammaray_network_srcs
     networksupport.cpp
     networkinterfacemodel.cpp
     networkconfigurationmodel.cpp
+    networkreplymodel.cpp
 
     cookies/cookieextension.cpp
     cookies/cookiejarmodel.cpp
@@ -19,9 +20,11 @@ if(GAMMARAY_BUILD_UI)
     networkinterfacewidget.cpp
     networkconfigurationwidget.cpp
     clientnetworkconfigurationmodel.cpp
+    networkreplywidget.cpp
+    clientnetworkreplymodel.cpp
 
     cookies/cookietab.cpp
   )
   gammaray_add_plugin(gammaray_network_ui JSON gammaray_network.json SOURCES ${gammaray_network_ui_srcs})
-  target_link_libraries(gammaray_network_ui gammaray_ui)
+  target_link_libraries(gammaray_network_ui gammaray_ui Qt5::Network)
 endif()

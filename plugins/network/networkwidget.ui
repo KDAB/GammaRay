@@ -36,6 +36,16 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="replyTab">
+      <attribute name="title">
+       <string>Operations</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="GammaRay::NetworkReplyWidget" name="widget_2" native="true"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -51,6 +61,12 @@
    <class>GammaRay::NetworkConfigurationWidget</class>
    <extends>QWidget</extends>
    <header>networkconfigurationwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::NetworkReplyWidget</class>
+   <extends>QWidget</extends>
+   <header>networkreplywidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
