@@ -79,7 +79,8 @@ void NetworkReplyWidget::contextMenu(QPoint pos)
 
     QMenu menu;
     if (!url.isEmpty()) {
-        menu.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), tr("Copy URL"), this, [url]() {
+        auto action = menu.addAction(QIcon::fromTheme(QStringLiteral("edit-copy")), tr("Copy URL"));
+        connect(action, &QAction::triggered, this, [url]() {
             QGuiApplication::clipboard()->setText(url);
         });
         menu.addSeparator();
