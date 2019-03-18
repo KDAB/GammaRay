@@ -323,7 +323,8 @@ QString VariantHandler::displayString(const QVariant &value)
         return (*it.value())(value);
     }
 
-    if (value.canConvert<QJsonObject>()) {
+    // Work around QTBUG-73437
+    if (value.userType() == qMetaTypeId<QJsonObject>()) {
         int size = value.value<QJsonObject>().size();
         if (size == 0) {
             return QStringLiteral("<empty>");
