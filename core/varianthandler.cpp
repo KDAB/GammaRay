@@ -53,6 +53,7 @@
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
+#include <QJsonObject>
 
 using namespace GammaRay;
 
@@ -320,6 +321,15 @@ QString VariantHandler::displayString(const QVariant &value)
     auto it = s_variantHandlerRepository()->stringConverters.constFind(value.userType());
     if (it != s_variantHandlerRepository()->stringConverters.constEnd()) {
         return (*it.value())(value);
+    }
+
+    if (value.canConvert<QJsonObject>()) {
+        int size = value.value<QJsonObject>().size();
+        if (size == 0) {
+            return QStringLiteral("<empty>");
+        } else {
+            return QStringLiteral("<%1 entries>").arg(size);
+        }
     }
 
     if (value.canConvert<QVariantList>()) {
