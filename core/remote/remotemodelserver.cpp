@@ -284,9 +284,10 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(QMap<int, QVariant> &&item
 
 bool RemoteModelServer::canSerialize(const QVariant &value) const
 {
-    if (qstrcmp(value.typeName(), "QJSValue") == 0) {
+    if (qstrcmp(value.typeName(), "QJSValue") == 0 || qstrcmp(value.typeName(), "QJsonObject") == 0) {
         // QJSValue tries to serialize nested elements and asserts if that fails
         // too bad it can contain QObject* as nested element, which obviously can't be serialized...
+        // QJsonObject serialization fails due to QTBUG-73437
         return false;
     }
 
