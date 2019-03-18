@@ -39,8 +39,9 @@ enum State {
     Running = 0,
     Error = 1,
     Finished = 2,
-    Encrypted = 4,
-    Deleted = 8
+    Encrypted = 4, // explicitly known to be encrypted
+    Unencrypted = 8, // explicitly known to not be encrypted, if none are set, we guess from URL
+    Deleted = 16
 };
 }
 

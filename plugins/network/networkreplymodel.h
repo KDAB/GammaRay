@@ -62,17 +62,18 @@ public:
 
     void objectCreated(QObject *obj);
 
-private:
     struct ReplyNode {
         QNetworkReply *reply;
         QString displayName;
         QUrl url;
         QStringList errorMsgs;
-        qint64 size;
-        quint64 duration;
+        qint64 size = 0;
+        quint64 duration = 0;
         QNetworkAccessManager::Operation op;
-        int state;
+        int state = NetworkReply::Running;
     };
+
+private:
     struct NAMNode {
         QNetworkAccessManager *nam;
         QString displayName;
@@ -80,13 +81,12 @@ private:
     };
 
     void replyFinished(QNetworkReply *reply, QNetworkAccessManager *nam);
-    void replyError(QNetworkReply *reply, QNetworkAccessManager *nam);
     void replyEncrypted(QNetworkReply *reply, QNetworkAccessManager *nam);
     void replyProgress(QNetworkReply *reply, qint64 progress, qint64 total, QNetworkAccessManager *nam);
     void replySslErrors(QNetworkReply *reply, const QList<QSslError> &errors, QNetworkAccessManager *nam);
     void replyDeleted(QNetworkReply *reply, QNetworkAccessManager *nam);
 
-    void updateReplyNode(QNetworkReply *reply, QNetworkAccessManager *nam, const std::function<void(QNetworkReply*,ReplyNode&)> &changeFunc);
+    Q_INVOKABLE void updateReplyNode(QNetworkAccessManager *nam, const GammaRay::NetworkReplyModel::ReplyNode &newNode);
 
     std::vector<NAMNode> m_nodes;
     QElapsedTimer m_time;

@@ -79,11 +79,14 @@ QVariant ClientNetworkReplyModel::data(const QModelIndex& index, int role) const
                 }
                 return QApplication::style()->standardIcon(QStyle::SP_BrowserReload);
             case NetworkReplyModelColumn::UrlColumn:
+            {
+                const auto url = QIdentityProxyModel::data(index, Qt::DisplayRole).toString();
                 // TODO add our own icons for this, we can't rely on the icon theme on !Linux
-                if (state & NetworkReply::Encrypted) {
+                if ((state & NetworkReply::Encrypted) || ((state & NetworkReply::Unencrypted) == 0 && url.startsWith(QLatin1String("https")))) {
                     return QIcon::fromTheme(QStringLiteral("channel-secure-symbolic"));
                 }
                 return QIcon::fromTheme(QStringLiteral("channel-insecure-symbolic"));
+            }
         }
     }
 
