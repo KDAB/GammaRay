@@ -35,6 +35,7 @@
 #include "sequentialpropertyadaptor.h"
 #include "associativepropertyadaptor.h"
 #include "metapropertyadaptor.h"
+#include "jsonpropertyadaptor.h"
 
 #include <QVector>
 
@@ -60,12 +61,22 @@ PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObjec
         || oi.type() == ObjectInstance::Value || oi.type() == ObjectInstance::QtGadgetPointer || oi.type() == ObjectInstance::QtGadgetValue)
         adaptors.push_back(new MetaPropertyAdaptor(parent));
 
-    if (oi.type() == ObjectInstance::QtVariant && oi.typeName() != "QJSValue" && oi.typeName() != "QJsonObject") {
-        const auto v = oi.variant();
-        if (v.canConvert<QVariantList>())
-            adaptors.push_back(new SequentialPropertyAdaptor(parent));
-        else if (v.canConvert<QVariantHash>())
-            adaptors.push_back(new AssociativePropertyAdaptor(parent));
+    if (oi.type() == ObjectInstance::QtVariant) {
+
+        if (oi.typeName() == "QJsonObject" || oi.typeName() == "QJsonArray")
+            adaptors.push_back(new JsonPropertyAdaptor(parent));
+        else if (oi.typeName() == "QJsonValue") {
+            if (oi.variant().toJsonValue().isObject() || oi.variant().toJsonValue().isArray()) {
+                adaptors.push_back(new JsonPropertyAdaptor(parent));
+            }
+        } else if(oi.typeName() == "QJSValue") {
+        } else {
+            const auto v = oi.variant();
+            if (v.canConvert<QVariantList>())
+                adaptors.push_back(new SequentialPropertyAdaptor(parent));
+            else if (v.canConvert<QVariantHash>())
+                adaptors.push_back(new AssociativePropertyAdaptor(parent));
+        }
     }
 
     foreach (auto factory, *s_propertyAdaptorFactories()) {
