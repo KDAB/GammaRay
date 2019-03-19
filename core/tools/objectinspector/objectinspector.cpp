@@ -213,11 +213,12 @@ void ObjectInspector::scanForConnectionIssues()
 
 void ObjectInspector::scanForThreadAffinityIssues()
 {
-    const auto &objects = Probe::instance()->allQObjects();
+    const auto probe = Probe::instance();
+    const auto &objects = probe->allQObjects();
 
     QMutexLocker lock(Probe::objectLock());
     for (const auto object : objects) {
-        if (!Probe::instance()->isValidObject(object)) {
+        if (!probe->isValidObject(object)) {
             continue;
         }
 
@@ -227,7 +228,7 @@ void ObjectInspector::scanForThreadAffinityIssues()
             problem.severity = Problem::Warning;
             problem.description = QStringLiteral("The thread %1 has affinity with itself.").arg(objectName);
             problem.object = ObjectId(object);
-            // p.location = bindingNode->sourceLocation(); //TODO can we get source locations of new-statements?
+            problem.locations.append(probe->objectCreationSourceLocation(object));
             problem.problemId = QStringLiteral("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck.Self.%1")
                     .arg(QString::number(reinterpret_cast<quintptr>(object)));
             problem.findingCategory = Problem::Scan;
@@ -245,7 +246,7 @@ void ObjectInspector::scanForThreadAffinityIssues()
             problem.severity = Problem::Warning;
             problem.description = QStringLiteral("The object %1 doesn't have the same thread affinity as its parent %2.").arg(objectName, parentName);
             problem.object = ObjectId(object);
-            // p.location = bindingNode->sourceLocation(); //TODO can we get source locations of new-statements?
+            problem.locations.append(probe->objectCreationSourceLocation(object));
             problem.problemId = QStringLiteral("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck.%1:%2")
                     .arg(QString::number(reinterpret_cast<quintptr>(object)),
                          QString::number(reinterpret_cast<quintptr>(parent)));
@@ -258,7 +259,7 @@ void ObjectInspector::scanForThreadAffinityIssues()
             problem.severity = Problem::Warning;
             problem.description = QStringLiteral("The object %1 has thread %2 as parent, but doesn't have affinity with it.").arg(objectName, parentName);
             problem.object = ObjectId(object);
-            // p.location = bindingNode->sourceLocation(); //TODO can we get source locations of new-statements?
+            problem.locations.append(probe->objectCreationSourceLocation(object));
             problem.problemId = QStringLiteral("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck.Parent.%1")
                     .arg(QString::number(reinterpret_cast<quintptr>(object)),
                          QString::number(reinterpret_cast<quintptr>(parent)));
