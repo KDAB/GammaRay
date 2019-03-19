@@ -35,6 +35,7 @@ using namespace GammaRay;
 
 JsonPropertyAdaptor::JsonPropertyAdaptor(QObject *parent)
     : PropertyAdaptor(parent)
+    , m_isObject(false)
 {
 }
 
