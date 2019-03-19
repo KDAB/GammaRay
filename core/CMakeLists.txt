@@ -53,6 +53,7 @@ set(gammaray_srcs
   sequentialpropertyadaptor.cpp
   objectinstance.cpp
   propertyadaptorfactory.cpp
+  jsonpropertyadaptor.cpp
 
   paintbuffer.cpp
   paintbuffermodel.cpp
