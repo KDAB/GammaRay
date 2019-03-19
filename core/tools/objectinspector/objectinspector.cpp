@@ -254,7 +254,7 @@ void ObjectInspector::scanForThreadAffinityIssues()
             ProblemCollector::addProblem(problem);
         }
 
-        if (parent->inherits("QThread") && object->thread() != object->parent()) {
+        if (qobject_cast<QThread*>(parent) && object->thread() != object->parent()) {
             Problem problem;
             problem.severity = Problem::Warning;
             problem.description = QStringLiteral("The object %1 has thread %2 as parent, but doesn't have affinity with it.").arg(objectName, parentName);
