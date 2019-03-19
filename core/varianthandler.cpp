@@ -54,6 +54,7 @@
 #include <QVector3D>
 #include <QVector4D>
 #include <QJsonObject>
+#include <QJsonArray>
 
 using namespace GammaRay;
 
@@ -330,6 +331,46 @@ QString VariantHandler::displayString(const QVariant &value)
             return QStringLiteral("<empty>");
         } else {
             return QStringLiteral("<%1 entries>").arg(size);
+        }
+    }
+
+    if (value.userType() == qMetaTypeId<QJsonArray>()) {
+        int size = value.value<QJsonArray>().size();
+        if (size == 0) {
+            return QStringLiteral("<empty>");
+        } else {
+            return QStringLiteral("<%1 entries>").arg(size);
+        }
+    }
+
+    if (value.userType() == qMetaTypeId<QJsonValue>()) {
+
+        QJsonValue v = value.value<QJsonValue>();
+
+        if (v.isBool()) {
+            return v.toBool() ? QStringLiteral("true") : QStringLiteral("false");
+        } else if (v.isDouble()) {
+            return QString::number(v.toDouble());
+        } else if(v.isNull()) {
+            return QStringLiteral("null");
+        } else if (v.isArray()) {
+            int size = v.toArray().size();
+            if (size == 0) {
+                return QStringLiteral("<empty>");
+            } else {
+                return QStringLiteral("<%1 entries>").arg(size);
+            }
+        } else if (v.isObject()) {
+            int size = v.toObject().size();
+            if (size == 0) {
+                return QStringLiteral("<empty>");
+            } else {
+                return QStringLiteral("<%1 entries>").arg(size);
+            }
+        } else if (v.isString()) {
+            return v.toString();
+        } else {
+            return QStringLiteral("undefined");
         }
     }
 
