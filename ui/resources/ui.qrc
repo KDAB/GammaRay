@@ -142,6 +142,13 @@
         <file>gammaray/ui/dark/icons/legend@2x.png</file>
         <file>gammaray/ui/dark/icons/legend@3x.png</file>
 
+        <file>gammaray/ui/dark/icons/lock.png</file>
+        <file>gammaray/ui/dark/icons/lock@2x.png</file>
+        <file>gammaray/ui/dark/icons/lock@3x.png</file>
+        <file>gammaray/ui/dark/icons/lock-open.png</file>
+        <file>gammaray/ui/dark/icons/lock-open@2x.png</file>
+        <file>gammaray/ui/dark/icons/lock-open@3x.png</file>
+
         <file>gammaray/ui/dark/icons/measure-pixels.png</file>
         <file>gammaray/ui/dark/icons/measure-pixels@2x.png</file>
         <file>gammaray/ui/dark/icons/measure-pixels@3x.png</file>

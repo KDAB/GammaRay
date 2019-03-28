@@ -29,6 +29,8 @@
 #include "clientnetworkreplymodel.h"
 #include "networkreplymodeldefs.h"
 
+#include <ui/uiresources.h>
+
 #include <QApplication>
 #include <QIcon>
 #include <QNetworkAccessManager>
@@ -81,11 +83,10 @@ QVariant ClientNetworkReplyModel::data(const QModelIndex& index, int role) const
             case NetworkReplyModelColumn::UrlColumn:
             {
                 const auto url = QIdentityProxyModel::data(index, Qt::DisplayRole).toString();
-                // TODO add our own icons for this, we can't rely on the icon theme on !Linux
                 if ((state & NetworkReply::Encrypted) || ((state & NetworkReply::Unencrypted) == 0 && url.startsWith(QLatin1String("https")))) {
-                    return QIcon::fromTheme(QStringLiteral("channel-secure-symbolic"));
+                    return UIResources::themedIcon(QLatin1String("lock.png"));
                 }
-                return QIcon::fromTheme(QStringLiteral("channel-insecure-symbolic"));
+                return UIResources::themedIcon(QLatin1String("lock-open.png"));
             }
         }
     }
