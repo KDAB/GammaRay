@@ -2,7 +2,7 @@
  * This file is part of GammaRay, the Qt application inspection and
  * manipulation tool.
  *
- * Copyright (C) 2014-2018 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+ * Copyright (C) 2014-2019 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
  * Author: Filipe Azevedo <filipe.azevedo@kdab.com>
  *
  * Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -116,7 +116,7 @@ private:
     bool m_initialized;
     bool m_settingsAccess;
     bool m_resizing;
-    // Int -> pixels, String -> suffixe dependant (% -> percent else pixels)
+    // Int -> pixels, String -> suffix dependent (% -> percent else pixels)
     // The UISizeVector is logical index based.
     QHash<QString, UISizeVector> m_defaultSplitterSizes;
     QHash<QString, UISizeVector> m_defaultHeaderSizes;
