@@ -2,10 +2,11 @@ GammaRay COMMERCIAL LICENSE AGREEMENT
 FOR COMMERCIAL VERSIONS
 Version 1.0
 
-Copyright of this license text (C) 2001 Trolltech AS and (C) 2002-2018
-Klarälvdalens Datakonsult AB.  All rights reserved. License text used
-with kind permission of Trolltech AS. The software and accompanying
-material is Copyright (C) 2010-2018 Klarälvdalens Datakonsult AB.
+Copyright of this license text (C) 2001 Trolltech AS and
+Copyright (C) 2002-2019 Klarälvdalens Datakonsult AB.
+All rights reserved. License text used with kind permission
+of Trolltech AS. The software and accompanying material is
+Copyright (C) 2010-2019 Klarälvdalens Datakonsult AB.
 
 This non-exclusive non-transferable License Agreement ("Agreement") is
 between you ("Licensee") and Klarälvdalens Datakonsult AB (KDAB), and
