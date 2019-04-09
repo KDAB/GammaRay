@@ -30,7 +30,7 @@ SKIP .*\.qhcp\.cmake
 #no need to check 3rdparty stuff
 SKIP /3rdparty/
 #nor Nokia's stuff
-SKIP /processlist_unix.cpp|/processlist_win.cpp|/processlist.h
+SKIP /processlist_unix.cpp|/processlist_win.cpp|/processlist.h|/compat/qasconst.h
 #if you have a build subdir, skip it
 SKIP /build-
 SKIP Doxyfile.cmake
