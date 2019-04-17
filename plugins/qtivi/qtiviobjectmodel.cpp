@@ -41,8 +41,6 @@
 #if defined(QT_IVIMEDIA_LIB)
 #include <QIviAmFmTuner>
 #endif
-#include <QIviProperty>
-#include <private/qiviproperty_p.h>
 #include <private/qiviabstractfeature_p.h>
 #include <private/qividefaultpropertyoverrider_p.h>
 
