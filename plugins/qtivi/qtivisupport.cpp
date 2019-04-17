@@ -40,7 +40,6 @@
 #include <QIviAbstractFeature>
 #include <QIviServiceObject>
 #include <QIviZonedFeatureInterface>
-#include <QIviProperty>
 
 #include <QDebug>
 

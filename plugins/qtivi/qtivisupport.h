@@ -30,7 +30,7 @@
 
 #include <core/toolfactory.h>
 
-#include <QIviProperty>
+#include <QIviServiceObject>
 
 namespace GammaRay {
 
@@ -41,7 +41,7 @@ public:
     explicit QtIviSupport(Probe *probe, QObject *parent = nullptr);
 };
 
-class QtIviSupportFactory : public QObject, public StandardToolFactory<QIviProperty, QtIviSupport>
+class QtIviSupportFactory : public QObject, public StandardToolFactory<QIviServiceObject, QtIviSupport>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)
