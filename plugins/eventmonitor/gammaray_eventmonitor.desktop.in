@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Style
+X-GammaRay-Id=gammaray_eventmonitor
+X-GammaRay-Types=QObject;
+X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
+Exec=${plugin_exec}

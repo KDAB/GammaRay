@@ -39,6 +39,7 @@
  */
 #ifdef QT_CORE_LIB
 Q_IMPORT_PLUGIN(CodecBrowserFactory)
+Q_IMPORT_PLUGIN(EventMonitorFactory)
 Q_IMPORT_PLUGIN(SignalMonitorFactory)
 Q_IMPORT_PLUGIN(StateMachineViewerFactory)
 Q_IMPORT_PLUGIN(TimerTopFactory)
