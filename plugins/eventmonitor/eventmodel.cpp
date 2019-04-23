@@ -72,7 +72,7 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
         case EventModelColumn::Time:
-            return event.time.toString();
+            return event.time.toString("hh:mm:ss.zzz");
         case EventModelColumn::Type:
         {
             static int eventEnumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
@@ -81,8 +81,6 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
         }
         case EventModelColumn::Spontaneous:
             return event.spontaneous;
-        case EventModelColumn::Accepted:
-            return event.accepted;
         case EventModelColumn::Receiver:
             return reinterpret_cast<qint64>(event.receiver);  // FIXME: show link to object
         }
@@ -94,8 +92,6 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
             return event.type;
         case EventModelColumn::Spontaneous:
             return event.spontaneous;
-        case EventModelColumn::Accepted:
-            return event.accepted;
         case EventModelColumn::Receiver:
             return reinterpret_cast<qint64>(event.receiver);  // FIXME: how to sort objects?
         }
@@ -114,8 +110,6 @@ QVariant EventModel::headerData(int section, Qt::Orientation orientation, int ro
             return tr("Type");
         case EventModelColumn::Spontaneous:
             return tr("Spontaneous");
-        case EventModelColumn::Accepted:
-            return tr("Accepted");
         case EventModelColumn::Receiver:
             return tr("Receiver");
         }
