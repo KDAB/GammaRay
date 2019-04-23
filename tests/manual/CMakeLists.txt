@@ -70,6 +70,7 @@ if(GAMMARAY_STATIC_PROBE)
     Qt5::Widgets
     gammaray_actioninspector_plugin
     gammaray_codecbrowser_plugin
+    gammaray_eventmonitor_plugin
     gammaray_guisupport
     gammaray_fontbrowser_plugin
     gammaray_sceneinspector_plugin

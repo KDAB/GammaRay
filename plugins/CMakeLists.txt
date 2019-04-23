@@ -1,4 +1,5 @@
 add_subdirectory(codecbrowser)
+add_subdirectory(eventmonitor)
 add_subdirectory(fontbrowser)
 add_subdirectory(kjobtracker)
 add_subdirectory(localeinspector)
