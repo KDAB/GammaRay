@@ -46,8 +46,13 @@ static bool eventCallback(void **data)
 {
     QEvent *event = reinterpret_cast<QEvent*>(data[1]);
     QObject *receiver = reinterpret_cast<QObject*>(data[0]);
+
     if (!event || !receiver) {
         qWarning() << "Event or receiver is invalid";
+        return false;
+    }
+
+    if (Probe::instance()->filterObject(receiver)) {
         return false;
     }
 
@@ -55,7 +60,6 @@ static bool eventCallback(void **data)
     eventData.time = QTime::currentTime();
     eventData.type = event->type();
     eventData.spontaneous = event->spontaneous();
-    eventData.accepted = event->isAccepted();
     eventData.receiver = receiver;
 
     if (s_model) {

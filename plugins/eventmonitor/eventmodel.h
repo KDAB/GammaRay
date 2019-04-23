@@ -40,7 +40,6 @@ struct EventData {
     QTime time;
     QEvent::Type type;
     bool spontaneous;
-    bool accepted;
     QObject* receiver;
 };
 }

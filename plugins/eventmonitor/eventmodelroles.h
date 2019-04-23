@@ -46,7 +46,6 @@ enum Columns {
     Time,
     Type,
     Spontaneous,
-    Accepted,
     Receiver,
     COUNT
 };
