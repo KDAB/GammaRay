@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Graphics Scenes
-X-GammaRay-Id=gammaray_sceneinspector
-X-GammaRay-Types=QGraphicsScene;
-X-GammaRay-SelectableTypes="QGraphicsObject;QGraphicsItem"
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=${plugin_exec}

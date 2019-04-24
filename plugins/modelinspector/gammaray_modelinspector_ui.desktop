@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Models
-X-GammaRay-Id=gammaray_modelinspector
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
-Exec=${plugin_exec}

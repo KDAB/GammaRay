@@ -36,9 +36,7 @@
 #include <QFileInfo>
 #include <QLibrary>
 #include <QLocale>
-#include <QSettings>
 #include <QCoreApplication>
-
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
@@ -57,10 +55,6 @@ PluginInfo::PluginInfo(const QString& path)
     // OSX has broken QLibrary::isLibrary() - QTBUG-50446
     if (QLibrary::isLibrary(path) || path.endsWith(Paths::pluginExtension(), Qt::CaseInsensitive))
         initFromJSON(path);
-    else if (path.endsWith(QLatin1String(".desktop")))
-        initFromDesktopFile(path);
-    else
-        qDebug("%s: %s not a library, nor a .desktop file.", Q_FUNC_INFO, qPrintable(path));
 }
 
 PluginInfo::PluginInfo(const QStaticPlugin &staticPlugin)
@@ -198,42 +192,4 @@ void PluginInfo::initFromJSON(const QJsonObject &metaData)
     m_selectableTypes.reserve(selectableTypes.size());
     for (auto &&selectable : selectableTypes)
         m_selectableTypes.push_back(selectable.toString().toUtf8());
-}
-
-void PluginInfo::initFromDesktopFile(const QString &path)
-{
-    const QFileInfo fi(path);
-    QSettings desktopFile(path, QSettings::IniFormat);
-    desktopFile.beginGroup(QStringLiteral("Desktop Entry"));
-
-    m_id = desktopFile.value(QStringLiteral("X-GammaRay-Id")).toString();
-    m_interface
-        = desktopFile.value(QStringLiteral("X-GammaRay-ServiceTypes"), QString()).toString();
-    m_supportedTypes = desktopFile.value(QStringLiteral("X-GammaRay-Types")).toString().split(QLatin1Char(
-                                                                                                  ';'),
-                                                                                              QString::SkipEmptyParts);
-    m_name = desktopFile.value(QStringLiteral("Name")).toString();
-    m_remoteSupport = desktopFile.value(QStringLiteral("X-GammaRay-Remote"), true).toBool();
-    m_hidden = desktopFile.value(QStringLiteral("Hidden"), false).toBool();
-
-    const auto selectable
-        = desktopFile.value(QStringLiteral("X-GammaRay-SelectableTypes")).toString().split(QLatin1Char(
-                                                                                               ';'),
-                                                                                           QString::SkipEmptyParts);
-    m_selectableTypes.reserve(selectable.size());
-    for (const auto &t : selectable)
-        m_selectableTypes.push_back(t.toUtf8());
-
-    const QString dllBaseName = desktopFile.value(QStringLiteral("Exec")).toString();
-    if (dllBaseName.isEmpty())
-        return;
-
-    foreach (const QString &entry,
-             fi.dir().entryList(QStringList(dllBaseName + QLatin1Char('*')), QDir::Files)) {
-        const QString pluginPath = fi.dir().absoluteFilePath(entry);
-        if (QLibrary::isLibrary(pluginPath)) {
-            m_path = pluginPath;
-            break;
-        }
-    }
 }

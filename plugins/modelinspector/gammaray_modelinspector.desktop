@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Models
-X-GammaRay-Id=gammaray_modelinspector
-X-GammaRay-Types="QAbstractItemModel;QItemSelectionModel"
-X-GammaRay-SelectableTypes="QAbstractItemModel;QItemSelectionModel"
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=${plugin_exec}

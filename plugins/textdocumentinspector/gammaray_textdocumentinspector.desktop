@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Text Documents
-X-GammaRay-Id=gammaray_textdocumentinspector
-X-GammaRay-Types="QTextDocument;"
-X-GammaRay-SelectableTypes="QTextDocument;QTextObject;QAbstractTextDocumnetLayout"
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=${plugin_exec}

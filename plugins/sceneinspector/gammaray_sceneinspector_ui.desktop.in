@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Graphics Scenes
-X-GammaRay-Id=gammaray_sceneinspector
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
-Exec=${plugin_exec}

@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Text Codecs
-X-GammaRay-Id=gammaray_codecbrowser
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
-Exec=${plugin_exec}

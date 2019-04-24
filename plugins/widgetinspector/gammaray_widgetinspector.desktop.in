@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Widgets
-X-GammaRay-Id=gammaray_widgetinspector
-X-GammaRay-Types="QWidget;QApplication"
-X-GammaRay-SelectableTypes="QWidget;QLayout"
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=${plugin_exec}

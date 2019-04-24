@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Gui Support
-Hidden=true
-X-GammaRay-Id=gammaray_guisupport
-X-GammaRay-Types="QObject;"
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=${plugin_exec}

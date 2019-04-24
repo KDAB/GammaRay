@@ -67,7 +67,6 @@ private:
     void init();
     void initFromJSON(const QString &path);
     void initFromJSON(const QJsonObject& metaData);
-    void initFromDesktopFile(const QString &path);
 
     QString m_path;
     QStaticPlugin m_staticPlugin;

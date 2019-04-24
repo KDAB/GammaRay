@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Style
-X-GammaRay-Id=gammaray_styleinspector
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
-Exec=${plugin_exec}

@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Object Visualization
-X-GammaRay-Id=gammaray_objectvisualizer
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
-Exec=${plugin_exec}

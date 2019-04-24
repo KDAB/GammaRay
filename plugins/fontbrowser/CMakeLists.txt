@@ -9,7 +9,6 @@ set(gammaray_fontbrowser_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_fontbrowser_plugin
-  DESKTOP gammaray_fontbrowser.desktop.in
   JSON gammaray_fontbrowser.json
   SOURCES ${gammaray_fontbrowser_plugin_srcs}
 )
@@ -28,7 +27,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_fontbrowser_ui_plugin
-    DESKTOP gammaray_fontbrowser_ui.desktop.in
     JSON gammaray_fontbrowser.json
     SOURCES ${gammaray_fontbrowser_plugin_ui_srcs}
   )

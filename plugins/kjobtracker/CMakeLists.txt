@@ -8,32 +8,22 @@ set_package_properties(KF5CoreAddons PROPERTIES
 
 # probe part
 if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
-if(KDE4_FOUND OR KF5CoreAddons_FOUND)
+if(KF5CoreAddons_FOUND)
   set(gammaray_kjob_plugin_srcs
     kjobtracker.cpp
     kjobmodel.cpp
   )
 
   gammaray_add_plugin(gammaray_kjobtracker_plugin
-    DESKTOP gammaray_kjobtracker.desktop.in
     JSON gammaray_kjobtracker.json
     SOURCES ${gammaray_kjob_plugin_srcs}
   )
 
-  if(KDE4_FOUND)
-    target_compile_definitions(gammaray_kjobtracker_plugin PRIVATE ${KDE4_DEFINITIONS})
-    target_include_directories(gammaray_kjobtracker_plugin PRIVATE ${KDE4_INCLUDES})
-    target_link_libraries(gammaray_kjobtracker_plugin
-      ${KDE4_KDECORE_LIBS}
-      gammaray_core
-    )
-  else()
-    target_link_libraries(gammaray_kjobtracker_plugin
+  target_link_libraries(gammaray_kjobtracker_plugin
       gammaray_core
       KF5::CoreAddons
       Qt5::Gui
-    )
-  endif()
+  )
 endif()
 endif()
 
@@ -44,7 +34,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_kjobtracker_ui_plugin
-    DESKTOP gammaray_kjobtracker_ui.desktop.in
     JSON gammaray_kjobtracker.json
     SOURCES ${gammaray_kjob_ui_plugin_srcs}
   )

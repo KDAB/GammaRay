@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=KJobs
-X-GammaRay-Id=gammaray_kjobtracker
-X-GammaRay-Types=KJob;
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=${plugin_exec}

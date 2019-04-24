@@ -12,7 +12,6 @@ set(gammaray_models_srcs
 qt5_wrap_cpp(gammaray_models_srcs ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.h)
 
 gammaray_add_plugin(gammaray_modelinspector
-  DESKTOP gammaray_modelinspector.desktop
   JSON gammaray_modelinspector.json
   SOURCES ${gammaray_models_srcs}
 )
@@ -34,7 +33,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_modelinspector_ui
-    DESKTOP gammaray_modelinspector_ui.desktop
     JSON gammaray_modelinspector.json
     SOURCES ${gammaray_models_ui_srcs}
   )

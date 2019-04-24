@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=Text Documents
-X-GammaRay-Id=gammaray_textdocumentinspector
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolUiFactory
-Exec=${plugin_exec}

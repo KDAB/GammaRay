@@ -5,7 +5,7 @@ set(gammaray_guisupport_srcs
 
   ui.qrc
 )
-gammaray_add_plugin(gammaray_guisupport JSON gammaray_guisupport.json DESKTOP gammaray_guisupport.desktop SOURCES ${gammaray_guisupport_srcs})
+gammaray_add_plugin(gammaray_guisupport JSON gammaray_guisupport.json SOURCES ${gammaray_guisupport_srcs})
 target_link_libraries(gammaray_guisupport gammaray_core)
 target_include_directories(gammaray_guisupport SYSTEM PRIVATE ${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 target_link_libraries(gammaray_guisupport Qt5::Gui)
@@ -17,6 +17,6 @@ if(GAMMARAY_BUILD_UI)
     guisupportuifactory.cpp
     paintanalyzertab.cpp
   )
-  gammaray_add_plugin(gammaray_guisupport_ui JSON gammaray_guisupport.json DESKTOP gammaray_guisupport_ui.desktop SOURCES ${gammaray_guisupport_ui_srcs})
+  gammaray_add_plugin(gammaray_guisupport_ui JSON gammaray_guisupport.json SOURCES ${gammaray_guisupport_ui_srcs})
   target_link_libraries(gammaray_guisupport_ui gammaray_ui)
 endif()

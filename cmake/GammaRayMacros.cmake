@@ -35,7 +35,7 @@ include(CMakeParseArguments)
 # - SOURCES <files> - the plugin sources
 #
 macro(gammaray_add_plugin _target_name)
-  set(oneValueArgs JSON DESKTOP)
+  set(oneValueArgs JSON)
   set(multiValueArgs SOURCES)
   cmake_parse_arguments(_gammaray_add_plugin "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -84,14 +84,6 @@ macro(gammaray_add_plugin _target_name)
   gammaray_set_rpath(${_target_name} ${PROBE_PLUGIN_INSTALL_DIR})
 
   install(TARGETS ${_target_name} DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
-  if(NOT ${Qt5Core_FOUND} AND _gammaray_add_plugin_DESKTOP)
-    set(plugin_exec ${_target_name}${GAMMARAY_PROBE_ABI_POSTFIX})
-    if(GAMMARAY_INSTALL_QT_LAYOUT)
-      set(plugin_exec ${_target_name}-${GAMMARAY_PROBE_ABI}${GAMMARAY_PROBE_ABI_POSTFIX})
-    endif()
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/${_gammaray_add_plugin_DESKTOP}" "${_build_target_dir}/${plugin_exec}.desktop")
-    install(FILES "${_build_target_dir}/${plugin_exec}.desktop" DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
-  endif()
   if(MSVC)
     install(FILES "$<TARGET_PDB_FILE_DIR:${_target_name}>/$<TARGET_PDB_FILE_NAME:${_target_name}>" DESTINATION ${PROBE_PLUGIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
   endif()

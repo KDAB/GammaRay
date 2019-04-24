@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=Script Engines
-X-GammaRay-Id=gammaray_scriptenginedebugger
-X-GammaRay-Types=QScriptEngine;
-X-GammaRay-ServiceTypes=com.kdab.GammaRay.ToolFactory
-Exec=${plugin_exec}
-X-GammaRay-Remote=false

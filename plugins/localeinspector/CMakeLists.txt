@@ -12,7 +12,6 @@ list(APPEND gammaray_localeinspector_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_localeinspector_plugin
-    DESKTOP gammaray_localeinspector.desktop.in
     JSON gammaray_localeinspector.json
     SOURCES ${gammaray_localeinspector_plugin_srcs}
 )
@@ -31,7 +30,6 @@ if(GAMMARAY_BUILD_UI)
     )
 
     gammaray_add_plugin(gammaray_localeinspector_ui_plugin
-        DESKTOP gammaray_localeinspector_ui.desktop.in
         JSON gammaray_localeinspector.json
         SOURCES ${gammaray_localeinspector_plugin_ui_srcs}
     )

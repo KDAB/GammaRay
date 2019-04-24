@@ -5,7 +5,7 @@ set(gammaray_objectvisualizer_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_objectvisualizer_plugin
-  DESKTOP gammaray_objectvisualizer.desktop.in
+  JSON gammaray_objectvisualizer.json
   SOURCES ${gammaray_objectvisualizer_plugin_srcs}
 )
 
@@ -55,7 +55,7 @@ if(VTK_FOUND AND VTK_QT_VERSION EQUAL 5 AND GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_objectvisualizer_ui_plugin
-    DESKTOP gammaray_objectvisualizer_ui.desktop.in
+    JSON gammaray_objectvisualizer.json
     SOURCES ${gammaray_objectvisualizer_ui_plugin_srcs}
   )
   target_include_directories(gammaray_objectvisualizer_ui_plugin SYSTEM PUBLIC ${VTK_INCLUDE_DIRS})
