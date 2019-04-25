@@ -30,7 +30,6 @@
 
 #include "modelmodel.h"
 #include "modelcellmodel.h"
-#include "modeltester.h"
 #include "modelcontentproxymodel.h"
 #include "selectionmodelmodel.h"
 
@@ -52,7 +51,6 @@ ModelInspector::ModelInspector(Probe *probe, QObject *parent)
     , m_selectionModelsSelectionModel(nullptr)
     , m_modelContentSelectionModel(nullptr)
     , m_modelContentProxyModel(new ModelContentProxyModel(this))
-    , m_modelTester(nullptr)
 {
     auto modelModelSource = new ModelModel(this);
     connect(probe, &Probe::objectCreated, modelModelSource, &ModelModel::objectAdded);
@@ -82,9 +80,6 @@ ModelInspector::ModelInspector(Probe *probe, QObject *parent)
 
     m_cellModel = new ModelCellModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelCellModel"), m_cellModel);
-
-    m_modelTester = new ModelTester(this);
-    connect(probe, &Probe::objectCreated, m_modelTester, &ModelTester::objectAdded);
 
     if (m_probe->needsObjectDiscovery())
         connect(m_probe, &Probe::objectCreated, this, &ModelInspector::objectCreated);
