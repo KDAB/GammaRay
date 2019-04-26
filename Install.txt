@@ -74,23 +74,6 @@ to remove all forwards
 You'll find more information on this in the wiki:
 https://github.com/KDAB/GammaRay/wiki/Cross-compiling-GammaRay
 
-== Building with Private Qt Headers (Qt4 only) ==
-To build against private Qt headers (necessary for painter debugging/profiling)
-you must have a developer build version of Qt available (i.e. Qt must be
-configured using the -developer-build option).
-
-Make sure the qmake found first in your execute comes from this build version.
-For example, if your Qt build is in /data/Qt/4.8 then:
- % export PATH=/data/Qt/4.8/bin:$PATH # on Linux using bash
-
-
-== Force a Qt4 build ==
-On systems with both Qt4 and Qt5 available, the CMake buildsystem will always
-attempt to use Qt5. To force a Qt4 build, pass -DGAMMARAY_ENFORCE_QT4_BUILD=true
-to CMake, as in:
-  % cmake -DGAMMARAY_ENFORCE_QT4_BUILD=true
-
-
 == Force a probe only build ==
 If you already built GammaRay in the past and that you want to support more probes,
 you don't need to rebuild entirely GammaRay for this specific Qt version.
