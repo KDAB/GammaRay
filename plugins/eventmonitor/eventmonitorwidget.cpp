@@ -29,6 +29,11 @@
 #include "eventmonitorwidget.h"
 #include "ui_eventmonitorwidget.h"
 
+#include "eventmodelroles.h"
+
+#include <ui/clientpropertymodel.h>
+#include <ui/propertyeditor/propertyeditordelegate.h>
+
 #include <common/objectbroker.h>
 
 using namespace GammaRay;
@@ -39,7 +44,15 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->eventTree->setDeferredResizeMode(EventModelColumn::Time, QHeaderView::ResizeToContents);
+    ui->eventTree->setDeferredResizeMode(EventModelColumn::Type, QHeaderView::ResizeToContents);
     ui->eventTree->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventModel")));
+    ui->eventTree->setSelectionModel(ObjectBroker::selectionModel(ui->eventTree->model()));
+
+    auto clientPropModel = new ClientPropertyModel(this);
+    clientPropModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventPropertyModel")));
+    ui->eventInspector->setModel(clientPropModel);
+    ui->eventInspector->setItemDelegate(new PropertyEditorDelegate(this));
 }
 
 EventMonitorWidget::~EventMonitorWidget()

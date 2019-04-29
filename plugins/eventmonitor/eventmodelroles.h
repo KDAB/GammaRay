@@ -36,7 +36,7 @@ namespace GammaRay {
 namespace EventModelRole {
 enum Role {
     Sort = UserRole + 1,     // not for remoting
-    Type
+    AttributesRole
 };
 }
 

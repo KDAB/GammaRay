@@ -28,13 +28,19 @@
 
 #include "eventmonitor.h"
 
+#include "eventmodelroles.h"
+
+#include <core/aggregatedpropertymodel.h>
 #include <core/metaobjectrepository.h>
 #include <core/metaobject.h>
+#include <core/objectinstance.h>
 #include <core/remote/serverproxymodel.h>
 
 #include <common/objectbroker.h>
+#include <common/objectmodel.h>
 
 #include <QDebug>
+#include <QItemSelectionModel>
 #include <QMutex>
 #include <QSortFilterProxyModel>
 
@@ -147,6 +153,7 @@ static bool eventCallback(void **data)
 EventMonitor::EventMonitor(Probe *probe, QObject *parent)
     : QObject(parent)
     , m_eventModel(new EventModel(this))
+    , m_eventPropertyModel(new AggregatedPropertyModel(this))
 {
     Q_ASSERT(s_model == nullptr);
     s_model = m_eventModel;
@@ -156,6 +163,22 @@ EventMonitor::EventMonitor(Probe *probe, QObject *parent)
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     proxy->setSourceModel(m_eventModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventModel"), proxy);
+
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventPropertyModel"), m_eventPropertyModel);
+
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
+    connect(selectionModel, &QItemSelectionModel::selectionChanged,
+            this, &EventMonitor::eventSelected);
+}
+
+void EventMonitor::eventSelected(const QItemSelection &selection)
+{
+    if (selection.isEmpty())
+        return;
+    const QModelIndex index = selection.first().topLeft();
+    QVariant eventAttributes = QVariant(index.data(EventModelRole::AttributesRole).value<QVariantMap>());
+
+    m_eventPropertyModel->setObject(eventAttributes);
 }
 
 EventMonitor::~EventMonitor() = default;
