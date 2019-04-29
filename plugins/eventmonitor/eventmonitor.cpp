@@ -104,6 +104,8 @@ QString eventTypeToClassName(QEvent::Type type) {
         return "QChildEvent";
     case QEvent::Timer:
         return "QTimerEvent";
+    case QEvent::MetaCall:
+        return "QMetaCallEvent";  // about to change in 5.14? see https://code.qt.io/cgit/qt/qtbase.git/commit/?h=dev&id=999c26dd83ad37fcd7a2b2fc62c0281f38c8e6e0
     default:
         return "";
     }

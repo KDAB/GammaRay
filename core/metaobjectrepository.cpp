@@ -37,6 +37,7 @@
 #include <QEasingCurve>
 #include <QFile>
 #include <QObject>
+#include <private/qobject_p.h>
 #include <QSortFilterProxyModel>
 #include <QStringList>
 #include <QThread>
@@ -184,6 +185,9 @@ void MetaObjectRepository::initIOTypes()
     MO_ADD_METAOBJECT1(QSaveFile, QFileDevice);
 }
 
+Q_DECLARE_METATYPE(const QObject*)
+Q_DECLARE_METATYPE(void**)
+
 void MetaObjectRepository::initQEventTypes()
 {
     MetaObject *mo = nullptr;
@@ -206,6 +210,12 @@ void MetaObjectRepository::initQEventTypes()
 
     MO_ADD_METAOBJECT1(QDeferredDeleteEvent, QEvent);
     MO_ADD_PROPERTY_RO(QDeferredDeleteEvent, loopLevel);
+
+    MO_ADD_METAOBJECT1(QMetaCallEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QMetaCallEvent, id);
+    MO_ADD_PROPERTY_RO(QMetaCallEvent, sender);
+    MO_ADD_PROPERTY_RO(QMetaCallEvent, signalId);
+//    MO_ADD_PROPERTY_RO(QMetaCallEvent, args);  // unusable atm because type is void**
 }
 
 MetaObjectRepository *MetaObjectRepository::instance()

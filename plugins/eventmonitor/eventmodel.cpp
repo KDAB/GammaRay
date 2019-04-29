@@ -29,9 +29,12 @@
 #include "eventmodel.h"
 #include "eventmodelroles.h"
 
+#include <core/probe.h>
+#include <core/util.h>
 #include <core/varianthandler.h>
 
 #include <QMetaEnum>
+#include <QMutexLocker>
 #include <QPoint>
 #include <QPointF>
 #include <QVariantMap>
@@ -67,7 +70,8 @@ int EventModel::rowCount(const QModelIndex &parent) const
         return m_events.size();
 
     if (parent.internalId() == TopLevelId && parent.column() == 0)
-        return m_events.at(parent.row()).attributes.size();
+        // TODO: add event propagation history as children
+        return 0;
 
     return 0;
 }
@@ -91,23 +95,18 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
             case EventModelColumn::Time:
                 return event.time.toString("hh:mm:ss.zzz");
             case EventModelColumn::Type:
-            {
-                static int eventEnumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
-                QString eventTypeName = QEvent::staticMetaObject.enumerator(eventEnumIndex).valueToKey(event.type);
-                return eventTypeName.isEmpty() ? QString::number(event.type) : eventTypeName;
-            }
-            case EventModelColumn::Value:
-                return QVariant();
+                return VariantHandler::displayString(event.type);
             case EventModelColumn::Receiver:
-                return reinterpret_cast<qint64>(event.receiver);  // FIXME: show link to object
+            {
+                QMutexLocker lock(Probe::objectLock());
+                if (Probe::instance()->isValidObject(event.receiver)) {
+                    return Util::displayString(event.receiver);
+                }
+                return Util::addressToString(event.receiver);
+            }
             }
         } else {
-            switch (index.column()) {
-            case EventModelColumn::Type:
-                return event.attributes.at(index.row()).first;
-            case EventModelColumn::Value:
-                return VariantHandler::displayString(event.attributes.at(index.row()).second);
-            }
+            // TODO: add event propagation history as children
         }
     } else if (role == EventModelRole::Sort) {
         if (index.internalId() == TopLevelId) {
@@ -116,8 +115,6 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
                 return event.time;
             case EventModelColumn::Type:
                 return event.type;
-            case EventModelColumn::Value:
-                return QVariant();
             case EventModelColumn::Receiver:
                 return reinterpret_cast<qint64>(event.receiver);  // FIXME: how to sort objects?
             }
@@ -143,8 +140,6 @@ QVariant EventModel::headerData(int section, Qt::Orientation orientation, int ro
             return tr("Time");
         case EventModelColumn::Type:
             return tr("Type");
-        case EventModelColumn::Value:
-            return tr("Value");
         case EventModelColumn::Receiver:
             return tr("Receiver");
         }

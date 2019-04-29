@@ -45,7 +45,6 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     ui->setupUi(this);
 
     ui->eventTree->setDeferredResizeMode(EventModelColumn::Time, QHeaderView::ResizeToContents);
-    ui->eventTree->setDeferredResizeMode(EventModelColumn::Type, QHeaderView::ResizeToContents);
     ui->eventTree->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventModel")));
     ui->eventTree->setSelectionModel(ObjectBroker::selectionModel(ui->eventTree->model()));
 

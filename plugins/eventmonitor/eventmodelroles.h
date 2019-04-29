@@ -45,7 +45,6 @@ namespace EventModelColumn {
 enum Columns {
     Time,
     Type,
-    Value,
     Receiver,
     COUNT
 };
