@@ -22,14 +22,19 @@ if(Qt5Quick_FOUND)
     quickscenegraphmodel.cpp
     quickpaintanalyzerextension.cpp
     quickscreengrabber.cpp
-    materialextension/materialextension.cpp
-    materialextension/materialshadermodel.cpp
-    materialextension/qquickopenglshadereffectmaterialadaptor.cpp
-    geometryextension/sggeometryextension.cpp
-    geometryextension/sggeometrymodel.cpp
-    textureextension/textureextension.cpp
-    textureextension/qsgtexturegrabber.cpp
   )
+
+  if(Qt5OpenGL_FOUND)
+    list(APPEND gammaray_quickinspector_srcs
+      materialextension/materialextension.cpp
+      materialextension/materialshadermodel.cpp
+      materialextension/qquickopenglshadereffectmaterialadaptor.cpp
+      geometryextension/sggeometryextension.cpp
+      geometryextension/sggeometrymodel.cpp
+      textureextension/textureextension.cpp
+      textureextension/qsgtexturegrabber.cpp
+    )
+  endif()
 
   gammaray_add_plugin(gammaray_quickinspector
     JSON gammaray_quickinspector.json
@@ -70,15 +75,19 @@ if(Qt5Quick_FOUND)
       quickscenecontrolwidget.cpp
       quickoverlaylegend.cpp
       gridsettingswidget.cpp
+    )
 
-      materialextension/materialextensionclient.cpp
-      materialextension/materialtab.cpp
-      geometryextension/sggeometrytab.cpp
-      geometryextension/sgwireframewidget.cpp
-      textureextension/texturetab.cpp
-      textureextension/textureviewwidget.cpp
-      textureextension/resources.qrc
+    if(Qt5OpenGL_FOUND)
+      list(APPEND gammaray_quickinspector_ui_srcs
+        geometryextension/sggeometrytab.cpp
+        geometryextension/sgwireframewidget.cpp
+        materialextension/materialextensionclient.cpp
+        materialextension/materialtab.cpp
+        textureextension/texturetab.cpp
+        textureextension/textureviewwidget.cpp
+        textureextension/resources.qrc
       )
+    endif()
 
     gammaray_add_plugin(gammaray_quickinspector_ui
       JSON gammaray_quickinspector.json

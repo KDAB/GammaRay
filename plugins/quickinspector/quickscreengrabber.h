@@ -40,7 +40,9 @@
 
 QT_BEGIN_NAMESPACE
 class QQuickWindow;
+#ifndef QT_NO_OPENGL
 class QOpenGLPaintDevice;
+#endif
 class QSGSoftwareRenderer;
 QT_END_NAMESPACE
 
@@ -188,6 +190,7 @@ protected:
     RenderInfo m_renderInfo;
 };
 
+#ifndef QT_NO_OPENGL
 class OpenGLScreenGrabber : public AbstractScreenGrabber
 {
     Q_OBJECT
@@ -206,6 +209,7 @@ private:
     bool m_isGrabbing;
     QMutex m_mutex;
 };
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 class SoftwareScreenGrabber : public AbstractScreenGrabber

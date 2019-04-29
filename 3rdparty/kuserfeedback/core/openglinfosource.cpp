@@ -19,7 +19,7 @@
 #include "openglinfosource_p.h"
 
 #include <QVariant>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0) && !defined(QT_NO_OPENGL)
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QSurfaceFormat>
@@ -42,7 +42,7 @@ QVariant OpenGLInfoSource::data()
 {
     QVariantMap m;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0) && !defined(QT_NO_OPENGL)
     QOpenGLContext context;
     if (context.create()) {
         QWindow window;

@@ -391,6 +391,7 @@ find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
   WebEngineWidgets
   Widgets
   WaylandCompositor
+  OpenGL
 )
 # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
 # so we can retrieve those packages even when installed into a different prefix
