@@ -1,4 +1,4 @@
-/*
+﻿/*
   metaobjectrepository.h
 
   This file is part of GammaRay, the Qt application inspection and
@@ -102,6 +102,7 @@ private:
     void initBuiltInTypes();
     void initQObjectTypes();
     void initIOTypes();
+    void initQEventTypes();
 
 private:
     QHash<QString, MetaObject*> m_metaObjects;

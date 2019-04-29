@@ -49,8 +49,10 @@
 
 #include <QClipboard>
 #include <QIcon>
+#include <QInputEvent>
 #include <QFont>
 #include <QMimeData>
+#include <QMouseEvent>
 #include <QPaintDevice>
 #include <QPainter>
 #include <QPainterPath>
@@ -82,6 +84,11 @@ Q_DECLARE_METATYPE(QPixelFormat::ByteOrder)
 Q_DECLARE_METATYPE(QPixelFormat::ColorModel)
 Q_DECLARE_METATYPE(QPixelFormat::TypeInterpretation)
 Q_DECLARE_METATYPE(QPixelFormat::YUVLayout)
+Q_DECLARE_METATYPE(Qt::MouseButton)
+Q_DECLARE_METATYPE(QFlags<Qt::MouseEventFlag>)
+Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
+Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
+
 
 // QGradient is pseudo-polymorphic, make it introspectable nevertheless
 #define MAKE_GRADIENT_CAST(Type) \
@@ -421,6 +428,99 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QPixelFormat, typeInterpretation);
     MO_ADD_PROPERTY_RO(QPixelFormat, yellowSize);
     MO_ADD_PROPERTY_RO(QPixelFormat, yuvLayout);
+
+    MO_ADD_METAOBJECT1(QInputEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QInputEvent, modifiers);
+    MO_ADD_PROPERTY_RO(QInputEvent, timestamp);
+
+    MO_ADD_METAOBJECT1(QMouseEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QMouseEvent, button);
+    MO_ADD_PROPERTY_RO(QMouseEvent, buttons);
+    MO_ADD_PROPERTY_RO(QMouseEvent, flags);
+    MO_ADD_PROPERTY_RO(QMouseEvent, globalPos);
+    MO_ADD_PROPERTY_RO(QMouseEvent, localPos);
+    MO_ADD_PROPERTY_RO(QMouseEvent, pos);
+    MO_ADD_PROPERTY_RO(QMouseEvent, screenPos);
+    MO_ADD_PROPERTY_RO(QMouseEvent, source);
+    MO_ADD_PROPERTY_RO(QMouseEvent, windowPos);
+
+    MO_ADD_METAOBJECT1(QHoverEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QHoverEvent, posF);
+    MO_ADD_PROPERTY_RO(QHoverEvent, oldPosF);
+
+    MO_ADD_METAOBJECT1(QWheelEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QWheelEvent, pixelDelta);
+    MO_ADD_PROPERTY_RO(QWheelEvent, angleDelta);
+    MO_ADD_PROPERTY_RO(QWheelEvent, delta);
+    MO_ADD_PROPERTY_RO(QWheelEvent, orientation);
+    MO_ADD_PROPERTY_RO(QWheelEvent, posF);
+    MO_ADD_PROPERTY_RO(QWheelEvent, globalPosF);
+    MO_ADD_PROPERTY_RO(QWheelEvent, buttons);
+    MO_ADD_PROPERTY_RO(QWheelEvent, phase);
+    MO_ADD_PROPERTY_RO(QWheelEvent, inverted);
+    MO_ADD_PROPERTY_RO(QWheelEvent, source);
+
+    MO_ADD_METAOBJECT1(QTabletEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QTabletEvent, posF);
+    MO_ADD_PROPERTY_RO(QTabletEvent, globalPosF);
+    MO_ADD_PROPERTY_RO(QTabletEvent, device);
+    MO_ADD_PROPERTY_RO(QTabletEvent, pointerType);
+    MO_ADD_PROPERTY_RO(QTabletEvent, uniqueId);
+    MO_ADD_PROPERTY_RO(QTabletEvent, pressure);
+    MO_ADD_PROPERTY_RO(QTabletEvent, z);
+    MO_ADD_PROPERTY_RO(QTabletEvent, tangentialPressure);
+    MO_ADD_PROPERTY_RO(QTabletEvent, rotation);
+    MO_ADD_PROPERTY_RO(QTabletEvent, xTilt);
+    MO_ADD_PROPERTY_RO(QTabletEvent, yTilt);
+    MO_ADD_PROPERTY_RO(QTabletEvent, button);
+    MO_ADD_PROPERTY_RO(QTabletEvent, buttons);
+
+    MO_ADD_METAOBJECT1(QNativeGestureEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QNativeGestureEvent, gestureType);
+    MO_ADD_PROPERTY_RO(QNativeGestureEvent, value);
+    MO_ADD_PROPERTY_RO(QNativeGestureEvent, localPos);
+    MO_ADD_PROPERTY_RO(QNativeGestureEvent, windowPos);
+    MO_ADD_PROPERTY_RO(QNativeGestureEvent, screenPos);
+    MO_ADD_PROPERTY_RO(QNativeGestureEvent, device);
+
+    MO_ADD_METAOBJECT1(QKeyEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QKeyEvent, key);
+    MO_ADD_PROPERTY_RO(QKeyEvent, modifiers);
+    MO_ADD_PROPERTY_RO(QKeyEvent, text);
+    MO_ADD_PROPERTY_RO(QKeyEvent, isAutoRepeat);
+    MO_ADD_PROPERTY_RO(QKeyEvent, count);
+    MO_ADD_PROPERTY_RO(QKeyEvent, nativeScanCode);
+    MO_ADD_PROPERTY_RO(QKeyEvent, nativeVirtualKey);
+    MO_ADD_PROPERTY_RO(QKeyEvent, nativeModifiers);
+
+    MO_ADD_METAOBJECT1(QFocusEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QFocusEvent, gotFocus);
+    MO_ADD_PROPERTY_RO(QFocusEvent, lostFocus);
+    MO_ADD_PROPERTY_RO(QFocusEvent, reason);
+
+    MO_ADD_METAOBJECT1(QPaintEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QPaintEvent, rect);
+    MO_ADD_PROPERTY_RO(QPaintEvent, region);
+
+    MO_ADD_METAOBJECT1(QMoveEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QMoveEvent, pos);
+    MO_ADD_PROPERTY_RO(QMoveEvent, oldPos);
+
+    MO_ADD_METAOBJECT1(QTouchEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QTouchEvent, device);
+    MO_ADD_PROPERTY_RO(QTouchEvent, target);
+    MO_ADD_PROPERTY_RO(QTouchEvent, touchPoints);  // how to store a list?
+    MO_ADD_PROPERTY_RO(QTouchEvent, window);
+
+//    MO_ADD_METAOBJECT0(QTouchEvent::TouchPoint);
+//    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, device);
+
+    MO_ADD_METAOBJECT1(QEnterEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QEnterEvent, globalPos);
+    MO_ADD_PROPERTY_RO(QEnterEvent, localPos);
+    MO_ADD_PROPERTY_RO(QEnterEvent, pos);
+    MO_ADD_PROPERTY_RO(QEnterEvent, screenPos);
+    MO_ADD_PROPERTY_RO(QEnterEvent, windowPos);
 }
 
 static QString surfaceFormatToString(const QSurfaceFormat &format)

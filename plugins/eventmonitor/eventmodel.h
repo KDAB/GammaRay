@@ -34,13 +34,15 @@
 #include <QTime>
 #include <QVector>
 #include <QEvent>
+#include <QVariant>
+#include <QPair>
 
 namespace GammaRay {
 struct EventData {
     QTime time;
     QEvent::Type type;
-    bool spontaneous;
     QObject* receiver;
+    QVector<QPair<const char *, QVariant>> attributes;
 };
 }
 
@@ -50,7 +52,7 @@ QT_BEGIN_NAMESPACE
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class EventModel : public QAbstractTableModel
+class EventModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
@@ -62,6 +64,9 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
+    QModelIndex index(int row, int column,
+                      const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
 
 public slots:
     void addEvent(const GammaRay::EventData &event);

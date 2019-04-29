@@ -67,6 +67,7 @@ void MetaObjectRepository::initBuiltInTypes()
     m_initialized = true;
     initQObjectTypes();
     initIOTypes();
+    initQEventTypes();
 }
 
 Q_DECLARE_METATYPE(QThread::Priority)
@@ -181,6 +182,30 @@ void MetaObjectRepository::initIOTypes()
     MO_ADD_PROPERTY_RO(QFile, symLinkTarget);
 
     MO_ADD_METAOBJECT1(QSaveFile, QFileDevice);
+}
+
+void MetaObjectRepository::initQEventTypes()
+{
+    MetaObject *mo = nullptr;
+    MO_ADD_METAOBJECT0(QEvent);
+    MO_ADD_PROPERTY_RO(QEvent, isAccepted);
+    MO_ADD_PROPERTY_RO(QEvent, spontaneous);
+    MO_ADD_PROPERTY_RO(QEvent, type);
+
+    MO_ADD_METAOBJECT1(QTimerEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QTimerEvent, timerId);
+
+    MO_ADD_METAOBJECT1(QChildEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QChildEvent, child);
+    MO_ADD_PROPERTY_RO(QChildEvent, added);
+    MO_ADD_PROPERTY_RO(QChildEvent, polished);
+    MO_ADD_PROPERTY_RO(QChildEvent, removed);
+
+    MO_ADD_METAOBJECT1(QDynamicPropertyChangeEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QDynamicPropertyChangeEvent, propertyName);
+
+    MO_ADD_METAOBJECT1(QDeferredDeleteEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QDeferredDeleteEvent, loopLevel);
 }
 
 MetaObjectRepository *MetaObjectRepository::instance()
