@@ -34,8 +34,13 @@
 
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
+class QItemSelection;
+QT_END_NAMESPACE
+
 
 namespace GammaRay {
+class AggregatedPropertyModel;
 
 class EventMonitor : public QObject
 {
@@ -44,9 +49,14 @@ public:
     explicit EventMonitor(Probe *probe, QObject *parent = nullptr);
     ~EventMonitor() override;
 
+private slots:
+    void eventSelected(const QItemSelection &selection);
+
 private:
     EventModel *m_eventModel;
+    AggregatedPropertyModel *m_eventPropertyModel;
 };
+
 
 class EventMonitorFactory : public QObject, public StandardToolFactory<QObject, EventMonitor>
 {

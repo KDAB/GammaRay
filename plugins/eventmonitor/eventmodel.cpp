@@ -34,6 +34,7 @@
 #include <QMetaEnum>
 #include <QPoint>
 #include <QPointF>
+#include <QVariantMap>
 
 using namespace GammaRay;
 
@@ -121,6 +122,14 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
                 return reinterpret_cast<qint64>(event.receiver);  // FIXME: how to sort objects?
             }
         }
+    } else if (role == EventModelRole::AttributesRole) {
+        if (index.internalId() == TopLevelId) {
+            QVariantMap attributesMap;
+            for (const QPair<const char *, QVariant>& pair: event.attributes) {
+                attributesMap.insert(QString::fromUtf8(pair.first), pair.second);
+            }
+            return attributesMap;
+        }
     }
 
     return QVariant();
@@ -152,7 +161,7 @@ QModelIndex EventModel::index(int row, int column, const QModelIndex &parent) co
     if (parent.isValid()) {
         if (row >= m_events.at(parent.row()).attributes.size())
             return QModelIndex();
-        return createIndex(row, column, parent.row());
+        return createIndex(row, column, static_cast<quintptr>(parent.row()));
     }
     return createIndex(row, column, TopLevelId);
 }
@@ -161,5 +170,5 @@ QModelIndex EventModel::parent(const QModelIndex &child) const
 {
     if (!child.isValid() || child.internalId() == TopLevelId)
         return {};
-    return createIndex(child.internalId(), 0, TopLevelId);
+    return createIndex(int(child.internalId()), 0, TopLevelId);
 }
