@@ -88,6 +88,8 @@ Q_DECLARE_METATYPE(Qt::MouseButton)
 Q_DECLARE_METATYPE(QFlags<Qt::MouseEventFlag>)
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
 Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
+Q_DECLARE_METATYPE(Qt::TouchPointState)
+Q_DECLARE_METATYPE(QFlags<QTouchEvent::TouchPoint::InfoFlag>)
 
 
 // QGradient is pseudo-polymorphic, make it introspectable nevertheless
@@ -509,11 +511,23 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QTouchEvent, QInputEvent);
     MO_ADD_PROPERTY_RO(QTouchEvent, device);
     MO_ADD_PROPERTY_RO(QTouchEvent, target);
-    MO_ADD_PROPERTY_RO(QTouchEvent, touchPoints);  // how to store a list?
+    MO_ADD_PROPERTY_RO(QTouchEvent, touchPoints);
     MO_ADD_PROPERTY_RO(QTouchEvent, window);
 
-//    MO_ADD_METAOBJECT0(QTouchEvent::TouchPoint);
-//    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, device);
+    MO_ADD_METAOBJECT0(QTouchEvent::TouchPoint);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, id);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, uniqueId);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, state);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, pos);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, startPos);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, lastPos);
+    // TODO: add other pos values?
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, pressure);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rotation);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, ellipseDiameters);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, velocity);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, flags);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rawScreenPositions);
 
     MO_ADD_METAOBJECT1(QEnterEvent, QEvent);
     MO_ADD_PROPERTY_RO(QEnterEvent, globalPos);
@@ -840,6 +854,13 @@ static const MetaEnum::Value<QPixelFormat::YUVLayout> pixelformat_yuvlayout_tabl
 };
 #undef E
 
+#define E(x) { QTouchEvent::TouchPoint:: x, #x }
+static const MetaEnum::Value<QTouchEvent::TouchPoint::InfoFlags> touch_point_info_flag_table[] = {
+    E(Pen),
+    E(Token)
+};
+#undef E
+
 static QString brushToString(const QBrush &b)
 {
     return VariantHandler::displayString(b.color()) + QLatin1String(", ") + EnumUtil::enumToString(QVariant::fromValue(b.style()));
@@ -944,6 +965,8 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QPixelFormat, ColorModel, pixelformat_colormodel_table);
     ER_REGISTER_ENUM(QPixelFormat, TypeInterpretation, pixelformat_typeinterpretation_table);
     ER_REGISTER_ENUM(QPixelFormat, YUVLayout, pixelformat_yuvlayout_table);
+
+    ER_REGISTER_FLAGS(QTouchEvent::TouchPoint, InfoFlags, touch_point_info_flag_table);
 }
 
 QObject *GuiSupport::targetObject(QObject *object) const

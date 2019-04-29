@@ -128,6 +128,7 @@ static bool eventCallback(void **data)
     eventData.time = QTime::currentTime();
     eventData.type = event->type();
     eventData.receiver = receiver;
+    eventData.attributes << QPair<const char*, QVariant>{"receiver", QVariant::fromValue(receiver)};
 
     QString className = eventTypeToClassName(event->type());
     if (!className.isEmpty()) {
