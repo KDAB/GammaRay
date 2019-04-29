@@ -29,12 +29,18 @@
 #include "eventmodel.h"
 #include "eventmodelroles.h"
 
+#include <core/varianthandler.h>
+
 #include <QMetaEnum>
+#include <QPoint>
+#include <QPointF>
 
 using namespace GammaRay;
 
+static const int TopLevelId = std::numeric_limits<int>::max();
+
 EventModel::EventModel(QObject *parent)
-    : QAbstractTableModel(parent)
+    : QAbstractItemModel(parent)
 {
     qRegisterMetaType<EventData>();
 }
@@ -56,10 +62,13 @@ int EventModel::columnCount(const QModelIndex &parent) const
 
 int EventModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid())
-        return 0;
+    if (!parent.isValid())
+        return m_events.size();
 
-    return m_events.count();
+    if (parent.internalId() == TopLevelId && parent.column() == 0)
+        return m_events.at(parent.row()).attributes.size();
+
+    return 0;
 }
 
 QVariant EventModel::data(const QModelIndex &index, int role) const
@@ -67,33 +76,50 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || index.row() > rowCount() || index.column() > columnCount())
         return QVariant();
 
-    const EventData &event = m_events.at(index.row());
+    int eventIndex = -1;
+    if (index.internalId() == TopLevelId)
+        eventIndex = index.row();
+    else
+        eventIndex = int(index.internalId());
+    Q_ASSERT(eventIndex >= 0 && eventIndex < m_events.size());
+    const EventData &event = m_events.at(eventIndex);
 
     if (role == Qt::DisplayRole) {
-        switch (index.column()) {
-        case EventModelColumn::Time:
-            return event.time.toString("hh:mm:ss.zzz");
-        case EventModelColumn::Type:
-        {
-            static int eventEnumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
-            QString eventTypeName = QEvent::staticMetaObject.enumerator(eventEnumIndex).valueToKey(event.type);
-            return eventTypeName.isEmpty() ? QString::number(event.type) : eventTypeName;
-        }
-        case EventModelColumn::Spontaneous:
-            return event.spontaneous;
-        case EventModelColumn::Receiver:
-            return reinterpret_cast<qint64>(event.receiver);  // FIXME: show link to object
+        if (index.internalId() == TopLevelId) {
+            switch (index.column()) {
+            case EventModelColumn::Time:
+                return event.time.toString("hh:mm:ss.zzz");
+            case EventModelColumn::Type:
+            {
+                static int eventEnumIndex = QEvent::staticMetaObject.indexOfEnumerator("Type");
+                QString eventTypeName = QEvent::staticMetaObject.enumerator(eventEnumIndex).valueToKey(event.type);
+                return eventTypeName.isEmpty() ? QString::number(event.type) : eventTypeName;
+            }
+            case EventModelColumn::Value:
+                return QVariant();
+            case EventModelColumn::Receiver:
+                return reinterpret_cast<qint64>(event.receiver);  // FIXME: show link to object
+            }
+        } else {
+            switch (index.column()) {
+            case EventModelColumn::Type:
+                return event.attributes.at(index.row()).first;
+            case EventModelColumn::Value:
+                return VariantHandler::displayString(event.attributes.at(index.row()).second);
+            }
         }
     } else if (role == EventModelRole::Sort) {
-        switch (index.column()) {
-        case EventModelColumn::Time:
-            return event.time;
-        case EventModelColumn::Type:
-            return event.type;
-        case EventModelColumn::Spontaneous:
-            return event.spontaneous;
-        case EventModelColumn::Receiver:
-            return reinterpret_cast<qint64>(event.receiver);  // FIXME: how to sort objects?
+        if (index.internalId() == TopLevelId) {
+            switch (index.column()) {
+            case EventModelColumn::Time:
+                return event.time;
+            case EventModelColumn::Type:
+                return event.type;
+            case EventModelColumn::Value:
+                return QVariant();
+            case EventModelColumn::Receiver:
+                return reinterpret_cast<qint64>(event.receiver);  // FIXME: how to sort objects?
+            }
         }
     }
 
@@ -108,12 +134,32 @@ QVariant EventModel::headerData(int section, Qt::Orientation orientation, int ro
             return tr("Time");
         case EventModelColumn::Type:
             return tr("Type");
-        case EventModelColumn::Spontaneous:
-            return tr("Spontaneous");
+        case EventModelColumn::Value:
+            return tr("Value");
         case EventModelColumn::Receiver:
             return tr("Receiver");
         }
     }
 
     return QVariant();
+}
+
+QModelIndex EventModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (row < 0 || column < 0 || column >= columnCount())
+        return {};
+
+    if (parent.isValid()) {
+        if (row >= m_events.at(parent.row()).attributes.size())
+            return QModelIndex();
+        return createIndex(row, column, parent.row());
+    }
+    return createIndex(row, column, TopLevelId);
+}
+
+QModelIndex EventModel::parent(const QModelIndex &child) const
+{
+    if (!child.isValid() || child.internalId() == TopLevelId)
+        return {};
+    return createIndex(child.internalId(), 0, TopLevelId);
 }

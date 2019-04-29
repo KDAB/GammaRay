@@ -28,6 +28,8 @@
 
 #include "eventmonitor.h"
 
+#include <core/metaobjectrepository.h>
+#include <core/metaobject.h>
 #include <core/remote/serverproxymodel.h>
 
 #include <common/objectbroker.h>
@@ -40,6 +42,66 @@ using namespace GammaRay;
 
 
 static EventModel *s_model = nullptr;
+
+
+QString eventTypeToClassName(QEvent::Type type) {
+    switch (type) {
+    case QEvent::NonClientAreaMouseMove:
+    case QEvent::NonClientAreaMouseButtonPress:
+    case QEvent::NonClientAreaMouseButtonRelease:
+    case QEvent::NonClientAreaMouseButtonDblClick:
+    case QEvent::MouseButtonDblClick:
+    case QEvent::MouseButtonPress:
+    case QEvent::MouseButtonRelease:
+    case QEvent::MouseMove:
+        return "QMouseEvent";
+    case QEvent::TouchBegin:
+    case QEvent::TouchUpdate:
+    case QEvent::TouchEnd:
+    case QEvent::TouchCancel:
+        return "QTouchEvent";
+    case QEvent::TabletMove:
+    case QEvent::TabletPress:
+    case QEvent::TabletRelease:
+    case QEvent::TabletEnterProximity:
+    case QEvent::TabletLeaveProximity:
+        return "QTabletEvent";
+    case QEvent::NativeGesture:
+        return "QNativeGestureEvent";
+    case QEvent::KeyPress:
+    case QEvent::KeyRelease:
+    case QEvent::ShortcutOverride:
+        return "QKeyEvent";
+    case QEvent::FocusIn:
+    case QEvent::FocusOut:
+    case QEvent::FocusAboutToChange:
+        return "QFocusEvent";
+    case QEvent::Move:
+        return "QMoveEvent";
+    case QEvent::Paint:
+        return "QPaintEvent";
+    case QEvent::Enter:
+        return "QEnterEvent";
+    case QEvent::Wheel:
+        return "QWheelEvent";
+    case QEvent::HoverEnter:
+    case QEvent::HoverMove:
+    case QEvent::HoverLeave:
+        return "QHoverEvent";
+    case QEvent::DynamicPropertyChange:
+        return "QDynamicPropertyChangeEvent";
+    case QEvent::DeferredDelete:
+        return "QDeferredDeleteEvent";
+    case QEvent::ChildAdded:
+    case QEvent::ChildPolished:
+    case QEvent::ChildRemoved:
+        return "QChildEvent";
+    case QEvent::Timer:
+        return "QTimerEvent";
+    default:
+        return "";
+    }
+}
 
 
 static bool eventCallback(void **data)
@@ -59,8 +121,19 @@ static bool eventCallback(void **data)
     EventData eventData;
     eventData.time = QTime::currentTime();
     eventData.type = event->type();
-    eventData.spontaneous = event->spontaneous();
     eventData.receiver = receiver;
+
+    QString className = eventTypeToClassName(event->type());
+    if (!className.isEmpty()) {
+        MetaObject *metaObj = MetaObjectRepository::instance()->metaObject(className);
+        if (metaObj) {
+            for (int i=0; i<metaObj->propertyCount(); ++i) {
+                MetaProperty* prop = metaObj->propertyAt(i);
+                if (strcmp(prop->name(), "type") == 0) continue;
+                eventData.attributes << QPair<const char*, QVariant>{prop->name(), prop->value(event)};
+            }
+        }
+    }
 
     if (s_model) {
         // add directly from foreground thread, delay from background thread

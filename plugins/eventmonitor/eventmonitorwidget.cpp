@@ -39,7 +39,7 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->eventTable->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventModel")));
+    ui->eventTree->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventModel")));
 }
 
 EventMonitorWidget::~EventMonitorWidget()

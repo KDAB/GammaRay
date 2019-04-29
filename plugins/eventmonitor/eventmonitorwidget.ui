@@ -16,12 +16,23 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QTableView" name="eventTable"/>
+    <widget class="GammaRay::DeferredTreeView" name="eventTree">
+     <property name="uniformRowHeights">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>GammaRay::DeferredTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/deferredtreeview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
