@@ -6,7 +6,6 @@ set(gammaray_eventmonitor_plugin_srcs
 )
 
 gammaray_add_plugin(gammaray_eventmonitor_plugin
-  DESKTOP gammaray_eventmonitor.desktop.in
   JSON gammaray_eventmonitor.json
   SOURCES ${gammaray_eventmonitor_plugin_srcs}
 )
@@ -24,7 +23,6 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_eventmonitor_ui_plugin
-    DESKTOP gammaray_eventmonitor_ui.desktop.in
     JSON gammaray_eventmonitor.json
     SOURCES ${gammaray_eventmonitor_ui_plugin_srcs}
   )
