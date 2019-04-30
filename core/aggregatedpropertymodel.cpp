@@ -48,13 +48,15 @@
 using namespace GammaRay;
 
 
+Q_DECLARE_METATYPE(const QObject*)
+
 /*!
  * Checks if it is dangerous to unpack a QVariant because it stores an invalid pointer.
  * Returns true if the value is an invalid pointer to a QObject.
  * Returns false either if it is a valid pointer or not a QObject*.
  */
 bool isInvalidPointer(const QVariant& value) {
-    if (!value.canConvert<QObject *>())
+    if (!value.canConvert<QObject *>() && !value.canConvert<const QObject *>())
         return false;
     return !Probe::instance()->isValidObject(Util::uncheckedQObjectCast(value));
 }
@@ -184,8 +186,7 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
                 return enumStr;
             if (d.value().type() == QVariant::Bool && (d.accessFlags() & PropertyData::Writable))
                 return QVariant();
-            if (d.value().canConvert<QObject *>() && Util::uncheckedQObjectCast(d.value()) != nullptr
-                    && !Probe::instance()->isValidObject(Util::uncheckedQObjectCast(d.value())))
+            if (isInvalidPointer(d.value()) && Util::uncheckedQObjectCast(d.value()) != nullptr)
                 return "[invalid]";
             return VariantHandler::displayString(d.value());
         }
@@ -228,7 +229,7 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
     }
     case PropertyModel::ObjectIdRole:
         if (d.value().canConvert<QObject *>()) {
-            if (!Probe::instance()->isValidObject(Util::uncheckedQObjectCast(d.value())))
+            if (isInvalidPointer(d.value()))
                 return QVariant();
             return QVariant::fromValue(ObjectId(d.value().value<QObject *>()));
         } else if (d.value().isValid()) {

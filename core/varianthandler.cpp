@@ -56,6 +56,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+Q_DECLARE_METATYPE(const QObject*)
+
 using namespace GammaRay;
 
 namespace GammaRay {
@@ -404,12 +406,13 @@ QString VariantHandler::displayString(const QVariant &value)
     // catch-all QObject handler
     // search the entire hierarchy for custom converters, so we can override this
     // for entire sub-trees
-    if (value.canConvert<QObject*>()) {
-        const auto obj = value.value<QObject*>();
+    if (value.canConvert<QObject*>() || value.canConvert<const QObject*>()) {
+        bool isConst = value.canConvert<const QObject*>();
+        const auto obj = isConst ? value.value<const QObject*>() : value.value<QObject*>();
         if (!obj || obj->metaObject() == &QObject::staticMetaObject)
             return Util::displayString(obj);
 
-        auto mo = value.value<QObject*>()->metaObject();
+        auto mo = obj->metaObject();
         while (mo) {
             auto type = QMetaType::type(QByteArray(mo->className()) + '*');
             if (type > 0) {
