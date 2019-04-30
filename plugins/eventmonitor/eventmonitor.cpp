@@ -60,54 +60,54 @@ QString eventTypeToClassName(QEvent::Type type) {
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease:
     case QEvent::MouseMove:
-        return "QMouseEvent";
+        return QStringLiteral("QMouseEvent");
     case QEvent::TouchBegin:
     case QEvent::TouchUpdate:
     case QEvent::TouchEnd:
     case QEvent::TouchCancel:
-        return "QTouchEvent";
+        return QStringLiteral("QTouchEvent");
     case QEvent::TabletMove:
     case QEvent::TabletPress:
     case QEvent::TabletRelease:
     case QEvent::TabletEnterProximity:
     case QEvent::TabletLeaveProximity:
-        return "QTabletEvent";
+        return QStringLiteral("QTabletEvent");
     case QEvent::NativeGesture:
-        return "QNativeGestureEvent";
+        return QStringLiteral("QNativeGestureEvent");
     case QEvent::KeyPress:
     case QEvent::KeyRelease:
     case QEvent::ShortcutOverride:
-        return "QKeyEvent";
+        return QStringLiteral("QKeyEvent");
     case QEvent::FocusIn:
     case QEvent::FocusOut:
     case QEvent::FocusAboutToChange:
-        return "QFocusEvent";
+        return QStringLiteral("QFocusEvent");
     case QEvent::Move:
-        return "QMoveEvent";
+        return QStringLiteral("QMoveEvent");
     case QEvent::Paint:
-        return "QPaintEvent";
+        return QStringLiteral("QPaintEvent");
     case QEvent::Enter:
-        return "QEnterEvent";
+        return QStringLiteral("QEnterEvent");
     case QEvent::Wheel:
-        return "QWheelEvent";
+        return QStringLiteral("QWheelEvent");
     case QEvent::HoverEnter:
     case QEvent::HoverMove:
     case QEvent::HoverLeave:
-        return "QHoverEvent";
+        return QStringLiteral("QHoverEvent");
     case QEvent::DynamicPropertyChange:
-        return "QDynamicPropertyChangeEvent";
+        return QStringLiteral("QDynamicPropertyChangeEvent");
     case QEvent::DeferredDelete:
-        return "QDeferredDeleteEvent";
+        return QStringLiteral("QDeferredDeleteEvent");
     case QEvent::ChildAdded:
     case QEvent::ChildPolished:
     case QEvent::ChildRemoved:
-        return "QChildEvent";
+        return QStringLiteral("QChildEvent");
     case QEvent::Timer:
-        return "QTimerEvent";
+        return QStringLiteral("QTimerEvent");
     case QEvent::MetaCall:
-        return "QMetaCallEvent";  // about to change in 5.14? see https://code.qt.io/cgit/qt/qtbase.git/commit/?h=dev&id=999c26dd83ad37fcd7a2b2fc62c0281f38c8e6e0
+        return QStringLiteral("QMetaCallEvent");  // about to change in 5.14? see https://code.qt.io/cgit/qt/qtbase.git/commit/?h=dev&id=999c26dd83ad37fcd7a2b2fc62c0281f38c8e6e0
     default:
-        return "";
+        return QStringLiteral("");
     }
 }
 
