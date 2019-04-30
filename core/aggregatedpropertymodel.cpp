@@ -47,6 +47,19 @@
 
 using namespace GammaRay;
 
+
+/*!
+ * Checks if it is dangerous to unpack a QVariant because it stores an invalid pointer.
+ * Returns true if the value is an invalid pointer to a QObject.
+ * Returns false either if it is a valid pointer or not a QObject*.
+ */
+bool isInvalidPointer(const QVariant& value) {
+    if (!value.canConvert<QObject *>())
+        return false;
+    return !Probe::instance()->isValidObject(Util::uncheckedQObjectCast(value));
+}
+
+
 AggregatedPropertyModel::AggregatedPropertyModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
@@ -294,9 +307,7 @@ int AggregatedPropertyModel::rowCount(const QModelIndex &parent) const
     if (!m_inhibitAdaptorCreation && !siblings.at(parent.row())) {
         // TODO: remember we tried any of this
         auto pd = adaptor->propertyData(parent.row());
-        if (!(pd.value().canConvert<QObject *>()
-              && !Probe::instance()->isValidObject(Util::uncheckedQObjectCast(pd.value())))
-                && !hasLoop(adaptor, pd.value())) {
+        if (!isInvalidPointer(pd.value()) && !hasLoop(adaptor, pd.value())) {
             auto a = PropertyAdaptorFactory::create(pd.value(), adaptor);
             siblings[parent.row()] = a;
             addPropertyAdaptor(a);
@@ -481,9 +492,7 @@ void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor *parentAdaptor, int 
     // TODO consolidate with code in rowCount()
     auto pd = parentAdaptor->propertyData(index);
 
-    if ((pd.value().canConvert<QObject *>()
-         && !Probe::instance()->isValidObject(Util::uncheckedQObjectCast(pd.value())))
-            || hasLoop(parentAdaptor, pd.value())) {
+    if (isInvalidPointer(pd.value()) || hasLoop(parentAdaptor, pd.value())) {
         m_inhibitAdaptorCreation = false;
         return;
     }
