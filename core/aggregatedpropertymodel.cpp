@@ -37,6 +37,7 @@
 #include "varianthandler.h"
 #include "enumrepositoryserver.h"
 #include "enumutil.h"
+#include "util.h"
 
 #include <common/objectid.h>
 #include <common/propertymodel.h>
@@ -170,6 +171,9 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
                 return enumStr;
             if (d.value().type() == QVariant::Bool && (d.accessFlags() & PropertyData::Writable))
                 return QVariant();
+            if (d.value().canConvert<QObject *>() && Util::uncheckedQObjectCast(d.value()) != nullptr
+                    && !Probe::instance()->isValidObject(Util::uncheckedQObjectCast(d.value())))
+                return "[invalid]";
             return VariantHandler::displayString(d.value());
         }
         case 2:
@@ -211,6 +215,8 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
     }
     case PropertyModel::ObjectIdRole:
         if (d.value().canConvert<QObject *>()) {
+            if (!Probe::instance()->isValidObject(Util::uncheckedQObjectCast(d.value())))
+                return QVariant();
             return QVariant::fromValue(ObjectId(d.value().value<QObject *>()));
         } else if (d.value().isValid()) {
             const auto &v = d.value();
@@ -472,6 +478,7 @@ void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor *parentAdaptor, int 
     // re-add the sub-tree
     // TODO consolidate with code in rowCount()
     auto pd = parentAdaptor->propertyData(index);
+
     if (hasLoop(parentAdaptor, pd.value())) {
         m_inhibitAdaptorCreation = false;
         return;

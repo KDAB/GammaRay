@@ -213,7 +213,7 @@ void MetaObjectRepository::initQEventTypes()
 
     MO_ADD_METAOBJECT1(QMetaCallEvent, QEvent);
     MO_ADD_PROPERTY_RO(QMetaCallEvent, id);
-    MO_ADD_PROPERTY_RO(QMetaCallEvent, sender);
+//    MO_ADD_PROPERTY_RO(QMetaCallEvent, sender);  // problematic because type is const QObject*
     MO_ADD_PROPERTY_RO(QMetaCallEvent, signalId);
 //    MO_ADD_PROPERTY_RO(QMetaCallEvent, args);  // unusable atm because type is void**
 }
