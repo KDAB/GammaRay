@@ -35,13 +35,16 @@
 #include <core/metaobject.h>
 #include <core/objectinstance.h>
 #include <core/remote/serverproxymodel.h>
+#include <core/util.h>
 
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 
 #include <QDebug>
 #include <QItemSelectionModel>
+#include <QMetaMethod>
 #include <QMutex>
+#include <QtCore/private/qobject_p.h>
 #include <QSortFilterProxyModel>
 
 using namespace GammaRay;
@@ -150,6 +153,41 @@ static bool eventCallback(void **data)
     eventData.receiver = receiver;
     eventData.attributes << QPair<const char*, QVariant>{"receiver", QVariant::fromValue(receiver)};
 
+    // the receiver of a deferred delete event is almost always invalid when shown in the UI
+    // we therefore store the name of the receiver as a string to provide at least
+    // some useful information:
+    if (event->type() == QEvent::DeferredDelete) {
+        if (Probe::instance()->isValidObject(receiver)) {
+            eventData.attributes << QPair<const char*, QVariant>{"receiverWas", Util::displayString(receiver)};
+        }
+    }
+
+    // try to extract the method name and arguments from a meta call event:
+    if (event->type() == QEvent::MetaCall) {
+        // about to change in 5.14? see https://code.qt.io/cgit/qt/qtbase.git/commit/?h=dev&id=999c26dd83ad37fcd7a2b2fc62c0281f38c8e6e0
+        QMetaCallEvent* metaCallEvent = static_cast<QMetaCallEvent*>(event);
+
+        if (metaCallEvent) {
+            if (Probe::instance()->isValidObject(receiver)) {
+                const QMetaObject *meta = receiver->metaObject();
+                if (meta) {
+                    QMetaMethod method = meta->method(metaCallEvent->id());
+                    int argc = method.parameterCount();
+                    void** argv = metaCallEvent->args();
+                    QList<QVariant> vargs;
+                    vargs.reserve(argc);
+                    for (int i = 0; i < argc; ++i) {
+                        int type = method.parameterType(i);
+                        vargs.append(QVariant(type, argv[i+1]));
+                    }
+                    eventData.attributes << QPair<const char*, QVariant>{"methodName", method.name()};
+                    eventData.attributes << QPair<const char*, QVariant>{"args", vargs};
+                }
+            }
+        }
+    }
+
+    // store all other meta properties:
     QString className = eventTypeToClassName(event->type());
     if (!className.isEmpty()) {
         MetaObject *metaObj = MetaObjectRepository::instance()->metaObject(className);
