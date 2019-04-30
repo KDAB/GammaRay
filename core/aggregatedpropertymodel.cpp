@@ -294,7 +294,9 @@ int AggregatedPropertyModel::rowCount(const QModelIndex &parent) const
     if (!m_inhibitAdaptorCreation && !siblings.at(parent.row())) {
         // TODO: remember we tried any of this
         auto pd = adaptor->propertyData(parent.row());
-        if (!hasLoop(adaptor, pd.value())) {
+        if (!(pd.value().canConvert<QObject *>()
+              && !Probe::instance()->isValidObject(Util::uncheckedQObjectCast(pd.value())))
+                && !hasLoop(adaptor, pd.value())) {
             auto a = PropertyAdaptorFactory::create(pd.value(), adaptor);
             siblings[parent.row()] = a;
             addPropertyAdaptor(a);
@@ -479,7 +481,9 @@ void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor *parentAdaptor, int 
     // TODO consolidate with code in rowCount()
     auto pd = parentAdaptor->propertyData(index);
 
-    if (hasLoop(parentAdaptor, pd.value())) {
+    if ((pd.value().canConvert<QObject *>()
+         && !Probe::instance()->isValidObject(Util::uncheckedQObjectCast(pd.value())))
+            || hasLoop(parentAdaptor, pd.value())) {
         m_inhibitAdaptorCreation = false;
         return;
     }
