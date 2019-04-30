@@ -1,5 +1,8 @@
 # probe part
 if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
+
+include_directories( ${Qt5Quick_PRIVATE_INCLUDE_DIRS} )
+
 set(gammaray_eventmonitor_plugin_srcs
   eventmonitor.cpp
   eventmodel.cpp
