@@ -184,4 +184,9 @@ void EventMonitor::eventSelected(const QItemSelection &selection)
     m_eventPropertyModel->setObject(eventAttributes);
 }
 
-EventMonitor::~EventMonitor() = default;
+EventMonitor::~EventMonitor() {
+    s_model = nullptr;
+    QInternal::unregisterCallback(QInternal::EventNotifyCallback, eventCallback);
+    m_eventModel->deleteLater();
+    m_eventPropertyModel->deleteLater();
+}
