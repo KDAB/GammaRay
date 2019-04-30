@@ -90,6 +90,7 @@ Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
 Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
 Q_DECLARE_METATYPE(Qt::TouchPointState)
 Q_DECLARE_METATYPE(QFlags<QTouchEvent::TouchPoint::InfoFlag>)
+Q_DECLARE_METATYPE(QFlags<QTouchDevice::CapabilityFlag>)
 
 
 // QGradient is pseudo-polymorphic, make it introspectable nevertheless
@@ -529,6 +530,12 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, flags);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rawScreenPositions);
 
+    MO_ADD_METAOBJECT0(QTouchDevice);
+    MO_ADD_PROPERTY_RO(QTouchDevice, capabilities);
+    MO_ADD_PROPERTY_RO(QTouchDevice, maximumTouchPoints);
+    MO_ADD_PROPERTY_RO(QTouchDevice, name);
+    MO_ADD_PROPERTY_RO(QTouchDevice, type);
+
     MO_ADD_METAOBJECT1(QEnterEvent, QEvent);
     MO_ADD_PROPERTY_RO(QEnterEvent, globalPos);
     MO_ADD_PROPERTY_RO(QEnterEvent, localPos);
@@ -861,6 +868,18 @@ static const MetaEnum::Value<QTouchEvent::TouchPoint::InfoFlags> touch_point_inf
 };
 #undef E
 
+#define E(x) { QTouchDevice:: x, #x }
+static const MetaEnum::Value<QTouchDevice::Capabilities> touch_device_capabilitites_flag_table[] = {
+    E(Position),
+    E(Area),
+    E(Pressure),
+    E(Velocity),
+    E(RawPositions),
+    E(NormalizedPosition),
+    E(MouseEmulation)
+};
+#undef E
+
 static QString brushToString(const QBrush &b)
 {
     return VariantHandler::displayString(b.color()) + QLatin1String(", ") + EnumUtil::enumToString(QVariant::fromValue(b.style()));
@@ -967,6 +986,7 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QPixelFormat, YUVLayout, pixelformat_yuvlayout_table);
 
     ER_REGISTER_FLAGS(QTouchEvent::TouchPoint, InfoFlags, touch_point_info_flag_table);
+    ER_REGISTER_FLAGS(QTouchDevice, Capabilities, touch_device_capabilitites_flag_table);
 }
 
 QObject *GuiSupport::targetObject(QObject *object) const
