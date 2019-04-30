@@ -66,6 +66,10 @@ QString eventTypeToClassName(QEvent::Type type) {
     case QEvent::TouchEnd:
     case QEvent::TouchCancel:
         return QStringLiteral("QTouchEvent");
+    case QEvent::ScrollPrepare:
+        return QStringLiteral("QScrollPrepareEvent");
+    case QEvent::Scroll:
+        return QStringLiteral("QScrollEvent");
     case QEvent::TabletMove:
     case QEvent::TabletPress:
     case QEvent::TabletRelease:
@@ -78,6 +82,20 @@ QString eventTypeToClassName(QEvent::Type type) {
     case QEvent::KeyRelease:
     case QEvent::ShortcutOverride:
         return QStringLiteral("QKeyEvent");
+    case QEvent::InputMethod:
+        return QStringLiteral("QInputMethodEvent");
+    case QEvent::InputMethodQuery:
+        return QStringLiteral("QInputMethodQueryEvent");
+    case QEvent::OrientationChange:
+        return QStringLiteral("QScreenOrientationChangeEvent");
+    case QEvent::WindowStateChange:
+        return QStringLiteral("QWindowStateChangeEvent");
+    case QEvent::ApplicationStateChange:
+        return QStringLiteral("QApplicationStateChangeEvent");
+    case QEvent::Expose:
+        return QStringLiteral("QExposeEvent");
+    case QEvent::Resize:
+        return QStringLiteral("QResizeEvent");
     case QEvent::FocusIn:
     case QEvent::FocusOut:
     case QEvent::FocusAboutToChange:

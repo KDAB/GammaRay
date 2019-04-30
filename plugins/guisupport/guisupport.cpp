@@ -92,6 +92,8 @@ Q_DECLARE_METATYPE(Qt::TouchPointState)
 Q_DECLARE_METATYPE(QFlags<QTouchEvent::TouchPoint::InfoFlag>)
 Q_DECLARE_METATYPE(QFlags<QTouchDevice::CapabilityFlag>)
 Q_DECLARE_METATYPE(QTouchDevice*)
+Q_DECLARE_METATYPE(QScrollEvent::ScrollState)
+Q_DECLARE_METATYPE(QList<QInputMethodEvent::Attribute>)
 
 
 // QGradient is pseudo-polymorphic, make it introspectable nevertheless
@@ -510,9 +512,30 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QPaintEvent, rect);
     MO_ADD_PROPERTY_RO(QPaintEvent, region);
 
+    MO_ADD_METAOBJECT1(QInputMethodEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QInputMethodEvent, attributes);
+    MO_ADD_PROPERTY_RO(QInputMethodEvent, preeditString);
+    MO_ADD_PROPERTY_RO(QInputMethodEvent, commitString);
+    MO_ADD_PROPERTY_RO(QInputMethodEvent, replacementStart);
+    MO_ADD_PROPERTY_RO(QInputMethodEvent, replacementLength);
+
+    MO_ADD_METAOBJECT1(QInputMethodQueryEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QInputMethodQueryEvent, queries);
+
     MO_ADD_METAOBJECT1(QMoveEvent, QEvent);
     MO_ADD_PROPERTY_RO(QMoveEvent, pos);
     MO_ADD_PROPERTY_RO(QMoveEvent, oldPos);
+
+    MO_ADD_METAOBJECT1(QExposeEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QExposeEvent, region);
+
+    MO_ADD_METAOBJECT1(QResizeEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QResizeEvent, size);
+    MO_ADD_PROPERTY_RO(QResizeEvent, oldSize);
+
+    MO_ADD_METAOBJECT1(QWindowStateChangeEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QWindowStateChangeEvent, oldState);
+    MO_ADD_PROPERTY_RO(QWindowStateChangeEvent, isOverride);
 
     MO_ADD_METAOBJECT1(QTouchEvent, QInputEvent);
     MO_ADD_PROPERTY_RO(QTouchEvent, device);
@@ -547,6 +570,24 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QTouchDevice, maximumTouchPoints);
     MO_ADD_PROPERTY_RO(QTouchDevice, name);
     MO_ADD_PROPERTY_RO(QTouchDevice, type);
+
+    MO_ADD_METAOBJECT1(QScrollPrepareEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QScrollPrepareEvent, startPos);
+    MO_ADD_PROPERTY_RO(QScrollPrepareEvent, viewportSize);
+    MO_ADD_PROPERTY_RO(QScrollPrepareEvent, contentPosRange);
+    MO_ADD_PROPERTY_RO(QScrollPrepareEvent, contentPos);
+
+    MO_ADD_METAOBJECT1(QScrollEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QScrollEvent, contentPos);
+    MO_ADD_PROPERTY_RO(QScrollEvent, overshootDistance);
+    MO_ADD_PROPERTY_RO(QScrollEvent, scrollState);
+
+    MO_ADD_METAOBJECT1(QScreenOrientationChangeEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QScreenOrientationChangeEvent, screen);
+    MO_ADD_PROPERTY_RO(QScreenOrientationChangeEvent, orientation);
+
+    MO_ADD_METAOBJECT1(QApplicationStateChangeEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QApplicationStateChangeEvent, applicationState);
 
     MO_ADD_METAOBJECT1(QEnterEvent, QEvent);
     MO_ADD_PROPERTY_RO(QEnterEvent, globalPos);
