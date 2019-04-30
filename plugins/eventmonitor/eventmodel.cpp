@@ -78,7 +78,7 @@ int EventModel::rowCount(const QModelIndex &parent) const
 
 QVariant EventModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() > rowCount() || index.column() > columnCount())
+    if (!index.isValid() || index.row() >= rowCount() || index.column() >= columnCount())
         return QVariant();
 
     int eventIndex = -1;
@@ -107,17 +107,6 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
             }
         } else {
             // TODO: add event propagation history as children
-        }
-    } else if (role == EventModelRole::Sort) {
-        if (index.internalId() == TopLevelId) {
-            switch (index.column()) {
-            case EventModelColumn::Time:
-                return event.time;
-            case EventModelColumn::Type:
-                return event.type;
-            case EventModelColumn::Receiver:
-                return reinterpret_cast<qint64>(event.receiver);  // FIXME: how to sort objects?
-            }
         }
     } else if (role == EventModelRole::AttributesRole) {
         if (index.internalId() == TopLevelId) {
