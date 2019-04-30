@@ -91,6 +91,7 @@ Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
 Q_DECLARE_METATYPE(Qt::TouchPointState)
 Q_DECLARE_METATYPE(QFlags<QTouchEvent::TouchPoint::InfoFlag>)
 Q_DECLARE_METATYPE(QFlags<QTouchDevice::CapabilityFlag>)
+Q_DECLARE_METATYPE(QTouchDevice*)
 
 
 // QGradient is pseudo-polymorphic, make it introspectable nevertheless
@@ -460,7 +461,9 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QWheelEvent, globalPosF);
     MO_ADD_PROPERTY_RO(QWheelEvent, buttons);
     MO_ADD_PROPERTY_RO(QWheelEvent, phase);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     MO_ADD_PROPERTY_RO(QWheelEvent, inverted);
+#endif
     MO_ADD_PROPERTY_RO(QWheelEvent, source);
 
     MO_ADD_METAOBJECT1(QTabletEvent, QInputEvent);
@@ -484,7 +487,9 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, localPos);
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, windowPos);
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, screenPos);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, device);
+#endif
 
     MO_ADD_METAOBJECT1(QKeyEvent, QInputEvent);
     MO_ADD_PROPERTY_RO(QKeyEvent, key);
@@ -517,18 +522,25 @@ void GuiSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT0(QTouchEvent::TouchPoint);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, id);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, uniqueId);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, state);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, pos);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, startPos);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, lastPos);
     // TODO: add other pos values?
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, pressure);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rotation);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, ellipseDiameters);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, velocity);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, flags);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rawScreenPositions);
+#if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rect);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, uniqueId);
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rotation);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, ellipseDiameters);
+#endif
 
     MO_ADD_METAOBJECT0(QTouchDevice);
     MO_ADD_PROPERTY_RO(QTouchDevice, capabilities);
@@ -864,7 +876,9 @@ static const MetaEnum::Value<QPixelFormat::YUVLayout> pixelformat_yuvlayout_tabl
 #define E(x) { QTouchEvent::TouchPoint:: x, #x }
 static const MetaEnum::Value<QTouchEvent::TouchPoint::InfoFlags> touch_point_info_flag_table[] = {
     E(Pen),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     E(Token)
+#endif
 };
 #undef E
 
