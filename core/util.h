@@ -180,6 +180,14 @@ inline bool isNullish(void *ptr)
 #endif
 }
 
+/*!
+ * QVariant::value<QObject *>() dereferences the object internally, this method
+ * converts it to a QObject without dereferencing (e.g. to check then if it still exists).
+ */
+inline const QObject* uncheckedQObjectCast(const QVariant& v) {
+    return *reinterpret_cast<const QObject* const*>(v.constData());
+}
+
 }
 }
 

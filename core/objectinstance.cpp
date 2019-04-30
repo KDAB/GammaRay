@@ -30,6 +30,7 @@
 #include "metaobjectrepository.h"
 #include "metaobject.h"
 #include "util.h"
+#include "probe.h"
 
 using namespace GammaRay;
 
@@ -59,6 +60,12 @@ ObjectInstance::ObjectInstance(const QVariant &value)
 {
     m_variant = value;
     if (value.canConvert<QObject *>()) {
+        // QVariant::value<QObject *>() dereferences the object internally, so we
+        // need to check first if it is still existing using a reinterpret cast:
+        if (!Probe::instance()->isValidObject(Util::uncheckedQObjectCast(value))) {
+            m_type = Invalid;
+            return;
+        }
         m_qtObj = value.value<QObject *>();
         if (m_qtObj) {
             m_metaObj = m_qtObj->metaObject();
