@@ -46,11 +46,13 @@ set(EXTRA_LIBS)
 if(HAVE_QT_DESIGNER)
   list(APPEND EXTRA_LIBS Qt5::Designer)
 endif()
+if(HAVE_QT_SVG)
+  list(APPEND EXTRA_LIBS Qt5::Svg)
+endif()
 
 target_link_libraries(gammaray_widget_export_actions
   Qt5::Core
   Qt5::Gui Qt5::Widgets
-  Qt5::Svg
   Qt5::PrintSupport
 
   ${EXTRA_LIBS}
