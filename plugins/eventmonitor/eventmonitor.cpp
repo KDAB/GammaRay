@@ -135,6 +135,10 @@ QString eventTypeToClassName(QEvent::Type type) {
 
 static bool eventCallback(void **data)
 {
+    if (!s_model || !Probe::instance()) {
+        return false;
+    }
+
     QEvent *event = reinterpret_cast<QEvent*>(data[1]);
     QObject *receiver = reinterpret_cast<QObject*>(data[0]);
 
@@ -243,6 +247,4 @@ void EventMonitor::eventSelected(const QItemSelection &selection)
 EventMonitor::~EventMonitor() {
     s_model = nullptr;
     QInternal::unregisterCallback(QInternal::EventNotifyCallback, eventCallback);
-    m_eventModel->deleteLater();
-    m_eventPropertyModel->deleteLater();
 }
