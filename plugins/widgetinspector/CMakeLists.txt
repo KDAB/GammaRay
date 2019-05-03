@@ -42,19 +42,16 @@ if(GAMMARAY_INSTALL_QT_LAYOUT)
   set_target_properties(gammaray_widget_export_actions PROPERTIES OUTPUT_NAME gammaray_widget_export_actions-${GAMMARAY_PROBE_ABI})
 endif()
 
-set(EXTRA_LIBS)
-if(HAVE_QT_DESIGNER)
-  list(APPEND EXTRA_LIBS Qt5::Designer)
+target_link_libraries(gammaray_widget_export_actions Qt5::Widgets)
+if (TARGET Qt5::Designer)
+    target_link_libraries(gammaray_widget_export_actions Qt5::Designer)
 endif()
-
-target_link_libraries(gammaray_widget_export_actions
-  Qt5::Core
-  Qt5::Gui Qt5::Widgets
-  Qt5::Svg
-  Qt5::PrintSupport
-
-  ${EXTRA_LIBS}
-)
+if (TARGET Qt5::PrintSupport)
+    target_link_libraries(gammaray_widget_export_actions Qt5::PrintSupport)
+endif()
+if (TARGET Qt5::Svg)
+    target_link_libraries(gammaray_widget_export_actions Qt5::Svg)
+endif()
 
 install(TARGETS gammaray_widget_export_actions DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
 if(MSVC)
