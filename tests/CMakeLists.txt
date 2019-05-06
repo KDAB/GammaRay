@@ -193,7 +193,7 @@ if(HAVE_QT_WIDGETS)
   target_link_libraries(enumpropertytest gammaray_core Qt5::Gui Qt5::Widgets)
 endif()
 
-gammaray_add_test(propertymodeltest propertymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
+gammaray_add_probe_test(propertymodeltest propertymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
 target_link_libraries(propertymodeltest gammaray_core gammaray_shared_test_data)
 
 gammaray_add_test(qmetaobjectvalidatortest qmetaobjectvalidatortest.cpp)

@@ -25,6 +25,7 @@
 */
 
 #include "testhelpers.h"
+#include "baseprobetest.h"
 
 #include <core/objectinstance.h>
 #include <core/aggregatedpropertymodel.h>
@@ -41,10 +42,15 @@
 using namespace GammaRay;
 using namespace TestHelpers;
 
-class PropertyModelTest : public QObject
+class PropertyModelTest : public BaseProbeTest
 {
     Q_OBJECT
 private slots:
+    void initTestCase()
+    {
+        createProbe();
+    }
+
     void testPropertyModel()
     {
         PropertyTestObject obj;
