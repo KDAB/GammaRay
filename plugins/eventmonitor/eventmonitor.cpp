@@ -161,31 +161,39 @@ static bool eventCallback(void **data)
     // we therefore store the name of the receiver as a string to provide at least
     // some useful information:
     if (event->type() == QEvent::DeferredDelete) {
-        if (Probe::instance()->isValidObject(receiver)) {
-            eventData.attributes << QPair<const char*, QVariant>{"receiverWas", Util::displayString(receiver)};
-        }
+        eventData.attributes << QPair<const char*, QVariant>{"[receiver type]", Util::displayString(receiver)};
     }
 
-    // try to extract the method name and arguments from a meta call event:
+    // try to extract the method name, arguments and return value from a meta call event:
     if (event->type() == QEvent::MetaCall) {
-        // about to change in 5.14? see https://code.qt.io/cgit/qt/qtbase.git/commit/?h=dev&id=999c26dd83ad37fcd7a2b2fc62c0281f38c8e6e0
+        eventData.attributes << QPair<const char*, QVariant>{"[receiver type]", Util::displayString(receiver)};
+        // QMetaCallEvent about to change in 5.14? see https://code.qt.io/cgit/qt/qtbase.git/commit/?h=dev&id=999c26dd83ad37fcd7a2b2fc62c0281f38c8e6e0
         QMetaCallEvent* metaCallEvent = static_cast<QMetaCallEvent*>(event);
-
         if (metaCallEvent) {
-            if (Probe::instance()->isValidObject(receiver)) {
+            int methodIndex = metaCallEvent->id();
+            if (methodIndex == int(ushort(-1))) {
+                // TODO: this is a slot call, but QMetaCall::slotObj is private
+                eventData.attributes << QPair<const char*, QVariant>{"[method name]", "[unknown slot]"};
+            } else {
+                // TODO: should first check if nargs and types is set, but both are private
                 const QMetaObject *meta = receiver->metaObject();
                 if (meta) {
                     QMetaMethod method = meta->method(metaCallEvent->id());
-                    int argc = method.parameterCount();
+                    eventData.attributes << QPair<const char*, QVariant>{"[method name]", method.name()};
                     void** argv = metaCallEvent->args();
-                    QList<QVariant> vargs;
-                    vargs.reserve(argc);
+                    if (method.returnType() != QMetaType::Void) {
+                        void* returnValueCopy = QMetaType::create(method.returnType(), argv[0]);
+                        eventData.attributes << QPair<const char*, QVariant>{"[return value]", QVariant(method.returnType(), returnValueCopy)};
+                    }
+                    int argc = method.parameterCount();
+                    QVariantMap vargs;
                     for (int i = 0; i < argc; ++i) {
                         int type = method.parameterType(i);
-                        vargs.append(QVariant(type, argv[i+1]));
+                        void* argumentDataCopy = QMetaType::create(type, argv[i+1]);
+                        vargs.insert(method.parameterNames().at(i), QVariant(type, argumentDataCopy));
                     }
-                    eventData.attributes << QPair<const char*, QVariant>{"methodName", method.name()};
-                    eventData.attributes << QPair<const char*, QVariant>{"args", vargs};
+                    if (argc > 0)
+                        eventData.attributes << QPair<const char*, QVariant>{"[arguments]", vargs};
                 }
             }
         }
