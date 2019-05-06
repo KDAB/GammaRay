@@ -562,8 +562,11 @@ add_definitions(
   -DQT_USE_FAST_OPERATOR_PLUS
   -DQT_NO_CAST_TO_ASCII
   -DQT_NO_URL_CAST_FROM_STRING
-  -DQT_STRICT_ITERATORS
 )
+if (NOT WIN32)
+  # BIC on MSVC at least (see e.g. https://bugreports.qt.io/browse/AUTOSUITE-946)
+  add_definitions(-DQT_STRICT_ITERATORS)
+endif()
 
 if(UPPERCASE_CMAKE_BUILD_TYPE MATCHES "^RELEASE$")
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
