@@ -181,19 +181,21 @@ static bool eventCallback(void **data)
                     QMetaMethod method = meta->method(metaCallEvent->id());
                     eventData.attributes << QPair<const char*, QVariant>{"[method name]", method.name()};
                     void** argv = metaCallEvent->args();
-                    if (method.returnType() != QMetaType::Void) {
-                        void* returnValueCopy = QMetaType::create(method.returnType(), argv[0]);
-                        eventData.attributes << QPair<const char*, QVariant>{"[return value]", QVariant(method.returnType(), returnValueCopy)};
+                    if (argv) { // nullptr e.g. for QDBusCallDeliveryEvent
+                        if (method.returnType() != QMetaType::Void) {
+                            void* returnValueCopy = QMetaType::create(method.returnType(), argv[0]);
+                            eventData.attributes << QPair<const char*, QVariant>{"[return value]", QVariant(method.returnType(), returnValueCopy)};
+                        }
+                        int argc = method.parameterCount();
+                        QVariantMap vargs;
+                        for (int i = 0; i < argc; ++i) {
+                            int type = method.parameterType(i);
+                            void* argumentDataCopy = QMetaType::create(type, argv[i+1]);
+                            vargs.insert(method.parameterNames().at(i), QVariant(type, argumentDataCopy));
+                        }
+                        if (argc > 0)
+                            eventData.attributes << QPair<const char*, QVariant>{"[arguments]", vargs};
                     }
-                    int argc = method.parameterCount();
-                    QVariantMap vargs;
-                    for (int i = 0; i < argc; ++i) {
-                        int type = method.parameterType(i);
-                        void* argumentDataCopy = QMetaType::create(type, argv[i+1]);
-                        vargs.insert(method.parameterNames().at(i), QVariant(type, argumentDataCopy));
-                    }
-                    if (argc > 0)
-                        eventData.attributes << QPair<const char*, QVariant>{"[arguments]", vargs};
                 }
             }
         }
