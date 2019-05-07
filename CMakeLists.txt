@@ -469,7 +469,7 @@ if(Qt5PrintSupport_FOUND)
   endif()
 endif()
 
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x040800)
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
 #add_definitions(-DQT_DEPRECATED_WARNINGS)
 
 set_package_properties(Qt5 PROPERTIES URL "https://qt.io/")
