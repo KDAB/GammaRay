@@ -51,6 +51,7 @@ using namespace GammaRay;
 
 
 static EventModel *s_model = nullptr;
+static EventMonitor *s_eventMonitor = nullptr;
 
 
 QString eventTypeToClassName(QEvent::Type type) {
@@ -154,9 +155,12 @@ QString eventTypeToClassName(QEvent::Type type) {
 
 static bool eventCallback(void **data)
 {
-    if (!s_model || !Probe::instance()) {
+    if (!s_model || !s_eventMonitor || !Probe::instance()) {
         return false;
     }
+
+    if (s_eventMonitor->isPaused())
+        return false;
 
     QEvent *event = reinterpret_cast<QEvent*>(data[1]);
     QObject *receiver = reinterpret_cast<QObject*>(data[0]);
@@ -243,12 +247,15 @@ static bool eventCallback(void **data)
 
 
 EventMonitor::EventMonitor(Probe *probe, QObject *parent)
-    : QObject(parent)
+    : EventMonitorInterface(parent)
     , m_eventModel(new EventModel(this))
     , m_eventPropertyModel(new AggregatedPropertyModel(this))
 {
     Q_ASSERT(s_model == nullptr);
     s_model = m_eventModel;
+
+    Q_ASSERT(s_eventMonitor == nullptr);
+    s_eventMonitor = this;
 
     QInternal::registerCallback(QInternal::EventNotifyCallback, eventCallback);
 
@@ -275,5 +282,11 @@ void EventMonitor::eventSelected(const QItemSelection &selection)
 
 EventMonitor::~EventMonitor() {
     s_model = nullptr;
+    s_eventMonitor = nullptr;
     QInternal::unregisterCallback(QInternal::EventNotifyCallback, eventCallback);
+}
+
+void EventMonitor::clearHistory()
+{
+    s_model->clear();
 }

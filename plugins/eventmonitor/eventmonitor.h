@@ -31,6 +31,7 @@
 
 #include <core/toolfactory.h>
 #include "eventmodel.h"
+#include "eventmonitorinterface.h"
 
 #include <QObject>
 
@@ -42,12 +43,17 @@ QT_END_NAMESPACE
 namespace GammaRay {
 class AggregatedPropertyModel;
 
-class EventMonitor : public QObject
+class EventMonitor : public EventMonitorInterface
 {
     Q_OBJECT
+    Q_INTERFACES(GammaRay::EventMonitorInterface)
+
 public:
     explicit EventMonitor(Probe *probe, QObject *parent = nullptr);
     ~EventMonitor() override;
+
+public slots:
+    virtual void clearHistory() override;
 
 private slots:
     void eventSelected(const QItemSelection &selection);

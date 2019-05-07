@@ -30,6 +30,7 @@
 #include "ui_eventmonitorwidget.h"
 
 #include "eventmodelroles.h"
+#include "eventmonitorclient.h"
 
 #include <ui/clientpropertymodel.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
@@ -37,12 +38,21 @@
 
 #include <common/objectbroker.h>
 
+static QObject *createEventMonitorClient(const QString & /*name*/, QObject *parent)
+{
+    return new GammaRay::EventMonitorClient(parent);
+}
+
 using namespace GammaRay;
 
 EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::EventMonitorWidget)
+    , m_interface(nullptr)
 {
+    ObjectBroker::registerClientObjectFactoryCallback<EventMonitorInterface *>(createEventMonitorClient);
+    m_interface = ObjectBroker::object<EventMonitorInterface *>();
+
     ui->setupUi(this);
 
     QAbstractItemModel * const eventModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventModel"));
@@ -50,6 +60,9 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     ui->eventTree->setDeferredResizeMode(EventModelColumn::Time, QHeaderView::ResizeToContents);
     ui->eventTree->setModel(eventModel);
     ui->eventTree->setSelectionModel(ObjectBroker::selectionModel(ui->eventTree->model()));
+
+    connect(ui->pauseButton, &QAbstractButton::toggled, this, &EventMonitorWidget::pauseAndResume);
+    connect(ui->clearButton, &QAbstractButton::pressed, m_interface, &EventMonitorInterface::clearHistory);
 
     auto clientPropModel = new ClientPropertyModel(this);
     clientPropModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventPropertyModel")));
@@ -60,4 +73,9 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
 EventMonitorWidget::~EventMonitorWidget()
 {
     delete ui;
+}
+
+void EventMonitorWidget::pauseAndResume(bool pause)
+{
+    m_interface->setProperty("isPaused", pause);
 }

@@ -29,7 +29,10 @@
 #ifndef GAMMARAY_EVENTMONITOR_EVENTMONITORWIDGET_H
 #define GAMMARAY_EVENTMONITOR_EVENTMONITORWIDGET_H
 
+#include "eventmonitorinterface.h"
+
 #include <ui/tooluifactory.h>
+
 #include <QWidget>
 
 namespace GammaRay {
@@ -44,8 +47,12 @@ public:
     explicit EventMonitorWidget(QWidget *parent = nullptr);
     ~EventMonitorWidget() override;
 
+private slots:
+    void pauseAndResume(bool pause);
+
 private:
     Ui::EventMonitorWidget *ui;
+    EventMonitorInterface *m_interface;
 };
 
 class EventMonitorUiFactory : public QObject, public StandardToolUiFactory<EventMonitorWidget>

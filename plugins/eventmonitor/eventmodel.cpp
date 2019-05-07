@@ -58,6 +58,13 @@ void EventModel::addEvent(const EventData &event)
     endInsertRows();
 }
 
+void EventModel::clear()
+{
+    beginResetModel();
+    m_events.clear();
+    endResetModel();
+}
+
 int EventModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
