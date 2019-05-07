@@ -71,6 +71,8 @@ public:
 public slots:
     void addEvent(const GammaRay::EventData &event);
 
+    void clear();
+
 private:
     QVector<EventData> m_events;
 };

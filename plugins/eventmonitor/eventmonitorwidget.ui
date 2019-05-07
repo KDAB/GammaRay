@@ -32,6 +32,23 @@
          <item>
           <widget class="QLineEdit" name="eventSearchLine"/>
          </item>
+         <item>
+          <widget class="QToolButton" name="pauseButton">
+           <property name="text">
+            <string>Pause</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="clearButton">
+           <property name="text">
+            <string>Clear History</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>

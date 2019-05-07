@@ -6,6 +6,7 @@ include_directories( ${Qt5Quick_PRIVATE_INCLUDE_DIRS} )
 set(gammaray_eventmonitor_plugin_srcs
   eventmonitor.cpp
   eventmodel.cpp
+  eventmonitorinterface.cpp
 )
 
 gammaray_add_plugin(gammaray_eventmonitor_plugin
@@ -23,6 +24,8 @@ endif()
 if(GAMMARAY_BUILD_UI)
   set(gammaray_eventmonitor_ui_plugin_srcs
     eventmonitorwidget.cpp
+    eventmonitorinterface.cpp
+    eventmonitorclient.cpp
   )
 
   gammaray_add_plugin(gammaray_eventmonitor_ui_plugin
