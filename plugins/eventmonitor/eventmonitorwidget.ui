@@ -22,13 +22,29 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="GammaRay::DeferredTreeView" name="eventTree">
-      <property name="uniformRowHeights">
-       <bool>true</bool>
-      </property>
-     </widget>
      <widget class="QWidget" name="layoutWidget_2">
       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="toolbarLayout">
+         <property name="bottomMargin">
+          <number>6</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="eventSearchLine"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="GammaRay::DeferredTreeView" name="eventTree">
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_2">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="GammaRay::DeferredTreeView" name="eventInspector">
          <property name="selectionMode">
