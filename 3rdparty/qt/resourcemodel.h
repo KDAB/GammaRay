@@ -92,6 +92,7 @@ public:
     bool dropMimeData(const QMimeData *data, Qt::DropAction action,
                       int row, int column, const QModelIndex &parent);
     Qt::DropActions supportedDropActions() const;
+    QHash<int, QByteArray> roleNames() const override;
 
     // ResourceModel specific API
 

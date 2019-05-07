@@ -1126,10 +1126,14 @@ void ResourceModelPrivate::init()
     root.parent = nullptr;
     root.info = QFileInfo(":");
     clear(&root);
-    QHash<int, QByteArray> roles = q->roleNames();
+}
+
+QHash<int, QByteArray> ResourceModel::roleNames() const
+{
+    QHash<int, QByteArray> roles = roleNames();
     roles.insert(ResourceModel::FilePathRole, "filePath");
     roles.insert(ResourceModel::FileNameRole, "fileName");
-    q->setRoleNames(roles);
+    return roles;
 }
 
 ResourceModelPrivate::QDirNode *ResourceModelPrivate::node(int row, QDirNode *parent) const

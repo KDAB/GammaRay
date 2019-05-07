@@ -89,9 +89,6 @@ TransitionModel::TransitionModel(QObject *parent)
     : ObjectModelBase<QAbstractItemModel>(parent)
     , d_ptr(new TransitionModelPrivate(this))
 {
-    QHash<int, QByteArray> _roleNames = roleNames();
-    // TODO
-    setRoleNames(_roleNames);
 }
 
 TransitionModel::~TransitionModel()

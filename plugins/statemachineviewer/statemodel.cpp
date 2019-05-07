@@ -148,10 +148,6 @@ StateModel::StateModel(QObject *parent)
     : QAbstractItemModel(parent)
     , d_ptr(new StateModelPrivate(this))
 {
-    QHash<int, QByteArray> _roleNames = roleNames();
-    _roleNames.insert(TransitionsRole, "transitions");
-    _roleNames.insert(IsInitialStateRole, "isInitial");
-    setRoleNames(_roleNames);
 }
 
 StateModel::~StateModel()
@@ -309,6 +305,14 @@ QMap<int, QVariant> StateModel::itemData(const QModelIndex &index) const
     if (loc.isValid())
         map.insert(ObjectModel::DeclarationLocationRole, loc);
     return map;
+}
+
+QHash<int, QByteArray> StateModel::roleNames() const
+{
+    QHash<int, QByteArray> _roleNames = roleNames();
+    _roleNames.insert(TransitionsRole, "transitions");
+    _roleNames.insert(IsInitialStateRole, "isInitial");
+    return _roleNames;
 }
 
 #include "moc_statemodel.cpp"

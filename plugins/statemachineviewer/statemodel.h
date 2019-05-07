@@ -68,6 +68,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
+    QHash<int, QByteArray> roleNames() const override;
 
 protected:
     Q_DECLARE_PRIVATE(StateModel)
