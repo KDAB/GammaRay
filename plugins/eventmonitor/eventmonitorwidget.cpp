@@ -77,5 +77,5 @@ EventMonitorWidget::~EventMonitorWidget()
 
 void EventMonitorWidget::pauseAndResume(bool pause)
 {
-    m_interface->setProperty("isPaused", pause);
+    m_interface->setIsPaused(pause);
 }
