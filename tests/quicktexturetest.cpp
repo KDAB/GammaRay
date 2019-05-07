@@ -76,7 +76,7 @@ private slots:
         remoteView->setViewActive(true);
 
         QQuickItem *textItem = nullptr;
-        foreach (auto item, qFindChildren<QQuickItem*>(view()->rootObject(), QString())) {
+        foreach (auto item, view()->rootObject()->findChildren<QQuickItem*>()) {
             if (strcmp(item->metaObject()->className(), "QQuickText") == 0)
                 textItem = item;
         }
@@ -103,7 +103,7 @@ private slots:
         remoteView->setViewActive(true);
 
         QQuickItem *source = nullptr;
-        foreach (auto item, qFindChildren<QQuickItem*>(view()->rootObject(), QString())) {
+        foreach (auto item, view()->rootObject()->findChildren<QQuickItem*>()) {
             if (item->inherits("QQuickShaderEffectSource"))
                 source = item;
         }

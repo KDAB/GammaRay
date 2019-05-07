@@ -130,7 +130,7 @@ private slots:
         QCOMPARE(shaderModel->rowCount(), 0);
 
         QQuickItem *effectItem = nullptr;
-        foreach (auto item, qFindChildren<QQuickItem*>(view()->rootObject(), QString())) {
+        foreach (auto item, view()->rootObject()->findChildren<QQuickItem*>()) {
             if (item->inherits("QQuickShaderEffect"))
                 effectItem = item;
         }

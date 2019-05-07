@@ -168,7 +168,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
         qWarning() << "Disabling 3D Widget inspector: missing QtQuick Controls";
     }
 #else
-    qFindChild<QTabBar *>(ui->tabWidget)->hide();
+    ui->tabWidget->findChild<QTabBar*>()->hide();
 #endif
 
     connect(ui->widgetPropertyWidget, &PropertyWidget::tabsUpdated, this, &WidgetInspectorWidget::propertyWidgetTabsChanged);
