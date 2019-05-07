@@ -40,7 +40,8 @@ EventMonitorInterface::EventMonitorInterface(QObject *parent)
 
 void EventMonitorInterface::setIsPaused(bool value)
 {
-    m_isPaused = value; emit isPausedChanged();
+    m_isPaused = value;
+    emit isPausedChanged();
 }
 
 EventMonitorInterface::~EventMonitorInterface() = default;
