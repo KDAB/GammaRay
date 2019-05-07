@@ -417,7 +417,7 @@ void MainWindow::showMessageStatistics()
     view->setWindowTitle(tr("Communication Message Statistics"));
     view->setAttribute(Qt::WA_DeleteOnClose);
     view->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MessageStatisticsModel")));
-    view->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
+    view->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     view->showMaximized();
 }
 

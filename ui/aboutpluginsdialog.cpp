@@ -48,7 +48,7 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
         auto *toolView = new QTableView(this);
         toolView->setShowGrid(false);
         toolView->setSelectionBehavior(QAbstractItemView::SelectRows);
-        toolView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+        toolView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         toolView->verticalHeader()->hide();
         toolView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ToolPluginModel")));
 
@@ -65,7 +65,7 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
         errorView->setModel(ObjectBroker::model(QStringLiteral(
                                                     "com.kdab.GammaRay.ToolPluginErrorModel")));
         errorView->verticalHeader()->hide();
-        errorView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+        errorView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
         QGroupBox *errorBox = new QGroupBox(tr("Failed Plugins"), this);
         layout = new QHBoxLayout(errorBox);

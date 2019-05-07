@@ -60,7 +60,7 @@ TimezoneTab::TimezoneTab(QWidget *parent)
     auto offsetProxy = new TimezoneOffsetDataClientModel(this);
     offsetProxy->setSourceModel(offsetModel);
     ui->offsetView->setModel(offsetProxy);
-    ui->offsetView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    ui->offsetView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 TimezoneTab::~TimezoneTab() = default;

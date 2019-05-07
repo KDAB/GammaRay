@@ -68,7 +68,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
     auto selectionModels = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectionModels"));
     ui->selectionModelsView->setModel(selectionModels);
     ui->selectionModelsView->header()->setObjectName("selectionModelsViewHeader");
-    ui->selectionModelsView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    ui->selectionModelsView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->selectionModelsView, &QWidget::customContextMenuRequested,
             this, &ModelInspectorWidget::selectionModelContextMenu);
     ui->selectionModelsView->setSelectionModel(ObjectBroker::selectionModel(selectionModels));

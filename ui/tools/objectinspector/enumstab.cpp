@@ -57,6 +57,6 @@ void EnumsTab::setObjectBaseName(const QString &baseName)
     proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "enums"));
     m_ui->enumView->setModel(proxy);
     m_ui->enumView->sortByColumn(0, Qt::AscendingOrder);
-    m_ui->enumView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    m_ui->enumView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     new SearchLineController(m_ui->enumSearchLine, proxy);
 }

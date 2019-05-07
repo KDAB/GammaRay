@@ -50,8 +50,8 @@ StyleElementStateTablePage::StyleElementStateTablePage(QWidget *parent)
     m_interface = ObjectBroker::object<StyleInspectorInterface *>();
 
     ui->setupUi(this);
-    ui->tableView->horizontalHeader()->setResizeMode(QHeaderView::Fixed);
-    ui->tableView->verticalHeader()->setResizeMode(QHeaderView::Fixed);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 
     connect(ui->widthBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             m_interface, &StyleInspectorInterface::setCellWidth);

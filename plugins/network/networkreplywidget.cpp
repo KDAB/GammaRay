@@ -51,7 +51,7 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
     auto proxy = new ClientNetworkReplyModel(this);
     proxy->setSourceModel(srcModel);
     ui->replyView->setModel(proxy);
-    ui->replyView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    ui->replyView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->replyView->expandAll();
 
     // auto-expand parents of new replies

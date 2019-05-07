@@ -40,11 +40,11 @@ SysInfoWidget::SysInfoWidget(QWidget* parent)
     ui->setupUi(this);
 
     ui->sysInfoView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SysInfoModel")));
-    ui->sysInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    ui->sysInfoView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->libInfoView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LibraryInfoModel")));
-    ui->libInfoView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    ui->libInfoView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->envView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EnvironmentModel")));
-    ui->envView->header()->setResizeMode(QHeaderView::ResizeToContents);
+    ui->envView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 SysInfoWidget::~SysInfoWidget() = default;
