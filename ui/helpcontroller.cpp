@@ -91,7 +91,6 @@ void HelpControllerPrivate::sendCommand(const QByteArray &cmd)
 
 Q_GLOBAL_STATIC(HelpControllerPrivate, s_helpController)
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
 static QString assistantExecutableName()
 {
 #ifdef Q_OS_OSX
@@ -100,7 +99,6 @@ static QString assistantExecutableName()
     return QStringLiteral("assistant");
 #endif
 }
-#endif
 
 bool HelpController::isAvailable()
 {

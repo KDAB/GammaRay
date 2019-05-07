@@ -69,11 +69,7 @@ public:
         const QList<QByteArray> paramTypes = signal.parameterTypes();
         for (int i = 0; i < paramTypes.size(); ++i) {
             int type = QMetaType::type(paramTypes[i]);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-            if (type == QMetaType::Void) {
-#else
             if (type == QMetaType::Void || type == QMetaType::UnknownType) {
-#endif
                 qWarning() << Q_FUNC_INFO << "unknown metatype for signal argument type"
                            << paramTypes[i];
                 continue;
