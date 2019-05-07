@@ -47,6 +47,8 @@
 #include <QDir>
 #include <QWidget>
 
+#include <algorithm>
+
 using namespace GammaRay;
 
 #define MAKE_FACTORY(type, label) \
@@ -258,7 +260,7 @@ void ClientToolManager::gotTools(const QVector<GammaRay::ToolData> &tools)
             }
         }
     }
-    qSort(m_tools.begin(), m_tools.end(), toolLessThan);
+    std::sort(m_tools.begin(), m_tools.end(), toolLessThan);
     emit toolListAvailable();
 
     if (m_remote) {

@@ -46,6 +46,7 @@
 #include <private/qsgsoftwarerenderer_p.h>
 #endif
 
+#include <algorithm>
 #include <functional>
 #include <cmath>
 
@@ -137,9 +138,9 @@ static QVector<QQuickItem *> findItemByClassName(const char *className, QQuickIt
     QList<QQuickItem *> childItems = parent->childItems();
     // direct children of contentItem need to be sorted the over way so overlay is draw on top of the rest
     if (parent == parent->window()->contentItem()) {
-        qSort(childItems.begin(), childItems.end(), quickItemZGreaterThan);
+        std::sort(childItems.begin(), childItems.end(), quickItemZGreaterThan);
     } else {
-        qSort(childItems.begin(), childItems.end(), quickItemZLessThan);
+        std::sort(childItems.begin(), childItems.end(), quickItemZLessThan);
     }
 
 

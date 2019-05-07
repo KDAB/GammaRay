@@ -38,6 +38,8 @@
 
 #include <common/objectmodel.h>
 
+#include <cstring>
+
 namespace GammaRay {
 
 class Widget3DWidget : public QObject
@@ -63,7 +65,7 @@ public:
     inline QString id() const {
         QString str(8, QLatin1Char('0'));
         const quint64 ptr = reinterpret_cast<quint64>(mQWidget.data());
-        qMemCopy(str.data(), &ptr, 8);
+        std::memcpy(str.data(), &ptr, 8);
         return str;
     };
 

@@ -43,6 +43,8 @@
 #include <QIviAmFmTuner>
 #endif
 
+#include <algorithm>
+
 //#define ENABLE_LOG
 
 using namespace GammaRay;
@@ -190,7 +192,7 @@ private:
             }
         }
 
-        qStableSort(iviPropertyNames);
+        std::stable_sort(iviPropertyNames.begin(), iviPropertyNames.end());
         QVERIFY_RETURN_FALSE(!iviPropertyNames.isEmpty());
         QVERIFY_RETURN_FALSE(!iviProperties.isEmpty());
 
@@ -209,7 +211,7 @@ private:
                     carrierPropertyValue(iviObject, carrierModelPropertyNames.last()));
         }
 
-        qStableSort(carrierModelPropertyNames);
+        std::stable_sort(carrierModelPropertyNames.begin(), carrierModelPropertyNames.end());
         QCOMPARE_RETURN_FALSE(carrierModelPropertyNames.count(), iviPropertyNames.count());
         QVERIFY_RETURN_FALSE(carrierModelPropertyNames == iviPropertyNames);
 
