@@ -33,6 +33,7 @@
 
 #include <ui/clientpropertymodel.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
+#include <ui/searchlinecontroller.h>
 
 #include <common/objectbroker.h>
 
@@ -44,8 +45,10 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
+    QAbstractItemModel * const eventModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventModel"));
+    new SearchLineController(ui->eventSearchLine, eventModel);
     ui->eventTree->setDeferredResizeMode(EventModelColumn::Time, QHeaderView::ResizeToContents);
-    ui->eventTree->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventModel")));
+    ui->eventTree->setModel(eventModel);
     ui->eventTree->setSelectionModel(ObjectBroker::selectionModel(ui->eventTree->model()));
 
     auto clientPropModel = new ClientPropertyModel(this);
