@@ -141,7 +141,7 @@ QStringList PEFile::imports() const
         const char *libraryName
             = reinterpret_cast<const char *>(rvaToFile(m_fileHeader, importDesc->Name));
         if (libraryName)
-            libs.push_back(QString::fromAscii(libraryName));
+            libs.push_back(QString::fromLatin1(libraryName));
         importDesc++;
         if (reinterpret_cast<const uchar *>(importDesc) + sizeof(IMAGE_IMPORT_DESCRIPTOR) >= m_end)
             return QStringList();

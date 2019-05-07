@@ -261,7 +261,7 @@ void TextureViewWidget::analyzeImageFlaws()
     if ( hs && !vs) overallSavingsInPercent = m_horizontalBorderImageSavingsInPercent;
     if (!hs &&  vs) overallSavingsInPercent = m_verticalBorderImageSavings;
     if ( hs &&  vs) {
-        const auto overlapRect = m_horizontalBorderRectMidCut.intersect(m_verticalBorderRectMidCut);
+        const auto overlapRect = m_horizontalBorderRectMidCut.intersected(m_verticalBorderRectMidCut);
         overallSavingsInPercent = area(m_horizontalBorderRectMidCut) + area(m_verticalBorderRectMidCut) - area(overlapRect);
         overallSavingsInPercent = qRound(overallSavingsInPercent / ((float) area(m_analyzedRect)) * 100);
     }

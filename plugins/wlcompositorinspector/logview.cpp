@@ -488,7 +488,7 @@ public:
 
     void mouseMoveEvent(QMouseEvent *e) override
     {
-      const QPointF &pos = e->posF();
+      const QPointF &pos = e->localPos();
       for (int i = 0; i < m_data.count(); ++i) {
         qreal timex = (m_data.at(i).time - m_start) / m_zoom;
         if (fabs(pos.x() - timex) < 2) {

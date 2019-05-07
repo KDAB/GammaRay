@@ -111,7 +111,6 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_PROPERTY_ST(QCoreApplication, applicationPid);
     MO_ADD_PROPERTY_ST(QCoreApplication, arguments);
     MO_ADD_PROPERTY_ST(QCoreApplication, closingDown);
-    MO_ADD_PROPERTY_ST(QCoreApplication, hasPendingEvents);
     MO_ADD_PROPERTY_ST(QCoreApplication, isQuitLockEnabled);
     MO_ADD_PROPERTY_ST(QCoreApplication, isSetuidAllowed);
     MO_ADD_PROPERTY_ST(QCoreApplication, libraryPaths);
