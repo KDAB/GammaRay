@@ -94,6 +94,7 @@ Q_DECLARE_METATYPE(QFlags<QTouchDevice::CapabilityFlag>)
 Q_DECLARE_METATYPE(QTouchDevice*)
 Q_DECLARE_METATYPE(QScrollEvent::ScrollState)
 Q_DECLARE_METATYPE(QList<QInputMethodEvent::Attribute>)
+Q_DECLARE_METATYPE(QContextMenuEvent::Reason)
 
 
 // QGradient is pseudo-polymorphic, make it introspectable nevertheless
@@ -435,9 +436,28 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QPixelFormat, yellowSize);
     MO_ADD_PROPERTY_RO(QPixelFormat, yuvLayout);
 
+    MO_ADD_METAOBJECT1(QDropEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QDropEvent, dropAction);
+    MO_ADD_PROPERTY_RO(QDropEvent, keyboardModifiers);
+    MO_ADD_PROPERTY_RO(QDropEvent, mimeData);
+    MO_ADD_PROPERTY_RO(QDropEvent, mouseButtons);
+    MO_ADD_PROPERTY_RO(QDropEvent, pos);
+    MO_ADD_PROPERTY_RO(QDropEvent, posF);
+    MO_ADD_PROPERTY_RO(QDropEvent, possibleActions);
+    MO_ADD_PROPERTY_RO(QDropEvent, proposedAction);
+    MO_ADD_PROPERTY_RO(QDropEvent, source);
+
+    MO_ADD_METAOBJECT1(QDragMoveEvent, QDropEvent);
+    MO_ADD_PROPERTY_RO(QDragMoveEvent, answerRect);
+
     MO_ADD_METAOBJECT1(QInputEvent, QEvent);
     MO_ADD_PROPERTY_RO(QInputEvent, modifiers);
     MO_ADD_PROPERTY_RO(QInputEvent, timestamp);
+
+    MO_ADD_METAOBJECT1(QContextMenuEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QContextMenuEvent, globalPos);
+    MO_ADD_PROPERTY_RO(QContextMenuEvent, pos);
+    MO_ADD_PROPERTY_RO(QContextMenuEvent, reason);
 
     MO_ADD_METAOBJECT1(QMouseEvent, QInputEvent);
     MO_ADD_PROPERTY_RO(QMouseEvent, button);
@@ -522,6 +542,10 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QInputMethodQueryEvent, QEvent);
     MO_ADD_PROPERTY_RO(QInputMethodQueryEvent, queries);
 
+    MO_ADD_METAOBJECT1(QHelpEvent, QEvent)
+    MO_ADD_PROPERTY_RO(QHelpEvent, globalPos)
+    MO_ADD_PROPERTY_RO(QHelpEvent, pos)
+
     MO_ADD_METAOBJECT1(QMoveEvent, QEvent);
     MO_ADD_PROPERTY_RO(QMoveEvent, pos);
     MO_ADD_PROPERTY_RO(QMoveEvent, oldPos);
@@ -585,6 +609,14 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QScreenOrientationChangeEvent, QEvent);
     MO_ADD_PROPERTY_RO(QScreenOrientationChangeEvent, screen);
     MO_ADD_PROPERTY_RO(QScreenOrientationChangeEvent, orientation);
+
+    MO_ADD_METAOBJECT1(QShortcutEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QShortcutEvent, isAmbiguous);
+    MO_ADD_PROPERTY_RO(QShortcutEvent, key);
+    MO_ADD_PROPERTY_RO(QShortcutEvent, shortcutId);
+
+    MO_ADD_METAOBJECT1(QStatusTipEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QStatusTipEvent, tip);
 
     MO_ADD_METAOBJECT1(QApplicationStateChangeEvent, QEvent);
     MO_ADD_PROPERTY_RO(QApplicationStateChangeEvent, applicationState);
@@ -699,6 +731,14 @@ static QString painterPathToString(const QPainterPath &path)
     return GuiSupport::tr("<%1 elements>").arg(path.elementCount());
 }
 
+#define E(x) { QContextMenuEvent::x , #x }
+static const MetaEnum::Value<QContextMenuEvent::Reason> context_menu_reason_table[] = {
+    E(Mouse),
+    E(Keyboard),
+    E(Other)
+};
+#undef E
+
 #define E(x) { QSurfaceFormat:: x, #x }
 static const MetaEnum::Value<QSurfaceFormat::FormatOption> surface_format_option_table[] = {
     E(StereoBuffers),
@@ -749,6 +789,13 @@ static const MetaEnum::Value<QFont::StyleHint> font_style_hint_table[] = {
     E(Fantasy),
     E(Cursive),
     E(System)
+};
+#undef E
+
+#define E(x) { Qt:: x, #x }
+static const MetaEnum::Value<Qt::MouseEventFlag> mouse_event_flag_table[] = {
+    E(MouseEventCreatedDoubleClick),
+    E(MouseEventFlagMask)
 };
 #undef E
 
@@ -999,6 +1046,7 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<const QMimeData*>(Util::displayString);
     VariantHandler::registerStringConverter<QSurfaceFormat>(surfaceFormatToString);
 
+    ER_REGISTER_ENUM(QContextMenuEvent, Reason, context_menu_reason_table);
     ER_REGISTER_ENUM(QSurface, SurfaceClass, surface_class_table);
     ER_REGISTER_ENUM(QSurface, SurfaceType, surface_type_table);
     ER_REGISTER_FLAGS(QSurfaceFormat, FormatOptions, surface_format_option_table);
@@ -1016,6 +1064,8 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QPainter, CompositionMode, painter_composition_mode_table);
     ER_REGISTER_FLAGS(QPainter, RenderHints, painter_render_hint_table);
     ER_REGISTER_ENUM(QPaintEngine, PolygonDrawMode, paintengine_polygon_draw_mode_table);
+
+    ER_REGISTER_FLAGS(Qt, MouseEventFlags, mouse_event_flag_table);
 
     VariantHandler::registerStringConverter<QBrush>(brushToString);
     VariantHandler::registerStringConverter<const QGradient*>(Util::addressToString);

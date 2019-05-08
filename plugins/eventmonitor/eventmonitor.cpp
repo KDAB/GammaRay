@@ -85,6 +85,8 @@ QString eventTypeToClassName(QEvent::Type type) {
     case QEvent::KeyRelease:
     case QEvent::ShortcutOverride:
         return QStringLiteral("QKeyEvent");
+    case QEvent::Shortcut:
+        return QStringLiteral("QShortcutEvent");
     case QEvent::InputMethod:
         return QStringLiteral("QInputMethodEvent");
     case QEvent::InputMethodQuery:
@@ -127,6 +129,23 @@ QString eventTypeToClassName(QEvent::Type type) {
         return QStringLiteral("QTimerEvent");
     case QEvent::MetaCall:
         return QStringLiteral("QMetaCallEvent");  // about to change in 5.14? see https://code.qt.io/cgit/qt/qtbase.git/commit/?h=dev&id=999c26dd83ad37fcd7a2b2fc62c0281f38c8e6e0
+    case QEvent::ActionAdded:
+    case QEvent::ActionChanged:
+    case QEvent::ActionRemoved:
+        return QStringLiteral("QActionEvent");
+    case QEvent::ContextMenu:
+        return QStringLiteral("QContextMenuEvent");
+    case QEvent::Drop:
+        return QStringLiteral("QDropEvent");
+    case QEvent::DragEnter:
+    case QEvent::DragMove:
+        return QStringLiteral("QDragMoveEvent");
+    case QEvent::GraphicsSceneHelp:
+    case QEvent::QueryWhatsThis:
+    case QEvent::ToolTip:
+        return QStringLiteral("QHelpEvent");
+    case QEvent::StatusTip:
+        return QStringLiteral("QStatusTip");
     default:
         return QStringLiteral("");
     }

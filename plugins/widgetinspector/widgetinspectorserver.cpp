@@ -644,6 +644,10 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY   (QSizePolicy, retainSizeWhenHidden, setRetainSizeWhenHidden);
     MO_ADD_PROPERTY   (QSizePolicy, verticalPolicy, setVerticalPolicy);
     MO_ADD_PROPERTY   (QSizePolicy, verticalStretch, setVerticalStretch);
+
+    MO_ADD_METAOBJECT1(QActionEvent, QEvent);
+    MO_ADD_PROPERTY_RO(QActionEvent, action);
+    MO_ADD_PROPERTY_RO(QActionEvent, before);
 }
 
 static QString sizePolicyPolicyToString(QSizePolicy::Policy policy)
