@@ -18,62 +18,128 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
-    <widget class="QSplitter" name="mainSplitter">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>1</number>
      </property>
-     <widget class="QWidget" name="layoutWidget_2">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Log</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QHBoxLayout" name="toolbarLayout">
-         <property name="bottomMargin">
-          <number>6</number>
+        <widget class="QSplitter" name="mainSplitter">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-         <item>
-          <widget class="QLineEdit" name="eventSearchLine"/>
-         </item>
-         <item>
-          <widget class="QToolButton" name="pauseButton">
-           <property name="text">
-            <string>Pause</string>
-           </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="clearButton">
-           <property name="text">
-            <string>Clear History</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="GammaRay::DeferredTreeView" name="eventTree">
-         <property name="contextMenuPolicy">
-          <enum>Qt::CustomContextMenu</enum>
-         </property>
-         <property name="uniformRowHeights">
-          <bool>true</bool>
-         </property>
+         <widget class="QWidget" name="layoutWidget">
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <layout class="QHBoxLayout" name="toolbarLayout">
+             <property name="bottomMargin">
+              <number>6</number>
+             </property>
+             <item>
+              <widget class="QLineEdit" name="eventSearchLine"/>
+             </item>
+             <item>
+              <widget class="QToolButton" name="pauseButton">
+               <property name="text">
+                <string>Pause</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="clearButton">
+               <property name="text">
+                <string>Clear History</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="GammaRay::DeferredTreeView" name="eventTree">
+             <property name="contextMenuPolicy">
+              <enum>Qt::CustomContextMenu</enum>
+             </property>
+             <property name="uniformRowHeights">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="layoutWidget_2">
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="GammaRay::DeferredTreeView" name="eventInspector">
+             <property name="contextMenuPolicy">
+              <enum>Qt::CustomContextMenu</enum>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::ContiguousSelection</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="layoutWidget_2">
-      <layout class="QVBoxLayout" name="verticalLayout">
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Types</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="GammaRay::DeferredTreeView" name="eventInspector">
-         <property name="contextMenuPolicy">
-          <enum>Qt::CustomContextMenu</enum>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::ContiguousSelection</enum>
-         </property>
-        </widget>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="toolbarLayout">
+           <property name="bottomMargin">
+            <number>6</number>
+           </property>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QToolButton" name="selectAllButton">
+             <property name="text">
+              <string>Enable All</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="deselectAllButton">
+             <property name="text">
+              <string>Disable All</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="GammaRay::DeferredTreeView" name="eventTypeTree">
+           <property name="uniformRowHeights">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>

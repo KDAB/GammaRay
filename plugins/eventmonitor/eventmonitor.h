@@ -32,6 +32,7 @@
 #include <core/toolfactory.h>
 #include "eventmodel.h"
 #include "eventmonitorinterface.h"
+#include "eventtypemodel.h"
 
 #include <QObject>
 
@@ -60,6 +61,7 @@ private slots:
 
 private:
     EventModel *m_eventModel;
+    EventTypeModel *m_eventTypeModel;
     AggregatedPropertyModel *m_eventPropertyModel;
 };
 
