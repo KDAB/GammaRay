@@ -74,7 +74,7 @@ QVariant EventTypeModel::data(const QModelIndex &index, int role) const
         case Columns::Count:
             return eventTypeData->count;
         case Columns::LoggingStatus:
-            return ""; //eventTypeData->loggingEnabled;
+            return QVariant();
         }
     } else if (role == Qt::CheckStateRole) {
         switch (index.column()) {
@@ -163,9 +163,12 @@ void EventTypeModel::disableAll()
 
 void EventTypeModel::resetCount()
 {
+    beginResetModel();
     for (EventTypeData* eventTypeData: m_data) {
         eventTypeData->count = 0;
     }
+    endResetModel();
+
 }
 
 void EventTypeModel::initEventTypes()

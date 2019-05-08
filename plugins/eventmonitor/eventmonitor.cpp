@@ -277,5 +277,6 @@ EventMonitor::~EventMonitor() {
 
 void EventMonitor::clearHistory()
 {
-    s_model->clear();
+    m_eventModel->clear();
+    m_eventTypeModel->resetCount();
 }
