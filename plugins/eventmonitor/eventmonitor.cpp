@@ -51,6 +51,7 @@ using namespace GammaRay;
 
 
 static EventModel *s_model = nullptr;
+static EventTypeModel *s_eventTypeModel = nullptr;
 static EventMonitor *s_eventMonitor = nullptr;
 
 
@@ -136,7 +137,7 @@ QString eventTypeToClassName(QEvent::Type type) {
 
 static bool eventCallback(void **data)
 {
-    if (!s_model || !s_eventMonitor || !Probe::instance()) {
+    if (!s_model || !s_eventTypeModel || !s_eventMonitor || !Probe::instance()) {
         return false;
     }
 
@@ -216,11 +217,11 @@ static bool eventCallback(void **data)
         }
     }
 
-    if (s_model) {
-        // add directly from foreground thread, delay from background thread
-        QMetaObject::invokeMethod(s_model, "addEvent", Qt::AutoConnection,
-                                  Q_ARG(GammaRay::EventData, eventData));
-    }
+    // add directly from foreground thread, delay from background thread
+    QMetaObject::invokeMethod(s_model, "addEvent", Qt::AutoConnection,
+                              Q_ARG(GammaRay::EventData, eventData));
+    QMetaObject::invokeMethod(s_eventTypeModel, "increaseCount", Qt::AutoConnection,
+                              Q_ARG(QEvent::Type, event->type()));
     return false;
 }
 
@@ -228,10 +229,14 @@ static bool eventCallback(void **data)
 EventMonitor::EventMonitor(Probe *probe, QObject *parent)
     : EventMonitorInterface(parent)
     , m_eventModel(new EventModel(this))
+    , m_eventTypeModel(new EventTypeModel(this))
     , m_eventPropertyModel(new AggregatedPropertyModel(this))
 {
     Q_ASSERT(s_model == nullptr);
     s_model = m_eventModel;
+
+    Q_ASSERT(s_eventTypeModel == nullptr);
+    s_eventTypeModel = m_eventTypeModel;
 
     Q_ASSERT(s_eventMonitor == nullptr);
     s_eventMonitor = this;
@@ -241,6 +246,10 @@ EventMonitor::EventMonitor(Probe *probe, QObject *parent)
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     proxy->setSourceModel(m_eventModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventModel"), proxy);
+
+    auto evenTypeProxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+    evenTypeProxy->setSourceModel(m_eventTypeModel);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventTypeModel"), evenTypeProxy);
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventPropertyModel"), m_eventPropertyModel);
 
@@ -261,6 +270,7 @@ void EventMonitor::eventSelected(const QItemSelection &selection)
 
 EventMonitor::~EventMonitor() {
     s_model = nullptr;
+    s_eventTypeModel = nullptr;
     s_eventMonitor = nullptr;
     QInternal::unregisterCallback(QInternal::EventNotifyCallback, eventCallback);
 }

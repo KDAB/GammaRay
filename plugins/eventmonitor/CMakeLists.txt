@@ -7,6 +7,7 @@ set(gammaray_eventmonitor_plugin_srcs
   eventmonitor.cpp
   eventmodel.cpp
   eventmonitorinterface.cpp
+  eventtypemodel.cpp
 )
 
 gammaray_add_plugin(gammaray_eventmonitor_plugin

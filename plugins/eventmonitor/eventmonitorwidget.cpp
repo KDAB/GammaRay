@@ -68,6 +68,9 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     clientPropModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventPropertyModel")));
     ui->eventInspector->setModel(clientPropModel);
     ui->eventInspector->setItemDelegate(new PropertyEditorDelegate(this));
+
+    QAbstractItemModel * const eventTypeModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventTypeModel"));
+    ui->eventTypeTree->setModel(eventTypeModel);
 }
 
 EventMonitorWidget::~EventMonitorWidget()
