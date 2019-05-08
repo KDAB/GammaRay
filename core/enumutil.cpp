@@ -107,8 +107,9 @@ int EnumUtil::enumToInt(const QVariant &value, const QMetaEnum &metaEnum)
 QString EnumUtil::enumToString(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
 {
     const auto me = metaEnum(value, typeName, metaObject);
-    if (me.isValid())
-        return me.valueToKeys(enumToInt(value, me));
+    if (me.isValid()) {
+        return me.isFlag() ? QString::fromUtf8(me.valueToKeys(enumToInt(value, me))) : QString::fromUtf8(me.valueToKey(enumToInt(value, me)));
+    }
     if (EnumRepositoryServer::isEnum(value.userType())) {
         const auto ev = EnumRepositoryServer::valueFromVariant(value);
         const auto def = EnumRepositoryServer::definitionForId(ev.id());
