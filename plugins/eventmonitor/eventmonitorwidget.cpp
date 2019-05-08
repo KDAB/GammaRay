@@ -75,6 +75,9 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     ui->eventInspector->setModel(clientPropModel);
     ui->eventInspector->setItemDelegate(new PropertyEditorDelegate(this));
     connect(ui->eventInspector, &QTreeView::customContextMenuRequested, this, &EventMonitorWidget::eventInspectorContextMenu);
+
+    QAbstractItemModel * const eventTypeModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventTypeModel"));
+    ui->eventTypeTree->setModel(eventTypeModel);
 }
 
 EventMonitorWidget::~EventMonitorWidget()
