@@ -33,10 +33,15 @@
 #include "eventmonitorclient.h"
 
 #include <ui/clientpropertymodel.h>
+#include <ui/contextmenuextension.h>
 #include <ui/propertyeditor/propertyeditordelegate.h>
 #include <ui/searchlinecontroller.h>
 
 #include <common/objectbroker.h>
+#include <common/objectid.h>
+#include <common/propertymodel.h>
+
+#include <QMenu>
 
 static QObject *createEventMonitorClient(const QString & /*name*/, QObject *parent)
 {
@@ -60,6 +65,7 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     ui->eventTree->setDeferredResizeMode(EventModelColumn::Time, QHeaderView::ResizeToContents);
     ui->eventTree->setModel(eventModel);
     ui->eventTree->setSelectionModel(ObjectBroker::selectionModel(ui->eventTree->model()));
+    connect(ui->eventTree, &QTreeView::customContextMenuRequested, this, &EventMonitorWidget::eventTreeContextMenu);
 
     connect(ui->pauseButton, &QAbstractButton::toggled, this, &EventMonitorWidget::pauseAndResume);
     connect(ui->clearButton, &QAbstractButton::pressed, m_interface, &EventMonitorInterface::clearHistory);
@@ -68,6 +74,7 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     clientPropModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventPropertyModel")));
     ui->eventInspector->setModel(clientPropModel);
     ui->eventInspector->setItemDelegate(new PropertyEditorDelegate(this));
+    connect(ui->eventInspector, &QTreeView::customContextMenuRequested, this, &EventMonitorWidget::eventInspectorContextMenu);
 }
 
 EventMonitorWidget::~EventMonitorWidget()
@@ -78,4 +85,40 @@ EventMonitorWidget::~EventMonitorWidget()
 void EventMonitorWidget::pauseAndResume(bool pause)
 {
     m_interface->setIsPaused(pause);
+}
+
+void EventMonitorWidget::eventTreeContextMenu(QPoint pos)
+{
+    auto index = ui->eventTree->indexAt(pos);
+    if (!index.isValid())
+        return;
+    index = index.sibling(index.row(), EventModelColumn::Receiver);
+
+    const auto objectId = index.data(EventModelRole::ReceiverIdRole).value<ObjectId>();
+    if (objectId.isNull())
+        return;
+
+    QMenu menu;
+    ContextMenuExtension ext(objectId);
+    ext.populateMenu(&menu);
+    menu.exec(ui->eventTree->viewport()->mapToGlobal(pos));
+}
+
+void EventMonitorWidget::eventInspectorContextMenu(QPoint pos)
+{
+    const auto idx = ui->eventInspector->indexAt(pos);
+    if (!idx.isValid())
+        return;
+
+    const auto actions = idx.data(PropertyModel::ActionRole).toInt();
+    const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
+    ContextMenuExtension ext(objectId);
+    const bool canShow = (actions == PropertyModel::NavigateTo && !objectId.isNull())
+                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+    if (!canShow)
+        return;
+
+    QMenu contextMenu;
+    ext.populateMenu(&contextMenu);
+    contextMenu.exec(ui->eventInspector->viewport()->mapToGlobal(pos));
 }

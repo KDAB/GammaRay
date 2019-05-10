@@ -28,8 +28,6 @@
 #ifndef GAMMARAY_EVENTMONITOR_EVENTMODEL_H
 #define GAMMARAY_EVENTMONITOR_EVENTMODEL_H
 
-#include <core/execution.h>
-
 #include <QAbstractTableModel>
 #include <QTime>
 #include <QVector>
@@ -67,6 +65,7 @@ public:
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
+    QMap<int, QVariant> itemData(const QModelIndex & index) const override;
 
 public slots:
     void addEvent(const GammaRay::EventData &event);

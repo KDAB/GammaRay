@@ -51,6 +51,9 @@ private slots:
     void pauseAndResume(bool pause);
 
 private:
+    void eventTreeContextMenu(QPoint pos);
+    void eventInspectorContextMenu(QPoint pos);
+
     Ui::EventMonitorWidget *ui;
     EventMonitorInterface *m_interface;
 };

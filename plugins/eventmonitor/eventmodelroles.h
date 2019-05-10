@@ -36,6 +36,7 @@ namespace GammaRay {
 namespace EventModelRole {
 enum Role {
     AttributesRole = UserRole + 1,
+    ReceiverIdRole
 };
 }
 

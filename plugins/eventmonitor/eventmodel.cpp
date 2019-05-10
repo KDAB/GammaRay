@@ -33,6 +33,8 @@
 #include <core/util.h>
 #include <core/varianthandler.h>
 
+#include <common/objectid.h>
+
 #include <QMetaEnum>
 #include <QMutexLocker>
 #include <QPoint>
@@ -123,6 +125,10 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
             }
             return attributesMap;
         }
+    } else if (role == EventModelRole::ReceiverIdRole && index.column() == EventModelColumn::Receiver) {
+        if (index.internalId() == TopLevelId) {
+            return QVariant::fromValue(ObjectId(event.receiver));
+        }
     }
 
     return QVariant();
@@ -162,4 +168,13 @@ QModelIndex EventModel::parent(const QModelIndex &child) const
     if (!child.isValid() || child.internalId() == TopLevelId)
         return {};
     return createIndex(int(child.internalId()), 0, TopLevelId);
+}
+
+QMap<int, QVariant> EventModel::itemData(const QModelIndex& index) const
+{
+    auto d = QAbstractItemModel::itemData(index);
+    if (index.column() == EventModelColumn::Receiver) {
+        d.insert(EventModelRole::ReceiverIdRole, index.data(EventModelRole::ReceiverIdRole));
+    }
+    return d;
 }

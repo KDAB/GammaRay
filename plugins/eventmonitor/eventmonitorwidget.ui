@@ -53,6 +53,9 @@
        </item>
        <item>
         <widget class="GammaRay::DeferredTreeView" name="eventTree">
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
          <property name="uniformRowHeights">
           <bool>true</bool>
          </property>
@@ -64,6 +67,9 @@
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="GammaRay::DeferredTreeView" name="eventInspector">
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::ContiguousSelection</enum>
          </property>
