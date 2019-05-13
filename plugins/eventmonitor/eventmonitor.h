@@ -44,6 +44,20 @@ QT_END_NAMESPACE
 namespace GammaRay {
 class AggregatedPropertyModel;
 
+
+class EventPropagationListener : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit EventPropagationListener(QObject *parent)
+        : QObject(parent)
+    {}
+
+    virtual bool eventFilter(QObject *receiver, QEvent *event) override;
+};
+
+
 class EventMonitor : public EventMonitorInterface
 {
     Q_OBJECT
