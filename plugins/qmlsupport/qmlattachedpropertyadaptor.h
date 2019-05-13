@@ -32,6 +32,8 @@
 #include <core/propertyadaptor.h>
 #include <core/propertyadaptorfactory.h>
 
+#include <qqmlprivate.h>
+
 namespace GammaRay {
 class QmlAttachedPropertyAdaptor : public PropertyAdaptor
 {
@@ -47,7 +49,11 @@ protected:
     void doSetObject(const ObjectInstance &oi) override;
 
 private:
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+    QVector<QQmlAttachedPropertiesFunc> m_attachedTypes;
+#else
     QVector<int> m_attachedTypes;
+#endif
 };
 
 /** QML attached property adaptor. */
