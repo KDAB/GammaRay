@@ -29,6 +29,7 @@
 #include "eventmonitor.h"
 
 #include "eventmodelroles.h"
+#include "eventtypefilter.h"
 
 #include <core/aggregatedpropertymodel.h>
 #include <core/metaobjectrepository.h>
@@ -266,8 +267,11 @@ EventMonitor::EventMonitor(Probe *probe, QObject *parent)
 
     QInternal::registerCallback(QInternal::EventNotifyCallback, eventCallback);
 
+    auto filterProxy = new EventTypeFilter(this, m_eventTypeModel);
+    filterProxy->setSourceModel(m_eventModel);
+    connect(m_eventTypeModel, &EventTypeModel::typeVisibilityChanged, filterProxy, &QSortFilterProxyModel::invalidate);
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-    proxy->setSourceModel(m_eventModel);
+    proxy->setSourceModel(filterProxy);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventModel"), proxy);
 
     auto evenTypeProxy = new ServerProxyModel<QSortFilterProxyModel>(this);

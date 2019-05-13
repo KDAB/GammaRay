@@ -107,10 +107,12 @@ bool EventTypeModel::setData(const QModelIndex &index, const QVariant &value, in
 
     const auto enabled = value.toInt() == Qt::Checked;
     EventTypeData* eventTypeData = static_cast<EventTypeData*>(index.internalPointer());
-    if (index.column() == Columns::RecordingStatus)
+    if (index.column() == Columns::RecordingStatus) {
         eventTypeData->recordingEnabled = enabled;
-    else if (index.column() == Columns::Visibility)
+    } else if (index.column() == Columns::Visibility) {
         eventTypeData->isVisibleInLog = enabled;
+        emit typeVisibilityChanged();
+    }
     emit dataChanged(index, index, { Qt::CheckStateRole });
     return true;
 }
@@ -196,6 +198,14 @@ void EventTypeModel::recordNone()
     endResetModel();
 }
 
+bool EventTypeModel::isVisible(QEvent::Type type) const
+{
+    if (m_data.contains(type)) {
+        return m_data.value(type)->isVisibleInLog;
+    }
+    return true;
+}
+
 void EventTypeModel::showAll()
 {
     beginResetModel();
@@ -203,6 +213,7 @@ void EventTypeModel::showAll()
         eventTypeData->isVisibleInLog = true;
     }
     endResetModel();
+    emit typeVisibilityChanged();
 }
 
 void EventTypeModel::showNone()
@@ -212,6 +223,7 @@ void EventTypeModel::showNone()
         eventTypeData->isVisibleInLog = false;
     }
     endResetModel();
+    emit typeVisibilityChanged();
 }
 
 void EventTypeModel::initEventTypes()
