@@ -47,6 +47,11 @@ public:
 
 public slots:
     virtual void clearHistory() = 0;
+    virtual void recordAll() = 0;
+    virtual void recordNone() = 0;
+    virtual void showAll() = 0;
+    virtual void showNone() = 0;
+
     bool isPaused() const { return m_isPaused; }
     void setIsPaused(bool value);
 

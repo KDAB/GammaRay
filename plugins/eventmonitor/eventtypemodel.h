@@ -28,8 +28,6 @@
 #ifndef GAMMARAY_EVENTMONITOR_EVENTTYPEMODEL_H
 #define GAMMARAY_EVENTMONITOR_EVENTTYPEMODEL_H
 
-#include <core/execution.h>
-
 #include <QAbstractTableModel>
 #include <QMap>
 #include <QEvent>
@@ -37,7 +35,8 @@
 namespace GammaRay {
 struct EventTypeData {
     int count = 0;
-    bool loggingEnabled = true;
+    bool recordingEnabled = true;
+    bool isVisibleInLog = true;
 };
 }
 
@@ -51,10 +50,13 @@ class EventTypeModel : public QAbstractTableModel
 {
     Q_OBJECT
 
+public:
     enum Columns {
         Type = 0,
+        Value,
         Count,
-        LoggingStatus,
+        RecordingStatus,
+        Visibility,
         COUNT
     };
 
@@ -74,11 +76,14 @@ public:
 
 public slots:
     void increaseCount(QEvent::Type type);
+    void resetCounts();
 
-    void enableAll();
-    void disableAll();
+    bool isRecording(QEvent::Type type) const;
+    void recordAll();
+    void recordNone();
 
-    void resetCount();
+    void showAll();
+    void showNone();
 
 private:
     void initEventTypes();

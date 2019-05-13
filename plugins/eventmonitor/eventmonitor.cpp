@@ -170,7 +170,9 @@ static bool eventCallback(void **data)
         qWarning() << "Event or receiver is invalid";
         return false;
     }
-
+    if (!s_eventTypeModel->isRecording(event->type())) {
+        return false;
+    }
     if (Probe::instance()->filterObject(receiver)) {
         return false;
     }
@@ -298,5 +300,26 @@ EventMonitor::~EventMonitor() {
 
 void EventMonitor::clearHistory()
 {
-    s_model->clear();
+    m_eventModel->clear();
+    m_eventTypeModel->resetCounts();
+}
+
+void EventMonitor::recordAll()
+{
+    m_eventTypeModel->recordAll();
+}
+
+void EventMonitor::recordNone()
+{
+    m_eventTypeModel->recordNone();
+}
+
+void EventMonitor::showAll()
+{
+    m_eventTypeModel->showAll();
+}
+
+void EventMonitor::showNone()
+{
+    m_eventTypeModel->showNone();
 }

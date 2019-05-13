@@ -31,6 +31,7 @@
 
 #include "eventmodelroles.h"
 #include "eventmonitorclient.h"
+#include "eventtypemodel.h"
 
 #include <ui/clientpropertymodel.h>
 #include <ui/contextmenuextension.h>
@@ -77,7 +78,14 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     connect(ui->eventInspector, &QTreeView::customContextMenuRequested, this, &EventMonitorWidget::eventInspectorContextMenu);
 
     QAbstractItemModel * const eventTypeModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventTypeModel"));
+    ui->eventTypeTree->sortByColumn(EventTypeModel::Columns::Type, Qt::AscendingOrder);
+    ui->eventTypeTree->setDeferredResizeMode(EventTypeModel::Columns::Type, QHeaderView::Stretch);
     ui->eventTypeTree->setModel(eventTypeModel);
+
+    connect(ui->recordAllButton, &QAbstractButton::pressed, m_interface, &EventMonitorInterface::recordAll);
+    connect(ui->recordNoneButton, &QAbstractButton::pressed, m_interface, &EventMonitorInterface::recordNone);
+    connect(ui->showAllButton, &QAbstractButton::pressed, m_interface, &EventMonitorInterface::showAll);
+    connect(ui->showNoneButton, &QAbstractButton::pressed, m_interface, &EventMonitorInterface::showNone);
 }
 
 EventMonitorWidget::~EventMonitorWidget()

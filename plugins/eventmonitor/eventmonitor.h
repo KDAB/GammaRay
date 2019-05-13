@@ -55,6 +55,10 @@ public:
 
 public slots:
     virtual void clearHistory() override;
+    virtual void recordAll() override;
+    virtual void recordNone() override;
+    virtual void showAll() override;
+    virtual void showNone() override;
 
 private slots:
     void eventSelected(const QItemSelection &selection);
