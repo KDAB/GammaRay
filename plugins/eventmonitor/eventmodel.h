@@ -41,6 +41,8 @@ struct EventData {
     QEvent::Type type;
     QObject* receiver;
     QVector<QPair<const char *, QVariant>> attributes;
+    QEvent* eventPtr;
+    QVector<EventData> propagatedEvents;
 };
 }
 
@@ -73,6 +75,7 @@ public slots:
     void clear();
 
 private:
+    friend class EventPropagationListener;
     QVector<EventData> m_events;
 };
 }

@@ -41,6 +41,7 @@
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 
+#include <QAbstractNativeEventFilter>
 #include <QDebug>
 #include <QItemSelectionModel>
 #include <QMetaMethod>
@@ -49,7 +50,6 @@
 #include <QSortFilterProxyModel>
 
 using namespace GammaRay;
-
 
 static EventModel *s_model = nullptr;
 static EventTypeModel *s_eventTypeModel = nullptr;
@@ -155,20 +155,14 @@ QString eventTypeToClassName(QEvent::Type type) {
 }
 
 
-static bool eventCallback(void **data)
-{
+bool shouldBeRecorded(QObject* receiver, QEvent* event) {
     if (!s_model || !s_eventTypeModel || !s_eventMonitor || !Probe::instance()) {
         return false;
     }
-
-    if (s_eventMonitor->isPaused())
+    if (s_eventMonitor->isPaused()) {
         return false;
-
-    QEvent *event = reinterpret_cast<QEvent*>(data[1]);
-    QObject *receiver = reinterpret_cast<QObject*>(data[0]);
-
+    }
     if (!event || !receiver) {
-        qWarning() << "Event or receiver is invalid";
         return false;
     }
     if (!s_eventTypeModel->isRecording(event->type())) {
@@ -177,12 +171,17 @@ static bool eventCallback(void **data)
     if (Probe::instance()->filterObject(receiver)) {
         return false;
     }
+    return true;
+}
 
+
+EventData createEventData(QObject* receiver, QEvent* event) {
     EventData eventData;
     eventData.time = QTime::currentTime();
     eventData.type = event->type();
     eventData.receiver = receiver;
     eventData.attributes << QPair<const char*, QVariant>{"receiver", QVariant::fromValue(receiver)};
+    eventData.eventPtr = event;
 
     // the receiver of a deferred delete event is almost always invalid when shown in the UI
     // we therefore store the name of the receiver as a string to provide at least
@@ -240,6 +239,19 @@ static bool eventCallback(void **data)
             }
         }
     }
+    return eventData;
+}
+
+
+static bool eventCallback(void **data)
+{
+    QEvent *event = reinterpret_cast<QEvent*>(data[1]);
+    QObject *receiver = reinterpret_cast<QObject*>(data[0]);
+
+    if (!shouldBeRecorded(receiver, event))
+        return false;
+
+    EventData eventData = createEventData(receiver, event);
 
     // add directly from foreground thread, delay from background thread
     QMetaObject::invokeMethod(s_model, "addEvent", Qt::AutoConnection,
@@ -266,6 +278,7 @@ EventMonitor::EventMonitor(Probe *probe, QObject *parent)
     s_eventMonitor = this;
 
     QInternal::registerCallback(QInternal::EventNotifyCallback, eventCallback);
+    QCoreApplication::instance()->installEventFilter(new EventPropagationListener(this));
 
     auto filterProxy = new EventTypeFilter(this, m_eventTypeModel);
     filterProxy->setSourceModel(m_eventModel);
@@ -326,4 +339,28 @@ void EventMonitor::showAll()
 void EventMonitor::showNone()
 {
     m_eventTypeModel->showNone();
+}
+
+bool EventPropagationListener::eventFilter(QObject *receiver, QEvent *event)
+{
+    if (!s_model)
+        return false;
+
+    if (s_model->m_events.isEmpty())
+        return false;
+
+    EventData& lastEvent = s_model->m_events.last();
+
+    if (lastEvent.eventPtr == event && lastEvent.receiver == receiver) {
+        // this is the same event we already recorded in the event callback
+        return false;
+    }
+
+    if (!shouldBeRecorded(receiver, event))
+        return false;
+
+    EventData propagatedEvent = createEventData(receiver, event);
+    lastEvent.propagatedEvents.append(propagatedEvent);
+
+    return false;
 }

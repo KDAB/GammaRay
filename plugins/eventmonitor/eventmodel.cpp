@@ -78,57 +78,50 @@ int EventModel::rowCount(const QModelIndex &parent) const
     if (!parent.isValid())
         return m_events.size();
 
-    if (parent.internalId() == TopLevelId && parent.column() == 0)
-        // TODO: add event propagation history as children
-        return 0;
+    if (parent.internalId() == TopLevelId && parent.column() == 0) {
+        const EventData &event = m_events.at(parent.row());
+        return event.propagatedEvents.size();
+    }
 
     return 0;
 }
 
 QVariant EventModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() >= rowCount() || index.column() >= columnCount())
+    if (!index.isValid() || index.column() >= columnCount())
         return QVariant();
 
-    int eventIndex = -1;
-    if (index.internalId() == TopLevelId)
-        eventIndex = index.row();
-    else
-        eventIndex = int(index.internalId());
-    Q_ASSERT(eventIndex >= 0 && eventIndex < m_events.size());
-    const EventData &event = m_events.at(eventIndex);
+    bool isPropagatedEvent = index.internalId() != TopLevelId;
+
+    int rootEventIndex = isPropagatedEvent ? int(index.internalId()) : index.row();
+    Q_ASSERT(rootEventIndex >= 0 && rootEventIndex < m_events.size());
+    const EventData &event = isPropagatedEvent
+            ? m_events.at(rootEventIndex).propagatedEvents.at(index.row())
+            : m_events.at(rootEventIndex);
 
     if (role == Qt::DisplayRole) {
-        if (index.internalId() == TopLevelId) {
-            switch (index.column()) {
-            case EventModelColumn::Time:
-                return event.time.toString("hh:mm:ss.zzz");
-            case EventModelColumn::Type:
-                return VariantHandler::displayString(event.type);
-            case EventModelColumn::Receiver:
-            {
-                QMutexLocker lock(Probe::objectLock());
-                if (Probe::instance()->isValidObject(event.receiver)) {
-                    return Util::displayString(event.receiver);
-                }
-                return Util::addressToString(event.receiver);
+        switch (index.column()) {
+        case EventModelColumn::Time:
+            return isPropagatedEvent ? "<propagated>" : event.time.toString("hh:mm:ss.zzz");
+        case EventModelColumn::Type:
+            return VariantHandler::displayString(event.type);
+        case EventModelColumn::Receiver:
+        {
+            QMutexLocker lock(Probe::objectLock());
+            if (Probe::instance()->isValidObject(event.receiver)) {
+                return Util::displayString(event.receiver);
             }
-            }
-        } else {
-            // TODO: add event propagation history as children
+            return Util::addressToString(event.receiver);
+        }
         }
     } else if (role == EventModelRole::AttributesRole) {
-        if (index.internalId() == TopLevelId) {
-            QVariantMap attributesMap;
-            for (const QPair<const char *, QVariant>& pair: event.attributes) {
-                attributesMap.insert(QString::fromUtf8(pair.first), pair.second);
-            }
-            return attributesMap;
+        QVariantMap attributesMap;
+        for (const QPair<const char *, QVariant>& pair: event.attributes) {
+            attributesMap.insert(QString::fromUtf8(pair.first), pair.second);
         }
+        return attributesMap;
     } else if (role == EventModelRole::ReceiverIdRole && index.column() == EventModelColumn::Receiver) {
-        if (index.internalId() == TopLevelId) {
-            return QVariant::fromValue(ObjectId(event.receiver));
-        }
+        return QVariant::fromValue(ObjectId(event.receiver));
     }
 
     return QVariant();
@@ -156,7 +149,7 @@ QModelIndex EventModel::index(int row, int column, const QModelIndex &parent) co
         return {};
 
     if (parent.isValid()) {
-        if (row >= m_events.at(parent.row()).attributes.size())
+        if (row >= m_events.at(parent.row()).propagatedEvents.size())
             return QModelIndex();
         return createIndex(row, column, static_cast<quintptr>(parent.row()));
     }
