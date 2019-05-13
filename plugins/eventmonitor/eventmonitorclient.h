@@ -41,7 +41,11 @@ public:
     ~EventMonitorClient() override;
 
 public slots:
-    void clearHistory() override;
+    virtual void clearHistory() override;
+    virtual void recordAll() override;
+    virtual void recordNone() override;
+    virtual void showAll() override;
+    virtual void showNone() override;
 };
 }
 

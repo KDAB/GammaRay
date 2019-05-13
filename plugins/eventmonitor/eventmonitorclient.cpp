@@ -45,3 +45,23 @@ void GammaRay::EventMonitorClient::clearHistory()
 {
     Endpoint::instance()->invokeObject(objectName(), "clearHistory");
 }
+
+void EventMonitorClient::recordAll()
+{
+    Endpoint::instance()->invokeObject(objectName(), "recordAll");
+}
+
+void EventMonitorClient::recordNone()
+{
+    Endpoint::instance()->invokeObject(objectName(), "recordNone");
+}
+
+void EventMonitorClient::showAll()
+{
+    Endpoint::instance()->invokeObject(objectName(), "showAll");
+}
+
+void EventMonitorClient::showNone()
+{
+    Endpoint::instance()->invokeObject(objectName(), "showNone");
+}

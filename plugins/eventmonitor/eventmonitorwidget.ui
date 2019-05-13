@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>689</width>
     <height>300</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
           <enum>Qt::Horizontal</enum>
          </property>
          <widget class="QWidget" name="layoutWidget">
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
             <layout class="QHBoxLayout" name="toolbarLayout">
              <property name="bottomMargin">
@@ -99,7 +99,7 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <layout class="QHBoxLayout" name="toolbarLayout">
+          <layout class="QHBoxLayout" name="toolbarLayout_2">
            <property name="bottomMargin">
             <number>6</number>
            </property>
@@ -117,16 +117,46 @@
             </spacer>
            </item>
            <item>
-            <widget class="QToolButton" name="selectAllButton">
+            <widget class="QToolButton" name="recordAllButton">
              <property name="text">
-              <string>Enable All</string>
+              <string>Record All</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QToolButton" name="deselectAllButton">
+            <widget class="QToolButton" name="recordNoneButton">
              <property name="text">
-              <string>Disable All</string>
+              <string>Record None</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Maximum</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QToolButton" name="showAllButton">
+             <property name="text">
+              <string>Show All</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="showNoneButton">
+             <property name="text">
+              <string>Show None</string>
              </property>
             </widget>
            </item>
