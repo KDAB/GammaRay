@@ -82,8 +82,12 @@ public slots:
     void recordAll();
     void recordNone();
 
+    bool isVisible(QEvent::Type type) const;
     void showAll();
     void showNone();
+
+signals:
+    void typeVisibilityChanged();
 
 private:
     void initEventTypes();
