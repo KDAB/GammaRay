@@ -94,6 +94,13 @@ macro(gammaray_join_list _var _sep)
   endforeach()
 endmacro()
 
+macro(gammaray_convert_to_relative_path _var)
+  # Make sure _var is a relative path
+  if(IS_ABSOLUTE "${${_var}}")
+    file(RELATIVE_PATH ${_var} "${CMAKE_INSTALL_PREFIX}" "${${_var}}")
+  endif()
+endmacro()
+
 macro(gammaray_inverse_dir _var _prefix)
   # strip out relative components, those break the following on OSX
   get_filename_component(_clean_prefix "${CMAKE_INSTALL_PREFIX}/${_prefix}" ABSOLUTE)

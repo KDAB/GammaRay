@@ -602,19 +602,23 @@ else()
   include(GNUInstallDirs)
 
   set(BIN_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}") # relative, usually "bin"
+  gammaray_convert_to_relative_path(BIN_INSTALL_DIR)
   if(GAMMARAY_INSTALL_QT_LAYOUT)
     set(LIB_INSTALL_DIR "lib") # Qt always uses "lib"
   else()
-    set(LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}") # "lib" or "lib64"
+    set(LIB_INSTALL_DIR  "${CMAKE_INSTALL_LIBDIR}") # "lib" or "lib64"
+    gammaray_convert_to_relative_path(LIB_INSTALL_DIR)
   endif()
   set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/gammaray")
   set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/GammaRay)
   set(DATAROOTDIR "${CMAKE_INSTALL_DATAROOTDIR}" CACHE PATH "Define install directory for read-only architecture-independent data")
+  gammaray_convert_to_relative_path(DATAROOTDIR)
   set(XDG_APPS_INSTALL_DIR "${DATAROOTDIR}/applications")
   set(APPDATA_INSTALL_DIR "${DATAROOTDIR}/appdata")
   set(ICON_INSTALL_DIR "${DATAROOTDIR}/icons")
   set(MAN_INSTALL_DIR "${DATAROOTDIR}/man/man1")
-  set(QCH_INSTALL_DIR "${CMAKE_INSTALL_DOCDIR}" CACHE STRING "Install location of Qt Assistant help files.")
+  set(QCH_INSTALL_DIR "${CMAKE_INSTALL_DOCDIR}" CACHE PATH "Install location of Qt Assistant help files.")
+  gammaray_convert_to_relative_path(QCH_INSTALL_DIR)
   if(WIN32)
     set(PLUGIN_INSTALL_DIR "plugins/gammaray")
     set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
