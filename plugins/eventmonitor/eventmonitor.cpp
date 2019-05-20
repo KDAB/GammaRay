@@ -28,12 +28,15 @@
 
 #include "eventmonitor.h"
 
+#include "eventmodel.h"
 #include "eventmodelroles.h"
+#include "eventmonitorinterface.h"
 #include "eventtypefilter.h"
+#include "eventtypemodel.h"
 
 #include <core/aggregatedpropertymodel.h>
-#include <core/metaobjectrepository.h>
 #include <core/metaobject.h>
+#include <core/metaobjectrepository.h>
 #include <core/objectinstance.h>
 #include <core/remote/serverproxymodel.h>
 #include <core/util.h>
@@ -41,13 +44,11 @@
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 
-#include <QAbstractNativeEventFilter>
-#include <QDebug>
 #include <QItemSelectionModel>
 #include <QMetaMethod>
 #include <QMutex>
-#include <QtCore/private/qobject_p.h>
 #include <QSortFilterProxyModel>
+#include <QtCore/private/qobject_p.h>
 
 using namespace GammaRay;
 
@@ -262,6 +263,43 @@ static bool eventCallback(void **data)
 }
 
 
+EventPropagationListener::EventPropagationListener(QObject *parent)
+    : QObject(parent)
+{}
+
+bool EventPropagationListener::eventFilter(QObject *receiver, QEvent *event)
+{
+    if (!s_model)
+        return false;
+
+    if (s_model->m_events.isEmpty())
+        return false;
+
+    EventData& lastEvent = s_model->m_events.last();
+
+    if (lastEvent.eventPtr == event && lastEvent.receiver == receiver) {
+        // this is the same event we already recorded in the event callback
+        return false;
+    }
+
+    if (!shouldBeRecorded(receiver, event))
+        return false;
+
+    if (event->type() != lastEvent.type) {
+        // a new event was created during the propagation
+        EventData newEvent = createEventData(receiver, event);
+        s_model->addEvent(newEvent);
+        s_eventTypeModel->increaseCount(event->type());
+        return false;
+    }
+
+    EventData propagatedEvent = createEventData(receiver, event);
+    lastEvent.propagatedEvents.append(propagatedEvent);
+
+    return false;
+}
+
+
 EventMonitor::EventMonitor(Probe *probe, QObject *parent)
     : EventMonitorInterface(parent)
     , m_eventModel(new EventModel(this))
@@ -339,36 +377,4 @@ void EventMonitor::showAll()
 void EventMonitor::showNone()
 {
     m_eventTypeModel->showNone();
-}
-
-bool EventPropagationListener::eventFilter(QObject *receiver, QEvent *event)
-{
-    if (!s_model)
-        return false;
-
-    if (s_model->m_events.isEmpty())
-        return false;
-
-    EventData& lastEvent = s_model->m_events.last();
-
-    if (lastEvent.eventPtr == event && lastEvent.receiver == receiver) {
-        // this is the same event we already recorded in the event callback
-        return false;
-    }
-
-    if (!shouldBeRecorded(receiver, event))
-        return false;
-
-    if (event->type() != lastEvent.type) {
-        // a new event was created during the propagation
-        EventData newEvent = createEventData(receiver, event);
-        s_model->addEvent(newEvent);
-        s_eventTypeModel->increaseCount(event->type());
-        return false;
-    }
-
-    EventData propagatedEvent = createEventData(receiver, event);
-    lastEvent.propagatedEvents.append(propagatedEvent);
-
-    return false;
 }
