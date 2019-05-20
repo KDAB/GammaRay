@@ -28,6 +28,7 @@ if(GAMMARAY_BUILD_UI)
     eventmonitorwidget.cpp
     eventmonitorinterface.cpp
     eventmonitorclient.cpp
+    eventtypeclientproxymodel.cpp
   )
 
   gammaray_add_plugin(gammaray_eventmonitor_ui_plugin

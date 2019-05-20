@@ -28,6 +28,8 @@
 #ifndef GAMMARAY_EVENTMONITOR_EVENTTYPEMODEL_H
 #define GAMMARAY_EVENTMONITOR_EVENTTYPEMODEL_H
 
+#include <common/modelroles.h>
+
 #include <QAbstractTableModel>
 #include <QMap>
 #include <QEvent>
@@ -60,6 +62,10 @@ public:
         COUNT
     };
 
+    enum Role {
+        MaxEventCount = GammaRay::UserRole + 1,
+    };
+
 public:
     explicit EventTypeModel(QObject *parent = nullptr);
     ~EventTypeModel() override;
@@ -73,6 +79,7 @@ public:
                         int role = Qt::DisplayRole) const override;
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const override;
+    QMap<int, QVariant> itemData(const QModelIndex& index) const override;
 
 public slots:
     void increaseCount(QEvent::Type type);
@@ -94,6 +101,7 @@ private:
 
 private:
     QMap<QEvent::Type, EventTypeData*> m_data;
+    int m_maxEventCount;
 };
 }
 
