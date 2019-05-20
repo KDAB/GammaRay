@@ -54,8 +54,8 @@ class EventTypeModel : public QAbstractTableModel
 
 public:
     enum Columns {
-        Type = 0,
-        Value,
+        Value = 0,
+        Type,
         Count,
         RecordingStatus,
         Visibility,
