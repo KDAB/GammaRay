@@ -79,6 +79,7 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     connect(ui->eventInspector, &QTreeView::customContextMenuRequested, this, &EventMonitorWidget::eventInspectorContextMenu);
 
     QAbstractItemModel * const eventTypeModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventTypeModel"));
+    new SearchLineController(ui->typeSearchLine, eventTypeModel);
     EventTypeClientProxyModel * const eventTypeProxyModel = new EventTypeClientProxyModel(this);
     eventTypeProxyModel->setSourceModel(eventTypeModel);
     ui->eventTypeTree->sortByColumn(EventTypeModel::Columns::Type, Qt::AscendingOrder);
