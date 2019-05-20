@@ -1130,7 +1130,7 @@ void ResourceModelPrivate::init()
 
 QHash<int, QByteArray> ResourceModel::roleNames() const
 {
-    QHash<int, QByteArray> roles = roleNames();
+    QHash<int, QByteArray> roles = QAbstractItemModel::roleNames();
     roles.insert(ResourceModel::FilePathRole, "filePath");
     roles.insert(ResourceModel::FileNameRole, "fileName");
     return roles;
