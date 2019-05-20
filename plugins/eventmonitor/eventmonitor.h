@@ -30,9 +30,7 @@
 #define GAMMARAY_EVENTMONITOR_EVENTMONITOR_H
 
 #include <core/toolfactory.h>
-#include "eventmodel.h"
 #include "eventmonitorinterface.h"
-#include "eventtypemodel.h"
 
 #include <QObject>
 
@@ -43,6 +41,8 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class AggregatedPropertyModel;
+class EventModel;
+class EventTypeModel;
 
 
 class EventPropagationListener : public QObject
@@ -50,9 +50,7 @@ class EventPropagationListener : public QObject
     Q_OBJECT
 
 public:
-    explicit EventPropagationListener(QObject *parent)
-        : QObject(parent)
-    {}
+    explicit EventPropagationListener(QObject *parent);
 
     virtual bool eventFilter(QObject *receiver, QEvent *event) override;
 };
