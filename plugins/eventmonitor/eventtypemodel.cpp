@@ -37,6 +37,7 @@ using namespace GammaRay;
 
 EventTypeModel::EventTypeModel(QObject *parent)
     : QAbstractTableModel(parent)
+    , m_maxEventCount(0)
 {
     initEventTypes();
 }
@@ -80,6 +81,8 @@ QVariant EventTypeModel::data(const QModelIndex &index, int role) const
         case Columns::Visibility:
             return eventTypeData->isVisibleInLog ? Qt::Checked : Qt::Unchecked;
         }
+    } else if (role == Role::MaxEventCount) {
+        return m_maxEventCount;
     }
 
     return QVariant();
@@ -147,17 +150,28 @@ QModelIndex EventTypeModel::index(int row, int column, const QModelIndex &parent
     return createIndex(row, column, item);
 }
 
+QMap<int, QVariant> EventTypeModel::itemData(const QModelIndex& index) const
+{
+    auto d = QAbstractItemModel::itemData(index);
+    if (index.column() == Columns::Count) {
+        d.insert(Role::MaxEventCount, index.data(Role::MaxEventCount));
+    }
+    return d;
+}
+
 void EventTypeModel::increaseCount(QEvent::Type type)
 {
     if (m_data.contains(type)) {
         EventTypeData* item = m_data.value(type);
         item->count++;
+        m_maxEventCount = std::max(item->count, m_maxEventCount);
         QModelIndex index = createIndex(m_data.keys().indexOf(type), Columns::Count, item);
         emit dataChanged(index, index);
     } else {
         beginInsertRows(QModelIndex(), m_data.count(), m_data.count());
         EventTypeData* item = new EventTypeData();
         item->count++;
+        m_maxEventCount = std::max(item->count, m_maxEventCount);
         m_data[type] = item;
         endInsertRows();
     }
@@ -169,6 +183,7 @@ void EventTypeModel::resetCounts()
     for (EventTypeData* eventTypeData: m_data) {
         eventTypeData->count = 0;
     }
+    m_maxEventCount = 0;
     endResetModel();
 }
 
