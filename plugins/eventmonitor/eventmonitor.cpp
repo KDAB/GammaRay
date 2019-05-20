@@ -359,6 +359,14 @@ bool EventPropagationListener::eventFilter(QObject *receiver, QEvent *event)
     if (!shouldBeRecorded(receiver, event))
         return false;
 
+    if (event->type() != lastEvent.type) {
+        // a new event was created during the propagation
+        EventData newEvent = createEventData(receiver, event);
+        s_model->addEvent(newEvent);
+        s_eventTypeModel->increaseCount(event->type());
+        return false;
+    }
+
     EventData propagatedEvent = createEventData(receiver, event);
     lastEvent.propagatedEvents.append(propagatedEvent);
 
