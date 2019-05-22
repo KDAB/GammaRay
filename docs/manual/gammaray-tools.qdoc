@@ -46,6 +46,7 @@
 
     \list
         \li \l{State Machine Debugger}
+        \li \l{Network}
         \li \l{Messages}
         \li \l{Signal Plotter}
         \li \l{Timers}

@@ -25,6 +25,33 @@
 
     \section1 Overview
 
+    The network view consists of three different sub-tools, each being on its own tab:
+    \list
+        \li Showing all network operations such as HTTP requests done via QNetworkAccessManager.
+        \li Showing all network interfaces found on the target system.
+        \li Showing all network configurations found on the target system.
+    \endlist
+
+
+    \section1 Network Operations
+
+    The network operations view shows all QNetworkReply instances and their associated QNetworkAccessManager.
+
+    \image gammaray-network-operations-monitor.png
+
+    The following information are available:
+    \list
+        \li Success or failure of the operation is indicated by the icon in the first column.
+        \li The row color indicates whether or not a QNetworkReply has been destroyed already,
+        for still alive replies object navigation via the context menu is available.
+        \li The HTTP operations performed and the corresponding URL are shown in columns two and five.
+        \li The time the operation took, and the amount of transferred data are shown in columns three and four. This information
+        might not be reliably available for short-lived operations in secondary threads though.
+        \li Whether or not transport encryption was used is shown by the icon in the fifth column.
+    \endlist
+
+    \section1 Network Interfaces
+
     The network interface view shows you all network interfaces and their corresponding states as seen by Qt on the target system.
 
     \image gammaray-network-interfaces.png
@@ -38,4 +65,8 @@
     \endlist
 
     Additionally, all IPv4 or IPv6 addresses configured for an interface are shown below the corresponding interface.
+
+    \section1 Network Configurations
+
+    The configurations tab shows the QNetworkConfiguration instances found on the system, such as all known Wifi configurations.
 */
