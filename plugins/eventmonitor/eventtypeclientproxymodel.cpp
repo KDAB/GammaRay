@@ -73,3 +73,23 @@ QVariant EventTypeClientProxyModel::data(const QModelIndex &index, int role) con
 
     return colorForRatio(ratio);
 }
+
+QVariant EventTypeClientProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
+        switch (section) {
+        case EventTypeModel::Columns::Type:
+            return tr("Type");
+        case EventTypeModel::Columns::Value:
+            return tr("Value");
+        case EventTypeModel::Columns::Count:
+            return tr("Count");
+        case EventTypeModel::Columns::RecordingStatus:
+            return tr("Record");
+        case EventTypeModel::Columns::Visibility:
+            return tr("Show");
+        }
+    }
+
+    return QVariant();
+}

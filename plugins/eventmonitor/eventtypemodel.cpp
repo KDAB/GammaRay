@@ -120,26 +120,6 @@ bool EventTypeModel::setData(const QModelIndex &index, const QVariant &value, in
     return true;
 }
 
-QVariant EventTypeModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-        switch (section) {
-        case Columns::Type:
-            return tr("Type");
-        case Columns::Value:
-            return tr("Value");
-        case Columns::Count:
-            return tr("Count");
-        case Columns::RecordingStatus:
-            return tr("Record");
-        case Columns::Visibility:
-            return tr("Show");
-        }
-    }
-
-    return QVariant();
-}
-
 QModelIndex EventTypeModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (row < 0 || column < 0 || column >= columnCount() || parent.isValid())
