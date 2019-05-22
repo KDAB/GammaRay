@@ -122,6 +122,8 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
         return attributesMap;
     } else if (role == EventModelRole::ReceiverIdRole && index.column() == EventModelColumn::Receiver) {
         return QVariant::fromValue(ObjectId(event.receiver));
+    } else if (role == EventModelRole::EventTypeRole) {
+        return QVariant::fromValue(event.type);
     }
 
     return QVariant();

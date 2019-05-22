@@ -29,17 +29,20 @@
 #include "eventtypefilter.h"
 
 #include "eventtypemodel.h"
+#include "eventmodelroles.h"
 
-GammaRay::EventTypeFilter::EventTypeFilter(QObject *parent, const EventTypeModel *model)
+using namespace GammaRay;
+
+EventTypeFilter::EventTypeFilter(QObject *parent, const EventTypeModel *model)
     : QSortFilterProxyModel(parent)
     , m_eventTypeModel(model)
 {
 
 }
 
-bool GammaRay::EventTypeFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+bool EventTypeFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-    QModelIndex typeIndex = sourceModel()->index(sourceRow, EventTypeModel::Columns::Value, sourceParent);
-    QEvent::Type type = sourceModel()->data(typeIndex).value<QEvent::Type>();
+    QModelIndex typeIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+    QEvent::Type type = sourceModel()->data(typeIndex, EventModelRole::EventTypeRole).value<QEvent::Type>();
     return m_eventTypeModel->isVisible(type);
 }
