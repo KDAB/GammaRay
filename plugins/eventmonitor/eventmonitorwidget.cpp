@@ -83,7 +83,6 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     EventTypeClientProxyModel * const eventTypeProxyModel = new EventTypeClientProxyModel(this);
     eventTypeProxyModel->setSourceModel(eventTypeModel);
     ui->eventTypeTree->sortByColumn(EventTypeModel::Columns::Type, Qt::AscendingOrder);
-    ui->eventTypeTree->setDeferredResizeMode(EventTypeModel::Columns::Value, QHeaderView::ResizeToContents);
     ui->eventTypeTree->setDeferredResizeMode(EventTypeModel::Columns::Type, QHeaderView::Stretch);
     ui->eventTypeTree->setModel(eventTypeProxyModel);
 

@@ -80,8 +80,6 @@ QVariant EventTypeClientProxyModel::headerData(int section, Qt::Orientation orie
         switch (section) {
         case EventTypeModel::Columns::Type:
             return tr("Type");
-        case EventTypeModel::Columns::Value:
-            return tr("Value");
         case EventTypeModel::Columns::Count:
             return tr("Count");
         case EventTypeModel::Columns::RecordingStatus:

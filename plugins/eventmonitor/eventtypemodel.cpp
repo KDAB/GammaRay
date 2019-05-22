@@ -68,9 +68,13 @@ QVariant EventTypeModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
         case Columns::Type:
-            return VariantHandler::displayString(m_data.keys().at(index.row()));
-        case Columns::Value:
-            return m_data.keys().at(index.row());
+        {
+            const auto s = VariantHandler::displayString(m_data.keys().at(index.row()));
+            if (s.isEmpty()) {
+                return m_data.keys().at(index.row());
+            }
+            return QString(s + QLatin1String(" [") + QString::number(m_data.keys().at(index.row())) + QLatin1Char(']'));
+        }
         case Columns::Count:
             return eventTypeData->count;
         }
