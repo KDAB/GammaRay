@@ -35,6 +35,10 @@
 #include <QVariant>
 #include <QPair>
 
+QT_BEGIN_NAMESPACE
+class QTimer;
+QT_END_NAMESPACE
+
 namespace GammaRay {
 struct EventData {
     QTime time;
@@ -77,6 +81,8 @@ public slots:
 private:
     friend class EventPropagationListener;
     QVector<EventData> m_events;
+    QVector<EventData> m_pendingEvents;
+    QTimer *m_pendingEventTimer;
 };
 }
 

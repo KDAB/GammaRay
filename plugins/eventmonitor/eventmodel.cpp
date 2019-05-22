@@ -40,6 +40,7 @@
 #include <QPoint>
 #include <QPointF>
 #include <QVariantMap>
+#include <QTimer>
 
 using namespace GammaRay;
 
@@ -47,17 +48,29 @@ static const int TopLevelId = std::numeric_limits<int>::max();
 
 EventModel::EventModel(QObject *parent)
     : QAbstractItemModel(parent)
+    , m_pendingEventTimer(new QTimer(this))
 {
     qRegisterMetaType<EventData>();
+
+    m_pendingEventTimer->setSingleShot(true);
+    m_pendingEventTimer->setInterval(200);
+    connect(m_pendingEventTimer, &QTimer::timeout, this, [this]() {
+        Q_ASSERT(!m_pendingEvents.isEmpty());
+        beginInsertRows(QModelIndex(), m_events.count(), m_events.count() + m_pendingEvents.size() - 1);
+        m_events += m_pendingEvents;
+        m_pendingEvents.clear();
+        endInsertRows();
+    });
 }
 
 EventModel::~EventModel() = default;
 
 void EventModel::addEvent(const EventData &event)
 {
-    beginInsertRows(QModelIndex(), m_events.count(), m_events.count());
-    m_events << event;
-    endInsertRows();
+    m_pendingEvents.push_back(event);
+    if (!m_pendingEventTimer->isActive()) {
+        m_pendingEventTimer->start();
+    }
 }
 
 void EventModel::clear()
