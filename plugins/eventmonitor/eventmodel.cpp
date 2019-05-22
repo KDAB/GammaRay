@@ -104,7 +104,13 @@ QVariant EventModel::data(const QModelIndex &index, int role) const
         case EventModelColumn::Time:
             return isPropagatedEvent ? "<propagated>" : event.time.toString("hh:mm:ss.zzz");
         case EventModelColumn::Type:
-            return VariantHandler::displayString(event.type);
+        {
+            const auto s = VariantHandler::displayString(event.type);
+            if (!s.isEmpty()) {
+                return s;
+            }
+            return event.type;
+        }
         case EventModelColumn::Receiver:
         {
             QMutexLocker lock(Probe::objectLock());
