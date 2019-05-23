@@ -76,6 +76,7 @@
             \li \l{Messages}
             \li \l{Signal Plotter}
             \li \l{Timers}
+            \li \l{Events}
             \li \l{Wayland Compositors}
             \li Script Engine Debugger
             \li \l{Object Browser}

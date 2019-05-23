@@ -1,0 +1,66 @@
+/*
+    gammaray-event-monitor.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2016-2019 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {Tools}
+    \nextpage {Wayland Compositors}
+    \previouspage {Timers}
+    \page gammaray-event-monitor.html
+
+    \title Events
+
+    \section1 Overview
+
+    The event monitor allows to observe all QEvent instances being processed by the target application. It allows
+    looking at the event stream, event propagation, event properties as well as provides statistics on how often
+    which event type occurs.
+
+    \section1 Event Log
+
+    The event log tab shows the history of all events that have gone through the event loop of the target application on the left hand side.
+    For a selected event, the view on the right side shows the properties of the corresponding event. In case an event is propagated to other
+    receivers (such as input events do along QWidget or QQuickItem hierarchies), those are shown as child entries of the corresponding event.
+
+    \image gammaray-event-monitor-log.png
+
+    The event history view shows the following information:
+
+    \list
+        \li The time the event was processed (not the time was put into the event queue).
+        \li The type name of the event (see QEvent::Type), or the numeric value of the event type in case of custom events.
+        \li The receiver of the event. If the receiver object has not been destroyed yet, it can be navigated to via the context menu.
+    \endlist
+
+    The toolbar above the event history allows to search for specific entries, to suspend the event recording, and to clear the event history.
+
+    \section1 Event Types
+
+    The event type view shows all known and observed event types, as well as the amount of corresponding events that have been registered.
+
+    \image gammaray-event-monitor-types.png
+
+    Two types of filters can be configured in the event type view by the checkboxes in the \uicontrol Record and \uicontrol Show columns:
+    \list
+        \li If an event type is not selected for recording, it is already discarded before being processed by GammaRay. This can be useful
+        if a certain event type is occurring so frequently that it impacts performance.
+        \li Events filtered for display are recorded but not shown in the event history, but are still recorded. This can be useful to improve
+        visibility when investigating a specific type of event.
+    \endlist
+
+    The toolbar above the event type view allows to search for a specific event type and offers actions to quickly select or deselect each of
+    the two filters.
+*/
