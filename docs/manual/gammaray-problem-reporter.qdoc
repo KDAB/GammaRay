@@ -1,0 +1,41 @@
+/*
+    gammaray-problem-reporter.qdoc
+
+    This file is part of the GammaRay documentation.
+
+    Copyright (C) 2018-2019 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+    Author: Volker Krause <volker.krause@kdab.com>
+
+    Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+    accordance with GammaRay Commercial License Agreement provided with the Software.
+
+    Contact info@kdab.com if any conditions of this licensing are not clear to you.
+
+    This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
+    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
+
+/*!
+    \contentspage {GammaRay User Manual}
+    \previouspage {Object Inspection}
+    \nextpage {Examples}
+    \page gammaray-problem-reporter.html
+
+    \title Problem Reporter
+
+    \section1 Overview
+
+    The problem reporter view can be found among the other inspection tools in the left sidebar. It is a central
+    place to collect all issues in the target application that GammaRay observed while being attached. Additionally,
+    it allows to scan the target application for a selected set of issues.
+
+    \image gammaray-problem-reporter.png
+
+    The detected issues are found in the list view on the right side, including a description, a severity level
+    of the issue (shown as icon), and if available the source location the issues originates in. A context menu
+    allows navigating to the source location, as well as to the associated object.
+
+    The left panel in the problem reporter controls explicit scans for issues. At the top various scans are listed
+    and can be selected, the button below executes the scan. Note that this can take quite some time and can block
+    the target application.
+*/
