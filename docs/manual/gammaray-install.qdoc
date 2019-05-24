@@ -65,7 +65,7 @@
     You can obtain the source code of GammaRay on \l{https://github.com/KDAB/GammaRay}{Github}. To build it you need
     the following requirements:
     \list
-        \li Qt 4.8 or 5.3 or newer
+        \li Qt 5.5 or newer
         \li CMake 3.1 or newer
         \li a C++11 compatible compiler
     \endlist
