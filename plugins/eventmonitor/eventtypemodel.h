@@ -34,6 +34,12 @@
 #include <QMap>
 #include <QEvent>
 
+#include <unordered_set>
+
+QT_BEGIN_NAMESPACE
+class QTimer;
+QT_END_NAMESPACE
+
 namespace GammaRay {
 struct EventTypeData {
     QEvent::Type type = QEvent::None;
@@ -96,10 +102,13 @@ signals:
 
 private:
     void initEventTypes();
+    void emitPendingUpdates();
 
 private:
     std::vector<EventTypeData> m_data;
-    int m_maxEventCount;
+    std::unordered_set<int> m_pendingUpdates;
+    int m_maxEventCount = 0;
+    QTimer *m_pendingUpdateTimer = nullptr;
 };
 }
 

@@ -31,15 +31,19 @@
 #include <core/varianthandler.h>
 
 #include <QMetaEnum>
-#include <QMutexLocker>
+#include <QTimer>
 
 using namespace GammaRay;
 
 EventTypeModel::EventTypeModel(QObject *parent)
     : QAbstractTableModel(parent)
-    , m_maxEventCount(0)
+    , m_pendingUpdateTimer(new QTimer(this))
 {
     initEventTypes();
+
+    m_pendingUpdateTimer->setSingleShot(true);
+    m_pendingUpdateTimer->setInterval(500);
+    connect(m_pendingUpdateTimer, &QTimer::timeout, this, &EventTypeModel::emitPendingUpdates);
 }
 
 EventTypeModel::~EventTypeModel() = default;
@@ -133,12 +137,13 @@ QMap<int, QVariant> EventTypeModel::itemData(const QModelIndex& index) const
 void EventTypeModel::increaseCount(QEvent::Type type)
 {
     const auto it = std::lower_bound(m_data.begin(), m_data.end(), type);
-    const auto row = std::distance(m_data.begin(), it);
     if (it != m_data.end() && (*it).type == type) {
         (*it).count++;
         m_maxEventCount = std::max((*it).count, m_maxEventCount);
-        QModelIndex index = createIndex(row, Columns::Count);
-        emit dataChanged(index, index);
+        m_pendingUpdates.insert(type);
+        if (!m_pendingUpdateTimer->isActive()) {
+            m_pendingUpdateTimer->start();
+        }
     } else {
         const auto row = std::distance(m_data.begin(), it);
         beginInsertRows(QModelIndex(), row, row);
@@ -229,4 +234,16 @@ void EventTypeModel::initEventTypes()
     }
     std::sort(m_data.begin(), m_data.end());
     endInsertRows();
+}
+
+void EventTypeModel::emitPendingUpdates()
+{
+    for (auto type : m_pendingUpdates) {
+        const auto it = std::lower_bound(m_data.begin(), m_data.end(), static_cast<QEvent::Type>(type));
+        Q_ASSERT(it != m_data.end());
+        const auto row = std::distance(m_data.begin(), it);
+        const auto idx = createIndex(row, EventTypeModel::Columns::Count);
+        emit dataChanged(idx, idx);
+    }
+    m_pendingUpdates.clear();
 }
