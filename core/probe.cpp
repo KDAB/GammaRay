@@ -972,7 +972,8 @@ void Probe::registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks)
 
 void Probe::setupSignalSpyCallbacks()
 {
-    QSignalSpyCallbackSet cbs = { nullptr, nullptr, nullptr, nullptr };
+    // memory management is with us for Qt >= 5.14, therefore static here!
+    static QSignalSpyCallbackSet cbs = { nullptr, nullptr, nullptr, nullptr };
     foreach (const auto &it, m_signalSpyCallbacks) {
         if (it.signalBeginCallback) cbs.signal_begin_callback = signal_begin_callback;
         if (it.signalEndCallback) cbs.signal_end_callback = signal_end_callback;

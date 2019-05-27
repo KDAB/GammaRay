@@ -49,7 +49,7 @@ protected:
     void doSetObject(const ObjectInstance &oi) override;
 
 private:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 4)
     QVector<QQmlAttachedPropertiesFunc> m_attachedTypes;
 #else
     QVector<int> m_attachedTypes;

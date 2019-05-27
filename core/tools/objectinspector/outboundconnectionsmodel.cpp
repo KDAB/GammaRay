@@ -58,7 +58,7 @@ QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outbound
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     QObjectPrivate::ConnectionData *cd = d->connections.load();
     if (cd) {
-        const auto &cl = cd->signalVector;
+        auto &cl = *(cd->signalVector.load());
 #else
     if (d->connectionLists) {
         // HACK: the declaration of d->connectionsLists is not accessible for us...
