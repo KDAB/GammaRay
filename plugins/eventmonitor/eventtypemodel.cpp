@@ -63,27 +63,25 @@ QVariant EventTypeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || index.row() >= rowCount() || index.column() >= columnCount())
         return QVariant();
 
-    EventTypeData* eventTypeData = static_cast<EventTypeData*>(index.internalPointer());
-
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
         case Columns::Type:
         {
-            const auto s = VariantHandler::displayString(m_data.keys().at(index.row()));
+            const auto s = VariantHandler::displayString(m_data[index.row()].type);
             if (s.isEmpty()) {
-                return m_data.keys().at(index.row());
+                return m_data[index.row()].type;
             }
-            return QString(s + QLatin1String(" [") + QString::number(m_data.keys().at(index.row())) + QLatin1Char(']'));
+            return QString(s + QLatin1String(" [") + QString::number(m_data[index.row()].type) + QLatin1Char(']'));
         }
         case Columns::Count:
-            return eventTypeData->count;
+            return m_data[index.row()].count;
         }
     } else if (role == Qt::CheckStateRole) {
         switch (index.column()) {
         case Columns::RecordingStatus:
-            return eventTypeData->recordingEnabled ? Qt::Checked : Qt::Unchecked;
+            return m_data[index.row()].recordingEnabled ? Qt::Checked : Qt::Unchecked;
         case Columns::Visibility:
-            return eventTypeData->isVisibleInLog ? Qt::Checked : Qt::Unchecked;
+            return m_data[index.row()].isVisibleInLog ? Qt::Checked : Qt::Unchecked;
         }
     } else if (role == Role::MaxEventCount) {
         return m_maxEventCount;
@@ -113,25 +111,14 @@ bool EventTypeModel::setData(const QModelIndex &index, const QVariant &value, in
         return false;
 
     const auto enabled = value.toInt() == Qt::Checked;
-    EventTypeData* eventTypeData = static_cast<EventTypeData*>(index.internalPointer());
     if (index.column() == Columns::RecordingStatus) {
-        eventTypeData->recordingEnabled = enabled;
+        m_data[index.row()].recordingEnabled = enabled;
     } else if (index.column() == Columns::Visibility) {
-        eventTypeData->isVisibleInLog = enabled;
+        m_data[index.row()].isVisibleInLog = enabled;
         emit typeVisibilityChanged();
     }
     emit dataChanged(index, index, { Qt::CheckStateRole });
     return true;
-}
-
-QModelIndex EventTypeModel::index(int row, int column, const QModelIndex &parent) const
-{
-    if (row < 0 || column < 0 || column >= columnCount() || parent.isValid())
-        return {};
-
-    EventTypeData* item = m_data.value(m_data.keys().at(row));
-
-    return createIndex(row, column, item);
 }
 
 QMap<int, QVariant> EventTypeModel::itemData(const QModelIndex& index) const
@@ -145,18 +132,21 @@ QMap<int, QVariant> EventTypeModel::itemData(const QModelIndex& index) const
 
 void EventTypeModel::increaseCount(QEvent::Type type)
 {
-    if (m_data.contains(type)) {
-        EventTypeData* item = m_data.value(type);
-        item->count++;
-        m_maxEventCount = std::max(item->count, m_maxEventCount);
-        QModelIndex index = createIndex(m_data.keys().indexOf(type), Columns::Count, item);
+    const auto it = std::lower_bound(m_data.begin(), m_data.end(), type);
+    const auto row = std::distance(m_data.begin(), it);
+    if (it != m_data.end() && (*it).type == type) {
+        (*it).count++;
+        m_maxEventCount = std::max((*it).count, m_maxEventCount);
+        QModelIndex index = createIndex(row, Columns::Count);
         emit dataChanged(index, index);
     } else {
-        beginInsertRows(QModelIndex(), m_data.count(), m_data.count());
-        EventTypeData* item = new EventTypeData();
-        item->count++;
-        m_maxEventCount = std::max(item->count, m_maxEventCount);
-        m_data[type] = item;
+        const auto row = std::distance(m_data.begin(), it);
+        beginInsertRows(QModelIndex(), row, row);
+        EventTypeData item;
+        item.type = type;
+        item.count++;
+        m_maxEventCount = std::max(item.count, m_maxEventCount);
+        m_data.insert(it, std::move(item));
         endInsertRows();
     }
 }
@@ -164,8 +154,8 @@ void EventTypeModel::increaseCount(QEvent::Type type)
 void EventTypeModel::resetCounts()
 {
     beginResetModel();
-    for (EventTypeData* eventTypeData: m_data) {
-        eventTypeData->count = 0;
+    for (auto &eventTypeData: m_data) {
+        eventTypeData.count = 0;
     }
     m_maxEventCount = 0;
     endResetModel();
@@ -173,8 +163,9 @@ void EventTypeModel::resetCounts()
 
 bool EventTypeModel::isRecording(QEvent::Type type) const
 {
-    if (m_data.contains(type)) {
-        return m_data.value(type)->recordingEnabled;
+    const auto it = std::lower_bound(m_data.begin(), m_data.end(), type);
+    if (it != m_data.end() && (*it).type == type) {
+        return (*it).recordingEnabled;
     }
     return true;
 }
@@ -182,8 +173,8 @@ bool EventTypeModel::isRecording(QEvent::Type type) const
 void EventTypeModel::recordAll()
 {
     beginResetModel();
-    for (EventTypeData* eventTypeData: m_data) {
-        eventTypeData->recordingEnabled = true;
+    for (auto &eventTypeData: m_data) {
+        eventTypeData.recordingEnabled = true;
     }
     endResetModel();
 }
@@ -191,16 +182,17 @@ void EventTypeModel::recordAll()
 void EventTypeModel::recordNone()
 {
     beginResetModel();
-    for (EventTypeData* eventTypeData: m_data) {
-        eventTypeData->recordingEnabled = false;
+    for (auto &eventTypeData: m_data) {
+        eventTypeData.recordingEnabled = false;
     }
     endResetModel();
 }
 
 bool EventTypeModel::isVisible(QEvent::Type type) const
 {
-    if (m_data.contains(type)) {
-        return m_data.value(type)->isVisibleInLog;
+    const auto it = std::lower_bound(m_data.begin(), m_data.end(), type);
+    if (it != m_data.end() && (*it).type == type) {
+        return (*it).isVisibleInLog;
     }
     return true;
 }
@@ -208,8 +200,8 @@ bool EventTypeModel::isVisible(QEvent::Type type) const
 void EventTypeModel::showAll()
 {
     beginResetModel();
-    for (EventTypeData* eventTypeData: m_data) {
-        eventTypeData->isVisibleInLog = true;
+    for (auto &eventTypeData: m_data) {
+        eventTypeData.isVisibleInLog = true;
     }
     endResetModel();
     emit typeVisibilityChanged();
@@ -218,8 +210,8 @@ void EventTypeModel::showAll()
 void EventTypeModel::showNone()
 {
     beginResetModel();
-    for (EventTypeData* eventTypeData: m_data) {
-        eventTypeData->isVisibleInLog = false;
+    for (auto &eventTypeData: m_data) {
+        eventTypeData.isVisibleInLog = false;
     }
     endResetModel();
     emit typeVisibilityChanged();
@@ -229,8 +221,12 @@ void EventTypeModel::initEventTypes()
 {
     QMetaEnum e = QMetaEnum::fromType<QEvent::Type>();
     beginInsertRows(QModelIndex(), 0, e.keyCount() - 1);
+    m_data.reserve(e.keyCount());
     for (int i = 0; i < e.keyCount(); ++i) {
-         m_data[static_cast<QEvent::Type>(e.value(i))] = new EventTypeData();
+        EventTypeData ev;
+        ev.type = static_cast<QEvent::Type>(e.value(i));
+        m_data.push_back(std::move(ev));
     }
+    std::sort(m_data.begin(), m_data.end());
     endInsertRows();
 }

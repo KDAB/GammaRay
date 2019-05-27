@@ -36,9 +36,12 @@
 
 namespace GammaRay {
 struct EventTypeData {
+    QEvent::Type type = QEvent::None;
     int count = 0;
     bool recordingEnabled = true;
     bool isVisibleInLog = true;
+    inline bool operator<(const EventTypeData &other) const { return type < other.type; }
+    inline bool operator<(QEvent::Type otherType) const { return type < otherType; }
 };
 }
 
@@ -74,8 +77,6 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const override;
     QMap<int, QVariant> itemData(const QModelIndex& index) const override;
 
 public slots:
@@ -97,7 +98,7 @@ private:
     void initEventTypes();
 
 private:
-    QMap<QEvent::Type, EventTypeData*> m_data;
+    std::vector<EventTypeData> m_data;
     int m_maxEventCount;
 };
 }
