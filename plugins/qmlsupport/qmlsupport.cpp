@@ -68,8 +68,10 @@
 #endif
 #include <private/qqmlcontext_p.h>
 #include <private/qqmlscriptstring_p.h>
-#include <private/qv8engine_p.h>
 #include <private/qv4qobjectwrapper_p.h>
+#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
+#include <private/qv8engine_p.h> // removed in qtdeclarative commit fd6321c03e2d63997078bfa41332dbddefbb86b0
+#endif
 
 Q_DECLARE_METATYPE(QQmlError)
 
