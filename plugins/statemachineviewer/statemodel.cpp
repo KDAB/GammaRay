@@ -309,10 +309,10 @@ QMap<int, QVariant> StateModel::itemData(const QModelIndex &index) const
 
 QHash<int, QByteArray> StateModel::roleNames() const
 {
-    QHash<int, QByteArray> _roleNames = roleNames();
-    _roleNames.insert(TransitionsRole, "transitions");
-    _roleNames.insert(IsInitialStateRole, "isInitial");
-    return _roleNames;
+    QHash<int, QByteArray> roleNames = QAbstractItemModel::roleNames();
+    roleNames.insert(TransitionsRole, "transitions");
+    roleNames.insert(IsInitialStateRole, "isInitial");
+    return roleNames;
 }
 
 #include "moc_statemodel.cpp"
