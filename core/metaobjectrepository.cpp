@@ -127,6 +127,7 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_PROPERTY_ST(QCoreApplication, applicationPid);
     MO_ADD_PROPERTY_ST(QCoreApplication, arguments);
     MO_ADD_PROPERTY_ST(QCoreApplication, closingDown);
+    MO_ADD_PROPERTY_ST(QCoreApplication, hasPendingEvents);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     MO_ADD_PROPERTY_ST(QCoreApplication, isQuitLockEnabled);
 #endif

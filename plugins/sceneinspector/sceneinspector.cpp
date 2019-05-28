@@ -260,7 +260,7 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
 
 void SceneInspector::sceneClicked(const QPointF &pos)
 {
-    QGraphicsItem *item = m_sceneModel->scene()->itemAt(pos, QTransform());
+    QGraphicsItem *item = m_sceneModel->scene()->itemAt(pos);
     if (item)
         sceneItemSelected(item);
 }
