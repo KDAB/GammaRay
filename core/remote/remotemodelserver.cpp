@@ -294,7 +294,7 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(QMap<int, QVariant> &&item
             it = itemData.erase(it);
         }
     }
-    return itemData;
+    return std::move(itemData);
 }
 
 bool RemoteModelServer::canSerialize(const QVariant &value) const
