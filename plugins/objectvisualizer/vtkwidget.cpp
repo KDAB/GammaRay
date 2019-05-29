@@ -181,7 +181,7 @@ void VtkWidget::setupGraph()
 
     vtkGraphLayoutView *graphLayoutView = vtkGraphLayoutView::New();
     graphLayoutView->AddRepresentationFromInput(graph);
-    graphLayoutView->SetVertexLabelVisibility(true);
+    graphLayoutView->SetVertexLabelVisibility(false);
     graphLayoutView->SetVertexLabelArrayName("labels");
     graphLayoutView->SetLayoutStrategyToSpanTree();
     graphLayoutView->SetVertexColorArrayName("Color");
