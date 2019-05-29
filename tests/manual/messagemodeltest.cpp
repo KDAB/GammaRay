@@ -73,7 +73,7 @@ void MessageGenerator::generateCritical()
     qCritical() << "A critical message";
 }
 
-Q_NORETURN void MessageGenerator::generateFatal()
+void MessageGenerator::generateFatal()
 {
     qFatal("A fatal message");
 }
