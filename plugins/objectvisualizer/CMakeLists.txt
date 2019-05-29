@@ -21,13 +21,15 @@ find_path(VTK_DIR VTKConfig.cmake
   /usr/lib64/vtk /usr/lib/vtk /usr/local/lib64/vtk /usr/local/lib/vtk
 )
 set(VTK_LIBS vtkGUISupportQt
-  vtkViewsInfovis # vtkGraphLayoutView & friends
+  vtkViewsInfovis
+  vtkInfovisLayout
+  vtkRenderingFreeType
 )
 find_package(VTK 7.1 COMPONENTS ${VTK_LIBS} CONFIG)
 set_package_properties(VTK PROPERTIES
   TYPE OPTIONAL
   DESCRIPTION "Visualization Toolkit"
-  PURPOSE "Needed for the object visualizer plugin (required Qt5). Just for toying around, highly experimental plugin."
+  PURPOSE "Needed for the object visualizer plugin (requires Qt5). Just for toying around, highly experimental plugin."
   URL "http://www.vtk.org"
 )
 if(VTK_FOUND)
