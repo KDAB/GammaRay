@@ -35,7 +35,7 @@
 # run qmake -query to see a full list
 
 if(TARGET Qt5::qmake)
-  get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake IMPORTED_LOCATION)
+  get_target_property(QT_QMAKE_EXECUTABLE Qt5::qmake LOCATION)
 else()
   message(FATAL_ERROR "No supported Qt version found. Make sure you find Qt before calling this")
 endif()
