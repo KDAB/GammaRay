@@ -26,8 +26,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_SIGNALMONITORCLIENT_H
-#define GAMMARAY_SIGNALMONITORCLIENT_H
+#ifndef GAMMARAY_EVENTMONITORCLIENT_H
+#define GAMMARAY_EVENTMONITORCLIENT_H
 
 #include "eventmonitorinterface.h"
 
@@ -49,4 +49,4 @@ public slots:
 };
 }
 
-#endif // GAMMARAY_SIGNALMONITORCLIENT_H
+#endif // GAMMARAY_EVENTMONITORCLIENT_H
