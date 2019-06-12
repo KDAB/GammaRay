@@ -101,12 +101,12 @@ private slots:
         QVERIFY(finishSpy.isValid());
 
         QVERIFY(launcher.start());
-        startSpy.wait(1000);
+        startSpy.wait(60000);
         QCOMPARE(startSpy.count(), 1);
         QCOMPARE(finishSpy.count(), 0);
 
         launcher.stop();
-        finishSpy.wait(1000);
+        finishSpy.wait(10000);
         QCOMPARE(finishSpy.count(), 1);
     }
 
@@ -132,7 +132,7 @@ private slots:
         QVERIFY(finishSpy.isValid());
 
         QVERIFY(launcher.start());
-        startSpy.wait(10000);
+        startSpy.wait(60000);
         QCOMPARE(startSpy.count(), 1);
         QCOMPARE(finishSpy.count(), 0);
 
@@ -157,7 +157,7 @@ private slots:
 #else
         options.setPid(target.pid());
 #endif
-        QTest::qWait(1000); // give the target some time to actually load the QtCore DLL, otherwise ABI detection fails
+        QTest::qWait(60000); // give the target some time to actually load the QtCore DLL, otherwise ABI detection fails
         ProbeABIDetector detector;
         options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForProcess(options.pid())));
         Launcher launcher(options);
