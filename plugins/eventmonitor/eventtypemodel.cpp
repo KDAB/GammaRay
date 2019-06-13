@@ -151,7 +151,7 @@ void EventTypeModel::increaseCount(QEvent::Type type)
         item.type = type;
         item.count++;
         m_maxEventCount = std::max(item.count, m_maxEventCount);
-        m_data.insert(it, std::move(item));
+        m_data.insert(it, item);
         endInsertRows();
     }
 }
@@ -230,7 +230,7 @@ void EventTypeModel::initEventTypes()
     for (int i = 0; i < e.keyCount(); ++i) {
         EventTypeData ev;
         ev.type = static_cast<QEvent::Type>(e.value(i));
-        m_data.push_back(std::move(ev));
+        m_data.push_back(ev);
     }
     std::sort(m_data.begin(), m_data.end());
     endInsertRows();

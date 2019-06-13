@@ -66,6 +66,7 @@ template<typename CompareFunc>
 {
     std::vector<QModelIndex> childIndices;
     int rowCount = model->rowCount(index);
+    childIndices.reserve(rowCount);
     for (int i = 0; i < rowCount; ++i) {
         childIndices.push_back(model->index(i, 0, index));
     }
@@ -413,7 +414,7 @@ void BindingInspectorTest::testQmlBindingProvider()
     QObject *rect = c.create();
     QTest::qWait(10);
     QVERIFY(rect);
-    QObject *text = rect->findChildren<QQuickText *>().front();
+    QObject *text = rect->findChildren<QQuickText *>().at(0);
 
     QObject *referencedObject = rect->objectName() == referencedObjectName ? rect : rect->findChild<QObject *>(referencedObjectName);
     QVERIFY(referencedObject);
@@ -960,7 +961,7 @@ void BindingInspectorTest::testIntegration()
     QObject *rect = c.create();
     QTest::qWait(10);
     QVERIFY(rect);
-    QObject *text = rect->findChildren<QQuickText *>().front();
+    QObject *text = rect->findChildren<QQuickText *>().at(0);
 
     QAbstractItemModel *bindingModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspector.bindingModel"));
     QVERIFY(bindingModel);

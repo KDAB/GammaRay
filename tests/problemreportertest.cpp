@@ -359,7 +359,7 @@ private slots:
         QVERIFY(duplicateProblem->description.contains("slot o2"));
 
 
-        disconnect(o1.get(), 0, o2.get(), 0);
+        disconnect(o1.get(), nullptr, o2.get(), nullptr);
         connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
         connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
         QTest::qWait(10);

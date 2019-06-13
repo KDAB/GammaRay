@@ -56,7 +56,7 @@ public:
      * Construct a new message to/from @p objectAddress and message type @p type.
      */
     explicit Message(Protocol::ObjectAddress objectAddress, Protocol::MessageType type);
-    Message(Message &&other); // krazy:exclude=explicit
+    Message(Message &&other) noexcept; // krazy:exclude=explicit
     ~Message();
 
     Protocol::ObjectAddress address() const;

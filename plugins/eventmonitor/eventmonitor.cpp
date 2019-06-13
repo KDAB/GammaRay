@@ -151,7 +151,7 @@ QString eventTypeToClassName(QEvent::Type type) {
     case QEvent::StatusTip:
         return QStringLiteral("QStatusTip");
     default:
-        return QStringLiteral("");
+        return QString();
     }
 }
 

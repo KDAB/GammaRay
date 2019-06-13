@@ -164,7 +164,7 @@ void QuickItemModel::disconnectItem(QQuickItem *item)
     Q_ASSERT(item);
     auto it = m_itemConnections.find(item);
     if (it != m_itemConnections.end()) {
-        for (auto connection : it->second) {
+        for (const auto &connection : it->second) {
             disconnect(connection);
         }
         m_itemConnections.erase(it);

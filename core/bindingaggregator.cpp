@@ -69,7 +69,7 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::findDependenciesFor
     for (const auto &provider : *s_providers()) {
         auto providerDependencies = provider->findDependenciesFor(node);
         for (auto &&providerDependency : providerDependencies) {
-            providerDependency.get()->dependencies() = findDependenciesFor(providerDependency.get());
+            providerDependency->dependencies() = findDependenciesFor(providerDependency.get());
             allDependencies.push_back(std::move(providerDependency));
         }
     }

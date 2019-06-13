@@ -557,7 +557,7 @@ static const MetaEnum::Value<QNetworkSession::UsagePolicies> network_session_usa
 };
 #undef E
 
-static QString proxyToString(const QNetworkProxy proxy)
+static QString proxyToString(const QNetworkProxy &proxy)
 {
     return VariantHandler::displayString(proxy.type());
 }
