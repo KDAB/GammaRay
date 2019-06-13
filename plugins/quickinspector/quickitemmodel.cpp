@@ -426,13 +426,30 @@ QuickEventMonitor::QuickEventMonitor(QuickItemModel *parent)
 
 bool QuickEventMonitor::eventFilter(QObject *obj, QEvent *event)
 {
-    // exclude some unsafe event types
-    const bool isUnsafeEventType = event->type() == QEvent::DeferredDelete || event->type() == QEvent::Destroy;
-    // exclude some event types which occur far too often and thus cost us bandwidth
-    const bool isFrequentEventType = event->type() == QEvent::HoverMove;
-    if (!isUnsafeEventType && !isFrequentEventType) {
-        m_model->updateItem(qobject_cast<QQuickItem *>(obj), QuickItemModelRole::ItemEvent);
+    switch (event->type()) {
+        // exclude some unsafe event types
+        case QEvent::DeferredDelete:
+        case QEvent::Destroy:
+
+        // exclude some event types which occur far too often and thus cost us bandwidth
+        case QEvent::HoverMove:
+        case QEvent::MouseMove:
+        case QEvent::TouchUpdate:
+        case QEvent::Wheel: // due to high frequency creation from touch events
+
+        // exclude event types that are unrelated to user interaction
+        case QEvent::MetaCall:
+        case QEvent::ChildAdded:
+        case QEvent::ChildPolished:
+        case QEvent::ChildRemoved:
+        case QEvent::Timer:
+
+            return false;
+
+        default:
+            break;
     }
 
+    m_model->updateItem(qobject_cast<QQuickItem *>(obj), QuickItemModelRole::ItemEvent);
     return false;
 }
