@@ -46,8 +46,13 @@ using namespace GammaRay;
 
 QuickItemModel::QuickItemModel(QObject *parent)
     : ObjectModelBase<QAbstractItemModel>(parent)
+    , m_dataChangeTimer(new QTimer(this))
 {
     m_clickEventFilter = new QuickEventMonitor(this);
+
+    m_dataChangeTimer->setSingleShot(true);
+    m_dataChangeTimer->setInterval(500);
+    connect(m_dataChangeTimer, &QTimer::timeout, this, &QuickItemModel::emitPendingDataChanges);
 }
 
 QuickItemModel::~QuickItemModel() = default;
@@ -372,14 +377,20 @@ void QuickItemModel::updateItem(QQuickItem *item, int role)
     if (!item || item->window() != m_window)
         return;
 
-    const QModelIndex left = indexForItem(item);
-    if (!left.isValid())
-        return;
-    const QModelIndex right = left.sibling(left.row(), columnCount() - 1);
+    auto it = std::lower_bound(m_pendingDataChanges.begin(), m_pendingDataChanges.end(), item);
+    if (it == m_pendingDataChanges.end() || (*it).item != item) {
+        PendingDataChange c;
+        c.item = item;
+        it = m_pendingDataChanges.insert(it, c);
+    }
 
-    Q_ASSERT(left.isValid());
-    Q_ASSERT(right.isValid());
-    emit dataChanged(left, right, QVector<int>() << role);
+    if (role == QuickItemModelRole::ItemEvent)
+        (*it).eventChange = true;
+    if (role == QuickItemModelRole::ItemFlags)
+        (*it).flagChange = true;
+
+    if (!m_dataChangeTimer->isActive())
+        m_dataChangeTimer->start();
 }
 
 void QuickItemModel::updateItemFlags(QQuickItem *item)
@@ -452,4 +463,31 @@ bool QuickEventMonitor::eventFilter(QObject *obj, QEvent *event)
 
     m_model->updateItem(qobject_cast<QQuickItem *>(obj), QuickItemModelRole::ItemEvent);
     return false;
+}
+
+void QuickItemModel::emitPendingDataChanges()
+{
+    QVector<int> roles;
+    roles.reserve(2);
+
+    for (const auto &change : m_pendingDataChanges) {
+        const auto left = indexForItem(change.item);
+        if (!left.isValid()) {
+            continue;
+        }
+        const auto right = left.sibling(left.row(), columnCount() - 1);
+        Q_ASSERT(left.isValid());
+        Q_ASSERT(right.isValid());
+
+        roles.clear();
+        if (change.eventChange) {
+            roles.push_back(QuickItemModelRole::ItemEvent);
+        }
+        if (change.flagChange) {
+            roles.push_back(QuickItemModelRole::ItemFlags);
+        }
+        emit dataChanged(left, right, roles);
+    }
+
+    m_pendingDataChanges.clear();
 }

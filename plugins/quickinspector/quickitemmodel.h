@@ -33,10 +33,12 @@
 
 #include <QHash>
 #include <QPointer>
+#include <QTimer>
 #include <QVector>
 
 #include <array>
 #include <unordered_map>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 class QQuickItem;
@@ -117,6 +119,17 @@ private:
     // TODO: Merge these two?
     QHash<QQuickItem *, int> m_itemFlags;
     std::unordered_map<QQuickItem *, std::array<QMetaObject::Connection, 8>> m_itemConnections;
+
+    // dataChange signal compression
+    struct PendingDataChange {
+        QQuickItem *item = nullptr;
+        bool eventChange = false;
+        bool flagChange = false;
+        inline bool operator<(QQuickItem *rhs) const { return item < rhs; }
+    };
+    std::vector<PendingDataChange> m_pendingDataChanges;
+    QTimer *m_dataChangeTimer = nullptr;
+    void emitPendingDataChanges();
 
     QuickEventMonitor *m_clickEventFilter;
 };
