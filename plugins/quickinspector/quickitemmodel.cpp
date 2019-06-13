@@ -401,18 +401,20 @@ void QuickItemModel::updateItemFlags(QQuickItem *item)
 
     auto rect = item->mapRectToScene(QRectF(0, 0, item->width(), item->height()));
 
-    while (ancestor && ancestor != m_window->contentItem()) {
-        if (ancestor->parentItem() == m_window->contentItem() || ancestor->clip()) {
-            auto ancestorRect = ancestor->mapRectToScene(QRectF(0, 0, ancestor->width(), ancestor->height()));
+    if (item->isVisible()) {
+        while (ancestor && ancestor != m_window->contentItem()) {
+            if (ancestor->parentItem() == m_window->contentItem() || ancestor->clip()) {
+                auto ancestorRect = ancestor->mapRectToScene(QRectF(0, 0, ancestor->width(), ancestor->height()));
 
-            partiallyOutOfView |= !ancestorRect.contains(rect);
-            outOfView = partiallyOutOfView && !rect.intersects(ancestorRect);
+                partiallyOutOfView |= !ancestorRect.contains(rect);
+                outOfView = partiallyOutOfView && !rect.intersects(ancestorRect);
 
-            if (outOfView) {
-                break;
+                if (outOfView) {
+                    break;
+                }
             }
+            ancestor = ancestor->parentItem();
         }
-        ancestor = ancestor->parentItem();
     }
 
     m_itemFlags[item] = (!item->isVisible() || item->opacity() == 0
