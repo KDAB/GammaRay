@@ -76,8 +76,7 @@ void RemoteModel::Node::allocateColumns()
     data.resize(parent->columnCount);
     flags.resize(parent->columnCount);
     flags.fill(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-    state.resize(parent->columnCount);
-    state.fill(RemoteModelNodeState::Empty | RemoteModelNodeState::Outdated);
+    state.resize(parent->columnCount, RemoteModelNodeState::Empty | RemoteModelNodeState::Outdated);
 }
 
 bool RemoteModel::Node::hasColumnData() const
@@ -85,7 +84,7 @@ bool RemoteModel::Node::hasColumnData() const
     if (!parent)
         return false;
     Q_ASSERT(data.size() == flags.size());
-    Q_ASSERT(data.size() == state.size());
+    Q_ASSERT(data.size() == (int)state.size());
     Q_ASSERT(data.isEmpty() || data.size() == parent->columnCount || parent->columnCount < 0);
 
     return data.size() == parent->columnCount && parent->columnCount > 0;
@@ -440,7 +439,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             for (int col = beginIndex.last().column; col <= endIndex.last().column; ++col) {
                 const auto state = stateForColumn(currentRow, col);
                 if ((state & RemoteModelNodeState::Outdated) == 0) {
-                    Q_ASSERT(currentRow->state.size() > col);
+                    Q_ASSERT((int)currentRow->state.size() > col);
                     currentRow->state[col] = state | RemoteModelNodeState::Outdated;
                 }
             }
@@ -703,8 +702,8 @@ RemoteModelNodeState::NodeStates RemoteModel::stateForColumn(RemoteModel::Node *
     Q_ASSERT(node);
     if (!node->hasColumnData())
         return RemoteModelNodeState::Empty | RemoteModelNodeState::Outdated;
-    Q_ASSERT(node->state.size() > columnIndex);
-    return node->state.at(columnIndex);
+    Q_ASSERT((int)node->state.size() > columnIndex);
+    return node->state[columnIndex];
 }
 
 void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
@@ -736,7 +735,7 @@ void RemoteModel::requestDataAndFlags(const QModelIndex &index) const
     Q_ASSERT((state & RemoteModelNodeState::Loading) == 0);
 
     node->allocateColumns();
-    Q_ASSERT(node->state.size() > index.column());
+    Q_ASSERT((int)node->state.size() > index.column());
     node->state[index.column()] = state | RemoteModelNodeState::Loading; // mark pending request
 
     auto &indexes = m_pendingRequests[DataAndFlags];
@@ -965,7 +964,7 @@ void RemoteModel::doInsertColumns(RemoteModel::Node *parentNode, int first, int 
         // allocate new columns
         node->data.insert(first, newColCount, QHash<int, QVariant>());
         node->flags.insert(first, newColCount, Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-        node->state.insert(first, newColCount, RemoteModelNodeState::Empty | RemoteModelNodeState::Outdated);
+        node->state.insert(node->state.begin() + first, newColCount, RemoteModelNodeState::Empty | RemoteModelNodeState::Outdated);
     }
 
     // adjust column count
@@ -990,7 +989,7 @@ void RemoteModel::doRemoveColumns(RemoteModel::Node *parentNode, int first, int 
             continue;
         node->data.remove(first, delColCount);
         node->flags.remove(first, delColCount);
-        node->state.remove(first, delColCount);
+        node->state.erase(node->state.begin() + first, node->state.begin() + last);
     }
 
     // adjust column count

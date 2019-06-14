@@ -107,7 +107,7 @@ private:
         qint32 columnCount = -1;
         QVector<QHash<int, QVariant> > data; // column -> role -> data
         QVector<Qt::ItemFlags> flags;      // column -> flags
-        QVector<RemoteModelNodeState::NodeStates> state;         // column -> state (cache outdated, waiting for data, etc)
+        std::vector<RemoteModelNodeState::NodeStates> state;         // column -> state (cache outdated, waiting for data, etc)
 
         int rowHint = -1; // for internal use by modelIndexForNode
     };
