@@ -157,8 +157,8 @@ QModelIndex RemoteModel::parent(const QModelIndex &index) const
     Q_ASSERT(currentNode->parent && currentNode->parent->parent);
     Q_ASSERT(currentNode->parent->children.contains(currentNode));
     Q_ASSERT(currentNode->parent->parent->children.contains(currentNode->parent));
-    return createIndex(currentNode->parent->parent->children.indexOf(
-                           currentNode->parent), 0, currentNode->parent);
+
+    return modelIndexForNode(currentNode->parent, 0);
 }
 
 int RemoteModel::rowCount(const QModelIndex &index) const
@@ -661,6 +661,7 @@ RemoteModel::Node *RemoteModel::nodeForIndex(const Protocol::ModelIndex &index) 
         if (node->children.size() <= i.row)
             return nullptr;
         node = node->children.at(i.row);
+        node->rowHint = i.row;
     }
     return node;
 }
@@ -670,7 +671,17 @@ QModelIndex RemoteModel::modelIndexForNode(Node *node, int column) const
     Q_ASSERT(node);
     if (node == m_root)
         return {};
-    return createIndex(node->parent->children.indexOf(node), column, node);
+
+    int row = -1;
+    if (node->rowHint > 0 && node->rowHint < node->parent->children.size()) {
+        if (node->parent->children.at(node->rowHint) == node)
+            row = node->rowHint;
+    }
+    if (row < 0) {
+        row = node->parent->children.indexOf(node);
+    }
+
+    return createIndex(row, column, node);
 }
 
 bool RemoteModel::isAncestor(RemoteModel::Node *ancestor, RemoteModel::Node *child) const
