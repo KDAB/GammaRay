@@ -134,7 +134,7 @@ Message::Message(Protocol::ObjectAddress objectAddress, Protocol::MessageType ty
     m_buffer->stream.setVersion(s_streamVersion);
 }
 
-Message::Message(Message &&other) noexcept
+Message::Message(Message &&other) Q_DECL_NOEXCEPT
     : m_objectAddress(other.m_objectAddress)
     , m_messageType(other.m_messageType)
     , m_buffer(std::move(other.m_buffer))
