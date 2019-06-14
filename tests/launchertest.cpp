@@ -157,7 +157,7 @@ private slots:
 #else
         options.setPid(target.pid());
 #endif
-        QTest::qWait(60000); // give the target some time to actually load the QtCore DLL, otherwise ABI detection fails
+        QTest::qWait(5000); // give the target some time to actually load the QtCore DLL, otherwise ABI detection fails
         ProbeABIDetector detector;
         options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForProcess(options.pid())));
         Launcher launcher(options);
