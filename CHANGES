@@ -1,6 +1,24 @@
 Release Highlights
 ==================
 
+Version 2.10.1
+--------------
+
+ * Fix detection of Qt infix builds.
+ * Fix QMake integration for Qt 5.12.1.
+ * Fix QtQuick inspector crash when reparenting to an unknown destination item.
+ * Fix scene graph model going out of sync on moves.
+ * Fix inconsistent transient state in QtQuick item model that can corrupt proxy model state.
+ * Fix Qt version detection for infix builds.
+ * Fix Qt version detection from executing Qt5Core.so on Linux.
+ * Fix infinite recursion if the target has its own message handler.
+ * Adapt to Qt 5.14 changes in signal spy and connection handling.
+ * Adapt to Qt 5.13 changes in QQmlType and QML attached property handling.
+ * Adapt to Qt 5.13 changes in QtIvi.
+ * Fix ABI incompatibility with MSVC builds due to QT_STRICT_ITERATOR usage.
+ * Fix enum to string conversion producing flag-like results sometimes.
+ * Fix relative search path logic for absolute install path overrides.
+
 Version 2.10.0
 --------------
 
