@@ -41,6 +41,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class AggregatedPropertyModel;
+class EventData;
 class EventModel;
 class EventTypeModel;
 
@@ -66,11 +67,14 @@ public:
     ~EventMonitor() override;
 
 public slots:
-    virtual void clearHistory() override;
-    virtual void recordAll() override;
-    virtual void recordNone() override;
-    virtual void showAll() override;
-    virtual void showNone() override;
+    void clearHistory() override;
+    void recordAll() override;
+    void recordNone() override;
+    void showAll() override;
+    void showNone() override;
+
+    void addEvent(const GammaRay::EventData &event);
+
 
 private slots:
     void eventSelected(const QItemSelection &selection);

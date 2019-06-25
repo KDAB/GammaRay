@@ -243,6 +243,11 @@ EventData createEventData(QObject* receiver, QEvent* event) {
     return eventData;
 }
 
+void EventMonitor::addEvent(const GammaRay::EventData &event)
+{
+    m_eventModel->addEvent(event);
+    m_eventTypeModel->increaseCount(event.type);
+}
 
 static bool eventCallback(void **data)
 {
@@ -255,10 +260,7 @@ static bool eventCallback(void **data)
     EventData eventData = createEventData(receiver, event);
 
     // add directly from foreground thread, delay from background thread
-    QMetaObject::invokeMethod(s_model, "addEvent", Qt::AutoConnection,
-                              Q_ARG(GammaRay::EventData, eventData));
-    QMetaObject::invokeMethod(s_eventTypeModel, "increaseCount", Qt::AutoConnection,
-                              Q_ARG(QEvent::Type, event->type()));
+    QMetaObject::invokeMethod(s_eventMonitor, "addEvent", Qt::AutoConnection, Q_ARG(GammaRay::EventData, eventData));
     return false;
 }
 
