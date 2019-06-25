@@ -1,8 +1,18 @@
 Release Highlights
 ==================
 
-Version 2.11.0 (Not released yet)
+Version 2.11.0
 --------------
+
+ * Drop support for Qt 4 and Qt <= 5.4.
+ * Drop support for MSVC 2010 and MSVC 2012, as well as GCC < 4.8.
+ * Add support for more QtNetwork properties.
+ * Add new network operations monitoring tool.
+ * Fix inspection of QJson types.
+ * Add thread affinity check to the problem reporter.
+ * Add new event monitoring tool.
+ * Initial forward compatibility with Qt6 build system.
+ * Improved performance of the Qt Quick 2 inspector and the signal monitor.
 
 Version 2.10.1
 --------------
