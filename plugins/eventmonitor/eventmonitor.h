@@ -41,7 +41,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class AggregatedPropertyModel;
-class EventData;
+struct EventData;
 class EventModel;
 class EventTypeModel;
 
