@@ -1,4 +1,5 @@
-add_subdirectory(geometryextension)
+add_subdirectory(geometryextension/es2)
+add_subdirectory(geometryextension/gl3)
 
 # shared stuff
 set(gammaray_3dinspector_shared_srcs
