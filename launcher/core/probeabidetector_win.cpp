@@ -40,6 +40,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QStandardPaths>
 #include <QString>
 #include <QStringList>
 
@@ -133,10 +134,36 @@ static Version fileVersion(const QString &path)
     }
     return Version(-1, -1);
 }
+
+QString absoluteExecutablePath(const QString &path)
+{
+    if (QFile::exists(path)) {
+        return path;
+    }
+
+    // see if Qt can find the executable (this can still fail for relative paths without extension)
+    const auto searchedPath = QStandardPaths::findExecutable(path);
+    if (!searchedPath.isEmpty()) {
+        return searchedPath;
+    }
+
+    // attempt to appends missing .exe extensions
+    const auto pathExt = QString::fromLocal8Bit(qgetenv("PATHEXT")).toLower().split(QLatin1Char(';'));
+    for (const auto &ext : pathExt) {
+        const auto extendedPath = path + ext;
+        if (QFile::exists(extendedPath)) {
+            return extendedPath;
+        }
+    }
+
+    return path;
+}
+
 QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
 {
-    const auto searchPaths = dllSearchPaths(path);
-    QStringList resolvedImports = QStringList(path);
+    const auto exe = absoluteExecutablePath(path);
+    const auto searchPaths = dllSearchPaths(exe);
+    QStringList resolvedImports = QStringList(exe);
     QSet<QString> checkedImports;
 
     while (!resolvedImports.isEmpty()) {
