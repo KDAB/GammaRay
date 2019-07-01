@@ -52,6 +52,7 @@ class QPickEvent;
 class QRenderPass;
 }
 class QComboBox;
+class QSurfaceFormat;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -84,6 +85,7 @@ private:
                                const QByteArray &bufferData);
     void trianglePicked(Qt3DRender::QPickEvent *pick);
     bool isIndexBuffer(unsigned int bufferIndex) const;
+    QSurfaceFormat probeFormat() const;
 
     std::unique_ptr<Ui::Qt3DGeometryTab> ui;
     QComboBox *m_shadingModeCombo;

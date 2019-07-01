@@ -71,6 +71,7 @@
 #include <Qt3DCore/QTransform>
 
 #include <QDebug>
+#include <QOpenGLContext>
 #include <QUrl>
 #include <QToolBar>
 #include <QWindow>
@@ -173,13 +174,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     m_surface = new QWindow;
     m_surface->setFlags(Qt::Window | Qt::FramelessWindowHint);
     m_surface->setSurfaceType(QSurface::OpenGLSurface);
-    QSurfaceFormat format;
-    format.setDepthBufferSize(24);
-    format.setSamples(4); // ???
-    format.setStencilBufferSize(8); // ???
-    format.setMajorVersion(3);
-    format.setMinorVersion(3);
-    format.setProfile(QSurfaceFormat::CoreProfile);
+    const auto format = probeFormat();
     m_surface->setFormat(format);
     QSurfaceFormat::setDefaultFormat(format);
     m_surface->create();
@@ -192,9 +187,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
             &Qt3DGeometryTab::updateGeometry);
 }
 
-Qt3DGeometryTab::~Qt3DGeometryTab()
-{
-}
+Qt3DGeometryTab::~Qt3DGeometryTab() = default;
 
 bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
 {
@@ -595,4 +588,33 @@ void Qt3DGeometryTab::trianglePicked(Qt3DRender::QPickEvent* pick)
 #else
     Q_UNUSED(pick);
 #endif
+}
+
+QSurfaceFormat Qt3DGeometryTab::probeFormat() const
+{
+    QSurfaceFormat format;
+    format.setDepthBufferSize(24);
+    format.setSamples(4); // ???
+    format.setStencilBufferSize(8); // ???
+
+    // try GL3 first
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setMajorVersion(3);
+    format.setMinorVersion(0);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+
+    QOpenGLContext context;
+    context.setScreen(window()->windowHandle()->screen());
+    context.setFormat(format);
+    if (context.create()) {
+        qDebug() << "Tried GL3, got:" << context.format();
+        return format;
+    }
+
+    // fall back to ES2
+    format.setRenderableType(QSurfaceFormat::OpenGLES);
+    format.setMajorVersion(2);
+    format.setMinorVersion(0);
+    format.setProfile(QSurfaceFormat::NoProfile);
+    return format;
 }
