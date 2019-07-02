@@ -242,11 +242,13 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     geometryEntity->addComponent(picker);
 
     // fallback wireframe rendering with ES2
-    auto es2lineEntity = new Qt3DCore::QEntity(rootEntity);
-    m_es2lineRenderer = new Qt3DRender::QGeometryRenderer;
-    es2lineEntity->addComponent(m_es2lineRenderer);
-    es2lineEntity->addComponent(createES2WireframeMaterial(rootEntity));
-    es2lineEntity->addComponent(m_geometryTransform);
+    if (m_surface->format().renderableType() == QSurfaceFormat::OpenGLES) {
+        auto es2lineEntity = new Qt3DCore::QEntity(rootEntity);
+        m_es2lineRenderer = new Qt3DRender::QGeometryRenderer;
+        es2lineEntity->addComponent(m_es2lineRenderer);
+        es2lineEntity->addComponent(createES2WireframeMaterial(rootEntity));
+        es2lineEntity->addComponent(m_geometryTransform);
+    }
 
     updateGeometry();
 
@@ -542,6 +544,9 @@ void Qt3DGeometryTab::updateGeometry()
         m_es2lineRenderer->setFirstInstance(0);
         m_es2lineRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::LineLoop);
         m_es2lineRenderer->setGeometry(geometry);
+
+        ui->actionShowNormals->setEnabled(false);
+        ui->actionShowNormals->setToolTip(tr("Visualizing normals not available when running in OpenGL ES2 fallback mode."));
     }
 
     auto oldGeometry = m_geometryRenderer->geometry();
