@@ -78,6 +78,7 @@ protected:
 
 private:
     Qt3DCore::QComponent *createMaterial(Qt3DCore::QNode *parent);
+    Qt3DCore::QComponent *createES2WireframeMaterial(Qt3DCore::QNode *parent);
     Qt3DCore::QComponent *createSkyboxMaterial(Qt3DCore::QNode *parent);
     void updateGeometry();
     void resetCamera();
@@ -95,6 +96,7 @@ private:
     Qt3DCore::QAspectEngine *m_aspectEngine;
     Qt3DRender::QCamera *m_camera;
     Qt3DRender::QGeometryRenderer *m_geometryRenderer;
+    Qt3DRender::QGeometryRenderer *m_es2lineRenderer; // ES2 wireframe fallback renderer
     Qt3DCore::QTransform *m_geometryTransform;
     Qt3DRender::QCullFace *m_cullMode;
     Qt3DRender::QDepthTest *m_depthTest;

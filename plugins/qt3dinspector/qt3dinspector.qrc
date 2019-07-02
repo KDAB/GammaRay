@@ -11,6 +11,8 @@
 
     <file>geometryextension/es2/skybox.vert</file>
     <file>geometryextension/es2/skybox.frag</file>
+    <file>geometryextension/es2/surface.vert</file>
+    <file>geometryextension/es2/surface.frag</file>
     <file>geometryextension/es2/wireframe.vert</file>
     <file>geometryextension/es2/wireframe.frag</file>
   </qresource>

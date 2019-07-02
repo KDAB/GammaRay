@@ -96,6 +96,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     , m_aspectEngine(nullptr)
     , m_camera(nullptr)
     , m_geometryRenderer(nullptr)
+    , m_es2lineRenderer(nullptr)
     , m_geometryTransform(nullptr)
     , m_cullMode(nullptr)
     , m_depthTest(nullptr)
@@ -239,6 +240,14 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     auto picker = new Qt3DRender::QObjectPicker;
     connect(picker, &Qt3DRender::QObjectPicker::clicked, this, &Qt3DGeometryTab::trianglePicked);
     geometryEntity->addComponent(picker);
+
+    // fallback wireframe rendering with ES2
+    auto es2lineEntity = new Qt3DCore::QEntity(rootEntity);
+    m_es2lineRenderer = new Qt3DRender::QGeometryRenderer;
+    es2lineEntity->addComponent(m_es2lineRenderer);
+    es2lineEntity->addComponent(createES2WireframeMaterial(rootEntity));
+    es2lineEntity->addComponent(m_geometryTransform);
+
     updateGeometry();
 
     auto lightEntity = new Qt3DCore::QEntity(rootEntity);
@@ -279,8 +288,8 @@ Qt3DCore::QComponent *Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
     gl3WireframeShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/gl3/wireframe.geom"))));
     gl3WireframeShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/gl3/wireframe.frag"))));
     auto es2WireframeShader = new Qt3DRender::QShaderProgram;
-    es2WireframeShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/es2/wireframe.vert"))));
-    es2WireframeShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/es2/wireframe.frag"))));
+    es2WireframeShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/es2/surface.vert"))));
+    es2WireframeShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/es2/surface.frag"))));
 
     auto blendEquationArgs = new Qt3DRender::QBlendEquationArguments;
     blendEquationArgs->setSourceRgb(Qt3DRender::QBlendEquationArguments::SourceAlpha);
@@ -342,6 +351,38 @@ Qt3DCore::QComponent *Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
     auto effect = new Qt3DRender::QEffect;
     effect->addTechnique(gl3Technique);
     effect->addTechnique(es2Technique);
+
+    material->setEffect(effect);
+    return material;
+}
+
+Qt3DCore::QComponent* Qt3DGeometryTab::createES2WireframeMaterial(Qt3DCore::QNode *parent)
+{
+    auto material = new Qt3DRender::QMaterial(parent);
+
+    auto shader = new Qt3DRender::QShaderProgram;
+    shader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/es2/wireframe.vert"))));
+    shader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/gammaray/qt3dinspector/geometryextension/es2/wireframe.frag"))));
+
+    auto renderPass = new Qt3DRender::QRenderPass;
+    renderPass->setShaderProgram(shader);
+    renderPass->addRenderState(m_cullMode);
+    renderPass->addRenderState(m_depthTest);
+
+    auto filterKey = new Qt3DRender::QFilterKey(material);
+    filterKey->setName(QStringLiteral("renderingStyle"));
+    filterKey->setValue(QStringLiteral("forward"));
+
+    auto technique = new Qt3DRender::QTechnique;
+    technique->graphicsApiFilter()->setApi(Qt3DRender::QGraphicsApiFilter::OpenGLES);
+    technique->graphicsApiFilter()->setMajorVersion(2);
+    technique->graphicsApiFilter()->setMinorVersion(0);
+    technique->graphicsApiFilter()->setProfile(Qt3DRender::QGraphicsApiFilter::NoProfile);
+    technique->addRenderPass(renderPass);
+    technique->addFilterKey(filterKey);
+
+    auto effect = new Qt3DRender::QEffect;
+    effect->addTechnique(technique);
 
     material->setEffect(effect);
     return material;
@@ -494,6 +535,14 @@ void Qt3DGeometryTab::updateGeometry()
     m_geometryRenderer->setIndexOffset(0);
     m_geometryRenderer->setFirstInstance(0);
     m_geometryRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::Triangles);
+
+    if (m_es2lineRenderer) {
+        m_es2lineRenderer->setInstanceCount(1);
+        m_es2lineRenderer->setIndexOffset(0);
+        m_es2lineRenderer->setFirstInstance(0);
+        m_es2lineRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::LineLoop);
+        m_es2lineRenderer->setGeometry(geometry);
+    }
 
     auto oldGeometry = m_geometryRenderer->geometry();
     m_geometryRenderer->setGeometry(geometry);
