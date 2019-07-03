@@ -49,7 +49,7 @@ class ProbeABIPrivate : public QSharedData
 public:
     ProbeABIPrivate() = default;
 
-    ProbeABIPrivate(const ProbeABIPrivate &other) = default;
+    ProbeABIPrivate(const ProbeABIPrivate &) = default;
 
     QString architecture;
     QString compiler;
@@ -67,11 +67,11 @@ ProbeABI::ProbeABI()
 {
 }
 
-ProbeABI::ProbeABI(const ProbeABI &other) = default;
+ProbeABI::ProbeABI(const ProbeABI &) = default;
 
 ProbeABI::~ProbeABI() = default;
 
-ProbeABI &ProbeABI::operator=(const ProbeABI &other) = default;
+ProbeABI &ProbeABI::operator=(const ProbeABI &) = default;
 
 int ProbeABI::majorQtVersion() const
 {

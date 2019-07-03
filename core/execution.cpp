@@ -366,11 +366,11 @@ Trace::Trace()
 {
 }
 
-Trace::Trace(const Trace &other) = default;
+Trace::Trace(const Trace &) = default;
 
 Trace::~Trace() = default;
 
-Trace& Trace::operator=(const Trace &other) = default;
+Trace& Trace::operator=(const Trace &) = default;
 
 bool Trace::empty() const
 {
