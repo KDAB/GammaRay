@@ -73,7 +73,9 @@ void MessageGenerator::generateCritical()
     qCritical() << "A critical message";
 }
 
-Q_NORETURN void MessageGenerator::generateFatal()
+/*some Windows compilers don't like Q_NORETURN*/
+/*error C2381: 'GammaRay::MessageGenerator::generateFatal': redefinition; '__declspec(noreturn)' or '[[noreturn]]' differs*/
+void MessageGenerator::generateFatal()
 {
     qFatal("A fatal message");
 }
