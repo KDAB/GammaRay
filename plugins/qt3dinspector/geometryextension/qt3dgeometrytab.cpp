@@ -179,7 +179,9 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     m_surface->setFormat(format);
     QSurfaceFormat::setDefaultFormat(format);
     m_surface->create();
-    ui->geometryPage->layout()->addWidget(QWidget::createWindowContainer(m_surface, this));
+    auto container = QWidget::createWindowContainer(m_surface, this);
+    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    ui->geometryPage->layout()->addWidget(container);
     m_surface->installEventFilter(this);
 
     m_interface = ObjectBroker::object<Qt3DGeometryExtensionInterface *>(
@@ -242,12 +244,19 @@ bool Qt3DGeometryTab::eventFilter(QObject *receiver, QEvent *event)
     geometryEntity->addComponent(picker);
 
     // fallback wireframe rendering with ES2
-    if (m_surface->format().renderableType() == QSurfaceFormat::OpenGLES) {
+    if (m_usingES2Fallback) {
         auto es2lineEntity = new Qt3DCore::QEntity(rootEntity);
         m_es2lineRenderer = new Qt3DRender::QGeometryRenderer;
         es2lineEntity->addComponent(m_es2lineRenderer);
         es2lineEntity->addComponent(createES2WireframeMaterial(rootEntity));
         es2lineEntity->addComponent(m_geometryTransform);
+
+        auto label = new QLabel(tr("<i>Using OpenGL ES2 fallback, wireframe rendering will be inaccurate.</i>"));
+        label->setAlignment(Qt::AlignRight);
+        label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+        ui->geometryPage->layout()->addWidget(label);
+
+        ui->actionShowNormals->setToolTip(tr("Visualizing normals not available when running in OpenGL ES2 fallback mode."));
     }
 
     updateGeometry();
@@ -497,7 +506,7 @@ void Qt3DGeometryTab::updateGeometry()
             setupAttribute(normalAttr, attrData);
             normalAttr->setName(Qt3DRender::QAttribute::defaultNormalAttributeName());
             geometry->addAttribute(normalAttr);
-            ui->actionShowNormals->setEnabled(true);
+            ui->actionShowNormals->setEnabled(!m_usingES2Fallback);
             m_shadingModeCombo->addItem(tr("Phong"), ShadingModePhong);
             m_shadingModeCombo->addItem(tr("Normal"), ShadingModeNormal);
         } else if (attrData.attributeType == Qt3DRender::QAttribute::IndexAttribute) {
@@ -544,9 +553,6 @@ void Qt3DGeometryTab::updateGeometry()
         m_es2lineRenderer->setFirstInstance(0);
         m_es2lineRenderer->setPrimitiveType(Qt3DRender::QGeometryRenderer::LineLoop);
         m_es2lineRenderer->setGeometry(geometry);
-
-        ui->actionShowNormals->setEnabled(false);
-        ui->actionShowNormals->setToolTip(tr("Visualizing normals not available when running in OpenGL ES2 fallback mode."));
     }
 
     auto oldGeometry = m_geometryRenderer->geometry();
@@ -661,11 +667,13 @@ QSurfaceFormat Qt3DGeometryTab::probeFormat() const
     context.setScreen(window()->windowHandle()->screen());
     context.setFormat(format);
     if (context.create()) {
-        qDebug() << "Tried GL3, got:" << context.format();
+        qDebug() << "Tried GL3, got:" << context.format() << context.format().renderableType();
+        m_usingES2Fallback = context.format().renderableType() == QSurfaceFormat::OpenGLES;
         return format;
     }
 
     // fall back to ES2
+    m_usingES2Fallback = true;
     format.setRenderableType(QSurfaceFormat::OpenGLES);
     format.setMajorVersion(2);
     format.setMinorVersion(0);

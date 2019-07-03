@@ -104,6 +104,7 @@ private:
     Qt3DRender::QParameter *m_normalLength;
     Qt3DRender::QParameter *m_shadingMode;
     BoundingVolume m_boundingVolume;
+    mutable bool m_usingES2Fallback = false;
 
     BufferModel *m_bufferModel;
 };
