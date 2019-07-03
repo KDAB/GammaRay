@@ -171,6 +171,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     connect(ui->bufferBox, QOverload<int>::of(&QComboBox::currentIndexChanged), m_bufferModel, &BufferModel::setBufferIndex);
 
     m_surface = new QWindow;
+    m_surface->setFlags(Qt::Window | Qt::FramelessWindowHint);
     m_surface->setSurfaceType(QSurface::OpenGLSurface);
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
