@@ -122,6 +122,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_actioninspector*
 %{_libdir}/gammaray/*/*/gammaray_bluetooth*
 %{_libdir}/gammaray/*/*/gammaray_codecbrowser*
+%{_libdir}/gammaray/*/*/gammaray_eventmonitor*
 %{_libdir}/gammaray/*/*/gammaray_fontbrowser*
 %{_libdir}/gammaray/*/*/gammaray_guisupport*
 %{_libdir}/gammaray/*/*/gammaray_localeinspector*
