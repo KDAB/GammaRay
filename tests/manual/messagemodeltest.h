@@ -47,7 +47,7 @@ private slots:
     void generateDebug();
     void generateWarning();
     void generateCritical();
-    void generateFatal();
+    Q_NORETURN void generateFatal();
 };
 }
 
