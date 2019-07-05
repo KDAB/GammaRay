@@ -47,7 +47,7 @@ private slots:
     void generateDebug();
     void generateWarning();
     void generateCritical();
-    void generateFatal();
+    void generateFatal(); //FIXME: Q_RETURN fails on some configurations
 };
 }
 
