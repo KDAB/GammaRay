@@ -40,7 +40,7 @@ class AvailableCheckersModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    AvailableCheckersModel(QObject *parent);
+    explicit AvailableCheckersModel(QObject *parent);
 
     QVariant data(const QModelIndex & index, int role) const override;
 

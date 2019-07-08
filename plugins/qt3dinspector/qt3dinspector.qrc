@@ -1,12 +1,19 @@
 <RCC>
   <qresource prefix="gammaray/qt3dinspector">
-    <file>geometryextension/passthrough.vert</file>
-    <file>geometryextension/wireframe.vert</file>
-    <file>geometryextension/wireframe.geom</file>
-    <file>geometryextension/wireframe.frag</file>
-    <file>geometryextension/normals.geom</file>
-    <file>geometryextension/normals.frag</file>
-    <file>geometryextension/skybox.vert</file>
-    <file>geometryextension/skybox.frag</file>
+    <file>geometryextension/gl3/passthrough.vert</file>
+    <file>geometryextension/gl3/wireframe.vert</file>
+    <file>geometryextension/gl3/wireframe.geom</file>
+    <file>geometryextension/gl3/wireframe.frag</file>
+    <file>geometryextension/gl3/normals.geom</file>
+    <file>geometryextension/gl3/normals.frag</file>
+    <file>geometryextension/gl3/skybox.vert</file>
+    <file>geometryextension/gl3/skybox.frag</file>
+
+    <file>geometryextension/es2/skybox.vert</file>
+    <file>geometryextension/es2/skybox.frag</file>
+    <file>geometryextension/es2/surface.vert</file>
+    <file>geometryextension/es2/surface.frag</file>
+    <file>geometryextension/es2/wireframe.vert</file>
+    <file>geometryextension/es2/wireframe.frag</file>
   </qresource>
 </RCC>

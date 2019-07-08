@@ -80,11 +80,11 @@ MethodArgument::MethodArgument(const QVariant &v)
     }
 }
 
-MethodArgument::MethodArgument(const MethodArgument &other) = default;
+MethodArgument::MethodArgument(const MethodArgument &) = default;
 
 MethodArgument::~MethodArgument() = default;
 
-MethodArgument &MethodArgument::operator=(const MethodArgument &other) = default;
+MethodArgument &MethodArgument::operator=(const MethodArgument &) = default;
 
 MethodArgument::operator QGenericArgument() const
 {

@@ -31,12 +31,25 @@ if (GLSLANG_VALIDATOR_EXECUTABLE)
   set(Glslang_FOUND TRUE)
 endif()
 
+# Copied from ECMPoQmTools which copied it from FindGettext.cmake
+function(_glslang_get_unique_target_name _name _unique_name)
+   set(propertyName "_GLSLANG_UNIQUE_COUNTER_${_name}")
+   get_property(currentCounter GLOBAL PROPERTY "${propertyName}")
+   if(NOT currentCounter)
+      set(currentCounter 1)
+   endif()
+   set(${_unique_name} "${_name}_${currentCounter}" PARENT_SCOPE)
+   math(EXPR currentCounter "${currentCounter} + 1")
+   set_property(GLOBAL PROPERTY ${propertyName} ${currentCounter} )
+endfunction()
+
 # validate individual shaders
 function(glslang_validate_shader)
   if (NOT GLSLANG_VALIDATOR_EXECUTABLE)
     return()
   endif()
 
+  _glslang_get_unique_target_name(_validate_shader _uid)
   foreach(_shader ${ARGN})
     get_filename_component(_shader_abs ${_shader} ABSOLUTE)
     add_custom_command(
@@ -45,7 +58,7 @@ function(glslang_validate_shader)
       COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/${_shader}.validate_shader
       MAIN_DEPENDENCY ${_shader_abs}
     )
-    add_custom_target(${_shader}_validate_shader ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_shader}.validate_shader)
+    add_custom_target(${_shader}${_uid} ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_shader}.validate_shader)
   endforeach()
 
 endfunction()
@@ -56,13 +69,14 @@ function(glslang_validate_program)
     return()
   endif()
 
+  _glslang_get_unique_target_name(validate_program _uid)
   foreach(_shader ${ARGN})
     get_filename_component(_shader_abs ${_shader} ABSOLUTE)
     get_filename_component(_shader_name ${_shader} NAME)
     set(_target "${_target}${_shader_name}_")
     list(APPEND _shaders ${_shader_abs})
   endforeach()
-  set(_target "${_target}validate_program")
+  set(_target "${_target}${_uid}")
 
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_target}.stamp

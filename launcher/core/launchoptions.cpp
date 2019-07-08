@@ -66,9 +66,9 @@ LaunchOptions::LaunchOptions()
 
 LaunchOptions::~LaunchOptions() = default;
 
-LaunchOptions::LaunchOptions(const LaunchOptions &other) = default;
+LaunchOptions::LaunchOptions(const LaunchOptions &) = default;
 
-LaunchOptions &LaunchOptions::operator=(const LaunchOptions &other) = default;
+LaunchOptions &LaunchOptions::operator=(const LaunchOptions &) = default;
 
 bool LaunchOptions::isLaunch() const
 {

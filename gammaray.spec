@@ -1,5 +1,5 @@
 Name:           gammaray
-Version:        2.10.0
+Version:        2.11.0
 Release:        1
 Summary:        An introspection tool for Qt applications
 Source:         %{name}-%{version}.tar.gz
@@ -122,6 +122,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_actioninspector*
 %{_libdir}/gammaray/*/*/gammaray_bluetooth*
 %{_libdir}/gammaray/*/*/gammaray_codecbrowser*
+%{_libdir}/gammaray/*/*/gammaray_eventmonitor*
 %{_libdir}/gammaray/*/*/gammaray_fontbrowser*
 %{_libdir}/gammaray/*/*/gammaray_guisupport*
 %{_libdir}/gammaray/*/*/gammaray_localeinspector*
@@ -171,6 +172,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_prefix}/mkspecs/modules/*.pri
 
 %changelog
+* Wed Jul 03 2019 Allen Winter <allen.winter@kdab.com> 2.11.0
+  2.11.0 final
 * Sun Dec 16 2018 Allen Winter <allen.winter@kdab.com> 2.10.0
   2.10.0 final
 * Wed Aug 01 2018 Allen Winter <allen.winter@kdab.com> 2.9.1
