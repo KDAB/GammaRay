@@ -89,6 +89,9 @@ void TextDocumentInspectorWidget::documentSelected(const QItemSelection &selecte
                                                    const QItemSelection &deselected)
 {
     Q_UNUSED(deselected);
+    if (selected.isEmpty()) {
+        return;
+    }
     const QModelIndex selectedRow = selected.first().topLeft();
     QObject *selectedObj = selectedRow.data(ObjectModel::ObjectRole).value<QObject *>();
     QTextDocument *doc = qobject_cast<QTextDocument *>(selectedObj);
