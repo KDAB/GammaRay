@@ -82,6 +82,7 @@
 #include <QEvent>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QSplitter>
 #include <QStyle>
 #include <QToolButton>
 #include <QWindow>
@@ -629,6 +630,10 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
 
     MO_ADD_METAOBJECT1(QScrollArea, QAbstractScrollArea);
     MO_ADD_PROPERTY   (QScrollArea, widget, setWidget);
+
+    MO_ADD_METAOBJECT1(QSplitter, QFrame);
+    MO_ADD_PROPERTY_RO(QSplitter, count);
+    MO_ADD_PROPERTY   (QSplitter, sizes, setSizes);
 
     MO_ADD_METAOBJECT1(QToolButton, QAbstractButton);
     MO_ADD_PROPERTY_RO(QToolButton, defaultAction);
