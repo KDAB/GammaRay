@@ -33,6 +33,7 @@
 #include <QEvent>
 #include <QLayout>
 #include <QPainter>
+#include <QSplitter>
 
 using namespace GammaRay;
 
@@ -43,13 +44,19 @@ static QWidget *toplevelWidget(QWidget *widget)
     auto isTopLevel = [](QWidget *widget) {
         return widget->isWindow();
     };
+    auto lastSuitableParent = parent;
     while (parent->parentWidget() &&
             !isTopLevel(parent->parentWidget()) &&
             !isTopLevel(parent)) {
         parent = parent->parentWidget();
+
+        // don't pick parents that can't take the overlay as a children
+        if (!qobject_cast<QSplitter*>(parent)) {
+            lastSuitableParent = parent;
+        }
     }
 
-    return parent;
+    return lastSuitableParent;
 }
 
 OverlayWidget::OverlayWidget()

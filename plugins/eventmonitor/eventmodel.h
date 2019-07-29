@@ -73,13 +73,15 @@ public:
     QModelIndex parent(const QModelIndex &child) const override;
     QMap<int, QVariant> itemData(const QModelIndex & index) const override;
 
+    bool hasEvents() const;
+    EventData& lastEvent();
+
 public slots:
     void addEvent(const GammaRay::EventData &event);
 
     void clear();
 
 private:
-    friend class EventPropagationListener;
     QVector<EventData> m_events;
     QVector<EventData> m_pendingEvents;
     QTimer *m_pendingEventTimer;

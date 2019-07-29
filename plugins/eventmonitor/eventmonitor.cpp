@@ -274,10 +274,10 @@ bool EventPropagationListener::eventFilter(QObject *receiver, QEvent *event)
     if (!s_model)
         return false;
 
-    if (s_model->m_events.isEmpty())
+    if (!s_model->hasEvents())
         return false;
 
-    EventData& lastEvent = s_model->m_events.last();
+    EventData& lastEvent = s_model->lastEvent();
 
     if (lastEvent.eventPtr == event && lastEvent.receiver == receiver) {
         // this is the same event we already recorded in the event callback
