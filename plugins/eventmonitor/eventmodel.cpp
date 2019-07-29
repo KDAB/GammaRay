@@ -192,3 +192,16 @@ QMap<int, QVariant> EventModel::itemData(const QModelIndex& index) const
     }
     return d;
 }
+
+bool EventModel::hasEvents() const
+{
+    return !m_events.empty() || !m_pendingEvents.empty();
+}
+
+EventData& EventModel::lastEvent()
+{
+    if (!m_pendingEvents.empty()) {
+        return m_pendingEvents.last();
+    }
+    return m_events.last();
+}
