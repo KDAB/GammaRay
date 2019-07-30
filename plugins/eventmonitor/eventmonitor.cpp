@@ -270,7 +270,6 @@ static bool eventCallback(void **data)
 
     // add directly from foreground thread, delay from background thread
     QMetaObject::invokeMethod(s_eventMonitor, "addEvent", Qt::AutoConnection, Q_ARG(GammaRay::EventData, eventData));
-
     return false;
 }
 
