@@ -155,26 +155,6 @@ QString eventTypeToClassName(QEvent::Type type) {
     }
 }
 
-bool isPointerEvent(QEvent::Type type) {
-    switch (type) {
-    case QEvent::NonClientAreaMouseMove:
-    case QEvent::NonClientAreaMouseButtonPress:
-    case QEvent::NonClientAreaMouseButtonRelease:
-    case QEvent::NonClientAreaMouseButtonDblClick:
-    case QEvent::MouseButtonDblClick:
-    case QEvent::MouseButtonPress:
-    case QEvent::MouseButtonRelease:
-    case QEvent::MouseMove:
-    case QEvent::TouchBegin:
-    case QEvent::TouchUpdate:
-    case QEvent::TouchEnd:
-    case QEvent::TouchCancel:
-        return true;
-    default:
-        return false;
-    }
-}
-
 
 bool shouldBeRecorded(QObject* receiver, QEvent* event) {
     if (!s_model || !s_eventTypeModel || !s_eventMonitor || !Probe::instance()) {
@@ -280,15 +260,16 @@ static bool eventCallback(void **data)
     EventData eventData = createEventData(receiver, event);
 
     if (!event->spontaneous()
-            && isPointerEvent(event->type())
             && s_model->hasEvents()
-            && s_model->lastEvent().eventPtr == eventData.eventPtr) {
-        // this is an event propagated by a QQuickWindow to a children:
+            && s_model->lastEvent().eventPtr == eventData.eventPtr
+            && s_model->lastEvent().type == event->type()) {
+        // this is an event propagated by a QQuickWindow to a child item:
         s_model->lastEvent().propagatedEvents.append(eventData);
-    } else {
-        // add directly from foreground thread, delay from background thread
-        QMetaObject::invokeMethod(s_eventMonitor, "addEvent", Qt::AutoConnection, Q_ARG(GammaRay::EventData, eventData));
+        return false;
     }
+
+    // add directly from foreground thread, delay from background thread
+    QMetaObject::invokeMethod(s_eventMonitor, "addEvent", Qt::AutoConnection, Q_ARG(GammaRay::EventData, eventData));
 
     return false;
 }
