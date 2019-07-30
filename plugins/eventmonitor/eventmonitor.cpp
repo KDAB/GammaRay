@@ -156,6 +156,43 @@ QString eventTypeToClassName(QEvent::Type type) {
 }
 
 
+bool isInputEvent(QEvent::Type type) {
+    switch (type) {
+    case QEvent::NonClientAreaMouseMove:
+    case QEvent::NonClientAreaMouseButtonPress:
+    case QEvent::NonClientAreaMouseButtonRelease:
+    case QEvent::NonClientAreaMouseButtonDblClick:
+    case QEvent::MouseButtonDblClick:
+    case QEvent::MouseButtonPress:
+    case QEvent::MouseButtonRelease:
+    case QEvent::MouseMove:
+    case QEvent::TouchBegin:
+    case QEvent::TouchUpdate:
+    case QEvent::TouchEnd:
+    case QEvent::TouchCancel:
+    case QEvent::Scroll:
+    case QEvent::TabletMove:
+    case QEvent::TabletPress:
+    case QEvent::TabletRelease:
+    case QEvent::TabletEnterProximity:
+    case QEvent::TabletLeaveProximity:
+    case QEvent::NativeGesture:
+    case QEvent::KeyPress:
+    case QEvent::KeyRelease:
+    case QEvent::Wheel:
+    case QEvent::HoverEnter:
+    case QEvent::HoverMove:
+    case QEvent::HoverLeave:
+    case QEvent::Drop:
+    case QEvent::DragEnter:
+    case QEvent::DragMove:
+        return true;
+    default:
+        return false;
+    }
+}
+
+
 bool shouldBeRecorded(QObject* receiver, QEvent* event) {
     if (!s_model || !s_eventTypeModel || !s_eventMonitor || !Probe::instance()) {
         return false;
@@ -260,6 +297,7 @@ static bool eventCallback(void **data)
     EventData eventData = createEventData(receiver, event);
 
     if (!event->spontaneous()
+            && isInputEvent(event->type())
             && s_model->hasEvents()
             && s_model->lastEvent().eventPtr == eventData.eventPtr
             && s_model->lastEvent().type == event->type()) {
