@@ -67,6 +67,7 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     ui->eventTree->setDeferredResizeMode(EventModelColumn::Time, QHeaderView::ResizeToContents);
     ui->eventTree->setModel(eventModel);
     ui->eventTree->setSelectionModel(ObjectBroker::selectionModel(ui->eventTree->model()));
+    ui->eventTree->header()->setSectionsClickable(false); // we do not want sorting here
     connect(ui->eventTree, &QTreeView::customContextMenuRequested, this, &EventMonitorWidget::eventTreeContextMenu);
 
     connect(ui->pauseButton, &QAbstractButton::toggled, this, &EventMonitorWidget::pauseAndResume);

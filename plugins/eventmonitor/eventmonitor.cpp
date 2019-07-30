@@ -320,12 +320,11 @@ EventMonitor::EventMonitor(Probe *probe, QObject *parent)
     QInternal::registerCallback(QInternal::EventNotifyCallback, eventCallback);
     QCoreApplication::instance()->installEventFilter(new EventPropagationListener(this));
 
-    auto filterProxy = new EventTypeFilter(this, m_eventTypeModel);
+    auto filterProxy = new ServerProxyModel<EventTypeFilter>(this);
+    filterProxy->setEventTypeModel(m_eventTypeModel);
     filterProxy->setSourceModel(m_eventModel);
     connect(m_eventTypeModel, &EventTypeModel::typeVisibilityChanged, filterProxy, &QSortFilterProxyModel::invalidate);
-    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-    proxy->setSourceModel(filterProxy);
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventModel"), proxy);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventModel"), filterProxy);
 
     auto evenTypeProxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     evenTypeProxy->setSourceModel(m_eventTypeModel);
@@ -333,7 +332,7 @@ EventMonitor::EventMonitor(Probe *probe, QObject *parent)
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventPropertyModel"), m_eventPropertyModel);
 
-    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(filterProxy);
     connect(selectionModel, &QItemSelectionModel::selectionChanged,
             this, &EventMonitor::eventSelected);
 }
