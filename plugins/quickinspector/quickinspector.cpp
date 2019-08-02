@@ -654,7 +654,7 @@ void QuickInspector::checkOverlaySettings()
 class SGSoftwareRendererPrivacyViolater : public QSGAbstractSoftwareRenderer
 {
 public:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0) || QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0) && QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     using QSGAbstractSoftwareRenderer::renderableNodes;
 #endif
     using QSGAbstractSoftwareRenderer::renderNodes;
