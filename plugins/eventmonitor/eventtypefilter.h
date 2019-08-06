@@ -41,14 +41,19 @@ class EventTypeFilter : public QSortFilterProxyModel
     Q_OBJECT
 
 public:
-    explicit EventTypeFilter(QObject *parent, const EventTypeModel *model);
+    explicit EventTypeFilter(QObject *parent);
     ~EventTypeFilter() override = default;
+
+    void setEventTypeModel(const EventTypeModel *typeModel);
+
+    void sort(int, Qt::SortOrder) override;
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override;
 
 private:
-    const EventTypeModel*  m_eventTypeModel;
+    const EventTypeModel*  m_eventTypeModel = nullptr;
 };
 }
 

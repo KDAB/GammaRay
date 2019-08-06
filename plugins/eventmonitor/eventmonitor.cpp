@@ -156,6 +156,43 @@ QString eventTypeToClassName(QEvent::Type type) {
 }
 
 
+bool isInputEvent(QEvent::Type type) {
+    switch (type) {
+    case QEvent::NonClientAreaMouseMove:
+    case QEvent::NonClientAreaMouseButtonPress:
+    case QEvent::NonClientAreaMouseButtonRelease:
+    case QEvent::NonClientAreaMouseButtonDblClick:
+    case QEvent::MouseButtonDblClick:
+    case QEvent::MouseButtonPress:
+    case QEvent::MouseButtonRelease:
+    case QEvent::MouseMove:
+    case QEvent::TouchBegin:
+    case QEvent::TouchUpdate:
+    case QEvent::TouchEnd:
+    case QEvent::TouchCancel:
+    case QEvent::Scroll:
+    case QEvent::TabletMove:
+    case QEvent::TabletPress:
+    case QEvent::TabletRelease:
+    case QEvent::TabletEnterProximity:
+    case QEvent::TabletLeaveProximity:
+    case QEvent::NativeGesture:
+    case QEvent::KeyPress:
+    case QEvent::KeyRelease:
+    case QEvent::Wheel:
+    case QEvent::HoverEnter:
+    case QEvent::HoverMove:
+    case QEvent::HoverLeave:
+    case QEvent::Drop:
+    case QEvent::DragEnter:
+    case QEvent::DragMove:
+        return true;
+    default:
+        return false;
+    }
+}
+
+
 bool shouldBeRecorded(QObject* receiver, QEvent* event) {
     if (!s_model || !s_eventTypeModel || !s_eventMonitor || !Probe::instance()) {
         return false;
@@ -259,6 +296,16 @@ static bool eventCallback(void **data)
 
     EventData eventData = createEventData(receiver, event);
 
+    if (!event->spontaneous()
+            && isInputEvent(event->type())
+            && s_model->hasEvents()
+            && s_model->lastEvent().eventPtr == eventData.eventPtr
+            && s_model->lastEvent().type == event->type()) {
+        // this is an event propagated by a QQuickWindow to a child item:
+        s_model->lastEvent().propagatedEvents.append(eventData);
+        return false;
+    }
+
     // add directly from foreground thread, delay from background thread
     QMetaObject::invokeMethod(s_eventMonitor, "addEvent", Qt::AutoConnection, Q_ARG(GammaRay::EventData, eventData));
     return false;
@@ -281,6 +328,11 @@ bool EventPropagationListener::eventFilter(QObject *receiver, QEvent *event)
 
     if (lastEvent.eventPtr == event && lastEvent.receiver == receiver) {
         // this is the same event we already recorded in the event callback
+        return false;
+    }
+    if (!lastEvent.propagatedEvents.isEmpty()
+            && lastEvent.propagatedEvents.last().eventPtr == event) {
+        // this is an event propagated by QML that is already recorded in the event callback
         return false;
     }
 
@@ -320,12 +372,11 @@ EventMonitor::EventMonitor(Probe *probe, QObject *parent)
     QInternal::registerCallback(QInternal::EventNotifyCallback, eventCallback);
     QCoreApplication::instance()->installEventFilter(new EventPropagationListener(this));
 
-    auto filterProxy = new EventTypeFilter(this, m_eventTypeModel);
+    auto filterProxy = new ServerProxyModel<EventTypeFilter>(this);
+    filterProxy->setEventTypeModel(m_eventTypeModel);
     filterProxy->setSourceModel(m_eventModel);
     connect(m_eventTypeModel, &EventTypeModel::typeVisibilityChanged, filterProxy, &QSortFilterProxyModel::invalidate);
-    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-    proxy->setSourceModel(filterProxy);
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventModel"), proxy);
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventModel"), filterProxy);
 
     auto evenTypeProxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     evenTypeProxy->setSourceModel(m_eventTypeModel);
@@ -333,7 +384,7 @@ EventMonitor::EventMonitor(Probe *probe, QObject *parent)
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.EventPropertyModel"), m_eventPropertyModel);
 
-    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
+    QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(filterProxy);
     connect(selectionModel, &QItemSelectionModel::selectionChanged,
             this, &EventMonitor::eventSelected);
 }
