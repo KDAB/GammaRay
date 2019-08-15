@@ -1,18 +1,24 @@
 /*
     Copyright (C) 2017 Volker Krause <vkrause@kde.org>
 
-    This program is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "selectionratiosource.h"
@@ -35,12 +41,13 @@ class SelectionRatioSourcePrivate : public AbstractDataSourcePrivate
 {
 public:
     SelectionRatioSourcePrivate();
+    ~SelectionRatioSourcePrivate();
 
     void selectionChanged();
     QString selectedValue() const;
 
     QItemSelectionModel *model;
-    std::unique_ptr<QObject> monitor;
+    QMetaObject::Connection monitorConnection;
     QString description;
     QString previousValue;
     QTime lastChangeTime;
@@ -49,26 +56,17 @@ public:
     int role;
 };
 
-class SelectionMonitor : public QObject
-{
-    Q_OBJECT
-public:
-    explicit SelectionMonitor(SelectionRatioSourcePrivate *d) : m_receiver(d) {}
-public Q_SLOTS:
-    void selectionChanged()
-    {
-        m_receiver->selectionChanged();
-    }
-private:
-    SelectionRatioSourcePrivate *m_receiver;
-};
-
 }
 
 SelectionRatioSourcePrivate::SelectionRatioSourcePrivate()
     : model(nullptr)
     , role(Qt::DisplayRole)
 {
+}
+
+SelectionRatioSourcePrivate::~SelectionRatioSourcePrivate()
+{
+    QObject::disconnect(monitorConnection);
 }
 
 void SelectionRatioSourcePrivate::selectionChanged()
@@ -99,8 +97,10 @@ SelectionRatioSource::SelectionRatioSource(QItemSelectionModel* selectionModel, 
     d->model = selectionModel;
     Q_ASSERT(selectionModel);
 
-    d->monitor.reset(new SelectionMonitor(d));
-    QObject::connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), d->monitor.get(), SLOT(selectionChanged()));
+    d->monitorConnection = QObject::connect(selectionModel, &QItemSelectionModel::selectionChanged, [this]() {
+        Q_D(SelectionRatioSource);
+        d->selectionChanged();
+    });
     d->lastChangeTime.start();
     d->selectionChanged();
 }
@@ -144,7 +144,7 @@ QVariant SelectionRatioSource::data()
     return m;
 }
 
-void SelectionRatioSource::load(QSettings *settings)
+void SelectionRatioSource::loadImpl(QSettings *settings)
 {
     Q_D(SelectionRatioSource);
     foreach (const auto &value, settings->childKeys()) {
@@ -155,7 +155,7 @@ void SelectionRatioSource::load(QSettings *settings)
     }
 }
 
-void SelectionRatioSource::store(QSettings *settings)
+void SelectionRatioSource::storeImpl(QSettings *settings)
 {
     Q_D(SelectionRatioSource);
     d->selectionChanged();
@@ -172,12 +172,10 @@ void SelectionRatioSource::store(QSettings *settings)
     }
 }
 
-void SelectionRatioSource::reset(QSettings* settings)
+void SelectionRatioSource::resetImpl(QSettings* settings)
 {
     Q_D(SelectionRatioSource);
     d->baseRatioSet.clear();
     d->ratioSet.clear();
     settings->remove(QString());
 }
-
-#include "selectionratiosource.moc"
