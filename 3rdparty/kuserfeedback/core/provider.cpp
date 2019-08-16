@@ -1,18 +1,24 @@
 /*
     Copyright (C) 2016 Volker Krause <vkrause@kde.org>
 
-    This program is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include <kuserfeedback_version.h>
@@ -31,12 +37,10 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QStandardPaths>
-#endif
 #include <QMetaEnum>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -51,7 +55,7 @@
 namespace KUserFeedback {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
 Q_LOGGING_CATEGORY(Log, "org.kde.UserFeedback", QtInfoMsg)
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 2, 0)
+#else
 Q_LOGGING_CATEGORY(Log, "org.kde.UserFeedback")
 #endif
 }
@@ -71,14 +75,15 @@ ProviderPrivate::ProviderPrivate(Provider *qq)
     , encouragementTime(-1)
     , encouragementDelay(300)
     , encouragementInterval(-1)
+    , backoffIntervalMinutes(-1)
 {
     submissionTimer.setSingleShot(true);
-    QObject::connect(&submissionTimer, SIGNAL(timeout()), q, SLOT(submit()));
+    QObject::connect(&submissionTimer, &QTimer::timeout, q, &Provider::submit);
 
     startTime.start();
 
     encouragementTimer.setSingleShot(true);
-    QObject::connect(&encouragementTimer, SIGNAL(timeout()), q, SLOT(emitShowEncouragementMessage()));
+    QObject::connect(&encouragementTimer, &QTimer::timeout, q, [this]() { emitShowEncouragementMessage(); });
 }
 
 ProviderPrivate::~ProviderPrivate()
@@ -148,7 +153,7 @@ void ProviderPrivate::load()
     s->endGroup();
 
     foreach (auto source, dataSources) {
-        s->beginGroup(QStringLiteral("Source-") + source->name());
+        s->beginGroup(QStringLiteral("Source-") + source->id());
         source->load(s.get());
         s->endGroup();
     }
@@ -173,7 +178,7 @@ void ProviderPrivate::store()
     s->endGroup();
 
     foreach (auto source, dataSources) {
-        s->beginGroup(QStringLiteral("Source-") + source->name());
+        s->beginGroup(QStringLiteral("Source-") + source->id());
         source->store(s.get());
         s->endGroup();
     }
@@ -200,108 +205,49 @@ void ProviderPrivate::aboutToQuit()
 
 bool ProviderPrivate::isValidSource(AbstractDataSource *source) const
 {
-    if (source->name().isEmpty()) {
+    if (source->id().isEmpty()) {
         qCWarning(Log) << "Skipping data source with empty name!";
         return false;
     }
     if (source->telemetryMode() == Provider::NoTelemetry) {
-        qCWarning(Log) << "Source" << source->name() << "attempts to report data unconditionally, ignoring!";
+        qCWarning(Log) << "Source" << source->id() << "attempts to report data unconditionally, ignoring!";
         return false;
     }
     if (source->description().isEmpty()) {
-        qCWarning(Log) << "Source" << source->name() << "has no description, ignoring!";
+        qCWarning(Log) << "Source" << source->id() << "has no description, ignoring!";
         return false;
     }
 
-    Q_ASSERT(!source->name().isEmpty());
+    Q_ASSERT(!source->id().isEmpty());
     Q_ASSERT(source->telemetryMode() != Provider::NoTelemetry);
     Q_ASSERT(!source->description().isEmpty());
     return true;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-QByteArray variantMapToJson(const QVariantMap &m)
-{
-    QByteArray b = "{";
-    for (auto it = m.begin(); it != m.end(); ++it) {
-        b += " \"" + it.key().toUtf8() + "\": ";
-        switch (it.value().type()) {
-            case QVariant::String:
-                b += '"' + it.value().toString().toUtf8() + '"';
-                break;
-            case QVariant::Int:
-                b += QByteArray::number(it.value().toInt());
-                break;
-            case QVariant::Double:
-                b += QByteArray::number(it.value().toDouble());
-                break;
-            case QVariant::Map:
-                b += variantMapToJson(it.value().toMap());
-                break;
-            default:
-                break;
-        }
-        if (std::distance(it, m.end()) != 1)
-            b += ",\n";
-    }
-    b += " }";
-    return b;
-}
-#endif
-
 QByteArray ProviderPrivate::jsonData(Provider::TelemetryMode mode) const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     QJsonObject obj;
     if (mode != Provider::NoTelemetry) {
         foreach (auto source, dataSources) {
-            if (!isValidSource(source))
+            if (!isValidSource(source) || !source->isActive())
                 continue;
             if (mode < source->telemetryMode())
                 continue;
             const auto data = source->data();
             if (data.canConvert<QVariantMap>())
-                obj.insert(source->name(), QJsonObject::fromVariantMap(data.toMap()));
+                obj.insert(source->id(), QJsonObject::fromVariantMap(data.toMap()));
             else if (data.canConvert<QVariantList>())
-                obj.insert(source->name(), QJsonArray::fromVariantList(data.value<QVariantList>()));
+                obj.insert(source->id(), QJsonArray::fromVariantList(data.value<QVariantList>()));
             else
-                qCWarning(Log) << "wrong type for" << source->name() << data;
+                qCWarning(Log) << "wrong type for" << source->id() << data;
         }
     }
 
     QJsonDocument doc(obj);
     return doc.toJson();
-#else
-    QByteArray b = "{";
-    if (mode != Provider::NoTelemetry) {
-        for (auto it = dataSources.begin(); it != dataSources.end(); ++it) {
-            if (!isValidSource(*it))
-                continue;
-            if (mode < (*it)->telemetryMode())
-                continue;
-            const auto data = (*it)->data();
-            if (data.canConvert<QVariantList>()) {
-                const auto l = data.value<QVariantList>();
-                b += " \"" + (*it)->name().toUtf8() + "\": [ ";
-                for (auto it2 = l.begin(); it2 != l.end(); ++it2) {
-                    b += variantMapToJson((*it2).toMap());
-                    if (std::distance(it2, l.end()) != 1)
-                        b += ", ";
-                }
-                b += " ]";
-            } else {
-                b += " \"" + (*it)->name().toUtf8() + "\": " + variantMapToJson(data.toMap());
-            }
-            if (std::distance(it, dataSources.end()) != 1)
-                b += ",\n";
-        }
-    }
-    b += '}';
-    return b;
-#endif
 }
 
-void ProviderPrivate::scheduleNextSubmission()
+void ProviderPrivate::scheduleNextSubmission(qint64 minTime)
 {
     submissionTimer.stop();
     if (!q->isEnabled())
@@ -309,20 +255,30 @@ void ProviderPrivate::scheduleNextSubmission()
     if (submissionInterval <= 0 || (telemetryMode == Provider::NoTelemetry && surveyInterval < 0))
         return;
 
+    if (minTime == 0) {
+        // If this is a regularly scheduled submission reset the backoff
+        backoffIntervalMinutes = -1;
+    }
+
     Q_ASSERT(submissionInterval > 0);
 
     const auto nextSubmission = lastSubmitTime.addDays(submissionInterval);
     const auto now = QDateTime::currentDateTime();
-    submissionTimer.start(std::max(0ll, now.msecsTo(nextSubmission)));
+    submissionTimer.start(std::max(minTime, now.msecsTo(nextSubmission)));
 }
 
-void ProviderPrivate::submitFinished()
+void ProviderPrivate::submitFinished(QNetworkReply *reply)
 {
-    auto reply = qobject_cast<QNetworkReply*>(q->sender());
-    Q_ASSERT(reply);
+    reply->deleteLater();
 
     if (reply->error() != QNetworkReply::NoError) {
-        qCWarning(Log) << "failed to submit user feedback:" << reply->errorString() << reply->readAll();
+        if (backoffIntervalMinutes == -1) {
+            backoffIntervalMinutes = 2;
+        } else {
+            backoffIntervalMinutes = backoffIntervalMinutes * 2;
+        }
+        qCWarning(Log) << "failed to submit user feedback:" << reply->errorString() << reply->readAll() << ". Calling scheduleNextSubmission with minTime" << backoffIntervalMinutes << "minutes";
+        scheduleNextSubmission(backoffIntervalMinutes * 60000ll);
         return;
     }
 
@@ -347,12 +303,11 @@ void ProviderPrivate::submitFinished()
 
     // reset source counters
     foreach (auto source, dataSources) {
-        s->beginGroup(QStringLiteral("Source-") + source->name());
+        s->beginGroup(QStringLiteral("Source-") + source->id());
         source->reset(s.get());
         s->endGroup();
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     const auto obj = QJsonDocument::fromJson(reply->readAll()).object();
     const auto it = obj.find(QLatin1String("surveys"));
     if (it != obj.end() && surveyInterval >= 0) {
@@ -364,15 +319,14 @@ void ProviderPrivate::submitFinished()
                 break;
         }
     }
-#endif
 
     scheduleNextSubmission();
 }
 
-QVariant ProviderPrivate::sourceData(const QString& sourceName) const
+QVariant ProviderPrivate::sourceData(const QString& sourceId) const
 {
     foreach (auto src, dataSources) {
-        if (src->name() == sourceName)
+        if (src->id() == sourceId)
             return src->data();
     }
     return QVariant();
@@ -384,7 +338,7 @@ bool ProviderPrivate::selectSurvey(const SurveyInfo &survey) const
     if (!q->isEnabled() || !survey.isValid() || completedSurveys.contains(survey.uuid().toString()))
         return false;
 
-    if (lastSurveyTime.addDays(surveyInterval) > QDateTime::currentDateTime())
+    if (surveyInterval != 0 && lastSurveyTime.addDays(surveyInterval) > QDateTime::currentDateTime())
         return false;
 
     if (!survey.target().isEmpty()) {
@@ -462,7 +416,7 @@ Provider::Provider(QObject *parent) :
 {
     qCDebug(Log);
 
-    connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
+    connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [this]() { d->aboutToQuit(); });
 
     auto domain = QCoreApplication::organizationDomain().split(QLatin1Char('.'));
     std::reverse(domain.begin(), domain.end());
@@ -568,15 +522,22 @@ void Provider::addDataSource(AbstractDataSource *source)
         timeSrc->setProvider(d);
 
     d->dataSources.push_back(source);
+    d->dataSourcesById[source->id()] = source;
 
     auto s = d->makeSettings();
-    s->beginGroup(QStringLiteral("Source-") + source->name());
+    s->beginGroup(QStringLiteral("Source-") + source->id());
     source->load(s.get());
 }
 
 QVector<AbstractDataSource*> Provider::dataSources() const
 {
     return d->dataSources;
+}
+
+AbstractDataSource *Provider::dataSource(const QString &id) const
+{
+    auto it = d->dataSourcesById.find(id);
+    return it != std::end(d->dataSourcesById) ? *it : nullptr;
 }
 
 int Provider::surveyInterval() const
@@ -666,6 +627,16 @@ void Provider::surveyCompleted(const SurveyInfo &info)
     d->storeOneGlobal(QStringLiteral("LastSurvey"), d->lastSurveyTime);
 }
 
+void Provider::load()
+{
+    d->load();
+}
+
+void Provider::store()
+{
+    d->store();
+}
+
 void Provider::submit()
 {
     if (!isEnabled()) {
@@ -690,29 +661,56 @@ void Provider::submit()
         path += QLatin1Char('/');
     path += QStringLiteral("receiver/submit/") + d->productId;
     url.setPath(path);
-    d->submit(url);
+    d->submitProbe(url);
 }
 
 void ProviderPrivate::submit(const QUrl &url)
 {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/json"));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     request.setHeader(QNetworkRequest::UserAgentHeader, QString(QStringLiteral("KUserFeedback/") + QStringLiteral(KUSERFEEDBACK_VERSION_STRING)));
-#endif
     auto reply = networkAccessManager->post(request, jsonData(telemetryMode));
-    QObject::connect(reply, SIGNAL(finished()), q, SLOT(submitFinished()));
+    QObject::connect(reply, &QNetworkReply::finished, q, [this, reply]() { submitFinished(reply); });
+}
+
+void ProviderPrivate::submitProbe(const QUrl &url)
+{
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::UserAgentHeader, QString(QStringLiteral("KUserFeedback/") + QStringLiteral(KUSERFEEDBACK_VERSION_STRING)));
+    auto reply = networkAccessManager->get(request);
+    QObject::connect(reply, &QNetworkReply::finished, q, [this, reply]() { submitProbeFinished(reply); });
+}
+
+void ProviderPrivate::submitProbeFinished(QNetworkReply *reply)
+{
+    reply->deleteLater();
+
+    if (reply->error() != QNetworkReply::NoError) {
+        qCWarning(Log) << "failed to probe user feedback submission interface:" << reply->errorString() << reply->readAll();
+        return;
+    }
+
+    const auto redirectTarget = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+    if (redirectTarget.isValid()) {
+        if (++redirectCount >= 20) {
+            qCWarning(Log) << "Redirect loop on" << reply->url().resolved(redirectTarget).toString();
+            return;
+        }
+        submitProbe(reply->url().resolved(redirectTarget));
+        return;
+    }
+
+    submit(reply->url());
 }
 
 void ProviderPrivate::writeAuditLog(const QDateTime &dt)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     const QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QStringLiteral("/kuserfeedback/audit");
     QDir().mkpath(path);
 
     QJsonObject docObj;
     foreach (auto source, dataSources) {
-        if (!isValidSource(source) || telemetryMode < source->telemetryMode())
+        if (!isValidSource(source) || !source->isActive() || telemetryMode < source->telemetryMode())
             continue;
         QJsonObject obj;
         const auto data = source->data();
@@ -724,7 +722,7 @@ void ProviderPrivate::writeAuditLog(const QDateTime &dt)
             continue;
         obj.insert(QLatin1String("telemetryMode"), QString::fromLatin1(telemetryModeEnum().valueToKey(source->telemetryMode())));
         obj.insert(QLatin1String("description"), source->description());
-        docObj.insert(source->name(), obj);
+        docObj.insert(source->id(), obj);
     }
 
     QFile file(path + QLatin1Char('/') + dt.toString(QStringLiteral("yyyyMMdd-hhmmss")) + QStringLiteral(".log"));
@@ -737,9 +735,6 @@ void ProviderPrivate::writeAuditLog(const QDateTime &dt)
     file.write(doc.toJson());
 
     qCDebug(Log) << "Audit log written:" << file.fileName();
-#else
-    Q_UNUSED(dt);
-#endif
 }
 
 #include "moc_provider.cpp"

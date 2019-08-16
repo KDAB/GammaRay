@@ -1,18 +1,24 @@
 /*
     Copyright (C) 2016 Volker Krause <vkrause@kde.org>
 
-    This program is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "platforminfosource.h"
@@ -35,7 +41,6 @@ QString PlatformInfoSource::description() const
 QVariant PlatformInfoSource::data()
 {
     QVariantMap m;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
 #if (defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID))
     // on Linux productType() is the distro name
     m.insert(QStringLiteral("os"), QStringLiteral("linux"));
@@ -62,41 +67,10 @@ QVariant PlatformInfoSource::data()
     m.insert(QStringLiteral("os"), QSysInfo::productType());
     m.insert(QStringLiteral("version"), QSysInfo::productVersion());
 #endif
-#else
-
-    // Qt4 and Qt5 < 5.4
-#ifdef Q_OS_LINUX
-    m.insert(QStringLiteral("os"), QStringLiteral("linux"));
-    m.insert(QStringLiteral("version"), QStringLiteral("unknown")); // TODO could be done by reading /etc/os-release
-#elif defined(Q_OS_WIN32)
-    m.insert(QStringLiteral("os"), QStringLiteral("windows"));
-    switch (QSysInfo::windowsVersion()) {
-        case QSysInfo::WV_NT: m.insert(QStringLiteral("version"), QStringLiteral("4.0")); break;
-        case QSysInfo::WV_2000: m.insert(QStringLiteral("version"), QStringLiteral("5.0")); break;
-        case QSysInfo::WV_XP: m.insert(QStringLiteral("version"), QStringLiteral("5.1")); break;
-        case QSysInfo::WV_2003: m.insert(QStringLiteral("version"), QStringLiteral("5.2")); break;
-        case QSysInfo::WV_VISTA: m.insert(QStringLiteral("version"), QStringLiteral("6.0")); break;
-        case QSysInfo::WV_WINDOWS7: m.insert(QStringLiteral("version"), QStringLiteral("6.1")); break;
-        case QSysInfo::WV_WINDOWS8: m.insert(QStringLiteral("version"), QStringLiteral("6.2")); break;
-        case QSysInfo::WV_WINDOWS8_1: m.insert(QStringLiteral("version"), QStringLiteral("6.3")); break;
-        default: m.insert(QStringLiteral("version"), QStringLiteral("unknown"));
-    }
-#elif defined(Q_OS_MAC)
-    m.insert(QStringLiteral("os"), QStringLiteral("macos"));
-    switch (QSysInfo::MacintoshVersion) {
-        case QSysInfo::MV_10_3: m.insert(QStringLiteral("version"), QStringLiteral("10.3")); break;
-        case QSysInfo::MV_10_4: m.insert(QStringLiteral("version"), QStringLiteral("10.4")); break;
-        case QSysInfo::MV_10_5: m.insert(QStringLiteral("version"), QStringLiteral("10.5")); break;
-        case QSysInfo::MV_10_6: m.insert(QStringLiteral("version"), QStringLiteral("10.6")); break;
-        case QSysInfo::MV_10_7: m.insert(QStringLiteral("version"), QStringLiteral("10.7")); break;
-        case QSysInfo::MV_10_8: m.insert(QStringLiteral("version"), QStringLiteral("10.8")); break;
-        case QSysInfo::MV_10_9: m.insert(QStringLiteral("version"), QStringLiteral("10.9")); break;
-        default: m.insert(QStringLiteral("version"), QStringLiteral("unknown"));
-    }
-#else
-    m.insert(QStringLiteral("os"), QStringLiteral("unusual"));
-#endif
-
-#endif
     return m;
+}
+
+QString PlatformInfoSource::name() const
+{
+    return tr("Platform information");
 }

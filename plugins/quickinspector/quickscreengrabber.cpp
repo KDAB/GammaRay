@@ -34,9 +34,12 @@
 #include <QEvent>
 #include <QPainter>
 #include <QQuickWindow>
+
+#ifndef QT_NO_OPENGL
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLPaintDevice>
+#endif
 
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
@@ -231,8 +234,10 @@ bool ItemOrLayoutFacade::isLayout() const
 std::unique_ptr<AbstractScreenGrabber> AbstractScreenGrabber::get(QQuickWindow* window)
 {
     switch (graphicsApiFor(window)) {
+#ifndef QT_NO_OPENGL
         case RenderInfo::OpenGL:
             return std::unique_ptr<AbstractScreenGrabber>(new OpenGLScreenGrabber(window));
+#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         case RenderInfo::Software:
             return std::unique_ptr<AbstractScreenGrabber>(new SoftwareScreenGrabber(window));
@@ -574,6 +579,7 @@ void AbstractScreenGrabber::disconnectTopItemChanges(QQuickItem *item)
     disconnect(item, &QQuickItem::heightChanged, this, &AbstractScreenGrabber::updateOverlay);
 }
 
+#ifndef QT_NO_OPENGL
 OpenGLScreenGrabber::OpenGLScreenGrabber(QQuickWindow *window)
     : AbstractScreenGrabber(window)
     , m_isGrabbing(false)
@@ -684,6 +690,7 @@ void OpenGLScreenGrabber::drawDecorations()
     QPainter p(&device);
     doDrawDecorations(p);
 }
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 SoftwareScreenGrabber::SoftwareScreenGrabber(QQuickWindow* window)

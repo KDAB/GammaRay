@@ -32,10 +32,12 @@
 #include "quickitemtreewatcher.h"
 #include "quickitemmodelroles.h"
 #include "quickscenepreviewwidget.h"
+#ifndef QT_NO_OPENGL
 #include "geometryextension/sggeometrytab.h"
 #include "materialextension/materialextensionclient.h"
 #include "materialextension/materialtab.h"
 #include "textureextension/texturetab.h"
+#endif
 #include "quickitemdelegate.h"
 #include "ui_quickinspectorwidget.h"
 
@@ -68,10 +70,12 @@ static QObject *createQuickInspectorClient(const QString & /*name*/, QObject *pa
     return new QuickInspectorClient(parent);
 }
 
+#ifndef QT_NO_OPENGL
 static QObject *createMaterialExtension(const QString &name, QObject *parent)
 {
     return new MaterialExtensionClient(name, parent);
 }
+#endif
 
 static QAction *createSeparator(QObject *parent)
 {
@@ -269,6 +273,7 @@ void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft,
 
 void QuickInspectorUiFactory::initUi()
 {
+#ifndef QT_NO_OPENGL
     ObjectBroker::registerClientObjectFactoryCallback<MaterialExtensionInterface *>(
         createMaterialExtension);
 
@@ -276,6 +281,7 @@ void QuickInspectorUiFactory::initUi()
 
     PropertyWidget::registerTab<SGGeometryTab>(QStringLiteral("sgGeometry"), tr("Geometry"));
     PropertyWidget::registerTab<TextureTab>(QStringLiteral("texture"), tr("Texture"));
+#endif
 }
 
 void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint &pos)

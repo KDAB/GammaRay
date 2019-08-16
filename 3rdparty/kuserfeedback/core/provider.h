@@ -1,18 +1,24 @@
 /*
     Copyright (C) 2016 Volker Krause <vkrause@kde.org>
 
-    This program is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
 
-    This program is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #ifndef KUSERFEEDBACK_PROVIDER_H
@@ -113,12 +119,8 @@ public:
         DetailedSystemInformation = 0x30, ///< Transmit detailed system information.
         DetailedUsageStatistics = 0x40, ///< Transmit detailed usage statistics.
     };
-#ifndef QT4_MOC_WORKAROUND
 #if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(TelemetryMode)
-#else
-    Q_ENUMS(TelemetryMode)
-#endif
 #else
     Q_ENUMS(TelemetryMode)
 #endif
@@ -186,6 +188,12 @@ public:
      */
     QVector<AbstractDataSource*> dataSources() const;
 
+    /*! Returns a data source with matched @p id
+     * @param id data source unique identifier
+     * @return pointer to found data source or nullptr if data source is not found
+     */
+    AbstractDataSource *dataSource(const QString &id) const;
+
     /*! Returns the minimum time between two surveys in days.
      *  The default is -1 (no surveys enabled).
      */
@@ -193,6 +201,7 @@ public:
 
     /*! Sets the minimum time in days between two surveys.
      *  @c -1 indicates no surveys should be requested.
+     *  @c 0 indicates no minimum time between surveys at all (i.e. bother the user as often as you want).
      */
     void setSurveyInterval(int days);
 
@@ -245,6 +254,18 @@ public Q_SLOTS:
      */
     void surveyCompleted(const KUserFeedback::SurveyInfo &info);
 
+    /*! Manually load settings of the provider and all added data sources.
+     *  Automatically invoked after object construction and changing product ID.
+     *  @note Potentially long operation.
+     */
+    void load();
+
+    /*! Manually store settings of the provider and all added data sources.
+     *  Will be autromatically invoked upon @p QCoreApplication::aboutToQuit signal.
+     *  @note Potentially long operation.
+     */
+    void store();
+
 Q_SIGNALS:
     /*! Emitted whenever there is a new survey available that can be presented
      *  to the user.
@@ -269,14 +290,9 @@ Q_SIGNALS:
 private:
     friend class ProviderPrivate;
     ProviderPrivate * const d;
-    Q_PRIVATE_SLOT(d, void aboutToQuit())
-    Q_PRIVATE_SLOT(d, void submitFinished())
-    Q_PRIVATE_SLOT(d, void emitShowEncouragementMessage())
     // for UI
     Q_PRIVATE_SLOT(d, QByteArray jsonData(KUserFeedback::Provider::TelemetryMode))
     // for testing
-    Q_PRIVATE_SLOT(d, void load())
-    Q_PRIVATE_SLOT(d, void store())
     Q_PRIVATE_SLOT(d, bool selectSurvey(const KUserFeedback::SurveyInfo&))
 };
 

@@ -80,7 +80,9 @@
 #include <QItemSelection>
 #include <QItemSelectionModel>
 #include <QMouseEvent>
+#ifndef QT_NO_OPENGL
 #include <QOpenGLContext>
+#endif
 #include <QSGNode>
 #include <QSGGeometry>
 #include <QSGMaterial>
@@ -95,7 +97,9 @@
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #include <QSGRenderNode>
 #include <QSGRendererInterface>
+#ifndef QT_NO_OPENGL
 #include <private/qquickopenglshadereffectnode_p.h>
+#endif
 #include <private/qsgsoftwarecontext_p.h>
 #include <private/qsgsoftwarerenderer_p.h>
 #include <private/qsgsoftwarerenderablenode_p.h>
@@ -103,7 +107,9 @@
 
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
+#ifndef QT_NO_OPENGL
 #include <private/qsgbatchrenderer_p.h>
+#endif
 #include <private/qsgdistancefieldglyphnode_p_p.h>
 #include <private/qabstractanimation_p.h>
 
@@ -398,8 +404,10 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     connect(m_pendingRenderMode, &RenderModeRequest::aboutToCleanSceneGraph, this, &QuickInspector::aboutToCleanSceneGraph);
     connect(m_pendingRenderMode, &RenderModeRequest::sceneGraphCleanedUp, this, &QuickInspector::sceneGraphCleanedUp);
 
+#ifndef QT_NO_OPENGL
     auto texGrab = new QSGTextureGrabber(this);
     connect(probe, &Probe::objectCreated, texGrab, &QSGTextureGrabber::objectCreated);
+#endif
 
     connect(Endpoint::instance(), &Endpoint::disconnected, this, [this]() {
         if (m_overlay)
@@ -923,10 +931,14 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_METAOBJECT1(QQuickWindow, QWindow);
     MO_ADD_PROPERTY(QQuickWindow, clearBeforeRendering, setClearBeforeRendering);
     MO_ADD_PROPERTY_RO(QQuickWindow, effectiveDevicePixelRatio);
+#ifndef QT_NO_OPENGL
     MO_ADD_PROPERTY(QQuickWindow, isPersistentOpenGLContext, setPersistentOpenGLContext);
+#endif
     MO_ADD_PROPERTY(QQuickWindow, isPersistentSceneGraph, setPersistentSceneGraph);
     MO_ADD_PROPERTY_RO(QQuickWindow, mouseGrabberItem);
+#ifndef QT_NO_OPENGL
     MO_ADD_PROPERTY_RO(QQuickWindow, openglContext);
+#endif
     MO_ADD_PROPERTY_RO(QQuickWindow, renderTargetId);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     MO_ADD_PROPERTY_RO(QQuickWindow, rendererInterface);
@@ -1041,6 +1053,7 @@ void QuickInspector::registerMetaTypes()
 
     MO_ADD_METAOBJECT1(QSGVertexColorMaterial, QSGMaterial);
 
+#ifndef QT_NO_OPENGL
     MO_ADD_METAOBJECT1(QSGDistanceFieldTextMaterial, QSGMaterial);
     MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, color);
     MO_ADD_PROPERTY_RO(QSGDistanceFieldTextMaterial, fontScale);
@@ -1058,6 +1071,7 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, cullMode);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, geometryUsesTextureSubRect);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, textureProviders);
+#endif
 #endif
 }
 
@@ -1180,12 +1194,14 @@ void QuickInspector::registerVariantHandlers()
 
 void QuickInspector::registerPCExtensions()
 {
+#ifndef QT_NO_OPENGL
     PropertyController::registerExtension<MaterialExtension>();
     PropertyController::registerExtension<SGGeometryExtension>();
     PropertyController::registerExtension<QuickPaintAnalyzerExtension>();
     PropertyController::registerExtension<TextureExtension>();
 
     PropertyAdaptorFactory::registerFactory(QQuickOpenGLShaderEffectMaterialAdaptorFactory::instance());
+#endif
     PropertyAdaptorFactory::registerFactory(QuickAnchorsPropertyAdaptorFactory::instance());
     PropertyFilters::registerFilter(PropertyFilter("QQuickItem", "anchors"));
 

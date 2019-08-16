@@ -8,8 +8,8 @@
     "Homepage": "https://api.kde.org/frameworks/kuserfeedback/html/index.html",
     "Version": "0.9.84",
 
-    "License": "GNU Library General Public License v2 or later",
-    "LicenseId": "LGPL-2.0",
+    "License": "MIT License",
+    "LicenseId": "MIT",
     "LicenseFile": "COPYING.LIB",
     "Copyright": "Copyright (C) 2016-2017 Volker Krause"
 }

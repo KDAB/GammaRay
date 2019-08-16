@@ -471,6 +471,13 @@ set(HAVE_QT_SVG ${Qt5Svg_FOUND})
 set(HAVE_QT_SCXML ${Qt5Scxml_FOUND})
 set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
 
+if(Qt5Gui_FOUND)
+  cmake_push_check_state()
+  set(CMAKE_REQUIRED_LIBRARIES Qt5::Gui)
+  check_cxx_symbol_exists(QT_NO_OPENGL "QOpenGLContext" QT_NO_OPENGL)
+  cmake_pop_check_state()
+endif()
+
 if(Qt5PrintSupport_FOUND)
   cmake_push_check_state()
   set(CMAKE_REQUIRED_LIBRARIES Qt5::PrintSupport)
