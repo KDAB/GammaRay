@@ -60,7 +60,7 @@ void EventTypeFilter::sort(int, Qt::SortOrder)
 
 bool EventTypeFilter::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const
 {
-    // we want newest event on top, but propagated events in order of occurence
+    // we want newest event on top, but propagated events in order of occurrence
     if (source_left.parent().isValid() && source_right.parent().isValid()) {
         return source_left.row() > source_right.row();
     }
