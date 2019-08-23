@@ -117,15 +117,15 @@ bool Server::isRemoteClient() const
 QUrl Server::serverAddress() const
 {
 #ifdef Q_OS_ANDROID
-    QUrl url(QString(QLatin1String("local://%1/+gammaray_socket")).arg(QDir::homePath()));
+    const QString defaultServerAddr = QLatin1String("local://") + QDir::homePath() + QLatin1String("/+gammaray_socket");
 #else
-    QUrl url(ProbeSettings::value(QStringLiteral(
-                                      "ServerAddress"), GAMMARAY_DEFAULT_ANY_TCP_URL).toString());
+    const QString defaultServerAddr = QString::fromUtf8(GAMMARAY_DEFAULT_ANY_TCP_URL);
+#endif
+    QUrl url(ProbeSettings::value(QStringLiteral("ServerAddress"), defaultServerAddr).toString());
     if (url.scheme().isEmpty())
         url.setScheme(QStringLiteral("tcp"));
     if (url.port() <= 0)
         url.setPort(defaultPort());
-#endif
     return url;
 }
 
