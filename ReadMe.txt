@@ -69,11 +69,14 @@ About KDAB
 ==========
 GammaRay is supported and maintained by Klarälvdalens Datakonsult AB (KDAB).
 
-KDAB, the Qt experts, provide consulting and mentoring for developing
-Qt applications from scratch and in porting from all popular and legacy
-frameworks to Qt. We continue to help develop parts of Qt and are one
-of the major contributors to the Qt Project. We can give advanced or
-standard trainings anywhere around the globe.
+The KDAB Group is the global No.1 software consultancy for Qt, C++ and
+OpenGL applications across desktop, embedded and mobile platforms.
+
+The KDAB Group provides consulting and mentoring for developing Qt applications
+from scratch and in porting from all popular and legacy frameworks to Qt.
+We continue to help develop parts of Qt and are one of the major contributors
+to the Qt Project. We can give advanced or standard trainings anywhere
+around the globe on Qt as well as C++, OpenGL, 3D and more.
 
 If you would like to have a custom plugin for GammaRay to visualize, profile
 or debug your own specific components or applications, get in touch with us
