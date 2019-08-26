@@ -41,6 +41,10 @@
 #include <QThread>
 #include <QWaitCondition>
 
+#ifdef Q_OS_ANDROID
+#include <QtAndroid>
+#endif
+
 #include <iostream>
 
 using namespace GammaRay;
@@ -210,11 +214,40 @@ void ProbeSettingsReceiver::setRootPathFromProbePath(const QString &probePath)
 }
 }
 
+#ifdef QT_ANDROIDEXTRAS_LIB
+static QVariant getPackageMetaData(const QString &key, const QVariant &defaultValue)
+{
+    auto pm = QtAndroid::androidContext().callObjectMethod("getPackageManager", "()Landroid/content/pm/PackageManager;");
+    auto packageName = QtAndroid::androidContext().callObjectMethod("getPackageName", "()Ljava/lang/String;");
+    auto GET_META_DATA = QAndroidJniObject::getStaticField<jint>("android/content/pm/PackageManager", "GET_META_DATA");
+    auto appInfo = pm.callObjectMethod("getApplicationInfo", "(Ljava/lang/String;I)Landroid/content/pm/ApplicationInfo;", packageName.object(), GET_META_DATA);
+    auto metaData = appInfo.getObjectField("metaData", "Landroid/os/Bundle;");
+    if (!metaData.isValid()) {
+        return defaultValue;
+    }
+
+    // TODO handle different type cases based on defaultValue.type()
+    auto value = metaData.callObjectMethod("getString", "(Ljava/lang/String;)Ljava/lang/String;", QAndroidJniObject::fromString(key).object());
+    if (value.isValid()) {
+        return value.toString();
+    }
+
+    return defaultValue;
+}
+#endif
+
 QVariant ProbeSettings::value(const QString &key, const QVariant &defaultValue)
 {
     QByteArray v = s_probeSettings()->settings.value(key.toUtf8());
     if (v.isEmpty())
         v = qgetenv("GAMMARAY_" + key.toLocal8Bit());
+
+#ifdef QT_ANDROIDEXTRAS_LIB
+    if (v.isEmpty()) {
+        return getPackageMetaData("com.kdab.gammaray." + key, defaultValue);
+    }
+#endif
+
     if (v.isEmpty())
         return defaultValue;
 

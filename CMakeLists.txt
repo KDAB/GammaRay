@@ -390,6 +390,7 @@ find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
   3DLogic
   3DRender
   3DQuick
+  AndroidExtras
   Bluetooth
   Concurrent
   Designer
