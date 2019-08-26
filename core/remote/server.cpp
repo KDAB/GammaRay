@@ -70,9 +70,9 @@ Server::Server(QObject *parent)
 
     m_broadcastTimer->setInterval(5 * 1000);
     m_broadcastTimer->setSingleShot(false);
-#ifndef Q_OS_ANDROID
-    m_broadcastTimer->start();
-#endif
+    if (serverAddress().scheme() == QLatin1String("tcp")) {
+        m_broadcastTimer->start();
+    }
     connect(m_broadcastTimer, &QTimer::timeout, this, &Server::broadcast);
     connect(this, &Server::disconnected, m_broadcastTimer, [this]{ m_broadcastTimer->start(); });
 
