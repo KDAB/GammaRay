@@ -67,7 +67,6 @@ void ModelCellModel::setModelIndex(const QModelIndex &idx)
     } else {
         m_index = idx;
         if (!m_roles.isEmpty()) {
-            // cppcheck-suppress nullPointer
             emit dataChanged(index(0, 1), index(rowCount() - 1, 1));
         }
     }

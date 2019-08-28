@@ -76,7 +76,7 @@ private:
         Q_ASSERT(false);
     }
 
-    // cppcheck-suppress operatorEqVarError m_data and m_size
+    // cppcheck-suppress operatorEqVarError; m_data and m_size
     LocalBuffer &operator=(const LocalBuffer &other) {
         Q_UNUSED(other);
         Q_ASSERT(false);
