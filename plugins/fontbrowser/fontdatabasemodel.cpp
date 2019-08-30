@@ -61,7 +61,7 @@ int FontDatabaseModel::rowCount(const QModelIndex &parent) const
 int FontDatabaseModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 2;
+    return NUM_COLUMNS;
 }
 
 QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
@@ -69,40 +69,77 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    int family = -1;
-    if (index.internalId() == TopLevelId)
-        family = index.row();
-    else
-        family = index.internalId();
-    Q_ASSERT(family >= 0 && family < m_families.size() && family < m_styles.size());
+    int styleIndex = -1;
+    int familyIndex = -1;
+    if (index.internalId() == TopLevelId) {
+        familyIndex = index.row();
+    } else {
+        familyIndex = index.internalId();
+        styleIndex = index.row();
+    }
+    Q_ASSERT(familyIndex >= 0 && familyIndex < m_families.size() && familyIndex < m_styles.size());
+    Q_ASSERT(styleIndex == -1 || (styleIndex >= 0 && styleIndex < m_styles.at(familyIndex).size()));
+
+    const auto &style = styleIndex == -1 ? QString() : m_styles.at(familyIndex).at(styleIndex);
+    const auto &family = m_families.at(familyIndex);
 
     if (role == Qt::DisplayRole) {
-        if (index.internalId() == TopLevelId) {
-            if (index.column() == 0)
-                return m_families.at(family);
-        } else {
-            switch (index.column()) {
-            case 0:
-                return m_styles.at(family).at(index.row());
-            case 1:
-                return smoothSizeString(m_families.at(family), m_styles.at(family).at(index.row()));
-            }
+        if (styleIndex == -1) {
+            if (index.column() == Label)
+                return family;
+            else
+                return {};
+        }
+        switch (static_cast<Columns>(index.column())) {
+        case Label:
+            return style;
+        case Weight:
+            return QFontDatabase().weight(family, style);
+        case SmoothSizes:
+            return smoothSizeString(family, style);
+        case Bold:
+        case Italic:
+        case Scalable:
+        case BitmapScalable:
+        case SmoothlyScalable:
+        case NUM_COLUMNS:
+            return {};
+        }
+    } else if (role == Qt::CheckStateRole && styleIndex != -1) {
+        auto checkState = [](bool state) {
+            return state ? Qt::Checked : Qt::Unchecked;
+        };
+        switch (static_cast<Columns>(index.column())) {
+        case Bold:
+            return checkState(QFontDatabase().bold(family, style));
+        case Italic:
+            return checkState(QFontDatabase().italic(family, style));
+        case Scalable:
+            return checkState(QFontDatabase().isScalable(family, style));
+        case BitmapScalable:
+            return checkState(QFontDatabase().isBitmapScalable(family, style));
+        case SmoothlyScalable:
+            return checkState(QFontDatabase().isSmoothlyScalable(family, style));
+        case Weight:
+        case Label:
+        case SmoothSizes:
+        case NUM_COLUMNS:
+            return {};
         }
     } else if (role == Qt::ToolTipRole) {
-        if (index.internalId() != TopLevelId && index.column() == 1)
-            return smoothSizeString(m_families.at(family), m_styles.at(family).at(index.row()));
+        if (style != -1 && index.column() == SmoothSizes)
+            return smoothSizeString(family, style);
     } else if (role == FontBrowserInterface::FontRole) {
-        if (index.internalId() == TopLevelId) {
-            return QFont(m_families.at(family));
+        if (style == -1) {
+            return QFont(family);
         } else {
-            QFontDatabase database;
-            return database.font(m_families.at(family), m_styles.at(family).at(index.row()), 10);
+            return QFontDatabase().font(family, style, 10);
         }
     } else if (role == FontBrowserInterface::FontSearchRole) {
         if (index.internalId() == TopLevelId) {
-            return m_families.at(family);
+            return family;
         } else {
-            return tr("%1 %2").arg(m_families.at(family), m_styles.at(family).at(index.row()));
+            return tr("%1 %2").arg(family, style);
         }
     }
 
@@ -112,11 +149,25 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
 QVariant FontDatabaseModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch (section) {
-        case 0:
+        switch (static_cast<Columns>(section)) {
+        case Label:
             return tr("Fonts");
-        case 1:
+        case Weight:
+            return tr("Weight");
+        case Bold:
+            return tr("Bold");
+        case Italic:
+            return tr("Italic");
+        case Scalable:
+            return tr("Scalable");
+        case BitmapScalable:
+            return tr("Bitmap Scalable");
+        case SmoothlyScalable:
+            return tr("Smoothly Scalable");
+        case SmoothSizes:
             return tr("Smooth Sizes");
+        case NUM_COLUMNS:
+            return {};
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);
