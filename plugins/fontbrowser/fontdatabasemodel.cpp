@@ -84,15 +84,9 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
     const auto &family = m_families.at(familyIndex);
 
     if (role == Qt::DisplayRole) {
-        if (styleIndex == -1) {
-            if (index.column() == Label)
-                return family;
-            else
-                return {};
-        }
         switch (static_cast<Columns>(index.column())) {
         case Label:
-            return style;
+            return styleIndex == -1 ? family : style;
         case Weight:
             return QFontDatabase().weight(family, style);
         case SmoothSizes:
@@ -105,7 +99,7 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
         case NUM_COLUMNS:
             return {};
         }
-    } else if (role == Qt::CheckStateRole && styleIndex != -1) {
+    } else if (role == Qt::CheckStateRole) {
         auto checkState = [](bool state) {
             return state ? Qt::Checked : Qt::Unchecked;
         };
@@ -127,7 +121,7 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
             return {};
         }
     } else if (role == Qt::ToolTipRole) {
-        if (style != -1 && index.column() == SmoothSizes)
+        if (index.column() == SmoothSizes)
             return smoothSizeString(family, style);
     } else if (role == FontBrowserInterface::FontRole) {
         if (style == -1) {
