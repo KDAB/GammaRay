@@ -84,6 +84,7 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
     proxy->setSourceModel(fontModel);
     proxy->setRecursiveFilteringEnabled(true);
     proxy->setFilterRole(FontBrowserInterface::FontSearchRole);
+    proxy->setSortRole(FontBrowserInterface::SortRole);
     new SearchLineController(ui->fontSearchLine, proxy);
     ui->fontTree->header()->setObjectName("fontTreeHeader");
     ui->fontTree->setDeferredResizeMode(0, QHeaderView::ResizeToContents);

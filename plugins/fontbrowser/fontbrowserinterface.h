@@ -46,6 +46,7 @@ public:
     enum {
         FontRole = Qt::UserRole + 1,
         FontSearchRole = Qt::UserRole + 2,
+        SortRole = Qt::UserRole + 3,
     };
 
 public slots:

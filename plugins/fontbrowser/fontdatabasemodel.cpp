@@ -82,8 +82,12 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
 
     const auto &style = styleIndex == -1 ? QString() : m_styles.at(familyIndex).at(styleIndex);
     const auto &family = m_families.at(familyIndex);
+    const auto isSortRole = role == FontBrowserInterface::SortRole;
 
-    if (role == Qt::DisplayRole) {
+    if (role == Qt::DisplayRole || isSortRole) {
+        auto toSortVariant = [isSortRole] (bool state) {
+            return isSortRole ? QVariant(state) : QVariant();
+        };
         switch (static_cast<Columns>(index.column())) {
         case Label:
             return styleIndex == -1 ? family : style;
@@ -92,10 +96,15 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
         case SmoothSizes:
             return smoothSizeString(family, style);
         case Bold:
+            return toSortVariant(QFontDatabase().bold(family, style));
         case Italic:
+            return toSortVariant(QFontDatabase().italic(family, style));
         case Scalable:
+            return toSortVariant(QFontDatabase().isScalable(family, style));
         case BitmapScalable:
+            return toSortVariant(QFontDatabase().isBitmapScalable(family, style));
         case SmoothlyScalable:
+            return toSortVariant(QFontDatabase().isSmoothlyScalable(family, style));
         case NUM_COLUMNS:
             return {};
         }
@@ -192,14 +201,18 @@ QHash<int, QByteArray> FontDatabaseModel::roleNames() const
     auto ret = QAbstractItemModel::roleNames();
     ret[FontBrowserInterface::FontRole] = QByteArrayLiteral("FontRole");
     ret[FontBrowserInterface::FontSearchRole] = QByteArrayLiteral("FontSearchRole");
+    ret[FontBrowserInterface::SortRole] = QByteArrayLiteral("SortRole");
     return ret;
 }
 
 QMap<int, QVariant> FontDatabaseModel::itemData(const QModelIndex &index) const
 {
     auto ret = QAbstractItemModel::itemData(index);
-    for (auto role : {FontBrowserInterface::FontRole, FontBrowserInterface::FontSearchRole})
+    for (auto role : {FontBrowserInterface::FontRole, FontBrowserInterface::FontSearchRole,
+                      FontBrowserInterface::SortRole})
+    {
         ret[role] = data(index, role);
+    }
     return ret;
 }
 
