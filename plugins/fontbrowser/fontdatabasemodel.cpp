@@ -27,6 +27,7 @@
 */
 
 #include "fontdatabasemodel.h"
+#include "fontbrowserinterface.h"
 
 #include <QDebug>
 #include <QFontDatabase>
@@ -90,12 +91,18 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
     } else if (role == Qt::ToolTipRole) {
         if (index.internalId() != TopLevelId && index.column() == 1)
             return smoothSizeString(m_families.at(family), m_styles.at(family).at(index.row()));
-    } else if (role == Qt::UserRole + 1) {
+    } else if (role == FontBrowserInterface::FontRole) {
         if (index.internalId() == TopLevelId) {
             return QFont(m_families.at(family));
         } else {
             QFontDatabase database;
             return database.font(m_families.at(family), m_styles.at(family).at(index.row()), 10);
+        }
+    } else if (role == FontBrowserInterface::FontSearchRole) {
+        if (index.internalId() == TopLevelId) {
+            return m_families.at(family);
+        } else {
+            return tr("%1 %2").arg(m_families.at(family), m_styles.at(family).at(index.row()));
         }
     }
 
@@ -133,6 +140,22 @@ QModelIndex FontDatabaseModel::parent(const QModelIndex &child) const
     if (!child.isValid() || child.internalId() == TopLevelId)
         return {};
     return createIndex(child.internalId(), 0, TopLevelId);
+}
+
+QHash<int, QByteArray> FontDatabaseModel::roleNames() const
+{
+    auto ret = QAbstractItemModel::roleNames();
+    ret[FontBrowserInterface::FontRole] = QByteArrayLiteral("FontRole");
+    ret[FontBrowserInterface::FontSearchRole] = QByteArrayLiteral("FontSearchRole");
+    return ret;
+}
+
+QMap<int, QVariant> FontDatabaseModel::itemData(const QModelIndex &index) const
+{
+    auto ret = QAbstractItemModel::itemData(index);
+    for (auto role : {FontBrowserInterface::FontRole, FontBrowserInterface::FontSearchRole})
+        ret[role] = data(index, role);
+    return ret;
 }
 
 QString FontDatabaseModel::smoothSizeString(const QString &family, const QString &style) const

@@ -51,6 +51,9 @@ public:
                       const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
 
+    QHash<int, QByteArray> roleNames() const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
+
 private:
     void ensureModelPopulated() const;
     void populateModel();

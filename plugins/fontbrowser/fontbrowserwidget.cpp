@@ -33,8 +33,10 @@
 #include "fontbrowserclient.h"
 
 #include <common/objectbroker.h>
+#include <ui/searchlinecontroller.h>
 
 #include <QAbstractItemModel>
+#include <QSortFilterProxyModel>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -78,11 +80,16 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
 
     QAbstractItemModel *fontModel = ObjectBroker::model(QStringLiteral(
                                                             "com.kdab.GammaRay.FontModel"));
+    auto proxy = new QSortFilterProxyModel(this);
+    proxy->setSourceModel(fontModel);
+    proxy->setRecursiveFilteringEnabled(true);
+    proxy->setFilterRole(FontBrowserInterface::FontSearchRole);
+    new SearchLineController(ui->fontSearchLine, proxy);
     ui->fontTree->header()->setObjectName("fontTreeHeader");
     ui->fontTree->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->fontTree->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    ui->fontTree->setModel(fontModel);
-    ui->fontTree->setSelectionModel(ObjectBroker::selectionModel(fontModel));
+    ui->fontTree->setModel(proxy);
+    ui->fontTree->setSelectionModel(ObjectBroker::selectionModel(proxy));
 
     ui->pointSize->setValue(font().pointSize());
 

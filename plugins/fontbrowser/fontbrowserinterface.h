@@ -43,6 +43,11 @@ public:
     explicit FontBrowserInterface(QObject *parent);
     ~FontBrowserInterface() override;
 
+    enum {
+        FontRole = Qt::UserRole + 1,
+        FontSearchRole = Qt::UserRole + 2,
+    };
+
 public slots:
     virtual void updateText(const QString &text) = 0;
     virtual void toggleBoldFont(bool bold) = 0;
