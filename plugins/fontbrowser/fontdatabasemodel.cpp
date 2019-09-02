@@ -133,7 +133,7 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
         if (index.column() == SmoothSizes)
             return smoothSizeString(family, style);
     } else if (role == FontBrowserInterface::FontRole) {
-        if (style == -1) {
+        if (styleIndex == -1) {
             return QFont(family);
         } else {
             return QFontDatabase().font(family, style, 10);
