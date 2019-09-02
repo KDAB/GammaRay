@@ -82,7 +82,9 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
                                                             "com.kdab.GammaRay.FontModel"));
     auto proxy = new QSortFilterProxyModel(this);
     proxy->setSourceModel(fontModel);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     proxy->setRecursiveFilteringEnabled(true);
+#endif
     proxy->setFilterRole(FontBrowserInterface::FontSearchRole);
     proxy->setSortRole(FontBrowserInterface::SortRole);
     new SearchLineController(ui->fontSearchLine, proxy);
