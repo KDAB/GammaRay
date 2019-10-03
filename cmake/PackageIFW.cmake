@@ -56,7 +56,8 @@ add_custom_target(packages)
 
 macro(addPackageTarget packageName dependsTarget installTarget type)
   set(PACKAGE_LIB_FILE "${CMAKE_BINARY_DIR}/${packageName}-${type}-${Qt5Core_VERSION}-${PACKAGE_PREFIX}.7z")
-  add_custom_target("package${type}"
+  set(PACKAGE_TARGET "${type}_package")
+  add_custom_target(${PACKAGE_TARGET}
     DEPENDS "${dependsTarget}"
     COMMAND  echo "Creating IFW package for ${packageName} of type ${type}: ${PACKAGE_LIB_FILE}"
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${installTarget}"
@@ -66,6 +67,6 @@ macro(addPackageTarget packageName dependsTarget installTarget type)
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${installTarget}"
     COMMAND  echo "Generated package file: ${PACKAGE_LIB_FILE}"
     )
-  add_dependencies(packages "package${type}")
+  add_dependencies(packages ${PACKAGE_TARGET})
 endmacro()
 
