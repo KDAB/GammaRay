@@ -118,12 +118,9 @@ bool GammaRay::BindingNode::isPartOfBindingLoop() const
     if (m_foundBindingLoop) {
         return true;
     }
-    for (const auto &dependency : m_dependencies) {
-        if (dependency->isPartOfBindingLoop()) {
-            return true;
-        }
-    }
-    return false;
+
+    return std::any_of(m_dependencies.begin(), m_dependencies.end(),
+        [](const std::unique_ptr<BindingNode> &dependency) { return dependency->isPartOfBindingLoop(); });
 }
 GammaRay::SourceLocation GammaRay::BindingNode::sourceLocation() const
 {
