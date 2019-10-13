@@ -205,14 +205,9 @@ static int iconIdForObject(const QMetaObject *mo, const QObject *obj)
     auto it = iconDataBase.constFind(QLatin1String(mo->className()));
     if (it != iconDataBase.end()) {
         for (const auto &propertyIcon : qAsConst(it->propertyIcons)) {
-            bool allMatch = true;
             Q_ASSERT(!propertyIcon.second.isEmpty());
-            for (const IconCacheEntry::PropertyPair &keyValue : qAsConst(propertyIcon.second)) {
-                if (stringifyProperty(obj, keyValue.first) != keyValue.second) {
-                    allMatch = false;
-                    break;
-                }
-            }
+            const bool allMatch = std::all_of(propertyIcon.second.begin(), propertyIcon.second.end(),
+                [obj](const IconCacheEntry::PropertyPair &keyValue) { return stringifyProperty(obj, keyValue.first) == keyValue.second; });
             if (allMatch)
                 return propertyIcon.first;
         }
