@@ -294,10 +294,12 @@ bool RemoteModelServer::canSerialize(const QVariant &value) const
     // recurse into containers
     if (value.canConvert<QVariantList>()) {
         QSequentialIterable it = value.value<QSequentialIterable>();
-        for (const QVariant &v : it) {
-            if (!canSerialize(v))
-                return false;
+
+        const bool cantSerialize = std::any_of(it.begin(), it.end(), [this](const QVariant &v) { return !canSerialize(v); });
+        if (cantSerialize) {
+            return false;
         }
+
         // note: do not return true here, the fact we can write every single element
         // does not mean we can write the entire thing, or vice vesa...
     } else if (value.canConvert<QVariantMap>()) {
