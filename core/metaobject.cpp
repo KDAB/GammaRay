@@ -39,10 +39,8 @@ MetaObject::~MetaObject()
 
 int MetaObject::propertyCount() const
 {
-    int count = 0;
-    for (MetaObject *mo : m_baseClasses)
-        count += mo->propertyCount();
-    return count + m_properties.size();
+    return std::accumulate(m_baseClasses.begin(), m_baseClasses.end(), m_properties.size(),
+        [](int accumulate, const MetaObject *mo) { return accumulate + mo->propertyCount(); });
 }
 
 MetaProperty *MetaObject::propertyAt(int index) const
@@ -112,11 +110,9 @@ bool MetaObject::isPolymorphic() const
 {
     if (isClassPolymorphic())
         return true;
-    for (const auto &baseClass : m_baseClasses) {
-        if (baseClass->isPolymorphic())
-            return true;
-    }
-    return false;
+
+    return std::any_of(m_baseClasses.begin(), m_baseClasses.end(),
+        [](const MetaObject *baseClass) { return baseClass->isPolymorphic(); });
 }
 
 void* MetaObject::castFrom(void *object, MetaObject *baseClass) const
@@ -138,9 +134,7 @@ bool MetaObject::inherits(const QString &className) const
 {
     if (className == m_className)
         return true;
-    for (MetaObject *metaObject : m_baseClasses) {
-        if (metaObject->inherits(className))
-            return true;
-    }
-    return false;
+
+    return std::any_of(m_baseClasses.begin(), m_baseClasses.end(),
+        [&className](const MetaObject *baseClass) { return baseClass->inherits(className); });
 }
