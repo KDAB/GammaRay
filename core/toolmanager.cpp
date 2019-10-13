@@ -136,11 +136,8 @@ ToolData ToolManager::toolInfoForFactory(ToolFactory *factory) const
 
 bool ToolManager::hasTool(const QString &id) const
 {
-    for (ToolFactory *factory : m_tools) {
-        if (factory->id() == id)
-            return true;
-    }
-    return false;
+    return std::any_of(m_tools.begin(), m_tools.end(),
+        [&id](ToolFactory *factory) { return factory->id() == id; } );
 }
 
 QVector<QString> ToolManager::toolsForObject(QObject *object) const
