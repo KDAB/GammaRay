@@ -48,25 +48,29 @@
 # will create the 7z packages for all added targets.
 
 
-set(PACKAGE_PATH "${CMAKE_BINARY_DIR}/install/${CMAKE_INSTALL_PREFIX}/${QT_INSTALL_PREFIX}")
-get_filename_component(PACKAGE_PREFIX ${PACKAGE_PATH} NAME)
-get_filename_component(PACKAGE_PATH "${PACKAGE_PATH}/.." REALPATH)
+set(PACKAGE_PATH "${CMAKE_BINARY_DIR}/install/")
+get_filename_component(PACKAGE_PREFIX ${QT_INSTALL_PREFIX} NAME)
 
 add_custom_target(packages)
+# Used to serialize the package creation, otherwise the packaging for different types will
+# conflict due to installing to the same place
+set(LAST_TARGET "")
 
 macro(addPackageTarget packageName dependsTarget installTarget type)
   set(PACKAGE_LIB_FILE "${CMAKE_BINARY_DIR}/${packageName}-${type}-${Qt5Core_VERSION}-${PACKAGE_PREFIX}.7z")
   set(PACKAGE_TARGET "${type}_package")
   add_custom_target(${PACKAGE_TARGET}
-    DEPENDS "${dependsTarget}"
+    DEPENDS "${LAST_TARGET}"
     COMMAND  echo "Creating IFW package for ${packageName} of type ${type}: ${PACKAGE_LIB_FILE}"
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${installTarget}"
     COMMAND ${CMAKE_COMMAND} -E remove -f ${PACKAGE_LIB_FILE}
-    COMMAND ${CMAKE_COMMAND} -E chdir "${CMAKE_BINARY_DIR}" "${CMAKE_MAKE_PROGRAM}" DESTDIR="${CMAKE_BINARY_DIR}/${installTarget}" ${installTarget}
+    COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR} -DCMAKE_INSTALL_PREFIX="${CMAKE_BINARY_DIR}/${installTarget}" -DBUILD_TESTING=Off
+    COMMAND ${CMAKE_COMMAND} -E chdir "${CMAKE_BINARY_DIR}" "${CMAKE_MAKE_PROGRAM}" ${installTarget}
     COMMAND ${CMAKE_COMMAND} -E chdir "${PACKAGE_PATH}"  7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ${PACKAGE_LIB_FILE} .
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${installTarget}"
     COMMAND  echo "Generated package file: ${PACKAGE_LIB_FILE}"
     )
   add_dependencies(packages ${PACKAGE_TARGET})
+  set(LAST_TARGET ${PACKAGE_TARGET})
 endmacro()
 
