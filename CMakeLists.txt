@@ -883,6 +883,5 @@ include(CPack)
 include(PackageIFW)
 
 addPackageTarget(GammaRay gammaray_probe install lib)
-addPackageTarget(GammaRay gammaray install tools)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
