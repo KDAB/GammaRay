@@ -44,7 +44,7 @@ TimezoneClientModel::~TimezoneClientModel() = default;
 
 QVariant TimezoneClientModel::data(const QModelIndex& index, int role) const
 {
-    if (role == Qt::ToolTipRole && index.column() > 0) {
+    if (role == Qt::ToolTipRole && index.column() != 0 && index.column() != TimezoneModelColumns::StandardDisplayNameColumn) {
         return QIdentityProxyModel::data(index.sibling(index.row(), 0), role);
     } else if (role == Qt::DisplayRole && index.column() == TimezoneModelColumns::DSTColumn) {
         const auto v = QIdentityProxyModel::data(index, Qt::DisplayRole);

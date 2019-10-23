@@ -56,6 +56,16 @@ int TimezoneModel::rowCount(const QModelIndex& parent) const
     return m_ids.count();
 }
 
+static QString displayNameForAllTimeTypes(const QTimeZone &tz, QTimeZone::NameType nameType)
+{
+    if (!tz.hasDaylightTime()) {
+        return tz.displayName(QTimeZone::StandardTime, nameType);
+    }
+    return tz.displayName(QTimeZone::StandardTime, nameType) + QLatin1String(" / ")
+         + tz.displayName(QTimeZone::DaylightTime, nameType) + QLatin1String(" / ")
+         + tz.displayName(QTimeZone::GenericTime, nameType);
+}
+
 QVariant TimezoneModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
@@ -75,9 +85,18 @@ QVariant TimezoneModel::data(const QModelIndex& index, int role) const
             case TimezoneModelColumns::WindowsIdColumn:
                 return QTimeZone::ianaIdToWindowsId(tz.id());
         }
-    } else if (role == Qt::ToolTipRole && index.column() == 0) {
+    } else if (role == Qt::ToolTipRole) {
         const QTimeZone tz(m_ids.at(index.row()));
-        return tz.comment();
+        switch (index.column()) {
+            case 0:
+                return tz.comment();
+            case TimezoneModelColumns::StandardDisplayNameColumn:
+                return QString(displayNameForAllTimeTypes(tz, QTimeZone::LongName) + QLatin1Char('\n')
+                    + displayNameForAllTimeTypes(tz, QTimeZone::ShortName) + QLatin1Char('\n')
+                    + displayNameForAllTimeTypes(tz, QTimeZone::OffsetName));
+            default:
+                return {};
+        }
     } else if (role == TimezoneModelRoles::LocalZoneRole && index.column() == 0) {
         if (m_ids.at(index.row()) == QTimeZone::systemTimeZoneId())
             return true;
