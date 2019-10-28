@@ -31,6 +31,7 @@
 #include "metaobject.h"
 #include "metaobjectrepository.h"
 #include "probe.h"
+#include "probesettings.h"
 #include "proxytoolfactory.h"
 #include "toolfactory.h"
 
@@ -220,6 +221,11 @@ void ToolManager::objectAdded(const QMetaObject *mo)
 
 void ToolManager::addToolFactory(ToolFactory *tool)
 {
+    const auto excludedTools = ProbeSettings::value(QStringLiteral("DisabledPlugins"), QString()).toString();
+    if (excludedTools.split(QLatin1Char(';')).contains(tool->id())) {
+        return;
+    }
+
     m_tools.push_back(tool);
     m_disabledTools.insert(tool);
 }
