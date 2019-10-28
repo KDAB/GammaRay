@@ -164,6 +164,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     typetraits.h
     util.h
     varianthandler.h
+    remote/server.h
   )
 
   ecm_generate_pri_file(BASE_NAME GammaRayCore

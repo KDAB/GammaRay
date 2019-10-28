@@ -108,6 +108,10 @@ public:
      */
      QString errorString() const;
 
+Q_SIGNALS:
+    /** Indicates the external address might have changed. */
+    void externalAddressChanged();
+
 protected:
     void messageReceived(const Message &msg) override;
     void handlerDestroyed(Protocol::ObjectAddress objectAddress,

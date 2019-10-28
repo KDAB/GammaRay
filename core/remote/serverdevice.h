@@ -64,6 +64,7 @@ public:
 
 signals:
     void newConnection();
+    void externalAddressChanged();
 
 protected:
     QUrl m_address;

@@ -67,6 +67,7 @@ Server::Server(QObject *parent)
         return;
 
     connect(m_serverDevice, &ServerDevice::newConnection, this, &Server::newConnection);
+    connect(m_serverDevice, &ServerDevice::externalAddressChanged, this, &Server::externalAddressChanged);
 
     m_broadcastTimer->setInterval(5 * 1000);
     m_broadcastTimer->setSingleShot(false);
