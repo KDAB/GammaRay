@@ -8,6 +8,14 @@ c:/Program Files on Windows and /Applications on MacOS.
 You can change this location by passing the option
 -DCMAKE_INSTALL_PREFIX=/install/path to cmake.
 
+Your system's installation of Qt will be used by default, which
+may not be the same as the Qt returned by `qmake -v`.
+To specify the Qt version to build against, use cmake option
+CMAKE_PREFIX_PATH, and point it to the gcc(_64) folder of your 
+installation:
+
+% cmake -DCMAKE_PREFIX_PATH=$HOME/Qt/5.11.2/gcc_64 ..`
+
 To build a debug version pass -DCMAKE_BUILD_TYPE=Debug to cmake.
 
 To build GammaRay you will need *at least*:
