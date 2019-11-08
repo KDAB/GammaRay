@@ -48,9 +48,9 @@ private slots:
 
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
-        options.setProbeSetting("TestValue", "http://www.kdab.com/");
-        options.setLaunchArguments(QStringList(QCoreApplication::applicationDirPath()
-                                               + QStringLiteral("/probesettingsclient")));
+        options.setProbeSetting("TestValue", "https://www.kdab.com/");
+        options.setLaunchArguments(QStringList(QCoreApplication::applicationDirPath() +
+                                               QStringLiteral("/probesettingsclient")));
 
         // this will effectively disable injection, so we will just launch the process
         options.setProbePath(QCoreApplication::applicationDirPath());
@@ -68,7 +68,7 @@ private slots:
         QCOMPARE(startSpy.size(), 1);
         QCOMPARE(finishSpy.size(), 1);
 
-        QCOMPARE(launcher.serverAddress(), QUrl(QStringLiteral("http://www.kdab.com/")));
+        QCOMPARE(launcher.serverAddress(), QUrl(QStringLiteral("https://www.kdab.com/")));
     }
 };
 

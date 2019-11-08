@@ -60,7 +60,7 @@ static QStringList dllSearchPaths(const QString &exePath)
 
     /* We don't want use wchar because Qt on Windows with MSVC can be built
        optionally with or without /Zc:wchar_t. And we can't know which.
-       http://stackoverflow.com/questions/4521252/qt-msvc-and-zcwchar-t-i-want-to-blow-up-the-world
+       https://stackoverflow.com/questions/4521252/qt-msvc-and-zcwchar-t-i-want-to-blow-up-the-world
        has a long discussion and options. We chose option3: don't use wchar.
     */
 
@@ -93,11 +93,13 @@ static QString resolveImport(const QString &import, const QStringList &searchPat
 {
     for (const auto &path : searchPaths) {
         const QString absPath = path + '/' + import;
-        if (!QFile::exists(absPath))
+        if (!QFile::exists(absPath)) {
             continue;
+        }
         PEFile f(absPath);
-        if (!f.isValid() || f.architecture() != arch)
+        if (!f.isValid() || f.architecture() != arch) {
             continue;
+        }
         return absPath;
     }
     qDebug() << "Could not resolve import" << import << "in" << searchPaths;
@@ -105,8 +107,7 @@ static QString resolveImport(const QString &import, const QStringList &searchPat
 }
 struct Version {
     Version(int major, int minor)
-        : major(major)
-        , minor(minor)
+        : major(major), minor(minor)
     {}
     int major;
     int minor;
@@ -180,8 +181,9 @@ QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
 
             foreach (const auto &import, f.imports()) {
                 const auto absPath = resolveImport(import, searchPaths, f.architecture());
-                if (!absPath.isEmpty() && !checkedImports.contains(import))
+                if (!absPath.isEmpty() && !checkedImports.contains(import)) {
                     resolvedSubImports.push_back(absPath);
+                }
                 checkedImports.insert(import);
             }
         }
@@ -201,9 +203,10 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
     do {
         snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
     } while(GetLastError() == ERROR_BAD_LENGTH);
-    if (GetLastError() == ERROR_ACCESS_DENIED)
+    if (GetLastError() == ERROR_ACCESS_DENIED) {
         return QString();
-    WIN_ERROR_ASSERT(snapshot != INVALID_HANDLE_VALUE,return QString());
+    }
+    WIN_ERROR_ASSERT(snapshot != INVALID_HANDLE_VALUE, return QString());
 
     for (bool hasNext = Module32First(snapshot, &me); hasNext;
          hasNext = Module32Next(snapshot, &me)) {
@@ -231,8 +234,8 @@ static QString compilerFromLibraries(const QStringList &libraries)
 static QString compilerVersionFromLibraries(const QStringList &libraries)
 {
     for (const QString &lib : libraries) {
-        if (lib.startsWith(QLatin1String("msvcp"), Qt::CaseInsensitive)
-            || lib.startsWith(QLatin1String("vcruntime"), Qt::CaseInsensitive)) {
+        if (lib.startsWith(QLatin1String("msvcp"), Qt::CaseInsensitive) ||
+            lib.startsWith(QLatin1String("vcruntime"), Qt::CaseInsensitive)) {
             return QString::number(fileVersion(lib).major * 10);
         }
     }

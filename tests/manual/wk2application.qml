@@ -31,5 +31,5 @@ import QtWebKit.experimental 1.0
 WebView {
   width: 800
   height: 600
-  url: "http://www.kdab.com/gammaray"
+  url: "https://www.kdab.com/gammaray"
 }
