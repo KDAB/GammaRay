@@ -51,7 +51,7 @@ if(DOXYGEN_DOT_EXECUTABLE)
   set(HAVE_DOT "YES")
 else()
   set(HAVE_DOT "NO")
-  message(STATUS "Unable to provide inheritance diagrams for the API documentation. To fix, install the graphviz project from http://www.graphviz.org")
+  message(STATUS "Unable to provide inheritance diagrams for the API documentation. To fix, install the graphviz project from https://www.graphviz.org")
 endif()
 
 if(DOXYGEN_FOUND AND QHELPGEN_EXECUTABLE)

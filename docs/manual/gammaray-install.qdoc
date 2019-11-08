@@ -12,7 +12,7 @@
     Contact info@kdab.com if any conditions of this licensing are not clear to you.
 
     This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
-    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+    International License. See <https://creativecommons.org/licenses/by-sa/4.0/>.
 */
 
 /*!
@@ -49,7 +49,7 @@
     Pre-built GammaRay packages are available for the following systems:
     \list
         \li \l{Qt Automotive Suite} contains everything needed as part of the standard SDK already.
-        \li For some Linux distributions \l{KDAB} provides packages via the Open Build Service \l{http://download.opensuse.org/repositories/isv:/KDAB/}{here}.
+        \li For some Linux distributions \l{KDAB} provides packages via the Open Build Service \l{https://download.opensuse.org/repositories/isv:/KDAB/}{here}.
     \endlist
 
     \section2 Build recipes
@@ -90,7 +90,7 @@
     \section2 Yocto
 
     A Yocto recipe for \l{Qt Automotive Suite} is available as part of the meta-boot2qt Yocto layer
-    \l{http://code.qt.io/cgit/yocto/meta-boot2qt.git/tree/recipes-qt/automotive/gammaray_git.bb}{here}.
+    \l{https://code.qt.io/cgit/yocto/meta-boot2qt.git/tree/recipes-qt/automotive/gammaray_git.bb}{here}.
     See the example below on how to customize this to your needs.
 
     Example gammaray_git.bb:

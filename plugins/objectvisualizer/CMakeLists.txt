@@ -28,7 +28,7 @@ set_package_properties(VTK PROPERTIES
   TYPE OPTIONAL
   DESCRIPTION "Visualization Toolkit"
   PURPOSE "Needed for the object visualizer plugin (required Qt5). Just for toying around, highly experimental plugin."
-  URL "http://www.vtk.org"
+  URL "https://www.vtk.org"
 )
 if(VTK_FOUND)
   find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
