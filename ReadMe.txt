@@ -54,8 +54,13 @@ Get Involved
 If you want to contribute, please check out: https://github.com/KDAB/GammaRay/wiki/Get-Involved
 
 KDAB will happily accept external contributions, but substantial
-contributions will require a signed Copyright Assignment Agreement.
+contributions will require a signed Copyright Assignment Agreement
+see docs/GammaRay-CopyrightAssignmentForm.docx).
+
 Contact info@kdab.com for more information.
+
+Please submit your contributions or issue reports from our GitHub space at
+https://github.com/KDAB/GammaRay
 
 License
 =======
@@ -63,7 +68,9 @@ The GammaRay Software is (C) 2010-2019 Klarälvdalens Datakonsult AB (KDAB),
 and is available under the terms of the GPL version 2 (or any later version,
 at your option).  See LICENSE.GPL.txt for license details.
 
-Commercial use is also permitted as described in ReadMe-commercial.txt.
+Commercial licensing terms are available in the included file LICENSE.txt.
+
+For terms of redistribution, refer to the corresponding license agreement.
 
 About KDAB
 ==========
