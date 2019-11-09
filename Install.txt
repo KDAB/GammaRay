@@ -46,13 +46,16 @@ Now build:
 Build on Android:
 $ mkdir android-build
 $ cd android-build
-$ export ANDROID_NDK=~/path/to/android-ndk
-$ cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-android.cmake \
+$ export ANDROID_NDK=/path/to/android-ndk
+$ cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \
         -DGAMMARAY_BUILD_UI=OFF \
         -DCMAKE_PREFIX_PATH=/android/qt5/install/path \
         -DCMAKE_INSTALL_PREFIX=/android/qt5/install/path ..
 $ make [-j CPU_NUMBER+2]
 $ make install
+
+For more information about building CMake projects on Android see
+https://developer.android.com/ndk/guides/cmake
 
 Using GammaRay on Android:
  - add GammaRay probe to your android .pro file
