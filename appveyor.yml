@@ -1,4 +1,5 @@
 version: '{build}-{branch}'
+image: Visual Studio 2017
 
 branches:
   # whitelist
@@ -11,7 +12,7 @@ clone_depth: 50
 init:
 - ps: |
     function craft() {
-        & "C:\python36\python.exe" "C:\CraftMaster\CraftMaster\CraftMaster.py" --config "$env:APPVEYOR_BUILD_FOLDER\appveyor.ini" --variables "APPVEYOR_BUILD_FOLDER=$env:APPVEYOR_BUILD_FOLDER" --target $env:TARGET -c $args
+        & "C:\Python37-x64\python.exe" "C:\CraftMaster\CraftMaster\CraftMaster.py" --config "$env:APPVEYOR_BUILD_FOLDER\appveyor.ini" --variables "APPVEYOR_BUILD_FOLDER=$env:APPVEYOR_BUILD_FOLDER" --target $env:TARGET -c $args
         if($LASTEXITCODE -ne 0) {exit $LASTEXITCODE}
     }
 
@@ -45,7 +46,6 @@ environment:
     - TARGET: windows-msvc2017_32-cl
     - TARGET: windows-mingw_32-gcc
     - TARGET: windows-msvc2017_64-cl
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
 
 artifacts:
   - path: cache\**\.*
