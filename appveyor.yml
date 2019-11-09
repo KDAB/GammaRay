@@ -44,7 +44,6 @@ test: off
 environment:
     matrix:
     - TARGET: windows-msvc2017_32-cl
-    - TARGET: windows-mingw_32-gcc
     - TARGET: windows-msvc2017_64-cl
 
 artifacts:
