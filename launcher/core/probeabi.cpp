@@ -43,7 +43,6 @@ class ProbeABIContext
 };
 
 
-// cppcheck-suppress copyCtorAndEqOperator
 class ProbeABIPrivate : public QSharedData
 {
 public:

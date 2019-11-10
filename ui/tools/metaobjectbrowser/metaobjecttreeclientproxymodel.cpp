@@ -183,7 +183,6 @@ Qt::ItemFlags MetaObjectTreeClientProxyModel::flags(const QModelIndex& index) co
 
 void MetaObjectTreeClientProxyModel::findQObjectIndex()
 {
-    // cppcheck-suppress nullPointer
     auto idxList = match(index(0, 0), Qt::DisplayRole,
                          QStringLiteral("QObject"), 1,
                          Qt::MatchFixedString | Qt::MatchCaseSensitive);

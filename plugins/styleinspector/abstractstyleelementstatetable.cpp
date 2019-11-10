@@ -47,7 +47,6 @@ AbstractStyleElementStateTable::AbstractStyleElementStateTable(QObject *parent)
 
 void AbstractStyleElementStateTable::cellSizeChanged()
 {
-    // cppcheck-suppress nullPointer
     emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
 }
 

@@ -563,7 +563,6 @@ void WlCompositorInspector::init(QWaylandCompositor *compositor)
 
     wl_list *clients = wl_display_get_client_list(dpy);
     wl_client *client;
-    // cppcheck-suppress uninitvar
     wl_client_for_each(client, clients) {
         addClient(client);
     }
