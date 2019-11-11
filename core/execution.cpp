@@ -31,7 +31,7 @@
 
 #include <QtGlobal>
 
-#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID) && defined(HAVE_BACKTRACE)
 #include <backward.hpp>
 #define USE_BACKWARD_CPP
 #else
