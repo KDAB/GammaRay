@@ -48,9 +48,8 @@ $ mkdir android-build
 $ cd android-build
 $ export ANDROID_NDK=/path/to/android-ndk
 $ cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \
-        -DGAMMARAY_BUILD_UI=OFF \
-        -DCMAKE_PREFIX_PATH=/android/qt5/install/path \
-        -DCMAKE_INSTALL_PREFIX=/android/qt5/install/path ..
+        -DCMAKE_FIND_ROOT_PATH=/android/qt5/install/path \
+        -DCMAKE_INSTALL_PREFIX=/install/path ..
 $ make [-j CPU_NUMBER+2]
 $ make install
 
