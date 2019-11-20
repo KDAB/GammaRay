@@ -46,10 +46,17 @@ if(Qt5Quick_FOUND)
   endif()
 
   target_include_directories(gammaray_quickinspector SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
+
+  if(ANDROID)
+    set(EXTRA_LIBS GLESv3)
+  else()
+    set(EXTRA_LIBS "")
+  endif()
   target_link_libraries(gammaray_quickinspector
     gammaray_quickinspector_shared
     gammaray_core Qt5::Quick
     gammaray_kitemmodels
+    ${EXTRA_LIBS}
   )
   endif()
 
