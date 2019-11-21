@@ -399,14 +399,19 @@ void MainWindow::aboutKDAB()
     dialog.setTitle(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
     dialog.setText(
         tr("<qt><p>GammaRay is supported and maintained by KDAB</p>"
-           "KDAB, the Qt experts, provide consulting and mentoring for developing "
-           "Qt applications from scratch and in porting from all popular and legacy "
-           "frameworks to Qt. We continue to help develop parts of Qt and are one "
-           "of the major contributors to the Qt Project. We can give advanced or "
-           "standard trainings anywhere around the globe.</p>"
-           "<p>Please visit <a href='https://www.kdab.com'>https://www.kdab.com</a> "
-           "to meet the people who write code like this."
-           "</p></qt>"));
+           "<p>The KDAB Group is the global No.1 software consultancy for Qt, C++ and "
+           "OpenGL applications across desktop, embedded and mobile platforms.</p>"
+
+           "<p>The KDAB Group provides consulting and mentoring for developing legacy "
+           "Qt applications from scratch and in porting from all popular and frameworks "
+           "to Qt.  We continue to help develop parts of Qt and are one of the major " "contributors to the Qt Project.  We can give advanced or standard trainings " "anywhere around the globe on Qt as well as C++, OpenGL, 3D and more.</p>"
+
+           "<p>If you would like to have a custom plugin for GammaRay to visualize, profile "
+           "or debug your own specific components or applications, get in touch with us "
+           "via <a href='https://www.kdab.com/contact'>https://www.kdab.com/contact</a>.  "
+           "KDAB engineers know how to write GammaRay plugins and can be contracted to "
+           "help you get yours working and improve your development efficiency.</p>"
+           "</qt>"));
     dialog.exec();
 }
 
