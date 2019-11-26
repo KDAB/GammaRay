@@ -28,6 +28,9 @@ BuildRequires:  ghostscript-core
 %if 0%{?fedora} > 24
 BuildRequires:  qt5-qt3d-devel wayland-devel qt5-qtwayland-devel kf5-syndication-devel
 %endif
+%if 0%{?fedora} > 30
+BuildRequires:  qt5-qtbase-private-devel
+%endif
 %endif
 
 %if %{defined suse_version}
