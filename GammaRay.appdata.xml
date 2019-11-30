@@ -26,20 +26,24 @@
     </ul>
   </description>
   <screenshots>
-    <screenshot type="default" width="500" height="273">
-      <image>https://www.kdab.com/wp-content/uploads/stories/software/gammaray2.png</image>
+    <screenshot type="default" width="1920" height="1033">
+      <image>https://www.kdab.com/wp-content/uploads/stories/gammaray-object-inspector.png</image>
       <caption/>
     </screenshot>
-    <screenshot width="500" height="281">
-      <image>https://www.kdab.com/wp-content/uploads/stories/software/gammaray1.png</image>
+    <screenshot width="1920" height="1033">
+      <image>https://www.kdab.com/wp-content/uploads/stories/gammaray-qq2-geometry.png</image>
       <caption/>
     </screenshot>
-    <screenshot width="500" height="281">
-      <image>https://www.kdab.com/wp-content/uploads/stories/software/gammaray4_text.png</image>
+    <screenshot width="1920" height="1033">
+      <image>https://www.kdab.com/wp-content/uploads/stories/gammaray-qsm-debugger-neptune-climate.png</image>
       <caption/>
     </screenshot>
-    <screenshot width="500" height="273">
-      <image>https://www.kdab.com/wp-content/uploads/stories/software/gammaray-traffic-light.png</image>
+    <screenshot width="1920" height="1033">
+      <image>https://www.kdab.com/wp-content/uploads/stories/gammaray-style-inspector.png</image>
+      <caption/>
+    </screenshot>
+    <screenshot width="1920" height="1033">
+      <image>https://www.kdab.com/wp-content/uploads/stories/gammaray-widget-inspector.png</image>
       <caption/>
     </screenshot>
   </screenshots>
