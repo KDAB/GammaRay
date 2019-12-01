@@ -1,4 +1,4 @@
-# <a name="title"></a> [![Logo](ui/resources/gammaray/ui/light/pixmaps/gammaray-trademark.png)](http://www.kdab.com/gammaray)
+# <a name="title"></a> [![Logo](ui/resources/gammaray/ui/light/pixmaps/gammaray-trademark.png)](https://www.kdab.com/gammaray)
 
 Introduction [![Packaging status](https://repology.org/badge/tiny-repos/gammaray.svg)](https://repology.org/metapackage/gammaray) [![Windows Build status](https://ci.appveyor.com/api/projects/status/bff5abu59vm3i73x/branch/master?svg=true)](https://ci.appveyor.com/project/KDAB/gammaray/branch/master)
 =======
@@ -55,7 +55,7 @@ If you want to contribute, please check out: https://github.com/KDAB/GammaRay/wi
 
 KDAB will happily accept external contributions, but substantial
 contributions will require a signed Copyright Assignment Agreement
-see docs/GammaRay-CopyrightAssignmentForm.docx).
+(see docs/GammaRay-CopyrightAssignmentForm.docx).
 
 Contact info@kdab.com for more information.
 

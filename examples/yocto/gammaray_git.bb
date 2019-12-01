@@ -1,5 +1,5 @@
 SUMMARY = "GammaRay Qt introspection probe"
-HOMEPAGE = "http://www.kdab.com/gammaray"
+HOMEPAGE = "https://www.kdab.com/gammaray"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL.txt;md5=2abfe5daa817fd4346b6d55293941415"

@@ -23,7 +23,7 @@
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "libraryutil.h"
@@ -65,15 +65,16 @@ static QVector<QByteArray> dependenciesInternal(const QString &fileName, bool fa
 
         const int begin = line.indexOf("=> ");
         const int end = line.lastIndexOf(" (");
-        if (begin <= 0 || end <= 0 || end <= begin)
+        if (begin <= 0 || end <= 0 || end <= begin) {
             continue;
+        }
         result.push_back(line.mid(begin + 3, end - begin - 3).trimmed());
     }
 
     return result;
 }
 
-QVector<QByteArray> LibraryUtil::dependencies(const QString& fileName)
+QVector<QByteArray> LibraryUtil::dependencies(const QString &fileName)
 {
     return dependenciesInternal(fileName);
 }
