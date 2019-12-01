@@ -415,7 +415,7 @@ Version 2.1.0:
 -------------
  * Aggregated property view combining static, dynamic and non-QObject property views.
  * Qt5Qml/Qt5Quick support
-   (see http://github.com/KDAB/GammaRay/wiki/QtQuick2-Support-Status)
+   (see https://github.com/KDAB/GammaRay/wiki/QtQuick2-Support-Status)
  * Probe ABI auto-detection on Linux, Mac and Windows.
  * Support to navigate to objects that are property values.
  * Plug-ins can now add specialized tabs to the property view.

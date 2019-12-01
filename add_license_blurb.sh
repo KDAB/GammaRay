@@ -33,7 +33,7 @@ find "$@" -name '*.h' -o -name '*.cpp' -o -name '*.qml' | grep -v /3rdparty/ | g
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 EOF
@@ -59,7 +59,7 @@ find "$@" -name '*.qdoc' | while read FILE; do
     Contact info@kdab.com if any conditions of this licensing are not clear to you.
 
     This work is also licensed under the Creative Commons Attribution-ShareAlike 4.0
-    International License. See <http://creativecommons.org/licenses/by-sa/4.0/>.
+    International License. See <https://creativecommons.org/licenses/by-sa/4.0/>.
 */
 
 EOF
@@ -96,7 +96,7 @@ find "$@" -name 'CMakeLists.txt' | while read FILE; do
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 EOF
     cat "$FILE" >> "$FILE".tmp
