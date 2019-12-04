@@ -65,7 +65,8 @@ public:
     inline QString id() const {
         QString str(8, QLatin1Char('0'));
         const quint64 ptr = reinterpret_cast<quint64>(mQWidget.data());
-        std::memcpy(str.data(), &ptr, 8);
+        // this is almost certainly wrong, but keep it for backwards compat:
+        std::memcpy(static_cast<void*>(str.data()), &ptr, 8);
         return str;
     };
 
