@@ -2,7 +2,7 @@
 ##  This file is part of GammaRay, the Qt application inspection and
 ##  manipulation tool.
 ##
-##  Copyright (C) 2015-2019 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+##  Copyright (C) 2019 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
 ##  Author: Renato Araujo Oliveira Filho <renato.araujo@kdab.com>
 ##
 ##  Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,12 +26,10 @@
 
 from conans import ConanFile, CMake, tools
 
-
 class KSyntaxHighlightingConan(ConanFile):
     name = "KSyntaxHighlighting"
     version = "5.64.0"
     license = "https://cgit.kde.org/syntax-highlighting.git/plain/COPYING"
-    author = "Klaralvdalens Datakonsult AB (KDAB) info@kdab.com"
     url = "git://anongit.kde.org/syntax-highlighting.git"
     description = "This is a stand-alone implementation of the Kate syntax highlighting engine."
     generators = "cmake"

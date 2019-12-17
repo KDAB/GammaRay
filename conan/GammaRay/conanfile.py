@@ -2,7 +2,7 @@
 ##  This file is part of GammaRay, the Qt application inspection and
 ##  manipulation tool.
 ##
-##  Copyright (C) 2015-2019 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+##  Copyright (C) 2019 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
 ##  Author: Renato Araujo Oliveira Filho <renato.araujo@kdab.com>
 ##
 ##  Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -26,10 +26,9 @@
 
 from conans import ConanFile, CMake, tools
 
-
 class GammaRayConan(ConanFile):
     name = "GammaRay"
-    version = "5.13"
+    version = "2.11"
     license = ("https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.txt,"
                "https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.GPL.txt,"
                "https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.BSD3.txt").format(version)
