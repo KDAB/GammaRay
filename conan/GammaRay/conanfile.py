@@ -28,7 +28,7 @@ from conans import ConanFile, CMake, tools
 
 class GammaRayConan(ConanFile):
     name = "GammaRay"
-    version = "2.11"
+    version = "2.11.1"
     license = ("https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.txt,"
                "https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.GPL.txt,"
                "https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.BSD3.txt").format(version)
