@@ -45,7 +45,7 @@ class NetworkReplyWidget : public QWidget
 {
     Q_OBJECT
 public:
-    NetworkReplyWidget(QWidget *parent = nullptr);
+    explicit NetworkReplyWidget(QWidget *parent = nullptr);
     ~NetworkReplyWidget();
 
 private:
