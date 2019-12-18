@@ -1,4 +1,4 @@
-CHECKSETS qt4,c++,foss
+CHECKSETS qt5,c++,foss
 
 #KDAB-specific checks
 EXTRA kdabcopyright,kdabcommercial
