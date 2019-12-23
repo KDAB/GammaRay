@@ -77,7 +77,7 @@ The %{name}-devel package contains libraries and header files for
 developing GammaRay plug-ins.
 
 %prep
-%setup -q
+%autosetup
 
 %build
 cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
