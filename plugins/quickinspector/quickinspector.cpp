@@ -325,7 +325,6 @@ void RenderModeRequest::apply()
         emit aboutToCleanSceneGraph();
         const QByteArray mode = renderModeToString(RenderModeRequest::mode);
         QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(window);
-        QMetaObject::invokeMethod(window, "cleanupSceneGraph", Qt::DirectConnection);
         winPriv->customRenderMode = mode;
         emit sceneGraphCleanedUp();
     }
