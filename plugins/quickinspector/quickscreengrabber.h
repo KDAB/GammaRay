@@ -185,8 +185,6 @@ protected:
     bool m_decorationsEnabled = true;
     QRectF m_userViewport;
     GrabbedFrame m_grabbedFrame;
-    QMetaMethod m_sceneChanged;
-    QMetaMethod m_sceneGrabbed;
     RenderInfo m_renderInfo;
 };
 
