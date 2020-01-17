@@ -230,6 +230,9 @@ void EventTypeModel::initEventTypes()
     for (int i = 0; i < e.keyCount(); ++i) {
         EventTypeData ev;
         ev.type = static_cast<QEvent::Type>(e.value(i));
+        if (ev.type == QEvent::MetaCall) { // expensive to record types are off by default
+            ev.recordingEnabled = false;
+        }
         m_data.push_back(ev);
     }
     std::sort(m_data.begin(), m_data.end());

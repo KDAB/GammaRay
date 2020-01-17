@@ -459,11 +459,6 @@ void Probe::showInProcessUi()
 
 bool Probe::filterObject(QObject *obj) const
 {
-    if (obj->thread() != thread()) {
-        // shortcut, never filter objects from a different thread
-        return false;
-    }
-
     QSet<QObject *> visitedObjects;
     int iteration = 0;
     QObject *o = obj;
@@ -481,8 +476,9 @@ bool Probe::filterObject(QObject *obj) const
         }
         ++iteration;
 
-        if (o == this || o == window())
+        if (o == this || o == window() || (qstrncmp(o->metaObject()->className(), "GammaRay::", 10) == 0)) {
             return true;
+        }
         o = o->parent();
     } while (o);
     return false;

@@ -27,6 +27,9 @@
 // probe name
 #define GAMMARAY_PROBE_BASENAME "${PROBE_BASENAME}"
 
+// library ABI suffix, as used with >= Qt 5.14 on Android
+#define ANDROID_ABI "${ANDROID_ABI}"
+
 // default network properties
 #define GAMMARAY_DEFAULT_LOCAL_ADDRESS "127.0.0.1"
 #define GAMMARAY_DEFAULT_LOCAL_TCP_URL "tcp://127.0.0.1"
