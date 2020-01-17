@@ -53,7 +53,7 @@
 #include <QKeySequence>
 #endif
 
-namespace GammaRay {
+using namespace GammaRay;
 
 class CrossThreadConnectionTask : public QRunnable
 {
@@ -89,6 +89,7 @@ public:
     UnregisteredType someProp() const { return {}; }
 };
 
+namespace GammaRay {
 class ProblemReporterTest : public BaseProbeTest
 {
     Q_OBJECT
@@ -426,10 +427,10 @@ private slots:
 #ifdef HAVE_QT_WIDGETS
     void testActionValidator()
     {
-        QAction *a1 = new QAction(QStringLiteral("Action 1"), this);
+        QAction *a1 = new QAction(QStringLiteral("Action 1"), qApp);
         a1->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));
         a1->setShortcutContext(Qt::ApplicationShortcut);
-        QAction *a2 = new QAction(QStringLiteral("Action 2"), this);
+        QAction *a2 = new QAction(QStringLiteral("Action 2"), qApp);
         a2->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));
         a2->setShortcutContext(Qt::WidgetShortcut);
         QTest::qWait(1); // event loop re-entry
