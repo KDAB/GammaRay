@@ -81,7 +81,7 @@ public:
             m_pool.push(std::unique_ptr<T>(ptr));
         });
         m_pool.pop();
-        return std::move(tmp);
+        return tmp;
     }
 
     bool empty() const
