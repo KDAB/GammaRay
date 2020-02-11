@@ -45,7 +45,6 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 class ModelCellModel;
-class ModelTester;
 class ModelContentProxyModel;
 class SelectionModelModel;
 
@@ -76,8 +75,6 @@ private:
     ModelContentProxyModel *m_modelContentProxyModel;
 
     ModelCellModel *m_cellModel;
-
-    ModelTester *m_modelTester;
 };
 
 class ModelInspectorFactory : public QObject,
