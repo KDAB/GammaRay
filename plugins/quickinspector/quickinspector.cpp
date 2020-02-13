@@ -316,7 +316,8 @@ void RenderModeRequest::apply()
     if (connection)
         disconnect(connection);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0) //there's a regression in Qt 5.14...
+#if QT_VERSION == QT_VERSION_CHECK(5, 14, 0) || QT_VERSION == QT_VERSION_CHECK(5, 14, 1)
+    // there's a regression in Qt 5.14...
     return;
 #endif
 
@@ -614,9 +615,11 @@ void QuickInspector::slotGrabWindow()
 void QuickInspector::setCustomRenderMode(
     GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0) //there's a regression in Qt 5.14...
+#if QT_VERSION == QT_VERSION_CHECK(5, 14, 0) || QT_VERSION == QT_VERSION_CHECK(5, 14, 1)
+    // there's a regression in Qt 5.14...
     return;
 #endif
+
     m_renderMode = customRenderMode;
 
     m_pendingRenderMode->applyOrDelay(m_window, customRenderMode);
@@ -638,7 +641,7 @@ void QuickInspector::checkFeatures()
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+#if QT_VERSION != QT_VERSION_CHECK(5, 14, 0) && QT_VERSION != QT_VERSION_CHECK(5, 14, 1)
     if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL)
         f = AllCustomRenderModes;
     else
