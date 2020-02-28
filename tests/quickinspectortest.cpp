@@ -335,11 +335,10 @@ private slots:
 
     void testProblemReporting()
     {
-#if !defined(Q_OS_MACX) //crashing on Mac
         //TODO using this qml-file as testcase might stop working if qt decides to be
         // smarter with out of view items in ListViews
         QVERIFY(showSource(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
-#endif
+
         QVERIFY(ProblemCollector::instance()->isCheckerRegistered("com.kdab.GammaRay.QuickItemChecker"));
 
         ProblemCollector::instance()->requestScan();
