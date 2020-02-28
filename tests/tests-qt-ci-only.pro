@@ -9,3 +9,4 @@
 # described in Install. txt
 
 # empty dummy file to make the CI not choke here
+TEMPLATE = aux

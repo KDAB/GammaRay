@@ -88,7 +88,7 @@ QAtomicPointer<Probe> Probe::s_instance = QAtomicPointer<Probe>(nullptr);
 namespace GammaRay {
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
-    if (method_index == 0 || Probe::instance()->filterObject(caller))
+    if (method_index == 0 || !Probe::instance() || Probe::instance()->filterObject(caller))
         return;
 
     method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
@@ -100,7 +100,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 
 static void signal_end_callback(QObject *caller, int method_index)
 {
-    if (method_index == 0)
+    if (method_index == 0 || !Probe::instance())
         return;
 
     QMutexLocker locker(Probe::objectLock());
@@ -117,7 +117,7 @@ static void signal_end_callback(QObject *caller, int method_index)
 
 static void slot_begin_callback(QObject *caller, int method_index, void **argv)
 {
-    if (method_index == 0 || Probe::instance()->filterObject(caller))
+    if (method_index == 0 || !Probe::instance() || Probe::instance()->filterObject(caller))
         return;
 
     Probe::executeSignalCallback([=](const SignalSpyCallbackSet &callbacks) {
@@ -128,7 +128,7 @@ static void slot_begin_callback(QObject *caller, int method_index, void **argv)
 
 static void slot_end_callback(QObject *caller, int method_index)
 {
-    if (method_index == 0)
+    if (method_index == 0 || !Probe::instance())
         return;
 
     QMutexLocker locker(Probe::objectLock());
@@ -227,10 +227,9 @@ Probe::Probe(QObject *parent)
             this, &Probe::processQueuedObjectChanges);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    const auto* signal_spy_set = qt_signal_spy_callback_set.load();
+    m_previousSignalSpyCallbackSet = qt_signal_spy_callback_set.load();
 #else
     const auto* signal_spy_set = &qt_signal_spy_callback_set;
-#endif
     if (signal_spy_set) {
         m_previousSignalSpyCallbackSet.signalBeginCallback
             = signal_spy_set->signal_begin_callback;
@@ -242,6 +241,7 @@ Probe::Probe(QObject *parent)
             = signal_spy_set->slot_end_callback;
         registerSignalSpyCallbackSet(m_previousSignalSpyCallbackSet); // daisy-chain existing callbacks
     }
+#endif
 
     connect(this, &Probe::objectCreated, m_metaObjectRegistry, &MetaObjectRegistry::objectAdded);
     connect(this, &Probe::objectDestroyed, m_metaObjectRegistry, &MetaObjectRegistry::objectRemoved);
@@ -253,15 +253,15 @@ Probe::~Probe()
     IF_DEBUG(cerr << "detaching GammaRay probe" << endl;
              )
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    qt_register_signal_spy_callbacks(m_previousSignalSpyCallbackSet);
+#else
     QSignalSpyCallbackSet prevCallbacks = {
         m_previousSignalSpyCallbackSet.signalBeginCallback,
         m_previousSignalSpyCallbackSet.slotBeginCallback,
         m_previousSignalSpyCallbackSet.signalEndCallback,
         m_previousSignalSpyCallbackSet.slotEndCallback
     };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    qt_register_signal_spy_callbacks(&prevCallbacks);
-#else
     qt_register_signal_spy_callbacks(prevCallbacks);
 #endif
 
