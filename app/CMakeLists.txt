@@ -35,7 +35,7 @@ if(APPLE)
     set(GAMMARAY_BUNDLE_SHORT_VERSION_STRING "${GAMMARAY_VERSION}")
     set(GAMMARAY_BUNDLE_LONG_VERSION_STRING "${GAMMARAY_VERSION_STRING}")
     set(GAMMARAY_BUNDLE_INFO_STRING "GammaRay ${GAMMARAY_VERSION}")
-    set(GAMMARAY_BUNDLE_COPYRIGHT "Copyright (C) 2010-2019 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com")
+    set(GAMMARAY_BUNDLE_COPYRIGHT "Copyright (C) 2010-2020 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com")
 
     configure_file("${GAMMARAY_BUNDLE_INFO_PLIST_IN}" "${GAMMARAY_BUNDLE_INFO_PLIST_OUT}")
 
