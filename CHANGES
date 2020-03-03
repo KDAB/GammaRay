@@ -6,7 +6,7 @@ Version 2.11.1
  * New EULA (see LICENSE.txt).
  * Supports Qt 5.14.
  * Add OpenGL ES2 fallback for the Qt3D geometry inspector.
- * Comes with an installing file for Conan (see conan folder).
+ * Comes with an installing file for Conan (WIP - see conan folder).
  * Keeping up with Qt5 and CMake.
  * Fix plugin loading with Qt 5.14 on Android.
  * Fix memory leak in event recording when Qt Quick remote view is active.
