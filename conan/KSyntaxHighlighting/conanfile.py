@@ -26,12 +26,10 @@
 
 from conans import ConanFile, CMake, tools
 
-
 class KSyntaxHighlightingConan(ConanFile):
     name = "KSyntaxHighlighting"
     version = "5.64.0"
     license = "https://cgit.kde.org/syntax-highlighting.git/plain/COPYING"
-    author = "Klaralvdalens Datakonsult AB (KDAB) info@kdab.com"
     url = "git://anongit.kde.org/syntax-highlighting.git"
     description = "This is a stand-alone implementation of the Kate syntax highlighting engine."
     generators = "cmake"
