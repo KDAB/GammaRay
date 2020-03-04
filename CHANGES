@@ -3,18 +3,22 @@ Release Highlights
 
 Version 2.11.1
 --------------
- * New EULA (see LICENSE.txt).
- * Supports Qt 5.14.
  * Add OpenGL ES2 fallback for the Qt3D geometry inspector.
- * Comes with an installing file for Conan (WIP - see conan folder).
- * Keeping up with Qt5 and CMake.
- * Fix plugin loading with Qt 5.14 on Android.
+ * Fix assert on empty text document selections.
+ * Fix side-effects of using the widget layout overlay on a QSplitter.
+ * Fix merging of events in the event monitor.
+ * Fix event order in the event monitor.
+ * Add event propagation detection for QtQuick pointer events.
+ * Fix compilation with QT_NO_OPENGL and QT_NO_SSL.
+ * Adapt QtQuick software renderer inspector to changes in Qt 5.14.
+ * Fix Android support with Qt 5.14.
  * Fix memory leak in event recording when Qt Quick remote view is active.
- * Small cleanups.
+ * Fix possible crash during probe destruction.
+ * Fix crash due to signal spy changes in Qt 5.14.
+ * Fix possible crash in the outbound connections view.
 
 Version 2.11.0
 --------------
-
  * Drop support for Qt 4 and Qt <= 5.4.
  * Drop support for MSVC 2010 and MSVC 2012, as well as GCC < 4.8.
  * Add support for more QtNetwork properties.
@@ -27,7 +31,6 @@ Version 2.11.0
 
 Version 2.10.1
 --------------
-
  * Fix detection of Qt infix builds.
  * Fix QMake integration for Qt 5.12.1.
  * Fix QtQuick inspector crash when reparenting to an unknown destination item.
@@ -45,7 +48,6 @@ Version 2.10.1
 
 Version 2.10.0
 --------------
-
  * Increase CMake requirement to version 3.1 on all platforms.
  * Add object navigation to the paint analyzer.
  * Reduce network load by moving more property model features to the client side.
