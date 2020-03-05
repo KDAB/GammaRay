@@ -61,6 +61,15 @@ if(Qt5Quick_FOUND)
 endif()
 endif()
 
+set(MACOS_DISABLE_UNSUPPORTED_TESTS FALSE)
+if(APPLE)
+  cmake_host_system_information(RESULT MACOS_RELEASE QUERY OS_RELEASE)
+  if(MACOS_RELEASE VERSION_GREATER_EQUAL 10.15.0 AND Qt5Quick_VERSION VERSION_LESS 5.12.0)
+    # Qt Quick is only supported on macOS Catalina using Qt 5.12 and above
+    set(MACOS_DISABLE_UNSUPPORTED_TESTS TRUE)
+  endif()
+endif()
+
 add_subdirectory(shared)
 add_subdirectory(manual)
 add_subdirectory(targets)
@@ -418,7 +427,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     endif()
   endif()
 
-  if(Qt5Quick_FOUND)
+  if(Qt5Quick_FOUND AND NOT MACOS_DISABLE_UNSUPPORTED_TESTS)
     gammaray_add_quick_test(quickinspectortest
       quickinspectortest.cpp
       quickinspectortest.qrc
