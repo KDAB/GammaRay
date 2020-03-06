@@ -61,15 +61,6 @@ if(Qt5Quick_FOUND)
 endif()
 endif()
 
-set(MACOS_DISABLE_UNSUPPORTED_TESTS FALSE)
-if(APPLE)
-  cmake_host_system_information(RESULT MACOS_RELEASE QUERY OS_RELEASE)
-  if(MACOS_RELEASE VERSION_GREATER_EQUAL 10.15.0 AND Qt5Quick_VERSION VERSION_LESS 5.12.0)
-    # Qt Quick is only supported on macOS Catalina using Qt 5.12 and above
-    set(MACOS_DISABLE_UNSUPPORTED_TESTS TRUE)
-  endif()
-endif()
-
 add_subdirectory(shared)
 add_subdirectory(manual)
 add_subdirectory(targets)
@@ -192,10 +183,10 @@ target_link_libraries(metaobjecttest gammaray_core)
 gammaray_add_probe_test(problemreportertest problemreportertest.cpp $<TARGET_OBJECTS:modeltestobj>)
 target_link_libraries(problemreportertest gammaray_core)
 if(Qt5Qml_FOUND)
-    target_link_libraries(problemreportertest Qt5::Qml)
+  target_link_libraries(problemreportertest Qt5::Qml)
 endif()
-if (Qt5Widgets_FOUND)
-    target_link_libraries(problemreportertest Qt5::Widgets)
+if(Qt5Widgets_FOUND)
+  target_link_libraries(problemreportertest Qt5::Widgets)
 endif()
 
 gammaray_add_test(objectinstancetest objectinstancetest.cpp)
@@ -427,7 +418,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     endif()
   endif()
 
-  if(Qt5Quick_FOUND AND NOT MACOS_DISABLE_UNSUPPORTED_TESTS)
+  if(Qt5Quick_FOUND)
     gammaray_add_quick_test(quickinspectortest
       quickinspectortest.cpp
       quickinspectortest.qrc
