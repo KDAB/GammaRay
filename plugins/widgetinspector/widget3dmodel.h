@@ -64,8 +64,8 @@ public:
     // the value for comparison, we can convert back to quintptr in C++
     inline QString id() const {
         QString str(8, QLatin1Char('0'));
-        const quint64 ptr = reinterpret_cast<quint64>(mQWidget.data());
-        std::memcpy(str.data(), &ptr, 8);
+        quint64 ptr = reinterpret_cast<quint64>(mQWidget.data());
+        std::memcpy(str.data(), static_cast<void*>(&ptr), 8);
         return str;
     };
 

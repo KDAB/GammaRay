@@ -176,7 +176,7 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_prefix}/mkspecs/modules/*.pri
 
 %changelog
-* Tue Dec 17 2019 Allen Winter <allen.winter@kdab.com> 2.11.1
+* Tue Mar 03 2020 Allen Winter <allen.winter@kdab.com> 2.11.1
   2.11.1 patchlevel release
 * Wed Jul 03 2019 Allen Winter <allen.winter@kdab.com> 2.11.0
   2.11.0 final
