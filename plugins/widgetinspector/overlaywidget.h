@@ -30,6 +30,7 @@
 #define GAMMARAY_WIDGETINSPECTOR_OVERLAYWIDGET_H
 
 #include <QLayout>
+#include <QPainterPath>
 #include <QPointer>
 #include <QWidget>
 
