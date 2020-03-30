@@ -46,8 +46,9 @@ Among other things GammaRay can:
 
 Contact
 =======
-* Feel free to visit us on IRC: Channel is #gammaray on Freenode (irc://irc.freenode.net/gammaray)
-* Or send mail to our mailing list: https://mail.kdab.com/mailman/listinfo/gammaray-interest
+* Feel free to visit us on IRC: Channel is #gammaray on Freenode ([Webchat](https://webchat.freenode.net/#gammaray))
+* Or send a mail to our community mailing list: gammaray-interest@kdab.com ([Mailman information](https://mail.kdab.com/mailman/listinfo/gammaray-interest))
+* Or send a mail to info@kdab.com for questions about copyright, licensing or commercial support.
 
 Get Involved
 ============
@@ -57,7 +58,8 @@ KDAB will happily accept external contributions, but substantial
 contributions will require a signed Copyright Assignment Agreement
 (see docs/GammaRay-CopyrightAssignmentForm.docx).
 
-Contact info@kdab.com for more information.
+Contact info@kdab.com for more information about the Copyright Assignment
+Agreement.
 
 Please submit your contributions or issue reports from our GitHub space at
 https://github.com/KDAB/GammaRay
