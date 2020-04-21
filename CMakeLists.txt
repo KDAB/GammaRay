@@ -126,16 +126,6 @@ if(BAD_CXX_MESSAGE)
   message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. Please retry using a modern compiler that supports C++11.")
 endif()
 
-set(MACOS_DISABLE_UNSUPPORTED_TESTS FALSE)
-if(APPLE)
-  cmake_host_system_information(RESULT MACOS_RELEASE QUERY OS_RELEASE)
-  if(MACOS_RELEASE VERSION_GREATER_EQUAL 10.15.0 AND Qt5Quick_VERSION VERSION_LESS 5.12.0)
-    # Qt Quick is only supported on macOS Catalina using Qt 5.12 and above
-    set(MACOS_DISABLE_UNSUPPORTED_TESTS TRUE)
-    message(STATUS "WARNING: Your version of MacOS is too old (less then 10.15) to use with QtQuick 5.12 or higher.  You can solve this by upgrading your MacOS or using older Qt versions.  Disabling QtQuick capabilities.")
-  endif()
-endif()
-
 if(MSVC AND MSVC_VERSION VERSION_EQUAL 1800)
   # MSVC 2013 implements some C++11 features only partially, which is why cmake
   # doesn't list these features as supported, still support is good enough for us.
@@ -417,6 +407,19 @@ find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
   Widgets
   WaylandCompositor
 )
+
+set(MACOS_DISABLE_UNSUPPORTED_TESTS FALSE)
+if(APPLE)
+  cmake_host_system_information(RESULT MACOS_RELEASE QUERY OS_RELEASE)
+  message(STATUS "MACOS_RELEASE: ${MACOS_RELEASE}")
+  message(STATUS "Qt5Quick_VERSION: ${Qt5Quick_VERSION}")
+  if(MACOS_RELEASE VERSION_GREATER_EQUAL 10.15.0 AND Qt5Quick_VERSION VERSION_LESS 5.12.0)
+    # Qt Quick is only supported on macOS Catalina using Qt 5.12 and above
+    set(MACOS_DISABLE_UNSUPPORTED_TESTS TRUE)
+    message(STATUS "WARNING: Your version of MacOS is too old (less then 10.15) to use with QtQuick 5.12 or higher.  You can solve this by upgrading your MacOS or using older Qt versions.  Disabling QtQuick capabilities.")
+  endif()
+endif()
+
 if(MACOS_DISABLE_UNSUPPORTED_TESTS)
   set(Qt5Quick_FOUND FALSE)
 endif()
