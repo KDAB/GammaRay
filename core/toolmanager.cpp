@@ -205,16 +205,14 @@ void ToolManager::objectAdded(const QMetaObject *mo)
     if (mo->superClass())
         objectAdded(mo->superClass());
 
-    for (auto it = m_disabledTools.begin(); it != m_disabledTools.end();) {
-        ToolFactory *factory = *it;
+    // operate on copy to ensure potential recursion isn't invalidating the iterators
+    const auto disabledToolsCopy = m_disabledTools;
+    for (auto *factory : disabledToolsCopy) {
         const auto begin = factory->supportedTypes().constBegin();
         const auto end = factory->supportedTypes().constEnd();
-        if (std::find(begin, end, mo->className()) != end) {
-            it = m_disabledTools.erase(it);
+        if (std::find(begin, end, mo->className()) != end && m_disabledTools.remove(factory)) {
             factory->init(Probe::instance());
             emit toolEnabled(factory->id());
-        } else {
-            ++it;
         }
     }
 }
