@@ -14,7 +14,7 @@ endif()
 ExternalProject_Add(
   GammaRay-${_build_type}
   SOURCE_DIR ${CMAKE_SOURCE_DIR}
-  BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/GammaRay-${_build_type}
+  BINARY_DIR ${CMAKE_BINARY_DIR}/${_build_type}
   EXCLUDE_FROM_ALL 1
   STEP_TARGETS build install
 
@@ -29,6 +29,7 @@ ExternalProject_Add(
     -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
     -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
     -DBUILD_TESTING=OFF
+    -DCMAKE_OBJECT_PATH_MAX=512
 )
 
 # hacky way to add a dependency from the default target to the build step
