@@ -61,7 +61,9 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     ui->commandView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
 
     ui->argumentView->setItemDelegate(new PropertyEditorDelegate(this));
+    ui->argumentView->header()->setObjectName("argumentViewHeader");
     ui->stackTraceView->setItemDelegate(new PropertyEditorDelegate(this));
+    ui->stackTraceView->header()->setObjectName("stackTraceViewHeader");
 
     auto toolbar = new QToolBar;
     // Our icons are 16x16 and support hidpi, so let force iconSize on every styles
