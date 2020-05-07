@@ -44,6 +44,7 @@ QT_BEGIN_NAMESPACE
 GAMMARAY_ENUM_STREAM_OPERATORS(QMetaMethod::Access)
 GAMMARAY_ENUM_STREAM_OPERATORS(QMetaMethod::MethodType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt::ConnectionType)
+GAMMARAY_ENUM_STREAM_OPERATORS(Qt::CaseSensitivity)
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::QMetaObjectValidatorResult::Results)
 GAMMARAY_ENUM_STREAM_OPERATORS(GammaRay::PropertyModel::PropertyFlags)
 QT_END_NAMESPACE
@@ -53,6 +54,7 @@ void StreamOperators::registerOperators()
     qRegisterMetaTypeStreamOperators<QMetaMethod::Access>();
     qRegisterMetaTypeStreamOperators<QMetaMethod::MethodType>();
     qRegisterMetaTypeStreamOperators<Qt::ConnectionType>();
+    qRegisterMetaTypeStreamOperators<Qt::CaseSensitivity>();
     qRegisterMetaTypeStreamOperators<QHash<int, QByteArray> >();
 
     qRegisterMetaType<ObjectId>();
