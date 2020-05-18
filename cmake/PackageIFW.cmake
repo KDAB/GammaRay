@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016-2019 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# Copyright (C) 2016-2020 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # All rights reserved.
 #
 # Author: Andras Mantia <andras.mantia@kdab.com>
@@ -47,7 +47,6 @@
 #
 # will create the 7z packages for all added targets.
 
-
 get_filename_component(PACKAGE_PREFIX ${QT_INSTALL_PREFIX} NAME)
 set(INSTALL_PATH "${CMAKE_BINARY_DIR}/install/${Qt5Core_VERSION}/${PACKAGE_PREFIX}")
 set(PACKAGE_PATH "${CMAKE_BINARY_DIR}/install/")
@@ -62,15 +61,15 @@ macro(addPackageTarget packageName dependsTarget installTarget type)
   set(PACKAGE_TARGET "${type}_package")
   add_custom_target(${PACKAGE_TARGET}
     DEPENDS "${LAST_TARGET}"
-    COMMAND  echo "Creating IFW package for ${packageName} of type ${type}: ${PACKAGE_LIB_FILE}"
+    COMMAND echo "Creating IFW package for ${packageName} of type ${type}: ${PACKAGE_LIB_FILE}"
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${installTarget}"
     COMMAND ${CMAKE_COMMAND} -E remove -f ${PACKAGE_LIB_FILE}
     COMMAND ${CMAKE_COMMAND} ${CMAKE_SOURCE_DIR} -DCMAKE_INSTALL_PREFIX="${INSTALL_PATH}" -DBUILD_TESTING=Off
     COMMAND ${CMAKE_COMMAND} -E chdir "${CMAKE_BINARY_DIR}" "${CMAKE_MAKE_PROGRAM}" ${installTarget}
-    COMMAND ${CMAKE_COMMAND} -E chdir "${PACKAGE_PATH}"  7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ${PACKAGE_LIB_FILE} .
+    COMMAND ${CMAKE_COMMAND} -E chdir "${PACKAGE_PATH}" 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on ${PACKAGE_LIB_FILE} .
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${installTarget}"
-    COMMAND  echo "Generated package file: ${PACKAGE_LIB_FILE}"
-    )
+    COMMAND echo "Generated package file: ${PACKAGE_LIB_FILE}"
+  )
   add_dependencies(packages ${PACKAGE_TARGET})
   set(LAST_TARGET ${PACKAGE_TARGET})
 endmacro()
