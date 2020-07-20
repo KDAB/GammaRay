@@ -52,7 +52,7 @@
         \li Print the GammaRay version and the GammaRay protocol version.
     \row
         \li \c -p, \c --pid \c <pid>
-        \li Attach to a a running application with process id \c <pid>.
+        \li Attach to a running application with process id \c <pid>.
     \row
         \li \c -i, \c --injector \c <injector>
         \li Specify injector type to use (see below).
