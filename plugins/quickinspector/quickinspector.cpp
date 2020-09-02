@@ -239,11 +239,16 @@ static const MetaEnum::Value<QSGTexture::WrapMode> qsg_texture_wrapmode_table[] 
 
 #undef E
 
-static bool isGoodCandidateItem(QQuickItem *item)
+static bool itemHasContents(QQuickItem *item)
+{
+    return item->flags().testFlag(QQuickItem::ItemHasContents);
+}
+
+static bool isGoodCandidateItem(QQuickItem *item, bool ignoreItemHasContents = false)
 {
 
     if (!item->isVisible() || qFuzzyCompare(item->opacity() + qreal(1.0), qreal(1.0)) ||
-            !item->flags().testFlag(QQuickItem::ItemHasContents)) {
+            (!ignoreItemHasContents && !itemHasContents(item))) {
         return false;
     }
 
@@ -829,12 +834,21 @@ void QuickInspector::pickElementId(const GammaRay::ObjectId &id)
 }
 
 ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &pos,
-                                           GammaRay::RemoteViewInterface::RequestMode mode, int &bestCandidate) const
+                                           GammaRay::RemoteViewInterface::RequestMode mode,
+                                           int &bestCandidate, bool parentIsGoodCandidate) const
 {
     Q_ASSERT(parent);
     ObjectIds objects;
 
     bestCandidate = -1;
+    if (parentIsGoodCandidate) {
+        // inherit the parent item opacity when looking for a good candidate item
+        // i.e. QQuickItem::isVisible is taking the parent into account already, but
+        // the opacity doesn't - we have to do this manually
+        // Yet we have to ignore ItemHasContents apparently, as the QQuickRootItem
+        // at least seems to not have this flag set.
+        parentIsGoodCandidate = isGoodCandidateItem(parent, true);
+    }
 
     auto childItems = parent->childItems();
     std::stable_sort(childItems.begin(), childItems.end(),
@@ -847,15 +861,15 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
         if (!child->childItems().isEmpty() && (child->contains(requestedPoint) || child->childrenRect().contains(requestedPoint))) {
             const int count = objects.count();
             int bc; // possibly better candidate among subChildren
-            objects << recursiveItemsAt(child, requestedPoint, mode, bc);
+            objects << recursiveItemsAt(child, requestedPoint, mode, bc, parentIsGoodCandidate);
 
-            if (bestCandidate == -1 && bc != -1) {
+            if (bestCandidate == -1 && parentIsGoodCandidate && bc != -1) {
                 bestCandidate = count + bc;
             }
         }
 
         if (child->contains(requestedPoint)) {
-            if (bestCandidate == -1 && isGoodCandidateItem(child)) {
+            if (bestCandidate == -1 && parentIsGoodCandidate && isGoodCandidateItem(child)) {
                 bestCandidate = objects.count();
             }
             objects << ObjectId(child);
@@ -866,7 +880,7 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
         }
     }
 
-    if (bestCandidate == -1 && isGoodCandidateItem(parent)) {
+    if (bestCandidate == -1 && parentIsGoodCandidate && itemHasContents(parent)) {
         bestCandidate = objects.count();
     }
 
