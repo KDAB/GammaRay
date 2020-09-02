@@ -39,6 +39,14 @@ Item {
       color:"#ffffffff"
       anchors.fill: parent
       opacity: 0
+
+      Rectangle {
+        id: visibleChildOfInvisibleParent
+
+        color: "#ffff0000"
+        anchors.fill: parent
+        opacity: 1
+      }
   }
 
   Rectangle {

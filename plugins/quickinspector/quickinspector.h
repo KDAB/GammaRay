@@ -152,7 +152,8 @@ private:
     static void scanForProblems();
 
     GammaRay::ObjectIds recursiveItemsAt(QQuickItem *parent, const QPointF &pos,
-                                         GammaRay::RemoteViewInterface::RequestMode mode, int& bestCandidate) const;
+                                         GammaRay::RemoteViewInterface::RequestMode mode,
+                                         int& bestCandidate, bool parentIsGoodCandidate = true) const;
 
     Probe *m_probe;
     std::unique_ptr<AbstractScreenGrabber> m_overlay;
