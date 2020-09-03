@@ -59,6 +59,7 @@
 #include <QPalette>
 #include <QPen>
 #include <QTextFormat>
+#include <QTimer>
 
 using namespace GammaRay;
 
@@ -138,9 +139,9 @@ GuiSupport::GuiSupport(Probe *probe, QObject *parent)
     connect(m_probe, &Probe::objectCreated, this, &GuiSupport::objectCreated);
 
     if (auto guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance())) {
-        QMetaObject::invokeMethod(this, [this]() {
+        QTimer::singleShot(0, this, [this]() {
             updateWindowIcon();
-        }, Qt::QueuedConnection);
+        });
 
         m_probe->installGlobalEventFilter(this);
         foreach (auto w, guiApp->topLevelWindows()) {
