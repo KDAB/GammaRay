@@ -1,6 +1,14 @@
 Release Highlights
 ==================
 
+Version 2.11.2
+--------------
+
+ * Support inspection of QSplitter properties.
+ * Make probe settings configurable via AndroidManifest.xml.
+ * Show more font properties in the font browser, and allow searching for fonts.
+ * Show all timezone name variants in the timezone browser.
+
 Version 2.11.1
 --------------
  * Add OpenGL ES2 fallback for the Qt3D geometry inspector.
