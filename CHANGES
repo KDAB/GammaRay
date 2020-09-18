@@ -3,11 +3,10 @@ Release Highlights
 
 Version 2.11.2
 --------------
-
- * Support inspection of QSplitter properties.
- * Make probe settings configurable via AndroidManifest.xml.
- * Show more font properties in the font browser, and allow searching for fonts.
- * Show all timezone name variants in the timezone browser.
+ * Prefer picking QtQuick items in fully visible parent-child chains.
+ * Fix deadlock with Qt 5.15 on high DPI screens.
+ * Fix QtQuick detection on older macOS versions.
+ * Support for Qt 5.15.
 
 Version 2.11.1
 --------------
