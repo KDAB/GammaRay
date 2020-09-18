@@ -1,3 +1,9 @@
+gammaray (2.11.2) final; urgency=low
+
+  * 2.11.2 patchlevel release
+
+ -- Allen Winter <allen.winter@kdab.com>  Fri, 18 Sep 2020 08:30:00 -0500
+
 gammaray (2.11.1) final; urgency=low
 
   * 2.11.1 patchlevel release
