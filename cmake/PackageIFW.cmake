@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016-2019 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# Copyright (C) 2016-2020 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # All rights reserved.
 #
 # Author: Andras Mantia <andras.mantia@kdab.com>
