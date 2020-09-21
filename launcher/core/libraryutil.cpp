@@ -48,7 +48,7 @@ static QVector<QByteArray> dependenciesInternal(const QString &fileName, bool fa
         if (!proc.waitForStarted()) // if that is not available, run the fallback
             return dependenciesInternal(fileName, true);
     } else {
-        // see http://man7.org/linux/man-pages/man8/ld.so.8.html
+        // see https://man7.org/linux/man-pages/man8/ld.so.8.html
         // by setting LD_TRACE_LOADED_OBJECTS=1 we make ld.so behave like ldd
         // this works even on embedded systems where ldd is not available
         QProcessEnvironment env = proc.processEnvironment();

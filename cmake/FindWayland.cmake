@@ -138,6 +138,6 @@ find_package_handle_standard_args(Wayland
 
 include(FeatureSummary)
 set_package_properties(Wayland PROPERTIES
-    URL "http://wayland.freedesktop.org"
+    URL "https://wayland.freedesktop.org"
     DESCRIPTION "C library implementation of the Wayland protocol: a protocol for a compositor to talk to its clients"
 )

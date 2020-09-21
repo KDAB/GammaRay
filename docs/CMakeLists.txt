@@ -44,7 +44,7 @@ find_package(Doxygen)
 set_package_properties(Doxygen PROPERTIES
   TYPE OPTIONAL
   DESCRIPTION "API Documentation system"
-  URL "http://www.doxygen.org"
+  URL "https://www.doxygen.org"
   PURPOSE "Needed to build the API documentation."
 )
 if(DOXYGEN_DOT_EXECUTABLE)

@@ -1,12 +1,12 @@
 Name:           gammaray
-Version:        2.11.1
+Version:        2.11.2
 Release:        1
 Summary:        An introspection tool for Qt applications
 Source0:        %{name}-%{version}.tar.gz
 Source1:        %{name}-%{version}.tar.gz.asc
 Url:            https://github.com/KDAB/GammaRay
 Group:          Development/Tools
-License:        GPL-2.0+
+License:        GPL-2.0-or-later.txt
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
@@ -176,6 +176,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_prefix}/mkspecs/modules/*.pri
 
 %changelog
+* Fri Sep 18 2020 Allen Winter <allen.winter@kdab.com> 2.11.2
+  2.11.2 patchlevel release
 * Tue Mar 03 2020 Allen Winter <allen.winter@kdab.com> 2.11.1
   2.11.1 patchlevel release
 * Wed Jul 03 2019 Allen Winter <allen.winter@kdab.com> 2.11.0

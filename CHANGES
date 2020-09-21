@@ -1,6 +1,13 @@
 Release Highlights
 ==================
 
+Version 2.11.2
+--------------
+ * Prefer picking QtQuick items in fully visible parent-child chains.
+ * Fix deadlock with Qt 5.15 on high DPI screens.
+ * Fix QtQuick detection on older macOS versions.
+ * Support for Qt 5.15.
+
 Version 2.11.1
 --------------
  * Add OpenGL ES2 fallback for the Qt3D geometry inspector.
