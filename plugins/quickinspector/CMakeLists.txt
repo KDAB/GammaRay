@@ -41,7 +41,7 @@ if(Qt5Quick_FOUND)
     )
 
     if(NOT Qt5Quick_VERSION VERSION_LESS 5.7)
-      target_sources(gammaray_quickinspector PUBLIC quickimplicitbindingdependencyprovider.cpp)
+      target_sources(gammaray_quickinspector PUBLIC ${CMAKE_CURRENT_LIST_DIR}/quickimplicitbindingdependencyprovider.cpp)
     endif()
 
     target_include_directories(gammaray_quickinspector SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})

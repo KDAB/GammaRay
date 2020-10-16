@@ -6,7 +6,7 @@ Source0:        %{name}-%{version}.tar.gz
 Source1:        %{name}-%{version}.tar.gz.asc
 Url:            https://github.com/KDAB/GammaRay
 Group:          Development/Tools
-License:        GPL-2.0-or-later.txt
+License:        GPL-2.0-or-later
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
