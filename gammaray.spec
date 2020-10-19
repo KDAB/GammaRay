@@ -53,7 +53,7 @@ state machines and more.
 
 Authors:
 --------
-     The GammaRay Team <gammaray-interest@kdab.com>
+     Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
 %define debug_package %{nil}
 %global __debug_install_post %{nil}
