@@ -53,7 +53,7 @@ bool LldbInjector::selfTest()
             const QString output = QString::fromLocal8Bit(process.readAll()).trimmed();
             const auto targetMajor = 3;
             const auto targetMinor = 6;
-            QRegExp rx(QStringLiteral("\\b([\\d]\\.[\\d]+\\.[\\d]+)\\b")); // lldb version 3.7.0 ( revision )
+            QRegExp rx(QStringLiteral("\\b([\\d]+\\.[\\d]+\\.[\\d]+)\\b")); // lldb version 3.7.0 ( revision )
 
             if (rx.indexIn(output) == -1) {
                 mErrorString = tr("The debugger version can't be read (%1)").arg(output);
