@@ -95,7 +95,7 @@ protected:
         }
 
         // wait at least two frames so we have the final window size with all render loop/driver combinations...
-        QTest::qWait(20);
+        QTest::qWait(100);
         renderSpy.wait();
         renderSpy.clear();
         m_view->update();
