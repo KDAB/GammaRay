@@ -30,10 +30,6 @@ if(GAMMARAY_BUILD_UI AND (NOT MSVC OR NOT MSVC_VERSION LESS 1800)) # at least MS
     logview.cpp
   )
 
-  qt5_wrap_ui(gammaray_wlcompositorinspector_ui_srcs
-    inspectorwidget.ui
-  )
-
   gammaray_add_plugin(gammaray_wlcompositorinspector_ui
     JSON gammaray_wlcompositorinspector.json
     SOURCES ${gammaray_wlcompositorinspector_ui_srcs}
