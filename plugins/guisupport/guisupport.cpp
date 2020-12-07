@@ -223,7 +223,11 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QImage, QPaintDevice);
     MO_ADD_PROPERTY_RO(QImage, allGray);
     MO_ADD_PROPERTY_RO(QImage, bitPlaneCount);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    MO_ADD_PROPERTY_RO(QImage, sizeInBytes)
+#else
     MO_ADD_PROPERTY_RO(QImage, byteCount);
+#endif
     MO_ADD_PROPERTY_RO(QImage, bytesPerLine);
     MO_ADD_PROPERTY_RO(QImage, cacheKey);
     MO_ADD_PROPERTY   (QImage, dotsPerMeterX, setDotsPerMeterX);
