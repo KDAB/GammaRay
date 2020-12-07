@@ -31,7 +31,7 @@
 
 #include <QCoreApplication>
 #include <QObject>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QSharedData>
 #include <QString>
 #include <QStringList>
@@ -201,10 +201,11 @@ ProbeABI ProbeABI::fromString(const QString &id)
     ProbeABI abi;
 
     // version
-    static QRegExp versionRegExp(R"(^qt(\d+)\_(\d+)$)");
-    if (versionRegExp.indexIn(idParts.value(index++)) != 0)
+    static const QRegularExpression versionRegExp(R"(^qt(\d+)\_(\d+)$)");
+    const auto match = versionRegExp.match(idParts.value(index++));
+    if (!match.hasMatch())
         return ProbeABI();
-    abi.setQtVersion(versionRegExp.cap(1).toInt(), versionRegExp.cap(2).toInt());
+    abi.setQtVersion(match.captured(1).toInt(), match.captured(2).toInt());
 
     // compiler
 #ifdef Q_OS_WIN

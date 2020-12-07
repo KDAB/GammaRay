@@ -40,7 +40,6 @@
 
 #include <QQuickView>
 #include <QItemSelectionModel>
-#include <QRegExp>
 #include <QSignalSpy>
 #include <QTest>
 
