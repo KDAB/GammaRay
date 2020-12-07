@@ -29,6 +29,7 @@
 #include "transferimage.h"
 
 #include <QDebug>
+#include <QIODevice>
 
 namespace GammaRay {
 TransferImage::TransferImage(const QImage &image)

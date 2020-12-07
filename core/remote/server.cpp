@@ -42,6 +42,7 @@
 #endif
 
 #include <QDebug>
+#include <QIODevice>
 #include <QTimer>
 #include <QMetaMethod>
 

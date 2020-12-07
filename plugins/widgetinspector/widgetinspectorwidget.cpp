@@ -50,6 +50,7 @@
 #include <ui/searchlinecontroller.h>
 #include <ui/uiresources.h>
 
+#include <QActionGroup>
 #include <QComboBox>
 #include <QDebug>
 #include <QFileDialog>

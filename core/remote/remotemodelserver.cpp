@@ -37,11 +37,13 @@
 #include <compat/qasconst.h>
 
 #include <QAbstractItemModel>
-#include <QSortFilterProxyModel>
+#include <QAssociativeIterable>
+#include <QBuffer>
 #include <QDataStream>
 #include <QDebug>
-#include <QBuffer>
 #include <QIcon>
+#include <QSequentialIterable>
+#include <QSortFilterProxyModel>
 
 #include <iostream>
 

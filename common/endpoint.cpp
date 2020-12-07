@@ -33,6 +33,7 @@
 
 #include <iostream>
 
+#include <QIODevice>
 #include <QLoggingCategory>
 //we use qCWarning, which we turn off by default, but which is not compiled out in releasebuilds
 Q_LOGGING_CATEGORY(networkstatistics, "gammaray.network.statistics", QtMsgType::QtCriticalMsg)

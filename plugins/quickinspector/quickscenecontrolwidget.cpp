@@ -35,6 +35,7 @@
 #include <ui/uiresources.h>
 
 #include <QAction>
+#include <QActionGroup>
 #include <QComboBox>
 #include <QLabel>
 #include <QMenu>

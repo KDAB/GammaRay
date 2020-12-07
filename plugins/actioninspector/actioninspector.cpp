@@ -35,6 +35,7 @@
 #include <common/objectbroker.h>
 #include <common/objectid.h>
 
+#include <QActionGroup>
 #include <QtPlugin>
 #include <QGraphicsWidget>
 #include <QItemSelectionModel>

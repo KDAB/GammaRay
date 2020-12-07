@@ -35,6 +35,7 @@
 
 #include <QGuiApplication>
 
+#include <QAssociativeIterable>
 #include <QCursor>
 #include <QDebug>
 #include <QDir>
@@ -48,6 +49,7 @@
 #include <QPalette>
 #include <QPoint>
 #include <QRect>
+#include <QSequentialIterable>
 #include <QSize>
 #include <QStringList>
 #include <QVector2D>

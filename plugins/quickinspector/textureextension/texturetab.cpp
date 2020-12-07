@@ -30,6 +30,7 @@
 #include "ui_texturetab.h"
 #include <ui/propertywidget.h>
 
+#include <QActionGroup>
 #include <QComboBox>
 #include <QToolBar>
 #include <cmath>

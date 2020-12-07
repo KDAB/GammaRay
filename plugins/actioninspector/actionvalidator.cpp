@@ -30,6 +30,7 @@
 
 #include <QAction>
 #include <QMutexLocker>
+#include <QWidget>
 
 #include <core/objectdataprovider.h>
 #include <core/probe.h>

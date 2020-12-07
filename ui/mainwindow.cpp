@@ -65,6 +65,7 @@
 #include <private/qguiapplication_p.h>
 
 #include <QAction>
+#include <QActionGroup>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDesktopServices>

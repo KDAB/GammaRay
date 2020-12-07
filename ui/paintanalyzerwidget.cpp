@@ -39,6 +39,7 @@
 #include <common/objectbroker.h>
 #include <common/sourcelocation.h>
 
+#include <QActionGroup>
 #include <QComboBox>
 #include <QDebug>
 #include <QLabel>
