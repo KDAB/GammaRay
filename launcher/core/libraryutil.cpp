@@ -33,7 +33,6 @@ using namespace GammaRay;
 #include <QByteArray>
 #include <QDebug>
 #include <QProcess>
-#include <QVector>
 
 static QVector<QByteArray> dependenciesInternal(const QString &fileName, bool fallback = false)
 {

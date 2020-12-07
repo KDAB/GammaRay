@@ -33,9 +33,9 @@
 
 #include <QHash>
 #include <QSharedDataPointer>
+#include <QStringList>
 
 QT_BEGIN_NAMESPACE
-class QStringList;
 class QVariant;
 class QProcessEnvironment;
 QT_END_NAMESPACE

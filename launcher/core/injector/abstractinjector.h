@@ -33,11 +33,11 @@
 
 #include <QProcess>
 #include <QSharedPointer>
+#include <QStringList>
 
 QT_BEGIN_NAMESPACE
 class QProcessEnvironment;
 class QString;
-class QStringList;
 QT_END_NAMESPACE
 
 namespace GammaRay {

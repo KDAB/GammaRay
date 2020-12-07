@@ -30,10 +30,10 @@
 #define GAMMARAY_LIBRARYUTIL_H
 
 #include <qglobal.h>
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
 class QByteArray;
-template <typename T> class QVector;
 QT_END_NAMESPACE
 
 namespace GammaRay {
