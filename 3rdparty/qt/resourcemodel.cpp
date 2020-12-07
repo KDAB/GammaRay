@@ -840,7 +840,11 @@ QModelIndex ResourceModel::index(const QString &path, int column) const
     }
 #endif
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     QStringList pathElements = absolutePath.split(QLatin1Char('/'), QString::SkipEmptyParts);
+#else
+    QStringList pathElements = absolutePath.split(QLatin1Char('/'), Qt::SkipEmptyParts);
+#endif
     if ((pathElements.isEmpty() || !QFileInfo(path).exists())
 #if !defined(Q_OS_WIN) || defined(Q_OS_WINCE)
         && path != QLatin1String("/")
