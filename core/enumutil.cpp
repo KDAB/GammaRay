@@ -34,6 +34,7 @@
 
 using namespace GammaRay;
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 namespace GammaRay {
 class ProtectedExposer : public QObject
 {
@@ -41,6 +42,7 @@ public:
     using QObject::staticQtMetaObject;
 };
 }
+#endif
 
 static const QMetaObject *metaObjectForClass(const QByteArray &name)
 {
@@ -68,7 +70,11 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
         enumTypeName = enumTypeName.mid(pos + 2);
     }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    const QMetaObject *mo = &Qt::staticMetaObject;
+#else
     const QMetaObject *mo = &ProtectedExposer::staticQtMetaObject;
+#endif
     int enumIndex = mo->indexOfEnumerator(enumTypeName);
     if (enumIndex < 0 && metaObject) {
         mo = metaObject;

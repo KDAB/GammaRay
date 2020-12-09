@@ -206,7 +206,11 @@ void MetaObjectRegistry::scanMetaTypes()
         if (mt)
             addMetaObject(mt);
     }
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    addMetaObject(&Qt::staticMetaObject);
+#else
     addMetaObject(&staticQtMetaObject);
+#endif
 }
 
 const QMetaObject *MetaObjectRegistry::addMetaObject(const QMetaObject *metaObject, bool mergeDynamic)
