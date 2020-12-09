@@ -302,7 +302,7 @@ void Server::registerMonitorNotifier(Protocol::ObjectAddress address, QObject *r
     Q_ASSERT(receiver);
     Q_ASSERT(monitorNotifier);
 
-    m_monitorNotifiers.insert(address, qMakePair<QObject *, QByteArray>(receiver, monitorNotifier));
+    m_monitorNotifiers.insert(address, qMakePair<QObject *, QByteArray>(std::forward<QObject*>(receiver), monitorNotifier));
 }
 
 void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName)
