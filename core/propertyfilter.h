@@ -45,8 +45,8 @@ public:
         const QString &className,
         const QString &name,
         const QString &typeName = QString(),
-        PropertyData::AccessFlags accessFlags = nullptr,
-        PropertyModel::PropertyFlags propertyFlags = nullptr
+        PropertyData::AccessFlags accessFlags = {},
+        PropertyModel::PropertyFlags propertyFlags = {}
     );
     static PropertyFilter classAndPropertyName(const QString &className,
                                                const QString &propertyName);
