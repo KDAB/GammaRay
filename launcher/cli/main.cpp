@@ -93,6 +93,9 @@ using namespace GammaRay;
 
 QTextStream out(stdout);
 QTextStream err(stderr);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+using Qt::endl;
+#endif
 
 static void usage(const char *argv0)
 {
