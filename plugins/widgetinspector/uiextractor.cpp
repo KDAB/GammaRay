@@ -42,7 +42,11 @@ bool UiExtractor::checkProperty(QObject *obj, const QString &prop) const
     const QMetaProperty mp = mo->property(mo->indexOfProperty(prop.toLatin1()));
 
     // TODO come up with some more aggressive filtering
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (mp.isValid() && mp.isDesignable(obj) && mp.isStored(obj) && mp.isWritable()) {
+#else
+    if (mp.isValid() && mp.isDesignable() && mp.isStored() && mp.isWritable()) {
+#endif
         const QVariant value = mp.read(obj);
 
         // try to figure out the default by resetting to it
