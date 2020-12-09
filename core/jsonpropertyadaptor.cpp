@@ -72,7 +72,7 @@ PropertyData JsonPropertyAdaptor::propertyData(int index) const
         auto it = m_object.begin();
         it += index;
         data.setName(VariantHandler::displayString(it.key()));
-        data.setValue(it.value());
+        data.setValue(it.value().toVariant());
         data.setClassName(QStringLiteral("QJsonObject"));
     } else {
         data.setName(VariantHandler::displayString(index));
