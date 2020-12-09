@@ -46,6 +46,9 @@ struct ModelCellData
     Qt::ItemFlags flags = Qt::NoItemFlags;
 };
 
+QDataStream &operator<<(QDataStream &out, const ModelCellData &data);
+QDataStream &operator>>(QDataStream &in, ModelCellData &data);
+
 class ModelInspectorInterface : public QObject
 {
     Q_OBJECT

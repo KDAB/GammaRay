@@ -33,21 +33,21 @@
 
 using namespace GammaRay;
 
-QT_BEGIN_NAMESPACE
+namespace GammaRay {
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt::ItemFlags)
 
-static QDataStream &operator<<(QDataStream &out, const ModelCellData &data)
+QDataStream &operator<<(QDataStream &out, const ModelCellData &data)
 {
     out << data.row << data.column << data.internalId << data.internalPtr << data.flags;
     return out;
 }
 
-static QDataStream &operator>>(QDataStream &in, ModelCellData &data)
+QDataStream &operator>>(QDataStream &in, ModelCellData &data)
 {
     in >> data.row >> data.column >> data.internalId >> data.internalPtr >> data.flags;
     return in;
 }
-QT_END_NAMESPACE
+}
 
 bool ModelCellData::operator==(const ModelCellData& other) const
 {
@@ -62,8 +62,7 @@ bool ModelCellData::operator==(const ModelCellData& other) const
 ModelInspectorInterface::ModelInspectorInterface(QObject *parent)
     : QObject(parent)
 {
-    qRegisterMetaType<ModelCellData>();
-    qRegisterMetaTypeStreamOperators<ModelCellData>();
+    StreamOperators::registerOperators<ModelCellData>();
     ObjectBroker::registerObject<ModelInspectorInterface *>(this);
 }
 

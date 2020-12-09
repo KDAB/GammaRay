@@ -110,8 +110,7 @@ bool Qt3DGeometryData::operator==(const Qt3DGeometryData &rhs) const
 Qt3DGeometryExtensionInterface::Qt3DGeometryExtensionInterface(const QString &name, QObject *parent)
     : QObject(parent)
 {
-    qRegisterMetaType<Qt3DGeometryData>();
-    qRegisterMetaTypeStreamOperators<Qt3DGeometryData>();
+    StreamOperators::registerOperators<Qt3DGeometryData>();
     ObjectBroker::registerObject(name, this);
 }
 

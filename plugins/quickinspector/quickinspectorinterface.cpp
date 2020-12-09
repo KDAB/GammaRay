@@ -31,6 +31,7 @@
 #include "quickdecorationsdrawer.h"
 
 #include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
 #include <QDataStream>
 
@@ -71,11 +72,11 @@ QuickInspectorInterface::QuickInspectorInterface(QObject *parent)
     , m_serverSideDecoration(false)
 {
     ObjectBroker::registerObject<QuickInspectorInterface *>(this);
-    qRegisterMetaTypeStreamOperators<Features>();
-    qRegisterMetaTypeStreamOperators<RenderMode>();
-    qRegisterMetaTypeStreamOperators<QuickItemGeometry>();
-    qRegisterMetaTypeStreamOperators<QVector<QuickItemGeometry>>();
-    qRegisterMetaTypeStreamOperators<QuickDecorationsSettings>();
+    StreamOperators::registerOperators<Features>();
+    StreamOperators::registerOperators<RenderMode>();
+    StreamOperators::registerOperators<QuickItemGeometry>();
+    StreamOperators::registerOperators<QVector<QuickItemGeometry>>();
+    StreamOperators::registerOperators<QuickDecorationsSettings>();
 }
 
 QuickInspectorInterface::~QuickInspectorInterface() = default;

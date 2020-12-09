@@ -26,20 +26,17 @@
 
 #include "statemachineviewerinterface.h"
 #include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
 using namespace GammaRay;
 
 StateMachineViewerInterface::StateMachineViewerInterface(QObject *parent)
     : QObject(parent)
 {
-    qRegisterMetaType<StateId>();
-    qRegisterMetaTypeStreamOperators<StateId>();
-    qRegisterMetaType<TransitionId>();
-    qRegisterMetaTypeStreamOperators<TransitionId>();
-    qRegisterMetaType<StateMachineConfiguration>();
-    qRegisterMetaTypeStreamOperators<StateMachineConfiguration>();
-    qRegisterMetaType<StateType>();
-    qRegisterMetaTypeStreamOperators<StateType>();
+    StreamOperators::registerOperators<StateId>();
+    StreamOperators::registerOperators<TransitionId>();
+    StreamOperators::registerOperators<StateMachineConfiguration>();
+    StreamOperators::registerOperators<StateType>();
     ObjectBroker::registerObject<StateMachineViewerInterface *>(this);
 }
 

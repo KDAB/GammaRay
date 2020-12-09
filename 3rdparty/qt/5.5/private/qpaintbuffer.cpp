@@ -2123,8 +2123,13 @@ QDataStream &operator>>(QDataStream &stream, QPaintBufferCacheEntryV2 &entry)
 
 static void qRegisterPaintBufferMetaTypes()
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qRegisterMetaTypeStreamOperators<QPaintBufferCacheEntry>();
     qRegisterMetaTypeStreamOperators<QPaintBufferCacheEntryV2>();
+#else
+    qRegisterMetaType<QPaintBufferCacheEntry>();
+    qRegisterMetaType<QPaintBufferCacheEntryV2>();
+#endif
 }
 
 Q_CONSTRUCTOR_FUNCTION(qRegisterPaintBufferMetaTypes)

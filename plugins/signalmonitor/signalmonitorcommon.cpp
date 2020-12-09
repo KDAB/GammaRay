@@ -28,11 +28,13 @@
 
 #include "signalmonitorcommon.h"
 
+#include <common/streamoperators.h>
+
 #include <QDataStream>
 
 using namespace GammaRay;
 
 void GammaRay::StreamOperators::registerSignalMonitorStreamOperators()
 {
-    qRegisterMetaTypeStreamOperators<QVector<qlonglong> >();
+    StreamOperators::registerOperators<QVector<qlonglong> >();
 }

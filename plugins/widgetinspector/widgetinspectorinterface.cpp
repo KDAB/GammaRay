@@ -29,6 +29,7 @@
 #include "widgetinspectorinterface.h"
 
 #include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
 #include <QDataStream>
 #include <QMetaType>
@@ -51,8 +52,9 @@ QDataStream &operator>>(QDataStream &in, WidgetInspectorInterface::Features &val
 WidgetInspectorInterface::WidgetInspectorInterface(QObject *parent)
     : QObject(parent)
 {
-    qRegisterMetaTypeStreamOperators<Features>();
-    qRegisterMetaTypeStreamOperators<WidgetFrameData>();
+    StreamOperators::registerOperators<Features>();
+    StreamOperators::registerOperators<WidgetFrameData>();
+
     ObjectBroker::registerObject<WidgetInspectorInterface *>(this);
 }
 

@@ -27,18 +27,16 @@
 */
 
 #include "toolmanagerinterface.h"
+#include "streamoperators.h"
 
 using namespace GammaRay;
 
 ToolManagerInterface::ToolManagerInterface(QObject *parent)
     : QObject(parent)
 {
-    qRegisterMetaType<ToolData>();
-    qRegisterMetaTypeStreamOperators<ToolData>();
-    qRegisterMetaType<QVector<ToolData> >();
-    qRegisterMetaTypeStreamOperators<QVector<ToolData> >();
-    qRegisterMetaType<QVector<QString> >();
-    qRegisterMetaTypeStreamOperators<QVector<QString> >();
+    StreamOperators::registerOperators<ToolData>();
+    StreamOperators::registerOperators<QVector<ToolData> >();
+    StreamOperators::registerOperators<QVector<QString> >();
 }
 
 ToolManagerInterface::~ToolManagerInterface() = default;

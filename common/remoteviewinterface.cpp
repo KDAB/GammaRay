@@ -138,12 +138,11 @@ RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
     qRegisterMetaType<QTouchEvent::TouchPoint>();
     qRegisterMetaType<QList<QTouchEvent::TouchPoint >>();
 
-    qRegisterMetaType<RequestMode>();
-    qRegisterMetaTypeStreamOperators<RequestMode>();
-    qRegisterMetaTypeStreamOperators<GammaRay::RemoteViewFrame>();
-    qRegisterMetaTypeStreamOperators<Qt::TouchPointStates>();
-    qRegisterMetaTypeStreamOperators<QList<QTouchEvent::TouchPoint>>();
-    qRegisterMetaTypeStreamOperators<QTouchEvent::TouchPoint::InfoFlags>();
+    StreamOperators::registerOperators<RequestMode>();
+    StreamOperators::registerOperators<GammaRay::RemoteViewFrame>();
+    StreamOperators::registerOperators<Qt::TouchPointStates>();
+    StreamOperators::registerOperators<QList<QTouchEvent::TouchPoint>>();
+    StreamOperators::registerOperators<QTouchEvent::TouchPoint::InfoFlags>();
 }
 
 QString RemoteViewInterface::name() const

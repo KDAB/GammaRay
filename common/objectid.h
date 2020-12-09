@@ -89,6 +89,10 @@ public:
 
     inline operator quint64() const { return m_id; }
 
+    inline bool operator==(const ObjectId &o2) const {
+        return m_type == o2.m_type && m_id == o2.m_id && m_typeName == o2.m_typeName;
+    }
+
 private:
     friend QDataStream &operator<<(QDataStream &out, const ObjectId &id);
     friend QDataStream &operator>>(QDataStream &out, ObjectId &id);

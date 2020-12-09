@@ -40,8 +40,8 @@
 namespace GammaRay {
 class RemoteViewFrame;
 
-QDataStream &operator<<(QDataStream &stream, const GammaRay::RemoteViewFrame &frame);
-QDataStream &operator>>(QDataStream &stream, GammaRay::RemoteViewFrame &frame);
+GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &stream, const GammaRay::RemoteViewFrame &frame);
+GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &stream, GammaRay::RemoteViewFrame &frame);
 
 /** Data of a single frame displayed in the RemoteViewWidget. */
 class GAMMARAY_COMMON_EXPORT RemoteViewFrame

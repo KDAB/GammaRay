@@ -29,6 +29,7 @@
 #include "paintanalyzerinterface.h"
 
 #include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
 using namespace GammaRay;
 
@@ -39,7 +40,7 @@ PaintAnalyzerInterface::PaintAnalyzerInterface(const QString &name, QObject *par
     , m_hasStackTrace(false)
 {
     ObjectBroker::registerObject(name, this);
-    qRegisterMetaTypeStreamOperators<PaintAnalyzerFrameData>();
+    StreamOperators::registerOperators<PaintAnalyzerFrameData>();
 }
 
 QString PaintAnalyzerInterface::name() const

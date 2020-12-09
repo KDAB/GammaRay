@@ -33,6 +33,7 @@
 
 #include <ui/propertybinder.h>
 #include <common/objectbroker.h>
+#include <common/streamoperators.h>
 
 #include <QAction>
 #include <QDateTime>
@@ -248,5 +249,5 @@ void PositioningWidget::setUiToPosition(const QGeoPositionInfo &pos)
 
 void PositioningUiFactory::initUi()
 {
-    qRegisterMetaTypeStreamOperators<QGeoPositionInfo>("QGeoPositionInfo");
+    StreamOperators::registerOperators<QGeoPositionInfo>();
 }

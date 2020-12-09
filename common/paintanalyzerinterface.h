@@ -73,8 +73,8 @@ struct PaintAnalyzerFrameData
     QPainterPath clipPath;
 };
 
-QDataStream &operator<<(QDataStream &stream, const GammaRay::PaintAnalyzerFrameData &data);
-QDataStream &operator>>(QDataStream &stream, GammaRay::PaintAnalyzerFrameData &data);
+GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &stream, const GammaRay::PaintAnalyzerFrameData &data);
+GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &stream, GammaRay::PaintAnalyzerFrameData &data);
 }
 
 Q_DECLARE_METATYPE(GammaRay::PaintAnalyzerFrameData)
