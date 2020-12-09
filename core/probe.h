@@ -49,6 +49,7 @@ class QModelIndex;
 class QThread;
 class QTimer;
 class QMutex;
+class QRecursiveMutex;
 class QSignalSpyCallbackSet;
 QT_END_NAMESPACE
 
@@ -192,7 +193,11 @@ public:
      * Lock this to check the validity of a QObject
      * and to access it safely afterwards.
      */
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    static QRecursiveMutex *objectLock();
+#else
     static QMutex *objectLock();
+#endif
 
     /*!
      * Check whether @p obj is still valid.

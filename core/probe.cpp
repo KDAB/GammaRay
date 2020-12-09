@@ -183,7 +183,11 @@ Q_GLOBAL_STATIC(Listener, s_listener)
 
 // ensures proper information is returned by isValidObject by
 // locking it in objectAdded/Removed
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+Q_GLOBAL_STATIC(QRecursiveMutex, s_lock)
+#else
 Q_GLOBAL_STATIC_WITH_ARGS(QMutex, s_lock, (QMutex::Recursive))
+#endif
 
 Probe::Probe(QObject *parent)
     : QObject(parent)
@@ -522,7 +526,11 @@ bool Probe::isValidObject(const QObject *obj) const
     return m_validObjects.contains(obj);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+QRecursiveMutex *Probe::objectLock()
+#else
 QMutex *Probe::objectLock()
+#endif
 {
     return s_lock();
 }
