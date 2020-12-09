@@ -56,11 +56,11 @@ QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outbound
     QVector<Connection> connections;
     QObjectPrivate *d = QObjectPrivate::get(object);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    QObjectPrivate::ConnectionData *cd = d->connections.load();
+    QObjectPrivate::ConnectionData *cd = d->connections.loadRelaxed();
     if (!cd)
         return connections;
 
-    auto cl = cd->signalVector.load();
+    auto cl = cd->signalVector.loadRelaxed();
 #else
     if (!d->connectionLists)
         return connections;

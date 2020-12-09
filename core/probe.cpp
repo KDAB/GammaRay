@@ -227,7 +227,7 @@ Probe::Probe(QObject *parent)
             this, &Probe::processQueuedObjectChanges);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    m_previousSignalSpyCallbackSet = qt_signal_spy_callback_set.load();
+    m_previousSignalSpyCallbackSet = qt_signal_spy_callback_set.loadRelaxed();
 #else
     const auto* signal_spy_set = &qt_signal_spy_callback_set;
     if (signal_spy_set) {
@@ -290,7 +290,11 @@ MetaObjectRegistry *Probe::metaObjectRegistry() const
 
 Probe *GammaRay::Probe::instance()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    return s_instance.loadRelaxed();
+#else
     return s_instance.load();
+#endif
 }
 
 bool Probe::isInitialized()
