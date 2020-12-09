@@ -49,7 +49,7 @@ public:
     QString injectorType;
     QString injectorTypeExecutableOverride;
     ProbeABI probeABI;
-    int pid = -1;
+    qint64 pid = -1;
     LaunchOptions::UiMode uiMode = LaunchOptions::OutOfProcessUi;
     QHash<QByteArray, QByteArray> probeSettings;
     QProcessEnvironment env;
@@ -112,12 +112,12 @@ QString LaunchOptions::absoluteExecutablePath() const
     return d->launchArguments.first();
 }
 
-int LaunchOptions::pid() const
+qint64 LaunchOptions::pid() const
 {
     return d->pid;
 }
 
-void LaunchOptions::setPid(int pid)
+void LaunchOptions::setPid(qint64 pid)
 {
     d->pid = pid;
     Q_ASSERT(d->pid <= 0 || d->launchArguments.isEmpty());

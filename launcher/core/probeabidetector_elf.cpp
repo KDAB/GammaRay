@@ -117,7 +117,7 @@ static ProbeABI qtVersionFromExec(const QString &path)
 
     // yep, you can actually execute QtCore.so...
     QProcess proc;
-    proc.setReadChannelMode(QProcess::SeparateChannels);
+    proc.setProcessChannelMode(QProcess::SeparateChannels);
     proc.setReadChannel(QProcess::StandardOutput);
     proc.start(path);
     proc.waitForFinished();

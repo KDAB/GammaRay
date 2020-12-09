@@ -156,8 +156,12 @@ bool DebuggerInjector::startDebugger(const QStringList &args, const QProcessEnvi
             this, &DebuggerInjector::readyReadStandardOutput);
     connect(m_process.data(), &QProcess::started,
             this, &AbstractInjector::started);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    connect(m_process.data(), &QProcess::finished, this, &DebuggerInjector::processFinished);
+#else
     connect(m_process.data(), static_cast<void(QProcess::*)(int)>(&QProcess::finished),
             this, &DebuggerInjector::processFinished);
+#endif
     m_process->setProcessChannelMode(QProcess::SeparateChannels);
     m_process->start(filePath(), args);
     bool status = m_process->waitForStarted(-1);

@@ -76,11 +76,7 @@ private slots:
             LaunchOptions options;
             options.setUiMode(LaunchOptions::NoUi);
             options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-#ifdef Q_OS_WIN
-            options.setPid(m_process.pid()->dwProcessId);
-#else
-            options.setPid(m_process.pid());
-#endif
+            options.setPid(m_process.processId());
 
             ProbeABIDetector detector;
             options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForProcess(options.pid())));
@@ -132,11 +128,7 @@ private slots:
 
             QVERIFY(spyReady.count() == 1);
             QVERIFY(Endpoint::isConnected());
-#ifdef Q_OS_WIN
-            QVERIFY(m_process.pid()->dwProcessId == Endpoint::instance()->pid());
-#else
-            QVERIFY(m_process.pid() == Endpoint::instance()->pid());
-#endif
+            QCOMPARE(m_process.processId(), Endpoint::instance()->pid());
             QVERIFY(spyError.isEmpty());
             QVERIFY(spyDisconnected.isEmpty());
 

@@ -81,8 +81,8 @@ public:
     QString absoluteExecutablePath() const;
 
     /** Process id for the process to attach to. */
-    void setPid(int pid);
-    int pid() const;
+    void setPid(qint64 pid);
+    qint64 pid() const;
 
     /** UI mode. */
     UiMode uiMode() const;

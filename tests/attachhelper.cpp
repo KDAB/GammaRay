@@ -56,7 +56,11 @@ AttachHelper::AttachHelper(const QString &gammaray, const QString &injector,
 {
     m_proc->setProcessChannelMode(QProcess::ForwardedChannels);
     connect(m_proc, &QProcess::started, this, &AttachHelper::processStarted);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     connect(m_proc, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, &AttachHelper::processFinished);
+#else
+    connect(m_proc, &QProcess::finished, this, &AttachHelper::processFinished);
+#endif
     m_proc->start(debuggee, arguments);
 }
 
@@ -86,11 +90,7 @@ void AttachHelper::attach()
     gammaray.setProcessChannelMode(QProcess::ForwardedChannels);
     QStringList args;
     args << QStringLiteral("--inprocess") << QStringLiteral("-i") << m_injector;
-#ifdef Q_OS_WIN32
-    args << QStringLiteral("-p") << QString::number(m_proc->pid()->dwProcessId);
-#else
-    args << QStringLiteral("-p") << QString::number(m_proc->pid());
-#endif
+    args << QStringLiteral("-p") << QString::number(m_proc->processId());
     args << QStringLiteral("-nodialogs");
     args << QStringLiteral("--listen") << QStringLiteral("tcp://127.0.0.1/");
     const int ret = gammaray.execute(m_gammaray, args);

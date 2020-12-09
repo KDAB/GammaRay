@@ -152,11 +152,7 @@ private slots:
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
-#ifdef Q_OS_WIN
-        options.setPid(target.pid()->dwProcessId);
-#else
-        options.setPid(target.pid());
-#endif
+        options.setPid(target.processId());
         QTest::qWait(5000); // give the target some time to actually load the QtCore DLL, otherwise ABI detection fails
         ProbeABIDetector detector;
         options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForProcess(options.pid())));
