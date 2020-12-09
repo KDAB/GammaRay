@@ -100,8 +100,12 @@ void ProbeSettingsReceiver::run()
 
     m_socket = new QLocalSocket;
     connect(m_socket, &QLocalSocket::disconnected, this, &ProbeSettingsReceiver::settingsReceivedFallback);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    connect(m_socket, &QLocalSocket::errorOccurred, this, &ProbeSettingsReceiver::settingsReceivedFallback);
+#else
     connect(m_socket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
             this, &ProbeSettingsReceiver::settingsReceivedFallback);
+#endif
     connect(m_socket, &QIODevice::readyRead, this, &ProbeSettingsReceiver::readyRead);
     m_socket->connectToServer(QStringLiteral("gammaray-")
                               + QString::number(ProbeSettings::launcherIdentifier()));
