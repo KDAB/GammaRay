@@ -32,14 +32,18 @@
 #include "common/settempvalue.h"
 
 #include <QApplication>
+#include <QDebug>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QDesktopWidget>
+#endif
 #include <QMainWindow>
 #include <QSplitter>
 #include <QHeaderView>
 #include <QSettings>
 #include <QEvent>
+#include <QScreen>
 #include <QTimer>
-#include <QDebug>
+
 #include <vector>
 
 #define WIDGET_CUSTOMIZED "customized"
@@ -385,7 +389,11 @@ void UIStateManager::restoreWindowState()
         const QByteArray state = m_stateSettings->value(widgetStateKey(m_widget)).toByteArray();
 
         if (geometry.isEmpty()) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            const QRect area = m_widget->screen()->availableGeometry();
+#else
             const QRect area = qApp->desktop()->availableGeometry(QCursor::pos());
+#endif
             QRect rect(QPoint(), QSize(1024, 768));
             rect.moveCenter(area.center());
             m_widget->setGeometry(rect);

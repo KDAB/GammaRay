@@ -34,7 +34,9 @@
 #include <QFileInfo>
 #include <QWidget>
 #include <QApplication>
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
 #include <QDesktopWidget>
+#endif
 #include <QScreen>
 #include <QDebug>
 
@@ -74,8 +76,12 @@ qreal devicePixelRatio(QWidget *widget)
     qreal pixelRatio = qApp->devicePixelRatio();
 
     if (widget) {
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
         const int screenNumber = qMax(0, qApp->desktop()->screenNumber(widget));
         const QScreen *screen = qApp->screens().value(screenNumber);
+#else
+        const QScreen *screen = widget->screen();
+#endif
         pixelRatio = screen->devicePixelRatio();
     }
 

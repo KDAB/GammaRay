@@ -66,7 +66,9 @@
 #include <QButtonGroup>
 #include <QComboBox>
 #include <QCompleter>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QDesktopWidget>
+#endif
 #include <QDialog>
 #include <QGraphicsEffect>
 #include <QGraphicsProxyWidget>
@@ -196,12 +198,14 @@ void WidgetInspectorServer::widgetSelectionChanged(const QItemSelection &selecti
     m_selectedWidget = widget;
     m_remoteView->setEventReceiver(m_selectedWidget ? m_selectedWidget->window()->windowHandle() : nullptr);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (m_selectedWidget
         && (qobject_cast<QDesktopWidget *>(m_selectedWidget)
             || m_selectedWidget->inherits("QDesktopScreenWidget"))) {
         m_overlayWidget->placeOn(WidgetOrLayoutFacade());
         return;
     }
+#endif
     if (m_selectedWidget == m_overlayWidget) {
         // this should not happen, but apparently our object recovery is slightly too good sometimes ;)
         return;
@@ -588,7 +592,9 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_ST(QApplication, activePopupWidget);
     MO_ADD_PROPERTY_ST(QApplication, activeWindow);
     MO_ADD_PROPERTY_ST(QApplication, colorSpec);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_PROPERTY_ST(QApplication, desktop);
+#endif
     MO_ADD_PROPERTY_ST(QApplication, focusWidget);
     MO_ADD_PROPERTY_ST(QApplication, style);
     MO_ADD_PROPERTY_ST(QApplication, topLevelWidgets);
