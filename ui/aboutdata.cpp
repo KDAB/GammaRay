@@ -77,7 +77,11 @@ QString AboutData::aboutTitle()
 
 QString AboutData::aboutHeader()
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return AboutDataContext::trUtf8(
+#else
+    return AboutDataContext::tr(
+#endif
                 "<p>The Qt application inspection and manipulation tool."
                 "Learn more at <a href=\"https://www.kdab.com/gammaray\">https://www.kdab.com/gammaray/</a>.</p>"
                 "<p>Copyright (C) 2010-2021 Klarälvdalens Datakonsult AB, "
@@ -89,14 +93,18 @@ QString AboutData::aboutHeader()
 
 QString AboutData::aboutAuthors()
 {
-    return AboutDataContext::trUtf8(
+    return AboutDataContext::tr(
                 "<p><u>Authors:</u><br>%1</p>"
                 ).arg(authorsAsHtml().join(QStringLiteral("<br>")));
 }
 
 QString AboutData::aboutFooter()
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     return AboutDataContext::trUtf8(
+#else
+    return AboutDataContext::tr(
+#endif
                 "<p>GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB "
                 "in the European Union, the United States and/or other countries.  Other product and "
                 "company names and logos may be trademarks or registered trademarks of their respective companies.</p>"
