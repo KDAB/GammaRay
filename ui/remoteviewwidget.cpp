@@ -1244,7 +1244,11 @@ void RemoteViewWidget::contextMenuEvent(QContextMenuEvent *event)
     }
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+void RemoteViewWidget::enterEvent(QEnterEvent *event)
+#else
 void RemoteViewWidget::enterEvent(QEvent *event)
+#endif
 {
     Q_UNUSED(event);
     switch (m_interactionMode) {
