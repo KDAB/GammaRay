@@ -362,7 +362,9 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_O2(QBrush, color, setColor);
     MO_ADD_PROPERTY_RO(QBrush, gradient);
     MO_ADD_PROPERTY_RO(QBrush, isOpaque);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_PROPERTY(QBrush, matrix, setMatrix);
+#endif
     MO_ADD_PROPERTY(QBrush, style, setStyle);
     MO_ADD_PROPERTY(QBrush, texture, setTexture);
     MO_ADD_PROPERTY(QBrush, transform, setTransform);

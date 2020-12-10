@@ -34,7 +34,9 @@
 
 #include <QApplication>
 #include <QDebug>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QMatrix>
+#endif
 #include <QMatrix4x4>
 #include <QPainter>
 #include <QQuaternion>
@@ -46,6 +48,7 @@ using namespace GammaRay;
 
 namespace {
 template<typename T> struct matrix_trait {};
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 template<> struct matrix_trait<QMatrix> {
     static const int rows = 3;
     static const int columns = 2;
@@ -69,6 +72,7 @@ template<> struct matrix_trait<QMatrix> {
         return 0.0;
     }
 };
+#endif
 
 template<> struct matrix_trait<QMatrix4x4> {
     static const int rows = 4;
@@ -166,8 +170,10 @@ void PropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
     const QVariant value = index.data(Qt::EditRole);
     if (value.canConvert<QMatrix4x4>()) {
         paint(painter, option, index, value.value<QMatrix4x4>());
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     } else if (value.canConvert<QMatrix>()) {
         paint(painter, option, index, value.value<QMatrix>());
+#endif
     } else if (value.type() == QVariant::Transform) {
         paint(painter, option, index, value.value<QTransform>());
     } else if (value.canConvert<QVector2D>()) {
@@ -189,8 +195,10 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option,
     const QVariant value = index.data(Qt::EditRole);
     if (value.canConvert<QMatrix4x4>()) {
         return sizeHint(option, index, value.value<QMatrix4x4>());
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     } else if (value.canConvert<QMatrix>()) {
         return sizeHint(option, index, value.value<QMatrix>());
+#endif
     } else if (value.type() == QVariant::Transform) {
         return sizeHint(option, index, value.value<QTransform>());
     } else if (value.canConvert<QVector2D>()) {

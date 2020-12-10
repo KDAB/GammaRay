@@ -54,9 +54,11 @@ void PropertyMatrixDialog::setMatrix(const QVariant &matrix)
 
     QString windowTitle = tr("Edit Matrix");
     switch (matrix.type()) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     case QVariant::Matrix:
         windowTitle = tr("Edit Matrix");
         break;
+#endif
     case QVariant::Matrix4x4:
         windowTitle = tr("Edit 4x4 Matrix");
         break;

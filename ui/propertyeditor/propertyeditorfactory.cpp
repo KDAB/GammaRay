@@ -59,7 +59,9 @@ PropertyEditorFactory::PropertyEditorFactory()
     addEditor(QVariant::SizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
     addEditor(QVariant::String, new QStandardItemEditorCreator<PropertyTextEditor>(), true);
     addEditor(QVariant::Transform, new QStandardItemEditorCreator<PropertyMatrixEditor>());
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     addEditor(QVariant::Matrix, new QStandardItemEditorCreator<PropertyMatrixEditor>());
+#endif
     addEditor(QVariant::Matrix4x4, new QStandardItemEditorCreator<PropertyMatrixEditor>());
     addEditor(QVariant::Vector2D, new QStandardItemEditorCreator<PropertyMatrixEditor>());
     addEditor(QVariant::Vector3D, new QStandardItemEditorCreator<PropertyMatrixEditor>());
