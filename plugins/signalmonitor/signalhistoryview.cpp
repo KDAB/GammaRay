@@ -130,3 +130,5 @@ bool SignalHistoryView::viewportEvent(QEvent *event)
 
     return DeferredTreeView::viewportEvent(event);
 }
+
+#include "moc_signalhistoryview.cpp"

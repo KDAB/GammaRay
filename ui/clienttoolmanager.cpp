@@ -364,3 +364,5 @@ ToolInfo ClientToolManager::toolForToolId(const QString &toolId) const {
         return ToolInfo();
     return m_tools.at(index);
 }
+
+#include "moc_clienttoolmanager.cpp"
