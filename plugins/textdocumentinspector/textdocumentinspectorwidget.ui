@@ -104,9 +104,6 @@
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="GammaRay::TextDocumentContentView" name="documentView">
-          <property name="tabStopWidth">
-           <number>40</number>
-          </property>
          </widget>
         </item>
        </layout>
@@ -118,9 +115,6 @@
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QTextBrowser" name="htmlView">
-          <property name="tabStopWidth">
-           <number>40</number>
-          </property>
          </widget>
         </item>
        </layout>
