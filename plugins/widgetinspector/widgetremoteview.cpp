@@ -87,7 +87,11 @@ void WidgetRemoteView::drawDecoration(QPainter* p)
         QLineF l(r1.center(), r2.center());
         for (const auto &prevLine : qAsConst(lines)) {
             QPointF pnt;
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
             if (l.intersect(prevLine, &pnt) == QLineF::BoundedIntersection && pnt != l.p1() && pnt != l.p2()) {
+#else
+            if (l.intersects(prevLine, &pnt) == QLineF::BoundedIntersection && pnt != l.p1() && pnt != l.p2()) {
+#endif
                 p->setPen(Qt::red);
                 break;
             }
