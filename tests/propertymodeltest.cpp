@@ -135,7 +135,7 @@ private slots:
         auto idx = searchFixedIndex(&model, "gadgetReadOnly");
         QVERIFY(idx.isValid());
         QCOMPARE(model.rowCount(idx), 1);
-        idx = idx.child(0, 1);
+        idx = model.index(0, 1, idx);
         QVERIFY((idx.flags() & Qt::ItemIsEditable) == 0);
     }
 
@@ -149,7 +149,7 @@ private slots:
         auto idx = searchFixedIndex(&model, "gadget");
         QVERIFY(idx.isValid());
         QCOMPARE(model.rowCount(idx), 1);
-        idx = idx.child(0, 1);
+        idx = model.index(0, 1, idx);
         QVERIFY(idx.flags() & Qt::ItemIsEditable);
         QVERIFY(model.setData(idx, 1554));
         QCOMPARE(obj.gadgetPointer()->prop1(), 1554);
@@ -157,7 +157,7 @@ private slots:
         idx = searchFixedIndex(&model, "gadgetPointer");
         QVERIFY(idx.isValid());
         QCOMPARE(model.rowCount(idx), 1);
-        idx = idx.child(0, 1);
+        idx = model.index(0, 1, idx);
         QVERIFY(idx.flags() & Qt::ItemIsEditable);
         QVERIFY(model.setData(idx, 1559));
         QCOMPARE(obj.gadgetPointer()->prop1(), 1559);
