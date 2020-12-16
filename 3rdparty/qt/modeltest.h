@@ -36,6 +36,12 @@
 #define MODELTEST_H
 
 #include <QtCore/QObject>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+#include <QtTest/QAbstractItemModelTester>
+
+using ModelTest = QAbstractItemModelTester;
+#else
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStack>
 
@@ -85,4 +91,5 @@ private:
   QList<QPersistentModelIndex> changing;
 };
 
+#endif
 #endif

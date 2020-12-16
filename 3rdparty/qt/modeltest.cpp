@@ -28,6 +28,8 @@
 
 #include "modeltest.h"
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
+
 #include <QtCore/QtCore>
 #include <QtTest/QtTest>
 
@@ -588,3 +590,4 @@ void ModelTest::headerDataChanged(Qt::Orientation orientation, int start, int en
     QVERIFY(end < itemCount);
 }
 
+#endif
