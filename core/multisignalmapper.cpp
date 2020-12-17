@@ -74,7 +74,11 @@ public:
                            << paramTypes[i];
                 continue;
             }
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             v.push_back(QVariant(type, args[i + 1]));
+#else
+            v.push_back(QVariant(QMetaType(type), args[i + 1]));
+#endif
         }
 
         return v;
