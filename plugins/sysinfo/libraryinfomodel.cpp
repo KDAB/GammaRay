@@ -46,7 +46,9 @@ static const location_info_t locInfoTable[] = {
     L(LibraryExecutablesPath),
     L(BinariesPath),
     L(PluginsPath),
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     L(ImportsPath),
+#endif
     L(Qml2ImportsPath),
     L(ArchDataPath),
     L(DataPath),

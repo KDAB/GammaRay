@@ -49,7 +49,9 @@ static const standard_path_t standard_paths[] = {
     P(PicturesLocation),
     P(TempLocation),
     P(HomeLocation),
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     P(DataLocation),
+#endif
     P(CacheLocation),
     P(GenericDataLocation),
     P(RuntimeLocation),
