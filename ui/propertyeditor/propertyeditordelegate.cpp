@@ -241,7 +241,11 @@ void PropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
     textRect = textRect.adjusted(textHMargin, textVMargin, -textHMargin, -textVMargin);
 
     static const int parenthesisLineWidth = 1;
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
     const int matrixSpacing = opt.fontMetrics.width(QStringLiteral("x"));
+#else
+    const int matrixSpacing = opt.fontMetrics.horizontalAdvance(QStringLiteral("x"));
+#endif
     const int matrixHMargin = matrixSpacing / 2;
     const int parenthesisWidth = qMax(matrixHMargin, 3);
 
@@ -292,8 +296,12 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option, const
     for (int col = 0; col < matrix_trait<Matrix>::columns; ++col) {
         width += columnWidth(opt, matrix, col);
     }
-    width += opt.fontMetrics.width(QStringLiteral("x")) * matrix_trait<Matrix>::columns + 2
-             * parenthesisLineWidth + 2 * textHMargin;
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
+    width += opt.fontMetrics.width(QStringLiteral("x"))
+#else
+    width += opt.fontMetrics.horizontalAdvance(QStringLiteral("x"))
+#endif
+             * matrix_trait<Matrix>::columns + 2 * parenthesisLineWidth + 2 * textHMargin;
 
     const int height = opt.fontMetrics.lineSpacing() * matrix_trait<Matrix>::rows + 2* textVMargin;
 
@@ -306,9 +314,11 @@ int PropertyEditorDelegate::columnWidth(const QStyleOptionViewItem &option, cons
 {
     int width = 0;
     for (int row = 0; row < matrix_trait<Matrix>::rows; ++row) {
-        width = qMax(width,
-                     option.fontMetrics.width(
-                         QString::number(matrix_trait<Matrix>::value(matrix, row, column))));
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
+        width = qMax(width, option.fontMetrics.width(QString::number(matrix_trait<Matrix>::value(matrix, row, column))));
+#else
+        width = qMax(width, option.fontMetrics.horizontalAdvance(QString::number(matrix_trait<Matrix>::value(matrix, row, column))));
+#endif
     }
     return width;
 }

@@ -97,7 +97,11 @@ int CodeEditor::sidebarWidth() const
         ++digits;
         count /= 10;
     }
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
     return 4 + fontMetrics().width(QLatin1Char('9')) * digits + foldingBarWidth();
+#else
+    return 4 + fontMetrics().horizontalAdvance(QLatin1Char('9')) * digits + foldingBarWidth();
+#endif
 }
 
 int CodeEditor::foldingBarWidth() const
