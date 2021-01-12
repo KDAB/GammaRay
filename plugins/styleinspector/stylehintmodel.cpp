@@ -68,6 +68,7 @@ enum Type {
     ToolButtonStyle,
     RequestInputPanel,
     ScrollMode,
+    KeyboardModifier,
 
     LastBasicType = Char,
     FirstEnumType = Alignment
@@ -95,7 +96,8 @@ static const struct StyleHintTypeInfo style_hint_type_table[] = {
     { "QFormLayout::FieldGrowthPolicy", &QFormLayout::staticMetaObject },
     { "Qt::ToolButtonStyle", nullptr },
     { "QStyle::RequestSoftwareInputPanel", &QStyle::staticMetaObject },
-    { "QAbstractItemView::ScrollMode", &QAbstractItemView::staticMetaObject }
+    { "QAbstractItemView::ScrollMode", &QAbstractItemView::staticMetaObject },
+    { "Qt::KeyboardModifier", nullptr },
 };
 
 namespace StyleHintExtraType {
@@ -187,7 +189,9 @@ static const StyleHintInfo style_hint_table[] = {
     SH(SH_ComboBox_PopupFrameStyle,                       FrameStyle,           None   )
     SH(SH_MessageBox_TextInteractionFlags,                TextInteractionFlags, None   )
     SH(SH_DialogButtonBox_ButtonsHaveIcons,               Bool,                 None   )
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     SH(SH_SpellCheckUnderlineStyle,                       Int,                  None   ) // TODO QTextCharFormat::UnderlineStyle
+#endif
     SH(SH_MessageBox_CenterButtons,                       Bool,                 None   )
     SH(SH_Menu_SelectionWrap,                             Bool,                 None   )
     SH(SH_ItemView_MovementWithoutUpdatingSelection,      Bool,                 None   )
@@ -229,6 +233,17 @@ static const StyleHintInfo style_hint_table[] = {
     SH(SH_Menu_SubMenuDontStartSloppyOnLeave,             Bool,                 None   )
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     SH(SH_ItemView_ScrollMode,                            ScrollMode,           None   )
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    SH(SH_TitleBar_ShowToolTipsOnButtons,                 Bool,                 None   )
+    SH(SH_Widget_Animation_Duration,                      Int,                  None   )
+    SH(SH_ComboBox_AllowWheelScrolling,                   Bool,                 None   )
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+    SH(SH_SpinBox_ButtonsInsideFrame,                     Bool,                 None   )
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+    SH(SH_SpinBox_StepModifier,                           KeyboardModifier,     None   )
 #endif
 };
 #undef SH

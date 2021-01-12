@@ -129,6 +129,15 @@ QVariant StandardIconModel::doData(int row, int column, int role) const
     MAKE_SP(SP_MediaVolume);
     MAKE_SP(SP_MediaVolumeMuted);
     MAKE_SP(SP_LineEditClearButton);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    MAKE_SP(SP_DialogYesToAllButton);
+    MAKE_SP(SP_DialogNoToAllButton);
+    MAKE_SP(SP_DialogSaveAllButton);
+    MAKE_SP(SP_DialogAbortButton);
+    MAKE_SP(SP_DialogRetryButton);
+    MAKE_SP(SP_DialogIgnoreButton);
+    MAKE_SP(SP_RestoreDefaultsButton);
+#endif
 
     return QVariant();
 }
@@ -140,7 +149,11 @@ int StandardIconModel::doColumnCount() const
 
 int StandardIconModel::doRowCount() const
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    return QStyle::SP_RestoreDefaultsButton + 1;
+#else
     return QStyle::SP_LineEditClearButton + 1;
+#endif
 }
 
 QVariant StandardIconModel::headerData(int section, Qt::Orientation orientation, int role) const

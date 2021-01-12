@@ -100,9 +100,11 @@ static const pixel_metric_t pixelMetrics[] = {
     MAKE_PM(PM_ToolBarSeparatorExtent),
     MAKE_PM(PM_ToolBarExtensionExtent),
     MAKE_PM(PM_SpinBoxSliderHeight),
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MAKE_PM(PM_DefaultTopLevelMargin),
     MAKE_PM(PM_DefaultChildMargin),
     MAKE_PM(PM_DefaultLayoutSpacing),
+#endif
     MAKE_PM(PM_ToolBarIconSize),
     MAKE_PM(PM_ListViewIconSize),
     MAKE_PM(PM_IconViewIconSize),
@@ -130,7 +132,14 @@ static const pixel_metric_t pixelMetrics[] = {
     MAKE_PM(PM_TabCloseIndicatorWidth),
     MAKE_PM(PM_TabCloseIndicatorHeight),
     MAKE_PM(PM_ScrollView_ScrollBarSpacing),
-    MAKE_PM(PM_SubMenuOverlap)
+    MAKE_PM(PM_SubMenuOverlap),
+    MAKE_PM(PM_TreeViewIndentation),
+    MAKE_PM(PM_HeaderDefaultSectionSizeHorizontal),
+    MAKE_PM(PM_HeaderDefaultSectionSizeVertical),
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+    MAKE_PM(PM_TitleBarButtonIconSize),
+    MAKE_PM(PM_TitleBarButtonSize),
+#endif
 };
 
 PixelMetricModel::PixelMetricModel(QObject *parent)
