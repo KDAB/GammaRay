@@ -260,6 +260,13 @@ namespace MetaPropertyFactory
     {
         return new MetaPropertyImpl<Class, GetterReturnType>(name, getter, nullptr);
     }
+#if defined(__cpp_noexcept_function_type) && __cpp_noexcept_function_type >= 201510
+    template <typename Class, typename GetterReturnType>
+    inline MetaProperty* makeProperty(const char *name, GetterReturnType(Class::*getter)() const noexcept)
+    {
+        return new MetaPropertyImpl<Class, GetterReturnType>(name, getter, nullptr);
+    }
+#endif
 
     // non-const getters...
     template <typename Class, typename GetterReturnType>
