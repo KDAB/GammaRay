@@ -355,7 +355,11 @@ void NetworkSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSslSocket, sessionProtocol);
     MO_ADD_PROPERTY_RO(QSslSocket, sessionCipher);
     MO_ADD_PROPERTY(QSslSocket, sslConfiguration, setSslConfiguration);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+    MO_ADD_PROPERTY_RO(QSslSocket, sslHandshakeErrors);
+#else
     MO_ADD_PROPERTY_RO(QSslSocket, sslErrors);
+#endif
 #endif // QT_NO_SSL
 
     MO_ADD_METAOBJECT1(QSocketNotifier, QObject);
