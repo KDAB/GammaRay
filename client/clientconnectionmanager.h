@@ -32,7 +32,7 @@
 #include "gammaray_client_export.h"
 
 #include <QObject>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QUrl>
 #include <QPointer>
 
@@ -137,7 +137,7 @@ private:
     GammaRay::ProcessTracker *m_processTracker;
     ClientToolManager *m_toolManager;
     QPointer<MainWindow> m_mainWindow;
-    QTime m_connectionTimeout;
+    QElapsedTimer m_connectionTimeout;
     bool m_ignorePersistentError;
     int m_tries;
 };

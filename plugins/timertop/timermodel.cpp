@@ -236,12 +236,12 @@ bool TimerModel::canHandleCaller(QObject *caller, int methodIndex) const
 void TimerModel::checkDispatcherStatus(QObject *object)
 {
     // m_mutex have to be locked!!
-    static QHash<QAbstractEventDispatcher *, QTime> dispatcherChecks;
+    static QHash<QAbstractEventDispatcher *, QElapsedTimer> dispatcherChecks;
     QAbstractEventDispatcher *dispatcher = QAbstractEventDispatcher::instance(object->thread());
     auto it = dispatcherChecks.find(dispatcher);
 
     if (it == dispatcherChecks.end()) {
-        it = dispatcherChecks.insert(dispatcher, QTime());
+        it = dispatcherChecks.insert(dispatcher, QElapsedTimer());
         it.value().start();
     }
 
