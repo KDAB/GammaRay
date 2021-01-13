@@ -44,14 +44,10 @@
 
 using namespace GammaRay;
 
-PluginInfo::PluginInfo()
-{
-  init();
-}
+PluginInfo::PluginInfo() = default;
 
 PluginInfo::PluginInfo(const QString& path)
 {
-    init();
     // OSX has broken QLibrary::isLibrary() - QTBUG-50446
     if (QLibrary::isLibrary(path) || path.endsWith(Paths::pluginExtension(), Qt::CaseInsensitive))
         initFromJSON(path);
@@ -59,17 +55,8 @@ PluginInfo::PluginInfo(const QString& path)
 
 PluginInfo::PluginInfo(const QStaticPlugin &staticPlugin)
 {
-    init();
-    m_staticPlugin = staticPlugin;
+    m_staticInstanceFunc = staticPlugin.instance;
     initFromJSON(staticPlugin.metaData());
-}
-
-void PluginInfo::init()
-{
-    m_remoteSupport = true;
-    m_hidden = false;
-    m_staticPlugin.instance = nullptr;
-    m_staticPlugin.rawMetaData = nullptr;
 }
 
 QString PluginInfo::path() const
@@ -156,13 +143,13 @@ static QString readLocalized(const QLocale &locale, const QJsonObject &obj, cons
 
 bool PluginInfo::isStatic() const
 {
-    return m_staticPlugin.instance && m_staticPlugin.rawMetaData;
+    return m_staticInstanceFunc;
 }
 
 QObject* PluginInfo::staticInstance() const
 {
     Q_ASSERT(isStatic());
-    return m_staticPlugin.instance();
+    return m_staticInstanceFunc();
 }
 
 void PluginInfo::initFromJSON(const QString &path)

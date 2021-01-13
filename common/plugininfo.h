@@ -64,19 +64,18 @@ public:
     QObject* staticInstance() const;
 
 private:
-    void init();
     void initFromJSON(const QString &path);
     void initFromJSON(const QJsonObject& metaData);
 
     QString m_path;
-    QStaticPlugin m_staticPlugin;
+    QtPluginInstanceFunction m_staticInstanceFunc = nullptr;
     QString m_id;
     QString m_interface;
     QStringList m_supportedTypes;
     QString m_name;
     QVector<QByteArray> m_selectableTypes;
-    bool m_remoteSupport;
-    bool m_hidden;
+    bool m_remoteSupport = true;
+    bool m_hidden = false;
 };
 }
 
