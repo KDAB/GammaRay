@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2017-2020 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2017-2021 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Filipe Azevedo <filipe.azevedo@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -41,7 +41,8 @@
 #include <launcher/core/probefinder.h>
 
 #include <QProcess>
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTest>
 
 #ifdef Q_OS_WIN
 #include <qt_windows.h>

@@ -2,7 +2,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015-2020 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2021 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Christoph Sterz <christoph.sterz@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -38,12 +38,11 @@
 
 #include <3rdparty/qt/modeltest.h>
 
-#include <QtTest/qtest.h>
-
 #include <QQuickView>
 #include <QItemSelectionModel>
 #include <QRegExp>
 #include <QSignalSpy>
+#include <QTest>
 
 using namespace GammaRay;
 

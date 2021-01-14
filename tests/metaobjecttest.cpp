@@ -2,7 +2,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2015-2020 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2015-2021 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -28,9 +28,9 @@
 #include <core/metaobject.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QObject>
 #include <QThread>
+#include <QTest>
 
 Q_DECLARE_METATYPE(QThread::Priority)
 

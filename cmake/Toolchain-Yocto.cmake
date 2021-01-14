@@ -2,7 +2,7 @@
 # Assumptions: toolchain script is sourced
 #
 
-# Copyright (c) 2013-2020 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# Copyright (c) 2013-2021 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # All rights reserved.
 #
 # Author: Christoph Sterz <christoph.sterz@kdab.com>
