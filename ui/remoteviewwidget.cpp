@@ -915,6 +915,7 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
 {
     QTouchEvent::TouchPoint p;
 
+#ifndef GAMMARAY_QT6_TODO
     p.setFlags(point.flags());
     p.setId(point.id());
     p.setPressure(point.pressure());
@@ -940,6 +941,7 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
     p.setLastScreenPos(mapToSource(point.lastScreenPos()));
     p.setScreenPos(mapToSource(point.screenPos()));
     p.setScreenRect(mapToSource(point.screenRect()));
+#endif
 
     return p;
 }
@@ -1149,6 +1151,7 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
     case ElementPicking:
     case Measuring:
     case ColorPicking:
+#ifndef GAMMARAY_QT6_TODO
         if (event->modifiers() & Qt::ControlModifier && event->orientation() == Qt::Vertical) {
             if (event->delta() > 0) {
                 zoomIn();
@@ -1164,7 +1167,12 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
             clampPanPosition();
             updateUserViewport();
         }
+#endif
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
         m_currentMousePosition = mapToSource(QPointF(event->pos()));
+#else
+        m_currentMousePosition = mapToSource(QPointF(event->position()));
+#endif
         if (m_interactionMode == ColorPicking) {
             updatePickerVisibility();
             pickColor();
@@ -1373,14 +1381,20 @@ void RemoteViewWidget::sendWheelEvent(QWheelEvent *event)
 {
     auto angleDelta = event->angleDelta();
     auto pixelDelta = event->pixelDelta();
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     m_interface->sendWheelEvent(mapToSource(event->pos()), pixelDelta, angleDelta,
                                 event->buttons(), event->modifiers());
+#else
+    m_interface->sendWheelEvent(mapToSource(event->position().toPoint()), pixelDelta, angleDelta,
+                                event->buttons(), event->modifiers());
+#endif
 }
 
 void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)
 {
     event->accept();
 
+#ifndef GAMMARAY_QT6_TODO
     QList<QTouchEvent::TouchPoint> touchPoints;
     foreach (const QTouchEvent::TouchPoint &point, event->touchPoints()) {
         touchPoints << mapToSource(point);
@@ -1395,4 +1409,5 @@ void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)
                                 caps,
                                 event->device()->maximumTouchPoints(),
                                 event->modifiers(), event->touchPointStates(), touchPoints);
+#endif
 }

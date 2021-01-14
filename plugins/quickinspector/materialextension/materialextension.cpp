@@ -47,8 +47,10 @@
 #include <private/qsgmaterialshader_p.h>
 #include <private/qsgdistancefieldglyphnode_p_p.h>
 
+#ifndef GAMMARAY_QT6_TODO
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #include <private/qquickopenglshadereffectnode_p.h>
+#endif
 #endif
 
 using namespace GammaRay;
@@ -86,7 +88,9 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
 
     m_materialPropertyModel->setObject(ObjectInstance(material, "QSGMaterial"));
 
+#ifndef GAMMARAY_QT6_TODO
     m_materialShader.reset(material->createShader());
+#endif
     m_shaderModel->setMaterialShader(m_materialShader.get());
     return true;
 }

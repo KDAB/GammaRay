@@ -81,14 +81,20 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
             F(SharedPointerToQObject);
             F(WeakPointerToQObject);
             F(TrackingPointerToQObject);
+#ifndef GAMMARAY_QT6_TODO
             F(WasDeclaredAsMetaType);
+#endif
             F(IsGadget);
         #undef F
 
             return l.join(QStringLiteral(", "));
         }
         case 5:
+#ifndef GAMMARAY_QT6_TODO
             return QMetaType::hasRegisteredComparators(metaTypeId);
+#else
+            return {};
+#endif
         case 6:
             return QMetaType::hasRegisteredDebugStreamOperator(metaTypeId);
         }

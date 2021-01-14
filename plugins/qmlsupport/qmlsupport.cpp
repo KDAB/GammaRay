@@ -88,6 +88,7 @@ static QString metaMethodToString(const QObject *object, const QMetaMethod &meth
 
 static QString callableQjsValueToString(const QJSValue &v)
 {
+#ifndef GAMMARAY_QT6_TODO
 #if defined(QT_DEPRECATED)
     // note: QJSValue::engine() is deprecated
     // note: QJSValuePrivate::convertedToValue got introduced in Qt 5.5.0
@@ -113,6 +114,9 @@ static QString callableQjsValueToString(const QJSValue &v)
 #else
     Q_UNUSED(v);
     return QStringLiteral("<callable>");
+#endif
+#else
+    return "TODO";
 #endif
 }
 
@@ -280,7 +284,9 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
     if (!context)
         return loc;
 
+#ifndef GAMMARAY_QT6_TODO
     loc.setUrl(context->url());
+#endif
 
     loc.setOneBasedLine(static_cast<int>(objectData->lineNumber));
     loc.setOneBasedColumn(static_cast<int>(objectData->columnNumber));
@@ -348,8 +354,10 @@ QmlSupport::QmlSupport(Probe *probe, QObject *parent)
     MO_ADD_PROPERTY_RO(QQmlType, typeName);
     MO_ADD_PROPERTY_RO(QQmlType, qmlTypeName);
     MO_ADD_PROPERTY_RO(QQmlType, elementName);
+#ifndef GAMMARAY_QT6_TODO
     MO_ADD_PROPERTY_RO(QQmlType, majorVersion);
     MO_ADD_PROPERTY_RO(QQmlType, minorVersion);
+#endif
 #if QT_VERSION < QT_VERSION_CHECK(5, 13, 0)
     MO_ADD_PROPERTY_RO(QQmlType, createSize); // got removed in v5.13.0-alpha1
 #endif

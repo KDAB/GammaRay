@@ -149,10 +149,10 @@ MessageHandler::MessageHandler(Probe *probe, QObject *parent)
     // install handler directly, catches most cases,
     // i.e. user has no special handler or the handler
     // is created before the QApplication
-    ensureHandlerInstalled();
+//     ensureHandlerInstalled();
     // recheck when eventloop is entered, if the user
     // installs a handler after QApp but before .exec()
-    QMetaObject::invokeMethod(this, "ensureHandlerInstalled", Qt::QueuedConnection);
+//     QMetaObject::invokeMethod(this, "ensureHandlerInstalled", Qt::QueuedConnection);
 
     auto catModel = new LoggingCategoryModel(this);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel"), catModel);

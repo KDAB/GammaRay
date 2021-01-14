@@ -31,9 +31,11 @@
 #include <core/propertydata.h>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#ifndef GAMMARAY_QT6_TODO
 #include <private/qquickopenglshadereffectnode_p.h>
 
 Q_DECLARE_METATYPE(QQuickOpenGLShaderEffectMaterial::UniformData)
+#endif
 #endif
 
 #include <QDebug>
@@ -66,6 +68,7 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 
     if (object().type() == ObjectInstance::Object) {
+#ifndef GAMMARAY_QT6_TODO
         auto mat = reinterpret_cast<QQuickOpenGLShaderEffectMaterial*>(object().object());
         switch (index) {
             case 0:
@@ -76,11 +79,13 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
                 break;
         }
         pd.setValue(QVariant::fromValue(mat->uniforms[index]));
+#endif
         pd.setClassName(QStringLiteral("QQuickOpenGLShaderEffectMaterial"));
         return pd;
     }
 
     if (object().type() == ObjectInstance::QtVariant) {
+#ifndef GAMMARAY_QT6_TODO
         const auto ud = object().variant().value<QQuickOpenGLShaderEffectMaterial::UniformData>();
         pd.setName(ud.name);
         pd.setValue(ud.value);
@@ -100,6 +105,7 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
             default:
                 break;
         }
+#endif
 
         return pd;
     }

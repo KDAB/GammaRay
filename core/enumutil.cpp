@@ -68,6 +68,12 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
     if (pos >= 0) {
         className = enumTypeName.left(pos);
         enumTypeName = enumTypeName.mid(pos + 2);
+#ifdef GAMMARAY_QT6_TODO
+            // TODO QVariant::typeName is no longer the flag name, but QFlags<Foo>...
+            if (enumTypeName.endsWith(">")) {
+                enumTypeName[enumTypeName.size() - 1] = 's';
+            }
+#endif
     }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)

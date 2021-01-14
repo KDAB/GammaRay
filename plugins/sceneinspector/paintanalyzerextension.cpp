@@ -95,7 +95,9 @@ bool PaintAnalyzerExtension::analyzePainting(QGraphicsItem *item)
     QStyleOptionGraphicsItem option;
     option.state = QStyle::State_None;
     option.rect = item->boundingRect().toRect();
+#ifndef GAMMARAY_QT6_TODO
     option.levelOfDetail = 1;
+#endif
     option.exposedRect = item->boundingRect();
 
     option.styleObject = item->toGraphicsObject();

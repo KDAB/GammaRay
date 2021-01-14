@@ -1,1 +1,1 @@
-qml_lint(state-machine.qml)
+#qml_lint(state-machine.qml)

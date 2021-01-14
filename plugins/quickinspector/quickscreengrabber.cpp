@@ -621,7 +621,9 @@ void OpenGLScreenGrabber::windowAfterRendering()
 
     // We are in the rendering thread at this point
     // And the gui thread is NOT locked
+#ifndef GAMMARAY_QT6_TODO
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());
+#endif
 
     if (m_isGrabbing) {
         const auto window = QRectF(QPoint(0,0), m_renderInfo.windowSize);
@@ -665,7 +667,9 @@ void OpenGLScreenGrabber::windowAfterRendering()
 
     drawDecorations();
 
+#ifndef GAMMARAY_QT6_TODO
     m_window->resetOpenGLState();
+#endif
 
     if (m_isGrabbing) {
         locker.unlock();

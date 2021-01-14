@@ -1,1 +1,1 @@
-qml_lint(quick-event-handling.qml)
+#qml_lint(quick-event-handling.qml)

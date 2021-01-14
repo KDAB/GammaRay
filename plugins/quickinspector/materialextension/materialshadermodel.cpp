@@ -36,6 +36,7 @@
 
 using namespace GammaRay;
 
+#ifndef GAMMARAY_QT6_TODO
 #define S(x) { QOpenGLShader:: x, #x }
 static const MetaEnum::Value<QOpenGLShader::ShaderTypeBit> qopengl_shader_type[] = {
     S(Vertex),
@@ -46,10 +47,12 @@ static const MetaEnum::Value<QOpenGLShader::ShaderTypeBit> qopengl_shader_type[]
     S(Compute)
 };
 #undef S
+#endif
 
 class SGMaterialShaderThief : public QSGMaterialShader
 {
 public:
+#ifndef GAMMARAY_QT6_TODO
     using QSGMaterialShader::vertexShader;
     using QSGMaterialShader::fragmentShader;
 
@@ -57,6 +60,7 @@ public:
     {
         return d_func()->m_sourceFiles;
     }
+#endif
 };
 
 
@@ -93,10 +97,12 @@ QByteArray MaterialShaderModel::shaderForRow(int row) const
 
     if (m_shaderFileCount == 0) {
         switch (row) {
+#ifndef GAMMARAY_QT6_TODO
             case 0:
                 return reinterpret_cast<SGMaterialShaderThief*>(m_shader)->vertexShader();
             case 1:
                 return reinterpret_cast<SGMaterialShaderThief*>(m_shader)->fragmentShader();
+#endif
         }
         return QByteArray();
     }
@@ -120,6 +126,7 @@ QVariant MaterialShaderModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || !m_shader || role != Qt::DisplayRole)
         return QVariant();
 
+#ifndef GAMMARAY_QT6_TODO
     if (m_shaderFileCount > 0) {
         const auto &files = reinterpret_cast<SGMaterialShaderThief*>(m_shader)->getShaderSources();
         int idx = index.row();
@@ -132,6 +139,7 @@ QVariant MaterialShaderModel::data(const QModelIndex& index, int role) const
     } else {
         return MetaEnum::flagsToString((1 << index.row()), qopengl_shader_type);
     }
+#endif
 
     return QVariant();
 }
@@ -139,10 +147,12 @@ QVariant MaterialShaderModel::data(const QModelIndex& index, int role) const
 int MaterialShaderModel::shaderFileCount(QSGMaterialShader *shader)
 {
     Q_ASSERT(shader);
-    const auto &files = reinterpret_cast<SGMaterialShaderThief*>(shader)->getShaderSources();
     int fileCount = 0;
+#ifndef GAMMARAY_QT6_TODO
+    const auto &files = reinterpret_cast<SGMaterialShaderThief*>(shader)->getShaderSources();
     for (auto it = files.begin(); it != files.end(); ++it)
         fileCount += it.value().size();
+#endif
     return fileCount;
 }
 
@@ -152,12 +162,14 @@ QString MaterialShaderModel::shaderFileForRow(int row) const
     Q_ASSERT(m_shaderFileCount > 0);
     Q_ASSERT(row < m_shaderFileCount);
 
+#ifndef GAMMARAY_QT6_TODO
     const auto &files = reinterpret_cast<SGMaterialShaderThief*>(m_shader)->getShaderSources();
     for (auto it = files.begin(); it != files.end(); ++it) {
         if (row < it.value().size())
             return it.value().at(row);
         row -= it.value().size();
     }
+#endif
 
     Q_ASSERT(false);
     return QString();

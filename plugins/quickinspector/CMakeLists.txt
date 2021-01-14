@@ -40,7 +40,7 @@ if(TARGET Qt::Quick)
       SOURCES ${gammaray_quickinspector_srcs}
     )
 
-    if(NOT Qt5Quick_VERSION VERSION_LESS 5.7)
+    if(NOT Qt5Quick_VERSION VERSION_LESS 5.7 OR TARGET Qt6::Quick)
       target_sources(gammaray_quickinspector PUBLIC ${CMAKE_CURRENT_LIST_DIR}/quickimplicitbindingdependencyprovider.cpp)
     endif()
 

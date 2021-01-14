@@ -49,6 +49,7 @@ QDataStream &operator>>(QDataStream &s, Qt::TouchPointStates &states)
     return s;
 }
 
+#ifndef GAMMARAY_QT6_TODO
 QDataStream &operator<<(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags flags)
 {
     return s << (int)flags;
@@ -61,10 +62,12 @@ QDataStream &operator>>(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags &flag
     flags = QTouchEvent::TouchPoint::InfoFlags(f);
     return s;
 }
+#endif
 
 QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &points)
 {
     s << points.count();
+#ifndef GAMMARAY_QT6_TODO
     for (const auto &p : points) {
         s << p.id();
         s << p.state();
@@ -77,6 +80,7 @@ QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &po
         s << p.flags();
         s << p.rawScreenPositions();
     }
+#endif
     return s;
 }
 
@@ -93,6 +97,7 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
     int count;
     s >> count;
     points.reserve(count);
+#ifndef GAMMARAY_QT6_TODO
     for (int i = 0; i < count; ++i) {
         QTouchEvent::TouchPoint p;
 
@@ -123,6 +128,7 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
 
         points.append(p);
     }
+#endif
     return s;
 }
 
@@ -142,7 +148,9 @@ RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
     StreamOperators::registerOperators<GammaRay::RemoteViewFrame>();
     StreamOperators::registerOperators<Qt::TouchPointStates>();
     StreamOperators::registerOperators<QList<QTouchEvent::TouchPoint>>();
+#ifndef GAMMARAY_QT6_TODO
     StreamOperators::registerOperators<QTouchEvent::TouchPoint::InfoFlags>();
+#endif
 }
 
 QString RemoteViewInterface::name() const

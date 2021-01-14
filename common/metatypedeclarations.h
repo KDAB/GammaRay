@@ -56,7 +56,9 @@
 Q_DECLARE_METATYPE(Qt::ConnectionType)
 Q_DECLARE_METATYPE(QMetaMethod::Access)
 Q_DECLARE_METATYPE(QMetaMethod::MethodType)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 Q_DECLARE_METATYPE(const QMetaObject *)
+#endif
 
 #include <QTimeZone>
 Q_DECLARE_METATYPE(QTimeZone)
