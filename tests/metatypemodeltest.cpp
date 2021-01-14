@@ -42,7 +42,7 @@
 #include <QObject>
 #include <QSignalSpy>
 #include <QThread>
-#include <QtTest/qtest.h>
+#include <QTest>
 
 using namespace GammaRay;
 using namespace TestHelpers;

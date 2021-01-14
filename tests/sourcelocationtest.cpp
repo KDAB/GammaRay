@@ -28,8 +28,8 @@
 
 #include <common/sourcelocation.h>
 
-#include <QtTest/qtest.h>
 #include <QObject>
+#include <QTest>
 
 using namespace GammaRay;
 

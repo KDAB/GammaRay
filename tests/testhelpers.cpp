@@ -30,7 +30,7 @@
 
 #include <QSignalSpy>
 #include <QAbstractItemModel>
-#include <QtTest/qtest.h>
+#include <QTest>
 
 static QModelIndex searchMatchesOne(QAbstractItemModel *model, const QVariant &value,
                                     int role, int column, Qt::MatchFlags flags)

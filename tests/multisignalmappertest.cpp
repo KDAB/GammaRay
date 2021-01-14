@@ -28,11 +28,11 @@
 
 #include "core/multisignalmapper.h"
 
-#include <QtTest/qtest.h>
-#include <QtTest/qsignalspy.h>
-#include <QObject>
-#include <QVector>
 #include <QDebug>
+#include <QObject>
+#include <QSignalSpy>
+#include <QVector>
+#include <QTest>
 
 using namespace GammaRay;
 

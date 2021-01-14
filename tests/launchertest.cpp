@@ -41,7 +41,7 @@
 #include <QDebug>
 #include <QObject>
 #include <QSignalSpy>
-#include <QtTest/qtest.h>
+#include <QTest>
 
 #include <memory>
 

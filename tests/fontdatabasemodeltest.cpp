@@ -28,7 +28,7 @@
 
 #include <3rdparty/qt/modeltest.h>
 
-#include <QtTest/qtest.h>
+#include <QTest>
 
 using namespace GammaRay;
 

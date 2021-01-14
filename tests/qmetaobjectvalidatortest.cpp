@@ -29,7 +29,7 @@
 #include <core/qmetaobjectvalidator.cpp>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
+#include <QTest>
 
 using namespace GammaRay;
 

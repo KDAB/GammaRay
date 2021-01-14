@@ -32,11 +32,11 @@
 
 #include <QBuffer>
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QObject>
 #include <QSignalSpy>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QTest>
 
 using namespace GammaRay;
 

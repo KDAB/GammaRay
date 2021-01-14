@@ -35,7 +35,7 @@
 #include <launcher/core/probeabi.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
+#include <QTest>
 #include <QObject>
 #include <QSignalSpy>
 

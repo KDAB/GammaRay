@@ -32,10 +32,10 @@
 
 #include <QBuffer>
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QSignalSpy>
 #include <QStandardItemModel>
 #include <QtEndian>
+#include <QTest>
 
 QT_BEGIN_NAMESPACE
 namespace QTest {

@@ -28,9 +28,9 @@
 #include <core/metaobject.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QObject>
 #include <QThread>
+#include <QTest>
 
 Q_DECLARE_METATYPE(QThread::Priority)
 

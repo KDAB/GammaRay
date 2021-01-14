@@ -28,13 +28,11 @@
 
 #include <launcher/ui/connectpage.h>
 
-#include <QtTest/qtest.h>
-
 #include <QDir>
 #include <QLineEdit>
 #include <QLocalServer>
 #include <QSignalSpy>
-
+#include <QTest>
 
 using namespace GammaRay;
 

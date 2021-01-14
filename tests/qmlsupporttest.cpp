@@ -41,10 +41,10 @@
 #include <QQmlEngine>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QObject>
-#include <QThread>
 #include <QSignalSpy>
+#include <QThread>
+#include <QTest>
 
 using namespace GammaRay;
 

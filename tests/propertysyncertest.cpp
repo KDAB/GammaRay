@@ -30,8 +30,8 @@
 #include <common/message.h>
 
 #include <QBuffer>
-#include <QtTest/qtest.h>
 #include <QObject>
+#include <QTest>
 
 using namespace GammaRay;
 

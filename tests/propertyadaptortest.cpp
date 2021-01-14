@@ -36,11 +36,11 @@
 #include <shared/propertytestobject.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QObject>
+#include <QPen>
 #include <QThread>
 #include <QSignalSpy>
-#include <QPen>
+#include <QTest>
 
 Q_DECLARE_METATYPE(QVector<int>)
 Q_DECLARE_METATYPE(QPen *)

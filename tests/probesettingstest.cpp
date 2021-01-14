@@ -32,9 +32,9 @@
 #include <launcher/core/launchoptions.h>
 #include <common/paths.h>
 
-#include <QtTest/qtest.h>
 #include <QObject>
 #include <QSignalSpy>
+#include <QTest>
 
 using namespace GammaRay;
 

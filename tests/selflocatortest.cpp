@@ -32,8 +32,8 @@
 #include <common/paths.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
 #include <QObject>
+#include <QTest>
 
 using namespace GammaRay;
 

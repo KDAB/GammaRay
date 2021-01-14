@@ -28,8 +28,8 @@
 
 #include <ui/propertybinder.h>
 
-#include <QtTest/qtest.h>
 #include <QObject>
+#include <QTest>
 
 class MyObject : public QObject
 {

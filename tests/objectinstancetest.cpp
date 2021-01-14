@@ -29,7 +29,7 @@
 #include <core/objectinstance.h>
 
 #include <QDebug>
-#include <QtTest/qtest.h>
+#include <QTest>
 
 Q_DECLARE_METATYPE(QDateTime *)
 

@@ -38,12 +38,11 @@
 
 #include <3rdparty/qt/modeltest.h>
 
-#include <QtTest/qtest.h>
-
 #include <QQuickView>
 #include <QItemSelectionModel>
 #include <QRegExp>
 #include <QSignalSpy>
+#include <QTest>
 
 using namespace GammaRay;
 

@@ -41,7 +41,8 @@
 #include <launcher/core/probefinder.h>
 
 #include <QProcess>
-#include <QtTest>
+#include <QSignalSpy>
+#include <QTest>
 
 #ifdef Q_OS_WIN
 #include <qt_windows.h>

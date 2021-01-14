@@ -28,11 +28,10 @@
 
 #include <plugins/quickinspector/quickitemmodel.h>
 
-#include <QtTest/qtest.h>
-
 #include <QDebug>
 #include <QQuickItem>
 #include <QQuickView>
+#include <QTest>
 
 using namespace GammaRay;
 

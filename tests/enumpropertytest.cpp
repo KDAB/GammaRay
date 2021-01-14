@@ -29,9 +29,9 @@
 #include <core/enumutil.h>
 #include <core/enumrepositoryserver.h>
 
-#include <QtTest/qtest.h>
 #include <QFrame>
 #include <QObject>
+#include <QTest>
 
 Q_DECLARE_METATYPE(const QMetaObject *)
 Q_DECLARE_METATYPE(QSizePolicy::ControlTypes)
