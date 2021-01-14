@@ -560,6 +560,7 @@ public:
     if (o == &m_view && e->type() == QEvent::Wheel) {
       QWheelEvent *we = static_cast<QWheelEvent *>(e);
 
+#ifndef GAMMARAY_QT6_TODO
       qreal pos = we->posF().x() * m_view.m_zoom;
       auto sb = horizontalScrollBar();
       int sbvalue = horizontalScrollBar()->value();
@@ -574,6 +575,7 @@ public:
       //keep the point under the mouse still, if possible
       pos = pos / m_view.m_zoom;
       sb->setValue(sbvalue + (0.5 + pos - we->posF().x()));
+#endif
     }
     return QScrollArea::eventFilter(o, e);
   }

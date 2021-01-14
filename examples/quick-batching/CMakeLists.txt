@@ -1,1 +1,1 @@
-qml_lint(quick-batching.qml Slider.qml)
+#qml_lint(quick-batching.qml Slider.qml)

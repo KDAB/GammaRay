@@ -115,7 +115,9 @@ private:
     bool m_grabberReady;
     bool m_pendingReset;
     bool m_pendingCompleteFrame;
+#ifndef GAMMARAY_QT6_TODO
     std::unique_ptr<QTouchDevice> m_touchDevice;
+#endif
 };
 }
 

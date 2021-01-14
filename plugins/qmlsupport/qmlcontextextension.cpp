@@ -69,8 +69,10 @@ bool QmlContextExtension::setQObject(QObject *object)
     auto context = qobject_cast<QQmlContext *>(object);
     if (!context) {
         auto data = QQmlData::get(object);
+#ifndef GAMMARAY_QT6_TODO
         if (data && data->context)
             context = data->context->asQQmlContext();
+#endif
     }
 
     m_contextModel->setContext(context);

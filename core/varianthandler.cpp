@@ -540,7 +540,12 @@ QVariant VariantHandler::serializableVariant(const QVariant &value)
         return QVariant::fromValue(EnumRepositoryServer::valueFromVariant(value));
     }
 
+#ifndef GAMMARAY_QT6_TODO
     return value;
+#else
+    // ### for Qt6 a lot of enums/flags pass the above checks and thus aren't converted to numbers, crashing the client
+    return {};
+#endif
 }
 
 void VariantHandler::clear()

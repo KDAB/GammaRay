@@ -94,7 +94,9 @@ private:
 
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
 Q_DECLARE_METATYPE(Qt::TouchPointStates)
+#ifndef GAMMARAY_QT6_TODO
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint::InfoFlags)
+#endif
 Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
 Q_DECLARE_METATYPE(GammaRay::RemoteViewInterface::RequestMode)
 QT_BEGIN_NAMESPACE

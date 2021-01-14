@@ -136,8 +136,10 @@ bool TextureExtension::setObject(void* object, const QString& typeName)
             return setQObject(mat->texture());
 
         if (auto mat = dynamic_cast<QSGDistanceFieldTextMaterial*>(material)) {
+#ifndef GAMMARAY_QT6_TODO
             if (!mat->texture() || mat->texture()->textureId <= 0)
                 return false;
+#endif
             m_remoteView->resetView();
             m_currentMaterial = mat;
             m_remoteView->sourceChanged();
@@ -178,8 +180,10 @@ void TextureExtension::triggerGrab()
 {
     if (m_currentTexture)
         QSGTextureGrabber::instance()->requestGrab(m_currentTexture);
+#ifndef GAMMARAY_QT6_TODO
     else if (m_currentMaterial)
         QSGTextureGrabber::instance()->requestGrab(m_currentMaterial->texture()->textureId, m_currentMaterial->texture()->size, m_currentMaterial);
+#endif
 }
 
 bool GammaRay::TextureExtension::ensureSetup()

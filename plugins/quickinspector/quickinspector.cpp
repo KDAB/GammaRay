@@ -98,7 +98,9 @@
 #include <QSGRenderNode>
 #include <QSGRendererInterface>
 #ifndef QT_NO_OPENGL
+#ifndef GAMMARAY_QT6_TODO
 #include <private/qquickopenglshadereffectnode_p.h>
+#endif
 #endif
 #include <private/qsgsoftwarecontext_p.h>
 #include <private/qsgsoftwarerenderer_p.h>
@@ -970,6 +972,7 @@ void QuickInspector::registerMetaTypes()
 {
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQuickWindow, QWindow);
+#ifndef GAMMARAY_QT6_TODO
     MO_ADD_PROPERTY(QQuickWindow, clearBeforeRendering, setClearBeforeRendering);
     MO_ADD_PROPERTY_RO(QQuickWindow, effectiveDevicePixelRatio);
 #ifndef QT_NO_OPENGL
@@ -981,6 +984,7 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QQuickWindow, openglContext);
 #endif
     MO_ADD_PROPERTY_RO(QQuickWindow, renderTargetId);
+#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     MO_ADD_PROPERTY_RO(QQuickWindow, rendererInterface);
 
@@ -1107,11 +1111,13 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSGDistanceFieldShiftedStyleTextMaterial, shift);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#ifndef GAMMARAY_QT6_TODO
     MO_ADD_METAOBJECT1(QQuickOpenGLShaderEffectMaterial, QSGMaterial);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, attributes);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, cullMode);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, geometryUsesTextureSubRect);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, textureProviders);
+#endif
 #endif
 #endif
 }
@@ -1122,7 +1128,9 @@ static const MetaEnum::Value<QSGRendererInterface::GraphicsApi> qsg_graphics_api
     E(Unknown),
     E(Software),
     E(OpenGL),
+#ifndef GAMMARAY_QT6_TODO
     E(Direct3D12),
+#endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     E(OpenVG)
 #endif

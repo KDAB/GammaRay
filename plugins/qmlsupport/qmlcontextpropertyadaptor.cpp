@@ -32,7 +32,9 @@
 
 #include <QQmlContext>
 #include <private/qqmlcontext_p.h>
+#ifndef GAMMARAY_QT6_TODO
 #include <private/qv4identifier_p.h>
+#endif
 
 #include <QDebug>
 
@@ -87,6 +89,7 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
     auto context = qobject_cast<QQmlContext *>(oi.qtObject());
     Q_ASSERT(context);
 
+#ifndef GAMMARAY_QT6_TODO
     auto contextData = QQmlContextData::get(context);
     Q_ASSERT(contextData);
 
@@ -106,6 +109,7 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 #endif
         ++e;
     }
+#endif
 }
 
 QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::s_instance = nullptr;

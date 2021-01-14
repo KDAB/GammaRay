@@ -20,7 +20,7 @@ target_link_libraries(gammaray_qmlsupport
 endif()
 
 
-if(NOT QtQml_VERSION VERSION_LESS 5.10)
+if(NOT QtQml_VERSION VERSION_LESS 5.10 OR TARGET Qt6::Qml)
     target_sources(gammaray_qmlsupport PUBLIC qmlbindingprovider.cpp)
 endif()
 
