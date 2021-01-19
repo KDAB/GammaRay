@@ -9,8 +9,11 @@ if(Qt5IviCore_FOUND)
         set(plugin_files ${plugin_files} qtivipropertymodel.cpp qtivipropertyoverrider.cpp)
     endif()
     gammaray_add_plugin(gammaray_qtivi JSON gammaray_qtivi.json SOURCES ${plugin_files})
-    target_include_directories(gammaray_qtivi SYSTEM PRIVATE ${Qt5IviCore_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(gammaray_qtivi gammaray_core Qt5::IviCore)
+    target_link_libraries(gammaray_qtivi
+        gammaray_core
+        Qt5::IviCore
+        Qt5::IviCorePrivate
+    )
     if(Qt5IviVehicleFunctions_FOUND)
         target_link_libraries(gammaray_qtivi Qt5::IviVehicleFunctions)
     endif()

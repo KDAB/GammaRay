@@ -4,8 +4,7 @@ gammaray_add_plugin(gammaray_translatorinspector
   JSON gammaray_translatorinspector.json
   SOURCES translatorinspector.cpp translatorinspectorinterface.cpp translatorwrapper.cpp translatorsmodel.cpp
 )
-target_include_directories(gammaray_translatorinspector SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
-target_link_libraries(gammaray_translatorinspector gammaray_core Qt5::Core)
+target_link_libraries(gammaray_translatorinspector gammaray_core Qt5::Core Qt5::CorePrivate)
 endif()
 
 # ui part

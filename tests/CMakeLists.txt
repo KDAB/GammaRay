@@ -207,8 +207,7 @@ gammaray_add_probe_test(propertymodeltest propertymodeltest.cpp $<TARGET_OBJECTS
 target_link_libraries(propertymodeltest gammaray_core gammaray_shared_test_data)
 
 gammaray_add_test(qmetaobjectvalidatortest qmetaobjectvalidatortest.cpp)
-target_include_directories(qmetaobjectvalidatortest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
-target_link_libraries(qmetaobjectvalidatortest Qt5::Gui gammaray_core)
+target_link_libraries(qmetaobjectvalidatortest Qt5::Gui Qt5::CorePrivate gammaray_core)
 
 if(GAMMARAY_BUILD_UI)
   gammaray_add_test(metatypemodeltest
@@ -240,8 +239,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
       ${CMAKE_SOURCE_DIR}/ui/tools/objectinspector/clientmethodmodel.cpp
       $<TARGET_OBJECTS:modeltestobj>
     )
-    target_include_directories(methodmodeltest SYSTEM PRIVATE ${Qt5Core_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(methodmodeltest gammaray_core Qt5::Gui Qt5::Widgets)
+    target_link_libraries(methodmodeltest gammaray_core Qt5::Gui Qt5::Widgets Qt5::CorePrivate)
   endif()
 endif()
 
@@ -398,8 +396,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
       ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qjsvaluepropertyadaptor.cpp
       ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlcontextpropertyadaptor.cpp
     )
-    target_include_directories(qmlsupporttest SYSTEM PRIVATE ${Qt5Qml_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(qmlsupporttest gammaray_core Qt5::Quick)
+    target_link_libraries(qmlsupporttest gammaray_core Qt5::Quick Qt5::QmlPrivate)
   endif()
 
   if(Qt5Quick_FOUND AND NOT Qt5Quick_VERSION VERSION_LESS 5.7) # requires MSVC 2013 or higher
@@ -407,8 +404,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
       bindinginspectortest.cpp
       $<TARGET_OBJECTS:modeltestobj>
     )
-    target_include_directories(bindinginspectortest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(bindinginspectortest gammaray_core Qt5::Quick)
+    target_link_libraries(bindinginspectortest gammaray_core Qt5::Quick Qt5::QuickPrivate)
     target_sources(bindinginspectortest PUBLIC
       ${CMAKE_SOURCE_DIR}/plugins/quickinspector/quickimplicitbindingdependencyprovider.cpp
     )
@@ -424,8 +420,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
       quickinspectortest.qrc
         $<TARGET_OBJECTS:modeltestobj>
     )
-    target_include_directories(quickinspectortest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(quickinspectortest gammaray_core gammaray_quickinspector_shared Qt5::Quick)
+    target_link_libraries(quickinspectortest gammaray_core gammaray_quickinspector_shared Qt5::Quick Qt5::QuickPrivate)
 
     gammaray_add_quick_test(quickinspectortest2
       quickinspectortest2.cpp
@@ -467,8 +462,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
       quickinspectortest.qrc
       $<TARGET_OBJECTS:modeltestobj>
     )
-    target_include_directories(quickmaterialtest SYSTEM PRIVATE ${Qt5Quick_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(quickmaterialtest gammaray_core Qt5::Quick)
+    target_link_libraries(quickmaterialtest gammaray_core Qt5::Quick Qt5::QuickPrivate)
   endif()
 
   if(Qt5IviCore_FOUND AND Qt5IviVehicleFunctions_FOUND AND Qt5IviCore_VERSION VERSION_LESS 1.2)
@@ -478,8 +472,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
       ../plugins/qtivi/qtivipropertymodel.cpp
       $<TARGET_OBJECTS:modeltestobj>
     )
-    target_include_directories(qtivipropertymodeltest SYSTEM PRIVATE ${Qt5IviCore_PRIVATE_INCLUDE_DIRS})
-    target_link_libraries(qtivipropertymodeltest Qt5::Gui Qt5::IviCore Qt5::IviVehicleFunctions)
+    target_link_libraries(qtivipropertymodeltest Qt5::Gui Qt5::IviCore Qt5::IviVehicleFunctions Qt5::IviCorePrivate)
     if(Qt5IviMedia_FOUND)
       target_link_libraries(qtivipropertymodeltest Qt5::IviMedia)
     endif()

@@ -121,12 +121,15 @@ gammaray_target_relocatable_interfaces(gammaray_core_ipaths)
 target_include_directories(gammaray_core PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_core_ipaths}>)
 target_include_directories(gammaray_core SYSTEM PRIVATE
     ${CMAKE_SOURCE_DIR}/3rdparty/backward-cpp
-    ${Qt5Core_PRIVATE_INCLUDE_DIRS}
-    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
 )
 target_link_libraries(gammaray_core
   LINK_PUBLIC gammaray_common
-  LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels ${CMAKE_DL_LIBS}
+  LINK_PRIVATE
+    gammaray_common_internal
+    gammaray_kitemmodels
+    ${CMAKE_DL_LIBS}
+    Qt5::CorePrivate
+    Qt5::GuiPrivate
 )
 set_target_properties(gammaray_core PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
@@ -134,7 +137,7 @@ set_target_properties(gammaray_core PROPERTIES
 )
 gammaray_set_rpath(gammaray_core ${LIB_INSTALL_DIR})
 
-target_link_libraries(gammaray_core LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Gui)
+target_link_libraries(gammaray_core LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Gui Qt5::GuiPrivate)
 if (TARGET Qt5::AndroidExtras)
     target_link_libraries(gammaray_core LINK_PRIVATE Qt5::AndroidExtras)
 endif()
