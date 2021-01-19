@@ -403,7 +403,7 @@ void QuickDecorationsDrawer::drawArrow(const QPointF &first, const QPointF &seco
 {
     m_painter->drawLine(first, second);
     QPointF vector(second - first);
-    QMatrix m;
+    QTransform m;
     m.rotate(30);
     QVector2D v1 = QVector2D(m.map(vector)).normalized() * 10;
     m.rotate(-60);

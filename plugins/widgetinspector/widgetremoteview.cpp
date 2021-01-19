@@ -54,7 +54,7 @@ static void drawArrow(QPainter *p, QPointF first, QPointF second)
 {
     p->drawLine(first, second);
     QPointF vector(second - first);
-    QMatrix m;
+    QTransform m;
     m.rotate(30);
     QVector2D v1 = QVector2D(m.map(vector)).normalized() * 10;
     m.rotate(-60);
