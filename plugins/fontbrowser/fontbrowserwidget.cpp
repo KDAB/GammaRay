@@ -111,6 +111,6 @@ FontBrowserWidget::~FontBrowserWidget() = default;
 
 void FontBrowserWidget::delayedInit()
 {
-    m_fontBrowser->setColors(palette().color(QPalette::Foreground),
+    m_fontBrowser->setColors(palette().color(QPalette::WindowText),
                              palette().color(QPalette::Base));
 }

@@ -71,7 +71,7 @@ QVariant KJobModel::data(const QModelIndex &index, int role) const
         switch (job.state) {
         case KJobInfo::Finished:
         case KJobInfo::Deleted:
-            return qApp->palette().brush(QPalette::Disabled, QPalette::Foreground);
+            return qApp->palette().brush(QPalette::Disabled, QPalette::WindowText);
         case KJobInfo::Error:
             return QVariant::fromValue<QColor>(Qt::red);
         case KJobInfo::Killed:
