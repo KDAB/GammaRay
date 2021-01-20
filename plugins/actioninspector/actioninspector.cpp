@@ -114,10 +114,14 @@ void ActionInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QAction, actionGroup);
     MO_ADD_PROPERTY(QAction, data, setData);
     MO_ADD_PROPERTY(QAction, isSeparator, setSeparator);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_PROPERTY_RO(QAction, menu);
     MO_ADD_PROPERTY_RO(QAction, parentWidget);
     MO_ADD_PROPERTY_RO(QAction, associatedGraphicsWidgets);
     MO_ADD_PROPERTY_RO(QAction, associatedWidgets);
+#else
+    MO_ADD_PROPERTY_RO(QAction, associatedObjects);
+#endif
 
     MO_ADD_METAOBJECT1(QActionGroup, QObject);
     MO_ADD_PROPERTY_RO(QActionGroup, actions);

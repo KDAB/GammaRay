@@ -380,7 +380,9 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY(QFont, italic, setItalic);
     MO_ADD_PROPERTY(QFont, kerning, setKerning);
     MO_ADD_PROPERTY_RO(QFont, key);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_PROPERTY_RO(QFont, lastResortFamily);
+#endif
 //     MO_ADD_PROPERTY_RO(QFont, lastResortFont); asserts at runtime!?
     MO_ADD_PROPERTY_RO(QFont, letterSpacing);
     MO_ADD_PROPERTY_RO(QFont, letterSpacingType);
