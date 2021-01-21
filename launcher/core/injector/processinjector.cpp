@@ -41,12 +41,18 @@ ProcessInjector::ProcessInjector()
     , mExitStatus(QProcess::NormalExit)
 {
     m_proc.setInputChannelMode(QProcess::ForwardedInputChannel);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     connect(&m_proc, &QProcess::errorOccurred, this, &ProcessInjector::processFailed);
-    connect(&m_proc, &QProcess::finished, this, &ProcessInjector::processFinished);
 #else
     connect(&m_proc, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error),
                this, &ProcessInjector::processFailed);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    connect(&m_proc, &QProcess::finished, this, &ProcessInjector::processFinished);
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+    connect(&m_proc, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            this, &ProcessInjector::processFinished);
+#else
     connect(&m_proc, static_cast<void(QProcess::*)(int)>(&QProcess::finished),
             this, &ProcessInjector::processFinished);
 #endif
@@ -61,7 +67,7 @@ ProcessInjector::~ProcessInjector()
 
 void ProcessInjector::stop()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     disconnect(&m_proc, &QProcess::errorOccurred, this, &ProcessInjector::processFailed);
 #else
     disconnect(&m_proc, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error),
