@@ -72,6 +72,9 @@
 #if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
 #include <private/qv8engine_p.h> // removed in qtdeclarative commit fd6321c03e2d63997078bfa41332dbddefbb86b0
 #endif
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qqmlcontextdata_p.h>
+#endif
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -284,10 +287,7 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
     if (!context)
         return loc;
 
-#ifndef GAMMARAY_QT6_TODO
     loc.setUrl(context->url());
-#endif
-
     loc.setOneBasedLine(static_cast<int>(objectData->lineNumber));
     loc.setOneBasedColumn(static_cast<int>(objectData->columnNumber));
     return loc;
