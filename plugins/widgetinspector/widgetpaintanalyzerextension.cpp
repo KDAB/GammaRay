@@ -73,6 +73,6 @@ void WidgetPaintAnalyzerExtension::analyze()
         return;
     m_paintAnalyzer->beginAnalyzePainting();
     m_paintAnalyzer->setBoundingRect(m_widget->rect());
-    m_widget->render(m_paintAnalyzer->paintDevice(), QPoint(), QRegion(), nullptr);
+    m_widget->render(m_paintAnalyzer->paintDevice(), QPoint(), QRegion(), {});
     m_paintAnalyzer->endAnalyzePainting();
 }
