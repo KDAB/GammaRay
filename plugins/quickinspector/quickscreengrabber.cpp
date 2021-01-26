@@ -49,6 +49,10 @@
 #include <private/qsgsoftwarerenderer_p.h>
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QQuickOpenGLUtils>
+#endif
+
 #include <algorithm>
 #include <functional>
 #include <cmath>
@@ -667,7 +671,9 @@ void OpenGLScreenGrabber::windowAfterRendering()
 
     drawDecorations();
 
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QQuickOpenGLUtils::resetOpenGLState();
+#else
     m_window->resetOpenGLState();
 #endif
 

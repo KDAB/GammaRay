@@ -112,7 +112,15 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow *window)
     // We can't detect this, so we rely on our safety checks in grabTexture and accept
     // a minimal chance of showing texture content from the wrong context.
     if (m_pendingTexture && QThread::currentThread() == m_pendingTexture->thread()) {
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        auto textureId = m_pendingTexture->nativeInterface<QNativeInterface::QSGOpenGLTexture>();
+        if (textureId) {
+            const auto img = grabTexture(context, textureId->nativeTexture());
+            if (!img.isNull()) {
+                emit textureGrabbed(m_pendingTexture, img);
+            }
+        }
+#else
         if (m_pendingTexture->textureId() > 0) {
             const auto img = grabTexture(context, m_pendingTexture->textureId());
             if (!img.isNull()) {
