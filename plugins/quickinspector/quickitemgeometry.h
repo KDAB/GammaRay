@@ -34,6 +34,7 @@
 #include <QPointF>
 #include <QTransform>
 #include <QColor>
+#include <QMetaType>
 
 QT_BEGIN_NAMESPACE
 class QQuickItem;
@@ -124,9 +125,7 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &
 QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry);
 }
 
-#ifndef GAMMARAY_QT6_TODO
 Q_DECLARE_METATYPE(GammaRay::QuickItemGeometry)
 Q_DECLARE_METATYPE(QVector<GammaRay::QuickItemGeometry>)
-#endif
 
 #endif

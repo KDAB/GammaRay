@@ -32,7 +32,11 @@
 
 #include <QQmlContext>
 #include <private/qqmlcontext_p.h>
-#ifndef GAMMARAY_QT6_TODO
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qqmlcontextdata_p.h>
+#include <private/qv4identifierhashdata_p.h>
+#else
 #include <private/qv4identifier_p.h>
 #endif
 
@@ -89,7 +93,6 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
     auto context = qobject_cast<QQmlContext *>(oi.qtObject());
     Q_ASSERT(context);
 
-#ifndef GAMMARAY_QT6_TODO
     auto contextData = QQmlContextData::get(context);
     Q_ASSERT(contextData);
 
@@ -97,6 +100,7 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
     m_contextPropertyNames.clear();
     m_contextPropertyNames.reserve(propNames.count());
 
+#ifndef GAMMARAY_QT6_TODO
     QV4::IdentifierHashEntry *e = propNames.d->entries;
     QV4::IdentifierHashEntry *end = e + propNames.d->alloc;
     while (e < end) {
