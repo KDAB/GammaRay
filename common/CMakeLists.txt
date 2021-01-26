@@ -57,7 +57,7 @@ target_compile_features(gammaray_common PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES}
 
 gammaray_target_relocatable_interfaces(gammaray_common_ipaths)
 target_include_directories(gammaray_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_common_ipaths}>)
-target_link_libraries(gammaray_common LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Network Qt5::Gui)
+target_link_libraries(gammaray_common LINK_PUBLIC Qt::Core LINK_PRIVATE Qt::Network Qt::Gui)
 target_link_libraries(gammaray_common LINK_PRIVATE gammaray_kitemmodels ${CMAKE_DL_LIBS})
 gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
 
@@ -85,7 +85,7 @@ set_target_properties(gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_C
 target_compile_features(gammaray_common_internal PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 target_link_libraries(gammaray_common_internal gammaray_common)
-target_link_libraries(gammaray_common_internal Qt5::Core Qt5::Network)
+target_link_libraries(gammaray_common_internal Qt::Core Qt::Network)
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
   install(TARGETS gammaray_common EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

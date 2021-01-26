@@ -20,9 +20,9 @@ set(gammaray_3dinspector_srcs
   ${gammaray_3dinspector_shared_srcs}
 )
 gammaray_add_plugin(gammaray_3dinspector JSON gammaray_3dinspector.json SOURCES ${gammaray_3dinspector_srcs})
-target_link_libraries(gammaray_3dinspector gammaray_core gammaray_kitemmodels Qt5::3DInput Qt5::3DRender)
-if (TARGET Qt5::3DAnimation)
-    target_link_libraries(gammaray_3dinspector Qt5::3DAnimation)
+target_link_libraries(gammaray_3dinspector gammaray_core gammaray_kitemmodels Qt::3DInput Qt::3DRender)
+if (TARGET Qt::3DAnimation)
+    target_link_libraries(gammaray_3dinspector Qt::3DAnimation)
 endif()
 endif()
 
@@ -46,5 +46,5 @@ if(GAMMARAY_BUILD_UI)
   )
 
   gammaray_add_plugin(gammaray_3dinspector_ui JSON gammaray_3dinspector.json SOURCES ${gammaray_3dinspector_ui_srcs})
-  target_link_libraries(gammaray_3dinspector_ui gammaray_ui Qt5::3DRender Qt5::3DInput Qt5::3DLogic Qt5::3DExtras)
+  target_link_libraries(gammaray_3dinspector_ui gammaray_ui Qt::3DRender Qt::3DInput Qt::3DLogic Qt::3DExtras)
 endif()

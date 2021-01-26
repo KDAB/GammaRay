@@ -56,6 +56,6 @@ set_target_properties(gammaray_kuserfeedback PROPERTIES ${GAMMARAY_DEFAULT_LIBRA
 gammaray_set_rpath(gammaray_kuserfeedback ${LIB_INSTALL_DIR})
 generate_export_header(gammaray_kuserfeedback)
 
-target_link_libraries(gammaray_kuserfeedback PUBLIC Qt5::Widgets PRIVATE Qt5::Gui Qt5::Network)
+target_link_libraries(gammaray_kuserfeedback PUBLIC Qt::Widgets PRIVATE Qt::Gui Qt::Network)
 
 install(TARGETS gammaray_kuserfeedback EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

@@ -37,7 +37,7 @@ The probe plugin should not supply user interface assets (icons, colors, etc). S
 on the target (embedded) system, and color/palette settings might be incompatible with that of the client system.
 Instead, send semantically information to the client, and resolve user interface assets on the client side.
 
-If the probe plugin does not have to link against Qt5::Gui anyway, consider avoiding linking against it to avoid
+If the probe plugin does not have to link against Qt::Gui anyway, consider avoiding linking against it to avoid
 this problem in the first place.
 
 \section gammaray-plugin-ui User Interface

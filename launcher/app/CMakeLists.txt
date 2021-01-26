@@ -7,7 +7,7 @@ gammaray_add_win_icon(gammaray_launcher_ui_srcs)
 
 add_executable(gammaray-launcher WIN32 ${gammaray_launcher_ui_srcs})
 target_link_libraries(gammaray-launcher
-  Qt5::Gui Qt5::Widgets
+  Qt::Gui Qt::Widgets
   gammaray_common
   gammaray_launcher_ui
 )

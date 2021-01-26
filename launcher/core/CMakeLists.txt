@@ -51,9 +51,9 @@ target_compile_features(gammaray_launcher PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURE
 
 gammaray_target_relocatable_interfaces(gammaray_launcher_ipaths)
 target_include_directories(gammaray_launcher PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_launcher_ipaths}>)
-target_link_libraries(gammaray_launcher LINK_PUBLIC Qt5::Core LINK_PRIVATE gammaray_common Qt5::Network ${CMAKE_DL_LIBS})
+target_link_libraries(gammaray_launcher LINK_PUBLIC Qt::Core LINK_PRIVATE gammaray_common Qt::Network ${CMAKE_DL_LIBS})
 if(HAVE_QT_WIDGETS)
-  target_link_libraries(gammaray_launcher LINK_PRIVATE Qt5::Gui Qt5::Widgets)
+  target_link_libraries(gammaray_launcher LINK_PRIVATE Qt::Gui Qt::Widgets)
 endif()
 if(WIN32)
   target_link_libraries(gammaray_launcher LINK_PRIVATE version)

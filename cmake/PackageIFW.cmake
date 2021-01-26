@@ -48,7 +48,7 @@
 # will create the 7z packages for all added targets.
 
 get_filename_component(PACKAGE_PREFIX ${QT_INSTALL_PREFIX} NAME)
-set(INSTALL_PATH "${CMAKE_BINARY_DIR}/install/${Qt5Core_VERSION}/${PACKAGE_PREFIX}")
+set(INSTALL_PATH "${CMAKE_BINARY_DIR}/install/${QtCore_VERSION}/${PACKAGE_PREFIX}")
 set(PACKAGE_PATH "${CMAKE_BINARY_DIR}/install/")
 
 add_custom_target(packages)
@@ -57,7 +57,7 @@ add_custom_target(packages)
 set(LAST_TARGET "")
 
 macro(addPackageTarget packageName dependsTarget installTarget type)
-  set(PACKAGE_LIB_FILE "${CMAKE_BINARY_DIR}/${packageName}-${type}-${Qt5Core_VERSION}-${PACKAGE_PREFIX}.7z")
+  set(PACKAGE_LIB_FILE "${CMAKE_BINARY_DIR}/${packageName}-${type}-${QtCore_VERSION}-${PACKAGE_PREFIX}.7z")
   set(PACKAGE_TARGET "${type}_package")
   add_custom_target(${PACKAGE_TARGET}
     DEPENDS "${LAST_TARGET}"

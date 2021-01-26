@@ -19,12 +19,12 @@ add_subdirectory(webinspector)
 add_subdirectory(wlcompositorinspector)
 
 
-if(Qt5Gui_FOUND)
+if(TARGET Qt::Gui)
   add_subdirectory(guisupport)
   add_subdirectory(textdocumentinspector)
 endif()
 
-if(Qt5Widgets_FOUND)
+if(TARGET Qt::Widgets)
   add_subdirectory(actioninspector)
   add_subdirectory(widgetinspector)
   add_subdirectory(sceneinspector)
@@ -37,23 +37,23 @@ if((Qt5Script_FOUND AND Qt5ScriptTools_FOUND) OR (Qt5Script_FOUND AND Qt5ScriptT
   add_subdirectory(scriptenginedebugger)
 endif()
 
-if(Qt5Qml_FOUND)
+if(TARGET Qt::Qml)
   add_subdirectory(qmlsupport)
 endif()
 
-if(Qt5QuickWidgets_FOUND)
+if(TARGET Qt::QuickWidgets)
   add_subdirectory(quickwidgetsupport)
 endif()
 
-if(Qt5Bluetooth_FOUND)
+if(TARGET Qt::Bluetooth)
   add_subdirectory(bluetooth)
 endif()
 
-if(Qt5Positioning_FOUND)
+if(TARGET Qt::Positioning)
   add_subdirectory(positioning)
 endif()
 
-if(Qt53DRender_FOUND AND Qt53DExtras_FOUND)
+if(TARGET Qt::3DRender AND TARGET Qt::3DExtras)
   add_subdirectory(qt3dinspector)
 endif()
 

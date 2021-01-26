@@ -9,7 +9,7 @@ add_executable(gammaray ${gammaray_runner_srcs})
 
 target_link_libraries(gammaray gammaray_launcher gammaray_common)
 if(HAVE_QT_WIDGETS)
-  target_link_libraries(gammaray Qt5::Gui Qt5::Widgets)
+  target_link_libraries(gammaray Qt::Gui Qt::Widgets)
 endif()
 
 gammaray_embed_info_plist(gammaray ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in)

@@ -374,12 +374,28 @@ find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
   WaylandCompositor
 )
 
+# Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
+# so we can retrieve those packages even when installed into a different prefix
+find_package(Qt5IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
+find_package(Qt5IviVehicleFunctions 1.1 NO_MODULE QUIET)
+find_package(Qt5IviMedia 1.1 NO_MODULE QUIET)
+find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
+
+# if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
+if(GAMMARAY_BUILD_DOCS)
+  find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
+endif()
+
+# these need to included after the last Qt-related find_package() call
+include (Qt5LegacySupport)
+include (ECMQt5ToQt6Porting)
+
 set(MACOS_DISABLE_UNSUPPORTED_TESTS FALSE)
 if(APPLE)
   cmake_host_system_information(RESULT MACOS_RELEASE QUERY OS_RELEASE)
   message(STATUS "MACOS_RELEASE: ${MACOS_RELEASE}")
-  message(STATUS "Qt5Quick_VERSION: ${Qt5Quick_VERSION}")
-  if(MACOS_RELEASE VERSION_GREATER_EQUAL 10.15.0 AND Qt5Quick_VERSION VERSION_LESS 5.12.0)
+  message(STATUS "QtQuick_VERSION: ${QtQuick_VERSION}")
+  if(MACOS_RELEASE VERSION_GREATER_EQUAL 10.15.0 AND QtQuick_VERSION VERSION_LESS 5.12.0)
     # Qt Quick is only supported on macOS Catalina using Qt 5.12 and above
     set(MACOS_DISABLE_UNSUPPORTED_TESTS TRUE)
     message(STATUS "WARNING: Your version of MacOS is too old (less then 10.15) to use with QtQuick 5.12 or higher.  You can solve this by upgrading your MacOS or using older Qt versions.  Disabling QtQuick capabilities.")
@@ -390,34 +406,21 @@ if(MACOS_DISABLE_UNSUPPORTED_TESTS)
   set(Qt5Quick_FOUND FALSE)
 endif()
 
-# Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
-# so we can retrieve those packages even when installed into a different prefix
-find_package(Qt5IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
-find_package(Qt5IviVehicleFunctions 1.1 NO_MODULE QUIET)
-find_package(Qt5IviMedia 1.1 NO_MODULE QUIET)
-find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
-include (Qt5LegacySupport)
-
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_EQUAL 5.9.1)
   # hide -Wc++1z-extensions warnings in this Qt version -- see: https://bugreports.qt.io/browse/QTBUG-61840
   add_flag_if_supported(-Wno-c++1z-extensions NO_CPP1Z_EXTENSIONS)
 endif()
-if(Qt5Core_VERSION VERSION_GREATER 5.7)
+if(QtCore_VERSION VERSION_GREATER 5.7)
   # Qt 5.8 is the first minor version to use nullptr more broadly
   # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
   #   .../examples/widget-layouting/ui_contactform.h:606:85: warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
   add_flag_if_supported(-Wzero-as-null-pointer-constant ZERO_AS_NULL_POINTER_CONSTANT)
 endif()
 
-# if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
-if(GAMMARAY_BUILD_DOCS)
-  find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
-endif()
-
 if(GAMMARAY_BUILD_UI) # widgets are required for the UI
   find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
   # 3D Widget inspector requires Qt3D 5.7
-  if(Qt5Core_VERSION VERSION_EQUAL 5.7 OR Qt5Core_VERSION VERSION_GREATER 5.7)
+  if(QtCore_VERSION VERSION_EQUAL 5.7 OR QtCore_VERSION VERSION_GREATER 5.7)
     if(${Qt53DRender_FOUND} AND ${Qt53DInput_FOUND} AND ${Qt53DLogic_FOUND} AND ${Qt53DQuick_FOUND})
       set(GAMMARAY_WITH_WIDGET3D TRUE)
     else()
@@ -432,16 +435,16 @@ set(HAVE_QT_SVG ${Qt5Svg_FOUND})
 set(HAVE_QT_SCXML ${Qt5Scxml_FOUND})
 set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
 
-if(Qt5Gui_FOUND)
+if(TARGET Qt::Gui)
   cmake_push_check_state()
-  set(CMAKE_REQUIRED_LIBRARIES Qt5::Gui)
+  set(CMAKE_REQUIRED_LIBRARIES Qt::Gui)
   check_cxx_symbol_exists(QT_NO_OPENGL "QOpenGLContext" QT_NO_OPENGL)
   cmake_pop_check_state()
 endif()
 
-if(Qt5PrintSupport_FOUND)
+if(TARGET Qt::PrintSupport)
   cmake_push_check_state()
-  set(CMAKE_REQUIRED_LIBRARIES Qt5::PrintSupport)
+  set(CMAKE_REQUIRED_LIBRARIES Qt::PrintSupport)
   check_cxx_symbol_exists(QT_NO_PRINTER "QPrinter" QT_NO_PRINTER)
   cmake_pop_check_state()
   if(NOT QT_NO_PRINTER)
@@ -676,7 +679,7 @@ add_subdirectory(common)
 add_subdirectory(core)
 add_subdirectory(probe)
 add_subdirectory(launcher)
-if(GAMMARAY_BUILD_UI AND Qt5Widgets_FOUND)
+if(GAMMARAY_BUILD_UI AND TARGET Qt::Widgets)
   if(NOT GAMMARAY_DISABLE_FEEDBACK)
     add_subdirectory(3rdparty/kuserfeedback)
   endif()
@@ -689,11 +692,11 @@ if(GAMMARAY_BUILD_UI AND Qt5Widgets_FOUND)
     add_subdirectory(app)
   endif()
 endif()
-if(BUILD_TESTING AND Qt5Test_FOUND AND NOT CMAKE_CROSSCOMPILING)
+if(BUILD_TESTING AND TARGET Qt::Test AND NOT CMAKE_CROSSCOMPILING)
   add_subdirectory(tests)
 endif()
 add_subdirectory(plugins)
-if(Qt5LinguistTools_FOUND)
+if(QtLinguistTools_FOUND)
   add_subdirectory(translations)
 endif()
 if(GAMMARAY_MULTI_BUILD)

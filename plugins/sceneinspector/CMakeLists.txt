@@ -13,7 +13,7 @@ gammaray_add_plugin(gammaray_sceneinspector_plugin
 )
 
 target_link_libraries(gammaray_sceneinspector_plugin
-  Qt5::Gui Qt5::Widgets
+  Qt::Gui Qt::Widgets
   gammaray_kitemmodels
   gammaray_core
 )

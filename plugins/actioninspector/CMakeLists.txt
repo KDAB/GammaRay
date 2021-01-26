@@ -12,7 +12,7 @@ gammaray_add_plugin(gammaray_actioninspector_plugin
 )
 
 target_link_libraries(gammaray_actioninspector_plugin
-  Qt5::Gui Qt5::Widgets
+  Qt::Gui Qt::Widgets
   gammaray_core
 )
 endif()

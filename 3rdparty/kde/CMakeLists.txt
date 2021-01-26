@@ -7,7 +7,7 @@ set(gammaray_kitemmodels_srcs
 
 add_library(gammaray_kitemmodels SHARED ${gammaray_kitemmodels_srcs})
 
-target_link_libraries(gammaray_kitemmodels LINK_PUBLIC Qt5::Core)
+target_link_libraries(gammaray_kitemmodels LINK_PUBLIC Qt::Core)
 
 set_target_properties(gammaray_kitemmodels PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}

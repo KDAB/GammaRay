@@ -14,7 +14,7 @@ set(gammaray_statemachineviewer_plugin_srcs
   qsmstatemachinedebuginterface.cpp
 )
 
-if(Qt5Scxml_FOUND)
+if(TARGET Qt::Scxml)
   list(APPEND gammaray_statemachineviewer_plugin_srcs
     qscxmlstatemachinedebuginterface.cpp)
 endif()
@@ -28,8 +28,8 @@ target_link_libraries(gammaray_statemachineviewer_plugin
   gammaray_core
 )
 
-if(Qt5Scxml_FOUND)
-  target_link_libraries(gammaray_statemachineviewer_plugin Qt5::Scxml Qt5::ScxmlPrivate)
+if(TARGET Qt::Scxml)
+  target_link_libraries(gammaray_statemachineviewer_plugin Qt::Scxml Qt::ScxmlPrivate)
 endif()
 endif()
 

@@ -18,7 +18,7 @@ gammaray_add_plugin(gammaray_widgetinspector_plugin
 )
 
 target_link_libraries(gammaray_widgetinspector_plugin
-  Qt5::Gui Qt5::Widgets
+  Qt::Gui Qt::Widgets
   gammaray_kitemmodels
   gammaray_core
 )
@@ -42,15 +42,15 @@ if(GAMMARAY_INSTALL_QT_LAYOUT)
   set_target_properties(gammaray_widget_export_actions PROPERTIES OUTPUT_NAME gammaray_widget_export_actions-${GAMMARAY_PROBE_ABI})
 endif()
 
-target_link_libraries(gammaray_widget_export_actions Qt5::Widgets)
-if (TARGET Qt5::Designer)
-    target_link_libraries(gammaray_widget_export_actions Qt5::Designer)
+target_link_libraries(gammaray_widget_export_actions Qt::Widgets)
+if (TARGET Qt::Designer)
+    target_link_libraries(gammaray_widget_export_actions Qt::Designer)
 endif()
-if (TARGET Qt5::PrintSupport)
-    target_link_libraries(gammaray_widget_export_actions Qt5::PrintSupport)
+if (TARGET Qt::PrintSupport)
+    target_link_libraries(gammaray_widget_export_actions Qt::PrintSupport)
 endif()
-if (TARGET Qt5::Svg)
-    target_link_libraries(gammaray_widget_export_actions Qt5::Svg)
+if (TARGET Qt::Svg)
+    target_link_libraries(gammaray_widget_export_actions Qt::Svg)
 endif()
 
 install(TARGETS gammaray_widget_export_actions DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
@@ -95,12 +95,12 @@ if(GAMMARAY_BUILD_UI)
 
   if (GAMMARAY_WITH_WIDGET3D)
     target_link_libraries(gammaray_widgetinspector_ui_plugin
-        Qt5::Qml
-        Qt5::Quick
-        Qt5::3DRender
-        Qt5::3DLogic
-        Qt5::3DInput
-        Qt5::3DQuick
+        Qt::Qml
+        Qt::Quick
+        Qt::3DRender
+        Qt::3DLogic
+        Qt::3DInput
+        Qt::3DQuick
     )
   endif()
 endif()

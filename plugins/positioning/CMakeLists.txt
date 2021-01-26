@@ -6,10 +6,10 @@ set(gammaray_positioning_srcs
     positioninfopropertyadaptor.cpp
 )
 gammaray_add_plugin(gammaray_positioning JSON gammaray_positioning.json SOURCES ${gammaray_positioning_srcs})
-target_link_libraries(gammaray_positioning gammaray_core Qt5::Positioning)
+target_link_libraries(gammaray_positioning gammaray_core Qt::Positioning)
 
 # proxy geo position info source factory
-if (NOT Qt5Core_VERSION VERSION_LESS 5.7)
+if (NOT QtCore_VERSION VERSION_LESS 5.7)
     set(gammaray_geopositioninfosource_srcs
         geopositioninfosourcefactory.cpp
         geopositioninfosource.cpp
@@ -20,15 +20,15 @@ if (NOT Qt5Core_VERSION VERSION_LESS 5.7)
     target_compile_features(gammaray_geopositioninfosource PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
     target_link_libraries(gammaray_geopositioninfosource
         gammaray_common
-        Qt5::Positioning
-        Qt5::CorePrivate
+        Qt::Positioning
+        Qt::CorePrivate
     )
     install(TARGETS gammaray_geopositioninfosource DESTINATION ${TARGET_PLUGIN_INSTALL_DIR}/position)
 endif()
 endif()
 
 # ui plugin
-if(GAMMARAY_BUILD_UI AND Qt5Location_FOUND AND Qt5QuickWidgets_FOUND AND NOT Qt5Core_VERSION VERSION_LESS 5.7)
+if(GAMMARAY_BUILD_UI AND TARGET Qt::Location AND TARGET Qt::QuickWidgets AND NOT QtCore_VERSION VERSION_LESS 5.7)
   set(gammaray_positioning_ui_srcs
     positioningwidget.cpp
     positioninginterface.cpp
@@ -42,9 +42,9 @@ if(GAMMARAY_BUILD_UI AND Qt5Location_FOUND AND Qt5QuickWidgets_FOUND AND NOT Qt5
 
   target_link_libraries(gammaray_positioning_ui
     gammaray_ui
-    Qt5::Widgets
-    Qt5::Positioning
-    Qt5::Location
-    Qt5::QuickWidgets
+    Qt::Widgets
+    Qt::Positioning
+    Qt::Location
+    Qt::QuickWidgets
   )
 endif()

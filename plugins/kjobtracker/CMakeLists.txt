@@ -22,7 +22,7 @@ if(KF5CoreAddons_FOUND)
   target_link_libraries(gammaray_kjobtracker_plugin
       gammaray_core
       KF5::CoreAddons
-      Qt5::Gui
+      Qt::Gui
   )
 endif()
 endif()

@@ -128,8 +128,8 @@ target_link_libraries(gammaray_core
     gammaray_common_internal
     gammaray_kitemmodels
     ${CMAKE_DL_LIBS}
-    Qt5::CorePrivate
-    Qt5::GuiPrivate
+    Qt::CorePrivate
+    Qt::GuiPrivate
 )
 set_target_properties(gammaray_core PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
@@ -137,9 +137,9 @@ set_target_properties(gammaray_core PROPERTIES
 )
 gammaray_set_rpath(gammaray_core ${LIB_INSTALL_DIR})
 
-target_link_libraries(gammaray_core LINK_PUBLIC Qt5::Core LINK_PRIVATE Qt5::Gui Qt5::GuiPrivate)
-if (TARGET Qt5::AndroidExtras)
-    target_link_libraries(gammaray_core LINK_PRIVATE Qt5::AndroidExtras)
+target_link_libraries(gammaray_core LINK_PUBLIC Qt::Core LINK_PRIVATE Qt::Gui Qt::GuiPrivate)
+if (TARGET Qt::AndroidExtras)
+    target_link_libraries(gammaray_core LINK_PRIVATE Qt::AndroidExtras)
 endif()
 
 add_backward(gammaray_core)

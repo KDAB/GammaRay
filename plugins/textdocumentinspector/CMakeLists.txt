@@ -10,7 +10,7 @@ gammaray_add_plugin(gammaray_textdocumentinspector
     SOURCES ${gammaray_textdocumentinspector_srcs}
 )
 target_link_libraries(gammaray_textdocumentinspector gammaray_core)
-target_link_libraries(gammaray_textdocumentinspector Qt5::Gui)
+target_link_libraries(gammaray_textdocumentinspector Qt::Gui)
 endif()
 
 # ui plugin

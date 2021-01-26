@@ -15,8 +15,8 @@ gammaray_add_plugin(gammaray_eventmonitor_plugin
 )
 
 target_link_libraries(gammaray_eventmonitor_plugin
-  Qt5::Gui
-  Qt5::CorePrivate
+  Qt::Gui
+  Qt::CorePrivate
   gammaray_core
 )
 endif()

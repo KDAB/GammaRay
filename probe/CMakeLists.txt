@@ -10,12 +10,12 @@ list(APPEND gammaray_probe_srcs entry_unix.cpp)
 add_library(gammaray_probe_obj OBJECT ${gammaray_probe_srcs})
 set_target_properties(gammaray_probe_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_compile_features(gammaray_probe_obj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
-target_compile_definitions(gammaray_probe_obj PRIVATE ${Qt5Core_DEFINITIONS}) # for -DQT_NAMESPACE=...
+target_compile_definitions(gammaray_probe_obj PRIVATE ${QtCore_DEFINITIONS}) # for -DQT_NAMESPACE=...
 target_include_directories(gammaray_probe_obj PUBLIC
     $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
 )
-target_link_libraries(gammaray_probe_obj Qt5::CorePrivate)
+target_link_libraries(gammaray_probe_obj Qt::CorePrivate)
 
 # probe lib
 # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
@@ -67,7 +67,7 @@ else()
     install(TARGETS gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
   endif()
   if (ANDROID)
-    if (Qt5Core_VERSION VERSION_LESS 5.14.0)
+    if (QtCore_VERSION VERSION_LESS 5.14.0)
       install(FILES gammaray_probe-android-dependencies.xml RENAME gammaray_probe-${GAMMARAY_PROBE_ABI}-android-dependencies.xml DESTINATION ${LIB_INSTALL_DIR})
     else()
       install(FILES gammaray_probe-android-dependencies.xml RENAME gammaray_probe-${GAMMARAY_PROBE_ABI}_${ANDROID_ABI}-android-dependencies.xml DESTINATION ${LIB_INSTALL_DIR})

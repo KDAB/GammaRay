@@ -16,7 +16,7 @@ if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 endif()
 
 # ui part
-if(GAMMARAY_BUILD_UI AND TARGET Qt5::WebEngineWidgets)
+if(GAMMARAY_BUILD_UI AND TARGET Qt::WebEngineWidgets)
     set(gammaray_webinspector_ui_plugin_srcs
         webinspectorwidget.cpp
     )
@@ -27,7 +27,7 @@ if(GAMMARAY_BUILD_UI AND TARGET Qt5::WebEngineWidgets)
     )
 
     target_link_libraries(gammaray_webinspector_ui_plugin
-        Qt5::WebEngineWidgets
+        Qt::WebEngineWidgets
         gammaray_ui
     )
 endif()

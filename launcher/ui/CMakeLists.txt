@@ -28,10 +28,10 @@ target_link_libraries(gammaray_launcher_ui
   gammaray_launcher
 
   LINK_PRIVATE
-  Qt5::Core
-  Qt5::Concurrent
-  Qt5::Gui Qt5::Widgets
-  Qt5::Network
+  Qt::Core
+  Qt::Concurrent
+  Qt::Gui Qt::Widgets
+  Qt::Network
   gammaray_ui
 )
 

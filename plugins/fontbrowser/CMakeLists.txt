@@ -14,7 +14,7 @@ gammaray_add_plugin(gammaray_fontbrowser_plugin
 )
 
 target_link_libraries(gammaray_fontbrowser_plugin gammaray_core)
-target_link_libraries(gammaray_fontbrowser_plugin Qt5::Gui)
+target_link_libraries(gammaray_fontbrowser_plugin Qt::Gui)
 endif()
 
 # ui part

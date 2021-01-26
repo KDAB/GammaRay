@@ -1,4 +1,4 @@
-if(Qt5Quick_FOUND)
+if(TARGET Qt::Quick)
   # shared stuff
   set(gammaray_quickinspector_shared_srcs
         quickinspectorinterface.cpp
@@ -8,7 +8,7 @@ if(Qt5Quick_FOUND)
       )
 
   add_library(gammaray_quickinspector_shared STATIC ${gammaray_quickinspector_shared_srcs})
-  target_link_libraries(gammaray_quickinspector_shared gammaray_common Qt5::Gui Qt5::Quick)
+  target_link_libraries(gammaray_quickinspector_shared gammaray_common Qt::Gui Qt::Quick)
 
   set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
   target_compile_features(gammaray_quickinspector_shared PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
@@ -47,23 +47,23 @@ if(Qt5Quick_FOUND)
     target_link_libraries(gammaray_quickinspector
       gammaray_quickinspector_shared
       gammaray_core
-      Qt5::Quick
-      Qt5::QuickPrivate
+      Qt::Quick
+      Qt::QuickPrivate
       gammaray_kitemmodels
     )
   endif()
 
-  if(TARGET Qt5::Gui_GLESv2)
+  if(TARGET Qt::Gui_GLESv2)
     include(CheckCXXSourceCompiles)
-    set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} Qt5::Gui_GLESv2)
+    set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} Qt::Gui_GLESv2)
     check_cxx_source_compiles("int main() {return 0;}" CAN_LINK_GUI_GLESV2)
     if(CAN_LINK_GUI_GLESV2)
       set(HAVE_GLESv2 TRUE)
-      target_link_libraries(gammaray_quickinspector Qt5::Gui_GLESv2)
+      target_link_libraries(gammaray_quickinspector Qt::Gui_GLESv2)
     endif()
   endif()
-  #the Qt5::Gui_GLESv2 target is not set on Android (up to qt5.13, at least)
-  if(ANDROID AND NOT TARGET Qt5::Gui_GLESv2)
+  #the Qt::Gui_GLESv2 target is not set on Android (up to qt5.13, at least)
+  if(ANDROID AND NOT TARGET Qt::Gui_GLESv2)
     target_link_libraries(gammaray_quickinspector GLESv2)
   endif()
 
@@ -102,7 +102,7 @@ if(Qt5Quick_FOUND)
     target_link_libraries(gammaray_quickinspector_ui
       gammaray_quickinspector_shared
       gammaray_ui
-      Qt5::Quick
+      Qt::Quick
     )
   endif()
 endif()

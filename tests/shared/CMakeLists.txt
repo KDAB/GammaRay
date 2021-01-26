@@ -11,4 +11,4 @@ set(gammaray_shared_test_srcs
 
 add_library(gammaray_shared_test_data STATIC ${gammaray_shared_test_srcs})
 target_compile_features(gammaray_shared_test_data PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
-target_link_libraries(gammaray_shared_test_data Qt5::Core)
+target_link_libraries(gammaray_shared_test_data Qt::Core)
