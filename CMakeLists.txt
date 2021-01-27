@@ -429,11 +429,11 @@ if(GAMMARAY_BUILD_UI) # widgets are required for the UI
   endif()
 endif()
 
-set(HAVE_QT_CONCURRENT ${Qt5Concurrent_FOUND})
-set(HAVE_QT_WIDGETS ${Qt5Widgets_FOUND})
-set(HAVE_QT_SVG ${Qt5Svg_FOUND})
-set(HAVE_QT_SCXML ${Qt5Scxml_FOUND})
-set(HAVE_QT_DESIGNER ${Qt5Designer_FOUND})
+set(HAVE_QT_CONCURRENT ${QtConcurrent_FOUND})
+set(HAVE_QT_WIDGETS ${QtWidgets_FOUND})
+set(HAVE_QT_SVG ${QtSvg_FOUND})
+set(HAVE_QT_SCXML ${QtScxml_FOUND})
+set(HAVE_QT_DESIGNER ${QtDesigner_FOUND})
 
 if(TARGET Qt::Gui)
   cmake_push_check_state()
