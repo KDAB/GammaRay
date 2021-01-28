@@ -1318,7 +1318,7 @@ QString ResourceModelPrivate::type(const QModelIndex &index) const
 QString ResourceModelPrivate::time(const QModelIndex &index) const
 {
 #ifndef QT_NO_DATESTRING
-    return node(index)->info.lastModified().toString(Qt::LocalDate);
+    return QLocale().toString(node(index)->info.lastModified(), QLocale::ShortFormat);
 #else
     Q_UNUSED(index);
     return QString();
