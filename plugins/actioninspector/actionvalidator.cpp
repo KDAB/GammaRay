@@ -85,7 +85,7 @@ void ActionValidator::insert(QAction *action)
         if (m_shortcutActionMap.values(sequence).contains(action))
             continue;
 
-        m_shortcutActionMap.insertMulti(sequence, action);
+        m_shortcutActionMap.insert(sequence, action);
     }
 
     // also track object destruction
@@ -112,7 +112,7 @@ void ActionValidator::safeRemove(QAction *action)
         const bool success = oldValues.removeOne(action);
         Q_UNUSED(success);
         Q_ASSERT(success);
-        m_shortcutActionMap[sequence] = action;
+        m_shortcutActionMap.replace(sequence, action);
     }
 }
 

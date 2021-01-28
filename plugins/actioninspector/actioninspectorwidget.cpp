@@ -61,7 +61,7 @@ ActionInspectorWidget::ActionInspectorWidget(QWidget *parent)
     ui->actionView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
     ui->actionView->setDeferredResizeMode(4, QHeaderView::ResizeToContents);
     ui->actionView->setModel(actionModel);
-    ui->actionView->sortByColumn(ActionModel::ShortcutsPropColumn);
+    ui->actionView->sortByColumn(ActionModel::ShortcutsPropColumn, Qt::AscendingOrder);
     connect(ui->actionView, &QWidget::customContextMenuRequested, this, &ActionInspectorWidget::contextMenu);
 
     auto selectionModel = ObjectBroker::selectionModel(actionModel);

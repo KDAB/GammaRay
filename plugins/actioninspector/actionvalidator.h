@@ -68,7 +68,7 @@ private:
     void safeRemove(QAction *action);
 
     // Multi-Map
-    QHash<QKeySequence, QAction *> m_shortcutActionMap;
+    QMultiHash<QKeySequence, QAction *> m_shortcutActionMap;
 };
 }
 
