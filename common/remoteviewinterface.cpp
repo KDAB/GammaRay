@@ -148,7 +148,9 @@ RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
     StreamOperators::registerOperators<GammaRay::RemoteViewFrame>();
     StreamOperators::registerOperators<Qt::TouchPointStates>();
     StreamOperators::registerOperators<QList<QTouchEvent::TouchPoint>>();
-#ifndef GAMMARAY_QT6_TODO
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    StreamOperators::registerOperators<QPointingDevice::PointerType>();
+#else
     StreamOperators::registerOperators<QTouchEvent::TouchPoint::InfoFlags>();
 #endif
 }
