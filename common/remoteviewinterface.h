@@ -94,7 +94,9 @@ private:
 
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
 Q_DECLARE_METATYPE(Qt::TouchPointStates)
-#ifndef GAMMARAY_QT6_TODO
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+Q_DECLARE_METATYPE(QPointingDevice::PointerType)
+#else
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint::InfoFlags)
 #endif
 Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)

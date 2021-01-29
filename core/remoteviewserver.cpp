@@ -168,25 +168,44 @@ void RemoteViewServer::sendMouseEvent(int type, const QPoint &localPos, int butt
 void RemoteViewServer::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta,
                                       int buttons, int modifiers)
 {
-#ifndef GAMMARAY_QT6_TODO
     if (!m_eventReceiver)
         return;
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(
+                                     localPos), pixelDelta, angleDelta, (Qt::MouseButtons)buttons,
+                                 (Qt::KeyboardModifiers)modifiers, Qt::NoScrollPhase, false);
+#else
     auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(
                                      localPos), pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical,
                                  /*not used*/ (Qt::MouseButtons)buttons,
                                  (Qt::KeyboardModifiers)modifiers);
-    QCoreApplication::postEvent(m_eventReceiver, event);
 #endif
+    QCoreApplication::postEvent(m_eventReceiver, event);
 }
 
 void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints,
                                       int modifiers, Qt::TouchPointStates touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
 {
-#ifndef GAMMARAY_QT6_TODO
     if (!m_eventReceiver)
         return;
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    if (!m_touchDevice) {
+        //create our own touch device, the system may not have one already, or it may not have
+        //the properties we want
+        m_touchDevice.reset(new QPointingDevice);
+    }
+    m_touchDevice->setType(QPointingDevice::DeviceType(touchDeviceType));
+    m_touchDevice->setCapabilities(QPointingDevice::Capabilities(deviceCaps));
+    m_touchDevice->setMaximumTouchPoints(touchDeviceMaxTouchPoints);
+
+    const int states = touchPointStates;
+    auto event = new QTouchEvent(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), static_cast<QEventPoint::States>(states), touchPoints);
+#ifndef GAMMARAY_QT6_TODO
+    event->setWindow(m_eventReceiver);
+#endif
+#else
     if (!m_touchDevice) {
         //create our own touch device, the system may not have one already, or it may not have
         //the properties we want
@@ -198,8 +217,9 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
 
     auto event = new QTouchEvent(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), touchPointStates, touchPoints);
     event->setWindow(m_eventReceiver);
-    QCoreApplication::sendEvent(m_eventReceiver, event);
 #endif
+
+    QCoreApplication::sendEvent(m_eventReceiver, event);
 }
 
 void RemoteViewServer::setViewActive(bool active)

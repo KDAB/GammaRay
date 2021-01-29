@@ -41,6 +41,7 @@ QT_BEGIN_NAMESPACE
 class QTimer;
 class QWindow;
 class QTouchDevice;
+class QPointingDevice;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -115,7 +116,9 @@ private:
     bool m_grabberReady;
     bool m_pendingReset;
     bool m_pendingCompleteFrame;
-#ifndef GAMMARAY_QT6_TODO
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    std::unique_ptr<QPointingDevice> m_touchDevice;
+#else
     std::unique_ptr<QTouchDevice> m_touchDevice;
 #endif
 };
