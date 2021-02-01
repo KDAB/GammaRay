@@ -5,11 +5,15 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR})
 configure_file(gammaray-test-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/gammaray-test-config.h)
 
 # create intermediate modeltestobj object files which unit tests can use
-add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
-set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_compile_features(modeltestobj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
-target_compile_definitions(modeltestobj PRIVATE $<TARGET_PROPERTY:Qt5::Core,INTERFACE_COMPILE_DEFINITIONS>) # for -DQT_NAMESPACE=...
-target_include_directories(modeltestobj PUBLIC $<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>)
+if (QtTest_VERSION VERSION_LESS 5.11)
+    add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
+    set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    target_compile_features(modeltestobj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
+    target_compile_definitions(modeltestobj PRIVATE $<TARGET_PROPERTY:Qt5::Core,INTERFACE_COMPILE_DEFINITIONS>) # for -DQT_NAMESPACE=...
+    target_include_directories(modeltestobj PUBLIC $<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>)
+else()
+    add_library(modeltestobj OBJECT)
+endif()
 
 # create intermediate test_helpers_obj object files which unit tests can use
 add_library(test_helpers_obj OBJECT testhelpers.cpp)
