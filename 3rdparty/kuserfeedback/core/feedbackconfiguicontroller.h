@@ -1,24 +1,7 @@
 /*
-    Copyright (C) 2017 Volker Krause <vkrause@kde.org>
+    SPDX-FileCopyrightText: 2017 Volker Krause <vkrause@kde.org>
 
-    Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
-    without limitation the rights to use, copy, modify, merge, publish,
-    distribute, sublicense, and/or sell copies of the Software, and to
-    permit persons to whom the Software is furnished to do so, subject to
-    the following conditions:
-
-    The above copyright notice and this permission notice shall be included
-    in all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    SPDX-License-Identifier: MIT
 */
 
 #ifndef KUSERFEEDBACK_FEEDBACKCONFIGUICONTROLLER_H
@@ -49,6 +32,8 @@ class KUSERFEEDBACKCORE_EXPORT FeedbackConfigUiController : public QObject
     Q_PROPERTY(int telemetryModeCount READ telemetryModeCount NOTIFY providerChanged)
     /*! Amount of supported survey modes. */
     Q_PROPERTY(int surveyModeCount READ surveyModeCount CONSTANT)
+    /*! Name of the application that will appear on descriptions. By default it will use QGuiApplication::applicationDisplayName() */
+    Q_PROPERTY(QString applicationName READ applicationName WRITE setApplicationName NOTIFY applicationNameChanged)
 public:
     explicit FeedbackConfigUiController(QObject *parent = nullptr);
     ~FeedbackConfigUiController();
@@ -65,6 +50,9 @@ public:
     /*! Amount of supported survey modes. */
     int surveyModeCount() const;
 
+    QString applicationName() const;
+    void setApplicationName(const QString& appName);
+
     /*! Convert slider index to telemetry mode. */
     Q_INVOKABLE KUserFeedback::Provider::TelemetryMode telemetryIndexToMode(int index) const;
     /*! Convert telemetry mode to slider index. */
@@ -77,6 +65,11 @@ public:
     /*! Detailed information about the data sources of the given telemetry mode index. */
     Q_INVOKABLE QString telemetryModeDetails(int telemetryIndex) const;
 
+    /*! Telemetry mode short name. */
+    Q_INVOKABLE QString telemetryName(KUserFeedback::Provider::TelemetryMode mode) const;
+    /*! Telemetry mode explanation text. */
+    Q_INVOKABLE QString telemetryDescription(KUserFeedback::Provider::TelemetryMode mode) const;
+
     /*! Convert slider index to survey interval. */
     Q_INVOKABLE int surveyIndexToInterval(int index) const;
     /*! Convert survey interval to slider index. */
@@ -88,6 +81,7 @@ public:
 Q_SIGNALS:
     /*! A provider-related setting has changed. */
     void providerChanged();
+    void applicationNameChanged(const QString &applicationName);
 
 private:
     std::unique_ptr<FeedbackConfigUiControllerPrivate> d;

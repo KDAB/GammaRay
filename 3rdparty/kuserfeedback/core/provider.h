@@ -1,24 +1,7 @@
 /*
-    Copyright (C) 2016 Volker Krause <vkrause@kde.org>
+    SPDX-FileCopyrightText: 2016 Volker Krause <vkrause@kde.org>
 
-    Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
-    without limitation the rights to use, copy, modify, merge, publish,
-    distribute, sublicense, and/or sell copies of the Software, and to
-    permit persons to whom the Software is furnished to do so, subject to
-    the following conditions:
-
-    The above copyright notice and this permission notice shall be included
-    in all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    SPDX-License-Identifier: MIT
 */
 
 #ifndef KUSERFEEDBACK_PROVIDER_H
@@ -107,6 +90,10 @@ class KUSERFEEDBACKCORE_EXPORT Provider : public QObject
      */
     Q_PROPERTY(int encouragementInterval READ encouragementInterval WRITE setEncouragementInterval NOTIFY providerSettingsChanged)
 
+    /*!
+     */
+    Q_PROPERTY(QString describeDataSources READ describeDataSources NOTIFY dataSourcesChanged)
+
 public:
     /*! Telemetry collection modes.
      *  Colleciton modes are inclusive, ie. higher modes always imply data from
@@ -119,11 +106,7 @@ public:
         DetailedSystemInformation = 0x30, ///< Transmit detailed system information.
         DetailedUsageStatistics = 0x40, ///< Transmit detailed usage statistics.
     };
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
     Q_ENUM(TelemetryMode)
-#else
-    Q_ENUMS(TelemetryMode)
-#endif
 
     /*! Create a new feedback provider.
      *  @param parent The parent object.
@@ -141,6 +124,12 @@ public:
      *  @see isEnabled
      */
     void setEnabled(bool enabled);
+
+    /*! Set the telemetry mode and the survey interval back to their default values.
+     *  @see telemetryMode(), surveyInterval()
+     *  @since 1.1.0
+     */
+    void restoreDefaults();
 
     /*! Returns the current product identifier. */
     QString productIdentifier() const;
@@ -245,6 +234,9 @@ public:
      */
     void setEncouragementInterval(int days);
 
+    /*! Returns a string with each source and its enable mode. */
+    QString describeDataSources() const;
+
 public Q_SLOTS:
     /*! Manually submit currently recorded data. */
     void submit();
@@ -286,6 +278,9 @@ Q_SIGNALS:
 
     /*! Emitted when the global enabled state changed. */
     void enabledChanged();
+
+    /*! Emitted when a data source is added or removed. */
+    void dataSourcesChanged();
 
 private:
     friend class ProviderPrivate;

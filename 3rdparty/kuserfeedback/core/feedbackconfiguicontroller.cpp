@@ -1,24 +1,7 @@
 /*
-    Copyright (C) 2017 Volker Krause <vkrause@kde.org>
+    SPDX-FileCopyrightText: 2017 Volker Krause <vkrause@kde.org>
 
-    Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
-    without limitation the rights to use, copy, modify, merge, publish,
-    distribute, sublicense, and/or sell copies of the Software, and to
-    permit persons to whom the Software is furnished to do so, subject to
-    the following conditions:
-
-    The above copyright notice and this permission notice shall be included
-    in all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    SPDX-License-Identifier: MIT
 */
 
 #include "feedbackconfiguicontroller.h"
@@ -38,21 +21,16 @@ class FeedbackConfigUiControllerPrivate {
 public:
     FeedbackConfigUiControllerPrivate();
 
-    static QString appName();
-
     Provider *provider;
     std::vector<Provider::TelemetryMode> telemetryModeMap;
+    QString m_appName;
 };
 }
 
 FeedbackConfigUiControllerPrivate::FeedbackConfigUiControllerPrivate() :
-    provider(nullptr)
+    provider(nullptr),
+    m_appName(QGuiApplication::applicationDisplayName())
 {
-}
-
-QString FeedbackConfigUiControllerPrivate::appName()
-{
-    return QGuiApplication::applicationDisplayName();
 }
 
 FeedbackConfigUiController::FeedbackConfigUiController(QObject* parent)
@@ -126,83 +104,79 @@ int FeedbackConfigUiController::telemetryModeToIndex(Provider::TelemetryMode mod
 
 QString FeedbackConfigUiController::telemetryModeName(int telemetryIndex) const
 {
-    switch (telemetryIndexToMode(telemetryIndex)) {
+    return telemetryName(telemetryIndexToMode(telemetryIndex));
+}
+
+QString FeedbackConfigUiController::telemetryModeDescription(int telemetryIndex) const
+{
+    return telemetryDescription(telemetryIndexToMode(telemetryIndex));
+}
+
+QString FeedbackConfigUiController::telemetryName(KUserFeedback::Provider::TelemetryMode mode) const
+{
+    switch (mode) {
         case Provider::NoTelemetry:
-            return tr("No telemetry");
+            return tr("Disabled");
         case Provider::BasicSystemInformation:
             return tr("Basic system information");
         case Provider::BasicUsageStatistics:
-            return tr("Basic usage statistics");
+            return tr("Basic system information and usage statistics");
         case Provider::DetailedSystemInformation:
-            return tr("Detailed system information");
+            return tr("Detailed system information and basic usage statistics");
         case Provider::DetailedUsageStatistics:
-            return tr("Detailed usage statistics");
+            return tr("Detailed system information and usage statistics");
     }
 
     return {};
 }
 
-QString FeedbackConfigUiController::telemetryModeDescription(int telemetryIndex) const
+QString FeedbackConfigUiController::telemetryDescription(KUserFeedback::Provider::TelemetryMode mode) const
 {
-    const auto name = d->appName();
+    const auto name = applicationName();
     if (name.isEmpty()) {
-        switch (telemetryIndexToMode(telemetryIndex)) {
+        switch (mode) {
             case Provider::NoTelemetry:
                 return tr(
-                    "We make this application for you. You can help us improve it by contributing information on how you use it. "
-                    "This allows us to make sure we focus on things that matter to you.\n"
-                    "Contributing statistics is of course entirely anonymous, will not use any kind of unique identifier and "
-                    "will not cover any data you process with this application."
+                    "Don't share anything"
                 );
             case Provider::BasicSystemInformation:
                 return tr(
-                    "Share basic system information. "
-                    "No unique identification is included, nor data processed with the application."
+                    "Share basic system information such as the version of the application and the operating system"
                 );
             case Provider::BasicUsageStatistics:
                 return tr(
-                    "Share basic system information and basic statistics on how often you use the application. "
-                    "No unique identification is included, nor data processed with the application."
+                    "Share basic system information and basic statistics on how often you use the application"
                 );
             case Provider::DetailedSystemInformation:
                 return tr(
-                    "Share basic statistics on how often you use the application, as well as detailed information about your system. "
-                    "No unique identification is included, nor data processed with the application."
+                    "Share basic statistics on how often you use the application, as well as more detailed information about your system"
                 );
             case Provider::DetailedUsageStatistics:
                 return tr(
-                    "Share detailed system information and statistics on how often individual features of the application are used. "
-                    "No unique identification is included, nor data processed with the application."
+                    "Share detailed system information and statistics on how often individual features of the application are used."
                 );
         }
     } else {
-        switch (telemetryIndexToMode(telemetryIndex)) {
+        switch (mode) {
             case Provider::NoTelemetry:
                 return tr(
-                    "We make %1 for you. You can help us improve it by contributing information on how you use it. "
-                    "This allows us to make sure we focus on things that matter to you.\n"
-                    "Contributing statistics is of course entirely anonymous, will not use any kind of unique identifier and "
-                    "will not cover any data you process with %1."
-                ).arg(name);
+                    "Don't share anything"
+                );
             case Provider::BasicSystemInformation:
                 return tr(
-                    "Share basic system information. "
-                    "No unique identification is included, nor data processed with %1."
+                    "Share basic system information such as the version of %1 and and the operating system"
                 ).arg(name);
             case Provider::BasicUsageStatistics:
                 return tr(
-                    "Share basic system information and basic statistics on how often you use %1. "
-                    "No unique identification is included, nor data processed with %1."
+                    "Share basic system information and basic statistics on how often you use %1"
                 ).arg(name);
             case Provider::DetailedSystemInformation:
                 return tr(
-                    "Share basic statistics on how often you use %1, as well as detailed information about your system. "
-                    "No unique identification is included, nor data processed with %1."
+                    "Share basic statistics on how often you use %1, as well as more detailed information about your system"
                 ).arg(name);
             case Provider::DetailedUsageStatistics:
                 return tr(
-                    "Share detailed system information and statistics on how often individual features of %1 are used. "
-                    "No unique identification is included, nor data processed with %1."
+                    "Share detailed system information and statistics on how often individual features of %1 are used."
                 ).arg(name);
         }
     }
@@ -250,40 +224,52 @@ int FeedbackConfigUiController::surveyIntervalToIndex(int interval) const
 
 QString FeedbackConfigUiController::surveyModeDescription(int surveyIndex) const
 {
-    const auto name = d->appName();
+    const auto name = applicationName();
     if (name.isEmpty()) {
         switch (surveyIndex) {
             case 0:
                 return tr(
-                    "We make this application for you. In order to ensure it actually does what you need it to do we "
-                    "would like to ask you about your use cases and your feedback, in the form of a web survey."
+                    "Don't participate in usability surveys"
                 );
             case 1:
                 return tr(
-                    "I will occasionally participate in web surveys about the application, not more than four times a year though."
+                    "Participate in surveys about the application not more than four times a year"
                 );
             case 2:
                 return tr(
-                    "I will participate in web surveys whenever one is available. Surveys can of course be deferred or skipped."
+                    "Participate in surveys about the application whenever one is available (they can be deferred or skipped)"
                 );
         }
     } else {
         switch (surveyIndex) {
             case 0:
                 return tr(
-                    "We make %1 for you. In order to ensure it actually does what you need it to do we "
-                    "would like to ask you about your use cases and your feedback, in the form of a web survey."
+                    "Don't participate in usability surveys about %1"
                 ).arg(name);
             case 1:
                 return tr(
-                    "I will occasionally participate in web surveys about %1, not more than four times a year though."
+                    "Participate in surveys about %1 not more than four times a year"
                 ).arg(name);
             case 2:
                 return tr(
-                    "I will participate in web surveys about %1 whenever one is available. Surveys can of course be deferred or skipped."
+                    "Participate in surveys about %1 whenever one is available (they can be deferred or skipped)"
                 ).arg(name);
         }
     }
 
     return QString();
+}
+
+QString FeedbackConfigUiController::applicationName() const
+{
+    return d->m_appName;
+}
+
+void FeedbackConfigUiController::setApplicationName(const QString& appName)
+{
+    if (appName == d->m_appName)
+        return;
+
+    d->m_appName = appName;
+    Q_EMIT applicationNameChanged(appName);
 }

@@ -1,24 +1,7 @@
 /*
-    Copyright (C) 2016 Volker Krause <vkrause@kde.org>
+    SPDX-FileCopyrightText: 2016 Volker Krause <vkrause@kde.org>
 
-    Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
-    without limitation the rights to use, copy, modify, merge, publish,
-    distribute, sublicense, and/or sell copies of the Software, and to
-    permit persons to whom the Software is furnished to do so, subject to
-    the following conditions:
-
-    The above copyright notice and this permission notice shall be included
-    in all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    SPDX-License-Identifier: MIT
 */
 
 #include <kuserfeedback_version.h>
@@ -53,11 +36,7 @@
 #include <numeric>
 
 namespace KUserFeedback {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 5, 0)
 Q_LOGGING_CATEGORY(Log, "org.kde.UserFeedback", QtInfoMsg)
-#else
-Q_LOGGING_CATEGORY(Log, "org.kde.UserFeedback")
-#endif
 }
 
 using namespace KUserFeedback;
@@ -447,6 +426,12 @@ void Provider::setEnabled(bool enabled)
     emit enabledChanged();
 }
 
+void Provider::restoreDefaults()
+{
+    setTelemetryMode(NoTelemetry);
+    setSurveyInterval(-1);
+}
+
 QString Provider::productIdentifier() const
 {
     return d->productId;
@@ -527,6 +512,8 @@ void Provider::addDataSource(AbstractDataSource *source)
     auto s = d->makeSettings();
     s->beginGroup(QStringLiteral("Source-") + source->id());
     source->load(s.get());
+
+    Q_EMIT dataSourcesChanged();
 }
 
 QVector<AbstractDataSource*> Provider::dataSources() const
@@ -705,7 +692,7 @@ void ProviderPrivate::submitProbeFinished(QNetworkReply *reply)
 
 void ProviderPrivate::writeAuditLog(const QDateTime &dt)
 {
-    const QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation) + QStringLiteral("/kuserfeedback/audit");
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + QStringLiteral("/kuserfeedback/audit");
     QDir().mkpath(path);
 
     QJsonObject docObj;
@@ -735,6 +722,21 @@ void ProviderPrivate::writeAuditLog(const QDateTime &dt)
     file.write(doc.toJson());
 
     qCDebug(Log) << "Audit log written:" << file.fileName();
+}
+
+QString Provider::describeDataSources() const
+{
+    QString ret;
+
+    const auto& mo = staticMetaObject;
+    const int modeEnumIdx = mo.indexOfEnumerator("TelemetryMode");
+    Q_ASSERT(modeEnumIdx >= 0);
+
+    const auto modeEnum = mo.enumerator(modeEnumIdx);
+    for (auto source : d->dataSources) {
+        ret += QString::fromUtf8(modeEnum.valueToKey(source->telemetryMode())) + QStringLiteral(": ") + source->name() + QLatin1Char('\n');
+    }
+    return ret;
 }
 
 #include "moc_provider.cpp"
