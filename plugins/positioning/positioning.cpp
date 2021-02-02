@@ -76,7 +76,7 @@ Positioning::Positioning(Probe *probe, QObject *parent)
 void Positioning::objectAdded(QObject* obj)
 {
     if (auto geoInfoSource = qobject_cast<QGeoPositionInfoSource*>(obj)) {
-        if (geoInfoSource->sourceName() != QLatin1Literal("gammaray")) {
+        if (geoInfoSource->sourceName() != QLatin1String("gammaray")) {
             if (positioningOverrideAvailable()) // we already have a proxy source taking care of things
                 return;
             // until we have a proxy, just forward the position from the real source
