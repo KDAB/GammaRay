@@ -46,7 +46,9 @@ macro(gammaray_add_plugin _target_name)
 
   # Work-around for KDEND-44 (also see https://cmake.org/Bug/bug_relationship_graph.php?bug_id=15419)
   # Re-generates moc file in case the JSON file changes
-  if (Qt5Core_FOUND AND NOT Qt5Core_VERSION VERSION_LESS 5.6.0) # DEPENDS argument for qt5_wrap_cpp was added in 5.6.0
+  # DEPENDS argument for qt5_wrap_cpp was added in 5.6.0
+  # CMake 3.9 or higher (which is required by Qt 6) does all that correctly
+  if (Qt5Core_FOUND AND NOT Qt5Core_VERSION VERSION_LESS 5.6.0 AND CMAKE_VERSION VERSION_LESS 3.9)
       list(GET _gammaray_add_plugin_SOURCES 0 mainSourceFile)
       string(REPLACE ".cpp" ".h" mainHeaderFile ${mainSourceFile})
 
