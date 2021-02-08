@@ -1,5 +1,5 @@
-find_package(KF5CoreAddons NO_MODULE QUIET)
-set_package_properties(KF5CoreAddons PROPERTIES
+find_package(KF${QtCore_VERSION_MAJOR}CoreAddons NO_MODULE QUIET)
+set_package_properties(KF${QtCore_VERSION_MAJOR}CoreAddons PROPERTIES
   TYPE OPTIONAL
   DESCRIPTION "KDE KCoreAddons Framework"
   URL "https://www.kde.org/"
@@ -8,7 +8,7 @@ set_package_properties(KF5CoreAddons PROPERTIES
 
 # probe part
 if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
-if(KF5CoreAddons_FOUND)
+if(TARGET KF${QtCore_VERSION_MAJOR}::CoreAddons)
   set(gammaray_kjob_plugin_srcs
     kjobtracker.cpp
     kjobmodel.cpp
@@ -21,7 +21,7 @@ if(KF5CoreAddons_FOUND)
 
   target_link_libraries(gammaray_kjobtracker_plugin
       gammaray_core
-      KF5::CoreAddons
+      KF${QtCore_VERSION_MAJOR}::CoreAddons
       Qt::Gui
   )
 endif()

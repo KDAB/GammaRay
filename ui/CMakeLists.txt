@@ -105,8 +105,8 @@ target_link_libraries(gammaray_ui
   LINK_PUBLIC Qt::Core Qt::Gui Qt::Widgets gammaray_common
   LINK_PRIVATE gammaray_common_internal gammaray_kitemmodels Qt::WidgetsPrivate
 )
-if(TARGET KF5::SyntaxHighlighting)
-  target_link_libraries(gammaray_ui LINK_PRIVATE KF5::SyntaxHighlighting)
+if(TARGET KF${QtCore_VERSION_MAJOR}::SyntaxHighlighting)
+  target_link_libraries(gammaray_ui LINK_PRIVATE KF${QtCore_VERSION_MAJOR}::SyntaxHighlighting)
 endif()
 
 set(gammaray_ui_internal_srcs

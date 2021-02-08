@@ -522,9 +522,9 @@ set_package_properties(Glslang PROPERTIES URL "https://github.com/KhronosGroup/g
 find_package(QmlLint)
 set_package_properties(QmlLint PROPERTIES URL "https://qt.io" PURPOSE "Validate QML code.")
 
-find_package(KF5SyntaxHighlighting 5.28 NO_MODULE QUIET)
-set_package_properties(KF5SyntaxHighlighting PROPERTIES TYPE RECOMMENDED URL "https://www.kde.org/" PURPOSE "Syntax highlighting for code editor.")
-if(TARGET KF5::SyntaxHighlighting)
+find_package(KF${QtCore_VERSION_MAJOR}SyntaxHighlighting 5.28 NO_MODULE QUIET)
+set_package_properties(KF${QtCore_VERSION_MAJOR}SyntaxHighlighting PROPERTIES TYPE RECOMMENDED URL "https://www.kde.org/" PURPOSE "Syntax highlighting for code editor.")
+if(TARGET KF${QtCore_VERSION_MAJOR}::SyntaxHighlighting)
   set(HAVE_SYNTAX_HIGHLIGHTING TRUE)
 endif()
 
