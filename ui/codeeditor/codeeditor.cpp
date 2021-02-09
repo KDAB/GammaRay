@@ -130,7 +130,7 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent *event)
     QMenu *hlSubMenu = nullptr;
     QString currentGroup;
     foreach (const auto &def, s_repository->definitions()) {
-        if (def.isHidden())
+        if (def.isHidden() || def.section().isEmpty())
             continue;
 
         if (currentGroup != def.section()) {
