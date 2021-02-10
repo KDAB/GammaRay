@@ -344,11 +344,11 @@ endif()
 #
 # Finding Qt
 #
-find_package(Qt5Core 5.5 NO_MODULE REQUIRED)
+find_package(Qt 5.5 NAMES Qt6 Qt5 COMPONENTS Core NO_MODULE REQUIRED)
 
-set_package_properties(Qt5Core PROPERTIES TYPE REQUIRED)
-find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Gui Network)
-find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
+set_package_properties(Qt${Qt_VERSION_MAJOR}Core PROPERTIES TYPE REQUIRED)
+find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Gui Network)
+find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS
   3DAnimation
   3DExtras
   3DInput
@@ -376,14 +376,14 @@ find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS
 
 # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
 # so we can retrieve those packages even when installed into a different prefix
-find_package(Qt5IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
-find_package(Qt5IviVehicleFunctions 1.1 NO_MODULE QUIET)
-find_package(Qt5IviMedia 1.1 NO_MODULE QUIET)
-find_package(Qt5Scxml 5.8 NO_MODULE QUIET)
+find_package(Qt${Qt_VERSION_MAJOR}IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
+find_package(Qt${Qt_VERSION_MAJOR}IviVehicleFunctions 1.1 NO_MODULE QUIET)
+find_package(Qt${Qt_VERSION_MAJOR}IviMedia 1.1 NO_MODULE QUIET)
+find_package(Qt${Qt_VERSION_MAJOR}Scxml 5.8 NO_MODULE QUIET)
 
 # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
 if(GAMMARAY_BUILD_DOCS)
-  find_package(Qt5 NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
+  find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
 endif()
 
 # these need to included after the last Qt-related find_package() call
@@ -418,7 +418,7 @@ if(QtCore_VERSION VERSION_GREATER 5.7)
 endif()
 
 if(GAMMARAY_BUILD_UI) # widgets are required for the UI
-  find_package(Qt5 NO_MODULE REQUIRED COMPONENTS Widgets)
+  find_package(Qt${QtCore_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Widgets)
   # 3D Widget inspector requires Qt3D 5.7
   if(QtCore_VERSION VERSION_EQUAL 5.7 OR QtCore_VERSION VERSION_GREATER 5.7)
     if(${Qt53DRender_FOUND} AND ${Qt53DInput_FOUND} AND ${Qt53DLogic_FOUND} AND ${Qt53DQuick_FOUND})
@@ -455,11 +455,11 @@ endif()
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
 #add_definitions(-DQT_DEPRECATED_WARNINGS)
 
-set_package_properties(Qt5 PROPERTIES URL "https://qt.io/")
-set_package_properties(Qt5Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
-set_package_properties(Qt5Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
-set_package_properties(Qt5Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
-set_package_properties(Qt5PrintSupport PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget PDF export.")
+set_package_properties(Qt${Qt_VERSION_MAJOR} PROPERTIES URL "https://qt.io/")
+set_package_properties(Qt${Qt_VERSION_MAJOR}Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
+set_package_properties(Qt${Qt_VERSION_MAJOR}Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
+set_package_properties(Qt${Qt_VERSION_MAJOR}Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
+set_package_properties(Qt${Qt_VERSION_MAJOR}PrintSupport PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget PDF export.")
 
 # debug suffixes for qmake compatibility
 if(WIN32)
