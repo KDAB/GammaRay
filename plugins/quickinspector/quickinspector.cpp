@@ -574,6 +574,8 @@ void QuickInspector::recreateOverlay()
         disconnect(m_overlay.get(), &QObject::destroyed, this, &QuickInspector::recreateOverlay);
 
     m_overlay = AbstractScreenGrabber::get(m_window);
+    if (!m_overlay)
+        return;
 
     connect(m_overlay.get(), &AbstractScreenGrabber::grabberReadyChanged, m_remoteView, &RemoteViewServer::setGrabberReady);
     connect(m_overlay.get(), &AbstractScreenGrabber::sceneChanged, m_remoteView, &RemoteViewServer::sourceChanged);
