@@ -345,12 +345,14 @@ gammaray_add_test(fontdatabasemodeltest
 )
 target_link_libraries(fontdatabasemodeltest Qt::Gui)
 
-gammaray_add_test(codecmodeltest
-  codecmodeltest.cpp
-  ${CMAKE_SOURCE_DIR}/plugins/codecbrowser/codecmodel.cpp
-  $<TARGET_OBJECTS:modeltestobj>
-)
-target_link_libraries(codecmodeltest Qt::Gui)
+if (TARGET Qt5::Core)
+    gammaray_add_test(codecmodeltest
+    codecmodeltest.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/codecbrowser/codecmodel.cpp
+    $<TARGET_OBJECTS:modeltestobj>
+    )
+    target_link_libraries(codecmodeltest Qt::Gui)
+endif()
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
   #does not work unless the translations are installed in QT_INSTALL_TRANSLATIONS
