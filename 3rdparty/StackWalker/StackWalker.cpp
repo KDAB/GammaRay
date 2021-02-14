@@ -243,7 +243,7 @@ static void MyStrCpy(char* szDest, size_t nMaxDestSize, const char* szSrc)
   }
   else
   {
-    strncpy_s(szDest, nMaxDestSize, szSrc, nMaxDestSize);
+    strncpy_s(szDest, nMaxDestSize, szSrc, nMaxDestSize-1);
     szDest[nMaxDestSize-1] = 0;
   }
 }  // MyStrCpy
@@ -655,7 +655,7 @@ private:
     pGMI = (tGMI) GetProcAddress( hPsapi, "GetModuleInformation" );
     if ( (pEPM == NULL) || (pGMFNE == NULL) || (pGMBN == NULL) || (pGMI == NULL) )
     {
-      // we couldn´t find all functions
+      // we couldnÂ´t find all functions
       FreeLibrary(hPsapi);
       return FALSE;
     }
