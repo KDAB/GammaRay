@@ -50,7 +50,6 @@
 #include <QValidator>
 
 #include <QGuiApplication>
-#include <QOpenGLShader>
 #include <QSurfaceFormat>
 #endif
 
@@ -81,9 +80,6 @@ Q_DECLARE_METATYPE(QPainter::RenderHints)
 #endif
 Q_DECLARE_METATYPE(QPaintEngine::PolygonDrawMode)
 
-#ifndef QT_NO_OPENGL
-Q_DECLARE_METATYPE(QOpenGLShader::ShaderType)
-#endif
 Q_DECLARE_METATYPE(QSurfaceFormat)
 #endif
 

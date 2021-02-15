@@ -360,6 +360,7 @@ find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS
   Concurrent
   Designer
   Location
+  OpenGL
   Positioning
   PrintSupport
   Qml

@@ -40,8 +40,6 @@
 
 #include <QGuiApplication>
 #include <QOpenGLContext>
-#include <QOpenGLShader>
-#include <QOpenGLShaderProgram>
 #include <QScreen>
 #include <QWindow>
 
@@ -310,21 +308,6 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QWindow, type);
 
 #ifndef QT_NO_OPENGL
-    MO_ADD_METAOBJECT1(QOpenGLShader, QObject);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, isCompiled);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, log);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, shaderId);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, shaderType);
-    MO_ADD_PROPERTY_RO(QOpenGLShader, sourceCode);
-
-    MO_ADD_METAOBJECT1(QOpenGLShaderProgram, QObject);
-    MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, isLinked);
-    MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, log);
-// FIXME calling this asserts in debug builds of some newer Qt versions
-// MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, maxGeometryOutputVertices);
-    MO_ADD_PROPERTY(QOpenGLShaderProgram, patchVertexCount, setPatchVertexCount);
-    MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, programId);
-
     MO_ADD_METAOBJECT1(QOpenGLContext, QObject);
     MO_ADD_PROPERTY_RO(QOpenGLContext, defaultFramebufferObject);
     // crashes if context isn't current
@@ -700,25 +683,6 @@ static const MetaEnum::Value<QSurface::SurfaceType> surface_type_table[] = {
 };
 #undef E
 
-#ifndef QT_NO_OPENGL
-static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
-{
-    QStringList types;
-#define ST(t) if (type & QOpenGLShader::t) types.push_back(QStringLiteral(#t));
-    ST(Vertex)
-    ST(Fragment)
-    ST(Geometry)
-    ST(TessellationControl)
-    ST(TessellationEvaluation)
-    ST(Compute)
-#undef ST
-
-    if (types.isEmpty())
-        return QStringLiteral("<none>");
-    return types.join(QStringLiteral(" | "));
-}
-#endif // QT_NO_OPENGL
-
 static QString textLengthToString(const QTextLength &l)
 {
     QString typeStr;
@@ -1062,9 +1026,6 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QSurface, SurfaceClass, surface_class_table);
     ER_REGISTER_ENUM(QSurface, SurfaceType, surface_type_table);
     ER_REGISTER_FLAGS(QSurfaceFormat, FormatOptions, surface_format_option_table);
-#ifndef QT_NO_OPENGL
-    VariantHandler::registerStringConverter<QOpenGLShader::ShaderType>(shaderTypeToString);
-#endif
 
     ER_REGISTER_ENUM(QFont, Capitalization, font_capitalization_table);
     ER_REGISTER_ENUM(QFont, HintingPreference, font_hinting_pref_table);

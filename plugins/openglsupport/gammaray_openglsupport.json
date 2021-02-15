@@ -1,0 +1,9 @@
+{
+    "hidden": true,
+    "id": "gammaray_openglsupport",
+    "name": "OpenGL Support",
+    "types": [
+        "QOpenGLShader",
+        "QOpenGLShaderProgram"
+    ]
+}
