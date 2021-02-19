@@ -201,12 +201,15 @@ bool DebuggerInjector::selfTest()
     return false;
 }
 
+#define STR(x) STR_IMPL(x)
+#define STR_IMPL(x) #x
+
 void DebuggerInjector::waitForMain()
 {
     addFunctionBreakpoint("main");
     execCmd("run");
 
-    loadSymbols("Qt5Core");
+    loadSymbols("Qt" STR(QT_VERSION_MAJOR) "Core");
     addMethodBreakpoint("QCoreApplication::exec");
     execCmd("continue");
 }
