@@ -1055,12 +1055,12 @@ void RemoteModel::setProxyFilterKeyColumn(int column)
     emit proxyFilterKeyColumnChanged();
 }
 
-QRegExp RemoteModel::proxyFilterRegExp() const
+RemoteModel::RegExpT RemoteModel::proxyFilterRegExp() const
 {
     return m_proxyFilterRegExp;
 }
 
-void RemoteModel::setProxyFilterRegExp(const QRegExp &regExp)
+void RemoteModel::setProxyFilterRegExp(const RegExpT &regExp)
 {
     if (m_proxyFilterRegExp == regExp)
         return;

@@ -29,7 +29,11 @@
 #include "searchlinecontroller.h"
 
 #include <QLineEdit>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QRegularExpression>
+#else
 #include <QRegExp>
+#endif
 #include <QTimer>
 #include <QAbstractProxyModel>
 
@@ -88,7 +92,12 @@ SearchLineController::~SearchLineController() = default;
 void SearchLineController::activateSearch()
 {
     if (m_filterModel) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        m_filterModel->setProperty("filterRegularExpression",
+                                   QRegularExpression(m_lineEdit->text(), QRegularExpression::CaseInsensitiveOption));
+#else
         m_filterModel->setProperty("filterRegExp",
                                    QRegExp(m_lineEdit->text(), Qt::CaseInsensitive, QRegExp::FixedString));
+#endif
     }
 }
