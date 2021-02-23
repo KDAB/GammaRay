@@ -35,6 +35,8 @@
 
 #include <QPointer>
 
+#include <memory>
+
 QT_BEGIN_NAMESPACE
 class QModelIndex;
 class QItemSelection;
@@ -99,7 +101,7 @@ private slots:
 
 private:
     QPointer<OverlayWidget> m_overlayWidget;
-    QLibrary *m_externalExportActions;
+    std::unique_ptr<QLibrary> m_externalExportActions;
     PropertyController *m_propertyController;
     QItemSelectionModel *m_widgetSelectionModel;
     QPointer<QWidget> m_selectedWidget;

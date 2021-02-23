@@ -110,7 +110,6 @@ static bool isGoodCandidateWidget(QWidget *widget)
 
 WidgetInspectorServer::WidgetInspectorServer(Probe *probe, QObject *parent)
     : WidgetInspectorInterface(parent)
-    , m_externalExportActions(new QLibrary(this))
     , m_propertyController(new PropertyController(objectName(), this))
     , m_paintAnalyzer(new PaintAnalyzer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"),
                                         this))
@@ -475,15 +474,22 @@ GammaRay::ObjectIds WidgetInspectorServer::recursiveWidgetsAt(QWidget *parent, c
 void WidgetInspectorServer::callExternalExportAction(const char *name, QWidget *widget,
                                                      const QString &fileName)
 {
-    if (!m_externalExportActions->isLoaded()) {
+    if (!m_externalExportActions) {
+        std::unique_ptr<QLibrary> lib;
         foreach (const auto &path, Paths::pluginPaths(GAMMARAY_PROBE_ABI)) {
             const QString baseName = path + QLatin1String("/libgammaray_widget_export_actions");
-            m_externalExportActions->setFileName(baseName + QLatin1Char('-') + QStringLiteral(GAMMARAY_PROBE_ABI));
-            if (m_externalExportActions->load())
+            lib.reset(new QLibrary);
+            lib->setFileName(baseName + QLatin1Char('-') + QStringLiteral(GAMMARAY_PROBE_ABI));
+            if (lib->load()) {
+                m_externalExportActions = std::move(lib);
                 break;
-            m_externalExportActions->setFileName(baseName + QStringLiteral(GAMMARAY_DEBUG_POSTFIX));
-            if (m_externalExportActions->load())
+            }
+            lib.reset(new QLibrary);
+            lib->setFileName(baseName + QStringLiteral(GAMMARAY_DEBUG_POSTFIX));
+            if (lib->load()) {
+                m_externalExportActions = std::move(lib);
                 break;
+            }
         }
     }
 
