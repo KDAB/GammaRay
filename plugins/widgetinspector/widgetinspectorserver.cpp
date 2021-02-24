@@ -397,16 +397,6 @@ void WidgetInspectorServer::saveAsSvg(const QString &fileName)
     m_overlayWidget->show();
 }
 
-void WidgetInspectorServer::saveAsPdf(const QString &fileName)
-{
-    if (fileName.isEmpty() || !m_selectedWidget)
-        return;
-
-    m_overlayWidget->hide();
-    callExternalExportAction("gammaray_save_widget_to_pdf", m_selectedWidget, fileName);
-    m_overlayWidget->show();
-}
-
 void WidgetInspectorServer::saveAsUiFile(const QString &fileName)
 {
     if (fileName.isEmpty() || !m_selectedWidget)
@@ -522,9 +512,6 @@ void WidgetInspectorServer::checkFeatures()
     Features f = NoFeature;
 #ifdef HAVE_QT_SVG
     f |= SvgExport;
-#endif
-#ifdef HAVE_QT_PRINTSUPPORT
-    f |= PdfExport;
 #endif
 #ifdef HAVE_QT_DESIGNER
     f |= UiExport;

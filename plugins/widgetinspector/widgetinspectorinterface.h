@@ -51,7 +51,6 @@ public:
         InputRedirection = 1,
         AnalyzePainting = 2,
         SvgExport = 4,
-        PdfExport = 8,
         UiExport = 16
     };
     Q_DECLARE_FLAGS(Features, Feature)
@@ -65,7 +64,6 @@ public:
 public slots:
     virtual void saveAsImage(const QString &fileName) = 0;
     virtual void saveAsSvg(const QString &fileName) = 0;
-    virtual void saveAsPdf(const QString &fileName) = 0;
     virtual void saveAsUiFile(const QString &fileName) = 0;
 
     virtual void analyzePainting() = 0;

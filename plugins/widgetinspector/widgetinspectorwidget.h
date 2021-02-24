@@ -64,7 +64,6 @@ private slots:
 
     void saveAsImage();
     void saveAsSvg();
-    void saveAsPdf();
     void saveAsUiFile();
     void analyzePainting();
     void updateActions();

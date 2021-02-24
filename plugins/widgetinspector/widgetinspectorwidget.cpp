@@ -138,7 +138,6 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
 
     connect(ui->actionSaveAsImage, &QAction::triggered, this, &WidgetInspectorWidget::saveAsImage);
     connect(ui->actionSaveAsSvg, &QAction::triggered, this, &WidgetInspectorWidget::saveAsSvg);
-    connect(ui->actionSaveAsPdf, &QAction::triggered, this, &WidgetInspectorWidget::saveAsPdf);
     connect(ui->actionSaveAsUiFile, &QAction::triggered, this, &WidgetInspectorWidget::saveAsUiFile);
     connect(ui->actionAnalyzePainting, &QAction::triggered, this, &WidgetInspectorWidget::analyzePainting);
 
@@ -146,7 +145,6 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
 
     addAction(ui->actionSaveAsImage);
     addAction(ui->actionSaveAsSvg);
-    addAction(ui->actionSaveAsPdf);
     addAction(ui->actionSaveAsUiFile);
     addAction(ui->actionAnalyzePainting);
 
@@ -208,8 +206,6 @@ void WidgetInspectorWidget::updateActions()
     ui->actionSaveAsImage->setEnabled(selection);
     ui->actionSaveAsSvg->setEnabled(
         selection && m_inspector->features() & WidgetInspectorInterface::SvgExport);
-    ui->actionSaveAsPdf->setEnabled(
-        selection && m_inspector->features() & WidgetInspectorInterface::PdfExport);
     ui->actionSaveAsUiFile->setEnabled(
         selection && m_inspector->features() & WidgetInspectorInterface::UiExport);
     ui->actionAnalyzePainting->setEnabled(
@@ -285,21 +281,6 @@ void WidgetInspectorWidget::saveAsSvg()
         return;
 
     m_inspector->saveAsSvg(fileName);
-}
-
-void WidgetInspectorWidget::saveAsPdf()
-{
-    const QString fileName
-        = QFileDialog::getSaveFileName(
-        this,
-        tr("Save As PDF"),
-        QString(),
-        tr("PDF (*.pdf)"));
-
-    if (fileName.isEmpty())
-        return;
-
-    m_inspector->saveAsPdf(fileName);
 }
 
 void WidgetInspectorWidget::saveAsUiFile()

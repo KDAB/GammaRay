@@ -46,7 +46,6 @@ WidgetInspectorClient::~WidgetInspectorClient() = default;
     }
 
 WRAP_REMOTE(saveAsImage, const QString &)
-WRAP_REMOTE(saveAsPdf, const QString &)
 WRAP_REMOTE(saveAsSvg, const QString &)
 WRAP_REMOTE(saveAsUiFile, const QString &)
 

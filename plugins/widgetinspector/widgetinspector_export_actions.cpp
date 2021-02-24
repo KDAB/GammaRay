@@ -38,10 +38,6 @@
 #include <QSvgGenerator>
 #endif
 
-#ifdef HAVE_QT_PRINTSUPPORT
-#include <QPrinter>
-#endif
-
 #include <QPainter>
 #include <QWidget>
 #include <QFile>
@@ -73,17 +69,4 @@ Q_DECL_EXPORT void gammaray_save_widget_to_ui(QWidget *widget, const QString &fi
 
 #endif
 
-#ifdef HAVE_QT_PRINTSUPPORT
-Q_DECL_EXPORT void gammaray_save_widget_to_pdf(QWidget *widget, const QString &fileName)
-{
-    QPrinter printer(QPrinter::ScreenResolution);
-    printer.setOutputFileName(fileName);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setPageMargins(0, 0, 0, 0, QPrinter::DevicePixel);
-    printer.setPaperSize(widget->size(), QPrinter::DevicePixel);
-
-    widget->render(&printer);
-}
-
-#endif
 }

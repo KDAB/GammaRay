@@ -79,14 +79,6 @@
     <string>Renders the currently selected image as SVG vector graphic.</string>
    </property>
   </action>
-  <action name="actionSaveAsPdf">
-   <property name="text">
-    <string>Save as &amp;PDF...</string>
-   </property>
-   <property name="toolTip">
-    <string>Renders the currently selected widget in to a PDF file.</string>
-   </property>
-  </action>
   <action name="actionSaveAsUiFile">
    <property name="text">
     <string>Save as &amp;UI file...</string>

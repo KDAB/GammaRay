@@ -89,7 +89,6 @@ private slots:
 
     void saveAsImage(const QString &fileName) override;
     void saveAsSvg(const QString &fileName) override;
-    void saveAsPdf(const QString &fileName) override;
     void saveAsUiFile(const QString &fileName) override;
 
     void analyzePainting() override;

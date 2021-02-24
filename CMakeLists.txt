@@ -362,7 +362,6 @@ find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS
   Location
   OpenGL
   Positioning
-  PrintSupport
   Qml
   Quick
   QuickWidgets
@@ -446,16 +445,6 @@ if(TARGET Qt::Gui)
   cmake_pop_check_state()
 endif()
 
-if(TARGET Qt::PrintSupport)
-  cmake_push_check_state()
-  set(CMAKE_REQUIRED_LIBRARIES Qt::PrintSupport)
-  check_cxx_symbol_exists(QT_NO_PRINTER "QPrinter" QT_NO_PRINTER)
-  cmake_pop_check_state()
-  if(NOT QT_NO_PRINTER)
-    set(HAVE_QT_PRINTSUPPORT ON)
-  endif()
-endif()
-
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
 #add_definitions(-DQT_DEPRECATED_WARNINGS)
 
@@ -463,7 +452,6 @@ set_package_properties(Qt${Qt_VERSION_MAJOR} PROPERTIES URL "https://qt.io/")
 set_package_properties(Qt${Qt_VERSION_MAJOR}Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
 set_package_properties(Qt${Qt_VERSION_MAJOR}Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
 set_package_properties(Qt${Qt_VERSION_MAJOR}Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
-set_package_properties(Qt${Qt_VERSION_MAJOR}PrintSupport PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget PDF export.")
 
 # debug suffixes for qmake compatibility
 if(WIN32)
