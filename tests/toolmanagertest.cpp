@@ -99,11 +99,11 @@ private slots:
         }
         QVERIFY(hasBasicTools);
         QVERIFY(actionInspector);
-        QCOMPARE(actionInspector->enabled, false);
-        QCOMPARE(actionInspector->hasUi, true);
+        QCOMPARE(actionInspector->enabled, false); /* coverity[UNINIT_CTOR] */
+        QCOMPARE(actionInspector->hasUi, true); /* coverity[UNINIT_CTOR] */
         QVERIFY(guiSupport);
-        QCOMPARE(guiSupport->enabled, true);
-        QCOMPARE(guiSupport->hasUi, false);
+        QCOMPARE(guiSupport->enabled, true); /* coverity[UNINIT_CTOR] */
+        QCOMPARE(guiSupport->hasUi, false); /* coverity[UNINIT_CTOR] */
         // Create QAction to enable action inspector
         QAction action("Test Action", this);
         toolEnabledSpy.wait(1000);
