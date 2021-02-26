@@ -1,0 +1,7 @@
+Alejandro Exojo <suy@badopi.org>
+Christian Gagneraud <christian.gagneraud@navico.com>
+Gábor Angyal <angyalgabor@t-online.hu>
+Jan Kundrát <jkt@flaska.net>
+Peter Kuemmel <syntheticpp@gmx.net>
+CESNET, z.s.p.o. <info@cesnet.cz>
+

@@ -68,6 +68,8 @@ Contact info@kdab.com for more information about the Copyright Assignment Agreem
 Please submit your contributions or issue reports from our GitHub space at
 https://github.com/KDAB/GammaRay
 
+Thanks to our [contributors](CONTRIBUTORS.txt).
+
 License
 =======
 The GammaRay Software is (C) 2010-2021 Klarälvdalens Datakonsult AB (KDAB),
