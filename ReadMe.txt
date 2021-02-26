@@ -61,12 +61,14 @@ Get Involved
 If you want to contribute, please check out: https://github.com/KDAB/GammaRay/wiki/Get-Involved
 
 KDAB will happily accept external contributions, but substantial contributions require
-a signed [Copyright Assignment Agreement](docs/GammaRay-CopyrightAssignmentForm.docx).
+a signed [Copyright Assignment Agreement](docs/GammaRay-CopyrightAssignmentForm.pdf).
 
 Contact info@kdab.com for more information about the Copyright Assignment Agreement.
 
 Please submit your contributions or issue reports from our GitHub space at
 https://github.com/KDAB/GammaRay
+
+Thanks to our [contributors](CONTRIBUTORS.txt).
 
 License
 =======
