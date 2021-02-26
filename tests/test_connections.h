@@ -134,7 +134,7 @@ private:
     void checkFinished();
     QList<TestThread *> m_threads;
     QList<TestConnections *> m_tester;
-    QEventLoop *m_loop;
+    QEventLoop *m_loop = nullptr;
 };
 
 #endif // TEST_CONNECTIONS_H
