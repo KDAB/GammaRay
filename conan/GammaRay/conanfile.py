@@ -31,7 +31,7 @@ class GammaRayConan(ConanFile):
     version = "2.11.2"
     license = ("https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.txt,"
                "https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.GPL.txt,"
-               "https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.BSD3.txt").format(version)
+               "https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.BSD2.txt").format(version)
     author = "Klaralvdalens Datakonsult AB (KDAB) info@kdab.com"
     url = "https://github.com/KDAB/GammaRay.git"
     description = "GammaRay is a software introspection tool for Qt applications developed by KDAB."
