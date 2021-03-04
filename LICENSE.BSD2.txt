@@ -1,6 +1,11 @@
 BSD-2-Clause
 
-Copyright (c) 2005 - 2019, Jochen Kalmbach
+Some 3rdparty code included with this software is licensed as follows:
+
+StackWalker: Copyright (c) 2005 - 2019, Jochen Kalmbach
+All rights reserved.
+
+lz4: Copyright (c) 2011-2016, Yann Collet
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
