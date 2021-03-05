@@ -992,18 +992,22 @@ static QString regionToString(const QRegion &region)
         return QStringLiteral("<null>");
     if (region.isEmpty())
         return QStringLiteral("<empty>");
+#if QT_VERSION > QT_VERSION_CHECK(5, 8, 0)
     if (region.rectCount() == 1)
-        return VariantHandler::displayString(region.rects().at(0));
+        return VariantHandler::displayString(*region.begin());
 
     QStringList rects;
     rects.reserve(region.rectCount());
-    foreach (const auto &r, region.rects())
+    for (const auto &r :  region)
         rects.push_back(VariantHandler::displayString(r));
 
     return GuiSupport::tr("[%1]: %2").arg(
         VariantHandler::displayString(region.boundingRect()),
         rects.join(QLatin1String("; "))
     );
+#else
+    return GuiSupport::tr("<%1 elements>").arg(region.rectCount());
+#endif
 }
 
 static QString imageToString(const QImage &image)
