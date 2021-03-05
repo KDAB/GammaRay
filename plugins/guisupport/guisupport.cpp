@@ -821,9 +821,14 @@ static const MetaEnum::Value<QPainter::RenderHint> painter_render_hint_table[] =
     E(Antialiasing),
     E(TextAntialiasing),
     E(SmoothPixmapTransform),
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     E(HighQualityAntialiasing),
     E(NonCosmeticDefaultPen),
-    E(Qt4CompatiblePainting)
+    E(Qt4CompatiblePainting),
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
+    E(LosslessImageRendering),
+#endif
 };
 #undef E
 
