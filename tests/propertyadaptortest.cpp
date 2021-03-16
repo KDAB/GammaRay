@@ -42,7 +42,7 @@
 #include <QSignalSpy>
 #include <QTest>
 
-Q_DECLARE_METATYPE(QVector<int>)
+Q_DECLARE_METATYPE(QList<int>)
 Q_DECLARE_METATYPE(QPen *)
 
 using namespace GammaRay;
@@ -164,14 +164,14 @@ private slots:
 
     void testSequentialContainer()
     {
-        auto v = QVector<int>() << 2 << 3 << 5 << 12;
+        auto v = QList<int>() << 2 << 3 << 5 << 12;
         auto adaptor = PropertyAdaptorFactory::create(ObjectInstance(QVariant::fromValue(v)), this);
 
         QVERIFY(adaptor);
         QCOMPARE(adaptor->count(), 4);
         verifyPropertyData(adaptor);
-        testProperty(adaptor, "0", "int", "QVector<int>", PropertyData::Readable);
-        testProperty(adaptor, "3", "int", "QVector<int>", PropertyData::Readable);
+        testProperty(adaptor, "0", "int", "QList<int>", PropertyData::Readable);
+        testProperty(adaptor, "3", "int", "QList<int>", PropertyData::Readable);
         QVERIFY(!adaptor->canAddProperty());
     }
 
