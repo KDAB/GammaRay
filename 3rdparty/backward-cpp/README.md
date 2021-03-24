@@ -1,4 +1,4 @@
-Backward-cpp
+Backward-cpp [![badge](https://img.shields.io/badge/conan.io-backward%2F1.3.0-green.svg?logo=data:image/png;base64%2CiVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAMAAAAolt3jAAAA1VBMVEUAAABhlctjlstkl8tlmMtlmMxlmcxmmcxnmsxpnMxpnM1qnc1sn85voM91oM11oc1xotB2oc56pNF6pNJ2ptJ8ptJ8ptN9ptN8p9N5qNJ9p9N9p9R8qtOBqdSAqtOAqtR%2BrNSCrNJ/rdWDrNWCsNWCsNaJs9eLs9iRvNuVvdyVv9yXwd2Zwt6axN6dxt%2Bfx%2BChyeGiyuGjyuCjyuGly%2BGlzOKmzOGozuKoz%2BKqz%2BOq0OOv1OWw1OWw1eWx1eWy1uay1%2Baz1%2Baz1%2Bez2Oe02Oe12ee22ujUGwH3AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgBQkREyOxFIh/AAAAiklEQVQI12NgAAMbOwY4sLZ2NtQ1coVKWNvoc/Eq8XDr2wB5Ig62ekza9vaOqpK2TpoMzOxaFtwqZua2Bm4makIM7OzMAjoaCqYuxooSUqJALjs7o4yVpbowvzSUy87KqSwmxQfnsrPISyFzWeWAXCkpMaBVIC4bmCsOdgiUKwh3JojLgAQ4ZCE0AMm2D29tZwe6AAAAAElFTkSuQmCC)](http://www.conan.io/source/backward/1.3.0/Manu343726/testing) [![Build Status](https://travis-ci.org/bombela/backward-cpp.svg?branch=master)](https://travis-ci.org/bombela/backward-cpp)
 ============
 
 Backward is a beautiful stack trace pretty printer for C++.
@@ -21,7 +21,7 @@ You can see that for the trace #1 in the example, the function
 `you_shall_not_pass()` was inlined in the function `...read2::do_test()` by the
 compiler.
 
-##Installation
+## Installation
 
 #### Install backward.hpp
 
@@ -39,12 +39,19 @@ errors (segfault, abort, un-handled exception...), simply add a copy of
 The code in `backward.cpp` is trivial anyway, you can simply copy what it's
 doing at your convenience.
 
-##Configuration & Dependencies
+## Configuration & Dependencies
 
 ### Integration with CMake
 
 If you are using CMake and want to use its configuration abilities to save
-you the trouble, you can easily integrate Backward:
+you the trouble, you can easily integrate Backward, depending on how you obtained
+the library.
+
+#### As a subdirectory:
+
+In this case you have a subdirectory containing the whole repository of Backward
+(eg.: using git-submodules), in this case you can do:
+
 ```
 add_subdirectory(/path/to/backward-cpp)
 
@@ -52,7 +59,39 @@ add_subdirectory(/path/to/backward-cpp)
 add_executable(mytarget mysource.cpp ${BACKWARD_ENABLE})
 
 # This will add libraries, definitions and include directories needed by backward
+# by setting each property on the target.
 add_backward(mytarget)
+```
+
+#### Modifying CMAKE_MODULE_PATH
+
+In this case you can have Backward installed as a subdirectory:
+
+```
+list(APPEND CMAKE_MODULE_PATH /path/to/backward-cpp)
+find_package(Backward)
+
+# This will add libraries, definitions and include directories needed by backward
+# through an IMPORTED target.
+target_link_libraries(mytarget PUBLIC Backward::Backward)
+```
+
+Notice that this is equivalent to using the the approach that uses `add_subdirectory()`,
+however it uses cmake's [imported target](https://cmake.org/Wiki/CMake/Tutorials/Exporting_and_Importing_Targets) mechanism.
+
+#### Installation through a regular package manager
+
+In this case you have obtained Backward through a package manager.
+
+Packages currently available:
+- [conda-forge](https://anaconda.org/conda-forge/backward-cpp)
+
+```
+find_package(Backward)
+
+# This will add libraries, definitions and include directories needed by backward
+# through an IMPORTED target.
+target_link_libraries(mytarget PUBLIC Backward::Backward)
 ```
 
 ### Compile with debug info
@@ -61,7 +100,7 @@ You need to compile your project with generation of debug symbols enabled,
 usually `-g` with clang++ and g++.
 
 Note that you can use `-g` with any level of optimization, with modern debug
-information encoding like DWARF, it only takes space in the binary (it'ss not
+information encoding like DWARF, it only takes space in the binary (it's not
 loaded in memory until your debugger or Backward makes use of it, don't worry),
 and it doesn't impact the code generation (at least on GNU/Linux x86\_64 for
 what I know).
@@ -88,7 +127,10 @@ easiest for you to install, so pick your poison:
 
 	apt-get install binutils-dev (or equivalent)
 
-And do not forget to link with the lib: `g++/clang++ -lbfd ...`
+And do not forget to link with the lib: `g++/clang++ -lbfd -ldl ...`
+
+This library requires dynamic loading. Which is provided by the library `dl`.
+Hence why we also link with `-ldl`.
 
 Then define the following before every inclusion of `backward.hpp` (don't
 forget to update `backward.cpp` as well):
@@ -107,7 +149,29 @@ Of course you can simply add the define (`-DBACKWARD_HAS_...=1`) and the
 linkage details in your build system and even auto-detect which library is
 installed, it's up to you.
 
-That'ss it, you are all set, you should be getting nice stack traces like the
+#### [libdwarf](https://sourceforge.net/projects/libdwarf/) and [libelf](http://www.mr511.de/software/english.html)
+
+	apt-get install libdwarf-dev (or equivalent)
+
+And do not forget to link with the lib and inform Backward to use it:
+
+	#define BACKWARD_HAS_DWARF 1
+
+There are several alternative implementations of libdwarf and libelf that
+are API compatible so it's possible, although it hasn't been tested, to
+replace the ones used when developing backward (in bold, below):
+
+* **_libelf_** by [Michael "Tired" Riepe](http://www.mr511.de/software/english.html)
+* **_libdwarf_** by [David Anderson](https://www.prevanders.net/dwarf.html)
+* libelf from [elfutils](https://fedorahosted.org/elfutils/)
+* libelf and libdwarf from FreeBSD's [ELF Tool Chain](https://sourceforge.net/p/elftoolchain/wiki/Home/) project
+
+
+Of course you can simply add the define (`-DBACKWARD_HAS_...=1`) and the
+linkage details in your build system and even auto-detect which library is
+installed, it's up to you.
+
+That's it, you are all set, you should be getting nice stack traces like the
 one at the beginning of this document.
 
 ## API
@@ -228,7 +292,7 @@ using namespace backward;
 StackTrace st; st.load_here(32);
 Printer p;
 p.object = true;
-p.color = false;
+p.color_mode = ColorMode::always;
 p.address = true;
 p.print(st, stderr);
 ```
@@ -240,21 +304,29 @@ class Printer { public:
 	// Print a little snippet of code if possible.
 	bool snippet = true;
 
-	// Colorize the trace (only set a color when printing on a terminal)
-	bool color = true;
+	// Colorize the trace
+	//  - ColorMode::automatic: Activate colors if possible. For example, when using a TTY on linux.
+	//  - ColorMode::always: Always use colors.
+	//  - ColorMode::never: Never use colors.
+	bool color_mode = ColorMode::automatic;
 
 	// Add the addresses of every source location to the trace.
 	bool address = false;
 
-	// Even if there is a source location, prints the object the trace comes
-	// from as well.
+	// Even if there is a source location, also prints the object
+	// from where the trace came from.
 	bool object = false;
 
-	// Resolve and print a stack trace. It takes a C FILE* object, only because
-	// it is possible to access the underalying OS-level file descriptor, which
-	// is then used to determine if the output is a terminal to print in color.
+	// Resolve and print a stack trace to the given C FILE* object.
+	// On linux, if the FILE* object is attached to a TTY,
+	// color will be used if color_mode is set to automatic.
 	template <typename StackTrace>
-		FILE* print(StackTrace& st, FILE* os = stderr)
+		FILE* print(StackTrace& st, FILE* fp = stderr);
+
+	// Resolve and print a stack trace to the given std::ostream object.
+	// Color will only be used if color_mode is set to always. 
+	template <typename ST>
+		std::ostream& print(ST& st, std::ostream& os);
 ```
 
 
@@ -330,7 +402,7 @@ struct ResolvedTrace: public Trace {
 
 François-Xavier Bourlet <bombela@gmail.com>
 
-Copyright 2013 Google Inc. All Rights Reserved.
+Copyright 2013-2017 Google Inc. All Rights Reserved.
 MIT License.
 
 ### Disclaimer

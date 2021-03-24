@@ -80,7 +80,7 @@ QString AboutData::aboutHeader()
                 "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
                 "<p>StackWalker code Copyright (c) 2005-2019, Jochen Kalmbach, All rights reserved<br>"
                 "lz4 fast LZ compression code Copyright (C) 2011-2015, Yann Collet, All rights reserved<br>"
-                "Backward-cpp code Copyright 2013 Google Inc. All rights reserved.</p>");
+                "backward-cpp code Copyright 2013-2017 Google Inc. All rights reserved.</p>");
 }
 
 QString AboutData::aboutAuthors()
