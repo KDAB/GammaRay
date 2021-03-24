@@ -106,7 +106,7 @@ set(KDE_INSTALL_USE_QT_SYS_PATHS OFF)
 include(ECMGeneratePriFile)
 include(ECMEnableSanitizers)
 include(GenerateExportHeader)
-include("3rdparty/backward-cpp/BackwardMacros.cmake")
+include("3rdparty/backward-cpp/BackwardConfig.cmake")
 
 # Exit for blacklisted compilers (those that don't support C++11 very well)
 #  MSVC++ < 2013 aka 1800
