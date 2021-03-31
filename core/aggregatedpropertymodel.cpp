@@ -263,6 +263,7 @@ bool AggregatedPropertyModel::setData(const QModelIndex &index, const QVariant &
     switch (role) {
     case Qt::EditRole:
     {
+        QPointer<GammaRay::PropertyAdaptor> guard(adaptor);
         if (value.userType() == qMetaTypeId<EnumValue>()) {
             const auto d = adaptor->propertyData(index.row());
             if (d.value().type() == QVariant::Int) {
@@ -275,7 +276,9 @@ bool AggregatedPropertyModel::setData(const QModelIndex &index, const QVariant &
         } else {
             adaptor->writeProperty(index.row(), value);
         }
-        propagateWrite(adaptor);
+        if (guard) {
+            propagateWrite(adaptor);
+        }
         return true;
     }
     case Qt::CheckStateRole:
