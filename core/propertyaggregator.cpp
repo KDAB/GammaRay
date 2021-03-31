@@ -87,8 +87,11 @@ void PropertyAggregator::writeProperty(int index, const QVariant &value)
     int offset = 0;
     for (const auto adaptor : qAsConst(m_propertyAdaptors)) {
         if (index < offset + adaptor->count()) {
+            QPointer<PropertyAggregator> guard(this);
             adaptor->writeProperty(index - offset, value);
-            m_oi = adaptor->object(); // propagate changes back to us, particularly matters for value types
+            if (guard) {
+                m_oi = adaptor->object(); // propagate changes back to us, particularly matters for value types
+            }
             return;
         }
         offset += adaptor->count();
