@@ -99,8 +99,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %files
 %defattr(-,root,root)
 %{_prefix}/share/applications/GammaRay.desktop
-%dir %{_prefix}/share/appdata/
-%{_prefix}/share/appdata/GammaRay.appdata.xml
+%dir %{_prefix}/share/metainfo/
+%{_prefix}/share/metainfo/com.kdab.GammaRay.metainfo.xml
 %{_prefix}/share/icons/hicolor
 %{_prefix}/share/doc/gammaray
 %dir %{_prefix}/share/gammaray/
