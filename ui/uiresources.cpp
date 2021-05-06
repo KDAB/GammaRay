@@ -37,6 +37,7 @@
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
 #include <QDesktopWidget>
 #endif
+#include <QPainter>
 #include <QScreen>
 #include <QDebug>
 
@@ -187,13 +188,14 @@ QString UIResources::themedFilePath(UIResources::ThemeEntryType type, const QStr
 
 QImage UIResources::tintedImage(const QImage &image, const QColor &color)
 {
-    QImage img(image.alphaChannel());
+    QImage img(image.size(), QImage::Format_ARGB32_Premultiplied);
     img.setDevicePixelRatio(image.devicePixelRatio());
-    QColor newColor = color;
-    for (int i = 0; i < img.colorCount(); ++i) {
-        newColor.setAlpha(qGray(img.color(i)));
-        img.setColor(i, newColor.rgba());
-    }
+
+    QPainter painter(&img);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.drawImage(img.rect(), image);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    painter.fillRect(img.rect(), color);
     return img;
 }
 
