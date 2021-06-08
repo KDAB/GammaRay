@@ -699,6 +699,10 @@ public:
 };
 #endif
 
+#if defined(Q_CC_CLANG) || defined(Q_CC_GNU)
+// keep it working in UBSAN
+__attribute__((no_sanitize("vptr")))
+#endif
 void QuickInspector::analyzePainting()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 3)
