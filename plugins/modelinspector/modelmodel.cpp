@@ -123,7 +123,11 @@ void ModelModel::objectAdded(QObject *obj)
 
 void ModelModel::objectRemoved(QObject *obj)
 {
-    int index = m_models.indexOf(static_cast<QAbstractItemModel *>(obj));
+    // do not dereference!
+    QAbstractItemModel *unsafeModelPtr = nullptr;
+    memcpy(&unsafeModelPtr, &obj, sizeof(unsafeModelPtr));
+
+    int index = m_models.indexOf(unsafeModelPtr);
     if (index >= 0 && index < m_models.size()) {
         beginRemoveRows(QModelIndex(), index, index);
         m_models.remove(index);

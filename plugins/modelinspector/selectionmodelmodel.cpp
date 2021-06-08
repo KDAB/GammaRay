@@ -71,15 +71,18 @@ void SelectionModelModel::objectCreated(QObject* obj)
 void SelectionModelModel::objectDestroyed(QObject* obj)
 {
     Q_ASSERT(obj);
-    auto model = static_cast<QItemSelectionModel*>(obj); // do not dereference!
 
-    auto it = std::lower_bound(m_selectionModels.begin(), m_selectionModels.end(), model);
-    if (it == m_selectionModels.end() || *it != model)
+    // do not dereference!
+    QItemSelectionModel *unsafeModelPtr = nullptr;
+    memcpy(&unsafeModelPtr, &obj, sizeof(unsafeModelPtr));
+
+    auto it = std::lower_bound(m_selectionModels.begin(), m_selectionModels.end(), unsafeModelPtr);
+    if (it == m_selectionModels.end() || *it != unsafeModelPtr)
         return;
     m_selectionModels.erase(it);
 
-    it = std::lower_bound(m_currentSelectionModels.begin(), m_currentSelectionModels.end(), model);
-    if (it == m_currentSelectionModels.end() || *it != model)
+    it = std::lower_bound(m_currentSelectionModels.begin(), m_currentSelectionModels.end(), unsafeModelPtr);
+    if (it == m_currentSelectionModels.end() || *it != unsafeModelPtr)
         return;
     const auto row = std::distance(m_currentSelectionModels.begin(), it);
     beginRemoveRows(QModelIndex(), row, row);
