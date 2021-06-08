@@ -77,6 +77,10 @@ public:
  *
  * @return Return true in case metaObject() does not point to staticMetaObject.
  */
+#if defined(Q_CC_CLANG) || defined(Q_CC_GNU)
+// keep it working in UBSAN
+__attribute__((no_sanitize("vptr")))
+#endif
 static inline bool hasDynamicMetaObject(const QObject *object)
 {
     return reinterpret_cast<const UnprotectedQObject *>(object)->data()->metaObject != nullptr;
