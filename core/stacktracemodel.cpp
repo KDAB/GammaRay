@@ -98,3 +98,17 @@ QVariant StackTraceModel::headerData(int section, Qt::Orientation orientation, i
     }
     return QAbstractTableModel::headerData(section, orientation, role);
 }
+
+QStringList StackTraceModel::fullTrace() const
+{
+    QStringList bt;
+    bt.reserve(m_frames.size());
+    for (const auto &frame : qAsConst(m_frames)) {
+        if (frame.location.isValid())
+            bt.push_back(frame.name + QLatin1String(" (") + frame.location.displayString() + QLatin1Char(')'));
+        else
+            bt.push_back(frame.name);
+    }
+
+    return bt;
+}

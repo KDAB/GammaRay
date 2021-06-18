@@ -40,6 +40,7 @@ class MessageHandlerInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool stackTraceAvailable READ stackTraceAvailable WRITE setStackTraceAvailable NOTIFY stackTraceAvailableChanged)
+    Q_PROPERTY(QStringList fullTrace READ fullTrace WRITE setFullTrace NOTIFY fullTraceChanged)
 public:
     explicit MessageHandlerInterface(QObject *parent = nullptr);
     ~MessageHandlerInterface() override;
@@ -47,13 +48,21 @@ public:
     bool stackTraceAvailable() const;
     void setStackTraceAvailable(bool available);
 
+    QStringList fullTrace() const;
+    void setFullTrace(const QStringList &newFullTrace);
+
+public slots:
+    virtual void generateFullTrace() = 0;
+
 signals:
     void fatalMessageReceived(const QString &app, const QString &message, const QTime &time,
                               const QStringList &backtrace);
     void stackTraceAvailableChanged(bool available);
+    void fullTraceChanged();
 
 private:
     bool m_stackTraceAvailable;
+    QStringList m_fullTrace;
 };
 }
 

@@ -53,6 +53,9 @@ public:
     explicit MessageHandler(Probe *probe, QObject *parent = nullptr);
     ~MessageHandler() override;
 
+public slots:
+    void generateFullTrace() override;
+
 private slots:
     void ensureHandlerInstalled();
     void handleFatalMessage(const GammaRay::DebugMessage &message);

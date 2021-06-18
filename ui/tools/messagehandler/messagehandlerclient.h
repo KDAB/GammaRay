@@ -38,6 +38,9 @@ class MessageHandlerClient : public MessageHandlerInterface
     Q_INTERFACES(GammaRay::MessageHandlerInterface)
 public:
     explicit MessageHandlerClient(QObject *parent = nullptr);
+
+public slots:
+    void generateFullTrace() override;
 };
 }
 
