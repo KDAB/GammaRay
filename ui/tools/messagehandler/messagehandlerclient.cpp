@@ -28,9 +28,16 @@
 
 #include "messagehandlerclient.h"
 
+#include <common/endpoint.h>
+
 using namespace GammaRay;
 
 MessageHandlerClient::MessageHandlerClient(QObject *parent)
     : MessageHandlerInterface(parent)
 {
+}
+
+void MessageHandlerClient::generateFullTrace()
+{
+    Endpoint::instance()->invokeObject(objectName(), "generateFullTrace");
 }

@@ -54,6 +54,8 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
+    QStringList fullTrace() const;
+
 private:
     mutable QVector<Execution::ResolvedFrame> m_frames;
     Execution::Trace m_trace;

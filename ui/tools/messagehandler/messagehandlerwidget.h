@@ -59,6 +59,7 @@ private slots:
 private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
     UIStateManager m_stateManager;
+    QObject *m_backtraceFetchContext = nullptr;
 };
 }
 

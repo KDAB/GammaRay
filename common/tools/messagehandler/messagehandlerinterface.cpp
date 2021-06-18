@@ -52,3 +52,16 @@ void MessageHandlerInterface::setStackTraceAvailable(bool available)
     m_stackTraceAvailable = available;
     emit stackTraceAvailableChanged(available);
 }
+
+QStringList MessageHandlerInterface::fullTrace() const
+{
+    return m_fullTrace;
+}
+
+void MessageHandlerInterface::setFullTrace(const QStringList &newFullTrace)
+{
+    if (m_fullTrace == newFullTrace)
+        return;
+    m_fullTrace = newFullTrace;
+    emit fullTraceChanged();
+}

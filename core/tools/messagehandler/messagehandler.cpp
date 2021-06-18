@@ -171,6 +171,11 @@ MessageHandler::~MessageHandler()
     s_handler = nullptr;
 }
 
+void MessageHandler::generateFullTrace()
+{
+    setFullTrace(m_stackTraceModel->fullTrace());
+}
+
 void MessageHandler::ensureHandlerInstalled()
 {
     QMutexLocker lock(&s_mutex);
