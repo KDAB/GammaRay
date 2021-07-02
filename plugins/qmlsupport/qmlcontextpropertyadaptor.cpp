@@ -90,6 +90,7 @@ void QmlContextPropertyAdaptor::writeProperty(int index, const QVariant &value)
 
 void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     auto context = qobject_cast<QQmlContext *>(oi.qtObject());
     Q_ASSERT(context);
 
@@ -100,7 +101,6 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
     m_contextPropertyNames.clear();
     m_contextPropertyNames.reserve(propNames.count());
 
-#ifndef GAMMARAY_QT6_TODO
     QV4::IdentifierHashEntry *e = propNames.d->entries;
     QV4::IdentifierHashEntry *end = e + propNames.d->alloc;
     while (e < end) {
@@ -113,6 +113,8 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 #endif
         ++e;
     }
+#else
+    Q_UNUSED(oi)
 #endif
 }
 
