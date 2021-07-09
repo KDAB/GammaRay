@@ -422,14 +422,6 @@ endif()
 
 if(GAMMARAY_BUILD_UI) # widgets are required for the UI
   find_package(Qt${QtCore_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Widgets)
-  # 3D Widget inspector requires Qt3D 5.7
-  if(QtCore_VERSION VERSION_EQUAL 5.7 OR QtCore_VERSION VERSION_GREATER 5.7)
-    if(${Qt53DRender_FOUND} AND ${Qt53DInput_FOUND} AND ${Qt53DLogic_FOUND} AND ${Qt53DQuick_FOUND})
-      set(GAMMARAY_WITH_WIDGET3D TRUE)
-    else()
-      message(STATUS "Not building GammaRay Widget 3D")
-    endif()
-  endif()
 endif()
 
 set(HAVE_QT_CONCURRENT ${QtConcurrent_FOUND})
@@ -489,7 +481,6 @@ endif()
 
 add_feature_info("QtScript debugger" Qt5ScriptTools_FOUND "Requires QtScript and QtScriptTools.")
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
-add_feature_info("3D Widget Inspector" GAMMARAY_WITH_WIDGET3D "Requires Qt5 >= 5.7, Qt3D and QtQuick Controls")
 
 #
 # Additional dependencies
