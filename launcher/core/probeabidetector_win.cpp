@@ -40,6 +40,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QProcess>
 #include <QStandardPaths>
 #include <QString>
 #include <QStringList>
@@ -167,6 +168,22 @@ QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
     QStringList resolvedImports = QStringList(exe);
     QSet<QString> checkedImports;
 
+    if (exe.endsWith("python.exe")) {
+        QProcess python;
+        python.start(exe, QStringList() << "-c" << "import sysconfig; print(sysconfig.get_paths()['purelib'])");
+        if (!python.waitForStarted())
+            return QString();
+        if(!python.waitForFinished())
+            return QString();
+        QString sitePackagesPath = QString(python.readAllStandardOutput()).trimmed();
+        QStringList dllPath = {"\\PySide2\\Qt5Core.dll", "\\PySide6\\Qt6Core.dll", "\\PyQt5\\Qt5\\bin\\Qt5Core.dll", "\\PyQt6\\Qt6\\bin\\Qt6Core.dll"};
+        foreach (const auto &import, dllPath) {
+            if (QFile::exists(sitePackagesPath + import)) {
+                return sitePackagesPath + import;
+            }
+        }
+    }
+
     while (!resolvedImports.isEmpty()) {
         for (const auto &import : qAsConst(resolvedImports)) {
             if (containsQtCore(import.toUtf8()))
@@ -211,7 +228,7 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
     for (bool hasNext = Module32First(snapshot, &me); hasNext;
          hasNext = Module32Next(snapshot, &me)) {
         const QString module = QString::fromUtf16(reinterpret_cast<const ushort *>(me.szModule));
-        if (containsQtCore(module.toUtf8())) {
+        if (!module.endsWith(".pyd") && containsQtCore(module.toUtf8())) {
             const QString path = QString::fromUtf16(reinterpret_cast<const ushort *>(me.szExePath));
             CloseHandle(snapshot);
             return path;
