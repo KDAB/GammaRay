@@ -66,4 +66,15 @@
 
     For more details on how to integrate the GammaRay client with and IDE, please see the
     \l{https://docs.kdab.com/gammaray/latest/}{API documentation}.
+
+    \section1 Working around \c{ld.so} secure-execution mode (Linux only)
+
+    If your environment triggers the dynamic linker's secure-execution
+    mode, then the default \c{preload} injector will fail.  In that
+    case, you can copy or link \c{gammaray_probe.so} into a standard
+    search directory (eg. \c{/usr/lib}), enable the set-user-ID mode
+    bit (eg. \c{chmod u+s /usr/lib/gammaray_probe.so}), and finally
+    use the \c{--injector-override gammaray_probe.so}
+
+    For more information about \c{ld.so}'s secure mode, see the \l{http://man7.org/linux/man-pages/man8/ld.so.8.html#ENVIRONMENT}{man page}
 */
