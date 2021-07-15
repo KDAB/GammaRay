@@ -35,6 +35,7 @@
 #include <launcher/core/probeabidetector.h>
 
 #include <QProcess>
+#include <QtConcurrent>
 #include <QDir>
 
 #include <algorithm>
@@ -127,15 +128,16 @@ ProcDataList processList(const ProcDataList &previous)
     const QStringList procIds = procDir.entryList();
     if (procIds.isEmpty())
         return rc;
-    for (const QString &procId : procIds) {
+    QMutex mutex;
+    QtConcurrent::blockingMap(procIds, [&rc, &mutex](const QString &procId){
         if (!isUnixProcessId(procId))
-            continue;
+            return;
         QString filename = QStringLiteral("/proc/");
         filename += procId;
         filename += QLatin1String("/stat");
         QFile file(filename);
         if (!file.open(QIODevice::ReadOnly))
-            continue;     // process may have exited
+            return;     // process may have exited
 
         const QStringList data = QString::fromLocal8Bit(file.readAll()).split(' ');
         ProcData proc;
@@ -161,8 +163,9 @@ ProcDataList processList(const ProcDataList &previous)
         cmdFile.close();
 
         proc.abi = s_abiDetector.abiForProcess(procId.toLongLong());
-
+        QMutexLocker lock{&mutex};
         rc.push_back(proc);
-    }
+
+    });
     return rc;
 }
