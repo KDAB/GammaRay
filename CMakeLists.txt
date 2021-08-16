@@ -68,7 +68,10 @@ endif()
 
 project(GammaRay CXX C)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ECM/modules)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/KDAB/modules)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -664,7 +667,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}
 )
 
-include(QtInstallPaths) #to set QT_INSTALL_FOO variables
+include(KDQtInstallPaths) #to set QT_INSTALL_FOO variables
 add_subdirectory(cmake)
 add_subdirectory(3rdparty/kde)
 add_subdirectory(common)
