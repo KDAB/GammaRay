@@ -362,7 +362,9 @@ if(CYGWIN)
 endif()
 
 # linker flags
-if((CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU) AND (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
+if((CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT APPLE) OR
+  (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT APPLE) OR
+  (CMAKE_CXX_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
   set(_linker_flags "-Wl,-z,origin")
   if(NOT ECM_ENABLE_SANITIZERS)
     set(_linker_flags "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${_linker_flags}")
