@@ -1,6 +1,10 @@
 Release Highlights
 ==================
 
+Version 2.11.3
+--------------
+ * Increase CMake requirement to version 3.4.0 (reflecting reality).
+
 Version 2.11.2
 --------------
  * Prefer picking QtQuick items in fully visible parent-child chains.
