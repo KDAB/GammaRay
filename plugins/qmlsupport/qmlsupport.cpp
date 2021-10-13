@@ -356,10 +356,14 @@ QmlSupport::QmlSupport(Probe *probe, QObject *parent)
     MO_ADD_PROPERTY_RO(QQmlType, typeName);
     MO_ADD_PROPERTY_RO(QQmlType, qmlTypeName);
     MO_ADD_PROPERTY_RO(QQmlType, elementName);
-#ifndef GAMMARAY_QT6_TODO
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    MO_ADD_PROPERTY_RO(QQmlType, version);
+#else
     MO_ADD_PROPERTY_RO(QQmlType, majorVersion);
     MO_ADD_PROPERTY_RO(QQmlType, minorVersion);
 #endif
+
 #if QT_VERSION < QT_VERSION_CHECK(5, 13, 0)
     MO_ADD_PROPERTY_RO(QQmlType, createSize); // got removed in v5.13.0-alpha1
 #endif
