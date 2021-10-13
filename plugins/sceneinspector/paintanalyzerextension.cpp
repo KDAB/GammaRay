@@ -95,9 +95,14 @@ bool PaintAnalyzerExtension::analyzePainting(QGraphicsItem *item)
     QStyleOptionGraphicsItem option;
     option.state = QStyle::State_None;
     option.rect = item->boundingRect().toRect();
-#ifndef GAMMARAY_QT6_TODO
-    option.levelOfDetail = 1;
-#endif
+
+    /* Commented because no longer available in Qt6
+     * The alternative 'levelOfDetailFromTransform'
+     * is available, but docs say its value will be 1 by
+     * default anyways
+     */
+    // option.levelOfDetail = 1;
+
     option.exposedRect = item->boundingRect();
 
     option.styleObject = item->toGraphicsObject();
