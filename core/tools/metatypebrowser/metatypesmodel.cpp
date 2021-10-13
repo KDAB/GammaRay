@@ -75,26 +75,34 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
         #define F(x) if (flags & QMetaType:: x) l.push_back(QStringLiteral(#x))
             F(NeedsConstruction);
             F(NeedsDestruction);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            F(RelocatableType);
+            F(IsConst);
+            F(IsQmlList);
+            F(IsUnsignedEnumeration);
+#else
             F(MovableType);
+            F(WasDeclaredAsMetaType);
+#endif
             F(PointerToQObject);
             F(IsEnumeration);
             F(SharedPointerToQObject);
             F(WeakPointerToQObject);
             F(TrackingPointerToQObject);
-#ifndef GAMMARAY_QT6_TODO
-            F(WasDeclaredAsMetaType);
-#endif
             F(IsGadget);
         #undef F
 
             return l.join(QStringLiteral(", "));
         }
         case 5:
-#ifndef GAMMARAY_QT6_TODO
-            return QMetaType::hasRegisteredComparators(metaTypeId);
+        {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            auto mt = QMetaType(metaTypeId);
+            return mt.isEqualityComparable() && mt.isOrdered();
 #else
-            return {};
+            return QMetaType::hasRegisteredComparators(metaTypeId);
 #endif
+        }
         case 6:
             return QMetaType::hasRegisteredDebugStreamOperator(metaTypeId);
         }
