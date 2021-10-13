@@ -47,9 +47,15 @@ public:
     explicit GeoPositionInfoSourceFactory(QObject *parent = nullptr);
     ~GeoPositionInfoSourceFactory() override;
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QGeoPositionInfoSource *positionInfoSource(QObject *parent) override;
     QGeoSatelliteInfoSource *satelliteInfoSource(QObject *parent) override;
     QGeoAreaMonitorSource *areaMonitor(QObject *parent) override;
+#else
+    QGeoPositionInfoSource *positionInfoSource(QObject *parent, const QVariantMap &parameters) override;
+    QGeoSatelliteInfoSource *satelliteInfoSource(QObject *parent, const QVariantMap &parameters) override;
+    QGeoAreaMonitorSource *areaMonitor(QObject *parent, const QVariantMap &parameters) override;
+#endif
 
 private:
     QFactoryLoader *m_factoryLoader;

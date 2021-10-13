@@ -48,8 +48,14 @@ GeoPositionInfoSourceFactory::~GeoPositionInfoSourceFactory()
     delete m_factoryLoader;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject *parent)
+#else
+QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject *parent, const QVariantMap &parameters)
+#endif
 {
+    Q_UNUSED(parameters)
+
     auto proxy = new GeoPositionInfoSource(parent);
 
     auto metaData = m_factoryLoader->metaData();
@@ -93,14 +99,24 @@ QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject
     return proxy;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QGeoSatelliteInfoSource* GeoPositionInfoSourceFactory::satelliteInfoSource(QObject *parent)
+#else
+QGeoSatelliteInfoSource* GeoPositionInfoSourceFactory::satelliteInfoSource(QObject *parent, const QVariantMap &parameters)
+#endif
 {
     Q_UNUSED(parent);
+    Q_UNUSED(parameters)
     return nullptr;
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QGeoAreaMonitorSource* GeoPositionInfoSourceFactory::areaMonitor(QObject *parent)
+#else
+QGeoAreaMonitorSource* GeoPositionInfoSourceFactory::areaMonitor(QObject *parent, const QVariantMap &parameters)
+#endif
 {
     Q_UNUSED(parent);
+    Q_UNUSED(parameters)
     return nullptr;
 }
