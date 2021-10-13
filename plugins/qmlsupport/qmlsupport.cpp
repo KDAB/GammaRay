@@ -91,12 +91,13 @@ static QString metaMethodToString(const QObject *object, const QMetaMethod &meth
 
 static QString callableQjsValueToString(const QJSValue &v)
 {
-#ifndef GAMMARAY_QT6_TODO
 #if defined(QT_DEPRECATED)
     // note: QJSValue::engine() is deprecated
     // note: QJSValuePrivate::convertedToValue got introduced in Qt 5.5.0
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+    QV4::ExecutionEngine *jsEngine = QJSValuePrivate::engine(&v);
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
     // QJSEngine::handle() changed signature in 5.12
     QV4::ExecutionEngine *jsEngine = v.engine()->handle();
 #else
@@ -105,8 +106,12 @@ static QString callableQjsValueToString(const QJSValue &v)
 
     QV4::Scope scope(jsEngine);
 
-    QV4::Scoped<QV4::QObjectMethod> qobjectMethod(scope, QJSValuePrivate::convertedToValue(jsEngine,
-                                                                                           v));
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+    QV4::Scoped<QV4::QObjectMethod> qobjectMethod(scope, QJSValuePrivate::convertToReturnedValue(jsEngine, v));
+#else
+    QV4::Scoped<QV4::QObjectMethod> qobjectMethod(scope, QJSValuePrivate::convertedToValue(jsEngine, v));
+#endif
+
     if (!qobjectMethod)
         return QStringLiteral("<callable>");
 
@@ -117,9 +122,6 @@ static QString callableQjsValueToString(const QJSValue &v)
 #else
     Q_UNUSED(v);
     return QStringLiteral("<callable>");
-#endif
-#else
-    return "TODO";
 #endif
 }
 
