@@ -49,7 +49,7 @@ class QModelIndex;
 class QThread;
 class QTimer;
 class QMutex;
-class QSignalSpyCallbackSet;
+struct QSignalSpyCallbackSet;
 QT_END_NAMESPACE
 
 namespace GammaRay {
