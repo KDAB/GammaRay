@@ -54,18 +54,6 @@
 
 cmake_minimum_required(VERSION 3.11.0)
 
-cmake_policy(SET CMP0020 NEW)
-cmake_policy(SET CMP0043 NEW)
-if(POLICY CMP0053)
-  cmake_policy(SET CMP0053 NEW)
-endif()
-if(POLICY CMP0063)
-  cmake_policy(SET CMP0063 NEW)
-endif()
-if(POLICY CMP0068)
-  cmake_policy(SET CMP0068 NEW)
-endif()
-
 project(GammaRay CXX C)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
