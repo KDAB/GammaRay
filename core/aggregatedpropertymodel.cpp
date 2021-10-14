@@ -317,6 +317,10 @@ int AggregatedPropertyModel::rowCount(const QModelIndex &parent) const
             addPropertyAdaptor(a);
         }
     }
+
+    if (siblings.isEmpty())
+        return 0;
+
     auto childAdaptor = siblings.at(parent.row());
     if (!childAdaptor)
         return 0;

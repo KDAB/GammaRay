@@ -31,6 +31,7 @@
 
 #include <compat/qasconst.h>
 
+#include <common/streamoperators.h>
 #include <common/message.h>
 
 #include <QApplication>
@@ -121,6 +122,12 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent)
 
     registerClient(serverObject);
     connectToServer();
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // TODO: Probably should be somewhere else
+    StreamOperators::registerOperators<QMargins>();
+    StreamOperators::registerOperators<QTabBar::SelectionBehavior>();
+#endif
 }
 
 RemoteModel::~RemoteModel()
