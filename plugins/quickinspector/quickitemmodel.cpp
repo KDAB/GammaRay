@@ -159,7 +159,7 @@ void QuickItemModel::connectItem(QQuickItem *item)
         connect(item, &QQuickItem::xChanged, this, itemUpdatedFunc),
         connect(item, &QQuickItem::yChanged, this, itemUpdatedFunc)
     }};
-    m_itemConnections.emplace(std::make_pair(item, std::move(connections))); // cant construct in-place, fails to compile under MSVC2010 :(
+    m_itemConnections.emplace(std::make_pair(item, std::move(connections))); // can't construct in-place, fails to compile under MSVC2010 :(
 
     item->installEventFilter(m_clickEventFilter);
 }

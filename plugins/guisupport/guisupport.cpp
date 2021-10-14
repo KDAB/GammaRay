@@ -1122,7 +1122,7 @@ QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
     // We need to compute this one first.
     if (target != qApp) {
         // There is no real notification to track application window icon change.
-        // Then make sure the application icon is uptodate first.
+        // Then make sure the application icon is up-to-date first.
         const auto ait = m_iconAndTitleOverrider.objectsIcons.find(qApp);
 
         if (ait != m_iconAndTitleOverrider.objectsIcons.end()) {

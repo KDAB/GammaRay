@@ -193,7 +193,7 @@ private slots:
         serverSelection.select(serverModel.index(4, 0), QItemSelectionModel::ClearAndSelect);
         QTest::qWait(100);
         fillModel(&clientModel);
-        clientSelection.applyPendingSelection(); // usually triggerd by SelectionModelClient
+        clientSelection.applyPendingSelection(); // usually triggered by SelectionModelClient
 
         QCOMPARE(clientSelection.selection().size(), 1);
         QCOMPARE(clientSelection.selection().first().topLeft(), clientModel.index(4, 0));

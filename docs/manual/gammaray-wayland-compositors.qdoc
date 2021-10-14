@@ -38,5 +38,5 @@
     on the center left.
 
     At the bottom there is a log view and a timeline view of Wayland events for the selected client. Hovering over the timeline
-    shows further infromation for the event under the mouse cursor in a tooltip.
+    shows further information for the event under the mouse cursor in a tooltip.
 */

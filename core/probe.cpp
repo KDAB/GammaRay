@@ -150,7 +150,7 @@ static QItemSelectionModel *selectionModelFactory(QAbstractItemModel *model)
 }
 
 // useful for debugging, dumps the object and all it's parents
-// also useable from GDB!
+// also usable from GDB!
 void dumpObject(QObject *obj)
 {
     if (!obj) {

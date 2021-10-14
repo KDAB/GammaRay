@@ -145,7 +145,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_visualizeTraces->setData(QuickInspectorInterface::VisualizeTraces);
     m_visualizeTraces->setCheckable(true);
     m_visualizeTraces->setToolTip(tr("<b>Visualize Controls</b><br>"
-                                     "The QtQuick scene is rendered normaly, in addition overlays will "
+                                     "The QtQuick scene is rendered normally, in addition overlays will "
                                      "highlight Qt Quick Controls."));
 
     m_serverSideDecorationsEnabled = new QAction(UIResources::themedIcon(QLatin1String("server-decorations.png")),

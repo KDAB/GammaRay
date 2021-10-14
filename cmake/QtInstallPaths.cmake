@@ -63,7 +63,7 @@ foreach(QVAL ${VARS_LIST})
     else()
       list(GET QVAL_LIST 1 path)
     endif()
-    if(NOT ${var}) #if set aleady on the command line for example
+    if(NOT ${var}) #if set already on the command line for example
       set(${var} ${path} CACHE PATH "Qt install path for ${var}")
     endif()
   endif()

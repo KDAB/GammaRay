@@ -224,7 +224,7 @@ static ProbeABI abiFromMachO(const QString &path, const uchar *data, qint64 size
     }
 
     if (QFileInfo(path).baseName().endsWith(QStringLiteral("_debug"), Qt::CaseInsensitive)) {
-        // We can probably also look for a S_ATTR_DEBUG segment, in the data, but that might not proove it's a debug
+        // We can probably also look for a S_ATTR_DEBUG segment, in the data, but that might not prove it's a debug
         // build as we can add debug symbols to release builds.
         abi.setIsDebug(true);
     }

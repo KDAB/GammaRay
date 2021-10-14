@@ -220,7 +220,7 @@ void ActionModel::scanForShortcutDuplicates() const
         Q_FOREACH (const QKeySequence &sequence, m_duplicateFinder->findAmbiguousShortcuts(action)) {
             Problem p;
             p.severity = Problem::Error;
-            p.description = QStringLiteral("Key sequence %1 is ambigous.").arg(sequence.toString(QKeySequence::NativeText));
+            p.description = QStringLiteral("Key sequence %1 is ambiguous.").arg(sequence.toString(QKeySequence::NativeText));
             p.problemId = QStringLiteral("gammaray_actioninspector.ShortcutDuplicates:%1").arg(sequence.toString(QKeySequence::PortableText));
             p.object = ObjectId(action);
             p.locations.push_back(ObjectDataProvider::creationLocation(action));

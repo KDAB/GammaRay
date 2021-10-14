@@ -87,7 +87,7 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
         pd.setTypeName(ud.value.typeName());
         pd.setClassName(QStringLiteral("QQuickOpenGLShaderEffectMaterial::UniformData"));
 
-        // special values are only filled in dynamically from the owning node, so we wont see those
+        // special values are only filled in dynamically from the owning node, so we won't see those
         switch (ud.specialType) {
             case QQuickOpenGLShaderEffectMaterial::UniformData::Opacity:
                 pd.setTypeName(QStringLiteral("double"));

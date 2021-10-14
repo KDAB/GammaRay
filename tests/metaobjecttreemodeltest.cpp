@@ -59,7 +59,7 @@ private slots:
 
         ModelTest modelTest(&model);
         Probe::instance()->discoverObject(this);
-        QTest::qWait(150); // wait for compressed change singals
+        QTest::qWait(150); // wait for compressed change signals
     }
 
     void testModelContent()

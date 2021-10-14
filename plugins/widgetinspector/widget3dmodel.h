@@ -134,7 +134,7 @@ private:
     Widget3DWidget *widgetForObject(QObject *obj, const QModelIndex &idx, bool createWhenMissing = true) const;
     Widget3DWidget *widgetForIndex(const QModelIndex &idx, bool createWhenMissing = true) const;
 
-    // mutable becasue we populate it lazily from data() const
+    // mutable because we populate it lazily from data() const
     mutable QHash<QObject *, Widget3DWidget*> mDataCache;
 };
 

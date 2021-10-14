@@ -38,7 +38,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 
-/*! Utilites for inspecting library dependencies. */
+/*! Utilities for inspecting library dependencies. */
 namespace LibraryUtil
 {
 

@@ -306,7 +306,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             Q_ASSERT((rowCount >= 0 && columnCount >= 0) || (rowCount == -1 && columnCount == -1));
             if (node->rowCount >= 0 || node->columnCount >= 0) {
                 // This can happen in similar racy conditions as below, when we request the row/col count
-                // for two different Node* at the same index (one was deleted inbetween and then the other
+                // for two different Node* at the same index (one was deleted in-between and then the other
                 // was created). We ignore the new data as the node it is intended for will request it again
                 // after processing all structure changes.
                 continue;
