@@ -1,0 +1,4 @@
+[codespell]
+skip = *.ts,./build-*,.git,./3rdparty/*,./cmake/ECM*,format.config.uncrustify.4_spaces
+interactive = 3
+ignore-words-list = ba,statics,resetable,processinf,nnumber,trun

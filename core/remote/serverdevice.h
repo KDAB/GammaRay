@@ -52,7 +52,7 @@ public:
     virtual QString errorString() const = 0;
     virtual QIODevice *nextPendingConnection() = 0;
 
-    /** An externally useable address of this server.
+    /** An externally usable address of this server.
      *  This might be different from @p serverAddress as passed in the constructor.
      */
     virtual QUrl externalAddress() const = 0;

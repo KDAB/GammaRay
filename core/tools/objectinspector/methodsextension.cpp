@@ -155,7 +155,7 @@ void MethodsExtension::invokeMethod(Qt::ConnectionType connectionType)
 
     const QVector<MethodArgument> args = m_methodArgumentModel->arguments();
     // TODO retrieve return value and add it to the log in case of success
-    // TODO measure executation time and that to the log
+    // TODO measure execution time and that to the log
     const bool result = method.invoke(
         m_object.data(), connectionType,
         args[0], args[1], args[2], args[3], args[4], args[5], args[6],

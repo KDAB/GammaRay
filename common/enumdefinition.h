@@ -72,7 +72,7 @@ public:
      */
     bool isValid() const;
 
-    /*! A unique identifer for this enum definition.
+    /*! A unique identifier for this enum definition.
      * This is used to identify enums between the GammaRay client and server.
      */
     EnumId id() const;

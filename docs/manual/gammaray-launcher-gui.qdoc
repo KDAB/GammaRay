@@ -44,7 +44,7 @@
     \section1 Launching Applications
 
     The \uicontrol Launch tab of the graphical launcher allows you to start new applications and inject GammaRay into them.
-    You just have to select an applcation from the list at the top, and specify command line arguments in the field
+    You just have to select an application from the list at the top, and specify command line arguments in the field
     below.
 
     \image gammaray-launcher-launch.png

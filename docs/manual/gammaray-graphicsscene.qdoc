@@ -26,7 +26,7 @@
 
     \section1 Overview
 
-    The graphcis scene inspector allows you to inspect the structure of a QGraphicsScene, and to view and edit the properties of the QGraphicsItem instances contained in it. It enables:
+    The graphics scene inspector allows you to inspect the structure of a QGraphicsScene, and to view and edit the properties of the QGraphicsItem instances contained in it. It enables:
 
     \list
         \li Inspecting the graphics item hierarchy.
@@ -53,7 +53,7 @@
 
     \list
         \li Element picking.
-        \li Diagnostic overlays with bounding shape, bounding box, and tranformation origin information.
+        \li Diagnostic overlays with bounding shape, bounding box, and transformation origin information.
     \endlist
 
     \section1 Paint Analyzer

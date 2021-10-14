@@ -659,7 +659,7 @@ void OpenGLScreenGrabber::windowAfterRendering()
         m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
         // Let emit the signal even if our image is possibly null, this way we make perfect ping/pong
-        // reuests making it easier to unit test.
+        // requests making it easier to unit test.
         emit sceneGrabbed(m_grabbedFrame);
     }
 

@@ -93,7 +93,7 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::bindingTreeForObjec
                 BindingNode *node = newBinding.get();
                 if (std::find_if(bindings.begin(), bindings.end(),
                     [node](const std::unique_ptr<BindingNode> &other){ return *node == *other; }) != bindings.end()) {
-                    continue; // apparantly this is a duplicate.
+                    continue; // apparently this is a duplicate.
                 }
                 node->dependencies() = findDependenciesFor(node);
 

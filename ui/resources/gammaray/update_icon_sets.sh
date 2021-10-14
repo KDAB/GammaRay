@@ -58,7 +58,7 @@ for source_size in "${SOURCE_SIZES[@]}"; do
                 elif [ ${HAVE_IMAGEMAGICK} -eq 1 ]; then
                     convert "${SOURCE_MASK}${BIGGEST_SOURCE_SIZE}x${BIGGEST_SOURCE_SIZE}.png" -resize ${source_size}x${source_size} "${source}"
                 else
-                    echo "No tool found to do image convertion to ${source}."
+                    echo "No tool found to do image conversion to ${source}."
                 fi
             fi
         fi

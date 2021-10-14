@@ -137,7 +137,7 @@ private slots:
                 QVERIFY(waitForSignal(&updatedSpy, true));
 
                 for (int j = 0; j < 3; ++j) {
-                    // The automatical clientViewUpdated answer is only done for frame sent.
+                    // The automatic clientViewUpdated answer is only done for frame sent.
                     // Let manually trigger answers.
                     QTest::qWait(throttlerInterval);
                     remoteView->clientViewUpdated();

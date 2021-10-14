@@ -27,8 +27,8 @@ find_file(QDOC_QTCORE_INDEX qtcore.index
 
 if(NOT QDOC_EXECUTABLE OR NOT QHELPGEN_EXECUTABLE OR NOT QDOC_TEMPLATE OR NOT QDOC_QTCORE_INDEX OR NOT QTATTRIBUTIONSSCANNER_EXECUTABLE)
   message(STATUS "Unable to build user manual in qch format.")
-  message(STATUS "qdoc exectuable: ${QDOC_EXECUTABLE}")
-  message(STATUS "qhelpgenerator exectuable: ${QHELPGEN_EXECUTABLE}")
+  message(STATUS "qdoc executable: ${QDOC_EXECUTABLE}")
+  message(STATUS "qhelpgenerator executable: ${QHELPGEN_EXECUTABLE}")
   message(STATUS "qtattributionsscanner executable: ${QTATTRIBUTIONSSCANNER_EXECUTABLE}")
   message(STATUS "qdoc template (qt-html-templates-offline.qdocconf): ${QDOC_TEMPLATE}")
   message(STATUS "qdoc qtcore index (qtcore.index): ${QDOC_QTCORE_INDEX}")

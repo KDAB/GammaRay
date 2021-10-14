@@ -55,7 +55,7 @@ public:
     /// the visible area on screen
     QRectF viewRect() const;
     void setViewRect(const QRectF &viewRect);
-    /// the interal scene might expand beyond the visible view area
+    /// the internal scene might expand beyond the visible view area
     QRectF sceneRect() const;
     void setSceneRect(const QRectF &sceneRect);
 

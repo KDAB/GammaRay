@@ -193,7 +193,7 @@ private slots:
         QCOMPARE(ProblemCollector::instance()->problems().size(), 0);
         ProblemCollector::instance()->requestScan();
         auto problemsFromScansCount = ProblemCollector::instance()->problems().size();
-        ProblemCollector::instance()->requestScan(); // scans should always be reproducable if the program didn't change.
+        ProblemCollector::instance()->requestScan(); // scans should always be reproducible if the program didn't change.
         QCOMPARE(ProblemCollector::instance()->problems().size(), problemsFromScansCount);
 
         auto dummyChecker = std::find_if(ProblemCollector::instance()->availableCheckers().begin(),
@@ -202,7 +202,7 @@ private slots:
                                         );
         dummyChecker->enabled = false;
 
-        ProblemCollector::instance()->requestScan(); // scans should always be reproducable if the program didn't change.
+        ProblemCollector::instance()->requestScan(); // scans should always be reproducible if the program didn't change.
         QCOMPARE(ProblemCollector::instance()->problems().size(), problemsFromScansCount - 2);
         dummyChecker->enabled = true;
 
@@ -444,7 +444,7 @@ private slots:
             [=](const Problem &p){
                 return p.problemId.startsWith("gammaray_actioninspector.ShortcutDuplicates")
                        && (p.object == ObjectId(a1) || p.object == ObjectId(a2))
-                       && p.description.contains("ambigous")
+                       && p.description.contains("ambiguous")
                        && p.description.contains(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::NativeText))
                        && p.problemId.endsWith(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::PortableText));
             }
