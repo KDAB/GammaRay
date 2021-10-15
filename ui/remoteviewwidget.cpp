@@ -1151,23 +1151,23 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
     case ElementPicking:
     case Measuring:
     case ColorPicking:
-#ifndef GAMMARAY_QT6_TODO
-        if (event->modifiers() & Qt::ControlModifier && event->orientation() == Qt::Vertical) {
-            if (event->delta() > 0) {
+    {
+        const bool vertical = event->angleDelta().x() == 0;
+        if (event->modifiers() & Qt::ControlModifier && vertical) {
+            if (event->angleDelta().y() > 0) { // Wheel Forward
                 zoomIn();
-            } else {
+            } else { // Wheel Backwards
                 zoomOut();
             }
         } else {
-            if (event->orientation() == Qt::Vertical) {
-                m_y += event->delta();
+            if (vertical) {
+                m_y += event->pixelDelta().y();
             } else {
-                m_x += event->delta();
+                m_x += event->pixelDelta().x();
             }
             clampPanPosition();
             updateUserViewport();
         }
-#endif
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
         m_currentMousePosition = mapToSource(QPointF(event->pos()));
 #else
@@ -1179,6 +1179,7 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
         }
         update();
         break;
+    }
     case InputRedirection:
         sendWheelEvent(event);
         break;
