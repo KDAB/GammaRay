@@ -98,8 +98,8 @@
 #include <QSGRenderNode>
 #include <QSGRendererInterface>
 #ifndef QT_NO_OPENGL
-#ifndef GAMMARAY_QT6_TODO
-#include <private/qquickopenglshadereffectnode_p.h>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  #include <private/qquickopenglshadereffectnode_p.h>
 #endif
 #endif
 #include <private/qsgsoftwarecontext_p.h>
@@ -325,6 +325,11 @@ void RenderModeRequest::apply()
 
 #if QT_VERSION == QT_VERSION_CHECK(5, 14, 0) || QT_VERSION == QT_VERSION_CHECK(5, 14, 1)
     // there's a regression in Qt 5.14...
+    return;
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // crashes in qrhigles2..bindShaderResources sometimes
     return;
 #endif
 
@@ -1120,14 +1125,12 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_METAOBJECT1(QSGDistanceFieldShiftedStyleTextMaterial, QSGDistanceFieldStyledTextMaterial);
     MO_ADD_PROPERTY_RO(QSGDistanceFieldShiftedStyleTextMaterial, shift);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT1(QQuickOpenGLShaderEffectMaterial, QSGMaterial);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, attributes);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, cullMode);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, geometryUsesTextureSubRect);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, textureProviders);
-#endif
 #endif
 #endif
 }
@@ -1138,8 +1141,8 @@ static const MetaEnum::Value<QSGRendererInterface::GraphicsApi> qsg_graphics_api
     E(Unknown),
     E(Software),
     E(OpenGL),
-#ifndef GAMMARAY_QT6_TODO
-    E(Direct3D12),
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    E(Direct3D12), // Should just remove this? See QTBUG-79925
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     E(OpenVG)

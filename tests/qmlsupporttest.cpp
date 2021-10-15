@@ -54,7 +54,8 @@ class QmlSupportTest : public QObject
 private:
     int indexOfProperty(PropertyAdaptor *adaptor, const char *name)
     {
-        for (int i = 0; i < adaptor->count(); ++i) {
+        const int count = adaptor->count();
+        for (int i = 0; i < count; ++i) {
             auto prop = adaptor->propertyData(i);
             if (prop.name() == QLatin1String(name))
                 return i;

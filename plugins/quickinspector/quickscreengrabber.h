@@ -116,10 +116,15 @@ public:
     struct RenderInfo {
         // Keep in sync with QSGRendererInterface::GraphicsApi
         enum GraphicsApi {
-            Unknown,
+            Unknown = 0,
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            Software = 1,
+            OpenGL = 3
+#else
             Software,
             OpenGL,
             Direct3D12
+#endif
         };
 
         RenderInfo()
