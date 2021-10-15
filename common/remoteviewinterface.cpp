@@ -49,7 +49,8 @@ QDataStream &operator>>(QDataStream &s, Qt::TouchPointStates &states)
     return s;
 }
 
-#ifndef GAMMARAY_QT6_TODO
+// Not available in Qt6, has QPointingDevice::PointerType instead
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QDataStream &operator<<(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags flags)
 {
     return s << (int)flags;

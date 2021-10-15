@@ -36,7 +36,6 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <QTimer>
-
 #include <QWindow>
 
 using namespace GammaRay;
@@ -202,9 +201,6 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
 
     const int states = touchPointStates;
     auto event = new QTouchEvent(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), static_cast<QEventPoint::States>(states), touchPoints);
-#ifndef GAMMARAY_QT6_TODO
-    event->setWindow(m_eventReceiver);
-#endif
 #else
     if (!m_touchDevice) {
         //create our own touch device, the system may not have one already, or it may not have
