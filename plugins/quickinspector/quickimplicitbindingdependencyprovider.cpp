@@ -146,7 +146,7 @@ void QuickImplicitBindingDependencyProvider::implicitSizeDependencies(QQuickItem
     if (!itemPriv)
         return;
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 2, 0)
     if (!itemPriv->widthValid()) {
         addDependency("width", item, "implicitWidth");
     }

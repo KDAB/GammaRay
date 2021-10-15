@@ -136,7 +136,10 @@ bool TextureExtension::setObject(void* object, const QString& typeName)
             return setQObject(mat->texture());
 
         if (auto mat = dynamic_cast<QSGDistanceFieldTextMaterial*>(material)) {
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            if (!mat->texture())
+                return false;
+#else
             if (!mat->texture() || mat->texture()->textureId <= 0)
                 return false;
 #endif
@@ -170,7 +173,6 @@ void TextureExtension::textureGrabbed(void* data, const QImage& img)
 {
     if (m_currentMaterial != data || !m_remoteView->isActive())
         return;
-
     RemoteViewFrame f;
     f.setImage(img);
     m_remoteView->sendFrame(f);
@@ -180,7 +182,13 @@ void TextureExtension::triggerGrab()
 {
     if (m_currentTexture)
         QSGTextureGrabber::instance()->requestGrab(m_currentTexture);
-#ifndef GAMMARAY_QT6_TODO
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    else if (m_currentMaterial) {
+        auto texture = m_currentMaterial->wrapperTexture()->nativeInterface<QNativeInterface::QSGOpenGLTexture>();
+        QSGTextureGrabber::instance()->requestGrab(texture->nativeTexture(), m_currentMaterial->texture()->size, m_currentMaterial);
+    }
+#else
     else if (m_currentMaterial)
         QSGTextureGrabber::instance()->requestGrab(m_currentMaterial->texture()->textureId, m_currentMaterial->texture()->size, m_currentMaterial);
 #endif
