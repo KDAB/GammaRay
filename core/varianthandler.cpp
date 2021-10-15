@@ -378,7 +378,7 @@ QString VariantHandler::displayString(const QVariant &value)
         }
     }
 
-    if (value.canConvert<QVariantList>()) {
+    if (value.canConvert<QVariantList>() && !value.canConvert<QString>()) {
         QSequentialIterable it = value.value<QSequentialIterable>();
         if (it.size() == 0) {
             return QStringLiteral("<empty>");
