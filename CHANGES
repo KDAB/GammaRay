@@ -2,6 +2,7 @@ Release Highlights
 ==================
 
 Version 3.0.0 (unreleased)
+--------------------------
  * Increase CMake requirement to version 3.11.0.
  * Port to Qt6 (in-progress)
 
