@@ -24,7 +24,7 @@ BuildRequires: qt5-qtdeclarative-devel qt5-qtconnectivity-devel qt5-qttools-deve
 BuildRequires:  kf5-kcoreaddons-devel
 %endif
 %if 0%{?fedora} > 23
-BuildRequires:  ghostscript-core
+BuildRequires:  ghostscript
 %endif
 %if 0%{?fedora} > 24
 BuildRequires:  qt5-qt3d-devel wayland-devel qt5-qtwayland-devel kf5-syndication-devel
