@@ -30,9 +30,9 @@
 #define GAMMARAY_MESSAGEHANDLER_MESSAGEHANDLERINTERFACE_H
 
 #include <QObject>
+#include <QStringList>
 
 QT_BEGIN_NAMESPACE
-class QStringList;
 class QTime;
 QT_END_NAMESPACE
 
