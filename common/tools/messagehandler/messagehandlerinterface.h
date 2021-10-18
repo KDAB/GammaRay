@@ -32,6 +32,7 @@
 #include <QObject>
 
 QT_BEGIN_NAMESPACE
+class QStringList;
 class QTime;
 QT_END_NAMESPACE
 
