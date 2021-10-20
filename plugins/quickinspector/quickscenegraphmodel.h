@@ -36,6 +36,7 @@
 #include <QHash>
 #include <QPointer>
 #include <QVector>
+#include <unordered_map>
 
 QT_BEGIN_NAMESPACE
 class QSGNode;
