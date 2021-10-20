@@ -29,8 +29,6 @@
 #ifndef GAMMARAY_MESSAGEHANDLER_MESSAGEHANDLERINTERFACE_H
 #define GAMMARAY_MESSAGEHANDLER_MESSAGEHANDLERINTERFACE_H
 
-#include "gammaray_common_export.h"
-
 #include <QObject>
 #include <QStringList>
 
@@ -39,7 +37,7 @@ class QTime;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-class GAMMARAY_COMMON_EXPORT MessageHandlerInterface : public QObject
+class MessageHandlerInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool stackTraceAvailable READ stackTraceAvailable WRITE setStackTraceAvailable NOTIFY stackTraceAvailableChanged)
