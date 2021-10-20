@@ -237,9 +237,9 @@ static const StyleHintInfo style_hint_table[] = {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     SH(SH_TitleBar_ShowToolTipsOnButtons,                 Bool,                 None   )
     SH(SH_Widget_Animation_Duration,                      Int,                  None   )
-    SH(SH_ComboBox_AllowWheelScrolling,                   Bool,                 None   )
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+    SH(SH_ComboBox_AllowWheelScrolling,                   Bool,                 None   )
     SH(SH_SpinBox_ButtonsInsideFrame,                     Bool,                 None   )
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
