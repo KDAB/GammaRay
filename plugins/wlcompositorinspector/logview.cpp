@@ -130,7 +130,7 @@ public:
     selectionBoundaries(start, end);
 
     if (start.y() < line && line < end.y()) {
-      return { 0, m_lines.at(line).text.text().count() };
+      return { 0, (int) m_lines.at(line).text.text().count() };
     }
 
     if (start.y() == line || end.y() == line) {
