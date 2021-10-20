@@ -39,6 +39,7 @@
 #include <common/endpoint.h>
 #include <common/objectbroker.h>
 #include <common/tools/messagehandler/messagemodelroles.h>
+#include <common/tools/messagehandler/messagehandlerinterface.h>
 
 #include <QSortFilterProxyModel>
 #include <QDialog>
