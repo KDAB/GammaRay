@@ -80,10 +80,10 @@ private:
     QPointer<QQuickWindow> m_window;
 
     QSGNode *m_rootNode;
-    QHash<QSGNode *, QSGNode *> m_childParentMap;
-    QHash<QSGNode *, QVector<QSGNode *> > m_parentChildMap;
-    QHash<QQuickItem *, QSGNode *> m_itemItemNodeMap;
-    QHash<QSGNode *, QQuickItem *> m_itemNodeItemMap;
+    std::unordered_map<QSGNode *, QSGNode *> m_childParentMap;
+    std::unordered_map<QSGNode *, QVector<QSGNode *> > m_parentChildMap;
+    std::unordered_map<QQuickItem *, QSGNode *> m_itemItemNodeMap;
+    std::unordered_map<QSGNode *, QQuickItem *> m_itemNodeItemMap;
 };
 }
 
