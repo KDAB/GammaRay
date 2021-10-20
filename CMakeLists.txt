@@ -103,13 +103,13 @@ include(ECMEnableSanitizers)
 include(GenerateExportHeader)
 include("3rdparty/backward-cpp/BackwardConfig.cmake")
 
-# Exit for blacklisted compilers (those that don't support C++11 very well)
-#  MSVC++ < 2013 aka 1800
+# Exit for blacklisted compilers (those that don't support full C++11)
+#  MSVC++ < 2015 aka 1900
 #  Clang 3.1
 set(BAD_CXX_MESSAGE "")
 if(MSVC)
-  if(MSVC_VERSION LESS 1800)
-    set(BAD_CXX_MESSAGE "MSVC 2013 or higher")
+  if(MSVC_VERSION LESS 1900)
+    set(BAD_CXX_MESSAGE "MSVC 2015 or higher")
   endif()
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -118,24 +118,14 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   endif()
 endif()
 if(BAD_CXX_MESSAGE)
-  message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. Please retry using a modern compiler that supports C++11.")
+  message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. Please retry using a compiler that supports C++11.")
 endif()
 
-if(MSVC AND MSVC_VERSION VERSION_EQUAL 1800)
-  # MSVC 2013 implements some C++11 features only partially, which is why cmake
-  # doesn't list these features as supported, still support is good enough for us.
-  set(GAMMARAY_REQUIRED_CXX_FEATURES
-            cxx_lambdas cxx_nullptr cxx_range_for cxx_raw_string_literals cxx_uniform_initialization
-            cxx_variadic_templates cxx_rvalue_references cxx_defaulted_functions
-            cxx_override cxx_final
-  )
-else()
-  set(GAMMARAY_REQUIRED_CXX_FEATURES
-            cxx_lambdas cxx_nullptr cxx_range_for cxx_raw_string_literals cxx_uniform_initialization
-            cxx_variadic_templates cxx_rvalue_references cxx_defaulted_functions cxx_deleted_functions
-            cxx_override cxx_final cxx_nonstatic_member_init
-  )
-endif()
+set(GAMMARAY_REQUIRED_CXX_FEATURES
+    cxx_lambdas cxx_nullptr cxx_range_for cxx_raw_string_literals cxx_uniform_initialization
+    cxx_variadic_templates cxx_rvalue_references cxx_defaulted_functions cxx_deleted_functions
+    cxx_override cxx_final cxx_nonstatic_member_init
+)
 
 # Version setup
 set(GAMMARAY_VERSION_MAJOR "2")
