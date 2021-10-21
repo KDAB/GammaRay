@@ -265,6 +265,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_flag_if_supported(-Wsizeof-pointer-memaccess POINTER_MEMACCESS)
   add_flag_if_supported(-Wreorder REORDER)
   add_flag_if_supported(-Wformat-security FORMAT_SECURITY)
+  add_flag_if_supported(-Wsuggest-override SUGGEST_OVERRIDE)
 
   check_cxx_compiler_flag(-std=gnu++0x HAVE_GXX_GNUXX11)
   check_cxx_compiler_flag(-std=c++0x HAVE_GXX_CXX11)
