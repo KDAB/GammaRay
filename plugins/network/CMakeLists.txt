@@ -2,6 +2,7 @@
 if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 set(gammaray_network_srcs
     networksupport.cpp
+    networksupportinterface.cpp
     networkinterfacemodel.cpp
     networkreplymodel.cpp
 
@@ -24,6 +25,8 @@ if(GAMMARAY_BUILD_UI)
     clientnetworkconfigurationmodel.cpp
     networkreplywidget.cpp
     clientnetworkreplymodel.cpp
+    networksupportinterface.cpp
+    networksupportclient.cpp
 
     cookies/cookietab.cpp
   )

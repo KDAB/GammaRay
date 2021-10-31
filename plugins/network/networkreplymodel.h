@@ -49,6 +49,7 @@ namespace GammaRay
 class NetworkReplyModel : public QAbstractItemModel
 {
     Q_OBJECT
+    Q_PROPERTY(bool captureResponse READ captureResponse WRITE setCaptureResponse NOTIFY captureResponseChanged)
 public:
     explicit NetworkReplyModel(QObject *parent = nullptr);
     ~NetworkReplyModel();
@@ -69,9 +70,16 @@ public:
         QStringList errorMsgs;
         qint64 size = 0;
         quint64 duration = 0;
+        QByteArray response;
         QNetworkAccessManager::Operation op;
         int state = NetworkReply::Running;
     };
+
+    bool captureResponse() const { return m_captureResponse; }
+    void setCaptureResponse(bool newCaptureResponse);
+
+signals:
+    void captureResponseChanged();
 
 private:
     struct NAMNode {
@@ -92,8 +100,8 @@ private:
 
     std::vector<NAMNode> m_nodes;
     QElapsedTimer m_time;
+    bool m_captureResponse = false;
 };
-
 }
 
 #endif // GAMMARAY_NETWORKREPLYMODEL_H

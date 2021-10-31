@@ -115,7 +115,7 @@ Q_DECLARE_METATYPE(QSslSocket::SslMode)
 #endif // QT_NO_SSL
 
 NetworkSupport::NetworkSupport(Probe *probe, QObject *parent)
-    : QObject(parent)
+    : NetworkSupportInterface(parent)
 {
     registerMetaTypes();
     registerVariantHandler();
@@ -130,6 +130,7 @@ NetworkSupport::NetworkSupport(Probe *probe, QObject *parent)
 #endif
 
     auto replyModel = new NetworkReplyModel(this);
+    connect(this, &NetworkSupportInterface::captureResponseChanged, replyModel, &NetworkReplyModel::setCaptureResponse);
     connect(probe, &Probe::objectCreated, replyModel, &NetworkReplyModel::objectCreated);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.NetworkReplyModel"), replyModel);
 
