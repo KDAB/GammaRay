@@ -49,7 +49,8 @@ namespace NetworkReplyModelRole {
 enum Role {
     ReplyStateRole = GammaRay::UserRole,
     ReplyErrorRole,
-    ObjectIdRole
+    ObjectIdRole,
+    ReplyResponseRole
 };
 }
 

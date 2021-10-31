@@ -114,6 +114,8 @@ QVariant NetworkReplyModel::data(const QModelIndex& index, int role) const
         return reply.errorMsgs;
     } else if (role == NetworkReplyModelRole::ObjectIdRole && index.column() == NetworkReplyModelColumn::ObjectColumn) {
         return QVariant::fromValue(ObjectId(reply.reply));
+    } else if (role == NetworkReplyModelRole::ReplyResponseRole && index.column() == NetworkReplyModelColumn::ObjectColumn) {
+        return reply.response;
     }
 
     return {};
@@ -193,6 +195,7 @@ QMap<int, QVariant> NetworkReplyModel::itemData(const QModelIndex& index) const
         m.insert(NetworkReplyModelRole::ReplyStateRole, data(index, NetworkReplyModelRole::ReplyStateRole));
         m.insert(NetworkReplyModelRole::ReplyErrorRole, data(index, NetworkReplyModelRole::ReplyErrorRole));
         m.insert(NetworkReplyModelRole::ObjectIdRole, data(index, NetworkReplyModelRole::ObjectIdRole));
+        m.insert(NetworkReplyModelRole::ReplyResponseRole, data(index, NetworkReplyModelRole::ReplyResponseRole));
     }
     return m;
 }
@@ -207,6 +210,12 @@ void NetworkReplyModel::replyFinished(QNetworkReply* reply, QNetworkAccessManage
     node.op = reply->operation();
     node.state |= NetworkReply::Finished;
     node.duration = m_time.elapsed() - node.duration;
+
+    if (m_captureResponse) {
+        // TODO: Allow whitelisting a set of Content-Type values
+        // TODO: Make the max size configurable
+        node.response = reply->peek(5*1024*1024);   // Read up to 5 MiB
+    }
 
     if (reply->error() != QNetworkReply::NoError) {
         node.state |= NetworkReply::Error;
@@ -306,6 +315,9 @@ void NetworkReplyModel::updateReplyNode(QNetworkAccessManager* nam, const Networ
             (*replyIt).url = newNode.url;
             (*replyIt).op = newNode.op;
         }
+        if (!newNode.response.isEmpty()) {
+            (*replyIt).response = newNode.response;
+        }
         (*replyIt).errorMsgs += newNode.errorMsgs;
         if ((*replyIt).duration > 0 && newNode.duration > 0 && (newNode.state & NetworkReply::Finished)) {
             (*replyIt).duration = newNode.duration > (*replyIt).duration ? newNode.duration - (*replyIt).duration : 0;
@@ -315,4 +327,12 @@ void NetworkReplyModel::updateReplyNode(QNetworkAccessManager* nam, const Networ
         const auto idx = createIndex(std::distance(replyIt, (*namIt).replies.rend()) - 1, 0, std::distance(m_nodes.begin(), namIt));
         emit dataChanged(idx, idx.sibling(idx.row(), columnCount() - 1));
     }
+}
+
+void NetworkReplyModel::setCaptureResponse(bool newCaptureResponse)
+{
+    if (m_captureResponse == newCaptureResponse)
+        return;
+    m_captureResponse = newCaptureResponse;
+    emit captureResponseChanged();
 }

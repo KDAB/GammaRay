@@ -1,11 +1,11 @@
 /*
-  networksupport.h
+  networksupportinterface.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2016-2021 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Volker Krause <volker.krause@kdab.com>
+  Copyright (C) 2019-2021 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Author: Shantanu Tushar <shantanu.tushar@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
@@ -26,35 +26,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMMARAY_NETWORKSUPPORT_H
-#define GAMMARAY_NETWORKSUPPORT_H
-
 #include "networksupportinterface.h"
 
-#include <core/toolfactory.h>
+#include <common/objectbroker.h>
 
-namespace GammaRay {
-class NetworkSupport : public NetworkSupportInterface
+using namespace GammaRay;
+
+NetworkSupportInterface::NetworkSupportInterface(QObject *parent)
+    : QObject(parent)
 {
-    Q_OBJECT
-public:
-    explicit NetworkSupport(Probe *probe, QObject *parent = nullptr);
-    ~NetworkSupport() override;
-
-private:
-    void registerMetaTypes();
-    void registerVariantHandler();
-};
-
-class NetworkSupportFactory : public QObject, public StandardToolFactory<QObject, NetworkSupport>
-{
-    Q_OBJECT
-    Q_INTERFACES(GammaRay::ToolFactory)
-    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_network.json")
-
-public:
-    explicit NetworkSupportFactory(QObject *parent = nullptr);
-};
+    ObjectBroker::registerObject<NetworkSupportInterface *>(this);
 }
 
-#endif // GAMMARAY_NETWORKSUPPORT_H
+NetworkSupportInterface::~NetworkSupportInterface() = default;
