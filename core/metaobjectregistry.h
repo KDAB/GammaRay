@@ -54,6 +54,10 @@ public:
 
     void scanMetaTypes();
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    static bool isTypeIdRegistered(int typeId);
+#endif
+
     QVariant data(const QMetaObject *metaObject, MetaObjectData type) const;
     bool isValid(const QMetaObject *metaObject) const;
     bool isStatic(const QMetaObject *metaObject) const;

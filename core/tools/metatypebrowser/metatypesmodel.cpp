@@ -28,6 +28,7 @@
 
 #include "metatypesmodel.h"
 
+#include <core/metaobjectregistry.h>
 #include <core/util.h>
 
 #include <common/objectid.h>
@@ -133,6 +134,21 @@ int MetaTypesModel::columnCount(const QModelIndex &parent) const
 void MetaTypesModel::scanMetaTypes()
 {
     QVector<int> metaTypes;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    for (int mtId = 0; mtId <= QMetaType::User; ++mtId) {
+        if (!MetaObjectRegistry::isTypeIdRegistered(mtId))
+            continue;
+        const auto name = QMetaType::typeName(mtId);
+        if (strstr(name, "GammaRay::") != name)
+            metaTypes.push_back(mtId);
+    }
+    for (int mtId = QMetaType::User + 1; QMetaType::isRegistered(mtId); ++mtId) {
+        const auto name = QMetaType::typeName(mtId);
+        if (strstr(name, "GammaRay::") != name)
+            metaTypes.push_back(mtId);
+    }
+#else
     for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
         if (!QMetaType::isRegistered(mtId))
             continue;
@@ -140,6 +156,7 @@ void MetaTypesModel::scanMetaTypes()
         if (strstr(name, "GammaRay::") != name)
             metaTypes.push_back(mtId);
     }
+#endif
 
     auto itOld = m_metaTypes.constBegin();
     auto itNew = metaTypes.constBegin();
