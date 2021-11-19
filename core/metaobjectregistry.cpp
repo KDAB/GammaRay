@@ -42,6 +42,20 @@
 #include <algorithm>
 #include <cassert>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    #include <QBitArray>
+    #include <QEasingCurve>
+    #include <QUuid>
+    #include <QJsonValue>
+    #include <QJsonObject>
+    #include <QJsonArray>
+    #include <QJsonDocument>
+    #include <QCborArray>
+    #include <QCborMap>
+    #include <QModelIndex>
+    #include <private/qmetatype_p.h>
+#endif
+
 using namespace GammaRay;
 
 namespace GammaRay {
@@ -201,8 +215,69 @@ void MetaObjectRegistry::objectAdded(QObject *obj)
     }
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+// Lifted from Qt
+struct MetaTypeCoreHelper : public QMetaTypeModuleHelper
+{
+    template<typename T, typename LiteralWrapper =
+             std::conditional_t<std::is_same_v<T, QString>, QLatin1String, const char *>>
+    static inline bool convertToBool(const T &source)
+    {
+        T str = source.toLower();
+        return !(str.isEmpty() || str == LiteralWrapper("0") || str == LiteralWrapper("false"));
+    }
+
+    const QtPrivate::QMetaTypeInterface *interfaceForType(int type) const override {
+        switch (type) {
+            QT_FOR_EACH_STATIC_PRIMITIVE_TYPE(QT_METATYPE_CONVERT_ID_TO_TYPE)
+            QT_FOR_EACH_STATIC_PRIMITIVE_POINTER(QT_METATYPE_CONVERT_ID_TO_TYPE)
+            QT_FOR_EACH_STATIC_CORE_CLASS(QT_METATYPE_CONVERT_ID_TO_TYPE)
+            QT_FOR_EACH_STATIC_CORE_POINTER(QT_METATYPE_CONVERT_ID_TO_TYPE)
+            QT_FOR_EACH_STATIC_CORE_TEMPLATE(QT_METATYPE_CONVERT_ID_TO_TYPE)
+        default:
+            return nullptr;
+        }
+    }
+};
+
+Q_GLOBAL_STATIC(MetaTypeCoreHelper, qMetaTypeCoreHelper);
+
+static const QMetaTypeModuleHelper *qModuleHelperForType(int type)
+{
+    if (type <= QMetaType::LastCoreType)
+        return qMetaTypeCoreHelper;
+    if (type >= QMetaType::FirstGuiType && type <= QMetaType::LastGuiType)
+        return qMetaTypeGuiHelper;
+    else if (type >= QMetaType::FirstWidgetsType && type <= QMetaType::LastWidgetsType)
+        return qMetaTypeWidgetsHelper;
+    return nullptr;
+}
+
+bool MetaObjectRegistry::isTypeIdRegistered(int type)
+{
+    if (auto moduleHelper = qModuleHelperForType(type))
+        return moduleHelper->interfaceForType(type) != nullptr;
+    return false;
+}
+#endif
+
 void MetaObjectRegistry::scanMetaTypes()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    for (int mtId = 0; mtId <= QMetaType::User; ++mtId) {
+        if (!isTypeIdRegistered(mtId))
+            continue;
+        if (const QMetaObject *mt = QMetaType::metaObjectForType(mtId)) {
+            addMetaObject(mt);
+        }
+    }
+
+    for (int mtId = QMetaType::User + 1; QMetaType::isRegistered(mtId); ++mtId) {
+        if (const QMetaObject *mt = QMetaType::metaObjectForType(mtId))
+            addMetaObject(mt);
+    }
+    addMetaObject(&Qt::staticMetaObject);
+#else
     for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
         if (!QMetaType::isRegistered(mtId))
             continue;
@@ -210,9 +285,6 @@ void MetaObjectRegistry::scanMetaTypes()
         if (mt)
             addMetaObject(mt);
     }
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    addMetaObject(&Qt::staticMetaObject);
-#else
     addMetaObject(&staticQtMetaObject);
 #endif
 }

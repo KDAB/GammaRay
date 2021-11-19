@@ -216,11 +216,12 @@ target_link_libraries(qmetaobjectvalidatortest Qt::Gui Qt::CorePrivate gammaray_
 if(GAMMARAY_BUILD_UI)
   gammaray_add_test(metatypemodeltest
     metatypemodeltest.cpp
+    ${CMAKE_SOURCE_DIR}/core/metaobjectregistry.cpp
     ${CMAKE_SOURCE_DIR}/core/tools/metatypebrowser/metatypesmodel.cpp
     ${CMAKE_SOURCE_DIR}/ui/tools/metatypebrowser/metatypesclientmodel.cpp
     $<TARGET_OBJECTS:modeltestobj>
   )
-  target_link_libraries(metatypemodeltest gammaray_core Qt::Gui Qt::Widgets)
+  target_link_libraries(metatypemodeltest gammaray_core Qt::Gui Qt::Widgets Qt::CorePrivate)
 endif()
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
