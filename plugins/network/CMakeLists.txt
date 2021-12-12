@@ -13,7 +13,7 @@ if (TARGET Qt5::Network)
     list(APPEND gammaray_network_srcs networkconfigurationmodel.cpp)
 endif()
 gammaray_add_plugin(gammaray_network JSON gammaray_network.json SOURCES ${gammaray_network_srcs})
-target_link_libraries(gammaray_network gammaray_core Qt::Network)
+target_link_libraries(gammaray_network gammaray_core Qt::Network Qt::CorePrivate)
 endif()
 
 # ui plugin

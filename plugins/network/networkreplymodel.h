@@ -90,12 +90,14 @@ private:
 
     void replyFinished(QNetworkReply *reply, QNetworkAccessManager *nam);
     void replyProgress(QNetworkReply *reply, qint64 progress, qint64 total, QNetworkAccessManager *nam);
+    void replyProgressSync(QNetworkReply *reply, qint64 progress, qint64 total, QNetworkAccessManager *nam);
 #ifndef QT_NO_SSL
     void replyEncrypted(QNetworkReply *reply, QNetworkAccessManager *nam);
     void replySslErrors(QNetworkReply *reply, const QList<QSslError> &errors, QNetworkAccessManager *nam);
 #endif
     void replyDeleted(QNetworkReply *reply, QNetworkAccessManager *nam);
 
+    void maybePeekResponse(ReplyNode &node, QNetworkReply *reply);
     Q_INVOKABLE void updateReplyNode(QNetworkAccessManager *nam, const GammaRay::NetworkReplyModel::ReplyNode &newNode);
 
     std::vector<NAMNode> m_nodes;

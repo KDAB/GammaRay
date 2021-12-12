@@ -33,6 +33,7 @@
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <private/qobject_p.h>
 
 #include <iostream>
 #include <limits>
@@ -42,6 +43,52 @@ using namespace GammaRay;
 static const auto TopIndex = std::numeric_limits<quintptr>::max();
 
 Q_DECLARE_METATYPE(GammaRay::NetworkReplyModel::ReplyNode)
+
+namespace {
+bool prioritizeLatestConnection(QObject *sender, const char *normalizedSignalName, QObject *receiver)
+{
+    const auto senderPrivate = QObjectPrivate::get(sender);
+    const auto sigIndex = senderPrivate->signalIndex(normalizedSignalName);
+    if (sigIndex < 0) {
+        return false;
+    }
+
+    const auto connectionData = senderPrivate->connections.loadRelaxed();
+    if (!connectionData) {
+        return false;
+    }
+
+    auto signalsVector = connectionData->signalVector.loadRelaxed();
+    if (!signalsVector) {
+        return false;
+    }
+
+    int connIndex = 0;
+    for (int i = 0; i < signalsVector->count(); ++i) {
+        const QObjectPrivate::Connection *conn = signalsVector->at(i).first;
+        while (conn) {
+            if (conn->signal_index == sigIndex && conn->receiver == receiver) {
+                connIndex = i;
+                // We continue because we want to locate the latest connection,
+                // i.e. the connection we just made
+            }
+
+            conn = conn->nextConnectionList;
+        }
+
+        // connIndex will be zero if we:
+        // - could not find the connection, well thats weird, but nothing we can do about it
+        // - found that our connection is already the first one, nothing to do then
+        if (connIndex > 0) {
+            std::swap(signalsVector->at(0), signalsVector->at(connIndex));
+            // We found our connection and prioritized it, job done
+            return true;
+        }
+    }
+
+    return false;
+}
+}
 
 NetworkReplyModel::NetworkReplyModel(QObject *parent)
     : QAbstractItemModel(parent)
@@ -181,6 +228,11 @@ void NetworkReplyModel::objectCreated(QObject *obj)
         }
         updateReplyNode(nam, replyNode);
 
+        connect(reply, &QNetworkReply::downloadProgress, this, [this, reply, nam](qint64 received, qint64 total) { replyProgressSync(reply, received, total, nam); }, Qt::DirectConnection);
+        if (!prioritizeLatestConnection(reply, QMetaObject::normalizedSignature("downloadProgress(qint64,qint64)"), this)) {
+            qWarning() << "Failed to prioritize our slot, capturing network response might not work";
+        }
+
         // capture nam, as we cannot deref reply anymore when this triggers
         connect(reply, &QNetworkReply::downloadProgress, this, [this, reply, nam](qint64 received, qint64 total) { replyProgress(reply, received, total, nam); });
         connect(reply, &QNetworkReply::uploadProgress, this, [this, reply, nam](qint64 received, qint64 total) { replyProgress(reply, received, total, nam); });
@@ -211,11 +263,7 @@ void NetworkReplyModel::replyFinished(QNetworkReply* reply, QNetworkAccessManage
     node.state |= NetworkReply::Finished;
     node.duration = m_time.elapsed() - node.duration;
 
-    if (m_captureResponse) {
-        // TODO: Allow whitelisting a set of Content-Type values
-        // TODO: Make the max size configurable
-        node.response = reply->peek(5*1024*1024);   // Read up to 5 MiB
-    }
+    maybePeekResponse(node, reply);
 
     if (reply->error() != QNetworkReply::NoError) {
         node.state |= NetworkReply::Error;
@@ -235,6 +283,17 @@ void NetworkReplyModel::replyProgress(QNetworkReply* reply, qint64 progress, qin
     node.reply = reply;
     node.size = std::max(progress, total);
     updateReplyNode(nam, node);
+}
+
+void NetworkReplyModel::replyProgressSync(QNetworkReply *reply, qint64 progress, qint64 total, QNetworkAccessManager *nam)
+{
+    /// WARNING this runs in the thread of the reply, not the thread of this!
+    ReplyNode node;
+    node.reply = reply;
+    node.size = std::max(progress, total);
+    maybePeekResponse(node, reply);
+
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
 }
 
 #ifndef QT_NO_SSL
@@ -275,6 +334,17 @@ void NetworkReplyModel::replyDeleted(QNetworkReply* reply, QNetworkAccessManager
     node.reply = reply;
     node.state |= NetworkReply::Deleted;
     QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+}
+
+void NetworkReplyModel::maybePeekResponse(ReplyNode &node, QNetworkReply *reply)
+{
+    if (m_captureResponse) {
+        // TODO: Allow whitelisting a set of Content-Type values
+        // TODO: Make the max size configurable
+        const auto resp = reply->peek(5*1024*1024);   // Read up to 5 MiB
+        if (!resp.isEmpty())
+            node.response = resp;
+    }
 }
 
 void NetworkReplyModel::updateReplyNode(QNetworkAccessManager* nam, const NetworkReplyModel::ReplyNode& newNode)
