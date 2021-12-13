@@ -33,6 +33,8 @@
 
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+
+// TODO: Should the network module import Qt Private headers? Or should this be somewhere else?
 #include <private/qobject_p.h>
 
 #include <iostream>
@@ -63,12 +65,12 @@ bool prioritizeLatestConnection(QObject *sender, const char *normalizedSignalNam
         return false;
     }
 
-    int connIndex = 0;
+    QObjectPrivate::Connection *ourConn = nullptr;
     for (int i = 0; i < signalsVector->count(); ++i) {
-        const QObjectPrivate::Connection *conn = signalsVector->at(i).first;
+        QObjectPrivate::Connection *conn = signalsVector->at(i).first;
         while (conn) {
             if (conn->signal_index == sigIndex && conn->receiver == receiver) {
-                connIndex = i;
+                ourConn = conn;
                 // We continue because we want to locate the latest connection,
                 // i.e. the connection we just made
             }
@@ -76,12 +78,18 @@ bool prioritizeLatestConnection(QObject *sender, const char *normalizedSignalNam
             conn = conn->nextConnectionList;
         }
 
-        // connIndex will be zero if we:
-        // - could not find the connection, well thats weird, but nothing we can do about it
-        // - found that our connection is already the first one, nothing to do then
-        if (connIndex > 0) {
-            std::swap(signalsVector->at(0), signalsVector->at(connIndex));
-            // We found our connection and prioritized it, job done
+        // TODO: The whole thing needs to be atomic
+        if (ourConn) {
+            if (ourConn == signalsVector->at(i).first) {
+                qDebug() << "We are already the first, nothing to do";
+                return true;
+            }
+
+            qDebug() << "Swapping" << ourConn->receiver << "with"
+                     << static_cast<QObjectPrivate::Connection*>(signalsVector->at(i).first)->receiver;
+            ourConn->prevConnectionList->nextConnectionList.storeRelaxed(ourConn->nextConnectionList);
+            ourConn->nextConnectionList.storeRelaxed(signalsVector->at(i).first);
+            signalsVector->at(i).first.storeRelaxed(ourConn);
             return true;
         }
     }
