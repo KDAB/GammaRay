@@ -959,7 +959,7 @@ void BindingInspectorTest::testIntegration()
     QQmlComponent c(&engine);
     c.setData(code, QUrl());
     QObject *rect = c.create();
-    QTest::qWait(10);
+    QTest::qWait(30);
     QVERIFY(rect);
     QObject *text = rect->findChildren<QQuickText *>().at(0);
 
