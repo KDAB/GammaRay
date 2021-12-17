@@ -47,8 +47,6 @@ struct ProcData
     QString user;
     GammaRay::ProbeABI abi;
 
-    ProcData() {}
-
     inline bool equals(const ProcData &other) const
     {
         return ppid == other.ppid &&

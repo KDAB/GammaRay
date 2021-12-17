@@ -117,6 +117,47 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
     return rc;
 }
 
+static ProcData procIdToProcData(const QString &procId)
+{
+    ProcData proc;
+    if (!isUnixProcessId(procId))
+        return proc;
+
+    QString filename = QStringLiteral("/proc/");
+    filename += procId;
+    filename += QLatin1String("/stat");
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly))
+        return proc;     // process may have exited
+
+    const QStringList data = QString::fromLocal8Bit(file.readAll()).split(' ');
+
+    proc.ppid = procId;
+    proc.name = data.at(1);
+    if (proc.name.startsWith(QLatin1Char('(')) && proc.name.endsWith(QLatin1Char(')'))) {
+        proc.name.truncate(proc.name.size() - 1);
+        proc.name.remove(0, 1);
+    }
+    proc.state = data.at(2);
+    // PPID is element 3
+
+    proc.user = QFileInfo(file).owner();
+    file.close();
+
+    QFile cmdFile(QLatin1String("/proc/") + procId + QLatin1String("/cmdline"));
+    if (cmdFile.open(QFile::ReadOnly)) {
+        QByteArray cmd = cmdFile.readAll();
+        cmd.replace('\0', ' ');
+        if (!cmd.isEmpty())
+            proc.name = QString::fromLocal8Bit(cmd).trimmed();
+    }
+    cmdFile.close();
+
+    proc.abi = s_abiDetector.abiForProcess(procId.toLongLong());
+
+    return proc;
+}
+
 // Determine UNIX processes by reading "/proc". Default to ps if
 // it does not exist
 ProcDataList processList(const ProcDataList &previous)
@@ -124,48 +165,19 @@ ProcDataList processList(const ProcDataList &previous)
     const QDir procDir(QStringLiteral("/proc/"));
     if (!procDir.exists())
         return unixProcessListPS(previous);
+
     ProcDataList rc;
     const QStringList procIds = procDir.entryList();
     if (procIds.isEmpty())
         return rc;
-    QMutex mutex;
-    QtConcurrent::blockingMap(procIds, [&rc, &mutex](const QString &procId){
-        if (!isUnixProcessId(procId))
-            return;
-        QString filename = QStringLiteral("/proc/");
-        filename += procId;
-        filename += QLatin1String("/stat");
-        QFile file(filename);
-        if (!file.open(QIODevice::ReadOnly))
-            return;     // process may have exited
 
-        const QStringList data = QString::fromLocal8Bit(file.readAll()).split(' ');
-        ProcData proc;
-        proc.ppid = procId;
-        proc.name = data.at(1);
-        if (proc.name.startsWith(QLatin1Char('(')) && proc.name.endsWith(QLatin1Char(')'))) {
-            proc.name.truncate(proc.name.size() - 1);
-            proc.name.remove(0, 1);
-        }
-        proc.state = data.at(2);
-        // PPID is element 3
+    // start collection
+    rc = QtConcurrent::blockingMapped<ProcDataList>(procIds, procIdToProcData);
 
-        proc.user = QFileInfo(file).owner();
-        file.close();
+    // Filter out invalid entries
+    rc.erase(std::remove_if(rc.begin(), rc.end(), [](const ProcData &pd){
+        return pd.ppid.isEmpty();
+    }), rc.end());
 
-        QFile cmdFile(QLatin1String("/proc/") + procId + QLatin1String("/cmdline"));
-        if (cmdFile.open(QFile::ReadOnly)) {
-            QByteArray cmd = cmdFile.readAll();
-            cmd.replace('\0', ' ');
-            if (!cmd.isEmpty())
-                proc.name = QString::fromLocal8Bit(cmd).trimmed();
-        }
-        cmdFile.close();
-
-        proc.abi = s_abiDetector.abiForProcess(procId.toLongLong());
-        QMutexLocker lock{&mutex};
-        rc.push_back(proc);
-
-    });
     return rc;
 }
