@@ -114,7 +114,8 @@ QVariant QuickSceneGraphModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         if (index.column() == 0) {
             return Util::addressToString(node);
-        } else if (index.column() == 1) {
+        }
+        if (index.column() == 1) {
             switch (node->type()) {
             case QSGNode::BasicNodeType:
                 return "Node";
