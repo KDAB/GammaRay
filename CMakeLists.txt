@@ -365,6 +365,9 @@ gammaray_option(
 if (GAMMARAY_QT6_BUILD)
     set(Qt_VERSION_MAJOR 6)
     set(QT_MIN_VERSION "6.0.0")
+
+    set(CMAKE_CXX_STANDARD 17)
+    add_definitions(-DGAMMARAY_QT6_TODO)
 endif()
 
 find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Gui Network)
@@ -393,10 +396,6 @@ find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS
   Widgets
   WaylandCompositor
 )
-if(TARGET Qt6::Core)
-  set(CMAKE_CXX_STANDARD 17)
-  add_definitions(-DGAMMARAY_QT6_TODO)
-endif ()
 
 # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
 # so we can retrieve those packages even when installed into a different prefix
