@@ -108,5 +108,9 @@ QString AboutData::aboutFooter()
                 "<p>GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB "
                 "in the European Union, the United States and/or other countries.  Other product and "
                 "company names and logos may be trademarks or registered trademarks of their respective companies.</p>"
-                "<br>");
+                "<br>"
+                "Social: <a href=\"https://twitter.com/KDABQt\">Twitter</a>, "
+                "<a href=\"https://www.facebook.com/kdabqt\">Facebook</a>, "
+                "<a href=\"https://www.youtube.com/c/KDABtv\">YouTube</a>, "
+                "<a href=\"https://www.kdab.com/category/blogs/\">Blogs</a>");
 }
