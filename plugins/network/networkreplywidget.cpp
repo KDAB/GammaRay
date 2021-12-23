@@ -89,6 +89,7 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
             ui->responseTextEdit->setPlainText(text);
         }
     });
+    ui->responseTextEdit->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     connect(ui->responseTextEdit, &QPlainTextEdit::textChanged, this, [this]() {
         ui->responseTextEdit->setVisible(!ui->responseTextEdit->toPlainText().isEmpty());
     });
