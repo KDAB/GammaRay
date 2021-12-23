@@ -42,9 +42,13 @@
 # -DGAMMARAY_BUILD_DOCS=[true|false]
 #  Build the API documentation and User Manual.
 #  Default=true (except when building the probe only)
-
+#
 # -DGAMMARAY_ENFORCE_QT_ASSERTS=[true|false]
 #  Force QT_ASSERT in all builds.
+#  Default=false
+#
+# -DENABLE_GOLD_LINKER=[true|false]
+#  Force usage of GNU gold linker on Linux
 #  Default=false
 #
 # To build the man page from POD, run 'make man' after CMake (assumes perl is available)
@@ -314,6 +318,20 @@ endif()
 
 if(CYGWIN)
   add_definitions(-D_GNU_SOURCE)
+endif()
+
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_SYSTEM_NAME MATCHES Linux)
+  # Gold linker
+  gammaray_option(ENABLE_GOLD_LINKER "Use GNU gold linker" OFF)
+  if(ENABLE_GOLD_LINKER)
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -fuse-ld=gold -Wl,--version OUTPUT_VARIABLE stdout ERROR_QUIET)
+    if("${stdout}" MATCHES "GNU gold")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=gold")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=gold")
+    else()
+      message(FATAL_ERROR "GNU gold linker isn't available.")
+    endif()
+  endif()
 endif()
 
 # linker flags
