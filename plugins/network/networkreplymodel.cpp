@@ -49,6 +49,9 @@ Q_DECLARE_METATYPE(GammaRay::NetworkReplyModel::ReplyNode)
 namespace {
 bool prioritizeLatestConnection(QObject *sender, const char *normalizedSignalName, QObject *receiver)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+    return false;
+#else
     const auto senderPrivate = QObjectPrivate::get(sender);
     const auto sigIndex = senderPrivate->signalIndex(normalizedSignalName);
     if (sigIndex < 0) {
@@ -95,6 +98,7 @@ bool prioritizeLatestConnection(QObject *sender, const char *normalizedSignalNam
     }
 
     return false;
+#endif
 }
 }
 
@@ -236,9 +240,11 @@ void NetworkReplyModel::objectCreated(QObject *obj)
         }
         updateReplyNode(nam, replyNode);
 
-        connect(reply, &QNetworkReply::downloadProgress, this, [this, reply, nam](qint64 received, qint64 total) { replyProgressSync(reply, received, total, nam); }, Qt::DirectConnection);
-        if (!prioritizeLatestConnection(reply, QMetaObject::normalizedSignature("downloadProgress(qint64,qint64)"), this)) {
-            qWarning() << "Failed to prioritize our slot, capturing network response might not work";
+        if (m_captureResponse) {
+            connect(reply, &QNetworkReply::downloadProgress, this, [this, reply, nam](qint64 received, qint64 total) { replyProgressSync(reply, received, total, nam); }, Qt::DirectConnection);
+            if (!prioritizeLatestConnection(reply, QMetaObject::normalizedSignature("downloadProgress(qint64,qint64)"), this)) {
+                qWarning() << "Failed to prioritize our slot, capturing network response might not work";
+            }
         }
 
         // capture nam, as we cannot deref reply anymore when this triggers
