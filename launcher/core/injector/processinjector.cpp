@@ -109,7 +109,7 @@ bool ProcessInjector::launchProcess(const QStringList &programAndArgs,
         newArgs << QStringLiteral("gdb") << QStringLiteral("--args");
         newArgs += args;
         args = newArgs;
-    } else if (env.value(QStringLiteral("GAMMARAY_DEBUG")).compare(QStringLiteral("RR"), Qt::CaseInsensitive)) {
+    } else if (env.value(QStringLiteral("GAMMARAY_DEBUG")).compare(QStringLiteral("RR"), Qt::CaseInsensitive) == 0) {
         QStringList newArgs;
         newArgs << QStringLiteral("rr") << QStringLiteral("record");
         newArgs += args;
