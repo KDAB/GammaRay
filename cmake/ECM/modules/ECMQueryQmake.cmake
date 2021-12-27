@@ -1,28 +1,5 @@
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
-#
-# 1. Redistributions of source code must retain the copyright
-#    notice, this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the copyright
-#    notice, this list of conditions and the following disclaimer in the
-#    documentation and/or other materials provided with the distribution.
-# 3. The name of the author may not be used to endorse or promote products
-#    derived from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-find_package(Qt5Core QUIET)
+include(${CMAKE_CURRENT_LIST_DIR}/QtVersionOption.cmake)
+find_package(Qt${QT_MAJOR_VERSION}Core QUIET)
 
 if (Qt5Core_FOUND)
     set(_qmake_executable_default "qmake-qt5")
@@ -33,12 +10,26 @@ endif()
 set(QMAKE_EXECUTABLE ${_qmake_executable_default}
     CACHE FILEPATH "Location of the Qt5 qmake executable")
 
+# Helper method
 # This is not public API (yet)!
+# Usage: query_qmake(<result_variable> <qt_variable> [TRY])
+# Passing TRY will result in the method not failing fatal if no qmake executable
+# has been found, but instead simply returning an empty string
 function(query_qmake result_variable qt_variable)
+    set(options TRY)
+    set(oneValueArgs )
+    set(multiValueArgs )
+
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
     if(NOT QMAKE_EXECUTABLE)
-        set(${result_variable} "" PARENT_SCOPE)
-        message(WARNING "Should specify a qmake Qt5 binary. Can't check ${qt_variable}")
-        return()
+        if(ARGS_TRY)
+            set(${result_variable} "" PARENT_SCOPE)
+            message(STATUS "No qmake Qt5 binary found. Can't check ${qt_variable}")
+            return()
+        else()
+            message(FATAL_ERROR "No qmake Qt5 binary found. Can't check ${qt_variable} as required")
+        endif()
     endif()
     execute_process(
         COMMAND ${QMAKE_EXECUTABLE} -query "${qt_variable}"
