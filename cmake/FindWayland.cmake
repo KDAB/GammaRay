@@ -75,7 +75,7 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #=============================================================================
 
-include(${CMAKE_CURRENT_LIST_DIR}/ECMFindModuleHelpers.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/ECM/modules/ECMFindModuleHelpers.cmake)
 
 ecm_find_package_version_check(Wayland)
 
