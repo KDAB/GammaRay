@@ -16,7 +16,7 @@ target_link_libraries(gammaray_objectvisualizer_plugin
 
 ######## START VTK VISUALIZATION
 
-find_package(VTK)
+find_package(VTK QUIET)
 set_package_properties(VTK PROPERTIES
   TYPE OPTIONAL
   DESCRIPTION "Visualization Toolkit"
@@ -26,7 +26,7 @@ set_package_properties(VTK PROPERTIES
 if(VTK_FOUND)
   find_path(VTK_QT_INCLUDE_DIR NAMES QVTKWidget.h HINTS ${VTK_INCLUDE_DIRS})
   if(NOT VTK_QT_INCLUDE_DIR)
-    message(STATUS "Cannot locate QVTKWidget.h in ${VTK_INCLUDE_DIRS}")
+    message(STATUS "Cannot locate QVTKWidget.h")
     set(VTK_FOUND FALSE)
     add_feature_info("QVTKWidget header" VTK_FOUND "Object visualizer plugin requires QVTKWidget.h header.")
   endif()
