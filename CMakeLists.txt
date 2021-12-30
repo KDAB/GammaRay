@@ -58,10 +58,6 @@
 
 cmake_minimum_required(VERSION 3.16.0)
 
-if(POLICY CMP0076)
-  cmake_policy(SET CMP0076 NEW)
-endif()
-
 project(GammaRay
   VERSION 2.99.50
   LANGUAGES CXX C
