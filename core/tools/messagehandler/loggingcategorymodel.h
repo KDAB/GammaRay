@@ -43,6 +43,8 @@ public:
     explicit LoggingCategoryModel(QObject *parent = nullptr);
     ~LoggingCategoryModel() override;
 
+    Q_INVOKABLE QByteArray exportLoggingConfig(bool all, bool forFile);
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
@@ -51,9 +53,21 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
 
+Q_SIGNALS:
+    void addCategorySignal(QLoggingCategory *category);
+
 private:
+    void addCategorySlot(QLoggingCategory *category);
     void addCategory(QLoggingCategory *category);
-    QVector<QLoggingCategory *> m_categories;
+
+    struct CategoryWithDefaultValues {
+        QLoggingCategory *category;
+        bool wasDebugEnabled;
+        bool wasInfoEnabled;
+        bool wasWarningEnabled;
+        bool wasCriticalEnabled;
+    };
+    QVector<CategoryWithDefaultValues> m_categories;
     QLoggingCategory::CategoryFilter m_previousFilter;
 
     friend void categoryFilter(QLoggingCategory *);

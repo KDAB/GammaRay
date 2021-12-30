@@ -52,6 +52,8 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QUrl>
+#include <QFileDialog>
+#include <QFile>
 
 using namespace GammaRay;
 
@@ -102,6 +104,9 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
     ui->backtraceView->setItemDelegate(new PropertyEditorDelegate(ui->backtraceView));
     connect(handler, &MessageHandlerInterface::stackTraceAvailableChanged, ui->backtraceView, &QWidget::setVisible);
     connect(ui->backtraceView, &QWidget::customContextMenuRequested, this, &MessageHandlerWidget::stackTraceContextMenu);
+    connect(ui->saveAllConf, &QPushButton::clicked, this, &MessageHandlerWidget::saveFileAllLogConfig);
+    connect(ui->saveModConf, &QPushButton::clicked, this, &MessageHandlerWidget::saveFileModLogConfig);
+    connect(ui->copyModConf, &QPushButton::clicked, this, &MessageHandlerWidget::exportModLogConfig);
 
     ui->categoriesView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel")));
 
@@ -226,4 +231,44 @@ void MessageHandlerWidget::stackTraceContextMenu(QPoint pos)
     cme.setLocation(ContextMenuExtension::ShowSource, loc);
     cme.populateMenu(&contextMenu);
     contextMenu.exec(ui->backtraceView->viewport()->mapToGlobal(pos));
+}
+
+void MessageHandlerWidget::saveFileAllLogConfig()
+{
+    saveFileLogConfig(true);
+}
+
+void MessageHandlerWidget::saveFileModLogConfig()
+{
+    saveFileLogConfig(false);
+}
+
+void MessageHandlerWidget::saveFileLogConfig(bool all)
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Save File"),
+                                                    {},
+                                                    tr("Config Files (*.ini)"));
+
+    if (!fileName.isEmpty()) {
+        QFile file(fileName);
+        if (!file.open(QFile::WriteOnly)) {
+            qWarning() << "Failed to save file" << fileName << file.errorString();
+            return;
+        }
+
+        QByteArray config;
+        auto model = ui->categoriesView->model();
+        model->metaObject()->invokeMethod(model, "exportLoggingConfig", Q_RETURN_ARG(QByteArray, config), Q_ARG(bool, all), Q_ARG(bool, true));
+        file.write(config);
+    }
+}
+
+void MessageHandlerWidget::exportModLogConfig()
+{
+    QByteArray config;
+    auto model = ui->categoriesView->model();
+    model->metaObject()->invokeMethod(model, "exportLoggingConfig", Q_RETURN_ARG(QByteArray, config), Q_ARG(bool, false), Q_ARG(bool, false));
+    QString env = QLatin1String("QT_LOGGING_RULES='") + QString::fromLatin1(config) + QLatin1Char('\'');
+    QGuiApplication::clipboard()->setText(env);
 }

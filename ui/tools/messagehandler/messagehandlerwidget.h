@@ -55,6 +55,10 @@ private slots:
     void copyToClipboard(const QString &message);
     void messageContextMenu(const QPoint &pos);
     void stackTraceContextMenu(QPoint pos);
+    void saveFileAllLogConfig();
+    void saveFileModLogConfig();
+    void saveFileLogConfig(bool all);
+    void exportModLogConfig();
 
 private:
     QScopedPointer<Ui::MessageHandlerWidget> ui;
