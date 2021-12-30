@@ -366,7 +366,6 @@ if (GAMMARAY_QT6_BUILD)
     set(Qt_VERSION_MAJOR 6)
     set(QT_MIN_VERSION "6.0.0")
 
-    set(CMAKE_CXX_STANDARD 17)
     add_definitions(-DGAMMARAY_QT6_TODO)
 endif()
 
@@ -407,6 +406,11 @@ find_package(Qt${Qt_VERSION_MAJOR}Scxml 5.8 NO_MODULE QUIET)
 # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
 if(GAMMARAY_BUILD_DOCS)
   find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
+endif()
+
+if(${Qt_VERSION_MAJOR} GREATER_EQUAL 6)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
 # these need to included after the last Qt-related find_package() call
