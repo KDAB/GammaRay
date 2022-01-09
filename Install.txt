@@ -130,19 +130,3 @@ You can therefore change this via the following CMake options:
 - CMAKE_INSTALL_RPATH=<path(s)> will add the specified absolute paths to RPATH,
   additionally to the relative RPATHs between GammaRay's components.
 
-== Warning! (Qt <= 5.4 only) ==
-If your Qt is linked with the "-Bsymbolic-function" option preloading will be
-broken.  When this is enabled, references to global functions will be bound to
-the shared object internally; therefore, the definition of the function will be
-fixed and cannot be overwritten by preloading.
-
-So, be sure that your distro-provided packages or your self-compiled packages
-are not linked with this flag (check with `echo $LDFLAGS` before compiling).
-For more info see: "man ld; search for "-Bsymbolic-function".
-
-Known affected distros:
-
-    Ubuntu 10.10, 11.04
-
-If you are affected by this, try the gdb injector instead by using the "-i gdb"
-command line argument.
