@@ -19,9 +19,9 @@ installation:
 To build a debug version pass -DCMAKE_BUILD_TYPE=Debug to cmake.
 
 To build GammaRay you will need *at least*:
- - CMake 3.11.0
+ - CMake 3.16.0
  - a C++ compiler with C++11 support
- - Qt 5.5 or higher
+ - Qt 5.5 or higher, or Qt 6
 
 Optional FOSS packages (eg. KDSME, etc) provide extra functionality.
 See the "Optional Dependencies" section below for more details.
