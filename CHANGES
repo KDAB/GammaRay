@@ -5,6 +5,7 @@ Version 3.0.0 (unreleased)
 --------------------------
  * Increase CMake requirement to version 3.16.0.
  * Port to Qt6 (in-progress)
+ * Network operations now optionally allow capturing HTTP response body
 
 Version 2.11.3
 --------------
