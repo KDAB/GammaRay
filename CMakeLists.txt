@@ -707,6 +707,10 @@ if(GAMMARAY_BUILD_DOCS)
   add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
 endif()
 
+# IDE Support (e.g. for QtCreator): Make the IDE aware of other files as well
+file(GLOB ALL_OTHER_FILES_LIST "*.md")
+add_custom_target(ALL_OTHER_FILES SOURCES ${ALL_OTHER_FILES_LIST})
+
 set(LICENSE_FILE "LICENSE.GPL.txt")
 set(README_FILE "README.md")
 list(APPEND DOCS ${LICENSE_FILE} ${README_FILE} "LICENSE.txt")
