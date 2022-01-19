@@ -44,6 +44,11 @@ Among other things GammaRay can:
  * Show all installed fonts.
  * Show all available codecs.
 
+Building GammaRay
+=================
+
+[See installation notes](INSTALL.md)
+
 Contact
 =======
 * See our official home page: https://www.kdab.com/gammaray
