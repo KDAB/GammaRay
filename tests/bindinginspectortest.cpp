@@ -263,7 +263,8 @@ void BindingInspectorTest::initTestCase()
     BindingAggregator::registerBindingProvider(std::unique_ptr<MockBindingProvider>(provider));
 
     QTest::qWait(1);
-    bindingExtension = ObjectBroker::object<BindingExtension*>("com.kdab.GammaRay.ObjectInspector.bindingsExtension");
+    bindingExtension = qobject_cast<BindingExtension*>(
+        ObjectBroker::objectInternal("com.kdab.GammaRay.ObjectInspector.bindingsExtension"));
     QVERIFY(bindingExtension);
     bindingModel = bindingExtension->model();
     QVERIFY(bindingModel);
