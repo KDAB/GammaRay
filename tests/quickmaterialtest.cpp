@@ -85,7 +85,8 @@ private slots:
         QCOMPARE(imageItem->metaObject()->className(), "QQuickImage");
         Probe::instance()->selectObject(imageItem, QPoint());
 
-        auto controller = ObjectBroker::object<PropertyController*>("com.kdab.GammaRay.QuickSceneGraph.controller");
+        auto obj = ObjectBroker::object<PropertyControllerInterface*>("com.kdab.GammaRay.QuickSceneGraph.controller");
+        auto controller = qobject_cast<PropertyController*>(obj);
         QVERIFY(controller);
 
         auto priv = QQuickItemPrivate::get(imageItem);
@@ -137,7 +138,8 @@ private slots:
         QVERIFY(effectItem);
         Probe::instance()->selectObject(effectItem, QPoint());
 
-        auto controller = ObjectBroker::object<PropertyController*>("com.kdab.GammaRay.QuickSceneGraph.controller");
+        auto obj = ObjectBroker::object<PropertyControllerInterface*>("com.kdab.GammaRay.QuickSceneGraph.controller");
+        auto controller = qobject_cast<PropertyController*>(obj);
         QVERIFY(controller);
 
         auto priv = QQuickItemPrivate::get(effectItem);
