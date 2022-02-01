@@ -12,6 +12,8 @@ set(WIDGET3D_SHADERS_WIDGET_WIREFRAME_PROGRAM
     widget_wireframe.geom
     widget_wireframe.vert
 )
-glslang_validate_program(${WIDGET3D_SHADERS_HORIZONTALS_PROGRAM})
-glslang_validate_program(${WIDGET3D_SHADERS_WIDGET_PROGRAM})
-glslang_validate_program(${WIDGET3D_SHADERS_WIDGET_WIREFRAME_PROGRAM})
+if(Glslang_FOUND)
+  glslang_validate_program(${WIDGET3D_SHADERS_HORIZONTALS_PROGRAM})
+  glslang_validate_program(${WIDGET3D_SHADERS_WIDGET_PROGRAM})
+  glslang_validate_program(${WIDGET3D_SHADERS_WIDGET_WIREFRAME_PROGRAM})
+endif()
