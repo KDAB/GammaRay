@@ -57,7 +57,7 @@ target_compile_features(gammaray_common PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES}
 
 gammaray_target_relocatable_interfaces(gammaray_common_ipaths)
 target_include_directories(gammaray_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_common_ipaths}>)
-target_link_libraries(gammaray_common LINK_PUBLIC Qt::Core LINK_PRIVATE Qt::Network Qt::Gui)
+target_link_libraries(gammaray_common LINK_PUBLIC Qt::Core LINK_PRIVATE Qt::Network Qt::Gui Qt::GuiPrivate)
 target_link_libraries(gammaray_common LINK_PRIVATE gammaray_kitemmodels ${CMAKE_DL_LIBS})
 gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
 

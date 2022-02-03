@@ -52,6 +52,12 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QStandardItemModel>
+#include <QWindow>
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qeventpoint_p.h>
+#include <private/qpointingdevice_p.h>
+#endif
 
 #include <cmath>
 #include <cstdlib>
@@ -915,7 +921,32 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
 {
     QTouchEvent::TouchPoint p;
 
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    QMutableEventPoint mut = QMutableEventPoint::constFrom(point);
+
+    mut.setScenePosition(mapToSource(point.scenePos()));
+    mut.setScreenPos(mapToSource(point.screenPos()));
+
+    mut.setGlobalGrabPosition(mapToSource(point.globalGrabPosition()));
+    mut.setGlobalLastPosition(mapToSource(point.globalLastPosition()));
+    mut.setGlobalPosition(mapToSource(point.globalPosition()));
+    mut.setGlobalPressPosition(mapToSource(point.globalPressPosition()));
+
+    mut.setRotation(point.rotation());
+    mut.setPressure(point.pressure());
+    mut.setId(point.id());
+    mut.setPosition(point.position());
+
+    mut.setUniqueId(point.uniqueId());
+    mut.setDevice(point.device());
+    mut.setState(point.state());
+
+    mut.setTimestamp(point.timestamp());
+    mut.setPressTimestamp(point.pressTimestamp());
+    mut.setEllipseDiameters(point.ellipseDiameters());
+
+    p = mut;
+#else
     p.setFlags(point.flags());
     p.setId(point.id());
     p.setPressure(point.pressure());
@@ -942,7 +973,6 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
     p.setScreenPos(mapToSource(point.screenPos()));
     p.setScreenRect(mapToSource(point.screenRect()));
 #endif
-
     return p;
 }
 
@@ -1395,7 +1425,23 @@ void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)
 {
     event->accept();
 
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    auto pointingDevice = qobject_cast<const QPointingDevice*>(event->device());
+    if (!pointingDevice) {
+        return;
+    }
+
+    QList<QTouchEvent::TouchPoint> touchPoints;
+    foreach (const QTouchEvent::TouchPoint &point, event->touchPoints()) {
+        touchPoints << mapToSource(point);
+    }
+
+    QInputDevice::Capabilities caps = pointingDevice->capabilities();
+    caps.setFlag(QInputDevice::Capability::Velocity, false);
+    m_interface->sendTouchEvent(event->type(), (int)event->deviceType(), caps, pointingDevice->maximumPoints(),
+                                event->modifiers().toInt(), event->touchPointStates(), touchPoints);
+
+#else
     QList<QTouchEvent::TouchPoint> touchPoints;
     foreach (const QTouchEvent::TouchPoint &point, event->touchPoints()) {
         touchPoints << mapToSource(point);
