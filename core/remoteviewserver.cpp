@@ -38,6 +38,12 @@
 #include <QTimer>
 #include <QWindow>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qeventpoint_p.h>
+#include <private/qevent_p.h>
+#include <private/qpointingdevice_p.h>
+#endif
+
 using namespace GammaRay;
 
 RemoteViewServer::RemoteViewServer(const QString &name, QObject *parent)
@@ -184,7 +190,7 @@ void RemoteViewServer::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
 }
 
 void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints,
-                                      int modifiers, Qt::TouchPointStates touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
+                                      int modifiers, int touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
 {
     if (!m_eventReceiver)
         return;
@@ -199,8 +205,11 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
     m_touchDevice->setCapabilities(QPointingDevice::Capabilities(deviceCaps));
     m_touchDevice->setMaximumTouchPoints(touchDeviceMaxTouchPoints);
 
-    const int states = touchPointStates;
-    auto event = new QTouchEvent(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), static_cast<QEventPoint::States>(states), touchPoints);
+    const QEventPoint::States states(touchPointStates);
+    auto event = new QTouchEvent(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), states, touchPoints);
+
+    auto *mut = QMutableTouchEvent::from(event);
+    mut->setTarget(m_eventReceiver);
 #else
     if (!m_touchDevice) {
         //create our own touch device, the system may not have one already, or it may not have
@@ -211,7 +220,8 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
     m_touchDevice->setCapabilities(QTouchDevice::CapabilityFlag(deviceCaps));
     m_touchDevice->setMaximumTouchPoints(touchDeviceMaxTouchPoints);
 
-    auto event = new QTouchEvent(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), touchPointStates, touchPoints);
+    const Qt::TouchPointStates states(touchPointStates);
+    auto event = new QTouchEvent(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), states, touchPoints);
     event->setWindow(m_eventReceiver);
 #endif
 

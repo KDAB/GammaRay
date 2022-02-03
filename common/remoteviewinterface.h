@@ -54,6 +54,12 @@ public:
 
     QString name() const;
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    using TouchPointStates = QEventPoint::States;
+#else
+    using TouchPointStates = Qt::TouchPointStates;
+#endif
+
 public slots:
     virtual void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode) = 0;
     virtual void pickElementId(const GammaRay::ObjectId &id) = 0;
@@ -69,7 +75,7 @@ public slots:
                                 int buttons, int modifiers) = 0;
 
     virtual void sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
-                                Qt::TouchPointStates touchPointStates,
+                                int touchPointStates,
                                 const QList<QTouchEvent::TouchPoint> &touchPoints) = 0;
 
     virtual void sendUserViewport(const QRectF &userViewport) = 0;
@@ -93,16 +99,28 @@ private:
 }
 
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
-Q_DECLARE_METATYPE(Qt::TouchPointStates)
+Q_DECLARE_METATYPE(GammaRay::RemoteViewInterface::TouchPointStates)
+Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
+Q_DECLARE_METATYPE(GammaRay::RemoteViewInterface::RequestMode)
+
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
 Q_DECLARE_METATYPE(QPointingDevice::PointerType)
+Q_DECLARE_METATYPE(QPointingDeviceUniqueId)
 #else
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint::InfoFlags)
 #endif
-Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
-Q_DECLARE_METATYPE(GammaRay::RemoteViewInterface::RequestMode)
+
 QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::RemoteViewInterface, "com.kdab.GammaRay.RemoteViewInterface/1.0")
 QT_END_NAMESPACE
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &points);
+GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points);
+GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &s, GammaRay::RemoteViewInterface::TouchPointStates &states);
+GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &s, GammaRay::RemoteViewInterface::TouchPointStates states);
+GAMMARAY_COMMON_EXPORT QDataStream &operator<<(QDataStream &s, QPointingDeviceUniqueId id);
+GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &s, QPointingDeviceUniqueId &id);
+#endif
 
 #endif // GAMMARAY_REMOTEVIEWINTERFACE_H

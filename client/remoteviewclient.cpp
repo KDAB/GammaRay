@@ -82,7 +82,7 @@ void RemoteViewClient::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
 }
 
 void RemoteViewClient::sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
-                                      Qt::TouchPointStates touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
+                                      int touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
 {
     Endpoint::instance()->invokeObject(name(), "sendTouchEvent", QVariantList()
                                        << QVariant::fromValue(type)

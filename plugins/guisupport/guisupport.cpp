@@ -612,7 +612,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QTouchEvent, target);
     MO_ADD_PROPERTY_RO(QTouchEvent, touchPoints);
 
-#ifndef QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT0(QTouchEvent::TouchPoint);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, id);
     MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, state);
@@ -640,6 +640,12 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QTouchDevice, maximumTouchPoints);
     MO_ADD_PROPERTY_RO(QTouchDevice, name);
     MO_ADD_PROPERTY_RO(QTouchDevice, type);
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    MO_ADD_METAOBJECT0(QTouchEvent::TouchPoint);
+    MO_ADD_METAOBJECT0(QPointingDevice);
+    MO_ADD_METAOBJECT0(QPointingDeviceUniqueId);
 #endif
 
     MO_ADD_METAOBJECT1(QScrollPrepareEvent, QEvent);

@@ -48,7 +48,7 @@ public:
     void sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta, int buttons,
                         int modifiers) override;
     void sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
-                        Qt::TouchPointStates touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
+                        int touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
                         override;
     void setViewActive(bool active) override;
     void sendUserViewport(const QRectF &userViewport) override;
