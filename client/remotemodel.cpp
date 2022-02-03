@@ -612,6 +612,47 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                 break;
             }
         }
+
+        /**
+         * Before clearing, make sure nodes in this
+         * list are independent of each other i.e.,
+         * no two nodes in the list may have parent-child
+         * relation as it will lead to crashes when
+         * parent delets all its childrens
+         */
+        const auto parentNodesCopy = parentNodes;
+        parentNodes.clear();
+        for (auto *node : parentNodesCopy) {
+            // First item => just insert
+            if (parentNodes.isEmpty()) {
+                parentNodes.push_back(node);
+                continue;
+            }
+
+            // Check for parent/childs
+            bool skip = false;
+            std::vector<Node*> childsOfNode;
+            for (auto *n : qAsConst(parentNodes)) {
+                if (isAncestor(n, node)) {
+                    // parent already there, no need to add
+                    skip = true;
+                    break;
+                } else if (isAncestor(node, n)) {
+                    // Remove childs
+                    childsOfNode.push_back(n);
+                }
+            }
+
+            if (skip) {
+                continue;
+            }
+
+            for (auto *c : childsOfNode) {
+                parentNodes.removeAll(c);
+            }
+            parentNodes.push_back(node);
+        }
+
         for (auto node : qAsConst(parentNodes)) {
             if (hint == 0)
                 node->clearChildrenStructure();
