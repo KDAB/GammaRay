@@ -32,6 +32,7 @@
 #include <core/propertycontrollerextension.h>
 
 #include <QObject>
+#include <QPointer>
 
 QT_BEGIN_NAMESPACE
 class QImage;
@@ -61,7 +62,7 @@ private:
     bool ensureSetup();
     void triggerGrab();
 
-    QSGTexture *m_currentTexture;
+    QPointer<QSGTexture> m_currentTexture;
     QSGDistanceFieldTextMaterial *m_currentMaterial;
     RemoteViewServer *m_remoteView;
     bool m_connected;
