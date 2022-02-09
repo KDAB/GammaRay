@@ -92,8 +92,7 @@ QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &po
     for (const auto &p : points) {
         s << p.id();
         s << p.state();
-        s << p.scenePos();
-        s << p.screenPos();
+        s << p.scenePosition();
         s << p.ellipseDiameters();
         s << p.position();
         s << p.uniqueId();
@@ -126,6 +125,7 @@ QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &po
     return s;
 }
 
+#if QT_VERSION <= QT_VERSION_CHECK(6, 2, 3)
 template<class T, class TouchPoint>
 void setPointValue(QDataStream &s, TouchPoint &p, void (TouchPoint::*func)(T))
 {
@@ -133,6 +133,15 @@ void setPointValue(QDataStream &s, TouchPoint &p, void (TouchPoint::*func)(T))
     s >> value;
     (p.*func)(value);
 }
+#else
+template<class T>
+void setPointValue(QDataStream &s, QEventPoint &p, void (*func)(QEventPoint &, T))
+{
+    typename std::decay<T>::type value;
+    s >> value;
+    (func)(p, value);
+}
+#endif
 
 QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
 {
@@ -142,12 +151,15 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     for (int i = 0; i < count; ++i) {
+#if QT_VERSION <= QT_VERSION_CHECK(6, 2, 3)
         QMutableEventPoint p;
+#else
+        QEventPoint p;
+#endif
 
         setPointValue(s, p, &QMutableEventPoint::setId);
         setPointValue(s, p, &QMutableEventPoint::setState);
         setPointValue(s, p, &QMutableEventPoint::setScenePosition);
-        setPointValue(s, p, &QMutableEventPoint::setScreenPos);
         setPointValue(s, p, &QMutableEventPoint::setEllipseDiameters);
         setPointValue(s, p, &QMutableEventPoint::setPosition);
         setPointValue(s, p, &QMutableEventPoint::setUniqueId);
@@ -161,10 +173,20 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
         setPointValue(s, p, &QMutableEventPoint::setPressure);
         setPointValue(s, p, &QMutableEventPoint::setRotation);
         quint64 v;
+
         s >> v;
+#if QT_VERSION <= QT_VERSION_CHECK(6, 2, 3)
         p.setPressTimestamp(v);
+#else
+        QMutableEventPoint::setPressTimestamp(p, v);
+#endif
+
         s >> v;
+#if QT_VERSION <= QT_VERSION_CHECK(6, 2, 3)
         p.setTimestamp(v);
+#else
+        QMutableEventPoint::setTimestamp(p, v);
+#endif
 
         points.append(p);
     }

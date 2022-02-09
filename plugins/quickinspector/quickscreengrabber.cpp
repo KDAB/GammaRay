@@ -625,7 +625,7 @@ void OpenGLScreenGrabber::windowAfterRendering()
 
     // We are in the rendering thread at this point
     // And the gui thread is NOT locked
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->rendererInterface()->getResource(m_window, QSGRendererInterface::OpenGLContextResource));
 #else
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->openglContext());

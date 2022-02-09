@@ -921,31 +921,42 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
 {
     QTouchEvent::TouchPoint p;
 
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+
+#if QT_VERSION > QT_VERSION_CHECK(6, 2, 3)
+    QMutableEventPoint::update(point, p);
+#define SET_POINT_VALUE(func, val) \
+    QMutableEventPoint::func(p, (val))
+#else
     QMutableEventPoint mut = QMutableEventPoint::constFrom(point);
+#define SET_POINT_VALUE(func, value) \
+    mut.func(value)
+#endif
 
-    mut.setScenePosition(mapToSource(point.scenePos()));
-    mut.setScreenPos(mapToSource(point.screenPos()));
+    SET_POINT_VALUE(setScenePosition, mapToSource(point.scenePos()));
+    SET_POINT_VALUE(setGlobalGrabPosition, mapToSource(point.globalGrabPosition()));
+    SET_POINT_VALUE(setGlobalLastPosition, mapToSource(point.globalGrabPosition()));
+    SET_POINT_VALUE(setGlobalPosition, mapToSource(point.globalPosition()));
+    SET_POINT_VALUE(setGlobalPressPosition, mapToSource(point.globalPressPosition()));
 
-    mut.setGlobalGrabPosition(mapToSource(point.globalGrabPosition()));
-    mut.setGlobalLastPosition(mapToSource(point.globalLastPosition()));
-    mut.setGlobalPosition(mapToSource(point.globalPosition()));
-    mut.setGlobalPressPosition(mapToSource(point.globalPressPosition()));
+    SET_POINT_VALUE(setRotation, point.rotation());
+    SET_POINT_VALUE(setPressure, point.pressure());
+    SET_POINT_VALUE(setId, point.id());
+    SET_POINT_VALUE(setPosition, point.position());
 
-    mut.setRotation(point.rotation());
-    mut.setPressure(point.pressure());
-    mut.setId(point.id());
-    mut.setPosition(point.position());
+    SET_POINT_VALUE(setUniqueId, point.uniqueId());
+    SET_POINT_VALUE(setDevice, point.device());
+    SET_POINT_VALUE(setState, point.state());
+    SET_POINT_VALUE(setTimestamp, point.timestamp());
+    SET_POINT_VALUE(setPressTimestamp, point.pressTimestamp());
+    SET_POINT_VALUE(setEllipseDiameters, point.ellipseDiameters());
 
-    mut.setUniqueId(point.uniqueId());
-    mut.setDevice(point.device());
-    mut.setState(point.state());
-
-    mut.setTimestamp(point.timestamp());
-    mut.setPressTimestamp(point.pressTimestamp());
-    mut.setEllipseDiameters(point.ellipseDiameters());
-
+#if QT_VERSION <= QT_VERSION_CHECK(6, 2, 3)
     p = mut;
+#endif
+
+#undef SET_POINT_VALUE
+
 #else
     p.setFlags(point.flags());
     p.setId(point.id());
@@ -1439,7 +1450,7 @@ void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)
     QInputDevice::Capabilities caps = pointingDevice->capabilities();
     caps.setFlag(QInputDevice::Capability::Velocity, false);
     m_interface->sendTouchEvent(event->type(), (int)event->deviceType(), caps, pointingDevice->maximumPoints(),
-                                event->modifiers().toInt(), event->touchPointStates(), touchPoints);
+                                (int) event->modifiers(), (int) event->touchPointStates(), touchPoints);
 
 #else
     QList<QTouchEvent::TouchPoint> touchPoints;
