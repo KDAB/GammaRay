@@ -846,13 +846,17 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
                 // child added events are sent before qt_addObject is called,
                 // so we assumes this comes from the ctor
                 objectAdded(obj, true);
-            } else if (!isObjectCreationQueued(obj) && !isObjectCreationQueued(obj->parent())) {
+            } else if (!isObjectCreationQueued(obj) && !isObjectCreationQueued(obj->parent()) && isValidObject(obj->parent())) {
                 // object is known already, just update the position in the tree
                 // BUT: only when we did not queue this item before
                 IF_DEBUG(cout << "update pos: " << hex << obj << endl;
                          )
                 m_pendingReparents.removeAll(obj);
                 emit objectReparented(obj);
+            } else if (!isValidObject(obj->parent())) {
+                objectAdded(obj->parent());
+                m_pendingReparents.push_back(obj);
+                notifyQueuedObjectChanges();
             }
         } else if (tracked) {
             // defer processing this until we know its final location
@@ -866,10 +870,16 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
         QMutexLocker lock(s_lock());
         const bool tracked = m_validObjects.contains(receiver);
         const bool filtered = filterObject(receiver);
+        const bool parentTracked = m_validObjects.contains(receiver->parent());
+
         if (!filtered && tracked && !isObjectCreationQueued(receiver)
-            && !isObjectCreationQueued(receiver->parent())) {
+            && !isObjectCreationQueued(receiver->parent()) && parentTracked) {
             m_pendingReparents.removeAll(receiver);
             emit objectReparented(receiver);
+        } else if (!parentTracked) {
+            objectAdded(receiver->parent());
+            m_pendingReparents.push_back(receiver);
+            notifyQueuedObjectChanges();
         }
     }
 
