@@ -40,7 +40,12 @@
 #include <QGuiApplication>
 #include <QMenu>
 #include <QPlainTextEdit>
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QTextCodec>
+#else
+#include <QStringDecoder>
+#endif
 
 using namespace GammaRay;
 
@@ -79,6 +84,15 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
         const auto response = current.sibling(current.row(), NetworkReplyModelColumn::ObjectColumn)
                 .data(NetworkReplyModelRole::ReplyResponseRole).toByteArray();
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QStringDecoder decoder(QStringDecoder::Utf8);
+        QByteArrayView bav(response.constData(), response.size());
+        const QString text = decoder.decode(bav);
+        if (!decoder.hasError()) {
+            ui->responseTextEdit->setPlainText(text);
+        }
+#else
+
         QTextCodec::ConverterState state;
         QTextCodec *codec = QTextCodec::codecForName("UTF-8");
         const QString text = codec->toUnicode(response.constData(), response.size(), &state);
@@ -88,6 +102,7 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
             // TODO: Add support for pretty-printing JSON, XML etc
             ui->responseTextEdit->setPlainText(text);
         }
+#endif
     });
     ui->responseTextEdit->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     connect(ui->responseTextEdit, &QPlainTextEdit::textChanged, this, [this]() {
