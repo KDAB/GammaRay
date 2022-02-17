@@ -113,7 +113,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     ui->itemTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->itemTreeView->setModel(proxy);
     ui->itemTreeView->setItemDelegate(new QuickItemDelegate(ui->itemTreeView));
-    new SearchLineController(ui->itemTreeSearchLine, proxy);
+    new SearchLineController(ui->itemTreeSearchLine, proxy, ui->itemTreeView);
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(proxy);
     ui->itemTreeView->setSelectionModel(selectionModel);
     connect(selectionModel, &QItemSelectionModel::selectionChanged,
@@ -127,7 +127,7 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     ui->sgTreeView->header()->setObjectName("sceneGraphTreeViewHeader");
     ui->sgTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->sgTreeView->setModel(clientSceneGraphModel);
-    new SearchLineController(ui->sgTreeSearchLine, clientSceneGraphModel);
+    new SearchLineController(ui->sgTreeSearchLine, clientSceneGraphModel, ui->sgTreeView);
     QItemSelectionModel *sgSelectionModel = ObjectBroker::selectionModel(clientSceneGraphModel);
     ui->sgTreeView->setSelectionModel(sgSelectionModel);
     connect(sgSelectionModel, &QItemSelectionModel::selectionChanged,

@@ -35,12 +35,15 @@
 #include <QRegExp>
 #endif
 #include <QTimer>
+#include <QTreeView>
 #include <QAbstractProxyModel>
+
+#include "common/remotemodelroles.h"
 
 using namespace GammaRay;
 
 namespace {
-static QAbstractItemModel *findEffectiveFilterModel(QAbstractItemModel *model) {
+QAbstractItemModel *findEffectiveFilterModel(QAbstractItemModel *model) {
     Q_ASSERT(model);
 
     if (model->metaObject()->indexOfProperty("filterKeyColumn") != -1) {
@@ -57,10 +60,11 @@ static QAbstractItemModel *findEffectiveFilterModel(QAbstractItemModel *model) {
 }
 }
 
-SearchLineController::SearchLineController(QLineEdit *lineEdit, QAbstractItemModel *proxyModel)
+SearchLineController::SearchLineController(QLineEdit *lineEdit, QAbstractItemModel *proxyModel, QTreeView *treeView)
     : QObject(lineEdit)
     , m_lineEdit(lineEdit)
     , m_filterModel(findEffectiveFilterModel(proxyModel))
+    , m_targetTreeView(treeView)
 {
     Q_ASSERT(lineEdit);
     Q_ASSERT(m_filterModel);
@@ -84,7 +88,12 @@ SearchLineController::SearchLineController(QLineEdit *lineEdit, QAbstractItemMod
     timer->setSingleShot(true);
     timer->setInterval(300);
     connect(lineEdit, &QLineEdit::textChanged, timer, [timer]{ timer->start(); });
-    connect(timer, &QTimer::timeout, this, &SearchLineController::activateSearch);
+    connect(timer, &QTimer::timeout, this, [this]{
+        activateSearch();
+        QTimer::singleShot(50, this, [this]{
+            onSearchFinished(m_lineEdit->text());
+        });
+    });
 }
 
 SearchLineController::~SearchLineController() = default;
@@ -99,5 +108,92 @@ void SearchLineController::activateSearch()
         m_filterModel->setProperty("filterRegExp",
                                    QRegExp(m_lineEdit->text(), Qt::CaseInsensitive, QRegExp::FixedString));
 #endif
+    }
+}
+
+void SearchLineController::onSearchFinished(const QString &searchTerm)
+{
+    if (!m_targetTreeView) {
+        return;
+    }
+
+    if (searchTerm.isEmpty()) {
+        // Make sure we keep the current item in view on clearing
+        auto current = m_targetTreeView->currentIndex();
+        if (current.isValid()) {
+            m_targetTreeView->scrollTo(current);
+        }
+        return;
+    }
+    m_delayedIdxesToExpand.clear();
+
+    if (!m_delayedExpandTimer) {
+        m_delayedExpandTimer = new QTimer(this);
+        m_delayedExpandTimer->setSingleShot(true);
+        m_delayedExpandTimer->setInterval(125);
+
+        connect(m_delayedExpandTimer, &QTimer::timeout, [this] {
+            QVector<QPersistentModelIndex> stillNotLoaded;
+            const auto copy = m_delayedIdxesToExpand;
+            m_delayedIdxesToExpand.clear();
+            auto it = copy.cbegin();
+            auto end = copy.cend();
+            for (; it != end; ++it) {
+                const QModelIndex index = *it;
+                if (!index.isValid()) {
+                    continue;
+                }
+                if (m_targetTreeView->isExpanded(index)) {
+                    continue;
+                }
+                const auto state = index.data(RemoteModelRole::LoadingState).value<RemoteModelNodeState::NodeStates>();
+                if (!state.testFlag(RemoteModelNodeState::Empty)) {
+                    expandRecursively(index);
+                    continue;
+                }
+                QPersistentModelIndex notLoaded = index;
+                stillNotLoaded.append(notLoaded);
+            }
+
+            m_delayedIdxesToExpand << stillNotLoaded;
+            if (!m_delayedIdxesToExpand.isEmpty()) {
+                m_delayedExpandTimer->start();
+            }
+        });
+    }
+
+    auto *model = m_targetTreeView->model();
+    const int rowCount = model->rowCount({});
+    // Walk the top level indexes and expand everything
+    for (int r = 0; r < rowCount; ++r) {
+        expandRecursively(model->index(r, 0));
+    }
+    // Start the timer to expand the not loaded indexes
+    m_delayedExpandTimer->start();
+}
+
+void SearchLineController::expandRecursively(const QModelIndex &idx)
+{
+    if (!idx.isValid() || !m_filterModel || !m_targetTreeView) {
+        return;
+    }
+
+    auto model = m_targetTreeView->model();
+    m_targetTreeView->expand(idx);
+
+    const int rowCount = model->rowCount(idx);
+    for (int i = 0; i < rowCount; ++i) {
+        auto childIdx = model->index(i, 0, idx);
+        if (!childIdx.isValid()) {
+            continue;
+        }
+
+        // The value might not be there, store it for delayed expansion
+        const auto state = childIdx.data(RemoteModelRole::LoadingState).value<RemoteModelNodeState::NodeStates>();
+        if (state & RemoteModelNodeState::Empty) {
+            m_delayedIdxesToExpand << childIdx;
+        } else {
+            expandRecursively(childIdx);
+        }
     }
 }
