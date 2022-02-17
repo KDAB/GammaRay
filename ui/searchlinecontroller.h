@@ -37,6 +37,8 @@
 
 QT_BEGIN_NAMESPACE
 class QLineEdit;
+class QTimer;
+class QTreeView;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -45,21 +47,30 @@ namespace GammaRay {
  * implementing QSFPM like properties (ie, filterKeyColumn, filterCaseSensitivity etc...).
  * If the given proxy is not a QSFPM api-like model, a check is performed recursively in all
  * sourceModel until a compatible QSFPM api-like one is found.
+ *
+ * If a treeView is provided, then the controller tries to auto expand the tree to reveal
+ * matching indexes
 */
 class GAMMARAY_UI_EXPORT SearchLineController : public QObject
 {
     Q_OBJECT
 public:
     /** Establish a connection between @p lineEdit and @p proxyModel. */
-    explicit SearchLineController(QLineEdit *lineEdit, QAbstractItemModel *proxyModel);
+    explicit SearchLineController(QLineEdit *lineEdit, QAbstractItemModel *proxyModel, QTreeView *treeView = nullptr);
     ~SearchLineController() override;
 
 private slots:
     void activateSearch();
+    void onSearchFinished(const QString &searchTerm);
 
 private:
+    void expandRecursively(const QModelIndex &);
+
     QLineEdit *m_lineEdit;
     QPointer<QAbstractItemModel> m_filterModel;
+    QPointer<QTreeView> m_targetTreeView;
+    QTimer *m_delayedExpandTimer = nullptr;
+    QVector<QPersistentModelIndex> m_delayedIdxesToExpand;
 };
 }
 

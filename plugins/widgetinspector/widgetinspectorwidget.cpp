@@ -44,6 +44,7 @@
 
 #include "common/objectbroker.h"
 #include "common/objectmodel.h"
+#include "common/remotemodelroles.h"
 
 #include <ui/contextmenuextension.h>
 #include <ui/paintbufferviewer.h>
@@ -61,6 +62,7 @@
 #include <QSettings>
 #include <QLayout>
 #include <QTabBar>
+#include <QTimer>
 
 using namespace GammaRay;
 
@@ -92,7 +94,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     ui->widgetTreeView->setDeferredResizeMode(1, QHeaderView::Interactive);
     ui->widgetTreeView->setModel(widgetModel);
     ui->widgetTreeView->setSelectionModel(ObjectBroker::selectionModel(widgetModel));
-    new SearchLineController(ui->widgetSearchLine, widgetModel);
+    new SearchLineController(ui->widgetSearchLine, widgetModel, ui->widgetTreeView);
     connect(ui->widgetTreeView->selectionModel(),
             &QItemSelectionModel::selectionChanged,
             this, &WidgetInspectorWidget::widgetSelected);
@@ -186,6 +188,7 @@ void WidgetInspectorWidget::restoreTargetState(QSettings *settings)
     m_remoteView->restoreState(settings->value("remoteViewState").toByteArray());
 }
 
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
 void WidgetInspectorWidget::onTabChanged(int index)
 {
 #ifdef GAMMARAY_WITH_WIDGET3D

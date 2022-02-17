@@ -60,7 +60,7 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     ui->objectTreeView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->objectTreeView->setDeferredResizeMode(0, QHeaderView::Stretch);
     ui->objectTreeView->setDeferredResizeMode(1, QHeaderView::Interactive);
-    new SearchLineController(ui->objectSearchLine, clientModel);
+    new SearchLineController(ui->objectSearchLine, clientModel, ui->objectTreeView);
 
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(ui->objectTreeView->model());
     ui->objectTreeView->setSelectionModel(selectionModel);
