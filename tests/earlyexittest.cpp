@@ -47,7 +47,7 @@ class EarlyExitTest : public QObject
 {
     Q_OBJECT
 private:
-    bool hasInjector(const char *type) const
+    static bool hasInjector(const char *type) 
     {
         auto injector = InjectorFactory::createInjector(type);
         if (!injector)
@@ -57,7 +57,7 @@ private:
     }
 
 private slots:
-    void testNonExistingTarget()
+    static void testNonExistingTarget()
     {
         LaunchOptions options;
 #ifdef Q_OS_MAC
@@ -83,7 +83,7 @@ private slots:
             QTest::newRow("lldb") << QStringLiteral("lldb");
     }
 
-    void testNonExistingTargetDebugger()
+    static void testNonExistingTargetDebugger()
     {
         QFETCH(QString, injectorType);
         if (injectorType.isEmpty())
@@ -106,7 +106,7 @@ private slots:
         QVERIFY(!launcher.errorMessage().isEmpty());
     }
 
-    void test()
+    static void test()
     {
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
@@ -136,7 +136,7 @@ private slots:
             QTest::newRow("lldb") << QStringLiteral("lldb");
     }
 
-    void testStop()
+    static void testStop()
     {
         QFETCH(QString, injectorType);
 

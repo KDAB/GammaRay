@@ -42,7 +42,7 @@ class ProbeSettingsTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void testSettingsRoundtrip()
+    static void testSettingsRoundtrip()
     {
         Paths::setRootPath(QCoreApplication::applicationDirPath() + QStringLiteral("/.."));
 

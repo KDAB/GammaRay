@@ -211,7 +211,7 @@ protected:
      *
      * This is invokes the method directly on the local object.
      */
-    void invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) const;
+    static void invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) ;
 
     PropertySyncer *m_propertySyncer;
     ///@endcond

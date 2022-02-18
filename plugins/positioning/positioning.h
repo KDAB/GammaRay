@@ -54,7 +54,7 @@ private slots:
     void objectAdded(QObject *obj);
 
 private:
-    void registerMetaTypes();
+    static void registerMetaTypes();
 
     std::vector<QGeoPositionInfoSource*> m_nonProxyPositionInfoSources;
 };

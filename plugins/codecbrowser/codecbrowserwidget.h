@@ -47,7 +47,7 @@ public:
     ~CodecBrowserWidget() override;
 
 private slots:
-    void textChanged(const QString &text);
+    static void textChanged(const QString &text);
 
 private:
     QScopedPointer<Ui::CodecBrowserWidget> ui;

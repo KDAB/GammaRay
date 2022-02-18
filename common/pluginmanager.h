@@ -81,8 +81,8 @@ protected:
     virtual bool createProxyFactory(const PluginInfo &pluginInfo, QObject *parent) = 0;
 
     void scan(const QString &serviceType);
-    QStringList pluginPaths() const;
-    QStringList pluginFilter() const;
+    static QStringList pluginPaths() ;
+    static QStringList pluginFilter() ;
 
     QList<PluginLoadError> m_errors;
     QObject *m_parent;

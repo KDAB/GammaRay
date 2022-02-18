@@ -40,7 +40,7 @@ class ProbeABIDetectorTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void testDetectExecutable()
+    static void testDetectExecutable()
     {
         ProbeABIDetector detector;
         QVERIFY(!detector.qtCoreForExecutable(QCoreApplication::applicationFilePath()).isEmpty());
@@ -48,7 +48,7 @@ private slots:
         QCOMPARE(abi.id(), QStringLiteral(GAMMARAY_PROBE_ABI));
     }
 
-    void testDetectProcess()
+    static void testDetectProcess()
     {
         ProbeABIDetector detector;
         QVERIFY(!detector.qtCoreForProcess(QCoreApplication::applicationPid()).isEmpty());
@@ -56,7 +56,7 @@ private slots:
         QCOMPARE(abi.id(), QStringLiteral(GAMMARAY_PROBE_ABI));
     }
 
-    void testContainsQtCore_data()
+    static void testContainsQtCore_data()
     {
         QTest::addColumn<QString>("line", nullptr);
         QTest::addColumn<bool>("isQtCore", nullptr);
@@ -96,7 +96,7 @@ private slots:
         QTest::newRow("libQt") << "libQt.dylib" << false;
     }
 
-    void testContainsQtCore()
+    static void testContainsQtCore()
     {
         QFETCH(QString, line);
         QFETCH(bool, isQtCore);

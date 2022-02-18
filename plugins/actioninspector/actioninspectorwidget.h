@@ -53,7 +53,7 @@ public:
     ~ActionInspectorWidget() override;
 
 private Q_SLOTS:
-    void triggerAction(const QModelIndex &index);
+    static void triggerAction(const QModelIndex &index);
     void contextMenu(QPoint pos);
     void selectionChanged(const QItemSelection &selection);
 

@@ -58,7 +58,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    Q_INVOKABLE QPair<int, QVariant> defaultSelectedItem() const;
+    Q_INVOKABLE static QPair<int, QVariant> defaultSelectedItem() ;
 
     /*!
      * Returns a list of all objects.

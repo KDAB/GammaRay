@@ -52,7 +52,7 @@ class QmlSupportTest : public QObject
 {
     Q_OBJECT
 private:
-    int indexOfProperty(PropertyAdaptor *adaptor, const char *name)
+    static int indexOfProperty(PropertyAdaptor *adaptor, const char *name)
     {
         const int count = adaptor->count();
         for (int i = 0; i < count; ++i) {
@@ -64,7 +64,7 @@ private:
     }
 
 private slots:
-    void initTestCase()
+    static void initTestCase()
     {
         PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
         PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());

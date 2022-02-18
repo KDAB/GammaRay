@@ -135,7 +135,7 @@ private:
     /** Checks if @p ancestor is a (grand)parent of @p child. */
     bool isAncestor(Node *ancestor, Node *child) const;
 
-    RemoteModelNodeState::NodeStates stateForColumn(Node *node, int columnIndex) const;
+    static RemoteModelNodeState::NodeStates stateForColumn(Node *node, int columnIndex) ;
 
     void requestRowColumnCount(const QModelIndex &index) const;
     void requestDataAndFlags(const QModelIndex &index) const;

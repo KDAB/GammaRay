@@ -44,8 +44,8 @@ class QMetaObjectValidatorTest : public QObject
     Q_PROPERTY(UnknownCustomType failUnknownType READ failUnknownType)
     Q_PROPERTY(KnownCustomType knownType READ knownType)
 public:
-    UnknownCustomType failUnknownType() const { return {}; }
-    KnownCustomType knownType() const { return {}; }
+    static UnknownCustomType failUnknownType() { return {}; }
+    static KnownCustomType knownType() { return {}; }
 
 signals:
     void destroyed();
@@ -55,7 +55,7 @@ public slots:
     void knownParameter(KnownCustomType) {}
 
 private slots:
-    void testSignalOverride()
+    static void testSignalOverride()
     {
         for (int i = staticMetaObject.methodOffset(); i < staticMetaObject.methodCount(); ++i) {
             const auto method = staticMetaObject.method(i);
@@ -70,7 +70,7 @@ private slots:
         }
     }
 
-    void testParameterTypes()
+    static void testParameterTypes()
     {
         for (int i = staticMetaObject.methodOffset(); i < staticMetaObject.methodCount(); ++i) {
             const auto method = staticMetaObject.method(i);
@@ -85,7 +85,7 @@ private slots:
         }
     }
 
-    void testPropertyType()
+    static void testPropertyType()
     {
         for (int i = staticMetaObject.propertyOffset(); i < staticMetaObject.propertyCount(); ++i) {
             const auto property = staticMetaObject.property(i);
@@ -100,7 +100,7 @@ private slots:
         }
     }
 
-    void testObject()
+    static void testObject()
     {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         QCOMPARE(QMetaObjectValidator::check(&staticMetaObject),

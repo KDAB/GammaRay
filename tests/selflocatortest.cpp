@@ -41,13 +41,13 @@ class SelfLocatorTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void testFindMe()
+    static void testFindMe()
     {
         qDebug() << SelfLocator::findMe();
         QCOMPARE(QCoreApplication::applicationFilePath(), SelfLocator::findMe());
     }
 
-    void testRootPath()
+    static void testRootPath()
     {
         qDebug() << Paths::rootPath();
         QVERIFY(!Paths::rootPath().isEmpty());

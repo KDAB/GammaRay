@@ -36,7 +36,7 @@ class FontDatabaseModelTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void modelTest()
+    static void modelTest()
     {
         FontDatabaseModel model;
         ModelTest tester(&model);

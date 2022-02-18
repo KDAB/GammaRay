@@ -48,7 +48,7 @@ public:
     explicit MetaObjectBrowser(Probe *probe, QObject *parent = nullptr);
 
 public Q_SLOTS:
-    void rescanMetaTypes();
+    static void rescanMetaTypes();
 
 private Q_SLOTS:
     void objectSelectionChanged(const QItemSelection &selection);

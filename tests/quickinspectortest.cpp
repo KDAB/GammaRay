@@ -72,7 +72,7 @@ private:
     }
 
 private slots:
-    void initTestCase()
+    static void initTestCase()
     {
         qRegisterMetaType<QItemSelection>();
     }

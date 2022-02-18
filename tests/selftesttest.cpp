@@ -38,7 +38,7 @@ class SelfTestTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void runSelfTest()
+    static void runSelfTest()
     {
         Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
         SelfTest selfTest;

@@ -37,7 +37,7 @@ class ProbeABITest : public QObject
 {
     Q_OBJECT
 private slots:
-    void testIsValid()
+    static void testIsValid()
     {
         ProbeABI abi;
         QVERIFY(!abi.isValid());
@@ -57,7 +57,7 @@ private slots:
         QVERIFY(abi.isValid());
     }
 
-    void testToString_data()
+    static void testToString_data()
     {
         QTest::addColumn<QString>("id", nullptr);
         QTest::addColumn<int>("majorVersion", nullptr);
@@ -80,7 +80,7 @@ private slots:
 #endif
     }
 
-    void testToString()
+    static void testToString()
     {
         QFETCH(QString, id);
         QFETCH(int, majorVersion);
@@ -100,7 +100,7 @@ private slots:
         QCOMPARE(abi.id(), id);
     }
 
-    void testFromString_data()
+    static void testFromString_data()
     {
         QTest::addColumn<QString>("id", nullptr);
         QTest::addColumn<bool>("valid", nullptr);
@@ -135,7 +135,7 @@ private slots:
 #endif
     }
 
-    void testFromString()
+    static void testFromString()
     {
         QFETCH(QString, id);
         QFETCH(bool, valid);
@@ -166,7 +166,7 @@ private slots:
 #endif
     }
 
-    void testDisplayString_data()
+    static void testDisplayString_data()
     {
         QTest::addColumn<QString>("id", nullptr);
         QTest::addColumn<QString>("display", nullptr);
@@ -184,7 +184,7 @@ private slots:
 #endif
     }
 
-    void testDisplayString()
+    static void testDisplayString()
     {
         QFETCH(QString, id);
         QFETCH(QString, display);
@@ -193,7 +193,7 @@ private slots:
         QCOMPARE(abi.displayString(), display);
     }
 
-    void testProbeABICompat()
+    static void testProbeABICompat()
     {
 #ifndef Q_OS_WIN
         const ProbeABI targetABI = ProbeABI::fromString(QStringLiteral("qt5_2-x86_64"));
@@ -241,7 +241,7 @@ private slots:
         QCOMPARE(targetABI.isCompatible(incompatABI), !compilerAbiMatters);
     }
 
-    void testProbeABISort()
+    static void testProbeABISort()
     {
         ProbeABI qt52;
         qt52.setQtVersion(5, 2);

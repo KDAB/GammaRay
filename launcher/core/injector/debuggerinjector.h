@@ -106,7 +106,7 @@ private:
         Out
     };
 
-    void processLog(DebuggerInjector::Orientation orientation, bool isError, const QString &text);
+    static void processLog(DebuggerInjector::Orientation orientation, bool isError, const QString &text);
 };
 }
 

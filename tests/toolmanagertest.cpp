@@ -46,7 +46,7 @@ class ToolManagerTest : public BaseProbeTest
 {
     Q_OBJECT
 private:
-    int visibleRowCount(QAbstractItemModel *model)
+    static int visibleRowCount(QAbstractItemModel *model)
     {
         int count = 0;
         for (int i = 0; i < model->rowCount(); ++i) {
@@ -58,7 +58,7 @@ private:
     }
 
 private slots:
-    void initTestCase()
+    static void initTestCase()
     {
         qRegisterMetaType<QVector<ToolInfo> >();
         new ClientToolManager;
@@ -155,7 +155,7 @@ private slots:
     }
 
 private:
-    void testHasBasicTools(bool actionInspectorEnabled)
+    static void testHasBasicTools(bool actionInspectorEnabled)
     {
         bool hasBasicTools = false;
         const ToolInfo *actionInspector = nullptr;
@@ -229,7 +229,7 @@ private:
         QVERIFY(supportedToolIds.contains(QStringLiteral("gammaray_actioninspector")));
     }
 
-    void testClearance()
+    static void testClearance()
     {
         QSignalSpy resetSpy(ClientToolManager::instance()->model(), &QAbstractItemModel::modelReset);
         ClientToolManager::instance()->clear();

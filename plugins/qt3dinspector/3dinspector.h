@@ -73,11 +73,11 @@ private:
     void frameGraphSelectionChanged(const QItemSelection &selection);
     void selectFrameGraphNode(Qt3DRender::QFrameGraphNode *node);
 
-    void registerCoreMetaTypes();
-    void registerInputMetaTypes();
-    void registerRenderMetaTypes();
-    void registerAnimationMetaTypes();
-    void registerExtensions();
+    static void registerCoreMetaTypes();
+    static void registerInputMetaTypes();
+    static void registerRenderMetaTypes();
+    static void registerAnimationMetaTypes();
+    static void registerExtensions();
 
 private:
     QAbstractItemModel *m_engineModel;

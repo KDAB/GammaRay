@@ -511,7 +511,7 @@ public:
       }
     }
 
-    qint64 round(qint64 time, int direction)
+    static qint64 round(qint64 time, int direction)
     {
       qint64 v = time % 200;
       return time + direction * v;

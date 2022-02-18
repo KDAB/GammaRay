@@ -57,7 +57,7 @@ public:
         return methodId;
     }
 
-    QVector<QVariant> convertArguments(QObject *sender, int signalIndex, void **args)
+    static QVector<QVariant> convertArguments(QObject *sender, int signalIndex, void **args)
     {
         Q_ASSERT(sender);
         Q_ASSERT(signalIndex >= 0);

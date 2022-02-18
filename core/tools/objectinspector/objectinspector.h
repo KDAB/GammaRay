@@ -54,7 +54,7 @@ private slots:
     void objectSelected(QObject *object);
 
 private:
-    void registerPCExtensions();
+    static void registerPCExtensions();
 
     static void scanForConnectionIssues();
     static void scanForThreadAffinityIssues();

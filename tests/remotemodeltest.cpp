@@ -117,7 +117,7 @@ class RemoteModelTest : public QObject
 {
     Q_OBJECT
 private:
-    bool waitForData(const QModelIndex &idx)
+    static bool waitForData(const QModelIndex &idx)
     {
         if (idx.data(RemoteModelRole::LoadingState).value<RemoteModelNodeState::NodeStates>() == RemoteModelNodeState::NoState)
             return true; // data already present
@@ -138,7 +138,7 @@ private:
     }
 
 private slots:
-    void initTestCase()
+    static void initTestCase()
     {
         FakeRemoteModelServer::setup();
         FakeRemoteModel::setup();

@@ -38,7 +38,7 @@ class CodecModelTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void modelTest()
+    static void modelTest()
     {
         AllCodecsModel allCodecs;
         ModelTest tester(&allCodecs);

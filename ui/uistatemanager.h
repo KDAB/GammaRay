@@ -93,13 +93,13 @@ protected:
     ///@cond internal
     bool eventFilter(QObject *object, QEvent *event) override;
 
-    QString widgetName(QWidget *widget) const;
+    static QString widgetName(QWidget *widget) ;
     QString widgetPath(QWidget *widget) const;
     QString widgetGeometryKey(QWidget *widget) const;
     QString widgetStateKey(QWidget *widget) const;
     QString widgetStateSectionsKey(QWidget *widget) const;
     bool checkWidget(QWidget *widget) const;
-    int percentToInt(const QString &size) const;
+    static int percentToInt(const QString &size) ;
 
 protected slots:
     void restoreWindowState();

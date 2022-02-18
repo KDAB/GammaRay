@@ -145,9 +145,9 @@ private:
     void selectWindow(QQuickWindow *window);
     void selectItem(QQuickItem *item);
     void selectSGNode(QSGNode *node);
-    void registerMetaTypes();
-    void registerVariantHandlers();
-    void registerPCExtensions();
+    static void registerMetaTypes();
+    static void registerVariantHandlers();
+    static void registerPCExtensions();
     QString findSGNodeType(QSGNode *node) const;
     static void scanForProblems();
 

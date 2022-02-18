@@ -46,7 +46,7 @@ public:
 public slots:
     void attach();
     void processStarted();
-    void processFinished(int);
+    static void processFinished(int);
 
 private:
     QTimer *m_timer;

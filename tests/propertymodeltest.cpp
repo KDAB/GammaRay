@@ -51,7 +51,7 @@ private slots:
         createProbe();
     }
 
-    void testPropertyModel()
+    static void testPropertyModel()
     {
         PropertyTestObject obj;
         obj.setProperty("dynamicProperty", 5);
@@ -86,7 +86,7 @@ private slots:
         QVERIFY(!moRow.sibling(moRow.row(), 1).data(Qt::DisplayRole).toString().isEmpty());
     }
 
-    void testMetaObject()
+    static void testMetaObject()
     {
         AggregatedPropertyModel model;
         model.setObject(ObjectInstance(nullptr, &Gadget::staticMetaObject));
@@ -97,7 +97,7 @@ private slots:
         QVERIFY(qmoRow.isValid());
     }
 
-    void testChangeNotification()
+    static void testChangeNotification()
     {
         ChangingPropertyObject obj;
         AggregatedPropertyModel model;
@@ -126,7 +126,7 @@ private slots:
         QCOMPARE(removeSpy.size(), 1);
     }
 
-    void testGadgetRO()
+    static void testGadgetRO()
     {
         PropertyTestObject obj;
         AggregatedPropertyModel model;
@@ -139,7 +139,7 @@ private slots:
         QVERIFY((idx.flags() & Qt::ItemIsEditable) == 0);
     }
 
-    void testGadgetRW()
+    static void testGadgetRW()
     {
         PropertyTestObject obj;
         AggregatedPropertyModel model;

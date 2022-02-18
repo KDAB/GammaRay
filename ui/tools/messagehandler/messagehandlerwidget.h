@@ -52,7 +52,7 @@ public:
 private slots:
     void fatalMessageReceived(const QString &app, const QString &message, const QTime &time,
                               const QStringList &backtrace);
-    void copyToClipboard(const QString &message);
+    static void copyToClipboard(const QString &message);
     void messageContextMenu(const QPoint &pos);
     void stackTraceContextMenu(QPoint pos);
     void saveFileAllLogConfig();

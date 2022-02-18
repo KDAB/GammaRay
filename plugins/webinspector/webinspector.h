@@ -39,7 +39,7 @@ public:
     explicit WebInspector(Probe *probe, QObject *parent = nullptr);
 
 private slots:
-    void objectAdded(QObject *obj);
+    static void objectAdded(QObject *obj);
 };
 
 class WebInspectorFactory : public QObject, public ToolFactory

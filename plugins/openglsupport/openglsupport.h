@@ -46,8 +46,8 @@ public:
     explicit OpenGLSupport(Probe *probe, QObject *parent = nullptr);
 
 private:
-    void registerMetaTypes();
-    void registerVariantHandler();
+    static void registerMetaTypes();
+    static void registerVariantHandler();
 };
 
 class OpenGLSupportFactory : public QObject, public StandardToolFactory<QObject, OpenGLSupport>

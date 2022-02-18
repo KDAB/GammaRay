@@ -69,7 +69,7 @@ public:
     void connectToHost(const QUrl &url, int tryAgain = 0);
 
     /*! Manually show the splash screen. */
-    void showSplashScreen();
+    static void showSplashScreen();
 
     GammaRay::ProcessTrackerBackend *processTrackerBackend() const;
     void setProcessTrackerBackend(GammaRay::ProcessTrackerBackend *backend);
@@ -124,7 +124,7 @@ private slots:
     void transientConnectionError();
 
     void delayedHideSplashScreen();
-    void hideSplashScreen();
+    static void hideSplashScreen();
     void targetQuitRequested();
 
     void updateProcessTrackerState();

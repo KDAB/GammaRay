@@ -59,7 +59,7 @@ public:
     }
 
 private:
-    QMetaMethod method(QObject *obj, const char *name)
+    static QMetaMethod method(QObject *obj, const char *name)
     {
         return obj->metaObject()->method(obj->metaObject()->indexOfSignal(name));
     }

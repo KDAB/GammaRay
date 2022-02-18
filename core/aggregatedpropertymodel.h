@@ -66,8 +66,8 @@ private:
     void clear();
     PropertyAdaptor *adaptorForIndex(const QModelIndex &index) const;
     void addPropertyAdaptor(PropertyAdaptor *adaptor) const;
-    QVariant data(PropertyAdaptor *adaptor, const PropertyData &d, int column, int role) const;
-    bool hasLoop(PropertyAdaptor *adaptor, const QVariant &v) const;
+    static QVariant data(PropertyAdaptor *adaptor, const PropertyData &d, int column, int role) ;
+    static bool hasLoop(PropertyAdaptor *adaptor, const QVariant &v) ;
     void reloadSubTree(PropertyAdaptor *parentAdaptor, int index);
     bool isParentEditable(PropertyAdaptor *adaptor) const;
     void propagateWrite(PropertyAdaptor *adaptor);

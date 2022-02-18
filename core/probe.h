@@ -123,7 +123,7 @@ public:
      * @param objectName Unique identifier for the model, typically in reverse domain notation.
      * @param model The model to register.
      */
-    void registerModel(const QString &objectName, QAbstractItemModel *model);
+    static void registerModel(const QString &objectName, QAbstractItemModel *model);
     /*!
      * Install a global event filter.
      * Use this rather than installing the filter manually on QCoreApplication,
@@ -143,7 +143,7 @@ public:
      *
      * @since 2.5
      */
-    bool needsObjectDiscovery() const;
+    static bool needsObjectDiscovery() ;
     /*!
      * Notify the probe about QObjects your plug-in can discover by using information about
      * the types it can handle.
@@ -178,9 +178,9 @@ public:
     void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks);
 
     /*! Returns the source code location @p object was created at. */
-    SourceLocation objectCreationSourceLocation(QObject *object) const;
+    static SourceLocation objectCreationSourceLocation(QObject *object) ;
     /*! Returns the entire stack trace for the creation of @p object. */
-    Execution::Trace objectCreationStackTrace(QObject *object) const;
+    static Execution::Trace objectCreationStackTrace(QObject *object) ;
 
     ///@cond internal
     QObject *window() const;
@@ -278,7 +278,7 @@ private slots:
     void shutdown();
 
     void processQueuedObjectChanges();
-    void handleObjectDestroyed(QObject *obj);
+    static void handleObjectDestroyed(QObject *obj);
 
 private:
     friend class ProbeCreator;
@@ -288,7 +288,7 @@ private:
      * about every QObject creation/destruction.
      * @since 2.0
      */
-    QT_DEPRECATED bool hasReliableObjectTracking() const;
+    static QT_DEPRECATED bool hasReliableObjectTracking() ;
 
     void objectFullyConstructed(QObject *obj);
 
@@ -302,7 +302,7 @@ private:
 
     /*! Check if we are capable of showing widgets. */
     static bool canShowWidgets();
-    void showInProcessUi();
+    static void showInProcessUi();
 
     static void createProbe(bool findExisting);
     void resendServerAddress();

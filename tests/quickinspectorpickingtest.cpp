@@ -49,7 +49,7 @@ class QuickInspectorPickingTest : public QObject
 {
     Q_OBJECT
 private:
-    void createProbe()
+    static void createProbe()
     {
         Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
         qputenv("GAMMARAY_ProbePath", Paths::probePath(GAMMARAY_PROBE_ABI).toUtf8());
@@ -60,7 +60,7 @@ private:
         QTest::qWait(1); // event loop re-entry
     }
 
-    bool waitForSignal(QSignalSpy *spy, bool keepResult = false)
+    static bool waitForSignal(QSignalSpy *spy, bool keepResult = false)
     {
         if (spy->isEmpty())
             spy->wait(1000);
@@ -92,7 +92,7 @@ private:
     }
 
 private slots:
-    void initTestCase()
+    static void initTestCase()
     {
         qRegisterMetaType<QItemSelection>();
     }
@@ -121,7 +121,7 @@ private slots:
         QTest::qWait(1);
     }
 
-    void testItemPicking_data()
+    static void testItemPicking_data()
     {
         QTest::addColumn<QString>("qmlFile", nullptr);
         QTest::addColumn<QString>("pickedObjectId", nullptr);

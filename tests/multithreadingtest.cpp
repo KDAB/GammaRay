@@ -61,7 +61,7 @@ class MultiThreadingTest : public BaseProbeTest
 {
     Q_OBJECT
 private slots:
-    void testCreateDestroy_data()
+    static void testCreateDestroy_data()
     {
         QTest::addColumn<int>("batchSize", nullptr);
         QTest::addColumn<int>("delay", nullptr);

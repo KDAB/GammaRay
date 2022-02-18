@@ -38,7 +38,7 @@ class BenchSuite : public QObject
 
 private slots:
     void iconForObject();
-    void probe_objectAdded();
+    static void probe_objectAdded();
 };
 }
 

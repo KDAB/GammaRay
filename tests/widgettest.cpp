@@ -39,7 +39,7 @@ class WidgetTest : public BaseProbeTest
 {
     Q_OBJECT
 private:
-    int visibleRowCount(QAbstractItemModel *model)
+    static int visibleRowCount(QAbstractItemModel *model)
     {
         int count = 0;
         for (int i = 0; i < model->rowCount(); ++i) {

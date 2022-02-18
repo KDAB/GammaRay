@@ -71,7 +71,7 @@ private slots:
         QVERIFY(s2.isNull());
     }
 
-    void cleanupTestCase()
+    static void cleanupTestCase()
     {
         // explicitly delete the probe as our usual cleanup doesn't work since we will
         // not get qApp::aboutToQuit() from QTest::qExec(), and then we end up with
