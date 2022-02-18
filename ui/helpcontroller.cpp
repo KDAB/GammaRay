@@ -49,7 +49,7 @@ struct HelpControllerPrivate
     HelpControllerPrivate() = default;
 
     void startProcess();
-    void sendCommand(const QByteArray &cmd);
+    void sendCommand(const QByteArray &cmd) const;
 
     QString assistantPath;
     QString qhcPath;
@@ -81,7 +81,7 @@ void HelpControllerPrivate::startProcess()
     sendCommand("expandToc 2;");
 }
 
-void HelpControllerPrivate::sendCommand(const QByteArray &cmd)
+void HelpControllerPrivate::sendCommand(const QByteArray &cmd) const
 {
     if (!proc) {
         return;

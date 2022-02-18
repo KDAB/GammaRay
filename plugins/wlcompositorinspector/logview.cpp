@@ -344,13 +344,13 @@ public:
       scrollbar->setValue(scrollbar->maximum());
   }
 
-  void reset()
+  void reset() const
   {
     m_view->m_lines.clear();
     m_view->resize(0, 0);
   }
 
-  void updateSize()
+  void updateSize() const
   {
     QSizeF lineSize = m_view->m_lines.last().text.size();
 

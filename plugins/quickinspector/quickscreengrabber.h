@@ -172,10 +172,10 @@ protected:
 private:
     void itemParentChanged(QQuickItem *parent);
     void itemWindowChanged(QQuickWindow *window);
-    void connectItemChanges(QQuickItem *item);
-    void disconnectItemChanges(QQuickItem *item);
-    void connectTopItemChanges(QQuickItem *item);
-    void disconnectTopItemChanges(QQuickItem *item);
+    void connectItemChanges(QQuickItem *item) const;
+    void disconnectItemChanges(QQuickItem *item) const;
+    void connectTopItemChanges(QQuickItem *item) const;
+    void disconnectTopItemChanges(QQuickItem *item) const;
 
 protected:
     QPointer<QQuickWindow> m_window;

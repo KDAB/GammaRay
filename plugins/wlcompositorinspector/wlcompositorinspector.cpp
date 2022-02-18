@@ -162,7 +162,7 @@ public:
         }
     }
 
-    void setCurrentClient(QWaylandClient *client)
+    void setCurrentClient(QWaylandClient *client) const
     {
         emit m_inspector->setLoggingClient(client ? client->processId() : 0);
     }
@@ -273,7 +273,7 @@ public:
         delete res;
     }
 
-    wl_resource *resource(uint32_t id)
+    wl_resource *resource(uint32_t id) const
     {
       return wl_client_get_object(m_client->client(), id);
     }

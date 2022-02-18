@@ -525,7 +525,7 @@ void AbstractScreenGrabber::itemWindowChanged(QQuickWindow *window)
     }
 }
 
-void AbstractScreenGrabber::connectItemChanges(QQuickItem *item)
+void AbstractScreenGrabber::connectItemChanges(QQuickItem *item) const
 {
     connect(item, &QQuickItem::childrenRectChanged, this, &AbstractScreenGrabber::updateOverlay);
     connect(item, &QQuickItem::rotationChanged, this, &AbstractScreenGrabber::updateOverlay);
@@ -540,7 +540,7 @@ void AbstractScreenGrabber::connectItemChanges(QQuickItem *item)
     connect(item, &QQuickItem::windowChanged, this, &AbstractScreenGrabber::itemWindowChanged);
 }
 
-void AbstractScreenGrabber::disconnectItemChanges(QQuickItem *item)
+void AbstractScreenGrabber::disconnectItemChanges(QQuickItem *item) const
 {
     disconnect(item, &QQuickItem::childrenRectChanged, this, &AbstractScreenGrabber::updateOverlay);
     disconnect(item, &QQuickItem::rotationChanged, this, &AbstractScreenGrabber::updateOverlay);
@@ -555,7 +555,7 @@ void AbstractScreenGrabber::disconnectItemChanges(QQuickItem *item)
     disconnect(item, &QQuickItem::windowChanged, this, &AbstractScreenGrabber::itemWindowChanged);
 }
 
-void AbstractScreenGrabber::connectTopItemChanges(QQuickItem *item)
+void AbstractScreenGrabber::connectTopItemChanges(QQuickItem *item) const
 {
     connect(item, &QQuickItem::childrenRectChanged, this, &AbstractScreenGrabber::updateOverlay);
     connect(item, &QQuickItem::rotationChanged, this, &AbstractScreenGrabber::updateOverlay);
@@ -564,7 +564,7 @@ void AbstractScreenGrabber::connectTopItemChanges(QQuickItem *item)
     connect(item, &QQuickItem::heightChanged, this, &AbstractScreenGrabber::updateOverlay);
 }
 
-void AbstractScreenGrabber::disconnectTopItemChanges(QQuickItem *item)
+void AbstractScreenGrabber::disconnectTopItemChanges(QQuickItem *item) const
 {
     disconnect(item, &QQuickItem::childrenRectChanged, this, &AbstractScreenGrabber::updateOverlay);
     disconnect(item, &QQuickItem::rotationChanged, this, &AbstractScreenGrabber::updateOverlay);

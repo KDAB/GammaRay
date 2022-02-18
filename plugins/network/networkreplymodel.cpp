@@ -350,7 +350,7 @@ void NetworkReplyModel::replyDeleted(QNetworkReply* reply, QNetworkAccessManager
     QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
 }
 
-void NetworkReplyModel::maybePeekResponse(ReplyNode &node, QNetworkReply *reply)
+void NetworkReplyModel::maybePeekResponse(ReplyNode &node, QNetworkReply *reply) const
 {
     if (m_captureResponse) {
         // TODO: Allow whitelisting a set of Content-Type values

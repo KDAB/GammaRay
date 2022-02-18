@@ -60,7 +60,7 @@ public:
     void setActive(bool active);
     bool isActive() const;
 
-    QString toolTipAt(const QModelIndex &index, int position, int width);
+    QString toolTipAt(const QModelIndex &index, int position, int width) const;
 
 signals:
     void visibleIntervalChanged(qint64 value);

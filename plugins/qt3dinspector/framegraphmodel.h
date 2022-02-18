@@ -71,8 +71,8 @@ private:
     void removeSubtree(Qt3DRender::QFrameGraphNode *node, bool danglingPointer);
     QModelIndex indexForNode(Qt3DRender::QFrameGraphNode *node) const;
 
-    void connectNode(Qt3DRender::QFrameGraphNode *node);
-    void disconnectNode(Qt3DRender::QFrameGraphNode *node);
+    void connectNode(Qt3DRender::QFrameGraphNode *node) const;
+    void disconnectNode(Qt3DRender::QFrameGraphNode *node) const;
     void nodeEnabledChanged();
 
 private:
