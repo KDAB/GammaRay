@@ -41,7 +41,7 @@
 
 using namespace GammaRay;
 
-bool NetworkDiscoveryModel::ServerInfo::operator==(const NetworkDiscoveryModel::ServerInfo &other)
+bool NetworkDiscoveryModel::ServerInfo::operator==(const NetworkDiscoveryModel::ServerInfo &other) const
 {
     return url == other.url;
 }

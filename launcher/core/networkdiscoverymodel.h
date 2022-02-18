@@ -70,7 +70,7 @@ private:
     QUdpSocket *m_socket;
 
     struct ServerInfo {
-        bool operator==(const ServerInfo &other);
+        bool operator==(const ServerInfo &other) const;
         qint32 version;
         QUrl url;
         QString label;

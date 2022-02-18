@@ -153,7 +153,7 @@ bool SignalHistoryDelegate::isActive() const
     return m_updateTimer->isActive();
 }
 
-QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position, int width)
+QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position, int width) const
 {
     const QAbstractItemModel * const model = index.model();
     const QVector<qint64> &events

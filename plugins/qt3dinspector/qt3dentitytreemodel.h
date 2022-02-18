@@ -73,8 +73,8 @@ private:
     void removeSubtree(Qt3DCore::QEntity *entity, bool danglingPointer);
     QModelIndex indexForEntity(Qt3DCore::QEntity *entity) const;
 
-    void connectEntity(Qt3DCore::QEntity *entity);
-    void disconnectEntity(Qt3DCore::QEntity *entity);
+    void connectEntity(Qt3DCore::QEntity *entity) const;
+    void disconnectEntity(Qt3DCore::QEntity *entity) const;
     void entityEnabledChanged();
 
 private:

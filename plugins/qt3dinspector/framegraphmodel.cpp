@@ -266,12 +266,12 @@ void FrameGraphModel::objectReparented(QObject *obj)
     }
 }
 
-void FrameGraphModel::connectNode(Qt3DRender::QFrameGraphNode *node)
+void FrameGraphModel::connectNode(Qt3DRender::QFrameGraphNode *node) const
 {
     connect(node, &Qt3DRender::QFrameGraphNode::enabledChanged, this, &FrameGraphModel::nodeEnabledChanged);
 }
 
-void FrameGraphModel::disconnectNode(Qt3DRender::QFrameGraphNode *node)
+void FrameGraphModel::disconnectNode(Qt3DRender::QFrameGraphNode *node) const
 {
     disconnect(node, &Qt3DRender::QFrameGraphNode::enabledChanged, this, &FrameGraphModel::nodeEnabledChanged);
 }

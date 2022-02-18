@@ -97,7 +97,7 @@ private:
 #endif
     void replyDeleted(QNetworkReply *reply, QNetworkAccessManager *nam);
 
-    void maybePeekResponse(ReplyNode &node, QNetworkReply *reply);
+    void maybePeekResponse(ReplyNode &node, QNetworkReply *reply) const;
     Q_INVOKABLE void updateReplyNode(QNetworkAccessManager *nam, const GammaRay::NetworkReplyModel::ReplyNode &newNode);
 
     std::vector<NAMNode> m_nodes;

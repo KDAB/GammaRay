@@ -280,12 +280,12 @@ void Qt3DEntityTreeModel::objectReparented(QObject *obj)
     }
 }
 
-void Qt3DEntityTreeModel::connectEntity(Qt3DCore::QEntity *entity)
+void Qt3DEntityTreeModel::connectEntity(Qt3DCore::QEntity *entity) const
 {
     connect(entity, &Qt3DCore::QEntity::enabledChanged, this, &Qt3DEntityTreeModel::entityEnabledChanged);
 }
 
-void Qt3DEntityTreeModel::disconnectEntity(Qt3DCore::QEntity *entity)
+void Qt3DEntityTreeModel::disconnectEntity(Qt3DCore::QEntity *entity) const
 {
     disconnect(entity, &Qt3DCore::QEntity::enabledChanged, this, &Qt3DEntityTreeModel::entityEnabledChanged);
 }

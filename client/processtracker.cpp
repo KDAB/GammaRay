@@ -57,7 +57,7 @@ public:
     }
 
 public slots:
-    void requestUpdate()
+    void requestUpdate() const
     {
         if (!backend) {
             qWarning("%s: Backend not set", Q_FUNC_INFO);
