@@ -59,7 +59,7 @@ public:
     }
 
 signals:
-    void message(const GammaRay::Message &msg);
+    void message(const GammaRay::Message &);
 
 private slots:
     void deliverMessage(const QByteArray &ba)
@@ -98,7 +98,7 @@ public:
     }
 
 signals:
-    void message(const GammaRay::Message &msg);
+    void message(const GammaRay::Message &);
 
 private:
     void sendMessage(const Message &msg) const override
