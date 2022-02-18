@@ -85,7 +85,7 @@ QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outbound
             if (c->isSlotObject)
                 conn.slotIndex = -1;
             else
-            conn.slotIndex = c->method();
+                conn.slotIndex = c->method();
             conn.type = c->connectionType;
             c = c->nextConnectionList;
             connections.push_back(conn);

@@ -152,6 +152,7 @@ bool PropertyEnumEditorModel::setData(const QModelIndex &index, const QVariant &
             m_value.setValue(m_value.value() | elem.value());
         else if (value.toInt() == Qt::Unchecked)
             m_value.setValue(m_value.value() & ~elem.value());
+
         emit dataChanged(this->index(0,0), this->index(rowCount() - 1, 0)); // mask flags can change multiple rows
         return true;
     }
