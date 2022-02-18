@@ -89,7 +89,7 @@ protected:
     void objectDestroyed(Protocol::ObjectAddress, const QString &, QObject *) override {}
 
 signals:
-    void message(const GammaRay::Message &msg);
+    void message(const GammaRay::Message &);
 };
 
 class FakeNetworkSelectionModel : public NetworkSelectionModel
