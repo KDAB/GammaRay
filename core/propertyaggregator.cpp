@@ -163,9 +163,8 @@ void PropertyAggregator::slotPropertyChanged(int first, int last)
         if (pa == source) {
             emit propertyChanged(first + offset, last + offset);
             return;
-        } else {
-            offset += pa->count();
         }
+        offset += pa->count();
     }
 }
 
@@ -179,9 +178,8 @@ void PropertyAggregator::slotPropertyAdded(int first, int last)
         if (pa == source) {
             emit propertyAdded(first + offset, last + offset);
             return;
-        } else {
-            offset += pa->count();
         }
+        offset += pa->count();
     }
 }
 
@@ -195,8 +193,7 @@ void PropertyAggregator::slotPropertyRemoved(int first, int last)
         if (pa == source) {
             emit propertyRemoved(first + offset, last + offset);
             return;
-        } else {
-            offset += pa->count();
         }
+        offset += pa->count();
     }
 }

@@ -64,15 +64,15 @@ void Translator::loadTranslations(const QString &catalog, const QString &path, c
         if (translator->load(uiLocale, catalog, QStringLiteral("_"), path)) {
             QCoreApplication::instance()->installTranslator(translator);
             return;
-        } else {
-            delete translator;
+        }
 
-            foreach (const QString &name, uiLocale.uiLanguages()) {
-                const QString fileName = QString("%1_%2.qm").arg(catalog, name);
-                const QString filePath = dir.filePath(fileName);
-                if (QFile::exists(filePath)) {
-                    return;
-                }
+        delete translator;
+
+        foreach (const QString &name, uiLocale.uiLanguages()) {
+            const QString fileName = QString("%1_%2.qm").arg(catalog, name);
+            const QString filePath = dir.filePath(fileName);
+            if (QFile::exists(filePath)) {
+                return;
             }
         }
     }

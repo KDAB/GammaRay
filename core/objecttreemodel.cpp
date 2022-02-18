@@ -213,11 +213,11 @@ QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
     QMutexLocker lock(Probe::objectLock());
     if (Probe::instance()->isValidObject(obj)) {
         return dataForObject(obj, index, role);
-    } else if (role == Qt::DisplayRole) {
+    }
+    if (role == Qt::DisplayRole) {
         if (index.column() == 0)
             return Util::addressToString(obj);
-        else
-            return tr("<deleted>");
+        return tr("<deleted>");
     }
 
     return QVariant();
