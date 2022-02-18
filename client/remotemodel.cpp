@@ -644,7 +644,8 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                     // parent already there, no need to add
                     skip = true;
                     break;
-                } else if (isAncestor(node, n)) {
+                }
+                if (isAncestor(node, n)) {
                     // Remove childs
                     childsOfNode.push_back(n);
                 }

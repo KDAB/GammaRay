@@ -60,9 +60,8 @@ int JsonPropertyAdaptor::count() const
 {
     if (m_isObject) {
         return m_object.size();
-    } else {
-        return m_array.size();
     }
+    return m_array.size();
 }
 
 PropertyData JsonPropertyAdaptor::propertyData(int index) const

@@ -66,7 +66,7 @@ static QAbstractItemModel *findSourceModel(QAbstractItemModel *model)
         if (model->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(
                                                    "defaultSelectedItem()")) != -1)
             return model;
-        else if (auto proxy = qobject_cast<QAbstractProxyModel *>(model))
+        if (auto proxy = qobject_cast<QAbstractProxyModel *>(model))
             return findSourceModel(proxy->sourceModel());
     }
 

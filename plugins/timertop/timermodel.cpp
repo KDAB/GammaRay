@@ -208,9 +208,9 @@ const TimerIdInfo *TimerModel::findTimerInfo(const QModelIndex &index) const
         }
 
         return &it.value();
-    } else {
-        if (index.row() < m_sourceModel->rowCount() + m_freeTimersInfo.count())
-            return &m_freeTimersInfo[index.row() - m_sourceModel->rowCount()];
+    }
+    if (index.row() < m_sourceModel->rowCount() + m_freeTimersInfo.count()) {
+        return &m_freeTimersInfo[index.row() - m_sourceModel->rowCount()];
     }
 
     return nullptr;
@@ -462,9 +462,8 @@ QModelIndex TimerModel::index(int row, int column, const QModelIndex &parent) co
             const QModelIndex sourceIndex = m_sourceModel->index(row, 0);
             QObject *const timerObject = sourceIndex.data(ObjectModel::ObjectRole).value<QObject *>();
             return createIndex(row, column, timerObject);
-        } else {
-            return createIndex(row, column, row - m_sourceModel->rowCount());
         }
+        return createIndex(row, column, row - m_sourceModel->rowCount());
     }
 
     return {};
