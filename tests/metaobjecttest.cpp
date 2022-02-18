@@ -40,7 +40,7 @@ class MetaObjectTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void testMetaObject()
+    static void testMetaObject()
     {
         QVERIFY(MetaObjectRepository::instance()->hasMetaObject(QStringLiteral("QThread")));
         auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QThread"));
@@ -57,7 +57,7 @@ private slots:
         QVERIFY(!superMo->superClass(0));
     }
 
-    void testMemberProperty()
+    static void testMemberProperty()
     {
         auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QThread"));
         QVERIFY(mo->propertyCount() >= 7); // depends on Qt version
@@ -79,7 +79,7 @@ private slots:
         QCOMPARE(prop->isReadOnly(), false);
     }
 
-    void testStaticProperty()
+    static void testStaticProperty()
     {
         auto *mo = MetaObjectRepository::instance()->metaObject(QStringLiteral("QCoreApplication"));
         QVERIFY(mo);

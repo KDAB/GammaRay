@@ -42,8 +42,8 @@ public:
     ~NetworkSupport() override;
 
 private:
-    void registerMetaTypes();
-    void registerVariantHandler();
+    static void registerMetaTypes();
+    static void registerVariantHandler();
 };
 
 class NetworkSupportFactory : public QObject, public StandardToolFactory<QObject, NetworkSupport>

@@ -48,7 +48,7 @@ public:
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const override;
 
-    Q_INVOKABLE QPair<int, QVariant> defaultSelectedItem() const;
+    Q_INVOKABLE static QPair<int, QVariant> defaultSelectedItem() ;
 
 private slots:
     void objectAdded(QObject *obj);

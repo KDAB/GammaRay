@@ -156,7 +156,7 @@ static QString resolveRPath(const QString &path, const QStringList &rpaths)
     return path;
 }
 
-QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
+QString ProbeABIDetector::qtCoreForExecutable(const QString &path)
 {
     auto qtCorePath = qtCoreFromOtool(resolveBundlePath(path));
     qtCorePath = resolveRPath(qtCorePath, readRPaths(path));
@@ -232,7 +232,7 @@ static ProbeABI abiFromMachO(const QString &path, const uchar *data, qint64 size
     return abi;
 }
 
-ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path) const
+ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
 {
     if (path.isEmpty())
         return ProbeABI();

@@ -123,7 +123,7 @@ class NetworkSelectionModelTest : public QObject
 {
     Q_OBJECT
 private:
-    void fillModel(QStandardItemModel *model)
+    static void fillModel(QStandardItemModel *model)
     {
         model->appendRow(new QStandardItem(QStringLiteral("Row 1")));
         model->appendRow(new QStandardItem(QStringLiteral("Row 2")));
@@ -133,7 +133,7 @@ private:
     }
 
 private slots:
-    void initTestCase()
+    static void initTestCase()
     {
         qRegisterMetaType<QItemSelection>();
         qRegisterMetaType<QModelIndex>();
@@ -143,7 +143,7 @@ private slots:
         QVERIFY(Endpoint::isConnected());
     }
 
-    void cleanupTestCase()
+    static void cleanupTestCase()
     {
         delete FakeEndpoint::instance();
     }

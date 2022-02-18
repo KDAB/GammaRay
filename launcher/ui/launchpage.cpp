@@ -96,7 +96,7 @@ void LaunchPage::writeSettings()
     settings.setValue(QStringLiteral("Launcher/AccessMode"), ui->accessMode->currentIndex());
 }
 
-QStringList LaunchPage::notEmptyString(const QStringList &list) const
+QStringList LaunchPage::notEmptyString(const QStringList &list) 
 {
     QStringList notEmptyStringList;
     const int numberOfArguments = list.count();

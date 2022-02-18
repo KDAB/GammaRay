@@ -738,7 +738,7 @@ bool RemoteModel::isAncestor(RemoteModel::Node *ancestor, RemoteModel::Node *chi
     return isAncestor(ancestor, child->parent);
 }
 
-RemoteModelNodeState::NodeStates RemoteModel::stateForColumn(RemoteModel::Node *node, int columnIndex) const
+RemoteModelNodeState::NodeStates RemoteModel::stateForColumn(RemoteModel::Node *node, int columnIndex) 
 {
     Q_ASSERT(node);
     if (!node->hasColumnData())

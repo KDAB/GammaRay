@@ -79,7 +79,7 @@ protected:
 private:
     Qt3DCore::QComponent *createMaterial(Qt3DCore::QNode *parent);
     Qt3DCore::QComponent *createES2WireframeMaterial(Qt3DCore::QNode *parent);
-    Qt3DCore::QComponent *createSkyboxMaterial(Qt3DCore::QNode *parent);
+    static Qt3DCore::QComponent *createSkyboxMaterial(Qt3DCore::QNode *parent);
     void updateGeometry();
     void resetCamera();
     void computeBoundingVolume(const Qt3DGeometryAttributeData &vertexAttr,

@@ -73,11 +73,11 @@ private:
                                            GammaRay::RemoteViewInterface::RequestMode mode, int& bestCandidate) const;
     void callExternalExportAction(const char *name, QWidget *widget, const QString &fileName);
     QImage imageForWidget(QWidget *widget);
-    void registerWidgetMetaTypes();
-    void registerVariantHandlers();
+    static void registerWidgetMetaTypes();
+    static void registerVariantHandlers();
     void discoverObjects();
     void checkFeatures();
-    QVector<QRect> tabFocusChain(QWidget *window) const;
+    static QVector<QRect> tabFocusChain(QWidget *window) ;
 
 private slots:
     void widgetSelectionChanged(const QItemSelection &selection);

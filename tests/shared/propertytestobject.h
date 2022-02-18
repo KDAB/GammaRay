@@ -44,7 +44,7 @@ public:
     int prop1() const { return m_prop1; }
     void setProp1(int v) { m_prop1 = v; }
     void resetProp1() { m_prop1 = 5; }
-    Q_INVOKABLE void someMethod();
+    Q_INVOKABLE static void someMethod();
 
 private:
     int m_prop1 = 42;

@@ -232,12 +232,12 @@ private slots:
     void cleanup();
     void testMockProvider();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-    void testQmlBindingProvider_data();
-    void testQmlBindingProvider();
+    static void testQmlBindingProvider_data();
+    static void testQmlBindingProvider();
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-    void testQtQuickProvider_data();
-    void testQtQuickProvider();
+    static void testQtQuickProvider_data();
+    static void testQtQuickProvider();
 #endif
     void testModel();
     void testModelDataChanged();

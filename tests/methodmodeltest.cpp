@@ -71,7 +71,7 @@ private slots:
         srcModel.setMetaObject(nullptr);
     }
 
-    void testModel()
+    static void testModel()
     {
         ObjectMethodModel srcModel;
         ClientMethodModel model;
@@ -93,7 +93,7 @@ private slots:
         QCOMPARE(model.rowCount(), 0);
     }
 
-    void testToolTip_data()
+    static void testToolTip_data()
     {
         QTest::addColumn<QString>("name", nullptr);
         QTest::addColumn<QString>("toolTip", nullptr);
@@ -102,7 +102,7 @@ private slots:
         QTest::newRow("revision") << "revisionedSlot" << "147";
     }
 
-    void testToolTip()
+    static void testToolTip()
     {
         QFETCH(QString, name);
         QFETCH(QString, toolTip);

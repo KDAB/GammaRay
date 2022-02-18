@@ -80,7 +80,7 @@ private slots:
     }
 
 private:
-    QVector<QQuickItem *> createItems(QQuickItem* parent)
+    static QVector<QQuickItem *> createItems(QQuickItem* parent)
     {
         const int numberOfItems = 10000;
         QVector<QQuickItem *> items;

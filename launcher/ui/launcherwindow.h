@@ -54,7 +54,7 @@ public:
 
 private slots:
     void tabChanged();
-    void help();
+    static void help();
 
 private:
     Ui::LauncherWindow *ui;

@@ -48,10 +48,10 @@ public:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
-    void registerMetaTypes();
-    void registerVariantHandler();
+    static void registerMetaTypes();
+    static void registerVariantHandler();
     void discoverObjects();
-    QObject *targetObject(QObject *object) const;
+    static QObject *targetObject(QObject *object) ;
     QIcon createIcon(const QIcon &oldIcon, QWindow *w=nullptr);
     void updateWindowIcon(QWindow *w=nullptr);
     void updateWindowTitle(QWindow *w);

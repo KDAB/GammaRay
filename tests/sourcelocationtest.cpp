@@ -37,7 +37,7 @@ class SourceLocationTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void testZeroAndOneBasedNumbering()
+    static void testZeroAndOneBasedNumbering()
     {
         SourceLocation loc;
         loc = SourceLocation::fromZeroBased(QUrl(QStringLiteral("file:///some/file")), 0, 0);
@@ -66,7 +66,7 @@ private slots:
         QStringLiteral("/some/file:78:87");
     }
 
-    void testDisplayString_data()
+    static void testDisplayString_data()
     {
         QTest::addColumn<QUrl>("url", nullptr);
         QTest::addColumn<int>("line", nullptr);
@@ -94,7 +94,7 @@ private slots:
             "qrc:///main.qml:1:1") << true;
     }
 
-    void testDisplayString()
+    static void testDisplayString()
     {
         QFETCH(QUrl, url);
         QFETCH(int, line);

@@ -53,7 +53,7 @@ public:
     static bool insideProbe();
 protected:
     ProbeGuard(bool newState);
-    void setInsideProbe(bool inside);
+    static void setInsideProbe(bool inside);
 private:
     Q_DISABLE_COPY(ProbeGuard)
     bool m_previousState;

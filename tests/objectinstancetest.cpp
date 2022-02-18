@@ -43,7 +43,7 @@ class ObjectInstanceTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void testQtObject()
+    static void testQtObject()
     {
         QObject obj;
 
@@ -60,7 +60,7 @@ private slots:
         QCOMPARE(oi.object(), oi2.object());
     }
 
-    void testMetaObjectVariantPointer()
+    static void testMetaObjectVariantPointer()
     {
         QDateTime dt;
 
@@ -79,7 +79,7 @@ private slots:
         QVERIFY(!(oi == oi2));
     }
 
-    void testMetaObjectVariantValue()
+    static void testMetaObjectVariantValue()
     {
         QDateTime dt;
 
@@ -101,7 +101,7 @@ private slots:
         QVERIFY(oi == oi2);
     }
 
-    void testUnknownVariantValue()
+    static void testUnknownVariantValue()
     {
         CustomType t;
 
@@ -110,7 +110,7 @@ private slots:
         QCOMPARE(oi.typeName(), QByteArray("CustomType"));
     }
 
-    void testUnknownVariantPointer()
+    static void testUnknownVariantPointer()
     {
         CustomType t;
 

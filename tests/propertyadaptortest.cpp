@@ -51,7 +51,7 @@ class PropertyAdaptorTest : public QObject
 {
     Q_OBJECT
 private:
-    void testProperty(PropertyAdaptor *adaptor, const char *name, const char *typeName,
+    static void testProperty(PropertyAdaptor *adaptor, const char *name, const char *typeName,
                       const char *className, PropertyData::AccessFlags flags)
     {
         for (int i = 0; i < adaptor->count(); ++i) {
@@ -67,7 +67,7 @@ private:
         QVERIFY(!"property not found");
     }
 
-    void verifyPropertyData(PropertyAdaptor *adaptor)
+    static void verifyPropertyData(PropertyAdaptor *adaptor)
     {
         for (int i = 0; i < adaptor->count(); ++i) {
             auto data = adaptor->propertyData(i);
@@ -77,7 +77,7 @@ private:
         }
     }
 
-    int indexOfProperty(PropertyAdaptor *adaptor, const char *name)
+    static int indexOfProperty(PropertyAdaptor *adaptor, const char *name)
     {
         for (int i = 0; i < adaptor->count(); ++i) {
             auto prop = adaptor->propertyData(i);
@@ -88,7 +88,7 @@ private:
     }
 
 private slots:
-    void initTestCase()
+    static void initTestCase()
     {
         MetaObject *mo;
         MO_ADD_METAOBJECT0(QPen);

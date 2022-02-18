@@ -50,7 +50,7 @@ protected:
     }
 
 private slots:
-    void initTestCase()
+    static void initTestCase()
     {
         qRegisterMetaType<QItemSelection>();
     }
@@ -74,7 +74,7 @@ private slots:
         QTest::qWait(1);
     }
 
-    void testPreviewFetchingThrottler_data()
+    static void testPreviewFetchingThrottler_data()
     {
         QTest::addColumn<bool>("clientIsReplying", nullptr);
         QTest::newRow("no-reply") << false;

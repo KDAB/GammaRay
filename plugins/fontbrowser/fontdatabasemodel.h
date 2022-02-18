@@ -70,7 +70,7 @@ private:
     void ensureModelPopulated() const;
     void populateModel();
 
-    QString smoothSizeString(const QString &family, const QString &style) const;
+    static QString smoothSizeString(const QString &family, const QString &style) ;
 
     QVector<QString> m_families;
     QVector<QVector<QString> > m_styles;

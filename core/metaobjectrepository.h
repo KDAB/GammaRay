@@ -100,9 +100,9 @@ protected:
 private:
     Q_DISABLE_COPY(MetaObjectRepository)
     void initBuiltInTypes();
-    void initQObjectTypes();
-    void initIOTypes();
-    void initQEventTypes();
+    static void initQObjectTypes();
+    static void initIOTypes();
+    static void initQEventTypes();
 
 private:
     QHash<QString, MetaObject*> m_metaObjects;

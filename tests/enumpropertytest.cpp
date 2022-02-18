@@ -115,7 +115,7 @@ public:
     }
 
 private slots:
-    void testEnumToString_data()
+    static void testEnumToString_data()
     {
         QTest::addColumn<QVariant>("variant", nullptr);
         QTest::addColumn<QByteArray>("name", nullptr);
@@ -219,7 +219,7 @@ private slots:
         QTest::newRow("ns object as int, semi-qualified enum in different object") << QVariant::fromValue<int>(MyNS::MyObject::MyValue2) << QByteArray("MyObject::MyEnum") << &MyNS::MyOtherObject::staticMetaObject << QStringLiteral("MyValue2");
     }
 
-    void testEnumToString()
+    static void testEnumToString()
     {
         QFETCH(QVariant, variant);
         QFETCH(QByteArray, name);

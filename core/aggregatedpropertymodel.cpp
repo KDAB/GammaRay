@@ -170,7 +170,7 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex &index) 
 }
 
 QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyData &d, int column,
-                                       int role) const
+                                       int role) 
 {
     switch (role) {
     case Qt::DisplayRole:
@@ -451,7 +451,7 @@ void AggregatedPropertyModel::objectInvalidated(PropertyAdaptor *adaptor)
     reloadSubTree(parentAdaptor, m_parentChildrenMap.value(parentAdaptor).indexOf(adaptor));
 }
 
-bool AggregatedPropertyModel::hasLoop(PropertyAdaptor *adaptor, const QVariant &v) const
+bool AggregatedPropertyModel::hasLoop(PropertyAdaptor *adaptor, const QVariant &v) 
 {
     const ObjectInstance newOi(v);
     if (newOi.type() != ObjectInstance::QtObject && newOi.type() != ObjectInstance::Object)

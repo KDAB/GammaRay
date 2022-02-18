@@ -57,7 +57,7 @@ public slots:
     void generateFullTrace() override;
 
 private slots:
-    void ensureHandlerInstalled();
+    static void ensureHandlerInstalled();
     void handleFatalMessage(const GammaRay::DebugMessage &message);
     void messageSelected(const QItemSelection &selection);
 

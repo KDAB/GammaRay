@@ -46,7 +46,7 @@ public:
 
     QSharedPointer<QObject> sharedObject() const;
     QPointer<QObject> trackingObject() const;
-    QVector<int> widgetVector() const;
+    static QVector<int> widgetVector() ;
 
 private:
     QSharedPointer<QObject> m_object;

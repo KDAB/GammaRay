@@ -928,12 +928,12 @@ void Probe::installGlobalEventFilter(QObject *filter)
     m_globalEventFilters.push_back(filter);
 }
 
-bool Probe::needsObjectDiscovery() const
+bool Probe::needsObjectDiscovery() 
 {
     return s_listener()->trackDestroyed;
 }
 
-bool Probe::hasReliableObjectTracking() const
+bool Probe::hasReliableObjectTracking() 
 {
     return true; // qHooks available, which works independent of the injector used
 }
@@ -1003,7 +1003,7 @@ void Probe::executeSignalCallback(const Func &func)
                   func);
 }
 
-SourceLocation Probe::objectCreationSourceLocation(QObject *object) const
+SourceLocation Probe::objectCreationSourceLocation(QObject *object) 
 {
   if (!s_listener()->constructionBacktracesForObjects.contains(object)) {
     IF_DEBUG(std::cout << "No backtrace for object available" << object << "." << std::endl;)
@@ -1023,7 +1023,7 @@ SourceLocation Probe::objectCreationSourceLocation(QObject *object) const
   return frame.location;
 }
 
-Execution::Trace Probe::objectCreationStackTrace(QObject *object) const
+Execution::Trace Probe::objectCreationStackTrace(QObject *object) 
 {
     return s_listener()->constructionBacktracesForObjects.value(object);
 }

@@ -56,7 +56,7 @@ class LauncherTest : public QObject
 {
     Q_OBJECT
 private:
-    bool hasInjector(const char *type) const
+    static bool hasInjector(const char *type) 
     {
         auto injector = InjectorFactory::createInjector(type);
         if (!injector)
@@ -76,7 +76,7 @@ private slots:
             QTest::newRow("windll") << QStringLiteral("windll");
     }
 
-    void testLauncher()
+    static void testLauncher()
     {
         QFETCH(QString, injectorType);
         if (injectorType.isEmpty())
@@ -111,7 +111,7 @@ private slots:
     }
 
 #ifdef HAVE_QT_WIDGETS
-    void testLauncherStyle()
+    static void testLauncherStyle()
     {
         LaunchOptions options;
         options.setUiMode(LaunchOptions::NoUi);
@@ -142,7 +142,7 @@ private slots:
     }
 #endif
 
-    void testAttach()
+    static void testAttach()
     {
         QProcess target;
         target.setProcessChannelMode(QProcess::ForwardedChannels);

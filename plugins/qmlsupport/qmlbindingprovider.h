@@ -57,8 +57,8 @@ public:
 private:
     std::unique_ptr<BindingNode> bindingNodeFromQmlProperty(QQmlProperty property, BindingNode *parent) const;
     BindingNode *bindingNodeFromBinding(QQmlAbstractBinding *binding) const;
-    void fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding) const;
-    QQmlAbstractBinding *bindingForProperty(QObject *obj, int propertyIndex) const;
+    static void fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding) ;
+    static QQmlAbstractBinding *bindingForProperty(QObject *obj, int propertyIndex) ;
 };
 
 }

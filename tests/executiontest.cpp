@@ -49,14 +49,14 @@ private slots:
         QVERIFY(Execution::isReadOnlyData(this->metaObject()->superClass()));
     }
 
-    void benchmarkReadOnlyData()
+    static void benchmarkReadOnlyData()
     {
         QBENCHMARK {
             Execution::isReadOnlyData(&QObject::staticMetaObject);
         }
     }
 
-    void testStackTrace()
+    static void testStackTrace()
     {
         if (!Execution::stackTracingAvailable())
             return;
@@ -69,7 +69,7 @@ private slots:
         }
     }
 
-    void benchmarkStackTrace()
+    static void benchmarkStackTrace()
     {
         if (!Execution::stackTracingAvailable())
             return;
@@ -79,7 +79,7 @@ private slots:
         }
     }
 
-    void benchmarkResolveStackTrace()
+    static void benchmarkResolveStackTrace()
     {
         if (!Execution::stackTracingAvailable())
             return;

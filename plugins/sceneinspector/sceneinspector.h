@@ -67,8 +67,8 @@ private slots:
 
 private:
     QString findBestType(QGraphicsItem *item);
-    void registerGraphicsViewMetaTypes();
-    void registerVariantHandlers();
+    static void registerGraphicsViewMetaTypes();
+    static void registerVariantHandlers();
     void connectToScene();
 
 private:

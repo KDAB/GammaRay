@@ -78,13 +78,13 @@ signals:
     void targetQuitRequested();
 
 private slots:
-    void help();
+    static void help();
     void configureFeedback();
     void about();
     void aboutPlugins();
     void aboutKDAB();
 
-    void showMessageStatistics();
+    static void showMessageStatistics();
 
     void toolSelected();
     bool selectTool(const QString &id);

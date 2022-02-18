@@ -45,13 +45,13 @@ public:
     ~ActionInspector() override;
 
 public Q_SLOTS:
-    void triggerAction(int row);
+    static void triggerAction(int row);
 
 private Q_SLOTS:
     void objectSelected(QObject *obj);
 
 private:
-    void registerMetaTypes();
+    static void registerMetaTypes();
     QItemSelectionModel *m_selectionModel;
 };
 

@@ -35,7 +35,7 @@
 
 using namespace GammaRay;
 
-QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
+QString ProbeABIDetector::qtCoreForExecutable(const QString &path)
 {
     Q_UNUSED(path);
     return QString();
@@ -47,7 +47,7 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
     return QString();
 }
 
-ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path) const
+ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
 {
     Q_UNUSED(path);
     return ProbeABI::fromString(GAMMARAY_PROBE_ABI);

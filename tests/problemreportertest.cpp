@@ -74,7 +74,7 @@ class FaultyMetaObjectBaseClass : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(UnregisteredType someProp READ someProp CONSTANT)
-    UnregisteredType someProp() const { return {}; }
+    static UnregisteredType someProp() { return {}; }
 };
 
 class FaultyMetaObjectClass : public FaultyMetaObjectBaseClass
@@ -84,9 +84,9 @@ class FaultyMetaObjectClass : public FaultyMetaObjectBaseClass
     Q_PROPERTY(UnregisteredType someProp READ someProp CONSTANT)
 
 public:
-    Q_INVOKABLE void noop(UnregisteredType param) { Q_UNUSED(param) }
+    Q_INVOKABLE static void noop(UnregisteredType param) { Q_UNUSED(param) }
 
-    UnregisteredType someProp() const { return {}; }
+    static UnregisteredType someProp() { return {}; }
 };
 
 namespace GammaRay {
@@ -118,13 +118,13 @@ private slots:
         availableCheckersModelTest.reset(new ModelTest(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.AvailableProblemCheckersModel"))));
     }
 
-    void cleanup()
+    static void cleanup()
     {
         ProblemCollector::instance()->clearScans();
         QCOMPARE(ProblemCollector::instance()->problems().size(), 0);
     }
 
-    void testDuplicates()
+    static void testDuplicates()
     {
         QCOMPARE(ProblemCollector::instance()->problems().size(), 0);
 
@@ -141,7 +141,7 @@ private slots:
         ProblemCollector::removeProblem(QStringLiteral("9skjlksdjb"));
     }
 
-    void testMultipleSourceLocations()
+    static void testMultipleSourceLocations()
     {
         QCOMPARE(ProblemCollector::instance()->problems().size(), 0);
 
@@ -180,7 +180,7 @@ private slots:
         ProblemCollector::removeProblem(QStringLiteral("abcdefg"));
     }
 
-    void testScans()
+    static void testScans()
     {
         auto standardCheckersCount = ProblemCollector::instance()->availableCheckers().size();
         ProblemCollector::registerProblemChecker(QStringLiteral("Dummy"),
@@ -228,7 +228,7 @@ private slots:
         ProblemCollector::instance()->availableCheckers().erase(dummyChecker);
     }
 
-    void testAvailableScansModel()
+    static void testAvailableScansModel()
     {
         auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.AvailableProblemCheckersModel"));
         auto rowCount = model->rowCount();
@@ -283,7 +283,7 @@ private slots:
     }
 
 #ifdef QT_QML_LIB
-    void testBindingLoopChecker()
+    static void testBindingLoopChecker()
     {
         QQmlEngine engine;
         QQmlComponent c(&engine);
@@ -314,7 +314,7 @@ private slots:
     }
 #endif
 
-    void testConnectionIssues()
+    static void testConnectionIssues()
     {
         QVERIFY(ProblemCollector::instance()->isCheckerRegistered("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck"));
 
@@ -384,7 +384,7 @@ private slots:
 
     }
 
-    void testMetaTypeChecks()
+    static void testMetaTypeChecks()
     {
         std::unique_ptr<QObject> obj(new FaultyMetaObjectClass);
         QTest::qWait(1);
@@ -425,7 +425,7 @@ private slots:
     }
 
 #ifdef HAVE_QT_WIDGETS
-    void testActionValidator()
+    static void testActionValidator()
     {
         QAction *a1 = new QAction(QStringLiteral("Action 1"), qApp);
         a1->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));

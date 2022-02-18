@@ -110,9 +110,9 @@ public:
 public slots:
     void startTests();
 private slots:
-    void run_data();
-    void run();
-    void threading();
+    static void run_data();
+    static void run();
+    static void threading();
 private:
     int m_argc;
     char **m_argv;

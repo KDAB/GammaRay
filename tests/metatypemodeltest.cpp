@@ -51,7 +51,7 @@ class MetaTypeModelTest : public QObject
 {
     Q_OBJECT
 private slots:
-    void testModel()
+    static void testModel()
     {
         MetaTypesModel srcModel;
         MetaTypesClientModel model;

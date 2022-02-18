@@ -160,7 +160,7 @@ QString absoluteExecutablePath(const QString &path)
     return path;
 }
 
-QString ProbeABIDetector::qtCoreForExecutable(const QString &path) const
+QString ProbeABIDetector::qtCoreForExecutable(const QString &path)
 {
     const auto exe = absoluteExecutablePath(path);
     const auto searchPaths = dllSearchPaths(exe);
@@ -247,7 +247,7 @@ static bool isDebugBuild(const QString &qtCoreDll)
     return qtCoreDll.endsWith(QLatin1String("d.dll"), Qt::CaseInsensitive);
 }
 
-ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path) const
+ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
 {
     ProbeABI abi;
     if (path.isEmpty())

@@ -54,7 +54,7 @@ private slots:
         m_localServer.close();
     }
 
-    void testUrl_data()
+    static void testUrl_data()
     {
         QTest::addColumn<QString>("userInput", nullptr);
         QTest::addColumn<QString>("expectedParsed", nullptr);
@@ -81,7 +81,7 @@ private slots:
         QTest::newRow("::ffff:192.168.15.2") << "::ffff:192.168.15.2" << "tcp://[::ffff:192.168.15.2]:11732" << true << true;
     }
 
-    void testUrl()
+    static void testUrl()
     {
         QFETCH(QString, userInput);
         QFETCH(QString, expectedParsed);
@@ -104,7 +104,7 @@ private slots:
         QCOMPARE(lineEdit->actions().contains(connectPage.m_implicitPortWarningSign), autoPortWarning);
     }
 
-    void testHostNames_data()
+    static void testHostNames_data()
     {
         QTest::addColumn<QString>("userInput", nullptr);
         QTest::addColumn<bool>("isValid", nullptr);
@@ -114,7 +114,7 @@ private slots:
         QTest::newRow("tcp://localhost:11732") << "tcp://localhost:11732" << true;
     }
 
-    void testHostNames()
+    static void testHostNames()
     {
         QFETCH(QString, userInput);
         QFETCH(bool, isValid);
