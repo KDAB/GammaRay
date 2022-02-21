@@ -64,14 +64,14 @@ public:
     void objectCreated(QObject *obj);
 
     struct ReplyNode {
-        QNetworkReply *reply;
+        QNetworkReply *reply = nullptr;
         QString displayName;
         QUrl url;
         QStringList errorMsgs;
         qint64 size = 0;
         quint64 duration = 0;
         QByteArray response;
-        QNetworkAccessManager::Operation op;
+        QNetworkAccessManager::Operation op = QNetworkAccessManager::UnknownOperation;
         int state = NetworkReply::Running;
     };
 
