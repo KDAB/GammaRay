@@ -1,6 +1,8 @@
-add_subdirectory(quick-batching)
-add_subdirectory(quick-event-handling)
-add_subdirectory(state-machine)
+if (Qt5Quick_VERSION GREATER 5.5)
+  add_subdirectory(quick-batching)
+  add_subdirectory(quick-event-handling)
+  add_subdirectory(state-machine)
+endif()
 
 if(TARGET Qt::Widgets)
   add_subdirectory(signal-slot)
