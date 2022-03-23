@@ -1192,7 +1192,11 @@ QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
         return oldIcon;
     }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const bool highDpiEnabled = qApp->testAttribute(Qt::AA_UseHighDpiPixmaps);
+#else
+    const bool highDpiEnabled = true;
+#endif
     QIcon newIcon;
     foreach (const QSize &size, gammarayIcon.availableSizes()) {
         QPixmap pix = oldIcon.pixmap(oldIcon.actualSize(size));
