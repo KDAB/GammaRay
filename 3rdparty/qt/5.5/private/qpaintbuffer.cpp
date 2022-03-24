@@ -553,7 +553,7 @@ class QPaintBufferEnginePrivate : public QPaintEngineExPrivate
 {
     Q_DECLARE_PUBLIC(QPaintBufferEngine)
 public:
-    void systemStateChanged() {
+    void systemStateChanged() override {
         Q_Q(QPaintBufferEngine);
         q->buffer->addCommand(QPaintBufferPrivate::Cmd_SystemStateChanged, QVariant(systemClip));
     }
@@ -1340,8 +1340,8 @@ public:
     QFakeDevice() { dpi_x = qt_defaultDpiX(); dpi_y = qt_defaultDpiY(); }
     void setDpiX(int dpi) { dpi_x = dpi; }
     void setDpiY(int dpi) { dpi_y = dpi; }
-    QPaintEngine *paintEngine() const { return nullptr; }
-    int metric(PaintDeviceMetric m) const
+    QPaintEngine *paintEngine() const override { return nullptr; }
+    int metric(PaintDeviceMetric m) const override
     {
         switch(m) {
             case PdmPhysicalDpiX:
