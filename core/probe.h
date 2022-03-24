@@ -288,7 +288,7 @@ private:
      * about every QObject creation/destruction.
      * @since 2.0
      */
-    static QT_DEPRECATED bool hasReliableObjectTracking() ;
+    QT_DEPRECATED static bool hasReliableObjectTracking();
 
     void objectFullyConstructed(QObject *obj);
 
