@@ -63,7 +63,7 @@ QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject
 
     // filter anything not applicable
     for (auto it = indexes.begin(); it != indexes.end();) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 3, 0)
         const auto data = metaData.at(*it).toCbor();
 #else
         const auto data = metaData.at(*it).value(QStringLiteral("MetaData")).toObject();
@@ -79,7 +79,7 @@ QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject
 
     // sort by priority
     std::sort(indexes.begin(), indexes.end(), [metaData](int lhs, int rhs) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 3, 0)
         const auto lData = metaData.at(lhs).toCbor();
         const auto rData = metaData.at(rhs).toCbor();
         return lData.value(QStringLiteral("Priority")).toInteger() > rData.value(QStringLiteral("Priority")).toInteger();
@@ -93,7 +93,7 @@ QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject
     // actually try the plugins
     QGeoPositionInfoSource *source = nullptr;
     for (auto it = indexes.constBegin(); it != indexes.constEnd(); ++it) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 3, 0)
         const auto data = metaData.at(*it).toCbor();
 #else
         const auto data = metaData.at(*it).value(QStringLiteral("MetaData")).toObject();
