@@ -11,6 +11,8 @@ EXCLUDE strings,explicit,normalize,passbyvalue,operators,nullstrcompare,nullstra
 #exclude more checks
 EXCLUDE qminmax,captruefalse
 EXCLUDE style
+#exclude spelling as codespell is a much, much better tool
+EXCLUDE spelling
 
 #coding style settings
 STYLE_CPPSTYLE qt
