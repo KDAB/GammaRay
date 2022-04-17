@@ -625,7 +625,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
          * list are independent of each other i.e.,
          * no two nodes in the list may have parent-child
          * relation as it will lead to crashes when
-         * parent delets all its childrens
+         * parent deletes all its childrens
          */
         const auto parentNodesCopy = parentNodes;
         parentNodes.clear();
@@ -636,7 +636,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                 continue;
             }
 
-            // Check for parent/childs
+            // Check for parent/children
             bool skip = false;
             std::vector<Node*> childsOfNode;
             for (auto *n : qAsConst(parentNodes)) {
@@ -646,7 +646,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                     break;
                 }
                 if (isAncestor(node, n)) {
-                    // Remove childs
+                    // Remove children
                     childsOfNode.push_back(n);
                 }
             }

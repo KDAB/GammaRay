@@ -471,9 +471,9 @@ void QuickSceneGraphModel::pruneSubTree(QSGNode *node)
 {
     auto it = m_parentChildMap.find(node);
     if (it != m_parentChildMap.end()) {
-        const QVector<QSGNode*> childs = it->second;
+        const QVector<QSGNode*> children = it->second;
 
-        foreach (auto child, childs)
+        foreach (auto child, children)
             pruneSubTree(child);
     }
     m_parentChildMap.erase(node);
