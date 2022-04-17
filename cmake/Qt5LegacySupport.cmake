@@ -1,6 +1,6 @@
 # Backward compatibility helpers with ancient Qt5 versions
 
-# Copyright (c) 2021 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# Copyright (C) 2021-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # All rights reserved.
 #
 # Author: Volker Krause <volker.krause@kdab.com>

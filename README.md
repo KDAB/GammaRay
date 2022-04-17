@@ -77,7 +77,7 @@ Thanks to our [contributors](CONTRIBUTORS.txt).
 
 License
 =======
-The GammaRay Software is (C) 2010-2021 Klarälvdalens Datakonsult AB (KDAB),
+The GammaRay Software is (C) 2010-2022 Klarälvdalens Datakonsult AB (KDAB),
 and is available under the terms of the GPL version 2 (or any later version,
 at your option).  See [LICENSE.GPL.txt](LICENSE.GPL.txt) for license details.
 

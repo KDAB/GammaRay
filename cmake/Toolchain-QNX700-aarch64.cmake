@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2021 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# Copyright (C) 2018-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # All rights reserved.
 #
 # Author: Kevin Funk <kevin.funk@kdab.com>

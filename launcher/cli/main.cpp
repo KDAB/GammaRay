@@ -4,7 +4,7 @@
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
 
-  Copyright (C) 2010-2021 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
+  Copyright (C) 2010-2022 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
   Author: Volker Krause <volker.krause@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
@@ -227,7 +227,7 @@ int main(int argc, char **argv)
         }
         if (arg == QLatin1String("-v") || arg == QLatin1String("--version")) {
             out << "GammaRay version " << GAMMARAY_VERSION_STRING << endl;
-            out << "Copyright (C) 2010-2021 Klaralvdalens Datakonsult AB, "
+            out << "Copyright (C) 2010-2022 Klaralvdalens Datakonsult AB, "
                 << "a KDAB Group company, info@kdab.com" << endl;
             out << "Protocol version " << Protocol::version() << endl;
             out << "Broadcast version " << Protocol::broadcastFormatVersion() << endl;
