@@ -625,7 +625,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
          * list are independent of each other i.e.,
          * no two nodes in the list may have parent-child
          * relation as it will lead to crashes when
-         * parent deletes all its childrens
+         * parent deletes all its children.
          */
         const auto parentNodesCopy = parentNodes;
         parentNodes.clear();
