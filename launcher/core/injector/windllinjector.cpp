@@ -60,7 +60,7 @@ public:
     }
 
 protected:
-    void run()
+    void run() override
     {
         WaitForSingleObject(m_injector->m_destProcess, INFINITE);
         DWORD exitCode;
