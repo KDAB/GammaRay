@@ -30,6 +30,7 @@ ExternalProject_Add(
     -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
     -DBUILD_TESTING=OFF
     -DCMAKE_OBJECT_PATH_MAX=512
+    -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
 )
 
 # hacky way to add a dependency from the default target to the build step
