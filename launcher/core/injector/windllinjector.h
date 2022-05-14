@@ -51,7 +51,7 @@ public:
     QProcess::ExitStatus exitStatus() override;
     QProcess::ProcessError processError() override;
     QString errorString() override;
-    void stop();
+    void stop() override;
 private slots:
     void processExited(int exitCode);
 private:
