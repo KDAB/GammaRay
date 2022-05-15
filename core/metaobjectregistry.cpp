@@ -240,7 +240,7 @@ struct MetaTypeCoreHelper : public QMetaTypeModuleHelper
     }
 };
 
-Q_GLOBAL_STATIC(MetaTypeCoreHelper, qMetaTypeCoreHelper);
+Q_GLOBAL_STATIC(MetaTypeCoreHelper, qMetaTypeCoreHelper)
 
 static const QMetaTypeModuleHelper *qModuleHelperForType(int type)
 {
