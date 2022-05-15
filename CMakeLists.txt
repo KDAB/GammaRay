@@ -288,6 +288,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   if(MINGW)
     # mingw will error out on the crazy casts in probe.cpp without this
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+    if(${Qt_VERSION_MAJOR} GREATER_EQUAL 6)
+      # prevent 'file too big' and 'too many sections' errors with Qt6
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
+    endif()
   endif()
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -363,9 +367,9 @@ gammaray_option(
   OFF
 )
 
-if (GAMMARAY_QT6_BUILD)
-    set(Qt_VERSION_MAJOR 6)
-    set(QT_MIN_VERSION "6.0.0")
+if(GAMMARAY_QT6_BUILD)
+  set(Qt_VERSION_MAJOR 6)
+  set(QT_MIN_VERSION "6.0.0")
 endif()
 
 find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Gui Network)
@@ -412,10 +416,9 @@ if(${Qt_VERSION_MAJOR} GREATER_EQUAL 6)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   add_definitions(-DGAMMARAY_QT6_TODO)
 
-  if (MSVC)
+  if(MSVC)
     add_compile_options(/Zc:__cplusplus)
   endif()
-
 endif()
 
 # these need to included after the last Qt-related find_package() call
