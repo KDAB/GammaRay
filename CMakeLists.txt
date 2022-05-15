@@ -288,10 +288,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   if(MINGW)
     # mingw will error out on the crazy casts in probe.cpp without this
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-    if(${Qt_VERSION_MAJOR} GREATER_EQUAL 6)
-      # prevent 'file too big' and 'too many sections' errors with Qt6
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
-    endif()
   endif()
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -441,10 +437,16 @@ if(MACOS_DISABLE_UNSUPPORTED_TESTS)
   set(Qt5Quick_FOUND FALSE)
 endif()
 
+if(MINGW AND ${Qt_VERSION_MAJOR} GREATER_EQUAL 6)
+  # prevent 'file too big' and 'too many sections' errors with Qt6
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
+endif()
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_EQUAL 5.9.1)
   # hide -Wc++1z-extensions warnings in this Qt version -- see: https://bugreports.qt.io/browse/QTBUG-61840
   add_flag_if_supported(-Wno-c++1z-extensions NO_CPP1Z_EXTENSIONS)
 endif()
+
 if(QtCore_VERSION VERSION_GREATER 5.7)
   # Qt 5.8 is the first minor version to use nullptr more broadly
   # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
