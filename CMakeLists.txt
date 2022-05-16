@@ -288,10 +288,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   if(MINGW)
     # mingw will error out on the crazy casts in probe.cpp without this
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-    if(${Qt_VERSION_MAJOR} GREATER_EQUAL 6)
-      # prevent 'file too big' and 'too many sections' errors with Qt6
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
-    endif()
   endif()
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -418,6 +414,10 @@ if(${Qt_VERSION_MAJOR} GREATER_EQUAL 6)
 
   if(MSVC)
     add_compile_options(/Zc:__cplusplus)
+  endif()
+  if(MINGW)
+    # prevent 'file too big' and 'too many sections' errors with Qt6
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
   endif()
 endif()
 
