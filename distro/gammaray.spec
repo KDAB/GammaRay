@@ -13,24 +13,24 @@ Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
 BuildRequires: cmake kdstatemachineeditor-devel
 %if %{defined suse_version}
-BuildRequires: libqt5-qtbase-private-headers-devel libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libQt5WebKitWidgets-devel libqt5-qtconnectivity-devel libqt5-qt3d-devel wayland-devel libqt5-qtwayland-devel bluez-qt-devel
+BuildRequires: libqt5-qtbase-private-headers-devel libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libqt5-qtconnectivity-devel libqt5-qt3d-devel wayland-devel libqt5-qtwayland-devel bluez-qt-devel
 # TODO: this seems only to be in the update repo?
 BuildRequires: kcoreaddons-devel
 %endif
 
 %if %{defined fedora}
-BuildRequires: qt5-qtdeclarative-devel qt5-qtconnectivity-devel qt5-qttools-devel qt5-qtsvg-devel qt5-qtscript-devel qt5-qtwebkit-devel
+BuildRequires: util-linux clang-libs qt5-qtdeclarative-devel qt5-qtconnectivity-devel qt5-qttools-devel qt5-qtsvg-devel qt5-qtscript-devel qt5-qtwebkit-devel
 %if 0%{?fedora} >= 21
-BuildRequires:  kf5-kcoreaddons-devel
+BuildRequires: kf5-kcoreaddons-devel
 %endif
 %if 0%{?fedora} > 23
-BuildRequires:  ghostscript
+BuildRequires: ghostscript
 %endif
 %if 0%{?fedora} > 24
-BuildRequires:  qt5-qt3d-devel wayland-devel qt5-qtwayland-devel kf5-syndication-devel
+BuildRequires: qt5-qt3d-devel wayland-devel qt5-qtwayland-devel kf5-syndication-devel
 %endif
 %if 0%{?fedora} > 30
-BuildRequires:  qt5-qtbase-private-devel
+BuildRequires: qt5-qtbase-private-devel
 %endif
 %endif
 
