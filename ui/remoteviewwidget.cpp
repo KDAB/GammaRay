@@ -923,7 +923,7 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 
-#if QT_VERSION > QT_VERSION_CHECK(6, 2, 3)
+#if QT_VERSION > QT_VERSION_CHECK(6, 2, 4)
     QMutableEventPoint::update(point, p);
 #define SET_POINT_VALUE(func, val) \
     QMutableEventPoint::func(p, (val))
@@ -951,7 +951,7 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
     SET_POINT_VALUE(setPressTimestamp, point.pressTimestamp());
     SET_POINT_VALUE(setEllipseDiameters, point.ellipseDiameters());
 
-#if QT_VERSION <= QT_VERSION_CHECK(6, 2, 3)
+#if QT_VERSION <= QT_VERSION_CHECK(6, 2, 4)
     p = mut;
 #endif
 
