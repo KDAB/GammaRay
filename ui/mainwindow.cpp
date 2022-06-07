@@ -561,6 +561,12 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
     }
 }
 
+void MainWindow::closeEvent(QCloseEvent *e)
+{
+    detachProbe();
+    QMainWindow::closeEvent(e);
+}
+
 void MainWindow::logTransmissionRate(quint64 bytesRead, quint64 bytesWritten)
 {
     const double transmissionRateRX = (bytesRead * 8 / 1024.0 / 1024.0); // in Mpbs

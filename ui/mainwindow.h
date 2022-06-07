@@ -96,6 +96,9 @@ private slots:
     void logTransmissionRate(quint64 bytesRead, quint64 bytesWritten);
     void setCodeNavigationIDE(QAction *action);
 
+protected:
+    void closeEvent(QCloseEvent *) override;
+
 private:
     QWidget *createErrorPage(const QModelIndex &index);
 
