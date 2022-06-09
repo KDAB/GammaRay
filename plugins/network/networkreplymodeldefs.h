@@ -43,6 +43,11 @@ enum State {
     Unencrypted = 8, // explicitly known to not be encrypted, if none are set, we guess from URL
     Deleted = 16
 };
+
+enum ContentType {
+    Unknown = 0,
+    Json = 1,
+};
 }
 
 namespace NetworkReplyModelRole {
@@ -50,7 +55,8 @@ enum Role {
     ReplyStateRole = GammaRay::UserRole,
     ReplyErrorRole,
     ObjectIdRole,
-    ReplyResponseRole
+    ReplyResponseRole,
+    ReplyContentType,
 };
 }
 

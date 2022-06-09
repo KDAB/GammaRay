@@ -40,6 +40,7 @@
 #include <QGuiApplication>
 #include <QMenu>
 #include <QPlainTextEdit>
+#include <QJsonDocument>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QTextCodec>
@@ -81,8 +82,13 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
 
     connect(ui->replyView, &QWidget::customContextMenuRequested, this, &NetworkReplyWidget::contextMenu);
     connect(ui->replyView->selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const QModelIndex &current, const QModelIndex &) {
-        const auto response = current.sibling(current.row(), NetworkReplyModelColumn::ObjectColumn)
-                .data(NetworkReplyModelRole::ReplyResponseRole).toByteArray();
+        const auto objColumn = current.sibling(current.row(), NetworkReplyModelColumn::ObjectColumn);
+        auto response = objColumn.data(NetworkReplyModelRole::ReplyResponseRole).toByteArray();
+        const auto contentType = (NetworkReply::ContentType)objColumn.data(NetworkReplyModelRole::ReplyContentType).toInt();
+
+        if (contentType == NetworkReply::Json) {
+            response = QJsonDocument::fromJson(response).toJson();
+        }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         QStringDecoder decoder(QStringDecoder::Utf8);
@@ -99,7 +105,7 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
         if (state.invalidChars > 0) {
             ui->responseTextEdit->setPlainText(tr("%1: Unable to show response preview").arg(qApp->applicationName()));
         } else {
-            // TODO: Add support for pretty-printing JSON, XML etc
+            // TODO: Add support for pretty-printing XML etc
             ui->responseTextEdit->setPlainText(text);
         }
 #endif

@@ -100,6 +100,15 @@ bool prioritizeLatestConnection(QObject *sender, const char *normalizedSignalNam
     return false;
 #endif
 }
+
+NetworkReply::ContentType contentType(const QVariant &v)
+{
+    if (v.toString().contains(QLatin1String("application/json"))) {
+        return NetworkReply::Json;
+    }
+    return NetworkReply::Unknown;
+}
+
 }
 
 NetworkReplyModel::NetworkReplyModel(QObject *parent)
@@ -175,6 +184,8 @@ QVariant NetworkReplyModel::data(const QModelIndex& index, int role) const
         return QVariant::fromValue(ObjectId(reply.reply));
     } else if (role == NetworkReplyModelRole::ReplyResponseRole && index.column() == NetworkReplyModelColumn::ObjectColumn) {
         return reply.response;
+    } else if (role == NetworkReplyModelRole::ReplyContentType && index.column() == NetworkReplyModelColumn::ObjectColumn) {
+        return reply.contentType;
     }
 
     return {};
@@ -238,6 +249,7 @@ void NetworkReplyModel::objectCreated(QObject *obj)
         } else {
             replyNode.duration = m_time.elapsed();
         }
+        replyNode.contentType = contentType(reply->header(QNetworkRequest::ContentTypeHeader));
         updateReplyNode(nam, replyNode);
 
         if (m_captureResponse) {
@@ -262,6 +274,7 @@ QMap<int, QVariant> NetworkReplyModel::itemData(const QModelIndex& index) const
         m.insert(NetworkReplyModelRole::ReplyErrorRole, data(index, NetworkReplyModelRole::ReplyErrorRole));
         m.insert(NetworkReplyModelRole::ObjectIdRole, data(index, NetworkReplyModelRole::ObjectIdRole));
         m.insert(NetworkReplyModelRole::ReplyResponseRole, data(index, NetworkReplyModelRole::ReplyResponseRole));
+        m.insert(NetworkReplyModelRole::ReplyContentType, data(index, NetworkReplyModelRole::ReplyContentType));
     }
     return m;
 }
@@ -276,6 +289,7 @@ void NetworkReplyModel::replyFinished(QNetworkReply* reply, QNetworkAccessManage
     node.op = reply->operation();
     node.state |= NetworkReply::Finished;
     node.duration = m_time.elapsed() - node.duration;
+    node.contentType = contentType(reply->header(QNetworkRequest::ContentTypeHeader));
 
     maybePeekResponse(node, reply);
 
@@ -407,6 +421,7 @@ void NetworkReplyModel::updateReplyNode(QNetworkAccessManager* nam, const Networ
             (*replyIt).duration = newNode.duration > (*replyIt).duration ? newNode.duration - (*replyIt).duration : 0;
         }
         (*replyIt).size = std::max((*replyIt).size, newNode.size);
+        (*replyIt).contentType = newNode.contentType;
 
         const auto idx = createIndex(std::distance(replyIt, (*namIt).replies.rend()) - 1, 0, std::distance(m_nodes.begin(), namIt));
         emit dataChanged(idx, idx.sibling(idx.row(), columnCount() - 1));
