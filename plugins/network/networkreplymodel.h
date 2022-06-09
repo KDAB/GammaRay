@@ -73,6 +73,7 @@ public:
         QByteArray response;
         QNetworkAccessManager::Operation op = QNetworkAccessManager::UnknownOperation;
         int state = NetworkReply::Running;
+        NetworkReply::ContentType contentType = NetworkReply::Unknown;
     };
 
     bool captureResponse() const { return m_captureResponse; }
