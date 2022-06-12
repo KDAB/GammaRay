@@ -35,6 +35,8 @@
 #include <QHash>
 #include <QVector>
 
+#include <unordered_map>
+
 namespace GammaRay {
 class PropertyAdaptor;
 class PropertyData;
@@ -81,7 +83,7 @@ private slots:
 
 private:
     PropertyAdaptor *m_rootAdaptor = nullptr;
-    mutable QHash<PropertyAdaptor *, QVector<PropertyAdaptor *> > m_parentChildrenMap;
+    mutable std::unordered_map<PropertyAdaptor *, QVector<PropertyAdaptor *> > m_parentChildrenMap;
     bool m_inhibitAdaptorCreation = false;
     bool m_readOnly = false;
 };

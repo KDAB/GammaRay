@@ -101,7 +101,7 @@ void AggregatedPropertyModel::clear()
     if (!m_rootAdaptor)
         return;
 
-    const auto count = m_parentChildrenMap.value(m_rootAdaptor).size();
+    const auto count = m_parentChildrenMap.at(m_rootAdaptor).size();
     if (count)
         beginRemoveRows(QModelIndex(), 0, count - 1);
 
@@ -304,7 +304,7 @@ int AggregatedPropertyModel::rowCount(const QModelIndex &parent) const
     if (!m_rootAdaptor || parent.column() > 0)
         return 0;
     if (!parent.isValid())
-        return m_parentChildrenMap.value(m_rootAdaptor).size();
+        return m_parentChildrenMap.at(m_rootAdaptor).size();
 
     auto adaptor = adaptorForIndex(parent);
     auto &siblings = m_parentChildrenMap[adaptor];
@@ -324,7 +324,7 @@ int AggregatedPropertyModel::rowCount(const QModelIndex &parent) const
     auto childAdaptor = siblings.at(parent.row());
     if (!childAdaptor)
         return 0;
-    return m_parentChildrenMap.value(childAdaptor).size(); // childAdaptor->count() might already be updated in insert/removeRows
+    return m_parentChildrenMap.at(childAdaptor).size(); // childAdaptor->count() might already be updated in insert/removeRows
 }
 
 Qt::ItemFlags AggregatedPropertyModel::flags(const QModelIndex &index) const
@@ -349,7 +349,7 @@ QModelIndex AggregatedPropertyModel::parent(const QModelIndex &child) const
         return {};
 
     auto parentAdaptor = childAdaptor->parentAdaptor();
-    return createIndex(m_parentChildrenMap.value(parentAdaptor).indexOf(
+    return createIndex(m_parentChildrenMap.at(parentAdaptor).indexOf(
                            childAdaptor), 0, parentAdaptor);
 }
 
@@ -361,7 +361,7 @@ QModelIndex AggregatedPropertyModel::index(int row, int column, const QModelInde
     if (!parent.isValid())
         return createIndex(row, column, m_rootAdaptor);
     auto adaptor = adaptorForIndex(parent);
-    return createIndex(row, column, m_parentChildrenMap.value(adaptor).at(parent.row()));
+    return createIndex(row, column, m_parentChildrenMap.at(adaptor).at(parent.row()));
 }
 
 PropertyAdaptor *AggregatedPropertyModel::adaptorForIndex(const QModelIndex &index) const
@@ -375,9 +375,10 @@ void AggregatedPropertyModel::addPropertyAdaptor(PropertyAdaptor *adaptor) const
 {
     if (!adaptor)
         return;
+
     QVector<PropertyAdaptor *> children;
     children.resize(adaptor->count());
-    m_parentChildrenMap.insert(adaptor, children);
+    m_parentChildrenMap.insert({ adaptor, children });
     connect(adaptor, &PropertyAdaptor::propertyChanged, this, &AggregatedPropertyModel::propertyChanged);
     connect(adaptor, &PropertyAdaptor::propertyAdded, this, &AggregatedPropertyModel::propertyAdded);
     connect(adaptor, &PropertyAdaptor::propertyRemoved, this, &AggregatedPropertyModel::propertyRemoved);
@@ -387,7 +388,7 @@ void AggregatedPropertyModel::propertyChanged(int first, int last)
 {
     auto adaptor = qobject_cast<PropertyAdaptor *>(sender());
     Q_ASSERT(adaptor);
-    Q_ASSERT(m_parentChildrenMap.contains(adaptor));
+    Q_ASSERT(m_parentChildrenMap.find(adaptor) != m_parentChildrenMap.cend());
     Q_ASSERT(first <= last);
     Q_ASSERT(first >= 0);
     Q_ASSERT(last < adaptor->count());
@@ -401,7 +402,7 @@ void AggregatedPropertyModel::propertyAdded(int first, int last)
 {
     auto adaptor = qobject_cast<PropertyAdaptor *>(sender());
     Q_ASSERT(adaptor);
-    Q_ASSERT(m_parentChildrenMap.contains(adaptor));
+    Q_ASSERT(m_parentChildrenMap.find(adaptor) != m_parentChildrenMap.cend());
     Q_ASSERT(first <= last);
     Q_ASSERT(first >= 0);
     Q_ASSERT(last < adaptor->count());
@@ -419,8 +420,9 @@ void AggregatedPropertyModel::propertyAdded(int first, int last)
 void AggregatedPropertyModel::propertyRemoved(int first, int last)
 {
     auto adaptor = qobject_cast<PropertyAdaptor *>(sender());
+
     Q_ASSERT(adaptor);
-    Q_ASSERT(m_parentChildrenMap.contains(adaptor));
+    Q_ASSERT(m_parentChildrenMap.find(adaptor) != m_parentChildrenMap.cend());
     Q_ASSERT(first <= last);
     Q_ASSERT(first >= 0);
     Q_ASSERT(last < adaptor->count());
@@ -441,7 +443,7 @@ void AggregatedPropertyModel::objectInvalidated()
 void AggregatedPropertyModel::objectInvalidated(PropertyAdaptor *adaptor)
 {
     Q_ASSERT(adaptor);
-    if (!m_parentChildrenMap.contains(adaptor)) // already handled
+    if (m_parentChildrenMap.find(adaptor) == m_parentChildrenMap.end()) // already handled
         return;
 
     if (adaptor == m_rootAdaptor) {
@@ -451,11 +453,11 @@ void AggregatedPropertyModel::objectInvalidated(PropertyAdaptor *adaptor)
 
     auto parentAdaptor = adaptor->parentAdaptor();
     Q_ASSERT(parentAdaptor);
-    Q_ASSERT(m_parentChildrenMap.contains(parentAdaptor));
-    reloadSubTree(parentAdaptor, m_parentChildrenMap.value(parentAdaptor).indexOf(adaptor));
+    Q_ASSERT(m_parentChildrenMap.find(parentAdaptor) != m_parentChildrenMap.cend());
+    reloadSubTree(parentAdaptor, m_parentChildrenMap.at(parentAdaptor).indexOf(adaptor));
 }
 
-bool AggregatedPropertyModel::hasLoop(PropertyAdaptor *adaptor, const QVariant &v) 
+bool AggregatedPropertyModel::hasLoop(PropertyAdaptor *adaptor, const QVariant &v)
 {
     const ObjectInstance newOi(v);
     if (newOi.type() != ObjectInstance::QtObject && newOi.type() != ObjectInstance::Object)
@@ -475,22 +477,23 @@ bool AggregatedPropertyModel::hasLoop(PropertyAdaptor *adaptor, const QVariant &
 void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor *parentAdaptor, int index)
 {
     Q_ASSERT(parentAdaptor);
-    Q_ASSERT(m_parentChildrenMap.contains(parentAdaptor));
+    Q_ASSERT(m_parentChildrenMap.find(parentAdaptor) != m_parentChildrenMap.cend());
     Q_ASSERT(index >= 0);
-    Q_ASSERT(index < m_parentChildrenMap.value(parentAdaptor).size());
+    Q_ASSERT(index < m_parentChildrenMap.at(parentAdaptor).size());
 
     // prevent rowCount calls as a result of the change notification to re-create
     // the adaptor
     m_inhibitAdaptorCreation = true;
 
     // remove the old sub-tree, if present
-    auto oldAdaptor = m_parentChildrenMap.value(parentAdaptor).at(index);
+    auto oldAdaptor = m_parentChildrenMap.at(parentAdaptor).at(index);
     if (oldAdaptor) {
-        auto oldRowCount = m_parentChildrenMap.value(oldAdaptor).size();
+        auto oldRowCount = m_parentChildrenMap.at(oldAdaptor).size();
         if (oldRowCount > 0)
             beginRemoveRows(createIndex(index, 0, parentAdaptor), 0, oldRowCount - 1);
         m_parentChildrenMap[parentAdaptor][index] = nullptr;
-        m_parentChildrenMap.remove(oldAdaptor);
+
+        m_parentChildrenMap.erase(oldAdaptor);
         delete oldAdaptor;
         if (oldRowCount)
             endRemoveRows();
@@ -528,7 +531,7 @@ bool AggregatedPropertyModel::isParentEditable(PropertyAdaptor *adaptor) const
 
     // we need all value types along the way to be writable
     if (adaptor->object().isValueType()) {
-        const auto row = m_parentChildrenMap.value(parentAdaptor).indexOf(adaptor);
+        const auto row = m_parentChildrenMap.at(parentAdaptor).indexOf(adaptor);
         Q_ASSERT(row >= 0);
 
         const auto pd = parentAdaptor->propertyData(row);
@@ -546,7 +549,7 @@ void AggregatedPropertyModel::propagateWrite(GammaRay::PropertyAdaptor* adaptor)
         return;
 
     if (adaptor->object().isValueType()) {
-        const auto row = m_parentChildrenMap.value(parentAdaptor).indexOf(adaptor);
+        const auto row = m_parentChildrenMap.at(parentAdaptor).indexOf(adaptor);
         Q_ASSERT(row >= 0);
 
         parentAdaptor->writeProperty(row, adaptor->object().variant());
