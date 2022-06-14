@@ -56,6 +56,7 @@ signals:
 
 protected:
     bool viewportEvent(QEvent *event) override;
+    void wheelEvent(QWheelEvent *) override;
 
 private slots:
     void eventDelegateChanged();

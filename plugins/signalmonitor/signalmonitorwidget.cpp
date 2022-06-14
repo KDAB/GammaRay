@@ -98,6 +98,11 @@ void SignalMonitorWidget::intervalScaleValueChanged(int value)
     ui->objectTreeView->eventDelegate()->setVisibleInterval(i);
 }
 
+QSlider *SignalMonitorWidget::zoomSlider()
+{
+    return ui->intervalScale;
+}
+
 void SignalMonitorWidget::adjustEventScrollBarSize()
 {
     // FIXME: Would like to have this in SignalHistoryView, but letting that

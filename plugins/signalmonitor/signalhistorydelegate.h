@@ -60,6 +60,7 @@ public:
     void setActive(bool active);
     bool isActive() const;
 
+    qint64 intervalForPosition(int position, int width) const;
     QString toolTipAt(const QModelIndex &index, int position, int width) const;
 
 signals:

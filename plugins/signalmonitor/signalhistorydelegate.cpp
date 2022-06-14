@@ -153,13 +153,18 @@ bool SignalHistoryDelegate::isActive() const
     return m_updateTimer->isActive();
 }
 
+qint64 SignalHistoryDelegate::intervalForPosition(int position,
+                                                  int width) const {
+  return ((m_visibleInterval * position) / width) + m_visibleOffset;
+}
+
 QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position, int width) const
 {
     const QAbstractItemModel * const model = index.model();
     const QVector<qint64> &events
         = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
 
-    const qint64 t = m_visibleInterval * position / width + m_visibleOffset;
+    const qint64 t = intervalForPosition(position, width);
     qint64 dtMin = std::numeric_limits<qint64>::max();
     int signalIndex = -1;
     qint64 signalTimestamp = -1;
