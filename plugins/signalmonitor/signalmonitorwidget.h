@@ -36,6 +36,7 @@
 
 QT_BEGIN_NAMESPACE
 class QItemSelection;
+class QSlider;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -49,6 +50,8 @@ class SignalMonitorWidget : public QWidget
 public:
     explicit SignalMonitorWidget(QWidget *parent = nullptr);
     ~SignalMonitorWidget() override;
+
+    QSlider *zoomSlider();
 
 private slots:
     void intervalScaleValueChanged(int value);

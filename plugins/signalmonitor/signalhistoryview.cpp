@@ -29,6 +29,7 @@
 #include "signalhistoryview.h"
 #include "signalhistorydelegate.h"
 #include "signalhistorymodel.h"
+#include "signalmonitorwidget.h"
 
 #include <QHelpEvent>
 #include <QScrollBar>
@@ -129,6 +130,40 @@ bool SignalHistoryView::viewportEvent(QEvent *event)
     }
 
     return DeferredTreeView::viewportEvent(event);
+}
+
+void SignalHistoryView::wheelEvent(QWheelEvent *e)
+{
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+    auto pos = e->pos();
+#else
+    auto pos = e->position().toPoint();
+#endif
+    if (pos.x() < eventColumnPosition()) {
+        DeferredTreeView::wheelEvent(e);
+        return;
+    }
+
+    if (e->modifiers() & Qt::ControlModifier) {
+        const qint64 interval = m_eventDelegate->intervalForPosition(pos.x() - eventColumnPosition(), eventColumnWidth());
+        if (interval <= 0) {
+            DeferredTreeView::wheelEvent(e);
+            return;
+        }
+        int y = e->angleDelta().y();
+        auto widget = static_cast<SignalMonitorWidget*>(parentWidget());
+        widget->zoomSlider()->setValue(widget->zoomSlider()->value() + y/16);
+        m_eventDelegate->setVisibleOffset(interval);
+
+        qint64 newInterval = m_eventDelegate->intervalForPosition(pos.x() - eventColumnPosition(), eventColumnWidth());
+        if (newInterval > interval) {
+            auto diff = newInterval - interval;
+            auto newPos = interval - diff;
+            m_eventDelegate->setVisibleOffset(newPos);
+        }
+        return;
+    }
+    DeferredTreeView::wheelEvent(e);
 }
 
 #include "moc_signalhistoryview.cpp"
