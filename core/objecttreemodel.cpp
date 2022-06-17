@@ -56,6 +56,8 @@ ObjectTreeModel::ObjectTreeModel(Probe *probe)
             this, &ObjectTreeModel::objectReparented);
     connect(probe, &Probe::objectFavorited,
             this, &ObjectTreeModel::objectFavorited);
+    connect(probe, &Probe::objectUnfavorited,
+            this, &ObjectTreeModel::objectUnfavorited);
 }
 
 QPair<int, QVariant> ObjectTreeModel::defaultSelectedItem() 
@@ -213,6 +215,17 @@ void ObjectTreeModel::objectFavorited(QObject *obj)
         return;
     }
     m_favorites.insert(obj);
+    Q_EMIT dataChanged(index, index, { ObjectModel::IsFavoriteRole });
+}
+
+void ObjectTreeModel::objectUnfavorited(QObject *obj)
+{
+    auto index = indexForObject(obj);
+    if (!index.isValid()) {
+        return;
+    }
+    Q_ASSERT(m_favorites.contains(obj));
+    m_favorites.remove(obj);
     Q_EMIT dataChanged(index, index, { ObjectModel::IsFavoriteRole });
 }
 

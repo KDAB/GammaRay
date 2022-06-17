@@ -79,9 +79,24 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "60%" << "40%");
 
     connect(ui->objectPropertyWidget, &PropertyWidget::tabsUpdated, this, &ObjectInspectorWidget::propertyWidgetTabsChanged);
+
+    ui->favoritesTreeView->header()->setObjectName(QStringLiteral("favoriteObjectsHeaderView"));
+    connect(ui->favoritesTreeView, &QTreeView::clicked, this, &ObjectInspectorWidget::onFavoriteObjectClicked);
 }
 
 ObjectInspectorWidget::~ObjectInspectorWidget() = default;
+
+void ObjectInspectorWidget::onFavoriteObjectClicked(const QModelIndex &idx)
+{
+    if (!idx.isValid())
+        return;
+
+    auto favProxyModel = qobject_cast<QAbstractProxyModel*>(ui->favoritesTreeView->model());
+    auto sourceIdx = favProxyModel->mapToSource(idx);
+    auto objProxyModel = qobject_cast<QAbstractProxyModel*>(ui->objectTreeView->model());
+    auto idxToSel = objProxyModel->mapFromSource(sourceIdx);
+    ui->objectTreeView->selectionModel()->select(idxToSel, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+}
 
 void ObjectInspectorWidget::objectSelectionChanged(const QItemSelection &selection)
 {

@@ -78,6 +78,7 @@ set(gammaray_ui_srcs
   tools/objectinspector/applicationattributetab.cpp
   tools/objectinspector/bindingtab.cpp
   tools/objectinspector/stacktracetab.cpp
+  tools/objectinspector/objectsfavoriteview.cpp
   tools/problemreporter/problemreporterwidget.cpp
   tools/problemreporter/problemreporterclient.cpp
   tools/problemreporter/problemclientmodel.cpp

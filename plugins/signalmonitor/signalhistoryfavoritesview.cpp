@@ -37,82 +37,9 @@
 
 using namespace GammaRay;
 
-class SignalHistoryFavoritesModel : public QSortFilterProxyModel
-{
-public:
-    explicit SignalHistoryFavoritesModel(QObject *parent = nullptr)
-        : QSortFilterProxyModel(parent)
-    {
-        setFilterRole(ObjectModel::IsFavoriteRole);
-        setFilterKeyColumn(0);
-
-        auto sourceModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"));
-        setSourceModel(sourceModel);
-    }
-
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override
-    {
-        auto idx = sourceModel()->index(source_row, SignalHistoryModel::ObjectColumn, source_parent);
-        return idx.data(ObjectModel::IsFavoriteRole).toBool();
-    }
-};
-
 SignalHistoryFavoritesView::SignalHistoryFavoritesView(QWidget *parent)
-    : GammaRay::SignalHistoryView(parent)
+    : Super(parent)
 {
-    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
     setRootIsDecorated(false);
-    setSizeAdjustPolicy(QAbstractItemView::AdjustToContents);
-    setContextMenuPolicy(Qt::CustomContextMenu);
-    setModel(new SignalHistoryFavoritesModel(this));
-
-    connect(this, &SignalHistoryFavoritesView::customContextMenuRequested,
-            this, &SignalHistoryFavoritesView::onCustomContextMenuRequested);
-
-    if (model() && model()->rowCount() == 0)
-        setHidden(true);
-}
-
-void SignalHistoryFavoritesView::setModel(QAbstractItemModel *m)
-{
-    if (model())
-        disconnect(model(), &QAbstractItemModel::rowsRemoved, this,
-                   &SignalHistoryFavoritesView::rowsRemoved);
-
-    SignalHistoryView::setModel(m);
-
-    connect(m, &QAbstractItemModel::rowsRemoved, this,
-            &SignalHistoryFavoritesView::rowsRemoved);
-}
-
-
-void SignalHistoryFavoritesView::rowsRemoved(const QModelIndex &, int, int)
-{
-    if (model() && model()->rowCount() == 0)
-        setHidden(true);
-}
-
-void SignalHistoryFavoritesView::rowsInserted(const QModelIndex &idx, int s, int e)
-{
-    if (isHidden())
-        setHidden(false);
-    SignalHistoryView::rowsInserted(idx, s, e);
-}
-
-void SignalHistoryFavoritesView::onCustomContextMenuRequested(QPoint pos)
-{
-    auto index = indexAt(pos);
-    if (!index.isValid())
-        return;
-    index = index.sibling(index.row(), 0);
-    const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
-    if (objectId.isNull())
-        return;
-
-    QMenu menu;
-    menu.addAction(tr("Remove from favorites"), this, [objectId]{
-        ObjectBroker::object<FavoriteObjectInterface*>()->unfavoriteObject(objectId);
-    });
-
-    menu.exec(viewport()->mapToGlobal(pos));
+    setModel(new FavoritesModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel")), this));
 }

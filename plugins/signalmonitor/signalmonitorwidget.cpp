@@ -94,12 +94,7 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     ui->favoritesObjectsTreeView->setEventScrollBar(ui->eventScrollBar);
     m_stateManager.setDefaultSizes(ui->favoritesObjectsTreeView->header(),
                                    UISizeVector() << 200 << 200 << -1);
-    connect(ui->favoritesObjectsTreeView->selectionModel(), &QItemSelectionModel::selectionChanged,
-            this, &SignalMonitorWidget::favoriteSelectionChanged);
-    connect(ui->favoritesObjectsTreeView, &QTreeView::clicked, this, [this](const QModelIndex &idx){
-        QItemSelection sel(idx, idx);
-        favoriteSelectionChanged(sel);
-    });
+    connect(ui->favoritesObjectsTreeView, &QTreeView::clicked, this, &SignalMonitorWidget::onFavoriteObjectClicked);
 }
 
 SignalMonitorWidget::~SignalMonitorWidget() = default;
@@ -165,11 +160,10 @@ void SignalMonitorWidget::contextMenu(QPoint pos)
     menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));
 }
 
-void SignalMonitorWidget::favoriteSelectionChanged(const QItemSelection &selection)
+void SignalMonitorWidget::onFavoriteObjectClicked(const QModelIndex &idx)
 {
-    if (selection.isEmpty())
+    if (!idx.isValid())
         return;
-    auto idx = selection.at(0).topLeft();
     auto favProxyModel = qobject_cast<QAbstractProxyModel*>(ui->favoritesObjectsTreeView->model());
     auto sourceIdx = favProxyModel->mapToSource(idx);
     auto objProxyModel = qobject_cast<QAbstractProxyModel*>(ui->objectTreeView->model());

@@ -124,6 +124,7 @@ public:
         loc = this->data(index, ObjectModel::DeclarationLocationRole);
         if (loc.isValid())
             map.insert(ObjectModel::DeclarationLocationRole, loc);
+        map.insert(ObjectModel::IsFavoriteRole, this->data(index, ObjectModel::IsFavoriteRole));
         return map;
     }
 
