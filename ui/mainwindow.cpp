@@ -563,7 +563,8 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
-    detachProbe();
+    if (!m_detaching)
+        detachProbe();
     QMainWindow::closeEvent(e);
 }
 
@@ -626,12 +627,14 @@ QWidget *MainWindow::createErrorPage(const QModelIndex &index)
 
 void MainWindow::quitHost()
 {
+    m_detaching = true;
     emit targetQuitRequested();
     ObjectBroker::object<ProbeControllerInterface *>()->quitHost();
 }
 
 void MainWindow::detachProbe()
 {
+    m_detaching = true;
     emit targetQuitRequested();
     ObjectBroker::object<ProbeControllerInterface *>()->detachProbe();
 }

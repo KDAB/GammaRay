@@ -108,6 +108,7 @@ private:
     QScopedPointer<Ui::MainWindow> ui;
     MainWindowUIStateManager m_stateManager;
     ClientToolFilterProxyModel *m_toolFilterModel;
+    bool m_detaching = false;
 
     KUserFeedback::Provider *m_feedbackProvider;
 };
