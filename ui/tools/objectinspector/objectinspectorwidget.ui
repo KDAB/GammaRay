@@ -22,6 +22,9 @@
         <widget class="QLineEdit" name="objectSearchLine"/>
        </item>
        <item>
+        <widget class="GammaRay::ObjectsFavoriteView" name="favoritesTreeView"/>
+       </item>
+       <item>
         <widget class="GammaRay::DeferredTreeView" name="objectTreeView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -59,6 +62,11 @@
    <class>GammaRay::DeferredTreeView</class>
    <extends>QTreeView</extends>
    <header>deferredtreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::ObjectsFavoriteView</class>
+   <extends>QTreeView</extends>
+   <header>tools/objectinspector/objectsfavoriteview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

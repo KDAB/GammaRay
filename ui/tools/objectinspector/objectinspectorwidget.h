@@ -47,6 +47,8 @@
 #include <common/objectbroker.h>
 
 #include <ui/uistatemanager.h>
+#include <ui/deferredtreeview.h>
+#include <ui/favoritesitemview.h>
 
 QT_BEGIN_NAMESPACE
 class QItemSelection;
@@ -71,6 +73,7 @@ public:
     ~ObjectInspectorWidget() override;
 
 private slots:
+    void onFavoriteObjectClicked(const QModelIndex &idx);
     void objectSelectionChanged(const QItemSelection &selection);
     void objectContextMenuRequested(const QPoint &pos);
     void propertyWidgetTabsChanged();

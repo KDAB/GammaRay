@@ -1,5 +1,5 @@
 /*
-  signalhistoryfavoritesview.h
+  objectsfavoriteview.h
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -25,20 +25,19 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_SIGNALHISTORYFAVSVIEW_H
-#define GAMMARAY_SIGNALHISTORYFAVSVIEW_H
+#ifndef GAMMARAY_OBJECTSFAVORITEVIEW_H
+#define GAMMARAY_OBJECTSFAVORITEVIEW_H
 
-#include "ui/favoritesitemview.h"
-#include "signalhistoryview.h"
+#include <ui/favoritesitemview.h>
+#include <ui/deferredtreeview.h>
 
 namespace GammaRay {
-class SignalHistoryFavoritesView : public FavoritesItemView<GammaRay::SignalHistoryView>
+class ObjectsFavoriteView : public FavoritesItemView<DeferredTreeView>
 {
     Q_OBJECT
-    using Super = FavoritesItemView<GammaRay::SignalHistoryView>;
 public:
-    SignalHistoryFavoritesView(QWidget *parent = nullptr);
+    ObjectsFavoriteView(QWidget *parent = nullptr);
 };
-} // namespace GammaRay
+}
 
-#endif // GAMMARAY_SIGNALHISTORYFAVSVIEW_H
+#endif

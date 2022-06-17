@@ -59,7 +59,7 @@ private slots:
     void pauseAndResume(bool pause);
     void eventDelegateIsActiveChanged(bool active);
     void contextMenu(QPoint pos);
-    void favoriteSelectionChanged(const QItemSelection &selection);
+    void onFavoriteObjectClicked(const QModelIndex &idx);
     void selectionChanged(const QItemSelection &selection);
 
 private:
