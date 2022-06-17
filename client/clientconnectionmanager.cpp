@@ -38,6 +38,7 @@
 #include "processtracker.h"
 #include "paintanalyzerclient.h"
 #include "remoteviewclient.h"
+#include "favoriteobjectclient.h"
 #include <toolmanagerclient.h>
 
 #include <common/objectbroker.h>
@@ -102,6 +103,11 @@ static QObject *createClassesIconsRepositoryClient(const QString &, QObject *par
     return new ClassesIconsRepositoryClient(parent);
 }
 
+static QObject *createFavoriteObjectClient(const QString &name, QObject *parent)
+{
+    return new FavoriteObjectClient(parent);
+}
+
 void ClientConnectionManager::init()
 {
     StreamOperators::registerOperators();
@@ -116,6 +122,7 @@ void ClientConnectionManager::init()
     ObjectBroker::registerClientObjectFactoryCallback<RemoteViewInterface *>(createRemoteViewClient);
     ObjectBroker::registerClientObjectFactoryCallback<EnumRepository*>(createEnumRepositoryClient);
     ObjectBroker::registerClientObjectFactoryCallback<ClassesIconsRepository*>(createClassesIconsRepositoryClient);
+    ObjectBroker::registerClientObjectFactoryCallback<FavoriteObjectInterface*>(createFavoriteObjectClient);
 
     ObjectBroker::setModelFactoryCallback(modelFactory);
     ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);

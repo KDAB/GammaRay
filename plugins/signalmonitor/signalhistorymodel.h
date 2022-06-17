@@ -36,6 +36,7 @@
 #include <QIcon>
 #include <QMetaMethod>
 #include <QByteArray>
+#include <QSet>
 
 namespace GammaRay {
 class Probe;
@@ -95,11 +96,14 @@ private:
 private slots:
     void onObjectAdded(QObject *object);
     void onObjectRemoved(QObject *object);
+    void onObjectFavorited(QObject *object);
+    void onObjectUnfavorited(QObject *object);
     void onSignalEmitted(QObject *sender, int signalIndex);
 
 private:
     QVector<Item *> m_tracedObjects;
     QHash<QObject *, int> m_itemIndex;
+    QSet<QObject*> m_favorites;
 };
 } // namespace GammaRay
 

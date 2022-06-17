@@ -40,6 +40,7 @@
 #include <common/objectbroker.h>
 
 #include <QMenu>
+#include <QSortFilterProxyModel>
 
 #include <cmath>
 
@@ -87,6 +88,18 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
 
     m_stateManager.setDefaultSizes(ui->objectTreeView->header(),
                                    UISizeVector() << 200 << 200 << -1);
+
+    // favorites
+    ui->favoritesObjectsTreeView->header()->setObjectName("favoritesObjectsTreeViewHeader");
+    ui->favoritesObjectsTreeView->setEventScrollBar(ui->eventScrollBar);
+    m_stateManager.setDefaultSizes(ui->favoritesObjectsTreeView->header(),
+                                   UISizeVector() << 200 << 200 << -1);
+    connect(ui->favoritesObjectsTreeView->selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, &SignalMonitorWidget::favoriteSelectionChanged);
+    connect(ui->favoritesObjectsTreeView, &QTreeView::clicked, this, [this](const QModelIndex &idx){
+        QItemSelection sel(idx, idx);
+        favoriteSelectionChanged(sel);
+    });
 }
 
 SignalMonitorWidget::~SignalMonitorWidget() = default;
@@ -96,6 +109,7 @@ void SignalMonitorWidget::intervalScaleValueChanged(int value)
     // FIXME: Define a more reasonable formula.
     qint64 i = 5000 / std::pow(1.07, value);
     ui->objectTreeView->eventDelegate()->setVisibleInterval(i);
+    ui->favoritesObjectsTreeView->eventDelegate()->setVisibleInterval(i);
 }
 
 QSlider *SignalMonitorWidget::zoomSlider()
@@ -126,6 +140,7 @@ void SignalMonitorWidget::adjustEventScrollBarSize()
 void SignalMonitorWidget::pauseAndResume(bool pause)
 {
     ui->objectTreeView->eventDelegate()->setActive(!pause);
+    ui->favoritesObjectsTreeView->eventDelegate()->setActive(!pause);
 }
 
 void SignalMonitorWidget::eventDelegateIsActiveChanged(bool active)
@@ -148,6 +163,18 @@ void SignalMonitorWidget::contextMenu(QPoint pos)
     ContextMenuExtension ext(objectId);
     ext.populateMenu(&menu);
     menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));
+}
+
+void SignalMonitorWidget::favoriteSelectionChanged(const QItemSelection &selection)
+{
+    if (selection.isEmpty())
+        return;
+    auto idx = selection.at(0).topLeft();
+    auto favProxyModel = qobject_cast<QAbstractProxyModel*>(ui->favoritesObjectsTreeView->model());
+    auto sourceIdx = favProxyModel->mapToSource(idx);
+    auto objProxyModel = qobject_cast<QAbstractProxyModel*>(ui->objectTreeView->model());
+    auto idxToSel = objProxyModel->mapFromSource(sourceIdx);
+    ui->objectTreeView->selectionModel()->select(idxToSel, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
 void SignalMonitorWidget::selectionChanged(const QItemSelection& selection)

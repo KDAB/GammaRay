@@ -168,6 +168,23 @@ public:
      * @since 2.1
      */
     void selectObject(void *object, const QString &typeName);
+
+
+    /*!
+     * Mark an object as favorite. Favorite objects might be shown
+     * in a separate view
+     * Connect to the objectFavorited(QObject*) signal on probe() to
+     * know when an object gets marked as favorited
+     */
+    void markObjectAsFavorite(QObject *object);
+    /*!
+     * Unmark an object as favorite
+     *
+     * Connect to the objectUnfavorited(QObject*) signal on probe() to
+     * know when an object gets removed as favorited
+     */
+    void removeObjectAsFavorite(QObject *object);
+
     /*!
      * Register a signal spy callback set.
      * Signal indexes provided as arguments are mapped to method indexes, ie. argument semantics
@@ -265,6 +282,8 @@ signals:
      */
     void objectDestroyed(QObject *obj);
     void objectReparented(QObject *obj);
+    void objectFavorited(QObject *obj);
+    void objectUnfavorited(QObject *obj);
 
     void aboutToDetach();
 

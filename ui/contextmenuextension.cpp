@@ -31,6 +31,7 @@
 #include <common/objectbroker.h>
 #include <common/propertymodel.h>
 #include <common/modelroles.h>
+#include <common/favoriteobjectinterface.h>
 
 #include <QCoreApplication>
 #include <QMenu>
@@ -134,5 +135,10 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
                 ClientToolManager::instance()->selectObject(id, toolInfo);
             });
         }
+    });
+
+    menu->addAction(QStringLiteral("Favorite"), [this]{
+        if (auto iface = ObjectBroker::object<FavoriteObjectInterface*>())
+            iface->markObjectAsFavorite(m_id);
     });
 }

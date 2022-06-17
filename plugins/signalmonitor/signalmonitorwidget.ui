@@ -71,6 +71,9 @@
     </layout>
    </item>
    <item>
+    <widget class="GammaRay::SignalHistoryFavoritesView" name="favoritesObjectsTreeView"/>
+   </item>
+   <item>
     <widget class="GammaRay::SignalHistoryView" name="objectTreeView">
      <property name="contextMenuPolicy">
       <enum>Qt::CustomContextMenu</enum>
@@ -116,6 +119,11 @@
    <class>GammaRay::SignalHistoryView</class>
    <extends>QTreeView</extends>
    <header>signalhistoryview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::SignalHistoryFavoritesView</class>
+   <extends>QTreeView</extends>
+   <header>signalhistoryfavoritesview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

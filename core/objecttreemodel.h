@@ -48,12 +48,13 @@ public:
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const override;
 
-    Q_INVOKABLE static QPair<int, QVariant> defaultSelectedItem() ;
+    Q_INVOKABLE static QPair<int, QVariant> defaultSelectedItem();
 
 private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
     void objectReparented(QObject *obj);
+    void objectFavorited(QObject *obj);
 
 private:
     QModelIndex indexForObject(QObject *object) const;
@@ -61,6 +62,7 @@ private:
 private:
     QHash<QObject *, QObject *> m_childParentMap;
     QHash<QObject *, QVector<QObject *> > m_parentChildMap;
+    QSet<QObject*> m_favorites;
 };
 }
 

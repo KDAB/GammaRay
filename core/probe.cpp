@@ -45,6 +45,7 @@
 #include "util.h"
 #include "varianthandler.h"
 #include "metaobjectregistry.h"
+#include "favoriteobject.h"
 
 #include "remote/server.h"
 #include "remote/remotemodelserver.h"
@@ -210,6 +211,7 @@ Probe::Probe(QObject *parent)
     ObjectBroker::registerObject<ProbeControllerInterface *>(new ProbeController(this));
     m_toolManager = new ToolManager(this);
     ObjectBroker::registerObject<ToolManagerInterface *>(m_toolManager);
+    ObjectBroker::registerObject<FavoriteObjectInterface*>(new FavoriteObject(this));
 
     m_problemCollector = new ProblemCollector(this);
 
@@ -978,6 +980,27 @@ void Probe::selectObject(void *object, const QString &typeName)
 
     m_toolManager->selectTool(tools.value(0));
     emit nonQObjectSelected(object, typeName);
+}
+
+void Probe::markObjectAsFavorite(QObject *object)
+{
+    {
+        QMutexLocker locker(Probe::objectLock());
+        if (!Probe::instance()->isValidObject(object))
+            return; // deleted in the slot
+    }
+
+    Q_EMIT objectFavorited(object);
+}
+
+void Probe::removeObjectAsFavorite(QObject *object)
+{
+    {
+        QMutexLocker locker(Probe::objectLock());
+        if (!Probe::instance()->isValidObject(object))
+            return; // deleted in the slot
+    }
+    Q_EMIT objectUnfavorited(object);
 }
 
 void Probe::registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks)

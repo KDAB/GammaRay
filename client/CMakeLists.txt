@@ -15,6 +15,7 @@ set(gammaray_clientlib_srcs
   remoteviewclient.cpp
   enumrepositoryclient.cpp
   classesiconsrepositoryclient.cpp
+  favoriteobjectclient.cpp
   ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc
 )
 
