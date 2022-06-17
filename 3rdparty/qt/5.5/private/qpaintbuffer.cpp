@@ -211,7 +211,7 @@ QPaintBuffer &QPaintBuffer::operator=(const QPaintBuffer &other)
     if (other.d_ptr != d_ptr) {
         QPaintBufferPrivate *data = other.d_ptr;
         data->ref.ref();
-        if (d_ptr->ref.deref())
+        if (!d_ptr->ref.deref())
             delete d_ptr;
         d_ptr = data;
     }

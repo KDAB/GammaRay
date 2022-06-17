@@ -27,6 +27,7 @@
 #include "baseprobetest.h"
 
 #include <common/objectbroker.h>
+#include <core/paintbuffer.h>
 
 #include <3rdparty/qt/modeltest.h>
 
@@ -91,6 +92,13 @@ private slots:
         delete w3;
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(visibleRowCount(model), 0);
+    }
+
+    void testPaintBuffer()
+    {
+        PaintBuffer buffer;
+        auto buffer2 = buffer;
+        buffer = PaintBuffer();
     }
 };
 
