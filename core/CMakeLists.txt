@@ -41,6 +41,7 @@ set(gammaray_srcs
   enumutil.cpp
   execution.cpp
   classesiconsrepositoryserver.cpp
+  favoriteobject.cpp
 
   propertyadaptor.cpp
   propertyaggregator.cpp

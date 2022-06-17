@@ -54,6 +54,8 @@ ObjectTreeModel::ObjectTreeModel(Probe *probe)
             this, &ObjectTreeModel::objectRemoved);
     connect(probe, &Probe::objectReparented,
             this, &ObjectTreeModel::objectReparented);
+    connect(probe, &Probe::objectFavorited,
+            this, &ObjectTreeModel::objectFavorited);
 }
 
 QPair<int, QVariant> ObjectTreeModel::defaultSelectedItem() 
@@ -149,6 +151,7 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
     siblings.erase(it);
     m_childParentMap.remove(obj);
     m_parentChildMap.remove(obj);
+    m_favorites.remove(obj);
 
     endRemoveRows();
 }
@@ -203,6 +206,16 @@ void ObjectTreeModel::objectReparented(QObject *obj)
     endMoveRows();
 }
 
+void ObjectTreeModel::objectFavorited(QObject *obj)
+{
+    auto index = indexForObject(obj);
+    if (!index.isValid()) {
+        return;
+    }
+    m_favorites.insert(obj);
+    Q_EMIT dataChanged(index, index, { ObjectModel::IsFavoriteRole });
+}
+
 QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -212,6 +225,9 @@ QVariant ObjectTreeModel::data(const QModelIndex &index, int role) const
 
     QMutexLocker lock(Probe::objectLock());
     if (Probe::instance()->isValidObject(obj)) {
+        if (role == ObjectModel::IsFavoriteRole) {
+            return m_favorites.contains(obj);
+        }
         return dataForObject(obj, index, role);
     }
     if (role == Qt::DisplayRole) {

@@ -55,6 +55,7 @@ enum Role {
     CreationLocationRole,   /**< Source location where this object was created, if known. */
     DeclarationLocationRole,/**< Source location where the type for this object has been declared, if known. */
     DecorationIdRole,       /**< The classes icon id to display as Qt::DecorationRole (see ClientDecorationIdentityProxyModel). */
+    IsFavoriteRole,
     UserRole                /**< UserRole, as defined by Qt. */
 };
 }

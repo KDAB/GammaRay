@@ -82,6 +82,8 @@ SignalHistoryModel::SignalHistoryModel(Probe *probe, QObject *parent)
 {
     connect(probe, &Probe::objectCreated, this, &SignalHistoryModel::onObjectAdded);
     connect(probe, &Probe::objectDestroyed, this, &SignalHistoryModel::onObjectRemoved);
+    connect(probe, &Probe::objectFavorited, this, &SignalHistoryModel::onObjectFavorited);
+    connect(probe, &Probe::objectUnfavorited, this, &SignalHistoryModel::onObjectUnfavorited);
 
     SignalSpyCallbackSet spy;
     spy.signalBeginCallback = signal_begin_callback;
@@ -148,6 +150,10 @@ QVariant SignalHistoryModel::data(const QModelIndex &index, int role) const
         break;
     }
 
+    if (role == ObjectModel::IsFavoriteRole) {
+        return m_favorites.contains(item(index)->object);
+    }
+
     return QVariant();
 }
 
@@ -176,6 +182,7 @@ QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex &index) con
     d.insert(SignalMapRole, data(index, SignalMapRole));
     d.insert(ObjectModel::ObjectIdRole, data(index, ObjectModel::ObjectIdRole));
     d.insert(ObjectModel::DecorationIdRole, data(index, ObjectModel::DecorationIdRole));
+    d.insert(ObjectModel::IsFavoriteRole, data(index, ObjectModel::IsFavoriteRole));
     return d;
 }
 
@@ -202,6 +209,7 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
 {
     Q_ASSERT(thread() == QThread::currentThread());
 
+    m_favorites.remove(object);
     const auto it = m_itemIndex.find(object);
     if (it == m_itemIndex.end())
         return;
@@ -213,6 +221,27 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
     data->object = nullptr;
     emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn)); // for ObjectIdRole
     emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
+}
+
+void SignalHistoryModel::onObjectFavorited(QObject *object)
+{
+    auto it = m_itemIndex.find(object);
+    if (it == m_itemIndex.end())
+        return;
+    const int itemIndex = *it;
+    m_favorites.insert(object);
+    emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn), {ObjectModel::IsFavoriteRole});
+}
+
+void SignalHistoryModel::onObjectUnfavorited(QObject *object)
+{
+    auto it = m_itemIndex.find(object);
+    if (it == m_itemIndex.end())
+        return;
+    const int itemIndex = *it;
+    Q_ASSERT(m_favorites.contains(object));
+    m_favorites.remove(object);
+    emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn), {ObjectModel::IsFavoriteRole});
 }
 
 void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)

@@ -70,6 +70,7 @@ set(gammaray_common_internal_srcs
   toolmanagerinterface.cpp
   networkselectionmodel.cpp
   streamoperators.cpp
+  favoriteobjectinterface.cpp
 
   tools/objectinspector/propertiesextensioninterface.cpp
   tools/objectinspector/methodsextensioninterface.cpp
@@ -109,6 +110,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     sourcelocation.h
     translator.h
     commonutils.h
+    favoriteobjectinterface.h
   )
 
   ecm_generate_pri_file(BASE_NAME GammaRayCommon
