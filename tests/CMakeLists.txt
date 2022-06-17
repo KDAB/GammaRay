@@ -377,7 +377,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
       widgettest.cpp
       $<TARGET_OBJECTS:modeltestobj>
     )
-    target_link_libraries(widgettest gammaray_core Qt::Widgets)
+    target_link_libraries(widgettest gammaray_core Qt::Widgets Qt::WidgetsPrivate)
+    target_include_directories(widgettest PRIVATE ${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/)
 
     gammaray_add_probe_test(actiontest
       actiontest.cpp

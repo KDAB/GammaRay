@@ -29,6 +29,8 @@
 #ifndef GAMMARAY_PAINTBUFFER_H
 #define GAMMARAY_PAINTBUFFER_H
 
+#include "gammaray_core_export.h"
+
 #include <config-gammaray.h>
 #include <common/objectid.h>
 #include <QVector>
@@ -104,7 +106,7 @@ private:
     GammaRay::PaintBuffer *m_buffer;
 };
 
-class PaintBuffer : public QPaintBuffer
+class GAMMARAY_CORE_EXPORT PaintBuffer : public QPaintBuffer
 {
 public:
     PaintBuffer();
