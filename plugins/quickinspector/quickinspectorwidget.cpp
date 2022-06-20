@@ -121,6 +121,11 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     connect(proxy, &QAbstractItemModel::dataChanged,
             this, &QuickInspectorWidget::itemModelDataChanged);
 
+    ui->favoritesTreeView->setSourceView(ui->itemTreeView);
+    ui->favoritesTreeView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
+    ui->favoritesTreeView->setItemDelegate(new QuickItemDelegate(ui->favoritesTreeView));
+    ui->favoritesTreeView->header()->setObjectName(QStringLiteral("quickFavItemTreeViewHeader"));
+
     model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
     auto *clientSceneGraphModel = new ClientDecorationIdentityProxyModel(this);
     clientSceneGraphModel->setSourceModel(model);

@@ -70,6 +70,8 @@ public:
 public slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
+    void objectFavorited(QObject *obj);
+    void objectUnfavorited(QObject *obj);
 
 private slots:
     void itemReparented(QQuickItem *item);
@@ -115,6 +117,7 @@ private:
 
     QHash<QQuickItem *, QQuickItem *> m_childParentMap;
     QHash<QQuickItem *, QVector<QQuickItem *> > m_parentChildMap;
+    QSet<QQuickItem*> m_favorites;
 
     // TODO: Merge these two?
     QHash<QQuickItem *, int> m_itemFlags;

@@ -402,6 +402,8 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
 
     connect(probe, &Probe::objectCreated, m_itemModel, &QuickItemModel::objectAdded);
     connect(probe, &Probe::objectDestroyed, m_itemModel, &QuickItemModel::objectRemoved);
+    connect(probe, &Probe::objectFavorited, m_itemModel, &QuickItemModel::objectFavorited);
+    connect(probe, &Probe::objectUnfavorited, m_itemModel, &QuickItemModel::objectUnfavorited);
     connect(probe, &Probe::objectSelected, this, &QuickInspector::qObjectSelected);
     connect(probe, &Probe::nonQObjectSelected, this, &QuickInspector::nonQObjectSelected);
 

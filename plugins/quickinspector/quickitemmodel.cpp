@@ -77,6 +77,8 @@ QVariant QuickItemModel::data(const QModelIndex &index, int role) const
         return m_itemFlags[item];
     if (role == ObjectModel::ObjectIdRole)
         return QVariant::fromValue(ObjectId(item));
+    if (role == ObjectModel::IsFavoriteRole)
+        return m_favorites.contains(item);
 
     return dataForObject(item, index, role);
 }
@@ -246,7 +248,30 @@ void QuickItemModel::objectRemoved(QObject *obj)
     Q_ASSERT(thread() == QThread::currentThread());
     QQuickItem *item = static_cast<QQuickItem *>(obj); // this is fine, we must not deref
                                                        // obj/item at this point anyway
+    m_favorites.remove(item);
     removeItem(item, true);
+}
+
+void QuickItemModel::objectFavorited(QObject *obj)
+{
+    auto item = static_cast<QQuickItem *>(obj);
+    auto index = indexForItem(item);
+    if (!index.isValid()) {
+        return;
+    }
+    m_favorites.insert(item);
+    Q_EMIT dataChanged(index, index, { ObjectModel::IsFavoriteRole });
+}
+
+void QuickItemModel::objectUnfavorited(QObject *obj)
+{
+    auto item = static_cast<QQuickItem *>(obj);
+    auto index = indexForItem(item);
+    if (!index.isValid())
+        return;
+    Q_ASSERT(m_favorites.contains(item));
+    m_favorites.remove(item);
+    Q_EMIT dataChanged(index, index, { ObjectModel::IsFavoriteRole });
 }
 
 void QuickItemModel::removeItem(QQuickItem *item, bool danglingPointer)

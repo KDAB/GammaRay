@@ -31,11 +31,13 @@
 #include <common/objectbroker.h>
 #include <common/favoriteobjectinterface.h>
 #include <common/objectmodel.h>
+#include <ui/deferredtreeview.h>
 
-#include <qglobal.h>
 #include <QAbstractItemModel>
-#include <QSortFilterProxyModel>
+#include <QAbstractItemView>
 #include <QMenu>
+#include <QPointer>
+#include <QSortFilterProxyModel>
 
 namespace GammaRay {
 
@@ -69,8 +71,16 @@ public:
 
         Base::connect(this, &Base::customContextMenuRequested,
                 this, &FavoritesItemView::onCustomContextMenuRequested);
+        Base::connect(this, &Base::clicked, this, &FavoritesItemView<Base>::onIndexClicked);
     }
 
+    void setSourceView(QAbstractItemView *view)
+    {
+        setModel(new FavoritesModel(view->model(), this));
+        m_sourceView = view;
+    }
+
+protected:
     void setModel(QAbstractItemModel *m) override
     {
         if (Base::model())
@@ -115,6 +125,29 @@ private:
 
         menu.exec(Base::viewport()->mapToGlobal(pos));
     }
+
+    void onIndexClicked(const QModelIndex &idx)
+    {
+        if (!idx.isValid() || !m_sourceView)
+            return;
+
+        auto favProxyModel = qobject_cast<QAbstractProxyModel*>(Base::model());
+        auto sourceIdx = favProxyModel->mapToSource(idx);
+        m_sourceView->selectionModel()->select(sourceIdx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    }
+
+private:
+    QPointer<QAbstractItemView> m_sourceView;
+};
+
+class GAMMARAY_UI_EXPORT ObjectsFavoriteView final : public FavoritesItemView<DeferredTreeView>
+{
+    Q_OBJECT
+public:
+    using FavoritesItemView<DeferredTreeView>::FavoritesItemView;
+
+private:
+    void setModel(QAbstractItemModel *model) override;
 };
 
 }
