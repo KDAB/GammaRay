@@ -39,6 +39,9 @@
                 <widget class="QLineEdit" name="widgetSearchLine"/>
                </item>
                <item>
+                <widget class="GammaRay::ObjectsFavoriteView" name="favoritesTreeView"/>
+               </item>
+               <item>
                 <widget class="GammaRay::DeferredTreeView" name="widgetTreeView">
                  <property name="contextMenuPolicy">
                   <enum>Qt::CustomContextMenu</enum>
@@ -107,6 +110,11 @@
    <extends>QWidget</extends>
    <header location="global">ui/propertywidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GammaRay::ObjectsFavoriteView</class>
+   <extends>QTreeView</extends>
+   <header location="global">ui/objectsfavoriteview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

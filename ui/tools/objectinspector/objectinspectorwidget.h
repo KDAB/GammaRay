@@ -73,7 +73,6 @@ public:
     ~ObjectInspectorWidget() override;
 
 private slots:
-    void onFavoriteObjectClicked(const QModelIndex &idx);
     void objectSelectionChanged(const QItemSelection &selection);
     void objectContextMenuRequested(const QPoint &pos);
     void propertyWidgetTabsChanged();

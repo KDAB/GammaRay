@@ -32,9 +32,37 @@ using namespace GammaRay;
 ObjectsFavoriteView::ObjectsFavoriteView(QWidget *parent)
     : FavoritesItemView<DeferredTreeView>(parent)
 {
-    auto m = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"));
-    auto proxyModel = new FavoritesModel(m, this);
+    connect(this, &QTreeView::clicked, this, &ObjectsFavoriteView::onIndexClicked);
+}
+
+void ObjectsFavoriteView::setSourceModel(QAbstractItemModel *model)
+{
+    auto proxyModel = new FavoritesModel(model, this);
     proxyModel->setRecursiveFilteringEnabled(true);
     setModel(proxyModel);
-    setHidden(false);
+}
+
+void ObjectsFavoriteView::setObjectsView(GammaRay::DeferredTreeView *view)
+{
+    m_objectsView = view;
+    // both views must have same sourceModel
+    auto sm = view->model();
+    auto m = model();
+#define proxy(m) qobject_cast<QAbstractProxyModel*>(m)
+    Q_ASSERT(proxy(sm)->sourceModel() == proxy(m)->sourceModel());
+#undef proxy
+}
+
+void ObjectsFavoriteView::onIndexClicked(const QModelIndex &idx)
+{
+    if (!idx.isValid() || !m_objectsView)
+        return;
+
+    auto favProxyModel = qobject_cast<QAbstractProxyModel*>(model());
+    auto sourceIdx = favProxyModel->mapToSource(idx);
+
+    auto objProxyModel = qobject_cast<QAbstractProxyModel*>(m_objectsView->model());
+    auto idxToSel = objProxyModel->mapFromSource(sourceIdx);
+
+    m_objectsView->selectionModel()->select(idxToSel, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }

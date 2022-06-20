@@ -31,12 +31,23 @@
 #include <ui/favoritesitemview.h>
 #include <ui/deferredtreeview.h>
 
+#include <QPointer>
+
 namespace GammaRay {
-class ObjectsFavoriteView : public FavoritesItemView<DeferredTreeView>
+class GAMMARAY_UI_EXPORT ObjectsFavoriteView : public FavoritesItemView<DeferredTreeView>
 {
     Q_OBJECT
 public:
     ObjectsFavoriteView(QWidget *parent = nullptr);
+    void setSourceModel(QAbstractItemModel *model);
+
+    /// The actual view from which the items can be favorited and shown in this view
+    void setObjectsView(GammaRay::DeferredTreeView *view);
+
+private:
+    void onIndexClicked(const QModelIndex &);
+
+    QPointer<GammaRay::DeferredTreeView> m_objectsView;
 };
 }
 
