@@ -80,8 +80,7 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
 
     connect(ui->objectPropertyWidget, &PropertyWidget::tabsUpdated, this, &ObjectInspectorWidget::propertyWidgetTabsChanged);
 
-    ui->favoritesTreeView->setSourceModel(model);
-    ui->favoritesTreeView->setObjectsView(ui->objectTreeView);
+    ui->favoritesTreeView->setSourceView(ui->objectTreeView);
     ui->favoritesTreeView->header()->setObjectName(QStringLiteral("favoriteObjectsHeaderView"));
 }
 

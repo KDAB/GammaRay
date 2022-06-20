@@ -35,7 +35,6 @@ if(GAMMARAY_BUILD_UI)
     signalhistorydelegate.cpp
     signalhistoryview.cpp
     signalmonitorclient.cpp
-    signalhistoryfavoritesview.cpp
   )
 
   gammaray_add_plugin(gammaray_signalmonitor_ui

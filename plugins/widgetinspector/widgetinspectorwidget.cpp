@@ -101,8 +101,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     connect(ui->widgetTreeView, &QWidget::customContextMenuRequested, this,
             &WidgetInspectorWidget::widgetTreeContextMenu);
 
-    ui->favoritesTreeView->setSourceModel(widgetTree);
-    ui->favoritesTreeView->setObjectsView(ui->widgetTreeView);
+    ui->favoritesTreeView->setSourceView(ui->widgetTreeView);
     ui->favoritesTreeView->header()->setObjectName(QStringLiteral("favoriteWidgetsHeaderView"));
 
     m_remoteView->setName(QStringLiteral("com.kdab.GammaRay.WidgetRemoteView"));

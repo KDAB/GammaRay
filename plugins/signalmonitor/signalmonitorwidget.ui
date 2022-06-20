@@ -123,7 +123,7 @@
   <customwidget>
    <class>GammaRay::SignalHistoryFavoritesView</class>
    <extends>QTreeView</extends>
-   <header>signalhistoryfavoritesview.h</header>
+   <header>signalmonitorwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

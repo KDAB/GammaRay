@@ -114,7 +114,7 @@
   <customwidget>
    <class>GammaRay::ObjectsFavoriteView</class>
    <extends>QTreeView</extends>
-   <header location="global">ui/objectsfavoriteview.h</header>
+   <header location="global">ui/favoritesitemview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

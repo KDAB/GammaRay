@@ -46,6 +46,12 @@
 
 using namespace GammaRay;
 
+SignalHistoryFavoritesView::SignalHistoryFavoritesView(QWidget *parent)
+    : Super(parent)
+{
+    setRootIsDecorated(false);
+}
+
 static QObject *signalMonitorClientFactory(const QString &, QObject *parent)
 {
     return new SignalMonitorClient(parent);
@@ -90,11 +96,11 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
                                    UISizeVector() << 200 << 200 << -1);
 
     // favorites
+    ui->favoritesObjectsTreeView->setSourceView(ui->objectTreeView);
     ui->favoritesObjectsTreeView->header()->setObjectName("favoritesObjectsTreeViewHeader");
     ui->favoritesObjectsTreeView->setEventScrollBar(ui->eventScrollBar);
     m_stateManager.setDefaultSizes(ui->favoritesObjectsTreeView->header(),
                                    UISizeVector() << 200 << 200 << -1);
-    connect(ui->favoritesObjectsTreeView, &QTreeView::clicked, this, &SignalMonitorWidget::onFavoriteObjectClicked);
 }
 
 SignalMonitorWidget::~SignalMonitorWidget() = default;
@@ -158,17 +164,6 @@ void SignalMonitorWidget::contextMenu(QPoint pos)
     ContextMenuExtension ext(objectId);
     ext.populateMenu(&menu);
     menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));
-}
-
-void SignalMonitorWidget::onFavoriteObjectClicked(const QModelIndex &idx)
-{
-    if (!idx.isValid())
-        return;
-    auto favProxyModel = qobject_cast<QAbstractProxyModel*>(ui->favoritesObjectsTreeView->model());
-    auto sourceIdx = favProxyModel->mapToSource(idx);
-    auto objProxyModel = qobject_cast<QAbstractProxyModel*>(ui->objectTreeView->model());
-    auto idxToSel = objProxyModel->mapFromSource(sourceIdx);
-    ui->objectTreeView->selectionModel()->select(idxToSel, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
 void SignalMonitorWidget::selectionChanged(const QItemSelection& selection)

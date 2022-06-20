@@ -1,5 +1,5 @@
 /*
-  objectsfavoriteview.h
+  favoritesitemview.cpp
 
   This file is part of GammaRay, the Qt application inspection and
   manipulation tool.
@@ -25,30 +25,15 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GAMMARAY_OBJECTSFAVORITEVIEW_H
-#define GAMMARAY_OBJECTSFAVORITEVIEW_H
+#include "favoritesitemview.h"
 
-#include <ui/favoritesitemview.h>
-#include <ui/deferredtreeview.h>
+using namespace GammaRay;
 
-#include <QPointer>
-
-namespace GammaRay {
-class GAMMARAY_UI_EXPORT ObjectsFavoriteView : public FavoritesItemView<DeferredTreeView>
+void ObjectsFavoriteView::setModel(QAbstractItemModel *model)
 {
-    Q_OBJECT
-public:
-    ObjectsFavoriteView(QWidget *parent = nullptr);
-    void setSourceModel(QAbstractItemModel *model);
-
-    /// The actual view from which the items can be favorited and shown in this view
-    void setObjectsView(GammaRay::DeferredTreeView *view);
-
-private:
-    void onIndexClicked(const QModelIndex &);
-
-    QPointer<GammaRay::DeferredTreeView> m_objectsView;
-};
-}
-
+    auto proxyModel = static_cast<FavoritesModel*>(model);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    proxyModel->setRecursiveFilteringEnabled(true);
 #endif
+    FavoritesItemView<DeferredTreeView>::setModel(proxyModel);
+}

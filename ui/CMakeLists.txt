@@ -30,7 +30,7 @@ set(gammaray_ui_srcs
   remoteviewwidget.cpp
   trailingcolorlabel.cpp
   helpcontroller.cpp
-  objectsfavoriteview.cpp
+  favoritesitemview.cpp
 
   paintanalyzerwidget.cpp
   paintanalyzerreplayview.cpp

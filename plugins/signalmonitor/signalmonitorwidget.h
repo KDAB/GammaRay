@@ -30,6 +30,8 @@
 #define GAMMARAY_SIGNALMONITORWIDGET_H
 
 #include <ui/uistatemanager.h>
+#include "signalhistoryview.h"
+#include "ui/favoritesitemview.h"
 #include "ui/tooluifactory.h"
 
 #include <QWidget>
@@ -43,6 +45,14 @@ namespace GammaRay {
 namespace Ui {
 class SignalMonitorWidget;
 }
+
+class SignalHistoryFavoritesView : public FavoritesItemView<GammaRay::SignalHistoryView>
+{
+    Q_OBJECT
+    using Super = FavoritesItemView<GammaRay::SignalHistoryView>;
+public:
+    SignalHistoryFavoritesView(QWidget *parent = nullptr);
+};
 
 class SignalMonitorWidget : public QWidget
 {
@@ -59,7 +69,6 @@ private slots:
     void pauseAndResume(bool pause);
     void eventDelegateIsActiveChanged(bool active);
     void contextMenu(QPoint pos);
-    void onFavoriteObjectClicked(const QModelIndex &idx);
     void selectionChanged(const QItemSelection &selection);
 
 private:
