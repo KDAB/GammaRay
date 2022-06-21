@@ -1,0 +1,135 @@
+{
+    "version": 2,
+    "configurePresets": [
+        {
+            "name": "dev",
+            "displayName": "dev",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-dev",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "dev6",
+            "displayName": "dev qt6",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-dev-qt6",
+            "cacheVariables": {
+                "GAMMARAY_QT6_BUILD": "ON",
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "dev-asan",
+            "displayName": "dev-asan",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-dev-asan",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "dev-asan6",
+            "displayName": "dev-asan qt6",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-dev-asan6",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "GAMMARAY_QT6_BUILD": "ON",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "dev-ftime-trace",
+            "displayName": "dev-ftime-trace",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-dev-ftime-trace",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_C_FLAGS_INIT" : "-ftime-trace",
+                "CMAKE_CXX_FLAGS_INIT": "-ftime-trace"
+            },
+            "environment": {
+                "CC": "/usr/bin/clang",
+                "CXX": "/usr/bin/clang++",
+                "CCACHE_DISABLE": "ON"
+            }
+        },
+        {
+            "name": "dev-clang",
+            "displayName": "dev-clang",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-dev-clang",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "environment": {
+                "CXX": "clang++",
+                "CCACHE_DISABLE": "ON"
+            }
+        },
+        {
+            "name": "dev-clang6",
+            "displayName": "dev-clang qt6",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-dev-clang6",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "GAMMARAY_QT6_BUILD": "ON"
+            },
+            "environment": {
+                "CXX": "clang++",
+                "CCACHE_DISABLE": "ON"
+            }
+        },
+        {
+            "name": "clazy",
+            "displayName": "clazy",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-clazy",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            },
+            "environment": {
+                "CXX": "clazy",
+                "CCACHE_DISABLE": "ON"
+            }
+        },
+        {
+            "name": "clazy6",
+            "displayName": "clazy",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-clazy6",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "GAMMARAY_QT6_BUILD": "ON"
+            },
+            "environment": {
+                "CXX": "clazy",
+                "CCACHE_DISABLE": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "dev-gammaray",
+            "configurePreset": "dev",
+            "targets": [
+                "all"
+            ]
+        },
+        {
+            "name": "clazy",
+            "configurePreset": "clazy",
+            "environment": {
+                "CLAZY_CHECKS": "level2,detaching-member,heap-allocated-small-trivial-type,isempty-vs-count,qstring-varargs,qvariant-template-instantiation,raw-environment-function,reserve-candidates,signal-with-return-value,thread-with-slots,no-ctor-missing-parent-argument,no-missing-typeinfo",
+                "CCACHE_DISABLE": "ON"
+            }
+        }
+    ]
+}
