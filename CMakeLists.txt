@@ -51,6 +51,9 @@
 #  Force usage of GNU gold linker on Linux
 #  Default=false
 #
+# -DGAMMARAY_USE_PCH=[true|false]
+# Use precompiled headers
+#
 # To build the man page from POD, run 'make man' after CMake (assumes perl is available)
 # To install the resulting man page, run 'make install'
 # The man page is not available on Windows.
@@ -240,6 +243,21 @@ if(GAMMARAY_STATIC_PROBE)
 else()
   set(GAMMARAY_LIBRARY_TYPE SHARED)
   set(GAMMARAY_PLUGIN_TYPE MODULE)
+endif()
+
+gammaray_option(GAMMARAY_USE_PCH "Enable Precompiled Headers support" OFF)
+if(GAMMARAY_USE_PCH)
+    add_library(gammaray_pch_core_gui STATIC)
+    file(GENERATE
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cpp
+    CONTENT "/*dummy pch file*/")
+    target_sources(gammaray_pch_core_gui PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cpp)
+    target_link_libraries(gammaray_pch_core_gui PRIVATE Qt::Core Qt::Gui)
+    set_target_properties(gammaray_pch_core_gui PROPERTIES
+        PRECOMPILE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/core/pch.h
+        CXX_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN ON
+    )
 endif()
 
 #
