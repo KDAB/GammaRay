@@ -131,6 +131,10 @@ target_link_libraries(gammaray_core
     Qt::CorePrivate
     Qt::GuiPrivate
 )
+if (GAMMARAY_USE_PCH)
+    target_precompile_headers(gammaray_core REUSE_FROM gammaray_pch_core_gui)
+endif()
+
 set_target_properties(gammaray_core PROPERTIES
   ${GAMMARAY_DEFAULT_LIBRARY_PROPERTIES}
   OUTPUT_NAME gammaray_core-${GAMMARAY_PROBE_ABI}

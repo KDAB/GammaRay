@@ -14,6 +14,7 @@ set(gammaray_qmlsupport_srcs
 gammaray_add_plugin(gammaray_qmlsupport JSON gammaray_qmlsupport.json SOURCES ${gammaray_qmlsupport_srcs})
 target_link_libraries(gammaray_qmlsupport
     gammaray_core
+    Qt::Gui
     Qt::Qml
     Qt::QmlPrivate
 )

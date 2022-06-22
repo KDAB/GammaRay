@@ -14,12 +14,12 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/classesiconsindex_data.cpp
 )
 
+add_library(gammaray_lz4 STATIC ${CMAKE_SOURCE_DIR}/3rdparty/lz4/lz4.c)
+set_target_properties(gammaray_lz4 PROPERTIES POSITION_INDEPENDENT_CODE ON)
 #
 # Shared non-UI code between probe and client
 #
 set(gammaray_common_srcs
-  ${CMAKE_SOURCE_DIR}/3rdparty/lz4/lz4.c
-
   methodargument.cpp
   objectbroker.cpp
   protocol.cpp
@@ -58,8 +58,11 @@ target_compile_features(gammaray_common PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES}
 gammaray_target_relocatable_interfaces(gammaray_common_ipaths)
 target_include_directories(gammaray_common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:${gammaray_common_ipaths}>)
 target_link_libraries(gammaray_common LINK_PUBLIC Qt::Core LINK_PRIVATE Qt::Network Qt::Gui Qt::GuiPrivate)
-target_link_libraries(gammaray_common LINK_PRIVATE gammaray_kitemmodels ${CMAKE_DL_LIBS})
+target_link_libraries(gammaray_common LINK_PRIVATE gammaray_lz4 gammaray_kitemmodels ${CMAKE_DL_LIBS})
 gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
+if (GAMMARAY_USE_PCH)
+    target_precompile_headers(gammaray_common REUSE_FROM gammaray_pch_core_gui)
+endif()
 
 set(gammaray_common_internal_srcs
   plugininfo.cpp

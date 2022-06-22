@@ -89,6 +89,10 @@ macro(gammaray_add_plugin _target_name)
   if(MSVC)
     install(FILES "$<TARGET_PDB_FILE_DIR:${_target_name}>/$<TARGET_PDB_FILE_NAME:${_target_name}>" DESTINATION ${PROBE_PLUGIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
   endif()
+
+  if (GAMMARAY_USE_PCH)
+    target_precompile_headers(${_target_name} REUSE_FROM gammaray_pch_core_gui)
+  endif()
 endmacro()
 
 # Common RPATH setup

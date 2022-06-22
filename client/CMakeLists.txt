@@ -48,7 +48,9 @@ target_link_libraries(gammaray_client
   Qt::Gui Qt::Widgets
   Qt::Network
 )
-
+if (GAMMARAY_USE_PCH)
+    target_precompile_headers(gammaray_client REUSE_FROM gammaray_pch_core_gui)
+endif()
 
 set(gammaray_client_srcs main.cpp)
 gammaray_add_win_icon(gammaray_client_srcs)
