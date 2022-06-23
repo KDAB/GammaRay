@@ -14,6 +14,9 @@ target_link_libraries(gammaray_scriptenginedebugger_plugin
   Qt5::ScriptTools
   gammaray_core
 )
+set_target_properties(gammaray_scriptenginedebugger_plugin PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
 endif()
 
 # UI plugin

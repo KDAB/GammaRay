@@ -8,7 +8,9 @@ gammaray_add_plugin(gammaray_objectvisualizer_plugin
   JSON gammaray_objectvisualizer.json
   SOURCES ${gammaray_objectvisualizer_plugin_srcs}
 )
-
+set_target_properties(gammaray_objectvisualizer_plugin PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
 target_link_libraries(gammaray_objectvisualizer_plugin
   gammaray_kitemmodels
   gammaray_core

@@ -5,6 +5,9 @@ gammaray_add_plugin(gammaray_translatorinspector
   SOURCES translatorinspector.cpp translatorinspectorinterface.cpp translatorwrapper.cpp translatorsmodel.cpp
 )
 target_link_libraries(gammaray_translatorinspector gammaray_core Qt::Core Qt::CorePrivate)
+set_target_properties(gammaray_translatorinspector PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
 endif()
 
 # ui part

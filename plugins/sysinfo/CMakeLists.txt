@@ -10,6 +10,9 @@ if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
 
     gammaray_add_plugin(gammaray_sysinfo_plugin JSON gammaray_sysinfo.json SOURCES ${sysinfo_probe_srcs})
     target_link_libraries(gammaray_sysinfo_plugin gammaray_core)
+    set_target_properties(gammaray_sysinfo_plugin PROPERTIES
+        DISABLE_PRECOMPILE_HEADERS ON
+    )
 endif()
 
 # ui part

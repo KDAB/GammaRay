@@ -7,6 +7,9 @@ set(gammaray_positioning_srcs
 )
 gammaray_add_plugin(gammaray_positioning JSON gammaray_positioning.json SOURCES ${gammaray_positioning_srcs})
 target_link_libraries(gammaray_positioning gammaray_core Qt::Positioning)
+set_target_properties(gammaray_positioning PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
 
 # proxy geo position info source factory
 if (NOT QtCore_VERSION VERSION_LESS 5.7)

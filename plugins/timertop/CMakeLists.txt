@@ -11,6 +11,9 @@ gammaray_add_plugin(gammaray_timertop_plugin
   JSON gammaray_timertop.json
   SOURCES ${gammaray_timertop_plugin_srcs}
 )
+set_target_properties(gammaray_timertop_plugin PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
 
 target_link_libraries(gammaray_timertop_plugin
   gammaray_core

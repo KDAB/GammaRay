@@ -15,6 +15,9 @@ gammaray_add_plugin(gammaray_localeinspector_plugin
     JSON gammaray_localeinspector.json
     SOURCES ${gammaray_localeinspector_plugin_srcs}
 )
+set_target_properties(gammaray_localeinspector_plugin PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
 
 target_link_libraries(gammaray_localeinspector_plugin gammaray_core)
 endif()

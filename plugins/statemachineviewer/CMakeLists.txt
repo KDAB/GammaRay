@@ -24,6 +24,10 @@ gammaray_add_plugin(gammaray_statemachineviewer_plugin
   SOURCES ${gammaray_statemachineviewer_plugin_srcs} ${gammaray_statemachineviewer_shared_srcs}
 )
 
+set_target_properties(gammaray_statemachineviewer_plugin PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
+
 target_link_libraries(gammaray_statemachineviewer_plugin
   gammaray_core
 )

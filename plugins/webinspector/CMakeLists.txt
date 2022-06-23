@@ -13,6 +13,10 @@ if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
     target_link_libraries(gammaray_webinspector_plugin
         gammaray_core
     )
+
+    set_target_properties(gammaray_webinspector_plugin PROPERTIES
+        DISABLE_PRECOMPILE_HEADERS ON
+    )
 endif()
 
 # ui part

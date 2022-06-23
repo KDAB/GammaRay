@@ -14,6 +14,9 @@ if (TARGET Qt5::Network)
 endif()
 gammaray_add_plugin(gammaray_network JSON gammaray_network.json SOURCES ${gammaray_network_srcs})
 target_link_libraries(gammaray_network gammaray_core Qt::Network Qt::CorePrivate)
+set_target_properties(gammaray_network PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
 endif()
 
 # ui plugin

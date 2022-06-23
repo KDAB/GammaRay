@@ -9,6 +9,9 @@ gammaray_add_plugin(gammaray_codecbrowser_plugin
   JSON gammaray_codecbrowser.json
   SOURCES ${gammaray_codecbrowser_plugin_srcs}
 )
+set_target_properties(gammaray_codecbrowser_plugin PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
 
 target_link_libraries(gammaray_codecbrowser_plugin
   gammaray_core

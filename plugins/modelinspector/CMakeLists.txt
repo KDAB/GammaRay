@@ -13,6 +13,9 @@ gammaray_add_plugin(gammaray_modelinspector
   JSON gammaray_modelinspector.json
   SOURCES ${gammaray_models_srcs}
 )
+set_target_properties(gammaray_modelinspector PROPERTIES
+    DISABLE_PRECOMPILE_HEADERS ON
+)
 
 target_link_libraries(gammaray_modelinspector
   gammaray_core
