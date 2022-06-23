@@ -26,14 +26,43 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "favoritesitemview.h"
+#include "kde/kdescendantsproxymodel.h"
+#include "kde/kmodelindexproxymapper.h"
 
 using namespace GammaRay;
 
 void ObjectsFavoriteView::setModel(QAbstractItemModel *model)
 {
-    auto proxyModel = static_cast<FavoritesModel*>(model);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-    proxyModel->setRecursiveFilteringEnabled(true);
-#endif
-    FavoritesItemView<DeferredTreeView>::setModel(proxyModel);
+    // We have three proxy models sitting in the line
+    // FavoritesModel -> KDescendantsProxyModel -> FavoritesModel -> View
+    // 1. Favorites model filters out all the non-favorites
+    // 2. This small list of favorites is then flattened by kdescendantsproxymodel
+    // 3. The flattened list is then refiltered to remove any parents
+    //
+    // We can do it with 2 models as well i.e.,
+    // KDescendantsProxyModel -> FavoritesModel -> View
+    // However, this makes things super slow
+
+    auto proxyModel1 = static_cast<FavoritesModel*>(model);
+    proxyModel1->setRecursiveFilteringEnabled(true);
+
+    auto flatteningModel = new KDescendantsProxyModel(this);
+    flatteningModel->setSourceModel(proxyModel1);
+
+    auto proxyModel2 = new FavoritesModel(flatteningModel, this);
+
+    m_proxyMapper = new KModelIndexProxyMapper(proxyModel1->sourceModel(), proxyModel2, this);
+
+    FavoritesItemView<DeferredTreeView>::setModel(proxyModel2);
+}
+
+void ObjectsFavoriteView::onIndexClicked(const QModelIndex &idx)
+{
+    if (!idx.isValid() || !m_sourceView || !m_proxyMapper)
+        return;
+
+    auto pm = static_cast<KModelIndexProxyMapper*>(m_proxyMapper);
+    auto sourceIdx = pm->mapRightToLeft(idx);
+
+    m_sourceView->selectionModel()->select(sourceIdx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }

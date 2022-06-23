@@ -41,7 +41,7 @@
 
 namespace GammaRay {
 
-class FavoritesModel : public QSortFilterProxyModel
+class FavoritesModel final : public QSortFilterProxyModel
 {
 public:
     explicit FavoritesModel(QAbstractItemModel *sourceModel, QObject *parent = nullptr)
@@ -101,11 +101,11 @@ private:
             Base::setHidden(true);
     }
 
-    void rowsInserted(const QModelIndex &idx, int s, int e) override
+    void rowsInserted(const QModelIndex &parent, int s, int e) override
     {
         if (Base::isHidden())
             Base::setHidden(false);
-        Base::rowsInserted(idx, s, e);
+        Base::rowsInserted(parent, s, e);
     }
 
     void onCustomContextMenuRequested(const QPoint &pos)
@@ -126,7 +126,7 @@ private:
         menu.exec(Base::viewport()->mapToGlobal(pos));
     }
 
-    void onIndexClicked(const QModelIndex &idx)
+    virtual void onIndexClicked(const QModelIndex &idx)
     {
         if (!idx.isValid() || !m_sourceView)
             return;
@@ -136,7 +136,7 @@ private:
         m_sourceView->selectionModel()->select(sourceIdx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     }
 
-private:
+protected:
     QPointer<QAbstractItemView> m_sourceView;
 };
 
@@ -148,6 +148,10 @@ public:
 
 private:
     void setModel(QAbstractItemModel *model) override;
+    void onIndexClicked(const QModelIndex &idx) override;
+
+private:
+    QObject *m_proxyMapper = nullptr;
 };
 
 }
