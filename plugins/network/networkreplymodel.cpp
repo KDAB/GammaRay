@@ -421,7 +421,8 @@ void NetworkReplyModel::updateReplyNode(QNetworkAccessManager* nam, const Networ
             (*replyIt).duration = newNode.duration > (*replyIt).duration ? newNode.duration - (*replyIt).duration : 0;
         }
         (*replyIt).size = std::max((*replyIt).size, newNode.size);
-        (*replyIt).contentType = newNode.contentType;
+        if (newNode.contentType != NetworkReply::Unknown)
+            (*replyIt).contentType = newNode.contentType;
 
         const auto idx = createIndex(std::distance(replyIt, (*namIt).replies.rend()) - 1, 0, std::distance(m_nodes.begin(), namIt));
         emit dataChanged(idx, idx.sibling(idx.row(), columnCount() - 1));
