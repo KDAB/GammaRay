@@ -31,6 +31,9 @@
 #include "core/probe.h"
 
 #include <private/qobject_p.h>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+#include <private/qobject_p_p.h>
+#endif
 
 using namespace GammaRay;
 

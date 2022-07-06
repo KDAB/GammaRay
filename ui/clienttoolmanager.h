@@ -34,6 +34,7 @@
 #include <QHash>
 #include <QPointer>
 #include <QVector>
+#include <QObject>
 
 QT_BEGIN_NAMESPACE
 class QAbstractItemModel;
