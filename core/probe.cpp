@@ -199,6 +199,8 @@ Probe::Probe(QObject *parent)
     , m_queueTimer(new QTimer(this))
     , m_server(nullptr)
 {
+    qputenv("DEBUGINFOD_URLS", QByteArray());
+
     Q_ASSERT(thread() == qApp->thread());
     IF_DEBUG(cout << "attaching GammaRay probe" << endl;)
 
