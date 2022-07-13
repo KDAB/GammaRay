@@ -40,6 +40,7 @@
 #include <QMutex>
 #include <QSet>
 #include <QThread>
+#include <QTimer>
 
 using namespace GammaRay;
 
@@ -90,6 +91,11 @@ SignalHistoryModel::SignalHistoryModel(Probe *probe, QObject *parent)
     probe->registerSignalSpyCallbackSet(spy);
 
     s_historyModel = this;
+
+    m_delayInsertTimer = new QTimer(this);
+    m_delayInsertTimer->setInterval(100);
+    m_delayInsertTimer->setSingleShot(true);
+    connect(m_delayInsertTimer, &QTimer::timeout, this, &SignalHistoryModel::insertPendingObjects);
 }
 
 SignalHistoryModel::~SignalHistoryModel()
@@ -186,6 +192,20 @@ QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex &index) con
     return d;
 }
 
+void SignalHistoryModel::insertPendingObjects()
+{
+    beginInsertRows(QModelIndex(), (int)m_tracedObjects.size(), m_tracedObjects.size() + (int)m_objectsToBeInserted.size() - 1);
+
+    int oldSize = m_tracedObjects.size();
+    m_tracedObjects.append(std::move(m_objectsToBeInserted));
+    for (int i = oldSize; i < m_tracedObjects.size(); ++i) {
+        m_itemIndex.insert(m_tracedObjects[i]->object, i);
+    }
+    m_objectsToBeInserted.clear();
+
+    endInsertRows();
+}
+
 void SignalHistoryModel::onObjectAdded(QObject *object)
 {
     Q_ASSERT(thread() == QThread::currentThread());
@@ -196,18 +216,18 @@ void SignalHistoryModel::onObjectAdded(QObject *object)
         || qstrncmp(object->metaObject()->className(), "QEventDispatcher", 16) == 0)
         return;
 
-    beginInsertRows(QModelIndex(), m_tracedObjects.size(), m_tracedObjects.size());
-
-    auto * const data = new Item(object);
-    m_itemIndex.insert(object, m_tracedObjects.size());
-    m_tracedObjects.push_back(data);
-
-    endInsertRows();
+    m_objectsToBeInserted << new Item(object);
+    if (!m_delayInsertTimer->isActive())
+        m_delayInsertTimer->start();
 }
 
 void SignalHistoryModel::onObjectRemoved(QObject *object)
 {
     Q_ASSERT(thread() == QThread::currentThread());
+
+    m_objectsToBeInserted.erase(std::remove_if(m_objectsToBeInserted.begin(), m_objectsToBeInserted.end(), [object](Item *o){
+        return o->object == object;
+    }), m_objectsToBeInserted.end());
 
     m_favorites.remove(object);
     const auto it = m_itemIndex.find(object);
