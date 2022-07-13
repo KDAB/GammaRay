@@ -99,11 +99,15 @@ private slots:
     void onObjectFavorited(QObject *object);
     void onObjectUnfavorited(QObject *object);
     void onSignalEmitted(QObject *sender, int signalIndex);
+    void insertPendingObjects();
 
 private:
     QVector<Item *> m_tracedObjects;
     QHash<QObject *, int> m_itemIndex;
     QSet<QObject*> m_favorites;
+
+    QTimer *m_delayInsertTimer;
+    QVector<Item*> m_objectsToBeInserted;
 };
 } // namespace GammaRay
 
