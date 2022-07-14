@@ -44,7 +44,9 @@ void ObjectsFavoriteView::setModel(QAbstractItemModel *model)
     // However, this makes things super slow
 
     auto proxyModel1 = static_cast<FavoritesModel*>(model);
+#if QT_VERSION > QT_VERSION_CHECK(5, 9, 0)
     proxyModel1->setRecursiveFilteringEnabled(true);
+#endif
 
     auto flatteningModel = new KDescendantsProxyModel(this);
     flatteningModel->setSourceModel(proxyModel1);
