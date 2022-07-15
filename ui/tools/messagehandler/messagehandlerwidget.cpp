@@ -156,7 +156,7 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
         buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
 
         auto joinedBacktrace = backtrace.join(QStringLiteral("\n"));
-        connect(copyBacktraceButton, &QPushButton::clicked, this, [this, joinedBacktrace] { copyToClipboard(joinedBacktrace); });
+        connect(copyBacktraceButton, &QPushButton::clicked, this, [joinedBacktrace] { copyToClipboard(joinedBacktrace); });
     }
 
     buttons->addButton(QDialogButtonBox::Close);
