@@ -107,6 +107,7 @@ void ObjectInspectorWidget::objectContextMenuRequested(const QPoint &pos)
                         ObjectModel::CreationLocationRole).value<SourceLocation>());
     ext.setLocation(ContextMenuExtension::Declaration,
                     index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.setCanFavoriteItems(true);
     ext.populateMenu(&menu);
 
     menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));

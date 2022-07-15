@@ -64,9 +64,12 @@ public:
     /// Populate @p menu with entries related to the captured object id. Only supported on Qt5
     void populateMenu(QMenu *menu);
 
+    void setCanFavoriteItems(bool);
+
 private:
     ObjectId m_id;
     QVector<QPair<Location, SourceLocation>> m_locations;
+    bool canFavorite = false;
 };
 }
 

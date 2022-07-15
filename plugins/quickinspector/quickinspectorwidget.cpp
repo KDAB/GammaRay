@@ -303,6 +303,7 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint &pos)
                         ObjectModel::CreationLocationRole).value<SourceLocation>());
     ext.setLocation(ContextMenuExtension::Declaration,
                     index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
+    ext.setCanFavoriteItems(true);
     ext.populateMenu(&contextMenu);
     contextMenu.exec(ui->itemTreeView->viewport()->mapToGlobal(pos));
 }

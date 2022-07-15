@@ -73,6 +73,11 @@ void ContextMenuExtension::setLocation(ContextMenuExtension::Location location,
     m_locations.push_back(QPair<Location, SourceLocation>(location, sourceLocation));
 }
 
+void ContextMenuExtension::setCanFavoriteItems(bool v)
+{
+    canFavorite = v;
+}
+
 bool ContextMenuExtension::discoverSourceLocation(ContextMenuExtension::Location location,
                                                   const QUrl &url)
 {
@@ -137,8 +142,10 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
         }
     });
 
-    menu->addAction(QStringLiteral("Favorite"), [this]{
-        if (auto iface = ObjectBroker::object<FavoriteObjectInterface*>())
-            iface->markObjectAsFavorite(m_id);
-    });
+    if (canFavorite) {
+        menu->addAction(QStringLiteral("Favorite"), [this]{
+            if (auto iface = ObjectBroker::object<FavoriteObjectInterface*>())
+                iface->markObjectAsFavorite(m_id);
+        });
+    }
 }

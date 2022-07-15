@@ -162,6 +162,7 @@ void SignalMonitorWidget::contextMenu(QPoint pos)
 
     QMenu menu;
     ContextMenuExtension ext(objectId);
+    ext.setCanFavoriteItems(true);
     ext.populateMenu(&menu);
     menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));
 }

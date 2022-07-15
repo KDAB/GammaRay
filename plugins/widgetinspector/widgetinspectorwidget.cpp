@@ -254,6 +254,7 @@ void WidgetInspectorWidget::widgetTreeContextMenu(QPoint pos)
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     QMenu menu(tr("Widget @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
     ContextMenuExtension ext(objectId);
+    ext.setCanFavoriteItems(true);
     ext.populateMenu(&menu);
 
     menu.exec(ui->widgetTreeView->viewport()->mapToGlobal(pos));
