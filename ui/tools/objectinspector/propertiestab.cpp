@@ -45,6 +45,7 @@
 #include <QSortFilterProxyModel>
 #include <QMenu>
 #include <QDebug>
+#include <QClipboard>
 
 using namespace GammaRay;
 
@@ -134,16 +135,39 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
     if (!index.isValid())
         return;
 
+    auto getPropertyNameAndValue = [](const QModelIndex &idx) {
+        if (!idx.isValid())
+            return QString();
+        const auto nameIdx = idx.sibling(idx.row(), PropertyModel::PropertyColumn);
+        const auto valIdx = idx.sibling(idx.row(), PropertyModel::ValueColumn);
+        const QString value = valIdx.data().toString();
+        if (value.isEmpty())
+            return QString();
+        QString ret = nameIdx.data().toString() + QStringLiteral(": ") + value;
+        return ret;
+    };
+
     const int actions = index.data(PropertyModel::ActionRole).toInt();
     const auto objectId = index.data(PropertyModel::ObjectIdRole).value<ObjectId>();
     ContextMenuExtension ext(objectId);
+    const QString property = getPropertyNameAndValue(index);
+
     const bool canShow = actions != PropertyModel::NoAction
-                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, index);
+                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, index)
+                         || !property.isEmpty();
 
     if (!canShow)
         return;
 
     QMenu contextMenu;
+
+    if (!property.isEmpty()) {
+#ifndef QT_NO_CLIPBOARD
+        contextMenu.addAction(tr("Copy"), [property]{
+            qApp->clipboard()->setText(property);
+        });
+#endif
+    }
 
     if (actions & PropertyModel::Delete) {
         QAction *action = contextMenu.addAction(tr("Remove"));
