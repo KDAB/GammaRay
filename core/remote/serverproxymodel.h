@@ -88,7 +88,8 @@ public:
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const override
     {
-        Model::used(this);
+        if (!m_active)
+            Model::used(this);
         return BaseProxy::index(row, column, parent);
     }
 
