@@ -89,6 +89,10 @@ QAtomicPointer<Probe> Probe::s_instance = QAtomicPointer<Probe>(nullptr);
 namespace GammaRay {
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
+    // Ignore event dispatcher signals
+    if (caller->inherits("QAbstractEventDispatcher"))
+        return;
+
     if (method_index == 0 || !Probe::instance() || Probe::instance()->filterObject(caller))
         return;
 
