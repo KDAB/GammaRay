@@ -85,6 +85,8 @@ signals:
     void proxyFilterKeyColumnChanged();
     void proxyFilterRegExpChanged();
 
+    void declarationCreationLocationsReceived(const QVariant &v, const QVariant &v2);
+
 private:
     struct Node
     { // represents one row
@@ -133,6 +135,8 @@ private:
     /// This is needed when rows have been added or removed before @p startRow, since
     /// pending replies might have a wrong index.
     void resetLoadingState(Node *node, int startRow) const;
+
+    QVariant requestCreationDeclarationLocation(const QModelIndex &, int role) const;
 
     /// execute a insertRows() operation
     void doInsertRows(Node *parentNode, int first, int last);

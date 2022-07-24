@@ -16,6 +16,7 @@
 
 #include "remotemodel.h"
 #include "client.h"
+#include "common/sourcelocation.h"
 
 #include <compat/qasconst.h>
 
@@ -216,7 +217,50 @@ QVariant RemoteModel::data(const QModelIndex &index, int role) const
 
     // note .value returns good defaults otherwise
     Q_ASSERT(node->data.size() > index.column());
-    return node->data.at(index.column()).value(role);
+    auto d = node->data.at(index.column()).value(role);
+
+    if (!d.isValid() && (role == ObjectModel::DeclarationLocationRole || role == ObjectModel::CreationLocationRole)) {
+        return requestCreationDeclarationLocation(index, role);
+    }
+
+    return d;
+}
+
+QVariant RemoteModel::requestCreationDeclarationLocation(const QModelIndex &index, int role) const
+{
+    if (role != ObjectModel::DeclarationLocationRole && role != ObjectModel::CreationLocationRole) {
+        qWarning() << Q_FUNC_INFO << "Unexpected role type" << role;
+        Q_ASSERT(false);
+        return {};
+    }
+
+    Message msg(m_myAddress, Protocol::ModelCreationDeclartionLocationRequest);
+    msg << Protocol::fromQModelIndex(index);
+    sendMessage(msg);
+
+    QVariant declarationLoc = QVariant::fromValue(SourceLocation{});
+    QVariant creationLoc = QVariant::fromValue(SourceLocation{});
+
+    QEventLoop loop;
+
+    auto conn = connect(this, &RemoteModel::declarationCreationLocationsReceived, this, [&creationLoc, &declarationLoc, &loop](const QVariant &d, const QVariant &c){
+        if (d.isValid())
+            declarationLoc = d;
+        if (c.isValid())
+            creationLoc = c;
+        loop.quit();
+    });
+
+    loop.exec();
+
+    disconnect(conn);
+    auto node = nodeForIndex(index);
+    node->data[0].insert(ObjectModel::DeclarationLocationRole, declarationLoc);
+    node->data[0].insert(ObjectModel::CreationLocationRole, creationLoc);
+
+    if (role == ObjectModel::CreationLocationRole)
+        return creationLoc;
+    return declarationLoc;
 }
 
 bool RemoteModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -655,6 +699,15 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
     case Protocol::ModelReset:
         clear();
         break;
+
+    case Protocol::ModelCreationDeclartionLocationReply:
+    {
+        QVariant declaration;
+        QVariant creation;
+        msg >> declaration >> creation;
+        Q_EMIT declarationCreationLocationsReceived(declaration, creation);
+        break;
+    }
     }
 }
 

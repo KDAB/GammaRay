@@ -107,12 +107,6 @@ public:
         QMap<int, QVariant> map = Base::itemData(index);
         map.insert(ObjectModel::ObjectIdRole, this->data(index, ObjectModel::ObjectIdRole));
         map.insert(ObjectModel::DecorationIdRole, this->data(index, ObjectModel::DecorationIdRole));
-        auto loc = this->data(index, ObjectModel::CreationLocationRole);
-        if (loc.isValid())
-            map.insert(ObjectModel::CreationLocationRole, loc);
-        loc = this->data(index, ObjectModel::DeclarationLocationRole);
-        if (loc.isValid())
-            map.insert(ObjectModel::DeclarationLocationRole, loc);
         map.insert(ObjectModel::IsFavoriteRole, this->data(index, ObjectModel::IsFavoriteRole));
         return map;
     }
