@@ -260,15 +260,14 @@ QModelIndex ObjectTreeModel::indexForObject(QObject *object) const
 {
     if (!object)
         return {};
-    QObject *parent = m_childParentMap.value(object);
-    const QModelIndex parentIndex = indexForObject(parent);
-    if (!parentIndex.isValid() && parent)
-        return QModelIndex();
+    // Find the parent
+    auto parent = m_childParentMap.value(object);
+    // Find all children of this parent
     const QVector<QObject *> &siblings = m_parentChildMap[parent];
+    // Find where @p object is
     auto it = std::lower_bound(siblings.constBegin(), siblings.constEnd(), object);
     if (it == siblings.constEnd() || *it != object)
         return QModelIndex();
-
     const int row = std::distance(siblings.constBegin(), it);
-    return index(row, 0, parentIndex);
+    return createIndex(row, 0, *it);
 }
