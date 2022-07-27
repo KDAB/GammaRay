@@ -105,6 +105,8 @@ static void signal_end_callback(QObject *caller, int method_index)
         return;
 
     QMutexLocker locker(Probe::objectLock());
+    if (!Probe::instance())
+        return;
     if (!Probe::instance()->isValidObject(caller)) // implies filterObject()
         return; // deleted in the slot
     locker.unlock();
