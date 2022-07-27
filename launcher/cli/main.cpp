@@ -152,7 +152,7 @@ static bool startLauncher()
     const QString launcherPath = LauncherFinder::findLauncher(LauncherFinder::LauncherUI);
     QProcess proc;
     proc.setProcessChannelMode(QProcess::ForwardedChannels);
-    proc.start(launcherPath);
+    proc.start(launcherPath, QStringList{});
     if (!proc.waitForFinished(-1))
         return false;
     return proc.exitCode() == 0;
@@ -165,7 +165,7 @@ static QUrl urlFromUserInput(const QString &s)
         url.setScheme(QStringLiteral("tcp"));
         QString host = url.path();
         int port = -1;
-        const int pos = host.lastIndexOf(':');
+        const auto pos = host.lastIndexOf(':');
         if (pos > 0) {
             port = host.mid(pos + 1).toUShort(); // clazy:exclude=qstring-ref due to Qt4 support
             host = host.left(pos);

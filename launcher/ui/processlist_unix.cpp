@@ -52,7 +52,7 @@ static bool isUnixProcessId(const QString &procname)
     return true;
 }
 
-struct PidAndNameMatch : public std::unary_function<ProcData, bool> {
+struct PidAndNameMatch {
     explicit PidAndNameMatch(const QString &ppid, const QString &name)
         : m_ppid(ppid)
         , m_name(name)
@@ -88,24 +88,23 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
     QByteArray output = psProcess.readAllStandardOutput();
     // Split "457 S+   /Users/foo.app"
     const QStringList lines = QString::fromLocal8Bit(output).split(QLatin1Char('\n'));
-    const int lineCount = lines.size();
+    const int lineCount = (int) lines.size();
     const QChar blank = QLatin1Char(' ');
     for (int l = 1; l < lineCount; l++) { // Skip header
         const QString line = lines.at(l).simplified();
         // we can't just split on blank as the process name might
         // contain them
-        const int endOfPid = line.indexOf(blank);
-        const int endOfState = line.indexOf(blank, endOfPid+1);
-        const int endOfUser = line.indexOf(blank, endOfState+1);
+        const auto endOfPid = line.indexOf(blank);
+        const auto endOfState = line.indexOf(blank, endOfPid+1);
+        const auto endOfUser = line.indexOf(blank, endOfState+1);
         if (endOfPid >= 0 && endOfState >= 0 && endOfUser >= 0) {
             ProcData procData;
             procData.ppid = line.left(endOfPid);
             procData.state = line.mid(endOfPid+1, endOfState-endOfPid-1);
             procData.user = line.mid(endOfState+1, endOfUser-endOfState-1);
             procData.name = line.right(line.size()-endOfUser-1);
-            ProcDataList::ConstIterator it
-                = std::find_if(previous.constBegin(), previous.constEnd(),
-                               PidAndNameMatch(procData.ppid, procData.name));
+            PidAndNameMatch f(procData.ppid, procData.name);
+            ProcDataList::ConstIterator it = std::find_if(previous.constBegin(), previous.constEnd(), f);
             if (it != previous.constEnd())
                 procData.abi = it->abi;
             else

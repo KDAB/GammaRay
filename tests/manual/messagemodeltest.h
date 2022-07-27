@@ -31,10 +31,6 @@
 
 #include <QWidget>
 
-#ifndef Q_NORETURN
-#define Q_NORETURN
-#endif
-
 namespace GammaRay {
 class MessageGenerator : public QWidget
 {

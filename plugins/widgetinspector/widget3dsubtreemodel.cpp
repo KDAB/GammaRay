@@ -41,7 +41,7 @@ public:
     int realChildrenCount() const
     {
         int count = 0;
-        for (int i = 0, c = children.count(); i < c; ++i) {
+        for (int i = 0, c = (int) children.count(); i < c; ++i) {
             if (children[i]) {
                 count += 1 + children[i]->realChildrenCount();
             }
@@ -154,7 +154,7 @@ void Widget3DSubtreeModel::populate()
         mNodeLookup.insert(index.data(Widget3DModel::IdRole).toString(), node);
 
         for (int i = 0, c = sourceModel()->rowCount(index); i < c; ++i) {
-            const auto child = index.child(i, 0);
+            const auto child = this->index(i, 0, index);
             Q_ASSERT(child.isValid());
             toVisit.push_back(child);
         }
@@ -306,7 +306,7 @@ void GammaRay::Widget3DSubtreeModel::sourceRowsAboutToBeRemoved(const QModelInde
     }
 
     for (int i = last; i >= first; --i) {
-        QModelIndex idx = parent.child(i, 0);
+        QModelIndex idx = index(i, 0, parent);
 
         // Find the node that we are removing and its position in mNodeList
         if (!parentNode->children.at(i)) {

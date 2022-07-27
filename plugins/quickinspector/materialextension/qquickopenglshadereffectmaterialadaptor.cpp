@@ -64,6 +64,10 @@ int QQuickOpenGLShaderEffectMaterialAdaptor::count() const
 
 PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) const
 {
+#ifdef GAMMARAY_QT6_TODO
+    Q_UNUSED(index)
+#endif
+
     PropertyData pd;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 

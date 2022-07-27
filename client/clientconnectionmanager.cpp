@@ -103,7 +103,7 @@ static QObject *createClassesIconsRepositoryClient(const QString &, QObject *par
     return new ClassesIconsRepositoryClient(parent);
 }
 
-static QObject *createFavoriteObjectClient(const QString &name, QObject *parent)
+static QObject *createFavoriteObjectClient(const QString &, QObject *parent)
 {
     return new FavoriteObjectClient(parent);
 }

@@ -397,11 +397,7 @@ void MainWindow::aboutKDAB()
     dialog.setWindowTitle(tr("About KDAB"));
     dialog.setWindowIcon(UIResources::themedPixmap(QStringLiteral("kdab-logo.png"), this));
     dialog.setThemeLogo(QStringLiteral("kdab-logo.png"));
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    dialog.setTitle(trUtf8("Klarälvdalens Datakonsult AB (KDAB)"));
-#else
     dialog.setTitle(tr("Klarälvdalens Datakonsult AB (KDAB)"));
-#endif
     dialog.setText(
         tr("<qt><p>GammaRay is supported and maintained by KDAB</p>"
            "<p>The KDAB Group is the global No.1 software consultancy for Qt, C++ and "

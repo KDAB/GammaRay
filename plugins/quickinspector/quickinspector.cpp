@@ -206,7 +206,11 @@ static QString qsgMaterialFlagsToString(QSGMaterial::Flags flags)
     F(RequiresDeterminant)
     F(RequiresFullMatrixExceptTranslate)
     F(RequiresFullMatrix)
+#if QT_VERSION < QT_VERSION_CHECK(6, 3, 0)
     F(CustomCompileStep)
+#else
+    F(NoBatching)
+#endif
 #undef F
 
     if (list.isEmpty())
@@ -248,13 +252,8 @@ static bool itemHasContents(QQuickItem *item)
 
 static bool isGoodCandidateItem(QQuickItem *item, bool ignoreItemHasContents = false)
 {
-
-    if (!item->isVisible() || qFuzzyCompare(item->opacity() + qreal(1.0), qreal(1.0)) ||
-            (!ignoreItemHasContents && !itemHasContents(item))) {
-        return false;
-    }
-
-    return true;
+    return !(!item->isVisible() || qFuzzyCompare(item->opacity() + qreal(1.0), qreal(1.0)) ||
+            (!ignoreItemHasContents && !itemHasContents(item)));
 }
 
 static QByteArray renderModeToString(QuickInspectorInterface::RenderMode customRenderMode)
@@ -1201,7 +1200,7 @@ static QString anchorLineToString(const QQuickAnchorLine &line)
     ) {
         return QStringLiteral("<none>");
     }
-    const auto s = Util::shortDisplayString(line.item);
+    QString s = Util::shortDisplayString(line.item);
     switch (line.anchorLine) {
         case QQuickAnchors::LeftAnchor: return s + QStringLiteral(".left");
         case QQuickAnchors::RightAnchor: return s + QStringLiteral(".right");
