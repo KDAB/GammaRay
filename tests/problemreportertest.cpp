@@ -74,7 +74,7 @@ class FaultyMetaObjectBaseClass : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(UnregisteredType someProp READ someProp CONSTANT)
-    static UnregisteredType someProp() { return {}; }
+    UnregisteredType someProp() const { return {}; }
 };
 
 class FaultyMetaObjectClass : public FaultyMetaObjectBaseClass
@@ -86,7 +86,7 @@ class FaultyMetaObjectClass : public FaultyMetaObjectBaseClass
 public:
     Q_INVOKABLE static void noop(UnregisteredType param) { Q_UNUSED(param) }
 
-    static UnregisteredType someProp() { return {}; }
+    UnregisteredType someProp() const { return {}; }
 };
 
 namespace GammaRay {
@@ -406,7 +406,8 @@ private slots:
                        && p.description.contains(QLatin1String("overrides base class property"));
             }
         ));
-
+        // In Qt6 objects get auto registed with metatype system
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         QVERIFY(std::any_of(problems.begin(), problems.end(),
             [&obj](const Problem &p){
                 return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
@@ -414,6 +415,7 @@ private slots:
                        && p.description.contains(QLatin1String("parameter type not registered"));
             }
         ));
+
         QVERIFY(std::any_of(problems.begin(), problems.end(),
             [&obj](const Problem &p){
                 return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
@@ -421,7 +423,7 @@ private slots:
                        && p.description.contains(QLatin1String("property with a type not registered"));
             }
         ));
-
+#endif
     }
 
 #ifdef HAVE_QT_WIDGETS
