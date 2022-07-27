@@ -214,11 +214,13 @@ private slots:
         if (!isViewExposed())
             return;
 
-        QVERIFY(waitForSignal(&gotFrameSpy, true));
+        QVERIFY(gotFrameSpy.wait() || gotFrameSpy.count() >= 1);
 
         QVERIFY(!renderSpy.isEmpty());
         QVERIFY(!gotFrameSpy.isEmpty());
-        const auto frame = gotFrameSpy.at(0).at(0).value<RemoteViewFrame>();
+        // take the last frame
+        const auto last = gotFrameSpy.count() - 1;
+        const auto frame = gotFrameSpy.at(last).at(0).value<RemoteViewFrame>();
         QImage img = frame.image();
         QTransform transform = frame.transform();
 
