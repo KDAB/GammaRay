@@ -389,7 +389,7 @@ void UIStateManager::restoreWindowState()
         const QByteArray state = m_stateSettings->value(widgetStateKey(m_widget)).toByteArray();
 
         if (geometry.isEmpty()) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
             const QRect area = m_widget->screen()->availableGeometry();
 #else
             const QRect area = qApp->desktop()->availableGeometry(QCursor::pos());
