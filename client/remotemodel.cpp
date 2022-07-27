@@ -39,6 +39,9 @@
 #include <QDebug>
 #include <QStyle>
 #include <QStyleOptionViewItem>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QTypeRevision>
+#endif
 
 #include <algorithm>
 #include <limits>
@@ -125,8 +128,9 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent)
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     // TODO: Probably should be somewhere else
-    StreamOperators::registerOperators<QMargins>();
-    StreamOperators::registerOperators<QTabBar::SelectionBehavior>();
+    qRegisterMetaType<QMargins>();
+    qRegisterMetaType<QTabBar::SelectionBehavior>();
+    qRegisterMetaType<QTypeRevision>();
 #endif
 }
 
