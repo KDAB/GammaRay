@@ -101,6 +101,7 @@ SignalHistoryModel::SignalHistoryModel(Probe *probe, QObject *parent)
 SignalHistoryModel::~SignalHistoryModel()
 {
     s_historyModel = nullptr;
+    qDeleteAll(m_objectsToBeInserted);
     qDeleteAll(m_tracedObjects);
 }
 
@@ -225,9 +226,16 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
 {
     Q_ASSERT(thread() == QThread::currentThread());
 
-    m_objectsToBeInserted.erase(std::remove_if(m_objectsToBeInserted.begin(), m_objectsToBeInserted.end(), [object](Item *o){
-        return o->object == object;
-    }), m_objectsToBeInserted.end());
+    {
+        auto it = std::find_if(m_objectsToBeInserted.cbegin(), m_objectsToBeInserted.cend(), [object](Item *item){
+            return item->object == object;
+        });
+        if (it != m_objectsToBeInserted.end()) {
+            delete *it;
+            m_objectsToBeInserted.erase(it);
+            return;
+        }
+    }
 
     m_favorites.remove(object);
     const auto it = m_itemIndex.find(object);
