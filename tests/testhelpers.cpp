@@ -61,7 +61,7 @@ static QModelIndexList searchMatchesAll(QAbstractItemModel *model, const QVarian
 bool TestHelpers::waitForSignal(QSignalSpy *spy, bool keepResult)
 {
     if (spy->isEmpty())
-        spy->wait(1000);
+        spy->wait(5000);
 
     bool result = !spy->isEmpty();
     if (!keepResult)
