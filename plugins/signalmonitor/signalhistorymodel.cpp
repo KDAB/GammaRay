@@ -227,7 +227,7 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
     Q_ASSERT(thread() == QThread::currentThread());
 
     {
-        auto it = std::find_if(m_objectsToBeInserted.cbegin(), m_objectsToBeInserted.cend(), [object](Item *item){
+        auto it = std::find_if(m_objectsToBeInserted.begin(), m_objectsToBeInserted.end(), [object](Item *item){
             return item->object == object;
         });
         if (it != m_objectsToBeInserted.end()) {
