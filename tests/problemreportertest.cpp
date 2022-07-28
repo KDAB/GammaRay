@@ -406,7 +406,7 @@ private slots:
                        && p.description.contains(QLatin1String("overrides base class property"));
             }
         ));
-        // In Qt6 objects get auto registed with metatype system
+        // In Qt6 objects get auto registered with metatype system
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         QVERIFY(std::any_of(problems.begin(), problems.end(),
             [&obj](const Problem &p){
