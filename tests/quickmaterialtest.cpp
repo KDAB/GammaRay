@@ -62,6 +62,11 @@ class QuickMaterialTest : public BaseQuickTest
 private slots:
     void testStaticShader()
     {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QFAIL("QuickMaterial hasn't been ported to Qt6 yet");
+        return;
+#endif
+
         if (!showSource("qrc:/manual/shadereffect.qml"))
             return;
 
@@ -112,6 +117,10 @@ private slots:
 
     void testDynamicShader()
     {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QFAIL("QuickMaterial hasn't been ported to Qt6 yet");
+        return;
+#endif
         if (!showSource("qrc:/manual/shadereffect.qml"))
             return;
 
