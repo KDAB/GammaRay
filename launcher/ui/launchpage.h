@@ -58,6 +58,8 @@ private slots:
     void detectABI(const QString &path);
 
 private:
+    bool fileIsExecutable() const;
+
     static QStringList notEmptyString(const QStringList &list);
     Ui::LaunchPage *ui;
     QStringListModel *m_argsModel;
