@@ -30,6 +30,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-dev-asan",
             "cacheVariables": {
+                "ECM_ENABLE_SANITIZERS": "address,undefined",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
@@ -41,6 +42,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-dev-asan6",
             "cacheVariables": {
+                "ECM_ENABLE_SANITIZERS": "address,undefined",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
                 "GAMMARAY_QT6_BUILD": "ON",
