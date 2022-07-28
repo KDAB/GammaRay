@@ -38,6 +38,7 @@ LaunchPage::LaunchPage(QWidget *parent)
     , m_abiIsValid(true)
 {
     ui->setupUi(this);
+    ui->errorLabel->hide();
 #if defined(Q_OS_MAC)
     QMargins margins = ui->formLayout->contentsMargins();
     margins.setRight(margins.right() + 2);
@@ -182,7 +183,12 @@ void LaunchPage::removeArgument()
 
 bool LaunchPage::isValid()
 {
-    if (ui->progEdit->text().isEmpty() || !m_abiIsValid)
+    return m_abiIsValid && fileIsExecutable();
+}
+
+bool LaunchPage::fileIsExecutable() const
+{
+    if (ui->progEdit->text().isEmpty())
         return false;
 
     const QFileInfo fi(ui->progEdit->text());
@@ -205,8 +211,16 @@ void LaunchPage::detectABI(const QString &path)
 {
     const ProbeABI abi = m_abiDetector.abiForExecutable(path);
     const int index = m_abiModel->indexOfBestMatchingABI(abi);
-    if (index >= 0)
+    if (index >= 0) {
         ui->probeBox->setCurrentIndex(index);
+    } else {
+        if (!fileIsExecutable()) {
+            ui->errorLabel->setText(tr("The given file path is not a valid executable"));
+        } else {
+            ui->errorLabel->setText(tr("None of the available ABI probes supports the ABI of this binary [%1]").arg(abi.displayString()));
+        }
+    }
     m_abiIsValid = index >= 0;
+    ui->errorLabel->setVisible(!m_abiIsValid && !ui->progEdit->text().isEmpty());
     emit updateButtonState();
 }

@@ -222,7 +222,7 @@ ProbeABI ProbeABI::fromString(const QString &id)
 QString ProbeABI::displayString() const
 {
     if (!isValid())
-        return QString();
+        return ProbeABIContext::tr("Unknown ABI");
 
     QStringList details;
 #ifdef Q_OS_WIN
