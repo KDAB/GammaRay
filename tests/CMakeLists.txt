@@ -430,12 +430,20 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     )
     target_link_libraries(quickinspectortest gammaray_core gammaray_quickinspector_shared Qt::Quick Qt::QuickPrivate)
 
+    # only opengl rhi backend is supported atm
+    if (TARGET Qt6::Quick)
+      set_tests_properties(quickinspectortest PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=rhi;QSG_RHI_BACKEND=opengl")
+    endif()
+
     gammaray_add_quick_test(quickinspectortest2
       quickinspectortest2.cpp
       quickinspectortest.qrc
       $<TARGET_OBJECTS:modeltestobj>
     )
     target_link_libraries(quickinspectortest2 gammaray_core gammaray_quickinspector_shared Qt::Quick)
+    if (TARGET Qt6::Quick)
+      set_tests_properties(quickinspectortest2 PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=rhi;QSG_RHI_BACKEND=opengl")
+    endif()
 
     # sw renderer support is only available in Qt 5.9.3 or newer
     if(NOT QtQuick_VERSION VERSION_LESS 5.9.3)
