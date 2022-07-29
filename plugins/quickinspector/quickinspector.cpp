@@ -1146,7 +1146,12 @@ static const MetaEnum::Value<QSGRendererInterface::GraphicsApi> qsg_graphics_api
     E(Direct3D12), // Should just remove this? See QTBUG-79925
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
-    E(OpenVG)
+    E(OpenVG),
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    E(Direct3D11),
+    E(Vulkan),
+    E(Metal),
 #endif
 };
 

@@ -118,8 +118,13 @@ public:
         enum GraphicsApi {
             Unknown = 0,
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-            Software = 1,
-            OpenGL = 3
+            Software,
+            OpenVG,
+            OpenGL,
+            Direct3D11,
+            Vulkan,
+            Metal,
+            Null,
 #else
             Software,
             OpenGL,
@@ -233,6 +238,24 @@ private:
     QSGSoftwareRenderer *softwareRenderer() const;
 
     bool m_isGrabbing = false;
+    QPointF m_lastItemPosition;
+};
+#endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+class UnsupportedScreenGrabber : public AbstractScreenGrabber
+{
+    Q_OBJECT
+public:
+    explicit UnsupportedScreenGrabber(QQuickWindow *window);
+    ~UnsupportedScreenGrabber() override;
+
+    void requestGrabWindow(const QRectF &userViewport) override;
+    void drawDecorations() override;
+
+private:
+    void updateOverlay() override;
+
     QPointF m_lastItemPosition;
 };
 #endif

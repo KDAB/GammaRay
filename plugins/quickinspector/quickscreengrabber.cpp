@@ -27,6 +27,8 @@
 */
 
 #include "quickscreengrabber.h"
+#include "core/enumutil.h"
+#include "core/varianthandler.h"
 
 #include <core/objectdataprovider.h>
 
@@ -245,6 +247,13 @@ std::unique_ptr<AbstractScreenGrabber> AbstractScreenGrabber::get(QQuickWindow* 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         case RenderInfo::Software:
             return std::unique_ptr<AbstractScreenGrabber>(new SoftwareScreenGrabber(window));
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        case RenderInfo::Vulkan:
+        case RenderInfo::Direct3D11:
+        case RenderInfo::OpenVG:
+        case RenderInfo::Metal:
+            return std::unique_ptr<AbstractScreenGrabber>(new UnsupportedScreenGrabber(window));
 #endif
         default:
             return nullptr;
@@ -810,4 +819,49 @@ QSGSoftwareRenderer *SoftwareScreenGrabber::softwareRenderer() const
 }
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+UnsupportedScreenGrabber::UnsupportedScreenGrabber(QQuickWindow *window)
+    : AbstractScreenGrabber(window)
+{
+}
 
+UnsupportedScreenGrabber::~UnsupportedScreenGrabber()
+{
+}
+
+void UnsupportedScreenGrabber::requestGrabWindow(const QRectF &/*userViewport*/)
+{
+    m_grabbedFrame.image = m_window->grabWindow();
+    m_grabbedFrame.image.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
+
+    int alpha = 120;
+    if (m_grabbedFrame.image.isNull()) {
+        m_grabbedFrame.image = QImage(m_window->size(), QImage::Format_ARGB32);
+        alpha = 200;
+    }
+
+    QPainter p(&m_grabbedFrame.image);
+    p.setRenderHint(QPainter::TextAntialiasing);
+    QColor gray(Qt::black);
+    gray.setAlpha(alpha);
+    p.fillRect(QRect(QPoint{}, m_window->size()), gray);
+    p.setPen(Qt::white);
+    auto font = qApp->font();
+    font.setPointSize(font.pointSize() + 1);
+    p.setFont(font);
+    QString backend = VariantHandler::displayString(QVariant::fromValue(m_window->graphicsApi()));
+    QString txt = backend + QStringLiteral(" is not supported yet, please use OpenGL or Software backend");
+    p.drawText(QRect{QPoint(0, 0), m_window->size()}, Qt::AlignCenter | Qt::TextWordWrap, txt);
+
+    emit sceneGrabbed(m_grabbedFrame);
+}
+
+void UnsupportedScreenGrabber::drawDecorations()
+{
+}
+
+void UnsupportedScreenGrabber::updateOverlay()
+{
+}
+
+#endif // QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
