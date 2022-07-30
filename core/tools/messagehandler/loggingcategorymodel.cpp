@@ -36,6 +36,8 @@ void categoryFilter(QLoggingCategory *category)
 {
     Q_ASSERT(LoggingCategoryModel::m_instance);
     Q_EMIT LoggingCategoryModel::m_instance->addCategorySignal(category);
+    if (LoggingCategoryModel::m_instance->m_previousFilter)
+        LoggingCategoryModel::m_instance->m_previousFilter(category);
 }
 }
 
@@ -191,6 +193,4 @@ QVariant LoggingCategoryModel::headerData(int section, Qt::Orientation orientati
 void LoggingCategoryModel::addCategorySlot(QLoggingCategory *category)
 {
     addCategory(category);
-    if (m_previousFilter)
-        m_previousFilter(category);
 }
