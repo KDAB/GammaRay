@@ -190,7 +190,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->actionRetractProbe, &QAction::triggered, this, &MainWindow::detachProbe);
 
-    connect(QApplication::instance(), &QCoreApplication::aboutToQuit, this, &QWidget::close);
+    connect(QApplication::instance(), &QCoreApplication::aboutToQuit, this, [this]{
+        m_detaching = true;
+        close();
+    });
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitHost);
     ui->actionQuit->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
 
@@ -623,6 +626,9 @@ QWidget *MainWindow::createErrorPage(const QModelIndex &index)
 
 void MainWindow::quitHost()
 {
+    if (m_detaching)
+        return;
+
     m_detaching = true;
     emit targetQuitRequested();
     ObjectBroker::object<ProbeControllerInterface *>()->quitHost();
@@ -630,6 +636,9 @@ void MainWindow::quitHost()
 
 void MainWindow::detachProbe()
 {
+    if (m_detaching)
+        return;
+
     m_detaching = true;
     emit targetQuitRequested();
     ObjectBroker::object<ProbeControllerInterface *>()->detachProbe();
