@@ -195,6 +195,9 @@ QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex &index) con
 
 void SignalHistoryModel::insertPendingObjects()
 {
+    if (m_objectsToBeInserted.empty())
+        return;
+
     beginInsertRows(QModelIndex(), (int)m_tracedObjects.size(), m_tracedObjects.size() + (int)m_objectsToBeInserted.size() - 1);
 
     int oldSize = m_tracedObjects.size();
