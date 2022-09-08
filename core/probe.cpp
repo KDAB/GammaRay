@@ -529,13 +529,6 @@ ProblemCollector *Probe::problemCollector() const
     return m_problemCollector;
 }
 
-bool Probe::isValidObject(const QObject *obj) const
-{
-    ///TODO: can we somehow assert(s_lock().isLocked()) ?!
-    ///  -> Not with a recursive mutex. Make it non-recursive, and you can do Q_ASSERT(!s_lock().tryLock());
-    return m_validObjects.contains(obj);
-}
-
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 QRecursiveMutex *Probe::objectLock()
 #else
@@ -948,12 +941,12 @@ void Probe::installGlobalEventFilter(QObject *filter)
     m_globalEventFilters.push_back(filter);
 }
 
-bool Probe::needsObjectDiscovery() 
+bool Probe::needsObjectDiscovery()
 {
     return s_listener()->trackDestroyed;
 }
 
-bool Probe::hasReliableObjectTracking() 
+bool Probe::hasReliableObjectTracking()
 {
     return true; // qHooks available, which works independent of the injector used
 }
@@ -1044,7 +1037,7 @@ void Probe::executeSignalCallback(const Func &func)
                   func);
 }
 
-SourceLocation Probe::objectCreationSourceLocation(QObject *object) 
+SourceLocation Probe::objectCreationSourceLocation(QObject *object)
 {
   if (!s_listener()->constructionBacktracesForObjects.contains(object)) {
     IF_DEBUG(std::cout << "No backtrace for object available" << object << "." << std::endl;)
@@ -1064,7 +1057,7 @@ SourceLocation Probe::objectCreationSourceLocation(QObject *object)
   return frame.location;
 }
 
-Execution::Trace Probe::objectCreationStackTrace(QObject *object) 
+Execution::Trace Probe::objectCreationStackTrace(QObject *object)
 {
     return s_listener()->constructionBacktracesForObjects.value(object);
 }
