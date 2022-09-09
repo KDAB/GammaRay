@@ -78,7 +78,7 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
             F(NeedsDestruction);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             F(RelocatableType);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 1, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 2, 0)
             F(IsConst);
 #endif
             F(IsQmlList);
