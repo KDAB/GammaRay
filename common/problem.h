@@ -79,4 +79,3 @@ struct Problem {
 Q_DECLARE_METATYPE(GammaRay::Problem::Severity)
 
 #endif // GAMMARAY_PROBLEM_H
-

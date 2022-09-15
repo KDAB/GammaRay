@@ -134,5 +134,3 @@ bool ProblemCollector::isCheckerRegistered(const QString& id) const
                         [&id](const Checker &c){ return c.id == id; }
                       );
 }
-
-

@@ -134,4 +134,3 @@ private:
 }
 
 #endif // GAMMARAY_PROBLEMCOLLECTOR_H
-

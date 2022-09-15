@@ -61,4 +61,3 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::RemoteModelNodeState::NodeStates)
 Q_DECLARE_METATYPE(GammaRay::RemoteModelNodeState::NodeStates)
 
 #endif
-

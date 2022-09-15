@@ -57,4 +57,3 @@ private:
 }
 
 #endif // GAMMARAY_JSONPROPERTYADAPTOR_H
-

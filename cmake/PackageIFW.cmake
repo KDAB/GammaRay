@@ -73,4 +73,3 @@ macro(addPackageTarget packageName dependsTarget installTarget type)
   add_dependencies(packages ${PACKAGE_TARGET})
   set(LAST_TARGET ${PACKAGE_TARGET})
 endmacro()
-

@@ -61,4 +61,3 @@ endif()
 if(TARGET Qt5::3DRender AND TARGET Qt5::3DExtras)
   add_subdirectory(qt3dinspector)
 endif()
-

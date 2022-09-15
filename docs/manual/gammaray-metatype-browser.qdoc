@@ -47,4 +47,3 @@
     If the target registers types later during application runtime, it might become necessary to manually trigger
     a scan for new meta types, the Meta Type menu contains a corresponding action for doing this.
 */
-

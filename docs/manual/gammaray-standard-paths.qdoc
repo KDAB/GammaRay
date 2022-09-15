@@ -50,4 +50,3 @@
     The \uicontrol Environment tab shows a table of all environment variables and their corresponding
     value, as seen by QProcessEnvironment::systemEnvironment() in the target process.
 */
-

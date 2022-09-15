@@ -102,4 +102,3 @@ void GammaRay::AvailableCheckersModel::checkerAdded()
 {
     endInsertRows();
 }
-

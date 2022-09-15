@@ -92,5 +92,3 @@ void Translator::loadStandAloneTranslations(const QString &overrideLanguage)
     loadGammaRayTranslations(overrideLanguage);
     loadTranslations(QStringLiteral("qt"), qtTranslationsPath(), overrideLanguage);
 }
-
-

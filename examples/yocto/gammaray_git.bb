@@ -26,4 +26,3 @@ FILES_${PN}-dbg += " \
     /usr/lib/gammaray/*/*/.debug \
     /usr/lib/gammaray/*/*/styles/.debug \
 "
-

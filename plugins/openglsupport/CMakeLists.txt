@@ -9,4 +9,3 @@ if (TARGET Qt6::OpenGL)
   target_link_libraries(gammaray_openglsupport Qt6::OpenGL)
 endif()
 endif()
-

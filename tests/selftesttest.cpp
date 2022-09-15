@@ -49,4 +49,3 @@ private slots:
 QTEST_MAIN(SelfTestTest)
 
 #include "selftesttest.moc"
-

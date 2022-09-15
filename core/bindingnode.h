@@ -98,4 +98,3 @@ private:
 }
 
 #endif // GAMMARAY_BINDINGNODE_H
-

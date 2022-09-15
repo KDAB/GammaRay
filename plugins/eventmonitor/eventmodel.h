@@ -89,4 +89,3 @@ private:
 }
 
 #endif // GAMMARAY_EVENTMONITOR_EVENTMODEL_H
-

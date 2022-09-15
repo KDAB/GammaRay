@@ -124,4 +124,3 @@ void PropertyByteArrayEditor::showEditor(QWidget* parent)
         save(dlg.bytes());
     emit editorClosed();
 }
-

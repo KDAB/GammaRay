@@ -50,4 +50,3 @@
     needed to notify the target application via a QEvent::LanguageChange event, this can be triggered via a corresponding action
     in the translations menu.
 */
-

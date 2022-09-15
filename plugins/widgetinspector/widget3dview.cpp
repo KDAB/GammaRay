@@ -324,4 +324,3 @@ void GammaRay::Widget3DView::selectCurrentObject()
 
 
 #include "widget3dview.moc"
-

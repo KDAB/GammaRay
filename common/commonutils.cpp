@@ -27,4 +27,3 @@
 */
 
 #include "commonutils.h"
-

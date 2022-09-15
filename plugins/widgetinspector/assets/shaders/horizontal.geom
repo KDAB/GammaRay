@@ -58,4 +58,3 @@ void main()
 
     EndPrimitive();
 }
-

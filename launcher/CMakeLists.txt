@@ -10,4 +10,3 @@ endif()
 if(GAMMARAY_BUILD_CLI_INJECTOR)
   add_subdirectory(win-injector)
 endif()
-

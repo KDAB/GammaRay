@@ -62,4 +62,3 @@ private:
 }
 
 #endif // GAMMARAY_ABSTRACTBINDINGPROVIDER_H
-

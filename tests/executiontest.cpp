@@ -95,4 +95,3 @@ private slots:
 QTEST_MAIN(ExecutionTest)
 
 #include "executiontest.moc"
-

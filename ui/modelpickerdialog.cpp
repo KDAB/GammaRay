@@ -139,4 +139,3 @@ void ModelPickerDialog::updatePendingSelection()
     if (m_pendingSelection != qNullSelection())
         setCurrentIndex(m_pendingSelection.first, m_pendingSelection.second);
 }
-
