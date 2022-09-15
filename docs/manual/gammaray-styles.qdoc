@@ -38,6 +38,6 @@
         \li built-in standard pixmaps,
         \li and the style-defined QPalette.
     \endlist
-    
+
     It also lets you view and edit style pixel metrics.
 */

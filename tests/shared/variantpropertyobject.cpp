@@ -54,7 +54,7 @@ QPointer<QObject> VariantPropertyObject::trackingObject() const
     return m_object.data();
 }
 
-QVector<int> VariantPropertyObject::widgetVector() 
+QVector<int> VariantPropertyObject::widgetVector()
 {
     QVector<int> vec;
     vec << 5;

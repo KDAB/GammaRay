@@ -60,7 +60,7 @@ ObjectTreeModel::ObjectTreeModel(Probe *probe)
             this, &ObjectTreeModel::objectUnfavorited);
 }
 
-QPair<int, QVariant> ObjectTreeModel::defaultSelectedItem() 
+QPair<int, QVariant> ObjectTreeModel::defaultSelectedItem()
 {
     // select the qApp object (if any) in the object model
     return QPair<int, QVariant>(ObjectModel::ObjectRole, QVariant::fromValue<QObject *>(qApp));

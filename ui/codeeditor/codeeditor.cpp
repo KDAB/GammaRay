@@ -302,7 +302,7 @@ bool CodeEditor::isFoldable(const QTextBlock &block) const
 #endif
 }
 
-bool CodeEditor::isFolded(const QTextBlock &block) 
+bool CodeEditor::isFolded(const QTextBlock &block)
 {
     if (!block.isValid())
         return false;

@@ -41,7 +41,7 @@
 
 using namespace GammaRay;
 
-std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::createBindingNode(QObject* obj, const char *propertyName, BindingNode *parent) 
+std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::createBindingNode(QObject* obj, const char *propertyName, BindingNode *parent)
 {
     if (!obj || !obj->metaObject())
         return {};

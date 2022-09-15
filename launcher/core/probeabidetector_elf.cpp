@@ -59,7 +59,7 @@ static QString qtCoreFromLdd(const QString &path)
     return QString();
 }
 
-QString ProbeABIDetector::qtCoreForExecutable(const QString &path) 
+QString ProbeABIDetector::qtCoreForExecutable(const QString &path)
 {
     // TODO: add fast version reading the ELF file directly?
     return qtCoreFromLdd(path);
@@ -187,7 +187,7 @@ static QString archFromELF(const QString &path)
     return QString();
 }
 
-ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path) 
+ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
 {
     if (path.isEmpty())
         return ProbeABI();

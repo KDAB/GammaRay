@@ -170,7 +170,7 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex &index) 
 }
 
 QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyData &d, int column,
-                                       int role) 
+                                       int role)
 {
     switch (role) {
     case Qt::DisplayRole:

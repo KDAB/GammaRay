@@ -42,7 +42,7 @@
 
 using namespace GammaRay;
 
-QQmlAbstractBinding *QmlBindingProvider::bindingForProperty(QObject *obj, int propertyIndex) 
+QQmlAbstractBinding *QmlBindingProvider::bindingForProperty(QObject *obj, int propertyIndex)
 {
     auto data = QQmlData::get(obj);
     if (!data || !data->hasBindingBit(propertyIndex))
@@ -66,7 +66,7 @@ bool QmlBindingProvider::canProvideBindingsFor(QObject *object) const
     return QQmlData::get(object);
 }
 
-void QmlBindingProvider::fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding) 
+void QmlBindingProvider::fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding)
 {
     QV4::Function *function = binding->function();
     if (function) {

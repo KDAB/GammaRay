@@ -138,7 +138,7 @@ void ProbeABI::setIsDebug(bool debug)
     d->isDebug = debug;
 }
 
-bool ProbeABI::isDebugRelevant() 
+bool ProbeABI::isDebugRelevant()
 {
 #if defined(Q_OS_MAC) || defined(Q_OS_WIN)
     return true;

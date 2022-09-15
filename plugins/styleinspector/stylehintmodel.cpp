@@ -326,7 +326,7 @@ int StyleHintModel::doRowCount() const
     return style_hint_count;
 }
 
-QVariant StyleHintModel::styleHintToVariant(QStyle::StyleHint hint, int value) 
+QVariant StyleHintModel::styleHintToVariant(QStyle::StyleHint hint, int value)
 {
     const auto type = style_hint_table[hint].type;
     switch (type) {

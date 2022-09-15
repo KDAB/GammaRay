@@ -56,7 +56,7 @@ class LauncherTest : public QObject
 {
     Q_OBJECT
 private:
-    static bool hasInjector(const char *type) 
+    static bool hasInjector(const char *type)
     {
         auto injector = InjectorFactory::createInjector(type);
         if (!injector)

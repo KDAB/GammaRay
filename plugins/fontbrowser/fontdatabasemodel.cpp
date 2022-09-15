@@ -216,7 +216,7 @@ QMap<int, QVariant> FontDatabaseModel::itemData(const QModelIndex &index) const
     return ret;
 }
 
-QString FontDatabaseModel::smoothSizeString(const QString &family, const QString &style) 
+QString FontDatabaseModel::smoothSizeString(const QString &family, const QString &style)
 {
     QFontDatabase database;
     const auto smoothSizes = database.smoothSizes(family, style);

@@ -50,7 +50,7 @@ QStyle *InjectorStylePlugin::create(const QString &)
     return nullptr;
 }
 
-QStringList InjectorStylePlugin::keys() 
+QStringList InjectorStylePlugin::keys()
 {
     return QStringList() << QStringLiteral("gammaray-injector");
 }

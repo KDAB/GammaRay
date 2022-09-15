@@ -189,7 +189,7 @@ QModelIndex MetaObjectTreeModel::indexForMetaObject(const QMetaObject *metaObjec
     return index(row, 0, parentIndex);
 }
 
-const QMetaObject *MetaObjectTreeModel::metaObjectForIndex(const QModelIndex &index) 
+const QMetaObject *MetaObjectTreeModel::metaObjectForIndex(const QModelIndex &index)
 {
     if (!index.isValid())
         return nullptr;

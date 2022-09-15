@@ -272,7 +272,7 @@ void WidgetInspectorServer::updateWidgetPreview()
     m_remoteView->sendFrame(frame);
 }
 
-QVector<QRect> WidgetInspectorServer::tabFocusChain(QWidget* window) 
+QVector<QRect> WidgetInspectorServer::tabFocusChain(QWidget* window)
 {
     QVector<QRect> r;
     QSet<QWidget*> widgets;

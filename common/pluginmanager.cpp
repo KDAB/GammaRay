@@ -50,7 +50,7 @@ PluginManagerBase::PluginManagerBase(QObject *parent)
 
 PluginManagerBase::~PluginManagerBase() = default;
 
-QStringList PluginManagerBase::pluginPaths() 
+QStringList PluginManagerBase::pluginPaths()
 {
 #ifndef GAMMARAY_STATIC_PROBE
     return Paths::pluginPaths(GAMMARAY_PROBE_ABI);
@@ -59,7 +59,7 @@ QStringList PluginManagerBase::pluginPaths()
 #endif
 }
 
-QStringList PluginManagerBase::pluginFilter() 
+QStringList PluginManagerBase::pluginFilter()
 {
     QStringList filter;
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)

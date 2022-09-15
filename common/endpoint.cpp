@@ -233,7 +233,7 @@ void Endpoint::invokeObject(const QString &objectName, const char *method,
 }
 
 void Endpoint::invokeObjectLocal(QObject *object, const char *method,
-                                 const QVariantList &args) 
+                                 const QVariantList &args)
 {
     Q_ASSERT(args.size() <= 10);
     QVector<MethodArgument> a(10);

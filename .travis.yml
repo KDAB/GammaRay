@@ -6,8 +6,8 @@ dist: trusty
 before_install:
     - sudo add-apt-repository ppa:beineri/opt-qt58-trusty -y
     - sudo apt-get update -qq
-    
-install: 
+
+install:
     - sudo apt-get -y install qt58base
     - source /opt/qt58/bin/qt58-env.sh
 
@@ -17,7 +17,7 @@ script:
   - cmake -DCMAKE_INSTALL_PREFIX=/usr ..
   - make -j4
   - sudo make DESTDIR=appdir install ; sudo chown -R $USER appdir ; find appdir/
-  - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" 
+  - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
   - chmod a+x linuxdeployqt*.AppImage
   - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
   - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/GammaRay.desktop -bundle-non-qt-libs
@@ -28,5 +28,5 @@ script:
   # Apparently the qt_prfxpath in libQt5Core.so
   # is not relative to libQt5Core.so but to the binary that is being executed, is this clever?
   - ( cd ./appdir/usr/lib/gammaray/ ;  ln -s ../../plugins/ . )
-  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/GammaRay.desktop -appimage 
-  - curl --upload-file ./GammaRay-*.AppImage https://transfer.sh/GammaRay-git.$(git rev-parse --short HEAD)-x86_64.AppImage 
+  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/GammaRay.desktop -appimage
+  - curl --upload-file ./GammaRay-*.AppImage https://transfer.sh/GammaRay-git.$(git rev-parse --short HEAD)-x86_64.AppImage

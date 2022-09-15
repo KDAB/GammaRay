@@ -73,7 +73,7 @@ QString ItemDelegateInterface::defaultDisplayText(const QModelIndex &index) cons
     return display;
 }
 
-const QWidget *ItemDelegateInterface::widget(const QStyleOptionViewItem &option) 
+const QWidget *ItemDelegateInterface::widget(const QStyleOptionViewItem &option)
 {
     const QStyleOptionViewItem &opt(option);
     return opt.widget;

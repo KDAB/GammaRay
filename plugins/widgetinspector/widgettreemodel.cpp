@@ -46,7 +46,7 @@ WidgetTreeModel::WidgetTreeModel(QObject *parent)
 {
 }
 
-QPair<int, QVariant> WidgetTreeModel::defaultSelectedItem() 
+QPair<int, QVariant> WidgetTreeModel::defaultSelectedItem()
 {
     // select the first QMainwindow window (if any) in the widget model
     return QPair<int, QVariant>(ObjectModel::ObjectRole,

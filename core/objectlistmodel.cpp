@@ -48,7 +48,7 @@ ObjectListModel::ObjectListModel(Probe *probe)
             this, &ObjectListModel::objectRemoved);
 }
 
-QPair<int, QVariant> ObjectListModel::defaultSelectedItem() 
+QPair<int, QVariant> ObjectListModel::defaultSelectedItem()
 {
     // select the qApp object (if any) in the object model
     return QPair<int, QVariant>(ObjectModel::ObjectRole, QVariant::fromValue<QObject *>(qApp));

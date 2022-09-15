@@ -13,7 +13,7 @@ You can change this location by passing the option
 Your system's installation of Qt will be used by default, which
 may not be the same as the Qt returned by `qmake -v`.
 To specify the Qt version to build against, use cmake option
-`CMAKE_PREFIX_PATH`, and point it to the gcc(_64) folder of your 
+`CMAKE_PREFIX_PATH`, and point it to the gcc(_64) folder of your
 installation:
 
 `% cmake -DCMAKE_PREFIX_PATH=$HOME/Qt/5.11.2/gcc_64 ..`
@@ -97,7 +97,7 @@ https://developer.android.com/ndk/guides/cmake
 Using GammaRay on Android:
 
  - add GammaRay probe to your android .pro file
- 
+
 ```
 myproject.pro
 ....

@@ -1142,7 +1142,7 @@ void GuiSupport::registerVariantHandler()
 #endif
 }
 
-QObject *GuiSupport::targetObject(QObject *object) 
+QObject *GuiSupport::targetObject(QObject *object)
 {
     return object ? object : qobject_cast<QObject *>(qApp);
 }

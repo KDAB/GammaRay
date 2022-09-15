@@ -63,7 +63,7 @@ ProbeABI ProbeABIDetector::abiForQtCore(const QString &path) const
     return abi;
 }
 
-QString ProbeABIDetector::qtCoreFromLsof(qint64 pid) 
+QString ProbeABIDetector::qtCoreFromLsof(qint64 pid)
 {
     QString lsofExe;
     lsofExe = QStandardPaths::findExecutable(QStringLiteral("lsof"));

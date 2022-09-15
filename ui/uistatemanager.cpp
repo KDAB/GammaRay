@@ -297,7 +297,7 @@ bool UIStateManager::eventFilter(QObject *object, QEvent *event)
     return result;
 }
 
-QString UIStateManager::widgetName(QWidget *widget) 
+QString UIStateManager::widgetName(QWidget *widget)
 {
     return (widget->objectName().isEmpty()
             ? QString::fromLatin1(widget->metaObject()->className())
@@ -374,7 +374,7 @@ bool UIStateManager::checkWidget(QWidget *widget) const
     return true;
 }
 
-int UIStateManager::percentToInt(const QString &size) 
+int UIStateManager::percentToInt(const QString &size)
 {
     return size.left(size.length() -1).toInt(); // clazy:exclude=qstring-ref due to Qt4 support
 }
