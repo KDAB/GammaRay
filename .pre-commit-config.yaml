@@ -1,8 +1,9 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+exclude: ^(3rdparty/|cmake/ECM/|/cmake/KDAB/)
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.2.0
+  rev: v4.3.0
   hooks:
   - id: trailing-whitespace
   - id: end-of-file-fixer
@@ -15,10 +16,10 @@ repos:
 #  hooks:
 #  - id: clang-format
 - repo: https://github.com/PyCQA/pylint
-  rev: v2.12.2
+  rev: v2.15.2
   hooks:
   - id: pylint
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.1.0
+  rev: v2.2.1
   hooks:
   - id: codespell
