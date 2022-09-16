@@ -33,7 +33,13 @@ set(QNX_PROCESSOR armv7)
 set(QNX_HOST_HINT "C:/qnx700/host/win32/x86")
 set(QNX_TARGET_HINT "C:/qnx700/target/qnx6")
 
-set(CMAKE_C_FLAGS "-Vgcc_ntoarmv7le" CACHE STRING "qcc c flags" FORCE)
-set(CMAKE_CXX_FLAGS "-Vgcc_ntoarmv7le -lang-c++" CACHE STRING "qcc cxx flags" FORCE)
+set(CMAKE_C_FLAGS
+    "-Vgcc_ntoarmv7le"
+    CACHE STRING "qcc c flags" FORCE
+)
+set(CMAKE_CXX_FLAGS
+    "-Vgcc_ntoarmv7le -lang-c++"
+    CACHE STRING "qcc cxx flags" FORCE
+)
 
 include("${CMAKE_CURRENT_LIST_DIR}/Toolchain-QNX700-common.cmake")

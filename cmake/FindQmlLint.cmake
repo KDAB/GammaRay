@@ -27,35 +27,48 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 find_program(QMLLINT_EXECUTABLE qmllint)
-if (QMLLINT_EXECUTABLE)
-  if(NOT QMLLINT_IS_WORKING)
-    # Try to fix common problems on Debian-based distros -- they provide /usr/bin/qmllint, which is a symlink to
-    # /usr/lib/x86_64-linux-gnu/qt4/bin/qmllint (or the Qt5 version of it). The actual executable is part of different
-    # package, so might not even be installed => double-check whether qmllint is working by executing it
-    execute_process(COMMAND ${QMLLINT_EXECUTABLE} --version RESULT_VARIABLE _qmllint_result OUTPUT_QUIET ERROR_QUIET)
-    if (_qmllint_result EQUAL 0)
-      set(QMLLINT_IS_WORKING TRUE CACHE BOOL "Whether the found qmllint executable is actually usable" FORCE)
+if(QMLLINT_EXECUTABLE)
+    if(NOT QMLLINT_IS_WORKING)
+        # Try to fix common problems on Debian-based distros -- they provide /usr/bin/qmllint,
+        # which is a symlink to /usr/lib/x86_64-linux-gnu/qt4/bin/qmllint (or the Qt5 version of it).
+        # The actual executable is part of different package, so might not even be installed =>
+        # double-check whether qmllint is working by executing it
+        execute_process(
+            COMMAND ${QMLLINT_EXECUTABLE} --version
+            RESULT_VARIABLE _qmllint_result
+            OUTPUT_QUIET ERROR_QUIET
+        )
+        if(_qmllint_result EQUAL 0)
+            set(QMLLINT_IS_WORKING
+                TRUE
+                CACHE BOOL "Whether the found qmllint executable is actually usable" FORCE
+            )
+        endif()
     endif()
-  endif()
-  if(QMLLINT_IS_WORKING)
-    set(QmlLint_FOUND TRUE)
-  endif()
+    if(QMLLINT_IS_WORKING)
+        set(QmlLint_FOUND TRUE)
+    endif()
 endif()
 
 # validate a list of qml files
 function(qml_lint)
-  if (NOT QMLLINT_EXECUTABLE OR NOT QmlLint_FOUND)
-    return()
-  endif()
+    if(NOT QMLLINT_EXECUTABLE OR NOT QmlLint_FOUND)
+        return()
+    endif()
 
-  foreach(_file ${ARGN})
-    get_filename_component(_file_abs ${_file} ABSOLUTE)
-    add_custom_command(
-      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_file}.qmllint
-      COMMAND ${QMLLINT_EXECUTABLE} ${_file_abs}
-      COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/${_file}.qmllint
-      MAIN_DEPENDENCY ${_file_abs}
-    )
-    add_custom_target(${_file}_qmllint ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_file}.qmllint)
-  endforeach()
+    foreach(_file ${ARGN})
+        get_filename_component(_file_abs ${_file} ABSOLUTE)
+        add_custom_command(
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_file}.qmllint
+            COMMAND ${QMLLINT_EXECUTABLE} ${_file_abs}
+            COMMAND ${CMAKE_COMMAND} -E touch ${CMAKE_CURRENT_BINARY_DIR}/${_file}.qmllint
+            MAIN_DEPENDENCY ${_file_abs}
+            COMMENT "Run qmlint on the specified files and create the associated timestamp semaphore"
+        )
+        add_custom_target(
+            ${_file}_qmllint ALL
+            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${_file}.qmllint
+            COMMENT "Target to run qmllint on the specified file"
+        )
+    endforeach()
 endfunction()

@@ -1,41 +1,38 @@
 # probe part
-if (NOT GAMMARAY_CLIENT_ONLY_BUILD)
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
 
-set(gammaray_eventmonitor_plugin_srcs
-  eventmonitor.cpp
-  eventmodel.cpp
-  eventmonitorinterface.cpp
-  eventtypemodel.cpp
-  eventtypefilter.cpp
-)
+    set(gammaray_eventmonitor_plugin_srcs
+        eventmonitor.cpp
+        eventmodel.cpp
+        eventmonitorinterface.cpp
+        eventtypemodel.cpp
+        eventtypefilter.cpp
+    )
 
-gammaray_add_plugin(gammaray_eventmonitor_plugin
-  JSON gammaray_eventmonitor.json
-  SOURCES ${gammaray_eventmonitor_plugin_srcs}
-)
+    gammaray_add_plugin(
+        gammaray_eventmonitor_plugin
+        JSON
+        gammaray_eventmonitor.json
+        SOURCES
+        ${gammaray_eventmonitor_plugin_srcs}
+    )
 
-target_link_libraries(gammaray_eventmonitor_plugin
-  Qt::Gui
-  Qt::CorePrivate
-  gammaray_core
-)
+    target_link_libraries(gammaray_eventmonitor_plugin Qt::Gui Qt::CorePrivate gammaray_core)
 endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)
-  set(gammaray_eventmonitor_ui_plugin_srcs
-    eventmonitorwidget.cpp
-    eventmonitorinterface.cpp
-    eventmonitorclient.cpp
-    eventtypeclientproxymodel.cpp
-  )
+    set(gammaray_eventmonitor_ui_plugin_srcs eventmonitorwidget.cpp eventmonitorinterface.cpp eventmonitorclient.cpp
+                                             eventtypeclientproxymodel.cpp
+    )
 
-  gammaray_add_plugin(gammaray_eventmonitor_ui_plugin
-    JSON gammaray_eventmonitor.json
-    SOURCES ${gammaray_eventmonitor_ui_plugin_srcs}
-  )
+    gammaray_add_plugin(
+        gammaray_eventmonitor_ui_plugin
+        JSON
+        gammaray_eventmonitor.json
+        SOURCES
+        ${gammaray_eventmonitor_ui_plugin_srcs}
+    )
 
-  target_link_libraries(gammaray_eventmonitor_ui_plugin
-    gammaray_ui
-  )
+    target_link_libraries(gammaray_eventmonitor_ui_plugin gammaray_ui)
 endif()

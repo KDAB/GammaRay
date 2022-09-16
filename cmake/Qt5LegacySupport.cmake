@@ -28,24 +28,29 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-macro(_create_private_target LIB)
-    if (NOT TARGET Qt::${LIB}Private AND NOT TARGET Qt5::${LIB}Private AND DEFINED Qt5${LIB}_PRIVATE_INCLUDE_DIRS)
+# Create private targets for the specified Qt library
+macro(_create_private_target qtLib)
+    if(NOT TARGET Qt::${qtLib}Private
+       AND NOT TARGET Qt5::${qtLib}Private
+       AND DEFINED Qt5${qtLib}_PRIVATE_INCLUDE_DIRS
+    )
         # HACK to work around broken Qt cmake configurations in older Qt version (up to 5.7 at least)
-        if(NOT "${Qt5${LIB}_PRIVATE_INCLUDE_DIRS}" MATCHES "/Qt${LIB}/")
-            string(REPLACE "/QtCore" "/Qt${LIB}" replaceme "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
+        if(NOT "${Qt5${qtLib}_PRIVATE_INCLUDE_DIRS}" MATCHES "/Qt${qtLib}/")
+            string(REPLACE "/QtCore" "/Qt${qtLib}" replaceme "${Qt5Core_PRIVATE_INCLUDE_DIRS}")
             list(APPEND Qt5${module}_PRIVATE_INCLUDE_DIRS ${replaceme})
-            list(REMOVE_DUPLICATES Qt5${LIB}_PRIVATE_INCLUDE_DIRS)
-            set(Qt5${module}_PRIVATE_INCLUDE_DIRS ${Qt5${LIB}_PRIVATE_INCLUDE_DIRS} PARENT_SCOPE)
+            list(REMOVE_DUPLICATES Qt5${qtLib}_PRIVATE_INCLUDE_DIRS)
+            set(Qt5${module}_PRIVATE_INCLUDE_DIRS
+                ${Qt5${qtLib}_PRIVATE_INCLUDE_DIRS}
+                PARENT_SCOPE
+            )
         endif()
 
-        add_library(Qt5::${LIB}Private INTERFACE IMPORTED)
-        set_target_properties(Qt5::${LIB}Private PROPERTIES
-            INTERFACE_INCLUDE_DIRECTORIES "${Qt5${LIB}_PRIVATE_INCLUDE_DIRS}"
+        add_library(Qt5::${qtLib}Private INTERFACE IMPORTED)
+        set_target_properties(
+            Qt5::${qtLib}Private PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${Qt5${qtLib}_PRIVATE_INCLUDE_DIRS}"
         )
-        if (DEFINED ARGN)
-            set_target_properties(Qt5::${LIB}Private PROPERTIES
-                INTERFACE_LINK_LIBRARIES ${ARGN}
-            )
+        if(DEFINED ARGN)
+            set_target_properties(Qt5::${qtLib}Private PROPERTIES INTERFACE_LINK_LIBRARIES ${ARGN})
         endif()
     endif()
 endmacro()

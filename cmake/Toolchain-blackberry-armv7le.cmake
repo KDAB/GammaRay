@@ -41,11 +41,17 @@ set(CMAKE_CXX_COMPILER QCC -V${arch})
 set(CMAKE_FIND_ROOT_PATH $ENV{QNX_TARGET}/armle-v7 $ENV{QNX_TARGET})
 
 if(CMAKE_HOST_WIN32)
-  set(HOST_EXECUTABLE_SUFFIX ".exe")
+    set(HOST_EXECUTABLE_SUFFIX ".exe")
 endif()
 
-set(CMAKE_AR "$ENV{QNX_HOST}/usr/bin/ntoarmv7-ar${HOST_EXECUTABLE_SUFFIX}" CACHE PATH "QNX ar Program")
-set(CMAKE_RANLIB "$ENV{QNX_HOST}/usr/bin/ntoarmv7-ranlib${HOST_EXECUTABLE_SUFFIX}" CACHE PATH "QNX ar Program")
+set(CMAKE_AR
+    "$ENV{QNX_HOST}/usr/bin/ntoarmv7-ar${HOST_EXECUTABLE_SUFFIX}"
+    CACHE PATH "QNX ar Program"
+)
+set(CMAKE_RANLIB
+    "$ENV{QNX_HOST}/usr/bin/ntoarmv7-ranlib${HOST_EXECUTABLE_SUFFIX}"
+    CACHE PATH "QNX ar Program"
+)
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search

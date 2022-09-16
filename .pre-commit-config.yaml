@@ -1,6 +1,6 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
-exclude: ^(3rdparty/|cmake/ECM/|/cmake/KDAB/)
+exclude: ^(3rdparty/|cmake/ECM/|cmake/KDAB/)
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.3.0
@@ -19,7 +19,15 @@ repos:
   rev: v2.15.2
   hooks:
   - id: pylint
+    exclude: ^(.cmake-format.py|conan/conanfile.py)
 - repo: https://github.com/codespell-project/codespell
   rev: v2.2.1
   hooks:
   - id: codespell
+- repo: https://github.com/cheshirekow/cmake-format-precommit
+  rev: v0.6.13
+  hooks:
+  - id: cmake-lint
+    exclude: (cmake/Toolchain-QNX|.py.cmake|Doxyfile.cmake|gammaray.qhcp.cmake|gammaray.rc.cmake|config-gammaray.h.cmake)
+  - id: cmake-format
+    exclude: (cmake/Toolchain-QNX|.py.cmake|Doxyfile.cmake|gammaray.qhcp.cmake|gammaray.rc.cmake|config-gammaray.h.cmake)

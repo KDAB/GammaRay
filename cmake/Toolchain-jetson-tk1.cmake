@@ -36,7 +36,10 @@ set(CMAKE_C_COMPILER "arm-linux-gnueabihf-gcc")
 set(CMAKE_CXX_COMPILER "arm-linux-gnueabihf-g++")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mtune=cortex-a15 -march=armv7-a -mfpu=neon-vfpv4")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mtune=cortex-a15 -march=armv7-a -mfpu=neon-vfpv4")
-set(CMAKE_EXE_LINKER_FLAGS "--sysroot=$ENV{SYSROOT} -Wl,-rpath-link,$ENV{SYSROOT}/usr/lib/arm-linux-gnueabihf/tegra" CACHE STRING "executable linker flags" FORCE)
+set(CMAKE_EXE_LINKER_FLAGS
+    "--sysroot=$ENV{SYSROOT} -Wl,-rpath-link,$ENV{SYSROOT}/usr/lib/arm-linux-gnueabihf/tegra"
+    CACHE STRING "executable linker flags" FORCE
+)
 set(CMAKE_SYSROOT "$ENV{SYSROOT}")
 
 set(CMAKE_FIND_ROOT_PATH "$ENV{SYSROOT}")

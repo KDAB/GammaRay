@@ -28,14 +28,14 @@ execute_process(
     OUTPUT_VARIABLE ALL_VARS
 )
 if(NOT return_code EQUAL 0)
-    message(WARNING "Failed call: ${QMAKE_EXECUTABLE} -query")
+    message(WARNING "Failed call: ${QT_QMAKE_EXECUTABLE} -query")
     message(FATAL_ERROR "QMake call failed: ${return_code}")
 endif()
 
 string(REPLACE "\n" ";" VARS_LIST ${ALL_VARS})
-foreach(QVAL ${VARS_LIST})
-    if(QVAL MATCHES "QT_INSTALL_")
-        string(REPLACE ":" ";" QVAL_LIST ${QVAL})
+foreach(qval ${VARS_LIST})
+    if(qval MATCHES "QT_INSTALL_")
+        string(REPLACE ":" ";" QVAL_LIST ${qval})
         list(LENGTH QVAL_LIST listlen)
         list(GET QVAL_LIST 0 var)
         if(WIN32 AND ${listlen} GREATER 2)

@@ -61,9 +61,10 @@
 
 cmake_minimum_required(VERSION 3.16.0)
 
-project(GammaRay
-  VERSION 2.99.50
-  LANGUAGES CXX C
+project(
+    GammaRay
+    VERSION 2.99.50
+    LANGUAGES CXX C
 )
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -80,20 +81,23 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(NOT DEFINED CMAKE_SKIP_BUILD_RPATH)
-  set(CMAKE_SKIP_BUILD_RPATH ON)
+    set(CMAKE_SKIP_BUILD_RPATH ON)
 endif()
 if(NOT DEFINED CMAKE_BUILD_WITH_INSTALL_RPATH)
-  set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 endif()
 if(NOT DEFINED CMAKE_INSTALL_RPATH_USE_LINK_PATH)
-  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 if(NOT DEFINED CMAKE_MACOSX_RPATH)
-  set(CMAKE_MACOSX_RPATH TRUE)
+    set(CMAKE_MACOSX_RPATH TRUE)
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
+    set(CMAKE_BUILD_TYPE
+        "Release"
+        CACHE STRING "" FORCE
+    )
 endif()
 
 include(CheckCCompilerFlag)
@@ -119,23 +123,34 @@ include("3rdparty/backward-cpp/BackwardConfig.cmake")
 #  Clang 3.1
 set(BAD_CXX_MESSAGE "")
 if(MSVC)
-  if(MSVC_VERSION LESS 1900)
-    set(BAD_CXX_MESSAGE "MSVC 2015 or higher")
-  endif()
+    if(MSVC_VERSION LESS 1900)
+        set(BAD_CXX_MESSAGE "MSVC 2015 or higher")
+    endif()
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.1.0)
-    set(BAD_CXX_MESSAGE "Clang v3.1.0 or higher")
-  endif()
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.1.0)
+        set(BAD_CXX_MESSAGE "Clang v3.1.0 or higher")
+    endif()
 endif()
 if(BAD_CXX_MESSAGE)
-  message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. Please retry using a compiler that supports C++11.")
+    message(FATAL_ERROR "\nSorry, ${BAD_CXX_MESSAGE} is required to build this software. "
+                        "Please retry using a compiler that supports C++11."
+    )
 endif()
 
 set(GAMMARAY_REQUIRED_CXX_FEATURES
-    cxx_lambdas cxx_nullptr cxx_range_for cxx_raw_string_literals cxx_uniform_initialization
-    cxx_variadic_templates cxx_rvalue_references cxx_defaulted_functions cxx_deleted_functions
-    cxx_override cxx_final cxx_nonstatic_member_init
+    cxx_lambdas
+    cxx_nullptr
+    cxx_range_for
+    cxx_raw_string_literals
+    cxx_uniform_initialization
+    cxx_variadic_templates
+    cxx_rvalue_references
+    cxx_defaulted_functions
+    cxx_deleted_functions
+    cxx_override
+    cxx_final
+    cxx_nonstatic_member_init
 )
 
 # Version setup
@@ -148,29 +163,32 @@ set(GAMMARAY_SOVERSION "3.0.0")
 set(GAMMARAY_PLUGIN_VERSION "3.0")
 set(PROJECT_VERSION_STRING "${GAMMARAY_VERSION_STRING}")
 if(ANDROID)
-  # non-rooted Android doesn't like .so versions and requires the lib prefix
-  set(GAMMARAY_DEFAULT_LIBRARY_PROPERTIES PREFIX "lib")
+    # non-rooted Android doesn't like .so versions and requires the lib prefix
+    set(GAMMARAY_DEFAULT_LIBRARY_PROPERTIES PREFIX "lib")
 else()
-  set(GAMMARAY_DEFAULT_LIBRARY_PROPERTIES SOVERSION ${GAMMARAY_SOVERSION} VERSION ${GAMMARAY_SOVERSION})
+    set(GAMMARAY_DEFAULT_LIBRARY_PROPERTIES SOVERSION ${GAMMARAY_SOVERSION} VERSION ${GAMMARAY_SOVERSION})
 endif()
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
-  find_package(Git)
-  set_package_properties(Git PROPERTIES TYPE OPTIONAL PURPOSE "Determine exact build version.")
-  if(GIT_FOUND)
-    execute_process(
-      COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-      OUTPUT_VARIABLE _git_revision
+    find_package(Git)
+    set_package_properties(
+        Git PROPERTIES
+        TYPE OPTIONAL
+        PURPOSE "Determine exact build version."
     )
-    string(REGEX REPLACE "\n" "" _git_revision "${_git_revision}")
-    set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION_STRING} (revision: ${_git_revision})")
-  endif()
+    if(GIT_FOUND)
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE _git_revision
+        )
+        string(REGEX REPLACE "\n" "" _git_revision "${_git_revision}")
+        set(GAMMARAY_VERSION_STRING "${GAMMARAY_VERSION_STRING} (revision: ${_git_revision})")
+    endif()
 endif()
 
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray-version.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray-version.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray-version.h
 )
 
 message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TYPE} mode")
@@ -180,29 +198,23 @@ message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TY
 #
 set(GAMMARAY_BUILD_UI_DEFAULT ON)
 if(QNXNTO OR ANDROID)
-  set(GAMMARAY_BUILD_UI_DEFAULT OFF)
+    set(GAMMARAY_BUILD_UI_DEFAULT OFF)
 endif()
 
 gammaray_option(
-  GAMMARAY_PROBE_ONLY_BUILD
-  "Build only an additional probe configuration for an already existing launcher."
-  OFF
+    GAMMARAY_PROBE_ONLY_BUILD "Build only an additional probe configuration for an already existing launcher." OFF
 )
 
-gammaray_option(
-  GAMMARAY_CLIENT_ONLY_BUILD
-  "Build the client part only."
-  OFF
-)
+gammaray_option(GAMMARAY_CLIENT_ONLY_BUILD "Build the client part only." OFF)
 
 if(GAMMARAY_CLIENT_ONLY_BUILD)
-  set(GAMMARAY_BUILD_UI_DEFAULT ON)
+    set(GAMMARAY_BUILD_UI_DEFAULT ON)
 endif()
 
 gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
 
 if(GAMMARAY_PROBE_ONLY_BUILD AND GAMMARAY_CLIENT_ONLY_BUILD)
-  message(FATAL_ERROR "You can only use one of the *ONLY* option.")
+    message(FATAL_ERROR "You can only use one of the *ONLY* option.")
 endif()
 
 gammaray_option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
@@ -213,21 +225,13 @@ gammaray_option(GAMMARAY_BUILD_CLI_INJECTOR "Build command line injector on Wind
 set(GAMMARAY_BUILD_DOCS_DEFAULT ON)
 set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT OFF)
 if(GAMMARAY_PROBE_ONLY_BUILD OR CMAKE_CROSSCOMPILING)
-  set(GAMMARAY_BUILD_DOCS_DEFAULT OFF)
-  set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT ON)
+    set(GAMMARAY_BUILD_DOCS_DEFAULT OFF)
+    set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT ON)
 endif()
 gammaray_option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
-gammaray_option(
-  GAMMARAY_STATIC_PROBE
-  "Build the probe as static library for compile-time injection."
-  OFF
-)
+gammaray_option(GAMMARAY_STATIC_PROBE "Build the probe as static library for compile-time injection." OFF)
 
-gammaray_option(
-  GAMMARAY_ENFORCE_QT_ASSERTS
-  "Force QT_ASSERT in all builds."
-  OFF
-)
+gammaray_option(GAMMARAY_ENFORCE_QT_ASSERTS "Force QT_ASSERT in all builds." OFF)
 
 gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." ${GAMMARAY_DISABLE_FEEDBACK_DEFAULT})
 
@@ -235,28 +239,31 @@ gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." ${GAM
 # Static probe setup
 #
 if(GAMMARAY_STATIC_PROBE)
-  set(GAMMARAY_BUILD_UI OFF)
-  set(GAMMARAY_PROBE_ONLY_BUILD ON)
+    set(GAMMARAY_BUILD_UI OFF)
+    set(GAMMARAY_PROBE_ONLY_BUILD ON)
 
-  set(GAMMARAY_LIBRARY_TYPE STATIC)
-  set(GAMMARAY_PLUGIN_TYPE STATIC)
+    set(GAMMARAY_LIBRARY_TYPE STATIC)
+    set(GAMMARAY_PLUGIN_TYPE STATIC)
 else()
-  set(GAMMARAY_LIBRARY_TYPE SHARED)
-  set(GAMMARAY_PLUGIN_TYPE MODULE)
+    set(GAMMARAY_LIBRARY_TYPE SHARED)
+    set(GAMMARAY_PLUGIN_TYPE MODULE)
 endif()
 
 gammaray_option(GAMMARAY_USE_PCH "Enable Precompiled Headers support" OFF)
 if(GAMMARAY_USE_PCH)
     add_library(gammaray_pch_core_gui STATIC)
-    file(GENERATE
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cpp
-    CONTENT "/*dummy pch file*/")
+    file(
+        GENERATE
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cpp
+        CONTENT "/*dummy pch file*/"
+    )
     target_sources(gammaray_pch_core_gui PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cpp)
     target_link_libraries(gammaray_pch_core_gui PRIVATE Qt::Core Qt::Gui)
-    set_target_properties(gammaray_pch_core_gui PROPERTIES
-        PRECOMPILE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/core/pch.h
-        CXX_VISIBILITY_PRESET hidden
-        VISIBILITY_INLINES_HIDDEN ON
+    set_target_properties(
+        gammaray_pch_core_gui
+        PROPERTIES PRECOMPILE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/core/pch.h
+                   CXX_VISIBILITY_PRESET hidden
+                   VISIBILITY_INLINES_HIDDEN ON
     )
 endif()
 
@@ -264,153 +271,174 @@ endif()
 # Compiler & linker settings
 #
 function(append_if condition value)
-  if(${condition})
-    foreach(variable ${ARGN})
-      set(${variable} "${${variable}} ${value}" PARENT_SCOPE)
-    endforeach()
-  endif()
+    if(${condition})
+        foreach(variable ${ARGN})
+            set(${variable}
+                "${${variable}} ${value}"
+                PARENT_SCOPE
+            )
+        endforeach()
+    endif()
 endfunction()
 
+# Add a C or C++ compiler flag if the compiler supports that flag
 macro(add_flag_if_supported flag name)
-  check_c_compiler_flag("-Werror ${flag}" "C_SUPPORTS_${name}")
-  append_if("C_SUPPORTS_${name}" "${flag}" CMAKE_C_FLAGS)
-  check_cxx_compiler_flag("-Werror ${flag}" "CXX_SUPPORTS_${name}")
-  append_if("CXX_SUPPORTS_${name}" "${flag}" CMAKE_CXX_FLAGS)
+    check_c_compiler_flag("-Werror ${flag}" "C_SUPPORTS_${name}")
+    append_if("C_SUPPORTS_${name}" "${flag}" CMAKE_C_FLAGS)
+    check_cxx_compiler_flag("-Werror ${flag}" "CXX_SUPPORTS_${name}")
+    append_if("CXX_SUPPORTS_${name}" "${flag}" CMAKE_CXX_FLAGS)
 endmacro()
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_flag_if_supported(-Wunused-but-set-variable UNUSED_BUT_SET)
-  add_flag_if_supported(-Wlogical-op LOGICAL_OP)
-  add_flag_if_supported(-Wsizeof-pointer-memaccess POINTER_MEMACCESS)
-  add_flag_if_supported(-Wreorder REORDER)
-  add_flag_if_supported(-Wformat-security FORMAT_SECURITY)
-  add_flag_if_supported(-Wsuggest-override SUGGEST_OVERRIDE)
+    add_flag_if_supported(-Wunused-but-set-variable UNUSED_BUT_SET)
+    add_flag_if_supported(-Wlogical-op LOGICAL_OP)
+    add_flag_if_supported(-Wsizeof-pointer-memaccess POINTER_MEMACCESS)
+    add_flag_if_supported(-Wreorder REORDER)
+    add_flag_if_supported(-Wformat-security FORMAT_SECURITY)
+    add_flag_if_supported(-Wsuggest-override SUGGEST_OVERRIDE)
 
-  check_cxx_compiler_flag(-std=gnu++0x HAVE_GXX_GNUXX11)
-  check_cxx_compiler_flag(-std=c++0x HAVE_GXX_CXX11)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Woverloaded-virtual -Winit-self -Wmissing-include-dirs -Wunused -Wundef -Wpointer-arith -Wmissing-noreturn -Werror=return-type -Wswitch")
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    # -Wgnu-zero-variadic-macro-arguments (part of -pedantic) is triggered by every qCDebug() call and therefore results
-    # in a lot of noise. This warning is only notifying us that clang is emulating the GCC behaviour
-    # instead of the exact standard wording so we can safely ignore it
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-gnu-zero-variadic-macro-arguments")
-  endif()
-  if(HAVE_GXX_GNUXX11) # QNX needs gnu++0x rather than c++0x for compiling QML V4 private headers
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x")
-  elseif(HAVE_GXX_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-  endif()
-  if(MINGW)
-    # mingw will error out on the crazy casts in probe.cpp without this
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-  endif()
+    check_cxx_compiler_flag(-std=gnu++0x HAVE_GXX_GNUXX11)
+    check_cxx_compiler_flag(-std=c++0x HAVE_GXX_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Woverloaded-virtual -Winit-self")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-include-dirs -Wunused -Wundef -Wpointer-arith")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-noreturn -Werror=return-type -Wswitch")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        # -Wgnu-zero-variadic-macro-arguments (part of -pedantic) is triggered by every qCDebug()
+        # call and therefore results in a lot of noise. This warning is only notifying us that clang
+        # is emulating the GCC behaviour instead of the exact standard wording so we can safely ignore it
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-gnu-zero-variadic-macro-arguments")
+    endif()
+    if(HAVE_GXX_GNUXX11) # QNX needs gnu++0x rather than c++0x for compiling QML V4 private headers
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x")
+    elseif(HAVE_GXX_CXX11)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    endif()
+    if(MINGW)
+        # mingw will error out on the crazy casts in probe.cpp without this
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+    endif()
 endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments -Wdocumentation")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qunused-arguments -Wdocumentation")
 endif()
 if(CMAKE_C_COMPILER_ID MATCHES "Clang")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Qunused-arguments -Wdocumentation")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Qunused-arguments -Wdocumentation")
 endif()
 
 # Do not treat the operator name keywords and, bitand, bitor, compl, not, or and xor as synonyms as keywords.
 # They're not supported under Visual Studio out of the box thus using them limits the portability of code
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER_ID MATCHES "Clang" OR (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32))
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-operator-names")
+if(CMAKE_COMPILER_IS_GNUCXX
+   OR CMAKE_C_COMPILER_ID MATCHES "Clang"
+   OR (CMAKE_C_COMPILER_ID STREQUAL "Intel" AND NOT WIN32)
+)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-operator-names")
 endif()
 
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /permissive-") #use strict C++ compliance
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244") #conversion from __int64 to int possible loss of data
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267") #conversion from size_t to int possible loss of data
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /permissive-") #use strict C++ compliance
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244") #conversion from __int64 to int possible loss of data
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267") #conversion from size_t to int possible loss of data
 endif()
 
 if(WIN32)
-  add_definitions(-DUNICODE -D_UNICODE -D_USING_V110_SDK71_=1)
+    add_definitions(-DUNICODE -D_UNICODE -D_USING_V110_SDK71_=1)
 endif()
 
 if(QNXNTO)
-  add_definitions(-D_QNX_SOURCE)
+    add_definitions(-D_QNX_SOURCE)
 endif()
 
 if(CYGWIN)
-  add_definitions(-D_GNU_SOURCE)
+    add_definitions(-D_GNU_SOURCE)
 endif()
 
 if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_SYSTEM_NAME MATCHES Linux)
-  # Gold linker
-  gammaray_option(ENABLE_GOLD_LINKER "Use GNU gold linker" OFF)
-  if(ENABLE_GOLD_LINKER)
-    execute_process(COMMAND ${CMAKE_C_COMPILER} -fuse-ld=gold -Wl,--version OUTPUT_VARIABLE stdout ERROR_QUIET)
-    if("${stdout}" MATCHES "GNU gold")
-      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=gold")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=gold")
-    else()
-      message(FATAL_ERROR "GNU gold linker isn't available.")
+    # Gold linker
+    gammaray_option(ENABLE_GOLD_LINKER "Use GNU gold linker" OFF)
+    if(ENABLE_GOLD_LINKER)
+        execute_process(
+            COMMAND ${CMAKE_C_COMPILER} -fuse-ld=gold -Wl,--version
+            OUTPUT_VARIABLE stdout
+            ERROR_QUIET
+        )
+        if("${stdout}" MATCHES "GNU gold")
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fuse-ld=gold")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=gold")
+        else()
+            message(FATAL_ERROR "GNU gold linker isn't available.")
+        endif()
     endif()
-  endif()
 endif()
 
 # linker flags
-if((CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU) AND (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-  set(_linker_flags "-Wl,-z,origin")
-  if(NOT ECM_ENABLE_SANITIZERS)
-    set(_linker_flags "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${_linker_flags}")
-  endif()
-  set(CMAKE_SHARED_LINKER_FLAGS "${_linker_flags} ${CMAKE_SHARED_LINKER_FLAGS}")
-  set(CMAKE_MODULE_LINKER_FLAGS "${_linker_flags} ${CMAKE_MODULE_LINKER_FLAGS}")
-  set(CMAKE_EXE_LINKER_FLAGS "${_linker_flags} ${CMAKE_EXE_LINKER_FLAGS}")
+if((CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU) AND (CMAKE_COMPILER_IS_GNUCXX
+                                                                            OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+)
+    set(_linker_flags "-Wl,-z,origin")
+    if(NOT ECM_ENABLE_SANITIZERS)
+        set(_linker_flags "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${_linker_flags}")
+    endif()
+    set(CMAKE_SHARED_LINKER_FLAGS "${_linker_flags} ${CMAKE_SHARED_LINKER_FLAGS}")
+    set(CMAKE_MODULE_LINKER_FLAGS "${_linker_flags} ${CMAKE_MODULE_LINKER_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${_linker_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
 if(GAMMARAY_ENFORCE_QT_ASSERTS)
-  add_definitions(-DQT_FORCE_ASSERTS)
+    add_definitions(-DQT_FORCE_ASSERTS)
 endif()
 
 #
 # Finding Qt
 #
-find_package(Qt 5.5 NAMES Qt6 Qt5 COMPONENTS Core NO_MODULE REQUIRED)
+find_package(
+    Qt
+    5.5
+    NAMES
+    Qt6
+    Qt5
+    COMPONENTS Core NO_MODULE
+    REQUIRED
+)
 
 set_package_properties(Qt${Qt_VERSION_MAJOR}Core PROPERTIES TYPE REQUIRED)
 
-gammaray_option(
-  GAMMARAY_QT6_BUILD
-  "Build with Qt6."
-  OFF
-)
+gammaray_option(GAMMARAY_QT6_BUILD "Build with Qt6." OFF)
 
 if(GAMMARAY_QT6_BUILD)
-  set(Qt_VERSION_MAJOR 6)
-  set(QT_MIN_VERSION "6.0.0")
+    set(Qt_VERSION_MAJOR 6)
+    set(QT_MIN_VERSION "6.0.0")
 endif()
 
 find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Gui Network)
-find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS
-  3DAnimation
-  3DExtras
-  3DInput
-  3DLogic
-  3DRender
-  3DQuick
-  AndroidExtras
-  Bluetooth
-  Concurrent
-  Designer
-  Location
-  OpenGL
-  Positioning
-  Qml
-  Quick
-  QuickWidgets
-  Svg
-  Script
-  ScriptTools
-  Test
-  WebEngineWidgets
-  Widgets
-  WaylandCompositor
+find_package(
+    Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET
+    OPTIONAL_COMPONENTS
+        3DAnimation
+        3DExtras
+        3DInput
+        3DLogic
+        3DRender
+        3DQuick
+        AndroidExtras
+        Bluetooth
+        Concurrent
+        Designer
+        Location
+        OpenGL
+        Positioning
+        Qml
+        Quick
+        QuickWidgets
+        Svg
+        Script
+        ScriptTools
+        Test
+        WebEngineWidgets
+        Widgets
+        WaylandCompositor
 )
 
 # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
@@ -422,21 +450,21 @@ find_package(Qt${Qt_VERSION_MAJOR}Scxml 5.8 NO_MODULE QUIET)
 
 # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
 if(GAMMARAY_BUILD_DOCS)
-  find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
+    find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
 endif()
 
 if(${Qt_VERSION_MAJOR} GREATER_EQUAL 6)
-  set(CMAKE_CXX_STANDARD 17)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  add_definitions(-DGAMMARAY_QT6_TODO)
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    add_definitions(-DGAMMARAY_QT6_TODO)
 
-  if(MSVC)
-    add_compile_options(/Zc:__cplusplus)
-  endif()
-  if(MINGW)
-    # prevent 'file too big' and 'too many sections' errors with Qt6
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
-  endif()
+    if(MSVC)
+        add_compile_options(/Zc:__cplusplus)
+    endif()
+    if(MINGW)
+        # prevent 'file too big' and 'too many sections' errors with Qt6
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
+    endif()
 endif()
 
 # these need to included after the last Qt-related find_package() call
@@ -445,41 +473,49 @@ include(ECMQt5ToQt6Porting)
 
 set(MACOS_DISABLE_UNSUPPORTED_TESTS FALSE)
 if(APPLE)
-  cmake_host_system_information(RESULT MACOS_RELEASE QUERY OS_RELEASE)
-  message(STATUS "MACOS_RELEASE: ${MACOS_RELEASE}")
-  message(STATUS "QtQuick_VERSION: ${QtQuick_VERSION}")
-  if(MACOS_RELEASE VERSION_GREATER_EQUAL 10.15.0 AND QtQuick_VERSION VERSION_LESS 5.12.0)
-    # Qt Quick is only supported on macOS Catalina using Qt 5.12 and above
-    set(MACOS_DISABLE_UNSUPPORTED_TESTS TRUE)
-    message(STATUS "WARNING: Your version of MacOS is too old (less then 10.15) to use with QtQuick 5.12 or higher.  You can solve this by upgrading your MacOS or using older Qt versions.  Disabling QtQuick capabilities.")
-  endif()
+    cmake_host_system_information(RESULT MACOS_RELEASE QUERY OS_RELEASE)
+    message(STATUS "MACOS_RELEASE: ${MACOS_RELEASE}")
+    message(STATUS "QtQuick_VERSION: ${QtQuick_VERSION}")
+    if(MACOS_RELEASE VERSION_GREATER_EQUAL 10.15.0 AND QtQuick_VERSION VERSION_LESS 5.12.0)
+        # Qt Quick is only supported on macOS Catalina using Qt 5.12 and above
+        set(MACOS_DISABLE_UNSUPPORTED_TESTS TRUE)
+        message(WARNING "Your version of MacOS is too old (less then 10.15) to use with QtQuick 5.12 or higher. "
+                        "You can solve this by upgrading your MacOS or using older Qt versions. "
+                        "Disabling QtQuick capabilities."
+        )
+    endif()
 endif()
 
 if(MACOS_DISABLE_UNSUPPORTED_TESTS)
-  set(Qt5Quick_FOUND FALSE)
+    set(Qt5Quick_FOUND FALSE)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_EQUAL 5.9.1)
-  # hide -Wc++1z-extensions warnings in this Qt version -- see: https://bugreports.qt.io/browse/QTBUG-61840
-  add_flag_if_supported(-Wno-c++1z-extensions NO_CPP1Z_EXTENSIONS)
+    # hide -Wc++1z-extensions warnings in this Qt version -- see: https://bugreports.qt.io/browse/QTBUG-61840
+    add_flag_if_supported(-Wno-c++1z-extensions NO_CPP1Z_EXTENSIONS)
 endif()
 if(QtCore_VERSION VERSION_GREATER 5.7)
-  # Qt 5.8 is the first minor version to use nullptr more broadly
-  # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
-  #   .../examples/widget-layouting/ui_contactform.h:606:85: warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
-  add_flag_if_supported(-Wzero-as-null-pointer-constant ZERO_AS_NULL_POINTER_CONSTANT)
+    # Qt 5.8 is the first minor version to use nullptr more broadly
+    # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
+    #   .../examples/widget-layouting/ui_contactform.h:606:85:
+    #   warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
+    add_flag_if_supported(-Wzero-as-null-pointer-constant ZERO_AS_NULL_POINTER_CONSTANT)
 endif()
 
 if(GAMMARAY_BUILD_UI) # widgets are required for the UI
-  find_package(Qt${QtCore_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Widgets)
-  # 3D Widget inspector requires Qt3D 5.7
-  if(QtCore_VERSION VERSION_EQUAL 5.7 OR QtCore_VERSION VERSION_GREATER 5.7)
-    if(${Qt53DRender_FOUND} AND ${Qt53DInput_FOUND} AND ${Qt53DLogic_FOUND} AND ${Qt53DQuick_FOUND})
-      set(GAMMARAY_WITH_WIDGET3D TRUE)
-    else()
-      message(STATUS "Not building GammaRay Widget 3D")
+    find_package(Qt${QtCore_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Widgets)
+    # 3D Widget inspector requires Qt3D 5.7
+    if(QtCore_VERSION VERSION_EQUAL 5.7 OR QtCore_VERSION VERSION_GREATER 5.7)
+        if(${Qt53DRender_FOUND}
+           AND ${Qt53DInput_FOUND}
+           AND ${Qt53DLogic_FOUND}
+           AND ${Qt53DQuick_FOUND}
+        )
+            set(GAMMARAY_WITH_WIDGET3D TRUE)
+        else()
+            message(STATUS "Not building GammaRay Widget 3D")
+        endif()
     endif()
-  endif()
 endif()
 
 set(HAVE_QT_CONCURRENT ${QtConcurrent_FOUND})
@@ -489,52 +525,64 @@ set(HAVE_QT_SCXML ${QtScxml_FOUND})
 set(HAVE_QT_DESIGNER ${QtDesigner_FOUND})
 
 if(TARGET Qt::Gui)
-  cmake_push_check_state()
-  set(CMAKE_REQUIRED_LIBRARIES Qt::Gui)
-  check_cxx_symbol_exists(QT_NO_OPENGL "QOpenGLContext" QT_NO_OPENGL)
-  cmake_pop_check_state()
+    cmake_push_check_state()
+    set(CMAKE_REQUIRED_LIBRARIES Qt::Gui)
+    check_cxx_symbol_exists(QT_NO_OPENGL "QOpenGLContext" QT_NO_OPENGL)
+    cmake_pop_check_state()
 endif()
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
 #add_definitions(-DQT_DEPRECATED_WARNINGS)
 
 set_package_properties(Qt${Qt_VERSION_MAJOR} PROPERTIES URL "https://qt.io/")
-set_package_properties(Qt${Qt_VERSION_MAJOR}Concurrent PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay launcher process list.")
-set_package_properties(Qt${Qt_VERSION_MAJOR}Widget PROPERTIES TYPE RECOMMENDED PURPOSE "Required for the GammaRay client UI and widget-related tools.")
-set_package_properties(Qt${Qt_VERSION_MAJOR}Svg PROPERTIES TYPE OPTIONAL PURPOSE "Required for widget SVG export.")
+set_package_properties(
+    Qt${Qt_VERSION_MAJOR}Concurrent PROPERTIES
+    TYPE RECOMMENDED
+    PURPOSE "Required for the GammaRay launcher process list."
+)
+set_package_properties(
+    Qt${Qt_VERSION_MAJOR}Widget PROPERTIES
+    TYPE RECOMMENDED
+    PURPOSE "Required for the GammaRay client UI and widget-related tools."
+)
+set_package_properties(
+    Qt${Qt_VERSION_MAJOR}Svg PROPERTIES
+    TYPE OPTIONAL
+    PURPOSE "Required for widget SVG export."
+)
 
 # debug suffixes for qmake compatibility
 if(WIN32)
-  set(CMAKE_DEBUG_POSTFIX "d")
+    set(CMAKE_DEBUG_POSTFIX "d")
 elseif(APPLE)
-  set(CMAKE_DEBUG_POSTFIX "_debug")
+    set(CMAKE_DEBUG_POSTFIX "_debug")
 endif()
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" UPPERCASE_CMAKE_BUILD_TYPE)
 
 if(NOT UPPERCASE_CMAKE_BUILD_TYPE MATCHES "^REL")
-  set(GAMMARAY_PROBE_ABI_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
+    set(GAMMARAY_PROBE_ABI_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
 endif()
 
 add_definitions(
-  -DQT_USE_FAST_CONCATENATION
-  -DQT_USE_FAST_OPERATOR_PLUS
-  -DQT_NO_CAST_TO_ASCII
-  -DQT_NO_URL_CAST_FROM_STRING
+    -DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS -DQT_NO_CAST_TO_ASCII -DQT_NO_URL_CAST_FROM_STRING
 )
 if(NOT WIN32)
-  # BIC on MSVC at least (see e.g. https://bugreports.qt.io/browse/AUTOSUITE-946)
-  add_definitions(-DQT_STRICT_ITERATORS)
+    # BIC on MSVC at least (see e.g. https://bugreports.qt.io/browse/AUTOSUITE-946)
+    add_definitions(-DQT_STRICT_ITERATORS)
 endif()
 
 if(UPPERCASE_CMAKE_BUILD_TYPE MATCHES "^RELEASE$")
-  add_definitions(-DQT_NO_DEBUG_OUTPUT)
+    add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
 if(HAVE_QT_WIDGETS)
-  gammaray_option(GAMMARAY_CORE_ONLY_LAUNCHER "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatibility)" FALSE)
+    gammaray_option(
+        GAMMARAY_CORE_ONLY_LAUNCHER
+        "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatibility)" FALSE
+    )
 else()
-  set(GAMMARAY_CORE_ONLY_LAUNCHER TRUE)
+    set(GAMMARAY_CORE_ONLY_LAUNCHER TRUE)
 endif()
 
 add_feature_info("QtScript debugger" Qt5ScriptTools_FOUND "Requires QtScript and QtScriptTools.")
@@ -554,20 +602,33 @@ check_cxx_symbol_exists(abi::__cxa_demangle cxxabi.h HAVE_CXA_DEMANGLE)
 find_file(HAVE_ELF_H elf.h)
 find_file(HAVE_SYS_ELF_H sys/elf.h)
 if(HAVE_ELF_H OR HAVE_SYS_ELF_H)
-  set(HAVE_ELF TRUE)
+    set(HAVE_ELF TRUE)
 endif()
 add_feature_info("ELF ABI detection" HAVE_ELF "Automatic probe ABI detection on ELF-based systems. Requires elf.h.")
 
 find_package(Glslang)
-set_package_properties(Glslang PROPERTIES URL "https://github.com/KhronosGroup/glslang" PURPOSE "Validate GL shader code.")
+set_package_properties(
+    Glslang PROPERTIES
+    URL "https://github.com/KhronosGroup/glslang"
+    PURPOSE "Validate GL shader code."
+)
 
 find_package(QmlLint)
-set_package_properties(QmlLint PROPERTIES URL "https://qt.io" PURPOSE "Validate QML code.")
+set_package_properties(
+    QmlLint PROPERTIES
+    URL "https://qt.io"
+    PURPOSE "Validate QML code."
+)
 
 find_package(KF${QtCore_VERSION_MAJOR}SyntaxHighlighting 5.28 NO_MODULE QUIET)
-set_package_properties(KF${QtCore_VERSION_MAJOR}SyntaxHighlighting PROPERTIES TYPE RECOMMENDED URL "https://www.kde.org/" PURPOSE "Syntax highlighting for code editor.")
+set_package_properties(
+    KF${QtCore_VERSION_MAJOR}SyntaxHighlighting PROPERTIES
+    TYPE RECOMMENDED
+    URL "https://www.kde.org/"
+    PURPOSE "Syntax highlighting for code editor."
+)
 if(TARGET KF${QtCore_VERSION_MAJOR}::SyntaxHighlighting)
-  set(HAVE_SYNTAX_HIGHLIGHTING TRUE)
+    set(HAVE_SYNTAX_HIGHLIGHTING TRUE)
 endif()
 
 #
@@ -579,122 +640,139 @@ include(GammaRayProbeABI)
 # Installation settings
 #
 if(ANDROID)
-  set(GAMMARAY_INSTALL_QT_LAYOUT ON)
+    set(GAMMARAY_INSTALL_QT_LAYOUT ON)
 endif()
 if(APPLE)
-  set(BUNDLE_APP_NAME "GammaRay.app")
+    set(BUNDLE_APP_NAME "GammaRay.app")
 
-  if(GAMMARAY_INSTALL_QT_LAYOUT)
-    set(BUNDLE_INSTALL_DIR "bin")
-    set(RESOURCES_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/Resources")
-    set(BIN_INSTALL_DIR "bin")
-    set(INCLUDE_INSTALL_DIR "include/gammaray")
-    set(LIB_INSTALL_DIR "lib")
-    set(LIBEXEC_INSTALL_DIR "libexec")
-    set(CMAKECONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/GammaRay")
-    set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
-    set(MAN_INSTALL_DIR "man/man1")
-    set(DOC_INSTALL_DIR "doc/gammaray")
-    set(QCH_INSTALL_DIR "doc")
-    set(TRANSLATION_INSTALL_DIR "translations")
-  else()
-    # Make sure default prefix on mac is /Applications, dunnow why but it does not default to it
-    # probably because we do not enabled built in bundle support in the main project
-    string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr/local" CMP_RESULT)
-    if(CMP_RESULT)
-      set(CMAKE_INSTALL_PREFIX "/Applications")
+    if(GAMMARAY_INSTALL_QT_LAYOUT)
+        set(BUNDLE_INSTALL_DIR "bin")
+        set(RESOURCES_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/Resources")
+        set(BIN_INSTALL_DIR "bin")
+        set(INCLUDE_INSTALL_DIR "include/gammaray")
+        set(LIB_INSTALL_DIR "lib")
+        set(LIBEXEC_INSTALL_DIR "libexec")
+        set(CMAKECONFIG_INSTALL_DIR "${LIB_INSTALL_DIR}/cmake/GammaRay")
+        set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
+        set(MAN_INSTALL_DIR "man/man1")
+        set(DOC_INSTALL_DIR "doc/gammaray")
+        set(QCH_INSTALL_DIR "doc")
+        set(TRANSLATION_INSTALL_DIR "translations")
+    else()
+        # Make sure default prefix on mac is /Applications, dunnow why but it does not default to it
+        # probably because we do not enabled built in bundle support in the main project
+        string(COMPARE EQUAL "${CMAKE_INSTALL_PREFIX}" "/usr/local" CMP_RESULT)
+        if(CMP_RESULT)
+            set(CMAKE_INSTALL_PREFIX "/Applications")
+        endif()
+
+        set(BUNDLE_INSTALL_DIR ".")
+        set(RESOURCES_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/Resources")
+        set(BIN_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/MacOS")
+        set(LIB_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/Frameworks")
+        set(PLUGIN_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/PlugIns/gammaray")
+        set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
+        set(MAN_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/man/man1")
+        set(DOC_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/docs")
+        set(QCH_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/docs")
+        set(TRANSLATION_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/translations")
+        set(INCLUDE_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/include/gammaray")
+        set(CMAKECONFIG_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/cmake/GammaRay")
+        set(ECM_MKSPECS_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/${ECM_MKSPECS_INSTALL_DIR}")
     endif()
-
-    set(BUNDLE_INSTALL_DIR ".")
-    set(RESOURCES_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/Resources")
-    set(BIN_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/MacOS")
-    set(LIB_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/Frameworks")
-    set(PLUGIN_INSTALL_DIR "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/PlugIns/gammaray")
-    set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
-    set(MAN_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/man/man1")
-    set(DOC_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/docs")
-    set(QCH_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/docs")
-    set(TRANSLATION_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/translations")
-    set(INCLUDE_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/include/gammaray")
-    set(CMAKECONFIG_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/cmake/GammaRay")
-    set(ECM_MKSPECS_INSTALL_DIR "${RESOURCES_INSTALL_DIR}/${ECM_MKSPECS_INSTALL_DIR}")
-  endif()
 else()
-  # Set installation paths
-  # This takes care of installing into "lib64" on distros that use that, for instance,
-  # by setting CMAKE_INSTALL_FULL_LIBDIR.
-  include(GNUInstallDirs)
+    # Set installation paths
+    # This takes care of installing into "lib64" on distros that use that, for instance,
+    # by setting CMAKE_INSTALL_FULL_LIBDIR.
+    include(GNUInstallDirs)
 
-  set(BIN_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}") # relative, usually "bin"
-  gammaray_convert_to_relative_path(BIN_INSTALL_DIR)
-  if(GAMMARAY_INSTALL_QT_LAYOUT)
-    set(LIB_INSTALL_DIR "lib") # Qt always uses "lib"
-  else()
-    set(LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}") # "lib" or "lib64"
-    gammaray_convert_to_relative_path(LIB_INSTALL_DIR)
-  endif()
-  set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/gammaray")
-  set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/GammaRay)
-  set(DATAROOTDIR "${CMAKE_INSTALL_DATAROOTDIR}" CACHE PATH "Define install directory for read-only architecture-independent data")
-  gammaray_convert_to_relative_path(DATAROOTDIR)
-  set(XDG_APPS_INSTALL_DIR "${DATAROOTDIR}/applications")
-  set(APPDATA_INSTALL_DIR "${DATAROOTDIR}/metainfo")
-  set(ICON_INSTALL_DIR "${DATAROOTDIR}/icons")
-  set(MAN_INSTALL_DIR "${DATAROOTDIR}/man/man1")
-  set(QCH_INSTALL_DIR "${CMAKE_INSTALL_DOCDIR}" CACHE PATH "Install location of Qt Assistant help files.")
-  gammaray_convert_to_relative_path(QCH_INSTALL_DIR)
-  if(WIN32)
-    set(PLUGIN_INSTALL_DIR "plugins/gammaray")
-    set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
-    set(DOC_INSTALL_DIR .)
-    set(TRANSLATION_INSTALL_DIR "translations")
-  else()
-    set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
-    set(LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray/libexec")
-    set(DOC_INSTALL_DIR "${DATAROOTDIR}/doc/gammaray/")
-    set(TRANSLATION_INSTALL_DIR "${DATAROOTDIR}/gammaray/translations")
-  endif()
+    set(BIN_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}") # relative, usually "bin"
+    gammaray_convert_to_relative_path(BIN_INSTALL_DIR)
+    if(GAMMARAY_INSTALL_QT_LAYOUT)
+        set(LIB_INSTALL_DIR "lib") # Qt always uses "lib"
+    else()
+        set(LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}") # "lib" or "lib64"
+        gammaray_convert_to_relative_path(LIB_INSTALL_DIR)
+    endif()
+    set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/gammaray")
+    set(CMAKECONFIG_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/GammaRay)
+    set(DATAROOTDIR
+        "${CMAKE_INSTALL_DATAROOTDIR}"
+        CACHE PATH "Define install directory for read-only architecture-independent data"
+    )
+    gammaray_convert_to_relative_path(DATAROOTDIR)
+    set(XDG_APPS_INSTALL_DIR "${DATAROOTDIR}/applications")
+    set(APPDATA_INSTALL_DIR "${DATAROOTDIR}/metainfo")
+    set(ICON_INSTALL_DIR "${DATAROOTDIR}/icons")
+    set(MAN_INSTALL_DIR "${DATAROOTDIR}/man/man1")
+    set(QCH_INSTALL_DIR
+        "${CMAKE_INSTALL_DOCDIR}"
+        CACHE PATH "Install location of Qt Assistant help files."
+    )
+    gammaray_convert_to_relative_path(QCH_INSTALL_DIR)
+    if(WIN32)
+        set(PLUGIN_INSTALL_DIR "plugins/gammaray")
+        set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
+        set(DOC_INSTALL_DIR .)
+        set(TRANSLATION_INSTALL_DIR "translations")
+    else()
+        set(PLUGIN_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray")
+        set(LIBEXEC_INSTALL_DIR "${LIB_INSTALL_DIR}/gammaray/libexec")
+        set(DOC_INSTALL_DIR "${DATAROOTDIR}/doc/gammaray/")
+        set(TRANSLATION_INSTALL_DIR "${DATAROOTDIR}/gammaray/translations")
+    endif()
 endif()
 
 if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
-  set(PROBE_BASENAME "gammaray_probe")
+    set(PROBE_BASENAME "gammaray_probe")
 else()
-  set(PROBE_BASENAME "${CMAKE_SHARED_LIBRARY_PREFIX}gammaray_probe")
+    set(PROBE_BASENAME "${CMAKE_SHARED_LIBRARY_PREFIX}gammaray_probe")
 endif()
 
 if(GAMMARAY_INSTALL_QT_LAYOUT)
-  if(WIN32)
-    set(PROBE_INSTALL_DIR ${BIN_INSTALL_DIR})
-  else()
-    set(PROBE_INSTALL_DIR ${LIB_INSTALL_DIR})
-  endif()
-  set(PROBE_PLUGIN_INSTALL_DIR "plugins/gammaray")
-  set(PLUGIN_INSTALL_DIR ${PROBE_PLUGIN_INSTALL_DIR})
-  set(TARGET_PLUGIN_INSTALL_DIR "plugins/gammaray-target")
+    if(WIN32)
+        set(PROBE_INSTALL_DIR ${BIN_INSTALL_DIR})
+    else()
+        set(PROBE_INSTALL_DIR ${LIB_INSTALL_DIR})
+    endif()
+    set(PROBE_PLUGIN_INSTALL_DIR "plugins/gammaray")
+    set(PLUGIN_INSTALL_DIR ${PROBE_PLUGIN_INSTALL_DIR})
+    set(TARGET_PLUGIN_INSTALL_DIR "plugins/gammaray-target")
 else()
-  set(PROBE_INSTALL_DIR "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}${GAMMARAY_PROBE_ABI_POSTFIX}")
-  set(PROBE_PLUGIN_INSTALL_DIR ${PROBE_INSTALL_DIR})
-  set(TARGET_PLUGIN_INSTALL_DIR "${PROBE_INSTALL_DIR}/target")
+    set(PROBE_INSTALL_DIR
+        "${PLUGIN_INSTALL_DIR}/${GAMMARAY_PLUGIN_VERSION}/${GAMMARAY_PROBE_ABI}${GAMMARAY_PROBE_ABI_POSTFIX}"
+    )
+    set(PROBE_PLUGIN_INSTALL_DIR ${PROBE_INSTALL_DIR})
+    set(TARGET_PLUGIN_INSTALL_DIR "${PROBE_INSTALL_DIR}/target")
 endif()
 
 if(NOT GAMMARAY_OUTPUT_PREFIX) # set by multibuild
-  set(GAMMARAY_OUTPUT_PREFIX ${PROJECT_BINARY_DIR})
+    set(GAMMARAY_OUTPUT_PREFIX ${PROJECT_BINARY_DIR})
 endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${GAMMARAY_OUTPUT_PREFIX}/${BIN_INSTALL_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${GAMMARAY_OUTPUT_PREFIX}/${LIB_INSTALL_DIR})
 
-set(
-  INSTALL_TARGETS_DEFAULT_ARGS
-  RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-  LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-  ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT Devel
-  BUNDLE DESTINATION ${BUNDLE_INSTALL_DIR}
+set(INSTALL_TARGETS_DEFAULT_ARGS
+    RUNTIME
+    DESTINATION
+    ${BIN_INSTALL_DIR}
+    LIBRARY
+    DESTINATION
+    ${LIB_INSTALL_DIR}
+    ARCHIVE
+    DESTINATION
+    ${LIB_INSTALL_DIR}
+    COMPONENT
+    Devel
+    BUNDLE
+    DESTINATION
+    ${BUNDLE_INSTALL_DIR}
 )
 
 # "inverse" install dirs, to find the base location again
 if(APPLE)
-  set(BUNDLE_INSTALL_DIR_PRIVATE "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/MacOS")
-  gammaray_inverse_dir(GAMMARAY_INVERSE_BUNDLE_DIR "${BUNDLE_INSTALL_DIR_PRIVATE}")
+    set(BUNDLE_INSTALL_DIR_PRIVATE "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/MacOS")
+    gammaray_inverse_dir(GAMMARAY_INVERSE_BUNDLE_DIR "${BUNDLE_INSTALL_DIR_PRIVATE}")
 endif()
 gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIB_DIR "${LIB_INSTALL_DIR}")
@@ -704,15 +782,8 @@ gammaray_inverse_dir(GAMMARAY_INVERSE_LIBEXEC_DIR "${LIBEXEC_INSTALL_DIR}")
 #
 # actually build the stuff
 #
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h
-)
-include_directories(
-  ${CMAKE_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/3rdparty
-  ${CMAKE_BINARY_DIR}
-)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-gammaray.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-gammaray.h)
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/3rdparty ${CMAKE_BINARY_DIR})
 
 include(KDQtInstallPaths) #to set QT_INSTALL_FOO variables
 add_subdirectory(cmake)
@@ -722,46 +793,59 @@ add_subdirectory(core)
 add_subdirectory(probe)
 add_subdirectory(launcher)
 if(GAMMARAY_BUILD_UI AND TARGET Qt::Widgets)
-  if(NOT GAMMARAY_DISABLE_FEEDBACK)
-    add_subdirectory(3rdparty/kuserfeedback)
-  endif()
-  add_subdirectory(ui)
-  if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    add_subdirectory(inprocessui)
-  endif()
-  if(NOT GAMMARAY_PROBE_ONLY_BUILD)
-    add_subdirectory(client)
-    add_subdirectory(app)
-  endif()
+    if(NOT GAMMARAY_DISABLE_FEEDBACK)
+        add_subdirectory(3rdparty/kuserfeedback)
+    endif()
+    add_subdirectory(ui)
+    if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
+        add_subdirectory(inprocessui)
+    endif()
+    if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+        add_subdirectory(client)
+        add_subdirectory(app)
+    endif()
 endif()
-if(BUILD_TESTING AND TARGET Qt::Test AND NOT CMAKE_CROSSCOMPILING)
-  add_subdirectory(tests)
+if(BUILD_TESTING
+   AND TARGET Qt::Test
+   AND NOT CMAKE_CROSSCOMPILING
+)
+    add_subdirectory(tests)
 endif()
 add_subdirectory(plugins)
 if(QtLinguistTools_FOUND)
-  add_subdirectory(translations)
+    add_subdirectory(translations)
 endif()
 if(GAMMARAY_MULTI_BUILD)
-  add_subdirectory(multibuild)
+    add_subdirectory(multibuild)
 endif()
 if(GAMMARAY_BUILD_DOCS)
-  add_subdirectory(examples)
-  add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
+    add_subdirectory(examples)
+    add_subdirectory(docs) # needs to go last, so see all installed headers for the API docs
 endif()
 
 # IDE Support (e.g. for QtCreator): Make the IDE aware of other files as well
 file(GLOB ALL_OTHER_FILES_LIST "*.md")
-add_custom_target(ALL_OTHER_FILES SOURCES ${ALL_OTHER_FILES_LIST})
+add_custom_target(
+    ALL_OTHER_FILES
+    SOURCES ${ALL_OTHER_FILES_LIST}
+    COMMENT "Target for IDE support to make the IDE aware of other files"
+)
 
 set(LICENSE_FILE "LICENSE.GPL.txt")
 set(README_FILE "README.md")
-list(APPEND DOCS ${LICENSE_FILE} ${README_FILE} "LICENSE.txt")
+list(
+    APPEND
+    DOCS
+    ${LICENSE_FILE}
+    ${README_FILE}
+    "LICENSE.txt"
+)
 if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
-  if(UNIX AND GAMMARAY_BUILD_UI)
-    install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-    install(FILES com.kdab.GammaRay.metainfo.xml DESTINATION ${APPDATA_INSTALL_DIR})
-  endif()
-  install(FILES ${DOCS} DESTINATION ${DOC_INSTALL_DIR})
+    if(UNIX AND GAMMARAY_BUILD_UI)
+        install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+        install(FILES com.kdab.GammaRay.metainfo.xml DESTINATION ${APPDATA_INSTALL_DIR})
+    endif()
+    install(FILES ${DOCS} DESTINATION ${DOC_INSTALL_DIR})
 endif()
 
 #
@@ -769,56 +853,52 @@ endif()
 #
 find_program(CPPCHECK_EXECUTABLE cppcheck)
 if(CPPCHECK_EXECUTABLE)
-  set(_cppcheck_flags "-I${CMAKE_CURRENT_BINARY_DIR}")
-  get_directory_property(_inc_dirs INCLUDE_DIRECTORIES)
-  foreach(_current ${_inc_dirs})
-    set(_cppcheck_flags ${_cppcheck_flags} "-I${_current}")
-  endforeach()
-  get_directory_property(_defs COMPILE_DEFINITIONS)
-  foreach(_current ${_defs})
-    set(_cppcheck_flags ${_cppcheck_flags} "-D${_current}")
-  endforeach()
+    set(_cppcheck_flags "-I${CMAKE_CURRENT_BINARY_DIR}")
+    get_directory_property(_inc_dirs INCLUDE_DIRECTORIES)
+    foreach(_current ${_inc_dirs})
+        set(_cppcheck_flags ${_cppcheck_flags} "-I${_current}")
+    endforeach()
+    get_directory_property(_defs COMPILE_DEFINITIONS)
+    foreach(_current ${_defs})
+        set(_cppcheck_flags ${_cppcheck_flags} "-D${_current}")
+    endforeach()
 
-  add_custom_target(cppcheck
-    COMMAND ${CPPCHECK_EXECUTABLE} --enable=all --inconclusive -f --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
-      -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty
-      -i${CMAKE_CURRENT_SOURCE_DIR}/tests
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Running the cppcheck static code checker"
-  )
+    add_custom_target(
+        cppcheck
+        COMMAND ${CPPCHECK_EXECUTABLE} --enable=all --inconclusive -f --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
+                -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty -i${CMAKE_CURRENT_SOURCE_DIR}/tests ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Running the cppcheck static code checker"
+    )
 endif()
 
 #
 # CMake package config file generation
 #
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
-  include(CMakePackageConfigHelpers)
-  configure_package_config_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
-    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-    PATH_VARS INCLUDE_INSTALL_DIR
-  )
+    include(CMakePackageConfigHelpers)
+    configure_package_config_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
+        INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+        PATH_VARS INCLUDE_INSTALL_DIR
+    )
 
-  write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
-    VERSION ${GAMMARAY_VERSION}
-    COMPATIBILITY SameMajorVersion
-  )
+    write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
+        VERSION ${GAMMARAY_VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
 
-  install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
-    DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-  )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
+                  ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+    )
 
-  install(
-    EXPORT GammaRayTargets
-    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-    FILE GammaRayTarget.cmake
-  #     NAMESPACE GammaRay::
-  )
+    install(
+        EXPORT GammaRayTargets
+        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+        FILE GammaRayTarget.cmake
+        #     NAMESPACE GammaRay::
+    )
 endif()
 
 #CPACK: General Settings
@@ -843,38 +923,35 @@ set(CPACK_DEBIAN_PACKAGE_SECTION "Development")
 
 set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/${README_FILE}")
 if(WIN32)
-  set(ICONS_DIR "${CMAKE_SOURCE_DIR}/resources")
-  set(CPACK_GENERATOR "NSIS" "ZIP")
-  set(CPACK_PACKAGE_EXECUTABLES "GammaRay" "GammaRay")
-  set(CPACK_PACKAGE_INSTALL_DIRECTORY "GammaRay")
-  set(CPACK_PACKAGE_FILE_NAME "GammaRay ${GAMMARAY_VERSION}")
-  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/${LICENSE_FILE}")
-  set(CPACK_NSIS_EXECUTABLES_DIRECTORY "${BIN_INSTALL_DIR}")
-  set(CPACK_NSIS_MUI_ICON "${ICONS_DIR}/GammaRay.ico")
-  #set(CPACK_PACKAGE_ICON "${ICONS_DIR}\\\\CharmNSISHeader.bmp")
-  set(CPACK_NSIS_URL_INFO_ABOUT "https://www.kdab.com/")
-  set(CPACK_NSIS_INSTALLED_ICON_NAME "GammaRay${CMAKE_EXECUTABLE_SUFFIX}")
-  set(CPACK_NSIS_MENU_LINKS
-    "${LICENSE_FILE}" "License"
-    "${README_FILE}" "Readme"
-  )
-  set(CPACK_NSIS_MUI_FINISHPAGE_RUN "${CPACK_NSIS_INSTALLED_ICON_NAME}")
+    set(ICONS_DIR "${CMAKE_SOURCE_DIR}/resources")
+    set(CPACK_GENERATOR "NSIS" "ZIP")
+    set(CPACK_PACKAGE_EXECUTABLES "GammaRay" "GammaRay")
+    set(CPACK_PACKAGE_INSTALL_DIRECTORY "GammaRay")
+    set(CPACK_PACKAGE_FILE_NAME "GammaRay ${GAMMARAY_VERSION}")
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/${LICENSE_FILE}")
+    set(CPACK_NSIS_EXECUTABLES_DIRECTORY "${BIN_INSTALL_DIR}")
+    set(CPACK_NSIS_MUI_ICON "${ICONS_DIR}/GammaRay.ico")
+    #set(CPACK_PACKAGE_ICON "${ICONS_DIR}\\\\CharmNSISHeader.bmp")
+    set(CPACK_NSIS_URL_INFO_ABOUT "https://www.kdab.com/")
+    set(CPACK_NSIS_INSTALLED_ICON_NAME "GammaRay${CMAKE_EXECUTABLE_SUFFIX}")
+    set(CPACK_NSIS_MENU_LINKS "${LICENSE_FILE}" "License" "${README_FILE}" "Readme")
+    set(CPACK_NSIS_MUI_FINISHPAGE_RUN "${CPACK_NSIS_INSTALLED_ICON_NAME}")
 elseif(APPLE)
-  set(CPACK_GENERATOR "DragNDrop")
-  set(CPACK_DMG_FORMAT "UDBZ")
-  set(CPACK_DMG_VOLUME_NAME "GammaRay")
-  set(CPACK_SYSTEM_NAME "OSX")
-  set(CPACK_PACKAGE_FILE_NAME "GammaRay-${GAMMARAY_VERSION}")
-  set(CPACK_PACKAGE_ICON "${ICONS_DIR}/CharmDMG.icns")
-  set(CPACK_DMG_DS_STORE "${ICONS_DIR}/CharmDSStore")
-  set(CPACK_DMG_BACKGROUND_IMAGE "${ICONS_DIR}/CharmDMGBackground.png")
+    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_DMG_FORMAT "UDBZ")
+    set(CPACK_DMG_VOLUME_NAME "GammaRay")
+    set(CPACK_SYSTEM_NAME "OSX")
+    set(CPACK_PACKAGE_FILE_NAME "GammaRay-${GAMMARAY_VERSION}")
+    set(CPACK_PACKAGE_ICON "${ICONS_DIR}/CharmDMG.icns")
+    set(CPACK_DMG_DS_STORE "${ICONS_DIR}/CharmDSStore")
+    set(CPACK_DMG_BACKGROUND_IMAGE "${ICONS_DIR}/CharmDMGBackground.png")
 elseif(UNIX)
-  set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+    set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
 include(CPack)
 include(PackageIFW)
 
-addPackageTarget(GammaRay gammaray_probe install lib)
+addpackagetarget(GammaRay gammaray_probe install lib)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
