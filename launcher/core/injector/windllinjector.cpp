@@ -104,10 +104,10 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
     dwCreationFlags |= CREATE_UNICODE_ENVIRONMENT;
     dwCreationFlags |= CREATE_SUSPENDED;
     STARTUPINFOW startupInfo = {
-        sizeof(STARTUPINFO), 0, 0, 0,
+        sizeof(STARTUPINFO), nullptr, nullptr, nullptr,
         ( ulong )CW_USEDEFAULT, ( ulong )CW_USEDEFAULT,
         ( ulong )CW_USEDEFAULT, ( ulong )CW_USEDEFAULT,
-        0, 0, 0, STARTF_USESTDHANDLES, 0, 0, 0,
+        0, 0, 0, STARTF_USESTDHANDLES, 0, 0, nullptr,
         GetStdHandle(STD_INPUT_HANDLE),
         GetStdHandle(STD_OUTPUT_HANDLE),
         GetStdHandle(STD_ERROR_HANDLE)
@@ -116,9 +116,9 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
     memset(&pid, 0, sizeof(PROCESS_INFORMATION));
 
     const QString applicationName = programAndArgs.join(QLatin1String(" "));
-    WIN_ERROR_ASSERT(CreateProcess(0, ( wchar_t * )applicationName.utf16(),
-                                   0, 0, TRUE, dwCreationFlags,
-                                   buffer.isEmpty() ? 0 : buffer.data(),
+    WIN_ERROR_ASSERT(CreateProcess(nullptr, ( wchar_t * )applicationName.utf16(),
+                                   nullptr, nullptr, TRUE, dwCreationFlags,
+                                   buffer.isEmpty() ? nullptr : buffer.data(),
                                    ( wchar_t * )workingDirectory().utf16(),
                                    &startupInfo, &pid),
                      return false);
