@@ -324,7 +324,7 @@ void ProcessTrackerBackendWindows::checkProcess(qint64 pid)
         } else {
             LocalHandlePtr processHandle(OpenProcess(READ_CONTROL | PROCESS_QUERY_INFORMATION | PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid)); // krazy:exclude=captruefalse
             if (!CheckRemoteDebuggerPresent(processHandle.get(), &traced)) {
-                qWarning("%s: Can not check remote debugger presence.");
+                qWarning("Can not check remote debugger presence.");
             }
         }
 
