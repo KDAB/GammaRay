@@ -107,7 +107,7 @@ DWORD BasicWinDllInjector::remoteKernel32Call(HANDLE destProcess, const char *fu
 
 void BasicWinDllInjector::logError(DWORD error)
 {
-    wchar_t *string = 0;
+    wchar_t *string = nullptr;
     FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
                   NULL,
                   error,

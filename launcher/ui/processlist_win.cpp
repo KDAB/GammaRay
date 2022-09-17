@@ -59,7 +59,7 @@ static inline BOOL queryFullProcessImageName(HANDLE h, DWORD flags, LPWSTR buffe
 {
     // Resolve required symbols from the kernel32.dll
     typedef BOOL (WINAPI *QueryFullProcessImageNameWProtoType)(HANDLE, DWORD, LPWSTR, PDWORD);
-    static QueryFullProcessImageNameWProtoType queryFullProcessImageNameW = 0;
+    static QueryFullProcessImageNameWProtoType queryFullProcessImageNameW = nullptr;
     if (!queryFullProcessImageNameW) {
         QLibrary kernel32Lib(QLatin1String("kernel32.dll"), 0);
         if (kernel32Lib.isLoaded() || kernel32Lib.load()) {
