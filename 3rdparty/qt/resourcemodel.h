@@ -45,8 +45,6 @@
 #include <QtCore/qabstractitemmodel.h>
 #include <QtCore/qdir.h>
 
-QT_MODULE(Gui)
-
 namespace GammaRay {
 
 class ResourceModelPrivate;
