@@ -19,7 +19,12 @@ repos:
   rev: v2.15.2
   hooks:
   - id: pylint
-    exclude: ^(.cmake-format.py|conan/conanfile.py)
+    exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
+- repo: https://github.com/pre-commit/mirrors-autopep8
+  rev: v1.7.0
+  hooks:
+  - id: autopep8
+    exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
 - repo: https://github.com/codespell-project/codespell
   rev: v2.2.1
   hooks:
