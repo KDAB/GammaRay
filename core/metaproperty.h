@@ -287,7 +287,7 @@ namespace MetaPropertyFactory
         return new MetaMemberPropertyImpl<Class, ValueType>(name, member);
     }
 
-    // lamda getters
+    // lambda getters
     template <typename Class, typename GetterReturnType>
     inline MetaProperty* makeProperty(const char *name, const std::function<GetterReturnType(Class*)> &func)
     {

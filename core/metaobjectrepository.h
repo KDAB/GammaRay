@@ -156,7 +156,7 @@ private:
     mo->addProperty(GammaRay::MetaPropertyFactory::makePropertyNonConst(#Getter, &Class::Getter));
 
 #if !defined(Q_CC_MSVC) || _MSC_VER >= 1900 //krazy:exclude=cpp
-/** Register a lamda property getter for class @p Class. */
+/** Register a lambda property getter for class @p Class. */
 #define MO_ADD_PROPERTY_LD(Class, Name, Func) \
 { \
     const auto ld = Func; \
