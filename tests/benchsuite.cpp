@@ -44,7 +44,8 @@ void BenchSuite::iconForObject()
     QWidget widget;
     QLabel label;
     QTreeView treeView;
-    QBENCHMARK {
+    QBENCHMARK
+    {
         Util::iconIdForObject(this);
         Util::iconIdForObject(&widget);
         Util::iconIdForObject(&label);
@@ -67,7 +68,8 @@ void BenchSuite::probe_objectAdded()
 
     auto it = objects.constBegin();
     auto end = objects.constEnd();
-    QBENCHMARK_ONCE {
+    QBENCHMARK_ONCE
+    {
         while (it != end) {
             Probe::objectAdded(*it);
             ++it;

@@ -40,19 +40,20 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-struct EventData {
+struct EventData
+{
     QTime time;
     QEvent::Type type;
-    QObject* receiver;
+    QObject *receiver;
     QVector<QPair<const char *, QVariant>> attributes;
-    QEvent* eventPtr;
+    QEvent *eventPtr;
     QVector<EventData> propagatedEvents;
 };
 }
 
 Q_DECLARE_METATYPE(GammaRay::EventData)
 QT_BEGIN_NAMESPACE
-    Q_DECLARE_TYPEINFO(GammaRay::EventData, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(GammaRay::EventData, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -71,10 +72,10 @@ public:
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
-    QMap<int, QVariant> itemData(const QModelIndex & index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
     bool hasEvents() const;
-    EventData& lastEvent();
+    EventData &lastEvent();
 
 public slots:
     void addEvent(const GammaRay::EventData &event);

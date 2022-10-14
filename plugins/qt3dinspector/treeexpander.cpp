@@ -34,7 +34,8 @@
 using namespace GammaRay;
 
 TreeExpander::TreeExpander(QTreeView *view)
-    : QObject(view), m_view(view)
+    : QObject(view)
+    , m_view(view)
 {
     Q_ASSERT(m_view);
     Q_ASSERT(m_view->model());

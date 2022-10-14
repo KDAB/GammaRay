@@ -88,41 +88,52 @@ struct LocaleDataAccessor
     Q_DISABLE_COPY(LocaleDataAccessor)
 };
 
-#define LOCALE_DISPLAY_ACCESSOR(NAME) \
-    struct Locale ## NAME ## Accessor : LocaleDataAccessor \
-    { \
-        explicit Locale ## NAME ## Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor( \
-                registry) {} \
-        QString accessorName() override { return QStringLiteral(#NAME); } \
-        QString display(const QLocale &locale) override \
-        { \
+#define LOCALE_DISPLAY_ACCESSOR(NAME)                                         \
+    struct Locale##NAME##Accessor : LocaleDataAccessor                        \
+    {                                                                         \
+        explicit Locale##NAME##Accessor(LocaleDataAccessorRegistry *registry) \
+            : LocaleDataAccessor(                                             \
+                registry)                                                     \
+        {                                                                     \
+        }                                                                     \
+        QString accessorName() override                                       \
+        {                                                                     \
+            return QStringLiteral(#NAME);                                     \
+        }                                                                     \
+        QString display(const QLocale &locale) override                       \
+        {
 
-#define LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME) \
-    struct Locale ## NAME ## Accessor : LocaleDataAccessor \
-    { \
-        explicit Locale ## NAME ## Accessor(LocaleDataAccessorRegistry *registry) : LocaleDataAccessor( \
-                registry, true) {} \
-  \
-        QString accessorName() override \
-        { \
-            return QStringLiteral(#NAME); \
-        } \
-        QString display(const QLocale &locale) override \
-        { \
+#define LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME)                                 \
+    struct Locale##NAME##Accessor : LocaleDataAccessor                        \
+    {                                                                         \
+        explicit Locale##NAME##Accessor(LocaleDataAccessorRegistry *registry) \
+            : LocaleDataAccessor(                                             \
+                registry, true)                                               \
+        {                                                                     \
+        }                                                                     \
+                                                                              \
+        QString accessorName() override                                       \
+        {                                                                     \
+            return QStringLiteral(#NAME);                                     \
+        }                                                                     \
+        QString display(const QLocale &locale) override                       \
+        {
 
 #define LOCALE_DISPLAY_ACCESSOR_END(NAME) \
-    return QString(); \
-    } \
-    }; new Locale ## NAME ## Accessor(this);
+    return QString();                     \
+    }                                     \
+    }                                     \
+    ;                                     \
+    new Locale##NAME##Accessor(this);
 
 #define LOCALE_SIMPLE_ACCESSOR(NAME, IMPLEMENTATION) \
-    LOCALE_DISPLAY_ACCESSOR(NAME) \
-    IMPLEMENTATION \
+    LOCALE_DISPLAY_ACCESSOR(NAME)                    \
+    IMPLEMENTATION                                   \
     LOCALE_DISPLAY_ACCESSOR_END(NAME)
 
 #define LOCALE_SIMPLE_DEFAULT_ACCESSOR(NAME, IMPLEMENTATION) \
-    LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME) \
-    IMPLEMENTATION \
+    LOCALE_DEFAULT_DISPLAY_ACCESSOR(NAME)                    \
+    IMPLEMENTATION                                           \
     LOCALE_DISPLAY_ACCESSOR_END(NAME)
 }
 

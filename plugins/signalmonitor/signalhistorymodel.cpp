@@ -73,7 +73,7 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
         static const QMetaMethod m = s_historyModel->metaObject()->method(
             s_historyModel->metaObject()->indexOfMethod("onSignalEmitted(QObject*,int)"));
         Q_ASSERT(m.isValid());
-        m.invoke(s_historyModel, Qt::AutoConnection, Q_ARG(QObject*, caller),
+        m.invoke(s_historyModel, Qt::AutoConnection, Q_ARG(QObject *, caller),
                  Q_ARG(int, signalIndex));
     }
 }
@@ -180,7 +180,7 @@ QVariant SignalHistoryModel::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
-QMap< int, QVariant > SignalHistoryModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> SignalHistoryModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> d = QAbstractItemModel::itemData(index);
     d.insert(EventsRole, data(index, EventsRole));
@@ -198,7 +198,7 @@ void SignalHistoryModel::insertPendingObjects()
     if (m_objectsToBeInserted.empty())
         return;
 
-    beginInsertRows(QModelIndex(), (int)m_tracedObjects.size(), m_tracedObjects.size() + (int)m_objectsToBeInserted.size() - 1);
+    beginInsertRows(QModelIndex(), ( int )m_tracedObjects.size(), m_tracedObjects.size() + ( int )m_objectsToBeInserted.size() - 1);
 
     int oldSize = m_tracedObjects.size();
     m_tracedObjects.append(std::move(m_objectsToBeInserted));
@@ -230,7 +230,7 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
     Q_ASSERT(thread() == QThread::currentThread());
 
     {
-        auto it = std::find_if(m_objectsToBeInserted.begin(), m_objectsToBeInserted.end(), [object](Item *item){
+        auto it = std::find_if(m_objectsToBeInserted.begin(), m_objectsToBeInserted.end(), [object](Item *item) {
             return item->object == object;
         });
         if (it != m_objectsToBeInserted.end()) {
@@ -261,7 +261,7 @@ void SignalHistoryModel::onObjectFavorited(QObject *object)
         return;
     const int itemIndex = *it;
     m_favorites.insert(object);
-    emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn), {ObjectModel::IsFavoriteRole});
+    emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn), { ObjectModel::IsFavoriteRole });
 }
 
 void SignalHistoryModel::onObjectUnfavorited(QObject *object)
@@ -272,7 +272,7 @@ void SignalHistoryModel::onObjectUnfavorited(QObject *object)
     const int itemIndex = *it;
     Q_ASSERT(m_favorites.contains(object));
     m_favorites.remove(object);
-    emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn), {ObjectModel::IsFavoriteRole});
+    emit dataChanged(index(itemIndex, ObjectColumn), index(itemIndex, ObjectColumn), { ObjectModel::IsFavoriteRole });
 }
 
 void SignalHistoryModel::onSignalEmitted(QObject *sender, int signalIndex)

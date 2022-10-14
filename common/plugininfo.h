@@ -61,11 +61,11 @@ public:
     bool isValid() const;
     bool isStatic() const;
 
-    QObject* staticInstance() const;
+    QObject *staticInstance() const;
 
 private:
     void initFromJSON(const QString &path);
-    void initFromJSON(const QJsonObject& metaData);
+    void initFromJSON(const QJsonObject &metaData);
 
     QString m_path;
     QtPluginInstanceFunction m_staticInstanceFunc = nullptr;

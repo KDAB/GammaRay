@@ -110,7 +110,7 @@ void SignalHistoryView::eventScrollBarSliderMoved(int value)
 bool SignalHistoryView::viewportEvent(QEvent *event)
 {
     if (event->type() == QEvent::ToolTip) {
-        const QHelpEvent * const help = static_cast<QHelpEvent *>(event);
+        const QHelpEvent *const help = static_cast<QHelpEvent *>(event);
         const QModelIndex index = indexAt(help->pos());
 
         if (index.isValid() && index.column() == SignalHistoryModel::EventColumn) {
@@ -151,8 +151,8 @@ void SignalHistoryView::wheelEvent(QWheelEvent *e)
             return;
         }
         int y = e->angleDelta().y();
-        auto widget = static_cast<SignalMonitorWidget*>(parentWidget());
-        widget->zoomSlider()->setValue(widget->zoomSlider()->value() + y/16);
+        auto widget = static_cast<SignalMonitorWidget *>(parentWidget());
+        widget->zoomSlider()->setValue(widget->zoomSlider()->value() + y / 16);
         m_eventDelegate->setVisibleOffset(interval);
 
         qint64 newInterval = m_eventDelegate->intervalForPosition(pos.x() - eventColumnPosition(), eventColumnWidth());

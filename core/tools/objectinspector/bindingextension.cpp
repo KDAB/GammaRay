@@ -46,7 +46,7 @@
 
 using namespace GammaRay;
 
-BindingExtension::BindingExtension(PropertyController* controller)
+BindingExtension::BindingExtension(PropertyController *controller)
     : QObject(controller)
     , PropertyControllerExtension(controller->objectBaseName() + ".bindings")
     , m_object(nullptr)
@@ -69,7 +69,7 @@ void BindingExtension::clear()
     m_bindingModel->cleared();
 }
 
-bool BindingExtension::setQObject(QObject* object)
+bool BindingExtension::setQObject(QObject *object)
 {
     if (m_object)
         disconnect(m_object, nullptr, this, nullptr);

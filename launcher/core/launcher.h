@@ -90,7 +90,7 @@ private:
     void checkDone();
 
 private:
-    LauncherPrivate * const d;
+    LauncherPrivate *const d;
 };
 }
 

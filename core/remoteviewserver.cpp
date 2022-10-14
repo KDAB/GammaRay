@@ -58,7 +58,8 @@ RemoteViewServer::RemoteViewServer(const QString &name, QObject *parent)
     , m_pendingCompleteFrame(false)
 {
     Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(
-                                                    name), this, "clientConnectedChanged");
+                                                    name),
+                                                this, "clientConnectedChanged");
 
     m_updateTimer->setSingleShot(true);
     m_updateTimer->setInterval(10);
@@ -142,8 +143,7 @@ void RemoteViewServer::clientViewUpdated()
 
 void RemoteViewServer::checkRequestUpdate()
 {
-    if (isActive() && !m_updateTimer->isActive() &&
-            m_clientReady && m_grabberReady && m_sourceChanged)
+    if (isActive() && !m_updateTimer->isActive() && m_clientReady && m_grabberReady && m_sourceChanged)
         m_updateTimer->start();
 }
 
@@ -153,7 +153,7 @@ void RemoteViewServer::sendKeyEvent(int type, int key, int modifiers, const QStr
     if (!m_eventReceiver)
         return;
 
-    auto event = new QKeyEvent((QEvent::Type)type, key, (Qt::KeyboardModifiers)modifiers, text,
+    auto event = new QKeyEvent(( QEvent::Type )type, key, ( Qt::KeyboardModifiers )modifiers, text,
                                autorep, count);
     QCoreApplication::postEvent(m_eventReceiver, event);
 }
@@ -164,9 +164,8 @@ void RemoteViewServer::sendMouseEvent(int type, const QPoint &localPos, int butt
     if (!m_eventReceiver)
         return;
 
-    auto event
-        = new QMouseEvent((QEvent::Type)type, localPos, (Qt::MouseButton)button,
-                          (Qt::MouseButtons)buttons, (Qt::KeyboardModifiers)modifiers);
+    auto event = new QMouseEvent(( QEvent::Type )type, localPos, ( Qt::MouseButton )button,
+                                 ( Qt::MouseButtons )buttons, ( Qt::KeyboardModifiers )modifiers);
     QCoreApplication::postEvent(m_eventReceiver, event);
 }
 
@@ -177,14 +176,12 @@ void RemoteViewServer::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
         return;
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-    auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(
-                                     localPos), pixelDelta, angleDelta, (Qt::MouseButtons)buttons,
-                                 (Qt::KeyboardModifiers)modifiers, Qt::NoScrollPhase, false);
+    auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(localPos), pixelDelta, angleDelta, ( Qt::MouseButtons )buttons,
+                                 ( Qt::KeyboardModifiers )modifiers, Qt::NoScrollPhase, false);
 #else
-    auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(
-                                     localPos), pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical,
-                                 /*not used*/ (Qt::MouseButtons)buttons,
-                                 (Qt::KeyboardModifiers)modifiers);
+    auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(localPos), pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical,
+                                 /*not used*/ ( Qt::MouseButtons )buttons,
+                                 ( Qt::KeyboardModifiers )modifiers);
 #endif
     QCoreApplication::postEvent(m_eventReceiver, event);
 }
@@ -197,8 +194,8 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
 
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
     if (!m_touchDevice) {
-        //create our own touch device, the system may not have one already, or it may not have
-        //the properties we want
+        // create our own touch device, the system may not have one already, or it may not have
+        // the properties we want
         m_touchDevice.reset(new QPointingDevice);
     }
     m_touchDevice->setType(QPointingDevice::DeviceType(touchDeviceType));
@@ -212,8 +209,8 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
     mut->setTarget(m_eventReceiver);
 #else
     if (!m_touchDevice) {
-        //create our own touch device, the system may not have one already, or it may not have
-        //the properties we want
+        // create our own touch device, the system may not have one already, or it may not have
+        // the properties we want
         m_touchDevice.reset(new QTouchDevice);
     }
     m_touchDevice->setType(QTouchDevice::DeviceType(touchDeviceType));

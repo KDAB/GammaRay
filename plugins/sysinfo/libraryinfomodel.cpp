@@ -32,12 +32,16 @@
 
 using namespace GammaRay;
 
-struct location_info_t {
+struct location_info_t
+{
     QLibraryInfo::LibraryLocation loc;
-    const char* name;
+    const char *name;
 };
 
-#define L(x) { QLibraryInfo:: x, #x }
+#define L(x)                \
+    {                       \
+        QLibraryInfo::x, #x \
+    }
 static const location_info_t locInfoTable[] = {
     L(PrefixPath),
     L(DocumentationPath),
@@ -60,33 +64,35 @@ static const location_info_t locInfoTable[] = {
 #undef L
 static const auto locInfoTableSize = sizeof(locInfoTable) / sizeof(location_info_t);
 
-LibraryInfoModel::LibraryInfoModel(QObject* parent)
+LibraryInfoModel::LibraryInfoModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
 }
 
-int LibraryInfoModel::columnCount(const QModelIndex& parent) const
+int LibraryInfoModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 2;
 }
 
-int LibraryInfoModel::rowCount(const QModelIndex& parent) const
+int LibraryInfoModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
     return locInfoTableSize;
 }
 
-QVariant LibraryInfoModel::data(const QModelIndex& index, int role) const
+QVariant LibraryInfoModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case 0: return locInfoTable[index.row()].name;
-            case 1: return QLibraryInfo::location(locInfoTable[index.row()].loc);
+        case 0:
+            return locInfoTable[index.row()].name;
+        case 1:
+            return QLibraryInfo::location(locInfoTable[index.row()].loc);
         }
     }
 
@@ -97,10 +103,10 @@ QVariant LibraryInfoModel::headerData(int section, Qt::Orientation orientation, 
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
-            case 0:
-                return tr("Location");
-            case 1:
-                return tr("Path");
+        case 0:
+            return tr("Location");
+        case 1:
+            return tr("Path");
         }
     }
     return QAbstractTableModel::headerData(section, orientation, role);

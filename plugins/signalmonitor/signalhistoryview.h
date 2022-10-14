@@ -45,8 +45,14 @@ public:
     explicit SignalHistoryView(QWidget *parent = nullptr);
 
     void setEventScrollBar(QScrollBar *scrollBar);
-    QScrollBar *eventScrollBar() const { return m_eventScrollBar; }
-    SignalHistoryDelegate *eventDelegate() const { return m_eventDelegate; }
+    QScrollBar *eventScrollBar() const
+    {
+        return m_eventScrollBar;
+    }
+    SignalHistoryDelegate *eventDelegate() const
+    {
+        return m_eventDelegate;
+    }
 
     int eventColumnPosition() const;
     int eventColumnWidth() const;
@@ -63,7 +69,7 @@ private slots:
     void eventScrollBarSliderMoved(int value);
 
 private:
-    SignalHistoryDelegate * const m_eventDelegate;
+    SignalHistoryDelegate *const m_eventDelegate;
     QScrollBar *m_eventScrollBar;
 };
 } // namespace GammaRay

@@ -42,8 +42,7 @@ QT_BEGIN_NAMESPACE
 class QNetworkReply;
 QT_END_NAMESPACE
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 /** QNetworkReply tracking. */
 class NetworkReplyModel : public QAbstractItemModel
@@ -59,11 +58,12 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
-    QMap<int, QVariant> itemData(const QModelIndex & index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
     void objectCreated(QObject *obj);
 
-    struct ReplyNode {
+    struct ReplyNode
+    {
         QNetworkReply *reply = nullptr;
         QString displayName;
         QUrl url;
@@ -76,14 +76,18 @@ public:
         NetworkReply::ContentType contentType = NetworkReply::Unknown;
     };
 
-    bool captureResponse() const { return m_captureResponse; }
+    bool captureResponse() const
+    {
+        return m_captureResponse;
+    }
     void setCaptureResponse(bool newCaptureResponse);
 
 signals:
     void captureResponseChanged();
 
 private:
-    struct NAMNode {
+    struct NAMNode
+    {
         QNetworkAccessManager *nam;
         QString displayName;
         std::vector<ReplyNode> replies;

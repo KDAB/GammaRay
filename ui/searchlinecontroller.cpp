@@ -43,7 +43,8 @@
 using namespace GammaRay;
 
 namespace {
-QAbstractItemModel *findEffectiveFilterModel(QAbstractItemModel *model) {
+QAbstractItemModel *findEffectiveFilterModel(QAbstractItemModel *model)
+{
     Q_ASSERT(model);
 
     if (model->metaObject()->indexOfProperty("filterKeyColumn") != -1) {
@@ -87,10 +88,10 @@ SearchLineController::SearchLineController(QLineEdit *lineEdit, QAbstractItemMod
     auto timer = new QTimer(this);
     timer->setSingleShot(true);
     timer->setInterval(300);
-    connect(lineEdit, &QLineEdit::textChanged, timer, [timer]{ timer->start(); });
-    connect(timer, &QTimer::timeout, this, [this]{
+    connect(lineEdit, &QLineEdit::textChanged, timer, [timer] { timer->start(); });
+    connect(timer, &QTimer::timeout, this, [this] {
         activateSearch();
-        QTimer::singleShot(50, this, [this]{
+        QTimer::singleShot(50, this, [this] {
             onSearchFinished(m_lineEdit->text());
         });
     });

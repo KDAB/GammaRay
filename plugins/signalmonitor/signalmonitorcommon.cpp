@@ -36,5 +36,5 @@ using namespace GammaRay;
 
 void GammaRay::StreamOperators::registerSignalMonitorStreamOperators()
 {
-    StreamOperators::registerOperators<QVector<qlonglong> >();
+    StreamOperators::registerOperators<QVector<qlonglong>>();
 }

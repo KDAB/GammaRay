@@ -54,21 +54,21 @@ using namespace GammaRay;
 class RemoteSurfaceView : public RemoteViewWidget
 {
 public:
-  explicit RemoteSurfaceView(QWidget *parent)
-    : RemoteViewWidget(parent)
-  {
-    setName(QStringLiteral("com.kdab.GammaRay.WaylandCompositorSurfaceView"));
-  }
+    explicit RemoteSurfaceView(QWidget *parent)
+        : RemoteViewWidget(parent)
+    {
+        setName(QStringLiteral("com.kdab.GammaRay.WaylandCompositorSurfaceView"));
+    }
 };
 
-static QObject *wlCompositorClientFactory(const QString &/*name*/, QObject *parent)
+static QObject *wlCompositorClientFactory(const QString & /*name*/, QObject *parent)
 {
-  return new WlCompositorClient(parent);
+    return new WlCompositorClient(parent);
 }
 
 InspectorWidget::InspectorWidget(QWidget *parent)
-               : QWidget(parent)
-               , m_ui(new Ui::InspectorWidget)
+    : QWidget(parent)
+    , m_ui(new Ui::InspectorWidget)
 {
     ObjectBroker::registerClientObjectFactoryCallback<WlCompositorInterface *>(wlCompositorClientFactory);
     m_client = ObjectBroker::object<WlCompositorInterface *>();
@@ -100,19 +100,18 @@ InspectorWidget::InspectorWidget(QWidget *parent)
 
     auto *surfaceView = new RemoteSurfaceView(this);
     m_ui->gridLayout->addWidget(surfaceView, 1, 0, 1, 1);
-
 }
 
 InspectorWidget::~InspectorWidget()
 {
-  m_client->disconnected();
+    m_client->disconnected();
 }
 
 void InspectorWidget::delayedInit()
 {
 }
 
-void InspectorWidget::clientSelected(const QItemSelection& selection)
+void InspectorWidget::clientSelected(const QItemSelection &selection)
 {
     if (selection.isEmpty()) {
         m_client->setSelectedClient(-1);
@@ -151,22 +150,22 @@ void InspectorWidget::resourceActivated(const QModelIndex &index)
 bool InspectorWidget::eventFilter(QObject *o, QEvent *e)
 {
     switch (e->type()) {
-        case QEvent::MouseButtonRelease: {
-            auto *me = static_cast<QMouseEvent *>(e);
-            if (o == m_ui->clientsView->viewport()) {
-                const auto idx = m_ui->clientsView->indexAt(me->pos());
-                if (!idx.isValid())
-                    m_ui->clientsView->selectionModel()->clear();
-            } else {
-                QModelIndex index = m_ui->resourcesView->indexAt(me->pos());
-                if (!index.isValid()) {
-                  m_ui->resourcesView->setCurrentIndex(index);
-                }
+    case QEvent::MouseButtonRelease: {
+        auto *me = static_cast<QMouseEvent *>(e);
+        if (o == m_ui->clientsView->viewport()) {
+            const auto idx = m_ui->clientsView->indexAt(me->pos());
+            if (!idx.isValid())
+                m_ui->clientsView->selectionModel()->clear();
+        } else {
+            QModelIndex index = m_ui->resourcesView->indexAt(me->pos());
+            if (!index.isValid()) {
+                m_ui->resourcesView->setCurrentIndex(index);
             }
-            return false;
         }
-        default:
-            break;
+        return false;
+    }
+    default:
+        break;
     }
     return QWidget::eventFilter(o, e);
 }

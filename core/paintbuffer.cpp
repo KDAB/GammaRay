@@ -40,33 +40,33 @@ PaintBufferEngine::PaintBufferEngine(GammaRay::PaintBuffer *buffer)
 
 PaintBufferEngine::~PaintBufferEngine() = default;
 
-void PaintBufferEngine::clip(const QVectorPath& path, Qt::ClipOperation op)
+void PaintBufferEngine::clip(const QVectorPath &path, Qt::ClipOperation op)
 {
     QPaintBufferEngine::clip(path, op);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::clip(const QRect& rect, Qt::ClipOperation op)
+void PaintBufferEngine::clip(const QRect &rect, Qt::ClipOperation op)
 {
     QPaintBufferEngine::clip(rect, op);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::clip(const QRegion& region, Qt::ClipOperation op)
+void PaintBufferEngine::clip(const QRegion &region, Qt::ClipOperation op)
 {
     QPaintBufferEngine::clip(region, op);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::clip(const QPainterPath& path, Qt::ClipOperation op)
+void PaintBufferEngine::clip(const QPainterPath &path, Qt::ClipOperation op)
 {
     QPaintBufferEngine::clip(path, op);
     // TODO disabled in QPaintBuffer
-//     createStackTrace();
-//      pushOrigin();
+    //     createStackTrace();
+    //      pushOrigin();
 }
 
 void PaintBufferEngine::backgroundModeChanged()
@@ -132,148 +132,148 @@ void PaintBufferEngine::transformChanged()
     pushOrigin();
 }
 
-void PaintBufferEngine::fillRect(const QRectF& rect, const QBrush& brush)
+void PaintBufferEngine::fillRect(const QRectF &rect, const QBrush &brush)
 {
     QPaintBufferEngine::fillRect(rect, brush);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::fillRect(const QRectF& rect, const QColor& color)
+void PaintBufferEngine::fillRect(const QRectF &rect, const QColor &color)
 {
     QPaintBufferEngine::fillRect(rect, color);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawRects(const QRect* rects, int rectCount)
+void PaintBufferEngine::drawRects(const QRect *rects, int rectCount)
 {
     QPaintBufferEngine::drawRects(rects, rectCount);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawRects(const QRectF* rects, int rectCount)
+void PaintBufferEngine::drawRects(const QRectF *rects, int rectCount)
 {
     QPaintBufferEngine::drawRects(rects, rectCount);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawLines(const QLine* lines, int lineCount)
+void PaintBufferEngine::drawLines(const QLine *lines, int lineCount)
 {
     QPaintBufferEngine::drawLines(lines, lineCount);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawLines(const QLineF* lines, int lineCount)
+void PaintBufferEngine::drawLines(const QLineF *lines, int lineCount)
 {
     QPaintBufferEngine::drawLines(lines, lineCount);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawEllipse(const QRect& r)
+void PaintBufferEngine::drawEllipse(const QRect &r)
 {
     QPaintBufferEngine::drawEllipse(r);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawEllipse(const QRectF& r)
+void PaintBufferEngine::drawEllipse(const QRectF &r)
 {
     QPaintBufferEngine::drawEllipse(r);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawPath(const QPainterPath& path)
+void PaintBufferEngine::drawPath(const QPainterPath &path)
 {
     QPaintBufferEngine::drawPath(path);
     // TODO this is not handled in QPaintBuffer
-//     createStackTrace();
-//      pushOrigin();
+    //     createStackTrace();
+    //      pushOrigin();
 }
 
-void PaintBufferEngine::drawPoints(const QPoint* points, int pointCount)
+void PaintBufferEngine::drawPoints(const QPoint *points, int pointCount)
 {
     QPaintBufferEngine::drawPoints(points, pointCount);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawPoints(const QPointF* points, int pointCount)
+void PaintBufferEngine::drawPoints(const QPointF *points, int pointCount)
 {
     QPaintBufferEngine::drawPoints(points, pointCount);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawPolygon(const QPoint* points, int pointCount, QPaintEngine::PolygonDrawMode mode)
+void PaintBufferEngine::drawPolygon(const QPoint *points, int pointCount, QPaintEngine::PolygonDrawMode mode)
 {
     QPaintBufferEngine::drawPolygon(points, pointCount, mode);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawPolygon(const QPointF* points, int pointCount, QPaintEngine::PolygonDrawMode mode)
+void PaintBufferEngine::drawPolygon(const QPointF *points, int pointCount, QPaintEngine::PolygonDrawMode mode)
 {
     QPaintBufferEngine::drawPolygon(points, pointCount, mode);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawPixmap(const QRectF& r, const QPixmap& pm, const QRectF& sr)
+void PaintBufferEngine::drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr)
 {
     QPaintBufferEngine::drawPixmap(r, pm, sr);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawPixmap(const QPointF& pos, const QPixmap& pm)
+void PaintBufferEngine::drawPixmap(const QPointF &pos, const QPixmap &pm)
 {
     QPaintBufferEngine::drawPixmap(pos, pm);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawImage(const QPointF& pos, const QImage& image)
+void PaintBufferEngine::drawImage(const QPointF &pos, const QImage &image)
 {
     QPaintBufferEngine::drawImage(pos, image);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawImage(const QRectF& r, const QImage& pm, const QRectF& sr, Qt::ImageConversionFlags flags)
+void PaintBufferEngine::drawImage(const QRectF &r, const QImage &pm, const QRectF &sr, Qt::ImageConversionFlags flags)
 {
     QPaintBufferEngine::drawImage(r, pm, sr, flags);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawTiledPixmap(const QRectF& r, const QPixmap& pixmap, const QPointF& s)
+void PaintBufferEngine::drawTiledPixmap(const QRectF &r, const QPixmap &pixmap, const QPointF &s)
 {
     QPaintBufferEngine::drawTiledPixmap(r, pixmap, s);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawTextItem(const QPointF& pos, const QTextItem& ti)
+void PaintBufferEngine::drawTextItem(const QPointF &pos, const QTextItem &ti)
 {
     QPaintBufferEngine::drawTextItem(pos, ti);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::drawStaticTextItem(QStaticTextItem* staticTextItem)
+void PaintBufferEngine::drawStaticTextItem(QStaticTextItem *staticTextItem)
 {
     QPaintBufferEngine::drawStaticTextItem(staticTextItem);
     createStackTrace();
     pushOrigin();
 }
 
-void PaintBufferEngine::setState(QPainterState* s)
+void PaintBufferEngine::setState(QPainterState *s)
 {
     const auto prevSize = m_buffer->data()->commands.size();
     QPaintBufferEngine::setState(s);
@@ -307,14 +307,18 @@ void PaintBufferEngine::pushOrigin()
 class PaintBufferPrivacyViolater : public QPainterReplayer
 {
 public:
-    static QPaintBufferPrivate* get(QPaintBuffer *buffer)
+    static QPaintBufferPrivate *get(QPaintBuffer *buffer)
     {
         PaintBufferPrivacyViolater p;
         p.processCommands(*buffer, nullptr, 0, -1); // end < begin -> no processing
         return p.extract();
     }
+
 private:
-    QPaintBufferPrivate *extract() const { return d; }
+    QPaintBufferPrivate *extract() const
+    {
+        return d;
+    }
 };
 
 
@@ -323,7 +327,7 @@ PaintBuffer::PaintBuffer()
     d = PaintBufferPrivacyViolater::get(this);
 }
 
-PaintBuffer::PaintBuffer(const PaintBuffer& other)
+PaintBuffer::PaintBuffer(const PaintBuffer &other)
     : QPaintBuffer(other)
     , m_stackTraces(other.m_stackTraces)
     , m_origins(other.m_origins)
@@ -333,7 +337,7 @@ PaintBuffer::PaintBuffer(const PaintBuffer& other)
 
 PaintBuffer::~PaintBuffer() = default;
 
-PaintBuffer& PaintBuffer::operator=(const PaintBuffer& other)
+PaintBuffer &PaintBuffer::operator=(const PaintBuffer &other)
 {
     QPaintBuffer::operator=(other);
     d = PaintBufferPrivacyViolater::get(this);
@@ -342,10 +346,10 @@ PaintBuffer& PaintBuffer::operator=(const PaintBuffer& other)
     return *this;
 }
 
-QPaintEngine* PaintBuffer::paintEngine() const
+QPaintEngine *PaintBuffer::paintEngine() const
 {
     if (!d->engine)
-        d->engine = new PaintBufferEngine(const_cast<PaintBuffer*>(this));
+        d->engine = new PaintBufferEngine(const_cast<PaintBuffer *>(this));
     return d->engine;
 }
 
@@ -369,7 +373,7 @@ void PaintBuffer::setOrigin(const ObjectId &obj)
     m_currentOrigin = obj;
 }
 
-QPaintBufferPrivate* PaintBuffer::data() const
+QPaintBufferPrivate *PaintBuffer::data() const
 {
     return d;
 }

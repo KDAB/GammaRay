@@ -37,19 +37,17 @@
 
 using namespace GammaRay;
 
-///NOTE: for crashes related to script engine debugger on shutdown, see:
-///      https://bugreports.qt.nokia.com/browse/QTBUG-21548
-///      Also it seems that we get another crash when the interrupt action
-///      was triggered and we close the mainwindow.
+/// NOTE: for crashes related to script engine debugger on shutdown, see:
+///       https://bugreports.qt.nokia.com/browse/QTBUG-21548
+///       Also it seems that we get another crash when the interrupt action
+///       was triggered and we close the mainwindow.
 
 ScriptEngineDebugger::ScriptEngineDebugger(Probe *probe, QObject *parent)
     : QObject(parent)
 {
-    auto *scriptEngineFilter
-        = new ObjectTypeFilterProxyModel<QScriptEngine>(this);
+    auto *scriptEngineFilter = new ObjectTypeFilterProxyModel<QScriptEngine>(this);
     scriptEngineFilter->setSourceModel(probe->objectListModel());
-    auto *singleColumnProxy
-        = new SingleColumnObjectProxyModel(this);
+    auto *singleColumnProxy = new SingleColumnObjectProxyModel(this);
     singleColumnProxy->setSourceModel(scriptEngineFilter);
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ScriptEngines"), singleColumnProxy);

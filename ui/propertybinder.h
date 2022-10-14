@@ -74,7 +74,8 @@ private slots:
 private:
     QObject *m_source;
     QPointer<QObject> m_destination;
-    struct Binding {
+    struct Binding
+    {
         QMetaProperty sourceProperty;
         QMetaProperty destinationProperty;
     };

@@ -42,7 +42,8 @@ class SceneModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    enum Role {
+    enum Role
+    {
         SceneItemRole = UserRole + 1
     };
     explicit SceneModel(QObject *parent = nullptr);

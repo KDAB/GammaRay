@@ -36,22 +36,22 @@ namespace GammaRay {
 /** Dynamic casting trait for supporting dynamic_cast-like functions for pseudo-polymorphic Qt types.
  *  The generic implementation in here just does dynamic_cast, this needs to be specialized where needed.
  */
-template <typename Out, typename In>
+template<typename Out, typename In>
 Out DynamicCast(In *in)
 {
     return dynamic_cast<Out>(in);
 }
 
 ///@cond internal
-template <typename Out>
-Out DynamicCast(void*)
+template<typename Out>
+Out DynamicCast(void *)
 {
     return nullptr;
 }
 ///@endcond
 
 /** Specializable variant of std::is_polymorphic, for use with pseudo-polymorphic Qt types. */
-template <typename T>
+template<typename T>
 bool IsPolymorphic()
 {
     return std::is_polymorphic<T>::value;

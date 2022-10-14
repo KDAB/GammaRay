@@ -36,18 +36,18 @@
 
 using namespace GammaRay;
 
-SelectionModelModel::SelectionModelModel(QObject *parent) :
-    ObjectModelBase<QAbstractTableModel>(parent),
-    m_model(nullptr)
+SelectionModelModel::SelectionModelModel(QObject *parent)
+    : ObjectModelBase<QAbstractTableModel>(parent)
+    , m_model(nullptr)
 {
 }
 
 SelectionModelModel::~SelectionModelModel() = default;
 
-void SelectionModelModel::objectCreated(QObject* obj)
+void SelectionModelModel::objectCreated(QObject *obj)
 {
     Q_ASSERT(obj);
-    auto model = qobject_cast<QItemSelectionModel*>(obj);
+    auto model = qobject_cast<QItemSelectionModel *>(obj);
     if (!model)
         return;
 
@@ -62,13 +62,13 @@ void SelectionModelModel::objectCreated(QObject* obj)
         return;
 
     it = std::lower_bound(m_currentSelectionModels.begin(), m_currentSelectionModels.end(), model);
-   const  auto row = std::distance(m_currentSelectionModels.begin(), it);
+    const auto row = std::distance(m_currentSelectionModels.begin(), it);
     beginInsertRows(QModelIndex(), row, row);
     m_currentSelectionModels.insert(it, model);
     endInsertRows();
 }
 
-void SelectionModelModel::objectDestroyed(QObject* obj)
+void SelectionModelModel::objectDestroyed(QObject *obj)
 {
     Q_ASSERT(obj);
 
@@ -92,7 +92,7 @@ void SelectionModelModel::objectDestroyed(QObject* obj)
 
 void SelectionModelModel::sourceModelChanged()
 {
-    auto model = qobject_cast<QItemSelectionModel*>(sender());
+    auto model = qobject_cast<QItemSelectionModel *>(sender());
     Q_ASSERT(model);
 
     auto it = std::lower_bound(m_currentSelectionModels.begin(), m_currentSelectionModels.end(), model);
@@ -116,7 +116,7 @@ void SelectionModelModel::sourceModelChanged()
 
 void SelectionModelModel::selectionChanged()
 {
-    auto model = qobject_cast<QItemSelectionModel*>(sender());
+    auto model = qobject_cast<QItemSelectionModel *>(sender());
     Q_ASSERT(model);
 
     if (model->model() != m_model)
@@ -128,7 +128,7 @@ void SelectionModelModel::selectionChanged()
     emit dataChanged(index(row, 1), index(row, 3));
 }
 
-void SelectionModelModel::setModel(QAbstractItemModel* model)
+void SelectionModelModel::setModel(QAbstractItemModel *model)
 {
     if (model == m_model)
         return;
@@ -140,8 +140,8 @@ void SelectionModelModel::setModel(QAbstractItemModel* model)
     }
 
     m_model = model;
-    QVector<QItemSelectionModel*> models;
-    std::copy_if(m_selectionModels.constBegin(), m_selectionModels.constEnd(), std::back_inserter(models), [this](QItemSelectionModel* model) {
+    QVector<QItemSelectionModel *> models;
+    std::copy_if(m_selectionModels.constBegin(), m_selectionModels.constEnd(), std::back_inserter(models), [this](QItemSelectionModel *model) {
         return model->model() == m_model;
     });
 
@@ -174,10 +174,14 @@ QVariant SelectionModelModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case 1: return model->selectedIndexes().size();
-            case 2: return model->selectedRows().size();
-            case 3: return model->selectedColumns().size();
-            case 4: return ObjectDataProvider::typeName(model);
+        case 1:
+            return model->selectedIndexes().size();
+        case 2:
+            return model->selectedRows().size();
+        case 3:
+            return model->selectedColumns().size();
+        case 4:
+            return ObjectDataProvider::typeName(model);
         }
     }
 
@@ -188,11 +192,16 @@ QVariant SelectionModelModel::headerData(int section, Qt::Orientation orientatio
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return tr("Object");
-            case 1: return tr("#Items");
-            case 2: return tr("#Rows");
-            case 3: return tr("#Columns");
-            case 4: return tr("Type");
+        case 0:
+            return tr("Object");
+        case 1:
+            return tr("#Items");
+        case 2:
+            return tr("#Rows");
+        case 3:
+            return tr("#Columns");
+        case 4:
+            return tr("Type");
         }
     }
     return QAbstractTableModel::headerData(section, orientation, role);

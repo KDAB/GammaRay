@@ -73,7 +73,7 @@ QVariant ObjectMethodModel::metaData(const QModelIndex &index, const QMetaMethod
     return QVariant();
 }
 
-QMap< int, QVariant > ObjectMethodModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> ObjectMethodModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> m = super::itemData(index);
     m.insert(ObjectMethodModelRole::MetaMethodType, data(index, ObjectMethodModelRole::MetaMethodType));

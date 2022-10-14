@@ -53,7 +53,7 @@ public:
 protected:
     QString defaultDisplayText(const QModelIndex &index) const;
 
-    static const QWidget *widget(const QStyleOptionViewItem &option) ;
+    static const QWidget *widget(const QStyleOptionViewItem &option);
     QStyle *style(const QStyleOptionViewItem &option) const;
 
 private:

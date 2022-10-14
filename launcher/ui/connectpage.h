@@ -48,6 +48,7 @@ class GAMMARAY_LAUNCHER_UI_EXPORT ConnectPage : public QWidget
 {
     Q_OBJECT
     friend class ::LauncherUiIPTest;
+
 public:
     explicit ConnectPage(QWidget *parent = nullptr);
     ~ConnectPage() override;

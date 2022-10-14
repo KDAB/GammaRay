@@ -56,26 +56,13 @@ struct QuickDecorationsSettings
     {
     }
 
-    bool operator==(const QuickDecorationsSettings &other) const {
-        return boundingRectColor == other.boundingRectColor &&
-                boundingRectBrush == other.boundingRectBrush &&
-                geometryRectColor == other.geometryRectColor &&
-                geometryRectBrush == other.geometryRectBrush &&
-                childrenRectColor == other.childrenRectColor &&
-                childrenRectBrush == other.childrenRectBrush &&
-                transformOriginColor == other.transformOriginColor &&
-                coordinatesColor == other.coordinatesColor &&
-                marginsColor == other.marginsColor &&
-                paddingColor == other.paddingColor &&
-                gridOffset == other.gridOffset &&
-                gridCellSize == other.gridCellSize &&
-                gridColor == other.gridColor &&
-                componentsTraces == other.componentsTraces &&
-                gridEnabled == other.gridEnabled
-                ;
+    bool operator==(const QuickDecorationsSettings &other) const
+    {
+        return boundingRectColor == other.boundingRectColor && boundingRectBrush == other.boundingRectBrush && geometryRectColor == other.geometryRectColor && geometryRectBrush == other.geometryRectBrush && childrenRectColor == other.childrenRectColor && childrenRectBrush == other.childrenRectBrush && transformOriginColor == other.transformOriginColor && coordinatesColor == other.coordinatesColor && marginsColor == other.marginsColor && paddingColor == other.paddingColor && gridOffset == other.gridOffset && gridCellSize == other.gridCellSize && gridColor == other.gridColor && componentsTraces == other.componentsTraces && gridEnabled == other.gridEnabled;
     }
 
-    bool operator!=(const QuickDecorationsSettings &other) const {
+    bool operator!=(const QuickDecorationsSettings &other) const
+    {
         return !operator==(other);
     }
 
@@ -99,40 +86,46 @@ struct QuickDecorationsSettings
 QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickDecorationsSettings &settings);
 QDataStream &operator>>(QDataStream &stream, GammaRay::QuickDecorationsSettings &settings);
 
-struct QuickDecorationsBaseRenderInfo {
+struct QuickDecorationsBaseRenderInfo
+{
     QuickDecorationsBaseRenderInfo(const QuickDecorationsSettings &settings = QuickDecorationsSettings(),
                                    const QRectF &viewRect = QRectF(),
                                    qreal zoom = 1.0)
         : settings(settings)
         , viewRect(viewRect)
         , zoom(zoom)
-    { }
+    {
+    }
 
     const QuickDecorationsSettings settings;
     const QRectF viewRect;
     const qreal zoom;
 };
 
-struct QuickDecorationsRenderInfo : QuickDecorationsBaseRenderInfo {
+struct QuickDecorationsRenderInfo : QuickDecorationsBaseRenderInfo
+{
     QuickDecorationsRenderInfo(const QuickDecorationsSettings &settings = QuickDecorationsSettings(),
                                const QuickItemGeometry &itemGeometry = QuickItemGeometry(),
                                const QRectF &viewRect = QRectF(),
                                qreal zoom = 1.0)
         : QuickDecorationsBaseRenderInfo(settings, viewRect, zoom)
         , itemGeometry(itemGeometry)
-    { }
+    {
+    }
 
     const QuickItemGeometry itemGeometry;
 };
 
-struct QuickDecorationsTracesInfo : QuickDecorationsBaseRenderInfo {
+struct QuickDecorationsTracesInfo : QuickDecorationsBaseRenderInfo
+{
     QuickDecorationsTracesInfo(const QuickDecorationsSettings &settings = QuickDecorationsSettings(),
                                const QVector<QuickItemGeometry> &itemsGeometry = QVector<QuickItemGeometry>(),
                                const QRectF &viewRect = QRectF(),
                                qreal zoom = 1.0)
         : QuickDecorationsBaseRenderInfo(settings, viewRect, zoom)
         , itemsGeometry(itemsGeometry)
-    { }
+    {
+    }
 
     const QVector<QuickItemGeometry> itemsGeometry;
 };
@@ -140,7 +133,8 @@ struct QuickDecorationsTracesInfo : QuickDecorationsBaseRenderInfo {
 class QuickDecorationsDrawer
 {
 public:
-    enum Type {
+    enum Type
+    {
         Decorations,
         Traces
     };
@@ -151,7 +145,8 @@ public:
     void render();
 
 private:
-    struct DrawTextInfo {
+    struct DrawTextInfo
+    {
         DrawTextInfo(const QPen &pen = QPen(), const QRectF &rect = QRectF(),
                      const QString &label = QString(),
                      int align = Qt::AlignCenter | Qt::TextDontClip)
@@ -159,7 +154,8 @@ private:
             , rect(rect)
             , label(label)
             , align(align)
-        { }
+        {
+        }
 
         QPen pen;
         QRectF rect;

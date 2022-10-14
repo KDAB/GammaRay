@@ -40,10 +40,16 @@ public:
     {
     }
 
-    qint64 mSecs() const { return currentMSecsSinceEpoch() - offset(); }
+    qint64 mSecs() const
+    {
+        return currentMSecsSinceEpoch() - offset();
+    }
     qint64 mSecs(qint64 alignment) const;
 
-    qint64 offset() const { return m_offset; }
+    qint64 offset() const
+    {
+        return m_offset;
+    }
     static const RelativeClock *sinceAppStart();
 
 private:

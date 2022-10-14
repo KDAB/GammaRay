@@ -33,14 +33,14 @@
 
 using namespace GammaRay;
 
-MetaTypesClientModel::MetaTypesClientModel(QObject* parent)
+MetaTypesClientModel::MetaTypesClientModel(QObject *parent)
     : QIdentityProxyModel(parent)
 {
 }
 
 MetaTypesClientModel::~MetaTypesClientModel() = default;
 
-QVariant MetaTypesClientModel::data(const QModelIndex& index, int role) const
+QVariant MetaTypesClientModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole && (index.column() == 5 || index.column() == 6)) {
         const auto v = QIdentityProxyModel::data(index, Qt::DisplayRole);
@@ -61,27 +61,27 @@ QVariant MetaTypesClientModel::headerData(int section, Qt::Orientation orientati
     if (orientation == Qt::Horizontal) {
         if (role == Qt::DisplayRole) {
             switch (section) {
-                case 0:
-                    return tr("Type Name");
-                case 1:
-                    return tr("Meta Type Id");
-                case 2:
-                    return tr("Size");
-                case 3:
-                    return tr("Meta Object");
-                case 4:
-                    return tr("Type Flags");
-                case 5:
-                    return tr("Compare");
-                case 6:
-                    return tr("Debug");
+            case 0:
+                return tr("Type Name");
+            case 1:
+                return tr("Meta Type Id");
+            case 2:
+                return tr("Size");
+            case 3:
+                return tr("Meta Object");
+            case 4:
+                return tr("Type Flags");
+            case 5:
+                return tr("Compare");
+            case 6:
+                return tr("Debug");
             }
         } else if (role == Qt::ToolTipRole) {
             switch (section) {
-                case 5:
-                    return tr("Has equality comparison operators registered.");
-                case 6:
-                    return tr("Has debug stream operators registered.");
+            case 5:
+                return tr("Has equality comparison operators registered.");
+            case 6:
+                return tr("Has debug stream operators registered.");
             }
         }
         return QVariant();

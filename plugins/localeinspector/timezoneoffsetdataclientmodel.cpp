@@ -30,7 +30,7 @@
 
 using namespace GammaRay;
 
-TimezoneOffsetDataClientModel::TimezoneOffsetDataClientModel(QObject* parent)
+TimezoneOffsetDataClientModel::TimezoneOffsetDataClientModel(QObject *parent)
     : QIdentityProxyModel(parent)
 {
 }
@@ -41,11 +41,16 @@ QVariant TimezoneOffsetDataClientModel::headerData(int section, Qt::Orientation 
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
-            case 0: return tr("Transition Time (UTC)");
-            case 1: return tr("Offset to UTC");
-            case 2: return tr("Standard Time Offset");
-            case 3: return tr("DST Offset");
-            case 4: return tr("Abbreviation");
+        case 0:
+            return tr("Transition Time (UTC)");
+        case 1:
+            return tr("Offset to UTC");
+        case 2:
+            return tr("Standard Time Offset");
+        case 3:
+            return tr("DST Offset");
+        case 4:
+            return tr("Abbreviation");
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);

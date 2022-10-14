@@ -41,7 +41,8 @@
 #include <QVector>
 
 namespace GammaRay {
-struct ObjectlBrokerData {
+struct ObjectlBrokerData
+{
     ObjectlBrokerData() = default;
     QHash<QString, QObject *> objects;
     QHash<QString, QAbstractItemModel *> models;
@@ -144,7 +145,7 @@ void ObjectBroker::setModelFactoryCallback(ObjectBroker::ModelFactoryCallback ca
 void ObjectBroker::registerSelectionModel(QItemSelectionModel *selectionModel)
 {
     Q_ASSERT(!s_objectBroker()->selectionModels.contains(const_cast<QAbstractItemModel *>(
-                                                             selectionModel->model())));
+        selectionModel->model())));
     s_objectBroker()->selectionModels.insert(
         const_cast<QAbstractItemModel *>(selectionModel->model()), selectionModel);
 }
@@ -152,7 +153,7 @@ void ObjectBroker::registerSelectionModel(QItemSelectionModel *selectionModel)
 void ObjectBroker::unregisterSelectionModel(QItemSelectionModel *selectionModel)
 {
     Q_ASSERT(s_objectBroker()->selectionModels.contains(const_cast<QAbstractItemModel *>(
-                                                            selectionModel->model())));
+        selectionModel->model())));
     s_objectBroker()->selectionModels.remove(
         const_cast<QAbstractItemModel *>(selectionModel->model()));
 }

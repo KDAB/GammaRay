@@ -47,7 +47,7 @@ using namespace GammaRay;
 
 static void registerMetaTypes()
 {
-    qRegisterMetaType<QIviServiceObject*>();
+    qRegisterMetaType<QIviServiceObject *>();
 
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT0(QIviServiceInterface);
@@ -62,8 +62,8 @@ static void registerMetaTypes()
     MO_ADD_PROPERTY_RO(QIviZonedFeatureInterface, availableZones);
 }
 
-QtIviSupport::QtIviSupport(Probe* probe, QObject* parent)
-   : QObject(parent)
+QtIviSupport::QtIviSupport(Probe *probe, QObject *parent)
+    : QObject(parent)
 {
     Q_UNUSED(probe);
     registerMetaTypes();
@@ -75,5 +75,5 @@ QtIviSupport::QtIviSupport(Probe* probe, QObject* parent)
 #endif
 
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.PropertyModel"), propertyModel);
-    //m_selectionModel = ObjectBroker::selectionModel(filterModel);
+    // m_selectionModel = ObjectBroker::selectionModel(filterModel);
 }

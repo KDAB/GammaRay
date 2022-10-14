@@ -43,13 +43,15 @@ namespace GammaRay {
 class ClientsModel : public QAbstractTableModel
 {
 public:
-    enum Columns {
+    enum Columns
+    {
         PidColumn,
         CommandColumn,
         EndColumn
     };
 
-    enum Roles {
+    enum Roles
+    {
         ObjectIdRole = UserRole + 1
     };
 

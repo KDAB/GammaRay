@@ -42,7 +42,7 @@ class PositioningInterface : public QObject
     Q_PROPERTY(bool positioningOverrideEnabled READ positioningOverrideEnabled WRITE setPositioningOverrideEnabled NOTIFY positioningOverrideEnabledChanged)
     Q_PROPERTY(QGeoPositionInfo positionInfoOverride READ positionInfoOverride WRITE setPositionInfoOverride NOTIFY positionInfoOverrideChanged)
 public:
-    explicit PositioningInterface(QObject* parent = nullptr);
+    explicit PositioningInterface(QObject *parent = nullptr);
 
     /** Position info from the source. */
     QGeoPositionInfo positionInfo() const;

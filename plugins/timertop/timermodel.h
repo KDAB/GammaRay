@@ -63,7 +63,8 @@ public:
     void preSignalActivate(QObject *caller, int methodIndex);
     void postSignalActivate(QObject *caller, int methodIndex);
 
-    enum Columns {
+    enum Columns
+    {
         ObjectNameColumn,
         StateColumn,
         TotalWakeupsColumn,
@@ -74,7 +75,8 @@ public:
         ColumnCount
     };
 
-    enum Roles {
+    enum Roles
+    {
         TimerIntervalRole = ObjectModel::UserRole,
         TimerTypeRole
     };

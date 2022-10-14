@@ -76,8 +76,7 @@ MetaObjectBrowser::MetaObjectBrowser(Probe *probe, QObject *parent)
                                              "QMetaObject Validator",
                                              "Checks for common errors with meta objects, like invocable functions with unregistered parameter types.",
                                              &MetaObjectBrowser::scanForMetaObjectProblems,
-                                             /*enabled=*/ false
-                                            );
+                                             /*enabled=*/false);
 }
 
 void MetaObjectBrowser::rescanMetaTypes()
@@ -92,8 +91,7 @@ void MetaObjectBrowser::objectSelectionChanged(const QItemSelection &selection)
         index = selection.first().topLeft();
 
     if (index.isValid()) {
-        const QMetaObject *metaObject
-            = index.data(QMetaObjectModel::MetaObjectRole).value<const QMetaObject*>();
+        const QMetaObject *metaObject = index.data(QMetaObjectModel::MetaObjectRole).value<const QMetaObject *>();
         m_propertyController->setMetaObject(metaObject);
     } else {
         m_propertyController->setMetaObject(nullptr);
@@ -152,8 +150,8 @@ void MetaObjectBrowser::doProblemScan(const QMetaObject *parent)
 
         auto results = QMetaObjectValidator::check(mo);
         if (results != QMetaObjectValidatorResult::NoIssue) {
-            //TODO do we want the Problem descriptions have more detail, i.e. have one problem listed
-            //     for each method/property that has issues instead of one for each metaobject?
+            // TODO do we want the Problem descriptions have more detail, i.e. have one problem listed
+            //      for each method/property that has issues instead of one for each metaobject?
             Problem p;
             p.severity = Problem::Warning;
             QStringList issueList;
@@ -168,7 +166,7 @@ void MetaObjectBrowser::doProblemScan(const QMetaObject *parent)
                 issueList.push_back(QStringLiteral("has a property with a type not registered with the meta type system"));
 
             p.description = QStringLiteral("%1 %2.").arg(mo->className(), issueList.join(", "));
-            p.object = ObjectId(const_cast<QMetaObject*>(mo), "const QMetaObject*");
+            p.object = ObjectId(const_cast<QMetaObject *>(mo), "const QMetaObject*");
             p.problemId = QString("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator:%1").arg(reinterpret_cast<quintptr>(mo));
             p.findingCategory = Problem::Scan;
             ProblemCollector::addProblem(p);

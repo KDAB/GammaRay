@@ -43,7 +43,7 @@ void ObjectsFavoriteView::setModel(QAbstractItemModel *model)
     // KDescendantsProxyModel -> FavoritesModel -> View
     // However, this makes things super slow
 
-    auto proxyModel1 = static_cast<FavoritesModel*>(model);
+    auto proxyModel1 = static_cast<FavoritesModel *>(model);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     proxyModel1->setRecursiveFilteringEnabled(true);
 #endif
@@ -63,7 +63,7 @@ void ObjectsFavoriteView::onIndexClicked(const QModelIndex &idx)
     if (!idx.isValid() || !m_sourceView || !m_proxyMapper)
         return;
 
-    auto pm = static_cast<KModelIndexProxyMapper*>(m_proxyMapper);
+    auto pm = static_cast<KModelIndexProxyMapper *>(m_proxyMapper);
     auto sourceIdx = pm->mapRightToLeft(idx);
 
     m_sourceView->selectionModel()->select(sourceIdx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);

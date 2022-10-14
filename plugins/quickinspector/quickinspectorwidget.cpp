@@ -100,8 +100,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     m_interface = ObjectBroker::object<QuickInspectorInterface *>();
 
     ui->windowComboBox->setModel(ObjectBroker::model(QStringLiteral(
-                                                         "com.kdab.GammaRay.QuickWindowModel")));
-    connect(ui->windowComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+        "com.kdab.GammaRay.QuickWindowModel")));
+    connect(ui->windowComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             m_interface, &QuickInspectorInterface::selectWindow);
     if (ui->windowComboBox->currentIndex() >= 0)
         m_interface->selectWindow(ui->windowComboBox->currentIndex());
@@ -172,8 +172,10 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     addAction(createSeparator(this));
     addAction(ui->actionSlowDownMode);
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
-    m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
+                                                                    << "50%");
+    m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%"
+                                                                           << "50%");
 
     connect(ui->actionSaveAsImage, &QAction::triggered, this, &QuickInspectorWidget::saveAsImage);
     connect(ui->actionSaveAsImageWithDecoration, &QAction::triggered, this, &QuickInspectorWidget::saveAsImage);
@@ -266,9 +268,8 @@ void QuickInspectorWidget::itemModelDataChanged(const QModelIndex &topLeft,
         QPersistentModelIndex persistentIndex(index);
         connect(colorAnimation, &QVariantAnimation::valueChanged,
                 ui->itemTreeView->itemDelegate(), [persistentIndex, this](const QVariant &value) {
-            qobject_cast<QuickItemDelegate *>(ui->itemTreeView->itemDelegate())->setTextColor(value,
-                                                                                              persistentIndex);
-        });
+                    qobject_cast<QuickItemDelegate *>(ui->itemTreeView->itemDelegate())->setTextColor(value, persistentIndex);
+                });
         colorAnimation->setStartValue(QColor(129, 0, 129));
         colorAnimation->setEndValue(QColor(129, 0, 129, 0));
         colorAnimation->setDuration(2000);
@@ -299,8 +300,7 @@ void GammaRay::QuickInspectorWidget::itemContextMenu(const QPoint &pos)
 
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     ContextMenuExtension ext(objectId);
-    ext.setLocation(ContextMenuExtension::Creation, index.data(
-                        ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
     ext.setLocation(ContextMenuExtension::Declaration,
                     index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.setCanFavoriteItems(true);
@@ -341,8 +341,7 @@ void QuickInspectorWidget::saveState()
 
 void QuickInspectorWidget::saveAsImage()
 {
-    const QString fileName
-        = QFileDialog::getSaveFileName(
+    const QString fileName = QFileDialog::getSaveFileName(
         this,
         tr("Save As Image"),
         QString(),
@@ -352,7 +351,7 @@ void QuickInspectorWidget::saveAsImage()
         return;
 
     const CompleteFrameRequest request(fileName,
-                                       sender() ==  ui->actionSaveAsImageWithDecoration);
+                                       sender() == ui->actionSaveAsImageWithDecoration);
     m_scenePreviewWidget->previewWidget()->requestCompleteFrame(request);
 }
 

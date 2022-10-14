@@ -63,7 +63,9 @@ class Server;
 class ToolManager;
 class ProblemCollector;
 class MetaObjectRegistry;
-namespace Execution { class Trace; }
+namespace Execution {
+class Trace;
+}
 
 /*!
  * Central entity of GammaRay: The probe is tracking the Qt application under test
@@ -106,7 +108,7 @@ public:
      * object lock and check the pointer with @e isValidObject though, before
      * dereferencing any of the QObject pointers.
      */
-    const QVector<QObject*> &allQObjects() const;
+    const QVector<QObject *> &allQObjects() const;
 
     /*!
      * Returns the object list model.
@@ -143,7 +145,7 @@ public:
      *
      * @since 2.5
      */
-    static bool needsObjectDiscovery() ;
+    static bool needsObjectDiscovery();
     /*!
      * Notify the probe about QObjects your plug-in can discover by using information about
      * the types it can handle.
@@ -195,9 +197,9 @@ public:
     void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks);
 
     /*! Returns the source code location @p object was created at. */
-    static SourceLocation objectCreationSourceLocation(QObject *object) ;
+    static SourceLocation objectCreationSourceLocation(QObject *object);
     /*! Returns the entire stack trace for the creation of @p object. */
-    static Execution::Trace objectCreationStackTrace(QObject *object) ;
+    static Execution::Trace objectCreationStackTrace(QObject *object);
 
     ///@cond internal
     QObject *window() const;
@@ -223,8 +225,8 @@ public:
      */
     bool isValidObject(const QObject *obj) const
     {
-        ///TODO: can we somehow assert(s_lock().isLocked()) ?!
-        ///  -> Not with a recursive mutex. Make it non-recursive, and you can do Q_ASSERT(!s_lock().tryLock());
+        /// TODO: can we somehow assert(s_lock().isLocked()) ?!
+        ///   -> Not with a recursive mutex. Make it non-recursive, and you can do Q_ASSERT(!s_lock().tryLock());
         return m_validObjects.contains(obj);
     }
 
@@ -242,7 +244,8 @@ public:
 
     ///@cond internal
     static void startupHookReceived();
-    template<typename Func> static void executeSignalCallback(const Func &func);
+    template<typename Func>
+    static void executeSignalCallback(const Func &func);
     ///@endcond
 
     ProblemCollector *problemCollector() const;
@@ -346,9 +349,11 @@ private:
     MetaObjectRegistry *m_metaObjectRegistry;
 
     // all delayed object changes need to go through a single queue, as the order is crucial
-    struct ObjectChange {
+    struct ObjectChange
+    {
         QObject *obj;
-        enum Type {
+        enum Type
+        {
             Create,
             Destroy
         } type;

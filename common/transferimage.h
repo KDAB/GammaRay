@@ -47,7 +47,8 @@ public:
     QTransform transform() const;
     void setTransform(const QTransform &transform);
 
-    enum Format {
+    enum Format
+    {
         QImageFormat,
         RawFormat
     };

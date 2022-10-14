@@ -30,8 +30,10 @@
 
 using namespace GammaRay;
 
-StyleElementProxyModel::StyleModelProxy(QObject *parent) : QIdentityProxyModel(parent), m_sizeHint(
-        64, 64)
+StyleElementProxyModel::StyleModelProxy(QObject *parent)
+    : QIdentityProxyModel(parent)
+    , m_sizeHint(
+          64, 64)
 {
 }
 

@@ -84,7 +84,7 @@ TimerId::Type TimerId::type() const
     return m_type;
 }
 
-QObject* TimerId::address() const
+QObject *TimerId::address() const
 {
     return m_timerAddress;
 }
@@ -178,7 +178,7 @@ void TimerIdInfo::update(const TimerId &id, QObject *receiver)
     }
 
     case TimerId::QTimerType: {
-        const QTimer *const timer = qobject_cast<QTimer*>(object);
+        const QTimer *const timer = qobject_cast<QTimer *>(object);
         timerId = timer->timerId();
         interval = timer->interval();
         lastReceiverAddress = id.address();

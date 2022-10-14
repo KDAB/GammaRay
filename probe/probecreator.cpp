@@ -63,10 +63,10 @@ ProbeCreator::ProbeCreator(CreateFlags flags)
     // too early the env var from there isn't going to reach the web process
     qputenv("QTWEBKIT_INSPECTOR_SERVER",
             QByteArray(GAMMARAY_DEFAULT_ANY_ADDRESS) + ':'
-            + QByteArray::number(Endpoint::defaultPort() + 1));
+                + QByteArray::number(Endpoint::defaultPort() + 1));
     qputenv("QTWEBENGINE_REMOTE_DEBUGGING",
             QByteArray(GAMMARAY_DEFAULT_ANY_ADDRESS) + ':'
-            + QByteArray::number(Endpoint::defaultPort() + 1));
+                + QByteArray::number(Endpoint::defaultPort() + 1));
 }
 
 void ProbeCreator::createProbe()

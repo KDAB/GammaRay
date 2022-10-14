@@ -31,10 +31,18 @@ class MyTestObject : public QObject
 {
     Q_OBJECT
 public slots:
-    void mySlot1() {}
-    void mySlot2() {}
-    void mySlot3() {}
-    void mySlot4() {}
+    void mySlot1()
+    {
+    }
+    void mySlot2()
+    {
+    }
+    void mySlot3()
+    {
+    }
+    void mySlot4()
+    {
+    }
 
 signals:
     void mySignal1();
@@ -48,8 +56,7 @@ static void connectObjects(QObject *sender, QObject *receiver)
     QObject::connect(sender, SIGNAL(mySignal1()), receiver, SLOT(mySlot1()));
     QObject::connect(sender, SIGNAL(mySignal2()), receiver, SLOT(mySlot2()), Qt::DirectConnection);
     QObject::connect(sender, SIGNAL(mySignal3()), receiver, SLOT(mySlot3()), Qt::QueuedConnection);
-    QObject::connect(sender, SIGNAL(mySignal4()), receiver, SLOT(
-                         mySlot4()), Qt::BlockingQueuedConnection);
+    QObject::connect(sender, SIGNAL(mySignal4()), receiver, SLOT(mySlot4()), Qt::BlockingQueuedConnection);
 }
 
 static void dummyFunction()

@@ -49,11 +49,12 @@ CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
     ui->selectedCodecs->header()->setObjectName("selectedCodecsHeader");
     ui->selectedCodecs->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->selectedCodecs->setModel(ObjectBroker::model(QStringLiteral(
-                                                         "com.kdab.GammaRay.SelectedCodecsModel")));
+        "com.kdab.GammaRay.SelectedCodecsModel")));
 
     connect(ui->codecText, &QLineEdit::textChanged, this, &CodecBrowserWidget::textChanged);
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
+                                                                    << "50%");
 }
 
 CodecBrowserWidget::~CodecBrowserWidget() = default;
@@ -61,6 +62,7 @@ CodecBrowserWidget::~CodecBrowserWidget() = default;
 void CodecBrowserWidget::textChanged(const QString &text)
 {
     Endpoint::instance()->invokeObject(QStringLiteral(
-                                           "com.kdab.GammaRay.CodecBrowser"), "textChanged",
+                                           "com.kdab.GammaRay.CodecBrowser"),
+                                       "textChanged",
                                        QVariantList() << text);
 }

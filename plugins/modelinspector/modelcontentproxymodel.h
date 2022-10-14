@@ -48,7 +48,8 @@ class ModelContentProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 public:
-    enum Roles {
+    enum Roles
+    {
         DisabledRole = GammaRay::UserRole + 1,
         SelectedRole,
         IsDisplayStringEmptyRole

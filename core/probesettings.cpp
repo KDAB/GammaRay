@@ -103,7 +103,7 @@ void ProbeSettingsReceiver::run()
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     connect(m_socket, &QLocalSocket::errorOccurred, this, &ProbeSettingsReceiver::settingsReceivedFallback);
 #else
-    connect(m_socket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
+    connect(m_socket, static_cast<void (QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
             this, &ProbeSettingsReceiver::settingsReceivedFallback);
 #endif
     connect(m_socket, &QIODevice::readyRead, this, &ProbeSettingsReceiver::readyRead);
@@ -131,23 +131,20 @@ void ProbeSettingsReceiver::readyRead()
     while (Message::canReadMessage(m_socket)) {
         auto msg = Message::readMessage(m_socket);
         switch (msg.type()) {
-        case Protocol::ServerVersion:
-        {
+        case Protocol::ServerVersion: {
             qint32 version;
             msg >> version;
             if (version != Protocol::version()) {
                 qWarning()
-                        <<
-                        "Unable to receive probe settings, mismatching protocol versions (expected:"
-                        << Protocol::version() << "got:" << version << ")";
+                    << "Unable to receive probe settings, mismatching protocol versions (expected:"
+                    << Protocol::version() << "got:" << version << ")";
                 qWarning() << "Continuing anyway, but this is likely going to fail.";
                 settingsReceivedFallback();
                 return;
             }
             break;
         }
-        case Protocol::ProbeSettings:
-        {
+        case Protocol::ProbeSettings: {
             msg >> s_probeSettings()->settings;
             // qDebug() << Q_FUNC_INFO << s_probeSettings()->settings;
             const QString probePath = ProbeSettings::value(QStringLiteral("ProbePath")).toString();

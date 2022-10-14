@@ -36,7 +36,10 @@
 
 using namespace GammaRay;
 
-#define F(x) { QNetworkInterface:: x, #x }
+#define F(x)                     \
+    {                            \
+        QNetworkInterface::x, #x \
+    }
 static const MetaEnum::Value<QNetworkInterface::InterfaceFlag> interface_flag_table[] = {
     F(IsUp),
     F(IsRunning),

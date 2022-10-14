@@ -30,7 +30,7 @@
 
 using namespace GammaRay;
 
-EnvironmentModel::EnvironmentModel(QObject* parent)
+EnvironmentModel::EnvironmentModel(QObject *parent)
     : QAbstractTableModel(parent)
     , m_env(QProcessEnvironment::systemEnvironment())
 {
@@ -38,28 +38,30 @@ EnvironmentModel::EnvironmentModel(QObject* parent)
 
 EnvironmentModel::~EnvironmentModel() = default;
 
-int EnvironmentModel::columnCount(const QModelIndex& parent) const
+int EnvironmentModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 2;
 }
 
-int EnvironmentModel::rowCount(const QModelIndex& parent) const
+int EnvironmentModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
     return m_env.keys().size();
 }
 
-QVariant EnvironmentModel::data(const QModelIndex& index, int role) const
+QVariant EnvironmentModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case 0: return m_env.keys().at(index.row());
-            case 1: return m_env.value(m_env.keys().at(index.row()));
+        case 0:
+            return m_env.keys().at(index.row());
+        case 1:
+            return m_env.value(m_env.keys().at(index.row()));
         }
     }
 
@@ -70,10 +72,10 @@ QVariant EnvironmentModel::headerData(int section, Qt::Orientation orientation, 
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
-            case 0:
-                return tr("Environment Variable");
-            case 1:
-                return tr("Value");
+        case 0:
+            return tr("Environment Variable");
+        case 1:
+            return tr("Value");
         }
     }
     return QAbstractTableModel::headerData(section, orientation, role);

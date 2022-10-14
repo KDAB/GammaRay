@@ -110,7 +110,8 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 
     ui->categoriesView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel")));
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
+                                                                    << "50%");
     m_stateManager.setDefaultSizes(ui->messageView->header(),
                                    UISizeVector() << -1 << 300 << -1 << -1 << -1);
 }
@@ -121,8 +122,7 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
                                                 const QTime &time, const QStringList &backtrace)
 {
     if (Endpoint::isConnected()
-        && !qobject_cast<MessageHandlerClient *>(ObjectBroker::object<MessageHandlerInterface *>()))
-    {
+        && !qobject_cast<MessageHandlerClient *>(ObjectBroker::object<MessageHandlerInterface *>())) {
         // only show on remote side
         return;
     }

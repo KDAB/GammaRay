@@ -155,13 +155,10 @@ void TextDocumentModel::fillBlock(const QTextBlock &block, QStandardItem *parent
             const auto start = std::max(range.start, it.fragment().position() - block.position());
             const auto end = std::min(range.start + range.length,
                                       it.fragment().position() + it.fragment().length()
-                                      - block.position());
+                                          - block.position());
             if (start >= end)
                 continue;
-            auto child
-                = new QStandardItem(tr("Layout Range: %1").arg(it.fragment().text().mid(start,
-                                                                                        end
-                                                                                        -start)));
+            auto child = new QStandardItem(tr("Layout Range: %1").arg(it.fragment().text().mid(start, end - start)));
             appendRow(item, child, range.format, QRectF());
         }
 #endif

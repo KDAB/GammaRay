@@ -47,7 +47,7 @@ SelectionModelServer::SelectionModelServer(const QString &objectName, QAbstractI
     m_myAddress = Server::instance()->registerObject(objectName, this, Server::ExportNothing);
     Server::instance()->registerMessageHandler(m_myAddress, this, "newMessage");
     Server::instance()->registerMonitorNotifier(m_myAddress, this, "modelMonitored");
-    connect(Endpoint::instance(), &Endpoint::disconnected, this, [this]{ modelMonitored(); });
+    connect(Endpoint::instance(), &Endpoint::disconnected, this, [this] { modelMonitored(); });
 }
 
 SelectionModelServer::~SelectionModelServer() = default;
@@ -77,7 +77,7 @@ void SelectionModelServer::connectModel()
 {
     Q_ASSERT(model());
 
-    auto startTimer = [this](){ m_timer->start(); };
+    auto startTimer = [this]() { m_timer->start(); };
     connect(model(), &QAbstractItemModel::modelReset, m_timer, startTimer);
     connect(model(), &QAbstractItemModel::rowsInserted, m_timer, startTimer);
     connect(model(), &QAbstractItemModel::rowsMoved, m_timer, startTimer);

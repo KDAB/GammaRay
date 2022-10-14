@@ -45,13 +45,11 @@ static QWidget *toplevelWidget(QWidget *widget)
         return widget->isWindow();
     };
     auto lastSuitableParent = parent;
-    while (parent->parentWidget() &&
-            !isTopLevel(parent->parentWidget()) &&
-            !isTopLevel(parent)) {
+    while (parent->parentWidget() && !isTopLevel(parent->parentWidget()) && !isTopLevel(parent)) {
         parent = parent->parentWidget();
 
         // don't pick parents that can't take the overlay as a children
-        if (!qobject_cast<QSplitter*>(parent)) {
+        if (!qobject_cast<QSplitter *>(parent)) {
             lastSuitableParent = parent;
         }
     }
@@ -60,8 +58,8 @@ static QWidget *toplevelWidget(QWidget *widget)
 }
 
 OverlayWidget::OverlayWidget()
-  : m_currentToplevelWidget(nullptr),
-    m_drawLayoutOutlineOnly(true)
+    : m_currentToplevelWidget(nullptr)
+    , m_drawLayoutOutlineOnly(true)
 {
     setAttribute(Qt::WA_TransparentForMouseEvents);
     setFocusPolicy(Qt::NoFocus);
@@ -148,18 +146,20 @@ void OverlayWidget::updatePositions()
     const QPoint parentPos = m_currentItem.widget()->mapTo(m_currentToplevelWidget, m_currentItem.pos());
     m_outerRect = QRect(parentPos.x(), parentPos.y(),
                         m_currentItem.geometry().width(),
-                        m_currentItem.geometry().height()).adjusted(0, 0, -1, -1);
+                        m_currentItem.geometry().height())
+                      .adjusted(0, 0, -1, -1);
 
     m_layoutPath = QPainterPath();
 
     if (m_currentItem.layout()
         && qstrcmp(m_currentItem.layout()->metaObject()->className(),
-                   "QMainWindowLayout") != 0) {
+                   "QMainWindowLayout")
+            != 0) {
         const QRect layoutGeometry = m_currentItem.layout()->geometry();
 
-        const QRect mappedOuterRect
-            = QRect(m_currentItem.widget()->mapTo(m_currentToplevelWidget,
-                                                  layoutGeometry.topLeft()), layoutGeometry.size());
+        const QRect mappedOuterRect = QRect(m_currentItem.widget()->mapTo(m_currentToplevelWidget,
+                                                                          layoutGeometry.topLeft()),
+                                            layoutGeometry.size());
 
         QPainterPath outerPath;
         outerPath.addRect(mappedOuterRect.adjusted(1, 1, -2, -2));
@@ -169,10 +169,9 @@ void OverlayWidget::updatePositions()
             QLayoutItem *item = m_currentItem.layout()->itemAt(i);
             if (item->widget() && !item->widget()->isVisible())
                 continue;
-            const QRect mappedInnerRect
-                = QRect(m_currentItem.widget()->mapTo(m_currentToplevelWidget,
-                                                      item->geometry().topLeft()),
-                        item->geometry().size());
+            const QRect mappedInnerRect = QRect(m_currentItem.widget()->mapTo(m_currentToplevelWidget,
+                                                                              item->geometry().topLeft()),
+                                                item->geometry().size());
             innerPath.addRect(mappedInnerRect);
         }
 

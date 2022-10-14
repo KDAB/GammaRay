@@ -99,10 +99,7 @@ void MethodsExtension::signalEmitted(QObject *sender, int signalIndex,
         prettyArgs.push_back(VariantHandler::displayString(v));
 
     m_methodLogModel->appendRow(
-        new QStandardItem(tr("%1: Signal %2 emitted, arguments: %3").arg(
-                              QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")),
-                              QString(sender->metaObject()->method(signalIndex).methodSignature()),
-                              prettyArgs.join(QStringLiteral(", ")))));
+        new QStandardItem(tr("%1: Signal %2 emitted, arguments: %3").arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")), QString(sender->metaObject()->method(signalIndex).methodSignature()), prettyArgs.join(QStringLiteral(", ")))));
 }
 
 void MethodsExtension::activateMethod()
@@ -133,8 +130,7 @@ void MethodsExtension::invokeMethod(Qt::ConnectionType connectionType)
     if (!m_object) {
         m_methodLogModel->appendRow(
             new QStandardItem(
-                tr("%1: Invocation failed: Invalid object, probably got deleted in the meantime.").
-                arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")))));
+                tr("%1: Invocation failed: Invalid object, probably got deleted in the meantime.").arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")))));
         return;
     }
 
@@ -148,8 +144,7 @@ void MethodsExtension::invokeMethod(Qt::ConnectionType connectionType)
     if (method.methodType() == QMetaMethod::Constructor) {
         m_methodLogModel->appendRow(
             new QStandardItem(
-                tr("%1: Invocation failed: Can't invoke constructors.").
-                arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")))));
+                tr("%1: Invocation failed: Can't invoke constructors.").arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")))));
         return;
     }
 
@@ -164,8 +159,7 @@ void MethodsExtension::invokeMethod(Qt::ConnectionType connectionType)
     if (!result) {
         m_methodLogModel->appendRow(
             new QStandardItem(
-                tr("%1: Invocation failed..").
-                arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")))));
+                tr("%1: Invocation failed..").arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")))));
         return;
     }
 

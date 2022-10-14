@@ -33,11 +33,10 @@
 
 using namespace GammaRay;
 
-namespace
-{
-    int argc = 1;
-    char argv0[] = "integrationtest";
-    char* argv[] = {argv0};
+namespace {
+int argc = 1;
+char argv0[] = "integrationtest";
+char *argv[] = { argv0 };
 }
 
 class IntegrationTest : public BaseProbeTest

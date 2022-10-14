@@ -50,7 +50,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
-    QMap<int, QVariant> itemData(const QModelIndex & index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
     TranslatorWrapper *translator(const QModelIndex &index) const;
 

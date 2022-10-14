@@ -58,7 +58,7 @@ public:
      */
     explicit ObjectFilterProxyModelBase(QObject *parent = nullptr);
 
-    QMap<int, QVariant> itemData(const QModelIndex& index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
 protected:
     /**

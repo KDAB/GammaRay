@@ -98,8 +98,7 @@ void QuickDecorationsDrawer::drawDecorations()
     }
 
     // children rect
-    if (itemGeometry.childrenRect.isValid() && itemGeometry.itemRect != itemGeometry.boundingRect &&
-            itemGeometry.transform.isIdentity()) {
+    if (itemGeometry.childrenRect.isValid() && itemGeometry.itemRect != itemGeometry.boundingRect && itemGeometry.transform.isIdentity()) {
         // If this item is transformed the children rect will be painted wrongly,
         // so for now skip painting it.
         m_painter->setPen(m_renderInfo->settings.childrenRectColor);
@@ -112,17 +111,14 @@ void QuickDecorationsDrawer::drawDecorations()
         m_painter->setPen(m_renderInfo->settings.transformOriginColor);
         m_painter->drawEllipse(itemGeometry.transformOriginPoint, 2.5, 2.5);
         m_painter->drawLine(itemGeometry.transformOriginPoint - QPointF(0, 6),
-                          itemGeometry.transformOriginPoint + QPointF(0, 6));
+                            itemGeometry.transformOriginPoint + QPointF(0, 6));
         m_painter->drawLine(itemGeometry.transformOriginPoint - QPointF(6, 0),
-                          itemGeometry.transformOriginPoint + QPointF(6, 0));
+                            itemGeometry.transformOriginPoint + QPointF(6, 0));
     }
 
     // x and y values
     m_painter->setPen(m_renderInfo->settings.coordinatesColor);
-    if (!itemGeometry.left &&
-            !itemGeometry.horizontalCenter &&
-            !itemGeometry.right &&
-            itemGeometry.x != 0) {
+    if (!itemGeometry.left && !itemGeometry.horizontalCenter && !itemGeometry.right && itemGeometry.x != 0) {
         QPointF parentEnd = (QPointF(itemGeometry.itemRect.x() - itemGeometry.x,
                                      itemGeometry.itemRect.y()));
         QPointF itemEnd = itemGeometry.itemRect.topLeft();
@@ -132,11 +128,7 @@ void QuickDecorationsDrawer::drawDecorations()
                               QStringLiteral("x: %1px").arg(itemGeometry.x / zoom),
                               Qt::AlignHCenter | Qt::TextDontClip);
     }
-    if (!itemGeometry.top &&
-            !itemGeometry.verticalCenter &&
-            !itemGeometry.bottom &&
-            !itemGeometry.baseline &&
-            itemGeometry.y != 0) {
+    if (!itemGeometry.top && !itemGeometry.verticalCenter && !itemGeometry.bottom && !itemGeometry.baseline && itemGeometry.y != 0) {
         QPointF parentEnd = (QPointF(itemGeometry.itemRect.x(),
                                      itemGeometry.itemRect.y() - itemGeometry.y));
         QPointF itemEnd = itemGeometry.itemRect.topLeft();
@@ -320,24 +312,24 @@ void QuickDecorationsDrawer::drawTraces()
         // type name label
         m_painter->setPen(QColor(250, 250, 250, 120));
         m_painter->drawText(classRect.adjusted(margin, margin, -margin, -margin),
-                          Qt::AlignVCenter | Qt::AlignLeft | Qt::TextDontClip,
-                          itemGeometry.traceTypeName);
+                            Qt::AlignVCenter | Qt::AlignLeft | Qt::TextDontClip,
+                            itemGeometry.traceTypeName);
 
         // draw bounding box corners
         m_painter->setPen(QPen(QColor(30, 30, 30), 3));
         m_painter->setBrush(m_painter->pen().color());
         const QVector<QPointF> points = QVector<QPointF>()
-                << itemGeometry.boundingRect.topLeft()
-                << itemGeometry.boundingRect.topRight()
-                << itemGeometry.boundingRect.bottomRight()
-                << itemGeometry.boundingRect.bottomLeft();
+            << itemGeometry.boundingRect.topLeft()
+            << itemGeometry.boundingRect.topRight()
+            << itemGeometry.boundingRect.bottomRight()
+            << itemGeometry.boundingRect.bottomLeft();
         m_painter->drawPoints(points);
 
         // name label
         m_painter->setPen(QColor(250, 250, 250, 120));
         m_painter->drawText(itemGeometry.boundingRect.adjusted(margin, margin, -margin, -margin),
-                          Qt::AlignVCenter | Qt::AlignLeft | Qt::TextDontClip,
-                          itemGeometry.traceName);
+                            Qt::AlignVCenter | Qt::AlignLeft | Qt::TextDontClip,
+                            itemGeometry.traceName);
     }
 
     m_painter->restore();
@@ -380,8 +372,7 @@ void QuickDecorationsDrawer::drawGrid()
     m_painter->setPen(m_renderInfo->settings.gridColor);
 
     QVector<QLineF> lines;
-    lines.reserve((viewRect.width() / gridCellSize.width()) +
-                  (viewRect.height() / gridCellSize.height()));
+    lines.reserve((viewRect.width() / gridCellSize.width()) + (viewRect.height() / gridCellSize.height()));
 
     for (qreal x = viewRect.left() + gridOffset.x(); x < viewRect.right(); x += gridCellSize.width()) {
         if (x < viewRect.left())
@@ -448,12 +439,12 @@ void QuickDecorationsDrawer::drawAnchor(const QuickItemGeometry &itemGeometry, Q
     m_painter->setPen(pen);
     if (orientation == Qt::Horizontal) {
         m_painter->drawLine(ownAnchorLine,
-                    itemGeometry.itemRect.top(), ownAnchorLine,
-                    itemGeometry.itemRect.bottom());
+                            itemGeometry.itemRect.top(), ownAnchorLine,
+                            itemGeometry.itemRect.bottom());
     } else {
         m_painter->drawLine(
-                    itemGeometry.itemRect.left(), ownAnchorLine,
-                    itemGeometry.itemRect.right(), ownAnchorLine);
+            itemGeometry.itemRect.left(), ownAnchorLine,
+            itemGeometry.itemRect.right(), ownAnchorLine);
     }
 
     // Foreign Anchor line
@@ -481,7 +472,7 @@ void QuickDecorationsDrawer::drawHorizontalAnchor(const QuickItemGeometry &itemG
 }
 
 QuickDecorationsDrawer::DrawTextInfo QuickDecorationsDrawer::drawAnchorLabel(const QuickItemGeometry &itemGeometry,
-                                                         Qt::Orientation orientation, qreal ownAnchorLine, qreal offset, const QString &label, Qt::Alignment align)
+                                                                             Qt::Orientation orientation, qreal ownAnchorLine, qreal offset, const QString &label, Qt::Alignment align)
 {
     if (align.testFlag(Qt::AlignCenter)) {
         qWarning("%s: You can not use Qt::AlignCenter!", Q_FUNC_INFO);
@@ -533,10 +524,9 @@ QuickDecorationsDrawer::DrawTextInfo QuickDecorationsDrawer::drawAnchorLabel(con
             }
 
             return QuickDecorationsDrawer::DrawTextInfo(
-                        m_painter->pen(),
-                        rect,
-                        label
-                        );
+                m_painter->pen(),
+                rect,
+                label);
         } else {
             QRectF rect(m_painter->fontMetrics().boundingRect(label));
 
@@ -560,10 +550,9 @@ QuickDecorationsDrawer::DrawTextInfo QuickDecorationsDrawer::drawAnchorLabel(con
             }
 
             return QuickDecorationsDrawer::DrawTextInfo(
-                        m_painter->pen(),
-                        rect,
-                        label
-                        );
+                m_painter->pen(),
+                rect,
+                label);
         }
     }
 
@@ -571,13 +560,13 @@ QuickDecorationsDrawer::DrawTextInfo QuickDecorationsDrawer::drawAnchorLabel(con
 }
 
 QuickDecorationsDrawer::DrawTextInfo QuickDecorationsDrawer::drawHorizontalAnchorLabel(const QuickItemGeometry &itemGeometry,
-                                                                   qreal ownAnchorLine, qreal offset, const QString &label, Qt::Alignment align)
+                                                                                       qreal ownAnchorLine, qreal offset, const QString &label, Qt::Alignment align)
 {
     return drawAnchorLabel(itemGeometry, Qt::Horizontal, ownAnchorLine, offset, label, align);
 }
 
 QuickDecorationsDrawer::DrawTextInfo QuickDecorationsDrawer::drawVerticalAnchorLabel(const QuickItemGeometry &itemGeometry,
-                                                                 qreal ownAnchorLine, qreal offset, const QString &label, Qt::Alignment align)
+                                                                                     qreal ownAnchorLine, qreal offset, const QString &label, Qt::Alignment align)
 {
     return drawAnchorLabel(itemGeometry, Qt::Vertical, ownAnchorLine, offset, label, align);
 }
@@ -585,22 +574,21 @@ QuickDecorationsDrawer::DrawTextInfo QuickDecorationsDrawer::drawVerticalAnchorL
 QDataStream &GammaRay::operator<<(QDataStream &stream, const GammaRay::QuickDecorationsSettings &settings)
 {
     stream
-            << settings.boundingRectColor
-            << settings.boundingRectBrush
-            << settings.geometryRectColor
-            << settings.geometryRectBrush
-            << settings.childrenRectColor
-            << settings.childrenRectBrush
-            << settings.transformOriginColor
-            << settings.coordinatesColor
-            << settings.marginsColor
-            << settings.paddingColor
-            << settings.gridOffset
-            << settings.gridCellSize
-            << settings.gridColor
-            << settings.componentsTraces
-            << settings.gridEnabled
-    ;
+        << settings.boundingRectColor
+        << settings.boundingRectBrush
+        << settings.geometryRectColor
+        << settings.geometryRectBrush
+        << settings.childrenRectColor
+        << settings.childrenRectBrush
+        << settings.transformOriginColor
+        << settings.coordinatesColor
+        << settings.marginsColor
+        << settings.paddingColor
+        << settings.gridOffset
+        << settings.gridCellSize
+        << settings.gridColor
+        << settings.componentsTraces
+        << settings.gridEnabled;
 
     return stream;
 }
@@ -608,22 +596,21 @@ QDataStream &GammaRay::operator<<(QDataStream &stream, const GammaRay::QuickDeco
 QDataStream &GammaRay::operator>>(QDataStream &stream, GammaRay::QuickDecorationsSettings &settings)
 {
     stream
-            >> settings.boundingRectColor
-            >> settings.boundingRectBrush
-            >> settings.geometryRectColor
-            >> settings.geometryRectBrush
-            >> settings.childrenRectColor
-            >> settings.childrenRectBrush
-            >> settings.transformOriginColor
-            >> settings.coordinatesColor
-            >> settings.marginsColor
-            >> settings.paddingColor
-            >> settings.gridOffset
-            >> settings.gridCellSize
-            >> settings.gridColor
-            >> settings.componentsTraces
-            >> settings.gridEnabled
-    ;
+        >> settings.boundingRectColor
+        >> settings.boundingRectBrush
+        >> settings.geometryRectColor
+        >> settings.geometryRectBrush
+        >> settings.childrenRectColor
+        >> settings.childrenRectBrush
+        >> settings.transformOriginColor
+        >> settings.coordinatesColor
+        >> settings.marginsColor
+        >> settings.paddingColor
+        >> settings.gridOffset
+        >> settings.gridCellSize
+        >> settings.gridColor
+        >> settings.componentsTraces
+        >> settings.gridEnabled;
 
     return stream;
 }

@@ -35,7 +35,7 @@
 
 #include <QIODevice>
 #include <QLoggingCategory>
-//we use qCWarning, which we turn off by default, but which is not compiled out in releasebuilds
+// we use qCWarning, which we turn off by default, but which is not compiled out in releasebuilds
 Q_LOGGING_CATEGORY(networkstatistics, "gammaray.network.statistics", QtMsgType::QtCriticalMsg)
 
 using namespace GammaRay;
@@ -47,7 +47,7 @@ Endpoint::Endpoint(QObject *parent)
     : QObject(parent)
     , m_propertySyncer(new PropertySyncer(this))
     , m_socket(nullptr)
-    , m_myAddress(Protocol::InvalidObjectAddress +1)
+    , m_myAddress(Protocol::InvalidObjectAddress + 1)
     , m_bytesRead(0)
     , m_bytesWritten(0)
     , m_pid(-1)
@@ -133,8 +133,8 @@ void Endpoint::doLogTransmissionRate()
 {
     emit logTransmissionRate(m_bytesRead, m_bytesWritten);
 
-    if(!isRemoteClient()) {
-        if(m_bytesRead != 0 || m_bytesWritten != 0) {
+    if (!isRemoteClient()) {
+        if (m_bytesRead != 0 || m_bytesWritten != 0) {
             const float transmissionRateRX = (m_bytesRead * 8 / 1024.0 / 1024.0); // in Mpbs
             const float transmissionRateTX = (m_bytesWritten * 8 / 1024.0 / 1024.0); // in Mpbs
             qCWarning(networkstatistics, "RX %7.3f Mbps | TX %7.3f Mbps", transmissionRateRX, transmissionRateTX);
@@ -367,9 +367,9 @@ void Endpoint::dispatchMessage(const Message &msg)
     }
 }
 
-QVector< QPair< Protocol::ObjectAddress, QString > > Endpoint::objectAddresses() const
+QVector<QPair<Protocol::ObjectAddress, QString>> Endpoint::objectAddresses() const
 {
-    QVector<QPair<Protocol::ObjectAddress, QString> > addrs;
+    QVector<QPair<Protocol::ObjectAddress, QString>> addrs;
     addrs.reserve(m_addressMap.size());
     for (auto it = m_addressMap.constBegin(); it != m_addressMap.constEnd(); ++it) {
         addrs.push_back(qMakePair(it.key(), it.value()->name));

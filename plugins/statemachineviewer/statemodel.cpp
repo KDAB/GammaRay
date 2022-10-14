@@ -64,7 +64,7 @@ class StateModelPrivate
     }
 
     Q_DECLARE_PUBLIC(StateModel)
-    StateModel * const q_ptr;
+    StateModel *const q_ptr;
     StateMachineDebugInterface *m_stateMachine;
     QVector<State> m_lastConfiguration;
 
@@ -73,7 +73,7 @@ class StateModelPrivate
     State mapModelIndex2State(const QModelIndex &) const;
     QModelIndex indexForState(State state) const;
 
-// private slots:
+    // private slots:
     void stateConfigurationChanged();
     void handleMachineDestroyed(QObject *);
 };

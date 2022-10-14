@@ -153,10 +153,7 @@ void ProcessTracker::stop()
 
 bool ProcessTrackerInfo::operator==(const GammaRay::ProcessTrackerInfo &other) const
 {
-    return pid == other.pid &&
-            traced == other.traced &&
-            state == other.state
-    ;
+    return pid == other.pid && traced == other.traced && state == other.state;
 }
 
 bool ProcessTrackerInfo::operator!=(const GammaRay::ProcessTrackerInfo &other) const

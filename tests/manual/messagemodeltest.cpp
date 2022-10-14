@@ -65,7 +65,8 @@ void MessageGenerator::generateDebug()
 
 void MessageGenerator::generateWarning()
 {
-    qWarning() << "A warning message" << "split into two parts";
+    qWarning() << "A warning message"
+               << "split into two parts";
 }
 
 void MessageGenerator::generateCritical()

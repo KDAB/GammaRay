@@ -48,8 +48,8 @@ ModelPickerDialog::ModelPickerDialog(QWidget *parent)
     : QDialog(parent)
     , m_view(new DeferredTreeView(this))
     , m_buttons(new QDialogButtonBox(this))
-    , m_searchBox (new QLineEdit(this))
-    , m_showInvisibleItems(new QCheckBox(tr("Hide invisible items"),this))
+    , m_searchBox(new QLineEdit(this))
+    , m_showInvisibleItems(new QCheckBox(tr("Hide invisible items"), this))
     , m_pendingSelection(qNullSelection())
 {
     setAttribute(Qt::WA_DeleteOnClose);
@@ -113,8 +113,7 @@ void ModelPickerDialog::setCurrentIndex(int role, const QVariant &value)
 
     if (index.isValid()) {
         setCurrentIndex(index);
-    }
-    else {
+    } else {
         m_pendingSelection = qMakePair(role, value);
     }
 }

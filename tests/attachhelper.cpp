@@ -57,7 +57,7 @@ AttachHelper::AttachHelper(const QString &gammaray, const QString &injector,
     m_proc->setProcessChannelMode(QProcess::ForwardedChannels);
     connect(m_proc, &QProcess::started, this, &AttachHelper::processStarted);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    connect(m_proc, static_cast<void(QProcess::*)(int)>(&QProcess::finished), this, &AttachHelper::processFinished);
+    connect(m_proc, static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &AttachHelper::processFinished);
 #else
     connect(m_proc, &QProcess::finished, this, &AttachHelper::processFinished);
 #endif
@@ -123,7 +123,8 @@ int main(int argc, char **argv)
     // run the self-test first, and skip the test if that fails
     // this prevents failures with Yama ptrace_scope activated for example
     if (QProcess::execute(gammaray,
-                          QStringList() << QStringLiteral("--self-test") << injector) == 1) {
+                          QStringList() << QStringLiteral("--self-test") << injector)
+        == 1) {
         qWarning() << "Skipping test due to injector self-test failure!";
         return 0;
     }

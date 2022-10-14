@@ -41,7 +41,8 @@ class LocaleAccessorModel : public QAbstractTableModel
     Q_OBJECT
     Q_ENUMS(CustomRoles)
 public:
-    enum CustomRoles {
+    enum CustomRoles
+    {
         AccessorRole = UserRole + 1
     };
 

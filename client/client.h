@@ -93,7 +93,8 @@ private slots:
     void socketDisconnected();
 
 private:
-    enum InitState {
+    enum InitState
+    {
         VersionChecked = 0x1,
         ObjectMapReceived = 0x2,
         ServerInfoReceived = 0x4,

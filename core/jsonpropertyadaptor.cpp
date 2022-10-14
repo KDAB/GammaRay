@@ -44,10 +44,10 @@ JsonPropertyAdaptor::~JsonPropertyAdaptor() = default;
 void JsonPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
 
-    if(oi.variant().userType() == qMetaTypeId<QJsonArray>()) {
+    if (oi.variant().userType() == qMetaTypeId<QJsonArray>()) {
         m_array = oi.variant().toJsonArray();
         m_isObject = false;
-    } else if(oi.variant().toJsonValue().isArray()) {
+    } else if (oi.variant().toJsonValue().isArray()) {
         m_array = oi.variant().toJsonValue().toArray();
         m_isObject = false;
     } else {

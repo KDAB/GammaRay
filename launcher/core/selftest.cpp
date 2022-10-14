@@ -101,8 +101,7 @@ bool SelfTest::checkInjector(const QString &injectorType)
         return false;
     }
     if (!injector->selfTest()) {
-        emit error(tr("Injector %1 failed to pass its self-test: %2.").arg(injectorType,
-                                                                           injector->errorString()));
+        emit error(tr("Injector %1 failed to pass its self-test: %2.").arg(injectorType, injector->errorString()));
         return false;
     }
 

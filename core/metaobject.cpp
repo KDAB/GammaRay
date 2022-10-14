@@ -119,7 +119,7 @@ bool MetaObject::isPolymorphic() const
     return false;
 }
 
-void* MetaObject::castFrom(void *object, MetaObject *baseClass) const
+void *MetaObject::castFrom(void *object, MetaObject *baseClass) const
 {
     const auto idx = m_baseClasses.indexOf(baseClass);
     if (idx < 0)

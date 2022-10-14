@@ -43,8 +43,7 @@ ProxyToolFactory::ProxyToolFactory(const PluginInfo &pluginInfo, QObject *parent
 
 bool ProxyToolFactory::isValid() const
 {
-    return
-        pluginInfo().isValid()
+    return pluginInfo().isValid()
         && !id().isEmpty()
         && !supportedTypes().isEmpty();
 }

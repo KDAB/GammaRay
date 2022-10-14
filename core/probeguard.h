@@ -51,9 +51,11 @@ public:
      *  In that case you might want to skip some operations,
      */
     static bool insideProbe();
+
 protected:
     ProbeGuard(bool newState);
     static void setInsideProbe(bool inside);
+
 private:
     Q_DISABLE_COPY(ProbeGuard)
     bool m_previousState;

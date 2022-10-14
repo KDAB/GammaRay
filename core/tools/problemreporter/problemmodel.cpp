@@ -54,22 +54,22 @@ QVariant ProblemModel::data(const QModelIndex &index, int role) const
 
     const Problem &problem = m_problemCollector->problems().at(index.row());
     switch (role) {
-        case Qt::DisplayRole:
-            switch (index.column()) {
-            case 0:
-                return problem.description;
-            case 1:
-                return problem.locations.size() ? problem.locations.front().displayString() : QString();
-            }
-            break;
-        case ObjectModel::ObjectIdRole:
-            return QVariant::fromValue(problem.object);
-        case ProblemModelRoles::SourceLocationRole:
-            return QVariant::fromValue(problem.locations);
-        case ProblemModelRoles::SeverityRole:
-            return static_cast<int>(problem.severity);
-        case ProblemModelRoles::ProblemIdRole:
-            return problem.problemId;
+    case Qt::DisplayRole:
+        switch (index.column()) {
+        case 0:
+            return problem.description;
+        case 1:
+            return problem.locations.size() ? problem.locations.front().displayString() : QString();
+        }
+        break;
+    case ObjectModel::ObjectIdRole:
+        return QVariant::fromValue(problem.object);
+    case ProblemModelRoles::SourceLocationRole:
+        return QVariant::fromValue(problem.locations);
+    case ProblemModelRoles::SeverityRole:
+        return static_cast<int>(problem.severity);
+    case ProblemModelRoles::ProblemIdRole:
+        return problem.problemId;
     }
     return QVariant();
 }

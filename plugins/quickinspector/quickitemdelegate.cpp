@@ -65,20 +65,18 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     painter->setClipping(true); // avoid the icons leaking into the next column
 
     const auto foregroundData = index.data(Qt::ForegroundRole);
-    const auto inactiveColor
-        = foregroundData.isNull() ? option.palette.text().color() : foregroundData.value<QColor>();
+    const auto inactiveColor = foregroundData.isNull() ? option.palette.text().color() : foregroundData.value<QColor>();
     const auto base = option.state
-                      & QStyle::State_Selected ? option.palette.highlightedText().color() :
-                      inactiveColor;
+            & QStyle::State_Selected
+        ? option.palette.highlightedText().color()
+        : inactiveColor;
 
     if (m_colors.contains(index.sibling(index.row(), 0))) {
         QColor blend = m_colors.value(index.sibling(index.row(), 0));
-        QColor blended
-            = QColor::fromRgbF(
-            base.redF()   * (1 - blend.alphaF()) + blend.redF()   * blend.alphaF(),
+        QColor blended = QColor::fromRgbF(
+            base.redF() * (1 - blend.alphaF()) + blend.redF() * blend.alphaF(),
             base.greenF() * (1 - blend.alphaF()) + blend.greenF() * blend.alphaF(),
-            base.blueF()  * (1 - blend.alphaF()) + blend.blueF()
-            * blend.alphaF());
+            base.blueF() * (1 - blend.alphaF()) + blend.blueF() * blend.alphaF());
         painter->setPen(blended);
     } else {
         painter->setPen(base);
@@ -92,7 +90,7 @@ void QuickItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         else if (deco.canConvert<QIcon>())
             icons.push_back(deco.value<QIcon>().pixmap(16, 16));
 
-        if ((flags &QuickItemModelRole::PartiallyOutOfView) && (~flags & QuickItemModelRole::Invisible))
+        if ((flags & QuickItemModelRole::PartiallyOutOfView) && (~flags & QuickItemModelRole::Invisible))
             icons << UIResources::themedIcon(QStringLiteral("warning.png")).pixmap(16, 16);
 
         if (flags & QuickItemModelRole::HasActiveFocus)
@@ -121,15 +119,14 @@ QSize QuickItemDelegate::sizeHint(const QStyleOptionViewItem &option,
     if (sh.isValid())
         return sh.toSize();
 
-    QSize textSize
-        = m_view->fontMetrics().size(Qt::TextSingleLine, index.data(Qt::DisplayRole).toString());
+    QSize textSize = m_view->fontMetrics().size(Qt::TextSingleLine, index.data(Qt::DisplayRole).toString());
 
     QSize decorationSize;
     if (index.column() == 0) {
         int flags = index.data(QuickItemModelRole::ItemFlags).value<int>();
 
         int icons = 1;
-        if ((flags &QuickItemModelRole::OutOfView) && (~flags & QuickItemModelRole::Invisible))
+        if ((flags & QuickItemModelRole::OutOfView) && (~flags & QuickItemModelRole::Invisible))
             icons++;
 
         if (flags & (QuickItemModelRole::HasFocus | QuickItemModelRole::HasActiveFocus))
@@ -138,8 +135,8 @@ QSize QuickItemDelegate::sizeHint(const QStyleOptionViewItem &option,
         decorationSize = QSize(icons * 20, 16);
     }
 
-    return {textSize.width() + decorationSize.width() + 5,
-                 qMax(textSize.height(), decorationSize.height())};
+    return { textSize.width() + decorationSize.width() + 5,
+             qMax(textSize.height(), decorationSize.height()) };
 }
 
 void QuickItemDelegate::setTextColor(const QVariant &textColor, const QPersistentModelIndex &index)

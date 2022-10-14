@@ -74,8 +74,7 @@ void ToolManager::selectObject(const ObjectId &id, const QString &toolId)
     switch (id.type()) {
     case ObjectId::Invalid:
         return;
-    case ObjectId::QObjectType:
-    {
+    case ObjectId::QObjectType: {
         QMutexLocker lock(Probe::objectLock());
         if (!Probe::instance()->isValidObject(id.asQObject()))
             return;
@@ -100,8 +99,7 @@ void ToolManager::requestToolsForObject(const ObjectId &id)
     switch (id.type()) {
     case ObjectId::Invalid:
         return;
-    case ObjectId::QObjectType:
-    {
+    case ObjectId::QObjectType: {
         QMutexLocker lock(Probe::objectLock());
         if (!Probe::instance()->isValidObject(id.asQObject()))
             return;

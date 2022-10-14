@@ -135,7 +135,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
     zoom->setAttribute(Qt::WA_MacSmallSize);
     zoom->setModel(m_remoteView->zoomLevelModel());
     toolbar->addWidget(zoom);
-    connect(zoom, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(zoom, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             m_remoteView, &RemoteViewWidget::setZoomLevel);
     connect(m_remoteView, &RemoteViewWidget::zoomLevelChanged, zoom, &QComboBox::setCurrentIndex);
     zoom->setCurrentIndex(m_remoteView->zoomLevelIndex());
@@ -155,8 +155,10 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
 
     updateActions();
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
-    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
+                                                                    << "50%");
+    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%"
+                                                                       << "50%");
 
 #ifdef GAMMARAY_WITH_WIDGET3D
     // Check if QQC are available, there's no build-time check for this
@@ -172,7 +174,7 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
         qWarning() << "Disabling 3D Widget inspector: missing QtQuick Controls";
     }
 #else
-    ui->tabWidget->findChild<QTabBar*>()->hide();
+    ui->tabWidget->findChild<QTabBar *>()->hide();
 #endif
 
     connect(ui->widgetPropertyWidget, &PropertyWidget::tabsUpdated, this, &WidgetInspectorWidget::propertyWidgetTabsChanged);
@@ -217,8 +219,7 @@ void WidgetInspectorWidget::updateActions()
     ui->actionAnalyzePainting->setEnabled(
         selection && m_inspector->features() & WidgetInspectorInterface::AnalyzePainting);
 
-    auto f = m_remoteView->supportedInteractionModes() &
-            ~RemoteViewWidget::InputRedirection;
+    auto f = m_remoteView->supportedInteractionModes() & ~RemoteViewWidget::InputRedirection;
     if (m_inspector->features() & WidgetInspectorInterface::InputRedirection)
         f |= RemoteViewWidget::InputRedirection;
     m_remoteView->setSupportedInteractionModes(f);
@@ -262,8 +263,7 @@ void WidgetInspectorWidget::widgetTreeContextMenu(QPoint pos)
 
 void WidgetInspectorWidget::saveAsImage()
 {
-    const QString fileName
-        = QFileDialog::getSaveFileName(
+    const QString fileName = QFileDialog::getSaveFileName(
         this,
         tr("Save As Image"),
         QString(),
@@ -277,8 +277,7 @@ void WidgetInspectorWidget::saveAsImage()
 
 void WidgetInspectorWidget::saveAsSvg()
 {
-    const QString fileName
-        = QFileDialog::getSaveFileName(
+    const QString fileName = QFileDialog::getSaveFileName(
         this,
         tr("Save As SVG"),
         QString(),
@@ -292,8 +291,7 @@ void WidgetInspectorWidget::saveAsSvg()
 
 void WidgetInspectorWidget::saveAsUiFile()
 {
-    const QString fileName
-        = QFileDialog::getSaveFileName(
+    const QString fileName = QFileDialog::getSaveFileName(
         this,
         tr("Save As Qt Designer UI File"),
         QString(),
@@ -309,8 +307,7 @@ void WidgetInspectorWidget::analyzePainting()
 {
     m_inspector->analyzePainting();
 
-    PaintBufferViewer *viewer
-        = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this);
+    PaintBufferViewer *viewer = new PaintBufferViewer(QStringLiteral("com.kdab.GammaRay.WidgetPaintAnalyzer"), this);
     viewer->show();
 }
 

@@ -41,9 +41,10 @@ namespace GammaRay {
  */
 namespace PropertyModel {
 /** Role enum, to be used with the property models. */
-enum Role {
+enum Role
+{
     ActionRole = GammaRay::UserRole + 1, /**< the property action role */
-    DeprecatedRole,                /**< @deprecated do not use */
+    DeprecatedRole, /**< @deprecated do not use */
     ObjectIdRole,
     ResetActionRole,
     PropertyFlagsRole,
@@ -52,7 +53,8 @@ enum Role {
 };
 
 /** Available property actions. */
-enum Action {
+enum Action
+{
     NoAction = 0,
     Delete = 1,
     Reset = 2,
@@ -60,7 +62,8 @@ enum Action {
 };
 
 /** Available columns. */
-enum Column {
+enum Column
+{
     PropertyColumn = 0,
     ValueColumn,
     TypeColumn,
@@ -70,7 +73,8 @@ enum Column {
 /** Property flags.
  *  @see QMetaProperty
  */
-enum PropertyFlag {
+enum PropertyFlag
+{
     None = 0,
     Constant = 1,
     Designable = 2,

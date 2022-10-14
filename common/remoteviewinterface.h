@@ -45,7 +45,8 @@ class GAMMARAY_COMMON_EXPORT RemoteViewInterface : public QObject
 {
     Q_OBJECT
 public:
-    enum RequestMode {
+    enum RequestMode
+    {
         RequestBest,
         RequestAll
     };

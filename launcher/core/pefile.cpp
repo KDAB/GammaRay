@@ -90,14 +90,12 @@ bool PEFile::parse()
         return false;
 
     // optional headers (for import descriptor)
-    const IMAGE_OPTIONAL_HEADER32 *optHdr32
-        = reinterpret_cast<const IMAGE_OPTIONAL_HEADER32 *>(data);
+    const IMAGE_OPTIONAL_HEADER32 *optHdr32 = reinterpret_cast<const IMAGE_OPTIONAL_HEADER32 *>(data);
     if (optHdr32->Magic == IMAGE_NT_OPTIONAL_HDR32_MAGIC) {
         data = rvaToFile(m_fileHeader,
                          optHdr32->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
     } else {
-        const IMAGE_OPTIONAL_HEADER64 *optHdr64
-            = reinterpret_cast<const IMAGE_OPTIONAL_HEADER64 *>(data);
+        const IMAGE_OPTIONAL_HEADER64 *optHdr64 = reinterpret_cast<const IMAGE_OPTIONAL_HEADER64 *>(data);
         if (optHdr64->Magic != IMAGE_NT_OPTIONAL_HDR64_MAGIC)
             return false;
         data = rvaToFile(m_fileHeader,
@@ -138,8 +136,7 @@ QStringList PEFile::imports() const
 
     auto importDesc = m_importDesc;
     while (importDesc->Name) {
-        const char *libraryName
-            = reinterpret_cast<const char *>(rvaToFile(m_fileHeader, importDesc->Name));
+        const char *libraryName = reinterpret_cast<const char *>(rvaToFile(m_fileHeader, importDesc->Name));
         if (libraryName)
             libs.push_back(QString::fromLatin1(libraryName));
         importDesc++;
@@ -168,11 +165,10 @@ const IMAGE_SECTION_HEADER *PEFile::sectionForRVA(const IMAGE_FILE_HEADER *hdr, 
     Q_ASSERT(m_end);
 
     const uchar *data = reinterpret_cast<const uchar *>(hdr);
-    auto sectionHdr
-        = reinterpret_cast<const IMAGE_SECTION_HEADER *>(data + sizeof(IMAGE_FILE_HEADER)
-                                                         + hdr->SizeOfOptionalHeader);
+    auto sectionHdr = reinterpret_cast<const IMAGE_SECTION_HEADER *>(data + sizeof(IMAGE_FILE_HEADER)
+                                                                     + hdr->SizeOfOptionalHeader);
     for (int i = 0; i < hdr->NumberOfSections; ++i, ++sectionHdr) {
-        if (reinterpret_cast<const uchar *>(sectionHdr +1) >= m_end)
+        if (reinterpret_cast<const uchar *>(sectionHdr + 1) >= m_end)
             return nullptr;
         if (rva >= sectionHdr->VirtualAddress
             && rva < sectionHdr->VirtualAddress + sectionHdr->Misc.VirtualSize)

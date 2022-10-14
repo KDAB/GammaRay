@@ -93,7 +93,7 @@ private slots:
         QCOMPARE(model->rowCount(), 2);
 
         const auto index = model->index(0, 5);
-        QCOMPARE(index.data(Qt::DisplayRole).toString(), QKeySequence(QStringLiteral("Ctrl+K")).toString( QKeySequence::PortableText));
+        QCOMPARE(index.data(Qt::DisplayRole).toString(), QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::PortableText));
         QVERIFY(!index.data(Qt::DecorationRole).isNull());
         QVERIFY(!index.data(Qt::ToolTipRole).toString().isEmpty());
 
@@ -115,7 +115,7 @@ private slots:
         QVERIFY(model);
         QCOMPARE(model->rowCount(), 1);
 
-        QSignalSpy changeSpy(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QSignalSpy changeSpy(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)));
         QVERIFY(changeSpy.isValid());
 
         a1->setCheckable(true);
@@ -127,9 +127,9 @@ private slots:
         QCOMPARE(changeSpy.size(), 3);
 
         a1->setDisabled(true);
-        QCOMPARE(model->index(0,0).data(Qt::CheckStateRole).toInt(), (int)Qt::Unchecked);
+        QCOMPARE(model->index(0, 0).data(Qt::CheckStateRole).toInt(), ( int )Qt::Unchecked);
         a1->setEnabled(true);
-        QCOMPARE(model->index(0,0).data(Qt::CheckStateRole).toInt(), (int)Qt::Checked);
+        QCOMPARE(model->index(0, 0).data(Qt::CheckStateRole).toInt(), ( int )Qt::Checked);
         QVERIFY(changeSpy.size() >= 4);
         changeSpy.clear();
 
@@ -139,7 +139,7 @@ private slots:
 
         a1->setChecked(true);
         QCOMPARE(changeSpy.size(), 1);
-        QCOMPARE(model->index(0, 3).data(Qt::CheckStateRole).toInt(), (int)Qt::Checked);
+        QCOMPARE(model->index(0, 3).data(Qt::CheckStateRole).toInt(), ( int )Qt::Checked);
         QVERIFY(model->setData(model->index(0, 3), Qt::Unchecked, Qt::CheckStateRole));
         QCOMPARE(a1->isChecked(), false);
         QCOMPARE(changeSpy.size(), 2);

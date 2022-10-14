@@ -67,7 +67,7 @@ private slots:
         ClientConnectionManager::init();
 
         m_process.setProcessChannelMode(QProcess::ForwardedChannels);
-        m_process.start(QLatin1String(TESTBIN_DIR "/minimalwidgetapplication"), QStringList{});
+        m_process.start(QLatin1String(TESTBIN_DIR "/minimalwidgetapplication"), QStringList {});
         QVERIFY(m_process.waitForStarted());
 
         QTest::qWait(1000); // give the target some time to actually load the QtCore DLL, otherwise ABI detection fails
@@ -120,8 +120,8 @@ private slots:
                 QTest::qWait(10);
 
                 if (!spyReady.isEmpty()
-                        || !spyError.isEmpty()
-                        || !spyDisconnected.isEmpty()) {
+                    || !spyError.isEmpty()
+                    || !spyDisconnected.isEmpty()) {
                     break;
                 }
             }

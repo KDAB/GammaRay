@@ -34,7 +34,8 @@
 namespace GammaRay {
 /** @brief Roles for the object inspector connections models. */
 namespace ConnectionsModelRoles {
-enum Role {
+enum Role
+{
     WarningFlagRole = UserRole + 1,
     EndpointRole,
     ActionRole
@@ -45,7 +46,8 @@ enum Role {
  * Returns via ActionRole from the connections models.
  */
 namespace ConnectionsModelActions {
-enum Action {
+enum Action
+{
     NoAction = 0,
     NavigateToEndpoint = 1
 };

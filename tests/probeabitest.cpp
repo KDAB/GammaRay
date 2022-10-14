@@ -70,13 +70,18 @@ private slots:
         QTest::newRow("invalid") << QString() << -1 << -1 << false << QString() << QString() << QString();
 #ifndef Q_OS_WIN
 #if defined(Q_OS_MAC)
-        QTest::newRow("mac") << "qt5_2-x86_64_debug" << 5 << 2 << true << "x86_64" << "CLANG" << QString();
+        QTest::newRow("mac") << "qt5_2-x86_64_debug" << 5 << 2 << true << "x86_64"
+                             << "CLANG" << QString();
 #else
-        QTest::newRow("unix") << "qt5_2-x86_64" << 5 << 2 << true << "x86_64" << "GCC" << QString();
+        QTest::newRow("unix") << "qt5_2-x86_64" << 5 << 2 << true << "x86_64"
+                              << "GCC" << QString();
 #endif
 #else
-        QTest::newRow("msvc") << "qt5_2-MSVC-140-x86_64d" << 5 << 2 << true << "x86_64" << "MSVC" << "140";
-        QTest::newRow("mingw") << "qt5_2-GNU-i686" << 5 << 2 << false << "i686" << "GNU" << QString();
+        QTest::newRow("msvc") << "qt5_2-MSVC-140-x86_64d" << 5 << 2 << true << "x86_64"
+                              << "MSVC"
+                              << "140";
+        QTest::newRow("mingw") << "qt5_2-GNU-i686" << 5 << 2 << false << "i686"
+                               << "GNU" << QString();
 #endif
     }
 
@@ -126,12 +131,15 @@ private slots:
         QTest::newRow("mac") << "qt5_2-x86_64_debug" << true << 5 << 2 << true << "x86_64"
                              << "CLANG" << QString();
 #else
-        QTest::newRow("unix") << "qt5_2-x86_64" << true << 5 << 2 << true << "x86_64" << "GCC" << QString();
+        QTest::newRow("unix") << "qt5_2-x86_64" << true << 5 << 2 << true << "x86_64"
+                              << "GCC" << QString();
 #endif
 #else
         QTest::newRow("msvc") << "qt5_2-MSVC-140-x86_64d" << true << 5 << 2 << true << "x86_64"
-                              << "MSVC" << "140";
-        QTest::newRow("mingw") << "qt5_2-GNU-i686d" << true << 5 << 2 << true << "i686" << "GNU" << QString();
+                              << "MSVC"
+                              << "140";
+        QTest::newRow("mingw") << "qt5_2-GNU-i686d" << true << 5 << 2 << true << "i686"
+                               << "GNU" << QString();
 #endif
     }
 
@@ -174,13 +182,17 @@ private slots:
         QTest::newRow("invalid") << QString() << QString();
 #ifndef Q_OS_WIN
 #if defined(Q_OS_MAC)
-        QTest::newRow("mac") << "qt5_2-x86_64_debug" << "Qt 5.2 (debug, x86_64)";
+        QTest::newRow("mac") << "qt5_2-x86_64_debug"
+                             << "Qt 5.2 (debug, x86_64)";
 #else
-        QTest::newRow("unix") << "qt5_2-x86_64" << "Qt 5.2 (x86_64)";
+        QTest::newRow("unix") << "qt5_2-x86_64"
+                              << "Qt 5.2 (x86_64)";
 #endif
 #else
-        QTest::newRow("msvc") << "qt5_2-MSVC-140-x86_64d" << "Qt 5.2 (MSVC, 140, debug, x86_64)";
-        QTest::newRow("mingw") << "qt5_2-GNU-i686d" << "Qt 5.2 (GNU, debug, i686)";
+        QTest::newRow("msvc") << "qt5_2-MSVC-140-x86_64d"
+                              << "Qt 5.2 (MSVC, 140, debug, x86_64)";
+        QTest::newRow("mingw") << "qt5_2-GNU-i686d"
+                               << "Qt 5.2 (GNU, debug, i686)";
 #endif
     }
 

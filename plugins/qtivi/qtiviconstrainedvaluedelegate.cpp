@@ -46,7 +46,10 @@ class SplitDataComboBox : public QComboBox
     Q_PROPERTY(QVariant modelData READ currentData USER true)
 
 public:
-    explicit SplitDataComboBox(QWidget *parent = nullptr) : QComboBox(parent) {}
+    explicit SplitDataComboBox(QWidget *parent = nullptr)
+        : QComboBox(parent)
+    {
+    }
 };
 
 
@@ -96,18 +99,16 @@ QWidget *QtIviConstrainedValueDelegate::createEditor(QWidget *parent, const QSty
             return editor;
         }
         break;
-    case QtIviPropertyModel::AvailableValuesConstraints:
-        {
-            auto *combo = new SplitDataComboBox(parent);
-            combo->setAutoFillBackground(true);
-            for (int i = 0; i + 1 < constraintValues.size(); i += 2) {
-                combo->addItem(constraintValues.at(i).toString(), constraintValues.at(i + 1));
-                if (constraintValues.at(i + 1) == index.data(Qt::EditRole))
-                    combo->setCurrentIndex(i / 2);
-            }
-            return combo;
+    case QtIviPropertyModel::AvailableValuesConstraints: {
+        auto *combo = new SplitDataComboBox(parent);
+        combo->setAutoFillBackground(true);
+        for (int i = 0; i + 1 < constraintValues.size(); i += 2) {
+            combo->addItem(constraintValues.at(i).toString(), constraintValues.at(i + 1));
+            if (constraintValues.at(i + 1) == index.data(Qt::EditRole))
+                combo->setCurrentIndex(i / 2);
         }
-        break;
+        return combo;
+    } break;
     default:
         qWarning() << "Unhandled type of value constraints" << constraintsType;
         break;

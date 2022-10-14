@@ -79,7 +79,7 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_METAOBJECT0(QMetaObject);
     MO_ADD_PROPERTY_RO(QMetaObject, classInfoCount);
     MO_ADD_PROPERTY_RO(QMetaObject, classInfoOffset);
-// MO_ADD_PROPERTY_RO(QMetaObject, className);
+    // MO_ADD_PROPERTY_RO(QMetaObject, className);
     MO_ADD_PROPERTY_RO(QMetaObject, constructorCount);
     MO_ADD_PROPERTY_RO(QMetaObject, enumeratorCount);
     MO_ADD_PROPERTY_RO(QMetaObject, enumeratorOffset);
@@ -188,7 +188,7 @@ void MetaObjectRepository::initIOTypes()
     MO_ADD_METAOBJECT1(QSaveFile, QFileDevice);
 }
 
-Q_DECLARE_METATYPE(const QObject*)
+Q_DECLARE_METATYPE(const QObject *)
 
 void MetaObjectRepository::initQEventTypes()
 {
@@ -215,7 +215,7 @@ void MetaObjectRepository::initQEventTypes()
 
     MO_ADD_METAOBJECT1(QMetaCallEvent, QEvent);
     MO_ADD_PROPERTY_RO(QMetaCallEvent, id);
-    MO_ADD_PROPERTY_RO(QMetaCallEvent, sender);  // problematic because type is const QObject*
+    MO_ADD_PROPERTY_RO(QMetaCallEvent, sender); // problematic because type is const QObject*
     MO_ADD_PROPERTY_RO(QMetaCallEvent, signalId);
 }
 
@@ -247,13 +247,13 @@ MetaObject *MetaObjectRepository::metaObject(const QString &typeName) const
     return m_metaObjects.value(typeName_);
 }
 
-MetaObject* MetaObjectRepository::metaObject(const QString& typeName, void *&obj) const
+MetaObject *MetaObjectRepository::metaObject(const QString &typeName, void *&obj) const
 {
     auto mo = metaObject(typeName);
     return metaObject(mo, obj);
 }
 
-MetaObject* MetaObjectRepository::metaObject(MetaObject *mo, void *&obj) const
+MetaObject *MetaObjectRepository::metaObject(MetaObject *mo, void *&obj) const
 {
     if (!mo || !mo->isPolymorphic())
         return mo;

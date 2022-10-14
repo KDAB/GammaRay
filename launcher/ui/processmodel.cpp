@@ -182,13 +182,7 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const
             return data.user;
     } else if (role == Qt::ToolTipRole) {
         const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(data.abi, m_availableABIs);
-        return tr("Name: %1\nPID: %2\nOwner: %3\nQt ABI: %4\nProbe available: %5").arg(
-            data.image.isEmpty() ? data.name : data.image,
-            data.ppid,
-            data.user,
-            data.abi.displayString(),
-            bestABI.isValid() ? tr("yes") : tr("no")
-            );
+        return tr("Name: %1\nPID: %2\nOwner: %3\nQt ABI: %4\nProbe available: %5").arg(data.image.isEmpty() ? data.name : data.image, data.ppid, data.user, data.abi.displayString(), bestABI.isValid() ? tr("yes") : tr("no"));
     } else if (role == PIDRole) {
         return data.ppid.toInt(); // why is this a QString in the first place!?
     } else if (role == NameRole) {

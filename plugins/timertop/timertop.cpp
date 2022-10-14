@@ -66,7 +66,9 @@ class TimerFilterModel : public ObjectTypeFilterProxyModel<QTimer>
 {
 public:
     explicit TimerFilterModel(QObject *parent)
-        : ObjectTypeFilterProxyModel<QTimer>(parent) {}
+        : ObjectTypeFilterProxyModel<QTimer>(parent)
+    {
+    }
 
     bool filterAcceptsObject(QObject *object) const override
     {
@@ -102,7 +104,7 @@ TimerTop::TimerTop(Probe *probe, QObject *parent)
 {
     Q_ASSERT(probe);
 
-    QSortFilterProxyModel * const filterModel = new TimerFilterModel(this);
+    QSortFilterProxyModel *const filterModel = new TimerFilterModel(this);
     filterModel->setDynamicSortFilter(true);
     filterModel->setSourceModel(probe->objectListModel());
     TimerModel::instance()->setParent(this); // otherwise it's not filtered out
@@ -124,16 +126,16 @@ void TimerTop::clearHistory()
     TimerModel::instance()->clearHistory();
 }
 
-void TimerTop::objectSelected(QObject* obj)
+void TimerTop::objectSelected(QObject *obj)
 {
-    auto timer = qobject_cast<QTimer*>(obj);
+    auto timer = qobject_cast<QTimer *>(obj);
     if (!timer)
         return;
 
     const auto model = m_selectionModel->model();
     const auto indexList = model->match(model->index(0, 0), ObjectModel::ObjectIdRole,
-                       QVariant::fromValue(ObjectId(timer)), 1,
-                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+                                        QVariant::fromValue(ObjectId(timer)), 1,
+                                        Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
 

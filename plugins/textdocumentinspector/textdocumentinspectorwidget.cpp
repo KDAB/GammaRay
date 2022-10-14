@@ -63,7 +63,7 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent)
     ui->documentTree->setDeferredResizeMode(0, QHeaderView::Stretch);
     ui->documentTree->setDeferredResizeMode(1, QHeaderView::ResizeToContents);
     ui->documentTree->setModel(ObjectBroker::model(QStringLiteral(
-                                                       "com.kdab.GammaRay.TextDocumentModel")));
+        "com.kdab.GammaRay.TextDocumentModel")));
     ui->documentTree->setSelectionModel(ObjectBroker::selectionModel(ui->documentTree->model()));
     connect(ui->documentTree->selectionModel(),
             &QItemSelectionModel::selectionChanged,
@@ -74,13 +74,14 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent)
     ui->documentFormatView->setDeferredResizeMode(1, QHeaderView::Stretch);
     ui->documentFormatView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
     ui->documentFormatView->setModel(ObjectBroker::model(QStringLiteral(
-                                                             "com.kdab.GammaRay.TextDocumentFormatModel")));
+        "com.kdab.GammaRay.TextDocumentFormatModel")));
 
     if (Endpoint::instance()->isRemoteClient()) // FIXME: content preview doesn't work remotely yet
         ui->tabWidget->hide();
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << 280 << -1 << -1);
-    m_stateManager.setDefaultSizes(ui->structureSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->structureSplitter, UISizeVector() << "50%"
+                                                                         << "50%");
 }
 
 TextDocumentInspectorWidget::~TextDocumentInspectorWidget() = default;

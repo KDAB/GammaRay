@@ -49,7 +49,7 @@ protected:
     void addMethodBreakpoint(const QByteArray &method) override;
     void clearBreakpoints() override;
     void printBacktrace() override;
-    void parseStandardError(const QByteArray & line) override;
+    void parseStandardError(const QByteArray &line) override;
 
 private:
     bool m_scriptSupportIsRequired;

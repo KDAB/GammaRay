@@ -92,7 +92,7 @@ bool prioritizeLatestConnection(QObject *sender, const char *normalizedSignalNam
             }
 
             qDebug() << "Swapping" << ourConn->receiver << "with"
-                     << static_cast<QObjectPrivate::Connection*>(signalsVector->at(i).first)->receiver;
+                     << static_cast<QObjectPrivate::Connection *>(signalsVector->at(i).first)->receiver;
             ourConn->prevConnectionList->nextConnectionList.storeRelaxed(ourConn->nextConnectionList);
             ourConn->nextConnectionList.storeRelaxed(signalsVector->at(i).first);
             signalsVector->at(i).first.storeRelaxed(ourConn);
@@ -119,19 +119,19 @@ NetworkReplyModel::NetworkReplyModel(QObject *parent)
 {
     m_time.start();
 
-    qRegisterMetaType<QNetworkAccessManager*>();
+    qRegisterMetaType<QNetworkAccessManager *>();
     qRegisterMetaType<GammaRay::NetworkReplyModel::ReplyNode>();
 }
 
 NetworkReplyModel::~NetworkReplyModel() = default;
 
-int NetworkReplyModel::columnCount(const QModelIndex& parent) const
+int NetworkReplyModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return NetworkReplyModelColumn::COLUMN_COUNT;
 }
 
-int NetworkReplyModel::rowCount(const QModelIndex& parent) const
+int NetworkReplyModel::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
         return m_nodes.size();
@@ -144,7 +144,7 @@ int NetworkReplyModel::rowCount(const QModelIndex& parent) const
     return 0;
 }
 
-QVariant NetworkReplyModel::data(const QModelIndex& index, int role) const
+QVariant NetworkReplyModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return {};
@@ -165,19 +165,22 @@ QVariant NetworkReplyModel::data(const QModelIndex& index, int role) const
     const auto &reply = m_nodes[index.internalId()].replies[index.row()];
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case NetworkReplyModelColumn::ObjectColumn: return reply.displayName;
-            case NetworkReplyModelColumn::OpColumn: return reply.op;
-            case NetworkReplyModelColumn::SizeColumn:
-                if (reply.duration == 0 && reply.size == 0) {
-                    return {}; // cached reply, we don't have proper data for that
-                }
-                return reply.size;
-            case NetworkReplyModelColumn::TimeColumn:
-                if (reply.state & NetworkReply::Finished) {
-                    return reply.duration;
-                }
-                return {};
-            case NetworkReplyModelColumn::UrlColumn: return reply.url;
+        case NetworkReplyModelColumn::ObjectColumn:
+            return reply.displayName;
+        case NetworkReplyModelColumn::OpColumn:
+            return reply.op;
+        case NetworkReplyModelColumn::SizeColumn:
+            if (reply.duration == 0 && reply.size == 0) {
+                return {}; // cached reply, we don't have proper data for that
+            }
+            return reply.size;
+        case NetworkReplyModelColumn::TimeColumn:
+            if (reply.state & NetworkReply::Finished) {
+                return reply.duration;
+            }
+            return {};
+        case NetworkReplyModelColumn::UrlColumn:
+            return reply.url;
         }
     } else if (role == NetworkReplyModelRole::ReplyStateRole && index.column() == NetworkReplyModelColumn::ObjectColumn) {
         return reply.state;
@@ -194,7 +197,7 @@ QVariant NetworkReplyModel::data(const QModelIndex& index, int role) const
     return {};
 }
 
-QModelIndex NetworkReplyModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex NetworkReplyModel::index(int row, int column, const QModelIndex &parent) const
 {
     // top-level
     if (!parent.isValid()) {
@@ -204,7 +207,7 @@ QModelIndex NetworkReplyModel::index(int row, int column, const QModelIndex& par
     return createIndex(row, column, parent.row());
 }
 
-QModelIndex NetworkReplyModel::parent(const QModelIndex& child) const
+QModelIndex NetworkReplyModel::parent(const QModelIndex &child) const
 {
     if (child.internalId() == TopIndex) {
         return {};
@@ -215,7 +218,7 @@ QModelIndex NetworkReplyModel::parent(const QModelIndex& child) const
 
 void NetworkReplyModel::objectCreated(QObject *obj)
 {
-    if (auto nam = qobject_cast<QNetworkAccessManager*>(obj)) {
+    if (auto nam = qobject_cast<QNetworkAccessManager *>(obj)) {
         beginInsertRows({}, m_nodes.size(), m_nodes.size());
         NAMNode node;
         node.nam = nam;
@@ -223,14 +226,16 @@ void NetworkReplyModel::objectCreated(QObject *obj)
         m_nodes.push_back(node);
         endInsertRows();
 
-        connect(nam, &QNetworkAccessManager::finished, this, [this, nam](QNetworkReply *reply) { replyFinished(reply, nam); }, Qt::DirectConnection);
+        connect(
+            nam, &QNetworkAccessManager::finished, this, [this, nam](QNetworkReply *reply) { replyFinished(reply, nam); }, Qt::DirectConnection);
 #ifndef QT_NO_SSL
-        connect(nam, &QNetworkAccessManager::encrypted, this, [this, nam](QNetworkReply *reply) { replyEncrypted(reply, nam); }, Qt::DirectConnection);
+        connect(
+            nam, &QNetworkAccessManager::encrypted, this, [this, nam](QNetworkReply *reply) { replyEncrypted(reply, nam); }, Qt::DirectConnection);
         connect(nam, &QNetworkAccessManager::sslErrors, this, [this, nam](QNetworkReply *reply, const QList<QSslError> &errors) { replySslErrors(reply, errors, nam); });
 #endif
     }
 
-    if (auto reply = qobject_cast<QNetworkReply*>(obj)) {
+    if (auto reply = qobject_cast<QNetworkReply *>(obj)) {
         auto nam = reply->manager();
         auto namIt = std::find_if(m_nodes.begin(), m_nodes.end(), [nam](const NAMNode &node) {
             return node.nam == nam;
@@ -256,7 +261,8 @@ void NetworkReplyModel::objectCreated(QObject *obj)
         updateReplyNode(nam, replyNode);
 
         if (m_captureResponse) {
-            connect(reply, &QNetworkReply::downloadProgress, this, [this, reply, nam](qint64 received, qint64 total) { replyProgressSync(reply, received, total, nam); }, Qt::DirectConnection);
+            connect(
+                reply, &QNetworkReply::downloadProgress, this, [this, reply, nam](qint64 received, qint64 total) { replyProgressSync(reply, received, total, nam); }, Qt::DirectConnection);
             if (!prioritizeLatestConnection(reply, QMetaObject::normalizedSignature("downloadProgress(qint64,qint64)"), this)) {
                 qWarning() << "Failed to prioritize our slot, capturing network response might not work";
             }
@@ -269,7 +275,7 @@ void NetworkReplyModel::objectCreated(QObject *obj)
     }
 }
 
-QMap<int, QVariant> NetworkReplyModel::itemData(const QModelIndex& index) const
+QMap<int, QVariant> NetworkReplyModel::itemData(const QModelIndex &index) const
 {
     auto m = QAbstractItemModel::itemData(index);
     if (index.column() == 0) {
@@ -282,7 +288,7 @@ QMap<int, QVariant> NetworkReplyModel::itemData(const QModelIndex& index) const
     return m;
 }
 
-void NetworkReplyModel::replyFinished(QNetworkReply* reply, QNetworkAccessManager *nam)
+void NetworkReplyModel::replyFinished(QNetworkReply *reply, QNetworkAccessManager *nam)
 {
     /// WARNING this runs in the thread of the reply, not the thread of this!
     ReplyNode node;
@@ -301,14 +307,15 @@ void NetworkReplyModel::replyFinished(QNetworkReply* reply, QNetworkAccessManage
         node.errorMsgs.push_back(reply->errorString());
     }
 
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
 
     if (reply->thread() != thread()) {
-        connect(reply, &QNetworkReply::destroyed, this, [this, reply, nam]() { replyDeleted(reply, nam); }, Qt::DirectConnection);
+        connect(
+            reply, &QNetworkReply::destroyed, this, [this, reply, nam]() { replyDeleted(reply, nam); }, Qt::DirectConnection);
     }
 }
 
-void NetworkReplyModel::replyProgress(QNetworkReply* reply, qint64 progress, qint64 total, QNetworkAccessManager *nam)
+void NetworkReplyModel::replyProgress(QNetworkReply *reply, qint64 progress, qint64 total, QNetworkAccessManager *nam)
 {
     ReplyNode node;
     node.reply = reply;
@@ -324,11 +331,11 @@ void NetworkReplyModel::replyProgressSync(QNetworkReply *reply, qint64 progress,
     node.size = std::max(progress, total);
     maybePeekResponse(node, reply);
 
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
 }
 
 #ifndef QT_NO_SSL
-void NetworkReplyModel::replyEncrypted(QNetworkReply* reply, QNetworkAccessManager *nam)
+void NetworkReplyModel::replyEncrypted(QNetworkReply *reply, QNetworkAccessManager *nam)
 {
     /// WARNING this runs in the thread of the reply, not the thread of this!
     ReplyNode node;
@@ -338,10 +345,10 @@ void NetworkReplyModel::replyEncrypted(QNetworkReply* reply, QNetworkAccessManag
     node.op = reply->operation();
     node.state |= NetworkReply::Encrypted;
 
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
 }
 
-void NetworkReplyModel::replySslErrors(QNetworkReply* reply, const QList<QSslError>& errors, QNetworkAccessManager *nam)
+void NetworkReplyModel::replySslErrors(QNetworkReply *reply, const QList<QSslError> &errors, QNetworkAccessManager *nam)
 {
     /// WARNING this runs in the thread of the reply, not the thread of this!
     ReplyNode node;
@@ -354,17 +361,17 @@ void NetworkReplyModel::replySslErrors(QNetworkReply* reply, const QList<QSslErr
         node.errorMsgs.push_back(err.errorString());
     }
 
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
 }
 #endif
 
-void NetworkReplyModel::replyDeleted(QNetworkReply* reply, QNetworkAccessManager* nam)
+void NetworkReplyModel::replyDeleted(QNetworkReply *reply, QNetworkAccessManager *nam)
 {
     /// WARNING this runs in the thread of the reply, not the thread of this!
     ReplyNode node;
     node.reply = reply;
     node.state |= NetworkReply::Deleted;
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
 }
 
 void NetworkReplyModel::maybePeekResponse(ReplyNode &node, QNetworkReply *reply) const
@@ -372,13 +379,13 @@ void NetworkReplyModel::maybePeekResponse(ReplyNode &node, QNetworkReply *reply)
     if (m_captureResponse) {
         // TODO: Allow whitelisting a set of Content-Type values
         // TODO: Make the max size configurable
-        const auto resp = reply->peek(5*1024*1024);   // Read up to 5 MiB
+        const auto resp = reply->peek(5 * 1024 * 1024); // Read up to 5 MiB
         if (!resp.isEmpty())
             node.response = resp;
     }
 }
 
-void NetworkReplyModel::updateReplyNode(QNetworkAccessManager* nam, const NetworkReplyModel::ReplyNode& newNode)
+void NetworkReplyModel::updateReplyNode(QNetworkAccessManager *nam, const NetworkReplyModel::ReplyNode &newNode)
 {
     // WARNING reply is no longer safe to deref here!
     const auto namIt = std::find_if(m_nodes.begin(), m_nodes.end(), [nam](const NAMNode &node) {
@@ -410,7 +417,7 @@ void NetworkReplyModel::updateReplyNode(QNetworkAccessManager* nam, const Networ
         }
         (*replyIt).state |= newNode.state;
         if ((*replyIt).state & NetworkReply::Unencrypted) {
-            (*replyIt).state &= ~ NetworkReply::Encrypted;
+            (*replyIt).state &= ~NetworkReply::Encrypted;
         }
         if (!newNode.url.isEmpty()) {
             (*replyIt).url = newNode.url;

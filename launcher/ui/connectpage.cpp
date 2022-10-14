@@ -108,14 +108,14 @@ void ConnectPage::handleLocalAddress(QString &stillToParse, bool &correctSoFar)
 {
 #ifdef Q_OS_UNIX
     if (stillToParse.startsWith(localPrefix))
-        stillToParse.remove(localPrefix); //don't remove second slash
+        stillToParse.remove(localPrefix); // don't remove second slash
 
     // It's okay if only a path to an existing file is given
     QFileInfo localSocketFile(stillToParse);
     if (localSocketFile.exists() && !localSocketFile.isDir() && !localSocketFile.isSymLink()) {
         QT_STATBUF statbuf;
         if (QT_STAT(QFile::encodeName(localSocketFile.filePath()), &statbuf) == 0) {
-            if(!S_ISSOCK(statbuf.st_mode)) {
+            if (!S_ISSOCK(statbuf.st_mode)) {
                 showFileIsNotSocketWarning();
             } else {
                 stillToParse = "";
@@ -170,7 +170,7 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
                              QLatin1Char('[') + possibleIPv6BracketAddress.toString() + QLatin1Char(']'));
     }
 
-    if (!possibleIPv6InterfaceAddress.isNull()){
+    if (!possibleIPv6InterfaceAddress.isNull()) {
         stillToParse.replace(interfaceMatch.captured(2), QString());
         handleAddressAndPort(stillToParse, correctSoFar, possibleIPv6InterfaceAddress.toString());
     }
@@ -207,7 +207,7 @@ void ConnectPage::hostResponse(const QHostInfo &hostInfo)
     if (hostInfo.error() != QHostInfo::NoError)
         return;
 
-    if(hostInfo.addresses().empty())
+    if (hostInfo.addresses().empty())
         return;
 
     m_currentUrl.setHost(hostInfo.hostName());
@@ -226,7 +226,7 @@ void ConnectPage::handleAddressAndPort(QString &stillToParse, bool &correctSoFar
         m_currentUrl.setHost(possibleAddress);
         m_currentUrl.setPort(Endpoint::defaultPort());
         showStandardPortAssumedWarning();
-    } else if(!skipPort) {
+    } else if (!skipPort) {
         m_currentUrl.setScheme("tcp");
         m_currentUrl.setHost(possibleAddress);
         handlePortString(stillToParse, correctSoFar);
@@ -241,7 +241,7 @@ void ConnectPage::handlePortString(QString &stillToParse, bool &correctSoFar)
         auto portString = match.captured(0);
         stillToParse = stillToParse.replace(portString, QString());
         auto portNumber = portString.replace(QLatin1Char(':'), QString()).toInt();
-        if (portNumber <= 65535){
+        if (portNumber <= 65535) {
             m_currentUrl.setPort(portNumber);
             correctSoFar = true;
         }

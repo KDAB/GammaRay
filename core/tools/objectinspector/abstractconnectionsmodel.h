@@ -50,9 +50,10 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
-    QMap< int, QVariant > itemData(const QModelIndex &index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
-    struct Connection {
+    struct Connection
+    {
         QPointer<QObject> endpoint;
         int signalIndex;
         int slotIndex;

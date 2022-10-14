@@ -77,15 +77,16 @@ public:
      * \p callback will be called to start the scan
      */
     static void registerProblemChecker(const QString &id,
-                                    const QString &name, const QString &description,
-                                    const std::function<void()> &callback,
-                                    bool enabled = true);
+                                       const QString &name, const QString &description,
+                                       const std::function<void()> &callback,
+                                       bool enabled = true);
 
     /// Meant to be used in unit tests
     bool isCheckerRegistered(const QString &id) const;
 
 private:
-    struct Checker {
+    struct Checker
+    {
         QString id;
         QString name;
         QString description;

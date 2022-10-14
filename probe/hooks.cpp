@@ -54,7 +54,8 @@
 
 using namespace GammaRay;
 
-static void log_injection(const char *msg) {
+static void log_injection(const char *msg)
+{
 #ifdef Q_OS_WIN
     OutputDebugStringA(msg);
 #else
@@ -110,12 +111,9 @@ static void installQHooks()
     Q_ASSERT(qtHookData[QHooks::HookDataVersion] >= 1);
     Q_ASSERT(qtHookData[QHooks::HookDataSize] >= 6);
 
-    gammaray_next_addObject
-        = reinterpret_cast<QHooks::AddQObjectCallback>(qtHookData[QHooks::AddQObject]);
-    gammaray_next_removeObject
-        = reinterpret_cast<QHooks::RemoveQObjectCallback>(qtHookData[QHooks::RemoveQObject]);
-    gammaray_next_startup_hook
-        = reinterpret_cast<QHooks::StartupCallback>(qtHookData[QHooks::Startup]);
+    gammaray_next_addObject = reinterpret_cast<QHooks::AddQObjectCallback>(qtHookData[QHooks::AddQObject]);
+    gammaray_next_removeObject = reinterpret_cast<QHooks::RemoveQObjectCallback>(qtHookData[QHooks::RemoveQObject]);
+    gammaray_next_startup_hook = reinterpret_cast<QHooks::StartupCallback>(qtHookData[QHooks::Startup]);
 
     qtHookData[QHooks::AddQObject] = reinterpret_cast<quintptr>(&gammaray_addObject);
     qtHookData[QHooks::RemoveQObject] = reinterpret_cast<quintptr>(&gammaray_removeObject);
@@ -151,9 +149,7 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
         return;
     }
     log_injection("gammaray_probe_attach()\n");
-    new ProbeCreator(ProbeCreator::Create |
-                     ProbeCreator::FindExistingObjects |
-                     ProbeCreator::ResendServerAddress);
+    new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects | ProbeCreator::ResendServerAddress);
 }
 
 extern "C" Q_DECL_EXPORT void gammaray_install_hooks()

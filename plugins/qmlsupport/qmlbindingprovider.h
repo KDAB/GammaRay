@@ -50,15 +50,15 @@ namespace GammaRay {
 class QmlBindingProvider : public AbstractBindingProvider
 {
 public:
-    std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject * obj) const override;
-    std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(GammaRay::BindingNode * binding) const override;
+    std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject *obj) const override;
+    std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(GammaRay::BindingNode *binding) const override;
     bool canProvideBindingsFor(QObject *object) const override;
 
 private:
     std::unique_ptr<BindingNode> bindingNodeFromQmlProperty(QQmlProperty property, BindingNode *parent) const;
     BindingNode *bindingNodeFromBinding(QQmlAbstractBinding *binding) const;
-    static void fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding) ;
-    static QQmlAbstractBinding *bindingForProperty(QObject *obj, int propertyIndex) ;
+    static void fetchSourceLocationFor(BindingNode *node, QQmlBinding *binding);
+    static QQmlAbstractBinding *bindingForProperty(QObject *obj, int propertyIndex);
 };
 
 }

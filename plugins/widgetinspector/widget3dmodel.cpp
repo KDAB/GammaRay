@@ -69,7 +69,7 @@ Widget3DWidget::Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &mo
     Widget3DWidget *w = this;
     while (w && !isWindow()) {
         ++mDepth;
-        w = qobject_cast<Widget3DWidget*>(w->parent());
+        w = qobject_cast<Widget3DWidget *>(w->parent());
     }
     if (!isWindow()) {
         --mDepth;
@@ -103,7 +103,7 @@ bool Widget3DWidget::isWindow() const
     // Those are technically windows, but we don't want them listed in the window
     // list
     // TODO: any more exceptions?
-    if (qobject_cast<QMenu*>(mQWidget)
+    if (qobject_cast<QMenu *>(mQWidget)
         || qstrcmp(mQWidget->metaObject()->className(), "QTipLabel") == 0) {
         return false;
     }
@@ -116,7 +116,7 @@ bool Widget3DWidget::eventFilter(QObject *obj, QEvent *ev)
     if (obj == mQWidget) {
         switch (ev->type()) {
         case QEvent::Resize: {
-            QResizeEvent *re = static_cast<QResizeEvent*>(ev);
+            QResizeEvent *re = static_cast<QResizeEvent *>(ev);
             if (re->oldSize() != re->size()) {
                 mMetaData[QStringLiteral("geometry")] = mQWidget->geometry();
                 mGeomDirty = true;
@@ -357,7 +357,7 @@ Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, const QModelIndex &
         if (obj->parent() && idx.parent().isValid()) {
             parent = widgetForObject(obj->parent(), idx.parent(), createWhenMissing);
         }
-        widget = new Widget3DWidget(qobject_cast<QWidget*>(obj), idx, parent);
+        widget = new Widget3DWidget(qobject_cast<QWidget *>(obj), idx, parent);
         connect(widget, &Widget3DWidget::changed,
                 this, &Widget3DModel::onWidgetChanged);
         connect(obj, &QObject::destroyed,
@@ -369,23 +369,23 @@ Widget3DWidget *Widget3DModel::widgetForObject(QObject *obj, const QModelIndex &
 
 Widget3DWidget *Widget3DModel::widgetForIndex(const QModelIndex &idx, bool createWhenMissing) const
 {
-   QObject *obj = this->QSortFilterProxyModel::data(idx, ObjectModel::ObjectRole).value<QObject*>();
-   Q_ASSERT(obj); // bug in model?
-   Q_ASSERT(obj->isWidgetType()); // this should be already filtered out by filterAcceptsRow()
+    QObject *obj = this->QSortFilterProxyModel::data(idx, ObjectModel::ObjectRole).value<QObject *>();
+    Q_ASSERT(obj); // bug in model?
+    Q_ASSERT(obj->isWidgetType()); // this should be already filtered out by filterAcceptsRow()
 
-   return widgetForObject(obj, idx, createWhenMissing);
+    return widgetForObject(obj, idx, createWhenMissing);
 }
 
 bool Widget3DModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     const QModelIndex sourceIdx = sourceModel()->index(source_row, 0, source_parent);
-    QObject *sourceObj = sourceModel()->data(sourceIdx, ObjectModel::ObjectRole).value<QObject*>();
+    QObject *sourceObj = sourceModel()->data(sourceIdx, ObjectModel::ObjectRole).value<QObject *>();
     return qobject_cast<QWidget *>(sourceObj);
 }
 
 void Widget3DModel::onWidgetChanged(const QVector<int> &roles)
 {
-    const auto widget = qobject_cast<Widget3DWidget*>(sender());
+    const auto widget = qobject_cast<Widget3DWidget *>(sender());
     Q_ASSERT(widget);
 
     const QModelIndex idx = widget->modelIndex();

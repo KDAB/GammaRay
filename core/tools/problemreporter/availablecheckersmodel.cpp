@@ -40,7 +40,7 @@ AvailableCheckersModel::AvailableCheckersModel(QObject *parent)
     connect(ProblemCollector::instance(), &ProblemCollector::checkerAdded, this, &AvailableCheckersModel::checkerAdded);
 }
 
-QVariant AvailableCheckersModel::data(const QModelIndex & index, int role) const
+QVariant AvailableCheckersModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.column() != 0 || index.row() < 0 || index.row() >= m_availableCheckers->size()) {
         return QVariant();
@@ -62,7 +62,7 @@ QVariant AvailableCheckersModel::data(const QModelIndex & index, int role) const
     return QVariant();
 }
 
-bool GammaRay::AvailableCheckersModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool GammaRay::AvailableCheckersModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (!index.isValid()
         || index.column() != 0
@@ -85,7 +85,7 @@ Qt::ItemFlags AvailableCheckersModel::flags(const QModelIndex &index) const
     return flags;
 }
 
-int AvailableCheckersModel::rowCount(const QModelIndex & parent) const
+int AvailableCheckersModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return 0;

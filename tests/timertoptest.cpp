@@ -48,11 +48,14 @@ class Deleter : public QObject
 public:
     explicit Deleter(QObject *parent = nullptr)
         : QObject(parent)
-    { }
+    {
+    }
 
 public slots:
     void deleteSender()
-    { delete sender(); }
+    {
+        delete sender();
+    }
 };
 
 class TimerTopTest : public BaseProbeTest
@@ -113,7 +116,7 @@ private slots:
         QVERIFY(idx.isValid());
         // TODO verify data
 
-        QSignalSpy dataChangeSpy(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QSignalSpy dataChangeSpy(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)));
         QVERIFY(dataChangeSpy.isValid());
         t1->start();
         QTest::qWait(10 * 1000); // there's a 5sec throttle on dataChanged
@@ -185,7 +188,7 @@ private slots:
             threadTimer->setInterval(100);
             threadTimer->moveToThread(mainThread.data());
 
-            connect(mainThread.data(), &QThread::started, threadTimer.data(), static_cast<void(QTimer::*)()>(&QTimer::start));
+            connect(mainThread.data(), &QThread::started, threadTimer.data(), static_cast<void (QTimer::*)()>(&QTimer::start));
 
             int timerId = -1;
             QTimer::singleShot(500, threadTimer.data(), [&]() {

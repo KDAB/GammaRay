@@ -63,7 +63,7 @@ private:
     float m_length = 4.0f;
 };
 
-MyCylinderGeometry::MyCylinderGeometry(QNode* parent)
+MyCylinderGeometry::MyCylinderGeometry(QNode *parent)
     : QGeometry(parent)
 {
     m_positionAttribute = new Qt3DRender::QAttribute(this);
@@ -116,13 +116,13 @@ MyCylinderGeometry::~MyCylinderGeometry()
 
 void MyCylinderGeometry::createVertexData()
 {
-    const int verticesCount  = (m_slices + 1) * m_rings + 2 * (m_slices + 1) + 2;
+    const int verticesCount = (m_slices + 1) * m_rings + 2 * (m_slices + 1) + 2;
     // vec3 pos, vec3 normal
     const quint32 vertexSize = (3 + 3) * sizeof(float);
 
     QByteArray verticesData;
     verticesData.resize(vertexSize * verticesCount);
-    float *verticesPtr = reinterpret_cast<float*>(verticesData.data());
+    float *verticesPtr = reinterpret_cast<float *>(verticesData.data());
 
     createSidesVertices(verticesPtr);
     createDiscVertices(verticesPtr, -m_length * 0.5f);
@@ -131,7 +131,7 @@ void MyCylinderGeometry::createVertexData()
     m_vertexBuffer->setData(verticesData);
 }
 
-void MyCylinderGeometry::createSidesVertices(float*& verticesPtr)
+void MyCylinderGeometry::createSidesVertices(float *&verticesPtr)
 {
     //! [Wrong side normals]
     const float dY = m_length / static_cast<float>(m_rings - 1);
@@ -141,11 +141,12 @@ void MyCylinderGeometry::createSidesVertices(float*& verticesPtr)
         const float y = -m_length / 2.0f + static_cast<float>(ring) * dY;
         for (int slice = 0; slice <= m_slices; ++slice) {
             const float theta = static_cast<float>(slice) * dTheta;
-            *verticesPtr++ = m_radius * qCos(theta);;
+            *verticesPtr++ = m_radius * qCos(theta);
+            ;
             *verticesPtr++ = y;
             *verticesPtr++ = m_radius * qSin(theta);
 
-            QVector3D n(qCos(theta), -y *0.5f, qSin(theta));
+            QVector3D n(qCos(theta), -y * 0.5f, qSin(theta));
             n.normalize();
             *verticesPtr++ = n.x();
             *verticesPtr++ = n.y();
@@ -183,14 +184,14 @@ void MyCylinderGeometry::createDiscVertices(float *&verticesPtr, float yPosition
 void MyCylinderGeometry::createIndexData()
 {
     const int facesCount = (m_slices * 2) * (m_rings - 1) // two tris per side, for each pair of adjacent rings
-            + m_slices * 2; // two caps
+        + m_slices * 2; // two caps
     const int indicesCount = facesCount * 3;
     const int indexSize = sizeof(quint16);
     Q_ASSERT(indicesCount < 65536);
 
     QByteArray indicesBytes;
     indicesBytes.resize(indicesCount * indexSize);
-    quint16 *indicesPtr = reinterpret_cast<quint16*>(indicesBytes.data());
+    quint16 *indicesPtr = reinterpret_cast<quint16 *>(indicesBytes.data());
 
     createSidesIndices(indicesPtr);
     createDiscIndices(indicesPtr, m_rings * (m_slices + 1), -m_length * 0.5);
@@ -220,20 +221,20 @@ void MyCylinderGeometry::createSidesIndices(quint16 *&indicesPtr)
 void MyCylinderGeometry::createDiscIndices(quint16 *&indicesPtr, int discCenterIndex, float /*yPosition*/)
 {
     //! [Wrong bottom disc indexes]
-    //const auto yNormal = (yPosition < 0.0f) ? -1.0f : 1.0f;
+    // const auto yNormal = (yPosition < 0.0f) ? -1.0f : 1.0f;
     for (auto slice = 0; slice < m_slices; ++slice) {
         const auto nextSlice = slice + 1;
         *indicesPtr++ = discCenterIndex;
         *indicesPtr++ = (discCenterIndex + 1 + nextSlice);
         *indicesPtr++ = (discCenterIndex + 1 + slice);
 
-        //if (yNormal < 0.0f)
-        //    qSwap(*(indicesPtr -1), *(indicesPtr - 2));
+        // if (yNormal < 0.0f)
+        //     qSwap(*(indicesPtr -1), *(indicesPtr - 2));
     }
     //! [Wrong bottom disc indexes]
 }
 
-MyCylinder::MyCylinder(Qt3DCore::QNode* parent)
+MyCylinder::MyCylinder(Qt3DCore::QNode *parent)
     : QGeometryRenderer(parent)
 {
     setGeometry(new MyCylinderGeometry(this));

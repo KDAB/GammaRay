@@ -1,6 +1,12 @@
 {
     "id": "gammaray_widgetinspector",
     "name": "Widgets",
-    "types": [ "QWidget", "QApplication" ],
-    "selectableTypes": [ "QWidget", "QLayout" ]
+    "types": [
+        "QWidget",
+        "QApplication"
+    ],
+    "selectableTypes": [
+        "QWidget",
+        "QLayout"
+    ]
 }

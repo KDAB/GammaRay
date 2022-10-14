@@ -37,9 +37,9 @@
 
 using namespace GammaRay;
 
-GeoPositionInfoSourceFactory::GeoPositionInfoSourceFactory(QObject* parent):
-    QObject(parent),
-    m_factoryLoader(new QFactoryLoader("org.qt-project.qt.position.sourcefactory/5.0", QStringLiteral("/position")))
+GeoPositionInfoSourceFactory::GeoPositionInfoSourceFactory(QObject *parent)
+    : QObject(parent)
+    , m_factoryLoader(new QFactoryLoader("org.qt-project.qt.position.sourcefactory/5.0", QStringLiteral("/position")))
 {
 }
 
@@ -49,9 +49,9 @@ GeoPositionInfoSourceFactory::~GeoPositionInfoSourceFactory()
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject *parent)
+QGeoPositionInfoSource *GeoPositionInfoSourceFactory::positionInfoSource(QObject *parent)
 #else
-QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject *parent, const QVariantMap &/*parameters*/)
+QGeoPositionInfoSource *GeoPositionInfoSourceFactory::positionInfoSource(QObject *parent, const QVariantMap & /*parameters*/)
 #endif
 {
     auto proxy = new GeoPositionInfoSource(parent);
@@ -84,9 +84,9 @@ QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject
         const auto rData = metaData.at(rhs).toCbor();
         return lData.value(QStringLiteral("Priority")).toInteger() > rData.value(QStringLiteral("Priority")).toInteger();
 #else
-        const auto lData = metaData.at(lhs).value(QStringLiteral("MetaData")).toObject();
-        const auto rData = metaData.at(rhs).value(QStringLiteral("MetaData")).toObject();
-        return lData.value(QStringLiteral("Priority")).toInt() > rData.value(QStringLiteral("Priority")).toInt();
+            const auto lData = metaData.at(lhs).value(QStringLiteral("MetaData")).toObject();
+            const auto rData = metaData.at(rhs).value(QStringLiteral("MetaData")).toObject();
+            return lData.value(QStringLiteral("Priority")).toInt() > rData.value(QStringLiteral("Priority")).toInt();
 #endif
     });
 
@@ -112,9 +112,9 @@ QGeoPositionInfoSource* GeoPositionInfoSourceFactory::positionInfoSource(QObject
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-QGeoSatelliteInfoSource* GeoPositionInfoSourceFactory::satelliteInfoSource(QObject *parent)
+QGeoSatelliteInfoSource *GeoPositionInfoSourceFactory::satelliteInfoSource(QObject *parent)
 #else
-QGeoSatelliteInfoSource* GeoPositionInfoSourceFactory::satelliteInfoSource(QObject *parent, const QVariantMap &/*parameters*/)
+QGeoSatelliteInfoSource *GeoPositionInfoSourceFactory::satelliteInfoSource(QObject *parent, const QVariantMap & /*parameters*/)
 #endif
 {
     Q_UNUSED(parent);
@@ -122,9 +122,9 @@ QGeoSatelliteInfoSource* GeoPositionInfoSourceFactory::satelliteInfoSource(QObje
 }
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-QGeoAreaMonitorSource* GeoPositionInfoSourceFactory::areaMonitor(QObject *parent)
+QGeoAreaMonitorSource *GeoPositionInfoSourceFactory::areaMonitor(QObject *parent)
 #else
-QGeoAreaMonitorSource* GeoPositionInfoSourceFactory::areaMonitor(QObject *parent, const QVariantMap &/*parameters*/)
+QGeoAreaMonitorSource *GeoPositionInfoSourceFactory::areaMonitor(QObject *parent, const QVariantMap & /*parameters*/)
 #endif
 {
     Q_UNUSED(parent);

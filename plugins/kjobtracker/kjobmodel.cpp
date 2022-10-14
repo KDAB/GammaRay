@@ -165,7 +165,7 @@ void KJobModel::jobResult(KJob *job)
         m_data[pos].state = KJobInfo::Finished;
     }
 
-    emit dataChanged(index(pos, 0), index(pos, columnCount()-1));
+    emit dataChanged(index(pos, 0), index(pos, columnCount() - 1));
 }
 
 void KJobModel::jobFinished(KJob *obj)
@@ -179,7 +179,7 @@ void KJobModel::jobFinished(KJob *obj)
         m_data[pos].statusText = tr("Killed");
     }
 
-    emit dataChanged(index(pos, 0), index(pos, columnCount()-1));
+    emit dataChanged(index(pos, 0), index(pos, columnCount() - 1));
 }
 
 void KJobModel::jobInfo(KJob *job, const QString &plainMessage)
@@ -191,7 +191,7 @@ void KJobModel::jobInfo(KJob *job, const QString &plainMessage)
     if (m_data.at(pos).state == KJobInfo::Running)
         m_data[pos].statusText = plainMessage;
 
-    emit dataChanged(index(pos, 0), index(pos, columnCount()-1));
+    emit dataChanged(index(pos, 0), index(pos, columnCount() - 1));
 }
 
 int KJobModel::indexOfJob(QObject *obj) const

@@ -57,7 +57,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
-                "CMAKE_C_FLAGS_INIT" : "-ftime-trace",
+                "CMAKE_C_FLAGS_INIT": "-ftime-trace",
                 "CMAKE_CXX_FLAGS_INIT": "-ftime-trace"
             },
             "environment": {

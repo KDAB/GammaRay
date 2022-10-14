@@ -67,10 +67,10 @@ void HelpControllerPrivate::startProcess()
     QObject::connect(proc,
                      static_cast<void (QProcess::*)(int,
                                                     QProcess::ExitStatus)>(&QProcess::finished),
-                     [this](){
-        proc->deleteLater();
-        proc = nullptr;
-    });
+                     [this]() {
+                         proc->deleteLater();
+                         proc = nullptr;
+                     });
     proc->setProgram(assistantPath);
     proc->setArguments(QStringList()
                        << QLatin1String("-collectionFile")
@@ -143,6 +143,7 @@ void HelpController::openPage(const QString &page)
     auto d = s_helpController();
     d->startProcess();
     d->sendCommand(QByteArray(
-                       "setSource qthelp://com.kdab.GammaRay." GAMMARAY_PLUGIN_VERSION "/") + page.toUtf8()
+                       "setSource qthelp://com.kdab.GammaRay." GAMMARAY_PLUGIN_VERSION "/")
+                   + page.toUtf8()
                    + ";syncContents\n");
 }

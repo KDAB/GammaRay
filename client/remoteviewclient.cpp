@@ -50,48 +50,25 @@ void RemoteViewClient::pickElementId(const GammaRay::ObjectId &id)
 void RemoteViewClient::sendKeyEvent(int type, int key, int modifiers, const QString &text,
                                     bool autorep, ushort count)
 {
-    Endpoint::instance()->invokeObject(name(), "sendKeyEvent", QVariantList()
-                                       << QVariant::fromValue(type)
-                                       << QVariant::fromValue(key)
-                                       << QVariant::fromValue(modifiers)
-                                       << QVariant::fromValue(text)
-                                       << QVariant::fromValue(autorep)
-                                       << QVariant::fromValue(count));
+    Endpoint::instance()->invokeObject(name(), "sendKeyEvent", QVariantList() << QVariant::fromValue(type) << QVariant::fromValue(key) << QVariant::fromValue(modifiers) << QVariant::fromValue(text) << QVariant::fromValue(autorep) << QVariant::fromValue(count));
 }
 
 void RemoteViewClient::sendMouseEvent(int type, const QPoint &localPos, int button, int buttons,
                                       int modifiers)
 {
-    Endpoint::instance()->invokeObject(name(), "sendMouseEvent", QVariantList()
-                                       << QVariant::fromValue(type)
-                                       << QVariant::fromValue(localPos)
-                                       << QVariant::fromValue(button)
-                                       << QVariant::fromValue(buttons)
-                                       << QVariant::fromValue(modifiers));
+    Endpoint::instance()->invokeObject(name(), "sendMouseEvent", QVariantList() << QVariant::fromValue(type) << QVariant::fromValue(localPos) << QVariant::fromValue(button) << QVariant::fromValue(buttons) << QVariant::fromValue(modifiers));
 }
 
 void RemoteViewClient::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta,
                                       int buttons, int modifiers)
 {
-    Endpoint::instance()->invokeObject(name(), "sendWheelEvent", QVariantList()
-                                       << QVariant::fromValue(localPos)
-                                       << QVariant::fromValue(pixelDelta)
-                                       << QVariant::fromValue(angleDelta)
-                                       << QVariant::fromValue(buttons)
-                                       << QVariant::fromValue(modifiers));
+    Endpoint::instance()->invokeObject(name(), "sendWheelEvent", QVariantList() << QVariant::fromValue(localPos) << QVariant::fromValue(pixelDelta) << QVariant::fromValue(angleDelta) << QVariant::fromValue(buttons) << QVariant::fromValue(modifiers));
 }
 
 void RemoteViewClient::sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
                                       int touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
 {
-    Endpoint::instance()->invokeObject(name(), "sendTouchEvent", QVariantList()
-                                       << QVariant::fromValue(type)
-                                       << QVariant::fromValue(touchDeviceType)
-                                       << QVariant::fromValue(deviceCaps)
-                                       << QVariant::fromValue(touchDeviceMaxTouchPoints)
-                                       << QVariant::fromValue(modifiers)
-                                       << QVariant::fromValue(touchPointStates)
-                                       << QVariant::fromValue(touchPoints));
+    Endpoint::instance()->invokeObject(name(), "sendTouchEvent", QVariantList() << QVariant::fromValue(type) << QVariant::fromValue(touchDeviceType) << QVariant::fromValue(deviceCaps) << QVariant::fromValue(touchDeviceMaxTouchPoints) << QVariant::fromValue(modifiers) << QVariant::fromValue(touchPointStates) << QVariant::fromValue(touchPoints));
 }
 
 void RemoteViewClient::setViewActive(bool active)

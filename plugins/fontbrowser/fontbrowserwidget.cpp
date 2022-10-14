@@ -59,8 +59,7 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
 
     ui->setupUi(this);
 
-    m_selectedFontModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectedFontModel"));
+    m_selectedFontModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SelectedFontModel"));
 
     ui->selectedFontsView->header()->setObjectName("selectedFontsViewHeader");
     ui->selectedFontsView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
@@ -75,11 +74,11 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
             m_fontBrowser, &FontBrowserInterface::toggleItalicFont);
     connect(ui->underlineBox, &QAbstractButton::toggled,
             m_fontBrowser, &FontBrowserInterface::toggleUnderlineFont);
-    connect(ui->pointSize, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(ui->pointSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             m_fontBrowser, &FontBrowserInterface::setPointSize);
 
     QAbstractItemModel *fontModel = ObjectBroker::model(QStringLiteral(
-                                                            "com.kdab.GammaRay.FontModel"));
+        "com.kdab.GammaRay.FontModel"));
     auto proxy = new QSortFilterProxyModel(this);
     proxy->setSourceModel(fontModel);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
@@ -103,7 +102,8 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
     m_fontBrowser->toggleUnderlineFont(ui->underlineBox->isChecked());
     m_fontBrowser->setPointSize(ui->pointSize->value());
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
+                                                                    << "50%");
     QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
 }
 

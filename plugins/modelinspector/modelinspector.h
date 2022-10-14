@@ -78,7 +78,7 @@ private:
 };
 
 class ModelInspectorFactory : public QObject,
-    public StandardToolFactory<QAbstractItemModel, ModelInspector>
+                              public StandardToolFactory<QAbstractItemModel, ModelInspector>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

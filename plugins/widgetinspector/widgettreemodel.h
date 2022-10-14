@@ -43,7 +43,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
-    Q_INVOKABLE static QPair<int, QVariant> defaultSelectedItem() ;
+    Q_INVOKABLE static QPair<int, QVariant> defaultSelectedItem();
 
 protected:
     bool filterAcceptsObject(QObject *object) const override;

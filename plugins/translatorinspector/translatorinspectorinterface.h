@@ -40,7 +40,10 @@ public:
     explicit TranslatorInspectorInterface(const QString &name, QObject *parent);
     ~TranslatorInspectorInterface() override;
 
-    const QString &name() const { return m_name; }
+    const QString &name() const
+    {
+        return m_name;
+    }
 
 public slots:
     virtual void sendLanguageChangeEvent() = 0;

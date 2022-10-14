@@ -53,7 +53,7 @@ void QuickInspectorClient::setCustomRenderMode(
     Endpoint::instance()->invokeObject(objectName(),
                                        "setCustomRenderMode",
                                        QVariantList()
-                                       << QVariant::fromValue(customRenderMode));
+                                           << QVariant::fromValue(customRenderMode));
 }
 
 void QuickInspectorClient::checkFeatures()
@@ -66,7 +66,7 @@ void QuickInspectorClient::setOverlaySettings(const GammaRay::QuickDecorationsSe
     Endpoint::instance()->invokeObject(objectName(),
                                        "setOverlaySettings",
                                        QVariantList()
-                                       << QVariant::fromValue(settings));
+                                           << QVariant::fromValue(settings));
 }
 
 void QuickInspectorClient::checkOverlaySettings()
@@ -89,5 +89,5 @@ void QuickInspectorClient::setSlowMode(bool slow)
     Endpoint::instance()->invokeObject(objectName(),
                                        "setSlowMode",
                                        QVariantList()
-                                       << slow);
+                                           << slow);
 }

@@ -41,7 +41,8 @@ public:
     explicit TextureViewWidget(QWidget *parent = nullptr);
     ~TextureViewWidget() override;
 
-    enum ImageFlag {
+    enum ImageFlag
+    {
         None = 0,
         FullyTransparent = 1,
         Unicolor = 2,
@@ -78,12 +79,11 @@ private:
     int m_pixelWasteInPercent;
     int m_pixelWasteInBytes;
     QRect m_analyzedRect;
-    QRect m_opaqueBoundingRect; //area actually occupied by opaque pixels
+    QRect m_opaqueBoundingRect; // area actually occupied by opaque pixels
     int m_horizontalBorderImageSavingsInPercent;
     QRect m_horizontalBorderRectMidCut;
     int m_verticalBorderImageSavings;
     QRect m_verticalBorderRectMidCut;
-
 };
 }
 

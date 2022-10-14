@@ -40,7 +40,8 @@ class MetaObjectRegistry : public QObject
     Q_OBJECT
 
 public:
-    enum MetaObjectData {
+    enum MetaObjectData
+    {
         ClassName,
         Valid,
         SelfCount,
@@ -87,7 +88,7 @@ private:
 
 private:
     QHash<const QMetaObject *, const QMetaObject *> m_childParentMap;
-    QHash<const QMetaObject *, QVector<const QMetaObject *> > m_parentChildMap;
+    QHash<const QMetaObject *, QVector<const QMetaObject *>> m_parentChildMap;
 
     struct MetaObjectInfo
     {
@@ -116,20 +117,20 @@ private:
         /// A copy of QMetaObject::className()
         QByteArray className;
     };
-    QHash<const QMetaObject*, MetaObjectInfo> m_metaObjectInfoMap;
+    QHash<const QMetaObject *, MetaObjectInfo> m_metaObjectInfoMap;
     /// canonical meta objects at creation time, so we can correctly decrement instance counts
     /// after destruction
-    QHash<QObject*, const QMetaObject*> m_metaObjectMap;
+    QHash<QObject *, const QMetaObject *> m_metaObjectMap;
     /// name to canonical QMO map, for merging dynamic meta objects as produced by QML
-    QHash<QByteArray, const QMetaObject*> m_metaObjectNameMap;
+    QHash<QByteArray, const QMetaObject *> m_metaObjectNameMap;
 
     /// alive instances for canonical dynamic meta objects
-    QHash<const QMetaObject*, QVector<const QMetaObject*> > m_aliveInstances;
+    QHash<const QMetaObject *, QVector<const QMetaObject *>> m_aliveInstances;
     /// mapping from QObject* to its owned QMetaObject (for dynamic ones only)
     /// this is needed to clean up m_aliveInstances on deletion
-    QHash<QObject*, const QMetaObject*> m_dynamicMetaObjectMap;
+    QHash<QObject *, const QMetaObject *> m_dynamicMetaObjectMap;
     /// QMO instance to canonical QMO mapping (for dynamic ones only)
-    QHash<const QMetaObject*, const QMetaObject*> m_canonicalMetaObjectMap;
+    QHash<const QMetaObject *, const QMetaObject *> m_canonicalMetaObjectMap;
 };
 }
 

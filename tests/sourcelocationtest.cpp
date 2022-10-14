@@ -90,8 +90,7 @@ private slots:
                                                << 0 << QStringLiteral("/some/file:23:1") << true;
         QTest::newRow("url") << QUrl::fromLocalFile(QStringLiteral("/some/file")) << 0 << 0
                              << QStringLiteral("/some/file:1:1") << true;
-        QTest::newRow("qrc") << QUrl(QStringLiteral("qrc:///main.qml")) << 0 << 0 << QStringLiteral(
-            "qrc:///main.qml:1:1") << true;
+        QTest::newRow("qrc") << QUrl(QStringLiteral("qrc:///main.qml")) << 0 << 0 << QStringLiteral("qrc:///main.qml:1:1") << true;
     }
 
     static void testDisplayString()

@@ -52,7 +52,7 @@ int LocaleAccessorModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
     int area = m_registry->accessors().size();
-    return qCeil((float)area / (int)qSqrt(area));
+    return qCeil(( float )area / ( int )qSqrt(area));
 }
 
 Qt::ItemFlags LocaleAccessorModel::flags(const QModelIndex &index) const
@@ -72,8 +72,7 @@ QVariant LocaleAccessorModel::data(const QModelIndex &index, int role) const
     case Qt::DisplayRole:
         return accessor->accessorName();
     case Qt::CheckStateRole:
-        return
-            m_registry->enabledAccessors().contains(accessor)
+        return m_registry->enabledAccessors().contains(accessor)
             ? Qt::Checked
             : Qt::Unchecked;
     case AccessorRole:

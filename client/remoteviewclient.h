@@ -49,7 +49,7 @@ public:
                         int modifiers) override;
     void sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
                         int touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
-                        override;
+        override;
     void setViewActive(bool active) override;
     void sendUserViewport(const QRectF &userViewport) override;
     void clientViewUpdated() override;

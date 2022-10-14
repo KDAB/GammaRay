@@ -96,9 +96,11 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
             this, &ModelInspectorWidget::modelSelected);
 
     ui->modelCellView->setModel(ObjectBroker::model(QStringLiteral(
-                                                        "com.kdab.GammaRay.ModelCellModel")));
+        "com.kdab.GammaRay.ModelCellModel")));
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "33%" << "33%" << "33%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "33%"
+                                                                    << "33%"
+                                                                    << "33%");
 
     cellDataChanged();
 }
@@ -116,21 +118,24 @@ void ModelInspectorWidget::modelSelected(const QItemSelection &selected)
         ui->modelView->scrollTo(index, QAbstractItemView::EnsureVisible);
 }
 
-#define F(x) { Qt:: x, #x }
+#define F(x)      \
+    {             \
+        Qt::x, #x \
+    }
 static const MetaEnum::Value<Qt::ItemFlag> item_flag_table[] = {
-    { Qt::ItemIsSelectable,     "Selectable" },
-    { Qt::ItemIsEditable,       "Editable" },
-    { Qt::ItemIsDragEnabled,    "DragEnabled" },
-    { Qt::ItemIsDropEnabled,    "DropEnabled" },
-    { Qt::ItemIsUserCheckable,  "UserCheckable" },
-    { Qt::ItemIsEnabled,        "Enabled" },
+    { Qt::ItemIsSelectable, "Selectable" },
+    { Qt::ItemIsEditable, "Editable" },
+    { Qt::ItemIsDragEnabled, "DragEnabled" },
+    { Qt::ItemIsDropEnabled, "DropEnabled" },
+    { Qt::ItemIsUserCheckable, "UserCheckable" },
+    { Qt::ItemIsEnabled, "Enabled" },
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
-    { Qt::ItemIsAutoTristate,   "AutoTristate" },
+    { Qt::ItemIsAutoTristate, "AutoTristate" },
 #else
-    { Qt::ItemIsTristate,       "AutoTristate" },
+    { Qt::ItemIsTristate, "AutoTristate" },
 #endif
     { Qt::ItemNeverHasChildren, "ItemNeverHasChildren" },
-    { Qt::ItemIsUserTristate,   "UserTristate" }
+    { Qt::ItemIsUserTristate, "UserTristate" }
 };
 #undef F
 
@@ -138,8 +143,8 @@ void ModelInspectorWidget::cellDataChanged()
 {
     const auto cellData = m_interface->currentCellData();
     ui->indexLabel->setText(cellData.row != -1
-                            ? tr("Row: %1 Column: %2").arg(cellData.row).arg(cellData.column)
-                            : tr("Invalid"));
+                                ? tr("Row: %1 Column: %2").arg(cellData.row).arg(cellData.column)
+                                : tr("Invalid"));
     ui->internalIdLabel->setText(cellData.internalId);
     ui->internalPtrLabel->setText(cellData.internalPtr);
     ui->flagsLabel->setText(MetaEnum::flagsToString(cellData.flags, item_flag_table));
@@ -161,8 +166,7 @@ void ModelInspectorWidget::modelContextMenu(QPoint pos)
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     QMenu menu;
     ContextMenuExtension ext(objectId);
-    ext.setLocation(ContextMenuExtension::Creation, index.data(
-                        ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
     ext.setLocation(ContextMenuExtension::Declaration,
                     index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.populateMenu(&menu);

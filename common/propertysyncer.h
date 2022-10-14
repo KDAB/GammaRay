@@ -78,7 +78,8 @@ private slots:
     void objectDestroyed(QObject *obj);
 
 private:
-    struct ObjectInfo {
+    struct ObjectInfo
+    {
         Protocol::ObjectAddress addr;
         QObject *obj;
         bool recursionLock;

@@ -45,7 +45,9 @@ class StandardPathsProxy : public QIdentityProxyModel
     Q_OBJECT
 public:
     explicit StandardPathsProxy(QObject *parent = nullptr)
-        : QIdentityProxyModel(parent) { }
+        : QIdentityProxyModel(parent)
+    {
+    }
 
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override
@@ -62,7 +64,9 @@ class StandardPathsDelegate : public QStyledItemDelegate
     Q_OBJECT
 public:
     explicit StandardPathsDelegate(QObject *parent = nullptr)
-        : QStyledItemDelegate(parent) { }
+        : QStyledItemDelegate(parent)
+    {
+    }
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
                const QModelIndex &index) const override
@@ -77,10 +81,12 @@ public:
 
             const int textMargin = style->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, widget) + 1;
             const QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &opt, widget)
-                                   .adjusted(textMargin, 1, -textMargin, -1);
+                                       .adjusted(textMargin, 1, -textMargin, -1);
             painter->setPen(((opt.state
-                              & QStyle::State_Selected) ? opt.palette.highlightedText() : opt.
-                             palette.text()).color());
+                              & QStyle::State_Selected)
+                                 ? opt.palette.highlightedText()
+                                 : opt.palette.text())
+                                .color());
             painter->drawText(textRect, Qt::AlignBottom | Qt::AlignLeft,
                               index.sibling(index.row(), 3).data().toString());
         } else {
@@ -94,8 +100,8 @@ public:
         if (index.column() == 2) {
             QSize s1 = QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 2));
             QSize s2 = QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 3));
-            return {qMax(s1.width(), s2.width()),
-                         s1.height() + s2.height() + option.fontMetrics.height()};
+            return { qMax(s1.width(), s2.width()),
+                     s1.height() + s2.height() + option.fontMetrics.height() };
         } else {
             return QStyledItemDelegate::sizeHint(option, index);
         }
@@ -112,7 +118,7 @@ StandardPathsWidget::StandardPathsWidget(QWidget *parent)
 
     auto *proxy = new StandardPathsProxy(this);
     proxy->setSourceModel(ObjectBroker::model(QStringLiteral(
-                                                  "com.kdab.GammaRay.StandardPathsModel")));
+        "com.kdab.GammaRay.StandardPathsModel")));
 
     ui->pathView->header()->setObjectName("pathViewHeader");
     ui->pathView->setUniformRowHeights(false);

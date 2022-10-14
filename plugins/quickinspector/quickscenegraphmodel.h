@@ -82,7 +82,7 @@ private:
 
     QSGNode *m_rootNode;
     std::unordered_map<QSGNode *, QSGNode *> m_childParentMap;
-    std::unordered_map<QSGNode *, QVector<QSGNode *> > m_parentChildMap;
+    std::unordered_map<QSGNode *, QVector<QSGNode *>> m_parentChildMap;
     std::unordered_map<QQuickItem *, QSGNode *> m_itemItemNodeMap;
     std::unordered_map<QSGNode *, QQuickItem *> m_itemNodeItemMap;
 };

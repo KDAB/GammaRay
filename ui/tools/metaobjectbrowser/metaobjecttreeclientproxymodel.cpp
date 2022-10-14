@@ -91,19 +91,18 @@ QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex &index, int role
     if (index.column() == QMetaObjectModel::ObjectColumn) {
         const auto issues = QIdentityProxyModel::data(index, QMetaObjectModel::MetaObjectIssues).value<QMetaObjectValidatorResult::Results>();
         switch (role) {
-            case Qt::DecorationRole:
-                if (issues != QMetaObjectValidatorResult::NoIssue)
-                    return qApp->style()->standardIcon(QStyle::SP_MessageBoxWarning);
-                break;
-            case Qt::ToolTipRole:
-            {
-                if (issues != QMetaObjectValidatorResult::NoIssue)
-                    return issuesToString(issues);
-                const auto invalid = index.sibling(index.row(), QMetaObjectModel::ObjectInclusiveAliveCountColumn).data(QMetaObjectModel::MetaObjectInvalid).toBool();
-                if (invalid)
-                    return tr("This meta object might have been deleted.");
-                break;
-            }
+        case Qt::DecorationRole:
+            if (issues != QMetaObjectValidatorResult::NoIssue)
+                return qApp->style()->standardIcon(QStyle::SP_MessageBoxWarning);
+            break;
+        case Qt::ToolTipRole: {
+            if (issues != QMetaObjectValidatorResult::NoIssue)
+                return issuesToString(issues);
+            const auto invalid = index.sibling(index.row(), QMetaObjectModel::ObjectInclusiveAliveCountColumn).data(QMetaObjectModel::MetaObjectInvalid).toBool();
+            if (invalid)
+                return tr("This meta object might have been deleted.");
+            break;
+        }
         }
         return QIdentityProxyModel::data(index, role);
     }
@@ -118,10 +117,9 @@ QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex &index, int role
     if (count <= 0)
         return QIdentityProxyModel::data(index, role);
 
-    const auto totalColumn = (index.column() == QMetaObjectModel::ObjectSelfCountColumn || index.column() == QMetaObjectModel::ObjectInclusiveCountColumn)?
-        QMetaObjectModel::ObjectInclusiveCountColumn : QMetaObjectModel::ObjectInclusiveAliveCountColumn;
+    const auto totalColumn = (index.column() == QMetaObjectModel::ObjectSelfCountColumn || index.column() == QMetaObjectModel::ObjectInclusiveCountColumn) ? QMetaObjectModel::ObjectInclusiveCountColumn : QMetaObjectModel::ObjectInclusiveAliveCountColumn;
     const auto totalCount = m_qobjIndex.sibling(m_qobjIndex.row(), totalColumn).data().toInt();
-    const auto ratio = (double)count / (double)totalCount;
+    const auto ratio = ( double )count / ( double )totalCount;
 
     // at this point, role can only be background or tooltip
 
@@ -136,40 +134,40 @@ QVariant MetaObjectTreeClientProxyModel::headerData(int section, Qt::Orientation
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
-            case QMetaObjectModel::ObjectColumn:
-                return tr("Meta Object Class");
-            case QMetaObjectModel::ObjectSelfCountColumn:
-                return tr("Self Total");
-            case QMetaObjectModel::ObjectInclusiveCountColumn:
-                return tr("Incl. Total");
-            case QMetaObjectModel::ObjectSelfAliveCountColumn:
-                return tr("Self Alive");
-            case QMetaObjectModel::ObjectInclusiveAliveCountColumn:
-                return tr("Incl. Alive");
-            default:
-                return QVariant();
+        case QMetaObjectModel::ObjectColumn:
+            return tr("Meta Object Class");
+        case QMetaObjectModel::ObjectSelfCountColumn:
+            return tr("Self Total");
+        case QMetaObjectModel::ObjectInclusiveCountColumn:
+            return tr("Incl. Total");
+        case QMetaObjectModel::ObjectSelfAliveCountColumn:
+            return tr("Self Alive");
+        case QMetaObjectModel::ObjectInclusiveAliveCountColumn:
+            return tr("Incl. Alive");
+        default:
+            return QVariant();
         }
     } else if (role == Qt::ToolTipRole) {
         switch (section) {
-            case QMetaObjectModel::ObjectColumn:
-                return tr("This column shows the QMetaObject class hierarchy.");
-            case QMetaObjectModel::ObjectSelfCountColumn:
-                return tr("This column shows the number of objects created of a particular type.");
-            case QMetaObjectModel::ObjectInclusiveCountColumn:
-                return tr("This column shows the number of objects created that inherit from a particular type.");
-            case QMetaObjectModel::ObjectSelfAliveCountColumn:
-                return tr("This column shows the number of objects created and not yet destroyed of a particular type.");
-            case QMetaObjectModel::ObjectInclusiveAliveCountColumn:
-                return tr("This column shows the number of objects created and not yet destroyed that inherit from a particular type.");
-            default:
-                return QVariant();
+        case QMetaObjectModel::ObjectColumn:
+            return tr("This column shows the QMetaObject class hierarchy.");
+        case QMetaObjectModel::ObjectSelfCountColumn:
+            return tr("This column shows the number of objects created of a particular type.");
+        case QMetaObjectModel::ObjectInclusiveCountColumn:
+            return tr("This column shows the number of objects created that inherit from a particular type.");
+        case QMetaObjectModel::ObjectSelfAliveCountColumn:
+            return tr("This column shows the number of objects created and not yet destroyed of a particular type.");
+        case QMetaObjectModel::ObjectInclusiveAliveCountColumn:
+            return tr("This column shows the number of objects created and not yet destroyed that inherit from a particular type.");
+        default:
+            return QVariant();
         }
     }
 
     return QIdentityProxyModel::headerData(section, orientation, role);
 }
 
-Qt::ItemFlags MetaObjectTreeClientProxyModel::flags(const QModelIndex& index) const
+Qt::ItemFlags MetaObjectTreeClientProxyModel::flags(const QModelIndex &index) const
 {
     auto f = QIdentityProxyModel::flags(index);
     if (index.isValid()) {

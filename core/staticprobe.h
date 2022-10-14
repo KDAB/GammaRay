@@ -72,17 +72,21 @@ Q_IMPORT_PLUGIN(WebInspectorFactory)
 /** Trigger static injection of the GammaRay probe.
  *  Put this into your main.cpp in global scope.
  */
-#define GAMMARAY_STATIC_INJECT \
-extern "C" { \
+#define GAMMARAY_STATIC_INJECT            \
+    extern "C" {                          \
     extern void gammaray_install_hooks(); \
-} \
-\
-namespace GammaRay { \
-class StaticInjector { \
-public: \
-    StaticInjector() { gammaray_install_hooks(); } \
-}; \
-static StaticInjector staticInjector; \
-}
+    }                                     \
+                                          \
+    namespace GammaRay {                  \
+    class StaticInjector                  \
+    {                                     \
+    public:                               \
+        StaticInjector()                  \
+        {                                 \
+            gammaray_install_hooks();     \
+        }                                 \
+    };                                    \
+    static StaticInjector staticInjector; \
+    }
 
 #endif

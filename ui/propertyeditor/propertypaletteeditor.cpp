@@ -36,7 +36,7 @@ PropertyPaletteEditor::PropertyPaletteEditor(QWidget *parent)
 {
 }
 
-void PropertyPaletteEditor::showEditor(QWidget* parent)
+void PropertyPaletteEditor::showEditor(QWidget *parent)
 {
     PaletteDialog dlg(value().value<QPalette>(), parent);
     dlg.setEditable(!isReadOnly());

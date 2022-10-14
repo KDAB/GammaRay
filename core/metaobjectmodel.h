@@ -38,9 +38,9 @@
 
 namespace GammaRay {
 template<typename MetaThing,
-         MetaThing(QMetaObject::*MetaAccessor)(int)const,
-         int(QMetaObject::*MetaCount)() const,
-         int(QMetaObject::*MetaOffset)() const>
+         MetaThing (QMetaObject::*MetaAccessor)(int) const,
+         int (QMetaObject::*MetaCount)() const,
+         int (QMetaObject::*MetaOffset)() const>
 class MetaObjectModel : public QAbstractItemModel
 {
     Q_DECLARE_TR_FUNCTIONS(GammaRay::MetaObjectModel)

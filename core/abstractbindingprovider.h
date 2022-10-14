@@ -54,7 +54,8 @@ public:
     virtual ~AbstractBindingProvider();
     virtual std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(BindingNode *binding) const = 0;
     virtual std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject *obj) const = 0;
-    virtual bool canProvideBindingsFor (QObject *object) const = 0;
+    virtual bool canProvideBindingsFor(QObject *object) const = 0;
+
 private:
     Q_DISABLE_COPY(AbstractBindingProvider)
 };

@@ -66,9 +66,11 @@ StyleInspector::StyleInspector(Probe *probe, QObject *parent)
             this, &StyleInspector::styleSelected);
 
     probe->registerModel(QStringLiteral(
-                             "com.kdab.GammaRay.StyleInspector.PrimitiveModel"), m_primitiveModel);
+                             "com.kdab.GammaRay.StyleInspector.PrimitiveModel"),
+                         m_primitiveModel);
     probe->registerModel(QStringLiteral(
-                             "com.kdab.GammaRay.StyleInspector.ControlModel"), m_controlModel);
+                             "com.kdab.GammaRay.StyleInspector.ControlModel"),
+                         m_controlModel);
     probe->registerModel(QStringLiteral(
                              "com.kdab.GammaRay.StyleInspector.ComplexControlModel"),
                          m_complexControlModel);

@@ -58,7 +58,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    Q_INVOKABLE static QPair<int, QVariant> defaultSelectedItem() ;
+    Q_INVOKABLE static QPair<int, QVariant> defaultSelectedItem();
 
     /*!
      * Returns a list of all objects.
@@ -66,7 +66,7 @@ public:
      * FIXME: This is a dirty hack. Instead of offering a getter to the internal data
      * here, we should move it out and only give the model a view of the data.
      */
-    const QVector<QObject*> &objects() const;
+    const QVector<QObject *> &objects() const;
 
 private slots:
     void objectAdded(QObject *obj);

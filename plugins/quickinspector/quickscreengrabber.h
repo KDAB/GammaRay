@@ -52,7 +52,7 @@ class ItemOrLayoutFacade
 {
 public:
     ItemOrLayoutFacade() = default;
-    ItemOrLayoutFacade(QQuickItem *item); //krazy:exclude=explicit
+    ItemOrLayoutFacade(QQuickItem *item); // krazy:exclude=explicit
 
     /// Get either the layout of the widget or the this-pointer
     QQuickItem *layout() const;
@@ -113,9 +113,11 @@ class AbstractScreenGrabber : public QObject
 {
     Q_OBJECT
 public:
-    struct RenderInfo {
+    struct RenderInfo
+    {
         // Keep in sync with QSGRendererInterface::GraphicsApi
-        enum GraphicsApi {
+        enum GraphicsApi
+        {
             Unknown = 0,
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             Software,

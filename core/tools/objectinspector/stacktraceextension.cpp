@@ -36,7 +36,7 @@
 
 using namespace GammaRay;
 
-StackTraceExtension::StackTraceExtension(PropertyController* controller)
+StackTraceExtension::StackTraceExtension(PropertyController *controller)
     : PropertyControllerExtension(controller->objectBaseName() + ".stackTrace")
     , m_model(new StackTraceModel(controller))
 {

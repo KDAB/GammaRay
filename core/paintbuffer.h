@@ -112,7 +112,7 @@ public:
     PaintBuffer();
     PaintBuffer(const PaintBuffer &other);
     ~PaintBuffer();
-    PaintBuffer& operator=(const PaintBuffer &other);
+    PaintBuffer &operator=(const PaintBuffer &other);
 
     QPaintEngine *paintEngine() const override;
 
@@ -130,11 +130,13 @@ public:
 
 
 
-    QPaintBufferPrivate* data() const;
+    QPaintBufferPrivate *data() const;
+
 private:
     friend class PaintBufferEngine;
     QPaintBufferPrivate *d; // not protected in the base class, somewhat nasty to get to
     QVector<Execution::Trace> m_stackTraces;
+
 public:
     QVector<ObjectId> m_origins;
     ObjectId m_currentOrigin;

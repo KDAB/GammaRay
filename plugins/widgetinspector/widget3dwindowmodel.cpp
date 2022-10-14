@@ -38,7 +38,8 @@ class Widget3DWindowModel::WindowNode
 public:
     explicit WindowNode(const QModelIndex &idx)
         : sourceIdx(idx)
-    {}
+    {
+    }
 
     QPersistentModelIndex sourceIdx;
 };
@@ -131,7 +132,7 @@ QModelIndex Widget3DWindowModel::mapToSource(const QModelIndex &proxyIndex) cons
         return QModelIndex();
     }
 
-    auto node = static_cast<WindowNode*>(proxyIndex.internalPointer());
+    auto node = static_cast<WindowNode *>(proxyIndex.internalPointer());
     if (!node) {
         return QModelIndex();
     }

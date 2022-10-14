@@ -66,7 +66,7 @@ public:
      *  This operator proxy over payload() allow to do:
      *   - Run time check on the stream status
      */
-    template <typename T>
+    template<typename T>
     GammaRay::Message &operator>>(T &value)
     {
         if (Q_UNLIKELY(payload().status() != QDataStream::Ok)) {
@@ -82,7 +82,7 @@ public:
     /** Read value from the payload
      *  This overload allow to read content from a const Message.
      */
-    template <typename T>
+    template<typename T>
     GammaRay::Message &operator>>(T &value) const
     {
         return const_cast<GammaRay::Message *>(this)->operator>>(value);
@@ -92,7 +92,7 @@ public:
      *  This operator proxy over payload() allow to do:
      *   - Run time check on the stream status
      */
-    template <typename T>
+    template<typename T>
     GammaRay::Message &operator<<(const T &value)
     {
         if (Q_UNLIKELY(payload().status() != QDataStream::Ok)) {

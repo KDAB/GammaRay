@@ -66,7 +66,8 @@ struct QuickItemGeometry
         , rightPadding(qQNaN())
         , topPadding(qQNaN())
         , bottomPadding(qQNaN())
-    { }
+    {
+    }
 
     // basic geometry
     QRectF itemRect;

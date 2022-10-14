@@ -40,7 +40,8 @@ struct TransitionId
 {
     explicit TransitionId(quintptr transition = 0)
         : id(static_cast<quint64>(transition))
-    {}
+    {
+    }
     operator quint64() const
     {
         return id;
@@ -64,7 +65,8 @@ struct StateId
 {
     explicit StateId(quintptr state = 0)
         : id(static_cast<quint64>(state))
-    {}
+    {
+    }
     operator quint64() const
     {
         return id;
@@ -84,7 +86,8 @@ inline QDataStream &operator>>(QDataStream &in, StateId &value)
     return in;
 }
 
-enum StateType {
+enum StateType
+{
     OtherState,
     FinalState,
     ShallowHistoryState,
@@ -140,7 +143,7 @@ signals:
 
 Q_DECLARE_METATYPE(GammaRay::StateId)
 QT_BEGIN_NAMESPACE
-    Q_DECLARE_TYPEINFO(GammaRay::StateId, Q_PRIMITIVE_TYPE);
+Q_DECLARE_TYPEINFO(GammaRay::StateId, Q_PRIMITIVE_TYPE);
 QT_END_NAMESPACE
 Q_DECLARE_METATYPE(GammaRay::TransitionId)
 Q_DECLARE_METATYPE(GammaRay::StateMachineConfiguration)

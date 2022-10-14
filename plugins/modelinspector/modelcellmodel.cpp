@@ -96,8 +96,7 @@ QVector<ModelCellModel::RoleInfo> ModelCellModel::rolesForModel(const QAbstractI
               << R(Qt::AccessibleTextRole)
               << R(Qt::AccessibleDescriptionRole)
               << R(Qt::SizeHintRole)
-              << R(Qt::InitialSortOrderRole)
-          ;
+              << R(Qt::InitialSortOrderRole);
 #undef R
     }
 
@@ -118,7 +117,7 @@ QVector<ModelCellModel::RoleInfo> ModelCellModel::rolesForModel(const QAbstractI
         }
     }
 
-    std::sort(roles.begin(), roles.end(), [] (const RoleInfo& lhs, const RoleInfo& rhs){return lhs.first < rhs.first;});
+    std::sort(roles.begin(), roles.end(), [](const RoleInfo &lhs, const RoleInfo &rhs) { return lhs.first < rhs.first; });
     return roles;
 }
 
@@ -153,8 +152,7 @@ bool ModelCellModel::setData(const QModelIndex &index, const QVariant &value, in
     if (index.isValid() && m_index.isValid()
         && (m_index.flags() & Qt::ItemIsEditable)
         && role == Qt::EditRole && index.column() == 1) {
-        const Qt::ItemDataRole sourceRole
-            = static_cast<Qt::ItemDataRole>(m_roles.at(index.row()).first);
+        const Qt::ItemDataRole sourceRole = static_cast<Qt::ItemDataRole>(m_roles.at(index.row()).first);
         QAbstractItemModel *sourceModel = const_cast<QAbstractItemModel *>(m_index.model());
         return sourceModel->setData(m_index, value, sourceRole);
     }

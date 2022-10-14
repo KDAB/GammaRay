@@ -37,7 +37,10 @@
 
 using namespace GammaRay;
 
-#define M(x) { Protocol:: x, #x }
+#define M(x)            \
+    {                   \
+        Protocol::x, #x \
+    }
 static const MetaEnum::Value<Protocol::MessageType> message_type_table[] = {
     M(ObjectMonitored),
     M(ObjectUnmonitored),
@@ -195,23 +198,23 @@ QVariant MessageStatisticsModel::data(const QModelIndex &index, int role) const
         if (info.messageCount[msgType] == 0) {
             return QVariant();
         }
-        const auto countRatio = (double)info.messageCount[msgType] / (double)m_totalCount;
-        const auto sizeRatio = (double)info.messageSize[msgType] / (double)m_totalSize;
+        const auto countRatio = ( double )info.messageCount[msgType] / ( double )m_totalCount;
+        const auto sizeRatio = ( double )info.messageSize[msgType] / ( double )m_totalSize;
         const auto ratio = std::max(countRatio, sizeRatio);
         return colorForRatio(ratio);
     }
 
     if (role == Qt::ToolTipRole) {
         return tr(
-            "Object: %1\nMessage Type: %2\nMessage Count: %3 of %4 (%5%)\nMessage Size: %6 of %7 (%8%)").
-               arg(info.name).
-               arg(MetaEnum::enumToString(static_cast<Protocol::MessageType>(index.column() + 1), message_type_table)).
-               arg(info.messageCount[msgType]).
-               arg(m_totalCount).
-               arg(100.0 * (double)info.messageCount[msgType] / (double)m_totalCount, 0, 'f', 2).
-               arg(info.messageSize[msgType]).
-               arg(m_totalSize).
-               arg(100.0 * (double)info.messageSize[msgType] / (double)m_totalSize, 0, 'f', 2);
+                   "Object: %1\nMessage Type: %2\nMessage Count: %3 of %4 (%5%)\nMessage Size: %6 of %7 (%8%)")
+            .arg(info.name)
+            .arg(MetaEnum::enumToString(static_cast<Protocol::MessageType>(index.column() + 1), message_type_table))
+            .arg(info.messageCount[msgType])
+            .arg(m_totalCount)
+            .arg(100.0 * ( double )info.messageCount[msgType] / ( double )m_totalCount, 0, 'f', 2)
+            .arg(info.messageSize[msgType])
+            .arg(m_totalSize)
+            .arg(100.0 * ( double )info.messageSize[msgType] / ( double )m_totalSize, 0, 'f', 2);
     }
 
     return QVariant();
@@ -224,8 +227,8 @@ QVariant MessageStatisticsModel::headerData(int section, Qt::Orientation orienta
             return MetaEnum::enumToString(static_cast<Protocol::MessageType>(section + 1), message_type_table);
 
         if (role == Qt::BackgroundRole) {
-            const auto countRatio = (double)countPerType(section) / (double)m_totalCount;
-            const auto sizeRatio = (double)sizePerType(section) / (double)m_totalSize;
+            const auto countRatio = ( double )countPerType(section) / ( double )m_totalCount;
+            const auto sizeRatio = ( double )sizePerType(section) / ( double )m_totalSize;
             const auto ratio = std::max(countRatio, sizeRatio);
             if (ratio > 0.0) {
                 return colorForRatio(ratio);
@@ -235,13 +238,7 @@ QVariant MessageStatisticsModel::headerData(int section, Qt::Orientation orienta
         if (role == Qt::ToolTipRole) {
             const auto count = countPerType(section);
             const auto size = sizePerType(section);
-            return tr("Message Count: %1 of %2 (%3%)\nMessage Size: %4 of %5 (%6%)").
-                   arg(count).
-                   arg(m_totalCount).
-                   arg(100.0 * (double)count / (double)m_totalCount, 0, 'f', 2).
-                   arg(size).
-                   arg(m_totalSize).
-                   arg(100.0 * (double)size / (double)m_totalSize, 0, 'f', 2);
+            return tr("Message Count: %1 of %2 (%3%)\nMessage Size: %4 of %5 (%6%)").arg(count).arg(m_totalCount).arg(100.0 * ( double )count / ( double )m_totalCount, 0, 'f', 2).arg(size).arg(m_totalSize).arg(100.0 * ( double )size / ( double )m_totalSize, 0, 'f', 2);
         }
     } else if (orientation == Qt::Vertical) {
         const auto &info = m_data.at(section);
@@ -249,8 +246,8 @@ QVariant MessageStatisticsModel::headerData(int section, Qt::Orientation orienta
             return info.name;
         }
         if (role == Qt::BackgroundRole) {
-            const auto countRatio = (double)info.totalCount() / (double)m_totalCount;
-            const auto sizeRatio = (double)info.totalSize() / (double)m_totalSize;
+            const auto countRatio = ( double )info.totalCount() / ( double )m_totalCount;
+            const auto sizeRatio = ( double )info.totalSize() / ( double )m_totalSize;
             const auto ratio = std::max(countRatio, sizeRatio);
             if (ratio > 0.0) {
                 return colorForRatio(ratio);
@@ -259,14 +256,7 @@ QVariant MessageStatisticsModel::headerData(int section, Qt::Orientation orienta
         if (role == Qt::ToolTipRole) {
             const auto count = info.totalCount();
             const auto size = info.totalSize();
-            return tr("Message Count: %1 of %2 (%3%)\nMessage Size: %4 of %5 (%6%)\nObject Address: %7").
-                   arg(count).
-                   arg(m_totalCount).
-                   arg(100.0 * (double)count / (double)m_totalCount, 0, 'f', 2).
-                   arg(size).
-                   arg(m_totalSize).
-                   arg(100.0 * (double)size / (double)m_totalSize, 0, 'f', 2).
-                   arg(section + 1);
+            return tr("Message Count: %1 of %2 (%3%)\nMessage Size: %4 of %5 (%6%)\nObject Address: %7").arg(count).arg(m_totalCount).arg(100.0 * ( double )count / ( double )m_totalCount, 0, 'f', 2).arg(size).arg(m_totalSize).arg(100.0 * ( double )size / ( double )m_totalSize, 0, 'f', 2).arg(section + 1);
         }
     }
 

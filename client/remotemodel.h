@@ -98,7 +98,8 @@ signals:
     void proxyFilterRegExpChanged();
 
 private:
-    struct Node { // represents one row
+    struct Node
+    { // represents one row
         Node() = default;
         ~Node();
         Q_DISABLE_COPY(Node)
@@ -116,9 +117,9 @@ private:
         QVector<Node *> children;
         qint32 rowCount = -1;
         qint32 columnCount = -1;
-        QVector<QHash<int, QVariant> > data; // column -> role -> data
-        QVector<Qt::ItemFlags> flags;      // column -> flags
-        std::vector<RemoteModelNodeState::NodeStates> state;         // column -> state (cache outdated, waiting for data, etc)
+        QVector<QHash<int, QVariant>> data; // column -> role -> data
+        QVector<Qt::ItemFlags> flags; // column -> flags
+        std::vector<RemoteModelNodeState::NodeStates> state; // column -> state (cache outdated, waiting for data, etc)
 
         int rowHint = -1; // for internal use by modelIndexForNode
     };
@@ -135,7 +136,7 @@ private:
     /** Checks if @p ancestor is a (grand)parent of @p child. */
     bool isAncestor(Node *ancestor, Node *child) const;
 
-    static RemoteModelNodeState::NodeStates stateForColumn(Node *node, int columnIndex) ;
+    static RemoteModelNodeState::NodeStates stateForColumn(Node *node, int columnIndex);
 
     void requestRowColumnCount(const QModelIndex &index) const;
     void requestDataAndFlags(const QModelIndex &index) const;
@@ -174,10 +175,11 @@ private slots:
 private:
     Node *m_root;
 
-    mutable QVector<QHash<int, QVariant> > m_horizontalHeaders; // section -> role -> data
-    mutable QVector<QHash<int, QVariant> > m_verticalHeaders; // section -> role -> data
+    mutable QVector<QHash<int, QVariant>> m_horizontalHeaders; // section -> role -> data
+    mutable QVector<QHash<int, QVariant>> m_verticalHeaders; // section -> role -> data
 
-    enum RequestType {
+    enum RequestType
+    {
         RowColumnCount,
         DataAndFlags
     };

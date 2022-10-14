@@ -47,6 +47,7 @@ public:
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
 private:
     QList<QByteArray> m_codecs;
 };

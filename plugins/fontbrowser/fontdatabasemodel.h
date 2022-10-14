@@ -42,7 +42,8 @@ public:
     explicit FontDatabaseModel(QObject *parent = nullptr);
     ~FontDatabaseModel() override;
 
-    enum Columns {
+    enum Columns
+    {
         Label,
         Weight,
         Bold,
@@ -70,10 +71,10 @@ private:
     void ensureModelPopulated() const;
     void populateModel();
 
-    static QString smoothSizeString(const QString &family, const QString &style) ;
+    static QString smoothSizeString(const QString &family, const QString &style);
 
     QVector<QString> m_families;
-    QVector<QVector<QString> > m_styles;
+    QVector<QVector<QString>> m_styles;
 };
 }
 

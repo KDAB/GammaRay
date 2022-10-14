@@ -170,12 +170,12 @@ private slots:
 
         auto itemSelectionModel = ObjectBroker::selectionModel(itemModel);
         QVERIFY(itemSelectionModel);
-        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
         QVERIFY(itemSpy.isValid());
 
         auto sgSelectionModel = ObjectBroker::selectionModel(sgModel);
         QVERIFY(sgModel);
-        QSignalSpy sgSpy(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QSignalSpy sgSpy(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
         QVERIFY(sgSpy.isValid());
 
         // auto center-click is broken before https://codereview.qt-project.org/141085/
@@ -227,8 +227,8 @@ private slots:
         img = img.transformed(transform);
 
         QVERIFY(!img.isNull());
-        QCOMPARE(img.width(), static_cast<int>(view()->width() *view()->devicePixelRatio()));
-        QCOMPARE(img.height(), static_cast<int>(view()->height() *view()->devicePixelRatio()));
+        QCOMPARE(img.width(), static_cast<int>(view()->width() * view()->devicePixelRatio()));
+        QCOMPARE(img.height(), static_cast<int>(view()->height() * view()->devicePixelRatio()));
 
         // Grabbed stuff seems to alter colors depending the monitor color profile, let use plain QColor for comparison.
         QCOMPARE(QColor(img.pixel(1 * view()->devicePixelRatio(), 1 * view()->devicePixelRatio())), QColor(255, 0, 0));
@@ -241,8 +241,7 @@ private slots:
 
     void testCustomRenderModes()
     {
-        QSignalSpy featureSpy(inspector, SIGNAL(features(
-                                                    GammaRay::QuickInspectorInterface::Features)));
+        QSignalSpy featureSpy(inspector, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)));
         QVERIFY(featureSpy.isValid());
         inspector->checkFeatures();
         QCOMPARE(featureSpy.size(), 1);
@@ -305,8 +304,8 @@ private slots:
 
         QVERIFY(showSource(QStringLiteral("qrc:/manual/anchorspropertyfiltertest.qml")));
 
-        auto rectWithoutAnchors = view()->rootObject()->findChild<QQuickItem*>("rectWithoutAnchors");
-        auto rectWithAnchors = view()->rootObject()->findChild<QQuickItem*>("rectWithAnchors");
+        auto rectWithoutAnchors = view()->rootObject()->findChild<QQuickItem *>("rectWithoutAnchors");
+        auto rectWithAnchors = view()->rootObject()->findChild<QQuickItem *>("rectWithAnchors");
 
         auto rectWithoutAnchorsPriv = QQuickItemPrivate::get(rectWithoutAnchors);
         auto rectWithAnchorsPriv = QQuickItemPrivate::get(rectWithAnchors);
@@ -325,14 +324,14 @@ private slots:
         QVERIFY(propertyModel->rowCount());
         QCOMPARE(anchorsFilterModel.rowCount(), 1);
         auto rectWithoutAnchorsAnchorsValue = anchorsFilterModel.data(anchorsFilterModel.index(0, 1), Qt::EditRole);
-        QVERIFY(rectWithoutAnchorsAnchorsValue.canConvert<QObject*>());
-        QVERIFY(rectWithoutAnchorsAnchorsValue.value<QObject*>() == nullptr);
+        QVERIFY(rectWithoutAnchorsAnchorsValue.canConvert<QObject *>());
+        QVERIFY(rectWithoutAnchorsAnchorsValue.value<QObject *>() == nullptr);
 
         Probe::instance()->selectObject(rectWithAnchors);
         QCOMPARE(anchorsFilterModel.rowCount(), 1);
         auto rectWithAnchorsAnchorsValue = anchorsFilterModel.data(anchorsFilterModel.index(0, 1), Qt::EditRole);
-        QVERIFY(rectWithAnchorsAnchorsValue.canConvert<QObject*>());
-        QVERIFY(rectWithAnchorsAnchorsValue.value<QObject*>() != nullptr);
+        QVERIFY(rectWithAnchorsAnchorsValue.canConvert<QObject *>());
+        QVERIFY(rectWithAnchorsAnchorsValue.value<QObject *>() != nullptr);
 
 
         Probe::instance()->selectObject(rectWithoutAnchors);
@@ -349,14 +348,14 @@ private slots:
         QTest::qWait(10);
 
         rectWithoutAnchorsAnchorsValue = anchorsFilterModel.data(anchorsFilterModel.index(0, 1), Qt::EditRole);
-        QVERIFY(rectWithoutAnchorsAnchorsValue.canConvert<QObject*>());
-        QVERIFY(rectWithoutAnchorsAnchorsValue.value<QObject*>() == nullptr);
+        QVERIFY(rectWithoutAnchorsAnchorsValue.canConvert<QObject *>());
+        QVERIFY(rectWithoutAnchorsAnchorsValue.value<QObject *>() == nullptr);
     }
 
     void testProblemReporting()
     {
-        //TODO using this qml-file as testcase might stop working if qt decides to be
-        // smarter with out of view items in ListViews
+        // TODO using this qml-file as testcase might stop working if qt decides to be
+        //  smarter with out of view items in ListViews
         QVERIFY(showSource(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
 
         QVERIFY(ProblemCollector::instance()->isCheckerRegistered("com.kdab.GammaRay.QuickItemChecker"));
@@ -368,13 +367,12 @@ private slots:
 
         const auto &problems = ProblemCollector::instance()->problems();
         QVERIFY(std::any_of(problems.begin(), problems.end(),
-            [&](const Problem &p){
-                return p.problemId.startsWith("com.kdab.GammaRay.QuickItemChecker")
-                    && !p.object.isNull()
-                    && p.description.contains("out of view")
-                    && p.locations.size() > 0;
-            }
-        ));
+                            [&](const Problem &p) {
+                                return p.problemId.startsWith("com.kdab.GammaRay.QuickItemChecker")
+                                    && !p.object.isNull()
+                                    && p.description.contains("out of view")
+                                    && p.locations.size() > 0;
+                            }));
     }
 
 private:

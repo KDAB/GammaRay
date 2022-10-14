@@ -50,8 +50,7 @@ QVariant AllCodecsModel::data(const QModelIndex &index, int role) const
         if (index.column() == 0)
             return m_codecs.at(index.row());
         if (index.column() == 1) {
-            const QList<QByteArray> aliases
-                = QTextCodec::codecForName(m_codecs.at(index.row()))->aliases();
+            const QList<QByteArray> aliases = QTextCodec::codecForName(m_codecs.at(index.row()))->aliases();
 
             QString result;
             int size = aliases.size();
@@ -143,10 +142,9 @@ QVariant SelectedCodecsModel::data(const QModelIndex &index, int role) const
             return m_codecs.at(index.row());
     } else if (index.column() == 1) {
         if (role == Qt::DisplayRole) {
-            const QByteArray ba
-                = QTextCodec::codecForName(m_codecs.at(index.row()).toLatin1())->fromUnicode(m_text);
-// QString result;
-// foreach ()
+            const QByteArray ba = QTextCodec::codecForName(m_codecs.at(index.row()).toLatin1())->fromUnicode(m_text);
+            // QString result;
+            // foreach ()
             return ba.toHex();
         }
     }

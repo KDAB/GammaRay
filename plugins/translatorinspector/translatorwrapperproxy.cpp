@@ -33,19 +33,20 @@
 
 using namespace GammaRay;
 
-TranslatorWrapperProxy::TranslatorWrapperProxy(QObject* parent)
+TranslatorWrapperProxy::TranslatorWrapperProxy(QObject *parent)
     : QIdentityProxyModel(parent)
 {
 }
 
 TranslatorWrapperProxy::~TranslatorWrapperProxy() = default;
 
-QVariant TranslatorWrapperProxy::data(const QModelIndex& proxyIndex, int role) const
+QVariant TranslatorWrapperProxy::data(const QModelIndex &proxyIndex, int role) const
 {
     if (hasIndex(proxyIndex.row(), proxyIndex.column(), proxyIndex.parent())) {
         if (role == Qt::FontRole) {
             const bool overridden = proxyIndex.sibling(proxyIndex.row(), 3)
-                    .data(TranslationsModel::IsOverriddenRole).toBool();
+                                        .data(TranslationsModel::IsOverriddenRole)
+                                        .toBool();
             QFont font;
             font.setItalic(overridden);
             return font;

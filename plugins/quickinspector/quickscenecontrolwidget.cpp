@@ -47,7 +47,8 @@
 using namespace GammaRay;
 
 namespace {
-static QAction *checkedAction(QActionGroup *group) {
+static QAction *checkedAction(QActionGroup *group)
+{
     // For some reason QActionGroup::checkedAction() is not yet synced when needed
     // Might be because of our direct QAction::setChecked() calls in between
     foreach (QAction *action, group->actions()) {
@@ -93,10 +94,9 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
                                        "With this tool enabled the QtQuick renderer highlights items, that have clipping "
                                        "enabled, so you can check for items, that have clipping enabled unnecessarily. "));
 
-    m_visualizeOverdraw
-            = new QAction(UIResources::themedIcon(QLatin1String("visualize-overdraw.png")),
-                          tr("Visualize Overdraw"),
-                          this);
+    m_visualizeOverdraw = new QAction(UIResources::themedIcon(QLatin1String("visualize-overdraw.png")),
+                                      tr("Visualize Overdraw"),
+                                      this);
     m_visualizeOverdraw->setObjectName("aVisualizeOverdraw");
     m_visualizeOverdraw->setActionGroup(m_visualizeGroup);
     m_visualizeOverdraw->setData(QuickInspectorInterface::VisualizeOverdraw);
@@ -138,9 +138,8 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
                                       "enabled, the QtQuick renderer will thus on each repaint highlight the item(s), "
                                       "that caused the repaint."));
 
-    m_visualizeTraces
-            = new QAction(UIResources::themedIcon(QLatin1String("visualize-traces.png")),
-                          tr("Visualize Controls"), this);
+    m_visualizeTraces = new QAction(UIResources::themedIcon(QLatin1String("visualize-traces.png")),
+                                    tr("Visualize Controls"), this);
     m_visualizeTraces->setObjectName("aVisualizeTraces");
     m_visualizeTraces->setActionGroup(m_visualizeGroup);
     m_visualizeTraces->setData(QuickInspectorInterface::VisualizeTraces);
@@ -166,7 +165,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_gridSettingsMenu->menuAction()->setObjectName("aLayoutGrid");
     m_gridSettingsMenu->setIcon(UIResources::themedIcon(QLatin1String("grid-settings.png")));
     m_gridSettingsMenu->setToolTip(tr("<b>Layout Grid</b><br>"
-                                  "Configure the layout helper grid."));
+                                      "Configure the layout helper grid."));
     m_gridSettingsMenu->setToolTipsVisible(true);
     m_gridSettingsMenu->addAction(gridSettingsAction);
 
@@ -196,7 +195,7 @@ QuickSceneControlWidget::QuickSceneControlWidget(QuickInspectorInterface *inspec
     m_zoomCombobox->setModel(m_previewWidget->zoomLevelModel());
     // macOS and some platforms expect to use *small* controls in such small toolbar
     m_zoomCombobox->setAttribute(Qt::WA_MacSmallSize);
-    connect(m_zoomCombobox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(m_zoomCombobox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             m_previewWidget, &RemoteViewWidget::setZoomLevel);
     connect(m_previewWidget, &RemoteViewWidget::zoomLevelChanged, m_zoomCombobox,
             &QComboBox::setCurrentIndex);
@@ -282,18 +281,18 @@ void QuickSceneControlWidget::setOverlaySettings(const QuickDecorationsSettings 
 }
 
 void QuickSceneControlWidget::setSupportsCustomRenderModes(
-        QuickInspectorInterface::Features supportedCustomRenderModes)
+    QuickInspectorInterface::Features supportedCustomRenderModes)
 {
     m_visualizeClipping->setEnabled(
-                supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeClipping);
+        supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeClipping);
     m_visualizeBatches->setEnabled(
-                supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeBatches);
+        supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeBatches);
     m_visualizeOverdraw->setEnabled(
-                supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeOverdraw);
+        supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeOverdraw);
     m_visualizeChanges->setEnabled(
-                supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeChanges);
+        supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeChanges);
     m_visualizeTraces->setEnabled(
-                supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeTraces);
+        supportedCustomRenderModes & QuickInspectorInterface::CustomRenderModeTraces);
 }
 
 void QuickSceneControlWidget::setServerSideDecorationsState(bool enabled)

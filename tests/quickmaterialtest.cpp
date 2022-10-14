@@ -43,9 +43,9 @@ using namespace GammaRay;
 
 static QSGGeometryNode *findGeometryNode(QSGNode *node)
 {
-    while(node) {
+    while (node) {
         if (node->type() == QSGNode::GeometryNodeType)
-            return static_cast<QSGGeometryNode*>(node);
+            return static_cast<QSGGeometryNode *>(node);
         if (node->childCount() == 0)
             return nullptr;
         if (node->childCount() > 1 && node->firstChild()->type() != QSGNode::GeometryNodeType)
@@ -70,7 +70,7 @@ private slots:
         if (!showSource("qrc:/manual/shadereffect.qml"))
             return;
 
-        auto iface = ObjectBroker::object<MaterialExtensionInterface*>("com.kdab.GammaRay.QuickSceneGraph.material");
+        auto iface = ObjectBroker::object<MaterialExtensionInterface *>("com.kdab.GammaRay.QuickSceneGraph.material");
         QVERIFY(iface);
         QSignalSpy shaderSpy(iface, SIGNAL(gotShader(QString)));
         QVERIFY(shaderSpy.isValid());
@@ -90,8 +90,8 @@ private slots:
         QCOMPARE(imageItem->metaObject()->className(), "QQuickImage");
         Probe::instance()->selectObject(imageItem, QPoint());
 
-        auto obj = ObjectBroker::object<PropertyControllerInterface*>("com.kdab.GammaRay.QuickSceneGraph.controller");
-        auto controller = qobject_cast<PropertyController*>(obj);
+        auto obj = ObjectBroker::object<PropertyControllerInterface *>("com.kdab.GammaRay.QuickSceneGraph.controller");
+        auto controller = qobject_cast<PropertyController *>(obj);
         QVERIFY(controller);
 
         auto priv = QQuickItemPrivate::get(imageItem);
@@ -124,7 +124,7 @@ private slots:
         if (!showSource("qrc:/manual/shadereffect.qml"))
             return;
 
-        auto iface = ObjectBroker::object<MaterialExtensionInterface*>("com.kdab.GammaRay.QuickSceneGraph.material");
+        auto iface = ObjectBroker::object<MaterialExtensionInterface *>("com.kdab.GammaRay.QuickSceneGraph.material");
         QVERIFY(iface);
         QSignalSpy shaderSpy(iface, SIGNAL(gotShader(QString)));
         QVERIFY(shaderSpy.isValid());
@@ -140,15 +140,15 @@ private slots:
         QCOMPARE(shaderModel->rowCount(), 0);
 
         QQuickItem *effectItem = nullptr;
-        foreach (auto item, view()->rootObject()->findChildren<QQuickItem*>()) {
+        foreach (auto item, view()->rootObject()->findChildren<QQuickItem *>()) {
             if (item->inherits("QQuickShaderEffect"))
                 effectItem = item;
         }
         QVERIFY(effectItem);
         Probe::instance()->selectObject(effectItem, QPoint());
 
-        auto obj = ObjectBroker::object<PropertyControllerInterface*>("com.kdab.GammaRay.QuickSceneGraph.controller");
-        auto controller = qobject_cast<PropertyController*>(obj);
+        auto obj = ObjectBroker::object<PropertyControllerInterface *>("com.kdab.GammaRay.QuickSceneGraph.controller");
+        auto controller = qobject_cast<PropertyController *>(obj);
         QVERIFY(controller);
 
         auto priv = QQuickItemPrivate::get(effectItem);

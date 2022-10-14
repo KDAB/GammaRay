@@ -43,7 +43,8 @@ public:
     explicit FontBrowserInterface(QObject *parent);
     ~FontBrowserInterface() override;
 
-    enum {
+    enum
+    {
         FontRole = Qt::UserRole + 1,
         FontSearchRole = Qt::UserRole + 2,
         SortRole = Qt::UserRole + 3,

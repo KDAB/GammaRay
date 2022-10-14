@@ -40,10 +40,10 @@
 
 using namespace GammaRay;
 
-///NOTE: for crashes related to script engine debugger on shutdown, see:
-///      https://bugreports.qt.nokia.com/browse/QTBUG-21548
-///      Also it seems that we get another crash when the interrupt action
-///      was triggered and we close the mainwindow.
+/// NOTE: for crashes related to script engine debugger on shutdown, see:
+///       https://bugreports.qt.nokia.com/browse/QTBUG-21548
+///       Also it seems that we get another crash when the interrupt action
+///       was triggered and we close the mainwindow.
 
 ScriptEngineDebuggerWidget::ScriptEngineDebuggerWidget(QWidget *parent)
     : QWidget(parent)
@@ -53,8 +53,8 @@ ScriptEngineDebuggerWidget::ScriptEngineDebuggerWidget(QWidget *parent)
 {
     ui->setupUi(this);
     ui->scriptEngineComboBox->setModel(ObjectBroker::model(QStringLiteral(
-                                                               "com.kdab.GammaRay.ScriptEngines")));
-    connect(ui->scriptEngineComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated),
+        "com.kdab.GammaRay.ScriptEngines")));
+    connect(ui->scriptEngineComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated),
             this, &ScriptEngineDebuggerWidget::scriptEngineSelected);
 
     ui->verticalLayout_10->addWidget(debugger->standardWindow());
@@ -70,12 +70,11 @@ ScriptEngineDebuggerWidget::~ScriptEngineDebuggerWidget()
 
 void ScriptEngineDebuggerWidget::scriptEngineSelected(int index)
 {
-    QObject *obj
-        = ui->scriptEngineComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject *>();
+    QObject *obj = ui->scriptEngineComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject *>();
     QScriptEngine *engine = qobject_cast<QScriptEngine *>(obj);
     if (engine) {
         debugger->attachTo(engine);
-// FIXME: if we'd do that, we'd get crashes on shutdown.
-// debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
+        // FIXME: if we'd do that, we'd get crashes on shutdown.
+        // debugger->action(QScriptEngineDebugger::InterruptAction)->trigger();
     }
 }

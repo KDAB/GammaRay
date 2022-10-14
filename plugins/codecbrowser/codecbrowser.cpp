@@ -51,7 +51,8 @@ CodecBrowser::CodecBrowser(Probe *probe, QObject *parent)
 
     m_selectedCodecsModel = new SelectedCodecsModel(this);
     probe->registerModel(QStringLiteral(
-                             "com.kdab.GammaRay.SelectedCodecsModel"), m_selectedCodecsModel);
+                             "com.kdab.GammaRay.SelectedCodecsModel"),
+                         m_selectedCodecsModel);
 }
 
 void CodecBrowser::textChanged(const QString &text)

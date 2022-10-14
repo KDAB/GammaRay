@@ -81,7 +81,7 @@ void ActionValidator::insert(QAction *action)
 {
     Q_ASSERT(action);
 
-    Q_FOREACH(const QKeySequence &sequence, action->shortcuts()) {
+    Q_FOREACH (const QKeySequence &sequence, action->shortcuts()) {
         if (m_shortcutActionMap.values(sequence).contains(action))
             continue;
 
@@ -104,7 +104,7 @@ void ActionValidator::remove(QAction *action)
 
 void ActionValidator::safeRemove(QAction *action)
 {
-    Q_FOREACH(const QKeySequence &sequence, m_shortcutActionMap.keys()) {
+    Q_FOREACH (const QKeySequence &sequence, m_shortcutActionMap.keys()) {
         if (!m_shortcutActionMap.values(sequence).contains(action))
             continue;
 
@@ -130,7 +130,7 @@ bool ActionValidator::hasAmbiguousShortcut(const QAction *action) const
                        [action, this](const QKeySequence &seq) { return isAmbigous(action, seq); });
 }
 
-QVector<QKeySequence> GammaRay::ActionValidator::findAmbiguousShortcuts(const QAction* action) const
+QVector<QKeySequence> GammaRay::ActionValidator::findAmbiguousShortcuts(const QAction *action) const
 {
     QVector<QKeySequence> shortcuts;
 
@@ -138,7 +138,7 @@ QVector<QKeySequence> GammaRay::ActionValidator::findAmbiguousShortcuts(const QA
     if (!action)
         return shortcuts;
 
-    Q_FOREACH(const QKeySequence &sequence, action->shortcuts()) {
+    Q_FOREACH (const QKeySequence &sequence, action->shortcuts()) {
         if (isAmbigous(action, sequence)) {
             shortcuts.push_back(sequence);
         }
@@ -154,7 +154,7 @@ bool GammaRay::ActionValidator::isAmbigous(const QAction *action, const QKeySequ
         return false;
     }
 
-    Q_FOREACH(const QAction *other, m_shortcutActionMap.values(sequence)) {
+    Q_FOREACH (const QAction *other, m_shortcutActionMap.values(sequence)) {
         if (!other || other == action || !Probe::instance()->isValidObject(other)) {
             continue;
         }

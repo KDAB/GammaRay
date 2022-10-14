@@ -41,7 +41,7 @@ ClientPropertyModel::ClientPropertyModel(QObject *parent)
 
 ClientPropertyModel::~ClientPropertyModel() = default;
 
-QVariant ClientPropertyModel::data(const QModelIndex& index, int role) const
+QVariant ClientPropertyModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::ToolTipRole && index.isValid()) {
         const auto idx0 = index.sibling(index.row(), 0);

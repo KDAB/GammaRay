@@ -56,21 +56,21 @@ static QObject *createPositioningClient(const QString &name, QObject *parent)
     return new PositioningClient(parent);
 }
 
-PositioningWidget::PositioningWidget(QWidget* parent):
-    QWidget(parent),
-    ui(new Ui::PositioningWidget),
-    m_mapController(new MapController(this)),
-    m_replaySource(nullptr),
-    m_updateLock(false)
+PositioningWidget::PositioningWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::PositioningWidget)
+    , m_mapController(new MapController(this))
+    , m_replaySource(nullptr)
+    , m_updateLock(false)
 {
     ui->setupUi(this);
     auto mapView = new QQuickWidget;
     mapView->rootContext()->setContextProperty(QStringLiteral("_controller"), m_mapController);
     ui->topLayout->addWidget(mapView);
 
-    ObjectBroker::registerClientObjectFactoryCallback<PositioningInterface*>(createPositioningClient);
+    ObjectBroker::registerClientObjectFactoryCallback<PositioningInterface *>(createPositioningClient);
 
-    m_interface = ObjectBroker::object<PositioningInterface*>();
+    m_interface = ObjectBroker::object<PositioningInterface *>();
     Q_ASSERT(m_interface);
     connect(m_interface, &PositioningInterface::positionInfoChanged, this, [this]() {
         m_mapController->setSourceCoordinate(m_interface->positionInfo().coordinate());

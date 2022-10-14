@@ -43,8 +43,7 @@ QT_END_NAMESPACE
 namespace GammaRay {
 
 /*! Enum conversion utility functions. */
-namespace EnumUtil
-{
+namespace EnumUtil {
 /*!
  * Determine the QMetaEnum for a given enum/flag value.
  * @param value A QVariant holding the enum/flag value, numerical or

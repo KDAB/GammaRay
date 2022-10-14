@@ -67,12 +67,10 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     const qint64 startTime = m_visibleOffset;
     const qint64 endTime = startTime + interval;
 
-    const QAbstractItemModel * const model = index.model();
-    const QVector<qint64> &events
-        = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
-    const qint64 t0
-        = qMax(static_cast<qint64>(0),
-               model->data(index, SignalHistoryModel::StartTimeRole).value<qint64>() - startTime);
+    const QAbstractItemModel *const model = index.model();
+    const QVector<qint64> &events = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64>>();
+    const qint64 t0 = qMax(static_cast<qint64>(0),
+                           model->data(index, SignalHistoryModel::StartTimeRole).value<qint64>() - startTime);
     qint64 t1 = model->data(index, SignalHistoryModel::EndTimeRole).value<qint64>();
     if (t1 < 0) // still alive
         t1 = m_totalInterval;
@@ -102,7 +100,7 @@ void SignalHistoryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
 QSize SignalHistoryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const
 {
-    return {0, option.fontMetrics.lineSpacing()}; // FIXME: minimum height
+    return { 0, option.fontMetrics.lineSpacing() }; // FIXME: minimum height
 }
 
 void SignalHistoryDelegate::setVisibleInterval(qint64 interval)
@@ -154,15 +152,15 @@ bool SignalHistoryDelegate::isActive() const
 }
 
 qint64 SignalHistoryDelegate::intervalForPosition(int position,
-                                                  int width) const {
-  return ((m_visibleInterval * position) / width) + m_visibleOffset;
+                                                  int width) const
+{
+    return ((m_visibleInterval * position) / width) + m_visibleOffset;
 }
 
 QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position, int width) const
 {
-    const QAbstractItemModel * const model = index.model();
-    const QVector<qint64> &events
-        = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64> >();
+    const QAbstractItemModel *const model = index.model();
+    const QVector<qint64> &events = model->data(index, SignalHistoryModel::EventsRole).value<QVector<qint64>>();
 
     const qint64 t = intervalForPosition(position, width);
     qint64 dtMin = std::numeric_limits<qint64>::max();
@@ -182,8 +180,7 @@ QString SignalHistoryDelegate::toolTipAt(const QModelIndex &index, int position,
     if (signalIndex < 0)
         return QString();
 
-    const auto signalNames
-        = index.data(SignalHistoryModel::SignalMapRole).value<QHash<int, QByteArray> >();
+    const auto signalNames = index.data(SignalHistoryModel::SignalMapRole).value<QHash<int, QByteArray>>();
     const auto it = signalNames.constFind(signalIndex);
     QString signalName;
     // see SignalHistoryModel, we store this with offset 1 to fit unknown ones into an unsigned value

@@ -68,7 +68,8 @@ private slots:
         QTest::newRow("unix1") << "libQtCore.so.4.8.6" << true;
         QTest::newRow("unix2") << "libQt5Core.so" << true;
         QTest::newRow("unix3") << "/path/to/libQt6Core.so.6.5.4" << true;
-        QTest::newRow("unix4") << "\t   libQt5Core.so.5.4.1\n" << true;
+        QTest::newRow("unix4") << "\t   libQt5Core.so.5.4.1\n"
+                               << true;
 
         QTest::newRow("mac1") << "QtCore" << true;
         QTest::newRow("mac2") << "/framework/5/QtCore" << true;

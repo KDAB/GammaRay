@@ -64,7 +64,7 @@ public:
 
 private:
     QModelIndex indexForMetaObject(const QMetaObject *metaObject) const;
-    static const QMetaObject *metaObjectForIndex(const QModelIndex &index) ;
+    static const QMetaObject *metaObjectForIndex(const QModelIndex &index);
 
 
 private slots:

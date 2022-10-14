@@ -37,7 +37,8 @@ namespace GammaRay {
 /*! Results of QMetaObjectValidator. */
 namespace QMetaObjectValidatorResult {
 
-enum Result {
+enum Result
+{
     NoIssue = 0,
     SignalOverride = 1,
     UnknownMethodParameterType = 2,

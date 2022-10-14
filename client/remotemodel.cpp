@@ -48,7 +48,7 @@
 
 using namespace GammaRay;
 
-void(*RemoteModel::s_registerClientCallback)() = nullptr;
+void (*RemoteModel::s_registerClientCallback)() = nullptr;
 
 RemoteModel::Node::~Node()
 {
@@ -88,7 +88,7 @@ bool RemoteModel::Node::hasColumnData() const
     if (!parent)
         return false;
     Q_ASSERT(data.size() == flags.size());
-    Q_ASSERT(data.size() == (int)state.size());
+    Q_ASSERT(data.size() == ( int )state.size());
     Q_ASSERT(data.isEmpty() || data.size() == parent->columnCount || parent->columnCount < 0);
 
     return data.size() == parent->columnCount && parent->columnCount > 0;
@@ -279,7 +279,7 @@ QVariant RemoteModel::headerData(int section, Qt::Orientation orientation, int r
 void RemoteModel::sort(int column, Qt::SortOrder order)
 {
     Message msg(m_myAddress, Protocol::ModelSortRequest);
-    msg << (quint32)column << (quint32)order;
+    msg << ( quint32 )column << ( quint32 )order;
     sendMessage(msg);
 }
 
@@ -289,8 +289,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         return;
 
     switch (msg.type()) {
-    case Protocol::ModelRowColumnCountReply:
-    {
+    case Protocol::ModelRowColumnCountReply: {
         quint32 size;
         msg >> size;
         Q_ASSERT(size > 0);
@@ -355,13 +354,12 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelContentReply:
-    {
+    case Protocol::ModelContentReply: {
         quint32 size;
         msg >> size;
         Q_ASSERT(size > 0);
 
-        QHash<QModelIndex, QVector<QModelIndex> > dataChangedIndexes;
+        QHash<QModelIndex, QVector<QModelIndex>> dataChangedIndexes;
         for (quint32 i = 0; i < size; ++i) {
             Protocol::ModelIndex index;
             msg >> index;
@@ -411,8 +409,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelHeaderReply:
-    {
+    case Protocol::ModelHeaderReply: {
         qint8 orientation;
         qint32 section;
         QHash<qint32, QVariant> data;
@@ -430,8 +427,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelContentChanged:
-    {
+    case Protocol::ModelContentChanged: {
         Protocol::ModelIndex beginIndex, endIndex;
         QVector<int> roles;
         msg >> beginIndex >> endIndex >> roles;
@@ -450,7 +446,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             for (int col = beginIndex.last().column; col <= endIndex.last().column; ++col) {
                 const auto state = stateForColumn(currentRow, col);
                 if ((state & RemoteModelNodeState::Outdated) == 0) {
-                    Q_ASSERT((int)currentRow->state.size() > col);
+                    Q_ASSERT(( int )currentRow->state.size() > col);
                     currentRow->state[col] = state | RemoteModelNodeState::Outdated;
                 }
             }
@@ -463,8 +459,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelHeaderChanged:
-    {
+    case Protocol::ModelHeaderChanged: {
         qint8 ori;
         int first, last;
         msg >> ori >> first >> last;
@@ -478,8 +473,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelRowsAdded:
-    {
+    case Protocol::ModelRowsAdded: {
         Protocol::ModelIndex parentIndex;
         int first, last;
         msg >> parentIndex >> first >> last;
@@ -493,8 +487,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelRowsRemoved:
-    {
+    case Protocol::ModelRowsRemoved: {
         Protocol::ModelIndex parentIndex;
         int first, last;
         msg >> parentIndex >> first >> last;
@@ -508,12 +501,11 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelRowsMoved:
-    {
+    case Protocol::ModelRowsMoved: {
         Protocol::ModelIndex sourceParentIndex, destParentIndex;
         int sourceFirst, sourceLast, destChild;
         msg >> sourceParentIndex >> sourceFirst >> sourceLast >> destParentIndex
-        >> destChild;
+            >> destChild;
         Q_ASSERT(sourceLast >= sourceFirst);
 
         Node *sourceParent = nodeForIndex(sourceParentIndex);
@@ -544,11 +536,10 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             break;
         }
 
-	break;
+        break;
     }
 
-    case Protocol::ModelColumnsAdded:
-    {
+    case Protocol::ModelColumnsAdded: {
         Protocol::ModelIndex parentIndex;
         int first, last;
         msg >> parentIndex >> first >> last;
@@ -562,8 +553,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelColumnsRemoved:
-    {
+    case Protocol::ModelColumnsRemoved: {
         Protocol::ModelIndex parentIndex;
         int first, last;
         msg >> parentIndex >> first >> last;
@@ -583,8 +573,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         clear();
         break;
 
-    case Protocol::ModelLayoutChanged:
-    {
+    case Protocol::ModelLayoutChanged: {
         QVector<Protocol::ModelIndex> parents;
         quint32 hint;
         msg >> parents >> hint;
@@ -642,7 +631,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
 
             // Check for parent/children
             bool skip = false;
-            std::vector<Node*> childsOfNode;
+            std::vector<Node *> childsOfNode;
             for (auto *n : qAsConst(parentNodes)) {
                 if (isAncestor(n, node)) {
                     // parent already there, no need to add
@@ -755,7 +744,7 @@ RemoteModelNodeState::NodeStates RemoteModel::stateForColumn(RemoteModel::Node *
     Q_ASSERT(node);
     if (!node->hasColumnData())
         return RemoteModelNodeState::Empty | RemoteModelNodeState::Outdated;
-    Q_ASSERT((int)node->state.size() > columnIndex);
+    Q_ASSERT(( int )node->state.size() > columnIndex);
     return node->state[columnIndex];
 }
 
@@ -788,7 +777,7 @@ void RemoteModel::requestDataAndFlags(const QModelIndex &index) const
     Q_ASSERT((state & RemoteModelNodeState::Loading) == 0);
 
     node->allocateColumns();
-    Q_ASSERT((int)node->state.size() > index.column());
+    Q_ASSERT(( int )node->state.size() > index.column());
     node->state[index.column()] = state | RemoteModelNodeState::Loading; // mark pending request
 
     auto &indexes = m_pendingRequests[DataAndFlags];

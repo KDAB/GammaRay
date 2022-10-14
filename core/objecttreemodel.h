@@ -62,8 +62,8 @@ private:
 
 private:
     QHash<QObject *, QObject *> m_childParentMap;
-    QHash<QObject *, QVector<QObject *> > m_parentChildMap;
-    QSet<QObject*> m_favorites;
+    QHash<QObject *, QVector<QObject *>> m_parentChildMap;
+    QSet<QObject *> m_favorites;
 };
 }
 

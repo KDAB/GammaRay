@@ -42,7 +42,6 @@ void StateModelDelegate::initStyleOption(QStyleOptionViewItem *option,
 
     // turn check marks into bold text, to save space and avoid the impression you can interact with this
     option->features = option->features & ~QStyleOptionViewItem::HasCheckIndicator;
-    const auto active
-        = index.sibling(index.row(), 0).data(Qt::CheckStateRole).toInt() == Qt::Checked;
+    const auto active = index.sibling(index.row(), 0).data(Qt::CheckStateRole).toInt() == Qt::Checked;
     option->font.setBold(active);
 }

@@ -83,7 +83,8 @@ SceneInspector::SceneInspector(Probe *probe, QObject *parent)
     , m_clientConnected(false)
 {
     Server::instance()->registerMonitorNotifier(Endpoint::instance()->objectAddress(
-                                                    objectName()), this, "clientConnectedChanged");
+                                                    objectName()),
+                                                this, "clientConnectedChanged");
 
     PropertyController::registerExtension<PaintAnalyzerExtension>();
 
@@ -95,8 +96,7 @@ SceneInspector::SceneInspector(Probe *probe, QObject *parent)
     connect(probe, &Probe::nonQObjectSelected,
             this, &SceneInspector::nonQObjectSelected);
 
-    auto *sceneFilterProxy
-        = new ObjectTypeFilterProxyModel<QGraphicsScene>(this);
+    auto *sceneFilterProxy = new ObjectTypeFilterProxyModel<QGraphicsScene>(this);
     sceneFilterProxy->setSourceModel(probe->objectListModel());
     auto *singleColumnProxy = new SingleColumnObjectProxyModel(this);
     singleColumnProxy->setSourceModel(sceneFilterProxy);
@@ -131,7 +131,7 @@ void SceneInspector::sceneSelected(const QItemSelection &selection)
     m_sceneModel->setScene(scene);
     connectToScene();
     // TODO remote support when a different graphics scene was selected
-// ui->graphicsSceneView->setGraphicsScene(scene);
+    // ui->graphicsSceneView->setGraphicsScene(scene);
 }
 
 void SceneInspector::connectToScene()
@@ -194,8 +194,7 @@ void SceneInspector::renderScene(const QTransform &transform, const QSize &size)
 
     scene->render(&painter, area, area, Qt::IgnoreAspectRatio);
 
-    QGraphicsItem *currentItem
-        = m_itemSelectionModel->currentIndex().data(SceneModel::SceneItemRole).value<QGraphicsItem *>();
+    QGraphicsItem *currentItem = m_itemSelectionModel->currentIndex().data(SceneModel::SceneItemRole).value<QGraphicsItem *>();
     if (currentItem)
         paintItemDecoration(currentItem, transform, &painter);
 
@@ -239,7 +238,7 @@ void SceneInspector::qObjectSelected(QObject *object, const QPoint &pos)
 
 void SceneInspector::nonQObjectSelected(void *obj, const QString &typeName)
 {
-    if (typeName == QLatin1String("QGraphicsItem*"))   // TODO: can we get sub-classes here?
+    if (typeName == QLatin1String("QGraphicsItem*")) // TODO: can we get sub-classes here?
         sceneItemSelected(reinterpret_cast<QGraphicsItem *>(obj));
 }
 
@@ -255,7 +254,7 @@ void SceneInspector::sceneItemSelected(QGraphicsItem *item)
     const QModelIndex index = indexList.first();
     m_itemSelectionModel->setCurrentIndex(index,
                                           QItemSelectionModel::ClearAndSelect
-                                          | QItemSelectionModel::Rows);
+                                              | QItemSelectionModel::Rows);
 }
 
 void SceneInspector::sceneClicked(const QPointF &pos)
@@ -318,7 +317,7 @@ void SceneInspector::registerGraphicsViewMetaTypes()
     MO_ADD_PROPERTY(QGraphicsItem, toolTip, setToolTip);
     MO_ADD_PROPERTY_RO(QGraphicsItem, topLevelItem);
     MO_ADD_PROPERTY_RO(QGraphicsItem, topLevelWidget);
-    MO_ADD_PROPERTY_RO(QGraphicsItem, transform /*,                 setTransform*/);                    // TODO: support setTransform
+    MO_ADD_PROPERTY_RO(QGraphicsItem, transform /*,                 setTransform*/); // TODO: support setTransform
     MO_ADD_PROPERTY(QGraphicsItem, transformOriginPoint, setTransformOriginPoint);
     MO_ADD_PROPERTY_RO(QGraphicsItem, type);
     MO_ADD_PROPERTY_RO(QGraphicsItem, window);
@@ -400,7 +399,10 @@ void SceneInspector::registerGraphicsViewMetaTypes()
     MO_ADD_PROPERTY_RO(QGraphicsProxyWidget, widget);
 }
 
-#define E(x) { QGraphicsItem:: x, #x }
+#define E(x)                 \
+    {                        \
+        QGraphicsItem::x, #x \
+    }
 static const MetaEnum::Value<QGraphicsItem::GraphicsItemFlag> graphics_item_flags_table[] = {
     E(ItemIsMovable),
     E(ItemIsSelectable),

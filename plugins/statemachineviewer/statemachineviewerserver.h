@@ -106,7 +106,7 @@ private:
 };
 
 class StateMachineViewerFactory : public QObject,
-    public StandardToolFactory<QStateMachine, StateMachineViewerServer>
+                                  public StandardToolFactory<QStateMachine, StateMachineViewerServer>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

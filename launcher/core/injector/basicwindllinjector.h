@@ -34,7 +34,8 @@
 
 
 
-class  BasicWinDllInjector {
+class BasicWinDllInjector
+{
 public:
     static BOOL addDllDirectory(HANDLE destProcess, wchar_t *dllDirPath);
 
@@ -45,8 +46,8 @@ public:
 private:
     static DWORD remoteKernel32Call(HANDLE destProcess, const char *funcName, const wchar_t *argument);
 
-    static void logError(DWORD error=GetLastError());
-    static void log(const wchar_t* msg);
+    static void logError(DWORD error = GetLastError());
+    static void log(const wchar_t *msg);
 };
 
 #endif // BASICWINDLLINJECTOR_H

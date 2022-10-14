@@ -46,7 +46,7 @@ using namespace GammaRay;
 
 PluginInfo::PluginInfo() = default;
 
-PluginInfo::PluginInfo(const QString& path)
+PluginInfo::PluginInfo(const QString &path)
 {
     // OSX has broken QLibrary::isLibrary() - QTBUG-50446
     if (QLibrary::isLibrary(path) || path.endsWith(Paths::pluginExtension(), Qt::CaseInsensitive))
@@ -135,7 +135,6 @@ static QString readLocalized(const QLocale &locale, const QJsonObject &obj, cons
 
         if (it != obj.end())
             return it.value().toString();
-
     }
 
     return obj.value(baseKey).toString();
@@ -146,7 +145,7 @@ bool PluginInfo::isStatic() const
     return m_staticInstanceFunc;
 }
 
-QObject* PluginInfo::staticInstance() const
+QObject *PluginInfo::staticInstance() const
 {
     Q_ASSERT(isStatic());
     return m_staticInstanceFunc();

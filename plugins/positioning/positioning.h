@@ -56,11 +56,11 @@ private slots:
 private:
     static void registerMetaTypes();
 
-    std::vector<QGeoPositionInfoSource*> m_nonProxyPositionInfoSources;
+    std::vector<QGeoPositionInfoSource *> m_nonProxyPositionInfoSources;
 };
 
 class PositioningFactory : public QObject,
-    public StandardToolFactory<QGeoPositionInfoSource, Positioning>
+                           public StandardToolFactory<QGeoPositionInfoSource, Positioning>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

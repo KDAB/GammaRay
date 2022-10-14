@@ -107,7 +107,8 @@ Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     proxy->setSourceModel(engineFilterModel);
     m_engineModel = proxy;
     probe->registerModel(QStringLiteral(
-                             "com.kdab.GammaRay.Qt3DInspector.engineModel"), m_engineModel);
+                             "com.kdab.GammaRay.Qt3DInspector.engineModel"),
+                         m_engineModel);
 
     connect(probe, &Probe::objectCreated, m_entityModel, &Qt3DEntityTreeModel::objectCreated);
     connect(probe, &Probe::objectDestroyed, m_entityModel, &Qt3DEntityTreeModel::objectDestroyed);
@@ -125,7 +126,8 @@ Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     auto frameGraphProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
     frameGraphProxy->setSourceModel(m_frameGraphModel);
     probe->registerModel(QStringLiteral(
-                             "com.kdab.GammaRay.Qt3DInspector.frameGraphModel"), frameGraphProxy);
+                             "com.kdab.GammaRay.Qt3DInspector.frameGraphModel"),
+                         frameGraphProxy);
     m_frameGraphSelectionModel = ObjectBroker::selectionModel(frameGraphProxy);
     connect(m_frameGraphSelectionModel, &QItemSelectionModel::selectionChanged, this,
             &Qt3DInspector::frameGraphSelectionChanged);
@@ -143,7 +145,7 @@ void Qt3DInspector::selectEngine(int row)
     const auto idx = m_engineModel->index(row, 0);
     if (idx.isValid()) {
         engine = qobject_cast<Qt3DCore::QAspectEngine *>(
-                     idx.data(ObjectModel::ObjectRole).value<QObject *>());
+            idx.data(ObjectModel::ObjectRole).value<QObject *>());
     }
 
     selectEngine(engine);
@@ -195,9 +197,11 @@ void Qt3DInspector::selectEntity(Qt3DCore::QEntity *entity)
     Model::used(model);
 
     const auto indexList = model->match(model->index(0,
-                                                     0), ObjectModel::ObjectRole,
+                                                     0),
+                                        ObjectModel::ObjectRole,
                                         QVariant::fromValue<Qt3DCore::QEntity *>(
-                                            entity), 1,
+                                            entity),
+                                        1,
                                         Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
@@ -205,7 +209,7 @@ void Qt3DInspector::selectEntity(Qt3DCore::QEntity *entity)
     const auto index = indexList.first();
     m_entitySelectionModel->select(index,
                                    QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows
-                                   | QItemSelectionModel::Current);
+                                       | QItemSelectionModel::Current);
 }
 
 void Qt3DInspector::frameGraphSelectionChanged(const QItemSelection &selection)
@@ -231,26 +235,25 @@ void Qt3DInspector::selectFrameGraphNode(Qt3DRender::QFrameGraphNode *node)
     Model::used(model);
 
     const auto indexList = model->match(model->index(0,
-                                                     0), ObjectModel::ObjectRole,
+                                                     0),
+                                        ObjectModel::ObjectRole,
                                         QVariant::fromValue<Qt3DRender::QFrameGraphNode *>(
-                                            node), 1,
+                                            node),
+                                        1,
                                         Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
 
     const auto index = indexList.first();
     m_frameGraphSelectionModel->select(index,
-                                       QItemSelectionModel::Select |
-                                       QItemSelectionModel::Clear |
-                                       QItemSelectionModel::Rows |
-                                       QItemSelectionModel::Current);
+                                       QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
 void Qt3DInspector::objectSelected(QObject *obj)
 {
     if (auto engine = qobject_cast<Qt3DCore::QAspectEngine *>(obj)) {
         selectEngine(engine);
-    // TODO check if the engine matches, otherwise switch that too
+        // TODO check if the engine matches, otherwise switch that too
     } else if (auto entity = qobject_cast<Qt3DCore::QEntity *>(obj)) {
         selectEntity(entity);
     } else if (auto node = qobject_cast<Qt3DRender::QFrameGraphNode *>(obj)) {
@@ -279,7 +282,7 @@ void Qt3DInspector::registerCoreMetaTypes()
 
 void Qt3DInspector::registerInputMetaTypes()
 {
-    qRegisterMetaType<Qt3DInput::QAbstractPhysicalDevice*>();
+    qRegisterMetaType<Qt3DInput::QAbstractPhysicalDevice *>();
 }
 
 static QString attributeToString(Qt3DRender::QAttribute *attr)
@@ -311,26 +314,26 @@ static QString graphicsApiFilterToString(Qt3DRender::QGraphicsApiFilter *filter)
 
     QString s;
     switch (filter->api()) {
-        case QGraphicsApiFilter::OpenGLES:
-            s = QStringLiteral("OpenGL ES ");
-            break;
-        case QGraphicsApiFilter::OpenGL:
-            s = QStringLiteral("OpenGL ");
-            break;
-        default:
-            return Util::displayString(filter);
+    case QGraphicsApiFilter::OpenGLES:
+        s = QStringLiteral("OpenGL ES ");
+        break;
+    case QGraphicsApiFilter::OpenGL:
+        s = QStringLiteral("OpenGL ");
+        break;
+    default:
+        return Util::displayString(filter);
     }
     s += QString::fromLatin1("%1.%2").arg(filter->majorVersion()).arg(filter->minorVersion());
 
     switch (filter->profile()) {
-        case QGraphicsApiFilter::NoProfile:
-            break;
-        case QGraphicsApiFilter::CoreProfile:
-            s += QStringLiteral(" core");
-            break;
-        case QGraphicsApiFilter::CompatibilityProfile:
-            s += QStringLiteral(" compat");
-            break;
+    case QGraphicsApiFilter::NoProfile:
+        break;
+    case QGraphicsApiFilter::CoreProfile:
+        s += QStringLiteral(" core");
+        break;
+    case QGraphicsApiFilter::CompatibilityProfile:
+        s += QStringLiteral(" compat");
+        break;
     }
 
     return s;
@@ -348,13 +351,13 @@ static QString parameterToString(Qt3DRender::QParameter *parameter)
 
 void Qt3DInspector::registerRenderMetaTypes()
 {
-    qRegisterMetaType<Qt3DRender::QAttribute*>();
-    qRegisterMetaType<Qt3DRender::QBuffer*>();
-    qRegisterMetaType<Qt3DRender::QCamera*>();
-    qRegisterMetaType<Qt3DRender::QEffect*>();
-    qRegisterMetaType<Qt3DRender::QFrameGraphNode*>();
-    qRegisterMetaType<Qt3DRender::QGraphicsApiFilter*>();
-    qRegisterMetaType<Qt3DRender::QTextureWrapMode*>();
+    qRegisterMetaType<Qt3DRender::QAttribute *>();
+    qRegisterMetaType<Qt3DRender::QBuffer *>();
+    qRegisterMetaType<Qt3DRender::QCamera *>();
+    qRegisterMetaType<Qt3DRender::QEffect *>();
+    qRegisterMetaType<Qt3DRender::QFrameGraphNode *>();
+    qRegisterMetaType<Qt3DRender::QGraphicsApiFilter *>();
+    qRegisterMetaType<Qt3DRender::QTextureWrapMode *>();
 
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(Qt3DRender::QMaterial, Qt3DCore::QComponent);
@@ -385,10 +388,10 @@ void Qt3DInspector::registerRenderMetaTypes()
     MO_ADD_PROPERTY_RO(Qt3DRender::QSceneLoader, entityNames);
 #endif
 
-    VariantHandler::registerStringConverter<Qt3DRender::QAttribute*>(attributeToString);
-    VariantHandler::registerStringConverter<Qt3DRender::QFilterKey*>(filterKeyToString);
-    VariantHandler::registerStringConverter<Qt3DRender::QGraphicsApiFilter*>(graphicsApiFilterToString);
-    VariantHandler::registerStringConverter<Qt3DRender::QParameter*>(parameterToString);
+    VariantHandler::registerStringConverter<Qt3DRender::QAttribute *>(attributeToString);
+    VariantHandler::registerStringConverter<Qt3DRender::QFilterKey *>(filterKeyToString);
+    VariantHandler::registerStringConverter<Qt3DRender::QGraphicsApiFilter *>(graphicsApiFilterToString);
+    VariantHandler::registerStringConverter<Qt3DRender::QParameter *>(parameterToString);
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
@@ -408,7 +411,7 @@ void Qt3DInspector::registerAnimationMetaTypes()
     MO_ADD_METAOBJECT0(Qt3DAnimation::QAnimationClipData);
     MO_ADD_PROPERTY_RO(Qt3DAnimation::QAnimationClipData, channelCount);
     MO_ADD_PROPERTY_RO(Qt3DAnimation::QAnimationClipData, isValid);
-    MO_ADD_PROPERTY   (Qt3DAnimation::QAnimationClipData, name, setName);
+    MO_ADD_PROPERTY(Qt3DAnimation::QAnimationClipData, name, setName);
 
     MO_ADD_METAOBJECT1(Qt3DAnimation::QAnimationController, QObject);
     MO_ADD_PROPERTY_NC(Qt3DAnimation::QAnimationController, animationGroupList);
@@ -419,7 +422,7 @@ void Qt3DInspector::registerAnimationMetaTypes()
     MO_ADD_METAOBJECT1(Qt3DAnimation::QChannelMapper, Qt3DCore::QNode);
     MO_ADD_PROPERTY_RO(Qt3DAnimation::QChannelMapper, mappings);
 
-    VariantHandler::registerStringConverter<Qt3DAnimation::QChannelMapping*>(channelMappingToString);
+    VariantHandler::registerStringConverter<Qt3DAnimation::QChannelMapping *>(channelMappingToString);
 #endif
 }
 

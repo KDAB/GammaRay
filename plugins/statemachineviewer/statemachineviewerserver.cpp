@@ -286,12 +286,12 @@ void StateMachineViewerServer::addState(State state)
                     hasChildren, label, type, connectToInitial);
 
     // add outgoing transitions
-    Q_FOREACH(auto transition, selectedStateMachine()->stateTransitions(state)) {
+    Q_FOREACH (auto transition, selectedStateMachine()->stateTransitions(state)) {
         addTransition(transition);
     }
 
     // add sub-states
-    Q_FOREACH(auto childState, selectedStateMachine()->stateChildren(state)) {
+    Q_FOREACH (auto childState, selectedStateMachine()->stateChildren(state)) {
         addState(childState);
     }
 }
@@ -334,7 +334,7 @@ void StateMachineViewerServer::handleLogMessage(const QString &label, const QStr
 
 void StateMachineViewerServer::objectSelected(QObject *obj)
 {
-    if (auto state = qobject_cast<QAbstractState*>(obj)) {
+    if (auto state = qobject_cast<QAbstractState *>(obj)) {
         auto model = m_stateSelectionModel->model();
         const auto idxs = model->match(model->index(0, 0), StateModel::StateValueRole,
                                        QVariant::fromValue(GammaRay::State(quintptr(state))), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
@@ -342,8 +342,7 @@ void StateMachineViewerServer::objectSelected(QObject *obj)
         if (idxs.isEmpty())
             return;
         const auto idx = idxs.first();
-        m_stateSelectionModel->select(idx, QItemSelectionModel::ClearAndSelect |
-            QItemSelectionModel::Rows | QItemSelectionModel::Current);
+        m_stateSelectionModel->select(idx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
     }
 }
 

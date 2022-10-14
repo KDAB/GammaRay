@@ -67,8 +67,8 @@ void OpenGLSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QOpenGLShaderProgram, QObject);
     MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, isLinked);
     MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, log);
-// FIXME calling this asserts in debug builds of some newer Qt versions
-// MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, maxGeometryOutputVertices);
+    // FIXME calling this asserts in debug builds of some newer Qt versions
+    // MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, maxGeometryOutputVertices);
     MO_ADD_PROPERTY(QOpenGLShaderProgram, patchVertexCount, setPatchVertexCount);
     MO_ADD_PROPERTY_RO(QOpenGLShaderProgram, programId);
 #endif // QT_NO_OPENGL
@@ -78,7 +78,9 @@ void OpenGLSupport::registerMetaTypes()
 static QString shaderTypeToString(const QOpenGLShader::ShaderType type)
 {
     QStringList types;
-#define ST(t) if (type & QOpenGLShader::t) types.push_back(QStringLiteral(#t));
+#define ST(t)                    \
+    if (type & QOpenGLShader::t) \
+        types.push_back(QStringLiteral(#t));
     ST(Vertex)
     ST(Fragment)
     ST(Geometry)

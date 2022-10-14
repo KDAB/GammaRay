@@ -32,10 +32,10 @@
 
 using namespace GammaRay;
 
-ProblemReporterInterface::ProblemReporterInterface(QObject* parent)
+ProblemReporterInterface::ProblemReporterInterface(QObject *parent)
     : QObject(parent)
 {
-    ObjectBroker::registerObject<ProblemReporterInterface*>(this);
+    ObjectBroker::registerObject<ProblemReporterInterface *>(this);
 }
 
 ProblemReporterInterface::~ProblemReporterInterface() = default;

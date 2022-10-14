@@ -34,7 +34,14 @@
 #include <QtGlobal>
 
 
-#define WIN_ERROR_ASSERT(condition, action) if (condition) {} else { qWarning("%s Error: %s failed: %s", Q_FUNC_INFO, #condition, qPrintable(qt_error_string())); action; } do {} while(false)
+#define WIN_ERROR_ASSERT(condition, action)                                                          \
+    if (condition) {                                                                                 \
+    } else {                                                                                         \
+        qWarning("%s Error: %s failed: %s", Q_FUNC_INFO, #condition, qPrintable(qt_error_string())); \
+        action;                                                                                      \
+    }                                                                                                \
+    do {                                                                                             \
+    } while (false)
 #define WIN_ERROR_CHECK(condition) WIN_ERROR_ASSERT(condition, qt_noop();)
 
 namespace GammaRay {

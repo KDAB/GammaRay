@@ -50,23 +50,51 @@ public:
     Widget3DWidget(QWidget *qWidget, const QPersistentModelIndex &modelIndex, Widget3DWidget *parent);
     ~Widget3DWidget() override;
 
-    inline QImage texture() const { return mTextureImage; }
-    inline QImage backTexture() const { return mBackTextureImage; }
-    inline QRect geometry() const { return mGeometry; }
-    inline QWidget *qWidget() const { return mQWidget; }
-    inline Widget3DWidget *parentWidget() const { return static_cast<Widget3DWidget*>(parent()); }
-    inline bool isVisible() const { return mQWidget->isVisible(); }
-    inline QVariantMap metaData() const { return mMetaData; }
+    inline QImage texture() const
+    {
+        return mTextureImage;
+    }
+    inline QImage backTexture() const
+    {
+        return mBackTextureImage;
+    }
+    inline QRect geometry() const
+    {
+        return mGeometry;
+    }
+    inline QWidget *qWidget() const
+    {
+        return mQWidget;
+    }
+    inline Widget3DWidget *parentWidget() const
+    {
+        return static_cast<Widget3DWidget *>(parent());
+    }
+    inline bool isVisible() const
+    {
+        return mQWidget->isVisible();
+    }
+    inline QVariantMap metaData() const
+    {
+        return mMetaData;
+    }
     inline bool isWindow() const;
-    inline int depth() const { return mDepth; }
-    inline QPersistentModelIndex modelIndex() const { return mModelIndex; }
+    inline int depth() const
+    {
+        return mDepth;
+    }
+    inline QPersistentModelIndex modelIndex() const
+    {
+        return mModelIndex;
+    }
     // QML does not handle 64bit integers, so use string instead, we only need
     // the value for comparison, we can convert back to quintptr in C++
-    inline QString id() const {
+    inline QString id() const
+    {
         QString str(8, QLatin1Char('0'));
         quint64 ptr = reinterpret_cast<quint64>(mQWidget.data());
         // this is almost certainly wrong, but keep it for backwards compat:
-        std::memcpy(static_cast<void*>(str.data()), static_cast<void*>(&ptr), 8);
+        std::memcpy(static_cast<void *>(str.data()), static_cast<void *>(&ptr), 8);
         return str;
     };
 
@@ -103,7 +131,8 @@ class Widget3DModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    enum Roles {
+    enum Roles
+    {
         IdRole = ObjectModel::UserRole + 1,
         TextureRole,
         BackTextureRole,
@@ -136,7 +165,7 @@ private:
     Widget3DWidget *widgetForIndex(const QModelIndex &idx, bool createWhenMissing = true) const;
 
     // mutable because we populate it lazily from data() const
-    mutable QHash<QObject *, Widget3DWidget*> mDataCache;
+    mutable QHash<QObject *, Widget3DWidget *> mDataCache;
 };
 
 }

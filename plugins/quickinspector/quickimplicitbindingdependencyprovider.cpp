@@ -41,7 +41,7 @@
 
 using namespace GammaRay;
 
-std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::createBindingNode(QObject* obj, const char *propertyName, BindingNode *parent)
+std::unique_ptr<BindingNode> GammaRay::QuickImplicitBindingDependencyProvider::createBindingNode(QObject *obj, const char *propertyName, BindingNode *parent)
 {
     if (!obj || !obj->metaObject())
         return {};
@@ -68,7 +68,7 @@ std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider
 {
     std::vector<std::unique_ptr<BindingNode>> bindings;
 
-    if (QQuickItem *item = qobject_cast<QQuickItem*>(obj)) { //FIXME: Check for QQuickAnchors directly here, as soon as we show properties of object-properties.
+    if (QQuickItem *item = qobject_cast<QQuickItem *>(obj)) { // FIXME: Check for QQuickAnchors directly here, as soon as we show properties of object-properties.
         QQuickItemPrivate *itemPriv = QQuickItemPrivate::get(item);
         if (!itemPriv)
             return bindings;
@@ -77,13 +77,20 @@ std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider
             return bindings;
 
         auto usedAnchors = anchors->usedAnchors();
-        if (usedAnchors & QQuickAnchors::TopAnchor)      bindings.push_back(createBindingNode(item, "anchors.top"));
-        if (usedAnchors & QQuickAnchors::BottomAnchor)   bindings.push_back(createBindingNode(item, "anchors.bottom"));
-        if (usedAnchors & QQuickAnchors::LeftAnchor)     bindings.push_back(createBindingNode(item, "anchors.left"));
-        if (usedAnchors & QQuickAnchors::RightAnchor)    bindings.push_back(createBindingNode(item, "anchors.right"));
-        if (usedAnchors & QQuickAnchors::HCenterAnchor)  bindings.push_back(createBindingNode(item, "anchors.horizontalCenter"));
-        if (usedAnchors & QQuickAnchors::VCenterAnchor)  bindings.push_back(createBindingNode(item, "anchors.verticalCenter"));
-        if (usedAnchors & QQuickAnchors::BaselineAnchor) bindings.push_back(createBindingNode(item, "anchors.baseline"));
+        if (usedAnchors & QQuickAnchors::TopAnchor)
+            bindings.push_back(createBindingNode(item, "anchors.top"));
+        if (usedAnchors & QQuickAnchors::BottomAnchor)
+            bindings.push_back(createBindingNode(item, "anchors.bottom"));
+        if (usedAnchors & QQuickAnchors::LeftAnchor)
+            bindings.push_back(createBindingNode(item, "anchors.left"));
+        if (usedAnchors & QQuickAnchors::RightAnchor)
+            bindings.push_back(createBindingNode(item, "anchors.right"));
+        if (usedAnchors & QQuickAnchors::HCenterAnchor)
+            bindings.push_back(createBindingNode(item, "anchors.horizontalCenter"));
+        if (usedAnchors & QQuickAnchors::VCenterAnchor)
+            bindings.push_back(createBindingNode(item, "anchors.verticalCenter"));
+        if (usedAnchors & QQuickAnchors::BaselineAnchor)
+            bindings.push_back(createBindingNode(item, "anchors.baseline"));
     }
 
     return bindings;
@@ -97,17 +104,16 @@ std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider
     if (!object)
         return dependencies;
 
-    auto addDependency = [this, binding, object, &dependencies](const char *propName, QObject *depObj, const char *depName)
-    {
+    auto addDependency = [this, binding, object, &dependencies](const char *propName, QObject *depObj, const char *depName) {
         if (depObj && binding->propertyIndex() == object->metaObject()->indexOfProperty(propName)) {
             dependencies.push_back(createBindingNode(depObj, depName, binding));
         }
     };
 
-    if (QQuickAnchors *anchors = qobject_cast<QQuickAnchors*>(object)) {
+    if (QQuickAnchors *anchors = qobject_cast<QQuickAnchors *>(object)) {
         anchorBindings(dependencies, anchors, binding->propertyIndex(), binding);
     }
-    if (QQuickItem *item = qobject_cast<QQuickItem*>(object)) {
+    if (QQuickItem *item = qobject_cast<QQuickItem *>(object)) {
         implicitSizeDependencies(item, addDependency);
         anchoringDependencies(item, addDependency);
         if (binding->propertyIndex() == item->metaObject()->indexOfProperty("childrenRect")) {
@@ -127,13 +133,13 @@ void QuickImplicitBindingDependencyProvider::anchorBindings(std::vector<std::uni
 {
     QQuickAnchorLine anchorLine = anchors->metaObject()->property(propertyIndex).read(anchors).value<QQuickAnchorLine>();
     auto dependencyPropertyName = anchorLine.anchorLine == QQuickAnchors::TopAnchor ? "top"
-                                : anchorLine.anchorLine == QQuickAnchors::BottomAnchor ? "bottom"
-                                : anchorLine.anchorLine == QQuickAnchors::LeftAnchor ? "left"
-                                : anchorLine.anchorLine == QQuickAnchors::RightAnchor ? "right"
-                                : anchorLine.anchorLine == QQuickAnchors::HCenterAnchor ? "horizontalCenter"
-                                : anchorLine.anchorLine == QQuickAnchors::VCenterAnchor ? "verticalCenter"
-                                : anchorLine.anchorLine == QQuickAnchors::BaselineAnchor ? "baseline"
-                                : "";
+        : anchorLine.anchorLine == QQuickAnchors::BottomAnchor                      ? "bottom"
+        : anchorLine.anchorLine == QQuickAnchors::LeftAnchor                        ? "left"
+        : anchorLine.anchorLine == QQuickAnchors::RightAnchor                       ? "right"
+        : anchorLine.anchorLine == QQuickAnchors::HCenterAnchor                     ? "horizontalCenter"
+        : anchorLine.anchorLine == QQuickAnchors::VCenterAnchor                     ? "verticalCenter"
+        : anchorLine.anchorLine == QQuickAnchors::BaselineAnchor                    ? "baseline"
+                                                                                    : "";
     if (anchorLine.item) {
         dependencies.push_back(createBindingNode(anchorLine.item, dependencyPropertyName, parent));
     }
@@ -347,5 +353,4 @@ void QuickImplicitBindingDependencyProvider::anchoringDependencies(QQuickItem *i
         addDependency("verticalCenter", item, "y");
         addDependency("verticalCenter", item, "height");
     }
-
 }

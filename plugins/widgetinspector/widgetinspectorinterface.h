@@ -46,7 +46,8 @@ class WidgetInspectorInterface : public QObject
     Q_PROPERTY(
         GammaRay::WidgetInspectorInterface::Features features READ features WRITE setFeatures NOTIFY featuresChanged)
 public:
-    enum Feature {
+    enum Feature
+    {
         NoFeature = 0,
         InputRedirection = 1,
         AnalyzePainting = 2,

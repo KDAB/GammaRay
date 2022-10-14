@@ -39,17 +39,24 @@
 namespace GammaRay {
 class QuickInspectorInterface;
 
-struct CompleteFrameRequest {
+struct CompleteFrameRequest
+{
     CompleteFrameRequest(const QString &filePath = QString(), bool drawDecoration = false)
         : filePath(filePath)
         , drawDecoration(drawDecoration)
-    { }
+    {
+    }
 
     bool isValid() const
-    { return !filePath.isEmpty(); }
+    {
+        return !filePath.isEmpty();
+    }
 
     void reset()
-    { filePath.clear(); drawDecoration = false; }
+    {
+        filePath.clear();
+        drawDecoration = false;
+    }
 
     CompleteFrameRequest &operator=(const CompleteFrameRequest &other)
     {

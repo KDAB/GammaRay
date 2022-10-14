@@ -39,7 +39,8 @@ class ProbeCreator : public QObject
 {
     Q_OBJECT
 public:
-    enum CreateFlag {
+    enum CreateFlag
+    {
         Create = 0,
         FindExistingObjects = 1,
         ResendServerAddress = 2

@@ -46,10 +46,10 @@ ProcessTrackerBackendMacOS::ProcessTrackerBackendMacOS(QObject *parent)
 void ProcessTrackerBackendMacOS::checkProcess(qint64 pid)
 {
     GammaRay::ProcessTrackerInfo pinfo(pid);
-    int                 status;
-    int                 mib[4];
-    struct kinfo_proc   info;
-    size_t              size;
+    int status;
+    int mib[4];
+    struct kinfo_proc info;
+    size_t size;
 
     // Initialize the flags so that, if sysctl fails for some bizarre
     // reason, we get a predictable result.
@@ -64,22 +64,22 @@ void ProcessTrackerBackendMacOS::checkProcess(qint64 pid)
 
     // Call sysctl.
     size = sizeof(info);
-    status = sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, NULL, 0); //krazy:exclude=null
+    status = sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, NULL, 0); // krazy:exclude=null
 
     if (status == 0) {
         // We're being debugged if the P_TRACED flag is set.
         pinfo.traced = (info.kp_proc.p_flag & P_TRACED) != 0;
 
         switch (info.kp_proc.p_stat) {
-            case SRUN:
-                pinfo.state = GammaRay::ProcessTracker::Running;
-                break;
-            case SSTOP:
-            case SSLEEP:
-                pinfo.state = GammaRay::ProcessTracker::Suspended;
-                break;
-            default:
-                break;
+        case SRUN:
+            pinfo.state = GammaRay::ProcessTracker::Running;
+            break;
+        case SSTOP:
+        case SSLEEP:
+            pinfo.state = GammaRay::ProcessTracker::Suspended;
+            break;
+        default:
+            break;
         }
     } else {
         qWarning("%s: Can not sysctl.", Q_FUNC_INFO);

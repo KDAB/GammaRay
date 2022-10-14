@@ -38,9 +38,9 @@
 
 using namespace GammaRay;
 
-#define QGV_ITEMTYPE(Type) \
-    { \
-        Type t; \
+#define QGV_ITEMTYPE(Type)                                   \
+    {                                                        \
+        Type t;                                              \
         m_typeNames.insert(t.type(), QStringLiteral(#Type)); \
     }
 
@@ -81,9 +81,7 @@ QVariant SceneModel::data(const QModelIndex &index, int role) const
         if (index.column() == 0) {
             if (obj && !obj->objectName().isEmpty())
                 return obj->objectName();
-            return
-                QStringLiteral("0x%1").
-                arg(QString::number(reinterpret_cast<qlonglong>(item), 16));
+            return QStringLiteral("0x%1").arg(QString::number(reinterpret_cast<qlonglong>(item), 16));
         } else if (index.column() == 1) {
             if (obj)
                 return obj->metaObject()->className();
@@ -153,7 +151,7 @@ QList<QGraphicsItem *> SceneModel::topLevelItems() const
     QList<QGraphicsItem *> topLevel;
     if (!m_scene)
         return topLevel;
-    Q_FOREACH(QGraphicsItem *item, m_scene->items()) {
+    Q_FOREACH (QGraphicsItem *item, m_scene->items()) {
         if (!item->parentItem())
             topLevel.push_back(item);
     }
@@ -181,9 +179,7 @@ QString SceneModel::typeName(int itemType) const
     if (itemType == QGraphicsItem::UserType)
         return QStringLiteral("UserType");
     if (itemType > QGraphicsItem::UserType) {
-        return
-            QStringLiteral("UserType + %1").
-            arg(itemType - static_cast<int>(QGraphicsItem::UserType));
+        return QStringLiteral("UserType + %1").arg(itemType - static_cast<int>(QGraphicsItem::UserType));
     }
     return QString::number(itemType);
 }

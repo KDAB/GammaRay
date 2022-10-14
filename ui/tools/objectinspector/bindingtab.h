@@ -37,8 +37,7 @@
 namespace GammaRay {
 class PropertyWidget;
 
-namespace Ui
-{
+namespace Ui {
 class BindingTab;
 }
 

@@ -34,20 +34,22 @@
 namespace GammaRay {
 
 namespace TimezoneModelRoles {
-    enum Role {
-        LocalZoneRole = GammaRay::UserRole
-    };
+enum Role
+{
+    LocalZoneRole = GammaRay::UserRole
+};
 }
 
 namespace TimezoneModelColumns {
-    enum Column {
-        IanaIdColumn,
-        CountryColumn,
-        StandardDisplayNameColumn,
-        DSTColumn,
-        WindowsIdColumn,
-        COUNT
-    };
+enum Column
+{
+    IanaIdColumn,
+    CountryColumn,
+    StandardDisplayNameColumn,
+    DSTColumn,
+    WindowsIdColumn,
+    COUNT
+};
 }
 
 }

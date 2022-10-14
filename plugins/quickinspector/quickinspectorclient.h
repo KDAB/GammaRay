@@ -51,7 +51,7 @@ public slots:
     void selectWindow(int index) override;
 
     void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
-    override;
+        override;
 
     void checkFeatures() override;
 

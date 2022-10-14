@@ -63,7 +63,7 @@ public:
     bool isDebug() const;
     void setIsDebug(bool debug);
     /*! Returns @c true if debug vs. release is changing the ABI. */
-    static bool isDebugRelevant() ;
+    static bool isDebugRelevant();
 
     /*! Compiler ABI is currently only relevant for MSVC vs. Mingw. */
     QString compiler() const;

@@ -54,8 +54,12 @@ class PaintBufferModelFilterProxy : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit PaintBufferModelFilterProxy(QObject *parent = nullptr)
-        : QSortFilterProxyModel(parent) {}
-    void sort(int, Qt::SortOrder) override {} // never sort, that has no semantics here
+        : QSortFilterProxyModel(parent)
+    {
+    }
+    void sort(int, Qt::SortOrder) override
+    {
+    } // never sort, that has no semantics here
 };
 
 PaintAnalyzer::PaintAnalyzer(const QString &name, QObject *parent)
@@ -180,9 +184,7 @@ void PaintAnalyzer::endAnalyzePainting()
     if (auto rowCount = m_paintBufferFilter->rowCount()) {
         const auto idx = m_paintBufferFilter->index(rowCount - 1, 0);
         m_selectionModel->select(idx,
-                                 QItemSelectionModel::ClearAndSelect |
-                                 QItemSelectionModel::Rows |
-                                 QItemSelectionModel::Current);
+                                 QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
     }
 
     PainterProfilingReplayer profiler;

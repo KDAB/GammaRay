@@ -53,13 +53,13 @@ StyleElementStateTablePage::StyleElementStateTablePage(QWidget *parent)
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 
-    connect(ui->widthBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(ui->widthBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             m_interface, &StyleInspectorInterface::setCellWidth);
-    connect(ui->widthBox,  static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(ui->widthBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &StyleElementStateTablePage::updateCellSize);
-    connect(ui->heightBox,  static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(ui->heightBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             m_interface, &StyleInspectorInterface::setCellHeight);
-    connect(ui->heightBox,  static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(ui->heightBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &StyleElementStateTablePage::updateCellSize);
     connect(ui->zoomSlider, &QAbstractSlider::valueChanged, m_interface, &StyleInspectorInterface::setCellZoom);
     connect(ui->zoomSlider, &QAbstractSlider::valueChanged, this, &StyleElementStateTablePage::updateCellSize);

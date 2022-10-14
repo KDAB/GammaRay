@@ -70,14 +70,14 @@ protected:
 
 private:
     GammaRay::ObjectIds recursiveWidgetsAt(QWidget *parent, const QPoint &pos,
-                                           GammaRay::RemoteViewInterface::RequestMode mode, int& bestCandidate) const;
+                                           GammaRay::RemoteViewInterface::RequestMode mode, int &bestCandidate) const;
     void callExternalExportAction(const char *name, QWidget *widget, const QString &fileName);
     QImage imageForWidget(QWidget *widget);
     static void registerWidgetMetaTypes();
     static void registerVariantHandlers();
     void discoverObjects();
     void checkFeatures();
-    static QVector<QRect> tabFocusChain(QWidget *window) ;
+    static QVector<QRect> tabFocusChain(QWidget *window);
 
 private slots:
     void widgetSelectionChanged(const QItemSelection &selection);
@@ -96,7 +96,7 @@ private slots:
     void updateWidgetPreview();
 
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
-    void pickElementId(const GammaRay::ObjectId& id);
+    void pickElementId(const GammaRay::ObjectId &id);
 
 private:
     QPointer<OverlayWidget> m_overlayWidget;

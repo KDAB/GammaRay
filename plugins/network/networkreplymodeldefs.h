@@ -31,11 +31,11 @@
 
 #include <common/modelroles.h>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 namespace NetworkReply {
-enum State {
+enum State
+{
     Running = 0,
     Error = 1,
     Finished = 2,
@@ -44,14 +44,16 @@ enum State {
     Deleted = 16
 };
 
-enum ContentType {
+enum ContentType
+{
     Unknown = 0,
     Json = 1,
 };
 }
 
 namespace NetworkReplyModelRole {
-enum Role {
+enum Role
+{
     ReplyStateRole = GammaRay::UserRole,
     ReplyErrorRole,
     ObjectIdRole,
@@ -61,7 +63,8 @@ enum Role {
 }
 
 namespace NetworkReplyModelColumn {
-enum Column {
+enum Column
+{
     ObjectColumn = 0,
     OpColumn = 1,
     TimeColumn = 2,

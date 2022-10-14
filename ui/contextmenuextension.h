@@ -45,7 +45,8 @@ class GAMMARAY_UI_EXPORT ContextMenuExtension
 {
 public:
     // UI presentation depend the order of this enum
-    enum Location {
+    enum Location
+    {
         GoTo,
         ShowSource,
         Creation,

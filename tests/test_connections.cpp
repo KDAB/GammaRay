@@ -43,7 +43,7 @@ const int TIMEOUTS = 100;
 // BEGIN TestObject
 TestObject::TestObject(QObject *parent)
     : QObject(parent)
-// test object creation in ctor
+    // test object creation in ctor
     , child(new QObject(this))
 {
     setObjectName(QStringLiteral("TestObject"));
@@ -242,9 +242,7 @@ void TestMain::run()
 {
     QFETCH(int, type);
 
-    bool manual
-        = QProcessEnvironment::systemEnvironment().value(QStringLiteral("GAMMARAY_TEST_MANUAL")).
-          toInt();
+    bool manual = QProcessEnvironment::systemEnvironment().value(QStringLiteral("GAMMARAY_TEST_MANUAL")).toInt();
     TestConnections tester(static_cast<TestConnections::Type>(type),
                            manual ? -1 : TIMEOUTS);
 

@@ -33,8 +33,12 @@
 
 using namespace GammaRay;
 
-struct UnknownCustomType {};
-struct KnownCustomType {};
+struct UnknownCustomType
+{
+};
+struct KnownCustomType
+{
+};
 
 Q_DECLARE_METATYPE(KnownCustomType)
 
@@ -44,15 +48,25 @@ class QMetaObjectValidatorTest : public QObject
     Q_PROPERTY(UnknownCustomType failUnknownType READ failUnknownType)
     Q_PROPERTY(KnownCustomType knownType READ knownType)
 public:
-    static UnknownCustomType failUnknownType() { return {}; }
-    static KnownCustomType knownType() { return {}; }
+    static UnknownCustomType failUnknownType()
+    {
+        return {};
+    }
+    static KnownCustomType knownType()
+    {
+        return {};
+    }
 
 signals:
     void destroyed();
 
 public slots:
-    void unknownParameter(int, UnknownCustomType, int) {}
-    void knownParameter(KnownCustomType) {}
+    void unknownParameter(int, UnknownCustomType, int)
+    {
+    }
+    void knownParameter(KnownCustomType)
+    {
+    }
 
 private slots:
     static void testSignalOverride()
@@ -74,7 +88,7 @@ private slots:
     {
         for (int i = staticMetaObject.methodOffset(); i < staticMetaObject.methodCount(); ++i) {
             const auto method = staticMetaObject.method(i);
-            if (method.name().startsWith("unknown")) //krazy:exclude=strings
+            if (method.name().startsWith("unknown")) // krazy:exclude=strings
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
                 QVERIFY(QMetaObjectValidator::checkMethod(&staticMetaObject, method) == QMetaObjectValidatorResult::NoIssue);
 #else
@@ -107,9 +121,7 @@ private slots:
                  QMetaObjectValidatorResult::SignalOverride);
 #else
         QCOMPARE(QMetaObjectValidator::check(&staticMetaObject),
-                 QMetaObjectValidatorResult::SignalOverride |
-                 QMetaObjectValidatorResult::UnknownMethodParameterType |
-                 QMetaObjectValidatorResult::UnknownPropertyType);
+                 QMetaObjectValidatorResult::SignalOverride | QMetaObjectValidatorResult::UnknownMethodParameterType | QMetaObjectValidatorResult::UnknownPropertyType);
 #endif
         QCOMPARE(QMetaObjectValidator::check(&QObject::staticMetaObject), QMetaObjectValidatorResult::NoIssue);
     }

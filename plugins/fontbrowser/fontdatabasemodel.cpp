@@ -85,7 +85,7 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
     const auto isSortRole = role == FontBrowserInterface::SortRole;
 
     if (role == Qt::DisplayRole || isSortRole) {
-        auto toSortVariant = [isSortRole] (bool state) {
+        auto toSortVariant = [isSortRole](bool state) {
             return isSortRole ? QVariant(state) : QVariant();
         };
         switch (static_cast<Columns>(index.column())) {
@@ -208,9 +208,8 @@ QHash<int, QByteArray> FontDatabaseModel::roleNames() const
 QMap<int, QVariant> FontDatabaseModel::itemData(const QModelIndex &index) const
 {
     auto ret = QAbstractItemModel::itemData(index);
-    for (auto role : {FontBrowserInterface::FontRole, FontBrowserInterface::FontSearchRole,
-                      FontBrowserInterface::SortRole})
-    {
+    for (auto role : { FontBrowserInterface::FontRole, FontBrowserInterface::FontSearchRole,
+                       FontBrowserInterface::SortRole }) {
         ret[role] = data(index, role);
     }
     return ret;

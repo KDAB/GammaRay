@@ -92,7 +92,7 @@ public:
      *  coming from the given base class. This performs the equivalent
      *  of a dynamic_cast and thus can return @p nullptr.
      */
-    void* castFrom(void *object, MetaObject *baseClass) const;
+    void *castFrom(void *object, MetaObject *baseClass) const;
 
 protected:
     /*! Casts up to base class @p baseClassIndex.
@@ -148,12 +148,12 @@ protected:
         Q_ASSERT(baseClassIndex >= 0 && baseClassIndex < m_baseClasses.size());
         Q_ASSERT(isPolymorphic());
         switch (baseClassIndex) {
-            case 0:
-                return DynamicCast<T*>(static_cast<Base1*>(object));
-            case 1:
-                return DynamicCast<T*>(static_cast<Base2*>(object));
-            case 2:
-                return DynamicCast<T*>(static_cast<Base3*>(object));
+        case 0:
+            return DynamicCast<T *>(static_cast<Base1 *>(object));
+        case 1:
+            return DynamicCast<T *>(static_cast<Base2 *>(object));
+        case 2:
+            return DynamicCast<T *>(static_cast<Base3 *>(object));
         }
         return nullptr;
     }

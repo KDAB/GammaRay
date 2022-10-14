@@ -70,7 +70,7 @@ public:
         Base::setContextMenuPolicy(Qt::CustomContextMenu);
 
         Base::connect(this, &Base::customContextMenuRequested,
-                this, &FavoritesItemView::onCustomContextMenuRequested);
+                      this, &FavoritesItemView::onCustomContextMenuRequested);
         Base::connect(this, &Base::clicked, this, &FavoritesItemView<Base>::onIndexClicked);
     }
 
@@ -85,7 +85,7 @@ protected:
     {
         if (Base::model())
             Base::disconnect(Base::model(), &QAbstractItemModel::rowsRemoved, this,
-                    &FavoritesItemView::rowsRemoved);
+                             &FavoritesItemView::rowsRemoved);
 
         Base::setModel(m);
         if (Base::model() && Base::model()->rowCount() == 0)
@@ -119,8 +119,8 @@ private:
             return;
 
         QMenu menu;
-        menu.addAction(Base::tr("Remove from favorites"), this, [objectId]{
-            ObjectBroker::object<FavoriteObjectInterface*>()->unfavoriteObject(objectId);
+        menu.addAction(Base::tr("Remove from favorites"), this, [objectId] {
+            ObjectBroker::object<FavoriteObjectInterface *>()->unfavoriteObject(objectId);
         });
 
         menu.exec(Base::viewport()->mapToGlobal(pos));
@@ -131,7 +131,7 @@ private:
         if (!idx.isValid() || !m_sourceView)
             return;
 
-        auto favProxyModel = qobject_cast<QAbstractProxyModel*>(Base::model());
+        auto favProxyModel = qobject_cast<QAbstractProxyModel *>(Base::model());
         auto sourceIdx = favProxyModel->mapToSource(idx);
         m_sourceView->selectionModel()->select(sourceIdx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     }

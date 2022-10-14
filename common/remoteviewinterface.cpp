@@ -43,7 +43,7 @@ GAMMARAY_ENUM_STREAM_OPERATORS(RemoteViewInterface::RequestMode)
 
 QDataStream &operator<<(QDataStream &s, GammaRay::RemoteViewInterface::TouchPointStates states)
 {
-    return s << (int)states;
+    return s << ( int )states;
 }
 
 QDataStream &operator>>(QDataStream &s, GammaRay::RemoteViewInterface::TouchPointStates &states)
@@ -58,7 +58,7 @@ QDataStream &operator>>(QDataStream &s, GammaRay::RemoteViewInterface::TouchPoin
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 QDataStream &operator<<(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags flags)
 {
-    return s << (int)flags;
+    return s << ( int )flags;
 }
 
 QDataStream &operator>>(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags &flags)
@@ -76,7 +76,7 @@ QDataStream &operator<<(QDataStream &s, QPointingDeviceUniqueId id)
 
 QDataStream &operator>>(QDataStream &s, QPointingDeviceUniqueId &id)
 {
-    int devId{};
+    int devId {};
     s >> devId;
     id = QPointingDeviceUniqueId::fromNumericId(devId);
     return s;
@@ -86,7 +86,7 @@ QDataStream &operator>>(QDataStream &s, QPointingDeviceUniqueId &id)
 QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &points)
 {
     // The (int) is fkn important!
-    s << (int)points.count();
+    s << ( int )points.count();
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     for (const auto &p : points) {
@@ -102,11 +102,11 @@ QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &po
         s << p.globalPressPosition();
         s << p.globalPosition();
 
-//         s << p.velocity();
+        //         s << p.velocity();
         s << p.pressure();
         s << p.rotation();
-        s << (quint64) p.pressTimestamp();
-        s << (quint64) p.timestamp();
+        s << ( quint64 )p.pressTimestamp();
+        s << ( quint64 )p.timestamp();
     }
 #else
     for (const auto &p : points) {
@@ -169,7 +169,7 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
         setPointValue(s, p, &QMutableEventPoint::setGlobalPressPosition);
         setPointValue(s, p, &QMutableEventPoint::setGlobalPosition);
 
-//         setPointValue(s, p, &QMutableEventPoint::setVelocity);
+        //         setPointValue(s, p, &QMutableEventPoint::setVelocity);
         setPointValue(s, p, &QMutableEventPoint::setPressure);
         setPointValue(s, p, &QMutableEventPoint::setRotation);
         quint64 v;
@@ -235,7 +235,7 @@ RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
     ObjectBroker::registerObject(name, this);
 
     qRegisterMetaType<QTouchEvent::TouchPoint>();
-    qRegisterMetaType<QList<QTouchEvent::TouchPoint >>();
+    qRegisterMetaType<QList<QTouchEvent::TouchPoint>>();
     qRegisterMetaType<RemoteViewInterface::TouchPointStates>();
 
     StreamOperators::registerOperators<RequestMode>();

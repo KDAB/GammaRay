@@ -101,7 +101,7 @@ QVariant QmlContextModel::data(const QModelIndex &index, int role) const
         case 0:
             return Util::shortDisplayString(context);
         case 1:
-            if (context->baseUrl().scheme() == QLatin1String("file"))     // ### use SourceLocation for this!
+            if (context->baseUrl().scheme() == QLatin1String("file")) // ### use SourceLocation for this!
                 return context->baseUrl().path();
             return context->baseUrl().toString();
         }

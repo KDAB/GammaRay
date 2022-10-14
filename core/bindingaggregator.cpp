@@ -52,15 +52,16 @@ void BindingAggregator::registerBindingProvider(std::unique_ptr<AbstractBindingP
     s_providers()->push_back(std::move(provider));
 }
 
-bool GammaRay::BindingAggregator::providerAvailableFor(QObject* object)
+bool GammaRay::BindingAggregator::providerAvailableFor(QObject *object)
 {
     return std::find_if(s_providers()->begin(), s_providers()->end(),
-                                        [object](const std::unique_ptr<AbstractBindingProvider>& provider) {
-                                            return provider->canProvideBindingsFor(object);
-                                        }) != s_providers()->end();
+                        [object](const std::unique_ptr<AbstractBindingProvider> &provider) {
+                            return provider->canProvideBindingsFor(object);
+                        })
+        != s_providers()->end();
 }
 
-std::vector<std::unique_ptr<BindingNode>> BindingAggregator::findDependenciesFor(BindingNode* node)
+std::vector<std::unique_ptr<BindingNode>> BindingAggregator::findDependenciesFor(BindingNode *node)
 {
     std::vector<std::unique_ptr<BindingNode>> allDependencies;
     if (node->isPartOfBindingLoop())
@@ -78,12 +79,11 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::findDependenciesFor
         allDependencies.end(),
         [](const std::unique_ptr<BindingNode> &a, const std::unique_ptr<BindingNode> &b) {
             return a->object() < b->object() || (a->object() == b->object() && a->propertyIndex() < b->propertyIndex());
-        }
-    );
+        });
     return allDependencies;
 }
 
-std::vector<std::unique_ptr<BindingNode>> BindingAggregator::bindingTreeForObject(QObject* obj)
+std::vector<std::unique_ptr<BindingNode>> BindingAggregator::bindingTreeForObject(QObject *obj)
 {
     std::vector<std::unique_ptr<BindingNode>> bindings;
     if (obj) {
@@ -92,14 +92,14 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::bindingTreeForObjec
             for (auto &&newBinding : newBindings) {
                 BindingNode *node = newBinding.get();
                 if (std::find_if(bindings.begin(), bindings.end(),
-                    [node](const std::unique_ptr<BindingNode> &other){ return *node == *other; }) != bindings.end()) {
+                                 [node](const std::unique_ptr<BindingNode> &other) { return *node == *other; })
+                    != bindings.end()) {
                     continue; // apparently this is a duplicate.
                 }
                 node->dependencies() = findDependenciesFor(node);
 
                 bindings.push_back(std::move(newBinding));
             }
-
         }
     }
     return bindings;
@@ -107,7 +107,7 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::bindingTreeForObjec
 
 void BindingAggregator::scanForBindingLoops()
 {
-    const QVector<QObject*> &allObjects = Probe::instance()->allQObjects();
+    const QVector<QObject *> &allObjects = Probe::instance()->allQObjects();
 
     QMutexLocker lock(Probe::objectLock());
     for (QObject *obj : allObjects) {

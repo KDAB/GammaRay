@@ -70,7 +70,8 @@ public:
     /// Set the object name for connecting to the server.
     void setName(const QString &name);
 
-    enum InteractionMode {
+    enum InteractionMode
+    {
         NoInteraction = 0, ///< disable all
         ViewInteraction = 1, ///< panning, zooming, etc
         Measuring = 2,

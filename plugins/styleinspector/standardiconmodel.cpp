@@ -52,9 +52,9 @@ QVariant StandardIconModel::dataForStandardIcon(QStyle::StandardPixmap stdPix, c
     return QVariant();
 }
 
-#define MAKE_SP(stdPix) \
-    if (row == QStyle:: stdPix) \
-        return dataForStandardIcon(QStyle:: stdPix, QStringLiteral(#stdPix), column, role)
+#define MAKE_SP(stdPix)        \
+    if (row == QStyle::stdPix) \
+    return dataForStandardIcon(QStyle::stdPix, QStringLiteral(#stdPix), column, role)
 
 QVariant StandardIconModel::doData(int row, int column, int role) const
 {

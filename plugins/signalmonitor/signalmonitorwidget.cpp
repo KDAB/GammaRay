@@ -70,8 +70,7 @@ SignalMonitorWidget::SignalMonitorWidget(QWidget *parent)
     ui->setupUi(this);
     ui->pauseButton->setIcon(qApp->style()->standardIcon(QStyle::SP_MediaPause));
 
-    QAbstractItemModel * const signalHistory
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"));
+    QAbstractItemModel *const signalHistory = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"));
     auto *signalHistoryProxyModel = new ClientDecorationIdentityProxyModel(this);
     signalHistoryProxyModel->setSourceModel(signalHistory);
     new SearchLineController(ui->objectSearchLine, signalHistoryProxyModel);
@@ -124,8 +123,8 @@ void SignalMonitorWidget::adjustEventScrollBarSize()
     // widget manage layouts of this widget would be nasty. Still I also I don't
     // feel like hooking a custom scrollbar into QTreeView. Sleeping between a
     // rock and a hard place.
-    const QWidget * const scrollBar = ui->objectTreeView->verticalScrollBar();
-    const QWidget * const viewport = ui->objectTreeView->viewport();
+    const QWidget *const scrollBar = ui->objectTreeView->verticalScrollBar();
+    const QWidget *const viewport = ui->objectTreeView->viewport();
 
     const int eventColumnLeft = ui->objectTreeView->eventColumnPosition();
     const int scrollBarLeft = scrollBar->mapTo(this, scrollBar->pos()).x();
@@ -167,7 +166,7 @@ void SignalMonitorWidget::contextMenu(QPoint pos)
     menu.exec(ui->objectTreeView->viewport()->mapToGlobal(pos));
 }
 
-void SignalMonitorWidget::selectionChanged(const QItemSelection& selection)
+void SignalMonitorWidget::selectionChanged(const QItemSelection &selection)
 {
     if (selection.isEmpty())
         return;

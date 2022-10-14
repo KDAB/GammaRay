@@ -161,14 +161,12 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
     });
     setShowLog(false);
 
-    QAbstractItemModel *stateMachineModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateMachineModel"));
+    QAbstractItemModel *stateMachineModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateMachineModel"));
     m_ui->stateMachinesView->setModel(stateMachineModel);
     connect(m_ui->stateMachinesView, SIGNAL(currentIndexChanged(int)), m_interface,
             SLOT(selectStateMachine(int)));
 
-    QAbstractItemModel *stateModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateModel"));
+    QAbstractItemModel *stateModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StateModel"));
     ClientDecorationIdentityProxyModel *stateProxyModel = new ClientDecorationIdentityProxyModel(this);
     stateProxyModel->setSourceModel(stateModel);
     connect(stateProxyModel, SIGNAL(modelReset()), this, SLOT(stateModelReset()));
@@ -197,30 +195,29 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
     m_stateMachineView->scene()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_stateMachineView->scene(), &KDSME::StateMachineScene::customContextMenuEvent,
             this, [this](KDSME::AbstractSceneContextMenuEvent *event) {
-        const auto objectId
-            = ObjectId(reinterpret_cast<QObject *>(event->elementUnderCursor()->internalId()));
-        const auto model = objectInspector()->model();
-        const auto matches = model->match(
-            model->index(0, 0), ObjectModel::ObjectIdRole,
-            QVariant::fromValue(objectId), 1,
-            Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
-        showContextMenuForObject(matches.value(0), event->globalPos());
-    });
+                const auto objectId = ObjectId(reinterpret_cast<QObject *>(event->elementUnderCursor()->internalId()));
+                const auto model = objectInspector()->model();
+                const auto matches = model->match(
+                    model->index(0, 0), ObjectModel::ObjectIdRole,
+                    QVariant::fromValue(objectId), 1,
+                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+                showContextMenuForObject(matches.value(0), event->globalPos());
+            });
 
     connect(m_interface, SIGNAL(message(QString)), this, SLOT(showMessage(QString)));
     connect(m_interface, SIGNAL(stateConfigurationChanged(GammaRay::StateMachineConfiguration)),
             this, SLOT(stateConfigurationChanged(GammaRay::StateMachineConfiguration)));
     connect(m_interface,
-            SIGNAL(stateAdded(GammaRay::StateId,GammaRay::StateId,bool,QString,GammaRay::StateType,bool)),
+            SIGNAL(stateAdded(GammaRay::StateId, GammaRay::StateId, bool, QString, GammaRay::StateType, bool)),
             this,
-            SLOT(stateAdded(GammaRay::StateId,GammaRay::StateId,bool,QString,GammaRay::StateType,bool)));
+            SLOT(stateAdded(GammaRay::StateId, GammaRay::StateId, bool, QString, GammaRay::StateType, bool)));
     connect(m_interface,
-            SIGNAL(transitionAdded(GammaRay::TransitionId,GammaRay::StateId,GammaRay::StateId,QString)),
+            SIGNAL(transitionAdded(GammaRay::TransitionId, GammaRay::StateId, GammaRay::StateId, QString)),
             this,
-            SLOT(transitionAdded(GammaRay::TransitionId,GammaRay::StateId,GammaRay::StateId,QString)));
-    connect(m_interface, SIGNAL(statusChanged(bool,bool)), this, SLOT(statusChanged(bool,bool)));
-    connect(m_interface, SIGNAL(transitionTriggered(GammaRay::TransitionId,QString)),
-            this, SLOT(transitionTriggered(GammaRay::TransitionId,QString)));
+            SLOT(transitionAdded(GammaRay::TransitionId, GammaRay::StateId, GammaRay::StateId, QString)));
+    connect(m_interface, SIGNAL(statusChanged(bool, bool)), this, SLOT(statusChanged(bool, bool)));
+    connect(m_interface, SIGNAL(transitionTriggered(GammaRay::TransitionId, QString)),
+            this, SLOT(transitionTriggered(GammaRay::TransitionId, QString)));
 
     connect(m_interface, SIGNAL(aboutToRepopulateGraph()), this, SLOT(clearGraph()));
     connect(m_interface, SIGNAL(graphRepopulated()), this, SLOT(repopulateView()));
@@ -235,8 +232,10 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
     // share selection model
     new SelectionModelSyncer(this);
 
-    m_stateManager.setDefaultSizes(m_ui->verticalSplitter, UISizeVector() << "50%" << "50%");
-    m_stateManager.setDefaultSizes(m_ui->horizontalSplitter, UISizeVector() << "30%" << "70%");
+    m_stateManager.setDefaultSizes(m_ui->verticalSplitter, UISizeVector() << "50%"
+                                                                          << "50%");
+    m_stateManager.setDefaultSizes(m_ui->horizontalSplitter, UISizeVector() << "30%"
+                                                                            << "70%");
 
     loadSettings();
 }
@@ -276,8 +275,7 @@ void StateMachineViewerWidget::showContextMenuForObject(const QModelIndex &index
 
     QMenu menu(tr("Entity @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
     ContextMenuExtension ext(objectId);
-    ext.setLocation(ContextMenuExtension::Creation, index.data(
-                        ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
     ext.setLocation(ContextMenuExtension::Declaration,
                     index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.populateMenu(&menu);
@@ -382,7 +380,7 @@ void StateMachineViewerWidget::transitionAdded(const TransitionId transitionId,
     KDSME::State *source = m_idToStateMap.value(sourceId);
     KDSME::State *target = m_idToStateMap.value(targetId);
     if (!source || !target) {
-        qDebug() << "Null source or target for transition:" <<  transitionId;
+        qDebug() << "Null source or target for transition:" << transitionId;
         return;
     }
 

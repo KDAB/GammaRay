@@ -69,7 +69,7 @@ TextureTab::TextureTab(PropertyWidget *parent)
     auto toolbar = new QToolBar;
     toolbar->setIconSize(QSize(16, 16));
     toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    toolbar->layout()->setContentsMargins(9,9,9,9);
+    toolbar->layout()->setContentsMargins(9, 9, 9, 9);
     toolbar->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
     ui->layout->setMenuBar(toolbar);
 
@@ -93,7 +93,7 @@ TextureTab::TextureTab(PropertyWidget *parent)
 
     ui->textureView->setSupportedInteractionModes(RemoteViewWidget::ViewInteraction | RemoteViewWidget::Measuring | RemoteViewWidget::ColorPicking);
 
-    connect(zoom, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(zoom, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             ui->textureView, &RemoteViewWidget::setZoomLevel);
     connect(ui->textureView, &RemoteViewWidget::zoomLevelChanged, zoom, &QComboBox::setCurrentIndex);
     connect(toggleTextureWasteAction, &QAction::toggled, ui->textureView, &TextureViewWidget::setTextureWasteVisualizationEnabled);
@@ -104,31 +104,33 @@ TextureTab::TextureTab(PropertyWidget *parent)
                 ui->textureInfo->setVisible(infoNecessary);
                 if (!infoNecessary)
                     ui->infoLabel->setText(QString());
-    });
+            });
     connect(ui->textureView, &TextureViewWidget::textureWasteFound, this,
             [&](bool isProblem, int percent, int bytes) {
                 addInfoLine(isProblem, tr("Transparency waste: %1% / %2.").arg(QString::number(percent), formatBytes(bytes)));
-    });
+            });
     connect(ui->textureView, &TextureViewWidget::textureIsUnicolor, this,
             [&](bool isProblem) {
                 addInfoLine(isProblem, tr("Texture has only one color, consider using a widget or a rectangle."));
-    });
+            });
     connect(ui->textureView, &TextureViewWidget::textureIsFullyTransparent, this,
             [&](bool isProblem) {
                 addInfoLine(isProblem, tr("Texture is fully transparent, consider using margins or anchoring."));
-    });
+            });
     connect(ui->textureView, &TextureViewWidget::textureHasBorderImageSavings, this,
             [&](bool isProblem, int percent, int bytes) {
-                addInfoLine(isProblem, tr("Using a BorderImage for this texture would save %1% / %2.")
-                    .arg(QString::number(percent), formatBytes(bytes)));
-    });
+                addInfoLine(isProblem, tr("Using a BorderImage for this texture would save %1% / %2.").arg(QString::number(percent), formatBytes(bytes)));
+            });
     zoom->setCurrentIndex(ui->textureView->zoomLevelIndex());
 }
 
-void TextureTab::addInfoLine(bool isProblem, const QString& newLine) {
-    if (!isProblem) return;
+void TextureTab::addInfoLine(bool isProblem, const QString &newLine)
+{
+    if (!isProblem)
+        return;
     auto text = ui->infoLabel->text();
-    if (!text.isEmpty()) text = text + QStringLiteral("<br>");
+    if (!text.isEmpty())
+        text = text + QStringLiteral("<br>");
     ui->infoLabel->setText(text + newLine);
 }
 

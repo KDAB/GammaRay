@@ -46,14 +46,13 @@ namespace GammaRay {
 class AbstractBindingProvider;
 class BindingNode;
 
-namespace BindingAggregator
-{
-    GAMMARAY_CORE_EXPORT bool providerAvailableFor(QObject *object);
-    GAMMARAY_CORE_EXPORT std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(BindingNode* node);
-    GAMMARAY_CORE_EXPORT std::vector<std::unique_ptr<BindingNode>> bindingTreeForObject(QObject* obj);
-    GAMMARAY_CORE_EXPORT void scanForBindingLoops();
+namespace BindingAggregator {
+GAMMARAY_CORE_EXPORT bool providerAvailableFor(QObject *object);
+GAMMARAY_CORE_EXPORT std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(BindingNode *node);
+GAMMARAY_CORE_EXPORT std::vector<std::unique_ptr<BindingNode>> bindingTreeForObject(QObject *obj);
+GAMMARAY_CORE_EXPORT void scanForBindingLoops();
 
-    GAMMARAY_CORE_EXPORT void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
+GAMMARAY_CORE_EXPORT void registerBindingProvider(std::unique_ptr<AbstractBindingProvider> provider);
 }
 }
 

@@ -44,13 +44,12 @@ BindingNode::BindingNode(QObject *obj, int propIndex, BindingNode *parent)
     , m_propertyIndex(propIndex)
 {
     Q_ASSERT(obj);
-    m_canonicalName
-        = m_object->metaObject() ? m_object->metaObject()->property(m_propertyIndex).name() : ":(";
+    m_canonicalName = m_object->metaObject() ? m_object->metaObject()->property(m_propertyIndex).name() : ":(";
     refreshValue();
     checkForLoops();
 }
 
-bool BindingNode::operator==(const BindingNode& other) const
+bool BindingNode::operator==(const BindingNode &other) const
 {
     return m_object == other.m_object && m_propertyIndex == other.m_propertyIndex;
 }
@@ -93,11 +92,11 @@ void BindingNode::setParent(BindingNode *newParent)
     checkForLoops();
 }
 
-GammaRay::BindingNode * GammaRay::BindingNode::parent() const
+GammaRay::BindingNode *GammaRay::BindingNode::parent() const
 {
     return m_parent;
 }
-QObject * GammaRay::BindingNode::object() const
+QObject *GammaRay::BindingNode::object() const
 {
     return m_object;
 }
@@ -105,7 +104,7 @@ int GammaRay::BindingNode::propertyIndex() const
 {
     return m_propertyIndex;
 }
-const QString & GammaRay::BindingNode::canonicalName() const
+const QString &GammaRay::BindingNode::canonicalName() const
 {
     return m_canonicalName;
 }
@@ -129,16 +128,16 @@ GammaRay::SourceLocation GammaRay::BindingNode::sourceLocation() const
 {
     return m_sourceLocation;
 }
-std::vector<std::unique_ptr<BindingNode> > & GammaRay::BindingNode::dependencies()
+std::vector<std::unique_ptr<BindingNode>> &GammaRay::BindingNode::dependencies()
 {
     return m_dependencies;
 }
-const std::vector<std::unique_ptr<BindingNode> > & GammaRay::BindingNode::dependencies() const
+const std::vector<std::unique_ptr<BindingNode>> &GammaRay::BindingNode::dependencies() const
 {
     return m_dependencies;
 }
 
-void BindingNode::setCanonicalName(const QString& name)
+void BindingNode::setCanonicalName(const QString &name)
 {
     m_canonicalName = name;
 }

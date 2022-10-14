@@ -100,7 +100,8 @@ AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi, QStringList 
         return createInjector(QStringLiteral("preload"));
     }
     return findFirstWorkingInjector(QStringList() << QStringLiteral("lldb")
-                                                  << QStringLiteral("gdb"), errorStrings);
+                                                  << QStringLiteral("gdb"),
+                                    errorStrings);
 #elif defined(Q_OS_UNIX)
     Q_UNUSED(abi);
     Q_UNUSED(errorStrings);
@@ -116,10 +117,12 @@ AbstractInjector::Ptr defaultInjectorForAttach(QStringList *errorStrings)
 {
 #if defined(Q_OS_MAC)
     return findFirstWorkingInjector(QStringList() << QStringLiteral("lldb")
-                                                  << QStringLiteral("gdb"), errorStrings);
+                                                  << QStringLiteral("gdb"),
+                                    errorStrings);
 #elif !defined(Q_OS_WIN)
     return findFirstWorkingInjector(QStringList() << QStringLiteral("gdb")
-                                                  << QStringLiteral("lldb"), errorStrings);
+                                                  << QStringLiteral("lldb"),
+                                    errorStrings);
 #else
     Q_UNUSED(errorStrings);
     return createInjector(QStringLiteral("windll"));

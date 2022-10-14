@@ -42,11 +42,13 @@
 
 using namespace GammaRay;
 
-static QString rootTranslationsPath() {
+static QString rootTranslationsPath()
+{
     return Paths::rootPath() + QLatin1Char('/') + GAMMARAY_TRANSLATION_INSTALL_DIR;
 }
 
-static QString qtTranslationsPath() {
+static QString qtTranslationsPath()
+{
     return QLibraryInfo::location(QLibraryInfo::TranslationsPath);
 }
 

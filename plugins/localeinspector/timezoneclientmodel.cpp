@@ -35,14 +35,14 @@
 
 using namespace GammaRay;
 
-TimezoneClientModel::TimezoneClientModel(QObject* parent)
+TimezoneClientModel::TimezoneClientModel(QObject *parent)
     : QIdentityProxyModel(parent)
 {
 }
 
 TimezoneClientModel::~TimezoneClientModel() = default;
 
-QVariant TimezoneClientModel::data(const QModelIndex& index, int role) const
+QVariant TimezoneClientModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::ToolTipRole && index.column() != 0 && index.column() != TimezoneModelColumns::StandardDisplayNameColumn) {
         return QIdentityProxyModel::data(index.sibling(index.row(), 0), role);
@@ -73,16 +73,16 @@ QVariant TimezoneClientModel::headerData(int section, Qt::Orientation orientatio
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case TimezoneModelColumns::IanaIdColumn:
-                return tr("IANA Id");
-            case TimezoneModelColumns::CountryColumn:
-                return tr("Country");
-            case TimezoneModelColumns::StandardDisplayNameColumn:
-                return tr("Standard Display Name");
-            case TimezoneModelColumns::DSTColumn:
-                return tr("DST");
-            case TimezoneModelColumns::WindowsIdColumn:
-                return tr("Windows Id");
+        case TimezoneModelColumns::IanaIdColumn:
+            return tr("IANA Id");
+        case TimezoneModelColumns::CountryColumn:
+            return tr("Country");
+        case TimezoneModelColumns::StandardDisplayNameColumn:
+            return tr("Standard Display Name");
+        case TimezoneModelColumns::DSTColumn:
+            return tr("DST");
+        case TimezoneModelColumns::WindowsIdColumn:
+            return tr("Windows Id");
         }
     }
 

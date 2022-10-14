@@ -159,7 +159,7 @@ bool DebuggerInjector::startDebugger(const QStringList &args, const QProcessEnvi
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     connect(m_process.data(), &QProcess::finished, this, &DebuggerInjector::processFinished);
 #else
-    connect(m_process.data(), static_cast<void(QProcess::*)(int)>(&QProcess::finished),
+    connect(m_process.data(), static_cast<void (QProcess::*)(int)>(&QProcess::finished),
             this, &DebuggerInjector::processFinished);
 #endif
     m_process->setProcessChannelMode(QProcess::SeparateChannels);
@@ -218,8 +218,7 @@ bool DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &p
 {
     Q_ASSERT(m_process);
     loadSymbols("dl");
-    execCmd(QStringLiteral("call (void) dlopen(\"%1\", %2)").
-            arg(probeDll).arg(RTLD_NOW).toUtf8());
+    execCmd(QStringLiteral("call (void) dlopen(\"%1\", %2)").arg(probeDll).arg(RTLD_NOW).toUtf8());
     loadSymbols(probeDll.toUtf8());
     execCmd(QStringLiteral("call (void) %1()").arg(probeFunc).toUtf8());
 
@@ -248,10 +247,10 @@ void DebuggerInjector::processLog(DebuggerInjector::Orientation orientation, boo
 {
     if (qgetenv("GAMMARAY_UNITTEST") == "1") { // clazy:exclude=qgetenv due to Qt4 support
         const QString output = QString::fromLatin1("%1 [%2] %3: %4")
-                               .arg(orientation == DebuggerInjector::In ? "<<<" : ">>>")
-                               .arg(QString::fromLatin1(isError ? "ERROR" : "OUTPUT"))
-                               .arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss:zzz")))
-                               .arg(text.trimmed());
+                                   .arg(orientation == DebuggerInjector::In ? "<<<" : ">>>")
+                                   .arg(QString::fromLatin1(isError ? "ERROR" : "OUTPUT"))
+                                   .arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss:zzz")))
+                                   .arg(text.trimmed());
 
         if (isError)
             std::cerr << qPrintable(output) << std::endl;

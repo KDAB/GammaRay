@@ -50,7 +50,7 @@ namespace GammaRay {
  *
  * If a treeView is provided, then the controller tries to auto expand the tree to reveal
  * matching indexes
-*/
+ */
 class GAMMARAY_UI_EXPORT SearchLineController : public QObject
 {
     Q_OBJECT

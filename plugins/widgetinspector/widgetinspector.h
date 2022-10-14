@@ -37,7 +37,7 @@
 
 namespace GammaRay {
 class WidgetInspectorFactory : public QObject,
-    public StandardToolFactory<QWidget, WidgetInspectorServer>
+                               public StandardToolFactory<QWidget, WidgetInspectorServer>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

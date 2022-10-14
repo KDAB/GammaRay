@@ -38,7 +38,7 @@ class PropertyColorEditor : public PropertyExtendedEditor
     Q_OBJECT
 public:
     explicit PropertyColorEditor(QWidget *parent = nullptr);
-    void showEditor(QWidget * parent) override;
+    void showEditor(QWidget *parent) override;
 };
 }
 

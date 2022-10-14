@@ -39,13 +39,12 @@ QT_END_NAMESPACE
 namespace GammaRay {
 
 /*! Utilities for inspecting library dependencies. */
-namespace LibraryUtil
-{
+namespace LibraryUtil {
 
-    /*! Returns a list of dependencies for @p fileName.
-     * @note This is currently only available on Linux.
-     */
-    QVector<QByteArray> dependencies(const QString &fileName);
+/*! Returns a list of dependencies for @p fileName.
+ * @note This is currently only available on Linux.
+ */
+QVector<QByteArray> dependencies(const QString &fileName);
 }
 
 }

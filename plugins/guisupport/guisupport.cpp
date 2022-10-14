@@ -66,15 +66,15 @@ Q_DECLARE_METATYPE(QFont::HintingPreference)
 Q_DECLARE_METATYPE(QFont::SpacingType)
 Q_DECLARE_METATYPE(QFont::Style)
 Q_DECLARE_METATYPE(QFont::StyleHint)
-Q_DECLARE_METATYPE(QImage*)
-Q_DECLARE_METATYPE(QPlatformPixmap*)
+Q_DECLARE_METATYPE(QImage *)
+Q_DECLARE_METATYPE(QPlatformPixmap *)
 Q_DECLARE_METATYPE(QPlatformPixmap::ClassId)
 Q_DECLARE_METATYPE(QSurface::SurfaceClass)
 Q_DECLARE_METATYPE(QSurface::SurfaceType)
 Q_DECLARE_METATYPE(QSurfaceFormat::FormatOptions)
-Q_DECLARE_METATYPE(const QMimeData*)
+Q_DECLARE_METATYPE(const QMimeData *)
 Q_DECLARE_METATYPE(QImage::Format)
-Q_DECLARE_METATYPE(const QGradient*)
+Q_DECLARE_METATYPE(const QGradient *)
 Q_DECLARE_METATYPE(QPixelFormat)
 Q_DECLARE_METATYPE(QPixelFormat::AlphaUsage)
 Q_DECLARE_METATYPE(QPixelFormat::AlphaPosition)
@@ -91,8 +91,8 @@ Q_DECLARE_METATYPE(Qt::TouchPointState)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 Q_DECLARE_METATYPE(QFlags<QTouchEvent::TouchPoint::InfoFlag>)
 Q_DECLARE_METATYPE(QFlags<QTouchDevice::CapabilityFlag>)
-Q_DECLARE_METATYPE(QTouchDevice*)
-Q_DECLARE_METATYPE(const QTouchDevice*)
+Q_DECLARE_METATYPE(QTouchDevice *)
+Q_DECLARE_METATYPE(const QTouchDevice *)
 #endif
 Q_DECLARE_METATYPE(QScrollEvent::ScrollState)
 Q_DECLARE_METATYPE(QList<QInputMethodEvent::Attribute>)
@@ -100,32 +100,36 @@ Q_DECLARE_METATYPE(QContextMenuEvent::Reason)
 
 
 // QGradient is pseudo-polymorphic, make it introspectable nevertheless
-#define MAKE_GRADIENT_CAST(Type) \
-    template<> Q ## Type *DynamicCast<Q ## Type *>(QGradient *g) { \
-        if (g->type() == QGradient:: Type) return static_cast<Q ## Type *>(g); \
-        return nullptr; \
+#define MAKE_GRADIENT_CAST(Type)                   \
+    template<>                                     \
+    Q##Type *DynamicCast<Q##Type *>(QGradient * g) \
+    {                                              \
+        if (g->type() == QGradient::Type)          \
+            return static_cast<Q##Type *>(g);      \
+        return nullptr;                            \
     }
 
-namespace GammaRay
-{
+namespace GammaRay {
 MAKE_GRADIENT_CAST(ConicalGradient)
 MAKE_GRADIENT_CAST(LinearGradient)
 MAKE_GRADIENT_CAST(RadialGradient)
 
-template <>
-bool IsPolymorphic<QGradient>() { return true; }
+template<>
+bool IsPolymorphic<QGradient>()
+{
+    return true;
+}
 }
 #undef MAKE_GRADIENT_CAST
 
 static bool isAcceptableWindow(QWindow *w)
 {
     return w
-            && w->isTopLevel()
-            && w->surfaceClass() != QSurface::Offscreen
-            // Offscreen windows can have a surface different than Offscreen,
-            // but they contains a window title 'Offscreen'
-            && w->title() != QStringLiteral("Offscreen")
-    ;
+        && w->isTopLevel()
+        && w->surfaceClass() != QSurface::Offscreen
+        // Offscreen windows can have a surface different than Offscreen,
+        // but they contains a window title 'Offscreen'
+        && w->title() != QStringLiteral("Offscreen");
 }
 
 GuiSupport::GuiSupport(Probe *probe, QObject *parent)
@@ -138,7 +142,7 @@ GuiSupport::GuiSupport(Probe *probe, QObject *parent)
     m_iconAndTitleOverrider.titleSuffix = tr(" (Injected by GammaRay)");
     connect(m_probe, &Probe::objectCreated, this, &GuiSupport::objectCreated);
 
-    if (auto guiApp = qobject_cast<QGuiApplication*>(QCoreApplication::instance())) {
+    if (auto guiApp = qobject_cast<QGuiApplication *>(QCoreApplication::instance())) {
         QTimer::singleShot(0, this, [this]() {
             updateWindowIcon();
         });
@@ -157,16 +161,16 @@ void GuiSupport::registerMetaTypes()
     MetaObject *mo;
 
     MO_ADD_METAOBJECT1(QMimeData, QObject);
-    MO_ADD_PROPERTY   (QMimeData, colorData, setColorData);
+    MO_ADD_PROPERTY(QMimeData, colorData, setColorData);
     MO_ADD_PROPERTY_RO(QMimeData, formats);
     MO_ADD_PROPERTY_RO(QMimeData, hasColor);
     MO_ADD_PROPERTY_RO(QMimeData, hasHtml);
     MO_ADD_PROPERTY_RO(QMimeData, hasText);
     MO_ADD_PROPERTY_RO(QMimeData, hasUrls);
-    MO_ADD_PROPERTY   (QMimeData, html, setHtml);
-    MO_ADD_PROPERTY   (QMimeData, imageData, setImageData);
-    MO_ADD_PROPERTY   (QMimeData, text, setText);
-    MO_ADD_PROPERTY   (QMimeData, urls, setUrls);
+    MO_ADD_PROPERTY(QMimeData, html, setHtml);
+    MO_ADD_PROPERTY(QMimeData, imageData, setImageData);
+    MO_ADD_PROPERTY(QMimeData, text, setText);
+    MO_ADD_PROPERTY(QMimeData, urls, setUrls);
 
 #ifndef QT_NO_CLIPBOARD
     MO_ADD_METAOBJECT1(QClipboard, QObject);
@@ -230,13 +234,13 @@ void GuiSupport::registerMetaTypes()
 #endif
     MO_ADD_PROPERTY_RO(QImage, bytesPerLine);
     MO_ADD_PROPERTY_RO(QImage, cacheKey);
-    MO_ADD_PROPERTY   (QImage, dotsPerMeterX, setDotsPerMeterX);
-    MO_ADD_PROPERTY   (QImage, dotsPerMeterY, setDotsPerMeterY);
+    MO_ADD_PROPERTY(QImage, dotsPerMeterX, setDotsPerMeterX);
+    MO_ADD_PROPERTY(QImage, dotsPerMeterY, setDotsPerMeterY);
     MO_ADD_PROPERTY_RO(QImage, format);
     MO_ADD_PROPERTY_RO(QImage, hasAlphaChannel);
     MO_ADD_PROPERTY_RO(QImage, isGrayscale);
     MO_ADD_PROPERTY_RO(QImage, isNull);
-    MO_ADD_PROPERTY   (QImage, offset, setOffset);
+    MO_ADD_PROPERTY(QImage, offset, setOffset);
     MO_ADD_PROPERTY_RO(QImage, pixelFormat);
     MO_ADD_PROPERTY_RO(QImage, rect);
     MO_ADD_PROPERTY_RO(QImage, size);
@@ -292,7 +296,7 @@ void GuiSupport::registerMetaTypes()
 #endif
     MO_ADD_PROPERTY_RO(QWindow, devicePixelRatio);
     MO_ADD_PROPERTY(QWindow, filePath, setFilePath);
-    MO_ADD_PROPERTY_RO(QWindow,  focusObject);
+    MO_ADD_PROPERTY_RO(QWindow, focusObject);
     MO_ADD_PROPERTY_RO(QWindow, frameGeometry);
     MO_ADD_PROPERTY_RO(QWindow, frameMargins);
     MO_ADD_PROPERTY(QWindow, framePosition, setFramePosition);
@@ -313,7 +317,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QOpenGLContext, QObject);
     MO_ADD_PROPERTY_RO(QOpenGLContext, defaultFramebufferObject);
     // crashes if context isn't current
-// MO_ADD_PROPERTY_RO(QOpenGLContext, extensions);
+    // MO_ADD_PROPERTY_RO(QOpenGLContext, extensions);
     MO_ADD_PROPERTY_RO(QOpenGLContext, format);
     MO_ADD_PROPERTY_RO(QOpenGLContext, isValid);
     MO_ADD_PROPERTY_RO(QOpenGLContext, screen);
@@ -323,13 +327,13 @@ void GuiSupport::registerMetaTypes()
 #endif // QT_NO_OPENGL
 
     MO_ADD_METAOBJECT0(QGradient);
-    MO_ADD_PROPERTY   (QGradient, coordinateMode, setCoordinateMode);
-    MO_ADD_PROPERTY   (QGradient, spread, setSpread);
-    MO_ADD_PROPERTY   (QGradient, stops, setStops);
+    MO_ADD_PROPERTY(QGradient, coordinateMode, setCoordinateMode);
+    MO_ADD_PROPERTY(QGradient, spread, setSpread);
+    MO_ADD_PROPERTY(QGradient, stops, setStops);
     MO_ADD_PROPERTY_RO(QGradient, type);
 
     MO_ADD_METAOBJECT1(QConicalGradient, QGradient);
-    MO_ADD_PROPERTY   (QConicalGradient, angle, setAngle);
+    MO_ADD_PROPERTY(QConicalGradient, angle, setAngle);
     MO_ADD_PROPERTY_O2(QConicalGradient, center, setCenter);
 
     MO_ADD_METAOBJECT1(QLinearGradient, QGradient);
@@ -338,10 +342,10 @@ void GuiSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT1(QRadialGradient, QGradient);
     MO_ADD_PROPERTY_O2(QRadialGradient, center, setCenter);
-    MO_ADD_PROPERTY   (QRadialGradient, centerRadius, setCenterRadius);
+    MO_ADD_PROPERTY(QRadialGradient, centerRadius, setCenterRadius);
     MO_ADD_PROPERTY_O2(QRadialGradient, focalPoint, setFocalPoint);
-    MO_ADD_PROPERTY   (QRadialGradient, focalRadius, setFocalRadius);
-    MO_ADD_PROPERTY   (QRadialGradient, radius, setRadius);
+    MO_ADD_PROPERTY(QRadialGradient, focalRadius, setFocalRadius);
+    MO_ADD_PROPERTY(QRadialGradient, radius, setRadius);
 
     MO_ADD_METAOBJECT0(QBrush);
     MO_ADD_PROPERTY_O2(QBrush, color, setColor);
@@ -368,7 +372,7 @@ void GuiSupport::registerMetaTypes()
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_PROPERTY_RO(QFont, lastResortFamily);
 #endif
-//     MO_ADD_PROPERTY_RO(QFont, lastResortFont); asserts at runtime!?
+    //     MO_ADD_PROPERTY_RO(QFont, lastResortFont); asserts at runtime!?
     MO_ADD_PROPERTY_RO(QFont, letterSpacing);
     MO_ADD_PROPERTY_RO(QFont, letterSpacingType);
     MO_ADD_PROPERTY(QFont, overline, setOverline);
@@ -705,7 +709,7 @@ static QString surfaceFormatToString(const QSurfaceFormat &format)
     }
 
     s += " (" + QString::number(format.majorVersion())
-         +'.' + QString::number(format.minorVersion());
+        + '.' + QString::number(format.minorVersion());
     switch (format.profile()) {
     case QSurfaceFormat::CoreProfile:
         s += QStringLiteral(" core");
@@ -719,14 +723,17 @@ static QString surfaceFormatToString(const QSurfaceFormat &format)
     s += ')';
 
     s += " RGBA: " + QString::number(format.redBufferSize())
-         +'/' + QString::number(format.greenBufferSize())
-         +'/' + QString::number(format.blueBufferSize())
-         +'/' + QString::number(format.alphaBufferSize());
+        + '/' + QString::number(format.greenBufferSize())
+        + '/' + QString::number(format.blueBufferSize())
+        + '/' + QString::number(format.alphaBufferSize());
 
     return s;
 }
 
-#define E(x) { QSurface:: x, #x }
+#define E(x)            \
+    {                   \
+        QSurface::x, #x \
+    }
 static const MetaEnum::Value<QSurface::SurfaceClass> surface_class_table[] = {
     E(Window),
     E(Offscreen)
@@ -769,7 +776,10 @@ static QString painterPathToString(const QPainterPath &path)
     return GuiSupport::tr("<%1 elements>").arg(path.elementCount());
 }
 
-#define E(x) { QContextMenuEvent::x , #x }
+#define E(x)                     \
+    {                            \
+        QContextMenuEvent::x, #x \
+    }
 static const MetaEnum::Value<QContextMenuEvent::Reason> context_menu_reason_table[] = {
     E(Mouse),
     E(Keyboard),
@@ -777,7 +787,10 @@ static const MetaEnum::Value<QContextMenuEvent::Reason> context_menu_reason_tabl
 };
 #undef E
 
-#define E(x) { QSurfaceFormat:: x, #x }
+#define E(x)                  \
+    {                         \
+        QSurfaceFormat::x, #x \
+    }
 static const MetaEnum::Value<QSurfaceFormat::FormatOption> surface_format_option_table[] = {
     E(StereoBuffers),
     E(DebugContext),
@@ -786,7 +799,10 @@ static const MetaEnum::Value<QSurfaceFormat::FormatOption> surface_format_option
 };
 #undef E
 
-#define E(x) { QFont:: x, #x }
+#define E(x)         \
+    {                \
+        QFont::x, #x \
+    }
 static const MetaEnum::Value<QFont::Capitalization> font_capitalization_table[] = {
     E(MixedCase),
     E(AllUppercase),
@@ -830,14 +846,20 @@ static const MetaEnum::Value<QFont::StyleHint> font_style_hint_table[] = {
 };
 #undef E
 
-#define E(x) { Qt:: x, #x }
+#define E(x)      \
+    {             \
+        Qt::x, #x \
+    }
 static const MetaEnum::Value<Qt::MouseEventFlag> mouse_event_flag_table[] = {
     E(MouseEventCreatedDoubleClick),
     E(MouseEventFlagMask)
 };
 #undef E
 
-#define E(x) { QPainter:: x, #x }
+#define E(x)            \
+    {                   \
+        QPainter::x, #x \
+    }
 static const MetaEnum::Value<QPainter::CompositionMode> painter_composition_mode_table[] = {
     E(CompositionMode_SourceOver),
     E(CompositionMode_DestinationOver),
@@ -894,7 +916,10 @@ static const MetaEnum::Value<QPainter::RenderHint> painter_render_hint_table[] =
 };
 #undef E
 
-#define E(x) { QPaintEngine:: x, #x }
+#define E(x)                \
+    {                       \
+        QPaintEngine::x, #x \
+    }
 static const MetaEnum::Value<QPaintEngine::PolygonDrawMode> paintengine_polygon_draw_mode_table[] = {
     E(OddEvenMode),
     E(WindingMode),
@@ -903,7 +928,10 @@ static const MetaEnum::Value<QPaintEngine::PolygonDrawMode> paintengine_polygon_
 };
 #undef E
 
-#define E(x) { QPlatformPixmap:: x, #x }
+#define E(x)                   \
+    {                          \
+        QPlatformPixmap::x, #x \
+    }
 static const MetaEnum::Value<QPlatformPixmap::ClassId> platformpixmap_classid_table[] = {
     E(RasterClass),
     E(DirectFBClass),
@@ -913,7 +941,10 @@ static const MetaEnum::Value<QPlatformPixmap::ClassId> platformpixmap_classid_ta
 };
 #undef E
 
-#define E(x) { QImage:: x, #x }
+#define E(x)          \
+    {                 \
+        QImage::x, #x \
+    }
 static const MetaEnum::Value<QImage::Format> image_format_table[] = {
     E(Format_Invalid),
     E(Format_Mono),
@@ -943,7 +974,10 @@ static const MetaEnum::Value<QImage::Format> image_format_table[] = {
 };
 #undef E
 
-#define E(x) { QPixelFormat:: x, #x }
+#define E(x)                \
+    {                       \
+        QPixelFormat::x, #x \
+    }
 static const MetaEnum::Value<QPixelFormat::AlphaPosition> pixelformat_alphaposition_table[] = {
     E(AtBeginning),
     E(AtEnd)
@@ -1005,7 +1039,10 @@ static const MetaEnum::Value<QPixelFormat::YUVLayout> pixelformat_yuvlayout_tabl
 #undef E
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#define E(x) { QTouchEvent::TouchPoint:: x, #x }
+#define E(x)                           \
+    {                                  \
+        QTouchEvent::TouchPoint::x, #x \
+    }
 static const MetaEnum::Value<QTouchEvent::TouchPoint::InfoFlags> touch_point_info_flag_table[] = {
     E(Pen),
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
@@ -1014,7 +1051,10 @@ static const MetaEnum::Value<QTouchEvent::TouchPoint::InfoFlags> touch_point_inf
 };
 #undef E
 
-#define E(x) { QTouchDevice:: x, #x }
+#define E(x)                \
+    {                       \
+        QTouchDevice::x, #x \
+    }
 static const MetaEnum::Value<QTouchDevice::Capabilities> touch_device_capabilitites_flag_table[] = {
     E(Position),
     E(Area),
@@ -1067,13 +1107,10 @@ static QString regionToString(const QRegion &region)
 
     QStringList rects;
     rects.reserve(region.rectCount());
-    for (const auto &r :  region)
+    for (const auto &r : region)
         rects.push_back(VariantHandler::displayString(r));
 
-    return GuiSupport::tr("[%1]: %2").arg(
-        VariantHandler::displayString(region.boundingRect()),
-        rects.join(QLatin1String("; "))
-    );
+    return GuiSupport::tr("[%1]: %2").arg(VariantHandler::displayString(region.boundingRect()), rects.join(QLatin1String("; ")));
 #else
     return GuiSupport::tr("<%1 elements>").arg(region.rectCount());
 #endif
@@ -1091,8 +1128,8 @@ static QString pixmapToString(const QPixmap &pixmap)
 
 void GuiSupport::registerVariantHandler()
 {
-    VariantHandler::registerStringConverter<const QValidator*>(Util::displayString);
-    VariantHandler::registerStringConverter<const QMimeData*>(Util::displayString);
+    VariantHandler::registerStringConverter<const QValidator *>(Util::displayString);
+    VariantHandler::registerStringConverter<const QMimeData *>(Util::displayString);
     VariantHandler::registerStringConverter<QSurfaceFormat>(surfaceFormatToString);
 
     ER_REGISTER_ENUM(QContextMenuEvent, Reason, context_menu_reason_table);
@@ -1114,19 +1151,19 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_FLAGS(Qt, MouseEventFlags, mouse_event_flag_table);
 
     VariantHandler::registerStringConverter<QBrush>(brushToString);
-    VariantHandler::registerStringConverter<const QGradient*>(Util::addressToString);
+    VariantHandler::registerStringConverter<const QGradient *>(Util::addressToString);
     VariantHandler::registerStringConverter<QImage>(imageToString);
     VariantHandler::registerStringConverter<QPainterPath>(painterPathToString);
     VariantHandler::registerStringConverter<QPen>(penToString);
     VariantHandler::registerStringConverter<QPixmap>(pixmapToString);
     VariantHandler::registerStringConverter<QRegion>(regionToString);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
-    VariantHandler::registerStringConverter<QPair<double, QColor> >([](const QPair<double, QColor> &p) {
+    VariantHandler::registerStringConverter<QPair<double, QColor>>([](const QPair<double, QColor> &p) {
         return QString(VariantHandler::displayString(p.first) + QLatin1String(": ") + VariantHandler::displayString(p.second));
     });
     ER_REGISTER_ENUM(QPlatformPixmap, ClassId, platformpixmap_classid_table);
-    VariantHandler::registerStringConverter<QImage*>(Util::addressToString);
-    VariantHandler::registerStringConverter<QPlatformPixmap*>(Util::addressToString);
+    VariantHandler::registerStringConverter<QImage *>(Util::addressToString);
+    VariantHandler::registerStringConverter<QPlatformPixmap *>(Util::addressToString);
 
     ER_REGISTER_ENUM(QPixelFormat, AlphaPosition, pixelformat_alphaposition_table);
     ER_REGISTER_ENUM(QPixelFormat, AlphaPremultiplied, pixelformat_alphapremultiplied_table);
@@ -1317,17 +1354,17 @@ void GuiSupport::objectCreated(QObject *object)
 bool GuiSupport::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::WindowIconChange) {
-        if (auto w = qobject_cast<QWindow*>(watched)) {
+        if (auto w = qobject_cast<QWindow *>(watched)) {
             if (!m_iconAndTitleOverrider.updatingObjectsIcon.contains(qApp)
-                    && !m_iconAndTitleOverrider.updatingObjectsIcon.contains(w)) {
+                && !m_iconAndTitleOverrider.updatingObjectsIcon.contains(w)) {
                 if (isAcceptableWindow(w))
                     updateWindowIcon(w);
             }
         }
     } else if (event->type() == QEvent::WindowTitleChange) {
-        if (auto w = qobject_cast<QWindow*>(watched)) {
+        if (auto w = qobject_cast<QWindow *>(watched)) {
             if (!m_iconAndTitleOverrider.updatingObjectsTitle.contains(qApp)
-                    && !m_iconAndTitleOverrider.updatingObjectsTitle.contains(w)) {
+                && !m_iconAndTitleOverrider.updatingObjectsTitle.contains(w)) {
                 if (isAcceptableWindow(w))
                     updateWindowTitle(w);
             }

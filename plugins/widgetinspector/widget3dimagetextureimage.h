@@ -34,8 +34,7 @@
 
 #include <QImage>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class Widget3DTextureDataFunctor;
 class Widget3DImageTextureImage : public Qt3DRender::QAbstractTextureImage

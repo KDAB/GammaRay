@@ -130,7 +130,7 @@ bool FrameGraphModel::setData(const QModelIndex &index, const QVariant &value, i
     if (!m_settings || !index.isValid() || role != Qt::CheckStateRole || index.column() != 0)
         return false;
 
-    auto node = reinterpret_cast<Qt3DRender::QFrameGraphNode*>(index.internalPointer());
+    auto node = reinterpret_cast<Qt3DRender::QFrameGraphNode *>(index.internalPointer());
     node->setEnabled(value.toInt() == Qt::Checked);
     emit dataChanged(index, index);
     return true;
@@ -168,7 +168,7 @@ static bool isRenderSettingsForNode(Qt3DRender::QRenderSettings *settings, Qt3DR
 
 void FrameGraphModel::objectCreated(QObject *obj)
 {
-    auto node = qobject_cast<Qt3DRender::QFrameGraphNode*>(obj);
+    auto node = qobject_cast<Qt3DRender::QFrameGraphNode *>(obj);
     if (!node || !m_settings)
         return;
 
@@ -207,7 +207,7 @@ void FrameGraphModel::objectCreated(QObject *obj)
 
 void FrameGraphModel::objectDestroyed(QObject *obj)
 {
-    auto node = static_cast<Qt3DRender::QFrameGraphNode*>(obj); // never dereference this!
+    auto node = static_cast<Qt3DRender::QFrameGraphNode *>(obj); // never dereference this!
     if (!m_childParentMap.contains(node)) {
         Q_ASSERT(!m_parentChildMap.contains(node));
         return;
@@ -249,7 +249,7 @@ void FrameGraphModel::removeSubtree(Qt3DRender::QFrameGraphNode *node, bool dang
 
 void FrameGraphModel::objectReparented(QObject *obj)
 {
-    auto node = qobject_cast<Qt3DRender::QFrameGraphNode*>(obj);
+    auto node = qobject_cast<Qt3DRender::QFrameGraphNode *>(obj);
     if (!node)
         return;
 
@@ -278,7 +278,7 @@ void FrameGraphModel::disconnectNode(Qt3DRender::QFrameGraphNode *node) const
 
 void FrameGraphModel::nodeEnabledChanged()
 {
-    auto node = qobject_cast<Qt3DRender::QFrameGraphNode*>(sender());
+    auto node = qobject_cast<Qt3DRender::QFrameGraphNode *>(sender());
     if (!node)
         return;
     const auto idx = indexForNode(node);

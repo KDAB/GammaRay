@@ -63,8 +63,7 @@ QStringList PluginManagerBase::pluginFilter()
 {
     QStringList filter;
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
-    filter.push_back(QStringLiteral("*") + QStringLiteral(
-                         GAMMARAY_PROBE_ABI) + Paths::pluginExtension());
+    filter.push_back(QStringLiteral("*") + QStringLiteral(GAMMARAY_PROBE_ABI) + Paths::pluginExtension());
 #else
     filter.push_back(QStringLiteral("*") + Paths::pluginExtension());
 #endif
@@ -100,8 +99,7 @@ void PluginManagerBase::scan(const QString &serviceType)
 
             if (pluginInfo.interfaceId() != serviceType) {
                 IF_DEBUG(
-                    qDebug() << Q_FUNC_INFO << "skipping" << pluginFile << "not supporting service type" << serviceType << "service types are: " << pluginInfo.interfaceId();
-                    )
+                    qDebug() << Q_FUNC_INFO << "skipping" << pluginFile << "not supporting service type" << serviceType << "service types are: " << pluginInfo.interfaceId();)
                 continue;
             }
 

@@ -74,7 +74,8 @@ void LocaleModel::init()
     m_localeData = m_registry->enabledAccessors();
 
     m_locales = QLocale::matchingLocales(QLocale::AnyLanguage, QLocale::AnyScript,
-                                         QLocale::AnyCountry).toVector();
+                                         QLocale::AnyCountry)
+                    .toVector();
 }
 
 void LocaleModel::accessorAdded()

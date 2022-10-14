@@ -34,7 +34,8 @@
 namespace GammaRay {
 /** Additional roles for EventModel. */
 namespace EventModelRole {
-enum Role {
+enum Role
+{
     AttributesRole = UserRole + 1,
     ReceiverIdRole,
     EventTypeRole
@@ -43,7 +44,8 @@ enum Role {
 
 /** Column indexes of EventModel. */
 namespace EventModelColumn {
-enum Columns {
+enum Columns
+{
     Time,
     Type,
     Receiver,
@@ -52,4 +54,4 @@ enum Columns {
 }
 }
 
-#endif  // GAMMARAY_EVENTMODELROLES
+#endif // GAMMARAY_EVENTMODELROLES

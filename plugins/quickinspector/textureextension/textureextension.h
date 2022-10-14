@@ -52,7 +52,7 @@ public:
     ~TextureExtension() override;
 
     bool setQObject(QObject *obj) override;
-    bool setObject(void * object, const QString & typeName) override;
+    bool setObject(void *object, const QString &typeName) override;
 
 private slots:
     void textureGrabbed(QSGTexture *tex, const QImage &img);

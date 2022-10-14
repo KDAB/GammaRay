@@ -40,9 +40,9 @@
 using namespace GammaRay;
 
 const char *executableNames[] = {
-    "gammaray",        // the Injector
+    "gammaray", // the Injector
     "gammaray-launcher", // the LauncherUI
-    "gammaray-client"  // the Client
+    "gammaray-client" // the Client
 };
 
 QString LauncherFinder::findLauncher(LauncherFinder::Type type)

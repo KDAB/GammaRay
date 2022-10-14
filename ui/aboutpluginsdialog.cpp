@@ -63,7 +63,7 @@ AboutPluginsDialog::AboutPluginsDialog(QWidget *parent, Qt::WindowFlags f)
         errorView->setShowGrid(false);
         errorView->setSelectionBehavior(QAbstractItemView::SelectRows);
         errorView->setModel(ObjectBroker::model(QStringLiteral(
-                                                    "com.kdab.GammaRay.ToolPluginErrorModel")));
+            "com.kdab.GammaRay.ToolPluginErrorModel")));
         errorView->verticalHeader()->hide();
         errorView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 

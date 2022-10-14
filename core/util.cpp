@@ -60,8 +60,7 @@ QString Util::displayString(const QObject *object)
         return QStringLiteral("QObject(0x0)");
     const auto name = ObjectDataProvider::name(object);
     if (name.isEmpty())
-        return QStringLiteral("%1[this=%2]").arg(object->metaObject()->className(),
-                                                 addressToString(object));
+        return QStringLiteral("%1[this=%2]").arg(object->metaObject()->className(), addressToString(object));
     return name;
 }
 
@@ -119,8 +118,7 @@ namespace GammaRay {
 static QString stringifyProperty(const QObject *obj, const QString &propName)
 {
     const QVariant value = obj->property(propName.toLatin1());
-    const QMetaProperty mp
-        = obj->metaObject()->property(
+    const QMetaProperty mp = obj->metaObject()->property(
         obj->metaObject()->indexOfProperty(propName.toLatin1()));
     if (mp.isValid()) {
         const QString enumStr = EnumUtil::enumToString(value, mp.typeName(), obj->metaObject());
@@ -134,7 +132,8 @@ struct IconCacheEntry
 {
     explicit IconCacheEntry(const QByteArray &className_ = QByteArray())
         : className(className_)
-    {}
+    {
+    }
 
     /// note: this member's data is being referenced by the database's key
     QByteArray className;
@@ -236,17 +235,15 @@ int Util::iconIdForObject(const QObject *object)
 QString Util::tooltipForObject(const QObject *object)
 {
     static const auto tip = qApp->translate("GammaRay::Util",
-        "<p style='white-space:pre'>Object name: %1 (Address: %2)\nType: %3\nParent: %4 (Address: %5)\nNumber of children: %6</p>");
+                                            "<p style='white-space:pre'>Object name: %1 (Address: %2)\nType: %3\nParent: %4 (Address: %5)\nNumber of children: %6</p>");
 
     return tip.arg(
-    object->objectName().isEmpty() ? QStringLiteral("&lt;Not set&gt;") : object->objectName(),
-    Util::addressToString(object),
-    object->metaObject()->className(),
-    object->parent() ? object->parent()->metaObject()->className() : QStringLiteral(
-        "<No parent>"),
-    Util::addressToString(object->parent()),
-    QString::number(object->children().size())
-    );
+        object->objectName().isEmpty() ? QStringLiteral("&lt;Not set&gt;") : object->objectName(),
+        Util::addressToString(object),
+        object->metaObject()->className(),
+        object->parent() ? object->parent()->metaObject()->className() : QStringLiteral("<No parent>"),
+        Util::addressToString(object->parent()),
+        QString::number(object->children().size()));
 }
 
 void Util::drawTransparencyPattern(QPainter *painter, const QRect &rect, int squareSize)

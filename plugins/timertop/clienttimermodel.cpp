@@ -87,7 +87,7 @@ QVariant ClientTimerModel::data(const QModelIndex &index, int role) const
             QFont font = QApplication::font("QAbstractItemView");
             font.setStrikeOut(type == TimerId::InvalidType || state == TimerIdInfo::InvalidState);
             return QVariant::fromValue(font);
-        } else if(role == Qt::BackgroundRole) {
+        } else if (role == Qt::BackgroundRole) {
             const QModelIndex sibling = index.sibling(index.row(), TimerModel::ObjectNameColumn);
             const TimerId::Type type = TimerId::Type(sibling.data(TimerModel::TimerTypeRole).toInt());
             switch (type) {

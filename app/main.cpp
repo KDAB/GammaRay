@@ -47,7 +47,9 @@ class InternalLauncher : public Launcher
     Q_OBJECT
 public:
     explicit InternalLauncher(const LaunchOptions &options, QObject *parent = nullptr)
-        : Launcher(options, parent) {}
+        : Launcher(options, parent)
+    {
+    }
 
 signals:
     void launchClient(const QUrl &serverAddress);
@@ -130,7 +132,7 @@ int main(int argc, char **argv)
 #else
         GAMMARAY_INVERSE_BIN_DIR
 #endif
-        );
+    );
     ClientConnectionManager::init();
 
     Orchestrator o;

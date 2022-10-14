@@ -43,7 +43,8 @@ class LaunchOptionsPrivate : public QSharedData
 public:
     LaunchOptionsPrivate()
         : env(QProcessEnvironment::systemEnvironment())
-    {}
+    {
+    }
 
     QStringList launchArguments;
     QString injectorType;
@@ -220,7 +221,7 @@ void LaunchOptions::setProbeSetting(const QString &key, const QVariant &value)
     d->probeSettings.insert(key.toUtf8(), v);
 }
 
-QHash< QByteArray, QByteArray > LaunchOptions::probeSettings() const
+QHash<QByteArray, QByteArray> LaunchOptions::probeSettings() const
 {
     return d->probeSettings;
 }

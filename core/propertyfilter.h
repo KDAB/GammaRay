@@ -40,21 +40,21 @@ namespace GammaRay {
 class GAMMARAY_CORE_EXPORT PropertyFilter
 {
 public:
-    explicit PropertyFilter() {}
+    explicit PropertyFilter()
+    {
+    }
     explicit PropertyFilter(
         const QString &className,
         const QString &name,
         const QString &typeName = QString(),
         PropertyData::AccessFlags accessFlags = {},
-        PropertyModel::PropertyFlags propertyFlags = {}
-    );
+        PropertyModel::PropertyFlags propertyFlags = {});
     static PropertyFilter classAndPropertyName(const QString &className,
                                                const QString &propertyName);
 
     bool matches(const PropertyData &prop) const;
 
 private:
-
     QString m_name;
     QString m_typeName;
     QString m_className;
@@ -62,21 +62,20 @@ private:
     PropertyModel::PropertyFlags m_propertyFlags;
 };
 
-namespace PropertyFilters
-{
-    GAMMARAY_CORE_EXPORT bool matches(const PropertyData &prop);
+namespace PropertyFilters {
+GAMMARAY_CORE_EXPORT bool matches(const PropertyData &prop);
 
-    /**
-    * Register a filter to remove properties from the property view. Property
-    * adaptors are free to consider or ignore filters.
-    *
-    * Use cases are e.g.:
-    * * Removing a QMetaProperty in order to re-add it from a custom adaptor
-    * * Prohibiting a property getter to be called, if it's known to crash the
-    *   application under certain circumstances (e.g. if a getter requires an
-    *   OpenGL context to be valid)
-    */
-    GAMMARAY_CORE_EXPORT void registerFilter(const PropertyFilter &filter);
+/**
+ * Register a filter to remove properties from the property view. Property
+ * adaptors are free to consider or ignore filters.
+ *
+ * Use cases are e.g.:
+ * * Removing a QMetaProperty in order to re-add it from a custom adaptor
+ * * Prohibiting a property getter to be called, if it's known to crash the
+ *   application under certain circumstances (e.g. if a getter requires an
+ *   OpenGL context to be valid)
+ */
+GAMMARAY_CORE_EXPORT void registerFilter(const PropertyFilter &filter);
 }
 
 }

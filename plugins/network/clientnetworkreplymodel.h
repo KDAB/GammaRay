@@ -31,8 +31,7 @@
 
 #include <QIdentityProxyModel>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 /** Client side of the QNetworkReply model. */
 class ClientNetworkReplyModel : public QIdentityProxyModel
@@ -42,7 +41,7 @@ public:
     explicit ClientNetworkReplyModel(QObject *parent = nullptr);
     ~ClientNetworkReplyModel();
 
-    QVariant data(const QModelIndex & index, int role) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 };
 

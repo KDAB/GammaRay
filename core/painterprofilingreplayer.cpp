@@ -62,7 +62,7 @@ PainterProfilingReplayer::PainterProfilingReplayer() = default;
 
 PainterProfilingReplayer::~PainterProfilingReplayer() = default;
 
-void PainterProfilingReplayer::profile(const PaintBuffer& buffer)
+void PainterProfilingReplayer::profile(const PaintBuffer &buffer)
 {
     const auto sourceSize = buffer.boundingRect().size().toSize();
     if (sourceSize.width() <= 0 || sourceSize.height() <= 0)
@@ -95,8 +95,8 @@ void PainterProfilingReplayer::profile(const PaintBuffer& buffer)
 
     m_costs.reserve(cmdSize);
     for (int i = 0; i < cmdSize; ++i) {
-        std::nth_element(samples.get() + i * runs, samples.get() + i * runs + runs/2, samples.get() + i * runs + runs);
-        m_costs.push_back(samples[i * runs + runs/2]);
+        std::nth_element(samples.get() + i * runs, samples.get() + i * runs + runs / 2, samples.get() + i * runs + runs);
+        m_costs.push_back(samples[i * runs + runs / 2]);
     }
     const auto sum = std::accumulate(m_costs.constBegin(), m_costs.constEnd(), 0.0);
     std::for_each(m_costs.begin(), m_costs.end(), [sum](double &c) { c = 100.0 * c / sum; });

@@ -42,9 +42,9 @@ public:
     explicit TimezoneModel(QObject *parent = nullptr);
     ~TimezoneModel() override;
 
-    int columnCount(const QModelIndex & parent) const override;
-    int rowCount(const QModelIndex & parent) const override;
-    QVariant data(const QModelIndex & index, int role) const override;
+    int columnCount(const QModelIndex &parent) const override;
+    int rowCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
 
 private:
     mutable QList<QByteArray> m_ids;

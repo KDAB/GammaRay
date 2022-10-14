@@ -39,7 +39,8 @@ namespace GammaRay {
 /*! Unique identifier for EnumDefinition instances. */
 typedef int EnumId;
 /*! Special value constants for GammaRay::EnumId. */
-enum EnumIds {
+enum EnumIds
+{
     InvalidEnumId = -1,
     FirstValidEnumId = 0
 };

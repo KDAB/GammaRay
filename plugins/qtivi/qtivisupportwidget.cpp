@@ -49,8 +49,7 @@ QtIVIWidget::QtIVIWidget(QWidget *parent)
     , m_stateManager(this)
 {
     setObjectName("QtIVIWidget");
-    QAbstractItemModel *propertyModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.PropertyModel"));
+    QAbstractItemModel *propertyModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.PropertyModel"));
     auto *clientModel = new QtIviPropertyClientModel(this);
     clientModel->setSourceModel(propertyModel);
     QItemSelectionModel *selectionModel = ObjectBroker::selectionModel(clientModel);

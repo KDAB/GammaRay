@@ -120,9 +120,9 @@ void ClientConnectionManager::init()
     ObjectBroker::registerClientObjectFactoryCallback<PaintAnalyzerInterface *>(
         createPaintAnalyzerClient);
     ObjectBroker::registerClientObjectFactoryCallback<RemoteViewInterface *>(createRemoteViewClient);
-    ObjectBroker::registerClientObjectFactoryCallback<EnumRepository*>(createEnumRepositoryClient);
-    ObjectBroker::registerClientObjectFactoryCallback<ClassesIconsRepository*>(createClassesIconsRepositoryClient);
-    ObjectBroker::registerClientObjectFactoryCallback<FavoriteObjectInterface*>(createFavoriteObjectClient);
+    ObjectBroker::registerClientObjectFactoryCallback<EnumRepository *>(createEnumRepositoryClient);
+    ObjectBroker::registerClientObjectFactoryCallback<ClassesIconsRepository *>(createClassesIconsRepositoryClient);
+    ObjectBroker::registerClientObjectFactoryCallback<FavoriteObjectInterface *>(createFavoriteObjectClient);
 
     ObjectBroker::setModelFactoryCallback(modelFactory);
     ObjectBroker::setSelectionModelFactoryCallback(selectionModelFactory);
@@ -285,13 +285,11 @@ void ClientConnectionManager::updateProcessTrackerState()
 {
     if (!m_client->isConnected()) {
         m_processTracker->stop();
-    }
-    else if (m_processTracker->isActive()) {
+    } else if (m_processTracker->isActive()) {
         if (!m_processTracker->backend() || m_processTracker->pid() < 0) {
             m_processTracker->stop();
         }
-    }
-    else {
+    } else {
         if (m_processTracker->backend() && m_processTracker->pid() >= 0) {
             m_processTracker->start();
         }

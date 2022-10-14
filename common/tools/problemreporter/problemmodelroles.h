@@ -34,7 +34,8 @@
 namespace GammaRay {
 namespace ProblemModelRoles {
 
-enum Roles {
+enum Roles
+{
     SeverityRole = ObjectModel::UserRole + 1,
     SourceLocationRole,
     ProblemIdRole

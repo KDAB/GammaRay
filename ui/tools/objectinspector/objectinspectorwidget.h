@@ -86,8 +86,14 @@ class ObjectInspectorFactory : public QObject, public ToolUiFactory
 {
     Q_OBJECT
 public:
-    QString id() const override { return QStringLiteral("GammaRay::ObjectInspector"); }
-    QString name() const override { return tr("Objects"); }
+    QString id() const override
+    {
+        return QStringLiteral("GammaRay::ObjectInspector");
+    }
+    QString name() const override
+    {
+        return tr("Objects");
+    }
     QWidget *createWidget(QWidget *parentWidget) override
     {
         return new ObjectInspectorWidget(
@@ -107,15 +113,14 @@ public:
                                                     PropertyWidgetTabPriority::Basic - 1);
         ObjectBroker::registerClientObjectFactoryCallback<ConnectionsExtensionInterface *>(
             createExtension<ConnectionsExtensionClient>);
-        PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), tr(
-                                                  "Enums"), PropertyWidgetTabPriority::Exotic - 1);
+        PropertyWidget::registerTab<EnumsTab>(QStringLiteral("enums"), tr("Enums"), PropertyWidgetTabPriority::Exotic - 1);
         PropertyWidget::registerTab<ClassInfoTab>(QStringLiteral("classInfo"), tr("Class Info"),
                                                   PropertyWidgetTabPriority::Exotic - 1);
         PropertyWidget::registerTab<ApplicationAttributeTab>(QStringLiteral("applicationAttributes"),
                                                              tr("Attributes"),
-            PropertyWidgetTabPriority::Advanced);
+                                                             PropertyWidgetTabPriority::Advanced);
         PropertyWidget::registerTab<BindingTab>(QStringLiteral("bindings"), tr("Bindings"),
-                                               PropertyWidgetTabPriority::Advanced);
+                                                PropertyWidgetTabPriority::Advanced);
         PropertyWidget::registerTab<StackTraceTab>(QStringLiteral("stackTrace"), tr("Stack Trace"),
                                                    PropertyWidgetTabPriority::Exotic);
     }

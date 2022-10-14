@@ -48,11 +48,19 @@ class MethodModelTest : public BaseProbeTest
 {
     Q_OBJECT
 public slots:
-    MY_TAG void taggedSlot() {}
+    MY_TAG void taggedSlot()
+    {
+    }
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    Q_REVISION(147) void revisionedSlot() {}
+    Q_REVISION(147)
+    void revisionedSlot()
+    {
+    }
 #else
-    Q_REVISION(0, 147) void revisionedSlot() {}
+    Q_REVISION(0, 147)
+    void revisionedSlot()
+    {
+    }
 #endif
 
 private slots:
@@ -98,8 +106,10 @@ private slots:
         QTest::addColumn<QString>("name", nullptr);
         QTest::addColumn<QString>("toolTip", nullptr);
 
-        QTest::newRow("tagged") << "taggedSlot" << "MY_TAG";
-        QTest::newRow("revision") << "revisionedSlot" << "147";
+        QTest::newRow("tagged") << "taggedSlot"
+                                << "MY_TAG";
+        QTest::newRow("revision") << "revisionedSlot"
+                                  << "147";
     }
 
     static void testToolTip()

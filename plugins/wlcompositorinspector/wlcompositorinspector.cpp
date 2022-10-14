@@ -59,79 +59,79 @@
 #include "ringbuffer.h"
 #include "resourceinfo.h"
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class SurfaceView : public RemoteViewServer
 {
 public:
-  SurfaceView(QObject *parent)
-    : RemoteViewServer(QStringLiteral("com.kdab.GammaRay.WaylandCompositorSurfaceView"), parent)
-    , m_surface(nullptr)
-  {
-    connect(this, &RemoteViewServer::requestUpdate, this, &SurfaceView::sendSurfaceFrame);
-  }
-
-  void setSurface(QWaylandSurface *surface)
-  {
-    if (m_surface == surface) {
-      return;
+    SurfaceView(QObject *parent)
+        : RemoteViewServer(QStringLiteral("com.kdab.GammaRay.WaylandCompositorSurfaceView"), parent)
+        , m_surface(nullptr)
+    {
+        connect(this, &RemoteViewServer::requestUpdate, this, &SurfaceView::sendSurfaceFrame);
     }
 
-    if (m_surface) {
-      disconnect(m_surface, &QWaylandSurface::redraw, this, &SurfaceView::redraw);
+    void setSurface(QWaylandSurface *surface)
+    {
+        if (m_surface == surface) {
+            return;
+        }
+
+        if (m_surface) {
+            disconnect(m_surface, &QWaylandSurface::redraw, this, &SurfaceView::redraw);
+        }
+        m_surface = surface;
+        if (surface) {
+            connect(surface, &QWaylandSurface::redraw, this, &SurfaceView::redraw);
+        }
+
+        redraw();
     }
-    m_surface = surface;
-    if (surface) {
-      connect(surface, &QWaylandSurface::redraw, this, &SurfaceView::redraw);
+
+    void redraw()
+    {
+        if (!m_surface) {
+            setNewFrame(QImage());
+            return;
+        }
+
+        auto *grabber = new QWaylandSurfaceGrabber(m_surface);
+        connect(grabber, &QWaylandSurfaceGrabber::success, this, [grabber, this](const QImage &img) {
+            setNewFrame(img);
+            grabber->deleteLater();
+        });
+        connect(grabber, &QWaylandSurfaceGrabber::failed, this, [grabber, this](QWaylandSurfaceGrabber::Error error) {
+            qWarning() << "Failed to grab surface." << error;
+            grabber->deleteLater();
+            setNewFrame(QImage());
+        });
+        grabber->grab();
     }
 
-    redraw();
-  }
-
-  void redraw()
-  {
-    if (!m_surface) {
-      setNewFrame(QImage());
-      return;
+    void setNewFrame(const QImage &img)
+    {
+        m_frame = img;
+        sourceChanged();
     }
 
-    auto *grabber = new QWaylandSurfaceGrabber(m_surface);
-    connect(grabber, &QWaylandSurfaceGrabber::success, this, [grabber, this](const QImage &img) {
-      setNewFrame(img);
-      grabber->deleteLater();
-    });
-    connect(grabber, &QWaylandSurfaceGrabber::failed, this, [grabber, this](QWaylandSurfaceGrabber::Error error) {
-      qWarning() << "Failed to grab surface." << error;
-      grabber->deleteLater();
-      setNewFrame(QImage());
-    });
-    grabber->grab();
-  }
+    void sendSurfaceFrame()
+    {
+        RemoteViewFrame frame;
+        frame.setImage(m_frame);
+        frame.setSceneRect(QRect(0, 0, m_frame.width(), m_frame.height()));
+        frame.setViewRect(QRect(0, 0, m_frame.width(), m_frame.height()));
+        sendFrame(frame);
+    }
 
-  void setNewFrame(const QImage &img)
-  {
-    m_frame = img;
-    sourceChanged();
-  }
-
-  void sendSurfaceFrame()
-  {
-    RemoteViewFrame frame;
-    frame.setImage(m_frame);
-    frame.setSceneRect(QRect(0, 0, m_frame.width(), m_frame.height()));
-    frame.setViewRect(QRect(0, 0, m_frame.width(), m_frame.height()));
-    sendFrame(frame);
-  }
-
-  QWaylandSurface *m_surface;
-  QImage m_frame;
+    QWaylandSurface *m_surface;
+    QImage m_frame;
 };
 
 class Logger : public QObject
 {
 public:
-    enum class MessageType {
+    enum class MessageType
+    {
         Request = WL_PROTOCOL_LOGGER_REQUEST,
         Event = WL_PROTOCOL_LOGGER_EVENT,
     };
@@ -142,16 +142,14 @@ public:
         , m_connected(false)
         , m_inspector(inspector)
     {
-      m_timer.start();
+        m_timer.start();
     }
 
     void add(wl_resource *res, MessageType dir, const QString &line)
     {
         pid_t pid;
         wl_client_get_credentials(wl_resource_get_client(res), &pid, nullptr, nullptr);
-        QString l = QStringLiteral("%1 %2 %3").arg(QString::number(pid),
-                                                   dir == MessageType::Request ? QLatin1String("->") : QLatin1String("<-"),
-                                                   line);
+        QString l = QStringLiteral("%1 %2 %3").arg(QString::number(pid), dir == MessageType::Request ? QLatin1String("->") : QLatin1String("<-"), line);
         // we use QByteArray rather than QString because the log has mostly (only) latin characters
         // so we save some space using utf8 rather than the utf16 QString uses
         QByteArray utf8 = l.toUtf8();
@@ -176,10 +174,11 @@ public:
         }
     }
 
-    struct Message {
-      qint64 time;
-      pid_t pid;
-      QByteArray line;
+    struct Message
+    {
+        qint64 time;
+        pid_t pid;
+        QByteArray line;
     };
     RingBuffer<Message> m_lines;
     bool m_connected;
@@ -189,13 +188,15 @@ public:
 
 class ResourcesModel : public QAbstractItemModel
 {
-    struct ClientListener {
+    struct ClientListener
+    {
         wl_listener l;
         ResourcesModel *m;
     };
 
 public:
-    struct Resource {
+    struct Resource
+    {
         wl_listener destroyListener;
         wl_resource *resource;
         ResourcesModel *model;
@@ -240,15 +241,20 @@ public:
                 model->addResource(resource);
             };
 
-            wl_client_for_each_resource(client->client(), [](wl_resource *res, void *ud) {
-                ResourcesModel *model = static_cast<ResourcesModel *>(ud);
-                model->addResource(res);
-                return WL_ITERATOR_CONTINUE;
-            }, this);
+            wl_client_for_each_resource(
+                client->client(), [](wl_resource *res, void *ud) {
+                    ResourcesModel *model = static_cast<ResourcesModel *>(ud);
+                    model->addResource(res);
+                    return WL_ITERATOR_CONTINUE;
+                },
+                this);
         }
     }
 
-    QWaylandClient *client() const { return m_client; }
+    QWaylandClient *client() const
+    {
+        return m_client;
+    }
 
     ~ResourcesModel() override
     {
@@ -275,7 +281,7 @@ public:
 
     wl_resource *resource(uint32_t id) const
     {
-      return wl_client_get_object(m_client->client(), id);
+        return wl_client_get_object(m_client->client(), id);
     }
 
     QModelIndex index(Resource *res) const
@@ -379,19 +385,19 @@ public:
     QVariant data(const QModelIndex &index, int role) const override
     {
         if (!exists(index))
-          return QVariant();
+            return QVariant();
 
         const Resource *resource = static_cast<Resource *>(index.internalPointer());
         wl_resource *res = resource->resource;
 
         ResourceInfo info(res);
         switch (role) {
-            case Qt::DisplayRole:
-                return info.name();
-            case Qt::ToolTipRole:
-                return info.info();
-            case Qt::UserRole + 2:
-                return info.id();
+        case Qt::DisplayRole:
+            return info.name();
+        case Qt::ToolTipRole:
+            return info.info();
+        case Qt::UserRole + 2:
+            return info.id();
         }
         return QVariant();
     }
@@ -423,9 +429,9 @@ public:
 };
 
 WlCompositorInspector::WlCompositorInspector(Probe *probe, QObject *parent)
-                     : WlCompositorInterface(parent)
-                     , m_compositor(nullptr)
-                     , m_surfaceView(new SurfaceView(this))
+    : WlCompositorInterface(parent)
+    , m_compositor(nullptr)
+    , m_surfaceView(new SurfaceView(this))
 {
     qWarning() << "init probe" << probe->objectTreeModel() << probe;
 
@@ -448,7 +454,8 @@ WlCompositorInspector::WlCompositorInspector(Probe *probe, QObject *parent)
 
 WlCompositorInspector::~WlCompositorInspector() = default;
 
-struct ClientsListener {
+struct ClientsListener
+{
     wl_listener listener;
     WlCompositorInspector *inspector;
 };
@@ -462,11 +469,11 @@ void WlCompositorInspector::objectAdded(QObject *obj)
 
 void WlCompositorInspector::objectSelected(QObject *obj)
 {
-    if (auto client = qobject_cast<QWaylandClient*>(obj)) {
+    if (auto client = qobject_cast<QWaylandClient *>(obj)) {
         const auto indexList = m_clientsModel->match(m_clientsModel->index(0, 0),
-                    ClientsModel::ObjectIdRole,
-                    QVariant::fromValue(ObjectId(client)), 1,
-                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+                                                     ClientsModel::ObjectIdRole,
+                                                     QVariant::fromValue(ObjectId(client)), 1,
+                                                     Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
 
         if (indexList.isEmpty())
             return;
@@ -477,7 +484,8 @@ void WlCompositorInspector::objectSelected(QObject *obj)
 }
 
 /* this comes from wayland */
-struct argument_details {
+struct argument_details
+{
     char type;
     int nullable;
 };
@@ -487,7 +495,7 @@ get_next_argument(const char *signature, struct argument_details *details)
 {
     details->nullable = 0;
     for (; *signature; ++signature) {
-        switch(*signature) {
+        switch (*signature) {
         case 'i':
         case 'u':
         case 'f':
@@ -513,57 +521,60 @@ void WlCompositorInspector::init(QWaylandCompositor *compositor)
     m_compositor = compositor;
 
     wl_display *dpy = compositor->display();
-    wl_display_add_protocol_logger(dpy, [](void *ud, wl_protocol_logger_type type, const wl_protocol_logger_message *message) {
-        auto *resource = message->resource;
-        QString line = QString("%1.%2(").arg(ResourceInfo(resource).name(), message->message->name);
-        const char *signature = message->message->signature;
-        for (int i = 0; i < message->arguments_count; ++i) {
-            const auto &arg = message->arguments[i];
-            argument_details details;
-            signature = get_next_argument(signature, &details);
-            if (i > 0) {
-                line += QLatin1String(", ");
-            }
+    wl_display_add_protocol_logger(
+        dpy, [](void *ud, wl_protocol_logger_type type, const wl_protocol_logger_message *message) {
+            auto *resource = message->resource;
+            QString line = QString("%1.%2(").arg(ResourceInfo(resource).name(), message->message->name);
+            const char *signature = message->message->signature;
+            for (int i = 0; i < message->arguments_count; ++i) {
+                const auto &arg = message->arguments[i];
+                argument_details details;
+                signature = get_next_argument(signature, &details);
+                if (i > 0) {
+                    line += QLatin1String(", ");
+                }
 
-            switch (details.type) {
-              case 'u':
-                  line += QString::number(arg.u);
-                  break;
-              case 'i':
-                  line += QString::number(arg.i);
-                  break;
-              case 'f':
-                  line += QString::number(wl_fixed_to_double(arg.f));
-                  break;
-              case 's':
-                  line += QString("\"%1\"").arg(arg.s);
-                  break;
-              case 'o': {
-                  wl_resource *r = (wl_resource *)arg.o;
-                  line += r ? ResourceInfo(r).name() : QLatin1String("(nil)");
-                  break;
-              }
-              case 'n': {
-                  const auto *type = message->message->types[i];
-                  line += QString("new id %1@%2").arg(type ? type->name : "[unknown]", arg.n ? QString::number(arg.n) : QStringLiteral("nil"));
-                  break;
-              }
-              case 'a':
-                  line += QStringLiteral("array");
-                  break;
-              case 'h':
-                  line += QString::number(arg.h);
-                  break;
+                switch (details.type) {
+                case 'u':
+                    line += QString::number(arg.u);
+                    break;
+                case 'i':
+                    line += QString::number(arg.i);
+                    break;
+                case 'f':
+                    line += QString::number(wl_fixed_to_double(arg.f));
+                    break;
+                case 's':
+                    line += QString("\"%1\"").arg(arg.s);
+                    break;
+                case 'o': {
+                    wl_resource *r = ( wl_resource * )arg.o;
+                    line += r ? ResourceInfo(r).name() : QLatin1String("(nil)");
+                    break;
+                }
+                case 'n': {
+                    const auto *type = message->message->types[i];
+                    line += QString("new id %1@%2").arg(type ? type->name : "[unknown]", arg.n ? QString::number(arg.n) : QStringLiteral("nil"));
+                    break;
+                }
+                case 'a':
+                    line += QStringLiteral("array");
+                    break;
+                case 'h':
+                    line += QString::number(arg.h);
+                    break;
+                }
             }
-        }
-        line += QLatin1Char(')');
+            line += QLatin1Char(')');
 
-        static_cast<WlCompositorInspector *>(ud)->m_logger->add(resource, (Logger::MessageType)type, line);
-    }, this);
+            static_cast<WlCompositorInspector *>(ud)->m_logger->add(resource, ( Logger::MessageType )type, line);
+        },
+        this);
 
     wl_list *clients = wl_display_get_client_list(dpy);
     wl_client *client;
-    wl_client_for_each(client, clients) {
+    wl_client_for_each(client, clients)
+    {
         addClient(client);
     }
 
@@ -584,7 +595,7 @@ void WlCompositorInspector::addClient(wl_client *c)
     qWarning() << "client" << client << pid;
     connect(client, &QObject::destroyed, this, [this, pid, client](QObject *) {
         if (m_resourcesModel->client() == client) {
-          m_resourcesModel->setClient(nullptr);
+            m_resourcesModel->setClient(nullptr);
         }
         m_clientsModel->removeClient(client);
     });
@@ -604,7 +615,7 @@ void WlCompositorInspector::disconnected()
 
 void WlCompositorInspector::setSelectedClient(int index)
 {
-    auto client = index >= 0 ?  m_clientsModel->client(index) : nullptr;
+    auto client = index >= 0 ? m_clientsModel->client(index) : nullptr;
     if (client != m_resourcesModel->client()) {
         m_resourcesModel->setClient(client);
         m_logger->setCurrentClient(client);

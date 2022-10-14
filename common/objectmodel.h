@@ -49,14 +49,15 @@ namespace GammaRay {
  */
 namespace ObjectModel {
 /*! Role enum, to be used with the object list and tree models. */
-enum Role {
-    ObjectRole = GammaRay::UserRole + 1,   /**< Pointer to the represented object (available in the probe code only). */
-    ObjectIdRole,           /**< ObjectId instance for represented object. */
-    CreationLocationRole,   /**< Source location where this object was created, if known. */
-    DeclarationLocationRole,/**< Source location where the type for this object has been declared, if known. */
-    DecorationIdRole,       /**< The classes icon id to display as Qt::DecorationRole (see ClientDecorationIdentityProxyModel). */
+enum Role
+{
+    ObjectRole = GammaRay::UserRole + 1, /**< Pointer to the represented object (available in the probe code only). */
+    ObjectIdRole, /**< ObjectId instance for represented object. */
+    CreationLocationRole, /**< Source location where this object was created, if known. */
+    DeclarationLocationRole, /**< Source location where the type for this object has been declared, if known. */
+    DecorationIdRole, /**< The classes icon id to display as Qt::DecorationRole (see ClientDecorationIdentityProxyModel). */
     IsFavoriteRole,
-    UserRole                /**< UserRole, as defined by Qt. */
+    UserRole /**< UserRole, as defined by Qt. */
 };
 }
 }

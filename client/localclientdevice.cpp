@@ -36,7 +36,7 @@ LocalClientDevice::LocalClientDevice(QObject *parent)
     m_socket = new QLocalSocket(this);
     connect(m_socket, &QLocalSocket::connected, this, &ClientDevice::connected);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    connect(m_socket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
+    connect(m_socket, static_cast<void (QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error),
             this, &LocalClientDevice::socketError);
 #else
     connect(m_socket, &QLocalSocket::errorOccurred, this, &LocalClientDevice::socketError);

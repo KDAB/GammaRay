@@ -1,6 +1,8 @@
 {
     "id": "gammaray_scriptenginedebugger",
     "name": "Script Engines",
-    "types": [ "QScriptEngine" ],
+    "types": [
+        "QScriptEngine"
+    ],
     "remoteSupport": false
 }

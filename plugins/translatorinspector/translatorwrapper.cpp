@@ -85,8 +85,7 @@ bool TranslationsModel::setData(const QModelIndex &index, const QVariant &value,
             return true;
         node.translation = value.toString();
         node.isOverridden = true;
-        emit dataChanged(index, index, QVector<int>() << Qt::DisplayRole
-                                                      << Qt::EditRole);
+        emit dataChanged(index, index, QVector<int>() << Qt::DisplayRole << Qt::EditRole);
         return true;
     }
     return false;
@@ -135,7 +134,7 @@ void TranslationsModel::resetTranslations(const QItemSelection &selection)
         }
     }
 
-    for (int i = ranges.count() -1; i >= 0; --i) {
+    for (int i = ranges.count() - 1; i >= 0; --i) {
         const auto &range = ranges[i];
         beginRemoveRows(QModelIndex(), range.first, range.second);
         m_nodes.remove(range.first, range.second - range.first + 1);
@@ -147,8 +146,7 @@ QString TranslationsModel::translation(const char *context, const char *sourceTe
                                        const char *disambiguation, const int n,
                                        const QString &default_)
 {
-    QModelIndex existingIndex
-        = findNode(context, sourceText, disambiguation, n, true);
+    QModelIndex existingIndex = findNode(context, sourceText, disambiguation, n, true);
     Row &row = m_nodes[existingIndex.row()];
     if (!row.isOverridden)
         setTranslation(existingIndex, default_);
@@ -233,7 +231,7 @@ QString TranslatorWrapper::translate(const char *context, const char *sourceText
 
 QString TranslatorWrapper::translateInternal(const char *context, const char *sourceText,
                                              const char *disambiguation, int n)
-const
+    const
 {
     return translator()->translate(context, sourceText, disambiguation, n);
 }

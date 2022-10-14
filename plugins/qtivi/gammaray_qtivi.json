@@ -1,7 +1,14 @@
 {
     "id": "gammaray_qtivi",
     "name": "Qt IVI",
-    "types": ["QIviServiceObject", "QIviAbstractFeature"],
-    "selectableTypes": ["QIviProperty", "QIviServiceObject", "QIviAbstractFeature"],
+    "types": [
+        "QIviServiceObject",
+        "QIviAbstractFeature"
+    ],
+    "selectableTypes": [
+        "QIviProperty",
+        "QIviServiceObject",
+        "QIviAbstractFeature"
+    ],
     "hidden": false
 }

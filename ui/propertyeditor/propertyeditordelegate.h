@@ -60,8 +60,8 @@ public:
                const QModelIndex &index) const override;
     QSize sizeHint(const QStyleOptionViewItem &option,
                    const QModelIndex &index) const override;
-    bool editorEvent(QEvent * event, QAbstractItemModel * model, const QStyleOptionViewItem & option, const QModelIndex & index) override;
-    QString displayText(const QVariant & value, const QLocale & locale) const override;
+    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) override;
+    QString displayText(const QVariant &value, const QLocale &locale) const override;
 
 private:
     template<typename Matrix>

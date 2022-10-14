@@ -52,8 +52,8 @@ LaunchPage::LaunchPage(QWidget *parent)
     ui->setupUi(this);
 #if defined(Q_OS_MAC)
     QMargins margins = ui->formLayout->contentsMargins();
-    margins.setRight(margins.right() +2);
-    margins.setBottom(margins.bottom() +2);
+    margins.setRight(margins.right() + 2);
+    margins.setBottom(margins.bottom() + 2);
     ui->formLayout->setContentsMargins(margins);
 #endif
     connect(ui->progSelectButton, &QAbstractButton::clicked, this, &LaunchPage::showFileDialog);
@@ -91,8 +91,7 @@ void LaunchPage::writeSettings()
     QSettings settings;
     settings.setValue(QStringLiteral("Launcher/Program"), ui->progEdit->text());
     settings.setValue(QStringLiteral("Launcher/WorkingDirectory"), ui->workDirEdit->text());
-    settings.setValue(QStringLiteral("Launcher/Arguments"), notEmptyString(
-                          m_argsModel->stringList()));
+    settings.setValue(QStringLiteral("Launcher/Arguments"), notEmptyString(m_argsModel->stringList()));
     settings.setValue(QStringLiteral("Launcher/AccessMode"), ui->accessMode->currentIndex());
 }
 
@@ -141,15 +140,15 @@ LaunchOptions LaunchPage::launchOptions() const
 
 void LaunchPage::showFileDialog()
 {
-    QString exeFilePath
-        = QFileDialog::getOpenFileName(
+    QString exeFilePath = QFileDialog::getOpenFileName(
         this,
         tr("Executable to Launch"),
         ui->progEdit->text()
 #ifdef Q_OS_WIN
-        , tr("Executable (*.exe)")
+            ,
+        tr("Executable (*.exe)")
 #endif
-        );
+    );
 
     if (exeFilePath.isEmpty())
         return;
@@ -158,8 +157,8 @@ void LaunchPage::showFileDialog()
         const QFileInfo fileInfo(exeFilePath);
         if (fileInfo.isBundle()) {
             const QString bundleTarget = QString::fromLatin1("%1/Contents/MacOS/%2")
-                    .arg(exeFilePath, fileInfo.completeBaseName())
-                    .replace(QLatin1String("/"), QDir::separator());
+                                             .arg(exeFilePath, fileInfo.completeBaseName())
+                                             .replace(QLatin1String("/"), QDir::separator());
             if (QFile::exists(bundleTarget))
                 exeFilePath = bundleTarget;
         }
@@ -171,8 +170,7 @@ void LaunchPage::showFileDialog()
 void LaunchPage::showDirDialog()
 {
     QString workingDirPath = QFileDialog::getExistingDirectory(
-        this, tr("Working Directory"), ui->workDirEdit->text()
-        );
+        this, tr("Working Directory"), ui->workDirEdit->text());
 
     if (!workingDirPath.isEmpty()) {
         ui->workDirEdit->setText(workingDirPath);

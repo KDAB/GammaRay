@@ -33,7 +33,8 @@
 
 namespace GammaRay {
 namespace WebViewModelRoles {
-enum Role {
+enum Role
+{
     WebKitVersionRole = ObjectModel::UserRole
 };
 }

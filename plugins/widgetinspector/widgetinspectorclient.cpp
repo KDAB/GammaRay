@@ -39,9 +39,9 @@ WidgetInspectorClient::WidgetInspectorClient(QObject *parent)
 
 WidgetInspectorClient::~WidgetInspectorClient() = default;
 
-#define WRAP_REMOTE(func, type) \
-    void WidgetInspectorClient::func(type arg) \
-    { \
+#define WRAP_REMOTE(func, type)                                                         \
+    void WidgetInspectorClient::func(type arg)                                          \
+    {                                                                                   \
         Endpoint::instance()->invokeObject(objectName(), #func, QVariantList() << arg); \
     }
 

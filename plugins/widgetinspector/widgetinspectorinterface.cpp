@@ -73,13 +73,13 @@ void WidgetInspectorInterface::setFeatures(WidgetInspectorInterface::Features fe
     emit featuresChanged();
 }
 
-QDataStream& operator<<(QDataStream &out, const WidgetFrameData &data)
+QDataStream &operator<<(QDataStream &out, const WidgetFrameData &data)
 {
     out << data.tabFocusRects;
     return out;
 }
 
-QDataStream& operator>>(QDataStream& in, WidgetFrameData &data)
+QDataStream &operator>>(QDataStream &in, WidgetFrameData &data)
 {
     in >> data.tabFocusRects;
     return in;

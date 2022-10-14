@@ -45,7 +45,7 @@ private slots:
         if (!showSource("qrc:/manual/textures.qml"))
             return;
 
-        auto remoteView = ObjectBroker::object<RemoteViewInterface*>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
+        auto remoteView = ObjectBroker::object<RemoteViewInterface *>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
         QVERIFY(remoteView);
         QSignalSpy frameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
         QVERIFY(frameSpy.isValid());
@@ -69,14 +69,14 @@ private slots:
         if (!showSource("qrc:/manual/textures.qml"))
             return;
 
-        auto remoteView = ObjectBroker::object<RemoteViewInterface*>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
+        auto remoteView = ObjectBroker::object<RemoteViewInterface *>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
         QVERIFY(remoteView);
         QSignalSpy frameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
         QVERIFY(frameSpy.isValid());
         remoteView->setViewActive(true);
 
         QQuickItem *textItem = nullptr;
-        foreach (auto item, view()->rootObject()->findChildren<QQuickItem*>()) {
+        foreach (auto item, view()->rootObject()->findChildren<QQuickItem *>()) {
             if (strcmp(item->metaObject()->className(), "QQuickText") == 0)
                 textItem = item;
         }
@@ -96,14 +96,14 @@ private slots:
             return;
         }
 
-        auto remoteView = ObjectBroker::object<RemoteViewInterface*>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
+        auto remoteView = ObjectBroker::object<RemoteViewInterface *>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
         QVERIFY(remoteView);
         QSignalSpy frameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
         QVERIFY(frameSpy.isValid());
         remoteView->setViewActive(true);
 
         QQuickItem *source = nullptr;
-        foreach (auto item, view()->rootObject()->findChildren<QQuickItem*>()) {
+        foreach (auto item, view()->rootObject()->findChildren<QQuickItem *>()) {
             if (item->inherits("QQuickShaderEffectSource"))
                 source = item;
         }

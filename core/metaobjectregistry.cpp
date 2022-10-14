@@ -43,17 +43,17 @@
 #include <cassert>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    #include <QBitArray>
-    #include <QEasingCurve>
-    #include <QUuid>
-    #include <QJsonValue>
-    #include <QJsonObject>
-    #include <QJsonArray>
-    #include <QJsonDocument>
-    #include <QCborArray>
-    #include <QCborMap>
-    #include <QModelIndex>
-    #include <private/qmetatype_p.h>
+#include <QBitArray>
+#include <QEasingCurve>
+#include <QUuid>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QCborArray>
+#include <QCborMap>
+#include <QModelIndex>
+#include <private/qmetatype_p.h>
 #endif
 
 using namespace GammaRay;
@@ -65,7 +65,10 @@ namespace GammaRay {
 class UnprotectedQObject : public QObject
 {
 public:
-    inline QObjectData *data() const { return d_ptr.data(); }
+    inline QObjectData *data() const
+    {
+        return d_ptr.data();
+    }
 };
 }
 
@@ -95,7 +98,8 @@ public:
 // keep it working in UBSAN
 __attribute__((no_sanitize("vptr")))
 #endif
-static inline bool hasDynamicMetaObject(const QObject *object)
+static inline bool
+hasDynamicMetaObject(const QObject *object)
 {
     return reinterpret_cast<const UnprotectedQObject *>(object)->data()->metaObject != nullptr;
 }
@@ -219,15 +223,15 @@ void MetaObjectRegistry::objectAdded(QObject *obj)
 // Lifted from Qt
 struct MetaTypeCoreHelper : public QMetaTypeModuleHelper
 {
-    template<typename T, typename LiteralWrapper =
-             std::conditional_t<std::is_same_v<T, QString>, QLatin1String, const char *>>
+    template<typename T, typename LiteralWrapper = std::conditional_t<std::is_same_v<T, QString>, QLatin1String, const char *>>
     static inline bool convertToBool(const T &source)
     {
         T str = source.toLower();
         return !(str.isEmpty() || str == LiteralWrapper("0") || str == LiteralWrapper("false"));
     }
 
-    const QtPrivate::QMetaTypeInterface *interfaceForType(int type) const override {
+    const QtPrivate::QMetaTypeInterface *interfaceForType(int type) const override
+    {
         switch (type) {
             QT_FOR_EACH_STATIC_PRIMITIVE_TYPE(QT_METATYPE_CONVERT_ID_TO_TYPE)
             QT_FOR_EACH_STATIC_PRIMITIVE_POINTER(QT_METATYPE_CONVERT_ID_TO_TYPE)
@@ -317,7 +321,7 @@ const QMetaObject *MetaObjectRegistry::addMetaObject(const QMetaObject *metaObje
     // beforeMetaObjectAdded() can use parentOf().
     m_childParentMap.insert(metaObject, parentMetaObject);
 
-    QVector<const QMetaObject *> &children = m_parentChildMap[ parentMetaObject ];
+    QVector<const QMetaObject *> &children = m_parentChildMap[parentMetaObject];
 
     emit beforeMetaObjectAdded(metaObject);
     children.push_back(metaObject);

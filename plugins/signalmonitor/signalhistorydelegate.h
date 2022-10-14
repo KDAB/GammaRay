@@ -50,12 +50,21 @@ public:
                    const QModelIndex &index) const override;
 
     void setVisibleInterval(qint64 interval);
-    qint64 visibleInterval() const { return m_visibleInterval; }
+    qint64 visibleInterval() const
+    {
+        return m_visibleInterval;
+    }
 
     void setVisibleOffset(qint64 offset);
-    qint64 visibleOffset() const { return m_visibleOffset; }
+    qint64 visibleOffset() const
+    {
+        return m_visibleOffset;
+    }
 
-    qint64 totalInterval() const { return m_totalInterval; }
+    qint64 totalInterval() const
+    {
+        return m_totalInterval;
+    }
 
     void setActive(bool active);
     bool isActive() const;
@@ -74,7 +83,7 @@ private slots:
     void onServerClockChanged(qlonglong msecs);
 
 private:
-    QTimer * const m_updateTimer;
+    QTimer *const m_updateTimer;
     qint64 m_visibleOffset;
     qint64 m_visibleInterval;
     qint64 m_totalInterval;

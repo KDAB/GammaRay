@@ -66,7 +66,7 @@ void Qt3DEntityTreeModel::populateFromNode(Qt3DCore::QNode *node)
 {
     // the entity tree can have intermediate nodes, so we need to do this
     // recursively without a depth limit
-    auto entity = qobject_cast<Qt3DCore::QEntity*>(node);
+    auto entity = qobject_cast<Qt3DCore::QEntity *>(node);
     if (entity) {
         populateFromEntity(entity);
     } else {
@@ -143,7 +143,7 @@ bool Qt3DEntityTreeModel::setData(const QModelIndex &index, const QVariant &valu
     if (!m_engine || !index.isValid() || role != Qt::CheckStateRole || index.column() != 0)
         return false;
 
-    auto entity = reinterpret_cast<Qt3DCore::QEntity*>(index.internalPointer());
+    auto entity = reinterpret_cast<Qt3DCore::QEntity *>(index.internalPointer());
     entity->setEnabled(value.toInt() == Qt::Checked);
     emit dataChanged(index, index);
     return true;
@@ -222,7 +222,7 @@ void Qt3DEntityTreeModel::objectCreated(QObject *obj)
 
 void Qt3DEntityTreeModel::objectDestroyed(QObject *obj)
 {
-    auto entity = static_cast<Qt3DCore::QEntity*>(obj); // never dereference this!
+    auto entity = static_cast<Qt3DCore::QEntity *>(obj); // never dereference this!
     if (!m_childParentMap.contains(entity)) {
         Q_ASSERT(!m_parentChildMap.contains(entity));
         return;
@@ -292,7 +292,7 @@ void Qt3DEntityTreeModel::disconnectEntity(Qt3DCore::QEntity *entity) const
 
 void Qt3DEntityTreeModel::entityEnabledChanged()
 {
-    auto entity = qobject_cast<Qt3DCore::QEntity*>(sender());
+    auto entity = qobject_cast<Qt3DCore::QEntity *>(sender());
     if (!entity)
         return;
     const auto idx = indexForEntity(entity);

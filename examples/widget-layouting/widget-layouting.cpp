@@ -34,9 +34,9 @@ class ContactForm : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ContactForm(QWidget *parent = nullptr) :
-        QWidget(parent),
-        ui(new Ui::ContactForm)
+    explicit ContactForm(QWidget *parent = nullptr)
+        : QWidget(parent)
+        , ui(new Ui::ContactForm)
     {
         ui->setupUi(this);
     }
@@ -45,7 +45,7 @@ private:
     QScopedPointer<Ui::ContactForm> ui;
 };
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     QWidget w1;

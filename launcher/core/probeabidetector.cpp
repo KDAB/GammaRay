@@ -71,7 +71,8 @@ QString ProbeABIDetector::qtCoreFromLsof(qint64 pid)
     if (lsofExe.isEmpty()) {
         lsofExe = QStandardPaths::findExecutable(QStringLiteral("lsof"),
                                                  QStringList() << QStringLiteral(
-                                                     "/usr/sbin") << QStringLiteral("/sbin"));
+                                                     "/usr/sbin")
+                                                               << QStringLiteral("/sbin"));
     }
     if (lsofExe.isEmpty()) {
         lsofExe = QStringLiteral("lsof"); // maybe QProcess has more luck
@@ -80,8 +81,7 @@ QString ProbeABIDetector::qtCoreFromLsof(qint64 pid)
     QProcess proc;
     proc.setProcessChannelMode(QProcess::SeparateChannels);
     proc.setReadChannel(QProcess::StandardOutput);
-    proc.start(lsofExe, QStringList() << QStringLiteral("-Fn") << QStringLiteral(
-                   "-n") << QStringLiteral("-p") << QString::number(pid));
+    proc.start(lsofExe, QStringList() << QStringLiteral("-Fn") << QStringLiteral("-n") << QStringLiteral("-p") << QString::number(pid));
     proc.waitForFinished();
 
     forever {
@@ -106,8 +106,7 @@ static bool checkQtCorePrefix(const QByteArray &line, int index)
     if (index >= 3 && line.indexOf("lib", index - 3) == index - 3)
         return true;
 
-    if ((line.at(index - 1) >= 'a' && line.at(index - 1) <= 'z') ||
-        (line.at(index - 1) >= 'A' && line.at(index - 1) <= 'Z'))
+    if ((line.at(index - 1) >= 'a' && line.at(index - 1) <= 'z') || (line.at(index - 1) >= 'A' && line.at(index - 1) <= 'Z'))
         return false;
 
     return true;
@@ -136,9 +135,7 @@ static bool checkQtCoreSuffix(const QByteArray &line, int index)
         ++index;
 
     // "Core" must not be followed by another part of the name, so we don't trigger on eg. "QtCoreAddon"
-    if (index < line.size() &&
-        ((line.at(index) >= 'a' && line.at(index) <= 'z') ||
-         (line.at(index) >= 'A' && line.at(index) <= 'Z')))
+    if (index < line.size() && ((line.at(index) >= 'a' && line.at(index) <= 'z') || (line.at(index) >= 'A' && line.at(index) <= 'Z')))
         return false;
 
     return true;

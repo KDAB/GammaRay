@@ -81,7 +81,7 @@ private:
     Qt3DCore::QAspectEngine *m_engine;
 
     QHash<Qt3DCore::QEntity *, Qt3DCore::QEntity *> m_childParentMap;
-    QHash<Qt3DCore::QEntity *, QVector<Qt3DCore::QEntity *> > m_parentChildMap;
+    QHash<Qt3DCore::QEntity *, QVector<Qt3DCore::QEntity *>> m_parentChildMap;
 };
 }
 

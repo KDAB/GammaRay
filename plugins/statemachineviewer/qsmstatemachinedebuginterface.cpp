@@ -44,28 +44,33 @@ Q_DECLARE_METATYPE(Qt::KeyboardModifiers)
 
 namespace GammaRay {
 
-static QAbstractState *fromState(State state) {
+static QAbstractState *fromState(State state)
+{
     return reinterpret_cast<QAbstractState *>(static_cast<quintptr>(state));
 }
 
-static State toState(QAbstractState *state = nullptr) {
+static State toState(QAbstractState *state = nullptr)
+{
     return State(reinterpret_cast<quintptr>(state));
 }
 
-static QAbstractTransition *fromTransition(Transition transition) {
+static QAbstractTransition *fromTransition(Transition transition)
+{
     return reinterpret_cast<QAbstractTransition *>(static_cast<quintptr>(transition));
 }
 
-static Transition toTransition(QAbstractTransition *transition) {
+static Transition toTransition(QAbstractTransition *transition)
+{
     return Transition(reinterpret_cast<quintptr>(transition));
 }
 
-template <typename T>
-static QVector<T*> childrenOfType(QObject *parent) {
+template<typename T>
+static QVector<T *> childrenOfType(QObject *parent)
+{
     Q_ASSERT(parent);
-    QVector<T*> v;
+    QVector<T *> v;
     foreach (auto obj, parent->children()) {
-        if (auto child = qobject_cast<T*>(obj))
+        if (auto child = qobject_cast<T *>(obj))
             v.push_back(child);
     }
     return v;
@@ -193,8 +198,7 @@ StateType QSMStateMachineDebugInterface::stateType(State stateId) const
     if (qobject_cast<QFinalState *>(state)) {
         type = FinalState;
     } else if (auto historyState = qobject_cast<QHistoryState *>(state)) {
-        type = historyState->historyType() == QHistoryState::ShallowHistory ? ShallowHistoryState :
-                                                                              DeepHistoryState;
+        type = historyState->historyType() == QHistoryState::ShallowHistory ? ShallowHistoryState : DeepHistoryState;
     } else if (qobject_cast<QStateMachine *>(state)) {
         type = StateMachineState;
     }
@@ -245,7 +249,7 @@ QString QSMStateMachineDebugInterface::transitionLabel(Transition t) const
         str += signal;
         return str;
     }
-        // QKeyEventTransition is in QtWidgets, so this is a bit dirty to avoid a hard dependency
+    // QKeyEventTransition is in QtWidgets, so this is a bit dirty to avoid a hard dependency
     else if (transition->inherits("QKeyEventTransition")) {
         QString s;
         const auto modifiers = transition->property("modifierMask").value<Qt::KeyboardModifiers>();

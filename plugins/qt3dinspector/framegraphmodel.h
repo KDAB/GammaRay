@@ -78,7 +78,7 @@ private:
 private:
     Qt3DRender::QRenderSettings *m_settings;
     QHash<Qt3DRender::QFrameGraphNode *, Qt3DRender::QFrameGraphNode *> m_childParentMap;
-    QHash<Qt3DRender::QFrameGraphNode *, QVector<Qt3DRender::QFrameGraphNode *> > m_parentChildMap;
+    QHash<Qt3DRender::QFrameGraphNode *, QVector<Qt3DRender::QFrameGraphNode *>> m_parentChildMap;
 };
 }
 

@@ -34,7 +34,8 @@
 namespace GammaRay {
 namespace MetaTypeRoles {
 
-enum Roles {
+enum Roles
+{
     MetaObjectIdRole = UserRole + 1
 };
 

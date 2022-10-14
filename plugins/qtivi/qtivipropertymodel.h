@@ -55,7 +55,8 @@ class QtIviPropertyModel : public QAbstractItemModel
     friend class ::QtIviPropertyModelTest;
 
 public:
-    enum Roles {
+    enum Roles
+    {
         ValueConstraintsRole = ObjectModel::UserRole + 1, // transmits the following constraints types
         RangeConstraints, // min / max
         AvailableValuesConstraints, // list of possible values
@@ -63,7 +64,8 @@ public:
         IsIviProperty
     };
 
-    enum Columns {
+    enum Columns
+    {
         NameColumn = 0, // The carrier label or property name
         ValueColumn,
         WritableColumn,

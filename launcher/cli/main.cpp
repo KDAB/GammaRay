@@ -109,31 +109,26 @@ static void usage(const char *argv0)
     out << "" << endl;
     out << "Options:" << endl;
     out << " -i, --injector <injector>           \tset injection type, possible values:" << endl;
-    out << "                                     \t" << InjectorFactory::availableInjectors().join(QStringLiteral(
-                                                                                                       ", "))
+    out << "                                     \t" << InjectorFactory::availableInjectors().join(QStringLiteral(", "))
         << endl;
     out
-        <<
-    " -o, --injector-override <executable>\tOverride the injector executable if handled (requires -i/--injector)"
+        << " -o, --injector-override <executable>\tOverride the injector executable if handled (requires -i/--injector)"
         << endl;
     out << " -p, --pid <pid>                     \tattach to running Qt application" << endl;
     out << "     --inprocess                     \tuse in-process UI" << endl;
     out << "     --inject-only                   \tonly inject the probe, don't show the UI"
         << endl;
     out
-        <<
-    "     --listen <address>              \tspecify the address the server should listen on [default: "
+        << "     --listen <address>              \tspecify the address the server should listen on [default: "
         << GAMMARAY_DEFAULT_ANY_TCP_URL << "]" << endl;
     out
-        <<
-    "     --no-listen                     \tdisables remote access entirely (implies --inprocess)"
+        << "     --no-listen                     \tdisables remote access entirely (implies --inprocess)"
         << endl;
     out << "     --list-probes                   \tlist all installed probes" << endl;
     out << "     --probe <abi>                   \tspecify which probe to use" << endl;
     out << "     --connect <host>[:port]         \tconnect to an already injected target" << endl;
     out
-        <<
-    "     --self-test [injector]          \trun self tests, of everything or the specified injector"
+        << "     --self-test [injector]          \trun self tests, of everything or the specified injector"
         << endl;
     out << " -h, --help                          \tprint program help and exit" << endl;
     out << " -v, --version                       \tprint program version and exit" << endl;
@@ -152,7 +147,7 @@ static bool startLauncher()
     const QString launcherPath = LauncherFinder::findLauncher(LauncherFinder::LauncherUI);
     QProcess proc;
     proc.setProcessChannelMode(QProcess::ForwardedChannels);
-    proc.start(launcherPath, QStringList{});
+    proc.start(launcherPath, QStringList {});
     if (!proc.waitForFinished(-1))
         return false;
     return proc.exitCode() == 0;
@@ -333,8 +328,7 @@ int main(int argc, char **argv)
             out << "No probe ABI specified and ABI auto-detection failed, picking "
                 << availableProbes.first().id() << " at random." << endl;
             out
-                <<
-            "To specify the probe ABI explicitly use --probe <abi>, available probes are listed using the --list-probes option."
+                << "To specify the probe ABI explicitly use --probe <abi>, available probes are listed using the --list-probes option."
                 << endl;
         }
         options.setProbeABI(availableProbes.first());

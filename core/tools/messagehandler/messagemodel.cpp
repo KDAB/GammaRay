@@ -44,8 +44,8 @@ MessageModel::~MessageModel() = default;
 
 void MessageModel::addMessage(const DebugMessage &message)
 {
-    ///WARNING: do not trigger *any* kind of debug output here
-    ///         this would trigger an infinite loop and hence crash!
+    /// WARNING: do not trigger *any* kind of debug output here
+    ///          this would trigger an infinite loop and hence crash!
 
     beginInsertRows(QModelIndex(), m_messages.count(), m_messages.count());
     m_messages << message;

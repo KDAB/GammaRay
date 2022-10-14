@@ -33,11 +33,11 @@
 
 namespace GammaRay {
 
-namespace NetworkConfigurationModelRoles
+namespace NetworkConfigurationModelRoles {
+enum Role
 {
-    enum Role {
-        DefaultConfigRole = UserRole
-    };
+    DefaultConfigRole = UserRole
+};
 }
 }
 

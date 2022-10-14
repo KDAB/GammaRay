@@ -61,7 +61,7 @@ QVariant WebViewModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QMap< int, QVariant > WebViewModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> WebViewModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> d;
     d.insert(Qt::DisplayRole, data(index, Qt::DisplayRole));
@@ -72,8 +72,5 @@ QMap< int, QVariant > WebViewModel::itemData(const QModelIndex &index) const
 
 bool WebViewModel::filterAcceptsObject(QObject *object) const
 {
-    return
-        object->inherits("QQuickWebView") ||
-        object->inherits("QQuickWebEngineView") ||
-        object->inherits("QWebEnginePage");
+    return object->inherits("QQuickWebView") || object->inherits("QQuickWebEngineView") || object->inherits("QWebEnginePage");
 }

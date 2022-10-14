@@ -52,7 +52,7 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
     , ui(new Ui::MetaTypeBrowserWidget)
     , m_stateManager(this)
 {
-    ObjectBroker::registerClientObjectFactoryCallback<MetaTypeBrowserInterface*>(createMetaTypeBrowserClient);
+    ObjectBroker::registerClientObjectFactoryCallback<MetaTypeBrowserInterface *>(createMetaTypeBrowserClient);
 
     ui->setupUi(this);
 
@@ -71,7 +71,7 @@ MetaTypeBrowserWidget::MetaTypeBrowserWidget(QWidget *parent)
 
     new SearchLineController(ui->metaTypeSearchLine, mtm->sourceModel());
 
-    auto iface = ObjectBroker::object<MetaTypeBrowserInterface*>();
+    auto iface = ObjectBroker::object<MetaTypeBrowserInterface *>();
     connect(ui->actionRescanTypes, &QAction::triggered, iface, &MetaTypeBrowserInterface::rescanTypes);
     iface->rescanTypes();
 

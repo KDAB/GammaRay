@@ -33,28 +33,28 @@
 namespace GammaRay {
 
 WlCompositorClient::WlCompositorClient(QObject *p)
-                  : WlCompositorInterface(p)
+    : WlCompositorInterface(p)
 {
 }
 
 void WlCompositorClient::connected()
 {
-  Endpoint::instance()->invokeObject(objectName(), "connected");
+    Endpoint::instance()->invokeObject(objectName(), "connected");
 }
 
 void WlCompositorClient::disconnected()
 {
-  Endpoint::instance()->invokeObject(objectName(), "disconnected");
+    Endpoint::instance()->invokeObject(objectName(), "disconnected");
 }
 
 void WlCompositorClient::setSelectedClient(int index)
 {
-  Endpoint::instance()->invokeObject(objectName(), "setSelectedClient", QVariantList() << index);
+    Endpoint::instance()->invokeObject(objectName(), "setSelectedClient", QVariantList() << index);
 }
 
 void WlCompositorClient::setSelectedResource(uint32_t id)
 {
-  Endpoint::instance()->invokeObject(objectName(), "setSelectedResource", QVariantList() << id);
+    Endpoint::instance()->invokeObject(objectName(), "setSelectedResource", QVariantList() << id);
 }
 
 }

@@ -113,7 +113,7 @@ void MimeTypesModel::makeItemsForType(const QString &mimeTypeName)
     }
 }
 
-QSet< QString > MimeTypesModel::normalizedMimeTypeNames(const QStringList &typeNames) const
+QSet<QString> MimeTypesModel::normalizedMimeTypeNames(const QStringList &typeNames) const
 {
     QSet<QString> res;
     for (const QString &typeName : typeNames) {

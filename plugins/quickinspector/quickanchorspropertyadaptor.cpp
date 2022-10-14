@@ -62,7 +62,6 @@ void QuickAnchorsPropertyAdaptor::doSetObject(const ObjectInstance &oi)
         return;
 
     m_anchorsPropertyIndex = propertyIndex;
-
 }
 
 int QuickAnchorsPropertyAdaptor::count() const
@@ -95,7 +94,7 @@ PropertyData QuickAnchorsPropertyAdaptor::propertyData(int index) const
         pmo = pmo->superClass();
     data.setClassName(pmo->className());
 
-    data.setValue(QVariant::fromValue(QQuickItemPrivate::get(qobject_cast<QQuickItem*>(object().qtObject()))->_anchors));
+    data.setValue(QVariant::fromValue(QQuickItemPrivate::get(qobject_cast<QQuickItem *>(object().qtObject()))->_anchors));
 
     PropertyModel::PropertyFlags f(PropertyModel::None);
     if (prop.isConstant())
@@ -144,7 +143,7 @@ PropertyData QuickAnchorsPropertyAdaptor::propertyData(int index) const
 QuickAnchorsPropertyAdaptorFactory *QuickAnchorsPropertyAdaptorFactory::s_instance = nullptr;
 
 PropertyAdaptor *QuickAnchorsPropertyAdaptorFactory::create(const ObjectInstance &oi,
-                                                          QObject *parent) const
+                                                            QObject *parent) const
 {
     if (oi.type() != ObjectInstance::QtObject || !oi.qtObject())
         return nullptr;

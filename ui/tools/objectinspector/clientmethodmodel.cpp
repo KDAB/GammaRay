@@ -53,29 +53,29 @@ QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
     if (index.column() == 1 && role == Qt::DisplayRole) {
         const auto methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
         switch (methodType) {
-            case QMetaMethod::Method:
-                return tr("Method");
-            case QMetaMethod::Constructor:
-                return tr("Constructor");
-            case QMetaMethod::Slot:
-                return tr("Slot");
-            case QMetaMethod::Signal:
-                return tr("Signal");
-            default:
-                return tr("Unknown");
+        case QMetaMethod::Method:
+            return tr("Method");
+        case QMetaMethod::Constructor:
+            return tr("Constructor");
+        case QMetaMethod::Slot:
+            return tr("Slot");
+        case QMetaMethod::Signal:
+            return tr("Signal");
+        default:
+            return tr("Unknown");
         }
     }
     if (index.column() == 2 && role == Qt::DisplayRole) {
         const auto methodAccess = index.data(ObjectMethodModelRole::MethodAccess).value<QMetaMethod::Access>();
         switch (methodAccess) {
-            case QMetaMethod::Public:
-                return tr("Public");
-            case QMetaMethod::Protected:
-                return tr("Protected");
-            case QMetaMethod::Private:
-                return tr("Private");
-            default:
-                return tr("Unknown");
+        case QMetaMethod::Public:
+            return tr("Public");
+        case QMetaMethod::Protected:
+            return tr("Protected");
+        case QMetaMethod::Private:
+            return tr("Private");
+        default:
+            return tr("Unknown");
         }
     }
     if (index.column() != 1 && role == ObjectMethodModelRole::MetaMethodType)
@@ -84,7 +84,7 @@ QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
         const auto idx = index.sibling(index.row(), 0);
         auto tt = idx.data(Qt::DisplayRole).toString();
         const auto tag = idx.data(ObjectMethodModelRole::MethodTag).toString();
-        tt += tr("\nTag: %1").arg(tag.isEmpty() ?tr("<none>") : tag);
+        tt += tr("\nTag: %1").arg(tag.isEmpty() ? tr("<none>") : tag);
         const auto rev = idx.data(ObjectMethodModelRole::MethodRevision);
         if (!rev.isNull())
             tt += tr("\nRevision: %1").arg(rev.toInt());
@@ -120,14 +120,14 @@ QVariant ClientMethodModel::headerData(int section, Qt::Orientation orientation,
         if (role != Qt::DisplayRole)
             return QVariant();
         switch (section) {
-            case 0:
-                return tr("Signature");
-            case 1:
-                return tr("Type");
-            case 2:
-                return tr("Access");
-            case 3:
-                return tr("Class");
+        case 0:
+            return tr("Signature");
+        case 1:
+            return tr("Type");
+        case 2:
+            return tr("Access");
+        case 3:
+            return tr("Class");
         }
     }
     return QIdentityProxyModel::headerData(section, orientation, role);

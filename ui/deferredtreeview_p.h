@@ -35,9 +35,14 @@ class HeaderView : public QHeaderView
 {
     Q_OBJECT
 public:
-    enum State {
-        NoState, ResizeSection, MoveSection, SelectSections, NoClear
-    };                                                                           // Copied from QHVPrivate
+    enum State
+    {
+        NoState,
+        ResizeSection,
+        MoveSection,
+        SelectSections,
+        NoClear
+    }; // Copied from QHVPrivate
 
     explicit HeaderView(Qt::Orientation orientation, QWidget *parent = nullptr);
 

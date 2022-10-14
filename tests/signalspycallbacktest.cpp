@@ -34,7 +34,10 @@ class Sender : public QObject
 {
     Q_OBJECT
 public:
-    void emitSignal() { emit mySignal(); }
+    void emitSignal()
+    {
+        emit mySignal();
+    }
 
 signals:
     void mySignal();
@@ -44,7 +47,10 @@ class Receiver : public QObject
 {
     Q_OBJECT
 public slots:
-    void senderDeletingSlot() { delete sender(); }
+    void senderDeletingSlot()
+    {
+        delete sender();
+    }
 };
 
 class SignalSpyCallbackTest : public BaseProbeTest

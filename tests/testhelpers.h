@@ -32,7 +32,7 @@
 #include <qnamespace.h>
 
 QT_BEGIN_NAMESPACE
-template <typename T>
+template<typename T>
 class QList;
 
 class QString;
@@ -43,8 +43,7 @@ class QModelIndex;
 typedef QList<QModelIndex> QModelIndexList;
 QT_END_NAMESPACE
 
-namespace TestHelpers
-{
+namespace TestHelpers {
 bool waitForSignal(QSignalSpy *spy, bool keepResult = false);
 
 QModelIndex searchFixedIndex(QAbstractItemModel *model, const QString &value,
@@ -64,16 +63,16 @@ QModelIndexList searchContainsIndexes(QAbstractItemModel *model, const QString &
                                       int role = Qt::DisplayRole, int column = 0);
 }
 
-#define QVERIFY_RETURN_FALSE(statement) \
-do {\
-    if (!QTest::qVerify(static_cast<bool>(statement), #statement, "", __FILE__, __LINE__))\
-    return false;\
-} while (0)
+#define QVERIFY_RETURN_FALSE(statement)                                                        \
+    do {                                                                                       \
+        if (!QTest::qVerify(static_cast<bool>(statement), #statement, "", __FILE__, __LINE__)) \
+            return false;                                                                      \
+    } while (0)
 
-#define QCOMPARE_RETURN_FALSE(actual, expected) \
-do {\
-    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
-    return false;\
-} while (0)
+#define QCOMPARE_RETURN_FALSE(actual, expected)                                         \
+    do {                                                                                \
+        if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) \
+            return false;                                                               \
+    } while (0)
 
 #endif // TESTHELPERS_H

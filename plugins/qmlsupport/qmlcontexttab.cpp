@@ -49,8 +49,7 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent)
 {
     ui->setupUi(this);
 
-    auto contextModel
-        = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextModel"));
+    auto contextModel = ObjectBroker::model(parent->objectBaseName() + QStringLiteral(".qmlContextModel"));
     ui->contextView->header()->setObjectName("contextViewHeader");
     ui->contextView->setModel(contextModel);
     ui->contextView->setSelectionModel(ObjectBroker::selectionModel(contextModel));
@@ -59,7 +58,7 @@ QmlContextTab::QmlContextTab(PropertyWidget *parent)
             &QmlContextTab::contextContextMenu);
 
     auto propertyModel = ObjectBroker::model(parent->objectBaseName()
-                              + QStringLiteral(".qmlContextPropertyModel"));
+                                             + QStringLiteral(".qmlContextPropertyModel"));
     auto propertyClient = new ClientPropertyModel(this);
     propertyClient->setSourceModel(propertyModel);
     auto propertyProxy = new QSortFilterProxyModel(this);
@@ -100,7 +99,7 @@ void QmlContextTab::propertiesContextMenu(QPoint pos)
     const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
     ContextMenuExtension ext(objectId);
     const bool canShow = (actions == PropertyModel::NavigateTo && !objectId.isNull())
-                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+        || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
 
     if (!canShow)
         return;

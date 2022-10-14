@@ -78,7 +78,7 @@ private:
 };
 
 class TranslatorInspectorFactory : public QObject,
-    public StandardToolFactory<QTranslator, TranslatorInspector>
+                                   public StandardToolFactory<QTranslator, TranslatorInspector>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)
@@ -86,7 +86,9 @@ class TranslatorInspectorFactory : public QObject,
 
 public:
     explicit TranslatorInspectorFactory(QObject *parent = nullptr)
-        : QObject(parent) {}
+        : QObject(parent)
+    {
+    }
 };
 }
 

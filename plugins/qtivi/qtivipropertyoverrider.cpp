@@ -66,12 +66,12 @@ class OverrideValueSetter : public QtPrivate::QSlotObjectBase
     {
         switch (which) {
         case Destroy:
-            delete static_cast<OverrideValueSetter*>(this_);
+            delete static_cast<OverrideValueSetter *>(this_);
             break;
         case Call: {
             // store the value for later when we restore the original getters and setters - then we
             // can also restore the last value received from the real backend.
-            OverrideValueSetter *const self = static_cast<OverrideValueSetter*>(this_);
+            OverrideValueSetter *const self = static_cast<OverrideValueSetter *>(this_);
             const QMetaType::Type mt = static_cast<QMetaType::Type>(self->m_stashedValue.userType());
             void *const firstArgument = a[1];
             self->m_stashedValue = QVariant(mt, firstArgument);
@@ -80,13 +80,17 @@ class OverrideValueSetter : public QtPrivate::QSlotObjectBase
         case Compare:
             *ret = false; // not implemented
             break;
-        case NumOperations: ;
+        case NumOperations:;
         }
     }
+
 public:
     QVariant m_stashedValue;
     explicit OverrideValueSetter(const QVariant &value)
-        : QSlotObjectBase(&impl), m_stashedValue(value) {}
+        : QSlotObjectBase(&impl)
+        , m_stashedValue(value)
+    {
+    }
 };
 
 class OverrideValueGetter : public QtPrivate::QSlotObjectBase
@@ -95,10 +99,10 @@ class OverrideValueGetter : public QtPrivate::QSlotObjectBase
     {
         switch (which) {
         case Destroy:
-            delete static_cast<OverrideValueGetter*>(this_);
+            delete static_cast<OverrideValueGetter *>(this_);
             break;
         case Call: {
-            QtIviPropertyOverrider *const overrider = static_cast<OverrideValueGetter*>(this_)->m_overrider;
+            QtIviPropertyOverrider *const overrider = static_cast<OverrideValueGetter *>(this_)->m_overrider;
             const QMetaType::Type mt = static_cast<QMetaType::Type>(overrider->m_overrideValue.userType());
             void *const returnValue = a[0];
             // There is no QMetaType::assign(), but we can still avoid re-allocating the storage.
@@ -110,19 +114,23 @@ class OverrideValueGetter : public QtPrivate::QSlotObjectBase
         case Compare:
             *ret = false; // not implemented
             break;
-        case NumOperations: ;
+        case NumOperations:;
         }
     }
+
 public:
     QtIviPropertyOverrider *m_overrider;
     explicit OverrideValueGetter(QtIviPropertyOverrider *overrider)
-        : QSlotObjectBase(&impl), m_overrider(overrider) {}
+        : QSlotObjectBase(&impl)
+        , m_overrider(overrider)
+    {
+    }
 };
 
 }
 
 QtIviPropertyOverrider::QtIviPropertyOverrider(QIviProperty *overriddenProperty)
-   : m_prop(overriddenProperty)
+    : m_prop(overriddenProperty)
 {
 }
 

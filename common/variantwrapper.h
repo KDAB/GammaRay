@@ -37,13 +37,26 @@ namespace GammaRay {
 class VariantWrapper
 {
 public:
-    inline VariantWrapper() {}
+    inline VariantWrapper()
+    {
+    }
     explicit inline VariantWrapper(const QVariant &variant)
-        : m_variant(variant) {}
+        : m_variant(variant)
+    {
+    }
 
-    inline QVariant variant() const { return m_variant; }
-    inline void setVariant(const QVariant &v) { m_variant = v; }
-    inline operator QVariant() const { return QVariant::fromValue(*this); }
+    inline QVariant variant() const
+    {
+        return m_variant;
+    }
+    inline void setVariant(const QVariant &v)
+    {
+        m_variant = v;
+    }
+    inline operator QVariant() const
+    {
+        return QVariant::fromValue(*this);
+    }
 
 private:
     QVariant m_variant;

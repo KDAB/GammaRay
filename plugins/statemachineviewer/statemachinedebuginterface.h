@@ -33,10 +33,12 @@
 
 namespace GammaRay {
 
-struct State {
+struct State
+{
     explicit State(quintptr id = 0)
         : m_id(id)
-    {}
+    {
+    }
 
     operator quintptr() const
     {
@@ -46,10 +48,12 @@ struct State {
     quintptr m_id;
 };
 
-struct Transition {
+struct Transition
+{
     explicit Transition(quintptr id = 0)
         : m_id(id)
-    {}
+    {
+    }
 
     operator quintptr() const
     {

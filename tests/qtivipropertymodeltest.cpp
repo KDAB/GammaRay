@@ -93,7 +93,8 @@ private:
     {
         const auto index(m_model->match(m_model->index(0, 0), ObjectModel::ObjectIdRole,
                                         QVariant::fromValue(ObjectId(carrier)), 1,
-                                        Qt::MatchFlags(Qt::MatchExactly | Qt::MatchWrap)).value(0));
+                                        Qt::MatchFlags(Qt::MatchExactly | Qt::MatchWrap))
+                             .value(0));
         return index.sibling(index.row(), column);
     }
 
@@ -101,9 +102,10 @@ private:
     {
         const QModelIndex parent(carrierIndex(carrier, 0));
         const auto index(parent.isValid()
-                         ? m_model->match(m_model->index(0, 0, parent), Qt::DisplayRole, property, 1,
-                                          Qt::MatchFlags(Qt::MatchExactly | Qt::MatchWrap)).value(0)
-                         : QModelIndex());
+                             ? m_model->match(m_model->index(0, 0, parent), Qt::DisplayRole, property, 1,
+                                              Qt::MatchFlags(Qt::MatchExactly | Qt::MatchWrap))
+                                   .value(0)
+                             : QModelIndex());
         return index.sibling(index.row(), column);
     }
 
@@ -123,7 +125,7 @@ private:
         const auto index(m_model->match(m_model->index(0, 0), ObjectModel::ObjectIdRole,
                                         QVariant::fromValue(ObjectId(property)), 1,
                                         Qt::MatchFlags(Qt::MatchExactly | Qt::MatchWrap | Qt::MatchRecursive))
-                         .value(0));
+                             .value(0));
         return index.sibling(index.row(), column);
     }
 
@@ -138,7 +140,8 @@ private:
                                    QtIviPropertyModel::RawValue);
     }
 
-    IviCarrierProperty iviCarrierProperty(QObject *carrier, const QString &property) const {
+    IviCarrierProperty iviCarrierProperty(QObject *carrier, const QString &property) const
+    {
         if (!carrier)
             return IviCarrierProperty::create();
 
@@ -208,7 +211,7 @@ private:
             carrierModelPropertyNames << nameIndex.data(Qt::DisplayRole).toString();
             QVERIFY_RETURN_FALSE(!carrierModelPropertyNames.last().isEmpty());
             QCOMPARE_RETURN_FALSE(iviProperties[carrierModelPropertyNames.last()],
-                    carrierPropertyValue(iviObject, carrierModelPropertyNames.last()));
+                                  carrierPropertyValue(iviObject, carrierModelPropertyNames.last()));
         }
 
         std::stable_sort(carrierModelPropertyNames.begin(), carrierModelPropertyNames.end());
@@ -257,132 +260,117 @@ private slots:
         // Invalid expect mean use value
 
         QTest::newRow("climate-default-climateMode")
-                << (QObject *)m_climate
-                << "climateMode"
-                << true
-                << QVariant()
-                << QVariant::fromValue(QIviClimateControl::ClimateOn)
-                << false
-        ;
+            << ( QObject * )m_climate
+            << "climateMode"
+            << true
+            << QVariant()
+            << QVariant::fromValue(QIviClimateControl::ClimateOn)
+            << false;
 
         QTest::newRow("climate-climateMode-Off")
-                << (QObject *)m_climate
-                << "climateMode"
-                << false
-                << QVariant::fromValue(QIviClimateControl::ClimateOff)
-                << QVariant()
-                << false
-        ;
+            << ( QObject * )m_climate
+            << "climateMode"
+            << false
+            << QVariant::fromValue(QIviClimateControl::ClimateOff)
+            << QVariant()
+            << false;
 
         QTest::newRow("climate-airflowDirections-Floor")
-                << (QObject *)m_climate
-                << "airflowDirections"
-                << false
-                << QVariant::fromValue(QIviClimateControl::AirflowDirections(QIviClimateControl::Floor))
-                << QVariant()
-                << false
-        ;
+            << ( QObject * )m_climate
+            << "airflowDirections"
+            << false
+            << QVariant::fromValue(QIviClimateControl::AirflowDirections(QIviClimateControl::Floor))
+            << QVariant()
+            << false;
 
         QTest::newRow("climate-airflowDirections-Floor|Dashboard")
-                << (QObject *)m_climate
-                << "airflowDirections"
-                << false
-                << QVariant::fromValue(QIviClimateControl::AirflowDirections(QIviClimateControl::Floor |
-                                                                             QIviClimateControl::Dashboard))
-                << QVariant()
-                << false
-        ;
+            << ( QObject * )m_climate
+            << "airflowDirections"
+            << false
+            << QVariant::fromValue(QIviClimateControl::AirflowDirections(QIviClimateControl::Floor | QIviClimateControl::Dashboard))
+            << QVariant()
+            << false;
 
         QTest::newRow("climate-FrontLeft-targetTemperature-25")
-                << (QObject *)m_climate->zoneAt("FrontLeft")
-                << "targetTemperature"
-                << false
-                << QVariant(25)
-                << QVariant()
-                << false
-        ;
+            << ( QObject * )m_climate->zoneAt("FrontLeft")
+            << "targetTemperature"
+            << false
+            << QVariant(25)
+            << QVariant()
+            << false;
 
         QTest::newRow("climate-FrontRight-seatHeater-8")
-                << (QObject *)m_climate->zoneAt("FrontRight")
-                << "seatHeater"
-                << false
-                << QVariant(8)
-                << QVariant()
-                << false
-        ;
+            << ( QObject * )m_climate->zoneAt("FrontRight")
+            << "seatHeater"
+            << false
+            << QVariant(8)
+            << QVariant()
+            << false;
 
         QTest::newRow("unknown-property")
-                << (QObject *)nullptr
-                << "hey"
-                << false
-                << QVariant(42)
-                << QVariant()
-                << true
-        ;
+            << ( QObject * )nullptr
+            << "hey"
+            << false
+            << QVariant(42)
+            << QVariant()
+            << true;
 
         QTest::newRow("climate-unknown-property-override")
-                << (QObject *)m_climate->zoneAt("FrontLeft")
-                << "hey"
-                << true
-                << QVariant(42)
-                << QVariant()
-                << true
-        ;
+            << ( QObject * )m_climate->zoneAt("FrontLeft")
+            << "hey"
+            << true
+            << QVariant(42)
+            << QVariant()
+            << true;
 
         QTest::newRow("climate-FrontLeft-heater-true(readonly)")
-                << (QObject *)m_climate->zoneAt("FrontLeft")
-                << "heater"
-                << false
-                << QVariant(true)
-                << QVariant(false)
-                << false
-        ;
+            << ( QObject * )m_climate->zoneAt("FrontLeft")
+            << "heater"
+            << false
+            << QVariant(true)
+            << QVariant(false)
+            << false;
 
 #if defined(QT_IVIMEDIA_LIB)
         QTest::newRow("amfm-default-discoveryMode")
-                << (QObject *)m_amfm
-                << "discoveryMode"
-                << false
-                << QVariant()
-                << QVariant::fromValue(QIviAbstractFeature::LoadOnlySimulationBackends)
-                << false
-        ;
+            << ( QObject * )m_amfm
+            << "discoveryMode"
+            << false
+            << QVariant()
+            << QVariant::fromValue(QIviAbstractFeature::LoadOnlySimulationBackends)
+            << false;
 
         QTest::newRow("amfm-discoveryMode-AutoDiscovery")
-                << (QObject *)m_amfm
-                << "discoveryMode"
-                << false
-                << QVariant::fromValue(QIviAbstractFeature::AutoDiscovery)
-                << QVariant()
-                << false
-        ;
+            << ( QObject * )m_amfm
+            << "discoveryMode"
+            << false
+            << QVariant::fromValue(QIviAbstractFeature::AutoDiscovery)
+            << QVariant()
+            << false;
 
         QTest::newRow("amfm-band-AMBand")
-                << (QObject *)m_amfm
-                << "band"
-                << false
-                << QVariant::fromValue(QIviAmFmTuner::AMBand)
-                << QVariant()
-                << false
-        ;
+            << ( QObject * )m_amfm
+            << "band"
+            << false
+            << QVariant::fromValue(QIviAmFmTuner::AMBand)
+            << QVariant()
+            << false;
 
         QTest::newRow("amfm-unknown-property-override")
-                << (QObject *)m_amfm
-                << "hey"
-                << true
-                << QVariant(42)
-                << QVariant()
-                << true
-        ;
+            << ( QObject * )m_amfm
+            << "hey"
+            << true
+            << QVariant(42)
+            << QVariant()
+            << true;
 
         QTest::newRow("amfm-scanRunning-true(readonly)")
-                << (QObject *)m_amfm
-                << "scanRunning"
-                << false
-                << QVariant(true)
-                << QVariant(false)
-                << false
-        ;
+            << ( QObject * )m_amfm
+            << "scanRunning"
+            << false
+            << QVariant(true)
+            << QVariant(false)
+            << false;
 #endif
     }
 
@@ -417,10 +405,9 @@ private slots:
         const QModelIndex overrideIndex(valueIndex.sibling(valueIndex.row(), QtIviPropertyModel::OverrideColumn));
 
 #if defined(ENABLE_LOG)
-        qWarning("Setting override: %i", (int)override);
+        qWarning("Setting override: %i", (int) override);
 #endif
-        const bool willOverride(iviProperty->isAvailable() && iviProperty->isOverridable() &&
-                                (overrideIndex.data(Qt::CheckStateRole).value<Qt::CheckState>() == Qt::Checked) != override);
+        const bool willOverride(iviProperty->isAvailable() && iviProperty->isOverridable() && (overrideIndex.data(Qt::CheckStateRole).value<Qt::CheckState>() == Qt::Checked) != override);
         QCOMPARE(m_model->setData(overrideIndex, override ? Qt::Checked : Qt::Unchecked, Qt::CheckStateRole), willOverride);
         QCOMPARE((overrideIndex.data(Qt::CheckStateRole).value<Qt::CheckState>() == Qt::Checked),
                  (!iviProperty->isAvailable() ? false : override));
@@ -429,8 +416,7 @@ private slots:
 #if defined(ENABLE_LOG)
             qWarning("Setting value: %s", qPrintable(value.toString()));
 #endif
-            const bool willWrite(iviProperty->isAvailable() && iviProperty->isWritable() &&
-                                 valueIndex.data(QtIviPropertyModel::RawValue) != value);
+            const bool willWrite(iviProperty->isAvailable() && iviProperty->isWritable() && valueIndex.data(QtIviPropertyModel::RawValue) != value);
             QCOMPARE(m_model->setData(valueIndex, value, Qt::EditRole), willWrite);
             if (willWrite) {
                 QCOMPARE(valueIndex.data(QtIviPropertyModel::RawValue), value);
@@ -441,7 +427,7 @@ private slots:
             QCOMPARE(iviProperty->cppValue(carrier), iviProperty->isAvailable() && !override ? expectValue : originalValue);
         }
         QCOMPARE(iviProperty->isAvailable(),
-                valueIndex.flags().testFlag(Qt::ItemIsEnabled));
+                 valueIndex.flags().testFlag(Qt::ItemIsEnabled));
         QCOMPARE(iviProperty->isAvailable() && iviProperty->isWritable(),
                  valueIndex.flags().testFlag(Qt::ItemIsEditable));
         QCOMPARE(valueIndex.data(QtIviPropertyModel::RawValue),

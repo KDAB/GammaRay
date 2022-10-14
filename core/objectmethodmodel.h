@@ -44,7 +44,7 @@ class ObjectMethodModel : public MetaObjectModel<QMetaMethod, &QMetaObject::meth
 public:
     explicit ObjectMethodModel(QObject *parent = nullptr);
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    QMap< int, QVariant > itemData(const QModelIndex &index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
 protected:
     QVariant metaData(const QModelIndex &index, const QMetaMethod &method,

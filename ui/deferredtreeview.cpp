@@ -57,7 +57,8 @@ HeaderView::HeaderView(Qt::Orientation orientation, QWidget *parent)
 // keep it working in UBSAN
 __attribute__((no_sanitize("vptr")))
 #endif
-bool HeaderView::isState(State state) const
+bool
+HeaderView::isState(State state) const
 {
     QHeaderViewPrivate *d = reinterpret_cast<QHeaderViewPrivate *>(d_ptr.data());
     return d->state == QHeaderViewPrivate::State(state);
@@ -77,7 +78,7 @@ DeferredTreeView::DeferredTreeView(QWidget *parent)
     // Default QTreeView header properties
     header()->setSectionsMovable(true);
     header()->setStretchLastSection(true);
-    header()->setDefaultAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    header()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     // Custom
     header()->setSortIndicatorShown(true);
 
@@ -100,8 +101,7 @@ QHeaderView::ResizeMode DeferredTreeView::deferredResizeMode(int logicalIndex) c
 {
     const auto it = m_sectionsProperties.constFind(logicalIndex);
     const int resizeMode = it != m_sectionsProperties.constEnd() ? (*it).resizeMode : -1;
-    return resizeMode != -1 ? QHeaderView::ResizeMode(resizeMode) : sectionResizeMode(
-        header(), logicalIndex);
+    return resizeMode != -1 ? QHeaderView::ResizeMode(resizeMode) : sectionResizeMode(header(), logicalIndex);
 }
 
 void DeferredTreeView::setDeferredResizeMode(int logicalIndex, QHeaderView::ResizeMode mode)

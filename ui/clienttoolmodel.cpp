@@ -56,29 +56,28 @@ QVariant ClientToolModel::data(const QModelIndex &index, int role) const
 
     const ToolInfo &tool = m_toolManager->tools().at(index.row());
     switch (role) {
-        case Qt::DisplayRole:
-            return tool.name();
-        case ToolModelRole::ToolId:
-            return tool.id();
-        case ToolModelRole::ToolWidget:
-            return QVariant::fromValue(m_toolManager->widgetForIndex(index.row()));
-        case Qt::ToolTipRole:
-            if (!tool.remotingSupported() && Endpoint::instance()->isRemoteClient())
-                return tr("This tool does not work in out-of-process mode.");
-            return QVariant();
-        case ToolModelRole::ToolEnabled:
-            return tool.isEnabled();
-        case ToolModelRole::ToolHasUi:
-            return tool.hasUi();
-        case ToolModelRole::ToolFeedbackId:
-        {
-            auto id = tool.id().toLower();
-            if (id.startsWith(QLatin1String("gammaray_")))
-                id = id.mid(9);
-            else if (id.startsWith(QLatin1String("gammaray::")))
-                id = id.mid(10);
-            return id;
-        }
+    case Qt::DisplayRole:
+        return tool.name();
+    case ToolModelRole::ToolId:
+        return tool.id();
+    case ToolModelRole::ToolWidget:
+        return QVariant::fromValue(m_toolManager->widgetForIndex(index.row()));
+    case Qt::ToolTipRole:
+        if (!tool.remotingSupported() && Endpoint::instance()->isRemoteClient())
+            return tr("This tool does not work in out-of-process mode.");
+        return QVariant();
+    case ToolModelRole::ToolEnabled:
+        return tool.isEnabled();
+    case ToolModelRole::ToolHasUi:
+        return tool.hasUi();
+    case ToolModelRole::ToolFeedbackId: {
+        auto id = tool.id().toLower();
+        if (id.startsWith(QLatin1String("gammaray_")))
+            id = id.mid(9);
+        else if (id.startsWith(QLatin1String("gammaray::")))
+            id = id.mid(10);
+        return id;
+    }
     }
     return QVariant();
 }
@@ -131,10 +130,7 @@ ClientToolSelectionModel::~ClientToolSelectionModel() = default;
 
 void ClientToolSelectionModel::selectTool(int index)
 {
-    select(model()->index(index, 0), QItemSelectionModel::Select
-           | QItemSelectionModel::Clear
-           | QItemSelectionModel::Rows
-           | QItemSelectionModel::Current);
+    select(model()->index(index, 0), QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
 void ClientToolSelectionModel::selectDefaultTool()

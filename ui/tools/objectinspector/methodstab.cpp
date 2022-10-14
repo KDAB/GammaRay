@@ -104,8 +104,7 @@ void MethodsTab::methodContextMenu(const QPoint &pos)
     if (!index.isValid() || !m_interface->hasObject())
         return;
 
-    const QMetaMethod::MethodType methodType
-        = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
+    const QMetaMethod::MethodType methodType = index.data(ObjectMethodModelRole::MetaMethodType).value<QMetaMethod::MethodType>();
     QMenu contextMenu;
     QAction *invokeAction = nullptr, *connectToAction = nullptr;
     if (methodType == QMetaMethod::Slot || methodType == QMetaMethod::Method) {

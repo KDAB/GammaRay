@@ -67,8 +67,8 @@ QString ItemDelegateInterface::defaultDisplayText(const QModelIndex &index) cons
     if (display.isEmpty()
         && (m_placeholderColumns.isEmpty() || m_placeholderColumns.contains(index.column()))) {
         display = QString(m_placeholderText)
-                  .replace(QStringLiteral("%r"), QString::number(index.row()))
-                  .replace(QStringLiteral("%c"), QString::number(index.column()));
+                      .replace(QStringLiteral("%r"), QString::number(index.row()))
+                      .replace(QStringLiteral("%c"), QString::number(index.column()));
     }
     return display;
 }

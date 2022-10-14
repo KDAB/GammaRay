@@ -40,8 +40,7 @@ QString GuiSupportUiFactory::id() const
 
 void GuiSupportUiFactory::initUi()
 {
-    PropertyWidget::registerTab<PaintAnalyzerTab>(QStringLiteral("painting"), tr(
-                                                      "Paint Analyzer"),
+    PropertyWidget::registerTab<PaintAnalyzerTab>(QStringLiteral("painting"), tr("Paint Analyzer"),
                                                   PropertyWidgetTabPriority::Advanced);
 }
 

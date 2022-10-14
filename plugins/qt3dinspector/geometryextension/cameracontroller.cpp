@@ -58,13 +58,13 @@ CameraController::CameraController(Qt3DCore::QNode *parent)
     // LMB for first person control
     auto mouseDevice = new Qt3DInput::QMouseDevice(this);
     auto leftMouseButtonInput = new Qt3DInput::QActionInput(this);
-    leftMouseButtonInput->setButtons({Qt3DInput::QMouseEvent::LeftButton});
+    leftMouseButtonInput->setButtons({ Qt3DInput::QMouseEvent::LeftButton });
     leftMouseButtonInput->setSourceDevice(mouseDevice);
     m_leftMouseButtonAction->addInput(leftMouseButtonInput);
 
     // MMB for orbit control
     auto midMouseButtonInput = new Qt3DInput::QActionInput(this);
-    midMouseButtonInput->setButtons({Qt3DInput::QMouseEvent::MiddleButton});
+    midMouseButtonInput->setButtons({ Qt3DInput::QMouseEvent::MiddleButton });
     midMouseButtonInput->setSourceDevice(mouseDevice);
     m_midMouseButtonAction->addInput(midMouseButtonInput);
 
@@ -141,7 +141,8 @@ void CameraController::frameActionTriggered(float dt)
         return;
     m_camera->translate(QVector3D(m_axis[TX]->value() * m_linearSpeed,
                                   m_axis[TY]->value() * m_linearSpeed,
-                                  m_axis[TZ]->value() * m_linearSpeed) * dt);
+                                  m_axis[TZ]->value() * m_linearSpeed)
+                        * dt);
     if (m_leftMouseButtonAction->isActive()) {
         m_camera->pan(m_axis[RX]->value() * m_lookSpeed * dt, QVector3D(0.0f, 1.0f, 0.0f));
         m_camera->tilt(m_axis[RY]->value() * m_lookSpeed * dt);
@@ -154,7 +155,7 @@ void CameraController::frameActionTriggered(float dt)
 void CameraController::addKeyboardInput(Axis axis, Qt::Key key, float scale)
 {
     auto keyboardInput = new Qt3DInput::QButtonAxisInput;
-    keyboardInput->setButtons({key});
+    keyboardInput->setButtons({ key });
     keyboardInput->setScale(scale);
     keyboardInput->setSourceDevice(m_keyboardDevice);
     m_axis[axis]->addInput(keyboardInput);

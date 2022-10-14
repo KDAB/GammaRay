@@ -34,12 +34,11 @@ using namespace GammaRay;
 Q_GLOBAL_STATIC(QVector<PropertyFilter>, s_propertyFilters)
 
 GammaRay::PropertyFilter::PropertyFilter(
-        const QString &className,
-        const QString &name,
-        const QString &typeName,
-        PropertyData::AccessFlags accessFlags,
-        PropertyModel::PropertyFlags propertyFlags
-    )
+    const QString &className,
+    const QString &name,
+    const QString &typeName,
+    PropertyData::AccessFlags accessFlags,
+    PropertyModel::PropertyFlags propertyFlags)
     : m_name(name)
     , m_typeName(typeName)
     , m_className(className)

@@ -68,7 +68,7 @@ LocaleInspector::LocaleInspector(Probe *probe, QObject *parent)
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.TimezoneOffsetDataModel"), m_offsetModel);
 }
 
-void LocaleInspector::timezoneSelected(const QItemSelection& selection)
+void LocaleInspector::timezoneSelected(const QItemSelection &selection)
 {
     if (selection.isEmpty())
         return;

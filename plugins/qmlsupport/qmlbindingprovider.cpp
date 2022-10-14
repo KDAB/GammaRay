@@ -82,7 +82,7 @@ std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFo
         return dependencies;
 
     QQmlAbstractBinding *abstractBinding = QQmlPropertyPrivate::binding(node->object(), QQmlPropertyIndex::fromEncoded(node->propertyIndex()));
-    QQmlBinding *binding = dynamic_cast<QQmlBinding*>(abstractBinding);
+    QQmlBinding *binding = dynamic_cast<QQmlBinding *>(abstractBinding);
     if (!binding)
         return dependencies;
 

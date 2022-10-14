@@ -95,7 +95,7 @@ private:
 };
 
 class Qt3DInspectorFactory : public QObject,
-    public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>
+                             public StandardToolFactory<Qt3DCore::QNode, Qt3DInspector>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

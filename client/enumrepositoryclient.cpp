@@ -36,7 +36,7 @@ using namespace GammaRay;
 EnumRepositoryClient::EnumRepositoryClient(QObject *parent)
     : EnumRepository(parent)
 {
-    ObjectBroker::registerObject<EnumRepository*>(this);
+    ObjectBroker::registerObject<EnumRepository *>(this);
 
     connect(this, &EnumRepository::definitionResponse,
             this, &EnumRepositoryClient::definitionReceived);
@@ -48,7 +48,7 @@ EnumDefinition EnumRepositoryClient::definition(EnumId id) const
 {
     const auto def = EnumRepository::definition(id);
     if (!def.isValid())
-        const_cast<EnumRepositoryClient*>(this)->requestDefinition(id);
+        const_cast<EnumRepositoryClient *>(this)->requestDefinition(id);
     return def;
 }
 
@@ -60,5 +60,5 @@ void EnumRepositoryClient::definitionReceived(const EnumDefinition &def)
 
 void EnumRepositoryClient::requestDefinition(EnumId id)
 {
-    Endpoint::instance()->invokeObject(qobject_interface_iid<EnumRepository*>(), "requestDefinition", QVariantList() <<  id);
+    Endpoint::instance()->invokeObject(qobject_interface_iid<EnumRepository *>(), "requestDefinition", QVariantList() << id);
 }

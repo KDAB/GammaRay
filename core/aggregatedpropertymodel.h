@@ -68,8 +68,8 @@ private:
     void clear();
     PropertyAdaptor *adaptorForIndex(const QModelIndex &index) const;
     void addPropertyAdaptor(PropertyAdaptor *adaptor) const;
-    static QVariant data(PropertyAdaptor *adaptor, const PropertyData &d, int column, int role) ;
-    static bool hasLoop(PropertyAdaptor *adaptor, const QVariant &v) ;
+    static QVariant data(PropertyAdaptor *adaptor, const PropertyData &d, int column, int role);
+    static bool hasLoop(PropertyAdaptor *adaptor, const QVariant &v);
     void reloadSubTree(PropertyAdaptor *parentAdaptor, int index);
     bool isParentEditable(PropertyAdaptor *adaptor) const;
     void propagateWrite(PropertyAdaptor *adaptor);
@@ -83,7 +83,7 @@ private slots:
 
 private:
     PropertyAdaptor *m_rootAdaptor = nullptr;
-    mutable std::unordered_map<PropertyAdaptor *, QVector<PropertyAdaptor *> > m_parentChildrenMap;
+    mutable std::unordered_map<PropertyAdaptor *, QVector<PropertyAdaptor *>> m_parentChildrenMap;
     bool m_inhibitAdaptorCreation = false;
     bool m_readOnly = false;
 };

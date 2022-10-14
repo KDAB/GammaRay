@@ -52,12 +52,16 @@ typedef QStyleOptionViewItemV4 QStyleOptionViewItemCV;
 typedef QStyleOptionProgressBarV2 QStyleOptionProgressBarCV;
 #endif
 
-struct style_state_t {
+struct style_state_t
+{
     const char *name;
     QStyle::State state;
 };
 
-#define MAKE_STATE(state) { #state, QStyle:: state }
+#define MAKE_STATE(state)     \
+    {                         \
+#state, QStyle::state \
+    }
 
 static const style_state_t styleStates[] = {
     MAKE_STATE(State_None),
@@ -225,9 +229,9 @@ QStyleOption *StyleOption::makeTitleBarStyleOption()
     auto *opt = new QStyleOptionTitleBar;
     opt->text = QStringLiteral("Title");
     opt->titleBarFlags = Qt::WindowMinMaxButtonsHint
-                         |Qt::WindowTitleHint
-                         |Qt::WindowSystemMenuHint
-                         |Qt::WindowCloseButtonHint;
+        | Qt::WindowTitleHint
+        | Qt::WindowSystemMenuHint
+        | Qt::WindowCloseButtonHint;
     return opt;
 }
 

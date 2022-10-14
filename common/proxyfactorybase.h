@@ -62,7 +62,9 @@ class ProxyFactory : public ProxyFactoryBase, public IFace
 {
 public:
     explicit inline ProxyFactory(const PluginInfo &pluginInfo, QObject *parent = nullptr)
-        : ProxyFactoryBase(pluginInfo, parent) {}
+        : ProxyFactoryBase(pluginInfo, parent)
+    {
+    }
     inline ~ProxyFactory() override = default;
 
     QString id() const override
@@ -78,7 +80,7 @@ protected:
         if (!iface) {
             m_errorString = qApp->translate("GammaRay::ProxyFactory",
                                             "Plugin does not provide an instance of %1.")
-                                                .arg(qobject_interface_iid<IFace *>());
+                                .arg(qobject_interface_iid<IFace *>());
             std::cerr << "Failed to cast object from " << qPrintable(pluginInfo().path())
                       << " to " << qobject_interface_iid<IFace *>() << std::endl;
         }

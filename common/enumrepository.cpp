@@ -30,7 +30,7 @@
 
 using namespace GammaRay;
 
-EnumRepository::EnumRepository(QObject* parent)
+EnumRepository::EnumRepository(QObject *parent)
     : QObject(parent)
 {
 }

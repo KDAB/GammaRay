@@ -59,8 +59,8 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
     ui->setupUi(this);
 #if defined(Q_OS_MAC)
     QMargins margins = ui->formLayout->contentsMargins();
-    margins.setRight(margins.right() +2);
-    margins.setBottom(margins.bottom() +2);
+    margins.setRight(margins.right() + 2);
+    margins.setBottom(margins.bottom() + 2);
     ui->formLayout->setContentsMargins(margins);
 #endif
 
@@ -93,7 +93,8 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
 
     QSettings settings;
     ui->accessMode->setCurrentIndex(settings.value(QStringLiteral(
-                                                      "Launcher/AttachAccessMode")).toInt());
+                                                       "Launcher/AttachAccessMode"))
+                                        .toInt());
 
     setWindowTitle(tr("GammaRay - Attach to Process"));
     setWindowIcon(QIcon(QStringLiteral(":/gammaray/GammaRay-128x128.png")));

@@ -76,7 +76,8 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     connect(ui->objectTreeView, &QWidget::customContextMenuRequested,
             this, &ObjectInspectorWidget::objectContextMenuRequested);
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "60%" << "40%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "60%"
+                                                                    << "40%");
 
     connect(ui->objectPropertyWidget, &PropertyWidget::tabsUpdated, this, &ObjectInspectorWidget::propertyWidgetTabsChanged);
 
@@ -103,8 +104,7 @@ void ObjectInspectorWidget::objectContextMenuRequested(const QPoint &pos)
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
     QMenu menu(tr("Object @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
     ContextMenuExtension ext(objectId);
-    ext.setLocation(ContextMenuExtension::Creation, index.data(
-                        ObjectModel::CreationLocationRole).value<SourceLocation>());
+    ext.setLocation(ContextMenuExtension::Creation, index.data(ObjectModel::CreationLocationRole).value<SourceLocation>());
     ext.setLocation(ContextMenuExtension::Declaration,
                     index.data(ObjectModel::DeclarationLocationRole).value<SourceLocation>());
     ext.setCanFavoriteItems(true);

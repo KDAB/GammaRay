@@ -50,8 +50,7 @@
 using namespace GammaRay;
 
 using MessageHandlerCallback = QtMessageHandler;
-static MessageHandlerCallback(*const installMessageHandler)(MessageHandlerCallback)
-    = qInstallMessageHandler;
+static MessageHandlerCallback (*const installMessageHandler)(MessageHandlerCallback) = qInstallMessageHandler;
 
 static MessageModel *s_model = nullptr;
 static MessageHandlerCallback s_handler = nullptr;
@@ -64,8 +63,8 @@ static QMutex s_mutex(QMutex::Recursive);
 
 static void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    ///WARNING: do not trigger *any* kind of debug output here
-    ///         this would trigger an infinite loop and hence crash!
+    /// WARNING: do not trigger *any* kind of debug output here
+    ///          this would trigger an infinite loop and hence crash!
 
     if (s_handlerDisabled) // recursion detected
         return;
@@ -87,8 +86,7 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
     if (!message.backtrace.empty()
         && (qgetenv("GAMMARAY_UNITTEST") == "1" || type == QtFatalMsg)) {
         if (type == QtFatalMsg)
-            std::cerr << "QFatal in " << qPrintable(qApp->applicationName()) << " (" << qPrintable(
-                qApp->applicationFilePath()) << ')' << std::endl;
+            std::cerr << "QFatal in " << qPrintable(qApp->applicationName()) << " (" << qPrintable(qApp->applicationFilePath()) << ')' << std::endl;
         std::cerr << "START BACKTRACE:" << std::endl;
         int i = 0;
         foreach (const auto &frame, Execution::resolveAll(message.backtrace))
@@ -192,8 +190,8 @@ void MessageHandler::ensureHandlerInstalled()
 void MessageHandler::handleFatalMessage(const DebugMessage &message)
 {
     const QString app = qApp->applicationName().isEmpty()
-                        ? qApp->applicationFilePath()
-                        : qApp->applicationName();
+        ? qApp->applicationFilePath()
+        : qApp->applicationName();
     QStringList bt;
     bt.reserve(message.backtrace.size());
     foreach (const auto &frame, Execution::resolveAll(message.backtrace)) {
@@ -207,7 +205,7 @@ void MessageHandler::handleFatalMessage(const DebugMessage &message)
         Endpoint::instance()->waitForMessagesWritten();
 }
 
-void MessageHandler::messageSelected(const QItemSelection& selection)
+void MessageHandler::messageSelected(const QItemSelection &selection)
 {
     if (selection.isEmpty()) {
         setStackTraceAvailable(false);

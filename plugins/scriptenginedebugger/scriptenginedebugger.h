@@ -43,7 +43,7 @@ public:
 };
 
 class ScriptEngineDebuggerFactory : public QObject,
-    public StandardToolFactory<QScriptEngine, ScriptEngineDebugger>
+                                    public StandardToolFactory<QScriptEngine, ScriptEngineDebugger>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

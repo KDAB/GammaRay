@@ -41,8 +41,7 @@
 
 using namespace GammaRay;
 
-QVector<PropertyWidgetTabFactoryBase *> PropertyWidget::s_tabFactories
-    = QVector<PropertyWidgetTabFactoryBase *>();
+QVector<PropertyWidgetTabFactoryBase *> PropertyWidget::s_tabFactories = QVector<PropertyWidgetTabFactoryBase *>();
 QVector<PropertyWidget *> PropertyWidget::s_propertyWidgets;
 
 PropertyWidget::PropertyWidget(QWidget *parent)
@@ -174,8 +173,9 @@ bool PropertyWidget::extensionAvailable(PropertyWidgetTabFactoryBase *factory) c
 bool PropertyWidget::factoryInUse(PropertyWidgetTabFactoryBase *factory) const
 {
     return std::find_if(m_pages.begin(), m_pages.end(), [factory](const PageInfo &pi) {
-        return pi.factory == factory;
-    }) != m_pages.end();
+               return pi.factory == factory;
+           })
+        != m_pages.end();
 }
 
 void PropertyWidget::slotCurrentTabChanged()

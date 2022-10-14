@@ -59,7 +59,7 @@ private:
 };
 
 class ScriptEngineDebuggerUiFactory : public QObject,
-    public StandardToolUiFactory<ScriptEngineDebuggerWidget>
+                                      public StandardToolUiFactory<ScriptEngineDebuggerWidget>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolUiFactory)

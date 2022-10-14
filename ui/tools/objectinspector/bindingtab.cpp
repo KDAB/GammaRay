@@ -43,7 +43,7 @@
 
 using namespace GammaRay;
 
-BindingTab::BindingTab(PropertyWidget* parent)
+BindingTab::BindingTab(PropertyWidget *parent)
     : QWidget(parent)
     , ui(new Ui::BindingTab)
 {

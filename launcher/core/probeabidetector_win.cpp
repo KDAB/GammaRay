@@ -105,10 +105,13 @@ static QString resolveImport(const QString &import, const QStringList &searchPat
     qDebug() << "Could not resolve import" << import << "in" << searchPaths;
     return QString();
 }
-struct Version {
+struct Version
+{
     Version(int major, int minor)
-        : major(major), minor(minor)
-    {}
+        : major(major)
+        , minor(minor)
+    {
+    }
     int major;
     int minor;
 };
@@ -118,7 +121,7 @@ static Version fileVersion(const QString &path)
     // version
     DWORD pointlessHandle;
     DWORD fileVersionInfoSize = GetFileVersionInfoSize(
-                reinterpret_cast<LPCWSTR>(path.utf16()), &pointlessHandle);
+        reinterpret_cast<LPCWSTR>(path.utf16()), &pointlessHandle);
     if (fileVersionInfoSize) {
         QScopedArrayPointer<BYTE> buffer(new BYTE[fileVersionInfoSize]);
         if (GetFileVersionInfoW(reinterpret_cast<LPCWSTR>(path.utf16()), pointlessHandle,
@@ -126,7 +129,8 @@ static Version fileVersion(const QString &path)
             void *versionInfoData;
             unsigned int versionInfoSize;
             if (VerQueryValue(buffer.data(), TEXT("\\"), &versionInfoData,
-                              &versionInfoSize) && versionInfoSize) {
+                              &versionInfoSize)
+                && versionInfoSize) {
                 VS_FIXEDFILEINFO *versionInfo = reinterpret_cast<VS_FIXEDFILEINFO *>(versionInfoData);
                 if (versionInfo->dwSignature == VS_FFI_SIGNATURE)
                     return Version(versionInfo->dwFileVersionMS >> 16, versionInfo->dwFileVersionMS & 0xFFFF);
@@ -202,7 +206,7 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
     // If the function fails with ERROR_BAD_LENGTH, retry the function until it succeeds.
     do {
         snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
-    } while(GetLastError() == ERROR_BAD_LENGTH);
+    } while (GetLastError() == ERROR_BAD_LENGTH);
     if (GetLastError() == ERROR_ACCESS_DENIED) {
         return QString();
     }
@@ -234,8 +238,7 @@ static QString compilerFromLibraries(const QStringList &libraries)
 static QString compilerVersionFromLibraries(const QStringList &libraries)
 {
     for (const QString &lib : libraries) {
-        if (lib.startsWith(QLatin1String("msvcp"), Qt::CaseInsensitive) ||
-            lib.startsWith(QLatin1String("vcruntime"), Qt::CaseInsensitive)) {
+        if (lib.startsWith(QLatin1String("msvcp"), Qt::CaseInsensitive) || lib.startsWith(QLatin1String("vcruntime"), Qt::CaseInsensitive)) {
             return QString::number(fileVersion(lib).major * 10);
         }
     }

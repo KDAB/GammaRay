@@ -45,10 +45,10 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
-    void disableChecker (const QString &id);
-    void enableChecker (const QString &id);
+    void disableChecker(const QString &id);
+    void enableChecker(const QString &id);
 
 private:
     QVector<QString> m_disabledCheckers; // holds the ids of the disabled checkers

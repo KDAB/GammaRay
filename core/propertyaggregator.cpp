@@ -59,8 +59,8 @@ int PropertyAggregator::count() const
         return 0;
     return std::accumulate(m_propertyAdaptors.constBegin(), m_propertyAdaptors.constEnd(), 0,
                            [](int lhs, PropertyAdaptor *rhs) {
-        return lhs + rhs->count();
-    });
+                               return lhs + rhs->count();
+                           });
 }
 
 PropertyData PropertyAggregator::propertyData(int index) const
@@ -102,11 +102,10 @@ void PropertyAggregator::writeProperty(int index, const QVariant &value)
 
 bool PropertyAggregator::canAddProperty() const
 {
-    auto count
-        = std::count_if(m_propertyAdaptors.constBegin(), m_propertyAdaptors.constEnd(),
-                        [](PropertyAdaptor *pa) {
-        return pa->canAddProperty();
-    });
+    auto count = std::count_if(m_propertyAdaptors.constBegin(), m_propertyAdaptors.constEnd(),
+                               [](PropertyAdaptor *pa) {
+                                   return pa->canAddProperty();
+                               });
     return count == 1;
 }
 

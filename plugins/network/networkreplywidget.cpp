@@ -55,7 +55,7 @@ static QObject *createClientNetworkSupportInterface(const QString & /*name*/, QO
     return new NetworkSupportClient(parent);
 }
 
-NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
+NetworkReplyWidget::NetworkReplyWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::NetworkReplyWidget)
 {
@@ -63,7 +63,7 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
 
     ObjectBroker::registerClientObjectFactoryCallback<NetworkSupportInterface *>(
         createClientNetworkSupportInterface);
-    auto interface = ObjectBroker::object<NetworkSupportInterface*>();
+    auto interface = ObjectBroker::object<NetworkSupportInterface *>();
 
     auto srcModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.NetworkReplyModel"));
     auto proxy = new ClientNetworkReplyModel(this);
@@ -84,7 +84,7 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
     connect(ui->replyView->selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const QModelIndex &current, const QModelIndex &) {
         const auto objColumn = current.sibling(current.row(), NetworkReplyModelColumn::ObjectColumn);
         auto response = objColumn.data(NetworkReplyModelRole::ReplyResponseRole).toByteArray();
-        const auto contentType = (NetworkReply::ContentType)objColumn.data(NetworkReplyModelRole::ReplyContentType).toInt();
+        const auto contentType = ( NetworkReply::ContentType )objColumn.data(NetworkReplyModelRole::ReplyContentType).toInt();
 
         if (contentType == NetworkReply::Json) {
             response = QJsonDocument::fromJson(response).toJson();
@@ -99,15 +99,15 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget* parent)
         }
 #else
 
-        QTextCodec::ConverterState state;
-        QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-        const QString text = codec->toUnicode(response.constData(), response.size(), &state);
-        if (state.invalidChars > 0) {
-            ui->responseTextEdit->setPlainText(tr("%1: Unable to show response preview").arg(qApp->applicationName()));
-        } else {
-            // TODO: Add support for pretty-printing XML etc
-            ui->responseTextEdit->setPlainText(text);
-        }
+            QTextCodec::ConverterState state;
+            QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+            const QString text = codec->toUnicode(response.constData(), response.size(), &state);
+            if (state.invalidChars > 0) {
+                ui->responseTextEdit->setPlainText(tr("%1: Unable to show response preview").arg(qApp->applicationName()));
+            } else {
+                // TODO: Add support for pretty-printing XML etc
+                ui->responseTextEdit->setPlainText(text);
+            }
 #endif
     });
     ui->responseTextEdit->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));

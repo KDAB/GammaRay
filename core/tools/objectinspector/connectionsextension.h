@@ -37,7 +37,7 @@ class InboundConnectionsModel;
 class OutboundConnectionsModel;
 
 class ConnectionsExtension : public ConnectionsExtensionInterface,
-    public PropertyControllerExtension
+                             public PropertyControllerExtension
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ConnectionsExtensionInterface)

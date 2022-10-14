@@ -37,7 +37,7 @@ class PropertyFontEditor : public PropertyExtendedEditor
     Q_OBJECT
 public:
     explicit PropertyFontEditor(QWidget *parent = nullptr);
-    void showEditor(QWidget * parent) override;
+    void showEditor(QWidget *parent) override;
 };
 }
 

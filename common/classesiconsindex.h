@@ -36,13 +36,13 @@
 
 namespace GammaRay {
 namespace ClassesIconsIndex {
-    typedef QHash<QString, int>::const_iterator ConstIterator;
+typedef QHash<QString, int>::const_iterator ConstIterator;
 
-    GAMMARAY_COMMON_EXPORT ConstIterator constBegin();
-    GAMMARAY_COMMON_EXPORT ConstIterator constEnd();
+GAMMARAY_COMMON_EXPORT ConstIterator constBegin();
+GAMMARAY_COMMON_EXPORT ConstIterator constEnd();
 
-    GAMMARAY_COMMON_EXPORT int iconIdForName(const QString &name);
-    GAMMARAY_COMMON_EXPORT QString iconNameForId(int id);
+GAMMARAY_COMMON_EXPORT int iconIdForName(const QString &name);
+GAMMARAY_COMMON_EXPORT QString iconNameForId(int id);
 }
 }
 

@@ -131,7 +131,7 @@ void ModelContentProxyModel::emitDataChangedForSelection(const QItemSelection &s
     }
 }
 
-void ModelContentProxyModel::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+void ModelContentProxyModel::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
     emitDataChangedForSelection(deselected);
     emitDataChangedForSelection(selected);

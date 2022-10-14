@@ -44,8 +44,7 @@ QmlListPropertyAdaptor::~QmlListPropertyAdaptor() = default;
 int QmlListPropertyAdaptor::count() const
 {
     auto var = object().variant(); // we need to keep that alive for the runtime of this method
-    QQmlListProperty<QObject> *prop
-        = reinterpret_cast<QQmlListProperty<QObject> *>(const_cast<void *>(var.data()));
+    QQmlListProperty<QObject> *prop = reinterpret_cast<QQmlListProperty<QObject> *>(const_cast<void *>(var.data()));
     if (!prop || !prop->count)
         return 0;
     return prop->count(prop);
@@ -56,8 +55,7 @@ PropertyData QmlListPropertyAdaptor::propertyData(int index) const
     PropertyData pd;
 
     auto var = object().variant(); // we need to keep that alive for the runtime of this method
-    QQmlListProperty<QObject> *prop
-        = reinterpret_cast<QQmlListProperty<QObject> *>(const_cast<void *>(var.data()));
+    QQmlListProperty<QObject> *prop = reinterpret_cast<QQmlListProperty<QObject> *>(const_cast<void *>(var.data()));
     if (!prop || !prop->at || !prop->count || index >= prop->count(prop))
         return pd;
 

@@ -101,7 +101,8 @@ protected:
 private:
     bool mManualError = false;
 
-    enum Orientation {
+    enum Orientation
+    {
         In,
         Out
     };

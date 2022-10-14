@@ -41,8 +41,7 @@ static const std::string PROBE_NAME = GAMMARAY_PROBE_BASENAME;
 extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpvReserved*/)
 {
     switch (dwReason) {
-    case DLL_PROCESS_ATTACH:
-    {
+    case DLL_PROCESS_ATTACH: {
         wchar_t buffer[MAX_PATH * 2];
         const int size = GetModuleFileNameW(hInstance, buffer, MAX_PATH * 2);
         if (!size) {
@@ -62,14 +61,13 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpv
                 break;
             }
         }
-        gammaray_probe_inject inject = (gammaray_probe_inject)GetProcAddress(probe, "gammaray_probe_inject");
+        gammaray_probe_inject inject = ( gammaray_probe_inject )GetProcAddress(probe, "gammaray_probe_inject");
         if (!inject) {
             OutputDebugStringW(L"GammaRay: Failed to resolve gammaray_probe_inject");
             break;
         }
         inject();
-    }
-        break;
+    } break;
     }
     // return false to get unloaded
     return FALSE; // krazy:exclude=captruefalse

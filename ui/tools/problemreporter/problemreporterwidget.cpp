@@ -52,8 +52,9 @@ class ProblemFilterDelegate : public QStyledItemDelegate
 {
 public:
     explicit ProblemFilterDelegate(QAbstractItemView *view)
-     : QStyledItemDelegate(view)
-    {}
+        : QStyledItemDelegate(view)
+    {
+    }
 
 
 protected:

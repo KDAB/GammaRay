@@ -56,7 +56,8 @@ class QuickInspectorWidget : public QWidget
 {
     Q_OBJECT
 public:
-    enum StateFlag {
+    enum StateFlag
+    {
         Ready = 0x0,
         WaitingApply = 0x1,
         WaitingFeatures = 0x2,

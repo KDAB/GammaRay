@@ -58,7 +58,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-Q_DECLARE_METATYPE(const QObject*)
+Q_DECLARE_METATYPE(const QObject *)
 
 using namespace GammaRay;
 
@@ -129,14 +129,12 @@ QString VariantHandler::displayString(const QVariant &value)
 {
     switch (value.type()) {
 #ifndef QT_NO_CURSOR
-    case QVariant::Cursor:
-    {
+    case QVariant::Cursor: {
         const QCursor cursor = value.value<QCursor>();
         return EnumUtil::enumToString(QVariant::fromValue<int>(cursor.shape()), "Qt::CursorShape");
     }
 #endif
-    case QVariant::Icon:
-    {
+    case QVariant::Icon: {
         const QIcon icon = value.value<QIcon>();
         if (icon.isNull()) {
             return qApp->translate("GammaRay::VariantHandler", "<no icon>");
@@ -149,69 +147,40 @@ QString VariantHandler::displayString(const QVariant &value)
         }
         return l.join(QStringLiteral(", "));
     }
-    case QVariant::Line:
-    {
+    case QVariant::Line: {
         const auto line = value.toLine();
-        return
-            QStringLiteral("%1, %2 → %3, %4").
-            arg(line.x1()).arg(line.y1()).
-            arg(line.x2()).arg(line.y2());
+        return QStringLiteral("%1, %2 → %3, %4").arg(line.x1()).arg(line.y1()).arg(line.x2()).arg(line.y2());
     }
 
-    case QVariant::LineF:
-    {
+    case QVariant::LineF: {
         const auto line = value.toLineF();
-        return
-            QStringLiteral("%1, %2 → %3, %4").
-            arg(line.x1()).arg(line.y1()).
-            arg(line.x2()).arg(line.y2());
+        return QStringLiteral("%1, %2 → %3, %4").arg(line.x1()).arg(line.y1()).arg(line.x2()).arg(line.y2());
     }
 
     case QVariant::Locale:
         return value.toLocale().name();
 
-    case QVariant::Point:
-    {
+    case QVariant::Point: {
         const auto point = value.toPoint();
-        return
-            QStringLiteral("%1, %2").
-            arg(point.x()).
-            arg(point.y());
+        return QStringLiteral("%1, %2").arg(point.x()).arg(point.y());
     }
 
-    case QVariant::PointF:
-    {
+    case QVariant::PointF: {
         const auto point = value.toPointF();
-        return
-            QStringLiteral("%1, %2").
-            arg(point.x()).
-            arg(point.y());
+        return QStringLiteral("%1, %2").arg(point.x()).arg(point.y());
     }
 
-    case QVariant::Rect:
-    {
+    case QVariant::Rect: {
         const auto rect = value.toRect();
-        return
-            QStringLiteral("%1, %2 %3 x %4").
-            arg(rect.x()).
-            arg(rect.y()).
-            arg(rect.width()).
-            arg(rect.height());
+        return QStringLiteral("%1, %2 %3 x %4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
     }
 
-    case QVariant::RectF:
-    {
+    case QVariant::RectF: {
         const auto rect = value.toRectF();
-        return
-            QStringLiteral("%1, %2 %3 x %4").
-            arg(rect.x()).
-            arg(rect.y()).
-            arg(rect.width()).
-            arg(rect.height());
+        return QStringLiteral("%1, %2 %3 x %4").arg(rect.x()).arg(rect.y()).arg(rect.width()).arg(rect.height());
     }
 
-    case QVariant::Palette:
-    {
+    case QVariant::Palette: {
         const QPalette pal = value.value<QPalette>();
         if (pal == qApp->palette()) {
             return QStringLiteral("<inherited>");
@@ -219,26 +188,17 @@ QString VariantHandler::displayString(const QVariant &value)
         return QStringLiteral("<custom>");
     }
 
-    case QVariant::Size:
-    {
+    case QVariant::Size: {
         const auto size = value.toSize();
-        return
-            QStringLiteral("%1 x %2").
-            arg(size.width()).
-            arg(size.height());
+        return QStringLiteral("%1 x %2").arg(size.width()).arg(size.height());
     }
 
-    case QVariant::SizeF:
-    {
+    case QVariant::SizeF: {
         const auto size = value.toSizeF();
-        return
-            QStringLiteral("%1 x %2").
-            arg(size.width()).
-            arg(size.height());
+        return QStringLiteral("%1 x %2").arg(size.width()).arg(size.height());
     }
 
-    case QVariant::StringList:
-    {
+    case QVariant::StringList: {
         const auto l = value.toStringList();
         if (l.isEmpty()) {
             return QStringLiteral("<empty>");
@@ -249,14 +209,9 @@ QString VariantHandler::displayString(const QVariant &value)
         return QStringLiteral("<%1 entries>").arg(l.size());
     }
 
-    case QVariant::Transform:
-    {
+    case QVariant::Transform: {
         const QTransform t = value.value<QTransform>();
-        return
-            QStringLiteral("[%1 %2 %3, %4 %5 %6, %7 %8 %9]").
-            arg(t.m11()).arg(t.m12()).arg(t.m13()).
-            arg(t.m21()).arg(t.m22()).arg(t.m23()).
-            arg(t.m31()).arg(t.m32()).arg(t.m33());
+        return QStringLiteral("[%1 %2 %3, %4 %5 %6, %7 %8 %9]").arg(t.m11()).arg(t.m12()).arg(t.m13()).arg(t.m21()).arg(t.m22()).arg(t.m23()).arg(t.m31()).arg(t.m32()).arg(t.m33());
     }
     default:
         break;
@@ -270,8 +225,10 @@ QString VariantHandler::displayString(const QVariant &value)
     if (value.userType() == qMetaTypeId<QMargins>()) {
         const QMargins margins = value.value<QMargins>();
         return qApp->translate("GammaRay::VariantHandler", "left: %1, top: %2, right: %3, bottom: %4")
-               .arg(margins.left()).arg(margins.top())
-               .arg(margins.right()).arg(margins.bottom());
+            .arg(margins.left())
+            .arg(margins.top())
+            .arg(margins.right())
+            .arg(margins.bottom());
     }
 
     if (value.userType() == qMetaTypeId<const QMetaObject *>()) {
@@ -301,8 +258,8 @@ QString VariantHandler::displayString(const QVariant &value)
         return value.value<QTimeZone>().id();
     }
 
-    if (value.userType() == qMetaTypeId<QSet<QByteArray> >()) {
-        const QSet<QByteArray> set = value.value<QSet<QByteArray> >();
+    if (value.userType() == qMetaTypeId<QSet<QByteArray>>()) {
+        const QSet<QByteArray> set = value.value<QSet<QByteArray>>();
         QStringList l;
         l.reserve(set.size());
         for (const QByteArray &b : set) {
@@ -355,7 +312,7 @@ QString VariantHandler::displayString(const QVariant &value)
             return v.toBool() ? QStringLiteral("true") : QStringLiteral("false");
         } else if (v.isDouble()) {
             return QString::number(v.toDouble());
-        } else if(v.isNull()) {
+        } else if (v.isNull()) {
             return QStringLiteral("null");
         } else if (v.isArray()) {
             int size = v.toArray().size();
@@ -396,8 +353,7 @@ QString VariantHandler::displayString(const QVariant &value)
     }
 
     // generic converters
-    const QVector<VariantHandler::GenericStringConverter> genStrConverters
-        = s_variantHandlerRepository()->genericStringConverters;
+    const QVector<VariantHandler::GenericStringConverter> genStrConverters = s_variantHandlerRepository()->genericStringConverters;
     for (auto converter : genStrConverters) {
         bool ok = false;
         const QString s = converter(value, &ok);
@@ -408,9 +364,9 @@ QString VariantHandler::displayString(const QVariant &value)
     // catch-all QObject handler
     // search the entire hierarchy for custom converters, so we can override this
     // for entire sub-trees
-    if (value.canConvert<QObject*>() || value.canConvert<const QObject*>()) {
-        bool isConst = value.canConvert<const QObject*>();
-        const auto obj = isConst ? value.value<const QObject*>() : value.value<QObject*>();
+    if (value.canConvert<QObject *>() || value.canConvert<const QObject *>()) {
+        bool isConst = value.canConvert<const QObject *>();
+        const auto obj = isConst ? value.value<const QObject *>() : value.value<QObject *>();
         if (!obj || obj->metaObject() == &QObject::staticMetaObject)
             return Util::displayString(obj);
 
@@ -433,8 +389,7 @@ QString VariantHandler::displayString(const QVariant &value)
 QVariant VariantHandler::decoration(const QVariant &value)
 {
     switch (value.type()) {
-    case QVariant::Brush:
-    {
+    case QVariant::Brush: {
         const QBrush b = value.value<QBrush>();
         if (b.style() != Qt::NoBrush) {
             QPixmap p(16, 16);
@@ -446,8 +401,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
         }
         break;
     }
-    case QVariant::Color:
-    {
+    case QVariant::Color: {
         const QColor c = value.value<QColor>();
         if (c.isValid()) {
             QPixmap p(16, 16);
@@ -460,8 +414,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
         break;
     }
 #ifndef QT_NO_CURSOR
-    case QVariant::Cursor:
-    {
+    case QVariant::Cursor: {
         const QCursor c = value.value<QCursor>();
         if (!c.pixmap().isNull()) {
             return c.pixmap().scaled(16, 16, Qt::KeepAspectRatio, Qt::FastTransformation);
@@ -471,8 +424,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
 #endif
     case QVariant::Icon:
         return value;
-    case QVariant::Pen:
-    {
+    case QVariant::Pen: {
         const QPen pen = value.value<QPen>();
         if (pen.style() != Qt::NoPen) {
             QPixmap p(16, 16);
@@ -488,8 +440,7 @@ QVariant VariantHandler::decoration(const QVariant &value)
         }
         break;
     }
-    case QVariant::Pixmap:
-    {
+    case QVariant::Pixmap: {
         const QPixmap p = value.value<QPixmap>();
         if (p.isNull()) {
             break;

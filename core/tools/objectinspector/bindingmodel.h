@@ -51,14 +51,15 @@ class BindingModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    enum {
+    enum
+    {
         NameColumn = 0,
         ValueColumn = 1,
         DepthColumn = 2,
         LocationColumn = 3
     };
 
-    explicit BindingModel (QObject *parent = nullptr);
+    explicit BindingModel(QObject *parent = nullptr);
     ~BindingModel() override;
 
     void setObject(QObject *obj, std::vector<std::unique_ptr<BindingNode>> &bindings);
@@ -69,7 +70,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-    QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 

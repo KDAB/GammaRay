@@ -38,9 +38,8 @@ QT_END_NAMESPACE
 namespace GammaRay {
 
 /*! Determines the absolute file path of this DLL. */
-namespace SelfLocator
-{
-    QString findMe();
+namespace SelfLocator {
+QString findMe();
 }
 
 }

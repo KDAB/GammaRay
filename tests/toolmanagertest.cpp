@@ -60,7 +60,7 @@ private:
 private slots:
     static void initTestCase()
     {
-        qRegisterMetaType<QVector<ToolInfo> >();
+        qRegisterMetaType<QVector<ToolInfo>>();
         new ClientToolManager;
     }
 
@@ -83,7 +83,7 @@ private slots:
         toolManager->requestAvailableTools();
         availableToolsSpy.wait(500);
         QCOMPARE(availableToolsSpy.size(), 1);
-        const auto &list = availableToolsSpy[0][0].value<QVector<ToolData> >();
+        const auto &list = availableToolsSpy[0][0].value<QVector<ToolData>>();
         QVERIFY(!list.isEmpty());
 
         bool hasBasicTools = false;
@@ -124,7 +124,7 @@ private slots:
         QCOMPARE(toolsForObjectSpy.size(), 1);
         const ObjectId &actionId = toolsForObjectSpy.first().first().value<ObjectId>();
         QCOMPARE(actionId.asQObject(), &action);
-        const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<QString> >();
+        const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<QString>>();
         QStringList supportedToolIds;
         for (const auto &tool : actionTools)
             supportedToolIds << tool;
@@ -174,7 +174,7 @@ private:
         QCOMPARE(actionInspector->hasUi(), true);
         QVERIFY(!guiSupport); // tools without ui are supposed to be filtered out
         QVERIFY(!ClientToolManager::instance()->widgetForId("inexistantTool"));
-        QVERIFY(actionInspectorEnabled == (bool)ClientToolManager::instance()->widgetForId("gammaray_actioninspector")); // if tool is disabled we explicitly want widgetForId to be null.
+        QVERIFY(actionInspectorEnabled == ( bool )ClientToolManager::instance()->widgetForId("gammaray_actioninspector")); // if tool is disabled we explicitly want widgetForId to be null.
     }
 
     void testToolEnabled()
@@ -217,7 +217,7 @@ private:
         QCOMPARE(toolsForObjectSpy.size(), 1);
         const ObjectId &actionId = toolsForObjectSpy.first().first().value<ObjectId>();
         QCOMPARE(actionId.asQObject(), &action);
-        const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<ToolInfo> >();
+        const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<ToolInfo>>();
         QStringList supportedToolIds;
         for (const auto &tool : actionTools) {
             QVERIFY(!tool.name().isEmpty());

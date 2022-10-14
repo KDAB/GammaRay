@@ -68,7 +68,7 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkMethod(const QMet
 
     // check for parameters with unknown type
     // don't check internal methods such as _q_createJSWrapper() from QQuickItem
-    if (!method.name().startsWith("_q")) { //krazy:exclude=strings
+    if (!method.name().startsWith("_q")) { // krazy:exclude=strings
         for (int j = 0; j < method.parameterCount(); ++j) {
             if (method.parameterType(j) == QMetaType::UnknownType)
                 r |= QMetaObjectValidatorResult::UnknownMethodParameterType;
@@ -87,8 +87,8 @@ QMetaObjectValidatorResult::Results QMetaObjectValidator::checkMethod(const QMet
 
 static bool isDynamicMetaObject(const QMetaObject *mo)
 {
-    Q_ASSERT(reinterpret_cast<const QMetaObjectPrivate*>(mo->d.data)->revision >= 3);
-    return reinterpret_cast<const QMetaObjectPrivate*>(mo->d.data)->flags & DynamicMetaObject;
+    Q_ASSERT(reinterpret_cast<const QMetaObjectPrivate *>(mo->d.data)->revision >= 3);
+    return reinterpret_cast<const QMetaObjectPrivate *>(mo->d.data)->flags & DynamicMetaObject;
 }
 
 QMetaObjectValidatorResult::Results QMetaObjectValidator::check(const QMetaObject *mo)

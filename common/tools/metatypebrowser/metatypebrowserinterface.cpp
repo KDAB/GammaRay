@@ -32,10 +32,10 @@
 
 using namespace GammaRay;
 
-MetaTypeBrowserInterface::MetaTypeBrowserInterface(QObject* parent)
+MetaTypeBrowserInterface::MetaTypeBrowserInterface(QObject *parent)
     : QObject(parent)
 {
-    ObjectBroker::registerObject<MetaTypeBrowserInterface*>(this);
+    ObjectBroker::registerObject<MetaTypeBrowserInterface *>(this);
 }
 
 MetaTypeBrowserInterface::~MetaTypeBrowserInterface() = default;

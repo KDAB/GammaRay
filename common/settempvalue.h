@@ -54,7 +54,7 @@ struct SetTempValue
     }
 
     Q_DISABLE_COPY(SetTempValue)
-    T& obj;
+    T &obj;
     T oldValue;
 };
 }

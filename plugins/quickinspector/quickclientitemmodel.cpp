@@ -59,15 +59,13 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
         if (role == Qt::ToolTipRole && flags) {
             QString tooltip = ClientDecorationIdentityProxyModel::data(index, role).toString();
             tooltip.append("<p style='white-space:pre'>");
-            //if flags has OutOfView it has also PartiallyOutOfView, no need to test both
-            if ((flags &QuickItemModelRole::PartiallyOutOfView)
+            // if flags has OutOfView it has also PartiallyOutOfView, no need to test both
+            if ((flags & QuickItemModelRole::PartiallyOutOfView)
                 && (~flags & QuickItemModelRole::Invisible)) {
                 QByteArray byteArray;
                 QBuffer buffer(&byteArray);
-                QIcon::fromTheme(QStringLiteral("dialog-warning")).pixmap(16, 16).save(&buffer,
-                                                                                       "PNG");
-                tooltip.append("<img src=\"data:image/png;base64,").
-                append(byteArray.toBase64());
+                QIcon::fromTheme(QStringLiteral("dialog-warning")).pixmap(16, 16).save(&buffer, "PNG");
+                tooltip.append("<img src=\"data:image/png;base64,").append(byteArray.toBase64());
                 if (flags & QuickItemModelRole::OutOfView)
                     tooltip.append("\"> Item is visible, but out of view.");
                 else
@@ -103,11 +101,8 @@ QVariant QuickClientItemModel::data(const QModelIndex &index, int role) const
 
                 QByteArray byteArray;
                 QBuffer buffer(&byteArray);
-                QIcon::fromTheme(QStringLiteral("dialog-information")).pixmap(16, 16).save(&buffer,
-                                                                                           "PNG");
-                tooltip.append(QStringLiteral("<img src=\"data:image/png;base64,").
-                               append(byteArray.toBase64()).
-                               append("\"> Item %1.").arg(flagStrings.join(QStringLiteral(", "))));
+                QIcon::fromTheme(QStringLiteral("dialog-information")).pixmap(16, 16).save(&buffer, "PNG");
+                tooltip.append(QStringLiteral("<img src=\"data:image/png;base64,").append(byteArray.toBase64()).append("\"> Item %1.").arg(flagStrings.join(QStringLiteral(", "))));
             }
             tooltip.append("</p>");
             return tooltip;

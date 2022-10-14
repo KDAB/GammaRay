@@ -41,22 +41,21 @@ namespace GammaRay {
 
 class WlCompositorInterface : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit WlCompositorInterface(QObject *parent);
-  ~WlCompositorInterface() override;
+    explicit WlCompositorInterface(QObject *parent);
+    ~WlCompositorInterface() override;
 
 public slots:
-  virtual void connected() = 0;
-  virtual void disconnected() = 0;
-  virtual void setSelectedClient(int index) = 0;
-  virtual void setSelectedResource(uint id) = 0;
+    virtual void connected() = 0;
+    virtual void disconnected() = 0;
+    virtual void setSelectedClient(int index) = 0;
+    virtual void setSelectedResource(uint id) = 0;
 
 signals:
-  void logMessage(quint64 pid, qint64 time, const QByteArray &msg);
-  void setLoggingClient(quint64 pid);
-  void resetLog();
-
+    void logMessage(quint64 pid, qint64 time, const QByteArray &msg);
+    void setLoggingClient(quint64 pid);
+    void resetLog();
 };
 
 }

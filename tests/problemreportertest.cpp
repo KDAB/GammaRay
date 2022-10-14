@@ -68,13 +68,18 @@ public:
     std::unique_ptr<QObject> mainThreadObj;
 };
 
-struct UnregisteredType {};
+struct UnregisteredType
+{
+};
 
 class FaultyMetaObjectBaseClass : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(UnregisteredType someProp READ someProp CONSTANT)
-    UnregisteredType someProp() const { return {}; }
+    UnregisteredType someProp() const
+    {
+        return {};
+    }
 };
 
 class FaultyMetaObjectClass : public FaultyMetaObjectBaseClass
@@ -84,9 +89,15 @@ class FaultyMetaObjectClass : public FaultyMetaObjectBaseClass
     Q_PROPERTY(UnregisteredType someProp READ someProp CONSTANT)
 
 public:
-    Q_INVOKABLE static void noop(UnregisteredType param) { Q_UNUSED(param) }
+    Q_INVOKABLE static void noop(UnregisteredType param)
+    {
+        Q_UNUSED(param)
+    }
 
-    UnregisteredType someProp() const { return {}; }
+    UnregisteredType someProp() const
+    {
+        return {};
+    }
 };
 
 namespace GammaRay {
@@ -198,8 +209,7 @@ private slots:
 
         auto dummyChecker = std::find_if(ProblemCollector::instance()->availableCheckers().begin(),
                                          ProblemCollector::instance()->availableCheckers().end(),
-                                         [](const ProblemCollector::Checker &c) { return c.id == QStringLiteral("Dummy"); }
-                                        );
+                                         [](const ProblemCollector::Checker &c) { return c.id == QStringLiteral("Dummy"); });
         dummyChecker->enabled = false;
 
         ProblemCollector::instance()->requestScan(); // scans should always be reproducible if the program didn't change.
@@ -241,8 +251,7 @@ private slots:
         auto &checkers = ProblemCollector::instance()->availableCheckers();
         checkers.erase(std::remove_if(checkers.begin(),
                                       checkers.end(),
-                                      [](ProblemCollector::Checker &c) { return c.id == "Dummy"; }
-                                     ));
+                                      [](ProblemCollector::Checker &c) { return c.id == "Dummy"; }));
         QCOMPARE(model->rowCount(), rowCount);
     }
 
@@ -309,8 +318,7 @@ private slots:
 #endif
         const auto &problems = ProblemCollector::instance()->problems();
         QVERIFY(std::any_of(problems.begin(), problems.end(),
-            [](const Problem &p){ return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.BindingLoopScan"); }
-        ));
+                            [](const Problem &p) { return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.BindingLoopScan"); }));
     }
 #endif
 
@@ -329,8 +337,8 @@ private slots:
         o1->setObjectName("o1");
         auto o2 = std::unique_ptr<QObject>(new QObject());
         o2->setObjectName("o2");
-        connect(o1.get(), SIGNAL(destroyed(QObject*)), o2.get(), SLOT(deleteLater()));
-        connect(o1.get(), SIGNAL(destroyed(QObject*)), o2.get(), SLOT(deleteLater()));
+        connect(o1.get(), SIGNAL(destroyed(QObject *)), o2.get(), SLOT(deleteLater()));
+        connect(o1.get(), SIGNAL(destroyed(QObject *)), o2.get(), SLOT(deleteLater()));
 
         QTest::qWait(10);
         ProblemCollector::instance()->requestScan();
@@ -340,8 +348,7 @@ private slots:
 
         const auto &problems = ProblemCollector::instance()->problems();
         auto crossThreadProblem = std::find_if(problems.begin(), problems.end(),
-            [](const Problem &p){ return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.CrossTread"); }
-        );
+                                               [](const Problem &p) { return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.CrossTread"); });
 
         QVERIFY(crossThreadProblem != problems.end());
         QCOMPARE(crossThreadProblem->object, ObjectId(task->mainThreadObj.get()));
@@ -350,8 +357,7 @@ private slots:
         QVERIFY(crossThreadProblem->description.contains("slot mainThreadObj"));
 
         auto duplicateProblem = std::find_if(problems.begin(), problems.end(),
-            [](const Problem &p){ return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.Duplicate"); }
-        );
+                                             [](const Problem &p) { return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.Duplicate"); });
 
         QVERIFY(duplicateProblem != problems.end());
         QCOMPARE(duplicateProblem->object, ObjectId(o2.get()));
@@ -368,11 +374,10 @@ private slots:
 
         const auto &problems2 = ProblemCollector::instance()->problems();
         auto duplicateProblem2 = std::find_if(problems2.begin(), problems2.end(),
-            [&o2](const Problem &p){
-                return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.Duplicate")
-                       && p.object == ObjectId(o2.get());
-            }
-        );
+                                              [&o2](const Problem &p) {
+                                                  return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.Duplicate")
+                                                      && p.object == ObjectId(o2.get());
+                                              });
 
         QEXPECT_FAIL("", "We can't find duplicates with PMF connects, yet.", Abort);
         QVERIFY(duplicateProblem2 != problems2.end());
@@ -380,8 +385,6 @@ private slots:
         QVERIFY(duplicateProblem2->description.contains("multiple times"));
         QVERIFY(duplicateProblem2->description.contains("signal o1"));
         QVERIFY(duplicateProblem2->description.contains("slot o2"));
-
-
     }
 
     static void testMetaTypeChecks()
@@ -391,8 +394,7 @@ private slots:
 
         auto &checkers = ProblemCollector::instance()->availableCheckers();
         auto checker = std::find_if(checkers.begin(), checkers.end(),
-                    [](ProblemCollector::Checker &c){ return c.id == "com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator"; }
-                   );
+                                    [](ProblemCollector::Checker &c) { return c.id == "com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator"; });
         QVERIFY(checker != checkers.end());
         checker->enabled = true;
 
@@ -400,29 +402,26 @@ private slots:
 
         const auto &problems = ProblemCollector::instance()->problems();
         QVERIFY(std::any_of(problems.begin(), problems.end(),
-            [&obj](const Problem &p){
-                return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
-                       && p.object == ObjectId(const_cast<QMetaObject*>(obj->metaObject()), "const QMetaObject*")
-                       && p.description.contains(QLatin1String("overrides base class property"));
-            }
-        ));
+                            [&obj](const Problem &p) {
+                                return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
+                                    && p.object == ObjectId(const_cast<QMetaObject *>(obj->metaObject()), "const QMetaObject*")
+                                    && p.description.contains(QLatin1String("overrides base class property"));
+                            }));
         // In Qt6 objects get auto registered with metatype system
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         QVERIFY(std::any_of(problems.begin(), problems.end(),
-            [&obj](const Problem &p){
-                return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
-                       && p.object == ObjectId(const_cast<QMetaObject*>(obj->metaObject()), "const QMetaObject*")
-                       && p.description.contains(QLatin1String("parameter type not registered"));
-            }
-        ));
+                            [&obj](const Problem &p) {
+                                return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
+                                    && p.object == ObjectId(const_cast<QMetaObject *>(obj->metaObject()), "const QMetaObject*")
+                                    && p.description.contains(QLatin1String("parameter type not registered"));
+                            }));
 
         QVERIFY(std::any_of(problems.begin(), problems.end(),
-            [&obj](const Problem &p){
-                return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
-                       && p.object == ObjectId(const_cast<QMetaObject*>(obj->metaObject()), "const QMetaObject*")
-                       && p.description.contains(QLatin1String("property with a type not registered"));
-            }
-        ));
+                            [&obj](const Problem &p) {
+                                return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
+                                    && p.object == ObjectId(const_cast<QMetaObject *>(obj->metaObject()), "const QMetaObject*")
+                                    && p.description.contains(QLatin1String("property with a type not registered"));
+                            }));
 #endif
     }
 
@@ -443,14 +442,13 @@ private slots:
 
         const auto &problems = ProblemCollector::instance()->problems();
         QVERIFY(std::any_of(problems.begin(), problems.end(),
-            [=](const Problem &p){
-                return p.problemId.startsWith("gammaray_actioninspector.ShortcutDuplicates")
-                       && (p.object == ObjectId(a1) || p.object == ObjectId(a2))
-                       && p.description.contains("ambiguous")
-                       && p.description.contains(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::NativeText))
-                       && p.problemId.endsWith(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::PortableText));
-            }
-        ));
+                            [=](const Problem &p) {
+                                return p.problemId.startsWith("gammaray_actioninspector.ShortcutDuplicates")
+                                    && (p.object == ObjectId(a1) || p.object == ObjectId(a2))
+                                    && p.description.contains("ambiguous")
+                                    && p.description.contains(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::NativeText))
+                                    && p.problemId.endsWith(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::PortableText));
+                            }));
     }
 #endif
 };

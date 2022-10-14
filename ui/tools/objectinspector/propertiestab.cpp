@@ -89,7 +89,7 @@ void PropertiesTab::setObjectBaseName(const QString &baseName)
     proxy->setSourceModel(typesModel);
     proxy->sort(0);
     m_ui->newPropertyType->setModel(proxy);
-    connect(m_ui->newPropertyType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(m_ui->newPropertyType, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &PropertiesTab::updateNewPropertyValueEditor);
     updateNewPropertyValueEditor();
     connect(m_ui->newPropertyName, &QLineEdit::textChanged,
@@ -153,8 +153,8 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
     const QString property = getPropertyNameAndValue(index);
 
     const bool canShow = actions != PropertyModel::NoAction
-                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, index)
-                         || !property.isEmpty();
+        || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, index)
+        || !property.isEmpty();
 
     if (!canShow)
         return;
@@ -163,7 +163,7 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
 
     if (!property.isEmpty()) {
 #ifndef QT_NO_CLIPBOARD
-        contextMenu.addAction(tr("Copy"), [property]{
+        contextMenu.addAction(tr("Copy"), [property] {
             qApp->clipboard()->setText(property);
         });
 #endif
@@ -197,8 +197,7 @@ void PropertiesTab::addNewProperty()
     Q_ASSERT(m_interface->canAddProperty());
     const PropertyEditorFactory::TypeId type = selectedTypeId(m_ui->newPropertyType);
 
-    const QByteArray editorPropertyName
-        = PropertyEditorFactory::instance()->valuePropertyName(type);
+    const QByteArray editorPropertyName = PropertyEditorFactory::instance()->valuePropertyName(type);
     const QVariant value = m_newPropertyValue->property(editorPropertyName);
     m_interface->setProperty(m_ui->newPropertyName->text(), value);
 

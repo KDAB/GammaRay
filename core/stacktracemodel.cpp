@@ -32,14 +32,14 @@
 
 using namespace GammaRay;
 
-StackTraceModel::StackTraceModel(QObject* parent)
+StackTraceModel::StackTraceModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
 }
 
 StackTraceModel::~StackTraceModel() = default;
 
-void StackTraceModel::setStackTrace(const Execution::Trace& trace)
+void StackTraceModel::setStackTrace(const Execution::Trace &trace)
 {
     if (!m_trace.empty()) {
         beginRemoveRows(QModelIndex(), 0, m_trace.size() - 1);
@@ -80,8 +80,10 @@ QVariant StackTraceModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case 0: return m_frames.at(index.row()).name;
-            case 1: return QVariant::fromValue(m_frames.at(index.row()).location);
+        case 0:
+            return m_frames.at(index.row()).name;
+        case 1:
+            return QVariant::fromValue(m_frames.at(index.row()).location);
         }
     }
 
@@ -92,8 +94,10 @@ QVariant StackTraceModel::headerData(int section, Qt::Orientation orientation, i
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case 0: return tr("Function");
-            case 1: return tr("Location");
+        case 0:
+            return tr("Function");
+        case 1:
+            return tr("Location");
         }
     }
     return QAbstractTableModel::headerData(section, orientation, role);

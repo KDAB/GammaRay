@@ -67,10 +67,10 @@ public:
     static GAMMARAY_CORE_EXPORT bool isEnum(int metaTypeId);
 
     //! @cond internal
-    static GAMMARAY_CORE_EXPORT EnumRepository* create(QObject *parent); // only exported for unit tests
+    static GAMMARAY_CORE_EXPORT EnumRepository *create(QObject *parent); // only exported for unit tests
 
-    template <typename Enum, typename V, std::size_t N>
-    static void registerEnum(const MetaEnum::Value<V>(&lookup_table)[N], const char* name, bool flag)
+    template<typename Enum, typename V, std::size_t N>
+    static void registerEnum(const MetaEnum::Value<V> (&lookup_table)[N], const char *name, bool flag)
     {
         if (isEnum(qMetaTypeId<Enum>()))
             return;
@@ -101,13 +101,15 @@ private:
 }
 
 /*! Register a MetaEnum lookup table with the EnumRepository. */
-#define ER_REGISTER_ENUM(Class, Name, LookupTable) { \
-    EnumRepositoryServer::registerEnum<Class::Name>(LookupTable, #Class "::" #Name, false); \
-}
+#define ER_REGISTER_ENUM(Class, Name, LookupTable)                                              \
+    {                                                                                           \
+        EnumRepositoryServer::registerEnum<Class::Name>(LookupTable, #Class "::" #Name, false); \
+    }
 
 /*! Register a MetaEnum lookup table with the EnumRepository. */
-#define ER_REGISTER_FLAGS(Class, Name, LookupTable) { \
-    EnumRepositoryServer::registerEnum<Class::Name>(LookupTable, #Class "::" #Name, true); \
-}
+#define ER_REGISTER_FLAGS(Class, Name, LookupTable)                                            \
+    {                                                                                          \
+        EnumRepositoryServer::registerEnum<Class::Name>(LookupTable, #Class "::" #Name, true); \
+    }
 
 #endif // GAMMARAY_ENUMREPOSITORYSERVER_H

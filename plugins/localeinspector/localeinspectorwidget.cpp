@@ -40,7 +40,7 @@ LocaleInspectorWidget::LocaleInspectorWidget(QWidget *parent)
     ui->setupUi(this);
 
     ui->tabWidget->setTabEnabled(ui->tabWidget->indexOf(ui->timezoneTab),
-        Endpoint::instance()->objectAddress(QLatin1String("com.kdab.GammaRay.TimezoneModel")) != Protocol::InvalidObjectAddress);
+                                 Endpoint::instance()->objectAddress(QLatin1String("com.kdab.GammaRay.TimezoneModel")) != Protocol::InvalidObjectAddress);
 }
 
 LocaleInspectorWidget::~LocaleInspectorWidget() = default;

@@ -60,7 +60,7 @@ int StyleInspectorInterface::cellZoom() const
 
 QSize StyleInspectorInterface::cellSizeHint() const
 {
-    return {m_cellWidth * m_cellZoom, m_cellHeight * m_cellZoom};
+    return { m_cellWidth * m_cellZoom, m_cellHeight * m_cellZoom };
 }
 
 void StyleInspectorInterface::setCellHeight(int height)

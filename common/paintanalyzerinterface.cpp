@@ -75,13 +75,13 @@ void PaintAnalyzerInterface::setHasStackTrace(bool hasStackTrace)
 }
 
 namespace GammaRay {
-QDataStream& operator<<(QDataStream &stream, const PaintAnalyzerFrameData &data)
+QDataStream &operator<<(QDataStream &stream, const PaintAnalyzerFrameData &data)
 {
     stream << data.clipPath;
     return stream;
 }
 
-QDataStream& operator>>(QDataStream &stream, PaintAnalyzerFrameData &data)
+QDataStream &operator>>(QDataStream &stream, PaintAnalyzerFrameData &data)
 {
     stream >> data.clipPath;
     return stream;

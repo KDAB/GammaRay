@@ -102,7 +102,7 @@ PropertyTextEditor::PropertyTextEditor(QWidget *parent)
     setInlineEditable(true);
 }
 
-void PropertyTextEditor::showEditor(QWidget* parent)
+void PropertyTextEditor::showEditor(QWidget *parent)
 {
     PropertyTextEditorDialog dlg(value().toString(), parent);
     dlg.setReadOnly(isReadOnly());
@@ -116,7 +116,7 @@ PropertyByteArrayEditor::PropertyByteArrayEditor(QWidget *parent)
 {
 }
 
-void PropertyByteArrayEditor::showEditor(QWidget* parent)
+void PropertyByteArrayEditor::showEditor(QWidget *parent)
 {
     PropertyTextEditorDialog dlg(value().toByteArray(), parent);
     dlg.setReadOnly(isReadOnly());

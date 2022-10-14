@@ -34,14 +34,14 @@
 
 using namespace GammaRay;
 
-ClientActionModel::ClientActionModel(QObject* parent)
+ClientActionModel::ClientActionModel(QObject *parent)
     : QIdentityProxyModel(parent)
 {
 }
 
 ClientActionModel::~ClientActionModel() = default;
 
-QVariant ClientActionModel::data(const QModelIndex& index, int role) const
+QVariant ClientActionModel::data(const QModelIndex &index, int role) const
 {
     if (role == ActionModel::ObjectIdRole && index.column() != ActionModel::AddressColumn) {
         return index.sibling(index.row(), ActionModel::AddressColumn).data(ActionModel::ObjectIdRole);
@@ -62,20 +62,20 @@ QVariant ClientActionModel::headerData(int section, Qt::Orientation orientation,
     if (orientation == Qt::Horizontal) {
         if (role == Qt::DisplayRole) {
             switch (section) {
-                case ActionModel::AddressColumn:
-                    return tr("Object");
-                case ActionModel::NameColumn:
-                    return tr("Name");
-                case ActionModel::CheckablePropColumn:
-                    return tr("Checkable");
-                case ActionModel::CheckedPropColumn:
-                    return tr("Checked");
-                case ActionModel::PriorityPropColumn:
-                    return tr("Priority");
-                case ActionModel::ShortcutsPropColumn:
-                    return tr("Shortcut(s)");
-                default:
-                    return QVariant();
+            case ActionModel::AddressColumn:
+                return tr("Object");
+            case ActionModel::NameColumn:
+                return tr("Name");
+            case ActionModel::CheckablePropColumn:
+                return tr("Checkable");
+            case ActionModel::CheckedPropColumn:
+                return tr("Checked");
+            case ActionModel::PriorityPropColumn:
+                return tr("Priority");
+            case ActionModel::ShortcutsPropColumn:
+                return tr("Shortcut(s)");
+            default:
+                return QVariant();
             }
         }
         return QVariant();

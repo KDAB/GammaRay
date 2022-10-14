@@ -51,7 +51,7 @@ public:
     explicit QSGTextureGrabber(QObject *parent = nullptr);
     ~QSGTextureGrabber() override;
 
-    static QSGTextureGrabber* instance();
+    static QSGTextureGrabber *instance();
 
 public slots:
     void objectCreated(QObject *obj);
@@ -74,7 +74,7 @@ private:
 
     QMutex m_mutex;
     QPointer<QSGTexture> m_pendingTexture;
-    std::vector<QPointer<QQuickWindow> > m_windows;
+    std::vector<QPointer<QQuickWindow>> m_windows;
 
     void *m_grabData;
     int m_textureId;

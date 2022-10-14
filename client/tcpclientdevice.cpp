@@ -38,7 +38,7 @@ TcpClientDevice::TcpClientDevice(QObject *parent)
     m_socket = new QTcpSocket(this);
     connect(m_socket, &QAbstractSocket::connected, this, &ClientDevice::connected);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    connect(m_socket, static_cast<void(QAbstractSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error),
+    connect(m_socket, static_cast<void (QAbstractSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error),
             this, &TcpClientDevice::socketError);
 #else
     connect(m_socket, &QAbstractSocket::errorOccurred, this, &TcpClientDevice::socketError);

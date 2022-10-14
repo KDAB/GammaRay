@@ -75,9 +75,9 @@ Positioning::Positioning(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectCreated, this, &Positioning::objectAdded);
 }
 
-void Positioning::objectAdded(QObject* obj)
+void Positioning::objectAdded(QObject *obj)
 {
-    if (auto geoInfoSource = qobject_cast<QGeoPositionInfoSource*>(obj)) {
+    if (auto geoInfoSource = qobject_cast<QGeoPositionInfoSource *>(obj)) {
         if (geoInfoSource->sourceName() != QLatin1String("gammaray")) {
             if (positioningOverrideAvailable()) // we already have a proxy source taking care of things
                 return;
@@ -93,7 +93,7 @@ void Positioning::objectAdded(QObject* obj)
                 });
                 m_nonProxyPositionInfoSources.clear();
             }
-            QMetaObject::invokeMethod(geoInfoSource, "setInterface", Q_ARG(PositioningInterface*, this));
+            QMetaObject::invokeMethod(geoInfoSource, "setInterface", Q_ARG(PositioningInterface *, this));
         }
     }
 }
@@ -103,7 +103,7 @@ void Positioning::registerMetaTypes()
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT0(QGeoPositionInfo);
     MO_ADD_PROPERTY_RO(QGeoPositionInfo, coordinate);
-    MO_ADD_PROPERTY   (QGeoPositionInfo, timestamp, setTimestamp);
+    MO_ADD_PROPERTY(QGeoPositionInfo, timestamp, setTimestamp);
 
     MO_ADD_METAOBJECT1(QGeoPositionInfoSource, QObject);
     MO_ADD_PROPERTY_RO(QGeoPositionInfoSource, error);

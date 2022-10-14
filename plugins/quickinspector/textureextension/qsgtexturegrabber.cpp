@@ -84,15 +84,17 @@ QSGTextureGrabber *QSGTextureGrabber::instance()
 
 void QSGTextureGrabber::objectCreated(QObject *obj)
 {
-    if (auto window = qobject_cast<QQuickWindow*>(obj))
+    if (auto window = qobject_cast<QQuickWindow *>(obj))
         addQuickWindow(window);
 }
 
 void QSGTextureGrabber::addQuickWindow(QQuickWindow *window)
 {
-    connect(window, &QQuickWindow::afterRendering, this, [this, window]() {
-        windowAfterRendering(window);
-    }, Qt::DirectConnection);
+    connect(
+        window, &QQuickWindow::afterRendering, this, [this, window]() {
+            windowAfterRendering(window);
+        },
+        Qt::DirectConnection);
     m_windows.emplace_back(window);
 }
 

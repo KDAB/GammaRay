@@ -45,7 +45,7 @@ class ProcessFilterModel;
 class ProbeABIModel;
 
 namespace Ui {
-    class AttachDialog;
+class AttachDialog;
 }
 
 /*! Widget for selecting a process to attach GammaRay to. */

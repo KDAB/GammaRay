@@ -64,8 +64,7 @@ void SceneInspectorInterface::paintItemDecoration(QGraphicsItem *item, const QTr
     painter->drawPath(shape);
 
     painter->setPen(Qt::red);
-    const QPointF transformOrigin
-        = item->mapToScene(item->transformOriginPoint());
+    const QPointF transformOrigin = item->mapToScene(item->transformOriginPoint());
     painter->drawEllipse(transformOrigin,
                          5.0 / transform.m11(),
                          5.0 / transform.m22());

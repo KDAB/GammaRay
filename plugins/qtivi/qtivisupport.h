@@ -48,7 +48,8 @@ class QtIviSupportFactory : public QObject, public StandardToolFactory<QIviServi
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_qtivi.json")
 
 public:
-    explicit QtIviSupportFactory(QObject *parent = nullptr) : QObject(parent)
+    explicit QtIviSupportFactory(QObject *parent = nullptr)
+        : QObject(parent)
     {
     }
 };

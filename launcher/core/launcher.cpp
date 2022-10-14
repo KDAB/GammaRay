@@ -53,7 +53,8 @@
 #include <iostream>
 
 namespace GammaRay {
-enum State {
+enum State
+{
     Initial = 0,
     InjectorFinished = 1,
     InjectorFailed = 2,
@@ -69,7 +70,8 @@ struct LauncherPrivate
         , socket(nullptr)
         , state(Initial)
         , exitCode(0)
-    {}
+    {
+    }
 
     AbstractInjector::Ptr createInjector(QStringList *errorStrings = nullptr) const
     {
@@ -214,8 +216,7 @@ bool Launcher::start()
     if (!success) {
         QString errorMessage;
         if (d->options.isLaunch()) {
-            errorMessage = tr("Failed to launch target '%1'.").
-                arg(d->options.launchArguments().join(QStringLiteral(" ")));
+            errorMessage = tr("Failed to launch target '%1'.").arg(d->options.launchArguments().join(QStringLiteral(" ")));
         }
         if (d->options.isAttach()) {
             errorMessage = tr("Failed to attach to target with PID %1.").arg(d->options.pid());
@@ -268,9 +269,7 @@ void Launcher::printAllAvailableIPs()
               << std::endl;
 
     foreach (const QNetworkInterface &inter, QNetworkInterface::allInterfaces()) {
-        if (!(inter.flags() & QNetworkInterface::IsUp) ||
-            !(inter.flags() & QNetworkInterface::IsRunning) ||
-            (inter.flags() & QNetworkInterface::IsLoopBack)) {
+        if (!(inter.flags() & QNetworkInterface::IsUp) || !(inter.flags() & QNetworkInterface::IsRunning) || (inter.flags() & QNetworkInterface::IsLoopBack)) {
             continue;
         }
 
@@ -318,7 +317,7 @@ void Launcher::injectorError(int exitCode, const QString &errorMessage)
     d->state |= InjectorFailed;
     std::cerr << qPrintable(errorMessage) << std::endl;
     std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting"
-              <<  std::endl;
+              << std::endl;
     checkDone();
 }
 
@@ -328,7 +327,7 @@ void Launcher::timeout()
 
     std::cerr << "Target not responding - timeout. Try setting the env variable GAMMARAY_LAUNCHER_TIMEOUT to a bigger value (in seconds)." << std::endl;
     std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting"
-              <<  std::endl;
+              << std::endl;
     checkDone();
 }
 
@@ -377,13 +376,11 @@ void Launcher::readyRead()
     while (Message::canReadMessage(d->socket)) {
         const auto msg = Message::readMessage(d->socket);
         switch (msg.type()) {
-        case Protocol::ServerAddress:
-        {
+        case Protocol::ServerAddress: {
             msg >> d->serverAddress;
             break;
         }
-        case Protocol::ServerLaunchError:
-        {
+        case Protocol::ServerLaunchError: {
             QString reason;
             msg >> reason;
             std::cerr << "Failed to start server: " << qPrintable(reason)

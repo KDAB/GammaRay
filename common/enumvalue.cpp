@@ -57,13 +57,13 @@ bool EnumValue::isValid() const
 }
 
 namespace GammaRay {
-QDataStream& operator<<(QDataStream &out, const EnumValue &v)
+QDataStream &operator<<(QDataStream &out, const EnumValue &v)
 {
     out << v.m_id << v.m_value;
     return out;
 }
 
-QDataStream& operator>>(QDataStream &in, EnumValue &v)
+QDataStream &operator>>(QDataStream &in, EnumValue &v)
 {
     in >> v.m_id >> v.m_value;
     return in;

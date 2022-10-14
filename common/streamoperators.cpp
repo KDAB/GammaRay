@@ -55,7 +55,7 @@ void StreamOperators::registerOperators()
     StreamOperators::registerOperators<QMetaMethod::MethodType>();
     StreamOperators::registerOperators<Qt::ConnectionType>();
     StreamOperators::registerOperators<Qt::CaseSensitivity>();
-    StreamOperators::registerOperators<QHash<int, QByteArray> >();
+    StreamOperators::registerOperators<QHash<int, QByteArray>>();
 
     StreamOperators::registerOperators<ObjectId>();
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))

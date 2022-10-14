@@ -56,7 +56,7 @@ void QuickItemTreeWatcher::itemModelRowsInserted(const QModelIndex &parent, int 
     for (int row = start; row <= end; ++row) {
         const QModelIndex index = m_itemView->model()->index(row, 0, parent);
         const bool invisible = index.data(QuickItemModelRole::ItemFlags).value<int>()
-                               &(QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
+            & (QuickItemModelRole::Invisible | QuickItemModelRole::ZeroSize);
 
         if (!invisible && siblingCount < 5)
             m_itemView->setExpanded(index, true);

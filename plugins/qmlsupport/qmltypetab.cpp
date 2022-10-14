@@ -68,7 +68,7 @@ void QmlTypeTab::contextMenu(QPoint pos)
     const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
     ContextMenuExtension ext(objectId);
     const bool canShow = actions != PropertyModel::NoAction
-                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+        || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
 
     if (!canShow)
         return;

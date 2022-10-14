@@ -58,6 +58,7 @@ class QuickAnchorsPropertyAdaptorFactory : public AbstractPropertyAdaptorFactory
 public:
     PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = nullptr) const override;
     static QuickAnchorsPropertyAdaptorFactory *instance();
+
 private:
     static QuickAnchorsPropertyAdaptorFactory *s_instance;
 };

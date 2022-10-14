@@ -108,7 +108,7 @@ public slots:
     void selectWindow(int index) override;
 
     void setCustomRenderMode(GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
-    override;
+        override;
 
     void checkFeatures() override;
 
@@ -117,7 +117,7 @@ public slots:
     void checkOverlaySettings() override;
 
     void requestElementsAt(const QPoint &pos, GammaRay::RemoteViewInterface::RequestMode mode);
-    void pickElementId(const GammaRay::ObjectId& id);
+    void pickElementId(const GammaRay::ObjectId &id);
 
     void sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFrame);
 
@@ -153,7 +153,7 @@ private:
 
     GammaRay::ObjectIds recursiveItemsAt(QQuickItem *parent, const QPointF &pos,
                                          GammaRay::RemoteViewInterface::RequestMode mode,
-                                         int& bestCandidate, bool parentIsGoodCandidate = true) const;
+                                         int &bestCandidate, bool parentIsGoodCandidate = true) const;
 
     Probe *m_probe;
     std::unique_ptr<AbstractScreenGrabber> m_overlay;
@@ -170,12 +170,12 @@ private:
     RemoteViewServer *m_remoteView;
     RenderModeRequest *m_pendingRenderMode;
     QuickInspectorInterface::RenderMode m_renderMode;
-    PaintAnalyzer* m_paintAnalyzer;
+    PaintAnalyzer *m_paintAnalyzer;
     bool m_slowDownEnabled;
 };
 
 class QuickInspectorFactory : public QObject,
-    public StandardToolFactory<QQuickWindow, QuickInspector>
+                              public StandardToolFactory<QQuickWindow, QuickInspector>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

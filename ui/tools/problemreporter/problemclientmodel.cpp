@@ -39,14 +39,14 @@
 
 using namespace GammaRay;
 
-ProblemClientModel::ProblemClientModel(QObject* parent)
+ProblemClientModel::ProblemClientModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
 }
 
 ProblemClientModel::~ProblemClientModel() = default;
 
-QVariant ProblemClientModel::data(const QModelIndex& index, int role) const
+QVariant ProblemClientModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DecorationRole) {
         if (index.column() != 0) {
@@ -71,10 +71,10 @@ QVariant ProblemClientModel::headerData(int section, Qt::Orientation orientation
     if (orientation == Qt::Horizontal) {
         if (role == Qt::DisplayRole) {
             switch (section) {
-                case 0:
-                    return tr("Problem Description");
-                case 1:
-                    return tr("Source Location");
+            case 0:
+                return tr("Problem Description");
+            case 1:
+                return tr("Source Location");
             }
         }
         return QVariant();
@@ -92,10 +92,10 @@ bool ProblemClientModel::filterAcceptsRow(int source_row, const QModelIndex &sou
     auto id = index.data(ProblemModelRoles::ProblemIdRole).toString();
 
     return std::none_of(m_disabledCheckers.begin(), m_disabledCheckers.end(),
-        [id](const QString &checkerId) { return id.startsWith(checkerId); });
+                        [id](const QString &checkerId) { return id.startsWith(checkerId); });
 }
 
-void ProblemClientModel::disableChecker(const QString& id)
+void ProblemClientModel::disableChecker(const QString &id)
 {
     if (m_disabledCheckers.contains(id))
         return;
@@ -103,7 +103,7 @@ void ProblemClientModel::disableChecker(const QString& id)
     m_disabledCheckers.push_back(id);
     invalidateFilter();
 }
-void ProblemClientModel::enableChecker(const QString& id)
+void ProblemClientModel::enableChecker(const QString &id)
 {
     m_disabledCheckers.erase(std::remove(m_disabledCheckers.begin(), m_disabledCheckers.end(), id), m_disabledCheckers.end());
     invalidateFilter();

@@ -33,7 +33,8 @@
 
 namespace GammaRay {
 namespace PaintBufferModelRoles {
-enum Role {
+enum Role
+{
     ValueRole = GammaRay::UserRole + 1,
     ClipPathRole,
     MaxCostRole,

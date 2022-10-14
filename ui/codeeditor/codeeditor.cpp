@@ -50,10 +50,10 @@ using namespace GammaRay;
 KSyntaxHighlighting::Repository *CodeEditor::s_repository = nullptr;
 #endif
 
-CodeEditor::CodeEditor(QWidget *parent) :
-    QPlainTextEdit(parent),
-    m_sideBar(new CodeEditorSidebar(this)),
-    m_highlighter(nullptr)
+CodeEditor::CodeEditor(QWidget *parent)
+    : QPlainTextEdit(parent)
+    , m_sideBar(new CodeEditorSidebar(this))
+    , m_highlighter(nullptr)
 {
     setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
@@ -261,14 +261,12 @@ void CodeEditor::ensureHighlighterExists()
 #ifdef HAVE_SYNTAX_HIGHLIGHTING
     if (!s_repository) {
         s_repository = new KSyntaxHighlighting::Repository;
-        qAddPostRoutine([](){ delete s_repository; });
+        qAddPostRoutine([]() { delete s_repository; });
     }
 
     if (!m_highlighter) {
         m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(document());
-        m_highlighter->setTheme(palette().color(QPalette::Base).lightness() < 128 ?
-                                s_repository->defaultTheme(KSyntaxHighlighting::Repository::DarkTheme) :
-                                s_repository->defaultTheme(KSyntaxHighlighting::Repository::LightTheme));
+        m_highlighter->setTheme(palette().color(QPalette::Base).lightness() < 128 ? s_repository->defaultTheme(KSyntaxHighlighting::Repository::DarkTheme) : s_repository->defaultTheme(KSyntaxHighlighting::Repository::LightTheme));
     }
 #endif
 }

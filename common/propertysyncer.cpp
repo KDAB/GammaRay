@@ -83,8 +83,7 @@ void PropertySyncer::addObject(Protocol::ObjectAddress addr, QObject *obj)
 
 void PropertySyncer::setObjectEnabled(Protocol::ObjectAddress addr, bool enabled)
 {
-    const auto it = std::find_if(m_objects.begin(), m_objects.end(), [addr](
-                                     const ObjectInfo &info) {
+    const auto it = std::find_if(m_objects.begin(), m_objects.end(), [addr](const ObjectInfo &info) {
         return info.addr == addr;
     });
     if (it == m_objects.end() || (*it).enabled == enabled)
@@ -112,21 +111,19 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
 {
     Q_ASSERT(msg.address() == m_address);
     switch (msg.type()) {
-    case Protocol::PropertySyncRequest:
-    {
+    case Protocol::PropertySyncRequest: {
         Protocol::ObjectAddress addr;
         msg >> addr;
         Q_ASSERT(addr != Protocol::InvalidObjectAddress);
 
-        const auto it
-            = std::find_if(m_objects.constBegin(), m_objects.constEnd(),
-                           [addr](const ObjectInfo &info) {
-                return info.addr == addr;
-            });
+        const auto it = std::find_if(m_objects.constBegin(), m_objects.constEnd(),
+                                     [addr](const ObjectInfo &info) {
+                                         return info.addr == addr;
+                                     });
         if (it == m_objects.constEnd())
             break;
 
-        QVector<QPair<QByteArray, QVariant> > values;
+        QVector<QPair<QByteArray, QVariant>> values;
         const auto propCount = (*it).obj->metaObject()->propertyCount();
         values.reserve(propCount);
         for (int i = qobjectPropertyOffset(); i < propCount; ++i) {
@@ -136,14 +133,13 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
         Q_ASSERT(!values.isEmpty());
 
         Message msg(m_address, Protocol::PropertyValuesChanged);
-        msg << addr << (quint32)values.size();
+        msg << addr << ( quint32 )values.size();
         for (const auto &value : qAsConst(values))
             msg << value.first << value.second;
         emit message(msg);
         break;
     }
-    case Protocol::PropertyValuesChanged:
-    {
+    case Protocol::PropertyValuesChanged: {
         Protocol::ObjectAddress addr;
         quint32 changeSize;
         msg >> addr >> changeSize;
@@ -151,8 +147,8 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
         Q_ASSERT(changeSize > 0);
 
         auto it = std::find_if(m_objects.begin(), m_objects.end(), [addr](const ObjectInfo &info) {
-                return info.addr == addr;
-            });
+            return info.addr == addr;
+        });
         if (it == m_objects.end())
             break;
 
@@ -165,8 +161,8 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
 
             // it can be invalid if as a result of the above call new objects have been registered for example
             it = std::find_if(m_objects.begin(), m_objects.end(), [addr](const ObjectInfo &info) {
-                    return info.addr == addr;
-                });
+                return info.addr == addr;
+            });
             Q_ASSERT(it != m_objects.end());
             (*it).recursionLock = false;
         }
@@ -182,8 +178,7 @@ void PropertySyncer::propertyChanged()
 {
     const auto *obj = sender();
     Q_ASSERT(obj);
-    const auto it
-        = std::find_if(m_objects.constBegin(), m_objects.constEnd(), [obj](const ObjectInfo &info) {
+    const auto it = std::find_if(m_objects.constBegin(), m_objects.constEnd(), [obj](const ObjectInfo &info) {
         return info.obj == obj;
     });
     Q_ASSERT(it != m_objects.constEnd());
@@ -192,7 +187,7 @@ void PropertySyncer::propertyChanged()
         return;
 
     const auto sigIndex = senderSignalIndex();
-    QVector<QPair<QByteArray, QVariant> > changes;
+    QVector<QPair<QByteArray, QVariant>> changes;
     for (int i = qobjectPropertyOffset(); i < obj->metaObject()->propertyCount(); ++i) {
         const auto prop = obj->metaObject()->property(i);
         if (prop.notifySignalIndex() != sigIndex)
@@ -202,7 +197,7 @@ void PropertySyncer::propertyChanged()
     Q_ASSERT(!changes.isEmpty());
 
     Message msg(m_address, Protocol::PropertyValuesChanged);
-    msg << (*it).addr << (quint32)changes.size();
+    msg << (*it).addr << ( quint32 )changes.size();
     for (const auto &change : qAsConst(changes))
         msg << change.first << change.second;
     emit message(msg);

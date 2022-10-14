@@ -46,7 +46,8 @@ class GAMMARAY_LAUNCHER_EXPORT NetworkDiscoveryModel : public QAbstractTableMode
 {
     Q_OBJECT
 public:
-    enum Role {
+    enum Role
+    {
         HostNameRole = Qt::UserRole + 1,
         PortRole,
         CompatibleRole,
@@ -69,7 +70,8 @@ private slots:
 private:
     QUdpSocket *m_socket;
 
-    struct ServerInfo {
+    struct ServerInfo
+    {
         bool operator==(const ServerInfo &other) const;
         qint32 version;
         QUrl url;

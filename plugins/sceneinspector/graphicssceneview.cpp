@@ -73,14 +73,10 @@ void GraphicsSceneView::setGraphicsScene(QGraphicsScene *scene)
 
 void GraphicsSceneView::sceneCoordinatesChanged(const QPointF &coord)
 {
-    ui->sceneCoordLabel->setText(QStringLiteral("%1 x %2").
-                                 arg(coord.x(), 0, 'f', 2).
-                                 arg(coord.y(), 0, 'f', 2));
+    ui->sceneCoordLabel->setText(QStringLiteral("%1 x %2").arg(coord.x(), 0, 'f', 2).arg(coord.y(), 0, 'f', 2));
 }
 
 void GraphicsSceneView::itemCoordinatesChanged(const QPointF &coord)
 {
-    ui->itemCoordLabel->setText(QStringLiteral("%1 x %2").
-                                arg(coord.x(), 0, 'f', 2).
-                                arg(coord.y(), 0, 'f', 2));
+    ui->itemCoordLabel->setText(QStringLiteral("%1 x %2").arg(coord.x(), 0, 'f', 2).arg(coord.y(), 0, 'f', 2));
 }

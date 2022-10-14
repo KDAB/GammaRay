@@ -117,7 +117,7 @@ int EnumUtil::enumToInt(const QVariant &value, const QMetaEnum &metaEnum)
 {
     // QVariant has no implicit QFlag to int conversion as of Qt 5.7
     if (metaEnum.isFlag() && QMetaType::sizeOf(value.userType()) == sizeof(int)) // int should be enough, QFlag has that hardcoded
-        return value.constData() ? *static_cast<const int*>(value.constData()) : 0;
+        return value.constData() ? *static_cast<const int *>(value.constData()) : 0;
     return value.toInt();
 }
 

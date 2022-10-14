@@ -93,7 +93,7 @@ QWidget *PropertyEditorFactory::createEditor(TypeId type, QWidget *parent) const
     return w;
 }
 
-QVector< int > PropertyEditorFactory::supportedTypes()
+QVector<int> PropertyEditorFactory::supportedTypes()
 {
     return instance()->m_supportedTypes;
 }

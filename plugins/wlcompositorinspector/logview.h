@@ -39,18 +39,18 @@ class Timeline;
 
 class LogView : public QTabWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit LogView(QWidget *p);
+    explicit LogView(QWidget *p);
 
-  QSize sizeHint() const override;
-  void logMessage(quint64 pid, qint64 time, const QByteArray &msg);
-  void setLoggingClient(quint64 pid);
-  void reset();
+    QSize sizeHint() const override;
+    void logMessage(quint64 pid, qint64 time, const QByteArray &msg);
+    void setLoggingClient(quint64 pid);
+    void reset();
 
 private:
-  Messages *m_messages;
-  Timeline *m_timeline;
+    Messages *m_messages;
+    Timeline *m_timeline;
 };
 
 }

@@ -61,12 +61,13 @@
 
 namespace GammaRay {
 
-class QQuickItemPropertyCache {
+class QQuickItemPropertyCache
+{
 public:
     static const QQuickItemPropertyCache &getPropertyCache(QQuickItem *item)
     {
-        static QHash<const QMetaObject*, QQuickItemPropertyCache> s_cache;
-        const QMetaObject* meta = item->metaObject();
+        static QHash<const QMetaObject *, QQuickItemPropertyCache> s_cache;
+        const QMetaObject *meta = item->metaObject();
         const auto it = s_cache.constFind(meta);
         if (it != s_cache.cend())
             return *it;
@@ -96,8 +97,9 @@ public:
     QMetaProperty bottomPadding;
 
 private:
-    static inline QMetaProperty property(const QMetaObject *meta, const char *name) {
-         return meta->property(meta->indexOfProperty(name));
+    static inline QMetaProperty property(const QMetaObject *meta, const char *name)
+    {
+        return meta->property(meta->indexOfProperty(name));
     }
 };
 
@@ -172,7 +174,7 @@ static QQuickItem *toplevelItem(QQuickItem *item)
 static QPointF itemPos(QQuickItem *item)
 {
     Q_ASSERT(item);
-    return {item->x(), item->y()};
+    return { item->x(), item->y() };
 }
 
 static QSizeF itemSize(QQuickItem *item)
@@ -237,30 +239,30 @@ bool ItemOrLayoutFacade::isLayout() const
     return itemIsLayout(m_object);
 }
 
-std::unique_ptr<AbstractScreenGrabber> AbstractScreenGrabber::get(QQuickWindow* window)
+std::unique_ptr<AbstractScreenGrabber> AbstractScreenGrabber::get(QQuickWindow *window)
 {
     switch (graphicsApiFor(window)) {
 #ifndef QT_NO_OPENGL
-        case RenderInfo::OpenGL:
-            return std::unique_ptr<AbstractScreenGrabber>(new OpenGLScreenGrabber(window));
+    case RenderInfo::OpenGL:
+        return std::unique_ptr<AbstractScreenGrabber>(new OpenGLScreenGrabber(window));
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-        case RenderInfo::Software:
-            return std::unique_ptr<AbstractScreenGrabber>(new SoftwareScreenGrabber(window));
+    case RenderInfo::Software:
+        return std::unique_ptr<AbstractScreenGrabber>(new SoftwareScreenGrabber(window));
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        case RenderInfo::Vulkan:
-        case RenderInfo::Direct3D11:
-        case RenderInfo::OpenVG:
-        case RenderInfo::Metal:
-            return std::unique_ptr<AbstractScreenGrabber>(new UnsupportedScreenGrabber(window));
+    case RenderInfo::Vulkan:
+    case RenderInfo::Direct3D11:
+    case RenderInfo::OpenVG:
+    case RenderInfo::Metal:
+        return std::unique_ptr<AbstractScreenGrabber>(new UnsupportedScreenGrabber(window));
 #endif
-        default:
-            return nullptr;
+    default:
+        return nullptr;
     }
 }
 
-AbstractScreenGrabber::RenderInfo::GraphicsApi AbstractScreenGrabber::graphicsApiFor(QQuickWindow* window)
+AbstractScreenGrabber::RenderInfo::GraphicsApi AbstractScreenGrabber::graphicsApiFor(QQuickWindow *window)
 {
     if (!window) {
         return RenderInfo::Unknown;
@@ -376,7 +378,7 @@ QuickItemGeometry AbstractScreenGrabber::initFromItem(QQuickItem *item)
 
     if (parent) {
         itemGeometry.itemRect = item->parentItem()->mapRectToScene(
-                    QRectF(item->x(), item->y(), item->width(), item->height()));
+            QRectF(item->x(), item->y(), item->width(), item->height()));
     } else {
         itemGeometry.itemRect = QRectF(0, 0, item->width(), item->height());
     }
@@ -399,15 +401,15 @@ QuickItemGeometry AbstractScreenGrabber::initFromItem(QQuickItem *item)
 
     if (anchors) {
         QQuickAnchors::Anchors usedAnchors = anchors->usedAnchors();
-        itemGeometry.left = (bool)(usedAnchors &QQuickAnchors::LeftAnchor) || anchors->fill();
-        itemGeometry.right = (bool)(usedAnchors &QQuickAnchors::RightAnchor) || anchors->fill();
-        itemGeometry.top = (bool)(usedAnchors &QQuickAnchors::TopAnchor) || anchors->fill();
-        itemGeometry.bottom = (bool)(usedAnchors &QQuickAnchors::BottomAnchor) || anchors->fill();
-        itemGeometry.baseline = (bool)(usedAnchors & QQuickAnchors::BaselineAnchor);
-        itemGeometry.horizontalCenter = (bool)(usedAnchors &QQuickAnchors::HCenterAnchor)
-                || anchors->centerIn();
-        itemGeometry.verticalCenter = (bool)(usedAnchors &QQuickAnchors::VCenterAnchor)
-                || anchors->centerIn();
+        itemGeometry.left = ( bool )(usedAnchors & QQuickAnchors::LeftAnchor) || anchors->fill();
+        itemGeometry.right = ( bool )(usedAnchors & QQuickAnchors::RightAnchor) || anchors->fill();
+        itemGeometry.top = ( bool )(usedAnchors & QQuickAnchors::TopAnchor) || anchors->fill();
+        itemGeometry.bottom = ( bool )(usedAnchors & QQuickAnchors::BottomAnchor) || anchors->fill();
+        itemGeometry.baseline = ( bool )(usedAnchors & QQuickAnchors::BaselineAnchor);
+        itemGeometry.horizontalCenter = ( bool )(usedAnchors & QQuickAnchors::HCenterAnchor)
+            || anchors->centerIn();
+        itemGeometry.verticalCenter = ( bool )(usedAnchors & QQuickAnchors::VCenterAnchor)
+            || anchors->centerIn();
         itemGeometry.leftMargin = anchors->leftMargin();
         itemGeometry.rightMargin = anchors->rightMargin();
         itemGeometry.topMargin = anchors->topMargin();
@@ -471,20 +473,18 @@ void AbstractScreenGrabber::gatherRenderInfo()
             findItemByClassName("QQuickControl",
                                 m_window->contentItem(),
                                 [this](QQuickItem *item) {
-                if (!item->isVisible())
-                    return;
-                QuickItemGeometry itemGeometry = initFromItem(item);
-                m_grabbedFrame.itemsGeometry << itemGeometry;
-                m_grabbedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
-                        itemGeometry.boundingRect;
-            });
+                                    if (!item->isVisible())
+                                        return;
+                                    QuickItemGeometry itemGeometry = initFromItem(item);
+                                    m_grabbedFrame.itemsGeometry << itemGeometry;
+                                    m_grabbedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect | itemGeometry.boundingRect;
+                                });
         } else {
             QuickItemGeometry itemGeometry;
             if (!m_currentItem.isNull())
                 itemGeometry = initFromItem(m_currentItem.data());
             m_grabbedFrame.itemsGeometry << itemGeometry;
-            m_grabbedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect |
-                    itemGeometry.boundingRect;
+            m_grabbedFrame.itemsGeometryRect |= itemGeometry.itemRect | itemGeometry.childrenRect | itemGeometry.boundingRect;
         }
     }
 }
@@ -641,7 +641,7 @@ void OpenGLScreenGrabber::windowAfterRendering()
 #endif
 
     if (m_isGrabbing) {
-        const auto window = QRectF(QPoint(0,0), m_renderInfo.windowSize);
+        const auto window = QRectF(QPoint(0, 0), m_renderInfo.windowSize);
         const auto intersect = m_userViewport.isValid() ? window.intersected(m_userViewport) : window;
 
         // readout parameters
@@ -672,7 +672,7 @@ void OpenGLScreenGrabber::windowAfterRendering()
         // set transform to flip the read texture later, when displayed
         // Keep in mind that transforms are local coordinate (ie, not impacted by the device pixel ratio)
         m_grabbedFrame.transform.scale(1.0, -1.0);
-        m_grabbedFrame.transform.translate(intersect.x() , -intersect.y() - intersect.height());
+        m_grabbedFrame.transform.translate(intersect.x(), -intersect.y() - intersect.height());
         m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
         // Let emit the signal even if our image is possibly null, this way we make perfect ping/pong
@@ -708,7 +708,7 @@ void OpenGLScreenGrabber::drawDecorations()
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-SoftwareScreenGrabber::SoftwareScreenGrabber(QQuickWindow* window)
+SoftwareScreenGrabber::SoftwareScreenGrabber(QQuickWindow *window)
     : AbstractScreenGrabber(window)
 {
     connect(m_window.data(), &QQuickWindow::afterRendering,
@@ -735,7 +735,7 @@ void SoftwareScreenGrabber::updateOverlay()
     }
 }
 
-void SoftwareScreenGrabber::requestGrabWindow(const QRectF& userViewport)
+void SoftwareScreenGrabber::requestGrabWindow(const QRectF &userViewport)
 {
     Q_UNUSED(userViewport);
 
@@ -814,7 +814,7 @@ QSGSoftwareRenderer *SoftwareScreenGrabber::softwareRenderer() const
     QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(m_window);
     if (!winPriv)
         return nullptr;
-    QSGSoftwareRenderer *softwareRenderer = dynamic_cast<QSGSoftwareRenderer*>(winPriv->renderer);
+    QSGSoftwareRenderer *softwareRenderer = dynamic_cast<QSGSoftwareRenderer *>(winPriv->renderer);
     return softwareRenderer;
 }
 #endif
@@ -829,7 +829,7 @@ UnsupportedScreenGrabber::~UnsupportedScreenGrabber()
 {
 }
 
-void UnsupportedScreenGrabber::requestGrabWindow(const QRectF &/*userViewport*/)
+void UnsupportedScreenGrabber::requestGrabWindow(const QRectF & /*userViewport*/)
 {
     m_grabbedFrame.image = m_window->grabWindow();
     m_grabbedFrame.image.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
@@ -844,14 +844,14 @@ void UnsupportedScreenGrabber::requestGrabWindow(const QRectF &/*userViewport*/)
     p.setRenderHint(QPainter::TextAntialiasing);
     QColor gray(Qt::black);
     gray.setAlpha(alpha);
-    p.fillRect(QRect(QPoint{}, m_window->size()), gray);
+    p.fillRect(QRect(QPoint {}, m_window->size()), gray);
     p.setPen(Qt::white);
     auto font = qApp->font();
     font.setPointSize(font.pointSize() + 1);
     p.setFont(font);
     QString backend = VariantHandler::displayString(QVariant::fromValue(m_window->graphicsApi()));
     QString txt = backend + QStringLiteral(" is not supported yet, please use OpenGL or Software backend");
-    p.drawText(QRect{QPoint(0, 0), m_window->size()}, Qt::AlignCenter | Qt::TextWordWrap, txt);
+    p.drawText(QRect { QPoint(0, 0), m_window->size() }, Qt::AlignCenter | Qt::TextWordWrap, txt);
 
     emit sceneGrabbed(m_grabbedFrame);
 }

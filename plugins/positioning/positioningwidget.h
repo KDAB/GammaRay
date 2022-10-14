@@ -41,8 +41,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 
-namespace Ui
-{
+namespace Ui {
 class PositioningWidget;
 }
 

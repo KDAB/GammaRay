@@ -48,7 +48,7 @@ namespace GammaRay {
 class GAMMARAY_CORE_EXPORT BindingNode
 {
 public:
-    BindingNode (QObject *object, int propertyIndex, BindingNode *parent = nullptr);
+    BindingNode(QObject *object, int propertyIndex, BindingNode *parent = nullptr);
 
     bool operator==(const BindingNode &other) const;
 

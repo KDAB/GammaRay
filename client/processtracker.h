@@ -44,7 +44,8 @@ class GAMMARAY_CLIENT_EXPORT ProcessTracker : public QObject
     Q_OBJECT
 
 public:
-    enum State {
+    enum State
+    {
         Unknown = -1,
         Running,
         Suspended

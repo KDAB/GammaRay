@@ -40,7 +40,10 @@ Q_DECLARE_METATYPE(QGeoPositionInfo)
 
 using namespace GammaRay;
 
-#define E(x) { QGeoPositionInfo:: x, #x }
+#define E(x)                    \
+    {                           \
+        QGeoPositionInfo::x, #x \
+    }
 static const MetaEnum::Value<QGeoPositionInfo::Attribute> attribute_table[] = {
     E(Direction),
     E(GroundSpeed),
@@ -73,9 +76,9 @@ PropertyData PositionInfoPropertyAdaptor::propertyData(int index) const
 }
 
 
-PositionInfoPropertyAdaptorFactory* PositionInfoPropertyAdaptorFactory::s_instance = nullptr;
+PositionInfoPropertyAdaptorFactory *PositionInfoPropertyAdaptorFactory::s_instance = nullptr;
 
-PropertyAdaptor* PositionInfoPropertyAdaptorFactory::create(const ObjectInstance &oi, QObject *parent) const
+PropertyAdaptor *PositionInfoPropertyAdaptorFactory::create(const ObjectInstance &oi, QObject *parent) const
 {
     if (oi.type() != ObjectInstance::Value)
         return nullptr;

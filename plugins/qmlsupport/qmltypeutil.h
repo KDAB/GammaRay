@@ -59,12 +59,12 @@ inline bool isValid(const QQmlType &type)
 }
 #endif
 
-inline QQmlType* callable(QQmlType *type)
+inline QQmlType *callable(QQmlType *type)
 {
     return type;
 }
 
-inline const QQmlType* callable(const QQmlType &type)
+inline const QQmlType *callable(const QQmlType &type)
 {
     return &type;
 }

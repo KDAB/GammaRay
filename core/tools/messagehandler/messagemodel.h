@@ -37,7 +37,8 @@
 #include <QVector>
 
 namespace GammaRay {
-struct DebugMessage {
+struct DebugMessage
+{
     QtMsgType type;
     QString message;
     QTime time;
@@ -51,7 +52,7 @@ struct DebugMessage {
 
 Q_DECLARE_METATYPE(GammaRay::DebugMessage)
 QT_BEGIN_NAMESPACE
-    Q_DECLARE_TYPEINFO(GammaRay::DebugMessage, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(GammaRay::DebugMessage, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
 namespace GammaRay {

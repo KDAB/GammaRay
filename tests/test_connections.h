@@ -57,7 +57,8 @@ class TestConnections : public QObject
 {
     Q_OBJECT
 public:
-    enum Type {
+    enum Type
+    {
         DeleteLater,
         Delete,
         NoEventLoop,
@@ -113,6 +114,7 @@ private slots:
     static void run_data();
     static void run();
     static void threading();
+
 private:
     int m_argc;
     char **m_argv;

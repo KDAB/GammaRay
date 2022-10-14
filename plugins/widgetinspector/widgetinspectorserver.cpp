@@ -91,7 +91,7 @@
 
 #include <iostream>
 
-Q_DECLARE_METATYPE(const QStyle*)
+Q_DECLARE_METATYPE(const QStyle *)
 Q_DECLARE_METATYPE(QSizePolicy::ControlType)
 Q_DECLARE_METATYPE(QSizePolicy::ControlTypes)
 
@@ -100,8 +100,7 @@ using namespace std;
 
 static bool isGoodCandidateWidget(QWidget *widget)
 {
-    if (!widget->isVisible() || widget->testAttribute(Qt::WA_NoSystemBackground) ||
-            widget->metaObject() == &QWidget::staticMetaObject) {
+    if (!widget->isVisible() || widget->testAttribute(Qt::WA_NoSystemBackground) || widget->metaObject() == &QWidget::staticMetaObject) {
         return false;
     }
 
@@ -245,7 +244,7 @@ bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
                     m_probe->selectObject(view->selectionModel());
                 else if (QComboBox *box = Util::findParentOfType<QComboBox>(object))
                     m_probe->selectObject(box->model());
-                else if (auto toolButton = qobject_cast<QToolButton*>(object)) {
+                else if (auto toolButton = qobject_cast<QToolButton *>(object)) {
                     if (toolButton->defaultAction())
                         m_probe->selectObject(toolButton->defaultAction());
                 }
@@ -272,10 +271,10 @@ void WidgetInspectorServer::updateWidgetPreview()
     m_remoteView->sendFrame(frame);
 }
 
-QVector<QRect> WidgetInspectorServer::tabFocusChain(QWidget* window)
+QVector<QRect> WidgetInspectorServer::tabFocusChain(QWidget *window)
 {
     QVector<QRect> r;
-    QSet<QWidget*> widgets;
+    QSet<QWidget *> widgets;
     auto w = window;
     while (w->nextInFocusChain()) {
         w = w->nextInFocusChain();
@@ -319,7 +318,7 @@ void WidgetInspectorServer::pickElementId(const GammaRay::ObjectId &id)
 QImage WidgetInspectorServer::imageForWidget(QWidget *widget)
 {
     // prevent "recursion", i.e. infinite update loop, in our eventFilter
-    Util::SetTempValue<QPointer<QWidget> > guard(m_selectedWidget, nullptr);
+    Util::SetTempValue<QPointer<QWidget>> guard(m_selectedWidget, nullptr);
     // We should use hidpi rendering but it's buggy so let stay with
     // low dpi rendering. See QTBUG-53801
     const qreal ratio = 1; // widget->window()->devicePixelRatio();
@@ -349,18 +348,17 @@ void WidgetInspectorServer::widgetSelected(QWidget *widget)
         return;
 
     const QAbstractItemModel *model = m_widgetSelectionModel->model();
-    const QModelIndexList indexList
-        = model->match(model->index(0, 0),
-                       ObjectModel::ObjectRole,
-                       QVariant::fromValue<QObject *>(widget), 1,
-                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+    const QModelIndexList indexList = model->match(model->index(0, 0),
+                                                   ObjectModel::ObjectRole,
+                                                   QVariant::fromValue<QObject *>(widget), 1,
+                                                   Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
     const QModelIndex index = indexList.first();
     m_widgetSelectionModel->select(
         index,
         QItemSelectionModel::Select | QItemSelectionModel::Clear
-        |QItemSelectionModel::Rows | QItemSelectionModel::Current);
+            | QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
 void WidgetInspectorServer::objectSelected(QObject *obj)
@@ -432,8 +430,7 @@ GammaRay::ObjectIds WidgetInspectorServer::recursiveWidgetsAt(QWidget *parent, c
                 if (bestCandidate == -1 && bc != -1) {
                     bestCandidate = count + bc;
                 }
-            }
-            else {
+            } else {
                 if (bestCandidate == -1 && isGoodCandidateWidget(w)) {
                     bestCandidate = objects.count();
                 }
@@ -483,9 +480,8 @@ void WidgetInspectorServer::callExternalExportAction(const char *name, QWidget *
         }
     }
 
-    void (*function)(QWidget *, const QString &)
-        = reinterpret_cast<void (*)(QWidget *,
-                                    const QString &)>(m_externalExportActions->resolve(name));
+    void (*function)(QWidget *, const QString &) = reinterpret_cast<void (*)(QWidget *,
+                                                                             const QString &)>(m_externalExportActions->resolve(name));
 
     if (!function) {
         cerr << Q_FUNC_INFO << ' ' << qPrintable(m_externalExportActions->errorString()) << endl;
@@ -550,31 +546,31 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
 
     MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
     MO_ADD_PROPERTY_RO(QWidget, actions);
-    MO_ADD_PROPERTY   (QWidget, backgroundRole, setBackgroundRole);
+    MO_ADD_PROPERTY(QWidget, backgroundRole, setBackgroundRole);
     MO_ADD_PROPERTY_RO(QWidget, contentsMargins);
     MO_ADD_PROPERTY_RO(QWidget, contentsRect);
     MO_ADD_PROPERTY_RO(QWidget, focusProxy);
     MO_ADD_PROPERTY_RO(QWidget, focusWidget);
-    MO_ADD_PROPERTY   (QWidget, foregroundRole, setForegroundRole);
-    MO_ADD_PROPERTY   (QWidget, graphicsEffect, setGraphicsEffect);
+    MO_ADD_PROPERTY(QWidget, foregroundRole, setForegroundRole);
+    MO_ADD_PROPERTY(QWidget, graphicsEffect, setGraphicsEffect);
     MO_ADD_PROPERTY_RO(QWidget, graphicsProxyWidget);
     MO_ADD_PROPERTY_RO(QWidget, hasFocus);
     MO_ADD_PROPERTY_RO(QWidget, hasMouseTracking);
     MO_ADD_PROPERTY_RO(QWidget, isWindow);
-    MO_ADD_PROPERTY   (QWidget, layout, setLayout);
+    MO_ADD_PROPERTY(QWidget, layout, setLayout);
     MO_ADD_PROPERTY_O2(QWidget, mask, setMask);
     MO_ADD_PROPERTY_RO(QWidget, nativeParentWidget);
     MO_ADD_PROPERTY_RO(QWidget, nextInFocusChain);
     MO_ADD_PROPERTY_RO(QWidget, parentWidget);
     MO_ADD_PROPERTY_RO(QWidget, previousInFocusChain);
-    MO_ADD_PROPERTY   (QWidget, style, setStyle);
+    MO_ADD_PROPERTY(QWidget, style, setStyle);
     MO_ADD_PROPERTY_RO(QWidget, underMouse);
     MO_ADD_PROPERTY_RO(QWidget, visibleRegion);
     MO_ADD_PROPERTY_RO(QWidget, window);
     MO_ADD_PROPERTY_RO(QWidget, windowHandle);
-    MO_ADD_PROPERTY   (QWidget, windowFlags, setWindowFlags);
-    MO_ADD_PROPERTY   (QWidget, windowRole, setWindowRole);
-    MO_ADD_PROPERTY   (QWidget, windowState, setWindowState);
+    MO_ADD_PROPERTY(QWidget, windowFlags, setWindowFlags);
+    MO_ADD_PROPERTY(QWidget, windowRole, setWindowRole);
+    MO_ADD_PROPERTY(QWidget, windowState, setWindowState);
 
     MO_ADD_METAOBJECT1(QStyle, QObject);
     MO_ADD_PROPERTY_RO(QStyle, proxy);
@@ -597,17 +593,17 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_RO(QCompleter, completionModel);
     MO_ADD_PROPERTY_RO(QCompleter, currentCompletion);
     MO_ADD_PROPERTY_RO(QCompleter, currentRow);
-    MO_ADD_PROPERTY   (QCompleter, model, setModel);
-    MO_ADD_PROPERTY   (QCompleter, popup, setPopup);
+    MO_ADD_PROPERTY(QCompleter, model, setModel);
+    MO_ADD_PROPERTY(QCompleter, popup, setPopup);
     MO_ADD_PROPERTY_RO(QCompleter, widget);
 
     MO_ADD_METAOBJECT1(QFrame, QWidget);
     MO_ADD_METAOBJECT1(QAbstractScrollArea, QFrame);
     MO_ADD_PROPERTY_RO(QAbstractScrollArea, cornerWidget);
-    MO_ADD_PROPERTY   (QAbstractScrollArea, horizontalScrollBar, setHorizontalScrollBar);
+    MO_ADD_PROPERTY(QAbstractScrollArea, horizontalScrollBar, setHorizontalScrollBar);
     MO_ADD_PROPERTY_RO(QAbstractScrollArea, maximumViewportSize);
-    MO_ADD_PROPERTY   (QAbstractScrollArea, verticalScrollBar, setVerticalScrollBar);
-    MO_ADD_PROPERTY   (QAbstractScrollArea, viewport, setViewport);
+    MO_ADD_PROPERTY(QAbstractScrollArea, verticalScrollBar, setVerticalScrollBar);
+    MO_ADD_PROPERTY(QAbstractScrollArea, viewport, setViewport);
 
     MO_ADD_METAOBJECT1(QAbstractItemView, QAbstractScrollArea);
     MO_ADD_PROPERTY_RO(QAbstractItemView, model);
@@ -620,34 +616,34 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_RO(QComboBox, itemDelegate);
     MO_ADD_PROPERTY_RO(QComboBox, lineEdit);
     MO_ADD_PROPERTY_RO(QComboBox, model);
-    MO_ADD_PROPERTY   (QComboBox, validator, setValidator);
-    MO_ADD_PROPERTY   (QComboBox, view, setView);
+    MO_ADD_PROPERTY(QComboBox, validator, setValidator);
+    MO_ADD_PROPERTY(QComboBox, view, setView);
 
     MO_ADD_METAOBJECT1(QLineEdit, QWidget);
-    MO_ADD_PROPERTY   (QLineEdit, completer, setCompleter);
-    MO_ADD_PROPERTY   (QLineEdit, validator, setValidator);
+    MO_ADD_PROPERTY(QLineEdit, completer, setCompleter);
+    MO_ADD_PROPERTY(QLineEdit, validator, setValidator);
 
     MO_ADD_METAOBJECT1(QScrollArea, QAbstractScrollArea);
-    MO_ADD_PROPERTY   (QScrollArea, widget, setWidget);
+    MO_ADD_PROPERTY(QScrollArea, widget, setWidget);
 
     MO_ADD_METAOBJECT1(QSplitter, QFrame);
     MO_ADD_PROPERTY_RO(QSplitter, count);
-    MO_ADD_PROPERTY   (QSplitter, sizes, setSizes);
+    MO_ADD_PROPERTY(QSplitter, sizes, setSizes);
 
     MO_ADD_METAOBJECT1(QToolButton, QAbstractButton);
     MO_ADD_PROPERTY_RO(QToolButton, defaultAction);
     MO_ADD_PROPERTY_RO(QToolButton, menu);
 
     MO_ADD_METAOBJECT0(QSizePolicy);
-    MO_ADD_PROPERTY   (QSizePolicy, controlType, setControlType);
+    MO_ADD_PROPERTY(QSizePolicy, controlType, setControlType);
     MO_ADD_PROPERTY_RO(QSizePolicy, expandingDirections);
-    MO_ADD_PROPERTY   (QSizePolicy, hasHeightForWidth, setHeightForWidth);
-    MO_ADD_PROPERTY   (QSizePolicy, hasWidthForHeight, setWidthForHeight);
-    MO_ADD_PROPERTY   (QSizePolicy, horizontalPolicy, setHorizontalPolicy);
-    MO_ADD_PROPERTY   (QSizePolicy, horizontalStretch, setHorizontalStretch);
-    MO_ADD_PROPERTY   (QSizePolicy, retainSizeWhenHidden, setRetainSizeWhenHidden);
-    MO_ADD_PROPERTY   (QSizePolicy, verticalPolicy, setVerticalPolicy);
-    MO_ADD_PROPERTY   (QSizePolicy, verticalStretch, setVerticalStretch);
+    MO_ADD_PROPERTY(QSizePolicy, hasHeightForWidth, setHeightForWidth);
+    MO_ADD_PROPERTY(QSizePolicy, hasWidthForHeight, setWidthForHeight);
+    MO_ADD_PROPERTY(QSizePolicy, horizontalPolicy, setHorizontalPolicy);
+    MO_ADD_PROPERTY(QSizePolicy, horizontalStretch, setHorizontalStretch);
+    MO_ADD_PROPERTY(QSizePolicy, retainSizeWhenHidden, setRetainSizeWhenHidden);
+    MO_ADD_PROPERTY(QSizePolicy, verticalPolicy, setVerticalPolicy);
+    MO_ADD_PROPERTY(QSizePolicy, verticalStretch, setVerticalStretch);
 
     MO_ADD_METAOBJECT1(QActionEvent, QEvent);
     MO_ADD_PROPERTY_RO(QActionEvent, action);
@@ -664,13 +660,13 @@ static QString sizePolicyPolicyToString(QSizePolicy::Policy policy)
 static QString sizePolicyToString(const QSizePolicy &policy)
 {
     return sizePolicyPolicyToString(policy.horizontalPolicy()) + " x "
-           + sizePolicyPolicyToString(policy.verticalPolicy());
+        + sizePolicyPolicyToString(policy.verticalPolicy());
 }
 
 void WidgetInspectorServer::registerVariantHandlers()
 {
     VariantHandler::registerStringConverter<QSizePolicy>(sizePolicyToString);
-    VariantHandler::registerStringConverter<const QStyle*>(Util::displayString);
+    VariantHandler::registerStringConverter<const QStyle *>(Util::displayString);
 }
 
 void WidgetInspectorServer::discoverObjects()

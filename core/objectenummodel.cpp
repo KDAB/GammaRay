@@ -36,7 +36,8 @@ using namespace GammaRay;
 typedef MetaObjectModel<QMetaEnum,
                         &QMetaObject::enumerator,
                         &QMetaObject::enumeratorCount,
-                        &QMetaObject::enumeratorOffset> SuperClass;
+                        &QMetaObject::enumeratorOffset>
+    SuperClass;
 
 GammaRay::ObjectEnumModel::ObjectEnumModel(QObject *parent)
     : SuperClass(parent)

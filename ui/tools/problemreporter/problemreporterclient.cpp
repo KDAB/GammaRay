@@ -32,7 +32,7 @@
 
 using namespace GammaRay;
 
-ProblemReporterClient::ProblemReporterClient(QObject* parent)
+ProblemReporterClient::ProblemReporterClient(QObject *parent)
     : ProblemReporterInterface(parent)
 {
 }

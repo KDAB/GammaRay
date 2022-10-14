@@ -77,7 +77,7 @@ ProbeABI AbstractInjector::targetAbi() const
     return m_targetAbi;
 }
 
-void AbstractInjector::setTargetAbi(const ProbeABI& abi)
+void AbstractInjector::setTargetAbi(const ProbeABI &abi)
 {
     m_targetAbi = abi;
 }

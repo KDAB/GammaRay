@@ -52,7 +52,8 @@ private slots:
         model.setWindow(&view);
         const auto items = createItems(root);
 
-        QBENCHMARK_ONCE {
+        QBENCHMARK_ONCE
+        {
             for (auto item : items) {
                 model.objectAdded(item);
             }
@@ -71,7 +72,8 @@ private slots:
             model.objectAdded(item);
         }
 
-        QBENCHMARK_ONCE {
+        QBENCHMARK_ONCE
+        {
             for (auto item : items) {
                 // trigger item update
                 item->setX(item->x() + 1);
@@ -80,7 +82,7 @@ private slots:
     }
 
 private:
-    static QVector<QQuickItem *> createItems(QQuickItem* parent)
+    static QVector<QQuickItem *> createItems(QQuickItem *parent)
     {
         const int numberOfItems = 10000;
         QVector<QQuickItem *> items;

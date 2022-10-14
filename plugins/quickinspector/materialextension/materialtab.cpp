@@ -54,7 +54,7 @@ MaterialTab::MaterialTab(PropertyWidget *parent)
     connect(m_ui->materialPropertyView, &QTreeView::customContextMenuRequested, this, &MaterialTab::propertyContextMenu);
 
     setObjectBaseName(parent->objectBaseName());
-    connect(m_ui->shaderList, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(m_ui->shaderList, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &MaterialTab::shaderSelectionChanged);
 
     m_ui->shaderEdit->setSyntaxDefinition(QLatin1String("GLSL"));
@@ -102,7 +102,7 @@ void MaterialTab::propertyContextMenu(QPoint pos)
     const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
     ContextMenuExtension ext(objectId);
     const bool canShow = (actions == PropertyModel::NavigateTo && !objectId.isNull())
-                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+        || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
 
     if (!canShow)
         return;

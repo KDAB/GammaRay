@@ -30,13 +30,13 @@
 
 using namespace GammaRay;
 
-MapController::MapController(QObject* parent):
-    QObject(parent),
-    m_sourceHorizontalAccuracy(.0),
-    m_sourceDirection(.0),
-    m_overrideHorizontalAccuracy(.0),
-    m_overrideDirection(.0),
-    m_overrideEnabled(false)
+MapController::MapController(QObject *parent)
+    : QObject(parent)
+    , m_sourceHorizontalAccuracy(.0)
+    , m_sourceDirection(.0)
+    , m_overrideHorizontalAccuracy(.0)
+    , m_overrideDirection(.0)
+    , m_overrideEnabled(false)
 {
 }
 
@@ -47,7 +47,7 @@ QGeoCoordinate MapController::sourceCoordinate() const
     return m_sourceCoordinate;
 }
 
-void MapController::setSourceCoordinate(const QGeoCoordinate& coord)
+void MapController::setSourceCoordinate(const QGeoCoordinate &coord)
 {
     if (m_sourceCoordinate == coord)
         return;
@@ -99,7 +99,7 @@ QGeoCoordinate MapController::overrideCoordinate() const
     return m_overrideCoordinate;
 }
 
-void MapController::setOverrideCoordinate(const QGeoCoordinate& coord)
+void MapController::setOverrideCoordinate(const QGeoCoordinate &coord)
 {
     if (m_overrideCoordinate == coord)
         return;

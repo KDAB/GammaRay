@@ -37,15 +37,19 @@ namespace GammaRay {
 /*! Variant conversion functions, extendable by plugins. */
 namespace VariantHandler {
 ///@cond internal
-template<typename RetT> struct Converter
+template<typename RetT>
+struct Converter
 {
-    virtual ~Converter() {}
+    virtual ~Converter()
+    {
+    }
 
     virtual RetT operator()(const QVariant &v) = 0;
 };
 
 template<typename RetT, typename InputT,
-         typename FuncT> struct ConverterImpl : public Converter<RetT>
+         typename FuncT>
+struct ConverterImpl : public Converter<RetT>
 {
     explicit inline ConverterImpl(FuncT converter)
         : f(converter)
@@ -77,7 +81,10 @@ GAMMARAY_CORE_EXPORT QString displayString(const QVariant &value);
  * @return a QString containing the human readable string.
  */
 template<typename T>
-inline QString displayString(T value) { return displayString(QVariant::fromValue<T>(value)); }
+inline QString displayString(T value)
+{
+    return displayString(QVariant::fromValue<T>(value));
+}
 
 /*!
  * Returns a value representing @p value in a itemview decoration role.

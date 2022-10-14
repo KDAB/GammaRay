@@ -92,7 +92,7 @@ private:
     QModelIndex m_rootIndex;
 
     QList<Node *> mNodeList;
-    QHash<QString, Node*> mNodeLookup;
+    QHash<QString, Node *> mNodeLookup;
 
     mutable QSet<QPersistentModelIndex> m_foreignWindows;
 };

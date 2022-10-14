@@ -96,10 +96,10 @@ QtIviPropertyModel::QtIviPropertyModel(Probe *probe)
     qRegisterMetaType<QIviAmFmTuner::Band>();
 #endif
 
-    connect(probe, SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
-    connect(probe, SIGNAL(objectDestroyed(QObject*)), this, SLOT(objectRemoved(QObject*)));
-    connect(probe, SIGNAL(objectReparented(QObject*)), this, SLOT(objectReparented(QObject*)));
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+    connect(probe, SIGNAL(objectCreated(QObject *)), this, SLOT(objectAdded(QObject *)));
+    connect(probe, SIGNAL(objectDestroyed(QObject *)), this, SLOT(objectRemoved(QObject *)));
+    connect(probe, SIGNAL(objectReparented(QObject *)), this, SLOT(objectReparented(QObject *)));
+    connect(probe, SIGNAL(objectSelected(QObject *, QPoint)), this, SLOT(objectSelected(QObject *)));
 }
 
 QtIviPropertyModel::IviCarrierProperty::IviCarrierProperty(QtIviPropertyModel::IviCarrierProperty &&other)
@@ -138,9 +138,8 @@ bool QtIviPropertyModel::IviCarrierProperty::hasNotifySignal() const
 bool QtIviPropertyModel::IviCarrierProperty::isWritable() const
 {
     return (m_iviProperty
-            ? m_iviOverrider.userWritable()
-            : m_metaProperty.isWritable() &&
-              !QMetaType(m_metaProperty.userType()).flags().testFlag(QMetaType::PointerToQObject));
+                ? m_iviOverrider.userWritable()
+                : m_metaProperty.isWritable() && !QMetaType(m_metaProperty.userType()).flags().testFlag(QMetaType::PointerToQObject));
 }
 
 bool QtIviPropertyModel::IviCarrierProperty::isOverridable() const
@@ -263,7 +262,7 @@ bool QtIviPropertyModel::IviCarrierProperty::setValue(const QVariant &value, QOb
         if (typeReference.type() == QVariant::Int) {
             toSet = value.value<EnumValue>().value();
         } else {
-            *(static_cast<int*>(typeReference.data())) = value.value<EnumValue>().value();
+            *(static_cast<int *>(typeReference.data())) = value.value<EnumValue>().value();
             toSet = typeReference;
         }
     }
@@ -292,8 +291,7 @@ bool QtIviPropertyModel::IviCarrierProperty::setValue(const QVariant &value, QOb
         } // ... else the valueChanged() signal was hopefully emitted from the setter
 
         return true;
-    }
-    else {
+    } else {
         if (!m_metaProperty.isWritable()) {
             return false;
         }
@@ -336,8 +334,8 @@ QString QtIviPropertyModel::IviCarrier::label() const
     }
     if (name.isEmpty()) {
         name = QString::fromLatin1("%1(0x%2)")
-                .arg(typeName())
-                .arg(QString::number(quintptr(m_carrier), 16));
+                   .arg(typeName())
+                   .arg(QString::number(quintptr(m_carrier), 16));
     }
     return name;
 }
@@ -446,9 +444,9 @@ void QtIviPropertyModel::objectAdded(QObject *obj)
     Q_ASSERT(Probe::instance()->isValidObject(obj));
     int propertyOffset = -1;
 
-    if (qobject_cast<QIviServiceObject*>(obj)) {
+    if (qobject_cast<QIviServiceObject *>(obj)) {
         propertyOffset = QIviServiceObject::staticMetaObject.propertyOffset();
-    } else if (qobject_cast<QIviAbstractFeature*>(obj)) {
+    } else if (qobject_cast<QIviAbstractFeature *>(obj)) {
         propertyOffset = QIviAbstractFeature::staticMetaObject.propertyOffset();
     }
 
@@ -503,12 +501,12 @@ void QtIviPropertyModel::objectRemoved(QObject *obj)
         const int row(rowOfCarrier(obj));
         if (row == -1) {
             IF_DEBUG(std::cout << "QtIviPropertyModel::objectRemoved(): we don't know this Ivi Object. "
-                     << obj << std::endl);
+                               << obj << std::endl);
             return;
         }
 
         IF_DEBUG(std::cout << "QtIviPropertyModel::objectRemoved(): removing an Ivi Object. "
-                 << obj << std::endl);
+                           << obj << std::endl);
 
         beginRemoveRows(QModelIndex(), row, row);
         m_carriers.erase(m_carriers.begin() + row);
@@ -533,14 +531,14 @@ void QtIviPropertyModel::objectSelected(QObject *obj)
 {
     const ObjectId id(obj);
     const QModelIndex index = match(this->index(0, 0), ObjectModel::ObjectIdRole, QVariant::fromValue(id), 1,
-                                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap).value(0);
+                                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap)
+                                  .value(0);
     if (!index.isValid()) {
         return;
     }
 
     QItemSelectionModel *const selectionModel = ObjectBroker::selectionModel(this);
-    selectionModel->select(index, QItemSelectionModel::ClearAndSelect |
-                           QItemSelectionModel::Rows | QItemSelectionModel::Current);
+    selectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
 QVariant QtIviPropertyModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -716,7 +714,6 @@ QVariant QtIviPropertyModel::data(const QModelIndex &index, int role) const
                 case RawValue:
                     return property.cppValue(carrier.m_carrier);
                 }
-
             }
         }
     }
@@ -738,8 +735,7 @@ QMap<int, QVariant> QtIviPropertyModel::itemData(const QModelIndex &index) const
 bool QtIviPropertyModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     const quint64 parentRow = index.internalId();
-    if (!index.isValid() || parentRow == PropertyCarrierIndex ||
-            parentRow >= m_carriers.size() || !flags(index).testFlag(Qt::ItemIsEditable)) {
+    if (!index.isValid() || parentRow == PropertyCarrierIndex || parentRow >= m_carriers.size() || !flags(index).testFlag(Qt::ItemIsEditable)) {
         return false;
     }
 
@@ -804,8 +800,7 @@ void QtIviPropertyModel::propertyChanged()
     if (QIviProperty *property = qobject_cast<QIviProperty *>(sender())) {
         // An Ivi property changed
         emitRowDataChanged(indexOfProperty(property, NameColumn));
-    } else if (qobject_cast<QIviServiceObject *>(sender()) ||
-               qobject_cast<QIviAbstractFeature *>(sender())) {
+    } else if (qobject_cast<QIviServiceObject *>(sender()) || qobject_cast<QIviAbstractFeature *>(sender())) {
         // A plain Qt property changed in a service or feature
         // Let's update the complete children as we can not known the property that changed
         const QModelIndex parent(indexOfCarrier(sender()));
@@ -849,7 +844,7 @@ int QtIviPropertyModel::columnCount(const QModelIndex &) const
 QModelIndex QtIviPropertyModel::parent(const QModelIndex &child) const
 {
     if (child.isValid()) {
-        const  quint64 parentRow = child.internalId();
+        const quint64 parentRow = child.internalId();
         if (parentRow != PropertyCarrierIndex) {
             return createIndex(parentRow, 0, PropertyCarrierIndex);
         }
@@ -869,8 +864,7 @@ QModelIndex QtIviPropertyModel::index(int row, int column, const QModelIndex &pa
             // create an index to a property
             const quint64 grandparentRow = parent.internalId();
             // only carriers have another level of children
-            if (grandparentRow == PropertyCarrierIndex &&
-                parent.row() >= 0 && uint(parent.row()) < m_carriers.size()) {
+            if (grandparentRow == PropertyCarrierIndex && parent.row() >= 0 && uint(parent.row()) < m_carriers.size()) {
                 const IviCarrier &carrier = m_carriers.at(parent.row());
                 if (row >= 0 && uint(row) < carrier.m_properties.size()) {
                     return createIndex(row, column, parent.row());

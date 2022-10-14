@@ -73,21 +73,21 @@ TextDocumentInspector::TextDocumentInspector(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectSelected, this, &TextDocumentInspector::objectSelected);
 }
 
-void TextDocumentInspector::objectSelected(QObject* obj)
+void TextDocumentInspector::objectSelected(QObject *obj)
 {
-    if (auto doc = qobject_cast<QTextDocument*>(obj)) {
+    if (auto doc = qobject_cast<QTextDocument *>(obj)) {
         const auto indexList = m_documentsModel->match(m_documentsModel->index(0, 0),
-                                  ObjectModel::ObjectRole,
-                                  QVariant::fromValue<QObject*>(doc), 1,
-                                  Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+                                                       ObjectModel::ObjectRole,
+                                                       QVariant::fromValue<QObject *>(doc), 1,
+                                                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
         if (indexList.isEmpty())
             return;
 
         const auto index = indexList.first();
         m_documentSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-    } else if (auto docObj = qobject_cast<QTextObject*>(obj)) {
+    } else if (auto docObj = qobject_cast<QTextObject *>(obj)) {
         objectSelected(docObj->document());
-    } else if (auto layout = qobject_cast<QAbstractTextDocumentLayout*>(obj)) {
+    } else if (auto layout = qobject_cast<QAbstractTextDocumentLayout *>(obj)) {
         objectSelected(layout->document());
     }
 }

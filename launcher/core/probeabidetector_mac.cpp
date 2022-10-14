@@ -54,10 +54,9 @@ static QString resolveBundlePath(const QString &bundlePath)
         return bundlePath;
 
     const QByteArray utf8Bundle = fi.absoluteFilePath().toUtf8();
-    CFURLRef bundleUrl
-        = CFURLCreateFromFileSystemRepresentation(NULL,
-                                                  reinterpret_cast<const UInt8 *>(utf8Bundle.data()),
-                                                  utf8Bundle.length(), true);
+    CFURLRef bundleUrl = CFURLCreateFromFileSystemRepresentation(NULL,
+                                                                 reinterpret_cast<const UInt8 *>(utf8Bundle.data()),
+                                                                 utf8Bundle.length(), true);
     CFBundleRef bundle = CFBundleCreate(NULL, bundleUrl);
     if (bundle) {
         CFURLRef url = CFBundleCopyExecutableURL(bundle);
@@ -108,7 +107,7 @@ static QStringList readRPaths(const QString &path)
 
     auto size = f.size();
     const uchar *data = f.map(0, size);
-    if (!data || (uint)size <= sizeof(quint32))
+    if (!data || ( uint )size <= sizeof(quint32))
         return rpaths;
 
     quint32 offset = 0;
@@ -242,7 +241,7 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
         return ProbeABI();
 
     const uchar *data = f.map(0, f.size());
-    if (!data || (uint)f.size() <= sizeof(quint32))
+    if (!data || ( uint )f.size() <= sizeof(quint32))
         return ProbeABI();
     return abiFromMachO(path, data, f.size());
 }

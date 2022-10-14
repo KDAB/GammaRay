@@ -73,34 +73,30 @@ void QuickScenePreviewWidget::restoreState(const QByteArray &state)
     switch (version) {
     case 1: {
         stream
-                >> mode
-                ;
+            >> mode;
         break;
     }
     case 2: {
         stream
-                >> mode
-                >> drawDecorations
-                ;
+            >> mode
+            >> drawDecorations;
         break;
     }
     case 3: {
         stream
-                >> mode
-                >> drawDecorations
-                >> gridOffset
-                >> gridCellSize
-                ;
+            >> mode
+            >> drawDecorations
+            >> gridOffset
+            >> gridCellSize;
         break;
     }
     case QuickScenePreviewWidgetStateVersion: {
         stream
-                >> mode
-                >> drawDecorations
-                >> gridOffset
-                >> gridCellSize
-                >> gridEnabled
-                ;
+            >> mode
+            >> drawDecorations
+            >> gridOffset
+            >> gridCellSize
+            >> gridEnabled;
         break;
     }
     }
@@ -132,34 +128,30 @@ QByteArray QuickScenePreviewWidget::saveState() const
         switch (QuickScenePreviewWidgetStateVersion) {
         case 1: {
             stream
-                    << m_control->customRenderMode()
-                       ;
+                << m_control->customRenderMode();
             break;
         }
         case 2: {
             stream
-                    << m_control->customRenderMode()
-                    << m_control->serverSideDecorationsEnabled()
-                       ;
+                << m_control->customRenderMode()
+                << m_control->serverSideDecorationsEnabled();
             break;
         }
         case 3: {
             stream
-                    << m_control->customRenderMode()
-                    << m_control->serverSideDecorationsEnabled()
-                    << m_overlaySettings.gridOffset
-                    << m_overlaySettings.gridCellSize
-                       ;
+                << m_control->customRenderMode()
+                << m_control->serverSideDecorationsEnabled()
+                << m_overlaySettings.gridOffset
+                << m_overlaySettings.gridCellSize;
             break;
         }
         case 4: {
             stream
-                    << m_control->customRenderMode()
-                    << m_control->serverSideDecorationsEnabled()
-                    << m_overlaySettings.gridOffset
-                    << m_overlaySettings.gridCellSize
-                    << m_overlaySettings.gridEnabled
-                       ;
+                << m_control->customRenderMode()
+                << m_control->serverSideDecorationsEnabled()
+                << m_overlaySettings.gridOffset
+                << m_overlaySettings.gridCellSize
+                << m_overlaySettings.gridEnabled;
             break;
         }
         }

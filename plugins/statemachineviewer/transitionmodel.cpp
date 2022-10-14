@@ -52,7 +52,7 @@ class TransitionModelPrivate
     }
 
     Q_DECLARE_PUBLIC(TransitionModel)
-    TransitionModel * const q_ptr;
+    TransitionModel *const q_ptr;
     QAbstractState *m_state;
 
     QList<QObject *> children(QObject *parent) const;

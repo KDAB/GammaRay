@@ -46,6 +46,7 @@ signals:
 
 public slots:
     void setPickedColor(QRgb color);
+
 private:
     QRgb m_pickedColor;
 };

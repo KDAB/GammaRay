@@ -36,11 +36,12 @@
 
 namespace GammaRay {
 
-TrailingColorLabel::TrailingColorLabel(QWidget *parent) : QLabel(parent)
+TrailingColorLabel::TrailingColorLabel(QWidget *parent)
+    : QLabel(parent)
 {
     setAttribute(Qt::WA_TransparentForMouseEvents);
 
-    m_pickedColor = qRgba(0,0,0,0);
+    m_pickedColor = qRgba(0, 0, 0, 0);
     setHidden(true);
 }
 
@@ -69,32 +70,32 @@ void TrailingColorLabel::paintEvent(QPaintEvent *event)
     p.setPen(QPen(palette().color(QPalette::Normal, QPalette::Text)));
 
     p.drawText(QRect(margin + squaresize + margin + 0 * numberGroupWidth, 0, numberGroupWidth, height),
-                Qt::AlignVCenter | Qt::AlignRight,
-                QString::number(qRed(m_pickedColor)));
+               Qt::AlignVCenter | Qt::AlignRight,
+               QString::number(qRed(m_pickedColor)));
     p.drawText(QRect(margin + squaresize + margin + 1 * numberGroupWidth, 0, numberGroupWidth, height),
-                Qt::AlignVCenter | Qt::AlignRight,
-                QString::number(qGreen(m_pickedColor)));
+               Qt::AlignVCenter | Qt::AlignRight,
+               QString::number(qGreen(m_pickedColor)));
     p.drawText(QRect(margin + squaresize + margin + 2 * numberGroupWidth, 0, numberGroupWidth, height),
-                Qt::AlignVCenter | Qt::AlignRight,
-                QString::number(qBlue(m_pickedColor)));
-    //alpha
+               Qt::AlignVCenter | Qt::AlignRight,
+               QString::number(qBlue(m_pickedColor)));
+    // alpha
     p.setPen(QPen(palette().color(QPalette::Disabled, QPalette::Text)));
     p.drawText(QRect(margin + squaresize + margin + 3 * numberGroupWidth + 2, 0, numberGroupWidth, height),
-                Qt::AlignVCenter | Qt::AlignLeft,
-                "|");
+               Qt::AlignVCenter | Qt::AlignLeft,
+               "|");
     p.drawText(QRect(margin + squaresize + margin + 3 * numberGroupWidth, 0, numberGroupWidth, height),
-                Qt::AlignVCenter | Qt::AlignRight,
-                QString::number(qAlpha(m_pickedColor)));
+               Qt::AlignVCenter | Qt::AlignRight,
+               QString::number(qAlpha(m_pickedColor)));
     { // Color bg-pattern
-    QBrush brush;
-    QPixmap bgPattern(squaresize, squaresize);
-    bgPattern.fill(Qt::lightGray);
-    QPainter bgPainter(&bgPattern);
-    bgPainter.fillRect(10, 0, 10, 10, Qt::gray);
-    bgPainter.fillRect(0, 10, 10, 10, Qt::gray);
-    brush.setTexture(bgPattern);
-    p.setBrush(brush);
-    p.drawRect(margin, margin, squaresize, squaresize);
+        QBrush brush;
+        QPixmap bgPattern(squaresize, squaresize);
+        bgPattern.fill(Qt::lightGray);
+        QPainter bgPainter(&bgPattern);
+        bgPainter.fillRect(10, 0, 10, 10, Qt::gray);
+        bgPainter.fillRect(0, 10, 10, 10, Qt::gray);
+        brush.setTexture(bgPattern);
+        p.setBrush(brush);
+        p.drawRect(margin, margin, squaresize, squaresize);
     }
 
     QColor color = QColor::fromRgba(m_pickedColor);

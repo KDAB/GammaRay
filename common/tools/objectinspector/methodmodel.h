@@ -35,7 +35,8 @@ namespace GammaRay {
 
 /*! Custom roles for GammaRay::ObjectMethodModel. */
 namespace ObjectMethodModelRole {
-enum Role {
+enum Role
+{
     MetaMethod = UserRole + 1,
     MetaMethodType,
     MethodSignature,

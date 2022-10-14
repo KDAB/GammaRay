@@ -33,7 +33,7 @@
 
 using namespace GammaRay;
 
-SysInfoWidget::SysInfoWidget(QWidget* parent)
+SysInfoWidget::SysInfoWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::SysInfoWidget)
 {

@@ -83,8 +83,7 @@ using namespace GammaRay;
 #if defined(QT_DEPRECATED)
 static QString metaMethodToString(const QObject *object, const QMetaMethod &method)
 {
-    return QStringLiteral("%1 bound on %2").arg(method.methodSignature(), Util::displayString(
-                                                    object));
+    return QStringLiteral("%1 bound on %2").arg(method.methodSignature(), Util::displayString(object));
 }
 
 #endif
@@ -128,10 +127,10 @@ static QString callableQjsValueToString(const QJSValue &v)
 static QString qmlErrorToString(const QQmlError &error)
 {
     return QStringLiteral("%1:%2:%3: %4")
-           .arg(error.url().toString())
-           .arg(error.line())
-           .arg(error.column())
-           .arg(error.description());
+        .arg(error.url().toString())
+        .arg(error.line())
+        .arg(error.column())
+        .arg(error.description());
 }
 
 static QString qmlListPropertyToString(const QVariant &value, bool *ok)
@@ -140,8 +139,7 @@ static QString qmlListPropertyToString(const QVariant &value, bool *ok)
         return QString();
 
     *ok = true;
-    QQmlListProperty<QObject> *prop
-        = reinterpret_cast<QQmlListProperty<QObject> *>(const_cast<void *>(value.data()));
+    QQmlListProperty<QObject> *prop = reinterpret_cast<QQmlListProperty<QObject> *>(const_cast<void *>(value.data()));
     if (!prop || !prop->count)
         return QString();
 
@@ -159,9 +157,9 @@ static QString qjsValueToString(const QJSValue &v)
     } else if (v.isBool()) {
         return v.toBool() ? QStringLiteral("true") : QStringLiteral("false");
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    // note: v.isQMetaObject() == true => v.isCallable() == true, because QV4::QMetaObjectWrapper inherits
-    // QV4::FunctionObject and isCallable just checks whether the object is a function object.
-    // thus the isQMetaObject check needs to come before the isCallable check
+        // note: v.isQMetaObject() == true => v.isCallable() == true, because QV4::QMetaObjectWrapper inherits
+        // QV4::FunctionObject and isCallable just checks whether the object is a function object.
+        // thus the isQMetaObject check needs to come before the isCallable check
     } else if (v.isQMetaObject()) {
         return QStringLiteral("QMetaObject[className=%1]").arg(v.toQMetaObject()->className());
 #endif
@@ -194,8 +192,7 @@ static QString qjsValueToString(const QJSValue &v)
 static QString qqmlScriptStringToString(const QQmlScriptString &v)
 {
     // QQmlScriptStringPrivate::get is not guaranteed to be exported, inline
-    auto scriptStringPriv
-        = reinterpret_cast<const QSharedDataPointer<QQmlScriptStringPrivate> *>(&v)->constData();
+    auto scriptStringPriv = reinterpret_cast<const QSharedDataPointer<QQmlScriptStringPrivate> *>(&v)->constData();
     return scriptStringPriv->script;
 }
 
@@ -336,7 +333,7 @@ QmlSupport::QmlSupport(Probe *probe, QObject *parent)
     MO_ADD_PROPERTY_RO(QQmlComponent, isReady);
 
     MO_ADD_METAOBJECT1(QQmlContext, QObject);
-    MO_ADD_PROPERTY(QQmlContext,  baseUrl, setBaseUrl);
+    MO_ADD_PROPERTY(QQmlContext, baseUrl, setBaseUrl);
     MO_ADD_PROPERTY(QQmlContext, contextObject, setContextObject);
     MO_ADD_PROPERTY_RO(QQmlContext, engine);
     MO_ADD_PROPERTY_RO(QQmlContext, isValid);
@@ -378,7 +375,7 @@ QmlSupport::QmlSupport(Probe *probe, QObject *parent)
     MO_ADD_PROPERTY_RO(QQmlType, qListTypeId);
     MO_ADD_PROPERTY_RO(QQmlType, metaObjectRevision);
     MO_ADD_PROPERTY_RO(QQmlType, containsRevisionedAttributes);
-// MO_ADD_PROPERTY_RO(QQmlType, interfaceIId);
+    // MO_ADD_PROPERTY_RO(QQmlType, interfaceIId);
     MO_ADD_PROPERTY_RO(QQmlType, index);
     MO_ADD_PROPERTY_RO(QQmlType, metaObject);
     MO_ADD_PROPERTY_RO(QQmlType, baseMetaObject);

@@ -49,7 +49,7 @@ QString typeToString(int type)
     case QtInfoMsg:
         return MessageDisplayModel::tr("Info");
     default:
-        return MessageDisplayModel::tr("Unknown");          // never reached in theory
+        return MessageDisplayModel::tr("Unknown"); // never reached in theory
     }
 }
 
@@ -78,19 +78,14 @@ QVariant MessageDisplayModel::data(const QModelIndex &proxyIndex, int role) cons
             return static_cast<QString>(fileName + ':' + QString::number(line));
         }
         break;
-    case Qt::ToolTipRole:
-    {
+    case Qt::ToolTipRole: {
         const auto srcIdx = mapToSource(proxyIndex);
         Q_ASSERT(srcIdx.isValid());
 
-        const auto msgType
-            = typeToString(srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Type).toInt());
-        const auto msgTime
-            = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Time).data().toString();
-        const auto msgText
-            = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Message).data().toString();
-        const auto backtrace
-            = srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Backtrace).toStringList();
+        const auto msgType = typeToString(srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Type).toInt());
+        const auto msgTime = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Time).data().toString();
+        const auto msgText = srcIdx.sibling(srcIdx.row(), MessageModelColumn::Message).data().toString();
+        const auto backtrace = srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Backtrace).toStringList();
         if (!backtrace.isEmpty()) {
             QString bt;
             int i = 0;
@@ -103,13 +98,15 @@ QVariant MessageDisplayModel::data(const QModelIndex &proxyIndex, int role) cons
                       "<dt><b>Time:</b></dt><dd>%2</dd>"
                       "<dt><b>Message:</b></dt><dd>%3</dd>"
                       "<dt><b>Backtrace:</b></dt><dd><pre>%4</pre></dd>"
-                      "</dl></qt>").arg(msgType, msgTime, msgText, bt);
+                      "</dl></qt>")
+                .arg(msgType, msgTime, msgText, bt);
         } else {
             return tr("<qt><dl>"
                       "<dt><b>Type:</b></dt><dd>%1</dd>"
                       "<dt><b>Time:</b></dt><dd>%2</dd>"
                       "<dt><b>Message:</b></dt><dd>%3</dd>"
-                      "</dl></qt>").arg(msgType, msgTime, msgText);
+                      "</dl></qt>")
+                .arg(msgType, msgTime, msgText);
         }
     }
     case Qt::DecorationRole:
@@ -117,8 +114,7 @@ QVariant MessageDisplayModel::data(const QModelIndex &proxyIndex, int role) cons
             const auto srcIdx = mapToSource(proxyIndex);
             Q_ASSERT(srcIdx.isValid());
 
-            const auto msgType
-                = srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Type).toInt();
+            const auto msgType = srcIdx.sibling(srcIdx.row(), 0).data(MessageModelRole::Type).toInt();
             auto style = qApp->style();
             switch (msgType) {
             case QtDebugMsg:
@@ -131,8 +127,7 @@ QVariant MessageDisplayModel::data(const QModelIndex &proxyIndex, int role) cons
             }
         }
         break;
-    case MessageModelRole::File:
-    {
+    case MessageModelRole::File: {
         const auto srcIdx = mapToSource(proxyIndex);
         Q_ASSERT(srcIdx.isValid());
         return srcIdx.sibling(srcIdx.row(), MessageModelColumn::File).data();

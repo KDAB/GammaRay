@@ -32,9 +32,9 @@
 
 using namespace GammaRay;
 
-ClientToolFilterProxyModel::ClientToolFilterProxyModel(QObject* parent) :
-    QSortFilterProxyModel(parent),
-    m_filterInactiveTools(false)
+ClientToolFilterProxyModel::ClientToolFilterProxyModel(QObject *parent)
+    : QSortFilterProxyModel(parent)
+    , m_filterInactiveTools(false)
 {
 }
 

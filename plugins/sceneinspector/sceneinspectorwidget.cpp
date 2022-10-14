@@ -77,7 +77,7 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
     ui->scenePropertyWidget->setObjectBaseName(QStringLiteral("com.kdab.GammaRay.SceneInspector"));
 
     ui->sceneComboBox->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneList")));
-    connect(ui->sceneComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(ui->sceneComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &SceneInspectorWidget::sceneSelected);
 
     auto sceneModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"));
@@ -120,11 +120,13 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
     QItemSelectionModel *selection = ObjectBroker::selectionModel(ui->sceneComboBox->model());
     if (selection->currentIndex().isValid())
         sceneSelected(selection->currentIndex().row());
-    else if (ui->sceneComboBox->currentIndex() >= 0)   // no server-side selection yet, but there's data available
+    else if (ui->sceneComboBox->currentIndex() >= 0) // no server-side selection yet, but there's data available
         sceneSelected(ui->sceneComboBox->currentIndex());
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
-    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
+                                                                    << "50%");
+    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%"
+                                                                       << "50%");
 
     connect(ui->scenePropertyWidget, &PropertyWidget::tabsUpdated, this, &SceneInspectorWidget::propertyWidgetTabsChanged);
 
@@ -198,14 +200,12 @@ void SceneInspectorWidget::visibleSceneRectChanged()
 void SceneInspectorWidget::sceneSelected(int index)
 {
     const QModelIndex mi = ui->sceneComboBox->model()->index(index, 0);
-    ObjectBroker::selectionModel(ui->sceneComboBox->model())->select(mi,
-                                                                     QItemSelectionModel::ClearAndSelect);
+    ObjectBroker::selectionModel(ui->sceneComboBox->model())->select(mi, QItemSelectionModel::ClearAndSelect);
 
     if (!Endpoint::instance()->isRemoteClient()) {
         // for in-process mode, use the user scene directly. This is much more performant and we can
         // skip the pixmap conversions and fps limitations thereof.
-        QObject *obj
-            = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject *>();
+        QObject *obj = ui->sceneComboBox->itemData(index, ObjectModel::ObjectRole).value<QObject *>();
         QGraphicsScene *scene = qobject_cast<QGraphicsScene *>(obj);
         cout << Q_FUNC_INFO << ' ' << scene << ' ' << obj << endl;
 
@@ -237,8 +237,7 @@ void SceneInspectorWidget::sceneContextMenu(QPoint pos)
         return;
 
     const auto objectId = index.data(ObjectModel::ObjectIdRole).value<ObjectId>();
-    QMenu menu(tr("QGraphicsItem @ %1").arg(QLatin1String("0x") + QString::number(
-                                                objectId.id(), 16)));
+    QMenu menu(tr("QGraphicsItem @ %1").arg(QLatin1String("0x") + QString::number(objectId.id(), 16)));
     ContextMenuExtension ext(objectId);
     ext.populateMenu(&menu);
 

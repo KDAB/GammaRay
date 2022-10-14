@@ -107,18 +107,18 @@ void ResourceBrowserWidget::setupLayout()
     // the widgets for nicer display
 
     int viewWidth = ui->treeView->columnWidth(0)
-                    +ui->treeView->columnWidth(1)
-                    +ui->treeView->columnWidth(2)
-                    +ui->treeView->contentsMargins().left()
-                    +ui->treeView->contentsMargins().right()
-                    + ui->treeView->verticalScrollBar()->width();
+        + ui->treeView->columnWidth(1)
+        + ui->treeView->columnWidth(2)
+        + ui->treeView->contentsMargins().left()
+        + ui->treeView->contentsMargins().right()
+        + ui->treeView->verticalScrollBar()->width();
     const int totalWidth = ui->mainSplitter->width();
     const int minPreviewWidth = 150;
     if (totalWidth > viewWidth + minPreviewWidth) {
         m_stateManager.setDefaultSizes(ui->mainSplitter,
                                        UISizeVector() << viewWidth
                                                       << (totalWidth - viewWidth
-                                           - ui->mainSplitter->handleWidth()));
+                                                          - ui->mainSplitter->handleWidth()));
         m_stateManager.restoreState();
     }
 }
@@ -251,8 +251,7 @@ void ResourceBrowserWidget::handleCustomContextMenu(const QPoint &pos)
         const QString sourceFilePath = selectedIndex.data(ResourceModel::FilePathRole).toString();
         const QString sourceFileName = sourceFilePath.mid(sourceFilePath.lastIndexOf('/') + 1);
 
-        const QString targetFilePath = QFileDialog::getSaveFileName(this, tr(
-                                                                        "Save As"), sourceFileName);
+        const QString targetFilePath = QFileDialog::getSaveFileName(this, tr("Save As"), sourceFileName);
         if (targetFilePath.isEmpty())
             return;
 

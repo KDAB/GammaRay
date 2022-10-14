@@ -65,9 +65,8 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
 {
     ui->setupUi(this);
 
-    m_inspector
-        = ObjectBroker::object<TranslatorInspectorInterface *>(QStringLiteral(
-                                                                   "com.kdab.GammaRay.TranslatorInspector"));
+    m_inspector = ObjectBroker::object<TranslatorInspectorInterface *>(QStringLiteral(
+        "com.kdab.GammaRay.TranslatorInspector"));
 
     ui->translatorList->header()->setObjectName("translatorListHeader");
     ui->translatorList->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
@@ -94,7 +93,8 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
         new SearchLineController(ui->translationsSearchLine, ui->translationsView->model());
     }
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
+                                                                    << "50%");
 
     connect(ui->actionSendLanguageChange, &QAction::triggered, m_inspector, &TranslatorInspectorInterface::sendLanguageChangeEvent);
     connect(ui->actionReset, &QAction::triggered, m_inspector, &TranslatorInspectorInterface::resetTranslations);

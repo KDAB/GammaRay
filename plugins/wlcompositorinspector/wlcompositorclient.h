@@ -35,17 +35,16 @@ namespace GammaRay {
 
 class WlCompositorClient : public WlCompositorInterface
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::WlCompositorInterface)
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::WlCompositorInterface)
 public:
-  explicit WlCompositorClient(QObject *p);
+    explicit WlCompositorClient(QObject *p);
 
 public slots:
-  void connected() override;
-  void disconnected() override;
-  void setSelectedClient(int index) override;
-  void setSelectedResource(uint32_t id) override;
-
+    void connected() override;
+    void disconnected() override;
+    void setSelectedClient(int index) override;
+    void setSelectedResource(uint32_t id) override;
 };
 
 }

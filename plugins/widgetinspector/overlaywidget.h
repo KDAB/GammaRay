@@ -39,9 +39,18 @@ namespace GammaRay {
 class WidgetOrLayoutFacade
 {
 public:
-    WidgetOrLayoutFacade() : m_object(nullptr) {}
-    WidgetOrLayoutFacade(QWidget *widget) : m_object(widget) {} //krazy:exclude=explicit
-    WidgetOrLayoutFacade(QLayout *layout) : m_object(layout) {} //krazy:exclude=explicit
+    WidgetOrLayoutFacade()
+        : m_object(nullptr)
+    {
+    }
+    WidgetOrLayoutFacade(QWidget *widget)
+        : m_object(widget)
+    {
+    } // krazy:exclude=explicit
+    WidgetOrLayoutFacade(QLayout *layout)
+        : m_object(layout)
+    {
+    } // krazy:exclude=explicit
 
     /// Get either the layout of the widget or the this-pointer
     inline QLayout *layout() const
@@ -70,15 +79,38 @@ public:
         return isLayout() ? asLayout()->geometry().topLeft() : QPoint(0, 0);
     }
 
-    inline bool isNull() const { return !m_object; }
-    inline QObject* data() { return m_object; }
-    inline QObject* operator->() const { Q_ASSERT(!isNull()); return m_object; }
-    inline void clear() { m_object = nullptr; }
+    inline bool isNull() const
+    {
+        return !m_object;
+    }
+    inline QObject *data()
+    {
+        return m_object;
+    }
+    inline QObject *operator->() const
+    {
+        Q_ASSERT(!isNull());
+        return m_object;
+    }
+    inline void clear()
+    {
+        m_object = nullptr;
+    }
 
 private:
-    inline bool isLayout() const { Q_ASSERT(!isNull()); return qobject_cast<QLayout *>(m_object); }
-    inline QLayout *asLayout() const { return static_cast<QLayout *>(m_object.data()); }
-    inline QWidget *asWidget() const { return static_cast<QWidget *>(m_object.data()); }
+    inline bool isLayout() const
+    {
+        Q_ASSERT(!isNull());
+        return qobject_cast<QLayout *>(m_object);
+    }
+    inline QLayout *asLayout() const
+    {
+        return static_cast<QLayout *>(m_object.data());
+    }
+    inline QWidget *asWidget() const
+    {
+        return static_cast<QWidget *>(m_object.data());
+    }
 
     QPointer<QObject> m_object;
 };

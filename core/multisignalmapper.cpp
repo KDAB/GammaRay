@@ -39,7 +39,9 @@ class MultiSignalMapperPrivate : public QObject
 public:
     explicit MultiSignalMapperPrivate(MultiSignalMapper *parent)
         : QObject(parent)
-        , q(parent) {}
+        , q(parent)
+    {
+    }
     ~MultiSignalMapperPrivate() override = default;
 
     int qt_metacall(QMetaObject::Call call, int methodId, void **args) override

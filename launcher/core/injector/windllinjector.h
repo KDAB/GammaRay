@@ -54,6 +54,7 @@ public:
     void stop() override;
 private slots:
     void processExited(int exitCode);
+
 private:
     QString fixProbeDllPath(const QString &probeDll);
 

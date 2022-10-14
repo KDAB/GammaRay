@@ -44,20 +44,20 @@ void QuickItemGeometry::scaleTo(qreal factor)
         return;
 
     itemRect = QRectF(
-                itemRect.topLeft() * factor,
-                itemRect.bottomRight() * factor);
+        itemRect.topLeft() * factor,
+        itemRect.bottomRight() * factor);
     boundingRect = QRectF(
-                boundingRect.topLeft() * factor,
-                boundingRect.bottomRight() * factor);
+        boundingRect.topLeft() * factor,
+        boundingRect.bottomRight() * factor);
     childrenRect = QRectF(
-                childrenRect.topLeft() * factor,
-                childrenRect.bottomRight() * factor);
+        childrenRect.topLeft() * factor,
+        childrenRect.bottomRight() * factor);
     backgroundRect = QRectF(
-                backgroundRect.topLeft() * factor,
-                backgroundRect.bottomRight() * factor);
+        backgroundRect.topLeft() * factor,
+        backgroundRect.bottomRight() * factor);
     contentItemRect = QRectF(
-                contentItemRect.topLeft() * factor,
-                contentItemRect.bottomRight() * factor);
+        contentItemRect.topLeft() * factor,
+        contentItemRect.bottomRight() * factor);
     transformOriginPoint = transformOriginPoint * factor;
     leftMargin = leftMargin * factor;
     horizontalCenterOffset = horizontalCenterOffset * factor;
@@ -79,41 +79,7 @@ void QuickItemGeometry::scaleTo(qreal factor)
 
 bool QuickItemGeometry::operator==(const QuickItemGeometry &other) const
 {
-    return
-        itemRect == other.itemRect &&
-        boundingRect == other.boundingRect &&
-        childrenRect == other.childrenRect &&
-        backgroundRect == other.backgroundRect &&
-        contentItemRect == other.contentItemRect &&
-        transformOriginPoint == other.transformOriginPoint &&
-        transform == other.transform &&
-        parentTransform == other.parentTransform &&
-        x == other.x &&
-        y == other.y &&
-        left == other.left &&
-        right == other.right &&
-        top == other.top &&
-        bottom == other.bottom &&
-        horizontalCenter == other.horizontalCenter &&
-        verticalCenter == other.verticalCenter &&
-        baseline == other.baseline &&
-        margins == other.margins &&
-        leftMargin == other.leftMargin &&
-        horizontalCenterOffset == other.horizontalCenterOffset &&
-        rightMargin == other.rightMargin &&
-        topMargin == other.topMargin &&
-        verticalCenterOffset == other.verticalCenterOffset &&
-        bottomMargin == other.bottomMargin &&
-        baselineOffset == other.baselineOffset &&
-        padding == other.padding &&
-        leftPadding == other.leftPadding &&
-        rightPadding == other.rightPadding &&
-        topPadding == other.topPadding &&
-        bottomPadding == other.bottomPadding &&
-        traceColor == other.traceColor &&
-        traceTypeName == other.traceTypeName &&
-        traceName == other.traceName
-    ;
+    return itemRect == other.itemRect && boundingRect == other.boundingRect && childrenRect == other.childrenRect && backgroundRect == other.backgroundRect && contentItemRect == other.contentItemRect && transformOriginPoint == other.transformOriginPoint && transform == other.transform && parentTransform == other.parentTransform && x == other.x && y == other.y && left == other.left && right == other.right && top == other.top && bottom == other.bottom && horizontalCenter == other.horizontalCenter && verticalCenter == other.verticalCenter && baseline == other.baseline && margins == other.margins && leftMargin == other.leftMargin && horizontalCenterOffset == other.horizontalCenterOffset && rightMargin == other.rightMargin && topMargin == other.topMargin && verticalCenterOffset == other.verticalCenterOffset && bottomMargin == other.bottomMargin && baselineOffset == other.baselineOffset && padding == other.padding && leftPadding == other.leftPadding && rightPadding == other.rightPadding && topPadding == other.topPadding && bottomPadding == other.bottomPadding && traceColor == other.traceColor && traceTypeName == other.traceTypeName && traceName == other.traceName;
 }
 
 bool QuickItemGeometry::operator!=(const QuickItemGeometry &other) const
@@ -161,8 +127,7 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &
 
            << geometry.traceColor
            << geometry.traceTypeName
-           << geometry.traceName
-    ;
+           << geometry.traceName;
 
     return stream;
 }
@@ -170,45 +135,44 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::QuickItemGeometry &
 QDataStream &operator>>(QDataStream &stream, GammaRay::QuickItemGeometry &geometry)
 {
     stream >> geometry.itemRect
-           >> geometry.boundingRect
-           >> geometry.childrenRect
-           >> geometry.backgroundRect
-           >> geometry.contentItemRect
+        >> geometry.boundingRect
+        >> geometry.childrenRect
+        >> geometry.backgroundRect
+        >> geometry.contentItemRect
 
-           >> geometry.transformOriginPoint
-           >> geometry.transform
-           >> geometry.parentTransform
+        >> geometry.transformOriginPoint
+        >> geometry.transform
+        >> geometry.parentTransform
 
-           >> geometry.x
-           >> geometry.y
+        >> geometry.x
+        >> geometry.y
 
-           >> geometry.left
-           >> geometry.right
-           >> geometry.top
-           >> geometry.bottom
-           >> geometry.horizontalCenter
-           >> geometry.verticalCenter
-           >> geometry.baseline
+        >> geometry.left
+        >> geometry.right
+        >> geometry.top
+        >> geometry.bottom
+        >> geometry.horizontalCenter
+        >> geometry.verticalCenter
+        >> geometry.baseline
 
-           >> geometry.margins
-           >> geometry.leftMargin
-           >> geometry.horizontalCenterOffset
-           >> geometry.rightMargin
-           >> geometry.topMargin
-           >> geometry.verticalCenterOffset
-           >> geometry.bottomMargin
-           >> geometry.baselineOffset
+        >> geometry.margins
+        >> geometry.leftMargin
+        >> geometry.horizontalCenterOffset
+        >> geometry.rightMargin
+        >> geometry.topMargin
+        >> geometry.verticalCenterOffset
+        >> geometry.bottomMargin
+        >> geometry.baselineOffset
 
-           >> geometry.padding
-           >> geometry.leftPadding
-           >> geometry.rightPadding
-           >> geometry.topPadding
-           >> geometry.bottomPadding
+        >> geometry.padding
+        >> geometry.leftPadding
+        >> geometry.rightPadding
+        >> geometry.topPadding
+        >> geometry.bottomPadding
 
-           >> geometry.traceColor
-           >> geometry.traceTypeName
-           >> geometry.traceName
-    ;
+        >> geometry.traceColor
+        >> geometry.traceTypeName
+        >> geometry.traceName;
 
     return stream;
 }

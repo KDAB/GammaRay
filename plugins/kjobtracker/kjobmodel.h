@@ -62,12 +62,14 @@ private slots:
 private:
     int indexOfJob(QObject *obj) const;
 
-    struct KJobInfo {
+    struct KJobInfo
+    {
         KJob *job;
         QString name;
         QString type;
         QString statusText;
-        enum {
+        enum
+        {
             Running,
             Finished,
             Error,

@@ -96,15 +96,14 @@ QMap<int, QVariant> TranslatorsModel::itemData(const QModelIndex &index) const
 }
 
 TranslatorWrapper *TranslatorsModel::translator(const QModelIndex &index)
-const
+    const
 {
     return m_translators.at(index.row());
 }
 
 void TranslatorsModel::sourceDataChanged()
 {
-    const int row
-        = m_translators.indexOf(qobject_cast<TranslationsModel *>(sender())->translator());
+    const int row = m_translators.indexOf(qobject_cast<TranslationsModel *>(sender())->translator());
     if (row == -1)
         return;
     const QModelIndex index = this->index(row, 2, QModelIndex());

@@ -41,7 +41,7 @@ QT_END_NAMESPACE
 namespace GammaRay {
 
 namespace Ui {
-  class InspectorWidget;
+class InspectorWidget;
 }
 
 class WlCompositorInterface;
@@ -49,7 +49,7 @@ class LogView;
 
 class InspectorWidget : public QWidget
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     explicit InspectorWidget(QWidget *parent = nullptr);
     ~InspectorWidget() override;
@@ -74,9 +74,9 @@ private:
 
 class InspectorWidgetFactory : public QObject, public StandardToolUiFactory<InspectorWidget>
 {
-  Q_OBJECT
-  Q_INTERFACES(GammaRay::ToolUiFactory)
-  Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_wlcompositorinspector.json")
+    Q_OBJECT
+    Q_INTERFACES(GammaRay::ToolUiFactory)
+    Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolUiFactory" FILE "gammaray_wlcompositorinspector.json")
 };
 
 

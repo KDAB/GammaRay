@@ -59,18 +59,26 @@ private:
         const qint64 startTime; // FIXME: make them all methods
         qint64 endTime() const;
 
-        qint64 timestamp(int i) const { return SignalHistoryModel::timestamp(events.at(i)); }
-        int signalIndex(int i) const { return SignalHistoryModel::signalIndex(events.at(i)); }
+        qint64 timestamp(int i) const
+        {
+            return SignalHistoryModel::timestamp(events.at(i));
+        }
+        int signalIndex(int i) const
+        {
+            return SignalHistoryModel::signalIndex(events.at(i));
+        }
     };
 
 public:
-    enum ColumnId {
+    enum ColumnId
+    {
         ObjectColumn,
         TypeColumn,
         EventColumn
     };
 
-    enum RoleId {
+    enum RoleId
+    {
         EventsRole = ObjectModel::UserRole + 1,
         StartTimeRole,
         EndTimeRole,
@@ -87,8 +95,14 @@ public:
                         int role = Qt::DisplayRole) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
-    static qint64 timestamp(qint64 ev) { return ev >> 16; }
-    static int signalIndex(qint64 ev) { return ev & 0xffff; }
+    static qint64 timestamp(qint64 ev)
+    {
+        return ev >> 16;
+    }
+    static int signalIndex(qint64 ev)
+    {
+        return ev & 0xffff;
+    }
 
 private:
     Item *item(const QModelIndex &index) const;
@@ -104,10 +118,10 @@ private slots:
 private:
     QVector<Item *> m_tracedObjects;
     QHash<QObject *, int> m_itemIndex;
-    QSet<QObject*> m_favorites;
+    QSet<QObject *> m_favorites;
 
     QTimer *m_delayInsertTimer;
-    QVector<Item*> m_objectsToBeInserted;
+    QVector<Item *> m_objectsToBeInserted;
 };
 } // namespace GammaRay
 

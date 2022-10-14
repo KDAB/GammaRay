@@ -78,7 +78,6 @@ public:
 QIviGammarayPropertyOverrider::QIviGammarayPropertyOverrider(QIviAbstractFeature *carrier, QObject *parent)
     : QIviDefaultPropertyOverrider(carrier, parent)
 {
-
 }
 
 bool QIviGammarayPropertyOverrider::setOverridenValue(int index, const QVariant &value)
@@ -94,7 +93,7 @@ bool QIviGammarayPropertyOverrider::setOverridenValue(int index, const QVariant 
         if (typeReference.type() == QVariant::Int) {
             toSet = value.value<EnumValue>().value();
         } else {
-            *(static_cast<int*>(typeReference.data())) = value.value<EnumValue>().value();
+            *(static_cast<int *>(typeReference.data())) = value.value<EnumValue>().value();
             toSet = typeReference;
         }
     }
@@ -141,7 +140,7 @@ QVariant QIviGammarayPropertyOverrider::iviConstraintsAt(int index) const
     const PropertyOverride &property = m_properties.at(index);
 
     QByteArray constraintsJSON;
-    for (int i=0; i<carrier->metaObject()->classInfoCount(); i++) {
+    for (int i = 0; i < carrier->metaObject()->classInfoCount(); i++) {
         QMetaClassInfo ci = carrier->metaObject()->classInfo(i);
         if (QLatin1String(ci.name()) == QLatin1String("IviPropertyDomains")) {
             constraintsJSON = QByteArray(ci.value());
@@ -198,10 +197,10 @@ QtIviObjectModel::QtIviObjectModel(Probe *probe)
     qRegisterMetaType<QIviAmFmTuner::Band>();
 #endif
 
-    connect(probe, SIGNAL(objectCreated(QObject*)), this, SLOT(objectAdded(QObject*)));
-    connect(probe, SIGNAL(objectDestroyed(QObject*)), this, SLOT(objectRemoved(QObject*)));
-    connect(probe, SIGNAL(objectReparented(QObject*)), this, SLOT(objectReparented(QObject*)));
-    connect(probe, SIGNAL(objectSelected(QObject*,QPoint)), this, SLOT(objectSelected(QObject*)));
+    connect(probe, SIGNAL(objectCreated(QObject *)), this, SLOT(objectAdded(QObject *)));
+    connect(probe, SIGNAL(objectDestroyed(QObject *)), this, SLOT(objectRemoved(QObject *)));
+    connect(probe, SIGNAL(objectReparented(QObject *)), this, SLOT(objectReparented(QObject *)));
+    connect(probe, SIGNAL(objectSelected(QObject *, QPoint)), this, SLOT(objectSelected(QObject *)));
 }
 
 int QtIviObjectModel::rowOfCarrier(const QObject *carrier) const
@@ -290,8 +289,8 @@ void QtIviObjectModel::objectRemoved(QObject *obj)
 
     if (m_handledObjects.contains(obj)) {
         QIviAbstractFeature *featureObj = qobject_cast<QIviAbstractFeature *>(obj);
-        for(auto &c : m_serviceCarriers) {
-            if(c.m_service->handles(obj)) {
+        for (auto &c : m_serviceCarriers) {
+            if (c.m_service->handles(obj)) {
                 c.m_service->removeCarrier(featureObj);
 
                 if (c.m_service->numCarriers() == 0) {
@@ -323,14 +322,14 @@ void QtIviObjectModel::objectSelected(QObject *obj)
 {
     const ObjectId id(obj);
     const QModelIndex index = match(this->index(0, 0), ObjectModel::ObjectIdRole, QVariant::fromValue(id), 1,
-                                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap).value(0);
+                                    Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap)
+                                  .value(0);
     if (!index.isValid()) {
         return;
     }
 
     QItemSelectionModel *const selectionModel = ObjectBroker::selectionModel(this);
-    selectionModel->select(index, QItemSelectionModel::ClearAndSelect |
-                           QItemSelectionModel::Rows | QItemSelectionModel::Current);
+    selectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 
 QVariant QtIviObjectModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -431,8 +430,8 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
             case Qt::ToolTipRole:
                 return carrier->description();
 
-//            case ObjectModel::ObjectIdRole:
-//                return QVariant::fromValue(carrier->objectId());
+                //            case ObjectModel::ObjectIdRole:
+                //                return QVariant::fromValue(carrier->objectId());
 
             default:
                 break;
@@ -496,7 +495,7 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
                     case ValueColumn: {
                         QVariant v = carrier->iviConstraintsAt(index.row());
                         if (!v.isValid() || v.type() != QVariant::List)
-                            return  {};
+                            return {};
                         QVariantList vl = v.toList();
                         QString result;
                         while (!vl.isEmpty()) {
@@ -520,7 +519,7 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
                             case QtIviObjectModel::AvailableValuesConstraints: {
                                 vl.pop_front();
                                 QStringList valstrings;
-                                for(const auto &vi: qAsConst(vl))
+                                for (const auto &vi : qAsConst(vl))
                                     valstrings << vi.toString();
                                 result += QString(QLatin1String("Valid Values: [%1]\n")).arg(valstrings.join(QLatin1String(", ")));
                                 vl.clear();
@@ -554,13 +553,12 @@ QVariant QtIviObjectModel::data(const QModelIndex &index, int role) const
                     break;
                 }
 
-//                case ObjectModel::ObjectIdRole:
-//                    return QVariant::fromValue(property.objectId());
+                    //                case ObjectModel::ObjectIdRole:
+                    //                    return QVariant::fromValue(property.objectId());
 
-//                case RawValue:
-//                    return property.cppValue();
+                    //                case RawValue:
+                    //                    return property.cppValue();
                 }
-
             }
         }
     }
@@ -582,8 +580,7 @@ QMap<int, QVariant> QtIviObjectModel::itemData(const QModelIndex &index) const
 bool QtIviObjectModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     const auto parentRow = index.internalId();
-    if (!index.isValid() || parentRow == PropertyCarrierIndex ||
-            parentRow >= m_serviceCarriers.size() || !flags(index).testFlag(Qt::ItemIsEditable)) {
+    if (!index.isValid() || parentRow == PropertyCarrierIndex || parentRow >= m_serviceCarriers.size() || !flags(index).testFlag(Qt::ItemIsEditable)) {
         return false;
     }
 
@@ -623,7 +620,7 @@ bool QtIviObjectModel::setData(const QModelIndex &index, const QVariant &value, 
             if (role == Qt::CheckStateRole) {
                 const bool isOverride = value.value<Qt::CheckState>() == Qt::Checked;
 
-                if(carrier->setOverride(index.row(), isOverride)) {
+                if (carrier->setOverride(index.row(), isOverride)) {
                     emitRowDataChanged(index);
                     return true;
                 }
@@ -642,7 +639,7 @@ bool QtIviObjectModel::setData(const QModelIndex &index, const QVariant &value, 
 
 void QtIviObjectModel::propertyChanged()
 {
-    if (QIviDefaultPropertyOverrider * carrier = qobject_cast<QIviDefaultPropertyOverrider *>(sender())) {
+    if (QIviDefaultPropertyOverrider *carrier = qobject_cast<QIviDefaultPropertyOverrider *>(sender())) {
         // A plain Qt property changed in a service or feature
         // Let's update the complete children as we can not known the property that changed
 
@@ -711,8 +708,7 @@ QModelIndex QtIviObjectModel::index(int row, int column, const QModelIndex &pare
             // create an index to a property
             const auto grandparentRow = parent.internalId();
             // only carriers have another level of children
-            if (grandparentRow == PropertyCarrierIndex &&
-                parent.row() >= 0 && uint(parent.row()) < m_serviceCarriers.size()) {
+            if (grandparentRow == PropertyCarrierIndex && parent.row() >= 0 && uint(parent.row()) < m_serviceCarriers.size()) {
                 const QIviDefaultPropertyOverriderPtr &carrier = m_serviceCarriers.at(parent.row()).m_service;
                 if (row >= 0 && row < carrier->propertyCount()) {
                     return createIndex(row, column, parent.row());

@@ -45,7 +45,8 @@ namespace GammaRay {
 class GAMMARAY_CORE_EXPORT ObjectInstance
 {
 public:
-    enum Type {
+    enum Type
+    {
         Invalid,
         QtObject,
         QtMetaObject,

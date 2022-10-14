@@ -157,7 +157,9 @@ private slots:
 
         auto targetModel = new QStringListModel;
         targetModel->setObjectName("targetModel");
-        targetModel->setStringList(QStringList() << "item1" << "item2" << "item3");
+        targetModel->setStringList(QStringList() << "item1"
+                                                 << "item2"
+                                                 << "item3");
         QTest::qWait(1); // trigger model inspector plugin loading
 
         auto modelModel = ObjectBroker::model("com.kdab.GammaRay.ModelModel");
@@ -182,7 +184,7 @@ private slots:
         modelSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
         QCOMPARE(selectionModels->rowCount(), 1);
 
-        QSignalSpy dataChangeSpy(selectionModels, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QSignalSpy dataChangeSpy(selectionModels, SIGNAL(dataChanged(QModelIndex, QModelIndex)));
         QVERIFY(dataChangeSpy.isValid());
         QCOMPARE(selectionModels->index(0, 1).data().toInt(), 0);
         QCOMPARE(selectionModels->index(0, 2).data().toInt(), 0);
@@ -258,7 +260,7 @@ private slots:
         QVERIFY(idx.isValid());
         QCOMPARE(idx.sibling(idx.row(), 1).data().toString(), QLatin1String("item0,0"));
 
-        auto iface = ObjectBroker::object<ModelInspectorInterface*>();
+        auto iface = ObjectBroker::object<ModelInspectorInterface *>();
         QVERIFY(iface);
         auto cellData = iface->currentCellData();
         QCOMPARE(cellData.row, 0);
@@ -279,7 +281,9 @@ private slots:
 
         auto targetModel = new QStringListModel;
         targetModel->setObjectName("targetModel");
-        targetModel->setStringList(QStringList() << "item1" << "item2" << "item3");
+        targetModel->setStringList(QStringList() << "item1"
+                                                 << "item2"
+                                                 << "item3");
         QTest::qWait(1); // trigger model inspector plugin loading
 
         auto modelModel = ObjectBroker::model("com.kdab.GammaRay.ModelModel");
@@ -310,7 +314,7 @@ private slots:
         for (int i = 0; i < targetModel->rowCount(); ++i)
             QVERIFY(contentModel->index(i, 0).data(ModelContentProxyModel::SelectedRole).isNull());
 
-        QSignalSpy contentSpy(contentModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QSignalSpy contentSpy(contentModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)));
         QVERIFY(contentSpy.isValid());
 
         targetSelModel->select(contentModel->index(1, 0), QItemSelectionModel::ClearAndSelect);
@@ -330,7 +334,9 @@ private slots:
 
         std::unique_ptr<QStringListModel> targetModel(new QStringListModel);
         targetModel->setObjectName("targetModel");
-        targetModel->setStringList(QStringList() << "item1" << "item2" << "item3");
+        targetModel->setStringList(QStringList() << "item1"
+                                                 << "item2"
+                                                 << "item3");
         QTest::qWait(1); // trigger model inspector plugin loading
 
         ClientToolManager mgr;
@@ -339,7 +345,7 @@ private slots:
         QVERIFY(widget);
         widget->show();
 
-        const auto views = widget->findChildren<QAbstractItemView*>();
+        const auto views = widget->findChildren<QAbstractItemView *>();
         for (auto view : views) {
             QVERIFY(view->model());
         }

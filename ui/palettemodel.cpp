@@ -33,7 +33,8 @@
 
 using namespace GammaRay;
 
-struct role_t {
+struct role_t
+{
     const char *name;
     QPalette::ColorRole role;
 };
@@ -60,7 +61,8 @@ static const role_t paletteRoles[] = {
     { "LinkVisited", QPalette::LinkVisited }
 };
 
-struct group_t {
+struct group_t
+{
     const char *name;
     QPalette::ColorGroup group;
 };
@@ -103,14 +105,15 @@ QVariant PaletteModel::data(const QModelIndex &index, int role) const
         if (index.column() == 0)
             return paletteRoles[index.row()].name;
 
-        return m_palette.color(paletteGroups[index.column()-1].group,
-                               paletteRoles[index.row()].role).name();
+        return m_palette.color(paletteGroups[index.column() - 1].group,
+                               paletteRoles[index.row()].role)
+            .name();
     } else if (role == Qt::EditRole && index.column() > 0) {
         // TODO return QBrush once we have an editor for that
-        return m_palette.color(paletteGroups[index.column()-1].group,
+        return m_palette.color(paletteGroups[index.column() - 1].group,
                                paletteRoles[index.row()].role);
     } else if (role == Qt::DecorationRole && index.column() != 0) {
-        const QBrush brush = m_palette.brush(paletteGroups[index.column()-1].group,
+        const QBrush brush = m_palette.brush(paletteGroups[index.column() - 1].group,
                                              paletteRoles[index.row()].role);
         QPixmap pixmap(32, 32);
         QPainter painter(&pixmap);
@@ -129,10 +132,10 @@ bool PaletteModel::setData(const QModelIndex &index, const QVariant &value, int 
 
     if (index.isValid() && role == Qt::EditRole) {
         if (value.type() == QVariant::Color) {
-            m_palette.setColor(paletteGroups[index.column()-1].group,
+            m_palette.setColor(paletteGroups[index.column() - 1].group,
                                paletteRoles[index.row()].role, value.value<QColor>());
         } else if (value.type() == QVariant::Brush) {
-            m_palette.setBrush(paletteGroups[index.column()-1].group,
+            m_palette.setBrush(paletteGroups[index.column() - 1].group,
                                paletteRoles[index.row()].role, value.value<QBrush>());
         }
     }
@@ -157,7 +160,7 @@ QVariant PaletteModel::headerData(int section, Qt::Orientation orientation, int 
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (section == 0)
             return tr("Role");
-        return paletteGroups[section-1].name;
+        return paletteGroups[section - 1].name;
     }
     return QAbstractItemModel::headerData(section, orientation, role);
 }

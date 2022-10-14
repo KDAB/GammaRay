@@ -34,11 +34,13 @@
 namespace GammaRay {
 /** Model roles shared between client and server. */
 namespace WidgetModelRoles {
-enum Roles {
+enum Roles
+{
     WidgetFlags = ObjectModel::UserRole,
 };
 
-enum WidgetFlag {
+enum WidgetFlag
+{
     None = 0,
     Invisible = 1
 };

@@ -51,9 +51,9 @@ int ModelModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid()) {
         if (parent.column() > 0)
             return 0;
-        QAbstractItemModel *sourceModel = static_cast<QAbstractItemModel*>(parent.internalPointer());
+        QAbstractItemModel *sourceModel = static_cast<QAbstractItemModel *>(parent.internalPointer());
         Q_ASSERT(sourceModel);
-        const QVector<QAbstractProxyModel*> proxies = proxiesForModel(sourceModel);
+        const QVector<QAbstractProxyModel *> proxies = proxiesForModel(sourceModel);
         return proxies.size();
     }
 

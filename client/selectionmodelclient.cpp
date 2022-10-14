@@ -42,7 +42,7 @@ SelectionModelClient::SelectionModelClient(const QString &objectName, QAbstractI
     m_timer->setInterval(125);
     Q_ASSERT(model);
     // We do use a timer to group requests to avoid network overhead
-    auto startTimer = [this](){ m_timer->start(); };
+    auto startTimer = [this]() { m_timer->start(); };
     connect(model, &QAbstractItemModel::modelAboutToBeReset, this, &SelectionModelClient::clearPendingSelection);
     connect(model, &QAbstractItemModel::rowsInserted, m_timer, startTimer);
     connect(model, &QAbstractItemModel::rowsMoved, m_timer, startTimer);

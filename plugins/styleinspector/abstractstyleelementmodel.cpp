@@ -80,7 +80,7 @@ bool AbstractStyleElementModel::isMainStyle() const
     }
 }
 
-QStyle* AbstractStyleElementModel::effectiveStyle() const
+QStyle *AbstractStyleElementModel::effectiveStyle() const
 {
     return (isMainStyle() && DynamicProxyStyle::exists()) ? DynamicProxyStyle::instance() : m_style;
 }

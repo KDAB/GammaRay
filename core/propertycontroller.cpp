@@ -36,8 +36,7 @@
 
 using namespace GammaRay;
 
-QVector<PropertyControllerExtensionFactoryBase *> PropertyController::s_extensionFactories
-    = QVector<PropertyControllerExtensionFactoryBase *>();
+QVector<PropertyControllerExtensionFactoryBase *> PropertyController::s_extensionFactories = QVector<PropertyControllerExtensionFactoryBase *>();
 QVector<PropertyController *> PropertyController::s_instances = QVector<PropertyController *>();
 
 PropertyController::PropertyController(const QString &baseName, QObject *parent)
@@ -63,7 +62,7 @@ void PropertyController::loadExtension(PropertyControllerExtensionFactoryBase *f
     m_extensions << factory->create(this);
 }
 
-void PropertyController::registerExtension(PropertyControllerExtensionFactoryBase* factory)
+void PropertyController::registerExtension(PropertyControllerExtensionFactoryBase *factory)
 {
     if (s_extensionFactories.indexOf(factory) >= 0)
         return;

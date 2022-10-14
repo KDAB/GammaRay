@@ -79,7 +79,8 @@
 using namespace GammaRay;
 
 // ### keep in sync with wireframe.vert/wireframe.frag
-enum ShadingMode {
+enum ShadingMode
+{
     ShadingModeFlat = 0,
     ShadingModePhong = 1,
     ShadingModeTexture = 2,
@@ -132,8 +133,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
     });
     connect(ui->actionCullBack, &QAction::toggled, this, [this]() {
         if (m_cullMode) {
-            m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back :
-                                Qt3DRender::QCullFace::NoCulling);
+            m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back : Qt3DRender::QCullFace::NoCulling);
         }
     });
     connect(m_shadingModeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this]() {
@@ -147,8 +147,7 @@ Qt3DGeometryTab::Qt3DGeometryTab(PropertyWidget *parent)
             m_depthTest->setDepthFunction(Qt3DRender::QDepthTest::Always);
         } else {
             ui->actionCullBack->setEnabled(true);
-            m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back :
-                                Qt3DRender::QCullFace::NoCulling);
+            m_cullMode->setMode(ui->actionCullBack->isChecked() ? Qt3DRender::QCullFace::Back : Qt3DRender::QCullFace::NoCulling);
             m_depthTest->setDepthFunction(Qt3DRender::QDepthTest::Less);
         }
     });
@@ -329,11 +328,11 @@ Qt3DCore::QComponent *Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
 
     auto normalsShader = new Qt3DRender::QShaderProgram;
     normalsShader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
-                                                                                       "qrc:/gammaray/qt3dinspector/geometryextension/gl3/passthrough.vert"))));
+        "qrc:/gammaray/qt3dinspector/geometryextension/gl3/passthrough.vert"))));
     normalsShader->setGeometryShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
-                                                                                         "qrc:/gammaray/qt3dinspector/geometryextension/gl3/normals.geom"))));
+        "qrc:/gammaray/qt3dinspector/geometryextension/gl3/normals.geom"))));
     normalsShader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral(
-                                                                                         "qrc:/gammaray/qt3dinspector/geometryextension/gl3/normals.frag"))));
+        "qrc:/gammaray/qt3dinspector/geometryextension/gl3/normals.frag"))));
 
     m_normalsRenderPass = new Qt3DRender::QRenderPass;
     m_normalsRenderPass->setShaderProgram(normalsShader);
@@ -367,7 +366,7 @@ Qt3DCore::QComponent *Qt3DGeometryTab::createMaterial(Qt3DCore::QNode *parent)
     return material;
 }
 
-Qt3DCore::QComponent* Qt3DGeometryTab::createES2WireframeMaterial(Qt3DCore::QNode *parent)
+Qt3DCore::QComponent *Qt3DGeometryTab::createES2WireframeMaterial(Qt3DCore::QNode *parent)
 {
     auto material = new Qt3DRender::QMaterial(parent);
 
@@ -589,12 +588,11 @@ void Qt3DGeometryTab::computeBoundingVolume(const Qt3DGeometryAttributeData &ver
     m_boundingVolume = BoundingVolume();
     QVector3D v;
     const auto vertexSize = std::max(vertexAttr.vertexSize, 1u);
-    const auto stride = std::max(vertexAttr.byteStride, (uint)Attribute::size(vertexAttr.vertexBaseType) * vertexSize);
+    const auto stride = std::max(vertexAttr.byteStride, ( uint )Attribute::size(vertexAttr.vertexBaseType) * vertexSize);
     for (unsigned int i = 0; i < vertexAttr.count; ++i) {
         const char *c = bufferData.constData() + vertexAttr.byteOffset + i * stride;
         switch (vertexAttr.vertexBaseType) {
-        case Qt3DRender::QAttribute::Float:
-        {
+        case Qt3DRender::QAttribute::Float: {
             // cppcheck-suppress invalidPointerCast
             auto f = reinterpret_cast<const float *>(c);
             v.setX(*f);
@@ -622,12 +620,12 @@ bool Qt3DGeometryTab::isIndexBuffer(unsigned int bufferIndex) const
 }
 
 
-void Qt3DGeometryTab::trianglePicked(Qt3DRender::QPickEvent* pick)
+void Qt3DGeometryTab::trianglePicked(Qt3DRender::QPickEvent *pick)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     if (pick->button() != Qt3DRender::QPickEvent::LeftButton)
         return;
-    const auto trianglePick = qobject_cast<Qt3DRender::QPickTriangleEvent*>(pick);
+    const auto trianglePick = qobject_cast<Qt3DRender::QPickTriangleEvent *>(pick);
 
     qDebug() << trianglePick << trianglePick->vertex1Index() << trianglePick->vertex2Index() << trianglePick->vertex3Index() << trianglePick->localIntersection() << trianglePick->triangleIndex() << m_interface->geometryData().buffers.at(ui->bufferBox->currentIndex()).type << ui->bufferBox->currentIndex();
     auto selModel = ui->bufferView->selectionModel();

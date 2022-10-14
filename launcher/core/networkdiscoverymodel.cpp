@@ -89,14 +89,14 @@ void NetworkDiscoveryModel::processPendingDatagrams()
         // a system with multiple public network interfaces
         if (!senderAddr.isNull() && info.url.scheme() == QLatin1String("tcp")) {
             switch (senderAddr.protocol()) {
-                case QAbstractSocket::IPv4Protocol:
-                    info.url.setHost(senderAddr.toString());
-                    break;
-                case QAbstractSocket::IPv6Protocol:
-                    info.url.setHost(QLatin1Char('[') + senderAddr.toString() + QLatin1Char(']'));
-                    break;
-                default:
-                    break;
+            case QAbstractSocket::IPv4Protocol:
+                info.url.setHost(senderAddr.toString());
+                break;
+            case QAbstractSocket::IPv6Protocol:
+                info.url.setHost(QLatin1Char('[') + senderAddr.toString() + QLatin1Char(']'));
+                break;
+            default:
+                break;
             }
         }
 
@@ -189,6 +189,6 @@ Qt::ItemFlags NetworkDiscoveryModel::flags(const QModelIndex &index) const
 
     const ServerInfo &info = m_data.at(index.row());
     if (info.version != Protocol::version())
-        return baseFlags & ~(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+        return baseFlags & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     return baseFlags;
 }

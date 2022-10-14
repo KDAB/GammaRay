@@ -48,7 +48,7 @@ protected:
     void clearBreakpoints() override;
     void printBacktrace() override;
     void loadSymbols(const QByteArray &library) override;
-    void parseStandardError(const QByteArray & line) override;
+    void parseStandardError(const QByteArray &line) override;
 
 private:
     void setupGdb();

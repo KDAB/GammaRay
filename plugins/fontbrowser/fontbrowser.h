@@ -37,8 +37,7 @@
 #include <QGuiApplication>
 
 namespace GammaRay {
-class FontBrowserFactory : public QObject
-    , public StandardToolFactory<QGuiApplication, FontBrowserServer>
+class FontBrowserFactory : public QObject, public StandardToolFactory<QGuiApplication, FontBrowserServer>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

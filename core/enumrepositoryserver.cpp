@@ -32,7 +32,7 @@
 
 using namespace GammaRay;
 
-EnumRepositoryServer* EnumRepositoryServer::s_instance = nullptr;
+EnumRepositoryServer *EnumRepositoryServer::s_instance = nullptr;
 
 EnumRepositoryServer::EnumRepositoryServer(QObject *parent)
     : EnumRepository(parent)
@@ -53,7 +53,7 @@ bool EnumRepositoryServer::isEnum(int metaTypeId)
 }
 
 
-EnumRepository* EnumRepositoryServer::create(QObject *parent)
+EnumRepository *EnumRepositoryServer::create(QObject *parent)
 {
     Q_ASSERT(!s_instance);
     s_instance = new EnumRepositoryServer(parent);
@@ -91,7 +91,7 @@ EnumValue EnumRepositoryServer::valueFromMetaEnum(int value, const QMetaEnum &me
     return EnumValue(def.id(), value);
 }
 
-EnumValue EnumRepositoryServer::valueFromVariant(const QVariant& value)
+EnumValue EnumRepositoryServer::valueFromVariant(const QVariant &value)
 {
     Q_ASSERT(s_instance);
 
@@ -100,11 +100,11 @@ EnumValue EnumRepositoryServer::valueFromVariant(const QVariant& value)
 
     const auto def = definitionForId(it.value());
     if (def.isFlag())
-        return EnumValue(it.value(), *static_cast<const int*>(value.constData())); // see EnumUtil
+        return EnumValue(it.value(), *static_cast<const int *>(value.constData())); // see EnumUtil
     return EnumValue(it.value(), value.toInt());
 }
 
-void EnumRepositoryServer::registerEnum(int metaTypeId, const char* name, const QVector<GammaRay::EnumDefinitionElement>& elems, bool flag)
+void EnumRepositoryServer::registerEnum(int metaTypeId, const char *name, const QVector<GammaRay::EnumDefinitionElement> &elems, bool flag)
 {
     Q_ASSERT(s_instance);
     Q_ASSERT(name);

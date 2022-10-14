@@ -62,18 +62,18 @@ QDataStream &operator<<(QDataStream &stream, const GammaRay::TransferImage &imag
     static const TransferImage::Format format = TransferImage::RawFormat;
 
     const QImage &img = image.image();
-    stream << (quint32)(format);
+    stream << ( quint32 )(format);
     switch (format) {
     case TransferImage::QImageFormat:
         stream << img;
         break;
     case TransferImage::RawFormat:
-        stream << (double)img.devicePixelRatio();
-        stream << (quint32)img.format() << (quint32)img.width() << (quint32)img.height() << image.transform();
+        stream << ( double )img.devicePixelRatio();
+        stream << ( quint32 )img.format() << ( quint32 )img.width() << ( quint32 )img.height() << image.transform();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-        stream.device()->write((const char*)img.constBits(), img.sizeInBytes());
+        stream.device()->write(( const char * )img.constBits(), img.sizeInBytes());
 #else
-        stream.device()->write((const char*)img.constBits(), img.byteCount());
+        stream.device()->write(( const char * )img.constBits(), img.byteCount());
 #endif
         break;
     }
@@ -88,15 +88,13 @@ QDataStream &operator>>(QDataStream &stream, TransferImage &image)
     const TransferImage::Format format = static_cast<TransferImage::Format>(i);
 
     switch (format) {
-    case TransferImage::QImageFormat:
-    {
+    case TransferImage::QImageFormat: {
         QImage img;
         stream >> img;
         image.setImage(img);
         break;
     }
-    case TransferImage::RawFormat:
-    {
+    case TransferImage::RawFormat: {
         double r;
         quint32 f, w, h;
         QTransform transform;

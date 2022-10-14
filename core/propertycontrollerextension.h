@@ -90,8 +90,11 @@ private:
 class PropertyControllerExtensionFactoryBase
 {
 public:
-    explicit PropertyControllerExtensionFactoryBase() {}
+    explicit PropertyControllerExtensionFactoryBase()
+    {
+    }
     virtual PropertyControllerExtension *create(PropertyController *controller) = 0;
+
 private:
     Q_DISABLE_COPY(PropertyControllerExtensionFactoryBase)
 };
@@ -113,7 +116,9 @@ public:
     }
 
 private:
-    explicit PropertyControllerExtensionFactory() {}
+    explicit PropertyControllerExtensionFactory()
+    {
+    }
     static PropertyControllerExtensionFactory<T> *s_instance;
 };
 

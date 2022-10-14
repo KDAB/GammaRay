@@ -76,18 +76,21 @@ private:
 ///@cond internal
 namespace detail {
 template<typename T>
-struct strip_const_ref {
+struct strip_const_ref
+{
     typedef T type;
 };
 
 template<typename T>
-struct strip_const_ref<const T &> {
+struct strip_const_ref<const T &>
+{
     typedef T type;
 };
 
 template<typename T>
-struct add_const_ref {
-    typedef const typename strip_const_ref<T>::type & type;
+struct add_const_ref
+{
+    typedef const typename strip_const_ref<T>::type &type;
 };
 }
 
@@ -101,7 +104,7 @@ private:
 public:
     inline MetaPropertyImpl(
         const char *name, GetterSignature getter,
-        void(Class::*setter)(SetterArgType) = nullptr)
+        void (Class::*setter)(SetterArgType) = nullptr)
         : MetaProperty(name)
         , m_getter(getter)
         , m_setter(setter)
@@ -148,7 +151,7 @@ private:
     typedef typename detail::strip_const_ref<GetterReturnType>::type ValueType;
 
 public:
-    inline MetaStaticPropertyImpl(const char *name, GetterReturnType(*getter)())
+    inline MetaStaticPropertyImpl(const char *name, GetterReturnType (*getter)())
         : MetaProperty(name)
         , m_getter(getter)
     {
@@ -196,7 +199,7 @@ public:
     {
         Q_ASSERT(object);
         Q_ASSERT(m_member);
-        return QVariant::fromValue(reinterpret_cast<Class*>(object)->*m_member);
+        return QVariant::fromValue(reinterpret_cast<Class *>(object)->*m_member);
     }
 
     const char *typeName() const override
@@ -213,7 +216,7 @@ template<typename Class, typename ValueType>
 class MetaLambdaPropertyImpl : public MetaProperty
 {
 public:
-    inline explicit MetaLambdaPropertyImpl(const char *name, const std::function<ValueType(Class*)> &func)
+    inline explicit MetaLambdaPropertyImpl(const char *name, const std::function<ValueType(Class *)> &func)
         : MetaProperty(name)
         , m_func(func)
     {
@@ -226,7 +229,7 @@ public:
 
     QVariant value(void *object) const override
     {
-        return QVariant::fromValue(m_func(reinterpret_cast<Class*>(object)));
+        return QVariant::fromValue(m_func(reinterpret_cast<Class *>(object)));
     }
 
     const char *typeName() const override
@@ -235,64 +238,63 @@ public:
     }
 
 private:
-    const std::function<ValueType(Class*)> m_func;
+    const std::function<ValueType(Class *)> m_func;
 };
 
 /*! Template argument deduction factory methods for the MetaXPropertyImpl classes. */
-namespace MetaPropertyFactory
+namespace MetaPropertyFactory {
+// explicitly handle value and const ref setters, to deal with overloaded setters for arbitrary types
+template<typename Class, typename GetterReturnType>
+inline MetaProperty *makeProperty(const char *name, GetterReturnType (Class::*getter)() const, void (Class::*setter)(typename detail::strip_const_ref<GetterReturnType>::type))
 {
-    // explicitly handle value and const ref setters, to deal with overloaded setters for arbitrary types
-    template <typename Class, typename GetterReturnType>
-    inline MetaProperty* makeProperty(const char *name, GetterReturnType(Class::*getter)() const, void(Class::*setter)(typename detail::strip_const_ref<GetterReturnType>::type))
-    {
-        return new MetaPropertyImpl<Class, GetterReturnType, typename detail::strip_const_ref<GetterReturnType>::type>(name, getter, setter);
-    }
+    return new MetaPropertyImpl<Class, GetterReturnType, typename detail::strip_const_ref<GetterReturnType>::type>(name, getter, setter);
+}
 
-    template <typename Class, typename GetterReturnType>
-    inline MetaProperty* makeProperty(const char *name, GetterReturnType(Class::*getter)() const, void(Class::*setter)(typename detail::add_const_ref<GetterReturnType>::type))
-    {
-        return new MetaPropertyImpl<Class, GetterReturnType, typename detail::add_const_ref<GetterReturnType>::type>(name, getter, setter);
-    }
+template<typename Class, typename GetterReturnType>
+inline MetaProperty *makeProperty(const char *name, GetterReturnType (Class::*getter)() const, void (Class::*setter)(typename detail::add_const_ref<GetterReturnType>::type))
+{
+    return new MetaPropertyImpl<Class, GetterReturnType, typename detail::add_const_ref<GetterReturnType>::type>(name, getter, setter);
+}
 
-    // can't merge with the above function, since MSVC2010 can't do default template arguments for template functions...
-    template <typename Class, typename GetterReturnType>
-    inline MetaProperty* makeProperty(const char *name, GetterReturnType(Class::*getter)() const)
-    {
-        return new MetaPropertyImpl<Class, GetterReturnType>(name, getter, nullptr);
-    }
+// can't merge with the above function, since MSVC2010 can't do default template arguments for template functions...
+template<typename Class, typename GetterReturnType>
+inline MetaProperty *makeProperty(const char *name, GetterReturnType (Class::*getter)() const)
+{
+    return new MetaPropertyImpl<Class, GetterReturnType>(name, getter, nullptr);
+}
 #if defined(__cpp_noexcept_function_type) && __cpp_noexcept_function_type >= 201510
-    template <typename Class, typename GetterReturnType>
-    inline MetaProperty* makeProperty(const char *name, GetterReturnType(Class::*getter)() const noexcept)
-    {
-        return new MetaPropertyImpl<Class, GetterReturnType>(name, getter, nullptr);
-    }
+template<typename Class, typename GetterReturnType>
+inline MetaProperty *makeProperty(const char *name, GetterReturnType (Class::*getter)() const noexcept)
+{
+    return new MetaPropertyImpl<Class, GetterReturnType>(name, getter, nullptr);
+}
 #endif
 
-    // non-const getters...
-    template <typename Class, typename GetterReturnType>
-    inline MetaProperty* makePropertyNonConst(const char *name, GetterReturnType(Class::*getter)())
-    {
-        return new MetaPropertyImpl<Class, GetterReturnType, GetterReturnType, GetterReturnType (Class::*)()>(name, getter, nullptr);
-    }
+// non-const getters...
+template<typename Class, typename GetterReturnType>
+inline MetaProperty *makePropertyNonConst(const char *name, GetterReturnType (Class::*getter)())
+{
+    return new MetaPropertyImpl<Class, GetterReturnType, GetterReturnType, GetterReturnType (Class::*)()>(name, getter, nullptr);
+}
 
-    template <typename GetterReturnType>
-    inline MetaProperty* makeProperty(const char *name, GetterReturnType(*getter)())
-    {
-        return new MetaStaticPropertyImpl<GetterReturnType>(name, getter);
-    }
+template<typename GetterReturnType>
+inline MetaProperty *makeProperty(const char *name, GetterReturnType (*getter)())
+{
+    return new MetaStaticPropertyImpl<GetterReturnType>(name, getter);
+}
 
-    template <typename Class, typename ValueType>
-    inline MetaProperty* makeProperty(const char *name, ValueType Class::*member)
-    {
-        return new MetaMemberPropertyImpl<Class, ValueType>(name, member);
-    }
+template<typename Class, typename ValueType>
+inline MetaProperty *makeProperty(const char *name, ValueType Class::*member)
+{
+    return new MetaMemberPropertyImpl<Class, ValueType>(name, member);
+}
 
-    // lambda getters
-    template <typename Class, typename GetterReturnType>
-    inline MetaProperty* makeProperty(const char *name, const std::function<GetterReturnType(Class*)> &func)
-    {
-        return new MetaLambdaPropertyImpl<Class, GetterReturnType>(name, func);
-    }
+// lambda getters
+template<typename Class, typename GetterReturnType>
+inline MetaProperty *makeProperty(const char *name, const std::function<GetterReturnType(Class *)> &func)
+{
+    return new MetaLambdaPropertyImpl<Class, GetterReturnType>(name, func);
+}
 }
 ///@endcond
 

@@ -55,8 +55,7 @@ QWidget *ProxyToolUiFactory::createWidget(QWidget *parentWidget)
     loadPlugin();
     ToolUiFactory *fac = factory();
     if (!fac)
-        return new QLabel(tr("Plugin '%1' could not be loaded.").arg(
-                              pluginInfo().path()), parentWidget);
+        return new QLabel(tr("Plugin '%1' could not be loaded.").arg(pluginInfo().path()), parentWidget);
     Q_ASSERT(fac);
     return fac->createWidget(parentWidget);
 }

@@ -49,7 +49,7 @@ private:
 };
 
 class QuickWidgetSupportFactory : public QObject,
-    public StandardToolFactory<QQuickWidget, QuickWidgetSupport>
+                                  public StandardToolFactory<QQuickWidget, QuickWidgetSupport>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

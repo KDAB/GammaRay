@@ -40,7 +40,8 @@ class ObjectVisualizerModel : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 public:
-    enum Role {
+    enum Role
+    {
         ObjectId = ObjectModel::UserRole,
         ObjectDisplayName,
         ClassName

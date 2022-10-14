@@ -68,7 +68,7 @@ private:
 };
 
 class TextDocumentInspectorWidgetFactory : public QObject,
-    public StandardToolUiFactory<TextDocumentInspectorWidget>
+                                           public StandardToolUiFactory<TextDocumentInspectorWidget>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolUiFactory)

@@ -56,8 +56,7 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
     const auto metaTypeId = m_metaTypes.at(index.row());
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-        case 0:
-        {
+        case 0: {
             QString name(QMetaType::typeName(metaTypeId));
             if (name.isEmpty())
                 return tr("N/A");
@@ -69,11 +68,12 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
             return QMetaType::sizeOf(metaTypeId);
         case 3:
             return Util::addressToString(QMetaType::metaObjectForType(metaTypeId));
-        case 4:
-        {
+        case 4: {
             const QMetaType::TypeFlags flags = QMetaType::typeFlags(metaTypeId);
             QStringList l;
-        #define F(x) if (flags & QMetaType:: x) l.push_back(QStringLiteral(#x))
+#define F(x)                  \
+    if (flags & QMetaType::x) \
+    l.push_back(QStringLiteral(#x))
             F(NeedsConstruction);
             F(NeedsDestruction);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -93,12 +93,11 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
             F(WeakPointerToQObject);
             F(TrackingPointerToQObject);
             F(IsGadget);
-        #undef F
+#undef F
 
             return l.join(QStringLiteral(", "));
         }
-        case 5:
-        {
+        case 5: {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             auto mt = QMetaType(metaTypeId);
             return mt.isEqualityComparable() && mt.isOrdered();
@@ -111,7 +110,7 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
         }
     } else if (role == MetaTypeRoles::MetaObjectIdRole && index.column() == 0) {
         if (auto mo = QMetaType::metaObjectForType(metaTypeId))
-            return QVariant::fromValue(ObjectId(const_cast<QMetaObject*>(mo), "const QMetaObject*"));
+            return QVariant::fromValue(ObjectId(const_cast<QMetaObject *>(mo), "const QMetaObject*"));
     }
 
     return QVariant();

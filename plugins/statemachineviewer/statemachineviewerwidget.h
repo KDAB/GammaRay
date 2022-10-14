@@ -104,7 +104,7 @@ private:
 };
 
 class StateMachineViewerUiFactory : public QObject,
-    public StandardToolUiFactory<StateMachineViewerWidget>
+                                    public StandardToolUiFactory<StateMachineViewerWidget>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolUiFactory)

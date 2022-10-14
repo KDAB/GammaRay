@@ -47,13 +47,13 @@ int EnumDefinitionElement::value() const
 }
 
 namespace GammaRay {
-QDataStream& operator<<(QDataStream &out, const EnumDefinitionElement &elem)
+QDataStream &operator<<(QDataStream &out, const EnumDefinitionElement &elem)
 {
     out << elem.m_value << elem.m_name;
     return out;
 }
 
-QDataStream& operator>>(QDataStream &in, EnumDefinitionElement &elem)
+QDataStream &operator>>(QDataStream &in, EnumDefinitionElement &elem)
 {
     in >> elem.m_value >> elem.m_name;
     return in;
@@ -96,12 +96,12 @@ QVector<EnumDefinitionElement> EnumDefinition::elements() const
     return m_elements;
 }
 
-void EnumDefinition::setElements(const QVector<EnumDefinitionElement>& elements)
+void EnumDefinition::setElements(const QVector<EnumDefinitionElement> &elements)
 {
     m_elements = elements;
 }
 
-QByteArray EnumDefinition::valueToString(const EnumValue& value) const
+QByteArray EnumDefinition::valueToString(const EnumValue &value) const
 {
     Q_ASSERT(value.id() == id());
     if (isFlag()) {
@@ -138,15 +138,15 @@ QByteArray EnumDefinition::valueToString(const EnumValue& value) const
 }
 
 namespace GammaRay {
-QDataStream& operator<<(QDataStream &out, const EnumDefinition &def)
+QDataStream &operator<<(QDataStream &out, const EnumDefinition &def)
 {
     out << def.m_id << def.m_isFlag << def.m_name << def.m_elements;
     return out;
 }
 
-QDataStream& operator>>(QDataStream &in, EnumDefinition &def)
+QDataStream &operator>>(QDataStream &in, EnumDefinition &def)
 {
-    in >>  def.m_id >> def.m_isFlag >> def.m_name >> def.m_elements;
+    in >> def.m_id >> def.m_isFlag >> def.m_name >> def.m_elements;
     return in;
 }
 

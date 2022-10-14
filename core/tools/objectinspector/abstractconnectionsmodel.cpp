@@ -70,8 +70,7 @@ QVariant AbstractConnectionsModel::data(const QModelIndex &index, int role) cons
         case 0:
             if (!conn.endpoint || !m_object)
                 return tr("Auto");
-            return tr("Auto (%1)").arg(conn.endpoint->thread() == m_object->thread() ? tr(
-                                           "Direct") : tr("Queued"));
+            return tr("Auto (%1)").arg(conn.endpoint->thread() == m_object->thread() ? tr("Direct") : tr("Queued"));
         case 1:
             return tr("Direct");
         case 2:
@@ -148,7 +147,7 @@ int AbstractConnectionsModel::signalIndexToMethodIndex(QObject *object, int sign
     return Util::signalIndexToMethodIndex(object->metaObject(), signalIndex);
 }
 
-QMap< int, QVariant > AbstractConnectionsModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> AbstractConnectionsModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> d = QAbstractTableModel::itemData(index);
     d.insert(ConnectionsModelRoles::WarningFlagRole,
@@ -157,7 +156,7 @@ QMap< int, QVariant > AbstractConnectionsModel::itemData(const QModelIndex &inde
     return d;
 }
 
-bool AbstractConnectionsModel::isDuplicate(const QVector<Connection> &connections, const AbstractConnectionsModel::Connection& conn)
+bool AbstractConnectionsModel::isDuplicate(const QVector<Connection> &connections, const AbstractConnectionsModel::Connection &conn)
 {
     for (const Connection &c : qAsConst(connections)) {
         if (&c == &conn)

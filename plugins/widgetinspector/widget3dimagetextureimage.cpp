@@ -31,8 +31,7 @@
 
 #include <QWidget>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class Widget3DImageTextureDataGenerator : public Qt3DRender::QTextureImageDataGenerator
 {

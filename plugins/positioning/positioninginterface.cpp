@@ -32,12 +32,12 @@
 
 using namespace GammaRay;
 
-PositioningInterface::PositioningInterface(QObject* parent)
+PositioningInterface::PositioningInterface(QObject *parent)
     : QObject(parent)
     , m_positioningOverrideAvailable(false)
     , m_positioningOverrideEnabled(false)
 {
-    ObjectBroker::registerObject<PositioningInterface*>(this);
+    ObjectBroker::registerObject<PositioningInterface *>(this);
 }
 
 QGeoPositionInfo PositioningInterface::positionInfo() const
@@ -45,7 +45,7 @@ QGeoPositionInfo PositioningInterface::positionInfo() const
     return m_postionInfo;
 }
 
-void PositioningInterface::setPositionInfo(const QGeoPositionInfo& info)
+void PositioningInterface::setPositionInfo(const QGeoPositionInfo &info)
 {
     if (m_postionInfo == info)
         return;
@@ -84,7 +84,7 @@ QGeoPositionInfo PositioningInterface::positionInfoOverride() const
     return m_postionInfoOverride;
 }
 
-void PositioningInterface::setPositionInfoOverride(const QGeoPositionInfo& info)
+void PositioningInterface::setPositionInfoOverride(const QGeoPositionInfo &info)
 {
     if (m_postionInfoOverride == info)
         return;

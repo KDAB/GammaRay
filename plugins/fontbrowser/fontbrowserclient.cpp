@@ -39,9 +39,9 @@ FontBrowserClient::FontBrowserClient(QObject *parent)
 {
 }
 
-#define WRAP_REMOTE(func, type) \
-    void FontBrowserClient::func(type arg) \
-    { \
+#define WRAP_REMOTE(func, type)                                                         \
+    void FontBrowserClient::func(type arg)                                              \
+    {                                                                                   \
         Endpoint::instance()->invokeObject(objectName(), #func, QVariantList() << arg); \
     }
 

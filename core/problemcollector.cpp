@@ -40,16 +40,16 @@ ProblemCollector::ProblemCollector(QObject *parent)
 {
 }
 
-ProblemCollector * ProblemCollector::instance()
+ProblemCollector *ProblemCollector::instance()
 {
     return Probe::instance()->problemCollector();
 }
 
-void ProblemCollector::registerProblemChecker(const QString& id,
-                                           const QString& name, const QString& description,
-                                           const std::function<void ()>& callback, bool enabled)
+void ProblemCollector::registerProblemChecker(const QString &id,
+                                              const QString &name, const QString &description,
+                                              const std::function<void()> &callback, bool enabled)
 {
-    Checker c = {id, name, description, callback, enabled};
+    Checker c = { id, name, description, callback, enabled };
     instance()->m_availableCheckers.push_back(c);
 }
 
@@ -64,7 +64,7 @@ void GammaRay::ProblemCollector::requestScan()
     emit problemScansFinished();
 }
 
-void ProblemCollector::addProblem(const Problem& problem)
+void ProblemCollector::addProblem(const Problem &problem)
 {
     auto self = instance();
 
@@ -81,7 +81,7 @@ void ProblemCollector::addProblem(const Problem& problem)
     self->m_problems.push_back(problem);
     emit self->problemAdded();
 }
-void ProblemCollector::removeProblem(const QString& problemId)
+void ProblemCollector::removeProblem(const QString &problemId)
 {
     auto self = instance();
     auto it = std::find_if(self->m_problems.begin(), self->m_problems.end(), [&](const Problem &problem) { return problem.problemId == problemId; });
@@ -118,7 +118,7 @@ void ProblemCollector::clearScans()
     }
 }
 
-const QVector<Problem> & ProblemCollector::problems()
+const QVector<Problem> &ProblemCollector::problems()
 {
     return m_problems;
 }
@@ -128,9 +128,8 @@ QVector<ProblemCollector::Checker> &ProblemCollector::availableCheckers()
     return m_availableCheckers;
 }
 
-bool ProblemCollector::isCheckerRegistered(const QString& id) const
+bool ProblemCollector::isCheckerRegistered(const QString &id) const
 {
     return std::any_of(m_availableCheckers.begin(), m_availableCheckers.end(),
-                        [&id](const Checker &c){ return c.id == id; }
-                      );
+                       [&id](const Checker &c) { return c.id == id; });
 }

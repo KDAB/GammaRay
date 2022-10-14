@@ -50,7 +50,8 @@ class QuickInspectorInterface : public QObject
     Q_OBJECT
     Q_PROPERTY(bool serverSideDecoration READ serverSideDecorationEnabled WRITE setServerSideDecorationsEnabled NOTIFY serverSideDecorationChanged)
 public:
-    enum Feature {
+    enum Feature
+    {
         NoFeatures = 0,
         CustomRenderModeClipping = 1,
         CustomRenderModeOverdraw = 2,
@@ -58,12 +59,13 @@ public:
         CustomRenderModeChanges = 8,
         CustomRenderModeTraces = 16,
         AllCustomRenderModes = CustomRenderModeClipping | CustomRenderModeOverdraw
-                               | CustomRenderModeBatches | CustomRenderModeChanges
-                               | CustomRenderModeTraces,
+            | CustomRenderModeBatches | CustomRenderModeChanges
+            | CustomRenderModeTraces,
         AnalyzePainting
     };
 
-    enum RenderMode {
+    enum RenderMode
+    {
         NormalRendering,
         VisualizeClipping,
         VisualizeOverdraw,

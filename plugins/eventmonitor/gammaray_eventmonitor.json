@@ -1,5 +1,7 @@
 {
     "id": "gammaray_eventmonitor",
     "name": "Events",
-    "types": [ "QObject" ]
+    "types": [
+        "QObject"
+    ]
 }

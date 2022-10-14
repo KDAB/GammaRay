@@ -39,8 +39,7 @@ int main(int argc, char **argv)
     QStandardItemModel firstModel(3, 3);
     for (int row = 0; row < 4; ++row) {
         for (int column = 0; column < 4; ++column) {
-            QStandardItem *item = new QStandardItem(QString("row %0, column %1").arg(row).arg(
-                                                        column));
+            QStandardItem *item = new QStandardItem(QString("row %0, column %1").arg(row).arg(column));
             firstModel.setItem(row, column, item);
         }
     }
@@ -48,7 +47,8 @@ int main(int argc, char **argv)
     firstView.setModel(&firstModel);
     firstView.show();
 
-    QStringListModel stringListModel(QStringList() << "Item1" << "Item2");
+    QStringListModel stringListModel(QStringList() << "Item1"
+                                                   << "Item2");
     QTableView secondView;
     secondView.setModel(&stringListModel);
     secondView.show();

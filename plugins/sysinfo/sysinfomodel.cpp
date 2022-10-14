@@ -33,14 +33,18 @@
 
 using namespace GammaRay;
 
-struct sysinfo_t {
-    QString(*func)();
-    const char* name;
+struct sysinfo_t
+{
+    QString (*func)();
+    const char *name;
 };
 
-#define S(x) { QSysInfo:: x, #x }
+#define S(x)            \
+    {                   \
+        QSysInfo::x, #x \
+    }
 static const sysinfo_t sysInfoTable[] = {
-#if !defined(Q_CC_MSVC) || _MSC_VER > 1600 //krazy:exclude=cpp to deal with older MS compilers
+#if !defined(Q_CC_MSVC) || _MSC_VER > 1600 // krazy:exclude=cpp to deal with older MS compilers
     { []() { return QString::fromLatin1(QLibraryInfo::build()); }, "build" },
 #endif
     S(buildAbi),
@@ -58,33 +62,35 @@ static const sysinfo_t sysInfoTable[] = {
 #undef S
 static const auto sysInfoTableSize = sizeof(sysInfoTable) / sizeof(sysinfo_t);
 
-SysInfoModel::SysInfoModel(QObject* parent)
+SysInfoModel::SysInfoModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
 }
 
-int SysInfoModel::columnCount(const QModelIndex& parent) const
+int SysInfoModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 2;
 }
 
-int SysInfoModel::rowCount(const QModelIndex& parent) const
+int SysInfoModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
     return sysInfoTableSize;
 }
 
-QVariant SysInfoModel::data(const QModelIndex& index, int role) const
+QVariant SysInfoModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case 0: return sysInfoTable[index.row()].name;
-            case 1: return sysInfoTable[index.row()].func();
+        case 0:
+            return sysInfoTable[index.row()].name;
+        case 1:
+            return sysInfoTable[index.row()].func();
         }
     }
 
@@ -95,10 +101,10 @@ QVariant SysInfoModel::headerData(int section, Qt::Orientation orientation, int 
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
-            case 0:
-                return tr("Key");
-            case 1:
-                return tr("Value");
+        case 0:
+            return tr("Key");
+        case 1:
+            return tr("Value");
         }
     }
     return QAbstractTableModel::headerData(section, orientation, role);

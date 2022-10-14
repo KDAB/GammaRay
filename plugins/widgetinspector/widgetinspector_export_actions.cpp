@@ -68,5 +68,4 @@ Q_DECL_EXPORT void gammaray_save_widget_to_ui(QWidget *widget, const QString &fi
 }
 
 #endif
-
 }

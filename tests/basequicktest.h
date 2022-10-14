@@ -99,11 +99,11 @@ protected:
         renderSpy.wait();
         renderSpy.clear();
         m_view->update();
-        return (ignoreNonExposedView() && !m_exposed) ||
-                (renderSpy.wait() || !renderSpy.isEmpty());
+        return (ignoreNonExposedView() && !m_exposed) || (renderSpy.wait() || !renderSpy.isEmpty());
     }
 
-    QQuickView *view() const {
+    QQuickView *view() const
+    {
         return m_view.get();
     }
 };

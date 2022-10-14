@@ -55,7 +55,7 @@ PropertyPointEditor::PropertyPointEditor(QWidget *parent)
 
 QPoint PropertyPointEditor::point() const
 {
-    return {ui->xBox->value(), ui->yBox->value()};
+    return { ui->xBox->value(), ui->yBox->value() };
 }
 
 void PropertyPointEditor::setPoint(const QPoint &point)
@@ -71,7 +71,7 @@ PropertySizeEditor::PropertySizeEditor(QWidget *parent)
 
 QSize PropertySizeEditor::sizeValue() const
 {
-    return {ui->xBox->value(), ui->yBox->value()};
+    return { ui->xBox->value(), ui->yBox->value() };
 }
 
 void PropertySizeEditor::setSizeValue(const QSize &size)

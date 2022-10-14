@@ -48,14 +48,15 @@
 using namespace GammaRay;
 
 
-Q_DECLARE_METATYPE(const QObject*)
+Q_DECLARE_METATYPE(const QObject *)
 
 /*!
  * Checks if it is dangerous to unpack a QVariant because it stores an invalid pointer.
  * Returns true if the value is an invalid pointer to a QObject.
  * Returns false either if it is a valid pointer or not a QObject*.
  */
-bool isInvalidPointer(const QVariant& value) {
+bool isInvalidPointer(const QVariant &value)
+{
     if (!value.canConvert<QObject *>() && !value.canConvert<const QObject *>())
         return false;
     return !Probe::instance()->isValidObject(Util::uncheckedQObjectCast(value));
@@ -82,7 +83,7 @@ void AggregatedPropertyModel::setObject(const ObjectInstance &oi)
 
     auto count = adaptor->count();
     if (count)
-        beginInsertRows(QModelIndex(), 0, count -1);
+        beginInsertRows(QModelIndex(), 0, count - 1);
 
     m_rootAdaptor = adaptor;
     addPropertyAdaptor(m_rootAdaptor);
@@ -122,7 +123,7 @@ QVariant AggregatedPropertyModel::data(const QModelIndex &index, int role) const
     if (!adaptor->object().isValid()) {
         QMetaObject::invokeMethod(const_cast<AggregatedPropertyModel *>(this), "objectInvalidated",
                                   Qt::QueuedConnection,
-                                  Q_ARG(GammaRay::PropertyAdaptor*, adaptor));
+                                  Q_ARG(GammaRay::PropertyAdaptor *, adaptor));
         return QVariant();
     }
 
@@ -140,14 +141,13 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex &index) 
     if (!adaptor->object().isValid()) {
         QMetaObject::invokeMethod(const_cast<AggregatedPropertyModel *>(this), "objectInvalidated",
                                   Qt::QueuedConnection,
-                                  Q_ARG(GammaRay::PropertyAdaptor*, adaptor));
+                                  Q_ARG(GammaRay::PropertyAdaptor *, adaptor));
         return res;
     }
     const auto d = adaptor->propertyData(index.row());
 
     res.insert(Qt::DisplayRole, data(adaptor, d, index.column(), Qt::DisplayRole));
-    res.insert(PropertyModel::ActionRole, data(adaptor, d,
-                                               index.column(), PropertyModel::ActionRole));
+    res.insert(PropertyModel::ActionRole, data(adaptor, d, index.column(), PropertyModel::ActionRole));
     res.insert(PropertyModel::ObjectIdRole,
                data(adaptor, d, index.column(), PropertyModel::ObjectIdRole));
     if (index.column() == 0) {
@@ -177,8 +177,7 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
         switch (column) {
         case 0:
             return d.name();
-        case 1:
-        {
+        case 1: {
             // QMetaProperty::read sets QVariant::typeName to int for enums,
             // so we need to handle that separately here
             const QString enumStr = EnumUtil::enumToString(d.value(), d.typeName().toLatin1(), adaptor->object().metaObject());
@@ -214,15 +213,14 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
         if (column == 1 && d.value().type() == QVariant::Bool && (d.accessFlags() & PropertyData::Writable))
             return d.value().toBool() ? Qt::Checked : Qt::Unchecked;
         break;
-    case PropertyModel::ActionRole:
-    {
+    case PropertyModel::ActionRole: {
         int actions = PropertyModel::NoAction;
         if (d.accessFlags() & PropertyData::Resettable)
             actions |= PropertyModel::Reset;
         if (d.accessFlags() & PropertyData::Deletable)
             actions |= PropertyModel::Delete;
         if ((MetaObjectRepository::instance()->metaObject(d.typeName())
-             && *reinterpret_cast<void * const *>(d.value().data()))
+             && *reinterpret_cast<void *const *>(d.value().data()))
             || d.value().value<QObject *>())
             actions |= PropertyModel::NavigateTo;
         return actions;
@@ -234,7 +232,7 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
             return QVariant::fromValue(ObjectId(d.value().value<QObject *>()));
         } else if (d.value().isValid()) {
             const auto &v = d.value();
-            return QVariant::fromValue(ObjectId(*reinterpret_cast<void * const *>(v.data()),
+            return QVariant::fromValue(ObjectId(*reinterpret_cast<void *const *>(v.data()),
                                                 v.typeName()));
         }
         return QVariant();
@@ -261,8 +259,7 @@ bool AggregatedPropertyModel::setData(const QModelIndex &index, const QVariant &
 
     const auto adaptor = adaptorForIndex(index);
     switch (role) {
-    case Qt::EditRole:
-    {
+    case Qt::EditRole: {
         QPointer<GammaRay::PropertyAdaptor> guard(adaptor);
         if (value.userType() == qMetaTypeId<EnumValue>()) {
             const auto d = adaptor->propertyData(index.row());
@@ -270,7 +267,7 @@ bool AggregatedPropertyModel::setData(const QModelIndex &index, const QVariant &
                 adaptor->writeProperty(index.row(), value.value<EnumValue>().value());
             } else {
                 auto v = d.value();
-                *(static_cast<int*>(v.data())) = value.value<EnumValue>().value();
+                *(static_cast<int *>(v.data())) = value.value<EnumValue>().value();
                 adaptor->writeProperty(index.row(), v);
             }
         } else {
@@ -349,8 +346,7 @@ QModelIndex AggregatedPropertyModel::parent(const QModelIndex &child) const
         return {};
 
     auto parentAdaptor = childAdaptor->parentAdaptor();
-    return createIndex(m_parentChildrenMap.at(parentAdaptor).indexOf(
-                           childAdaptor), 0, parentAdaptor);
+    return createIndex(m_parentChildrenMap.at(parentAdaptor).indexOf(childAdaptor), 0, parentAdaptor);
 }
 
 QModelIndex AggregatedPropertyModel::index(int row, int column, const QModelIndex &parent) const
@@ -542,7 +538,7 @@ bool AggregatedPropertyModel::isParentEditable(PropertyAdaptor *adaptor) const
     return isParentEditable(parentAdaptor);
 }
 
-void AggregatedPropertyModel::propagateWrite(GammaRay::PropertyAdaptor* adaptor)
+void AggregatedPropertyModel::propagateWrite(GammaRay::PropertyAdaptor *adaptor)
 {
     const auto parentAdaptor = adaptor->parentAdaptor();
     if (!parentAdaptor)

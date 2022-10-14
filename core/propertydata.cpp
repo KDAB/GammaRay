@@ -107,7 +107,7 @@ QString PropertyData::notifySignal() const
     return m_notifySignal;
 }
 
-void PropertyData::setNotifySignal(const QString& notifySignal)
+void PropertyData::setNotifySignal(const QString &notifySignal)
 {
     m_notifySignal = notifySignal;
 }

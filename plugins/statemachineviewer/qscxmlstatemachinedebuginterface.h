@@ -37,12 +37,11 @@ class QScxmlStateMachine;
 class QScxmlStateMachineInfo;
 QT_END_NAMESPACE
 
-namespace GammaRay
-{
+namespace GammaRay {
 
-class QScxmlStateMachineDebugInterface: public StateMachineDebugInterface
+class QScxmlStateMachineDebugInterface : public StateMachineDebugInterface
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit QScxmlStateMachineDebugInterface(QScxmlStateMachine *stateMachine, QObject *parent = nullptr);

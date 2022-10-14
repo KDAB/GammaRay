@@ -60,9 +60,7 @@ MethodInvocationDialog::~MethodInvocationDialog() = default;
 
 Qt::ConnectionType MethodInvocationDialog::connectionType() const
 {
-    return ui->connectionTypeComboBox->itemData(ui->connectionTypeComboBox->currentIndex()).value<Qt
-                                                                                                  ::
-                                                                                                  ConnectionType>();
+    return ui->connectionTypeComboBox->itemData(ui->connectionTypeComboBox->currentIndex()).value<Qt ::ConnectionType>();
 }
 
 void MethodInvocationDialog::setArgumentModel(QAbstractItemModel *model)

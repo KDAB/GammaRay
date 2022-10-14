@@ -51,20 +51,23 @@ private:
     static void registerMetaTypes();
     static void registerVariantHandler();
     void discoverObjects();
-    static QObject *targetObject(QObject *object) ;
-    QIcon createIcon(const QIcon &oldIcon, QWindow *w=nullptr);
-    void updateWindowIcon(QWindow *w=nullptr);
+    static QObject *targetObject(QObject *object);
+    QIcon createIcon(const QIcon &oldIcon, QWindow *w = nullptr);
+    void updateWindowIcon(QWindow *w = nullptr);
     void updateWindowTitle(QWindow *w);
-    void restoreWindowIcon(QWindow *w=nullptr);
+    void restoreWindowIcon(QWindow *w = nullptr);
     void restoreWindowTitle(QWindow *w);
 
-    struct IconAndTitleOverriderData {
-        struct Icons {
+    struct IconAndTitleOverriderData
+    {
+        struct Icons
+        {
             explicit Icons(const QIcon &originalIcon = QIcon(),
                            const QIcon &gammarayIcon = QIcon())
                 : originalIcon(originalIcon)
                 , gammarayIcon(gammarayIcon)
-            { }
+            {
+            }
 
             QIcon originalIcon;
             QIcon gammarayIcon;

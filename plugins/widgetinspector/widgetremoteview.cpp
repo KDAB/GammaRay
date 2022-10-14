@@ -36,7 +36,7 @@
 
 using namespace GammaRay;
 
-WidgetRemoteView::WidgetRemoteView(QWidget* parent)
+WidgetRemoteView::WidgetRemoteView(QWidget *parent)
     : RemoteViewWidget(parent)
     , m_tabFocusEnabled(false)
 {
@@ -63,7 +63,7 @@ static void drawArrow(QPainter *p, QPointF first, QPointF second)
     p->drawLine(second, second - v2.toPointF());
 }
 
-void WidgetRemoteView::drawDecoration(QPainter* p)
+void WidgetRemoteView::drawDecoration(QPainter *p)
 {
     if (!m_tabFocusEnabled)
         return;

@@ -39,20 +39,22 @@ static const int RemoteModelUserRole = 0xFFFFFF;
 
 /*! Custom roles for RemoteModel. */
 namespace RemoteModelRole {
-    enum Roles {
-        LoadingState = RemoteModelUserRole + 1
-    };
+enum Roles
+{
+    LoadingState = RemoteModelUserRole + 1
+};
 }
 
 /*! Cell loading state of RemoteModel. */
 namespace RemoteModelNodeState {
-    enum NodeState {
-        NoState = 0,
-        Empty = 1,
-        Loading = 2,
-        Outdated = 4
-    };
-    Q_DECLARE_FLAGS(NodeStates, NodeState)
+enum NodeState
+{
+    NoState = 0,
+    Empty = 1,
+    Loading = 2,
+    Outdated = 4
+};
+Q_DECLARE_FLAGS(NodeStates, NodeState)
 }
 
 }

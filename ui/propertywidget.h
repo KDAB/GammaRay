@@ -65,8 +65,9 @@ public:
      * @param priority This is used to keep tabs in a stable order, tabs are ordered
      *   left to right with increasing priority.
      */
-    template<typename T> static void registerTab(const QString &name, const QString &label,
-                                                 int priority = 1000)
+    template<typename T>
+    static void registerTab(const QString &name, const QString &label,
+                            int priority = 1000)
     {
         registerTab(new PropertyWidgetTabFactory<T>(name, label, priority));
     }
@@ -92,7 +93,8 @@ private:
     QTimer *m_tabsUpdatedTimer;
     QWidget *m_lastManuallySelectedWidget;
 
-    struct PageInfo {
+    struct PageInfo
+    {
         PropertyWidgetTabFactoryBase *factory;
         QWidget *widget;
     };

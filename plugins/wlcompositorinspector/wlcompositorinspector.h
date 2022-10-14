@@ -49,7 +49,7 @@ class Logger;
 class ResourcesModel;
 class SurfaceView;
 
-class WlCompositorInspector: public WlCompositorInterface
+class WlCompositorInspector : public WlCompositorInterface
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::WlCompositorInterface)
@@ -79,14 +79,15 @@ private:
     SurfaceView *m_surfaceView;
 };
 
-class WlCompositorInspectorFactory: public QObject, public StandardToolFactory<QWaylandCompositor, WlCompositorInspector>
+class WlCompositorInspectorFactory : public QObject, public StandardToolFactory<QWaylandCompositor, WlCompositorInspector>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)
     Q_PLUGIN_METADATA(IID "com.kdab.GammaRay.ToolFactory" FILE "gammaray_wlcompositorinspector.json")
 
 public:
-    explicit WlCompositorInspectorFactory(QObject *parent = nullptr) : QObject(parent)
+    explicit WlCompositorInspectorFactory(QObject *parent = nullptr)
+        : QObject(parent)
     {
     }
 };

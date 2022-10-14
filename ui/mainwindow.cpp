@@ -89,27 +89,28 @@ using namespace GammaRay;
 
 namespace {
 
-struct IdeSettings {
-    const char * const app;
-    const char * const args;
-    const char * const name;
-    const char * const icon;
+struct IdeSettings
+{
+    const char *const app;
+    const char *const args;
+    const char *const name;
+    const char *const icon;
 };
 
 static const IdeSettings ideSettings[] = {
 #if defined(Q_OS_WIN) || defined(Q_OS_OSX)
-    {"", "", "", ""          }                                                          // Dummy content, because we can't have empty arrays.
+    { "", "", "", "" } // Dummy content, because we can't have empty arrays.
 #else
-    { "kdevelop", "%f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KDevelop"), "kdevelop"  },
+    { "kdevelop", "%f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KDevelop"), "kdevelop" },
     { "kate", "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Kate"),
-      "kate"      },
+      "kate" },
     { "kwrite", "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KWrite"),
-      nullptr     },
+      nullptr },
     { "gedit", "%f +%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "gedit"),
-      nullptr     },
+      nullptr },
     { "gvim", "%f +%l", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "gvim"),
-      nullptr     },
-    { "qtcreator", "-client %f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr     }
+      nullptr },
+    { "qtcreator", "-client %f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr }
 #endif
 };
 #if defined(Q_OS_WIN) || defined(Q_OS_OSX) // Remove this #if branch when adding real data to ideSettings for Windows/OSX.
@@ -136,8 +137,7 @@ QStyle *gammarayStyleOverride()
 QStyle *gammarayDefaultStyle()
 {
     foreach (const QString &styleName,
-             QGuiApplicationPrivate::platform_theme->themeHint(QPlatformTheme::StyleNames).
-             toStringList()) {
+             QGuiApplicationPrivate::platform_theme->themeHint(QPlatformTheme::StyleNames).toStringList()) {
         if (auto style = QStyleFactory::create(styleName)) {
             return style;
         }
@@ -178,7 +178,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         // check if the style is not already overwritten
         if (!styleOverride) {
-            if (auto defaultStyle= gammarayDefaultStyle()) {
+            if (auto defaultStyle = gammarayDefaultStyle()) {
                 applyStyle(defaultStyle);
             }
         }
@@ -190,7 +190,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->actionRetractProbe, &QAction::triggered, this, &MainWindow::detachProbe);
 
-    connect(QApplication::instance(), &QCoreApplication::aboutToQuit, this, [this]{
+    connect(QApplication::instance(), &QCoreApplication::aboutToQuit, this, [this] {
         m_detaching = true;
         close();
     });
@@ -205,7 +205,7 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::aboutPlugins);
     connect(ui->actionMessageStatistics, &QAction::triggered, this, &MainWindow::showMessageStatistics);
     connect(ui->actionAboutQt, &QAction::triggered,
-            qobject_cast<QApplication*>(QApplication::instance()), &QApplication::aboutQt);
+            qobject_cast<QApplication *>(QApplication::instance()), &QApplication::aboutQt);
     connect(ui->actionAboutGammaRay, &QAction::triggered, this, &MainWindow::about);
     connect(ui->actionAboutKDAB, &QAction::triggered, this, &MainWindow::aboutKDAB);
 
@@ -408,7 +408,9 @@ void MainWindow::aboutKDAB()
 
            "<p>The KDAB Group provides consulting and mentoring for developing legacy "
            "Qt applications from scratch and in porting from all popular and frameworks "
-           "to Qt.  We continue to help develop parts of Qt and are one of the major " "contributors to the Qt Project.  We can give advanced or standard trainings " "anywhere around the globe on Qt as well as C++, OpenGL, 3D and more.</p>"
+           "to Qt.  We continue to help develop parts of Qt and are one of the major "
+           "contributors to the Qt Project.  We can give advanced or standard trainings "
+           "anywhere around the globe on Qt as well as C++, OpenGL, 3D and more.</p>"
 
            "<p>If you would like to have a custom plugin for GammaRay to visualize, profile "
            "or debug your own specific components or applications, get in touch with us "
@@ -435,9 +437,7 @@ bool MainWindow::selectTool(const QString &id)
         return false;
 
     const QItemSelectionModel::SelectionFlags selectionFlags =
-        QItemSelectionModel::ClearAndSelect |
-        QItemSelectionModel::Rows |
-        QItemSelectionModel::Current;
+        QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current;
     const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
     const QAbstractItemModel *model = ui->toolSelector->model();
     const QModelIndex toolIndex =
@@ -466,8 +466,7 @@ void MainWindow::toolSelected()
     QWidget *toolWidget = mi.data(ToolModelRole::ToolWidget).value<QWidget *>();
     if (!toolWidget) {
         toolWidget = createErrorPage(mi);
-        ui->toolSelector->model()->setData(mi, QVariant::fromValue(
-                                               toolWidget), ToolModelRole::ToolWidget);
+        ui->toolSelector->model()->setData(mi, QVariant::fromValue(toolWidget), ToolModelRole::ToolWidget);
     }
 
     Q_ASSERT(toolWidget);
@@ -536,7 +535,7 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
             command += ideSettings[ideIdx].args;
         } else
 #endif
-        if (ideIdx == -1) {
+            if (ideIdx == -1) {
             command = settings.value(QStringLiteral("CustomCommand")).toString();
         } else {
             QDesktopServices::openUrl(QUrl(url));
@@ -572,9 +571,7 @@ void MainWindow::logTransmissionRate(quint64 bytesRead, quint64 bytesWritten)
     const double transmissionRateRX = (bytesRead * 8 / 1024.0 / 1024.0); // in Mpbs
     const double transmissionRateTX = (bytesWritten * 8 / 1024.0 / 1024.0); // in Mpbs
     ui->statusBar->showMessage(
-        tr("Transmission rate: RX %1 Mbps, TX %2 Mbps").
-            arg(transmissionRateRX, 7, 'f', 3).
-            arg(transmissionRateTX, 7, 'f', 3));
+        tr("Transmission rate: RX %1 Mbps, TX %2 Mbps").arg(transmissionRateRX, 7, 'f', 3).arg(transmissionRateTX, 7, 'f', 3));
 }
 
 void GammaRay::MainWindow::setCodeNavigationIDE(QAction *action)
@@ -587,8 +584,7 @@ void GammaRay::MainWindow::setCodeNavigationIDE(QAction *action)
             this, tr("Custom Code Navigation"),
             tr(
                 "Specify command to use for code navigation, '%f' will be replaced by the file name, '%l' by the line number and '%c' by the column number."),
-            QLineEdit::Normal, settings.value(QStringLiteral("CustomCommand")).toString()
-            );
+            QLineEdit::Normal, settings.value(QStringLiteral("CustomCommand")).toString());
         if (!customCmd.isEmpty()) {
             settings.setValue(QStringLiteral("CustomCommand"), customCmd);
             settings.setValue(QStringLiteral("IDE"), -1);

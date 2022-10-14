@@ -50,17 +50,21 @@ namespace GammaRay {
 class QuickImplicitBindingDependencyProvider : public AbstractBindingProvider
 {
 public:
-    std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject * obj) const override;
-    std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(GammaRay::BindingNode * binding) const override;
+    std::vector<std::unique_ptr<BindingNode>> findBindingsFor(QObject *obj) const override;
+    std::vector<std::unique_ptr<BindingNode>> findDependenciesFor(GammaRay::BindingNode *binding) const override;
     bool canProvideBindingsFor(QObject *object) const override;
 
 private:
-    static std::unique_ptr<BindingNode> createBindingNode(QObject *obj, const char *propertyName, BindingNode *parent = nullptr) ;
+    static std::unique_ptr<BindingNode> createBindingNode(QObject *obj, const char *propertyName, BindingNode *parent = nullptr);
     void anchorBindings(std::vector<std::unique_ptr<BindingNode>> &dependencies, QQuickAnchors *anchors, int propertyIndex, BindingNode *parent = nullptr) const;
-    template<class Func> void childrenRectDependencies(QQuickItem *item, Func addDependency) const;
-    template<class Func> void positionerDependencies(QQuickItem *item, Func addDependency) const;
-    template<class Func> void implicitSizeDependencies(QQuickItem *item, Func addDependency) const;
-    template<class Func> void anchoringDependencies(QQuickItem *item, Func addDependency) const;
+    template<class Func>
+    void childrenRectDependencies(QQuickItem *item, Func addDependency) const;
+    template<class Func>
+    void positionerDependencies(QQuickItem *item, Func addDependency) const;
+    template<class Func>
+    void implicitSizeDependencies(QQuickItem *item, Func addDependency) const;
+    template<class Func>
+    void anchoringDependencies(QQuickItem *item, Func addDependency) const;
 };
 
 }

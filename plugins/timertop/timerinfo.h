@@ -42,7 +42,8 @@ class TimerId
     friend uint qHash(const TimerId &);
 
 public:
-    enum Type {
+    enum Type
+    {
         InvalidType,
         // A QObject, no timer id
         QQmlTimerType,
@@ -57,7 +58,7 @@ public:
     explicit TimerId(int timerId, QObject *receiver);
 
     Type type() const;
-    QObject* address() const;
+    QObject *address() const;
     int timerId() const;
 
     bool operator==(const TimerId &other) const;
@@ -71,7 +72,8 @@ private:
 
 struct TimerIdInfo
 {
-    enum State {
+    enum State
+    {
         InvalidState,
         InactiveState,
         SingleShotState,
@@ -88,9 +90,12 @@ struct TimerIdInfo
         , wakeupsPerSec(0.0)
         , timePerWakeup(0.0)
         , maxWakeupTime(0)
-    { }
+    {
+    }
 
-    ~TimerIdInfo() { }
+    ~TimerIdInfo()
+    {
+    }
 
     /** Update timer information to the current state.
      *  It's the callers responsibility to ensure the receiver or timer object
@@ -103,7 +108,7 @@ struct TimerIdInfo
     int interval;
 
     uint totalWakeups;
-    QObject* lastReceiverAddress; // The QTimer/QQmlTimer or last known receiver address
+    QObject *lastReceiverAddress; // The QTimer/QQmlTimer or last known receiver address
     QPointer<QObject> lastReceiverObject;
 
     QString objectName;

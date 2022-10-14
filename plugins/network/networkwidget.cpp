@@ -45,6 +45,5 @@ NetworkWidget::~NetworkWidget() = default;
 
 void NetworkWidgetFactory::initUi()
 {
-    PropertyWidget::registerTab<CookieTab>(QStringLiteral("cookieJar"), tr(
-                                               "Cookies"), PropertyWidgetTabPriority::Basic);
+    PropertyWidget::registerTab<CookieTab>(QStringLiteral("cookieJar"), tr("Cookies"), PropertyWidgetTabPriority::Basic);
 }

@@ -53,8 +53,15 @@ public:
     void setCamera(Qt3DRender::QCamera *camera);
 
 private:
-    enum Axis {
-        RX, RY, RZ, TX, TY, TZ, AXISCOUNT
+    enum Axis
+    {
+        RX,
+        RY,
+        RZ,
+        TX,
+        TY,
+        TZ,
+        AXISCOUNT
     };
 
     void frameActionTriggered(float dt);

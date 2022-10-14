@@ -72,7 +72,7 @@ void BufferModel::updateAttributes()
     Q_ASSERT(m_data.buffers.size() >= m_bufferIndex);
     m_buffer = m_data.buffers.at(m_bufferIndex).data;
     for (const auto &attr : qAsConst(m_data.attributes)) {
-        if (attr.bufferIndex == (uint)m_bufferIndex)
+        if (attr.bufferIndex == ( uint )m_bufferIndex)
             updateAttribute(attr);
     }
 
@@ -91,7 +91,7 @@ void BufferModel::updateAttribute(const GammaRay::Qt3DGeometryAttributeData &att
             col.name += QLatin1Char('[') + QString::number(i) + QLatin1Char(']');
         col.offset = attrData.byteOffset + i * Attribute::size(attrData.vertexBaseType);
         col.type = attrData.vertexBaseType;
-        col.stride = std::max(attrData.byteStride, (uint)Attribute::size(attrData.vertexBaseType) * attrData.vertexSize);
+        col.stride = std::max(attrData.byteStride, ( uint )Attribute::size(attrData.vertexBaseType) * attrData.vertexSize);
         m_attrs.push_back(col);
     }
 }

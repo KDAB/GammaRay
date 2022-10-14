@@ -79,7 +79,7 @@ QString TcpServerDevice::bestAvailableIP(const QHostAddress &address) const
                 || !addr.scopeId().isEmpty())
                 continue;
 
-            //If its our desired IP (e.g. from --listen) return early
+            // If its our desired IP (e.g. from --listen) return early
             if (addr == address)
                 return addr.toString();
             if (firstHostFound.isEmpty())
@@ -97,7 +97,7 @@ QUrl TcpServerDevice::externalAddress() const
     if (address.isLoopback()) {
         myHost = address.toString();
     } else {
-        //scan Interfaces for available IPs, use requested address if we can find it.
+        // scan Interfaces for available IPs, use requested address if we can find it.
         myHost = bestAvailableIP(address);
     }
 

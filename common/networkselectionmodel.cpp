@@ -39,7 +39,7 @@ using namespace GammaRay;
 
 static QDataStream &operator<<(QDataStream &out, QItemSelectionModel::SelectionFlags command)
 {
-    out << (quint32)command; // Qt4 and Qt5 use the same enum layout, so this is fine for now
+    out << ( quint32 )command; // Qt4 and Qt5 use the same enum layout, so this is fine for now
     return out;
 }
 
@@ -55,8 +55,7 @@ static void writeSelection(Message *msg, const QItemSelection &selection)
 {
     *msg << qint32(selection.size());
     for (const QItemSelectionRange &range : selection)
-        *msg << Protocol::fromQModelIndex(range.topLeft()) << Protocol::fromQModelIndex(
-            range.bottomRight());
+        *msg << Protocol::fromQModelIndex(range.topLeft()) << Protocol::fromQModelIndex(range.bottomRight());
 }
 
 // find a model having a defaultSelectedItem method
@@ -64,7 +63,8 @@ static QAbstractItemModel *findSourceModel(QAbstractItemModel *model)
 {
     if (model) {
         if (model->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(
-                                                   "defaultSelectedItem()")) != -1)
+                "defaultSelectedItem()"))
+            != -1)
             return model;
         if (auto proxy = qobject_cast<QAbstractProxyModel *>(model))
             return findSourceModel(proxy->sourceModel());
@@ -105,10 +105,9 @@ void NetworkSelectionModel::sendSelection()
 
     if (!hasSelection()) {
         if (model()->rowCount() > 0) {
-            const QItemSelectionModel::SelectionFlags selectionFlags
-                = QItemSelectionModel::ClearAndSelect
-                  |QItemSelectionModel::Rows
-                  | QItemSelectionModel::Current;
+            const QItemSelectionModel::SelectionFlags selectionFlags = QItemSelectionModel::ClearAndSelect
+                | QItemSelectionModel::Rows
+                | QItemSelectionModel::Current;
             const Qt::MatchFlags matchFlags = Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap;
             QAbstractItemModel *sourceModel = findSourceModel(model());
             QModelIndex index = model()->index(0, 0);
@@ -119,18 +118,18 @@ void NetworkSelectionModel::sendSelection()
                 QModelIndex defaultIndex;
 
                 QMetaObject::invokeMethod(sourceModel, "defaultSelectedItem", Qt::DirectConnection,
-                                          QReturnArgument<QPair<int, QVariant> >("QPair<int,QVariant>",
-                                                                            result));
+                                          QReturnArgument<QPair<int, QVariant>>("QPair<int,QVariant>",
+                                                                                result));
 
                 if (result.second.userType() == qMetaTypeId<ModelUtils::MatchAcceptor>()) {
-                    defaultIndex
-                        = ModelUtils::match(index, result.first,
-                                            result.second.value<ModelUtils::MatchAcceptor>(),
-                                            1, matchFlags).value(0);
+                    defaultIndex = ModelUtils::match(index, result.first,
+                                                     result.second.value<ModelUtils::MatchAcceptor>(),
+                                                     1, matchFlags)
+                                       .value(0);
                 } else {
-                    defaultIndex
-                        = model()->match(index, result.first, result.second, 1,
-                                         matchFlags).value(0);
+                    defaultIndex = model()->match(index, result.first, result.second, 1,
+                                                  matchFlags)
+                                       .value(0);
                 }
 
                 if (defaultIndex.isValid())
@@ -181,16 +180,14 @@ void NetworkSelectionModel::newMessage(const Message &msg)
 {
     Q_ASSERT(msg.address() == m_myAddress);
     switch (msg.type()) {
-    case Protocol::SelectionModelSelect:
-    {
+    case Protocol::SelectionModelSelect: {
         Util::SetTempValue<bool> guard(m_handlingRemoteMessage, true);
         m_pendingSelection = readSelection(msg);
         msg >> m_pendingCommand;
         applyPendingSelection();
         break;
     }
-    case Protocol::SelectionModelCurrent:
-    {
+    case Protocol::SelectionModelCurrent: {
         SelectionFlags flags;
         Protocol::ModelIndex index;
         msg >> flags >> index;

@@ -73,14 +73,14 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
 
     if (object().type() == ObjectInstance::Object) {
 #ifndef GAMMARAY_QT6_TODO
-        auto mat = reinterpret_cast<QQuickOpenGLShaderEffectMaterial*>(object().object());
+        auto mat = reinterpret_cast<QQuickOpenGLShaderEffectMaterial *>(object().object());
         switch (index) {
-            case 0:
-                pd.setName(QStringLiteral("Vertex Uniforms"));
-                break;
-            case 1:
-                pd.setName(QStringLiteral("Fragment Uniforms"));
-                break;
+        case 0:
+            pd.setName(QStringLiteral("Vertex Uniforms"));
+            break;
+        case 1:
+            pd.setName(QStringLiteral("Fragment Uniforms"));
+            break;
         }
         pd.setValue(QVariant::fromValue(mat->uniforms[index]));
 #endif
@@ -98,16 +98,16 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
 
         // special values are only filled in dynamically from the owning node, so we won't see those
         switch (ud.specialType) {
-            case QQuickOpenGLShaderEffectMaterial::UniformData::Opacity:
-                pd.setTypeName(QStringLiteral("double"));
-                pd.setValue(QStringLiteral("<see node>"));
-                break;
-            case QQuickOpenGLShaderEffectMaterial::UniformData::Matrix:
-                pd.setTypeName(QStringLiteral("QMatrix4x4"));
-                pd.setValue(QStringLiteral("<see node>"));
-                break;
-            default:
-                break;
+        case QQuickOpenGLShaderEffectMaterial::UniformData::Opacity:
+            pd.setTypeName(QStringLiteral("double"));
+            pd.setValue(QStringLiteral("<see node>"));
+            break;
+        case QQuickOpenGLShaderEffectMaterial::UniformData::Matrix:
+            pd.setTypeName(QStringLiteral("QMatrix4x4"));
+            pd.setValue(QStringLiteral("<see node>"));
+            break;
+        default:
+            break;
         }
 #endif
 

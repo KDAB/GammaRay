@@ -39,7 +39,8 @@ class MimeTypesModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    enum Roles {
+    enum Roles
+    {
         IconNameRole = UserRole + 1,
         GenericIconNameRole
     };
@@ -58,7 +59,7 @@ private:
     static QList<QStandardItem *> makeRowForType(const QMimeType &mt);
     QSet<QString> normalizedMimeTypeNames(const QStringList &typeNames) const;
 
-    QHash<QString, QVector<QStandardItem *> > m_mimeTypeNodes;
+    QHash<QString, QVector<QStandardItem *>> m_mimeTypeNodes;
     QMimeDatabase m_db;
     bool m_modelFilled;
 };

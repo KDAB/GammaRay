@@ -35,7 +35,7 @@
 
 using namespace GammaRay;
 
-PaintAnalyzerReplayView::PaintAnalyzerReplayView(QWidget* parent)
+PaintAnalyzerReplayView::PaintAnalyzerReplayView(QWidget *parent)
     : RemoteViewWidget(parent)
     , m_showClipArea(true)
 {
@@ -54,7 +54,7 @@ void PaintAnalyzerReplayView::setShowClipArea(bool show)
     update();
 }
 
-void PaintAnalyzerReplayView::drawDecoration(QPainter* p)
+void PaintAnalyzerReplayView::drawDecoration(QPainter *p)
 {
     const auto data = frame().data().value<PaintAnalyzerFrameData>();
     if (data.clipPath.isEmpty() || !m_showClipArea)

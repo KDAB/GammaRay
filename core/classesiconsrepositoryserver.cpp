@@ -33,7 +33,7 @@
 
 using namespace GammaRay;
 
-ClassesIconsRepositoryServer* ClassesIconsRepositoryServer::s_instance = nullptr;
+ClassesIconsRepositoryServer *ClassesIconsRepositoryServer::s_instance = nullptr;
 
 ClassesIconsRepositoryServer::ClassesIconsRepositoryServer(QObject *parent)
     : ClassesIconsRepository(parent)
@@ -46,7 +46,8 @@ ClassesIconsRepositoryServer::ClassesIconsRepositoryServer(QObject *parent)
     index.resize(ClassesIconsIndex::s_numberToKey.size());
 
     for (auto it = ClassesIconsIndex::s_numberToKey.constBegin(),
-         end = ClassesIconsIndex::s_numberToKey.constEnd(); it != end; ++it) {
+              end = ClassesIconsIndex::s_numberToKey.constEnd();
+         it != end; ++it) {
         index[it.key()] = it.value();
     }
 

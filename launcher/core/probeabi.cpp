@@ -150,25 +150,24 @@ bool ProbeABI::isDebugRelevant()
 bool ProbeABI::isValid() const
 {
     return hasQtVersion()
-           && !d->architecture.isEmpty()
+        && !d->architecture.isEmpty()
 #ifdef Q_OS_WIN
-           && !d->compiler.isEmpty()
-           && (!isVersionRelevant() || !d->compilerVersion.isEmpty())
+        && !d->compiler.isEmpty()
+        && (!isVersionRelevant() || !d->compilerVersion.isEmpty())
 #endif
-    ;
+        ;
 }
 
 bool ProbeABI::isCompatible(const ProbeABI &referenceABI) const
 {
     return d->majorQtVersion == referenceABI.majorQtVersion()
-           && d->minorQtVersion >= referenceABI.minorQtVersion() // we can work with older probes, since the target defines the Qt libraries being used
-           && d->architecture == referenceABI.architecture()
+        && d->minorQtVersion >= referenceABI.minorQtVersion() // we can work with older probes, since the target defines the Qt libraries being used
+        && d->architecture == referenceABI.architecture()
 #ifdef Q_OS_WIN
-           && d->compiler == referenceABI.compiler()
-           && d->compilerVersion == referenceABI.compilerVersion()
+        && d->compiler == referenceABI.compiler()
+        && d->compilerVersion == referenceABI.compilerVersion()
 #endif
-           && (isDebugRelevant() ? d->isDebug == referenceABI.isDebug() : true)
-    ;
+        && (isDebugRelevant() ? d->isDebug == referenceABI.isDebug() : true);
 }
 
 QString ProbeABI::id() const
@@ -186,9 +185,7 @@ QString ProbeABI::id() const
 #endif
 
     idParts.push_back(architecture());
-    return idParts.join(QStringLiteral("-")).append(isDebugRelevant()
-                                                    && isDebug() ? QStringLiteral(
-                                                        GAMMARAY_DEBUG_POSTFIX) : QString());
+    return idParts.join(QStringLiteral("-")).append(isDebugRelevant() && isDebug() ? QStringLiteral(GAMMARAY_DEBUG_POSTFIX) : QString());
 }
 
 ProbeABI ProbeABI::fromString(const QString &id)
@@ -251,19 +248,19 @@ QString ProbeABI::displayString() const
     details.push_back(architecture());
 
     return ProbeABIContext::tr("Qt %1.%2 (%3)")
-           .arg(majorQtVersion())
-           .arg(minorQtVersion())
-           .arg(details.join(QStringLiteral(", ")));
+        .arg(majorQtVersion())
+        .arg(minorQtVersion())
+        .arg(details.join(QStringLiteral(", ")));
 }
 
 bool ProbeABI::operator==(const ProbeABI &rhs) const
 {
     return majorQtVersion() == rhs.majorQtVersion()
-           && minorQtVersion() == rhs.minorQtVersion()
-           && architecture() == rhs.architecture()
-           && compiler() == rhs.compiler()
-           && compilerVersion() == rhs.compilerVersion()
-           && isDebug() == rhs.isDebug();
+        && minorQtVersion() == rhs.minorQtVersion()
+        && architecture() == rhs.architecture()
+        && compiler() == rhs.compiler()
+        && compilerVersion() == rhs.compilerVersion()
+        && isDebug() == rhs.isDebug();
 }
 
 bool ProbeABI::operator<(const ProbeABI &rhs) const

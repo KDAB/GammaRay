@@ -60,7 +60,8 @@ private:
     void addCategorySlot(QLoggingCategory *category);
     void addCategory(QLoggingCategory *category);
 
-    struct CategoryWithDefaultValues {
+    struct CategoryWithDefaultValues
+    {
         QLoggingCategory *category;
         bool wasDebugEnabled;
         bool wasInfoEnabled;

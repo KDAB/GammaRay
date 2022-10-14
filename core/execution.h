@@ -41,8 +41,7 @@
 namespace GammaRay {
 
 /*! Functions to inspect the current program execution. */
-namespace Execution
-{
+namespace Execution {
 /*! Checks whether the given memory address is inside a read-only data section. */
 GAMMARAY_CORE_EXPORT bool isReadOnlyData(const void *data);
 
@@ -59,15 +58,17 @@ class TracePrivate;
  *  This is essentially just a list of addresses, and needs to
  *  be resolved to symbol names and source location for display.
  */
-class GAMMARAY_CORE_EXPORT Trace {
+class GAMMARAY_CORE_EXPORT Trace
+{
 public:
     Trace();
     Trace(const Trace &other);
     ~Trace();
-    Trace& operator=(const Trace &other);
+    Trace &operator=(const Trace &other);
 
     bool empty() const;
     int size() const;
+
 private:
     friend class TracePrivate;
     std::shared_ptr<TracePrivate> d;
@@ -83,7 +84,8 @@ private:
 GAMMARAY_CORE_EXPORT Trace stackTrace(int maxDepth, int skip = 0);
 
 /*! A resolved frame in a stack trace. */
-class GAMMARAY_CORE_EXPORT ResolvedFrame {
+class GAMMARAY_CORE_EXPORT ResolvedFrame
+{
 public:
     QString name;
     SourceLocation location;

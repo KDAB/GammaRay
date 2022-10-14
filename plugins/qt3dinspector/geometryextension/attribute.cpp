@@ -52,7 +52,8 @@ int Attribute::size(Qt3DRender::QAttribute::VertexBaseType type)
     return size_table[type];
 }
 
-template<typename T> static QVariant toVariant(const char *data)
+template<typename T>
+static QVariant toVariant(const char *data)
 {
     // cppcheck-suppress invalidPointerCast
     return QVariant::fromValue<T>(*reinterpret_cast<const T *>(data));

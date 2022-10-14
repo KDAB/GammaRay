@@ -53,7 +53,8 @@ public:
     ~Server() override;
 
     /** Indicates which parts of a QObject should be exported to the client. */
-    enum ObjectExportOption {
+    enum ObjectExportOption
+    {
         ExportNothing = 0x0,
         ExportSignals = 0x1,
         ExportProperties = 0x2,
@@ -106,7 +107,7 @@ public:
     /**
      * Returns the current error of the device to be displayed to the user.
      */
-     QString errorString() const;
+    QString errorString() const;
 
 Q_SIGNALS:
     /** Indicates the external address might have changed. */
@@ -133,7 +134,7 @@ private:
 
 private:
     ServerDevice *m_serverDevice;
-    QHash<Protocol::ObjectAddress, QPair<QObject *, QByteArray> > m_monitorNotifiers;
+    QHash<Protocol::ObjectAddress, QPair<QObject *, QByteArray>> m_monitorNotifiers;
     Protocol::ObjectAddress m_nextAddress;
 
     QString m_label;

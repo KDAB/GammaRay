@@ -32,14 +32,14 @@
 
 using namespace GammaRay;
 
-TimezoneOffsetDataModel::TimezoneOffsetDataModel(QObject* parent)
+TimezoneOffsetDataModel::TimezoneOffsetDataModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
 }
 
 TimezoneOffsetDataModel::~TimezoneOffsetDataModel() = default;
 
-void TimezoneOffsetDataModel::setTimezone(const QTimeZone& tz)
+void TimezoneOffsetDataModel::setTimezone(const QTimeZone &tz)
 {
     if (!m_offsets.isEmpty()) {
         beginRemoveRows(QModelIndex(), 0, m_offsets.size() - 1);
@@ -75,20 +75,20 @@ void TimezoneOffsetDataModel::setTimezone(const QTimeZone& tz)
     }
 }
 
-int TimezoneOffsetDataModel::columnCount(const QModelIndex& parent) const
+int TimezoneOffsetDataModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 5;
 }
 
-int TimezoneOffsetDataModel::rowCount(const QModelIndex& parent) const
+int TimezoneOffsetDataModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
     return m_offsets.size();
 }
 
-QVariant TimezoneOffsetDataModel::data(const QModelIndex& index, int role) const
+QVariant TimezoneOffsetDataModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -96,16 +96,16 @@ QVariant TimezoneOffsetDataModel::data(const QModelIndex& index, int role) const
     if (role == Qt::DisplayRole) {
         const auto offset = m_offsets.at(index.row());
         switch (index.column()) {
-            case 0:
-                return offset.atUtc;
-            case 1:
-                return offset.offsetFromUtc;
-            case 2:
-                return offset.standardTimeOffset;
-            case 3:
-                return offset.daylightTimeOffset;
-            case 4:
-                return offset.abbreviation;
+        case 0:
+            return offset.atUtc;
+        case 1:
+            return offset.offsetFromUtc;
+        case 2:
+            return offset.standardTimeOffset;
+        case 3:
+            return offset.daylightTimeOffset;
+        case 4:
+            return offset.abbreviation;
         }
     }
 

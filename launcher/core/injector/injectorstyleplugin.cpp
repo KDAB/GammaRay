@@ -40,9 +40,9 @@ using namespace GammaRay;
 QStyle *InjectorStylePlugin::create(const QString &)
 {
     inject();
-    const QStringList styleNameList
-        = QGuiApplicationPrivate::platform_theme->themeHint(
-        QPlatformTheme::StyleNames).toStringList();
+    const QStringList styleNameList = QGuiApplicationPrivate::platform_theme->themeHint(
+                                                                                QPlatformTheme::StyleNames)
+                                          .toStringList();
     for (const QString &styleName : styleNameList) {
         if (QStyle *style = QStyleFactory::create(styleName))
             return style;

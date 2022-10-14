@@ -55,7 +55,7 @@ public:
     explicit MultiSignalMapperTest(QObject *parent = nullptr)
         : QObject(parent)
     {
-        qRegisterMetaType<QVector<QVariant> >();
+        qRegisterMetaType<QVector<QVariant>>();
     }
 
 private:
@@ -75,7 +75,7 @@ private slots:
         mapper.connectToSignal(&emitter1, method(&emitter1, "signal2(QString)"));
         mapper.connectToSignal(&emitter2, method(&emitter1, "signal2(QString)"));
 
-        QSignalSpy spy(&mapper, SIGNAL(signalEmitted(QObject*,int,QVector<QVariant>)));
+        QSignalSpy spy(&mapper, SIGNAL(signalEmitted(QObject *, int, QVector<QVariant>)));
         QVERIFY(spy.isValid());
         QVERIFY(spy.isEmpty());
 
@@ -83,13 +83,13 @@ private slots:
         QCOMPARE(spy.size(), 1);
         QCOMPARE(spy.at(0).at(0).value<QObject *>(), &emitter1);
         QCOMPARE(spy.at(0).at(1).toInt(), emitter1.metaObject()->indexOfSignal("signal1(int)"));
-        QCOMPARE(spy.at(0).at(2).value<QVector<QVariant> >().first().toInt(), 42);
+        QCOMPARE(spy.at(0).at(2).value<QVector<QVariant>>().first().toInt(), 42);
 
         emit emitter2.signal2(QStringLiteral("hello"));
         QCOMPARE(spy.size(), 2);
         QCOMPARE(spy.at(1).at(0).value<QObject *>(), &emitter2);
         QCOMPARE(spy.at(1).at(1).toInt(), emitter1.metaObject()->indexOfSignal("signal2(QString)"));
-        QCOMPARE(spy.at(1).at(2).value<QVector<QVariant> >().first().toString(),
+        QCOMPARE(spy.at(1).at(2).value<QVector<QVariant>>().first().toString(),
                  QStringLiteral("hello"));
     }
 };

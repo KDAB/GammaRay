@@ -69,7 +69,7 @@ PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObjec
             if (oi.variant().toJsonValue().isObject() || oi.variant().toJsonValue().isArray()) {
                 adaptors.push_back(new JsonPropertyAdaptor(parent));
             }
-        } else if(oi.typeName() == "QJSValue") {
+        } else if (oi.typeName() == "QJSValue") {
         } else {
             const auto v = oi.variant();
             if (v.canConvert<QVariantList>())

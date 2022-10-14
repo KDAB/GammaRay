@@ -40,19 +40,18 @@ inline void compress(const QByteArray &src, QByteArray &dst)
     const qint32 srcSz = src.size();
 
     dst.resize(LZ4_compressBound(srcSz + sizeof(srcSz)));
-    *(qint32 *)dst.data() = srcSz; // save the source size
+    *( qint32 * )dst.data() = srcSz; // save the source size
 
-    const int sz
-        = LZ4_compress_default(src.constData(), dst.data() + sizeof(int), srcSz, dst.size());
+    const int sz = LZ4_compress_default(src.constData(), dst.data() + sizeof(int), srcSz, dst.size());
     dst.resize(sz + sizeof(srcSz));
 }
 
 inline void uncompress(const QByteArray &src, QByteArray &dst)
 {
-    const qint32 dstSz = *(const qint32 *)src.constData(); // get the dest size
+    const qint32 dstSz = *( const qint32 * )src.constData(); // get the dest size
     dst.resize(dstSz);
     const int sz = LZ4_decompress_safe(src.constData() + sizeof(dstSz), dst.data(),
-                                       src.size()- sizeof(dstSz), dstSz);
+                                       src.size() - sizeof(dstSz), dstSz);
     if (sz <= 0)
         dst.resize(0);
     else
@@ -62,19 +61,21 @@ inline void uncompress(const QByteArray &src, QByteArray &dst)
 static quint8 s_streamVersion = GammaRay::Message::lowestSupportedDataVersion();
 static const int minimumUncompressedSize = 32;
 
-template<typename T> static T readNumber(QIODevice *device)
+template<typename T>
+static T readNumber(QIODevice *device)
 {
     T buffer;
-    const int readSize = device->read((char *)&buffer, sizeof(T));
+    const int readSize = device->read(( char * )&buffer, sizeof(T));
     Q_UNUSED(readSize);
     Q_ASSERT(readSize == sizeof(T));
     return qFromBigEndian(buffer);
 }
 
-template<typename T> static void writeNumber(QIODevice *device, T value)
+template<typename T>
+static void writeNumber(QIODevice *device, T value)
 {
     value = qToBigEndian(value);
-    const int writeSize = device->write((char *)&value, sizeof(T));
+    const int writeSize = device->write(( char * )&value, sizeof(T));
     Q_UNUSED(writeSize);
     Q_ASSERT(writeSize == sizeof(T));
 }
@@ -135,9 +136,9 @@ Message::Message(Protocol::ObjectAddress objectAddress, Protocol::MessageType ty
 }
 
 Message::Message(Message &&other) Q_DECL_NOEXCEPT
-    : m_objectAddress(other.m_objectAddress)
-    , m_messageType(other.m_messageType)
-    , m_buffer(std::move(other.m_buffer))
+    : m_objectAddress(other.m_objectAddress),
+      m_messageType(other.m_messageType),
+      m_buffer(std::move(other.m_buffer))
 {
 }
 
@@ -164,13 +165,13 @@ bool Message::canReadMessage(QIODevice *device)
         return false;
 
     static const int minimumSize = sizeof(Protocol::PayloadSize) + sizeof(Protocol::ObjectAddress)
-                                   + sizeof(Protocol::MessageType);
+        + sizeof(Protocol::MessageType);
     if (device->bytesAvailable() < minimumSize)
         return false;
 
     Protocol::PayloadSize payloadSize;
-    const int peekSize = device->peek((char *)&payloadSize, sizeof(Protocol::PayloadSize));
-    if (peekSize < (int)sizeof(Protocol::PayloadSize))
+    const int peekSize = device->peek(( char * )&payloadSize, sizeof(Protocol::PayloadSize));
+    if (peekSize < ( int )sizeof(Protocol::PayloadSize))
         return false;
 
     if (payloadSize == -1 && !device->isSequential()) // input end on shared memory
@@ -192,7 +193,7 @@ Message Message::readMessage(QIODevice *device)
     Q_ASSERT(msg.m_objectAddress != Protocol::InvalidObjectAddress);
     if (payloadSize < 0) {
         payloadSize = abs(payloadSize);
-        auto& uncompressedData = msg.m_buffer->scratchSpace;
+        auto &uncompressedData = msg.m_buffer->scratchSpace;
         uncompressedData.resize(payloadSize);
         device->read(uncompressedData.data(), payloadSize);
         uncompress(uncompressedData, msg.m_buffer->data.buffer());
@@ -240,7 +241,7 @@ void Message::write(QIODevice *device) const
     Q_ASSERT(m_messageType != Protocol::InvalidMessageType);
     static const bool compressionEnabled = qgetenv("GAMMARAY_DISABLE_LZ4") != "1";
     const int buffSize = m_buffer->data.size();
-    auto& compressedData = m_buffer->scratchSpace;
+    auto &compressedData = m_buffer->scratchSpace;
     if (buffSize > minimumUncompressedSize && compressionEnabled)
         compress(m_buffer->data.buffer(), compressedData);
 
@@ -248,7 +249,7 @@ void Message::write(QIODevice *device) const
     if (isCompressed)
         writeNumber<Protocol::PayloadSize>(device, -compressedData.size()); // send compressed Buffer
     else
-        writeNumber<Protocol::PayloadSize>(device, buffSize);   // send uncompressed Buffer
+        writeNumber<Protocol::PayloadSize>(device, buffSize); // send uncompressed Buffer
 
     writeNumber(device, m_objectAddress);
     writeNumber(device, m_messageType);

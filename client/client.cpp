@@ -132,15 +132,17 @@ void Client::messageReceived(const Message &msg)
     if (!(m_initState & VersionChecked)) {
         if (msg.address() != endpointAddress() || msg.type() != Protocol::ServerVersion) {
             emit persisitentConnectionError(tr(
-                                                "Protocol violation, first message is not the server version."));
+                "Protocol violation, first message is not the server version."));
             disconnectFromHost();
         }
         qint32 serverVersion;
         msg >> serverVersion;
         if (serverVersion != Protocol::version()) {
-            emit persisitentConnectionError(tr("Gammaray Protocol Mismatch.\n" \
-                                               "Probe version is %1, was expecting %2.").arg(
-                                                serverVersion).arg(Protocol::version()));
+            emit persisitentConnectionError(tr("Gammaray Protocol Mismatch.\n"
+                                               "Probe version is %1, was expecting %2.")
+                                                .arg(
+                                                    serverVersion)
+                                                .arg(Protocol::version()));
             disconnectFromHost();
         }
         m_initState |= VersionChecked;
@@ -149,8 +151,7 @@ void Client::messageReceived(const Message &msg)
 
     if (msg.address() == endpointAddress()) {
         switch (msg.type()) {
-        case Protocol::ObjectAdded:
-        {
+        case Protocol::ObjectAdded: {
             QString name;
             Protocol::ObjectAddress addr;
             msg >> name >> addr;
@@ -158,16 +159,14 @@ void Client::messageReceived(const Message &msg)
             m_statModel->addObject(addr, name);
             break;
         }
-        case Protocol::ObjectRemoved:
-        {
+        case Protocol::ObjectRemoved: {
             QString name;
             msg >> name;
             removeObjectNameAddressMapping(name);
             break;
         }
-        case Protocol::ObjectMapReply:
-        {
-            QVector<QPair<Protocol::ObjectAddress, QString> > objects;
+        case Protocol::ObjectMapReply: {
+            QVector<QPair<Protocol::ObjectAddress, QString>> objects;
             msg >> objects;
             for (auto it = objects.constBegin(); it != objects.constEnd(); ++it) {
                 if (it->first != endpointAddress())
@@ -176,7 +175,7 @@ void Client::messageReceived(const Message &msg)
             }
 
             m_propertySyncer->setAddress(objectAddress(QStringLiteral(
-                                                           "com.kdab.GammaRay.PropertySyncer")));
+                "com.kdab.GammaRay.PropertySyncer")));
             Q_ASSERT(m_propertySyncer->address() != Protocol::InvalidObjectAddress);
             Endpoint::registerMessageHandler(
                 m_propertySyncer->address(), m_propertySyncer, "handleMessage");
@@ -184,8 +183,7 @@ void Client::messageReceived(const Message &msg)
             m_initState |= ObjectMapReceived;
             break;
         }
-        case Protocol::ServerInfo:
-        {
+        case Protocol::ServerInfo: {
             QString label;
             QString key;
             qint64 pid;
@@ -205,8 +203,7 @@ void Client::messageReceived(const Message &msg)
             m_initState |= ServerInfoReceived;
             break;
         }
-        case Protocol::ServerDataVersionNegotiated:
-        {
+        case Protocol::ServerDataVersionNegotiated: {
             quint8 version;
             msg >> version;
             Message::setNegotiatedDataVersion(version);

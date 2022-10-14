@@ -77,8 +77,8 @@ void ActionInspector::triggerAction(int row)
     if (!index.isValid())
         return;
 
-    QObject *obj = index.data(ActionModel::ObjectRole).value<QObject*>();
-    QAction *action = qobject_cast<QAction*>(obj);
+    QObject *obj = index.data(ActionModel::ObjectRole).value<QObject *>();
+    QAction *action = qobject_cast<QAction *>(obj);
 
     if (action)
         action->trigger();
@@ -93,18 +93,18 @@ void GammaRay::ActionInspector::objectSelected(QObject *obj)
     const QAbstractItemModel *model = m_selectionModel->model();
 
     const auto indexList = model->match(model->index(0, 0),
-                       ActionModel::ObjectIdRole,
-                       QVariant::fromValue(ObjectId(action)), 1,
-                       Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+                                        ActionModel::ObjectIdRole,
+                                        QVariant::fromValue(ObjectId(action)), 1,
+                                        Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
 
     const QModelIndex index = indexList.first();
     m_selectionModel->select(index,
                              QItemSelectionModel::Select
-                             |QItemSelectionModel::Clear
-                             |QItemSelectionModel::Rows
-                             |QItemSelectionModel::Current);
+                                 | QItemSelectionModel::Clear
+                                 | QItemSelectionModel::Rows
+                                 | QItemSelectionModel::Current);
 }
 
 void ActionInspector::registerMetaTypes()

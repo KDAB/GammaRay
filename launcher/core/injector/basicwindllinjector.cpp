@@ -25,30 +25,39 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-//krazy:excludeall=null,captruefalse since this file uses the WinAPI
+// krazy:excludeall=null,captruefalse since this file uses the WinAPI
 
 #include "basicwindllinjector.h"
 
 #include <sstream>
 
-#define ERROR_ASSERT(condition, action) if (condition) {} else {\
-    std::wstringstream stream;\
-    stream << L"Error: " << #condition;\
-    BasicWinDllInjector::log(stream.str().c_str());\
-    BasicWinDllInjector::logError(); action; } do {} while(false)
-#define ERROR_CHECK(condition) ERROR_ASSERT(condition, do {} while(false));
+#define ERROR_ASSERT(condition, action)                 \
+    if (condition) {                                    \
+    } else {                                            \
+        std::wstringstream stream;                      \
+        stream << L"Error: " << #condition;             \
+        BasicWinDllInjector::log(stream.str().c_str()); \
+        BasicWinDllInjector::logError();                \
+        action;                                         \
+    }                                                   \
+    do {                                                \
+    } while (false)
+#define ERROR_CHECK(condition) ERROR_ASSERT( \
+    condition, do {} while (false));
 
-BOOL BasicWinDllInjector::addDllDirectory(HANDLE destProcess, wchar_t *dllDirPath) {
+BOOL BasicWinDllInjector::addDllDirectory(HANDLE destProcess, wchar_t *dllDirPath)
+{
     if (!remoteKernel32Call(destProcess, "SetDllDirectoryW", dllDirPath)) {
         std::wstringstream stream;
-        stream << L"Failed to call SetDllDirectoryW" <<  dllDirPath;
+        stream << L"Failed to call SetDllDirectoryW" << dllDirPath;
         log(stream.str().c_str());
         return FALSE;
     }
     return TRUE;
 }
 
-void BasicWinDllInjector::inject(HANDLE destProcess, wchar_t *dllPath) {
+void BasicWinDllInjector::inject(HANDLE destProcess, wchar_t *dllPath)
+{
     // the probe loader will return false to get unloaded so don't check for success
     remoteKernel32Call(destProcess, "LoadLibraryW", dllPath);
 }
@@ -64,7 +73,7 @@ BOOL BasicWinDllInjector::injectProcess(wchar_t *pidString, wchar_t *path, wchar
         BasicWinDllInjector::logError();
         return FALSE;
     }
-    if(!addDllDirectory(destProcess, path))
+    if (!addDllDirectory(destProcess, path))
         return FALSE;
     inject(destProcess, probePath);
     return TRUE;
@@ -89,10 +98,10 @@ DWORD BasicWinDllInjector::remoteKernel32Call(HANDLE destProcess, const char *fu
         logError();
         return FALSE;
     }
-    ERROR_ASSERT(WriteProcessMemory(destProcess, mem, (void*)argument, strsize, NULL), return FALSE);
+    ERROR_ASSERT(WriteProcessMemory(destProcess, mem, ( void * )argument, strsize, NULL), return FALSE);
 
     // call function pointer in remote process
-    auto thread = CreateRemoteThread(destProcess, NULL, 0, (LPTHREAD_START_ROUTINE)func, mem, 0, NULL);
+    auto thread = CreateRemoteThread(destProcess, NULL, 0, ( LPTHREAD_START_ROUTINE )func, mem, 0, NULL);
     if (!thread) {
         log(L"Filed to creare thread in target process!");
         logError();
@@ -108,19 +117,21 @@ DWORD BasicWinDllInjector::remoteKernel32Call(HANDLE destProcess, const char *fu
     return result;
 }
 
-void BasicWinDllInjector::logError(DWORD error) {
+void BasicWinDllInjector::logError(DWORD error)
+{
     wchar_t *string = 0;
-    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER|FORMAT_MESSAGE_FROM_SYSTEM,
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
                   NULL,
                   error,
                   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                  (LPWSTR)&string,
+                  ( LPWSTR )&string,
                   0,
                   NULL);
     log(string);
-    LocalFree((HLOCAL)string);
+    LocalFree(( HLOCAL )string);
 }
 
-void BasicWinDllInjector::log(const wchar_t *msg) {
+void BasicWinDllInjector::log(const wchar_t *msg)
+{
     OutputDebugStringW(msg);
 }

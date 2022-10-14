@@ -58,16 +58,30 @@ public:
         : m_type(VoidStarType)
         , m_id(reinterpret_cast<quint64>(obj))
         , m_typeName(typeName)
-    {}
+    {
+    }
     explicit ObjectId(QObject *obj)
         : m_type(QObjectType)
         , m_id(reinterpret_cast<quint64>(obj))
-    {}
+    {
+    }
     explicit ObjectId() = default;
-    inline bool isNull() const { return m_id == 0; }
-    inline quint64 id() const { return m_id; }
-    inline Type type() const { return m_type; }
-    inline QByteArray typeName() const { return m_typeName; }
+    inline bool isNull() const
+    {
+        return m_id == 0;
+    }
+    inline quint64 id() const
+    {
+        return m_id;
+    }
+    inline Type type() const
+    {
+        return m_type;
+    }
+    inline QByteArray typeName() const
+    {
+        return m_typeName;
+    }
 
     inline QObject *asQObject() const
     {
@@ -75,7 +89,7 @@ public:
         return reinterpret_cast<QObject *>(m_id);
     }
 
-    template <typename T>
+    template<typename T>
     inline T asQObjectType() const
     {
         return qobject_cast<T>(asQObject());
@@ -87,9 +101,13 @@ public:
         return reinterpret_cast<void *>(m_id);
     }
 
-    inline operator quint64() const { return m_id; }
+    inline operator quint64() const
+    {
+        return m_id;
+    }
 
-    inline bool operator==(const ObjectId &o2) const {
+    inline bool operator==(const ObjectId &o2) const
+    {
         return m_type == o2.m_type && m_id == o2.m_id && m_typeName == o2.m_typeName;
     }
 
@@ -139,8 +157,8 @@ inline QDataStream &operator>>(QDataStream &in, ObjectId &id)
 Q_DECLARE_METATYPE(GammaRay::ObjectId)
 Q_DECLARE_METATYPE(GammaRay::ObjectIds)
 QT_BEGIN_NAMESPACE
-    Q_DECLARE_TYPEINFO(GammaRay::ObjectId, Q_MOVABLE_TYPE);
-    Q_DECLARE_TYPEINFO(GammaRay::ObjectIds, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(GammaRay::ObjectId, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(GammaRay::ObjectIds, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
 #endif // GAMMARAY_OBJECTID_H

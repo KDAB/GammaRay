@@ -58,8 +58,7 @@ void MetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
         break;
     case ObjectInstance::QtObject:
     case ObjectInstance::QtGadgetPointer:
-    case ObjectInstance::QtGadgetValue:
-    {
+    case ObjectInstance::QtGadgetValue: {
         const QMetaObject *mo = oi.metaObject();
         while (mo && !m_metaObj) {
             m_metaObj = MetaObjectRepository::instance()->metaObject(mo->className());

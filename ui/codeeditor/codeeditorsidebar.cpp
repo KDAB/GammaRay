@@ -35,9 +35,9 @@
 
 using namespace GammaRay;
 
-CodeEditorSidebar::CodeEditorSidebar(CodeEditor *editor) :
-    QWidget(editor),
-    m_codeEditor(editor)
+CodeEditorSidebar::CodeEditorSidebar(CodeEditor *editor)
+    : QWidget(editor)
+    , m_codeEditor(editor)
 {
 }
 
@@ -45,7 +45,7 @@ CodeEditorSidebar::~CodeEditorSidebar() = default;
 
 QSize CodeEditorSidebar::sizeHint() const
 {
-    return {m_codeEditor->sidebarWidth(), 0};
+    return { m_codeEditor->sidebarWidth(), 0 };
 }
 
 void CodeEditorSidebar::paintEvent(QPaintEvent *event)

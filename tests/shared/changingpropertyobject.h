@@ -46,7 +46,10 @@ public:
         setObjectName(QStringLiteral("changingPropertyObject"));
     }
 
-    int staticChangingProperty() { return m_count; }
+    int staticChangingProperty()
+    {
+        return m_count;
+    }
     void staticChangingPropertyReset()
     {
         m_count = 0;

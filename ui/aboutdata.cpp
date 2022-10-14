@@ -78,31 +78,31 @@ QString AboutData::aboutTitle()
 QString AboutData::aboutHeader()
 {
     return AboutDataContext::tr(
-                "<p>The Qt application inspection and manipulation tool."
-                "Learn more at <a href=\"https://www.kdab.com/gammaray\">https://www.kdab.com/gammaray/</a>.</p>"
-                "<p>Copyright (C) 2010-2022 Klarälvdalens Datakonsult AB, "
-                "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
-                "<p>StackWalker code Copyright (c) 2005-2019, Jochen Kalmbach, All rights reserved<br>"
-                "lz4 fast LZ compression code Copyright (C) 2011-2015, Yann Collet, All rights reserved<br>"
-                "backward-cpp code Copyright 2013-2017 Google Inc. All rights reserved.</p>");
+        "<p>The Qt application inspection and manipulation tool."
+        "Learn more at <a href=\"https://www.kdab.com/gammaray\">https://www.kdab.com/gammaray/</a>.</p>"
+        "<p>Copyright (C) 2010-2022 Klarälvdalens Datakonsult AB, "
+        "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
+        "<p>StackWalker code Copyright (c) 2005-2019, Jochen Kalmbach, All rights reserved<br>"
+        "lz4 fast LZ compression code Copyright (C) 2011-2015, Yann Collet, All rights reserved<br>"
+        "backward-cpp code Copyright 2013-2017 Google Inc. All rights reserved.</p>");
 }
 
 QString AboutData::aboutAuthors()
 {
     return AboutDataContext::tr(
-                "<p><u>Authors:</u><br>%1</p>"
-                ).arg(authorsAsHtml().join(QStringLiteral("<br>")));
+               "<p><u>Authors:</u><br>%1</p>")
+        .arg(authorsAsHtml().join(QStringLiteral("<br>")));
 }
 
 QString AboutData::aboutFooter()
 {
     return AboutDataContext::tr(
-                "<p>GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB "
-                "in the European Union, the United States and/or other countries.  Other product and "
-                "company names and logos may be trademarks or registered trademarks of their respective companies.</p>"
-                "<br>"
-                "Social: <a href=\"https://twitter.com/KDABQt\">Twitter</a>, "
-                "<a href=\"https://www.facebook.com/kdabqt\">Facebook</a>, "
-                "<a href=\"https://www.youtube.com/c/KDABtv\">YouTube</a>, "
-                "<a href=\"https://www.kdab.com/category/blogs/\">Blogs</a>");
+        "<p>GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB "
+        "in the European Union, the United States and/or other countries.  Other product and "
+        "company names and logos may be trademarks or registered trademarks of their respective companies.</p>"
+        "<br>"
+        "Social: <a href=\"https://twitter.com/KDABQt\">Twitter</a>, "
+        "<a href=\"https://www.facebook.com/kdabqt\">Facebook</a>, "
+        "<a href=\"https://www.youtube.com/c/KDABtv\">YouTube</a>, "
+        "<a href=\"https://www.kdab.com/category/blogs/\">Blogs</a>");
 }

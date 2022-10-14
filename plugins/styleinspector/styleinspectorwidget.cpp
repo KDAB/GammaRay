@@ -42,27 +42,27 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
     ui->setupUi(this);
 
     ui->styleSelector->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.StyleList")));
-    connect(ui->styleSelector, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(ui->styleSelector, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &StyleInspectorWidget::styleSelected);
 
     ui->primitivePage->setModel(ObjectBroker::model(QStringLiteral(
-                                                        "com.kdab.GammaRay.StyleInspector.PrimitiveModel")));
+        "com.kdab.GammaRay.StyleInspector.PrimitiveModel")));
     ui->controlPage->setModel(ObjectBroker::model(QStringLiteral(
-                                                      "com.kdab.GammaRay.StyleInspector.ControlModel")));
+        "com.kdab.GammaRay.StyleInspector.ControlModel")));
     ui->complexControlPage->setModel(ObjectBroker::model(QStringLiteral(
-                                                             "com.kdab.GammaRay.StyleInspector.ComplexControlModel")));
+        "com.kdab.GammaRay.StyleInspector.ComplexControlModel")));
 
     ui->pixelMetricView->header()->setObjectName("pixelMetricViewHeader");
     ui->pixelMetricView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->pixelMetricView->setDeferredResizeMode(1, QHeaderView::Stretch);
     ui->pixelMetricView->setModel(ObjectBroker::model(QStringLiteral(
-                                                          "com.kdab.GammaRay.StyleInspector.PixelMetricModel")));
+        "com.kdab.GammaRay.StyleInspector.PixelMetricModel")));
 
     ui->standardIconView->header()->setObjectName("standardIconViewHeader");
     ui->standardIconView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
     ui->standardIconView->setDeferredResizeMode(1, QHeaderView::Stretch);
     ui->standardIconView->setModel(ObjectBroker::model(QStringLiteral(
-                                                           "com.kdab.GammaRay.StyleInspector.StandardIconModel")));
+        "com.kdab.GammaRay.StyleInspector.StandardIconModel")));
 
     ui->standardPaletteView->header()->setObjectName("standardPaletteViewHeader");
     ui->standardPaletteView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);
@@ -70,7 +70,7 @@ StyleInspectorWidget::StyleInspectorWidget(QWidget *parent)
     ui->standardPaletteView->setDeferredResizeMode(2, QHeaderView::ResizeToContents);
     ui->standardPaletteView->setDeferredResizeMode(3, QHeaderView::ResizeToContents);
     ui->standardPaletteView->setModel(ObjectBroker::model(QStringLiteral(
-                                                              "com.kdab.GammaRay.StyleInspector.PaletteModel")));
+        "com.kdab.GammaRay.StyleInspector.PaletteModel")));
 
     ui->styleHintView->header()->setObjectName("styleHintViewHeader");
     ui->styleHintView->setDeferredResizeMode(0, QHeaderView::ResizeToContents);

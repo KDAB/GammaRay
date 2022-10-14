@@ -110,29 +110,29 @@ void ModelInspector::modelSelected(const QItemSelection &selected)
 
 void ModelInspector::objectSelected(QObject *object)
 {
-    if (auto model = qobject_cast<QAbstractItemModel*>(object)) {
+    if (auto model = qobject_cast<QAbstractItemModel *>(object)) {
         if (model == m_modelContentProxyModel->sourceModel())
             return;
 
         const auto indexList = m_modelModel->match(m_modelModel->index(0, 0),
-                                  ObjectModel::ObjectRole,
-                                  QVariant::fromValue<QObject*>(model), 1,
-                                  Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+                                                   ObjectModel::ObjectRole,
+                                                   QVariant::fromValue<QObject *>(model), 1,
+                                                   Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
         if (indexList.isEmpty())
             return;
 
         const auto index = indexList.first();
         m_modelSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     }
-    if (auto selModel = qobject_cast<QItemSelectionModel*>(object)) {
+    if (auto selModel = qobject_cast<QItemSelectionModel *>(object)) {
         if (!selModel->model())
             return;
-        objectSelected(const_cast<QAbstractItemModel*>(selModel->model()));
+        objectSelected(const_cast<QAbstractItemModel *>(selModel->model()));
 
         const auto indexList = m_selectionModelsModel->match(m_selectionModelsModel->index(0, 0),
-                                  ObjectModel::ObjectRole,
-                                  QVariant::fromValue<QObject*>(selModel), 1,
-                                  Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+                                                             ObjectModel::ObjectRole,
+                                                             QVariant::fromValue<QObject *>(selModel), 1,
+                                                             Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
         if (indexList.isEmpty())
             return;
 
@@ -182,5 +182,5 @@ void ModelInspector::selectionModelSelected(const QItemSelection &selected)
         m_modelContentProxyModel->setSelectionModel(nullptr);
         return;
     }
-    m_modelContentProxyModel->setSelectionModel(qobject_cast<QItemSelectionModel*>(idx.data(ObjectModel::ObjectRole).value<QObject*>()));
+    m_modelContentProxyModel->setSelectionModel(qobject_cast<QItemSelectionModel *>(idx.data(ObjectModel::ObjectRole).value<QObject *>()));
 }

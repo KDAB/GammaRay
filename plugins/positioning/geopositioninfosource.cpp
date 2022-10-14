@@ -33,16 +33,16 @@
 
 using namespace GammaRay;
 
-GeoPositionInfoSource::GeoPositionInfoSource(QObject* parent) :
-    QGeoPositionInfoSource(parent),
-    m_source(nullptr),
-    m_interface(nullptr)
+GeoPositionInfoSource::GeoPositionInfoSource(QObject *parent)
+    : QGeoPositionInfoSource(parent)
+    , m_source(nullptr)
+    , m_interface(nullptr)
 {
 }
 
 GeoPositionInfoSource::~GeoPositionInfoSource() = default;
 
-void GeoPositionInfoSource::setSource(QGeoPositionInfoSource* source)
+void GeoPositionInfoSource::setSource(QGeoPositionInfoSource *source)
 {
     Q_ASSERT(!m_source);
     m_source = source;
@@ -87,12 +87,12 @@ void GeoPositionInfoSource::setPreferredPositioningMethods(PositioningMethods me
 
 void GeoPositionInfoSource::setUpdateInterval(int msec)
 {
-  if (m_source) {
-    m_source->setUpdateInterval(msec);
-    QGeoPositionInfoSource::setUpdateInterval(m_source->updateInterval());
-  } else {
-    QGeoPositionInfoSource::setUpdateInterval(msec);
-  }
+    if (m_source) {
+        m_source->setUpdateInterval(msec);
+        QGeoPositionInfoSource::setUpdateInterval(m_source->updateInterval());
+    } else {
+        QGeoPositionInfoSource::setUpdateInterval(msec);
+    }
 }
 
 QGeoPositionInfoSource::PositioningMethods GeoPositionInfoSource::supportedPositioningMethods() const
@@ -120,7 +120,7 @@ void GeoPositionInfoSource::stopUpdates()
         m_source->stopUpdates();
 }
 
-void GeoPositionInfoSource::setInterface(PositioningInterface* iface)
+void GeoPositionInfoSource::setInterface(PositioningInterface *iface)
 {
     Q_ASSERT(iface);
     m_interface = iface;

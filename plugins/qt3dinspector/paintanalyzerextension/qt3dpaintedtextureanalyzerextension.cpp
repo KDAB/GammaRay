@@ -49,7 +49,7 @@ public:
 };
 #endif
 
-Qt3DPaintedTextureAnalyzerExtension::Qt3DPaintedTextureAnalyzerExtension(PropertyController* controller)
+Qt3DPaintedTextureAnalyzerExtension::Qt3DPaintedTextureAnalyzerExtension(PropertyController *controller)
     : PropertyControllerExtension(controller->objectBaseName() + ".painting")
     , m_paintAnalyzer(nullptr)
 {
@@ -57,7 +57,7 @@ Qt3DPaintedTextureAnalyzerExtension::Qt3DPaintedTextureAnalyzerExtension(Propert
     // as we share the UI with the other plugins.
     const QString aName = controller->objectBaseName() + QStringLiteral(".painting.analyzer");
     if (ObjectBroker::hasObject(aName)) {
-        m_paintAnalyzer = qobject_cast<PaintAnalyzer*>(ObjectBroker::object<PaintAnalyzerInterface*>(aName));
+        m_paintAnalyzer = qobject_cast<PaintAnalyzer *>(ObjectBroker::object<PaintAnalyzerInterface *>(aName));
     } else {
         m_paintAnalyzer = new PaintAnalyzer(aName, controller);
     }
@@ -67,18 +67,18 @@ Qt3DPaintedTextureAnalyzerExtension::~Qt3DPaintedTextureAnalyzerExtension()
 {
 }
 
-bool Qt3DPaintedTextureAnalyzerExtension::setQObject(QObject* object)
+bool Qt3DPaintedTextureAnalyzerExtension::setQObject(QObject *object)
 {
     if (!PaintAnalyzer::isAvailable())
         return false;
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    if (auto tex = qobject_cast<Qt3DRender::QAbstractTexture*>(object)) {
+    if (auto tex = qobject_cast<Qt3DRender::QAbstractTexture *>(object)) {
         if (tex->textureImages().size() == 1)
             return setQObject(tex->textureImages().at(0));
     }
 
-    auto tex = qobject_cast<Qt3DRender::QPaintedTextureImage*>(object);
+    auto tex = qobject_cast<Qt3DRender::QPaintedTextureImage *>(object);
     if (!tex || tex->size() == QSize(0, 0))
         return false;
 
@@ -86,7 +86,7 @@ bool Qt3DPaintedTextureAnalyzerExtension::setQObject(QObject* object)
     m_paintAnalyzer->setBoundingRect(QRect(QPoint(0, 0), tex->size()));
     {
         QPainter p(m_paintAnalyzer->paintDevice());
-        reinterpret_cast<QPaintedTextureImagePrivacyViolater*>(tex)->paint(&p);
+        reinterpret_cast<QPaintedTextureImagePrivacyViolater *>(tex)->paint(&p);
     }
     m_paintAnalyzer->endAnalyzePainting();
     return true;

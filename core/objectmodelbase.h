@@ -59,7 +59,8 @@ public:
      * Constructor.
      * @param parent is the parent object for this instance.
      */
-    explicit ObjectModelBase<Base>(QObject *parent) : Base(parent)
+    explicit ObjectModelBase<Base>(QObject *parent)
+        : Base(parent)
     {
     }
 

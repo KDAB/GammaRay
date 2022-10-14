@@ -98,13 +98,12 @@ QByteArray LoggingCategoryModel::exportLoggingConfig(bool all, bool forFile)
 void LoggingCategoryModel::addCategory(QLoggingCategory *category)
 {
     beginInsertRows(QModelIndex(), m_categories.size(), m_categories.size());
-    m_categories.push_back(CategoryWithDefaultValues{
-                               category,
-                               category->isDebugEnabled(),
-                               category->isInfoEnabled(),
-                               category->isWarningEnabled(),
-                               category->isCriticalEnabled()
-                           });
+    m_categories.push_back(CategoryWithDefaultValues {
+        category,
+        category->isDebugEnabled(),
+        category->isInfoEnabled(),
+        category->isWarningEnabled(),
+        category->isCriticalEnabled() });
     endInsertRows();
 }
 
@@ -161,8 +160,7 @@ bool LoggingCategoryModel::setData(const QModelIndex &index, const QVariant &val
     if (!index.isValid() || index.column() == 0 || role != Qt::CheckStateRole)
         return false;
 
-    static const QtMsgType type_map[]
-        = { QtDebugMsg, QtDebugMsg, QtInfoMsg, QtWarningMsg, QtCriticalMsg };
+    static const QtMsgType type_map[] = { QtDebugMsg, QtDebugMsg, QtInfoMsg, QtWarningMsg, QtCriticalMsg };
 
     const auto enabled = value.toInt() == Qt::Checked;
     auto cat = m_categories.at(index.row());

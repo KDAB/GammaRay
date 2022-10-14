@@ -48,7 +48,7 @@ class PositionInfoPropertyAdaptorFactory : public AbstractPropertyAdaptorFactory
 {
 public:
     PropertyAdaptor *create(const ObjectInstance &oi, QObject *parent = nullptr) const override;
-    static PositionInfoPropertyAdaptorFactory* instance();
+    static PositionInfoPropertyAdaptorFactory *instance();
 
 private:
     static PositionInfoPropertyAdaptorFactory *s_instance;

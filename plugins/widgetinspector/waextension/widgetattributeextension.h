@@ -36,7 +36,8 @@ class QWidget;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-template<typename, typename> class AttributeModel;
+template<typename, typename>
+class AttributeModel;
 
 class WidgetAttributeExtension : public PropertyControllerExtension
 {

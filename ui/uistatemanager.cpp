@@ -55,7 +55,7 @@ QAbstractItemView *headerView(QHeaderView *header)
 {
     QWidget *view = header->parentWidget();
 
-    while (!qobject_cast<QAbstractItemView*>(view))
+    while (!qobject_cast<QAbstractItemView *>(view))
         view = view->parentWidget();
 
     return qobject_cast<QAbstractItemView *>(view);
@@ -76,7 +76,7 @@ void distributeSpace(QList<int> &sizes, int size, int handleSize)
     if (!its.empty()) {
         const int freeSpace = size - usedSpace - (sizes.count() * handleSize) - handleSize;
         const int space = freeSpace / its.size();
-        for (auto & it : its)
+        for (auto &it : its)
             (*it) = space;
     }
 }
@@ -228,7 +228,7 @@ void UIStateManager::restoreState()
         m_stateSettings->beginGroup(Endpoint::instance()->key());
         QMetaMethod method = m_targetStateSource->method(m_targetRestoreMethodId);
         QObject *target = m_targetStateSource == m_widget->metaObject() ? qobject_cast<QObject *>(m_widget) : this;
-        method.invoke(target, Q_ARG(QSettings*, m_stateSettings));
+        method.invoke(target, Q_ARG(QSettings *, m_stateSettings));
         m_stateSettings->endGroup();
     }
 
@@ -258,7 +258,7 @@ void UIStateManager::saveState()
         m_stateSettings->beginGroup(Endpoint::instance()->key());
         QMetaMethod method = m_targetStateSource->method(m_targetSaveMethodId);
         QObject *target = m_targetStateSource == m_widget->metaObject() ? qobject_cast<QObject *>(m_widget) : this;
-        method.invoke(target, Q_ARG(QSettings*, m_stateSettings));
+        method.invoke(target, Q_ARG(QSettings *, m_stateSettings));
         m_stateSettings->endGroup();
     }
 
@@ -300,8 +300,9 @@ bool UIStateManager::eventFilter(QObject *object, QEvent *event)
 QString UIStateManager::widgetName(QWidget *widget)
 {
     return (widget->objectName().isEmpty()
-            ? QString::fromLatin1(widget->metaObject()->className())
-            : widget->objectName()).toLower();
+                ? QString::fromLatin1(widget->metaObject()->className())
+                : widget->objectName())
+        .toLower();
 }
 
 QString UIStateManager::widgetPath(QWidget *widget) const
@@ -376,7 +377,7 @@ bool UIStateManager::checkWidget(QWidget *widget) const
 
 int UIStateManager::percentToInt(const QString &size)
 {
-    return size.left(size.length() -1).toInt(); // clazy:exclude=qstring-ref due to Qt4 support
+    return size.left(size.length() - 1).toInt(); // clazy:exclude=qstring-ref due to Qt4 support
 }
 
 void UIStateManager::restoreWindowState()
@@ -384,8 +385,7 @@ void UIStateManager::restoreWindowState()
     QMainWindow *window = qobject_cast<QMainWindow *>(m_widget);
 
     if (window) {
-        const QByteArray geometry
-            = m_stateSettings->value(widgetGeometryKey(m_widget)).toByteArray();
+        const QByteArray geometry = m_stateSettings->value(widgetGeometryKey(m_widget)).toByteArray();
         const QByteArray state = m_stateSettings->value(widgetStateKey(m_widget)).toByteArray();
 
         if (geometry.isEmpty()) {
@@ -440,8 +440,7 @@ void UIStateManager::restoreSplitterState(QSplitter *splitter)
                         sizes << size.toInt();
                         break;
 
-                    case QVariant::String:
-                    {              // Percent
+                    case QVariant::String: { // Percent
                         int value = percentToInt(size.toString());
                         if (value == -1)
                             sizes << value;
@@ -540,8 +539,7 @@ void UIStateManager::restoreHeaderState(QHeaderView *header)
             }
         } else {
             if (!m_resizing) {
-                const int count
-                    = m_stateSettings->value(widgetStateSectionsKey(header), -1).toInt();
+                const int count = m_stateSettings->value(widgetStateSectionsKey(header), -1).toInt();
                 if (count == header->count()) {
                     header->restoreState(state);
                     header->setProperty(WIDGET_CUSTOMIZED, true);

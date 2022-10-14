@@ -40,7 +40,9 @@
 
 using namespace GammaRay;
 
-static void fakeRegisterServer() {}
+static void fakeRegisterServer()
+{
+}
 
 namespace GammaRay {
 class FakeRemoteModelServer : public RemoteModelServer
@@ -64,13 +66,16 @@ signals:
 private slots:
     void deliverMessage(const QByteArray &ba)
     {
-        QBuffer buffer(const_cast<QByteArray*>(&ba));
+        QBuffer buffer(const_cast<QByteArray *>(&ba));
         buffer.open(QIODevice::ReadOnly);
         emit message(Message::readMessage(&buffer));
     }
 
 private:
-    bool isConnected() const override { return true; }
+    bool isConnected() const override
+    {
+        return true;
+    }
     void sendMessage(const Message &msg) const override
     {
         QByteArray ba;
@@ -78,7 +83,7 @@ private:
         buffer.open(QIODevice::WriteOnly);
         msg.write(&buffer);
         buffer.close();
-        QMetaObject::invokeMethod(const_cast<FakeRemoteModelServer*>(this), "deliverMessage", Qt::QueuedConnection, Q_ARG(QByteArray, ba));
+        QMetaObject::invokeMethod(const_cast<FakeRemoteModelServer *>(this), "deliverMessage", Qt::QueuedConnection, Q_ARG(QByteArray, ba));
     }
 };
 
@@ -122,7 +127,7 @@ private:
         if (idx.data(RemoteModelRole::LoadingState).value<RemoteModelNodeState::NodeStates>() == RemoteModelNodeState::NoState)
             return true; // data already present
 
-        QSignalSpy spy(const_cast<QAbstractItemModel*>(idx.model()), SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+        QSignalSpy spy(const_cast<QAbstractItemModel *>(idx.model()), SIGNAL(dataChanged(QModelIndex, QModelIndex)));
         if (!spy.isValid())
             return false;
         idx.data(); // trigger the request
@@ -317,7 +322,7 @@ private slots:
         QVERIFY(waitForData(pi1));
         QCOMPARE(pi1.data().toString(), QStringLiteral("entry1"));
         // this fails with data() call batching sizes close to 1
-// QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
+        // QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
         QCOMPARE(proxy.rowCount(pi1), 2);
     }
 };

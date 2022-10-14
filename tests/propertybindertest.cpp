@@ -39,9 +39,16 @@ class MyObject : public QObject
 public:
     explicit MyObject(QObject *parent = nullptr)
         : QObject(parent)
-    {}
-    int intProp() { return p1; }
-    int intProp2() { return p2; }
+    {
+    }
+    int intProp()
+    {
+        return p1;
+    }
+    int intProp2()
+    {
+        return p2;
+    }
     void setIntProp(int i)
     {
         if (p1 == i)

@@ -81,11 +81,12 @@ protected:
     virtual bool createProxyFactory(const PluginInfo &pluginInfo, QObject *parent) = 0;
 
     void scan(const QString &serviceType);
-    static QStringList pluginPaths() ;
-    static QStringList pluginFilter() ;
+    static QStringList pluginPaths();
+    static QStringList pluginFilter();
 
     QList<PluginLoadError> m_errors;
     QObject *m_parent;
+
 private:
     Q_DISABLE_COPY(PluginManagerBase)
 };
@@ -103,7 +104,9 @@ public:
         scan(serviceType);
     }
 
-    inline ~PluginManager() {}
+    inline ~PluginManager()
+    {
+    }
 
     inline QVector<IFace *> plugins()
     {
@@ -115,8 +118,7 @@ protected:
     {
         auto *proxy = new Proxy(pluginInfo, parent);
         if (!proxy->isValid()) {
-            m_errors << PluginLoadError(pluginInfo.path(), qApp->translate("GammaRay::PluginManager",
-                                            "Failed to load plugin: %1").arg(proxy->errorString()));
+            m_errors << PluginLoadError(pluginInfo.path(), qApp->translate("GammaRay::PluginManager", "Failed to load plugin: %1").arg(proxy->errorString()));
             std::cerr << "invalid plugin " << qPrintable(pluginInfo.path()) << std::endl;
             delete proxy;
         } else {

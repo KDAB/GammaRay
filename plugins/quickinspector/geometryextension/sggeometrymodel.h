@@ -42,13 +42,13 @@ class SGVertexModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-
-    enum Role {
+    enum Role
+    {
         IsCoordinateRole = 257,
         RenderRole = 258
     };
 
-    explicit SGVertexModel (QObject *parent = nullptr);
+    explicit SGVertexModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
@@ -70,11 +70,12 @@ class SGAdjacencyModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum Role {
+    enum Role
+    {
         DrawingModeRole = 257,
         RenderRole = 258
     };
-    explicit SGAdjacencyModel (QObject *parent = nullptr);
+    explicit SGAdjacencyModel(QObject *parent = nullptr);
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;

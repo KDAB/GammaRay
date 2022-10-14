@@ -55,7 +55,7 @@ SignalMonitor::SignalMonitor(Probe *probe, QObject *parent)
     m_objSelectionModel = ObjectBroker::selectionModel(proxy);
 
     m_clock = new QTimer(this);
-    m_clock->setInterval(1000/25); // update frequency of the delegate, we could slow this down a lot, and let the client interpolate, if necessary
+    m_clock->setInterval(1000 / 25); // update frequency of the delegate, we could slow this down a lot, and let the client interpolate, if necessary
     m_clock->setSingleShot(false);
     connect(m_clock, &QTimer::timeout, this, &SignalMonitor::timeout);
 
@@ -77,10 +77,10 @@ void SignalMonitor::sendClockUpdates(bool enabled)
         m_clock->stop();
 }
 
-void SignalMonitor::objectSelected(QObject* obj)
+void SignalMonitor::objectSelected(QObject *obj)
 {
     const auto indexList = m_objModel->match(m_objModel->index(0, 0), ObjectModel::ObjectIdRole,
-        QVariant::fromValue<ObjectId>(ObjectId(obj)), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
+                                             QVariant::fromValue<ObjectId>(ObjectId(obj)), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
     if (indexList.isEmpty())
         return;
 

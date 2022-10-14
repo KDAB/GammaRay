@@ -40,7 +40,7 @@ public:
     ~WebViewModel() override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    QMap< int, QVariant > itemData(const QModelIndex &index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
     bool filterAcceptsObject(QObject *object) const override;
 };
 }

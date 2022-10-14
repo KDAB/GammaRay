@@ -44,7 +44,8 @@ static const int UserRole = 256;
  */
 namespace ToolModelRole {
 /*! Tool model data roles. */
-enum Role {
+enum Role
+{
     ToolFactory = UserRole + 1,
     ToolWidget,
     ToolId,

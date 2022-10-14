@@ -48,7 +48,8 @@ class TextDocumentModel : public QStandardItemModel
 public:
     explicit TextDocumentModel(QObject *parent = nullptr);
 
-    enum Roles {
+    enum Roles
+    {
         FormatRole = UserRole,
         BoundingBoxRole
     };

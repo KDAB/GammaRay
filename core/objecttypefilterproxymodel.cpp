@@ -36,7 +36,7 @@ ObjectFilterProxyModelBase::ObjectFilterProxyModelBase(QObject *parent)
     setDynamicSortFilter(true);
 }
 
-QMap<int, QVariant> ObjectFilterProxyModelBase::itemData(const QModelIndex& index) const
+QMap<int, QVariant> ObjectFilterProxyModelBase::itemData(const QModelIndex &index) const
 {
     return sourceModel()->itemData(mapToSource(index));
 }

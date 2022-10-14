@@ -1,5 +1,7 @@
 {
     "id": "gammaray_styleinspector",
     "name": "Styles",
-    "types": [ "QStyle" ]
+    "types": [
+        "QStyle"
+    ]
 }

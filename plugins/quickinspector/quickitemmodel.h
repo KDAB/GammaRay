@@ -47,7 +47,7 @@ QT_END_NAMESPACE
 
 namespace GammaRay {
 
-//forward
+// forward
 class QuickEventMonitor;
 
 /** QQ2 item tree model. */
@@ -65,7 +65,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent) const override;
-    QMap< int, QVariant > itemData(const QModelIndex &index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
 public slots:
     void objectAdded(QObject *obj);
@@ -116,19 +116,23 @@ private:
     QPointer<QQuickWindow> m_window;
 
     QHash<QQuickItem *, QQuickItem *> m_childParentMap;
-    QHash<QQuickItem *, QVector<QQuickItem *> > m_parentChildMap;
-    QSet<QQuickItem*> m_favorites;
+    QHash<QQuickItem *, QVector<QQuickItem *>> m_parentChildMap;
+    QSet<QQuickItem *> m_favorites;
 
     // TODO: Merge these two?
     QHash<QQuickItem *, int> m_itemFlags;
     std::unordered_map<QQuickItem *, std::array<QMetaObject::Connection, 8>> m_itemConnections;
 
     // dataChange signal compression
-    struct PendingDataChange {
+    struct PendingDataChange
+    {
         QQuickItem *item = nullptr;
         bool eventChange = false;
         bool flagChange = false;
-        inline bool operator<(QQuickItem *rhs) const { return item < rhs; }
+        inline bool operator<(QQuickItem *rhs) const
+        {
+            return item < rhs;
+        }
     };
     std::vector<PendingDataChange> m_pendingDataChanges;
     QTimer *m_dataChangeTimer = nullptr;

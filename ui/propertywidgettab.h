@@ -43,11 +43,12 @@ class PropertyWidget;
  */
 namespace PropertyWidgetTabPriority {
 /*! Tab priority constants. */
-enum Priority {
-    First = 0,     ///< The main property inspector, the left-most one.
-    Basic = 100,     ///< QObject data that is of common use.
-    Advanced = 200,     ///< Tools with common and high value use for a small sub-set of classes.
-    Exotic = 300     ///< Rarely used information, or data that is only valuable to a small amount of users.
+enum Priority
+{
+    First = 0, ///< The main property inspector, the left-most one.
+    Basic = 100, ///< QObject data that is of common use.
+    Advanced = 200, ///< Tools with common and high value use for a small sub-set of classes.
+    Exotic = 300 ///< Rarely used information, or data that is only valuable to a small amount of users.
 };
 }
 
@@ -78,7 +79,9 @@ class PropertyWidgetTabFactory : public PropertyWidgetTabFactoryBase
 {
 public:
     explicit PropertyWidgetTabFactory(const QString &name, const QString &label, int priority)
-        : GammaRay::PropertyWidgetTabFactoryBase(name, label, priority) {}
+        : GammaRay::PropertyWidgetTabFactoryBase(name, label, priority)
+    {
+    }
 
     QWidget *createWidget(PropertyWidget *parent) override
     {

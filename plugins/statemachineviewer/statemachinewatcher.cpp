@@ -37,11 +37,13 @@
 
 using namespace GammaRay;
 
-static State toState(QAbstractState *state = nullptr) {
+static State toState(QAbstractState *state = nullptr)
+{
     return State(reinterpret_cast<quintptr>(state));
 }
 
-static Transition toTransition(QAbstractTransition *transition) {
+static Transition toTransition(QAbstractTransition *transition)
+{
     return Transition(reinterpret_cast<quintptr>(transition));
 }
 
@@ -63,7 +65,7 @@ void StateMachineWatcher::setWatchedStateMachine(QStateMachine *machine)
     m_watchedStateMachine = machine;
 
     clearWatchedStates();
-    Q_FOREACH(QAbstractState* state, machine->findChildren<QAbstractState *>()) {
+    Q_FOREACH (QAbstractState *state, machine->findChildren<QAbstractState *>()) {
         watchState(state);
     }
 
@@ -87,7 +89,7 @@ void StateMachineWatcher::watchState(QAbstractState *state)
     connect(state, &QObject::destroyed,
             this, &StateMachineWatcher::handleStateDestroyed, Qt::UniqueConnection);
 
-    Q_FOREACH(QAbstractTransition *transition, state->findChildren<QAbstractTransition *>()) {
+    Q_FOREACH (QAbstractTransition *transition, state->findChildren<QAbstractTransition *>()) {
         connect(transition, &QAbstractTransition::triggered,
                 this, &StateMachineWatcher::handleTransitionTriggered, Qt::UniqueConnection);
     }
@@ -101,7 +103,7 @@ void StateMachineWatcher::clearWatchedStates()
         disconnect(state, &QAbstractState::exited, this, &StateMachineWatcher::handleStateExited);
         disconnect(state, &QObject::destroyed, this, &StateMachineWatcher::handleStateDestroyed);
 
-        Q_FOREACH(QAbstractTransition *transition, state->findChildren<QAbstractTransition *>()) {
+        Q_FOREACH (QAbstractTransition *transition, state->findChildren<QAbstractTransition *>()) {
             disconnect(transition, &QAbstractTransition::triggered, this, &StateMachineWatcher::handleTransitionTriggered);
         }
     }

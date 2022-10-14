@@ -41,19 +41,26 @@ class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
-struct EventTypeData {
+struct EventTypeData
+{
     QEvent::Type type = QEvent::None;
     int count = 0;
     bool recordingEnabled = true;
     bool isVisibleInLog = true;
-    inline bool operator<(const EventTypeData &other) const { return type < other.type; }
-    inline bool operator<(QEvent::Type otherType) const { return type < otherType; }
+    inline bool operator<(const EventTypeData &other) const
+    {
+        return type < other.type;
+    }
+    inline bool operator<(QEvent::Type otherType) const
+    {
+        return type < otherType;
+    }
 };
 }
 
 Q_DECLARE_METATYPE(GammaRay::EventTypeData)
 QT_BEGIN_NAMESPACE
-    Q_DECLARE_TYPEINFO(GammaRay::EventTypeData, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(GammaRay::EventTypeData, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -62,7 +69,8 @@ class EventTypeModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    enum Columns {
+    enum Columns
+    {
         Type = 0,
         Count,
         RecordingStatus,
@@ -70,7 +78,8 @@ public:
         COUNT
     };
 
-    enum Role {
+    enum Role
+    {
         MaxEventCount = GammaRay::UserRole + 1,
     };
 
@@ -83,7 +92,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
-    QMap<int, QVariant> itemData(const QModelIndex& index) const override;
+    QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
 public slots:
     void increaseCount(QEvent::Type type);

@@ -52,7 +52,7 @@ signals:
 
 private:
     friend class MultiSignalMapperPrivate;
-    MultiSignalMapperPrivate * const d;
+    MultiSignalMapperPrivate *const d;
 };
 }
 

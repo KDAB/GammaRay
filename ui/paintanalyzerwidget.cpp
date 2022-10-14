@@ -90,7 +90,7 @@ PaintAnalyzerWidget::PaintAnalyzerWidget(QWidget *parent)
     ui->paintAnalyzerSplitter->setStretchFactor(0, 1);
     ui->paintAnalyzerSplitter->setStretchFactor(1, 2);
 
-    connect(zoom, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(zoom, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             ui->replayWidget, &RemoteViewWidget::setZoomLevel);
     connect(ui->replayWidget, &RemoteViewWidget::zoomLevelChanged, zoom, &QComboBox::setCurrentIndex);
     zoom->setCurrentIndex(ui->replayWidget->zoomLevelIndex());
@@ -121,7 +121,7 @@ void PaintAnalyzerWidget::setBaseName(const QString &name)
 
     ui->replayWidget->setName(name + QStringLiteral(".remoteView"));
 
-    m_iface = ObjectBroker::object<PaintAnalyzerInterface*>(name);
+    m_iface = ObjectBroker::object<PaintAnalyzerInterface *>(name);
     connect(m_iface, &PaintAnalyzerInterface::hasArgumentDetailsChanged, this, &PaintAnalyzerWidget::detailsChanged);
     connect(m_iface, &PaintAnalyzerInterface::hasStackTraceChanged, this, &PaintAnalyzerWidget::detailsChanged);
     detailsChanged();

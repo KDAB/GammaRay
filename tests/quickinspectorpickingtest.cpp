@@ -80,8 +80,7 @@ private:
         exposed = QTest::qWaitForWindowExposed(view);
         if (!exposed)
             qWarning()
-                <<
-            "Unable to expose window, probably running tests on a headless system - ignoring all following render failures.";
+                << "Unable to expose window, probably running tests on a headless system - ignoring all following render failures.";
 
 
         // wait at least two frames so we have the final window size with all render loop/driver combinations...
@@ -126,12 +125,18 @@ private slots:
         QTest::addColumn<QString>("qmlFile", nullptr);
         QTest::addColumn<QString>("pickedObjectId", nullptr);
 
-        QTest::newRow("Vanilla Rect-Clicking") << "qrc:/manual/picking/stackedrects.qml" << "bluerect";
-        QTest::newRow("Negative z-order") << "qrc:/manual/picking/negativezordering.qml" << "greenrect";
-        QTest::newRow("Invisible overlay") << "qrc:/manual/picking/invisibleoverlay.qml" << "redrect";
-        QTest::newRow("Opacity:0 overlay") << "qrc:/manual/picking/opacityzerooverlay.qml" << "yellowrect";
-        QTest::newRow("Loader") << "qrc:/manual/picking/loader.qml" << "bluerect";
-        QTest::newRow("Outside of parent") << "qrc:/manual/picking/outsideofparent.qml" << "redrectchild";
+        QTest::newRow("Vanilla Rect-Clicking") << "qrc:/manual/picking/stackedrects.qml"
+                                               << "bluerect";
+        QTest::newRow("Negative z-order") << "qrc:/manual/picking/negativezordering.qml"
+                                          << "greenrect";
+        QTest::newRow("Invisible overlay") << "qrc:/manual/picking/invisibleoverlay.qml"
+                                           << "redrect";
+        QTest::newRow("Opacity:0 overlay") << "qrc:/manual/picking/opacityzerooverlay.qml"
+                                           << "yellowrect";
+        QTest::newRow("Loader") << "qrc:/manual/picking/loader.qml"
+                                << "bluerect";
+        QTest::newRow("Outside of parent") << "qrc:/manual/picking/outsideofparent.qml"
+                                           << "redrectchild";
     }
 
     // Info: Clickposition is always in Center of View
@@ -144,12 +149,12 @@ private slots:
 
         auto itemSelectionModel = ObjectBroker::selectionModel(itemModel);
         QVERIFY(itemSelectionModel);
-        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)));
+        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
         QVERIFY(itemSpy.isValid());
 
         // auto center-click is broken before https://codereview.qt-project.org/141085/
         QTest::mouseClick(view, Qt::LeftButton, Qt::ShiftModifier | Qt::ControlModifier,
-                          QPoint(view->width()/2, view->height()/2));
+                          QPoint(view->width() / 2, view->height() / 2));
 
         if (itemSpy.isEmpty())
             QVERIFY(itemSpy.wait());

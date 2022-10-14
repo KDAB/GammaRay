@@ -33,7 +33,7 @@ using namespace GammaRay;
 FavoriteObjectClient::FavoriteObjectClient(QObject *parent)
     : FavoriteObjectInterface(parent)
 {
-    ObjectBroker::registerObject<FavoriteObjectInterface*>(this);
+    ObjectBroker::registerObject<FavoriteObjectInterface *>(this);
 }
 
 void FavoriteObjectClient::markObjectAsFavorite(const ObjectId &id)

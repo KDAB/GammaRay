@@ -64,8 +64,8 @@ private slots:
     void selectionChanged();
 
 private:
-    QVector<QItemSelectionModel*> m_selectionModels;
-    QVector<QItemSelectionModel*> m_currentSelectionModels;
+    QVector<QItemSelectionModel *> m_selectionModels;
+    QVector<QItemSelectionModel *> m_currentSelectionModels;
     QAbstractItemModel *m_model;
 };
 }

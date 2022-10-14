@@ -50,7 +50,7 @@
 using namespace GammaRay;
 using namespace std;
 
-void(*RemoteModelServer::s_registerServerCallback)() = nullptr;
+void (*RemoteModelServer::s_registerServerCallback)() = nullptr;
 
 RemoteModelServer::RemoteModelServer(const QString &objectName, QObject *parent)
     : QObject(parent)
@@ -153,8 +153,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
     ProbeGuard g;
     switch (msg.type()) {
-    case Protocol::ModelRowColumnCountRequest:
-    {
+    case Protocol::ModelRowColumnCountRequest: {
         quint32 size;
         msg >> size;
         Q_ASSERT(size > 0);
@@ -178,8 +177,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelContentRequest:
-    {
+    case Protocol::ModelContentRequest: {
         quint32 size;
         msg >> size;
         Q_ASSERT(size > 0);
@@ -201,15 +199,14 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         msg << quint32(indexes.size());
         for (const auto &qmIndex : qAsConst(indexes))
             msg << Protocol::fromQModelIndex(qmIndex)
-                          << filterItemData(m_model->itemData(qmIndex))
-                          << qint32(m_model->flags(qmIndex));
+                << filterItemData(m_model->itemData(qmIndex))
+                << qint32(m_model->flags(qmIndex));
 
         sendMessage(msg);
         break;
     }
 
-    case Protocol::ModelHeaderRequest:
-    {
+    case Protocol::ModelHeaderRequest: {
         qint8 orientation;
         qint32 section;
         msg >> orientation >> section;
@@ -231,8 +228,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelSetDataRequest:
-    {
+    case Protocol::ModelSetDataRequest: {
         Protocol::ModelIndex index;
         int role;
         QVariant value;
@@ -242,16 +238,14 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
         break;
     }
 
-    case Protocol::ModelSortRequest:
-    {
+    case Protocol::ModelSortRequest: {
         quint32 column, order;
         msg >> column >> order;
-        m_model->sort(column, (Qt::SortOrder)order);
+        m_model->sort(column, ( Qt::SortOrder )order);
         break;
     }
 
-    case Protocol::ModelSyncBarrier:
-    {
+    case Protocol::ModelSyncBarrier: {
         qint32 barrierId;
         msg >> barrierId;
         Message reply(m_myAddress, Protocol::ModelSyncBarrier);
@@ -270,14 +264,14 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(QMap<int, QVariant> &&item
         } else if (it.value().userType() == qMetaTypeId<QIcon>()) {
             // see also: https://bugreports.qt-project.org/browse/QTBUG-33321
             const QIcon icon = it.value().value<QIcon>();
-            ///TODO: what size to use? icon.availableSizes is empty...
+            /// TODO: what size to use? icon.availableSizes is empty...
             if (!icon.isNull())
                 it.value() = icon.pixmap(QSize(16, 16));
             ++it;
         } else if (canSerialize(it.value())) {
             ++it;
         } else {
-// qWarning() << "Cannot serialize QVariant of type" << it.value().typeName();
+            // qWarning() << "Cannot serialize QVariant of type" << it.value().typeName();
             it = itemData.erase(it);
         }
     }
@@ -349,7 +343,7 @@ void RemoteModelServer::headerDataChanged(Qt::Orientation orientation, int first
     if (!isConnected())
         return;
     Message msg(m_myAddress, Protocol::ModelHeaderChanged);
-    msg <<  qint8(orientation) << first << last;
+    msg << qint8(orientation) << first << last;
     sendMessage(msg);
 }
 
@@ -417,7 +411,7 @@ void RemoteModelServer::layoutChanged(const QList<QPersistentModelIndex> &parent
 }
 
 
-void RemoteModelServer::sendLayoutChanged(const QVector< Protocol::ModelIndex > &parents,
+void RemoteModelServer::sendLayoutChanged(const QVector<Protocol::ModelIndex> &parents,
                                           quint32 hint)
 {
     if (!isConnected())
@@ -454,7 +448,7 @@ void RemoteModelServer::sendMoveMessage(Protocol::MessageType type,
         return;
     Message msg(m_myAddress, type);
     msg << sourceParent << qint32(sourceStart) << qint32(sourceEnd)
-                  << destinationParent << qint32(destinationIndex);
+        << destinationParent << qint32(destinationIndex);
     sendMessage(msg);
 }
 

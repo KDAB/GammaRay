@@ -43,13 +43,13 @@ NetworkConfigurationModel::NetworkConfigurationModel(QObject *parent)
 
 NetworkConfigurationModel::~NetworkConfigurationModel() = default;
 
-int NetworkConfigurationModel::columnCount(const QModelIndex& parent) const
+int NetworkConfigurationModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 8;
 }
 
-int NetworkConfigurationModel::rowCount(const QModelIndex& parent) const
+int NetworkConfigurationModel::rowCount(const QModelIndex &parent) const
 {
     // delayed lazy loading, not just for performance, creating QNetworkConfigurationManager
     // has tons of side-effects such as D-Bus communication on Linux, that will possibly
@@ -64,7 +64,7 @@ int NetworkConfigurationModel::rowCount(const QModelIndex& parent) const
     return m_configs.size();
 }
 
-Qt::ItemFlags NetworkConfigurationModel::flags(const QModelIndex& index) const
+Qt::ItemFlags NetworkConfigurationModel::flags(const QModelIndex &index) const
 {
     const auto baseFlags = QAbstractTableModel::flags(index);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
@@ -74,7 +74,7 @@ Qt::ItemFlags NetworkConfigurationModel::flags(const QModelIndex& index) const
     return baseFlags;
 }
 
-QVariant NetworkConfigurationModel::data(const QModelIndex& index, int role) const
+QVariant NetworkConfigurationModel::data(const QModelIndex &index, int role) const
 {
     if (!m_mgr || !index.isValid())
         return QVariant();
@@ -82,26 +82,26 @@ QVariant NetworkConfigurationModel::data(const QModelIndex& index, int role) con
     const auto conf = m_configs.at(index.row());
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-            case 0:
-                return conf.name();
-            case 1:
-                return conf.identifier();
-            case 2:
-                return conf.bearerTypeName();
-            case 3:
+        case 0:
+            return conf.name();
+        case 1:
+            return conf.identifier();
+        case 2:
+            return conf.bearerTypeName();
+        case 3:
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
-                return conf.connectTimeout();
+            return conf.connectTimeout();
 #else
-                return QStringLiteral("?");
+            return QStringLiteral("?");
 #endif
-            case 4:
-                return conf.isRoamingAvailable();
-            case 5:
-                return VariantHandler::displayString(QVariant::fromValue(conf.purpose()));
-            case 6:
-                return VariantHandler::displayString(QVariant::fromValue(conf.state()));
-            case 7:
-                return VariantHandler::displayString(QVariant::fromValue(conf.type()));
+        case 4:
+            return conf.isRoamingAvailable();
+        case 5:
+            return VariantHandler::displayString(QVariant::fromValue(conf.purpose()));
+        case 6:
+            return VariantHandler::displayString(QVariant::fromValue(conf.state()));
+        case 7:
+            return VariantHandler::displayString(QVariant::fromValue(conf.type()));
         }
     } else if (role == Qt::EditRole && index.column() == 3) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
@@ -115,7 +115,7 @@ QVariant NetworkConfigurationModel::data(const QModelIndex& index, int role) con
     return QVariant();
 }
 
-bool NetworkConfigurationModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool NetworkConfigurationModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (!m_mgr || !index.isValid() || role != Qt::EditRole || index.column() != 3 || value.isNull())
         return false;
@@ -145,7 +145,7 @@ void NetworkConfigurationModel::init()
     endResetModel();
 }
 
-void NetworkConfigurationModel::configurationAdded(const QNetworkConfiguration& config)
+void NetworkConfigurationModel::configurationAdded(const QNetworkConfiguration &config)
 {
     const auto it = std::find(m_configs.begin(), m_configs.end(), config);
     if (it != m_configs.end())
@@ -155,7 +155,7 @@ void NetworkConfigurationModel::configurationAdded(const QNetworkConfiguration& 
     endInsertRows();
 }
 
-void NetworkConfigurationModel::configurationChanged(const QNetworkConfiguration& config)
+void NetworkConfigurationModel::configurationChanged(const QNetworkConfiguration &config)
 {
     const auto it = std::find(m_configs.begin(), m_configs.end(), config);
     if (it == m_configs.end())
@@ -164,7 +164,7 @@ void NetworkConfigurationModel::configurationChanged(const QNetworkConfiguration
     emit dataChanged(index(idx, 0), index(idx, columnCount() - 1));
 }
 
-void NetworkConfigurationModel::configurationRemoved(const QNetworkConfiguration& config)
+void NetworkConfigurationModel::configurationRemoved(const QNetworkConfiguration &config)
 {
     const auto it = std::find(m_configs.begin(), m_configs.end(), config);
     if (it == m_configs.end())

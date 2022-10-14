@@ -41,7 +41,8 @@ namespace GammaRay {
  *  Every remoted proxy model should be wrapped into this template, unless you already have
  *  a special implementation for itemData() handling this.
  */
-template<typename BaseProxy> class ServerProxyModel : public BaseProxy
+template<typename BaseProxy>
+class ServerProxyModel : public BaseProxy
 {
 public:
     explicit ServerProxyModel(QObject *parent = nullptr)

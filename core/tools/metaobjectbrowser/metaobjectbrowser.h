@@ -67,7 +67,7 @@ private:
 };
 
 class MetaObjectBrowserFactory : public QObject,
-    public StandardToolFactory<QObject, MetaObjectBrowser>
+                                 public StandardToolFactory<QObject, MetaObjectBrowser>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

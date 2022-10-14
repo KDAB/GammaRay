@@ -38,8 +38,7 @@ class ProbeABI;
 
 namespace InjectorFactory {
 GAMMARAY_LAUNCHER_EXPORT AbstractInjector::Ptr createInjector(const QString &name,
-                                                              const QString &executableOverride
-                                                                  = QString());
+                                                              const QString &executableOverride = QString());
 
 AbstractInjector::Ptr defaultInjectorForLaunch(const ProbeABI &abi, QStringList *errorStrings = nullptr);
 

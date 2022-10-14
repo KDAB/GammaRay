@@ -52,7 +52,10 @@ public slots:
     virtual void showAll() = 0;
     virtual void showNone() = 0;
 
-    bool isPaused() const { return m_isPaused; }
+    bool isPaused() const
+    {
+        return m_isPaused;
+    }
     void setIsPaused(bool value);
 
 signals:

@@ -106,8 +106,7 @@ QString findProbe(const ProbeABI &probeAbi, const QStringList &searchRoots)
     qWarning() << "Cannot locate probe for ABI" << probeAbi.displayString() << " in "
                << searchRoots << Paths::rootPath();
     qWarning()
-            <<
-            "This is likely a setup problem, due to an incomplete or partially moved installation.";
+        << "This is likely a setup problem, due to an incomplete or partially moved installation.";
     return QString();
 }
 

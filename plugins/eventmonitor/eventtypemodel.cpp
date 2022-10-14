@@ -69,8 +69,7 @@ QVariant EventTypeModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
-        case Columns::Type:
-        {
+        case Columns::Type: {
             const auto s = VariantHandler::displayString(m_data[index.row()].type);
             if (s.isEmpty()) {
                 return m_data[index.row()].type;
@@ -110,8 +109,8 @@ Qt::ItemFlags EventTypeModel::flags(const QModelIndex &index) const
 bool EventTypeModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (!index.isValid() || role != Qt::CheckStateRole
-            || (index.column() != Columns::RecordingStatus
-                && index.column() != Columns::Visibility))
+        || (index.column() != Columns::RecordingStatus
+            && index.column() != Columns::Visibility))
         return false;
 
     const auto enabled = value.toInt() == Qt::Checked;
@@ -125,7 +124,7 @@ bool EventTypeModel::setData(const QModelIndex &index, const QVariant &value, in
     return true;
 }
 
-QMap<int, QVariant> EventTypeModel::itemData(const QModelIndex& index) const
+QMap<int, QVariant> EventTypeModel::itemData(const QModelIndex &index) const
 {
     auto d = QAbstractItemModel::itemData(index);
     if (index.column() == Columns::Count) {
@@ -159,7 +158,7 @@ void EventTypeModel::increaseCount(QEvent::Type type)
 void EventTypeModel::resetCounts()
 {
     beginResetModel();
-    for (auto &eventTypeData: m_data) {
+    for (auto &eventTypeData : m_data) {
         eventTypeData.count = 0;
     }
     m_maxEventCount = 0;
@@ -178,7 +177,7 @@ bool EventTypeModel::isRecording(QEvent::Type type) const
 void EventTypeModel::recordAll()
 {
     beginResetModel();
-    for (auto &eventTypeData: m_data) {
+    for (auto &eventTypeData : m_data) {
         eventTypeData.recordingEnabled = true;
     }
     endResetModel();
@@ -187,7 +186,7 @@ void EventTypeModel::recordAll()
 void EventTypeModel::recordNone()
 {
     beginResetModel();
-    for (auto &eventTypeData: m_data) {
+    for (auto &eventTypeData : m_data) {
         eventTypeData.recordingEnabled = false;
     }
     endResetModel();
@@ -205,7 +204,7 @@ bool EventTypeModel::isVisible(QEvent::Type type) const
 void EventTypeModel::showAll()
 {
     beginResetModel();
-    for (auto &eventTypeData: m_data) {
+    for (auto &eventTypeData : m_data) {
         eventTypeData.isVisibleInLog = true;
     }
     endResetModel();
@@ -215,7 +214,7 @@ void EventTypeModel::showAll()
 void EventTypeModel::showNone()
 {
     beginResetModel();
-    for (auto &eventTypeData: m_data) {
+    for (auto &eventTypeData : m_data) {
         eventTypeData.isVisibleInLog = false;
     }
     endResetModel();

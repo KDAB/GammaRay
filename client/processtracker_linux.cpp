@@ -85,26 +85,25 @@ void ProcessTrackerBackendLinux::checkProcess(qint64 pid)
         for (const QString &value : values) {
             if (value.startsWith(QStringLiteral("TracerPid:"))) {
                 pinfo.traced = value.split(QLatin1Char(':')).value(1).simplified().toLongLong();
-            }
-            else if (value.startsWith(QStringLiteral("State:"))) {
+            } else if (value.startsWith(QStringLiteral("State:"))) {
                 const char status(value.split(QLatin1Char(':')).value(1).simplified()[0].toUpper().toLatin1());
 
                 // status decoding as taken from fs/proc/array.c
                 switch (status) {
-                    case 'T': {
-                        pinfo.state = GammaRay::ProcessTracker::Suspended;
-                        break;
-                    }
+                case 'T': {
+                    pinfo.state = GammaRay::ProcessTracker::Suspended;
+                    break;
+                }
 
-                    case 'S': // Sleeping
-                    case 'R': {
-                        pinfo.state = GammaRay::ProcessTracker::Running;
-                        break;
-                    }
+                case 'S': // Sleeping
+                case 'R': {
+                    pinfo.state = GammaRay::ProcessTracker::Running;
+                    break;
+                }
 
-                    //case 'Z': // Zombie
-                    //case 'D': // Disk Sleep
-                    //case 'W': // Paging
+                    // case 'Z': // Zombie
+                    // case 'D': // Disk Sleep
+                    // case 'W': // Paging
                 }
             }
         }

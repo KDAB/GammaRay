@@ -49,13 +49,9 @@ QDataStream &operator>>(QDataStream &in, ModelCellData &data)
 }
 }
 
-bool ModelCellData::operator==(const ModelCellData& other) const
+bool ModelCellData::operator==(const ModelCellData &other) const
 {
-    return row == other.row &&
-           column == other.column &&
-           internalId == other.internalId &&
-           internalPtr == other.internalPtr &&
-           flags == other.flags;
+    return row == other.row && column == other.column && internalId == other.internalId && internalPtr == other.internalPtr && flags == other.flags;
 }
 
 
@@ -73,7 +69,7 @@ ModelCellData ModelInspectorInterface::currentCellData() const
     return m_currentCellData;
 }
 
-void ModelInspectorInterface::setCurrentCellData(const ModelCellData& cellData)
+void ModelInspectorInterface::setCurrentCellData(const ModelCellData &cellData)
 {
     if (m_currentCellData == cellData)
         return;

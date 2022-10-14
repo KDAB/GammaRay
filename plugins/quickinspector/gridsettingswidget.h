@@ -34,7 +34,9 @@
 namespace GammaRay {
 
 struct QuickDecorationsSettings;
-namespace Ui { class GridSettingsWidget; }
+namespace Ui {
+class GridSettingsWidget;
+}
 
 class GridSettingsWidget : public QWidget
 {

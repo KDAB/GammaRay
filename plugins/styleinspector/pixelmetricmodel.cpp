@@ -33,12 +33,16 @@
 
 using namespace GammaRay;
 
-struct pixel_metric_t {
+struct pixel_metric_t
+{
     const char *name;
     QStyle::PixelMetric pixelMetric;
 };
 
-#define MAKE_PM(metric) { #metric, QStyle:: metric }
+#define MAKE_PM(metric)         \
+    {                           \
+#metric, QStyle::metric \
+    }
 
 static const pixel_metric_t pixelMetrics[] = {
     MAKE_PM(PM_ButtonMargin),

@@ -46,7 +46,8 @@ class TranslationsModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    enum CustomRoles {
+    enum CustomRoles
+    {
         IsOverriddenRole = GammaRay::UserRole
     };
 
@@ -100,7 +101,10 @@ class TranslatorWrapper : public QTranslator
 public:
     explicit TranslatorWrapper(QTranslator *wrapped, QObject *parent = nullptr);
 
-    TranslationsModel *model() const { return m_model; }
+    TranslationsModel *model() const
+    {
+        return m_model;
+    }
 
     bool isEmpty() const override;
     QString translate(const char *context, const char *sourceText, const char *disambiguation,

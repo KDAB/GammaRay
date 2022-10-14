@@ -37,14 +37,21 @@
 
 using namespace GammaRay;
 
-struct control_element_t {
+struct control_element_t
+{
     const char *name;
     QStyle::ControlElement control;
     QStyleOption *(*styleOptionFactory)();
 };
 
-#define MAKE_CE(control) { #control, QStyle:: control, &StyleOption::makeStyleOption }
-#define MAKE_CE_X(control, factory) { #control, QStyle:: control, &StyleOption:: factory }
+#define MAKE_CE(control)                                         \
+    {                                                            \
+#control, QStyle::control, &StyleOption::makeStyleOption \
+    }
+#define MAKE_CE_X(control, factory)                      \
+    {                                                    \
+#control, QStyle::control, &StyleOption::factory \
+    }
 
 static const control_element_t controlElements[] = {
     MAKE_CE_X(CE_PushButton, makeButtonStyleOption),

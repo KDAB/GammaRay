@@ -46,16 +46,20 @@ QString sourceLocationLabel(ContextMenuExtension::Location location,
     switch (location) {
     case ContextMenuExtension::GoTo:
         return qApp->translate("GammaRay::ContextMenuExtension",
-                               "Go to: %1").arg(sourceLocation.displayString());
+                               "Go to: %1")
+            .arg(sourceLocation.displayString());
     case ContextMenuExtension::ShowSource:
         return qApp->translate("GammaRay::ContextMenuExtension",
-                               "Show source: %1").arg(sourceLocation.displayString());
+                               "Show source: %1")
+            .arg(sourceLocation.displayString());
     case ContextMenuExtension::Creation:
         return qApp->translate("GammaRay::ContextMenuExtension",
-                               "Go to creation: %1").arg(sourceLocation.displayString());
+                               "Go to creation: %1")
+            .arg(sourceLocation.displayString());
     case ContextMenuExtension::Declaration:
         return qApp->translate("GammaRay::ContextMenuExtension",
-                               "Go to declaration: %1").arg(sourceLocation.displayString());
+                               "Go to declaration: %1")
+            .arg(sourceLocation.displayString());
     }
     Q_ASSERT(false);
     return QString();
@@ -100,14 +104,11 @@ bool ContextMenuExtension::discoverPropertySourceLocation(ContextMenuExtension::
     if (!index.isValid())
         return false;
 
-    const bool isUrl
-        = index.sibling(index.row(), PropertyModel::TypeColumn).data().toString() == QStringLiteral(
-        "QUrl");
+    const bool isUrl = index.sibling(index.row(), PropertyModel::TypeColumn).data().toString() == QStringLiteral("QUrl");
     if (!isUrl)
         return false;
 
-    return discoverSourceLocation(location, index.sibling(
-                                      index.row(), PropertyModel::ValueColumn).data().toUrl());
+    return discoverSourceLocation(location, index.sibling(index.row(), PropertyModel::ValueColumn).data().toUrl());
 }
 
 void ContextMenuExtension::populateMenu(QMenu *menu)
@@ -132,19 +133,20 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
 
     // delay adding actions until we know the supported tools
     QObject::connect(ClientToolManager::instance(), &ClientToolManager::toolsForObjectResponse,
-            menu, [menu](const ObjectId &id, const QVector<ToolInfo> &toolInfos) {
-        for (const auto &toolInfo : toolInfos) {
-            auto action = menu->addAction(qApp->translate("GammaRay::ContextMenuExtension",
-                                                          "Show in \"%1\" tool").arg(toolInfo.name()));
-            QObject::connect(action, &QAction::triggered, [id, toolInfo]() {
-                ClientToolManager::instance()->selectObject(id, toolInfo);
-            });
-        }
-    });
+                     menu, [menu](const ObjectId &id, const QVector<ToolInfo> &toolInfos) {
+                         for (const auto &toolInfo : toolInfos) {
+                             auto action = menu->addAction(qApp->translate("GammaRay::ContextMenuExtension",
+                                                                           "Show in \"%1\" tool")
+                                                               .arg(toolInfo.name()));
+                             QObject::connect(action, &QAction::triggered, [id, toolInfo]() {
+                                 ClientToolManager::instance()->selectObject(id, toolInfo);
+                             });
+                         }
+                     });
 
     if (canFavorite) {
-        menu->addAction(QStringLiteral("Favorite"), [this]{
-            if (auto iface = ObjectBroker::object<FavoriteObjectInterface*>())
+        menu->addAction(QStringLiteral("Favorite"), [this] {
+            if (auto iface = ObjectBroker::object<FavoriteObjectInterface *>())
                 iface->markObjectAsFavorite(m_id);
         });
     }

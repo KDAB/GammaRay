@@ -54,7 +54,8 @@ public:
 
     void clear();
 
-    enum Columns {
+    enum Columns
+    {
         PIDColumn,
         NameColumn,
         StateColumn,
@@ -65,7 +66,8 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    enum CustomRoles {
+    enum CustomRoles
+    {
         PIDRole = Qt::UserRole,
         NameRole,
         StateRole,

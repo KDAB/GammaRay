@@ -48,7 +48,8 @@ private slots:
         ModelTest tester2(&codecs);
         QCOMPARE(codecs.rowCount(), 0);
 
-        codecs.setCodecs(QStringList() << "UTF-8" << "Latin1");
+        codecs.setCodecs(QStringList() << "UTF-8"
+                                       << "Latin1");
         QCOMPARE(codecs.rowCount(), 2);
         codecs.updateText("Hello World");
 

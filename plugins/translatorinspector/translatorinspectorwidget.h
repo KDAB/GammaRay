@@ -72,7 +72,7 @@ private:
 };
 
 class TranslatorInspectorWidgetFactory : public QObject,
-    public StandardToolUiFactory<TranslatorInspectorWidget>
+                                         public StandardToolUiFactory<TranslatorInspectorWidget>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolUiFactory)

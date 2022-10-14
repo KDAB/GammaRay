@@ -51,23 +51,32 @@
 
 using namespace GammaRay;
 
-#define MAKE_FACTORY(type, label) \
-    class type##Factory : public ToolUiFactory { \
-    public: \
-        virtual QString id() const override { return "GammaRay::" #type; } \
-        virtual QString name() const override { return label; } \
-        virtual QWidget *createWidget(QWidget *parentWidget) override  { \
-            return new type##Widget(parentWidget); \
-        } \
+#define MAKE_FACTORY(type, label)                                     \
+    class type##Factory : public ToolUiFactory                        \
+    {                                                                 \
+    public:                                                           \
+        virtual QString id() const override                           \
+        {                                                             \
+            return "GammaRay::" #type;                                \
+        }                                                             \
+        virtual QString name() const override                         \
+        {                                                             \
+            return label;                                             \
+        }                                                             \
+        virtual QWidget *createWidget(QWidget *parentWidget) override \
+        {                                                             \
+            return new type##Widget(parentWidget);                    \
+        }                                                             \
     }
 
-MAKE_FACTORY(MessageHandler,    qApp->translate("GammaRay::MessageHandlerFactory", "Messages"));
+MAKE_FACTORY(MessageHandler, qApp->translate("GammaRay::MessageHandlerFactory", "Messages"));
 MAKE_FACTORY(MetaObjectBrowser, qApp->translate("GammaRay::MetaObjectBrowserFactory", "Meta Objects"));
-MAKE_FACTORY(MetaTypeBrowser,   qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"));
-MAKE_FACTORY(ProblemReporter,   qApp->translate("GammaRay::ProblemReporterFactory", "Problems"));
-MAKE_FACTORY(ResourceBrowser,   qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"));
+MAKE_FACTORY(MetaTypeBrowser, qApp->translate("GammaRay::MetaTypeBrowserFactory", "Meta Types"));
+MAKE_FACTORY(ProblemReporter, qApp->translate("GammaRay::ProblemReporterFactory", "Problems"));
+MAKE_FACTORY(ResourceBrowser, qApp->translate("GammaRay::ResourceBrowserFactory", "Resources"));
 
-struct PluginRepository {
+struct PluginRepository
+{
     PluginRepository() = default;
     Q_DISABLE_COPY(PluginRepository)
     ~PluginRepository()
@@ -111,11 +120,11 @@ static bool toolLessThan(const ToolInfo &lhs, const ToolInfo &rhs)
     return lhs.name().localeAwareCompare(rhs.name()) < 0;
 }
 
-ToolInfo::ToolInfo(const ToolData &toolData, ToolUiFactory *factory) :
-    m_toolId(toolData.id),
-    m_isEnabled(toolData.enabled),
-    m_hasUi(toolData.hasUi),
-    m_factory(factory)
+ToolInfo::ToolInfo(const ToolData &toolData, ToolUiFactory *factory)
+    : m_toolId(toolData.id)
+    , m_isEnabled(toolData.enabled)
+    , m_hasUi(toolData.hasUi)
+    , m_factory(factory)
 {
 }
 
@@ -159,7 +168,7 @@ bool ToolInfo::isValid() const
 }
 
 
-ClientToolManager* ClientToolManager::s_instance = nullptr;
+ClientToolManager *ClientToolManager::s_instance = nullptr;
 
 ClientToolManager::ClientToolManager(QObject *parent)
     : QObject(parent)
@@ -358,7 +367,8 @@ int ClientToolManager::toolIndexForToolId(const QString &toolId) const
     return -1;
 }
 
-ToolInfo ClientToolManager::toolForToolId(const QString &toolId) const {
+ToolInfo ClientToolManager::toolForToolId(const QString &toolId) const
+{
     const int index = toolIndexForToolId(toolId);
     if (index < 0 || index >= m_tools.size())
         return ToolInfo();

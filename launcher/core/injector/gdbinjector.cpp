@@ -88,15 +88,18 @@ void GdbInjector::parseStandardError(const QByteArray &line)
     if (line.startsWith("Function \"main\" not defined.")) {
         setManualError(tr("The debuggee application is missing debug symbols which are required\n"
                           "for GammaRay's GDB injector. Please recompile the debuggee.\n\n"
-                          "GDB error was: %1").arg(QString::fromLocal8Bit(line)));
+                          "GDB error was: %1")
+                           .arg(QString::fromLocal8Bit(line)));
     } else if (line.startsWith("Can't find member of namespace, class, struct, or union named \"QCoreApplication::exec\"")) {
         setManualError(tr("Your QtCore library is missing debug symbols which are required\n"
                           "for GammaRay's GDB injector. Please install the required debug symbols.\n\n"
-                          "GDB error was: %1").arg(QString::fromLocal8Bit(line)));
+                          "GDB error was: %1")
+                           .arg(QString::fromLocal8Bit(line)));
     } else if (line.startsWith("warning: Unable to restore previously selected frame")) {
         setManualError(tr("The debuggee application seems to have an invalid stack trace\n"
                           "This can be caused by the executable being updated on disk after launching it.\n\n"
-                          "GDB error was: %1").arg(QString::fromLocal8Bit(line)));
+                          "GDB error was: %1")
+                           .arg(QString::fromLocal8Bit(line)));
     }
 }
 

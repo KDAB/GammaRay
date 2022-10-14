@@ -39,7 +39,8 @@ namespace GammaRay {
 /*! Utility function to find the various executables related to the launcher. */
 namespace LauncherFinder {
 /*! Identifies a launcher helper executable type. */
-enum Type {
+enum Type
+{
     Injector,
     LauncherUI,
     Client

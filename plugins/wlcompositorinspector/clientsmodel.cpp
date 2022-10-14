@@ -91,27 +91,27 @@ QVariant ClientsModel::data(const QModelIndex &index, int role) const
     auto client = m_clients.at(index.row());
 
     switch (index.column()) {
-        case PidColumn:
-            if (role == Qt::DisplayRole)
-                return client->processId();
-            if (role == ObjectIdRole)
-                return QVariant::fromValue(ObjectId(client));
-	    break;
-        case CommandColumn: {
-            if (role != Qt::DisplayRole)
-                return QVariant();
-            auto pid = client->processId();
-            QByteArray path;
-            QTextStream(&path) << "/proc/" << pid << "/cmdline";
-            QFile file(path);
-            if (!file.open(QIODevice::ReadOnly)) {
-                return QStringLiteral("Not available :/");
-            }
-
-            QByteArray data = file.readAll();
-            data.replace('\0', ' ');
-            return data;
+    case PidColumn:
+        if (role == Qt::DisplayRole)
+            return client->processId();
+        if (role == ObjectIdRole)
+            return QVariant::fromValue(ObjectId(client));
+        break;
+    case CommandColumn: {
+        if (role != Qt::DisplayRole)
+            return QVariant();
+        auto pid = client->processId();
+        QByteArray path;
+        QTextStream(&path) << "/proc/" << pid << "/cmdline";
+        QFile file(path);
+        if (!file.open(QIODevice::ReadOnly)) {
+            return QStringLiteral("Not available :/");
         }
+
+        QByteArray data = file.readAll();
+        data.replace('\0', ' ');
+        return data;
+    }
     }
     return QVariant();
 }
@@ -131,10 +131,10 @@ QVariant ClientsModel::headerData(int section, Qt::Orientation orientation, int)
 {
     if (orientation == Qt::Horizontal) {
         switch (section) {
-            case PidColumn:
-                return QStringLiteral("pid");
-            case CommandColumn:
-                return QStringLiteral("command");
+        case PidColumn:
+            return QStringLiteral("pid");
+        case CommandColumn:
+            return QStringLiteral("command");
         }
     }
     return QString::number(section + 1);

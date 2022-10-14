@@ -50,6 +50,7 @@ class SignalHistoryFavoritesView : public FavoritesItemView<GammaRay::SignalHist
 {
     Q_OBJECT
     using Super = FavoritesItemView<GammaRay::SignalHistoryView>;
+
 public:
     SignalHistoryFavoritesView(QWidget *parent = nullptr);
 };

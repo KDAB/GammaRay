@@ -62,7 +62,7 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
 
     ui->setupUi(this);
 
-    QAbstractItemModel * const eventModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventModel"));
+    QAbstractItemModel *const eventModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventModel"));
     new SearchLineController(ui->eventSearchLine, eventModel);
     ui->eventTree->setDeferredResizeMode(EventModelColumn::Time, QHeaderView::ResizeToContents);
     ui->eventTree->setModel(eventModel);
@@ -79,9 +79,9 @@ EventMonitorWidget::EventMonitorWidget(QWidget *parent)
     ui->eventInspector->setItemDelegate(new PropertyEditorDelegate(this));
     connect(ui->eventInspector, &QTreeView::customContextMenuRequested, this, &EventMonitorWidget::eventInspectorContextMenu);
 
-    QAbstractItemModel * const eventTypeModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventTypeModel"));
+    QAbstractItemModel *const eventTypeModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.EventTypeModel"));
     new SearchLineController(ui->typeSearchLine, eventTypeModel);
-    EventTypeClientProxyModel * const eventTypeProxyModel = new EventTypeClientProxyModel(this);
+    EventTypeClientProxyModel *const eventTypeProxyModel = new EventTypeClientProxyModel(this);
     eventTypeProxyModel->setSourceModel(eventTypeModel);
     ui->eventTypeTree->sortByColumn(EventTypeModel::Columns::Type, Qt::AscendingOrder);
     ui->eventTypeTree->setDeferredResizeMode(EventTypeModel::Columns::Type, QHeaderView::Stretch);
@@ -130,7 +130,7 @@ void EventMonitorWidget::eventInspectorContextMenu(QPoint pos)
     const auto objectId = idx.data(PropertyModel::ObjectIdRole).value<ObjectId>();
     ContextMenuExtension ext(objectId);
     const bool canShow = (actions == PropertyModel::NavigateTo && !objectId.isNull())
-                         || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
+        || ext.discoverPropertySourceLocation(ContextMenuExtension::GoTo, idx);
     if (!canShow)
         return;
 

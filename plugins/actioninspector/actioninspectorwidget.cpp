@@ -80,7 +80,8 @@ void ActionInspectorWidget::triggerAction(const QModelIndex &index)
         return;
 
     Endpoint::instance()->invokeObject(QStringLiteral(
-                                           "com.kdab.GammaRay.ActionInspector"), "triggerAction",
+                                           "com.kdab.GammaRay.ActionInspector"),
+                                       "triggerAction",
                                        QVariantList() << index.row());
 }
 
@@ -101,7 +102,7 @@ void ActionInspectorWidget::contextMenu(QPoint pos)
     menu.exec(ui->actionView->viewport()->mapToGlobal(pos));
 }
 
-void ActionInspectorWidget::selectionChanged(const QItemSelection& selection)
+void ActionInspectorWidget::selectionChanged(const QItemSelection &selection)
 {
     if (selection.isEmpty())
         return;

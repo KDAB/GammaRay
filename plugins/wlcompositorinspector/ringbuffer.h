@@ -36,45 +36,57 @@ namespace GammaRay {
 template<class T>
 struct RingBuffer
 {
-  RingBuffer(int capacity)
-    : m_head(0)
-    , m_capacity(capacity)
-  {
-    Q_ASSERT(capacity > 0);
-  }
-
-  int count() const { return qMin(m_capacity, m_vector.count()); }
-  int capacity() const { return m_capacity; }
-  bool isEmpty() const { return count() == 0; }
-
-  const T &last() const { return at(count() - 1); }
-
-  void append(const T &t)
-  {
-    if (m_vector.count() == m_capacity) {
-      m_vector[m_head++] = t;
-      if (m_head >= m_capacity)
-        m_head = 0;
-    } else {
-      m_vector.append(t);
+    RingBuffer(int capacity)
+        : m_head(0)
+        , m_capacity(capacity)
+    {
+        Q_ASSERT(capacity > 0);
     }
-  }
 
-  const T &at(int i) const
-  {
-    int index = (i + m_head) % m_capacity;
-    return m_vector.at(index);
-  }
+    int count() const
+    {
+        return qMin(m_capacity, m_vector.count());
+    }
+    int capacity() const
+    {
+        return m_capacity;
+    }
+    bool isEmpty() const
+    {
+        return count() == 0;
+    }
 
-  void clear()
-  {
-    m_vector.clear();
-    m_head = 0;
-  }
+    const T &last() const
+    {
+        return at(count() - 1);
+    }
 
-  QVector<T> m_vector;
-  int m_head;
-  int m_capacity;
+    void append(const T &t)
+    {
+        if (m_vector.count() == m_capacity) {
+            m_vector[m_head++] = t;
+            if (m_head >= m_capacity)
+                m_head = 0;
+        } else {
+            m_vector.append(t);
+        }
+    }
+
+    const T &at(int i) const
+    {
+        int index = (i + m_head) % m_capacity;
+        return m_vector.at(index);
+    }
+
+    void clear()
+    {
+        m_vector.clear();
+        m_head = 0;
+    }
+
+    QVector<T> m_vector;
+    int m_head;
+    int m_capacity;
 };
 
 }

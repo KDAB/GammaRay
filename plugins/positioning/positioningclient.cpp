@@ -30,7 +30,7 @@
 
 using namespace GammaRay;
 
-PositioningClient::PositioningClient(QObject* parent):
-    PositioningInterface(parent)
+PositioningClient::PositioningClient(QObject *parent)
+    : PositioningInterface(parent)
 {
 }

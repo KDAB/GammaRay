@@ -79,7 +79,7 @@ private:
 };
 
 class SceneInspectorFactory : public QObject,
-    public StandardToolFactory<QGraphicsScene, SceneInspector>
+                              public StandardToolFactory<QGraphicsScene, SceneInspector>
 {
     Q_OBJECT
     Q_INTERFACES(GammaRay::ToolFactory)

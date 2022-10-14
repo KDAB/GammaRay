@@ -47,7 +47,8 @@ class BaseProbeTest : public QObject
 public:
     explicit BaseProbeTest(QObject *parent = nullptr)
         : QObject(parent)
-    { }
+    {
+    }
 
 protected:
     virtual void createProbe()

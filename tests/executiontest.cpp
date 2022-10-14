@@ -51,7 +51,8 @@ private slots:
 
     static void benchmarkReadOnlyData()
     {
-        QBENCHMARK {
+        QBENCHMARK
+        {
             Execution::isReadOnlyData(&QObject::staticMetaObject);
         }
     }
@@ -73,7 +74,8 @@ private slots:
     {
         if (!Execution::stackTracingAvailable())
             return;
-        QBENCHMARK {
+        QBENCHMARK
+        {
             const auto trace = Execution::stackTrace(255);
             QVERIFY(trace.size() > 0);
         }
@@ -85,7 +87,8 @@ private slots:
             return;
         const auto trace = Execution::stackTrace(255);
         QVERIFY(trace.size() > 0);
-        QBENCHMARK {
+        QBENCHMARK
+        {
             const auto frames = Execution::resolveAll(trace);
             QCOMPARE(frames.size(), trace.size());
         }

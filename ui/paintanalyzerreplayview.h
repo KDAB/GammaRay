@@ -46,7 +46,7 @@ public slots:
     void setShowClipArea(bool show);
 
 protected:
-    void drawDecoration(QPainter * p) override;
+    void drawDecoration(QPainter *p) override;
 
 private:
     bool m_showClipArea;

@@ -57,7 +57,8 @@ static const ObjectAddress LauncherAddress = std::numeric_limits<ObjectAddress>:
 static const MessageType InvalidMessageType = 0;
 
 /*! Protocol message types. */
-enum BuildInMessageType {
+enum BuildInMessageType
+{
     // object management
     // client -> server
     ObjectMonitored = InvalidMessageType + 1,
@@ -121,7 +122,10 @@ class ModelIndexData
 {
 public:
     explicit ModelIndexData(qint32 row_ = 0, qint32 column_ = 0)
-        : row(row_), column(column_) {}
+        : row(row_)
+        , column(column_)
+    {
+    }
 
     qint32 row;
     qint32 column;
@@ -130,7 +134,8 @@ public:
 using ModelIndex = QVector<ModelIndexData>;
 
 /*! Protocol representation of an QItemSelectionRange. */
-struct ItemSelectionRange {
+struct ItemSelectionRange
+{
     ModelIndex topLeft;
     ModelIndex bottomRight;
 };
@@ -155,18 +160,18 @@ GAMMARAY_COMMON_EXPORT qint32 broadcastFormatVersion();
 
 ///@cond internal
 QT_BEGIN_NAMESPACE
-inline QDataStream& operator>>(QDataStream& s, GammaRay::Protocol::ModelIndexData& data)
+inline QDataStream &operator>>(QDataStream &s, GammaRay::Protocol::ModelIndexData &data)
 {
     s >> data.row >> data.column;
     return s;
 }
-inline QDataStream& operator<<(QDataStream& s, const GammaRay::Protocol::ModelIndexData& data)
+inline QDataStream &operator<<(QDataStream &s, const GammaRay::Protocol::ModelIndexData &data)
 {
     s << data.row << data.column;
     return s;
 }
 
-inline QDebug& operator<<(QDebug &s, const GammaRay::Protocol::ModelIndexData &data)
+inline QDebug &operator<<(QDebug &s, const GammaRay::Protocol::ModelIndexData &data)
 {
     s << '(' << data.row << ',' << data.column << ')';
     return s;

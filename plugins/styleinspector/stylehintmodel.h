@@ -52,7 +52,7 @@ protected:
     int doRowCount() const override;
 
 private:
-    static QVariant styleHintToVariant(QStyle::StyleHint hint, int value) ;
+    static QVariant styleHintToVariant(QStyle::StyleHint hint, int value);
     QVariant styleHintData(QStyle::StyleHint hint) const;
 };
 

@@ -45,15 +45,16 @@ using namespace GammaRay;
 
 namespace GammaRay {
 namespace UIResources {
-struct PairThemeFileName {
+struct PairThemeFileName
+{
     bool operator==(const PairThemeFileName &other) const
     {
-        return devicePixelRatio == other.devicePixelRatio &&
-                theme == other.theme &&
-                filePath == other.filePath;
+        return devicePixelRatio == other.devicePixelRatio && theme == other.theme && filePath == other.filePath;
     }
     bool operator!=(const PairThemeFileName &other) const
-    { return !operator==(other); }
+    {
+        return !operator==(other);
+    }
 
     qreal devicePixelRatio;
     UIResources::Theme theme;
@@ -120,8 +121,8 @@ QString themedPath(UIResources::Theme theme, const QString &extra, QWidget *widg
     const int dpr = qRound(devicePixelRatio(widget));
     if (dpr > 1) {
         const QString highdpi = QString::fromLatin1("%1/%2@%4x.%3")
-                .arg(candidate.path(), candidate.baseName(), candidate.suffix())
-                .arg(dpr);
+                                    .arg(candidate.path(), candidate.baseName(), candidate.suffix())
+                                    .arg(dpr);
         if (QFile::exists(highdpi))
             candidate.setFile(highdpi);
     }
@@ -142,7 +143,7 @@ QString themedFilePath(ThemeEntryType type, UIResources::Theme theme, const QStr
 
     if (it == hash.end()) {
         const QString iconFilePath = QString::fromLatin1("%1/%2")
-                .arg(type == Pixmap ? QStringLiteral("pixmaps") : QStringLiteral("icons"), filePath);
+                                         .arg(type == Pixmap ? QStringLiteral("pixmaps") : QStringLiteral("icons"), filePath);
         QString candidate(UIResources::themedPath(theme, iconFilePath, widget));
 
         // Fallback to default theme file

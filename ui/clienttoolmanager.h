@@ -110,7 +110,7 @@ public:
     void requestToolsForObject(const ObjectId &id);
     void selectObject(const ObjectId &id, const ToolInfo &toolInfo);
 
-    static ClientToolManager* instance();
+    static ClientToolManager *instance();
 
 public slots:
     void requestAvailableTools();
@@ -134,7 +134,7 @@ private slots:
     void toolsForObjectReceived(const GammaRay::ObjectId &id, const QVector<QString> &toolIds);
 
 private:
-    typedef QHash<QString, QPointer<QWidget> > WidgetsHash;
+    typedef QHash<QString, QPointer<QWidget>> WidgetsHash;
     mutable WidgetsHash m_widgets; // ToolId -> Widget
     QVector<ToolInfo> m_tools;
     QPointer<ToolManagerInterface> m_remote;

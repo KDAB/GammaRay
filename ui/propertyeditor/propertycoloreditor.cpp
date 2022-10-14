@@ -37,7 +37,7 @@ PropertyColorEditor::PropertyColorEditor(QWidget *parent)
 {
 }
 
-void PropertyColorEditor::showEditor(QWidget* parent)
+void PropertyColorEditor::showEditor(QWidget *parent)
 {
     const QColor color = QColorDialog::getColor(value().value<QColor>(), parent,
                                                 QString(), QColorDialog::ShowAlphaChannel);

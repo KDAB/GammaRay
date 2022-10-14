@@ -105,13 +105,13 @@ private:
     static void initQEventTypes();
 
 private:
-    QHash<QString, MetaObject*> m_metaObjects;
-    std::unordered_map<MetaObject*, std::vector<MetaObject*> > m_derivedTypes;
+    QHash<QString, MetaObject *> m_metaObjects;
+    std::unordered_map<MetaObject *, std::vector<MetaObject *>> m_derivedTypes;
     bool m_initialized = false;
 };
 }
 ///@cond internal
-#define MO_ADD_BASECLASS(Base) \
+#define MO_ADD_BASECLASS(Base)                                                                  \
     Q_ASSERT(GammaRay::MetaObjectRepository::instance()->hasMetaObject(QStringLiteral(#Base))); \
     mo->addBaseClass(GammaRay::MetaObjectRepository::instance()->metaObject(QStringLiteral(#Base)));
 ///@endcond
@@ -119,7 +119,7 @@ private:
 /** Register @p Class with the MetaObjectRepository.
  *  Use this if @p Class has no base class.
  */
-#define MO_ADD_METAOBJECT0(Class) \
+#define MO_ADD_METAOBJECT0(Class)             \
     mo = new GammaRay::MetaObjectImpl<Class>; \
     mo->setClassName(QStringLiteral(#Class)); \
     GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);
@@ -127,20 +127,20 @@ private:
 /** Register @p Class with the MetaObjectRepository.
  *  Use this if @p Class has one base class.
  */
-#define MO_ADD_METAOBJECT1(Class, Base1) \
+#define MO_ADD_METAOBJECT1(Class, Base1)             \
     mo = new GammaRay::MetaObjectImpl<Class, Base1>; \
-    mo->setClassName(QStringLiteral(#Class)); \
-    MO_ADD_BASECLASS(Base1) \
+    mo->setClassName(QStringLiteral(#Class));        \
+    MO_ADD_BASECLASS(Base1)                          \
     GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);
 
 /** Register @p Class with the MetaObjectRepository.
  *  Use this if @p Class has two base classes.
  */
-#define MO_ADD_METAOBJECT2(Class, Base1, Base2) \
+#define MO_ADD_METAOBJECT2(Class, Base1, Base2)             \
     mo = new GammaRay::MetaObjectImpl<Class, Base1, Base2>; \
-    mo->setClassName(QStringLiteral(#Class)); \
-    MO_ADD_BASECLASS(Base1) \
-    MO_ADD_BASECLASS(Base2) \
+    mo->setClassName(QStringLiteral(#Class));               \
+    MO_ADD_BASECLASS(Base1)                                 \
+    MO_ADD_BASECLASS(Base2)                                 \
     GammaRay::MetaObjectRepository::instance()->addMetaObject(mo);
 
 /** Register a read/write property for class @p Class. */
@@ -155,13 +155,13 @@ private:
 #define MO_ADD_PROPERTY_NC(Class, Getter) \
     mo->addProperty(GammaRay::MetaPropertyFactory::makePropertyNonConst(#Getter, &Class::Getter));
 
-#if !defined(Q_CC_MSVC) || _MSC_VER >= 1900 //krazy:exclude=cpp
+#if !defined(Q_CC_MSVC) || _MSC_VER >= 1900 // krazy:exclude=cpp
 /** Register a lambda property getter for class @p Class. */
-#define MO_ADD_PROPERTY_LD(Class, Name, Func) \
-{ \
-    const auto ld = Func; \
-    mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty<Class, decltype(ld(std::declval<Class*>()))>(#Name, ld)); \
-}
+#define MO_ADD_PROPERTY_LD(Class, Name, Func)                                                                                  \
+    {                                                                                                                          \
+        const auto ld = Func;                                                                                                  \
+        mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty<Class, decltype(ld(std::declval<Class *>()))>(#Name, ld)); \
+    }
 
 /** Register a read/write property for class @p Class.
  *  Use this for overloaded getters or setters that would confuse older MSVC versions.

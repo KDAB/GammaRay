@@ -53,7 +53,8 @@ public:
     ~LaunchOptions();
     LaunchOptions &operator=(const LaunchOptions &other);
 
-    enum UiMode {
+    enum UiMode
+    {
         InProcessUi,
         OutOfProcessUi,
         NoUi

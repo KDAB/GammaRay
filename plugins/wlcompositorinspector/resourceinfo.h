@@ -35,24 +35,23 @@
 struct wl_resource;
 struct wl_interface;
 
-namespace GammaRay
-{
+namespace GammaRay {
 
 class ResourceInfo
 {
     Q_DECLARE_TR_FUNCTIONS(GammaRay::ResourceInfo)
 public:
-  explicit ResourceInfo(wl_resource *resource);
+    explicit ResourceInfo(wl_resource *resource);
 
-  uint32_t id() const;
-  const char *interfaceName() const;
-  bool isInterface(const wl_interface *iface) const;
-  QString name() const;
-  QString info() const;
-  QStringList infoLines() const;
+    uint32_t id() const;
+    const char *interfaceName() const;
+    bool isInterface(const wl_interface *iface) const;
+    QString name() const;
+    QString info() const;
+    QStringList infoLines() const;
 
 private:
-  wl_resource *m_resource;
+    wl_resource *m_resource;
 };
 
 }

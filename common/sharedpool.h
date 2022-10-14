@@ -38,12 +38,12 @@
 
 namespace GammaRay {
 
-template <class T>
+template<class T>
 class SharedPool
 {
 public:
     // no `using a = b;` for MSVC2010 :(
-    typedef std::unique_ptr<T, std::function<void(T*)>> PtrType;
+    typedef std::unique_ptr<T, std::function<void(T *)>> PtrType;
 
     SharedPool(size_t prealloc = 0)
         : m_capacity(0)

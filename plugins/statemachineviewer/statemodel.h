@@ -46,11 +46,12 @@ class StateModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    enum Roles {
+    enum Roles
+    {
         TransitionsRole = ObjectModel::UserRole + 1, ///< return bool, see StateMachineDebugInterface::transitions()
         IsInitialStateRole, ///< return bool, see StateMachineDebugInterface::isInitialState()
-        StateValueRole,     ///< return GammaRay::State
-        StateIdRole         ///< return GammaRay::StateId
+        StateValueRole, ///< return GammaRay::State
+        StateIdRole ///< return GammaRay::StateId
     };
 
     explicit StateModel(QObject *parent = nullptr);
@@ -72,11 +73,11 @@ public:
 
 protected:
     Q_DECLARE_PRIVATE(StateModel)
-    StateModelPrivate * const d_ptr;
+    StateModelPrivate *const d_ptr;
 
 private:
     Q_PRIVATE_SLOT(d_func(), void stateConfigurationChanged())
-    Q_PRIVATE_SLOT(d_func(), void handleMachineDestroyed(QObject*))
+    Q_PRIVATE_SLOT(d_func(), void handleMachineDestroyed(QObject *))
 };
 }
 

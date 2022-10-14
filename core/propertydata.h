@@ -41,7 +41,8 @@ namespace GammaRay {
 class GAMMARAY_CORE_EXPORT PropertyData
 {
 public:
-    enum AccessFlag {
+    enum AccessFlag
+    {
         Readable = 0,
         Writable = 1,
         Deletable = 2,
@@ -83,7 +84,7 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::PropertyData::AccessFlags)
 QT_BEGIN_NAMESPACE
-    Q_DECLARE_TYPEINFO(GammaRay::PropertyData, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(GammaRay::PropertyData, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
 #endif // GAMMARAY_PROPERTYDATA_H

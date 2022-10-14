@@ -49,7 +49,6 @@ QVariant WidgetClientModel::data(const QModelIndex &index, int role) const
 
         if (flags & WidgetModelRoles::Invisible)
             return qApp->palette().color(QPalette::Disabled, QPalette::Text);
-
     }
     return ClientDecorationIdentityProxyModel::data(index, role);
 }

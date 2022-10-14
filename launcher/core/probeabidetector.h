@@ -52,7 +52,7 @@ public:
     ProbeABI abiForProcess(qint64 pid) const;
 
     /*! Returns the full path to QtCore used by the given executable. */
-    static QString qtCoreForExecutable(const QString &path) ;
+    static QString qtCoreForExecutable(const QString &path);
 
     /*! Returns the full path to QtCore used by the process with PID @p pid. */
     QString qtCoreForProcess(quint64 pid) const;
@@ -73,12 +73,12 @@ private:
     /*! Detect the ABI of the given QtCore DLL.
      *  This needs to be implemented for every platform.
      */
-    static ProbeABI detectAbiForQtCore(const QString &path) ;
+    static ProbeABI detectAbiForQtCore(const QString &path);
 
     /*! Path to the QtCore DLL for @p pid, using the lsof tool
      *  on UNIX-like systems.
      */
-    static QString qtCoreFromLsof(qint64 pid) ;
+    static QString qtCoreFromLsof(qint64 pid);
 
     mutable QHash<QString, ProbeABI> m_abiForQtCoreCache;
 };

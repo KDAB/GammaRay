@@ -56,8 +56,8 @@ QmlContextExtension::QmlContextExtension(PropertyController *controller)
     auto contextSelectionModel = ObjectBroker::selectionModel(m_contextModel);
     QObject::connect(contextSelectionModel, &QItemSelectionModel::selectionChanged,
                      [this](const QItemSelection &selection) {
-        contextSelected(selection);
-    });
+                         contextSelected(selection);
+                     });
 
     controller->registerModel(m_propertyModel, QStringLiteral("qmlContextPropertyModel"));
 }

@@ -39,13 +39,15 @@ namespace StreamOperators {
 void registerOperators();
 
 namespace Internal {
-template<typename T> QDataStream &writeEnum(QDataStream &out, T value)
+template<typename T>
+QDataStream &writeEnum(QDataStream &out, T value)
 {
     out << static_cast<qint32>(value);
     return out;
 }
 
-template<typename T> QDataStream &readEnum(QDataStream &in, T &value)
+template<typename T>
+QDataStream &readEnum(QDataStream &in, T &value)
 {
     qint32 v;
     in >> v;
@@ -55,7 +57,7 @@ template<typename T> QDataStream &readEnum(QDataStream &in, T &value)
 }
 
 /** Abstract away stream operator registration across Qt versions. */
-template <typename T>
+template<typename T>
 void registerOperators()
 {
     qRegisterMetaType<T>();
@@ -66,11 +68,15 @@ void registerOperators()
 
 }
 
-#define GAMMARAY_ENUM_STREAM_OPERATORS(enumType) \
-    QDataStream &operator<<(QDataStream &out, enumType value) \
-    { return GammaRay::StreamOperators::Internal::writeEnum(out, value); } \
-    QDataStream &operator>>(QDataStream &in, enumType &value) \
-    { return GammaRay::StreamOperators::Internal::readEnum(in, value); }
+#define GAMMARAY_ENUM_STREAM_OPERATORS(enumType)                           \
+    QDataStream &operator<<(QDataStream &out, enumType value)              \
+    {                                                                      \
+        return GammaRay::StreamOperators::Internal::writeEnum(out, value); \
+    }                                                                      \
+    QDataStream &operator>>(QDataStream &in, enumType &value)              \
+    {                                                                      \
+        return GammaRay::StreamOperators::Internal::readEnum(in, value);   \
+    }
 }
 
 #endif // GAMMARAY_STREAMOPERATORS_H

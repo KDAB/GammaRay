@@ -63,8 +63,8 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QModelIndex index(int row, int column, const QModelIndex & parent) const override;
-    QModelIndex parent(const QModelIndex & child) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
 
 private:
     QVariant argumentAt(const QPaintBufferCommand &cmd, int index) const;

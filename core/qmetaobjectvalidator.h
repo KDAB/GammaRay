@@ -40,8 +40,7 @@ QT_END_NAMESPACE
 namespace GammaRay {
 
 /*! Checks QMetaObject instances for common problems. */
-namespace QMetaObjectValidator
-{
+namespace QMetaObjectValidator {
 
 QMetaObjectValidatorResult::Results checkProperty(const QMetaObject *mo, const QMetaProperty &property);
 QMetaObjectValidatorResult::Results checkMethod(const QMetaObject *mo, const QMetaMethod &method);

@@ -34,22 +34,23 @@
 namespace GammaRay {
 
 /*! Column and role definitions for the QMetaObject tree model. */
-namespace QMetaObjectModel
+namespace QMetaObjectModel {
+enum Role
 {
-    enum Role {
-        MetaObjectRole = UserRole + 1,
-        MetaObjectIssues,
-        MetaObjectInvalid
-    };
+    MetaObjectRole = UserRole + 1,
+    MetaObjectIssues,
+    MetaObjectInvalid
+};
 
-    enum Column {
-        ObjectColumn,
-        ObjectSelfCountColumn,
-        ObjectInclusiveCountColumn,
-        ObjectSelfAliveCountColumn,
-        ObjectInclusiveAliveCountColumn,
-        _Last
-    };
+enum Column
+{
+    ObjectColumn,
+    ObjectSelfCountColumn,
+    ObjectInclusiveCountColumn,
+    ObjectSelfAliveCountColumn,
+    ObjectInclusiveAliveCountColumn,
+    _Last
+};
 }
 
 }

@@ -57,7 +57,8 @@ private:
     int countPerType(int msgType) const;
     quint64 sizePerType(int msgType) const;
 
-    struct Info {
+    struct Info
+    {
         Info();
         int totalCount() const;
         quint64 totalSize() const;

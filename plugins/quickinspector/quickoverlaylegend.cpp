@@ -46,25 +46,28 @@ class LegendModel : public QAbstractListModel
 
     struct Item
     {
-        enum Mode {
+        enum Mode
+        {
             Rect,
             Line,
             Last = Line + 1
         };
 
         explicit Item(const QBrush &brush = QBrush(), const QPen &pen = QPen(),
-             const QByteArray &label = QByteArray())
+                      const QByteArray &label = QByteArray())
             : brush(brush)
             , pen(pen)
             , label(label)
-        { }
+        {
+        }
 
         QBrush brush;
         QPen pen;
         QByteArray label;
         QPixmap pixmap;
 
-        static void createPixmap(Item &item) {
+        static void createPixmap(Item &item)
+        {
             static qreal dpr = 2.0;
             static QSize iconSize(44, 44);
             QPixmap pixmap(iconSize.width() * Last * dpr, iconSize.height() * dpr);
@@ -90,7 +93,7 @@ class LegendModel : public QAbstractListModel
                         painter.drawRect(rect.adjusted(margin, margin, -margin, -margin));
                         break;
                     }
-                    case Line:{
+                    case Line: {
                         painter.drawLine(QLine(QPoint(rect.left() + margin, rect.center().y() - 2),
                                                QPoint(rect.right() - margin, rect.center().y() - 2)));
                         pen.setStyle(Qt::DotLine);
@@ -150,52 +153,44 @@ public:
         m_items.clear();
 
         m_items << Item(
-                       settings.boundingRectBrush,
-                       settings.boundingRectColor,
-                       QT_TR_NOOP("Bounding rect")
-                       );
+            settings.boundingRectBrush,
+            settings.boundingRectColor,
+            QT_TR_NOOP("Bounding rect"));
 
         m_items << Item(
-                       settings.geometryRectBrush,
-                       settings.geometryRectColor,
-                       QT_TR_NOOP("Geometry rect")
-                       );
+            settings.geometryRectBrush,
+            settings.geometryRectColor,
+            QT_TR_NOOP("Geometry rect"));
 
         m_items << Item(
-                       settings.childrenRectBrush,
-                       settings.childrenRectColor,
-                       QT_TR_NOOP("Children rect")
-                       );
+            settings.childrenRectBrush,
+            settings.childrenRectColor,
+            QT_TR_NOOP("Children rect"));
 
         m_items << Item(
-                       QBrush(),
-                       settings.transformOriginColor,
-                       QT_TR_NOOP("Transform origin")
-                       );
+            QBrush(),
+            settings.transformOriginColor,
+            QT_TR_NOOP("Transform origin"));
 
         m_items << Item(
-                       QBrush(),
-                       settings.coordinatesColor,
-                       QT_TR_NOOP("Coordinates (x, y...)")
-                       );
+            QBrush(),
+            settings.coordinatesColor,
+            QT_TR_NOOP("Coordinates (x, y...)"));
 
         m_items << Item(
-                       QBrush(),
-                       settings.marginsColor,
-                       QT_TR_NOOP("Margins/Anchors")
-                       );
+            QBrush(),
+            settings.marginsColor,
+            QT_TR_NOOP("Margins/Anchors"));
 
         m_items << Item(
-                       QBrush(),
-                       settings.paddingColor,
-                       QT_TR_NOOP("Padding")
-                       );
+            QBrush(),
+            settings.paddingColor,
+            QT_TR_NOOP("Padding"));
 
         m_items << Item(
-                       QBrush(),
-                       settings.gridColor,
-                       QT_TR_NOOP("Grid")
-                       );
+            QBrush(),
+            settings.gridColor,
+            QT_TR_NOOP("Grid"));
 
         for (int i = 0; i < m_items.count(); ++i) {
             Item::createPixmap(m_items[i]);

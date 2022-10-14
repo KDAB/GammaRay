@@ -44,7 +44,8 @@ class PropertyTextEditorDialog : public QDialog
 {
     Q_OBJECT
 public:
-    enum Mode {
+    enum Mode
+    {
         NoMode,
         StringMode,
         HexMode
@@ -76,7 +77,7 @@ class PropertyTextEditor : public PropertyExtendedEditor
     Q_OBJECT
 public:
     explicit PropertyTextEditor(QWidget *parent = nullptr);
-    void showEditor(QWidget * parent) override;
+    void showEditor(QWidget *parent) override;
 };
 
 class PropertyByteArrayEditor : public PropertyExtendedEditor
@@ -84,7 +85,7 @@ class PropertyByteArrayEditor : public PropertyExtendedEditor
     Q_OBJECT
 public:
     explicit PropertyByteArrayEditor(QWidget *parent = nullptr);
-    void showEditor(QWidget * parent) override;
+    void showEditor(QWidget *parent) override;
 };
 }
 

@@ -53,7 +53,7 @@ QmlContextPropertyAdaptor::~QmlContextPropertyAdaptor() = default;
 
 int QmlContextPropertyAdaptor::count() const
 {
-    return (int) m_contextPropertyNames.size();
+    return ( int )m_contextPropertyNames.size();
 }
 
 PropertyData QmlContextPropertyAdaptor::propertyData(int index) const

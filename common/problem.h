@@ -42,13 +42,16 @@
 
 namespace GammaRay {
 
-struct Problem {
-    enum Severity {
+struct Problem
+{
+    enum Severity
+    {
         Info = 1,
         Warning,
         Error
     };
-    enum FindingCategory {
+    enum FindingCategory
+    {
         Unknown,
         Live, ///< is added and removed as the problem arises/vanishes by the reporting tool
         Scan, ///< is added in response to a scan request and removed by the problem collector in advance to the next scan
@@ -58,7 +61,8 @@ struct Problem {
     Problem()
         : severity(Error)
         , findingCategory(Unknown)
-    {}
+    {
+    }
 
     Severity severity;
     ObjectId object;

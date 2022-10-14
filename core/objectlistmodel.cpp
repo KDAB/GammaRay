@@ -40,7 +40,7 @@ using namespace GammaRay;
 using namespace std;
 
 ObjectListModel::ObjectListModel(Probe *probe)
-    : ObjectModelBase< QAbstractTableModel >(probe)
+    : ObjectModelBase<QAbstractTableModel>(probe)
 {
     connect(probe, &Probe::objectCreated,
             this, &ObjectListModel::objectAdded);

@@ -65,7 +65,7 @@ void QuickSceneGraphModel::setWindow(QQuickWindow *window)
     m_rootNode = currentRootNode();
     if (m_window && m_rootNode) {
         updateSGTree(false);
-        connect(m_window.data(), &QQuickWindow::afterRendering, this, [this]{ updateSGTree(); });
+        connect(m_window.data(), &QQuickWindow::afterRendering, this, [this] { updateSGTree(); });
     }
 
     endResetModel();
@@ -149,7 +149,7 @@ int QuickSceneGraphModel::rowCount(const QModelIndex &parent) const
 
     auto it = m_parentChildMap.find(parentNode);
     if (it != m_parentChildMap.end()) {
-        return (int) it->second.size();
+        return ( int )it->second.size();
     }
     return 0;
 }
@@ -189,8 +189,11 @@ void QuickSceneGraphModel::clear()
 }
 
 // indexForNode() is expensive, so only use it when really needed
-#define GET_INDEX if (emitSignals && !hasMyIndex) { myIndex = indexForNode(node); hasMyIndex = true; \
-}
+#define GET_INDEX                     \
+    if (emitSignals && !hasMyIndex) { \
+        myIndex = indexForNode(node); \
+        hasMyIndex = true;            \
+    }
 
 void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
 {
@@ -471,7 +474,7 @@ void QuickSceneGraphModel::pruneSubTree(QSGNode *node)
 {
     auto it = m_parentChildMap.find(node);
     if (it != m_parentChildMap.end()) {
-        const QVector<QSGNode*> children = it->second;
+        const QVector<QSGNode *> children = it->second;
 
         foreach (auto child, children)
             pruneSubTree(child);

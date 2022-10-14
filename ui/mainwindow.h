@@ -103,7 +103,7 @@ private:
     QWidget *createErrorPage(const QModelIndex &index);
 
     /// apply custom style for GammaRay's main window
-    void applyStyle(QStyle* style);
+    void applyStyle(QStyle *style);
 
     QScopedPointer<Ui::MainWindow> ui;
     MainWindowUIStateManager m_stateManager;

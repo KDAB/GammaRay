@@ -34,13 +34,15 @@
 namespace GammaRay {
 /** Model roles shared between client and server. */
 namespace QuickItemModelRole {
-enum Roles {
+enum Roles
+{
     ItemFlags = ObjectModel::UserRole,
     ItemEvent,
     ItemActions
 };
 
-enum ItemFlag {
+enum ItemFlag
+{
     None = 0,
     Invisible = 1,
     ZeroSize = 2,

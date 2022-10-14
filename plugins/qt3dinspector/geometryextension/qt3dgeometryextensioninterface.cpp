@@ -50,15 +50,14 @@ static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData
 static QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
 {
     in >> data.name >> data.attributeType >> data.byteOffset >> data.byteStride >> data.count
-       >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
+        >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
     return in;
 }
 QT_END_NAMESPACE
 
 bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData &rhs) const
 {
-    return
-        name == rhs.name
+    return name == rhs.name
         && attributeType == rhs.attributeType
         && byteOffset == rhs.byteOffset
         && byteStride == rhs.byteStride

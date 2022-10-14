@@ -33,7 +33,9 @@
 
 Q_DECLARE_METATYPE(QDateTime *)
 
-struct CustomType {};
+struct CustomType
+{
+};
 Q_DECLARE_METATYPE(CustomType)
 Q_DECLARE_METATYPE(CustomType *)
 

@@ -37,10 +37,8 @@ LocaleTab::LocaleTab(QWidget *parent)
     , ui(new Ui::LocaleTab)
     , m_stateManager(this)
 {
-    QAbstractItemModel *localeModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LocaleModel"));
-    QAbstractItemModel *accessorModel
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"));
+    QAbstractItemModel *localeModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LocaleModel"));
+    QAbstractItemModel *accessorModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LocaleAccessorModel"));
 
     ui->setupUi(this);
     ui->accessorTable->horizontalHeader()->setObjectName("accessorTableHHeader");
@@ -68,8 +66,8 @@ LocaleTab::~LocaleTab() = default;
 void LocaleTab::initSplitterPosition()
 {
     const int accessorHeight = ui->accessorTable->model()->rowCount()
-                               * (ui->accessorTable->rowHeight(0) + 1)                                      // + grid line
-                               + 2 * ui->accessorTable->frameWidth();
+            * (ui->accessorTable->rowHeight(0) + 1) // + grid line
+        + 2 * ui->accessorTable->frameWidth();
     m_stateManager.setDefaultSizes(ui->mainSplitter,
                                    UISizeVector() << accessorHeight << height() - accessorHeight);
     m_stateManager.restoreState();

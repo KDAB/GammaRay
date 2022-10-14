@@ -54,7 +54,8 @@ private:
     void updateAttribute(const Qt3DGeometryAttributeData &attrData);
 
     Qt3DGeometryData m_data;
-    struct ColumnData {
+    struct ColumnData
+    {
         QString name;
         Qt3DRender::QAttribute::VertexBaseType type;
         uint offset;

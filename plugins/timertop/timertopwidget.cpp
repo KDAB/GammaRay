@@ -70,7 +70,7 @@ TimerTopWidget::TimerTopWidget(QWidget *parent)
     connect(ui->timerView, &QWidget::customContextMenuRequested, this, &TimerTopWidget::contextMenu);
     connect(ui->clearTimers, &QAbstractButton::clicked, m_interface, &TimerTopInterface::clearHistory);
 
-    auto * const sortModel = new ClientTimerModel(this);
+    auto *const sortModel = new ClientTimerModel(this);
     sortModel->setSourceModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel")));
     sortModel->setDynamicSortFilter(true);
     ui->timerView->setModel(sortModel);

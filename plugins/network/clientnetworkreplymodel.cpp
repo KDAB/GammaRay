@@ -39,24 +39,30 @@
 
 using namespace GammaRay;
 
-ClientNetworkReplyModel::ClientNetworkReplyModel(QObject* parent)
+ClientNetworkReplyModel::ClientNetworkReplyModel(QObject *parent)
     : QIdentityProxyModel(parent)
 {
 }
 
 ClientNetworkReplyModel::~ClientNetworkReplyModel() = default;
 
-QVariant ClientNetworkReplyModel::data(const QModelIndex& index, int role) const
+QVariant ClientNetworkReplyModel::data(const QModelIndex &index, int role) const
 {
     if (role == Qt::DisplayRole && index.column() == NetworkReplyModelColumn::OpColumn) {
         const auto op = QIdentityProxyModel::data(index, role).toInt();
         switch (op) {
-            case QNetworkAccessManager::HeadOperation: return QStringLiteral("HEAD");
-            case QNetworkAccessManager::GetOperation: return QStringLiteral("GET");
-            case QNetworkAccessManager::PutOperation: return QStringLiteral("PUT");
-            case QNetworkAccessManager::PostOperation: return QStringLiteral("POST");
-            case QNetworkAccessManager::DeleteOperation: return QStringLiteral("DELETE");
-            case QNetworkAccessManager::CustomOperation: return tr("Custom");
+        case QNetworkAccessManager::HeadOperation:
+            return QStringLiteral("HEAD");
+        case QNetworkAccessManager::GetOperation:
+            return QStringLiteral("GET");
+        case QNetworkAccessManager::PutOperation:
+            return QStringLiteral("PUT");
+        case QNetworkAccessManager::PostOperation:
+            return QStringLiteral("POST");
+        case QNetworkAccessManager::DeleteOperation:
+            return QStringLiteral("DELETE");
+        case QNetworkAccessManager::CustomOperation:
+            return tr("Custom");
         }
     }
 
@@ -73,21 +79,20 @@ QVariant ClientNetworkReplyModel::data(const QModelIndex& index, int role) const
     if (role == Qt::DecorationRole && index.parent().isValid()) {
         const auto state = QIdentityProxyModel::data(index.sibling(index.row(), NetworkReplyModelColumn::ObjectColumn), NetworkReplyModelRole::ReplyStateRole).toInt();
         switch (index.column()) {
-            case NetworkReplyModelColumn::ObjectColumn:
-                if (state & NetworkReply::Error) {
-                    return QApplication::style()->standardIcon(QStyle::SP_DialogCancelButton);
-                } else if (state & NetworkReply::Finished) {
-                    return QApplication::style()->standardIcon(QStyle::SP_DialogOkButton);
-                }
-                return QApplication::style()->standardIcon(QStyle::SP_BrowserReload);
-            case NetworkReplyModelColumn::UrlColumn:
-            {
-                const auto url = QIdentityProxyModel::data(index, Qt::DisplayRole).toString();
-                if ((state & NetworkReply::Encrypted) || ((state & NetworkReply::Unencrypted) == 0 && url.startsWith(QLatin1String("https")))) {
-                    return UIResources::themedIcon(QLatin1String("lock.png"));
-                }
-                return UIResources::themedIcon(QLatin1String("lock-open.png"));
+        case NetworkReplyModelColumn::ObjectColumn:
+            if (state & NetworkReply::Error) {
+                return QApplication::style()->standardIcon(QStyle::SP_DialogCancelButton);
+            } else if (state & NetworkReply::Finished) {
+                return QApplication::style()->standardIcon(QStyle::SP_DialogOkButton);
             }
+            return QApplication::style()->standardIcon(QStyle::SP_BrowserReload);
+        case NetworkReplyModelColumn::UrlColumn: {
+            const auto url = QIdentityProxyModel::data(index, Qt::DisplayRole).toString();
+            if ((state & NetworkReply::Encrypted) || ((state & NetworkReply::Unencrypted) == 0 && url.startsWith(QLatin1String("https")))) {
+                return UIResources::themedIcon(QLatin1String("lock.png"));
+            }
+            return UIResources::themedIcon(QLatin1String("lock-open.png"));
+        }
         }
     }
 
@@ -117,11 +122,16 @@ QVariant ClientNetworkReplyModel::headerData(int section, Qt::Orientation orient
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
-            case NetworkReplyModelColumn::ObjectColumn: return tr("Reply");
-            case NetworkReplyModelColumn::OpColumn: return tr("Operation");
-            case NetworkReplyModelColumn::TimeColumn: return tr("Duration");
-            case NetworkReplyModelColumn::SizeColumn: return tr("Size");
-            case NetworkReplyModelColumn::UrlColumn: return tr("URL");
+        case NetworkReplyModelColumn::ObjectColumn:
+            return tr("Reply");
+        case NetworkReplyModelColumn::OpColumn:
+            return tr("Operation");
+        case NetworkReplyModelColumn::TimeColumn:
+            return tr("Duration");
+        case NetworkReplyModelColumn::SizeColumn:
+            return tr("Size");
+        case NetworkReplyModelColumn::UrlColumn:
+            return tr("URL");
         }
     }
 

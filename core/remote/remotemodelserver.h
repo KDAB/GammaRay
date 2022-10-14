@@ -91,7 +91,7 @@ private:
     void sendMoveMessage(Protocol::MessageType type, const Protocol::ModelIndex &sourceParent,
                          int sourceStart, int sourceEnd,
                          const Protocol::ModelIndex &destinationParent, int destinationIndex);
-    QMap< int, QVariant > filterItemData(QMap<int, QVariant> &&itemData) const;
+    QMap<int, QVariant> filterItemData(QMap<int, QVariant> &&itemData) const;
     void sendLayoutChanged(
         const QVector<Protocol::ModelIndex> &parents = QVector<Protocol::ModelIndex>(),
         quint32 hint = 0);

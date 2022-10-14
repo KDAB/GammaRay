@@ -33,11 +33,9 @@
 
 #include <memory>
 
-namespace GammaRay
-{
+namespace GammaRay {
 
-namespace Ui
-{
+namespace Ui {
 class NetworkReplyWidget;
 }
 

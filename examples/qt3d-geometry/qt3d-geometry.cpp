@@ -41,7 +41,7 @@
 #include <QGuiApplication>
 #include <QPropertyAnimation>
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     Qt3DExtras::Qt3DWindow view;
@@ -77,13 +77,13 @@ int main(int argc, char* argv[])
     // Camera
     auto camera = view.camera();
     camera->setObjectName("camera");
-    camera->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
+    camera->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
     camera->setPosition(QVector3D(0, 0, 6.0f));
     camera->setViewCenter(QVector3D(0, 0, 0));
 
     auto camController = new Qt3DExtras::QOrbitCameraController(rootEntity);
-    camController->setLinearSpeed( 50.0f );
-    camController->setLookSpeed( 180.0f );
+    camController->setLinearSpeed(50.0f);
+    camController->setLookSpeed(180.0f);
     camController->setCamera(camera);
 
     view.setRootEntity(rootEntity);

@@ -35,8 +35,8 @@
 
 using namespace GammaRay;
 
-ModelContentDelegate::ModelContentDelegate(QObject* parent) :
-    QStyledItemDelegate(parent)
+ModelContentDelegate::ModelContentDelegate(QObject *parent)
+    : QStyledItemDelegate(parent)
 {
 }
 

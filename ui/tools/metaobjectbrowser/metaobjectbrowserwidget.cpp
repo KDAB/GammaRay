@@ -49,8 +49,7 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
 {
     setObjectName("MetaObjectBrowserWidget");
 
-    auto model
-        = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"));
+    auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowserTreeModel"));
     auto proxy = new MetaObjectTreeClientProxyModel(this);
     proxy->setSourceModel(model);
 
@@ -87,7 +86,7 @@ MetaObjectBrowserWidget::MetaObjectBrowserWidget(QWidget *parent)
 
     connect(m_propertyWidget, &PropertyWidget::tabsUpdated, this, &MetaObjectBrowserWidget::propertyWidgetTabsChanged);
 
-	Endpoint::instance()->invokeObject(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), "rescanMetaTypes");
+    Endpoint::instance()->invokeObject(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), "rescanMetaTypes");
 }
 
 void MetaObjectBrowserWidget::selectionChanged(const QItemSelection &selection)

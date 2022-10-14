@@ -35,8 +35,8 @@ ToolManagerInterface::ToolManagerInterface(QObject *parent)
     : QObject(parent)
 {
     StreamOperators::registerOperators<ToolData>();
-    StreamOperators::registerOperators<QVector<ToolData> >();
-    StreamOperators::registerOperators<QVector<QString> >();
+    StreamOperators::registerOperators<QVector<ToolData>>();
+    StreamOperators::registerOperators<QVector<QString>>();
 }
 
 ToolManagerInterface::~ToolManagerInterface() = default;

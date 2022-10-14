@@ -38,7 +38,7 @@ class PositioningClient : public PositioningInterface
     Q_OBJECT
     Q_INTERFACES(GammaRay::PositioningInterface)
 public:
-    explicit PositioningClient(QObject* parent = nullptr);
+    explicit PositioningClient(QObject *parent = nullptr);
 };
 
 }

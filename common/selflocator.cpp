@@ -42,7 +42,7 @@ using namespace GammaRay;
 static QString findMeInternal()
 {
     Dl_info info;
-    if (dladdr(reinterpret_cast<void*>(&SelfLocator::findMe), &info) == 0)
+    if (dladdr(reinterpret_cast<void *>(&SelfLocator::findMe), &info) == 0)
         return QString();
     if (!info.dli_fname)
         return QString();
@@ -58,9 +58,9 @@ static QString findMeInternal()
     WCHAR path[MAX_PATH];
     HMODULE handle;
     if (GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-        reinterpret_cast<LPWSTR>(&SelfLocator::findMe), &handle)) {
+                           reinterpret_cast<LPWSTR>(&SelfLocator::findMe), &handle)) {
         GetModuleFileNameW(handle, path, sizeof(path));
-        return QDir::fromNativeSeparators(QString::fromUtf16(reinterpret_cast<const ushort*>(path)));
+        return QDir::fromNativeSeparators(QString::fromUtf16(reinterpret_cast<const ushort *>(path)));
     }
     return QString();
 }

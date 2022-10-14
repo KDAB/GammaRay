@@ -32,12 +32,16 @@
 
 using namespace GammaRay;
 
-struct standard_path_t {
+struct standard_path_t
+{
     QStandardPaths::StandardLocation location;
     const char *locationName;
 };
 
-#define P(x) { QStandardPaths:: x, #x }
+#define P(x)                  \
+    {                         \
+        QStandardPaths::x, #x \
+    }
 
 static const standard_path_t standard_paths[] = {
     P(DesktopLocation),

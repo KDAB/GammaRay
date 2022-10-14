@@ -85,9 +85,8 @@ private slots:
     {
         QFETCH(bool, clientIsReplying);
 
-        auto remoteView
-            = ObjectBroker::object<RemoteViewInterface *>(QStringLiteral(
-                                                              "com.kdab.GammaRay.QuickRemoteView"));
+        auto remoteView = ObjectBroker::object<RemoteViewInterface *>(QStringLiteral(
+            "com.kdab.GammaRay.QuickRemoteView"));
         QVERIFY(remoteView);
 
         QVERIFY(showSource(QStringLiteral("qrc:/manual/rotationinvariant.qml")));
@@ -173,8 +172,7 @@ private slots:
         const qreal maxPossibleQmlRequests =
             clientIsReplying ? animationDuration / 1000.0 * 60.0 : 1.0;
         const qreal maxPossibleThrottledRequests =
-            clientIsReplying ?
-                qMin(maxPossibleQmlRequests, animationDuration / throttlerInterval) : 1.0;
+            clientIsReplying ? qMin(maxPossibleQmlRequests, animationDuration / throttlerInterval) : 1.0;
 
         // Testing dynamic scene
         for (int i = 0; i < 3; i++) {

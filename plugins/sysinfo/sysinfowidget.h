@@ -37,7 +37,9 @@
 
 namespace GammaRay {
 
-namespace Ui { class SysInfoWidget; }
+namespace Ui {
+class SysInfoWidget;
+}
 
 class SysInfoWidget : public QWidget
 {

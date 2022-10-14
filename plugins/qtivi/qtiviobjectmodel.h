@@ -57,7 +57,8 @@ class QtIviObjectModel : public QAbstractItemModel
     friend class ::QtIviObjectModelTest;
 
 public:
-    enum Roles {
+    enum Roles
+    {
         ValueConstraintsRole = ObjectModel::UserRole + 1, // transmits the following constraints types
         RangeConstraints, // min / max
         MinRangeConstraints, // min
@@ -67,7 +68,8 @@ public:
         IsIviProperty
     };
 
-    enum Columns {
+    enum Columns
+    {
         NameColumn = 0, // The carrier label or property name
         ValueColumn,
         WritableColumn,
@@ -105,7 +107,8 @@ private:
     QModelIndex indexOfProperty(const QObject *carrier, const QByteArray &property, int column = 0 /*NameColumn*/) const;
 
     typedef std::shared_ptr<QT_PREPEND_NAMESPACE(QIviDefaultPropertyOverrider)> QIviDefaultPropertyOverriderPtr;
-    struct ServiceZone {
+    struct ServiceZone
+    {
         QString m_zone;
         QIviDefaultPropertyOverriderPtr m_service;
     };

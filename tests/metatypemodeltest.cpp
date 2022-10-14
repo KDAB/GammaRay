@@ -71,14 +71,13 @@ private slots:
 
         idx = searchFixedIndex(&model, "QThread*");
         QVERIFY(!idx.isValid());
-        qRegisterMetaType<QThread*>();
+        qRegisterMetaType<QThread *>();
         srcModel.scanMetaTypes();
         idx = searchFixedIndex(&model, "QThread*");
         QVERIFY(idx.isValid());
 
         QCOMPARE(resetSpy.size(), 0);
     }
-
 };
 
 QTEST_MAIN(MetaTypeModelTest)

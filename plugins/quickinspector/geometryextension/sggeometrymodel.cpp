@@ -105,30 +105,22 @@ QVariant SGVertexModel::data(const QModelIndex &index, int role) const
         attrInfo += index.column();
         switch (attrInfo->type) {
         case GL_BYTE:
-            return toStringList<char>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(
-                                                                                             ", "));
+            return toStringList<char>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(", "));
         case GL_UNSIGNED_BYTE:
-            return toStringList<unsigned char>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(
-                                                                                                      ", "));
+            return toStringList<unsigned char>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(", "));
         case GL_UNSIGNED_SHORT:
-            return toStringList<quint16>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(
-                                                                                                ", "));
+            return toStringList<quint16>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(", "));
         case GL_SHORT:
-            return toStringList<qint16>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(
-                                                                                               ", "));
+            return toStringList<qint16>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(", "));
         case GL_INT:
-            return toStringList<int>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(
-                                                                                            ", "));
+            return toStringList<int>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(", "));
         case GL_UNSIGNED_INT:
-            return toStringList<uint>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(
-                                                                                             ", "));
+            return toStringList<uint>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(", "));
         case GL_FLOAT:
-            return toStringList<float>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(
-                                                                                              ", "));
+            return toStringList<float>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(", "));
 #if defined(GL_DOUBLE) && GL_DOUBLE != GL_FLOAT
         case GL_DOUBLE:
-            return toStringList<double>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(
-                                                                                               ", "));
+            return toStringList<double>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(", "));
 #endif
 #ifndef QT_OPENGL_ES_2
         case GL_2_BYTES:
@@ -139,15 +131,12 @@ QVariant SGVertexModel::data(const QModelIndex &index, int role) const
             return "4Bytes";
 #endif
         default:
-            return QStringLiteral("Unknown %1 byte data: 0x").
-                   arg(attrInfo->tupleSize).
-                   append(QByteArray((char *)index.internalPointer(), attrInfo->tupleSize).
-                          toHex());
+            return QStringLiteral("Unknown %1 byte data: 0x").arg(attrInfo->tupleSize).append(QByteArray(( char * )index.internalPointer(), attrInfo->tupleSize).toHex());
         }
     } else if (role == IsCoordinateRole) {
         const QSGGeometry::Attribute *attrInfo = m_geometry->attributes();
         attrInfo += index.column();
-        return (bool)attrInfo->isVertexCoordinate;
+        return ( bool )attrInfo->isVertexCoordinate;
     } else if (role == RenderRole) {
         const QSGGeometry::Attribute *attrInfo = m_geometry->attributes();
         attrInfo += index.column();
@@ -178,7 +167,7 @@ QVariant SGVertexModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QMap< int, QVariant > SGVertexModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> SGVertexModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> map = QAbstractItemModel::itemData(index);
     map.insert(IsCoordinateRole, data(index, IsCoordinateRole));
@@ -190,7 +179,7 @@ QVariant SGVertexModel::headerData(int section, Qt::Orientation orientation, int
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal && m_geometry) {
 #ifndef GAMMARAY_QT6_TODO
-        char const * const *attributeNames = m_node->material()->createShader()->attributeNames();
+        char const *const *attributeNames = m_node->material()->createShader()->attributeNames();
 
         for (int i = 0; i <= section; i++) {
             if (!attributeNames[i])
@@ -312,7 +301,7 @@ void SGAdjacencyModel::setNode(QSGGeometryNode *node)
     endResetModel();
 }
 
-QMap< int, QVariant > SGAdjacencyModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> SGAdjacencyModel::itemData(const QModelIndex &index) const
 {
     QMap<int, QVariant> map = QAbstractItemModel::itemData(index);
     map.insert(DrawingModeRole, data(index, DrawingModeRole));

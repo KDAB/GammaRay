@@ -61,15 +61,14 @@ public:
 
 
 private:
-
     EnumValue m_value;
     EnumDefinition m_def;
 };
 
 }
 
-PropertyEnumEditorModel::PropertyEnumEditorModel(QObject *parent) :
-    QAbstractListModel(parent)
+PropertyEnumEditorModel::PropertyEnumEditorModel(QObject *parent)
+    : QAbstractListModel(parent)
 {
 }
 
@@ -84,7 +83,7 @@ void PropertyEnumEditorModel::setValue(const EnumValue &value)
 {
     beginResetModel();
     m_value = value;
-    auto repo = ObjectBroker::object<EnumRepository*>();
+    auto repo = ObjectBroker::object<EnumRepository *>();
     m_def = repo->definition(value.id());
     endResetModel();
 }
@@ -153,24 +152,24 @@ bool PropertyEnumEditorModel::setData(const QModelIndex &index, const QVariant &
         else if (value.toInt() == Qt::Unchecked)
             m_value.setValue(m_value.value() & ~elem.value());
 
-        emit dataChanged(this->index(0,0), this->index(rowCount() - 1, 0)); // mask flags can change multiple rows
+        emit dataChanged(this->index(0, 0), this->index(rowCount() - 1, 0)); // mask flags can change multiple rows
         return true;
     }
     return QAbstractListModel::setData(index, value, role);
 }
 
-PropertyEnumEditor::PropertyEnumEditor(QWidget* parent) :
-    QComboBox(parent),
-    m_model(new PropertyEnumEditorModel(this))
+PropertyEnumEditor::PropertyEnumEditor(QWidget *parent)
+    : QComboBox(parent)
+    , m_model(new PropertyEnumEditorModel(this))
 {
     setModel(m_model);
-    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(update())); // FIXME: Clazy says 4 overloads for update, but I find not a single one...
+    connect(m_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(update())); // FIXME: Clazy says 4 overloads for update, but I find not a single one...
 
-    auto repo = ObjectBroker::object<EnumRepository*>();
+    auto repo = ObjectBroker::object<EnumRepository *>();
     connect(repo, &EnumRepository::definitionChanged, this, &PropertyEnumEditor::definitionChanged);
 
     setEnabled(false);
-    connect(this, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+    connect(this, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &PropertyEnumEditor::slotCurrentIndexChanged);
 }
 
@@ -181,7 +180,7 @@ EnumValue PropertyEnumEditor::enumValue() const
     return m_model->value();
 }
 
-void PropertyEnumEditor::setEnumValue(const EnumValue& value)
+void PropertyEnumEditor::setEnumValue(const EnumValue &value)
 {
     m_model->setValue(value);
     updateCurrentIndex();
@@ -193,7 +192,7 @@ void PropertyEnumEditor::definitionChanged(int id)
     if (!m_model->value().isValid() || id != m_model->value().id())
         return;
 
-    auto repo = ObjectBroker::object<EnumRepository*>();
+    auto repo = ObjectBroker::object<EnumRepository *>();
     const auto def = repo->definition(id);
     m_model->setDefinition(def);
     updateCurrentIndex();
@@ -240,7 +239,7 @@ void PropertyEnumEditor::slotCurrentIndexChanged(int index)
     m_model->updateValue(def.elements().at(index).value());
 }
 
-void PropertyEnumEditor::paintEvent(QPaintEvent* event)
+void PropertyEnumEditor::paintEvent(QPaintEvent *event)
 {
     const auto def = m_model->definition();
 

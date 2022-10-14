@@ -201,7 +201,7 @@ protected:
     virtual void doSendMessage(const Message &msg);
 
     /*! All current object name/address pairs. */
-    QVector<QPair<Protocol::ObjectAddress, QString> > objectAddresses() const;
+    QVector<QPair<Protocol::ObjectAddress, QString>> objectAddresses() const;
 
     /*! Singleton instance. */
     static Endpoint *s_instance;
@@ -211,7 +211,7 @@ protected:
      *
      * This is invokes the method directly on the local object.
      */
-    static void invokeObjectLocal(QObject *object, const char *method, const QVariantList &args) ;
+    static void invokeObjectLocal(QObject *object, const char *method, const QVariantList &args);
 
     PropertySyncer *m_propertySyncer;
     ///@endcond

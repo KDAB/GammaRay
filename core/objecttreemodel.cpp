@@ -46,7 +46,7 @@ using namespace std;
 using namespace GammaRay;
 
 ObjectTreeModel::ObjectTreeModel(Probe *probe)
-    : ObjectModelBase< QAbstractItemModel >(probe)
+    : ObjectModelBase<QAbstractItemModel>(probe)
 {
     connect(probe, &Probe::objectCreated,
             this, &ObjectTreeModel::objectAdded);
@@ -77,13 +77,11 @@ void ObjectTreeModel::objectAdded(QObject *obj)
     Q_ASSERT(thread() == QThread::currentThread());
     Q_ASSERT(Probe::instance()->isValidObject(obj));
 
-    IF_DEBUG(cout << "tree obj added: " << hex << obj << " p: " << parentObject(obj) << endl;
-             )
+    IF_DEBUG(cout << "tree obj added: " << hex << obj << " p: " << parentObject(obj) << endl;)
     Q_ASSERT(!obj->parent() || Probe::instance()->isValidObject(parentObject(obj)));
 
     if (indexForObject(obj).isValid()) {
-        IF_DEBUG(cout << "tree double obj added: " << hex << obj << endl;
-                 )
+        IF_DEBUG(cout << "tree double obj added: " << hex << obj << endl;)
         return;
     }
 
@@ -95,8 +93,7 @@ void ObjectTreeModel::objectAdded(QObject *obj)
     if (parentObject(obj)) {
         const QModelIndex index = indexForObject(parentObject(obj));
         if (!index.isValid()) {
-            IF_DEBUG(cout << "tree: handle parent first" << endl;
-                     )
+            IF_DEBUG(cout << "tree: handle parent first" << endl;)
             objectAdded(parentObject(obj));
         }
     }
@@ -106,7 +103,7 @@ void ObjectTreeModel::objectAdded(QObject *obj)
     // either we get a proper parent and hence valid index or there is no parent
     Q_ASSERT(index.isValid() || !parentObject(obj));
 
-    QVector<QObject *> &children = m_parentChildMap[ parentObject(obj) ];
+    QVector<QObject *> &children = m_parentChildMap[parentObject(obj)];
     auto it = std::lower_bound(children.begin(), children.end(), obj);
     const int row = std::distance(children.begin(), it);
 
@@ -124,24 +121,23 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
     Q_ASSERT(thread() == QThread::currentThread());
 
     IF_DEBUG(cout
-             << "tree removed: "
-             << hex << obj << " "
-             << hex << obj->parent() << dec << " "
-             << m_parentChildMap.value(obj->parent()).size() << " "
-             << m_parentChildMap.contains(obj) << endl;
-             )
+                 << "tree removed: "
+                 << hex << obj << " "
+                 << hex << obj->parent() << dec << " "
+                 << m_parentChildMap.value(obj->parent()).size() << " "
+                 << m_parentChildMap.contains(obj) << endl;)
 
     if (!m_childParentMap.contains(obj)) {
         Q_ASSERT(!m_parentChildMap.contains(obj));
         return;
     }
 
-    QObject *parentObj = m_childParentMap[ obj ];
+    QObject *parentObj = m_childParentMap[obj];
     const QModelIndex parentIndex = indexForObject(parentObj);
     if (parentObj && !parentIndex.isValid())
         return;
 
-    QVector<QObject *> &siblings = m_parentChildMap[ parentObj ];
+    QVector<QObject *> &siblings = m_parentChildMap[parentObj];
 
     auto it = std::lower_bound(siblings.begin(), siblings.end(), obj);
     if (it == siblings.end() || *it != obj)
@@ -162,8 +158,7 @@ void ObjectTreeModel::objectReparented(QObject *obj)
 {
     // slot, hence should always land in main thread due to auto connection
     Q_ASSERT(thread() == QThread::currentThread());
-    IF_DEBUG(cout << "object reparented: " << hex << obj << dec << endl;
-             )
+    IF_DEBUG(cout << "object reparented: " << hex << obj << dec << endl;)
 
     QMutexLocker objectLock(Probe::objectLock());
     if (!Probe::instance()->isValidObject(obj)) {
@@ -185,20 +180,18 @@ void ObjectTreeModel::objectReparented(QObject *obj)
 
     QVector<QObject *> &oldSiblings = m_parentChildMap[oldParent];
     auto oldIt = std::lower_bound(oldSiblings.begin(),
-                                                          oldSiblings.end(), obj);
+                                  oldSiblings.end(), obj);
     if (oldIt == oldSiblings.end() || *oldIt != obj)
         return;
     const int sourceRow = std::distance(oldSiblings.begin(), oldIt);
 
-    IF_DEBUG(cout << "actually reparenting! " << hex << obj << " old parent: " << oldParent << " new parent: " << parentObject(
-                 obj) << dec << endl;
-             )
+    IF_DEBUG(cout << "actually reparenting! " << hex << obj << " old parent: " << oldParent << " new parent: " << parentObject(obj) << dec << endl;)
     const auto destParent = indexForObject(parentObject(obj));
     Q_ASSERT(destParent.isValid() || !parentObject(obj));
 
     QVector<QObject *> &newSiblings = m_parentChildMap[parentObject(obj)];
     auto newIt = std::lower_bound(newSiblings.begin(),
-                                                          newSiblings.end(), obj);
+                                  newSiblings.end(), obj);
     const int destRow = std::distance(newSiblings.begin(), newIt);
 
     beginMoveRows(sourceParent, sourceRow, sourceRow, destParent, destRow);
@@ -283,7 +276,7 @@ QModelIndex ObjectTreeModel::indexForObject(QObject *object) const
     const QModelIndex parentIndex = indexForObject(parent);
     if (!parentIndex.isValid() && parent)
         return QModelIndex();
-    const QVector<QObject *> &siblings = m_parentChildMap[ parent ];
+    const QVector<QObject *> &siblings = m_parentChildMap[parent];
     auto it = std::lower_bound(siblings.constBegin(), siblings.constEnd(), object);
     if (it == siblings.constEnd() || *it != object)
         return QModelIndex();

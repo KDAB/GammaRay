@@ -1,6 +1,11 @@
 {
     "id": "gammaray_sceneinspector",
     "name": "Graphics Scenes",
-    "types": [ "QGraphicsScene" ],
-    "selectableTypes": [ "QGraphicsObject", "QGraphicsItem" ]
+    "types": [
+        "QGraphicsScene"
+    ],
+    "selectableTypes": [
+        "QGraphicsObject",
+        "QGraphicsItem"
+    ]
 }

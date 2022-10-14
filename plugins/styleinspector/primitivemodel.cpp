@@ -37,14 +37,21 @@
 
 using namespace GammaRay;
 
-struct primitive_element_t {
+struct primitive_element_t
+{
     const char *name;
     QStyle::PrimitiveElement primitive;
     QStyleOption *(*styleOptionFactory)();
 };
 
-#define MAKE_PE(primitive) { #primitive, QStyle:: primitive, &StyleOption::makeStyleOption }
-#define MAKE_PE_X(primitive, factory) { #primitive, QStyle:: primitive, &StyleOption:: factory }
+#define MAKE_PE(primitive)                                           \
+    {                                                                \
+#primitive, QStyle::primitive, &StyleOption::makeStyleOption \
+    }
+#define MAKE_PE_X(primitive, factory)                        \
+    {                                                        \
+#primitive, QStyle::primitive, &StyleOption::factory \
+    }
 
 static const primitive_element_t primititveElements[] = {
     MAKE_PE_X(PE_Frame, makeFrameStyleOption),

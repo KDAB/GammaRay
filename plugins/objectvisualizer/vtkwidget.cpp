@@ -106,14 +106,14 @@ void VtkWidget::setModel(QAbstractItemModel *model)
 {
     m_model = model;
 
-    connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            SLOT(objectRowsInserted(QModelIndex,int,int)));
+    connect(m_model, SIGNAL(rowsInserted(QModelIndex, int, int)),
+            SLOT(objectRowsInserted(QModelIndex, int, int)));
 
-    connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-            SLOT(objectRowsAboutToBeRemoved(QModelIndex,int,int)));
+    connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+            SLOT(objectRowsAboutToBeRemoved(QModelIndex, int, int)));
 
-    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            SLOT(objectDataChanged(QModelIndex,QModelIndex)));
+    connect(m_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+            SLOT(objectDataChanged(QModelIndex, QModelIndex)));
 
     doRepopulate(); // no delay here, otherwise we race against the signals
 }
@@ -121,7 +121,7 @@ void VtkWidget::setModel(QAbstractItemModel *model)
 void VtkWidget::setSelectionModel(QItemSelectionModel *selectionModel)
 {
     m_selectionModel = selectionModel;
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
             SLOT(selectionChanged()));
 }
 
@@ -303,8 +303,7 @@ qulonglong VtkWidget::addObject(const QModelIndex &index)
 
     // add edge to parent
     if (index.parent().isValid()) {
-        const qulonglong parentId
-            = index.parent().data(ObjectVisualizerModel::ObjectId).toULongLong();
+        const qulonglong parentId = index.parent().data(ObjectVisualizerModel::ObjectId).toULongLong();
         if (parentId) {
             Q_ASSERT(m_objectIdMap.contains(parentId));
             const vtkIdType parentType = m_objectIdMap.value(parentId);
@@ -421,8 +420,7 @@ static QModelIndex mapToSource(const QModelIndex &proxyIndex)
     if (proxyIndex.model()->inherits("GammaRay::ObjectVisualizerModel"))
         return proxyIndex;
 
-    const QAbstractProxyModel *proxyModel
-        = qobject_cast<const QAbstractProxyModel *>(proxyIndex.model());
+    const QAbstractProxyModel *proxyModel = qobject_cast<const QAbstractProxyModel *>(proxyIndex.model());
 
     if (proxyModel)
         return mapToSource(proxyModel->mapToSource(proxyIndex));
