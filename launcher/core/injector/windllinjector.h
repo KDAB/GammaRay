@@ -5,7 +5,7 @@
   manipulation tool.
 
   Copyright (C) 2010-2022 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
-  Author: Patrick Spendrin <ps_ml@gmx.de>
+  Author: Patrick Spendrin <patrick.spendrin@kdab.com>
 
   Licensees holding valid commercial KDAB GammaRay licenses may use this file in
   accordance with GammaRay Commercial License Agreement provided with the Software.
