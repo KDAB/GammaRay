@@ -1,12 +1,15 @@
-# qmake -> cmake wrapper for the Qt CI system
-#
-# DO NOT USE THIS UNLESS YOU KNOW WHAT YOU ARE DOING!
-#
-# This only supports a tiny subset of the CMake build system,
-# hardcoded for the needs of integration with the Qt CI system.
-#
-# If you are building GammaRay yourself, please use CMake as
 # described in Install. txt
+# This file is part of GammaRay, the Qt application inspection and manipulation tool.
+#
+# SPDX-FileCopyrightText: 2016-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#
+# SPDX-License-Identifier: GPL-2.0-or-later OR LicenseRef-KDAB-GammaRay
+#
+# Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+# accordance with GammaRay Commercial License Agreement provided with the Software.
+#
+# Contact info@kdab.com if any conditions of this licensing are not clear to you.
+#
 
 requires(linux:!android|win32:!winphone:!winrt|osx)
 requires(!integrity)

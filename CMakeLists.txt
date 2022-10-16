@@ -1,62 +1,14 @@
-# This is the top-level CMakeLists.txt file for the GammaRay project.
 #
-# Pass the following variables to cmake to control the build:
-# (See Install.txt for more information)
+# This file is part of GammaRay, the Qt application inspection and manipulation tool.
 #
-# -DGAMMARAY_BUILD_UI=[true|false]
-#  Build the client and in-process UI.
-#  Default=true (except on QNX and Android)
+# SPDX-FileCopyrightText: 2010-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 #
-# -DGAMMARAY_PROBE_ONLY_BUILD=[true|false]
-#  Build only an additional probe configuration for an already existing launcher.
-#  Default=false
+# SPDX-License-Identifier: GPL-2.0-or-later OR LicenseRef-KDAB-GammaRay
 #
-# -DGAMMARAY_CLIENT_ONLY_BUILD=[true|false]
-#  Build the client part only.
-#  Default=false
+# Licensees holding valid commercial KDAB GammaRay licenses may use this file in
+# accordance with GammaRay Commercial License Agreement provided with the Software.
 #
-# -DGAMMARAY_ENABLE_GPL_ONLY_FEATURES=[true|false]
-#  Enable features only available under GPL license.
-#  Default=false
-#
-# -DGAMMARAY_INSTALL_QT_LAYOUT=[true|false]
-#  Install GammaRay in Qt folder using Qt layout folders:
-#    - plugins will go in <qt_folder>/plugins/gammaray
-#    - all the other libs, including probe library will go in <qt_folder>/lib
-#    - qmake mkspecs file
-#  Default=false
-#  Only use for Android or when you know what you are doing.
-#
-# -DGAMMARAY_BUILD_CLI_INJECTOR=[true|false]
-#  Build the cli injector on Windows
-#  Default=true
-#
-# -DGAMMARAY_MULTI_BUILD=[true|false]
-#  Build multiple applicable probe configurations.
-#  Default=true
-#
-# -DGAMMARAY_STATIC_PROBE=[true|false]
-#  Build the probe as static library for compile-time injection
-#  Default=false
-#
-# -DGAMMARAY_BUILD_DOCS=[true|false]
-#  Build the API documentation and User Manual.
-#  Default=true (except when building the probe only)
-#
-# -DGAMMARAY_ENFORCE_QT_ASSERTS=[true|false]
-#  Force QT_ASSERT in all builds.
-#  Default=false
-#
-# -DENABLE_GOLD_LINKER=[true|false]
-#  Force usage of GNU gold linker on Linux
-#  Default=false
-#
-# -DGAMMARAY_USE_PCH=[true|false]
-# Use precompiled headers
-#
-# To build the man page from POD, run 'make man' after CMake (assumes perl is available)
-# To install the resulting man page, run 'make install'
-# The man page is not available on Windows.
+# Contact info@kdab.com if any conditions of this licensing are not clear to you.
 #
 
 cmake_minimum_required(VERSION 3.16.0)
