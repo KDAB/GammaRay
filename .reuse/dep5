@@ -4,7 +4,7 @@ Upstream-Contact: <info@kdab.com>
 Source: https://www.github.com/KDAB/GammaRay
 
 #misc source code
-Files: *.ui *.qrc *.json CMakePresets.json GammaRay.desktop app/Info.plist.in client/Info.plist.in launcher/app/Info.plist.in launcher/cli/Info.plist.in com.kdab.GammaRay.metainfo.xml resources/gammaray/authors docs/collection/about.txt *.frag *.geom *.vert *.ts *.qm *.map
+Files: *.ui *.qrc *.json CMakePresets.json GammaRay.desktop app/Info.plist.in client/Info.plist.in launcher/app/Info.plist.in launcher/cli/Info.plist.in com.kdab.GammaRay.metainfo.xml resources/gammaray/authors docs/collection/about.txt *.frag *.geom *.vert *.ts *.qm *.map cmake/gammaray.rc.cmake
 Copyright: 2010-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 License: GPL-2.0-or-later OR LicenseRef-KDAB-GammaRay
 
@@ -76,4 +76,3 @@ License: LGPL-2.0-or-later
 Files: 3rdparty/kuserfeedback/*
 Copyright: 2017 Volker Krause <vkrause@kde.org>
 License: MIT
-
