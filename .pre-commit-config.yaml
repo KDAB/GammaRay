@@ -13,11 +13,11 @@ repos:
     args: [--allow-multiple-documents]
   - id: check-json
 - repo: https://github.com/pre-commit/mirrors-clang-format
-  rev: v14.0.0
+  rev: v14.0.6
   hooks:
   - id: clang-format
 - repo: https://github.com/PyCQA/pylint
-  rev: v2.15.2
+  rev: v2.15.4
   hooks:
   - id: pylint
     exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
@@ -27,7 +27,7 @@ repos:
   - id: autopep8
     exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.2.1
+  rev: v2.2.2
   hooks:
   - id: codespell
 - repo: https://github.com/cheshirekow/cmake-format-precommit
