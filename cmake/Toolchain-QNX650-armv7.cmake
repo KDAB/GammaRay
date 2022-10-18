@@ -1,12 +1,11 @@
 #
-# (C) Copyright 2009 Johns Hopkins University (JHU), All Rights
-# Reserved.
-#
+# SPDX-FileCopyrightText: 2009 Johns Hopkins University (JHU), All Rights Reserved.
+# SPDX-License-Identifier: LicenseRef-CISST
+
 # --- begin cisst license - do not edit ---
 #
-# This software is provided "as is" under an open source license, with
-# no warranty.  The complete license can be found in license.txt and
-# http://www.cisst.org/cisst/license.txt.
+# This software is provided "as is" under an open source license, with no warranty.
+# The complete license can be found in LICENSES/LicenseRef-CISST.txt.
 #
 # --- end cisst license ---
 
