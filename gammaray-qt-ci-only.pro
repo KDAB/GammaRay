@@ -1,4 +1,3 @@
-# described in Install. txt
 # This file is part of GammaRay, the Qt application inspection and manipulation tool.
 #
 # SPDX-FileCopyrightText: 2016-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
@@ -18,7 +17,7 @@ requires(!cross_compile)
 win32: requires(!contains(QMAKE_HOST.version_string,  $$re_escape(8.1)))
 
 message("QMake wrapper for the GammaRay build system is only supported for the Qt CI.")
-message("If you are seeing this and you are not the Qt CI, please refer to Install.txt!")
+message("If you are seeing this and you are not the Qt CI, please refer to INSTALL.md!")
 
 # additional indirection is needed as the above requires conditions don't work correctly
 # in aux templates, on some platforms

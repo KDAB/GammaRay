@@ -69,7 +69,7 @@
         \li a C++11 compatible compiler
     \endlist
 
-    GammaRay is build using the normal CMake build process, you can find more information in the Install.txt file
+    GammaRay is built using the normal CMake build process, you can find more information in the INSTALL.md file
     in the GammaRay source tree.
 
 
