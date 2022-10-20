@@ -783,21 +783,16 @@ add_custom_target(
     COMMENT "Target for IDE support to make the IDE aware of other files"
 )
 
-set(LICENSE_FILE "LICENSE.GPL.txt")
+set(LICENSE_FILE "LICENSE.txt")
 set(README_FILE "README.md")
-list(
-    APPEND
-    DOCS
-    ${LICENSE_FILE}
-    ${README_FILE}
-    "LICENSE.txt"
-)
+list(APPEND DOCS ${LICENSE_FILE} ${README_FILE})
 if(NOT APPLE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
     if(UNIX AND GAMMARAY_BUILD_UI)
         install(FILES GammaRay.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
         install(FILES com.kdab.GammaRay.metainfo.xml DESTINATION ${APPDATA_INSTALL_DIR})
     endif()
     install(FILES ${DOCS} DESTINATION ${DOC_INSTALL_DIR})
+    install(DIRECTORY LICENSES DESTINATION ${DOC_INSTALL_DIR})
 endif()
 
 #

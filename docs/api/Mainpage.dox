@@ -89,9 +89,12 @@ The key elements for embedding the client UI are:
 
 The GammaRay Software is (C) 2010-2022 Klarälvdalens Datakonsult AB (KDAB),
 and is available under the terms of the GPL version 2 (or any later version,
-at your option).  See LICENSE.GPL.txt for license details.
+at your option).
+See <a href="LICENSES/GPL-2.0-or-later.txt">GPL-2.0-or-later.txt</a> for
+license details.
 
-Commercial licensing terms are available in the included file LICENSE.txt.
+Commercial licensing terms are available in the included file
+<a href="LICENSES/LicenseRef-KDAB-GammaRay.txt">LicenseRef-KDAB-GammaRay.txt</a>.
 
 For terms of redistribution, refer to the corresponding license agreement.
 

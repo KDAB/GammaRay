@@ -79,9 +79,11 @@ License
 =======
 The GammaRay Software is (C) 2010-2022 Klarälvdalens Datakonsult AB (KDAB),
 and is available under the terms of the GPL version 2 (or any later version,
-at your option).  See [LICENSE.GPL.txt](LICENSE.GPL.txt) for license details.
+at your option).  See [LGPL-2.0-or-later.txt](LICENSES/LGPL-2.0-or-later.txt)
+for license details.
 
-Commercial licensing terms are available in the included file [LICENSE.txt](LICENSE.txt).
+Commercial licensing terms are available in the included file
+[LicenseRef-KDAB-GammaRay.txt](LICENSES/LicenseRef-KDAB-GammaRay.txt).
 
 For terms of redistribution, refer to the corresponding license agreement.
 

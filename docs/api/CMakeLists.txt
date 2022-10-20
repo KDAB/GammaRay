@@ -27,6 +27,15 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmake ${CMAKE_CURRENT_BINARY
 add_custom_command(
     OUTPUT ${DOXYGEN_OUTPUT_DIR}/qch/gammaray-api.qch
     COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    #copy some files by-hand that are referred to by the markdown README
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${DOXYGEN_OUTPUT_DIR}/html/LICENSES
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/LICENSES/GPL-2.0-or-later.txt
+            ${DOXYGEN_OUTPUT_DIR}/html/LICENSES
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/LICENSES/LicenseRef-KDAB-GammaRay.txt
+            ${DOXYGEN_OUTPUT_DIR}/html/LICENSES
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${DOXYGEN_OUTPUT_DIR}/html/docs
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/docs/GammaRay-CopyrightAssignmentForm.pdf
+            ${DOXYGEN_OUTPUT_DIR}/html/docs
     DEPENDS ${_all_hdrs} ${_dox_deps} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     COMMENT "Generate the .qch file"

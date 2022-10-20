@@ -1,101 +1,14 @@
-GammaRay END-USER LICENSE AGREEMENT (EULA)
-FOR COMMERCIAL VERSIONS
-November 1, 2019
+License
+=======
+The GammaRay Software is (C) 2010-2022 Klarälvdalens Datakonsult AB (KDAB),
+and is available under the terms of the GPL version 2 (or any later version,
+at your option).
 
-IMPORTANT-READ CAREFULLY: This Klarälvdalens Datakonsult AB End-User
-License Agreement ("EULA") is a legal agreement between you (either an
-individual or a legal entity) and Klarälvdalens Datakonsult AB
-("KDAB") for the Klarälvdalens Datakonsult AB software product
-“GammaRay” ("Licensed Product").
+Commercial licensing terms are available in the included file
+LICENSES/LicenseRef-KDAB-GammaRay.txt.
 
-By installing, copying, or downloading the Licensed Product, you agree
-to be bound by the terms of this EULA. If you do not agree to the
-terms of this EULA, do not install, copy, or download the Licensed
-Product; you may, however, return it to your place of purchase for a
-full refund.
+Note that this software relies on 3rd party MIT-licensed projects
+and various other freely distributable files some of which are
+unsed only for testing and not part of the application itself.
 
-Upon your acceptance of the terms and conditions of this EULA, KDAB
-grants you the right to use the Licensed Product as provided below.
-
-GRANT OF RIGHTS
-
-Under the condition of Your payment of all license fees KDAB grants to
-you a nonexclusive, nontransferable, royalty-bearing, perpetual and
-worldwide license to copy the Licensed Product for the purpose of designing,
-developing, and testing your software product(s) ("Applications").
-
-If you are an individual, you may install copies of the Licensed
-Product on all of your computers provided that you are the only
-individual using the Licensed Product.
-
-If you are a legal entity, you may provide as many staff members
-("Designated User") with copies of the Licensed Product as you have
-licensed. Any Designated User is permitted to install copies of the
-Licensed Product on all of the Designated User’s computers provided
-that the respective Designated User is the only individual using the
-Licensed Product. If you are a legal entity, You may at any time
-designate another individual to replace the current Designated User,
-so long as there is no more than one Designated User per license at
-any given time.
-
-To the extent that the Licensed Product includes software code
-("Included Code") in your Applications for the intended purpose of
-designing, developing, and testing your Applications you are permitted
-to create a derivative or combined work consisting of your
-Applications and the Included Code and to use the derivative or
-combined work internally for the intended purpose. However, KDAB does
-not grant the right to redistribute the combination of your
-Application with the Included Code to third parties without prior
-written consent of KDAB.
-
-Nothing in this License is intended to reduce, limit, or restrict your
-rights arising from limitations or exceptions that are provided for in
-connection with the copyright protection under copyright law or other
-applicable laws.
-
-WARRANTY DISCLAIMER
-
-THE LICENSED PRODUCT IS LICENSED TO YOU "AS IS".  TO THE MAXIMUM
-EXTENT PERMITTED BY APPLICABLE LAW, KDAB ON BEHALF OF ITSELF AND ITS
-SUPPLIERS, DISCLAIMS ALL WARRANTIES AND CONDITIONS, EITHER EXPRESS OR
-IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND
-NON-INFRINGEMENT WITH REGARD TO THE LICENSED PRODUCT.  THIS WARRANTY
-DISCLAIMER NOTWITHSTANDING, YOU MAY HAVE SPECIFIC LEGAL RIGHTS WHICH
-MAY VARY FROM STATE/JURISDICTION TO STATE/JURISDICTION.
-
-LIMITATION OF LIABILITY
-
-IF, KDAB'S WARRANTY DISCLAIMER NOTWITHSTANDING, KDAB IS HELD LIABLE TO
-YOU, WHETHER IN CONTRACT, TORT OR ANY OTHER LEGAL THEORY, BASED ON THE
-LICENSED PRODUCT, KDAB'S ENTIRE LIABILITY TO YOU AND YOUR EXCLUSIVE
-REMEDY SHALL BE, AT KDAB'S OPTION, EITHER (A) RETURN OF THE PRICE YOU
-PAID FOR THE LICENSED PRODUCT, OR (B) REPAIR OR REPLACEMENT OF THE
-LICENSED PRODUCT, PROVIDED YOU RETURN TO KDAB ALL COPIES OF THE
-LICENSED PRODUCT AS ORIGINALLY DELIVERED TO YOU.  KDAB SHALL NOT UNDER
-ANY CIRCUMSTANCES BE LIABLE TO YOU BASED ON FAILURE OF THE LICENSED
-PRODUCT IF THE FAILURE RESULTED FROM ACCIDENT, ABUSE OR
-MISAPPLICATION, NOR SHALL KDAB UNDER ANY CIRCUMSTANCES BE LIABLE FOR
-SPECIAL DAMAGES, PUNITIVE OR EXEMPLARY DAMAGES, DAMAGES FOR LOSS OF
-PROFITS OR INTERRUPTION OF BUSINESS OR FOR LOSS OR CORRUPTION OF DATA.
-
-ANY AWARD OF DAMAGES FROM KDAB TO YOU SHALL NOT EXCEED THE TOTAL
-AMOUNT YOU HAVE PAID TO KDAB IN CONNECTION WITH THIS EULA.
-
-SUPPORT AND UPDATES
-
-You will receive software developer support and access to Updates to
-the Licensed Product in accordance with KDAB support policies and
-procedures as agreed upon in your support agreement with KDAB.
-
-GENERAL PROVISIONS
-
-This EULA may only be modified in writing signed by you and an
-authorized officer of KDAB. All terms of any purchase order or other
-ordering document shall be superseded by this EULA.  If any provision
-of the EULA is found void or unenforceable, the remainder will remain
-valid and enforceable according to its terms.  If any remedy provided
-is determined to have failed for its essential purpose, all limitations
-of liability and exclusions of damages set forth in this EULA shall
-remain in effect.  This EULA shall be construed, interpreted and governed
-by the laws of Sweden, the venue to be Sunne Tingsratt.
+See the full license texts in the LICENSES folder.
