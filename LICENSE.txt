@@ -9,6 +9,6 @@ LICENSES/LicenseRef-KDAB-GammaRay.txt.
 
 Note that this software relies on 3rd party MIT-licensed projects
 and various other freely distributable files some of which are
-unsed only for testing and not part of the application itself.
+unused only for testing and not part of the application itself.
 
 See the full license texts in the LICENSES folder.
