@@ -93,20 +93,7 @@ if(GAMMARAY_BUILD_UI)
         widgetclientmodel.cpp
         widgetremoteview.cpp
         waextension/widgetattributetab.cpp
-        assets.qrc
     )
-
-    if(GAMMARAY_WITH_WIDGET3D)
-        add_subdirectory(assets)
-
-        set(gammaray_widgetinspector_ui_plugin_srcs
-            ${gammaray_widgetinspector_ui_plugin_srcs}
-            widget3dview.cpp
-            widget3dwindowmodel.cpp
-            widget3dsubtreemodel.cpp
-            widget3dimagetextureimage.cpp
-        )
-    endif()
 
     gammaray_add_plugin(
         gammaray_widgetinspector_ui_plugin
@@ -117,16 +104,4 @@ if(GAMMARAY_BUILD_UI)
     )
 
     target_link_libraries(gammaray_widgetinspector_ui_plugin gammaray_ui)
-
-    if(GAMMARAY_WITH_WIDGET3D)
-        target_link_libraries(
-            gammaray_widgetinspector_ui_plugin
-            Qt::Qml
-            Qt::Quick
-            Qt::3DRender
-            Qt::3DLogic
-            Qt::3DInput
-            Qt::3DQuick
-        )
-    endif()
 endif()

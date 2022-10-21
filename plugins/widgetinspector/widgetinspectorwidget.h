@@ -46,7 +46,6 @@ public:
     Q_INVOKABLE void restoreTargetState(QSettings *settings);
 
 private slots:
-    void onTabChanged(int index);
     void widgetSelected(const QItemSelection &selection);
     void widgetTreeContextMenu(QPoint pos);
 

@@ -9,8 +9,6 @@
 #
 # Contact info@kdab.com if any conditions of this licensing are not clear to you.
 #
-add_subdirectory(geometryextension/es2)
-add_subdirectory(geometryextension/gl3)
 
 # shared stuff
 set(gammaray_3dinspector_shared_srcs qt3dinspectorinterface.cpp geometryextension/qt3dgeometryextensioninterface.cpp)

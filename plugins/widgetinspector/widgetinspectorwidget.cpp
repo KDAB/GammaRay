@@ -24,12 +24,6 @@
 #include "widgetmodelroles.h"
 #include "widgetremoteview.h"
 
-#ifdef GAMMARAY_WITH_WIDGET3D
-#include "widget3dview.h"
-#include <QQmlEngine>
-#include <QQmlComponent>
-#endif
-
 #include "common/objectbroker.h"
 #include "common/objectmodel.h"
 #include "common/remotemodelroles.h"
@@ -147,26 +141,9 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
                                                                     << "50%");
     m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%"
                                                                        << "50%");
-
-#ifdef GAMMARAY_WITH_WIDGET3D
-    // Check if QQC are available, there's no build-time check for this
-    QQmlEngine engine;
-    QQmlComponent comp(&engine);
-    comp.setData("import QtQuick.Controls 1.2; CheckBox {}", QUrl());
-    QScopedPointer<QObject> obj(comp.create());
-    if (!obj.isNull()) {
-        QWidget *widget3d = new QWidget(this);
-        ui->tabWidget->addTab(widget3d, tr("3D View"));
-        widget3d->setLayout(new QHBoxLayout());
-    } else {
-        qWarning() << "Disabling 3D Widget inspector: missing QtQuick Controls";
-    }
-#else
     ui->tabWidget->findChild<QTabBar *>()->hide();
-#endif
 
     connect(ui->widgetPropertyWidget, &PropertyWidget::tabsUpdated, this, &WidgetInspectorWidget::propertyWidgetTabsChanged);
-    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &WidgetInspectorWidget::onTabChanged);
 }
 
 WidgetInspectorWidget::~WidgetInspectorWidget() = default;
@@ -179,19 +156,6 @@ void WidgetInspectorWidget::saveTargetState(QSettings *settings) const
 void WidgetInspectorWidget::restoreTargetState(QSettings *settings)
 {
     m_remoteView->restoreState(settings->value("remoteViewState").toByteArray());
-}
-
-// NOLINTNEXTLINE(readability-convert-member-functions-to-static)
-void WidgetInspectorWidget::onTabChanged(int index)
-{
-#ifdef GAMMARAY_WITH_WIDGET3D
-    if (index == 1 && m_3dView == nullptr) {
-        m_3dView = new Widget3DView(this);
-        ui->tabWidget->widget(1)->layout()->addWidget(m_3dView);
-    }
-#else
-    Q_UNUSED(index)
-#endif
 }
 
 void WidgetInspectorWidget::updateActions()
