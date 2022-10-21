@@ -7,14 +7,14 @@ EXTRA kdabcopyright-reuse,kdabcommercial-reuse,fosslicense-reuse
 #EXTRA defines,null
 
 #exclude checks now being done by clazy or clang-tools
-EXCLUDE strings,explicit,normalize,passbyvalue,operators,nullstrcompare,nullstrassign,doublequote_chars,qobject,sigsandslots,staticobjects
+EXCLUDE strings,explicit,normalize,passbyvalue,operators,nullstrcompare,nullstrassign,doublequote_chars,qobject,sigsandslots,staticobjects,inline,postfixop
 #exclude more checks
 EXCLUDE qminmax,captruefalse
-EXCLUDE style
 #exclude spelling as codespell is a much, much better tool
 EXCLUDE spelling
 
 #coding style settings
+EXCLUDE style
 STYLE_CPPSTYLE qt
 STYLE_OFFSET 4
 STYLE_LINEMAX 0
@@ -25,7 +25,7 @@ SKIP /plugins/.*/.*\.desktop$
 
 #no need to check 3rdparty stuff
 SKIP /3rdparty/
-#nor Nokia's stuff
+#nor Digia's stuff
 SKIP /processlist_unix.cpp|/processlist_win.cpp|/processlist.h|/compat/qasconst.h
 #if you have a build subdir, skip it
 SKIP /build-
@@ -35,6 +35,7 @@ SKIP /GammaRayConfig\.cmake\.in
 SKIP .*\.qhcp\.cmake
 SKIP Doxyfile.cmake
 SKIP \.cmake-format\.py
+SKIP cmake/gammaray.rc.cmake
 #skip the borrowed code in the cmake subdir
 SKIP /cmake/ECM/|/cmake/KDAB/
 #skip the borrowed code in the cmake subdir
