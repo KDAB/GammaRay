@@ -14,7 +14,7 @@ Copyright: 2010-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@k
 License: GPL-2.0-or-later OR LicenseRef-KDAB-GammaRay
 
 #misc config files
-Files: 3rdparty/*/qt_attribution.json .clang-format .clang-tidy .clangd .clazy .cmake-format.py .codespellrc .emacs-dirvars .git-blame-ignore-revs .gitattributes .gitignore .kateconfig .krazy .pep8 .pre-commit-config.yaml .pylintrc .qmake.conf .tag .travis.yml appveyor.ini appveyor.yml distro/* format.config.uncrustify.4_spaces *.qdocconf format_sources docs/collection/gammaray.qhcp.cmake examples/yocto/gammaray_git.bb probe/gammaray_probe-android-dependencies.xml docs/api/Doxyfile.cmake
+Files: 3rdparty/*/qt_attribution.json .clang-format .clang-tidy .clangd .clazy .cmake-format.py .codespellrc .emacs-dirvars .git-blame-ignore-revs .gitattributes .gitignore .kateconfig .krazy .mdlrc .mdlrc.rb .pep8 .pre-commit-config.yaml .pylintrc .qmake.conf .tag .travis.yml appveyor.ini appveyor.yml distro/* format.config.uncrustify.4_spaces *.qdocconf format_sources docs/collection/gammaray.qhcp.cmake examples/yocto/gammaray_git.bb probe/gammaray_probe-android-dependencies.xml docs/api/Doxyfile.cmake
 Copyright: 2010-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 License: BSD-3-Clause
 

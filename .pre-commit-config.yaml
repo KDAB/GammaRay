@@ -37,6 +37,13 @@ repos:
     exclude: (cmake/Toolchain-QNX|.py.cmake|.h.cmake|.rc.cmake|Doxyfile.cmake|gammaray.qhcp.cmake)
   - id: cmake-format
     exclude: (cmake/Toolchain-QNX|.py.cmake|.h.cmake|.rc.cmake|Doxyfile.cmake|gammaray.qhcp.cmake)
+- repo: https://github.com/markdownlint/markdownlint
+  rev: v0.11.0
+  hooks:
+  - id: markdownlint
+    entry: mdl
+    language: ruby
+    files: \.(md|mdown|markdown)$
 - repo: https://github.com/fsfe/reuse-tool
   rev: v1.0.0
   hooks:
