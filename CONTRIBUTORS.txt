@@ -4,3 +4,4 @@ Gábor Angyal <angyalgabor@t-online.hu>
 Jan Kundrát <jkt@flaska.net>
 Peter Kuemmel <syntheticpp@gmx.net>
 CESNET, z.s.p.o. <info@cesnet.cz>
+Albert Astals Cid <aacid@kde.org>
