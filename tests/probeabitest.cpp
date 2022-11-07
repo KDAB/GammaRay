@@ -167,7 +167,7 @@ private slots:
         QTest::addColumn<QString>("id", nullptr);
         QTest::addColumn<QString>("display", nullptr);
 
-        QTest::newRow("invalid") << QString() << QString();
+        QTest::newRow("invalid") << QString() << "Unknown ABI";
 #ifndef Q_OS_WIN
 #if defined(Q_OS_MAC)
         QTest::newRow("mac") << "qt5_2-x86_64_debug"
