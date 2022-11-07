@@ -3,7 +3,7 @@
 Please see the comments at the top of CMakeLists.txt for the available configuration options
 you can pass to CMake.
 
-## Building and requirements
+## Requirements
 
 To build GammaRay you will need *at least*:
 
@@ -11,8 +11,21 @@ To build GammaRay you will need *at least*:
 - a C++ compiler with C++11 support
 - Qt 5.5 or higher, or Qt 6
 
+Please be aware that GammaRay heavily relies on Qt private headers which can
+be changed at will by The Qt Company between releases and may need to be
+specially installed from your distribution. Before running CMake, make sure
+your Qt installation provides private Qt headers.
+
+i.e. when using distro provided Qt make sure you have (or the equivalent for Qt6):
+
+- Redhat,Fedora: qt5-qtbase-private-devel
+- Debian,Ubuntu: qtbase5-private-dev qtdeclarative5-private-dev
+- SUSE: libqt5-qtbase-private-headers-devel libqt5-qtdeclarative-private-headers-devel
+
 Optional FOSS packages (eg. KDSME, etc) provide extra functionality.
 See the "Optional Dependencies" section below for more details.
+
+## Building
 
 Open a terminal capable of building Qt applications.
 Make sure you have cmake, ninja, compiler, Qt, etc in PATH.
