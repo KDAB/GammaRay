@@ -24,7 +24,6 @@ add_subdirectory(timertop)
 
 add_subdirectory(mimetypes)
 add_subdirectory(network)
-add_subdirectory(objectvisualizer)
 add_subdirectory(qtivi)
 add_subdirectory(sysinfo)
 add_subdirectory(translatorinspector)

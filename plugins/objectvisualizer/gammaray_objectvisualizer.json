@@ -1,8 +1,0 @@
-{
-    "id": "gammaray_objectvisualizer",
-    "name": "Object Visualization",
-    "name[de]": "Objektvisualisierung",
-    "types": [
-        "QObject"
-    ]
-}
