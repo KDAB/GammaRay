@@ -455,7 +455,6 @@ find_package(
         3DLogic
         3DRender
         3DQuick
-        AndroidExtras
         Bluetooth
         Concurrent
         Designer
@@ -473,6 +472,9 @@ find_package(
         Widgets
         WaylandCompositor
 )
+if(ANDROID)
+    find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS AndroidExtras)
+endif()
 
 # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
 # so we can retrieve those packages even when installed into a different prefix
