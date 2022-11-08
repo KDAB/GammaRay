@@ -31,7 +31,7 @@ Simply add::
    include(ECMEnableSanitizers)
 
 to your ``CMakeLists.txt``. Note that this module is included in
-KDECompilerSettings, so projects using that module do not need to also
+:kde-module:`KDECompilerSettings`, so projects using that module do not need to also
 include this one.
 
 The sanitizers are not enabled by default. Instead, you must set

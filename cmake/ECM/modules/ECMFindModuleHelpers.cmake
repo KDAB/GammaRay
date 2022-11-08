@@ -6,9 +6,9 @@
 ECMFindModuleHelpers
 --------------------
 
-Helper macros for find modules: ecm_find_package_version_check(),
-ecm_find_package_parse_components() and
-ecm_find_package_handle_library_components().
+Helper macros for find modules: ``ecm_find_package_version_check()``,
+``ecm_find_package_parse_components()`` and
+``ecm_find_package_handle_library_components()``.
 
 ::
 
@@ -26,14 +26,14 @@ is older than that required by extra-cmake-modules.
 
 This macro will populate <variable> with a list of components found in
 <name>_FIND_COMPONENTS, after checking that all those components are in the
-list of KNOWN_COMPONENTS; if there are any unknown components, it will print
+list of ``KNOWN_COMPONENTS``; if there are any unknown components, it will print
 an error or warning (depending on the value of <name>_FIND_REQUIRED) and call
-return().
+``return()``.
 
 The order of components in <variable> is guaranteed to match the order they
-are listed in the KNOWN_COMPONENTS argument.
+are listed in the ``KNOWN_COMPONENTS`` argument.
 
-If SKIP_DEPENDENCY_HANDLING is not set, for each component the variable
+If ``SKIP_DEPENDENCY_HANDLING`` is not set, for each component the variable
 <name>_<component>_component_deps will be checked for dependent components.
 If <component> is listed in <name>_FIND_COMPONENTS, then all its (transitive)
 dependencies will also be added to <variable>.
@@ -53,13 +53,13 @@ and <name>_<component>_header variable should contain the name of a header
 file associated with it (whatever relative path is normally passed to
 '#include'). <name>_<component>_header_subdir variable can be used to specify
 which subdirectory of the include path the headers will be found in.
-ecm_find_package_components() will then search for the library
+``ecm_find_package_components()`` will then search for the library
 and include directory (creating appropriate cache variables) and create an
 imported library target named <name>::<component>.
 
 Additional variables can be used to provide additional information:
 
-If SKIP_PKG_CONFIG, the <name>_<component>_pkg_config variable is set, and
+If ``SKIP_PKG_CONFIG``, the <name>_<component>_pkg_config variable is set, and
 pkg-config is found, the pkg-config module given by
 <name>_<component>_pkg_config will be searched for and used to help locate the
 library and header file.  It will also be used to set
@@ -69,13 +69,13 @@ Note that if version information is found via pkg-config,
 <name>_<component>_FIND_VERSION can be set to require a particular version
 for each component.
 
-If SKIP_DEPENDENCY_HANDLING is not set, the INTERFACE_LINK_LIBRARIES property
+If ``SKIP_DEPENDENCY_HANDLING`` is not set, the ``INTERFACE_LINK_LIBRARIES`` property
 of the imported target for <component> will be set to contain the imported
 targets for the components listed in <name>_<component>_component_deps.
-<component>_FOUND will also be set to false if any of the components in
+<component>_FOUND will also be set to ``FALSE`` if any of the components in
 <name>_<component>_component_deps are not found.  This requires the components
 in <name>_<component>_component_deps to be listed before <component> in the
-COMPONENTS argument.
+``COMPONENTS`` argument.
 
 The following variables will be set:
 
@@ -93,11 +93,12 @@ The following variables will be set:
   they are passed to the macro), although if it is already set, it will not
   be altered
 
-Note that these variables are never cleared, so if
-ecm_find_package_handle_library_components() is called multiple times with
-different components (typically because of multiple find_package() calls) then
-``<name>_TARGETS``, for example, will contain all the targets found in any
-call (although no duplicates).
+.. note::
+  These variables are never cleared, so if
+  ``ecm_find_package_handle_library_components()`` is called multiple times with
+  different components (typically because of multiple ``find_package()`` calls) then
+  ``<name>_TARGETS``, for example, will contain all the targets found in any
+  call (although no duplicates).
 
 Since pre-1.0.0.
 #]=======================================================================]
