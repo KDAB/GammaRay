@@ -11,6 +11,72 @@
 # Contact info@kdab.com if any conditions of this licensing are not clear to you.
 #
 
+# This is the top-level CMakeLists.txt file for the GammaRay project.
+#
+# Pass the following variables to cmake to control the build:
+# (See INSTALL.md for more information)
+#
+# -DGAMMARAY_QT6_BUILD=[true|false]
+#  Build against Qt6 rather than Qt5
+#  Default=false (Qt5 will be used even if Qt6 is available)
+#
+# -DGAMMARAY_PROBE_ONLY_BUILD=[true|false]
+#  Build only an additional probe configuration for an already existing launcher
+#  Default=false
+#
+# -DGAMMARAY_CLIENT_ONLY_BUILD=[true|false]
+#  Build the client part only
+#  Default=false
+#
+# -DGAMMARAY_BUILD_UI=[true|false]
+#  Build the GammaRay client and in-process UI
+#  Default=true (false for QNX or Android)
+#
+# -DGAMMARAY_INSTALL_QT_LAYOUT=[true|false]
+#  Install into Qt directory layout
+#  Default=false
+#
+# -DGAMMARAY_MULTI_BUILD=[true|false]
+#  Build multiple applicable probe configurations
+#  Default=true
+#
+# -DGAMMARAY_BUILD_CLI_INJECTOR=[true|false]
+#  Build command line injector on Windows
+#  Default=true (ignored on non-Windows systems)
+#
+# -DGAMMARAY_STATIC_PROBE=[true|false]
+#  Build the probe as static library for compile-time injection
+#  Default=false
+#
+# -DGAMMARAY_CORE_ONLY_LAUNCHER=[true|false]
+#  Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatibility
+#  Default=false
+#
+# -DGAMMARAY_DISABLE_FEEDBACK=[true|false]
+#  Disable user feedback support
+#  Default=false (always true if cross-compiling or building probe-only (see GAMMARAY_PROBE_ONLY_BUILD))
+#
+# -DGAMMARAY_BUILD_DOCS=[true|false]
+#  Build GammaRay documentation
+#  Default=true (always false if cross-compiling or building probe-only (see GAMMARAY_PROBE_ONLY_BUILD))
+#
+# -DGAMMARAY_ENABLE_GPL_ONLY_FEATURES=[true|false]
+#  Enable features only available under GPL license
+#  Default=false
+#
+# -DGAMMARAY_ENFORCE_QT_ASSERTS=[true|false]
+#  Force QT_ASSERT in all builds
+#  Default=false
+#
+# -DGAMMARAY_USE_PCH=[true|false]
+#  Enable Precompiled Headers support
+#  Default=false
+#
+# -DENABLE_GOLD_LINKER=[true|false]
+#  Use GNU gold linker
+#  Default=false
+#
+
 cmake_minimum_required(VERSION 3.16.0)
 
 project(
