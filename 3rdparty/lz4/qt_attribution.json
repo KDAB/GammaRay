@@ -6,10 +6,10 @@
 
     "Description": "Fast compression algorithm.",
     "Homepage": "https://github.com/lz4/lz4",
-    "Version": "1.7",
+    "Version": "1.9.4",
 
     "License": "BSD 2-clause License",
     "LicenseId": "BSD-2-Clause",
     "LicenseFile": "LICENSE",
-    "Copyright": "Copyright (c) 2011-2016, Yann Collet"
+    "Copyright": "Copyright (c) 2011-2020, Yann Collet"
 }

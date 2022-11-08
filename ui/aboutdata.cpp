@@ -71,7 +71,7 @@ QString AboutData::aboutHeader()
         "<p>Copyright (C) 2010-2022 Klarälvdalens Datakonsult AB, "
         "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
         "<p>StackWalker code Copyright (c) 2005-2019, Jochen Kalmbach, All rights reserved<br>"
-        "lz4 fast LZ compression code Copyright (C) 2011-2015, Yann Collet, All rights reserved<br>"
+        "lz4 fast LZ compression code Copyright (C) 2011-2020, Yann Collet, All rights reserved<br>"
         "backward-cpp code Copyright 2013-2017 Google Inc. All rights reserved.</p>");
 }
 

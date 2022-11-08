@@ -56,7 +56,7 @@ License: BSD-2-Clause
 
 #3rdparty lz4
 Files: 3rdparty/lz4/*
-Copyright: 2011-2016, Yann Collet
+Copyright: 2011-2020, Yann Collet
 License: BSD-2-Clause
 
 #3rdparty backward-cpp

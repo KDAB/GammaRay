@@ -9,6 +9,7 @@ Version 3.0.0 (unreleased)
  * Remove the 3D Widget Inspector View
  * Remove the experimental VTK-based Object Visualizer
  * Update backward-cpp to version 1.6
+ * Update lz4 to version 1.9.4
 
 Version 2.11.3
 --------------
