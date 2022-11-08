@@ -45,6 +45,9 @@
 
 # Qt version
 set(GAMMARAY_PROBE_ABI "qt${QtCore_VERSION_MAJOR}_${QtCore_VERSION_MINOR}")
+if(NOT ANDROID)
+    set(ANDROID_ABI "")
+endif()
 
 # on Windows, the compiler also matters
 if(WIN32)
@@ -96,21 +99,21 @@ elseif(APPLE)
 
     # on Android we derive this from ANDROID_ABI
 elseif(ANDROID OR CMAKE_SYSTEM_NAME MATCHES "Android")
-    if(NOT ANDROID_ABI)
+    if(DEFINED ANDROID_ABI)
+        if(ANDROID_ABI MATCHES "arm64")
+            set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-aarch64")
+        elseif(ANDROID_ABI MATCHES "arm")
+            set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-arm")
+        elseif(ANDROID_ABI STREQUAL "x86_64")
+            set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-x86_64")
+        elseif(ANDROID_ABI STREQUAL "x86")
+            set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-i686")
+        else()
+            message(FATAL_ERROR "Unsupported Android ABI ${ANDROID_ABI}.")
+        endif()
+    else()
         message(FATAL_ERROR "Unknown target ABI. Make sure ANDROID_ABI is set!")
     endif()
-    if(ANDROID_ABI MATCHES "arm64")
-        set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-aarch64")
-    elseif(ANDROID_ABI MATCHES "arm")
-        set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-arm")
-    elseif(ANDROID_ABI STREQUAL "x86_64")
-        set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-x86_64")
-    elseif(ANDROID_ABI STREQUAL "x86")
-        set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-i686")
-    else()
-        message(FATAL_ERROR "Unsupported Android ABI ${ANDROID_ABI}.")
-    endif()
-
 else()
     if(NOT CMAKE_SYSTEM_PROCESSOR)
         message(

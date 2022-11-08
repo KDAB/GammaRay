@@ -557,6 +557,10 @@ endif()
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
 #add_definitions(-DQT_DEPRECATED_WARNINGS)
 
+if(NOT DEFINED QT_LIBINFIX)
+    set(QT_LIBINFIX "")
+endif()
+
 set_package_properties(Qt${Qt_VERSION_MAJOR} PROPERTIES URL "https://qt.io/")
 set_package_properties(
     Qt${Qt_VERSION_MAJOR}Concurrent PROPERTIES
@@ -579,6 +583,8 @@ if(WIN32)
     set(CMAKE_DEBUG_POSTFIX "d")
 elseif(APPLE)
     set(CMAKE_DEBUG_POSTFIX "_debug")
+else()
+    set(CMAKE_DEBUG_POSTFIX "")
 endif()
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" UPPERCASE_CMAKE_BUILD_TYPE)
@@ -654,6 +660,7 @@ include(GammaRayProbeABI)
 #
 # Installation settings
 #
+set(BUNDLE_INSTALL_DIR "")
 if(ANDROID)
     set(GAMMARAY_INSTALL_QT_LAYOUT ON)
 endif()
@@ -788,6 +795,9 @@ set(INSTALL_TARGETS_DEFAULT_ARGS
 if(APPLE)
     set(BUNDLE_INSTALL_DIR_PRIVATE "${BUNDLE_INSTALL_DIR}/${BUNDLE_APP_NAME}/Contents/MacOS")
     gammaray_inverse_dir(GAMMARAY_INVERSE_BUNDLE_DIR "${BUNDLE_INSTALL_DIR_PRIVATE}")
+else()
+    set(BUNDLE_INSTALL_DIR_PRIVATE "")
+    set(GAMMARAY_INVERSE_BUNDLE_DIR "")
 endif()
 gammaray_inverse_dir(GAMMARAY_INVERSE_BIN_DIR "${BIN_INSTALL_DIR}")
 gammaray_inverse_dir(GAMMARAY_INVERSE_LIB_DIR "${LIB_INSTALL_DIR}")
