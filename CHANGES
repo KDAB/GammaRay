@@ -8,6 +8,7 @@ Version 3.0.0 (unreleased)
  * Network operations now optionally allow capturing HTTP response body
  * Remove the 3D Widget Inspector View
  * Remove the experimental VTK-based Object Visualizer
+ * Update backward-cpp to version 1.6
 
 Version 2.11.3
 --------------
