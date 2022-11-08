@@ -6,7 +6,7 @@
 
     "Description": "Backward is a beautiful stack trace pretty printer for C++.",
     "Homepage": "https://github.com/bombela/backward-cpp",
-    "Version": "1.5",
+    "Version": "1.6",
 
     "License": "MIT License",
     "LicenseId": "MIT",
