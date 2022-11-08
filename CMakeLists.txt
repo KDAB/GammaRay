@@ -883,10 +883,12 @@ if(CPPCHECK_EXECUTABLE)
         set(_cppcheck_flags ${_cppcheck_flags} "-D${_current}")
     endforeach()
 
+    # cmake-lint: disable=C0301
     add_custom_target(
         cppcheck
-        COMMAND ${CPPCHECK_EXECUTABLE} --enable=all --inconclusive -f --suppress=*:${QT_INCLUDE_DIR}* ${_cppcheck_flags}
-                -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty -i${CMAKE_CURRENT_SOURCE_DIR}/tests ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMAND
+            ${CPPCHECK_EXECUTABLE} --enable=all --inconclusive -f --suppress=*:${QT_INSTALL_HEADERS}* ${_cppcheck_flags}
+            -i${CMAKE_CURRENT_SOURCE_DIR}/3rdparty -i${CMAKE_CURRENT_SOURCE_DIR}/tests ${CMAKE_CURRENT_SOURCE_DIR}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Running the cppcheck static code checker"
     )
