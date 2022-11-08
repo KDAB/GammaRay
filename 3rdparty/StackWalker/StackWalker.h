@@ -43,10 +43,6 @@
 
 #include <windows.h>
 
-#if _MSC_VER >= 1900
-#pragma warning(disable : 4091)
-#endif
-
 // special defines for VC5/6 (if no actual PSDK is installed):
 #if _MSC_VER < 1300
 typedef unsigned __int64 DWORD64, *PDWORD64;
@@ -61,6 +57,13 @@ class StackWalkerInternal; // forward
 class StackWalker
 {
 public:
+  typedef enum ExceptType
+  {
+    NonExcept   = 0,     // RtlCaptureContext
+    AfterExcept = 1,
+    AfterCatch  = 2,     // get_current_exception_context
+  } ExceptType;
+
   typedef enum StackWalkOptions
   {
     // No addition info will be retrieved
@@ -95,13 +98,28 @@ public:
     OptionsAll = 0x3F
   } StackWalkOptions;
 
+  StackWalker(ExceptType extype, int options = OptionsAll, PEXCEPTION_POINTERS exp = NULL);
+
   StackWalker(int    options = OptionsAll, // 'int' is by design, to combine the enum-flags
               LPCSTR szSymPath = NULL,
               DWORD  dwProcessId = GetCurrentProcessId(),
               HANDLE hProcess = GetCurrentProcess());
+
   StackWalker(DWORD dwProcessId, HANDLE hProcess);
+
   virtual ~StackWalker();
 
+  bool SetSymPath(LPCSTR szSymPath);
+
+  bool SetTargetProcess(DWORD dwProcessId, HANDLE hProcess);
+
+  PCONTEXT GetCurrentExceptionContext();
+
+private:
+  bool Init(ExceptType extype, int options, LPCSTR szSymPath, DWORD dwProcessId,
+            HANDLE hProcess, PEXCEPTION_POINTERS exp = NULL);
+
+public:
   typedef BOOL(__stdcall* PReadProcessMemoryRoutine)(
       HANDLE  hProcess,
       DWORD64 qwBaseAddress,

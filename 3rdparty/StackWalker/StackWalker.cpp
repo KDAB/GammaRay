@@ -88,8 +88,14 @@
 #include <stdlib.h>
 #include <tchar.h>
 #include <windows.h>
+#include <new>
+
 #pragma comment(lib, "version.lib") // for "VerQueryValue"
+
 #pragma warning(disable : 4826)
+#if _MSC_VER >= 1900
+#pragma warning(disable : 4091)   // For fix unnamed enums from DbgHelp.h
+#endif
 
 
 // If VC7 and later, then use the shipped 'dbghelp.h'-file
@@ -249,13 +255,12 @@ static void MyStrCpy(char* szDest, size_t nMaxDestSize, const char* szSrc)
 class StackWalkerInternal
 {
 public:
-  StackWalkerInternal(StackWalker* parent, HANDLE hProcess)
+  StackWalkerInternal(StackWalker* parent, HANDLE hProcess, PCONTEXT ctx)
   {
     m_parent = parent;
     m_hDbhHelp = NULL;
     pSC = NULL;
     m_hProcess = hProcess;
-    m_szSymPath = NULL;
     pSFTA = NULL;
     pSGLFA = NULL;
     pSGMB = NULL;
@@ -268,7 +273,11 @@ public:
     pSW = NULL;
     pUDSN = NULL;
     pSGSP = NULL;
+    m_ctx.ContextFlags = 0;
+    if (ctx != NULL)
+      m_ctx = *ctx;
   }
+
   ~StackWalkerInternal()
   {
     if (pSC != NULL)
@@ -277,10 +286,8 @@ public:
       FreeLibrary(m_hDbhHelp);
     m_hDbhHelp = NULL;
     m_parent = NULL;
-    if (m_szSymPath != NULL)
-      free(m_szSymPath);
-    m_szSymPath = NULL;
   }
+
   BOOL Init(LPCSTR szSymPath)
   {
     if (m_parent == NULL)
@@ -381,9 +388,7 @@ public:
     }
 
     // SymInitialize
-    if (szSymPath != NULL)
-      m_szSymPath = _strdup(szSymPath);
-    if (this->pSI(m_hProcess, m_szSymPath, FALSE) == FALSE)
+    if (this->pSI(m_hProcess, szSymPath, FALSE) == FALSE)
       this->m_parent->OnDbgHelpErr("SymInitialize", GetLastError(), 0);
 
     DWORD symOptions = this->pSGO(); // SymGetOptions
@@ -409,12 +414,12 @@ public:
 
   StackWalker* m_parent;
 
+  CONTEXT m_ctx;
   HMODULE m_hDbhHelp;
   HANDLE  m_hProcess;
-  LPSTR   m_szSymPath;
 
 #pragma pack(push, 8)
-  typedef struct IMAGEHLP_MODULE64_V3
+  typedef struct _IMAGEHLP_MODULE64_V3
   {
     DWORD    SizeOfStruct;         // set to sizeof(IMAGEHLP_MODULE64)
     DWORD64  BaseOfImage;          // base load address of module
@@ -441,9 +446,9 @@ public:
     // new elements: 17-Dec-2003
     BOOL SourceIndexed; // pdb supports source server
     BOOL Publics;       // contains public symbols
-  };
+  } IMAGEHLP_MODULE64_V3, *PIMAGEHLP_MODULE64_V3;
 
-  typedef struct IMAGEHLP_MODULE64_V2
+  typedef struct _IMAGEHLP_MODULE64_V2
   {
     DWORD    SizeOfStruct;         // set to sizeof(IMAGEHLP_MODULE64)
     DWORD64  BaseOfImage;          // base load address of module
@@ -455,7 +460,7 @@ public:
     CHAR     ModuleName[32];       // module name
     CHAR     ImageName[256];       // image name
     CHAR     LoadedImageName[256]; // symbol file name
-  };
+  } IMAGEHLP_MODULE64_V2, *PIMAGEHLP_MODULE64_V2;
 #pragma pack(pop)
 
   // SymCleanup()
@@ -495,14 +500,14 @@ public:
   tSGSFA pSGSFA;
 
   // SymInitialize()
-  typedef BOOL(__stdcall* tSI)(IN HANDLE hProcess, IN PSTR UserSearchPath, IN BOOL fInvadeProcess);
+  typedef BOOL(__stdcall* tSI)(IN HANDLE hProcess, IN LPCSTR UserSearchPath, IN BOOL fInvadeProcess);
   tSI pSI;
 
   // SymLoadModule64()
   typedef DWORD64(__stdcall* tSLM)(IN HANDLE hProcess,
                                    IN HANDLE hFile,
-                                   IN PSTR ImageName,
-                                   IN PSTR ModuleName,
+                                   IN LPCSTR ImageName,
+                                   IN LPCSTR ModuleName,
                                    IN DWORD64 BaseOfDll,
                                    IN DWORD SizeOfDll);
   tSLM pSLM;
@@ -870,41 +875,102 @@ public:
 };
 
 // #############################################################
-StackWalker::StackWalker(DWORD dwProcessId, HANDLE hProcess)
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && _MSC_VER < 1900
+extern "C" void* __cdecl _getptd();
+#endif
+#if defined(_MSC_VER) && _MSC_VER >= 1900
+extern "C" void** __cdecl __current_exception_context();
+#endif
+
+static PCONTEXT get_current_exception_context()
 {
-  this->m_options = OptionsAll;
-  this->m_modulesLoaded = FALSE;
-  this->m_hProcess = hProcess;
-  this->m_sw = new StackWalkerInternal(this, this->m_hProcess);
-  this->m_dwProcessId = dwProcessId;
-  this->m_szSymPath = NULL;
-  this->m_MaxRecursionCount = 1000;
+  PCONTEXT * pctx = NULL;
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && _MSC_VER < 1900  
+  LPSTR ptd = (LPSTR)_getptd();
+  if (ptd)
+    pctx = (PCONTEXT *)(ptd + (sizeof(void*) == 4 ? 0x8C : 0xF8));
+#endif
+#if defined(_MSC_VER) && _MSC_VER >= 1900
+  pctx = (PCONTEXT *)__current_exception_context();
+#endif
+  return pctx ? *pctx : NULL;
 }
-StackWalker::StackWalker(int options, LPCSTR szSymPath, DWORD dwProcessId, HANDLE hProcess)
+
+bool StackWalker::Init(ExceptType extype, int options, LPCSTR szSymPath, DWORD dwProcessId,
+                       HANDLE hProcess, PEXCEPTION_POINTERS exp)
 {
+  PCONTEXT ctx = NULL;
+  if (extype == AfterCatch)
+    ctx = get_current_exception_context();
+  if (extype == AfterExcept && exp)
+    ctx = exp->ContextRecord;
   this->m_options = options;
   this->m_modulesLoaded = FALSE;
-  this->m_hProcess = hProcess;
-  this->m_sw = new StackWalkerInternal(this, this->m_hProcess);
-  this->m_dwProcessId = dwProcessId;
-  if (szSymPath != NULL)
-  {
-    this->m_szSymPath = _strdup(szSymPath);
-    this->m_options |= SymBuildPath;
-  }
-  else
-    this->m_szSymPath = NULL;
+  this->m_szSymPath = NULL;
   this->m_MaxRecursionCount = 1000;
+  this->m_sw = NULL;
+  SetTargetProcess(dwProcessId, hProcess);
+  SetSymPath(szSymPath);
+  /* MSVC ignore std::nothrow specifier for `new` operator */
+  LPVOID buf = malloc(sizeof(StackWalkerInternal));
+  if (!buf)
+    return false;
+  memset(buf, 0, sizeof(StackWalkerInternal));
+  this->m_sw = new(buf) StackWalkerInternal(this, this->m_hProcess, ctx);  // placement new
+  return true;
+}
+
+StackWalker::StackWalker(DWORD dwProcessId, HANDLE hProcess)
+{
+  Init(NonExcept, OptionsAll, NULL, dwProcessId, hProcess);
+}
+
+StackWalker::StackWalker(int options, LPCSTR szSymPath, DWORD dwProcessId, HANDLE hProcess)
+{
+  Init(NonExcept, options, szSymPath, dwProcessId, hProcess);
+}
+
+StackWalker::StackWalker(ExceptType extype, int options, PEXCEPTION_POINTERS exp)
+{
+  Init(extype, options, NULL, GetCurrentProcessId(), GetCurrentProcess(), exp);
 }
 
 StackWalker::~StackWalker()
 {
-  if (m_szSymPath != NULL)
+  SetSymPath(NULL);
+  if (m_sw != NULL) {
+    m_sw->~StackWalkerInternal();  // call the object's destructor
+    free(m_sw);
+  }
+  m_sw = NULL;
+}
+
+bool StackWalker::SetSymPath(LPCSTR szSymPath)
+{
+  if (m_szSymPath)
     free(m_szSymPath);
   m_szSymPath = NULL;
-  if (this->m_sw != NULL)
-    delete this->m_sw;
-  this->m_sw = NULL;
+  if (szSymPath == NULL)
+    return true;
+  m_szSymPath = _strdup(szSymPath);
+  if (m_szSymPath)
+    m_options |= SymBuildPath;
+  return true;
+}
+
+bool StackWalker::SetTargetProcess(DWORD dwProcessId, HANDLE hProcess)
+{
+  m_dwProcessId = dwProcessId;
+  m_hProcess = hProcess;
+  if (m_sw)
+    m_sw->m_hProcess = hProcess;
+  return true;
+}
+
+PCONTEXT StackWalker::GetCurrentExceptionContext()
+{
+  return get_current_exception_context();
 }
 
 BOOL StackWalker::LoadModules()
@@ -1068,7 +1134,10 @@ BOOL StackWalker::ShowCallstack(HANDLE                    hThread,
     if (GetThreadId(hThread) == GetCurrentThreadId())
 #endif
     {
-      GET_CURRENT_CONTEXT_STACKWALKER_CODEPLEX(c, USED_CONTEXT_FLAGS);
+      if (m_sw->m_ctx.ContextFlags != 0)
+        c = m_sw->m_ctx;   // context taken at Init
+      else
+        GET_CURRENT_CONTEXT_STACKWALKER_CODEPLEX(c, USED_CONTEXT_FLAGS);
     }
     else
     {
@@ -1120,6 +1189,14 @@ BOOL StackWalker::ShowCallstack(HANDLE                    hThread,
   s.AddrBStore.Offset = c.RsBSP;
   s.AddrBStore.Mode = AddrModeFlat;
   s.AddrStack.Offset = c.IntSp;
+  s.AddrStack.Mode = AddrModeFlat;
+#elif _M_ARM64
+  imageType = IMAGE_FILE_MACHINE_ARM64;
+  s.AddrPC.Offset = c.Pc;
+  s.AddrPC.Mode = AddrModeFlat;
+  s.AddrFrame.Offset = c.Fp;
+  s.AddrFrame.Mode = AddrModeFlat;
+  s.AddrStack.Offset = c.Sp;
   s.AddrStack.Mode = AddrModeFlat;
 #else
 #error "Platform not supported!"
