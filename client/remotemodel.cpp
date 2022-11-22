@@ -238,12 +238,12 @@ QVariant RemoteModel::requestCreationDeclarationLocation(const QModelIndex &inde
     msg << Protocol::fromQModelIndex(index);
     sendMessage(msg);
 
-    QVariant declarationLoc = QVariant::fromValue(SourceLocation{});
-    QVariant creationLoc = QVariant::fromValue(SourceLocation{});
+    QVariant declarationLoc = QVariant::fromValue(SourceLocation {});
+    QVariant creationLoc = QVariant::fromValue(SourceLocation {});
 
     QEventLoop loop;
 
-    auto conn = connect(this, &RemoteModel::declarationCreationLocationsReceived, this, [&creationLoc, &declarationLoc, &loop](const QVariant &d, const QVariant &c){
+    auto conn = connect(this, &RemoteModel::declarationCreationLocationsReceived, this, [&creationLoc, &declarationLoc, &loop](const QVariant &d, const QVariant &c) {
         if (d.isValid())
             declarationLoc = d;
         if (c.isValid())
@@ -700,8 +700,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         clear();
         break;
 
-    case Protocol::ModelCreationDeclartionLocationReply:
-    {
+    case Protocol::ModelCreationDeclartionLocationReply: {
         QVariant declaration;
         QVariant creation;
         msg >> declaration >> creation;
