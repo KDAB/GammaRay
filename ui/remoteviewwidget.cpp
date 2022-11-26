@@ -1029,6 +1029,15 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
 {
     m_currentMousePosition = mapToSource(QPointF(event->pos()));
 
+    // Initiate the middle mouse button panning that works regardless of the interaction mode
+    if (event->button() == Qt::MiddleButton) {
+        m_mouseDownPosition = event->pos() - QPoint(m_x, m_y);
+        m_cursorBeforeMmbPan = cursor();
+        setCursor(Qt::ClosedHandCursor);
+        QWidget::mousePressEvent(event);
+        return;
+    }
+
     switch (m_interactionMode) {
     case NoInteraction:
         break;
@@ -1075,12 +1084,29 @@ void RemoteViewWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     m_currentMousePosition = mapToSource(QPointF(event->pos()));
 
+    if (event->button() == Qt::MiddleButton) {
+        // In view interaction, set the open hand cursor if the user hasn't
+        // initiated LMB panning in the meantime. Otherwise, bring back the
+        // original cursor.
+        if (m_interactionMode == ViewInteraction) {
+            if (!(event->buttons() & Qt::LeftButton)) {
+                setCursor(Qt::OpenHandCursor);
+            }
+        } else {
+            setCursor(m_cursorBeforeMmbPan);
+        }
+        QWidget::mouseReleaseEvent(event);
+        return;
+    }
+
     switch (m_interactionMode) {
     case NoInteraction:
     case ElementPicking:
         break;
     case ViewInteraction:
-        setCursor(Qt::OpenHandCursor);
+        if (!(event->buttons() & Qt::MiddleButton)) {
+            setCursor(Qt::OpenHandCursor);
+        }
         break;
     case Measuring:
         if (event->buttons() & Qt::LeftButton)
@@ -1122,6 +1148,17 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
 {
     m_currentMousePosition = mapToSource(QPointF(event->pos()));
 
+    auto handlePan = [this](QPoint mousePos) {
+        m_x = mousePos.x() - m_mouseDownPosition.x();
+        m_y = mousePos.y() - m_mouseDownPosition.y();
+        clampPanPosition();
+        updateUserViewport();
+    };
+
+    if (event->buttons() & Qt::MiddleButton) {
+        handlePan(event->pos());
+    }
+
     switch (m_interactionMode) {
     case NoInteraction:
     case ElementPicking:
@@ -1130,10 +1167,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
         if (event->buttons() != Qt::LeftButton) {
             break;
         }
-        m_x = event->x() - m_mouseDownPosition.x();
-        m_y = event->y() - m_mouseDownPosition.y();
-        clampPanPosition();
-        updateUserViewport();
+        handlePan(event->pos());
         break;
     case Measuring:
         if (event->buttons() & Qt::LeftButton) {
@@ -1141,7 +1175,9 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
         }
         break;
     case InputRedirection:
-        sendMouseEvent(event);
+        if (!(event->buttons() & Qt::MiddleButton)) {
+            sendMouseEvent(event);
+        }
         break;
     case ColorPicking:
         // label should be always fully inside the remoteviewwidget
