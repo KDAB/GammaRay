@@ -146,7 +146,6 @@ include(GammaRayMacros)
 include(GammaRayMacrosInternal)
 include(FeatureSummary)
 set(KDE_INSTALL_USE_QT_SYS_PATHS OFF)
-include(ECMGeneratePriFile)
 include(ECMEnableSanitizers)
 include(GenerateExportHeader)
 include("3rdparty/backward-cpp/BackwardConfig.cmake")
@@ -441,6 +440,7 @@ set_package_properties(Qt${Qt_VERSION_MAJOR}Core PROPERTIES TYPE REQUIRED)
 gammaray_option(GAMMARAY_QT6_BUILD "Build with Qt6." OFF)
 
 if(GAMMARAY_QT6_BUILD)
+    set(QT_MAJOR_VERSION 6) # For ECMQueryQt.cmake
     set(Qt_VERSION_MAJOR 6)
     set(QT_MIN_VERSION "6.0.0")
 endif()
@@ -505,6 +505,7 @@ endif()
 # these need to included after the last Qt-related find_package() call
 include(Qt5LegacySupport)
 include(ECMQt5ToQt6Porting)
+include(ECMGeneratePriFile)
 
 set(MACOS_DISABLE_UNSUPPORTED_TESTS FALSE)
 if(APPLE)
