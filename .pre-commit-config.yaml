@@ -3,7 +3,7 @@
 exclude: ^(3rdparty/|cmake/ECM/|cmake/KDAB/|launcher/ui/processlist.*|compat/qasconst.h)
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.3.0
+  rev: v4.4.0
   hooks:
   - id: trailing-whitespace
   - id: end-of-file-fixer
@@ -13,16 +13,16 @@ repos:
     args: [--allow-multiple-documents]
   - id: check-json
 - repo: https://github.com/pre-commit/mirrors-clang-format
-  rev: v14.0.6
+  rev: v15.0.4
   hooks:
   - id: clang-format
 - repo: https://github.com/PyCQA/pylint
-  rev: v2.15.5
+  rev: v2.15.6
   hooks:
   - id: pylint
     exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
 - repo: https://github.com/pre-commit/mirrors-autopep8
-  rev: v1.7.0
+  rev: v2.0.0
   hooks:
   - id: autopep8
     exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
