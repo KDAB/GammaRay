@@ -26,7 +26,7 @@
 
 #include <qt_windows.h>
 // Processthreadsapi.h on Windows 8 and Windows Server 2012
-//#include <tlhelp32.h>
+// #include <tlhelp32.h>
 
 #include <type_traits>
 #include <memory>

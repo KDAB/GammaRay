@@ -45,7 +45,7 @@
 
 static const quintptr PropertyCarrierIndex = ~quintptr(0);
 
-//#define IF_DEBUG(x) (x)
+// #define IF_DEBUG(x) (x)
 #define IF_DEBUG(x)
 
 using namespace GammaRay;

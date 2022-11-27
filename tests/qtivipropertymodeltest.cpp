@@ -33,7 +33,7 @@
 
 #include <algorithm>
 
-//#define ENABLE_LOG
+// #define ENABLE_LOG
 
 using namespace GammaRay;
 using namespace TestHelpers;

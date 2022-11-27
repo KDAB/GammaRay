@@ -42,7 +42,7 @@
 
 static const quint64 PropertyCarrierIndex = ~quint64(0); // there is no QUINT64_MAX
 
-//#define IF_DEBUG(x) (x)
+// #define IF_DEBUG(x) (x)
 #define IF_DEBUG(x)
 
 using namespace GammaRay;
