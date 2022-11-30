@@ -21,6 +21,7 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QStandardPaths>
+#include <QVector>
 
 using namespace GammaRay;
 
