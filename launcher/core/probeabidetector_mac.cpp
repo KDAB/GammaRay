@@ -27,6 +27,7 @@
 #include <QString>
 
 #include <CoreFoundation/CoreFoundation.h>
+#include <mach-o/fat.h>
 #include <mach-o/loader.h>
 
 using namespace GammaRay;
@@ -155,6 +156,20 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
     return qtCoreFromLsof(pid);
 }
 
+static QString archFromCpuType(cpu_type_t cputype)
+{
+    switch (cputype) {
+    case CPU_TYPE_I386:
+        return "i686";
+    case CPU_TYPE_X86_64:
+        return "x86_64";
+    case CPU_TYPE_ARM64:
+        return "arm64";
+    }
+
+    return QString();
+}
+
 template<typename T>
 static QString readMachOHeader(const uchar *data, quint64 size, quint32 &offset, qint32 &ncmds,
                                qint32 &cmdsize)
@@ -167,36 +182,20 @@ static QString readMachOHeader(const uchar *data, quint64 size, quint32 &offset,
     ncmds = header->ncmds;
     cmdsize = header->sizeofcmds;
 
-    switch (header->cputype) {
-    case CPU_TYPE_I386:
-        return "i686";
-    case CPU_TYPE_X86_64:
-        return "x86_64";
-    }
-
-    return QString();
+    return archFromCpuType(header->cputype);
 }
 
-static ProbeABI abiFromMachO(const QString &path, const uchar *data, qint64 size)
+template<typename T>
+static bool readAbiFromMachOHeader(const uchar *data, quint64 size, ProbeABI *abi)
 {
-    ProbeABI abi;
-    const quint32 magic = *reinterpret_cast<const quint32 *>(data);
-
     quint32 offset = 0;
     qint32 ncmds = 0;
     qint32 cmdsize = 0;
 
-    switch (magic) {
-    case MH_MAGIC:
-        abi.setArchitecture(readMachOHeader<mach_header>(data, size, offset, ncmds, cmdsize));
-        break;
-    case MH_MAGIC_64:
-        abi.setArchitecture(readMachOHeader<mach_header_64>(data, size, offset, ncmds, cmdsize));
-        break;
-    }
+    abi->setArchitecture(readMachOHeader<T>(data, size, offset, ncmds, cmdsize));
 
     if (offset >= size || ncmds <= 0 || cmdsize <= 0 || size <= offset + cmdsize)
-        return ProbeABI();
+        return false;
 
     // read load commands
     for (int i = 0; i < ncmds; ++i) {
@@ -205,31 +204,73 @@ static ProbeABI abiFromMachO(const QString &path, const uchar *data, qint64 size
             const dylib_command *dlcmd = reinterpret_cast<const dylib_command *>(data + offset);
             const int majorVersion = (dlcmd->dylib.current_version & 0x00ff0000) >> 16;
             const int minorVersion = (dlcmd->dylib.current_version & 0x0000ff00) >> 8;
-            abi.setQtVersion(majorVersion, minorVersion);
+            abi->setQtVersion(majorVersion, minorVersion);
         }
         offset += cmd->cmdsize;
+    }
+
+    return true;
+}
+
+static QVector<ProbeABI> abiFromMachO(const QString &path, const uchar *data, qint64 size)
+{
+    QVector<ProbeABI> result;
+    const quint32 magic = *reinterpret_cast<const quint32 *>(data);
+
+    switch (magic) {
+    case FAT_CIGAM:
+    {
+        const fat_header *header = reinterpret_cast<const fat_header *>(data);
+        for (unsigned long i = 0; i < OSSwapInt32(header->nfat_arch); ++i) {
+            const fat_arch *arch_header = reinterpret_cast<const fat_arch *>(data + sizeof(fat_header) + sizeof(fat_arch) * i);
+            if (OSSwapInt32(arch_header->cputype) & CPU_ARCH_ABI64) {
+                ProbeABI abi;
+                if (readAbiFromMachOHeader<mach_header_64>(data + OSSwapInt32(arch_header->offset), size, &abi)) {
+                    result << abi;
+                }
+                abi.setArchitecture(archFromCpuType(OSSwapInt32(arch_header->cputype)));
+            }
+        }
+        break;
+    }
+    case MH_MAGIC: {
+        ProbeABI abi;
+        if (readAbiFromMachOHeader<mach_header>(data, size, &abi)) {
+            result << abi;
+        }
+        break;
+    }
+    case MH_MAGIC_64: {
+        ProbeABI abi;
+        if (readAbiFromMachOHeader<mach_header_64>(data, size, &abi)) {
+            result << abi;
+        }
+        break;
+    }
     }
 
     if (QFileInfo(path).baseName().endsWith(QStringLiteral("_debug"), Qt::CaseInsensitive)) {
         // We can probably also look for a S_ATTR_DEBUG segment, in the data, but that might not prove it's a debug
         // build as we can add debug symbols to release builds.
-        abi.setIsDebug(true);
+        for (ProbeABI &abi : result) {
+            abi.setIsDebug(true);
+        }
     }
 
-    return abi;
+    return result;
 }
 
-ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
+QVector<ProbeABI> ProbeABIDetector::detectAbiForQtCore(const QString &path)
 {
     if (path.isEmpty())
-        return ProbeABI();
+        return {};
 
     QFile f(path);
     if (!f.open(QFile::ReadOnly))
-        return ProbeABI();
+        return {};
 
     const uchar *data = f.map(0, f.size());
     if (!data || ( uint )f.size() <= sizeof(quint32))
-        return ProbeABI();
+        return {};
     return abiFromMachO(path, data, f.size());
 }
