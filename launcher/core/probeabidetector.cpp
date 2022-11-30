@@ -37,7 +37,7 @@ ProbeABI ProbeABIDetector::abiForExecutable(const QString &path) const
     // they want to run
     for (const ProbeABI &abi : abis) {
         if (abi.architecture() == QSysInfo::currentCpuArchitecture()) {
-                return abi;
+            return abi;
         }
     }
     return abis[0];
@@ -53,7 +53,7 @@ ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
     // forced to run a particular abi if the OS supports so
     for (const ProbeABI &abi : abis) {
         if (abi.architecture() == QSysInfo::currentCpuArchitecture()) {
-                return abi;
+            return abi;
         }
     }
     return abis[0];

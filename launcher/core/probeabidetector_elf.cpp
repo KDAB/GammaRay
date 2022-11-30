@@ -189,5 +189,5 @@ QVector<ProbeABI> ProbeABIDetector::detectAbiForQtCore(const QString &path)
     const QString arch = archFromELF(path);
     abi.setArchitecture(arch);
 
-    return {abi};
+    return { abi };
 }

@@ -268,5 +268,5 @@ QVector<ProbeABI> ProbeABIDetector::detectAbiForQtCore(const QString &path)
         abi.setCompilerVersion(compilerVersionFromLibraries(libs));
     }
 
-    return {abi};
+    return { abi };
 }

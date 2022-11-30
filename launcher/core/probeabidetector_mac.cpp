@@ -218,8 +218,7 @@ static QVector<ProbeABI> abiFromMachO(const QString &path, const uchar *data, qi
     const quint32 magic = *reinterpret_cast<const quint32 *>(data);
 
     switch (magic) {
-    case FAT_CIGAM:
-    {
+    case FAT_CIGAM: {
         const fat_header *header = reinterpret_cast<const fat_header *>(data);
         for (unsigned long i = 0; i < OSSwapInt32(header->nfat_arch); ++i) {
             const fat_arch *arch_header = reinterpret_cast<const fat_arch *>(data + sizeof(fat_header) + sizeof(fat_arch) * i);
