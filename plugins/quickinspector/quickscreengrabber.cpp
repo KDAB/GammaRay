@@ -763,7 +763,7 @@ void SoftwareScreenGrabber::drawDecorations()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 9, 3)
     auto renderer = softwareRenderer();
-    if (!renderer)
+    if (!renderer || !renderer->currentPaintDevice())
         return;
     QPainter p(renderer->currentPaintDevice());
     p.setClipRegion(renderer->flushRegion());
