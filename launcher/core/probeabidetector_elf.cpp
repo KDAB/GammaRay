@@ -175,10 +175,10 @@ static QString archFromELF(const QString &path)
     return QString();
 }
 
-ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
+QVector<ProbeABI> ProbeABIDetector::detectAbiForQtCore(const QString &path)
 {
     if (path.isEmpty())
-        return ProbeABI();
+        return {};
 
     // try to find the version
     ProbeABI abi = qtVersionFromFileName(path);
@@ -189,5 +189,5 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
     const QString arch = archFromELF(path);
     abi.setArchitecture(arch);
 
-    return abi;
+    return {abi};
 }

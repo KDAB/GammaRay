@@ -56,19 +56,19 @@ private:
     /*! Returns the ABI of the given QtCore DLL.
      *  Implementation of abiForXXX() should call this as it implements caching.
      */
-    ProbeABI abiForQtCore(const QString &path) const;
+    QVector<ProbeABI> abiForQtCore(const QString &path) const;
 
     /*! Detect the ABI of the given QtCore DLL.
      *  This needs to be implemented for every platform.
      */
-    static ProbeABI detectAbiForQtCore(const QString &path);
+    static QVector<ProbeABI> detectAbiForQtCore(const QString &path);
 
     /*! Path to the QtCore DLL for @p pid, using the lsof tool
      *  on UNIX-like systems.
      */
     static QString qtCoreFromLsof(qint64 pid);
 
-    mutable QHash<QString, ProbeABI> m_abiForQtCoreCache;
+    mutable QHash<QString, QVector<ProbeABI>> m_abiForQtCoreCache;
 };
 }
 

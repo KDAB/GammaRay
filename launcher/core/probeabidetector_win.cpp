@@ -238,27 +238,27 @@ static bool isDebugBuild(const QString &qtCoreDll)
     return qtCoreDll.endsWith(QLatin1String("d.dll"), Qt::CaseInsensitive);
 }
 
-ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
+QVector<ProbeABI> ProbeABIDetector::detectAbiForQtCore(const QString &path)
 {
     ProbeABI abi;
     if (path.isEmpty())
-        return abi;
+        return {};
 
     Version version = fileVersion(path);
     if (version.major == -1)
-        return abi;
+        return {};
 
     abi.setQtVersion(version.major, version.minor);
 
     // architecture and dependent libraries
     PEFile f(path);
     if (!f.isValid())
-        return ProbeABI();
+        return {};
 
     // architecture
     abi.setArchitecture(f.architecture());
     if (abi.architecture().isEmpty())
-        return ProbeABI();
+        return {};
 
     // compiler and debug mode
     QStringList libs = f.imports();
@@ -268,5 +268,5 @@ ProbeABI ProbeABIDetector::detectAbiForQtCore(const QString &path)
         abi.setCompilerVersion(compilerVersionFromLibraries(libs));
     }
 
-    return abi;
+    return {abi};
 }

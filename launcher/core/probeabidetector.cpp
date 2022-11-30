@@ -28,25 +28,48 @@ ProbeABIDetector::ProbeABIDetector() = default;
 
 ProbeABI ProbeABIDetector::abiForExecutable(const QString &path) const
 {
-    return abiForQtCore(qtCoreForExecutable(path));
+    const QVector<ProbeABI> abis = abiForQtCore(qtCoreForExecutable(path));
+    if (abis.isEmpty()) {
+        return {};
+    }
+    // Assume you want to run the one your system cpu is about if it exists
+    // It could be improved asking the user which of the multiple abis
+    // they want to run
+    for (const ProbeABI &abi : abis) {
+        if (abi.architecture() == QSysInfo::currentCpuArchitecture()) {
+                return abi;
+        }
+    }
+    return abis[0];
 }
 
 ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
 {
-    return abiForQtCore(qtCoreForProcess(pid));
+    const QVector<ProbeABI> abis = abiForQtCore(qtCoreForProcess(pid));
+    if (abis.isEmpty()) {
+        return {};
+    }
+    // FIXME this is not necessarily true, since the user could have
+    // forced to run a particular abi if the OS supports so
+    for (const ProbeABI &abi : abis) {
+        if (abi.architecture() == QSysInfo::currentCpuArchitecture()) {
+                return abi;
+        }
+    }
+    return abis[0];
 }
 
-ProbeABI ProbeABIDetector::abiForQtCore(const QString &path) const
+QVector<ProbeABI> ProbeABIDetector::abiForQtCore(const QString &path) const
 {
     QFileInfo fi(path);
     if (!fi.exists())
-        return ProbeABI();
+        return {};
 
     auto it = m_abiForQtCoreCache.constFind(fi.canonicalFilePath());
     if (it != m_abiForQtCoreCache.constEnd())
         return it.value();
 
-    const ProbeABI abi = detectAbiForQtCore(fi.canonicalFilePath());
+    const QVector<ProbeABI> abi = detectAbiForQtCore(fi.canonicalFilePath());
     m_abiForQtCoreCache.insert(fi.canonicalFilePath(), abi);
     return abi;
 }
