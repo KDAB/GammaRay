@@ -23,6 +23,7 @@
 
 #include <QHash>
 #include <QString>
+#include <QVector>
 
 namespace GammaRay {
 /*! Detect the probe ABI required for a given target.
