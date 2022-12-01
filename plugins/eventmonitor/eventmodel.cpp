@@ -64,7 +64,7 @@ void EventModel::addEvent(const EventData &event)
 void EventModel::clear()
 {
     beginResetModel();
-    m_events.clear();
+    m_events = QVector<EventData>();
     endResetModel();
 }
 
