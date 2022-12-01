@@ -44,8 +44,7 @@ static EventModel *s_model = nullptr;
 static EventTypeModel *s_eventTypeModel = nullptr;
 static EventMonitor *s_eventMonitor = nullptr;
 
-
-QString eventTypeToClassName(QEvent::Type type)
+static QString eventTypeToClassName(QEvent::Type type)
 {
     switch (type) {
     case QEvent::NonClientAreaMouseMove:
@@ -145,7 +144,7 @@ QString eventTypeToClassName(QEvent::Type type)
 }
 
 
-bool isInputEvent(QEvent::Type type)
+static bool isInputEvent(QEvent::Type type)
 {
     switch (type) {
     case QEvent::NonClientAreaMouseMove:
@@ -183,7 +182,7 @@ bool isInputEvent(QEvent::Type type)
 }
 
 
-bool shouldBeRecorded(QObject *receiver, QEvent *event)
+static bool shouldBeRecorded(QObject *receiver, QEvent *event)
 {
     if (!s_model || !s_eventTypeModel || !s_eventMonitor || !Probe::instance()) {
         return false;
@@ -204,7 +203,7 @@ bool shouldBeRecorded(QObject *receiver, QEvent *event)
 }
 
 
-EventData createEventData(QObject *receiver, QEvent *event)
+static EventData createEventData(QObject *receiver, QEvent *event)
 {
     EventData eventData;
     eventData.time = QTime::currentTime();
