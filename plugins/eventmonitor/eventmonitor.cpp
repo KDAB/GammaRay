@@ -269,7 +269,8 @@ static EventData createEventData(QObject *receiver, QEvent *event)
     if (!className.isEmpty()) {
         MetaObject *metaObj = MetaObjectRepository::instance()->metaObject(className);
         if (metaObj) {
-            for (int i = 0; i < metaObj->propertyCount(); ++i) {
+            const int propCount = metaObj->propertyCount();
+            for (int i = 0; i < propCount; ++i) {
                 MetaProperty *prop = metaObj->propertyAt(i);
                 if (strcmp(prop->name(), "type") == 0)
                     continue;
