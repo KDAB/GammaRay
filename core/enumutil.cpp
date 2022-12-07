@@ -43,6 +43,31 @@ static const QMetaObject *metaObjectForClass(const QByteArray &name)
     return mo;
 }
 
+static QMetaEnum flagsFromEnumIndex(int enumIndex, const QByteArray &enumName, const QMetaObject *const mo)
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    Q_ASSERT(false);
+    return mo->enumerator(enumIndex);
+#endif
+    Q_ASSERT(mo);
+    // usually it should be just enumIndex + 1
+    const auto count = mo->enumeratorCount();
+    if (enumIndex + 1 < count) {
+        const QMetaEnum me = mo->enumerator(enumIndex + 1);
+        if (me.isFlag() && enumName == me.enumName()) {
+            return me;
+        }
+    }
+
+    for (int i = mo->enumeratorOffset(); i < count; ++i) {
+        const QMetaEnum me = mo->enumerator(i);
+        if (me.isFlag() && enumName == me.enumName()) {
+            return me;
+        }
+    }
+    return mo->enumerator(enumIndex);
+}
+
 QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
 {
     QByteArray fullTypeName(typeName);
@@ -53,6 +78,7 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
     QByteArray className;
     QByteArray enumTypeName(fullTypeName);
     const int pos = enumTypeName.lastIndexOf("::");
+    bool isFlag = false;
     if (pos >= 0) {
         className = enumTypeName.left(pos);
         enumTypeName = enumTypeName.mid(pos + 2);
@@ -61,6 +87,7 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
         // QVariant::typeName is no longer the flag name, but QFlags<Foo>...
         if (className.startsWith("QFlags<")) {
             className.remove(0, sizeof("QFlags<") - 1);
+            isFlag = true;
         }
 
         if (enumTypeName.endsWith(">")) {
@@ -98,6 +125,11 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
 
     if (enumIndex < 0)
         return {};
+
+    if (isFlag) {
+        return flagsFromEnumIndex(enumIndex, enumTypeName, mo);
+    }
+
     return mo->enumerator(enumIndex);
 }
 
@@ -113,7 +145,11 @@ QString EnumUtil::enumToString(const QVariant &value, const char *typeName, cons
 {
     const auto me = metaEnum(value, typeName, metaObject);
     if (me.isValid()) {
-        return me.isFlag() ? QString::fromUtf8(me.valueToKeys(enumToInt(value, me))) : QString::fromUtf8(me.valueToKey(enumToInt(value, me)));
+        if (me.isFlag()) {
+            return QString::fromUtf8(me.valueToKeys(enumToInt(value, me)));
+        } else {
+            return QString::fromUtf8(me.valueToKey(enumToInt(value, me)));
+        }
     }
     if (EnumRepositoryServer::isEnum(value.userType())) {
         const auto ev = EnumRepositoryServer::valueFromVariant(value);
