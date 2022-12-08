@@ -6,6 +6,7 @@
 
 #include "qtversionsource.h"
 
+#include <QLibraryInfo>     /* for qVersion() in Qt >= 6.5 */
 #include <QVariant>
 
 using namespace KUserFeedback;
