@@ -101,6 +101,9 @@ void TextDocumentInspectorWidget::documentSelected(const QItemSelection &selecte
 void TextDocumentInspectorWidget::documentElementSelected(const QItemSelection &selected,
                                                           const QItemSelection &deselected)
 {
+    if (selected.isEmpty())
+        return;
+
     Q_UNUSED(deselected);
     const QModelIndex selectedRow = selected.first().topLeft();
 
