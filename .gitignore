@@ -9,6 +9,8 @@ CMakeLists.txt.user
 *.qmlc
 callgrind.out.*
 perf.data*
+/compile_commands.json
+.cache
 
 # from kdiff3
 *.BACKUP.*
