@@ -395,6 +395,11 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         for (quint32 i = 0; i < size; ++i) {
             Protocol::ModelIndex index;
             msg >> index;
+            if (index.isEmpty()) {
+                Q_ASSERT(false);
+                qWarning() << "Unexpected empty index, probably some type failed to deserialize" << Q_FUNC_INFO;
+                continue;
+            }
             Node *node = nodeForIndex(index);
             const auto column = index.last().column;
             const auto state = node ? stateForColumn(node, column) : RemoteModelNodeState::NoState;
