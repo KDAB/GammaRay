@@ -24,6 +24,7 @@
 #include "propertymatrixeditor.h"
 #include "propertytexteditor.h"
 #include "propertyrecteditor.h"
+#include "propertymargineditor.h"
 
 #include <QItemEditorFactory>
 
@@ -57,6 +58,9 @@ PropertyEditorFactory::PropertyEditorFactory()
     addEditor(QVariant::Quaternion, new QStandardItemEditorCreator<PropertyMatrixEditor>());
 
     registerEditor(static_cast<TypeId>(qMetaTypeId<EnumValue>()), new QStandardItemEditorCreator<PropertyEnumEditor>());
+
+    registerEditor(static_cast<TypeId>(qMetaTypeId<QMargins>()), new QStandardItemEditorCreator<PropertyMarginsEditor>());
+    registerEditor(static_cast<TypeId>(qMetaTypeId<QMarginsF>()), new QStandardItemEditorCreator<PropertyMarginsFEditor>());
 }
 
 PropertyEditorFactory *PropertyEditorFactory::instance()
