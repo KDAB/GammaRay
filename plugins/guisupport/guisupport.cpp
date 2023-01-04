@@ -25,6 +25,8 @@
 #include <core/varianthandler.h>
 
 #include <common/metatypedeclarations.h>
+#include "common/streamoperators.h"
+
 
 #include <QGuiApplication>
 #include <QOpenGLContext>
@@ -85,6 +87,7 @@ Q_DECLARE_METATYPE(const QTouchDevice *)
 Q_DECLARE_METATYPE(QScrollEvent::ScrollState)
 Q_DECLARE_METATYPE(QList<QInputMethodEvent::Attribute>)
 Q_DECLARE_METATYPE(QContextMenuEvent::Reason)
+Q_DECLARE_METATYPE(QMarginsF)
 
 
 // QGradient is pseudo-polymorphic, make it introspectable nevertheless
@@ -676,6 +679,9 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QEnterEvent, localPos);
     MO_ADD_PROPERTY_RO(QEnterEvent, screenPos);
     MO_ADD_PROPERTY_RO(QEnterEvent, windowPos);
+
+    StreamOperators::registerOperators<QMargins>();
+    StreamOperators::registerOperators<QMarginsF>();
 }
 
 static QString surfaceFormatToString(const QSurfaceFormat &format)
@@ -1104,6 +1110,18 @@ static QString regionToString(const QRegion &region)
 #endif
 }
 
+template<typename Margins>
+static QString marginsToString(const Margins &margins)
+{
+    if (margins.isNull())
+        return QStringLiteral("<null>");
+    return GuiSupport::tr("left: %1, top: %2, right: %3, bottom: %4")
+        .arg(margins.left())
+        .arg(margins.top())
+        .arg(margins.right())
+        .arg(margins.bottom());
+}
+
 static QString imageToString(const QImage &image)
 {
     return VariantHandler::displayString(image.size());
@@ -1145,6 +1163,8 @@ void GuiSupport::registerVariantHandler()
     VariantHandler::registerStringConverter<QPen>(penToString);
     VariantHandler::registerStringConverter<QPixmap>(pixmapToString);
     VariantHandler::registerStringConverter<QRegion>(regionToString);
+    VariantHandler::registerStringConverter<QMargins>(marginsToString<QMargins>);
+    VariantHandler::registerStringConverter<QMarginsF>(marginsToString<QMarginsF>);
     VariantHandler::registerStringConverter<QTextLength>(textLengthToString);
     VariantHandler::registerStringConverter<QPair<double, QColor>>([](const QPair<double, QColor> &p) {
         return QString(VariantHandler::displayString(p.first) + QLatin1String(": ") + VariantHandler::displayString(p.second));
