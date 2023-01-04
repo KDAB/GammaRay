@@ -48,7 +48,7 @@ static QMetaEnum flagsFromEnumIndex(int enumIndex, const QByteArray &enumName, c
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Q_ASSERT(false);
     return mo->enumerator(enumIndex);
-#endif
+#else
     Q_ASSERT(mo);
     // usually it should be just enumIndex + 1
     const auto count = mo->enumeratorCount();
@@ -66,6 +66,7 @@ static QMetaEnum flagsFromEnumIndex(int enumIndex, const QByteArray &enumName, c
         }
     }
     return mo->enumerator(enumIndex);
+#endif
 }
 
 QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
