@@ -61,6 +61,7 @@ set(gammaray_ui_srcs
     propertyeditor/propertymatrixmodel.cpp
     propertyeditor/propertytexteditor.cpp
     propertyeditor/propertyrecteditor.cpp
+    propertyeditor/propertymargineditor.cpp
     codeeditor/codeeditor.cpp
     codeeditor/codeeditorsidebar.cpp
     tools/messagehandler/messagedisplaymodel.cpp
