@@ -19,12 +19,29 @@
 #include <common/endpoint.h>
 #include <common/metatypedeclarations.h>
 #include <common/variantwrapper.h>
+#include <common/streamoperators.h>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QTypeRevision>
+#endif
 
 using namespace GammaRay;
+
+Q_DECLARE_METATYPE(QMarginsF)
+
+static void registerMetaTypes()
+{
+    StreamOperators::registerOperators<QMargins>();
+    StreamOperators::registerOperators<QMarginsF>();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // TODO: Probably should be somewhere else
+    qRegisterMetaType<QTypeRevision>();
+#endif
+}
 
 PropertyControllerClient::PropertyControllerClient(const QString &name, QObject *parent)
     : PropertyControllerInterface(name, parent)
 {
+    registerMetaTypes();
 }
 
 PropertyControllerClient::~PropertyControllerClient() = default;
