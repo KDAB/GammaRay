@@ -16,6 +16,7 @@
 
 #include "metaobjectrepository.h"
 #include "metaobject.h"
+#include "enumrepositoryserver.h"
 
 #include <common/metatypedeclarations.h>
 
@@ -60,6 +61,22 @@ void MetaObjectRepository::initBuiltInTypes()
 }
 
 Q_DECLARE_METATYPE(QThread::Priority)
+
+#define E(x)           \
+    {                  \
+        QThread::x, #x \
+    }
+static const MetaEnum::Value<QThread::Priority> qthread_priority_enum_table[] = {
+    E(IdlePriority),
+    E(LowestPriority),
+    E(LowPriority),
+    E(NormalPriority),
+    E(HighPriority),
+    E(HighestPriority),
+    E(TimeCriticalPriority),
+    E(InheritPriority),
+};
+#undef E
 
 void MetaObjectRepository::initQObjectTypes()
 {
@@ -133,6 +150,8 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_PROPERTY(QEasingCurve, overshoot, setOvershoot);
     MO_ADD_PROPERTY(QEasingCurve, period, setPeriod);
     MO_ADD_PROPERTY(QEasingCurve, type, setType);
+
+    ER_REGISTER_ENUM(QThread, Priority, qthread_priority_enum_table);
 }
 
 Q_DECLARE_METATYPE(QIODevice::OpenMode)
