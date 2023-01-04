@@ -109,6 +109,18 @@ static QString displayVector(const T &vector)
     }
     return '[' + v.join(QStringLiteral(", ")) + ']';
 }
+
+static bool isEnum(const QVariant &value)
+{
+    if (!value.isValid())
+        return false;
+    const QMetaType mt(value.userType());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    return mt.isValid() && ((mt.flags() & QMetaType::IsEnumeration) || (mt.flags() & QMetaType::IsUnsignedEnumeration));
+#else
+    return mt.isValid() && mt.flags() & QMetaType::IsEnumeration;
+#endif
+}
 }
 
 Q_GLOBAL_STATIC(VariantHandlerRepository, s_variantHandlerRepository)
@@ -371,6 +383,10 @@ QString VariantHandler::displayString(const QVariant &value)
         return Util::displayString(obj);
     }
 
+    if (isEnum(value)) {
+        return QString::number(value.toInt());
+    }
+
     return value.toString();
 }
 
@@ -479,7 +495,10 @@ QVariant VariantHandler::serializableVariant(const QVariant &value)
         return QVariant::fromValue(EnumRepositoryServer::valueFromVariant(value));
     }
 
-    // If this breaks, check enumutil.cpp => EnumUtil::metaEnum
+    if (isEnum(value)) {
+        return QVariant(value.value<int>());
+    }
+
     return value;
 }
 
