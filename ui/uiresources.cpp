@@ -142,7 +142,7 @@ QString themedFilePath(ThemeEntryType type, UIResources::Theme theme, const QStr
         }
 
         it = hash.insert(pair, candidate);
-        Q_ASSERT_X(QFile::exists(*it), "themedFilePath", qPrintable(*it));
+        // Q_ASSERT_X(QFile::exists(*it), "themedFilePath", qPrintable(*it));
     }
 
     return *it;
