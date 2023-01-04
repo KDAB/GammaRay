@@ -732,6 +732,8 @@ else()
         CACHE PATH "Install location of Qt Assistant help files."
     )
     gammaray_convert_to_relative_path(QCH_INSTALL_DIR)
+    set(ZSHAUTOCOMPLETE_INSTALL_DIR "${DATAROOTDIR}/zsh/site-functions")
+
     if(WIN32)
         set(PLUGIN_INSTALL_DIR "plugins/gammaray")
         set(LIBEXEC_INSTALL_DIR "${BIN_INSTALL_DIR}")
