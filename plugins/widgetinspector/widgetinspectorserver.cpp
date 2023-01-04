@@ -534,7 +534,7 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_METAOBJECT2(QWidget, QObject, QPaintDevice);
     MO_ADD_PROPERTY_RO(QWidget, actions);
     MO_ADD_PROPERTY(QWidget, backgroundRole, setBackgroundRole);
-    MO_ADD_PROPERTY_RO(QWidget, contentsMargins);
+    MO_ADD_PROPERTY(QWidget, contentsMargins, setContentsMargins);
     MO_ADD_PROPERTY_RO(QWidget, contentsRect);
     MO_ADD_PROPERTY_RO(QWidget, focusProxy);
     MO_ADD_PROPERTY_RO(QWidget, focusWidget);
