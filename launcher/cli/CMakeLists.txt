@@ -32,6 +32,13 @@ gammaray_set_rpath(gammaray ${BIN_INSTALL_DIR})
 install(
     TARGETS gammaray ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
+if(ZSHAUTOCOMPLETE_INSTALL_DIR)
+    install(
+        FILES completions/gammaray.zsh
+        RENAME _gammaray
+        DESTINATION ${ZSHAUTOCOMPLETE_INSTALL_DIR}
+    )
+endif()
 if(MSVC)
     install(
         FILES "$<TARGET_PDB_FILE_DIR:gammaray>/$<TARGET_PDB_FILE_NAME:gammaray>"
