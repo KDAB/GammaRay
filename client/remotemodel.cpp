@@ -118,7 +118,6 @@ RemoteModel::RemoteModel(const QString &serverObject, QObject *parent)
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     // TODO: Probably should be somewhere else
     qRegisterMetaType<QMargins>();
-    qRegisterMetaType<QTabBar::SelectionBehavior>();
     qRegisterMetaType<QTypeRevision>();
 #endif
 }
