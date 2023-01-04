@@ -222,14 +222,6 @@ QString VariantHandler::displayString(const QVariant &value)
         const auto v = value.value<uchar>();
         return QString::number(v) + QLatin1String(" '") + QChar(v) + QLatin1Char('\'');
     }
-    if (value.userType() == qMetaTypeId<QMargins>()) {
-        const QMargins margins = value.value<QMargins>();
-        return qApp->translate("GammaRay::VariantHandler", "left: %1, top: %2, right: %3, bottom: %4")
-            .arg(margins.left())
-            .arg(margins.top())
-            .arg(margins.right())
-            .arg(margins.bottom());
-    }
 
     if (value.userType() == qMetaTypeId<const QMetaObject *>()) {
         const auto mo = value.value<const QMetaObject *>();
