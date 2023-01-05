@@ -180,7 +180,7 @@ void PositioningWidget::loadNmeaFile()
     connect(m_replaySource, &QGeoPositionInfoSource::positionUpdated, this, &PositioningWidget::replayPosition);
     m_replaySource->startUpdates();
 
-#if QT_VERSION < QT_VERSION_CHECK(6,2,0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
     connect(m_replaySource, &QNmeaPositionInfoSource::updateTimeout, this, []() {
         qDebug() << "NMEA source update timeout!";
     });
