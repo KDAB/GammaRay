@@ -2,7 +2,7 @@
 # Assumptions: toolchain is in path, $SYSROOT points to the sysroot
 #
 
-# SPDX-FileCopyrightText: 2013-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# SPDX-FileCopyrightText: 2013-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # Author: Volker Krause <volker.krause@kdab.com>
 
 # SPDX-License-Identifier: BSD-3-Clause

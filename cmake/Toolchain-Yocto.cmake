@@ -2,7 +2,7 @@
 # Assumptions: toolchain script is sourced
 #
 
-# SPDX-FileCopyrightText: 2013-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# SPDX-FileCopyrightText: 2013-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # Author: Christoph Sterz <christoph.sterz@kdab.com>
 
 # SPDX-License-Identifier: BSD-3-Clause

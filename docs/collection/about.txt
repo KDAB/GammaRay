@@ -2,7 +2,7 @@
 
 <p>The Qt application inspection and manipulation tool.
 Learn more at <a href=\"https://www.kdab.com/gammaray\">https://www.kdab.com/gammaray/</a>.</p>
-<p>Copyright (C) 2010-2022 Klarälvdalens Datakonsult AB,
+<p>Copyright (C) 2010-2023 Klarälvdalens Datakonsult AB,
 a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>
 
 <p>GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB

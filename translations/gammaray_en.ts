@@ -15,7 +15,7 @@
     </message>
     <message>
         <location line="+5"/>
-        <source>&lt;p&gt;The Qt application inspection and manipulation tool.Learn more at &lt;a href=&quot;https://www.kdab.com/gammaray&quot;&gt;https://www.kdab.com/gammaray/&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright (C) 2010-2022 Klarälvdalens Datakonsult AB, a KDAB Group company, &lt;a href=&quot;mailto:info@kdab.com&quot;&gt;info@kdab.com&lt;/a&gt;&lt;/p&gt;&lt;p&gt;StackWalker code Copyright (c) 2005-2019, Jochen Kalmbach, All rights reserved&lt;br&gt;lz4 fast LZ compression code Copyright (C) 2011-2015, Yann Collet, All rights reserved&lt;br&gt;backward-cpp code Copyright 2013-2017 Google Inc. All rights reserved.&lt;/p&gt;</source>
+        <source>&lt;p&gt;The Qt application inspection and manipulation tool.Learn more at &lt;a href=&quot;https://www.kdab.com/gammaray&quot;&gt;https://www.kdab.com/gammaray/&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright (C) 2010-2023 Klarälvdalens Datakonsult AB, a KDAB Group company, &lt;a href=&quot;mailto:info@kdab.com&quot;&gt;info@kdab.com&lt;/a&gt;&lt;/p&gt;&lt;p&gt;StackWalker code Copyright (c) 2005-2019, Jochen Kalmbach, All rights reserved&lt;br&gt;lz4 fast LZ compression code Copyright (C) 2011-2015, Yann Collet, All rights reserved&lt;br&gt;backward-cpp code Copyright 2013-2017 Google Inc. All rights reserved.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

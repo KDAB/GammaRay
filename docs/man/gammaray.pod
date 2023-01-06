@@ -121,7 +121,7 @@ indicating a problem occurred while launching or attaching an injector.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2010-2022 Klaralvdalens Datakonsult AB, a KDAB Group company, <info@kdab.com>
+Copyright (C) 2010-2023 Klaralvdalens Datakonsult AB, a KDAB Group company, <info@kdab.com>
 
 Licensees holding valid commercial KDAB GammaRay licenses may use this file in
 accordance with GammaRay Commercial License Agreement provided with the Software.

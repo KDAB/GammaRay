@@ -1,7 +1,7 @@
 # Toolchain file for building x86_64 binaries on OSX ARM-based systems
 #
 
-# SPDX-FileCopyrightText: 2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# SPDX-FileCopyrightText: 2022-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # Author: Allen Winter <allen.winter@kdab.com>
 
 # SPDX-License-Identifier: BSD-3-Clause

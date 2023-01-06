@@ -1,7 +1,7 @@
 # Toolchain file for 32bit builds on 64bit OSX hosts
 #
 
-# SPDX-FileCopyrightText: 2013-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# SPDX-FileCopyrightText: 2013-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # Author: Volker Krause <volker.krause@kdab.com>
 # Author: Filipe Azevedo <filipe.azevedo@kdab.com>
 

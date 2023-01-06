@@ -3,7 +3,7 @@
 
   This file is part of GammaRay, the Qt application inspection and manipulation tool.
 
-  SPDX-FileCopyrightText: 2014-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+  SPDX-FileCopyrightText: 2014-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
   Author: Volker Krause <volker.krause@kdab.com>
 
   SPDX-License-Identifier: GPL-2.0-or-later OR LicenseRef-KDAB-GammaRay
@@ -68,7 +68,7 @@ QString AboutData::aboutHeader()
     return AboutDataContext::tr(
         "<p>The Qt application inspection and manipulation tool."
         "Learn more at <a href=\"https://www.kdab.com/gammaray\">https://www.kdab.com/gammaray/</a>.</p>"
-        "<p>Copyright (C) 2010-2022 Klarälvdalens Datakonsult AB, "
+        "<p>Copyright (C) 2010-2023 Klarälvdalens Datakonsult AB, "
         "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
         "<p>StackWalker code Copyright (c) 2005-2019, Jochen Kalmbach, All rights reserved<br>"
         "lz4 fast LZ compression code Copyright (C) 2011-2020, Yann Collet, All rights reserved<br>"

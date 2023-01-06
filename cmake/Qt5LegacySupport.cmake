@@ -1,6 +1,6 @@
 # This file is part of GammaRay, the Qt application inspection and manipulation tool.
 #
-# SPDX-FileCopyrightText: 2021-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# SPDX-FileCopyrightText: 2021-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 #
 # SPDX-License-Identifier: GPL-2.0-or-later OR LicenseRef-KDAB-GammaRay
 #
@@ -11,7 +11,7 @@
 #
 # Backward compatibility helpers with ancient Qt5 versions
 
-# Copyright (C) 2021-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# Copyright (C) 2021-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # All rights reserved.
 #
 # Author: Volker Krause <volker.krause@kdab.com>

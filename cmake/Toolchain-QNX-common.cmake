@@ -1,6 +1,6 @@
 #
 # SPDX-FileCopyrightText: 2009 Johns Hopkins University (JHU), All Rights Reserved.
-# SPDX-FileCopyrightText: 2012-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# SPDX-FileCopyrightText: 2012-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # SPDX-License-Identifier: LicenseRef-CISST
 
 # --- begin cisst license - do not edit ---

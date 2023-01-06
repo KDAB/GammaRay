@@ -1,6 +1,6 @@
 # Basic cmake toolchain file for BlackBerry 10
 
-# SPDX-FileCopyrightText: 2013-2022 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# SPDX-FileCopyrightText: 2013-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 # Author: Rafael Roquetto <rafael.roquetto@kdab.com>
 
 # SPDX-License-Identifier: BSD-3-Clause
