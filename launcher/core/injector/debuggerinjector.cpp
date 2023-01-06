@@ -244,5 +244,8 @@ void DebuggerInjector::processLog(DebuggerInjector::Orientation orientation, boo
             std::cerr << qPrintable(output) << std::endl;
         else
             std::cout << qPrintable(output) << std::endl;
+    } else {
+        if (isError)
+            std::cerr << qPrintable(text.trimmed()) << std::endl;
     }
 }
