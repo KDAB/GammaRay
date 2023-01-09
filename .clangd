@@ -3,4 +3,4 @@ Diagnostics:
     Remove: [modernize*, readability-function-*, readability-magic-numbers, readability-qualified-auto, llvm-qualified-auto, misc-non-private-member-variables-in-classes, cppcoreguidelines-pro-type-reinterpret-cast, llvmlibc-*, altera-*, readability-redundant-access-specifiers, readability-redundant-member-init, performance-no-int-to-ptr, misc-no-recursion]
 CompileFlags:
   Add: -Wno-gnu-zero-variadic-macro-arguments
-  Remove: -Wgnu-zero-variadic-macro-arguments
+  Remove: [-Wgnu-zero-variadic-macro-arguments, -mno-direct-extern-access]
