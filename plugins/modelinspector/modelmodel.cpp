@@ -15,6 +15,7 @@
 */
 
 #include "modelmodel.h"
+#include <QThread>
 
 using namespace GammaRay;
 
@@ -74,6 +75,9 @@ QModelIndex ModelModel::index(int row, int column, const QModelIndex &parent) co
 
 void ModelModel::objectAdded(QObject *obj)
 {
+    if (obj->thread() != QThread::currentThread()) { // ignore models in secondary threads, they can be deleted at any time
+        return;
+    }
     QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>(obj);
     if (proxy) {
         beginResetModel(); // FIXME
