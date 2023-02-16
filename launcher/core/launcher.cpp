@@ -157,7 +157,7 @@ bool Launcher::start()
         Q_ASSERT(!errorStrings.isEmpty());
         std::cerr << "Potential errors:" << std::endl;
         for (const QString &errorString : qAsConst(errorStrings)) {
-            std::cerr << "  Error: " << qPrintable(errorString) << std::endl;
+            injectorError(-1, errorString);
         }
         std::cerr << std::endl;
 
@@ -172,6 +172,8 @@ bool Launcher::start()
         } else {
             injectorError(-1, tr("Injector %1 not found.").arg(d->options.injectorType()));
         }
+        std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting"
+                  << std::endl;
         return false;
     }
 
@@ -213,6 +215,8 @@ bool Launcher::start()
             errorMessage += tr("\nError: %1").arg(d->injector->errorString());
         }
         injectorError(d->injector->exitCode() ? d->injector->exitCode() : 1, errorMessage);
+        std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting"
+                  << std::endl;
         return false;
     }
     return true;
@@ -300,12 +304,11 @@ void Launcher::injectorFinished()
 void Launcher::injectorError(int exitCode, const QString &errorMessage)
 {
     d->exitCode = exitCode;
-    d->errorMessage = errorMessage;
+    d->errorMessage += errorMessage + "\n\n";
 
     d->state |= InjectorFailed;
     std::cerr << qPrintable(errorMessage) << std::endl;
-    std::cerr << "See <https://github.com/KDAB/GammaRay/wiki/Known-Issues> for troubleshooting"
-              << std::endl;
+
     checkDone();
 }
 
