@@ -343,14 +343,14 @@ int main(int argc, char **argv)
 
     Launcher launcher(options);
     if (!launcher.start()) {
-        #ifdef HAVE_QT_WIDGETS
-                QMessageBox errorBox;
-                errorBox.setWindowTitle("Launcher Error");
-                errorBox.setIcon(QMessageBox::Icon::Critical);
-                errorBox.setTextFormat(Qt::MarkdownText);
-                errorBox.setText(launcher.errorMessage() + "\nSee https://github.com/KDAB/GammaRay/wiki/Known-Issues for troubleshooting");
-                errorBox.exec();
-        #endif
+#ifdef HAVE_QT_WIDGETS
+        QMessageBox errorBox;
+        errorBox.setWindowTitle("Launcher Error");
+        errorBox.setIcon(QMessageBox::Icon::Critical);
+        errorBox.setTextFormat(Qt::MarkdownText);
+        errorBox.setText(launcher.errorMessage() + "\nSee https://github.com/KDAB/GammaRay/wiki/Known-Issues for troubleshooting");
+        errorBox.exec();
+#endif
         return launcher.exitCode();
     } else {
         QObject::connect(&launcher, SIGNAL(finished()), &app, SLOT(quit()));
