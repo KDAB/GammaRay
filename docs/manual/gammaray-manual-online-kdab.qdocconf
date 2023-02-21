@@ -9,16 +9,16 @@ HTML.stylesheets += \
     style/gammaray-logo-256.png \
 
 HTML.headerstyles = \
-    "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab16/css/bootstrap-3.3.6.min.css\" type=\"text/css\"/>\n" \
-    "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab16/css/font-awesome-4.5.0.min.css\" type=\"text/css\"/>\n" \
-    "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab16/style.css\" type=\"text/css\"/>\n" \
+    "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab18/css/bootstrap-3.3.6.min.css\" type=\"text/css\"/>\n" \
+    "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab18/css/font-awesome-4.5.0.min.css\" type=\"text/css\"/>\n" \
+    "  <link rel=\"stylesheet\" href=\"https://www.kdab.com/wp-content/themes/kdab18/style.css\" type=\"text/css\"/>\n" \
     "  <link rel=\"stylesheet\" href=\"style/kdab-online.css\" type=\"text/css\"/>\n" \
     "  <link rel=\"icon\" href=\"https://www.kdab.com/wp-content/uploads/stories/cropped-Favicon-32x32.png\" sizes=\"32x32\"/>\n"
 
 HTML.headerscripts = \
-    "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab16/js/jquery-2.2.3.min.js?ver=2.2.3\"></script>\n" \
-    "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab16/js/modernizr.custom.js?ver=2.6.2\"></script>\n" \
-    "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab16/js/bootstrap-3.3.6.min.js?ver=3.3.6\"></script>\n" \
+    "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab18/js/jquery-2.2.3.min.js?ver=2.2.3\"></script>\n" \
+    "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab18/js/modernizr.custom.js?ver=2.6.2\"></script>\n" \
+    "  <script type=\"text/javascript\" src=\"https://www.kdab.com/wp-content/themes/kdab18/js/bootstrap-3.3.6.min.js?ver=3.3.6\"></script>\n" \
     "  <script type=\"text/javascript\">\n" \
     "  \$(function(){\n" \
     "     \$(\"#kdab-header\").load(\"style/kdab-header.html\", function() {\n" \
