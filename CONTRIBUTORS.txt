@@ -6,3 +6,4 @@ Peter Kuemmel <syntheticpp@gmx.net>
 CESNET, z.s.p.o. <info@cesnet.cz>
 Albert Astals Cid <aacid@kde.org>
 Ivan Tkachenko <me@ratijas.tk>
+Joshua Goins <josh@redstrate.com>
