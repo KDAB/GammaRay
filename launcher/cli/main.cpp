@@ -75,58 +75,69 @@ void installSignalHandler()
     std::signal(SIGTERM, shutdownGracefully);
 #endif
 }
+
+QTextStream &out()
+{
+    static QTextStream out(stdout);
+    return out;
+}
+
+QTextStream &err()
+{
+    static QTextStream err(stderr);
+    return err;
+}
 }
 
 using namespace GammaRay;
 
-QTextStream out(stdout);
-QTextStream err(stderr);
+
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 using Qt::endl;
 #endif
 
 static void usage(const char *argv0)
 {
-    out << "Usage: " << argv0
-        << " [options] [--pid <pid> | <application> <args> | --connect <host>[:<port>]]" << endl;
-    out << "" << endl;
-    out << "Inspect runtime internals of a Qt-application, such as:" << endl;
-    out << "  QObject tree, properties, signal/slots, widgets, models," << endl;
-    out << "  graphics views, javascript debugger, resources," << endl;
-    out << "  state machines, meta types, fonts, codecs, text documents" << endl;
-    out << "" << endl;
-    out << "Options:" << endl;
-    out << " -i, --injector <injector>           \tset injection type, possible values:" << endl;
-    out << "                                     \t" << InjectorFactory::availableInjectors().join(QStringLiteral(", "))
-        << endl;
-    out
+    out() << "Usage: " << argv0
+          << " [options] [--pid <pid> | <application> <args> | --connect <host>[:<port>]]" << endl;
+    out() << "" << endl;
+    out() << "Inspect runtime internals of a Qt-application, such as:" << endl;
+    out() << "  QObject tree, properties, signal/slots, widgets, models," << endl;
+    out() << "  graphics views, javascript debugger, resources," << endl;
+    out() << "  state machines, meta types, fonts, codecs, text documents" << endl;
+    out() << "" << endl;
+    out() << "Options:" << endl;
+    out() << " -i, --injector <injector>           \tset injection type, possible values:" << endl;
+    out() << "                                     \t" << InjectorFactory::availableInjectors().join(QStringLiteral(", "))
+          << endl;
+    out()
         << " -o, --injector-override <executable>\tOverride the injector executable if handled (requires -i/--injector)"
         << endl;
-    out << " -p, --pid <pid>                     \tattach to running Qt application" << endl;
-    out << "     --inprocess                     \tuse in-process UI" << endl;
-    out << "     --inject-only                   \tonly inject the probe, don't show the UI"
-        << endl;
-    out
+    out() << " -p, --pid <pid>                     \tattach to running Qt application" << endl;
+    out() << "     --inprocess                     \tuse in-process UI" << endl;
+    out() << "     --inject-only                   \tonly inject the probe, don't show the UI"
+          << endl;
+    out()
         << "     --listen <address>              \tspecify the address the server should listen on [default: "
         << GAMMARAY_DEFAULT_ANY_TCP_URL << "]" << endl;
-    out
+    out()
         << "     --no-listen                     \tdisables remote access entirely (implies --inprocess)"
         << endl;
-    out << "     --list-probes                   \tlist all installed probes" << endl;
-    out << "     --probe <abi>                   \tspecify which probe to use" << endl;
-    out << "     --connect <host>[:port]         \tconnect to an already injected target" << endl;
-    out
+    out() << "     --list-probes                   \tlist all installed probes" << endl;
+    out() << "     --probe <abi>                   \tspecify which probe to use" << endl;
+    out() << "     --connect <host>[:port]         \tconnect to an already injected target" << endl;
+    out()
         << "     --self-test [injector]          \trun self tests, of everything or the specified injector"
         << endl;
-    out << " -h, --help                          \tprint program help and exit" << endl;
-    out << " -v, --version                       \tprint program version and exit" << endl;
+    out() << " -h, --help                          \tprint program help and exit" << endl;
+    out() << " -v, --version                       \tprint program version and exit" << endl;
 #ifdef HAVE_QT_WIDGETS
-    out << endl
-        << "When run without any options, " << argv0 << " will present a list of running\n"
-        << "Qt-applications from which you can attach the selected injector. Else,\n"
-        << "you can attach to a running process by specifying its pid, or you can\n"
-        << "start a new Qt-application by specifying its name (and optional arguments)."
-        << endl;
+    out() << endl
+          << "When run without any options, " << argv0 << " will present a list of running\n"
+          << "Qt-applications from which you can attach the selected injector. Else,\n"
+          << "you can attach to a running process by specifying its pid, or you can\n"
+          << "start a new Qt-application by specifying its name (and optional arguments)."
+          << endl;
 #endif
 }
 
@@ -209,11 +220,11 @@ int main(int argc, char **argv)
             return 0;
         }
         if (arg == QLatin1String("-v") || arg == QLatin1String("--version")) {
-            out << "GammaRay version " << GAMMARAY_VERSION_STRING << endl;
-            out << "Copyright (C) 2010-2023 Klaralvdalens Datakonsult AB, "
-                << "a KDAB Group company, info@kdab.com" << endl;
-            out << "Protocol version " << Protocol::version() << endl;
-            out << "Broadcast version " << Protocol::broadcastFormatVersion() << endl;
+            out() << "GammaRay version " << GAMMARAY_VERSION_STRING << endl;
+            out() << "Copyright (C) 2010-2023 Klaralvdalens Datakonsult AB, "
+                  << "a KDAB Group company, info@kdab.com" << endl;
+            out() << "Protocol version " << Protocol::version() << endl;
+            out() << "Broadcast version " << Protocol::broadcastFormatVersion() << endl;
             return 0;
         }
         if (arg == QLatin1String("--inprocess"))
@@ -229,17 +240,17 @@ int main(int argc, char **argv)
         }
         if (arg == QLatin1String("--list-probes")) {
             foreach (const ProbeABI &abi, ProbeFinder::listProbeABIs())
-                out << abi.id() << " (" << abi.displayString() << ")" << endl;
+                out() << abi.id() << " (" << abi.displayString() << ")" << endl;
             return 0;
         }
         if (arg == QLatin1String("--probe") && !args.isEmpty()) {
             const ProbeABI abi = ProbeABI::fromString(args.takeFirst());
             if (!abi.isValid()) {
-                out << "Invalid probe ABI specified, see --list-probes for valid ones." << endl;
+                out() << "Invalid probe ABI specified, see --list-probes for valid ones." << endl;
                 return 1;
             }
             if (ProbeFinder::findProbe(abi).isEmpty()) {
-                out << abi.id() << " is not a known probe, see --list-probes." << endl;
+                out() << abi.id() << " is not a known probe, see --list-probes." << endl;
                 return 1;
             }
             options.setProbeABI(abi);
@@ -254,10 +265,10 @@ int main(int argc, char **argv)
         if (arg == QLatin1String("--self-test")) {
             SelfTest selfTest;
             QObject::connect(&selfTest, &SelfTest::information, [](const QString &msg) {
-                out << msg << endl;
+                out() << msg << endl;
             });
             QObject::connect(&selfTest, &SelfTest::error, [](const QString &msg) {
-                err << "Error: " << msg << endl;
+                err() << "Error: " << msg << endl;
             });
             if (args.isEmpty() || args.first().startsWith('-'))
                 return selfTest.checkEverything() ? 0 : 1;
@@ -300,22 +311,22 @@ int main(int argc, char **argv)
     if (options.probeABI().isValid()) {
         const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(options.probeABI());
         if (!bestABI.isValid()) {
-            out << "No probe found for ABI " << options.probeABI().id() << endl;
+            out() << "No probe found for ABI " << options.probeABI().id() << endl;
             return 1;
         }
-        out << "Detected ABI " << options.probeABI().id() << ", using ABI " << bestABI.id()
-            << "." << endl;
+        out() << "Detected ABI " << options.probeABI().id() << ", using ABI " << bestABI.id()
+              << "." << endl;
         options.setProbeABI(bestABI);
     } else {
         const QVector<ProbeABI> availableProbes = ProbeFinder::listProbeABIs();
         if (availableProbes.isEmpty()) {
-            out << "No probes found, this is likely an installation problem." << endl;
+            out() << "No probes found, this is likely an installation problem." << endl;
             return 1;
         }
         if (availableProbes.size() > 1) {
-            out << "No probe ABI specified and ABI auto-detection failed, picking "
-                << availableProbes.first().id() << " at random." << endl;
-            out
+            out() << "No probe ABI specified and ABI auto-detection failed, picking "
+                  << availableProbes.first().id() << " at random." << endl;
+            out()
                 << "To specify the probe ABI explicitly use --probe <abi>, available probes are listed using the --list-probes option."
                 << endl;
         }
