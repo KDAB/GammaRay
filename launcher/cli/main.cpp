@@ -347,7 +347,8 @@ int main(int argc, char **argv)
         QMessageBox errorBox;
         errorBox.setWindowTitle("Launcher Error");
         errorBox.setIcon(QMessageBox::Icon::Critical);
-        errorBox.setTextFormat(Qt::MarkdownText);
+        // errorBox.setTextFormat(Qt::MarkdownText);
+        errorBox.setTextInteractionFlags(Qt::TextBrowserInteraction);
         errorBox.setText(launcher.errorMessage() + "\nSee https://github.com/KDAB/GammaRay/wiki/Known-Issues for troubleshooting");
         errorBox.exec();
 #endif
