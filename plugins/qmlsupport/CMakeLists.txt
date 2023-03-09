@@ -33,10 +33,11 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         Qt::Qml
         Qt::QmlPrivate
     )
-endif()
 
-if(NOT QtQml_VERSION VERSION_LESS 5.10 OR TARGET Qt6::Qml)
-    target_sources(gammaray_qmlsupport PUBLIC qmlbindingprovider.cpp)
+    if(NOT QtQml_VERSION VERSION_LESS 5.10 OR TARGET Qt6::Qml)
+        target_sources(gammaray_qmlsupport PUBLIC qmlbindingprovider.cpp)
+    endif()
+
 endif()
 
 # ui plugin
