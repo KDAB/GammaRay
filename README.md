@@ -1,4 +1,4 @@
-<!-- markdownlint-disable-next-line MD013 -->
+<!-- markdownlint-disable-next-line MD013 MD033 -->
 # <a name="title"></a> <img src="/ui/resources/gammaray/ui/light/pixmaps/GammaRay-logo.png" height="350px" title="Logo">
 
 GammaRay is a software introspection tool for Qt applications developed by KDAB.
@@ -22,18 +22,21 @@ Among other things GammaRay can:
 * Browse the QtQuick2 item tree and scenegraph.
 * Inspect shaders and geometry data of QtQuick2 items.
 * Plot object lifetime and emitted signals.
-* Browse the QAbstractProxyModel hierarchy and inspect intermediate results in a proxy model chain.
+* Browse the QAbstractProxyModel hierarchy and inspect intermediate results
+  in a proxy model chain.
 * Visual live inspection of QStateMachines.
 * Browse the item tree of any QGraphicsView scene.
-* Show a live preview of QGraphicsView items, including showing their coordinate system,
-  transformation origin, rotate/zoom/pan, etc.
+* Show a live preview of QGraphicsView items, including showing their
+  coordinate system, transformation origin, rotate/zoom/pan, etc.
 * Intercept translations and change them at runtime.
 * Inspect all building blocks of a QStyle.
 * Show all QTimers and their statistics (number of wakeups, wakeup time, ...)
-* Browse all QTextDocuments, along with the ability to edit them and view their internal structures.
+* Browse all QTextDocuments, along with the ability to edit them and view
+  their internal structures.
 * Act as a complete java script debugger, attachable to any QScriptEngine
   (including the usually not accessible one used by QtQuick1 internally).
-* Perform HTML/CSS/DOM/JS introspection/editing/profiling on any QWebPage, thanks to QWebInspector.
+* Perform HTML/CSS/DOM/JS introspection/editing/profiling on any QWebPage,
+  thanks to QWebInspector.
 * Browse the QResource tree and its content.
 * Show all registered meta types.
 * Show all installed fonts.
@@ -100,6 +103,7 @@ via <https://www.kdab.com/contact>.  KDAB engineers know how to write GammaRay
 plugins and can be contracted to help you get yours working and improve your
 development efficiency.
 
-GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens Datakonsult AB
-in the European Union, the United States and/or other countries.  Other product and
-company names and logos may be trademarks or registered trademarks of their respective companies.
+GammaRay and the GammaRay logo are registered trademarks of Klarälvdalens
+Datakonsult AB in the European Union, the United States and/or other
+countries.  Other product and company names and logos may be trademarks or
+registered trademarks of their respective companies.
