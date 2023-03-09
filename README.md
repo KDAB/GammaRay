@@ -1,3 +1,4 @@
+<!-- markdownlint-disable-next-line MD013 -->
 # <a name="title"></a> <img src="/ui/resources/gammaray/ui/light/pixmaps/GammaRay-logo.png" height="350px" title="Logo">
 
 GammaRay is a software introspection tool for Qt applications developed by KDAB.
