@@ -234,15 +234,15 @@ target_link_libraries(
     metaobjecttest gammaray_core
 )
 
-gammaray_add_probe_test(problemreportertest problemreportertest.cpp $<TARGET_OBJECTS:modeltestobj>)
-target_link_libraries(
-    problemreportertest gammaray_core
-)
-if(TARGET Qt::Qml)
-    target_link_libraries(problemreportertest Qt::Qml)
-endif()
-if(TARGET Qt::Widgets)
-    target_link_libraries(problemreportertest Qt::Widgets)
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
+    gammaray_add_probe_test(problemreportertest problemreportertest.cpp $<TARGET_OBJECTS:modeltestobj>)
+    target_link_libraries(problemreportertest gammaray_core)
+    if(TARGET Qt::Qml)
+        target_link_libraries(problemreportertest Qt::Qml)
+    endif()
+    if(TARGET Qt::Widgets)
+        target_link_libraries(problemreportertest Qt::Widgets)
+    endif()
 endif()
 
 gammaray_add_test(objectinstancetest objectinstancetest.cpp)
@@ -265,10 +265,10 @@ if(HAVE_QT_WIDGETS)
     target_link_libraries(enumpropertytest gammaray_core Qt::Gui Qt::Widgets)
 endif()
 
-gammaray_add_probe_test(propertymodeltest propertymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
-target_link_libraries(
-    propertymodeltest gammaray_core gammaray_shared_test_data
-)
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
+    gammaray_add_probe_test(propertymodeltest propertymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
+    target_link_libraries(propertymodeltest gammaray_core gammaray_shared_test_data)
+endif()
 
 gammaray_add_test(qmetaobjectvalidatortest qmetaobjectvalidatortest.cpp)
 target_link_libraries(
