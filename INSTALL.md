@@ -121,6 +121,7 @@ You'll find more information on this in the wiki:
 <https://github.com/KDAB/GammaRay/wiki/Cross-compiling-GammaRay>
 
 ## Force a probe only build
+
 If you already built GammaRay in the past and that you want to support more probes,
 you don't need to rebuild entirely GammaRay for this specific Qt version.
 You can instead just build the GammaRay probe for the new Qt version and install it
