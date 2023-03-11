@@ -1,0 +1,71 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        build-type:
+          - ''
+          - '-DGAMMARAY_CLIENT_ONLY_BUILD=1'
+#          - '-DGAMMARAY_PROBE_ONLY_BUILD=1 -DGAMMARAY_BUILD_UI=0'
+        qt-version: ['5.15.*', '6.4.*']
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure Python (Linux)
+      if: ${{ runner.os }} == 'linux'
+      run: |
+        sudo python3 -m pip install wheel
+        sudo python3 -m pip install --upgrade setuptools
+        sudo python3 -m pip install 'py7zr==0.19.*'
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: ${{ matrix.qt-version }}
+        cache: true
+        setup-python: false
+    - name: Configure
+      run: |
+        MATRIX_QT_VERSION=${{ matrix.qt-version }}
+        QT_MAJOR_VERSION=${MATRIX_QT_VERSION:0:1}
+        if [ $QT_MAJOR_VERSION == "6" ]; then
+          EXTRA_CMAKE_FLAGS="-DGAMMARAY_QT6_BUILD=1 -DQT_MAJOR_VERSION=${QT_MAJOR_VERSION}";
+        fi
+        cmake -B _build -S . \
+          ${{ matrix.build-type }} ${EXTRA_CMAKE_FLAGS}
+    - name: Build
+      run: |
+        cmake --build _build
+    - name: Install
+      run: |
+        cmake --install _build --prefix ./install
+    - name: Deploy (Linux) - Disabled due to GammaRay GLIBC_2.28 requirement
+      if: false
+      run: |
+        sudo apt install libfuse2
+        wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        chmod a+x linuxdeployqt*.AppImage
+        unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
+        ./linuxdeployqt*.AppImage ./install/usr/share/applications/GammaRay.desktop -bundle-non-qt-libs
+        # Workaround for https://github.com/probonopd/linuxdeployqt/issues/83
+        ./linuxdeployqt*.AppImage --appimage-extract
+        ./squashfs-root/usr/bin/patchelf --set-rpath '$ORIGIN/../..' ./appdir/usr/lib/gammaray/libexec/gammaray-launcher
+        ./squashfs-root/usr/bin/patchelf --set-rpath '$ORIGIN/../..' ./appdir/usr/lib/gammaray/libexec/gammaray-client
+        # Apparently the qt_prfxpath in libQt5Core.so
+        # is not relative to libQt5Core.so but to the binary that is being executed, is this clever?
+        ( cd ./appdir/usr/lib/gammaray/ ;  ln -s ../../plugins/ . )
+        ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/GammaRay.desktop -appimage
+        # curl --upload-file ./GammaRay-*.AppImage https://transfer.sh/GammaRay-git.$(git rev-parse --short HEAD)-x86_64.AppImage
