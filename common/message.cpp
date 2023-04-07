@@ -259,3 +259,32 @@ int Message::size() const
 {
     return m_buffer->data.size();
 }
+
+int Message::pos() const
+{
+    return payload().device()->pos();
+}
+
+void Message::findAndSkipCString(const char *marker, int from) const
+{
+    if (!marker)
+        return;
+
+    if (payload().status() == QDataStream::Ok) {
+        from = payload().device()->pos();
+        payload().device()->seek(from + qstrlen(marker));
+        return;
+    }
+
+    int f = m_buffer->data.data().indexOf(marker, from);
+    if (f != -1) {
+        int len = qstrlen(marker);
+        m_buffer->stream.device()->seek(f + len);
+        m_buffer->stream.resetStatus();
+    }
+}
+
+int Message::writeCStringMarker(const char *bytes, int len)
+{
+    return m_buffer->stream.writeRawData(bytes, len);
+}

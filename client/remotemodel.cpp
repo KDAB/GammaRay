@@ -390,13 +390,19 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                 qWarning() << "Unexpected empty index, probably some type failed to deserialize" << Q_FUNC_INFO;
                 continue;
             }
+            quint32 indexEndPos = msg.pos();
+
             Node *node = nodeForIndex(index);
             const auto column = index.last().column;
             const auto state = node ? stateForColumn(node, column) : RemoteModelNodeState::NoState;
             typedef QHash<int, QVariant> ItemData;
             ItemData itemData;
             qint32 flags;
-            msg >> itemData >> flags;
+            // read item data
+            msg >> itemData;
+            // skip the marker and reset if itemData was invalid/unreadable
+            msg.findAndSkipCString(GammaRay::REMOTE_MODEL_MARKER, indexEndPos);
+            msg >> flags;
             if ((state & RemoteModelNodeState::Loading) == 0)
                 continue; // we didn't ask for this, probably outdated response for a moved cell
 
