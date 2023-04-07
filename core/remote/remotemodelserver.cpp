@@ -15,6 +15,7 @@
 */
 
 #include "remotemodelserver.h"
+#include "common/remotemodelroles.h"
 #include "server.h"
 #include <core/probeguard.h>
 #include <common/protocol.h>
@@ -186,10 +187,12 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
         Message msg(m_myAddress, Protocol::ModelContentReply);
         msg << quint32(indexes.size());
-        for (const auto &qmIndex : qAsConst(indexes))
-            msg << Protocol::fromQModelIndex(qmIndex)
-                << filterItemData(m_model->itemData(qmIndex))
-                << qint32(m_model->flags(qmIndex));
+        for (const auto &qmIndex : qAsConst(indexes)) {
+            msg << Protocol::fromQModelIndex(qmIndex);
+            msg << filterItemData(m_model->itemData(qmIndex));
+            msg.writeCStringMarker(GammaRay::REMOTE_MODEL_MARKER, sizeof(GammaRay::REMOTE_MODEL_MARKER) - 1);
+            msg << qint32(m_model->flags(qmIndex));
+        }
 
         sendMessage(msg);
         break;

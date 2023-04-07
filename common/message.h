@@ -111,6 +111,29 @@ public:
     /** Size of the uncompressed message payload. */
     int size() const;
 
+    /** Current position of the stream */
+    int pos() const;
+
+    /**
+     * Finds @p marker and seeks the internal QDataStream to
+     * right after the marker.
+     *
+     * @p from the pos to start search from
+     */
+    void findAndSkipCString(const char *marker, int from) const;
+
+    /**
+     * Write a c string (starting at @p bytes, with size @p len) to the message.
+     * This method can be used to add a marker with the data
+     * that you are writing. This marker can then be used
+     * to skip a certain portion of the message in case
+     * the stream is not valid anymore. Use the method
+     * findAndSkipCString to skip this marker when reading
+     * the message.
+     * @return the number of bytes written
+     */
+    int writeCStringMarker(const char *bytes, int len);
+
 private:
     Message();
 
