@@ -747,7 +747,11 @@ void SoftwareScreenGrabber::requestGrabWindow(const QRectF &userViewport)
     renderer->markDirty();
     winPriv->polishItems();
     winPriv->syncSceneGraph();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    winPriv->renderSceneGraph();
+#else
     winPriv->renderSceneGraph(m_window->size());
+#endif
     renderer->setCurrentPaintDevice(regularRenderDevice);
 #else
     m_grabbedFrame.image = m_window->grabWindow();
