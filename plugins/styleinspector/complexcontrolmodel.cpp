@@ -35,11 +35,11 @@ struct complex_control_element_t
 
 #define MAKE_CC2(control, factory)                                              \
     {                                                                           \
-#control, QStyle::control, &StyleOption::factory, QStyle::SubControls() \
+        #control, QStyle::control, &StyleOption::factory, QStyle::SubControls() \
     }
 #define MAKE_CC3(control, factory, subControls) \
     {                                           \
-#control, QStyle::control,              \
+        #control, QStyle::control,              \
             &StyleOption::factory, subControls  \
     }
 
