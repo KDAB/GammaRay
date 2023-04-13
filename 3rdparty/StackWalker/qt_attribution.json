@@ -6,7 +6,7 @@
 
     "Description": "Callstack access for Windows.",
     "Homepage": "https://github.com/JochenKalmbach/StackWalker",
-    "Version": "5b0df7a4db8896f6b6dc45d36e383c52577e3c6b"
+    "Version": "5b0df7a4db8896f6b6dc45d36e383c52577e3c6b",
 
     "License": "BSD 2-Clause \"Simplified\" License",
     "LicenseId": "BSD-2-Clause",
