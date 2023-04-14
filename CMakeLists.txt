@@ -56,10 +56,6 @@
 #  Build GammaRay documentation
 #  Default=true (always false if cross-compiling or building probe-only (see GAMMARAY_PROBE_ONLY_BUILD))
 #
-# -DGAMMARAY_ENABLE_GPL_ONLY_FEATURES=[true|false]
-#  Enable features only available under GPL license
-#  Default=false
-#
 # -DGAMMARAY_ENFORCE_QT_ASSERTS=[true|false]
 #  Force QT_ASSERT in all builds
 #  Default=false
@@ -246,7 +242,6 @@ if(GAMMARAY_PROBE_ONLY_BUILD AND GAMMARAY_CLIENT_ONLY_BUILD)
     message(FATAL_ERROR "You can only use one of the *ONLY* option.")
 endif()
 
-gammaray_option(GAMMARAY_ENABLE_GPL_ONLY_FEATURES "Enable features only available under GPL license." OFF)
 gammaray_option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." OFF)
 gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
 gammaray_option(GAMMARAY_BUILD_CLI_INJECTOR "Build command line injector on Windows." ON)

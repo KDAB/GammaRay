@@ -68,7 +68,6 @@ class GammaRayConan(ConanFile):
         self.cmake.definitions["GAMMARAY_BUILD_UI"] = self.options.build_ui
         self.cmake.definitions["GAMMARAY_PROBE_ONLY_BUILD"] = self.options.probe_only_build
         self.cmake.definitions["GAMMARAY_CLIENT_ONLY_BUILD"] = self.options.client_only_build
-        self.cmake.definitions["GAMMARAY_ENABLE_GPL_ONLY_FEATURES"] = self.options.enable_gpl_only_features
         self.cmake.definitions["GAMMARAY_INSTALL_QT_LAYOUT"] = self.options.install_qt_layout
         self.cmake.definitions["GAMMARAY_BUILD_CLI_INJECTOR"] = self.options.build_cli_injector
         self.cmake.definitions["GAMMARAY_MULTI_BUILD"] = self.options.multi_build
