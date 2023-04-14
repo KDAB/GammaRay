@@ -75,10 +75,13 @@ and is available under the terms of the GPL version 2 (or any later version,
 at your option).  See [GPL-2.0-or-later.txt](LICENSES/GPL-2.0-or-later.txt)
 for license details.
 
-Commercial licensing terms are available in the included file
-[LicenseRef-KDAB-GammaRay.txt](LICENSES/LicenseRef-KDAB-GammaRay.txt).
+Contact KDAB at <info@kdab.com> to inquire about commercial licensing.
 
 For terms of redistribution, refer to the corresponding license agreement.
+
+Note that this software relies on 3rd party MIT-licensed projects
+and various other freely distributable files some of which are
+unused only for testing and not part of the application itself.
 
 ## About KDAB
 

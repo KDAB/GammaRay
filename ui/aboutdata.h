@@ -6,12 +6,9 @@
   SPDX-FileCopyrightText: 2014-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
   Author: Volker Krause <volker.krause@kdab.com>
 
-  SPDX-License-Identifier: GPL-2.0-or-later OR LicenseRef-KDAB-GammaRay
+  SPDX-License-Identifier: GPL-2.0-or-later
 
-  Licensees holding valid commercial KDAB GammaRay licenses may use this file in
-  accordance with GammaRay Commercial License Agreement provided with the Software.
-
-  Contact info@kdab.com if any conditions of this licensing are not clear to you.
+  Contact KDAB at <info@kdab.com> for commercial licensing options.
 */
 
 #ifndef GAMMARAY_ABOUTDATA_H

@@ -2,16 +2,10 @@
 #
 # SPDX-FileCopyrightText: 2017-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 #
-# SPDX-License-Identifier: GPL-2.0-or-later OR LicenseRef-KDAB-GammaRay
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
-# Licensees holding valid commercial KDAB GammaRay licenses may use this file in
-# accordance with GammaRay Commercial License Agreement provided with the Software.
+# Contact KDAB at <info@kdab.com> for commercial licensing options.
 #
-# Contact info@kdab.com if any conditions of this licensing are not clear to you.
-#
-# implementation detail of the qmake -> cmake wrapper for the Qt CI system
-#
-# DO NOT USE THIS DIRECTLY!
 
 TEMPLATE = aux
 

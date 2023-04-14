@@ -2,14 +2,10 @@
 #
 # SPDX-FileCopyrightText: 2017-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 #
-# SPDX-License-Identifier: GPL-2.0-or-later OR LicenseRef-KDAB-GammaRay
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
-# Licensees holding valid commercial KDAB GammaRay licenses may use this file in
-# accordance with GammaRay Commercial License Agreement provided with the Software.
+# Contact KDAB at <info@kdab.com> for commercial licensing options.
 #
-# Contact info@kdab.com if any conditions of this licensing are not clear to you.
-#
-#!/bin/bash -e
 
 # This script will create or update icon sets for macOS (icns) and windows (ico) at the same time (if possible).
 # This script can be run anywhere bash/imagemagick is installed on (Windows with linux subsystem, unix...) but
