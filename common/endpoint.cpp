@@ -221,9 +221,11 @@ void Endpoint::invokeObjectLocal(QObject *object, const char *method,
                                  const QVariantList &args)
 {
     Q_ASSERT(args.size() <= 10);
-    QVector<MethodArgument> a(10);
+    MethodArgument m[10] = {};
+    QGenericArgument a[10] = {};
     for (int i = 0; i < args.size(); ++i) {
-        a[i] = MethodArgument(args.at(i));
+        m[i] = MethodArgument(args.at(i));
+        a[i] = QGenericArgument(m[i]);
     }
 
     QMetaObject::invokeMethod(object, method, a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8],
