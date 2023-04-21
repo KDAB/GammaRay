@@ -154,7 +154,10 @@ void AttachDialog::updateProcessesFinished()
 {
     QFutureWatcher<ProcDataList> *watcher = dynamic_cast<QFutureWatcher<ProcDataList> *>(sender());
     Q_ASSERT(watcher);
-    ui->stackedWidget->setCurrentWidget(ui->listViewPage);
+    if (ui->stackedWidget->currentWidget() != ui->listViewPage) {
+        ui->stackedWidget->setCurrentWidget(ui->listViewPage);
+        ui->filter->setFocus();
+    }
     const int oldPid = pid();
     m_model->mergeProcesses(watcher->result());
     if (oldPid != pid())
