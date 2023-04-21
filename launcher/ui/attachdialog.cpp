@@ -58,7 +58,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
     ui->view->setModel(m_proxyModel);
     // hide state
     ui->view->hideColumn(ProcessModel::StateColumn);
-    ui->view->sortByColumn(ProcessModel::NameColumn, Qt::AscendingOrder);
+    ui->view->sortByColumn(ProcessModel::PIDColumn, Qt::DescendingOrder);
     ui->view->setSortingEnabled(true);
 
     ui->view->setEditTriggers(QAbstractItemView::NoEditTriggers);
