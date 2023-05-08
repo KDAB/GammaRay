@@ -58,6 +58,7 @@ QuickInspectorInterface::QuickInspectorInterface(QObject *parent)
 {
     ObjectBroker::registerObject<QuickInspectorInterface *>(this);
     StreamOperators::registerOperators<Features>();
+    qRegisterMetaType<Features>("QFlags<GammaRay::QuickInspectorInterface::Feature>");
     StreamOperators::registerOperators<RenderMode>();
     StreamOperators::registerOperators<QuickItemGeometry>();
     StreamOperators::registerOperators<QVector<QuickItemGeometry>>();

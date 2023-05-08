@@ -75,7 +75,11 @@ public slots:
 
 signals:
     void reset();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    void elementsAtReceived(const QList<GammaRay::ObjectId> &ids, int bestCandidate);
+#else
     void elementsAtReceived(const GammaRay::ObjectIds &ids, int bestCandidate);
+#endif
     void frameUpdated(const GammaRay::RemoteViewFrame &frame);
 
 private:
