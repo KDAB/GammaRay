@@ -86,7 +86,7 @@ public slots:
     virtual void setSlowMode(bool slow) = 0;
 
 signals:
-    void features(GammaRay::QuickInspectorInterface::Features features);
+    void features(QFlags<GammaRay::QuickInspectorInterface::Feature> features);
     void serverSideDecorationChanged(bool enabled);
     void overlaySettings(const GammaRay::QuickDecorationsSettings &settings);
     void slowModeChanged(bool slow);
