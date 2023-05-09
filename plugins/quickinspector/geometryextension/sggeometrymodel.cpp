@@ -107,7 +107,7 @@ QVariant SGVertexModel::data(const QModelIndex &index, int role) const
         case GL_DOUBLE:
             return toStringList<double>(index.internalPointer(), attrInfo->tupleSize).join(QStringLiteral(", "));
 #endif
-#ifndef QT_OPENGL_ES_2
+#if !QT_CONFIG(opengles2)
         case GL_2_BYTES:
             return "2Bytes";
         case GL_3_BYTES:

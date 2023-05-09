@@ -66,7 +66,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
             drawHighlightedFace(&painter, QVector<int>() << index << m_adjacencyList[i - 1] << m_adjacencyList.first());
         }
 
-#ifndef QT_OPENGL_ES_2
+#if !QT_CONFIG(opengles2)
         else if ((m_drawingMode == GL_QUADS || m_drawingMode == GL_QUAD_STRIP) && i % 4 == 3) {
             drawHighlightedFace(&painter,
                                 QVector<int>() << index << m_adjacencyList[i - 1] << m_adjacencyList[i - 2] << m_adjacencyList[i - 3]);
@@ -88,7 +88,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
              || (m_drawingMode == GL_TRIANGLES && i % 3)
              || m_drawingMode == GL_TRIANGLE_STRIP
              || m_drawingMode == GL_TRIANGLE_FAN
-#ifndef QT_OPENGL_ES_2
+#if !QT_CONFIG(opengles2)
              || (m_drawingMode == GL_QUADS && i % 4 != 0)
              || (m_drawingMode == GL_QUAD_STRIP && i % 2)
              || m_drawingMode == GL_POLYGON
@@ -101,7 +101,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
         // Draw a connection to the second previous vertex
         if ((m_drawingMode == GL_TRIANGLE_STRIP
              || (m_drawingMode == GL_TRIANGLES && i % 3 == 2)
-#ifndef QT_OPENGL_ES_2
+#if !QT_CONFIG(opengles2)
              || m_drawingMode == GL_QUAD_STRIP
 #endif
              )
@@ -110,7 +110,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
         }
 
         // draw a connection to the third previous vertex
-#ifndef QT_OPENGL_ES_2
+#if !QT_CONFIG(opengles2)
         if (m_drawingMode == GL_QUADS && i % 4 == 3) {
             drawWire(&painter, index, m_adjacencyList[i - 3]);
         }
@@ -119,7 +119,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
 
         // Draw a connection to the very first vertex
         if ((m_drawingMode == GL_LINE_LOOP && i == m_adjacencyList.size() - 1)
-#ifndef QT_OPENGL_ES_2
+#if !QT_CONFIG(opengles2)
             || (m_drawingMode == GL_POLYGON && i == m_adjacencyList.size() - 1)
 #endif
             || m_drawingMode == GL_TRIANGLE_FAN)
@@ -156,7 +156,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
         : m_drawingMode == GL_LINE_STRIP             ? QStringLiteral("GL_LINE_STRIP")
         : m_drawingMode == GL_LINE_LOOP              ? QStringLiteral("GL_LINE_LOOP")
         :
-#ifndef QT_OPENGL_ES_2
+#if !QT_CONFIG(opengles2)
         m_drawingMode == GL_POLYGON      ? QStringLiteral("GL_POLYGON")
         : m_drawingMode == GL_QUADS      ? QStringLiteral("GL_QUADS")
         : m_drawingMode == GL_QUAD_STRIP ? QStringLiteral("GL_QUAD_STRIP")

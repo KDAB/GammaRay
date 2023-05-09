@@ -185,7 +185,7 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) co
         glFuncs->glDeleteFramebuffers(1, &fbo);
         return img;
     } else {
-#if !defined(QT_NO_OPENGL) && !defined(QT_OPENGL_ES_2)
+#if !defined(QT_NO_OPENGL) && !QT_CONFIG(opengles2)
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         auto glFuncs = QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_2_0>(context);
 #else
