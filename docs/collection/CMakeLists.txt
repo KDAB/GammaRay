@@ -29,8 +29,7 @@ add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhc
     COMMAND ${CMAKE_COMMAND} -E copy ${manual_qch_file} ${CMAKE_CURRENT_BINARY_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy ${apidocs_qch_file} ${CMAKE_CURRENT_BINARY_DIR}
-    COMMAND Qt::qhelpgenerator ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhcp -o
-            ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhc
+    COMMAND Qt::qhelpgenerator ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhcp -o ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhc
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gammaray.qhcp.cmake ${manual_qch_target} ${apidocs_qch_target}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generate the GammaRay .qhc file using qhelpgenerator"
