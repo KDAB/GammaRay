@@ -8,13 +8,6 @@
 #
 # Use various Qt tools to generate the manuals, in both Qt and KDAB branding
 macro(qt_build_doc _qdocconf_name)
-    #compute the qdoc template dir from where the qt-html-templates-offline.qdocconf was found
-    get_filename_component(QDOC_TEMPLATE_DIR ${QDOC_TEMPLATE} DIRECTORY)
-    get_filename_component(QDOC_TEMPLATE_DIR ${QDOC_TEMPLATE_DIR} DIRECTORY)
-
-    #compute the qdoc index dir from where the qtcore.index was found
-    get_filename_component(QDOC_INDEX_DIR ${QDOC_QTCORE_INDEX} DIRECTORY)
-    get_filename_component(QDOC_INDEX_DIR ${QDOC_INDEX_DIR} DIRECTORY)
 
     # run the attribution scanner to collect 3rdparty license information
     file(GLOB_RECURSE _qt_attributions "${CMAKE_SOURCE_DIR}/3rdparty/*/qt_attribution.json")
