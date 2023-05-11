@@ -8,28 +8,48 @@
 #
 
 # qdoc toolchain
-# TODO: some of this probably should be upstreamed to Qt's cmake files...
-# TODO replace with Qt::qhelpgenerator for Qt >= 5.7.1
-find_program(QHELPGEN_EXECUTABLE qhelpgenerator HINTS ${QT_INSTALL_BINS})
-find_program(QDOC_EXECUTABLE qdoc HINTS ${QT_INSTALL_BINS})
-find_program(QTATTRIBUTIONSSCANNER_EXECUTABLE qtattributionsscanner HINTS ${QT_INSTALL_BINS})
+find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help)
+if(Qt_VERSION_MAJOR EQUAL 5)
+    find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS AttributionsScannerTools)
+elseif(Qt_VERSION_MAJOR GREATER_EQUAL 6)
+    find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS ToolsTools)
+endif()
+
+if(TARGET Qt::qdoc)
+    set(QDOC_EXECUTABLE "$<TARGET_FILE:Qt::qdoc>")
+else()
+    find_program(QDOC_EXECUTABLE qdoc HINTS ${QT_INSTALL_BINS})
+endif()
+
+if(TARGET Qt::qhelpgenerator)
+    # Required for Doxygen
+    get_target_property(QHELPGEN_EXECUTABLE Qt::qhelpgenerator IMPORTED_LOCATION)
+else()
+    find_program(QHELPGEN_EXECUTABLE qhelpgenerator HINTS ${QT_INSTALL_BINS})
+endif()
+
+if(TARGET Qt::qtattributionsscanner)
+    set(QTATTRIBUTIONSSCANNER_EXECUTABLE Qt::qtattributionsscanner)
+else()
+    find_program(QTATTRIBUTIONSSCANNER_EXECUTABLE qtattributionsscanner HINTS ${QT_INSTALL_BINS})
+endif()
 
 if(NOT DEFINED QDOC_TEMPLATE_DIR)
+    # compute the qdoc template dir from where qt-html-templates-offline.qdocconf is found
     find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf HINTS ${QT_INSTALL_DOCS} ${QT_INSTALL_DATA}
                                                                             ${QT_INSTALL_DATA}/doc
     )
     if(QDOC_TEMPLATE)
-        #compute the qdoc template dir from where the qt-html-templates-offline.qdocconf was found
         get_filename_component(QDOC_TEMPLATE_DIR ${QDOC_TEMPLATE} DIRECTORY)
         get_filename_component(QDOC_TEMPLATE_DIR ${QDOC_TEMPLATE_DIR} DIRECTORY)
     endif()
 endif()
 
 if(NOT DEFINED QDOC_INDEX_DIR)
-    find_file(QDOC_QTCORE_INDEX qtcore.index HINTS ${QT_INSTALL_DOCS}/qtcore ${QT_INSTALL_DATA}/doc/qtcore)
-    if(QDOC_QTCORE_INDEX)
-        #compute the qdoc index dir from where the qtcore.index was found
-        get_filename_component(QDOC_INDEX_DIR ${QDOC_QTCORE_INDEX} DIRECTORY)
+    # compute the qdoc index dir from where qtcore.index is found
+    find_file(QDOC_INDEX qtcore.index HINTS ${QT_INSTALL_DOCS}/qtcore ${QT_INSTALL_DATA}/doc/qtcore)
+    if(QDOC_INDEX)
+        get_filename_component(QDOC_INDEX_DIR ${QDOC_INDEX} DIRECTORY)
         get_filename_component(QDOC_INDEX_DIR ${QDOC_INDEX_DIR} DIRECTORY)
     endif()
 endif()
@@ -40,12 +60,25 @@ if(NOT QDOC_EXECUTABLE
    OR NOT QDOC_INDEX_DIR
    OR NOT QTATTRIBUTIONSSCANNER_EXECUTABLE
 )
+    # Expand imported target data for status reporting
+    if(TARGET Qt::qdoc)
+        get_target_property(QDOC_EXECUTABLE Qt::qdoc IMPORTED_LOCATION)
+    endif()
+    if(TARGET Qt::qtattributionsscanner)
+        get_target_property(QTATTRIBUTIONSSCANNER_EXECUTABLE Qt::qtattributionsscanner IMPORTED_LOCATION)
+    endif()
+    foreach(_var QDOC_INDEX QDOC_TEMPLATE)
+        if(NOT DEFINED ${_var})
+            set(${_var} "${_var}_DIR=${${_var}_DIR}")
+        endif()
+    endforeach()
+
     message(STATUS "Unable to build user manual in qch format.")
     message(STATUS "qdoc executable: ${QDOC_EXECUTABLE}")
     message(STATUS "qhelpgenerator executable: ${QHELPGEN_EXECUTABLE}")
     message(STATUS "qtattributionsscanner executable: ${QTATTRIBUTIONSSCANNER_EXECUTABLE}")
-    message(STATUS "qdoc template dir: ${QDOC_TEMPLATE_DIR}")
-    message(STATUS "qdoc index dir: ${QDOC_INDEX_DIR}")
+    message(STATUS "qdoc template: ${QDOC_TEMPLATE}")
+    message(STATUS "qdoc index: ${QDOC_INDEX}")
     set(GAMMARAY_USER_MANUAL_BUILD False)
 else()
     set(GAMMARAY_USER_MANUAL_BUILD True)
