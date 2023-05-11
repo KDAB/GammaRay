@@ -14,27 +14,20 @@ find_program(QHELPGEN_EXECUTABLE qhelpgenerator HINTS ${QT_INSTALL_BINS})
 find_program(QDOC_EXECUTABLE qdoc HINTS ${QT_INSTALL_BINS})
 find_program(QTATTRIBUTIONSSCANNER_EXECUTABLE qtattributionsscanner HINTS ${QT_INSTALL_BINS})
 
-if (NOT DEFINED QDOC_TEMPLATE_DIR)
-     find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf
-         HINTS
-	     ${QT_INSTALL_DOCS}
-	     ${QT_INSTALL_DATA}
-             ${QT_INSTALL_DATA}/doc
+if(NOT DEFINED QDOC_TEMPLATE_DIR)
+    find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf HINTS ${QT_INSTALL_DOCS} ${QT_INSTALL_DATA}
+                                                                            ${QT_INSTALL_DATA}/doc
     )
-    if (QDOC_TEMPLATE)
+    if(QDOC_TEMPLATE)
         #compute the qdoc template dir from where the qt-html-templates-offline.qdocconf was found
         get_filename_component(QDOC_TEMPLATE_DIR ${QDOC_TEMPLATE} DIRECTORY)
         get_filename_component(QDOC_TEMPLATE_DIR ${QDOC_TEMPLATE_DIR} DIRECTORY)
     endif()
 endif()
 
-if (NOT DEFINED QDOC_INDEX_DIR)
-    find_file(QDOC_QTCORE_INDEX qtcore.index
-        HINTS
-	    ${QT_INSTALL_DOCS}/qtcore
-	    ${QT_INSTALL_DATA}/doc/qtcore
-    )
-    if (QDOC_QTCORE_INDEX)
+if(NOT DEFINED QDOC_INDEX_DIR)
+    find_file(QDOC_QTCORE_INDEX qtcore.index HINTS ${QT_INSTALL_DOCS}/qtcore ${QT_INSTALL_DATA}/doc/qtcore)
+    if(QDOC_QTCORE_INDEX)
         #compute the qdoc index dir from where the qtcore.index was found
         get_filename_component(QDOC_INDEX_DIR ${QDOC_QTCORE_INDEX} DIRECTORY)
         get_filename_component(QDOC_INDEX_DIR ${QDOC_INDEX_DIR} DIRECTORY)
