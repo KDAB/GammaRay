@@ -14,23 +14,45 @@ find_program(QHELPGEN_EXECUTABLE qhelpgenerator HINTS ${QT_INSTALL_BINS})
 find_program(QDOC_EXECUTABLE qdoc HINTS ${QT_INSTALL_BINS})
 find_program(QTATTRIBUTIONSSCANNER_EXECUTABLE qtattributionsscanner HINTS ${QT_INSTALL_BINS})
 
-find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf HINTS ${QT_INSTALL_DOCS} ${QT_INSTALL_DATA}
-                                                                        ${QT_INSTALL_DATA}/doc
-)
-find_file(QDOC_QTCORE_INDEX qtcore.index HINTS ${QT_INSTALL_DOCS}/qtcore ${QT_INSTALL_DATA}/doc/qtcore)
+if (NOT DEFINED QDOC_TEMPLATE_DIR)
+     find_file(QDOC_TEMPLATE global/qt-html-templates-offline.qdocconf
+         HINTS
+	     ${QT_INSTALL_DOCS}
+	     ${QT_INSTALL_DATA}
+             ${QT_INSTALL_DATA}/doc
+    )
+    if (QDOC_TEMPLATE)
+        #compute the qdoc template dir from where the qt-html-templates-offline.qdocconf was found
+        get_filename_component(QDOC_TEMPLATE_DIR ${QDOC_TEMPLATE} DIRECTORY)
+        get_filename_component(QDOC_TEMPLATE_DIR ${QDOC_TEMPLATE_DIR} DIRECTORY)
+    endif()
+endif()
+
+if (NOT DEFINED QDOC_INDEX_DIR)
+    find_file(QDOC_QTCORE_INDEX qtcore.index
+        HINTS
+	    ${QT_INSTALL_DOCS}/qtcore
+	    ${QT_INSTALL_DATA}/doc/qtcore
+    )
+    if (QDOC_QTCORE_INDEX)
+        #compute the qdoc index dir from where the qtcore.index was found
+        get_filename_component(QDOC_INDEX_DIR ${QDOC_QTCORE_INDEX} DIRECTORY)
+        get_filename_component(QDOC_INDEX_DIR ${QDOC_INDEX_DIR} DIRECTORY)
+    endif()
+endif()
 
 if(NOT QDOC_EXECUTABLE
    OR NOT QHELPGEN_EXECUTABLE
-   OR NOT QDOC_TEMPLATE
-   OR NOT QDOC_QTCORE_INDEX
+   OR NOT QDOC_TEMPLATE_DIR
+   OR NOT QDOC_INDEX_DIR
    OR NOT QTATTRIBUTIONSSCANNER_EXECUTABLE
 )
     message(STATUS "Unable to build user manual in qch format.")
     message(STATUS "qdoc executable: ${QDOC_EXECUTABLE}")
     message(STATUS "qhelpgenerator executable: ${QHELPGEN_EXECUTABLE}")
     message(STATUS "qtattributionsscanner executable: ${QTATTRIBUTIONSSCANNER_EXECUTABLE}")
-    message(STATUS "qdoc template (qt-html-templates-offline.qdocconf): ${QDOC_TEMPLATE}")
-    message(STATUS "qdoc qtcore index (qtcore.index): ${QDOC_QTCORE_INDEX}")
+    message(STATUS "qdoc template dir: ${QDOC_TEMPLATE_DIR}")
+    message(STATUS "qdoc index dir: ${QDOC_INDEX_DIR}")
     set(GAMMARAY_USER_MANUAL_BUILD False)
 else()
     set(GAMMARAY_USER_MANUAL_BUILD True)
