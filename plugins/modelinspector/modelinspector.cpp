@@ -20,8 +20,7 @@
 
 #include <core/remote/serverproxymodel.h>
 #include <common/objectbroker.h>
-
-#include <3rdparty/kde/krecursivefilterproxymodel.h>
+#include <common/recursiveproxymodelbase.h>
 
 #include <QDebug>
 #include <QItemSelectionModel>
@@ -41,7 +40,7 @@ ModelInspector::ModelInspector(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectCreated, modelModelSource, &ModelModel::objectAdded);
     connect(probe, &Probe::objectDestroyed, modelModelSource, &ModelModel::objectRemoved);
 
-    auto modelModelProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    auto modelModelProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     modelModelProxy->setSourceModel(modelModelSource);
     m_modelModel = modelModelProxy;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ModelModel"), m_modelModel);

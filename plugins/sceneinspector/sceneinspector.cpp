@@ -31,8 +31,7 @@
 #include <common/endpoint.h>
 #include <common/metatypedeclarations.h>
 #include <common/objectmodel.h>
-
-#include <kde/krecursivefilterproxymodel.h>
+#include <common/recursiveproxymodelbase.h>
 
 #include <QGraphicsEffect>
 #include <QGraphicsItem>
@@ -91,7 +90,7 @@ SceneInspector::SceneInspector(Probe *probe, QObject *parent)
             this, &SceneInspector::sceneSelected);
 
     m_sceneModel = new SceneModel(this);
-    auto sceneProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    auto sceneProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     sceneProxy->setSourceModel(m_sceneModel);
     sceneProxy->addRole(ObjectModel::ObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"), sceneProxy);

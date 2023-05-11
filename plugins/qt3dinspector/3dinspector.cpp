@@ -27,8 +27,7 @@
 
 #include <common/modelevent.h>
 #include <common/objectbroker.h>
-
-#include <3rdparty/kde/krecursivefilterproxymodel.h>
+#include <common/recursiveproxymodelbase.h>
 
 #include <Qt3DRender/QAbstractTexture>
 #include <Qt3DRender/QAbstractTextureImage>
@@ -98,7 +97,7 @@ Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectCreated, m_entityModel, &Qt3DEntityTreeModel::objectCreated);
     connect(probe, &Probe::objectDestroyed, m_entityModel, &Qt3DEntityTreeModel::objectDestroyed);
     connect(probe, &Probe::objectReparented, m_entityModel, &Qt3DEntityTreeModel::objectReparented);
-    auto entityProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    auto entityProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     entityProxy->setSourceModel(m_entityModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), entityProxy);
     m_entitySelectionModel = ObjectBroker::selectionModel(entityProxy);
@@ -108,7 +107,7 @@ Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectCreated, m_frameGraphModel, &FrameGraphModel::objectCreated);
     connect(probe, &Probe::objectDestroyed, m_frameGraphModel, &FrameGraphModel::objectDestroyed);
     connect(probe, &Probe::objectReparented, m_frameGraphModel, &FrameGraphModel::objectReparented);
-    auto frameGraphProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    auto frameGraphProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     frameGraphProxy->setSourceModel(m_frameGraphModel);
     probe->registerModel(QStringLiteral(
                              "com.kdab.GammaRay.Qt3DInspector.frameGraphModel"),

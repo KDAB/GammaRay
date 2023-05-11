@@ -35,7 +35,6 @@
 #include <core/objecttypefilterproxymodel.h>
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/serverproxymodel.h>
-#include <3rdparty/kde/krecursivefilterproxymodel.h>
 #include <core/remoteviewserver.h>
 
 #include <wayland-server.h>

@@ -15,16 +15,16 @@
 #define GAMMARAY_VISIBILITYFILTERPROXYMODEL_H
 
 #include "gammaray_common_export.h"
-#include "3rdparty/kde/krecursivefilterproxymodel.h"
+#include "common/recursiveproxymodelbase.h"
 
 namespace GammaRay {
 
 /**
- * @brief A KRecursiveFilterProxyModel for ObjectIds.
+ * @brief A RecursiveFilterProxyModel for ObjectIds.
  *
  * Filter in and sort according to the objects list.
  */
-class VisibilityFilterProxyModel : public KRecursiveFilterProxyModel
+class VisibilityFilterProxyModel : public RecursiveProxyModelBase
 {
     Q_OBJECT
 

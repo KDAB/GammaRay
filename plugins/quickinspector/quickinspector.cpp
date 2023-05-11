@@ -34,6 +34,7 @@
 #include <common/probecontrollerinterface.h>
 #include <common/problem.h>
 #include <common/remoteviewframe.h>
+#include <common/recursiveproxymodelbase.h>
 
 #include <core/enumrepositoryserver.h>
 #include <core/metaenum.h>
@@ -51,8 +52,6 @@
 #include <core/paintanalyzer.h>
 #include <core/bindingaggregator.h>
 #include <core/problemcollector.h>
-
-#include <3rdparty/kde/krecursivefilterproxymodel.h>
 
 #include <QQuickItem>
 #include <QQuickWindow>
@@ -385,7 +384,7 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     m_windowModel = proxy;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickWindowModel"), m_windowModel);
 
-    auto filterProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    auto filterProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     filterProxy->setSourceModel(m_itemModel);
     filterProxy->addRole(ObjectModel::ObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickItemModel"), filterProxy);
@@ -405,7 +404,7 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged,
             this, &QuickInspector::itemSelectionChanged);
 
-    filterProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    filterProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     filterProxy->setSourceModel(m_sgModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"), filterProxy);
 
