@@ -41,8 +41,7 @@
 #include "common/paths.h"
 #include <common/probecontrollerinterface.h>
 #include <common/remoteviewframe.h>
-
-#include <3rdparty/kde/krecursivefilterproxymodel.h>
+#include <common/recursiveproxymodelbase.h>
 
 #include <QAction>
 #include <QAbstractItemView>
@@ -112,7 +111,7 @@ WidgetInspectorServer::WidgetInspectorServer(Probe *probe, QObject *parent)
     auto *widgetFilterProxy = new WidgetTreeModel(this);
     widgetFilterProxy->setSourceModel(probe->objectTreeModel());
 
-    auto widgetSearchProxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    auto widgetSearchProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     widgetSearchProxy->setSourceModel(widgetFilterProxy);
     widgetSearchProxy->addRole(ObjectModel::ObjectIdRole);
 

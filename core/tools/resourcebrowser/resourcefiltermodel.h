@@ -14,10 +14,10 @@
 #ifndef GAMMARAY_RESOURCEBROWSER_RESOURCEFILTERMODEL_H
 #define GAMMARAY_RESOURCEBROWSER_RESOURCEFILTERMODEL_H
 
-#include <3rdparty/kde/krecursivefilterproxymodel.h>
+#include <common/recursiveproxymodelbase.h>
 
 namespace GammaRay {
-class ResourceFilterModel : public KRecursiveFilterProxyModel
+class ResourceFilterModel : public RecursiveProxyModelBase
 {
     Q_OBJECT
 public:

@@ -32,8 +32,7 @@
 #include <core/problemcollector.h>
 #include <core/util.h>
 #include <remote/serverproxymodel.h>
-
-#include <3rdparty/kde/krecursivefilterproxymodel.h>
+#include <common/recursiveproxymodelbase.h>
 
 #include <QCoreApplication>
 #include <QItemSelectionModel>
@@ -53,7 +52,7 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
                                                       "com.kdab.GammaRay.ObjectInspector"),
                                                   this);
 
-    auto proxy = new ServerProxyModel<KRecursiveFilterProxyModel>(this);
+    auto proxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     proxy->setSourceModel(probe->objectTreeModel());
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"), proxy);
 

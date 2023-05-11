@@ -15,18 +15,18 @@
 #define GAMMARAY_OBJECTIDFILTERPROXYMODEL_H
 
 #include "gammaray_common_export.h"
-#include "3rdparty/kde/krecursivefilterproxymodel.h"
 
 #include <common/objectid.h>
+#include <common/recursiveproxymodelbase.h>
 
 namespace GammaRay {
 
 /**
- * @brief A KRecursiveFilterProxyModel for ObjectIds.
+ * @brief A RecursiveFilterProxyModel for ObjectIds.
  *
  * Filter in and sort according to the objects list.
  */
-class GAMMARAY_COMMON_EXPORT ObjectIdsFilterProxyModel : public KRecursiveFilterProxyModel
+class GAMMARAY_COMMON_EXPORT ObjectIdsFilterProxyModel : public RecursiveProxyModelBase
 {
     Q_OBJECT
 

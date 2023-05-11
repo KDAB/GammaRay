@@ -19,7 +19,7 @@
 using namespace GammaRay;
 
 VisibilityFilterProxyModel::VisibilityFilterProxyModel(QObject *parent)
-    : KRecursiveFilterProxyModel(parent)
+    : RecursiveProxyModelBase(parent)
     , m_hideItems(true)
     , m_flagRole(0)
     , m_invisibleMask(0)
@@ -45,7 +45,7 @@ bool VisibilityFilterProxyModel::acceptRow(int source_row, const QModelIndex &so
             return false;
     }
 
-    return KRecursiveFilterProxyModel::acceptRow(source_row, source_parent);
+    return RecursiveProxyModelBase::acceptRow(source_row, source_parent);
 }
 
 void VisibilityFilterProxyModel::setHideItems(bool hideItems)
