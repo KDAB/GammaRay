@@ -1123,7 +1123,6 @@ QFileInfo ResourceModel::fileInfo(const QModelIndex &index) const
 
 void ResourceModelPrivate::init()
 {
-    Q_Q(ResourceModel);
     filters = QDir::AllEntries | QDir::NoDotAndDotDot;
     sort = QDir::Name;
     nameFilters << QLatin1String("*");

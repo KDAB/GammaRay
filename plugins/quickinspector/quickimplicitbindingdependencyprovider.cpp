@@ -89,7 +89,7 @@ std::vector<std::unique_ptr<BindingNode>> QuickImplicitBindingDependencyProvider
     if (!object)
         return dependencies;
 
-    auto addDependency = [this, binding, object, &dependencies](const char *propName, QObject *depObj, const char *depName) {
+    auto addDependency = [binding, object, &dependencies](const char *propName, QObject *depObj, const char *depName) {
         if (depObj && binding->propertyIndex() == object->metaObject()->indexOfProperty(propName)) {
             dependencies.push_back(createBindingNode(depObj, depName, binding));
         }
