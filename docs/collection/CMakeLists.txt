@@ -6,8 +6,8 @@
 #
 # Contact KDAB at <info@kdab.com> for commercial licensing options.
 #
-if(NOT TARGET Qt5::qcollectiongenerator)
-    message(STATUS "qcollectiongenerator not found, documentation collection will not be generated.")
+if(NOT TARGET Qt::qhelpgenerator)
+    message(STATUS "qhelpgenerator not found, documentation collection will not be generated.")
     return()
 endif()
 
@@ -29,11 +29,11 @@ add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhc
     COMMAND ${CMAKE_COMMAND} -E copy ${manual_qch_file} ${CMAKE_CURRENT_BINARY_DIR}
     COMMAND ${CMAKE_COMMAND} -E copy ${apidocs_qch_file} ${CMAKE_CURRENT_BINARY_DIR}
-    COMMAND Qt5::qcollectiongenerator ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhcp -o
+    COMMAND Qt::qhelpgenerator ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhcp -o
             ${CMAKE_CURRENT_BINARY_DIR}/gammaray.qhc
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/gammaray.qhcp.cmake ${manual_qch_target} ${apidocs_qch_target}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "Generate the GammaRay .qhc file using qcollectiongenerator"
+    COMMENT "Generate the GammaRay .qhc file using qhelpgenerator"
 )
 add_custom_target(
     gammaray_qhc ALL
