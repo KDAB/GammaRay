@@ -110,7 +110,7 @@ QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &po
     return s;
 }
 
-#if QT_VERSION <= QT_VERSION_CHECK(6, 3, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 3, 0)
 template<class T, class TouchPoint>
 void setPointValue(QDataStream &s, TouchPoint &p, void (TouchPoint::*func)(T))
 {
@@ -136,7 +136,7 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     for (int i = 0; i < count; ++i) {
-#if QT_VERSION <= QT_VERSION_CHECK(6, 3, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 3, 0)
         QMutableEventPoint p;
 #else
         QEventPoint p;
@@ -160,14 +160,14 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
         quint64 v;
 
         s >> v;
-#if QT_VERSION <= QT_VERSION_CHECK(6, 3, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 3, 0)
         p.setPressTimestamp(v);
 #else
         QMutableEventPoint::setPressTimestamp(p, v);
 #endif
 
         s >> v;
-#if QT_VERSION <= QT_VERSION_CHECK(6, 3, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 3, 0)
         p.setTimestamp(v);
 #else
         QMutableEventPoint::setTimestamp(p, v);
