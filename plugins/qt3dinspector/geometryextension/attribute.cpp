@@ -17,6 +17,8 @@
 
 #include <cstdint>
 
+#include <QVariant>
+
 using namespace GammaRay;
 
 // ### careful: order must match qattribute.h
@@ -32,7 +34,7 @@ static const int size_table[] = {
     sizeof(double), // Double
 };
 
-int Attribute::size(Qt3DRender::QAttribute::VertexBaseType type)
+int Attribute::size(Qt3DGeometry::QAttribute::VertexBaseType type)
 {
     return size_table[type];
 }
@@ -44,26 +46,26 @@ static QVariant toVariant(const char *data)
     return QVariant::fromValue<T>(*reinterpret_cast<const T *>(data));
 }
 
-QVariant Attribute::variant(Qt3DRender::QAttribute::VertexBaseType type, const char *data)
+QVariant Attribute::variant(Qt3DGeometry::QAttribute::VertexBaseType type, const char *data)
 {
     switch (type) {
-    case Qt3DRender::QAttribute::Byte:
+    case Qt3DGeometry::QAttribute::Byte:
         return toVariant<int8_t>(data);
-    case Qt3DRender::QAttribute::UnsignedByte:
+    case Qt3DGeometry::QAttribute::UnsignedByte:
         return toVariant<uint8_t>(data);
-    case Qt3DRender::QAttribute::Short:
+    case Qt3DGeometry::QAttribute::Short:
         return toVariant<int16_t>(data);
-    case Qt3DRender::QAttribute::UnsignedShort:
+    case Qt3DGeometry::QAttribute::UnsignedShort:
         return toVariant<uint16_t>(data);
-    case Qt3DRender::QAttribute::Int:
+    case Qt3DGeometry::QAttribute::Int:
         return toVariant<int32_t>(data);
-    case Qt3DRender::QAttribute::UnsignedInt:
+    case Qt3DGeometry::QAttribute::UnsignedInt:
         return toVariant<uint32_t>(data);
-    case Qt3DRender::QAttribute::HalfFloat:
+    case Qt3DGeometry::QAttribute::HalfFloat:
         return QVariant("TODO");
-    case Qt3DRender::QAttribute::Float:
+    case Qt3DGeometry::QAttribute::Float:
         return toVariant<float>(data);
-    case Qt3DRender::QAttribute::Double:
+    case Qt3DGeometry::QAttribute::Double:
         return toVariant<double>(data);
     }
     return QVariant();

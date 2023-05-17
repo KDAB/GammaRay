@@ -16,11 +16,21 @@
 #include <core/propertycontroller.h>
 #include <core/util.h>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <Qt3DCore/QAttribute>
+#include <Qt3DCore/QBuffer>
+// #include <Qt3DRender/QBufferDataGenerator>
+#include <Qt3DCore/QGeometry>
+#include <Qt3DRender/QGeometryRenderer>
+namespace Qt3DGeometry = Qt3DCore;
+#else
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QBufferDataGenerator>
 #include <Qt3DRender/QGeometry>
 #include <Qt3DRender/QGeometryRenderer>
+namespace Qt3DGeometry = Qt3DRender;
+#endif
 
 #include <Qt3DCore/QEntity>
 
@@ -50,11 +60,11 @@ bool Qt3DGeometryExtension::setQObject(QObject *object)
             if ((geometry = qobject_cast<Qt3DRender::QGeometryRenderer *>(component)))
                 break;
         }
-    } else if (auto geo = qobject_cast<Qt3DRender::QGeometry *>(object)) {
+    } else if (auto geo = qobject_cast<Qt3DGeometry::QGeometry *>(object)) {
         return setQObject(geo->parent());
-    } else if (auto attr = qobject_cast<Qt3DRender::QAttribute *>(object)) {
+    } else if (auto attr = qobject_cast<Qt3DGeometry::QAttribute *>(object)) {
         return setQObject(attr->parent());
-    } else if (auto buffer = qobject_cast<Qt3DRender::QBuffer *>(object)) {
+    } else if (auto buffer = qobject_cast<Qt3DGeometry::QBuffer *>(object)) {
         return setQObject(buffer->parent());
     }
 
@@ -77,7 +87,7 @@ void Qt3DGeometryExtension::updateGeometryData()
         return;
     }
 
-    QHash<Qt3DRender::QBuffer *, uint> bufferMap;
+    QHash<Qt3DGeometry::QBuffer *, uint> bufferMap;
     data.attributes.reserve(m_geometry->geometry()->attributes().size());
     foreach (auto attr, m_geometry->geometry()->attributes()) {
         if (attr->count() == 0) // ignore empty/invalid attributes
@@ -98,12 +108,16 @@ void Qt3DGeometryExtension::updateGeometryData()
         } else {
             Qt3DGeometryBufferData buffer;
             buffer.name = Util::displayString(attr->buffer());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+            buffer.data = attr->buffer()->data();
+#else
             buffer.type = attr->buffer()->type();
             auto generator = attr->buffer()->dataGenerator();
             if (generator)
                 buffer.data = (*generator.data())();
             else
                 buffer.data = attr->buffer()->data();
+#endif
 
             attrData.bufferIndex = data.buffers.size();
             bufferMap.insert(attr->buffer(), attrData.bufferIndex);

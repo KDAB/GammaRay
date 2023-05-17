@@ -21,18 +21,24 @@
 using namespace GammaRay;
 
 QT_BEGIN_NAMESPACE
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DCore::QAttribute::AttributeType)
+GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DCore::QAttribute::VertexBaseType)
+#else
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QAttribute::AttributeType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QAttribute::VertexBaseType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QBuffer::BufferType)
+#endif
 
-static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
+QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
 {
     out << data.name << data.attributeType << data.byteOffset << data.byteStride << data.count
         << data.divisor << data.vertexBaseType << data.vertexSize << data.bufferIndex;
     return out;
 }
 
-static QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
+QDataStream &operator>>(QDataStream &in, Qt3DGeometryAttributeData &data)
 {
     in >> data.name >> data.attributeType >> data.byteOffset >> data.byteStride >> data.count
         >> data.divisor >> data.vertexBaseType >> data.vertexSize >> data.bufferIndex;
@@ -54,15 +60,23 @@ bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData &rhs)
 }
 
 QT_BEGIN_NAMESPACE
-static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryBufferData &data)
+QDataStream &operator<<(QDataStream &out, const Qt3DGeometryBufferData &data)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    out << data.name << data.data;
+#else
     out << data.name << data.data << data.type;
+#endif
     return out;
 }
 
-static QDataStream &operator>>(QDataStream &in, Qt3DGeometryBufferData &data)
+QDataStream &operator>>(QDataStream &in, Qt3DGeometryBufferData &data)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    in >> data.name >> data.data;
+#else
     in >> data.name >> data.data >> data.type;
+#endif
     return in;
 }
 QT_END_NAMESPACE
@@ -73,13 +87,13 @@ bool Qt3DGeometryBufferData::operator==(const Qt3DGeometryBufferData &rhs) const
 }
 
 QT_BEGIN_NAMESPACE
-static QDataStream &operator<<(QDataStream &out, const Qt3DGeometryData &data)
+QDataStream &operator<<(QDataStream &out, const Qt3DGeometryData &data)
 {
     out << data.attributes << data.buffers;
     return out;
 }
 
-static QDataStream &operator>>(QDataStream &in, Qt3DGeometryData &data)
+QDataStream &operator>>(QDataStream &in, Qt3DGeometryData &data)
 {
     in >> data.attributes >> data.buffers;
     return in;

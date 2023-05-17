@@ -29,14 +29,23 @@
 #include <common/objectbroker.h>
 #include <common/recursiveproxymodelbase.h>
 
-#include <Qt3DRender/QAbstractTexture>
-#include <Qt3DRender/QAbstractTextureImage>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <Qt3DCore/QAttribute>
+#include <Qt3DCore/QBuffer>
+#include <Qt3DCore/QGeometry>
+namespace Qt3DGeometry = Qt3DCore;
+#else
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
+#include <Qt3DRender/QGeometry>
+namespace Qt3DGeometry = Qt3DRender;
+#endif
+
+#include <Qt3DRender/QAbstractTexture>
+#include <Qt3DRender/QAbstractTextureImage>
 #include <Qt3DRender/QCamera>
 #include <Qt3DRender/QEffect>
 #include <Qt3DRender/QFrameGraphNode>
-#include <Qt3DRender/QGeometry>
 #include <Qt3DRender/QGraphicsApiFilter>
 #include <Qt3DRender/QMaterial>
 #include <Qt3DRender/QParameter>
@@ -269,7 +278,7 @@ void Qt3DInspector::registerInputMetaTypes()
     qRegisterMetaType<Qt3DInput::QAbstractPhysicalDevice *>();
 }
 
-static QString attributeToString(Qt3DRender::QAttribute *attr)
+static QString attributeToString(Qt3DGeometry::QAttribute *attr)
 {
     if (!attr || attr->name().isEmpty())
         return Util::displayString(attr);
@@ -335,8 +344,8 @@ static QString parameterToString(Qt3DRender::QParameter *parameter)
 
 void Qt3DInspector::registerRenderMetaTypes()
 {
-    qRegisterMetaType<Qt3DRender::QAttribute *>();
-    qRegisterMetaType<Qt3DRender::QBuffer *>();
+    qRegisterMetaType<Qt3DGeometry::QAttribute *>();
+    qRegisterMetaType<Qt3DGeometry::QBuffer *>();
     qRegisterMetaType<Qt3DRender::QCamera *>();
     qRegisterMetaType<Qt3DRender::QEffect *>();
     qRegisterMetaType<Qt3DRender::QFrameGraphNode *>();
@@ -351,8 +360,8 @@ void Qt3DInspector::registerRenderMetaTypes()
     MO_ADD_PROPERTY_RO(Qt3DRender::QEffect, parameters);
     MO_ADD_PROPERTY_RO(Qt3DRender::QEffect, techniques);
 
-    MO_ADD_METAOBJECT1(Qt3DRender::QGeometry, Qt3DCore::QNode);
-    MO_ADD_PROPERTY_RO(Qt3DRender::QGeometry, attributes);
+    MO_ADD_METAOBJECT1(Qt3DGeometry::QGeometry, Qt3DCore::QNode);
+    MO_ADD_PROPERTY_RO(Qt3DGeometry::QGeometry, attributes);
 
     MO_ADD_METAOBJECT1(Qt3DRender::QTechnique, Qt3DCore::QNode);
     MO_ADD_PROPERTY_RO(Qt3DRender::QTechnique, filterKeys);
@@ -372,7 +381,7 @@ void Qt3DInspector::registerRenderMetaTypes()
     MO_ADD_PROPERTY_RO(Qt3DRender::QSceneLoader, entityNames);
 #endif
 
-    VariantHandler::registerStringConverter<Qt3DRender::QAttribute *>(attributeToString);
+    VariantHandler::registerStringConverter<Qt3DGeometry::QAttribute *>(attributeToString);
     VariantHandler::registerStringConverter<Qt3DRender::QFilterKey *>(filterKeyToString);
     VariantHandler::registerStringConverter<Qt3DRender::QGraphicsApiFilter *>(graphicsApiFilterToString);
     VariantHandler::registerStringConverter<Qt3DRender::QParameter *>(parameterToString);
