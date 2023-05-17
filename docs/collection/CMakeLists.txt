@@ -6,7 +6,10 @@
 #
 # Contact KDAB at <info@kdab.com> for commercial licensing options.
 #
-find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help ToolsTools)
+find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help)
+if (Qt_VERSION_MAJOR GREATER_EQUAL 6)
+    find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS ToolsTools)
+endif()
 if(NOT TARGET Qt::qhelpgenerator)
     message(STATUS "qhelpgenerator not found, documentation collection will not be generated.")
     return()
