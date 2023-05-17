@@ -14,14 +14,22 @@
 #ifndef GAMMARAY_ATTRIBUTE_H
 #define GAMMARAY_ATTRIBUTE_H
 
+#include <QtGlobal>
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <Qt3DCore/QAttribute>
+namespace Qt3DGeometry = Qt3DCore;
+#else
 #include <Qt3DRender/QAttribute>
+namespace Qt3DGeometry = Qt3DRender;
+#endif
 
 namespace GammaRay {
 /** Utilities for decoding attribute data. */
 namespace Attribute {
-int size(Qt3DRender::QAttribute::VertexBaseType type);
+int size(Qt3DGeometry::QAttribute::VertexBaseType type);
 
-QVariant variant(Qt3DRender::QAttribute::VertexBaseType type, const char *data);
+QVariant variant(Qt3DGeometry::QAttribute::VertexBaseType type, const char *data);
 }
 }
 

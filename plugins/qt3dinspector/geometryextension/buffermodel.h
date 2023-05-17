@@ -42,7 +42,7 @@ private:
     struct ColumnData
     {
         QString name;
-        Qt3DRender::QAttribute::VertexBaseType type;
+        Qt3DGeometry::QAttribute::VertexBaseType type;
         uint offset;
         uint stride;
     };

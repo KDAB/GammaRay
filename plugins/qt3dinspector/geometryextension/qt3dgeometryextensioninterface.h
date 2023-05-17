@@ -14,8 +14,17 @@
 #ifndef GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H
 #define GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H
 
+#include <QtGlobal>
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <Qt3DCore/QAttribute>
+#include <Qt3DCore/QBuffer>
+namespace Qt3DGeometry = Qt3DCore;
+#else
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
+namespace Qt3DGeometry = Qt3DRender;
+#endif
 
 namespace GammaRay {
 struct Qt3DGeometryAttributeData
@@ -24,12 +33,12 @@ struct Qt3DGeometryAttributeData
     bool operator==(const Qt3DGeometryAttributeData &rhs) const;
 
     QString name;
-    Qt3DRender::QAttribute::AttributeType attributeType = Qt3DRender::QAttribute::VertexAttribute;
+    Qt3DGeometry::QAttribute::AttributeType attributeType = Qt3DGeometry::QAttribute::VertexAttribute;
     uint byteOffset = 0;
     uint byteStride = 0;
     uint count = 0;
     uint divisor = 0;
-    Qt3DRender::QAttribute::VertexBaseType vertexBaseType = Qt3DRender::QAttribute::UnsignedShort;
+    Qt3DGeometry::QAttribute::VertexBaseType vertexBaseType = Qt3DGeometry::QAttribute::UnsignedShort;
     uint vertexSize = 0;
     uint bufferIndex = 0;
 };
@@ -41,7 +50,9 @@ struct Qt3DGeometryBufferData
 
     QString name;
     QByteArray data;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Qt3DRender::QBuffer::BufferType type = Qt3DRender::QBuffer::VertexBuffer;
+#endif
 };
 
 struct Qt3DGeometryData
@@ -77,5 +88,16 @@ QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(GammaRay::Qt3DGeometryExtensionInterface,
                     "com.kdab.GammaRay.Qt3DGeometryExtensionInterface/1.0")
 QT_END_NAMESPACE
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+QT_BEGIN_NAMESPACE
+QDataStream &operator<<(QDataStream &s, const GammaRay::Qt3DGeometryData &);
+QDataStream &operator>>(QDataStream &s, GammaRay::Qt3DGeometryData &);
+QDataStream &operator<<(QDataStream &out, const GammaRay::Qt3DGeometryBufferData &data);
+QDataStream &operator>>(QDataStream &out, GammaRay::Qt3DGeometryBufferData &data);
+QDataStream &operator<<(QDataStream &out, const GammaRay::Qt3DGeometryAttributeData &data);
+QDataStream &operator>>(QDataStream &in, GammaRay::Qt3DGeometryAttributeData &data);
+QT_END_NAMESPACE
+#endif
 
 #endif // GAMMARAY_QT3DGEOMETRYEXTENSIONINTERFACE_H
