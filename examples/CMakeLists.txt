@@ -18,6 +18,6 @@ if(TARGET Qt::Widgets)
     add_subdirectory(widget-layouting)
 endif()
 
-if(Qt53DExtras_FOUND)
+if(Qt${Qt_VERSION_MAJOR}3DExtras_FOUND)
     add_subdirectory(qt3d-geometry)
 endif()
