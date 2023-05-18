@@ -103,16 +103,17 @@ private slots:
         toolManager->selectObject(ObjectId(&action), QStringLiteral("gammaray_actioninspector"));
         toolSelectedSpy.wait(50);
         QCOMPARE(toolSelectedSpy.size(), 1);
-        QString selectedTool = toolSelectedSpy.first().first().toString();
+        QString selectedTool = toolSelectedSpy.constFirst().constFirst().toString();
         QCOMPARE(selectedTool, QStringLiteral("gammaray_actioninspector"));
 
         toolManager->requestToolsForObject(ObjectId(&action));
         toolsForObjectSpy.wait(50);
         QCOMPARE(toolsForObjectSpy.size(), 1);
-        const ObjectId &actionId = toolsForObjectSpy.first().first().value<ObjectId>();
+        const ObjectId &actionId = toolsForObjectSpy.constFirst().constFirst().value<ObjectId>();
         QCOMPARE(actionId.asQObject(), &action);
-        const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<QString>>();
+        const auto &actionTools = toolsForObjectSpy.constFirst().constLast().value<QVector<QString>>();
         QStringList supportedToolIds;
+        supportedToolIds.reserve(actionTools.size());
         for (const auto &tool : actionTools)
             supportedToolIds << tool;
         QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::ObjectInspector")));
@@ -190,7 +191,7 @@ private:
         toolManager->selectObject(ObjectId(&action), QStringLiteral("gammaray_actioninspector"));
         toolSelectedSpy.wait(50);
         QCOMPARE(toolSelectedSpy.size(), 1);
-        QString selectedTool = toolSelectedSpy.first().first().toString();
+        QString selectedTool = toolSelectedSpy.constFirst().constFirst().toString();
         QCOMPARE(selectedTool, QStringLiteral("gammaray_actioninspector"));
     }
 
@@ -202,9 +203,9 @@ private:
         ClientToolManager::instance()->requestToolsForObject(ObjectId(&action));
         toolsForObjectSpy.wait(50);
         QCOMPARE(toolsForObjectSpy.size(), 1);
-        const ObjectId &actionId = toolsForObjectSpy.first().first().value<ObjectId>();
+        const ObjectId &actionId = toolsForObjectSpy.constFirst().constFirst().value<ObjectId>();
         QCOMPARE(actionId.asQObject(), &action);
-        const auto &actionTools = toolsForObjectSpy.first().last().value<QVector<ToolInfo>>();
+        const auto &actionTools = toolsForObjectSpy.constFirst().constLast().value<QVector<ToolInfo>>();
         QStringList supportedToolIds;
         for (const auto &tool : actionTools) {
             QVERIFY(!tool.name().isEmpty());
