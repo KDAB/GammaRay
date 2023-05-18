@@ -235,13 +235,13 @@ private slots:
         QStandardItemModel serverModel;
         FakeNetworkSelectionModel serverSelection(ServerAddress, &serverModel);
         fillModel(&serverModel);
-        QSignalSpy serverSpy(&serverSelection, &FakeNetworkSelectionModel::selectionChanged);
+        QSignalSpy serverSpy(&serverSelection, &FakeNetworkSelectionModel::currentChanged);
         QVERIFY(serverSpy.isValid());
 
         QStandardItemModel clientModel;
         fillModel(&clientModel);
         FakeNetworkSelectionModel clientSelection(ClientAddress, &clientModel);
-        QSignalSpy clientSpy(&clientSelection, &FakeNetworkSelectionModel::selectionChanged);
+        QSignalSpy clientSpy(&clientSelection, &FakeNetworkSelectionModel::currentChanged);
         QVERIFY(clientSpy.isValid());
         QSignalSpy clientRowSpy(&clientSelection, &FakeNetworkSelectionModel::currentRowChanged);
         QVERIFY(clientRowSpy.isValid());
