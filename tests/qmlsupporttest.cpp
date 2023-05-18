@@ -20,6 +20,7 @@
 #include <core/propertyadaptorfactory.h>
 #include <core/objectinstance.h>
 #include <core/propertydata.h>
+#include <core/enumrepositoryserver.h>
 
 #include <QQmlComponent>
 #include <QQmlContext>
@@ -49,8 +50,9 @@ private:
     }
 
 private slots:
-    static void initTestCase()
+    void initTestCase()
     {
+        EnumRepositoryServer::create(this);
         PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
         PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());
         PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());

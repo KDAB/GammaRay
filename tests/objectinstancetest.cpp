@@ -12,6 +12,7 @@
 */
 
 #include <core/objectinstance.h>
+#include <core/enumrepositoryserver.h>
 
 #include <QDebug>
 #include <QTest>
@@ -30,6 +31,11 @@ class ObjectInstanceTest : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase()
+    {
+        EnumRepositoryServer::create(this);
+    }
+
     static void testQtObject()
     {
         QObject obj;

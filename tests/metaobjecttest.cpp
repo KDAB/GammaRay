@@ -12,6 +12,7 @@
 */
 
 #include <core/metaobjectrepository.h>
+#include <core/enumrepositoryserver.h>
 #include <core/metaobject.h>
 
 #include <QDebug>
@@ -27,6 +28,11 @@ class MetaObjectTest : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase()
+    {
+        EnumRepositoryServer::create(this);
+    }
+
     static void testMetaObject()
     {
         QVERIFY(MetaObjectRepository::instance()->hasMetaObject(QStringLiteral("QThread")));

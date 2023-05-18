@@ -17,6 +17,7 @@
 #include <core/propertydata.h>
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
+#include <core/enumrepositoryserver.h>
 
 #include <shared/propertytestobject.h>
 
@@ -73,8 +74,9 @@ private:
     }
 
 private slots:
-    static void initTestCase()
+    void initTestCase()
     {
+        EnumRepositoryServer::create(this);
         MetaObject *mo;
         MO_ADD_METAOBJECT0(QPen);
         MO_ADD_PROPERTY(QPen, color, setColor);
