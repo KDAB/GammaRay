@@ -58,7 +58,7 @@ int main(int argc, char **argv)
     QObject::connect(btn, &QPushButton::clicked, &w, [&w]() {
         //! [Missing setSingleShot]
         auto timer = new QTimer(&w);
-        QObject::connect(timer, SIGNAL(timeout()), &w, SLOT(repaint()));
+        QObject::connect(timer, &QTimer::timeout, &w, [&w] { w.repaint(); });
         timer->setInterval(0);
         // timer->setSingleShot(true);
         timer->start();

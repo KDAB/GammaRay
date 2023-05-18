@@ -92,11 +92,11 @@ private slots:
         model.setObject(&obj);
         QVERIFY(model.rowCount() >= 4);
 
-        QSignalSpy changeSpy(&model, SIGNAL(dataChanged(QModelIndex, QModelIndex)));
+        QSignalSpy changeSpy(&model, &QAbstractItemModel::dataChanged);
         QVERIFY(changeSpy.isValid());
-        QSignalSpy addSpy(&model, SIGNAL(rowsInserted(QModelIndex, int, int)));
+        QSignalSpy addSpy(&model, &QAbstractItemModel::rowsInserted);
         QVERIFY(addSpy.isValid());
-        QSignalSpy removeSpy(&model, SIGNAL(rowsRemoved(QModelIndex, int, int)));
+        QSignalSpy removeSpy(&model, &QAbstractItemModel::rowsRemoved);
         QVERIFY(removeSpy.isValid());
 
         obj.changeProperties();

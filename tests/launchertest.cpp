@@ -80,9 +80,9 @@ private slots:
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
 
-        QSignalSpy startSpy(&launcher, SIGNAL(started()));
+        QSignalSpy startSpy(&launcher, &Launcher::started);
         QVERIFY(startSpy.isValid());
-        QSignalSpy finishSpy(&launcher, SIGNAL(finished()));
+        QSignalSpy finishSpy(&launcher, &Launcher::finished);
         QVERIFY(finishSpy.isValid());
 
         QVERIFY(launcher.start());
@@ -111,9 +111,9 @@ private slots:
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
 
-        QSignalSpy startSpy(&launcher, SIGNAL(started()));
+        QSignalSpy startSpy(&launcher, &Launcher::started);
         QVERIFY(startSpy.isValid());
-        QSignalSpy finishSpy(&launcher, SIGNAL(finished()));
+        QSignalSpy finishSpy(&launcher, &Launcher::finished);
         QVERIFY(finishSpy.isValid());
 
         QVERIFY(launcher.start());
@@ -143,7 +143,7 @@ private slots:
         options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForProcess(options.pid())));
         Launcher launcher(options);
 
-        QSignalSpy spy(&launcher, SIGNAL(attached()));
+        QSignalSpy spy(&launcher, &Launcher::attached);
         QVERIFY(spy.isValid());
         QVERIFY(launcher.start());
 

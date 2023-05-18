@@ -148,7 +148,9 @@ PropertyEnumEditor::PropertyEnumEditor(QWidget *parent)
     , m_model(new PropertyEnumEditorModel(this))
 {
     setModel(m_model);
-    connect(m_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(update())); // FIXME: Clazy says 4 overloads for update, but I find not a single one...
+    connect(m_model, &PropertyEnumEditorModel::dataChanged, this, [this] {
+        update();
+    });
 
     auto repo = ObjectBroker::object<EnumRepository *>();
     connect(repo, &EnumRepository::definitionChanged, this, &PropertyEnumEditor::definitionChanged);

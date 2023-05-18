@@ -73,7 +73,7 @@ private slots:
         t.iterations = iterations;
         QTest::qWait(1);
 
-        QSignalSpy spy(&t, SIGNAL(finished()));
+        QSignalSpy spy(&t, &Thread::finished);
         QVERIFY(spy.isValid());
 
         // this mainly aims at not triggering any of the sanity checks in the object models or Probe

@@ -67,7 +67,7 @@ private slots:
             options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForProcess(options.pid())));
             Launcher launcher(options);
 
-            QSignalSpy spy(&launcher, SIGNAL(attached()));
+            QSignalSpy spy(&launcher, &Launcher::attached);
             QVERIFY(spy.isValid());
             QVERIFY(launcher.start());
 
@@ -83,9 +83,9 @@ private slots:
     void testMultipleConnection()
     {
         ClientConnectionManager connector(nullptr, false);
-        QSignalSpy spyReady(&connector, SIGNAL(ready()));
-        QSignalSpy spyError(&connector, SIGNAL(persistentConnectionError(QString)));
-        QSignalSpy spyDisconnected(&connector, SIGNAL(disconnected()));
+        QSignalSpy spyReady(&connector, &ClientConnectionManager::ready);
+        QSignalSpy spyError(&connector, &ClientConnectionManager::persistentConnectionError);
+        QSignalSpy spyDisconnected(&connector, &ClientConnectionManager::disconnected);
 
         QVERIFY(spyReady.isValid());
         QVERIFY(spyError.isValid());

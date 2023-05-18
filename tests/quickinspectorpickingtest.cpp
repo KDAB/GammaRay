@@ -59,7 +59,7 @@ private:
 
     bool showSource(const QString &sourceFile)
     {
-        QSignalSpy renderSpy(view, SIGNAL(frameSwapped()));
+        QSignalSpy renderSpy(view, &QQuickWindow::frameSwapped);
         Q_ASSERT(renderSpy.isValid());
 
         view->setSource(QUrl(sourceFile));
@@ -136,7 +136,7 @@ private slots:
 
         auto itemSelectionModel = ObjectBroker::selectionModel(itemModel);
         QVERIFY(itemSelectionModel);
-        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
+        QSignalSpy itemSpy(itemSelectionModel, &QItemSelectionModel::selectionChanged);
         QVERIFY(itemSpy.isValid());
 
         // auto center-click is broken before https://codereview.qt-project.org/141085/

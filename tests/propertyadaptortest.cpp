@@ -95,7 +95,7 @@ private slots:
                      PropertyData::Writable | PropertyData::Resettable);
         QVERIFY(!adaptor->canAddProperty());
 
-        QSignalSpy spy(adaptor, SIGNAL(propertyChanged(int, int)));
+        QSignalSpy spy(adaptor, &PropertyAdaptor::propertyChanged);
         QVERIFY(spy.isValid());
 
         QCOMPARE(adaptor->propertyData(0).value(), QVariant(42));
@@ -132,7 +132,7 @@ private slots:
         QVERIFY(adaptor->count() > 3);
         verifyPropertyData(adaptor);
 
-        QSignalSpy spy(adaptor, SIGNAL(propertyChanged(int, int)));
+        QSignalSpy spy(adaptor, &PropertyAdaptor::propertyChanged);
         QVERIFY(spy.isValid());
 
         auto idx = indexOfProperty(adaptor, "priority");
@@ -195,7 +195,7 @@ private slots:
         testProperty(adaptor, "dynamicProperty", "int", "<dynamic>",
                      PropertyData::Writable | PropertyData::Deletable);
 
-        QSignalSpy changeSpy(adaptor, SIGNAL(propertyChanged(int, int)));
+        QSignalSpy changeSpy(adaptor, &PropertyAdaptor::propertyChanged);
         QVERIFY(changeSpy.isValid());
 
         auto propIdx = indexOfProperty(adaptor, "intProp");
@@ -234,9 +234,9 @@ private slots:
         QCOMPARE(changeSpy.at(0).at(1).toInt(), propIdx);
         QCOMPARE(obj->property("dynamicProperty").toInt(), 12);
 
-        QSignalSpy addSpy(adaptor, SIGNAL(propertyAdded(int, int)));
+        QSignalSpy addSpy(adaptor, &PropertyAdaptor::propertyAdded);
         QVERIFY(addSpy.isValid());
-        QSignalSpy removeSpy(adaptor, SIGNAL(propertyRemoved(int, int)));
+        QSignalSpy removeSpy(adaptor, &PropertyAdaptor::propertyRemoved);
         QVERIFY(removeSpy.isValid());
 
         QVERIFY(adaptor->canAddProperty());
@@ -255,7 +255,7 @@ private slots:
         QCOMPARE(removeSpy.size(), 1);
         QCOMPARE(addSpy.size(), 1);
 
-        QSignalSpy invalidatedSpy(adaptor, SIGNAL(objectInvalidated()));
+        QSignalSpy invalidatedSpy(adaptor, &PropertyAdaptor::objectInvalidated);
         QVERIFY(invalidatedSpy.isValid());
         delete obj;
         QVERIFY(!invalidatedSpy.isEmpty());

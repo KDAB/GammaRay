@@ -67,7 +67,7 @@ protected:
 
     bool showSource(const QString &sourceFile)
     {
-        QSignalSpy renderSpy(m_view.get(), SIGNAL(frameSwapped()));
+        QSignalSpy renderSpy(m_view.get(), &QQuickWindow::frameSwapped);
         Q_ASSERT(renderSpy.isValid());
 
         m_view->setSource(QUrl(sourceFile));

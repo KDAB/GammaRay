@@ -114,7 +114,7 @@ private:
         if (idx.data(RemoteModelRole::LoadingState).value<RemoteModelNodeState::NodeStates>() == RemoteModelNodeState::NoState)
             return true; // data already present
 
-        QSignalSpy spy(const_cast<QAbstractItemModel *>(idx.model()), SIGNAL(dataChanged(QModelIndex, QModelIndex)));
+        QSignalSpy spy(const_cast<QAbstractItemModel *>(idx.model()), &QAbstractItemModel::dataChanged);
         if (!spy.isValid())
             return false;
         idx.data(); // trigger the request

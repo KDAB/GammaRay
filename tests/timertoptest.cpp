@@ -101,7 +101,7 @@ private slots:
         QVERIFY(idx.isValid());
         // TODO verify data
 
-        QSignalSpy dataChangeSpy(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)));
+        QSignalSpy dataChangeSpy(model, &QAbstractItemModel::dataChanged);
         QVERIFY(dataChangeSpy.isValid());
         t1->start();
         QTest::qWait(10 * 1000); // there's a 5sec throttle on dataChanged

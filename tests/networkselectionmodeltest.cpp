@@ -103,8 +103,9 @@ public:
     {
         m_myAddress = address;
 
-        connect(Endpoint::instance(), SIGNAL(message(GammaRay::Message)), this,
-                SLOT(dispatchMessage(GammaRay::Message)));
+        auto endpoint = qobject_cast<FakeEndpoint *>(FakeEndpoint::instance());
+        QVERIFY(endpoint);
+        connect(endpoint, &FakeEndpoint::message, this, &FakeNetworkSelectionModel::dispatchMessage);
     }
 
     void applyPendingSelection()
@@ -160,13 +161,13 @@ private slots:
         QStandardItemModel serverModel;
         FakeNetworkSelectionModel serverSelection(ServerAddress, &serverModel);
         fillModel(&serverModel);
-        QSignalSpy serverSpy(&serverSelection, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
+        QSignalSpy serverSpy(&serverSelection, &FakeNetworkSelectionModel::selectionChanged);
         QVERIFY(serverSpy.isValid());
 
         QStandardItemModel clientModel;
         fillModel(&clientModel);
         FakeNetworkSelectionModel clientSelection(ClientAddress, &clientModel);
-        QSignalSpy clientSpy(&clientSelection, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
+        QSignalSpy clientSpy(&clientSelection, &FakeNetworkSelectionModel::selectionChanged);
         QVERIFY(clientSpy.isValid());
 
         serverSelection.select(serverModel.index(2, 0), QItemSelectionModel::ClearAndSelect);
@@ -193,7 +194,7 @@ private slots:
 
         QStandardItemModel clientModel;
         FakeNetworkSelectionModel clientSelection(ClientAddress, &clientModel);
-        QSignalSpy clientSpy(&clientSelection, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
+        QSignalSpy clientSpy(&clientSelection, &FakeNetworkSelectionModel::selectionChanged);
         QVERIFY(clientSpy.isValid());
         QVERIFY(!clientSelection.hasSelection());
 
@@ -219,7 +220,7 @@ private slots:
         QStandardItemModel clientModel;
         fillModel(&clientModel);
         FakeNetworkSelectionModel clientSelection(ClientAddress, &clientModel);
-        QSignalSpy clientSpy(&clientSelection, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
+        QSignalSpy clientSpy(&clientSelection, &FakeNetworkSelectionModel::selectionChanged);
         QVERIFY(clientSpy.isValid());
 
         clientSelection.requestSelection(); // usually called by SelectionModelClient
@@ -234,15 +235,15 @@ private slots:
         QStandardItemModel serverModel;
         FakeNetworkSelectionModel serverSelection(ServerAddress, &serverModel);
         fillModel(&serverModel);
-        QSignalSpy serverSpy(&serverSelection, SIGNAL(currentChanged(QModelIndex, QModelIndex)));
+        QSignalSpy serverSpy(&serverSelection, &FakeNetworkSelectionModel::selectionChanged);
         QVERIFY(serverSpy.isValid());
 
         QStandardItemModel clientModel;
         fillModel(&clientModel);
         FakeNetworkSelectionModel clientSelection(ClientAddress, &clientModel);
-        QSignalSpy clientSpy(&clientSelection, SIGNAL(currentChanged(QModelIndex, QModelIndex)));
+        QSignalSpy clientSpy(&clientSelection, &FakeNetworkSelectionModel::selectionChanged);
         QVERIFY(clientSpy.isValid());
-        QSignalSpy clientRowSpy(&clientSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)));
+        QSignalSpy clientRowSpy(&clientSelection, &FakeNetworkSelectionModel::currentRowChanged);
         QVERIFY(clientRowSpy.isValid());
 
         serverSelection.setCurrentIndex(serverModel.index(2, 0), QItemSelectionModel::NoUpdate);

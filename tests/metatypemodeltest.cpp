@@ -43,7 +43,7 @@ private slots:
         model.setSourceModel(&srcModel);
         ModelTest modelTest(&model);
         QVERIFY(model.rowCount() > 0);
-        QSignalSpy resetSpy(&model, SIGNAL(modelReset()));
+        QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
         QVERIFY(resetSpy.isValid());
 
         auto idx = searchFixedIndex(&model, "QObject*");
