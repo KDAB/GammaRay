@@ -632,7 +632,7 @@ void BindingInspectorTest::testModelDataChanged()
     QCOMPARE(obj1dIndex.sibling(obj1dIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel->rowCount(obj1dIndex), 0);
 
-    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)));
+    QSignalSpy dataChangedSpy(bindingModel, &QAbstractItemModel::dataChanged);
     QVERIFY(dataChangedSpy.isValid());
 
     obj1.setD(3.1415926535897932);
@@ -674,8 +674,8 @@ void BindingInspectorTest::testModelAdditions()
     QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel->rowCount(obj1cIndex), 0);
 
-    QSignalSpy rowAddedSpy(bindingModel, SIGNAL(rowsInserted(QModelIndex, int, int)));
-    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)));
+    QSignalSpy rowAddedSpy(bindingModel, &QAbstractItemModel::rowsInserted);
+    QSignalSpy dataChangedSpy(bindingModel, &QAbstractItemModel::dataChanged);
     QVERIFY(rowAddedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -750,8 +750,8 @@ void BindingInspectorTest::testModelInsertions()
     QCOMPARE(obj1eIndex.sibling(obj1eIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("0"));
     QCOMPARE(bindingModel->rowCount(obj1eIndex), 0);
 
-    QSignalSpy rowAddedSpy(bindingModel, SIGNAL(rowsInserted(QModelIndex, int, int)));
-    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)));
+    QSignalSpy rowAddedSpy(bindingModel, &QAbstractItemModel::rowsInserted);
+    QSignalSpy dataChangedSpy(bindingModel, &QAbstractItemModel::dataChanged);
     QVERIFY(rowAddedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -840,8 +840,8 @@ void BindingInspectorTest::testModelRemovalAtEnd()
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
     QCOMPARE(bindingModel->rowCount(obj1aIndex), 3);
 
-    QSignalSpy rowRemovedSpy(bindingModel, SIGNAL(rowsRemoved(QModelIndex, int, int)));
-    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)));
+    QSignalSpy rowRemovedSpy(bindingModel, &QAbstractItemModel::rowsRemoved);
+    QSignalSpy dataChangedSpy(bindingModel, &QAbstractItemModel::dataChanged);
     QVERIFY(rowRemovedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 
@@ -893,8 +893,8 @@ void BindingInspectorTest::testModelRemovalInside()
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral("2"));
     QCOMPARE(bindingModel->rowCount(obj1aIndex), 3);
 
-    QSignalSpy rowRemovedSpy(bindingModel, SIGNAL(rowsRemoved(QModelIndex, int, int)));
-    QSignalSpy dataChangedSpy(bindingModel, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)));
+    QSignalSpy rowRemovedSpy(bindingModel, &QAbstractItemModel::rowsRemoved);
+    QSignalSpy dataChangedSpy(bindingModel, &QAbstractItemModel::dataChanged);
     QVERIFY(rowRemovedSpy.isValid());
     QVERIFY(dataChangedSpy.isValid());
 

@@ -28,6 +28,6 @@ int main(int argc, char **argv)
     QUrl addr = QUrl::fromUserInput(ProbeSettings::value("TestValue").toString());
     ProbeSettings::sendServerAddress(addr);
 
-    QTimer::singleShot(1000, &app, SLOT(quit()));
+    QTimer::singleShot(1000, &app, &QCoreApplication::quit);
     return app.exec();
 }

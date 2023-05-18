@@ -102,7 +102,7 @@ private slots:
         QVERIFY(model);
         QCOMPARE(model->rowCount(), 1);
 
-        QSignalSpy changeSpy(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)));
+        QSignalSpy changeSpy(model, &QAbstractItemModel::dataChanged);
         QVERIFY(changeSpy.isValid());
 
         a1->setCheckable(true);

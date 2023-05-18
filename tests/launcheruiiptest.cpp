@@ -90,7 +90,7 @@ private slots:
         QFETCH(bool, autoPortWarning);
 
         ConnectPage connectPage;
-        QSignalSpy addressParsedSpy(&connectPage, SIGNAL(userInputParsed()));
+        QSignalSpy addressParsedSpy(&connectPage, &ConnectPage::userInputParsed);
         auto lineEdit = connectPage.findChild<QLineEdit *>("host");
         QVERIFY(lineEdit);
         lineEdit->setText(userInput);
@@ -121,7 +121,7 @@ private slots:
         QFETCH(QString, userInput);
         QFETCH(bool, isValid);
         ConnectPage connectPage;
-        QSignalSpy dnsDoneSpy(&connectPage, SIGNAL(dnsResolved()));
+        QSignalSpy dnsDoneSpy(&connectPage, &ConnectPage::dnsResolved);
         auto lineEdit = connectPage.findChild<QLineEdit *>("host");
         QVERIFY(lineEdit);
         lineEdit->setText(userInput);

@@ -82,7 +82,7 @@ private slots:
         options.setInjectorType(injectorType);
         Launcher launcher(options);
 
-        QSignalSpy spy(&launcher, SIGNAL(finished()));
+        QSignalSpy spy(&launcher, &Launcher::finished);
         QVERIFY(launcher.start());
 
         spy.wait(10000);
@@ -102,7 +102,7 @@ private slots:
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
 
-        QSignalSpy spy(&launcher, SIGNAL(finished()));
+        QSignalSpy spy(&launcher, &Launcher::finished);
 
         QVERIFY(launcher.start());
 
@@ -135,7 +135,7 @@ private slots:
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
 
-        QSignalSpy spy(&launcher, SIGNAL(finished()));
+        QSignalSpy spy(&launcher, &Launcher::finished);
 
         QVERIFY(launcher.start());
         launcher.stop();

@@ -32,7 +32,7 @@ private slots:
 
         auto remoteView = ObjectBroker::object<RemoteViewInterface *>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
         QVERIFY(remoteView);
-        QSignalSpy frameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
+        QSignalSpy frameSpy(remoteView, &RemoteViewInterface::frameUpdated);
         QVERIFY(frameSpy.isValid());
         remoteView->setViewActive(true);
 
@@ -56,7 +56,7 @@ private slots:
 
         auto remoteView = ObjectBroker::object<RemoteViewInterface *>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
         QVERIFY(remoteView);
-        QSignalSpy frameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
+        QSignalSpy frameSpy(remoteView, &RemoteViewInterface::frameUpdated);
         QVERIFY(frameSpy.isValid());
         remoteView->setViewActive(true);
 
@@ -83,7 +83,7 @@ private slots:
 
         auto remoteView = ObjectBroker::object<RemoteViewInterface *>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
         QVERIFY(remoteView);
-        QSignalSpy frameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
+        QSignalSpy frameSpy(remoteView, &RemoteViewInterface::frameUpdated);
         QVERIFY(frameSpy.isValid());
         remoteView->setViewActive(true);
 

@@ -351,8 +351,8 @@ int main(int argc, char **argv)
 #endif
         return launcher.exitCode();
     } else {
-        QObject::connect(&launcher, SIGNAL(finished()), &app, SLOT(quit()));
-        QObject::connect(&launcher, SIGNAL(attached()), &app, SLOT(quit()));
+        QObject::connect(&launcher, &Launcher::finished, &app, &QApplication::quit);
+        QObject::connect(&launcher, &Launcher::attached, &app, &QApplication::quit);
     }
     auto result = app.exec();
     return result == 0 ? launcher.exitCode() : result;

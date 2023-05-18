@@ -154,7 +154,7 @@ private slots:
         QVERIFY(selectionModels);
         ModelTest selModelTester(selectionModels);
         QCOMPARE(selectionModels->rowCount(), 0);
-        QSignalSpy resetSpy(selectionModels, SIGNAL(modelReset()));
+        QSignalSpy resetSpy(selectionModels, &QAbstractItemModel::modelReset);
         QVERIFY(resetSpy.isValid());
 
         auto targetSelModel = new QItemSelectionModel(targetModel);
@@ -169,7 +169,7 @@ private slots:
         modelSelModel->select(idx, QItemSelectionModel::ClearAndSelect);
         QCOMPARE(selectionModels->rowCount(), 1);
 
-        QSignalSpy dataChangeSpy(selectionModels, SIGNAL(dataChanged(QModelIndex, QModelIndex)));
+        QSignalSpy dataChangeSpy(selectionModels, &QAbstractItemModel::dataChanged);
         QVERIFY(dataChangeSpy.isValid());
         QCOMPARE(selectionModels->index(0, 1).data().toInt(), 0);
         QCOMPARE(selectionModels->index(0, 2).data().toInt(), 0);
@@ -213,7 +213,7 @@ private slots:
         QVERIFY(cellModel);
         ModelTest cellModelTester(cellModel);
         QCOMPARE(cellModel->rowCount(), 0);
-        QSignalSpy cellContentResetSpy(cellModel, SIGNAL(modelReset()));
+        QSignalSpy cellContentResetSpy(cellModel, &QAbstractItemModel::modelReset);
         QVERIFY(cellContentResetSpy.isValid());
 
         auto targetModelIdx = searchFixedIndex(modelModel, QLatin1String("targetModel"), Qt::MatchRecursive);
@@ -299,7 +299,7 @@ private slots:
         for (int i = 0; i < targetModel->rowCount(); ++i)
             QVERIFY(contentModel->index(i, 0).data(ModelContentProxyModel::SelectedRole).isNull());
 
-        QSignalSpy contentSpy(contentModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)));
+        QSignalSpy contentSpy(contentModel, &QAbstractItemModel::dataChanged);
         QVERIFY(contentSpy.isValid());
 
         targetSelModel->select(contentModel->index(1, 0), QItemSelectionModel::ClearAndSelect);

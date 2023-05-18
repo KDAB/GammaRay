@@ -42,9 +42,9 @@ private slots:
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
 
         Launcher launcher(options);
-        QSignalSpy startSpy(&launcher, SIGNAL(started()));
+        QSignalSpy startSpy(&launcher, &Launcher::started);
         QVERIFY(startSpy.isValid());
-        QSignalSpy finishSpy(&launcher, SIGNAL(finished()));
+        QSignalSpy finishSpy(&launcher, &Launcher::finished);
         QVERIFY(finishSpy.isValid());
 
         QVERIFY(launcher.start());

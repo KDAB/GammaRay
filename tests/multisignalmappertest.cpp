@@ -62,7 +62,7 @@ private slots:
         mapper.connectToSignal(&emitter1, method(&emitter1, "signal2(QString)"));
         mapper.connectToSignal(&emitter2, method(&emitter1, "signal2(QString)"));
 
-        QSignalSpy spy(&mapper, SIGNAL(signalEmitted(QObject *, int, QVector<QVariant>)));
+        QSignalSpy spy(&mapper, &MultiSignalMapper::signalEmitted);
         QVERIFY(spy.isValid());
         QVERIFY(spy.isEmpty());
 

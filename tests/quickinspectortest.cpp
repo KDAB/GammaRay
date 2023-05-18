@@ -157,12 +157,12 @@ private slots:
 
         auto itemSelectionModel = ObjectBroker::selectionModel(itemModel);
         QVERIFY(itemSelectionModel);
-        QSignalSpy itemSpy(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
+        QSignalSpy itemSpy(itemSelectionModel, &QItemSelectionModel::selectionChanged);
         QVERIFY(itemSpy.isValid());
 
         auto sgSelectionModel = ObjectBroker::selectionModel(sgModel);
         QVERIFY(sgModel);
-        QSignalSpy sgSpy(sgSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)));
+        QSignalSpy sgSpy(sgSelectionModel, &QItemSelectionModel::selectionChanged);
         QVERIFY(sgSpy.isValid());
 
         // auto center-click is broken before https://codereview.qt-project.org/141085/
@@ -189,10 +189,10 @@ private slots:
         QVERIFY(remoteView);
         remoteView->setViewActive(true);
 
-        QSignalSpy renderSpy(view(), SIGNAL(frameSwapped()));
+        QSignalSpy renderSpy(view(), &QQuickWindow::frameSwapped);
         QVERIFY(renderSpy.isValid());
 
-        QSignalSpy gotFrameSpy(remoteView, SIGNAL(frameUpdated(GammaRay::RemoteViewFrame)));
+        QSignalSpy gotFrameSpy(remoteView, &RemoteViewInterface::frameUpdated);
         QVERIFY(gotFrameSpy.isValid());
 
         QVERIFY(showSource(QStringLiteral("qrc:/manual/rotationinvariant.qml")));
@@ -228,13 +228,13 @@ private slots:
 
     void testCustomRenderModes()
     {
-        QSignalSpy featureSpy(inspector, SIGNAL(features(GammaRay::QuickInspectorInterface::Features)));
+        QSignalSpy featureSpy(inspector, &QuickInspectorInterface::features);
         QVERIFY(featureSpy.isValid());
         inspector->checkFeatures();
         QCOMPARE(featureSpy.size(), 1);
         auto features = featureSpy.at(0).at(0).value<GammaRay::QuickInspectorInterface::Features>();
 
-        QSignalSpy renderSpy(view(), SIGNAL(frameSwapped()));
+        QSignalSpy renderSpy(view(), &QQuickWindow::frameSwapped);
         QVERIFY(renderSpy.isValid());
 
         QVERIFY(showSource(QStringLiteral("qrc:/manual/reparenttest.qml")));
