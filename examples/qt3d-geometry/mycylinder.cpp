@@ -37,11 +37,11 @@ public:
 
 private:
     void createVertexData();
-    void createSidesVertices(float *&verticesPtr);
-    void createDiscVertices(float *&verticesPtr, float yPosition);
+    void createSidesVertices(float *&verticesPtr) const;
+    void createDiscVertices(float *&verticesPtr, float yPosition) const;
     void createIndexData();
-    void createSidesIndices(quint16 *&indicesPtr);
-    void createDiscIndices(quint16 *&indicesPtr, int discCenterIndex, float yPosition);
+    void createSidesIndices(quint16 *&indicesPtr) const;
+    void createDiscIndices(quint16 *&indicesPtr, int discCenterIndex, float yPosition) const;
 
     Qt3DGeometry::QAttribute *m_positionAttribute;
     Qt3DGeometry::QAttribute *m_normalAttribute;
@@ -143,7 +143,7 @@ void MyCylinderGeometry::createVertexData()
     m_vertexBuffer->setData(verticesData);
 }
 
-void MyCylinderGeometry::createSidesVertices(float *&verticesPtr)
+void MyCylinderGeometry::createSidesVertices(float *&verticesPtr) const
 {
     //! [Wrong side normals]
     const float dY = m_length / static_cast<float>(m_rings - 1);
@@ -168,7 +168,7 @@ void MyCylinderGeometry::createSidesVertices(float *&verticesPtr)
     //! [Wrong side normals]
 }
 
-void MyCylinderGeometry::createDiscVertices(float *&verticesPtr, float yPosition)
+void MyCylinderGeometry::createDiscVertices(float *&verticesPtr, float yPosition) const
 {
     const float dTheta = (M_PI * 2) / static_cast<float>(m_slices);
     const float yNormal = (yPosition < 0.0f) ? -1.0f : 1.0f;
@@ -212,7 +212,7 @@ void MyCylinderGeometry::createIndexData()
     m_indexBuffer->setData(indicesBytes);
 }
 
-void MyCylinderGeometry::createSidesIndices(quint16 *&indicesPtr)
+void MyCylinderGeometry::createSidesIndices(quint16 *&indicesPtr) const
 {
     for (auto ring = 0; ring < m_rings - 1; ++ring) {
         const auto ringIndexStart = ring * (m_slices + 1);
@@ -230,7 +230,7 @@ void MyCylinderGeometry::createSidesIndices(quint16 *&indicesPtr)
     }
 }
 
-void MyCylinderGeometry::createDiscIndices(quint16 *&indicesPtr, int discCenterIndex, float /*yPosition*/)
+void MyCylinderGeometry::createDiscIndices(quint16 *&indicesPtr, int discCenterIndex, float /*yPosition*/) const
 {
     //! [Wrong bottom disc indexes]
     // const auto yNormal = (yPosition < 0.0f) ? -1.0f : 1.0f;
