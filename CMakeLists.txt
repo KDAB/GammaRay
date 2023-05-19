@@ -435,6 +435,7 @@ if(GAMMARAY_QT6_BUILD)
     set(Qt_VERSION_MAJOR 6)
     set(QT_MIN_VERSION "6.0.0")
 endif()
+set(QT_MAJOR_VERSION ${Qt_VERSION_MAJOR}) #needed by ECM cmake
 
 find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Gui Network)
 find_package(
