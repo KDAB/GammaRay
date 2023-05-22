@@ -5,19 +5,19 @@
 # SPDX-License-Identifier: BSD-3-Clause
 #
 
-# Assumes you've already found Qt and Qt_VERSION_MAJOR is set
+# Assumes you've already found Qt and QT_VERSION_MAJOR is set
 #
 # Create variables for all the various install paths for the Qt version in use
 # Make sure to have found Qt before using this.
 # sets variables like QT_INSTALL_PREFIX, QT_INSTALL_DATA, QT_INSTALL_DOCS, etc.
 # run qmake -query to see a full list
 
-if(NOT DEFINED Qt_VERSION_MAJOR)
-    message(FATAL_ERROR "Please set Qt_VERSION_MAJOR first (ie. set(Qt_VERSION_MAJOR 5))")
+if(NOT DEFINED QT_VERSION_MAJOR)
+    message(FATAL_ERROR "Please set QT_VERSION_MAJOR first (ie. set(QT_VERSION_MAJOR 5))")
 endif()
 
-if(TARGET Qt${Qt_VERSION_MAJOR}::qmake)
-    get_target_property(QT_QMAKE_EXECUTABLE Qt${Qt_VERSION_MAJOR}::qmake LOCATION)
+if(TARGET Qt${QT_VERSION_MAJOR}::qmake)
+    get_target_property(QT_QMAKE_EXECUTABLE Qt${QT_VERSION_MAJOR}::qmake LOCATION)
 else()
     message(FATAL_ERROR "No supported Qt version found. Make sure you find Qt before calling this")
 endif()
