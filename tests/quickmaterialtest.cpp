@@ -48,12 +48,13 @@ private slots:
     void testStaticShader()
     {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        QFAIL("QuickMaterial hasn't been ported to Qt6 yet");
-        return;
-#endif
-
+        if (!showSource("qrc:/manual/shadereffect6.qml"))
+            return;
+#else
         if (!showSource("qrc:/manual/shadereffect.qml"))
             return;
+#endif
+
 
         auto iface = ObjectBroker::object<MaterialExtensionInterface *>("com.kdab.GammaRay.QuickSceneGraph.material");
         QVERIFY(iface);
@@ -103,11 +104,12 @@ private slots:
     void testDynamicShader()
     {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        QFAIL("QuickMaterial hasn't been ported to Qt6 yet");
-        return;
-#endif
+        if (!showSource("qrc:/manual/shadereffect6.qml"))
+            return;
+#else
         if (!showSource("qrc:/manual/shadereffect.qml"))
             return;
+#endif
 
         auto iface = ObjectBroker::object<MaterialExtensionInterface *>("com.kdab.GammaRay.QuickSceneGraph.material");
         QVERIFY(iface);
@@ -141,6 +143,11 @@ private slots:
         auto geometryNode = findGeometryNode(priv->itemNodeInstance);
         QVERIFY(geometryNode);
         controller->setObject(geometryNode, "QSGGeometryNode");
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        // In Qt6 we don't have access to shader source code
+        return;
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         QVERIFY(propModel->rowCount() > 1);
