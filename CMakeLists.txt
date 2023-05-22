@@ -414,6 +414,15 @@ if(GAMMARAY_ENFORCE_QT_ASSERTS)
     add_definitions(-DQT_FORCE_ASSERTS)
 endif()
 
+gammaray_option(GAMMARAY_QT6_BUILD "Build with Qt6." OFF)
+if(GAMMARAY_QT6_BUILD)
+    set(Qt_VERSION_MAJOR 6)
+    set(QT_MIN_VERSION "6.0.0")
+    set(QT_MAJOR_VERSION 6) #needed by ECM cmake
+else()
+    set(QT_MAJOR_VERSION 5) #needed by ECM cmake
+endif()
+
 #
 # Finding Qt
 #
@@ -421,21 +430,12 @@ find_package(
     Qt
     5.5
     NAMES
-    Qt6
-    Qt5
+    Qt${QT_MAJOR_VERSION}
     COMPONENTS Core NO_MODULE
     REQUIRED
 )
 
 set_package_properties(Qt${Qt_VERSION_MAJOR}Core PROPERTIES TYPE REQUIRED)
-
-gammaray_option(GAMMARAY_QT6_BUILD "Build with Qt6." OFF)
-
-if(GAMMARAY_QT6_BUILD)
-    set(Qt_VERSION_MAJOR 6)
-    set(QT_MIN_VERSION "6.0.0")
-endif()
-set(QT_MAJOR_VERSION ${Qt_VERSION_MAJOR}) #needed by ECM cmake
 
 find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Gui Network)
 find_package(
