@@ -73,7 +73,9 @@ bool MaterialExtension::setObject(void *object, const QString &typeName)
 
     m_materialPropertyModel->setObject(ObjectInstance(material, "QSGMaterial"));
 
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    m_materialShader.reset(material->createShader(QSGRendererInterface::RenderMode2D));
+#else
     m_materialShader.reset(material->createShader());
 #endif
     m_shaderModel->setMaterialShader(m_materialShader.get());
