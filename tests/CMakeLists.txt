@@ -565,7 +565,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_add_quick_test(
             quickmaterialtest quickmaterialtest.cpp quickinspectortest.qrc $<TARGET_OBJECTS:modeltestobj>
         )
-        if(Qt_VERSION_MAJOR GREATER_EQUAL 6)
+        if(QT_VERSION_MAJOR GREATER_EQUAL 6)
             find_package(Qt6 COMPONENTS ShaderTools)
             qt6_add_shaders(
                 quickmaterialtest

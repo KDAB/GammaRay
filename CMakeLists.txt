@@ -12,9 +12,9 @@
 # Pass the following variables to cmake to control the build:
 # (See INSTALL.md for more information)
 #
-# -DGAMMARAY_QT6_BUILD=[true|false]
-#  Build against Qt6 rather than Qt5
-#  Default=false (Qt5 will be used even if Qt6 is available)
+# -DQT_VERSION_MAJOR=[5|6]
+#  Build against QtX version
+#  Default=(The first Qt version found by cmake or the one provided by CMAKE_PREFIX_PATH will be used)
 #
 # -DGAMMARAY_PROBE_ONLY_BUILD=[true|false]
 #  Build only an additional probe configuration for an already existing launcher
@@ -414,32 +414,26 @@ if(GAMMARAY_ENFORCE_QT_ASSERTS)
     add_definitions(-DQT_FORCE_ASSERTS)
 endif()
 
-#
-# Finding Qt
-#
-find_package(
-    Qt
-    5.5
-    NAMES
-    Qt6
-    Qt5
-    COMPONENTS Core NO_MODULE
-    REQUIRED
-)
-
-set_package_properties(Qt${Qt_VERSION_MAJOR}Core PROPERTIES TYPE REQUIRED)
-
-gammaray_option(GAMMARAY_QT6_BUILD "Build with Qt6." OFF)
-
-if(GAMMARAY_QT6_BUILD)
-    set(Qt_VERSION_MAJOR 6)
-    set(QT_MIN_VERSION "6.0.0")
+if(NOT DEFINED QT_VERSION_MAJOR)
+    #
+    # Finding Qt
+    #
+    find_package(
+        QT
+        5.5
+        NAMES
+        Qt6
+        Qt5
+        COMPONENTS Core NO_MODULE
+        REQUIRED
+    )
 endif()
-set(QT_MAJOR_VERSION ${Qt_VERSION_MAJOR}) #needed by ECM cmake
 
-find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Gui Network)
+set_package_properties(Qt${QT_VERSION_MAJOR}Core PROPERTIES TYPE REQUIRED)
+
+find_package(Qt${QT_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Gui Network)
 find_package(
-    Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET
+    Qt${QT_VERSION_MAJOR} NO_MODULE QUIET
     OPTIONAL_COMPONENTS
         3DAnimation
         3DExtras
@@ -465,22 +459,22 @@ find_package(
         WaylandCompositor
 )
 if(ANDROID)
-    find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS AndroidExtras)
+    find_package(Qt${QT_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS AndroidExtras)
 endif()
 
 # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
 # so we can retrieve those packages even when installed into a different prefix
-find_package(Qt${Qt_VERSION_MAJOR}IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
-find_package(Qt${Qt_VERSION_MAJOR}IviVehicleFunctions 1.1 NO_MODULE QUIET)
-find_package(Qt${Qt_VERSION_MAJOR}IviMedia 1.1 NO_MODULE QUIET)
-find_package(Qt${Qt_VERSION_MAJOR}Scxml 5.8 NO_MODULE QUIET)
+find_package(Qt${QT_VERSION_MAJOR}IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
+find_package(Qt${QT_VERSION_MAJOR}IviVehicleFunctions 1.1 NO_MODULE QUIET)
+find_package(Qt${QT_VERSION_MAJOR}IviMedia 1.1 NO_MODULE QUIET)
+find_package(Qt${QT_VERSION_MAJOR}Scxml 5.8 NO_MODULE QUIET)
 
 # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
 if(GAMMARAY_BUILD_DOCS)
-    find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
+    find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
 endif()
 
-if(${Qt_VERSION_MAJOR} GREATER_EQUAL 6)
+if(QT_VERSION_MAJOR GREATER_EQUAL 6)
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     add_definitions(-DGAMMARAY_QT6_TODO)
@@ -553,19 +547,19 @@ if(NOT DEFINED QT_LIBINFIX)
     set(QT_LIBINFIX "")
 endif()
 
-set_package_properties(Qt${Qt_VERSION_MAJOR} PROPERTIES URL "https://qt.io/")
+set_package_properties(Qt${QT_VERSION_MAJOR} PROPERTIES URL "https://qt.io/")
 set_package_properties(
-    Qt${Qt_VERSION_MAJOR}Concurrent PROPERTIES
+    Qt${QT_VERSION_MAJOR}Concurrent PROPERTIES
     TYPE RECOMMENDED
     PURPOSE "Required for the GammaRay launcher process list."
 )
 set_package_properties(
-    Qt${Qt_VERSION_MAJOR}Widget PROPERTIES
+    Qt${QT_VERSION_MAJOR}Widget PROPERTIES
     TYPE RECOMMENDED
     PURPOSE "Required for the GammaRay client UI and widget-related tools."
 )
 set_package_properties(
-    Qt${Qt_VERSION_MAJOR}Svg PROPERTIES
+    Qt${QT_VERSION_MAJOR}Svg PROPERTIES
     TYPE OPTIONAL
     PURPOSE "Required for widget SVG export."
 )
