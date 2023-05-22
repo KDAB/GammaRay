@@ -427,10 +427,7 @@ endif()
 # Finding Qt
 #
 find_package(
-    Qt
-    5.5
-    NAMES
-    Qt${QT_MAJOR_VERSION}
+    Qt 5.5 NAMES Qt${QT_MAJOR_VERSION}
     COMPONENTS Core NO_MODULE
     REQUIRED
 )
