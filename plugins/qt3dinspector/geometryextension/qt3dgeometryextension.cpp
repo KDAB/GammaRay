@@ -109,7 +109,9 @@ void Qt3DGeometryExtension::updateGeometryData()
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             buffer.data = attr->buffer()->data();
 #else
+#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
             buffer.type = attr->buffer()->type();
+#endif // QT_VERSION_CHECK(5, 10, 0)
             auto generator = attr->buffer()->dataGenerator();
             if (generator)
                 buffer.data = (*generator.data())();

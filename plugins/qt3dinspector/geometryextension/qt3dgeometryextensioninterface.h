@@ -50,7 +50,7 @@ struct Qt3DGeometryBufferData
 
     QString name;
     QByteArray data;
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
     Qt3DRender::QBuffer::BufferType type = Qt3DRender::QBuffer::VertexBuffer;
 #endif
 };

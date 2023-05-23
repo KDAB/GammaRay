@@ -481,7 +481,7 @@ void Qt3DGeometryTab::updateGeometry()
     QVector<Qt3DGeometry::QBuffer *> buffers;
     buffers.reserve(geo.buffers.size());
     for (const auto &bufferData : geo.buffers) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
         auto buffer = new Qt3DGeometry::QBuffer(geometry);
 #else
         auto buffer = new Qt3DGeometry::QBuffer(bufferData.type, geometry);
