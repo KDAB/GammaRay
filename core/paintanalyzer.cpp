@@ -127,7 +127,7 @@ void PaintAnalyzer::repaint()
     }
     RemoteViewFrame frame;
     frame.setImage(image);
-    frame.setData(QVariant::fromValue(data));
+    frame.data = QVariant::fromValue(data);
     m_remoteView->sendFrame(frame);
 
     if (index.isValid()) {

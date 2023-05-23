@@ -88,7 +88,7 @@ void TextureViewWidget::drawBorderImageCutouts(QPainter *p) const
 
 void TextureViewWidget::drawActiveAtlasTile(QPainter *p) const
 {
-    auto rect = frame().data().toRect();
+    auto rect = frame().data.toRect();
     if (!rect.isValid())
         return;
 
@@ -131,7 +131,7 @@ void TextureViewWidget::analyzeImageFlaws()
     QImage analyzedTexture;
     QRect analyzedRect;
     int atlasTextureOffset = 0; // atlas textures are 1 pixel bigger
-    auto atlasSubTile = frame().data().toRect();
+    auto atlasSubTile = frame().data.toRect();
     if (atlasSubTile.isValid()) { // Atlas-Case
         analyzedTexture = frame().image().copy(atlasSubTile);
         analyzedRect = atlasSubTile;

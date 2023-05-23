@@ -250,7 +250,7 @@ void WidgetInspectorServer::updateWidgetPreview()
     frame.setImage(imageForWidget(m_selectedWidget->window()));
     WidgetFrameData data;
     data.tabFocusRects = tabFocusChain(m_selectedWidget->window());
-    frame.setData(QVariant::fromValue(data));
+    frame.data = QVariant::fromValue(data);
     m_remoteView->sendFrame(frame);
 }
 

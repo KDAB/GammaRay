@@ -68,26 +68,16 @@ void RemoteViewFrame::setImage(const QImage &image, const QTransform &transform)
     m_image.setTransform(transform);
 }
 
-QVariant RemoteViewFrame::data() const
-{
-    return m_data;
-}
-
-void RemoteViewFrame::setData(const QVariant &data)
-{
-    m_data = data;
-}
-
 QDataStream &operator<<(QDataStream &stream, const RemoteViewFrame &frame)
 {
-    stream << frame.m_image << frame.m_data << frame.m_viewRect << frame.m_sceneRect;
+    stream << frame.m_image << frame.data << frame.m_viewRect << frame.m_sceneRect;
     return stream;
 }
 
 QDataStream &operator>>(QDataStream &stream, RemoteViewFrame &frame)
 {
     stream >> frame.m_image;
-    stream >> frame.m_data;
+    stream >> frame.data;
     stream >> frame.m_viewRect;
     stream >> frame.m_sceneRect;
     return stream;

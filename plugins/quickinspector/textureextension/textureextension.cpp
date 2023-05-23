@@ -152,7 +152,7 @@ void TextureExtension::textureGrabbed(QSGTexture *tex, const QImage &img)
         QRect subRect(img.width() * m_currentTexture->normalizedTextureSubRect().x(),
                       img.height() * m_currentTexture->normalizedTextureSubRect().y(),
                       m_currentTexture->textureSize().width(), m_currentTexture->textureSize().height());
-        f.setData(subRect);
+        f.data = QVariant::fromValue(subRect);
     }
     m_remoteView->sendFrame(f);
 }
