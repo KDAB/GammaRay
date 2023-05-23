@@ -24,11 +24,11 @@ class MessageGenerator : public QWidget
 public:
     MessageGenerator();
 
-private slots:
+private:
     static void generateDebug();
     static void generateWarning();
     static void generateCritical();
-    static void generateFatal(); // FIXME: Q_RETURN fails on some configurations
+    [[noreturn]] static void generateFatal();
 };
 }
 
