@@ -451,7 +451,7 @@ static void setupAttribute(Qt3DGeometry::QAttribute *attr, const Qt3DGeometryAtt
     attr->setByteStride(attrData.byteStride);
     attr->setCount(attrData.count);
     attr->setDivisor(attrData.divisor);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     attr->setAttributeType(attrData.attributeType);
     attr->setVertexBaseType(attrData.vertexBaseType);
     attr->setVertexSize(attrData.vertexSize);
