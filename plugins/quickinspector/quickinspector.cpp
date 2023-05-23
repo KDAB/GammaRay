@@ -606,6 +606,8 @@ void QuickInspector::sceneGraphCleanedUp()
 
 void QuickInspector::sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFrame)
 {
+    if (!m_window)
+        return;
     RemoteViewFrame frame;
     frame.setImage(grabbedFrame.image, grabbedFrame.transform);
     frame.setSceneRect(grabbedFrame.itemsGeometryRect);
