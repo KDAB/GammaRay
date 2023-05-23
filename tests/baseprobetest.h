@@ -44,6 +44,7 @@ protected:
         Hooks::installHooks();
         Probe::startupHookReceived();
         new ProbeCreator(ProbeCreator::Create);
+        // NOLINTNEXTLINE clang-analyzer-cplusplus.NewDeleteLeaks
         QTest::qWait(1); // event loop re-entry
     }
 };
