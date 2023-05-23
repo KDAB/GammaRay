@@ -41,11 +41,7 @@ AttachHelper::AttachHelper(const QString &gammaray, const QString &injector,
 {
     m_proc->setProcessChannelMode(QProcess::ForwardedChannels);
     connect(m_proc, &QProcess::started, this, &AttachHelper::processStarted);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    connect(m_proc, static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &AttachHelper::processFinished);
-#else
     connect(m_proc, &QProcess::finished, this, &AttachHelper::processFinished);
-#endif
     m_proc->start(debuggee, arguments);
 }
 
