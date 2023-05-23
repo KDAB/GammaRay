@@ -114,10 +114,11 @@ QVariant MaterialShaderModel::data(const QModelIndex &index, int role) const
     if (QSGMaterialShaderPrivate *p = QSGMaterialShaderPrivate::get(m_shader)) {
         int i = 0;
         const auto &shaderFiles = p->shaderFileNames;
-        for (const auto &[type, _] : shaderFiles.asKeyValueRange()) {
+        for (auto it = shaderFiles.cbegin(); it != shaderFiles.cend(); ++it) {
+            auto type = it.key();
             if (i == index.row()) {
                 switch (type) {
-                case QShader::Stage::VertexStage:
+                case QShader::VertexStage:
                     return QString::fromLatin1("Vertex");
                 case QShader::TessellationControlStage:
                     return QString::fromLatin1("TessellationControlStage");
