@@ -16,7 +16,7 @@ DEPENDS = "qtdeclarative qtdeclarative-native"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECMAKE += " -DGAMMARAY_BUILD_UI=OFF -DGAMMARAY_QT6_BUILD=ON"
+EXTRA_OECMAKE += " -DGAMMARAY_BUILD_UI=OFF -DQT_VERSION_MAJOR=6"
 
 FILES_${PN} += "/usr/share/zsh/site-functions/_gammaray"
 
