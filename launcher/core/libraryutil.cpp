@@ -38,7 +38,7 @@ static QVector<QByteArray> dependenciesInternal(const QString &fileName, bool fa
         QProcessEnvironment env = proc.processEnvironment();
         env.insert(QStringLiteral("LD_TRACE_LOADED_OBJECTS"), QStringLiteral("1"));
         proc.setProcessEnvironment(env);
-        proc.start(fileName);
+        proc.start(fileName, QStringList {}, QProcess::ReadOnly);
     }
     proc.waitForFinished();
 

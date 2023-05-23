@@ -131,7 +131,7 @@ private slots:
     {
         QProcess target;
         target.setProcessChannelMode(QProcess::ForwardedChannels);
-        target.start(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"));
+        target.start(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"), {}, QProcess::ReadWrite);
         QVERIFY(target.waitForStarted());
 
         LaunchOptions options;

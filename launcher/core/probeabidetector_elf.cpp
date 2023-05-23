@@ -104,7 +104,7 @@ static ProbeABI qtVersionFromExec(const QString &path)
     QProcess proc;
     proc.setProcessChannelMode(QProcess::SeparateChannels);
     proc.setReadChannel(QProcess::StandardOutput);
-    proc.start(path);
+    proc.start(path, {}, QProcess::ReadOnly);
     proc.waitForFinished();
     const QByteArray line = proc.readLine();
     const int pos = line.indexOf("Qt ");
