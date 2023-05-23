@@ -43,6 +43,7 @@ static const QMetaObject *metaObjectForClass(const QByteArray &name)
 static QMetaEnum flagsFromEnumIndex(int enumIndex, const QByteArray &enumName, const QMetaObject *const mo)
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    Q_UNUSED(enumName)
     Q_ASSERT(false);
     return mo->enumerator(enumIndex);
 #else
