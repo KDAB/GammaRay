@@ -19,19 +19,17 @@
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <Qt3DCore/QAttribute>
 #include <Qt3DCore/QBuffer>
-// #include <Qt3DRender/QBufferDataGenerator>
 #include <Qt3DCore/QGeometry>
-#include <Qt3DRender/QGeometryRenderer>
 namespace Qt3DGeometry = Qt3DCore;
 #else
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
 #include <Qt3DRender/QBufferDataGenerator>
 #include <Qt3DRender/QGeometry>
-#include <Qt3DRender/QGeometryRenderer>
 namespace Qt3DGeometry = Qt3DRender;
 #endif
 
+#include <Qt3DRender/QGeometryRenderer>
 #include <Qt3DCore/QEntity>
 
 #include <QDebug>
