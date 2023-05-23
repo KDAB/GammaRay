@@ -71,7 +71,7 @@ private slots:
 private:
     static QVector<QQuickItem *> createItems(QQuickItem *parent)
     {
-        const int numberOfItems = 10000;
+        const int numberOfItems = 100; // increase when benchmarking as needed
         QVector<QQuickItem *> items;
         items.reserve(numberOfItems);
         for (int i = 0; i < numberOfItems; ++i) {
