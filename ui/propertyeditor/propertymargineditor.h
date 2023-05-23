@@ -10,6 +10,8 @@
 
   Contact KDAB at <info@kdab.com> for commercial licensing options.
 */
+#ifndef GAMMARAY_PROPERTYMARGINEDITOR_H
+#define GAMMARAY_PROPERTYMARGINEDITOR_H
 
 #include "propertyeditor/propertyextendededitor.h"
 
@@ -35,3 +37,5 @@ public:
 };
 
 } // namespace GammaRay
+
+#endif
