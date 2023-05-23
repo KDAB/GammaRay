@@ -154,7 +154,7 @@ private slots:
 
         // Our animation properties
         const qreal animationInterval = throttlerInterval;
-        const qreal animationDuration = 1400.0;
+        const qreal animationDuration = 100.0;
         // Qml try to render @ ~60fps
         const qreal maxPossibleQmlRequests =
             clientIsReplying ? animationDuration / 1000.0 * 60.0 : 1.0;
