@@ -54,8 +54,8 @@ public:
     void setData(const QVariant &data);
 
 private:
-    friend QDataStream &operator<<(QDataStream &stream, const RemoteViewFrame &frame);
-    friend QDataStream &operator>>(QDataStream &stream, RemoteViewFrame &frame);
+    GAMMARAY_COMMON_EXPORT friend QDataStream &operator<<(QDataStream &stream, const RemoteViewFrame &frame);
+    GAMMARAY_COMMON_EXPORT friend QDataStream &operator>>(QDataStream &stream, RemoteViewFrame &frame);
     TransferImage m_image;
     QVariant m_data;
     QRectF m_viewRect;
