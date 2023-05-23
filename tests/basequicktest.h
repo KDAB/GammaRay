@@ -81,7 +81,9 @@ protected:
 
         // wait at least two frames so we have the final window size with all render loop/driver combinations...
         QTest::qWait(100);
-        renderSpy.wait();
+        if (!(!renderSpy.isEmpty() || renderSpy.wait())) {
+            qWarning() << Q_FUNC_INFO << "got no frameSwapped signal!";
+        }
         renderSpy.clear();
         m_view->update();
         return (ignoreNonExposedView() && !m_exposed) || (renderSpy.wait() || !renderSpy.isEmpty());
