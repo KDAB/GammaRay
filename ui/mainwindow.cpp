@@ -534,8 +534,9 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
         if (!command.isEmpty()) {
             std::cout << "Detaching: " << qPrintable(command) << std::endl;
             // TODO refactor this to avoid the command splitting altogether, so we don't fail with e.g. spaces in paths
-            const auto s = command.split(QLatin1Char(' '));
-            QProcess::startDetached(s.at(0), s.sliced(1));
+            auto s = command.split(QLatin1Char(' '));
+            const QString program = s.takeFirst();
+            QProcess::startDetached(program, s);
         }
     }
 }
