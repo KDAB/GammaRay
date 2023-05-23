@@ -25,19 +25,18 @@ using namespace GammaRay;
 struct complex_control_element_t
 {
     const char *name;
-    QStyle::ComplexControl control;
     QStyleOption *(*styleOptionFactory)();
+    QStyle::ComplexControl control;
     QStyle::SubControls subControls;
 };
 
 #define MAKE_CC2(control, factory)                                              \
     {                                                                           \
-#control, QStyle::control, &StyleOption::factory, QStyle::SubControls() \
+#control, &StyleOption::factory, QStyle::control, QStyle::SubControls() \
     }
-#define MAKE_CC3(control, factory, subControls) \
-    {                                           \
-#control, QStyle::control,              \
-            &StyleOption::factory, subControls  \
+#define MAKE_CC3(control, factory, subControls)                       \
+    {                                                                 \
+#control, &StyleOption::factory, QStyle::control, subControls \
     }
 
 static const complex_control_element_t complexControlElements[] = {
