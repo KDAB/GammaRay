@@ -611,9 +611,9 @@ void QuickInspector::sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFram
     frame.setSceneRect(grabbedFrame.itemsGeometryRect);
     frame.setViewRect(QRect(0, 0, m_window->width(), m_window->height()));
     if (m_overlay && m_overlay->settings().componentsTraces)
-        frame.setData(QVariant::fromValue(grabbedFrame.itemsGeometry));
+        frame.data = QVariant::fromValue(grabbedFrame.itemsGeometry);
     else if (!grabbedFrame.itemsGeometry.isEmpty())
-        frame.setData(QVariant::fromValue(grabbedFrame.itemsGeometry.at(0)));
+        frame.data = QVariant::fromValue(grabbedFrame.itemsGeometry.at(0));
     m_remoteView->sendFrame(frame);
 }
 

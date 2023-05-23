@@ -41,7 +41,7 @@ void PaintAnalyzerReplayView::setShowClipArea(bool show)
 
 void PaintAnalyzerReplayView::drawDecoration(QPainter *p)
 {
-    const auto data = frame().data().value<PaintAnalyzerFrameData>();
+    const auto data = frame().data.value<PaintAnalyzerFrameData>();
     if (data.clipPath.isEmpty() || !m_showClipArea)
         return;
 

@@ -53,7 +53,7 @@ void WidgetRemoteView::drawDecoration(QPainter *p)
     if (!m_tabFocusEnabled)
         return;
 
-    const auto data = frame().data().value<WidgetFrameData>();
+    const auto data = frame().data.value<WidgetFrameData>();
     if (data.tabFocusRects.size() < 2)
         return;
 
