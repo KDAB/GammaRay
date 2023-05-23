@@ -564,7 +564,6 @@ void WidgetInspectorServer::registerWidgetMetaTypes()
     MO_ADD_PROPERTY_ST(QApplication, activePopupWidget);
     MO_ADD_PROPERTY_ST(QApplication, activeWindow);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_PROPERTY_ST(QApplication, colorSpec);
     MO_ADD_PROPERTY_ST(QApplication, desktop);
 #endif
     MO_ADD_PROPERTY_ST(QApplication, focusWidget);
