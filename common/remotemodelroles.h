@@ -43,8 +43,7 @@ Q_DECLARE_FLAGS(NodeStates, NodeState)
 }
 
 /*! Marker that is used to restore message reading if the stream is unreadable */
-static Q_CONSTEXPR const char REMOTE_MODEL_MARKER[] = "REMOTE_MODEL_MARKER";
-
+static const char REMOTE_MODEL_MARKER[] = "REMOTE_MODEL_MARKER";
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(GammaRay::RemoteModelNodeState::NodeStates)
