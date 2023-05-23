@@ -104,10 +104,9 @@ private slots:
         QSignalSpy dataChangeSpy(model, &QAbstractItemModel::dataChanged);
         QVERIFY(dataChangeSpy.isValid());
         t1->start();
-        QTest::qWait(10 * 1000); // there's a 5sec throttle on dataChanged
 
         // TODO verify data
-        QVERIFY(!dataChangeSpy.isEmpty());
+        QVERIFY(!dataChangeSpy.isEmpty() || dataChangeSpy.wait(10 * 1000));
         QVERIFY(dataChangeSpy.size() < 5);
 
         delete t1;
@@ -128,12 +127,8 @@ private slots:
         auto timerId = startTimer(10);
 
         // The TimerModel does batch all by a 5000ms timer.
-        QTest::qWait(5000);
-
         // Wait for the free timer discovery
-        int i = 0;
-        while (model->rowCount() == prevRowCount && i++ < 10)
-            QTest::qWait(100);
+        QTRY_VERIFY_WITH_TIMEOUT(model->rowCount() != prevRowCount, 6000);
 
         idx = searchFixedIndex(model, "testObject");
         QVERIFY(idx.isValid());
