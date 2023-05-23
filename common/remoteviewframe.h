@@ -32,9 +32,6 @@ GAMMARAY_COMMON_EXPORT QDataStream &operator>>(QDataStream &stream, GammaRay::Re
 class GAMMARAY_COMMON_EXPORT RemoteViewFrame
 {
 public:
-    RemoteViewFrame() = default;
-    ~RemoteViewFrame();
-
     bool isValid() const;
 
     /// the visible area on screen
