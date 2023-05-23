@@ -414,6 +414,9 @@ if(GAMMARAY_ENFORCE_QT_ASSERTS)
     add_definitions(-DQT_FORCE_ASSERTS)
 endif()
 
+if(GAMMARAY_QT6_BUILD) #to support the "old-way" of specifying a Qt6 build
+    set(QT_VERSION_MAJOR 6)
+endif()
 if(NOT DEFINED QT_VERSION_MAJOR)
     #
     # Finding Qt
