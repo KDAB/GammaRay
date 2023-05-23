@@ -16,8 +16,6 @@
 #include <QDataStream>
 
 namespace GammaRay {
-RemoteViewFrame::~RemoteViewFrame() = default;
-
 bool RemoteViewFrame::isValid() const
 {
     return !m_image.image().isNull();
