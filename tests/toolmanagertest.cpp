@@ -158,6 +158,7 @@ private:
         }
         QVERIFY(hasBasicTools);
         QVERIFY(actionInspector);
+        // NOLINTNEXTLINE (clang-analyzer-core.CallAndMessage)
         QCOMPARE(actionInspector->isEnabled(), actionInspectorEnabled);
         QCOMPARE(actionInspector->hasUi(), true);
         QVERIFY(!guiSupport); // tools without ui are supposed to be filtered out
