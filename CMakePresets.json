@@ -7,6 +7,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-dev",
             "cacheVariables": {
+                "QT_VERSION_MAJOR": "5",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "GAMMARAY_USE_PCH": "ON"
@@ -30,6 +31,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-dev-asan",
             "cacheVariables": {
+                "QT_VERSION_MAJOR": "5",
                 "ECM_ENABLE_SANITIZERS": "address,undefined",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
@@ -55,6 +57,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-dev-ftime-trace",
             "cacheVariables": {
+                "QT_VERSION_MAJOR": "5",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
                 "CMAKE_C_FLAGS_INIT": "-ftime-trace",
@@ -72,6 +75,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-dev-clang",
             "cacheVariables": {
+                "QT_VERSION_MAJOR": "5",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
@@ -102,6 +106,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-clazy",
             "cacheVariables": {
+                "QT_VERSION_MAJOR": "5",
                 "CMAKE_BUILD_TYPE": "Debug"
             },
             "environment": {
@@ -130,7 +135,10 @@
             "configurePreset": "dev",
             "targets": [
                 "all"
-            ]
+            ],
+            "cacheVariables": {
+                "QT_VERSION_MAJOR": "5"
+            }
         },
         {
             "name": "clazy",
@@ -138,6 +146,9 @@
             "environment": {
                 "CLAZY_CHECKS": "level2,detaching-member,heap-allocated-small-trivial-type,isempty-vs-count,qstring-varargs,qvariant-template-instantiation,raw-environment-function,reserve-candidates,signal-with-return-value,thread-with-slots,no-ctor-missing-parent-argument,no-missing-typeinfo",
                 "CCACHE_DISABLE": "ON"
+            },
+            "cacheVariables": {
+                "QT_VERSION_MAJOR": "5"
             }
         }
     ]
