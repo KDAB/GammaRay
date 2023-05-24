@@ -46,7 +46,11 @@ if(GAMMARAY_BUILD_UI
         positioningwidget.qrc
     )
 
-    qml_lint(mapview.qml)
+    # FIXME: make it work with Qt 6.5+
+    if(NOT QtCore_VERSION VERSION_GREATER_EQUAL 6.5)
+        qml_lint(mapview.qml)
+    endif()
+
     gammaray_add_plugin(
         gammaray_positioning_ui
         JSON
