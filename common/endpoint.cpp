@@ -65,6 +65,10 @@ Endpoint::~Endpoint()
         delete it.value();
     }
 
+    if (m_socket) {
+        connectionClosed();
+    }
+
     s_instance = nullptr;
 }
 
