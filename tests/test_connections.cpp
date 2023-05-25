@@ -229,7 +229,7 @@ void TestMain::run()
 
     bool manual = QProcessEnvironment::systemEnvironment().value(QStringLiteral("GAMMARAY_TEST_MANUAL")).toInt();
     TestConnections tester(static_cast<TestConnections::Type>(type),
-                           manual ? -1 : TIMEOUTS);
+                           manual ? -1 : 15);
 
     TestWaiter waiter;
     waiter.addTester(&tester);
