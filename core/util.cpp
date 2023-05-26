@@ -59,13 +59,6 @@ QString Util::shortDisplayString(const QObject *object)
     return name;
 }
 
-QString Util::addressToString(const void *p)
-{
-    char buf[20];
-    qsnprintf(buf, sizeof(buf), "0x%llx", reinterpret_cast<quint64>(p));
-    return QString::fromLatin1(buf);
-}
-
 QString Util::enumToString(const QVariant &value, const char *typeName, const QObject *object)
 {
     return EnumUtil::enumToString(value, typeName, object ? object->metaObject() : nullptr);

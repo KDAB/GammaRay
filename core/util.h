@@ -63,7 +63,12 @@ GAMMARAY_CORE_EXPORT QString shortDisplayString(const QObject *object);
  *
  * @return a QString containing the human readable address string.
  */
-GAMMARAY_CORE_EXPORT QString addressToString(const void *p);
+inline QString addressToString(const void *p)
+{
+    char buf[20];
+    qsnprintf(buf, sizeof(buf), "0x%llx", reinterpret_cast<quint64>(p));
+    return QString::fromLatin1(buf);
+}
 
 /*!
  * Translates an enum or flag value into a human readable text.
