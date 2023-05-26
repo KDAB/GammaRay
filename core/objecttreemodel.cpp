@@ -75,15 +75,14 @@ void ObjectTreeModel::objectAdded(QObject *obj)
     // then later the delayed signal comes in
     // so catch this gracefully by first adding the
     // parent if required
+    QModelIndex index = indexForObject(parentObject(obj));
     if (parentObject(obj)) {
-        const QModelIndex index = indexForObject(parentObject(obj));
         if (!index.isValid()) {
             IF_DEBUG(cout << "tree: handle parent first" << endl;)
             objectAdded(parentObject(obj));
+            index = indexForObject(parentObject(obj));
         }
     }
-
-    const QModelIndex index = indexForObject(parentObject(obj));
 
     // either we get a proper parent and hence valid index or there is no parent
     Q_ASSERT(index.isValid() || !parentObject(obj));
@@ -112,12 +111,13 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
                  << m_parentChildMap.value(obj->parent()).size() << " "
                  << m_parentChildMap.contains(obj) << endl;)
 
-    if (!m_childParentMap.contains(obj)) {
+    auto parentIt = m_childParentMap.constFind(obj);
+    if (parentIt == m_childParentMap.cend()) {
         Q_ASSERT(!m_parentChildMap.contains(obj));
         return;
     }
 
-    QObject *parentObj = m_childParentMap[obj];
+    QObject *parentObj = parentIt.value();
     const QModelIndex parentIndex = indexForObject(parentObj);
     if (parentObj && !parentIndex.isValid())
         return;
@@ -132,7 +132,7 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
     beginRemoveRows(parentIndex, row, row);
 
     siblings.erase(it);
-    m_childParentMap.remove(obj);
+    m_childParentMap.erase(parentIt);
     m_parentChildMap.remove(obj);
     m_favorites.remove(obj);
 
@@ -152,13 +152,14 @@ void ObjectTreeModel::objectReparented(QObject *obj)
     }
 
     // we didn't know obj yet
-    if (!m_childParentMap.contains(obj)) {
+    auto parentIt = m_childParentMap.constFind(obj);
+    if (parentIt == m_childParentMap.cend()) {
         Q_ASSERT(!m_parentChildMap.contains(obj));
         objectAdded(obj);
         return;
     }
 
-    QObject *oldParent = m_childParentMap.value(obj);
+    QObject *oldParent = parentIt.value();
     const auto sourceParent = indexForObject(oldParent);
     if ((oldParent && !sourceParent.isValid()) || (oldParent == parentObject(obj)))
         return;
