@@ -12,25 +12,25 @@ machines or scene graphs.
 
 Among other things GammaRay can:
 
-* Browse the QObject tree with live updates.
+* Browse the `QObject` tree with live updates.
 * View and edit object properties.
-* View and invoke slots of a QObject, and monitor its signals.
-* List all QObject inbound and outbound signal/slot connections.
-* Provide a layout information overlay for QWidget and QtQuick2 applications.
-* Inspect all QPainter operations used to draw a specific widget.
-* Browse the QtQuick2 item tree and scenegraph.
+* View and invoke slots of a `QObject`, and monitor its signals.
+* List all `QObject` inbound and outbound signal/slot connections.
+* Provide a layout information overlay for `QWidget` and `QtQuick2` applications.
+* Inspect all `QPainter` operations used to draw a specific widget.
+* Browse the `QtQuick2` item tree and scenegraph.
 * Inspect shaders and geometry data of QtQuick2 items.
 * Plot object lifetime and emitted signals.
-* Browse the QAbstractProxyModel hierarchy and inspect intermediate results in a proxy model chain.
+* Browse the `QAbstractProxyModel` hierarchy and inspect intermediate results in a proxy model chain.
 * Visual live inspection of QStateMachines.
-* Browse the item tree of any QGraphicsView scene.
-* Show a live preview of QGraphicsView items, including showing their coordinate system,
+* Browse the item tree of any `QGraphicsView` scene.
+* Show a live preview of `QGraphicsView` items, including showing their coordinate system,
   transformation origin, rotate/zoom/pan, etc.
 * Intercept translations and change them at runtime.
-* Inspect all building blocks of a QStyle.
+* Inspect all building blocks of a `QStyle`.
 * Show all QTimers and their statistics (number of wakeups, wakeup time, ...)
 * Browse all QTextDocuments, along with the ability to edit them and view their internal structures.
-* Act as a complete java script debugger, attachable to any QScriptEngine
+* Act as a complete java script debugger, attachable to any `QScriptEngine`
   (including the usually not accessible one used by QtQuick1 internally).
 * Perform HTML/CSS/DOM/JS introspection/editing/profiling on any QWebPage, thanks to QWebInspector.
 * Browse the QResource tree and its content.
