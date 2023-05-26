@@ -480,7 +480,6 @@ endif()
 if(QT_VERSION_MAJOR GREATER_EQUAL 6)
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
-    add_definitions(-DGAMMARAY_QT6_TODO)
 
     if(MSVC)
         add_compile_options(/Zc:__cplusplus)
