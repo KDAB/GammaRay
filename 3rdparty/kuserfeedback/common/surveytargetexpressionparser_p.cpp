@@ -1086,6 +1086,7 @@ YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
 
     /* Number of syntax errors so far.  */
     int yynerrs;
+    ( void )yynerrs;
 
     int yystate;
     /* Number of tokens to shift before error messages enabled.  */
