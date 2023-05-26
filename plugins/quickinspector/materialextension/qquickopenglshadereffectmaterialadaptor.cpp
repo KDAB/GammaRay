@@ -15,12 +15,10 @@
 
 #include <core/propertydata.h>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <private/qquickopenglshadereffectnode_p.h>
 
 Q_DECLARE_METATYPE(QQuickOpenGLShaderEffectMaterial::UniformData)
-#endif
 #endif
 
 #include <QDebug>
@@ -49,15 +47,12 @@ int QQuickOpenGLShaderEffectMaterialAdaptor::count() const
 
 PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) const
 {
-#ifdef GAMMARAY_QT6_TODO
     Q_UNUSED(index)
-#endif
-
     PropertyData pd;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 
     if (object().type() == ObjectInstance::Object) {
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         auto mat = reinterpret_cast<QQuickOpenGLShaderEffectMaterial *>(object().object());
         switch (index) {
         case 0:
@@ -74,7 +69,7 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
     }
 
     if (object().type() == ObjectInstance::QtVariant) {
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         const auto ud = object().variant().value<QQuickOpenGLShaderEffectMaterial::UniformData>();
         pd.setName(ud.name);
         pd.setValue(ud.value);
