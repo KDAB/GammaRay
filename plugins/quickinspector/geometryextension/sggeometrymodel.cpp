@@ -163,7 +163,25 @@ QMap<int, QVariant> SGVertexModel::itemData(const QModelIndex &index) const
 QVariant SGVertexModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal && m_geometry) {
-#ifndef GAMMARAY_QT6_TODO
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        if (section < m_geometry->attributeCount()) {
+            switch (m_geometry->attributes()[section].attributeType) {
+            case QSGGeometry::UnknownAttribute:
+                return QStringLiteral("UnknownAttribute");
+            case QSGGeometry::PositionAttribute:
+                return QStringLiteral("PositionAttribute");
+            case QSGGeometry::ColorAttribute:
+                return QStringLiteral("ColorAttribute");
+            case QSGGeometry::TexCoordAttribute:
+                return QStringLiteral("TexCoordAttribute");
+            case QSGGeometry::TexCoord1Attribute:
+                return QStringLiteral("TexCoord1Attribute");
+            case QSGGeometry::TexCoord2Attribute:
+                return QStringLiteral("TexCoord2Attribute");
+                break;
+            }
+        }
+#else
         char const *const *attributeNames = m_node->material()->createShader()->attributeNames();
 
         for (int i = 0; i <= section; i++) {
