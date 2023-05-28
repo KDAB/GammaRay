@@ -151,7 +151,8 @@ bool ObjectBroker::hasSelectionModel(QAbstractItemModel *model)
 static QAbstractItemModel *sourceModelForProxy(QAbstractItemModel *model)
 {
     // stop once we found a registered model, this is what network communication is based on
-    if (s_objectBroker()->models.values().contains(model))
+    auto it = std::find(s_objectBroker()->models.cbegin(), s_objectBroker()->models.cend(), model);
+    if (it != s_objectBroker->models.cend())
         return model;
 
     QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>(model);
