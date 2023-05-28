@@ -287,7 +287,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(UiIntegration::instance(), &UiIntegration::navigateToCode, this,
             &MainWindow::navigateToCode);
 
-    const bool developerModeEnabled = !qgetenv("GAMMARAY_DEVELOPERMODE").isEmpty();
+    const bool developerModeEnabled = !qEnvironmentVariableIsEmpty("GAMMARAY_DEVELOPERMODE");
     if (developerModeEnabled) {
         connect(Endpoint::instance(), &Endpoint::logTransmissionRate,
                 this, &MainWindow::logTransmissionRate);
