@@ -56,7 +56,7 @@ void Translator::loadTranslations(const QString &catalog, const QString &path, c
         delete translator;
 
         foreach (const QString &name, uiLocale.uiLanguages()) {
-            const QString fileName = QString("%1_%2.qm").arg(catalog, name);
+            const QString fileName = QStringLiteral("%1_%2.qm").arg(catalog, name);
             const QString filePath = dir.filePath(fileName);
             if (QFile::exists(filePath)) {
                 return;

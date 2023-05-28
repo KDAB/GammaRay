@@ -501,7 +501,7 @@ void MainWindow::toolContextMenu(QPoint pos)
 void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumber)
 {
     // Show Qt resources in our qrc browser
-    if (url.scheme() == "qrc") {
+    if (url.scheme() == QLatin1String("qrc")) {
         if (selectTool(QStringLiteral("GammaRay::ResourceBrowser"))) {
             QMetaObject::invokeMethod(ui->toolStack->currentWidget(), "selectResource",
                                       Q_ARG(QString, url.toString()),

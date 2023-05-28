@@ -38,7 +38,7 @@ PluginManagerBase::~PluginManagerBase() = default;
 QStringList PluginManagerBase::pluginPaths()
 {
 #ifndef GAMMARAY_STATIC_PROBE
-    return Paths::pluginPaths(GAMMARAY_PROBE_ABI);
+    return Paths::pluginPaths(QStringLiteral(GAMMARAY_PROBE_ABI));
 #else
     return QStringList();
 #endif

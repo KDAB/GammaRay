@@ -29,7 +29,7 @@ BindingNode::BindingNode(QObject *obj, int propIndex, BindingNode *parent)
     , m_propertyIndex(propIndex)
 {
     Q_ASSERT(obj);
-    m_canonicalName = m_object->metaObject() ? m_object->metaObject()->property(m_propertyIndex).name() : ":(";
+    m_canonicalName = m_object->metaObject() ? m_object->metaObject()->property(m_propertyIndex).name() : QStringLiteral(":(");
     refreshValue();
     checkForLoops();
 }

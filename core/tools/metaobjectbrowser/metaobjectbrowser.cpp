@@ -56,9 +56,9 @@ MetaObjectBrowser::MetaObjectBrowser(Probe *probe, QObject *parent)
 
     ObjectBroker::registerObject(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser"), this);
 
-    ProblemCollector::registerProblemChecker("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator",
-                                             "QMetaObject Validator",
-                                             "Checks for common errors with meta objects, like invocable functions with unregistered parameter types.",
+    ProblemCollector::registerProblemChecker(QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator"),
+                                             QStringLiteral("QMetaObject Validator"),
+                                             QStringLiteral("Checks for common errors with meta objects, like invocable functions with unregistered parameter types."),
                                              &MetaObjectBrowser::scanForMetaObjectProblems,
                                              /*enabled=*/false);
 }
@@ -149,9 +149,9 @@ void MetaObjectBrowser::doProblemScan(const QMetaObject *parent)
             if (results & QMetaObjectValidatorResult::UnknownPropertyType)
                 issueList.push_back(QStringLiteral("has a property with a type not registered with the meta type system"));
 
-            p.description = QStringLiteral("%1 %2.").arg(mo->className(), issueList.join(", "));
+            p.description = QStringLiteral("%1 %2.").arg(mo->className(), issueList.join(QStringLiteral(", ")));
             p.object = ObjectId(const_cast<QMetaObject *>(mo), "const QMetaObject*");
-            p.problemId = QString("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator:%1").arg(reinterpret_cast<quintptr>(mo));
+            p.problemId = QStringLiteral("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator:%1").arg(reinterpret_cast<quintptr>(mo));
             p.findingCategory = Problem::Scan;
             ProblemCollector::addProblem(p);
         }
