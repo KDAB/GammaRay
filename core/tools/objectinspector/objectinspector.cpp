@@ -65,17 +65,17 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectSelected,
             this, &ObjectInspector::objectSelected);
 
-    ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.BindingLoopScan",
-                                             "Binding Loops",
-                                             "Scans all QObjects for binding loops",
+    ProblemCollector::registerProblemChecker(QStringLiteral("com.kdab.GammaRay.ObjectInspector.BindingLoopScan"),
+                                             QStringLiteral("Binding Loops"),
+                                             QStringLiteral("Scans all QObjects for binding loops"),
                                              &BindingAggregator::scanForBindingLoops);
-    ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck",
-                                             "Connection issues",
-                                             "Scans all QObjects for direct cross-thread and duplicate connections",
+    ProblemCollector::registerProblemChecker(QStringLiteral("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck"),
+                                             QStringLiteral("Connection issues"),
+                                             QStringLiteral("Scans all QObjects for direct cross-thread and duplicate connections"),
                                              &ObjectInspector::scanForConnectionIssues);
-    ProblemCollector::registerProblemChecker("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck",
-                                             "Threading issues",
-                                             "Scans all QObjects for thread affinity issues",
+    ProblemCollector::registerProblemChecker(QStringLiteral("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck"),
+                                             QStringLiteral("Threading issues"),
+                                             QStringLiteral("Scans all QObjects for thread affinity issues"),
                                              &ObjectInspector::scanForThreadAffinityIssues);
 }
 
@@ -159,7 +159,7 @@ void ObjectInspector::scanForConnectionIssues()
             p.description = descriptionTemplate.arg(receiverName, slotName, senderName, signalName);
             p.object = ObjectId(receiver);
             //                 p.location = bindingNode->sourceLocation(); //TODO can we get source locations of connect-statements?
-            p.problemId = QString("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.%1:%2.%3-%4.%5")
+            p.problemId = QStringLiteral("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.%1:%2.%3-%4.%5")
                               .arg(problemType,
                                    QString::number(reinterpret_cast<quintptr>(sender)),
                                    QString::number(connection.signalIndex),

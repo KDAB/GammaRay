@@ -67,7 +67,7 @@ void TrailingColorLabel::paintEvent(QPaintEvent *event)
     p.setPen(QPen(palette().color(QPalette::Disabled, QPalette::Text)));
     p.drawText(QRect(margin + squaresize + margin + 3 * numberGroupWidth + 2, 0, numberGroupWidth, height),
                Qt::AlignVCenter | Qt::AlignLeft,
-               "|");
+               QStringLiteral("|"));
     p.drawText(QRect(margin + squaresize + margin + 3 * numberGroupWidth, 0, numberGroupWidth, height),
                Qt::AlignVCenter | Qt::AlignRight,
                QString::number(qAlpha(m_pickedColor)));

@@ -81,7 +81,7 @@ QVariant ClientMethodModel::data(const QModelIndex &index, int role) const
                 l.push_back(tr("overrides base class signal"));
             if (r & QMetaObjectValidatorResult::UnknownMethodParameterType)
                 l.push_back(tr("uses parameter type not registered with the meta type system"));
-            tt += tr("\nIssues: %1").arg(l.join(", "));
+            tt += tr("\nIssues: %1").arg(l.join(QStringLiteral(", ")));
         }
         return tt;
     }

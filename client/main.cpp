@@ -28,10 +28,10 @@ using namespace GammaRay;
 
 int main(int argc, char **argv)
 {
-    QCoreApplication::setOrganizationName("KDAB");
-    QCoreApplication::setOrganizationDomain("kdab.com");
-    QCoreApplication::setApplicationName("GammaRay");
-    QCoreApplication::setApplicationVersion(GAMMARAY_COMPACT_VERSION_STRING);
+    QCoreApplication::setOrganizationName(QStringLiteral("KDAB"));
+    QCoreApplication::setOrganizationDomain(QStringLiteral("kdab.com"));
+    QCoreApplication::setApplicationName(QStringLiteral("GammaRay"));
+    QCoreApplication::setApplicationVersion(QStringLiteral(GAMMARAY_COMPACT_VERSION_STRING));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);

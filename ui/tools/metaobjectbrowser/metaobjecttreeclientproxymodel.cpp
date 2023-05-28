@@ -65,7 +65,7 @@ static QString issuesToString(QMetaObjectValidatorResult::Results r)
         l.push_back(MetaObjectTreeClientProxyModel::tr("overrides base class property"));
     if (r & QMetaObjectValidatorResult::UnknownPropertyType)
         l.push_back(MetaObjectTreeClientProxyModel::tr("property with type not registered with the meta type system"));
-    return MetaObjectTreeClientProxyModel::tr("Issues:<ul><li>%1</li></ul>").arg(l.join("</li><li>"));
+    return MetaObjectTreeClientProxyModel::tr("Issues:<ul><li>%1</li></ul>").arg(l.join(QStringLiteral("</li><li>")));
 }
 
 QVariant MetaObjectTreeClientProxyModel::data(const QModelIndex &index, int role) const

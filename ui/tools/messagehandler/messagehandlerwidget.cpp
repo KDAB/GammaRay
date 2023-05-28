@@ -192,7 +192,7 @@ void MessageHandlerWidget::messageContextMenu(const QPoint &pos)
         m_backtraceFetchContext = new QObject(handler);
 
         connect(handler, &MessageHandlerInterface::fullTraceChanged, m_backtraceFetchContext, [handler] {
-            qApp->clipboard()->setText(handler->fullTrace().join("\n"));
+            qApp->clipboard()->setText(handler->fullTrace().join(QStringLiteral("\n")));
         });
 
         handler->generateFullTrace();
