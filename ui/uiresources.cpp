@@ -175,7 +175,6 @@ QString UIResources::themedFilePath(UIResources::ThemeEntryType type, const QStr
 QImage UIResources::tintedImage(const QImage &image, const QColor &color)
 {
     QImage img(image.size(), QImage::Format_ARGB32_Premultiplied);
-    img.setDevicePixelRatio(image.devicePixelRatio());
 
     QPainter painter(&img);
     painter.setCompositionMode(QPainter::CompositionMode_Source);
