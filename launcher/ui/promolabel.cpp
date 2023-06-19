@@ -52,5 +52,6 @@ void PromoLabel::updatePixmap()
 {
     // load image and adapt it to user's foreground color
     const QImage image = UIResources::themedImage(themeFileName(), this);
-    setPixmap(UIResources::tintedPixmap(image, palette().windowText().color()));
+    const QPixmap pixmap = UIResources::tintedPixmap(image, palette().windowText().color());
+    setPixmap(pixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
