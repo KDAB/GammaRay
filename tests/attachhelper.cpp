@@ -13,7 +13,7 @@
 
 #include "attachhelper.h"
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
 #ifndef NOMINMAX
 // compile fix for Qt5+VS2010+QDateTime, see:
 // https://forum.qt.io/topic/21605/solved-qt5-vs2010-qdatetime-not-enough-actual-parameters-for-macro-min-max

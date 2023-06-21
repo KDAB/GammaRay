@@ -30,7 +30,7 @@
 
 #include <memory>
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
 #include <qt_windows.h>
 #endif
 
