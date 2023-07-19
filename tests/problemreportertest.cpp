@@ -281,6 +281,10 @@ private slots:
 #ifdef QT_QML_LIB
     static void testBindingLoopChecker()
     {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QSKIP("Binding Loop detection doesn't work on Qt6 yet");
+#endif
+
         QQmlEngine engine;
         QQmlComponent c(&engine);
         c.setData("import QtQml 2.0\n"
