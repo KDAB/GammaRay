@@ -33,7 +33,8 @@ enum ContentType
 {
     Unknown = 0,
     Json = 1,
-    Xml = 2
+    Xml = 2,
+    Image = 4
 };
 }
 

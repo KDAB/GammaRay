@@ -28,6 +28,7 @@
 #include <QJsonDocument>
 #include <QBuffer>
 #include <QXmlStreamReader>
+#include <QLabel>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QTextCodec>
@@ -73,6 +74,8 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget *parent)
         auto response = objColumn.data(NetworkReplyModelRole::ReplyResponseRole).toByteArray();
         const auto contentType = ( NetworkReply::ContentType )objColumn.data(NetworkReplyModelRole::ReplyContentType).toInt();
 
+        ui->imageLabel->clear();
+
         switch (contentType) {
         case NetworkReply::Json:
             response = QJsonDocument::fromJson(response).toJson(QJsonDocument::JsonFormat::Indented);
@@ -101,6 +104,10 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget *parent)
             response.swap(formattedResponse);
             break;
         }
+        case NetworkReply::Image:
+            ui->imageLabel->setPixmap(QPixmap::fromImage(QImage::fromData(response)));
+            response.clear();
+            break;
         default:
             break;
         }

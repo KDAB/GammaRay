@@ -44,6 +44,11 @@
          <bool>true</bool>
         </property>
        </widget>
+       <widget class="QLabel" name="imageLabel">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
       </widget>
      </item>
     </layout>
