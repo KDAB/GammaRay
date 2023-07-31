@@ -26,6 +26,8 @@
 #include <QMenu>
 #include <QPlainTextEdit>
 #include <QJsonDocument>
+#include <QBuffer>
+#include <QXmlStreamReader>
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QTextCodec>
@@ -71,8 +73,36 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget *parent)
         auto response = objColumn.data(NetworkReplyModelRole::ReplyResponseRole).toByteArray();
         const auto contentType = ( NetworkReply::ContentType )objColumn.data(NetworkReplyModelRole::ReplyContentType).toInt();
 
-        if (contentType == NetworkReply::Json) {
-            response = QJsonDocument::fromJson(response).toJson();
+        switch (contentType) {
+        case NetworkReply::Json:
+            response = QJsonDocument::fromJson(response).toJson(QJsonDocument::JsonFormat::Indented);
+            break;
+        case NetworkReply::Xml: {
+            QXmlStreamReader reader(response);
+
+            QByteArray formattedResponse;
+            QXmlStreamWriter writer(&formattedResponse);
+            writer.setAutoFormatting(true);
+
+            while (!reader.atEnd()) {
+                reader.readNext();
+                if (reader.isWhitespace()) {
+                    continue;
+                }
+
+                writer.writeCurrentToken(reader);
+            }
+
+            if (reader.hasError()) {
+                qWarning() << "Error while parsing XML:" << reader.errorString();
+                break;
+            }
+
+            response.swap(formattedResponse);
+            break;
+        }
+        default:
+            break;
         }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -90,7 +120,6 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget *parent)
             if (state.invalidChars > 0) {
                 ui->responseTextEdit->setPlainText(tr("%1: Unable to show response preview").arg(qApp->applicationName()));
             } else {
-                // TODO: Add support for pretty-printing XML etc
                 ui->responseTextEdit->setPlainText(text);
             }
 #endif
