@@ -93,6 +93,8 @@ NetworkReply::ContentType contentType(const QVariant &v)
 {
     if (v.toString().contains(QLatin1String("application/json"))) {
         return NetworkReply::Json;
+    } else if (v.toString().contains(QLatin1String("application/xml"))) {
+        return NetworkReply::Xml;
     }
     return NetworkReply::Unknown;
 }
