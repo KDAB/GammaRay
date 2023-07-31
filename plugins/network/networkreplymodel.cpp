@@ -95,6 +95,8 @@ NetworkReply::ContentType contentType(const QVariant &v)
         return NetworkReply::Json;
     } else if (v.toString().contains(QLatin1String("application/xml"))) {
         return NetworkReply::Xml;
+    } else if (v.toString().startsWith(QLatin1String("image/"))) {
+        return NetworkReply::Image;
     }
     return NetworkReply::Unknown;
 }
