@@ -125,6 +125,7 @@ public:
         }
 
         qreal dpr;
+        QPoint windowPosition;
         QSize windowSize;
         GraphicsApi graphicsApi = Unknown;
     };

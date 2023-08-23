@@ -442,6 +442,7 @@ void AbstractScreenGrabber::gatherRenderInfo()
     // See QTBUG-53795
     m_renderInfo.dpr = m_window->effectiveDevicePixelRatio();
     m_renderInfo.windowSize = m_window->size();
+    m_renderInfo.windowPosition = m_window->position();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     m_renderInfo.graphicsApi = static_cast<RenderInfo::GraphicsApi>(m_window->rendererInterface()->graphicsApi());
 #else
@@ -629,19 +630,32 @@ void OpenGLScreenGrabber::windowAfterRendering()
         const auto window = QRectF(QPoint(0, 0), m_renderInfo.windowSize);
         const auto intersect = m_userViewport.isValid() ? window.intersected(m_userViewport) : window;
 
+        // get viewport size
+        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
+        int viewport[4]; // x, y, width, height
+        glFuncs->glGetIntegerv(GL_VIEWPORT, viewport);
+        int yOff = 0;
+        int xOff = 0;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+        // With Qt 6.4 all the content of the window (widgets + quick) is on the same surface, we need
+        // to find the right x,y offsets to extract and show just our quick widget
+        xOff = m_renderInfo.windowPosition.x();
+        const auto windowBottom = (m_renderInfo.windowPosition.y() + m_renderInfo.windowSize.height());
+        const auto viewportHeight = viewport[3];
+        yOff = viewportHeight - windowBottom;
+#endif
+
         // readout parameters
         // when in doubt, round x and y to floor--> reads one pixel more
-        const int x = static_cast<int>(std::floor(intersect.x() * m_renderInfo.dpr));
+        const int x = static_cast<int>(std::floor(intersect.x() * m_renderInfo.dpr)) + xOff;
         // correct y for gpu-flipped textures being read from the bottom
-        const int y = static_cast<int>(std::floor((m_renderInfo.windowSize.height() - intersect.height() - intersect.y()) * m_renderInfo.dpr));
+        const int y = static_cast<int>(std::floor((m_renderInfo.windowSize.height() - intersect.height() - intersect.y()) * m_renderInfo.dpr)) + yOff;
         // when in doubt, round up w and h --> also reads one pixel more
         int w = static_cast<int>(std::ceil(intersect.width() * m_renderInfo.dpr));
         int h = static_cast<int>(std::ceil(intersect.height() * m_renderInfo.dpr));
 
         // cap to viewport size (which we can overshoot due to rounding errors in highdpi scaling)
-        QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
-        int viewport[4];
-        glFuncs->glGetIntegerv(GL_VIEWPORT, viewport);
         if (x + w > viewport[2])
             w = viewport[2] - x;
         if (y + h > viewport[3])
