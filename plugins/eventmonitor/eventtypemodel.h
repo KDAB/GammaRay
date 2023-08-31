@@ -79,15 +79,16 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
 
+    bool isRecording(QEvent::Type type) const;
+    bool isVisible(QEvent::Type type) const;
+
 public slots:
     void increaseCount(QEvent::Type type);
     void resetCounts();
 
-    bool isRecording(QEvent::Type type) const;
     void recordAll();
     void recordNone();
 
-    bool isVisible(QEvent::Type type) const;
     void showAll();
     void showNone();
 
