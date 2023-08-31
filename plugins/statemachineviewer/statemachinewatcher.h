@@ -39,10 +39,10 @@ public:
     QStateMachine *watchedStateMachine() const;
 
 Q_SIGNALS:
-    void stateEntered(State state);
-    void stateExited(State state);
+    void stateEntered(GammaRay::State state);
+    void stateExited(GammaRay::State state);
 
-    void transitionTriggered(Transition transition);
+    void transitionTriggered(GammaRay::Transition transition);
 
     void watchedStateMachineChanged(QStateMachine *);
 

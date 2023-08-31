@@ -41,7 +41,7 @@ public slots:
     void startUpdates() override;
     void stopUpdates() override;
 
-    void setInterface(PositioningInterface *iface);
+    void setInterface(GammaRay::PositioningInterface *iface);
 
 private:
     bool overrideEnabled() const;

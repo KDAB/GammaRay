@@ -54,18 +54,18 @@ public:
 
     using StateMachineViewerInterface::stateConfigurationChanged;
 private slots:
-    void stateEntered(State state);
-    void stateExited(State state);
+    void stateEntered(GammaRay::State state);
+    void stateExited(GammaRay::State state);
     void stateConfigurationChanged();
-    void handleTransitionTriggered(Transition transition);
+    void handleTransitionTriggered(GammaRay::Transition transition);
 
     void stateSelectionChanged();
 
-    void setFilteredStates(const QVector<State> &states);
+    void setFilteredStates(const QVector<GammaRay::State> &states);
     void selectStateMachine(int row) override;
 
     /// Takes ownership of @p machine
-    void setSelectedStateMachine(StateMachineDebugInterface *machine);
+    void setSelectedStateMachine(GammaRay::StateMachineDebugInterface *machine);
 
     void updateStartStop();
     void toggleRunning() override;

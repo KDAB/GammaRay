@@ -40,8 +40,8 @@ public:
     TranslatorWrapper *translator(const QModelIndex &index) const;
 
 public slots:
-    void registerTranslator(TranslatorWrapper *translator);
-    void unregisterTranslator(TranslatorWrapper *translator);
+    void registerTranslator(GammaRay::TranslatorWrapper *translator);
+    void unregisterTranslator(GammaRay::TranslatorWrapper *translator);
 
 private slots:
     void sourceDataChanged();
