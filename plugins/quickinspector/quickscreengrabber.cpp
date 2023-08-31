@@ -640,10 +640,13 @@ void OpenGLScreenGrabber::windowAfterRendering()
 #if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
         // With Qt 6.4 all the content of the window (widgets + quick) is on the same surface, we need
         // to find the right x,y offsets to extract and show just our quick widget
-        xOff = m_renderInfo.windowPosition.x();
-        const auto windowBottom = (m_renderInfo.windowPosition.y() + m_renderInfo.windowSize.height());
-        const auto viewportHeight = viewport[3];
-        yOff = viewportHeight - windowBottom;
+        const bool isQQuickWidget = qstrcmp(m_window->metaObject()->className(), "QQuickWidgetOffscreenWindow") == 0;
+        if (isQQuickWidget) {
+            xOff = m_renderInfo.windowPosition.x();
+            const auto windowBottom = (m_renderInfo.windowPosition.y() + m_renderInfo.windowSize.height());
+            const auto viewportHeight = viewport[3];
+            yOff = viewportHeight - windowBottom;
+        }
 #endif
 
         // readout parameters
