@@ -1052,7 +1052,8 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSGNode, childCount);
     MO_ADD_PROPERTY_RO(QSGNode, flags);
     MO_ADD_PROPERTY_RO(QSGNode, isSubtreeBlocked);
-    MO_ADD_PROPERTY(QSGNode, dirtyState, markDirty);
+    // ignore deprecation warning
+    MO_ADD_PROPERTY(QSGNode, dirtyState, markDirty); // NOLINT
 
     MO_ADD_METAOBJECT1(QSGBasicGeometryNode, QSGNode);
     MO_ADD_PROPERTY_O1(QSGBasicGeometryNode, geometry);
