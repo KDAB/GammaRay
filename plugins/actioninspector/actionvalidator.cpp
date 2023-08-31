@@ -89,7 +89,8 @@ void ActionValidator::remove(QAction *action)
 
 void ActionValidator::safeRemove(QAction *action)
 {
-    Q_FOREACH (const QKeySequence &sequence, m_shortcutActionMap.keys()) {
+    for (auto it = m_shortcutActionMap.cbegin(); it != m_shortcutActionMap.cend(); ++it) {
+        const QKeySequence &sequence = it.key();
         if (!m_shortcutActionMap.values(sequence).contains(action))
             continue;
 
