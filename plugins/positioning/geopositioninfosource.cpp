@@ -146,7 +146,7 @@ void GeoPositionInfoSource::connectSource()
     connect(m_source, QOverload<QGeoPositionInfoSource::Error>::of(&QGeoPositionInfoSource::error), this, &GeoPositionInfoSource::error, Qt::UniqueConnection);
     connect(m_source, &QGeoPositionInfoSource::updateTimeout, this, &GeoPositionInfoSource::updateTimeout, Qt::UniqueConnection);
 #else
-    connect(m_source, &QGeoPositionInfoSource::errorOccurred, this, &GeoPositionInfoSource::error, Qt::UniqueConnection);
+    connect(m_source, &QGeoPositionInfoSource::errorOccurred, this, &GeoPositionInfoSource::errorOccurred, Qt::UniqueConnection);
 #endif
     connect(m_source, &QGeoPositionInfoSource::positionUpdated, this, &GeoPositionInfoSource::positionUpdated, Qt::UniqueConnection);
     QGeoPositionInfoSource::setPreferredPositioningMethods(m_source->preferredPositioningMethods());
@@ -162,7 +162,7 @@ void GeoPositionInfoSource::disconnectSource()
     disconnect(m_source, QOverload<QGeoPositionInfoSource::Error>::of(&QGeoPositionInfoSource::error), this, &GeoPositionInfoSource::error);
     disconnect(m_source, &QGeoPositionInfoSource::updateTimeout, this, &GeoPositionInfoSource::updateTimeout);
 #else
-    disconnect(m_source, &QGeoPositionInfoSource::errorOccurred, this, &GeoPositionInfoSource::error);
+    disconnect(m_source, &QGeoPositionInfoSource::errorOccurred, this, &GeoPositionInfoSource::errorOccurred);
 #endif
 
     disconnect(m_source, &QGeoPositionInfoSource::positionUpdated, this, &GeoPositionInfoSource::positionUpdated);
