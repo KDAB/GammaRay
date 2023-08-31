@@ -227,10 +227,10 @@ void DebuggerInjector::processLog(DebuggerInjector::Orientation orientation, boo
 {
     if (qgetenv("GAMMARAY_UNITTEST") == "1") { // clazy:exclude=qgetenv due to Qt4 support
         const QString output = QString::fromLatin1("%1 [%2] %3: %4")
-                                   .arg(orientation == DebuggerInjector::In ? "<<<" : ">>>")
-                                   .arg(QString::fromLatin1(isError ? "ERROR" : "OUTPUT"))
-                                   .arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss:zzz")))
-                                   .arg(text.trimmed());
+                                   .arg(orientation == DebuggerInjector::In ? "<<<" : ">>>",
+                                        QString::fromLatin1(isError ? "ERROR" : "OUTPUT"), // type
+                                        QTime::currentTime().toString(QStringLiteral("HH:mm:ss:zzz")), // time
+                                        text.trimmed()); // text
 
         if (isError)
             std::cerr << qPrintable(output) << std::endl;
