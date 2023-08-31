@@ -148,7 +148,7 @@ void PropertiesTab::propertyContextMenu(const QPoint &pos)
 
     if (!property.isEmpty()) {
 #ifndef QT_NO_CLIPBOARD
-        contextMenu.addAction(tr("Copy"), [property] {
+        contextMenu.addAction(tr("Copy"), this, [property] {
             qApp->clipboard()->setText(property);
         });
 #endif

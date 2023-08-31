@@ -118,7 +118,7 @@ void SearchLineController::onSearchFinished(const QString &searchTerm)
         m_delayedExpandTimer->setSingleShot(true);
         m_delayedExpandTimer->setInterval(125);
 
-        connect(m_delayedExpandTimer, &QTimer::timeout, [this] {
+        connect(m_delayedExpandTimer, &QTimer::timeout, this, [this] {
             QVector<QPersistentModelIndex> stillNotLoaded;
             const auto copy = m_delayedIdxesToExpand;
             m_delayedIdxesToExpand.clear();

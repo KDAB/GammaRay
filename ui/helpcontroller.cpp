@@ -52,6 +52,7 @@ void HelpControllerPrivate::startProcess()
     QObject::connect(proc,
                      static_cast<void (QProcess::*)(int,
                                                     QProcess::ExitStatus)>(&QProcess::finished),
+                     proc,
                      [this]() {
                          proc->deleteLater();
                          proc = nullptr;
