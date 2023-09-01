@@ -41,8 +41,9 @@ private slots:
         QCOMPARE(imageItem->metaObject()->className(), "QQuickImage");
         Probe::instance()->selectObject(imageItem, QPoint());
 
-        QVERIFY(frameSpy.wait());
-        const auto frame = frameSpy.at(0).at(0).value<RemoteViewFrame>();
+        QVERIFY(frameSpy.wait() || frameSpy.count() >= 1);
+        const auto last = frameSpy.count() - 1;
+        const auto frame = frameSpy.at(last).at(0).value<RemoteViewFrame>();
         QCOMPARE(frame.viewRect(), QRectF(0, 0, 360, 360));
         QCOMPARE(frame.image().pixel(358, 0), QColor(Qt::red).rgb());
         QCOMPARE(frame.image().pixel(119, 0), QColor(Qt::green).rgb());
@@ -68,8 +69,9 @@ private slots:
         QVERIFY(textItem);
         Probe::instance()->selectObject(textItem, QPoint());
 
-        QVERIFY(frameSpy.wait());
-        const auto frame = frameSpy.at(0).at(0).value<RemoteViewFrame>();
+        QVERIFY(frameSpy.wait() || frameSpy.count() >= 1);
+        const auto last = frameSpy.count() - 1;
+        const auto frame = frameSpy.at(last).at(0).value<RemoteViewFrame>();
         QVERIFY(frame.viewRect().height() > 0);
         QVERIFY(frame.viewRect().width() > 0);
     }
@@ -99,8 +101,9 @@ private slots:
         QVERIFY(source);
         Probe::instance()->selectObject(source, QPoint());
 
-        QVERIFY(frameSpy.wait());
-        const auto frame = frameSpy.at(0).at(0).value<RemoteViewFrame>();
+        QVERIFY(frameSpy.wait() || frameSpy.count() >= 1);
+        const auto last = frameSpy.count() - 1;
+        const auto frame = frameSpy.at(last).at(0).value<RemoteViewFrame>();
         QVERIFY(frame.viewRect().height() > 0);
         QVERIFY(frame.viewRect().width() > 0);
     }
