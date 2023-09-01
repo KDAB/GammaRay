@@ -99,9 +99,22 @@ static QStringList readRPaths(const QString &path)
     quint32 offset = 0;
     qint32 ncmds = 0;
     qint32 cmdsize = 0;
+    qint32 arch_header_offset = 0;
 
     const quint32 magic = *reinterpret_cast<const quint32 *>(data);
     switch (magic) {
+    case FAT_CIGAM: {
+        const fat_header *header = reinterpret_cast<const fat_header *>(data);
+        for (unsigned long i = 0; i < OSSwapInt32(header->nfat_arch); ++i) {
+            const fat_arch *arch_header = reinterpret_cast<const fat_arch *>(data + sizeof(fat_header) + sizeof(fat_arch) * i);
+            if (OSSwapInt32(arch_header->cputype) & CPU_ARCH_ABI64) {
+                arch_header_offset = OSSwapInt32(arch_header->offset);
+                readMachOHeader<mach_header_64>(data + arch_header_offset, size, offset, ncmds, cmdsize);
+                break;
+            }
+        }
+        break;
+    }
     case MH_MAGIC:
         readMachOHeader<mach_header>(data, size, offset, ncmds, cmdsize);
         break;
@@ -116,9 +129,9 @@ static QStringList readRPaths(const QString &path)
     // read load commands
     const auto pathBase = QFileInfo(path).absolutePath();
     for (int i = 0; i < ncmds; ++i) {
-        const load_command *cmd = reinterpret_cast<const load_command *>(data + offset);
+        const load_command *cmd = reinterpret_cast<const load_command *>(data + arch_header_offset + offset);
         if (cmd->cmd == LC_RPATH) {
-            const rpath_command *rpcmd = reinterpret_cast<const rpath_command *>(data + offset);
+            const rpath_command *rpcmd = reinterpret_cast<const rpath_command *>(data + arch_header_offset + offset);
             auto rpath = QString::fromUtf8(reinterpret_cast<const char *>(rpcmd) + rpcmd->path.offset);
             rpath.replace(QStringLiteral("@executable_path"), pathBase);
             rpath.replace(QStringLiteral("@loader_path"), pathBase);
@@ -164,6 +177,7 @@ static QString archFromCpuType(cpu_type_t cputype)
         return "arm64";
     }
 
+    printf("archFromCpuType: Unknown cpu_type_t value: %d\n", ( int )cputype);
     return QString();
 }
 
