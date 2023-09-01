@@ -16,6 +16,8 @@
 #include <QObject>
 #include <QTest>
 
+#include <memory>
+
 class MyObject : public QObject
 {
     Q_PROPERTY(int intProp READ intProp WRITE setIntProp NOTIFY intPropChanged)
