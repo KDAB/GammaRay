@@ -58,12 +58,17 @@ TranslatorInspector::TranslatorInspector(Probe *probe, QObject *parent)
     obj->translators.append(m_fallbackWrapper);
 
     qApp->installEventFilter(this);
-    sendLanguageChangeEvent();
+    sendLanguageChangeEvent_impl();
 
     connect(probe, &Probe::objectSelected, this, &TranslatorInspector::objectSelected);
 }
 
 void TranslatorInspector::sendLanguageChangeEvent()
+{
+    sendLanguageChangeEvent_impl();
+}
+
+void TranslatorInspector::sendLanguageChangeEvent_impl()
 {
     QEvent event(QEvent::LanguageChange);
     qApp->sendEvent(qApp, &event);

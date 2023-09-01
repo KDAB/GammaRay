@@ -47,6 +47,9 @@ private slots:
     void readStdErr();
 
 private:
+    void stop_impl();
+
+private:
     QProcess::ProcessError mProcessError;
     QProcess::ExitStatus mExitStatus;
     QProcess m_proc;

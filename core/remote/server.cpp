@@ -48,7 +48,8 @@ Server::Server(QObject *parent)
     if (!ProbeSettings::value(QStringLiteral("RemoteAccessEnabled"), true).toBool())
         return;
 
-    m_serverDevice = ServerDevice::create(serverAddress(), this);
+    const auto serverAddress = serverAddress_impl();
+    m_serverDevice = ServerDevice::create(serverAddress, this);
     if (!m_serverDevice)
         return;
 
@@ -57,7 +58,7 @@ Server::Server(QObject *parent)
 
     m_broadcastTimer->setInterval(5 * 1000);
     m_broadcastTimer->setSingleShot(false);
-    if (serverAddress().scheme() == QLatin1String("tcp")) {
+    if (serverAddress.scheme() == QLatin1String("tcp")) {
         m_broadcastTimer->start();
     }
     connect(m_broadcastTimer, &QTimer::timeout, this, &Server::broadcast);
@@ -103,6 +104,11 @@ bool Server::isRemoteClient() const
 }
 
 QUrl Server::serverAddress() const
+{
+    return serverAddress_impl();
+}
+
+QUrl Server::serverAddress_impl() const
 {
 #ifdef Q_OS_ANDROID
     const QString defaultServerAddr = QLatin1String("local://") + QDir::homePath() + QLatin1String("/+gammaray_socket");

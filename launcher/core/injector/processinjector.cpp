@@ -47,10 +47,15 @@ ProcessInjector::ProcessInjector()
 
 ProcessInjector::~ProcessInjector()
 {
-    stop();
+    stop_impl();
 }
 
 void ProcessInjector::stop()
+{
+    stop_impl();
+}
+
+void ProcessInjector::stop_impl()
 {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     disconnect(&m_proc, &QProcess::errorOccurred, this, &ProcessInjector::processFailed);

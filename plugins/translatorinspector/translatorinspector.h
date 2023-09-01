@@ -52,6 +52,7 @@ protected:
     bool eventFilter(QObject *object, QEvent *event) override;
 
 private:
+    void sendLanguageChangeEvent_impl();
     static void registerMetaTypes();
 
     QItemSelectionModel *m_selectionModel;

@@ -25,6 +25,8 @@ public:
     explicit StyleInspectorClient(QObject *parent = nullptr);
     ~StyleInspectorClient() override;
 
+    void init();
+
     void setCellHeight(int height) override;
     void setCellWidth(int width) override;
     void setCellZoom(int zoom) override;

@@ -116,6 +116,7 @@ private slots:
 
 private:
     void sendServerGreeting();
+    QUrl serverAddress_impl() const;
 
 private:
     ServerDevice *m_serverDevice;

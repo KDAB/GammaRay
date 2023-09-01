@@ -92,6 +92,7 @@ private:
         Out
     };
 
+    void stop_impl();
     static void processLog(DebuggerInjector::Orientation orientation, bool isError, const QString &text);
 };
 }

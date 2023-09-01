@@ -19,13 +19,17 @@ using namespace GammaRay;
 StyleInspectorClient::StyleInspectorClient(QObject *parent)
     : StyleInspectorInterface(parent)
 {
+}
+
+StyleInspectorClient::~StyleInspectorClient() = default;
+
+void StyleInspectorClient::init()
+{
     // make sure the remote server side uses our initial values
     setCellHeight(cellHeight());
     setCellWidth(cellWidth());
     setCellZoom(cellZoom());
 }
-
-StyleInspectorClient::~StyleInspectorClient() = default;
 
 void StyleInspectorClient::setCellHeight(int height)
 {

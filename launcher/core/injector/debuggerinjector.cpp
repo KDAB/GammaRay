@@ -27,7 +27,7 @@ using namespace GammaRay;
 
 DebuggerInjector::~DebuggerInjector()
 {
-    stop();
+    stop_impl();
 }
 
 QString DebuggerInjector::filePath() const
@@ -41,6 +41,11 @@ void DebuggerInjector::setFilePath(const QString &filePath)
 }
 
 void DebuggerInjector::stop()
+{
+    stop_impl();
+}
+
+void DebuggerInjector::stop_impl()
 {
     if (m_process) {
         if (!mManualError) {

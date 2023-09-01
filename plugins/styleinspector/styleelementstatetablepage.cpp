@@ -20,7 +20,9 @@
 
 static QObject *createStyleInspectorClient(const QString & /*name*/, QObject *parent)
 {
-    return new GammaRay::StyleInspectorClient(parent);
+    auto styleInspectorClient = new GammaRay::StyleInspectorClient(parent);
+    styleInspectorClient->init();
+    return styleInspectorClient;
 }
 
 using namespace GammaRay;
