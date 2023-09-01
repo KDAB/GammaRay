@@ -58,8 +58,10 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
         static const QMetaMethod m = s_historyModel->metaObject()->method(
             s_historyModel->metaObject()->indexOfMethod("onSignalEmitted(QObject*,int)"));
         Q_ASSERT(m.isValid());
-        m.invoke(s_historyModel, Qt::AutoConnection, Q_ARG(QObject *, caller),
+        // clang-format off
+        m.invoke(s_historyModel, Qt::AutoConnection, Q_ARG(QObject*, caller),
                  Q_ARG(int, signalIndex));
+        // clang-format on
     }
 }
 
