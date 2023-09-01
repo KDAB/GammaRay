@@ -3,15 +3,22 @@ Release Highlights
 
 Version 3.0.0 (unreleased)
 --------------------------
- * Remove the KDAB commercial license.
- * Increase CMake requirement to version 3.16.0.
- * Port to Qt6 (in-progress).
+ * Port to Qt6.
  * Network operations now optionally allow capturing HTTP response body.
+ * Objects can now be favorited via context menu. A favorited object appears in a separate item view above the main itemview
+ * Add support for modifying QMargins in properties
+ * Allow zooming with mouse wheel in Signals view
+ * Filtering for an object now automatically expands the tree and selects the object
+ * Fix a crash when an object is reparented
+ * Improved performance of signals view
+ * Improved performance when target application triggers massive object destructions/constructions
+ * Remove the KDAB commercial license.
  * Remove the 3D Widget Inspector View.
  * Remove the experimental VTK-based Object Visualizer.
  * Update 3rdparty/backward-cpp to version 1.6.
  * Update 3rdparty/lz4 to version 1.9.4.
  * Update 3rdparty/StackWalker.
+ * Increase CMake requirement to version 3.16.0.
 
 Version 2.11.3
 --------------
