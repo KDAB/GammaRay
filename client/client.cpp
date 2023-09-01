@@ -43,7 +43,11 @@ Client::Client(QObject *parent)
                                         m_statModel);
 }
 
-Client::~Client() = default;
+Client::~Client()
+{
+    socketDisconnected();
+    disconnect(this, &Endpoint::disconnected, this, &Client::socketDisconnected);
+}
 
 Client *Client::instance()
 {
