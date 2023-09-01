@@ -177,7 +177,7 @@ private slots:
                 &RemoteModelServer::newRequest);
 
         ModelTest modelTest(&client);
-        QVERIFY(QTest::qWaitFor([&client] { return client.rowCount() == 4; }));
+        QTRY_VERIFY(client.rowCount() == 4); // ModelTest is going to fetch stuff for us already
 
         QCOMPARE(client.rowCount(), 4);
         QCOMPARE(client.hasChildren(), true);
@@ -188,7 +188,7 @@ private slots:
         QCOMPARE(client.rowCount(index), 0);
 
         listModel->insertRow(1, new QStandardItem(QStringLiteral("entry1")));
-        QVERIFY(QTest::qWaitFor([&client] { return client.rowCount() == 5; }));
+        QTRY_VERIFY(client.rowCount() == 5);
         QCOMPARE(client.rowCount(), 5);
         index = client.index(1, 0);
         QVERIFY(waitForData(index));
@@ -196,7 +196,7 @@ private slots:
 
         const auto deleteMe = listModel->takeRow(3);
         qDeleteAll(deleteMe);
-        QVERIFY(QTest::qWaitFor([&client] { return client.rowCount() == 4; }));
+        QTRY_VERIFY(client.rowCount() == 4);
         QCOMPARE(client.rowCount(), 4);
     }
 
@@ -223,7 +223,7 @@ private slots:
                 &RemoteModelServer::newRequest);
 
         ModelTest modelTest(&client);
-        QVERIFY(QTest::qWaitFor([&client] { return client.rowCount() == 2; }));
+        QTRY_VERIFY(client.rowCount() == 2);
 
         QCOMPARE(client.rowCount(), 2);
         QCOMPARE(client.hasChildren(), true);
@@ -239,7 +239,7 @@ private slots:
         QCOMPARE(client.rowCount(i12), 0);
 
         e1->insertRow(1, new QStandardItem(QStringLiteral("entry11")));
-        QVERIFY(QTest::qWaitFor([&client, i1] { return client.rowCount(i1) == 3; }));
+        QTRY_VERIFY(client.rowCount(i1) == 3);
 
         QCOMPARE(client.rowCount(i1), 3);
         auto i11 = client.index(1, 0, i1);
@@ -249,7 +249,7 @@ private slots:
 
         const auto deleteMe = e1->takeRow(0);
         qDeleteAll(deleteMe);
-        QVERIFY(QTest::qWaitFor([&client, i1] { return client.rowCount(i1) == 2; }));
+        QTRY_VERIFY(client.rowCount(i1) == 2);
 
         QCOMPARE(client.rowCount(i1), 2);
         i11 = client.index(0, 0, i1);
@@ -288,7 +288,7 @@ private slots:
         proxy.setSourceModel(&client);
 
         ModelTest modelTest(&proxy);
-        QVERIFY(QTest::qWaitFor([&client] { return client.rowCount() == 2; }));
+        QTRY_VERIFY(client.rowCount() == 2);
 
         QCOMPARE(client.rowCount(), 2);
         QCOMPARE(proxy.rowCount(), 2);

@@ -1067,9 +1067,7 @@ void BindingInspectorTest::testIntegration()
     QCOMPARE(bindingModel->rowCount(aHeightIndex), 0);
 
     delete rect;
-    QVERIFY(QTest::qWaitFor([bindingModel] {
-        return bindingModel->rowCount() == 0;
-    }));
+    QTRY_VERIFY(bindingModel->rowCount() == 0);
 }
 #endif
 
