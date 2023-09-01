@@ -431,7 +431,7 @@ void Probe::showInProcessUi()
 #else
 #if !defined(Q_OS_MAC)
 #if defined(QT_DEBUG)
-        path += QStringLiteral(GAMMARAY_DEBUG_POSTFIX);
+        path += QLatin1String(GAMMARAY_DEBUG_POSTFIX);
 #endif
 #endif
 #endif

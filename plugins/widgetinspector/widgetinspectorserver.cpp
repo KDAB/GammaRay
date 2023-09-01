@@ -455,7 +455,7 @@ void WidgetInspectorServer::callExternalExportAction(const char *name, QWidget *
                 break;
             }
             lib.reset(new QLibrary);
-            lib->setFileName(baseName + QStringLiteral(GAMMARAY_DEBUG_POSTFIX));
+            lib->setFileName(baseName + QLatin1String(GAMMARAY_DEBUG_POSTFIX));
             if (lib->load()) {
                 m_externalExportActions = std::move(lib);
                 break;

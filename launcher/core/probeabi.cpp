@@ -170,7 +170,7 @@ QString ProbeABI::id() const
 #endif
 
     idParts.push_back(architecture());
-    return idParts.join(QStringLiteral("-")).append(isDebugRelevant() && isDebug() ? QStringLiteral(GAMMARAY_DEBUG_POSTFIX) : QString());
+    return idParts.join(QStringLiteral("-")).append(isDebugRelevant() && isDebug() ? QLatin1String(GAMMARAY_DEBUG_POSTFIX) : QString());
 }
 
 ProbeABI ProbeABI::fromString(const QString &id)
@@ -200,7 +200,7 @@ ProbeABI ProbeABI::fromString(const QString &id)
         return ProbeABI();
 
     // architecture / debug/release
-    const QString postfix = QStringLiteral(GAMMARAY_DEBUG_POSTFIX);
+    const QString postfix = QLatin1String(GAMMARAY_DEBUG_POSTFIX);
     QString arch = idParts.value(index);
 
     if (!postfix.isEmpty()) {
