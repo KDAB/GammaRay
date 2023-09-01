@@ -76,7 +76,11 @@ private slots:
 
     void testShaderEffectSourceGrab()
     {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        if (!showSource("qrc:/manual/shadereffect6.qml")) {
+#else
         if (!showSource("qrc:/manual/shadereffect.qml")) {
+#endif
             qWarning() << "Skipping test due to unavailable QtQuick display.";
             return;
         }

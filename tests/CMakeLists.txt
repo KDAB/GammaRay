@@ -568,6 +568,15 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         if(QT_VERSION_MAJOR GREATER_EQUAL 6)
             find_package(Qt6 COMPONENTS ShaderTools)
             qt6_add_shaders(
+                quicktexturetest
+                "quicktexturetest_shaders"
+                PREFIX
+                "/"
+                FILES
+                "manual/shadereffect.vert"
+                "manual/shadereffect.frag"
+            )
+            qt6_add_shaders(
                 quickmaterialtest
                 "quickmaterialtest_shaders"
                 PREFIX
