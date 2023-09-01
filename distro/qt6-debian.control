@@ -2,13 +2,13 @@ Source: gammaray
 Section: Miscellaneous
 Priority: optional
 Maintainer: Allen Winter <allen.winter@kdab.com>
-Build-Depends: debhelper (>=9), cdbs, cmake, qtbase5-private-dev, qtdeclarative5-dev, qtdeclarative5-private-dev, qtdeclarative5-dev-tools, qtscript5-dev, qttools5-dev, libqt5svg5-dev, libqt5webkit5-dev, kdstatemachineeditor
+Build-Depends: debhelper (>=9), cdbs, cmake, qt6-base-private-dev, qt6declarative-dev, qt6-declarative-private-dev, qt6declarative-dev-tools, qt6-base-dev-tools
 Standards-Version: 3.9.6
 Homepage: https://github.com/KDAB/GammaRay
 
-Package: gammaray
+Package: qt6-gammaray
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, kdstatemachineeditor
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: A tool to poke around in a Qt-application
  GammaRay is a tool for examining the internals of a Qt application
  and to some extent also manipulate it. GammaRay uses injection

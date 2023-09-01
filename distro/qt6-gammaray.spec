@@ -1,5 +1,5 @@
-Name:           gammaray
-Version:        2.11.3
+Name:           qt6-gammaray
+Version:        3.0.0
 Release:        1
 Summary:        An introspection tool for Qt applications
 Source0:        %{name}-%{version}.tar.gz
@@ -11,27 +11,13 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Vendor:         Klaralvdalens Datakonsult AB (KDAB)
 Packager:       Klaralvdalens Datakonsult AB (KDAB) <info@kdab.com>
 
-BuildRequires: cmake kdstatemachineeditor-devel
+BuildRequires: cmake
 %if %{defined suse_version}
-BuildRequires: libqt5-qtbase-private-headers-devel libqt5-qtdeclarative-private-headers-devel libQt5Concurrent-devel libqt5-qttools-devel libqt5-qtsvg-devel libQt5PrintSupport-devel libqt5-qtscript-devel libqt5-qtconnectivity-devel libqt5-qt3d-devel wayland-devel libqt5-qtwayland-devel bluez-qt-devel
-# TODO: this seems only to be in the update repo?
-BuildRequires: kcoreaddons-devel
+BuildRequires: qt6-qtbase-devel qt6-base-private-devel qt6-qtdeclarative-devel qt6-connectivity-devel
 %endif
 
 %if %{defined fedora}
-BuildRequires: util-linux clang-libs qt5-qtdeclarative-devel qt5-qtconnectivity-devel qt5-qttools-devel qt5-qtsvg-devel qt5-qtscript-devel qt5-qtwebkit-devel
-%if 0%{?fedora} >= 21
-BuildRequires: kf5-kcoreaddons-devel
-%endif
-%if 0%{?fedora} > 23
-BuildRequires: ghostscript
-%endif
-%if 0%{?fedora} > 24
-BuildRequires: qt5-qt3d-devel wayland-devel qt5-qtwayland-devel kf5-syndication-devel
-%endif
-%if 0%{?fedora} > 30
-BuildRequires: qt5-qtbase-private-devel
-%endif
+BuildRequires: util-linux clang-libs qt6-qtbase-devel qt6-base-private-devel qt6-qtdeclarative-devel qt6-connectivity-devel
 %endif
 
 %if %{defined suse_version}
@@ -141,7 +127,6 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_libdir}/gammaray/*/*/gammaray_sceneinspector*
 %{_libdir}/gammaray/*/*/gammaray_scriptenginedebugger*
 %{_libdir}/gammaray/*/*/gammaray_signalmonitor*
-%{_libdir}/gammaray/*/*/gammaray_statemachineviewer*
 %{_libdir}/gammaray/*/*/gammaray_styleinspector*
 %{_libdir}/gammaray/*/*/gammaray_sysinfo*
 %{_libdir}/gammaray/*/*/gammaray_textdocumentinspector*
@@ -176,6 +161,8 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE
 %{_prefix}/mkspecs/modules/*.pri
 
 %changelog
+* Fri Sep 01 2023 Allen Winter <allen.winter@kdab.com> 3.0.0
+  3.0.0 final
 * Fri Oct 15 2021 Allen Winter <allen.winter@kdab.com> 2.11.3
   2.11.3 patchlevel release
 * Fri Sep 18 2020 Allen Winter <allen.winter@kdab.com> 2.11.2

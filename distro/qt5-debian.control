@@ -1,0 +1,19 @@
+Source: gammaray
+Section: Miscellaneous
+Priority: optional
+Maintainer: Allen Winter <allen.winter@kdab.com>
+Build-Depends: debhelper (>=9), cdbs, cmake, qtbase5-private-dev, qtdeclarative5-dev, qtdeclarative5-private-dev, qtdeclarative5-dev-tools, qtscript5-dev, qttools5-dev, libqt5svg5-dev, libqt5webkit5-dev, kdstatemachineeditor
+Standards-Version: 3.9.6
+Homepage: https://github.com/KDAB/GammaRay
+
+Package: qt5-gammaray
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, kdstatemachineeditor
+Description: A tool to poke around in a Qt-application
+ GammaRay is a tool for examining the internals of a Qt application
+ and to some extent also manipulate it. GammaRay uses injection
+ methods to hook into an application at runtime and provide access to
+ a wide variety of interesting information. It provides easy ways of
+ navigating through the complex internal structures you find in some
+ Qt frameworks, such as QGraphicsView, model/view, QTextDocument,
+ state machines and more.
