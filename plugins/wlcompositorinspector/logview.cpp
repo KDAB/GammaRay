@@ -251,7 +251,11 @@ public:
             }
             const QStaticText &line = m_lines.at(i).text;
             LineSelection selection = lineSelection(i);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+            string += line.text().midRef(selection.start, selection.end - selection.start);
+#else
             string += line.text().mid(selection.start, selection.end - selection.start);
+#endif
             string += QLatin1Char('\n');
         }
         return string;
