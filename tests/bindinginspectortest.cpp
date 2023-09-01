@@ -699,9 +699,9 @@ void BindingInspectorTest::testModelAdditions()
     QCOMPARE(dataChangedSpy.at(2).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
 
     QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 12);
-    QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
 
-    QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(obj1cIndex.sibling(obj1cIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(obj1cIndex), 2);
 
     auto obj1cChildren = getSortedChildren(obj1cIndex);
@@ -709,7 +709,7 @@ void BindingInspectorTest::testModelAdditions()
     QVERIFY(node1aIndex.isValid());
     QCOMPARE(node1aIndex.data().toString(), QStringLiteral("a"));
     QCOMPARE(node1aIndex.sibling(node1aIndex.row(), BindingModel::ValueColumn).data().toInt(), 12);
-    QCOMPARE(node1aIndex.sibling(node1aIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(node1aIndex.sibling(node1aIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(node1aIndex), 0);
 
     QModelIndex obj1bIndex = obj1cChildren[1];
@@ -978,53 +978,53 @@ void BindingInspectorTest::testIntegration()
     QModelIndex fooIndex = topLevelIndices[4];
     QVERIFY(fooIndex.isValid());
     QCOMPARE(fooIndex.data().toString(), QStringLiteral("t.foo"));
-    QCOMPARE(fooIndex.sibling(fooIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(fooIndex.sibling(fooIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(fooIndex), 1);
 
     QModelIndex tWidthIndex = bindingModel->index(0, 0, fooIndex);
     QVERIFY(tWidthIndex.isValid());
     QCOMPARE(tWidthIndex.data().toString(), QStringLiteral("t.width"));
-    QCOMPARE(tWidthIndex.sibling(tWidthIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(tWidthIndex.sibling(tWidthIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(tWidthIndex), 2);
 
     auto tWidthChildren = getSortedChildren(tWidthIndex);
     QModelIndex tAnchorsRightIndex = tWidthChildren[1];
     QVERIFY(tAnchorsRightIndex.isValid());
     QCOMPARE(tAnchorsRightIndex.data().toString(), QStringLiteral("t.anchors.right"));
-    QCOMPARE(tAnchorsRightIndex.sibling(tAnchorsRightIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(tAnchorsRightIndex.sibling(tAnchorsRightIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(tAnchorsRightIndex), 2); // is `parent` and `parent.right`
 
     auto tAnchorsRightChildren = getSortedChildren(tAnchorsRightIndex);
     QModelIndex aRightIndex = tAnchorsRightChildren[0];
     QVERIFY(aRightIndex.isValid());
     QCOMPARE(aRightIndex.data().toString(), QStringLiteral("a.right"));
-    QCOMPARE(aRightIndex.sibling(aRightIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(aRightIndex.sibling(aRightIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(aRightIndex), 2);
 
     auto aRightChildren = getSortedChildren(aRightIndex);
     QModelIndex aWidthIndex = aRightChildren[0];
     QVERIFY(aWidthIndex.isValid());
     QCOMPARE(aWidthIndex.data().toString(), QStringLiteral("a.width"));
-    QCOMPARE(aWidthIndex.sibling(aWidthIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(aWidthIndex.sibling(aWidthIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(aWidthIndex), 1);
 
     QModelIndex aImplicitWidthIndex = bindingModel->index(0, 0, aWidthIndex);
     QVERIFY(aImplicitWidthIndex.isValid());
     QCOMPARE(aImplicitWidthIndex.data().toString(), QStringLiteral("a.implicitWidth"));
-    QCOMPARE(aImplicitWidthIndex.sibling(aImplicitWidthIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(aImplicitWidthIndex.sibling(aImplicitWidthIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(aImplicitWidthIndex), 1);
 
     QModelIndex aChildrenRectIndex = bindingModel->index(0, 0, aImplicitWidthIndex);
     QVERIFY(aChildrenRectIndex.isValid());
     QCOMPARE(aChildrenRectIndex.data().toString(), QStringLiteral("a.childrenRect"));
-    QCOMPARE(aChildrenRectIndex.sibling(aChildrenRectIndex.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(aChildrenRectIndex.sibling(aChildrenRectIndex.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(aChildrenRectIndex), 2);
 
     auto aChildrenRectChildren = getSortedChildren(aChildrenRectIndex);
     QModelIndex tWidthIndex2 = aChildrenRectChildren[1];
     QVERIFY(tWidthIndex2.isValid());
     QCOMPARE(tWidthIndex2.data().toString(), QStringLiteral("t.width"));
-    QCOMPARE(tWidthIndex2.sibling(tWidthIndex2.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(tWidthIndex2.sibling(tWidthIndex2.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(tWidthIndex2), 0);
 
     Probe::instance()->selectObject(rect);
@@ -1033,7 +1033,7 @@ void BindingInspectorTest::testIntegration()
     QVERIFY(aImplicitWidthIndex2.isValid());
     QCOMPARE(aImplicitWidthIndex2.data().toString(), QStringLiteral("a.implicitWidth"));
     QCOMPARE(aImplicitWidthIndex2.sibling(aImplicitWidthIndex2.row(), BindingModel::ValueColumn).data().toDouble(), 0.0);
-    QCOMPARE(aImplicitWidthIndex2.sibling(aImplicitWidthIndex2.row(), BindingModel::DepthColumn).data().toString(), QStringLiteral(u"\u221E"));
+    QCOMPARE(aImplicitWidthIndex2.sibling(aImplicitWidthIndex2.row(), BindingModel::DepthColumn).data().toString(), QString(QChar(0x221e)));
     QCOMPARE(bindingModel->rowCount(aImplicitWidthIndex2), 1);
 
     Probe::instance()->selectObject(text);
@@ -1067,7 +1067,9 @@ void BindingInspectorTest::testIntegration()
     QCOMPARE(bindingModel->rowCount(aHeightIndex), 0);
 
     delete rect;
-    QCOMPARE(bindingModel->rowCount(), 0);
+    QVERIFY(QTest::qWaitFor([bindingModel] {
+        return bindingModel->rowCount() == 0;
+    }));
 }
 #endif
 
