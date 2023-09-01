@@ -33,9 +33,9 @@ private slots:
     {
         createProbe();
 
-        QAction *a1 = new QAction(QStringLiteral("Action 1"), this);
+        std::unique_ptr<QAction> a1(new QAction(QStringLiteral("Action 1"), this));
         a1->setObjectName("action1");
-        QAction *a2 = new QAction(QStringLiteral("Action 2"), this);
+        std::unique_ptr<QAction> a2(new QAction(QStringLiteral("Action 2"), this));
         QTest::qWait(1); // event loop re-entry
 
         auto sourceModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));
@@ -51,11 +51,11 @@ private slots:
         QVERIFY(idx.data(Qt::ToolTipRole).isNull());
         QVERIFY(idx.data(Qt::DecorationRole).isNull());
 
-        delete a1;
+        a1.reset();
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(model->rowCount(), 1);
 
-        delete a2;
+        a2.reset();
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(model->rowCount(), 0);
     }
@@ -64,10 +64,10 @@ private slots:
     {
         createProbe();
 
-        QAction *a1 = new QAction(QStringLiteral("Action 1"), this);
+        std::unique_ptr<QAction> a1(new QAction(QStringLiteral("Action 1"), this));
         a1->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));
         a1->setShortcutContext(Qt::ApplicationShortcut);
-        QAction *a2 = new QAction(QStringLiteral("Action 2"), this);
+        std::unique_ptr<QAction> a2(new QAction(QStringLiteral("Action 2"), this));
         a2->setShortcut(QKeySequence(QStringLiteral("Ctrl+K")));
         a2->setShortcutContext(Qt::WidgetShortcut);
         QTest::qWait(1); // event loop re-entry
@@ -84,8 +84,8 @@ private slots:
         QVERIFY(!index.data(Qt::DecorationRole).isNull());
         QVERIFY(!index.data(Qt::ToolTipRole).toString().isEmpty());
 
-        delete a1;
-        delete a2;
+        a1.reset();
+        a2.reset();
         QTest::qWait(1);
     }
 
@@ -93,7 +93,7 @@ private slots:
     {
         createProbe();
 
-        QAction *a1 = new QAction(QStringLiteral("Action 1"), this);
+        std::unique_ptr<QAction> a1(new QAction(QStringLiteral("Action 1"), this));
         QTest::qWait(1); // event loop re-entry
 
         auto sourceModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ActionModel"));

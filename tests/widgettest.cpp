@@ -44,39 +44,39 @@ private slots:
         createProbe();
 
         // we need one widget for the plugin to activate, otherwise the model will not be available
-        auto w1 = new QWidget;
+        std::unique_ptr<QWidget> w1(new QWidget);
         QTest::qWait(1); // event loop re-entry
 
         auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WidgetTree"));
         QVERIFY(model);
         ModelTest modelTest(model);
 
-        auto w2 = new QWidget;
+        std::unique_ptr<QWidget> w2(new QWidget);
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(visibleRowCount(model), 2);
 
-        w2->setParent(w1);
+        w2->setParent(w1.get());
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(visibleRowCount(model), 1);
 
-        w2->setParent(w1);
+        w2->setParent(w1.get());
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(visibleRowCount(model), 1);
 
-        auto w3 = new QWidget;
-        w2->setParent(w3); // reparent without event loop reentry!
+        std::unique_ptr<QWidget> w3(new QWidget);
+        w2->setParent(w3.get()); // reparent without event loop reentry!
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(visibleRowCount(model), 2);
 
-        delete w2;
+        w2.reset();
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(visibleRowCount(model), 2);
 
-        delete w1;
+        w1.reset();
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(visibleRowCount(model), 1);
 
-        delete w3;
+        w3.reset();
         QTest::qWait(1); // event loop re-entry
         QCOMPARE(visibleRowCount(model), 0);
     }

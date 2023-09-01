@@ -26,11 +26,11 @@ public:
         : QObject(parent)
     {
     }
-    int intProp()
+    int intProp() const
     {
         return p1;
     }
-    int intProp2()
+    int intProp2() const
     {
         return p2;
     }
@@ -82,22 +82,22 @@ private slots:
 
     void testInitialBinding()
     {
-        auto *obj1 = new MyObject(this);
+        std::unique_ptr<MyObject> obj1(new MyObject(this));
         obj1->setIntProp(18);
-        auto *obj2 = new MyObject(this);
+        std::unique_ptr<MyObject> obj2(new MyObject(this));
         QVERIFY(obj1->intProp() != obj2->intProp());
-        new PropertyBinder(obj1, "intProp", obj2, "intProp");
+        new PropertyBinder(obj1.get(), "intProp", obj2.get(), "intProp");
         QCOMPARE(obj2->intProp(), 18);
     }
 
     void testMultiBinding()
     {
-        auto *obj1 = new MyObject(this);
+        std::unique_ptr<MyObject> obj1(new MyObject(this));
         obj1->setIntProp(18);
         obj1->setIntProp2(133);
-        auto *obj2 = new MyObject(this);
+        std::unique_ptr<MyObject> obj2(new MyObject(this));
 
-        auto binder = new PropertyBinder(obj1, obj2);
+        auto binder = new PropertyBinder(obj1.get(), obj2.get());
         binder->add("intProp", "intProp");
         binder->add("intProp2", "intProp2");
 

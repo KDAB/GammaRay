@@ -43,6 +43,7 @@ private:
         qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Hooks::installHooks();
         Probe::startupHookReceived();
+        // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
         new ProbeCreator(ProbeCreator::Create);
         QTest::qWait(1); // event loop re-entry
     }

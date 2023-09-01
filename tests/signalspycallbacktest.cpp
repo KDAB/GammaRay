@@ -62,6 +62,9 @@ private slots:
         connect(s2.data(), &Sender::mySignal, &r, &Receiver::senderDeletingSlot);
         s2->emitSignal(); // must not crash
         QVERIFY(s2.isNull());
+
+        delete s1.data();
+        delete s2.data();
     }
 
     static void cleanupTestCase()
