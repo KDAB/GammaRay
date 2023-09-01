@@ -17,7 +17,7 @@ BuildRequires: qt6-qtbase-devel qt6-base-private-devel qt6-qtdeclarative-devel q
 %endif
 
 %if %{defined fedora}
-BuildRequires: util-linux clang-libs qt6-qtbase-devel qt6-base-private-devel qt6-qtdeclarative-devel qt6-connectivity-devel
+BuildRequires: util-linux clang-libs qt6-qtbase qt6-qtbase-devel qt6-qtbase-private-devel qt6-qtbase-common qt6-qtbase-gui libxkbcommon-devel
 %endif
 
 %if %{defined suse_version}
@@ -66,7 +66,7 @@ developing GammaRay plug-ins.
 %autosetup
 
 %build
-cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+cmake . -DCMAKE_INSTALL_PREFIX=/usr -DQT_VERSION_MAJOR=6 -DCMAKE_BUILD_TYPE=Release
 %__make %{?_smp_mflags}
 
 %post -p /sbin/ldconfig
