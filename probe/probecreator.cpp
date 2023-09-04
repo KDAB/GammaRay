@@ -46,12 +46,10 @@ ProbeCreator::ProbeCreator(CreateFlags flags)
 
     // HACK the webinspector plugin does this as well, but if the web view is created
     // too early the env var from there isn't going to reach the web process
-    qputenv("QTWEBKIT_INSPECTOR_SERVER",
-            QByteArray(GAMMARAY_DEFAULT_ANY_ADDRESS) + ':'
-                + QByteArray::number(Endpoint::defaultPort() + 1));
-    qputenv("QTWEBENGINE_REMOTE_DEBUGGING",
-            QByteArray(GAMMARAY_DEFAULT_ANY_ADDRESS) + ':'
-                + QByteArray::number(Endpoint::defaultPort() + 1));
+    // IP:PORT
+    QByteArray addr = QByteArray(GAMMARAY_DEFAULT_ANY_ADDRESS).append(':').append(QByteArray::number(Endpoint::defaultPort() + 1));
+    qputenv("QTWEBKIT_INSPECTOR_SERVER", addr);
+    qputenv("QTWEBENGINE_REMOTE_DEBUGGING", addr);
 }
 
 void ProbeCreator::createProbe()
