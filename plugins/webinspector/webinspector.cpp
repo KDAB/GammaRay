@@ -39,8 +39,8 @@ WebInspector::WebInspector(Probe *probe, QObject *parent)
     if (serverUrl.scheme() == QLatin1String("tcp"))
         serverAddress = serverUrl.host();
     // see also probecreator.cpp
-    qputenv("QTWEBKIT_INSPECTOR_SERVER",
-            serverAddress.toLocal8Bit() + ':' + QByteArray::number(Endpoint::defaultPort() + 1));
+    QByteArray addr = serverAddress.toLocal8Bit().append(':').append(QByteArray::number(Endpoint::defaultPort() + 1));
+    qputenv("QTWEBKIT_INSPECTOR_SERVER", addr);
     qputenv("QTWEBENGINE_REMOTE_DEBUGGING", QByteArray::number(Endpoint::defaultPort() + 1));
 }
 
