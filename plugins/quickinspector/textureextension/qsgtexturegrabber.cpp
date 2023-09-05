@@ -17,7 +17,9 @@
 #include <QImage>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
+#if !defined(QT_NO_OPENGL) && !QT_CONFIG(opengles2)
 #include <QOpenGLFunctions_2_0>
+#endif
 #include <QPainter>
 #include <QQuickWindow>
 #include <QSGTexture>
