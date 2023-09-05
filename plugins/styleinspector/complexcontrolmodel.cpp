@@ -32,11 +32,11 @@ struct complex_control_element_t
 
 #define MAKE_CC2(control, factory)                                              \
     {                                                                           \
-#control, &StyleOption::factory, QStyle::control, QStyle::SubControls() \
+        #control, &StyleOption::factory, QStyle::control, QStyle::SubControls() \
     }
 #define MAKE_CC3(control, factory, subControls)                       \
     {                                                                 \
-#control, &StyleOption::factory, QStyle::control, subControls \
+        #control, &StyleOption::factory, QStyle::control, subControls \
     }
 
 static const complex_control_element_t complexControlElements[] = {

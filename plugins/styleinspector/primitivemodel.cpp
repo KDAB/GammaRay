@@ -31,11 +31,11 @@ struct primitive_element_t
 
 #define MAKE_PE(primitive)                                           \
     {                                                                \
-#primitive, QStyle::primitive, &StyleOption::makeStyleOption \
+        #primitive, QStyle::primitive, &StyleOption::makeStyleOption \
     }
 #define MAKE_PE_X(primitive, factory)                        \
     {                                                        \
-#primitive, QStyle::primitive, &StyleOption::factory \
+        #primitive, QStyle::primitive, &StyleOption::factory \
     }
 
 static const primitive_element_t primititveElements[] = {
