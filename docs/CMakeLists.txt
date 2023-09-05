@@ -8,11 +8,11 @@
 #
 
 # qdoc toolchain
-find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help)
-if(Qt_VERSION_MAJOR EQUAL 5)
-    find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS AttributionsScannerTools)
-elseif(Qt_VERSION_MAJOR GREATER_EQUAL 6)
-    find_package(Qt${Qt_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS ToolsTools)
+find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help)
+if(QT_VERSION_MAJOR EQUAL 5)
+    find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS AttributionsScannerTools)
+elseif(QT_VERSION_MAJOR GREATER_EQUAL 6)
+    find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS ToolsTools)
 endif()
 
 if(TARGET Qt::qdoc)
@@ -25,13 +25,13 @@ if(TARGET Qt::qhelpgenerator)
     # Required for Doxygen
     get_target_property(QHELPGEN_EXECUTABLE Qt::qhelpgenerator IMPORTED_LOCATION)
 else()
-    find_program(QHELPGEN_EXECUTABLE qhelpgenerator HINTS ${QT_INSTALL_BINS})
+    find_program(QHELPGEN_EXECUTABLE qhelpgenerator HINTS ${QT_INSTALL_BINS} ${QT_INSTALL_LIBEXECS})
 endif()
 
 if(TARGET Qt::qtattributionsscanner)
     set(QTATTRIBUTIONSSCANNER_EXECUTABLE Qt::qtattributionsscanner)
 else()
-    find_program(QTATTRIBUTIONSSCANNER_EXECUTABLE qtattributionsscanner HINTS ${QT_INSTALL_BINS})
+    find_program(QTATTRIBUTIONSSCANNER_EXECUTABLE qtattributionsscanner HINTS ${QT_INSTALL_BINS} ${QT_INSTALL_LIBEXECS})
 endif()
 
 if(NOT DEFINED QDOC_TEMPLATE_DIR)
