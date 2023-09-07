@@ -9,7 +9,7 @@
 
 #include "provider.h"
 
-#include <common/surveytargetexpressionevaluator.h>
+#include "common/surveytargetexpressionevaluator.h"
 
 #include <QDateTime>
 #include <QStringList>
