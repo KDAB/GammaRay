@@ -44,7 +44,8 @@ void QMetaPropertyAdaptor::doSetObject(const ObjectInstance &oi)
         const QMetaProperty prop = mo->property(i);
         if (!PropertyFilters::matches(propertyMetaData(i))) {
             if (oi.type() == ObjectInstance::QtObject && oi.qtObject() && prop.hasNotifySignal()) {
-                connect(oi.qtObject(), QByteArray("2") + prop.notifySignal().methodSignature(), this, SLOT(propertyUpdated()));
+                const QByteArray sig = QByteArray("2") + prop.notifySignal().methodSignature();
+                connect(oi.qtObject(), sig, this, SLOT(propertyUpdated()));
                 m_notifyToRowMap.insert(prop.notifySignalIndex(), m_rowToPropertyIndex.size());
             }
             m_rowToPropertyIndex.push_back(i);

@@ -225,8 +225,10 @@ static QVariant getPackageMetaData(const QString &key, const QVariant &defaultVa
 QVariant ProbeSettings::value(const QString &key, const QVariant &defaultValue)
 {
     QByteArray v = s_probeSettings()->settings.value(key.toUtf8());
-    if (v.isEmpty())
-        v = qgetenv("GAMMARAY_" + key.toLocal8Bit());
+    if (v.isEmpty()) {
+        const QByteArray cstr = "GAMMARAY_" + key.toLocal8Bit();
+        v = qgetenv(cstr);
+    }
 
 #ifdef QT_ANDROIDEXTRAS_LIB
     if (v.isEmpty()) {

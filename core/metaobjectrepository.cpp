@@ -24,6 +24,9 @@
 #include <QFile>
 #include <QObject>
 #include <private/qobject_p.h>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+#include <private/qcoreevent_p.h>
+#endif
 #include <QSortFilterProxyModel>
 #include <QStringList>
 #include <QThread>
