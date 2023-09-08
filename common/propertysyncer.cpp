@@ -53,7 +53,8 @@ void PropertySyncer::addObject(Protocol::ObjectAddress addr, QObject *obj)
         const auto prop = obj->metaObject()->property(i);
         if (!prop.hasNotifySignal())
             continue;
-        connect(obj, QByteArray("2") + prop.notifySignal().methodSignature(), this, SLOT(propertyChanged()));
+        const QByteArray ba = QByteArray("2") + prop.notifySignal().methodSignature();
+        connect(obj, ba, this, SLOT(propertyChanged()));
     }
 
     connect(obj, &QObject::destroyed, this, &PropertySyncer::objectDestroyed);
