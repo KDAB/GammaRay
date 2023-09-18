@@ -454,7 +454,7 @@ void Probe::showInProcessUi()
         else
             factory();
     }
-#endif  // QT_CONFIG(library)
+#endif // QT_CONFIG(library)
     IF_DEBUG(cout << "creation done" << endl;)
 }
 
