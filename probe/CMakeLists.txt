@@ -103,7 +103,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         endif()
     endif()
 
-    if(MSVC)
+    if(MSVC AND GAMMARAY_LIBRARY_TYPE STREQUAL SHARED)
         install(
             FILES "$<TARGET_PDB_FILE_DIR:gammaray_probe>/$<TARGET_PDB_FILE_NAME:gammaray_probe>"
             DESTINATION ${BIN_INSTALL_DIR}

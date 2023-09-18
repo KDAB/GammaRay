@@ -84,7 +84,7 @@ macro(gammaray_add_plugin _target_name)
     gammaray_set_rpath(${_target_name} ${PROBE_PLUGIN_INSTALL_DIR})
 
     install(TARGETS ${_target_name} DESTINATION ${PROBE_PLUGIN_INSTALL_DIR})
-    if(MSVC)
+    if(MSVC AND GAMMARAY_PLUGIN_TYPE STREQUAL SHARED)
         install(
             FILES "$<TARGET_PDB_FILE_DIR:${_target_name}>/$<TARGET_PDB_FILE_NAME:${_target_name}>"
             DESTINATION ${PROBE_PLUGIN_INSTALL_DIR}

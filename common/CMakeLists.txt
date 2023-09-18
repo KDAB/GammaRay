@@ -172,7 +172,7 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
 else()
     install(TARGETS gammaray_common ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
-if(MSVC)
+if(MSVC AND GAMMARAY_LIBRARY_TYPE STREQUAL SHARED)
     install(
         FILES "$<TARGET_PDB_FILE_DIR:gammaray_common>/$<TARGET_PDB_FILE_NAME:gammaray_common>"
         DESTINATION ${BIN_INSTALL_DIR}
