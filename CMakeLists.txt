@@ -64,6 +64,10 @@
 #  Enable Precompiled Headers support
 #  Default=false
 #
+# -DGAMMARAY_ENABLE_KDE_KITEMMODELS=[true|false]
+#  Build a set of item models extending the Qt model-view framework
+#  Default=true
+#
 # -DENABLE_GOLD_LINKER=[true|false]
 #  Use GNU gold linker
 #  Default=false
@@ -802,7 +806,10 @@ include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/3rdparty ${CMAKE_BIN
 
 include(KDQtInstallPaths) #to set QT_INSTALL_FOO variables
 add_subdirectory(cmake)
-add_subdirectory(3rdparty/kde)
+set(GAMMARAY_ENABLE_KDE_KITEMMODELS_DEFAULT ON)
+if(GAMMARAY_ENABLE_KDE_KITEMMODELS)
+    add_subdirectory(3rdparty/kde)
+endif()
 add_subdirectory(common)
 add_subdirectory(core)
 add_subdirectory(probe)
