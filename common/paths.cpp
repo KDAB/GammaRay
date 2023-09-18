@@ -109,6 +109,7 @@ QStringList pluginPaths(const QString &probeABI)
     addPluginPath(l, rootPath() + QLatin1String("/" GAMMARAY_PLUGIN_INSTALL_DIR "/" GAMMARAY_PLUGIN_VERSION "/") + probeABI);
     addPluginPath(l, rootPath() + QLatin1String("/" GAMMARAY_PLUGIN_INSTALL_DIR));
 
+#if QT_CONFIG(library)
     // based on Qt plugin search paths
     foreach (const auto &path, QCoreApplication::libraryPaths()) {
         addPluginPath(l, path + QLatin1String("/gammaray/" GAMMARAY_PLUGIN_VERSION "/") + probeABI);
@@ -118,6 +119,7 @@ QStringList pluginPaths(const QString &probeABI)
         addPluginPath(l, path);
 #endif
     }
+#endif  // QT_CONFIG(library)
 
     // based on Qt's own install layout and/or qt.conf
     const auto path = QLibraryInfo::location(QLibraryInfo::PluginsPath);
@@ -136,11 +138,13 @@ QStringList targetPluginPaths(const QString &probeABI)
     addPluginPath(l, rootPath() + QLatin1String("/" GAMMARAY_TARGET_PLUGIN_INSTALL_DIR "/" GAMMARAY_PLUGIN_VERSION "/") + probeABI);
     addPluginPath(l, rootPath() + QLatin1String("/" GAMMARAY_TARGET_PLUGIN_INSTALL_DIR));
 
+#if QT_CONFIG(library)
     // based on Qt plugin search paths
     foreach (const auto &path, QCoreApplication::libraryPaths()) {
         addPluginPath(l, path + QLatin1String("/gammaray/" GAMMARAY_PLUGIN_VERSION "/") + probeABI + QLatin1String("/target"));
         addPluginPath(l, path + QLatin1String("/gammaray-target"));
     }
+#endif  // QT_CONFIG(library)
 
     // based on Qt's own install layout and/or qt.conf
     const auto path = QLibraryInfo::location(QLibraryInfo::PluginsPath);

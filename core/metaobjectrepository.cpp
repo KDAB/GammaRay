@@ -118,7 +118,9 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_PROPERTY_ST(QCoreApplication, closingDown);
     MO_ADD_PROPERTY_ST(QCoreApplication, isQuitLockEnabled);
     MO_ADD_PROPERTY_ST(QCoreApplication, isSetuidAllowed);
+#if QT_CONFIG(library)
     MO_ADD_PROPERTY_ST(QCoreApplication, libraryPaths);
+#endif
     MO_ADD_PROPERTY_ST(QCoreApplication, startingUp);
 
     MO_ADD_METAOBJECT1(QAbstractItemModel, QObject);

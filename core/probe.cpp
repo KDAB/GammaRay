@@ -47,7 +47,9 @@
 #include <QGuiApplication>
 #include <QWindow>
 #include <QDir>
+#if QT_CONFIG(library)
 #include <QLibrary>
+#endif
 #include <QMouseEvent>
 #include <QUrl>
 #include <QThread>
@@ -422,6 +424,7 @@ void Probe::showInProcessUi()
     IF_DEBUG(cout << "creating GammaRay::MainWindow" << endl;)
     ProbeGuard guard;
 
+#if QT_CONFIG(library)
     QLibrary lib;
     foreach (auto path, Paths::pluginPaths(QStringLiteral(GAMMARAY_PROBE_ABI))) {
         path += QStringLiteral("/gammaray_inprocessui");
@@ -451,7 +454,7 @@ void Probe::showInProcessUi()
         else
             factory();
     }
-
+#endif  // QT_CONFIG(library)
     IF_DEBUG(cout << "creation done" << endl;)
 }
 

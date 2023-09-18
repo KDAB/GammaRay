@@ -43,6 +43,7 @@ void ProxyFactoryBase::loadPlugin()
     if (m_factory)
         return;
 
+#if QT_CONFIG(library)
     if (!pluginInfo().isStatic()) {
         QPluginLoader loader(pluginInfo().path(), this);
         m_factory = loader.instance();
@@ -54,6 +55,9 @@ void ProxyFactoryBase::loadPlugin()
     } else {
         m_factory = pluginInfo().staticInstance();
     }
+#else
+    m_factory = pluginInfo().staticInstance();
+#endif
 
     if (m_factory)
         m_factory->setParent(this);

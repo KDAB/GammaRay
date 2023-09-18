@@ -19,7 +19,9 @@
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
+#if QT_CONFIG(library)
 #include <QLibrary>
+#endif
 #include <QLocale>
 #include <QCoreApplication>
 #include <QJsonArray>
@@ -33,8 +35,13 @@ PluginInfo::PluginInfo() = default;
 
 PluginInfo::PluginInfo(const QString &path)
 {
+#if QT_CONFIG(library)
+    const bool isLibrary = QLibrary::isLibrary(path);
+#else
+    const bool isLibrary = false;
+#endif
     // OSX has broken QLibrary::isLibrary() - QTBUG-50446
-    if (QLibrary::isLibrary(path) || path.endsWith(Paths::pluginExtension(), Qt::CaseInsensitive))
+    if (isLibrary || path.endsWith(Paths::pluginExtension(), Qt::CaseInsensitive))
         initFromJSON(path);
 }
 
@@ -138,9 +145,11 @@ QObject *PluginInfo::staticInstance() const
 
 void PluginInfo::initFromJSON(const QString &path)
 {
+#if QT_CONFIG(library)
     const QPluginLoader loader(path);
     const QJsonObject metaData = loader.metaData();
     initFromJSON(metaData);
+#endif
     m_path = path;
 }
 
