@@ -13,21 +13,21 @@ repos:
     args: [--allow-multiple-documents]
   - id: check-json
 - repo: https://github.com/pre-commit/mirrors-clang-format
-  rev: v15.0.4
+  rev: v16.0.6
   hooks:
   - id: clang-format
 - repo: https://github.com/PyCQA/pylint
-  rev: v2.15.6
+  rev: v3.0.0a7
   hooks:
   - id: pylint
     exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
 - repo: https://github.com/pre-commit/mirrors-autopep8
-  rev: v2.0.2
+  rev: v2.0.4
   hooks:
   - id: autopep8
     exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.2.4
+  rev: v2.2.5
   hooks:
   - id: codespell
 - repo: https://github.com/cheshirekow/cmake-format-precommit
@@ -45,6 +45,6 @@ repos:
     language: ruby
     files: \.(md|mdown|markdown)$
 - repo: https://github.com/fsfe/reuse-tool
-  rev: v1.1.2
+  rev: v2.1.0
   hooks:
   - id: reuse

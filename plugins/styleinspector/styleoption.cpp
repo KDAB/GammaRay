@@ -45,7 +45,7 @@ struct style_state_t
 
 #define MAKE_STATE(state)     \
     {                         \
-#state, QStyle::state \
+        #state, QStyle::state \
     }
 
 static const style_state_t styleStates[] = {
