@@ -31,11 +31,11 @@ struct control_element_t
 
 #define MAKE_CE(control)                                         \
     {                                                            \
-#control, QStyle::control, &StyleOption::makeStyleOption \
+        #control, QStyle::control, &StyleOption::makeStyleOption \
     }
 #define MAKE_CE_X(control, factory)                      \
     {                                                    \
-#control, QStyle::control, &StyleOption::factory \
+        #control, QStyle::control, &StyleOption::factory \
     }
 
 static const control_element_t controlElements[] = {

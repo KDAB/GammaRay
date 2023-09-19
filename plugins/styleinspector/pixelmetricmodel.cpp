@@ -26,7 +26,7 @@ struct pixel_metric_t
 
 #define MAKE_PM(metric)         \
     {                           \
-#metric, QStyle::metric \
+        #metric, QStyle::metric \
     }
 
 static const pixel_metric_t pixelMetrics[] = {
