@@ -25,6 +25,7 @@
 
 #include <QDebug>
 #include <QObject>
+#include <QScopeGuard>
 #include <QSignalSpy>
 #include <QTest>
 
@@ -130,6 +131,11 @@ private slots:
     static void testAttach()
     {
         QProcess target;
+        auto cleanup = qScopeGuard([&target] {
+            target.kill();
+            target.waitForFinished();
+        });
+
         target.setProcessChannelMode(QProcess::ForwardedChannels);
         target.start(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"), {}, QProcess::ReadWrite);
         QVERIFY(target.waitForStarted());
@@ -149,9 +155,6 @@ private slots:
 
         spy.wait(30000);
         QCOMPARE(spy.count(), 1);
-
-        target.kill();
-        target.waitForFinished();
     }
 };
 
