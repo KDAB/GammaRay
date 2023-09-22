@@ -63,12 +63,20 @@ private slots:
     {
         QQmlEngine engine;
         QQmlComponent component(&engine);
-        component.setData("import QtQuick 2.0\nRectangle { Text { text: \"Hello world!\" } }",
+        component.setData(R"V0G0N(
+import QtQuick 2.0
+Rectangle {
+    Text {
+        text: "Hello world!"
+    }
+}
+)V0G0N",
                           QUrl());
         auto obj = component.create();
-        QVERIFY(obj);
+        QVERIFY2(obj, qPrintable(component.errorString()));
 
         auto adaptor = PropertyAdaptorFactory::create(obj, this);
+
         QVERIFY(adaptor);
         QVERIFY(adaptor->count() > 20);
 
@@ -96,7 +104,7 @@ private slots:
         QQmlComponent component(&engine);
         component.setData("import QtQuick 2.0\nRectangle { Keys.enabled: true }", QUrl());
         auto obj = component.create();
-        QVERIFY(obj);
+        QVERIFY2(obj, qPrintable(component.errorString()));
 
         auto adaptor = PropertyAdaptorFactory::create(obj, this);
         QVERIFY(adaptor);
@@ -123,7 +131,7 @@ private slots:
             "import QtQuick 2.0\nRectangle { property var a1: []; property var a2: [\"hello\", \"world\"] }",
             QUrl());
         auto obj = component.create();
-        QVERIFY(obj);
+        QVERIFY2(obj, qPrintable(component.errorString()));
 
         auto adaptor = PropertyAdaptorFactory::create(obj, this);
         QVERIFY(adaptor);
