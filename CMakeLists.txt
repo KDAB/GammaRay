@@ -236,9 +236,9 @@ if(GAMMARAY_CLIENT_ONLY_BUILD)
     set(GAMMARAY_BUILD_UI_DEFAULT ON)
 endif()
 
-if (GAMMARAY_PROBE_ONLY_BUILD)
+if(GAMMARAY_PROBE_ONLY_BUILD)
     set(GAMMARAY_BUILD_UI_DEFAULT OFF)
-endif ()
+endif()
 
 gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
 
