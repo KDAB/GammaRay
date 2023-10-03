@@ -9,7 +9,7 @@ Copyright: 2010-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@k
 License: GPL-2.0-or-later
 
 #misc documentation
-Files: CHANGES CONTRIBUTORS.txt INSTALL.md README.md docs/man/gammaray.pod *.dox *.html *.css docs/GammaRay-CopyrightAssignmentForm.pdf ui/resources/gammaray/ui/icons/classes/qtquick2/README ui/resources/gammaray/ui/icons/classes/qtwidgets/README
+Files: CHANGES CONTRIBUTORS.txt INSTALL.md README.md docs/manual/style/* ui/resources/gammaray/ui/icons/classes/*/* docs/api/*.dox docs/api/*.html docs/man/*.pod docs/*.pdf
 Copyright: 2010-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 License: GPL-2.0-or-later
 
