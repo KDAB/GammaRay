@@ -54,7 +54,7 @@
         \li A set of non-introspectable but well-known properties of Qt classes built into GammaRay.
     \endlist
 
-    Additionally the following container types are supported, and exapanded depending on their content:
+    Additionally the following container types are supported, and expanded depending on their content:
 
     \list
         \li QSequentialIterable, which covers most sequential containers like QVector and QList.
