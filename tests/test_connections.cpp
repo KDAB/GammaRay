@@ -241,7 +241,7 @@ void TestMain::threading()
     TestWaiter waiter;
     const int timeouts = 10;
     // some testers to be run in the main thread
-    // with varying timouts
+    // with varying timeouts
     TestConnections tester1(TestConnections::NoEventLoop, timeouts, 10);
     waiter.addTester(&tester1);
     TestConnections tester2(TestConnections::Delete, timeouts, 11);
