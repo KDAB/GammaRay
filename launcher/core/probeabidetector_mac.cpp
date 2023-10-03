@@ -40,10 +40,10 @@ static QString resolveBundlePath(const QString &bundlePath)
         return bundlePath;
 
     const QByteArray utf8Bundle = fi.absoluteFilePath().toUtf8();
-    CFURLRef bundleUrl = CFURLCreateFromFileSystemRepresentation(NULL,
+    CFURLRef bundleUrl = CFURLCreateFromFileSystemRepresentation(nullptr,
                                                                  reinterpret_cast<const UInt8 *>(utf8Bundle.data()),
                                                                  utf8Bundle.length(), true);
-    CFBundleRef bundle = CFBundleCreate(NULL, bundleUrl);
+    CFBundleRef bundle = CFBundleCreate(nullptr, bundleUrl);
     if (bundle) {
         CFURLRef url = CFBundleCopyExecutableURL(bundle);
         char executableFile[FILENAME_MAX];
