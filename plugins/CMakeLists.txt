@@ -8,8 +8,8 @@
 #
 if(TARGET Qt5::Core)
     add_subdirectory(codecbrowser)
-    add_subdirectory(statemachineviewer)
 endif()
+add_subdirectory(statemachineviewer)
 add_subdirectory(eventmonitor)
 add_subdirectory(fontbrowser)
 add_subdirectory(kjobtracker)

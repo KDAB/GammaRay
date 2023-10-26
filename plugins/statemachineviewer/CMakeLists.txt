@@ -40,20 +40,27 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     if(TARGET Qt::Scxml)
         target_link_libraries(gammaray_statemachineviewer_plugin Qt::Scxml Qt::ScxmlPrivate)
     endif()
+    if(TARGET Qt6::StateMachine)
+        target_link_libraries(gammaray_statemachineviewer_plugin Qt6::StateMachine Qt6::StateMachinePrivate)
+    endif()
 endif()
 
 # UI part - dependencies
+set(KDSME_PACKAGE_NAME KDSME)
+if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+    set(KDSME_PACKAGE_NAME KDSME-qt6)
+endif()
 set_package_properties(
-    KDSME PROPERTIES
+    ${KDSME_PACKAGE_NAME} PROPERTIES
     URL "https://github.com/KDAB/KDStateMachineEditor"
     DESCRIPTION "KDAB State Machine Editor framework"
     TYPE RECOMMENDED
     PURPOSE "Graphical state machine debugging."
 )
-find_package(KDSME 1.2 CONFIG QUIET)
+find_package(${KDSME_PACKAGE_NAME} 1.2 CONFIG QUIET)
 
 # UI part
-if(GAMMARAY_BUILD_UI AND KDSME_FOUND)
+if(GAMMARAY_BUILD_UI AND ${KDSME_PACKAGE_NAME}_FOUND)
 
     set(gammaray_statemachineviewer_ui_plugin_srcs statemachineviewerwidget.cpp statemachineviewerclient.cpp
                                                    statemodeldelegate.cpp
@@ -76,4 +83,10 @@ if(GAMMARAY_BUILD_UI AND KDSME_FOUND)
         gammaray_ui
     )
 
+    if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+        target_link_libraries(
+            gammaray_statemachineviewer_ui_plugin
+            Qt6::StateMachine
+        )
+    endif()
 endif()
