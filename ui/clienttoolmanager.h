@@ -84,7 +84,7 @@ public:
     int toolIndexForToolId(const QString &toolId) const;
     ToolInfo toolForToolId(const QString &toolId) const;
 
-    inline QVector<ToolInfo> tools() const
+    inline QVector<ToolInfo> const& tools() const
     {
         return m_tools;
     }
