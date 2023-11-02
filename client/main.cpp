@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-    QGuiApplication::setDesktopFileName(QStringLiteral("GammaRay.desktop"));
+    QGuiApplication::setDesktopFileName(QStringLiteral("GammaRay"));
 #endif
 
     QApplication app(argc, argv);
