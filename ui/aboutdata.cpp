@@ -63,7 +63,7 @@ QString AboutData::aboutTitle()
 QString AboutData::aboutHeader()
 {
     return AboutDataContext::tr(
-        "<p>The Qt application inspection and manipulation tool."
+        "<p>The Qt application inspection and manipulation tool. "
         "Learn more at <a href=\"https://www.kdab.com/gammaray\">https://www.kdab.com/gammaray/</a>.</p>"
         "<p>Copyright (C) 2010-2023 Klarälvdalens Datakonsult AB, "
         "a KDAB Group company, <a href=\"mailto:info@kdab.com\">info@kdab.com</a></p>"
