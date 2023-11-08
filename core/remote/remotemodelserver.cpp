@@ -432,6 +432,20 @@ void RemoteModelServer::sendAddRemoveMessage(Protocol::MessageType type, const Q
 {
     if (!isConnected())
         return;
+
+    if (objectName() == QLatin1String("com.kdab.GammaRay.QuickSceneGraphModel")) {
+        if (type == Protocol::ModelRowsRemoved) {
+            qDebug() << "==============================1";
+            auto si = qobject_cast<const QAbstractProxyModel *>(parent.model())->mapToSource(parent);
+            qDebug() << parent.data().toString() << si.parent() << si;
+            qDebug() << "server ModelRowsRemoved..." << parent << start << end << "MI" << Protocol::fromQModelIndex(parent) << model()->rowCount(parent) << parent.parent() << sender();
+            qDebug() << "==============================1";
+            if (!parent.parent().isValid() && si.parent().isValid()) {
+                // breakpoint or crash here to see the bt;
+            }
+        }
+    }
+
     Message msg(m_myAddress, type);
     msg << Protocol::fromQModelIndex(parent) << start << end;
     sendMessage(msg);
