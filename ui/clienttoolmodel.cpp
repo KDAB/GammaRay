@@ -39,7 +39,7 @@ QVariant ClientToolModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    const ToolInfo &tool = m_toolManager->tools().at(index.row());
+    const ToolInfo tool = m_toolManager->tools().at(index.row());
     switch (role) {
     case Qt::DisplayRole:
         return tool.name();
@@ -89,7 +89,7 @@ Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return flags;
 
-    const auto &tool = m_toolManager->tools().at(index.row());
+    const auto tool = m_toolManager->tools().at(index.row());
     if (!tool.isEnabled() || (!tool.remotingSupported() && Endpoint::instance()->isRemoteClient()))
         flags &= ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     return flags;

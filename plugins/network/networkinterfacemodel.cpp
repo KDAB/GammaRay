@@ -80,8 +80,8 @@ QVariant NetworkInterfaceModel::data(const QModelIndex &index, int role) const
                 return MetaEnum::flagsToString(iface.flags(), interface_flag_table);
             }
         } else if (index.column() == 0) {
-            const auto &iface = m_interfaces.at(index.internalId());
-            const auto &addr = iface.addressEntries().at(index.row());
+            const auto iface = m_interfaces.at(index.internalId());
+            const auto addr = iface.addressEntries().at(index.row());
             return QString(addr.ip().toString() + QLatin1Char('/') + addr.netmask().toString());
         }
     }
