@@ -257,9 +257,9 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
                     beginInsertRows(myIndex, idx, idx);
                 m_childParentMap[*j] = node;
                 i = childList.insert(i, *j);
-                populateFromNode(*j, false);
                 if (emitSignals)
                     endInsertRows();
+                populateFromNode(*j, false);
             }
             ++i;
             ++j;
