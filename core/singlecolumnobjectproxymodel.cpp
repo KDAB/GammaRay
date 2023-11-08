@@ -38,3 +38,11 @@ QVariant SingleColumnObjectProxyModel::data(const QModelIndex &proxyIndex, int r
 
     return QIdentityProxyModel::data(proxyIndex, role);
 }
+
+QMap<int, QVariant> SingleColumnObjectProxyModel::itemData(const QModelIndex &proxyIndex) const
+{
+    QMap<int, QVariant> map = QIdentityProxyModel::itemData(proxyIndex);
+    map[Qt::DisplayRole] = data(proxyIndex);
+    return map;
+}
+
