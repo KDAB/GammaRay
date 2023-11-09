@@ -13,8 +13,8 @@
 
 #include "mimetypes.h"
 #include "mimetypesmodel.h"
-#include <core/remote/serverproxymodel.h>
-#include <QIdentityProxyModel>
+
+#include <common/recursiveproxymodelbase.h>
 
 using namespace GammaRay;
 
@@ -22,7 +22,7 @@ MimeTypes::MimeTypes(Probe *probe, QObject *parent)
     : QObject(parent)
 {
     auto model = new MimeTypesModel(this);
-    auto proxy = new ServerProxyModel<QIdentityProxyModel>(this);
+    auto proxy = new RecursiveProxyModelBase(this);
     proxy->setSourceModel(model);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.MimeTypeModel"), proxy);
 }

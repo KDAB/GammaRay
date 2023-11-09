@@ -27,6 +27,7 @@
 
 #include <common/modelevent.h>
 #include <common/objectbroker.h>
+#include <common/recursiveproxymodelbase.h>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <Qt3DCore/QAttribute>
@@ -68,7 +69,6 @@ namespace Qt3DGeometry = Qt3DRender;
 #include <Qt3DCore/QEntity>
 
 #include <QDebug>
-#include <QIdentityProxyModel>
 #include <QItemSelection>
 #include <QItemSelectionModel>
 
@@ -106,7 +106,7 @@ Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectCreated, m_entityModel, &Qt3DEntityTreeModel::objectCreated);
     connect(probe, &Probe::objectDestroyed, m_entityModel, &Qt3DEntityTreeModel::objectDestroyed);
     connect(probe, &Probe::objectReparented, m_entityModel, &Qt3DEntityTreeModel::objectReparented);
-    auto entityProxy = new ServerProxyModel<QIdentityProxyModel>(this);
+    auto entityProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     entityProxy->setSourceModel(m_entityModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.Qt3DInspector.sceneModel"), entityProxy);
     m_entitySelectionModel = ObjectBroker::selectionModel(entityProxy);
@@ -116,7 +116,7 @@ Qt3DInspector::Qt3DInspector(Probe *probe, QObject *parent)
     connect(probe, &Probe::objectCreated, m_frameGraphModel, &FrameGraphModel::objectCreated);
     connect(probe, &Probe::objectDestroyed, m_frameGraphModel, &FrameGraphModel::objectDestroyed);
     connect(probe, &Probe::objectReparented, m_frameGraphModel, &FrameGraphModel::objectReparented);
-    auto frameGraphProxy = new ServerProxyModel<QIdentityProxyModel>(this);
+    auto frameGraphProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     frameGraphProxy->setSourceModel(m_frameGraphModel);
     probe->registerModel(QStringLiteral(
                              "com.kdab.GammaRay.Qt3DInspector.frameGraphModel"),
