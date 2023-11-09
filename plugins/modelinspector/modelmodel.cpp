@@ -48,6 +48,9 @@ int ModelModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex ModelModel::parent(const QModelIndex &child) const
 {
+    if (!child.isValid())
+        return {};
+
     QAbstractItemModel *model = static_cast<QAbstractItemModel *>(child.internalPointer());
     Q_ASSERT(model);
     if (m_models.contains(model))
