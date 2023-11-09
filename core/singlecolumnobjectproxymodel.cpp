@@ -45,4 +45,3 @@ QMap<int, QVariant> SingleColumnObjectProxyModel::itemData(const QModelIndex &pr
     map[Qt::DisplayRole] = data(proxyIndex);
     return map;
 }
-
