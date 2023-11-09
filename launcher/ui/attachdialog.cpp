@@ -53,7 +53,6 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
 
     m_proxyModel = new ProcessFilterModel(this);
     m_proxyModel->setSourceModel(m_model);
-    m_proxyModel->setDynamicSortFilter(true);
 
     ui->view->setModel(m_proxyModel);
     // hide state

@@ -18,7 +18,6 @@ using namespace GammaRay;
 ObjectFilterProxyModelBase::ObjectFilterProxyModelBase(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
-    setDynamicSortFilter(true);
 }
 
 QMap<int, QVariant> ObjectFilterProxyModelBase::itemData(const QModelIndex &index) const

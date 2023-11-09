@@ -33,7 +33,6 @@ SignalMonitor::SignalMonitor(Probe *probe, QObject *parent)
 
     auto *model = new SignalHistoryModel(probe, this);
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-    proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(model);
     m_objModel = proxy;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"), proxy);
