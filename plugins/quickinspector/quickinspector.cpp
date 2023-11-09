@@ -34,6 +34,7 @@
 #include <common/probecontrollerinterface.h>
 #include <common/problem.h>
 #include <common/remoteviewframe.h>
+#include <common/recursiveproxymodelbase.h>
 
 #include <core/enumrepositoryserver.h>
 #include <core/metaenum.h>

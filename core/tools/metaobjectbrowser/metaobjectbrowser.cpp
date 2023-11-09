@@ -24,10 +24,10 @@
 #include <common/objectbroker.h>
 #include <common/metatypedeclarations.h>
 #include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
+#include <common/recursiveproxymodelbase.h>
 
 #include <QDebug>
 #include <QItemSelectionModel>
-#include <QIdentityProxyModel>
 
 using namespace GammaRay;
 
@@ -37,7 +37,7 @@ MetaObjectBrowser::MetaObjectBrowser(Probe *probe, QObject *parent)
     , m_motm(new MetaObjectTreeModel(this))
     , m_model(nullptr)
 {
-    auto model = new ServerProxyModel<QIdentityProxyModel>(this);
+    auto model = new ServerProxyModel<RecursiveProxyModelBase>(this);
     model->addRole(QMetaObjectModel::MetaObjectIssues);
     model->addRole(QMetaObjectModel::MetaObjectInvalid);
     model->setSourceModel(m_motm);
