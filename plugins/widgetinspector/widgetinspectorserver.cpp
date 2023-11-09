@@ -41,7 +41,6 @@
 #include "common/paths.h"
 #include <common/probecontrollerinterface.h>
 #include <common/remoteviewframe.h>
-#include <common/recursiveproxymodelbase.h>
 
 #include <QAction>
 #include <QAbstractItemView>
@@ -71,6 +70,7 @@
 #include <QStyle>
 #include <QToolButton>
 #include <QWindow>
+#include <QIdentityProxyModel>
 
 #include <iostream>
 
@@ -111,7 +111,7 @@ WidgetInspectorServer::WidgetInspectorServer(Probe *probe, QObject *parent)
     auto *widgetFilterProxy = new WidgetTreeModel(this);
     widgetFilterProxy->setSourceModel(probe->objectTreeModel());
 
-    auto widgetSearchProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
+    auto widgetSearchProxy = new ServerProxyModel<QIdentityProxyModel>(this);
     widgetSearchProxy->setSourceModel(widgetFilterProxy);
     widgetSearchProxy->addRole(ObjectModel::ObjectIdRole);
 
