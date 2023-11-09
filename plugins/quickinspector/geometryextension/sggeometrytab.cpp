@@ -40,7 +40,6 @@ void SGGeometryTab::setObjectBaseName(const QString &baseName)
     m_adjacencyModel = ObjectBroker::model(baseName + '.' + "sgGeometryAdjacencyModel");
 
     auto *proxy = new QSortFilterProxyModel(this);
-    proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(m_vertexModel);
     m_ui->tableView->setModel(proxy);
     auto *selectionModel = new QItemSelectionModel(proxy);
