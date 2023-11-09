@@ -318,8 +318,8 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
 
                 auto it = m_childParentMap.find(*j);
                 if (it != m_childParentMap.end()) {
-                    QSGNode *node = it->second;
-                    m_parentChildMap[node].remove(sourceIdx.row());
+                    QSGNode *childNode = it->second;
+                    m_parentChildMap[childNode].remove(sourceIdx.row());
                     m_childParentMap.erase(*j);
                 }
 
@@ -413,8 +413,6 @@ QSGNode *QuickSceneGraphModel::sgNodeForItem(QQuickItem *item) const
 
 QQuickItem *QuickSceneGraphModel::itemForSgNode(QSGNode *node) const
 {
-    m_itemNodeItemMap.find(node);
-
     while (node && !contains(m_itemNodeItemMap, node)) {
         // If there's no entry for node, take its parent
         auto it = m_childParentMap.find(node);
@@ -460,10 +458,9 @@ void QuickSceneGraphModel::pruneSubTree(QSGNode *node)
     auto it = m_parentChildMap.find(node);
     if (it != m_parentChildMap.end()) {
         const QVector<QSGNode *> children = it->second;
-
-        foreach (auto child, children)
+        for (auto child : children)
             pruneSubTree(child);
+        m_parentChildMap.erase(node);
     }
-    m_parentChildMap.erase(node);
     m_childParentMap.erase(node);
 }
