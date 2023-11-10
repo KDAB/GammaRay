@@ -52,15 +52,13 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_client
-  PUBLIC
-    Qt::Core
-  PRIVATE
-    gammaray_ui
-    gammaray_ui_internal
-    gammaray_common
-    Qt::Gui
-    Qt::Widgets
-    Qt::Network
+    PUBLIC Qt::Core
+    PRIVATE gammaray_ui
+            gammaray_ui_internal
+            gammaray_common
+            Qt::Gui
+            Qt::Widgets
+            Qt::Network
 )
 if(GAMMARAY_USE_PCH)
     target_precompile_headers(gammaray_client REUSE_FROM gammaray_pch_core_gui)

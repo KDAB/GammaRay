@@ -128,14 +128,12 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_core
-  PUBLIC
-    gammaray_common
-  PRIVATE
-    gammaray_common_internal
-    gammaray_kitemmodels
-    ${CMAKE_DL_LIBS}
-    Qt::CorePrivate
-    Qt::GuiPrivate
+    PUBLIC gammaray_common
+    PRIVATE gammaray_common_internal
+            gammaray_kitemmodels
+            ${CMAKE_DL_LIBS}
+            Qt::CorePrivate
+            Qt::GuiPrivate
 )
 if(GAMMARAY_USE_PCH)
     target_precompile_headers(gammaray_core REUSE_FROM gammaray_pch_core_gui)
@@ -149,11 +147,8 @@ gammaray_set_rpath(gammaray_core ${LIB_INSTALL_DIR})
 
 target_link_libraries(
     gammaray_core
-  PUBLIC
-    Qt::Core
-  PRIVATE
-    Qt::Gui
-    Qt::GuiPrivate
+    PUBLIC Qt::Core
+    PRIVATE Qt::Gui Qt::GuiPrivate
 )
 if(TARGET Qt::AndroidExtras)
     target_link_libraries(gammaray_core PRIVATE Qt::AndroidExtras)

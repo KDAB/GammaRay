@@ -73,19 +73,12 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_common
-  PUBLIC
-    Qt::Core
-  PRIVATE
-    Qt::Network
-    Qt::Gui
-    Qt::GuiPrivate
+    PUBLIC Qt::Core
+    PRIVATE Qt::Network Qt::Gui Qt::GuiPrivate
 )
 target_link_libraries(
     gammaray_common
-  PRIVATE
-    gammaray_lz4
-    gammaray_kitemmodels
-    ${CMAKE_DL_LIBS}
+    PRIVATE gammaray_lz4 gammaray_kitemmodels ${CMAKE_DL_LIBS}
 )
 gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
 if(GAMMARAY_USE_PCH)
