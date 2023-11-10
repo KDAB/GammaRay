@@ -384,7 +384,7 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     m_windowModel = proxy;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickWindowModel"), m_windowModel);
 
-    auto filterProxy = new ServerProxyModel<QIdentityProxyModel>(this);
+    auto filterProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     filterProxy->setSourceModel(m_itemModel);
     filterProxy->addRole(ObjectModel::ObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickItemModel"), filterProxy);
@@ -404,7 +404,7 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged,
             this, &QuickInspector::itemSelectionChanged);
 
-    auto sgFilterProxy = new ServerProxyModel<QIdentityProxyModel>(this);
+    auto sgFilterProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
     sgFilterProxy->setSourceModel(m_sgModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"), sgFilterProxy);
 
