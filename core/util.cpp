@@ -42,11 +42,14 @@ using namespace std;
 QString Util::displayString(const QObject *object)
 {
     if (!object)
-        return QStringLiteral("QObject(0x0)");
+        return QStringLiteral("0x0 (QObject)");
     const auto name = ObjectDataProvider::name(object);
     if (name.isEmpty())
-        return QStringLiteral("%1[this=%2]").arg(object->metaObject()->className(), addressToString(object));
-    return name;
+        return QStringLiteral("%1 (%2)").arg(addressToString(object), object->metaObject()->className());
+    const auto typeName = ObjectDataProvider::typeName(object);
+    if (name == typeName)
+        return name;
+    return QStringLiteral("%1 (%2)").arg(ObjectDataProvider::typeName(object), name);
 }
 
 QString Util::shortDisplayString(const QObject *object)

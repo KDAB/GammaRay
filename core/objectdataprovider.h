@@ -38,13 +38,13 @@ public:
     /*! Returns a name or identifier for @p obj. */
     virtual QString name(const QObject *obj) const = 0;
     /*! Returns the full name of the type of @p obj. */
-    virtual QString typeName(QObject *obj) const = 0;
+    virtual QString typeName(const QObject *obj) const = 0;
     /*! Returns a shortened type name (e.g. excluding namespaces) for @p obj. */
-    virtual QString shortTypeName(QObject *obj) const = 0;
+    virtual QString shortTypeName(const QObject *obj) const = 0;
     /*! Returns the source location where @p obj has been created. */
-    virtual SourceLocation creationLocation(QObject *obj) const = 0;
+    virtual SourceLocation creationLocation(const QObject *obj) const = 0;
     /*! Returns the source location where the type of @p obj has been declared. */
-    virtual SourceLocation declarationLocation(QObject *obj) const = 0;
+    virtual SourceLocation declarationLocation(const QObject *obj) const = 0;
 
 private:
     Q_DISABLE_COPY(AbstractObjectDataProvider)
@@ -61,16 +61,16 @@ GAMMARAY_CORE_EXPORT void registerProvider(AbstractObjectDataProvider *provider)
 GAMMARAY_CORE_EXPORT QString name(const QObject *obj);
 
 /*! Returns the type name of @p obj. */
-GAMMARAY_CORE_EXPORT QString typeName(QObject *obj);
+GAMMARAY_CORE_EXPORT QString typeName(const QObject *obj);
 
 /*! Returns the short type name of @p obj. */
-GAMMARAY_CORE_EXPORT QString shortTypeName(QObject *obj);
+GAMMARAY_CORE_EXPORT QString shortTypeName(const QObject *obj);
 
 /*! Returns the source location where this object was created, if known. */
-GAMMARAY_CORE_EXPORT SourceLocation creationLocation(QObject *obj);
+GAMMARAY_CORE_EXPORT SourceLocation creationLocation(const QObject *obj);
 
 /*! Returns the source location where the type of this object was declared, if known. */
-GAMMARAY_CORE_EXPORT SourceLocation declarationLocation(QObject *obj);
+GAMMARAY_CORE_EXPORT SourceLocation declarationLocation(const QObject *obj);
 }
 }
 

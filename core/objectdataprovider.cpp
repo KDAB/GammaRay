@@ -48,7 +48,7 @@ QString ObjectDataProvider::name(const QObject *obj)
     return name;
 }
 
-QString ObjectDataProvider::typeName(QObject *obj)
+QString ObjectDataProvider::typeName(const QObject *obj)
 {
     if (!obj)
         return QString();
@@ -61,7 +61,7 @@ QString ObjectDataProvider::typeName(QObject *obj)
     return obj->metaObject()->className();
 }
 
-QString ObjectDataProvider::shortTypeName(QObject *obj)
+QString ObjectDataProvider::shortTypeName(const QObject *obj)
 {
     if (!obj)
         return QString();
@@ -74,7 +74,7 @@ QString ObjectDataProvider::shortTypeName(QObject *obj)
     return obj->metaObject()->className();
 }
 
-SourceLocation ObjectDataProvider::creationLocation(QObject *obj)
+SourceLocation ObjectDataProvider::creationLocation(const QObject *obj)
 {
     SourceLocation loc;
     if (!obj)
@@ -90,7 +90,7 @@ SourceLocation ObjectDataProvider::creationLocation(QObject *obj)
     return loc;
 }
 
-SourceLocation ObjectDataProvider::declarationLocation(QObject *obj)
+SourceLocation ObjectDataProvider::declarationLocation(const QObject *obj)
 {
     SourceLocation loc;
     if (!obj)

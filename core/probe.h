@@ -182,7 +182,7 @@ public:
     void registerSignalSpyCallbackSet(const SignalSpyCallbackSet &callbacks);
 
     /*! Returns the source code location @p object was created at. */
-    static SourceLocation objectCreationSourceLocation(QObject *object);
+    static SourceLocation objectCreationSourceLocation(const QObject *object);
     /*! Returns the entire stack trace for the creation of @p object. */
     static Execution::Trace objectCreationStackTrace(QObject *object);
 
