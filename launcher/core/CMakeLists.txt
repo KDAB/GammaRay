@@ -69,12 +69,8 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_launcher
-  PUBLIC
-    Qt::Core
-  PRIVATE
-    gammaray_common
-    Qt::Network
-    ${CMAKE_DL_LIBS}
+    PUBLIC Qt::Core
+    PRIVATE gammaray_common Qt::Network ${CMAKE_DL_LIBS}
 )
 if(HAVE_QT_WIDGETS)
     target_link_libraries(gammaray_launcher PRIVATE Qt::Gui Qt::Widgets)

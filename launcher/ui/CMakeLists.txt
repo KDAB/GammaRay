@@ -40,15 +40,13 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_launcher_ui
-  PUBLIC
-    gammaray_launcher
-  PRIVATE
-    Qt::Core
-    Qt::Concurrent
-    Qt::Gui
-    Qt::Widgets
-    Qt::Network
-    gammaray_ui
+    PUBLIC gammaray_launcher
+    PRIVATE Qt::Core
+            Qt::Concurrent
+            Qt::Gui
+            Qt::Widgets
+            Qt::Network
+            gammaray_ui
 )
 
 install(
