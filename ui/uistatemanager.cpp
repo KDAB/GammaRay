@@ -555,7 +555,11 @@ void UIStateManager::saveHeaderState(QHeaderView *header)
 
 void UIStateManager::headerSectionCountChanged()
 {
-    restoreHeaderState(qobject_cast<QHeaderView *>(sender()));
+    auto headerView = qobject_cast<QHeaderView *>(sender());
+    // Delay the call to restoreHeaderState to avoid multiple changes in flight at the QAIM level
+    // E.g. we might be here because of columnsInserted() (which just finished, but not all receivers were told yet)
+    // and restoring will sort() the model, which will emit layoutChanged(). Separate the two so QAbstractItemModelTester doesn't abort.
+    QMetaObject::invokeMethod(this, "restoreHeaderState", Qt::QueuedConnection, Q_ARG(QHeaderView *, headerView));
 }
 
 void UIStateManager::widgetResized(QWidget *widget)

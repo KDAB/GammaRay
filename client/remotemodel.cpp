@@ -136,6 +136,8 @@ QModelIndex RemoteModel::index(int row, int column, const QModelIndex &parent) c
 
 QModelIndex RemoteModel::parent(const QModelIndex &index) const
 {
+    if (!index.isValid())
+        return {};
     Node *currentNode = nodeForIndex(index);
     Q_ASSERT(currentNode);
     if (currentNode == m_root || currentNode->parent == m_root)
@@ -158,7 +160,7 @@ int RemoteModel::rowCount(const QModelIndex &index) const
         if (node->columnCount < 0) // not yet requested vs. in the middle of insertion
             requestRowColumnCount(index);
     }
-    return qMax(0, node->rowCount); // if requestRowColumnCount is synchronoous, ie. changes rowCount (as in simple unit test), returning 0 above would cause ModelTest to see inconsistent data
+    return qMax(0, node->rowCount); // if requestRowColumnCount is synchronous, ie. changes rowCount (as in simple unit test), returning 0 above would cause ModelTest to see inconsistent data
 }
 
 int RemoteModel::columnCount(const QModelIndex &index) const
