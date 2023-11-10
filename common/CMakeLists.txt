@@ -73,16 +73,16 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_common
-    LINK_PUBLIC
+  PUBLIC
     Qt::Core
-    LINK_PRIVATE
+  PRIVATE
     Qt::Network
     Qt::Gui
     Qt::GuiPrivate
 )
 target_link_libraries(
     gammaray_common
-    LINK_PRIVATE
+  PRIVATE
     gammaray_lz4
     gammaray_kitemmodels
     ${CMAKE_DL_LIBS}

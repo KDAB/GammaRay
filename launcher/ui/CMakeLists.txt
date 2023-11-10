@@ -40,9 +40,9 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_launcher_ui
-    LINK_PUBLIC
+  PUBLIC
     gammaray_launcher
-    LINK_PRIVATE
+  PRIVATE
     Qt::Core
     Qt::Concurrent
     Qt::Gui

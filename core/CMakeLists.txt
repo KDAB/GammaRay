@@ -128,9 +128,9 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_core
-    LINK_PUBLIC
+  PUBLIC
     gammaray_common
-    LINK_PRIVATE
+  PRIVATE
     gammaray_common_internal
     gammaray_kitemmodels
     ${CMAKE_DL_LIBS}
@@ -149,14 +149,14 @@ gammaray_set_rpath(gammaray_core ${LIB_INSTALL_DIR})
 
 target_link_libraries(
     gammaray_core
-    LINK_PUBLIC
+  PUBLIC
     Qt::Core
-    LINK_PRIVATE
+  PRIVATE
     Qt::Gui
     Qt::GuiPrivate
 )
 if(TARGET Qt::AndroidExtras)
-    target_link_libraries(gammaray_core LINK_PRIVATE Qt::AndroidExtras)
+    target_link_libraries(gammaray_core PRIVATE Qt::AndroidExtras)
 endif()
 
 add_backward(gammaray_core)

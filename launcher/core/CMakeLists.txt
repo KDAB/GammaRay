@@ -69,20 +69,20 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_launcher
-    LINK_PUBLIC
+  PUBLIC
     Qt::Core
-    LINK_PRIVATE
+  PRIVATE
     gammaray_common
     Qt::Network
     ${CMAKE_DL_LIBS}
 )
 if(HAVE_QT_WIDGETS)
-    target_link_libraries(gammaray_launcher LINK_PRIVATE Qt::Gui Qt::Widgets)
+    target_link_libraries(gammaray_launcher PRIVATE Qt::Gui Qt::Widgets)
 endif()
 if(WIN32)
-    target_link_libraries(gammaray_launcher LINK_PRIVATE version)
+    target_link_libraries(gammaray_launcher PRIVATE version)
 elseif(APPLE)
-    target_link_libraries(gammaray_launcher LINK_PRIVATE "-framework CoreFoundation")
+    target_link_libraries(gammaray_launcher PRIVATE "-framework CoreFoundation")
 endif()
 
 install(
