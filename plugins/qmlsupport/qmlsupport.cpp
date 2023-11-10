@@ -186,10 +186,10 @@ class QmlObjectDataProvider : public AbstractObjectDataProvider
 {
 public:
     QString name(const QObject *obj) const override;
-    QString typeName(QObject *obj) const override;
-    QString shortTypeName(QObject *obj) const override;
-    SourceLocation creationLocation(QObject *obj) const override;
-    SourceLocation declarationLocation(QObject *obj) const override;
+    QString typeName(const QObject *obj) const override;
+    QString shortTypeName(const QObject *obj) const override;
+    SourceLocation creationLocation(const QObject *obj) const override;
+    SourceLocation declarationLocation(const QObject *obj) const override;
 };
 }
 
@@ -202,7 +202,7 @@ QString QmlObjectDataProvider::name(const QObject *obj) const
     return ctx->nameForObject(const_cast<QObject *>(obj));
 }
 
-QString QmlObjectDataProvider::typeName(QObject *obj) const
+QString QmlObjectDataProvider::typeName(const QObject *obj) const
 {
     Q_ASSERT(obj);
 
@@ -234,7 +234,7 @@ QString QmlObjectDataProvider::typeName(QObject *obj) const
     return QString();
 }
 
-QString QmlObjectDataProvider::shortTypeName(QObject *obj) const
+QString QmlObjectDataProvider::shortTypeName(const QObject *obj) const
 {
     auto n = typeName(obj);
     const auto isQmlType = !n.isEmpty();
@@ -255,13 +255,13 @@ QString QmlObjectDataProvider::shortTypeName(QObject *obj) const
     return isQmlType ? n : QString(); // let somebody else handle shortening of non-QML names
 }
 
-SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
+SourceLocation QmlObjectDataProvider::creationLocation(const QObject *obj) const
 {
     SourceLocation loc;
 
     auto objectData = QQmlData::get(obj);
     if (!objectData) {
-        if (auto context = qobject_cast<QQmlContext *>(obj)) {
+        if (auto context = qobject_cast<const QQmlContext *>(obj)) {
             loc.setUrl(context->baseUrl());
         }
         return loc;
@@ -277,7 +277,7 @@ SourceLocation QmlObjectDataProvider::creationLocation(QObject *obj) const
     return loc;
 }
 
-SourceLocation QmlObjectDataProvider::declarationLocation(QObject *obj) const
+SourceLocation QmlObjectDataProvider::declarationLocation(const QObject *obj) const
 {
     Q_ASSERT(obj);
 

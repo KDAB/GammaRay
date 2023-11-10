@@ -1009,14 +1009,15 @@ void Probe::executeSignalCallback(const Func &func)
                   func);
 }
 
-SourceLocation Probe::objectCreationSourceLocation(QObject *object)
+SourceLocation Probe::objectCreationSourceLocation(const QObject *object)
 {
-    if (!s_listener()->constructionBacktracesForObjects.contains(object)) {
+    QObject *key = const_cast<QObject *>(object);
+    if (!s_listener()->constructionBacktracesForObjects.contains(key)) {
         IF_DEBUG(std::cout << "No backtrace for object available" << object << "." << std::endl;)
         return SourceLocation();
     }
 
-    const auto &st = s_listener()->constructionBacktracesForObjects.value(object);
+    const auto &st = s_listener()->constructionBacktracesForObjects.value(key);
     int distanceToQObject = 0;
 
     const QMetaObject *metaObject = object->metaObject();
