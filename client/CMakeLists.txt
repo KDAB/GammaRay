@@ -52,9 +52,9 @@ target_include_directories(
 )
 target_link_libraries(
     gammaray_client
-    LINK_PUBLIC
+  PUBLIC
     Qt::Core
-    LINK_PRIVATE
+  PRIVATE
     gammaray_ui
     gammaray_ui_internal
     gammaray_common
