@@ -83,7 +83,7 @@ if(GAMMARAY_BUILD_UI AND ${KDSME_PACKAGE_NAME}_FOUND)
         gammaray_ui
     )
 
-    if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+    if(TARGET Qt6::StateMachine)
         target_link_libraries(gammaray_statemachineviewer_ui_plugin Qt6::StateMachine)
     endif()
 endif()
