@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: 2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#
+# SPDX-License-Identifier: MIT
+
+name: CI Nightly
+
+on:
+  schedule:
+  - cron: '0 3 * * *'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-latest
+
+        config:
+          - name: clang-tidy
+            cmake_arg: '-DCMAKE_CXX_CLANG_TIDY=clang-tidy'
+            qt_version: "6.6"
+            qt_modules: qtshadertools
+
+          - name: clazy
+            cmake_arg: '-DCMAKE_CXX_COMPILER=clazy'
+            qt_version: "6.6"
+            qt_modules: qtshadertools
+            apt_pgks:
+              - clazy
+
+    steps:
+      - name: Install Qt ${{ matrix.config.qt_version }} with options and default aqtversion
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ matrix.config.qt_version }}
+          modules: ${{ matrix.config.qt_modules }}
+          cache: true
+
+      - name: Install ninja-build tool (must be after Qt due PATH changes)
+        uses: turtlesec-no/get-ninja@main
+
+      - name: Install dependencies on Ubuntu (${{ join(matrix.config.apt_pgks, ' ') }})
+        if: ${{ runner.os == 'Linux' && matrix.config.apt_pgks }}
+        run: |
+          sudo apt update -qq
+          echo ${{ join(matrix.config.apt_pgks, ' ') }} | xargs sudo apt install -y
+
+      - uses: actions/checkout@v4
+
+      - name: Fetch Git submodules
+        run: git submodule update --init --recursive
+
+      - name: Configure project
+        run: >
+            cmake -S . -B ./build -G Ninja ${{ matrix.config.cmake_arg }}
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo
+            -Werror=dev
+            -DECM_ENABLE_SANITIZERS=address
+            -DGAMMARAY_QT6_BUILD=ON
+            -DGAMMARAY_DISABLE_FEEDBACK=ON
+            -DGAMMARAY_BUILD_DOCS=${{ matrix.config.name == 'clazy' }}
+            -DGAMMARAY_MULTI_BUILD=${{ matrix.config.name == 'clazy' }}
+
+      - name: Build Project
+        run: cmake --build ./build
