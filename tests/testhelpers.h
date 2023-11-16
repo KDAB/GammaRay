@@ -15,6 +15,7 @@
 #define TESTHELPERS_H
 
 #include <qnamespace.h>
+#include <functional>
 
 QT_BEGIN_NAMESPACE
 template<typename T>
@@ -46,6 +47,24 @@ QModelIndex searchContainsIndex(QAbstractItemModel *model, const QString &value,
 QModelIndexList searchContainsIndexes(QAbstractItemModel *model, const QString &value,
                                       Qt::MatchFlags extra = Qt::MatchExactly,
                                       int role = Qt::DisplayRole, int column = 0);
+
+class kdScopeGuard
+{
+public:
+    kdScopeGuard(std::function<void()> cb)
+        : m_cb(cb)
+    {
+    }
+    ~kdScopeGuard()
+    {
+        if (m_cb) {
+            m_cb();
+        }
+    }
+
+private:
+    std::function<void()> m_cb;
+};
 }
 
 #define QVERIFY_RETURN_FALSE(statement)                                                        \
