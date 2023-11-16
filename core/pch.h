@@ -52,7 +52,6 @@
 #include <QPropertyAnimation>
 #include <QRandomGenerator>
 #include <QReadWriteLock>
-#include <QScopeGuard>
 #include <QScopedPointer>
 #include <QSettings>
 #include <QSharedData>

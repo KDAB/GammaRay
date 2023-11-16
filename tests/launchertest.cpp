@@ -25,7 +25,6 @@
 
 #include <QDebug>
 #include <QObject>
-#include <QScopeGuard>
 #include <QSignalSpy>
 #include <QTest>
 
@@ -131,7 +130,7 @@ private slots:
     static void testAttach()
     {
         QProcess target;
-        auto cleanup = qScopeGuard([&target] {
+        auto cleanup = kdScopeGuard([&target] {
             target.kill();
             target.waitForFinished();
         });
