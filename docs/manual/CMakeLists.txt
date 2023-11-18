@@ -19,6 +19,12 @@ macro(qt_build_doc _qdocconf_name)
         COMMENT "Generate codecontrbutions.qdoc using qtattributescanner"
     )
 
+    # Point to the qt documentation index files, if discovered
+    set(_qdoc_index_args)
+    if(QDOC_INDEX_DIR)
+        set(_qdoc_index_args --indexdir ${QDOC_INDEX_DIR})
+    endif()
+
     # offline docs
     # run qdoc to get qhp file
     set(_qdoc_output_dir ${CMAKE_CURRENT_BINARY_DIR}/${_qdocconf_name})
@@ -30,9 +36,8 @@ macro(qt_build_doc _qdocconf_name)
         OUTPUT ${_qdoc_output_dir}/${_qdocconf_name}.qhp
         COMMAND
             ${CMAKE_COMMAND} -E env QT_INSTALL_DOCS=${QDOC_TEMPLATE_DIR} QT_VERSION_TAG=${GAMMARAY_PLUGIN_VERSION}
-            QT_VERSION=${GAMMARAY_VERSION} BUILDDIR=${CMAKE_CURRENT_BINARY_DIR} ${QDOC_EXECUTABLE} --indexdir
-            ${QDOC_INDEX_DIR} --outputdir ${_qdoc_output_dir}
-            ${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-offline.qdocconf
+            QT_VERSION=${GAMMARAY_VERSION} BUILDDIR=${CMAKE_CURRENT_BINARY_DIR} ${QDOC_EXECUTABLE} ${_qdoc_index_args}
+            --outputdir ${_qdoc_output_dir} ${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-offline.qdocconf
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-offline.qdocconf ${_qdoc_srcs} ${_qdoc_imgs}
         COMMENT "Generate the offline manual using qdoc"
     )
@@ -61,9 +66,8 @@ macro(qt_build_doc _qdocconf_name)
         OUTPUT ${_qdoc_output_dir}/index.html
         COMMAND
             ${CMAKE_COMMAND} -E env QT_INSTALL_DOCS=${QDOC_TEMPLATE_DIR} QT_VERSION_TAG=${GAMMARAY_PLUGIN_VERSION}
-            QT_VERSION=${GAMMARAY_VERSION} BUILDDIR=${CMAKE_CURRENT_BINARY_DIR} ${QDOC_EXECUTABLE} --indexdir
-            ${QDOC_INDEX_DIR} --outputdir ${_qdoc_output_dir}
-            ${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-online.qdocconf
+            QT_VERSION=${GAMMARAY_VERSION} BUILDDIR=${CMAKE_CURRENT_BINARY_DIR} ${QDOC_EXECUTABLE} ${_qdoc_index_args}
+            --outputdir ${_qdoc_output_dir} ${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-online.qdocconf
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-online.qdocconf ${_qdoc_srcs} ${_qdoc_imgs}
                 ${_qdoc_styles}
         COMMENT "Generate the Qt-branded online manual using qdoc"
@@ -79,9 +83,8 @@ macro(qt_build_doc _qdocconf_name)
         OUTPUT ${_qdoc_output_dir}/index.html
         COMMAND
             ${CMAKE_COMMAND} -E env QT_INSTALL_DOCS=${QDOC_TEMPLATE_DIR} QT_VERSION_TAG=${GAMMARAY_PLUGIN_VERSION}
-            QT_VERSION=${GAMMARAY_VERSION} BUILDDIR=${CMAKE_CURRENT_BINARY_DIR} ${QDOC_EXECUTABLE} --indexdir
-            ${QDOC_INDEX_DIR} --outputdir ${_qdoc_output_dir}
-            ${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-online-kdab.qdocconf
+            QT_VERSION=${GAMMARAY_VERSION} BUILDDIR=${CMAKE_CURRENT_BINARY_DIR} ${QDOC_EXECUTABLE} ${_qdoc_index_args}
+            --outputdir ${_qdoc_output_dir} ${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-online-kdab.qdocconf
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_qdocconf_name}-online-kdab.qdocconf ${_qdoc_srcs} ${_qdoc_imgs}
                 ${_qdoc_styles}
         COMMENT "Generate the KDAB-branded online manual using qdoc"

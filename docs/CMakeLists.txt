@@ -46,7 +46,7 @@ if(NOT DEFINED QDOC_TEMPLATE_DIR)
 endif()
 
 if(NOT DEFINED QDOC_INDEX_DIR)
-    # compute the qdoc index dir from where qtcore.index is found
+    # try to compute the qdoc index dir from where qtcore.index is found
     find_file(QDOC_INDEX qtcore.index HINTS ${QT_INSTALL_DOCS}/qtcore ${QT_INSTALL_DATA}/doc/qtcore)
     if(QDOC_INDEX)
         get_filename_component(QDOC_INDEX_DIR ${QDOC_INDEX} DIRECTORY)
@@ -57,7 +57,6 @@ endif()
 if(NOT QDOC_EXECUTABLE
    OR NOT QHELPGEN_EXECUTABLE
    OR NOT QDOC_TEMPLATE_DIR
-   OR NOT QDOC_INDEX_DIR
    OR NOT QTATTRIBUTIONSSCANNER_EXECUTABLE
 )
     # Expand imported target data for status reporting
@@ -82,6 +81,9 @@ if(NOT QDOC_EXECUTABLE
     set(GAMMARAY_USER_MANUAL_BUILD False)
 else()
     set(GAMMARAY_USER_MANUAL_BUILD True)
+    if(NOT QDOC_INDEX_DIR)
+        message(STATUS "Couldn't find index dir, manual won't link to system documentation")
+    endif()
 endif()
 
 add_feature_info(
