@@ -65,7 +65,7 @@ private slots:
 
         delete s1.data();
         delete s2.data();
-    }
+    } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
 
     static void cleanupTestCase()
     {

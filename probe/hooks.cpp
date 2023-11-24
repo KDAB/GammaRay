@@ -57,9 +57,8 @@ static void gammaray_pre_routine()
     if (qApp) // DllMain will do a better job at this, we are too early here and might not even have our staticMetaObject properly resolved
         return;
 #endif
-    // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
     new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects);
-}
+} // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
 Q_COREAPP_STARTUP_FUNCTION(gammaray_pre_routine)
 
 // previously installed Qt hooks, for daisy-chaining
@@ -70,12 +69,11 @@ static void (*gammaray_next_removeObject)(QObject *) = nullptr;
 extern "C" Q_DECL_EXPORT void gammaray_startup_hook()
 {
     Probe::startupHookReceived();
-    // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
     new ProbeCreator(ProbeCreator::Create);
 
     if (gammaray_next_startup_hook)
         gammaray_next_startup_hook();
-}
+} // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
 
 extern "C" Q_DECL_EXPORT void gammaray_addObject(QObject *obj)
 {
@@ -127,9 +125,8 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
     }
     Hooks::installHooks();
     log_injection("gammaray_probe_inject()\n");
-    // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
     new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects);
-}
+} // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
 {
@@ -137,9 +134,8 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
         return;
     }
     log_injection("gammaray_probe_attach()\n");
-    // NOLINTNEXTLINE(clang-analyzer-cplusplus.NewDeleteLeaks)
     new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects | ProbeCreator::ResendServerAddress);
-}
+} // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
 
 extern "C" Q_DECL_EXPORT void gammaray_install_hooks()
 {
