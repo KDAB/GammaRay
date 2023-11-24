@@ -78,7 +78,9 @@ void Positioning::objectAdded(QObject *obj)
                 });
                 m_nonProxyPositionInfoSources.clear();
             }
-            QMetaObject::invokeMethod(geoInfoSource, "setInterface", Q_ARG(PositioningInterface *, this));
+            // clang-format off
+            QMetaObject::invokeMethod(geoInfoSource, "setInterface", Q_ARG(PositioningInterface*, this));
+            // clang-format on
         }
     }
 }

@@ -214,7 +214,9 @@ void UIStateManager::restoreState()
         m_stateSettings->beginGroup(Endpoint::instance()->key());
         QMetaMethod method = m_targetStateSource->method(m_targetRestoreMethodId);
         QObject *target = m_targetStateSource == m_widget->metaObject() ? qobject_cast<QObject *>(m_widget) : this;
-        method.invoke(target, Q_ARG(QSettings *, m_stateSettings));
+        // clang-format off
+        method.invoke(target, Q_ARG(QSettings*, m_stateSettings));
+        // clang-format on
         m_stateSettings->endGroup();
     }
 
@@ -244,7 +246,9 @@ void UIStateManager::saveState()
         m_stateSettings->beginGroup(Endpoint::instance()->key());
         QMetaMethod method = m_targetStateSource->method(m_targetSaveMethodId);
         QObject *target = m_targetStateSource == m_widget->metaObject() ? qobject_cast<QObject *>(m_widget) : this;
-        method.invoke(target, Q_ARG(QSettings *, m_stateSettings));
+        // clang-format off
+        method.invoke(target, Q_ARG(QSettings*, m_stateSettings));
+        // clang-format on
         m_stateSettings->endGroup();
     }
 
@@ -559,7 +563,9 @@ void UIStateManager::headerSectionCountChanged()
     // Delay the call to restoreHeaderState to avoid multiple changes in flight at the QAIM level
     // E.g. we might be here because of columnsInserted() (which just finished, but not all receivers were told yet)
     // and restoring will sort() the model, which will emit layoutChanged(). Separate the two so QAbstractItemModelTester doesn't abort.
-    QMetaObject::invokeMethod(this, "restoreHeaderState", Qt::QueuedConnection, Q_ARG(QHeaderView *, headerView));
+    // clang-format off
+    QMetaObject::invokeMethod(this, "restoreHeaderState", Qt::QueuedConnection, Q_ARG(QHeaderView*, headerView));
+    // clang-format on
 }
 
 void UIStateManager::widgetResized(QWidget *widget)

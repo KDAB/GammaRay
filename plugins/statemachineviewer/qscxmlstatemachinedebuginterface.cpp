@@ -43,13 +43,14 @@ QScxmlStateMachineDebugInterface::QScxmlStateMachineDebugInterface(QScxmlStateMa
     , m_stateMachine(stateMachine)
     , m_info(new QScxmlStateMachineInfo(stateMachine))
 {
+    // clang-format off
     connect(stateMachine, SIGNAL(runningChanged(bool)), this, SIGNAL(runningChanged(bool)));
-
-    connect(stateMachine, SIGNAL(log(QString, QString)), this, SIGNAL(logMessage(QString, QString)));
+    connect(stateMachine, SIGNAL(log(QString,QString)), this, SIGNAL(logMessage(QString,QString)));
 
     connect(m_info.data(), SIGNAL(statesEntered(QVector<QScxmlStateMachineInfo::StateId>)), this, SLOT(statesEntered(QVector<QScxmlStateMachineInfo::StateId>)));
     connect(m_info.data(), SIGNAL(statesExited(QVector<QScxmlStateMachineInfo::StateId>)), this, SLOT(statesExited(QVector<QScxmlStateMachineInfo::StateId>)));
     connect(m_info.data(), SIGNAL(transitionsTriggered(QVector<QScxmlStateMachineInfo::TransitionId>)), this, SLOT(transitionsTriggered(QVector<QScxmlStateMachineInfo::TransitionId>)));
+    // clang-format on
 }
 
 QScxmlStateMachineDebugInterface::~QScxmlStateMachineDebugInterface()

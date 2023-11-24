@@ -328,8 +328,10 @@ private slots:
         o1->setObjectName("o1");
         auto o2 = std::unique_ptr<QObject>(new QObject());
         o2->setObjectName("o2");
-        connect(o1.get(), SIGNAL(destroyed(QObject *)), o2.get(), SLOT(deleteLater()));
-        connect(o1.get(), SIGNAL(destroyed(QObject *)), o2.get(), SLOT(deleteLater()));
+        // clang-format off
+        connect(o1.get(), SIGNAL(destroyed(QObject*)), o2.get(), SLOT(deleteLater()));
+        connect(o1.get(), SIGNAL(destroyed(QObject*)), o2.get(), SLOT(deleteLater()));
+        // clang-format on
 
         QTest::qWait(10);
         ProblemCollector::instance()->requestScan();

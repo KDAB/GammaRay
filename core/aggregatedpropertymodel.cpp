@@ -106,9 +106,11 @@ QVariant AggregatedPropertyModel::data(const QModelIndex &index, int role) const
 
     const auto adaptor = adaptorForIndex(index);
     if (!adaptor->object().isValid()) {
+        // clang-format off
         QMetaObject::invokeMethod(const_cast<AggregatedPropertyModel *>(this), "objectInvalidated",
                                   Qt::QueuedConnection,
-                                  Q_ARG(GammaRay::PropertyAdaptor *, adaptor));
+                                  Q_ARG(GammaRay::PropertyAdaptor*, adaptor));
+        // clang-format on
         return QVariant();
     }
 
@@ -124,9 +126,11 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex &index) 
 
     const auto adaptor = adaptorForIndex(index);
     if (!adaptor->object().isValid()) {
+        // clang-format off
         QMetaObject::invokeMethod(const_cast<AggregatedPropertyModel *>(this), "objectInvalidated",
                                   Qt::QueuedConnection,
-                                  Q_ARG(GammaRay::PropertyAdaptor *, adaptor));
+                                  Q_ARG(GammaRay::PropertyAdaptor*, adaptor));
+        // clang-format on
         return res;
     }
     const auto d = adaptor->propertyData(index.row());

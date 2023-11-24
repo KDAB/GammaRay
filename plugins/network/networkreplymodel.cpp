@@ -296,7 +296,9 @@ void NetworkReplyModel::replyFinished(QNetworkReply *reply, QNetworkAccessManage
         node.errorMsgs.push_back(reply->errorString());
     }
 
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format off
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format on
 
     if (reply->thread() != thread()) {
         connect(
@@ -320,7 +322,9 @@ void NetworkReplyModel::replyProgressSync(QNetworkReply *reply, qint64 progress,
     node.size = std::max(progress, total);
     maybePeekResponse(node, reply);
 
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format off
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format on
 }
 
 #ifndef QT_NO_SSL
@@ -333,8 +337,9 @@ void NetworkReplyModel::replyEncrypted(QNetworkReply *reply, QNetworkAccessManag
     node.url = reply->url();
     node.op = reply->operation();
     node.state |= NetworkReply::Encrypted;
-
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format off
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format on
 }
 
 void NetworkReplyModel::replySslErrors(QNetworkReply *reply, const QList<QSslError> &errors, QNetworkAccessManager *nam)
@@ -350,7 +355,9 @@ void NetworkReplyModel::replySslErrors(QNetworkReply *reply, const QList<QSslErr
         node.errorMsgs.push_back(err.errorString());
     }
 
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format off
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format on
 }
 #endif
 
@@ -360,7 +367,9 @@ void NetworkReplyModel::replyDeleted(QNetworkReply *reply, QNetworkAccessManager
     ReplyNode node;
     node.reply = reply;
     node.state |= NetworkReply::Deleted;
-    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager *, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format off
+    QMetaObject::invokeMethod(this, "updateReplyNode", Qt::AutoConnection, Q_ARG(QNetworkAccessManager*, nam), Q_ARG(GammaRay::NetworkReplyModel::ReplyNode, node));
+    // clang-format on
 }
 
 void NetworkReplyModel::maybePeekResponse(ReplyNode &node, QNetworkReply *reply) const
