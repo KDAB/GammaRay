@@ -35,11 +35,10 @@
 #include <launcher/core/probeabidetector.h>
 
 #include <QProcess>
-#include <QtConcurrent>
+#include <QtConcurrent/QtConcurrentMap>
 #include <QDir>
 
 #include <algorithm>
-#include <functional>
 
 static GammaRay::ProbeABIDetector s_abiDetector;
 
