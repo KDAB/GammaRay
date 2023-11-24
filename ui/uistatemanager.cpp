@@ -49,21 +49,21 @@ QAbstractItemView *headerView(QHeaderView *header)
 
 void distributeSpace(QList<int> &sizes, int size, int handleSize)
 {
-    std::vector<QList<int>::Iterator> its;
+    std::vector<int> indexes;
     int usedSpace = 0;
 
-    for (auto it = sizes.begin(), end = sizes.end(); it != end; ++it) {
-        if ((*it) == -1)
-            its.push_back(it);
+    for (int i = 0; i < sizes.size(); ++i) {
+        if (sizes[i] == -1)
+            indexes.push_back(i);
         else
-            usedSpace += (*it);
+            usedSpace += sizes[i];
     }
 
-    if (!its.empty()) {
+    if (!indexes.empty()) {
         const int freeSpace = size - usedSpace - (sizes.count() * handleSize) - handleSize;
-        const int space = freeSpace / its.size();
-        for (auto &it : its)
-            (*it) = space;
+        const int space = freeSpace / indexes.size();
+        for (auto i : indexes)
+            sizes[i] = space;
     }
 }
 
