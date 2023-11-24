@@ -194,7 +194,7 @@ QVariant MessageStatisticsModel::data(const QModelIndex &index, int role) const
     if (role == Qt::ToolTipRole) {
         return tr(
                    "Object: %1\nMessage Type: %2\nMessage Count: %3 of %4 (%5%)\nMessage Size: %6 of %7 (%8%)")
-            .arg(info.name)
+            .arg(info.name) // clazy:exclude=qstring-arg
             .arg(MetaEnum::enumToString(static_cast<Protocol::MessageType>(index.column() + 1), message_type_table))
             .arg(info.messageCount[msgType])
             .arg(m_totalCount)
