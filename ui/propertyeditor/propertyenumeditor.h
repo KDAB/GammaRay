@@ -25,7 +25,7 @@ class PropertyEnumEditorModel;
 class PropertyEnumEditor : public QComboBox
 {
     Q_OBJECT
-    Q_PROPERTY(GammaRay::EnumValue enumValue READ enumValue WRITE setEnumValue USER true)
+    Q_PROPERTY(GammaRay::EnumValue enumValue READ enumValue WRITE setEnumValue USER true) // clazy:exclude=qproperty-without-notify
 public:
     explicit PropertyEnumEditor(QWidget *parent = nullptr);
     ~PropertyEnumEditor() override;

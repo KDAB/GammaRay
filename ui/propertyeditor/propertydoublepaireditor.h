@@ -36,7 +36,7 @@ protected:
 class PropertyPointFEditor : public PropertyDoublePairEditor
 {
     Q_OBJECT
-    Q_PROPERTY(QPointF pointF READ pointF WRITE setPointF USER true)
+    Q_PROPERTY(QPointF pointF READ pointF WRITE setPointF USER true) // clazy:exclude=qproperty-without-notify
 public:
     explicit PropertyPointFEditor(QWidget *parent = nullptr);
     QPointF pointF() const;
@@ -46,7 +46,7 @@ public:
 class PropertySizeFEditor : public PropertyDoublePairEditor
 {
     Q_OBJECT
-    Q_PROPERTY(QSizeF sizeF READ sizeF WRITE setSizeF USER true)
+    Q_PROPERTY(QSizeF sizeF READ sizeF WRITE setSizeF USER true) // clazy:exclude=qproperty-without-notify
 public:
     explicit PropertySizeFEditor(QWidget *parent = nullptr);
     QSizeF sizeF() const;

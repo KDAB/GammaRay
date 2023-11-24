@@ -39,15 +39,15 @@ class Message;
 class RemoteModelServer : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool dynamicSortFilter READ proxyDynamicSortFilter WRITE setProxyDynamicSortFilter)
-    Q_PROPERTY(
+    Q_PROPERTY(bool dynamicSortFilter READ proxyDynamicSortFilter WRITE setProxyDynamicSortFilter) // clazy:exclude=qproperty-without-notify
+    Q_PROPERTY( // clazy:exclude=qproperty-without-notify
         Qt::CaseSensitivity filterCaseSensitivity READ proxyFilterCaseSensitivity WRITE setProxyFilterCaseSensitivity)
-    Q_PROPERTY(int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn)
+    Q_PROPERTY(int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn) // clazy:exclude=qproperty-without-notify
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Q_PROPERTY(QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp)
     using RegExpT = QRegExp;
 #else
-    Q_PROPERTY(QRegularExpression filterRegularExpression READ proxyFilterRegExp WRITE setProxyFilterRegExp)
+    Q_PROPERTY(QRegularExpression filterRegularExpression READ proxyFilterRegExp WRITE setProxyFilterRegExp) // clazy:exclude=qproperty-without-notify
     using RegExpT = QRegularExpression;
 #endif
 

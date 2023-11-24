@@ -28,7 +28,7 @@ using namespace GammaRay;
 class SplitDataComboBox : public QComboBox
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant modelData READ currentData USER true)
+    Q_PROPERTY(QVariant modelData READ currentData USER true) // clazy:exclude=qproperty-without-notify
 
 public:
     explicit SplitDataComboBox(QWidget *parent = nullptr)

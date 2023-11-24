@@ -30,8 +30,8 @@ Q_DECLARE_METATYPE(KnownCustomType)
 class QMetaObjectValidatorTest : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(UnknownCustomType failUnknownType READ failUnknownType)
-    Q_PROPERTY(KnownCustomType knownType READ knownType)
+    Q_PROPERTY(UnknownCustomType failUnknownType READ failUnknownType CONSTANT)
+    Q_PROPERTY(KnownCustomType knownType READ knownType CONSTANT)
 public:
     static UnknownCustomType failUnknownType()
     {

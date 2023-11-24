@@ -19,6 +19,8 @@
 
 #include <QMetaType>
 
+// clazy:excludeall=qproperty-without-notify
+
 class Gadget
 {
     Q_GADGET

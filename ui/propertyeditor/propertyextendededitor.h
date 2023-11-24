@@ -28,7 +28,7 @@ class PropertyExtendedEditor;
 class PropertyExtendedEditor : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant value READ value WRITE setValue USER true)
+    Q_PROPERTY(QVariant value READ value WRITE setValue USER true) // clazy:exclude=qproperty-without-notify
 public:
     explicit PropertyExtendedEditor(QWidget *parent = nullptr);
     ~PropertyExtendedEditor();
