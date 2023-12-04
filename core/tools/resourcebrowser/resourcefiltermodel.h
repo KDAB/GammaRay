@@ -22,7 +22,7 @@ class ResourceFilterModel : public RecursiveProxyModelBase
     Q_OBJECT
 public:
     explicit ResourceFilterModel(QObject *parent = nullptr);
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+    bool acceptRow(int source_row, const QModelIndex &source_parent) const override;
 };
 }
 
