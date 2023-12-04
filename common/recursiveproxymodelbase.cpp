@@ -12,7 +12,16 @@
 */
 #include "recursiveproxymodelbase.h"
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 bool RecursiveProxyModelBase::acceptRow(int sourceRow, const QModelIndex &sourceParent) const
 {
+    // delegate to base class
     return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
+}
+#endif
+
+bool RecursiveProxyModelBase::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+    // delegate to acceptRow
+    return acceptRow(sourceRow, sourceParent);
 }

@@ -24,11 +24,11 @@ ResourceFilterModel::ResourceFilterModel(QObject *parent)
 {
 }
 
-bool ResourceFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+bool ResourceFilterModel::acceptRow(int source_row, const QModelIndex &source_parent) const
 {
     const QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
     const QString path = index.data(ResourceModel::FilePathRole).toString();
     if (path == QLatin1String(":/gammaray") || path.startsWith(QLatin1String(":/gammaray/")))
         return false;
-    return RecursiveProxyModelBase::filterAcceptsRow(source_row, source_parent);
+    return RecursiveProxyModelBase::acceptRow(source_row, source_parent);
 }
