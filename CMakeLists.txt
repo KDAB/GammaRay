@@ -428,7 +428,7 @@ if(NOT DEFINED QT_VERSION_MAJOR)
     #
     find_package(
         QT
-        5.5
+        5.15
         NAMES
         Qt6
         Qt5
