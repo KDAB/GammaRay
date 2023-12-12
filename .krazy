@@ -7,11 +7,13 @@ EXTRA kdabcopyright-reuse,kdabcontactus,fosslicense-reuse
 #EXTRA defines,null
 
 #exclude checks now being done by clazy or clang-tools
-EXCLUDE strings,explicit,normalize,passbyvalue,operators,nullstrcompare,nullstrassign,doublequote_chars,qobject,sigsandslots,staticobjects,inline,postfixop,dpointer,constref
-#exclude more checks
+EXCLUDE strings,explicit,normalize,passbyvalue,operators,nullstrcompare,nullstrassign,doublequote_chars,qobject,sigsandslots,staticobjects,inline,postfixop,dpointer,constref,emptystrcompare
+#exclude more checks (was for ancient Qt4)
 EXCLUDE qminmax,captruefalse
 #exclude spelling as codespell is a much, much better tool
 EXCLUDE spelling
+#exclude other checks done by pre-commit
+EXCLUDE endswithnewline,filenames
 
 #coding style settings
 EXCLUDE style
