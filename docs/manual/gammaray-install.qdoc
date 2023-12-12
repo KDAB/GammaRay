@@ -60,7 +60,7 @@
     You can obtain the source code of GammaRay on \l{https://github.com/KDAB/GammaRay}{Github}. To build it you need
     the following requirements:
     \list
-        \li Qt 5.5 or newer
+        \li Qt 5.15 or newer
         \li CMake 3.4 or newer
         \li a C++11 compatible compiler
     \endlist
@@ -158,6 +158,6 @@
         export PATH=<toolchain>:$PATH
 
         cd <builddir>
-        cmake -DCMAKE_TOOLCHAIN_FILE=<srcdir>/cmake/Toolchain-RPI.cmake  -DCMAKE_PREFIX_PATH=$SYSROOT/usr/local/Qt-5.5.1 -DCMAKE_INSTALL_PREFIX=$SYSROOT/usr/ -DGAMMARAY_BUILD_UI=OFF
+        cmake -DCMAKE_TOOLCHAIN_FILE=<srcdir>/cmake/Toolchain-RPI.cmake  -DCMAKE_PREFIX_PATH=$SYSROOT/usr/local/Qt-5.15.1 -DCMAKE_INSTALL_PREFIX=$SYSROOT/usr/ -DGAMMARAY_BUILD_UI=OFF
     \endcode
 */
