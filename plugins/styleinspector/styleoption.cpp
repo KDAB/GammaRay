@@ -17,9 +17,6 @@
 
 using namespace GammaRay;
 
-// The following commit in qtbase.git deprecated versioned style class in 5.7.0
-//   95a6dc1 - QStyleOption*V<N>: mark as Q_DECL_DEPRECATED
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
 using QStyleOptionFrameCV = QStyleOptionFrame;
 using QStyleOptionToolBoxCV = QStyleOptionToolBox;
 using QStyleOptionTabCV = QStyleOptionTab;
@@ -27,15 +24,6 @@ using QStyleOptionTabBarBaseCV = QStyleOptionTabBarBase;
 using QStyleOptionTabWidgetFrameCV = QStyleOptionTabWidgetFrame;
 using QStyleOptionViewItemCV = QStyleOptionViewItem;
 using QStyleOptionProgressBarCV = QStyleOptionProgressBar;
-#else
-typedef QStyleOptionFrameV3 QStyleOptionFrameCV;
-typedef QStyleOptionToolBoxV2 QStyleOptionToolBoxCV;
-typedef QStyleOptionTabBarBaseV2 QStyleOptionTabBarBaseCV;
-typedef QStyleOptionTabV3 QStyleOptionTabCV;
-typedef QStyleOptionTabWidgetFrameV2 QStyleOptionTabWidgetFrameCV;
-typedef QStyleOptionViewItemV4 QStyleOptionViewItemCV;
-typedef QStyleOptionProgressBarV2 QStyleOptionProgressBarCV;
-#endif
 
 struct style_state_t
 {

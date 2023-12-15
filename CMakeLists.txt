@@ -507,31 +507,13 @@ if(APPLE)
     cmake_host_system_information(RESULT MACOS_RELEASE QUERY OS_RELEASE)
     message(STATUS "MACOS_RELEASE: ${MACOS_RELEASE}")
     message(STATUS "QtQuick_VERSION: ${QtQuick_VERSION}")
-    if(MACOS_RELEASE VERSION_GREATER_EQUAL 10.15.0 AND QtQuick_VERSION VERSION_LESS 5.12.0)
-        # Qt Quick is only supported on macOS Catalina using Qt 5.12 and above
-        set(MACOS_DISABLE_UNSUPPORTED_TESTS TRUE)
-        message(WARNING "Your version of MacOS is too old (less then 10.15) to use with QtQuick 5.12 or higher. "
-                        "You can solve this by upgrading your MacOS or using older Qt versions. "
-                        "Disabling QtQuick capabilities."
-        )
-    endif()
 endif()
 
 if(MACOS_DISABLE_UNSUPPORTED_TESTS)
     set(Qt5Quick_FOUND FALSE)
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND Qt5Core_VERSION VERSION_EQUAL 5.9.1)
-    # hide -Wc++1z-extensions warnings in this Qt version -- see: https://bugreports.qt.io/browse/QTBUG-61840
-    add_flag_if_supported(-Wno-c++1z-extensions NO_CPP1Z_EXTENSIONS)
-endif()
-if(QtCore_VERSION VERSION_GREATER 5.7)
-    # Qt 5.8 is the first minor version to use nullptr more broadly
-    # With versions below Qt might lots of warnings for -Wzero-as-null-pointer-constant, e.g.:
-    #   .../examples/widget-layouting/ui_contactform.h:606:85:
-    #   warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
-    add_flag_if_supported(-Wzero-as-null-pointer-constant ZERO_AS_NULL_POINTER_CONSTANT)
-endif()
+add_flag_if_supported(-Wzero-as-null-pointer-constant ZERO_AS_NULL_POINTER_CONSTANT)
 
 if(GAMMARAY_BUILD_UI) # widgets are required for the UI
     find_package(Qt${QtCore_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Widgets)

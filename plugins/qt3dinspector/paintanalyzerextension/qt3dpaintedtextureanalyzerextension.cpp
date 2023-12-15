@@ -18,21 +18,17 @@
 
 #include <common/objectbroker.h>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #include <Qt3DRender/QPaintedTextureImage>
-#endif
 
 #include <QPainter>
 
 using namespace GammaRay;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 class QPaintedTextureImagePrivacyViolater : public Qt3DRender::QPaintedTextureImage
 {
 public:
     using Qt3DRender::QPaintedTextureImage::paint;
 };
-#endif
 
 Qt3DPaintedTextureAnalyzerExtension::Qt3DPaintedTextureAnalyzerExtension(PropertyController *controller)
     : PropertyControllerExtension(controller->objectBaseName() + ".painting")
@@ -57,7 +53,6 @@ bool Qt3DPaintedTextureAnalyzerExtension::setQObject(QObject *object)
     if (!PaintAnalyzer::isAvailable())
         return false;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     if (auto tex = qobject_cast<Qt3DRender::QAbstractTexture *>(object)) {
         if (tex->textureImages().size() == 1)
             return setQObject(tex->textureImages().at(0));
@@ -75,9 +70,4 @@ bool Qt3DPaintedTextureAnalyzerExtension::setQObject(QObject *object)
     }
     m_paintAnalyzer->endAnalyzePainting();
     return true;
-
-#else
-    Q_UNUSED(object);
-    return false;
-#endif
 }

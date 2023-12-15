@@ -32,45 +32,6 @@ macro(gammaray_add_plugin _target_name)
     endif()
     set(_build_target_dir "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_PLUGIN_INSTALL_DIR}")
 
-    # Work-around for KDEND-44 (also see https://cmake.org/Bug/bug_relationship_graph.php?bug_id=15419)
-    # Re-generates moc file in case the JSON file changes
-    # DEPENDS argument for qt5_wrap_cpp was added in 5.6.0
-    # CMake 3.9 or higher (which is required by Qt 6) does all that correctly
-    if(Qt5Core_FOUND
-       AND NOT Qt5Core_VERSION VERSION_LESS 5.6.0
-       AND CMAKE_VERSION VERSION_LESS 3.9
-    )
-        list(GET _gammaray_add_plugin_SOURCES 0 mainSourceFile)
-        string(REPLACE ".cpp" ".h" mainHeaderFile ${mainSourceFile})
-
-        # sanity check
-        file(READ ${mainHeaderFile} mainHeaderFileContents)
-        string(FIND "${mainHeaderFileContents}" "Q_PLUGIN_METADATA" hasPluginMetadataMacroMatchRes)
-        if(hasPluginMetadataMacroMatchRes EQUAL -1)
-            message(FATAL_ERROR "First file passed to SOURCES must be the .cpp file which includes "
-                                "the header using the Q_PLUGIN_METADATA macro"
-            )
-        endif()
-
-        qt5_wrap_cpp(
-            _gammaray_add_plugin_SOURCES
-            ${mainHeaderFile}
-            DEPENDS
-            ${_gammaray_add_plugin_JSON}
-            TARGET
-            ${_target_name}
-        )
-        set_source_files_properties("${mainHeaderFile}" PROPERTIES SKIP_AUTOMOC TRUE)
-        set_source_files_properties("${mainSourceFile}" PROPERTIES SKIP_AUTOMOC TRUE)
-        set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/moc_${mainSourceFile} PROPERTY SKIP_AUTOGEN ON)
-        # workaround AUTOUIC failing on files with SKIP_AUTOMOC enabled
-        string(REPLACE ".cpp" ".ui" mainUiFile ${mainSourceFile})
-        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${mainUiFile}")
-            qt5_wrap_ui(_gammaray_add_plugin_SOURCES ${mainUiFile})
-            set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/ui_${mainHeaderFile} PROPERTY SKIP_AUTOGEN ON)
-        endif()
-    endif()
-
     add_library(${_target_name} ${GAMMARAY_PLUGIN_TYPE} ${_gammaray_add_plugin_SOURCES})
     set_target_properties(${_target_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${_build_target_dir})
     set_target_properties(${_target_name} PROPERTIES PREFIX "")

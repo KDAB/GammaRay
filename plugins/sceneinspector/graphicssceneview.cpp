@@ -23,13 +23,8 @@ GraphicsSceneView::GraphicsSceneView(QWidget *parent)
     ui->setupUi(this);
 
     QFontMetrics fm(ui->sceneCoordLabel->font());
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-    ui->sceneCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
-    ui->itemCoordLabel->setFixedWidth(fm.width(QStringLiteral("00000.00 x 00000.00")));
-#else
     ui->sceneCoordLabel->setFixedWidth(fm.horizontalAdvance(QStringLiteral("00000.00 x 00000.00")));
     ui->itemCoordLabel->setFixedWidth(fm.horizontalAdvance(QStringLiteral("00000.00 x 00000.00")));
-#endif
     connect(ui->graphicsView, &GraphicsView::sceneCoordinatesChanged,
             this, &GraphicsSceneView::sceneCoordinatesChanged);
     connect(ui->graphicsView, &GraphicsView::itemCoordinatesChanged,

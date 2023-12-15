@@ -15,7 +15,7 @@
 
 #include <core/propertydata.h>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <private/qquickopenglshadereffectnode_p.h>
 
 Q_DECLARE_METATYPE(QQuickOpenGLShaderEffectMaterial::UniformData)
@@ -34,14 +34,12 @@ QQuickOpenGLShaderEffectMaterialAdaptor::~QQuickOpenGLShaderEffectMaterialAdapto
 
 int QQuickOpenGLShaderEffectMaterialAdaptor::count() const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     if (object().type() == ObjectInstance::Object) {
         return 2;
     }
     if (object().type() == ObjectInstance::QtVariant) {
         return 1;
     }
-#endif
     return 0;
 }
 
@@ -49,7 +47,6 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
 {
     Q_UNUSED(index)
     PropertyData pd;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 
     if (object().type() == ObjectInstance::Object) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -93,9 +90,6 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
 
         return pd;
     }
-#else
-    Q_UNUSED(index);
-#endif
 
     return pd;
 }

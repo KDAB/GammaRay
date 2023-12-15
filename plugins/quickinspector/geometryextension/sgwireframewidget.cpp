@@ -169,11 +169,7 @@ void SGWireframeWidget::paintEvent(QPaintEvent *)
         ? QStringLiteral("GL_TRIANGLE_FAN")
         : tr("Unknown");
     QString text = tr("Drawing mode: %1").arg(drawingMode);
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-    painter.drawText(contentsRect().width() - painter.fontMetrics().width(text),
-#else
     painter.drawText(contentsRect().width() - painter.fontMetrics().horizontalAdvance(text),
-#endif
                      contentsRect().height() - painter.fontMetrics().height(), text);
 }
 

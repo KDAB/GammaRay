@@ -59,7 +59,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         ${gammaray_quickinspector_srcs}
     )
 
-    if(NOT Qt5Quick_VERSION VERSION_LESS 5.7 OR TARGET Qt6::Quick)
+    if(TARGET Qt${QT_MAJOR_VERSION}::Quick)
         target_sources(
             gammaray_quickinspector PUBLIC ${CMAKE_CURRENT_LIST_DIR}/quickimplicitbindingdependencyprovider.cpp
         )

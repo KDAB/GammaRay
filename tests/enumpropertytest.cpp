@@ -47,7 +47,6 @@ static const MetaEnum::Value<EnumHolder::MyEnum> my_enum_table[] = {
     // Value3 intentionally missing
 };
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 namespace EnumNS {
 Q_NAMESPACE
 enum UnscopedEnum
@@ -80,7 +79,6 @@ Q_FLAG_NS(UnscopedFlags)
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(EnumNS::UnscopedFlags)
 // Q_DECLARE_OPERATORS_FOR_FLAGS(EnumNS::ScopedFlags)
-#endif
 
 namespace MyNS {
 class MyObject : public QObject
@@ -178,7 +176,6 @@ private slots:
         QTest::newRow("plain flag, double, mixed") << QVariant::fromValue<EnumHolder::MyFlags>(EnumHolder::Value2 | EnumHolder::Value3) << QByteArray() << nullObj << QStringLiteral("Value2|flag 0x4");
         QTest::newRow("plain flag, empty") << QVariant::fromValue(EnumHolder::MyFlags()) << QByteArray() << nullObj << QStringLiteral("Value0");
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         // namespaced unscoped enum
         QTest::newRow("ns enum as int, QMO/name") << QVariant::fromValue<int>(EnumNS::BVal) << QByteArray("EnumNS::UnscopedEnum") << &EnumNS::staticMetaObject << QStringLiteral("BVal");
         QTest::newRow("ns enum as int, name") << QVariant::fromValue<int>(EnumNS::AVal) << QByteArray("EnumNS::UnscopedEnum") << nullObj << QStringLiteral("AVal");
@@ -211,7 +208,6 @@ private slots:
         QTest::newRow("ns scoped flag, QMO") << QVariant::fromValue<EnumNS::ScopedFlags>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag) << QByteArray() << &EnumNS::staticMetaObject << QStringLiteral("EFlag|FFlag");
         QTest::newRow("ns scoped flag, name") << QVariant::fromValue<EnumNS::ScopedFlags>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag) << QByteArray("EnumNS::ScopedFlags") << nullObj << QStringLiteral("EFlag|FFlag");
         QTest::newRow("ns scoped flag") << QVariant::fromValue<EnumNS::ScopedFlags>(EnumNS::ScopedFlag::EFlag | EnumNS::ScopedFlag::FFlag) << QByteArray() << nullObj << QStringLiteral("EFlag|FFlag");
-#endif
 #endif
 
         // enums from namespace QObjects

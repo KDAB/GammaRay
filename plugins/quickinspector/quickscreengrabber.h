@@ -207,7 +207,6 @@ private:
 };
 #endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 class SoftwareScreenGrabber : public AbstractScreenGrabber
 {
     Q_OBJECT
@@ -228,7 +227,6 @@ private:
     bool m_isGrabbing = false;
     QPointF m_lastItemPosition;
 };
-#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 class UnsupportedScreenGrabber : public AbstractScreenGrabber

@@ -138,9 +138,6 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget *parent)
     connect(ui->captureResponse, &QCheckBox::toggled, interface, [interface](bool checked) {
         interface->setProperty("captureResponse", checked);
     });
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-    ui->captureResponse->setVisible(false);
-#endif
 }
 
 NetworkReplyWidget::~NetworkReplyWidget() = default;

@@ -19,10 +19,6 @@
 #include <QDebug>
 #include <QGeoPositionInfo>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-Q_DECLARE_METATYPE(QGeoPositionInfo)
-#endif
-
 using namespace GammaRay;
 
 #define E(x)                    \

@@ -283,11 +283,7 @@ void QuickDecorationsDrawer::drawTraces()
         m_painter->setPen(QColor(60, 60, 60, 70));
         m_painter->setBrush(m_painter->pen().color());
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-        const int margin = m_painter->fontMetrics().width(QLatin1Char('X')) / 2;
-#else
         const int margin = m_painter->fontMetrics().horizontalAdvance(QLatin1Char('X')) / 2;
-#endif
         const QRectF classRect =
             itemGeometry.boundingRect.adjusted(
                 0, 0, 0,

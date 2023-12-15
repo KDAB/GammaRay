@@ -46,13 +46,13 @@ CMake option `CMAKE_PREFIX_PATH` and point it to the folder of your installation
 For example:
 
 ```bash
-    cmake -DCMAKE_PREFIX_PATH=$HOME/Qt/5.11.2/gcc_64 ..
+    cmake -DCMAKE_PREFIX_PATH=$HOME/Qt/6.6.0/gcc_64 ..
 ```
 
 or
 
 ```bash
-    set CMAKE_PREFIX_PATH=c:\Qt\5.15.4\msvc2019_64
+    set CMAKE_PREFIX_PATH=c:\Qt\6.6.0\msvc2019_64
     cmake...
 ```
 

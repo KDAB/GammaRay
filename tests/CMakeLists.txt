@@ -13,16 +13,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${LIB_INSTALL_DIR})
 configure_file(gammaray-test-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/gammaray-test-config.h)
 
 # create intermediate modeltestobj object files which unit tests can use
-if(QtTest_VERSION VERSION_LESS 5.11)
-    add_library(modeltestobj OBJECT ${CMAKE_SOURCE_DIR}/3rdparty/qt/modeltest.cpp)
-    set_target_properties(modeltestobj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    target_compile_features(modeltestobj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
-    target_compile_definitions(modeltestobj PRIVATE $<TARGET_PROPERTY:Qt5::Core,INTERFACE_COMPILE_DEFINITIONS>
-    )# for -DQT_NAMESPACE=...
-    target_include_directories(modeltestobj PUBLIC $<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>)
-else()
-    add_library(modeltestobj OBJECT)
-endif()
+add_library(
+    modeltestobj OBJECT
+)
 
 # create intermediate test_helpers_obj object files which unit tests can use
 add_library(
@@ -494,16 +487,14 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         target_link_libraries(qmlsupporttest gammaray_core Qt::Quick Qt::QmlPrivate)
     endif()
 
-    if(TARGET Qt::Quick AND NOT QtQuick_VERSION VERSION_LESS 5.7) # requires MSVC 2013 or higher
+    if(TARGET Qt::Quick)
         gammaray_add_quick_test(bindinginspectortest bindinginspectortest.cpp $<TARGET_OBJECTS:modeltestobj>)
         target_link_libraries(bindinginspectortest gammaray_core Qt::Quick Qt::QuickPrivate)
         target_sources(
             bindinginspectortest
             PUBLIC ${CMAKE_SOURCE_DIR}/plugins/quickinspector/quickimplicitbindingdependencyprovider.cpp
         )
-        if(NOT QtQml_VERSION VERSION_LESS 5.10)
-            target_sources(bindinginspectortest PUBLIC ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlbindingprovider.cpp)
-        endif()
+        target_sources(bindinginspectortest PUBLIC ${CMAKE_SOURCE_DIR}/plugins/qmlsupport/qmlbindingprovider.cpp)
     endif()
 
     if(TARGET Qt::Quick)
@@ -536,17 +527,15 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         endif()
 
         # sw renderer support is only available in Qt 5.9.3 or newer
-        if(NOT QtQuick_VERSION VERSION_LESS 5.9.3)
-            add_test(NAME quickinspectortest2_softwarecontext COMMAND quickinspectortest2)
-            set_tests_properties(
-                quickinspectortest2_softwarecontext PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=softwarecontext"
-            )
+        add_test(NAME quickinspectortest2_softwarecontext COMMAND quickinspectortest2)
+        set_tests_properties(
+            quickinspectortest2_softwarecontext PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=softwarecontext"
+        )
 
-            add_test(NAME quickinspectortest_softwarecontext COMMAND quickinspectortest)
-            set_tests_properties(
-                quickinspectortest_softwarecontext PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=softwarecontext"
-            )
-        endif()
+        add_test(NAME quickinspectortest_softwarecontext COMMAND quickinspectortest)
+        set_tests_properties(
+            quickinspectortest_softwarecontext PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=softwarecontext"
+        )
 
         gammaray_add_quick_test(
             quickinspectorpickingtest quickinspectorpickingtest.cpp quickinspectortest.qrc

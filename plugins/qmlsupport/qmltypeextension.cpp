@@ -18,14 +18,8 @@
 #include <core/objectinstance.h>
 #include <core/propertycontroller.h>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
-#include <private/qqmlcompiler_p.h>
-#else
 #include <private/qv4compileddata_p.h>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 #include <private/qv4executablecompilationunit_p.h> // created in qtdeclarative commit fd6321c03e2d63997078bfa41332dbddefbb86b0
-#endif
-#endif
 #include <private/qqmldata_p.h>
 #include <private/qqmlmetatype_p.h>
 
@@ -50,17 +44,10 @@ bool QmlTypeExtension::setQObject(QObject *object)
 
     // QML-defined type
     auto data = QQmlData::get(object);
-#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
-    if (!data || !data->compiledData)
-        return false;
-
-    const auto qmlType = QQmlMetaType::qmlType(data->compiledData->url());
-#else
     if (!data || !data->compilationUnit)
         return false;
 
     const auto qmlType = QQmlMetaType::qmlType(data->compilationUnit->url());
-#endif
     if (!QmlType::isValid(qmlType))
         return false;
 

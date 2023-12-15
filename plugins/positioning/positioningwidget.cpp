@@ -29,10 +29,6 @@
 #include <QQuickWidget>
 #include <QQmlContext>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-Q_DECLARE_METATYPE(QGeoPositionInfo)
-#endif
-
 using namespace GammaRay;
 
 static QObject *createPositioningClient(const QString &name, QObject *parent)

@@ -25,9 +25,6 @@
 #include <QGeoSatelliteInfoSource>
 #include <QGeoAreaMonitorSource>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-Q_DECLARE_METATYPE(QGeoPositionInfo)
-#endif
 Q_DECLARE_METATYPE(QGeoPositionInfoSource::Error)
 Q_DECLARE_METATYPE(QGeoPositionInfoSource::PositioningMethods)
 Q_DECLARE_METATYPE(QGeoSatelliteInfoSource::Error)

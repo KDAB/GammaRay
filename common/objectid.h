@@ -20,10 +20,6 @@
 #include <QMetaType>
 #include <QVector>
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
-#include <algorithm>
-#endif
-
 namespace GammaRay {
 /** @brief Type-safe and cross-process object identifier vector. */
 using ObjectIds = QVector<class ObjectId>;
@@ -111,13 +107,6 @@ inline QDebug &operator<<(QDebug dbg, const ObjectId &id)
     dbg.nospace() << "ObjectId(" << id.type() << ", " << id.id() << ", " << id.typeName() << ")";
     return dbg.space();
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 6, 0)
-inline bool operator<(const ObjectIds &lhs, const ObjectIds &rhs)
-{
-    return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
-}
-#endif
 
 inline QDataStream &operator<<(QDataStream &out, const ObjectId &id)
 {

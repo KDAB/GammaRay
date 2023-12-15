@@ -17,11 +17,7 @@
 #include <core/objectinstance.h>
 
 #include <private/qqmlmetatype_p.h>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 2)
 #define GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
-#else
-#undef GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
-#endif
 
 #ifdef GAMMARAY_QQMLTYPE_IS_VALUE_TYPE
 Q_DECLARE_METATYPE(QQmlType)

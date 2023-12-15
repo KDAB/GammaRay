@@ -62,21 +62,13 @@ bool Qt3DGeometryAttributeData::operator==(const Qt3DGeometryAttributeData &rhs)
 QT_BEGIN_NAMESPACE
 QDataStream &operator<<(QDataStream &out, const Qt3DGeometryBufferData &data)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     out << data.name << data.data;
-#else
-    out << data.name << data.data << data.type;
-#endif
     return out;
 }
 
 QDataStream &operator>>(QDataStream &in, Qt3DGeometryBufferData &data)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     in >> data.name >> data.data;
-#else
-    in >> data.name >> data.data >> data.type;
-#endif
     return in;
 }
 QT_END_NAMESPACE

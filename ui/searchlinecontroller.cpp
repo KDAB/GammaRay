@@ -64,9 +64,7 @@ SearchLineController::SearchLineController(QLineEdit *lineEdit, QAbstractItemMod
     m_filterModel->setProperty("filterCaseSensitivity", Qt::CaseInsensitive);
     activateSearch();
 
-#if QT_VERSION >= 0x050200
     m_lineEdit->setClearButtonEnabled(true);
-#endif
     if (m_lineEdit->placeholderText().isEmpty())
         m_lineEdit->setPlaceholderText(tr("Search"));
 
