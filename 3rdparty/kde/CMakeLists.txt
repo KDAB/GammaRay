@@ -1,7 +1,6 @@
 set(gammaray_kitemmodels_srcs
   klinkitemselectionmodel.cpp
   kmodelindexproxymapper.cpp
-  krecursivefilterproxymodel.cpp
   kdescendantsproxymodel.cpp
   kitemmodels_debug.cpp
 )

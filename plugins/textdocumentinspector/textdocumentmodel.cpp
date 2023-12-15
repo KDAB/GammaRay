@@ -135,7 +135,6 @@ void TextDocumentModel::fillBlock(const QTextBlock &block, QStandardItem *parent
         appendRow(parent, item, it.fragment().charFormat(), b);
         if (!block.layout())
             continue;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
         foreach (const auto &range, block.layout()->formats()) {
             const auto start = std::max(range.start, it.fragment().position() - block.position());
             const auto end = std::min(range.start + range.length,
@@ -146,7 +145,6 @@ void TextDocumentModel::fillBlock(const QTextBlock &block, QStandardItem *parent
             auto child = new QStandardItem(tr("Layout Range: %1").arg(it.fragment().text().mid(start, end - start)));
             appendRow(item, child, range.format, QRectF());
         }
-#endif
     }
 }
 

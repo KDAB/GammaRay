@@ -37,9 +37,7 @@ static const sysinfo_t sysInfoTable[] = {
     S(currentCpuArchitecture),
     S(kernelType),
     S(kernelVersion),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     S(machineHostName),
-#endif
     S(prettyProductName),
     S(productType),
     S(productVersion)

@@ -197,11 +197,7 @@ public:
      * Lock this to check the validity of a QObject
      * and to access it safely afterwards.
      */
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     static QRecursiveMutex *objectLock();
-#else
-    static QMutex *objectLock();
-#endif
 
     /*!
      * Check whether @p obj is still valid.
@@ -350,11 +346,7 @@ private:
     QVector<QObject *> m_globalEventFilters;
     QVector<SignalSpyCallbackSet> m_signalSpyCallbacks;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     QSignalSpyCallbackSet *m_previousSignalSpyCallbackSet;
-#else
-    SignalSpyCallbackSet m_previousSignalSpyCallbackSet;
-#endif
     Server *m_server;
 };
 }

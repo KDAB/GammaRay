@@ -727,11 +727,7 @@ void RemoteViewWidget::drawFPS(QPainter *p)
 
     QString fps = QString::number(m_fps, 'g', 3) + " fps";
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-    const auto fpsWidth = metrics.width(fps);
-#else
     const auto fpsWidth = metrics.horizontalAdvance(fps);
-#endif
     const QRect textrect(width() - vRulerWidth - fpsWidth - 5,
                          height() - hRulerHeight - metrics.height() - 5,
                          fpsWidth + 2,
@@ -751,11 +747,7 @@ void RemoteViewWidget::drawFPS(QPainter *p)
 int RemoteViewWidget::viewTickLabelDistance() const
 {
     const auto maxLabel = std::max(m_frame.viewRect().width(), m_frame.viewRect().height());
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-    return 2 * fontMetrics().width(QString::number(maxLabel));
-#else
     return 2 * fontMetrics().horizontalAdvance(QString::number(maxLabel));
-#endif
 }
 
 int RemoteViewWidget::sourceTickLabelDistance(int viewDistance)
@@ -846,11 +838,7 @@ void RemoteViewWidget::drawMeasurementLabel(QPainter *p, QPoint pos, QPoint dir,
     p->save();
     static const auto margin = 2;
     const auto height = fontMetrics().height() + (2 * margin);
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-    const auto width = fontMetrics().width(text) + (2 * margin);
-#else
     const auto width = fontMetrics().horizontalAdvance(text) + (2 * margin);
-#endif
 
     QRect r(pos.x(), pos.y(), width * dir.x(), height * dir.y());
     r = r.normalized();
@@ -1182,11 +1170,7 @@ void RemoteViewWidget::wheelEvent(QWheelEvent *event)
             clampPanPosition();
             updateUserViewport();
         }
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-        m_currentMousePosition = mapToSource(QPointF(event->pos()));
-#else
         m_currentMousePosition = mapToSource(QPointF(event->position()));
-#endif
         if (m_interactionMode == ColorPicking) {
             updatePickerVisibility();
             pickColor();
@@ -1361,11 +1345,7 @@ int RemoteViewWidget::contentHeight() const
 
 int RemoteViewWidget::verticalRulerWidth() const
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-    return fontMetrics().width(QString::number(m_frame.sceneRect().height())) + 24; // 2* tick length + some margin
-#else
     return fontMetrics().horizontalAdvance(QString::number(m_frame.sceneRect().height())) + 24; // 2* tick length + some margin
-#endif
 }
 
 int RemoteViewWidget::horizontalRulerHeight() const
@@ -1395,13 +1375,8 @@ void RemoteViewWidget::sendWheelEvent(QWheelEvent *event)
 {
     auto angleDelta = event->angleDelta();
     auto pixelDelta = event->pixelDelta();
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-    m_interface->sendWheelEvent(mapToSource(event->pos()), pixelDelta, angleDelta,
-                                event->buttons(), event->modifiers());
-#else
     m_interface->sendWheelEvent(mapToSource(event->position().toPoint()), pixelDelta, angleDelta,
                                 event->buttons(), event->modifiers());
-#endif
 }
 
 void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)

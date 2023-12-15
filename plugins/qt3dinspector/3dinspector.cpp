@@ -56,13 +56,11 @@ namespace Qt3DGeometry = Qt3DRender;
 
 #include <Qt3DInput/QAbstractPhysicalDevice>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
 #include <Qt3DAnimation/QAnimationClipData>
 #include <Qt3DAnimation/QAnimationController>
 #include <Qt3DAnimation/QAnimationGroup>
 #include <Qt3DAnimation/QChannelMapper>
 #include <Qt3DAnimation/QChannelMapping>
-#endif
 
 #include <Qt3DCore/QAspectEngine>
 #include <Qt3DCore/QComponent>
@@ -259,11 +257,7 @@ void Qt3DInspector::registerCoreMetaTypes()
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(Qt3DCore::QNode, QObject);
     MO_ADD_PROPERTY_RO(Qt3DCore::QNode, notificationsBlocked);
-#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    MO_ADD_PROPERTY_RO(Qt3DCore::QNode, childrenNodes);
-#else
     MO_ADD_PROPERTY_RO(Qt3DCore::QNode, childNodes);
-#endif
 
     MO_ADD_METAOBJECT1(Qt3DCore::QComponent, Qt3DCore::QNode);
     MO_ADD_PROPERTY_RO(Qt3DCore::QComponent, entities);
@@ -377,9 +371,7 @@ void Qt3DInspector::registerRenderMetaTypes()
     MO_ADD_PROPERTY_RO(Qt3DRender::QAbstractTexture, textureImages);
 
     MO_ADD_METAOBJECT1(Qt3DRender::QSceneLoader, Qt3DCore::QComponent);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     MO_ADD_PROPERTY_RO(Qt3DRender::QSceneLoader, entityNames);
-#endif
 
     VariantHandler::registerStringConverter<Qt3DGeometry::QAttribute *>(attributeToString);
     VariantHandler::registerStringConverter<Qt3DRender::QFilterKey *>(filterKeyToString);
@@ -387,7 +379,6 @@ void Qt3DInspector::registerRenderMetaTypes()
     VariantHandler::registerStringConverter<Qt3DRender::QParameter *>(parameterToString);
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
 static QString channelMappingToString(Qt3DAnimation::QChannelMapping *mapping)
 {
     if (!mapping || mapping->channelName().isEmpty() || mapping->property().isEmpty())
@@ -395,11 +386,9 @@ static QString channelMappingToString(Qt3DAnimation::QChannelMapping *mapping)
     return mapping->channelName() + QLatin1String(" -> ") + Util::displayString(mapping->target())
         + QLatin1Char('.') + mapping->property();
 }
-#endif
 
 void Qt3DInspector::registerAnimationMetaTypes()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT0(Qt3DAnimation::QAnimationClipData);
     MO_ADD_PROPERTY_RO(Qt3DAnimation::QAnimationClipData, channelCount);
@@ -416,7 +405,6 @@ void Qt3DInspector::registerAnimationMetaTypes()
     MO_ADD_PROPERTY_RO(Qt3DAnimation::QChannelMapper, mappings);
 
     VariantHandler::registerStringConverter<Qt3DAnimation::QChannelMapping *>(channelMappingToString);
-#endif
 }
 
 void Qt3DInspector::registerExtensions()

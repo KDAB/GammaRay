@@ -106,18 +106,7 @@ void Qt3DGeometryExtension::updateGeometryData()
         } else {
             Qt3DGeometryBufferData buffer;
             buffer.name = Util::displayString(attr->buffer());
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
             buffer.data = attr->buffer()->data();
-#else
-#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
-            buffer.type = attr->buffer()->type();
-#endif // QT_VERSION_CHECK(5, 10, 0)
-            auto generator = attr->buffer()->dataGenerator();
-            if (generator)
-                buffer.data = (*generator.data())();
-            else
-                buffer.data = attr->buffer()->data();
-#endif
 
             attrData.bufferIndex = data.buffers.size();
             bufferMap.insert(attr->buffer(), attrData.bufferIndex);

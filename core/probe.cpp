@@ -175,11 +175,7 @@ Q_GLOBAL_STATIC(Listener, s_listener)
 
 // ensures proper information is returned by isValidObject by
 // locking it in objectAdded/Removed
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 Q_GLOBAL_STATIC(QRecursiveMutex, s_lock)
-#else
-Q_GLOBAL_STATIC_WITH_ARGS(QMutex, s_lock, (QMutex::Recursive))
-#endif
 
 Probe::Probe(QObject *parent)
     : QObject(parent)
@@ -224,18 +220,7 @@ Probe::Probe(QObject *parent)
     connect(m_queueTimer, &QTimer::timeout,
             this, &Probe::processQueuedObjectChanges);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     m_previousSignalSpyCallbackSet = qt_signal_spy_callback_set.loadRelaxed();
-#else
-    const auto *signal_spy_set = &qt_signal_spy_callback_set;
-    if (signal_spy_set) {
-        m_previousSignalSpyCallbackSet.signalBeginCallback = signal_spy_set->signal_begin_callback;
-        m_previousSignalSpyCallbackSet.signalEndCallback = signal_spy_set->signal_end_callback;
-        m_previousSignalSpyCallbackSet.slotBeginCallback = signal_spy_set->slot_begin_callback;
-        m_previousSignalSpyCallbackSet.slotEndCallback = signal_spy_set->slot_end_callback;
-        registerSignalSpyCallbackSet(m_previousSignalSpyCallbackSet); // daisy-chain existing callbacks
-    }
-#endif
 
     connect(this, &Probe::objectCreated, m_metaObjectRegistry, &MetaObjectRegistry::objectAdded);
     connect(this, &Probe::objectDestroyed, m_metaObjectRegistry, &MetaObjectRegistry::objectRemoved);
@@ -251,17 +236,7 @@ Probe::~Probe()
     qtHookData[QHooks::RemoveQObject] = 0;
     qtHookData[QHooks::Startup] = 0;
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     qt_register_signal_spy_callbacks(m_previousSignalSpyCallbackSet);
-#else
-    QSignalSpyCallbackSet prevCallbacks = {
-        m_previousSignalSpyCallbackSet.signalBeginCallback,
-        m_previousSignalSpyCallbackSet.slotBeginCallback,
-        m_previousSignalSpyCallbackSet.signalEndCallback,
-        m_previousSignalSpyCallbackSet.slotEndCallback
-    };
-    qt_register_signal_spy_callbacks(prevCallbacks);
-#endif
 
     ObjectBroker::clear();
     ProbeSettings::resetLauncherIdentifier();
@@ -288,11 +263,7 @@ MetaObjectRegistry *Probe::metaObjectRegistry() const
 
 Probe *GammaRay::Probe::instance()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     return s_instance.loadRelaxed();
-#else
-    return s_instance.load();
-#endif
 }
 
 bool Probe::isInitialized()
@@ -509,11 +480,7 @@ ProblemCollector *Probe::problemCollector() const
     return m_problemCollector;
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 QRecursiveMutex *Probe::objectLock()
-#else
-QMutex *Probe::objectLock()
-#endif
 {
     return s_lock();
 }
@@ -994,11 +961,7 @@ void Probe::setupSignalSpyCallbacks()
         if (it.slotEndCallback)
             cbs.slot_end_callback = slot_end_callback;
     }
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     qt_register_signal_spy_callbacks(&cbs);
-#else
-    qt_register_signal_spy_callbacks(cbs);
-#endif
 }
 
 template<typename Func>

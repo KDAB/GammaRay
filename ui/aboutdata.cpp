@@ -32,11 +32,7 @@ QStringList AboutData::authors()
 {
     QFile f(QStringLiteral(":/gammaray/authors"));
     if (f.open(QFile::ReadOnly)) {
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-        return QString::fromUtf8(f.readAll()).split('\n', QString::SkipEmptyParts);
-#else
         return QString::fromUtf8(f.readAll()).split('\n', Qt::SkipEmptyParts);
-#endif
     } else {
         Q_ASSERT_X(false, "AboutData::authors()", "cannot open the authors resource file");
         qWarning() << "Failed to open the authors resource file";

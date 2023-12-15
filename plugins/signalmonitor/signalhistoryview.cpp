@@ -119,11 +119,7 @@ bool SignalHistoryView::viewportEvent(QEvent *event)
 
 void SignalHistoryView::wheelEvent(QWheelEvent *e)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-    auto pos = e->pos();
-#else
     auto pos = e->position().toPoint();
-#endif
     if (pos.x() < eventColumnPosition()) {
         DeferredTreeView::wheelEvent(e);
         return;

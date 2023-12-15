@@ -30,9 +30,7 @@
 #include <QOpenGLVersionFunctionsFactory>
 #endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
 #include <QOpenGLExtraFunctions>
-#endif
 
 #ifndef GL_TEXTURE_WIDTH
 #define GL_TEXTURE_WIDTH 0x1000
@@ -92,13 +90,9 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow *window)
         return;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     if (window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL) {
         return;
     }
-#else
-    Q_UNUSED(window);
-#endif
 
     auto context = QOpenGLContext::currentContext();
     // This check is only correct with the threaded render loop, for the basic one this
@@ -157,7 +151,6 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) co
             return QImage();
         }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
         // check if the size matches our expectations (requires ES3.1, so we might have to skip this
         auto glExtraFuncs = context->extraFunctions();
         if (glExtraFuncs) {
@@ -172,7 +165,6 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) co
         } else {
             qDebug() << "Can't validate texture size (OpenGL ES < 3.1), things might go wrong in a multi-context scenario...";
         }
-#endif
 
         // bind texture to an FBO, and read that, direct texture reading is not supported with OpenGL ES
         int prev_fbo = -1;

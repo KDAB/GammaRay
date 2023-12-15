@@ -24,9 +24,7 @@
 #include "textureextension/qsgtexturegrabber.h"
 #include "textureextension/textureextension.h"
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
 #include "quickimplicitbindingdependencyprovider.h"
-#endif
 
 #include <common/endpoint.h>
 #include <common/modelevent.h>
@@ -78,7 +76,6 @@
 #include <QCoreApplication>
 #include <QMutexLocker>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #include <QSGRenderNode>
 #include <QSGRendererInterface>
 #ifndef QT_NO_OPENGL
@@ -89,7 +86,6 @@
 #include <private/qsgsoftwarecontext_p.h>
 #include <private/qsgsoftwarerenderer_p.h>
 #include <private/qsgsoftwarerenderablenode_p.h>
-#endif
 
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
@@ -121,21 +117,15 @@ Q_DECLARE_METATYPE(QSGMaterial *)
 Q_DECLARE_METATYPE(QSGMaterial::Flags)
 Q_DECLARE_METATYPE(QSGTexture::WrapMode)
 Q_DECLARE_METATYPE(QSGTexture::Filtering)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
 Q_DECLARE_METATYPE(QSGTexture::AnisotropyLevel)
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 Q_DECLARE_METATYPE(QSGRenderNode *)
 Q_DECLARE_METATYPE(QSGRenderNode::RenderingFlags)
 Q_DECLARE_METATYPE(QSGRenderNode::StateFlags)
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 Q_DECLARE_METATYPE(QSGRendererInterface *)
 Q_DECLARE_METATYPE(QSGRendererInterface::GraphicsApi)
 Q_DECLARE_METATYPE(QSGRendererInterface::ShaderCompilationTypes)
 Q_DECLARE_METATYPE(QSGRendererInterface::ShaderSourceTypes)
 Q_DECLARE_METATYPE(QSGRendererInterface::ShaderType)
-#endif
 
 using namespace GammaRay;
 
@@ -214,7 +204,6 @@ static QString qsgMaterialFlagsToString(QSGMaterial::Flags flags)
     {                     \
         QSGTexture::x, #x \
     }
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
 static const MetaEnum::Value<QSGTexture::AnisotropyLevel> qsg_texture_anisotropy_table[] = {
     E(AnisotropyNone),
     E(Anisotropy2x),
@@ -222,7 +211,6 @@ static const MetaEnum::Value<QSGTexture::AnisotropyLevel> qsg_texture_anisotropy
     E(Anisotropy8x),
     E(Anisotropy16x)
 };
-#endif
 
 static const MetaEnum::Value<QSGTexture::Filtering> qsg_texture_filtering_table[] = {
     E(None),
@@ -233,9 +221,7 @@ static const MetaEnum::Value<QSGTexture::Filtering> qsg_texture_filtering_table[
 static const MetaEnum::Value<QSGTexture::WrapMode> qsg_texture_wrapmode_table[] = {
     E(Repeat),
     E(ClampToEdge),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     E(MirroredRepeat)
-#endif
 };
 
 #undef E
@@ -315,20 +301,13 @@ void RenderModeRequest::apply()
     if (connection)
         disconnect(connection);
 
-#if QT_VERSION == QT_VERSION_CHECK(5, 14, 0) || QT_VERSION == QT_VERSION_CHECK(5, 14, 1)
-    // there's a regression in Qt 5.14...
-    return;
-#endif
-
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     // crashes in qrhigles2..bindShaderResources sometimes
     return;
 #endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     if (window && window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
         return;
-#endif
 
     if (window) {
         emit aboutToCleanSceneGraph();
@@ -633,10 +612,6 @@ void QuickInspector::slotGrabWindow()
 void QuickInspector::setCustomRenderMode(
     GammaRay::QuickInspectorInterface::RenderMode customRenderMode)
 {
-#if QT_VERSION == QT_VERSION_CHECK(5, 14, 0) || QT_VERSION == QT_VERSION_CHECK(5, 14, 1)
-    // there's a regression in Qt 5.14...
-    return;
-#endif
 
     m_renderMode = customRenderMode;
 
@@ -658,17 +633,10 @@ void QuickInspector::checkFeatures()
         return;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-#if QT_VERSION != QT_VERSION_CHECK(5, 14, 0) && QT_VERSION != QT_VERSION_CHECK(5, 14, 1)
     if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL)
         f = AllCustomRenderModes;
-    else
-#endif
-        if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
+    else if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
         f = AnalyzePainting;
-#else
-    f = AllCustomRenderModes;
-#endif
 
     emit features(f);
 }
@@ -689,18 +657,13 @@ void QuickInspector::checkOverlaySettings()
     emit overlaySettings(m_overlay ? m_overlay->settings() : QuickDecorationsSettings());
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 3) // only with 5.9.3 the SW renderer got exported
 class SGSoftwareRendererPrivacyViolater : public QSGAbstractSoftwareRenderer
 {
 public:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0) && QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-    using QSGAbstractSoftwareRenderer::renderableNodes;
-#endif
     using QSGAbstractSoftwareRenderer::buildRenderList;
     using QSGAbstractSoftwareRenderer::optimizeRenderList;
     using QSGAbstractSoftwareRenderer::renderNodes;
 };
-#endif
 
 #if defined(Q_CC_CLANG) || defined(Q_CC_GNU)
 // keep it working in UBSAN
@@ -709,7 +672,6 @@ __attribute__((no_sanitize("vptr")))
 void
 QuickInspector::analyzePainting()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 3)
     if (!m_window || m_window->rendererInterface()->graphicsApi() != QSGRendererInterface::Software || !PaintAnalyzer::isAvailable())
         return;
 
@@ -728,27 +690,11 @@ QuickInspector::analyzePainting()
         renderer->markDirty();
         renderer->buildRenderList();
         renderer->optimizeRenderList();
-#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0) || QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         renderer->renderNodes(&painter);
-#else
-        auto iterator = renderer->renderableNodes().begin();
-        // First node is the background and needs to painted without blending
-        auto backgroundNode = *iterator;
-        backgroundNode->renderNode(&painter, /*force opaque painting*/ true);
-        iterator++;
-
-        for (; iterator != renderer->renderableNodes().end(); ++iterator) {
-            auto node = *iterator;
-            QQuickItem *origin = m_sgModel->itemForSgNode(node->handle());
-            m_paintAnalyzer->setOrigin(ObjectId(origin));
-            node->renderNode(&painter);
-        }
-#endif
 
         rc->m_activePainter = prevPainter;
     }
     m_paintAnalyzer->endAnalyzePainting();
-#endif
 }
 
 void QuickInspector::checkSlowMode()
@@ -993,7 +939,6 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY(QQuickWindow, isPersistentSceneGraph, setPersistentSceneGraph);
     MO_ADD_PROPERTY_RO(QQuickWindow, effectiveDevicePixelRatio);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     MO_ADD_PROPERTY_RO(QQuickWindow, rendererInterface);
 
     MO_ADD_METAOBJECT0(QSGRendererInterface);
@@ -1001,7 +946,6 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSGRendererInterface, shaderCompilationType);
     MO_ADD_PROPERTY_RO(QSGRendererInterface, shaderSourceType);
     MO_ADD_PROPERTY_RO(QSGRendererInterface, shaderType);
-#endif
 
     MO_ADD_METAOBJECT1(QQuickView, QQuickWindow);
     MO_ADD_PROPERTY_RO(QQuickView, engine);
@@ -1032,9 +976,7 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY(QQuickPaintedItem, performanceHints, setPerformanceHints);
 
     MO_ADD_METAOBJECT1(QSGTexture, QObject);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     MO_ADD_PROPERTY(QSGTexture, anisotropyLevel, setAnisotropyLevel);
-#endif
     MO_ADD_PROPERTY(QSGTexture, filtering, setFiltering);
     MO_ADD_PROPERTY_RO(QSGTexture, hasAlphaChannel);
     MO_ADD_PROPERTY_RO(QSGTexture, hasMipmaps);
@@ -1081,7 +1023,6 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY(QSGOpacityNode, opacity, setOpacity);
     MO_ADD_PROPERTY(QSGOpacityNode, combinedOpacity, setCombinedOpacity);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     MO_ADD_METAOBJECT1(QSGRenderNode, QSGNode);
     MO_ADD_PROPERTY_RO(QSGRenderNode, changedStates);
     MO_ADD_PROPERTY_RO(QSGRenderNode, flags);
@@ -1089,7 +1030,6 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSGRenderNode, inheritedOpacity);
     MO_ADD_PROPERTY_RO(QSGRenderNode, matrix);
     MO_ADD_PROPERTY_RO(QSGRenderNode, clipList);
-#endif
 
     MO_ADD_METAOBJECT0(QSGMaterial);
     MO_ADD_PROPERTY_RO(QSGMaterial, flags);
@@ -1119,7 +1059,7 @@ void QuickInspector::registerMetaTypes()
     MO_ADD_METAOBJECT1(QSGDistanceFieldShiftedStyleTextMaterial, QSGDistanceFieldStyledTextMaterial);
     MO_ADD_PROPERTY_RO(QSGDistanceFieldShiftedStyleTextMaterial, shift);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT1(QQuickOpenGLShaderEffectMaterial, QSGMaterial);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, attributes);
     MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, cullMode);
@@ -1129,7 +1069,6 @@ void QuickInspector::registerMetaTypes()
 #endif
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #define E(x)                        \
     {                               \
         QSGRendererInterface::x, #x \
@@ -1141,9 +1080,7 @@ static const MetaEnum::Value<QSGRendererInterface::GraphicsApi> qsg_graphics_api
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     E(Direct3D12), // Should just remove this? See QTBUG-79925
 #endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     E(OpenVG),
-#endif
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     E(Direct3D11),
     E(Vulkan),
@@ -1168,9 +1105,7 @@ static const MetaEnum::Value<QSGRendererInterface::ShaderType> qsg_shader_type_t
     E(HLSL)
 };
 #undef E
-#endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #define E(x)                 \
     {                        \
         QSGRenderNode::x, #x \
@@ -1193,15 +1128,11 @@ static const MetaEnum::Value<QSGRenderNode::RenderingFlag> render_node_rendering
     E(OpaqueRendering)
 };
 #undef E
-#endif
 
 static QString anchorLineToString(const QQuickAnchorLine &line)
 {
     if (!line.item
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-        || line.anchorLine == QQuickAnchors::InvalidAnchor
-#endif
-    ) {
+        || line.anchorLine == QQuickAnchors::InvalidAnchor) {
         return QStringLiteral("<none>");
     }
     QString s = Util::shortDisplayString(line.item);
@@ -1231,9 +1162,7 @@ void QuickInspector::registerVariantHandlers()
     ER_REGISTER_FLAGS(QQuickItem, Flags, qqitem_flag_table);
     ER_REGISTER_FLAGS(QSGNode, DirtyState, qsg_node_dirtystate_table);
     ER_REGISTER_FLAGS(QSGNode, Flags, qsg_node_flag_table);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     ER_REGISTER_ENUM(QSGTexture, AnisotropyLevel, qsg_texture_anisotropy_table);
-#endif
     ER_REGISTER_ENUM(QSGTexture, Filtering, qsg_texture_filtering_table);
     ER_REGISTER_ENUM(QSGTexture, WrapMode, qsg_texture_wrapmode_table);
 
@@ -1252,19 +1181,15 @@ void QuickInspector::registerVariantHandlers()
     VariantHandler::registerStringConverter<const QSGGeometry *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGMaterial *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGMaterial::Flags>(qsgMaterialFlagsToString);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     VariantHandler::registerStringConverter<QSGRenderNode *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGRenderNode::StateFlags>(MetaEnum::flagsToString_fn(render_node_state_flags_table));
     VariantHandler::registerStringConverter<QSGRenderNode::RenderingFlags>(MetaEnum::flagsToString_fn(render_node_rendering_flags_table));
-#endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     VariantHandler::registerStringConverter<QSGRendererInterface *>(Util::addressToString);
     VariantHandler::registerStringConverter<QSGRendererInterface::GraphicsApi>(MetaEnum::enumToString_fn(qsg_graphics_api_table));
     VariantHandler::registerStringConverter<QSGRendererInterface::ShaderCompilationTypes>(MetaEnum::flagsToString_fn(qsg_shader_compilation_type_table));
     VariantHandler::registerStringConverter<QSGRendererInterface::ShaderSourceTypes>(MetaEnum::flagsToString_fn(qsg_shader_source_type_table));
     VariantHandler::registerStringConverter<QSGRendererInterface::ShaderType>(MetaEnum::enumToString_fn(qsg_shader_type_table));
-#endif
 }
 
 void QuickInspector::registerPCExtensions()
@@ -1280,7 +1205,5 @@ void QuickInspector::registerPCExtensions()
     PropertyAdaptorFactory::registerFactory(QuickAnchorsPropertyAdaptorFactory::instance());
     PropertyFilters::registerFilter(PropertyFilter("QQuickItem", "anchors"));
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     BindingAggregator::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QuickImplicitBindingDependencyProvider));
-#endif
 }

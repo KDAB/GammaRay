@@ -62,9 +62,6 @@ Q_DECLARE_METATYPE(const QMatrix4x4 *)
 Q_DECLARE_METATYPE(const QValidator *)
 
 Q_DECLARE_METATYPE(QPainter::CompositionMode)
-#if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
-Q_DECLARE_METATYPE(QPainter::RenderHints)
-#endif
 Q_DECLARE_METATYPE(QPaintEngine::PolygonDrawMode)
 
 Q_DECLARE_METATYPE(QSurfaceFormat)

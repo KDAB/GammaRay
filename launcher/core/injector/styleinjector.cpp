@@ -39,13 +39,7 @@ QString StyleInjector::name() const
 
 static QChar listSeparator()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     return QDir::listSeparator();
-#elif defined(Q_OS_WIN)
-    return ';';
-#else
-    return ':';
-#endif
 }
 
 bool StyleInjector::launch(const QStringList &programAndArgs, const QString &probeDll,

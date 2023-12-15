@@ -40,11 +40,7 @@ static MessageHandlerCallback (*const installMessageHandler)(MessageHandlerCallb
 static MessageModel *s_model = nullptr;
 static MessageHandlerCallback s_handler = nullptr;
 static bool s_handlerDisabled = false;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 static QRecursiveMutex s_mutex;
-#else
-static QMutex s_mutex(QMutex::Recursive);
-#endif
 
 static void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {

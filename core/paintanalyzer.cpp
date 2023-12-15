@@ -94,11 +94,7 @@ void PaintAnalyzer::repaint()
     }
 
     const QSize sourceSize = m_paintBufferModel->buffer().boundingRect().size().toSize();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     const qreal ratio = m_paintBufferModel->buffer().devicePixelRatioF();
-#else
-    const qreal ratio = m_paintBufferModel->buffer().devicePixelRatio();
-#endif
     QImage image(sourceSize * ratio, QImage::Format_ARGB32);
     image.setDevicePixelRatio(ratio);
     image.fill(Qt::transparent);

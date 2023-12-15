@@ -46,16 +46,8 @@ public:
     {
         QWaylandSurface *surface = QWaylandSurface::fromResource(res);
         lines << tr("Role: %1").arg(surface->role() ? QString(surface->role()->name()) : QStringLiteral("none"));
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-        lines << tr("Buffer size: (%1x%2)").arg(QString::number(surface->size().width()), QString::number(surface->size().height()));
-#else
         lines << tr("Buffer size: (%1x%2)").arg(QString::number(surface->bufferSize().width()), QString::number(surface->bufferSize().height()));
-#endif
-#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
-        lines << tr("Is mapped: %1").arg(surface->isMapped() ? QStringLiteral("true") : QStringLiteral("false"));
-#else
         lines << tr("Has content: %1").arg(surface->hasContent() ? QStringLiteral("true") : QStringLiteral("false"));
-#endif
     }
     static void wlshellsurfaceInfo(wl_resource *res, QStringList &lines)
     {
@@ -81,10 +73,8 @@ public:
         lines << tr("Model: %1").arg(output->model());
         lines << tr("Physical size: (%1x%2)").arg(QString::number(output->physicalSize().width()), QString::number(output->physicalSize().height()));
         lines << tr("Position: (%1x%2)").arg(QString::number(output->position().x()), QString::number(output->position().y()));
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         const auto mode = output->currentMode();
         lines << tr("Current mode: %1x%2@%3Hz").arg(QString::number(mode.size().width()), QString::number(mode.size().height()), QString::number(mode.refreshRate() / 1000.0f));
-#endif
         lines << tr("Scale factor: %1").arg(QString::number(output->scaleFactor()));
         lines << tr("Transform: %1").arg(QMetaEnum::fromType<QWaylandOutput::Transform>().valueToKey(output->transform()));
         lines << tr("Subpixel: %1").arg(QMetaEnum::fromType<QWaylandOutput::Subpixel>().valueToKey(output->subpixel()));

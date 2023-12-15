@@ -149,9 +149,7 @@ private slots:
         return;
 #endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         QVERIFY(propModel->rowCount() > 1);
-#endif
         QCOMPARE(shaderModel->rowCount(), 2);
 
         iface->getShader(0);

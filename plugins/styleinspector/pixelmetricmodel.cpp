@@ -125,10 +125,8 @@ static const pixel_metric_t pixelMetrics[] = {
     MAKE_PM(PM_TreeViewIndentation),
     MAKE_PM(PM_HeaderDefaultSectionSizeHorizontal),
     MAKE_PM(PM_HeaderDefaultSectionSizeVertical),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
     MAKE_PM(PM_TitleBarButtonIconSize),
     MAKE_PM(PM_TitleBarButtonSize),
-#endif
 };
 
 PixelMetricModel::PixelMetricModel(QObject *parent)

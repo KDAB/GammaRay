@@ -43,19 +43,11 @@ QVector<AbstractConnectionsModel::Connection> OutboundConnectionsModel::outbound
 {
     QVector<Connection> connections;
     QObjectPrivate *d = QObjectPrivate::get(object);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     QObjectPrivate::ConnectionData *cd = d->connections.loadRelaxed();
     if (!cd)
         return connections;
 
     auto cl = cd->signalVector.loadRelaxed();
-#else
-    if (!d->connectionLists)
-        return connections;
-
-    // HACK: the declaration of d->connectionsLists is not accessible for us...
-    const auto cl = reinterpret_cast<QVector<QObjectPrivate::ConnectionList> *>(d->connectionLists);
-#endif
     if (!cl)
         return connections;
 

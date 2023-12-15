@@ -218,23 +218,17 @@ private slots:
     void init();
     void cleanup();
     void testMockProvider();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     static void testQmlBindingProvider_data();
     static void testQmlBindingProvider();
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     static void testQtQuickProvider_data();
     static void testQtQuickProvider();
-#endif
     void testModel();
     void testModelDataChanged();
     void testModelAdditions();
     void testModelInsertions();
     void testModelRemovalAtEnd();
     void testModelRemovalInside();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     void testIntegration();
-#endif
 
 private:
     MockBindingProvider *provider;
@@ -320,7 +314,6 @@ void BindingInspectorTest::testMockProvider()
     QCOMPARE(dependency3->cachedValue().toBool(), false);
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 void BindingInspectorTest::testQmlBindingProvider_data()
 {
     QTest::addColumn<QByteArray>("code");
@@ -434,9 +427,7 @@ void BindingInspectorTest::testQmlBindingProvider()
 
     delete rect;
 }
-#endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
 void BindingInspectorTest::testQtQuickProvider_data()
 {
     QTest::addColumn<QByteArray>("code", nullptr);
@@ -548,7 +539,6 @@ void BindingInspectorTest::testQtQuickProvider()
 
     delete rect;
 }
-#endif
 
 void BindingInspectorTest::testModel()
 {
@@ -925,7 +915,6 @@ void BindingInspectorTest::testModelRemovalInside()
     QCOMPARE(dataChangedSpy.at(1).at(1).toModelIndex(), obj1aIndex.sibling(obj1aIndex.row(), BindingModel::DepthColumn));
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 void BindingInspectorTest::testIntegration()
 {
     createProbe();
@@ -1069,7 +1058,6 @@ void BindingInspectorTest::testIntegration()
     delete rect;
     QTRY_VERIFY(bindingModel->rowCount() == 0);
 }
-#endif
 
 QTEST_MAIN(BindingInspectorTest)
 

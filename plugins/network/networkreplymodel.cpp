@@ -37,9 +37,6 @@ Q_DECLARE_METATYPE(GammaRay::NetworkReplyModel::ReplyNode)
 namespace {
 bool prioritizeLatestConnection(QObject *sender, const char *normalizedSignalName, QObject *receiver)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-    return false;
-#else
     const auto senderPrivate = QObjectPrivate::get(sender);
     const auto sigIndex = senderPrivate->signalIndex(normalizedSignalName);
     if (sigIndex < 0) {
@@ -86,7 +83,6 @@ bool prioritizeLatestConnection(QObject *sender, const char *normalizedSignalNam
     }
 
     return false;
-#endif
 }
 
 NetworkReply::ContentType contentType(const QVariant &v)

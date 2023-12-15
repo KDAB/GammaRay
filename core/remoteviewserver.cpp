@@ -160,14 +160,8 @@ void RemoteViewServer::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
     if (!m_eventReceiver)
         return;
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
     auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(localPos), pixelDelta, angleDelta, ( Qt::MouseButtons )buttons,
                                  ( Qt::KeyboardModifiers )modifiers, Qt::NoScrollPhase, false);
-#else
-    auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(localPos), pixelDelta, angleDelta, 0, /*not used*/ Qt::Vertical,
-                                 /*not used*/ ( Qt::MouseButtons )buttons,
-                                 ( Qt::KeyboardModifiers )modifiers);
-#endif
     QCoreApplication::postEvent(m_eventReceiver, event);
 }
 

@@ -114,11 +114,7 @@ static const MetaEnum::Value<Qt::ItemFlag> item_flag_table[] = {
     { Qt::ItemIsDropEnabled, "DropEnabled" },
     { Qt::ItemIsUserCheckable, "UserCheckable" },
     { Qt::ItemIsEnabled, "Enabled" },
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     { Qt::ItemIsAutoTristate, "AutoTristate" },
-#else
-    { Qt::ItemIsTristate, "AutoTristate" },
-#endif
     { Qt::ItemNeverHasChildren, "ItemNeverHasChildren" },
     { Qt::ItemIsUserTristate, "UserTristate" }
 };

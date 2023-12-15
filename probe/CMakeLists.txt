@@ -87,19 +87,11 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             install(TARGETS gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
         endif()
         if(ANDROID)
-            if(QtCore_VERSION VERSION_LESS 5.14.0)
-                install(
-                    FILES gammaray_probe-android-dependencies.xml
-                    RENAME gammaray_probe-${GAMMARAY_PROBE_ABI}-android-dependencies.xml
-                    DESTINATION ${LIB_INSTALL_DIR}
-                )
-            else()
-                install(
-                    FILES gammaray_probe-android-dependencies.xml
-                    RENAME gammaray_probe-${GAMMARAY_PROBE_ABI}_${ANDROID_ABI}-android-dependencies.xml
-                    DESTINATION ${LIB_INSTALL_DIR}
-                )
-            endif()
+            install(
+                FILES gammaray_probe-android-dependencies.xml
+                RENAME gammaray_probe-${GAMMARAY_PROBE_ABI}_${ANDROID_ABI}-android-dependencies.xml
+                DESTINATION ${LIB_INSTALL_DIR}
+            )
         endif()
     endif()
 
