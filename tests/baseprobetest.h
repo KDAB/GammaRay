@@ -38,6 +38,7 @@ public:
 protected:
     virtual void createProbe()
     {
+
         Paths::setRelativeRootPath(GAMMARAY_INVERSE_BIN_DIR);
         qputenv("GAMMARAY_ProbePath", Paths::probePath(GAMMARAY_PROBE_ABI).toUtf8());
         qputenv("GAMMARAY_ServerAddress", GAMMARAY_DEFAULT_LOCAL_TCP_URL);

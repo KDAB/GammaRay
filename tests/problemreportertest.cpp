@@ -345,9 +345,14 @@ private slots:
 
         QVERIFY(crossThreadProblem != problems.end());
         QCOMPARE(crossThreadProblem->object, ObjectId(task->mainThreadObj.get()));
-        QVERIFY(crossThreadProblem->description.contains("direct cross-thread connection"));
-        QVERIFY(crossThreadProblem->description.contains("signal newThreadObj"));
-        QVERIFY(crossThreadProblem->description.contains("slot mainThreadObj"));
+        QVERIFY2(crossThreadProblem->description.contains("direct cross-thread connection"), qPrintable(crossThreadProblem->description));
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QVERIFY2(crossThreadProblem->description.contains("signal QObject (newThreadObj)"), qPrintable(crossThreadProblem->description));
+        QVERIFY2(crossThreadProblem->description.contains("slot QObject (mainThreadObj)"), qPrintable(crossThreadProblem->description));
+#else
+        QVERIFY2(crossThreadProblem->description.contains("signal QtQml/QtObject (newThreadObj)"), qPrintable(crossThreadProblem->description));
+        QVERIFY2(crossThreadProblem->description.contains("slot QtQml/QtObject (mainThreadObj)"), qPrintable(crossThreadProblem->description));
+#endif
 
         auto duplicateProblem = std::find_if(problems.begin(), problems.end(),
                                              [](const Problem &p) { return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.Duplicate"); });
@@ -355,9 +360,13 @@ private slots:
         QVERIFY(duplicateProblem != problems.end());
         QCOMPARE(duplicateProblem->object, ObjectId(o2.get()));
         QVERIFY(duplicateProblem->description.contains("multiple times"));
-        QVERIFY(duplicateProblem->description.contains("signal o1"));
-        QVERIFY(duplicateProblem->description.contains("slot o2"));
-
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QVERIFY2(duplicateProblem->description.contains("signal QObject (o1)"), qPrintable(duplicateProblem->description));
+        QVERIFY2(duplicateProblem->description.contains("slot QObject (o2)"), qPrintable(duplicateProblem->description));
+#else
+        QVERIFY2(duplicateProblem->description.contains("signal QtQml/QtObject (o1)"), qPrintable(duplicateProblem->description));
+        QVERIFY2(duplicateProblem->description.contains("slot QtQml/QtObject (o2)"), qPrintable(duplicateProblem->description));
+#endif
 
         disconnect(o1.get(), nullptr, o2.get(), nullptr);
         connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
