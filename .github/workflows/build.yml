@@ -79,19 +79,17 @@ jobs:
         run: echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 
         # Exclude
-        # connectiontest-style-filter is flaky
         # quickmaterialtest|quicktexturetest fails because of QT_QUICK_BACKEND=software
       - name: Run tests on Linux Qt5 (offscreen)
         if: ${{ runner.os == 'Linux' && matrix.config.qt_major == 5 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quickmaterialtest|quicktexturetest|problemreportertest|timertoptest"
+          --exclude-regex "quickmaterialtest|quicktexturetest|timertoptest"
         env:
           QT_QPA_PLATFORM: offscreen
           QT_QUICK_BACKEND: software
 
         # Exclude
-        # connectiontest-style-filter|bindinginspectortest is flaky
         # quickmaterialtest|quicktexturetest fails because of QT_QUICK_BACKEND=software AND QT_QPA_PLATFORM=offscreen
         # quickinspectortest|quickinspectortest2 fails at CI, local with 6.2.4 passes
         # modelinspectortest fails in Qt6/CI passes locally
@@ -99,18 +97,12 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.config.qt_major == 6 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quickmaterialtest|quicktexturetest|bindinginspectortest|quickinspectortest|quickinspectortest2|modelinspectortest|problemreportertest|timertoptest"
+          --exclude-regex "quickmaterialtest|quicktexturetest|bindinginspectortest|quickinspectortest|quickinspectortest2|modelinspectortest|timertoptest"
         env:
           QT_QPA_PLATFORM: offscreen
           QT_QUICK_BACKEND: software
 
         # Exclude
-        #1 - connectiontest-preload (Failed)
-        #2 - connectiontest-preload-filter (Failed)
-        #3 - connectiontest-style (Failed)
-        #4 - connectiontest-style-filter (Failed)
-        #5 - connectiontest-lldb (Failed)
-        #6 - connectiontest-lldb-filter (Failed)
         #23 - probeabidetectortest (Failed)
         #26 - launchertest (Failed)
         #37 - quickinspectortest2 (Failed)
@@ -118,15 +110,9 @@ jobs:
         if: ${{ runner.os == 'macOS' && matrix.config.qt_major == 5 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "probeabidetectortest|launchertest|quickinspectortest2|problemreportertest|timertoptest"
+          --exclude-regex "probeabidetectortest|launchertest|quickinspectortest2|timertoptest"
 
         # Exclude
-        #1 - connectiontest-preload (Failed)
-        #2 - connectiontest-preload-filter (Failed)
-        #3 - connectiontest-style (Failed)
-        #4 - connectiontest-style-filter (Failed)
-        #5 - connectiontest-lldb (Failed)
-        #6 - connectiontest-lldb-filter (Failed)
         #28 - probeabidetectortest (Failed)
         #31 - launchertest (Failed)
         #32 - clientconnectiontest (Failed)
@@ -138,7 +124,7 @@ jobs:
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
           --exclude-regex
-          "probeabidetectortest|launchertest|clientconnectiontest|modelinspectortest|quickinspectortest2|bindinginspectortest|quicktexturetest|problemreportertest|timertoptest"
+          "probeabidetectortest|launchertest|clientconnectiontest|modelinspectortest|quickinspectortest2|bindinginspectortest|quicktexturetest|timertoptest"
 
         # Exclude
         # quicktexturetest
@@ -147,7 +133,7 @@ jobs:
         if: ${{ runner.os == 'Windows' && matrix.config.qt_major == 5 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quicktexturetest|bindinginspectortest|problemreportertest|timertoptest|problemreportertest|timertoptest"
+          --exclude-regex "quicktexturetest|bindinginspectortest|timertoptest"
 
         # Exclude
         # quicktexturetest
@@ -157,7 +143,7 @@ jobs:
         if: ${{ runner.os == 'Windows' && matrix.config.qt_major == 6 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quicktexturetest|launchertest|bindinginspectortest|modelinspectortest|problemreportertest|timertoptest|probesettingstest"
+          --exclude-regex "quicktexturetest|launchertest|bindinginspectortest|modelinspectortest|timertoptest|probesettingstest"
 
       - name: Read tests log when it fails
         uses: andstor/file-reader-action@v1
