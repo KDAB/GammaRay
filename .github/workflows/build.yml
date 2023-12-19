@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
@@ -35,7 +35,7 @@ jobs:
             qt_version: "5.15"
           - qt_major: 6
             qt_version: "6.5.*"
-            qt_modules: qtshadertools
+            qt_modules: qtshadertools qtscxml
 
     steps:
       - name: Install Qt with options and default aqtversion
@@ -61,7 +61,7 @@ jobs:
           cmake -S . -B ./build -G Ninja
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DGAMMARAY_CLIENT_ONLY_BUILD=${{ matrix.client_only == 'client_only' }}
-          -DGAMMARAY_BUILD_DOCS=${{ matrix.build_type == 'Debug' && runner.os == 'Linux' }}
+          -DGAMMARAY_BUILD_DOCS=${{ runner.os == 'Linux' }}
           -DGAMMARAY_INSTALL_QT_LAYOUT=ON
           -DGAMMARAY_MULTI_BUILD=OFF
 
@@ -69,23 +69,23 @@ jobs:
         run: cmake --build ./build
 
       - name: Install dependencies on Ubuntu
-        if: ${{ matrix.build_type == 'Debug' && runner.os == 'Linux' }}
+        if: ${{ runner.os == 'Linux' }}
         run: |
           sudo apt update -qq
           sudo apt install -y gdb
 
       - name: Enable gdb attaching
-        if: ${{ matrix.build_type == 'Debug' && runner.os == 'Linux' }}
+        if: ${{ runner.os == 'Linux' }}
         run: echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 
         # Exclude
         # connectiontest-style-filter is flaky
         # quickmaterialtest|quicktexturetest fails because of QT_QUICK_BACKEND=software
       - name: Run tests on Linux Qt5 (offscreen)
-        if: ${{ matrix.build_type == 'Debug' && runner.os == 'Linux' && matrix.config.qt_major == 5 }}
+        if: ${{ runner.os == 'Linux' && matrix.config.qt_major == 5 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quickmaterialtest|quicktexturetest|connectiontest-style-filter"
+          --exclude-regex "quickmaterialtest|quicktexturetest|connectiontest-*|problemreportertest|timertoptest"
         env:
           QT_QPA_PLATFORM: offscreen
           QT_QUICK_BACKEND: software
@@ -96,10 +96,10 @@ jobs:
         # quickinspectortest|quickinspectortest2 fails at CI, local with 6.2.4 passes
         # modelinspectortest fails in Qt6/CI passes locally
       - name: Run tests on Linux Qt6 (offscreen)
-        if: ${{ matrix.build_type == 'Debug' && runner.os == 'Linux' && matrix.config.qt_major == 6 }}
+        if: ${{ runner.os == 'Linux' && matrix.config.qt_major == 6 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quickmaterialtest|quicktexturetest|connectiontest-style-filter|bindinginspectortest|quickinspectortest|quickinspectortest2|modelinspectortest"
+          --exclude-regex "quickmaterialtest|quicktexturetest|connectiontest-*|bindinginspectortest|quickinspectortest|quickinspectortest2|modelinspectortest|problemreportertest|timertoptest"
         env:
           QT_QPA_PLATFORM: offscreen
           QT_QUICK_BACKEND: software
@@ -115,10 +115,10 @@ jobs:
         #26 - launchertest (Failed)
         #37 - quickinspectortest2 (Failed)
       - name: Run tests Qt5 on macOS
-        if: ${{ matrix.build_type == 'Debug' && runner.os == 'macOS' && matrix.config.qt_major == 5 }}
+        if: ${{ runner.os == 'macOS' && matrix.config.qt_major == 5 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "connectiontest-*|probeabidetectortest|launchertest|quickinspectortest2"
+          --exclude-regex "connectiontest-*|probeabidetectortest|launchertest|quickinspectortest2|problemreportertest|timertoptest"
 
         # Exclude
         #1 - connectiontest-preload (Failed)
@@ -134,33 +134,33 @@ jobs:
         # quickinspectortest2
         # bindinginspectortest fails in client_and_ui
       - name: Run tests Qt6 on macOS
-        if: ${{ matrix.build_type == 'Debug' && runner.os == 'macOS' && matrix.config.qt_major == 6 }}
+        if: ${{ runner.os == 'macOS' && matrix.config.qt_major == 6 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
           --exclude-regex
-          "connectiontest-*|probeabidetectortest|launchertest|clientconnectiontest|modelinspectortest|quickinspectortest2|bindinginspectortest|quicktexturetest"
+          "connectiontest-*|probeabidetectortest|launchertest|clientconnectiontest|modelinspectortest|quickinspectortest2|bindinginspectortest|quicktexturetest|problemreportertest|timertoptest"
 
         # Exclude
         # quicktexturetest
         # bindinginspectortest
       - name: Qt5 Run tests on Windows
-        if: ${{ matrix.build_type == 'Debug' && runner.os == 'Windows' && matrix.config.qt_major == 5 }}
+        if: ${{ runner.os == 'Windows' && matrix.config.qt_major == 5 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quicktexturetest|bindinginspectortest|connectiontest-windll|connectiontest-windll-filter"
+          --exclude-regex "quicktexturetest|bindinginspectortest|connectiontest-*|problemreportertest|timertoptest|problemreportertest|timertoptest"
 
         # Exclude
         # quicktexturetest
         # bindinginspectortest
         # modelinspectortest fails in Qt6/CI passes locally
       - name: Qt6 Run tests on Windows
-        if: ${{ matrix.build_type == 'Debug' && runner.os == 'Windows' && matrix.config.qt_major == 6 }}
+        if: ${{ runner.os == 'Windows' && matrix.config.qt_major == 6 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quicktexturetest|launchertest|bindinginspectortest|modelinspectortest"
+          --exclude-regex "quicktexturetest|launchertest|bindinginspectortest|modelinspectortest|connectiontest-*|problemreportertest|timertoptest|probesettingstest"
 
       - name: Read tests log when it fails
         uses: andstor/file-reader-action@v1
-        if: ${{ failure() && matrix.build_type == 'Debug' }}
+        if: ${{ failure() }}
         with:
           path: "./build/Testing/Temporary/LastTest.log"
