@@ -83,6 +83,7 @@ void ProbeSettingsReceiver::run()
     m_mutex.lock(); // we only need this for ordering run after waitForSettingsReceived
     m_mutex.unlock();
 
+    const QString server = QLatin1String("gammaray-") + QString::number(ProbeSettings::launcherIdentifier());
     m_socket = new QLocalSocket;
     connect(m_socket, &QLocalSocket::disconnected, this, &ProbeSettingsReceiver::settingsReceivedFallback);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -92,12 +93,11 @@ void ProbeSettingsReceiver::run()
             this, &ProbeSettingsReceiver::settingsReceivedFallback);
 #endif
     connect(m_socket, &QIODevice::readyRead, this, &ProbeSettingsReceiver::readyRead);
-    m_socket->connectToServer(QStringLiteral("gammaray-")
-                              + QString::number(ProbeSettings::launcherIdentifier()));
+    m_socket->connectToServer(server);
     if (!m_socket->waitForConnected(10000)) {
 #ifndef Q_OS_ANDROID
         qWarning() << "Failed to connect to launcher, can't receive probe settings!"
-                   << m_socket->errorString();
+                   << server << m_socket->errorString();
 #endif
         settingsReceivedFallback();
     }

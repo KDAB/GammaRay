@@ -39,7 +39,7 @@ public:
 public slots:
     void deleteSender()
     {
-        delete sender();
+        sender()->deleteLater();
     }
 };
 
@@ -150,7 +150,11 @@ private slots:
             auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel"));
             QVERIFY(model);
 
-            QSharedPointer<QThread> mainThread(new QThread);
+            QSharedPointer<QThread> mainThread(new QThread, [](QThread *obj) {
+                obj->quit();
+                QVERIFY(obj->wait());
+                obj->deleteLater();
+            });
             mainThread->setObjectName("mainThread");
 
             // main thread free timer operating on "mainThread" object
@@ -168,7 +172,8 @@ private slots:
             threadTimer->setInterval(100);
             threadTimer->moveToThread(mainThread.data());
 
-            connect(mainThread.data(), &QThread::started, threadTimer.data(), static_cast<void (QTimer::*)()>(&QTimer::start));
+            connect(mainThread.data(), &QThread::started, threadTimer.data(), QOverload<>::of(&QTimer::start));
+            connect(mainThread.data(), &QThread::finished, threadTimer.data(), QOverload<>::of(&QTimer::stop));
 
             int timerId = -1;
             QTimer::singleShot(500, threadTimer.data(), [&]() {
@@ -202,14 +207,6 @@ private slots:
             for (const QModelIndex &idx : idxs) {
                 QVERIFY(idx.isValid());
             }
-
-            QTimer::singleShot(0, threadTimer.data(), [&]() {
-                threadTimer->QObject::killTimer(timerId);
-                threadTimer->stop();
-                mainThread->quit();
-            });
-
-            QVERIFY(mainThread->wait());
 
             // remove free timers from model
             QMetaObject::invokeMethod(model, "clearHistory");
