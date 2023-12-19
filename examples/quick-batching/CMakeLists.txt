@@ -6,4 +6,8 @@
 #
 # Contact KDAB at <info@kdab.com> for commercial licensing options.
 #
-qml_lint(quick-batching.qml Slider.qml)
+qml_lint(quick-batching.qml)
+
+if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+    qml_lint(Slider.qml)
+endif()

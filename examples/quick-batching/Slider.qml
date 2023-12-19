@@ -13,6 +13,8 @@
 
 import QtQuick 2.0
 
+pragma ComponentBehavior: Bound
+
 Item {
     id: root
 
@@ -21,11 +23,27 @@ Item {
     property real maxValue: 100
     property real value: 50
 
+    component SliderDelegate : Item {
+        required property int index
+
+        //! [Slider delegate]
+        Rectangle {
+            property bool active: view.currentIndex <= parent.index
+            anchors.right: parent.right
+            width: parent.width
+            height: parent.height - 3
+            color: Qt.hsva((parent.index/view.count)/3, active ? 1.0 : 0.5, active ? 1.0 : 0.75)
+            opacity: active ? 1.0 : 1.0 - (view.currentIndex - parent.index) / view.model
+            scale: active ? 1.0 : 0.9
+        }
+        //! [Slider delegate]
+    }
+
     ListView {
         id: view
         anchors.fill: parent
-        anchors.rightMargin: mirrorSlider ? 0 : handle.width
-        anchors.leftMargin: mirrorSlider ? handle.width : 0
+        anchors.rightMargin: root.mirrorSlider ? 0 : handle.width
+        anchors.leftMargin: root.mirrorSlider ? handle.width : 0
 
         orientation: Qt.Vertical
         interactive: false
@@ -35,29 +53,16 @@ Item {
 
         currentIndex: (root.value - root.minValue) / (root.maxValue - root.minValue) * view.count
 
-        delegate: Item {
+        delegate: SliderDelegate {
             width: view.width
             height: view.itemHeight
-            property int entry: index
-
-            //! [Slider delegate]
-            Rectangle {
-                property bool active: view.currentIndex <= index
-                anchors.right: parent.right
-                width: parent.width
-                height: parent.height - 3
-                color: Qt.hsva((index/view.count)/3, active ? 1.0 : 0.5, active ? 1.0 : 0.75)
-                opacity: active ? 1.0 : 1.0 - (view.currentIndex - index) / view.model
-                scale: active ? 1.0 : 0.9
-            }
-            //! [Slider delegate]
         }
 
         Rectangle {
             id: handle
             property real currentItemY: view.currentItem ? view.currentItem.y : 0
-            anchors.left: mirrorSlider ? undefined : parent.right
-            anchors.right: mirrorSlider ? parent.left : undefined
+            anchors.left: root.mirrorSlider ? undefined : parent.right
+            anchors.right: root.mirrorSlider ? parent.left : undefined
             width: 10
             height: width
             radius: 5
@@ -70,13 +75,17 @@ Item {
             anchors.fill: view
             hoverEnabled: false
             preventStealing: true
-            onClicked: updateCurrentIndex(mouse.x, mouse.y)
-            onPositionChanged: updateCurrentIndex(mouse.x, mouse.y)
+            onClicked: (mouse)=> {
+                updateCurrentIndex(mouse.x, mouse.y)
+            }
+            onPositionChanged: (mouse)=> {
+                updateCurrentIndex(mouse.x, mouse.y)
+            }
 
             function updateCurrentIndex(x, y) {
                 var item = view.itemAt(x, y);
                 if (item) {
-                    var newValue = item.entry / view.count * (root.maxValue - root.minValue) + root.minValue;
+                    var newValue = (item as SliderDelegate).index / view.count * (root.maxValue - root.minValue) + root.minValue;
                     root.value = Math.min(root.maxValue, Math.max(root.minValue, newValue));
                 }
             }
