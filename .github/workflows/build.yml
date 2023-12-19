@@ -85,7 +85,7 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.config.qt_major == 5 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quickmaterialtest|quicktexturetest|connectiontest-*|problemreportertest|timertoptest"
+          --exclude-regex "quickmaterialtest|quicktexturetest|problemreportertest|timertoptest"
         env:
           QT_QPA_PLATFORM: offscreen
           QT_QUICK_BACKEND: software
@@ -99,7 +99,7 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.config.qt_major == 6 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quickmaterialtest|quicktexturetest|connectiontest-*|bindinginspectortest|quickinspectortest|quickinspectortest2|modelinspectortest|problemreportertest|timertoptest"
+          --exclude-regex "quickmaterialtest|quicktexturetest|bindinginspectortest|quickinspectortest|quickinspectortest2|modelinspectortest|problemreportertest|timertoptest"
         env:
           QT_QPA_PLATFORM: offscreen
           QT_QUICK_BACKEND: software
@@ -118,7 +118,7 @@ jobs:
         if: ${{ runner.os == 'macOS' && matrix.config.qt_major == 5 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "connectiontest-*|probeabidetectortest|launchertest|quickinspectortest2|problemreportertest|timertoptest"
+          --exclude-regex "probeabidetectortest|launchertest|quickinspectortest2|problemreportertest|timertoptest"
 
         # Exclude
         #1 - connectiontest-preload (Failed)
@@ -138,7 +138,7 @@ jobs:
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
           --exclude-regex
-          "connectiontest-*|probeabidetectortest|launchertest|clientconnectiontest|modelinspectortest|quickinspectortest2|bindinginspectortest|quicktexturetest|problemreportertest|timertoptest"
+          "probeabidetectortest|launchertest|clientconnectiontest|modelinspectortest|quickinspectortest2|bindinginspectortest|quicktexturetest|problemreportertest|timertoptest"
 
         # Exclude
         # quicktexturetest
@@ -147,7 +147,7 @@ jobs:
         if: ${{ runner.os == 'Windows' && matrix.config.qt_major == 5 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quicktexturetest|bindinginspectortest|connectiontest-*|problemreportertest|timertoptest|problemreportertest|timertoptest"
+          --exclude-regex "quicktexturetest|bindinginspectortest|problemreportertest|timertoptest|problemreportertest|timertoptest"
 
         # Exclude
         # quicktexturetest
@@ -157,7 +157,7 @@ jobs:
         if: ${{ runner.os == 'Windows' && matrix.config.qt_major == 6 }}
         run: >
           ctest --test-dir ./build -C ${{ matrix.build_type }} --output-on-failure
-          --exclude-regex "quicktexturetest|launchertest|bindinginspectortest|modelinspectortest|connectiontest-*|problemreportertest|timertoptest|probesettingstest"
+          --exclude-regex "quicktexturetest|launchertest|bindinginspectortest|modelinspectortest|problemreportertest|timertoptest|probesettingstest"
 
       - name: Read tests log when it fails
         uses: andstor/file-reader-action@v1

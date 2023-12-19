@@ -172,32 +172,35 @@ elseif(WIN32)
     list(APPEND INJECTOR_TYPES windll style)
 endif()
 
-foreach(injectorType ${INJECTOR_TYPES})
-    add_test(
-        connectiontest-${injectorType}
-        ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray
-        --inprocess
-        --listen
-        tcp://127.0.0.1
-        -unittest
-        -i
-        ${injectorType}
-        ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-    )
-    add_test(
-        connectiontest-${injectorType}-filter
-        ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray
-        --inprocess
-        -unittest
-        --listen
-        tcp://127.0.0.1
-        -filtertest
-        -i
-        ${injectorType}
-        ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
-    )
-    set_tests_properties(connectiontest-${injectorType}-filter PROPERTIES ENVIRONMENT GAMMARAY_TEST_FILTER=1)
-endforeach()
+if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
+    # No probes are available in client only build
+    foreach(injectorType ${INJECTOR_TYPES})
+        add_test(
+            connectiontest-${injectorType}
+            ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray
+            --inprocess
+            --listen
+            tcp://127.0.0.1
+            -unittest
+            -i
+            ${injectorType}
+            ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+        )
+        add_test(
+            connectiontest-${injectorType}-filter
+            ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/gammaray
+            --inprocess
+            -unittest
+            --listen
+            tcp://127.0.0.1
+            -filtertest
+            -i
+            ${injectorType}
+            ${PROJECT_BINARY_DIR}/${BIN_INSTALL_DIR}/connectiontest
+        )
+        set_tests_properties(connectiontest-${injectorType}-filter PROPERTIES ENVIRONMENT GAMMARAY_TEST_FILTER=1)
+    endforeach()
+endif()
 
 #
 # common and core unit tests
