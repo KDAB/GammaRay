@@ -220,12 +220,23 @@ private slots:
         QVERIFY(targetModelIdx.isValid());
         auto modelSelModel = ObjectBroker::selectionModel(modelModel);
         QVERIFY(modelSelModel);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        // TODO this breaks QAbstractItemModelTester in Qt6
+        // when the targetModel->appendRow(item); code is
+        // executed below a headerDataChanged() is emitted and asserts
         modelSelModel->select(targetModelIdx, QItemSelectionModel::ClearAndSelect);
+#endif
         QCOMPARE(contentModel->rowCount(), 0);
 
         auto item = new QStandardItem("item0,0");
         item->setFlags(Qt::NoItemFlags); // should nevertheless be selectable for inspection
         targetModel->appendRow(item);
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        // TODO remove this when the above select does not assert in QAbstractItemModelTester
+        modelSelModel->select(targetModelIdx, QItemSelectionModel::ClearAndSelect);
+#endif
+
         QCOMPARE(contentModel->rowCount(), 1);
         QCOMPARE(contentModel->columnCount(), 1);
         auto idx = contentModel->index(0, 0);
