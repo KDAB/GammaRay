@@ -20,3 +20,4 @@ perf.data*
 
 # ts generation
 translations/plugin_meta_data.cpp
+build*/
