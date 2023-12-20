@@ -58,13 +58,21 @@ Stay up-to-date with KDAB product announcements:
 
 If you want to contribute, please check out: <https://github.com/KDAB/GammaRay/wiki/Get-Involved>
 
-KDAB will happily accept external contributions, but substantial contributions require
-a signed [Copyright Assignment Agreement](docs/GammaRay-CopyrightAssignmentForm.pdf).
-
-Contact info@kdab.com for more information about the Copyright Assignment Agreement.
-
 Please submit your contributions or issue reports from our GitHub space at
 <https://github.com/KDAB/GammaRay>.
+
+KDAB will happily accept external contributions; however, **all** contributions
+require a signed KDAB Copyright Assignment Agreement.
+
+* Individual contributors (non-employees) are required to electronically agree
+  to the KDAB CLA using the GitHub cla-assistant hook.
+
+* Employees, representing their company, must email a completed and signed
+  [KDAB Copyright Assignment Agreement](https://github.com/KDAB/GammaRay/blob/master/docs/GammaRay-CopyrightAssignmentForm.pdf)
+  to info@kdab.com.
+
+This is needed so we can continue to dual-license GammaRay.
+Contact info@kdab.com for more information.
 
 Thanks to our [contributors](CONTRIBUTORS.txt).
 
