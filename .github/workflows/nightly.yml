@@ -21,12 +21,12 @@ jobs:
           - name: clang-tidy
             cmake_arg: '-DCMAKE_CXX_CLANG_TIDY=clang-tidy'
             qt_version: "6.6"
-            qt_modules: qtshadertools
+            qt_modules: qtshadertools qtscxml
 
           - name: clazy
             cmake_arg: '-DCMAKE_CXX_COMPILER=clazy'
             qt_version: "6.6"
-            qt_modules: qtshadertools
+            qt_modules: qtshadertools qtscxml
             apt_pgks:
               - clazy
 
