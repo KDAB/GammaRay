@@ -17,7 +17,6 @@
 
 #include <ui/searchlinecontroller.h>
 #include <common/objectbroker.h>
-#include <common/recursiveproxymodelbase.h>
 
 #include <QSortFilterProxyModel>
 
@@ -36,7 +35,7 @@ EnumsTab::~EnumsTab() = default;
 
 void EnumsTab::setObjectBaseName(const QString &baseName)
 {
-    QSortFilterProxyModel *proxy = new RecursiveProxyModelBase(this);
+    auto *proxy = new QSortFilterProxyModel(this);
     proxy->setDynamicSortFilter(true);
     proxy->setSourceModel(ObjectBroker::model(baseName + '.' + "enums"));
     m_ui->enumView->setModel(proxy);

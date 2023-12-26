@@ -32,7 +32,6 @@
 #include <common/probecontrollerinterface.h>
 #include <common/problem.h>
 #include <common/remoteviewframe.h>
-#include <common/recursiveproxymodelbase.h>
 
 #include <core/enumrepositoryserver.h>
 #include <core/metaenum.h>
@@ -75,6 +74,7 @@
 #include <QMatrix4x4>
 #include <QCoreApplication>
 #include <QMutexLocker>
+#include <QSortFilterProxyModel>
 
 #include <QSGRenderNode>
 #include <QSGRendererInterface>
@@ -363,7 +363,7 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     m_windowModel = proxy;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickWindowModel"), m_windowModel);
 
-    auto filterProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
+    auto filterProxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     filterProxy->setSourceModel(m_itemModel);
     filterProxy->addRole(ObjectModel::ObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickItemModel"), filterProxy);
@@ -383,7 +383,7 @@ QuickInspector::QuickInspector(Probe *probe, QObject *parent)
     connect(m_itemSelectionModel, &QItemSelectionModel::selectionChanged,
             this, &QuickInspector::itemSelectionChanged);
 
-    auto sgFilterProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
+    auto sgFilterProxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     sgFilterProxy->setSourceModel(m_sgModel);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"), sgFilterProxy);
 

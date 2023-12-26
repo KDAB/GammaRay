@@ -12,14 +12,13 @@
 */
 
 #include <visibilityfilterproxymodel.h>
-#include "common/objectmodel.h"
 
 #include <QDebug>
 
 using namespace GammaRay;
 
 VisibilityFilterProxyModel::VisibilityFilterProxyModel(QObject *parent)
-    : RecursiveProxyModelBase(parent)
+    : QSortFilterProxyModel(parent)
     , m_hideItems(true)
     , m_flagRole(0)
     , m_invisibleMask(0)
@@ -32,7 +31,7 @@ void VisibilityFilterProxyModel::sort(int column, Qt::SortOrder order)
     Q_UNUSED(order);
 }
 
-bool VisibilityFilterProxyModel::acceptRow(int source_row, const QModelIndex &source_parent) const
+bool VisibilityFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     const QModelIndex source_index = sourceModel()->index(source_row, 0, source_parent);
     if (!source_index.isValid()) {
@@ -45,7 +44,7 @@ bool VisibilityFilterProxyModel::acceptRow(int source_row, const QModelIndex &so
             return false;
     }
 
-    return RecursiveProxyModelBase::acceptRow(source_row, source_parent);
+    return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 
 void VisibilityFilterProxyModel::setHideItems(bool hideItems)

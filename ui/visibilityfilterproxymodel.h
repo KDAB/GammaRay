@@ -14,8 +14,7 @@
 #ifndef GAMMARAY_VISIBILITYFILTERPROXYMODEL_H
 #define GAMMARAY_VISIBILITYFILTERPROXYMODEL_H
 
-#include "gammaray_common_export.h"
-#include "common/recursiveproxymodelbase.h"
+#include <QSortFilterProxyModel>
 
 namespace GammaRay {
 
@@ -24,7 +23,7 @@ namespace GammaRay {
  *
  * Filter in and sort according to the objects list.
  */
-class VisibilityFilterProxyModel : public RecursiveProxyModelBase
+class VisibilityFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
@@ -51,7 +50,7 @@ protected:
      * @return true if the item in the row can be included in the model;
      *         otherwise returns false.
      */
-    bool acceptRow(int source_row, const QModelIndex &source_parent) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
 private:
     bool m_hideItems;

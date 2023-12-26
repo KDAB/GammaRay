@@ -27,11 +27,7 @@
 
 #include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QRegExp>
-#else
 #include <QRegularExpression>
-#endif
 
 #include <QQuickItem>
 #include <private/qquickitem_p.h>
@@ -116,18 +112,11 @@ private slots:
 
         itemModel->setProperty("filterKeyColumn", -1);
         itemModel->setProperty("filterRegExp",
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-                               QRegExp("Rect", Qt::CaseInsensitive, QRegExp::FixedString));
-#else
                                QRegularExpression("Rect", QRegularExpression::CaseInsensitiveOption));
-#endif
+
         sgModel->setProperty("filterKeyColumn", -1);
         sgModel->setProperty("filterRegExp",
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-                             QRegExp("Transform", Qt::CaseInsensitive, QRegExp::FixedString));
-#else
                              QRegularExpression("Transform", QRegularExpression::CaseInsensitiveOption));
-#endif
         QVERIFY(itemModel->rowCount() > 0);
         QVERIFY(sgModel->rowCount() > 0);
 
@@ -136,13 +125,8 @@ private slots:
             QTest::keyClick(view(), Qt::Key_Down);
         QTest::qWait(20);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        itemModel->setProperty("filterRegExp", QRegExp());
-        sgModel->setProperty("filterRegExp", QRegExp());
-#else
         itemModel->setProperty("filterRegExp", QRegularExpression());
         sgModel->setProperty("filterRegExp", QRegularExpression());
-#endif
 
         QTest::qWait(20);
     }

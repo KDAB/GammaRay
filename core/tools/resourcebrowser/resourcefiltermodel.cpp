@@ -20,15 +20,15 @@
 using namespace GammaRay;
 
 ResourceFilterModel::ResourceFilterModel(QObject *parent)
-    : RecursiveProxyModelBase(parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
-bool ResourceFilterModel::acceptRow(int source_row, const QModelIndex &source_parent) const
+bool ResourceFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     const QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
     const QString path = index.data(ResourceModel::FilePathRole).toString();
     if (path == QLatin1String(":/gammaray") || path.startsWith(QLatin1String(":/gammaray/")))
         return false;
-    return RecursiveProxyModelBase::acceptRow(source_row, source_parent);
+    return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
