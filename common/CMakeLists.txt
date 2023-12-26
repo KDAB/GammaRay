@@ -52,7 +52,6 @@ set(gammaray_common_srcs
     remoteviewframe.cpp
     transferimage.cpp
     commonutils.cpp
-    recursiveproxymodelbase.cpp
 )
 
 add_library(
@@ -145,7 +144,6 @@ if(NOT GAMMARAY_PROBE_ONLY_BUILD)
         translator.h
         commonutils.h
         favoriteobjectinterface.h
-        recursiveproxymodelbase.h
     )
 
     ecm_generate_pri_file(

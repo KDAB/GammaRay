@@ -14,15 +14,15 @@
 #ifndef GAMMARAY_RESOURCEBROWSER_RESOURCEFILTERMODEL_H
 #define GAMMARAY_RESOURCEBROWSER_RESOURCEFILTERMODEL_H
 
-#include <common/recursiveproxymodelbase.h>
+#include <QSortFilterProxyModel>
 
 namespace GammaRay {
-class ResourceFilterModel : public RecursiveProxyModelBase
+class ResourceFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
     explicit ResourceFilterModel(QObject *parent = nullptr);
-    bool acceptRow(int source_row, const QModelIndex &source_parent) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 };
 }
 

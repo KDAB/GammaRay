@@ -17,7 +17,7 @@
 using namespace GammaRay;
 
 ObjectIdsFilterProxyModel::ObjectIdsFilterProxyModel(QObject *parent)
-    : RecursiveProxyModelBase(parent)
+    : QSortFilterProxyModel(parent)
 {
 }
 
@@ -41,11 +41,11 @@ void ObjectIdsFilterProxyModel::setIds(const GammaRay::ObjectIds &ids)
     invalidateFilter();
 }
 
-bool ObjectIdsFilterProxyModel::acceptRow(int source_row, const QModelIndex &source_parent) const
+bool ObjectIdsFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     // shortcut for the common case, the object id stuff below allocates memory and does expensive model lookups
     if (m_ids.isEmpty()) {
-        return RecursiveProxyModelBase::acceptRow(source_row, source_parent);
+        return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
     }
 
     const QModelIndex source_index = sourceModel()->index(source_row, 0, source_parent);
@@ -58,7 +58,7 @@ bool ObjectIdsFilterProxyModel::acceptRow(int source_row, const QModelIndex &sou
         return false;
     }
 
-    return RecursiveProxyModelBase::acceptRow(source_row, source_parent);
+    return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 
 bool ObjectIdsFilterProxyModel::filterAcceptsObjectId(const GammaRay::ObjectId &id) const

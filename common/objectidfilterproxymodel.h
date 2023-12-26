@@ -17,7 +17,7 @@
 #include "gammaray_common_export.h"
 
 #include <common/objectid.h>
-#include <common/recursiveproxymodelbase.h>
+#include <QSortFilterProxyModel>
 
 namespace GammaRay {
 
@@ -26,7 +26,7 @@ namespace GammaRay {
  *
  * Filter in and sort according to the objects list.
  */
-class GAMMARAY_COMMON_EXPORT ObjectIdsFilterProxyModel : public RecursiveProxyModelBase
+class GAMMARAY_COMMON_EXPORT ObjectIdsFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
@@ -50,7 +50,7 @@ protected:
      * @return true if the item in the row can be included in the model;
      *         otherwise returns false.
      */
-    bool acceptRow(int source_row, const QModelIndex &source_parent) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
     /**
      * Determines if the specified ObjectID can be included in the model.

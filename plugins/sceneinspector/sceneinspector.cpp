@@ -31,7 +31,6 @@
 #include <common/endpoint.h>
 #include <common/metatypedeclarations.h>
 #include <common/objectmodel.h>
-#include <common/recursiveproxymodelbase.h>
 
 #include <QGraphicsEffect>
 #include <QGraphicsItem>
@@ -42,6 +41,7 @@
 #include <QGraphicsView>
 #include <QItemSelectionModel>
 #include <QTextDocument>
+#include <QSortFilterProxyModel>
 
 #include <iostream>
 
@@ -90,7 +90,7 @@ SceneInspector::SceneInspector(Probe *probe, QObject *parent)
             this, &SceneInspector::sceneSelected);
 
     m_sceneModel = new SceneModel(this);
-    auto sceneProxy = new ServerProxyModel<RecursiveProxyModelBase>(this);
+    auto sceneProxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     sceneProxy->setSourceModel(m_sceneModel);
     sceneProxy->addRole(ObjectModel::ObjectIdRole);
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SceneGraphModel"), sceneProxy);
