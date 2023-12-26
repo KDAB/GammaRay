@@ -13,7 +13,7 @@
 
 import QtPositioning 5.3
 import QtLocation 5.3
-import QtQuick 2.0
+import QtQuick 2.15
 
 Item {
     Plugin {
@@ -34,7 +34,9 @@ Item {
             opacity: 0.5
             Connections {
                 target: _controller
-                onOverrideCoordinateChanged: sourceTrace.addCoordinate(_controller.sourceCoordinate)
+                function onOverrideCoordinateChanged() {
+                    sourceTrace.addCoordinate(_controller.sourceCoordinate);
+                }
             }
         }
 
@@ -45,7 +47,9 @@ Item {
             opacity: 0.5
             Connections {
                 target: _controller
-                onOverrideCoordinateChanged: overrideTrace.addCoordinate(_controller.overrideCoordinate)
+                function onOverrideCoordinateChanged() {
+                    overrideTrace.addCoordinate(_controller.overrideCoordinate);
+                }
             }
         }
 
@@ -152,6 +156,10 @@ Item {
 
     Connections {
         target: _controller
-        onCenterOnPosition: map.center = _controller.overrideEnabled ? _controller.overrideCoordinate : _controller.sourceCoordinate
+        function onCenterOnPosition() {
+            map.center = _controller.overrideEnabled
+                ? _controller.overrideCoordinate
+                : _controller.sourceCoordinate;
+        }
     }
 }
