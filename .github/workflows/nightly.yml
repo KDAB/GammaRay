@@ -12,19 +12,17 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
 
         config:
-          - name: clang-tidy
-            cmake_arg: '-DCMAKE_CXX_CLANG_TIDY=clang-tidy'
+          - preset: ci-dev-clang-tidy-qt6
             qt_version: "6.6"
             qt_modules: qtshadertools qtscxml
 
-          - name: clazy
-            cmake_arg: '-DCMAKE_CXX_COMPILER=clazy'
+          - preset: ci-dev-clazy-qt6
             qt_version: "6.6"
             qt_modules: qtshadertools qtscxml
             apt_pgks:
@@ -54,14 +52,7 @@ jobs:
 
       - name: Configure project
         run: >
-            cmake -S . -B ./build -G Ninja ${{ matrix.config.cmake_arg }}
-            -DCMAKE_BUILD_TYPE=RelWithDebInfo
-            -Werror=dev
-            -DECM_ENABLE_SANITIZERS=address
-            -DGAMMARAY_QT6_BUILD=ON
-            -DGAMMARAY_DISABLE_FEEDBACK=ON
-            -DGAMMARAY_BUILD_DOCS=${{ matrix.config.name == 'clazy' }}
-            -DGAMMARAY_MULTI_BUILD=${{ matrix.config.name == 'clazy' }}
+            cmake -S . -G Ninja --preset ${{ matrix.config.preset }}
 
       - name: Build Project
-        run: cmake --build ./build
+        run: cmake --build ./build-${{ matrix.config.preset }}
