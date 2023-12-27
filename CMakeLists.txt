@@ -293,6 +293,7 @@ if(GAMMARAY_USE_PCH)
         PROPERTIES PRECOMPILE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/core/pch.h
                    CXX_VISIBILITY_PRESET hidden
                    VISIBILITY_INLINES_HIDDEN ON
+                   POSITION_INDEPENDENT_CODE ON
     )
 endif()
 
