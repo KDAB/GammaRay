@@ -220,7 +220,7 @@ void ResourceBrowserWidget::handleCustomContextMenu(const QPoint &pos)
 
     if (!selectedAction)
         return;
-    else if (selectedAction==saveAsAction) {
+    else if (selectedAction == saveAsAction) {
         if (selectedIndex.model()->hasChildren(selectedIndex)) {
             const QString sourceDirectory = selectedIndex.data(ResourceModel::FilePathRole).toString();
             const QString targetDirectory = QFileDialog::getExistingDirectory(this, tr("Save As"));
@@ -248,8 +248,7 @@ void ResourceBrowserWidget::handleCustomContextMenu(const QPoint &pos)
 
             m_interface->downloadResource(sourceFilePath, targetFilePath);
         }
-    }
-    else if (selectedAction==copyUriAction) {
+    } else if (selectedAction == copyUriAction) {
         const QString sourceFilePath = selectedIndex.data(ResourceModel::FilePathRole).toString();
         QApplication::clipboard()->setText(sourceFilePath, QClipboard::Clipboard);
     }
