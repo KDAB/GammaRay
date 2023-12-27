@@ -31,6 +31,7 @@
 #include <QScrollBar>
 #include <QTimer>
 #include <QTextBlock>
+#include <QClipboard>
 
 using namespace GammaRay;
 
@@ -211,35 +212,45 @@ void ResourceBrowserWidget::handleCustomContextMenu(const QPoint &pos)
         return;
 
     QMenu menu;
-    menu.addAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save As..."));
-    if (!menu.exec(ui->treeView->viewport()->mapToGlobal(pos)))
+    auto saveAsAction = new QAction(style()->standardIcon(QStyle::SP_DialogSaveButton), tr("Save As..."));
+    auto copyUriAction = new QAction(style()->standardIcon(QStyle::SP_DirLinkIcon), tr("Copy URI"));
+    menu.addAction(saveAsAction);
+    menu.addAction(copyUriAction);
+    auto selectedAction = menu.exec(ui->treeView->viewport()->mapToGlobal(pos));
+
+    if (!selectedAction)
         return;
+    else if (selectedAction==saveAsAction) {
+        if (selectedIndex.model()->hasChildren(selectedIndex)) {
+            const QString sourceDirectory = selectedIndex.data(ResourceModel::FilePathRole).toString();
+            const QString targetDirectory = QFileDialog::getExistingDirectory(this, tr("Save As"));
 
-    if (selectedIndex.model()->hasChildren(selectedIndex)) {
-        const QString sourceDirectory = selectedIndex.data(ResourceModel::FilePathRole).toString();
-        const QString targetDirectory = QFileDialog::getExistingDirectory(this, tr("Save As"));
+            // create local target directory tree
+            foreach (const QString &directoryPath, collectDirectories(selectedIndex, sourceDirectory)) {
+                if (directoryPath.isEmpty())
+                    continue;
 
-        // create local target directory tree
-        foreach (const QString &directoryPath, collectDirectories(selectedIndex, sourceDirectory)) {
-            if (directoryPath.isEmpty())
-                continue;
+                QDir dir(targetDirectory + '/' + directoryPath);
+                dir.mkpath(QStringLiteral("."));
+            }
 
-            QDir dir(targetDirectory + '/' + directoryPath);
-            dir.mkpath(QStringLiteral("."));
+            // request all resource files
+            foreach (const QString &filePath, collectFiles(selectedIndex, sourceDirectory))
+                m_interface->downloadResource(sourceDirectory + filePath, targetDirectory + filePath);
+
+        } else {
+            const QString sourceFilePath = selectedIndex.data(ResourceModel::FilePathRole).toString();
+            const QString sourceFileName = sourceFilePath.mid(sourceFilePath.lastIndexOf('/') + 1);
+
+            const QString targetFilePath = QFileDialog::getSaveFileName(this, tr("Save As"), sourceFileName);
+            if (targetFilePath.isEmpty())
+                return;
+
+            m_interface->downloadResource(sourceFilePath, targetFilePath);
         }
-
-        // request all resource files
-        foreach (const QString &filePath, collectFiles(selectedIndex, sourceDirectory))
-            m_interface->downloadResource(sourceDirectory + filePath, targetDirectory + filePath);
-
-    } else {
+    }
+    else if (selectedAction==copyUriAction) {
         const QString sourceFilePath = selectedIndex.data(ResourceModel::FilePathRole).toString();
-        const QString sourceFileName = sourceFilePath.mid(sourceFilePath.lastIndexOf('/') + 1);
-
-        const QString targetFilePath = QFileDialog::getSaveFileName(this, tr("Save As"), sourceFileName);
-        if (targetFilePath.isEmpty())
-            return;
-
-        m_interface->downloadResource(sourceFilePath, targetFilePath);
+        QApplication::clipboard()->setText(sourceFilePath, QClipboard::Clipboard);
     }
 }
