@@ -73,6 +73,8 @@ bool BindingExtension::setQObject(QObject *object)
             }
         }
         connect(object, &QObject::destroyed, this, &BindingExtension::clear);
+    } else {
+        m_bindings.clear();
     }
 
     m_bindingModel->setObject(object, m_bindings);
