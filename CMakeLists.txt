@@ -441,6 +441,10 @@ endif()
 set_package_properties(Qt${QT_VERSION_MAJOR}Core PROPERTIES TYPE REQUIRED)
 
 find_package(Qt${QT_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Gui Network)
+if(QT_VERSION_MAJOR EQUAL 6 AND QT_VERSION_MINOR LESS 3)
+    message(FATAL_ERROR "Sorry, Qt6 less than version 6.3 is not supported since GammaRay 3.1")
+endif()
+
 find_package(
     Qt${QT_VERSION_MAJOR} NO_MODULE QUIET
     OPTIONAL_COMPONENTS

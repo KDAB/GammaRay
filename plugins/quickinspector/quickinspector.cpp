@@ -188,7 +188,7 @@ static QString qsgMaterialFlagsToString(QSGMaterial::Flags flags)
     F(RequiresDeterminant)
     F(RequiresFullMatrixExceptTranslate)
     F(RequiresFullMatrix)
-#if QT_VERSION < QT_VERSION_CHECK(6, 3, 0)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     F(CustomCompileStep)
 #else
     F(NoBatching)
