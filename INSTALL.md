@@ -9,7 +9,7 @@ To build GammaRay you will need *at least*:
 
 - CMake 3.16.0
 - a C++ compiler with C++11 support
-- Qt 5.15 or higher, or Qt 6
+- Qt 5.15 or higher, or Qt 6.3 or higher
   (GammaRay v3.0.0 was the last release to support Qt versions less than 5.15)
 
 Please be aware that GammaRay heavily relies on Qt private headers which can
