@@ -1,11 +1,12 @@
 # This file is part of GammaRay, the Qt application inspection and manipulation tool.
 #
-# SPDX-FileCopyrightText: 2015-2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+# SPDX-FileCopyrightText: 2015 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 # Contact KDAB at <info@kdab.com> for commercial licensing options.
 #
+
 # Integrated launcher/client for Mac app bundles
 if(APPLE)
     if(NOT GAMMARAY_INSTALL_QT_LAYOUT)
@@ -47,7 +48,7 @@ if(APPLE)
         set(GAMMARAY_BUNDLE_LONG_VERSION_STRING "${GAMMARAY_VERSION_STRING}")
         set(GAMMARAY_BUNDLE_INFO_STRING "GammaRay ${GAMMARAY_VERSION}")
         set(GAMMARAY_BUNDLE_COPYRIGHT
-            "Copyright (C) 2010-2023 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com"
+            "Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com"
         )
 
         configure_file("${GAMMARAY_BUNDLE_INFO_PLIST_IN}" "${GAMMARAY_BUNDLE_INFO_PLIST_OUT}")
