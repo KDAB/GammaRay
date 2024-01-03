@@ -64,6 +64,10 @@
 #  Enable Precompiled Headers support
 #  Default=false
 #
+# -DGAMMARAY_WITH_KDSME=[true|false]
+#  Enable State Machine Viewer Plugin UI by requiring KDAB State Machine Editor
+#  Default=false
+#
 # -DENABLE_GOLD_LINKER=[true|false]
 #  Use GNU gold linker
 #  Default=false
@@ -250,6 +254,7 @@ endif()
 gammaray_option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." OFF)
 gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
 gammaray_option(GAMMARAY_BUILD_CLI_INJECTOR "Build command line injector on Windows." ON)
+gammaray_option(GAMMARAY_WITH_KDSME "Enable State Machine UI with KDSME" OFF)
 
 set(GAMMARAY_BUILD_DOCS_DEFAULT ON)
 set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT OFF)
@@ -797,7 +802,7 @@ include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/3rdparty ${CMAKE_BIN
 
 include(KDQtInstallPaths) #to set QT_INSTALL_FOO variables
 add_subdirectory(cmake)
-add_subdirectory(3rdparty/kde)
+add_subdirectory(3rdparty)
 add_subdirectory(common)
 add_subdirectory(core)
 add_subdirectory(probe)

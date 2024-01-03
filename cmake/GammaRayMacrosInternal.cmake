@@ -132,3 +132,19 @@ macro(gammaray_add_dummy_package _package _found)
     list(APPEND _packages ${_package})
     set_property(GLOBAL PROPERTY ${_property_name} "${_packages}")
 endmacro()
+
+# Check if some required submodule is initialized
+function(gammaray_ensure_submodule_exists submodule)
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${submodule}/.git")
+        if(EXISTS "${appframework_SOURCE_DIR}/.git")
+            message(
+                FATAL_ERROR
+                    "The git submodule ${submodule} is not initialized.\n"
+                    "Please run the following command in the source directory (${appframework_SOURCE_DIR}):\n"
+                    "    git submodule update --init --recursive ${CMAKE_CURRENT_SOURCE_DIR}/${submodule}\n"
+            )
+        else()
+            message(FATAL_ERROR "The submodules are missing - please report a broken source package.\n")
+        endif()
+    endif()
+endfunction()
