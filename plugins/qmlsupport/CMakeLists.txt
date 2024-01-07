@@ -35,7 +35,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         Qt::QmlPrivate
     )
 
-    if(TARGET Qt${QT_MAJOR_VERSION}::Qml)
+    if(TARGET Qt${QT_VERSION_MAJOR}::Qml)
         target_sources(gammaray_qmlsupport PUBLIC qmlbindingprovider.cpp)
     endif()
 
