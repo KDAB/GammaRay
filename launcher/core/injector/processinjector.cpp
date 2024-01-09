@@ -75,7 +75,7 @@ bool ProcessInjector::launchProcess(const QStringList &programAndArgs,
         // ### TODO properly handle quoted arguments!
         QStringList newArgs = fullWrapperCmd.split(' ');
         newArgs += args;
-        args = newArgs;
+        args = std::move(newArgs);
         qDebug() << "Launching with target wrapper:" << args;
     } else if (env.value(QStringLiteral("GAMMARAY_DEBUG")).compare(QStringLiteral("GDB"), Qt::CaseInsensitive) == 0
                || env.value(QStringLiteral("GAMMARAY_GDB")).toInt()) {
@@ -86,17 +86,17 @@ bool ProcessInjector::launchProcess(const QStringList &programAndArgs,
 #endif
         newArgs << QStringLiteral("--args");
         newArgs += args;
-        args = newArgs;
+        args = std::move(newArgs);
     } else if (env.value(QStringLiteral("GAMMARAY_DEBUG")).compare(QStringLiteral("GDB_NORUN"), Qt::CaseInsensitive) == 0) {
         QStringList newArgs;
         newArgs << QStringLiteral("gdb") << QStringLiteral("--args");
         newArgs += args;
-        args = newArgs;
+        args = std::move(newArgs);
     } else if (env.value(QStringLiteral("GAMMARAY_DEBUG")).compare(QStringLiteral("RR"), Qt::CaseInsensitive) == 0) {
         QStringList newArgs;
         newArgs << QStringLiteral("rr") << QStringLiteral("record");
         newArgs += args;
-        args = newArgs;
+        args = std::move(newArgs);
     }
 
     const QString program = args.takeFirst();

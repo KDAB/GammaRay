@@ -408,7 +408,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             if (node) {
                 node->allocateColumns();
                 Q_ASSERT(node->data.size() > column);
-                node->data[column] = itemData;
+                node->data[column] = std::move(itemData);
                 node->flags[column] = static_cast<Qt::ItemFlags>(flags);
                 node->state[column] = state & ~(RemoteModelNodeState::Loading | RemoteModelNodeState::Empty | RemoteModelNodeState::Outdated);
 
@@ -435,7 +435,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                 c1 = std::min(c1, index.column());
                 c2 = std::max(c2, index.column());
             }
-            const auto qmi = indexes.at(0);
+            const auto &qmi = indexes.at(0);
             emit dataChanged(qmi.sibling(r1, c1), qmi.sibling(r2, c2));
         }
         break;
@@ -452,7 +452,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         if (headers.isEmpty())
             break;
         Q_ASSERT(headers.size() > section);
-        headers[section] = data;
+        headers[section] = std::move(data);
         if ((orientation == Qt::Horizontal && m_root->columnCount > section)
             || (orientation == Qt::Vertical && m_root->rowCount > section))
             emit headerDataChanged(static_cast<Qt::Orientation>(orientation), section, section);

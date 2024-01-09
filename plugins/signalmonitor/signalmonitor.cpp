@@ -68,6 +68,6 @@ void SignalMonitor::objectSelected(QObject *obj)
     if (indexList.isEmpty())
         return;
 
-    const auto index = indexList.first();
+    const auto &index = indexList.first();
     m_objSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }

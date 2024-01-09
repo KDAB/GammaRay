@@ -97,7 +97,7 @@ QVector<ModelCellModel::RoleInfo> ModelCellModel::rolesForModel(const QAbstractI
             }
         }
         if (!roleFound) {
-            const auto name = it.value().isEmpty() ? tr("Role #%1").arg(it.key()) : QString::fromLatin1(it.value());
+            const auto &name = it.value().isEmpty() ? tr("Role #%1").arg(it.key()) : QString::fromLatin1(it.value());
             roles.push_back(qMakePair(it.key(), name));
         }
     }
