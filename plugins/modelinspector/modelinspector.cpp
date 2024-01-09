@@ -105,7 +105,7 @@ void ModelInspector::objectSelected(QObject *object)
         if (indexList.isEmpty())
             return;
 
-        const auto index = indexList.first();
+        const auto &index = indexList.first();
         m_modelSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     }
     if (auto selModel = qobject_cast<QItemSelectionModel *>(object)) {
@@ -120,7 +120,7 @@ void ModelInspector::objectSelected(QObject *object)
         if (indexList.isEmpty())
             return;
 
-        const auto index = indexList.first();
+        const auto &index = indexList.first();
         m_selectionModelsSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     }
 }

@@ -104,7 +104,7 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
             procData.user = line.mid(endOfState + 1, endOfUser - endOfState - 1);
             procData.name = line.right(line.size() - endOfUser - 1);
             PidAndNameMatch f(procData.ppid, procData.name);
-            ProcDataList::ConstIterator it = std::find_if(previous.constBegin(), previous.constEnd(), f);
+            ProcDataList::ConstIterator it = std::find_if(previous.constBegin(), previous.constEnd(), std::move(f));
             if (it != previous.constEnd())
                 procData.abi = it->abi;
             else

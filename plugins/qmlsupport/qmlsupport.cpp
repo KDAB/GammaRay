@@ -252,7 +252,7 @@ QString QmlObjectDataProvider::shortTypeName(const QObject *obj) const
     if (idx > 0)
         return n.left(idx);
 
-    return isQmlType ? n : QString(); // let somebody else handle shortening of non-QML names
+    return isQmlType ? std::move(n) : QString(); // let somebody else handle shortening of non-QML names
 }
 
 SourceLocation QmlObjectDataProvider::creationLocation(const QObject *obj) const

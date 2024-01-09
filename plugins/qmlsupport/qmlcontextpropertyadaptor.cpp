@@ -66,7 +66,7 @@ void QmlContextPropertyAdaptor::writeProperty(int index, const QVariant &value)
     Q_ASSERT(index >= 0);
     Q_ASSERT(index < m_contextPropertyNames.size());
 
-    const auto name = m_contextPropertyNames.at(index);
+    const auto &name = m_contextPropertyNames.at(index);
     auto context = qobject_cast<QQmlContext *>(object().qtObject());
     if (name.isEmpty() || !context)
         return;

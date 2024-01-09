@@ -141,7 +141,7 @@ void TranslatorInspector::objectSelected(QObject *obj)
     if (indexList.isEmpty())
         return;
 
-    const auto index = indexList.first();
+    const auto &index = indexList.first();
     m_selectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }
 

@@ -361,9 +361,7 @@ void AggregatedPropertyModel::addPropertyAdaptor(PropertyAdaptor *adaptor) const
     if (!adaptor)
         return;
 
-    QVector<PropertyAdaptor *> children;
-    children.resize(adaptor->count());
-    m_parentChildrenMap[adaptor] = children;
+    m_parentChildrenMap.emplace(adaptor, QVector<PropertyAdaptor *>(adaptor->count()));
     connect(adaptor, &PropertyAdaptor::propertyChanged, this, &AggregatedPropertyModel::propertyChanged);
     connect(adaptor, &PropertyAdaptor::propertyAdded, this, &AggregatedPropertyModel::propertyAdded);
     connect(adaptor, &PropertyAdaptor::propertyRemoved, this, &AggregatedPropertyModel::propertyRemoved);

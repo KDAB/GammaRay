@@ -394,7 +394,7 @@ GammaRay::ObjectIds WidgetInspectorServer::recursiveWidgetsAt(QWidget *parent, c
 
     bestCandidate = -1;
 
-    const auto childItems = parent->children();
+    const auto &childItems = parent->children();
     for (int i = childItems.size() - 1; i >= 0; --i) { // backwards to match z order
         auto c = childItems.at(i);
         if (!c->isWidgetType() || c->metaObject()->className() == QLatin1String("GammaRay::OverlayWidget"))
@@ -463,14 +463,16 @@ void WidgetInspectorServer::callExternalExportAction(const char *name, QWidget *
         }
     }
 
-    void (*function)(QWidget *, const QString &) = reinterpret_cast<void (*)(QWidget *,
-                                                                             const QString &)>(m_externalExportActions->resolve(name));
+    if (m_externalExportActions) {
+        void (*function)(QWidget *, const QString &) = reinterpret_cast<void (*)(QWidget *,
+                                                                                 const QString &)>(m_externalExportActions->resolve(name));
 
-    if (!function) {
-        cerr << Q_FUNC_INFO << ' ' << qPrintable(m_externalExportActions->errorString()) << endl;
-        return;
+        if (!function) {
+            cerr << Q_FUNC_INFO << ' ' << qPrintable(m_externalExportActions->errorString()) << endl;
+            return;
+        }
+        function(widget, fileName);
     }
-    function(widget, fileName);
 }
 
 void WidgetInspectorServer::analyzePainting()

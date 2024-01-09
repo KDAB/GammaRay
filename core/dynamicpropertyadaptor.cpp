@@ -66,7 +66,7 @@ void DynamicPropertyAdaptor::writeProperty(int index, const QVariant &value)
         return;
     Q_ASSERT(index < m_propNames.size());
 
-    const auto propName = m_propNames.at(index);
+    const auto &propName = m_propNames.at(index);
     object().qtObject()->setProperty(propName, value);
 }
 

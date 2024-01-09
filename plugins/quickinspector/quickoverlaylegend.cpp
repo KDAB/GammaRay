@@ -91,7 +91,7 @@ class LegendModel : public QAbstractListModel
                 }
             }
 
-            item.pixmap = pixmap;
+            item.pixmap = std::move(pixmap);
         }
     };
 

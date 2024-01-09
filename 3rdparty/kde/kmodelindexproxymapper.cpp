@@ -43,7 +43,7 @@ class KModelIndexProxyMapperPrivate
 
     bool assertSelectionValid(const QItemSelection &selection) const
     {
-        Q_FOREACH (const QItemSelectionRange &range, selection) {
+        for (const QItemSelectionRange &range : selection) {
             if (!range.isValid()) {
                 qCDebug(KITEMMODELS_LOG) << selection << m_leftModel << m_rightModel << m_proxyChainDown << m_proxyChainUp;
             }
@@ -146,7 +146,7 @@ void KModelIndexProxyMapperPrivate::createProxyChain()
             return;
         }
     }
-    m_proxyChainDown = proxyChainDown;
+    m_proxyChainDown = std::move(proxyChainDown);
     checkConnected();
 }
 

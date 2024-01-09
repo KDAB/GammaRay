@@ -32,7 +32,7 @@ struct SetTempValue
         : obj(obj)
         , oldValue(obj)
     {
-        obj = newValue;
+        obj = std::move(newValue);
     }
 
     ~SetTempValue()

@@ -108,7 +108,7 @@ QVariant PropertyEnumEditorModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         return m_def.elements().at(index.row()).name();
     } else if (role == Qt::CheckStateRole && m_def.isFlag()) {
-        const auto elem = m_def.elements().at(index.row());
+        const auto &elem = m_def.elements().at(index.row());
         if (elem.value() == 0)
             return m_value.value() == 0 ? Qt::Checked : Qt::Unchecked;
         return (elem.value() & m_value.value()) == elem.value() ? Qt::Checked : Qt::Unchecked;
@@ -131,7 +131,7 @@ bool PropertyEnumEditorModel::setData(const QModelIndex &index, const QVariant &
         return false;
 
     if (role == Qt::CheckStateRole) {
-        const auto elem = m_def.elements().at(index.row());
+        const auto &elem = m_def.elements().at(index.row());
         if (value.toInt() == Qt::Checked)
             m_value.setValue(m_value.value() | elem.value());
         else if (value.toInt() == Qt::Unchecked)

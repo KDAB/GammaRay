@@ -68,7 +68,7 @@ void TextDocumentInspector::objectSelected(QObject *obj)
         if (indexList.isEmpty())
             return;
 
-        const auto index = indexList.first();
+        const auto &index = indexList.first();
         m_documentSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     } else if (auto docObj = qobject_cast<QTextObject *>(obj)) {
         objectSelected(docObj->document());

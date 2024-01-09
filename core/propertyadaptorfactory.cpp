@@ -56,7 +56,7 @@ PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObjec
             }
         } else if (oi.typeName() == "QJSValue") {
         } else {
-            const auto v = oi.variant();
+            const auto &v = oi.variant();
             if (v.canConvert<QVariantList>())
                 adaptors.push_back(new SequentialPropertyAdaptor(parent));
             else if (v.canConvert<QVariantHash>())
@@ -64,7 +64,8 @@ PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObjec
         }
     }
 
-    foreach (auto factory, *s_propertyAdaptorFactories()) {
+    const auto factories = *s_propertyAdaptorFactories();
+    for (auto factory : factories) {
         auto a = factory->create(oi, parent);
         if (a)
             adaptors.push_back(a);

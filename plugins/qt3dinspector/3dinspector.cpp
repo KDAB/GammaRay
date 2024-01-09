@@ -197,7 +197,7 @@ void Qt3DInspector::selectEntity(Qt3DCore::QEntity *entity)
     if (indexList.isEmpty())
         return;
 
-    const auto index = indexList.first();
+    const auto &index = indexList.first();
     m_entitySelectionModel->select(index,
                                    QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows
                                        | QItemSelectionModel::Current);
@@ -235,7 +235,7 @@ void Qt3DInspector::selectFrameGraphNode(Qt3DRender::QFrameGraphNode *node)
     if (indexList.isEmpty())
         return;
 
-    const auto index = indexList.first();
+    const auto &index = indexList.first();
     m_frameGraphSelectionModel->select(index,
                                        QItemSelectionModel::Select | QItemSelectionModel::Clear | QItemSelectionModel::Rows | QItemSelectionModel::Current);
 }

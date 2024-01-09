@@ -58,7 +58,7 @@ QWidget *QtIviConstrainedValueDelegate::createEditor(QWidget *parent, const QSty
             const QVariant type = constraints.takeFirst();
             if (type.isValid() && type.canConvert<uint>()) {
                 constraintsType = type.toUInt();
-                constraintValues = constraints;
+                constraintValues = std::move(constraints);
             }
         }
     }

@@ -58,7 +58,7 @@ void QmlContextModel::setContext(QQmlContext *leafContext)
     std::reverse(tmp.begin(), tmp.end());
 
     beginInsertRows(QModelIndex(), 0, tmp.size() - 1);
-    m_contexts = tmp;
+    m_contexts = std::move(tmp);
     endInsertRows();
 }
 
