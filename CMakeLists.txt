@@ -480,9 +480,21 @@ endif()
 find_package(Qt${QT_VERSION_MAJOR}IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
 find_package(Qt${QT_VERSION_MAJOR}IviVehicleFunctions 1.1 NO_MODULE QUIET)
 find_package(Qt${QT_VERSION_MAJOR}IviMedia 1.1 NO_MODULE QUIET)
-find_package(Qt${QT_VERSION_MAJOR}Scxml ${Qt${QT_VERSION_MAJOR}_VERSION} EXACT NO_MODULE QUIET)
+find_package(
+    Qt${QT_VERSION_MAJOR}Scxml
+    ${Qt${QT_VERSION_MAJOR}_VERSION}
+    EXACT
+    NO_MODULE
+    QUIET
+)
 if(QT_VERSION_MAJOR GREATER_EQUAL 6)
-    find_package(Qt${QT_VERSION_MAJOR}StateMachine ${Qt${QT_VERSION_MAJOR}_VERSION} EXACT NO_MODULE QUIET)
+    find_package(
+        Qt${QT_VERSION_MAJOR}StateMachine
+        ${Qt${QT_VERSION_MAJOR}_VERSION}
+        EXACT
+        NO_MODULE
+        QUIET
+    )
 endif()
 
 # if translation/doc host tools are missing, the Qt5 cmake config files throw errors...
