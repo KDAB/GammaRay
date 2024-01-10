@@ -156,6 +156,10 @@ bool ProbeABIDetector::containsQtCore(const QByteArray &line)
     // Windows Qt[X]Core[d].dll
 
     for (int index = 0; (index = line.indexOf("Qt", index)) >= 0; ++index) {
+        // Path must not be something like "libqtqmlcoreplugin" which is not what we're looking for
+        if (line.contains(QByteArrayLiteral("qml")))
+            return false;
+
         if (!checkQtCorePrefix(line, index))
             continue;
 
