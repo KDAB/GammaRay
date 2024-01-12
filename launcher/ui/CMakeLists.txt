@@ -8,15 +8,24 @@
 #
 
 set(gammaray_launcher_ui_srcs
-    promolabel.cpp
-    launcherwindow.cpp
-    launchpage.cpp
-    selftestpage.cpp
-    connectpage.cpp
     attachdialog.cpp
-    processmodel.cpp
-    processfiltermodel.cpp
+    attachdialog.h
+    connectpage.cpp
+    connectpage.h
+    launcherwindow.cpp
+    launcherwindow.h
+    launchpage.cpp
+    launchpage.h
     probeabimodel.cpp
+    probeabimodel.h
+    processfiltermodel.cpp
+    processfiltermodel.h
+    processmodel.cpp
+    processmodel.h
+    promolabel.cpp
+    promolabel.h
+    selftestpage.cpp
+    selftestpage.h
     resources/ui.qrc
 )
 if(NOT WIN32)

@@ -13,16 +13,24 @@ set(gammaray_statemachineviewer_shared_srcs statemachineviewerinterface.cpp)
 # probe part
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     set(gammaray_statemachineviewer_plugin_srcs
-        statemachineviewerserver.cpp
-        transitionmodel.cpp
-        statemodel.cpp
-        statemachinewatcher.cpp
-        statemachinedebuginterface.cpp
         qsmstatemachinedebuginterface.cpp
+        qsmstatemachinedebuginterface.h
+        statemachinedebuginterface.cpp
+        statemachinedebuginterface.h
+        statemachineviewerserver.cpp
+        statemachineviewerserver.h
+        statemachinewatcher.cpp
+        statemachinewatcher.h
+        statemodel.cpp
+        statemodel.h
+        transitionmodel.cpp
+        transitionmodel.h
     )
 
     if(TARGET Qt::Scxml)
-        list(APPEND gammaray_statemachineviewer_plugin_srcs qscxmlstatemachinedebuginterface.cpp)
+        list(APPEND gammaray_statemachineviewer_plugin_srcs qscxmlstatemachinedebuginterface.cpp
+             qscxmlstatemachinedebuginterface.h
+        )
     endif()
 
     gammaray_add_plugin(
@@ -63,8 +71,13 @@ find_package(${KDSME_PACKAGE_NAME} 1.2 CONFIG QUIET)
 # UI part
 if(GAMMARAY_BUILD_UI AND ${KDSME_PACKAGE_NAME}_FOUND)
 
-    set(gammaray_statemachineviewer_ui_plugin_srcs statemachineviewerwidget.cpp statemachineviewerclient.cpp
-                                                   statemodeldelegate.cpp
+    set(gammaray_statemachineviewer_ui_plugin_srcs
+        statemachineviewerclient.cpp
+        statemachineviewerclient.h
+        statemachineviewerwidget.cpp
+        statemachineviewerwidget.h
+        statemodeldelegate.cpp
+        statemodeldelegate.h
     )
 
     gammaray_add_plugin(

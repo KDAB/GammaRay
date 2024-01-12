@@ -9,10 +9,24 @@
 
 # probe part
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_localeinspector_plugin_srcs localeinspector.cpp localemodel.cpp localedataaccessor.cpp
-                                             localeaccessormodel.cpp
+    set(gammaray_localeinspector_plugin_srcs
+        localeaccessormodel.cpp
+        localeaccessormodel.h
+        localedataaccessor.cpp
+        localedataaccessor.h
+        localeinspector.cpp
+        localeinspector.h
+        localemodel.cpp
+        localemodel.h
     )
-    list(APPEND gammaray_localeinspector_plugin_srcs timezonemodel.cpp timezoneoffsetdatamodel.cpp)
+    list(
+        APPEND
+        gammaray_localeinspector_plugin_srcs
+        timezonemodel.cpp
+        timezonemodel.h
+        timezoneoffsetdatamodel.cpp
+        timezoneoffsetdatamodel.h
+    )
 
     gammaray_add_plugin(
         gammaray_localeinspector_plugin
@@ -30,10 +44,15 @@ endif()
 if(GAMMARAY_BUILD_UI)
     set(gammaray_localeinspector_plugin_ui_srcs
         localeinspectorwidget.cpp
+        localeinspectorwidget.h
         localetab.cpp
-        timezonetab.cpp
+        localetab.h
         timezoneclientmodel.cpp
+        timezoneclientmodel.h
         timezoneoffsetdataclientmodel.cpp
+        timezoneoffsetdataclientmodel.h
+        timezonetab.cpp
+        timezonetab.h
     )
 
     gammaray_add_plugin(

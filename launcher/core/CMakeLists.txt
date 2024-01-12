@@ -10,39 +10,60 @@
 add_subdirectory(injector)
 
 set(gammaray_launcher_shared_srcs
-    injector/abstractinjector.cpp
-    injector/processinjector.cpp
-    injector/injectorfactory.cpp
-    injector/styleinjector.cpp
-    libraryutil.cpp
-    probeabi.cpp
-    probeabidetector.cpp
-    probefinder.cpp
-    launchoptions.cpp
-    networkdiscoverymodel.cpp
     clientlauncher.cpp
-    launcherfinder.cpp
+    clientlauncher.h
+    injector/abstractinjector.cpp
+    injector/abstractinjector.h
+    injector/injectorfactory.cpp
+    injector/injectorfactory.h
+    injector/processinjector.cpp
+    injector/processinjector.h
+    injector/styleinjector.cpp
+    injector/styleinjector.h
     launcher.cpp
+    launcher.h
+    launcherfinder.cpp
+    launcherfinder.h
+    launchoptions.cpp
+    launchoptions.h
+    libraryutil.cpp
+    libraryutil.h
+    networkdiscoverymodel.cpp
+    networkdiscoverymodel.h
+    probeabi.cpp
+    probeabi.h
+    probeabidetector.cpp
+    probeabidetector.h
+    probefinder.cpp
+    probefinder.h
     selftest.cpp
+    selftest.h
 )
 
 if(WIN32)
     list(
         APPEND
         gammaray_launcher_shared_srcs
-        probeabidetector_win.cpp
-        pefile.cpp
         injector/basicwindllinjector.cpp
+        injector/basicwindllinjector.h
         injector/windllinjector.cpp
+        injector/windllinjector.h
+        pefile.cpp
+        pefile.h
+        probeabidetector_win.cpp
     )
 else()
     list(
         APPEND
         gammaray_launcher_shared_srcs
         injector/debuggerinjector.cpp
+        injector/debuggerinjector.h
         injector/gdbinjector.cpp
+        injector/gdbinjector.h
         injector/lldbinjector.cpp
+        injector/lldbinjector.h
         injector/preloadinjector.cpp
+        injector/preloadinjector.h
     )
     if(APPLE)
         list(APPEND gammaray_launcher_shared_srcs probeabidetector_mac.cpp)

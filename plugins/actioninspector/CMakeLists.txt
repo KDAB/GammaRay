@@ -9,7 +9,14 @@
 
 # probe part
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_actioninspector_plugin_srcs actioninspector.cpp actionvalidator.cpp actionmodel.cpp)
+    set(gammaray_actioninspector_plugin_srcs
+        actioninspector.cpp
+        actioninspector.h
+        actionmodel.cpp
+        actionmodel.h
+        actionvalidator.cpp
+        actionvalidator.h
+    )
 
     gammaray_add_plugin(
         gammaray_actioninspector_plugin
@@ -24,7 +31,9 @@ endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)
-    set(gammaray_actioninspector_ui_plugin_srcs actioninspectorwidget.cpp clientactionmodel.cpp)
+    set(gammaray_actioninspector_ui_plugin_srcs actioninspectorwidget.cpp actioninspectorwidget.h clientactionmodel.cpp
+                                                clientactionmodel.h
+    )
 
     gammaray_add_plugin(
         gammaray_actioninspector_ui_plugin

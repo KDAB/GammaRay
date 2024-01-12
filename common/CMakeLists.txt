@@ -31,28 +31,50 @@ set_target_properties(gammaray_lz4 PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # Shared non-UI code between probe and client
 #
 set(gammaray_common_srcs
-    methodargument.cpp
-    objectbroker.cpp
-    protocol.cpp
-    message.cpp
-    endpoint.cpp
-    paths.cpp
-    propertysyncer.cpp
-    modelevent.cpp
-    modelutils.cpp
-    objectidfilterproxymodel.cpp
-    paintanalyzerinterface.cpp
-    selflocator.cpp
-    sourcelocation.cpp
-    translator.cpp
-    enumdefinition.cpp
-    enumrepository.cpp
-    enumvalue.cpp
     classesiconsrepository.cpp
-    remoteviewinterface.cpp
-    remoteviewframe.cpp
-    transferimage.cpp
+    classesiconsrepository.h
     commonutils.cpp
+    commonutils.h
+    endpoint.cpp
+    endpoint.h
+    enumdefinition.cpp
+    enumdefinition.h
+    enumrepository.cpp
+    enumrepository.h
+    enumvalue.cpp
+    enumvalue.h
+    message.cpp
+    message.h
+    methodargument.cpp
+    methodargument.h
+    modelevent.cpp
+    modelevent.h
+    modelutils.cpp
+    modelutils.h
+    objectbroker.cpp
+    objectbroker.h
+    objectidfilterproxymodel.cpp
+    objectidfilterproxymodel.h
+    paintanalyzerinterface.cpp
+    paintanalyzerinterface.h
+    paths.cpp
+    paths.h
+    propertysyncer.cpp
+    propertysyncer.h
+    protocol.cpp
+    protocol.h
+    remoteviewframe.cpp
+    remoteviewframe.h
+    remoteviewinterface.cpp
+    remoteviewinterface.h
+    selflocator.cpp
+    selflocator.h
+    sourcelocation.cpp
+    sourcelocation.h
+    transferimage.cpp
+    transferimage.h
+    translator.cpp
+    translator.h
 )
 
 add_library(
@@ -86,22 +108,38 @@ if(GAMMARAY_USE_PCH)
 endif()
 
 set(gammaray_common_internal_srcs
-    plugininfo.cpp
-    pluginmanager.cpp
-    proxyfactorybase.cpp
-    propertycontrollerinterface.cpp
-    probecontrollerinterface.cpp
-    toolmanagerinterface.cpp
-    networkselectionmodel.cpp
-    streamoperators.cpp
     favoriteobjectinterface.cpp
-    tools/objectinspector/propertiesextensioninterface.cpp
-    tools/objectinspector/methodsextensioninterface.cpp
-    tools/objectinspector/connectionsextensioninterface.cpp
+    favoriteobjectinterface.h
+    networkselectionmodel.cpp
+    networkselectionmodel.h
+    plugininfo.cpp
+    plugininfo.h
+    pluginmanager.cpp
+    pluginmanager.h
+    probecontrollerinterface.cpp
+    probecontrollerinterface.h
+    propertycontrollerinterface.cpp
+    propertycontrollerinterface.h
+    proxyfactorybase.cpp
+    proxyfactorybase.h
+    streamoperators.cpp
+    streamoperators.h
+    toolmanagerinterface.cpp
+    toolmanagerinterface.h
     tools/messagehandler/messagehandlerinterface.cpp
+    tools/messagehandler/messagehandlerinterface.h
     tools/metatypebrowser/metatypebrowserinterface.cpp
+    tools/metatypebrowser/metatypebrowserinterface.h
+    tools/objectinspector/connectionsextensioninterface.cpp
+    tools/objectinspector/connectionsextensioninterface.h
+    tools/objectinspector/methodsextensioninterface.cpp
+    tools/objectinspector/methodsextensioninterface.h
+    tools/objectinspector/propertiesextensioninterface.cpp
+    tools/objectinspector/propertiesextensioninterface.h
     tools/problemreporter/problemreporterinterface.cpp
+    tools/problemreporter/problemreporterinterface.h
     tools/resourcebrowser/resourcebrowserinterface.cpp
+    tools/resourcebrowser/resourcebrowserinterface.h
 )
 
 add_library(

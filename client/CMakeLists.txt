@@ -8,23 +8,40 @@
 #
 
 set(gammaray_clientlib_srcs
-    client.cpp
-    remotemodel.cpp
-    selectionmodelclient.cpp
-    clientconnectionmanager.cpp
-    propertycontrollerclient.cpp
-    probecontrollerclient.cpp
-    processtracker.cpp
-    toolmanagerclient.cpp
-    clientdevice.cpp
-    tcpclientdevice.cpp
-    localclientdevice.cpp
-    messagestatisticsmodel.cpp
-    paintanalyzerclient.cpp
-    remoteviewclient.cpp
-    enumrepositoryclient.cpp
     classesiconsrepositoryclient.cpp
+    classesiconsrepositoryclient.h
+    client.cpp
+    client.h
+    clientconnectionmanager.cpp
+    clientconnectionmanager.h
+    clientdevice.cpp
+    clientdevice.h
+    enumrepositoryclient.cpp
+    enumrepositoryclient.h
     favoriteobjectclient.cpp
+    favoriteobjectclient.h
+    localclientdevice.cpp
+    localclientdevice.h
+    messagestatisticsmodel.cpp
+    messagestatisticsmodel.h
+    paintanalyzerclient.cpp
+    paintanalyzerclient.h
+    probecontrollerclient.cpp
+    probecontrollerclient.h
+    processtracker.cpp
+    processtracker.h
+    propertycontrollerclient.cpp
+    propertycontrollerclient.h
+    remotemodel.cpp
+    remotemodel.h
+    remoteviewclient.cpp
+    remoteviewclient.h
+    selectionmodelclient.cpp
+    selectionmodelclient.h
+    tcpclientdevice.cpp
+    tcpclientdevice.h
+    toolmanagerclient.cpp
+    toolmanagerclient.h
     ${CMAKE_SOURCE_DIR}/resources/gammaray.qrc
 )
 

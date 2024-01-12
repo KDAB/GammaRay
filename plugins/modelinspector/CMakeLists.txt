@@ -16,6 +16,12 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         modelcellmodel.cpp
         modelcontentproxymodel.cpp
         selectionmodelmodel.cpp
+        modelinspector.h
+        modelinspectorinterface.h
+        modelmodel.h
+        modelcellmodel.h
+        modelcontentproxymodel.h
+        selectionmodelmodel.h
     )
 
     gammaray_add_plugin(
@@ -33,8 +39,15 @@ endif()
 # ui part
 if(GAMMARAY_BUILD_UI)
 
-    set(gammaray_models_ui_srcs modelinspectorwidget.cpp modelinspectorinterface.cpp modelinspectorclient.cpp
-                                modelcontentdelegate.cpp
+    set(gammaray_models_ui_srcs
+        modelcontentdelegate.cpp
+        modelcontentdelegate.h
+        modelinspectorclient.cpp
+        modelinspectorclient.h
+        modelinspectorinterface.cpp
+        modelinspectorinterface.h
+        modelinspectorwidget.cpp
+        modelinspectorwidget.h
     )
 
     gammaray_add_plugin(

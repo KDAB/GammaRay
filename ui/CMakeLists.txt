@@ -11,85 +11,165 @@
 #
 set(gammaray_ui_srcs
     aboutdata.cpp
+    aboutdata.h
     aboutwidget.cpp
-    themedimagelabel.cpp
+    aboutwidget.h
     clientdecorationidentityproxymodel.cpp
+    clientdecorationidentityproxymodel.h
     clientpropertymodel.cpp
+    clientpropertymodel.h
     clienttoolmanager.cpp
+    clienttoolmanager.h
     clienttoolmodel.cpp
-    contextmenuextension.cpp
-    deferredtreeview.cpp
-    editabletypesmodel.cpp
-    itemdelegate.cpp
-    methodinvocationdialog.cpp
-    modelpickerdialog.cpp
-    palettemodel.cpp
-    propertybinder.cpp
-    propertywidget.cpp
-    propertywidgettab.cpp
-    proxytooluifactory.cpp
-    visibilityfilterproxymodel.cpp
-    splashscreen.cpp
-    searchlinecontroller.cpp
-    tooluifactory.cpp
-    uiintegration.cpp
-    uistatemanager.cpp
-    uiresources.cpp
-    remoteviewwidget.cpp
-    trailingcolorlabel.cpp
-    helpcontroller.cpp
-    favoritesitemview.cpp
-    paintanalyzerwidget.cpp
-    paintanalyzerreplayview.cpp
-    paintbufferclientmodel.cpp
-    paintbufferviewer.cpp
-    propertyeditor/propertycoloreditor.cpp
-    propertyeditor/propertydoublepaireditor.cpp
-    propertyeditor/propertyeditorfactory.cpp
-    propertyeditor/propertyextendededitor.cpp
-    propertyeditor/propertyfonteditor.cpp
-    propertyeditor/propertyintpaireditor.cpp
-    propertyeditor/propertypaletteeditor.cpp
-    propertyeditor/palettedialog.cpp
-    propertyeditor/propertyeditordelegate.cpp
-    propertyeditor/propertyenumeditor.cpp
-    propertyeditor/propertymatrixdialog.cpp
-    propertyeditor/propertymatrixeditor.cpp
-    propertyeditor/propertymatrixmodel.cpp
-    propertyeditor/propertytexteditor.cpp
-    propertyeditor/propertyrecteditor.cpp
-    propertyeditor/propertymargineditor.cpp
+    clienttoolmodel.h
     codeeditor/codeeditor.cpp
+    codeeditor/codeeditor.h
     codeeditor/codeeditorsidebar.cpp
+    codeeditor/codeeditorsidebar.h
+    contextmenuextension.cpp
+    contextmenuextension.h
+    deferredtreeview.cpp
+    deferredtreeview.h
+    editabletypesmodel.cpp
+    editabletypesmodel.h
+    favoritesitemview.cpp
+    favoritesitemview.h
+    helpcontroller.cpp
+    helpcontroller.h
+    itemdelegate.cpp
+    itemdelegate.h
+    methodinvocationdialog.cpp
+    methodinvocationdialog.h
+    modelpickerdialog.cpp
+    modelpickerdialog.h
+    paintanalyzerreplayview.cpp
+    paintanalyzerreplayview.h
+    paintanalyzerwidget.cpp
+    paintanalyzerwidget.h
+    paintbufferclientmodel.cpp
+    paintbufferclientmodel.h
+    paintbufferviewer.cpp
+    paintbufferviewer.h
+    palettemodel.cpp
+    palettemodel.h
+    propertybinder.cpp
+    propertybinder.h
+    propertyeditor/palettedialog.cpp
+    propertyeditor/palettedialog.h
+    propertyeditor/propertycoloreditor.cpp
+    propertyeditor/propertycoloreditor.h
+    propertyeditor/propertydoublepaireditor.cpp
+    propertyeditor/propertydoublepaireditor.h
+    propertyeditor/propertyeditordelegate.cpp
+    propertyeditor/propertyeditordelegate.h
+    propertyeditor/propertyeditorfactory.cpp
+    propertyeditor/propertyeditorfactory.h
+    propertyeditor/propertyenumeditor.cpp
+    propertyeditor/propertyenumeditor.h
+    propertyeditor/propertyextendededitor.cpp
+    propertyeditor/propertyextendededitor.h
+    propertyeditor/propertyfonteditor.cpp
+    propertyeditor/propertyfonteditor.h
+    propertyeditor/propertyintpaireditor.cpp
+    propertyeditor/propertyintpaireditor.h
+    propertyeditor/propertymargineditor.cpp
+    propertyeditor/propertymargineditor.h
+    propertyeditor/propertymatrixdialog.cpp
+    propertyeditor/propertymatrixdialog.h
+    propertyeditor/propertymatrixeditor.cpp
+    propertyeditor/propertymatrixeditor.h
+    propertyeditor/propertymatrixmodel.cpp
+    propertyeditor/propertymatrixmodel.h
+    propertyeditor/propertypaletteeditor.cpp
+    propertyeditor/propertypaletteeditor.h
+    propertyeditor/propertyrecteditor.cpp
+    propertyeditor/propertyrecteditor.h
+    propertyeditor/propertytexteditor.cpp
+    propertyeditor/propertytexteditor.h
+    propertywidget.cpp
+    propertywidget.h
+    propertywidgettab.cpp
+    propertywidgettab.h
+    proxytooluifactory.cpp
+    proxytooluifactory.h
+    remoteviewwidget.cpp
+    remoteviewwidget.h
+    searchlinecontroller.cpp
+    searchlinecontroller.h
+    splashscreen.cpp
+    splashscreen.h
+    themedimagelabel.cpp
+    themedimagelabel.h
     tools/messagehandler/messagedisplaymodel.cpp
-    tools/messagehandler/messagehandlerwidget.cpp
+    tools/messagehandler/messagedisplaymodel.h
     tools/messagehandler/messagehandlerclient.cpp
+    tools/messagehandler/messagehandlerclient.h
+    tools/messagehandler/messagehandlerwidget.cpp
+    tools/messagehandler/messagehandlerwidget.h
     tools/metaobjectbrowser/metaobjectbrowserwidget.cpp
+    tools/metaobjectbrowser/metaobjectbrowserwidget.h
     tools/metaobjectbrowser/metaobjecttreeclientproxymodel.cpp
-    tools/metatypebrowser/metatypebrowserwidget.cpp
-    tools/metatypebrowser/metatypesclientmodel.cpp
+    tools/metaobjectbrowser/metaobjecttreeclientproxymodel.h
     tools/metatypebrowser/metatypebrowserclient.cpp
-    tools/objectinspector/objectinspectorwidget.cpp
-    tools/objectinspector/propertiestab.cpp
-    tools/objectinspector/propertiesextensionclient.cpp
-    tools/objectinspector/clientmethodmodel.cpp
-    tools/objectinspector/methodsextensionclient.cpp
-    tools/objectinspector/methodstab.cpp
-    tools/objectinspector/connectionstab.cpp
-    tools/objectinspector/connectionsclientproxymodel.cpp
-    tools/objectinspector/connectionsextensionclient.cpp
-    tools/objectinspector/enumstab.cpp
-    tools/objectinspector/classinfotab.cpp
-    tools/objectinspector/methodstab.cpp
+    tools/metatypebrowser/metatypebrowserclient.h
+    tools/metatypebrowser/metatypebrowserwidget.cpp
+    tools/metatypebrowser/metatypebrowserwidget.h
+    tools/metatypebrowser/metatypesclientmodel.cpp
+    tools/metatypebrowser/metatypesclientmodel.h
     tools/objectinspector/applicationattributetab.cpp
+    tools/objectinspector/applicationattributetab.h
     tools/objectinspector/bindingtab.cpp
+    tools/objectinspector/bindingtab.h
+    tools/objectinspector/classinfotab.cpp
+    tools/objectinspector/classinfotab.h
+    tools/objectinspector/clientmethodmodel.cpp
+    tools/objectinspector/clientmethodmodel.h
+    tools/objectinspector/connectionsclientproxymodel.cpp
+    tools/objectinspector/connectionsclientproxymodel.h
+    tools/objectinspector/connectionsextensionclient.cpp
+    tools/objectinspector/connectionsextensionclient.h
+    tools/objectinspector/connectionstab.cpp
+    tools/objectinspector/connectionstab.h
+    tools/objectinspector/enumstab.cpp
+    tools/objectinspector/enumstab.h
+    tools/objectinspector/methodsextensionclient.cpp
+    tools/objectinspector/methodsextensionclient.h
+    tools/objectinspector/methodstab.cpp
+    tools/objectinspector/methodstab.cpp
+    tools/objectinspector/methodstab.h
+    tools/objectinspector/methodstab.h
+    tools/objectinspector/objectinspectorwidget.cpp
+    tools/objectinspector/objectinspectorwidget.h
+    tools/objectinspector/propertiesextensionclient.cpp
+    tools/objectinspector/propertiesextensionclient.h
+    tools/objectinspector/propertiestab.cpp
+    tools/objectinspector/propertiestab.h
     tools/objectinspector/stacktracetab.cpp
-    tools/problemreporter/problemreporterwidget.cpp
-    tools/problemreporter/problemreporterclient.cpp
+    tools/objectinspector/stacktracetab.h
     tools/problemreporter/problemclientmodel.cpp
+    tools/problemreporter/problemclientmodel.h
+    tools/problemreporter/problemreporterclient.cpp
+    tools/problemreporter/problemreporterclient.h
+    tools/problemreporter/problemreporterwidget.cpp
+    tools/problemreporter/problemreporterwidget.h
     tools/resourcebrowser/clientresourcemodel.cpp
-    tools/resourcebrowser/resourcebrowserwidget.cpp
+    tools/resourcebrowser/clientresourcemodel.h
     tools/resourcebrowser/resourcebrowserclient.cpp
+    tools/resourcebrowser/resourcebrowserclient.h
+    tools/resourcebrowser/resourcebrowserwidget.cpp
+    tools/resourcebrowser/resourcebrowserwidget.h
+    tooluifactory.cpp
+    tooluifactory.h
+    trailingcolorlabel.cpp
+    trailingcolorlabel.h
+    uiintegration.cpp
+    uiintegration.h
+    uiresources.cpp
+    uiresources.h
+    uistatemanager.cpp
+    uistatemanager.h
+    visibilityfilterproxymodel.cpp
+    visibilityfilterproxymodel.h
     resources/ui.qrc
     ${CMAKE_CURRENT_BINARY_DIR}/resources/classicons.qrc
 )
@@ -122,11 +202,16 @@ if(TARGET KF${QtCore_VERSION_MAJOR}::SyntaxHighlighting)
 endif()
 
 set(gammaray_ui_internal_srcs
-    sidepane.cpp
-    aboutpluginsdialog.cpp
-    mainwindow.cpp
-    clienttoolfilterproxymodel.cpp
     aboutdialog.cpp
+    aboutdialog.h
+    aboutpluginsdialog.cpp
+    aboutpluginsdialog.h
+    clienttoolfilterproxymodel.cpp
+    clienttoolfilterproxymodel.h
+    mainwindow.cpp
+    mainwindow.h
+    sidepane.cpp
+    sidepane.h
 )
 
 add_library(

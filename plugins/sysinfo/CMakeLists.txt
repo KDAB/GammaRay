@@ -10,11 +10,16 @@
 # probe part
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     set(sysinfo_probe_srcs
-        sysinfo.cpp
         environmentmodel.cpp
+        environmentmodel.h
         libraryinfomodel.cpp
+        libraryinfomodel.h
         standardpathsmodel.cpp
+        standardpathsmodel.h
+        sysinfo.cpp
+        sysinfo.h
         sysinfomodel.cpp
+        sysinfomodel.h
     )
 
     gammaray_add_plugin(
@@ -30,7 +35,7 @@ endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)
-    set(sysinfo_ui_srcs sysinfowidget.cpp standardpathswidget.cpp)
+    set(sysinfo_ui_srcs standardpathswidget.cpp standardpathswidget.h sysinfowidget.cpp sysinfowidget.h)
 
     gammaray_add_plugin(
         gammaray_sysinfo_ui_plugin

@@ -9,7 +9,7 @@
 
 # probe plugin
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_quickwidgetsupport_srcs quickwidgetsupport.cpp)
+    set(gammaray_quickwidgetsupport_srcs quickwidgetsupport.cpp quickwidgetsupport.h)
     gammaray_add_plugin(
         gammaray_quickwidgetsupport
         JSON
