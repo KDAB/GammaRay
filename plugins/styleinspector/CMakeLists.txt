@@ -10,19 +10,32 @@
 # probe part
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     set(gammaray_styleinspector_plugin_srcs
-        styleinspector.cpp
-        pixelmetricmodel.cpp
-        standardiconmodel.cpp
-        primitivemodel.cpp
-        controlmodel.cpp
-        styleoption.cpp
-        abstractstyleelementmodel.cpp
-        abstractstyleelementstatetable.cpp
-        complexcontrolmodel.cpp
-        dynamicproxystyle.cpp
-        styleinspectorinterface.cpp
-        stylehintmodel.cpp
         ${CMAKE_SOURCE_DIR}/ui/palettemodel.cpp
+        ${CMAKE_SOURCE_DIR}/ui/palettemodel.h
+        abstractstyleelementmodel.cpp
+        abstractstyleelementmodel.h
+        abstractstyleelementstatetable.cpp
+        abstractstyleelementstatetable.h
+        complexcontrolmodel.cpp
+        complexcontrolmodel.h
+        controlmodel.cpp
+        controlmodel.h
+        dynamicproxystyle.cpp
+        dynamicproxystyle.h
+        pixelmetricmodel.cpp
+        pixelmetricmodel.h
+        primitivemodel.cpp
+        primitivemodel.h
+        standardiconmodel.cpp
+        standardiconmodel.h
+        stylehintmodel.cpp
+        stylehintmodel.h
+        styleinspector.cpp
+        styleinspector.h
+        styleinspectorinterface.cpp
+        styleinspectorinterface.h
+        styleoption.cpp
+        styleoption.h
     )
 
     gammaray_add_plugin(
@@ -38,8 +51,15 @@ endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)
-    set(gammaray_styleinspector_ui_plugin_srcs styleinspectorwidget.cpp styleelementstatetablepage.cpp
-                                               styleinspectorinterface.cpp styleinspectorclient.cpp
+    set(gammaray_styleinspector_ui_plugin_srcs
+        styleelementstatetablepage.cpp
+        styleelementstatetablepage.h
+        styleinspectorclient.cpp
+        styleinspectorclient.h
+        styleinspectorinterface.cpp
+        styleinspectorinterface.h
+        styleinspectorwidget.cpp
+        styleinspectorwidget.h
     )
 
     gammaray_add_plugin(

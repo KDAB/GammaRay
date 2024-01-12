@@ -146,7 +146,7 @@ endif()
 
 add_executable(
     attachhelper
-    attachhelper.cpp
+    attachhelper.cpp attachhelper.h
 )
 gammaray_set_rpath(attachhelper ${BIN_INSTALL_DIR})
 

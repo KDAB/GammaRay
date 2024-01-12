@@ -9,7 +9,14 @@
 
 # probe plugin
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_textdocumentinspector_srcs textdocumentinspector.cpp textdocumentformatmodel.cpp textdocumentmodel.cpp)
+    set(gammaray_textdocumentinspector_srcs
+        textdocumentformatmodel.cpp
+        textdocumentformatmodel.h
+        textdocumentinspector.cpp
+        textdocumentinspector.h
+        textdocumentmodel.cpp
+        textdocumentmodel.h
+    )
     gammaray_add_plugin(
         gammaray_textdocumentinspector
         JSON
@@ -23,7 +30,9 @@ endif()
 
 # ui plugin
 if(GAMMARAY_BUILD_UI)
-    set(gammaray_textdocumentinspector_ui_srcs textdocumentinspectorwidget.cpp textdocumentcontentview.cpp)
+    set(gammaray_textdocumentinspector_ui_srcs textdocumentcontentview.cpp textdocumentcontentview.h
+                                               textdocumentinspectorwidget.cpp textdocumentinspectorwidget.h
+    )
 
     gammaray_add_plugin(
         gammaray_textdocumentinspector_ui

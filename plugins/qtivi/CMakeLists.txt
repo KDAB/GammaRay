@@ -13,9 +13,15 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         set(plugin_files qtivisupport.cpp)
         if(QtIviCore_VERSION VERSION_GREATER 1.1)
             add_definitions(-DQTIVI_DISABLE_IVIPROPERTIES)
-            set(plugin_files ${plugin_files} qtiviobjectmodel.cpp)
+            set(plugin_files ${plugin_files} qtiviobjectmodel.cpp qtiviobjectmodel.h)
         else()
-            set(plugin_files ${plugin_files} qtivipropertymodel.cpp qtivipropertyoverrider.cpp)
+            set(plugin_files
+                ${plugin_files}
+                qtivipropertymodel.cpp
+                qtivipropertymodel.h
+                qtivipropertyoverrider.cpp
+                qtivipropertyoverrider.h
+            )
         endif()
         gammaray_add_plugin(
             gammaray_qtivi
@@ -41,9 +47,12 @@ if(GAMMARAY_BUILD_UI)
         JSON
         gammaray_qtivi.json
         SOURCES
-        qtivisupportwidget.cpp
         qtiviconstrainedvaluedelegate.cpp
+        qtiviconstrainedvaluedelegate.h
         qtivipropertyclientmodel.cpp
+        qtivipropertyclientmodel.h
+        qtivisupportwidget.cpp
+        qtivisupportwidget.h
     )
     target_link_libraries(gammaray_qtivi_ui gammaray_ui)
 endif()

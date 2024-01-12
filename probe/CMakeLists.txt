@@ -8,7 +8,7 @@
 #
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_probe_srcs probecreator.cpp hooks.cpp)
+    set(gammaray_probe_srcs hooks.cpp hooks.h probecreator.cpp probecreator.h)
 
     list(APPEND gammaray_probe_srcs entry_unix.cpp)
 

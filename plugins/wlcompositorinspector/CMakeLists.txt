@@ -16,8 +16,15 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     )
 
     if(TARGET Qt::WaylandCompositor AND Wayland_FOUND)
-        set(gammaray_wlcompositorinspector_srcs wlcompositorinspector.cpp wlcompositorinterface.cpp clientsmodel.cpp
-                                                resourceinfo.cpp
+        set(gammaray_wlcompositorinspector_srcs
+            clientsmodel.cpp
+            clientsmodel.h
+            resourceinfo.cpp
+            resourceinfo.h
+            wlcompositorinspector.cpp
+            wlcompositorinspector.h
+            wlcompositorinterface.cpp
+            wlcompositorinterface.h
         )
         gammaray_add_plugin(
             gammaray_wlcompositorinspector
@@ -40,8 +47,15 @@ endif()
 # ui part
 if(GAMMARAY_BUILD_UI AND (NOT MSVC OR NOT MSVC_VERSION LESS 1800)) # at least MSVC 2013
 
-    set(gammaray_wlcompositorinspector_ui_srcs inspectorwidget.cpp wlcompositorinterface.cpp wlcompositorclient.cpp
-                                               logview.cpp
+    set(gammaray_wlcompositorinspector_ui_srcs
+        inspectorwidget.cpp
+        inspectorwidget.h
+        logview.cpp
+        logview.h
+        wlcompositorclient.cpp
+        wlcompositorclient.h
+        wlcompositorinterface.cpp
+        wlcompositorinterface.h
     )
 
     gammaray_add_plugin(

@@ -9,7 +9,16 @@
 
 # probe part
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_timertop_plugin_srcs timertop.cpp timertopinterface.cpp timermodel.cpp timerinfo.cpp)
+    set(gammaray_timertop_plugin_srcs
+        timerinfo.cpp
+        timerinfo.h
+        timermodel.cpp
+        timermodel.h
+        timertop.cpp
+        timertop.h
+        timertopinterface.cpp
+        timertopinterface.h
+    )
 
     gammaray_add_plugin(
         gammaray_timertop_plugin
@@ -26,8 +35,15 @@ endif()
 # ui part
 if(GAMMARAY_BUILD_UI)
 
-    set(gammaray_timertop_plugin_ui_srcs timertopwidget.cpp timertopinterface.cpp timertopclient.cpp
-                                         clienttimermodel.cpp
+    set(gammaray_timertop_plugin_ui_srcs
+        clienttimermodel.cpp
+        clienttimermodel.h
+        timertopclient.cpp
+        timertopclient.h
+        timertopinterface.cpp
+        timertopinterface.h
+        timertopwidget.cpp
+        timertopwidget.h
     )
 
     gammaray_add_plugin(

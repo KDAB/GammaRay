@@ -9,7 +9,7 @@
 
 # probe plugin
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_mimetypes_srcs mimetypes.cpp mimetypesmodel.cpp)
+    set(gammaray_mimetypes_srcs mimetypes.cpp mimetypes.h mimetypesmodel.cpp mimetypesmodel.h)
     gammaray_add_plugin(
         gammaray_mimetypes
         JSON
@@ -22,7 +22,7 @@ endif()
 
 # ui plugin
 if(GAMMARAY_BUILD_UI)
-    set(gammaray_mimetypes_ui_srcs mimetypeswidget.cpp)
+    set(gammaray_mimetypes_ui_srcs mimetypeswidget.cpp mimetypeswidget.h)
     gammaray_add_plugin(
         gammaray_mimetypes_ui
         JSON

@@ -9,7 +9,7 @@
 
 # probe plugin
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_guisupport_srcs guisupport.cpp ui.qrc)
+    set(gammaray_guisupport_srcs guisupport.cpp guisupport.h ui.qrc)
     gammaray_add_plugin(
         gammaray_guisupport
         JSON
@@ -22,7 +22,9 @@ endif()
 
 # ui plugin
 if(GAMMARAY_BUILD_UI)
-    set(gammaray_guisupport_ui_srcs guisupportuifactory.cpp paintanalyzertab.cpp)
+    set(gammaray_guisupport_ui_srcs guisupportuifactory.cpp guisupportuifactory.h paintanalyzertab.cpp
+                                    paintanalyzertab.h
+    )
     gammaray_add_plugin(
         gammaray_guisupport_ui
         JSON

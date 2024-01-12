@@ -8,7 +8,9 @@
 #
 
 # shared part
-set(gammaray_signalmonitor_shared_srcs signalmonitorinterface.cpp signalmonitorcommon.cpp)
+set(gammaray_signalmonitor_shared_srcs signalmonitorcommon.cpp signalmonitorcommon.h signalmonitorinterface.cpp
+                                       signalmonitorinterface.h
+)
 add_library(
     gammaray_signalmonitor_shared STATIC
     ${gammaray_signalmonitor_shared_srcs}
@@ -22,7 +24,14 @@ target_compile_features(gammaray_signalmonitor_shared PUBLIC ${GAMMARAY_REQUIRED
 
 # probe plugin
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_signalmonitor_srcs signalmonitor.cpp signalhistorymodel.cpp relativeclock.cpp)
+    set(gammaray_signalmonitor_srcs
+        relativeclock.cpp
+        relativeclock.h
+        signalhistorymodel.cpp
+        signalhistorymodel.h
+        signalmonitor.cpp
+        signalmonitor.h
+    )
 
     gammaray_add_plugin(
         gammaray_signalmonitor
@@ -38,8 +47,15 @@ endif()
 
 if(GAMMARAY_BUILD_UI)
     # ui plugin
-    set(gammaray_signalmonitor_ui_srcs signalmonitorwidget.cpp signalhistorydelegate.cpp signalhistoryview.cpp
-                                       signalmonitorclient.cpp
+    set(gammaray_signalmonitor_ui_srcs
+        signalhistorydelegate.cpp
+        signalhistorydelegate.h
+        signalhistoryview.cpp
+        signalhistoryview.h
+        signalmonitorclient.cpp
+        signalmonitorclient.h
+        signalmonitorwidget.cpp
+        signalmonitorwidget.h
     )
 
     gammaray_add_plugin(
