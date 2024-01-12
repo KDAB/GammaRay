@@ -219,7 +219,7 @@ int main(int argc, char **argv)
         }
         if (arg == QLatin1String("-v") || arg == QLatin1String("--version")) {
             out() << "GammaRay version " << GAMMARAY_VERSION_STRING << endl;
-            out() << "Copyright (C) 2010-2024 Klaralvdalens Datakonsult AB, "
+            out() << "© Klaralvdalens Datakonsult AB, "
                   << "a KDAB Group company, info@kdab.com" << endl;
             out() << "Protocol version " << Protocol::version() << endl;
             out() << "Broadcast version " << Protocol::broadcastFormatVersion() << endl;
