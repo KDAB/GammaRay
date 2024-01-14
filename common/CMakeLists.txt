@@ -53,6 +53,7 @@ set(gammaray_common_srcs
     modelutils.h
     objectbroker.cpp
     objectbroker.h
+    objectid.h
     objectidfilterproxymodel.cpp
     objectidfilterproxymodel.h
     paintanalyzerinterface.cpp
