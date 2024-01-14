@@ -394,7 +394,7 @@ void Probe::showInProcessUi()
     ProbeGuard guard;
 
     QLibrary lib;
-    foreach (auto path, Paths::pluginPaths(QStringLiteral(GAMMARAY_PROBE_ABI))) {
+    for (auto &path : Paths::pluginPaths(QStringLiteral(GAMMARAY_PROBE_ABI))) {
         path += QStringLiteral("/gammaray_inprocessui");
 #if defined(GAMMARAY_INSTALL_QT_LAYOUT)
         path += '-';

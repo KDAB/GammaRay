@@ -64,7 +64,7 @@ PropertyAdaptor *PropertyAdaptorFactory::create(const ObjectInstance &oi, QObjec
         }
     }
 
-    const auto factories = *s_propertyAdaptorFactories();
+    const auto &factories = *s_propertyAdaptorFactories();
     for (auto factory : factories) {
         auto a = factory->create(oi, parent);
         if (a)

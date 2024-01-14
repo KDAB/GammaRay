@@ -65,7 +65,7 @@ void AuditLogEntryModel::reload()
     beginResetModel();
     m_entries.clear();
 
-    foreach (auto e, QDir(m_path).entryList(QDir::Files | QDir::Readable)) {
+    for (auto &e : QDir(m_path).entryList(QDir::Files | QDir::Readable)) {
         if (!e.endsWith(QLatin1String(".log")))
             continue;
         e.chop(4);
