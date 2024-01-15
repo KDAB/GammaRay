@@ -302,14 +302,8 @@ void RenderModeRequest::apply()
         disconnect(connection);
 
     if (window) {
-        switch (window->rendererInterface()->graphicsApi()) {
-        // Compatible render interfaces
-        case QSGRendererInterface::Software:
-        case QSGRendererInterface::OpenGL:
-            break;
-        default:
+        if (window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
             return;
-        }
 
         emit aboutToCleanSceneGraph();
         const QByteArray mode = renderModeToString(RenderModeRequest::mode);
