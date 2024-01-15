@@ -806,8 +806,14 @@ UnsupportedScreenGrabber::~UnsupportedScreenGrabber()
 
 void UnsupportedScreenGrabber::requestGrabWindow(const QRectF & /*userViewport*/)
 {
+    const qreal ratio = m_window->effectiveDevicePixelRatio();
+    const int width = m_window->width(),
+              height = m_window->height();
     m_grabbedFrame.image = m_window->grabWindow();
-    m_grabbedFrame.image.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
+    if (ratio == 1.0)
+        m_grabbedFrame.image = m_grabbedFrame.image.copy(0, 0, width, height);
+    else
+        m_grabbedFrame.image = m_grabbedFrame.image.copy(0, 0, width, height).scaledToHeight(height * ratio);
 
     int alpha = 120;
     if (m_grabbedFrame.image.isNull()) {
