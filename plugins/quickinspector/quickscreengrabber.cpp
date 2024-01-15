@@ -819,14 +819,15 @@ void UnsupportedScreenGrabber::requestGrabWindow(const QRectF & /*userViewport*/
     p.setRenderHint(QPainter::TextAntialiasing);
     QColor gray(Qt::black);
     gray.setAlpha(alpha);
-    p.fillRect(QRect(QPoint {}, m_window->size()), gray);
+    auto textBoxRect = QRect(QPoint(4, 4), m_window->size() - QSize(8, 8));
+    p.fillRect(textBoxRect, gray);
     p.setPen(Qt::white);
     auto font = qApp->font();
     font.setPointSize(font.pointSize() + 1);
     p.setFont(font);
     QString backend = VariantHandler::displayString(QVariant::fromValue(m_window->graphicsApi()));
     QString txt = backend + QStringLiteral(" is not supported yet, please use OpenGL or Software backend");
-    p.drawText(QRect { QPoint(0, 0), m_window->size() }, Qt::AlignCenter | Qt::TextWordWrap, txt);
+    p.drawText(textBoxRect, Qt::AlignCenter | Qt::TextWordWrap, txt);
 
     emit sceneGrabbed(m_grabbedFrame);
 }
