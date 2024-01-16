@@ -135,7 +135,9 @@ void MetaObjectRepository::initQObjectTypes()
     MO_ADD_PROPERTY_RO(QDateTime, isNull);
     MO_ADD_PROPERTY_RO(QDateTime, isValid);
     MO_ADD_PROPERTY_RO(QDateTime, offsetFromUtc);
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
     MO_ADD_PROPERTY(QDateTime, timeZone, setTimeZone);
+#endif
 
     MO_ADD_METAOBJECT0(QTimeZone);
     MO_ADD_PROPERTY_RO(QTimeZone, comment);
@@ -217,8 +219,10 @@ void MetaObjectRepository::initQEventTypes()
     MO_ADD_METAOBJECT1(QDynamicPropertyChangeEvent, QEvent);
     MO_ADD_PROPERTY_RO(QDynamicPropertyChangeEvent, propertyName);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
     MO_ADD_METAOBJECT1(QDeferredDeleteEvent, QEvent);
     MO_ADD_PROPERTY_RO(QDeferredDeleteEvent, loopLevel);
+#endif
 
     MO_ADD_METAOBJECT1(QMetaCallEvent, QEvent);
     MO_ADD_PROPERTY_RO(QMetaCallEvent, id);
