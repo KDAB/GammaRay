@@ -18,7 +18,11 @@
 #
 # -DGAMMARAY_PROBE_ONLY_BUILD=[true|false]
 #  Build only an additional probe configuration for an already existing launcher
-#  Default=false
+#  Default=false (always true if building the static probe (see GAMMARAY_STATIC_PROBE))
+#
+# -DGAMMARAY_ALWAYS_INSTALL_HEADERS=[true|false]
+#  Install header, Qt's project include and CMake export files.
+#  Default=true (false if building probe-only (see GAMMARAY_PROBE_ONLY_BUILD))
 #
 # -DGAMMARAY_CLIENT_ONLY_BUILD=[true|false]
 #  Build the client part only
@@ -229,6 +233,12 @@ endif()
 
 gammaray_option(
     GAMMARAY_PROBE_ONLY_BUILD "Build only an additional probe configuration for an already existing launcher." OFF
+)
+
+gammaray_option(
+    GAMMARAY_ALWAYS_INSTALL_HEADERS
+    "Install header, Qt's project include and CMake export files."
+    $<IF:$<BOOL:${GAMMARAY_PROBE_ONLY_BUILD}>,OFF,ON>
 )
 
 gammaray_option(GAMMARAY_CLIENT_ONLY_BUILD "Build the client part only." OFF)
@@ -895,7 +905,7 @@ endif()
 #
 # CMake package config file generation
 #
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD OR GAMMARAY_ALWAYS_INSTALL_HEADERS)
     include(CMakePackageConfigHelpers)
     configure_package_config_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake

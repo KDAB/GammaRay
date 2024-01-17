@@ -16,7 +16,7 @@ set_target_properties(gammaray_kitemmodels PROPERTIES
 )
 gammaray_set_rpath(gammaray_kitemmodels ${LIB_INSTALL_DIR})
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD OR GAMMARAY_ALWAYS_INSTALL_HEADERS)
   install(TARGETS gammaray_kitemmodels EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
   if(MSVC)
     install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_kitemmodels>/$<TARGET_PDB_FILE_NAME:gammaray_kitemmodels>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)

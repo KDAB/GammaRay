@@ -219,7 +219,7 @@ target_include_directories(
 target_link_libraries(
     gammaray_core
     PUBLIC gammaray_common
-    PRIVATE gammaray_common_internal
+    PRIVATE $<TARGET_OBJECTS:gammaray_common_internal>
             gammaray_kitemmodels
             ${CMAKE_DL_LIBS}
             Qt::CorePrivate
@@ -246,7 +246,7 @@ endif()
 
 add_backward(gammaray_core)
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD OR GAMMARAY_ALWAYS_INSTALL_HEADERS)
     install(
         TARGETS gammaray_core
         EXPORT GammaRayTargets

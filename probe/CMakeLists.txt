@@ -63,7 +63,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             set_target_properties(gammaray_winloader PROPERTIES OUTPUT_NAME gammaray_winloader-${GAMMARAY_PROBE_ABI})
             install(TARGETS gammaray_winloader ${INSTALL_TARGETS_DEFAULT_ARGS})
         endif()
-        if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+        if(NOT GAMMARAY_PROBE_ONLY_BUILD OR GAMMARAY_ALWAYS_INSTALL_HEADERS)
             install(
                 TARGETS gammaray_probe
                 EXPORT GammaRayTargets

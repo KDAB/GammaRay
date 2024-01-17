@@ -23,7 +23,7 @@ configure_file(
 )
 
 add_library(
-    gammaray_lz4 STATIC
+    gammaray_lz4 OBJECT
     ${CMAKE_SOURCE_DIR}/3rdparty/lz4/lz4.c
 )
 set_target_properties(gammaray_lz4 PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -101,7 +101,7 @@ target_link_libraries(
 )
 target_link_libraries(
     gammaray_common
-    PRIVATE gammaray_lz4 gammaray_kitemmodels ${CMAKE_DL_LIBS}
+    PRIVATE $<TARGET_OBJECTS:gammaray_lz4> gammaray_kitemmodels ${CMAKE_DL_LIBS}
 )
 gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
 if(GAMMARAY_USE_PCH)
@@ -144,7 +144,7 @@ set(gammaray_common_internal_srcs
 )
 
 add_library(
-    gammaray_common_internal STATIC
+    gammaray_common_internal OBJECT
     ${gammaray_common_internal_srcs}
 )
 set_target_properties(gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -157,7 +157,7 @@ target_link_libraries(
     gammaray_common_internal Qt::Core Qt::Network
 )
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD OR GAMMARAY_ALWAYS_INSTALL_HEADERS)
     install(
         TARGETS gammaray_common
         EXPORT GammaRayTargets

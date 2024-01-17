@@ -195,7 +195,7 @@ target_include_directories(
 target_link_libraries(
     gammaray_ui
     PUBLIC Qt::Core Qt::Gui Qt::Widgets gammaray_common
-    PRIVATE gammaray_common_internal gammaray_kitemmodels Qt::WidgetsPrivate
+    PRIVATE $<TARGET_OBJECTS:gammaray_common_internal> gammaray_kitemmodels Qt::WidgetsPrivate
 )
 if(TARGET KF${QtCore_VERSION_MAJOR}::SyntaxHighlighting)
     target_link_libraries(gammaray_ui PRIVATE KF${QtCore_VERSION_MAJOR}::SyntaxHighlighting)
@@ -226,7 +226,7 @@ target_link_libraries(
     Qt::Gui
     Qt::Widgets
     Qt::GuiPrivate
-    gammaray_common_internal
+    $<TARGET_OBJECTS:gammaray_common_internal>
     gammaray_ui
     gammaray_kitemmodels
 )
@@ -235,7 +235,7 @@ if(NOT GAMMARAY_DISABLE_FEEDBACK)
     target_link_libraries(gammaray_ui_internal gammaray_kuserfeedback)
 endif()
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
+if(NOT GAMMARAY_PROBE_ONLY_BUILD OR GAMMARAY_ALWAYS_INSTALL_HEADERS)
     install(
         TARGETS gammaray_ui
         EXPORT GammaRayTargets
