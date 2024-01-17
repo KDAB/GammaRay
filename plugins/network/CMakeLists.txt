@@ -32,6 +32,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_network.json
         SOURCES
         ${gammaray_network_srcs}
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_network gammaray_core Qt::Network Qt::CorePrivate)
     set_target_properties(gammaray_network PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
@@ -65,6 +67,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_network.json
         SOURCES
         ${gammaray_network_ui_srcs}
+        TYPE
+        UI
     )
     target_link_libraries(gammaray_network_ui gammaray_ui Qt::Network)
 endif()

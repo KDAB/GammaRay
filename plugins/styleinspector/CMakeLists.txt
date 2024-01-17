@@ -44,6 +44,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_styleinspector.json
         SOURCES
         ${gammaray_styleinspector_plugin_srcs}
+        TYPE
+        PROBE
     )
 
     target_link_libraries(gammaray_styleinspector_plugin Qt::Gui Qt::Widgets gammaray_core)
@@ -68,6 +70,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_styleinspector.json
         SOURCES
         ${gammaray_styleinspector_ui_plugin_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_styleinspector_ui_plugin gammaray_ui)

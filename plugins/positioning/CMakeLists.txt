@@ -29,6 +29,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_positioning.json
         SOURCES
         ${gammaray_positioning_srcs}
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_positioning gammaray_core Qt::Positioning)
     set_target_properties(gammaray_positioning PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
@@ -77,6 +79,8 @@ if(GAMMARAY_BUILD_UI
         gammaray_positioning.json
         SOURCES
         ${gammaray_positioning_ui_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(

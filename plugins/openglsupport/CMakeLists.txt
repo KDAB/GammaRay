@@ -16,6 +16,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         SOURCES
         openglsupport.cpp
         openglsupport.h
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_openglsupport gammaray_core Qt::Gui)
     if(TARGET Qt6::OpenGL)

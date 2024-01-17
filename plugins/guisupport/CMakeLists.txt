@@ -16,6 +16,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_guisupport.json
         SOURCES
         ${gammaray_guisupport_srcs}
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_guisupport gammaray_core Qt::Gui Qt::GuiPrivate)
 endif()
@@ -31,6 +33,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_guisupport.json
         SOURCES
         ${gammaray_guisupport_ui_srcs}
+        TYPE
+        UI
     )
     target_link_libraries(gammaray_guisupport_ui gammaray_ui)
 endif()

@@ -17,6 +17,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_scriptenginedebugger.json
         SOURCES
         ${gammaray_scriptenginedebugger_plugin_srcs}
+        TYPE
+        PROBE
     )
 
     target_link_libraries(gammaray_scriptenginedebugger_plugin Qt5::Script Qt5::ScriptTools gammaray_core)
@@ -33,6 +35,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_scriptenginedebugger.json
         SOURCES
         ${gammaray_scriptenginedebugger_ui_plugin_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_scriptenginedebugger_ui_plugin Qt5::Script Qt5::ScriptTools gammaray_ui)

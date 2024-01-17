@@ -222,30 +222,35 @@ message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TY
 #
 # Build options
 #
-set(GAMMARAY_BUILD_UI_DEFAULT ON)
-if(QNXNTO OR ANDROID)
-    set(GAMMARAY_BUILD_UI_DEFAULT OFF)
+option(BUILD_SHARED_LIBS "Build GammaRay statically or dynamically" ON)
+
+set(GAMMARAY_STATIC_PROBE_DEFAULT OFF)
+if(NOT BUILD_SHARED_LIBS)
+    set(GAMMARAY_STATIC_PROBE_DEFAULT ON)
 endif()
+gammaray_option(
+    GAMMARAY_STATIC_PROBE "Build the probe as static library for compile-time injection."
+    ${GAMMARAY_STATIC_PROBE_DEFAULT}
+)
 
 gammaray_option(
     GAMMARAY_PROBE_ONLY_BUILD "Build only an additional probe configuration for an already existing launcher." OFF
 )
-
 gammaray_option(GAMMARAY_CLIENT_ONLY_BUILD "Build the client part only." OFF)
-
-if(GAMMARAY_CLIENT_ONLY_BUILD)
-    set(GAMMARAY_BUILD_UI_DEFAULT ON)
-endif()
-
-if(GAMMARAY_PROBE_ONLY_BUILD)
-    set(GAMMARAY_BUILD_UI_DEFAULT OFF)
-endif()
-
-gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
 
 if(GAMMARAY_PROBE_ONLY_BUILD AND GAMMARAY_CLIENT_ONLY_BUILD)
     message(FATAL_ERROR "You can only use one of the *ONLY* option.")
 endif()
+
+set(GAMMARAY_BUILD_UI_DEFAULT ON)
+if(GAMMARAY_CLIENT_ONLY_BUILD)
+    set(GAMMARAY_BUILD_UI_DEFAULT ON)
+elseif(GAMMARAY_PROBE_ONLY_BUILD)
+    set(GAMMARAY_BUILD_UI_DEFAULT OFF)
+elseif(QNXNTO OR ANDROID)
+    set(GAMMARAY_BUILD_UI_DEFAULT OFF)
+endif()
+gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
 
 gammaray_option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." OFF)
 gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
@@ -258,7 +263,6 @@ if(GAMMARAY_PROBE_ONLY_BUILD OR CMAKE_CROSSCOMPILING)
     set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT ON)
 endif()
 gammaray_option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
-gammaray_option(GAMMARAY_STATIC_PROBE "Build the probe as static library for compile-time injection." OFF)
 
 gammaray_option(GAMMARAY_ENFORCE_QT_ASSERTS "Force QT_ASSERT in all builds." OFF)
 
@@ -267,15 +271,18 @@ gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." ${GAM
 #
 # Static probe setup
 #
-if(GAMMARAY_STATIC_PROBE)
-    set(GAMMARAY_BUILD_UI OFF)
-    set(GAMMARAY_PROBE_ONLY_BUILD ON)
+set(GAMMARAY_UI_LIBRARY_TYPE SHARED)
+set(GAMMARAY_UI_PLUGIN_TYPE MODULE)
+if(NOT BUILD_SHARED_LIBS)
+    set(GAMMARAY_UI_LIBRARY_TYPE STATIC)
+    set(GAMMARAY_UI_PLUGIN_TYPE STATIC)
+endif()
 
-    set(GAMMARAY_LIBRARY_TYPE STATIC)
-    set(GAMMARAY_PLUGIN_TYPE STATIC)
-else()
-    set(GAMMARAY_LIBRARY_TYPE SHARED)
-    set(GAMMARAY_PLUGIN_TYPE MODULE)
+set(GAMMARAY_PROBE_LIBRARY_TYPE ${GAMMARAY_UI_LIBRARY_TYPE})
+set(GAMMARAY_PROBE_PLUGIN_TYPE ${GAMMARAY_UI_PLUGIN_TYPE})
+if(GAMMARAY_STATIC_PROBE)
+    set(GAMMARAY_PROBE_LIBRARY_TYPE STATIC)
+    set(GAMMARAY_PROBE_PLUGIN_TYPE STATIC)
 endif()
 
 gammaray_option(GAMMARAY_USE_PCH "Enable Precompiled Headers support" OFF)

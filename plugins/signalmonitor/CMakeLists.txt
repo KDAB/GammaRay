@@ -12,7 +12,7 @@ set(gammaray_signalmonitor_shared_srcs signalmonitorcommon.cpp signalmonitorcomm
                                        signalmonitorinterface.h
 )
 add_library(
-    gammaray_signalmonitor_shared STATIC
+    gammaray_signalmonitor_shared OBJECT
     ${gammaray_signalmonitor_shared_srcs}
 )
 target_link_libraries(
@@ -39,6 +39,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_signalmonitor.json
         SOURCES
         ${gammaray_signalmonitor_srcs}
+        TYPE
+        PROBE
     )
 
     target_link_libraries(gammaray_signalmonitor gammaray_core gammaray_signalmonitor_shared)
@@ -64,6 +66,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_signalmonitor.json
         SOURCES
         ${gammaray_signalmonitor_ui_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_signalmonitor_ui gammaray_ui gammaray_signalmonitor_shared)

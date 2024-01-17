@@ -29,6 +29,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             gammaray_qtivi.json
             SOURCES
             ${plugin_files}
+            TYPE
+            PROBE
         )
         target_link_libraries(gammaray_qtivi gammaray_core Qt::IviCore Qt::IviCorePrivate)
         if(TARGET Qt::IviVehicleFunctions)
@@ -53,6 +55,8 @@ if(GAMMARAY_BUILD_UI)
         qtivipropertyclientmodel.h
         qtivisupportwidget.cpp
         qtivisupportwidget.h
+        TYPE
+        UI
     )
     target_link_libraries(gammaray_qtivi_ui gammaray_ui)
 endif()

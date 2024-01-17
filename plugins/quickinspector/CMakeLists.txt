@@ -18,7 +18,7 @@ set(gammaray_quickinspector_shared_srcs quickinspectorinterface.cpp quickitemgeo
 )
 
 add_library(
-    gammaray_quickinspector_shared STATIC
+    gammaray_quickinspector_shared OBJECT
     ${gammaray_quickinspector_shared_srcs}
 )
 target_link_libraries(
@@ -71,6 +71,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_quickinspector.json
         SOURCES
         ${gammaray_quickinspector_srcs}
+        TYPE
+        PROBE
     )
 
     if(TARGET Qt${QT_MAJOR_VERSION}::Quick)
@@ -153,6 +155,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_quickinspector.json
         SOURCES
         ${gammaray_quickinspector_ui_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_quickinspector_ui gammaray_quickinspector_shared gammaray_ui Qt::Quick)

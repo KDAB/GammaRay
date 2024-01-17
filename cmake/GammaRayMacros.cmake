@@ -17,7 +17,7 @@ include(CMakeParseArguments)
 # - SOURCES <files> - the plugin sources
 #
 macro(gammaray_add_plugin _target_name)
-    set(oneValueArgs JSON)
+    set(oneValueArgs JSON TYPE)
     set(multiValueArgs SOURCES)
     cmake_parse_arguments(
         _gammaray_add_plugin
@@ -27,12 +27,19 @@ macro(gammaray_add_plugin _target_name)
         ${ARGN}
     )
 
+    set(_type_options UI PROBE)
+    if(NOT DEFINED _gammaray_add_plugin_TYPE)
+        set(_gammaray_add_plugin_TYPE PROBE)
+    elseif(NOT _gammaray_add_plugin_TYPE IN_LIST _type_options)
+        message(FATAL_ERROR "Plugin type must be either PROBE or UI")
+    endif()
+
     if(NOT PROBE_PLUGIN_INSTALL_DIR) # HACK for external plugins that don't set PLUGIN_INSTALL_DIR
         set(PROBE_PLUGIN_INSTALL_DIR ${GAMMARAY_PROBE_PLUGIN_INSTALL_DIR})
     endif()
     set(_build_target_dir "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_PLUGIN_INSTALL_DIR}")
 
-    add_library(${_target_name} ${GAMMARAY_PLUGIN_TYPE} ${_gammaray_add_plugin_SOURCES})
+    add_library(${_target_name} ${GAMMARAY_${_gammaray_add_plugin_TYPE}_PLUGIN_TYPE} ${_gammaray_add_plugin_SOURCES})
     set_target_properties(${_target_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${_build_target_dir})
     set_target_properties(${_target_name} PROPERTIES PREFIX "")
     if(GAMMARAY_STATIC_PROBE)

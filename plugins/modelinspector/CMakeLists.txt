@@ -30,6 +30,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_modelinspector.json
         SOURCES
         ${gammaray_models_srcs}
+        TYPE
+        PROBE
     )
     set_target_properties(gammaray_modelinspector PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 
@@ -56,6 +58,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_modelinspector.json
         SOURCES
         ${gammaray_models_ui_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_modelinspector_ui gammaray_ui)

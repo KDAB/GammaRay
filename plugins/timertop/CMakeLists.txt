@@ -26,6 +26,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_timertop.json
         SOURCES
         ${gammaray_timertop_plugin_srcs}
+        TYPE
+        PROBE
     )
     set_target_properties(gammaray_timertop_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 
@@ -52,6 +54,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_timertop.json
         SOURCES
         ${gammaray_timertop_plugin_ui_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_timertop_ui_plugin gammaray_ui)

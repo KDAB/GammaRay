@@ -40,6 +40,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         SOURCES
         ${gammaray_statemachineviewer_plugin_srcs}
         ${gammaray_statemachineviewer_shared_srcs}
+        TYPE
+        PROBE
     )
 
     set_target_properties(gammaray_statemachineviewer_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
@@ -87,6 +89,8 @@ if(GAMMARAY_BUILD_UI AND ${KDSME_PACKAGE_NAME}_FOUND)
         SOURCES
         ${gammaray_statemachineviewer_ui_plugin_srcs}
         ${gammaray_statemachineviewer_shared_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(

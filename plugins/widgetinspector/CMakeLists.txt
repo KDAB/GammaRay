@@ -36,6 +36,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_widgetinspector.json
         SOURCES
         ${gammaray_widgetinspector_plugin_srcs}
+        TYPE
+        PROBE
     )
 
     target_link_libraries(
@@ -109,6 +111,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_widgetinspector.json
         SOURCES
         ${gammaray_widgetinspector_ui_plugin_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_widgetinspector_ui_plugin gammaray_ui)

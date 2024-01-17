@@ -26,6 +26,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_3dinspector.json
         SOURCES
         ${gammaray_3dinspector_srcs}
+        TYPE
+        PROBE
     )
     target_link_libraries(
         gammaray_3dinspector
@@ -62,6 +64,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_3dinspector.json
         SOURCES
         ${gammaray_3dinspector_ui_srcs}
+        TYPE
+        UI
     )
     target_link_libraries(
         gammaray_3dinspector_ui

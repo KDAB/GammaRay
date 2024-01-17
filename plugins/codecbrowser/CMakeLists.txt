@@ -17,6 +17,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_codecbrowser.json
         SOURCES
         ${gammaray_codecbrowser_plugin_srcs}
+        TYPE
+        PROBE
     )
     set_target_properties(gammaray_codecbrowser_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 
@@ -34,6 +36,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_codecbrowser.json
         SOURCES
         ${gammaray_codecbrowser_plugin_ui_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_codecbrowser_ui_plugin gammaray_common gammaray_ui)

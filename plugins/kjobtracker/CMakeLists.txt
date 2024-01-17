@@ -27,6 +27,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             gammaray_kjobtracker.json
             SOURCES
             ${gammaray_kjob_plugin_srcs}
+            TYPE
+            PROBE
         )
 
         target_link_libraries(gammaray_kjobtracker_plugin gammaray_core KF${QtCore_VERSION_MAJOR}::CoreAddons Qt::Gui)
@@ -43,6 +45,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_kjobtracker.json
         SOURCES
         ${gammaray_kjob_ui_plugin_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_kjobtracker_ui_plugin gammaray_ui)

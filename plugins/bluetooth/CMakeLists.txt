@@ -16,6 +16,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         SOURCES
         bluetooth.cpp
         bluetooth.h
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_bluetooth gammaray_core Qt::Bluetooth)
     set_target_properties(gammaray_bluetooth PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)

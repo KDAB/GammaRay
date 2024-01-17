@@ -23,7 +23,7 @@ configure_file(
 )
 
 add_library(
-    gammaray_lz4 STATIC
+    gammaray_lz4 OBJECT
     ${CMAKE_SOURCE_DIR}/3rdparty/lz4/lz4.c
 )
 set_target_properties(gammaray_lz4 PROPERTIES POSITION_INDEPENDENT_CODE ON)
@@ -80,7 +80,7 @@ set(gammaray_common_srcs
 
 add_library(
     gammaray_common
-    ${GAMMARAY_LIBRARY_TYPE} ${gammaray_common_srcs}
+    ${GAMMARAY_PROBE_LIBRARY_TYPE} ${gammaray_common_srcs}
 )
 generate_export_header(gammaray_common)
 # cmake-lint: disable=E1120
@@ -144,7 +144,7 @@ set(gammaray_common_internal_srcs
 )
 
 add_library(
-    gammaray_common_internal STATIC
+    gammaray_common_internal OBJECT
     ${gammaray_common_internal_srcs}
 )
 set_target_properties(gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)

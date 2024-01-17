@@ -16,6 +16,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_mimetypes.json
         SOURCES
         ${gammaray_mimetypes_srcs}
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_mimetypes gammaray_core Qt::Gui gammaray_kitemmodels)
 endif()
@@ -29,6 +31,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_mimetypes.json
         SOURCES
         ${gammaray_mimetypes_ui_srcs}
+        TYPE
+        UI
     )
     target_link_libraries(gammaray_mimetypes_ui gammaray_ui)
 endif()

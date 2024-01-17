@@ -16,6 +16,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_quickwidgetsupport.json
         SOURCES
         ${gammaray_quickwidgetsupport_srcs}
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_quickwidgetsupport gammaray_core Qt::QuickWidgets)
 endif()

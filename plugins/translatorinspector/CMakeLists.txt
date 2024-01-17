@@ -22,6 +22,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         translatorsmodel.h
         translatorwrapper.cpp
         translatorwrapper.h
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_translatorinspector gammaray_core Qt::Core Qt::CorePrivate)
     set_target_properties(gammaray_translatorinspector PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
@@ -40,6 +42,8 @@ if(GAMMARAY_BUILD_UI)
         translatorinspectorwidget.h
         translatorwrapperproxy.cpp
         translatorwrapperproxy.h
+        TYPE
+        UI
     )
     target_link_libraries(gammaray_translatorinspector_ui gammaray_ui)
 endif()

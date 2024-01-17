@@ -202,7 +202,7 @@ endif()
 # core lib
 add_library(
     gammaray_core
-    ${GAMMARAY_LIBRARY_TYPE} ${gammaray_srcs}
+    ${GAMMARAY_PROBE_LIBRARY_TYPE} ${gammaray_srcs}
 )
 generate_export_header(gammaray_core)
 target_compile_features(gammaray_core PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})

@@ -17,6 +17,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_webinspector.json
         SOURCES
         ${gammaray_webinspector_plugin_srcs}
+        TYPE
+        PROBE
     )
 
     target_link_libraries(gammaray_webinspector_plugin gammaray_core)
@@ -34,6 +36,8 @@ if(GAMMARAY_BUILD_UI AND TARGET Qt::WebEngineWidgets)
         gammaray_webinspector.json
         SOURCES
         ${gammaray_webinspector_ui_plugin_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_webinspector_ui_plugin Qt::WebEngineWidgets gammaray_ui)

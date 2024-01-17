@@ -34,6 +34,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_localeinspector.json
         SOURCES
         ${gammaray_localeinspector_plugin_srcs}
+        TYPE
+        PROBE
     )
     set_target_properties(gammaray_localeinspector_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 
@@ -61,6 +63,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_localeinspector.json
         SOURCES
         ${gammaray_localeinspector_plugin_ui_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_localeinspector_ui_plugin gammaray_ui)

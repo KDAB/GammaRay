@@ -25,7 +25,7 @@ list(APPEND gammaray_userfeedback_srcs
     widgets/auditlogbrowserdialog.cpp
 )
 
-add_library(gammaray_kuserfeedback SHARED ${gammaray_userfeedback_srcs})
+add_library(gammaray_kuserfeedback ${GAMMARAY_UI_LIBRARY_TYPE} ${gammaray_userfeedback_srcs})
 # Disable warnings for generated stuff
 if(MSVC)
     set_source_files_properties(common/surveytargetexpressionlexer.cpp PROPERTIES COMPILE_FLAGS "/wd4018 /wd4996")

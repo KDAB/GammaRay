@@ -54,8 +54,8 @@ elseif(WIN32)
 endif()
 
 add_library(
-    gammaray_client SHARED
-    ${gammaray_clientlib_srcs}
+    gammaray_client
+    ${GAMMARAY_UI_LIBRARY_TYPE} ${gammaray_clientlib_srcs}
 )
 generate_export_header(gammaray_client)
 # cmake-lint: disable=E1120

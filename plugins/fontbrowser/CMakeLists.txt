@@ -28,6 +28,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_fontbrowser.json
         SOURCES
         ${gammaray_fontbrowser_plugin_srcs}
+        TYPE
+        PROBE
     )
 
     target_link_libraries(gammaray_fontbrowser_plugin gammaray_core)
@@ -52,6 +54,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_fontbrowser.json
         SOURCES
         ${gammaray_fontbrowser_plugin_ui_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_fontbrowser_ui_plugin gammaray_common gammaray_ui)

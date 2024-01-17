@@ -26,6 +26,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_qmlsupport.json
         SOURCES
         ${gammaray_qmlsupport_srcs}
+        TYPE
+        PROBE
     )
     target_link_libraries(
         gammaray_qmlsupport
@@ -51,6 +53,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_qmlsupport.json
         SOURCES
         ${gammaray_qmlsupport_ui_srcs}
+        TYPE
+        UI
     )
     target_link_libraries(gammaray_qmlsupport_ui gammaray_ui)
 endif()

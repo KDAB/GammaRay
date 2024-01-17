@@ -28,6 +28,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_sysinfo.json
         SOURCES
         ${sysinfo_probe_srcs}
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_sysinfo_plugin gammaray_core)
     set_target_properties(gammaray_sysinfo_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
@@ -43,6 +45,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_sysinfo.json
         SOURCES
         ${sysinfo_ui_srcs}
+        TYPE
+        UI
     )
     target_link_libraries(gammaray_sysinfo_ui_plugin gammaray_ui)
 endif()

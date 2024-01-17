@@ -5,7 +5,7 @@ set(gammaray_kitemmodels_srcs
   kitemmodels_debug.cpp
 )
 
-add_library(gammaray_kitemmodels SHARED ${gammaray_kitemmodels_srcs})
+add_library(gammaray_kitemmodels ${GAMMARAY_PROBE_LIBRARY_TYPE} ${gammaray_kitemmodels_srcs})
 
 target_link_libraries(gammaray_kitemmodels PUBLIC Qt::Core)
 

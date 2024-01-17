@@ -75,8 +75,8 @@ else()
 endif()
 
 add_library(
-    gammaray_launcher SHARED
-    ${gammaray_launcher_shared_srcs}
+    gammaray_launcher
+    ${GAMMARAY_UI_LIBRARY_TYPE} ${gammaray_launcher_shared_srcs}
 )
 generate_export_header(gammaray_launcher)
 # cmake-lint: disable=E1120

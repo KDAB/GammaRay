@@ -23,6 +23,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_textdocumentinspector.json
         SOURCES
         ${gammaray_textdocumentinspector_srcs}
+        TYPE
+        PROBE
     )
     target_link_libraries(gammaray_textdocumentinspector gammaray_core)
     target_link_libraries(gammaray_textdocumentinspector Qt::Gui)
@@ -40,6 +42,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_textdocumentinspector.json
         SOURCES
         ${gammaray_textdocumentinspector_ui_srcs}
+        TYPE
+        UI
     )
     target_link_libraries(gammaray_textdocumentinspector_ui gammaray_ui)
 endif()

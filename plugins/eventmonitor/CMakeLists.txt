@@ -29,6 +29,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_eventmonitor.json
         SOURCES
         ${gammaray_eventmonitor_plugin_srcs}
+        TYPE
+        PROBE
     )
 
     target_link_libraries(gammaray_eventmonitor_plugin Qt::Gui Qt::CorePrivate gammaray_core)
@@ -53,6 +55,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_eventmonitor.json
         SOURCES
         ${gammaray_eventmonitor_ui_plugin_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_eventmonitor_ui_plugin gammaray_ui)

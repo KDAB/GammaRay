@@ -26,6 +26,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_sceneinspector.json
         SOURCES
         ${gammaray_sceneinspector_plugin_srcs}
+        TYPE
+        PROBE
     )
 
     target_link_libraries(
@@ -58,6 +60,8 @@ if(GAMMARAY_BUILD_UI)
         gammaray_sceneinspector.json
         SOURCES
         ${gammaray_sceneinspector_ui_plugin_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_sceneinspector_ui_plugin gammaray_ui)

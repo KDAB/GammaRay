@@ -26,7 +26,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     # probe lib
     # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
     # Windows also needs SHARED rather than MODULE here, to end up in bin/
-    add_library(gammaray_probe ${GAMMARAY_LIBRARY_TYPE} $<TARGET_OBJECTS:gammaray_probe_obj>)
+    add_library(gammaray_probe ${GAMMARAY_PROBE_LIBRARY_TYPE} $<TARGET_OBJECTS:gammaray_probe_obj>)
     target_link_libraries(gammaray_probe gammaray_core ${CMAKE_DL_LIBS})
 
     set_target_properties(

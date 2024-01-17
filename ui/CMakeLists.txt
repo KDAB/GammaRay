@@ -175,8 +175,8 @@ set(gammaray_ui_srcs
 )
 
 add_library(
-    gammaray_ui SHARED
-    ${gammaray_ui_srcs}
+    gammaray_ui
+    ${GAMMARAY_UI_LIBRARY_TYPE} ${gammaray_ui_srcs}
 )
 generate_export_header(gammaray_ui)
 # cmake-lint: disable=E1120
@@ -215,24 +215,24 @@ set(gammaray_ui_internal_srcs
 )
 
 add_library(
-    gammaray_ui_internal STATIC
+    gammaray_ui_internal OBJECT
     ${gammaray_ui_internal_srcs}
 )
 set_target_properties(gammaray_ui_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_compile_features(gammaray_ui_internal PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 target_link_libraries(
     gammaray_ui_internal
-    Qt::Core
-    Qt::Gui
-    Qt::Widgets
-    Qt::GuiPrivate
-    gammaray_common_internal
-    gammaray_ui
-    gammaray_kitemmodels
+    PUBLIC Qt::Core
+           Qt::Gui
+           Qt::Widgets
+           Qt::GuiPrivate
+           gammaray_common_internal
+           gammaray_ui
+           gammaray_kitemmodels
 )
 
 if(NOT GAMMARAY_DISABLE_FEEDBACK)
-    target_link_libraries(gammaray_ui_internal gammaray_kuserfeedback)
+    target_link_libraries(gammaray_ui_internal PUBLIC gammaray_kuserfeedback)
 endif()
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)

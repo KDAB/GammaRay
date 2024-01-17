@@ -32,6 +32,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             gammaray_wlcompositorinspector.json
             SOURCES
             ${gammaray_wlcompositorinspector_srcs}
+            TYPE
+            PROBE
         )
         target_link_libraries(
             gammaray_wlcompositorinspector
@@ -64,6 +66,8 @@ if(GAMMARAY_BUILD_UI AND (NOT MSVC OR NOT MSVC_VERSION LESS 1800)) # at least MS
         gammaray_wlcompositorinspector.json
         SOURCES
         ${gammaray_wlcompositorinspector_ui_srcs}
+        TYPE
+        UI
     )
 
     target_link_libraries(gammaray_wlcompositorinspector_ui Qt::Widgets gammaray_common gammaray_ui)
