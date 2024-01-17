@@ -61,7 +61,7 @@ jobs:
         uses: turtlesec-no/get-ninja@main
 
       - name: Make sure MSVC is found when Ninja generator is in use
-        if: runner.os == 'Windows'
+        if: ${{ runner.os == 'Windows' }}
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Configure project
@@ -73,19 +73,19 @@ jobs:
         run: cmake --build ./build-${{ matrix.config.preset }}
 
       - name: Install dependencies on Ubuntu
-        if: runner.os == 'Linux' && matrix.config.tests != ""
+        if: ${{ runner.os == 'Linux' && matrix.config.tests != "" }}
         run: |
           sudo apt update -qq
           sudo apt install -y gdb
 
       - name: Enable gdb attaching
-        if: runner.os == 'Linux' && matrix.config.tests != ""
+        if: ${{ runner.os == 'Linux' && matrix.config.tests != "" }}
         run: echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 
         # Exclude
         # quickmaterialtest|quicktexturetest fails because of QT_QUICK_BACKEND=software
       - name: Run tests on Linux Qt5 (offscreen)
-        if: runner.os == 'Linux' && matrix.config.tests == 'qt5'
+        if: ${{ runner.os == 'Linux' && matrix.config.tests == 'qt5' }}
         run: >
           ctest --test-dir ./build-${{ matrix.config.preset }} --output-on-failure
           --exclude-regex "quickmaterialtest|quicktexturetest"
@@ -97,7 +97,7 @@ jobs:
         # quickmaterialtest|quicktexturetest fails because of QT_QUICK_BACKEND=software AND QT_QPA_PLATFORM=offscreen
         # quickinspectortest|quickinspectortest2 fails at CI, local with 6.2.4 passes
       - name: Run tests on Linux Qt6 (offscreen)
-        if: runner.os == 'Linux' && matrix.config.tests == 'qt6'
+        if: ${{ runner.os == 'Linux' && matrix.config.tests == 'qt6' }}
         run: >
           ctest --test-dir ./build-${{ matrix.config.preset }} --output-on-failure
           --exclude-regex "quickmaterialtest|quicktexturetest|quickinspectortest|quickinspectortest2"
@@ -110,7 +110,7 @@ jobs:
         #26 - launchertest (Failed)
         #37 - quickinspectortest2 (Failed)
       - name: Run tests Qt5 on macOS
-        if: runner.os == 'macOS' && matrix.config.tests == 'qt5'
+        if: ${{ runner.os == 'macOS' && matrix.config.tests == 'qt5' }}
         run: >
           ctest --test-dir ./build-${{ matrix.config.preset }} --output-on-failure
           --exclude-regex "probeabidetectortest|launchertest|quickinspectortest2"
@@ -121,7 +121,7 @@ jobs:
         #32 - clientconnectiontest (Failed)
         # quickinspectortest2
       - name: Run tests Qt6 on macOS
-        if: runner.os == 'macOS' && matrix.config.tests == 'qt6'
+        if: ${{ runner.os == 'macOS' && matrix.config.tests == 'qt6' }}
         run: >
           ctest --test-dir ./build-${{ matrix.config.preset }} --output-on-failure
           --exclude-regex
@@ -131,7 +131,7 @@ jobs:
         # quicktexturetest
         # bindinginspectortest
       - name: Qt5 Run tests on Windows
-        if: runner.os == 'Windows' && matrix.config.tests == 'qt5'
+        if: ${{ runner.os == 'Windows' && matrix.config.tests == 'qt5' }}
         run: >
           ctest --test-dir ./build-${{ matrix.config.preset }} -C 'Release' --output-on-failure
           --exclude-regex "quicktexturetest|bindinginspectortest"
@@ -139,7 +139,7 @@ jobs:
         # Exclude
         # quicktexturetest
       - name: Qt6 Run tests on Windows
-        if: runner.os == 'Windows' && matrix.config.tests == 'qt6'
+        if: ${{ runner.os == 'Windows' && matrix.config.tests == 'qt6' }}
         run: >
           ctest --test-dir ./build-${{ matrix.config.preset }} -C 'Release' --output-on-failure
           --exclude-regex "quicktexturetest|launchertest|probesettingstest"
