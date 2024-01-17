@@ -5,6 +5,7 @@
             "name": "base",
             "generator": "Ninja",
             "hidden": true,
+            "binaryDir": "${sourceDir}/build-${presetName}",
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             },
@@ -14,29 +15,23 @@
         },
         {
             "name": "dev",
+            "inherits": "base",
             "displayName": "dev",
-            "binaryDir": "${sourceDir}/build-dev",
             "cacheVariables": {
                 "QT_VERSION_MAJOR": "5",
                 "CMAKE_BUILD_TYPE": "Release",
                 "GAMMARAY_USE_PCH": "ON"
-            },
-            "inherits": [
-                "base"
-            ]
+            }
         },
         {
-            "name": "dev6",
-            "displayName": "dev qt6",
-            "binaryDir": "${sourceDir}/build-dev-qt6",
+            "name": "dev-qt6",
+            "inherits": "base",
+            "displayName": "dev-qt6",
             "cacheVariables": {
                 "QT_VERSION_MAJOR": "6",
                 "CMAKE_BUILD_TYPE": "Release",
                 "GAMMARAY_USE_PCH": "ON"
-            },
-            "inherits": [
-                "base"
-            ]
+            }
         },
         {
             "name": "dev-asan",
@@ -143,6 +138,7 @@
         },
         {
             "name": "ci-dev-client-only-qt5",
+            "inherits": "dev",
             "displayName": "ci-dev-client-only-qt5",
             "description": "Qt5 client-only build",
             "binaryDir": "${sourceDir}/build-ci-dev-client-only-qt5",
@@ -151,55 +147,60 @@
                 "GAMMARAY_CLIENT_ONLY_BUILD": "ON",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
                 "GAMMARAY_MULTI_BUILD": "OFF"
-            },
-            "inherits": [
-                "dev"
-            ]
+            }
         },
         {
             "name": "ci-dev-client-only-qt6",
+            "inherits": "dev-qt6",
             "displayName": "ci-dev-client-only-qt6",
             "description": "Qt6 client-only build",
-            "binaryDir": "${sourceDir}/build-ci-dev-client-only-qt6",
-            "generator": "Ninja",
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "ON",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
                 "GAMMARAY_MULTI_BUILD": "OFF"
-            },
-            "inherits": [
-                "dev6"
-            ]
+            }
         },
         {
             "name": "ci-dev-client-and-ui-qt5",
+            "inherits": "dev",
             "displayName": "ci-dev-client-and-ui-qt5",
             "description": "Qt5 client and ui build",
-            "binaryDir": "${sourceDir}/build-ci-dev-client-and-ui-qt5",
-            "generator": "Ninja",
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "OFF",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
                 "GAMMARAY_MULTI_BUILD": "OFF"
-            },
-            "inherits": [
-                "dev"
-            ]
+            }
         },
         {
             "name": "ci-dev-client-and-ui-qt6",
+            "inherits": "dev-qt6",
             "displayName": "ci-dev-client-and-ui-qt6",
             "description": "Qt6 client and ui build",
-            "binaryDir": "${sourceDir}/build-ci-dev-client-and-ui-qt6",
-            "generator": "Ninja",
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "OFF",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
                 "GAMMARAY_MULTI_BUILD": "OFF"
-            },
-            "inherits": [
-                "dev6"
-            ]
+            }
+        },
+        {
+            "name": "ci-dev-probe-only-qt5",
+            "inherits": "dev",
+            "description": "Qt5 PROBE_ONLY build",
+            "cacheVariables": {
+                "GAMMARAY_PROBE_ONLY_BUILD": "ON",
+                "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
+                "GAMMARAY_BUILD_UI": "OFF"
+            }
+        },
+        {
+            "name": "ci-dev-probe-only-qt6",
+            "inherits": "dev-qt6",
+            "description": "Qt6 PROBE_ONLY build",
+            "cacheVariables": {
+                "GAMMARAY_PROBE_ONLY_BUILD": "ON",
+                "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
+                "GAMMARAY_BUILD_UI": "OFF"
+            }
         },
         {
             "name": "ci-dev-clang-tidy-qt6",
@@ -216,7 +217,7 @@
                 "GAMMARAY_USE_PCH": "OFF"
             },
             "inherits": [
-                "dev6"
+                "dev-qt6"
             ]
         },
         {
@@ -234,7 +235,7 @@
                 "GAMMARAY_USE_PCH": "OFF"
             },
             "inherits": [
-                "dev6"
+                "dev-qt6"
             ]
         }
     ],
