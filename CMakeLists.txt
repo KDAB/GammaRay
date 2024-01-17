@@ -236,8 +236,7 @@ gammaray_option(
 )
 
 gammaray_option(
-    GAMMARAY_ALWAYS_INSTALL_HEADERS
-    "Install header, Qt's project include and CMake export files."
+    GAMMARAY_ALWAYS_INSTALL_HEADERS "Install header, Qt's project include and CMake export files."
     $<IF:$<BOOL:${GAMMARAY_PROBE_ONLY_BUILD}>,OFF,ON>
 )
 
