@@ -489,44 +489,44 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QHoverEvent, oldPosF);
 
 #if QT_CONFIG(wheelevent)
-    #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        MO_ADD_METAOBJECT1(QWheelEvent, QInputEvent);
-        MO_ADD_PROPERTY_RO(QWheelEvent, buttons);
-        MO_ADD_PROPERTY_RO(QWheelEvent, delta);
-        MO_ADD_PROPERTY_RO(QWheelEvent, orientation);
-        MO_ADD_PROPERTY_RO(QWheelEvent, posF);
-        MO_ADD_PROPERTY_RO(QWheelEvent, globalPosF);
-    #else
-        MO_ADD_METAOBJECT1(QWheelEvent, QSinglePointEvent);
-    #endif
-        MO_ADD_PROPERTY_RO(QWheelEvent, pixelDelta);
-        MO_ADD_PROPERTY_RO(QWheelEvent, angleDelta);
-        MO_ADD_PROPERTY_RO(QWheelEvent, phase);
-    #if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
-        MO_ADD_PROPERTY_RO(QWheelEvent, inverted);
-    #endif
-        MO_ADD_PROPERTY_RO(QWheelEvent, source);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    MO_ADD_METAOBJECT1(QWheelEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QWheelEvent, buttons);
+    MO_ADD_PROPERTY_RO(QWheelEvent, delta);
+    MO_ADD_PROPERTY_RO(QWheelEvent, orientation);
+    MO_ADD_PROPERTY_RO(QWheelEvent, posF);
+    MO_ADD_PROPERTY_RO(QWheelEvent, globalPosF);
+#else
+    MO_ADD_METAOBJECT1(QWheelEvent, QSinglePointEvent);
+#endif
+    MO_ADD_PROPERTY_RO(QWheelEvent, pixelDelta);
+    MO_ADD_PROPERTY_RO(QWheelEvent, angleDelta);
+    MO_ADD_PROPERTY_RO(QWheelEvent, phase);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    MO_ADD_PROPERTY_RO(QWheelEvent, inverted);
+#endif
+    MO_ADD_PROPERTY_RO(QWheelEvent, source);
 #endif
 
 #if QT_CONFIG(tabletevent)
-    #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        MO_ADD_METAOBJECT1(QTabletEvent, QInputEvent);
-        MO_ADD_PROPERTY_RO(QTabletEvent, device);
-        MO_ADD_PROPERTY_RO(QTabletEvent, pointerType);
-        MO_ADD_PROPERTY_RO(QTabletEvent, posF);
-        MO_ADD_PROPERTY_RO(QTabletEvent, globalPosF);
-    #else
-        MO_ADD_METAOBJECT1(QTabletEvent, QSinglePointEvent);
-    #endif
-        MO_ADD_PROPERTY_RO(QTabletEvent, uniqueId);
-        MO_ADD_PROPERTY_RO(QTabletEvent, pressure);
-        MO_ADD_PROPERTY_RO(QTabletEvent, z);
-        MO_ADD_PROPERTY_RO(QTabletEvent, tangentialPressure);
-        MO_ADD_PROPERTY_RO(QTabletEvent, rotation);
-        MO_ADD_PROPERTY_RO(QTabletEvent, xTilt);
-        MO_ADD_PROPERTY_RO(QTabletEvent, yTilt);
-        MO_ADD_PROPERTY_RO(QTabletEvent, button);
-        MO_ADD_PROPERTY_RO(QTabletEvent, buttons);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    MO_ADD_METAOBJECT1(QTabletEvent, QInputEvent);
+    MO_ADD_PROPERTY_RO(QTabletEvent, device);
+    MO_ADD_PROPERTY_RO(QTabletEvent, pointerType);
+    MO_ADD_PROPERTY_RO(QTabletEvent, posF);
+    MO_ADD_PROPERTY_RO(QTabletEvent, globalPosF);
+#else
+    MO_ADD_METAOBJECT1(QTabletEvent, QSinglePointEvent);
+#endif
+    MO_ADD_PROPERTY_RO(QTabletEvent, uniqueId);
+    MO_ADD_PROPERTY_RO(QTabletEvent, pressure);
+    MO_ADD_PROPERTY_RO(QTabletEvent, z);
+    MO_ADD_PROPERTY_RO(QTabletEvent, tangentialPressure);
+    MO_ADD_PROPERTY_RO(QTabletEvent, rotation);
+    MO_ADD_PROPERTY_RO(QTabletEvent, xTilt);
+    MO_ADD_PROPERTY_RO(QTabletEvent, yTilt);
+    MO_ADD_PROPERTY_RO(QTabletEvent, button);
+    MO_ADD_PROPERTY_RO(QTabletEvent, buttons);
 #endif
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
