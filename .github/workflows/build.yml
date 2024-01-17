@@ -28,14 +28,21 @@ jobs:
             qt_version: "5.15"
 
           - preset: ci-dev-client-only-qt6
-            qt_version: "6.5.*"
+            qt_version: "6.6.*"
             qt_modules: qtshadertools qtscxml
 
           - preset: ci-dev-client-and-ui-qt5
             qt_version: "5.15"
 
           - preset: ci-dev-client-and-ui-qt6
-            qt_version: "6.5.*"
+            qt_version: "6.6.*"
+            qt_modules: qtshadertools qtscxml
+
+          - preset: ci-dev-client-and-ui-qt6
+            qt_version: "6.7.*"
+            qt_modules: qtshadertools qtscxml
+            # TODO 6.7 changed this, maybe when there's a new aqt we can remove this
+            qt_arch: linux_gcc_64
 
     steps:
       - name: Install Qt with options and default aqtversion
@@ -44,6 +51,7 @@ jobs:
           aqtversion: null # use whatever the default is
           modules: ${{ matrix.config.qt_modules }}
           version: ${{ matrix.config.qt_version }}
+          arch: ${{ matrix.config.qt_arch }}
           cache: true
 
       - name: Checkout sources
