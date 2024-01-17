@@ -35,9 +35,11 @@ jobs:
 
           - preset: ci-dev-client-and-ui-qt5
             qt_version: "5.15"
+            tests_with: qt5
 
           - preset: ci-dev-client-and-ui-qt6
             qt_version: "6.5.*"
+            tests_with: qt6
 
           - preset: ci-dev-probe-only-qt5
             qt_version: "5.15"
