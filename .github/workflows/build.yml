@@ -73,13 +73,13 @@ jobs:
         run: cmake --build ./build-${{ matrix.config.preset }}
 
       - name: Install dependencies on Ubuntu
-        if: ${{ runner.os == 'Linux' && matrix.config.tests_with != "" }}
+        if: ${{ runner.os == 'Linux' && matrix.config.tests_with != '' }}
         run: |
           sudo apt update -qq
           sudo apt install -y gdb
 
       - name: Enable gdb attaching
-        if: ${{ runner.os == 'Linux' && matrix.config.tests_with != "" }}
+        if: ${{ runner.os == 'Linux' && matrix.config.tests_with != '' }}
         run: echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 
         # Exclude
