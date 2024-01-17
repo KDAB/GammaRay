@@ -160,9 +160,13 @@ void RemoteViewServer::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
     if (!m_eventReceiver)
         return;
 
+#if QT_CONFIG(wheelevent)
     auto event = new QWheelEvent(localPos, m_eventReceiver->mapToGlobal(localPos), pixelDelta, angleDelta, ( Qt::MouseButtons )buttons,
                                  ( Qt::KeyboardModifiers )modifiers, Qt::NoScrollPhase, false);
     QCoreApplication::postEvent(m_eventReceiver, event);
+#else
+    qWarning() << Q_FUNC_INFO << "QWheelEvent is not supported";
+#endif
 }
 
 void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints,
