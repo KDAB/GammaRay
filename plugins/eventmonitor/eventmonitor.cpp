@@ -34,6 +34,7 @@
 #include <QMutex>
 #include <QSortFilterProxyModel>
 #include <QtCore/private/qobject_p.h>
+#include <QtGui/qtgui-config.h>
 
 using namespace GammaRay;
 
